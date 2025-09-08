@@ -6792,7 +6792,7 @@ angle::Result ContextVk::memoryBarrier(const gl::Context *context, GLbitfield ba
     // other commands.  For the latter, since storage buffer and images are not tracked in command
     // buffers, we can't rely on the command buffers being flushed in the usual way when recording
     // these commands (i.e. through |getOutsideRenderPassCommandBuffer()| and
-    // |vk::CommandBufferAccess|).  Conservatively flushing command buffers with any storage output
+    // |vk::CommandResources|).  Conservatively flushing command buffers with any storage output
     // simplifies this use case.  If this needs to be avoided in the future,
     // |getOutsideRenderPassCommandBuffer()| can be modified to flush the command buffers if they
     // have had any storage output.
@@ -8822,80 +8822,81 @@ angle::Result ContextVk::switchToReadOnlyDepthStencilMode(gl::Texture *texture,
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
+angle::Result ContextVk::onResourceAccess(const vk::CommandResources &resources)
 {
-    ANGLE_TRY(flushCommandBuffersIfNecessary(access));
+    ANGLE_TRY(flushCommandBuffersIfNecessary(resources));
 
-    for (const vk::CommandBufferImageAccess &imageAccess : access.getReadImages())
+    for (const vk::CommandResourceImage &readImage : resources.getReadImages())
     {
-        vk::ImageHelper *image = imageAccess.image;
+        vk::ImageHelper *image = readImage.image;
         ASSERT(!isRenderPassStartedAndUsesImage(*image));
 
-        imageAccess.image->recordReadBarrier(this, imageAccess.aspectFlags, imageAccess.imageLayout,
-                                             mOutsideRenderPassCommands);
+        readImage.image->recordReadBarrier(this, readImage.aspectFlags, readImage.imageLayout,
+                                           mOutsideRenderPassCommands);
         mOutsideRenderPassCommands->retainImage(image);
     }
 
-    for (const vk::CommandBufferImageSubresourceAccess &imageReadAccess :
-         access.getReadImageSubresources())
+    for (const vk::CommandResourceImageSubresource &readImageSubresource :
+         resources.getReadImageSubresources())
     {
-        vk::ImageHelper *image = imageReadAccess.access.image;
+        vk::ImageHelper *image = readImageSubresource.image.image;
         ASSERT(!isRenderPassStartedAndUsesImage(*image));
 
         image->recordReadSubresourceBarrier(
-            this, imageReadAccess.access.aspectFlags, imageReadAccess.access.imageLayout,
-            imageReadAccess.levelStart, imageReadAccess.levelCount, imageReadAccess.layerStart,
-            imageReadAccess.layerCount, mOutsideRenderPassCommands);
+            this, readImageSubresource.image.aspectFlags, readImageSubresource.image.imageLayout,
+            readImageSubresource.levelStart, readImageSubresource.levelCount,
+            readImageSubresource.layerStart, readImageSubresource.layerCount,
+            mOutsideRenderPassCommands);
         mOutsideRenderPassCommands->retainImage(image);
     }
 
-    for (const vk::CommandBufferImageSubresourceAccess &imageWrite : access.getWriteImages())
+    for (const vk::CommandResourceImageSubresource &writeImage : resources.getWriteImages())
     {
-        vk::ImageHelper *image = imageWrite.access.image;
+        vk::ImageHelper *image = writeImage.image.image;
         ASSERT(!isRenderPassStartedAndUsesImage(*image));
 
-        image->recordWriteBarrier(this, imageWrite.access.aspectFlags,
-                                  imageWrite.access.imageLayout, imageWrite.levelStart,
-                                  imageWrite.levelCount, imageWrite.layerStart,
-                                  imageWrite.layerCount, mOutsideRenderPassCommands);
+        image->recordWriteBarrier(this, writeImage.image.aspectFlags, writeImage.image.imageLayout,
+                                  writeImage.levelStart, writeImage.levelCount,
+                                  writeImage.layerStart, writeImage.layerCount,
+                                  mOutsideRenderPassCommands);
         mOutsideRenderPassCommands->retainImage(image);
-        image->onWrite(imageWrite.levelStart, imageWrite.levelCount, imageWrite.layerStart,
-                       imageWrite.layerCount, imageWrite.access.aspectFlags);
+        image->onWrite(writeImage.levelStart, writeImage.levelCount, writeImage.layerStart,
+                       writeImage.layerCount, writeImage.image.aspectFlags);
     }
 
-    for (const vk::CommandBufferBufferAccess &bufferAccess : access.getReadBuffers())
+    for (const vk::CommandResourceBuffer &readBuffer : resources.getReadBuffers())
     {
-        ASSERT(!isRenderPassStartedAndUsesBufferForWrite(*bufferAccess.buffer));
-        ASSERT(!mOutsideRenderPassCommands->usesBufferForWrite(*bufferAccess.buffer));
+        ASSERT(!isRenderPassStartedAndUsesBufferForWrite(*readBuffer.buffer));
+        ASSERT(!mOutsideRenderPassCommands->usesBufferForWrite(*readBuffer.buffer));
 
-        mOutsideRenderPassCommands->bufferRead(this, bufferAccess.accessType, bufferAccess.stage,
-                                               bufferAccess.buffer);
+        mOutsideRenderPassCommands->bufferRead(this, readBuffer.accessType, readBuffer.stage,
+                                               readBuffer.buffer);
     }
 
-    for (const vk::CommandBufferBufferAccess &bufferAccess : access.getWriteBuffers())
+    for (const vk::CommandResourceBuffer &writeBuffer : resources.getWriteBuffers())
     {
-        ASSERT(!isRenderPassStartedAndUsesBuffer(*bufferAccess.buffer));
-        ASSERT(!mOutsideRenderPassCommands->usesBuffer(*bufferAccess.buffer));
+        ASSERT(!isRenderPassStartedAndUsesBuffer(*writeBuffer.buffer));
+        ASSERT(!mOutsideRenderPassCommands->usesBuffer(*writeBuffer.buffer));
 
-        mOutsideRenderPassCommands->bufferWrite(this, bufferAccess.accessType, bufferAccess.stage,
-                                                bufferAccess.buffer);
+        mOutsideRenderPassCommands->bufferWrite(this, writeBuffer.accessType, writeBuffer.stage,
+                                                writeBuffer.buffer);
     }
 
-    for (const vk::CommandBufferBufferExternalAcquireRelease &bufferAcquireRelease :
-         access.getExternalAcquireReleaseBuffers())
+    for (const vk::CommandResourceBufferExternalAcquireRelease &bufferAcquireRelease :
+         resources.getExternalAcquireReleaseBuffers())
     {
         mOutsideRenderPassCommands->retainResourceForWrite(bufferAcquireRelease.buffer);
     }
 
-    for (const vk::CommandBufferResourceAccess &resourceAccess : access.getAccessResources())
+    for (const vk::CommandResourceGeneric &genericResource : resources.getGenericResources())
     {
-        mOutsideRenderPassCommands->retainResource(resourceAccess.resource);
+        mOutsideRenderPassCommands->retainResource(genericResource.resource);
     }
 
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandBufferAccess &access)
+angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandResources &resources)
 {
     // Go over resources and decide whether the render pass needs to close, whether the outside
     // render pass commands need to be flushed, or neither.  Note that closing the render pass
@@ -8905,13 +8906,13 @@ angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandBufferA
     // that once at the end.
 
     // Read images only need to close the render pass if they need a layout transition.
-    for (const vk::CommandBufferImageAccess &imageAccess : access.getReadImages())
+    for (const vk::CommandResourceImage &readImage : resources.getReadImages())
     {
         // Note that different read methods are not compatible. A shader read uses a different
         // layout than a transfer read. So we cannot support simultaneous read usage as easily as
         // for Buffers.  TODO: Don't close the render pass if the image was only used read-only in
         // the render pass.  http://anglebug.com/42263557
-        if (isRenderPassStartedAndUsesImage(*imageAccess.image))
+        if (isRenderPassStartedAndUsesImage(*readImage.image))
         {
             return flushCommandsAndEndRenderPass(RenderPassClosureReason::ImageUseThenOutOfRPRead);
         }
@@ -8920,19 +8921,19 @@ angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandBufferA
     // In cases where the image has both read and write permissions, the render pass should be
     // closed if there is a read from a previously written subresource (in a specific level/layer),
     // or a write to a previously read one.
-    for (const vk::CommandBufferImageSubresourceAccess &imageSubresourceAccess :
-         access.getReadImageSubresources())
+    for (const vk::CommandResourceImageSubresource &readImageSubresource :
+         resources.getReadImageSubresources())
     {
-        if (isRenderPassStartedAndUsesImage(*imageSubresourceAccess.access.image))
+        if (isRenderPassStartedAndUsesImage(*readImageSubresource.image.image))
         {
             return flushCommandsAndEndRenderPass(RenderPassClosureReason::ImageUseThenOutOfRPRead);
         }
     }
 
     // Write images only need to close the render pass if they need a layout transition.
-    for (const vk::CommandBufferImageSubresourceAccess &imageWrite : access.getWriteImages())
+    for (const vk::CommandResourceImageSubresource &writeImage : resources.getWriteImages())
     {
-        if (isRenderPassStartedAndUsesImage(*imageWrite.access.image))
+        if (isRenderPassStartedAndUsesImage(*writeImage.image.image))
         {
             return flushCommandsAndEndRenderPass(RenderPassClosureReason::ImageUseThenOutOfRPWrite);
         }
@@ -8941,28 +8942,28 @@ angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandBufferA
     bool shouldCloseOutsideRenderPassCommands = false;
 
     // Read buffers only need a new command buffer if previously used for write.
-    for (const vk::CommandBufferBufferAccess &bufferAccess : access.getReadBuffers())
+    for (const vk::CommandResourceBuffer &readBuffer : resources.getReadBuffers())
     {
-        if (isRenderPassStartedAndUsesBufferForWrite(*bufferAccess.buffer))
+        if (isRenderPassStartedAndUsesBufferForWrite(*readBuffer.buffer))
         {
             return flushCommandsAndEndRenderPass(
                 RenderPassClosureReason::BufferWriteThenOutOfRPRead);
         }
-        else if (mOutsideRenderPassCommands->usesBufferForWrite(*bufferAccess.buffer))
+        else if (mOutsideRenderPassCommands->usesBufferForWrite(*readBuffer.buffer))
         {
             shouldCloseOutsideRenderPassCommands = true;
         }
     }
 
     // Write buffers always need a new command buffer if previously used.
-    for (const vk::CommandBufferBufferAccess &bufferAccess : access.getWriteBuffers())
+    for (const vk::CommandResourceBuffer &writeBuffer : resources.getWriteBuffers())
     {
-        if (isRenderPassStartedAndUsesBuffer(*bufferAccess.buffer))
+        if (isRenderPassStartedAndUsesBuffer(*writeBuffer.buffer))
         {
             return flushCommandsAndEndRenderPass(
                 RenderPassClosureReason::BufferUseThenOutOfRPWrite);
         }
-        else if (mOutsideRenderPassCommands->usesBuffer(*bufferAccess.buffer))
+        else if (mOutsideRenderPassCommands->usesBuffer(*writeBuffer.buffer))
         {
             shouldCloseOutsideRenderPassCommands = true;
         }

@@ -79,10 +79,10 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
             BufferVk *bufferVk             = vk::GetImpl(buffer);
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-            vk::CommandBufferAccess access;
+            vk::CommandResources resources;
             vk::OutsideRenderPassCommandBuffer *commandBuffer;
-            access.onBufferExternalAcquireRelease(&bufferHelper);
-            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+            resources.onBufferExternalAcquireRelease(&bufferHelper);
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
             // Queue ownership transfer.
             bufferHelper.acquireFromExternal(vk::kExternalDeviceQueueIndex,
@@ -102,10 +102,10 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
             vk::ImageLayout layout =
                 vk::GetImageLayoutFromGLImageLayout(contextVk, textureBarrier.layout);
 
-            vk::CommandBufferAccess access;
+            vk::CommandResources resources;
             vk::OutsideRenderPassCommandBuffer *commandBuffer;
-            access.onExternalAcquireRelease(&image);
-            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+            resources.onExternalAcquireRelease(&image);
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
             // Image should not be accessed while unowned. Emulated formats may have staged updates
             // to clear the image after initialization.
@@ -136,10 +136,10 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
             ANGLE_TRY(contextVk->onBufferReleaseToExternal(bufferHelper));
-            vk::CommandBufferAccess access;
+            vk::CommandResources resources;
             vk::OutsideRenderPassCommandBuffer *commandBuffer;
-            access.onBufferExternalAcquireRelease(&bufferHelper);
-            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+            resources.onBufferExternalAcquireRelease(&bufferHelper);
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
             // Queue ownership transfer.
             bufferHelper.releaseToExternal(vk::kExternalDeviceQueueIndex, commandBuffer);
@@ -168,10 +168,10 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
             ANGLE_TRY(textureVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
             ANGLE_TRY(contextVk->onImageReleaseToExternal(image));
-            vk::CommandBufferAccess access;
+            vk::CommandResources resources;
             vk::OutsideRenderPassCommandBuffer *commandBuffer;
-            access.onExternalAcquireRelease(&image);
-            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+            resources.onExternalAcquireRelease(&image);
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
             // Queue ownership transfer and layout transition.
             image.releaseToExternal(contextVk, vk::kExternalDeviceQueueIndex, layout,

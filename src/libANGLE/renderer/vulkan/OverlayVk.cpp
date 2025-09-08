@@ -80,13 +80,13 @@ angle::Result OverlayVk::createFont(ContextVk *contextVk)
         mFontImage.getLayerCount()));
 
     // Copy font data from staging buffer.
-    vk::CommandBufferAccess access;
-    access.onBufferTransferRead(&fontDataBuffer.get());
-    access.onImageTransferWrite(gl::LevelIndex(0), gl::overlay::kFontMipCount, 0,
-                                gl::overlay::kFontCharacters, VK_IMAGE_ASPECT_COLOR_BIT,
-                                &mFontImage);
+    vk::CommandResources resources;
+    resources.onBufferTransferRead(&fontDataBuffer.get());
+    resources.onImageTransferWrite(gl::LevelIndex(0), gl::overlay::kFontMipCount, 0,
+                                   gl::overlay::kFontCharacters, VK_IMAGE_ASPECT_COLOR_BIT,
+                                   &mFontImage);
     vk::OutsideRenderPassCommandBuffer *fontDataUpload;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &fontDataUpload));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &fontDataUpload));
 
     VkBufferImageCopy copy           = {};
     copy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;

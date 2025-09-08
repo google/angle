@@ -449,11 +449,11 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     angle::Result createEvent(CLEventImpl::CreateFunc *createFunc,
                               cl::ExecutionStatus initialStatus);
 
-    angle::Result onResourceAccess(const vk::CommandBufferAccess &access);
-    angle::Result getCommandBuffer(const vk::CommandBufferAccess &access,
+    angle::Result onResourceAccess(const vk::CommandResources &resources);
+    angle::Result getCommandBuffer(const vk::CommandResources &resources,
                                    vk::OutsideRenderPassCommandBuffer **commandBufferOut)
     {
-        ANGLE_TRY(onResourceAccess(access));
+        ANGLE_TRY(onResourceAccess(resources));
         *commandBufferOut = &mComputePassCommands->getCommandBuffer();
         return angle::Result::Continue;
     }

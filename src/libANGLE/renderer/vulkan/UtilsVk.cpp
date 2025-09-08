@@ -1959,13 +1959,13 @@ angle::Result UtilsVk::convertIndexBuffer(ContextVk *contextVk,
 {
     ANGLE_TRY(ensureConvertIndexResourcesInitialized(contextVk));
 
-    vk::CommandBufferAccess access;
-    access.onBufferComputeShaderRead(src);
-    access.onBufferComputeShaderWrite(dst);
+    vk::CommandResources resources;
+    resources.onBufferComputeShaderRead(src);
+    resources.onBufferComputeShaderWrite(dst);
 
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));
     commandBuffer = &commandBufferHelper->getCommandBuffer();
 
     VkDescriptorSet descriptorSet;
@@ -2022,15 +2022,15 @@ angle::Result UtilsVk::convertIndexIndirectBuffer(ContextVk *contextVk,
 {
     ANGLE_TRY(ensureConvertIndexIndirectResourcesInitialized(contextVk));
 
-    vk::CommandBufferAccess access;
-    access.onBufferComputeShaderRead(srcIndirectBuf);
-    access.onBufferComputeShaderRead(srcIndexBuf);
-    access.onBufferComputeShaderWrite(dstIndirectBuf);
-    access.onBufferComputeShaderWrite(dstIndexBuf);
+    vk::CommandResources resources;
+    resources.onBufferComputeShaderRead(srcIndirectBuf);
+    resources.onBufferComputeShaderRead(srcIndexBuf);
+    resources.onBufferComputeShaderWrite(dstIndirectBuf);
+    resources.onBufferComputeShaderWrite(dstIndexBuf);
 
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));
     commandBuffer = &commandBufferHelper->getCommandBuffer();
 
     VkDescriptorSet descriptorSet;
@@ -2093,15 +2093,15 @@ angle::Result UtilsVk::convertLineLoopIndexIndirectBuffer(
 {
     ANGLE_TRY(ensureConvertIndexIndirectLineLoopResourcesInitialized(contextVk));
 
-    vk::CommandBufferAccess access;
-    access.onBufferComputeShaderRead(srcIndirectBuffer);
-    access.onBufferComputeShaderRead(srcIndexBuffer);
-    access.onBufferComputeShaderWrite(dstIndirectBuffer);
-    access.onBufferComputeShaderWrite(dstIndexBuffer);
+    vk::CommandResources resources;
+    resources.onBufferComputeShaderRead(srcIndirectBuffer);
+    resources.onBufferComputeShaderRead(srcIndexBuffer);
+    resources.onBufferComputeShaderWrite(dstIndirectBuffer);
+    resources.onBufferComputeShaderWrite(dstIndexBuffer);
 
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));
     commandBuffer = &commandBufferHelper->getCommandBuffer();
 
     VkDescriptorSet descriptorSet;
@@ -2159,14 +2159,14 @@ angle::Result UtilsVk::convertLineLoopArrayIndirectBuffer(
 {
     ANGLE_TRY(ensureConvertIndirectLineLoopResourcesInitialized(contextVk));
 
-    vk::CommandBufferAccess access;
-    access.onBufferComputeShaderRead(srcIndirectBuffer);
-    access.onBufferComputeShaderWrite(dstIndirectBuffer);
-    access.onBufferComputeShaderWrite(dstIndexBuffer);
+    vk::CommandResources resources;
+    resources.onBufferComputeShaderRead(srcIndirectBuffer);
+    resources.onBufferComputeShaderWrite(dstIndirectBuffer);
+    resources.onBufferComputeShaderWrite(dstIndexBuffer);
 
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));
     commandBuffer = &commandBufferHelper->getCommandBuffer();
 
     VkDescriptorSet descriptorSet;
@@ -2278,12 +2278,12 @@ angle::Result UtilsVk::convertVertexBuffer(
     const ConvertVertexParameters &params,
     const OffsetAndVertexCounts &additionalOffsetVertexCounts)
 {
-    vk::CommandBufferAccess access;
-    access.onBufferComputeShaderRead(src);
-    access.onBufferComputeShaderWrite(dst);
+    vk::CommandResources resources;
+    resources.onBufferComputeShaderRead(src);
+    resources.onBufferComputeShaderWrite(dst);
 
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));
 
     ConvertVertexShaderParams shaderParams;
     shaderParams.Ns = params.srcFormat->channelCount;
@@ -3218,17 +3218,17 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     vk::ImageHelper *depthStencilImage = &depthStencilRenderTarget->getImageForWrite();
 
     // Change layouts prior to computation.
-    vk::CommandBufferAccess access;
-    access.onImageComputeShaderRead(src->getAspectFlags(), src);
-    access.onImageTransferWrite(depthStencilRenderTarget->getLevelIndex(), 1,
-                                depthStencilRenderTarget->getLayerIndex(), 1,
-                                depthStencilImage->getAspectFlags(), depthStencilImage);
-    access.onBufferComputeShaderWrite(&blitBuffer.get());
+    vk::CommandResources resources;
+    resources.onImageComputeShaderRead(src->getAspectFlags(), src);
+    resources.onImageTransferWrite(depthStencilRenderTarget->getLevelIndex(), 1,
+                                   depthStencilRenderTarget->getLayerIndex(), 1,
+                                   depthStencilImage->getAspectFlags(), depthStencilImage);
+    resources.onBufferComputeShaderWrite(&blitBuffer.get());
 
     VkDescriptorSet descriptorSet;
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));
     commandBuffer = &commandBufferHelper->getCommandBuffer();
     ANGLE_TRY(allocateDescriptorSet(contextVk, commandBufferHelper,
                                     Function::BlitResolveStencilNoExport, &descriptorSet));
@@ -3624,19 +3624,19 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
     bool isDst3D = dst->getType() == VK_IMAGE_TYPE_3D;
 
     // Change layouts prior to computation.
-    vk::CommandBufferAccess access;
-    access.onImageTransferRead(src->getAspectFlags(), src);
-    access.onImageTransferWrite(params.dstLevel, 1, isDst3D ? 0 : params.dstOffset[2],
-                                isDst3D ? 1 : params.copyExtents[2], VK_IMAGE_ASPECT_COLOR_BIT,
-                                dst);
+    vk::CommandResources resources;
+    resources.onImageTransferRead(src->getAspectFlags(), src);
+    resources.onImageTransferWrite(params.dstLevel, 1, isDst3D ? 0 : params.dstOffset[2],
+                                   isDst3D ? 1 : params.copyExtents[2], VK_IMAGE_ASPECT_COLOR_BIT,
+                                   dst);
 
     // srcBuffer is the destination of copyImageToBuffer() below.
-    access.onBufferTransferWrite(&srcBuffer.get());
-    access.onBufferComputeShaderWrite(&dstBuffer.get());
+    resources.onBufferTransferWrite(&srcBuffer.get());
+    resources.onBufferComputeShaderWrite(&dstBuffer.get());
 
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));
     commandBuffer = &commandBufferHelper->getCommandBuffer();
 
     // Copy src into buffer, completely packed.
@@ -3837,12 +3837,12 @@ angle::Result UtilsVk::copyImageToBuffer(ContextVk *contextVk,
         textureType == gl::TextureType::_2D ? params.srcLayer : 0, 1, VK_IMAGE_USAGE_SAMPLED_BIT,
         linearFormat, GL_NONE));
 
-    vk::CommandBufferAccess access;
-    access.onImageComputeShaderRead(src->getAspectFlags(), src);
-    access.onBufferComputeShaderWrite(dst);
+    vk::CommandResources resources;
+    resources.onImageComputeShaderRead(src->getAspectFlags(), src);
+    resources.onBufferComputeShaderWrite(dst);
 
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));
 
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
     commandBuffer = &commandBufferHelper->getCommandBuffer();
@@ -3903,11 +3903,11 @@ angle::Result UtilsVk::copyRgbToRgba(ContextVk *contextVk,
 {
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
 
-    vk::CommandBufferAccess access;
-    access.onBufferComputeShaderRead(srcBuffer);
-    access.onBufferComputeShaderWrite(dstBuffer);
+    vk::CommandResources resources;
+    resources.onBufferComputeShaderRead(srcBuffer);
+    resources.onBufferComputeShaderWrite(dstBuffer);
 
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));
 
     rx::UtilsVk::ConvertVertexShaderParams shaderParams;
     shaderParams.Ns = 3;   // src channels
@@ -4204,11 +4204,11 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     vk::LevelIndex maxLevelVK  = baseLevelVK + (levelCount - 1);
 
     // Transition entire image to color attachment layout
-    vk::CommandBufferAccess access;
-    access.onImageDrawMipmapGenerationWrite(baseLevelGL, levelCount, 0, layerCount,
-                                            VK_IMAGE_ASPECT_COLOR_BIT, image);
+    vk::CommandResources resources;
+    resources.onImageDrawMipmapGenerationWrite(baseLevelGL, levelCount, 0, layerCount,
+                                               VK_IMAGE_ASPECT_COLOR_BIT, image);
     vk::OutsideRenderPassCommandBuffer *outsideCommandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &outsideCommandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &outsideCommandBuffer));
 
     gl::TextureType textureType       = vk::Get2DTextureType(layerCount, sampleCount);
     gl::SwizzleState swizzle          = {};
@@ -4819,15 +4819,15 @@ angle::Result UtilsVk::generateFragmentShadingRate(
 
     // Setup compute shader
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
-    vk::CommandBufferAccess access = {};
+    vk::CommandResources resources = {};
 
     // Fragment shading rate image will always have 1 layer.
-    access.onImageComputeShaderWrite(shadingRateAttachmentImageHelper->getFirstAllocatedLevel(),
-                                     shadingRateAttachmentImageHelper->getLevelCount(), 0,
-                                     shadingRateAttachmentImageHelper->getLayerCount(),
-                                     shadingRateAttachmentImageHelper->getAspectFlags(),
-                                     shadingRateAttachmentImageHelper);
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
+    resources.onImageComputeShaderWrite(shadingRateAttachmentImageHelper->getFirstAllocatedLevel(),
+                                        shadingRateAttachmentImageHelper->getLevelCount(), 0,
+                                        shadingRateAttachmentImageHelper->getLayerCount(),
+                                        shadingRateAttachmentImageHelper->getAspectFlags(),
+                                        shadingRateAttachmentImageHelper);
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));
     VkDescriptorSet descriptorSet;
     ANGLE_TRY(allocateDescriptorSet(contextVk, commandBufferHelper,
                                     Function::GenerateFragmentShadingRate, &descriptorSet));
@@ -4988,12 +4988,12 @@ angle::Result LineLoopHelper::getIndexBufferForElementArrayBuffer(ContextVk *con
         {sourceOffset, indexBuffer->getOffset() + unitCount * unitSize, unitSize},
     };
 
-    vk::CommandBufferAccess access;
-    access.onBufferTransferWrite(indexBuffer);
-    access.onBufferTransferRead(sourceBuffer);
+    vk::CommandResources resources;
+    resources.onBufferTransferWrite(indexBuffer);
+    resources.onBufferTransferRead(sourceBuffer);
 
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
     commandBuffer->copyBuffer(sourceBuffer->getBuffer(), indexBuffer->getBuffer(),
                               static_cast<uint32_t>(copies.size()), copies.data());

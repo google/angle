@@ -1183,12 +1183,12 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
         blitAspectMask &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
     }
 
-    vk::CommandBufferAccess access;
-    access.onImageTransferRead(imageAspectMask, srcImage);
-    access.onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
-                                drawRenderTarget->getLayerIndex(), 1, imageAspectMask, dstImage);
+    vk::CommandResources resources;
+    resources.onImageTransferRead(imageAspectMask, srcImage);
+    resources.onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
+                                   drawRenderTarget->getLayerIndex(), 1, imageAspectMask, dstImage);
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
     VkImageBlit blit               = {};
     blit.srcSubresource.aspectMask = blitAspectMask;
@@ -1913,12 +1913,12 @@ angle::Result FramebufferVk::generateFragmentShadingRateWithCPU(
     ANGLE_TRY(buffer->flush(contextVk->getRenderer(), 0, buffer->getSize()));
     buffer->unmap(contextVk->getRenderer());
     // copy data from staging buffer to image
-    vk::CommandBufferAccess access;
-    access.onBufferTransferRead(buffer);
-    access.onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
-                                &mFragmentShadingRateImage);
+    vk::CommandResources resources;
+    resources.onBufferTransferRead(buffer);
+    resources.onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
+                                   &mFragmentShadingRateImage);
     vk::OutsideRenderPassCommandBuffer *dataUpload;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &dataUpload));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &dataUpload));
     VkBufferImageCopy copy           = {};
     copy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     copy.imageSubresource.layerCount = 1;
@@ -2093,21 +2093,21 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
                                                      const UtilsVk::BlitResolveParameters &params,
                                                      vk::ImageHelper *srcImage)
 {
-    vk::CommandBufferAccess access;
-    access.onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, srcImage);
+    vk::CommandResources resources;
+    resources.onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, srcImage);
 
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
     {
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
         vk::ImageHelper &dstImage        = drawRenderTarget->getImageForWrite();
 
-        access.onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
-                                    drawRenderTarget->getLayerIndex(), 1, VK_IMAGE_ASPECT_COLOR_BIT,
-                                    &dstImage);
+        resources.onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
+                                       drawRenderTarget->getLayerIndex(), 1,
+                                       VK_IMAGE_ASPECT_COLOR_BIT, &dstImage);
     }
 
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
     VkImageResolve resolveRegion                = {};
     resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -4006,11 +4006,11 @@ angle::Result FramebufferVk::flushDepthStencilDeferredClear(ContextVk *contextVk
     // Depth/stencil attachments cannot be 3D.
     ASSERT(!renderTarget->is3DImage());
 
-    vk::CommandBufferAccess access;
-    access.onImageTransferWrite(renderTarget->getLevelIndex(), 1, renderTarget->getLayerIndex(), 1,
-                                image.getAspectFlags(), &image);
+    vk::CommandResources resources;
+    resources.onImageTransferWrite(renderTarget->getLevelIndex(), 1, renderTarget->getLayerIndex(),
+                                   1, image.getAspectFlags(), &image);
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
     VkImageSubresourceRange range = {};
     range.aspectMask              = aspect;

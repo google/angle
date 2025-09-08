@@ -5132,10 +5132,10 @@ angle::Result QueryHelper::endQuery(ContextVk *contextVk)
             RenderPassClosureReason::EndNonRenderPassQuery));
     }
 
-    CommandBufferAccess access;
+    CommandResources resources;
     OutsideRenderPassCommandBuffer *commandBuffer;
-    access.onQueryAccess(this);
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+    resources.onQueryAccess(this);
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
     ANGLE_TRY(contextVk->handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd));
 
@@ -5190,10 +5190,10 @@ angle::Result QueryHelper::flushAndWriteTimestamp(ContextVk *contextVk)
             contextVk->flushCommandsAndEndRenderPass(RenderPassClosureReason::TimestampQuery));
     }
 
-    CommandBufferAccess access;
+    CommandResources resources;
     OutsideRenderPassCommandBuffer *commandBuffer;
-    access.onQueryAccess(this);
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+    resources.onQueryAccess(this);
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
     writeTimestamp(contextVk, commandBuffer);
     return angle::Result::Continue;
 }
@@ -8677,23 +8677,23 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         region.extent.height = srcHeight;
         region.extent.depth  = (isSrc3D || isDst3D) ? srcDepth : 1;
 
-        CommandBufferAccess access;
+        CommandResources resources;
         if (srcImage == dstImage)
         {
-            access.onImageSelfCopy(srcLevelGL, 1, region.srcSubresource.baseArrayLayer,
-                                   region.srcSubresource.layerCount, dstLevelGL, 1,
-                                   region.dstSubresource.baseArrayLayer,
-                                   region.dstSubresource.layerCount, aspectFlags, srcImage);
+            resources.onImageSelfCopy(srcLevelGL, 1, region.srcSubresource.baseArrayLayer,
+                                      region.srcSubresource.layerCount, dstLevelGL, 1,
+                                      region.dstSubresource.baseArrayLayer,
+                                      region.dstSubresource.layerCount, aspectFlags, srcImage);
         }
         else
         {
-            access.onImageTransferRead(aspectFlags, srcImage);
-            access.onImageTransferWrite(dstLevelGL, 1, region.dstSubresource.baseArrayLayer,
-                                        region.dstSubresource.layerCount, aspectFlags, dstImage);
+            resources.onImageTransferRead(aspectFlags, srcImage);
+            resources.onImageTransferWrite(dstLevelGL, 1, region.dstSubresource.baseArrayLayer,
+                                           region.dstSubresource.layerCount, aspectFlags, dstImage);
         }
 
         OutsideRenderPassCommandBuffer *commandBuffer;
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
         ASSERT(srcImage->valid() && dstImage->valid());
         ASSERT(srcImage->getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL ||
@@ -8741,13 +8741,13 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
 {
     Renderer *renderer = contextVk->getRenderer();
 
-    CommandBufferAccess access;
+    CommandResources resources;
     gl::LevelIndex baseLevelGL = toGLLevel(baseLevel);
-    access.onImageTransferWrite(baseLevelGL + 1, maxLevel.get(), 0, mLayerCount,
-                                VK_IMAGE_ASPECT_COLOR_BIT, this);
+    resources.onImageTransferWrite(baseLevelGL + 1, maxLevel.get(), 0, mLayerCount,
+                                   VK_IMAGE_ASPECT_COLOR_BIT, this);
 
     OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
     // We are able to use blitImage since the image format we are using supports it.
     int32_t mipWidth  = mExtents.width;
@@ -10523,7 +10523,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
     // done with fine granularity as updates are applied.  This is achieved by specifying a layer
     // that is outside the tracking range. Under some circumstances, ComputeWrite is also required.
     // This need not be applied if the only updates are ClearEmulatedChannels.
-    CommandBufferAccess transferAccess;
+    CommandResources transferAccess;
     OutsideRenderPassCommandBufferHelper *commandBuffer = nullptr;
     bool transCoding = renderer->getFeatures().supportsComputeTranscodeEtcToBc.enabled &&
                        IsETCFormat(intendedFormat) && IsBCFormat(actualformat);
@@ -10741,7 +10741,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                     ASSERT(currentBuffer && currentBuffer->valid());
                     ANGLE_TRY(currentBuffer->flush(renderer));
 
-                    CommandBufferAccess bufferAccess;
+                    CommandResources bufferAccess;
                     VkBufferImageCopy *copyRegion = &update.data.buffer.copyRegion;
 
                     if (transCoding && update.data.buffer.formatID != actualformat)
@@ -10779,7 +10779,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                 }
                 case UpdateSource::Image:
                 {
-                    CommandBufferAccess imageAccess;
+                    CommandResources imageAccess;
                     imageAccess.onImageTransferRead(aspectFlags, &update.refCounted.image->get());
                     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(imageAccess,
                                                                                  &commandBuffer));
@@ -11348,12 +11348,12 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     regions.imageSubresource.layerCount     = layerCount;
     regions.imageSubresource.mipLevel       = sourceLevelVk.get();
 
-    CommandBufferAccess access;
-    access.onBufferTransferWrite(dstBuffer);
-    access.onImageTransferRead(aspectFlags, this);
+    CommandResources resources;
+    resources.onBufferTransferWrite(dstBuffer);
+    resources.onImageTransferRead(aspectFlags, this);
 
     OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
     commandBuffer->copyImageToBuffer(mImage, getCurrentLayout(), bufferHandle, regionCount,
                                      &regions);
@@ -11884,9 +11884,9 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
         ANGLE_TRY(
             contextVk->flushCommandsAndEndRenderPass(RenderPassClosureReason::PrepareForImageCopy));
 
-        CommandBufferAccess access;
+        CommandResources resources;
         OutsideRenderPassCommandBuffer *commandBuffer;
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
         // Create some temp views because copyImage works in terms of them
         gl::TextureType textureType = Get2DTextureType(1, resolvedImage.get().getSamples());
@@ -11912,7 +11912,7 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
         ANGLE_TRY(contextVk->getUtils().copyImage(contextVk, &resolvedImage.get(), &stagingView,
                                                   src, &srcView, params));
 
-        CommandBufferAccess readAccess;
+        CommandResources readAccess;
         readAccess.onImageTransferRead(layoutChangeAspectFlags, &resolvedImage.get());
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(readAccess, &commandBuffer));
 
@@ -11930,13 +11930,13 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
 
     if (isMultisampled)
     {
-        CommandBufferAccess access;
-        access.onImageTransferRead(layoutChangeAspectFlags, this);
-        access.onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1, layoutChangeAspectFlags,
-                                    &resolvedImage.get());
+        CommandResources resources;
+        resources.onImageTransferRead(layoutChangeAspectFlags, this);
+        resources.onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1, layoutChangeAspectFlags,
+                                       &resolvedImage.get());
 
         OutsideRenderPassCommandBuffer *commandBuffer;
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
         // Note: resolve only works on color images (not depth/stencil).
         ASSERT(copyAspectFlags == VK_IMAGE_ASPECT_COLOR_BIT);
@@ -11973,7 +11973,7 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
             BufferHelper &packBuffer      = GetImpl(packPixelsParams.packBuffer)->getBuffer();
             VkDeviceSize packBufferOffset = packBuffer.getOffset();
 
-            CommandBufferAccess copyAccess;
+            CommandResources copyAccess;
             copyAccess.onBufferTransferWrite(&packBuffer);
             copyAccess.onImageTransferRead(layoutChangeAspectFlags, src);
 
@@ -12035,7 +12035,7 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
             roundUp(region.bufferImageHeight, storageFormatInfo.compressedBlockHeight);
     }
 
-    CommandBufferAccess readbackAccess;
+    CommandResources readbackAccess;
     readbackAccess.onBufferTransferWrite(stagingBuffer);
     readbackAccess.onImageTransferRead(layoutChangeAspectFlags, src);
 
@@ -13536,71 +13536,72 @@ ActiveHandleCounter::ActiveHandleCounter() : mActiveCounts{}, mAllocatedCounts{}
 
 ActiveHandleCounter::~ActiveHandleCounter() = default;
 
-// CommandBufferAccess implementation.
-CommandBufferAccess::CommandBufferAccess()  = default;
-CommandBufferAccess::~CommandBufferAccess() = default;
+// CommandResources implementation.
+CommandResources::CommandResources()  = default;
+CommandResources::~CommandResources() = default;
 
-void CommandBufferAccess::onBufferRead(VkAccessFlags readAccessType,
-                                       PipelineStage readStage,
-                                       BufferHelper *buffer)
+void CommandResources::onBufferRead(VkAccessFlags readAccessType,
+                                    PipelineStage readStage,
+                                    BufferHelper *buffer)
 {
     ASSERT(!buffer->isReleasedToExternal());
     mReadBuffers.emplace_back(buffer, readAccessType, readStage);
 }
 
-void CommandBufferAccess::onBufferWrite(VkAccessFlags writeAccessType,
-                                        PipelineStage writeStage,
-                                        BufferHelper *buffer)
+void CommandResources::onBufferWrite(VkAccessFlags writeAccessType,
+                                     PipelineStage writeStage,
+                                     BufferHelper *buffer)
 {
     ASSERT(!buffer->isReleasedToExternal());
     mWriteBuffers.emplace_back(buffer, writeAccessType, writeStage);
 }
 
-void CommandBufferAccess::onImageRead(VkImageAspectFlags aspectFlags,
-                                      ImageLayout imageLayout,
-                                      ImageHelper *image)
+void CommandResources::onImageRead(VkImageAspectFlags aspectFlags,
+                                   ImageLayout imageLayout,
+                                   ImageHelper *image)
 {
     ASSERT(!image->isReleasedToExternal());
     ASSERT(image->getImageSerial().valid());
     mReadImages.emplace_back(image, aspectFlags, imageLayout);
 }
 
-void CommandBufferAccess::onImageWrite(gl::LevelIndex levelStart,
-                                       uint32_t levelCount,
-                                       uint32_t layerStart,
-                                       uint32_t layerCount,
-                                       VkImageAspectFlags aspectFlags,
-                                       ImageLayout imageLayout,
-                                       ImageHelper *image)
+void CommandResources::onImageWrite(gl::LevelIndex levelStart,
+                                    uint32_t levelCount,
+                                    uint32_t layerStart,
+                                    uint32_t layerCount,
+                                    VkImageAspectFlags aspectFlags,
+                                    ImageLayout imageLayout,
+                                    ImageHelper *image)
 {
     ASSERT(!image->isReleasedToExternal());
     ASSERT(image->getImageSerial().valid());
-    mWriteImages.emplace_back(CommandBufferImageAccess{image, aspectFlags, imageLayout}, levelStart,
+    mWriteImages.emplace_back(CommandResourceImage{image, aspectFlags, imageLayout}, levelStart,
                               levelCount, layerStart, layerCount);
 }
 
-void CommandBufferAccess::onImageReadSubresources(gl::LevelIndex levelStart,
-                                                  uint32_t levelCount,
-                                                  uint32_t layerStart,
-                                                  uint32_t layerCount,
-                                                  VkImageAspectFlags aspectFlags,
-                                                  ImageLayout imageLayout,
-                                                  ImageHelper *image)
+void CommandResources::onImageReadSubresources(gl::LevelIndex levelStart,
+                                               uint32_t levelCount,
+                                               uint32_t layerStart,
+                                               uint32_t layerCount,
+                                               VkImageAspectFlags aspectFlags,
+                                               ImageLayout imageLayout,
+                                               ImageHelper *image)
 {
     ASSERT(!image->isReleasedToExternal());
     ASSERT(image->getImageSerial().valid());
-    mReadImageSubresources.emplace_back(CommandBufferImageAccess{image, aspectFlags, imageLayout},
+    mReadImageSubresources.emplace_back(CommandResourceImage{image, aspectFlags, imageLayout},
                                         levelStart, levelCount, layerStart, layerCount);
 }
 
-void CommandBufferAccess::onBufferExternalAcquireRelease(BufferHelper *buffer)
+void CommandResources::onBufferExternalAcquireRelease(BufferHelper *buffer)
 {
-    mExternalAcquireReleaseBuffers.emplace_back(CommandBufferBufferExternalAcquireRelease{buffer});
+    mExternalAcquireReleaseBuffers.emplace_back(
+        CommandResourceBufferExternalAcquireRelease{buffer});
 }
 
-void CommandBufferAccess::onResourceAccess(Resource *resource)
+void CommandResources::onResourceAccess(Resource *resource)
 {
-    mAccessResources.emplace_back(CommandBufferResourceAccess{resource});
+    mGenericResources.emplace_back(CommandResourceGeneric{resource});
 }
 
 // DescriptorMetaCache implementation.

@@ -288,19 +288,19 @@ angle::Result CopyBuffers(ContextVk *contextVk,
     ASSERT(srcBuffer->valid() && dstBuffer->valid());
 
     // Enqueue a copy command on the GPU
-    vk::CommandBufferAccess access;
+    vk::CommandResources resources;
     if (srcBuffer->getBufferSerial() == dstBuffer->getBufferSerial())
     {
-        access.onBufferSelfCopy(srcBuffer);
+        resources.onBufferSelfCopy(srcBuffer);
     }
     else
     {
-        access.onBufferTransferRead(srcBuffer);
-        access.onBufferTransferWrite(dstBuffer);
+        resources.onBufferTransferRead(srcBuffer);
+        resources.onBufferTransferWrite(dstBuffer);
     }
 
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
     commandBuffer->copyBuffer(srcBuffer->getBuffer(), dstBuffer->getBuffer(), regionCount,
                               copyRegions);
@@ -1078,19 +1078,19 @@ angle::Result BufferVk::stagedUpdate(ContextVk *contextVk,
     else
     {
         // Check for self-dependency.
-        vk::CommandBufferAccess access;
+        vk::CommandResources resources;
         if (dataSource.buffer->getBufferSerial() == mBuffer.getBufferSerial())
         {
-            access.onBufferSelfCopy(&mBuffer);
+            resources.onBufferSelfCopy(&mBuffer);
         }
         else
         {
-            access.onBufferTransferRead(dataSource.buffer);
-            access.onBufferTransferWrite(&mBuffer);
+            resources.onBufferTransferRead(dataSource.buffer);
+            resources.onBufferTransferWrite(&mBuffer);
         }
 
         vk::OutsideRenderPassCommandBuffer *commandBuffer;
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
         // Enqueue a copy command on the GPU.
         const VkBufferCopy copyRegion = {dataSource.bufferOffset + dataSource.buffer->getOffset(),

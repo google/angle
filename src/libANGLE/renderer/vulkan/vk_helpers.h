@@ -4060,39 +4060,39 @@ class ActiveHandleCounter final : angle::NonCopyable
 // directly correspond to the application draw/dispatch call.  Before the command is recorded in the
 // command buffer, the render pass may need to be broken and/or appropriate barriers may need to be
 // inserted.  The following struct aggregates all resources that such internal commands need.
-struct CommandBufferBufferAccess
+struct CommandResourceBuffer
 {
     BufferHelper *buffer;
     VkAccessFlags accessType;
     PipelineStage stage;
 };
-struct CommandBufferImageAccess
+struct CommandResourceImage
 {
     ImageHelper *image;
     VkImageAspectFlags aspectFlags;
     ImageLayout imageLayout;
 };
-struct CommandBufferImageSubresourceAccess
+struct CommandResourceImageSubresource
 {
-    CommandBufferImageAccess access;
+    CommandResourceImage image;
     gl::LevelIndex levelStart;
     uint32_t levelCount;
     uint32_t layerStart;
     uint32_t layerCount;
 };
-struct CommandBufferBufferExternalAcquireRelease
+struct CommandResourceBufferExternalAcquireRelease
 {
     BufferHelper *buffer;
 };
-struct CommandBufferResourceAccess
+struct CommandResourceGeneric
 {
     Resource *resource;
 };
-class CommandBufferAccess : angle::NonCopyable
+class CommandResources : angle::NonCopyable
 {
   public:
-    CommandBufferAccess();
-    ~CommandBufferAccess();
+    CommandResources();
+    ~CommandResources();
 
     void onBufferTransferRead(BufferHelper *buffer)
     {
@@ -4197,16 +4197,16 @@ class CommandBufferAccess : angle::NonCopyable
 
     // The limits reflect the current maximum concurrent usage of each resource type.  ASSERTs will
     // fire if this limit is exceeded in the future.
-    using ReadBuffers           = angle::FixedVector<CommandBufferBufferAccess, 2>;
-    using WriteBuffers          = angle::FixedVector<CommandBufferBufferAccess, 2>;
-    using ReadImages            = angle::FixedVector<CommandBufferImageAccess, 2>;
-    using WriteImages           = angle::FixedVector<CommandBufferImageSubresourceAccess,
-                                                     gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
-    using ReadImageSubresources = angle::FixedVector<CommandBufferImageSubresourceAccess, 1>;
+    using ReadBuffers  = angle::FixedVector<CommandResourceBuffer, 2>;
+    using WriteBuffers = angle::FixedVector<CommandResourceBuffer, 2>;
+    using ReadImages   = angle::FixedVector<CommandResourceImage, 2>;
+    using WriteImages =
+        angle::FixedVector<CommandResourceImageSubresource, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
+    using ReadImageSubresources = angle::FixedVector<CommandResourceImageSubresource, 1>;
 
     using ExternalAcquireReleaseBuffers =
-        angle::FixedVector<CommandBufferBufferExternalAcquireRelease, 1>;
-    using AccessResources = angle::FixedVector<CommandBufferResourceAccess, 1>;
+        angle::FixedVector<CommandResourceBufferExternalAcquireRelease, 1>;
+    using GenericResources = angle::FixedVector<CommandResourceGeneric, 1>;
 
     const ReadBuffers &getReadBuffers() const { return mReadBuffers; }
     const WriteBuffers &getWriteBuffers() const { return mWriteBuffers; }
@@ -4217,7 +4217,7 @@ class CommandBufferAccess : angle::NonCopyable
     {
         return mExternalAcquireReleaseBuffers;
     }
-    const AccessResources &getAccessResources() const { return mAccessResources; }
+    const GenericResources &getGenericResources() const { return mGenericResources; }
 
   private:
     void onBufferRead(VkAccessFlags readAccessType, PipelineStage readStage, BufferHelper *buffer);
@@ -4250,7 +4250,7 @@ class CommandBufferAccess : angle::NonCopyable
     WriteImages mWriteImages;
     ReadImageSubresources mReadImageSubresources;
     ExternalAcquireReleaseBuffers mExternalAcquireReleaseBuffers;
-    AccessResources mAccessResources;
+    GenericResources mGenericResources;
 };
 
 enum class PresentMode
