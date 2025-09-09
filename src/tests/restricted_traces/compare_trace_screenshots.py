@@ -86,9 +86,9 @@ def versus_native(args):
         get_traces_from_images()
 
     for trace in sorted(traces):
+        frame = ""
         if args.trace_list_path != None:
             keyframe = get_trace_key_frame(args.trace_list_path, trace)
-            frame = ""
             if keyframe != "":
                 frame = "_frame" + str(keyframe)
 

@@ -462,7 +462,7 @@ cd screenshots
 
 And run the compare script:
 ```
-python3 ../src/tests/restricted_traces/compare_trace_screenshots.py versus_native --trace-list-path ../src/tests/restricted_traces/
+python3 ../src/tests/restricted_traces/compare_trace_screenshots.py versus_native --screenshot-dir . --trace-list-path ../src/tests/restricted_traces/
 ```
 
 The script will print out results comparing ANGLE vs. native screenshots at different fuzz factors.
