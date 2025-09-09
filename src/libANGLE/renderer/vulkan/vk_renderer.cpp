@@ -491,6 +491,14 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
       "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "command = vkCmdDrawIndexed",
       "prior_command = vkCmdEndRenderPass"}},
+    // False positive: https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/10667
+    {"SYNC-HAZARD-WRITE-AFTER-READ",
+     false,
+     {"message_type = DynamicRenderingAttachmentError", "hazard_type = WRITE_AFTER_READ",
+      "access = "
+      "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
+      "prior_access = VK_PIPELINE_STAGE_2_BLIT_BIT(VK_ACCESS_2_TRANSFER_READ_BIT)",
+      "command = vkCmdDraw", "prior_command = vkCmdBlitImage"}},
     // https://anglebug.com/443095908
     {"SYNC-HAZARD-WRITE-AFTER-READ",
      false,

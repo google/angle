@@ -365,10 +365,12 @@ constexpr ImageAccessToMemoryBarrierDataMap kImageMemoryBarrierData = {
         ImageMemoryBarrierData{
             VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             // Note: depth/stencil resolve uses color output stage and mask!
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT |
+                VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             // Transition to: all reads and writes must happen after barrier.
-            VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT,
+            VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT |
+                VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT,
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
@@ -862,6 +864,22 @@ void InitializeImageLayoutAndMemoryBarrierDataMap(
         barrierData.dstStageMask &= supportedVulkanPipelineStageMask;
         ASSERT(barrierData.pipelineStageGroup ==
                GetPipelineStageGroupFromStageFlags(barrierData.dstStageMask));
+    }
+
+    // Use the GENERAL layout if possible and efficient.  By removing image layout transitions,
+    // we're able to issue more efficient synchronization.
+    if (features.supportsUnifiedImageLayouts.enabled)
+    {
+        for (ImageMemoryBarrierData &barrierData : *map)
+        {
+            if (barrierData.layout != VK_IMAGE_LAYOUT_UNDEFINED &&
+                barrierData.layout != VK_IMAGE_LAYOUT_PRESENT_SRC_KHR &&
+                barrierData.layout != VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR)
+            {
+                ASSERT(barrierData.layout != VK_IMAGE_LAYOUT_PREINITIALIZED);
+                barrierData.layout = VK_IMAGE_LAYOUT_GENERAL;
+            }
+        }
     }
 
     // When dynamic rendering is not enabled, input attachments should use the GENERAL layout.
