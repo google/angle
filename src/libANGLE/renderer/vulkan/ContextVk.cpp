@@ -2608,15 +2608,9 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
     if (mRenderer->getFeatures().useVertexInputBindingStrideDynamicState.enabled ||
         getFeatures().supportsVertexInputDynamicState.enabled)
     {
-        const gl::AttribArray<GLuint> &bufferStrides =
-            vertexArrayVk->getCurrentArrayBufferStrides();
         const gl::AttribArray<angle::FormatID> &bufferFormats =
             vertexArrayVk->getCurrentArrayBufferFormats();
         gl::AttribArray<VkDeviceSize> strides = {};
-        const gl::AttribArray<GLuint> &bufferDivisors =
-            vertexArrayVk->getCurrentArrayBufferDivisors();
-        const gl::AttribArray<GLuint> &bufferRelativeOffsets =
-            vertexArrayVk->getCurrentArrayBufferRelativeOffsets();
         const gl::ComponentTypeMask vertexAttributesTypeMask =
             vertexArrayVk->getState().getVertexAttributesTypeMask();
 
@@ -2640,7 +2634,8 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
             const bool mismatchingType =
                 attribType != programAttribType && (programAttribType == gl::ComponentType::Float ||
                                                     attribType == gl::ComponentType::Float);
-            strides[attribIndex] = mismatchingType ? 0 : bufferStrides[attribIndex];
+            strides[attribIndex] =
+                mismatchingType ? 0 : vertexArrayVk->getCurrentArrayBufferStride(attribIndex);
 
             if (getFeatures().supportsVertexInputDynamicState.enabled)
             {
@@ -2650,9 +2645,10 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
                 bindingDesc.binding = static_cast<uint32_t>(attribIndex);
                 bindingDesc.stride  = static_cast<uint32_t>(strides[attribIndex]);
                 bindingDesc.divisor =
-                    bufferDivisors[attribIndex] > mRenderer->getMaxVertexAttribDivisor()
+                    vertexArrayVk->getCurrentArrayBufferDivisor(attribIndex) >
+                            mRenderer->getMaxVertexAttribDivisor()
                         ? 1
-                        : bufferDivisors[attribIndex];
+                        : vertexArrayVk->getCurrentArrayBufferDivisor(attribIndex);
                 if (bindingDesc.divisor != 0)
                 {
                     bindingDesc.inputRate =
@@ -2674,7 +2670,7 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
                     this, bufferFormats[attribIndex], programAttribType,
                     static_cast<uint32_t>(attribIndex));
                 attribDesc.location = static_cast<uint32_t>(attribIndex);
-                attribDesc.offset   = bufferRelativeOffsets[attribIndex];
+                attribDesc.offset = vertexArrayVk->getCurrentArrayBufferRelativeOffset(attribIndex);
 
                 bindingDescs.push_back(bindingDesc);
                 attributeDescs.push_back(attribDesc);
@@ -9302,9 +9298,9 @@ angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask enabledAtt
             const GLuint staticStride =
                 mRenderer->getFeatures().useVertexInputBindingStrideDynamicState.enabled
                     ? 0
-                    : vertexArray.getCurrentArrayBufferStrides()[attribIndex];
+                    : vertexArray.getCurrentArrayBufferStride(attribIndex);
 
-            GLuint divisor = vertexArray.getCurrentArrayBufferDivisors()[attribIndex];
+            GLuint divisor = vertexArray.getCurrentArrayBufferDivisor(attribIndex);
             // Set divisor to 1 for attribs with emulated divisor
             if (divisor > mRenderer->getMaxVertexAttribDivisor())
             {
@@ -9314,7 +9310,7 @@ angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask enabledAtt
             mGraphicsPipelineDesc->updateVertexInput(
                 this, &mGraphicsPipelineTransition, static_cast<uint32_t>(attribIndex),
                 staticStride, divisor, vertexArray.getCurrentArrayBufferFormats()[attribIndex],
-                vertexArray.getCurrentArrayBufferRelativeOffsets()[attribIndex]);
+                vertexArray.getCurrentArrayBufferRelativeOffset(attribIndex));
         }
     }
 
