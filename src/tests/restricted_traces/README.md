@@ -479,6 +479,25 @@ Script will also save difference PNG files for each fuzz factor into the `--scre
 files will be saved even if there is no difference. To discard such files you may add
 `--discard_zero_diff_png` (or `-d`) argument **before** the `versus_native` command.
 
+# Comparing screenshots in two directories at different fuzz factors
+
+In some cases it may be useful to compare screenshots in two directories. For example: to compare
+different runs on the same device, different loops of the same replay run, runs on different
+devices, and so on.
+
+After you have prepared screenshots for comparison, run the `fuzz_ab` command:
+
+```
+python3 compare_trace_screenshots.py -d fuzz_ab --a_dir /my/trace/a --b_dir /my/trace/b --out /my/trace/diff
+```
+
+It will compare screenshots in these directories at different fuzz factors (similar to the
+`versus_native` command). In this example `-d` (`--discard_zero_diff_png`) argument was added to
+only keep PNG files with the difference.
+
+Command also has `--relaxed_file_list_match` (`-r`) argument, allowing to compare directories with
+at least single match, which may be handy in some situations.
+
 # Upgrading existing traces
 
 With tracer updates sometimes we want to re-run tracing to upgrade the trace file format or to
