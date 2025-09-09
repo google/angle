@@ -201,6 +201,8 @@ def main():
 
     args = parser.parse_args()
 
+    logging.basicConfig(level=args.log.upper())
+
     try:
         if args.command == 'versus_native':
             return versus_native(args)
