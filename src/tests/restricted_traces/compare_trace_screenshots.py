@@ -120,6 +120,8 @@ def versus_native(args):
                     results.append("NA".encode('UTF-8'))
                 else:
                     results.append(diff.stderr)
+                    if args.discard_zero_diff_png and line.split()[0] == b'0':
+                        os.remove(diff_file)
             logging.debug(" for " + trace + " " + str(fuzz) + "%")
 
         print(trace, os.path.basename(vulkan_file), os.path.basename(native_file),
@@ -169,6 +171,8 @@ def versus_upgrade(args):
                     exit(1)
                 else:
                     results.append(diff.stderr)
+                    if args.discard_zero_diff_png:
+                        os.remove(diff_file)
 
         print(before_image, results[0].decode('UTF-8'))
 
@@ -178,6 +182,12 @@ def versus_upgrade(args):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--log', help='Logging level.', default=DEFAULT_LOG_LEVEL)
+    parser.add_argument(
+        '-d',
+        '--discard_zero_diff_png',
+        help='Discard output PNGs with zero difference.',
+        action='store_true',
+        default=False)
 
     # Create commands for different modes of using this script
     subparsers = parser.add_subparsers(dest='command', required=True, help='Command to run.')

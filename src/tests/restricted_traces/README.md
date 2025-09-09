@@ -474,6 +474,11 @@ asphalt_8 angle_vulkan_asphalt_8.png angle_native_asphalt_8.png 641849 222157 11
 asphalt_9 angle_vulkan_asphalt_9.png angle_native_asphalt_9.png 17919 420 305 293 232 3
 ...
 ```
+
+Script will also save difference PNG files for each fuzz factor into the `--screenshot-dir`. These
+files will be saved even if there is no difference. To discard such files you may add
+`--discard_zero_diff_png` (or `-d`) argument **before** the `versus_native` command.
+
 # Upgrading existing traces
 
 With tracer updates sometimes we want to re-run tracing to upgrade the trace file format or to
