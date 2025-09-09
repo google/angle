@@ -2435,8 +2435,9 @@ class ImageHelper final : public Resource, public angle::Subject
                                           LevelIndex maxLevel);
 
     // Resolve this image into a destination image.  This image should be in the TransferSrc layout.
-    // The destination image is automatically transitioned into TransferDst.
-    void resolve(ImageHelper *dst,
+    // The destination image should be in the TransferDst layout.
+    void resolve(Renderer *renderer,
+                 ImageHelper *dst,
                  const VkImageResolve &region,
                  OutsideRenderPassCommandBuffer *commandBuffer);
 

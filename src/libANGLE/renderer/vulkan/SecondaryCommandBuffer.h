@@ -218,6 +218,8 @@ struct BlitImageParams
     VkImage srcImage;
     VkImage dstImage;
     VkImageBlit region;
+    VkImageLayout srcImageLayout;
+    VkImageLayout dstImageLayout;
 };
 VERIFY_8_BYTE_ALIGNMENT(BlitImageParams)
 
@@ -592,6 +594,8 @@ struct ResolveImageParams
     VkImageResolve region;
     VkImage srcImage;
     VkImage dstImage;
+    VkImageLayout srcImageLayout;
+    VkImageLayout dstImageLayout;
 };
 VERIFY_8_BYTE_ALIGNMENT(ResolveImageParams)
 
@@ -1478,14 +1482,14 @@ ANGLE_INLINE void SecondaryCommandBuffer::blitImage(const Image &srcImage,
                                                     VkFilter filter)
 {
     // Currently ANGLE uses limited params so verify those assumptions and update if they change
-    ASSERT(srcImageLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-    ASSERT(dstImageLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
     ASSERT(regionCount == 1);
     BlitImageParams *paramStruct = initCommand<BlitImageParams>(CommandID::BlitImage);
     paramStruct->srcImage        = srcImage.getHandle();
     paramStruct->dstImage        = dstImage.getHandle();
     paramStruct->filter          = filter;
     paramStruct->region          = regions[0];
+    paramStruct->srcImageLayout  = srcImageLayout;
+    paramStruct->dstImageLayout  = dstImageLayout;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::bufferBarrier(
@@ -2022,13 +2026,13 @@ ANGLE_INLINE void SecondaryCommandBuffer::resolveImage(const Image &srcImage,
                                                        const VkImageResolve *regions)
 {
     // Currently ANGLE uses limited params so verify those assumptions and update if they change.
-    ASSERT(srcImageLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-    ASSERT(dstImageLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
     ASSERT(regionCount == 1);
     ResolveImageParams *paramStruct = initCommand<ResolveImageParams>(CommandID::ResolveImage);
     paramStruct->srcImage           = srcImage.getHandle();
     paramStruct->dstImage           = dstImage.getHandle();
     paramStruct->region             = regions[0];
+    paramStruct->srcImageLayout     = srcImageLayout;
+    paramStruct->dstImageLayout     = dstImageLayout;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setBlendConstants(const float blendConstants[4])

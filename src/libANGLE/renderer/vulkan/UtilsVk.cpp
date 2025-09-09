@@ -3000,7 +3000,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     ANGLE_TRY(allocateDescriptorSet(contextVk, &contextVk->getStartedRenderPassCommands(),
                                     Function::BlitResolve, &descriptorSet));
 
-    // Pick layout consistent with GetImageReadLayout() to avoid unnecessary layout change.
+    // Pick layout consistent with GetImageReadAccess() to avoid unnecessary layout change.
     vk::ImageAccess srcImagelayout = src->isDepthOrStencil()
                                          ? vk::ImageAccess::DepthReadStencilReadFragmentShaderRead
                                          : vk::ImageAccess::FragmentShaderReadOnly;
@@ -4060,7 +4060,7 @@ angle::Result UtilsVk::transCodeEtcToBc(ContextVk *contextVk,
     writeDescriptorSet[0].pTexelBufferView     = &bufferView;
 
     VkDescriptorImageInfo imageInfo       = {};
-    imageInfo.imageLayout                 = VK_IMAGE_LAYOUT_GENERAL;
+    imageInfo.imageLayout                 = dstImage->getCurrentLayout(renderer);
     writeDescriptorSet[1].sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     writeDescriptorSet[1].descriptorType  = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
     writeDescriptorSet[1].dstBinding      = 1;
@@ -4260,9 +4260,13 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     pipelineDesc.setRasterizationSamples(sampleCount);
     pipelineDesc.setRenderPassDesc(renderPassDesc);
 
+    const VkImageLayout drawLayout = image->getCurrentLayout(renderer);
+    const VkImageLayout readLayout =
+        renderer->getVkImageLayout(vk::ImageAccess::FragmentShaderReadOnly);
+
     // Setup write descriptors
     VkDescriptorImageInfo imageInfos = {};
-    imageInfos.imageLayout           = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    imageInfos.imageLayout           = readLayout;
 
     VkDescriptorImageInfo samplerInfo = {};
     samplerInfo.sampler = isMipmapFiltered ? mLinearSampler.getHandle() : mPointSampler.getHandle();
@@ -4291,9 +4295,9 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     barrier.subresourceRange.layerCount     = layerCount;
     barrier.subresourceRange.baseMipLevel   = baseLevelVK.get();
     barrier.subresourceRange.levelCount     = 1;
-    barrier.oldLayout                       = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    barrier.oldLayout                       = drawLayout;
     barrier.srcAccessMask                   = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    barrier.newLayout                       = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    barrier.newLayout                       = readLayout;
     barrier.dstAccessMask                   = VK_ACCESS_SHADER_READ_BIT;
 
     // Sample from mipLevel N and draw to mipLevel N+1
@@ -4480,6 +4484,9 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         (params.unresolveDepth ? 1 : 0) + (unresolveStencilWithShaderExport ? 1 : 0);
     const uint32_t totalBindingCount = colorAttachmentCount + depthStencilBindingCount;
 
+    const VkImageLayout readLayout =
+        renderer->getVkImageLayout(vk::ImageAccess::FragmentShaderReadOnly);
+
     if (totalBindingCount > 0)
     {
         const Function function = static_cast<Function>(
@@ -4507,15 +4514,13 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         if (unresolveStencilWithShaderExport)
         {
             inputImageInfo[inputBindingIndex].imageView = stencilSrcView->getHandle();
-            inputImageInfo[inputBindingIndex].imageLayout =
-                VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            inputImageInfo[inputBindingIndex].imageLayout = readLayout;
             ++inputBindingIndex;
         }
         if (params.unresolveDepth)
         {
             inputImageInfo[inputBindingIndex].imageView = depthSrcView->getHandle();
-            inputImageInfo[inputBindingIndex].imageLayout =
-                VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            inputImageInfo[inputBindingIndex].imageLayout = readLayout;
             ++inputBindingIndex;
         }
 
@@ -4524,8 +4529,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         {
             inputImageInfo[inputBindingIndex].imageView =
                 colorSrcView[attachmentIndex]->getHandle();
-            inputImageInfo[inputBindingIndex].imageLayout =
-                VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            inputImageInfo[inputBindingIndex].imageLayout = readLayout;
             ++inputBindingIndex;
         }
 
@@ -4605,7 +4609,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
 
         VkDescriptorImageInfo stencilImageInfo = {};
         stencilImageInfo.imageView             = stencilSrcView->getHandle();
-        stencilImageInfo.imageLayout           = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        stencilImageInfo.imageLayout           = readLayout;
 
         VkWriteDescriptorSet stencilWriteInfo = {};
         stencilWriteInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

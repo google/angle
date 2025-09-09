@@ -303,6 +303,19 @@ enum class DynamicRenderingInfoSubset
     Pipeline,
 };
 
+bool IsReadOnlyDepthStencilAccess(ImageAccess imageAccess)
+{
+    switch (imageAccess)
+    {
+        case ImageAccess::DepthReadStencilRead:
+        case ImageAccess::DepthReadStencilReadFragmentShaderRead:
+        case ImageAccess::DepthReadStencilReadAllShadersRead:
+            return true;
+        default:
+            return false;
+    }
+}
+
 void DeriveRenderingInfo(Renderer *renderer,
                          const RenderPassDesc &desc,
                          DynamicRenderingInfoSubset subset,
@@ -312,7 +325,8 @@ void DeriveRenderingInfo(Renderer *renderer,
                          const vk::AttachmentOpsArray &ops,
                          const PackedClearValuesArray &clearValues,
                          uint32_t layerCount,
-                         DynamicRenderingInfo *infoOut)
+                         DynamicRenderingInfo *infoOut,
+                         bool *isReadOnlyDepthStencilOut)
 {
     ASSERT(renderer->getFeatures().preferDynamicRendering.enabled);
     // MSRTT cannot be emulated over dynamic rendering.
@@ -391,11 +405,8 @@ void DeriveRenderingInfo(Renderer *renderer,
                        vk::ImageAccess::SharedPresent);
             const VkImageLayout layout = renderer->getVkImageLayout(
                 static_cast<vk::ImageAccess>(ops[attachmentCount].initialLayout));
-            const VkImageLayout resolveImageLayout =
-                (static_cast<vk::ImageAccess>(ops[attachmentCount].finalResolveLayout) ==
-                         vk::ImageAccess::SharedPresent
-                     ? VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR
-                     : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+            const VkImageLayout resolveImageLayout = renderer->getVkImageLayout(
+                static_cast<vk::ImageAccess>(ops[attachmentCount].finalResolveLayout));
             const VkResolveModeFlagBits resolveMode =
                 isYUVExternalFormat ? VK_RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID
                 : desc.hasColorResolveAttachment(colorIndexGL) ? VK_RESOLVE_MODE_AVERAGE_BIT
@@ -468,10 +479,11 @@ void DeriveRenderingInfo(Renderer *renderer,
             const bool resolveStencil =
                 angleFormat.stencilBits != 0 && desc.hasStencilResolveAttachment();
 
-            const VkImageLayout layout = renderer->getVkImageLayout(
-                static_cast<vk::ImageAccess>(ops[attachmentCount].initialLayout));
+            const ImageAccess imageAccess =
+                static_cast<ImageAccess>(ops[attachmentCount].initialLayout);
+            const VkImageLayout layout = renderer->getVkImageLayout(imageAccess);
             const VkImageLayout resolveImageLayout =
-                VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+                renderer->getVkImageLayout(ImageAccess::DepthWriteStencilWrite);
             const VkResolveModeFlagBits depthResolveMode =
                 resolveDepth ? VK_RESOLVE_MODE_SAMPLE_ZERO_BIT : VK_RESOLVE_MODE_NONE;
             const VkResolveModeFlagBits stencilResolveMode =
@@ -510,6 +522,11 @@ void DeriveRenderingInfo(Renderer *renderer,
                 angleFormat.depthBits == 0 ? nullptr : &infoOut->depthAttachmentInfo;
             infoOut->renderingInfo.pStencilAttachment =
                 angleFormat.stencilBits == 0 ? nullptr : &infoOut->stencilAttachmentInfo;
+
+            if (isReadOnlyDepthStencilOut != nullptr)
+            {
+                *isReadOnlyDepthStencilOut = IsReadOnlyDepthStencilAccess(imageAccess);
+            }
         }
 
         ++attachmentCount;
@@ -544,7 +561,7 @@ void DeriveRenderingInfo(Renderer *renderer,
                 VK_STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR;
             infoOut->fragmentShadingRateInfo.imageView = attachmentViews[attachmentCount.get()];
             infoOut->fragmentShadingRateInfo.imageLayout =
-                VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR;
+                renderer->getVkImageLayout(vk::ImageAccess::FragmentShadingRateAttachmentReadOnly);
             infoOut->fragmentShadingRateInfo.shadingRateAttachmentTexelSize =
                 renderer->getMaxFragmentShadingRateAttachmentTexelSize();
 
@@ -756,11 +773,11 @@ void UnpackDepthStencilResolveAttachmentDesc(vk::ErrorContext *context,
         desc->stencilStoreOp = stencilInfo.isInvalidated ? VK_ATTACHMENT_STORE_OP_DONT_CARE
                                                          : VK_ATTACHMENT_STORE_OP_STORE;
     }
-    desc->initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-    desc->finalLayout   = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    desc->initialLayout = desc->finalLayout =
+        renderer->getVkImageLayout(vk::ImageAccess::DepthWriteStencilWrite);
 }
 
-void UnpackFragmentShadingRateAttachmentDesc(VkAttachmentDescription2 *desc)
+void UnpackFragmentShadingRateAttachmentDesc(Renderer *renderer, VkAttachmentDescription2 *desc)
 {
     *desc                = {};
     desc->sType          = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2;
@@ -771,8 +788,8 @@ void UnpackFragmentShadingRateAttachmentDesc(VkAttachmentDescription2 *desc)
     desc->storeOp        = VK_ATTACHMENT_STORE_OP_NONE;
     desc->stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     desc->stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    desc->initialLayout  = VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR;
-    desc->finalLayout    = VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR;
+    desc->initialLayout  = desc->finalLayout =
+        renderer->getVkImageLayout(vk::ImageAccess::FragmentShadingRateAttachmentReadOnly);
 }
 
 void UnpackStencilState(const PackedStencilOpState &packedState,
@@ -822,6 +839,7 @@ void SetPipelineShaderStageInfo(const VkStructureType type,
 // subpass will only contain the attachments that need to be unresolved to simplify the shader that
 // performs the operations.
 void InitializeUnresolveSubpass(
+    Renderer *renderer,
     const RenderPassDesc &desc,
     const gl::DrawBuffersVector<VkAttachmentReference2> &drawSubpassColorAttachmentRefs,
     const gl::DrawBuffersVector<VkAttachmentReference2> &drawSubpassResolveAttachmentRefs,
@@ -925,6 +943,8 @@ void InitializeUnresolveSubpass(
     //
     // Again, the color attachment refs already created for the application draw subpass can be used
     // indexed with colorIndexGL.
+    const VkImageLayout readLayout =
+        renderer->getVkImageLayout(vk::ImageAccess::FragmentShaderReadOnly);
     if (desc.hasDepthStencilUnresolveAttachment())
     {
         ASSERT(desc.hasDepthStencilAttachment());
@@ -936,7 +956,7 @@ void InitializeUnresolveSubpass(
         unresolveDepthStencilInputAttachmentRef.sType = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         unresolveDepthStencilInputAttachmentRef.attachment =
             depthStencilResolveAttachmentRef.attachment;
-        unresolveDepthStencilInputAttachmentRef.layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        unresolveDepthStencilInputAttachmentRef.layout = readLayout;
 
         unresolveDepthStencilInputAttachmentRef.aspectMask = 0;
         if (desc.hasDepthUnresolveAttachment())
@@ -979,7 +999,7 @@ void InitializeUnresolveSubpass(
         // Note the input attachment layout should be shader read-only.  The subpass dependency
         // will take care of transitioning the layout of the resolve attachment to color attachment
         // automatically.
-        unresolveInputAttachmentRefs->back().layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        unresolveInputAttachmentRefs->back().layout = readLayout;
     }
 
     ASSERT(!unresolveColorAttachmentRefs->empty() ||
@@ -1455,6 +1475,7 @@ void UpdateSubpassColorPerfCounters(const VkRenderPassCreateInfo2 &createInfo,
 
 void UpdateRenderPassDepthStencilPerfCounters(const VkRenderPassCreateInfo2 &createInfo,
                                               size_t renderPassIndex,
+                                              ImageAccess depthStencilImageAccess,
                                               RenderPassPerfCounters *countersOut)
 {
     ASSERT(renderPassIndex != VK_ATTACHMENT_UNUSED);
@@ -1477,7 +1498,7 @@ void UpdateRenderPassDepthStencilPerfCounters(const VkRenderPassCreateInfo2 &cre
 
     // Depth/stencil read-only mode.
     countersOut->readOnlyDepthStencil +=
-        ds.finalLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL ? 1 : 0;
+        IsReadOnlyDepthStencilAccess(depthStencilImageAccess) ? 1 : 0;
 }
 
 void UpdateRenderPassDepthStencilResolvePerfCounters(
@@ -1524,6 +1545,7 @@ void UpdateRenderPassPerfCounters(
     const RenderPassDesc &desc,
     const VkRenderPassCreateInfo2 &createInfo,
     const VkSubpassDescriptionDepthStencilResolve &depthStencilResolve,
+    ImageAccess depthStencilImageAccess,
     RenderPassPerfCounters *countersOut)
 {
     // Accumulate depth/stencil attachment indices in all subpasses to avoid double-counting
@@ -1557,7 +1579,7 @@ void UpdateRenderPassPerfCounters(
     for (size_t attachmentRenderPassIndex : depthStencilAttachmentIndices)
     {
         UpdateRenderPassDepthStencilPerfCounters(createInfo, attachmentRenderPassIndex,
-                                                 countersOut);
+                                                 depthStencilImageAccess, countersOut);
     }
 
     UpdateRenderPassDepthStencilResolvePerfCounters(createInfo, depthStencilResolve, countersOut);
@@ -2983,7 +3005,8 @@ void RenderPassDesc::beginRendering(
 {
     DynamicRenderingInfo info;
     DeriveRenderingInfo(context->getRenderer(), *this, DynamicRenderingInfoSubset::Full, renderArea,
-                        subpassContents, attachmentViews, ops, clearValues, layerCount, &info);
+                        subpassContents, attachmentViews, ops, clearValues, layerCount, &info,
+                        nullptr);
 
     primary->beginRendering(info.renderingInfo);
 
@@ -3013,7 +3036,7 @@ void RenderPassDesc::populateRenderingInheritanceInfo(
     DynamicRenderingInfo renderingInfo;
     DeriveRenderingInfo(renderer, *this, DynamicRenderingInfoSubset::Pipeline, {},
                         VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS, {}, {}, {}, 0,
-                        &renderingInfo);
+                        &renderingInfo, nullptr);
     *colorFormatStorageOut = renderingInfo.colorAttachmentFormats;
 
     *infoOut       = {};
@@ -3040,9 +3063,10 @@ void RenderPassDesc::updatePerfCounters(
     angle::VulkanPerfCounters *countersOut)
 {
     DynamicRenderingInfo info;
+    bool isReadOnlyDepthStencil = false;
     DeriveRenderingInfo(context->getRenderer(), *this, DynamicRenderingInfoSubset::Full, {},
                         VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS, attachmentViews, ops, {}, 0,
-                        &info);
+                        &info, &isReadOnlyDepthStencil);
 
     // Note: resolve attachments don't have ops with dynamic rendering and they are implicit.
     // Counter-tests should take the |preferDynamicRendering| flag into account.  For color, it's
@@ -3113,21 +3137,7 @@ void RenderPassDesc::updatePerfCounters(
         }
     }
 
-    if (info.renderingInfo.pDepthAttachment != nullptr ||
-        info.renderingInfo.pStencilAttachment != nullptr)
-    {
-        ASSERT(info.renderingInfo.pDepthAttachment == nullptr ||
-               info.renderingInfo.pStencilAttachment == nullptr ||
-               info.renderingInfo.pDepthAttachment->imageLayout ==
-                   info.renderingInfo.pStencilAttachment->imageLayout);
-
-        const VkImageLayout layout = info.renderingInfo.pDepthAttachment != nullptr
-                                         ? info.renderingInfo.pDepthAttachment->imageLayout
-                                         : info.renderingInfo.pStencilAttachment->imageLayout;
-
-        countersOut->readOnlyDepthStencilRenderPasses +=
-            layout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL ? 1 : 0;
-    }
+    countersOut->readOnlyDepthStencilRenderPasses += isReadOnlyDepthStencil ? 1 : 0;
 }
 
 bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs)
@@ -3624,7 +3634,7 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
     {
         DeriveRenderingInfo(context->getRenderer(), getRenderPassDesc(),
                             DynamicRenderingInfoSubset::Pipeline, {}, VK_SUBPASS_CONTENTS_INLINE,
-                            {}, {}, {}, 0, &renderingInfo);
+                            {}, {}, {}, 0, &renderingInfo, nullptr);
         AttachPipelineRenderingInfo(context, getRenderPassDesc(), renderingInfo, subset,
                                     shaders.usePipelineLibrary()
                                         ? ShadersStateSource::PipelineLibrary
@@ -6789,6 +6799,8 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
     const FramebufferVk *framebufferVk,
     const WriteDescriptorDescs &writeDescriptorDescs)
 {
+    vk::Renderer *renderer = contextVk->getRenderer();
+
     // Note: Depth/stencil input attachments are only supported in ANGLE when using
     // VK_KHR_dynamic_rendering_local_read, so the layout is chosen to be the one specifically made
     // for that extension.
@@ -6803,6 +6815,8 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
                 renderTargetVk->getDrawSubresourceSerial();
             const VkImageAspectFlags aspects =
                 renderTargetVk->getImageForRenderPass().getAspectFlags();
+            const VkImageLayout inputAttachmentLayout =
+                renderer->getVkImageLayout(ImageAccess::DepthStencilWriteAndInput);
 
             if (executable.usesDepthFramebufferFetch() &&
                 (aspects & VK_IMAGE_ASPECT_DEPTH_BIT) != 0)
@@ -6816,9 +6830,8 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
                         .getVariableById(gl::ShaderType::Fragment,
                                          sh::vk::spirv::kIdDepthInputAttachment)
                         .binding;
-                updateInputAttachment(contextVk, depthBinding,
-                                      VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR, imageView, serial,
-                                      writeDescriptorDescs);
+                updateInputAttachment(contextVk, depthBinding, inputAttachmentLayout, imageView,
+                                      serial, writeDescriptorDescs);
             }
 
             if (executable.usesStencilFramebufferFetch() &&
@@ -6833,9 +6846,8 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
                         .getVariableById(gl::ShaderType::Fragment,
                                          sh::vk::spirv::kIdStencilInputAttachment)
                         .binding;
-                updateInputAttachment(contextVk, stencilBinding,
-                                      VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR, imageView, serial,
-                                      writeDescriptorDescs);
+                updateInputAttachment(contextVk, stencilBinding, inputAttachmentLayout, imageView,
+                                      serial, writeDescriptorDescs);
             }
         }
     }
@@ -6852,6 +6864,8 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
         gl::ShaderType::Fragment, sh::vk::spirv::kIdInputAttachment0 + firstColorInputAttachment);
 
     const uint32_t baseColorBinding = baseColorInfo.binding - firstColorInputAttachment;
+    const VkImageLayout inputAttachmentLayout =
+        renderer->getVkImageLayout(ImageAccess::ColorWriteAndInput);
 
     for (size_t colorIndex : framebufferVk->getState().getColorAttachmentsMask())
     {
@@ -6865,11 +6879,8 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
 
         // We just need any layout that represents GENERAL for render pass objects.  With dynamic
         // rendering, there's a specific layout.
-        updateInputAttachment(contextVk, binding,
-                              contextVk->getFeatures().preferDynamicRendering.enabled
-                                  ? VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR
-                                  : VK_IMAGE_LAYOUT_GENERAL,
-                              imageView, serial, writeDescriptorDescs);
+        updateInputAttachment(contextVk, binding, inputAttachmentLayout, imageView, serial,
+                              writeDescriptorDescs);
     }
 
     return angle::Result::Continue;
@@ -7595,6 +7606,9 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
 
     gl::DrawBuffersArray<vk::ImageAccess> colorResolveImageLayout = {};
 
+    const VkImageLayout defaultColorAttachmentLayout =
+        renderer->getVkImageLayout(vk::ImageAccess::ColorWrite);
+
     // Pack color attachments
     vk::PackedAttachmentIndex attachmentCount(0);
     for (uint32_t colorIndexGL = 0; colorIndexGL < desc.colorAttachmentRange(); ++colorIndexGL)
@@ -7625,13 +7639,13 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         {
             colorAttachmentRefs.push_back(kUnusedAttachment);
             // temporary workaround for ARM driver assertion. Will remove once driver fix lands
-            colorAttachmentRefs.back().layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            colorAttachmentRefs.back().layout     = defaultColorAttachmentLayout;
             colorAttachmentRefs.back().aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 
             VkAttachmentReference2 colorRef = {};
             colorRef.sType                  = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
             colorRef.attachment             = attachmentCount.get();
-            colorRef.layout                 = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            colorRef.layout                 = defaultColorAttachmentLayout;
             colorRef.aspectMask             = VK_IMAGE_ASPECT_COLOR_BIT;
 
             colorResolveAttachmentRefs.push_back(colorRef);
@@ -7661,7 +7675,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         colorRef.sType                  = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         colorRef.attachment             = attachmentCount.get();
         colorRef.layout                 = needInputAttachments
-                                              ? VK_IMAGE_LAYOUT_GENERAL
+                                              ? renderer->getVkImageLayout(vk::ImageAccess::ColorWriteAndInput)
                                               : renderer->getVkImageLayout(static_cast<vk::ImageAccess>(
                                     ops[attachmentCount].initialLayout));
         colorRef.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -7699,6 +7713,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
     }
 
     // Pack depth/stencil attachment, if any
+    vk::ImageAccess depthStencilImageAccess = vk::ImageAccess::Undefined;
     if (desc.hasDepthStencilAttachment())
     {
         uint32_t depthStencilIndexGL = static_cast<uint32_t>(desc.depthStencilAttachmentIndex());
@@ -7706,10 +7721,11 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         angle::FormatID attachmentFormatID = desc[depthStencilIndexGL];
         ASSERT(attachmentFormatID != angle::FormatID::NONE);
 
+        depthStencilImageAccess = static_cast<vk::ImageAccess>(ops[attachmentCount].initialLayout);
+
         depthStencilAttachmentRef.sType      = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         depthStencilAttachmentRef.attachment = attachmentCount.get();
-        depthStencilAttachmentRef.layout     = renderer->getVkImageLayout(
-            static_cast<vk::ImageAccess>(ops[attachmentCount].initialLayout));
+        depthStencilAttachmentRef.layout     = renderer->getVkImageLayout(depthStencilImageAccess);
         depthStencilAttachmentRef.aspectMask =
             VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
 
@@ -7728,12 +7744,13 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
     // Pack fragment shading rate attachment, if any
     if (desc.hasFragmentShadingAttachment())
     {
-        vk::UnpackFragmentShadingRateAttachmentDesc(&attachmentDescs[attachmentCount.get()]);
+        vk::UnpackFragmentShadingRateAttachmentDesc(renderer,
+                                                    &attachmentDescs[attachmentCount.get()]);
 
         fragmentShadingRateAttachmentRef.sType      = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         fragmentShadingRateAttachmentRef.attachment = attachmentCount.get();
         fragmentShadingRateAttachmentRef.layout =
-            VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR;
+            renderer->getVkImageLayout(vk::ImageAccess::FragmentShadingRateAttachmentReadOnly);
 
         ++attachmentCount;
     }
@@ -7762,9 +7779,9 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
 
         const VkImageLayout finalLayout =
             renderer->getVkImageLayout(colorResolveImageLayout[colorIndexGL]);
-        const VkImageLayout initialLayout = (finalLayout == VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR
-                                                 ? VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR
-                                                 : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+        const VkImageLayout initialLayout =
+            (finalLayout == VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR ? VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR
+                                                               : defaultColorAttachmentLayout);
 
         VkAttachmentReference2 colorRef = {};
         colorRef.sType                  = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
@@ -7837,7 +7854,8 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         }
 
         depthStencilResolveAttachmentRef.attachment = attachmentCount.get();
-        depthStencilResolveAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+        depthStencilResolveAttachmentRef.layout =
+            renderer->getVkImageLayout(vk::ImageAccess::DepthWriteStencilWrite);
         depthStencilResolveAttachmentRef.aspectMask = 0;
 
         if (!isMSRTTEmulationDepthInvalidated && !isDepthUnused)
@@ -7872,10 +7890,10 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
     {
         subpassDesc.push_back({});
         vk::InitializeUnresolveSubpass(
-            desc, colorAttachmentRefs, colorResolveAttachmentRefs, depthStencilAttachmentRef,
-            depthStencilResolveAttachmentRef, &unresolveColorAttachmentRefs,
-            &unresolveDepthStencilAttachmentRef, &unresolveInputAttachmentRefs,
-            &unresolvePreserveAttachmentRefs, &subpassDesc.back());
+            renderer, desc, colorAttachmentRefs, colorResolveAttachmentRefs,
+            depthStencilAttachmentRef, depthStencilResolveAttachmentRef,
+            &unresolveColorAttachmentRefs, &unresolveDepthStencilAttachmentRef,
+            &unresolveInputAttachmentRefs, &unresolvePreserveAttachmentRefs, &subpassDesc.back());
     }
 
     subpassDesc.push_back({});
@@ -8034,7 +8052,8 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         // unresolve and resolve operations etc.  This information is taken out of the render pass
         // create info.  Depth/stencil resolve attachment uses RenderPass2 structures, so it's
         // passed in separately.
-        vk::UpdateRenderPassPerfCounters(desc, createInfo, depthStencilResolve, renderPassCounters);
+        vk::UpdateRenderPassPerfCounters(desc, createInfo, depthStencilResolve,
+                                         depthStencilImageAccess, renderPassCounters);
     }
 
     return angle::Result::Continue;

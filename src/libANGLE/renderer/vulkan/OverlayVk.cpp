@@ -104,7 +104,7 @@ angle::Result OverlayVk::createFont(ContextVk *contextVk)
 
         fontDataUpload->copyBufferToImage(fontDataBuffer.get().getBuffer().getHandle(),
                                           mFontImage.getImage(),
-                                          VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copy);
+                                          mFontImage.getCurrentLayout(renderer), 1, &copy);
     }
 
     return angle::Result::Continue;

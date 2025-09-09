@@ -646,6 +646,8 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
                                                       size_t bufferOffset,
                                                       ImageBufferCopyDirection direction)
 {
+    vk::Renderer *renderer = mContext->getRenderer();
+
     vk::CommandResources resources;
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
     VkImageAspectFlags aspectFlags = imageVk.getImage().getAspectFlags();
@@ -684,7 +686,7 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
     if (direction == ImageBufferCopyDirection::ToBuffer)
     {
         commandBuffer->copyImageToBuffer(imageVk.getImage().getImage(),
-                                         VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                         imageVk.getImage().getCurrentLayout(renderer),
                                          buffer.getBuffer().getHandle(), 1, &copyRegion);
 
         mComputePassCommands->getCommandBuffer().pipelineBarrier(
@@ -693,9 +695,9 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
     }
     else
     {
-        commandBuffer->copyBufferToImage(buffer.getBuffer().getHandle(),
-                                         imageVk.getImage().getImage(),
-                                         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copyRegion);
+        commandBuffer->copyBufferToImage(
+            buffer.getBuffer().getHandle(), imageVk.getImage().getImage(),
+            imageVk.getImage().getCurrentLayout(renderer), 1, &copyRegion);
 
         mComputePassCommands->getCommandBuffer().pipelineBarrier(
             VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 0, 1, &memBarrier,
@@ -1001,6 +1003,8 @@ angle::Result CLCommandQueueVk::enqueueCopyImage(const cl::Image &srcImage,
                                                  const cl::EventPtrs &waitEvents,
                                                  CLEventImpl::CreateFunc *eventCreateFunc)
 {
+    vk::Renderer *renderer = mContext->getRenderer();
+
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
     ANGLE_TRY(processWaitlist(waitEvents));
 
@@ -1030,9 +1034,10 @@ angle::Result CLCommandQueueVk::enqueueCopyImage(const cl::Image &srcImage,
         ANGLE_TRY(insertBarrier());
     }
 
-    commandBuffer->copyImage(
-        srcImageVk->getImage().getImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-        dstImageVk->getImage().getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copyRegion);
+    commandBuffer->copyImage(srcImageVk->getImage().getImage(),
+                             srcImageVk->getImage().getCurrentLayout(renderer),
+                             dstImageVk->getImage().getImage(),
+                             dstImageVk->getImage().getCurrentLayout(renderer), 1, &copyRegion);
 
     ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
 
@@ -1847,6 +1852,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
                 // Update image/descriptor info
                 VkDescriptorImageInfo &imageInfo =
                     kernelArgDescSetBuilder.allocDescriptorImageInfo();
+                // TODO: Can't this always be vkMem.getImage().getCurrentLayout(renderer)?
                 imageInfo.imageLayout = arg.type == NonSemanticClspvReflectionArgumentStorageImage
                                             ? VK_IMAGE_LAYOUT_GENERAL
                                             : vkMem.getImage().getCurrentLayout(renderer);

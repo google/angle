@@ -2441,7 +2441,7 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         resolveRegion.dstOffset                     = {};
         resolveRegion.extent                        = image.image->getRotatedExtents();
 
-        mColorImageMS.resolve(image.image.get(), resolveRegion,
+        mColorImageMS.resolve(renderer, image.image.get(), resolveRegion,
                               &commandBufferHelper->getCommandBuffer());
 
         contextVk->getPerfCounters().swapchainResolveOutsideSubpass++;

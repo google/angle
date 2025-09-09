@@ -449,7 +449,7 @@ vk::ImageAccess GetDepthStencilAttachmentImageReadLayout(const vk::ImageHelper &
     }
 }
 
-vk::ImageAccess GetImageReadLayout(TextureVk *textureVk,
+vk::ImageAccess GetImageReadAccess(TextureVk *textureVk,
                                    const gl::ProgramExecutable &executable,
                                    size_t textureUnit,
                                    PipelineType pipelineType)
@@ -2567,7 +2567,7 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
         vk::ImageHelper &image = textureVk->getImage();
 
         const vk::ImageAccess imageAccess =
-            GetImageReadLayout(textureVk, *executable, textureUnit, pipelineType);
+            GetImageReadAccess(textureVk, *executable, textureUnit, pipelineType);
 
         // Ensure the image is in the desired layout
         commandBufferHelper->imageRead(this, image.getAspectFlags(), imageAccess, &image);

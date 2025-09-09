@@ -332,9 +332,8 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 case CommandID::BlitImage:
                 {
                     const BlitImageParams *params = getParamPtr<BlitImageParams>(currentCommand);
-                    vkCmdBlitImage(cmdBuffer, params->srcImage,
-                                   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, params->dstImage,
-                                   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &params->region,
+                    vkCmdBlitImage(cmdBuffer, params->srcImage, params->srcImageLayout,
+                                   params->dstImage, params->dstImageLayout, 1, &params->region,
                                    params->filter);
                     break;
                 }
@@ -688,9 +687,8 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const ResolveImageParams *params =
                         getParamPtr<ResolveImageParams>(currentCommand);
-                    vkCmdResolveImage(cmdBuffer, params->srcImage,
-                                      VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, params->dstImage,
-                                      VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &params->region);
+                    vkCmdResolveImage(cmdBuffer, params->srcImage, params->srcImageLayout,
+                                      params->dstImage, params->dstImageLayout, 1, &params->region);
                     break;
                 }
                 case CommandID::SetBlendConstants:

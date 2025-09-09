@@ -71,7 +71,7 @@ constexpr ImageAccessToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageAccess::ColorWriteAndInput,
         ImageMemoryBarrierData{
-            VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR,
+            VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             // Transition to: all reads and writes must happen after barrier.
@@ -119,7 +119,7 @@ constexpr ImageAccessToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageAccess::DepthStencilWriteAndInput,
         ImageMemoryBarrierData{
-            VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR,
+            VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ,
             kAllDepthStencilPipelineStageFlags,
             kAllDepthStencilPipelineStageFlags,
             // Transition to: all reads and writes must happen after barrier.
@@ -862,6 +862,13 @@ void InitializeImageLayoutAndMemoryBarrierDataMap(
         barrierData.dstStageMask &= supportedVulkanPipelineStageMask;
         ASSERT(barrierData.pipelineStageGroup ==
                GetPipelineStageGroupFromStageFlags(barrierData.dstStageMask));
+    }
+
+    // When dynamic rendering is not enabled, input attachments should use the GENERAL layout.
+    if (!features.preferDynamicRendering.enabled)
+    {
+        (*map)[ImageAccess::ColorWriteAndInput].layout        = VK_IMAGE_LAYOUT_GENERAL;
+        (*map)[ImageAccess::DepthStencilWriteAndInput].layout = VK_IMAGE_LAYOUT_GENERAL;
     }
 }
 

@@ -240,12 +240,25 @@ VkClearValue GetRobustResourceClearValue(const angle::Format &intendedFormat,
     return clearValue;
 }
 
-bool IsShaderReadOnlyLayout(const ImageMemoryBarrierData &imageAccess)
+bool IsShaderReadOnlyAccess(ImageAccess imageAccess)
 {
-    // We also use VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL for texture sample from depth
-    // texture. See GetImageReadLayout() for detail.
-    return imageAccess.layout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL ||
-           imageAccess.layout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+    switch (imageAccess)
+    {
+        case ImageAccess::ExternalShadersReadOnly:
+        case ImageAccess::VertexShaderReadOnly:
+        case ImageAccess::PreFragmentShadersReadOnly:
+        case ImageAccess::FragmentShaderReadOnly:
+        case ImageAccess::ComputeShaderReadOnly:
+        case ImageAccess::AllGraphicsShadersReadOnly:
+        // We also use read-only depth/stencil for texture sample from depth texture. See
+        // GetImageReadAccess() for details.
+        case ImageAccess::DepthReadStencilRead:
+        case ImageAccess::DepthReadStencilReadFragmentShaderRead:
+        case ImageAccess::DepthReadStencilReadAllShadersRead:
+            return true;
+        default:
+            return false;
+    }
 }
 
 bool IsAnySubresourceContentDefined(const gl::TexLevelArray<angle::BitSet8<8>> &contentDefined)
@@ -6118,15 +6131,14 @@ angle::Result ImageHelper::initializeNonZeroMemory(ErrorContext *context,
             }
 
             commandBuffer.copyBufferToImage(stagingBuffer.getBuffer().getHandle(), mImage,
-                                            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copyRegion);
+                                            getCurrentLayout(renderer), 1, &copyRegion);
 
             if (hasBothDepthAndStencil)
             {
                 copyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_STENCIL_BIT;
 
                 commandBuffer.copyBufferToImage(stagingBuffer.getBuffer().getHandle(), mImage,
-                                                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1,
-                                                &copyRegion);
+                                                getCurrentLayout(renderer), 1, &copyRegion);
             }
         }
     }
@@ -6766,15 +6778,13 @@ void ImageHelper::setCurrentImageAccess(Renderer *renderer, ImageAccess newAcces
         return;
     }
 
-    const ImageMemoryBarrierData &transitionFrom =
-        renderer->getImageMemoryBarrierData(mCurrentAccess);
-    const ImageMemoryBarrierData &transitionTo = renderer->getImageMemoryBarrierData(newAccess);
     mLastNonShaderReadOnlyAccess =
-        !IsShaderReadOnlyLayout(transitionFrom) ? mCurrentAccess : mLastNonShaderReadOnlyAccess;
+        !IsShaderReadOnlyAccess(mCurrentAccess) ? mCurrentAccess : mLastNonShaderReadOnlyAccess;
     // Force the use of BarrierType::Pipeline in the next barrierImpl call
     mLastNonShaderReadOnlyEvent.release(renderer);
-    mCurrentShaderReadStageMask =
-        IsShaderReadOnlyLayout(transitionTo) ? transitionTo.dstStageMask : 0;
+    mCurrentShaderReadStageMask = IsShaderReadOnlyAccess(newAccess)
+                                      ? renderer->getImageMemoryBarrierData(newAccess).dstStageMask
+                                      : 0;
     mCurrentAccess = newAccess;
 }
 
@@ -7402,8 +7412,9 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
         const ImageMemoryBarrierData &transitionTo = renderer->getImageMemoryBarrierData(newAccess);
         VkPipelineStageFlags srcStageMask          = transitionFrom.srcStageMask;
         VkPipelineStageFlags dstStageMask          = transitionTo.dstStageMask;
+        const bool isNewAccessShaderReadOnly       = IsShaderReadOnlyAccess(newAccess);
 
-        if (transitionFrom.layout == transitionTo.layout && IsShaderReadOnlyLayout(transitionTo) &&
+        if (transitionFrom.layout == transitionTo.layout && isNewAccessShaderReadOnly &&
             mBarrierQueueSerial == queueSerial && !hasQueueChange)
         {
             // If we are switching between different shader stage reads of the same render pass,
@@ -7462,8 +7473,7 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
                                          context->getDeviceQueueIndex().familyIndex(),
                                          &imageMemoryBarrier);
 
-            if (transitionFrom.layout == transitionTo.layout &&
-                IsShaderReadOnlyLayout(transitionTo))
+            if (transitionFrom.layout == transitionTo.layout && isNewAccessShaderReadOnly)
             {
                 // If we are transiting within shaderReadOnly layout, i.e. reading from different
                 // shader stages, VkEvent can't handle this right now. In order for VkEvent to
@@ -7510,8 +7520,7 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
 
             // If we are transition into shaderRead layout, remember the last
             // non-shaderRead layout here.
-            const bool isShaderReadOnly = IsShaderReadOnlyLayout(transitionTo);
-            if (isShaderReadOnly)
+            if (isNewAccessShaderReadOnly)
             {
                 mLastNonShaderReadOnlyEvent.release(context);
                 mLastNonShaderReadOnlyAccess = mCurrentAccess;
@@ -7522,7 +7531,7 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
             {
                 eventBarriers->addEventImageBarrier(renderer, mCurrentEvent, dstStageMask,
                                                     imageMemoryBarrier);
-                if (isShaderReadOnly)
+                if (isNewAccessShaderReadOnly)
                 {
                     mLastNonShaderReadOnlyEvent = mCurrentEvent;
                 }
@@ -7740,8 +7749,8 @@ void ImageHelper::Copy(Renderer *renderer,
 {
     ASSERT(commandBuffer->valid() && srcImage->valid() && dstImage->valid());
 
-    ASSERT(srcImage->getCurrentLayout(renderer) == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
-    ASSERT(dstImage->getCurrentLayout(renderer) == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+    ASSERT(srcImage->getCurrentImageAccess() == ImageAccess::TransferSrc);
+    ASSERT(dstImage->getCurrentImageAccess() == ImageAccess::TransferDst);
 
     VkImageCopy region    = {};
     region.srcSubresource = srcSubresource;
@@ -7832,10 +7841,10 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
         ASSERT(srcImage->valid() && dstImage->valid());
-        ASSERT(srcImage->getCurrentLayout(renderer) == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL ||
-               srcImage->getCurrentLayout(renderer) == VK_IMAGE_LAYOUT_GENERAL);
-        ASSERT(dstImage->getCurrentLayout(renderer) == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL ||
-               dstImage->getCurrentLayout(renderer) == VK_IMAGE_LAYOUT_GENERAL);
+        ASSERT(srcImage->getCurrentImageAccess() == ImageAccess::TransferSrc ||
+               srcImage->getCurrentImageAccess() == ImageAccess::TransferSrcDst);
+        ASSERT(dstImage->getCurrentImageAccess() == ImageAccess::TransferDst ||
+               dstImage->getCurrentImageAccess() == ImageAccess::TransferSrcDst);
 
         commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(renderer),
                                  dstImage->getImage(), dstImage->getCurrentLayout(renderer), 1,
@@ -7896,12 +7905,19 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
     VkImageMemoryBarrier barrier            = {};
     barrier.sType                           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
     barrier.image                           = mImage.getHandle();
+    barrier.oldLayout                       = getCurrentLayout(renderer);
+    barrier.newLayout                       = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    barrier.srcAccessMask                   = VK_ACCESS_TRANSFER_WRITE_BIT;
+    barrier.dstAccessMask                   = VK_ACCESS_TRANSFER_READ_BIT;
     barrier.srcQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
     barrier.dstQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
     barrier.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     barrier.subresourceRange.baseArrayLayer = 0;
     barrier.subresourceRange.layerCount     = mLayerCount;
     barrier.subresourceRange.levelCount     = 1;
+
+    const VkImageLayout blitSrcLayout = barrier.newLayout;
+    const VkImageLayout blitDstLayout = barrier.oldLayout;
 
     const VkFilter filter =
         gl_vk::GetFilter(CalculateGenerateMipmapFilter(contextVk, getActualFormatID()));
@@ -7915,14 +7931,11 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
         if (mipLevel > baseLevel && mipLevel <= maxLevel)
         {
             barrier.subresourceRange.baseMipLevel = mipLevel.get() - 1;
-            barrier.oldLayout                     = getCurrentLayout(renderer);
-            barrier.newLayout                     = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-            barrier.srcAccessMask                 = VK_ACCESS_TRANSFER_WRITE_BIT;
-            barrier.dstAccessMask                 = VK_ACCESS_TRANSFER_READ_BIT;
 
-            // We can do it for all layers at once.
             commandBuffer->imageBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
                                         VK_PIPELINE_STAGE_TRANSFER_BIT, barrier);
+
+            // We can do it for all layers at once.
             VkImageBlit blit                   = {};
             blit.srcOffsets[0]                 = {0, 0, 0};
             blit.srcOffsets[1]                 = {mipWidth, mipHeight, mipDepth};
@@ -7937,17 +7950,17 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
             blit.dstSubresource.baseArrayLayer = 0;
             blit.dstSubresource.layerCount     = mLayerCount;
 
-            commandBuffer->blitImage(mImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, mImage,
-                                     VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit, filter);
+            commandBuffer->blitImage(mImage, blitSrcLayout, mImage, blitDstLayout, 1, &blit,
+                                     filter);
         }
         mipWidth  = nextMipWidth;
         mipHeight = nextMipHeight;
         mipDepth  = nextMipDepth;
     }
 
-    // Transition all mip level to the same layout so we can declare our whole image layout to one
-    // ImageAccess. FragmentShaderReadOnly is picked here since this is the most reasonable usage
-    // after glGenerateMipmap call.
+    // Transition all mip level to the same layout so we can declare our whole image layout to
+    // one ImageAccess. FragmentShaderReadOnly is picked here since this is the most reasonable
+    // usage after glGenerateMipmap call.
     barrier.oldLayout     = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
     barrier.newLayout     = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
@@ -7985,14 +7998,17 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-void ImageHelper::resolve(ImageHelper *dst,
+void ImageHelper::resolve(Renderer *renderer,
+                          ImageHelper *dst,
                           const VkImageResolve &region,
                           OutsideRenderPassCommandBuffer *commandBuffer)
 {
     ASSERT(mCurrentAccess == ImageAccess::TransferSrc ||
            mCurrentAccess == ImageAccess::SharedPresent);
-    commandBuffer->resolveImage(getImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dst->getImage(),
-                                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+    ASSERT(dst->getCurrentImageAccess() == ImageAccess::TransferDst ||
+           dst->getCurrentImageAccess() == ImageAccess::SharedPresent);
+    commandBuffer->resolveImage(getImage(), getCurrentLayout(renderer), dst->getImage(),
+                                dst->getCurrentLayout(renderer), 1, &region);
 }
 
 void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
@@ -8439,7 +8455,7 @@ angle::Result ImageHelper::updateSubresourceOnHost(ContextVk *contextVk,
         transition.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
         // The GENERAL layout is always guaranteed to be in
         // VkPhysicalDeviceHostImageCopyPropertiesEXT::pCopyDstLayouts
-        transition.newLayout                       = VK_IMAGE_LAYOUT_GENERAL;
+        transition.newLayout = renderer->getVkImageLayout(ImageAccess::HostCopy);
         transition.subresourceRange.aspectMask     = aspectMask;
         transition.subresourceRange.baseMipLevel   = 0;
         transition.subresourceRange.levelCount     = mLevelCount;
@@ -11089,7 +11105,7 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
         resolveRegion.dstOffset                     = {};
         resolveRegion.extent                        = srcExtent;
 
-        resolve(&resolvedImage.get(), resolveRegion, commandBuffer);
+        resolve(renderer, &resolvedImage.get(), resolveRegion, commandBuffer);
 
         // Make the resolved image the target of buffer copy.
         src                           = &resolvedImage.get();
