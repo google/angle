@@ -125,7 +125,7 @@ enum class BufferUsageType
 
 // A maximum offset of 4096 covers almost every Vulkan driver on desktop (80%) and mobile (99%). The
 // next highest values to meet native drivers are 16 bits or 32 bits.
-constexpr uint32_t kAttributeOffsetMaxBits = 15;
+constexpr uint32_t kAttributeOffsetMaxBits = 16;
 constexpr uint32_t kInvalidMemoryTypeIndex = UINT32_MAX;
 constexpr uint32_t kInvalidMemoryHeapIndex = UINT32_MAX;
 

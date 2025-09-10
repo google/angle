@@ -67,17 +67,14 @@ bool ShouldCombineAttributes(vk::Renderer *renderer,
         return false;
     }
     const vk::Format &vertexFormat = renderer->getFormat(attrib.format->id);
-    return !vertexFormat.getVertexLoadRequiresConversion(false) && binding.getDivisor() == 0 &&
+    return !vertexFormat.getVertexLoadRequiresConversion() && binding.getDivisor() == 0 &&
            ClientBindingAligned(attrib, binding.getStride(),
-                                vertexFormat.getVertexInputAlignment(false));
+                                vertexFormat.getVertexInputAlignment());
 }
 
-void WarnOnVertexFormatConversion(ContextVk *contextVk,
-                                  const vk::Format &vertexFormat,
-                                  bool compressed,
-                                  bool insertEventMarker)
+void WarnOnVertexFormatConversion(ContextVk *contextVk, const vk::Format &vertexFormat)
 {
-    if (!vertexFormat.getVertexLoadRequiresConversion(compressed))
+    if (!vertexFormat.getVertexLoadRequiresConversion())
     {
         return;
     }
@@ -86,7 +83,7 @@ void WarnOnVertexFormatConversion(ContextVk *contextVk,
         contextVk, GL_DEBUG_SEVERITY_LOW,
         "The Vulkan driver does not support vertex attribute format 0x%04X, emulating with 0x%04X",
         vertexFormat.getIntendedFormat().glInternalFormat,
-        vertexFormat.getActualBufferFormat(compressed).glInternalFormat);
+        vertexFormat.getActualBufferFormat().glInternalFormat);
 }
 
 angle::Result StreamVertexData(ContextVk *contextVk,
@@ -739,55 +736,41 @@ gl::VertexArray::DirtyBits VertexArrayVk::checkBufferForDirtyBits(
     const gl::Context *context,
     const gl::VertexArrayBufferBindingMask bufferBindingMask)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
     gl::VertexArray::DirtyBits dirtyBits;
 
-    // If vertex array was not observing while unbound, we need to check buffer's
-    // internal storage and take action if buffer storage has changed while not
-    // observing.
-    if (ANGLE_UNLIKELY(contextVk->getFeatures().compressVertexData.enabled))
+    const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
+    const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
+
+    // Element buffer is not in bindings yet, has to handle separately.
+    dirtyBits.set(gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
+
+    gl::VertexArrayBufferBindingMask bindingMask = bufferBindingMask;
+    bindingMask.reset(gl::kElementArrayBufferIndex);
+
+    for (size_t bindingIndex : bindingMask)
     {
-        // If compressVertexData.enabled, it also depends on buffer usage which may have changed.
-        uint64_t bits = bufferBindingMask.bits();
-        bits <<= gl::VertexArray::DIRTY_BIT_BINDING_0;
-        dirtyBits = gl::VertexArray::DirtyBits(bits);
-    }
-    else
-    {
-        const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
-        const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
-
-        // Element buffer is not in bindings yet, has to handle separately.
-        dirtyBits.set(gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
-
-        gl::VertexArrayBufferBindingMask bindingMask = bufferBindingMask;
-        bindingMask.reset(gl::kElementArrayBufferIndex);
-
-        for (size_t bindingIndex : bindingMask)
+        const gl::Buffer *bufferGL    = getVertexArrayBuffer(bindingIndex);
+        vk::BufferSerial bufferSerial = vk::GetImpl(bufferGL)->getBufferSerial();
+        gl::AttributesMask enabledAttributeMask =
+            bindings[bindingIndex].getBoundAttributesMask() & mState.getEnabledAttributesMask();
+        for (size_t attribIndex : enabledAttributeMask)
         {
-            const gl::Buffer *bufferGL    = getVertexArrayBuffer(bindingIndex);
-            vk::BufferSerial bufferSerial = vk::GetImpl(bufferGL)->getBufferSerial();
-            gl::AttributesMask enabledAttributeMask =
-                bindings[bindingIndex].getBoundAttributesMask() & mState.getEnabledAttributesMask();
-            for (size_t attribIndex : enabledAttributeMask)
+            ASSERT(attribs[attribIndex].enabled);
+            if (!bufferSerial.valid() || bufferSerial != mCurrentArrayBufferSerial[attribIndex])
             {
-                ASSERT(attribs[attribIndex].enabled);
-                if (!bufferSerial.valid() || bufferSerial != mCurrentArrayBufferSerial[attribIndex])
-                {
-                    dirtyBits.set(gl::VertexArray::DIRTY_BIT_BINDING_0 + bindingIndex);
-                    break;
-                }
+                dirtyBits.set(gl::VertexArray::DIRTY_BIT_BINDING_0 + bindingIndex);
+                break;
             }
         }
+    }
 
-        // buffer content may have changed when it became non-current. In that case we always assume
-        // buffer data has changed.
-        if (mContentsObserverBindingsMask.any())
-        {
-            uint64_t bits = mContentsObserverBindingsMask.bits();
-            bits <<= gl::VertexArray::DIRTY_BIT_BUFFER_DATA_0;
-            dirtyBits |= gl::VertexArray::DirtyBits(bits);
-        }
+    // buffer content may have changed when it became non-current. In that case we always assume
+    // buffer data has changed.
+    if (mContentsObserverBindingsMask.any())
+    {
+        uint64_t bits = mContentsObserverBindingsMask.bits();
+        bits <<= gl::VertexArray::DIRTY_BIT_BUFFER_DATA_0;
+        dirtyBits |= gl::VertexArray::DirtyBits(bits);
     }
 
     return dirtyBits;
@@ -860,20 +843,6 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         mLineLoopBufferLastIndex.reset();
         ANGLE_TRY(contextVk->onIndexBufferChange(mCurrentElementArrayBuffer));
         mDirtyLineLoopTranslation = true;
-    }
-
-    // Update mCurrentArrayBufferCompressed only if feature is enabled
-    if (ANGLE_UNLIKELY(renderer->getFeatures().compressVertexData.enabled))
-    {
-        for (size_t attribIndex : attribDirtyBits)
-        {
-            const vk::Format &vertexFormat = renderer->getFormat(attribs[attribIndex].format->id);
-            gl::Buffer *bufferGL = getVertexArrayBuffer(attribs[attribIndex].bindingIndex);
-            bool compress        = gl::IsStaticBufferUsage(bufferGL->getUsage()) &&
-                            vertexFormat.canCompressBufferData();
-            mCurrentArrayBufferCompressed.set(attribIndex, compress);
-        }
-        mCurrentArrayBufferCompressed &= mState.getEnabledAttributesMask();
     }
 
     // Update mStreamingVertexAttribsMask
@@ -980,7 +949,6 @@ angle::Result VertexArrayVk::updateActiveAttribInfo(ContextVk *contextVk)
 
         ANGLE_TRY(contextVk->onVertexAttributeChange(
             attribIndex, mCurrentArrayBufferStrides[attribIndex], binding.getDivisor(), format,
-            mCurrentArrayBufferCompressed.test(attribIndex),
             mCurrentArrayBufferRelativeOffsets[attribIndex], mCurrentArrayBuffers[attribIndex]));
 
         mCurrentArrayBufferFormats[attribIndex] = format;
@@ -1004,7 +972,6 @@ angle::Result VertexArrayVk::syncDirtyEnabledAttrib(ContextVk *contextVk,
     mCurrentArrayBufferRelativeOffsets[attribIndex] = attrib.relativeOffset;
     gl::Buffer *bufferGL                            = getVertexArrayBuffer(attrib.bindingIndex);
     bool isStreamingVertexAttrib                    = mStreamingVertexAttribsMask.test(attribIndex);
-    bool compressed = mCurrentArrayBufferCompressed.test(attribIndex);
 
     mNeedsConversionAttribMask.reset(attribIndex);
 
@@ -1020,7 +987,7 @@ angle::Result VertexArrayVk::syncDirtyEnabledAttrib(ContextVk *contextVk,
 
         bool needsConversion =
             hasAtLeastOneVertex &&
-            (vertexFormat.getVertexLoadRequiresConversion(compressed) || !bindingIsAligned);
+            (vertexFormat.getVertexLoadRequiresConversion() || !bindingIsAligned);
 
         if (ANGLE_UNLIKELY(needsConversion))
         {
@@ -1070,8 +1037,7 @@ angle::Result VertexArrayVk::syncDirtyEnabledAttrib(ContextVk *contextVk,
         {
             bool combined = ShouldCombineAttributes(renderer, attrib, binding);
             mCurrentArrayBufferStrides[attribIndex] =
-                combined ? binding.getStride()
-                         : vertexFormat.getActualBufferFormat(compressed).pixelBytes;
+                combined ? binding.getStride() : vertexFormat.getActualBufferFormat().pixelBytes;
         }
         else
         {
@@ -1130,21 +1096,19 @@ angle::Result VertexArrayVk::syncNeedsConversionAttrib(ContextVk *contextVk,
     ASSERT(bufferGL->getSize() > 0);
     BufferVk *bufferVk = vk::GetImpl(bufferGL);
 
-    bool compressed = mCurrentArrayBufferCompressed.test(attribIndex);
-
     const angle::Format &srcFormat = vertexFormat.getIntendedFormat();
     unsigned srcFormatSize         = srcFormat.pixelBytes;
     uint32_t srcStride             = binding.getStride() == 0 ? srcFormatSize : binding.getStride();
     bool bindingIsAligned =
         BindingIsAligned(srcFormat, binding.getOffset() + attrib.relativeOffset, srcStride);
 
-    const angle::Format &dstFormat = vertexFormat.getActualBufferFormat(compressed);
+    const angle::Format &dstFormat = vertexFormat.getActualBufferFormat();
     // Converted buffer is tightly packed
     uint32_t dstStride = dstFormat.pixelBytes;
 
-    ASSERT(vertexFormat.getVertexInputAlignment(compressed) <= vk::kVertexBufferAlignment);
+    ASSERT(vertexFormat.getVertexInputAlignment() <= vk::kVertexBufferAlignment);
 
-    WarnOnVertexFormatConversion(contextVk, vertexFormat, compressed, true);
+    WarnOnVertexFormatConversion(contextVk, vertexFormat);
 
     const VertexConversionBuffer::CacheKey cacheKey{
         srcFormat.id, srcStride, static_cast<size_t>(binding.getOffset()) + attrib.relativeOffset,
@@ -1177,12 +1141,6 @@ angle::Result VertexArrayVk::syncNeedsConversionAttrib(ContextVk *contextVk,
 
     if (conversion->dirty())
     {
-        if (compressed)
-        {
-            INFO() << "Compressing vertex data in buffer " << bufferGL->id().value << " from "
-                   << ToUnderlying(srcFormat.id) << " to " << ToUnderlying(dstFormat.id) << ".";
-        }
-
         if (bindingIsAligned)
         {
             ANGLE_TRY(
@@ -1194,7 +1152,7 @@ angle::Result VertexArrayVk::syncNeedsConversionAttrib(ContextVk *contextVk,
                                   "GPU stall due to vertex format conversion of unaligned data");
 
             ANGLE_TRY(convertVertexBufferCPU(contextVk, bufferVk, conversion, srcFormat, dstFormat,
-                                             vertexFormat.getVertexLoadFunction(compressed)));
+                                             vertexFormat.getVertexLoadFunction()));
         }
 
         // If conversion happens, the destination buffer stride may be changed,
@@ -1246,7 +1204,7 @@ gl::AttributesMask VertexArrayVk::mergeClientAttribsRange(
         {
             combinedIndexes.push_back(attribIndex);
         }
-        GLuint pixelBytes      = vertexFormat.getActualBufferFormat(false).pixelBytes;
+        GLuint pixelBytes                     = vertexFormat.getActualBufferFormat().pixelBytes;
         size_t destStride      = combined ? binding.getStride() : pixelBytes;
         uintptr_t startAddress = reinterpret_cast<uintptr_t>(attrib.pointer);
         mergeRangesOut[attribIndex].startAddr = startAddress;
@@ -1342,11 +1300,10 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
         const gl::VertexBinding &binding = bindings[attrib.bindingIndex];
 
         const vk::Format &vertexFormat = renderer->getFormat(attrib.format->id);
-        const angle::Format &dstFormat = vertexFormat.getActualBufferFormat(false);
+        const angle::Format &dstFormat = vertexFormat.getActualBufferFormat();
         GLuint pixelBytes              = dstFormat.pixelBytes;
 
-        const bool compressed = false;
-        ASSERT(vertexFormat.getVertexInputAlignment(false) <= vk::kVertexBufferAlignment);
+        ASSERT(vertexFormat.getVertexInputAlignment() <= vk::kVertexBufferAlignment);
 
         vk::BufferHelper *vertexDataBuffer = nullptr;
         const uint8_t *src                 = static_cast<const uint8_t *>(attrib.pointer);
@@ -1386,8 +1343,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
 
                         ANGLE_TRY(StreamVertexDataWithDivisor(
                             contextVk, vertexDataBuffer, src, bytesToAllocate, binding.getStride(),
-                            stride, vertexFormat.getVertexLoadFunction(compressed), divisor,
-                            numVertices));
+                            stride, vertexFormat.getVertexLoadFunction(), divisor, numVertices));
 
                         ANGLE_TRY(bufferVk->unmapReadAccessOnly(contextVk));
                     }
@@ -1403,8 +1359,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
                     size_t numVertices = instanceCount;
                     ANGLE_TRY(StreamVertexDataWithDivisor(
                         contextVk, vertexDataBuffer, src, bytesToAllocate, binding.getStride(),
-                        stride, vertexFormat.getVertexLoadFunction(compressed), divisor,
-                        numVertices));
+                        stride, vertexFormat.getVertexLoadFunction(), divisor, numVertices));
                 }
             }
             else
@@ -1419,7 +1374,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
 
                 ANGLE_TRY(StreamVertexData(contextVk, vertexDataBuffer, src, bytesToAllocate, 0,
                                            count, binding.getStride(),
-                                           vertexFormat.getVertexLoadFunction(compressed)));
+                                           vertexFormat.getVertexLoadFunction()));
             }
         }
         else if (attrib.pointer == nullptr)
@@ -1449,7 +1404,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
                     contextVk, attribBufferHelper[mergedAttribIdx],
                     (const uint8_t *)range.copyStartAddr, bytesToAllocate - destOffset, destOffset,
                     vertexCount, binding.getStride(),
-                    combined ? nullptr : vertexFormat.getVertexLoadFunction(compressed)));
+                    combined ? nullptr : vertexFormat.getVertexLoadFunction()));
             }
             vertexDataBuffer = attribBufferHelper[mergedAttribIdx];
             startOffset      = combined ? (uintptr_t)attrib.pointer - range.startAddr : 0;
@@ -1562,7 +1517,7 @@ angle::Result VertexArrayVk::updateDefaultAttrib(ContextVk *contextVk, size_t at
         setDefaultPackedInput(contextVk, attribIndex, &mCurrentArrayBufferFormats[attribIndex]);
 
         ANGLE_TRY(contextVk->onVertexAttributeChange(
-            attribIndex, 0, 0, mCurrentArrayBufferFormats[attribIndex], false, 0, nullptr));
+            attribIndex, 0, 0, mCurrentArrayBufferFormats[attribIndex], 0, nullptr));
     }
 
     return angle::Result::Continue;

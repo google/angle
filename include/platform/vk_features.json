@@ -636,14 +636,6 @@
             ]
         },
         {
-            "name": "compress_vertex_data",
-            "category": "Workarounds",
-            "description": [
-                "Compress vertex data to smaller data types when ",
-                "possible. Using this feature makes ANGLE non-conformant."
-            ]
-        },
-        {
             "name": "prefer_draw_clear_over_vkCmdClearAttachments",
             "category": "Workarounds",
             "description": [

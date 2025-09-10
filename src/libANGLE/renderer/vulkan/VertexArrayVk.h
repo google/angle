@@ -130,11 +130,6 @@ class VertexArrayVk : public VertexArrayImpl
         return mCurrentArrayBufferDivisors;
     }
 
-    const gl::AttributesMask &getCurrentArrayBufferCompressed() const
-    {
-        return mCurrentArrayBufferCompressed;
-    }
-
     // Update mCurrentElementArrayBuffer based on the vertex array state
     void updateCurrentElementArrayBuffer();
 
@@ -228,7 +223,6 @@ class VertexArrayVk : public VertexArrayImpl
     gl::BufferBindingMask mDivisorExceedMaxSupportedValueBindingMask;
 
     gl::AttributesMask mCurrentEnabledAttributesMask;
-    gl::AttributesMask mCurrentArrayBufferCompressed;
     // Track client and/or emulated attribs that we have to stream their buffer contents
     gl::AttributesMask mStreamingVertexAttribsMask;
     gl::AttributesMask mNeedsConversionAttribMask;

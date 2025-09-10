@@ -73,7 +73,6 @@ enum class Feature
     ClipCullDistanceBrokenWithPassthroughShaders,
     ClipSrcRegionForBlitFramebuffer,
     CompileJobIsThreadSafe,
-    CompressVertexData,
     ConvertLowpAndMediumpFloatUniformsTo16Bits,
     CopyIOSurfaceToNonIOSurfaceForReadOptimization,
     CopyTextureToBufferForReadOptimization,

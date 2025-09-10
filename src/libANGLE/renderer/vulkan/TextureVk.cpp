@@ -741,7 +741,7 @@ bool TextureVk::isFastUnpackPossible(const gl::Box &area,
     {
         return false;
     }
-    const angle::Format &bufferFormat = vkFormat.getActualBufferFormat(false);
+    const angle::Format &bufferFormat = vkFormat.getActualBufferFormat();
     const bool isCombinedDepthStencil = bufferFormat.hasDepthAndStencilBits();
     const bool isDepthXorStencil = bufferFormat.hasDepthOrStencilBits() && !isCombinedDepthStencil;
     const bool isCompatibleDepth = vkFormat.getIntendedFormat().depthBits == bufferFormat.depthBits;

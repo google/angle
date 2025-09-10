@@ -2617,8 +2617,6 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
             vertexArrayVk->getCurrentArrayBufferDivisors();
         const gl::AttribArray<GLuint> &bufferRelativeOffsets =
             vertexArrayVk->getCurrentArrayBufferRelativeOffsets();
-        const gl::AttributesMask &bufferCompressed =
-            vertexArrayVk->getCurrentArrayBufferCompressed();
         const gl::ComponentTypeMask vertexAttributesTypeMask =
             vertexArrayVk->getState().getVertexAttributesTypeMask();
 
@@ -2673,8 +2671,8 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
                 attribDesc.sType   = VK_STRUCTURE_TYPE_VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT;
                 attribDesc.binding = static_cast<uint32_t>(attribIndex);
                 attribDesc.format  = vk::GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
-                    this, bufferFormats[attribIndex], bufferCompressed[attribIndex],
-                    programAttribType, static_cast<uint32_t>(attribIndex));
+                    this, bufferFormats[attribIndex], programAttribType,
+                    static_cast<uint32_t>(attribIndex));
                 attribDesc.location = static_cast<uint32_t>(attribIndex);
                 attribDesc.offset   = bufferRelativeOffsets[attribIndex];
 
@@ -9316,7 +9314,6 @@ angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask enabledAtt
             mGraphicsPipelineDesc->updateVertexInput(
                 this, &mGraphicsPipelineTransition, static_cast<uint32_t>(attribIndex),
                 staticStride, divisor, vertexArray.getCurrentArrayBufferFormats()[attribIndex],
-                vertexArray.getCurrentArrayBufferCompressed()[attribIndex],
                 vertexArray.getCurrentArrayBufferRelativeOffsets()[attribIndex]);
         }
     }

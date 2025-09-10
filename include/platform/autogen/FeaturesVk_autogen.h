@@ -494,12 +494,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo compressVertexData = {
-        "compressVertexData",
-        FeatureCategory::VulkanWorkarounds,
-        &members,
-    };
-
     FeatureInfo preferDrawClearOverVkCmdClearAttachments = {
         "preferDrawClearOverVkCmdClearAttachments",
         FeatureCategory::VulkanWorkarounds,

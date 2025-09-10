@@ -148,7 +148,6 @@ Format::Format()
       mActualSampleOnlyImageFormatID(angle::FormatID::NONE),
       mActualRenderableImageFormatID(angle::FormatID::NONE),
       mActualBufferFormatID(angle::FormatID::NONE),
-      mActualCompressedBufferFormatID(angle::FormatID::NONE),
       mImageInitializerFunction(nullptr),
       mTextureLoadFunctions(),
       mRenderableTextureLoadFunctions(),
@@ -215,22 +214,11 @@ void Format::initBufferFallback(Renderer *renderer,
         mVertexLoadFunction           = info[i].vertexLoadFunction;
         mVertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
     }
-
-    if (renderer->getFeatures().compressVertexData.enabled && compressedStartIndex < numInfo)
-    {
-        int i = FindSupportedFormat(renderer, info, compressedStartIndex, numInfo,
-                                    HasFullBufferFormatSupport);
-
-        mActualCompressedBufferFormatID         = info[i].format;
-        mVkCompressedBufferFormatIsPacked       = info[i].vkFormatIsPacked;
-        mCompressedVertexLoadFunction           = info[i].vertexLoadFunction;
-        mCompressedVertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
-    }
 }
 
-size_t Format::getVertexInputAlignment(bool compressed) const
+size_t Format::getVertexInputAlignment() const
 {
-    const angle::Format &bufferFormat = getActualBufferFormat(compressed);
+    const angle::Format &bufferFormat = getActualBufferFormat();
     size_t pixelBytes                 = bufferFormat.pixelBytes;
     return mVkBufferFormatIsPacked ? pixelBytes : (pixelBytes / bufferFormat.channelCount);
 }

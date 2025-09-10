@@ -1819,7 +1819,6 @@ using PipelineStateBitSet   = angle::BitSetArray<angle::EnumSize<PipelineState>(
         uint32_t *vaDivisors   = &(*valuesOut)[PipelineState::VertexAttribDivisor];
         uint32_t *vaOffsets    = &(*valuesOut)[PipelineState::VertexAttribOffset];
         uint32_t *vaStrides    = &(*valuesOut)[PipelineState::VertexAttribStride];
-        uint32_t *vaCompressed = &(*valuesOut)[PipelineState::VertexAttribCompressed];
         uint32_t *vaShaderComponentType =
             &(*valuesOut)[PipelineState::VertexAttribShaderComponentType];
         for (uint32_t attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; ++attribIndex)
@@ -1828,7 +1827,6 @@ using PipelineStateBitSet   = angle::BitSetArray<angle::EnumSize<PipelineState>(
             vaDivisors[attribIndex]   = vertex.attribs[attribIndex].divisor;
             vaOffsets[attribIndex]    = vertex.attribs[attribIndex].offset;
             vaStrides[attribIndex]    = vertex.strides[attribIndex];
-            vaCompressed[attribIndex] = vertex.attribs[attribIndex].compressed;
 
             gl::ComponentType componentType = gl::GetComponentTypeMask(
                 gl::ComponentTypeMask(vertex.shaderAttribComponentType), attribIndex);
@@ -3361,7 +3359,6 @@ void GraphicsPipelineDesc::initDefaults(const ErrorContext *context,
         {
             SetBitField(packedAttrib.divisor, 0);
             SetBitField(packedAttrib.format, defaultFormat);
-            SetBitField(packedAttrib.compressed, 0);
             SetBitField(packedAttrib.offset, 0);
         }
         mVertexInput.vertex.shaderAttribComponentType = 0;
@@ -3721,7 +3718,6 @@ angle::FormatID patchVertexAttribComponentType(angle::FormatID format,
 VkFormat GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
     ErrorContext *context,
     angle::FormatID formatID,
-    bool compressed,
     const gl::ComponentType programAttribType,
     uint32_t attribIndex)
 {
@@ -3729,7 +3725,7 @@ VkFormat GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
     // Get the corresponding VkFormat for the attrib's format.
     const Format &format                = renderer->getFormat(formatID);
     const angle::Format &intendedFormat = format.getIntendedFormat();
-    VkFormat vkFormat                   = format.getActualBufferVkFormat(renderer, compressed);
+    VkFormat vkFormat                   = format.getActualBufferVkFormat(renderer);
 
     const gl::ComponentType attribType = GetVertexAttributeComponentType(
         intendedFormat.isPureInt(), intendedFormat.vertexAttribType);
@@ -3741,8 +3737,7 @@ VkFormat GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
         {
             angle::FormatID patchFormatID =
                 patchVertexAttribComponentType(formatID, programAttribType);
-            vkFormat =
-                renderer->getFormat(patchFormatID).getActualBufferVkFormat(renderer, compressed);
+            vkFormat = renderer->getFormat(patchFormatID).getActualBufferVkFormat(renderer);
         }
         else
         {
@@ -3756,7 +3751,7 @@ VkFormat GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
             ASSERT(intendedFormat.blueBits == convertedFormat.getIntendedFormat().blueBits);
             ASSERT(intendedFormat.alphaBits == convertedFormat.getIntendedFormat().alphaBits);
 
-            vkFormat = convertedFormat.getActualBufferVkFormat(renderer, compressed);
+            vkFormat = convertedFormat.getActualBufferVkFormat(renderer);
         }
         const Format &origFormat  = renderer->getFormat(GetFormatIDFromVkFormat(origVkFormat));
         const Format &patchFormat = renderer->getFormat(GetFormatIDFromVkFormat(vkFormat));
@@ -3821,8 +3816,8 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
                 gl::ComponentTypeMask(mVertexInput.vertex.shaderAttribComponentType), attribIndex);
 
             attribDesc.binding = attribIndex;
-            attribDesc.format  = getPipelineVertexInputStateFormat(
-                context, formatID, packedAttrib.compressed, programAttribType, attribIndex);
+            attribDesc.format   = getPipelineVertexInputStateFormat(context, formatID,
+                                                                    programAttribType, attribIndex);
             attribDesc.location = static_cast<uint32_t>(attribIndex);
             attribDesc.offset   = packedAttrib.offset;
 
@@ -4247,7 +4242,6 @@ void GraphicsPipelineDesc::updateVertexInput(ContextVk *contextVk,
                                              GLuint stride,
                                              GLuint divisor,
                                              angle::FormatID format,
-                                             bool compressed,
                                              GLuint relativeOffset)
 {
     PackedAttribDesc &packedAttrib = mVertexInput.vertex.attribs[attribIndex];
@@ -4260,7 +4254,6 @@ void GraphicsPipelineDesc::updateVertexInput(ContextVk *contextVk,
     }
 
     SetBitField(packedAttrib.format, format);
-    SetBitField(packedAttrib.compressed, compressed);
     SetBitField(packedAttrib.offset, relativeOffset);
 
     constexpr size_t kAttribBits = kPackedAttribDescSize * kBitsPerByte;

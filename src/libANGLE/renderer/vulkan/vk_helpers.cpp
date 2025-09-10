@@ -12554,7 +12554,7 @@ angle::Result BufferViewHelper::getView(ErrorContext *context,
     ASSERT(format.valid());
 
     vk::Renderer *renderer = context->getRenderer();
-    VkFormat viewVkFormat  = format.getActualBufferVkFormat(renderer, false);
+    VkFormat viewVkFormat  = format.getActualBufferVkFormat(renderer);
     if (viewVkFormatOut != nullptr)
     {
         *viewVkFormatOut = viewVkFormat;
@@ -12570,7 +12570,7 @@ angle::Result BufferViewHelper::getView(ErrorContext *context,
     // If the size is not a multiple of pixelBytes, remove the extra bytes.  The last element cannot
     // be read anyway, and this is a requirement of Vulkan (for size to be a multiple of format
     // texel block size).
-    const angle::Format &bufferFormat = format.getActualBufferFormat(false);
+    const angle::Format &bufferFormat = format.getActualBufferFormat();
     const GLuint pixelBytes           = bufferFormat.pixelBytes;
     VkDeviceSize size                 = mSize - mSize % pixelBytes;
 

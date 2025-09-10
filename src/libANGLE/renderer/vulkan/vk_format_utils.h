@@ -123,27 +123,19 @@ class Format final : private angle::NonCopyable
     // is used by vertex buffers as well as texture buffers.  Note that all formats required for
     // GL_EXT_texture_buffer have mandatory support for vertex buffers in Vulkan, so they won't be
     // using an emulated format.
-    const angle::Format &getActualBufferFormat(bool compressed) const
+    const angle::Format &getActualBufferFormat() const
     {
-        return angle::Format::Get(compressed ? mActualCompressedBufferFormatID
-                                             : mActualBufferFormatID);
+        return angle::Format::Get(mActualBufferFormatID);
     }
 
-    VkFormat getActualBufferVkFormat(const Renderer *renderer, bool compressed) const
+    VkFormat getActualBufferVkFormat(const Renderer *renderer) const
     {
-        return GetVkFormatFromFormatID(
-            renderer, compressed ? mActualCompressedBufferFormatID : mActualBufferFormatID);
+        return GetVkFormatFromFormatID(renderer, mActualBufferFormatID);
     }
 
-    VertexCopyFunction getVertexLoadFunction(bool compressed) const
-    {
-        return compressed ? mCompressedVertexLoadFunction : mVertexLoadFunction;
-    }
+    VertexCopyFunction getVertexLoadFunction() const { return mVertexLoadFunction; }
 
-    bool getVertexLoadRequiresConversion(bool compressed) const
-    {
-        return compressed ? mCompressedVertexLoadRequiresConversion : mVertexLoadRequiresConversion;
-    }
+    bool getVertexLoadRequiresConversion() const { return mVertexLoadRequiresConversion; }
 
     // |intendedGLFormat| always correponds to a valid GLenum type. For types that don't have a
     // corresponding GLenum we do our best to specify a GLenum that is "close".
@@ -157,16 +149,10 @@ class Format final : private angle::NonCopyable
         return mActualSampleOnlyImageFormatID != mActualRenderableImageFormatID;
     }
 
-    bool canCompressBufferData() const
-    {
-        return mActualCompressedBufferFormatID != angle::FormatID::NONE &&
-               mActualBufferFormatID != mActualCompressedBufferFormatID;
-    }
-
     // Returns the alignment for a buffer to be used with the vertex input stage in Vulkan. This
     // calculation is listed in the Vulkan spec at the end of the section 'Vertex Input
     // Description'.
-    size_t getVertexInputAlignment(bool compressed) const;
+    size_t getVertexInputAlignment() const;
 
   private:
     friend class FormatTable;
@@ -186,7 +172,6 @@ class Format final : private angle::NonCopyable
     angle::FormatID mActualSampleOnlyImageFormatID;
     angle::FormatID mActualRenderableImageFormatID;
     angle::FormatID mActualBufferFormatID;
-    angle::FormatID mActualCompressedBufferFormatID;
 
     InitializeTextureDataFunction mImageInitializerFunction;
     LoadFunctionMap mTextureLoadFunctions;

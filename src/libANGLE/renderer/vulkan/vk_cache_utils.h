@@ -507,8 +507,8 @@ struct PackedAttribDesc final
     uint8_t format;
     uint8_t divisor;
     uint16_t offset : kAttributeOffsetMaxBits;
-    uint16_t compressed : 1;
 };
+static_assert(kAttributeOffsetMaxBits == 16, "Keep PackedAttribDesc struct tightly packed");
 
 constexpr size_t kPackedAttribDescSize = sizeof(PackedAttribDesc);
 static_assert(kPackedAttribDescSize == 4, "Size mismatch");
@@ -949,7 +949,6 @@ class GraphicsPipelineDesc final
                            GLuint stride,
                            GLuint divisor,
                            angle::FormatID format,
-                           bool compressed,
                            GLuint relativeOffset);
     void setVertexShaderComponentTypes(gl::AttributesMask activeAttribLocations,
                                        gl::ComponentTypeMask componentTypeMask);
@@ -1113,7 +1112,6 @@ class GraphicsPipelineDesc final
 
     static VkFormat getPipelineVertexInputStateFormat(ErrorContext *context,
                                                       angle::FormatID formatID,
-                                                      bool compressed,
                                                       const gl::ComponentType programAttribType,
                                                       uint32_t attribIndex);
 

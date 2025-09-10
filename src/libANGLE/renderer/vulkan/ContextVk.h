@@ -418,7 +418,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                           GLuint stride,
                                           GLuint divisor,
                                           angle::FormatID format,
-                                          bool compressed,
                                           GLuint relativeOffset,
                                           const vk::BufferHelper *vertexBuffer);
 
@@ -1754,7 +1753,6 @@ ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex
                                                               GLuint stride,
                                                               GLuint divisor,
                                                               angle::FormatID format,
-                                                              bool compressed,
                                                               GLuint relativeOffset,
                                                               const vk::BufferHelper *vertexBuffer)
 {
@@ -1768,8 +1766,7 @@ ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex
         // Set divisor to 1 for attribs with emulated divisor
         mGraphicsPipelineDesc->updateVertexInput(
             this, &mGraphicsPipelineTransition, static_cast<uint32_t>(attribIndex), staticStride,
-            divisor > mRenderer->getMaxVertexAttribDivisor() ? 1 : divisor, format, compressed,
-            relativeOffset);
+            divisor > mRenderer->getMaxVertexAttribDivisor() ? 1 : divisor, format, relativeOffset);
     }
 
     mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
