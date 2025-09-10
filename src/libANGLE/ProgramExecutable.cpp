@@ -581,6 +581,11 @@ void GetInterfaceBlockName(const UniformBlockIndex index,
 
     const auto &block = list[index.value];
 
+    if (length)
+    {
+        *length = 0;
+    }
+
     if (bufSize > 0)
     {
         std::string blockName = block.name;
@@ -795,10 +800,10 @@ void ProgramExecutable::reset()
 
     mPod.fragmentInoutIndices.reset();
 
-    mPod.hasClipDistance         = false;
-    mPod.hasDiscard              = false;
-    mPod.enablesPerSampleShading = false;
-    mPod.hasYUVOutput            = false;
+    mPod.hasClipDistance           = false;
+    mPod.hasDiscard                = false;
+    mPod.enablesPerSampleShading   = false;
+    mPod.hasYUVOutput              = false;
     mPod.hasDepthInputAttachment   = false;
     mPod.hasStencilInputAttachment = false;
 
@@ -1652,7 +1657,9 @@ bool ProgramExecutable::linkValidateOutputVariables(
 
         // Don't store outputs for gl_FragDepth, gl_FragColor, etc.
         if (outputVariable.isBuiltIn())
+        {
             continue;
+        }
 
         int fixedLocation = GetOutputLocationForLink(fragmentOutputLocations, outputVariable);
         if (fixedLocation == -1)
@@ -1703,7 +1710,9 @@ bool ProgramExecutable::linkValidateOutputVariables(
 
         // Don't store outputs for gl_FragDepth, gl_FragColor, etc.
         if (outputVariable.isBuiltIn())
+        {
             continue;
+        }
 
         AssignOutputIndex(fragmentOutputIndices, outputVariable);
         ASSERT(outputVariable.pod.index == 0 || outputVariable.pod.index == 1);
@@ -1962,7 +1971,7 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps)
     {
         auto &uniform = mUniforms[index];
 
-        uniform.pod.blockArrayStride               = uniform.isArray() ? 4 : 0;
+        uniform.pod.blockArrayStride = uniform.isArray() ? 4 : 0;
         uniform.pod.blockOffset =
             uniform.getOffset() + uniform.pod.blockArrayStride * uniform.getOuterArrayOffset();
         uniform.pod.blockMatrixStride              = 0;
@@ -2368,17 +2377,17 @@ void ProgramExecutable::getActiveAttribute(GLuint index,
                                            GLenum *type,
                                            GLchar *name) const
 {
+    if (length)
+    {
+        *length = 0;
+    }
+
     if (mProgramInputs.empty())
     {
         // Program is not successfully linked
         if (bufsize > 0)
         {
             name[0] = '\0';
-        }
-
-        if (length)
-        {
-            *length = 0;
         }
 
         *type = GL_NONE;
@@ -3002,7 +3011,9 @@ GLsizei ProgramExecutable::clampUniformCount(const VariableLocation &locationInf
                                              const T *v)
 {
     if (count == 1)
+    {
         return 1;
+    }
 
     const LinkedUniform &linkedUniform = mUniforms[locationInfo.index];
 
