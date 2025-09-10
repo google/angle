@@ -6084,19 +6084,22 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // To avoid memory bloating due to using pipeline caches per program, the pipeline cache in the
     // renderer can be used.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferGlobalPipelineCache, isNvidia || (isAMD && !isRADV));
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferGlobalPipelineCache,
+                            isNvidia || (isAMD && !isRADV) || isSamsung);
 
     // Whether the pipeline caches should merge into the global pipeline cache.  This should only be
     // enabled on platforms if:
     //
+    // - preferGlobalPipelineCache is not enabled
     // - VK_EXT_graphics_pipeline_library is not supported.  In that case, only the program's cache
     //   used during warm up is merged into the global cache for later monolithic pipeline creation.
     // - VK_EXT_graphics_pipeline_library is supported, monolithic pipelines are preferred, and the
     //   driver is able to reuse blobs from partial pipelines when creating monolithic pipelines.
     ANGLE_FEATURE_CONDITION(&mFeatures, mergeProgramPipelineCachesToGlobalCache,
-                            !mFeatures.supportsGraphicsPipelineLibrary.enabled ||
-                                (mFeatures.preferMonolithicPipelinesOverLibraries.enabled &&
-                                 libraryBlobsAreReusedByMonolithicPipelines));
+                            !mFeatures.preferGlobalPipelineCache.enabled &&
+                                (!mFeatures.supportsGraphicsPipelineLibrary.enabled ||
+                                 (mFeatures.preferMonolithicPipelinesOverLibraries.enabled &&
+                                  libraryBlobsAreReusedByMonolithicPipelines)));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, enableAsyncPipelineCacheCompression, true);
 
@@ -6572,7 +6575,6 @@ angle::Result Renderer::getPipelineCache(vk::ErrorContext *context,
 
     angle::SimpleMutex *pipelineCacheMutex =
         context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled ||
-                context->getFeatures().preferGlobalPipelineCache.enabled ||
                 context->getFeatures().preferMonolithicPipelinesOverLibraries.enabled
             ? &mPipelineCacheMutex
             : nullptr;

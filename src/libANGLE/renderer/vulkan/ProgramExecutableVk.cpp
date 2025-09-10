@@ -903,7 +903,7 @@ angle::Result ProgramExecutableVk::getPipelineCacheWarmUpTasks(
     vk::RenderPass compatibleRenderPass;
 
     WarmUpTaskCommon prepForWarmUpContext(renderer);
-    ANGLE_TRY(prepareForWarmUpPipelineCache(&prepForWarmUpContext, pipelineRobustness,
+    ANGLE_TRY(preparePipelineCacheForWarmUp(&prepForWarmUpContext, pipelineRobustness,
                                             pipelineProtectedAccess, subset, &isCompute,
                                             &graphicsPipelineDesc, &compatibleRenderPass));
 
@@ -959,7 +959,7 @@ angle::Result ProgramExecutableVk::getPipelineCacheWarmUpTasks(
     return angle::Result::Continue;
 }
 
-angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
+angle::Result ProgramExecutableVk::preparePipelineCacheForWarmUp(
     vk::ErrorContext *context,
     vk::PipelineRobustness pipelineRobustness,
     vk::PipelineProtectedAccess pipelineProtectedAccess,
@@ -973,7 +973,18 @@ angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
     ASSERT(renderPassOut);
     ASSERT(context->getFeatures().warmUpPipelineCacheAtLink.enabled);
 
-    ANGLE_TRY(ensurePipelineCacheInitialized(context));
+    // Ensure pipeline cache is initialized
+    if (context->getFeatures().preferGlobalPipelineCache.enabled)
+    {
+        // Make sure Renderer's pipeline cache is initialized
+        vk::PipelineCacheAccess unused;
+        ANGLE_TRY(context->getRenderer()->getPipelineCache(context, &unused));
+    }
+    else
+    {
+        // Make sure ProgramExecutableVk's pipeline cache is initialized
+        ANGLE_TRY(ensurePipelineCacheInitialized(context));
+    }
 
     *isComputeOut        = false;
     const bool isCompute = mExecutable->hasLinkedShaderStage(gl::ShaderType::Compute);
