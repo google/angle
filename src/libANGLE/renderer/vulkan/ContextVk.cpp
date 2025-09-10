@@ -2619,6 +2619,8 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
             vertexArrayVk->getCurrentArrayBufferRelativeOffsets();
         const gl::AttributesMask &bufferCompressed =
             vertexArrayVk->getCurrentArrayBufferCompressed();
+        const gl::ComponentTypeMask vertexAttributesTypeMask =
+            vertexArrayVk->getState().getVertexAttributesTypeMask();
 
         gl::AttribVector<VkVertexInputBindingDescription2EXT> bindingDescs;
         gl::AttribVector<VkVertexInputAttributeDescription2EXT> attributeDescs;
@@ -2632,11 +2634,8 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
 
         for (size_t attribIndex : activeAttribLocations)
         {
-            const angle::Format &intendedFormat =
-                mRenderer->getFormat(bufferFormats[attribIndex]).getIntendedFormat();
-
-            const gl::ComponentType attribType = GetVertexAttributeComponentType(
-                intendedFormat.isPureInt(), intendedFormat.vertexAttribType);
+            const gl::ComponentType attribType =
+                gl::GetComponentTypeMask(vertexAttributesTypeMask, attribIndex);
             const gl::ComponentType programAttribType =
                 gl::GetComponentTypeMask(programAttribsTypeMask, attribIndex);
 
