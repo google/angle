@@ -3407,6 +3407,79 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
 }
 
+// Test that textureLod in a discontinuous loop does not generate HLSL loop unrolling errors.
+TEST_P(GLSLTest_ES3, TextureLODShadowSamplerInDiscontinuousLoop)
+{
+    constexpr char kVS[] =
+        R"(#version 300 es
+out float vLoop;
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    vLoop = 10.0;
+})";
+
+    constexpr char kFS0[] =
+        R"(#version 300 es
+precision highp float;
+precision highp sampler2DShadow;
+
+uniform sampler2DShadow shadowMap;
+in float vLoop;
+out vec4 fragColor;
+
+void main()
+{
+    int loopCount = int(vLoop); /* Each fragment may have a different value here.
+                                   This makes it invalid to use gradient functions
+                                   inside the loop! */
+
+    float shadowSum = 0.0;
+    int i = 0;
+    while (i < loopCount)
+    {
+        float x = float(i) + 1.0; /* Makes sure sample operation cannot be optimized
+                                     to be outside of the loop */
+        shadowSum += textureLod(shadowMap, vec3(1.0 / x, 1.0 / x, 0.5), 0.0);
+        ++i;
+    }
+
+    fragColor = vec4(shadowSum, shadowSum, shadowSum, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program0, kVS, kFS0);
+    ASSERT_TRUE(program0.valid());
+
+    constexpr char kFS1[] =
+        R"(#version 300 es
+precision highp float;
+precision highp sampler2DShadow;
+
+uniform sampler2DShadow u_testSampler;
+
+out vec4 fragOut4f;
+
+void main() {
+    float a = texture(u_testSampler, vec3(10.0, 10.0, 0.5));
+    for(;;) {
+        if (a != 10.0) {
+            a = textureLod(u_testSampler, vec3(4.0, 4.0, 0.1), 0.0);
+            break;
+        }
+        if (a != 4.0) {
+            a = textureLod(u_testSampler, vec3(10.0, 10.0, 0.4), 0.0);
+            break;
+        }
+        fragOut4f = vec4(0.0);
+        return;
+    }
+    fragOut4f = vec4(a);
+})";
+
+    ANGLE_GL_PROGRAM(program1, kVS, kFS1);
+    ASSERT_TRUE(program1.valid());
+}
+
 // Test that == and != for structs and array types work.
 TEST_P(GLSLTest_ES31, StructAndArrayEqualOperator)
 {

@@ -114,8 +114,12 @@ class PullGradient : public TIntermTraverser
             }
             else if (BuiltInGroup::IsBuiltIn(node->getOp()) && !BuiltInGroup::IsMath(node->getOp()))
             {
+                // Texture sample functions that operate on shadow samplers bottom out in the HLSL
+                // SampleCmp function which does not have an LOD parameter. These functions need
+                // gradients.
                 if (mGradientBuiltinFunctions.find(node->getFunction()->name()) !=
-                    mGradientBuiltinFunctions.end())
+                        mGradientBuiltinFunctions.end() ||
+                    isShadowSamplerTextureCall(node))
                 {
                     onGradient();
                 }
@@ -126,6 +130,23 @@ class PullGradient : public TIntermTraverser
     }
 
   private:
+    bool isShadowSamplerTextureCall(TIntermAggregate *node) const
+    {
+        if (!node->getFunction())
+        {
+            return false;
+        }
+
+        if (node->getFunction()->name() != "textureLod")
+        {
+            return false;
+        }
+
+        TIntermSequence *arguments = node->getSequence();
+        TBasicType samplerType     = (*arguments)[0]->getAsTyped()->getType().getBasicType();
+        return IsShadowSampler(samplerType);
+    }
+
     MetadataList *mMetadataList;
     ASTMetadataHLSL *mMetadata;
     size_t mIndex;
