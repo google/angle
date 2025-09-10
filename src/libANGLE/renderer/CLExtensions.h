@@ -32,6 +32,8 @@ struct CLExtensions
     using ExternalMemoryHandleFixedVector =
         angle::FixedVector<ExternalMemoryHandleType,
                            static_cast<int>(cl::ExternalMemoryHandle::EnumCount)>;
+    using SupportedDepthOrderTypes = angle::PackedEnumBitSet<cl::ImageChannelType>;
+
     bool populateSupportedExternalMemoryHandleTypes(ExternalMemoryHandleBitset supportedHandles);
 
     std::string versionStr;
@@ -48,6 +50,7 @@ struct CLExtensions
     ExternalMemoryHandleBitset externalMemoryHandleSupport;
     // keep an "OpenCL list" version of supported external memory types
     ExternalMemoryHandleFixedVector externalMemoryHandleSupportList;
+    SupportedDepthOrderTypes supportedDepthOrderTypes;
 
     // These Khronos extension names must be returned by all devices that support OpenCL 1.1.
     bool khrByteAddressableStore       = false;  // cl_khr_byte_addressable_store
