@@ -1107,8 +1107,6 @@ angle::Result VertexArrayVk::syncDirtyDisabledAttrib(ContextVk *contextVk,
     mCurrentArrayBufferDivisors[attribIndex]        = 0;
     mCurrentArrayBufferRelativeOffsets[attribIndex] = 0;
 
-    setDefaultPackedInput(contextVk, attribIndex, &mCurrentArrayBufferFormats[attribIndex]);
-
     mCurrentEnabledAttributesMask.reset(attribIndex);
     return angle::Result::Continue;
 }
