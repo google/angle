@@ -8946,6 +8946,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
             std::string proto = "void SetupReplay(void)";
 
             std::stringstream out;
+            std::stringstream outMainContextSetupCall;
 
             out << proto << "\n";
             out << "{\n";
@@ -8972,10 +8973,11 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 {
                     if (usesMidExecutionCapture())
                     {
-                        // Setup the presentation (this) context first.
-                        out << "    " << FmtSetupFunction(kNoPartId, context->id(), FuncUsage::Call)
+                        // Setup the presentation (this) context last
+                        outMainContextSetupCall
+                            << "    " << FmtSetupFunction(kNoPartId, context->id(), FuncUsage::Call)
                             << ";\n";
-                        out << "\n";
+                        outMainContextSetupCall << "\n";
                     }
 
                     continue;
@@ -9002,6 +9004,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                     }
                 }
             }
+            out << outMainContextSetupCall.str();
 
             // If there are other contexts that were initialized, we need to make the main context
             // current again.
