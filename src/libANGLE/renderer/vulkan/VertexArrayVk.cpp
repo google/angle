@@ -947,7 +947,7 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         ANGLE_TRY(syncDirtyDisabledAttrib(contextVk, attribs[attribIndex], attribIndex));
     }
 
-    ANGLE_TRY(contextVk->onVertexArrayChange(enabledAttribDirtyBits, disabledAttribDirtyBits));
+    ANGLE_TRY(contextVk->onVertexArrayChange(enabledAttribDirtyBits));
 
     attribBits->fill(gl::VertexArray::DirtyAttribBits());
     bindingBits->fill(gl::VertexArray::DirtyBindingBits());

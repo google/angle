@@ -413,8 +413,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mGraphicsDirtyBits |= kIndexAndVertexDirtyBits;
     }
 
-    angle::Result onVertexArrayChange(const gl::AttributesMask enabledAttribDirtyBits,
-                                      const gl::AttributesMask disabledAttribDirtyBits);
+    angle::Result onVertexArrayChange(const gl::AttributesMask enabledAttribDirtyBits);
     angle::Result onVertexAttributeChange(size_t attribIndex,
                                           GLuint stride,
                                           GLuint divisor,

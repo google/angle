@@ -9291,18 +9291,15 @@ angle::Result ContextVk::ensureInterfacePipelineCache()
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask enabledAttribDirtyBits,
-                                             const gl::AttributesMask disabledAttribDirtyBits)
+angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask enabledAttribDirtyBits)
 {
     const VertexArrayVk &vertexArray = *getVertexArray();
 
     if (ANGLE_UNLIKELY(!getFeatures().supportsVertexInputDynamicState.enabled))
     {
-        const gl::AttributesMask attribDirtyBits = enabledAttribDirtyBits | disabledAttribDirtyBits;
-
         invalidateCurrentGraphicsPipeline();
 
-        for (size_t attribIndex : attribDirtyBits)
+        for (size_t attribIndex : enabledAttribDirtyBits)
         {
             const GLuint staticStride =
                 mRenderer->getFeatures().useVertexInputBindingStrideDynamicState.enabled
