@@ -5801,7 +5801,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     bool isBGR565Renderable = hasImageFormatFeatureBits(angle::FormatID::B5G6R5_UNORM,
                                                         VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
     ANGLE_FEATURE_CONDITION(&mFeatures, preferBGR565ToRGB565,
-                            isBGR565Renderable && isQualcommProprietary && !isPixel4);
+                            isBGR565Renderable && isQualcomm && !isPixel4);
 
     // Emit SPIR-V 1.4 when supported.  The following old drivers have various bugs with SPIR-V 1.4:
     //
