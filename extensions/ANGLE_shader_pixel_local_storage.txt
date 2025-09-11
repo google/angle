@@ -520,6 +520,14 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         associated pixel local storage plane on the current draw framebuffer, as
         enumerated in Table X.3.
 
+      * INVALID_OPERATION is generated if a draw is issued while either of the
+        following two constraints are violated:
+
+        (a) If the fragment shader declares index zero output, then attachment
+        zero must be present, and have a compatible numeric type.
+
+        (b) If attachment zero is present, it must be enabled.
+
     Because of the "implementation-dependent" clause of the framebuffer
     completeness test, and because a pixel local storage implementation may add
     additional attachments to the underlying framebuffer object, it is strongly
