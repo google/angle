@@ -587,11 +587,7 @@ OperatorInfo OutputWGSLTraverser::useOperatorAndGetInfo(TIntermNode *current,
         case TOperator::EOpNegative:
             return {"-"};
         case TOperator::EOpPositive:
-            if (argType0->isMatrix())
-            {
-                return {""};
-            }
-            return {"+"};
+            return {""};
         case TOperator::EOpLogicalNot:
             return {"!"};
         // Component-wise not done with normal prefix unary operator in WGSL:
