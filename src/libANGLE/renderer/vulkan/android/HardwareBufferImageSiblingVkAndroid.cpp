@@ -155,6 +155,36 @@ HardwareBufferImageSiblingVkAndroid::HardwareBufferImageSiblingVkAndroid(EGLClie
 
 HardwareBufferImageSiblingVkAndroid::~HardwareBufferImageSiblingVkAndroid() {}
 
+void CheckFormatSupport(
+    vk::Renderer *renderer,
+    const VkAndroidHardwareBufferFormatPropertiesANDROID &bufferFormatProperties,
+    const uint64_t ahbUsage,
+    bool *externalFormatHasNecessaryFormatSupport,
+    bool *formatHasNecessaryFormatSupport)
+{
+    *externalFormatHasNecessaryFormatSupport =
+        ((bufferFormatProperties.formatFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT) != 0);
+
+    if (((ahbUsage & AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER) != 0) &&
+        (bufferFormatProperties.formatFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT) == 0)
+    {
+        *externalFormatHasNecessaryFormatSupport = false;
+    }
+
+    if (bufferFormatProperties.format == VK_FORMAT_UNDEFINED)
+    {
+        *formatHasNecessaryFormatSupport = false;
+    }
+    else
+    {
+        angle::FormatID formatID = vk::GetFormatIDFromVkFormat(bufferFormatProperties.format);
+        *formatHasNecessaryFormatSupport =
+            (ahbUsage & AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER) != 0
+                ? HasFullTextureFormatSupport(renderer, formatID)
+                : HasNonRenderableTextureFormatSupport(renderer, formatID);
+    }
+}
+
 // Static
 egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
     vk::Renderer *renderer,
@@ -209,32 +239,31 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
     angle::android::GetANativeWindowBufferProperties(windowBuffer, &width, &height, &depth,
                                                      &pixelFormat, &usage);
 
-    if (bufferFormatProperties.format == VK_FORMAT_UNDEFINED)
+    //  https://registry.khronos.org/vulkan/specs/latest/man/html/VkAndroidHardwareBufferFormatPropertiesANDROID.html
+    //  "externalFormat [...] must not be zero."
+    ASSERT(bufferFormatProperties.externalFormat != 0);
+
+    bool externalFormatHasNecessaryFormatSupport;
+    bool formatHasNecessaryFormatSupport;
+
+    CheckFormatSupport(renderer, bufferFormatProperties, usage,
+                       &externalFormatHasNecessaryFormatSupport, &formatHasNecessaryFormatSupport);
+
+    if (!externalFormatHasNecessaryFormatSupport &&
+        (bufferFormatProperties.format == VK_FORMAT_UNDEFINED))
     {
-        ASSERT(bufferFormatProperties.externalFormat != 0);
-        // We must have an external format, check that it supports texture sampling
-        if (!(bufferFormatProperties.formatFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT))
-        {
-            std::ostringstream err;
-            err << "Sampling from AHardwareBuffer externalFormat 0x" << std::hex
-                << bufferFormatProperties.externalFormat << " is unsupported.";
-            return egl::Error(EGL_BAD_PARAMETER, err.str());
-        }
+        std::ostringstream err;
+        err << "Sampling from AHardwareBuffer externalFormat 0x" << std::hex
+            << bufferFormatProperties.externalFormat << " is unsupported.";
+        return egl::Error(EGL_BAD_PARAMETER, err.str());
     }
-    else
+
+    if (!externalFormatHasNecessaryFormatSupport && !formatHasNecessaryFormatSupport)
     {
-        angle::FormatID formatID = vk::GetFormatIDFromVkFormat(bufferFormatProperties.format);
-        const bool hasNecessaryFormatSupport =
-            (usage & AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER) != 0
-                ? HasFullTextureFormatSupport(renderer, formatID)
-                : HasNonRenderableTextureFormatSupport(renderer, formatID);
-        if (!hasNecessaryFormatSupport)
-        {
-            std::ostringstream err;
-            err << "AHardwareBuffer format " << bufferFormatProperties.format
-                << " does not support enough features to use as a texture.";
-            return egl::Error(EGL_BAD_PARAMETER, err.str());
-        }
+        std::ostringstream err;
+        err << "AHardwareBuffer format " << bufferFormatProperties.format
+            << " does not support enough features to use as a texture.";
+        return egl::Error(EGL_BAD_PARAMETER, err.str());
     }
 
     if (attribs.getAsInt(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE) == EGL_TRUE)
@@ -298,7 +327,19 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     ANGLE_VK_TRY(displayVk, vkGetAndroidHardwareBufferPropertiesANDROID(device, hardwareBuffer,
                                                                         &bufferProperties));
 
-    const bool isExternal = bufferFormatProperties.format == VK_FORMAT_UNDEFINED;
+    bool externalFormatHasNecessaryFormatSupport;
+    bool formatHasNecessaryFormatSupport;
+
+    CheckFormatSupport(renderer, bufferFormatProperties, mUsage,
+                       &externalFormatHasNecessaryFormatSupport, &formatHasNecessaryFormatSupport);
+
+    ASSERT(formatHasNecessaryFormatSupport || externalFormatHasNecessaryFormatSupport);
+
+    const bool isExternal =
+        externalFormatHasNecessaryFormatSupport && !formatHasNecessaryFormatSupport;
+
+    ANGLE_VK_CHECK(displayVk, isExternal || bufferFormatProperties.format != VK_FORMAT_UNDEFINED,
+                   VK_ERROR_INITIALIZATION_FAILED);
 
     VkExternalFormatANDROID externalFormat = {};
     externalFormat.sType                   = VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID;
