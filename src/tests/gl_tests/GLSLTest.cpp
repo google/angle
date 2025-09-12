@@ -539,6 +539,9 @@ class GLSLTestNoValidation : public GLSLTest
     GLSLTestNoValidation() { setNoErrorEnabled(true); }
 };
 
+class GLSLTest_ClampPointSize : public GLSLTest
+{};
+
 class GLSLTest_ES3 : public GLSLTest
 {};
 
@@ -4213,6 +4216,32 @@ void main() {
     f(green);
 })";
     CompileShader(GL_FRAGMENT_SHADER, kFS);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests that a vertex shader retrieving values from a 2D texture to
+// use as an offset for gl_PointSize successfully compiles.
+// https://issues.angleproject.org/444653099
+TEST_P(GLSLTest_ClampPointSize, MonomorphizeMainPrototypeNoCrash)
+{
+    constexpr char kVS[] = R"(
+attribute vec2 a_texCoord;
+struct Wrapper{
+    sampler2D sampler;
+};
+float getRedValue(Wrapper wrapper){
+    return texture2D(wrapper.sampler, a_texCoord).r;
+}
+uniform Wrapper u_wrappedSampler;
+
+void main();
+void main(){
+    float offset = getRedValue(u_wrappedSampler);
+    gl_PointSize = 10.0 + offset;
+    return;
+}
+)";
+    CompileShader(GL_VERTEX_SHADER, kVS);
     ASSERT_GL_NO_ERROR();
 }
 
@@ -21569,6 +21598,11 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTestLoops);
 ANGLE_INSTANTIATE_TEST_ES3(GLSLTestLoops);
 
 ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ClampPointSize);
+ANGLE_INSTANTIATE_TEST_ES2_AND(GLSLTest_ClampPointSize,
+                               ES2_OPENGL().enable(Feature::ClampPointSize),
+                               ES2_VULKAN().enable(Feature::ClampPointSize));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLTest);
