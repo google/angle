@@ -3655,7 +3655,7 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
     return result;
 }
 
-angle::FormatID patchVertexAttribComponentType(angle::FormatID format,
+angle::FormatID PatchVertexAttribComponentType(angle::FormatID format,
                                                gl::ComponentType vsInputType)
 {
     const gl::VertexFormat &vertexFormat = gl::GetVertexFormatFromID(format);
@@ -3736,7 +3736,7 @@ VkFormat GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
         if (attribType == gl::ComponentType::Float || programAttribType == gl::ComponentType::Float)
         {
             angle::FormatID patchFormatID =
-                patchVertexAttribComponentType(formatID, programAttribType);
+                PatchVertexAttribComponentType(formatID, programAttribType);
             vkFormat = renderer->getFormat(patchFormatID).getActualBufferVkFormat(renderer);
         }
         else

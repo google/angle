@@ -902,6 +902,9 @@ struct GraphicsPipelineShadersInfo final
     friend class GraphicsPipelineDesc;
 };
 
+angle::FormatID PatchVertexAttribComponentType(angle::FormatID format,
+                                               gl::ComponentType vsInputType);
+
 // State changes are applied through the update methods. Each update method can also have a
 // sibling method that applies the update without marking a state transition. The non-transition
 // update methods are used for internal shader pipelines. Not every non-transition update method
