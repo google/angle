@@ -1779,7 +1779,7 @@ angle::Result UtilsVk::ensureSamplersInitialized(ContextVk *contextVk)
     samplerInfo.compareEnable           = VK_FALSE;
     samplerInfo.compareOp               = VK_COMPARE_OP_ALWAYS;
     samplerInfo.minLod                  = 0;
-    samplerInfo.maxLod                  = 0;
+    samplerInfo.maxLod                  = gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS - 1;
     samplerInfo.borderColor             = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK;
     samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
@@ -2881,6 +2881,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     ANGLE_TRY(ensureBlitResolveResourcesInitialized(contextVk));
 
     bool isResolve = src->getSamples() > 1;
+    bool isDepthOrStencil = src->isDepthOrStencil();
 
     BlitResolveShaderParams shaderParams;
     // Note: adjustments made for pre-rotatation in FramebufferVk::blit() affect these
@@ -2897,6 +2898,8 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     shaderParams.stretch[1]      = params.stretch[1];
     shaderParams.invSrcExtent[0] = 1.0f / params.srcExtents[0];
     shaderParams.invSrcExtent[1] = 1.0f / params.srcExtents[1];
+    // Depth/stencil copy views are specific to the level, so no need to offset them further.
+    shaderParams.srcMip          = isDepthOrStencil ? 0 : params.srcMip.get();
     shaderParams.srcLayer        = params.srcLayer;
     shaderParams.samples         = src->getSamples();
     shaderParams.invSamples      = 1.0f / shaderParams.samples;
@@ -3361,7 +3364,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     shaderParams.dstIsAlpha       = dstIntendedFormat.isLUMA() && dstIntendedFormat.alphaBits > 0;
     shaderParams.dstDefaultChannelsMask =
         GetFormatDefaultChannelMask(dst->getIntendedFormat(), dst->getActualFormat());
-    shaderParams.srcMip       = params.srcMip;
+    shaderParams.srcMip         = params.srcMip.get();
     shaderParams.srcLayer     = params.srcLayer;
     shaderParams.srcSampleCount = params.srcSampleCount;
     shaderParams.srcOffset[0] = params.srcOffset[0];

@@ -11708,7 +11708,6 @@ ComputePipelineOptions GetComputePipelineOptions(vk::PipelineRobustness robustne
 // ImageViewHelper implementation.
 ImageViewHelper::ImageViewHelper()
     : mCurrentBaseMaxLevelHash(0),
-      mIsCopyImageViewShared(false),
       mReadColorspace(ImageViewColorspace::Invalid),
       mWriteColorspace(ImageViewColorspace::Invalid)
 {}
@@ -11722,12 +11721,12 @@ ImageViewHelper::ImageViewHelper(ImageViewHelper &&other)
 
     std::swap(mPerLevelRangeLinearReadImageViews, other.mPerLevelRangeLinearReadImageViews);
     std::swap(mPerLevelRangeSRGBReadImageViews, other.mPerLevelRangeSRGBReadImageViews);
-    std::swap(mPerLevelRangeLinearCopyImageViews, other.mPerLevelRangeLinearCopyImageViews);
-    std::swap(mPerLevelRangeSRGBCopyImageViews, other.mPerLevelRangeSRGBCopyImageViews);
-    std::swap(mIsCopyImageViewShared, other.mIsCopyImageViewShared);
     std::swap(mPerLevelRangeStencilReadImageViews, other.mPerLevelRangeStencilReadImageViews);
     std::swap(mPerLevelRangeSamplerExternal2DY2YEXTImageViews,
               other.mPerLevelRangeSamplerExternal2DY2YEXTImageViews);
+
+    std::swap(mLinearCopyImageView, other.mLinearCopyImageView);
+    std::swap(mSRGBCopyImageView, other.mSRGBCopyImageView);
 
     std::swap(mLayerLevelDrawImageViews, other.mLayerLevelDrawImageViews);
     std::swap(mLayerLevelDrawImageViewsLinear, other.mLayerLevelDrawImageViewsLinear);
@@ -11760,7 +11759,6 @@ void ImageViewHelper::release(Renderer *renderer, const ResourceUse &use)
     mReadColorspace          = ImageViewColorspace::Invalid;
     mWriteColorspace         = ImageViewColorspace::Invalid;
     // Clear shared flag
-    mIsCopyImageViewShared = false;
     mColorspaceState.reset();
 
     GarbageObjects garbage;
@@ -11770,10 +11768,18 @@ void ImageViewHelper::release(Renderer *renderer, const ResourceUse &use)
     // Release the read views
     ReleaseImageViews(&mPerLevelRangeLinearReadImageViews, &garbage);
     ReleaseImageViews(&mPerLevelRangeSRGBReadImageViews, &garbage);
-    ReleaseImageViews(&mPerLevelRangeLinearCopyImageViews, &garbage);
-    ReleaseImageViews(&mPerLevelRangeSRGBCopyImageViews, &garbage);
     ReleaseImageViews(&mPerLevelRangeStencilReadImageViews, &garbage);
     ReleaseImageViews(&mPerLevelRangeSamplerExternal2DY2YEXTImageViews, &garbage);
+
+    // Release the copy views
+    if (mLinearCopyImageView.valid())
+    {
+        garbage.emplace_back(GetGarbage(&mLinearCopyImageView));
+    }
+    if (mSRGBCopyImageView.valid())
+    {
+        garbage.emplace_back(GetGarbage(&mSRGBCopyImageView));
+    }
 
     // Release the draw views
     ReleaseLayerLevelImageViews(&mLayerLevelDrawImageViews, &garbage);
@@ -11807,15 +11813,15 @@ void ImageViewHelper::release(Renderer *renderer, const ResourceUse &use)
 
 bool ImageViewHelper::isImageViewGarbageEmpty() const
 {
-    return mPerLevelRangeLinearReadImageViews.empty() &&
-           mPerLevelRangeLinearCopyImageViews.empty() && mPerLevelRangeSRGBReadImageViews.empty() &&
-           mPerLevelRangeSRGBCopyImageViews.empty() &&
+    return mPerLevelRangeLinearReadImageViews.empty() && !mLinearCopyImageView.valid() &&
+           mPerLevelRangeSRGBReadImageViews.empty() && !mSRGBCopyImageView.valid() &&
            mPerLevelRangeStencilReadImageViews.empty() &&
            mPerLevelRangeSamplerExternal2DY2YEXTImageViews.empty() &&
            mLayerLevelDrawImageViews.empty() && mLayerLevelDrawImageViewsLinear.empty() &&
            mSubresourceDrawImageViews.empty() && mLayerLevelDepthOnlyImageViews.empty() &&
            mLayerLevelStencilOnlyImageViews.empty() && mSubresourceDepthOnlyImageViews.empty() &&
-           mSubresourceStencilOnlyImageViews.empty() && mLayerLevelStorageImageViews.empty();
+           mSubresourceStencilOnlyImageViews.empty() && mLayerLevelStorageImageViews.empty() &&
+           !mFragmentShadingRateImageView.valid();
 }
 
 void ImageViewHelper::destroy(VkDevice device)
@@ -11828,10 +11834,12 @@ void ImageViewHelper::destroy(VkDevice device)
     // Release the read views
     DestroyImageViews(&mPerLevelRangeLinearReadImageViews, device);
     DestroyImageViews(&mPerLevelRangeSRGBReadImageViews, device);
-    DestroyImageViews(&mPerLevelRangeLinearCopyImageViews, device);
-    DestroyImageViews(&mPerLevelRangeSRGBCopyImageViews, device);
     DestroyImageViews(&mPerLevelRangeStencilReadImageViews, device);
     DestroyImageViews(&mPerLevelRangeSamplerExternal2DY2YEXTImageViews, device);
+
+    // Release the copy views
+    mLinearCopyImageView.destroy(device);
+    mSRGBCopyImageView.destroy(device);
 
     // Release the draw views
     DestroyLayerLevelImageViews(&mLayerLevelDrawImageViews, device);
@@ -11881,8 +11889,6 @@ angle::Result ImageViewHelper::initReadViews(ContextVk *contextVk,
 
         mPerLevelRangeLinearReadImageViews.resize(maxViewCount);
         mPerLevelRangeSRGBReadImageViews.resize(maxViewCount);
-        mPerLevelRangeLinearCopyImageViews.resize(maxViewCount);
-        mPerLevelRangeSRGBCopyImageViews.resize(maxViewCount);
         mPerLevelRangeStencilReadImageViews.resize(maxViewCount);
         mPerLevelRangeSamplerExternal2DY2YEXTImageViews.resize(maxViewCount);
     }
@@ -11961,20 +11967,11 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
         fetchType = Get2DTextureType(layerCount, image.getSamples());
     }
 
-    if (!image.getActualFormat().isBlock)
+    if (!image.getActualFormat().isBlock && !getCopyImageView().valid())
     {
-        if (fetchType != viewType || readSwizzle != formatSwizzle ||
-            HasBothDepthAndStencilAspects(aspectFlags))
-        {
-            ANGLE_TRY(image.initLayerImageViewWithUsage(
-                contextVk, fetchType, aspectFlags, formatSwizzle, &getCopyImageViewStorage(),
-                baseLevel, levelCount, baseLayer, layerCount, imageUsageFlags,
-                astcDecodePrecision));
-        }
-        else
-        {
-            mIsCopyImageViewShared = true;
-        }
+        ANGLE_TRY(image.initLayerImageViewWithUsage(
+            contextVk, fetchType, aspectFlags, formatSwizzle, &getCopyImageView(), LevelIndex(0),
+            image.getLevelCount(), baseLayer, layerCount, imageUsageFlags, astcDecodePrecision));
     }
     return angle::Result::Continue;
 }
@@ -12061,30 +12058,19 @@ angle::Result ImageViewHelper::initLinearAndSrgbReadViewsImpl(ContextVk *context
 
     if (!image.getActualFormat().isBlock)
     {
-        if (fetchType != viewType || formatSwizzle != readSwizzle ||
-            HasBothDepthAndStencilAspects(aspectFlags))
+        if (!mLinearCopyImageView.valid())
         {
-            if (!mPerLevelRangeLinearCopyImageViews[mCurrentBaseMaxLevelHash].valid())
-            {
-                ANGLE_TRY(image.initReinterpretedLayerImageView(
-                    contextVk, fetchType, aspectFlags, formatSwizzle,
-                    &mPerLevelRangeLinearCopyImageViews[mCurrentBaseMaxLevelHash], baseLevel,
-                    levelCount, baseLayer, layerCount, imageUsageFlags, linearFormat,
-                    astcDecodePrecision));
-            }
-            if (srgbFormat != angle::FormatID::NONE &&
-                !mPerLevelRangeSRGBCopyImageViews[mCurrentBaseMaxLevelHash].valid())
-            {
-                ANGLE_TRY(image.initReinterpretedLayerImageView(
-                    contextVk, fetchType, aspectFlags, formatSwizzle,
-                    &mPerLevelRangeSRGBCopyImageViews[mCurrentBaseMaxLevelHash], baseLevel,
-                    levelCount, baseLayer, layerCount, imageUsageFlags, srgbFormat,
-                    astcDecodePrecision));
-            }
+            ANGLE_TRY(image.initReinterpretedLayerImageView(
+                contextVk, fetchType, aspectFlags, formatSwizzle, &mLinearCopyImageView,
+                LevelIndex(0), image.getLevelCount(), baseLayer, layerCount, imageUsageFlags,
+                linearFormat, astcDecodePrecision));
         }
-        else
+        if (srgbFormat != angle::FormatID::NONE && !mSRGBCopyImageView.valid())
         {
-            mIsCopyImageViewShared = true;
+            ANGLE_TRY(image.initReinterpretedLayerImageView(
+                contextVk, fetchType, aspectFlags, formatSwizzle, &mSRGBCopyImageView,
+                LevelIndex(0), image.getLevelCount(), baseLayer, layerCount, imageUsageFlags,
+                srgbFormat, astcDecodePrecision));
         }
     }
 

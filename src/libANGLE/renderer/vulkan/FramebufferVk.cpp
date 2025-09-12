@@ -338,6 +338,8 @@ void AdjustBlitAreas(RenderTargetVk *readRenderTarget,
     params->srcExtents[1]          = srcAttachmentDimensions.height;
     params->flipX                  = *flipX;
     params->flipY                  = *flipY;
+    params->srcMip =
+        readRenderTarget->getImageForCopy().toVkLevel(readRenderTarget->getLevelIndex());
     params->srcLayer               = readRenderTarget->getLayerIndex();
 }
 

@@ -138,6 +138,7 @@ class UtilsVk : angle::NonCopyable
         // |blitArea| is the area in destination where blit happens.  It's expected that scissor
         // and source clipping effects have already been applied to it.
         gl::Rectangle blitArea;
+        vk::LevelIndex srcMip;
         int srcLayer;
         // Whether linear or point sampling should be used.
         bool linear;
@@ -162,7 +163,7 @@ class UtilsVk : angle::NonCopyable
         int srcOffset[2];
         int srcExtents[2];
         int dstOffset[2];
-        int srcMip;
+        vk::LevelIndex srcMip;
         int srcLayer;
         int srcSampleCount;
         int srcHeight;
@@ -474,6 +475,7 @@ class UtilsVk : angle::NonCopyable
         BlitResolveOffset offset = {};
         float stretch[2]         = {};
         float invSrcExtent[2]    = {};
+        int32_t srcMip           = 0;
         int32_t srcLayer         = 0;
         int32_t samples          = 0;
         float invSamples         = 0;

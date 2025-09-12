@@ -4406,6 +4406,48 @@ TEST_P(BlitFramebufferTest, Blit2DArrayTo3D)
     test3DBlit(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_3D);
 }
 
+// Test that glBlitFramebuffer works when the framebuffer attachment level is not zero.  At the same
+// time, the texture's base level is also non-zero.
+TEST_P(BlitFramebufferTestES31, BlitNonZeroLevelSource)
+{
+    GLFramebuffer readFbo, drawFbo;
+    GLTexture readColor, drawColor;
+
+    glBindTexture(GL_TEXTURE_2D, readColor);
+    glTexStorage2D(GL_TEXTURE_2D, 5, GL_RGBA8, 128, 64);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, readColor, 3);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(blueProgram, std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    glBindTexture(GL_TEXTURE_2D, drawColor);
+    glTexStorage2D(GL_TEXTURE_2D, 6, GL_RGBA8, 64, 128);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, drawColor, 5);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    // Blit 1-to-1
+    glBlitFramebuffer(0, 0, 1, 1, 0, 0, 1, 1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFbo);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+
+    // Blit with stretch
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFbo);
+    glBlitFramebuffer(0, 0, 1, 2, 0, 0, 3, 4, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFbo);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 2, 3, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BlitFramebufferANGLETest);

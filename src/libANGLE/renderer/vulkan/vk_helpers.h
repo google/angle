@@ -3390,13 +3390,13 @@ class ImageViewHelper final : angle::NonCopyable
     }
     const ImageView &getLinearCopyImageView() const
     {
-        return mIsCopyImageViewShared ? getValidReadViewImpl(mPerLevelRangeLinearReadImageViews)
-                                      : getValidReadViewImpl(mPerLevelRangeLinearCopyImageViews);
+        ASSERT(mLinearCopyImageView.valid());
+        return mLinearCopyImageView;
     }
     const ImageView &getSRGBCopyImageView() const
     {
-        return mIsCopyImageViewShared ? getValidReadViewImpl(mPerLevelRangeSRGBReadImageViews)
-                                      : getValidReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
+        ASSERT(mSRGBCopyImageView.valid());
+        return mSRGBCopyImageView;
     }
     const ImageView &getStencilReadImageView() const
     {
@@ -3441,17 +3441,8 @@ class ImageViewHelper final : angle::NonCopyable
 
     bool hasCopyImageView() const
     {
-        if ((mReadColorspace == ImageViewColorspace::Linear &&
-             mCurrentBaseMaxLevelHash < mPerLevelRangeLinearCopyImageViews.size()) ||
-            (mReadColorspace == ImageViewColorspace::SRGB &&
-             mCurrentBaseMaxLevelHash < mPerLevelRangeSRGBCopyImageViews.size()))
-        {
-            return getCopyImageView().valid();
-        }
-        else
-        {
-            return false;
-        }
+        return (mReadColorspace == ImageViewColorspace::Linear && mLinearCopyImageView.valid()) ||
+               (mReadColorspace == ImageViewColorspace::SRGB && mSRGBCopyImageView.valid());
     }
 
     // For applications that frequently switch a texture's max level, and make no other changes to
@@ -3629,20 +3620,8 @@ class ImageViewHelper final : angle::NonCopyable
     }
     ImageView &getCopyImageView()
     {
-        if (mReadColorspace == ImageViewColorspace::Linear)
-        {
-            return mIsCopyImageViewShared ? getReadViewImpl(mPerLevelRangeLinearReadImageViews)
-                                          : getReadViewImpl(mPerLevelRangeLinearCopyImageViews);
-        }
-
-        return mIsCopyImageViewShared ? getReadViewImpl(mPerLevelRangeSRGBReadImageViews)
-                                      : getReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
-    }
-    ImageView &getCopyImageViewStorage()
-    {
-        return mReadColorspace == ImageViewColorspace::Linear
-                   ? getReadViewImpl(mPerLevelRangeLinearCopyImageViews)
-                   : getReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
+        return mReadColorspace == ImageViewColorspace::Linear ? mLinearCopyImageView
+                                                              : mSRGBCopyImageView;
     }
 
     // Used by public get*ImageView() methods to do proper assert based on vector size and validity
@@ -3720,10 +3699,6 @@ class ImageViewHelper final : angle::NonCopyable
                   "Not enough bits in mCurrentBaseMaxLevelHash");
     uint8_t mCurrentBaseMaxLevelHash;
 
-    // This flag is set when copy views are identical to read views, and we share the views instead
-    // of creating new ones.
-    bool mIsCopyImageViewShared;
-
     mutable ImageViewColorspace mReadColorspace;
     mutable ImageViewColorspace mWriteColorspace;
     mutable angle::ColorspaceState mColorspaceState;
@@ -3731,10 +3706,14 @@ class ImageViewHelper final : angle::NonCopyable
     // Read views (one per [base, max] level range)
     ImageViewVector mPerLevelRangeLinearReadImageViews;
     ImageViewVector mPerLevelRangeSRGBReadImageViews;
-    ImageViewVector mPerLevelRangeLinearCopyImageViews;
-    ImageViewVector mPerLevelRangeSRGBCopyImageViews;
     ImageViewVector mPerLevelRangeStencilReadImageViews;
     ImageViewVector mPerLevelRangeSamplerExternal2DY2YEXTImageViews;
+
+    // Copy views always view the whole image, because the shaders directly access the mips and they
+    // don't need to take the base level into account (because it pertains only to textures, and
+    // it's a detail that's not propagated to the render target).
+    ImageView mLinearCopyImageView;
+    ImageView mSRGBCopyImageView;
 
     // Draw views
     LayerLevelImageViewVector mLayerLevelDrawImageViews;
