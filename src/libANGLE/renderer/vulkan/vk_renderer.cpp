@@ -6561,6 +6561,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mNativeVectorWidthHalf    = 2;
         mPreferredVectorWidthHalf = 8;
     }
+
+    // There are use cases where synchronization is not performed properly when texture is modified
+    // between different contexts. To avoid rendering artifacts, force submit staged updates for
+    // Samsung.
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceSubmitImmutableTextureUpdates, isSamsung);
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}
