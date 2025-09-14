@@ -2898,9 +2898,9 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     shaderParams.stretch[1]      = params.stretch[1];
     shaderParams.invSrcExtent[0] = 1.0f / params.srcExtents[0];
     shaderParams.invSrcExtent[1] = 1.0f / params.srcExtents[1];
-    // Depth/stencil copy views are specific to the level, so no need to offset them further.
+    // Depth/stencil copy views are specific to the level/layer, so no need to offset them further.
     shaderParams.srcMip          = isDepthOrStencil ? 0 : params.srcMip.get();
-    shaderParams.srcLayer        = params.srcLayer;
+    shaderParams.srcLayer        = isDepthOrStencil ? 0 : params.srcLayer;
     shaderParams.samples         = src->getSamples();
     shaderParams.invSamples      = 1.0f / shaderParams.samples;
     shaderParams.outputMask      = framebuffer->getState().getEnabledDrawBuffers().bits();
@@ -2949,7 +2949,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     uint32_t flags =
         GetBlitResolveFlags(blitColor, blitDepth, blitStencil, src->getIntendedFormat());
-    flags |= src->getLayerCount() > 1 ? BlitResolve_frag::kSrcIsArray : 0;
+    flags |= src->getLayerCount() > 1 && !isDepthOrStencil ? BlitResolve_frag::kSrcIsArray : 0;
     flags |= isResolve ? BlitResolve_frag::kIsResolve : 0;
     Function function = Function::BlitResolve;
 
@@ -3169,7 +3169,8 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     shaderParams.stretch[1]      = params.stretch[1];
     shaderParams.invSrcExtent[0] = 1.0f / params.srcExtents[0];
     shaderParams.invSrcExtent[1] = 1.0f / params.srcExtents[1];
-    shaderParams.srcLayer        = params.srcLayer;
+    // Depth/stencil copy views are specific to the layer, so no need to offset it further.
+    shaderParams.srcLayer        = 0;
     shaderParams.srcWidth        = params.srcExtents[0];
     shaderParams.srcHeight       = params.srcExtents[1];
     shaderParams.dstPitch        = bufferRowLengthInUints;
@@ -3213,8 +3214,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     // Linear sampling is only valid with color blitting.
     ASSERT(!params.linear);
 
-    uint32_t flags = src->getLayerCount() > 1 ? BlitResolveStencilNoExport_comp::kSrcIsArray : 0;
-    flags |= isResolve ? BlitResolve_frag::kIsResolve : 0;
+    uint32_t flags = isResolve ? BlitResolveStencilNoExport_comp::kIsResolve : 0;
 
     RenderTargetVk *depthStencilRenderTarget = framebuffer->getDepthStencilRenderTarget();
     ASSERT(depthStencilRenderTarget != nullptr);
