@@ -7518,9 +7518,10 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
                 }
             }
 
-            // If we are transition into shaderRead layout, remember the last
-            // non-shaderRead layout here.
-            if (isNewAccessShaderReadOnly)
+            // If we are transition into shaderRead layout, remember the last non-shaderRead layout
+            // here.
+            const bool isCurrentAccessShaderReadOnly = IsShaderReadOnlyAccess(mCurrentAccess);
+            if (isNewAccessShaderReadOnly && !isCurrentAccessShaderReadOnly)
             {
                 mLastNonShaderReadOnlyEvent.release(context);
                 mLastNonShaderReadOnlyAccess = mCurrentAccess;
@@ -7531,7 +7532,7 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
             {
                 eventBarriers->addEventImageBarrier(renderer, mCurrentEvent, dstStageMask,
                                                     imageMemoryBarrier);
-                if (isNewAccessShaderReadOnly)
+                if (isNewAccessShaderReadOnly && !isCurrentAccessShaderReadOnly)
                 {
                     mLastNonShaderReadOnlyEvent = mCurrentEvent;
                 }
@@ -7557,6 +7558,8 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
     // pipelineBarrier. Otherwise if we keep mCurrentEvent here we may accidentally end up waiting
     // for an old event which creates sync hazard.
     ASSERT(!mCurrentEvent.valid());
+
+    ASSERT(!IsShaderReadOnlyAccess(mLastNonShaderReadOnlyAccess));
 }
 
 void ImageHelper::setCurrentRefCountedEvent(Context *context,
