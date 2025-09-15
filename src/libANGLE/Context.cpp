@@ -4471,6 +4471,10 @@ void Context::initCaps()
                   "mobile";
         extensions->depth32OES = false;
 
+        // https://issuetracker.google.com/445241477
+        INFO() << "Disabling GL_EXT_texture_norm16 during capture, which is not widely supported";
+        extensions->textureNorm16EXT = false;
+
         // The corresponding Vulkan extension is presently limited to ARM and Qualcomm
         INFO()
             << "Disabling GL_EXT_texture_compression_astc_decode_mode and "
