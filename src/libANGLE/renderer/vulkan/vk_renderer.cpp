@@ -6471,6 +6471,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // failing.
     ANGLE_FEATURE_CONDITION(&mFeatures, convertLowpAndMediumpFloatUniformsTo16Bits,
                             m16BitStorageFeatures.uniformAndStorageBuffer16BitAccess == VK_TRUE &&
+                                mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE &&
                                 !(IsWindows() && isIntel) && false);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsUnifiedImageLayouts,
