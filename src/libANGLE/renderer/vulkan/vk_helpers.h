@@ -1751,6 +1751,19 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void markClosed() { getCommandBuffer().close(); }
 #endif
 
+    void buffersVertexAttribRead(Context *context,
+                                 const gl::AttribArray<BufferHelper *> &buffers,
+                                 uint32_t maxAttrib)
+    {
+        for (uint32_t attribIndex = 0; attribIndex < maxAttrib; ++attribIndex)
+        {
+            vk::BufferHelper *arrayBuffer = buffers[attribIndex];
+            ASSERT(arrayBuffer != nullptr);
+            bufferRead(context, VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT, PipelineStage::VertexInput,
+                       arrayBuffer);
+        }
+    }
+
     void imageRead(ContextVk *contextVk,
                    VkImageAspectFlags aspectFlags,
                    ImageAccess imageAccess,
