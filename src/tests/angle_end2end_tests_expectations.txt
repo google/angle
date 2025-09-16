@@ -145,6 +145,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 410591534 WIN INTEL OPENGL : TextureCubeTestES3.IncompatibleCubeFacesThenSingleFaceCompatibleUploadAndIncompatibleAgain*/* = SKIP
 411157348 WIN D3D11 : ImageTestES31.UseSourceTextureAsStorageImage/* = SKIP
 409821658 WIN INTEL OPENGL : SRGBTextureTestES3.SRGBSkipEncodeAndDecodeInGenerateMipmap/ES3_OpenGL* = SKIP
+444980424 WIN NVIDIA VULKAN : ShadingRateEXTTest.FragmentShadingRatePrimitive/* = SKIP
 
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2111)
 40644896 WIN INTEL OPENGL : D3DImageFormatConversionTest.WriteColorFunctionR8G8B8A8/* = SKIP
