@@ -417,7 +417,7 @@ vars = {
   'checkout_angle_restricted_trace_slay_the_spire': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_slingshot_test1': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_slingshot_test2': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_slotmania': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_slotomania': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_snake_io': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_snake_lite': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_sniper_3d': 'checkout_angle_restricted_traces',
@@ -4023,15 +4023,15 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_slingshot_test2',
   },
-  'src/tests/restricted_traces/slotmania': {
+  'src/tests/restricted_traces/slotomania': {
       'packages': [
         {
-            'package': 'angle/traces/slotmania',
+            'package': 'angle/traces/slotomania',
             'version': 'version:1',
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_restricted_trace_slotmania',
+      'condition': 'checkout_angle_restricted_trace_slotomania',
   },
   'src/tests/restricted_traces/snake_io': {
       'packages': [
