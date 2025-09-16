@@ -55,6 +55,7 @@ enum class CommandID : uint16_t
     BindTransformFeedbackBuffers,
     BindVertexBuffers,
     BindVertexBuffers2,
+    BindVertexBuffers2NoStride,
     BlitImage,
     BufferBarrier,
     BufferBarrier2,
@@ -208,7 +209,8 @@ struct BindTransformFeedbackBuffersParams
 VERIFY_8_BYTE_ALIGNMENT(BindTransformFeedbackBuffersParams)
 
 using BindVertexBuffersParams  = BindTransformFeedbackBuffersParams;
-using BindVertexBuffers2Params = BindVertexBuffersParams;
+using BindVertexBuffers2Params         = BindVertexBuffersParams;
+using BindVertexBuffers2NoStrideParams = BindVertexBuffers2Params;
 
 struct BlitImageParams
 {
@@ -907,6 +909,12 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                             const VkDeviceSize *sizes,
                             const VkDeviceSize *strides);
 
+    void bindVertexBuffers2NoStride(uint32_t firstBinding,
+                                    uint32_t bindingCount,
+                                    const VkBuffer *buffers,
+                                    const VkDeviceSize *offsets,
+                                    const VkDeviceSize *sizes);
+
     void blitImage(const Image &srcImage,
                    VkImageLayout srcImageLayout,
                    const Image &dstImage,
@@ -1473,6 +1481,27 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindVertexBuffers2(uint32_t firstBindi
     writePtr                  = storeArrayParameter(writePtr, offsets, offsetsSize);
     writePtr                  = storeArrayParameter(writePtr, sizes, sizesSize);
     storeArrayParameter(writePtr, strides, stridesSize);
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::bindVertexBuffers2NoStride(uint32_t firstBinding,
+                                                                     uint32_t bindingCount,
+                                                                     const VkBuffer *buffers,
+                                                                     const VkDeviceSize *offsets,
+                                                                     const VkDeviceSize *sizes)
+{
+    ASSERT(firstBinding == 0);
+    uint8_t *writePtr;
+    const ArrayParamSize buffersSize = calculateArrayParameterSize<VkBuffer>(bindingCount);
+    const ArrayParamSize offsetsSize = calculateArrayParameterSize<VkDeviceSize>(bindingCount);
+    const ArrayParamSize sizesSize   = offsetsSize;
+    BindVertexBuffers2NoStrideParams *paramStruct = initCommand<BindVertexBuffers2NoStrideParams>(
+        CommandID::BindVertexBuffers2NoStride,
+        buffersSize.allocateBytes + offsetsSize.allocateBytes + sizesSize.allocateBytes, &writePtr);
+    // Copy params
+    paramStruct->bindingCount = bindingCount;
+    writePtr                  = storeArrayParameter(writePtr, buffers, buffersSize);
+    writePtr                  = storeArrayParameter(writePtr, offsets, offsetsSize);
+    storeArrayParameter(writePtr, sizes, sizesSize);
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::blitImage(const Image &srcImage,

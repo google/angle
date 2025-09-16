@@ -331,6 +331,19 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                                                sizes, strides);
                     break;
                 }
+                case CommandID::BindVertexBuffers2NoStride:
+                {
+                    const BindVertexBuffers2NoStrideParams *params =
+                        getParamPtr<BindVertexBuffers2NoStrideParams>(currentCommand);
+                    const VkBuffer *buffers = GetFirstArrayParameter<VkBuffer>(params);
+                    const VkDeviceSize *offsets =
+                        GetNextArrayParameter<VkDeviceSize>(buffers, params->bindingCount);
+                    const VkDeviceSize *sizes =
+                        GetNextArrayParameter<VkDeviceSize>(offsets, params->bindingCount);
+                    vkCmdBindVertexBuffers2EXT(cmdBuffer, 0, params->bindingCount, buffers, offsets,
+                                               sizes, nullptr);
+                    break;
+                }
                 case CommandID::BlitImage:
                 {
                     const BlitImageParams *params = getParamPtr<BlitImageParams>(currentCommand);

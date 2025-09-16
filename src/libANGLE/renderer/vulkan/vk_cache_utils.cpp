@@ -3488,7 +3488,7 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
 
         if (!context->getFeatures().supportsVertexInputDynamicState.enabled)
         {
-            // Note: If vertex inpute state is dynamic, no need to set pVertexInputState;
+            // Note: If vertex input state is dynamic, no need to set pVertexInputState;
             // vertexInputState is not initialized either.
             createInfo.pVertexInputState = &vertexInputState.vertexInputState;
         }
@@ -3769,15 +3769,16 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
     GraphicsPipelineDynamicStateList *dynamicStateListOut) const
 {
     // TODO(jmadill): Possibly use different path for ES 3.1 split bindings/attribs.
-    uint32_t vertexAttribCount = 0;
-
+    const gl::AttributesMask &activeAttributeLocationsMask =
+        gl::AttributesMask(mVertexInput.inputAssembly.bits.programActiveAttributeLocations);
     if (!context->getFeatures().supportsVertexInputDynamicState.enabled)
     {
         stateOut->divisorState.sType =
             VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT;
         stateOut->divisorState.pVertexBindingDivisors = stateOut->divisorDesc.data();
-        for (size_t attribIndexSizeT :
-             gl::AttributesMask(mVertexInput.inputAssembly.bits.programActiveAttributeLocations))
+
+        uint32_t vertexAttribCount = 0;
+        for (size_t attribIndexSizeT : activeAttributeLocationsMask)
         {
             const uint32_t attribIndex = static_cast<uint32_t>(attribIndexSizeT);
 
@@ -3823,6 +3824,7 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
 
             vertexAttribCount++;
         }
+        ASSERT(vertexAttribCount == static_cast<uint32_t>(activeAttributeLocationsMask.count()));
 
         // The binding descriptions are filled in at draw time.
         stateOut->vertexInputState.sType =
@@ -3851,7 +3853,7 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
 
     // Dynamic state
     if (context->getFeatures().useVertexInputBindingStrideDynamicState.enabled &&
-        vertexAttribCount > 0)
+        activeAttributeLocationsMask.any())
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE);
     }

@@ -2684,9 +2684,22 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
 
     if (maxAttrib > 0)
     {
+        if (getFeatures().useVertexInputBindingStrideDynamicState.enabled)
+        {
+            const gl::AttribArray<VkDeviceSize> &bufferSizes =
+                vertexArrayVk->getCurrentArrayBufferSizes();
 
-        mRenderPassCommandBuffer->bindVertexBuffers(0, maxAttrib, bufferHandles.data(),
-                                                    bufferOffsets.data());
+            // bindVertexBuffers2EXT() requires extended dynamic state or shader object extension.
+            // Since the strides are already set in setVertexInput(), they need not be set here.
+            ASSERT(getFeatures().supportsExtendedDynamicState.enabled);
+            mRenderPassCommandBuffer->bindVertexBuffers2NoStride(
+                0, maxAttrib, bufferHandles.data(), bufferOffsets.data(), bufferSizes.data());
+        }
+        else
+        {
+            mRenderPassCommandBuffer->bindVertexBuffers(0, maxAttrib, bufferHandles.data(),
+                                                        bufferOffsets.data());
+        }
     }
     // Mark all active vertex buffers as accessed.
     mRenderPassCommands->buffersVertexAttribRead(this, vertexArrayVk->getCurrentArrayBuffers(),
