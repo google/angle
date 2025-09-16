@@ -62,8 +62,6 @@ class VertexArrayVk : public VertexArrayImpl
                             gl::VertexArray::DirtyAttribBitsArray *attribBits,
                             gl::VertexArray::DirtyBindingBitsArray *bindingBits) override;
 
-    angle::Result updateActiveAttribInfo(ContextVk *contextVk);
-
     angle::Result updateDefaultAttrib(ContextVk *contextVk, size_t attribIndex);
 
     angle::Result updateStreamedAttribs(const gl::Context *context,
@@ -167,14 +165,16 @@ class VertexArrayVk : public VertexArrayImpl
                                         const void *sourcePointer,
                                         BufferBindingDirty *bufferBindingDirty);
 
-    const gl::AttributesMask &getStreamingVertexAttribsMask() const
-    {
-        return mStreamingVertexAttribsMask;
-    }
+    gl::AttributesMask getStreamingVertexAttribsMask() const { return mStreamingVertexAttribsMask; }
 
     gl::ComponentTypeMask getCurrentVertexAttributesTypeMask() const
     {
         return mCurrentVertexAttributesTypeMask;
+    }
+
+    gl::AttributesMask getCurrentEnabledAttributesMask() const
+    {
+        return mCurrentEnabledAttributesMask;
     }
 
   private:

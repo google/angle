@@ -970,24 +970,6 @@ ANGLE_INLINE void VertexArrayVk::setDefaultPackedInput(ContextVk *contextVk,
     *formatOut = GetCurrentValueFormatID(defaultValue.Type);
 }
 
-angle::Result VertexArrayVk::updateActiveAttribInfo(ContextVk *contextVk)
-{
-    const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
-
-    // Update pipeline cache with current active attribute info
-    for (size_t attribIndex : mState.getEnabledAttributesMask())
-    {
-        const gl::VertexAttribute &attrib = attribs[attribIndex];
-
-        ANGLE_TRY(contextVk->onVertexAttributeChange(
-            attribIndex, getCurrentArrayBufferStride(attribIndex),
-            getCurrentArrayBufferDivisor(attribIndex), attrib.format->id,
-            getCurrentArrayBufferRelativeOffset(attribIndex), mCurrentArrayBuffers[attribIndex]));
-    }
-
-    return angle::Result::Continue;
-}
-
 angle::Result VertexArrayVk::syncDirtyEnabledAttrib(ContextVk *contextVk,
                                                     const gl::VertexAttribute &attrib,
                                                     const gl::VertexBinding &binding,
