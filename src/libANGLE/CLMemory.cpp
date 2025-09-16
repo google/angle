@@ -151,6 +151,66 @@ bool Memory::isUseHostPtr() const
     return mFlags.intersects(CL_MEM_USE_HOST_PTR);
 }
 
+// Sub-buffers do not track regions themselves; all queries and updates are
+// forwarded to the parent buffer with the region translated into the parent's
+// coordinate space (shifted by mOffset along x).
+bool Memory::isRegionMappedForWrite(const cl::MemoryRegion &region) const
+{
+    if (hasParent())
+    {
+        const cl::Offset childOffset = region.getOffset();
+        cl::MemoryRegion parentRegion(
+            cl::Offset(childOffset.x + mOffset, childOffset.y, childOffset.z), region.getExtents());
+        return mParent->isRegionMappedForWrite(parentRegion);
+    }
+    return mMappedRegionTracker->hasWriteConflict(region);
+}
+
+bool Memory::isPtrMapped(const void *mappedPtr) const
+{
+    if (hasParent())
+    {
+        return mParent->isPtrMapped(mappedPtr);
+    }
+    return mMappedRegionTracker->hasKey(mappedPtr);
+}
+
+angle::Result Memory::addMappedRegion(const MapFlags flags,
+                                      const void *mappedPtr,
+                                      cl::MemoryRegion region)
+{
+    if (hasParent())
+    {
+        const cl::Offset childOffset = region.getOffset();
+        cl::MemoryRegion parentRegion(
+            cl::Offset(childOffset.x + mOffset, childOffset.y, childOffset.z), region.getExtents());
+        return mParent->addMappedRegion(flags, mappedPtr, parentRegion);
+    }
+
+    const bool isWrite = flags.intersects(CL_MAP_WRITE | CL_MAP_WRITE_INVALIDATE_REGION);
+    auto tracker       = mMappedRegionTracker.synchronize();
+
+    if (isWrite)
+    {
+        tracker->addWriter(mappedPtr, region);
+    }
+    else
+    {
+        tracker->addReader(mappedPtr, region);
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result Memory::removeMappedRegion(const void *mappedPtr)
+{
+    if (hasParent())
+    {
+        return mParent->removeMappedRegion(mappedPtr);
+    }
+    mMappedRegionTracker->remove(mappedPtr);
+    return angle::Result::Continue;
+}
+
 Memory::~Memory()
 {
     mDestructorCallbacks.invoke(this);

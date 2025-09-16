@@ -54,6 +54,16 @@ class Memory : public _cl_mem, public Object
 
     static Memory *Cast(cl_mem memobj);
 
+    // Memory region interface
+    bool isRegionMappedForWrite(const cl::MemoryRegion &region) const;
+    bool isPtrMapped(const void *) const;
+    angle::Result addMappedRegion(const MapFlags flags,
+                                  const void *mappedPtr,
+                                  cl::MemoryRegion region);
+    angle::Result removeMappedRegion(const void *mappedPtr);
+
+    bool hasParent() const { return IsValid(mParent.get()); }
+
   protected:
     Memory(const Buffer &buffer,
            Context &context,
@@ -77,6 +87,9 @@ class Memory : public _cl_mem, public Object
 
     DestructorCallbacks<MemoryCB> mDestructorCallbacks;
     std::atomic<cl_uint> mMapCount;
+
+    // Can have multiple active mapped read regions but just one write region.
+    angle::SynchronizedValue<cl::MemoryAccessTracker<const void *>> mMappedRegionTracker;
 
     friend class Buffer;
     friend class Context;
