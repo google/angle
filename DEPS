@@ -416,6 +416,7 @@ vars = {
   'checkout_angle_restricted_trace_slay_the_spire': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_slingshot_test1': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_slingshot_test2': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_slotmania': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_snake_io': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_snake_lite': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_sniper_3d': 'checkout_angle_restricted_traces',
@@ -424,6 +425,7 @@ vars = {
   'checkout_angle_restricted_trace_sonic_forces': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_sonic_the_hedgehog': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_special_forces_group_2': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_spider_fighter_3': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_standoff_2': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_star_trek_fleet_command': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_star_wars_galaxy_of_heroes': 'checkout_angle_restricted_traces',
@@ -4010,6 +4012,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_slingshot_test2',
   },
+  'src/tests/restricted_traces/slotmania': {
+      'packages': [
+        {
+            'package': 'angle/traces/slotmania',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_slotmania',
+  },
   'src/tests/restricted_traces/snake_io': {
       'packages': [
         {
@@ -4089,6 +4101,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_special_forces_group_2',
+  },
+  'src/tests/restricted_traces/spider_fighter_3': {
+      'packages': [
+        {
+            'package': 'angle/traces/spider_fighter_3',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_spider_fighter_3',
   },
   'src/tests/restricted_traces/standoff_2': {
       'packages': [
