@@ -930,6 +930,24 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         ANGLE_TRY(syncDirtyDisabledAttrib(contextVk, attribs[attribIndex], attribIndex));
     }
 
+    if (ANGLE_UNLIKELY(mDivisorExceedMaxSupportedValueBindingMask.any()))
+    {
+        gl::AttributesMask divisorExceedMaxSupportedValueAttribMask;
+        for (size_t bindingIndex : mDivisorExceedMaxSupportedValueBindingMask)
+        {
+            divisorExceedMaxSupportedValueAttribMask |=
+                bindings[bindingIndex].getBoundAttributesMask();
+        }
+        // Set divisor to 1 for attribs with emulated divisor, since we always go down the stream
+        // code path
+        divisorExceedMaxSupportedValueAttribMask &= mCurrentEnabledAttributesMask;
+        for (size_t attribIndex : divisorExceedMaxSupportedValueAttribMask)
+        {
+            ASSERT(mStreamingVertexAttribsMask.test(attribIndex));
+            mVertexInputBindingDesc[attribIndex].divisor = 1;
+        }
+    }
+
     ANGLE_TRY(contextVk->onVertexArrayChange(enabledAttribDirtyBits));
 
     attribBits->fill(gl::VertexArray::DirtyAttribBits());
@@ -952,18 +970,16 @@ ANGLE_INLINE void VertexArrayVk::setDefaultPackedInput(ContextVk *contextVk,
 angle::Result VertexArrayVk::updateActiveAttribInfo(ContextVk *contextVk)
 {
     const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
-    const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
 
     // Update pipeline cache with current active attribute info
     for (size_t attribIndex : mState.getEnabledAttributesMask())
     {
         const gl::VertexAttribute &attrib = attribs[attribIndex];
-        const gl::VertexBinding &binding  = bindings[attribs[attribIndex].bindingIndex];
 
         ANGLE_TRY(contextVk->onVertexAttributeChange(
-            attribIndex, getCurrentArrayBufferStride(attribIndex), binding.getDivisor(),
-            attrib.format->id, getCurrentArrayBufferRelativeOffset(attribIndex),
-            mCurrentArrayBuffers[attribIndex]));
+            attribIndex, getCurrentArrayBufferStride(attribIndex),
+            getCurrentArrayBufferDivisor(attribIndex), attrib.format->id,
+            getCurrentArrayBufferRelativeOffset(attribIndex), mCurrentArrayBuffers[attribIndex]));
     }
 
     return angle::Result::Continue;
@@ -1318,7 +1334,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
 
         vk::BufferHelper *vertexDataBuffer = nullptr;
         const uint8_t *src                 = static_cast<const uint8_t *>(attrib.pointer);
-        const uint32_t divisor             = binding.getDivisor();
+        uint32_t divisor                   = binding.getDivisor();
 
         bool combined            = mergeAttribMask.test(attribIndex);
         GLuint stride            = combined ? binding.getStride() : pixelBytes;
@@ -1372,6 +1388,8 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
                         contextVk, vertexDataBuffer, src, bytesToAllocate, binding.getStride(),
                         stride, vertexFormat.getVertexLoadFunction(), divisor, numVertices));
                 }
+
+                divisor = 1;
             }
             else
             {

@@ -2640,10 +2640,8 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
         bindingDesc.sType   = VK_STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT;
         bindingDesc.binding = static_cast<uint32_t>(attribIndex);
         bindingDesc.stride  = static_cast<uint32_t>(stride);
-        bindingDesc.divisor = vertexArrayVk->getCurrentArrayBufferDivisor(attribIndex) >
-                                      mRenderer->getMaxVertexAttribDivisor()
-                                  ? 1
-                                  : vertexArrayVk->getCurrentArrayBufferDivisor(attribIndex);
+        bindingDesc.divisor = vertexArrayVk->getCurrentArrayBufferDivisor(attribIndex);
+        ASSERT(bindingDesc.divisor <= mRenderer->getMaxVertexAttribDivisor());
         if (bindingDesc.divisor != 0)
         {
             bindingDesc.inputRate = static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_INSTANCE);
@@ -9327,11 +9325,7 @@ angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask enabledAtt
                     : vertexArray.getCurrentArrayBufferStride(attribIndex);
 
             GLuint divisor = vertexArray.getCurrentArrayBufferDivisor(attribIndex);
-            // Set divisor to 1 for attribs with emulated divisor
-            if (divisor > mRenderer->getMaxVertexAttribDivisor())
-            {
-                divisor = 1;
-            }
+            ASSERT(divisor <= mRenderer->getMaxVertexAttribDivisor());
 
             mGraphicsPipelineDesc->updateVertexInput(
                 this, &mGraphicsPipelineTransition, static_cast<uint32_t>(attribIndex),

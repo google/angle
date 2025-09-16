@@ -1767,10 +1767,10 @@ ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex
     {
         invalidateCurrentGraphicsPipeline();
 
-        // Set divisor to 1 for attribs with emulated divisor
-        mGraphicsPipelineDesc->updateVertexInput(
-            this, &mGraphicsPipelineTransition, static_cast<uint32_t>(attribIndex), staticStride,
-            divisor > mRenderer->getMaxVertexAttribDivisor() ? 1 : divisor, format, relativeOffset);
+        ASSERT(divisor <= mRenderer->getMaxVertexAttribDivisor());
+        mGraphicsPipelineDesc->updateVertexInput(this, &mGraphicsPipelineTransition,
+                                                 static_cast<uint32_t>(attribIndex), staticStride,
+                                                 divisor, format, relativeOffset);
     }
 
     mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
