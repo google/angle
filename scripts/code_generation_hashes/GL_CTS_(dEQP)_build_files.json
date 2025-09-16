@@ -158,7 +158,7 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/vkscpc/CMakeLists.txt":
     "b1e0a3495cabd10a8020bf0aa2635ee1",
   "third_party/VK-GL-CTS/src/external/vulkancts/vkscserver/CMakeLists.txt":
-    "9e662101f6be2a7029a0fbfda671eab9",
+    "8e3c3d8286a007fcad20f46031df5c76",
   "third_party/VK-GL-CTS/src/external/zlib/CMakeLists.txt":
     "30ffe3a360ab8870fe103084e9947e6d",
   "third_party/VK-GL-CTS/src/framework/CMakeLists.txt":
