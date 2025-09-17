@@ -5834,6 +5834,43 @@ TEST_P(ImageTestES3, RGBXAHBUploadDataColorspace)
     destroyAndroidHardwareBuffer(ahb);
 }
 
+// Test that RGBX data are preserved when importing from AHB and glTexSubImage is able to update
+// data using GL_RGBA.
+TEST_P(ImageTestES3, RGBXAHBUploadDataRGBA)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
+
+    const GLubyte kGarbage[]            = {123, 123, 123, 123};
+    const GLubyte kRed50LinearNoAlpha[] = {128, 0, 0, 0};
+    const GLubyte kRed50Linear[]        = {128, 0, 0, 255};
+
+    // Create the Image
+    AHardwareBuffer *ahb;
+    EGLImageKHR ahbImage;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM,
+                                              kDefaultAHBUsage, kDefaultAttribs, {{kGarbage, 4}},
+                                              &ahb, &ahbImage);
+
+    GLTexture ahbTexture;
+    createEGLImageTargetTexture2D(ahbImage, ahbTexture);
+
+    glBindTexture(GL_TEXTURE_2D, ahbTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kRed50LinearNoAlpha);
+    glFinish();
+
+    // Make sure the alpha channel is always 1.
+    verifyResults2D(ahbTexture, kRed50Linear);
+    verifyResultAHB(ahb, {{kRed50Linear, 4}});
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), ahbImage);
+    destroyAndroidHardwareBuffer(ahb);
+}
+
 // Test that RGB data are preserved when importing from AHB created with sRGB color space and
 // glTexSubImage is able to update data.
 TEST_P(ImageTestES3, RGBAHBUploadDataColorspace)

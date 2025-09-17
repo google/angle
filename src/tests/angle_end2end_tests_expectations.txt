@@ -540,6 +540,9 @@ b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWi
 // Unimplemented fallback path for when format is not renderable or AHB hasn't specified the GPU_FRAMEBUFFER usage.
 42264676 ANDROID VULKAN : ImageTestES3.RGBXAHBImportNoFramebufferUsage/* = SKIP
 
+// Test is not suitable for GLES.
+444335354 ANDROID GLES : ImageTestES3.RGBXAHBUploadDataRGBA/* = SKIP
+
 // Nexus 5X expectations.
 42264673 NEXUS5X GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 42264717 NEXUS5X GLES : GLSLTest_ES31.BuiltInsWithOutParameters/* = SKIP
