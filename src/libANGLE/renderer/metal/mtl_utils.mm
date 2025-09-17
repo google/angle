@@ -894,9 +894,22 @@ angle::ObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
         // Mark all positions in VS with attribute invariant as non-optimizable
         options.get().preserveInvariance = usesInvariance;
 
-        if (disableFastMath)
+        if (@available(macOS 15.0, iOS 18.0, *))
         {
-            options.get().fastMathEnabled = false;
+            if (disableFastMath)
+            {
+                options.get().mathMode                   = MTLMathModeSafe;
+                options.get().mathFloatingPointFunctions = MTLMathFloatingPointFunctionsPrecise;
+            }
+            else
+            {
+                options.get().mathMode                   = MTLMathModeFast;
+                options.get().mathFloatingPointFunctions = MTLMathFloatingPointFunctionsFast;
+            }
+        }
+        else
+        {
+            options.get().fastMathEnabled = !disableFastMath;
         }
 
         options.get().languageVersion =
