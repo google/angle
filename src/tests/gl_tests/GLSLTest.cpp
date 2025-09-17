@@ -2020,6 +2020,41 @@ void main(){
     glDeleteShader(shader);
 }
 
+// Verify that using a struct as both invariant and non-invariant output works.
+// The shader interface block has a variable name in this variant.
+TEST_P(GLSLTest_ES31, StructBothInvariantAndNot2)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+
+struct S
+{
+    vec4 s;
+};
+
+out Output
+{
+    vec4 x;
+    invariant S s;
+} o;
+
+out S s2;
+
+void main(){
+    o.x = vec4(0);
+    o.s.s = vec4(1);
+    s2.s = vec4(2);
+    S s3 = o.s;
+    o.s.s = s3.s;
+})";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kVS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
 // Verify that using maximum size as atomic counter offset results in compilation failure.
 TEST_P(GLSLTest_ES31, CompileWithMaxAtomicCounterOffsetFails)
 {

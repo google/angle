@@ -564,6 +564,8 @@ void SpirvTypeSpec::onBlockFieldSelection(const TType &fieldType)
         {
             isOrHasBoolInInterfaceBlock = fieldType.isStructureContainingType(EbtBool);
         }
+
+        isInvariantBlock = fieldType.isInvariant();
     }
 }
 
