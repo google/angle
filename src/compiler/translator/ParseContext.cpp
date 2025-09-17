@@ -1480,8 +1480,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
 
     if (!((identifier.beginsWith("gl_LastFragData") || type->getQualifier() == EvqFragmentInOut) &&
           (isExtensionEnabled(TExtension::EXT_shader_framebuffer_fetch) ||
-           isExtensionEnabled(TExtension::EXT_shader_framebuffer_fetch_non_coherent))) &&
-        !(type->isPixelLocal() && isExtensionEnabled(TExtension::ANGLE_shader_pixel_local_storage)))
+           isExtensionEnabled(TExtension::EXT_shader_framebuffer_fetch_non_coherent))))
     {
         checkNoncoherentIsNotSpecified(line, type->getLayoutQualifier().noncoherent);
     }
@@ -2440,8 +2439,8 @@ void TParseContext::checkNoncoherentIsNotSpecified(const TSourceLoc &location, b
     if (noncoherent != false)
     {
         error(location,
-              "invalid layout qualifier: only valid when used with 'gl_LastFragData', the "
-              "variable decorated with 'inout' in a fragment shader, or pixel local storage",
+              "invalid layout qualifier: only valid when used with 'gl_LastFragData' or the "
+              "variable decorated with 'inout' in a fragment shader",
               "noncoherent");
     }
 }
@@ -5945,10 +5944,10 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
         if (qualifierType == "noncoherent")
         {
             if (checkCanUseOneOfExtensions(
-                    qualifierTypeLine, std::array<TExtension, 3u>{
-                                           {TExtension::EXT_shader_framebuffer_fetch,
-                                            TExtension::EXT_shader_framebuffer_fetch_non_coherent,
-                                            TExtension::ANGLE_shader_pixel_local_storage}}))
+                    qualifierTypeLine,
+                    std::array<TExtension, 2u>{
+                        {TExtension::EXT_shader_framebuffer_fetch,
+                         TExtension::EXT_shader_framebuffer_fetch_non_coherent}}))
             {
                 checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 100);
                 qualifier.noncoherent = true;
