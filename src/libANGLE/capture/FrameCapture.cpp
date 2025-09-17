@@ -1058,6 +1058,12 @@ void MaybeResetDefaultUniforms(std::stringstream &out,
         // Emit the reset calls per modified location
         for (const gl::UniformLocation &location : locations)
         {
+            // If location is equal to -1, the data passed in will be silently ignored and the
+            // specified uniform variable will not be changed
+            if (location.value == -1)
+            {
+                continue;
+            }
             gl::UniformLocation baseLocation =
                 resourceTracker->getDefaultUniformBaseLocation(programID, location);
             if (alreadyReset.find(baseLocation) != alreadyReset.end())
