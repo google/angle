@@ -2574,7 +2574,7 @@ void main() {
                            reinterpret_cast<const void *>(0));
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(colorLocation);
 
     drawQuad(program, "a_position", 0.5f);
 
