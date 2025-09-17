@@ -1037,7 +1037,8 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
                     static_cast<const TVariable *>(getSymbolTable().findBuiltIn(
                         ImmutableString("gl_NumSamples"), getShaderVersion()));
                 TIntermTyped *numSamples = driverUniforms->getNumSamples();
-                if (!ReplaceVariableWithTyped(this, root, numSamplesVar, numSamples))
+                if (numSamplesVar &&
+                    !ReplaceVariableWithTyped(this, root, numSamplesVar, numSamples))
                 {
                     return false;
                 }

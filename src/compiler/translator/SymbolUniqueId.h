@@ -56,4 +56,13 @@ enum class SymbolClass : uint8_t
 
 }  // namespace sh
 
+namespace std
+{
+template <>
+struct hash<sh::TSymbolUniqueId>
+{
+    size_t operator()(const sh::TSymbolUniqueId &key) const { return key.get(); }
+};
+}  // namespace std
+
 #endif  // COMPILER_TRANSLATOR_SYMBOLUNIQUEID_H_

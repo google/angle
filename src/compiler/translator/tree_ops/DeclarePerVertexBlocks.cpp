@@ -238,7 +238,7 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
         }
 
         // If this built-in was already visited, reuse the variable defined for it.
-        auto replacement = mVariableMap.find(variable);
+        auto replacement = mVariableMap.find(variable->uniqueId());
         if (replacement != mVariableMap.end())
         {
             queueReplacement(replacement->second->deepCopy(), OriginalNode::IS_DROPPED);
@@ -273,7 +273,7 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
                                                variable->symbolType(), variable->extensions());
 
         TIntermSymbol *newSymbol = new TIntermSymbol(newVariable);
-        mVariableMap[variable]   = newSymbol;
+        mVariableMap[variable->uniqueId()] = newSymbol;
 
         queueReplacement(newSymbol, OriginalNode::IS_DROPPED);
     }

@@ -186,7 +186,7 @@ struct ObjectAndAccessChain
 
 bool operator==(const ObjectAndAccessChain &a, const ObjectAndAccessChain &b)
 {
-    return a.variable == b.variable && a.accessChain == b.accessChain;
+    return a.variable->uniqueId() == b.variable->uniqueId() && a.accessChain == b.accessChain;
 }
 
 struct ObjectAndAccessChainHash

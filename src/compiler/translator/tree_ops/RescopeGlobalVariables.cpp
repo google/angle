@@ -58,7 +58,7 @@ class Rescoper : public TIntermTraverser
                     const TVariable *newVar =
                         new TVariable(&compiler->getSymbolTable(), pair.first->name(), newType,
                                       pair.first->symbolType(), pair.first->extensions());
-                    replacementMap[pair.first] = new TIntermSymbol(newVar);
+                    replacementMap[pair.first->uniqueId()] = new TIntermSymbol(newVar);
 
                     movedDeclarations.insert(pair.second.declaration);
                 }
