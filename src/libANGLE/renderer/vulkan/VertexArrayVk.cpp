@@ -313,8 +313,7 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk,
       mVertexInputAttribDesc{},
       mCurrentElementArrayBuffer(nullptr),
       mLineLoopHelper(contextVk->getRenderer()),
-      mDirtyLineLoopTranslation(true),
-      mAllowZeroDivisor(!contextVk->getFeatures().supportsVertexInputDynamicState.enabled)
+      mDirtyLineLoopTranslation(true)
 {
     vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
 
@@ -322,12 +321,20 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk,
     mCurrentArrayBufferOffsets.fill(0);
     mCurrentArrayBuffers.fill(&emptyBuffer);
 
-    GLuint divisor = mAllowZeroDivisor ? 0 : 1;
+    // Divisor value is ignored by the implementation when using VK_VERTEX_INPUT_RATE_VERTEX, but it
+    // is set to 1 to avoid a validation error due to a validation layer issue.
+    mZeroDivisor =
+        contextVk->getRenderer()->isVertexAttributeInstanceRateZeroDivisorAllowed() ? 0 : 1;
+
     for (uint32_t attribIndex = 0; attribIndex < mVertexInputBindingDesc.size(); attribIndex++)
     {
         mVertexInputBindingDesc[attribIndex] = VkVertexInputBindingDescription2EXT{
-            VK_STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT,    nullptr, attribIndex, 0,
-            static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_VERTEX), divisor};
+            VK_STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT,
+            nullptr,
+            attribIndex,
+            0,
+            static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_VERTEX),
+            mZeroDivisor};
     }
 
     for (uint32_t attribIndex = 0; attribIndex < mVertexInputAttribDesc.size(); attribIndex++)
@@ -1556,23 +1563,17 @@ ANGLE_INLINE void VertexArrayVk::setVertexInputBindingDescDivisor(vk::Renderer *
                                                                   size_t attribIndex,
                                                                   GLuint divisor)
 {
-    mVertexInputBindingDesc[attribIndex].divisor = divisor;
     if (divisor != 0)
     {
         mVertexInputBindingDesc[attribIndex].inputRate =
             static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_INSTANCE);
+        mVertexInputBindingDesc[attribIndex].divisor = divisor;
     }
     else
     {
         mVertexInputBindingDesc[attribIndex].inputRate =
             static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_VERTEX);
-        if (!mAllowZeroDivisor)
-        {
-            // Divisor value is ignored by the implementation when using
-            // VK_VERTEX_INPUT_RATE_VERTEX, but it is set to 1 to avoid a validation error
-            // due to a validation layer issue.
-            mVertexInputBindingDesc[attribIndex].divisor = 1;
-        }
+        mVertexInputBindingDesc[attribIndex].divisor = mZeroDivisor;
     }
 }
 }  // namespace rx

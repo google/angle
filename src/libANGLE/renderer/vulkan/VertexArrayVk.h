@@ -265,7 +265,8 @@ class VertexArrayVk : public VertexArrayImpl
     gl::VertexArray::DirtyBindingBits mBindingDirtyBitsRequiresPipelineUpdate;
     gl::VertexArray::DirtyAttribBits mAttribDirtyBitsRequiresPipelineUpdate;
 
-    bool mAllowZeroDivisor;
+    // This maybe 0 or 1 depends on feature bit
+    uint32_t mZeroDivisor;
 };
 }  // namespace rx
 

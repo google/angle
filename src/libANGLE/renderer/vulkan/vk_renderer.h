@@ -720,6 +720,12 @@ class Renderer : angle::NonCopyable
     uint32_t getPreferredVectorWidthDouble() const { return mPreferredVectorWidthDouble; }
     uint32_t getPreferredVectorWidthHalf() const { return mPreferredVectorWidthHalf; }
 
+    bool isVertexAttributeInstanceRateZeroDivisorAllowed() const
+    {
+        return !mFeatures.supportsVertexInputDynamicState.enabled ||
+               mVertexAttributeDivisorFeatures.vertexAttributeInstanceRateZeroDivisor == VK_TRUE;
+    }
+
   private:
     angle::Result setupDevice(vk::ErrorContext *context,
                               const angle::FeatureOverrides &featureOverrides,
