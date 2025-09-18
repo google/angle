@@ -1520,36 +1520,31 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
 
 angle::Result VertexArrayVk::updateDefaultAttrib(ContextVk *contextVk, size_t attribIndex)
 {
+    ASSERT(!mState.getEnabledAttributesMask().test(attribIndex));
     vk::Renderer *renderer = contextVk->getRenderer();
-    if (!mState.getEnabledAttributesMask().test(attribIndex))
-    {
-        vk::BufferHelper *bufferHelper;
-        ANGLE_TRY(
-            contextVk->allocateStreamedVertexBuffer(attribIndex, kDefaultValueSize, &bufferHelper));
+    vk::BufferHelper *bufferHelper;
+    ANGLE_TRY(
+        contextVk->allocateStreamedVertexBuffer(attribIndex, kDefaultValueSize, &bufferHelper));
 
-        const gl::VertexAttribCurrentValueData &defaultValue =
-            contextVk->getState().getVertexAttribCurrentValues()[attribIndex];
-        uint8_t *ptr = bufferHelper->getMappedMemory();
-        memcpy(ptr, &defaultValue.Values, kDefaultValueSize);
-        ANGLE_TRY(bufferHelper->flush(contextVk->getRenderer()));
+    const gl::VertexAttribCurrentValueData &defaultValue =
+        contextVk->getState().getVertexAttribCurrentValues()[attribIndex];
+    uint8_t *ptr = bufferHelper->getMappedMemory();
+    memcpy(ptr, &defaultValue.Values, kDefaultValueSize);
+    ANGLE_TRY(bufferHelper->flush(contextVk->getRenderer()));
 
-        VkDeviceSize bufferOffset;
-        mCurrentArrayBufferHandles[attribIndex] =
-            bufferHelper->getBufferForVertexArray(contextVk, kDefaultValueSize, &bufferOffset)
-                .getHandle();
-        mCurrentArrayBufferOffsets[attribIndex]  = bufferOffset;
-        mCurrentArrayBufferSizes[attribIndex]       = kDefaultValueSize;
-        mCurrentArrayBuffers[attribIndex]        = bufferHelper;
-        mCurrentArrayBufferSerial[attribIndex]   = bufferHelper->getBufferSerial();
-        mVertexInputBindingDesc[attribIndex].stride = 0;
-        setVertexInputBindingDescDivisor(renderer, attribIndex, 0);
+    VkDeviceSize bufferOffset;
+    mCurrentArrayBufferHandles[attribIndex] =
+        bufferHelper->getBufferForVertexArray(contextVk, kDefaultValueSize, &bufferOffset)
+            .getHandle();
+    mCurrentArrayBufferOffsets[attribIndex]     = bufferOffset;
+    mCurrentArrayBufferSizes[attribIndex]       = kDefaultValueSize;
+    mCurrentArrayBuffers[attribIndex]           = bufferHelper;
+    mCurrentArrayBufferSerial[attribIndex]      = bufferHelper->getBufferSerial();
+    mVertexInputBindingDesc[attribIndex].stride = 0;
+    setVertexInputBindingDescDivisor(renderer, attribIndex, 0);
 
-        setDefaultPackedInput(contextVk, attribIndex, &mDefaultAttribFormatIDs[attribIndex]);
-        setVertexInputAttribDescFormat(renderer, attribIndex, mDefaultAttribFormatIDs[attribIndex]);
-
-        ANGLE_TRY(contextVk->onVertexAttributeChange(
-            attribIndex, 0, 0, mDefaultAttribFormatIDs[attribIndex], 0, nullptr));
-    }
+    setDefaultPackedInput(contextVk, attribIndex, &mDefaultAttribFormatIDs[attribIndex]);
+    setVertexInputAttribDescFormat(renderer, attribIndex, mDefaultAttribFormatIDs[attribIndex]);
 
     return angle::Result::Continue;
 }

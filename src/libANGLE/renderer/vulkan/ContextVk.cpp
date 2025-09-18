@@ -2115,14 +2115,18 @@ angle::Result ContextVk::handleDirtyGraphicsDefaultAttribs(DirtyBits::Iterator *
                                                            DirtyBits dirtyBitMask)
 {
     ASSERT(mDirtyDefaultAttribsMask.any());
-
-    gl::AttributesMask attribsMask =
-        mDirtyDefaultAttribsMask & mState.getProgramExecutable()->getAttributesMask();
     VertexArrayVk *vertexArrayVk = getVertexArray();
+
+    gl::AttributesMask attribsMask = mDirtyDefaultAttribsMask;
+    attribsMask &= ~vertexArrayVk->getCurrentEnabledAttributesMask();
+    attribsMask &= mState.getProgramExecutable()->getAttributesMask();
+
     for (size_t attribIndex : attribsMask)
     {
         ANGLE_TRY(vertexArrayVk->updateDefaultAttrib(this, attribIndex));
     }
+
+    ANGLE_TRY(onVertexArrayChange(attribsMask));
 
     mDirtyDefaultAttribsMask.reset();
     return angle::Result::Continue;
@@ -9302,20 +9306,7 @@ void ContextVk::resetPerFramePerfCounters()
         .resetDescriptorCacheStats();
 }
 
-angle::Result ContextVk::ensureInterfacePipelineCache()
-{
-    if (!mInterfacePipelinesCache.valid())
-    {
-        VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
-        pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-
-        ANGLE_VK_TRY(this, mInterfacePipelinesCache.init(getDevice(), pipelineCacheCreateInfo));
-    }
-
-    return angle::Result::Continue;
-}
-
-angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask enabledAttribDirtyBits)
+angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask dirtyAttribBits)
 {
     const VertexArrayVk &vertexArray = *getVertexArray();
 
@@ -9323,7 +9314,7 @@ angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask enabledAtt
     {
         invalidateCurrentGraphicsPipeline();
 
-        for (size_t attribIndex : enabledAttribDirtyBits)
+        for (size_t attribIndex : dirtyAttribBits)
         {
             const GLuint staticStride =
                 mRenderer->getFeatures().useVertexInputBindingStrideDynamicState.enabled
@@ -9344,7 +9335,7 @@ angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask enabledAtt
     {
         const gl::AttribArray<vk::BufferHelper *> &buffers = vertexArray.getCurrentArrayBuffers();
         bool breakRenderPass                               = false;
-        for (size_t attribIndex : enabledAttribDirtyBits)
+        for (size_t attribIndex : dirtyAttribBits)
         {
             ASSERT(buffers[attribIndex] != nullptr);
             if (buffers[attribIndex]->writtenByCommandBuffer(mCurrentTransformFeedbackQueueSerial))

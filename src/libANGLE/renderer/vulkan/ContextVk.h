@@ -413,13 +413,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mGraphicsDirtyBits |= kIndexAndVertexDirtyBits;
     }
 
-    angle::Result onVertexArrayChange(const gl::AttributesMask enabledAttribDirtyBits);
-    angle::Result onVertexAttributeChange(size_t attribIndex,
-                                          GLuint stride,
-                                          GLuint divisor,
-                                          angle::FormatID format,
-                                          GLuint relativeOffset,
-                                          const vk::BufferHelper *vertexBuffer);
+    angle::Result onVertexArrayChange(const gl::AttributesMask dirtyAttribBits);
 
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
@@ -1452,8 +1446,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void generateOutsideRenderPassCommandsQueueSerial();
     void generateRenderPassCommandsQueueSerial(QueueSerial *queueSerialOut);
 
-    angle::Result ensureInterfacePipelineCache();
-
     angle::ImageLoadContext mImageLoadContext;
 
     std::array<GraphicsDirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
@@ -1751,30 +1743,6 @@ ANGLE_INLINE angle::Result ContextVk::onIndexBufferChange(
     mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
     mLastIndexBufferOffset = reinterpret_cast<const void *>(angle::DirtyPointer);
     return endRenderPassIfTransformFeedbackBuffer(currentIndexBuffer);
-}
-
-ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex,
-                                                              GLuint stride,
-                                                              GLuint divisor,
-                                                              angle::FormatID format,
-                                                              GLuint relativeOffset,
-                                                              const vk::BufferHelper *vertexBuffer)
-{
-    const GLuint staticStride =
-        mRenderer->getFeatures().useVertexInputBindingStrideDynamicState.enabled ? 0 : stride;
-
-    if (!getFeatures().supportsVertexInputDynamicState.enabled)
-    {
-        invalidateCurrentGraphicsPipeline();
-
-        ASSERT(divisor <= mRenderer->getMaxVertexAttribDivisor());
-        mGraphicsPipelineDesc->updateVertexInput(this, &mGraphicsPipelineTransition,
-                                                 static_cast<uint32_t>(attribIndex), staticStride,
-                                                 divisor, format, relativeOffset);
-    }
-
-    mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
-    return endRenderPassIfTransformFeedbackBuffer(vertexBuffer);
 }
 
 ANGLE_INLINE bool ContextVk::hasUnsubmittedUse(const vk::ResourceUse &use) const
