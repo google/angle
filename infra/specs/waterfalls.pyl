@@ -19,6 +19,14 @@
       'swarming_containment_auto',
     ],
     'machines': {
+      'android-arm64-exp-pixel10': {
+        'os_type': 'android',
+        'mixins': [
+          'gpu_pixel_10_stable',
+        ],
+        'test_suites': {
+        },
+      },
       'android-arm64-exp-pixel6': {  # android-arm64-pixel6 below for android-arm64-test
         'os_type': 'android',
         'mixins': [
