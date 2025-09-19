@@ -167,6 +167,7 @@ enum class Feature
     ExplicitlyEnablePerSampleShading,
     ExposeES32ForTesting,
     ExposeNonConformantExtensionsAndVersions,
+    ExternallySynchronizePipelineCacheAccess,
     FinishDoesNotCauseQueriesToBeAvailable,
     FlushAfterEndingTransformFeedback,
     FlushAfterStreamVertexData,

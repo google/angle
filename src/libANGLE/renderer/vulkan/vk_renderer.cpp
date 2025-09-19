@@ -6114,6 +6114,17 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                                  (mFeatures.preferMonolithicPipelinesOverLibraries.enabled &&
                                   libraryBlobsAreReusedByMonolithicPipelines)));
 
+    // Whether all accesses to pipeline cache need to be externally synchronized. This should only
+    // be enabled on platforms if:
+    //
+    // - mergeProgramPipelineCachesToGlobalCache is enabled
+    // - preferMonolithicPipelinesOverLibraries is enabled
+    // - stale nvidia drivers
+    ANGLE_FEATURE_CONDITION(&mFeatures, externallySynchronizePipelineCacheAccess,
+                            mFeatures.mergeProgramPipelineCachesToGlobalCache.enabled ||
+                                mFeatures.preferMonolithicPipelinesOverLibraries.enabled ||
+                                (isNvidia && driverVersion < angle::VersionTriple(441, 0, 0)));
+
     ANGLE_FEATURE_CONDITION(&mFeatures, enableAsyncPipelineCacheCompression, true);
 
     // Enable using an extra submit fence for the command batches. In case there is an external
@@ -6588,8 +6599,7 @@ angle::Result Renderer::getPipelineCache(vk::ErrorContext *context,
     ANGLE_TRY(ensurePipelineCacheInitialized(context));
 
     angle::SimpleMutex *pipelineCacheMutex =
-        context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled ||
-                context->getFeatures().preferMonolithicPipelinesOverLibraries.enabled
+        context->getFeatures().externallySynchronizePipelineCacheAccess.enabled
             ? &mPipelineCacheMutex
             : nullptr;
 

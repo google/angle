@@ -1562,6 +1562,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo externallySynchronizePipelineCacheAccess = {
+        "externallySynchronizePipelineCacheAccess",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
