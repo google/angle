@@ -238,6 +238,7 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
         switch (arg.type)
         {
             case NonSemanticClspvReflectionArgumentPodPushConstant:
+            {
                 ASSERT(mPodArgumentPushConstants.size() >=
                        arg.pushConstantSize + arg.pushConstOffset);
                 arg.handle     = &mPodArgumentPushConstants[arg.pushConstOffset];
@@ -248,8 +249,10 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
                     ANGLE_UNSAFE_TODO(memcpy(arg.handle, argValue, arg.handleSize));
                 }
                 break;
+            }
             case NonSemanticClspvReflectionArgumentPodUniform:
             case NonSemanticClspvReflectionArgumentPodStorageBuffer:
+            {
                 ASSERT(mPodBuffer->getSize() >= argSize + arg.podUniformOffset);
                 if (argSize > 0 && argValue != nullptr)
                 {
@@ -257,8 +260,20 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
                         argValue, arg.podStorageBufferOffset, argSize));
                 }
                 break;
+            }
             case NonSemanticClspvReflectionArgumentUniform:
             case NonSemanticClspvReflectionArgumentStorageBuffer:
+            {
+                ASSERT(argSize == sizeof(cl_mem *));
+                arg.handleSize = argSize;
+                arg.handle     = nullptr;
+                // Argument can be null ptr
+                if (argValue && *static_cast<const cl_mem *>(argValue))
+                {
+                    arg.handle = *static_cast<const cl_mem *>(argValue);
+                }
+                break;
+            }
             case NonSemanticClspvReflectionArgumentStorageImage:
             case NonSemanticClspvReflectionArgumentSampledImage:
             case NonSemanticClspvReflectionArgumentUniformTexelBuffer:
