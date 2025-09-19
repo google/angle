@@ -1945,7 +1945,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
 
     gl::LevelIndex level(index.getLevelIndex());
 
-    UtilsVk::CopyImageParameters params;
+    UtilsVk::CopyImageParameters params = {};
     params.srcOffset[0]        = rotatedSourceBox.x;
     params.srcOffset[1]        = rotatedSourceBox.y;
     params.srcExtents[0]       = rotatedSourceBox.width;
