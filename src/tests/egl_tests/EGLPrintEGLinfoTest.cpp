@@ -535,6 +535,9 @@ class EGLPrintFeaturesVulkanExtensionsInfoTest : public EGLPrintEGLinfoTest
 // Log enabled features
 TEST_P(EGLPrintFeaturesVulkanExtensionsInfoTest, LogEnabledFeatures)
 {
+    // The system EGL may not expose ANGLE-specific extensions, which is not a failure.
+    ANGLE_SKIP_TEST_IF(isDriverSystemEgl());
+
     ASSERT_EQ(IsEGLClientExtensionEnabled("EGL_ANGLE_feature_control"), true);
 
     EGLAttrib featureCount = -1;
