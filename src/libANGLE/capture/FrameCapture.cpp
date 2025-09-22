@@ -4575,6 +4575,12 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     CallResetMap &resetCalls = resetHelper.getResetCalls();
     Capture(&resetCalls[angle::EntryPoint::GLBindVertexArray],
             vertexArrayFuncs.bindVertexArray(replayState, true, currentVertexArray->id()));
+    gl::Buffer *elementArrayBuffer = currentVertexArray->getElementArrayBuffer();
+    if (elementArrayBuffer)
+    {
+        resetHelper.setStartingBufferBinding(gl::BufferBinding::ElementArray,
+                                             currentVertexArray->getElementArrayBuffer()->id());
+    }
 
     // Capture indexed buffer bindings.
     const gl::BufferVector &uniformIndexedBuffers =
