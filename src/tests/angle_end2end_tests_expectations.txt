@@ -208,9 +208,6 @@ b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWi
 42267037 WIN NVIDIA VULKAN : Texture2DTestES3.TexStorage2DSimultaneousUseOfMultipleYuvSourcesNoData/* = SKIP
 42267037 WIN NVIDIA GLES : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
 42267037 WIN NVIDIA OPENGL : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
-42267037 WIN NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinary/* = SKIP
-42267037 WIN NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinaryTwice/* = SKIP
-42267037 WIN NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsWarmedUpAtLinkTime/* = SKIP
 
 // Intel/windows does not ignore gl_Layer for non-layered framebuffers
 374790899 WIN INTEL OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
@@ -239,9 +236,6 @@ b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWi
 362545033 LINUX NVIDIA VULKAN : EGLBufferAgeTest.SingleBuffer/* = SKIP
 362545033 LINUX NVIDIA VULKAN : GLSLTest.NestedPowStatements/* = SKIP
 362486580 LINUX NVIDIA VULKAN : SixteenBppTextureTestES3.RGB5A1UploadRGBA8/* = SKIP
-362545033 LINUX NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinary/* = SKIP
-362545033 LINUX NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinaryTwice/* = SKIP
-362545033 LINUX NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsWarmedUpAtLinkTime/* = SKIP
 362545033 LINUX NVIDIA VULKAN : VulkanPerformanceCounterTest_SingleBuffer.SwapBuffersAfterFlushIgnored/* = SKIP
 362545033 LINUX NVIDIA OPENGL : PointSpriteTest.TrianglesNotTreatedAsPointSprites/* = SKIP
 362545033 LINUX NVIDIA OPENGL : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
@@ -320,9 +314,6 @@ b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWi
 40644895 WIN INTEL VULKAN : RobustBufferAccessBehaviorTest.DynamicBuffer/* = SKIP
 40644895 WIN INTEL VULKAN : RobustBufferAccessBehaviorTest.InterleavedAttributes/* = SKIP
 40644895 WIN INTEL VULKAN : Texture2DTestES3.NonZeroBaseEmulatedClear/* = SKIP
-40644895 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinary/* = SKIP
-40644895 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinaryTwice/* = SKIP
-40644895 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsWarmedUpAtLinkTime/* = SKIP
 342557702 WIN INTEL VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoSupportsExtendedDynamicState2 = SKIP
 433836330 WIN INTEL VULKAN : TransformFeedbackTestES31.ModeMismatchClassMismatch/* = SKIP
 // vk_icdNegotiateLoaderICDInterfaceVersion crashes (possibly Mesa bug?)
@@ -1300,9 +1291,6 @@ b/267953710 GALAXYS22 VULKAN : TextureSampleShadingTest.Basic/* = SKIP
 b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest.bufferDataWithSizeFollowedByZeroAndThenSizeAgainShouldReuseStorage/* = SKIP
 b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest.BufferSubDataShouldNotTriggerSyncState_Copy/* = SKIP
 b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest.BufferSubDataShouldNotTriggerSyncState_SubData/* = SKIP
-b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinary/* = SKIP
-b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinaryTwice/* = SKIP
-b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsWarmedUpAtLinkTime/* = SKIP
 b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDrawThenClear/* = SKIP
 372059358 GALAXYS22 VULKAN : MultisampleTestES3.CopyTexImage2DFromMsaaDefaultFbo/* = SKIP
 40644776 GALAXYS22 VULKAN : ImageTestES3.SourceAHBTarget2DGenerateMipmap* = SKIP
