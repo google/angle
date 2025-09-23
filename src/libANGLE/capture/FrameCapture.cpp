@@ -3868,6 +3868,15 @@ void CaptureShareGroupMidExecutionSetup(
             }
         };
 
+        auto capTexParams = [&replayState, texture, &texSetupCalls](GLenum pname,
+                                                                    const GLint *params) {
+            for (std::vector<CallCapture> *calls : texSetupCalls)
+            {
+                Capture(calls, CaptureTexParameteriv(replayState, true, texture->getType(), pname,
+                                                     params));
+            }
+        };
+
         if (textureSamplerState.getMinFilter() != defaultSamplerState.getMinFilter())
         {
             capTexParam(GL_TEXTURE_MIN_FILTER, textureSamplerState.getMinFilter());
@@ -3942,6 +3951,13 @@ void CaptureShareGroupMidExecutionSetup(
         if (texture->getMaxLevel() != 1000)
         {
             capTexParam(GL_TEXTURE_MAX_LEVEL, texture->getMaxLevel());
+        }
+
+        if (context->isGLES1() && texture->getCrop() != gl::Rectangle())
+        {
+            const gl::Rectangle &crop = texture->getCrop();
+            const GLint params[4]{crop.x, crop.y, crop.width, crop.height};
+            capTexParams(GL_TEXTURE_CROP_RECT_OES, params);
         }
 
         // If the texture is immutable, initialize it with TexStorage
