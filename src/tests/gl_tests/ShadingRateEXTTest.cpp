@@ -149,10 +149,11 @@ TEST_P(ShadingRateEXTTest, FragmentShadingRate)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
-// Test EXT_fragment_shading_rate state change with Blend
+// Test EXT_fragment_shading_rate and EXT_fragment_shading_rate_primitive state change with Blend
 TEST_P(ShadingRateEXTTest, FragmentShadingRateBlend)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_fragment_shading_rate"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_fragment_shading_rate_primitive"));
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
