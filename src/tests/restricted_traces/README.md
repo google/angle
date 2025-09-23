@@ -254,6 +254,28 @@ storage on sdcard, but create a subfolder to isolate ANGLE's files:
 adb shell mkdir -p /sdcard/Android/data/$PACKAGE_NAME/angle_capture
 ```
 
+If the [capture](#Trigger the capture) failed due
+to these errors:
+
+```
+Output directory
+'/sdcard/Android/data/$PACKAGE_NAME/angle_capture/' does not exist.
+Create it over adb using mkdir.
+```
+
+```
+Could not open binary data file /sdcard/Android/data/$PACKAGE_NAME/angle_capture/$LABEL.angledata.gz
+```
+
+It means the app does not have access to /sdcard/. We will need to use the app's
+own data storage, which requires enabling adb root first:
+
+```
+adb root
+adb shell setprop debug.angle.capture.out_dir /data/data/$PACKAGE_NAME/angle_capture
+adb shell mkdir -p /data/data/$PACKAGE_NAME/angle_capture
+```
+
 ## Start the target app
 
 From here, you can start the application. You should see logcat entries like the following,
