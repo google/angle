@@ -417,6 +417,20 @@ TEST_P(CopyTexImageTest, RGBAToRGB8)
     runCopyTexImageTest(GL_RGB8, expected);
 }
 
+// CopyTexImage from GL_RGBA to GL_RGB8
+TEST_P(CopyTexImageTest, NoResizeRGBAToRGB8)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_required_internalformat"));
+    GLubyte expected[3][4] = {
+        {64, 255, 191, 255},
+        {255, 191, 127, 255},
+        {127, 64, 255, 255},
+    };
+
+    initializeResources(GL_RGBA, GL_UNSIGNED_BYTE);
+    runCopyTexImageTestNoResize(GL_RGB8, expected);
+}
+
 // CopyTexImage from GL_RGBA to GL_RGBA
 TEST_P(CopyTexImageTest, RGBAToRGBA)
 {

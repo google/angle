@@ -300,8 +300,10 @@ angle::Result TextureWgpu::copySubImageImpl(const gl::Context *context,
                                  clippedSourceBox);
     }
 
-    UNIMPLEMENTED();
-    return angle::Result::Continue;
+    return getImage()->copyImageCpuReadback(
+        context, index, clippedSourceArea, modifiedDestOffset,
+        gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), internalFormat,
+        colorReadRT->getImage(), source->getExtents());
 }
 
 angle::Result TextureWgpu::copyTexture(const gl::Context *context,

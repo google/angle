@@ -1516,6 +1516,15 @@ constexpr T roundDownPow2(const T value, const T alignment)
 }
 
 template <typename T>
+angle::CheckedNumeric<T> CheckedRoundUpPow2(const T value, const T alignment)
+{
+    ASSERT(gl::isPow2(alignment));
+    angle::CheckedNumeric<T> checkedValue(value);
+    angle::CheckedNumeric<T> checkedAlignment(alignment);
+    return (checkedValue + checkedAlignment - 1) & ~(checkedAlignment - 1);
+}
+
+template <typename T>
 angle::CheckedNumeric<T> CheckedRoundUp(const T value, const T alignment)
 {
     angle::CheckedNumeric<T> checkedValue(value);
