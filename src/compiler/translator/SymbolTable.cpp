@@ -208,16 +208,10 @@ TSymbolTable::VariableMetadata *TSymbolTable::getOrCreateVariableMetadata(const 
     return &iter->second;
 }
 
-void TSymbolTable::markStaticWrite(const TVariable &variable)
+void TSymbolTable::markStaticUse(const TVariable &variable)
 {
-    auto metadata         = getOrCreateVariableMetadata(variable);
-    metadata->staticWrite = true;
-}
-
-void TSymbolTable::markStaticRead(const TVariable &variable)
-{
-    auto metadata        = getOrCreateVariableMetadata(variable);
-    metadata->staticRead = true;
+    auto metadata       = getOrCreateVariableMetadata(variable);
+    metadata->staticUse = true;
 }
 
 bool TSymbolTable::isStaticallyUsed(const TVariable &variable) const
@@ -225,7 +219,7 @@ bool TSymbolTable::isStaticallyUsed(const TVariable &variable) const
     ASSERT(!variable.getConstPointer());
     int id    = variable.uniqueId().get();
     auto iter = mVariableMetadata.find(id);
-    return iter != mVariableMetadata.end() && (iter->second.staticRead || iter->second.staticWrite);
+    return iter != mVariableMetadata.end() && iter->second.staticUse;
 }
 
 void TSymbolTable::addInvariantVarying(const TVariable &variable)
@@ -431,9 +425,7 @@ void TSymbolTable::initSamplerDefaultPrecision(TBasicType samplerType)
     setDefaultPrecision(samplerType, EbpLow);
 }
 
-TSymbolTable::VariableMetadata::VariableMetadata()
-    : staticRead(false), staticWrite(false), invariant(false)
-{}
+TSymbolTable::VariableMetadata::VariableMetadata() : staticUse(false), invariant(false) {}
 
 const TSymbol *SymbolRule::get(ShShaderSpec shaderSpec,
                                int shaderVersion,

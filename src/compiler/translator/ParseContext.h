@@ -548,7 +548,7 @@ class TParseContext : angle::NonCopyable
     // Note that there may be tests in AtomicCounter_test that will need to be updated as well.
     constexpr static size_t kAtomicCounterArrayStride = 4;
 
-    void markStaticReadIfSymbol(TIntermNode *node);
+    void markStaticUseIfSymbol(TIntermNode *node);
 
     // Returns a clamped index. If it prints out an error message, the token is "[]".
     int checkIndexLessThan(bool outOfRangeIndexIsError,

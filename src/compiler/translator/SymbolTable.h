@@ -234,8 +234,7 @@ class TSymbolTable : angle::NonCopyable, TSymbolTableBase
     const TVariable *gl_FragData() const;
     const TVariable *gl_SecondaryFragDataEXT() const;
 
-    void markStaticRead(const TVariable &variable);
-    void markStaticWrite(const TVariable &variable);
+    void markStaticUse(const TVariable &variable);
 
     // Note: Should not call this for constant variables.
     bool isStaticallyUsed(const TVariable &variable) const;
@@ -288,8 +287,7 @@ class TSymbolTable : angle::NonCopyable, TSymbolTableBase
     struct VariableMetadata
     {
         VariableMetadata();
-        bool staticRead;
-        bool staticWrite;
+        bool staticUse;
         bool invariant;
     };
 

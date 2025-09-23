@@ -626,12 +626,12 @@ void TParseContext::checkPrecisionSpecified(const TSourceLoc &line,
     }
 }
 
-void TParseContext::markStaticReadIfSymbol(TIntermNode *node)
+void TParseContext::markStaticUseIfSymbol(TIntermNode *node)
 {
     TIntermSwizzle *swizzleNode = node->getAsSwizzleNode();
     if (swizzleNode)
     {
-        markStaticReadIfSymbol(swizzleNode->getOperand());
+        markStaticUseIfSymbol(swizzleNode->getOperand());
         return;
     }
     TIntermBinary *binaryNode = node->getAsBinaryNode();
@@ -643,7 +643,7 @@ void TParseContext::markStaticReadIfSymbol(TIntermNode *node)
             case EOpIndexIndirect:
             case EOpIndexDirectStruct:
             case EOpIndexDirectInterfaceBlock:
-                markStaticReadIfSymbol(binaryNode->getLeft());
+                markStaticUseIfSymbol(binaryNode->getLeft());
                 return;
             default:
                 return;
@@ -652,7 +652,7 @@ void TParseContext::markStaticReadIfSymbol(TIntermNode *node)
     TIntermSymbol *symbolNode = node->getAsSymbolNode();
     if (symbolNode)
     {
-        symbolTable.markStaticRead(symbolNode->variable());
+        symbolTable.markStaticUse(symbolNode->variable());
     }
 }
 
@@ -833,7 +833,7 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
     TIntermSymbol *symNode = node->getAsSymbolNode();
     if (message.empty() && symNode != nullptr)
     {
-        symbolTable.markStaticWrite(symNode->variable());
+        symbolTable.markStaticUse(symNode->variable());
         return true;
     }
 
@@ -966,7 +966,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
 
     for (TIntermNode *arg : arguments)
     {
-        markStaticReadIfSymbol(arg);
+        markStaticUseIfSymbol(arg);
         const TIntermTyped *argTyped = arg->getAsTyped();
         ASSERT(argTyped != nullptr);
         if (type.getBasicType() != EbtStruct && IsOpaqueType(argTyped->getBasicType()))
@@ -2471,7 +2471,7 @@ void TParseContext::functionCallRValueLValueErrorCheck(const TFunction *fnCandid
                                qual == EvqParamInOut || qual == EvqParamConst);
         if (argumentIsRead)
         {
-            markStaticReadIfSymbol(argument);
+            markStaticUseIfSymbol(argument);
             if (!IsImage(argument->getBasicType()))
             {
                 if (argument->getMemoryQualifier().writeonly)
@@ -2908,7 +2908,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
     }
 
     *initNode = new TIntermBinary(EOpInitialize, intermSymbol, initializer);
-    markStaticReadIfSymbol(initializer);
+    markStaticUseIfSymbol(initializer);
     (*initNode)->setLine(line);
     return true;
 }
@@ -2951,18 +2951,18 @@ TIntermNode *TParseContext::addLoop(TLoopType type,
     TIntermTyped *typedCond = nullptr;
     if (cond)
     {
-        markStaticReadIfSymbol(cond);
+        markStaticUseIfSymbol(cond);
         typedCond = cond->getAsTyped();
     }
     if (expr)
     {
-        markStaticReadIfSymbol(expr);
+        markStaticUseIfSymbol(expr);
     }
     // In case the loop body was not parsed as a block and contains a statement that simply refers
     // to a variable, we need to mark it as statically used.
     if (body)
     {
-        markStaticReadIfSymbol(body);
+        markStaticUseIfSymbol(body);
     }
     if (cond == nullptr || typedCond)
     {
@@ -3014,11 +3014,11 @@ TIntermNode *TParseContext::addIfElse(TIntermTyped *cond,
     // simply refers to a variable, we need to mark them as statically used.
     if (code.node1)
     {
-        markStaticReadIfSymbol(code.node1);
+        markStaticUseIfSymbol(code.node1);
     }
     if (code.node2)
     {
-        markStaticReadIfSymbol(code.node2);
+        markStaticUseIfSymbol(code.node2);
     }
 
     // For compile time constant conditions, prune the code now.
@@ -3035,7 +3035,7 @@ TIntermNode *TParseContext::addIfElse(TIntermTyped *cond,
     }
 
     TIntermIfElse *node = new TIntermIfElse(cond, EnsureBlock(code.node1), EnsureBlock(code.node2));
-    markStaticReadIfSymbol(cond);
+    markStaticUseIfSymbol(cond);
     node->setLine(loc);
 
     return node;
@@ -5572,7 +5572,7 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         }
     }
 
-    markStaticReadIfSymbol(indexExpression);
+    markStaticUseIfSymbol(indexExpression);
     TIntermBinary *node = new TIntermBinary(EOpIndexIndirect, baseExpression, indexExpression);
     node->setLine(location);
     // Indirect indexing can never be constant folded.
@@ -6700,7 +6700,7 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
         return nullptr;
     }
 
-    markStaticReadIfSymbol(init);
+    markStaticUseIfSymbol(init);
     TIntermSwitch *node = new TIntermSwitch(init, statementList);
     node->setLine(loc);
     return node;
@@ -6801,7 +6801,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
         return nullptr;
     }
 
-    markStaticReadIfSymbol(child);
+    markStaticUseIfSymbol(child);
     TIntermUnary *node = new TIntermUnary(op, child, func);
     node->setLine(loc);
 
@@ -7218,8 +7218,8 @@ TIntermTyped *TParseContext::addBinaryMathInternal(TOperator op,
 
     TIntermBinary *node = new TIntermBinary(op, left, right);
     ASSERT(op != EOpAssign);
-    markStaticReadIfSymbol(left);
-    markStaticReadIfSymbol(right);
+    markStaticUseIfSymbol(left);
+    markStaticUseIfSymbol(right);
     node->setLine(loc);
     return expressionOrFoldedResult(node);
 }
@@ -7290,9 +7290,9 @@ TIntermTyped *TParseContext::addAssign(TOperator op,
     }
     if (op != EOpAssign)
     {
-        markStaticReadIfSymbol(left);
+        markStaticUseIfSymbol(left);
     }
-    markStaticReadIfSymbol(right);
+    markStaticUseIfSymbol(right);
     node->setLine(loc);
     return node;
 }
@@ -7318,8 +7318,8 @@ TIntermTyped *TParseContext::addComma(TIntermTyped *left,
     }
 
     TIntermBinary *commaNode = TIntermBinary::CreateComma(left, right, mShaderVersion);
-    markStaticReadIfSymbol(left);
-    markStaticReadIfSymbol(right);
+    markStaticUseIfSymbol(left);
+    markStaticUseIfSymbol(right);
     commaNode->setLine(loc);
 
     return expressionOrFoldedResult(commaNode);
@@ -7375,7 +7375,7 @@ TIntermBranch *TParseContext::addBranch(TOperator op,
 {
     if (expression != nullptr)
     {
-        markStaticReadIfSymbol(expression);
+        markStaticUseIfSymbol(expression);
         ASSERT(op == EOpReturn);
         mFunctionReturnsValue = true;
         if (mCurrentFunctionType->getBasicType() == EbtVoid)
@@ -7396,7 +7396,7 @@ void TParseContext::appendStatement(TIntermBlock *block, TIntermNode *statement)
 {
     if (statement != nullptr)
     {
-        markStaticReadIfSymbol(statement);
+        markStaticUseIfSymbol(statement);
         block->appendStatement(statement);
     }
 }
@@ -7815,7 +7815,7 @@ TIntermTyped *TParseContext::addMethod(TFunctionLookup *fnCall, const TSourceLoc
     else
     {
         TIntermUnary *node = new TIntermUnary(EOpArrayLength, thisNode, nullptr);
-        markStaticReadIfSymbol(thisNode);
+        markStaticUseIfSymbol(thisNode);
         node->setLine(loc);
         return node->fold(mDiagnostics);
     }
@@ -7985,9 +7985,9 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
     }
 
     TIntermTernary *node = new TIntermTernary(cond, trueExpression, falseExpression);
-    markStaticReadIfSymbol(cond);
-    markStaticReadIfSymbol(trueExpression);
-    markStaticReadIfSymbol(falseExpression);
+    markStaticUseIfSymbol(cond);
+    markStaticUseIfSymbol(trueExpression);
+    markStaticUseIfSymbol(falseExpression);
     node->setLine(loc);
     return expressionOrFoldedResult(node);
 }
