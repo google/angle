@@ -73,7 +73,7 @@
                         "type":{
                             "basic":"Int",
                             "precision":"Low",
-                            "qualifier":"Uniform"
+                            "qualifier":"NumSamples"
                         }
                     }
                 }

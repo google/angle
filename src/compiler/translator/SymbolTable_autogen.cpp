@@ -579,12 +579,13 @@ constexpr const TVariable kgl_NumSamples(BuiltInId::gl_NumSamples,
                                          SymbolType::BuiltIn,
                                          std::array<TExtension, 1u>{
                                              {TExtension::OES_sample_variables}},
-                                         StaticType::Get<EbtInt, EbpLow, EvqUniform, 1, 1>());
-constexpr const TVariable kgl_NumSamplesES3_2(BuiltInId::gl_NumSamplesES3_2,
-                                              BuiltInName::gl_NumSamples,
-                                              SymbolType::BuiltIn,
-                                              std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                              StaticType::Get<EbtInt, EbpLow, EvqUniform, 1, 1>());
+                                         StaticType::Get<EbtInt, EbpLow, EvqNumSamples, 1, 1>());
+constexpr const TVariable kgl_NumSamplesES3_2(
+    BuiltInId::gl_NumSamplesES3_2,
+    BuiltInName::gl_NumSamples,
+    SymbolType::BuiltIn,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    StaticType::Get<EbtInt, EbpLow, EvqNumSamples, 1, 1>());
 constexpr const TVariable kgl_NumWorkGroups(
     BuiltInId::gl_NumWorkGroups,
     BuiltInName::gl_NumWorkGroups,

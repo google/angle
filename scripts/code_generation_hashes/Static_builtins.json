@@ -4,13 +4,13 @@
   "src/compiler/translator/Operator_autogen.h":
     "5bf164c0e357df73ab727dd14346f05e",
   "src/compiler/translator/SymbolTable_autogen.cpp":
-    "2bf73117a4421d4379b550746a0c2aa3",
+    "97a7f8904a73add623fea139eb08e283",
   "src/compiler/translator/SymbolTable_autogen.h":
     "b2e514444f403535c72b47d23e851591",
   "src/compiler/translator/builtin_function_declarations.txt":
     "df755020e057b626d8a8412bb481bea8",
   "src/compiler/translator/builtin_variables.json":
-    "29a0e307c28e8c932f0cd8b1d4b82245",
+    "6828e57a47a85bdb4a215eff1700d08f",
   "src/compiler/translator/gen_builtin_symbols.py":
     "868aec3ab57d9d487b66afc7ac454ba7",
   "src/compiler/translator/tree_util/BuiltIn_autogen.h":

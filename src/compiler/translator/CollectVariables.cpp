@@ -516,7 +516,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
     }
     else if (symbolName == "gl_NumSamples")
     {
-        ASSERT(qualifier == EvqUniform);
+        ASSERT(qualifier == EvqNumSamples);
 
         if (!mNumSamplesAdded)
         {
