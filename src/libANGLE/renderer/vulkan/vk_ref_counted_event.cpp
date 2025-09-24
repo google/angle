@@ -503,12 +503,16 @@ void EventBarrierArray::execute(Renderer *renderer, PrimaryCommandBuffer *primar
 
 void EventBarrierArray::addDiagnosticsString(std::ostringstream &out) const
 {
-    out << "Event Barrier: ";
+    std::ostringstream eventStream;
+    eventStream << "Event Barrier: ";
     for (const EventBarrier &barrier : mBarriers)
     {
-        barrier.addDiagnosticsString(out);
+        barrier.addDiagnosticsString(eventStream);
     }
-    out << "\\l";
+    if (!mBarriers.empty())
+    {
+        out << eventStream.str() << "\\l";
+    }
 }
 }  // namespace vk
 }  // namespace rx

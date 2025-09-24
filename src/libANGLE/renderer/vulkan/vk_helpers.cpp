@@ -4492,16 +4492,22 @@ void PipelineBarrierArray::execute(Renderer *renderer, PrimaryCommandBuffer *pri
 
 void PipelineBarrierArray::addDiagnosticsString(std::ostringstream &out) const
 {
-    out << "Memory Barrier: ";
+    std::ostringstream barrierStream;
+    barrierStream << "Memory Barrier: ";
+    bool haveBarrierLog = false;
     for (PipelineStage pipelineStage : mBarrierMask)
     {
         const PipelineBarrier &barrier = mBarriers[pipelineStage];
         if (!barrier.isEmpty())
         {
-            barrier.addDiagnosticsString(out);
+            haveBarrierLog = true;
+            barrier.addDiagnosticsString(barrierStream);
         }
     }
-    out << "\\l";
+    if (haveBarrierLog)
+    {
+        out << barrierStream.str() << "\\l";
+    }
 }
 
 // BufferHelper implementation.
