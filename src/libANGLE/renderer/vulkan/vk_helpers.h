@@ -998,6 +998,9 @@ class BufferHelper : public ReadWriteResource
     const Buffer &getBufferForVertexArray(ContextVk *contextVk,
                                           VkDeviceSize actualDataSize,
                                           VkDeviceSize *offsetOut);
+    const Buffer &getIndexBufferForVertexArray(ContextVk *contextVk,
+                                               VkDeviceSize actualDataSize,
+                                               VkDeviceSize *offsetOut);
 
     void onNewDescriptorSet(const SharedDescriptorSetCacheKey &sharedCacheKey)
     {
@@ -1040,6 +1043,10 @@ class BufferHelper : public ReadWriteResource
             mTransformFeedbackWriteHeuristicBits |= 1;
         }
     }
+
+    const Buffer &getBufferForVertexArrayImpl(ContextVk *contextVk,
+                                              VkDeviceSize actualDataSize,
+                                              VkDeviceSize *offsetOut);
 
     // Suballocation object.
     BufferSuballocation mSuballocation;

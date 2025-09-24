@@ -5914,9 +5914,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // VK_EXT_vertex_input_dynamic_state enables dynamic state for the full vertex input state. As
     // such, when available use supportsVertexInputDynamicState instead of
     // useVertexInputBindingStrideDynamicState.
-    ANGLE_FEATURE_CONDITION(&mFeatures, useVertexInputBindingStrideDynamicState,
-                            mFeatures.supportsExtendedDynamicState.enabled &&
-                                !isExtendedDynamicStateBuggy && !isVertexInputBindingStrideBuggy);
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, useVertexInputBindingStrideDynamicState,
+        mFeatures.supportsExtendedDynamicState.enabled && !isVertexInputBindingStrideBuggy);
     // On ARM drivers prior to r52, |vkCmdSetCullMode| incorrectly culls non-triangle topologies,
     // according to the errata: https://developer.arm.com/documentation/SDEN-3735689/0100/?lang=en
     ANGLE_FEATURE_CONDITION(&mFeatures, useCullModeDynamicState,

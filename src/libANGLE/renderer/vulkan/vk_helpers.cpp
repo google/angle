@@ -4852,6 +4852,22 @@ const Buffer &BufferHelper::getBufferForVertexArray(ContextVk *contextVk,
                                                     VkDeviceSize actualDataSize,
                                                     VkDeviceSize *offsetOut)
 {
+    ASSERT(!contextVk->getFeatures().useVertexInputBindingStrideDynamicState.enabled);
+    return getBufferForVertexArrayImpl(contextVk, actualDataSize, offsetOut);
+}
+
+const Buffer &BufferHelper::getIndexBufferForVertexArray(ContextVk *contextVk,
+                                                         VkDeviceSize actualDataSize,
+                                                         VkDeviceSize *offsetOut)
+{
+    ASSERT(!contextVk->getFeatures().supportsMaintenance5.enabled);
+    return getBufferForVertexArrayImpl(contextVk, actualDataSize, offsetOut);
+}
+
+const Buffer &BufferHelper::getBufferForVertexArrayImpl(ContextVk *contextVk,
+                                                        VkDeviceSize actualDataSize,
+                                                        VkDeviceSize *offsetOut)
+{
     ASSERT(mSuballocation.valid());
     ASSERT(actualDataSize <= mSuballocation.getSize());
 

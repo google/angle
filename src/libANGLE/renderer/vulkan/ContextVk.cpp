@@ -2788,7 +2788,7 @@ angle::Result ContextVk::handleDirtyGraphicsIndexBuffer(DirtyBits::Iterator *dir
     else
     {
         VkDeviceSize bufferOffset;
-        const vk::Buffer &buffer = elementArrayBuffer->getBufferForVertexArray(
+        const vk::Buffer &buffer = elementArrayBuffer->getIndexBufferForVertexArray(
             this, elementArrayBuffer->getSize(), &bufferOffset);
 
         mRenderPassCommandBuffer->bindIndexBuffer(buffer, bufferOffset + mCurrentIndexBufferOffset,
