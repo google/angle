@@ -6319,7 +6319,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             isTileBasedRenderer || isSoftwareRenderer);
     // vkCmdResetEvent adds extra GPU overhead and ARM prefers CPU overhead of creating/destroying
     // VkEvent instead of GPU overhead associated with vkCmdResetEvent.
-    ANGLE_FEATURE_CONDITION(&mFeatures, recycleVkEvent, !isARM);
+    ANGLE_FEATURE_CONDITION(&mFeatures, recycleVkEvent, false);
 
     // Disable for Samsung, details here -> http://anglebug.com/386749841#comment21
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDynamicRendering,
