@@ -753,6 +753,8 @@
 42265068 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
 42265068 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.max_lod.nearest_linear = FAIL
 42265068 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.max_lod.nearest_nearest = FAIL
+42265068 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.max_lod.linear_nearest = FAIL
+42265068 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.max_lod.linear_linear = FAIL
 42265068 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.linear_linear = FAIL
 42265068 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.linear_nearest = FAIL
 42265068 MAC METAL INTEL : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.nearest_linear = FAIL
