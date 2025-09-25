@@ -1576,7 +1576,7 @@ inline const char *getQualifierString(TQualifier q)
     case EvqVolatile:                  return "volatile";
     case EvqGeometryIn:                return "in";
     case EvqGeometryOut:               return "out";
-    case EvqPerVertexIn:               return "gl_in";
+    case EvqPerVertexIn:               return "in";
     case EvqPrimitiveIDIn:             return "gl_PrimitiveIDIn";
     case EvqInvocationID:              return "gl_InvocationID";
     case EvqPrimitiveID:               return "gl_PrimitiveID";

@@ -940,7 +940,8 @@ bool IsRedeclarableBuiltIn(const ImmutableString &name)
     return name == "gl_ClipDistance" || name == "gl_CullDistance" || name == "gl_FragDepth" ||
            name == "gl_LastFragData" || name == "gl_LastFragColorARM" ||
            name == "gl_LastFragDepthARM" || name == "gl_LastFragStencilARM" ||
-           name == "gl_PerVertex" || name == "gl_Position" || name == "gl_PointSize";
+           name == "gl_PerVertex" || name == "gl_in" || name == "gl_Position" ||
+           name == "gl_PointSize";
 }
 
 size_t FindFieldIndex(const TFieldList &fieldList, const char *fieldName)

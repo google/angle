@@ -1468,7 +1468,7 @@ void TIntermUnary::promote()
 TPrecision TIntermUnary::derivePrecision() const
 {
     // Unary operators generally derive their precision from their operand, except for a few
-    // built-ins where this is overriden.
+    // built-ins where this is overridden.
     switch (mOp)
     {
         case EOpArrayLength:
