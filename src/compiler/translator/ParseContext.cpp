@@ -1439,14 +1439,26 @@ void TParseContext::checkDeclarationIsValidArraySize(const TSourceLoc &line,
 //
 bool TParseContext::declareVariable(const TSourceLoc &line,
                                     const ImmutableString &identifier,
-                                    const TType *type,
+                                    const TType *declarationType,
                                     TVariable **variable)
 {
     ASSERT((*variable) == nullptr);
 
+    // When gl_Position and gl_PointSize are redeclared per EXT_separate_shader_objects, make sure
+    // they have the right qualifier.
+    const TType *type = declarationType;
+    if (identifier == "gl_Position" || identifier == "gl_PointSize")
+    {
+        TType *fixedType = new TType(*type);
+        fixedType->setQualifier(identifier == "gl_Position" ? EvqPosition : EvqPointSize);
+        type = fixedType;
+    }
+
     SymbolType symbolType = SymbolType::UserDefined;
     switch (type->getQualifier())
     {
+        case EvqPosition:
+        case EvqPointSize:
         case EvqClipDistance:
         case EvqCullDistance:
         case EvqFragDepth:

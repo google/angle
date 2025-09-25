@@ -1523,8 +1523,8 @@ inline const char *getQualifierString(TQualifier q)
     case EvqParamConst:                return "const";
     case EvqInstanceID:                return "InstanceID";
     case EvqVertexID:                  return "VertexID";
-    case EvqPosition:                  return "Position";
-    case EvqPointSize:                 return "PointSize";
+    case EvqPosition:                  return "out"; // Per EXT_separate_shader_objects
+    case EvqPointSize:                 return "out"; // Per EXT_separate_shader_objects
     case EvqDrawID:                    return "DrawID";
     case EvqFragCoord:                 return "FragCoord";
     case EvqFrontFacing:               return "FrontFacing";
