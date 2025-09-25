@@ -159,11 +159,13 @@ bool GetFormatModifierProperties(DisplayVk *displayVk,
 }
 
 VkImageUsageFlags GetUsageFlags(vk::Renderer *renderer,
-                                const bool isDepthStencilFormat,
+                                const angle::Format &format,
                                 const VkDrmFormatModifierPropertiesEXT &properties,
                                 bool *texturableOut,
                                 bool *renderableOut)
 {
+    const bool isDepthStencilFormat = format.hasDepthOrStencilBits();
+
     // Check what format features are exposed for this modifier.
     constexpr uint32_t kTextureableRequiredBits =
         VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
@@ -330,6 +332,7 @@ angle::Result GetAllocateInfo(const egl::AttributeMap &attribs,
 DmaBufImageSiblingVkLinux::DmaBufImageSiblingVkLinux(const egl::AttributeMap &attribs)
     : mAttribs(attribs),
       mFormat(GL_NONE),
+      mVkFormats(),
       mRenderable(false),
       mTextureable(false),
       mYUV(false),
@@ -344,6 +347,8 @@ DmaBufImageSiblingVkLinux::DmaBufImageSiblingVkLinux(const egl::AttributeMap &at
 
     int fourCCFormat = mAttribs.getAsInt(EGL_LINUX_DRM_FOURCC_EXT);
     mFormat          = gl::Format(angle::DrmFourCCFormatToGLInternalFormat(fourCCFormat, &mYUV));
+    mVkFormats       = angle::DrmFourCCFormatToVkFormats(fourCCFormat);
+
     mHasProtectedContent = mAttribs.getAsInt(EGL_PROTECTED_CONTENT_EXT, false);
 }
 
@@ -398,9 +403,17 @@ bool FindSupportedFlagsForFormat(vk::Renderer *renderer,
     return *outUsageFlags != 0;
 }
 
-angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
+angle::Result DmaBufImageSiblingVkLinux::initWithFormat(DisplayVk *displayVk,
+                                                        const angle::Format &format,
+                                                        VkFormat vulkanFormat,
+                                                        MutableFormat mutableFormat,
+                                                        InitResult *initResultOut)
 {
+    *initResultOut         = InitResult::Success;
     vk::Renderer *renderer = displayVk->getRenderer();
+
+    const angle::FormatID intendedFormatID    = vk::GetFormatIDFromVkFormat(vulkanFormat);
+    const angle::FormatID actualImageFormatID = vk::GetFormatIDFromVkFormat(vulkanFormat);
 
     const uint32_t planeCount = GetPlaneCount(mAttribs);
 
@@ -418,47 +431,16 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
     }
 
     // First, check the possible features for the format and determine usage and create flags.
-    // Usage at import time is unknown (render vs sample-only), so try Renderable first; if that
-    // fails, fall back to SampleOnly.
     VkDrmFormatModifierPropertiesEXT modifierProperties = {};
-    VkImageUsageFlags usageFlags                        = 0;
-    const bool isDepthStencilFormat                     = mFormat.info->isDepthOrStencil();
-    const vk::Format &vkFormat = renderer->getFormat(mFormat.info->sizedInternalFormat);
-
-    // Try to see if the format can be Renderable first.
-    mRenderable                                = false;
-    mTextureable                               = false;
-    vk::ImageFormatSupport chosenFormatSupport = vk::ImageFormatSupport::Renderable;
-    VkFormat chosenVkFormat = vkFormat.getActualImageVkFormat(renderer, chosenFormatSupport);
-    if (GetFormatModifierProperties(displayVk, chosenVkFormat, plane0Modifier, &modifierProperties))
+    if (!GetFormatModifierProperties(displayVk, vulkanFormat, plane0Modifier, &modifierProperties))
     {
-        usageFlags = GetUsageFlags(renderer, isDepthStencilFormat, modifierProperties,
-                                   &mTextureable, &mRenderable);
-    }
-    // If not renderable, try SampleOnly.
-    if (!mRenderable && vkFormat.hasRenderableImageFallbackFormat())
-    {
-        chosenVkFormat =
-            vkFormat.getActualImageVkFormat(renderer, vk::ImageFormatSupport::SampleOnly);
-        chosenFormatSupport = vk::ImageFormatSupport::SampleOnly;
-        if (GetFormatModifierProperties(displayVk, chosenVkFormat, plane0Modifier,
-                                        &modifierProperties))
-        {
-            usageFlags = GetUsageFlags(renderer, isDepthStencilFormat, modifierProperties,
-                                       &mTextureable, &mRenderable);
-        }
+        // Format is incompatible
+        *initResultOut = InitResult::Failed;
+        return angle::Result::Continue;
     }
 
-    // If neither texturable nor renderable, bail out.
-    if (!mRenderable && !mTextureable)
-    {
-        return angle::Result::Stop;
-    }
-
-    // Use vk::Format's intended/actual IDs so emulated formats are handled correctly.
-    const angle::FormatID intendedFormatID = vkFormat.getIntendedFormatID();
-    const angle::FormatID actualImageFormatID =
-        vkFormat.getActualImageFormatID(chosenFormatSupport);
+    VkImageUsageFlags usageFlags =
+        GetUsageFlags(renderer, format, modifierProperties, &mTextureable, &mRenderable);
 
     VkImageCreateFlags createFlags =
         vk::kVkImageCreateFlagsNone | (hasProtectedContent() ? VK_IMAGE_CREATE_PROTECTED_BIT : 0);
@@ -496,24 +478,27 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
     externalMemoryImageCreateInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT;
 
     VkImageFormatListCreateInfoKHR imageFormatListCreateInfo;
-    imageFormatListCreateInfo.sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO;
-    imageFormatListCreateInfo.pNext           = nullptr;
-    imageFormatListCreateInfo.viewFormatCount = 0;
-    imageFormatListCreateInfo.pViewFormats    = nullptr;
-
     vk::ImageHelper::ImageListFormats imageListFormatsStorage;
     const void *imageCreateInfoPNext = vk::ImageHelper::DeriveCreateInfoPNext(
         displayVk, usageFlags, actualImageFormatID, &externalMemoryImageCreateInfo,
         &imageFormatListCreateInfo, &imageListFormatsStorage, &createFlags);
 
-    if (!FindSupportedFlagsForFormat(renderer, chosenVkFormat, plane0Modifier,
+    if (mutableFormat == MutableFormat::NotAllowed)
+    {
+        createFlags &= ~VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+        // When mutable format bit is not set, viewFormatCount must be 0 or 1.
+        imageFormatListCreateInfo.viewFormatCount =
+            std::min(imageFormatListCreateInfo.viewFormatCount, 1u);
+    }
+
+    if (!FindSupportedFlagsForFormat(renderer, vulkanFormat, plane0Modifier,
                                      imageFormatListCreateInfo, &usageFlags, createFlags,
                                      &imageFormatProperties))
     {
         // The image is not unusable with current flags.
-        return angle::Result::Stop;
+        *initResultOut = InitResult::Failed;
+        return angle::Result::Continue;
     }
-
     mRenderable  = usageFlags & kRenderUsage;
     mTextureable = usageFlags & kTextureUsage;
 
@@ -593,6 +578,41 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
     return mImage->initExternalMemory(
         displayVk, renderer->getMemoryProperties(), externalMemoryRequirements, allocateInfoCount,
         allocateInfo.allocateInfoPtr.data(), vk::kForeignDeviceQueueIndex, flags);
+}
+
+angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
+{
+    vk::Renderer *renderer = displayVk->getRenderer();
+
+    const vk::Format &vkFormat = renderer->getFormat(mFormat.info->sizedInternalFormat);
+    const angle::Format &format =
+        vkFormat.getActualImageFormat(rx::vk::ImageFormatSupport::SampleOnly);
+
+    InitResult initResult;
+
+    for (VkFormat vkFmt : mVkFormats)
+    {
+        // Try all formats with mutable format bit first
+        ANGLE_TRY(initWithFormat(displayVk, format, vkFmt, MutableFormat::Allowed, &initResult));
+        if (initResult == InitResult::Success)
+        {
+            return angle::Result::Continue;
+        }
+    }
+
+    for (VkFormat vkFmt : mVkFormats)
+    {
+        // Then try without mutable format bit
+        ANGLE_TRY(initWithFormat(displayVk, format, vkFmt, MutableFormat::NotAllowed, &initResult));
+        if (initResult == InitResult::Success)
+        {
+            return angle::Result::Continue;
+        }
+    }
+
+    // Failed to find any suitable format
+    ANGLE_VK_UNREACHABLE(displayVk);
+    return angle::Result::Stop;
 }
 
 void DmaBufImageSiblingVkLinux::onDestroy(const egl::Display *display)

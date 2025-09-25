@@ -121,10 +121,6 @@ std::vector<int> VkFormatToDrmFourCCFormat(VkFormat format)
     }
 }
 
-// Maps a DRM FourCC formats to a view-compatible set of VkFormats.
-// Returns only the base format's linear/sRGB pair when both exist.
-// Callers expect these formats to be mutually compatible and pass the list
-// to VkImageFormatListCreateInfo for image creation.
 std::vector<VkFormat> DrmFourCCFormatToVkFormats(int fourccFormat)
 {
     switch (fourccFormat)
