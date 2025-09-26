@@ -548,6 +548,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo forceSubmitExceptionsAtFBOBoundary = {
+        "forceSubmitExceptionsAtFBOBoundary",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo useMultipleDescriptorsForExternalFormats = {
         "useMultipleDescriptorsForExternalFormats",
         FeatureCategory::VulkanWorkarounds,

@@ -709,6 +709,14 @@
             "issue": "https://issuetracker.google.com/187425444"
         },
         {
+            "name": "force_submit_exceptions_at_FBO_boundary",
+            "category": "Workarounds",
+            "description": [
+                "Some commands force immediate submission at FBO boundary."
+            ],
+            "issue": "https://issuetracker.google.com/422507974"
+        },
+        {
             "name": "use_multiple_descriptors_for_external_formats",
             "category": "Workarounds",
             "description": [

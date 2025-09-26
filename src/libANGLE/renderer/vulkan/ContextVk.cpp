@@ -65,10 +65,6 @@ static constexpr VkDeviceSize kMaxRenderPassCountPerCommandBuffer = 128;
 // RenderPassCommands.
 static constexpr size_t kMaxReservedOutsideRenderPassQueueSerials = 15;
 
-// The number of minimum commands in the command buffer to prefer submit at FBO boundary or
-// immediately submit when the device is idle after calling to flush.
-static constexpr uint32_t kMinCommandCountToSubmit = 32;
-
 // Dumping the command stream is disabled by default.
 static constexpr bool kEnableCommandStreamDiagnostics = false;
 
@@ -1500,7 +1496,7 @@ angle::Result ContextVk::flushImpl(const gl::Context *context)
     uint32_t currentRPCommandCount =
         mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount() +
         mCommandsPendingSubmissionCount;
-    if (currentRPCommandCount >= kMinCommandCountToSubmit)
+    if (currentRPCommandCount >= mRenderer->getMinCommandCountToSubmit())
     {
         if (!mRenderer->isInFlightCommandsEmpty())
         {
@@ -5849,18 +5845,23 @@ angle::Result ContextVk::syncState(const gl::Context *context,
 
                 // To reduce CPU overhead if submission at FBO boundary is preferred, the deferred
                 // flush is triggered after the currently accumulated command count for the render
-                // pass command buffer hits a threshold (kMinCommandCountToSubmit). However,
-                // currently in the case of a clear or invalidate GL command, a deferred flush is
-                // still triggered.
+                // pass command buffer hits a threshold (Renderer::getMinCommandCountToSubmit()).
                 uint32_t currentRPCommandCount =
                     mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount() +
                     mCommandsPendingSubmissionCount;
-                bool allowExceptionForSubmitAtBoundary = command == gl::Command::Clear ||
-                                                         command == gl::Command::Invalidate ||
-                                                         mRenderer->isInFlightCommandsEmpty();
+                bool allowExceptionForSubmitAtBoundary = mRenderer->isInFlightCommandsEmpty();
+
+                // For performance reasons, in the case of a clear or invalidate GL command, a
+                // deferred flush can be triggered if the corresponding feature flag is enabled.
+                if (getFeatures().forceSubmitExceptionsAtFBOBoundary.enabled)
+                {
+                    allowExceptionForSubmitAtBoundary |=
+                        command == gl::Command::Clear || command == gl::Command::Invalidate;
+                }
+
                 bool shouldSubmitAtFBOBoundary =
                     getFeatures().preferSubmitAtFBOBoundary.enabled &&
-                    (currentRPCommandCount >= kMinCommandCountToSubmit ||
+                    (currentRPCommandCount >= mRenderer->getMinCommandCountToSubmit() ||
                      allowExceptionForSubmitAtBoundary);
 
                 if ((shouldSubmitAtFBOBoundary || mState.getDrawFramebuffer()->isDefault()) &&

@@ -726,6 +726,8 @@ class Renderer : angle::NonCopyable
                mVertexAttributeDivisorFeatures.vertexAttributeInstanceRateZeroDivisor == VK_TRUE;
     }
 
+    uint32_t getMinCommandCountToSubmit() const { return mMinCommandCountToSubmit; }
+
   private:
     angle::Result setupDevice(vk::ErrorContext *context,
                               const angle::FeatureOverrides &featureOverrides,
@@ -1123,6 +1125,10 @@ class Renderer : angle::NonCopyable
     uint32_t mNativeVectorWidthHalf;
     uint32_t mPreferredVectorWidthDouble;
     uint32_t mPreferredVectorWidthHalf;
+
+    // The number of minimum commands in the command buffer to prefer submit at FBO boundary or
+    // immediately submit when the device is idle after calling to flush.
+    uint32_t mMinCommandCountToSubmit;
 };
 
 ANGLE_INLINE Serial Renderer::generateQueueSerial(SerialIndex index)

@@ -1943,7 +1943,8 @@ Renderer::Renderer()
       mNativeVectorWidthDouble(0),
       mNativeVectorWidthHalf(0),
       mPreferredVectorWidthDouble(0),
-      mPreferredVectorWidthHalf(0)
+      mPreferredVectorWidthHalf(0),
+      mMinCommandCountToSubmit(0)
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
     mFormatProperties.fill(invalid);
@@ -5675,6 +5676,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // score improves 7%.
     ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitAtFBOBoundary,
                             isTileBasedRenderer || isSwiftShader);
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceSubmitExceptionsAtFBOBoundary, !isQualcommProprietary);
+    mMinCommandCountToSubmit = isQualcommProprietary ? 1024 : 32;
 
     // In order to support immutable samplers tied to external formats, we need to overallocate
     // descriptor counts for such immutable samplers
