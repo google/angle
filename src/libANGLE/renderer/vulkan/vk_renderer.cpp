@@ -6489,10 +6489,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Temporarily disable the feature on PowerVR while the above 2 bugs are under investigations
     // http://anglebug.com/446159597
     // Disable the feature on Samsung devices
+    // https://b.corp.google.com/issues/446844410
+    // Disable on non-ARM GPU until the performance impact on them is verified.
     ANGLE_FEATURE_CONDITION(&mFeatures, convertLowpAndMediumpFloatUniformsTo16Bits,
                             m16BitStorageFeatures.uniformAndStorageBuffer16BitAccess == VK_TRUE &&
-                                mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE &&
-                                !(IsWindows() && isIntel) && !isPowerVR && !isSamsung);
+                                mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE && isARM);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsUnifiedImageLayouts,
                             mUnifiedImageLayoutsFeatures.unifiedImageLayouts == VK_TRUE);
