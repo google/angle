@@ -622,7 +622,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         return nullptr;
     }
 
-    if (!postParseChecks(parseContext))
+    if (!postParseChecks(&parseContext))
     {
         return nullptr;
     }
@@ -1029,13 +1029,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    // Checks which functions are used and if "main" exists
+    // Checks which functions are used
     mFunctionMetadata.clear();
     mFunctionMetadata.resize(mCallDag.size());
-    if (!tagUsedFunctions())
-    {
-        return false;
-    }
+    tagUsedFunctions();
 
     if (!pruneUnusedFunctions(root))
     {
@@ -1464,27 +1461,26 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     return true;
 }
 
-bool TCompiler::postParseChecks(const TParseContext &parseContext)
+bool TCompiler::postParseChecks(TParseContext *parseContext)
 {
-    std::stringstream errorMessage;
+    // If parse failed, we shouldn't reach here.
+    ASSERT(parseContext->getTreeRoot() != nullptr);
 
-    if (parseContext.getTreeRoot() == nullptr)
+    if (!parseContext->isMainDeclared())
     {
-        errorMessage << "Shader parsing failed (mTreeRoot == nullptr)";
-    }
-
-    for (TType *type : parseContext.getDeferredArrayTypesToSize())
-    {
-        errorMessage << "Unsized global array type: " << type->getBasicString();
-    }
-
-    if (!errorMessage.str().empty())
-    {
-        mDiagnostics.globalError(errorMessage.str().c_str());
+        parseContext->error(kNoSourceLoc, "Missing main()", "");
         return false;
     }
 
-    return true;
+    bool success = true;
+
+    for (TType *type : parseContext->getDeferredArrayTypesToSize())
+    {
+        parseContext->error(kNoSourceLoc, "Unsized global array type: ", type->getBasicString());
+        success = false;
+    }
+
+    return success;
 }
 
 bool TCompiler::compile(const char *const shaderStrings[],
@@ -1867,20 +1863,18 @@ bool TCompiler::checkCallDepth()
     return true;
 }
 
-bool TCompiler::tagUsedFunctions()
+void TCompiler::tagUsedFunctions()
 {
-    // Search from main, starting from the end of the DAG as it usually is the root.
+    // Search from main, starting from the end of the DAG as it's usually found at the end of the
+    // shader.
     for (size_t i = mCallDag.size(); i-- > 0;)
     {
         if (mCallDag.getRecordFromIndex(i).node->getFunction()->isMain())
         {
             internalTagUsedFunction(i);
-            return true;
+            break;
         }
     }
-
-    mDiagnostics.globalError("Missing main()");
-    return false;
 }
 
 void TCompiler::internalTagUsedFunction(size_t index)

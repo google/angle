@@ -78,6 +78,7 @@ class TParseContext : angle::NonCopyable
     bool isEarlyFragmentTestsSpecified() const { return mEarlyFragmentTestsSpecified; }
     bool hasDiscard() const { return mHasDiscard; }
     bool isSampleQualifierSpecified() const { return mSampleQualifierSpecified; }
+    bool isMainDeclared() const { return mIsMainDeclared; }
 
     void setLoopNestingLevel(int loopNestintLevel) { mLoopNestingLevel = loopNestintLevel; }
 
@@ -802,6 +803,7 @@ class TParseContext : angle::NonCopyable
 
     // keeps track whether we are declaring / defining the function main().
     bool mDeclaringMain;
+    bool mIsMainDeclared;
 
     // Track the state of each atomic counter binding.
     std::map<int, AtomicCounterBindingState> mAtomicCounterBindingStates;

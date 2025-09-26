@@ -574,6 +574,24 @@ std::string BuildBigInitialStackShader(int length)
     return result;
 }
 
+// Test that an empty shader fails to compile
+TEST_P(GLSLTest, EmptyShader)
+{
+    constexpr char kFS[] = "";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_EQ(0u, shader);
+}
+
+// Test that a shader with no main in it fails to compile
+TEST_P(GLSLTest, MissingMain)
+{
+    constexpr char kFS[] = R"(precision mediump float;)";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_EQ(0u, shader);
+}
+
 // Tests a shader from conformance.olges/GL/build/build_017_to_024
 // This shader uses chained assign-equals ops with swizzle, often reusing the same variable
 // as part of a swizzle.

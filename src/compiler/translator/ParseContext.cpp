@@ -342,6 +342,8 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMaxShaderStorageBufferBindings(resources.MaxShaderStorageBufferBindings),
       mMaxPixelLocalStoragePlanes(resources.MaxPixelLocalStoragePlanes),
       mDeclaringFunction(false),
+      mDeclaringMain(false),
+      mIsMainDeclared(false),
       mGeometryShaderInputPrimitiveType(EptUndefined),
       mGeometryShaderOutputPrimitiveType(EptUndefined),
       mGeometryShaderInvocations(0),
@@ -4712,6 +4714,10 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     }
 
     mDeclaringMain = function->isMain();
+    if (mDeclaringMain)
+    {
+        mIsMainDeclared = true;
+    }
 
     //
     // If this is a redeclaration, it could also be a definition, in which case, we want to use the

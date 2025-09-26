@@ -253,6 +253,8 @@
 381727390 : MultisampleTexture2DTestES31.CopyMultisampleArrayImageEXT/* = SKIP_FOR_CAPTURE
 381727390 : MultisampleTexture2DTestES31.CopyMultisampleArrayImageOES/* = SKIP_FOR_CAPTURE
 
+# Crashes in gl::JoinShaderSources during replay
+447613212 : GLSLTest.EmptyShader/* = SKIP_FOR_CAPTURE
 
 # Crashes on win and linux trace bots
 372059358 : MultisampleTestES3.CopyTexImage2DFromMsaaDefaultFbo/* = SKIP_FOR_CAPTURE
