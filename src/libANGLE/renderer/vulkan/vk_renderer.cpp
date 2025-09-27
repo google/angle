@@ -126,6 +126,12 @@ bool IsRADV(uint32_t vendorId, uint32_t driverId, const char *deviceName)
     return IsAMD(vendorId) && strstr(deviceName, "RADV") != nullptr;
 }
 
+bool IsMesaPanVK(uint32_t driverId)
+{
+    // rely on VkDriverId alone to identify MESA PanVK driver
+    return driverId == VK_DRIVER_ID_MESA_PANVK;
+}
+
 bool IsQualcommOpenSource(uint32_t vendorId, uint32_t driverId, const char *deviceName)
 {
     if (!IsQualcomm(vendorId))
@@ -5098,6 +5104,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                              mPhysicalDeviceProperties.deviceName);
     const bool isQualcommProprietary = isQualcomm && !isQualcommOpenSource;
 
+    // Distinguish between the ARM proprietary driver and the Mesa open source driver
+    const bool isMesaPanVK      = IsMesaPanVK(mDriverProperties.driverID);
+    const bool isARMProprietary = isARM && !isMesaPanVK;
+
     // Lacking other explicit ways to tell if mali GPU is job manager based or command stream front
     // end based, we use maxDrawIndirectCount as equivalent since all JM based has
     // maxDrawIndirectCount==1 and all CSF based has maxDrawIndirectCount>1.
@@ -5109,7 +5119,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                                mPhysicalDeviceProperties.deviceName);
 
     angle::VersionInfo driverVersion = {};
-    if (isARM)
+    if (isARMProprietary)
     {
         driverVersion = angle::ParseArmVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
     }
@@ -5179,9 +5189,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, provokingVertex,
                             mProvokingVertexFeatures.provokingVertexLast == VK_TRUE);
 
-    // http://b/208458772. ARM driver supports this protected memory extension but we are seeing
-    // excessive load/store unit activity when this extension is enabled, even if not been used.
-    // Disable this extension on older ARM platforms that don't support
+    // http://b/208458772. ARM proprietary driver supports this protected memory extension but we
+    // are seeing excessive load/store unit activity when this extension is enabled, even if not
+    // been used. Disable this extension on older ARM platforms that don't support
     // VK_EXT_pipeline_protected_access.
     // http://anglebug.com/42266183
     //
@@ -5190,7 +5200,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsProtectedMemory,
         mProtectedMemoryFeatures.protectedMemory == VK_TRUE &&
-            (!isARM || mPipelineProtectedAccessFeatures.pipelineProtectedAccess == VK_TRUE) &&
+            (!isARMProprietary ||
+             mPipelineProtectedAccessFeatures.pipelineProtectedAccess == VK_TRUE) &&
             !isIntel);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostQueryReset,
@@ -5345,7 +5356,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         ExtensionFound(VK_EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, disallowMixedDepthStencilLoadOpNoneAndLoad,
-                            isARM && driverVersion < angle::VersionTriple(38, 1, 0));
+                            isARMProprietary && driverVersion < angle::VersionTriple(38, 1, 0));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsRenderPassStoreOpNone,
@@ -5415,10 +5426,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Preferring the MSRTSS flag is for texture initialization. If the MSRTSS is not used at first,
     // it will be used (if available) when recreating the image if it is bound to an MSRTT
     // framebuffer.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferMSRTSSFlagByDefault,
-                            mFeatures.supportsMultisampledRenderToSingleSampled.enabled &&
-                                (isARM || (isQualcommProprietary &&
-                                           driverVersion >= angle::VersionTriple(512, 777, 0))));
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, preferMSRTSSFlagByDefault,
+        mFeatures.supportsMultisampledRenderToSingleSampled.enabled &&
+            (isARMProprietary ||
+             (isQualcommProprietary && driverVersion >= angle::VersionTriple(512, 777, 0))));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsImage2dViewOf3d,
                             mImage2dViewOf3dFeatures.image2DViewOf3D == VK_TRUE);
@@ -5483,10 +5495,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // that can cause OOM and timeouts.
     ANGLE_FEATURE_CONDITION(&mFeatures, allocateNonZeroMemory, false);
 
-    // ARM does buffer copy on geometry pipeline, which may create a GPU pipeline bubble that
-    // prevents vertex shader to overlap with fragment shader on job manager based architecture. For
-    // now we always choose CPU to do copy on ARM job manager based GPU.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferCPUForBufferSubData, isARM);
+    // ARM proprietary driver does buffer copy on geometry pipeline, which may create a GPU pipeline
+    // bubble that prevents vertex shader to overlap with fragment shader on job manager based
+    // architecture. For now we always choose CPU to do copy on ARM job manager based GPU.
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferCPUForBufferSubData, isARMProprietary);
 
     // On android, we usually are GPU limited, we try to use CPU to do data copy when other
     // conditions are the same. Set to zero will use GPU to do copy. This is subject to further
@@ -5539,9 +5551,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, asyncGarbageCleanup, true);
     // reset sometimes gets blocked by mutex lock inside vulkan driver and runs in small core while
     // main thread gets blocked by command pool lock. FOr now dont call reset in garbage clean up
-    // thread on ARM.
+    // thread on ARM proprietary driver.
     ANGLE_FEATURE_CONDITION(&mFeatures, asyncCommandBufferReset,
-                            mFeatures.asyncGarbageCleanup.enabled && !isARM);
+                            mFeatures.asyncGarbageCleanup.enabled && !isARMProprietary);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsYUVSamplerConversion,
                             mSamplerYcbcrConversionFeatures.samplerYcbcrConversion != VK_FALSE);
@@ -5610,11 +5622,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //   * OOM: http://crbug.com/1263046
     // - Intel on windows: http://anglebug.com/42263602
     // - AMD on windows: http://crbug.com/1132366
-    // - Old ARM drivers on Android fail multiple tests, though newer drivers don't (although they
-    //   support MSRTSS and emulation is unnecessary)
+    // - Old ARM proprietary drivers on Android fail multiple tests, though newer drivers don't
+    //   (although they support MSRTSS and emulation is unnecessary)
     //
     ANGLE_FEATURE_CONDITION(&mFeatures, allowMultisampledRenderToTextureEmulation,
-                            (isTileBasedRenderer && !isARM) || isSamsung);
+                            (isTileBasedRenderer && !isARMProprietary) || isSamsung);
     ANGLE_FEATURE_CONDITION(&mFeatures, enableMultisampledRenderToTexture,
                             mFeatures.supportsMultisampledRenderToSingleSampled.enabled ||
                                 (mFeatures.supportsDepthStencilResolve.enabled &&
@@ -5632,7 +5644,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             mFeatures.supportsPipelineStatisticsQuery.enabled && isSamsung);
 
     // Android mistakenly destroys the old swapchain when creating a new one.
-    ANGLE_FEATURE_CONDITION(&mFeatures, waitIdleBeforeSwapchainRecreation, IsAndroid() && isARM);
+    ANGLE_FEATURE_CONDITION(&mFeatures, waitIdleBeforeSwapchainRecreation,
+                            IsAndroid() && isARMProprietary);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, destroyOldSwapchainInSharedPresentMode, IsAndroid());
 
@@ -5740,8 +5753,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, enableAdditionalBlendFactorsForDithering, isSamsung);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, adjustClearColorPrecision,
-                            IsAndroid() && mFeatures.supportsLegacyDithering.enabled && isARM &&
-                                driverVersion < angle::VersionTriple(50, 0, 0));
+                            IsAndroid() && mFeatures.supportsLegacyDithering.enabled &&
+                                isARMProprietary && driverVersion < angle::VersionTriple(50, 0, 0));
 
     // ANGLE always exposes framebuffer fetch because too many apps assume it's there.  See comments
     // on |mIsColorFramebufferFetchCoherent| for details.  Non-coherent framebuffer fetch is always
@@ -5825,13 +5838,15 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //                    good since at least version 525.  http://anglebug.com/343249127
     // - Qualcomm drivers - Crashes when creating pipelines in the presence of OpCopyLogical with
     //                      some types.  http://anglebug.com/343218484
-    // - ARM drivers - Fail tests when OpSelect uses a scalar to select between vectors.  Known good
-    //                 since at least version 47.  http://anglebug.com/343218491
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsSPIRV14,
-                            ExtensionFound(VK_KHR_SPIRV_1_4_EXTENSION_NAME, deviceExtensionNames) &&
-                                !(isNvidia && driverVersion < angle::VersionTriple(525, 0, 0)) &&
-                                !isQualcommProprietary &&
-                                !(isARM && driverVersion < angle::VersionTriple(47, 0, 0)));
+    // - ARM proprietary drivers - Fail tests when OpSelect uses a scalar to select between vectors.
+    //                             Known good since at least version 47.
+    //                             http://anglebug.com/343218491
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsSPIRV14,
+        ExtensionFound(VK_KHR_SPIRV_1_4_EXTENSION_NAME, deviceExtensionNames) &&
+            !(isNvidia && driverVersion < angle::VersionTriple(525, 0, 0)) &&
+            !isQualcommProprietary &&
+            !(isARMProprietary && driverVersion < angle::VersionTriple(47, 0, 0)));
 
     // Rounding features from VK_KHR_float_controls extension
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDenormFtzFp16,
@@ -5888,8 +5903,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Regressions have been detected using r46 on older architectures though
     // http://issuetracker.google.com/336411904
     const bool isExtendedDynamicStateBuggy =
-        (isARM && driverVersion < angle::VersionTriple(44, 1, 0)) ||
-        (isMaliJobManagerBasedGPU && driverVersion >= angle::VersionTriple(46, 0, 0));
+        isARMProprietary &&
+        (driverVersion < angle::VersionTriple(44, 1, 0) ||
+         (isMaliJobManagerBasedGPU && driverVersion >= angle::VersionTriple(46, 0, 0)));
 
     // Vertex input binding stride is buggy for Windows/Intel drivers before 100.9684.
     const bool isVertexInputBindingStrideBuggy =
@@ -5898,8 +5914,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Intel driver has issues with VK_EXT_vertex_input_dynamic_state
     // http://anglebug.com/42265637#comment9
     //
-    // On ARM drivers prior to r48, |vkCmdBindVertexBuffers2| applies strides to the wrong index,
-    // according to the errata: https://developer.arm.com/documentation/SDEN-3735689/0100/?lang=en
+    // On ARM proprietary drivers prior to r48, |vkCmdBindVertexBuffers2| applies strides to the
+    // wrong index, according to the errata:
+    // https://developer.arm.com/documentation/SDEN-3735689/0100/?lang=en
     //
     // On Qualcomm drivers prior to 777, this feature had a bug.
     // http://anglebug.com/381384988
@@ -5907,7 +5924,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsVertexInputDynamicState,
         mVertexInputDynamicStateFeatures.vertexInputDynamicState == VK_TRUE &&
             !(IsWindows() && isIntel) &&
-            !(isARM && driverVersion < angle::VersionTriple(48, 0, 0)) &&
+            !(isARMProprietary && driverVersion < angle::VersionTriple(48, 0, 0)) &&
             !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 777, 0)));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState,
@@ -5920,12 +5937,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, useVertexInputBindingStrideDynamicState,
         mFeatures.supportsExtendedDynamicState.enabled && !isVertexInputBindingStrideBuggy);
-    // On ARM drivers prior to r52, |vkCmdSetCullMode| incorrectly culls non-triangle topologies,
-    // according to the errata: https://developer.arm.com/documentation/SDEN-3735689/0100/?lang=en
-    ANGLE_FEATURE_CONDITION(&mFeatures, useCullModeDynamicState,
-                            mFeatures.supportsExtendedDynamicState.enabled &&
-                                !isExtendedDynamicStateBuggy &&
-                                !(isARM && driverVersion < angle::VersionTriple(52, 0, 0)));
+    // On ARM proprietary drivers prior to r52, |vkCmdSetCullMode| incorrectly culls non-triangle
+    // topologies, according to the errata:
+    // https://developer.arm.com/documentation/SDEN-3735689/0100/?lang=en
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, useCullModeDynamicState,
+        mFeatures.supportsExtendedDynamicState.enabled && !isExtendedDynamicStateBuggy &&
+            !(isARMProprietary && driverVersion < angle::VersionTriple(52, 0, 0)));
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthCompareOpDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthTestEnableDynamicState,
@@ -5971,10 +5989,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // framebuffers (512.805).  http://crbug.com/415968761
     const bool isQualcommWithImagelessFramebufferBug =
         isQualcommProprietary && driverVersion < angle::VersionTriple(512, 806, 0);
-    // Some ARM-based phones with the 38.0 and 38.1 driver crash when creating imageless
-    // framebuffers.
-    const bool isArmDriverWithImagelessFramebufferBug =
-        isARM && driverVersion >= angle::VersionTriple(38, 0, 0) &&
+    // Some ARM-based phones with the 38.0 and 38.1 ARM proprietary driver crash when creating
+    // imageless framebuffers.
+    const bool isARMProprietaryWithImagelessFramebufferBug =
+        isARMProprietary && driverVersion >= angle::VersionTriple(38, 0, 0) &&
         driverVersion < angle::VersionTriple(38, 2, 0);
     // PowerVR with imageless framebuffer spends enormous amounts of time in framebuffer destruction
     // and creation. ANGLE doesn't cache imageless framebuffers, instead adding them to garbage
@@ -5983,7 +6001,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsImagelessFramebuffer,
                             mImagelessFramebufferFeatures.imagelessFramebuffer == VK_TRUE &&
                                 !isSamsungDriverWithImagelessFramebufferBug &&
-                                !isArmDriverWithImagelessFramebufferBug &&
+                                !isARMProprietaryWithImagelessFramebufferBug &&
                                 !isQualcommWithImagelessFramebufferBug && !isPowerVR);
 
     if (ExtensionFound(VK_KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME, deviceExtensionNames))
@@ -6033,13 +6051,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // On RADV, creating graphics pipeline can crash in the driver.  http://crbug.com/1497512
     //
-    // Some unacceptable performance degradation has been observed on ARM GPU based device
-    // when graphics pipeline is enabled, therefore it's recommended to disable it until
-    // the problematic area gets addressed and fixed. http://anglebug.com/404581992
+    // Some unacceptable performance degradation has been observed on device with ARM proprietary
+    // driver when graphics pipeline is enabled, therefore it's recommended to disable it until the
+    // problematic area gets addressed and fixed. http://anglebug.com/404581992
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsGraphicsPipelineLibrary,
                             mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE &&
                                 (!isNvidia || driverVersion >= angle::VersionTriple(531, 0, 0)) &&
-                                !isRADV && !isARM);
+                                !isRADV && !isARMProprietary);
 
     // When VK_EXT_graphics_pipeline_library is not used:
     //
@@ -6047,7 +6065,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //   fragment output state, causing draw-time pipeline creation to miss the cache regardless of
     //   warm up:
     //
-    //     - ARM drivers
+    //     - ARM proprietary drivers
     //     - Imagination drivers
     //
     //   The following drivers are instead known to _not_ include said state, and hit the cache at
@@ -6064,7 +6082,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // When VK_EXT_graphics_pipeline_library is used, warm up is always enabled as the chances of
     // blobs being reused is very high.
-    const bool libraryBlobsAreReusedByMonolithicPipelines = !isARM && !isPowerVR;
+    const bool libraryBlobsAreReusedByMonolithicPipelines = !isARMProprietary && !isPowerVR;
     ANGLE_FEATURE_CONDITION(
         &mFeatures, warmUpPipelineCacheAtLink,
         mFeatures.supportsGraphicsPipelineLibrary.enabled ||
@@ -6168,18 +6186,18 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, verifyPipelineCacheInBlobCache,
                             !mFeatures.hasBlobCacheThatEvictsOldItemsFirst.enabled);
 
-    // On ARM, dynamic state for stencil write mask doesn't work correctly in the presence of
-    // discard or alpha to coverage, if the static state provided when creating the pipeline has a
-    // value of 0.
+    // On ARM proprietary driver, dynamic state for stencil write mask doesn't work correctly in the
+    // presence of discard or alpha to coverage, if the static state provided when creating the
+    // pipeline has a value of 0. Fixed in r43p0 release.
     ANGLE_FEATURE_CONDITION(&mFeatures, useNonZeroStencilWriteMaskStaticState,
-                            isARM && driverVersion < angle::VersionTriple(43, 0, 0));
+                            isARMProprietary && driverVersion < angle::VersionTriple(43, 0, 0));
 
     // On some vendors per-sample shading is not enabled despite the presence of a Sample
     // decoration. Guard against this by parsing shader for "sample" decoration and explicitly
     // enabling per-sample shading pipeline state.
     ANGLE_FEATURE_CONDITION(&mFeatures, explicitlyEnablePerSampleShading, !isQualcommProprietary);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, explicitlyCastMediumpFloatTo16Bit, isARM);
+    ANGLE_FEATURE_CONDITION(&mFeatures, explicitlyCastMediumpFloatTo16Bit, isARMProprietary);
 
     // Force to create swapchain with continuous refresh on shared present. Disabled by default.
     // Only enable it on integrations without EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID passthrough.
@@ -6248,23 +6266,25 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitOnAnySamplesPassedQueryEnd,
                             isTileBasedRenderer);
 
-    // ARM driver appears having a bug that if we did not wait for submission to complete, but call
-    // vkGetQueryPoolResults(VK_QUERY_RESULT_WAIT_BIT), it may result VK_NOT_READY.
-    // https://issuetracker.google.com/253522366
+    // ARM proprietary driver appears having a bug that if we did not wait for submission to
+    // complete, but call vkGetQueryPoolResults(VK_QUERY_RESULT_WAIT_BIT), it may result
+    // VK_NOT_READY. https://issuetracker.google.com/253522366
     //
     // Workaround for nvidia earlier version driver which appears having a bug that On older nvidia
     // driver, vkGetQueryPoolResult() with VK_QUERY_RESULT_WAIT_BIT may result in incorrect result.
     // In that case we force into CPU wait for submission to complete. http://anglebug.com/42265186
-    ANGLE_FEATURE_CONDITION(&mFeatures, forceWaitForSubmissionToCompleteForQueryResult,
-                            isARM || (isNvidia && driverVersion < angle::VersionTriple(470, 0, 0)));
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, forceWaitForSubmissionToCompleteForQueryResult,
+        isARMProprietary || (isNvidia && driverVersion < angle::VersionTriple(470, 0, 0)));
 
-    // Some ARM drivers may not free memory in "vkFreeCommandBuffers()" without
+    // Some ARM proprietary drivers may not free memory in "vkFreeCommandBuffers()" without
     // VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT flag.
-    ANGLE_FEATURE_CONDITION(&mFeatures, useResetCommandBufferBitForSecondaryPools, isARM);
+    ANGLE_FEATURE_CONDITION(&mFeatures, useResetCommandBufferBitForSecondaryPools,
+                            isARMProprietary);
 
-    // Intel and AMD mesa drivers need depthBiasConstantFactor to be doubled to align with GL.
+    // Intel, Mali and AMD mesa drivers need depthBiasConstantFactor to be doubled to align with GL.
     ANGLE_FEATURE_CONDITION(&mFeatures, doubleDepthBiasConstantFactor,
-                            (isIntel && !IsWindows()) || isRADV || isNvidia);
+                            (isIntel && !IsWindows()) || isMesaPanVK || isRADV || isNvidia);
 
     // Required to pass android.media.codec.cts.EncodeDecodeTest
     // https://issuetracker.google.com/246218584
@@ -6352,7 +6372,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Emulation of GL_EXT_multisampled_render_to_texture is not possible with dynamic rendering.
     // That support is also not sacrificed for dynamic rendering.
     //
-    // Use of dynamic rendering is disabled on older ARM drivers due to driver bugs
+    // Use of dynamic rendering is disabled on older ARM proprietary drivers due to driver bugs
     // (http://issuetracker.google.com/356051947).
     //
     // Use of dynamic rendering is disabled on older Qualcomm drivers due to driver bugs
@@ -6371,7 +6391,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.supportsDynamicRendering.enabled &&
             mFeatures.supportsDynamicRenderingLocalRead.enabled && !hasLegacyDitheringV1 &&
             !emulatesMultisampledRenderToTexture &&
-            !(isARM && driverVersion < angle::VersionTriple(52, 0, 0)) &&
+            !(isARMProprietary && driverVersion < angle::VersionTriple(52, 0, 0)) &&
             !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 801, 0)) &&
             !isPowerVR);
 
@@ -6490,10 +6510,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // http://anglebug.com/446159597
     // Disable the feature on Samsung devices
     // https://b.corp.google.com/issues/446844410
-    // Disable on non-ARM GPU until the performance impact on them is verified.
+    // Disable on driver implementations other than ARM proprietary until the performance impact on
+    // them is verified.
     ANGLE_FEATURE_CONDITION(&mFeatures, convertLowpAndMediumpFloatUniformsTo16Bits,
                             m16BitStorageFeatures.uniformAndStorageBuffer16BitAccess == VK_TRUE &&
-                                mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE && isARM);
+                                mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE &&
+                                isARMProprietary);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsUnifiedImageLayouts,
                             mUnifiedImageLayoutsFeatures.unifiedImageLayouts == VK_TRUE);
