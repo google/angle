@@ -6680,8 +6680,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     }
 
     // Check if VK implementation needs to strip-out non-semantic reflection info from shader module
-    // (Default is to assume not supported)
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderNonSemanticInfo, false);
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsShaderNonSemanticInfo,
+        ExtensionFound(VK_KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME, deviceExtensionNames));
 
     // Don't expose these 2 extensions on Samsung devices -
     // 1. ANGLE_rgbx_internal_format
