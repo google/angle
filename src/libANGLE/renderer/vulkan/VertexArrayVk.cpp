@@ -1022,7 +1022,7 @@ angle::Result VertexArrayVk::syncDirtyEnabledAttrib(ContextVk *contextVk,
             vk::BufferHelper &bufferHelper         = bufferVk->getBuffer();
             mCurrentArrayBuffers[attribIndex]      = &bufferHelper;
             mCurrentArrayBufferSerial[attribIndex] = bufferHelper.getBufferSerial();
-            VkDeviceSize bufferSize                = bufferVk->getSize();
+            VkDeviceSize bufferSize                = bufferHelper.getSize();
 
             VkDeviceSize bufferOffset;
             if (contextVk->getFeatures().useVertexInputBindingStrideDynamicState.enabled)
