@@ -302,7 +302,7 @@ void OutputWGSLTraverser::visitSymbol(TIntermSymbol *symbolNode)
         {
             ASSERT(mRewritePipelineVarOutput->IsInputVar(var.uniqueId()) ||
                    mRewritePipelineVarOutput->IsOutputVar(var.uniqueId()) ||
-                   var.uniqueId() == BuiltInId::gl_DepthRange);
+                   type.getQualifier() == EvqDepthRange);
             // TODO(anglebug.com/376553328): support gl_DepthRange.
             // Match the name of the struct field in `mRewritePipelineVarOutput`.
             mSink << "_";

@@ -969,6 +969,8 @@ enum TQualifier
     EvqLastFragDepth,
     EvqLastFragStencil,
 
+    EvqDepthRange,  // gl_DepthRange
+
     // GLSL ES 3.0 vertex output and fragment input
 
     // This section combines
