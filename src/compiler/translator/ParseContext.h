@@ -798,6 +798,16 @@ class TParseContext : angle::NonCopyable
     int mMaxShaderStorageBufferBindings;
     int mMaxPixelLocalStoragePlanes;
 
+    // keeps track of whether any of the built-ins that can be redeclared (see
+    // IsRedeclarableBuiltIn()) has been marked as invariant/precise before the possible
+    // redeclaration.
+    //
+    // If redeclared after being marked as invariant/precise, a compile error is generated.
+    // The GLSL spec does not explicitly call this out as invalid, but it's not a useful sequence
+    // of statements (invariant/precise could have been directly specified on the redeclaration),
+    // and there are no known users.
+    TUnorderedMap<TQualifier, bool> mBuiltInQualified;
+
     // keeps track whether we are declaring / defining a function
     bool mDeclaringFunction;
 

@@ -21634,6 +21634,62 @@ void main() {
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
 }
+
+// Test that gl_FragDepth can be marked invariant.
+TEST_P(GLSLTest_ES3, FragDepthInvariant)
+{
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_conservative_depth: enable
+precision mediump float;
+invariant gl_FragDepth;
+void main() {
+    gl_FragDepth = 0.5;
+}
+)";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
+// Test that marking a built-in as invariant and then redeclaring it is an error.
+TEST_P(GLSLTest_ES3, FragDepthInvariantThenRedeclare)
+{
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_conservative_depth:enable
+precision mediump float;
+invariant gl_FragDepth;
+out float gl_FragDepth;
+void main() {
+    gl_FragDepth = 0.5;
+}
+)";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_EQ(0u, shader);
+}
+
+// Test that gl_Position and gl_PointSize can be marked invariant and redeclared in separate
+// statements. Note that EXT_seperate_shader_objects expects the redeclaration to come first.
+TEST_P(GLSLTest_ES31, PositionRedeclaredAndInvariant)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_separate_shader_objects"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_separate_shader_objects: require
+precision mediump float;
+out vec4 gl_Position;
+out float gl_PointSize;
+invariant gl_Position;
+invariant gl_PointSize;
+void main() {
+}
+)";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kVS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
