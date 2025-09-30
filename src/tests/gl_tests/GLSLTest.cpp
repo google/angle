@@ -592,6 +592,17 @@ TEST_P(GLSLTest, MissingMain)
     EXPECT_EQ(0u, shader);
 }
 
+// Test that a shader with only a main prototype in it fails to compile
+TEST_P(GLSLTest, MainPrototypeOnly)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+void main();
+)";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_EQ(0u, shader);
+}
+
 // Tests a shader from conformance.olges/GL/build/build_017_to_024
 // This shader uses chained assign-equals ops with swizzle, often reusing the same variable
 // as part of a swizzle.

@@ -4589,6 +4589,11 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
         new TIntermFunctionDefinition(functionPrototype, functionBody);
     functionNode->setLine(location);
 
+    if (mDeclaringMain)
+    {
+        mIsMainDeclared = true;
+    }
+
     symbolTable.pop();
     return functionNode;
 }
@@ -4714,10 +4719,6 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     }
 
     mDeclaringMain = function->isMain();
-    if (mDeclaringMain)
-    {
-        mIsMainDeclared = true;
-    }
 
     //
     // If this is a redeclaration, it could also be a definition, in which case, we want to use the
