@@ -2367,6 +2367,23 @@ bool OutputWGSLTraverser::emulateDoWhileLoop(TIntermLoop *loopNode)
 {
     ASSERT(loopNode->getType() == TLoopType::ELoopDoWhile);
 
+    // Emulate do-while with an infinite loop and a WGSL-special "continuing" and "break-if"
+    // statement.
+    //
+    // Example GLSL:
+    // do {
+    //    // Loop body, which might contain 'continue'
+    // } while(condition)
+    //
+    // Becomes WGSL:
+    // loop {
+    //   // Loop body, which might contain 'continue'
+
+    //   continuing {
+    //     break if !condition;
+    //   }
+    // }
+
     TIntermNode *initNode  = loopNode->getInit();
     TIntermTyped *condNode = loopNode->getCondition();
     TIntermTyped *exprNode = loopNode->getExpression();
@@ -2377,13 +2394,20 @@ bool OutputWGSLTraverser::emulateDoWhileLoop(TIntermLoop *loopNode)
     // Write an infinite loop.
     mSink << "loop {\n";
     mIndentLevel++;
+    // The loop body may contain a "continue" branch.
     loopNode->getBody()->traverse(this);
     mSink << "\n";
     emitIndentation();
     // At the end of the loop, break if the loop condition dos not still hold.
-    mSink << "if (!(";
+    mSink << "continuing {\n";
+    mIndentLevel++;
+    emitIndentation();
+    mSink << "break if !(";
     condNode->traverse(this);
-    mSink << ") { break; }\n";
+    mSink << ");\n";
+    mIndentLevel--;
+    emitIndentation();
+    mSink << "}\n";
     mIndentLevel--;
     emitIndentation();
     mSink << "}";

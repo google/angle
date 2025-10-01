@@ -646,7 +646,9 @@ fn _uwhileLoopDemo()
     {
       (_ui)++;
     }
-    if (!((_ui) < (5i)) { break; }
+    continuing {
+      break if !((_ui) < (5i));
+    }
   }
 }
 
