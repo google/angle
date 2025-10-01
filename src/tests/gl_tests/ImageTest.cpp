@@ -263,12 +263,12 @@ void main()
         return R"(#version 300 es
 precision highp float;
 uniform highp sampler3D tex3D;
-uniform uint layer;
+uniform float layer;
 in vec2 texcoord;
 out vec4 fragColor;
 void main()
 {
-    fragColor = texture(tex3D, vec3(texcoord.x, texcoord.y, float(layer)));
+    fragColor = texture(tex3D, vec3(texcoord.x, texcoord.y, layer));
 })";
     }
 
@@ -1255,10 +1255,15 @@ void main()
                              mTextureUniformLocation);
     }
 
-    void verifyResults3D(GLuint texture, const GLubyte data[4], uint32_t layerIndex = 0)
+    void verifyResults3D(GLuint texture,
+                         const GLubyte data[4],
+                         uint32_t layerIndex,
+                         uint32_t totalLayers)
     {
         glUseProgram(m3DTextureProgram);
-        glUniform1ui(m3DTextureLayerUniformLocation, layerIndex);
+        float layerInterval = 1.0f / totalLayers;
+        float layerCenter   = ((layerIndex + 1) * 1.0f / totalLayers) - layerInterval / 2.0f;
+        glUniform1f(m3DTextureLayerUniformLocation, layerCenter);
 
         verifyResultsTexture(texture, data, GL_TEXTURE_3D, m3DTextureProgram,
                              m3DTextureUniformLocation);
@@ -2987,7 +2992,7 @@ TEST_P(ImageTestES3, Source3DTarget3DStorageOrphan)
     EGLImageKHR image;
 
     createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, attribs,
-                                  static_cast<void *>(&kLinearColor), source, &image);
+                                  static_cast<void *>(&kLinearColor3D), source, &image);
 
     // Create the target
     GLTexture target;
@@ -2996,7 +3001,7 @@ TEST_P(ImageTestES3, Source3DTarget3DStorageOrphan)
     for (size_t layer = 0; layer < depth; layer++)
     {
         // Expect that the target texture has the same color as the source texture
-        verifyResults3D(target, kLinearColor);
+        verifyResults3D(target, &kLinearColor3D[layer * 4], layer, depth);
     }
 
     // Try to orphan this target texture
