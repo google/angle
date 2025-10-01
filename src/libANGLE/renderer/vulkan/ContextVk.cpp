@@ -1528,7 +1528,7 @@ angle::Result ContextVk::flush(const gl::Context *context)
 
     if (!mCurrentWindowSurface || isSingleBufferedWindowCurrent())
     {
-        ANGLE_TRY(onFramebufferBoundary(context));
+        ANGLE_TRY(onFrameBoundary(context));
     }
 
     return angle::Result::Continue;
@@ -1550,16 +1550,16 @@ angle::Result ContextVk::finish(const gl::Context *context)
 
     if (!mCurrentWindowSurface || singleBufferedFlush)
     {
-        ANGLE_TRY(onFramebufferBoundary(context));
+        ANGLE_TRY(onFrameBoundary(context));
     }
 
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::onFramebufferBoundary(const gl::Context *contextGL)
+angle::Result ContextVk::onFrameBoundary(const gl::Context *contextGL)
 {
-    mShareGroupVk->onFramebufferBoundary();
-    return mRenderer->syncPipelineCacheVk(this, mRenderer->getGlobalOps(), contextGL);
+    mShareGroupVk->onFrameBoundary();
+    return mRenderer->onFrameBoundary(contextGL);
 }
 
 angle::Result ContextVk::setupDraw(const gl::Context *context,
@@ -6205,7 +6205,8 @@ angle::Result ContextVk::onUnMakeCurrent(const gl::Context *context)
     {
         releaseQueueSerialIndex();
     }
-    return angle::Result::Continue;
+
+    return onFrameBoundary(context);
 }
 
 angle::Result ContextVk::onSurfaceUnMakeCurrent(WindowSurfaceVk *surface)
