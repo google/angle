@@ -2110,7 +2110,7 @@ angle::Result ContextVk::handleDirtyGraphicsDefaultAttribs(DirtyBits::Iterator *
     VertexArrayVk *vertexArrayVk = getVertexArray();
 
     gl::AttributesMask attribsMask = mDirtyDefaultAttribsMask;
-    attribsMask &= ~vertexArrayVk->getCurrentEnabledAttributesMask();
+    attribsMask &= ~vertexArrayVk->getCurrentEnabledAttribsMask();
     attribsMask &= mState.getProgramExecutable()->getAttributesMask();
 
     for (size_t attribIndex : attribsMask)
@@ -2611,9 +2611,9 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
     if (ANGLE_LIKELY(vertexAttributesTypeMask == programAttribsTypeMask))
     {
         const gl::AttribArray<VkVertexInputBindingDescription2EXT> &bindingDescs =
-            vertexArrayVk->getVertexInputBindingDesc();
+            vertexArrayVk->getVertexInputBindingDescs();
         const gl::AttribArray<VkVertexInputAttributeDescription2EXT> &attributeDescs =
-            vertexArrayVk->getVertexInputAttribDesc();
+            vertexArrayVk->getVertexInputAttribDescs();
 
         mRenderPassCommandBuffer->setVertexInput(maxAttrib, bindingDescs.data(), maxAttrib,
                                                  attributeDescs.data());
@@ -2624,9 +2624,9 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
         gl::AttribArray<VkVertexInputBindingDescription2EXT> bindingDescs;
         gl::AttribArray<VkVertexInputAttributeDescription2EXT> attributeDescs;
 
-        memcpy(bindingDescs.data(), vertexArrayVk->getVertexInputBindingDesc().data(),
+        memcpy(bindingDescs.data(), vertexArrayVk->getVertexInputBindingDescs().data(),
                maxAttrib * sizeof(VkVertexInputBindingDescription2EXT));
-        memcpy(attributeDescs.data(), vertexArrayVk->getVertexInputAttribDesc().data(),
+        memcpy(attributeDescs.data(), vertexArrayVk->getVertexInputAttribDescs().data(),
                maxAttrib * sizeof(VkVertexInputAttributeDescription2EXT));
 
         const gl::AttributesMask &activeAttribLocations =
@@ -5879,7 +5879,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING:
             {
                 invalidateDefaultAttributes(context->getActiveDefaultAttribsMask());
-                ANGLE_TRY(onVertexArrayChange(vertexArrayVk->getCurrentEnabledAttributesMask()));
+                ANGLE_TRY(onVertexArrayChange(vertexArrayVk->getCurrentEnabledAttribsMask()));
                 ANGLE_TRY(onIndexBufferChange(vertexArrayVk->getCurrentElementArrayBuffer()));
                 break;
             }

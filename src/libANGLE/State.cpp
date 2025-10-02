@@ -2393,6 +2393,43 @@ VertexArrayID PrivateState::getVertexArrayId() const
     return mVertexArrayPrivate->id();
 }
 
+void PrivateState::setVertexAttribFormat(GLuint attribIndex,
+                                         GLint size,
+                                         VertexAttribType type,
+                                         bool normalized,
+                                         bool pureInteger,
+                                         GLuint relativeOffset)
+{
+    mVertexArrayPrivate->setVertexAttribFormat(attribIndex, size, type, normalized, pureInteger,
+                                               relativeOffset);
+    mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
+}
+
+void PrivateState::setVertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
+{
+    mVertexArrayPrivate->setVertexAttribBinding(attribIndex, bindingIndex);
+    mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
+}
+
+void PrivateState::setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
+{
+    mVertexArrayPrivate->setVertexBindingDivisor(bindingIndex, divisor);
+    mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
+}
+
+void PrivateState::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
+{
+    mVertexArrayPrivate->enableAttribute(attribNum, enabled);
+    mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
+}
+
+void PrivateState::setVertexAttribDivisor(GLuint index, GLuint divisor)
+{
+    mVertexArrayPrivate->setVertexAttribDivisor(index, divisor);
+    mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
+}
+
+// State implementation.
 State::State(const State *shareContextState,
              egl::ShareGroup *shareGroup,
              TextureManager *shareTextures,
@@ -3044,30 +3081,6 @@ void State::bindVertexBuffer(const Context *context,
     mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void PrivateState::setVertexAttribFormat(GLuint attribIndex,
-                                         GLint size,
-                                         VertexAttribType type,
-                                         bool normalized,
-                                         bool pureInteger,
-                                         GLuint relativeOffset)
-{
-    mVertexArrayPrivate->setVertexAttribFormat(attribIndex, size, type, normalized, pureInteger,
-                                               relativeOffset);
-    mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
-}
-
-void PrivateState::setVertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
-{
-    mVertexArrayPrivate->setVertexAttribBinding(attribIndex, bindingIndex);
-    mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
-}
-
-void PrivateState::setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
-{
-    mVertexArrayPrivate->setVertexBindingDivisor(bindingIndex, divisor);
-    mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
-}
-
 angle::Result State::setProgram(const Context *context, Program *newProgram)
 {
     if (newProgram && !newProgram->isLinked())
@@ -3372,18 +3385,6 @@ angle::Result State::detachBuffer(Context *context, const Buffer *buffer)
     }
 
     return angle::Result::Continue;
-}
-
-void PrivateState::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
-{
-    mVertexArrayPrivate->enableAttribute(attribNum, enabled);
-    mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
-}
-
-void PrivateState::setVertexAttribDivisor(GLuint index, GLuint divisor)
-{
-    mVertexArrayPrivate->setVertexAttribDivisor(index, divisor);
-    mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
 const void *State::getVertexAttribPointer(unsigned int attribNum) const
