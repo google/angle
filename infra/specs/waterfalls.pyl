@@ -25,6 +25,8 @@
           'gpu_pixel_10_stable',
         ],
         'test_suites': {
+          'gtest_tests': 'android_gtests',
+          'isolated_scripts': 'isolated_scripts_group_common',
         },
       },
       'android-arm64-exp-pixel6': {  # android-arm64-pixel6 below for android-arm64-test
