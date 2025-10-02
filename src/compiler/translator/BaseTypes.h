@@ -1544,6 +1544,7 @@ inline const char *getQualifierString(TQualifier q)
     case EvqLastFragData:              return "LastFragData";
     case EvqLastFragDepth:             return "LastFragDepthARM";
     case EvqLastFragStencil:           return "LastFragStencilARM";
+    case EvqDepthRange:                return "DepthRange";
     case EvqFragmentInOut:             return "inout";
     case EvqSmoothOut:                 return "smooth out";
     case EvqCentroidOut:               return "smooth centroid out";

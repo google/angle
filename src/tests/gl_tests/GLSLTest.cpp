@@ -2860,6 +2860,19 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that GLSL error on gl_DepthRange does not crash.
+TEST_P(GLSLTestNoValidation, DepthRangeError)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+void main()
+{
+    gl_DepthRange + 1;
+})";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_EQ(0u, shader);
+}
+
 std::string GenerateSmallPowShader(double base, double exponent)
 {
     std::stringstream stream;
