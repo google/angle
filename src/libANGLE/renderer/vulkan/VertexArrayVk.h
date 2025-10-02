@@ -204,17 +204,19 @@ class VertexArrayVk : public VertexArrayImpl
                                          const angle::Format &dstFormat,
                                          const VertexCopyFunction vertexLoadFunction);
 
-    angle::Result syncDirtyEnabledNonStreamingAttrib(ContextVk *contextVk,
-                                                     const gl::VertexAttribute &attrib,
-                                                     const gl::VertexBinding &binding,
-                                                     size_t attribIndex,
-                                                     bool bufferOnly);
+    angle::Result syncDirtyEnabledNonStreamingAttrib(
+        ContextVk *contextVk,
+        const gl::VertexAttribute &attrib,
+        const gl::VertexBinding &binding,
+        size_t attribIndex,
+        const gl::VertexArray::DirtyAttribBits &dirtyAttribBits);
 
-    angle::Result syncDirtyEnabledStreamingAttrib(ContextVk *contextVk,
-                                                  const gl::VertexAttribute &attrib,
-                                                  const gl::VertexBinding &binding,
-                                                  size_t attribIndex,
-                                                  bool bufferOnly);
+    angle::Result syncDirtyEnabledStreamingAttrib(
+        ContextVk *contextVk,
+        const gl::VertexAttribute &attrib,
+        const gl::VertexBinding &binding,
+        size_t attribIndex,
+        const gl::VertexArray::DirtyAttribBits &dirtyAttribBits);
 
     angle::Result syncDirtyDisabledAttrib(ContextVk *contextVk,
                                           const gl::VertexAttribute &attrib,
@@ -269,10 +271,6 @@ class VertexArrayVk : public VertexArrayImpl
     gl::AttributesMask mNeedsConversionAttribsMask;
 
     gl::ComponentTypeMask mCurrentVertexAttributesTypeMask;
-
-    // The attrib/binding dirty bits that requires graphics pipeline update
-    gl::VertexArray::DirtyBindingBits mBindingDirtyBitsRequiresPipelineUpdate;
-    gl::VertexArray::DirtyAttribBits mAttribDirtyBitsRequiresPipelineUpdate;
 
     // This maybe 0 or 1 depends on feature bit
     uint32_t mZeroDivisor;

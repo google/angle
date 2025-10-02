@@ -30,6 +30,10 @@ namespace
 constexpr int kStreamIndexBufferCachedIndexCount = 6;
 constexpr int kMaxCachedStreamIndexBuffers       = 4;
 constexpr size_t kDefaultValueSize               = sizeof(gl::VertexAttribCurrentValueData::Values);
+constexpr gl::VertexArray::DirtyAttribBits kDirtyFormatAttribBits =
+    gl::VertexArray::DirtyAttribBits({gl::VertexArray::DIRTY_ATTRIB_ENABLED,
+                                      gl::VertexArray::DIRTY_ATTRIB_POINTER,
+                                      gl::VertexArray::DIRTY_ATTRIB_FORMAT});
 
 ANGLE_INLINE bool BindingIsAligned(const angle::Format &angleFormat,
                                    VkDeviceSize offset,
@@ -349,18 +353,6 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk,
             VK_FORMAT_R8G8B8A8_UNORM,
             0};
     }
-
-    mBindingDirtyBitsRequiresPipelineUpdate.set(gl::VertexArray::DIRTY_BINDING_DIVISOR);
-    if (!contextVk->getFeatures().useVertexInputBindingStrideDynamicState.enabled)
-    {
-        mBindingDirtyBitsRequiresPipelineUpdate.set(gl::VertexArray::DIRTY_BINDING_STRIDE);
-    }
-
-    // All but DIRTY_ATTRIB_POINTER_BUFFER requires graphics pipeline update
-    mAttribDirtyBitsRequiresPipelineUpdate.set(gl::VertexArray::DIRTY_ATTRIB_ENABLED);
-    mAttribDirtyBitsRequiresPipelineUpdate.set(gl::VertexArray::DIRTY_ATTRIB_POINTER);
-    mAttribDirtyBitsRequiresPipelineUpdate.set(gl::VertexArray::DIRTY_ATTRIB_FORMAT);
-    mAttribDirtyBitsRequiresPipelineUpdate.set(gl::VertexArray::DIRTY_ATTRIB_BINDING);
 }
 
 VertexArrayVk::~VertexArrayVk() {}
@@ -824,25 +816,12 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
     gl::AttributesMask attribDirtyBits(
         static_cast<uint32_t>(dirtyBits.bits() >> gl::VertexArray::DIRTY_BIT_ATTRIB_0));
 
-    gl::AttributesMask previousStreamingVertexAttribsMask = mStreamingVertexAttribsMask;
-
-    // Tracks which attribute needs full update
-    gl::AttributesMask fullAttribUpdate;
-
     // Fold DIRTY_BIT_BINDING_n into DIRTY_BIT_ATTRIB_n
     if (bufferBindingDirtyBits.any())
     {
         for (size_t bindingIndex : bufferBindingDirtyBits)
         {
             attribDirtyBits |= bindings[bindingIndex].getBoundAttributesMask();
-
-            gl::VertexArray::DirtyBindingBits dirtyBindingBitsRequirePipelineUpdate =
-                (*bindingBits)[bindingIndex] & mBindingDirtyBitsRequiresPipelineUpdate;
-            if (dirtyBindingBitsRequirePipelineUpdate.any())
-            {
-                fullAttribUpdate |= bindings[bindingIndex].getBoundAttributesMask();
-            }
-
             mDivisorExceedMaxSupportedValueBindingMask.set(
                 bindingIndex,
                 bindings[bindingIndex].getDivisor() > renderer->getMaxVertexAttribDivisor());
@@ -882,10 +861,6 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
     }
     mStreamingVertexAttribsMask &= mState.getEnabledAttributesMask();
 
-    // If we sre switching between streaming and buffer mode, set bufferOnly to false since we
-    // are actually changing the buffer.
-    fullAttribUpdate |= previousStreamingVertexAttribsMask ^ mStreamingVertexAttribsMask;
-
     // All enabled attributes that are dirty
     gl::AttributesMask enabledAttribDirtyBits = attribDirtyBits & mState.getEnabledAttributesMask();
 
@@ -897,16 +872,10 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         enabledAttribDirtyBits & ~mStreamingVertexAttribsMask;
     for (size_t attribIndex : enabledNonStreamAttribDirtyBits)
     {
-        gl::VertexArray::DirtyAttribBits dirtyAttribBitsRequiresPipelineUpdate =
-            (*attribBits)[attribIndex] & mAttribDirtyBitsRequiresPipelineUpdate;
-
-        const bool bufferOnly =
-            !fullAttribUpdate[attribIndex] && dirtyAttribBitsRequiresPipelineUpdate.none();
-
         // This will also update mNeedsConversionAttribMask
         ANGLE_TRY(syncDirtyEnabledNonStreamingAttrib(contextVk, attribs[attribIndex],
                                                      bindings[attribs[attribIndex].bindingIndex],
-                                                     attribIndex, bufferOnly));
+                                                     attribIndex, (*attribBits)[attribIndex]));
     }
 
     // Sync all enabled and streaming attributes that are dirty
@@ -914,16 +883,10 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         enabledAttribDirtyBits & mStreamingVertexAttribsMask;
     for (size_t attribIndex : enabledStreamAttribDirtyBits)
     {
-        gl::VertexArray::DirtyAttribBits dirtyAttribBitsRequiresPipelineUpdate =
-            (*attribBits)[attribIndex] & mAttribDirtyBitsRequiresPipelineUpdate;
-
-        const bool bufferOnly =
-            !fullAttribUpdate[attribIndex] && dirtyAttribBitsRequiresPipelineUpdate.none();
-
         // This will also update mNeedsConversionAttribMask
         ANGLE_TRY(syncDirtyEnabledStreamingAttrib(contextVk, attribs[attribIndex],
                                                   bindings[attribs[attribIndex].bindingIndex],
-                                                  attribIndex, bufferOnly));
+                                                  attribIndex, (*attribBits)[attribIndex]));
     }
 
     // Sync all enabled attributes that needs data conversion.
@@ -1008,7 +971,7 @@ ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledNonStreamingAttrib(
     const gl::VertexAttribute &attrib,
     const gl::VertexBinding &binding,
     size_t attribIndex,
-    bool bufferOnly)
+    const gl::VertexArray::DirtyAttribBits &dirtyAttribBits)
 {
     vk::Renderer *renderer = contextVk->getRenderer();
     ASSERT(attrib.enabled);
@@ -1079,11 +1042,11 @@ ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledNonStreamingAttrib(
         mVertexInputBindingDescs[attribIndex].stride = 0;
     }
 
-    if (!bufferOnly)
+    if ((dirtyAttribBits & kDirtyFormatAttribBits).any())
     {
         setVertexInputAttribDescFormat(renderer, attribIndex, attrib.format->id);
-        setVertexInputBindingDescDivisor(renderer, attribIndex, binding.getDivisor());
     }
+    setVertexInputBindingDescDivisor(renderer, attribIndex, binding.getDivisor());
 
     mCurrentEnabledAttribsMask.set(attribIndex);
     return angle::Result::Continue;
@@ -1094,7 +1057,7 @@ ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledStreamingAttrib(
     const gl::VertexAttribute &attrib,
     const gl::VertexBinding &binding,
     size_t attribIndex,
-    bool bufferOnly)
+    const gl::VertexArray::DirtyAttribBits &dirtyAttribBits)
 {
     vk::Renderer *renderer = contextVk->getRenderer();
     ASSERT(attrib.enabled);
@@ -1116,11 +1079,11 @@ ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledStreamingAttrib(
     // Init attribute offset to the front-end value
     mVertexInputAttribDescs[attribIndex].offset = attrib.relativeOffset;
 
-    if (!bufferOnly)
+    if ((dirtyAttribBits & kDirtyFormatAttribBits).any())
     {
         setVertexInputAttribDescFormat(renderer, attribIndex, attrib.format->id);
-        setVertexInputBindingDescDivisor(renderer, attribIndex, binding.getDivisor());
     }
+    setVertexInputBindingDescDivisor(renderer, attribIndex, binding.getDivisor());
 
     mCurrentEnabledAttribsMask.set(attribIndex);
     return angle::Result::Continue;
