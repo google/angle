@@ -886,9 +886,16 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
     // are actually changing the buffer.
     fullAttribUpdate |= previousStreamingVertexAttribsMask ^ mStreamingVertexAttribsMask;
 
-    // Sync all enabled attributes that are dirty
+    // All enabled attributes that are dirty
     gl::AttributesMask enabledAttribDirtyBits = attribDirtyBits & mState.getEnabledAttributesMask();
-    for (size_t attribIndex : enabledAttribDirtyBits)
+
+    // We are going to re-evaluate mNeedsConversionAttribMask inside syncDirtyEnabledAttrib
+    mNeedsConversionAttribMask &= ~enabledAttribDirtyBits;
+
+    // Sync all enabled non-streaming attributes that are dirty
+    const gl::AttributesMask enabledNonStreamAttribDirtyBits =
+        enabledAttribDirtyBits & ~mStreamingVertexAttribsMask;
+    for (size_t attribIndex : enabledNonStreamAttribDirtyBits)
     {
         gl::VertexArray::DirtyAttribBits dirtyAttribBitsRequiresPipelineUpdate =
             (*attribBits)[attribIndex] & mAttribDirtyBitsRequiresPipelineUpdate;
@@ -897,9 +904,26 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
             !fullAttribUpdate[attribIndex] && dirtyAttribBitsRequiresPipelineUpdate.none();
 
         // This will also update mNeedsConversionAttribMask
-        ANGLE_TRY(syncDirtyEnabledAttrib(contextVk, attribs[attribIndex],
-                                         bindings[attribs[attribIndex].bindingIndex], attribIndex,
-                                         bufferOnly));
+        ANGLE_TRY(syncDirtyEnabledNonStreamingAttrib(contextVk, attribs[attribIndex],
+                                                     bindings[attribs[attribIndex].bindingIndex],
+                                                     attribIndex, bufferOnly));
+    }
+
+    // Sync all enabled and streaming attributes that are dirty
+    const gl::AttributesMask enabledStreamAttribDirtyBits =
+        enabledAttribDirtyBits & mStreamingVertexAttribsMask;
+    for (size_t attribIndex : enabledStreamAttribDirtyBits)
+    {
+        gl::VertexArray::DirtyAttribBits dirtyAttribBitsRequiresPipelineUpdate =
+            (*attribBits)[attribIndex] & mAttribDirtyBitsRequiresPipelineUpdate;
+
+        const bool bufferOnly =
+            !fullAttribUpdate[attribIndex] && dirtyAttribBitsRequiresPipelineUpdate.none();
+
+        // This will also update mNeedsConversionAttribMask
+        ANGLE_TRY(syncDirtyEnabledStreamingAttrib(contextVk, attribs[attribIndex],
+                                                  bindings[attribs[attribIndex].bindingIndex],
+                                                  attribIndex, bufferOnly));
     }
 
     // Sync all enabled attributes that needs data conversion.
@@ -979,36 +1003,36 @@ ANGLE_INLINE void VertexArrayVk::setDefaultPackedInput(ContextVk *contextVk,
     *formatOut = GetCurrentValueFormatID(defaultValue.Type);
 }
 
-angle::Result VertexArrayVk::syncDirtyEnabledAttrib(ContextVk *contextVk,
-                                                    const gl::VertexAttribute &attrib,
-                                                    const gl::VertexBinding &binding,
-                                                    size_t attribIndex,
-                                                    bool bufferOnly)
+ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledNonStreamingAttrib(
+    ContextVk *contextVk,
+    const gl::VertexAttribute &attrib,
+    const gl::VertexBinding &binding,
+    size_t attribIndex,
+    bool bufferOnly)
 {
     vk::Renderer *renderer = contextVk->getRenderer();
     ASSERT(attrib.enabled);
+    ASSERT(!mStreamingVertexAttribsMask.test(attribIndex));
+    ASSERT(!mNeedsConversionAttribMask[attribIndex]);
 
     const vk::Format &vertexFormat = renderer->getFormat(attrib.format->id);
 
     // Init attribute offset to the front-end value
     mVertexInputAttribDesc[attribIndex].offset      = attrib.relativeOffset;
     gl::Buffer *bufferGL                            = getVertexArrayBuffer(attrib.bindingIndex);
-    bool isStreamingVertexAttrib                    = mStreamingVertexAttribsMask.test(attribIndex);
+    const angle::Format &srcFormat                  = vertexFormat.getIntendedFormat();
+    unsigned srcFormatSize                          = srcFormat.pixelBytes;
+    bool hasAtLeastOneVertex = (bufferGL->getSize() - binding.getOffset()) >= srcFormatSize;
+    // If buffer size is 0, hasAtLeastOneVertex must be false
+    ASSERT(bufferGL->getSize() > 0 || !hasAtLeastOneVertex);
 
-    mNeedsConversionAttribMask.reset(attribIndex);
-
-    if (!isStreamingVertexAttrib && bufferGL->getSize() > 0)
+    if (ANGLE_LIKELY(hasAtLeastOneVertex))
     {
         BufferVk *bufferVk             = vk::GetImpl(bufferGL);
-        const angle::Format &srcFormat = vertexFormat.getIntendedFormat();
-        unsigned srcFormatSize         = srcFormat.pixelBytes;
         uint32_t srcStride       = binding.getStride() == 0 ? srcFormatSize : binding.getStride();
-        bool hasAtLeastOneVertex = (bufferGL->getSize() - binding.getOffset()) >= srcFormatSize;
         bool bindingIsAligned =
             BindingIsAligned(srcFormat, binding.getOffset() + attrib.relativeOffset, srcStride);
-
         bool needsConversion =
-            hasAtLeastOneVertex &&
             (vertexFormat.getVertexLoadRequiresConversion() || !bindingIsAligned);
 
         if (ANGLE_UNLIKELY(needsConversion))
@@ -1017,65 +1041,80 @@ angle::Result VertexArrayVk::syncDirtyEnabledAttrib(ContextVk *contextVk,
             mNeedsConversionAttribMask.set(attribIndex);
             return angle::Result::Continue;
         }
-        else if (ANGLE_LIKELY(hasAtLeastOneVertex))
+
+        vk::BufferHelper &bufferHelper         = bufferVk->getBuffer();
+        mCurrentArrayBuffers[attribIndex]      = &bufferHelper;
+        mCurrentArrayBufferSerial[attribIndex] = bufferHelper.getBufferSerial();
+        VkDeviceSize bufferSize                = bufferHelper.getSize();
+
+        VkDeviceSize bufferOffset;
+        if (contextVk->getFeatures().useVertexInputBindingStrideDynamicState.enabled)
         {
-            vk::BufferHelper &bufferHelper         = bufferVk->getBuffer();
-            mCurrentArrayBuffers[attribIndex]      = &bufferHelper;
-            mCurrentArrayBufferSerial[attribIndex] = bufferHelper.getBufferSerial();
-            VkDeviceSize bufferSize                = bufferHelper.getSize();
-
-            VkDeviceSize bufferOffset;
-            if (contextVk->getFeatures().useVertexInputBindingStrideDynamicState.enabled)
-            {
-                mCurrentArrayBufferHandles[attribIndex] = bufferHelper.getBuffer().getHandle();
-                bufferOffset                            = bufferHelper.getOffset();
-            }
-            else
-            {
-                mCurrentArrayBufferHandles[attribIndex] =
-                    bufferHelper.getBufferForVertexArray(contextVk, bufferSize, &bufferOffset)
-                        .getHandle();
-            }
-
-            // Vulkan requires the offset is within the buffer. We use robust access
-            // behaviour to reset the offset if it starts outside the buffer.
-            ASSERT(binding.getOffset() < static_cast<GLint64>(bufferSize));
-            mCurrentArrayBufferOffsets[attribIndex]     = bufferOffset + binding.getOffset();
-            mCurrentArrayBufferSizes[attribIndex]       = bufferSize - binding.getOffset();
-            mVertexInputBindingDesc[attribIndex].stride = binding.getStride();
+            mCurrentArrayBufferHandles[attribIndex] = bufferHelper.getBuffer().getHandle();
+            bufferOffset                            = bufferHelper.getOffset();
         }
         else
         {
-            vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
-
-            mCurrentArrayBuffers[attribIndex]       = &emptyBuffer;
-            mCurrentArrayBufferSerial[attribIndex]  = emptyBuffer.getBufferSerial();
-            mCurrentArrayBufferHandles[attribIndex] = emptyBuffer.getBuffer().getHandle();
-            mCurrentArrayBufferOffsets[attribIndex] = emptyBuffer.getOffset();
-            mCurrentArrayBufferSizes[attribIndex]       = emptyBuffer.getSize();
-            mVertexInputBindingDesc[attribIndex].stride = 0;
+            mCurrentArrayBufferHandles[attribIndex] =
+                bufferHelper.getBufferForVertexArray(contextVk, bufferSize, &bufferOffset)
+                    .getHandle();
         }
+
+        // Vulkan requires the offset is within the buffer. We use robust access
+        // behaviour to reset the offset if it starts outside the buffer.
+        ASSERT(binding.getOffset() < static_cast<GLint64>(bufferSize));
+        mCurrentArrayBufferOffsets[attribIndex]     = bufferOffset + binding.getOffset();
+        mCurrentArrayBufferSizes[attribIndex]       = bufferSize - binding.getOffset();
+        mVertexInputBindingDesc[attribIndex].stride = binding.getStride();
     }
     else
     {
-        vk::BufferHelper &emptyBuffer           = contextVk->getEmptyBuffer();
+        vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
+
         mCurrentArrayBuffers[attribIndex]       = &emptyBuffer;
         mCurrentArrayBufferSerial[attribIndex]  = emptyBuffer.getBufferSerial();
         mCurrentArrayBufferHandles[attribIndex] = emptyBuffer.getBuffer().getHandle();
         mCurrentArrayBufferOffsets[attribIndex] = emptyBuffer.getOffset();
-        mCurrentArrayBufferSizes[attribIndex]   = emptyBuffer.getSize();
-
-        if (isStreamingVertexAttrib)
-        {
-            bool combined = ShouldCombineAttributes(renderer, attrib, binding);
-            mVertexInputBindingDesc[attribIndex].stride =
-                combined ? binding.getStride() : vertexFormat.getActualBufferFormat().pixelBytes;
-        }
-        else
-        {
-            mVertexInputBindingDesc[attribIndex].stride = 0;
-        }
+        mCurrentArrayBufferSizes[attribIndex]       = emptyBuffer.getSize();
+        mVertexInputBindingDesc[attribIndex].stride = 0;
     }
+
+    if (!bufferOnly)
+    {
+        setVertexInputAttribDescFormat(renderer, attribIndex, attrib.format->id);
+        setVertexInputBindingDescDivisor(renderer, attribIndex, binding.getDivisor());
+    }
+
+    mCurrentEnabledAttributesMask.set(attribIndex);
+    return angle::Result::Continue;
+}
+
+ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledStreamingAttrib(
+    ContextVk *contextVk,
+    const gl::VertexAttribute &attrib,
+    const gl::VertexBinding &binding,
+    size_t attribIndex,
+    bool bufferOnly)
+{
+    vk::Renderer *renderer = contextVk->getRenderer();
+    ASSERT(attrib.enabled);
+    ASSERT(mStreamingVertexAttribsMask.test(attribIndex));
+    ASSERT(!mNeedsConversionAttribMask[attribIndex]);
+
+    const vk::Format &vertexFormat = renderer->getFormat(attrib.format->id);
+
+    vk::BufferHelper &emptyBuffer           = contextVk->getEmptyBuffer();
+    mCurrentArrayBuffers[attribIndex]       = &emptyBuffer;
+    mCurrentArrayBufferSerial[attribIndex]  = emptyBuffer.getBufferSerial();
+    mCurrentArrayBufferHandles[attribIndex] = emptyBuffer.getBuffer().getHandle();
+    mCurrentArrayBufferOffsets[attribIndex] = emptyBuffer.getOffset();
+    mCurrentArrayBufferSizes[attribIndex]   = emptyBuffer.getSize();
+
+    bool combined = ShouldCombineAttributes(renderer, attrib, binding);
+    mVertexInputBindingDesc[attribIndex].stride =
+        combined ? binding.getStride() : vertexFormat.getActualBufferFormat().pixelBytes;
+    // Init attribute offset to the front-end value
+    mVertexInputAttribDesc[attribIndex].offset = attrib.relativeOffset;
 
     if (!bufferOnly)
     {

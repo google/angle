@@ -207,11 +207,17 @@ class VertexArrayVk : public VertexArrayImpl
                                          const angle::Format &dstFormat,
                                          const VertexCopyFunction vertexLoadFunction);
 
-    angle::Result syncDirtyEnabledAttrib(ContextVk *contextVk,
-                                         const gl::VertexAttribute &attrib,
-                                         const gl::VertexBinding &binding,
-                                         size_t attribIndex,
-                                         bool bufferOnly);
+    angle::Result syncDirtyEnabledNonStreamingAttrib(ContextVk *contextVk,
+                                                     const gl::VertexAttribute &attrib,
+                                                     const gl::VertexBinding &binding,
+                                                     size_t attribIndex,
+                                                     bool bufferOnly);
+
+    angle::Result syncDirtyEnabledStreamingAttrib(ContextVk *contextVk,
+                                                  const gl::VertexAttribute &attrib,
+                                                  const gl::VertexBinding &binding,
+                                                  size_t attribIndex,
+                                                  bool bufferOnly);
 
     angle::Result syncDirtyDisabledAttrib(ContextVk *contextVk,
                                           const gl::VertexAttribute &attrib,
