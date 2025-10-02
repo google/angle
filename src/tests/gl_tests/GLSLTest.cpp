@@ -22399,6 +22399,364 @@ void main() {
     EXPECT_NE(0u, shader);
     glDeleteShader(shader);
 }
+
+// Make sure gl_PerVertex is not accepted other than as `out` and with no name in vertex shader
+TEST_P(GLSLTest_ES31, ValidatePerVertexVertexShader)
+{
+    {
+        // Cannot use gl_PerVertex with attribute
+        constexpr char kVS[] = R"(attribute gl_PerVertex{vec4 gl_Position;};
+void main() {})";
+        GLuint shader        = CompileShader(GL_VERTEX_SHADER, kVS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use gl_PerVertex with a name (without EXT_shader_io_blocks)
+        constexpr char kVS[] = R"(#version 300 es
+out gl_PerVertex{vec4 gl_Position;} name;
+void main() {})";
+        GLuint shader        = CompileShader(GL_VERTEX_SHADER, kVS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use gl_PerVertex (without EXT_shader_io_blocks)
+        constexpr char kVS[] = R"(#version 310 es
+out gl_PerVertex{vec4 gl_Position;};
+void main() {})";
+        GLuint shader        = CompileShader(GL_VERTEX_SHADER, kVS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    {
+        // Cannot use gl_PerVertex with a name
+        constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+out gl_PerVertex{vec4 gl_Position;} name;
+void main() {})";
+        GLuint shader        = CompileShader(GL_VERTEX_SHADER, kVS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // out gl_PerVertex without a name is ok.
+        constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+out gl_PerVertex{vec4 gl_Position;};
+void main() {})";
+        GLuint shader        = CompileShader(GL_VERTEX_SHADER, kVS);
+        EXPECT_NE(0u, shader);
+        glDeleteShader(shader);
+    }
+}
+
+// Make sure gl_PerVertex is not accepted other than as `out .. gl_out[]`, or `in .. gl_in[]` in
+// tessellation control shader.
+TEST_P(GLSLTest_ES31, ValidatePerVertexTessellationControlShader)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+
+    {
+        // Cannot use out gl_PerVertex with a name (without EXT_shader_io_blocks)
+        constexpr char kTCS[] = R"(#version 300 es
+out gl_PerVertex{vec4 gl_Position;} name[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_CONTROL_SHADER, kTCS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex with a name (without EXT_shader_io_blocks)
+        constexpr char kTCS[] = R"(#version 300 es
+in gl_PerVertex{vec4 gl_Position;} name[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_CONTROL_SHADER, kTCS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use out gl_PerVertex (without EXT_shader_io_blocks)
+        constexpr char kTCS[] = R"(#version 310 es
+out gl_PerVertex{vec4 gl_Position;} gl_out[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_CONTROL_SHADER, kTCS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex (without EXT_shader_io_blocks)
+        constexpr char kTCS[] = R"(#version 310 es
+in gl_PerVertex{vec4 gl_Position;} gl_in[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_CONTROL_SHADER, kTCS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use out gl_PerVertex with a name
+        constexpr char kTCS[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+layout (vertices=4) out;
+out gl_PerVertex{vec4 gl_Position;} name[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_CONTROL_SHADER, kTCS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex with a name
+        constexpr char kTCS[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+layout (vertices=4) out;
+in gl_PerVertex{vec4 gl_Position;} name[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_CONTROL_SHADER, kTCS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use out gl_PerVertex if not arrayed
+        constexpr char kTCS[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+layout (vertices=4) out;
+out gl_PerVertex{vec4 gl_Position;} gl_out;
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_CONTROL_SHADER, kTCS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex if not arrayed
+        constexpr char kTCS[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+layout (vertices=4) out;
+in gl_PerVertex{vec4 gl_Position;} gl_in;
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_CONTROL_SHADER, kTCS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // out gl_PerVertex with gl_out, and in gl_PerVertex with gl_in are ok.
+        constexpr char kTCS[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+layout (vertices=4) out;
+out gl_PerVertex{vec4 gl_Position;} gl_out[];
+in gl_PerVertex{vec4 gl_Position;} gl_in[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_CONTROL_SHADER, kTCS);
+        EXPECT_NE(0u, shader);
+        glDeleteShader(shader);
+    }
+}
+
+// Make sure gl_PerVertex is not accepted other than as `out .. gl_out`, or `in .. gl_in[]` in
+// tessellation evaluation shader.
+TEST_P(GLSLTest_ES31, ValidatePerVertexTessellationEvaluationShader)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+
+    {
+        // Cannot use out gl_PerVertex with a name (without EXT_shader_io_blocks)
+        constexpr char kTES[] = R"(#version 300 es
+out gl_PerVertex{vec4 gl_Position;} name;
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_EVALUATION_SHADER, kTES);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex with a name (without EXT_shader_io_blocks)
+        constexpr char kTES[] = R"(#version 300 es
+in gl_PerVertex{vec4 gl_Position;} name[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_EVALUATION_SHADER, kTES);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use out gl_PerVertex (without EXT_shader_io_blocks)
+        constexpr char kTES[] = R"(#version 310 es
+out gl_PerVertex{vec4 gl_Position;};
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_EVALUATION_SHADER, kTES);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex (without EXT_shader_io_blocks)
+        constexpr char kTES[] = R"(#version 310 es
+in gl_PerVertex{vec4 gl_Position;} gl_in[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_EVALUATION_SHADER, kTES);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use out gl_PerVertex with a name
+        constexpr char kTES[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+layout (isolines, point_mode) in;
+out gl_PerVertex{vec4 gl_Position;} name;
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_EVALUATION_SHADER, kTES);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex with a name
+        constexpr char kTES[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+layout (isolines, point_mode) in;
+in gl_PerVertex{vec4 gl_Position;} name[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_EVALUATION_SHADER, kTES);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use out gl_PerVertex if arrayed
+        constexpr char kTES[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+layout (isolines, point_mode) in;
+out gl_PerVertex{vec4 gl_Position;} gl_out[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_EVALUATION_SHADER, kTES);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex if not arrayed
+        constexpr char kTES[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+layout (isolines, point_mode) in;
+in gl_PerVertex{vec4 gl_Position;} gl_in;
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_EVALUATION_SHADER, kTES);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // out gl_PerVertex without a name, and in gl_PerVertex with gl_in are ok.
+        constexpr char kTES[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+layout (isolines, point_mode) in;
+out gl_PerVertex{vec4 gl_Position;};
+in gl_PerVertex{vec4 gl_Position;} gl_in[];
+void main() {})";
+        GLuint shader         = CompileShader(GL_TESS_EVALUATION_SHADER, kTES);
+        EXPECT_NE(0u, shader);
+        glDeleteShader(shader);
+    }
+}
+
+// Make sure gl_PerVertex is not accepted other than as `out .. gl_out`, or `in .. gl_in[]` in
+// geometry shader.
+TEST_P(GLSLTest_ES31, ValidatePerVertexGeometryShader)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+
+    {
+        // Cannot use out gl_PerVertex with a name (without EXT_shader_io_blocks)
+        constexpr char kGS[] = R"(#version 300 es
+out gl_PerVertex{vec4 gl_Position;} name;
+void main() {})";
+        GLuint shader        = CompileShader(GL_GEOMETRY_SHADER, kGS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex with a name (without EXT_shader_io_blocks)
+        constexpr char kGS[] = R"(#version 300 es
+in gl_PerVertex{vec4 gl_Position;} name[];
+void main() {})";
+        GLuint shader        = CompileShader(GL_GEOMETRY_SHADER, kGS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use out gl_PerVertex (without EXT_shader_io_blocks)
+        constexpr char kGS[] = R"(#version 310 es
+out gl_PerVertex{vec4 gl_Position;};
+void main() {})";
+        GLuint shader        = CompileShader(GL_GEOMETRY_SHADER, kGS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex (without EXT_shader_io_blocks)
+        constexpr char kGS[] = R"(#version 310 es
+in gl_PerVertex{vec4 gl_Position;} gl_in[];
+void main() {})";
+        GLuint shader        = CompileShader(GL_GEOMETRY_SHADER, kGS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use out gl_PerVertex with a name
+        constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout (triangles) in;
+layout (points, max_vertices = 1) out;
+out gl_PerVertex{vec4 gl_Position;} name;
+void main() {})";
+        GLuint shader        = CompileShader(GL_GEOMETRY_SHADER, kGS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex with a name
+        constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout (triangles) in;
+layout (points, max_vertices = 1) out;
+in gl_PerVertex{vec4 gl_Position;} name[];
+void main() {})";
+        GLuint shader        = CompileShader(GL_GEOMETRY_SHADER, kGS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use out gl_PerVertex if arrayed
+        constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout (triangles) in;
+layout (points, max_vertices = 1) out;
+out gl_PerVertex{vec4 gl_Position;} gl_out[];
+void main() {})";
+        GLuint shader        = CompileShader(GL_GEOMETRY_SHADER, kGS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // Cannot use in gl_PerVertex if not arrayed
+        constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout (triangles) in;
+layout (points, max_vertices = 1) out;
+in gl_PerVertex{vec4 gl_Position;} gl_in;
+void main() {})";
+        GLuint shader        = CompileShader(GL_GEOMETRY_SHADER, kGS);
+        EXPECT_EQ(0u, shader);
+    }
+
+    {
+        // out gl_PerVertex without a name, and in gl_PerVertex with gl_in are ok.
+        constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout (triangles) in;
+layout (points, max_vertices = 1) out;
+out gl_PerVertex{vec4 gl_Position;};
+in gl_PerVertex{vec4 gl_Position;} gl_in[];
+void main() {})";
+        GLuint shader        = CompileShader(GL_GEOMETRY_SHADER, kGS);
+        EXPECT_NE(0u, shader);
+        glDeleteShader(shader);
+    }
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(

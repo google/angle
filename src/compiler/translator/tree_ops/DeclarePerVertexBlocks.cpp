@@ -311,6 +311,13 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
             return false;
         }
 
+        // If gl_out is redeclared by the shader, make sure it's not overridden.
+        if (symbol->getType().getQualifier() == EvqPerVertexOut)
+        {
+            mPerVertexOutVar = &symbol->variable();
+            return false;
+        }
+
         return true;
     }
 
