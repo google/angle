@@ -1140,7 +1140,7 @@
                                 "type":{
                                     "basic":"Int",
                                     "precision":"High",
-                                    "qualifier":"Uniform"
+                                    "qualifier":"BaseVertex"
                                 }
                             },
                             "gl_BaseInstance":{
@@ -1149,25 +1149,7 @@
                                 "type":{
                                     "basic":"Int",
                                     "precision":"High",
-                                    "qualifier":"Uniform"
-                                }
-                            },
-                            "angle_BaseVertex":{
-                                "essl_level":"COMMON_BUILTINS",
-                                "essl_extension":"ANGLE_base_vertex_base_instance_shader_builtin",
-                                "type":{
-                                    "basic":"Int",
-                                    "precision":"High",
-                                    "qualifier":"Uniform"
-                                }
-                            },
-                            "angle_BaseInstance":{
-                                "essl_level":"COMMON_BUILTINS",
-                                "essl_extension":"ANGLE_base_vertex_base_instance_shader_builtin",
-                                "type":{
-                                    "basic":"Int",
-                                    "precision":"High",
-                                    "qualifier":"Uniform"
+                                    "qualifier":"BaseInstance"
                                 }
                             }
                         }

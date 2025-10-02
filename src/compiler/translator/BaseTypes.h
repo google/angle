@@ -941,7 +941,11 @@ enum TQualifier
     EvqPosition,
     EvqPointSize,
 
-    EvqDrawID,  // ANGLE_multi_draw
+    // ANGLE_base_vertex_base_instance_shader_builtin
+    EvqBaseVertex,
+    EvqBaseInstance,
+    // ANGLE_multi_draw
+    EvqDrawID,
 
     // built-ins read by fragment shader
     EvqFragCoord,
@@ -1527,6 +1531,8 @@ inline const char *getQualifierString(TQualifier q)
     case EvqVertexID:                  return "VertexID";
     case EvqPosition:                  return "out"; // Per EXT_separate_shader_objects
     case EvqPointSize:                 return "out"; // Per EXT_separate_shader_objects
+    case EvqBaseVertex:                return "BaseVertex";
+    case EvqBaseInstance:              return "BaseInstance";
     case EvqDrawID:                    return "DrawID";
     case EvqFragCoord:                 return "FragCoord";
     case EvqFrontFacing:               return "FrontFacing";
