@@ -8,6 +8,8 @@
 #include "common/log_utils.h"
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/ImmutableString.h"
+#include "compiler/translator/ImmutableStringBuilder.h"
+#include "compiler/translator/Operator_autogen.h"
 #include "compiler/translator/util.h"
 #include "compiler/translator/wgsl/Utils.h"
 
@@ -39,81 +41,93 @@ void EmitConstructorList(TInfoSinkBase &sink, const TType &type, ImmutableString
     }
     sink << ")";
 }
+
+ImmutableString ConcatId(const char *prefix, uint64_t funcId)
+{
+    return BuildConcatenatedImmutableString("ANGLE_", prefix, "_", funcId);
+}
+
+template <typename T>
+uint64_t InsertIntoMapWithUniqueId(uint64_t &idCounter, TMap<T, uint64_t> &map, const T &key)
+{
+    auto [iterator, inserted] = map.try_emplace(key, idCounter);
+
+    if (inserted)
+    {
+        idCounter++;
+    }
+
+    return iterator->second;
+}
 }  // namespace
 
 WGSLWrapperFunction WGSLProgramPrelude::preIncrement(const TType &incrementedType)
 {
-    mPreIncrementedTypes.insert(incrementedType);
-    switch (incrementedType.getQualifier())
+    ASSERT(incrementedType.getBasicType() == EbtInt || incrementedType.getBasicType() == EbtUInt ||
+           incrementedType.getBasicType() == EbtFloat);
+
+    uint64_t uniqueId =
+        InsertIntoMapWithUniqueId(mUniqueFuncId, mPreIncrementedTypes, incrementedType);
+    switch (GetWgslAddressSpaceForPointer(incrementedType))
     {
-        case EvqTemporary:
-        // NOTE: As of Sept 2025, parameters are immutable in WGSL (and are handled by an AST pass
-        // that copies parameters to temporaries). Include these here in case parameters become
-        // mutable in the future.
-        case EvqParamIn:
-        case EvqParamOut:
-        case EvqParamInOut:
-            return {ImmutableString("preIncFunc(&"), kEndParanthesis};
-        default:
+        case WgslPointerAddressSpace::Function:
+            return {BuildConcatenatedImmutableString(ConcatId("preIncFunc", uniqueId), "(&"),
+                    kEndParanthesis};
+        case WgslPointerAddressSpace::Private:
             // EvqGlobal and various other shader outputs/builtins are all globals.
-            return {ImmutableString("preIncPriv(&"), kEndParanthesis};
+            return {BuildConcatenatedImmutableString(ConcatId("preIncPriv", uniqueId), "(&"),
+                    kEndParanthesis};
     }
 }
 
 WGSLWrapperFunction WGSLProgramPrelude::preDecrement(const TType &decrementedType)
 {
-    mPreDecrementedTypes.insert(decrementedType);
-    switch (decrementedType.getQualifier())
+    uint64_t uniqueId =
+        InsertIntoMapWithUniqueId(mUniqueFuncId, mPreDecrementedTypes, decrementedType);
+
+    switch (GetWgslAddressSpaceForPointer(decrementedType))
     {
-        case EvqTemporary:
-        // NOTE: As of Sept 2025, parameters are immutable in WGSL (and are handled by an AST pass
-        // that copies parameters to temporaries). Include these here in case parameters become
-        // mutable in the future.
-        case EvqParamIn:
-        case EvqParamOut:
-        case EvqParamInOut:
-            return {ImmutableString("preDecFunc(&"), kEndParanthesis};
-        default:
+        case WgslPointerAddressSpace::Function:
+            return {BuildConcatenatedImmutableString(ConcatId("preDecFunc", uniqueId), "(&"),
+                    kEndParanthesis};
+        case WgslPointerAddressSpace::Private:
             // EvqGlobal and various other shader outputs/builtins are all globals.
-            return {ImmutableString("preDecPriv(&"), kEndParanthesis};
+            return {BuildConcatenatedImmutableString(ConcatId("preDecPriv", uniqueId), "(&"),
+                    kEndParanthesis};
     }
 }
 
 WGSLWrapperFunction WGSLProgramPrelude::postIncrement(const TType &incrementedType)
 {
-    mPostIncrementedTypes.insert(incrementedType);
-    switch (incrementedType.getQualifier())
+    uint64_t uniqueId =
+        InsertIntoMapWithUniqueId(mUniqueFuncId, mPostIncrementedTypes, incrementedType);
+
+    switch (GetWgslAddressSpaceForPointer(incrementedType))
     {
-        case EvqTemporary:
-        // NOTE: As of Sept 2025, parameters are immutable in WGSL (and are handled by an AST pass
-        // that copies parameters to temporaries). Include these here in case parameters become
-        // mutable in the future.
-        case EvqParamIn:
-        case EvqParamOut:
-        case EvqParamInOut:
-            return {ImmutableString("postIncFunc(&"), kEndParanthesis};
-        default:
+        case WgslPointerAddressSpace::Function:
+            return {BuildConcatenatedImmutableString(ConcatId("postIncFunc", uniqueId), "(&"),
+                    kEndParanthesis};
+        case WgslPointerAddressSpace::Private:
             // EvqGlobal and various other shader outputs/builtins are all globals.
-            return {ImmutableString("postIncPriv(&"), kEndParanthesis};
+            return {BuildConcatenatedImmutableString(ConcatId("postIncPriv", uniqueId), "(&"),
+                    kEndParanthesis};
     }
 }
 
 WGSLWrapperFunction WGSLProgramPrelude::postDecrement(const TType &decrementedType)
 {
-    mPostDecrementedTypes.insert(decrementedType);
-    switch (decrementedType.getQualifier())
+    uint64_t uniqueId =
+        InsertIntoMapWithUniqueId(mUniqueFuncId, mPostDecrementedTypes, decrementedType);
+
+    switch (GetWgslAddressSpaceForPointer(decrementedType))
     {
-        case EvqTemporary:
-        // NOTE: As of Sept 2025, parameters are immutable in WGSL (and are handled by an AST pass
-        // that copies parameters to temporaries). Include these here in case parameters become
-        // mutable in the future.
-        case EvqParamIn:
-        case EvqParamOut:
-        case EvqParamInOut:
-            return {ImmutableString("postDecFunc(&"), kEndParanthesis};
-        default:
+        case WgslPointerAddressSpace::Function:
+            return {BuildConcatenatedImmutableString(ConcatId("postDecFunc", uniqueId), "(&"),
+                    kEndParanthesis};
+        case WgslPointerAddressSpace::Private:
             // EvqGlobal and various other shader outputs/builtins are all globals.
-            return {ImmutableString("postDecPriv(&"), kEndParanthesis};
+            return {BuildConcatenatedImmutableString(ConcatId("postDecPriv", uniqueId), "(&"),
+                    kEndParanthesis};
     }
 }
 
@@ -132,29 +146,29 @@ void WGSLProgramPrelude::outputPrelude(TInfoSinkBase &sink)
         sink << "  return *x;\n";
         sink << "}\n";
     };
-    for (const TType &type : mPreIncrementedTypes)
+    for (const std::pair<const TType, FuncId> &elem : mPreIncrementedTypes)
     {
 
         // NOTE: it's easiest just to generate increments and decrements functions for variables
         // that live in either the function-local scope or the module-local scope. TType holds a
         // qualifier, but its operator== and operator< ignore the qualifier. We could keep track of
         // the qualifiers used but that's overkill.
-        genPreIncOrDec(ImmutableString("private"), type, ImmutableString("+="),
-                       ImmutableString("preIncPriv"));
-        genPreIncOrDec(ImmutableString("function"), type, ImmutableString("+="),
-                       ImmutableString("preIncFunc"));
+        genPreIncOrDec(ImmutableString("private"), elem.first, ImmutableString("+="),
+                       ConcatId("preIncPriv", elem.second));
+        genPreIncOrDec(ImmutableString("function"), elem.first, ImmutableString("+="),
+                       ConcatId("preIncFunc", elem.second));
     }
-    for (const TType &type : mPreDecrementedTypes)
+    for (const std::pair<const TType, FuncId> &elem : mPreDecrementedTypes)
     {
 
         // NOTE: it's easiest just to generate increments and decrements functions for variables
         // that live in either the function-local scope or the module-local scope. TType holds a
         // qualifier, but its operator== and operator< ignore the qualifier. We could keep track of
         // the qualifiers used but that's overkill.
-        genPreIncOrDec(ImmutableString("private"), type, ImmutableString("-="),
-                       ImmutableString("preDecPriv"));
-        genPreIncOrDec(ImmutableString("function"), type, ImmutableString("-="),
-                       ImmutableString("preDecFunc"));
+        genPreIncOrDec(ImmutableString("private"), elem.first, ImmutableString("-="),
+                       ConcatId("preDecPriv", elem.second));
+        genPreIncOrDec(ImmutableString("function"), elem.first, ImmutableString("-="),
+                       ConcatId("preDecFunc", elem.second));
     }
 
     auto genPostIncOrDec = [&](ImmutableString addressSpace, const TType &type, ImmutableString op,
@@ -171,27 +185,27 @@ void WGSLProgramPrelude::outputPrelude(TInfoSinkBase &sink)
         sink << "  return old;\n";
         sink << "}\n";
     };
-    for (const TType &type : mPostIncrementedTypes)
+    for (const std::pair<const TType, FuncId> &elem : mPostIncrementedTypes)
     {
         // NOTE: it's easiest just to generate increments and decrements functions for variables
         // that live in either the function-local scope or the module-local scope. TType holds a
         // qualifier, but its operator== and operator< ignore the qualifier. We could keep track of
         // the qualifiers used but that's overkill.
-        genPostIncOrDec(ImmutableString("private"), type, ImmutableString("+="),
-                        ImmutableString("postIncPriv"));
-        genPostIncOrDec(ImmutableString("function"), type, ImmutableString("+="),
-                        ImmutableString("postIncFunc"));
+        genPostIncOrDec(ImmutableString("private"), elem.first, ImmutableString("+="),
+                        ConcatId("postIncPriv", elem.second));
+        genPostIncOrDec(ImmutableString("function"), elem.first, ImmutableString("+="),
+                        ConcatId("postIncFunc", elem.second));
     }
-    for (const TType &type : mPostDecrementedTypes)
+    for (const std::pair<const TType, FuncId> &elem : mPostDecrementedTypes)
     {
         // NOTE: it's easiest just to generate increments and decrements functions for variables
         // that live in either the function-local scope or the module-local scope. TType holds a
         // qualifier, but its operator== and operator< ignore the qualifier. We could keep track of
         // the qualifiers used but that's overkill.
-        genPostIncOrDec(ImmutableString("private"), type, ImmutableString("-="),
-                        ImmutableString("postDecPriv"));
-        genPostIncOrDec(ImmutableString("function"), type, ImmutableString("-="),
-                        ImmutableString("postDecFunc"));
+        genPostIncOrDec(ImmutableString("private"), elem.first, ImmutableString("-="),
+                        ConcatId("postDecPriv", elem.second));
+        genPostIncOrDec(ImmutableString("function"), elem.first, ImmutableString("-="),
+                        ConcatId("postDecFunc", elem.second));
     }
 }
 

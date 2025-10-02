@@ -10,6 +10,8 @@
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/Operator_autogen.h"
+
 namespace sh
 {
 struct WGSLWrapperFunction
@@ -29,10 +31,14 @@ class WGSLProgramPrelude
     void outputPrelude(TInfoSinkBase &sink);
 
   private:
-    TSet<TType> mPreIncrementedTypes;
-    TSet<TType> mPreDecrementedTypes;
-    TSet<TType> mPostIncrementedTypes;
-    TSet<TType> mPostDecrementedTypes;
+    using FuncId = uint64_t;
+
+    FuncId mUniqueFuncId = 0;
+
+    TMap<TType, FuncId> mPreIncrementedTypes;
+    TMap<TType, FuncId> mPreDecrementedTypes;
+    TMap<TType, FuncId> mPostIncrementedTypes;
+    TMap<TType, FuncId> mPostDecrementedTypes;
 };
 }  // namespace sh
 

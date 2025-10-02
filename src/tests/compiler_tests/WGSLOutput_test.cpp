@@ -844,60 +844,60 @@ TEST_F(WGSLOutputTest, IncrementDecrement)
         })";
     const std::string &outputString =
         R"(diagnostic(warning,derivative_uniformity);
-fn preIncPriv(x : ptr<private, vec4<i32>>) -> vec4<i32> {
+fn ANGLE_preIncPriv_4(x : ptr<private, vec4<i32>>) -> vec4<i32> {
   (*x) += vec4<i32>(1);
   return *x;
 }
-fn preIncFunc(x : ptr<function, vec4<i32>>) -> vec4<i32> {
+fn ANGLE_preIncFunc_4(x : ptr<function, vec4<i32>>) -> vec4<i32> {
   (*x) += vec4<i32>(1);
   return *x;
 }
-fn postIncPriv(x : ptr<private, f32>) -> f32 {
+fn ANGLE_postIncPriv_0(x : ptr<private, f32>) -> f32 {
   var old = *x;
   (*x) += f32(1);
   return old;
 }
-fn postIncFunc(x : ptr<function, f32>) -> f32 {
+fn ANGLE_postIncFunc_0(x : ptr<function, f32>) -> f32 {
   var old = *x;
   (*x) += f32(1);
   return old;
 }
-fn postIncPriv(x : ptr<private, mat2x2<f32>>) -> mat2x2<f32> {
+fn ANGLE_postIncPriv_5(x : ptr<private, mat2x2<f32>>) -> mat2x2<f32> {
   var old = *x;
   (*x) += mat2x2<f32>(1, 1, 1, 1);
   return old;
 }
-fn postIncFunc(x : ptr<function, mat2x2<f32>>) -> mat2x2<f32> {
+fn ANGLE_postIncFunc_5(x : ptr<function, mat2x2<f32>>) -> mat2x2<f32> {
   var old = *x;
   (*x) += mat2x2<f32>(1, 1, 1, 1);
   return old;
 }
-fn postIncPriv(x : ptr<private, vec4<f32>>) -> vec4<f32> {
+fn ANGLE_postIncPriv_2(x : ptr<private, vec4<f32>>) -> vec4<f32> {
   var old = *x;
   (*x) += vec4<f32>(1);
   return old;
 }
-fn postIncFunc(x : ptr<function, vec4<f32>>) -> vec4<f32> {
+fn ANGLE_postIncFunc_2(x : ptr<function, vec4<f32>>) -> vec4<f32> {
   var old = *x;
   (*x) += vec4<f32>(1);
   return old;
 }
-fn postIncPriv(x : ptr<private, vec4<i32>>) -> vec4<i32> {
+fn ANGLE_postIncPriv_3(x : ptr<private, vec4<i32>>) -> vec4<i32> {
   var old = *x;
   (*x) += vec4<i32>(1);
   return old;
 }
-fn postIncFunc(x : ptr<function, vec4<i32>>) -> vec4<i32> {
+fn ANGLE_postIncFunc_3(x : ptr<function, vec4<i32>>) -> vec4<i32> {
   var old = *x;
   (*x) += vec4<i32>(1);
   return old;
 }
-fn postIncPriv(x : ptr<private, u32>) -> u32 {
+fn ANGLE_postIncPriv_1(x : ptr<private, u32>) -> u32 {
   var old = *x;
   (*x) += u32(1);
   return old;
 }
-fn postIncFunc(x : ptr<function, u32>) -> u32 {
+fn ANGLE_postIncFunc_1(x : ptr<function, u32>) -> u32 {
   var old = *x;
   (*x) += u32(1);
   return old;
@@ -940,29 +940,29 @@ fn _umain()
 {
   for (var _ui : i32 = (0i); (_ui) < (5i); (_ui)++)
   {
-    postIncFunc(&((ANGLE_output_global.color).x));
+    ANGLE_postIncFunc_0(&((ANGLE_output_global.color).x));
   }
   var _ui : u32 = (0u);
-  while ((postIncFunc(&(_ui))) < (5u))
+  while ((ANGLE_postIncFunc_1(&(_ui))) < (5u))
   {
-    postIncFunc(&((ANGLE_output_global.color).y));
+    ANGLE_postIncFunc_0(&((ANGLE_output_global.color).y));
   }
-  postIncPriv(&(ANGLE_output_global.color));
+  ANGLE_postIncPriv_2(&(ANGLE_output_global.color));
   var _uiv : vec4<i32> = (vec4<i32>(1i, 2i, 3i, 4i));
-  postIncFunc(&(_uiv));
-  preIncFunc(&(_uiv));
+  ANGLE_postIncFunc_3(&(_uiv));
+  ANGLE_preIncFunc_4(&(_uiv));
   ((ANGLE_output_global.color).x) += (f32((_uiv).x));
   var _um : mat2x2<f32> = (mat2x2<f32>(4.0f, 0.0f, 0.0f, 4.0f));
-  postIncFunc(&(_um));
+  ANGLE_postIncFunc_5(&(_um));
   var sbc1 : mat2x2<f32> = (_um);
   ((ANGLE_output_global.color).x) = ((((ANGLE_output_global.color).xy) * (sbc1)).x);
   ((ANGLE_output_global.color).y) = ((((ANGLE_output_global.color).xy) * (sbc1)).y);
-  var _um2 : mat2x2<f32> = (postIncFunc(&(_um)));
+  var _um2 : mat2x2<f32> = (ANGLE_postIncFunc_5(&(_um)));
   var sbc2 : mat2x2<f32> = (_um2);
   ((ANGLE_output_global.color).x) = ((((ANGLE_output_global.color).xy) * (sbc2)).x);
   ((ANGLE_output_global.color).y) = ((((ANGLE_output_global.color).xy) * (sbc2)).y);
-  postIncPriv(&(ANGLE_output_global.color));
-  postIncPriv(&(_uglobVar));
+  ANGLE_postIncPriv_2(&(ANGLE_output_global.color));
+  ANGLE_postIncPriv_0(&(_uglobVar));
   ((ANGLE_output_global.color).x) += (_uglobVar);
 }
 @fragment

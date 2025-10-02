@@ -361,4 +361,22 @@ GlobalVars FindGlobalVars(TIntermBlock *root)
     return globals;
 }
 
+WgslPointerAddressSpace GetWgslAddressSpaceForPointer(const TType &type)
+{
+    switch (type.getQualifier())
+    {
+        case EvqTemporary:
+        // NOTE: As of Sept 2025, parameters are immutable in WGSL (and are handled by an AST pass
+        // that copies parameters to temporaries). Include these here in case parameters become
+        // mutable in the future.
+        case EvqParamIn:
+        case EvqParamOut:
+        case EvqParamInOut:
+            return WgslPointerAddressSpace::Function;
+        default:
+            // EvqGlobal and various other shader outputs/builtins are all globals.
+            return WgslPointerAddressSpace::Private;
+    }
+}
+
 }  // namespace sh
