@@ -20860,7 +20860,6 @@ TEST_P(GLSLTest, ESSL1ExtensionMacros)
         "GL_EXT_shadow_samplers",
         "GL_KHR_blend_equation_advanced",
         "GL_NV_EGL_stream_consumer_external",
-        "GL_NV_shader_framebuffer_fetch",
         "GL_OES_EGL_image_external",
         "GL_OES_standard_derivatives",
         "GL_OES_texture_3D",
@@ -20948,7 +20947,6 @@ TEST_P(GLSLTest_ES3, ESSL3ExtensionMacros)
         "GL_EXT_tessellation_shader",
         "GL_EXT_texture_buffer",
         "GL_EXT_texture_cube_map_array",
-        "GL_NV_shader_framebuffer_fetch",
         "GL_OES_geometry_shader",
         "GL_OES_primitive_bounding_box",
         "GL_OES_shader_image_atomic",
@@ -21015,7 +21013,6 @@ TEST_P(GLSLTest_ES31, ESSL31ExtensionMacros)
         "GL_EXT_frag_depth",
         "GL_EXT_shader_texture_lod",
         "GL_EXT_shadow_samplers",
-        "GL_NV_shader_framebuffer_fetch",
         "GL_OES_standard_derivatives",
     });
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fs.c_str());
