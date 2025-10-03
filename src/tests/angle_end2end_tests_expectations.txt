@@ -451,6 +451,7 @@
 443101808 MAC METAL AMD : SimpleUniformUsageTestES3.BoolInArray/* = SKIP
 409867243 MAC METAL : Texture2DTestES3.RGB565RenderAndReadIntoRGB565PBO/* = SKIP
 448658625 MAC METAL : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
+448658625 IOS METAL : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
 
 // The workaround is not intended to be enabled in this configuration so
 // skip it as the failure is likely a driver bug.
