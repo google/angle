@@ -89,7 +89,7 @@ class ValidateAST : public TIntermTraverser
     // For validateVariableReferences:
     std::vector<std::set<const TVariable *>> mDeclaredVariables;
     std::set<const TInterfaceBlock *> mNamelessInterfaceBlocks;
-    std::map<ImmutableString, const TVariable *> mReferencedBuiltIns;
+    std::map<ImmutableString, TSymbolUniqueId> mReferencedBuiltIns;
     bool mVariableReferencesFailed = false;
 
     // For validateOps:
@@ -623,11 +623,11 @@ void ValidateAST::visitBuiltInVariable(TIntermSymbol *node)
         auto iter = mReferencedBuiltIns.find(name);
         if (iter == mReferencedBuiltIns.end())
         {
-            mReferencedBuiltIns[name] = variable;
+            mReferencedBuiltIns.emplace(name, variable->uniqueId());
             return;
         }
 
-        if (variable != iter->second)
+        if (variable->uniqueId() != iter->second)
         {
             mDiagnostics->error(
                 node->getLine(),
