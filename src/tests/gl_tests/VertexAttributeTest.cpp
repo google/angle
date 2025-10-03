@@ -5579,6 +5579,8 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     ES2_VULKAN_SWIFTSHADER().enable(Feature::ForceFallbackFormat),
     ES3_VULKAN().enable(Feature::ForceFallbackFormat),
     ES3_VULKAN_SWIFTSHADER().enable(Feature::ForceFallbackFormat),
+    ES3_VULKAN().disable(Feature::ForceSizePointerForBoundVertexBuffers),
+    ES3_VULKAN_SWIFTSHADER().disable(Feature::ForceSizePointerForBoundVertexBuffers),
     ES3_METAL().disable(Feature::HasExplicitMemBarrier).disable(Feature::HasCheapRenderPass),
     ES3_METAL().disable(Feature::HasExplicitMemBarrier).enable(Feature::HasCheapRenderPass),
     ES2_OPENGL().enable(Feature::ForceMinimumMaxVertexAttributes),
@@ -5605,15 +5607,18 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     ES3_METAL().disable(Feature::HasExplicitMemBarrier).enable(Feature::HasCheapRenderPass),
     ES3_VULKAN()
         .disable(Feature::UseVertexInputBindingStrideDynamicState)
-        .disable(Feature::SupportsGraphicsPipelineLibrary));
+        .disable(Feature::SupportsGraphicsPipelineLibrary),
+    ES3_VULKAN().disable(Feature::ForceSizePointerForBoundVertexBuffers));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VertexAttributeTestES31);
-ANGLE_INSTANTIATE_TEST_ES31_AND(VertexAttributeTestES31,
-                                ES31_VULKAN().enable(Feature::ForceFallbackFormat),
-                                ES31_VULKAN_SWIFTSHADER().enable(Feature::ForceFallbackFormat),
-                                ES31_VULKAN()
-                                    .disable(Feature::UseVertexInputBindingStrideDynamicState)
-                                    .disable(Feature::SupportsGraphicsPipelineLibrary));
+ANGLE_INSTANTIATE_TEST_ES31_AND(
+    VertexAttributeTestES31,
+    ES31_VULKAN().enable(Feature::ForceFallbackFormat),
+    ES31_VULKAN_SWIFTSHADER().enable(Feature::ForceFallbackFormat),
+    ES31_VULKAN()
+        .disable(Feature::UseVertexInputBindingStrideDynamicState)
+        .disable(Feature::SupportsGraphicsPipelineLibrary),
+    ES31_VULKAN().disable(Feature::ForceSizePointerForBoundVertexBuffers));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     VertexAttributeCachingTest,

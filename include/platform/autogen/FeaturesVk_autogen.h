@@ -1592,6 +1592,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo forceSizePointerForBoundVertexBuffers = {
+        "forceSizePointerForBoundVertexBuffers",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

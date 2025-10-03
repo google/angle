@@ -446,32 +446,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
          "old_layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL",
          "new_layout = VK_IMAGE_LAYOUT_GENERAL",
      }},
-    // From: TraceTest.special_forces_group_2 http://anglebug.com/42264123
-    // http://anglebug.com/397775556
-    // From: TraceTest.life_is_strange http://anglebug.com/42266180 (Linux AMD)
-    // From: TraceTest.diablo_immortal http://anglebug.com/42266309 (Linux AMD)
-    {"SYNC-HAZARD-READ-AFTER-WRITE",
-     false,
-     {
-         "message_type = BufferError",
-         "access = "
-         "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT(VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT)",
-         "prior_access = "
-         "VK_PIPELINE_STAGE_2_COPY_BIT(VK_ACCESS_2_TRANSFER_WRITE_BIT)",
-         "command = vkCmdDrawIndexed",
-         "prior_command = vkCmdCopyBuffer",
-     }},
-    // http://anglebug.com/394598470
-    {"SYNC-HAZARD-WRITE-AFTER-READ",
-     false,
-     {
-         "message_type = BufferCopyError",
-         "access = VK_PIPELINE_STAGE_2_COPY_BIT(VK_ACCESS_2_TRANSFER_WRITE_BIT)",
-         "prior_access = "
-         "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT(VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT)",
-         "command = vkCmdCopyBuffer",
-         "prior_command = vkCmdDrawIndexed",
-     }},
     // http://anglebug.com/399191283
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      false,
@@ -505,6 +479,37 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
       "prior_access = VK_PIPELINE_STAGE_2_BLIT_BIT(VK_ACCESS_2_TRANSFER_READ_BIT)",
       "command = vkCmdDraw", "prior_command = vkCmdBlitImage"}},
+};
+
+// Messages that should not be generated if the feature to force-enable providing the size pointer
+// to vkCmdBindVertexBuffers2() is disabled.
+constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutForcedSizePointer[] = {
+    // From: TraceTest.special_forces_group_2 http://anglebug.com/42264123
+    // http://anglebug.com/397775556
+    // From: TraceTest.life_is_strange http://anglebug.com/42266180 (Linux AMD)
+    // From: TraceTest.diablo_immortal http://anglebug.com/42266309 (Linux AMD)
+    {"SYNC-HAZARD-READ-AFTER-WRITE",
+     false,
+     {
+         "message_type = BufferError",
+         "access = "
+         "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT(VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT)",
+         "prior_access = "
+         "VK_PIPELINE_STAGE_2_COPY_BIT(VK_ACCESS_2_TRANSFER_WRITE_BIT)",
+         "command = vkCmdDrawIndexed",
+         "prior_command = vkCmdCopyBuffer",
+     }},
+    // http://anglebug.com/394598470
+    {"SYNC-HAZARD-WRITE-AFTER-READ",
+     false,
+     {
+         "message_type = BufferCopyError",
+         "access = VK_PIPELINE_STAGE_2_COPY_BIT(VK_ACCESS_2_TRANSFER_WRITE_BIT)",
+         "prior_access = "
+         "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT(VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT)",
+         "command = vkCmdCopyBuffer",
+         "prior_command = vkCmdDrawIndexed",
+     }},
     // https://anglebug.com/443095908
     {"SYNC-HAZARD-WRITE-AFTER-READ",
      false,
@@ -4665,6 +4670,13 @@ void Renderer::initializeValidationMessageSuppressions()
     // Build the list of syncval errors that are currently expected and should be skipped.
     mSkippedSyncvalMessages.insert(mSkippedSyncvalMessages.end(), kSkippedSyncvalMessages,
                                    kSkippedSyncvalMessages + ArraySize(kSkippedSyncvalMessages));
+    if (!getFeatures().forceSizePointerForBoundVertexBuffers.enabled)
+    {
+        mSkippedSyncvalMessages.insert(
+            mSkippedSyncvalMessages.end(), kSkippedSyncvalMessagesWithoutForcedSizePointer,
+            kSkippedSyncvalMessagesWithoutForcedSizePointer +
+                ArraySize(kSkippedSyncvalMessagesWithoutForcedSizePointer));
+    }
     if (!getFeatures().supportsRenderPassLoadStoreOpNone.enabled)
     {
         mSkippedSyncvalMessages.insert(
@@ -5987,6 +5999,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             mFeatures.supportsExtendedDynamicState.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useStencilTestEnableDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
+
+    // Providing vkCmdBindVertexBuffers2() with a pointer to the sizes of the bound buffers can help
+    // with syncval issues and robustness.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, forceSizePointerForBoundVertexBuffers,
+        mEnableValidationLayers && mFeatures.useVertexInputBindingStrideDynamicState.enabled);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState2,
                             mExtendedDynamicState2Features.extendedDynamicState2 == VK_TRUE &&

@@ -84,7 +84,7 @@ VertexArrayPrivate::VertexArrayPrivate(rx::GLImplFactory *factory,
                                        VertexArrayID id,
                                        size_t maxAttribs,
                                        size_t maxAttribBindings)
-    : mId(id), mState(mId, maxAttribs, maxAttribBindings), mBufferAccessValidationEnabled(false)
+    : mId(id), mState(mId, maxAttribs, maxAttribBindings), mRobustBufferAccessEnabled(false)
 {}
 
 VertexArrayPrivate::~VertexArrayPrivate() {}
@@ -100,7 +100,7 @@ void VertexArrayPrivate::setVertexAttribBinding(size_t attribIndex, GLuint newBi
 
     mState.setAttribBinding(attribIndex, newBindingIndex);
 
-    if (mBufferAccessValidationEnabled)
+    if (mRobustBufferAccessEnabled)
     {
         VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
         attrib.updateCachedElementLimit(mState.mVertexBindings[newBindingIndex],
@@ -158,7 +158,7 @@ ANGLE_INLINE void VertexArrayPrivate::setDirtyBindingBit(size_t bindingIndex,
 ANGLE_INLINE void VertexArrayPrivate::updateCachedElementLimit(const VertexBinding &binding,
                                                                GLint64 bufferSize)
 {
-    ASSERT(mBufferAccessValidationEnabled);
+    ASSERT(mRobustBufferAccessEnabled);
     for (size_t boundAttribute : binding.getBoundAttributesMask())
     {
         mState.mVertexAttributes[boundAttribute].updateCachedElementLimit(binding, bufferSize);
@@ -244,7 +244,7 @@ void VertexArrayPrivate::setVertexAttribFormat(size_t attribIndex,
         setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_FORMAT);
     }
 
-    if (mBufferAccessValidationEnabled)
+    if (mRobustBufferAccessEnabled)
     {
         attrib.updateCachedElementLimit(mState.mVertexBindings[attrib.bindingIndex],
                                         mCachedBufferSize[attrib.bindingIndex]);
@@ -483,6 +483,12 @@ ANGLE_INLINE VertexArray::DirtyBindingBits VertexArray::bindVertexBufferImpl(con
     dirtyBindingBits.set(DIRTY_BINDING_BUFFER, oldBuffer != boundBuffer);
     dirtyBindingBits.set(DIRTY_BINDING_STRIDE, static_cast<GLuint>(stride) != binding->getStride());
     dirtyBindingBits.set(DIRTY_BINDING_OFFSET, offset != binding->getOffset());
+    if (mRobustBufferAccessEnabled)
+    {
+        GLint64 bufferSize = boundBuffer ? boundBuffer->getSize() : 0;
+        dirtyBindingBits.set(DIRTY_BINDING_SIZE, bufferSize != mCachedBufferSize[bindingIndex]);
+        mCachedBufferSize[bindingIndex] = bufferSize;
+    }
 
     if (dirtyBindingBits.none())
     {
@@ -533,9 +539,8 @@ ANGLE_INLINE VertexArray::DirtyBindingBits VertexArray::bindVertexBufferImpl(con
     binding->setOffset(offset);
     binding->setStride(stride);
 
-    if (mBufferAccessValidationEnabled)
+    if (mRobustBufferAccessEnabled)
     {
-        mCachedBufferSize[bindingIndex] = boundBuffer ? boundBuffer->getSize() : 0;
         updateCachedElementLimit(*binding, mCachedBufferSize[bindingIndex]);
     }
 
@@ -702,6 +707,16 @@ bool VertexArray::bufferMaskBitsPointToTheSameBuffer(
     return true;
 }
 
+void VertexArray::updateBindingSizeIfChanged(const size_t bindingIndex, const GLint64 bufferSize)
+{
+    ASSERT(mRobustBufferAccessEnabled);
+    if (mCachedBufferSize[bindingIndex] != bufferSize)
+    {
+        setDirtyBindingBit(bindingIndex, DIRTY_BINDING_SIZE);
+        mCachedBufferSize[bindingIndex] = bufferSize;
+    }
+}
+
 // This becomes current vertex array on the context
 void VertexArray::onBind(const Context *context)
 {
@@ -731,12 +746,12 @@ void VertexArray::onBind(const Context *context)
         updateCachedMappedArrayBuffersBinding(bindingIndex);
     }
 
-    if (mBufferAccessValidationEnabled)
+    if (mRobustBufferAccessEnabled)
     {
         for (size_t bindingIndex : bufferBindingMask)
         {
             Buffer *bufferGL                = mVertexArrayBuffers[bindingIndex].get();
-            mCachedBufferSize[bindingIndex] = bufferGL->getSize();
+            updateBindingSizeIfChanged(bindingIndex, bufferGL->getSize());
             updateCachedElementLimit(mState.mVertexBindings[bindingIndex],
                                      mCachedBufferSize[bindingIndex]);
         }
@@ -834,12 +849,12 @@ void VertexArray::onSharedBufferBind(const Context *context,
         updateCachedMappedArrayBuffersBinding(bindingIndex);
     }
 
-    if (mBufferAccessValidationEnabled)
+    if (mRobustBufferAccessEnabled)
     {
         for (size_t bindingIndex : vertexBufferBindingMask)
         {
             ASSERT(buffer == mVertexArrayBuffers[bindingIndex].get());
-            mCachedBufferSize[bindingIndex] = buffer->getSize();
+            updateBindingSizeIfChanged(bindingIndex, buffer->getSize());
             updateCachedElementLimit(mState.mVertexBindings[bindingIndex],
                                      mCachedBufferSize[bindingIndex]);
         }
@@ -878,13 +893,13 @@ void VertexArray::onBufferChanged(const Context *context,
     switch (message)
     {
         case angle::SubjectMessage::SubjectChanged:
-            if (mBufferAccessValidationEnabled)
+            if (mRobustBufferAccessEnabled)
             {
                 VertexArrayBufferBindingMask VertexBufferBindingMask = bufferBindingMask;
                 VertexBufferBindingMask.reset(kElementArrayBufferIndex);
                 for (size_t bindingIndex : VertexBufferBindingMask)
                 {
-                    mCachedBufferSize[bindingIndex] = buffer->getSize();
+                    updateBindingSizeIfChanged(bindingIndex, buffer->getSize());
                     updateCachedElementLimit(mState.mVertexBindings[bindingIndex],
                                              mCachedBufferSize[bindingIndex]);
                 }

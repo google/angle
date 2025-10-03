@@ -1659,6 +1659,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // True if current started render pass is allowed to reactivate.
     bool mAllowRenderPassToReactivate;
 
+    // This flag indicates whether size pointer should be used as arg for binding vertex buffers.
+    bool mUseSizePointerForBindingVertexBuffers;
+
     // The size of copy commands issued between buffers and images. Used to submit the command
     // buffer for the outside render pass.
     VkDeviceSize mTotalBufferToImageCopySize;

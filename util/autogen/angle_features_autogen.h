@@ -197,6 +197,7 @@ enum class Feature
     ForcePassthroughShaders,
     ForceRobustResourceInit,
     ForceSampleUsageForAhbBackedImages,
+    ForceSizePointerForBoundVertexBuffers,
     ForceSubmitExceptionsAtFBOBoundary,
     ForceSubmitImmutableTextureUpdates,
     ForceTextureLodOffset1,

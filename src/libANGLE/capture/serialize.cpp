@@ -1401,8 +1401,6 @@ void SerializeVertexArray(JsonSerializer *json, gl::VertexArray *vertexArray)
     SerializeVertexArrayState(json, vertexArray->getState());
     SerializeVertexBindingsVector(json, vertexArray->getVertexBindings(),
                                   vertexArray->getBufferBindingPointers());
-    json->addScalar("BufferAccessValidationEnabled",
-                    vertexArray->isBufferAccessValidationEnabled());
 }
 
 }  // namespace

@@ -52,6 +52,12 @@ const char *GetCommandString(CommandID id)
             return "BindVertexBuffers";
         case CommandID::BindVertexBuffers2:
             return "BindVertexBuffers2";
+        case CommandID::BindVertexBuffers2NoSize:
+            return "BindVertexBuffers2NoSize";
+        case CommandID::BindVertexBuffers2NoSizeNoStride:
+            return "BindVertexBuffers2NoSizeNoStride";
+        case CommandID::BindVertexBuffers2NoStride:
+            return "BindVertexBuffers2NoStride";
         case CommandID::BlitImage:
             return "BlitImage";
         case CommandID::BufferBarrier:
@@ -329,6 +335,30 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                         GetNextArrayParameter<VkDeviceSize>(sizes, params->bindingCount);
                     vkCmdBindVertexBuffers2EXT(cmdBuffer, 0, params->bindingCount, buffers, offsets,
                                                sizes, strides);
+                    break;
+                }
+                case CommandID::BindVertexBuffers2NoSize:
+                {
+                    const BindVertexBuffers2NoSizeParams *params =
+                        getParamPtr<BindVertexBuffers2NoSizeParams>(currentCommand);
+                    const VkBuffer *buffers = GetFirstArrayParameter<VkBuffer>(params);
+                    const VkDeviceSize *offsets =
+                        GetNextArrayParameter<VkDeviceSize>(buffers, params->bindingCount);
+                    const VkDeviceSize *strides =
+                        GetNextArrayParameter<VkDeviceSize>(offsets, params->bindingCount);
+                    vkCmdBindVertexBuffers2EXT(cmdBuffer, 0, params->bindingCount, buffers, offsets,
+                                               nullptr, strides);
+                    break;
+                }
+                case CommandID::BindVertexBuffers2NoSizeNoStride:
+                {
+                    const BindVertexBuffers2NoSizeNoStrideParams *params =
+                        getParamPtr<BindVertexBuffers2NoSizeNoStrideParams>(currentCommand);
+                    const VkBuffer *buffers = GetFirstArrayParameter<VkBuffer>(params);
+                    const VkDeviceSize *offsets =
+                        GetNextArrayParameter<VkDeviceSize>(buffers, params->bindingCount);
+                    vkCmdBindVertexBuffers2EXT(cmdBuffer, 0, params->bindingCount, buffers, offsets,
+                                               nullptr, nullptr);
                     break;
                 }
                 case CommandID::BindVertexBuffers2NoStride:

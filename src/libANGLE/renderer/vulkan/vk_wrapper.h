@@ -224,6 +224,15 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                             const VkDeviceSize *offsets,
                             const VkDeviceSize *sizes,
                             const VkDeviceSize *strides);
+    void bindVertexBuffers2NoSize(uint32_t firstBinding,
+                                  uint32_t bindingCount,
+                                  const VkBuffer *buffers,
+                                  const VkDeviceSize *offsets,
+                                  const VkDeviceSize *strides);
+    void bindVertexBuffers2NoSizeNoStride(uint32_t firstBinding,
+                                          uint32_t bindingCount,
+                                          const VkBuffer *buffers,
+                                          const VkDeviceSize *offsets);
     void bindVertexBuffers2NoStride(uint32_t firstBinding,
                                     uint32_t bindingCount,
                                     const VkBuffer *buffers,
@@ -1434,6 +1443,23 @@ ANGLE_INLINE void CommandBuffer::bindVertexBuffers2(uint32_t firstBinding,
     ASSERT(valid());
     vkCmdBindVertexBuffers2EXT(mHandle, firstBinding, bindingCount, buffers, offsets, sizes,
                                strides);
+}
+
+ANGLE_INLINE void CommandBuffer::bindVertexBuffers2NoSize(uint32_t firstBinding,
+                                                          uint32_t bindingCount,
+                                                          const VkBuffer *buffers,
+                                                          const VkDeviceSize *offsets,
+                                                          const VkDeviceSize *strides)
+{
+    bindVertexBuffers2(firstBinding, bindingCount, buffers, offsets, nullptr, strides);
+}
+
+ANGLE_INLINE void CommandBuffer::bindVertexBuffers2NoSizeNoStride(uint32_t firstBinding,
+                                                                  uint32_t bindingCount,
+                                                                  const VkBuffer *buffers,
+                                                                  const VkDeviceSize *offsets)
+{
+    bindVertexBuffers2(firstBinding, bindingCount, buffers, offsets, nullptr, nullptr);
 }
 
 ANGLE_INLINE void CommandBuffer::bindVertexBuffers2NoStride(uint32_t firstBinding,

@@ -242,14 +242,14 @@ TEST_P(RobustBufferAccessBehaviorTest, D3D11StateSynchronizationOrderBug)
     glBindBuffer(GL_ARRAY_BUFFER, vb);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
 
-    const std::array<GLushort, 12> indicies{
+    const std::array<GLushort, 12> indices{
         0, 1, 2, 0, 2, 3,  // quad0
         4, 5, 6, 4, 6, 7,  // quad1
     };
 
     GLBuffer ib;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(), GL_STATIC_DRAW);
 
     constexpr char kVS[] = R"(
 precision highp float;
@@ -298,6 +298,104 @@ void main()
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT,
                    reinterpret_cast<const void *>(sizeof(GLshort) * 6));
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Tests that the test draws correctly after a larger size has been copied to the array buffer from
+// another location of the same source data.
+TEST_P(RobustBufferAccessBehaviorTest, ChangeBufferDataSizeWithSameAttribPointer)
+{
+    ANGLE_SKIP_TEST_IF(!initExtension());
+    constexpr size_t kWindowWidth  = 128;
+    constexpr size_t kWindowHeight = 128;
+    glViewport(0, 0, kWindowWidth, kWindowHeight);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+
+    constexpr char kVS[] = R"(#version 300 es
+in highp vec2 a_position;
+in mediump vec3 a_color;
+out mediump vec3 v_color;
+void main()
+{
+    gl_Position = vec4(a_position, 0.0, 1.0);
+    v_color = a_color;
+})";
+    constexpr char kFS[] = R"(#version 300 es
+in mediump vec3 v_color;
+layout(location = 0) out mediump vec4 o_color;
+void main()
+{
+    o_color = vec4(v_color, 1.0);
+})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLVertexArray vao;
+    glBindVertexArray(vao);
+
+    const std::array<angle::Vector2, 8> vertices{
+        angle::Vector2(-1.0f, 1.0f), angle::Vector2(-1.0f, -1.0f), angle::Vector2(1.0f, -1.0f),
+        angle::Vector2(1.0f, 1.0f),  angle::Vector2(-0.5f, 0.5f),  angle::Vector2(-0.5f, -0.5f),
+        angle::Vector2(0.5f, -0.5f), angle::Vector2(0.5f, 0.5f),
+    };
+
+    GLBuffer positionBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
+
+    const std::array<GLushort, 12> indices{
+        0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7,
+    };
+
+    GLint locPos = glGetAttribLocation(program, "a_position");
+    glEnableVertexAttribArray(locPos);
+    glVertexAttribPointer(locPos, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(), GL_STATIC_DRAW);
+
+    const std::array<angle::Vector3, 16> colors{
+        angle::Vector3(1.0f, 0.0f, 0.0f), angle::Vector3(1.0f, 0.0f, 0.0f),
+        angle::Vector3(1.0f, 0.0f, 0.0f), angle::Vector3(1.0f, 0.0f, 0.0f),
+
+        angle::Vector3(1.0f, 0.0f, 0.0f), angle::Vector3(1.0f, 0.0f, 0.0f),
+        angle::Vector3(1.0f, 0.0f, 0.0f), angle::Vector3(1.0f, 0.0f, 0.0f),
+
+        angle::Vector3(1.0f, 0.0f, 0.0f), angle::Vector3(1.0f, 0.0f, 0.0f),
+        angle::Vector3(1.0f, 0.0f, 0.0f), angle::Vector3(1.0f, 0.0f, 0.0f),
+
+        angle::Vector3(0.0f, 1.0f, 0.0f), angle::Vector3(0.0f, 1.0f, 0.0f),
+        angle::Vector3(0.0f, 1.0f, 0.0f), angle::Vector3(0.0f, 1.0f, 0.0f),
+    };
+
+    GLBuffer colorBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(angle::Vector3) * 4, &colors[0], GL_STREAM_DRAW);
+
+    GLint locColor = glGetAttribLocation(program, "a_color");
+    glEnableVertexAttribArray(locColor);
+    glVertexAttribPointer(locColor, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::red);
+    glBindVertexArray(0);
+
+    // Copy a larger amount of data to the same buffer containing the colors from another location
+    // while using the same args for the vertex attribute pointer. The larger draw should be able to
+    // use the new data copied into the bound buffer.
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(angle::Vector3) * 8, &colors[8], GL_STREAM_DRAW);
+    glBindVertexArray(vao);
+    glEnableVertexAttribArray(locColor);
+    glVertexAttribPointer(locColor, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, nullptr);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight / 4, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth / 4, kWindowHeight, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, 3 * kWindowHeight / 4, kWindowWidth, kWindowHeight / 4, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(3 * kWindowWidth / 4, 0, kWindowWidth / 4, kWindowHeight, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kWindowWidth / 4, kWindowHeight / 4, kWindowWidth / 2, kWindowHeight / 2,
+                         GLColor::green);
 }
 
 // Covers drawing with a very large vertex range which overflows GLsizei. http://crbug.com/842028

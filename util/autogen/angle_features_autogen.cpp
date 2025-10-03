@@ -197,6 +197,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ForcePassthroughShaders, "forcePassthroughShaders"},
     {Feature::ForceRobustResourceInit, "forceRobustResourceInit"},
     {Feature::ForceSampleUsageForAhbBackedImages, "forceSampleUsageForAhbBackedImages"},
+    {Feature::ForceSizePointerForBoundVertexBuffers, "forceSizePointerForBoundVertexBuffers"},
     {Feature::ForceSubmitExceptionsAtFBOBoundary, "forceSubmitExceptionsAtFBOBoundary"},
     {Feature::ForceSubmitImmutableTextureUpdates, "forceSubmitImmutableTextureUpdates"},
     {Feature::ForceTextureLodOffset1, "forceTextureLodOffset1"},

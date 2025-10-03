@@ -708,6 +708,7 @@ Context::Context(egl::Display *display,
       mDisplay(display),
       mWebGLContext(GetWebGLContext(attribs)),
       mBufferAccessValidationEnabled(false),
+      mRequiresRobustBehavior(false),
       mExtensionsEnabled(GetExtensionsEnabled(attribs, mWebGLContext)),
       mMemoryProgramCache(memoryProgramCache),
       mMemoryShaderCache(memoryShaderCache),
@@ -3207,7 +3208,7 @@ VertexArray *Context::checkVertexArrayAllocation(VertexArrayID vertexArrayHandle
         vertexArray = new VertexArray(mImplementation.get(), vertexArrayHandle,
                                       mState.getCaps().maxVertexAttributes,
                                       mState.getCaps().maxVertexAttribBindings);
-        vertexArray->setBufferAccessValidationEnabled(mBufferAccessValidationEnabled);
+        vertexArray->setRobustBufferAccessEnabled(mRequiresRobustBehavior);
 
         getMutablePrivateState()->setVertexArray(vertexArrayHandle, vertexArray);
     }
@@ -4717,17 +4718,18 @@ void Context::updateCaps()
         mTilingDirtyObjects.set(state::DIRTY_OBJECT_DRAW_ATTACHMENTS);
     }
 
-    // We need to validate buffer bounds if we are in a WebGL or robust access context and the
-    // back-end does not support robust buffer access behaviour.
-    mBufferAccessValidationEnabled = (!mSupportedExtensions.robustBufferAccessBehaviorKHR &&
-                                      (mState.isWebGL() || mState.hasRobustAccess()));
+    // If we are in a WebGL or robust access context and the back-end does not support robust buffer
+    // access behaviour, we need to validate the buffer bounds manually.
+    mRequiresRobustBehavior = mState.isWebGL() || mState.hasRobustAccess();
+    mBufferAccessValidationEnabled =
+        !mSupportedExtensions.robustBufferAccessBehaviorKHR && mRequiresRobustBehavior;
 
     // Cache this in the VertexArrays. They need to check it in state change notifications.
     // Note: vertex array objects are private to context and so the map doesn't need locking
     for (auto vaoIter : UnsafeResourceMapIter(getPrivateState().getVertexArrayMap()))
     {
         VertexArray *vao = vaoIter.second;
-        vao->setBufferAccessValidationEnabled(mBufferAccessValidationEnabled);
+        vao->setRobustBufferAccessEnabled(mRequiresRobustBehavior);
     }
 
     // Reinitialize state cache after extension changes.

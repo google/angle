@@ -2091,6 +2091,14 @@
             "description": [
                 "VkDevice supports the VK_KHR_shader_atomic_int64 extension "
             ]
+        },
+        {
+            "name": "force_size_pointer_for_bound_vertex_buffers",
+            "category": "Features",
+            "description": [
+                "Make sure the pSizes pointer to BindVertexBuffers2 is provided"
+            ],
+            "issue": "https://anglebug.com/448047351"
         }
     ]
 }

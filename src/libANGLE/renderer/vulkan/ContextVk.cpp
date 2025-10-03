@@ -857,6 +857,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mHasAnyCommandsPendingSubmission(false),
       mIsInColorFramebufferFetchMode(false),
       mAllowRenderPassToReactivate(true),
+      mUseSizePointerForBindingVertexBuffers(false),
       mTotalBufferToImageCopySize(0),
       mEstimatedPendingImageGarbageSize(0),
       mRenderPassCountSinceSubmit(0),
@@ -1211,6 +1212,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     mPerfMonitorCounters.push_back(vulkanGroup);
 
     mCurrentGarbage.reserve(32);
+
+    mUseSizePointerForBindingVertexBuffers =
+        getFeatures().forceSizePointerForBoundVertexBuffers.enabled || hasRobustAccess();
 }
 
 ContextVk::~ContextVk() {}
@@ -2688,14 +2692,21 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
     {
         if (getFeatures().useVertexInputBindingStrideDynamicState.enabled)
         {
-            const gl::AttribArray<VkDeviceSize> &bufferSizes =
-                vertexArrayVk->getCurrentArrayBufferSizes();
-
             // bindVertexBuffers2EXT() requires extended dynamic state or shader object extension.
             // Since the strides are already set in setVertexInput(), they need not be set here.
             ASSERT(getFeatures().supportsExtendedDynamicState.enabled);
-            mRenderPassCommandBuffer->bindVertexBuffers2NoStride(
-                0, maxAttrib, bufferHandles.data(), bufferOffsets.data(), bufferSizes.data());
+            if (mUseSizePointerForBindingVertexBuffers)
+            {
+                const gl::AttribArray<VkDeviceSize> &bufferSizes =
+                    vertexArrayVk->getCurrentArrayBufferSizes();
+                mRenderPassCommandBuffer->bindVertexBuffers2NoStride(
+                    0, maxAttrib, bufferHandles.data(), bufferOffsets.data(), bufferSizes.data());
+            }
+            else
+            {
+                mRenderPassCommandBuffer->bindVertexBuffers2NoSizeNoStride(
+                    0, maxAttrib, bufferHandles.data(), bufferOffsets.data());
+            }
         }
         else
         {
@@ -2732,8 +2743,6 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
         const gl::ComponentTypeMask vertexAttributesTypeMask =
             vertexArrayVk->getCurrentVertexAttributesTypeMask();
         const gl::ComponentTypeMask &programAttribsTypeMask = executable->getAttributesTypeMask();
-        const gl::AttribArray<VkDeviceSize> &bufferSizes =
-            vertexArrayVk->getCurrentArrayBufferSizes();
         gl::AttribArray<VkDeviceSize> strides               = {};
 
         for (size_t attribIndex : activeAttribLocations)
@@ -2752,9 +2761,19 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
 
         // bindVertexBuffers2EXT() requires the extension extended dynamic state or shader object.
         ASSERT(getFeatures().supportsExtendedDynamicState.enabled);
-        mRenderPassCommandBuffer->bindVertexBuffers2(0, maxAttrib, bufferHandles.data(),
-                                                     bufferOffsets.data(), bufferSizes.data(),
-                                                     strides.data());
+        if (mUseSizePointerForBindingVertexBuffers)
+        {
+            const gl::AttribArray<VkDeviceSize> &bufferSizes =
+                vertexArrayVk->getCurrentArrayBufferSizes();
+            mRenderPassCommandBuffer->bindVertexBuffers2(0, maxAttrib, bufferHandles.data(),
+                                                         bufferOffsets.data(), bufferSizes.data(),
+                                                         strides.data());
+        }
+        else
+        {
+            mRenderPassCommandBuffer->bindVertexBuffers2NoSize(
+                0, maxAttrib, bufferHandles.data(), bufferOffsets.data(), strides.data());
+        }
     }
     else
     {
