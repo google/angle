@@ -1634,6 +1634,18 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsTileMemoryHeap = {
+        "supportsTileMemoryHeap",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
+    FeatureInfo simulateTileMemoryForTesting = {
+        "simulateTileMemoryForTesting",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
