@@ -3628,14 +3628,14 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
             checkAtomicCounterOffsetIsValid(false, identifierOrTypeLocation, type);
         }
 
+        adjustRedeclaredBuiltInType(identifierOrTypeLocation, identifier, type);
+
         TVariable *variable = nullptr;
         if (declareVariable(identifierOrTypeLocation, identifier, type, &variable))
         {
             symbol = new TIntermSymbol(variable);
         }
     }
-
-    adjustRedeclaredBuiltInType(identifierOrTypeLocation, identifier, type);
 
     TIntermDeclaration *declaration = new TIntermDeclaration();
     declaration->setLine(identifierOrTypeLocation);
