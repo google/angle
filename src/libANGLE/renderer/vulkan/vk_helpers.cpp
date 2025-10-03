@@ -4757,6 +4757,7 @@ VkResult BufferHelper::initSuballocation(Context *context,
                                          BufferPool *pool)
 {
     ASSERT(pool != nullptr);
+    ASSERT(size != 0);
     Renderer *renderer = context->getRenderer();
 
     // We should reset these in case the BufferHelper object has been released and called
