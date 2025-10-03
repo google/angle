@@ -6549,6 +6549,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // between different contexts. To avoid rendering artifacts, force submit staged updates for
     // Samsung.
     ANGLE_FEATURE_CONDITION(&mFeatures, forceSubmitImmutableTextureUpdates, isSamsung);
+
+    // Don't expose these 2 extensions on Samsung devices -
+    // 1. GL_ANGLE_shader_pixel_local_storage
+    // 2. GL_ANGLE_shader_pixel_local_storage_coherent
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportShaderPixelLocalStorageAngle, !isSamsung);
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}

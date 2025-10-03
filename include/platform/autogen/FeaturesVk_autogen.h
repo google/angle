@@ -1574,6 +1574,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportShaderPixelLocalStorageAngle = {
+        "supportShaderPixelLocalStorageAngle",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

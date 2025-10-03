@@ -2069,6 +2069,14 @@
                 "Externally synchronize all pipeline cache accesses"
             ],
             "issue": "https://anglebug.com/445240187"
+        },
+        {
+            "name": "support_shader_pixel_local_storage_angle",
+            "category": "Features",
+            "description": [
+                "Enable support for GL_ANGLE_shader_pixel_local_storage extension"
+            ],
+            "issue": "https://anglebug.com/40096838"
         }
     ]
 }

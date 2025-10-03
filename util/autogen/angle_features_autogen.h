@@ -360,6 +360,7 @@ enum class Feature
     SupportsGlobalPriority,
     SupportsGlobalPriorityQuery,
     SupportsGraphicsPipelineLibrary,
+    SupportShaderPixelLocalStorageAngle,
     SupportsHostImageCopy,
     SupportsHostQueryReset,
     SupportsImage2dViewOf3d,

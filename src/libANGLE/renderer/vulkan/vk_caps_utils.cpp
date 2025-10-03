@@ -1371,7 +1371,8 @@ void Renderer::ensureCapsInitialized() const
     //   * The Vulkan backend limits the ES version to 2.0 when drawBuffersIndexed is not supported.
     //   * The frontend disables all ES 3.x extensions when the context version is too low for them.
     //   * This means it is impossible on Vulkan to have pixel local storage without DBI.
-    if (mNativeExtensions.drawBuffersIndexedAny())
+    if (mFeatures.supportShaderPixelLocalStorageAngle.enabled &&
+        mNativeExtensions.drawBuffersIndexedAny())
     {
         // With drawBuffersIndexed, we can always at least support non-coherent PLS with input
         // attachments.

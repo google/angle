@@ -360,6 +360,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsGlobalPriority, "supportsGlobalPriority"},
     {Feature::SupportsGlobalPriorityQuery, "supportsGlobalPriorityQuery"},
     {Feature::SupportsGraphicsPipelineLibrary, "supportsGraphicsPipelineLibrary"},
+    {Feature::SupportShaderPixelLocalStorageAngle, "supportShaderPixelLocalStorageAngle"},
     {Feature::SupportsHostImageCopy, "supportsHostImageCopy"},
     {Feature::SupportsHostQueryReset, "supportsHostQueryReset"},
     {Feature::SupportsImage2dViewOf3d, "supportsImage2dViewOf3d"},
