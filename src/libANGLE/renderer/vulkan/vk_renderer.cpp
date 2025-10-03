@@ -325,9 +325,9 @@ constexpr const char *kExposeNonConformantSkippedMessages[] = {
     "VUID-VkSwapchainCreateInfoKHR-presentMode-01427",
 };
 
+// VVL appears has a bug tracking stageMask on VkEvent with secondary command buffer.
+// https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/7849
 constexpr const char *kSkippedMessagesWithVulkanSecondaryCommandBuffer[] = {
-    // VVL appears has a bug tracking stageMask on VkEvent with secondary command buffer.
-    // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/7849
     "VUID-vkCmdWaitEvents-srcStageMask-parameter",
 };
 
@@ -341,14 +341,6 @@ constexpr const char *kSkippedMessagesWithVulkanSecondaryCommandBuffer[] = {
 // http://anglebug.com/42265307
 constexpr const char *kSkippedMessagesWithRenderPassObjectsAndVulkanSCB[] = {
     "VUID-vkCmdExecuteCommands-pCommandBuffers-00099",
-};
-
-constexpr const char *kSkippedMessagesWithDynamicRenderingAndVulkanSCB[] = {
-    // Bug in validation of dynamic rendering flags
-    // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/10761
-    "VUID-vkCmdDraw-flags-10582",
-    "VUID-vkCmdDrawIndexedIndirect-flags-10582",
-    "VUID-vkCmdDrawIndirect-flags-10582",
 };
 
 // VVL bugs with dynamic rendering
@@ -4636,22 +4628,13 @@ void Renderer::initializeValidationMessageSuppressions()
                 ArraySize(kSkippedMessagesWithVulkanSecondaryCommandBuffer));
     }
 
-    if (!vk::RenderPassCommandBuffer::ExecutesInline())
+    if (!getFeatures().preferDynamicRendering.enabled &&
+        !vk::RenderPassCommandBuffer::ExecutesInline())
     {
-        if (getFeatures().preferDynamicRendering.enabled)
-        {
-            mSkippedValidationMessages.insert(
-                mSkippedValidationMessages.end(), kSkippedMessagesWithDynamicRenderingAndVulkanSCB,
-                kSkippedMessagesWithDynamicRenderingAndVulkanSCB +
-                    ArraySize(kSkippedMessagesWithDynamicRenderingAndVulkanSCB));
-        }
-        else
-        {
-            mSkippedValidationMessages.insert(
-                mSkippedValidationMessages.end(), kSkippedMessagesWithRenderPassObjectsAndVulkanSCB,
-                kSkippedMessagesWithRenderPassObjectsAndVulkanSCB +
-                    ArraySize(kSkippedMessagesWithRenderPassObjectsAndVulkanSCB));
-        }
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kSkippedMessagesWithRenderPassObjectsAndVulkanSCB,
+            kSkippedMessagesWithRenderPassObjectsAndVulkanSCB +
+                ArraySize(kSkippedMessagesWithRenderPassObjectsAndVulkanSCB));
     }
 
     if (getFeatures().preferDynamicRendering.enabled)
