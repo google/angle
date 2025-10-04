@@ -1375,23 +1375,18 @@ void Renderer::ensureCapsInitialized() const
     if (mFeatures.supportShaderPixelLocalStorageAngle.enabled &&
         mNativeExtensions.drawBuffersIndexedAny())
     {
-        // With drawBuffersIndexed, we can always at least support non-coherent PLS with input
-        // attachments.
         mNativeExtensions.shaderPixelLocalStorageANGLE = true;
 
-        if (!mIsColorFramebufferFetchCoherent &&
-            getFeatures().supportsFragmentShaderPixelInterlock.enabled)
-        {
-            // Use shader images with VK_EXT_fragment_shader_interlock, instead of input
-            // attachments, if they're our only option to be coherent.
-            mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = true;
-            mNativePLSOptions.type = ShPixelLocalStorageType::ImageLoadStore;
-            // GL_ARB_fragment_shader_interlock compiles to SPV_EXT_fragment_shader_interlock.
-            mNativePLSOptions.fragmentSyncType =
-                ShFragmentSynchronizationType::FragmentShaderInterlock_ARB_GL;
-            mNativePLSOptions.supportsNativeRGBA8ImageFormats = true;
-        }
-        else
+        // Prefer framebuffer fetch in almost all cases if it's available, except if framebuffer
+        // fetch isn't coherent *and* fragment shader pixel interlock is available. This is the case
+        // on many desktop GPUs. Fall back to using shader images with interlock to provide coherent
+        // PLS in this case.
+        bool fetchIsNonCoherentButHasInterlock =
+            !mIsColorFramebufferFetchCoherent &&
+            getFeatures().supportsFragmentShaderPixelInterlock.enabled;
+
+        if (getFeatures().supportsShaderFramebufferFetch.enabled &&
+            !fetchIsNonCoherentButHasInterlock)
         {
             // Input attachments are the preferred implementation for PLS on Vulkan.
             mNativeExtensions.shaderPixelLocalStorageCoherentANGLE =
@@ -1400,6 +1395,27 @@ void Renderer::ensureCapsInitialized() const
             mNativePLSOptions.fragmentSyncType = mIsColorFramebufferFetchCoherent
                                                      ? ShFragmentSynchronizationType::Automatic
                                                      : ShFragmentSynchronizationType::NotSupported;
+        }
+        else
+        {
+            mNativePLSOptions.type = ShPixelLocalStorageType::ImageLoadStore;
+            mNativePLSOptions.supportsNativeRGBA8ImageFormats = true;
+
+            if (getFeatures().supportsFragmentShaderPixelInterlock.enabled)
+            {
+                // Use shader images with VK_EXT_fragment_shader_interlock, instead of input
+                // attachments, if they're our only option to be coherent.
+                mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = true;
+                // GL_ARB_fragment_shader_interlock compiles to SPV_EXT_fragment_shader_interlock.
+                mNativePLSOptions.fragmentSyncType =
+                    ShFragmentSynchronizationType::FragmentShaderInterlock_ARB_GL;
+            }
+            else
+            {
+                // If fragment shader pixel interlock isn't supported, then only non-coherent PLS is
+                // supported.
+                mNativePLSOptions.fragmentSyncType = ShFragmentSynchronizationType::NotSupported;
+            }
         }
     }
 
