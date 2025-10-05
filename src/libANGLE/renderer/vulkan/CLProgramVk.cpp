@@ -946,6 +946,8 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
                     if (clspvRet != CLSPV_SUCCESS)
                     {
                         ERR() << "OpenCL build failed with: ClspvError(" << clspvRet << ")!";
+                        ERR() << "Clspv option: " << processedOptions;
+                        ERR() << "Build log: " << std::endl << deviceProgramData.buildLog;
                         deviceProgramData.buildStatus = CL_BUILD_ERROR;
                         return false;
                     }
@@ -987,6 +989,8 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
                     if (clspvRet != CLSPV_SUCCESS)
                     {
                         ERR() << "OpenCL build failed with: ClspvError(" << clspvRet << ")!";
+                        ERR() << "Clspv option: " << processedOptions;
+                        ERR() << "Build log: " << std::endl << deviceProgramData.buildLog;
                         deviceProgramData.buildStatus = CL_BUILD_ERROR;
                         return false;
                     }
