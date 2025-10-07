@@ -7,7 +7,7 @@ Revision: 28b5bbb227d331c01e6ff9b2f8729732135aadc7
 Update Mechanism: Static.HardFork (https://crbug.com/419410757)
 Security Critical: no
 Shipped: yes
-License: Chromium
+License: BSD-3-Clause
 License File: LICENSE in Chromium/src
 
 Description:

@@ -3,7 +3,7 @@ Short Name: desugar
 URL: https://github.com/bazelbuild/bazel
 Version: 1.1.0
 Update Mechanism: Manual
-License: Apache 2.0
+License: Apache-2.0
 Security Critical: no
 Shipped: yes
 
