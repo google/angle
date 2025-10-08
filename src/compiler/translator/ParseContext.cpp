@@ -393,6 +393,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mDeclaringFunction(false),
       mDeclaringMain(false),
       mIsMainDeclared(false),
+      mIsReturnVisitedInMain(false),
       mGeometryShaderInputPrimitiveType(EptUndefined),
       mGeometryShaderOutputPrimitiveType(EptUndefined),
       mGeometryShaderInvocations(0),
@@ -4876,6 +4877,7 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
     }
 
     mDeclaringMain = function->isMain();
+    mIsReturnVisitedInMain = false;
 
     //
     // If this is a redeclaration, it could also be a definition, in which case, we want to use the
@@ -7683,6 +7685,7 @@ TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
             if (mDeclaringMain)
             {
                 errorIfPLSDeclared(loc, PLSIllegalOperations::ReturnFromMain);
+                mIsReturnVisitedInMain = true;
             }
             break;
         case EOpKill:
@@ -8212,6 +8215,30 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCallImpl(TFunctionLookup *
                 fnCandidate->extensions()[0] != TExtension::UNDEFINED)
             {
                 checkCanUseOneOfExtensions(loc, fnCandidate->extensions());
+            }
+
+            // From GLES 3.2:
+            //
+            // For tessellation control shaders, the barrier() function may only be placed inside
+            // the function main() of the shader and may not be called within any control flow.
+            // Barriers are also disallowed after a return statement in the function main().
+            if (fnCandidate->getBuiltInOp() == EOpBarrierTCS)
+            {
+                if (mIsReturnVisitedInMain)
+                {
+                    error(loc,
+                          "barrier() may not be called at any point after a return statement in "
+                          "the function main()",
+                          "barrier");
+                }
+                else if (!mDeclaringMain)
+                {
+                    error(loc, "barrier() is only allowed inside the function main()", "barrier");
+                }
+                else if (!mControlFlow.empty())
+                {
+                    error(loc, "barrier() is not allowed within any control flow", "barrier");
+                }
             }
 
             // All function calls are mapped to a built-in operation.

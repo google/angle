@@ -26,7 +26,6 @@
 #include "compiler/translator/OutputTree.h"
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/SizeClipCullDistance.h"
-#include "compiler/translator/ValidateBarrierFunctionCall.h"
 #include "compiler/translator/ValidateLimitations.h"
 #include "compiler/translator/ValidateMaxParameters.h"
 #include "compiler/translator/ValidateOutputs.h"
@@ -976,12 +975,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
-    }
-
-    // Validate no barrier() after return before prunning it in |PruneNoOps()| below.
-    if (mShaderType == GL_TESS_CONTROL_SHADER && !ValidateBarrierFunctionCall(root, &mDiagnostics))
-    {
-        return false;
     }
 
     // We prune no-ops to work around driver bugs and to keep AST processing and output simple.

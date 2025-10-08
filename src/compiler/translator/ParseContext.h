@@ -856,11 +856,15 @@ class TParseContext : angle::NonCopyable
     // keeps track whether we are declaring / defining the function main().
     bool mDeclaringMain;
     bool mIsMainDeclared;
+    // Whether `return` has been observed in `main()`.  Used to validate barrier() in tessellation
+    // control shaders which are not allowed after `return`.
+    bool mIsReturnVisitedInMain;
 
     // Track state related to control flow, used for various validation:
     //
     // * That case is within switch, continue is within loop, and break is within loop or switch
     // * That the shader statements don't get too nested (based on `MaxStatementDepth`)
+    // * In tessellation control shaders, barrier() cannot be called in divergent control flow.
     struct ControlFlow
     {
         ControlFlowType type;
