@@ -21,6 +21,7 @@
 #include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/ValidateSwitch.h"
 #include "compiler/translator/glslang.h"
+#include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/util.h"
 
@@ -299,6 +300,51 @@ void MarkClipCullIndex(const TSourceLoc &line, TIntermTyped *indexExpr, ClipCull
     {
         info->hasNonConstIndex = true;
     }
+}
+
+bool ValidateFragColorAndFragData(GLenum shaderType,
+                                  int shaderVersion,
+                                  const TSymbolTable &symbolTable,
+                                  TDiagnostics *diagnostics)
+{
+    if (shaderVersion > 100 || shaderType != GL_FRAGMENT_SHADER)
+    {
+        return true;
+    }
+
+    bool usesFragColor = false;
+    bool usesFragData  = false;
+    // This validation is a bit stricter than the spec - it's only an error to write to
+    // both FragData and FragColor. But because it's better not to have reads from undefined
+    // variables, we always return an error if they are both referenced, rather than only if they
+    // are written.
+    if (symbolTable.isStaticallyUsed(*BuiltInVariable::gl_FragColor()) ||
+        symbolTable.isStaticallyUsed(*BuiltInVariable::gl_SecondaryFragColorEXT()))
+    {
+        usesFragColor = true;
+    }
+    // Extension variables may not always be initialized (saves some time at symbol table init).
+    bool secondaryFragDataUsed =
+        symbolTable.gl_SecondaryFragDataEXT() != nullptr &&
+        symbolTable.isStaticallyUsed(*symbolTable.gl_SecondaryFragDataEXT());
+    if (symbolTable.isStaticallyUsed(*symbolTable.gl_FragData()) || secondaryFragDataUsed)
+    {
+        usesFragData = true;
+    }
+    if (usesFragColor && usesFragData)
+    {
+        const char *errorMessage = "cannot use both gl_FragData and gl_FragColor";
+        if (symbolTable.isStaticallyUsed(*BuiltInVariable::gl_SecondaryFragColorEXT()) ||
+            secondaryFragDataUsed)
+        {
+            errorMessage =
+                "cannot use both output variable sets (gl_FragData, gl_SecondaryFragDataEXT)"
+                " and (gl_FragColor, gl_SecondaryFragColorEXT)";
+        }
+        diagnostics->globalError(errorMessage);
+        return false;
+    }
+    return true;
 }
 }  // namespace
 
@@ -8460,6 +8506,11 @@ bool TParseContext::postParseChecks()
               "The length() method cannot be called on gl_CullDistance that is not "
               "runtime sized and also has not yet been explicitly sized",
               "gl_CullDistance");
+        success = false;
+    }
+
+    if (!ValidateFragColorAndFragData(mShaderType, mShaderVersion, symbolTable, mDiagnostics))
+    {
         success = false;
     }
 
