@@ -7,7 +7,7 @@
 '''
 Pixel 6 (ARM based) specific script that measures the following for each restricted_trace:
 - Wall time per frame
-- GPU time per frame (if run with --vsync)
+- GPU time per frame (if run with --track-gpu-time)
 - CPU time per frame
 - GPU power per frame
 - CPU power per frame
@@ -269,6 +269,8 @@ def run_trace(trace, args, screenshot_device_dir):
         flags += ['--screenshot-frame', args.screenshot_frame]
     if args.fps_limit != '':
         flags += ['--fps-limit', args.fps_limit]
+    if args.track_gpu_time:
+        flags.append('--track-gpu-time')
 
     # Build a command that can be run directly over ADB, for example:
     r'''
@@ -605,8 +607,8 @@ def collect_cpu_inst(done_event, test_fixedtime, results):
 
         # Filter simpleperf record within actual test running time
         temp_filter_file = run_adb_shell_command('mktemp /data/local/tmp/tmp.XXXXXX').strip()
-        run_adb_shell_command(f'echo "CLOCK monotonic\n\
-            GLOBAL_BEGIN {start_ns}\n\
+        run_adb_shell_command(f'echo "CLOCK monotonic\n \
+            GLOBAL_BEGIN {start_ns}\n \
             GLOBAL_END {end_ns}"  > {temp_filter_file}')
 
         perf_output = run_adb_shell_command(f'''simpleperf report \
@@ -874,6 +876,8 @@ def main():
         help='Whether to run the trace in offscreen mode',
         action='store_true',
         default=False)
+    parser.add_argument(
+        '--track-gpu-time', help='Enables GPU time tracking', action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -1306,7 +1310,7 @@ def run_traces(args):
 
                 wall_time = get_test_time()
 
-                gpu_time = get_gpu_time() if args.vsync else '0'
+                gpu_time = get_gpu_time() if args.track_gpu_time else '0'
 
                 cpu_time = get_cpu_time()
 

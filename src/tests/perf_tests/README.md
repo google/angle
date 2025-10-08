@@ -112,6 +112,7 @@ Trace tests take command line arguments that pick the run configuration:
 * `--screenshot-frame <frame>`: Which frame to capture a screenshot of. Defaults to first frame (1). Using `-1` will capture every frame rendered, including those after Reset for multiple loops. Only implemented in `TracePerfTest`.
 * `--include-inactive-resources` : Include all resources captured at trace-time during replay. Only resources which are active during trace execution are replayed by default.
 * `--fps-limit <limit>` : Limit replay framerate to specified value.
+* `--track-gpu-time` : Enables GPU frametime tracking if "GL_EXT_disjoint_timer_query" is available.
 
 For example, for an endless run with no warmup on swiftshader, run:
 
@@ -129,4 +130,4 @@ clock time by the number of test iterations.
 * `gpu_time`: Estimated GPU elapsed time per test iteration. We compute the estimate using GLES
 [timestamp queries](https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_disjoint_timer_query.txt)
 at the beginning and ending of each test loop.
-  * For trace tests, this metric is only enabled in `vsync` mode.
+  * For trace tests, this metric is enabled by the `--track-gpu-time` argument.
