@@ -93,22 +93,6 @@ class TParseContext : angle::NonCopyable
     bool hasDiscard() const { return mHasDiscard; }
     bool isSampleQualifierSpecified() const { return mSampleQualifierSpecified; }
 
-    void setLoopNestingLevel(int loopNestintLevel) { mLoopNestingLevel = loopNestintLevel; }
-
-    void incrLoopNestingLevel(const TSourceLoc &line)
-    {
-        ++mLoopNestingLevel;
-        checkNestingLevel(line);
-    }
-    void decrLoopNestingLevel() { --mLoopNestingLevel; }
-
-    void incrSwitchNestingLevel(const TSourceLoc &line)
-    {
-        ++mSwitchNestingLevel;
-        checkNestingLevel(line);
-    }
-    void decrSwitchNestingLevel() { --mSwitchNestingLevel; }
-
     bool isComputeShaderLocalSizeDeclared() const { return mComputeShaderLocalSizeDeclared; }
     sh::WorkGroupSize getComputeShaderLocalSize() const;
 
@@ -257,6 +241,7 @@ class TParseContext : angle::NonCopyable
                                          TIntermTyped *initializer,
                                          const TSourceLoc &loc);
 
+    void beginLoop(const TSourceLoc &line);
     void onLoopConditionBegin();
     void onLoopConditionEnd(TIntermNode *condition);
     void onLoopContinueEnd(TIntermNode *statement);
@@ -466,6 +451,7 @@ class TParseContext : angle::NonCopyable
 
     void checkIsBelowStructNestingLimit(const TSourceLoc &line, const TField &field);
 
+    void beginSwitch(const TSourceLoc &line);
     TIntermSwitch *addSwitch(TIntermTyped *init,
                              TIntermBlock *statementList,
                              const TSourceLoc &loc);
@@ -739,6 +725,14 @@ class TParseContext : angle::NonCopyable
 
     void sizeUnsizedArrayTypes(uint32_t arraySize);
 
+    enum class ControlFlowType
+    {
+        If,
+        Loop,
+        Switch,
+    };
+    bool isNestedIn(ControlFlowType type) const;
+
     // Certain operations become illegal only iff the shader declares pixel local storage uniforms.
     enum class PLSIllegalOperations
     {
@@ -791,9 +785,7 @@ class TParseContext : angle::NonCopyable
     ShCompileOptions mCompileOptions;  // Options passed to TCompiler
     int mShaderVersion;
     TIntermBlock *mTreeRoot;  // root of parse tree being created
-    int mLoopNestingLevel;    // 0 if outside all loops
     int mStructNestingLevel;  // incremented while parsing a struct declaration
-    int mSwitchNestingLevel;  // 0 if outside all switch statements
     const TType
         *mCurrentFunctionType;    // the return type of the function that's currently being parsed
     bool mFunctionReturnsValue;   // true if a non-void function has a return
@@ -864,6 +856,16 @@ class TParseContext : angle::NonCopyable
     // keeps track whether we are declaring / defining the function main().
     bool mDeclaringMain;
     bool mIsMainDeclared;
+
+    // Track state related to control flow, used for various validation:
+    //
+    // * That case is within switch, continue is within loop, and break is within loop or switch
+    // * That the shader statements don't get too nested (based on `MaxStatementDepth`)
+    struct ControlFlow
+    {
+        ControlFlowType type;
+    };
+    std::vector<ControlFlow> mControlFlow;
 
     // Track the state of each atomic counter binding.
     std::map<int, AtomicCounterBindingState> mAtomicCounterBindingStates;

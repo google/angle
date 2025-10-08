@@ -874,9 +874,9 @@ static const yytype_int16 yyrline[] = {
     1417, 1427, 1437, 1440, 1447, 1454, 1461, 1464, 1474, 1474, 1477, 1477, 1483, 1486, 1492, 1495,
     1502, 1506, 1512, 1515, 1521, 1525, 1529, 1530, 1536, 1537, 1538, 1539, 1540, 1541, 1542, 1546,
     1550, 1550, 1550, 1557, 1558, 1565, 1565, 1566, 1566, 1575, 1579, 1586, 1590, 1597, 1598, 1605,
-    1605, 1613, 1613, 1621, 1631, 1631, 1638, 1641, 1647, 1651, 1657, 1660, 1657, 1667, 1670, 1667,
-    1676, 1676, 1676, 1686, 1690, 1696, 1699, 1705, 1711, 1711, 1721, 1724, 1727, 1730, 1733, 1741,
-    1747, 1753, 1756, 1762, 1762};
+    1605, 1613, 1613, 1621, 1631, 1631, 1637, 1640, 1646, 1650, 1656, 1659, 1656, 1665, 1668, 1665,
+    1673, 1673, 1673, 1682, 1686, 1692, 1695, 1701, 1707, 1707, 1717, 1720, 1723, 1726, 1729, 1737,
+    1743, 1749, 1752, 1758, 1758};
 #endif
 
 /** Accessing symbol of state STATE.  */
@@ -4633,7 +4633,7 @@ yyreduce:
 
         case 308: /* $@14: %empty  */
         {
-            context->incrSwitchNestingLevel((yylsp[-3]));
+            context->beginSwitch((yylsp[-3]));
         }
         break;
 
@@ -4642,7 +4642,6 @@ yyreduce:
         {
             (yyval.interm.intermSwitch) = context->addSwitch(
                 (yyvsp[-3].interm.intermTypedNode), (yyvsp[0].interm.intermBlock), (yylsp[-5]));
-            context->decrSwitchNestingLevel();
         }
         break;
 
@@ -4678,7 +4677,7 @@ yyreduce:
         case 314: /* $@15: %empty  */
         {
             context->symbolTable.push();
-            context->incrLoopNestingLevel((yylsp[-1]));
+            context->beginLoop((yylsp[-1]));
             context->onLoopConditionBegin();
         }
         break;
@@ -4696,13 +4695,12 @@ yyreduce:
             (yyval.interm.intermNode) =
                 context->addLoop(ELoopWhile, 0, (yyvsp[-3].interm.intermNode), 0,
                                  (yyvsp[0].interm.intermNode), (yylsp[-6]));
-            context->decrLoopNestingLevel();
         }
         break;
 
         case 317: /* $@17: %empty  */
         {
-            context->incrLoopNestingLevel((yylsp[0]));
+            context->beginLoop((yylsp[0]));
             context->onDoLoopBegin();
         }
         break;
@@ -4719,14 +4717,13 @@ yyreduce:
             (yyval.interm.intermNode) =
                 context->addLoop(ELoopDoWhile, 0, (yyvsp[-2].interm.intermTypedNode), 0,
                                  (yyvsp[-6].interm.intermNode), (yylsp[-5]));
-            context->decrLoopNestingLevel();
         }
         break;
 
         case 320: /* $@19: %empty  */
         {
             context->symbolTable.push();
-            context->incrLoopNestingLevel((yylsp[-1]));
+            context->beginLoop((yylsp[-1]));
         }
         break;
 
@@ -4744,7 +4741,6 @@ yyreduce:
                 ELoopFor, (yyvsp[-4].interm.intermNode), (yyvsp[-2].interm.nodePair).node1,
                 reinterpret_cast<TIntermTyped *>((yyvsp[-2].interm.nodePair).node2),
                 (yyvsp[0].interm.intermNode), (yylsp[-7]));
-            context->decrLoopNestingLevel();
         }
         break;
 

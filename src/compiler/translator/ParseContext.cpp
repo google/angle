@@ -349,9 +349,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mCompileOptions(options),
       mShaderVersion(100),
       mTreeRoot(nullptr),
-      mLoopNestingLevel(0),
       mStructNestingLevel(0),
-      mSwitchNestingLevel(0),
       mCurrentFunctionType(nullptr),
       mFunctionReturnsValue(false),
       mFragmentPrecisionHighOnESSL1(false),
@@ -1434,7 +1432,7 @@ bool TParseContext::checkIsValidTypeAndQualifierForArray(const TSourceLoc &index
 
 void TParseContext::checkNestingLevel(const TSourceLoc &line)
 {
-    if (static_cast<size_t>(mLoopNestingLevel + mSwitchNestingLevel) > mMaxStatementDepth)
+    if (mControlFlow.size() > mMaxStatementDepth)
     {
         error(line, "statement is too deeply nested", "");
     }
@@ -3022,6 +3020,15 @@ TIntermNode *TParseContext::addConditionInitializer(const TPublicType &pType,
     return nullptr;
 }
 
+void TParseContext::beginLoop(const TSourceLoc &line)
+{
+    ControlFlow flow = {};
+    flow.type        = ControlFlowType::Loop;
+    mControlFlow.push_back(flow);
+
+    checkNestingLevel(line);
+}
+
 void TParseContext::onLoopConditionBegin() {}
 
 void TParseContext::onLoopConditionEnd(TIntermNode *condition) {}
@@ -3042,6 +3049,8 @@ TIntermNode *TParseContext::addLoop(TLoopType type,
                                     TIntermNode *body,
                                     const TSourceLoc &line)
 {
+    mControlFlow.pop_back();
+
     TIntermNode *node       = nullptr;
     TIntermTyped *typedCond = nullptr;
     if (cond)
@@ -3100,7 +3109,12 @@ TIntermNode *TParseContext::addLoop(TLoopType type,
     return block;
 }
 
-void TParseContext::onIfTrueBlockBegin(TIntermTyped *cond, const TSourceLoc &loc) {}
+void TParseContext::onIfTrueBlockBegin(TIntermTyped *cond, const TSourceLoc &loc)
+{
+    ControlFlow flow = {};
+    flow.type        = ControlFlowType::If;
+    mControlFlow.push_back(flow);
+}
 
 void TParseContext::onIfTrueBlockEnd() {}
 
@@ -3112,6 +3126,8 @@ TIntermNode *TParseContext::addIfElse(TIntermTyped *cond,
                                       TIntermNodePair code,
                                       const TSourceLoc &loc)
 {
+    mControlFlow.pop_back();
+
     bool isScalarBool = checkIsScalarBool(loc, cond);
     // In case the conditional statements were not parsed as blocks and contain a statement that
     // simply refers to a variable, we need to mark them as statically used.
@@ -4757,7 +4773,7 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
     mFunctionReturnsValue = false;
 
     *prototypeOut = createPrototypeNodeFromFunction(*function, location, true);
-    setLoopNestingLevel(0);
+    ASSERT(mControlFlow.empty());
 
     // ESSL 1.00 spec allows for variable in function body to redefine parameter
     if (IsSpecWithFunctionBodyNewScope(mShaderSpec, mShaderVersion))
@@ -6966,10 +6982,21 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
     return typeSpecifierNonArray;
 }
 
+void TParseContext::beginSwitch(const TSourceLoc &line)
+{
+    ControlFlow flow = {};
+    flow.type        = ControlFlowType::Switch;
+    mControlFlow.push_back(flow);
+
+    checkNestingLevel(line);
+}
+
 TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
                                         TIntermBlock *statementList,
                                         const TSourceLoc &loc)
 {
+    mControlFlow.pop_back();
+
     TBasicType switchType = init->getBasicType();
     if ((switchType != EbtInt && switchType != EbtUInt) || init->isMatrix() || init->isArray() ||
         init->isVector())
@@ -6992,9 +7019,24 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
     return node;
 }
 
+bool TParseContext::isNestedIn(ControlFlowType type) const
+{
+    // Used for validation, we need to know for example that a `continue` statement is nested
+    // within a loop, etc.  Search backwards in the nested control flow info to find the closest
+    // control flow of given type.
+    for (auto iter = mControlFlow.rbegin(); iter != mControlFlow.rend(); ++iter)
+    {
+        if (iter->type == type)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 TIntermCase *TParseContext::addCase(TIntermTyped *condition, const TSourceLoc &loc)
 {
-    if (mSwitchNestingLevel == 0)
+    if (!isNestedIn(ControlFlowType::Switch))
     {
         error(loc, "case labels need to be inside switch statements", "case");
         return nullptr;
@@ -7025,7 +7067,7 @@ TIntermCase *TParseContext::addCase(TIntermTyped *condition, const TSourceLoc &l
 
 TIntermCase *TParseContext::addDefault(const TSourceLoc &loc)
 {
-    if (mSwitchNestingLevel == 0)
+    if (!isNestedIn(ControlFlowType::Switch))
     {
         error(loc, "default labels need to be inside switch statements", "default");
         return nullptr;
@@ -7622,13 +7664,13 @@ TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
     switch (op)
     {
         case EOpContinue:
-            if (mLoopNestingLevel <= 0)
+            if (!isNestedIn(ControlFlowType::Loop))
             {
                 error(loc, "continue statement only allowed in loops", "");
             }
             break;
         case EOpBreak:
-            if (mLoopNestingLevel <= 0 && mSwitchNestingLevel <= 0)
+            if (!isNestedIn(ControlFlowType::Loop) && !isNestedIn(ControlFlowType::Switch))
             {
                 error(loc, "break statement only allowed in loops and switch statements", "");
             }
