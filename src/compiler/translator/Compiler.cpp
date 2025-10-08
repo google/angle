@@ -27,7 +27,6 @@
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/SizeClipCullDistance.h"
 #include "compiler/translator/ValidateLimitations.h"
-#include "compiler/translator/ValidateMaxParameters.h"
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/ValidateTypeSizeLimitations.h"
 #include "compiler/translator/ValidateVaryingLocations.h"
@@ -1968,12 +1967,6 @@ bool TCompiler::limitExpressionComplexity(TIntermBlock *root)
     if (!IsASTDepthBelowLimit(root, mResources.MaxExpressionComplexity))
     {
         mDiagnostics.globalError("Expression too complex.");
-        return false;
-    }
-
-    if (!ValidateMaxParameters(root, mResources.MaxFunctionParameters))
-    {
-        mDiagnostics.globalError("Function has too many parameters.");
         return false;
     }
 

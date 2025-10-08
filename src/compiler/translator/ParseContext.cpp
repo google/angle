@@ -390,6 +390,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMaxAtomicCounterBufferSize(resources.MaxAtomicCounterBufferSize),
       mMaxShaderStorageBufferBindings(resources.MaxShaderStorageBufferBindings),
       mMaxPixelLocalStoragePlanes(resources.MaxPixelLocalStoragePlanes),
+      mMaxFunctionParameters(resources.MaxFunctionParameters),
       mDeclaringFunction(false),
       mDeclaringMain(false),
       mIsMainDeclared(false),
@@ -4734,8 +4735,15 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
     // Check that non-void functions have at least one return statement.
     if (mCurrentFunctionType->getBasicType() != EbtVoid && !mFunctionReturnsValue)
     {
-        error(location,
-              "function does not return a value:", functionPrototype->getFunction()->name());
+        error(location, "Function does not return a value",
+              functionPrototype->getFunction()->name());
+    }
+    if (mCompileOptions.limitExpressionComplexity &&
+        functionPrototype->getFunction()->getParamCount() >
+            static_cast<unsigned int>(mMaxFunctionParameters))
+    {
+        error(location, "Function has too many parameters",
+              functionPrototype->getFunction()->name());
     }
 
     if (functionBody == nullptr)

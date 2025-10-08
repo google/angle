@@ -839,6 +839,7 @@ class TParseContext : angle::NonCopyable
     int mMaxAtomicCounterBufferSize;
     int mMaxShaderStorageBufferBindings;
     int mMaxPixelLocalStoragePlanes;
+    int mMaxFunctionParameters;
 
     // keeps track of whether any of the built-ins that can be redeclared (see
     // IsRedeclarableBuiltIn()) has been marked as invariant/precise before the possible
