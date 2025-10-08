@@ -1495,7 +1495,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
                                     const TType *declarationType,
                                     TVariable **variable)
 {
-    ASSERT((*variable) == nullptr);
+    ASSERT(*variable == nullptr);
 
     // When gl_Position and gl_PointSize are redeclared per EXT_separate_shader_objects, make sure
     // they have the right qualifier.
@@ -1533,7 +1533,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
             break;
     }
 
-    (*variable) = new TVariable(&symbolTable, identifier, type, symbolType);
+    *variable = new TVariable(&symbolTable, identifier, type, symbolType);
 
     if (type->getQualifier() == EvqFragmentOut)
     {
@@ -1765,6 +1765,12 @@ void TParseContext::parseParameterQualifier(const TSourceLoc &line,
     {
         type.setPrecise(true);
     }
+}
+
+void TParseContext::addParameter(TFunction *function, TParameter *param)
+{
+    const TVariable *variable = param->createVariable(&symbolTable);
+    function->addParameter(variable);
 }
 
 template <size_t size>
@@ -3016,6 +3022,19 @@ TIntermNode *TParseContext::addConditionInitializer(const TPublicType &pType,
     return nullptr;
 }
 
+void TParseContext::onLoopConditionBegin() {}
+
+void TParseContext::onLoopConditionEnd(TIntermNode *condition) {}
+
+void TParseContext::onLoopContinueEnd(TIntermNode *statement)
+{
+    endStatementWithValue(statement);
+}
+
+void TParseContext::onDoLoopBegin() {}
+
+void TParseContext::onDoLoopConditionBegin() {}
+
 TIntermNode *TParseContext::addLoop(TLoopType type,
                                     TIntermNode *init,
                                     TIntermNode *cond,
@@ -3080,6 +3099,14 @@ TIntermNode *TParseContext::addLoop(TLoopType type,
     block->setLine(line);
     return block;
 }
+
+void TParseContext::onIfTrueBlockBegin(TIntermTyped *cond, const TSourceLoc &loc) {}
+
+void TParseContext::onIfTrueBlockEnd() {}
+
+void TParseContext::onIfFalseBlockBegin() {}
+
+void TParseContext::onIfFalseBlockEnd() {}
 
 TIntermNode *TParseContext::addIfElse(TIntermTyped *cond,
                                       TIntermNodePair code,
@@ -7556,6 +7583,12 @@ TIntermTyped *TParseContext::addAssign(TOperator op,
     return node;
 }
 
+void TParseContext::onShortCircuitAndBegin(TIntermTyped *left, const TSourceLoc &loc) {}
+
+void TParseContext::onShortCircuitOrBegin(TIntermTyped *left, const TSourceLoc &loc) {}
+
+void TParseContext::onCommaLeftHandSideParsed(TIntermTyped *left) {}
+
 TIntermTyped *TParseContext::addComma(TIntermTyped *left,
                                       TIntermTyped *right,
                                       const TSourceLoc &loc)
@@ -7657,6 +7690,9 @@ void TParseContext::appendStatement(TIntermBlock *block, TIntermNode *statement)
     {
         markStaticUseIfSymbol(statement);
         block->appendStatement(statement);
+
+        // Discard the value, if any.
+        endStatementWithValue(statement);
     }
 }
 
@@ -8187,6 +8223,12 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
     return CreateZeroNode(TType(EbtFloat, EbpMedium, EvqConst));
 }
 
+void TParseContext::onTernaryConditionParsed(TIntermTyped *cond, const TSourceLoc &line) {}
+
+void TParseContext::onTernaryTrueExpressionParsed(TIntermTyped *trueExpression,
+                                                  const TSourceLoc &line)
+{}
+
 TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
                                                  TIntermTyped *trueExpression,
                                                  TIntermTyped *falseExpression,
@@ -8262,6 +8304,8 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
     node->setLine(loc);
     return expressionOrFoldedResult(node);
 }
+
+void TParseContext::endStatementWithValue(TIntermNode *statement) {}
 
 bool TParseContext::postParseChecks()
 {

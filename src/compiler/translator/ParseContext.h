@@ -256,6 +256,12 @@ class TParseContext : angle::NonCopyable
                                          const ImmutableString &identifier,
                                          TIntermTyped *initializer,
                                          const TSourceLoc &loc);
+
+    void onLoopConditionBegin();
+    void onLoopConditionEnd(TIntermNode *condition);
+    void onLoopContinueEnd(TIntermNode *statement);
+    void onDoLoopBegin();
+    void onDoLoopConditionBegin();
     TIntermNode *addLoop(TLoopType type,
                          TIntermNode *init,
                          TIntermNode *cond,
@@ -265,6 +271,10 @@ class TParseContext : angle::NonCopyable
 
     // For "if" test nodes. There are three children: a condition, a true path, and a false path.
     // The two paths are in TIntermNodePair code.
+    void onIfTrueBlockBegin(TIntermTyped *cond, const TSourceLoc &loc);
+    void onIfTrueBlockEnd();
+    void onIfFalseBlockBegin();
+    void onIfFalseBlockEnd();
     TIntermNode *addIfElse(TIntermTyped *cond, TIntermNodePair code, const TSourceLoc &loc);
 
     void addFullySpecifiedType(TPublicType *typeSpecifier);
@@ -362,6 +372,7 @@ class TParseContext : angle::NonCopyable
     void parseParameterQualifier(const TSourceLoc &line,
                                  const TTypeQualifierBuilder &typeQualifierBuilder,
                                  TPublicType &type);
+    void addParameter(TFunction *function, TParameter *param);
 
     TIntermTyped *addIndexExpression(TIntermTyped *baseExpression,
                                      const TSourceLoc &location,
@@ -475,7 +486,10 @@ class TParseContext : angle::NonCopyable
                             TIntermTyped *left,
                             TIntermTyped *right,
                             const TSourceLoc &loc);
+    void onShortCircuitAndBegin(TIntermTyped *left, const TSourceLoc &loc);
+    void onShortCircuitOrBegin(TIntermTyped *left, const TSourceLoc &loc);
 
+    void onCommaLeftHandSideParsed(TIntermTyped *left);
     TIntermTyped *addComma(TIntermTyped *left, TIntermTyped *right, const TSourceLoc &loc);
 
     TIntermBranch *addBranch(TOperator op, const TSourceLoc &loc);
@@ -495,6 +509,8 @@ class TParseContext : angle::NonCopyable
     // has the arguments.
     TIntermTyped *addFunctionCallOrMethod(TFunctionLookup *fnCall, const TSourceLoc &loc);
 
+    void onTernaryConditionParsed(TIntermTyped *cond, const TSourceLoc &line);
+    void onTernaryTrueExpressionParsed(TIntermTyped *trueExpression, const TSourceLoc &line);
     TIntermTyped *addTernarySelection(TIntermTyped *cond,
                                       TIntermTyped *trueExpression,
                                       TIntermTyped *falseExpression,
@@ -554,6 +570,9 @@ class TParseContext : angle::NonCopyable
 
     size_t getMaxExpressionComplexity() const { return mMaxExpressionComplexity; }
     size_t getMaxStatementDepth() const { return mMaxStatementDepth; }
+
+    // Pop the side effect of a statement when it's discarded, like when ; is encountered.
+    void endStatementWithValue(TIntermNode *statement);
 
     bool postParseChecks();
 
