@@ -208,6 +208,76 @@ class EventSyncImpl : public SyncImpl
     angle::ObjCPtr<id<MTLEvent>> mMetalEvent;
     uint64_t mEncodedCommandBufferSerial = 0;
 };
+
+class CommandsScheduledSyncImpl : public SyncImpl
+{
+  public:
+    CommandsScheduledSyncImpl() : mCv(new std::condition_variable()), mLock(new std::mutex()) {}
+
+    ~CommandsScheduledSyncImpl() override {}
+
+    angle::Result set(ContextMtl *contextMtl)
+    {
+        contextMtl->addCommandBufferScheduledCallback([this] { this->signal(); });
+        contextMtl->flushCommandBuffer(mtl::NoWait);
+        return angle::Result::Continue;
+    }
+
+    angle::Result clientWait(ContextMtl *contextMtl,
+                             bool flushCommands,
+                             uint64_t timeout,
+                             GLenum *outResult) override
+    {
+        std::unique_lock<std::mutex> lg(*mLock);
+        if (mSignaled)
+        {
+            *outResult = GL_ALREADY_SIGNALED;
+            return angle::Result::Continue;
+        }
+
+        if (timeout == 0)
+        {
+            *outResult = GL_TIMEOUT_EXPIRED;
+            return angle::Result::Continue;
+        }
+
+        if (!mCv->wait_for(lg, std::chrono::nanoseconds(SanitizeTimeout(timeout)),
+                           [this] { return mSignaled; }))
+        {
+            *outResult = GL_TIMEOUT_EXPIRED;
+            return angle::Result::Continue;
+        }
+
+        ASSERT(mSignaled);
+        *outResult = GL_CONDITION_SATISFIED;
+        return angle::Result::Continue;
+    }
+
+    angle::Result serverWait(ContextMtl *contextMtl) override
+    {
+        // Not supported for this sync type.
+        return angle::Result::Continue;
+    }
+
+    angle::Result getStatus(DisplayMtl *displayMtl, bool *signaled) override
+    {
+        std::unique_lock<std::mutex> lg(*mLock);
+        *signaled = mSignaled;
+        return angle::Result::Continue;
+    }
+
+    void signal()
+    {
+        std::lock_guard<std::mutex> lg(*mLock);
+        mSignaled = true;
+        mCv->notify_one();
+    }
+
+  private:
+    std::shared_ptr<std::condition_variable> mCv;
+    std::shared_ptr<std::mutex> mLock;
+    bool mSignaled = false;
+};
 }  // namespace mtl
 
 // FenceNVMtl implementation
@@ -336,7 +406,6 @@ egl::Error EGLSyncMtl::initialize(const egl::Display *display,
                 return egl::Error(EGL_BAD_ALLOC, "eglCreateSyncKHR failed to create sync object");
             }
             mSync = std::move(impl);
-
             break;
         }
 
@@ -379,11 +448,23 @@ egl::Error EGLSyncMtl::initialize(const egl::Display *display,
             break;
         }
 
+        case EGL_SYNC_METAL_COMMANDS_SCHEDULED_ANGLE:
+        {
+            auto impl = std::make_unique<mtl::CommandsScheduledSyncImpl>();
+            if (IsError(impl->set(contextMtl)))
+            {
+                return egl::Error(EGL_BAD_ALLOC, "eglCreateSyncKHR failed to create sync object");
+            }
+            mSync = std::move(impl);
+            break;
+        }
+
         default:
             UNREACHABLE();
             return egl::Error(EGL_BAD_ALLOC);
     }
 
+    mType = type;
     return egl::NoError();
 }
 
@@ -395,9 +476,15 @@ egl::Error EGLSyncMtl::clientWait(const egl::Display *display,
 {
     ASSERT((flags & ~EGL_SYNC_FLUSH_COMMANDS_BIT_KHR) == 0);
 
+    // Allow null context only for EGL_SYNC_METAL_COMMANDS_SCHEDULED_ANGLE.
+    if (mType != EGL_SYNC_METAL_COMMANDS_SCHEDULED_ANGLE && !context)
+    {
+        return egl::Error(EGL_BAD_CONTEXT);
+    }
+
     bool flush             = (flags & EGL_SYNC_FLUSH_COMMANDS_BIT_KHR) != 0;
     GLenum result          = GL_NONE;
-    ContextMtl *contextMtl = mtl::GetImpl(context);
+    ContextMtl *contextMtl = context ? mtl::GetImpl(context) : nullptr;
     if (IsError(mSync->clientWait(contextMtl, flush, static_cast<uint64_t>(timeout), &result)))
     {
         return egl::Error(EGL_BAD_ALLOC);

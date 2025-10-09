@@ -104,6 +104,9 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
     bool isSerialCompleted(uint64_t serial) const;
     bool waitUntilSerialCompleted(uint64_t serial, uint64_t timeoutNs) const;
 
+    bool isSerialScheduled(uint64_t serial) const;
+    void addCommandBufferScheduledCallback(uint64_t serial, std::function<void()> callback);
+
     CommandQueue &operator=(id<MTLCommandQueue> metalQueue)
     {
         set(metalQueue);
@@ -111,6 +114,7 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
     }
 
     angle::ObjCPtr<id<MTLCommandBuffer>> makeMetalCommandBuffer(uint64_t *queueSerialOut);
+
     void onCommandBufferCommitted(id<MTLCommandBuffer> buf, uint64_t serial);
 
     uint64_t getNextRenderPassEncoderSerial();
@@ -123,10 +127,18 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
     MTLCommandBufferError popCmdBufferError() { return mCmdBufferError.pop(); }
 
   private:
+    using ParentClass = WrappedObject<id<MTLCommandQueue>>;
+
     void onCommandBufferCompleted(id<MTLCommandBuffer> buf,
                                   uint64_t serial,
                                   uint64_t timeElapsedEntry);
-    using ParentClass = WrappedObject<id<MTLCommandQueue>>;
+
+    void onCommandBufferScheduled(uint64_t serial);
+
+    void addCommandBufferToTimeElapsedEntry(std::lock_guard<std::mutex> &lg, uint64_t id);
+    void recordCommandBufferTimeElapsed(std::lock_guard<std::mutex> &lg,
+                                        uint64_t id,
+                                        double seconds);
 
     struct CmdBufferQueueEntry
     {
@@ -137,6 +149,7 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
 
     uint64_t mQueueSerialCounter = 1;
     AtomicSerial mCommittedBufferSerial;
+    AtomicSerial mScheduledBufferSerial;
     AtomicSerial mCompletedBufferSerial;
     uint64_t mRenderEncoderCounter = 1;
 
@@ -162,10 +175,7 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
 
     AtomicCommandBufferError mCmdBufferError;
 
-    void addCommandBufferToTimeElapsedEntry(std::lock_guard<std::mutex> &lg, uint64_t id);
-    void recordCommandBufferTimeElapsed(std::lock_guard<std::mutex> &lg,
-                                        uint64_t id,
-                                        double seconds);
+    angle::HashMap<uint64_t, std::vector<std::function<void()>>> mCommandBufferScheduledCallbacks;
 };
 
 class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::NonCopyable
@@ -256,7 +266,6 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     angle::HashSet<id> mResourceList;
     size_t mWorkingResourceSize              = 0;
     bool mCommitted                          = false;
-    CommandBufferFinishOperation mLastWaitOp = mtl::NoWait;
 };
 
 class CommandEncoder : public WrappedObject<id<MTLCommandEncoder>>, angle::NonCopyable
