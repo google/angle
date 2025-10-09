@@ -147,7 +147,6 @@
 410591534 WIN INTEL OPENGL : TextureCubeTestES3.IncompatibleCubeFacesThenSingleFaceCompatibleUploadAndIncompatibleAgain*/* = SKIP
 411157348 WIN D3D11 : ImageTestES31.UseSourceTextureAsStorageImage/* = SKIP
 409821658 WIN INTEL OPENGL : SRGBTextureTestES3.SRGBSkipEncodeAndDecodeInGenerateMipmap/ES3_OpenGL* = SKIP
-444980424 NVIDIA VULKAN : ShadingRateEXTTest.FragmentShadingRatePrimitive/* = SKIP
 447556589 WIN INTEL OPENGL : GeometryShaderTest.ImplicitSizedArrayMatchesExplicitSizedArray/* = SKIP
 447556589 WIN INTEL OPENGL : GeometryShaderTest.ImplicitSizedArrayMatchesExplicitSizedArray2/* = SKIP
 
@@ -1687,7 +1686,6 @@
 410630704 SAMSUNG GALAXYS24EXYNOS : PixelLocalStorageValidationTest.ModifyTextureDuringPLS/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS : PixelLocalStorageValidationTest.PLSActive_bans_blend_equation_advanced/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS : PixelLocalStorageValidationTest.PLSActive_bans_blend_func_extended/* = SKIP
-410630704 SAMSUNG GALAXYS24EXYNOS VULKAN : ShadingRateEXTTest.FragmentShadingRatePrimitive/* = SKIP
 
 
 // Snapdragon 8 Gen3 Mobile Reference Device
