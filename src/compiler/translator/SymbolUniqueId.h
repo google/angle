@@ -22,11 +22,13 @@ class TSymbolUniqueId
     POOL_ALLOCATOR_NEW_DELETE
     explicit TSymbolUniqueId(const TSymbol &symbol);
     constexpr TSymbolUniqueId(const TSymbolUniqueId &) = default;
-    TSymbolUniqueId &operator=(const TSymbolUniqueId &);
-    bool operator==(const TSymbolUniqueId &) const;
-    bool operator!=(const TSymbolUniqueId &) const;
+    TSymbolUniqueId &operator=(const TSymbolUniqueId &) = default;
+    bool operator==(const TSymbolUniqueId &other) const { return mId == other.mId; }
+    bool operator!=(const TSymbolUniqueId &other) const { return !(*this == other); }
 
     constexpr int get() const { return mId; }
+
+    static constexpr TSymbolUniqueId kInvalid() { return TSymbolUniqueId(-1); }
 
   private:
     friend class TSymbolTable;

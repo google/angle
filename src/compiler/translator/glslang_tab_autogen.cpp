@@ -4677,14 +4677,14 @@ yyreduce:
         case 314: /* $@15: %empty  */
         {
             context->symbolTable.push();
-            context->beginLoop((yylsp[-1]));
-            context->onLoopConditionBegin();
+            context->beginLoop(ELoopWhile, (yylsp[-1]));
+            context->onLoopConditionBegin(nullptr, (yylsp[-1]));
         }
         break;
 
         case 315: /* $@16: %empty  */
         {
-            context->onLoopConditionEnd((yyvsp[0].interm.intermNode));
+            context->onLoopConditionEnd((yyvsp[0].interm.intermNode), (yylsp[0]));
         }
         break;
 
@@ -4700,7 +4700,7 @@ yyreduce:
 
         case 317: /* $@17: %empty  */
         {
-            context->beginLoop((yylsp[0]));
+            context->beginLoop(ELoopDoWhile, (yylsp[0]));
             context->onDoLoopBegin();
         }
         break;
@@ -4723,13 +4723,13 @@ yyreduce:
         case 320: /* $@19: %empty  */
         {
             context->symbolTable.push();
-            context->beginLoop((yylsp[-1]));
+            context->beginLoop(ELoopFor, (yylsp[-1]));
         }
         break;
 
         case 321: /* $@20: %empty  */
         {
-            context->onLoopConditionBegin();
+            context->onLoopConditionBegin((yyvsp[0].interm.intermNode), (yylsp[0]));
         }
         break;
 
@@ -4771,8 +4771,8 @@ yyreduce:
 
         case 327: /* for_rest_statement: conditionopt SEMICOLON  */
         {
-            context->onLoopConditionEnd((yyvsp[-1].interm.intermNode));
-            context->onLoopContinueEnd(nullptr);
+            context->onLoopConditionEnd((yyvsp[-1].interm.intermNode), (yylsp[-1]));
+            context->onLoopContinueEnd(nullptr, (yylsp[-1]));
             (yyval.interm.nodePair).node1 = (yyvsp[-1].interm.intermNode);
             (yyval.interm.nodePair).node2 = 0;
         }
@@ -4780,13 +4780,13 @@ yyreduce:
 
         case 328: /* $@21: %empty  */
         {
-            context->onLoopConditionEnd((yyvsp[-1].interm.intermNode));
+            context->onLoopConditionEnd((yyvsp[-1].interm.intermNode), (yylsp[-1]));
         }
         break;
 
         case 329: /* for_rest_statement: conditionopt SEMICOLON $@21 expression  */
         {
-            context->onLoopContinueEnd((yyvsp[0].interm.intermTypedNode));
+            context->onLoopContinueEnd((yyvsp[0].interm.intermTypedNode), (yylsp[0]));
             (yyval.interm.nodePair).node1 = (yyvsp[-3].interm.intermNode);
             (yyval.interm.nodePair).node2 = (yyvsp[0].interm.intermTypedNode);
         }

@@ -1654,24 +1654,24 @@ condition
 
 iteration_statement
     : WHILE LEFT_PAREN {
-        context->symbolTable.push(); context->beginLoop(@1);
-        context->onLoopConditionBegin();
+        context->symbolTable.push(); context->beginLoop(ELoopWhile, @1);
+        context->onLoopConditionBegin(nullptr, @1);
     } condition {
-        context->onLoopConditionEnd($4);
+        context->onLoopConditionEnd($4, @4);
     } RIGHT_PAREN statement_no_new_scope {
         context->symbolTable.pop();
         $$ = context->addLoop(ELoopWhile, 0, $4, 0, $7, @1);
     }
     | DO {
-        context->beginLoop(@1);
+        context->beginLoop(ELoopDoWhile, @1);
         context->onDoLoopBegin();
     } statement_with_scope WHILE LEFT_PAREN {
         context->onDoLoopConditionBegin();
     } expression RIGHT_PAREN SEMICOLON {
         $$ = context->addLoop(ELoopDoWhile, 0, $7, 0, $3, @4);
     }
-    | FOR LEFT_PAREN { context->symbolTable.push(); context->beginLoop(@1); } for_init_statement {
-        context->onLoopConditionBegin();
+    | FOR LEFT_PAREN { context->symbolTable.push(); context->beginLoop(ELoopFor, @1); } for_init_statement {
+        context->onLoopConditionBegin($4, @4);
     } for_rest_statement RIGHT_PAREN statement_no_new_scope {
         context->symbolTable.pop();
         $$ = context->addLoop(ELoopFor, $4, $6.node1, reinterpret_cast<TIntermTyped*>($6.node2), $8, @1);
@@ -1699,15 +1699,15 @@ conditionopt
 
 for_rest_statement
     : conditionopt SEMICOLON {
-        context->onLoopConditionEnd($1);
-        context->onLoopContinueEnd(nullptr);
+        context->onLoopConditionEnd($1, @1);
+        context->onLoopContinueEnd(nullptr, @1);
         $$.node1 = $1;
         $$.node2 = 0;
     }
     | conditionopt SEMICOLON {
-        context->onLoopConditionEnd($1);
+        context->onLoopConditionEnd($1, @1);
     } expression {
-        context->onLoopContinueEnd($4);
+        context->onLoopContinueEnd($4, @4);
         $$.node1 = $1;
         $$.node2 = $4;
     }

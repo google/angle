@@ -26,7 +26,6 @@
 #include "compiler/translator/OutputTree.h"
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/SizeClipCullDistance.h"
-#include "compiler/translator/ValidateLimitations.h"
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/ValidateTypeSizeLimitations.h"
 #include "compiler/translator/ValidateVaryingLocations.h"
@@ -882,12 +881,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (shouldRunLoopAndIndexingValidation(compileOptions) &&
-        !ValidateLimitations(root, mShaderType, &mSymbolTable, &mDiagnostics))
-    {
-        return false;
-    }
-
     // Fold expressions that could not be folded before validation that was done as a part of
     // parsing.
     if (!FoldExpressions(this, root, &mDiagnostics))
@@ -1036,7 +1029,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    // Clamping uniform array bounds needs to happen after validateLimitations pass.
     if (compileOptions.clampIndirectArrayBounds)
     {
         if (!ClampIndirectIndices(this, root, &mSymbolTable))
@@ -1233,7 +1225,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    // Built-in function emulation needs to happen after validateLimitations pass.
     GetGlobalPoolAllocator()->lock();
     initBuiltInFunctionEmulator(&mBuiltInFunctionEmulator, compileOptions);
     GetGlobalPoolAllocator()->unlock();

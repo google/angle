@@ -39,6 +39,16 @@ namespace
 
 const int kWebGLMaxStructNesting = 4;
 
+bool ShouldEnforceESSL100LoopAndIndexingLimitations(ShShaderSpec spec,
+                                                    int shaderVersion,
+                                                    const ShCompileOptions &compileOptions)
+{
+    // If compiling an ESSL 1.00 shader for WebGL, or if its been requested through the API,
+    // validate loop and indexing as well (to verify that the shader only uses minimal functionality
+    // of ESSL 1.00 as in Appendix A of the spec).
+    return (IsWebGLBasedSpec(spec) && shaderVersion == 100) || compileOptions.validateLoopIndexing;
+}
+
 struct IsSamplerFunc
 {
     bool operator()(TBasicType type) { return IsSampler(type); }
@@ -346,6 +356,11 @@ bool ValidateFragColorAndFragData(GLenum shaderType,
     }
     return true;
 }
+
+bool IsESSL100ConstantExpression(TIntermNode *node)
+{
+    return node->getAsConstantUnion() != nullptr && node->getAsTyped()->getQualifier() == EvqConst;
+}
 }  // namespace
 
 // This tracks each binding point's current default offset for inheritance of subsequent
@@ -411,7 +426,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mDefaultBufferMatrixPacking(EmpColumnMajor),
       mDefaultBufferBlockStorage(sh::IsWebGLBasedSpec(spec) ? EbsStd140 : EbsShared),
       mDiagnostics(diagnostics),
-      mDirectiveHandler(ext, *mDiagnostics, mShaderVersion, mShaderType),
+      mDirectiveHandler(ext, *mDiagnostics, *this, mShaderType),
       mPreprocessor(mDiagnostics, &mDirectiveHandler, angle::pp::PreprocessorSettings(spec)),
       mScanner(nullptr),
       mMaxExpressionComplexity(static_cast<size_t>(options.limitExpressionComplexity
@@ -441,6 +456,8 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mDeclaringMain(false),
       mIsMainDeclared(false),
       mIsReturnVisitedInMain(false),
+      mValidateESSL100Limitations(
+          ShouldEnforceESSL100LoopAndIndexingLimitations(spec, mShaderVersion, options)),
       mGeometryShaderInputPrimitiveType(EptUndefined),
       mGeometryShaderOutputPrimitiveType(EptUndefined),
       mGeometryShaderInvocations(0),
@@ -461,6 +478,14 @@ TParseContext::TParseContext(TSymbolTable &symt,
 {}
 
 TParseContext::~TParseContext() {}
+
+void TParseContext::onShaderVersionDeclared(int version)
+{
+    mShaderVersion = version;
+    // Update cached decisions that depend on the shader version
+    mValidateESSL100Limitations = ShouldEnforceESSL100LoopAndIndexingLimitations(
+        mShaderSpec, mShaderVersion, mCompileOptions);
+}
 
 bool TParseContext::anyMultiviewExtensionAvailable()
 {
@@ -932,6 +957,11 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
     TIntermSymbol *symNode = node->getAsSymbolNode();
     if (message.empty() && symNode != nullptr)
     {
+        if (mValidateESSL100Limitations)
+        {
+            checkESSL100NoLoopSymbolAssign(symNode, line);
+        }
+
         symbolTable.markStaticUse(symNode->variable());
         return true;
     }
@@ -3068,21 +3098,338 @@ TIntermNode *TParseContext::addConditionInitializer(const TPublicType &pType,
     return nullptr;
 }
 
-void TParseContext::beginLoop(const TSourceLoc &line)
+void TParseContext::checkESSL100ForLoopInit(TIntermNode *init, const TSourceLoc &line)
+{
+    // The loop must be a `for` loop, and have the following form according to ESSL 100 spec,
+    // Appendix A:
+    //
+    //    for (type symbol = initializer; symbol op constant; symbol += constant)
+    //
+    // Validate the init statement here.
+    if (init == nullptr)
+    {
+        error(line, "Missing init declaration", "for");
+        return;
+    }
+
+    //
+    // init-declaration has the form:
+    //     type-specifier identifier = constant-expression
+    //
+    TIntermDeclaration *decl = init->getAsDeclarationNode();
+    if (decl == nullptr)
+    {
+        error(line, "Invalid init declaration", "for");
+        return;
+    }
+    TIntermSequence *declSeq = decl->getSequence();
+    if (declSeq->size() != 1)
+    {
+        error(line, "Invalid init declaration", "for");
+        return;
+    }
+    TIntermBinary *declInit = (*declSeq)[0]->getAsBinaryNode();
+    if (declInit == nullptr || declInit->getOp() != EOpInitialize)
+    {
+        error(line, "Invalid init declaration", "for");
+        return;
+    }
+    TIntermSymbol *symbol = declInit->getLeft()->getAsSymbolNode();
+    if (symbol == nullptr)
+    {
+        error(line, "Invalid init declaration", "for");
+        return;
+    }
+    // The loop index has type int or float.
+    TBasicType type = symbol->getBasicType();
+    if ((type != EbtInt && type != EbtUInt && type != EbtFloat) || !symbol->isScalar())
+    {
+        error(line, "Invalid type for loop index", getBasicString(type));
+        return;
+    }
+    // The loop index is initialized with constant expression.
+    if (!IsESSL100ConstantExpression(declInit->getRight()))
+    {
+        error(line, "Loop index cannot be initialized with non-constant expression",
+              symbol->getName());
+        return;
+    }
+
+    // Keep track of the loop symbol.  The loop symbol is not allowed to be modified in the body.
+    ASSERT(mControlFlow.back().type == ControlFlowType::Loop);
+    mControlFlow.back().forLoopSymbol = symbol->uniqueId();
+}
+
+void TParseContext::checkESSL100ForLoopCondition(TIntermNode *condition, const TSourceLoc &line)
+{
+    if (condition == nullptr)
+    {
+        error(line, "Missing condition", "for");
+        return;
+    }
+
+    // condition has the form:
+    //     loop_index relational_operator constant_expression
+    TIntermBinary *binOp = condition->getAsBinaryNode();
+    if (binOp == nullptr)
+    {
+        error(line, "Invalid condition", "for");
+        return;
+    }
+    // Loop index should be to the left of relational operator.
+    TIntermSymbol *symbol = binOp->getLeft()->getAsSymbolNode();
+    if (symbol == nullptr)
+    {
+        error(line, "Invalid condition", "for");
+        return;
+    }
+    ASSERT(mControlFlow.back().type == ControlFlowType::Loop);
+    if (symbol->uniqueId() != mControlFlow.back().forLoopSymbol)
+    {
+        error(line, "Expected loop index", symbol->getName());
+        return;
+    }
+    // Relational operator is one of: > >= < <= == or !=.
+    switch (binOp->getOp())
+    {
+        case EOpEqual:
+        case EOpNotEqual:
+        case EOpLessThan:
+        case EOpGreaterThan:
+        case EOpLessThanEqual:
+        case EOpGreaterThanEqual:
+            break;
+        default:
+            error(line, "Invalid relational operator", GetOperatorString(binOp->getOp()));
+            return;
+    }
+    // Loop index must be compared with a constant.
+    if (!IsESSL100ConstantExpression(binOp->getRight()))
+    {
+        error(line, "Loop index cannot be compared with non-constant expression",
+              symbol->getName());
+        return;
+    }
+}
+
+void TParseContext::checkESSL100ForLoopContinue(TIntermNode *statement, const TSourceLoc &line)
+{
+    if (statement == nullptr)
+    {
+        error(line, "Missing expression", "for");
+        return;
+    }
+
+    // for expression has one of the following forms:
+    //
+    //     loop_index++
+    //     loop_index--
+    //     loop_index += constant_expression
+    //     loop_index -= constant_expression
+    //     ++loop_index
+    //     --loop_index
+    //
+    // The last two forms are not specified in the spec, but we're assuming its an oversight.
+    TIntermUnary *unOp   = statement->getAsUnaryNode();
+    TIntermBinary *binOp = unOp ? nullptr : statement->getAsBinaryNode();
+
+    TOperator op            = EOpNull;
+    const TFunction *opFunc = nullptr;
+    TIntermSymbol *symbol   = nullptr;
+    if (unOp != nullptr)
+    {
+        op     = unOp->getOp();
+        opFunc = unOp->getFunction();
+        symbol = unOp->getOperand()->getAsSymbolNode();
+    }
+    else if (binOp != nullptr)
+    {
+        op     = binOp->getOp();
+        symbol = binOp->getLeft()->getAsSymbolNode();
+    }
+
+    // The operand must be loop index.
+    if (symbol == nullptr)
+    {
+        error(line, "Invalid expression", "for");
+        return;
+    }
+    ASSERT(mControlFlow.back().type == ControlFlowType::Loop);
+    if (symbol->uniqueId() != mControlFlow.back().forLoopSymbol)
+    {
+        error(line, "Expected loop index", symbol->getName());
+        return;
+    }
+
+    // The operator is one of: ++ -- += -=.
+    switch (op)
+    {
+        case EOpPostIncrement:
+        case EOpPostDecrement:
+        case EOpPreIncrement:
+        case EOpPreDecrement:
+            ASSERT(unOp != nullptr && binOp == nullptr);
+            break;
+        case EOpAddAssign:
+        case EOpSubAssign:
+            ASSERT(unOp == nullptr && binOp != nullptr);
+            break;
+        default:
+            if (BuiltInGroup::IsBuiltIn(op))
+            {
+                ASSERT(opFunc != nullptr);
+                error(line, "Invalid built-in call", opFunc->name().data());
+            }
+            else
+            {
+                error(line, "Invalid operator", GetOperatorString(op));
+            }
+            return;
+    }
+
+    // Loop index must be incremented/decremented with a constant.
+    if (binOp != nullptr)
+    {
+        if (!IsESSL100ConstantExpression(binOp->getRight()))
+        {
+            error(line, "Loop index cannot be modified by non-constant expression",
+                  symbol->getName());
+            return;
+        }
+    }
+
+    // After the continue statement is visited, mark the for loop symbol as needing to stay
+    // constant.
+    mControlFlow.back().isForLoopSymbolConstant = true;
+}
+
+bool TParseContext::isESSL100ConstantLoopSymbol(TIntermSymbol *symbol)
+{
+    ASSERT(symbol != nullptr);
+    const TSymbolUniqueId symbolUniqueId = symbol->uniqueId();
+
+    for (const ControlFlow &controlFlow : mControlFlow)
+    {
+        if (controlFlow.isForLoopSymbolConstant && symbolUniqueId == controlFlow.forLoopSymbol)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void TParseContext::checkESSL100NoLoopSymbolAssign(TIntermSymbol *symbol, const TSourceLoc &line)
+{
+    if (isESSL100ConstantLoopSymbol(symbol))
+    {
+        error(line, "Loop index cannot be statically assigned to within the body of the loop",
+              symbol->getName());
+    }
+}
+
+void TParseContext::checkESSL100ConstantIndex(TIntermTyped *index, const TSourceLoc &line)
+{
+    // According to ESSL 100 spec, Appendix A:
+    //
+    // > constant-index-expressions are a superset of constant-expressions.
+    // > Constant-index-expressions can include loop indices as defined in GLSL ES 1.0 spec,
+    // > Appendix A, section 4.
+    //
+    // > The following are constant-index-expressions:
+    // > - Constant expressions
+    // > - Loop indices as defined in section 4
+    // > - Expressions composed of both of the above
+    //
+    // To implement the above, all subnodes of index are visited:
+    //
+    // * If any are symbols, they must be a loop index.
+    // * Otherwise if they have no children, they must have a constant value.
+    // * No user function calls are allowed (every other forbidden function call ends up using a
+    //   symbol, such as texture2D())
+    //
+    // Since the expression complexity validation is not done yet (check against
+    // MaxExpressionComplexity), this operation is not done with recursion.
+    std::vector<TIntermTyped *> toInspect;
+    toInspect.push_back(index);
+
+    while (!toInspect.empty())
+    {
+        TIntermTyped *node = toInspect.back();
+        toInspect.pop_back();
+
+        if (node->getAsAggregate() && node->getAsAggregate()->isFunctionCall())
+        {
+            error(line, "Index expression cannot contain function calls", "[]");
+            return;
+        }
+
+        size_t childCount = node->getChildCount();
+        if (childCount == 0)
+        {
+            // If a symbol is used that's not const or a loop index, this expression is not allowed.
+            TIntermSymbol *symbol = node->getAsSymbolNode();
+            if (symbol != nullptr)
+            {
+                if (symbol->getQualifier() != EvqConst && !isESSL100ConstantLoopSymbol(symbol))
+                {
+                    error(line, "Index expression can only contain const or loop symbols",
+                          symbol->getName().data());
+                    return;
+                }
+            }
+            else if (!node->hasConstantValue())
+            {
+                error(line, "Index expression must be constant", "[]");
+                return;
+            }
+        }
+
+        for (size_t childIndex = 0; childIndex < childCount; ++childIndex)
+        {
+            toInspect.push_back(node->getChildNode(childIndex)->getAsTyped());
+        }
+    }
+}
+
+void TParseContext::beginLoop(TLoopType loopType, const TSourceLoc &line)
 {
     ControlFlow flow = {};
     flow.type        = ControlFlowType::Loop;
     mControlFlow.push_back(flow);
 
     checkNestingLevel(line);
+
+    // According to ESSL 100 spec, Appendix A, while and do-while don't need to be supported.
+    // WebGL forbids them, and so they must be rejected.
+    if (mValidateESSL100Limitations && loopType != ELoopFor)
+    {
+        error(line, "This type of loop is not allowed", loopType == ELoopWhile ? "while" : "do");
+    }
 }
 
-void TParseContext::onLoopConditionBegin() {}
-
-void TParseContext::onLoopConditionEnd(TIntermNode *condition) {}
-
-void TParseContext::onLoopContinueEnd(TIntermNode *statement)
+void TParseContext::onLoopConditionBegin(TIntermNode *init, const TSourceLoc &line)
 {
+    if (mValidateESSL100Limitations)
+    {
+        checkESSL100ForLoopInit(init, line);
+    }
+}
+
+void TParseContext::onLoopConditionEnd(TIntermNode *condition, const TSourceLoc &line)
+{
+    if (mValidateESSL100Limitations)
+    {
+        checkESSL100ForLoopCondition(condition, line);
+    }
+}
+
+void TParseContext::onLoopContinueEnd(TIntermNode *statement, const TSourceLoc &line)
+{
+    if (mValidateESSL100Limitations)
+    {
+        checkESSL100ForLoopContinue(statement, line);
+    }
+
     endStatementWithValue(statement);
 }
 
@@ -3110,6 +3457,7 @@ TIntermNode *TParseContext::addLoop(TLoopType type,
     {
         markStaticUseIfSymbol(expr);
     }
+
     // In case the loop body was not parsed as a block and contains a statement that simply refers
     // to a variable, we need to mark it as statically used.
     if (body)
@@ -5930,6 +6278,14 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         }
     }
 
+    // According to ESSL 100 spec, Appendix A, the index expression must be a
+    // constant-index-expression unless the operand is a uniform in a vertex shader.
+    if (mValidateESSL100Limitations &&
+        !(mShaderType == GL_VERTEX_SHADER && baseExpression->getQualifier() == EvqUniform))
+    {
+        checkESSL100ConstantIndex(indexExpression, location);
+    }
+
     markStaticUseIfSymbol(indexExpression);
     TIntermBinary *node = new TIntermBinary(EOpIndexIndirect, baseExpression, indexExpression);
     node->setLine(location);
@@ -7672,6 +8028,7 @@ TIntermTyped *TParseContext::addAssign(TOperator op,
         assignError(loc, "assign", left->getType(), right->getType());
         return left;
     }
+
     if (op != EOpAssign)
     {
         markStaticUseIfSymbol(left);

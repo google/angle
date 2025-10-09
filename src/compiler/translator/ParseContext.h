@@ -63,6 +63,7 @@ class TParseContext : angle::NonCopyable
     void *getScanner() const { return mScanner; }
     void setScanner(void *scanner) { mScanner = scanner; }
     int getShaderVersion() const { return mShaderVersion; }
+    void onShaderVersionDeclared(int version);
     sh::GLenum getShaderType() const { return mShaderType; }
     ShShaderSpec getShaderSpec() const { return mShaderSpec; }
     int numErrors() const { return mDiagnostics->numErrors(); }
@@ -241,10 +242,10 @@ class TParseContext : angle::NonCopyable
                                          TIntermTyped *initializer,
                                          const TSourceLoc &loc);
 
-    void beginLoop(const TSourceLoc &line);
-    void onLoopConditionBegin();
-    void onLoopConditionEnd(TIntermNode *condition);
-    void onLoopContinueEnd(TIntermNode *statement);
+    void beginLoop(TLoopType loopType, const TSourceLoc &line);
+    void onLoopConditionBegin(TIntermNode *init, const TSourceLoc &line);
+    void onLoopConditionEnd(TIntermNode *condition, const TSourceLoc &line);
+    void onLoopContinueEnd(TIntermNode *statement, const TSourceLoc &line);
     void onDoLoopBegin();
     void onDoLoopConditionBegin();
     TIntermNode *addLoop(TLoopType type,
@@ -712,6 +713,13 @@ class TParseContext : angle::NonCopyable
                                                               const TSourceLoc &location,
                                                               bool insertParametersToSymbolTable);
 
+    void checkESSL100ForLoopInit(TIntermNode *init, const TSourceLoc &line);
+    void checkESSL100ForLoopCondition(TIntermNode *condition, const TSourceLoc &line);
+    void checkESSL100ForLoopContinue(TIntermNode *statement, const TSourceLoc &line);
+    void checkESSL100NoLoopSymbolAssign(TIntermSymbol *symbol, const TSourceLoc &line);
+    void checkESSL100ConstantIndex(TIntermTyped *index, const TSourceLoc &line);
+    bool isESSL100ConstantLoopSymbol(TIntermSymbol *symbol);
+
     void setAtomicCounterBindingDefaultOffset(const TPublicType &declaration,
                                               const TSourceLoc &location);
 
@@ -866,11 +874,19 @@ class TParseContext : angle::NonCopyable
     // * That case is within switch, continue is within loop, and break is within loop or switch
     // * That the shader statements don't get too nested (based on `MaxStatementDepth`)
     // * In tessellation control shaders, barrier() cannot be called in divergent control flow.
+    // * ESSL 1.0 limits restricts the shape of `for` loops (see Appendix A)
+    // * ESSL 1.0 limits array indices to `constant-index-expressions` (see Appendix A)
     struct ControlFlow
     {
         ControlFlowType type;
+
+        // Used when validating ESSL 1.0 limitations for `for` loops.
+        TSymbolUniqueId forLoopSymbol = TSymbolUniqueId::kInvalid();
+        bool isForLoopSymbolConstant  = false;
     };
     std::vector<ControlFlow> mControlFlow;
+    // Whether ESSL 1.0 limitations in Appendix A must be enforced.
+    bool mValidateESSL100Limitations;
 
     // Track the state of each atomic counter binding.
     std::map<int, AtomicCounterBindingState> mAtomicCounterBindingStates;
