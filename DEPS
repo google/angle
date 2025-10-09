@@ -307,6 +307,7 @@ vars = {
   'checkout_angle_restricted_trace_kingshot': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_klondike_adventures': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_knives_out': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_lands_of_jail': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_last_shelter_survival': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_last_war_survival_game': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_last_z_survival_shooter': 'checkout_angle_restricted_traces',
@@ -2934,6 +2935,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_knives_out',
+  },
+  'src/tests/restricted_traces/lands_of_jail': {
+      'packages': [
+        {
+            'package': 'angle/traces/lands_of_jail',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_lands_of_jail',
   },
   'src/tests/restricted_traces/last_shelter_survival': {
       'packages': [
