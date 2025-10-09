@@ -257,17 +257,18 @@ CompiledShaderState::CompiledShaderState(gl::ShaderType type)
 
 CompiledShaderState::~CompiledShaderState() {}
 
+void CompiledShaderState::buildPassthroughCompiledShaderState(const std::string &inputShaderSource)
+{
+    translatedSource = inputShaderSource;
+}
+
 void CompiledShaderState::buildCompiledShaderState(const ShHandle compilerHandle,
-                                                   const std::string &inputShaderSource,
                                                    ShShaderOutput outputType)
 {
     switch (outputType)
     {
         case SH_SPIRV_VULKAN_OUTPUT:
             compiledBinary = sh::GetObjectBinaryBlob(compilerHandle);
-            break;
-        case SH_NULL_OUTPUT:
-            translatedSource = inputShaderSource;
             break;
         default:
             translatedSource = sh::GetObjectCode(compilerHandle);

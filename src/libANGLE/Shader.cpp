@@ -202,7 +202,7 @@ angle::Result CompileTask::compileImpl()
 
 angle::Result CompileTask::postTranslate()
 {
-    mCompiledState->buildCompiledShaderState(mCompilerHandle, mSource, mOutputType);
+    mCompiledState->buildCompiledShaderState(mCompilerHandle, mOutputType);
 
     ASSERT(!mCompiledState->translatedSource.empty() || !mCompiledState->compiledBinary.empty());
 
@@ -690,6 +690,12 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
         }
     }
 
+    if (context->getState().usesPassthroughShaders())
+    {
+        passthroughCompile(context, &options, resultExpectancy);
+        return;
+    }
+
     mBoundCompiler.set(context, compiler);
     ASSERT(mBoundCompiler.get());
 
@@ -954,6 +960,30 @@ bool Shader::loadBinaryImpl(const Context *context,
     mCompileJob->compileEvent = std::make_unique<CompileEvent>(compileTask, compileEvent);
 
     return true;
+}
+
+void Shader::passthroughCompile(const Context *context,
+                                ShCompileOptions *compileOptions,
+                                angle::JobResultExpectancy resultExpectancy)
+{
+    mState.mCompiledState = std::make_shared<CompiledShaderState>(mState.getShaderType());
+    mState.mCompiledState->buildPassthroughCompiledShaderState(mState.mSource);
+
+    mState.mCompileStatus = CompileStatus::COMPILE_REQUESTED;
+
+    // Ask the backend to prepare the translate task
+    std::shared_ptr<rx::ShaderTranslateTask> translateTask =
+        mImplementation->compile(context, compileOptions);
+
+    std::shared_ptr<CompileTask> compileTask(new CompileTask(
+        context->getFrontendFeatures(), mState.mCompiledState, std::move(translateTask)));
+
+    const angle::JobThreadSafety threadSafety = GetTranslateTaskThreadSafety(context);
+    std::shared_ptr<angle::WaitableEvent> compileEvent =
+        context->postCompileLinkTask(compileTask, threadSafety, resultExpectancy);
+
+    mCompileJob               = std::make_shared<CompileJob>();
+    mCompileJob->compileEvent = std::make_unique<CompileEvent>(compileTask, compileEvent);
 }
 
 void Shader::setShaderKey(const Context *context,

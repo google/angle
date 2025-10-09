@@ -52,8 +52,8 @@ struct CompiledShaderState
     ~CompiledShaderState();
 
     void buildCompiledShaderState(const ShHandle compilerHandle,
-                                  const std::string &inputShaderSource,
                                   ShShaderOutput outputType);
+    void buildPassthroughCompiledShaderState(const std::string &inputShaderSource);
 
     void serialize(gl::BinaryOutputStream &stream) const;
     void deserialize(gl::BinaryInputStream &stream);

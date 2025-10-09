@@ -927,7 +927,6 @@ void Program::setupExecutableForLink(const Context *context)
         mState.mShaderCompileJobs[shaderType] = std::move(compileJob);
         mState.mAttachedShaders[shaderType]   = std::move(shaderCompiledState);
     }
-    mProgram->prepareForLink(shaderImpls);
 
     const angle::FrontendFeatures &frontendFeatures = context->getFrontendFeatures();
     if (frontendFeatures.dumpShaderSource.enabled)
@@ -951,6 +950,13 @@ void Program::setupExecutableForLink(const Context *context)
     mState.mExecutable->mPod.isSeparable                 = mState.mSeparable;
 
     mState.mInfoLog.reset();
+
+    mProgram->prepareForLink(shaderImpls);
+
+    if (context->getState().usesPassthroughShaders())
+    {
+        mProgram->prepareForPassthroughLink(&mState.mAttachedShaders);
+    }
 }
 
 void Program::syncExecutableOnSuccessfulLink()

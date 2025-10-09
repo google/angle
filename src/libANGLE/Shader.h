@@ -209,6 +209,10 @@ class Shader final : angle::NonCopyable, public LabeledObject
                         angle::JobResultExpectancy resultExpectancy,
                         bool generatedWithOfflineCompiler);
 
+    void passthroughCompile(const Context *context,
+                            ShCompileOptions *compileOptions,
+                            angle::JobResultExpectancy resultExpectancy);
+
     // Compute a key to uniquely identify the shader object in memory caches.
     void setShaderKey(const Context *context,
                       const ShCompileOptions &compileOptions,

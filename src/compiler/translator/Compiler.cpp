@@ -767,7 +767,6 @@ bool TCompiler::getShaderBinary(const ShHandle compilerHandle,
     gl::CompiledShaderState state(shaderType);
     state.buildCompiledShaderState(
         compilerHandle,
-        gl::JoinShaderSources(static_cast<GLsizei>(numStrings), shaderStrings, nullptr),
         mOutputType);
 
     stream.writeBytes(
