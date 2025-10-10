@@ -1695,7 +1695,6 @@ bool TCompiler::initCallDag(TIntermNode *root)
     {
         case CallDAG::INITDAG_SUCCESS:
             return true;
-        case CallDAG::INITDAG_RECURSION:
         case CallDAG::INITDAG_UNDEFINED:
             // Error message has already been written out.
             ASSERT(mDiagnostics.numErrors() > 0);

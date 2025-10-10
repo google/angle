@@ -720,6 +720,8 @@ class TParseContext : angle::NonCopyable
     void checkESSL100ConstantIndex(TIntermTyped *index, const TSourceLoc &line);
     bool isESSL100ConstantLoopSymbol(TIntermSymbol *symbol);
 
+    void checkCallGraph();
+
     void setAtomicCounterBindingDefaultOffset(const TPublicType &declaration,
                                               const TSourceLoc &location);
 
@@ -795,9 +797,8 @@ class TParseContext : angle::NonCopyable
     int mShaderVersion;
     TIntermBlock *mTreeRoot;  // root of parse tree being created
     int mStructNestingLevel;  // incremented while parsing a struct declaration
-    const TType
-        *mCurrentFunctionType;    // the return type of the function that's currently being parsed
-    bool mFunctionReturnsValue;   // true if a non-void function has a return
+    const TFunction *mCurrentFunction;   // the function that's currently being parsed
+    bool mFunctionReturnsValue;          // true if a non-void function has a return
     bool mFragmentPrecisionHighOnESSL1;  // true if highp precision is supported when compiling
                                          // ESSL1.
     bool mEarlyFragmentTestsSpecified;   // true if layout(early_fragment_tests) in; is specified.
@@ -865,7 +866,7 @@ class TParseContext : angle::NonCopyable
 
     // keeps track whether we are declaring / defining the function main().
     bool mDeclaringMain;
-    bool mIsMainDeclared;
+    const TFunction *mMainFunction;
     // Whether `return` has been observed in `main()`.  Used to validate barrier() in tessellation
     // control shaders which are not allowed after `return`.
     bool mIsReturnVisitedInMain;
@@ -906,6 +907,9 @@ class TParseContext : angle::NonCopyable
         const TVariable *loopVariable;
     };
     TVector<PossiblyInfiniteLoop> mPossiblyInfiniteLoops;
+
+    // Track the static call graph.  Static recursion is disallowed by GLSL.
+    TUnorderedMap<const TFunction *, TUnorderedSet<const TFunction *>> mCallGraph;
 
     // Track the state of each atomic counter binding.
     std::map<int, AtomicCounterBindingState> mAtomicCounterBindingStates;

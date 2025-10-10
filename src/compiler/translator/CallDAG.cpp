@@ -211,8 +211,8 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
                 // in the chain printed in the info log.
                 if (callee->visiting)
                 {
-                    errorStream << "Recursive function call in the following call chain:";
-                    result = INITDAG_RECURSION;
+                    // This is a recursion, but that's already checked and rejected by the parser.
+                    ASSERT(false);
                     break;
                 }
             }

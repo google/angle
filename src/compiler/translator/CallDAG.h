@@ -48,7 +48,6 @@ class CallDAG : angle::NonCopyable
     enum InitResult
     {
         INITDAG_SUCCESS,
-        INITDAG_RECURSION,
         INITDAG_UNDEFINED,
     };
 

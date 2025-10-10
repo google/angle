@@ -411,7 +411,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mShaderVersion(100),
       mTreeRoot(nullptr),
       mStructNestingLevel(0),
-      mCurrentFunctionType(nullptr),
+      mCurrentFunction(nullptr),
       mFunctionReturnsValue(false),
       mFragmentPrecisionHighOnESSL1(false),
       mEarlyFragmentTestsSpecified(false),
@@ -454,7 +454,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMaxFunctionParameters(resources.MaxFunctionParameters),
       mDeclaringFunction(false),
       mDeclaringMain(false),
-      mIsMainDeclared(false),
+      mMainFunction(nullptr),
       mIsReturnVisitedInMain(false),
       mValidateESSL100Limitations(
           ShouldEnforceESSL100LoopAndIndexingLimitations(spec, mShaderVersion, options)),
@@ -5221,7 +5221,7 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
     }
 
     // Check that non-void functions have at least one return statement.
-    if (mCurrentFunctionType->getBasicType() != EbtVoid && !mFunctionReturnsValue)
+    if (mCurrentFunction->getReturnType().getBasicType() != EbtVoid && !mFunctionReturnsValue)
     {
         error(location, "Function does not return a value",
               functionPrototype->getFunction()->name());
@@ -5243,10 +5243,12 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
         new TIntermFunctionDefinition(functionPrototype, functionBody);
     functionNode->setLine(location);
 
+    ASSERT(functionPrototype->getFunction() == mCurrentFunction);
     if (mDeclaringMain)
     {
-        mIsMainDeclared = true;
+        mMainFunction = mCurrentFunction;
     }
+    mCurrentFunction = nullptr;
 
     symbolTable.pop();
     return functionNode;
@@ -5266,7 +5268,7 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
     }
 
     // Remember the return type for later checking for return statements.
-    mCurrentFunctionType  = &(function->getReturnType());
+    mCurrentFunction      = function;
     mFunctionReturnsValue = false;
 
     *prototypeOut = createPrototypeNodeFromFunction(*function, location, true);
@@ -8187,7 +8189,7 @@ TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
             }
             break;
         case EOpReturn:
-            if (mCurrentFunctionType->getBasicType() != EbtVoid)
+            if (mCurrentFunction->getReturnType().getBasicType() != EbtVoid)
             {
                 error(loc, "non-void function must return a value", "return");
             }
@@ -8228,11 +8230,11 @@ TIntermBranch *TParseContext::addBranch(TOperator op,
         markStaticUseIfSymbol(expression);
         ASSERT(op == EOpReturn);
         mFunctionReturnsValue = true;
-        if (mCurrentFunctionType->getBasicType() == EbtVoid)
+        if (mCurrentFunction->getReturnType().getBasicType() == EbtVoid)
         {
             error(loc, "void function cannot return a value", "return");
         }
-        else if (*mCurrentFunctionType != expression->getType())
+        else if (mCurrentFunction->getReturnType() != expression->getType())
         {
             error(loc, "function return is not matching type:", "return");
         }
@@ -8717,6 +8719,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCallImpl(TFunctionLookup *
             callNode->setLine(loc);
             checkImageMemoryAccessForUserDefinedFunctions(fnCandidate, callNode);
             functionCallRValueLValueErrorCheck(fnCandidate, callNode);
+            mCallGraph[mCurrentFunction].insert(fnCandidate);
             return callNode;
         }
 
@@ -8893,23 +8896,113 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
 
 void TParseContext::endStatementWithValue(TIntermNode *statement) {}
 
+void TParseContext::checkCallGraph()
+{
+    // Verify that the call graph does not contain a loop.
+    enum class VisitState
+    {
+        NotVisited,
+        Visiting,
+        Visited,
+    };
+    struct Visit
+    {
+        // Note: Can't use default initializer because of msvc.
+        Visit() : state(VisitState::NotVisited) {}
+        VisitState state;
+    };
+    TUnorderedMap<const TFunction *, Visit> visitState;
+
+    TVector<const TFunction *> visitStack;
+    visitStack.reserve(mCallGraph.size());
+
+    // Visit all the functions; even if a function is unreachable, it must still result in a compile
+    // error.
+    for (auto iter : mCallGraph)
+    {
+        visitStack.push_back(iter.first);
+    }
+
+    auto checkRecursion = [this, &visitState, &visitStack](const TFunction *function,
+                                                           const TFunction *callee) -> bool {
+        if (visitState[callee].state == VisitState::Visiting)
+        {
+            std::stringstream errorStream = sh::InitializeStream<std::stringstream>();
+            errorStream << "Recursive function call in the following call chain: "
+                        << callee->name();
+            if (callee != function)
+            {
+                for (auto caller = visitStack.rbegin(); caller != visitStack.rend(); ++caller)
+                {
+                    if (visitState[*caller].state != VisitState::Visiting)
+                    {
+                        continue;
+                    }
+
+                    errorStream << " <- " << (*caller)->name();
+                    if (*caller == callee)
+                    {
+                        break;
+                    }
+                }
+            }
+            mDiagnostics->globalError(errorStream.str().c_str());
+            visitState[callee].state = VisitState::Visited;
+            return false;
+        }
+        return true;
+    };
+
+    while (!visitStack.empty())
+    {
+        const TFunction *function = visitStack.back();
+        visitStack.pop_back();
+
+        Visit &visit = visitState[function];
+
+        // If node is already visited, ignore it as it's already checked.
+        if (visit.state == VisitState::Visited)
+        {
+            continue;
+        }
+        // If the node is done being visited, mark it so.
+        if (visit.state == VisitState::Visiting)
+        {
+            visit.state = VisitState::Visited;
+            continue;
+        }
+
+        // Add the callees to the stack.
+        visit.state = VisitState::Visiting;
+        visitStack.push_back(function);
+
+        for (const TFunction *callee : mCallGraph[function])
+        {
+            // If any is being visited, that's a recursion!
+            if (!checkRecursion(function, callee))
+            {
+                break;
+            }
+
+            visitStack.push_back(callee);
+        }
+    }
+}
+
 bool TParseContext::postParseChecks()
 {
     // If parse failed, we shouldn't reach here.
     ASSERT(mTreeRoot != nullptr);
 
-    if (!mIsMainDeclared)
+    if (mMainFunction == nullptr)
     {
         error(kNoSourceLoc, "Missing main()", "");
         return false;
     }
 
-    bool success = true;
-
     for (TType *type : mDeferredArrayTypesToSize)
     {
         error(kNoSourceLoc, "Unsized global array type: ", type->getBasicString());
-        success = false;
     }
 
     // Clip/cull distance validation now that the size can be determined.
@@ -8919,7 +9012,6 @@ bool TParseContext::postParseChecks()
               "The gl_ClipDistance array must be sized by the shader either redeclaring it with a "
               "size or indexing it only with constant integral expressions",
               "gl_ClipDistance");
-        success = false;
     }
 
     if (mCullDistanceInfo.size == 0 && mCullDistanceInfo.hasNonConstIndex)
@@ -8928,7 +9020,6 @@ bool TParseContext::postParseChecks()
               "The gl_CullDistance array must be sized by the shader either redeclaring it with a "
               "size or indexing it only with constant integral expressions",
               "gl_CullDistance");
-        success = false;
     }
 
     const unsigned int usedClipDistances = getClipDistanceArraySize();
@@ -8942,7 +9033,6 @@ bool TParseContext::postParseChecks()
     {
         error(mCullDistanceInfo.firstEncounter, "Cull distance functionality is not available",
               "gl_CullDistance");
-        success = false;
     }
 
     if (static_cast<int>(combinedClipAndCullDistances) > mMaxCombinedClipAndCullDistances)
@@ -8952,7 +9042,6 @@ bool TParseContext::postParseChecks()
                   "gl_MaxCombinedClipAndCullDistances ("
                << combinedClipAndCullDistances << " > " << mMaxCombinedClipAndCullDistances << ")";
         error(mClipDistanceInfo.firstEncounter, strstr.str().c_str(), "gl_ClipDistance");
-        success = false;
     }
 
     if (mClipDistanceInfo.hasArrayLengthMethodCall && usedClipDistances == 0)
@@ -8961,7 +9050,6 @@ bool TParseContext::postParseChecks()
               "The length() method cannot be called on gl_ClipDistance that is not "
               "runtime sized and also has not yet been explicitly sized",
               "gl_ClipDistance");
-        success = false;
     }
     if (mCullDistanceInfo.hasArrayLengthMethodCall && usedCullDistances == 0)
     {
@@ -8969,13 +9057,9 @@ bool TParseContext::postParseChecks()
               "The length() method cannot be called on gl_CullDistance that is not "
               "runtime sized and also has not yet been explicitly sized",
               "gl_CullDistance");
-        success = false;
     }
 
-    if (!ValidateFragColorAndFragData(mShaderType, mShaderVersion, symbolTable, mDiagnostics))
-    {
-        success = false;
-    }
+    ValidateFragColorAndFragData(mShaderType, mShaderVersion, symbolTable, mDiagnostics);
 
     if (mCompileOptions.rejectWebglShadersWithUndefinedBehavior)
     {
@@ -8987,12 +9071,13 @@ bool TParseContext::postParseChecks()
                 mConstantTrueVariables.end())
             {
                 error(loop.line, "Infinite loop detected in the shader", loop.loopVariable->name());
-                success = false;
             }
         }
     }
 
-    return success;
+    checkCallGraph();
+
+    return numErrors() == 0;
 }
 
 //
