@@ -740,6 +740,7 @@ class TParseContext : angle::NonCopyable
         Switch,
     };
     bool isNestedIn(ControlFlowType type) const;
+    void popControlFlow();
 
     // Certain operations become illegal only iff the shader declares pixel local storage uniforms.
     enum class PLSIllegalOperations
@@ -876,6 +877,7 @@ class TParseContext : angle::NonCopyable
     // * In tessellation control shaders, barrier() cannot be called in divergent control flow.
     // * ESSL 1.0 limits restricts the shape of `for` loops (see Appendix A)
     // * ESSL 1.0 limits array indices to `constant-index-expressions` (see Appendix A)
+    // * Rejection of obvious infinite loops with WebGL.
     struct ControlFlow
     {
         ControlFlowType type;
@@ -883,10 +885,27 @@ class TParseContext : angle::NonCopyable
         // Used when validating ESSL 1.0 limitations for `for` loops.
         TSymbolUniqueId forLoopSymbol = TSymbolUniqueId::kInvalid();
         bool isForLoopSymbolConstant  = false;
+
+        // Used to detect and reject infinite loops with WebGL.
+        TSourceLoc loopLocation                          = kNoSourceLoc;
+        bool isLoopConditionConstantTrue                 = false;
+        const TVariable *loopConditionConstantTrueSymbol = nullptr;
+        bool hasBreak                                    = false;
+        bool hasReturn                                   = false;
     };
     std::vector<ControlFlow> mControlFlow;
     // Whether ESSL 1.0 limitations in Appendix A must be enforced.
     bool mValidateESSL100Limitations;
+    // Whether the variable is initialized to true, and never modified.  If this is used as a loop
+    // variable, where the loop doesn't have break or return, at the end of parse we can detect
+    // these loops as infinite loop.
+    TUnorderedSet<TSymbolUniqueId> mConstantTrueVariables;
+    struct PossiblyInfiniteLoop
+    {
+        TSourceLoc line;
+        const TVariable *loopVariable;
+    };
+    TVector<PossiblyInfiniteLoop> mPossiblyInfiniteLoops;
 
     // Track the state of each atomic counter binding.
     std::map<int, AtomicCounterBindingState> mAtomicCounterBindingStates;

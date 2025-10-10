@@ -4735,6 +4735,8 @@ class WebGL2GLSLTest : public GLSLTest
 {
   protected:
     WebGL2GLSLTest() { setWebGLCompatibilityEnabled(true); }
+
+    void testInfiniteLoop(const char *fs);
 };
 
 TEST_P(WebGLGLSLTest, MaxVaryingVec4PlusFragCoord)
@@ -9803,38 +9805,26 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 }
 
-// Test that basic infinite loops are either rejected or are pruned in WebGL
-TEST_P(WebGL2GLSLTest, BasicInfiniteLoop)
+void WebGL2GLSLTest::testInfiniteLoop(const char *fs)
 {
-    constexpr char kFS[] = R"(#version 300 es
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, fs);
+    if (getEGLWindow()->isFeatureEnabled(Feature::RejectWebglShadersWithUndefinedBehavior))
+    {
+        EXPECT_EQ(0u, shader);
+    }
+    else
+    {
+        EXPECT_NE(0u, shader);
+    }
+}
+
+// Test that infinite loop with while(true) is rejected
+TEST_P(WebGL2GLSLTest, InfiniteLoopWhileTrue)
+{
+    testInfiniteLoop(R"(#version 300 es
 precision highp float;
 uniform uint zero;
 out vec4 color;
-
-bool globalConstantVariable = true;
-
-float f()
-{
-    // Should not be pruned
-    while (true)
-    {
-        // Should not be pruned
-        for (int i = 0; true; ++i)
-        {
-            if (zero < 10u)
-            {
-                switch (zero)
-                {
-                    case 0u:
-                        // Loops should be pruned because of this `return`.
-                        return 0.7;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-}
 
 void main()
 {
@@ -9842,10 +9832,7 @@ void main()
     float g = 1.;
     float b = 0.;
 
-    bool localConstantVariable = true;
-    bool localVariable = true;
-
-    // Should be pruned
+    // Infinite loop
     while (true)
     {
         r += 0.1;
@@ -9855,18 +9842,191 @@ void main()
         }
     }
 
+    color = vec4(r, g, b, 1);
+})");
+}
+
+// Test that infinite loop with for(;true;) is rejected
+TEST_P(WebGL2GLSLTest, InfiniteLoopForTrue)
+{
+    testInfiniteLoop(R"(#version 300 es
+precision highp float;
+uniform uint zero;
+out vec4 color;
+
+void main()
+{
+    float r = 0.;
+    float g = 1.;
+    float b = 0.;
+
+    // Infinite loop
+    for (;!false;)
+    {
+        r += 0.1;
+    }
+
+    color = vec4(r, g, b, 1);
+})");
+}
+
+// Test that infinite loop with do{} while(true) is rejected
+TEST_P(WebGL2GLSLTest, InfiniteLoopDoWhileTrue)
+{
+    testInfiniteLoop(R"(#version 300 es
+precision highp float;
+uniform uint zero;
+out vec4 color;
+
+void main()
+{
+    float r = 0.;
+    float g = 1.;
+    float b = 0.;
+
+    // Infinite loop
+    do
+    {
+        r += 0.1;
+        switch (uint(r))
+        {
+            case 0:
+                g += 0.1;
+                break;
+            default:
+                b += 0.1;
+                continue;
+        }
+    } while (true);
+
+    color = vec4(r, g, b, 1);
+})");
+}
+
+// Test that infinite loop with constant local variable is rejected
+TEST_P(WebGL2GLSLTest, InfiniteLoopLocalVariable)
+{
+    testInfiniteLoop(R"(#version 300 es
+precision highp float;
+uniform uint zero;
+out vec4 color;
+
+void main()
+{
+    float r = 0.;
+    float g = 1.;
+    float b = 0.;
+
+    bool localConstTrue = true;
+
+    // Infinite loop
+    do
+    {
+        r += 0.1;
+        switch (uint(r))
+        {
+            case 0:
+                g += 0.1;
+                break;
+            default:
+                b += 0.1;
+                continue;
+        }
+    } while (localConstTrue);
+
+    color = vec4(r, g, b, 1);
+})");
+}
+
+// Test that infinite loop with global variable is rejected
+TEST_P(WebGL2GLSLTest, InfiniteLoopGlobalVariable)
+{
+    testInfiniteLoop(R"(#version 300 es
+precision highp float;
+uniform uint zero;
+out vec4 color;
+
+bool globalConstTrue = true;
+
+void main()
+{
+    float r = 0.;
+    float g = 1.;
+    float b = 0.;
+
+    // Infinite loop
+    do
+    {
+        r += 0.1;
+        switch (uint(r))
+        {
+            case 0:
+                g += 0.1;
+                break;
+            default:
+                b += 0.1;
+                continue;
+        }
+    } while (globalConstTrue);
+
+    color = vec4(r, g, b, 1);
+})");
+}
+
+// Basic test that loops are not mistakenly considered infinite loops.
+TEST_P(WebGL2GLSLTest, NotInfiniteLoop)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform uint zero;
+out vec4 color;
+
+float f()
+{
+    // Not infinite loop
+    while (true)
+    {
+        // Not infinite loop
+        for (int i = 0; true; ++i)
+        {
+            if (zero < 10u)
+            {
+                switch (zero)
+                {
+                    case 0u:
+                        // Loops are not infinite because of this `return`.
+                        return 0.7;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+}
+
+void writeFalse(out bool v)
+{
+    v = false;
+}
+
+bool globalConstantVariable = true;
+
+void main()
+{
+    float r = 0.;
+    float g = 1.;
+    float b = 0.;
+
+    bool localConstantVariable = true;
+    bool localVariable = true;
+    bool localVariable2 = true;
+
     if (zero != 0u)
     {
         localVariable = false;
     }
 
-    // Should be pruned
-    while (localConstantVariable)
-    {
-        g -= 0.1;
-    }
-
-    // Should not be pruned
+    // Not infinite loop because of break
     while (localConstantVariable)
     {
         b += 0.3;
@@ -9874,27 +10034,26 @@ void main()
         if (g > 0.4) { break; }
     }
 
-    // Should be pruned
-    for (; globalConstantVariable; )
+    // Not infinite loop because of break
+    while (globalConstantVariable)
     {
-        g -= 0.1;
+        b += 0.2;
 
-        switch (zero)
-        {
-            case 0u:
-                r = 0.4;
-                break;
-            default:
-                r = 0.2;
-                break;
-        }
+        if (g > 0.4) { break; }
     }
 
-    // Should not be pruned
+    // Not infinite loop because variable gets modified.
     while (localVariable)
     {
         b += 0.2;
         localVariable = !localVariable;
+    }
+
+    // Not infinite loop because variable gets modified.
+    while (localVariable2)
+    {
+        b += 0.1;
+        writeFalse(localVariable2);
     }
 
     r = f();
@@ -9902,21 +10061,52 @@ void main()
     color = vec4(r, g, b, 1);
 })";
 
-    if (getEGLWindow()->isFeatureEnabled(Feature::RejectWebglShadersWithUndefinedBehavior))
-    {
-        GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
-        EXPECT_EQ(0u, shader);
-    }
-    else
-    {
-        ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
-        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
-        EXPECT_PIXEL_NEAR(0, 0, 178, 255, 127, 255, 1);
-    }
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_NEAR(0, 0, 178, 255, 204, 255, 1);
 }
 
-// Test that while(true) loops with break/return are not rejected
-TEST_P(WebGL2GLSLTest, NotInfiniteLoop)
+// Test that while(global) loops are not rejected if global is modified in a function call whose
+// definition is after the loop.
+TEST_P(WebGL2GLSLTest, NotInfiniteLoopIfGlobalIsModified)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform uint zero;
+out vec4 color;
+
+bool globalVariable = true;
+
+// resetGlobal modifies globalVariable, but its definition is not visible while parsing the loop
+void resetGlobal();
+
+void main()
+{
+    float r = 0.;
+    float g = 1.;
+    float b = 0.;
+
+    while (globalVariable)
+    {
+        r += 0.5;
+        resetGlobal();
+    }
+
+    color = vec4(r, g, b, 1);
+}
+
+void resetGlobal()
+{
+    globalVariable = false;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_NEAR(0, 0, 127, 255, 0, 255, 1);
+}
+
+// Test that while(true) loops with break or return are not rejected
+TEST_P(WebGL2GLSLTest, NotInfiniteLoopIfBreakOrReturn)
 {
     constexpr char kFS[] = R"(#version 300 es
 precision highp float;

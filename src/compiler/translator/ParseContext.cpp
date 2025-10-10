@@ -961,6 +961,11 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         {
             checkESSL100NoLoopSymbolAssign(symNode, line);
         }
+        if (mCompileOptions.rejectWebglShadersWithUndefinedBehavior)
+        {
+            // For simplicity, if a variable is written to, assume it's no longer always true.
+            mConstantTrueVariables.erase(symNode->variable().uniqueId());
+        }
 
         symbolTable.markStaticUse(symNode->variable());
         return true;
@@ -3050,13 +3055,24 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
         return false;
     }
 
-    if (qualifier == EvqConst)
+    const TConstantUnion *initializerConstArray = initializer->getConstantValue();
+    if (initializerConstArray)
     {
-        // Save the constant folded value to the variable if possible.
-        const TConstantUnion *constArray = initializer->getConstantValue();
-        if (constArray)
+        if (mCompileOptions.rejectWebglShadersWithUndefinedBehavior)
         {
-            variable->shareConstPointer(constArray);
+            // If this is `bool variable = true`, track it.  If it's ever used as l-value, it's
+            // removed from this list.  At the end of parse, if a variable is in this list, it's set
+            // to true and never modified.
+            if (type->isScalarBool() && initializerConstArray->getBConst())
+            {
+                mConstantTrueVariables.insert(variable->uniqueId());
+            }
+        }
+
+        // Save the constant folded value to the variable if possible.
+        if (qualifier == EvqConst)
+        {
+            variable->shareConstPointer(initializerConstArray);
             if (initializer->getType().canReplaceWithConstantUnion())
             {
                 ASSERT(*initNode == nullptr);
@@ -3391,6 +3407,60 @@ void TParseContext::checkESSL100ConstantIndex(TIntermTyped *index, const TSource
     }
 }
 
+void TParseContext::popControlFlow()
+{
+    ASSERT(!mControlFlow.empty());
+    const ControlFlow justEndedControlFlow = mControlFlow.back();
+    mControlFlow.pop_back();
+
+    if (mCompileOptions.rejectWebglShadersWithUndefinedBehavior)
+    {
+        // Carry information about whether break or return are present in the block to the parent
+        // block.
+        if (!mControlFlow.empty())
+        {
+            mControlFlow.back().hasReturn =
+                mControlFlow.back().hasReturn || justEndedControlFlow.hasReturn;
+            // `break` in an if statement also break out of the outer construct.
+            if (justEndedControlFlow.type == ControlFlowType::If)
+            {
+                mControlFlow.back().hasBreak =
+                    mControlFlow.back().hasBreak || justEndedControlFlow.hasBreak;
+            }
+        }
+
+        if (justEndedControlFlow.type != ControlFlowType::Loop || justEndedControlFlow.hasReturn ||
+            justEndedControlFlow.hasBreak)
+        {
+            return;
+        }
+
+        // If the loop has a constant-true condition without a break or return, it will loop
+        // forever. Give a parse error about it.
+        if (justEndedControlFlow.isLoopConditionConstantTrue)
+        {
+            error(justEndedControlFlow.loopLocation, "Infinite loop detected in the shader", "");
+            return;
+        }
+
+        // Otherwise, if the loop is based on a symbol that stays constant-true until the end of the
+        // shader, that's also an obvious infinite loop.
+        if (justEndedControlFlow.loopConditionConstantTrueSymbol != nullptr &&
+            mConstantTrueVariables.find(
+                justEndedControlFlow.loopConditionConstantTrueSymbol->uniqueId()) !=
+                mConstantTrueVariables.end())
+        {
+            // But we can't know whether the variable will stay unchanged until the end of the
+            // shader, so the decision to produce a compile error is deferred.
+            PossiblyInfiniteLoop loop;
+            loop.line         = justEndedControlFlow.loopLocation;
+            loop.loopVariable = justEndedControlFlow.loopConditionConstantTrueSymbol;
+
+            mPossiblyInfiniteLoops.push_back(loop);
+        }
+    }
+}
+
 void TParseContext::beginLoop(TLoopType loopType, const TSourceLoc &line)
 {
     ControlFlow flow = {};
@@ -3421,6 +3491,30 @@ void TParseContext::onLoopConditionEnd(TIntermNode *condition, const TSourceLoc 
     {
         checkESSL100ForLoopCondition(condition, line);
     }
+
+    if (mCompileOptions.rejectWebglShadersWithUndefinedBehavior)
+    {
+        mControlFlow.back().loopLocation = line;
+        TIntermConstantUnion *constCondition =
+            condition ? condition->getAsConstantUnion() : nullptr;
+        TIntermSymbol *conditionSymbol = condition ? condition->getAsSymbolNode() : nullptr;
+
+        const bool isConditionConstantTrue =
+            condition == nullptr ||
+            (constCondition != nullptr && constCondition->getType().isScalarBool() &&
+             constCondition->getBConst(0));
+
+        if (isConditionConstantTrue)
+        {
+            mControlFlow.back().isLoopConditionConstantTrue = true;
+        }
+        else if (conditionSymbol != nullptr &&
+                 mConstantTrueVariables.find(conditionSymbol->uniqueId()) !=
+                     mConstantTrueVariables.end())
+        {
+            mControlFlow.back().loopConditionConstantTrueSymbol = &conditionSymbol->variable();
+        }
+    }
 }
 
 void TParseContext::onLoopContinueEnd(TIntermNode *statement, const TSourceLoc &line)
@@ -3444,7 +3538,7 @@ TIntermNode *TParseContext::addLoop(TLoopType type,
                                     TIntermNode *body,
                                     const TSourceLoc &line)
 {
-    mControlFlow.pop_back();
+    popControlFlow();
 
     TIntermNode *node       = nullptr;
     TIntermTyped *typedCond = nullptr;
@@ -3522,7 +3616,7 @@ TIntermNode *TParseContext::addIfElse(TIntermTyped *cond,
                                       TIntermNodePair code,
                                       const TSourceLoc &loc)
 {
-    mControlFlow.pop_back();
+    popControlFlow();
 
     bool isScalarBool = checkIsScalarBool(loc, cond);
     // In case the conditional statements were not parsed as blocks and contain a statement that
@@ -7407,7 +7501,7 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
                                         TIntermBlock *statementList,
                                         const TSourceLoc &loc)
 {
-    mControlFlow.pop_back();
+    popControlFlow();
 
     TBasicType switchType = init->getBasicType();
     if ((switchType != EbtInt && switchType != EbtUInt) || init->isMatrix() || init->isArray() ||
@@ -8087,6 +8181,10 @@ TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
             {
                 error(loc, "break statement only allowed in loops and switch statements", "");
             }
+            else
+            {
+                mControlFlow.back().hasBreak = true;
+            }
             break;
         case EOpReturn:
             if (mCurrentFunctionType->getBasicType() != EbtVoid)
@@ -8097,6 +8195,10 @@ TIntermBranch *TParseContext::addBranch(TOperator op, const TSourceLoc &loc)
             {
                 errorIfPLSDeclared(loc, PLSIllegalOperations::ReturnFromMain);
                 mIsReturnVisitedInMain = true;
+            }
+            if (!mControlFlow.empty())
+            {
+                mControlFlow.back().hasReturn = true;
             }
             break;
         case EOpKill:
@@ -8133,6 +8235,10 @@ TIntermBranch *TParseContext::addBranch(TOperator op,
         else if (*mCurrentFunctionType != expression->getType())
         {
             error(loc, "function return is not matching type:", "return");
+        }
+        if (!mControlFlow.empty())
+        {
+            mControlFlow.back().hasReturn = true;
         }
     }
     TIntermBranch *node = new TIntermBranch(op, expression);
@@ -8869,6 +8975,21 @@ bool TParseContext::postParseChecks()
     if (!ValidateFragColorAndFragData(mShaderType, mShaderVersion, symbolTable, mDiagnostics))
     {
         success = false;
+    }
+
+    if (mCompileOptions.rejectWebglShadersWithUndefinedBehavior)
+    {
+        // For any possibly infinite loops, check if the loop variable remained unchanged and so the
+        // loop is in fact definitely an infinite loop.
+        for (PossiblyInfiniteLoop loop : mPossiblyInfiniteLoops)
+        {
+            if (mConstantTrueVariables.find(loop.loopVariable->uniqueId()) !=
+                mConstantTrueVariables.end())
+            {
+                error(loop.line, "Infinite loop detected in the shader", loop.loopVariable->name());
+                success = false;
+            }
+        }
     }
 
     return success;
