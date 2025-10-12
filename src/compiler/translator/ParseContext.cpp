@@ -5270,6 +5270,8 @@ void TParseContext::parseFunctionDefinitionHeader(const TSourceLoc &location,
     // Remember the return type for later checking for return statements.
     mCurrentFunction      = function;
     mFunctionReturnsValue = false;
+    // The function is about to be defined
+    mDefinedFunctions.insert(function);
 
     *prototypeOut = createPrototypeNodeFromFunction(*function, location, true);
     ASSERT(mControlFlow.empty());
@@ -8921,6 +8923,18 @@ void TParseContext::checkCallGraph()
     for (auto iter : mCallGraph)
     {
         visitStack.push_back(iter.first);
+
+        // Check the callees of this function too, if any is undefined, it's an error.
+        for (const TFunction *callee : iter.second)
+        {
+            if (mDefinedFunctions.find(callee) == mDefinedFunctions.end())
+            {
+                std::stringstream errorStream = sh::InitializeStream<std::stringstream>();
+                errorStream << "Function " << callee->name() << "() called by "
+                            << iter.first->name() << "() is undefined";
+                mDiagnostics->globalError(errorStream.str().c_str());
+            }
+        }
     }
 
     auto checkRecursion = [this, &visitState, &visitStack](const TFunction *function,

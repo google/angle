@@ -910,6 +910,9 @@ class TParseContext : angle::NonCopyable
 
     // Track the static call graph.  Static recursion is disallowed by GLSL.
     TUnorderedMap<const TFunction *, TUnorderedSet<const TFunction *>> mCallGraph;
+    // Track functions that have been defined.  At the end of parse, if any
+    // function is called that's not in this list, it's a compile error.
+    TUnorderedSet<const TFunction *> mDefinedFunctions;
 
     // Track the state of each atomic counter binding.
     std::map<int, AtomicCounterBindingState> mAtomicCounterBindingStates;

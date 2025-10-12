@@ -959,11 +959,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    // Create the function DAG and check there is no recursion
-    if (!initCallDag(root))
-    {
-        return false;
-    }
+    // Create the function DAG.
+    initCallDag(root);
 
     if (compileOptions.limitCallStackDepth && !checkCallDepth())
     {
@@ -1686,22 +1683,10 @@ void TCompiler::clearResults()
     mSymbolTable.clearCompilationResults();
 }
 
-bool TCompiler::initCallDag(TIntermNode *root)
+void TCompiler::initCallDag(TIntermNode *root)
 {
     mCallDag.clear();
-
-    switch (mCallDag.init(root, &mDiagnostics))
-    {
-        case CallDAG::INITDAG_SUCCESS:
-            return true;
-        case CallDAG::INITDAG_UNDEFINED:
-            // Error message has already been written out.
-            ASSERT(mDiagnostics.numErrors() > 0);
-            return false;
-    }
-
-    UNREACHABLE();
-    return true;
+    mCallDag.init(root);
 }
 
 bool TCompiler::checkCallDepth()

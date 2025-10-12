@@ -295,8 +295,8 @@ class TCompiler : public TShHandleBase
     [[nodiscard]] bool initializeGLPosition(TIntermBlock *root);
     // Return true if the maximum expression complexity is below the limit.
     bool limitExpressionComplexity(TIntermBlock *root);
-    // Creates the function call DAG for further analysis, returning false if there is a recursion
-    bool initCallDag(TIntermNode *root);
+    // Creates the function call DAG for further analysis.
+    void initCallDag(TIntermNode *root);
     void tagUsedFunctions();
     void internalTagUsedFunction(size_t index);
 
