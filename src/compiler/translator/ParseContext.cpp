@@ -452,6 +452,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMaxShaderStorageBufferBindings(resources.MaxShaderStorageBufferBindings),
       mMaxPixelLocalStoragePlanes(resources.MaxPixelLocalStoragePlanes),
       mMaxFunctionParameters(resources.MaxFunctionParameters),
+      mMaxCallStackDepth(resources.MaxCallStackDepth),
       mDeclaringFunction(false),
       mDeclaringMain(false),
       mMainFunction(nullptr),
@@ -8912,6 +8913,7 @@ void TParseContext::checkCallGraph()
         // Note: Can't use default initializer because of msvc.
         Visit() : state(VisitState::NotVisited) {}
         VisitState state;
+        uint32_t callDepth = 0;
     };
     TUnorderedMap<const TFunction *, Visit> visitState;
 
@@ -8967,6 +8969,34 @@ void TParseContext::checkCallGraph()
         return true;
     };
 
+    auto postVisitCheckCallDepth = [this, &visitState](const TFunction *function) -> bool {
+        if (!mCompileOptions.limitCallStackDepth)
+        {
+            return true;
+        }
+
+        uint32_t callDepth = 0;
+        for (const TFunction *callee : mCallGraph[function])
+        {
+            callDepth = std::max(callDepth, visitState[callee].callDepth);
+        }
+        // Add one depth for the call from this function to the callees.
+        ++callDepth;
+
+        visitState[function].callDepth = callDepth;
+
+        if (callDepth > static_cast<uint32_t>(mMaxCallStackDepth))
+        {
+            std::stringstream errorStream = sh::InitializeStream<std::stringstream>();
+            errorStream << "Call stack too deep (larger than " << mMaxCallStackDepth
+                        << ") in function: " << function->name();
+            mDiagnostics->globalError(errorStream.str().c_str());
+            return false;
+        }
+
+        return true;
+    };
+
     while (!visitStack.empty())
     {
         const TFunction *function = visitStack.back();
@@ -8983,6 +9013,10 @@ void TParseContext::checkCallGraph()
         if (visit.state == VisitState::Visiting)
         {
             visit.state = VisitState::Visited;
+            if (!postVisitCheckCallDepth(function))
+            {
+                break;
+            }
             continue;
         }
 

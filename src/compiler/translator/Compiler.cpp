@@ -962,11 +962,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // Create the function DAG.
     initCallDag(root);
 
-    if (compileOptions.limitCallStackDepth && !checkCallDepth())
-    {
-        return false;
-    }
-
     // Checks which functions are used
     mFunctionMetadata.clear();
     mFunctionMetadata.resize(mCallDag.size());
@@ -1687,62 +1682,6 @@ void TCompiler::initCallDag(TIntermNode *root)
 {
     mCallDag.clear();
     mCallDag.init(root);
-}
-
-bool TCompiler::checkCallDepth()
-{
-    std::vector<int> depths(mCallDag.size());
-
-    for (size_t i = 0; i < mCallDag.size(); i++)
-    {
-        int depth                     = 0;
-        const CallDAG::Record &record = mCallDag.getRecordFromIndex(i);
-
-        for (int calleeIndex : record.callees)
-        {
-            depth = std::max(depth, depths[calleeIndex] + 1);
-        }
-
-        depths[i] = depth;
-
-        if (depth >= mResources.MaxCallStackDepth)
-        {
-            // Trace back the function chain to have a meaningful info log.
-            std::stringstream errorStream = sh::InitializeStream<std::stringstream>();
-            errorStream << "Call stack too deep (larger than " << mResources.MaxCallStackDepth
-                        << ") with the following call chain: "
-                        << record.node->getFunction()->name();
-
-            int currentFunction = static_cast<int>(i);
-            int currentDepth    = depth;
-
-            while (currentFunction != -1)
-            {
-                errorStream
-                    << " -> "
-                    << mCallDag.getRecordFromIndex(currentFunction).node->getFunction()->name();
-
-                int nextFunction = -1;
-                for (const int &calleeIndex : mCallDag.getRecordFromIndex(currentFunction).callees)
-                {
-                    if (depths[calleeIndex] == currentDepth - 1)
-                    {
-                        currentDepth--;
-                        nextFunction = calleeIndex;
-                    }
-                }
-
-                currentFunction = nextFunction;
-            }
-
-            std::string errorStr = errorStream.str();
-            mDiagnostics.globalError(errorStr.c_str());
-
-            return false;
-        }
-    }
-
-    return true;
 }
 
 void TCompiler::tagUsedFunctions()

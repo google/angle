@@ -279,8 +279,6 @@ class TCompiler : public TShHandleBase
     bool initBuiltInSymbolTable(const ShBuiltInResources &resources);
     // Compute the string representation of the built-in resources
     void setResourceString();
-    // Return false if the call depth is exceeded.
-    bool checkCallDepth();
     // Insert statements to reference all members in unused uniform blocks with standard and shared
     // layout. This is to work around a Mac driver that treats unused standard/shared
     // uniform blocks as inactive.
