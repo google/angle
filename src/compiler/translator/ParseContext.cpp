@@ -19,7 +19,6 @@
 #include "compiler/translator/Declarator.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/ValidateGlobalInitializer.h"
-#include "compiler/translator/ValidateSwitch.h"
 #include "compiler/translator/glslang.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
@@ -3422,8 +3421,9 @@ void TParseContext::popControlFlow()
         {
             mControlFlow.back().hasReturn =
                 mControlFlow.back().hasReturn || justEndedControlFlow.hasReturn;
-            // `break` in an if statement also break out of the outer construct.
-            if (justEndedControlFlow.type == ControlFlowType::If)
+            // `break` in an if block or just a nested block also break out of the outer construct.
+            if (justEndedControlFlow.type == ControlFlowType::If ||
+                justEndedControlFlow.type == ControlFlowType::NewScope)
             {
                 mControlFlow.back().hasBreak =
                     mControlFlow.back().hasBreak || justEndedControlFlow.hasBreak;
@@ -3460,6 +3460,21 @@ void TParseContext::popControlFlow()
             mPossiblyInfiniteLoops.push_back(loop);
         }
     }
+}
+
+void TParseContext::beginNestedScope()
+{
+    symbolTable.push();
+
+    ControlFlow flow = {};
+    flow.type        = ControlFlowType::NewScope;
+    mControlFlow.push_back(flow);
+}
+
+void TParseContext::endNestedScope()
+{
+    symbolTable.pop();
+    popControlFlow();
 }
 
 void TParseContext::beginLoop(TLoopType loopType, const TSourceLoc &line)
@@ -7500,6 +7515,8 @@ void TParseContext::beginSwitch(const TSourceLoc &line, TIntermTyped *init)
     flow.switchType  = init->getBasicType();
     mControlFlow.push_back(flow);
 
+    symbolTable.push();
+
     checkNestingLevel(line);
 }
 
@@ -7507,6 +7524,7 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
                                         TIntermBlock *statementList,
                                         const TSourceLoc &loc)
 {
+    symbolTable.pop();
     popControlFlow();
 
     TBasicType switchType = init->getBasicType();
@@ -7529,12 +7547,6 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
     {
         error(loc, "no statement between the last case label and the end of the switch statement",
               "switch");
-        return nullptr;
-    }
-
-    if (!ValidateSwitchStatementList(switchType, mDiagnostics, statementList, loc))
-    {
-        ASSERT(mDiagnostics->numErrors() > 0);
         return nullptr;
     }
 

@@ -242,6 +242,9 @@ class TParseContext : angle::NonCopyable
                                          TIntermTyped *initializer,
                                          const TSourceLoc &loc);
 
+    void beginNestedScope();
+    void endNestedScope();
+
     void beginLoop(TLoopType loopType, const TSourceLoc &line);
     void onLoopConditionBegin(TIntermNode *init, const TSourceLoc &line);
     void onLoopConditionEnd(TIntermNode *condition, const TSourceLoc &line);
@@ -738,9 +741,14 @@ class TParseContext : angle::NonCopyable
 
     enum class ControlFlowType
     {
+        // Control flow nested under `if`.
         If,
+        // Control flow nested under `for`, `while` or `do { ... } while`.
         Loop,
+        // Control flow nested under `switch`.
         Switch,
+        // Not a divergent control flow, but nested under a new `{}` scope.
+        NewScope,
     };
     bool isNestedIn(ControlFlowType type) const;
     bool isDirectlyUnderSwitch() const;

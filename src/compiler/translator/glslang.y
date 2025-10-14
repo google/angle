@@ -1547,7 +1547,7 @@ compound_statement_with_scope
         $$ = new TIntermBlock();
         $$->setLine(@$);
     }
-    | LEFT_BRACE { context->symbolTable.push(); } statement_list { context->symbolTable.pop(); } RIGHT_BRACE {
+    | LEFT_BRACE { context->beginNestedScope(); } statement_list { context->endNestedScope(); } RIGHT_BRACE {
         $3->setLine(@$);
         $$ = $3;
     }
@@ -1562,10 +1562,10 @@ statement_no_new_scope
     ;
 
 statement_with_scope
-    : { context->symbolTable.push(); } compound_statement_no_new_scope { context->symbolTable.pop(); $$ = $2; }
-    | { context->symbolTable.push(); } simple_statement                {
+    : { context->beginNestedScope(); } compound_statement_no_new_scope { context->endNestedScope(); $$ = $2; }
+    | { context->beginNestedScope(); } simple_statement                {
         context->endStatementWithValue($2);
-        context->symbolTable.pop();
+        context->endNestedScope();
         $$ = $2;
     }
     ;
@@ -1628,7 +1628,7 @@ selection_rest_statement
 // Note that we've diverged from the spec grammar here a bit for the sake of simplicity.
 // We're reusing compound_statement_with_scope instead of having separate rules for switch.
 switch_statement
-    : SWITCH LEFT_PAREN expression RIGHT_PAREN { context->beginSwitch(@1, $3); } compound_statement_with_scope {
+    : SWITCH LEFT_PAREN expression RIGHT_PAREN { context->beginSwitch(@1, $3); } compound_statement_no_new_scope {
         $$ = context->addSwitch($3, $6, @1);
     }
     ;
