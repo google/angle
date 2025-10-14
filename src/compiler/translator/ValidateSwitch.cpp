@@ -46,8 +46,6 @@ class ValidateSwitch : public TIntermTraverser
     bool validateInternal(const TSourceLoc &loc);
 
     TDiagnostics *mDiagnostics;
-    bool mFirstCaseFound;
-    bool mStatementBeforeCase;
     bool mLastStatementWasCase;
     int mControlFlowDepth;
     bool mCaseInsideControlFlow;
@@ -67,8 +65,6 @@ bool ValidateSwitch::validate(TBasicType switchType,
 ValidateSwitch::ValidateSwitch(TBasicType switchType, TDiagnostics *diagnostics)
     : TIntermTraverser(true, false, true, nullptr),
       mDiagnostics(diagnostics),
-      mFirstCaseFound(false),
-      mStatementBeforeCase(false),
       mLastStatementWasCase(false),
       mControlFlowDepth(0),
       mCaseInsideControlFlow(false)
@@ -78,8 +74,6 @@ ValidateSwitch::ValidateSwitch(TBasicType switchType, TDiagnostics *diagnostics)
 
 void ValidateSwitch::visitSymbol(TIntermSymbol *)
 {
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
 }
 
@@ -87,15 +81,11 @@ void ValidateSwitch::visitConstantUnion(TIntermConstantUnion *)
 {
     // Conditions of case labels are not traversed, so this is some other constant
     // Could be just a statement like "0;"
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
 }
 
 bool ValidateSwitch::visitDeclaration(Visit, TIntermDeclaration *)
 {
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
     return true;
 }
@@ -104,8 +94,6 @@ bool ValidateSwitch::visitBlock(Visit visit, TIntermBlock *)
 {
     if (getParentNode() != nullptr)
     {
-        if (!mFirstCaseFound)
-            mStatementBeforeCase = true;
         mLastStatementWasCase = false;
         if (visit == PreVisit)
             ++mControlFlowDepth;
@@ -117,32 +105,24 @@ bool ValidateSwitch::visitBlock(Visit visit, TIntermBlock *)
 
 bool ValidateSwitch::visitBinary(Visit, TIntermBinary *)
 {
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
     return true;
 }
 
 bool ValidateSwitch::visitUnary(Visit, TIntermUnary *)
 {
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
     return true;
 }
 
 bool ValidateSwitch::visitTernary(Visit, TIntermTernary *)
 {
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
     return true;
 }
 
 bool ValidateSwitch::visitSwizzle(Visit, TIntermSwizzle *)
 {
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
     return true;
 }
@@ -153,16 +133,12 @@ bool ValidateSwitch::visitIfElse(Visit visit, TIntermIfElse *)
         ++mControlFlowDepth;
     if (visit == PostVisit)
         --mControlFlowDepth;
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
     return true;
 }
 
 bool ValidateSwitch::visitSwitch(Visit, TIntermSwitch *)
 {
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
     // Don't go into nested switch statements
     return false;
@@ -176,7 +152,6 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
         mDiagnostics->error(node->getLine(), "label statement nested inside control flow", nodeStr);
         mCaseInsideControlFlow = true;
     }
-    mFirstCaseFound       = true;
     mLastStatementWasCase = true;
     // Don't traverse the condition of the case statement
     return false;
@@ -187,8 +162,6 @@ bool ValidateSwitch::visitAggregate(Visit visit, TIntermAggregate *)
     if (getParentNode() != nullptr)
     {
         // This is not the statementList node, but some other node.
-        if (!mFirstCaseFound)
-            mStatementBeforeCase = true;
         mLastStatementWasCase = false;
     }
     return true;
@@ -200,26 +173,18 @@ bool ValidateSwitch::visitLoop(Visit visit, TIntermLoop *)
         ++mControlFlowDepth;
     if (visit == PostVisit)
         --mControlFlowDepth;
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
     return true;
 }
 
 bool ValidateSwitch::visitBranch(Visit, TIntermBranch *)
 {
-    if (!mFirstCaseFound)
-        mStatementBeforeCase = true;
     mLastStatementWasCase = false;
     return true;
 }
 
 bool ValidateSwitch::validateInternal(const TSourceLoc &loc)
 {
-    if (mStatementBeforeCase)
-    {
-        mDiagnostics->error(loc, "statement before the first label", "switch");
-    }
     if (mLastStatementWasCase)
     {
         // There have been some differences between versions of GLSL ES specs on whether this should
@@ -233,7 +198,7 @@ bool ValidateSwitch::validateInternal(const TSourceLoc &loc)
     {
         mDiagnostics->error(loc, "too complex expressions inside a switch statement", "switch");
     }
-    return !mStatementBeforeCase && !mLastStatementWasCase && !mCaseInsideControlFlow &&
+    return !mLastStatementWasCase && !mCaseInsideControlFlow &&
            getMaxDepth() < kMaxAllowedTraversalDepth;
 }
 

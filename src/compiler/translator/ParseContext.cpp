@@ -8293,6 +8293,13 @@ void TParseContext::appendStatement(TIntermBlock *block, TIntermNode *statement)
 {
     if (statement != nullptr)
     {
+        // Validate that no statement is added before the first case label of a switch construct.
+        if (statement->getAsCaseNode() == nullptr && isDirectlyUnderSwitch() &&
+            mControlFlow.back().caseLabels.empty())
+        {
+            error(statement->getLine(), "statement before the first label", "switch");
+        }
+
         markStaticUseIfSymbol(statement);
         block->appendStatement(statement);
 
