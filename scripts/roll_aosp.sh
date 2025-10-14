@@ -177,6 +177,7 @@ delete_after_codegen_paths=(
    "third_party/android_system_sdk"
    "third_party/android_toolchain"
    "third_party/bazel"
+   "third_party/clspv/gn"
    "third_party/colorama"
    "third_party/jdk/current"  # subdirs only to keep third_party/jdk/BUILD.gn (not pulled by gclient as it comes from ANGLE repo)
    "third_party/jdk/extras"
