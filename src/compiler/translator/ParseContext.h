@@ -595,6 +595,7 @@ class TParseContext : angle::NonCopyable
                          TVariable **variable);
 
     void checkNestingLevel(const TSourceLoc &line);
+    bool checkCase(const TSourceLoc &line, int64_t caseValue, const char *caseOrDefault);
 
     void checkCanBeDeclaredWithoutInitializer(const TSourceLoc &line,
                                               const ImmutableString &identifier,
@@ -742,6 +743,7 @@ class TParseContext : angle::NonCopyable
         Switch,
     };
     bool isNestedIn(ControlFlowType type) const;
+    bool isDirectlyUnderSwitch() const;
     void popControlFlow();
 
     // Certain operations become illegal only iff the shader declares pixel local storage uniforms.
@@ -894,6 +896,12 @@ class TParseContext : angle::NonCopyable
         const TVariable *loopConditionConstantTrueSymbol = nullptr;
         bool hasBreak                                    = false;
         bool hasReturn                                   = false;
+
+        // Used to detect and reject invalid `case` placements in a switch.
+        // int64_t is used to include both signed and unsigned case values (which are 32-bit).  The
+        // default case uses a number outside the [INT_MIN, UINT_MAX] range.
+        static constexpr int64_t kDefaultCaseLabel = std::numeric_limits<int64_t>::max();
+        TVector<int64_t> caseLabels;
     };
     std::vector<ControlFlow> mControlFlow;
     // Whether ESSL 1.0 limitations in Appendix A must be enforced.

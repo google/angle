@@ -7545,13 +7545,34 @@ bool TParseContext::isNestedIn(ControlFlowType type) const
     return false;
 }
 
+bool TParseContext::isDirectlyUnderSwitch() const
+{
+    return mControlFlow.size() > 0 && mControlFlow.back().type == ControlFlowType::Switch;
+}
+
+bool TParseContext::checkCase(const TSourceLoc &line, int64_t caseValue, const char *caseOrDefault)
+{
+    if (!isDirectlyUnderSwitch())
+    {
+        error(line, "case and default labels need to be inside switch statements", caseOrDefault);
+        return false;
+    }
+    for (int64_t existingCaseLabel : mControlFlow.back().caseLabels)
+    {
+        if (caseValue == existingCaseLabel)
+        {
+            error(line, "duplicate case label", caseOrDefault);
+            return false;
+        }
+    }
+
+    mControlFlow.back().caseLabels.push_back(caseValue);
+
+    return true;
+}
+
 TIntermCase *TParseContext::addCase(TIntermTyped *condition, const TSourceLoc &loc)
 {
-    if (!isNestedIn(ControlFlowType::Switch))
-    {
-        error(loc, "case labels need to be inside switch statements", "case");
-        return nullptr;
-    }
     if (condition == nullptr)
     {
         error(loc, "case label must have a condition", "case");
@@ -7561,6 +7582,7 @@ TIntermCase *TParseContext::addCase(TIntermTyped *condition, const TSourceLoc &l
         condition->isMatrix() || condition->isArray() || condition->isVector())
     {
         error(condition->getLine(), "case label must be a scalar integer", "case");
+        return nullptr;
     }
     TIntermConstantUnion *conditionConst = condition->getAsConstantUnion();
     // ANGLE should be able to fold any EvqConst expressions resulting in an integer - but to be
@@ -7570,7 +7592,17 @@ TIntermCase *TParseContext::addCase(TIntermTyped *condition, const TSourceLoc &l
     if (condition->getQualifier() != EvqConst || conditionConst == nullptr)
     {
         error(condition->getLine(), "case label must be constant", "case");
+        return nullptr;
     }
+
+    const int64_t caseValue = condition->getBasicType() == EbtInt
+                                  ? static_cast<int64_t>(conditionConst->getIConst(0))
+                                  : static_cast<int64_t>(conditionConst->getUConst(0));
+    if (!checkCase(loc, caseValue, "case"))
+    {
+        return nullptr;
+    }
+
     TIntermCase *node = new TIntermCase(condition);
     node->setLine(loc);
     return node;
@@ -7578,11 +7610,11 @@ TIntermCase *TParseContext::addCase(TIntermTyped *condition, const TSourceLoc &l
 
 TIntermCase *TParseContext::addDefault(const TSourceLoc &loc)
 {
-    if (!isNestedIn(ControlFlowType::Switch))
+    if (!checkCase(loc, ControlFlow::kDefaultCaseLabel, "default"))
     {
-        error(loc, "default labels need to be inside switch statements", "default");
         return nullptr;
     }
+
     TIntermCase *node = new TIntermCase(nullptr);
     node->setLine(loc);
     return node;

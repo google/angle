@@ -53,10 +53,6 @@ class ValidateSwitch : public TIntermTraverser
     bool mLastStatementWasCase;
     int mControlFlowDepth;
     bool mCaseInsideControlFlow;
-    int mDefaultCount;
-    std::set<int> mCasesSigned;
-    std::set<unsigned int> mCasesUnsigned;
-    bool mDuplicateCases;
 };
 
 bool ValidateSwitch::validate(TBasicType switchType,
@@ -79,9 +75,7 @@ ValidateSwitch::ValidateSwitch(TBasicType switchType, TDiagnostics *diagnostics)
       mStatementBeforeCase(false),
       mLastStatementWasCase(false),
       mControlFlowDepth(0),
-      mCaseInsideControlFlow(false),
-      mDefaultCount(0),
-      mDuplicateCases(false)
+      mCaseInsideControlFlow(false)
 {
     setMaxAllowedDepth(kMaxAllowedTraversalDepth);
 }
@@ -188,15 +182,7 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
     }
     mFirstCaseFound       = true;
     mLastStatementWasCase = true;
-    if (!node->hasCondition())
-    {
-        ++mDefaultCount;
-        if (mDefaultCount > 1)
-        {
-            mDiagnostics->error(node->getLine(), "duplicate default label", nodeStr);
-        }
-    }
-    else
+    if (node->hasCondition())
     {
         TIntermConstantUnion *condition = node->getCondition()->getAsConstantUnion();
         if (condition == nullptr)
@@ -211,33 +197,6 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
                                 "case label type does not match switch init-expression type",
                                 nodeStr);
             mCaseTypeMismatch = true;
-        }
-
-        if (conditionType == EbtInt)
-        {
-            int iConst = condition->getIConst(0);
-            if (mCasesSigned.find(iConst) != mCasesSigned.end())
-            {
-                mDiagnostics->error(condition->getLine(), "duplicate case label", nodeStr);
-                mDuplicateCases = true;
-            }
-            else
-            {
-                mCasesSigned.insert(iConst);
-            }
-        }
-        else if (conditionType == EbtUInt)
-        {
-            unsigned int uConst = condition->getUConst(0);
-            if (mCasesUnsigned.find(uConst) != mCasesUnsigned.end())
-            {
-                mDiagnostics->error(condition->getLine(), "duplicate case label", nodeStr);
-                mDuplicateCases = true;
-            }
-            else
-            {
-                mCasesUnsigned.insert(uConst);
-            }
         }
         // Other types are possible only in error cases, where the error has already been generated
         // when parsing the case statement.
@@ -298,8 +257,7 @@ bool ValidateSwitch::validateInternal(const TSourceLoc &loc)
         mDiagnostics->error(loc, "too complex expressions inside a switch statement", "switch");
     }
     return !mStatementBeforeCase && !mLastStatementWasCase && !mCaseInsideControlFlow &&
-           !mCaseTypeMismatch && mDefaultCount <= 1 && !mDuplicateCases &&
-           getMaxDepth() < kMaxAllowedTraversalDepth;
+           !mCaseTypeMismatch && getMaxDepth() < kMaxAllowedTraversalDepth;
 }
 
 }  // anonymous namespace
