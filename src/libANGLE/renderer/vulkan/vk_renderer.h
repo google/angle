@@ -727,6 +727,11 @@ class Renderer : angle::NonCopyable
 
     angle::Result onFrameBoundary(const gl::Context *contextGL);
 
+    uint32_t getMinRenderPassWriteCommandCountToEarlySubmit() const
+    {
+        return mMinRPWriteCommandCountToEarlySubmit;
+    }
+
   private:
     angle::Result setupDevice(vk::ErrorContext *context,
                               const angle::FeatureOverrides &featureOverrides,
@@ -1130,6 +1135,10 @@ class Renderer : angle::NonCopyable
     // The number of minimum commands in the command buffer to prefer submit at FBO boundary or
     // immediately submit when the device is idle after calling to flush.
     uint32_t mMinCommandCountToSubmit;
+
+    // The number of minimum write commands in the command buffer to trigger one submission of
+    // pending commands at draw call time
+    uint32_t mMinRPWriteCommandCountToEarlySubmit;
 };
 
 ANGLE_INLINE Serial Renderer::generateQueueSerial(SerialIndex index)

@@ -1579,6 +1579,16 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         mGraphicsPipelineDesc->updateTopology(&mGraphicsPipelineTransition, mCurrentDrawMode);
     }
 
+    // Submit pending commands if the number of write-commands in the current render pass reaches a
+    // threshold to avoid delaying the submission too much.
+    if (ANGLE_UNLIKELY(mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount() >
+                       mRenderer->getMinRenderPassWriteCommandCountToEarlySubmit()) &&
+        (mCommandsPendingSubmissionCount > 0))
+    {
+        ANGLE_TRY(submitCommands(nullptr, nullptr));
+        mCommandsPendingSubmissionCount = 0;
+    }
+
     // Must be called before the command buffer is started. Can call finish.
     VertexArrayVk *vertexArrayVk = getVertexArray();
     if (vertexArrayVk->getStreamingVertexAttribsMask().any())

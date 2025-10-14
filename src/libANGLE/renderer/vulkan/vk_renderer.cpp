@@ -1950,7 +1950,8 @@ Renderer::Renderer()
       mNativeVectorWidthHalf(0),
       mPreferredVectorWidthDouble(0),
       mPreferredVectorWidthHalf(0),
-      mMinCommandCountToSubmit(0)
+      mMinCommandCountToSubmit(0),
+      mMinRPWriteCommandCountToEarlySubmit(UINT32_MAX)
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
     mFormatProperties.fill(invalid);
@@ -5709,9 +5710,17 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // improves performance. Most app traces shows frame time reduced and manhattan 3.1 offscreen
     // score improves 7%.
     ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitAtFBOBoundary,
-                            isTileBasedRenderer || isSwiftShader);
+                            ((isTileBasedRenderer || isSwiftShader) && !isARMProprietary));
+
     ANGLE_FEATURE_CONDITION(&mFeatures, forceSubmitExceptionsAtFBOBoundary, !isQualcommProprietary);
     mMinCommandCountToSubmit = isQualcommProprietary ? 1024 : 32;
+
+    // The number of minimum write commands in the command buffer to trigger one submission of
+    // pending commands at draw call time
+    if (isARMProprietary)
+    {
+        mMinRPWriteCommandCountToEarlySubmit = 128;
+    }
 
     // In order to support immutable samplers tied to external formats, we need to overallocate
     // descriptor counts for such immutable samplers
