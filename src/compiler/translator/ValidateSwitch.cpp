@@ -25,20 +25,11 @@ class ValidateSwitch : public TIntermTraverser
                          TIntermBlock *statementList,
                          const TSourceLoc &loc);
 
-    void visitSymbol(TIntermSymbol *) override;
-    void visitConstantUnion(TIntermConstantUnion *) override;
-    bool visitDeclaration(Visit, TIntermDeclaration *) override;
     bool visitBlock(Visit visit, TIntermBlock *) override;
-    bool visitBinary(Visit, TIntermBinary *) override;
-    bool visitUnary(Visit, TIntermUnary *) override;
-    bool visitTernary(Visit, TIntermTernary *) override;
-    bool visitSwizzle(Visit, TIntermSwizzle *) override;
     bool visitIfElse(Visit visit, TIntermIfElse *) override;
     bool visitSwitch(Visit, TIntermSwitch *) override;
     bool visitCase(Visit, TIntermCase *node) override;
-    bool visitAggregate(Visit, TIntermAggregate *) override;
     bool visitLoop(Visit visit, TIntermLoop *) override;
-    bool visitBranch(Visit, TIntermBranch *) override;
 
   private:
     ValidateSwitch(TBasicType switchType, TDiagnostics *context);
@@ -46,7 +37,6 @@ class ValidateSwitch : public TIntermTraverser
     bool validateInternal(const TSourceLoc &loc);
 
     TDiagnostics *mDiagnostics;
-    bool mLastStatementWasCase;
     int mControlFlowDepth;
     bool mCaseInsideControlFlow;
 };
@@ -65,65 +55,21 @@ bool ValidateSwitch::validate(TBasicType switchType,
 ValidateSwitch::ValidateSwitch(TBasicType switchType, TDiagnostics *diagnostics)
     : TIntermTraverser(true, false, true, nullptr),
       mDiagnostics(diagnostics),
-      mLastStatementWasCase(false),
       mControlFlowDepth(0),
       mCaseInsideControlFlow(false)
 {
     setMaxAllowedDepth(kMaxAllowedTraversalDepth);
 }
 
-void ValidateSwitch::visitSymbol(TIntermSymbol *)
-{
-    mLastStatementWasCase = false;
-}
-
-void ValidateSwitch::visitConstantUnion(TIntermConstantUnion *)
-{
-    // Conditions of case labels are not traversed, so this is some other constant
-    // Could be just a statement like "0;"
-    mLastStatementWasCase = false;
-}
-
-bool ValidateSwitch::visitDeclaration(Visit, TIntermDeclaration *)
-{
-    mLastStatementWasCase = false;
-    return true;
-}
-
 bool ValidateSwitch::visitBlock(Visit visit, TIntermBlock *)
 {
     if (getParentNode() != nullptr)
     {
-        mLastStatementWasCase = false;
         if (visit == PreVisit)
             ++mControlFlowDepth;
         if (visit == PostVisit)
             --mControlFlowDepth;
     }
-    return true;
-}
-
-bool ValidateSwitch::visitBinary(Visit, TIntermBinary *)
-{
-    mLastStatementWasCase = false;
-    return true;
-}
-
-bool ValidateSwitch::visitUnary(Visit, TIntermUnary *)
-{
-    mLastStatementWasCase = false;
-    return true;
-}
-
-bool ValidateSwitch::visitTernary(Visit, TIntermTernary *)
-{
-    mLastStatementWasCase = false;
-    return true;
-}
-
-bool ValidateSwitch::visitSwizzle(Visit, TIntermSwizzle *)
-{
-    mLastStatementWasCase = false;
     return true;
 }
 
@@ -133,13 +79,11 @@ bool ValidateSwitch::visitIfElse(Visit visit, TIntermIfElse *)
         ++mControlFlowDepth;
     if (visit == PostVisit)
         --mControlFlowDepth;
-    mLastStatementWasCase = false;
     return true;
 }
 
 bool ValidateSwitch::visitSwitch(Visit, TIntermSwitch *)
 {
-    mLastStatementWasCase = false;
     // Don't go into nested switch statements
     return false;
 }
@@ -152,19 +96,8 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
         mDiagnostics->error(node->getLine(), "label statement nested inside control flow", nodeStr);
         mCaseInsideControlFlow = true;
     }
-    mLastStatementWasCase = true;
     // Don't traverse the condition of the case statement
     return false;
-}
-
-bool ValidateSwitch::visitAggregate(Visit visit, TIntermAggregate *)
-{
-    if (getParentNode() != nullptr)
-    {
-        // This is not the statementList node, but some other node.
-        mLastStatementWasCase = false;
-    }
-    return true;
 }
 
 bool ValidateSwitch::visitLoop(Visit visit, TIntermLoop *)
@@ -173,33 +106,16 @@ bool ValidateSwitch::visitLoop(Visit visit, TIntermLoop *)
         ++mControlFlowDepth;
     if (visit == PostVisit)
         --mControlFlowDepth;
-    mLastStatementWasCase = false;
-    return true;
-}
-
-bool ValidateSwitch::visitBranch(Visit, TIntermBranch *)
-{
-    mLastStatementWasCase = false;
     return true;
 }
 
 bool ValidateSwitch::validateInternal(const TSourceLoc &loc)
 {
-    if (mLastStatementWasCase)
-    {
-        // There have been some differences between versions of GLSL ES specs on whether this should
-        // be an error or not, but as of early 2018 the latest discussion is that this is an error
-        // also on GLSL ES versions newer than 3.00.
-        mDiagnostics->error(
-            loc, "no statement between the last label and the end of the switch statement",
-            "switch");
-    }
     if (getMaxDepth() >= kMaxAllowedTraversalDepth)
     {
         mDiagnostics->error(loc, "too complex expressions inside a switch statement", "switch");
     }
-    return !mLastStatementWasCase && !mCaseInsideControlFlow &&
-           getMaxDepth() < kMaxAllowedTraversalDepth;
+    return !mCaseInsideControlFlow && getMaxDepth() < kMaxAllowedTraversalDepth;
 }
 
 }  // anonymous namespace

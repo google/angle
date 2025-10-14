@@ -7519,6 +7519,19 @@ TIntermSwitch *TParseContext::addSwitch(TIntermTyped *init,
     }
 
     ASSERT(statementList);
+
+    // There have been some differences between versions of GLSL ES specs on whether this should
+    // be an error or not, but this was clarified as an error in GLSL ES versions newer than 3.00
+    // too.
+    const size_t statementCount = statementList->getChildCount();
+    if (statementCount > 0 &&
+        statementList->getChildNode(statementCount - 1)->getAsCaseNode() != nullptr)
+    {
+        error(loc, "no statement between the last case label and the end of the switch statement",
+              "switch");
+        return nullptr;
+    }
+
     if (!ValidateSwitchStatementList(switchType, mDiagnostics, statementList, loc))
     {
         ASSERT(mDiagnostics->numErrors() > 0);
