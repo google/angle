@@ -1036,6 +1036,65 @@ TEST_P(RobustBufferAccessBehaviorTest, OutOfBoundsIndexBuffers)
     DrawAndVerifyOutOfBoundsIndex(/*StartIndex*/ numberOfQuads - 4);
 }
 
+// DrawArray with both color and position attribute data interleaved in the same buffer.
+TEST_P(RobustBufferAccessBehaviorTest, DrawArraysWithInterleavedAttributeData)
+{
+    ANGLE_SKIP_TEST_IF(!initExtension());
+
+    constexpr char vert[] =
+        "attribute vec2 v_position;\n"
+        "attribute vec4 a_color;\n"
+        "varying vec4 v_color;\n"
+        "void main() {\n"
+        "    gl_Position = vec4(v_position, 0.0, 1.0);\n"
+        "    v_color = a_color;\n"
+        "}\n";
+
+    constexpr char frag[] =
+        "precision mediump float;\n"
+        "varying vec4 v_color;\n"
+        "void main() {\n"
+        "    gl_FragColor = v_color;\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(prog, vert, frag);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw a red quad covering the whole screen. On Xclipse devices this is
+    // rendered as if the final vertex is transparent black rather than red.
+    std::array<std::pair<Vector2, GLColor32F>, 6> vertices = {{{{-1.0f, 1.0f}, kFloatRed},
+                                                               {{-1.0f, -1.0f}, kFloatRed},
+                                                               {{1.0f, -1.0f}, kFloatRed},
+                                                               {{-1.0f, 1.0f}, kFloatRed},
+                                                               {{1.0f, -1.0f}, kFloatRed},
+                                                               {{1.0f, 1.0f}, kFloatRed}}};
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+    glUseProgram(prog);
+    const GLint positionLocation = glGetAttribLocation(prog, "v_position");
+    ASSERT_NE(-1, positionLocation);
+    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]), 0);
+    glEnableVertexAttribArray(positionLocation);
+    const GLint colorLocation = glGetAttribLocation(prog, "a_color");
+    ASSERT_NE(-1, colorLocation);
+    glVertexAttribPointer(colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(vertices[0]),
+                          reinterpret_cast<const void *>(sizeof(Vector2)));
+    glEnableVertexAttribArray(colorLocation);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    EXPECT_PIXEL_COLOR_EQ(0, getWindowHeight() - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(RobustBufferAccessBehaviorTest,
                        WithNoFixture(ES3_VULKAN()),
                        WithNoFixture(ES3_OPENGL()),
