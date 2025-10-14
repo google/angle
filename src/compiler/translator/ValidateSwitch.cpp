@@ -45,9 +45,7 @@ class ValidateSwitch : public TIntermTraverser
 
     bool validateInternal(const TSourceLoc &loc);
 
-    TBasicType mSwitchType;
     TDiagnostics *mDiagnostics;
-    bool mCaseTypeMismatch;
     bool mFirstCaseFound;
     bool mStatementBeforeCase;
     bool mLastStatementWasCase;
@@ -68,9 +66,7 @@ bool ValidateSwitch::validate(TBasicType switchType,
 
 ValidateSwitch::ValidateSwitch(TBasicType switchType, TDiagnostics *diagnostics)
     : TIntermTraverser(true, false, true, nullptr),
-      mSwitchType(switchType),
       mDiagnostics(diagnostics),
-      mCaseTypeMismatch(false),
       mFirstCaseFound(false),
       mStatementBeforeCase(false),
       mLastStatementWasCase(false),
@@ -182,25 +178,6 @@ bool ValidateSwitch::visitCase(Visit, TIntermCase *node)
     }
     mFirstCaseFound       = true;
     mLastStatementWasCase = true;
-    if (node->hasCondition())
-    {
-        TIntermConstantUnion *condition = node->getCondition()->getAsConstantUnion();
-        if (condition == nullptr)
-        {
-            // This can happen in error cases.
-            return false;
-        }
-        TBasicType conditionType = condition->getBasicType();
-        if (conditionType != mSwitchType)
-        {
-            mDiagnostics->error(condition->getLine(),
-                                "case label type does not match switch init-expression type",
-                                nodeStr);
-            mCaseTypeMismatch = true;
-        }
-        // Other types are possible only in error cases, where the error has already been generated
-        // when parsing the case statement.
-    }
     // Don't traverse the condition of the case statement
     return false;
 }
@@ -257,7 +234,7 @@ bool ValidateSwitch::validateInternal(const TSourceLoc &loc)
         mDiagnostics->error(loc, "too complex expressions inside a switch statement", "switch");
     }
     return !mStatementBeforeCase && !mLastStatementWasCase && !mCaseInsideControlFlow &&
-           !mCaseTypeMismatch && getMaxDepth() < kMaxAllowedTraversalDepth;
+           getMaxDepth() < kMaxAllowedTraversalDepth;
 }
 
 }  // anonymous namespace

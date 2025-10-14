@@ -4633,7 +4633,7 @@ yyreduce:
 
         case 308: /* $@14: %empty  */
         {
-            context->beginSwitch((yylsp[-3]));
+            context->beginSwitch((yylsp[-3]), (yyvsp[-1].interm.intermTypedNode));
         }
         break;
 

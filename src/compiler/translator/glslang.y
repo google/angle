@@ -1628,7 +1628,7 @@ selection_rest_statement
 // Note that we've diverged from the spec grammar here a bit for the sake of simplicity.
 // We're reusing compound_statement_with_scope instead of having separate rules for switch.
 switch_statement
-    : SWITCH LEFT_PAREN expression RIGHT_PAREN { context->beginSwitch(@1); } compound_statement_with_scope {
+    : SWITCH LEFT_PAREN expression RIGHT_PAREN { context->beginSwitch(@1, $3); } compound_statement_with_scope {
         $$ = context->addSwitch($3, $6, @1);
     }
     ;

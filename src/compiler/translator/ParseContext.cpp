@@ -7493,10 +7493,11 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
     return typeSpecifierNonArray;
 }
 
-void TParseContext::beginSwitch(const TSourceLoc &line)
+void TParseContext::beginSwitch(const TSourceLoc &line, TIntermTyped *init)
 {
     ControlFlow flow = {};
     flow.type        = ControlFlowType::Switch;
+    flow.switchType  = init->getBasicType();
     mControlFlow.push_back(flow);
 
     checkNestingLevel(line);
@@ -7601,6 +7602,11 @@ TIntermCase *TParseContext::addCase(TIntermTyped *condition, const TSourceLoc &l
     if (!checkCase(loc, caseValue, "case"))
     {
         return nullptr;
+    }
+
+    if (condition->getBasicType() != mControlFlow.back().switchType)
+    {
+        error(loc, "case label type does not match switch init-expression type", "case");
     }
 
     TIntermCase *node = new TIntermCase(condition);

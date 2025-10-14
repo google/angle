@@ -452,7 +452,7 @@ class TParseContext : angle::NonCopyable
 
     void checkIsBelowStructNestingLimit(const TSourceLoc &line, const TField &field);
 
-    void beginSwitch(const TSourceLoc &line);
+    void beginSwitch(const TSourceLoc &line, TIntermTyped *init);
     TIntermSwitch *addSwitch(TIntermTyped *init,
                              TIntermBlock *statementList,
                              const TSourceLoc &loc);
@@ -900,6 +900,7 @@ class TParseContext : angle::NonCopyable
         // Used to detect and reject invalid `case` placements in a switch.
         // int64_t is used to include both signed and unsigned case values (which are 32-bit).  The
         // default case uses a number outside the [INT_MIN, UINT_MAX] range.
+        TBasicType switchType                      = EbtInt;
         static constexpr int64_t kDefaultCaseLabel = std::numeric_limits<int64_t>::max();
         TVector<int64_t> caseLabels;
     };
