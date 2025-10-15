@@ -3566,7 +3566,7 @@ void Context::initVersionStrings()
     else
     {
         versionString << "OpenGL ES ";
-        versionString << clientVersion.getMajor() << "." << clientVersion.getMinor() << ".0 (ANGLE "
+        versionString << clientVersion.getMajor() << "." << clientVersion.getMinor() << " (ANGLE "
                       << angle::GetANGLEVersionString() << ")";
     }
 
