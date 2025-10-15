@@ -549,6 +549,7 @@ clspv_llvm_static_lib("clspv_llvm_lib_transforms_instrumentation") {
   ]
   sources = [
     "//$clspv_llvm_dir/llvm/lib/Transforms/Instrumentation/AddressSanitizer.cpp",
+    "//$clspv_llvm_dir/llvm/lib/Transforms/Instrumentation/AllocToken.cpp",
     "//$clspv_llvm_dir/llvm/lib/Transforms/Instrumentation/BlockCoverageInference.cpp",
     "//$clspv_llvm_dir/llvm/lib/Transforms/Instrumentation/BoundsChecking.cpp",
     "//$clspv_llvm_dir/llvm/lib/Transforms/Instrumentation/CGProfile.cpp",
@@ -1064,6 +1065,7 @@ clspv_llvm_static_lib("clspv_llvm_lib_codegen") {
     "//$clspv_llvm_dir/llvm/lib/CodeGen/LowLevelTypeUtils.cpp",
     "//$clspv_llvm_dir/llvm/lib/CodeGen/LowerEmuTLS.cpp",
     "//$clspv_llvm_dir/llvm/lib/CodeGen/MBFIWrapper.cpp",
+    "//$clspv_llvm_dir/llvm/lib/CodeGen/MIR2Vec.cpp",
     "//$clspv_llvm_dir/llvm/lib/CodeGen/MIRCanonicalizerPass.cpp",
     "//$clspv_llvm_dir/llvm/lib/CodeGen/MIRFSDiscriminator.cpp",
     "//$clspv_llvm_dir/llvm/lib/CodeGen/MIRNamerPass.cpp",
@@ -2308,6 +2310,7 @@ clspv_llvm_static_lib("clspv_llvm_lib_support") {
     "//$clspv_llvm_dir/llvm/lib/Support/Atomic.cpp",
     "//$clspv_llvm_dir/llvm/lib/Support/DynamicLibrary.cpp",
     "//$clspv_llvm_dir/llvm/lib/Support/Errno.cpp",
+    "//$clspv_llvm_dir/llvm/lib/Support/Jobserver.cpp",
     "//$clspv_llvm_dir/llvm/lib/Support/Memory.cpp",
     "//$clspv_llvm_dir/llvm/lib/Support/Path.cpp",
     "//$clspv_llvm_dir/llvm/lib/Support/Process.cpp",
@@ -2535,8 +2538,15 @@ clspv_clang_static_lib("clspv_clang_lib_analysis") {
     "//$clspv_llvm_dir/clang/lib/Analysis/FixitUtil.cpp",
     "//$clspv_llvm_dir/clang/lib/Analysis/IntervalPartition.cpp",
     "//$clspv_llvm_dir/clang/lib/Analysis/IssueHash.cpp",
-    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeAnnotations.cpp",
-    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeSafety.cpp",
+    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeSafety/Checker.cpp",
+    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeSafety/Facts.cpp",
+    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeSafety/FactsGenerator.cpp",
+    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeSafety/LifetimeAnnotations.cpp",
+    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeSafety/LifetimeSafety.cpp",
+    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeSafety/LiveOrigins.cpp",
+    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeSafety/LoanPropagation.cpp",
+    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeSafety/Loans.cpp",
+    "//$clspv_llvm_dir/clang/lib/Analysis/LifetimeSafety/Origins.cpp",
     "//$clspv_llvm_dir/clang/lib/Analysis/LiveVariables.cpp",
     "//$clspv_llvm_dir/clang/lib/Analysis/MacroExpansionContext.cpp",
     "//$clspv_llvm_dir/clang/lib/Analysis/ObjCNoReturn.cpp",
@@ -2732,7 +2742,6 @@ clspv_clang_static_lib("clspv_clang_lib_astmatchers") {
   sources = [
     "//$clspv_llvm_dir/clang/lib/ASTMatchers/ASTMatchFinder.cpp",
     "//$clspv_llvm_dir/clang/lib/ASTMatchers/ASTMatchersInternal.cpp",
-    "//$clspv_llvm_dir/clang/lib/ASTMatchers/GtestMatchers.cpp",
   ]
 }
 
