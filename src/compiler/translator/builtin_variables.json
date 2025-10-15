@@ -1534,13 +1534,6 @@
                 "essl_extension":"EXT_tessellation_shader, OES_tessellation_shader",
                 "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(gl_PerVertex, EvqPerVertexIn, TLayoutQualifier::Create()); {type_name}->makeArray(resources.MaxPatchVertices);"
-            },
-            "gl_out":{
-                "suffix":"TES",
-                "essl_level":"ESSL3_1_BUILTINS",
-                "essl_extension":"EXT_tessellation_shader, OES_tessellation_shader",
-                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
-                "initDynamicType":"TType *{type_name} = new TType(gl_PerVertex, EvqPerVertexOut, TLayoutQualifier::Create()); {type_name}->makeArray(resources.MaxPatchVertices);"
             }
         },
         "subgroups":{

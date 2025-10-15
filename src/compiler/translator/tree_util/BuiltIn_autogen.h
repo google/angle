@@ -3099,15 +3099,13 @@ class BuiltInId
     static constexpr const TSymbolUniqueId gl_PerVertexTESES3_2         = TSymbolUniqueId(2014);
     static constexpr const TSymbolUniqueId gl_inTES                     = TSymbolUniqueId(2015);
     static constexpr const TSymbolUniqueId gl_inTESES3_2                = TSymbolUniqueId(2016);
-    static constexpr const TSymbolUniqueId gl_outTES                    = TSymbolUniqueId(2017);
-    static constexpr const TSymbolUniqueId gl_outTESES3_2               = TSymbolUniqueId(2018);
-    static constexpr const TSymbolUniqueId gl_PerVertexOutTesBlock      = TSymbolUniqueId(2019);
-    static constexpr const TSymbolUniqueId gl_PerVertexOutTesBlockES3_2 = TSymbolUniqueId(2020);
-    static constexpr const TSymbolUniqueId gl_PositionTES               = TSymbolUniqueId(2021);
-    static constexpr const TSymbolUniqueId gl_PositionTESES3_2          = TSymbolUniqueId(2022);
-    static constexpr const TSymbolUniqueId gl_ViewID_OVR                = TSymbolUniqueId(2023);
-    static constexpr const TSymbolUniqueId gl_ClipDistance              = TSymbolUniqueId(2024);
-    static constexpr const TSymbolUniqueId gl_CullDistance              = TSymbolUniqueId(2025);
+    static constexpr const TSymbolUniqueId gl_PerVertexOutTesBlock      = TSymbolUniqueId(2017);
+    static constexpr const TSymbolUniqueId gl_PerVertexOutTesBlockES3_2 = TSymbolUniqueId(2018);
+    static constexpr const TSymbolUniqueId gl_PositionTES               = TSymbolUniqueId(2019);
+    static constexpr const TSymbolUniqueId gl_PositionTESES3_2          = TSymbolUniqueId(2020);
+    static constexpr const TSymbolUniqueId gl_ViewID_OVR                = TSymbolUniqueId(2021);
+    static constexpr const TSymbolUniqueId gl_ClipDistance              = TSymbolUniqueId(2022);
+    static constexpr const TSymbolUniqueId gl_CullDistance              = TSymbolUniqueId(2023);
 
 };  // class BuiltInId
 

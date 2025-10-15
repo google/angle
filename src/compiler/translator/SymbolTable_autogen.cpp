@@ -25,7 +25,7 @@ using TableBase = TSymbolTableBase;
 
 struct SymbolIdChecker
 {
-    static_assert(TSymbolTable::kFirstUserDefinedSymbolId > 2025);
+    static_assert(TSymbolTable::kFirstUserDefinedSymbolId > 2023);
 };
 
 namespace BuiltInName
@@ -19618,15 +19618,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_TessLevelInnerTES),
     Rule::Get<320, Shader::TESS_CONTROL_EXT, 0>(&TableBase::m_gl_outTCSES3_2),
-    Rule::Get<320, Shader::TESS_EVALUATION_EXT, 0>(&TableBase::m_gl_outTESES3_2),
     Rule::Get<310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_outTCS),
     Rule::Get<310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_outTCS),
-    Rule::Get<310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
-        &TableBase::m_gl_outTES),
-    Rule::Get<310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(OES_tessellation_shader)>(
-        &TableBase::m_gl_outTES),
     Rule::Get<320, Shader::TESS_CONTROL_EXT, 0>(&TableBase::m_gl_BoundingBoxTCSES3_2),
     Rule::Get<320, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_BoundingBoxTCS),
@@ -22499,12 +22494,12 @@ constexpr uint16_t kMangledOffsets[] = {
     2025,  // gl_TessLevelOuter
     2031,  // gl_TessLevelInner
     2037,  // gl_out
-    2043,  // gl_BoundingBox
-    2046,  // gl_BoundingBoxEXT
-    2049,  // gl_BoundingBoxOES
-    2052,  // gl_TessCoord
-    2053,  // gl_ViewID_OVR
-    2054,  // gl_CullDistance
+    2040,  // gl_BoundingBox
+    2043,  // gl_BoundingBoxEXT
+    2046,  // gl_BoundingBoxOES
+    2049,  // gl_TessCoord
+    2050,  // gl_ViewID_OVR
+    2051,  // gl_CullDistance
 };
 
 using Ext = TExtension;
@@ -24094,20 +24089,6 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_inTESES3_2 =
         new TVariable(BuiltInId::gl_inTESES3_2, BuiltInName::gl_in, SymbolType::BuiltIn,
                       std::array<TExtension, 1u>{{TExtension::UNDEFINED}}, type_gl_inTESES3_2);
-    TType *type_gl_outTES = new TType(gl_PerVertex, EvqPerVertexOut, TLayoutQualifier::Create());
-    type_gl_outTES->makeArray(resources.MaxPatchVertices);
-    type_gl_outTES->realize();
-    m_gl_outTES = new TVariable(BuiltInId::gl_outTES, BuiltInName::gl_out, SymbolType::BuiltIn,
-                                std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
-                                                            TExtension::OES_tessellation_shader}},
-                                type_gl_outTES);
-    TType *type_gl_outTESES3_2 =
-        new TType(gl_PerVertex, EvqPerVertexOut, TLayoutQualifier::Create());
-    type_gl_outTESES3_2->makeArray(resources.MaxPatchVertices);
-    type_gl_outTESES3_2->realize();
-    m_gl_outTESES3_2 =
-        new TVariable(BuiltInId::gl_outTESES3_2, BuiltInName::gl_out, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}}, type_gl_outTESES3_2);
     TFieldList *fields_gl_PerVertexOutTesBlock = new TFieldList();
     fields_gl_PerVertexOutTesBlock->push_back(
         new TField(new TType(EbtFloat, EbpHigh, EvqPosition, 4, 1), BuiltInName::gl_Position,
@@ -24161,9 +24142,7 @@ namespace
 uint16_t GetNextRuleIndex(uint32_t nameHash)
 {
     if (nameHash == 1426 - 1)
-    {
         return ArraySize(BuiltInArray::kRules);
-    }
     return BuiltInArray::kMangledOffsets[nameHash + 1];
 }
 }  // namespace
@@ -24175,9 +24154,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
 
     uint32_t nameHash = name.mangledNameHash();
     if (nameHash >= 1426)
-    {
         return nullptr;
-    }
 
     const char *actualName = BuiltInArray::kMangledNames[nameHash];
     if (name != actualName)

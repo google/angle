@@ -159,8 +159,6 @@ class TSymbolTableBase
     TSymbol *m_gl_PerVertexTESES3_2                          = nullptr;
     TSymbol *m_gl_inTES                                      = nullptr;
     TSymbol *m_gl_inTESES3_2                                 = nullptr;
-    TSymbol *m_gl_outTES                                     = nullptr;
-    TSymbol *m_gl_outTESES3_2                                = nullptr;
     TSymbol *m_gl_PositionTES                                = nullptr;
     TSymbol *m_gl_PositionTESES3_2                           = nullptr;
     TSymbol *m_gl_ClipDistance                               = nullptr;
