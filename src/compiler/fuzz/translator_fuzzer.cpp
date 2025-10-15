@@ -252,19 +252,19 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     // Dump the string being passed to the compiler to ease debugging.
     // The string is written char-by-char and unwanted characters are replaced with whitespace.
     // This is because characters such as \r can hide the shader contents.
-    std::cout << "\nCompile input with unprintable characters turned to whitespace:\n";
+    std::cerr << "\nCompile input with unprintable characters turned to whitespace:\n";
     for (const char *c = shaderStrings[0]; *c; ++c)
     {
         if (*c < ' ' && *c != '\n')
         {
-            std::cout << ' ';
+            std::cerr << ' ';
         }
         else
         {
-            std::cout << *c;
+            std::cerr << *c;
         }
     }
-    std::cout << "\nEnd of compile input.\n\n";
+    std::cerr << "\nEnd of compile input.\n\n";
 
     translator->compile(shaderStrings, 1, options);
 
