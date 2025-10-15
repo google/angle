@@ -115,6 +115,28 @@ TEST_P(EGLSyncTestMetalCommandsScheduled, NoWork)
     EXPECT_EGL_TRUE(eglDestroySync(display, sync));
 }
 
+// Test that there's no crash if a sync object is destroyed before its command buffer is scheduled.
+TEST_P(EGLSyncTestMetalCommandsScheduled, DestroyBeforeScheduled)
+{
+    ANGLE_SKIP_TEST_IF(!hasCommandsScheduledSyncExtension());
+
+    recordCommands();
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    EGLSync sync1      = eglCreateSync(display, EGL_SYNC_METAL_COMMANDS_SCHEDULED_ANGLE, nullptr);
+    EXPECT_NE(sync1, EGL_NO_SYNC);
+
+    // Create and destroy another sync object immediately - it will add a callback to the commands
+    // scheduled handler, but the callback shouldn't crash even after the sync object is destroyed.
+    EGLSync sync2 = eglCreateSync(display, EGL_SYNC_METAL_COMMANDS_SCHEDULED_ANGLE, nullptr);
+    EXPECT_NE(sync2, EGL_NO_SYNC);
+    EXPECT_EGL_TRUE(eglDestroySync(display, sync2));
+
+    waitForCommandsScheduled(display, sync1);
+
+    EXPECT_EGL_TRUE(eglDestroySync(display, sync1));
+}
+
 ANGLE_INSTANTIATE_TEST(EGLSyncTestMetalCommandsScheduled, ES2_METAL(), ES3_METAL());
 // This test suite is not instantiated on non-Metal backends and OSes.
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSyncTestMetalCommandsScheduled);

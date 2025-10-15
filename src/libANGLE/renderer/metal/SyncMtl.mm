@@ -212,13 +212,16 @@ class EventSyncImpl : public SyncImpl
 class CommandsScheduledSyncImpl : public SyncImpl
 {
   public:
-    CommandsScheduledSyncImpl() : mCv(new std::condition_variable()), mLock(new std::mutex()) {}
-
-    ~CommandsScheduledSyncImpl() override {}
+    CommandsScheduledSyncImpl()           = default;
+    ~CommandsScheduledSyncImpl() override = default;
 
     angle::Result set(ContextMtl *contextMtl)
     {
-        contextMtl->addCommandBufferScheduledCallback([this] { this->signal(); });
+        contextMtl->addCommandBufferScheduledCallback([state = mState] {
+            std::lock_guard<std::mutex> lock(state->mutex);
+            state->signaled = true;
+            state->cv.notify_one();
+        });
         contextMtl->flushCommandBuffer(mtl::NoWait);
         return angle::Result::Continue;
     }
@@ -228,8 +231,8 @@ class CommandsScheduledSyncImpl : public SyncImpl
                              uint64_t timeout,
                              GLenum *outResult) override
     {
-        std::unique_lock<std::mutex> lg(*mLock);
-        if (mSignaled)
+        std::unique_lock<std::mutex> lock(mState->mutex);
+        if (mState->signaled)
         {
             *outResult = GL_ALREADY_SIGNALED;
             return angle::Result::Continue;
@@ -241,14 +244,14 @@ class CommandsScheduledSyncImpl : public SyncImpl
             return angle::Result::Continue;
         }
 
-        if (!mCv->wait_for(lg, std::chrono::nanoseconds(SanitizeTimeout(timeout)),
-                           [this] { return mSignaled; }))
+        if (!mState->cv.wait_for(lock, std::chrono::nanoseconds(SanitizeTimeout(timeout)),
+                                 [state = mState] { return state->signaled; }))
         {
             *outResult = GL_TIMEOUT_EXPIRED;
             return angle::Result::Continue;
         }
 
-        ASSERT(mSignaled);
+        ASSERT(mState->signaled);
         *outResult = GL_CONDITION_SATISFIED;
         return angle::Result::Continue;
     }
@@ -261,22 +264,19 @@ class CommandsScheduledSyncImpl : public SyncImpl
 
     angle::Result getStatus(DisplayMtl *displayMtl, bool *signaled) override
     {
-        std::unique_lock<std::mutex> lg(*mLock);
-        *signaled = mSignaled;
+        std::lock_guard<std::mutex> lock(mState->mutex);
+        *signaled = mState->signaled;
         return angle::Result::Continue;
     }
 
-    void signal()
-    {
-        std::lock_guard<std::mutex> lg(*mLock);
-        mSignaled = true;
-        mCv->notify_one();
-    }
-
   private:
-    std::shared_ptr<std::condition_variable> mCv;
-    std::shared_ptr<std::mutex> mLock;
-    bool mSignaled = false;
+    struct State
+    {
+        std::condition_variable cv;
+        std::mutex mutex;
+        bool signaled = false;
+    };
+    std::shared_ptr<State> mState{std::make_shared<State>()};
 };
 }  // namespace mtl
 
