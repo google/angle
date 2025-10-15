@@ -1714,6 +1714,41 @@ cl_int ValidateSetKernelArg(cl_kernel kernel,
         }
     }
 
+    // CL_MAX_SIZE_RESTRICTION_EXCEEDED if the size in bytes of the memory object (if the argument
+    // is a memory object) or arg_size (if the argument is declared with local qualifier) exceeds a
+    // language- specified maximum size restriction for this argument, such as the MaxByteOffset
+    // SPIR-V decoration. This error code is missing before version 2.2.
+    // For versions below 2.2
+    // CL_OUT_OF_RESOURCES if there is a failure to allocate resources required by the OpenCL
+    // implementation on the device.
+    if (arg_value == nullptr &&
+        krnl.getInfo().args[arg_index].addressQualifier == CL_KERNEL_ARG_ADDRESS_LOCAL)
+    {
+        for (const auto &device : krnl.getProgram().getDevices())
+        {
+            cl_ulong maxLocalMemSize      = 0;
+            cl_ulong compiledLocalMemSize = krnl.getImpl().getCompiledLocalMemSize(*device);
+            if (ANGLE_UNLIKELY(IsError(device->getImpl<rx::CLDeviceImpl>().getInfoULong(
+                    cl::DeviceInfo::LocalMemSize, &maxLocalMemSize))))
+            {
+                // The implementation shouldn't come this far if device query can report errors.
+                ASSERT(false);
+            }
+            if (arg_size + compiledLocalMemSize > maxLocalMemSize)
+            {
+                if (krnl.getProgram().getContext().getPlatform().getVersion() >
+                    CL_MAKE_VERSION(2, 1, 0))
+                {
+                    return CL_MAX_SIZE_RESTRICTION_EXCEEDED;
+                }
+                else
+                {
+                    return CL_OUT_OF_RESOURCES;
+                }
+            }
+        }
+    }
+
     return CL_SUCCESS;
 }
 
@@ -2531,13 +2566,19 @@ cl_int ValidateEnqueueNDRangeKernel(cl_command_queue command_queue,
         }
     }
 
+    cl_ulong localMemSize    = 0;
     cl_ulong maxLocalMemSize = 0;
-    if (IsError(queue.getDevice().getInfo(cl::DeviceInfo::LocalMemSize, sizeof(maxLocalMemSize),
-                                          &maxLocalMemSize, nullptr)))
+    if (ANGLE_UNLIKELY(
+            IsError(krnl.getWorkGroupInfo(const_cast<cl_device_id>(device.getNative()),
+                                          cl::KernelWorkGroupInfo::LocalMemSize,
+                                          sizeof(localMemSize), &localMemSize, nullptr)) ||
+            IsError(device.getImpl<rx::CLDeviceImpl>().getInfoULong(cl::DeviceInfo::LocalMemSize,
+                                                                    &maxLocalMemSize))))
     {
-        return CL_INVALID_VALUE;
+        // The implementation shouldn't come this far if device query can report errors.
+        ASSERT(false);
     }
-    if (krnl.getImpl().getLocalMemSizeUsed(queue.getDevice()) > maxLocalMemSize)
+    if (localMemSize > maxLocalMemSize)
     {
         ERR() << "Kernel exceeds the maximum local mem size capability";
         return CL_OUT_OF_RESOURCES;
