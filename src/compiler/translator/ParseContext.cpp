@@ -300,7 +300,7 @@ void MarkClipCullIndex(const TSourceLoc &line, TIntermTyped *indexExpr, ClipCull
                 idx = constIdx->getUConst();
                 break;
             default:
-                UNREACHABLE();
+                // This can happen due to a compile error that is generated elsewhere.
                 break;
         }
 
