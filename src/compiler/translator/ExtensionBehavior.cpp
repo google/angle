@@ -66,7 +66,7 @@
     OP(KHR_blend_equation_advanced,                    100, 320) \
     OP(NV_EGL_stream_consumer_external,                100, 320) \
     OP(NV_shader_noperspective_interpolation,          300, 320) \
-    OP(OES_EGL_image_external,                         100, 310) \
+    OP(OES_EGL_image_external,                         100, 320) \
     OP(OES_EGL_image_external_essl3,                   300, 320) \
     OP(OES_sample_variables,                           300, 320) \
     OP(OES_shader_multisample_interpolation,           300, 320) \
