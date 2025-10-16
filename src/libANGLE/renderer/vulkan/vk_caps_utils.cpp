@@ -900,9 +900,10 @@ void Renderer::ensureCapsInitialized() const
     mNativeCaps.maxAtomicCounterBufferSize     = maxStorageBufferRange;
 
     // There is no particular limit to how many atomic counters there can be, other than the size of
-    // a storage buffer.  We nevertheless limit this to something reasonable (4096 arbitrarily).
+    // a storage buffer.  We nevertheless limit this to something reasonable; 32 arbitrarily, which
+    // is more than what most GLES drivers support (8, the minimum required value).
     const int32_t maxAtomicCounters =
-        std::min<int32_t>(4096, maxStorageBufferRange / sizeof(uint32_t));
+        std::min<int32_t>(32, maxStorageBufferRange / sizeof(uint32_t));
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         mNativeCaps.maxShaderAtomicCounters[shaderType] = maxAtomicCounters;
