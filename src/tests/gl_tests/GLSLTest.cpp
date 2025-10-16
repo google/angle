@@ -629,6 +629,29 @@ TEST_P(GLSLTest, SwizzledChainedAssignIncrement)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(75, 75, 38, 38));
 }
 
+// Same test as above without unary increments.
+TEST_P(GLSLTest, SwizzledChainedAssign)
+{
+    constexpr char kFS[] =
+        R"(
+        precision mediump float;
+        void main() {
+            vec2 v = vec2(1,5);
+            // at the end of next statement, values in
+            // v.x = 12, v.y = 12
+            v.xy += v.yx += v.xy;
+            // v1 and v2, both are initialized with (12,12)
+            vec2 v1 = v, v2 = v;
+            v1.xy += v2.yx += (v.xy) += 1.0;  // v1 = 37, v2 = 25 each
+            gl_FragColor = vec4(v1,v2)/255.;  // 37, 37, 25, 25
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(37, 37, 25, 25));
+}
+
 TEST_P(GLSLTest, NamelessScopedStructs)
 {
     constexpr char kFS[] = R"(precision mediump float;
@@ -4133,6 +4156,129 @@ TEST_P(GLSLTest, NestedSequenceOperatorWithTernaryInside)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests that function arguments are evaluated left to right.
+// See GLSL ES 3.0 spec, 6.1.1 Function Calling Conventions:
+// "All arguments are evaluated at call time, exactly once, in order, from left to right."
+TEST_P(GLSLTest, FunctionArgumentEvalOrder)
+{
+    constexpr char kFS[] = R"(
+precision mediump float;
+uniform bool u;
+
+int outVar1, outVar2;
+
+void f (int arg1, int arg2) {
+    outVar1 = arg1;
+    outVar2 = arg2;
+}
+
+void main()
+{
+    int a = u ? 1 : 2;      // will be 2
+    f (a, a++);
+
+    // Verify that both args were 2 but a was incremented afterwards.
+    gl_FragColor = vec4(outVar1 == 2, outVar2 == 2, a == 3, 1);
+})";
+
+    ANGLE_GL_PROGRAM(prog, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(prog, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Same as FunctionArgumentEvalOrder, but with f as an overloaded function.
+TEST_P(GLSLTest, FunctionArgumentEvalOrderOverloaded)
+{
+    constexpr char kFS[] = R"(
+precision mediump float;
+uniform bool u;
+
+int outVar1, outVar2;
+
+void f (in int arg1, in int arg2) {
+    outVar1 = arg1;
+    outVar2 = arg2;
+}
+
+void f (out int arg1, in float arg2) {
+    arg1 = int(arg2);
+}
+
+void main()
+{
+    int a = u ? 1 : 2;      // will be 2
+    f (a, a++);
+    f (a, float(a++)); // Should NOT modify `a` because the first arg is assigned the current
+                // value of `a` (before it is incremented as part of the side effects
+                // of evaluating the second argument).
+
+    // Verify that both args were 2 but a was incremented afterwards.
+    gl_FragColor = vec4(outVar1 == 2, outVar2 == 2, a == 3, 1);
+})";
+
+    ANGLE_GL_PROGRAM(prog, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(prog, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Tests that function arguments are evaluated left to right.
+TEST_P(GLSLTest, FunctionArgumentEvalOrderIncrement)
+{
+    constexpr char kFS[] = R"(
+precision mediump float;
+uniform bool u;
+
+int outVar1, outVar2;
+
+void f (int arg1, int arg2) {
+    outVar1 = arg1;
+    outVar2 = arg2;
+}
+
+void main()
+{
+    int a = u ? 1 : 2;      // will be 2
+    f (a++, a);
+
+    // Verify that the first arg was still 2 but its evaluation set a == 3 for the second
+    // argument.
+    gl_FragColor = vec4(outVar1 == 2, outVar2 == 3, a == 3, 1);
+})";
+
+    ANGLE_GL_PROGRAM(prog, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(prog, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Tests that function arguments are evaluated left to right, specifically when one argument is a
+// ternary that modifies a variable used by an earlier function argument.
+TEST_P(GLSLTest, TernaryModifiesVariableInSameStatement)
+{
+    constexpr char kFS[] = R"(
+precision mediump float;
+uniform bool u;
+
+int outVar1, outVar2;
+
+void f (int arg1, int arg2) {
+    outVar1 = arg1;
+    outVar2 = arg2;
+}
+
+void main()
+{
+    int a = u ? 1 : 2;      // will be 2
+    f (a, a == 2 ? a++ : a + 1); // Ternary causes `a` to be incremented.
+
+    // Verify that both args were 2 but a was incremented afterwards.
+    gl_FragColor = vec4(outVar1 == 2, outVar2 == 2, a == 3, 1);
+})";
+
+    ANGLE_GL_PROGRAM(prog, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(prog, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
 // Test that nesting ternary and short-circuitting operators work.
 TEST_P(GLSLTest, NestedTernaryAndShortCircuit)
 {
@@ -4164,6 +4310,53 @@ void main()
 
     // Verify that a is 7, b is 4 and c is 15.
     gl_FragColor = vec4(a == 7, b == 4, c == 15, 1);
+})";
+
+    ANGLE_GL_PROGRAM(prog, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(prog, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Test that nesting ternary and short-circuitting operators work, but using function calls
+// instead of assignments for side effects.
+TEST_P(GLSLTest, NestedTernaryAndShortCircuitWithFunctionCalls)
+{
+    // Note that the uniform doesn't need to be set, and will contain the default value of false.
+    constexpr char kFS[] = R"(
+precision mediump float;
+uniform bool u;
+
+int globVar = 0;
+
+int f () {
+    globVar++;
+    return globVar;
+}
+
+void main()
+{
+    int a = u ? 12345 : 2;      // will be 2
+    int b = u ? 12345 : 4;      // will be 4
+    int c = u ? 12345 : 0;      // will be 0
+
+    if (a == 2                  // true path is taken
+        ? (b == 3               // false path is taken
+            ? f() != 0
+            : b != 0            // true
+          ) && (                // short-circuit evaluates RHS
+            f() == 1          // true, modifies globVar
+            ||                  // short-circuit doesn't evaluate RHS
+            f() == 8
+          )
+        : (a == 0 && b == 0
+            ? (int(f() == 2 && f() == 0)) != 0
+            : (int(f() != 2 && f() != 0)) != 0))
+    {
+        c += 15;                // will execute
+    }
+
+    // Verify that a is 7, b is 4 and c is 15.
+    gl_FragColor = vec4(a == 2, b == 4, c == 15, globVar == 1);
 })";
 
     ANGLE_GL_PROGRAM(prog, essl1_shaders::vs::Simple(), kFS);
@@ -19698,7 +19891,7 @@ TEST_P(GLSLTest_ES3, MonomorphizeForAndContinue)
 
     constexpr char kFS[] =
         R"(#version 300 es
-        
+
         precision mediump float;
         out vec4 fragOut;
         struct aParam
@@ -19725,7 +19918,7 @@ TEST_P(GLSLTest_ES3, MonomorphizeForAndContinue)
         void main()
         {
             fragOut.a = monomorphizedFunction(theParam);
-        }        
+        }
 )";
     CompileShader(GL_FRAGMENT_SHADER, kFS);
     ASSERT_GL_NO_ERROR();
@@ -22944,6 +23137,303 @@ void main() {})";
         glDeleteShader(shader);
     }
 }
+
+// Tests that outparams work when used with globals.
+TEST_P(GLSLTest, OutparamWorksGlobal)
+{
+    constexpr char kFS[] =
+        R"(
+        precision mediump float;
+        float globalX = 0.5;
+        void f(inout float x) {
+            x += x;
+        }
+        void main() {
+            f (globalX);
+            gl_FragColor = vec4(globalX, 1.0, 1.0, 1.0); // white
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Tests that outparams work when used with temporary arrays.
+TEST_P(GLSLTest, OutparamWorksTempArray)
+{
+    constexpr char kFS[] =
+        R"(
+        precision mediump float;
+        void f(inout float x, out float y, in float val) {
+            y = x;
+            x = val;
+        }
+        void main() {
+            float arr[3];
+            arr[0] = 1.0;
+            arr[1] = 0.25;
+            arr[2] = 127.0/255.0;
+            f (arr[0], arr[1], arr[2]);
+            // arr[1] = arr[0] = 1.0;
+            // arr[0] = arr[2] = 0.5;
+            gl_FragColor = vec4(arr[0], arr[1], arr[2], 1.0);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(127u, 255u, 127u, 255u));
+}
+
+// Checks (add-)assigning to a multielement-swizzle where both the LHS and RHS have side effects.
+// Doesn't test the LHS side effects.
+TEST_P(GLSLTest, ComplicatedMultielementSwizzle1)
+{
+
+    constexpr char kFS[] =
+        R"(
+        precision mediump float;
+        void main() {
+            int i = 0;
+            float a = 0.0;
+            vec4 vecs[2];
+            vecs[0] = vec4(0.0);
+            vecs[1] = vec4(1.0);
+            vecs[++i].yz += vec2(a++, a++); // vecs[1].yz += vec2(0.0, 1.0);
+
+            gl_FragColor = vecs[1]/255.0;  // 1, 1, 2, 1
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(1, 1, 2, 1));
+}
+
+// Checks (add-)assigning to a multielement-swizzle where both the LHS and RHS have side effects.
+// See GLSL ES 3.0 Spec. 5.8 Assignments:
+// "Expressions on the left of an assignment are evaluated before expressions on the right of the
+// assignment."
+TEST_P(GLSLTest, ComplicatedMultielementSwizzle2)
+{
+
+    constexpr char kFS[] =
+        R"(
+        precision mediump float;
+        void main() {
+            int i = 0;
+            float a = 0.0;
+            vec4 vecs[2];
+            vecs[0] = vec4(0.0);
+            vecs[1] = vec4(1.0);
+            // Essentially vecs[0].yz = (vecs[1].xy += vec2(0.0, 1.0));
+            // Resulting in:
+            // vecs[1] = vec4(1.0, 2.0, 1.0, 1.0);
+            // So vecs[1].xy = vec2(1.0, 2.0);
+            // So vecs[0] = vec4(0.0, 1.0, 2.0, 0.0);
+            vecs[i++].yz = (vecs[i++].xy += vec2(a++, a++));
+
+            gl_FragColor = vec4(vecs[0].yz, vecs[1].zw)/255.;  // 1, 2, 1, 1
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(1, 2, 1, 1));
+}
+
+// Checks that ternaries work with params.
+TEST_P(GLSLTest, TernariesWithParams1)
+{
+    constexpr char kFS[] =
+        R"(precision mediump float;
+
+float func (in float a, in float b)
+{
+    return a > b ? -1.0 : 1.0;
+}
+
+void main()
+{
+    float x = 1.0;
+    float m = func(x, x); // returns 1.0
+    gl_FragColor = vec4(m, m, m, 1.0);
+}
+
+)";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Checks that ternaries work with params and the return value is passed to an outparam.
+TEST_P(GLSLTest, TernariesWithParams2)
+{
+    constexpr char kFS[] =
+        R"(precision mediump float;
+
+void func (in float a, in float b, out float ret)
+{
+    ret = a > b ? -1.0 : 1.0;
+}
+
+void main()
+{
+    float x = 1.0;
+    float m;
+    func(x, x, m); // returns 1.0
+    gl_FragColor = vec4(m, m, m, 1.0);
+}
+
+)";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Checks that ternaries work with params where one is an inout param. The inout param is read from
+// and written to.
+TEST_P(GLSLTest, TernariesWithParams3)
+{
+    constexpr char kFS[] =
+        R"(precision mediump float;
+
+void func (in float a, inout float b)
+{
+    b = a > b ? -1.0 : 1.0;
+}
+
+void main()
+{
+    float x = 1.0;
+    func(x, x); // x = 1.0
+    gl_FragColor = vec4(x, x, x, 1.0);
+}
+
+)";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Tests that calling a function with an in parameter as an inout argument works.
+TEST_P(GLSLTest, NestedInoutVars1)
+{
+
+    constexpr char kFS[] =
+        R"(precision mediump float;
+
+void negate (inout float x);
+
+float func (in float a, in float b)
+{
+    negate(a);
+    if (abs(a-b) < 0.1) {
+        return -1.0;
+    } else {
+        return 1.0;
+    }
+}
+
+void main()
+{
+    float x = 1.0;
+    float m = func(x, x); // returns 1.0
+    gl_FragColor = vec4(m, m, m, 1.0);
+}
+
+void negate (inout float x) { x = -x; }
+
+)";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Tests that calling a function with inout parameters as in, out, and inout arguments works.
+TEST_P(GLSLTest, NestedInoutVars2)
+{
+    constexpr char kFS[] =
+        R"(precision mediump float;
+
+    float get (in float x);
+    void set (out float x, in float val);
+    void negate (inout float x);
+
+    float func (inout float a, inout float b)
+    {
+        negate(a);
+        return abs(a - b) < 0.1 ? -1.0 : 1.0;
+    }
+
+    void main()
+    {
+        float x;
+        set(x, 1.0);
+        float m = func(x, x); // returns 1.0
+        gl_FragColor = vec4(m, m, m, 1.0);
+    }
+
+    float get (in float x) { return x; }
+    void set (out float x, in float val) { x = val; }
+    void negate (inout float x) { set(x, -get(x)); }
+
+    )";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Tests that calling a function with out parameters as out arguments works.
+TEST_P(GLSLTest, NestedInoutVars3)
+{
+    constexpr char kFS[] =
+        R"(precision mediump float;
+
+    float globVar;
+
+    void g (out float y, out float x) {
+        x = 127.0/255.0;
+        y = 1.0;
+    }
+
+    void f (out float x) {
+        g(x, x);
+    }
+
+    void main()
+    {
+        f (globVar);
+        gl_FragColor = vec4(globVar, 0.0, 0.0, 1.0);
+    }
+
+    )";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // According to the GLES spec, it's undefined which order outparams are copied out, so globVar
+    // could have ended with either 0.5 or 1.0.
+    GLColor color = angle::ReadColor(0, 0);
+    ASSERT_GL_NO_ERROR();
+    if (color != GLColor::red && color != GLColor(127u, 0u, 0u, 255u))
+    {
+        ADD_FAILURE() << "Got " << color << ", expected white or grey";
+    }
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
