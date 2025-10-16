@@ -1193,6 +1193,43 @@ TEST_P(RobustBufferAccessBehaviorTest, DrawArraysWithInterleavedAttributeData)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test dynamic buffer crash when context created with robust buffer access enabled
+TEST_P(RobustBufferAccessBehaviorTest, DynamicBufferCrash)
+{
+    ANGLE_SKIP_TEST_IF(!initExtension());
+
+    constexpr char kVS[] = R"(
+attribute vec4 position;
+attribute vec2 texCoord;
+varying vec2 v_texCoord;
+void main(void) {
+  v_texCoord = texCoord;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec2 v_texCoord;
+uniform vec4 colorMult;
+uniform sampler2D colorMap;
+void main(void) {
+  gl_FragColor = texture2D(colorMap, v_texCoord) * colorMult;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glLinkProgram(program);
+    ASSERT_TRUE(CheckLinkStatusAndReturnProgram(program, true));
+    glUseProgram(program);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+    glVertexAttribDivisor(0, 65537);
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0x4141, 65, 536870912);
+    // Either no error or invalid operation is okay, but test should not crash or hang.
+    GLenum glError = glGetError();
+    ASSERT_EQ(true, glError == GL_NO_ERROR || glError == GL_OUT_OF_MEMORY);
+}
+
 ANGLE_INSTANTIATE_TEST(RobustBufferAccessBehaviorTest,
                        WithNoFixture(ES3_VULKAN()),
                        WithNoFixture(ES3_OPENGL()),

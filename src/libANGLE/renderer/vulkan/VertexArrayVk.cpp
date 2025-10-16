@@ -1361,8 +1361,10 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
             // Instanced attrib
             if (divisor > renderer->getMaxVertexAttribDivisor())
             {
-                // Divisor will be set to 1 & so update buffer to have 1 attrib per instance
-                size_t bytesToAllocate = instanceCount * stride;
+                // Divisor will be set to 1 & so update buffer to have 1 attrib per instance. Make
+                // sure we do multiplication with uint64_t in case the result is more than 32 bit.
+                // We will let buffer allocation code handle the failure if needed.
+                size_t bytesToAllocate = static_cast<size_t>(instanceCount) * stride;
 
                 // Allocate buffer for results
                 ANGLE_TRY(contextVk->allocateStreamedVertexBuffer(attribIndex, bytesToAllocate,

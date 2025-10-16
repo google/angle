@@ -2834,6 +2834,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
                                       BufferHelper **bufferHelperOut,
                                       bool *newBufferAllocatedOut)
 {
+    ASSERT(sizeInBytes != 0);
     bool newBuffer = !allocateFromCurrentBuffer(sizeInBytes, bufferHelperOut);
     if (newBufferAllocatedOut)
     {

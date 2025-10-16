@@ -294,6 +294,9 @@
 374790899 NVIDIA OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
 374790899 NVIDIA GLES : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
 42265887 NVIDIA VULKAN : CopyCompressedTextureTestES31.CopyFromUncompressedToCompressed/* = SKIP
+// RobustBufferAccess is not actually robust (will hang).
+435228814 NVIDIA GLES : RobustBufferAccessBehaviorTest.DynamicBufferCrash/* = SKIP
+435228814 NVIDIA OPENGL : RobustBufferAccessBehaviorTest.DynamicBufferCrash/* = SKIP
 
 // Nvidia Vulkan
 42265709 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixCopyBug/* = SKIP
@@ -334,6 +337,8 @@
 // vk_icdNegotiateLoaderICDInterfaceVersion crashes (possibly Mesa bug?)
 40096893 LINUX INTEL VULKAN : RGBTextureBufferTestES31.* = SKIP
 40096893 LINUX INTEL VULKAN : TextureBufferTestES31.TexBufferFormatMismatch/* = SKIP
+// RobustBufferAccess is not actually robust (will hang).
+435228814 LINUX INTEL VULKAN : RobustBufferAccessBehaviorTest.DynamicBufferCrash/* = SKIP
 
 // Advanced blend tests fail on Intel (ES 3.2)
 340942999 WIN INTEL VULKAN : AdvancedBlendTestES32.* = SKIP
