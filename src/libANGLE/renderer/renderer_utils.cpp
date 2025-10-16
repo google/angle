@@ -1275,32 +1275,27 @@ void ReadFromBufferWithLayout(int componentCount,
     const int elementSize = sizeof(T) * componentCount;
     const uint8_t *source  = uniformData->data() + layoutInfo.offset;
     const uint8_t *readPtr = source + arrayIndex * layoutInfo.arrayStride;
-    // If the data read back is GLfloat, it is possible we need to transform the GLshort stored in
-    // memory to GLfloat, so handle GLfloat case separately.
+    // Special case when the expected data read back is GLfloat, it is possible we need to
+    // transform the data in memory from GLshort to GLfloat.
     if constexpr (std::is_same<T, GLfloat>::value)
     {
         if (isFloat16)
         {
-            // If we are expected to read back 4 GLfloat, we will first get back 8 GLshort,
-            // We transform the first 4 GLshort.
-            // The rest 4 GLshort is garbage value we don't care.
-            std::vector<GLshort> transformedValues(componentCount * 2, 0);
-            memcpy(transformedValues.data(), readPtr, elementSize);
+            // check that dst is aligned to 4 bytes (size of GLfloat)
+            ASSERT(reinterpret_cast<uintptr_t>(dst) % 4 == 0);
+            // check that readPtr is aligned to 2 bytes (size of GLshort)
+            ASSERT(reinterpret_cast<uintptr_t>(readPtr) % 2 == 0);
+            const GLshort *transformedValues = reinterpret_cast<const GLshort *>(readPtr);
             for (size_t index = 0; index < static_cast<size_t>(componentCount); ++index)
             {
-                *dst = gl::float16ToFloat32(transformedValues[index]);
-                ++dst;
+                dst[index] = gl::float16ToFloat32(transformedValues[index]);
             }
-        }
-        else
-        {
-            memcpy(dst, readPtr, elementSize);
+            // skip the generic case below
+            return;
         }
     }
-    else
-    {
-        memcpy(dst, readPtr, elementSize);
-    }
+    // Generic case where no data transform is needed
+    memcpy(dst, readPtr, elementSize);
 }
 
 template <typename T>
@@ -1402,6 +1397,8 @@ void SetUniform(const gl::ProgramExecutable *executable,
                         // check that writePtr is aligned to 2 bytes (size of GLshort)
                         ASSERT(reinterpret_cast<uintptr_t>(writePtr) % 2 == 0);
                         const GLfloat *readPtr = v + (readIndex * componentCount);
+                        // check that readPtr is aligned to 4 bytes (size of GLfloat)
+                        ASSERT(reinterpret_cast<uintptr_t>(readPtr) % 4 == 0);
                         // we need to write:
                         // 1) elementSize of transformed GLshort data
                         // 2) elementSize of padding 0s
