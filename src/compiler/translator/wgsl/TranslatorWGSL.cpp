@@ -336,11 +336,13 @@ void OutputWGSLTraverser::visitSymbol(TIntermSymbol *symbolNode)
         // Accesses of pipeline variables should be rewritten as struct accesses.
         if (mRewritePipelineVarOutput->IsInputVar(var.uniqueId()))
         {
-            mSink << kBuiltinInputStructName << "." << var.name();
+            mSink << kBuiltinInputStructName << ".";
+            WriteNameOf(mSink, var);
         }
         else if (mRewritePipelineVarOutput->IsOutputVar(var.uniqueId()))
         {
-            mSink << kBuiltinOutputStructName << "." << var.name();
+            mSink << kBuiltinOutputStructName << ".";
+            WriteNameOf(mSink, var);
         }
         else
         {
