@@ -35,6 +35,8 @@ class WGSLOutputTest : public MatchOutputCodeTest
         ShCompileOptions defaultCompileOptions = {};
         defaultCompileOptions.validateAST      = true;
         setDefaultCompileOptions(defaultCompileOptions);
+
+        getResources()->MaxDrawBuffers = 2;
     }
 };
 
@@ -799,8 +801,108 @@ fn wgslMain()
     EXPECT_TRUE(foundInCode(outputString.c_str()));
 }
 
+TEST_F(WGSLOutputTest, ChainedAssignment)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision highp float;
+
+        in vec4 inColor;
+        layout (location = 0) out vec4 color1;
+        layout (location = 1) out vec4 color2;
+
+        float globVar = 1.0;
+
+        void main()
+        {
+          vec4 tempColor;
+          if ((tempColor = inColor).x == 1.0) {
+            color1 = color2 = inColor;
+          }
+        })";
+    const std::string &outputString =
+        R"(diagnostic(warning,derivative_uniformity);
+fn ANGLE_assignPriv_0(dest : ptr<private, vec4<f32>>, src : vec4<f32>) -> vec4<f32>  {
+  *dest = src;
+  return *dest;
+}
+fn ANGLE_assignFunc_0(dest : ptr<function, vec4<f32>>, src : vec4<f32>) -> vec4<f32>  {
+  *dest = src;
+  return *dest;
+}
+struct ANGLE_Input_Global {
+  inColor : vec4<f32>,
+};
+
+var<private> ANGLE_input_global : ANGLE_Input_Global;
+
+struct ANGLE_Input_Annotated {
+  @location(@@@@@@) inColor : vec4<f32>,
+};
+
+struct ANGLE_Output_Global {
+  color1 : vec4<f32>,
+  color2 : vec4<f32>,
+};
+
+var<private> ANGLE_output_global : ANGLE_Output_Global;
+
+struct ANGLE_Output_Annotated {
+  @location(@@@@@@) color1 : vec4<f32>,
+  @location(@@@@@@) color2 : vec4<f32>,
+};
+
+@group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
+
+struct ANGLEDepthRangeParams
+{
+  near : f32,
+  far : f32,
+  diff : f32,
+};
+
+;
+;
+;
+
+struct ANGLEUniformBlock
+{
+  @align(16) acbBufferOffsets : vec2<u32>,
+  depthRange : vec2<f32>,
+  renderArea : u32,
+  flipXY : u32,
+  dither : u32,
+  misc : u32,
+};
+
+;
+
+fn _umain()
+{
+  var _utempColor : vec4<f32>;
+  if (((ANGLE_assignFunc_0(&_utempColor, ANGLE_input_global.inColor)).x) == (1.0f))
+  {
+    (ANGLE_output_global.color1) = (ANGLE_assignPriv_0(&ANGLE_output_global.color2, ANGLE_input_global.inColor));
+  }
+}
+@fragment
+fn wgslMain(ANGLE_input_annotated : ANGLE_Input_Annotated) -> ANGLE_Output_Annotated
+{
+  ANGLE_input_global.inColor = ANGLE_input_annotated.inColor;
+  _umain();
+  var ANGLE_output_annotated : ANGLE_Output_Annotated;
+  ANGLE_output_annotated.color1 = ANGLE_output_global.color1;
+  ANGLE_output_annotated.color2 = ANGLE_output_global.color2;
+  return ANGLE_output_annotated;
+}
+)";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode(outputString.c_str()));
+}
+
 TEST_F(WGSLOutputTest, IncrementDecrement)
 {
+
     const std::string &shaderString =
         R"(#version 300 es
         precision highp float;

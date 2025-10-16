@@ -529,31 +529,36 @@ OperatorInfo OutputWGSLTraverser::useOperatorAndGetInfo(TIntermNode *current,
             // This should have been done by a preprocessing.
             UNREACHABLE();
             return {"TODO_operator"};
-        case TOperator::EOpAssign:
-            return {"="};
         case TOperator::EOpInitialize:
             return {"="};
+        // Assignments are always statements in WGSL and do not yield a value, so they are
+        // implemented as functions, unless the current expression is a statement and is a scalar
+        // integer, in which case the normal postfix operator will do.
+        case TOperator::EOpAssign:
         // Compound assignments now exist: https://www.w3.org/TR/WGSL/#compound-assignment-sec
         case TOperator::EOpAddAssign:
-            return {"+="};
         case TOperator::EOpSubAssign:
-            return {"-="};
         case TOperator::EOpMulAssign:
-            return {"*="};
         case TOperator::EOpDivAssign:
-            return {"/="};
         case TOperator::EOpIModAssign:
-            return {"%="};
         case TOperator::EOpBitShiftLeftAssign:
-            return {"<<="};
         case TOperator::EOpBitShiftRightAssign:
-            return {">>="};
         case TOperator::EOpBitwiseAndAssign:
-            return {"&="};
         case TOperator::EOpBitwiseXorAssign:
-            return {"^="};
         case TOperator::EOpBitwiseOrAssign:
-            return {"|="};
+        case TOperator::EOpVectorTimesScalarAssign:
+        case TOperator::EOpVectorTimesMatrixAssign:
+        case TOperator::EOpMatrixTimesScalarAssign:
+        case TOperator::EOpMatrixTimesMatrixAssign:
+            if (isStatement(current))
+            {
+                return {GetOperatorString(op)};
+            }
+            else
+            {
+                return OperatorInfo{nullptr, mPrelude->assign(*argType0, *argType1, op)};
+            }
+
         case TOperator::EOpAdd:
             return {"+"};
         case TOperator::EOpSub:
@@ -662,14 +667,6 @@ OperatorInfo OutputWGSLTraverser::useOperatorAndGetInfo(TIntermNode *current,
             {
                 return OperatorInfo{"", mPrelude->preDecrement(*argType0)};
             }
-        case TOperator::EOpVectorTimesScalarAssign:
-            return {"*="};
-        case TOperator::EOpVectorTimesMatrixAssign:
-            return {"*="};
-        case TOperator::EOpMatrixTimesScalarAssign:
-            return {"*="};
-        case TOperator::EOpMatrixTimesMatrixAssign:
-            return {"*="};
         case TOperator::EOpVectorTimesScalar:
             return {"*"};
         case TOperator::EOpVectorTimesMatrix:
@@ -1273,24 +1270,30 @@ bool OutputWGSLTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
                 mSink << opInfo.wgslWrapperFn->prefix;
             }
 
+            auto emitArgList = [&]() {
+                leftNode.traverse(this);
+                mSink << ", ";
+                rightNode.traverse(this);
+            };
+
             // x * y, x ^ y, etc.
             if (opInfo.IsSymbolicOperator())
             {
                 groupedTraverse(leftNode);
-                if (op != TOperator::EOpComma)
-                {
-                    mSink << " ";
-                }
-                mSink << opInfo.opName << " ";
+                mSink << " " << opInfo.opName << " ";
                 groupedTraverse(rightNode);
+            }
+            else if (opInfo.wgslWrapperFn)
+            {
+                // Any necessary parentheses should be contained in opInfo.wgslWrapperFn->prefix and
+                // opInfo.wgslWrapperFn->suffix.
+                emitArgList();
             }
             // E.g. builtin function calls
             else
             {
                 mSink << opInfo.opName << "(";
-                leftNode.traverse(this);
-                mSink << ", ";
-                rightNode.traverse(this);
+                emitArgList();
                 mSink << ")";
             }
 
