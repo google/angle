@@ -1397,8 +1397,10 @@ void SetUniform(const gl::ProgramExecutable *executable,
                     for (int writeIndex = locationInfo.arrayIndex, readIndex = 0;
                          writeIndex < maxIndex; writeIndex++, readIndex++)
                     {
-                        const int arrayOffset  = writeIndex * layoutInfo.arrayStride;
-                        uint8_t *writePtr      = dst + arrayOffset;
+                        const int arrayOffset = writeIndex * layoutInfo.arrayStride;
+                        uint8_t *writePtr     = dst + arrayOffset;
+                        // check that writePtr is aligned to 2 bytes (size of GLshort)
+                        ASSERT(reinterpret_cast<uintptr_t>(writePtr) % 2 == 0);
                         const GLfloat *readPtr = v + (readIndex * componentCount);
                         // we need to write:
                         // 1) elementSize of transformed GLshort data
