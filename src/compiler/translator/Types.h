@@ -333,8 +333,6 @@ class TType
     // deepest field (nesting2.field1.position).
     int getDeepestStructNesting() const;
 
-    bool isNamelessStruct() const;
-
     bool isStructureContainingArrays() const;
     bool isStructureContainingMatrices() const;
     bool isStructureContainingType(TBasicType t) const;
