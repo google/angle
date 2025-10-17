@@ -3,7 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
@@ -35,7 +34,6 @@
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
 #include "compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.h"
-#include "compiler/translator/tree_ops/wgsl/EmulateMutableFunctionParams.h"
 #include "compiler/translator/tree_ops/wgsl/RewriteMixedTypeMathExprs.h"
 #include "compiler/translator/tree_ops/wgsl/RewriteMultielementSwizzleAssignment.h"
 #include "compiler/translator/tree_util/BuiltIn_autogen.h"
@@ -1526,7 +1524,12 @@ void OutputWGSLTraverser::emitFunctionParameter(const TFunction &func, const TVa
 
 void OutputWGSLTraverser::visitFunctionPrototype(TIntermFunctionPrototype *funcProtoNode)
 {
-    // WGSL does not need function prototypes at all. Functions can be declared out of order.
+    const TFunction &func = *funcProtoNode->getFunction();
+
+    emitIndentation();
+    // TODO(anglebug.com/42267100): output correct signature for main() if main() is declared as a
+    // function prototype, or perhaps just emit nothing.
+    emitFunctionSignature(func);
 }
 
 bool OutputWGSLTraverser::visitFunctionDefinition(Visit, TIntermFunctionDefinition *funcDefNode)
@@ -2551,11 +2554,6 @@ TranslatorWGSL::TranslatorWGSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutpu
 bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root,
                                                    const TVariable **defaultUniformBlockOut)
 {
-    if (!EmulateMutableFunctionParams(this, root))
-    {
-        return false;
-    }
-
     if (!RewriteMixedTypeMathExprs(this, root))
     {
         return false;

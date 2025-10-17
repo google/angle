@@ -149,7 +149,7 @@ struct ANGLEUniformBlock
 };
 
 ;
-;
+fn _udoFoo(_ufoo : _uFoo, _uzw : f32) -> vec4<f32>;
 
 fn _udoFoo(_ufoo : _uFoo, _uzw : f32) -> vec4<f32>
 {
@@ -370,136 +370,6 @@ fn _umain()
   ANGLEfunc3024_udoFoo(array<array<_uFoo, 2>, 2>(array<_uFoo, 2>(_ufoo, _ufoo), array<_uFoo, 2>(_ufoo, _ufoo)), 3.0f, mat2x2<f32>(1.0f, 0.0f, 0.0f, 1.0f), vec2<i32>(1i, 2i));
   ANGLEfunc3029_udoFoo(array<array<_uFoo, 2>, 2>(array<_uFoo, 2>(_ufoo, _ufoo), array<_uFoo, 2>(_ufoo, _ufoo)), 3.0f, mat2x2<f32>(1.0f, 0.0f, 0.0f, 1.0f), vec2<u32>(1u, 2u));
   (ANGLE_output_global.outColor) = (vec4<f32>((_ufoo)._ux, 0.0f, 0.0f, 0.0f));
-}
-@fragment
-fn wgslMain() -> ANGLE_Output_Annotated
-{
-  _umain();
-  var ANGLE_output_annotated : ANGLE_Output_Annotated;
-  ANGLE_output_annotated.outColor = ANGLE_output_global.outColor;
-  return ANGLE_output_annotated;
-}
-)";
-    compile(shaderString);
-    EXPECT_TRUE(foundInCode(outputString.c_str()));
-}
-
-TEST_F(WGSLOutputTest, ModifyFunctionParameters)
-{
-    const std::string &shaderString =
-        R"(#version 310 es
-        precision highp float;
-
-        out vec4 outColor;
-
-        struct Foo {
-            float x;
-            float y;
-        };
-
-        vec4 doFoo(Foo foo, float zw)
-        {
-            foo.x = foo.y;
-            return vec4(foo.x, foo.y, zw, zw);
-        }
-
-        float returnFloat(float x) {
-          x += 5.0;
-          return x;
-        }
-
-        float takeArgs(vec2 x, float y, float z) {
-          y -= x.x;
-          z -= 1.0;
-          return y;
-        }
-
-        void main()
-        {
-            Foo foo;
-            // Struct field accesses.
-            foo.x = 2.0;
-            foo.y = 2.0;
-
-            doFoo(foo, returnFloat(3.0));
-            takeArgs(vec2(1.0, 2.0), foo.x, 7.0);
-            float f3 = returnFloat(doFoo(foo, 7.0 + 9.0).x);
-
-            outColor = vec4(f3, 0.0, 0.0, 0.0);
-        })";
-    const std::string &outputString =
-        R"(diagnostic(warning,derivative_uniformity);
-struct ANGLE_Output_Global {
-  outColor : vec4<f32>,
-};
-
-var<private> ANGLE_output_global : ANGLE_Output_Global;
-
-struct ANGLE_Output_Annotated {
-  @location(@@@@@@) outColor : vec4<f32>,
-};
-
-@group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
-
-struct ANGLEDepthRangeParams
-{
-  near : f32,
-  far : f32,
-  diff : f32,
-};
-
-struct _uFoo
-{
-  _ux : f32,
-  _uy : f32,
-};
-
-;
-
-struct ANGLEUniformBlock
-{
-  @align(16) acbBufferOffsets : vec2<u32>,
-  depthRange : vec2<f32>,
-  renderArea : u32,
-  flipXY : u32,
-  dither : u32,
-  misc : u32,
-};
-
-;
-
-fn _udoFoo(_ufoo : _uFoo, _uzw : f32) -> vec4<f32>
-{
-  var sbc8 : _uFoo = (_ufoo);
-  ((sbc8)._ux) = ((sbc8)._uy);
-  return vec4<f32>((sbc8)._ux, (sbc8)._uy, _uzw, _uzw);
-}
-
-fn _ureturnFloat(_ux : f32) -> f32
-{
-  var sbc9 : f32 = (_ux);
-  (sbc9) += (5.0f);
-  return sbc9;
-}
-
-fn _utakeArgs(_ux : vec2<f32>, _uy : f32, _uz : f32) -> f32
-{
-  var sbca : f32 = (_uy);
-  var sbcb : f32 = (_uz);
-  (sbca) -= ((_ux).x);
-  (sbcb) -= (1.0f);
-  return sbca;
-}
-
-fn _umain()
-{
-  var _ufoo : _uFoo;
-  ((_ufoo)._ux) = (2.0f);
-  ((_ufoo)._uy) = (2.0f);
-  _udoFoo(_ufoo, _ureturnFloat(3.0f));
-  _utakeArgs(vec2<f32>(1.0f, 2.0f), (_ufoo)._ux, 7.0f);
-  var _uf3 : f32 = (_ureturnFloat((_udoFoo(_ufoo, 16.0f)).x));
-  (ANGLE_output_global.outColor) = (vec4<f32>(_uf3, 0.0f, 0.0f, 0.0f));
 }
 @fragment
 fn wgslMain() -> ANGLE_Output_Annotated
