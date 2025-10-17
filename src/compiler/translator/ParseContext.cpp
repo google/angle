@@ -4687,9 +4687,13 @@ bool TParseContext::parseGeometryShaderInputLayoutQualifier(const TTypeQualifier
         if (mGeometryShaderInputPrimitiveType == EptUndefined)
         {
             mGeometryShaderInputPrimitiveType = layoutQualifier.primitiveType;
-            setGeometryShaderInputArraySize(
-                GetGeometryShaderInputArraySize(mGeometryShaderInputPrimitiveType),
-                typeQualifier.line);
+            const GLuint inputArraySize =
+                GetGeometryShaderInputArraySize(mGeometryShaderInputPrimitiveType);
+
+            // Size any implicitly sized arrays that have already been declared.  Done before
+            // verifying gl_in's array size, since that could also need to be sized.
+            sizeUnsizedArrayTypes(inputArraySize);
+            setGeometryShaderInputArraySize(inputArraySize, typeQualifier.line);
         }
         else if (mGeometryShaderInputPrimitiveType != layoutQualifier.primitiveType)
         {
@@ -4697,10 +4701,6 @@ bool TParseContext::parseGeometryShaderInputLayoutQualifier(const TTypeQualifier
                   "layout");
             return false;
         }
-
-        // Size any implicitly sized arrays that have already been declared.
-        sizeUnsizedArrayTypes(
-            symbolTable.getGlInVariableWithArraySize()->getType().getOutermostArraySize());
     }
 
     // Set mGeometryInvocations if exists
@@ -4866,26 +4866,6 @@ void TParseContext::sizeUnsizedArrayTypes(uint32_t arraySize)
         type->sizeOutermostUnsizedArray(arraySize);
     }
     mDeferredArrayTypesToSize.clear();
-
-    // The gl_in variable may have been redeclared before it is sized.  Make sure it's declaration
-    // is in sync with SymbolTable::mGlInVariableWithArraySize.
-    if (mTreeRoot)
-    {
-        for (TIntermNode *node : *mTreeRoot->getSequence())
-        {
-            TIntermDeclaration *decl = node->getAsDeclarationNode();
-            TIntermSymbol *symbol    = decl && decl->getChildCount() == 1
-                                           ? decl->getChildNode(0)->getAsSymbolNode()
-                                           : nullptr;
-            if (symbol != nullptr && symbol->getQualifier() == EvqPerVertexIn)
-            {
-                ASSERT(symbolTable.getGlInVariableWithArraySize() != nullptr);
-                decl->replaceChildNode(
-                    symbol, new TIntermSymbol(symbolTable.getGlInVariableWithArraySize()));
-                break;
-            }
-        }
-    }
 }
 
 void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &typeQualifierBuilder)

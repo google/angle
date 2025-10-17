@@ -187,17 +187,37 @@ bool TSymbolTable::setGlInArraySize(unsigned int inputArraySize, int shaderVersi
 
 void TSymbolTable::onGlInVariableRedeclaration(const TVariable *redeclaredGlIn)
 {
-    // If mGlInVariableWithArraySize was previously cached because it was sized, update the cached
-    // pointer.
-    if (mGlInVariableWithArraySize)
-    {
-        // If mGlInVariableWithArraySize is set when gl_in is redeclared, it's because gl_in was
-        // sized before the redeclaration.  In that case, make sure the redeclared variable is also
-        // sized.
-        ASSERT(mGlInVariableWithArraySize->getType().getOutermostArraySize() ==
+    // There are 4 possibilities:
+    //
+    // 1. input primitive layout is set, then gl_in is encountered (not declared)
+    // 2. input primitive layout is set, then gl_in is redeclared
+    // 3. gl_in is redeclared with a size, then input primitive layout is set
+    // 4. gl_in is redeclared without a size, then input primitive layout is set
+    //
+    // In case 1, setGlInArraySize declares mGlInVariableWithArraySize, but this function is not
+    // called.
+    //
+    // In case 2, setGlInArraySize declares mGlInVariableWithArraySize, but we need to replace it
+    // with the shader-declared gl_in (redeclaredGlIn).  The array size of
+    // mGlInVariableWithArraySize and redeclaredGlIn should match (validated before the call).
+    //
+    // In case 3, this function is called when mGlInVariableWithArraySize is nullptr.  We set that
+    // to redeclaredGlIn.  Later when the input primitive is encountered, setGlInArraySize verifies
+    // that the size matches the expectation.
+    //
+    // In case 4, similarly this function is called when mGlInVariableWithArraySize is nullptr.
+    // That is again set to redeclaredGlIn.  The parser needs to ensure this unsized array is sized
+    // before calling setGlInArraySize which verifies the array sizes match.
+    //
+    // In all cases, basically mGlInVariableWithArraySize should be set to the redeclared variable.
+
+    // If mGlInVariableWithArraySize is set when gl_in is redeclared, it's because gl_in was
+    // sized before the redeclaration.  In that case, make sure the redeclared variable is also
+    // sized.
+    ASSERT(mGlInVariableWithArraySize == nullptr ||
+           mGlInVariableWithArraySize->getType().getOutermostArraySize() ==
                redeclaredGlIn->getType().getOutermostArraySize());
-        mGlInVariableWithArraySize = redeclaredGlIn;
-    }
+    mGlInVariableWithArraySize = redeclaredGlIn;
 }
 
 const TVariable *TSymbolTable::getGlInVariableWithArraySize() const
