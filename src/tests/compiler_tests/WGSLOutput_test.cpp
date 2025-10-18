@@ -1132,6 +1132,7 @@ struct ANGLEUniformBlock
 };
 
 ;
+;
 
 struct ANGLE_DefaultUniformBlock
 {
@@ -1144,11 +1145,221 @@ fn _umain()
 {
   var _udCopy : array<f32, 5> = (ANGLE_Convert_Array5_ANGLE_wrapped_float_ElementsTo_float_Elements(((ANGLE_defaultUniformBlock)._uunis)._ud));
   (ANGLE_output_global.fragColor) = (vec4<f32>((((ANGLE_defaultUniformBlock)._uunis)._ua)._ux, ((ANGLE_defaultUniformBlock)._uunis)._ub, ((ANGLE_defaultUniformBlock)._uunis)._uc, (_udCopy)[1i]));
-  (ANGLE_output_global.fragColor) += (vec4<f32>(((ANGLE_defaultUniformBlock)._uunis)._ud[2i].elem, ((ANGLE_defaultUniformBlock)._uunis)._ue, ((((ANGLE_defaultUniformBlock)._uunis)._uf)[0i])[2i], (select((ANGLE_Convert_Array5_ANGLE_wrapped_float_ElementsTo_float_Elements(((ANGLE_defaultUniformBlock)._uunis)._ug)), (ANGLE_Convert_Array5_ANGLE_wrapped_float_ElementsTo_float_Elements(((ANGLE_defaultUniformBlock)._uunis)._ud)), ((((ANGLE_defaultUniformBlock)._uunis)._ue) > (0.5f))))[1i]));
+  (ANGLE_output_global.fragColor) += (vec4<f32>(((ANGLE_defaultUniformBlock)._uunis)._ud[2i].elem, ((ANGLE_defaultUniformBlock)._uunis)._ue, ((((ANGLE_defaultUniformBlock)._uunis)._uf)[0i])[2i], (sbc1())[1i]));
+}
+
+fn sbc1() -> array<f32, 5>
+{
+  if ((((ANGLE_defaultUniformBlock)._uunis)._ue) > (0.5f))
+  {
+    return ANGLE_Convert_Array5_ANGLE_wrapped_float_ElementsTo_float_Elements(((ANGLE_defaultUniformBlock)._uunis)._ud);
+  }
+  else
+  {
+    return ANGLE_Convert_Array5_ANGLE_wrapped_float_ElementsTo_float_Elements(((ANGLE_defaultUniformBlock)._uunis)._ug);
+  }
 }
 @fragment
 fn wgslMain() -> ANGLE_Output_Annotated
 {
+  _umain();
+  var ANGLE_output_annotated : ANGLE_Output_Annotated;
+  ANGLE_output_annotated.fragColor = ANGLE_output_global.fragColor;
+  return ANGLE_output_annotated;
+}
+)";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode(outputString.c_str()));
+}
+
+TEST_F(WGSLOutputTest, Ternaries)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+precision mediump float;
+
+float globVar;
+
+in float inVar;
+out vec4 fragColor;
+void main() {
+  fragColor = vec4(0.0);
+  // Basic ternary
+  fragColor.x = inVar > 0.5 ? 1.0 : 0.0;
+  // Ternary with reference to temp vars
+  float x = inVar + 1.0;
+  fragColor.y = x > 0.5 ? 1.0 + x : x - 1.0;
+  // Ternary with reference to global vars or in vars
+  globVar = inVar - 2.0;
+  fragColor.z = x > globVar ? 1.0 + x : x - 1.0;
+
+  float y = inVar - 7.0;
+  fragColor.w = (x > globVar ? (x > globVar + 0.5 ? y + 0.5 : y - 0.5) : y);
+
+  float z = (x > globVar ? y : x);
+  fragColor.w += z;
+
+  fragColor.w += (z > 0.5 ? z : z + 0.5);
+})";
+    const std::string &outputString =
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Input_Global {
+  inVar : f32,
+};
+
+var<private> ANGLE_input_global : ANGLE_Input_Global;
+
+struct ANGLE_Input_Annotated {
+  @location(@@@@@@) inVar : f32,
+};
+
+struct ANGLE_Output_Global {
+  fragColor : vec4<f32>,
+};
+
+var<private> ANGLE_output_global : ANGLE_Output_Global;
+
+struct ANGLE_Output_Annotated {
+  @location(@@@@@@) fragColor : vec4<f32>,
+};
+
+@group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
+
+struct ANGLEDepthRangeParams
+{
+  near : f32,
+  far : f32,
+  diff : f32,
+};
+
+var<private> _uglobVar : f32;
+;
+;
+var<private> _ux : f32;
+var<private> _uy : f32;
+var<private> _uz : f32;
+
+struct ANGLEUniformBlock
+{
+  @align(16) acbBufferOffsets : vec2<u32>,
+  depthRange : vec2<f32>,
+  renderArea : u32,
+  flipXY : u32,
+  dither : u32,
+  misc : u32,
+};
+
+;
+;
+;
+;
+;
+;
+;
+;
+
+fn _umain()
+{
+  (ANGLE_output_global.fragColor) = (vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f));
+  ((ANGLE_output_global.fragColor).x) = (sbc3());
+  (_ux) = ((ANGLE_input_global.inVar) + (1.0f));
+  ((ANGLE_output_global.fragColor).y) = (sbc4());
+  (_uglobVar) = ((ANGLE_input_global.inVar) - (2.0f));
+  ((ANGLE_output_global.fragColor).z) = (sbc5());
+  (_uy) = ((ANGLE_input_global.inVar) - (7.0f));
+  ((ANGLE_output_global.fragColor).w) = (sbc6());
+  (_uz) = (sbc7());
+  ((ANGLE_output_global.fragColor).w) += (_uz);
+  ((ANGLE_output_global.fragColor).w) += (sbc8());
+}
+
+fn sbc3() -> f32
+{
+  if ((ANGLE_input_global.inVar) > (0.5f))
+  {
+    return 1.0f;
+  }
+  else
+  {
+    return 0.0f;
+  }
+}
+
+fn sbc4() -> f32
+{
+  if ((_ux) > (0.5f))
+  {
+    return (1.0f) + (_ux);
+  }
+  else
+  {
+    return (_ux) - (1.0f);
+  }
+}
+
+fn sbc5() -> f32
+{
+  if ((_ux) > (_uglobVar))
+  {
+    return (1.0f) + (_ux);
+  }
+  else
+  {
+    return (_ux) - (1.0f);
+  }
+}
+
+fn sbc6() -> f32
+{
+  if ((_ux) > (_uglobVar))
+  {
+    return sbc9();
+  }
+  else
+  {
+    return _uy;
+  }
+}
+
+fn sbc7() -> f32
+{
+  if ((_ux) > (_uglobVar))
+  {
+    return _uy;
+  }
+  else
+  {
+    return _ux;
+  }
+}
+
+fn sbc8() -> f32
+{
+  if ((_uz) > (0.5f))
+  {
+    return _uz;
+  }
+  else
+  {
+    return (_uz) + (0.5f);
+  }
+}
+
+fn sbc9() -> f32
+{
+  if ((_ux) > ((_uglobVar) + (0.5f)))
+  {
+    return (_uy) + (0.5f);
+  }
+  else
+  {
+    return (_uy) - (0.5f);
+  }
+}
+@fragment
+fn wgslMain(ANGLE_input_annotated : ANGLE_Input_Annotated) -> ANGLE_Output_Annotated
+{
+  ANGLE_input_global.inVar = ANGLE_input_annotated.inVar;
   _umain();
   var ANGLE_output_annotated : ANGLE_Output_Annotated;
   ANGLE_output_annotated.fragColor = ANGLE_output_global.fragColor;

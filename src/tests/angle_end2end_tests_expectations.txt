@@ -1859,7 +1859,6 @@
 418022112 WGPU : ImageTest.RespecificationOfOtherLevel/* = SKIP
 418022112 WGPU : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 423702346 WGPU : SimpleUniformUsageTestES3.PackUniformFP16Test/* = SKIP
-42267100 WGPU : SimpleUniformUsageTestES3.TernarySelectAnArrayThenIndex/* = SKIP
 438268609 WGPU : CopyTexImageTest.CopyTex*Cube*/* = SKIP
 // Unimplemented format conversions for image copies 
 438268609 WGPU : CopyTexImageTest.RGBAToL*/* = SKIP

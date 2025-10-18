@@ -36,6 +36,7 @@
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
 #include "compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.h"
 #include "compiler/translator/tree_ops/wgsl/EmulateMutableFunctionParams.h"
+#include "compiler/translator/tree_ops/wgsl/PullExpressionsIntoFunctions.h"
 #include "compiler/translator/tree_ops/wgsl/RewriteMixedTypeMathExprs.h"
 #include "compiler/translator/tree_ops/wgsl/RewriteMultielementSwizzleAssignment.h"
 #include "compiler/translator/tree_util/BuiltIn_autogen.h"
@@ -2551,6 +2552,11 @@ TranslatorWGSL::TranslatorWGSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutpu
 bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root,
                                                    const TVariable **defaultUniformBlockOut)
 {
+    if (!PullExpressionsIntoFunctions(this, root))
+    {
+        return false;
+    }
+
     if (!EmulateMutableFunctionParams(this, root))
     {
         return false;
@@ -2661,6 +2667,7 @@ bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root,
     {
         return false;
     }
+
     return true;
 }
 

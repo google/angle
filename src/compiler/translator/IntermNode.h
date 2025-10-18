@@ -695,6 +695,7 @@ class TIntermBlock : public TIntermNode, public TIntermAggregateBase
   public:
     TIntermBlock() : TIntermNode(), mIsTreeRoot(false) {}
     TIntermBlock(std::initializer_list<TIntermNode *> stmts);
+    TIntermBlock(TIntermSequence &&stmts);
     ~TIntermBlock() override {}
 
     TIntermBlock *getAsBlock() override { return this; }

@@ -456,6 +456,11 @@ TIntermBlock::TIntermBlock(std::initializer_list<TIntermNode *> stmts)
     }
 }
 
+TIntermBlock::TIntermBlock(TIntermSequence &&stmts) : mStatements(std::move(stmts))
+{
+    mIsTreeRoot = false;
+}
+
 size_t TIntermBlock::getChildCount() const
 {
     return mStatements.size();
