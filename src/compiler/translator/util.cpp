@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 //
 
+#include "compiler/translator/IntermNode.h"
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
@@ -15,8 +16,9 @@
 #include "common/span.h"
 #include "common/utilities.h"
 #include "compiler/preprocessor/numeric_lex.h"
+#include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
-#include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/Symbol.h"
 
 bool atoi_clamp(const char *str, unsigned int *value)
 {
@@ -490,6 +492,34 @@ ImmutableString GetTypeName(const TType &type,
         return HashName(type.getStruct(), prefix, hashFunction, nameMap);
     else
         return ImmutableString(type.getBuiltInTypeNameString());
+}
+
+bool IsParam(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+        case EvqParamOut:
+        case EvqParamInOut:
+        case EvqParamIn:
+        case EvqParamConst:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+bool IsParamOut(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+        case EvqParamOut:
+        case EvqParamInOut:
+            return true;
+
+        default:
+            return false;
+    }
 }
 
 bool IsVaryingOut(TQualifier qualifier)
@@ -975,6 +1005,20 @@ Declaration ViewDeclaration(TIntermDeclaration &declNode, uint32_t index)
         symbolNode = initNode->getLeft()->getAsSymbolNode();
         ASSERT(symbolNode);
         return {*symbolNode, initNode->getRight()};
+    }
+}
+
+bool IsIndexOp(TOperator op)
+{
+    switch (op)
+    {
+        case EOpIndexDirect:
+        case EOpIndexDirectStruct:
+        case EOpIndexDirectInterfaceBlock:
+        case EOpIndexIndirect:
+            return true;
+        default:
+            return false;
     }
 }
 
