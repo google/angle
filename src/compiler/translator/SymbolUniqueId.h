@@ -25,6 +25,7 @@ class TSymbolUniqueId
     TSymbolUniqueId &operator=(const TSymbolUniqueId &) = default;
     bool operator==(const TSymbolUniqueId &other) const { return mId == other.mId; }
     bool operator!=(const TSymbolUniqueId &other) const { return !(*this == other); }
+    bool operator<(const TSymbolUniqueId &other) const { return get() < other.get(); }
 
     constexpr int get() const { return mId; }
 
