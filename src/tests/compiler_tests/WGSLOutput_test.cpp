@@ -1502,6 +1502,146 @@ fn wgslMain(ANGLE_input_annotated : ANGLE_Input_Annotated) -> ANGLE_Output_Annot
     EXPECT_TRUE(foundInCode(outputString.c_str()));
 }
 
+TEST_F(WGSLOutputTest, DifficultMultiElementSwizzle)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+precision mediump float;
+
+float globVar;
+
+in float inVar;
+out vec4 fragColor;
+void main() {
+  fragColor.xy = vec2(1.0, 2.0);
+
+  vec4[2] vecs;
+  int i = 0;
+  float a = 0.0;
+  vecs[i++].yz = (vecs[i++].xy = vec2(a++, a++));
+})";
+    const std::string &outputString =
+        R"(diagnostic(warning,derivative_uniformity);
+fn ANGLE_postIncPriv_1(x : ptr<private, f32>) -> f32 {
+  var old = *x;
+  (*x) += f32(1);
+  return old;
+}
+fn ANGLE_postIncFunc_1(x : ptr<function, f32>) -> f32 {
+  var old = *x;
+  (*x) += f32(1);
+  return old;
+}
+fn ANGLE_postIncPriv_0(x : ptr<private, i32>) -> i32 {
+  var old = *x;
+  (*x) += i32(1);
+  return old;
+}
+fn ANGLE_postIncFunc_0(x : ptr<function, i32>) -> i32 {
+  var old = *x;
+  (*x) += i32(1);
+  return old;
+}
+struct ANGLE_Output_Global {
+  fragColor : vec4<f32>,
+};
+
+var<private> ANGLE_output_global : ANGLE_Output_Global;
+
+struct ANGLE_Output_Annotated {
+  @location(@@@@@@) fragColor : vec4<f32>,
+};
+
+@group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
+
+struct ANGLEDepthRangeParams
+{
+  near : f32,
+  far : f32,
+  diff : f32,
+};
+
+var<private> _uinVar : f32;
+;
+var<private> _uvecs : array<vec4<f32>, 2>;
+var<private> _ui : i32;
+var<private> _ua : f32;
+
+struct ANGLEUniformBlock
+{
+  @align(16) acbBufferOffsets : vec2<u32>,
+  depthRange : vec2<f32>,
+  renderArea : u32,
+  flipXY : u32,
+  dither : u32,
+  misc : u32,
+};
+
+;
+;
+;
+;
+;
+
+fn _umain()
+{
+  var sbd9 : vec2<f32> = (vec2<f32>(1.0f, 2.0f));
+  ((ANGLE_output_global.fragColor).x) = ((sbd9).x);
+  ((ANGLE_output_global.fragColor).y) = ((sbd9).y);
+  (_ui) = (0i);
+  (_ua) = (0.0f);
+  sbca();
+}
+
+fn sbc4(sbc3 : ptr<function, vec4<f32>>) -> vec2<f32>
+{
+  var sbda : vec2<f32> = (sbd7(&(*sbc3)));
+  (((*sbc3)).y) = ((sbda).x);
+  (((*sbc3)).z) = ((sbda).y);
+  return ((*sbc3)).yz;
+}
+
+fn sbca() -> vec2<f32>
+{
+  let sbc6 : ptr<private, vec4<f32>> = (&((_uvecs)[clamp((ANGLE_postIncPriv_0(&(_ui))), 0, 1)]));
+  var sbc5 : vec4<f32>;
+  var sbc9 : vec2<f32> = (sbc4(&sbc5));
+  ((*sbc6)) = (sbc5);
+  return sbc9;
+}
+
+fn sbcc(sbcb : ptr<function, vec4<f32>>, sbc3 : ptr<function, vec4<f32>>) -> vec2<f32>
+{
+  var sbdb : vec2<f32> = (vec2<f32>(ANGLE_postIncPriv_1(&(_ua)), ANGLE_postIncPriv_1(&(_ua))));
+  (((*sbcb)).x) = ((sbdb).x);
+  (((*sbcb)).y) = ((sbdb).y);
+  return ((*sbcb)).xy;
+}
+
+fn sbd7(sbc3 : ptr<function, vec4<f32>>) -> vec2<f32>
+{
+  let sbcf : ptr<private, vec4<f32>> = (&((_uvecs)[clamp((ANGLE_postIncPriv_0(&(_ui))), 0, 1)]));
+  var sbce : vec4<f32>;
+  let sbd3 : ptr<function, vec4<f32>> = (&((*sbc3)));
+  var sbd2 : vec4<f32>;
+  var sbd6 : vec2<f32> = (sbcc(&sbce, &sbd2));
+  ((*sbcf)) = (sbce);
+  ((*sbd3)) = (sbd2);
+  return sbd6;
+}
+@fragment
+fn wgslMain() -> ANGLE_Output_Annotated
+{
+  _umain();
+  var ANGLE_output_annotated : ANGLE_Output_Annotated;
+  ANGLE_output_annotated.fragColor = ANGLE_output_global.fragColor;
+  return ANGLE_output_annotated;
+}
+)";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode(outputString.c_str()));
+}
+
 TEST_F(WGSLOutputTest, UniformsWithMatCx2)
 {
     const std::string &shaderString =

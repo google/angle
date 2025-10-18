@@ -124,6 +124,14 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
                 visit, UntranslatableConstructAndMetadata{UntranslatableCommaOperator{binary},
                                                           getParentNode(), mCurrentFunction});
         }
+        if (IsMultielementSwizzleAssignment(binary->getOp(), binary->getLeft()) &&
+            !CanRewriteMultiElementSwizzleAssignmentEasily(binary, getParentNode()))
+        {
+
+            handleUntranslatableConstruct(
+                visit, UntranslatableConstructAndMetadata{UntranslatableMultiElementSwizzle{binary},
+                                                          getParentNode(), mCurrentFunction});
+        }
 
         return true;
     }
@@ -192,10 +200,15 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
         TIntermBinary *commaOperator;
     };
     using UntranslatableFunctionCallWithOutparams = TIntermAggregate *;
+    struct UntranslatableMultiElementSwizzle
+    {
+        TIntermBinary *multielementSwizzle;
+    };
 
     using UntranslatableConstruct = std::variant<UntranslatableTernary,
                                                  UntranslatableCommaOperator,
-                                                 UntranslatableFunctionCallWithOutparams>;
+                                                 UntranslatableFunctionCallWithOutparams,
+                                                 UntranslatableMultiElementSwizzle>;
 
     struct UntranslatableConstructAndMetadata
     {
@@ -476,6 +489,53 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
         return substituteFunction;
     }
 
+    TFunction *replaceDifficultMultielementSwizzle(TIntermBinary *swizzleAssignment,
+                                                   const TIntermFunctionDefinition *parentFunction,
+                                                   TIntermSequence &newFunctionPrototypes,
+                                                   TIntermSequence &newFunctionDefinitions)
+    {
+        // Pull into a function that takes the swizzle operand as an outparam, which will then be
+        // handled by future passes of this AST traverser if necessary.
+        TIntermSwizzle *oldSwizzle = swizzleAssignment->getLeft()->getAsSwizzleNode();
+        ASSERT(oldSwizzle);
+
+        TType *paramType = new TType(oldSwizzle->getOperand()->getType());
+        paramType->setQualifier(swizzleAssignment->getOp() == EOpAssign ? EvqParamOut
+                                                                        : EvqParamInOut);
+        TVariable *operandParam = new TVariable(mSymbolTable, kEmptyImmutableString, paramType,
+                                                SymbolType::AngleInternal);
+
+        // Swizzle the outparam:
+        TIntermSwizzle *swizzledParam =
+            new TIntermSwizzle(new TIntermSymbol(operandParam), oldSwizzle->getSwizzleOffsets());
+
+        // Assign to the swizzled outparam instead of the original
+        TIntermBinary *newSwizzleAssignment = new TIntermBinary(
+            swizzleAssignment->getOp(), swizzledParam, swizzleAssignment->getRight());
+
+        // The swizzle assignment has a result, so return it.
+        TIntermBranch *result = new TIntermBranch(TOperator::EOpReturn, swizzledParam->deepCopy());
+        TIntermBlock *substituteFunctionBody = new TIntermBlock({newSwizzleAssignment, result});
+
+        TFunction *substituteFunction =
+            new TFunction(mSymbolTable, kEmptyImmutableString, SymbolType::AngleInternal,
+                          GetHelperType(swizzleAssignment->getType(), EvqTemporary),
+                          !swizzleAssignment->getRight()->hasSideEffects());
+
+        substituteFunction->addParameter(operandParam);
+
+        // Make sure to insert new function definitions and prototypes.
+        newFunctionPrototypes.push_back(new TIntermFunctionPrototype(substituteFunction));
+        TIntermFunctionDefinition *substituteFunctionDef = new TIntermFunctionDefinition(
+            new TIntermFunctionPrototype(substituteFunction), substituteFunctionBody);
+        newFunctionDefinitions.push_back(substituteFunctionDef);
+
+        addParamsFromOtherFunctionAndReplace(substituteFunction, substituteFunctionDef,
+                                             parentFunction);
+
+        return substituteFunction;
+    }
+
     bool replaceTempVarsWithGlobals(TIntermBlock *root)
     {
         TIntermSequence globalDeclarations;
@@ -589,6 +649,19 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
                 substituteFunction =
                     replaceCallToFuncWithOutparams(*funcCall, constructAndMetadata.parentFunction,
                                                    newFunctionPrototypes, newFunctionDefinitions);
+            }
+            else if (UntranslatableMultiElementSwizzle *multielementSwizzleAssignment =
+                         std::get_if<UntranslatableMultiElementSwizzle>(&construct))
+            {
+                untranslatableNode = multielementSwizzleAssignment->multielementSwizzle;
+                substituteFunction = replaceDifficultMultielementSwizzle(
+                    multielementSwizzleAssignment->multielementSwizzle,
+                    constructAndMetadata.parentFunction, newFunctionPrototypes,
+                    newFunctionDefinitions);
+
+                args.push_back(multielementSwizzleAssignment->multielementSwizzle->getLeft()
+                                   ->getAsSwizzleNode()
+                                   ->getOperand());
             }
             else
             {
