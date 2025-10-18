@@ -116,6 +116,18 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
         return true;
     }
 
+    bool visitBinary(Visit visit, TIntermBinary *binary) override
+    {
+        if (binary->getOp() == EOpComma)
+        {
+            handleUntranslatableConstruct(
+                visit, UntranslatableConstructAndMetadata{UntranslatableCommaOperator{binary},
+                                                          getParentNode(), mCurrentFunction});
+        }
+
+        return true;
+    }
+
     bool foundUntranslatableConstruct() const { return !mUntranslatableConstructs.empty(); }
 
     bool update(TIntermBlock *root)
@@ -126,8 +138,13 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
 
   private:
     using UntranslatableTernary = TIntermTernary *;
+    struct UntranslatableCommaOperator
+    {
+        TIntermBinary *commaOperator;
+    };
 
-    using UntranslatableConstruct = std::variant<UntranslatableTernary>;
+    using UntranslatableConstruct =
+        std::variant<UntranslatableTernary, UntranslatableCommaOperator>;
 
     struct UntranslatableConstructAndMetadata
     {
@@ -215,6 +232,64 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
         TFunction *substituteFunction = new TFunction(
             mSymbolTable, kEmptyImmutableString, SymbolType::AngleInternal,
             GetHelperType(ternary->getType(), EvqTemporary), !ternary->hasSideEffects());
+
+        // Make sure to insert new function definitions and prototypes.
+        newFunctionPrototypes.push_back(new TIntermFunctionPrototype(substituteFunction));
+        TIntermFunctionDefinition *substituteFunctionDef = new TIntermFunctionDefinition(
+            new TIntermFunctionPrototype(substituteFunction), substituteFunctionBody);
+        newFunctionDefinitions.push_back(substituteFunctionDef);
+
+        addParamsFromOtherFunctionAndReplace(substituteFunction, substituteFunctionDef,
+                                             parentFunction);
+
+        return substituteFunction;
+    }
+
+    TFunction *replaceSequenceOperator(TIntermBinary *sequenceOperator,
+                                       const TIntermFunctionDefinition *parentFunction,
+                                       TIntermSequence &newFunctionPrototypes,
+                                       TIntermSequence &newFunctionDefinitions)
+    {
+        ASSERT(sequenceOperator->getOp() == EOpComma);
+
+        // Pull into function that just puts one statement after the other.
+
+        TIntermSequence extractedStmts;
+
+        // Flatten the nested comma operators into a sequence of statements.
+        std::stack<TIntermTyped *, TVector<TIntermTyped *>> stmts;
+        stmts.push(sequenceOperator->getRight());
+        stmts.push(sequenceOperator->getLeft());
+        while (!stmts.empty())
+        {
+            TIntermTyped *stmt = stmts.top();
+            stmts.pop();
+
+            if (TIntermBinary *nestedSequenceOperator = stmt->getAsBinaryNode();
+                nestedSequenceOperator && nestedSequenceOperator->getOp() == EOpComma)
+            {
+                stmts.push(nestedSequenceOperator->getRight());
+                stmts.push(nestedSequenceOperator->getLeft());
+                continue;
+            }
+
+            extractedStmts.push_back(stmt);
+        }
+
+        // The last statement needs a return, if it is not of type void (i.e. the type of a function
+        // call to a void-returning function).
+        TIntermNode *lastStmt = extractedStmts.back();
+        if (lastStmt->getAsTyped()->getBasicType() != EbtVoid)
+        {
+            extractedStmts.back() = new TIntermBranch(TOperator::EOpReturn, lastStmt->getAsTyped());
+        }
+
+        TIntermBlock *substituteFunctionBody = new TIntermBlock(std::move(extractedStmts));
+
+        TFunction *substituteFunction =
+            new TFunction(mSymbolTable, kEmptyImmutableString, SymbolType::AngleInternal,
+                          GetHelperType(sequenceOperator->getType(), EvqTemporary),
+                          !sequenceOperator->hasSideEffects());
 
         // Make sure to insert new function definitions and prototypes.
         newFunctionPrototypes.push_back(new TIntermFunctionPrototype(substituteFunction));
@@ -325,6 +400,14 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
                 untranslatableNode = *ternary;
                 substituteFunction = replaceTernary(*ternary, constructAndMetadata.parentFunction,
                                                     newFunctionPrototypes, newFunctionDefinitions);
+            }
+            else if (UntranslatableCommaOperator *commaOperator =
+                         std::get_if<UntranslatableCommaOperator>(&construct))
+            {
+                untranslatableNode = commaOperator->commaOperator;
+                substituteFunction = replaceSequenceOperator(
+                    commaOperator->commaOperator, constructAndMetadata.parentFunction,
+                    newFunctionPrototypes, newFunctionDefinitions);
             }
             else
             {

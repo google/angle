@@ -506,7 +506,8 @@ OperatorInfo OutputWGSLTraverser::useOperatorAndGetInfo(TIntermNode *current,
         case TOperator::EOpComma:
             // WGSL does not have a comma operator or any other way to implement "statement list as
             // an expression", so nested expressions will have to be pulled out into statements.
-            UNIMPLEMENTED();
+            // This should have been done by a preprocessing.
+            UNREACHABLE();
             return {"TODO_operator"};
         case TOperator::EOpAssign:
             return {"="};

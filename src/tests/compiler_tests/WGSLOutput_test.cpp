@@ -1370,6 +1370,138 @@ fn wgslMain(ANGLE_input_annotated : ANGLE_Input_Annotated) -> ANGLE_Output_Annot
     EXPECT_TRUE(foundInCode(outputString.c_str()));
 }
 
+TEST_F(WGSLOutputTest, CommaOperator)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+precision mediump float;
+
+float globVar;
+
+in float inVar;
+out vec4 fragColor;
+
+void setGlobVar() {
+  globVar = 1.0;
+}
+
+void main() {
+  fragColor = vec4(0.0);
+  float tempVar;
+  fragColor.x = (globVar = inVar, tempVar = globVar, tempVar);
+
+  (tempVar = 5.0, globVar = 6.0, setGlobVar());
+
+  float a,b,c,d,e;
+  fragColor.x += ((a = 1.0, b = a), (c = b, (d = c)), (setGlobVar(), e = d, e));
+})";
+    const std::string &outputString =
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Input_Global {
+  inVar : f32,
+};
+
+var<private> ANGLE_input_global : ANGLE_Input_Global;
+
+struct ANGLE_Input_Annotated {
+  @location(@@@@@@) inVar : f32,
+};
+
+struct ANGLE_Output_Global {
+  fragColor : vec4<f32>,
+};
+
+var<private> ANGLE_output_global : ANGLE_Output_Global;
+
+struct ANGLE_Output_Annotated {
+  @location(@@@@@@) fragColor : vec4<f32>,
+};
+
+@group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
+
+struct ANGLEDepthRangeParams
+{
+  near : f32,
+  far : f32,
+  diff : f32,
+};
+
+var<private> _uglobVar : f32;
+;
+;
+var<private> _utempVar : f32;
+var<private> _ua : f32;
+var<private> _ub : f32;
+var<private> _uc : f32;
+var<private> _ud : f32;
+var<private> _ue : f32;
+
+struct ANGLEUniformBlock
+{
+  @align(16) acbBufferOffsets : vec2<u32>,
+  depthRange : vec2<f32>,
+  renderArea : u32,
+  flipXY : u32,
+  dither : u32,
+  misc : u32,
+};
+
+;
+;
+;
+;
+
+fn _usetGlobVar()
+{
+  (_uglobVar) = (1.0f);
+}
+
+fn _umain()
+{
+  (ANGLE_output_global.fragColor) = (vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f));
+  ((ANGLE_output_global.fragColor).x) = (sbca());
+  sbcb();
+  ((ANGLE_output_global.fragColor).x) += (sbcc());
+}
+
+fn sbca() -> f32
+{
+  (_uglobVar) = (ANGLE_input_global.inVar);
+  (_utempVar) = (_uglobVar);
+  return _utempVar;
+}
+
+fn sbcb()
+{
+  (_utempVar) = (5.0f);
+  (_uglobVar) = (6.0f);
+  _usetGlobVar();
+}
+
+fn sbcc() -> f32
+{
+  (_ua) = (1.0f);
+  (_ub) = (_ua);
+  (_uc) = (_ub);
+  (_ud) = (_uc);
+  _usetGlobVar();
+  (_ue) = (_ud);
+  return _ue;
+}
+@fragment
+fn wgslMain(ANGLE_input_annotated : ANGLE_Input_Annotated) -> ANGLE_Output_Annotated
+{
+  ANGLE_input_global.inVar = ANGLE_input_annotated.inVar;
+  _umain();
+  var ANGLE_output_annotated : ANGLE_Output_Annotated;
+  ANGLE_output_annotated.fragColor = ANGLE_output_global.fragColor;
+  return ANGLE_output_annotated;
+}
+)";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode(outputString.c_str()));
+}
+
 TEST_F(WGSLOutputTest, UniformsWithMatCx2)
 {
     const std::string &shaderString =
