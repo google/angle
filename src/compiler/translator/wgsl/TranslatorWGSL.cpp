@@ -45,6 +45,7 @@
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
+#include "compiler/translator/util.h"
 #include "compiler/translator/wgsl/OutputUniformBlocks.h"
 #include "compiler/translator/wgsl/RewritePipelineVariables.h"
 #include "compiler/translator/wgsl/Utils.h"
@@ -180,10 +181,11 @@ class OutputWGSLTraverser : public TIntermTraverser
     struct EmitVariableDeclarationConfig
     {
         EmitTypeConfig typeConfig;
-        bool isParameter            = false;
-        bool disableStructSpecifier = false;
-        bool needsVar               = false;
-        bool isGlobalScope          = false;
+        bool isParameter                                     = false;
+        std::optional<WgslPointerAddressSpace> emitAsPointer = std::nullopt;
+        bool disableStructSpecifier                          = false;
+        bool isDeclaration                                   = false;
+        bool isGlobalScope                                   = false;
     };
 
     void groupedTraverse(TIntermNode &node);
@@ -232,6 +234,8 @@ class OutputWGSLTraverser : public TIntermTraverser
 
     int mIndentLevel        = -1;
     int mLastIndentationPos = -1;
+
+    TUnorderedSet<TSymbolUniqueId> mIsActuallyOfPointerType;
 };
 
 OutputWGSLTraverser::OutputWGSLTraverser(
@@ -340,7 +344,23 @@ void OutputWGSLTraverser::visitSymbol(TIntermSymbol *symbolNode)
         }
         else
         {
+            // If this symbol refers to an outparam, that param was translated as a pointer and must
+            // be dereferenced to be accessed.
+            // Similarly, some symbol are actually pointers, even though in the GLSL AST they are
+            // regular types (as GLSL does not have pointers, just out variables).
+            const bool isOutParam = IsParamOut(var.getType().getQualifier());
+            const bool isActuallyOfPointerType =
+                mIsActuallyOfPointerType.contains(symbolNode->uniqueId());
+            const bool needsDereference = isOutParam || isActuallyOfPointerType;
+            if (needsDereference)
+            {
+                mSink << "(*";
+            }
             WriteNameOf(mSink, var);
+            if (needsDereference)
+            {
+                mSink << ")";
+            }
         }
 
         if (var.symbolType() == SymbolType::BuiltIn)
@@ -1958,19 +1978,26 @@ void OutputWGSLTraverser::emitTextureBuiltin(const TOperator op, const TIntermSe
 bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
 {
     const TIntermSequence &args = *aggregateNode->getSequence();
+    const TFunction *callee     = aggregateNode->getFunction();  // Can be nullptr
 
     auto emitArgList = [&]() {
         mSink << "(";
 
         bool emitComma = false;
-        for (TIntermNode *arg : args)
+        for (size_t i = 0; i < args.size(); i++)
         {
             if (emitComma)
             {
                 mSink << ", ";
             }
             emitComma = true;
-            arg->traverse(this);
+
+            // If outparams, must pass a pointer.
+            if (callee && IsParamOut(callee->getParam(i)->getType().getQualifier()))
+            {
+                mSink << "&";
+            }
+            args[i]->traverse(this);
         }
 
         mSink << ")";
@@ -1992,14 +2019,21 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
         switch (op)
         {
             case TOperator::EOpCallFunctionInAST:
-                emitFunctionName(*aggregateNode->getFunction());
+                emitFunctionName(*callee);
                 emitArgList();
                 return false;
 
             default:
-                // Do not allow raw function calls, i.e. calls to functions
-                // not present in the AST.
-                ASSERT(op != TOperator::EOpCallInternalRawFunction);
+                // There is one raw call currently and that is used to get a pointer to an l-value.
+                if (op == EOpCallInternalRawFunction)
+                {
+                    ASSERT(callee->name() == "ANGLE_takePointer");
+                    ASSERT(args.size() == 1);
+                    mSink << "&";
+                    groupedTraverse(*aggregateNode->getChildNode(0));
+                    return false;
+                }
+
                 auto getArgType = [&](size_t index) -> const TType * {
                     if (index < args.size())
                     {
@@ -2242,11 +2276,19 @@ void OutputWGSLTraverser::emitVariableDeclaration(const VarDecl &decl,
     ASSERT(basicType == TBasicType::EbtStruct || decl.symbolType != SymbolType::Empty ||
            evdConfig.isParameter);
 
-    if (evdConfig.needsVar)
+    if (evdConfig.isDeclaration)
     {
-        // "const" and "let" probably don't need to be ever emitted because they are more for
+        // "const" and "let" typically don't need to be emitted because they are more for
         // readability, and the GLSL compiler constant folds most (all?) the consts anyway.
-        mSink << "var";
+        // However, pointers in WGSL must be declared with let.
+        if (evdConfig.emitAsPointer)
+        {
+            mSink << "let";
+        }
+        else
+        {
+            mSink << "var";
+        }
         if (evdConfig.isGlobalScope)
         {
             if (decl.type.getQualifier() == EvqUniform)
@@ -2271,7 +2313,26 @@ void OutputWGSLTraverser::emitVariableDeclaration(const VarDecl &decl,
         emitNameOf(decl);
     }
     mSink << " : ";
+
+    bool isOutParam = evdConfig.isParameter && IsParamOut(decl.type.getQualifier());
+    if (isOutParam)
+    {
+        // Arguments to outparams will always be function-local due to AST pre-passes.
+        mSink << "ptr<function, ";
+    }
+    else if (evdConfig.emitAsPointer)
+    {
+        ASSERT(!evdConfig.isParameter);
+        mSink << "ptr<" << StringForWgslPointerAddressSpace(evdConfig.emitAsPointer.value())
+              << ", ";
+    }
+
     WriteWgslType(mSink, decl.type, evdConfig.typeConfig);
+
+    if (isOutParam || evdConfig.emitAsPointer)
+    {
+        mSink << ">";
+    }
 }
 
 bool OutputWGSLTraverser::visitDeclaration(Visit, TIntermDeclaration *declNode)
@@ -2280,7 +2341,7 @@ bool OutputWGSLTraverser::visitDeclaration(Visit, TIntermDeclaration *declNode)
     TIntermNode &node = *declNode->getChildNode(0);
 
     EmitVariableDeclarationConfig evdConfig;
-    evdConfig.needsVar      = true;
+    evdConfig.isDeclaration = true;
     evdConfig.isGlobalScope = mIndentLevel == 0;
 
     if (TIntermSymbol *symbolNode = node.getAsSymbolNode())
@@ -2309,6 +2370,19 @@ bool OutputWGSLTraverser::visitDeclaration(Visit, TIntermDeclaration *declNode)
             // Some variables, like shader inputs/outputs/builtins, are declared in the WGSL source
             // outside of the traverser.
             return false;
+        }
+
+        if (valueNode->getAsAggregate() && valueNode->getAsAggregate()->getFunction())
+        {
+            const TFunction *func = valueNode->getAsAggregate()->getFunction();
+            if (valueNode->getAsAggregate()->getOp() == EOpCallInternalRawFunction &&
+                func->name() == "ANGLE_takePointer")
+            {
+                mIsActuallyOfPointerType.insert(leftSymbolNode->uniqueId());
+
+                evdConfig.emitAsPointer = GetWgslAddressSpaceForPointer(
+                    FindRootVariable(valueNode->getAsAggregate()->getChildNode(0))->getType());
+            }
         }
 
         emitVariableDeclaration({var.symbolType(), var.name(), var.getType()}, evdConfig);
@@ -2676,6 +2750,10 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
                                const ShCompileOptions &compileOptions,
                                PerformanceDiagnostics *perfDiagnostics)
 {
+    // TODO(https://issues.angleproject.org/issues/42264589#comment3): remove this, as it is
+    // deprecated.
+    mValidateASTOptions.validateNoRawFunctionCalls = false;
+
     if (kOutputTreeBeforeTranslation)
     {
         TInfoSinkBase treeOut;

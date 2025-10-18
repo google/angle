@@ -21,16 +21,19 @@
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/tree_util/Visit.h"
+#include "compiler/translator/util.h"
 
 namespace sh
 {
 namespace
 {
 
-bool IsParam(const TVariable *var)
+bool IsParamImmutableInWgsl(const TVariable *var)
 {
     TQualifier q = var->getType().getQualifier();
-    return q == EvqParamIn || q == EvqParamInOut || q == EvqParamOut || q == EvqParamConst;
+    // Outparams (EvqOut, EvqInOut) are translated as pointers and don't need any extra mutability.
+    // EvqParamConst is obviously immutable.
+    return q == EvqParamIn;
 }
 
 class EmulateMutableFunctionParamsTraverser : public TLValueTrackingTraverser
@@ -50,7 +53,7 @@ class EmulateMutableFunctionParamsTraverser : public TLValueTrackingTraverser
     {
         const TVariable *paramVar = &node->variable();
         // Only looking at params used within functions.
-        if (mInGlobalScope || !IsParam(paramVar))
+        if (mInGlobalScope || !IsParamImmutableInWgsl(paramVar))
         {
             return;
         }

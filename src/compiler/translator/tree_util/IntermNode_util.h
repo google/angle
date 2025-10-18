@@ -81,6 +81,10 @@ const TVariable *DeclareInterfaceBlockVariable(TIntermBlock *root,
                                                uint32_t arraySize,
                                                const ImmutableString &blockVariableName);
 
+// `expr` must be an lvalue. This will return the root variable, e.g. the root variable of
+// `a[0].b[0].xy` is `a`,
+const TVariable *FindRootVariable(TIntermNode *expr);
+
 // Creates a variable for a struct type.
 const TVariable &CreateStructTypeVariable(TSymbolTable &symbolTable, const TStructure &structure);
 

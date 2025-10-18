@@ -77,6 +77,7 @@ enum class WgslPointerAddressSpace
 };
 
 WgslPointerAddressSpace GetWgslAddressSpaceForPointer(const TType &type);
+ImmutableString StringForWgslPointerAddressSpace(WgslPointerAddressSpace as);
 
 }  // namespace sh
 

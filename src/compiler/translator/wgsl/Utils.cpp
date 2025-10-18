@@ -9,6 +9,7 @@
 #include "common/log_utils.h"
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Common.h"
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/Types.h"
@@ -376,6 +377,17 @@ WgslPointerAddressSpace GetWgslAddressSpaceForPointer(const TType &type)
         default:
             // EvqGlobal and various other shader outputs/builtins are all globals.
             return WgslPointerAddressSpace::Private;
+    }
+}
+
+ImmutableString StringForWgslPointerAddressSpace(WgslPointerAddressSpace as)
+{
+    switch (as)
+    {
+        case WgslPointerAddressSpace::Function:
+            return ImmutableString("function");
+        case WgslPointerAddressSpace::Private:
+            return ImmutableString("private");
     }
 }
 

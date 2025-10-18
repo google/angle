@@ -128,6 +128,55 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
         return true;
     }
 
+    bool visitAggregate(Visit visit, TIntermAggregate *aggregate) override
+    {
+        const TFunction *calledFunction = aggregate->getFunction();
+        if (aggregate->getOp() != EOpCallFunctionInAST || !calledFunction)
+        {
+            return true;
+        }
+
+        TSet<const TVariable *> outparamVars;
+        bool foundIncompatibleOutparam = false;
+        for (size_t i = 0; i < calledFunction->getParamCount(); ++i)
+        {
+            TQualifier paramQualifier = calledFunction->getParam(i)->getType().getQualifier();
+            if (IsParamOut(paramQualifier))
+            {
+                const TVariable *argRootVariable = FindRootVariable(aggregate->getChildNode(i));
+                // Any global vars as outparams can conflict (in terms of WGSL's pointer alias
+                // analysis) with accesses to the actual global var, so to be safe, any
+                // non-temporary vars as outparams are consider to be incompatible.
+                // WGSL also requires pointer to specify whether they are pointers to temporaries
+                // or module-scope variables, which makes WGSL output more complicated unless we
+                // only ever allow temporaries as outparams.
+                // This makes an exception for parameters as well, which can be treated as
+                // temporaries.
+                TQualifier q = argRootVariable->getType().getQualifier();
+                if (q != EvqTemporary && !IsParam(q))
+                {
+                    foundIncompatibleOutparam = true;
+                    break;
+                }
+                // Different temporary variables can all be used as outparams to the same function.
+                // In fact this is what the translation will do for incompatible calls.
+                if (!outparamVars.insert(argRootVariable).second)
+                {
+                    foundIncompatibleOutparam = true;
+                    break;
+                }
+            }
+        }
+        if (!foundIncompatibleOutparam)
+        {
+            return true;
+        }
+
+        handleUntranslatableConstruct(visit, {aggregate, getParentNode(), mCurrentFunction});
+
+        return true;
+    }
+
     bool foundUntranslatableConstruct() const { return !mUntranslatableConstructs.empty(); }
 
     bool update(TIntermBlock *root)
@@ -142,9 +191,11 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
     {
         TIntermBinary *commaOperator;
     };
+    using UntranslatableFunctionCallWithOutparams = TIntermAggregate *;
 
-    using UntranslatableConstruct =
-        std::variant<UntranslatableTernary, UntranslatableCommaOperator>;
+    using UntranslatableConstruct = std::variant<UntranslatableTernary,
+                                                 UntranslatableCommaOperator,
+                                                 UntranslatableFunctionCallWithOutparams>;
 
     struct UntranslatableConstructAndMetadata
     {
@@ -232,6 +283,128 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
         TFunction *substituteFunction = new TFunction(
             mSymbolTable, kEmptyImmutableString, SymbolType::AngleInternal,
             GetHelperType(ternary->getType(), EvqTemporary), !ternary->hasSideEffects());
+
+        // Make sure to insert new function definitions and prototypes.
+        newFunctionPrototypes.push_back(new TIntermFunctionPrototype(substituteFunction));
+        TIntermFunctionDefinition *substituteFunctionDef = new TIntermFunctionDefinition(
+            new TIntermFunctionPrototype(substituteFunction), substituteFunctionBody);
+        newFunctionDefinitions.push_back(substituteFunctionDef);
+
+        addParamsFromOtherFunctionAndReplace(substituteFunction, substituteFunctionDef,
+                                             parentFunction);
+
+        return substituteFunction;
+    }
+
+    TFunction *replaceCallToFuncWithOutparams(TIntermAggregate *funcCall,
+                                              const TIntermFunctionDefinition *parentFunction,
+                                              TIntermSequence &newFunctionPrototypes,
+                                              TIntermSequence &newFunctionDefinitions)
+    {
+        TIntermSequence initSequence;
+        TIntermSequence finishSequence;
+
+        TIntermSequence newCallArgs;
+
+        // Create temporaries for all the parameters. Arguments must be evaluated in order.
+        const TFunction *callee = funcCall->getFunction();
+        for (size_t i = 0; i < callee->getParamCount(); i++)
+        {
+            TIntermTyped *arg = funcCall->getChildNode(i)->getAsTyped();
+            ASSERT(arg);
+            const TVariable *param = callee->getParam(i);
+            TQualifier paramQ      = param->getType().getQualifier();
+
+            // Create temp variable for each argument to the original function.
+            TVariable *newArg = CreateTempVariable(mSymbolTable, &param->getType(), EvqTemporary);
+            // We will use temp as the argument for the new function call.
+            newCallArgs.push_back(new TIntermSymbol(newArg));
+
+            if (paramQ == EvqParamInOut || paramQ == EvqParamOut)
+            {
+                // If inout-param, save pointer to argument. Otherwise we may evaluate arg twice,
+                // and even though arg must be an l-value, it can still have side effects (e.g. in
+                // x[i++] = ...);
+                TVariable *newArgPtr =
+                    CreateTempVariable(mSymbolTable, &param->getType(), EvqTemporary);
+                TFunction *getPointerFunc =
+                    new TFunction(mSymbolTable, ImmutableString("ANGLE_takePointer"),
+                                  SymbolType::AngleInternal, &param->getType(), false);
+                getPointerFunc->addParameter(
+                    CreateTempVariable(mSymbolTable, &param->getType(), EvqParamInOut));
+                TIntermSequence *getPointerCallArgs = new TIntermSequence({arg});
+                TIntermAggregate *getPointerCall =
+                    TIntermAggregate::CreateRawFunctionCall(*getPointerFunc, getPointerCallArgs);
+                // temp_ptr = &arg; (argument should only reference global variables)
+                initSequence.push_back(CreateTempInitDeclarationNode(newArgPtr, getPointerCall));
+                if (paramQ == EvqParamInOut)
+                {
+                    // temp = *temp_ptr; (The traverser will see the pointer variable and
+                    // automatically dereference it.)
+                    initSequence.push_back(
+                        CreateTempInitDeclarationNode(newArg, new TIntermSymbol(newArgPtr)));
+                }
+                else
+                {
+                    ASSERT(paramQ == EvqParamOut);
+                    // Before the function call, just create empty var for outparam purposes. E.g.:
+                    // temp : f32;
+                    initSequence.push_back(CreateTempDeclarationNode(newArg));
+                }
+
+                // After the function call:
+                // *temp_ptr = temp;
+                finishSequence.push_back(
+                    CreateTempAssignmentNode(newArgPtr, new TIntermSymbol(newArg)));
+            }
+            else if (paramQ == EvqParamIn || paramQ == EvqParamConst)
+            {
+                // temp = argument; (argument should only reference global variables),
+                initSequence.push_back(CreateTempInitDeclarationNode(newArg, arg));
+            }
+            else
+            {
+                UNREACHABLE();
+            }
+        }
+
+        // Start the callSequence with the initSequence.
+        TIntermSequence callSequence = std::move(initSequence);
+
+        // Create a call to the function with outparams.
+        TIntermAggregate *newCall = TIntermAggregate::CreateFunctionCall(*callee, &newCallArgs);
+        // If necessary, save the return value of the call.
+        TVariable *retVal = nullptr;
+        const bool needsToSaveRetVal =
+            funcCall->getFunction()->getReturnType().getBasicType() != EbtVoid;
+        if (needsToSaveRetVal)
+        {
+            retVal = CreateTempVariable(mSymbolTable, &funcCall->getFunction()->getReturnType(),
+                                        EvqTemporary);
+            TIntermDeclaration *savedRetVal = CreateTempInitDeclarationNode(retVal, newCall);
+            callSequence.push_back(savedRetVal);
+        }
+        else
+        {
+            callSequence.push_back(newCall);
+        }
+
+        // Finish with the finishSequence.
+        callSequence.insert(callSequence.end(), finishSequence.begin(), finishSequence.end());
+
+        // Return a value if necessary.
+        if (needsToSaveRetVal)
+        {
+            callSequence.push_back(
+                new TIntermBranch(TOperator::EOpReturn, new TIntermSymbol(retVal)));
+        }
+
+        TIntermBlock *substituteFunctionBody = new TIntermBlock(std::move(callSequence));
+
+        TFunction *substituteFunction =
+            new TFunction(mSymbolTable, kEmptyImmutableString, SymbolType::AngleInternal,
+                          GetHelperType(funcCall->getFunction()->getReturnType(), std::nullopt),
+                          funcCall->getFunction()->isKnownToNotHaveSideEffects());
 
         // Make sure to insert new function definitions and prototypes.
         newFunctionPrototypes.push_back(new TIntermFunctionPrototype(substituteFunction));
@@ -408,6 +581,14 @@ class PullExpressionsIntoFunctionsTraverser : public TIntermTraverser
                 substituteFunction = replaceSequenceOperator(
                     commaOperator->commaOperator, constructAndMetadata.parentFunction,
                     newFunctionPrototypes, newFunctionDefinitions);
+            }
+            else if (TIntermAggregate **funcCall =
+                         std::get_if<UntranslatableFunctionCallWithOutparams>(&construct))
+            {
+                untranslatableNode = *funcCall;
+                substituteFunction =
+                    replaceCallToFuncWithOutparams(*funcCall, constructAndMetadata.parentFunction,
+                                                   newFunctionPrototypes, newFunctionDefinitions);
             }
             else
             {
