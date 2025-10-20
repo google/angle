@@ -69,6 +69,7 @@ constexpr angle::PackedEnumMap<webgpu::RenderPassClosureReason, const char *>
          "Render pass closed to update texture"},
         {webgpu::RenderPassClosureReason::CopyTextureToTexture,
          "Render pass closed to copy texture"},
+        {webgpu::RenderPassClosureReason::CopyImage, "Render pass closed to copy image"},
     }};
 
 }  // namespace
