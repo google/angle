@@ -402,7 +402,7 @@ angle::Result NewSemaphore(vk::ErrorContext *context,
 {
     if (semaphoreRecycler->empty())
     {
-        ANGLE_VK_TRY(context, semaphoreOut->init(context->getDevice()));
+        ANGLE_VK_TRY(context, semaphoreOut->init(context->getDevice(), VK_SEMAPHORE_TYPE_BINARY));
     }
     else
     {
@@ -1425,7 +1425,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
     // Create the semaphores that will be used for vkAcquireNextImageKHR.
     for (vk::Semaphore &semaphore : mAcquireOperation.unlockedAcquireData.acquireImageSemaphores)
     {
-        ANGLE_VK_TRY(displayVk, semaphore.init(displayVk->getDevice()));
+        ANGLE_VK_TRY(displayVk, semaphore.init(displayVk->getDevice(), VK_SEMAPHORE_TYPE_BINARY));
     }
 
     // Keep the image acquire deferred.  |mColorRenderTarget| will not be accessed until update in

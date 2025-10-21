@@ -493,7 +493,7 @@ class Semaphore final : public WrappedObject<Semaphore, VkSemaphore>
     Semaphore() = default;
     void destroy(VkDevice device);
 
-    VkResult init(VkDevice device);
+    VkResult init(VkDevice device, VkSemaphoreType semaphoreType);
     VkResult importFd(VkDevice device, const VkImportSemaphoreFdInfoKHR &importFdInfo) const;
 };
 
@@ -1619,13 +1619,23 @@ ANGLE_INLINE void Semaphore::destroy(VkDevice device)
     }
 }
 
-ANGLE_INLINE VkResult Semaphore::init(VkDevice device)
+ANGLE_INLINE VkResult Semaphore::init(VkDevice device, VkSemaphoreType semaphoreType)
 {
     ASSERT(!valid());
 
     VkSemaphoreCreateInfo semaphoreInfo = {};
     semaphoreInfo.sType                 = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
     semaphoreInfo.flags                 = 0;
+
+    VkSemaphoreTypeCreateInfoKHR semaphoreTypeInfo = {};
+    if (semaphoreType != VK_SEMAPHORE_TYPE_BINARY)
+    {
+        semaphoreTypeInfo.sType         = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO_KHR;
+        semaphoreTypeInfo.semaphoreType = semaphoreType;
+
+        // vk::AddToPNextChain is not available in this header.
+        semaphoreInfo.pNext = &semaphoreTypeInfo;
+    }
 
     return vkCreateSemaphore(device, &semaphoreInfo, nullptr, &mHandle);
 }
