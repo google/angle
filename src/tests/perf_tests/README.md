@@ -113,6 +113,7 @@ Trace tests take command line arguments that pick the run configuration:
 * `--include-inactive-resources` : Include all resources captured at trace-time during replay. Only resources which are active during trace execution are replayed by default.
 * `--fps-limit <limit>` : Limit replay framerate to specified value.
 * `--track-gpu-time` : Enables GPU frametime tracking if "GL_EXT_disjoint_timer_query" is available.
+* `--add-swap-into-gpu-time` : Normally, GPU time is only tracked for the replay frame commands while excluding swap (or blit calls in case of the offscreen test). This option includes swap/blit time into the GPU frametime tracking. Warning: this will also include screenshot capture code when it is enabled.
 
 For example, for an endless run with no warmup on swiftshader, run:
 

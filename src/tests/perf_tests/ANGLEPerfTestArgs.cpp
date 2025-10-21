@@ -59,6 +59,7 @@ const char *gPrintExtensionsToFile = nullptr;
 const char *gRequestedExtensions   = nullptr;
 bool gIncludeInactiveResources     = false;
 bool gTrackGPUTime                 = false;
+bool gAddSwapIntoGPUTime           = false;
 
 namespace
 {
@@ -104,7 +105,8 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
            ParseCStringArg("--request-extensions", argc, argv, argIndex, &gRequestedExtensions) ||
            ParseFlag("--include-inactive-resources", argc, argv, argIndex,
                      &gIncludeInactiveResources) ||
-           ParseFlag("--track-gpu-time", argc, argv, argIndex, &gTrackGPUTime);
+           ParseFlag("--track-gpu-time", argc, argv, argIndex, &gTrackGPUTime) ||
+           ParseFlag("--add-swap-into-gpu-time", argc, argv, argIndex, &gAddSwapIntoGPUTime);
 }
 }  // namespace
 }  // namespace angle

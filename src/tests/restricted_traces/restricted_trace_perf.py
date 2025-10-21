@@ -271,6 +271,8 @@ def run_trace(trace, args, screenshot_device_dir):
         flags += ['--fps-limit', args.fps_limit]
     if args.track_gpu_time:
         flags.append('--track-gpu-time')
+    if args.add_swap_into_gpu_time:
+        flags.append('--add-swap-into-gpu-time')
 
     # Build a command that can be run directly over ADB, for example:
     r'''
@@ -607,8 +609,8 @@ def collect_cpu_inst(done_event, test_fixedtime, results):
 
         # Filter simpleperf record within actual test running time
         temp_filter_file = run_adb_shell_command('mktemp /data/local/tmp/tmp.XXXXXX').strip()
-        run_adb_shell_command(f'echo "CLOCK monotonic\n \
-            GLOBAL_BEGIN {start_ns}\n \
+        run_adb_shell_command(f'echo "CLOCK monotonic\n\
+            GLOBAL_BEGIN {start_ns}\n\
             GLOBAL_END {end_ns}"  > {temp_filter_file}')
 
         perf_output = run_adb_shell_command(f'''simpleperf report \
@@ -878,6 +880,11 @@ def main():
         default=False)
     parser.add_argument(
         '--track-gpu-time', help='Enables GPU time tracking', action='store_true', default=False)
+    parser.add_argument(
+        '--add-swap-into-gpu-time',
+        help='Adds swap/offscreen blit into the gpu_time tracking',
+        action='store_true',
+        default=False)
 
     args = parser.parse_args()
 
