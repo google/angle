@@ -1709,7 +1709,6 @@ void TracePerfTest::drawBenchmark()
                     saveScreenshotIfEnabled(ScreenshotType::kGrid);
                 }
                 getGLWindow()->swap();
-                glClear(GL_COLOR_BUFFER_BIT);
                 mOffscreenFrameCount = 0;
             }
             else
