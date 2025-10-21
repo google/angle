@@ -1749,7 +1749,9 @@ void TracePerfTest::drawBenchmark()
 
     if (gAddSwapIntoGPUTime)
     {
-        stopGpuTimer();
+        // No need flush here since swap already performs it implicitly and we already call flush
+        // in case of the offscreen test.
+        stopGpuTimer(false);
         // Need this flush to submit the timestamp query to the GPU right now, instead of delaying
         // it until some time later in the next frame.
         glFlush();
