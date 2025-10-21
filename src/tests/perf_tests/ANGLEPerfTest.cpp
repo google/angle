@@ -37,6 +37,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <numeric>
@@ -1015,14 +1016,29 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
+    constexpr const char *REQUESTED_EXTENSIONS_FILENAME = "angle_trace_requested_extensions";
+
     if (gRequestedExtensions != nullptr)
     {
+        std::filesystem::path tempDir     = std::filesystem::temp_directory_path();
+        std::filesystem::path extFilePath = tempDir / REQUESTED_EXTENSIONS_FILENAME;
         std::istringstream ss{gRequestedExtensions};
         std::string ext;
+
+        std::ofstream extFile(extFilePath);
+        if (!extFile.is_open())
+        {
+            FATAL() << "Error: Couldn't open temporary extension file";
+        }
+
         while (std::getline(ss, ext, ' '))
         {
+            // Set the extension for the trace's main context
             glRequestExtensionANGLE(ext.c_str());
+            // Write extension to file for the trace's side-contexts
+            extFile << ext << std::endl;
         }
+        extFile.close();
     }
 
     // Disable vsync (if not done by the window init).
