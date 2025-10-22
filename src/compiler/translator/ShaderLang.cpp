@@ -17,7 +17,7 @@
 
 #include "common/PackedEnums.h"
 #include "compiler/translator/Compiler.h"
-#include "compiler/translator/InitializeDll.h"
+#include "compiler/translator/InitializeGlobals.h"
 #include "compiler/translator/length_limits.h"
 #ifdef ANGLE_ENABLE_HLSL
 #    include "compiler/translator/hlsl/TranslatorHLSL.h"
@@ -147,7 +147,7 @@ bool Initialize()
 {
     if (!isInitialized)
     {
-        isInitialized = InitProcess();
+        isInitialized = InitializePoolIndex();
     }
     return isInitialized;
 }
@@ -159,7 +159,7 @@ bool Finalize()
 {
     if (isInitialized)
     {
-        DetachProcess();
+        FreePoolIndex();
         isInitialized = false;
     }
     return true;

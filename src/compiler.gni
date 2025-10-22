@@ -58,8 +58,6 @@ angle_translator_sources = [
   "src/compiler/translator/InfoSink.h",
   "src/compiler/translator/Initialize.cpp",
   "src/compiler/translator/Initialize.h",
-  "src/compiler/translator/InitializeDll.cpp",
-  "src/compiler/translator/InitializeDll.h",
   "src/compiler/translator/InitializeGlobals.h",
   "src/compiler/translator/IntermNode.cpp",
   "src/compiler/translator/IntermNode.h",
