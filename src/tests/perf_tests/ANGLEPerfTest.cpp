@@ -377,6 +377,14 @@ void ANGLEPerfTest::run()
             double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
             mTestTrialResults.push_back(secondsPerIteration * 1000.0);
         }
+        if (gSleepBetweenTrialMs > 0 && trial + 1 < numTrials)
+        {
+            if (gVerboseLogging)
+            {
+                printf("Sleeping for %d milliseconds before next trial...\n", gSleepBetweenTrialMs);
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(gSleepBetweenTrialMs));
+        }
     }
 
     atraceCounter("TraceStage", 0);

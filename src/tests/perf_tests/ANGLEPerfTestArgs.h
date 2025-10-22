@@ -28,6 +28,7 @@ extern bool gVerboseLogging;
 extern bool gWarmup;
 extern int gTrialTimeSeconds;
 extern int gTestTrials;
+extern int gSleepBetweenTrialMs;
 extern bool gNoFinish;
 extern bool gRetraceMode;
 extern bool gMinimizeGPUWork;

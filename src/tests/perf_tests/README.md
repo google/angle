@@ -62,6 +62,7 @@ Several command-line arguments control how the tests run:
 * `--warmup`: Run a warmup phase before the test. Defaults to off.
 * `--fixed-test-time-with-warmup x`: Start with a warmup, then run the tests until this much time has elapsed.
 * `--trials`: Number of times to repeat testing. Defaults to 3.
+* `--sleep-between-trials`: Number of milliseconds to sleep between trials. May be useful to see trials boundaries in Perfetto `"gpu.renderstages"` traces.
 * `--no-finish`: Don't call glFinish after each test trial.
 * `--validation`: Enable serialization validation in the trace tests. Normally used with SwiftShader and retracing.
 * `--perf-counters`: Additional performance counters to include in the result output. Separate multiple entries with colons: ':'.
