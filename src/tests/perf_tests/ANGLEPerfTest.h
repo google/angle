@@ -138,6 +138,8 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     std::string mStory;
     Timer mTrialTimer;
     uint64_t mGPUTimeNs;
+    double mFrameWallTimeSec;
+    double mBusyWaitCpuTimeSec;
     bool mSkipTest;
     std::string mSkipTestReason;
     std::unique_ptr<perf_test::PerfResultReporter> mReporter;

@@ -52,6 +52,7 @@ const char *gUseGL                 = nullptr;
 bool gOffscreen                    = false;
 bool gVsync                        = false;
 int gFpsLimit                      = 0;
+bool gFpsLimitUsesBusyWait         = false;
 bool gRunToKeyFrame                = false;
 int gFixedTestTime                 = 0;
 int gFixedTestTimeWithWarmup       = 0;
@@ -61,6 +62,7 @@ const char *gRequestedExtensions   = nullptr;
 bool gIncludeInactiveResources     = false;
 bool gTrackGPUTime                 = false;
 bool gAddSwapIntoGPUTime           = false;
+bool gAddSwapIntoFrameWallTime     = false;
 
 namespace
 {
@@ -97,6 +99,7 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
            ParseCStringArg("--trace-interpreter", argc, argv, argIndex, &gTraceInterpreter) ||
            ParseIntArg("--screenshot-frame", argc, argv, argIndex, &gScreenshotFrame) ||
            ParseIntArg("--fps-limit", argc, argv, argIndex, &gFpsLimit) ||
+           ParseFlag("--fps-limit-uses-busy-wait", argc, argv, argIndex, &gFpsLimitUsesBusyWait) ||
            ParseCStringArgWithHandling("--render-test-output-dir", argc, argv, argIndex,
                                        &gRenderTestOutputDir, ArgHandling::Preserve) ||
            ParseCStringArg("--screenshot-dir", argc, argv, argIndex, &gScreenshotDir) ||
@@ -108,7 +111,9 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
            ParseFlag("--include-inactive-resources", argc, argv, argIndex,
                      &gIncludeInactiveResources) ||
            ParseFlag("--track-gpu-time", argc, argv, argIndex, &gTrackGPUTime) ||
-           ParseFlag("--add-swap-into-gpu-time", argc, argv, argIndex, &gAddSwapIntoGPUTime);
+           ParseFlag("--add-swap-into-gpu-time", argc, argv, argIndex, &gAddSwapIntoGPUTime) ||
+           ParseFlag("--add-swap-into-frame-wall-time", argc, argv, argIndex,
+                     &gAddSwapIntoFrameWallTime);
 }
 }  // namespace
 }  // namespace angle

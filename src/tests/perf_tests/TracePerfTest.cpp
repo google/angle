@@ -1630,7 +1630,9 @@ void TracePerfTest::drawBenchmark()
     startGpuTimer();
     atraceCounter("TraceFrameIndex", mCurrentFrame);
 
+    const double beginReplayFrameTimeSec = mTrialTimer.getElapsedWallClockTime();
     mTraceReplay->replayFrame(mCurrentFrame);
+    mFrameWallTimeSec += mTrialTimer.getElapsedWallClockTime() - beginReplayFrameTimeSec;
 
     if (!gAddSwapIntoGPUTime)
     {
@@ -1638,6 +1640,10 @@ void TracePerfTest::drawBenchmark()
     }
 
     updatePerfCounters();
+
+    // Need to exclude potentially expensive calls above from the Frame Time.
+    const double beginSwapTimeSec =
+        gAddSwapIntoFrameWallTime ? mTrialTimer.getElapsedWallClockTime() : 0.0;
 
     if (mParams->surfaceType == SurfaceType::Offscreen)
     {
@@ -1744,6 +1750,12 @@ void TracePerfTest::drawBenchmark()
         bindFramebuffer(GL_FRAMEBUFFER, 0);
         saveScreenshotIfEnabled(ScreenshotType::kFrame);
         getGLWindow()->swap();
+    }
+
+    if (gAddSwapIntoFrameWallTime)
+    {
+        const double endSwapTimeSec = mTrialTimer.getElapsedWallClockTime();
+        mFrameWallTimeSec += endSwapTimeSec - beginSwapTimeSec;
     }
 
     if (gAddSwapIntoGPUTime)

@@ -311,6 +311,8 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
       mBackend(backend),
       mStory(story),
       mGPUTimeNs(0),
+      mFrameWallTimeSec(0.0),
+      mBusyWaitCpuTimeSec(0.0),
       mSkipTest(false),
       mStepsToRun(std::max(gStepsPerTrial, gMaxStepsPerformed)),
       mTrialNumStepsPerformed(0),
@@ -329,6 +331,7 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
     }
     mReporter = std::make_unique<perf_test::PerfResultReporter>(mName + mBackend, mStory);
     mReporter->RegisterImportantMetric(".wall_time", units);
+    mReporter->RegisterImportantMetric(".frame_wall_time", units);
     mReporter->RegisterImportantMetric(".cpu_time", units);
     mReporter->RegisterImportantMetric(".gpu_time", units);
     mReporter->RegisterFyiMetric(".trial_steps", "count");
@@ -429,6 +432,8 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
     mTrialNumStepsPerformed = 0;
     mRunning                = true;
     mGPUTimeNs              = 0;
+    mFrameWallTimeSec       = 0.0;
+    mBusyWaitCpuTimeSec     = 0.0;
     int stepAlignment       = getStepAlignment();
     mTrialTimer.start();
     startTest();
@@ -437,15 +442,15 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
     double lastLoopWallTime = 0;
     while (mRunning)
     {
-        // When ATrace enabled, track average frame time before the first frame of each trace loop.
+        // When ATrace enabled, track average wall time before the first frame of each trace loop.
         if (ATraceEnabled() && stepAlignment > 1 && runPolicy == RunTrialPolicy::RunContinuously &&
             mTrialNumStepsPerformed % stepAlignment == 0)
         {
             double wallTime = mTrialTimer.getElapsedWallClockTime();
             if (loopStepsPerformed > 0)  // 0 at the first frame of the first loop
             {
-                int frameTimeAvgUs = int(1e6 * (wallTime - lastLoopWallTime) / loopStepsPerformed);
-                atraceCounter("TraceLoopFrameTimeAvgUs", frameTimeAvgUs);
+                int wallTimeAvgUs = int(1e6 * (wallTime - lastLoopWallTime) / loopStepsPerformed);
+                atraceCounter("TraceLoopWallTimeAvgUs", wallTimeAvgUs);
                 loopStepsPerformed = 0;
             }
             lastLoopWallTime = wallTime;
@@ -487,11 +492,28 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
 
         if (gFpsLimit)
         {
-            double wantTime    = mTrialNumStepsPerformed / double(gFpsLimit);
-            double currentTime = mTrialTimer.getElapsedWallClockTime();
-            if (currentTime < wantTime)
+            double wantTime = mTrialNumStepsPerformed / double(gFpsLimit);
+            if (gFpsLimitUsesBusyWait)
             {
-                std::this_thread::sleep_for(std::chrono::duration<double>(wantTime - currentTime));
+                Timer busyWaitTimer;
+                busyWaitTimer.start();
+                while (mTrialTimer.getElapsedWallClockTime() < wantTime)
+                {
+                }
+                busyWaitTimer.stop();
+                // Estimate CPU time spend busy waiting by the current thread.
+                const double busyWaitCpuTime = std::min(busyWaitTimer.getElapsedWallClockTime(),
+                                                        busyWaitTimer.getElapsedCpuTime());
+                mBusyWaitCpuTimeSec += busyWaitCpuTime;
+            }
+            else
+            {
+                double currentTime = mTrialTimer.getElapsedWallClockTime();
+                if (currentTime < wantTime)
+                {
+                    std::this_thread::sleep_for(
+                        std::chrono::duration<double>(wantTime - currentTime));
+                }
             }
         }
         step();
@@ -516,7 +538,7 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
 
     if (runPolicy == RunTrialPolicy::RunContinuously)
     {
-        atraceCounter("TraceLoopFrameTimeAvgUs", 0);
+        atraceCounter("TraceLoopWallTimeAvgUs", 0);
     }
     finishTest();
     mTrialTimer.stop();
@@ -595,7 +617,11 @@ void ANGLEPerfTest::addHistogramSample(const char *metric, double value, const s
 
 void ANGLEPerfTest::processResults()
 {
-    processClockResult(".cpu_time", mTrialTimer.getElapsedCpuTime());
+    processClockResult(".cpu_time", mTrialTimer.getElapsedCpuTime() - mBusyWaitCpuTimeSec);
+    if (mFrameWallTimeSec > 0.0)
+    {
+        processClockResult(".frame_wall_time", mFrameWallTimeSec);
+    }
     processClockResult(".wall_time", mTrialTimer.getElapsedWallClockTime());
 
     if (mGPUTimeNs > 0)
