@@ -20,6 +20,21 @@
 namespace
 {
 
+// This test verifies that allocate() crashes when all handles are exhausted.
+TEST(HandleAllocatorTest, HandleExhaustionDeathTest)
+{
+    // Create an allocator with a very small range to easily exhaust handles.
+    gl::HandleAllocator limitedAllocator(3);  // Handles 1, 2, 3
+
+    // Allocate all available handles.
+    limitedAllocator.allocate();
+    limitedAllocator.allocate();
+    limitedAllocator.allocate();
+
+    // Attempt to allocate another handle, which should cause a crash.
+    ASSERT_DEATH(limitedAllocator.allocate(), "");
+}
+
 TEST(HandleAllocatorTest, ReservationsWithGaps)
 {
     gl::HandleAllocator allocator;

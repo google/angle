@@ -14,6 +14,7 @@
 #include <limits>
 
 #include "common/debug.h"
+#include "common/mathutil.h"
 
 namespace gl
 {
@@ -78,7 +79,9 @@ GLuint HandleAllocator::allocate()
     }
     else
     {
-        listIt->begin++;
+        angle::CheckedNumeric<GLuint> checkedBegin = listIt->begin;
+        checkedBegin++;
+        listIt->begin = checkedBegin.ValueOrDie();
     }
 
     if (mLoggingEnabled)
@@ -99,15 +102,18 @@ void HandleAllocator::release(GLuint handle)
     // Try consolidating the ranges first.
     for (HandleRange &handleRange : mUnallocatedList)
     {
-        if (handleRange.begin - 1 == handle)
+        angle::CheckedNumeric<GLuint> checkedBegin = handleRange.begin;
+        angle::CheckedNumeric<GLuint> checkedEnd   = handleRange.end;
+
+        if ((checkedBegin - 1).ValueOrDie() == handle)
         {
-            handleRange.begin--;
+            handleRange.begin = (checkedBegin - 1).ValueOrDie();
             return;
         }
 
-        if (handleRange.end == handle - 1)
+        if (checkedEnd.ValueOrDie() == (handle - 1))
         {
-            handleRange.end++;
+            handleRange.end = (checkedEnd + 1).ValueOrDie();
             return;
         }
     }
