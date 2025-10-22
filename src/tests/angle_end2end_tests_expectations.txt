@@ -572,6 +572,7 @@
 452919815 PIXEL4ORXL GLES : GLSLTest_ES3.VaryingAnonymousStructEquality/* = SKIP
 42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlIn/* = SKIP
 42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlInBeforeInputSize/* = SKIP
+42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlInBeforeInputSizeButUnused/* = SKIP
 42264513 PIXEL4ORXL GLES : ImageTest.Source2DTarget2D_Colorspace/* = SKIP
 42264513 PIXEL4ORXL GLES : ImageTest.Source2DTargetExternal_Colorspace/* = SKIP
 42264513 PIXEL4ORXL GLES : ImageTest.Source2DTargetRenderbuffer_Colorspace/* = SKIP

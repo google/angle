@@ -13664,6 +13664,130 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test dead code after constant folded control flow structures
+TEST_P(GLSLTest_ES3, DeadCodeInConstFoldControlFlow)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+
+vec4 constantIf()
+{
+    vec4 ret = vec4(0, 0.1, 0, 0);
+    if (true)
+    {
+        return ret;
+    }
+    ret = vec4(1, 0, 0, 0);
+    return ret;
+}
+
+vec4 constantFor()
+{
+    vec4 ret = vec4(0.1, 0, 0, 0);
+    for (int i = 0; i < 10; ++i)
+    {
+        ret.r += 0.1;
+        break;
+    }
+    ret.a += 0.1;
+    return ret;
+}
+
+vec4 constantWhileFalse()
+{
+    vec4 ret = vec4(0, 0, 0.1, 0);
+    while (false)
+    {
+        ret.g = 1.0;
+        return ret;
+    }
+    ret.b += 0.1;
+    return ret;
+}
+
+vec4 constantWhileTrue()
+{
+    vec4 ret = vec4(0, 0.1, 0, 0);
+    while (true)
+    {
+        ret.g += 0.3;
+        break;
+    }
+    ret.g += 0.1;
+    return ret;
+}
+
+vec4 constantDoWhileFalse()
+{
+    vec4 ret = vec4(0, 0, 0.1, 0);
+    do
+    {
+        ret.b += 0.1;
+        return ret;
+    } while (false);
+
+    ret.a = 1.;
+    return ret;
+}
+
+vec4 constantDoWhileTrue()
+{
+    vec4 ret = vec4(0, 0, 0.1, 0);
+    do
+    {
+        ret.b += 0.1;
+        return ret;
+    } while (true);
+
+    ret.r = 1.;
+    return ret;
+}
+
+vec4 constantSwitch()
+{
+    vec4 ret = vec4(0, 0, 0.1, 0);
+    switch (4)
+    {
+    case 1:
+        ret.r = 1.;
+        break;
+    case 3:
+        ret.b = 1.;
+        // fallthrough
+    case 4:
+        ret.a += 0.1;
+        // fallthrough
+    case 5:
+        return ret;
+    default:
+        ret.g = 1.;
+    }
+    ret.r = 1.;
+    return ret;
+}
+
+void main()
+{
+    vec4 result = constantIf();
+    result += constantFor();
+    result += constantWhileFalse();
+    result += constantWhileTrue();
+    result += constantDoWhileFalse();
+    result += constantDoWhileTrue();
+    result += constantSwitch();
+
+    color = result;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 153, 179, 51), 1);
+}
+
 // Test that blocks with only variable declarations inside are handled correctly
 TEST_P(GLSLTest_ES3, BlocksWithOnlyVariableDeclaration)
 {
@@ -17757,6 +17881,32 @@ void main()
         }
 
     color = result == 150 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    runTest(kFS);
+}
+
+// Test for loop with a continue expression that is void.
+TEST_P(GLSLTestLoops, ForVoidContinue)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+
+void f()
+{
+}
+
+void main()
+{
+    int result = 0;
+    for (int i = 0; i < 10; f())
+    {
+        ++result;
+        ++i;
+    }
+
+    color = result == 10 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
 })";
 
     runTest(kFS);

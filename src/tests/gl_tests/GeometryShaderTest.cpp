@@ -432,6 +432,67 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that redeclaring gl_in works when geometry shader array input size
+// is set after shader input variables, but gl_in itself is not used.
+TEST_P(GeometryShaderTest, RedeclareGlInBeforeInputSizeButUnused)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+precision highp float;
+layout(location = 0) in highp vec4 position;
+out gl_PerVertex
+{
+    highp vec4 gl_Position;
+};
+void main()
+{
+    gl_Position = vec4(0, 0, 0, position.w);
+})";
+
+    constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+uniform vec4 u_color;
+in gl_PerVertex
+{
+    highp vec4 gl_Position;
+} gl_in[];
+layout (triangles) in;
+layout (triangle_strip, max_vertices = 3) out;
+out vec4 gs_out;
+void main()
+{
+    gl_Position = vec4(-1, -1, 0, 1);
+    gs_out = u_color;
+    EmitVertex();
+    gl_Position = vec4(3, -1, 0, 1);
+    gs_out = u_color;
+    EmitVertex();
+    gl_Position = vec4(-1, 3, 0, 1);
+    gs_out = u_color;
+    EmitVertex();
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+in vec4 gs_out;
+layout(location = 0) out vec4 oColor;
+void main()
+{
+    oColor = gs_out;
+})";
+
+    ANGLE_GL_PROGRAM_WITH_GS(program, kVS, kGS, kFS);
+    glUseProgram(program);
+
+    glUniform4f(glGetUniformLocation(program, "u_color"), 0, 1, 0, 1);
+    drawQuad(program, "position", 0.0f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Verify that Geometry Shader can be compiled when geometry shader array input size
 // is set after shader input variables.
 // http://anglebug.com/42265598 GFXBench Car Chase uses this pattern
