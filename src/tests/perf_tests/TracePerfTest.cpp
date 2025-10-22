@@ -1608,19 +1608,6 @@ void TracePerfTest::drawBenchmark()
             buffer = 0;  // gles1: a single frame is rendered to buffer 0
         }
         bindFramebuffer(GL_FRAMEBUFFER, buffer);
-
-        GLsync sync = mOffscreenSyncs[offscreenBufferIndex];
-        if (sync)
-        {
-            constexpr GLuint64 kTimeout = 2'000'000'000;  // 2 seconds
-            GLenum result = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, kTimeout);
-            if (result != GL_CONDITION_SATISFIED && result != GL_ALREADY_SIGNALED)
-            {
-                failTest(std::string("glClientWaitSync unexpected result: ") +
-                         std::to_string(result));
-            }
-            glDeleteSync(sync);
-        }
     }
 
     char frameName[32];
@@ -1736,6 +1723,20 @@ void TracePerfTest::drawBenchmark()
             {
                 bindFramebuffer(GL_DRAW_FRAMEBUFFER, currentDrawFBO);
                 bindFramebuffer(GL_READ_FRAMEBUFFER, currentReadFBO);
+            }
+
+            // Wait for the next frame here to simulate the behaviour of the swap buffers call
+            GLsync sync = mOffscreenSyncs[(offscreenBufferIndex + 1) % mMaxOffscreenBufferCount];
+            if (sync)
+            {
+                constexpr GLuint64 kTimeout = 2'000'000'000;  // 2 seconds
+                GLenum result = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, kTimeout);
+                if (result != GL_CONDITION_SATISFIED && result != GL_ALREADY_SIGNALED)
+                {
+                    failTest(std::string("glClientWaitSync unexpected result: ") +
+                             std::to_string(result));
+                }
+                glDeleteSync(sync);
             }
 
             if (currentEglContext != mEglContext)
