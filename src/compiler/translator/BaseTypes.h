@@ -1062,9 +1062,6 @@ enum TQualifier
     EvqLayerOut,       // gl_Layer (GS output)
     EvqLayerIn,        // gl_Layer (FS input)
 
-    // GLSL ES 3.1 extension EXT_gpu_shader5 qualifiers
-    EvqPrecise,
-
     // GLES ES 3.1 extension EXT_tessellation_shader qualifiers
     EvqPatchIn,
     EvqPatchOut,
@@ -1589,7 +1586,6 @@ inline const char *getQualifierString(TQualifier q)
     case EvqPrimitiveIDIn:             return "gl_PrimitiveIDIn";
     case EvqInvocationID:              return "gl_InvocationID";
     case EvqPrimitiveID:               return "gl_PrimitiveID";
-    case EvqPrecise:                   return "precise";
     case EvqClipDistance:              return "ClipDistance";
     case EvqCullDistance:              return "CullDistance";
     case EvqSample:                    return "sample";

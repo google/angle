@@ -316,7 +316,7 @@ class TCompiler : public TShHandleBase
 
     // Fetches and stores shader metadata that is not stored within the AST itself, such as shader
     // version.
-    void setASTMetadata(const TParseContext &parseContext);
+    void setShaderMetadata(const TParseContext &parseContext);
 
     // Check if shader version meets the requirement.
     bool checkShaderVersion(TParseContext *parseContext);

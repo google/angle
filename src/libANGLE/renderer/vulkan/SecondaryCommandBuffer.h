@@ -16,9 +16,9 @@
 #endif
 
 #include "common/vulkan/vk_headers.h"
+#include "libANGLE/renderer/vulkan/AllocatorHelperPool.h"
 #include "libANGLE/renderer/vulkan/vk_command_buffer_utils.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
-#    include "libANGLE/renderer/vulkan/AllocatorHelperPool.h"
 
 namespace rx
 {

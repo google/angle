@@ -577,7 +577,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         return nullptr;
     }
 
-    setASTMetadata(parseContext);
+    setShaderMetadata(parseContext);
 
     if (!checkShaderVersion(&parseContext))
     {
@@ -665,7 +665,7 @@ bool TCompiler::checkShaderVersion(TParseContext *parseContext)
     return true;
 }
 
-void TCompiler::setASTMetadata(const TParseContext &parseContext)
+void TCompiler::setShaderMetadata(const TParseContext &parseContext)
 {
     mShaderVersion = parseContext.getShaderVersion();
 

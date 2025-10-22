@@ -17,7 +17,6 @@
 #include "common/utilities.h"
 #include "compiler/preprocessor/SourceLocation.h"
 #include "compiler/translator/Declarator.h"
-#include "compiler/translator/StaticType.h"
 #include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/glslang.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
@@ -35,7 +34,6 @@ namespace sh
 
 namespace
 {
-
 const int kWebGLMaxStructNesting = 4;
 
 bool ShouldEnforceESSL100LoopAndIndexingLimitations(ShShaderSpec spec,

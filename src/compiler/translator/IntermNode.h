@@ -292,7 +292,7 @@ class TIntermSymbol : public TIntermTyped
   public:
     TIntermSymbol(const TVariable *variable);
 
-    TIntermTyped *deepCopy() const override { return new TIntermSymbol(*this); }
+    TIntermSymbol *deepCopy() const override { return new TIntermSymbol(*this); }
 
     bool hasConstantValue() const override;
     const TConstantUnion *getConstantValue() const override;

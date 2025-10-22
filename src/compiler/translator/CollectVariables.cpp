@@ -1311,11 +1311,7 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
         }
         else if (qualifier != EvqPixelLocalEXT)
         {
-
-            if (!namedBlock)
-            {
-                namedBlock = findNamedInterfaceBlock(interfaceBlock->name());
-            }
+            namedBlock = findNamedInterfaceBlock(interfaceBlock->name());
             ASSERT(namedBlock);
             ASSERT(namedBlock->staticUse);
             namedBlock->active      = true;

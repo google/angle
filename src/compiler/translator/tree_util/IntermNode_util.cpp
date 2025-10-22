@@ -195,6 +195,15 @@ TIntermConstantUnion *CreateBoolNode(bool value)
     return new TIntermConstantUnion(u, type);
 }
 
+TIntermConstantUnion *CreateYuvCscNode(TYuvCscStandardEXT value)
+{
+    TConstantUnion *u = new TConstantUnion[1];
+    u[0].setYuvCscStandardEXTConst(value);
+
+    TType type(EbtYuvCscStandardEXT, EbpUndefined, EvqConst, 1);
+    return new TIntermConstantUnion(u, type);
+}
+
 TVariable *CreateTempVariable(TSymbolTable *symbolTable, const TType *type)
 {
     ASSERT(symbolTable != nullptr);

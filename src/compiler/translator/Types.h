@@ -171,11 +171,11 @@ class TType
     bool isInterpolant() const { return interpolant; }
     void setInterpolant(bool i) { interpolant = i; }
 
-    TMemoryQualifier getMemoryQualifier() const { return memoryQualifier; }
+    const TMemoryQualifier &getMemoryQualifier() const { return memoryQualifier; }
     void setMemoryQualifier(const TMemoryQualifier &mq) { memoryQualifier = mq; }
 
-    TLayoutQualifier getLayoutQualifier() const { return layoutQualifier; }
-    void setLayoutQualifier(TLayoutQualifier lq) { layoutQualifier = lq; }
+    const TLayoutQualifier &getLayoutQualifier() const { return layoutQualifier; }
+    void setLayoutQualifier(const TLayoutQualifier &lq) { layoutQualifier = lq; }
 
     uint8_t getNominalSize() const { return primarySize; }
     uint8_t getSecondarySize() const { return secondarySize; }
@@ -462,7 +462,7 @@ struct TTypeSpecifierNonArray
     bool isVector() const { return primarySize > 1 && secondarySize == 1; }
 };
 
-// Type represeting parsed type specifire on a struct or variable declaration or
+// Type representing parsed type specifier on a struct or variable declaration or
 // parameter declaration.
 // Note: must be trivially constructible.
 struct TPublicType
