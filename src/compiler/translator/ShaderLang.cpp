@@ -25,6 +25,10 @@
 #include "angle_gl.h"
 #include "compiler/translator/VariablePacker.h"
 
+#ifdef ANGLE_IR
+#    include "compiler/translator/ir/src/compile.h"
+#endif
+
 namespace sh
 {
 
@@ -148,6 +152,9 @@ bool Initialize()
     if (!isInitialized)
     {
         isInitialized = InitializePoolIndex();
+#ifdef ANGLE_IR
+        ir::ffi::initialize_global_pool_index_workaround();
+#endif
     }
     return isInitialized;
 }
@@ -160,6 +167,9 @@ bool Finalize()
     if (isInitialized)
     {
         FreePoolIndex();
+#ifdef ANGLE_IR
+        ir::ffi::free_global_pool_index_workaround();
+#endif
         isInitialized = false;
     }
     return true;

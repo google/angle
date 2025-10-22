@@ -254,6 +254,10 @@ angle_test("angle_unittests") {
   if (angle_has_rapidjson) {
     sources += [ "../common/serializer/JsonSerializer_unittest.cpp" ]
   }
+
+  if (angle_ir) {
+    configs += [ "${angle_root}:angle_translator_ir" ]
+  }
 }
 
 if (is_ios) {
@@ -546,6 +550,10 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
     if (angle_enable_vulkan) {
       sources += angle_white_box_tests_vulkan_sources
       deps += [ "$angle_root/src/common/vulkan:angle_vulkan_entry_points" ]
+    }
+
+    if (angle_ir) {
+      configs += [ "${angle_root}:angle_translator_ir" ]
     }
   }
 }

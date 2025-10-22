@@ -30,6 +30,7 @@
 #include "compiler/translator/ValidateTypeSizeLimitations.h"
 #include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/VariablePacker.h"
+#include "compiler/translator/ir/src/compile.h"
 #include "compiler/translator/tree_ops/ClampFragDepth.h"
 #include "compiler/translator/tree_ops/ClampIndirectIndices.h"
 #include "compiler/translator/tree_ops/ClampPointSize.h"
@@ -584,7 +585,14 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         return nullptr;
     }
 
+#ifdef ANGLE_IR
+    ir::IR ir = parseContext.getIR();
+
+    // Create an AST out of the IR while the rest of the translator is still AST based.
+    TIntermBlock *root = ir::GenerateAST(std::move(ir), this, compileOptions).root;
+#else
     TIntermBlock *root = parseContext.getTreeRoot();
+#endif
     if (compileOptions.skipAllValidationAndTransforms)
     {
         collectVariables(root);
@@ -879,6 +887,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
+#if !defined(ANGLE_IR)
     // Fold expressions that could not be folded before validation that was done as a part of
     // parsing.
     if (!FoldExpressions(this, root, &mDiagnostics))
@@ -887,6 +896,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
     // Folding should only be able to generate warnings.
     ASSERT(mDiagnostics.numErrors() == 0);
+#endif  // !defined(ANGLE_IR)
 
     if (parseContext.isExtensionEnabled(TExtension::ANGLE_clip_cull_distance) ||
         parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance) ||
@@ -896,6 +906,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         mCullDistanceSize = static_cast<uint8_t>(parseContext.getCullDistanceArraySize());
         mMetadataFlags[MetadataFlags::HasClipDistance] = parseContext.isClipDistanceUsed();
 
+#if !defined(ANGLE_IR)
         // gl_ClipDistance and gl_CullDistance built-in arrays have unique semantics.
         // They are pre-declared as unsized and must be sized by the shader either
         // redeclaring them or indexing them only with integral constant expressions.
@@ -914,8 +925,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
+#endif  // !defined(ANGLE_IR)
     }
 
+#if !defined(ANGLE_IR)
     // We prune no-ops to work around driver bugs and to keep AST processing and output simple.
     // The following kinds of no-ops are pruned:
     //   1. Empty declarations "int;".
@@ -928,6 +941,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         return false;
     }
+#endif  // !defined(ANGLE_IR)
     mValidateASTOptions.validateNoStatementsAfterBranch = true;
 
     // We need to generate globals early if we have non constant initializers enabled
@@ -962,6 +976,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // Create the function DAG.
     initCallDag(root);
 
+#if !defined(ANGLE_IR)
     // Checks which functions are used
     mFunctionMetadata.clear();
     mFunctionMetadata.resize(mCallDag.size());
@@ -971,6 +986,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         return false;
     }
+#endif  // !defined(ANGLE_IR)
 
     if (IsSpecWithFunctionBodyNewScope(mShaderSpec, mShaderVersion))
     {
@@ -1039,6 +1055,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
+#if !defined(ANGLE_IR)
     if (compileOptions.addAndTrueToLoopCondition)
     {
         if (!AddAndTrueToLoopCondition(this, root))
@@ -1062,6 +1079,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
             return false;
         }
     }
+#endif  // !defined(ANGLE_IR)
 
     // https://crbug.com/437678149:
     // On Mac, if ANGLE internal uniforms are not placed on the top of ANGLE_UserUniforms struct,
@@ -1120,6 +1138,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
+#if !defined(ANGLE_IR)
     if (compileOptions.simplifyLoopConditions)
     {
         if (!SimplifyLoopConditions(this, root, &getSymbolTable()))
@@ -1147,6 +1166,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         return false;
     }
+#endif  // !defined(ANGLE_IR)
 
     if (compileOptions.rescopeGlobalVariables)
     {
@@ -1158,6 +1178,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     mValidateASTOptions.validateMultiDeclarations = true;
 
+#if !defined(ANGLE_IR)
     if (!SplitSequenceOperator(this, root, IntermNodePatternMatcher::kArrayLengthMethod,
                                &getSymbolTable()))
     {
@@ -1178,6 +1199,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         return false;
     }
+#endif  // !defined(ANGLE_IR)
 
     // In case the last case inside a switch statement is a certain type of no-op, GLSL compilers in
     // drivers may not accept it. In this case we clean up the dead code from the end of switch

@@ -115,6 +115,11 @@ angle_translator_sources = [
   "src/compiler/translator/glslang_tab_autogen.cpp",
   "src/compiler/translator/glslang_tab_autogen.h",
   "src/compiler/translator/hlsl/TranslatorHLSL.h",
+  "src/compiler/translator/ir/src/builder.h",
+  "src/compiler/translator/ir/src/compile.h",
+  "src/compiler/translator/ir/src/output/ir_to_legacy.h",
+  "src/compiler/translator/ir/src/output/legacy.h",
+  "src/compiler/translator/ir/src/pool_alloc.h",
   "src/compiler/translator/length_limits.h",
   "src/compiler/translator/msl/DriverUniformMetal.h",
   "src/compiler/translator/msl/TranslatorMSL.h",
@@ -452,6 +457,13 @@ angle_translator_lib_wgsl_sources = [
   "src/compiler/translator/wgsl/Utils.h",
   "src/compiler/translator/wgsl/WGSLProgramPrelude.cpp",
   "src/compiler/translator/wgsl/WGSLProgramPrelude.h",
+]
+
+angle_translator_lib_ir_sources = [
+  "src/compiler/translator/ir/src/builder.cpp",
+  "src/compiler/translator/ir/src/compile.cpp",
+  "src/compiler/translator/ir/src/output/ir_to_legacy.cpp",
+  "src/compiler/translator/ir/src/pool_alloc.cpp",
 ]
 
 angle_preprocessor_sources = [

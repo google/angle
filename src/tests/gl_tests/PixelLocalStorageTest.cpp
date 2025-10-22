@@ -8630,12 +8630,12 @@ TEST_P(PixelLocalStorageCompilerTest, BlendFuncExtended_illegal_with_PLS)
     void main()
     {})";
     EXPECT_FALSE(log.compileFragmentShader(kBlendFuncExtendedNoLocation));
-    EXPECT_TRUE(log.has(
-        "ERROR: 0:5: 'out1' : must explicitly specify all locations when using multiple fragment "
-        "outputs and pixel local storage, even if EXT_blend_func_extended is enabled"));
-    EXPECT_TRUE(log.has(
-        "ERROR: 0:6: 'out0' : must explicitly specify all locations when using multiple fragment "
-        "outputs and pixel local storage, even if EXT_blend_func_extended is enabled"));
+    EXPECT_TRUE(
+        log.has("'out1' : must explicitly specify all locations when using multiple fragment "
+                "outputs and pixel local storage, even if EXT_blend_func_extended is enabled"));
+    EXPECT_TRUE(
+        log.has("'out0' : must explicitly specify all locations when using multiple fragment "
+                "outputs and pixel local storage, even if EXT_blend_func_extended is enabled"));
 
     // index=0 is ok.
     constexpr char kValidFragmentIndex0[] = R"(#version 300 es
