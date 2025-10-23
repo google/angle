@@ -226,6 +226,7 @@
 42266128 LINUX INTEL OPENGL : CopyTexImageTest.CopyTexImageMesaYFlipPartial/* = SKIP
 342316794 LINUX INTEL VULKAN : GLSLTest_ES31.TernaryOnStructsInDifferentBlockStorages/* = SKIP
 347282472 LINUX NVIDIA OPENGL : CopyTextureTest.CopyOutsideMipmap/* = SKIP
+454915387 LINUX NVIDIA OPENGL : GLSLConstantFoldingTest.ArrayMixedArgumentsWithSideEffectIndex/* = SKIP
 // New failures when upgrading to Ubuntu 22/newer driver.
 362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.Clear2DArray/* = SKIP
 362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.Clear3D/* = SKIP
@@ -571,6 +572,7 @@
 42264513 PIXEL4ORXL GLES : CubeMapTextureTest.SampleCoordinateTransform/* = SKIP
 42265301 PIXEL4ORXL GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 452919815 PIXEL4ORXL GLES : GLSLTest_ES3.VaryingAnonymousStructEquality/* = SKIP
+454827197 PIXEL4ORXL GLES : GLSLConstantFoldingTest_ES31.NamedArrayOfArrayIndex/* = SKIP
 42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlIn/* = SKIP
 42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlInBeforeInputSize/* = SKIP
 42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlInBeforeInputSizeButUnused/* = SKIP

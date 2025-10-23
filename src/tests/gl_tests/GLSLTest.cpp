@@ -4444,7 +4444,6 @@ void main() {
 
     const GLuint *ptr = reinterpret_cast<const GLuint *>(
         glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kOutputInitData), GL_MAP_READ_BIT));
-    fprintf(stderr, "%d %d %d %d %d\n", ptr[0], ptr[1], ptr[2], ptr[3], ptr[4]);
     EXPECT_FALSE(ptr[0]);
     EXPECT_TRUE(ptr[1]);
     EXPECT_FALSE(ptr[2]);
@@ -23582,6 +23581,22 @@ TEST_P(GLSLTest, NestedInoutVars3)
     {
         ADD_FAILURE() << "Got " << color << ", expected white or grey";
     }
+}
+
+// Regression test case of unary + constant folding of a void struct member.
+TEST_P(GLSLTest, UnaryPlusOnVoidStructMemory)
+{
+    constexpr char kFS[] = R"(uniform mediump vec4 u;
+struct U
+{
+    void t;
+};
+void main() {
+  +U().t;
+})";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_EQ(0u, shader);
 }
 
 }  // anonymous namespace

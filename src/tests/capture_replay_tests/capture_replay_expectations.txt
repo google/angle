@@ -256,6 +256,9 @@
 # Crashes in gl::JoinShaderSources during replay
 447613212 : GLSLTest.EmptyShader/* = SKIP_FOR_CAPTURE
 
+# Missing support for GL_ANGLE_translated_shader_source
+454830637 : GLSLConstantFoldingTest* = SKIP_FOR_CAPTURE
+
 # Crashes on win and linux trace bots
 372059358 : MultisampleTestES3.CopyTexImage2DFromMsaaDefaultFbo/* = SKIP_FOR_CAPTURE
 

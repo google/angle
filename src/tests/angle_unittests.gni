@@ -96,9 +96,6 @@ angle_unittests_compiler_tests_sources = [
   "compiler_tests/AtomicCounter_test.cpp",
   "compiler_tests/BufferVariables_test.cpp",
   "compiler_tests/CollectVariables_test.cpp",
-  "compiler_tests/ConstantFoldingNaN_test.cpp",
-  "compiler_tests/ConstantFoldingOverflow_test.cpp",
-  "compiler_tests/ConstantFolding_test.cpp",
   "compiler_tests/ConstructCompiler_test.cpp",
   "compiler_tests/EXT_YUV_target_test.cpp",
   "compiler_tests/EXT_blend_func_extended_test.cpp",
@@ -153,8 +150,6 @@ angle_unittests_compiler_tests_sources = [
   "compiler_tests/Type_test.cpp",
   "compiler_tests/VariablePacker_test.cpp",
   "compiler_tests/WorkGroupSize_test.cpp",
-  "test_utils/ConstantFoldingTest.cpp",
-  "test_utils/ConstantFoldingTest.h",
   "test_utils/ShaderCompileTreeTest.cpp",
   "test_utils/ShaderCompileTreeTest.h",
 ]
