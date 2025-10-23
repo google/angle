@@ -286,6 +286,9 @@ TEST_P(MultithreadingTest, MultiContextDeleteDraw)
 
             EXPECT_EGL_TRUE(eglDestroyContext(dpy, ctx2));
             EXPECT_EGL_TRUE(eglDestroyContext(dpy, ctx1));
+
+            // Clean up
+            EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
         }
     });
 
@@ -329,6 +332,9 @@ TEST_P(MultithreadingTest, MultiContextDeleteDraw)
                 glDrawArrays(GL_TRIANGLES, 0, 6);
             }
         }
+
+        // Clean up
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
     });
 
     t1.join();
@@ -828,6 +834,9 @@ TEST_P(MultithreadingTest, EGLImageProduceConsume)
         }
 
         eglDestroyContext(dpy, ctx);
+
+        // Clean up
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
     });
 
     std::thread consumerThread([&]() {
@@ -896,6 +905,9 @@ TEST_P(MultithreadingTest, EGLImageProduceConsume)
             }
         }
         eglDestroyContext(dpy, ctx);
+
+        // Clean up
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
     });
 
     producerThread.join();
@@ -1227,6 +1239,9 @@ TEST_P(MultithreadingTest, CreateFenceThreadAClientWaitSyncThreadBDelayedFlush)
         constexpr GLuint64 kTimeout = 2'000'000'000;  // 2 seconds
         threadSynchronization.nextStep(Step::Thread0ClientWaitSync);
         ASSERT_EQ(EGL_CONDITION_SATISFIED_KHR, eglClientWaitSyncKHR(dpy, sync, 0, kTimeout));
+
+        // Clean up
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
 
         ASSERT_TRUE(threadSynchronization.waitForStep(Step::Finish));
     };
@@ -3222,6 +3237,9 @@ TEST_P(MultithreadingTestES3, CreateNewContextAfterTextureUploadOnMainThread)
 
         // Destroy the context.
         EXPECT_EGL_TRUE(eglDestroyContext(dpy, ctx1));
+
+        // Clean up
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
     });
 
     thread.join();
