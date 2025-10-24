@@ -180,7 +180,6 @@ delete_after_codegen_paths=(
    "third_party/clspv/gn"
    "third_party/colorama"
    "third_party/jdk/current"  # subdirs only to keep third_party/jdk/BUILD.gn (not pulled by gclient as it comes from ANGLE repo)
-   "third_party/jdk/extras"
    "third_party/llvm-build"
    "third_party/proguard"
    "third_party/r8"
