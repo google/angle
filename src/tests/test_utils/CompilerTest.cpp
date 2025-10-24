@@ -19,6 +19,7 @@ GLuint CompiledShader::compile(GLenum type, const char *source)
 
     GLint infoLogLength;
     glGetShaderiv(mShader, GL_INFO_LOG_LENGTH, &infoLogLength);
+    mInfoLog.clear();
 
     if (infoLogLength > 0)
     {
@@ -57,29 +58,32 @@ GLuint CompiledShader::compile(GLenum type, const char *source)
 
 CompiledShader::~CompiledShader()
 {
-    destroy();
+    if (mShader != 0)
+    {
+        destroy();
+    }
 }
 
 void CompiledShader::destroy()
 {
     glDeleteShader(mShader);
+    ASSERT_GL_NO_ERROR();
     mShader = 0;
 
-    mInfoLog.clear();
     mTranslatedSource.clear();
 }
 
-bool CompiledShader::hasError(const char *expect)
+bool CompiledShader::hasError(const char *expect) const
 {
     return mInfoLog.find(expect) != std::string::npos;
 }
 
-bool CompiledShader::verifyInTranslatedSource(const char *expect)
+bool CompiledShader::verifyInTranslatedSource(const char *expect) const
 {
     return mTranslatedSource.empty() || mTranslatedSource.find(expect) != std::string::npos;
 }
 
-bool CompiledShader::verifyNotInTranslatedSource(const char *expect)
+bool CompiledShader::verifyNotInTranslatedSource(const char *expect) const
 {
     return mTranslatedSource.empty() || mTranslatedSource.find(expect) == std::string::npos;
 }
@@ -88,8 +92,17 @@ void CompilerTest::testSetUp() {}
 
 void CompilerTest::testTearDown()
 {
+    reset();
+}
+
+void CompilerTest::reset()
+{
     mVertexShader.destroy();
+    mTessellationControlShader.destroy();
+    mTessellationEvaluationShader.destroy();
+    mGeometryShader.destroy();
     mFragmentShader.destroy();
+    mComputeShader.destroy();
 
     glDeleteProgram(mProgram);
     mProgram = 0;
@@ -108,8 +121,16 @@ CompiledShader &CompilerTest::getCompiledShader(GLenum type)
     {
         case GL_VERTEX_SHADER:
             return mVertexShader;
+        case GL_TESS_CONTROL_SHADER:
+            return mTessellationControlShader;
+        case GL_TESS_EVALUATION_SHADER:
+            return mTessellationEvaluationShader;
+        case GL_GEOMETRY_SHADER:
+            return mGeometryShader;
         case GL_FRAGMENT_SHADER:
             return mFragmentShader;
+        case GL_COMPUTE_SHADER:
+            return mComputeShader;
         default:
             // Unsupported type
             ASSERT(false);
@@ -121,13 +142,32 @@ GLuint CompilerTest::link()
 {
     mProgram = glCreateProgram();
 
-    if (mVertexShader.success())
+    if (mComputeShader.success())
     {
-        glAttachShader(mProgram, mVertexShader.getShader());
+        glAttachShader(mProgram, mComputeShader.getShader());
     }
-    if (mFragmentShader.success())
+    else
     {
-        glAttachShader(mProgram, mFragmentShader.getShader());
+        if (mVertexShader.success())
+        {
+            glAttachShader(mProgram, mVertexShader.getShader());
+        }
+        if (mTessellationControlShader.success())
+        {
+            glAttachShader(mProgram, mTessellationControlShader.getShader());
+        }
+        if (mTessellationEvaluationShader.success())
+        {
+            glAttachShader(mProgram, mTessellationEvaluationShader.getShader());
+        }
+        if (mGeometryShader.success())
+        {
+            glAttachShader(mProgram, mGeometryShader.getShader());
+        }
+        if (mFragmentShader.success())
+        {
+            glAttachShader(mProgram, mFragmentShader.getShader());
+        }
     }
 
     glLinkProgram(mProgram);

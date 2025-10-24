@@ -27,7 +27,7 @@
 410584013 GLES : ImageTestES3.ImmutableTextureOverwriteBaseLevelAndGenerateMipmapWhileInUse/* = SKIP
 42266349 VULKAN : MultithreadingTestES3.UnsynchronizedTextureReads/* = SKIP
 42266349 VULKAN : MultithreadingTestES3.UnsynchronizedTextureReads2/* = SKIP
-377614665 VULKAN : GLSLTest.StructSamplerVsComma/* = SKIP
+377614665 VULKAN : GLSLValidationTest.StructSamplerVsComma/* = SKIP
 410584007 VULKAN : ImageTestES31.UseSourceTextureAsStorageImage/* = SKIP
 // Incorrectly handled pretty much in all backends
 42266871 : CopyTexImageTestES3.RedefineSameLevel/* = SKIP
@@ -447,7 +447,7 @@
 40644744 MAC METAL INTEL : BlitFramebufferTest.MultisampleDepth/* = SKIP
 40644744 MAC METAL AMD : BlitFramebufferTest.MultisampleDepth/* = SKIP
 40644777 MAC METAL AMD : ColorMaskForDrawBuffersTest.Blit/* = SKIP
-440536251 MAC METAL AMD : GLSLTest_ES3.ManySamplerFieldsInStructComplex/* = SKIP
+440536251 MAC METAL AMD : GLSLValidationTest_ES3.ManySamplerFieldsInStructComplex/* = SKIP
 443101808 MAC METAL AMD : SimpleUniformUsageTestES3.BoolInArray/* = SKIP
 409867243 MAC METAL : Texture2DTestES3.RGB565RenderAndReadIntoRGB565PBO/* = SKIP
 448658625 MAC METAL : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
@@ -493,7 +493,7 @@
 351275980 IOS METAL : GLSLTest_ES3.DynamicIndexingOfSwizzledLValuesShouldWork2/* = SKIP
 
 // D3D
-42264944 WIN D3D9 : GLSLTest.HandleExcessiveLoopBug/* = SKIP
+42264944 WIN D3D9 : GLSLValidationTest.HandleExcessiveLoopBug/* = SKIP
 42264620 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 42264653 WIN D3D11 : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 42264675 WIN D3D11 : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
@@ -509,7 +509,7 @@
 42265582 WIN D3D11 : SimpleStateChangeTestES3.InvalidateRGBThenDraw/* = SKIP
 42265582 WIN D3D11 : SimpleStateChangeTestES3.DrawInvalidateRGBThenDraw/* = SKIP
 42265582 WIN D3D11 : SimpleStateChangeTestES3.DrawAndInvalidateRGBThenVerifyAlpha/* = SKIP
-42265587 WIN D3D9 : GLSLTest.LoopBodyEndingInBranch*/* = SKIP
+42265587 WIN D3D9 : GLSLValidationTest.LoopBodyEndingInBranch*/* = SKIP
 42265622 WIN D3D9 : RobustResourceInitTest.OutOfBoundsArrayBuffers/* = SKIP
 42265686 WIN D3D11 : BufferDataTestES3.BufferDataWithNullFollowedByMap/* = SKIP
 42265767 WIN INTEL D3D11 : StateChangeTestES3.PolygonOffset/* = SKIP
@@ -519,7 +519,7 @@
 42265799 WIN D3D11 : StateChangeTestES3.PrimitiveRestart/* = SKIP
 40050019 WIN D3D11 : WebGL2GLSLTest.InitOutputParams/* = SKIP
 1456243 WIN D3D11 : WebGL2CompatibilityTest.DrawWithZeroSizedBuffer/* = SKIP
-42266836 WIN D3D9 : GLSLTest.VectorScalarArithmeticWithSideEffectInLoop/* = SKIP
+42266836 WIN D3D9 : GLSLValidationTest.VectorScalarArithmeticWithSideEffectInLoop/* = SKIP
 42267092 WIN D3D11 : BlitFramebufferTest.FlippedBlits/* = SKIP
 343249129 WIN D3D11 : GLSLTest_ES31.TernaryOnStructsInDifferentBlockStorages/* = SKIP
 432303915 WIN D3D11 : GLSLTest.VerifyMaxFragmentUniformVectorsWithSamplers/* = SKIP
@@ -1862,13 +1862,13 @@
 42267100 WGPU : GLSLTest.ScopedStructsOrderBug2/* = SKIP
 42267100 WGPU : GLSLTest.StructConstantFoldingBug2/* = SKIP
 42267100 WGPU : GLSLTest.ScopedStructsBug/* = SKIP
-42267100 WGPU : GLSLTest.MissingReturnFloat/* = SKIP
-42267100 WGPU : GLSLTest.MissingReturnVec2/* = SKIP
-42267100 WGPU : GLSLTest.MissingReturnVec3/* = SKIP
-42267100 WGPU : GLSLTest.MissingReturnVec4/* = SKIP
-42267100 WGPU : GLSLTest.MissingReturnIVec4/* = SKIP
-42267100 WGPU : GLSLTest.MissingReturnMat4/* = SKIP
-42267100 WGPU : GLSLTest.MissingReturnStruct/* = SKIP
+42267100 WGPU : GLSLValidationTest.MissingReturnFloat/* = SKIP
+42267100 WGPU : GLSLValidationTest.MissingReturnVec2/* = SKIP
+42267100 WGPU : GLSLValidationTest.MissingReturnVec3/* = SKIP
+42267100 WGPU : GLSLValidationTest.MissingReturnVec4/* = SKIP
+42267100 WGPU : GLSLValidationTest.MissingReturnIVec4/* = SKIP
+42267100 WGPU : GLSLValidationTest.MissingReturnMat4/* = SKIP
+42267100 WGPU : GLSLValidationTest.MissingReturnStruct/* = SKIP
 42267100 WGPU : GLSLTest.CommaTestNoRedundantStatements/* = SKIP
 42267100 WGPU : GLSLTest.MaxVaryingVec4_TwoBuiltins/* = SKIP
 42267100 WGPU : GLSLTest.MaxVaryingVec4_ThreeBuiltins/* = SKIP
@@ -1880,7 +1880,7 @@
 42267100 WGPU : GLSLTest.VerifyMaxFragmentUniformVectorsWithSamplers/* = SKIP
 42267100 WGPU : GLSLTest.TextureLODRewriteInVertexShader/* = SKIP
 42267100 WGPU : GLSLTest.ArrayOfStructContainingArrayOfSamplers/* = SKIP
-42267100 WGPU : GLSLTest.IndexConstantSamplerArrayIndexing/* = SKIP
+42267100 WGPU : GLSLValidationTest.IndexConstantSamplerArrayIndexing/* = SKIP
 42267100 WGPU : GLSLTest.RenderTrisWithPointCoord/* = SKIP
 42267100 WGPU : GLSLTest.NestedSequenceOperatorWithTernaryInside/* = SKIP
 42267100 WGPU : GLSLTest.NestedTernaryAndShortCircuit/* = SKIP
@@ -1913,7 +1913,7 @@
 42267100 WGPU : GLSLTest.MatEquality/* = SKIP
 42267100 WGPU : GLSLTest.StructEquality/* = SKIP
 42267100 WGPU : GLSLTest.NestedStructEquality/* = SKIP
-42267100 WGPU : GLSLTest.VectorScalarArithmeticWithSideEffectInLoop/* = SKIP
+42267100 WGPU : GLSLValidationTest.VectorScalarArithmeticWithSideEffectInLoop/* = SKIP
 42267100 WGPU : GLSLTestNoValidation.DepthRangeUniforms/* = SKIP
 42266907 WGPU : IncompleteTextureTest.IncompleteTexture2D/* = SKIP
 42266907 WGPU : IncompleteTextureTest.UpdateTexture/* = SKIP

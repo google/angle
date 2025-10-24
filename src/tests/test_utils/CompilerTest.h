@@ -34,23 +34,23 @@ class CompiledShader
     const std::string &getTranslatedSource() const { return mTranslatedSource; }
 
     // Returns true if the expected error is found in the info log.
-    bool hasError(const char *expect);
+    bool hasError(const char *expect) const;
     // Returns true if either the translated source does not exist or it contains this substring.
-    bool verifyInTranslatedSource(const char *expect);
+    bool verifyInTranslatedSource(const char *expect) const;
     // Returns true if either the translated source does not exist or it does not contains this
     // substring.
-    bool verifyNotInTranslatedSource(const char *expect);
+    bool verifyNotInTranslatedSource(const char *expect) const;
 
   private:
     std::string mInfoLog;
     std::string mTranslatedSource;
-    GLuint mShader;
+    GLuint mShader = 0;
 };
 
 class CompilerTest : public ANGLETest<>
 {
   public:
-    CompilerTest() : mProgram(0)
+    CompilerTest()
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -59,6 +59,8 @@ class CompilerTest : public ANGLETest<>
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
     }
+
+    void reset();
 
     const CompiledShader &compile(GLenum type, const char *source);
     CompiledShader &getCompiledShader(GLenum type);
@@ -73,9 +75,13 @@ class CompilerTest : public ANGLETest<>
 
   private:
     CompiledShader mVertexShader;
+    CompiledShader mTessellationControlShader;
+    CompiledShader mTessellationEvaluationShader;
+    CompiledShader mGeometryShader;
     CompiledShader mFragmentShader;
+    CompiledShader mComputeShader;
 
-    GLuint mProgram;
+    GLuint mProgram = 0;
 };
 
 #endif  // TESTS_TEST_UTILS_COMPILER_TEST_H_
