@@ -2106,6 +2106,104 @@ void main() {
     validateSuccess(GL_VERTEX_SHADER, kVS);
 }
 
+// Test an invalid shader where a for loop index is used as an out parameter.
+// See limitations in ESSL 1.00 Appendix A.
+TEST_P(WebGLGLSLValidationTest, IndexAsFunctionOutParameter)
+{
+    const char kFS[] = R"(precision mediump float;
+void fun(out int a)
+{
+   a = 2;
+}
+void main()
+{
+    for (int i = 0; i < 2; ++i)
+    {
+        fun(i);
+    }
+    gl_FragColor = vec4(0.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'i' : Loop index cannot be statically assigned to within the body of the loop");
+}
+
+// Test an invalid shader where a for loop index is used as an inout parameter.
+// See limitations in ESSL 1.00 Appendix A.
+TEST_P(WebGLGLSLValidationTest, IndexAsFunctionInOutParameter)
+{
+    const char kFS[] = R"(precision mediump float;
+void fun(int b, inout int a)
+{
+   a += b;
+}
+void main()
+{
+    for (int i = 0; i < 2; ++i)
+    {
+        fun(2, i);
+    }
+    gl_FragColor = vec4(0.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'i' : Loop index cannot be statically assigned to within the body of the loop");
+}
+
+// Test a valid shader where a for loop index is used as an in parameter in a function that also has
+// an out parameter.
+// See limitations in ESSL 1.00 Appendix A.
+TEST_P(WebGLGLSLValidationTest, IndexAsFunctionInParameter)
+{
+    const char kFS[] = R"(precision mediump float;
+void fun(int b, inout int a)
+{
+   a += b;
+}
+void main()
+{
+    for (int i = 0; i < 2; ++i)
+    {
+        int a = 1;
+        fun(i, a);
+    }
+    gl_FragColor = vec4(0.0);
+})";
+    validateSuccess(GL_FRAGMENT_SHADER, kFS);
+}
+
+// Test an invalid shader where a for loop index is used as a target of assignment.
+// See limitations in ESSL 1.00 Appendix A.
+TEST_P(WebGLGLSLValidationTest, IndexAsTargetOfAssignment)
+{
+    const char kFS[] = R"(precision mediump float;
+void main()
+{
+    for (int i = 0; i < 2; ++i)
+    {
+        i = 2;
+    }
+    gl_FragColor = vec4(0.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'i' : Loop index cannot be statically assigned to within the body of the loop");
+}
+
+// Test an invalid shader where a for loop index is incremented inside the loop.
+// See limitations in ESSL 1.00 Appendix A.
+TEST_P(WebGLGLSLValidationTest, IndexIncrementedInLoopBody)
+{
+    const char kFS[] = R"(precision mediump float;
+void main()
+{
+    for (int i = 0; i < 2; ++i)
+    {
+        ++i;
+    }
+    gl_FragColor = vec4(0.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'i' : Loop index cannot be statically assigned to within the body of the loop");
+}
+
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
