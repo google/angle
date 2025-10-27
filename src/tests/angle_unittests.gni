@@ -90,7 +90,6 @@ angle_unittests_sources = [
 
 angle_unittests_compiler_tests_sources = [
   "compiler_tests/API_test.cpp",
-  "compiler_tests/ARB_texture_rectangle_test.cpp",
   "compiler_tests/AtomicCounter_test.cpp",
   "compiler_tests/BufferVariables_test.cpp",
   "compiler_tests/CollectVariables_test.cpp",

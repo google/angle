@@ -943,12 +943,6 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.multiDrawIndirectEXT        = true;
     mNativeExtensions.translatedShaderSourceANGLE = true;
     mNativeExtensions.discardFramebufferEXT       = true;
-    // TODO(anglebug.com/42264909): Apple's implementation exposed
-    // mNativeExtensions.textureRectangle = true here and
-    // EGL_TEXTURE_RECTANGLE_ANGLE as the eglBindTexImage texture target on
-    // macOS. This no longer seems necessary as IOSurfaces can be bound to
-    // regular 2D textures with Metal, and causes other problems such as
-    // breaking the SPIR-V Metal compiler.
 
     mNativeExtensions.multisampledRenderToTextureEXT =
         (supportsAppleGPUFamily(1) ||

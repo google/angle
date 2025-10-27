@@ -2277,6 +2277,108 @@ void main()
     }
 }
 
+class GLSLValidationTextureRectangleTest : public GLSLValidationTest
+{};
+
+// Check that if the extension is not supported, trying to use the features without having an
+// extension directive fails.
+//
+// If the extension is supported, check that new types and builtins are usable even with the
+// #extension directive
+// Issue #15 of ARB_texture_rectangle explains that the extension was specified before the
+// #extension mechanism was in place so it doesn't require explicit enabling.
+TEST_P(GLSLValidationTextureRectangleTest, NewTypeAndBuiltinsWithoutExtensionDirective)
+{
+    const char kFS[] = R"(
+precision mediump float;
+uniform sampler2DRect tex;
+void main()
+{
+    vec4 color = texture2DRect(tex, vec2(1.0));
+    color = texture2DRectProj(tex, vec3(1.0));
+    color = texture2DRectProj(tex, vec4(1.0));
+})";
+    if (IsGLExtensionEnabled("GL_ANGLE_texture_rectangle"))
+    {
+        validateSuccess(GL_FRAGMENT_SHADER, kFS);
+    }
+    else
+    {
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "'GL_ARB_texture_rectangle' : extension is not supported");
+    }
+}
+
+// Check that if the extension is not supported, trying to use the features fails.
+//
+// If the extension is supported, test that using the feature with the extension directive passes.
+TEST_P(GLSLValidationTextureRectangleTest, NewTypeAndBuiltinsWithExtensionDirective)
+{
+    const char kFS[] = R"(#extension GL_ARB_texture_rectangle : enable
+precision mediump float;
+uniform sampler2DRect tex;
+void main()
+{
+    vec4 color = texture2DRect(tex, vec2(1.0));
+    color = texture2DRectProj(tex, vec3(1.0));
+    color = texture2DRectProj(tex, vec4(1.0));
+})";
+    if (IsGLExtensionEnabled("GL_ANGLE_texture_rectangle"))
+    {
+        validateSuccess(GL_FRAGMENT_SHADER, kFS);
+    }
+    else
+    {
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "'GL_ARB_texture_rectangle' : extension is not supported");
+    }
+}
+
+// Check that it is not possible to pass a sampler2DRect where sampler2D is expected, and vice versa
+TEST_P(GLSLValidationTextureRectangleTest, Rect2DVs2DMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_texture_rectangle"));
+
+    {
+        const char kFS[] = R"(
+#extension GL_ARB_texture_rectangle : require
+precision mediump float;
+uniform sampler2DRect tex;
+void main() {
+    vec4 color = texture2D(tex, vec2(1.0));"
+})";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "'texture2D' : no matching overloaded function found");
+    }
+
+    {
+        const char kFS[] = R"(
+#extension GL_ARB_texture_rectangle : require
+precision mediump float;
+uniform sampler2D tex;
+void main() {
+    vec4 color = texture2DRect(tex, vec2(1.0));"
+})";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "'texture2DRect' : no matching overloaded function found");
+    }
+}
+
+// Disabling ARB_texture_rectangle in GLSL should work, even if it is enabled by default.
+// See ARB_texture_rectangle spec: "a shader can still include all variations of #extension
+// GL_ARB_texture_rectangle in its source code"
+TEST_P(GLSLValidationTextureRectangleTest, DisableARBTextureRectangle)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_texture_rectangle"));
+
+    const char kFS[] = R"(#extension GL_ARB_texture_rectangle : disable
+precision mediump float;
+
+uniform sampler2DRect s;
+void main()
+{})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'GL_ARB_texture_rectangle' : extension is disabled");
+}
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -2296,3 +2398,5 @@ ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLValidationTest);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationClipDistanceTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLValidationClipDistanceTest_ES3,
                                ES3_VULKAN().disable(Feature::SupportsAppleClipDistance));
+
+ANGLE_INSTANTIATE_TEST_ES2(GLSLValidationTextureRectangleTest);
