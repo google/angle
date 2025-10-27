@@ -2204,6 +2204,79 @@ void main()
                   "'i' : Loop index cannot be statically assigned to within the body of the loop");
 }
 
+class GLSLValidationClipDistanceTest_ES3 : public GLSLValidationTest_ES3
+{};
+
+// Extension support is required to compile properly.  Expect failure when it is not present.
+TEST_P(GLSLValidationClipDistanceTest_ES3, CompileFailsWithoutExtension)
+{
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_APPLE_clip_distance"));
+
+    {
+        constexpr char kVS[] = R"(#extension GL_APPLE_clip_distance : require
+uniform vec4 uPlane;
+
+attribute vec4 aPosition;
+
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[1] = dot(aPosition, uPlane);
+})";
+        validateError(GL_VERTEX_SHADER, kVS,
+                      "'GL_APPLE_clip_distance' : extension is not supported");
+    }
+
+    {
+        constexpr char kVS[] = R"(#version 300 es
+#extension GL_APPLE_clip_distance : require
+uniform vec4 uPlane;
+
+in vec4 aPosition;
+
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[1] = dot(aPosition, uPlane);
+})";
+        validateError(GL_VERTEX_SHADER, kVS,
+                      "'GL_APPLE_clip_distance' : extension is not supported");
+    }
+}
+
+// Extension directive is required to compile properly.  Expect failure when it is not present.
+TEST_P(GLSLValidationClipDistanceTest_ES3, CompileFailsWithExtensionWithoutPragma)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_APPLE_clip_distance"));
+
+    {
+        constexpr char kVS[] = R"(uniform vec4 uPlane;
+
+attribute vec4 aPosition;
+
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[1] = dot(aPosition, uPlane);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'GL_APPLE_clip_distance' : extension is disabled");
+    }
+
+    {
+        constexpr char kVS[] = R"(#version 300 es
+uniform vec4 uPlane;
+
+in vec4 aPosition;
+
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[1] = dot(aPosition, uPlane);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'GL_APPLE_clip_distance' : extension is disabled");
+    }
+}
+
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -2219,3 +2292,7 @@ ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLValidationTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLValidationTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLValidationTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationClipDistanceTest_ES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLValidationClipDistanceTest_ES3,
+                               ES3_VULKAN().disable(Feature::SupportsAppleClipDistance));
