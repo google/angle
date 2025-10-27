@@ -2422,6 +2422,141 @@ void main()
 {})";
     validateError(GL_FRAGMENT_SHADER, kFS, "'GL_ARB_texture_rectangle' : extension is disabled");
 }
+
+class GLSLValidationAtomicCounterTest_ES31 : public GLSLValidationTest_ES31
+{};
+
+// Test that ESSL 3.00 doesn't support atomic_uint.
+TEST_P(GLSLValidationAtomicCounterTest_ES31, InvalidShaderVersion)
+{
+    constexpr char kFS[] = R"(#version 300 es
+layout(binding = 0, offset = 4) uniform atomic_uint a;
+void main()
+{
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'atomic_uint' : Illegal use of reserved word");
+}
+
+// Test that any qualifier other than uniform leads to compile-time error.
+TEST_P(GLSLValidationAtomicCounterTest_ES31, InvalidQualifier)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+layout(binding = 0, offset = 4) in atomic_uint a;
+void main()
+{
+})";
+    validateError(GL_COMPUTE_SHADER, kCS, "'atomic_uint' : atomic_uints must be uniform");
+}
+
+// Test that uniform must be specified for declaration.
+TEST_P(GLSLValidationAtomicCounterTest_ES31, UniformMustSpecifiedForDeclaration)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+atomic_uint a;
+void main()
+{
+})";
+    validateError(GL_COMPUTE_SHADER, kCS, "'atomic_uint' : atomic_uints must be uniform");
+}
+
+// Test that offset overlapping leads to compile-time error (ESSL 3.10 section 4.4.6).
+TEST_P(GLSLValidationAtomicCounterTest_ES31, BindingOffsetOverlapping)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+layout(binding = 0, offset = 4) uniform atomic_uint a;
+layout(binding = 0, offset = 6) uniform atomic_uint b;
+void main()
+{
+})";
+    validateError(GL_COMPUTE_SHADER, kCS, "'atomic counter' : Offset overlapping");
+}
+
+// Test offset inheritance for multiple variables in one same declaration.
+TEST_P(GLSLValidationAtomicCounterTest_ES31, MultipleVariablesDeclaration)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+layout(binding = 0, offset = 4) uniform atomic_uint a, b;
+layout(binding = 0, offset = 8) uniform atomic_uint c;
+void main()
+{
+})";
+    validateError(GL_COMPUTE_SHADER, kCS, "'atomic counter' : Offset overlapping");
+}
+
+// Test that subsequent declarations inherit the globally specified offset.
+TEST_P(GLSLValidationAtomicCounterTest_ES31, GlobalBindingOffsetOverlapping)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+layout(binding = 2, offset = 4) uniform atomic_uint;
+layout(binding = 2) uniform atomic_uint b;
+layout(binding = 2, offset = 4) uniform atomic_uint c;
+void main()
+{
+})";
+    validateError(GL_COMPUTE_SHADER, kCS, "'atomic counter' : Offset overlapping");
+}
+
+// The spec only demands offset unique and non-overlapping. So this should be allowed.
+TEST_P(GLSLValidationAtomicCounterTest_ES31, DeclarationSequenceWithDecrementalOffsetsSpecified)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+layout(binding = 2, offset = 4) uniform atomic_uint a;
+layout(binding = 2, offset = 0) uniform atomic_uint b;
+void main()
+{
+})";
+    validateSuccess(GL_COMPUTE_SHADER, kCS);
+}
+
+// Test that image format qualifiers are not allowed for atomic counters.
+TEST_P(GLSLValidationAtomicCounterTest_ES31, ImageFormatMustNotSpecified)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+layout(binding = 0, offset = 4, rgba32f) uniform atomic_uint a;
+void main()
+{
+})";
+    validateError(GL_COMPUTE_SHADER, kCS,
+                  "'rgba32f' : invalid layout qualifier: only valid when used with images");
+}
+
+// Test that global layout qualifiers must not use 'offset'.
+TEST_P(GLSLValidationAtomicCounterTest_ES31, OffsetMustNotSpecifiedForGlobalLayoutQualifier)
+{
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+layout(offset = 4) in;
+void main()
+{
+})";
+    validateError(GL_COMPUTE_SHADER, kCS,
+                  "'offset' : invalid layout qualifier: only valid when used with atomic counters");
+}
+
+// Test that offset overlapping leads to compile-time error (ESSL 3.10 section 4.4.6).
+// Note that there is some vagueness in the spec when it comes to this test.
+TEST_P(GLSLValidationAtomicCounterTest_ES31, BindingOffsetOverlappingForArrays)
+{
+    GLint maxAtomicCounterBuffers = 0;
+    glGetIntegerv(GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS, &maxAtomicCounterBuffers);
+    ANGLE_SKIP_TEST_IF(maxAtomicCounterBuffers < 3);
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1) in;
+layout(binding = 2, offset = 4) uniform atomic_uint[2] a;
+layout(binding = 2, offset = 8) uniform atomic_uint b;
+void main()
+{
+})";
+    validateError(GL_COMPUTE_SHADER, kCS, "'atomic counter' : Offset overlapping");
+}
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -2443,3 +2578,6 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLValidationClipDistanceTest_ES3,
                                ES3_VULKAN().disable(Feature::SupportsAppleClipDistance));
 
 ANGLE_INSTANTIATE_TEST_ES2(GLSLValidationTextureRectangleTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationAtomicCounterTest_ES31);
+ANGLE_INSTANTIATE_TEST_ES31(GLSLValidationAtomicCounterTest_ES31);
