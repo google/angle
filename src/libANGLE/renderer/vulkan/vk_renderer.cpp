@@ -2621,10 +2621,15 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
 
 angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 {
-    // This number matches Chromium and was picked by looking at memory usage of
+    // The preferred heap block size was picked by looking at memory usage of
     // Android apps. The allocator will start making blocks at 1/8 the max size
     // and builds up block size as needed before capping at the max set here.
     mPreferredLargeHeapBlockSize = 4 * 1024 * 1024;
+
+    // The first allocated buffer block from an empty buffer pool has a smaller size in order to
+    // reduce the memory footprint.
+    mPreferredInitialBufferBlockSize = 1 * 1024 * 1024;
+    ASSERT(mPreferredInitialBufferBlockSize <= mPreferredLargeHeapBlockSize);
 
     // Create VMA allocator
     ANGLE_VK_TRY(context,
@@ -7513,7 +7518,14 @@ void Renderer::onDeallocateHandle(vk::HandleType handleType, uint32_t count)
     mActiveHandleCounts.onDeallocate(handleType, count);
 }
 
-VkDeviceSize Renderer::getPreferedBufferBlockSize(uint32_t memoryTypeIndex) const
+VkDeviceSize Renderer::getPreferredInitialBufferBlockSize(uint32_t memoryTypeIndex) const
+{
+    // Try not to exceed 1/64 of heap size to begin with.
+    const VkDeviceSize heapSize = getMemoryProperties().getHeapSizeForMemoryType(memoryTypeIndex);
+    return std::min(heapSize / 64, mPreferredInitialBufferBlockSize);
+}
+
+VkDeviceSize Renderer::getPreferredLargeBufferBlockSize(uint32_t memoryTypeIndex) const
 {
     // Try not to exceed 1/64 of heap size to begin with.
     const VkDeviceSize heapSize = getMemoryProperties().getHeapSizeForMemoryType(memoryTypeIndex);

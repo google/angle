@@ -1097,7 +1097,6 @@ class BufferPool : angle::NonCopyable
     void initWithFlags(Renderer *renderer,
                        vma::VirtualBlockCreateFlags flags,
                        VkBufferUsageFlags usage,
-                       VkDeviceSize initialSize,
                        uint32_t memoryTypeIndex,
                        VkMemoryPropertyFlags memoryProperty);
 
@@ -1125,8 +1124,15 @@ class BufferPool : angle::NonCopyable
     vma::VirtualBlockCreateFlags mVirtualBlockCreateFlags;
     VkBufferUsageFlags mUsage;
     bool mHostVisible;
+    // Size used to create the last allocated buffer block from the pool to suballocate from.
     VkDeviceSize mSize;
+    // Size used to allocate a new buffer block from an empty pool.
+    VkDeviceSize mInitialSize;
+    // Size used to allocate a new buffer block from a non-empty pool.
+    VkDeviceSize mPreferredSize;
+    // Intended memory type index used for the buffer allocation.
     uint32_t mMemoryTypeIndex;
+    // Total allocated buffer block size from the pool.
     VkDeviceSize mTotalMemorySize;
     BufferBlockPointerVector mBufferBlocks;
     std::deque<BufferBlockPointer> mEmptyBufferBlocks;
