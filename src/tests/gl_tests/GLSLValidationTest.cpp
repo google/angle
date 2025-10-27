@@ -2557,6 +2557,445 @@ void main()
 })";
     validateError(GL_COMPUTE_SHADER, kCS, "'atomic counter' : Offset overlapping");
 }
+
+class GLSLValidationShaderStorageBlockTest_ES31 : public GLSLValidationTest_ES31
+{};
+
+// Test that shader storage block layout qualifiers can be declared for global scope.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, LayoutQualifiersDeclaredInGlobal)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(shared, column_major) buffer;
+void main()
+{
+})";
+    validateSuccess(GL_FRAGMENT_SHADER, kFS);
+}
+
+// Test that it is a compile-time error to declare buffer variables at global scope (outside a
+// block).
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, DeclareBufferVariableAtGlobal)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) buffer int a;
+void main()
+{
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'buffer' : cannot declare buffer variables at global scope(outside a block)");
+}
+
+// Test that the buffer variable can't be opaque type.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, BufferVariableWithOpaqueType)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) buffer buf {
+    int b1;
+    atomic_uint b2;
+};
+void main()
+{
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'buf' : Opaque types are not allowed in interface blocks");
+}
+
+// Test that the uniform variable can't be in shader storage block.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, UniformVariableInShaderStorageBlock)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) buffer buf {
+    uniform int a;
+};
+void main()
+{
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'uniform' : invalid qualifier on shader storage block member");
+}
+
+// Test that buffer qualifier is not supported in version lower than GLSL ES 3.10.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, BufferQualifierInESSL3)
+{
+    constexpr char kFS[] = R"(#version 300 es
+layout(binding = 3) buffer buf {
+    int b1;
+    buffer int b2;
+};
+void main()
+{
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'binding' : invalid layout qualifier: not supported");
+}
+
+// Test that can't assign to a readonly buffer variable.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, AssignToReadonlyBufferVariable)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) buffer buf {
+    readonly int b1;
+};
+void main()
+{
+    b1 = 5;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  R"('assign' : l-value required (can't modify a readonly variable "b1"))");
+}
+
+// Test that can't assign to a buffer variable declared within shader storage block with readonly.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, AssignToBufferVariableWithinReadonlyBlock)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) readonly buffer buf {
+    int b1;
+};
+void main()
+{
+    b1 = 5;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  R"('assign' : l-value required (can't modify a readonly variable "b1"))");
+}
+
+// Test that can't assign to a readonly buffer variable through an instance name.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, AssignToReadonlyBufferVariableByInstanceName)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+layout(binding = 3) buffer buf {
+    readonly float f;
+} instanceBuffer;
+void main()
+{
+    instanceBuffer.f += 0.2;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'assign' : can't modify a readonly variable");
+}
+
+// Test that can't assign to a readonly struct buffer variable.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, AssignToReadonlyStructBufferVariable)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+struct S {
+    float f;
+};
+layout(binding = 3) buffer buf {
+    readonly S s;
+};
+void main()
+{
+    s.f += 0.2;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  R"('assign' : l-value required (can't modify a readonly variable "s"))");
+}
+
+// Test that can't assign to a readonly struct buffer variable through an instance name.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31,
+       AssignToReadonlyStructBufferVariableByInstanceName)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+struct S {
+    float f;
+};
+layout(binding = 3) buffer buf {
+    readonly S s;
+} instanceBuffer;
+void main()
+{
+    instanceBuffer.s.f += 0.2;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'assign' : can't modify a readonly variable");
+}
+
+// Test that a readonly and writeonly buffer variable should neither read or write.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, AccessReadonlyWriteonlyBufferVariable)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) buffer buf {
+    readonly writeonly int b1;
+};
+void main()
+{
+    b1 = 5;
+    int test = b1;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  R"('assign' : l-value required (can't modify a readonly variable "b1"))");
+}
+
+// Test that accessing a writeonly buffer variable should be error.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, AccessWriteonlyBufferVariable)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) buffer buf {
+    writeonly int b1;
+};
+void main()
+{
+    int test = b1;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'=' : Invalid operation for variables with writeonly");
+}
+
+// Test that accessing a buffer variable through an instance name inherits the writeonly qualifier
+// and generates errors.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, AccessWriteonlyBufferVariableByInstanceName)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+layout(binding = 3) writeonly buffer buf {
+    float f;
+} instanceBuffer;
+void main()
+{
+    float test = instanceBuffer.f;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'=' : Invalid operation for variables with writeonly");
+}
+
+// Test that writeonly buffer variable as the argument of a unary operator should be error.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, UnaryOperatorWithWriteonlyBufferVariable)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) buffer buf {
+    writeonly int b1;
+};
+void main()
+{
+    ++b1;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'++' : wrong operand type - no operation '++' exists that takes an operand of "
+                  "type buffer mediump writeonly int (or there is no acceptable conversion)");
+}
+
+// Test that writeonly buffer variable on the left-hand side of compound assignment should be error.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, CompoundAssignmentToWriteonlyBufferVariable)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) buffer buf {
+    writeonly int b1;
+};
+void main()
+{
+    b1 += 5;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'+=' : Invalid operation for variables with writeonly");
+}
+
+// Test that writeonly buffer variable as ternary op argument should be error.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, TernarySelectionWithWriteonlyBufferVariable)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) buffer buf {
+    writeonly bool b1;
+};
+void main()
+{
+    int test = b1 ? 1 : 0;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'?:' : ternary operator is not allowed for variables with writeonly");
+}
+
+// Test that writeonly buffer variable as array constructor argument should be error.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, ArrayConstructorWithWriteonlyBufferVariable)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+layout(binding = 3) buffer buf {
+    writeonly float f;
+};
+void main()
+{
+    float a[3] = float[3](f, f, f);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'constructor' : cannot convert a variable with writeonly");
+}
+
+// Test that writeonly buffer variable as structure constructor argument should be error.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, StructureConstructorWithWriteonlyBufferVariable)
+{
+    constexpr char kFS[] = R"(#version 310 es
+struct S {
+    int a;
+};
+struct T {
+    S b;
+};
+layout(binding = 3) buffer buf {
+    writeonly S c;
+};
+void main()
+{
+    T t = T(c);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'constructor' : cannot convert a variable with writeonly");
+}
+
+// Test that writeonly buffer variable as built-in function argument should be error.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, BuiltInFunctionWithWriteonlyBufferVariable)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(binding = 3) buffer buf {
+    writeonly int a;
+};
+void main()
+{
+    int test = min(a, 1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'min' : Writeonly value cannot be passed for 'in' or 'inout' parameters");
+}
+
+// Test that writeonly buffer variable as user-defined function in argument should be error.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31,
+       UserDefinedFunctionWithWriteonlyBufferVariableInArgument)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+layout(binding = 3) buffer buf {
+    writeonly float f;
+};
+void foo(float a) {}
+void main()
+{
+    foo(f);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "foo' : Writeonly value cannot be passed for 'in' or 'inout' parameters");
+}
+
+// Test that readonly buffer variable as user-defined function out argument should be error.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31,
+       UserDefinedFunctionWithReadonlyBufferVariableOutArgument)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+layout(binding = 3) buffer buf {
+    readonly float f;
+};
+void foo(out float a) {}
+void main()
+{
+    foo(f);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  R"('assign' : l-value required (can't modify a readonly variable "f"))");
+}
+
+// Test that buffer qualifier can't modify a function parameter.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, BufferQualifierOnFunctionParameter)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+void foo(buffer float a) {}
+void main()
+{
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'buffer' : only allowed at global scope");
+}
+
+// Test that using std430 qualifier on a uniform block will fail to compile.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, UniformBlockWithStd430)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(std430) uniform buf {
+    int b1;
+    int b2;
+};
+void main()
+{
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'std430' : The std430 layout is supported only for shader storage blocks");
+}
+
+// Test that indexing a runtime-sized array with a negative constant index does not compile.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, IndexRuntimeSizedArrayWithNegativeIndex)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(std430) buffer buf
+{
+    int arr[];
+};
+
+void main()
+{
+    arr[-1];
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'[]' : index expression is negative");
+}
+
+// Test that only the last member of a buffer can be runtime-sized.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, RuntimeSizedVariableInNotLastInBuffer)
+{
+    constexpr char kFS[] = R"(#version 310 es
+layout(std430) buffer buf
+{
+    int arr[];
+    int i;
+};
+
+void main()
+{
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'arr' : array members of interface blocks must specify a size");
+}
+
+// Test that memory qualifiers are output.
+TEST_P(GLSLValidationShaderStorageBlockTest_ES31, MemoryQualifiers)
+{
+    constexpr char kFS[]         = R"(#version 310 es
+precision highp float;
+precision highp int;
+layout(std430) coherent buffer buf
+{
+    int defaultCoherent;
+    coherent ivec2 specifiedCoherent;
+    volatile ivec3 specifiedVolatile;
+    restrict ivec4 specifiedRestrict;
+    readonly float specifiedReadOnly;
+    writeonly vec2 specifiedWriteOnly;
+    volatile readonly vec3 specifiedMultiple;
+};
+
+void main()
+{
+})";
+    const CompiledShader &shader = compile(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_TRUE(shader.success());
+    if (IsOpenGLES())
+    {
+        // The following are GLSL qualifiers, so only valid with GLSL translation.
+        EXPECT_TRUE(shader.verifyInTranslatedSource("coherent highp int"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("coherent highp ivec2"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("coherent volatile highp ivec3"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("coherent restrict highp ivec4"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("readonly coherent highp float"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("writeonly coherent highp vec2"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("readonly coherent volatile highp vec3"));
+    }
+    else if (IsOpenGL())
+    {
+        // The following are GLSL qualifiers, so only valid with GLSL translation.
+        EXPECT_TRUE(shader.verifyInTranslatedSource("coherent int"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("coherent ivec2"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("coherent volatile ivec3"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("coherent restrict ivec4"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("readonly coherent float"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("writeonly coherent vec2"));
+        EXPECT_TRUE(shader.verifyInTranslatedSource("readonly coherent volatile vec3"));
+    }
+    reset();
+}
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -2581,3 +3020,6 @@ ANGLE_INSTANTIATE_TEST_ES2(GLSLValidationTextureRectangleTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationAtomicCounterTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31(GLSLValidationAtomicCounterTest_ES31);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationShaderStorageBlockTest_ES31);
+ANGLE_INSTANTIATE_TEST_ES31(GLSLValidationShaderStorageBlockTest_ES31);
