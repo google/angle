@@ -2229,6 +2229,8 @@
 454016926 VULKAN : GLSLTest.FunctionArgumentEvalOrderOverloaded/* = SKIP
 454016926 METAL : GLSLTest.FunctionArgumentEvalOrderOverloaded/* = SKIP
 
+455800276 : DrawBaseVertexBaseInstanceTest_ES3.AllowsUserDefinedANGLEDrawID/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

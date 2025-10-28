@@ -99,7 +99,6 @@ angle_unittests_compiler_tests_sources = [
   "compiler_tests/EXT_shader_framebuffer_fetch_test.cpp",
   "compiler_tests/EXT_shader_texture_lod_test.cpp",
   "compiler_tests/EXT_shadow_samplers_test.cpp",
-  "compiler_tests/EmulateGLBaseVertexBaseInstance_test.cpp",
   "compiler_tests/EmulateGLDrawID_test.cpp",
   "compiler_tests/EmulateGLFragColorBroadcast_test.cpp",
   "compiler_tests/ExpressionLimit_test.cpp",
