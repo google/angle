@@ -3153,6 +3153,128 @@ void main() {
         validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
     }
 }
+
+class GLSLValidationExtensionDirectiveTest_ES3 : public GLSLValidationTest_ES3
+{
+  public:
+    void testCompileNeedsExtensionDirective(GLenum shaderType,
+                                            const char *shaderSource,
+                                            const char *version,
+                                            const char *extension,
+                                            bool extensionTokenIsReserved)
+    {
+        {
+            std::stringstream src;
+            if (version)
+            {
+                src << version << "\n";
+            }
+            src << shaderSource;
+            const CompiledShader &shader = compile(shaderType, src.str().c_str());
+            EXPECT_FALSE(shader.success());
+            EXPECT_TRUE(shader.hasError(extensionTokenIsReserved ? "extension is disabled"
+                                                                 : "syntax error"));
+            reset();
+        }
+
+        {
+            std::stringstream src;
+            if (version)
+            {
+                src << version << "\n";
+            }
+            src << "#extension " << extension << ": disable\n" << shaderSource;
+            const CompiledShader &shader = compile(shaderType, src.str().c_str());
+            EXPECT_FALSE(shader.success());
+            EXPECT_TRUE(shader.hasError(extensionTokenIsReserved ? "extension is disabled"
+                                                                 : "syntax error"));
+            reset();
+        }
+
+        {
+            std::stringstream src;
+            if (version)
+            {
+                src << version << "\n";
+            }
+            src << "#extension " << extension << ": enable\n" << shaderSource;
+            EXPECT_TRUE(compile(shaderType, src.str().c_str()).success());
+            reset();
+        }
+
+        {
+            std::stringstream src;
+            if (version)
+            {
+                src << version << "\n";
+            }
+            src << "#extension " << extension << ": warn\n" << shaderSource;
+            const CompiledShader &shader = compile(shaderType, src.str().c_str());
+            EXPECT_TRUE(shader.success());
+            EXPECT_TRUE(shader.hasError("WARNING"));
+            EXPECT_TRUE(shader.hasError("extension is being used"));
+            reset();
+        }
+    }
+};
+
+// OES_EGL_image_external needs to be enabled in GLSL to be able to use samplerExternalOES.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3,
+       SamplerExternalOESUsageNeedsImageExtensionDirective)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_EGL_image_external"));
+
+    constexpr char kFS[] = R"(precision mediump float;
+uniform samplerExternalOES s;
+void main()
+{})";
+    testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS, nullptr,
+                                       "GL_OES_EGL_image_external", true);
+}
+
+// NV_EGL_stream_consumer_external needs to be enabled in GLSL to be able to use samplerExternalOES.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3,
+       SamplerExternalOESUsageNeedsStreamExtensionDirective)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_EGL_stream_consumer_external"));
+
+    constexpr char kFS[] = R"(precision mediump float;
+uniform samplerExternalOES s;
+void main()
+{})";
+    testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS, nullptr,
+                                       "GL_NV_EGL_stream_consumer_external", true);
+}
+
+// GL_EXT_YUV_target needs to be enabled in GLSL to be able to use samplerExternal2DY2YEXT.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3,
+       SamplerExternal2DY2YEXTUsageNeedsExtensionDirective)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    constexpr char kFS[] = R"(precision mediump float;
+uniform __samplerExternal2DY2YEXT s;
+void main()
+{})";
+    // The translator does not complain about __samplerExternal2DY2YEXT used if the extension is not
+    // enabled (i.e. doesn't treat this as a reserved word).  In that case, the complaint from the
+    // compiler would be a syntax error.
+    testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS, "#version 300 es",
+                                       "GL_EXT_YUV_target", false);
+}
+
+// GL_EXT_YUV_target needs to be enabled in GLSL to be able to use layout(yuv).
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, YUVLayoutNeedsExtensionDirective)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    constexpr char kFS[] = R"(precision mediump float;
+layout(yuv) out vec4 color;
+void main()
+{})";
+    testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS, "#version 300 es",
+                                       "GL_EXT_YUV_target", true);
+}
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -3203,3 +3325,6 @@ ANGLE_INSTANTIATE_TEST(
     ES3_VULKAN().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
     ES3_VULKAN_SWIFTSHADER().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
     ES3_METAL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationExtensionDirectiveTest_ES3);
+ANGLE_INSTANTIATE_TEST_ES3(GLSLValidationExtensionDirectiveTest_ES3);
