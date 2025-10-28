@@ -3110,6 +3110,49 @@ void main() {
         validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
     }
 }
+
+class GLSLValidationDrawIDTest : public GLSLValidationTest
+{};
+
+// Check that a user-defined "gl_DrawID" is not permitted
+TEST_P(GLSLValidationDrawIDTest, DisallowsUserDefinedGLDrawID)
+{
+    {
+        // Check that it is not permitted without the GL_ANGLE_multi_draw extension
+        constexpr char kVS[] = R"(uniform int gl_DrawID;
+void main() {
+   gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+    }
+
+    {
+        constexpr char kVS[] = R"(void main() {
+   int gl_DrawID = 0;
+   gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+    }
+
+    {
+        // Check that it is not permitted with the extension
+        constexpr char kVS[] = R"(#extension GL_ANGLE_multi_draw : require
+uniform int gl_DrawID;
+void main() {
+   gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+    }
+
+    {
+        constexpr char kVS[] = R"(#extension GL_ANGLE_multi_draw : require
+void main() {
+   int gl_DrawID = 0;
+   gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);
+})";
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+    }
+}
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -3150,3 +3193,13 @@ ANGLE_INSTANTIATE_TEST(
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLValidationBaseVertexTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLValidationBaseVertexTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationDrawIDTest);
+ANGLE_INSTANTIATE_TEST(
+    GLSLValidationDrawIDTest,
+    ES3_D3D11().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
+    ES3_OPENGL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
+    ES3_OPENGLES().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
+    ES3_VULKAN().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
+    ES3_VULKAN_SWIFTSHADER().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
+    ES3_METAL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions));

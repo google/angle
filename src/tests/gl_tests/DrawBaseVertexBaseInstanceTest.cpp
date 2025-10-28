@@ -1249,8 +1249,7 @@ void main()
     verified = vec4(gl_BaseVertex == 2, gl_BaseInstance == 0,
                     angle_BaseVertex == 3, angle_BaseInstance == 5);
     gl_Position = vec4(position, 0, 1);
-}
-)";
+})";
 
     constexpr char kFS[] = R"(#version 300 es
 precision mediump float;
@@ -1260,8 +1259,7 @@ out vec4 color;
 void main()
 {
     color = verified;
-}
-)";
+})";
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
