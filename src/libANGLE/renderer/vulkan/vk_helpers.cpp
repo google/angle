@@ -4573,14 +4573,9 @@ angle::Result BufferHelper::init(ErrorContext *context,
     VkBufferCreateInfo modifiedCreateInfo;
     const VkBufferCreateInfo *createInfo = &requestedCreateInfo;
 
-    if (renderer->getFeatures().padBuffersToMaxVertexAttribStride.enabled)
-    {
-        const VkDeviceSize maxVertexAttribStride = renderer->getMaxVertexAttribStride();
-        ASSERT(maxVertexAttribStride);
-        modifiedCreateInfo = requestedCreateInfo;
-        modifiedCreateInfo.size += maxVertexAttribStride;
-        createInfo = &modifiedCreateInfo;
-    }
+    modifiedCreateInfo      = requestedCreateInfo;
+    modifiedCreateInfo.size = renderer->padVertexAttribBufferSizeIfNeeded(requestedCreateInfo.size);
+    createInfo              = &modifiedCreateInfo;
 
     VkMemoryPropertyFlags requiredFlags =
         (memoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
@@ -4771,13 +4766,7 @@ VkResult BufferHelper::initSuballocation(Context *context,
     // initSuballocation again.
     initializeBarrierTracker(context);
 
-    if (renderer->getFeatures().padBuffersToMaxVertexAttribStride.enabled)
-    {
-        const VkDeviceSize maxVertexAttribStride = renderer->getMaxVertexAttribStride();
-        ASSERT(maxVertexAttribStride);
-        size += maxVertexAttribStride;
-    }
-
+    size = static_cast<size_t>(renderer->padVertexAttribBufferSizeIfNeeded(size));
     VK_RESULT_TRY(pool->allocateBuffer(context, size, alignment, &mSuballocation));
 
     context->getPerfCounters().bufferSuballocationCalls++;
