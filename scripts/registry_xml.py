@@ -491,7 +491,7 @@ class apis:
     CL = 'CL'
 
 # For GLenum types
-api_enums = {apis.GL: 'BigGLEnum', apis.GLES: 'GLESEnum'}
+api_enums = {apis.GLES: 'GLESEnum'}
 default_enum_group_name = 'AllEnums'
 
 
