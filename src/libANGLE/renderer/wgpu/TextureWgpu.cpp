@@ -344,7 +344,7 @@ angle::Result TextureWgpu::copySubImageImpl(const gl::Context *context,
         const angle::Format &dstAngleFormat = dstFormat.getIntendedFormat();
 
         return contextWgpu->getUtils()->copyImage(contextWgpu, colorReadRT->getTextureView(),
-                                                  dstView, size, isViewportFlipY, srcFormat.id,
+                                                  dstView, size, isViewportFlipY, srcFormat,
                                                   dstAngleFormat.id, dstActualFormatID);
     }
 
