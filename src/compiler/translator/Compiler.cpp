@@ -1405,7 +1405,7 @@ bool TCompiler::compile(const char *const shaderStrings[],
             OutputTree(root, mInfoSink.info);
         }
 
-        if (compileOptions.objectCode)
+        if (compileOptions.objectCode && !compileOptions.skipAllValidationAndTransforms)
         {
             PerformanceDiagnostics perfDiagnostics(&mDiagnostics);
             if (!translate(root, compileOptions, &perfDiagnostics))
