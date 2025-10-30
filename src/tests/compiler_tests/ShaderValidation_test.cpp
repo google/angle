@@ -26,6 +26,8 @@ class FragmentShaderValidationTest : public ShaderCompileTreeTest
     FragmentShaderValidationTest() {}
 
   protected:
+    void initResources(ShBuiltInResources *resources) override { resources->MaxDrawBuffers = 8; }
+
     ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
     ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
 };

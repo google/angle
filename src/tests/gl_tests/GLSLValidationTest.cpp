@@ -686,6 +686,49 @@ void main() {
                   "'a' : Size of declared private variable exceeds implementation-defined limit");
 }
 
+// Test that too large color outputs are rejected
+TEST_P(GLSLValidationTest_ES3, LargeColorOutput)
+{
+    GLint maxDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ANGLE_SKIP_TEST_IF(maxDrawBuffers >= 32);
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 colorOut[32];
+
+void main()
+{
+    colorOut[0] = vec4(0, 0, 0, 1);
+    colorOut[31] = vec4(0, 0, 0, 1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'colorOut' : output array locations would exceed MAX_DRAW_BUFFERS");
+}
+
+// Test that too large color outputs are rejected
+TEST_P(GLSLValidationTest_ES3, LargeColorOutputWithLocation)
+{
+    GLint maxDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ANGLE_SKIP_TEST_IF(maxDrawBuffers >= 10);
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+layout(location = 0) out vec4 colorOut[4];
+layout(location = 4) out vec4 colorOut2[6];
+
+void main()
+{
+    colorOut[0] = vec4(0, 0, 0, 1);
+    colorOut[3] = vec4(0, 0, 0, 1);
+    colorOut2[0] = vec4(0, 0, 0, 1);
+    colorOut2[5] = vec4(0, 0, 0, 1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'colorOut2' : output array locations would exceed MAX_DRAW_BUFFERS");
+}
+
 // Test that marking a built-in as invariant and then redeclaring it is an error.
 TEST_P(GLSLValidationTest_ES3, FragDepthInvariantThenRedeclare)
 {
