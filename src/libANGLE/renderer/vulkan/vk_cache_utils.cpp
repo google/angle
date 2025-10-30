@@ -6731,6 +6731,10 @@ angle::Result DescriptorSetDescBuilder::updateImages(
             {
                 GLuint imageUnit     = imageBinding.boundImageUnits[arrayElement];
                 TextureVk *textureVk = activeImages[imageUnit];
+                if (!textureVk)
+                {
+                    continue;
+                }
 
                 uint32_t infoIndex = writeDescriptorDescs[info.binding].descriptorInfoIndex +
                                      arrayElement + imageUniform.getOuterArrayOffset();
@@ -6759,6 +6763,10 @@ angle::Result DescriptorSetDescBuilder::updateImages(
                 GLuint imageUnit             = imageBinding.boundImageUnits[arrayElement];
                 const gl::ImageUnit &binding = imageUnits[imageUnit];
                 TextureVk *textureVk         = activeImages[imageUnit];
+                if (!textureVk)
+                {
+                    continue;
+                }
 
                 vk::ImageHelper *image         = &textureVk->getImage();
                 const vk::ImageView *imageView = nullptr;
