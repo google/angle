@@ -1764,6 +1764,8 @@ void TracePerfTest::drawBenchmark()
     {
         mTraceReplay->resetReplay();
         mCurrentFrame = mStartFrame;
+        // Flush to avoid gpu_time tracking issues on some platforms (Native GLES Qualcomm).
+        glFlush();
     }
     else
     {
