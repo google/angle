@@ -228,10 +228,7 @@
 347282472 LINUX NVIDIA OPENGL : CopyTextureTest.CopyOutsideMipmap/* = SKIP
 454915387 LINUX NVIDIA OPENGL : GLSLConstantFoldingTest.ArrayMixedArgumentsWithSideEffectIndex/* = SKIP
 // New failures when upgrading to Ubuntu 22/newer driver.
-362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.Clear2DArray/* = SKIP
-362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.Clear3D/* = SKIP
-362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.ClearCubeMap/* = SKIP
-362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.ClearCubeMapArray/* = SKIP
+362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.Clear/ES3_1_Vulkan__GL_RGBA4_GL_RGBA_GL_UNSIGNED_BYTE_GL_TEXTURE_CUBE_MAP_ARRAY = SKIP
 362545033 LINUX NVIDIA VULKAN : EGLBufferAgeTest.SingleBuffer/* = SKIP
 362545033 LINUX NVIDIA VULKAN : GLSLTest.NestedPowStatements/* = SKIP
 362486580 LINUX NVIDIA VULKAN : SixteenBppTextureTestES3.RGB5A1UploadRGBA8/* = SKIP
@@ -2100,10 +2097,10 @@
 361623543 WIN INTEL OPENGL : ClearTextureEXTTest.StencilTexture/* = SKIP
 361623543 WIN INTEL OPENGL : FramebufferTest_ES31.ClearTextureEXT2DMSStencil/* = SKIP
 361623543 LINUX INTEL OPENGL : FramebufferTest_ES31.ClearTextureEXT2DMSStencil/* = SKIP
-384967031 WIN INTEL OPENGL : ClearTextureEXTTestES31*.ClearCubeMapArray/* = SKIP
+384967031 WIN INTEL OPENGL : ClearTextureEXTTestES31*.Clear/*TEXTURE_CUBE_MAP_ARRAY = SKIP
 384967031 WIN INTEL OPENGL : ClearTextureEXTTestES31Unrenderable.Clear*RGB9_E5* = SKIP
-384967031 LINUX INTEL OPENGL : ClearTextureEXTTestES31Unrenderable.Clear3D/* = SKIP
-384967031 LINUX INTEL OPENGL : ClearTextureEXTTestES31Renderable.Clear2DArray/* = SKIP
+384967031 LINUX INTEL OPENGL : ClearTextureEXTTestES31Unrenderable.Clear/*GL_TEXTURE_3D = SKIP
+384967031 LINUX INTEL OPENGL : ClearTextureEXTTestES31Renderable.Clear/*GL_TEXTURE_2D_ARRAY = SKIP
 
 // EGL_experimental_present_path_angle D3D11 failure
 347060511 D3D11 : EGLPresentPathD3D11.ClientBufferPresentPathFast/* = SKIP
