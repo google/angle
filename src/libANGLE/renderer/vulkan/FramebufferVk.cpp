@@ -2231,12 +2231,12 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
     {
         mDeferredClears.reset(vk::kUnpackedStencilIndex);
     }
-    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+
+    // Limit invalidateColorBuffers to enabled draw buffers
+    invalidateColorBuffers &= mState.getEnabledDrawBuffers();
+    for (size_t colorIndexGL : invalidateColorBuffers)
     {
-        if (invalidateColorBuffers.test(colorIndexGL))
-        {
-            mDeferredClears.reset(colorIndexGL);
-        }
+        mDeferredClears.reset(colorIndexGL);
     }
 
     // If there are still deferred clears, restage them. See relevant comment in invalidateSub.
@@ -2249,19 +2249,16 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
     // so their loadOp can be set to DONT_CARE in the following render pass.
     if (!isSubInvalidate)
     {
-        for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+        for (size_t colorIndexGL : invalidateColorBuffers)
         {
-            if (invalidateColorBuffers.test(colorIndexGL))
-            {
-                RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
-                ASSERT(colorRenderTarget);
+            RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
+            ASSERT(colorRenderTarget);
 
-                bool preferToKeepContentsDefined = false;
-                colorRenderTarget->invalidateEntireContent(contextVk, &preferToKeepContentsDefined);
-                if (preferToKeepContentsDefined)
-                {
-                    invalidateColorBuffers.reset(colorIndexGL);
-                }
+            bool preferToKeepContentsDefined = false;
+            colorRenderTarget->invalidateEntireContent(contextVk, &preferToKeepContentsDefined);
+            if (preferToKeepContentsDefined)
+            {
+                invalidateColorBuffers.reset(colorIndexGL);
             }
         }
 
@@ -2306,8 +2303,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
         vk::PackedAttachmentIndex colorIndexVk(0);
         for (size_t colorIndexGL : mState.getColorAttachmentsMask())
         {
-            if (mState.getEnabledDrawBuffers()[colorIndexGL] &&
-                invalidateColorBuffers.test(colorIndexGL))
+            if (invalidateColorBuffers.test(colorIndexGL))
             {
                 contextVk->getStartedRenderPassCommands().invalidateRenderPassColorAttachment(
                     contextVk->getState(), colorIndexGL, colorIndexVk, invalidateArea);
