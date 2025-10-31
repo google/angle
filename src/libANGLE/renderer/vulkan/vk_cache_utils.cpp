@@ -8031,6 +8031,13 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         createInfo.pDependencies   = subpassDependencies.data();
     }
 
+    if (desc.viewCount() && desc.isRenderToTexture())
+    {
+        // GL_OVR_multiview_multisampled_render_to_texture is only implemented
+        // through the VK_EXT_multisampled_render_to_single_sampled extension, and not emulated.
+        ASSERT(isRenderToTextureThroughExtension);
+    }
+
     const uint32_t viewMask = angle::BitMask<uint32_t>(desc.viewCount());
     if (desc.viewCount() > 0)
     {

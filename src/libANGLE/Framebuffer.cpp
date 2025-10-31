@@ -1983,6 +1983,19 @@ void Framebuffer::setAttachmentMultiview(const Context *context,
                   FramebufferAttachment::kDefaultRenderToTextureSamples);
 }
 
+void Framebuffer::setAttachmentMultisampleMultiview(const Context *context,
+                                                    GLenum type,
+                                                    GLenum binding,
+                                                    const ImageIndex &textureIndex,
+                                                    FramebufferAttachmentObject *resource,
+                                                    GLsizei samples,
+                                                    GLsizei numViews,
+                                                    GLint baseViewIndex)
+{
+    setAttachment(context, type, binding, textureIndex, resource, numViews, baseViewIndex, true,
+                  samples);
+}
+
 void Framebuffer::commitWebGL1DepthStencilIfConsistent(const Context *context,
                                                        GLsizei numViews,
                                                        GLuint baseViewIndex,

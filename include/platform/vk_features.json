@@ -314,6 +314,14 @@
             "issue": "http://anglebug.com/42264577"
         },
         {
+            "name": "supports_multiview_multisample_render_to_texture",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_multiview and VK_EXT_multisampled_render_to_single_sampled extension"
+            ],
+            "issue": "http://anglebug.com/42261787"
+        },
+        {
             "name": "force_D16_tex_filter",
             "category": "Workarounds",
             "description": [

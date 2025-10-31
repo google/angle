@@ -5490,6 +5490,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMultiview, mMultiviewFeatures.multiview == VK_TRUE);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsMultiviewMultisampleRenderToTexture,
+                            mFeatures.supportsMultisampledRenderToSingleSampled.enabled &&
+                                mFeatures.supportsMultiview.enabled);
+
     // VK_EXT_device_fault can provide more information when the device is lost.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsDeviceFault,

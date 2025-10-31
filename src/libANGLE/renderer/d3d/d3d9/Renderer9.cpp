@@ -1169,6 +1169,8 @@ angle::Result Renderer9::updateState(const gl::Context *context, gl::PrimitiveMo
     if (firstColorAttachment)
     {
         ASSERT(firstColorAttachment->isAttached());
+        // GL_OVR_multiview_multisampled_render_to_texture is not supported on D3D backend
+        ASSERT(!(firstColorAttachment->isRenderToTexture() && firstColorAttachment->isMultiview()));
         RenderTarget9 *renderTarget = nullptr;
         ANGLE_TRY(firstColorAttachment->getRenderTarget(context, firstColorAttachment->getSamples(),
                                                         &renderTarget));
@@ -1208,6 +1210,8 @@ angle::Result Renderer9::setBlendDepthRasterStates(const gl::Context *context,
     if (firstColorAttachment)
     {
         ASSERT(firstColorAttachment->isAttached());
+        // GL_OVR_multiview_multisampled_render_to_texture is not supported on D3D backend
+        ASSERT(!(firstColorAttachment->isRenderToTexture() && firstColorAttachment->isMultiview()));
         RenderTarget9 *renderTarget = nullptr;
         ANGLE_TRY(firstColorAttachment->getRenderTarget(context, firstColorAttachment->getSamples(),
                                                         &renderTarget));

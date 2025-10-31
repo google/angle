@@ -260,6 +260,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsMultiviewMultisampleRenderToTexture = {
+        "supportsMultiviewMultisampleRenderToTexture",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo forceD16TexFilter = {
         "forceD16TexFilter",
         FeatureCategory::VulkanWorkarounds,

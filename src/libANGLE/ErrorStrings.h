@@ -615,6 +615,7 @@ inline constexpr const char *kTextureLevelOutOfRange = "Level is larger than tex
 inline constexpr const char *kTextureNotBound = "A texture must be bound.";
 inline constexpr const char *kTextureNotPow2 = "The texture is a non-power-of-two texture.";
 inline constexpr const char *kTextureRectangleNotSupported = "Context does not support GL_ANGLE_texture_rectangle.";
+inline constexpr const char *kTextureAttachmentSamplesMismatch = "Samples value must be the same for all texture attachments";
 inline constexpr const char *kTextureSizeTooSmall = "Texture dimensions must all be greater than zero.";
 inline constexpr const char *kTextureStorageCompressionExtensionRequired = "GL_EXT_texture_storage_compression not enabled.";
 inline constexpr const char *kTextureTargetInvalidForCopyImage = "Texture target is TEXTURE_BUFFER or does not match the type of the texture.";

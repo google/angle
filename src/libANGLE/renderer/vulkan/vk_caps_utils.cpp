@@ -388,6 +388,8 @@ void Renderer::ensureCapsInitialized() const
         getFeatures().enableMultisampledRenderToTexture.enabled;
     mNativeExtensions.multisampledRenderToTexture2EXT =
         getFeatures().enableMultisampledRenderToTexture.enabled;
+    mNativeExtensions.multiviewMultisampledRenderToTextureOVR =
+        getFeatures().supportsMultiviewMultisampleRenderToTexture.enabled;
     mNativeExtensions.textureStorageMultisample2dArrayOES =
         (limitsVk.standardSampleLocations == VK_TRUE);
     mNativeExtensions.copyTextureCHROMIUM           = true;

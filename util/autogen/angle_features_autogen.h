@@ -385,6 +385,7 @@ enum class Feature
     SupportsMultiDrawIndirect,
     SupportsMultisampledRenderToSingleSampled,
     SupportsMultiview,
+    SupportsMultiviewMultisampleRenderToTexture,
     SupportsNonConstantLoopIndexing,
     SupportsPipelineCreationFeedback,
     SupportsPipelineProtectedAccess,

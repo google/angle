@@ -117,6 +117,7 @@ angle_end2end_tests_sources = [
   "gl_tests/MultisampledRenderToTextureTest.cpp",
   "gl_tests/MultithreadingTest.cpp",
   "gl_tests/MultiviewDrawTest.cpp",
+  "gl_tests/MultiviewMultisampledRenderToTextureTest.cpp",
   "gl_tests/ObjectAllocationTest.cpp",
   "gl_tests/OcclusionQueriesTest.cpp",
   "gl_tests/PBOExtensionTest.cpp",
