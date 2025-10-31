@@ -876,6 +876,8 @@ ANGLE_TRACE_LOADER_EXPORT PFNGLGENVERTEXARRAYSOESPROC t_glGenVertexArraysOES;
 ANGLE_TRACE_LOADER_EXPORT PFNGLISVERTEXARRAYOESPROC t_glIsVertexArrayOES;
 ANGLE_TRACE_LOADER_EXPORT PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC
     t_glFramebufferTextureMultiviewOVR;
+ANGLE_TRACE_LOADER_EXPORT PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC
+    t_glFramebufferTextureMultisampleMultiviewOVR;
 ANGLE_TRACE_LOADER_EXPORT PFNGLFRAMEBUFFERFOVEATIONCONFIGQCOMPROC
     t_glFramebufferFoveationConfigQCOM;
 ANGLE_TRACE_LOADER_EXPORT PFNGLFRAMEBUFFERFOVEATIONPARAMETERSQCOMPROC
@@ -2284,6 +2286,9 @@ void LoadTraceGLES(LoadProc loadProc)
         reinterpret_cast<PFNGLISVERTEXARRAYOESPROC>(loadProc("glIsVertexArrayOES"));
     t_glFramebufferTextureMultiviewOVR = reinterpret_cast<PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC>(
         loadProc("glFramebufferTextureMultiviewOVR"));
+    t_glFramebufferTextureMultisampleMultiviewOVR =
+        reinterpret_cast<PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC>(
+            loadProc("glFramebufferTextureMultisampleMultiviewOVR"));
     t_glFramebufferFoveationConfigQCOM = reinterpret_cast<PFNGLFRAMEBUFFERFOVEATIONCONFIGQCOMPROC>(
         loadProc("glFramebufferFoveationConfigQCOM"));
     t_glFramebufferFoveationParametersQCOM =

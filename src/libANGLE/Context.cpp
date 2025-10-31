@@ -3842,6 +3842,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.multiviewOVR                 = false;
         supportedExtensions.multiview2OVR                = false;
         supportedExtensions.multiviewMultisampleANGLE    = false;
+        supportedExtensions.multiviewMultisampledRenderToTextureOVR = false;
         supportedExtensions.copyTexture3dANGLE           = false;
         supportedExtensions.textureMultisampleANGLE      = false;
         supportedExtensions.textureQueryLodEXT           = false;
@@ -5428,6 +5429,17 @@ void Context::framebufferTextureMultiview(GLenum target,
     }
 
     mState.setObjectDirty(target);
+}
+
+void Context::framebufferTextureMultisampleMultiview(GLenum target,
+                                                     GLenum attachment,
+                                                     TextureID texturePacked,
+                                                     GLint level,
+                                                     GLsizei samples,
+                                                     GLint baseViewIndex,
+                                                     GLsizei numViews)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::framebufferTexture(GLenum target, GLenum attachment, TextureID texture, GLint level)

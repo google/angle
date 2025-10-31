@@ -3813,6 +3813,20 @@ bool ValidateFramebufferTextureMultiviewOVR(const Context *context,
     return true;
 }
 
+bool ValidateFramebufferTextureMultisampleMultiviewOVR(const Context *context,
+                                                       angle::EntryPoint entryPoint,
+                                                       GLenum target,
+                                                       GLenum attachment,
+                                                       TextureID texturePacked,
+                                                       GLint level,
+                                                       GLsizei samples,
+                                                       GLint baseViewIndex,
+                                                       GLsizei numViews)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ValidateUniform1ui(const Context *context,
                         angle::EntryPoint entryPoint,
                         UniformLocation location,
