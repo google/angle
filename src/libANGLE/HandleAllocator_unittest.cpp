@@ -13,6 +13,7 @@
 #include <unordered_set>
 
 #include "gmock/gmock.h"
+#include "gtest/gtest-death-test.h"
 #include "gtest/gtest.h"
 
 #include "libANGLE/HandleAllocator.h"
