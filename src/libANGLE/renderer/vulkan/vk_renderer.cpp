@@ -475,7 +475,26 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
       "prior_access = VK_PIPELINE_STAGE_2_BLIT_BIT(VK_ACCESS_2_TRANSFER_READ_BIT)",
       "command = vkCmdDraw", "prior_command = vkCmdBlitImage"}},
-};
+    // https://anglebug.com/456785955
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     false,
+     {"message_type = RenderPassLoadOpError", "hazard_type = WRITE_AFTER_WRITE",
+      "access = "
+      "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
+      "BIT)",
+      "prior_access = "
+      "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)",
+      "command = vkCmdBeginRenderPass", "prior_command = vkCmdEndRenderPass",
+      "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE"}},
+    {"SYNC-HAZARD-READ-AFTER-WRITE",
+     false,
+     {"message_type = RenderPassLoadOpError", "hazard_type = READ_AFTER_WRITE",
+      "access = "
+      "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
+      "prior_access = "
+      "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)",
+      "command = vkCmdBeginRenderPass", "prior_command = vkCmdEndRenderPass",
+      "load_op = VK_ATTACHMENT_LOAD_OP_LOAD"}}};
 
 // Messages that should not be generated if the feature to force-enable providing the size pointer
 // to vkCmdBindVertexBuffers2() is disabled.
