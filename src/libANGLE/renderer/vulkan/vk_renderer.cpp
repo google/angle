@@ -5718,12 +5718,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // or extensions. For the purpose of testing coverage, we would still enable ES 3.2 on these
     // platforms. However, once a listed test platform is updated to a version that does support
     // ES 3.2, it should be unlisted.
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, exposeES32ForTesting,
-        mFeatures.exposeNonConformantExtensionsAndVersions.enabled &&
-            (isSoftwareRenderer || isPixel4 ||
-             (IsLinux() && isNvidia && driverVersion < angle::VersionTriple(441, 0, 0)) ||
-             (IsWindows() && isIntel)));
+    ANGLE_FEATURE_CONDITION(&mFeatures, exposeES32ForTesting,
+                            mFeatures.exposeNonConformantExtensionsAndVersions.enabled &&
+                                (isSoftwareRenderer || isPixel4 || (IsWindows() && isIntel)));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsMemoryBudget,
