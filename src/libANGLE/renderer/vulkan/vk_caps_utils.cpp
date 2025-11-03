@@ -1119,8 +1119,24 @@ void Renderer::ensureCapsInitialized() const
     mNativeExtensions.textureBufferOES = true;
     mNativeExtensions.textureBufferEXT = true;
 
-    mNativeCaps.maxTextureBufferSize =
-        rx::LimitToIntAnd(limitsVk.maxTexelBufferElements, mMaxBufferMemorySizeLimit);
+    {
+        // GLES 3.2's limit for GL_MAX_TEXTURE_BUFFER_SIZE is 65536.  Note that this limit is about
+        // how many texels are addressable by the texture buffer.
+        //
+        // Aiming for 256MB of memory (see https://gitlab.freedesktop.org/mesa/mesa/-/issues/9862),
+        // a buffer of RGBA32 values would need 16 million elements, which is chosen by ANGLE.  This
+        // is far above the minimum requirement.  Note also that it could correspond to a 4k*4k 2D
+        // texture.
+        //
+        // Note additionally that mMaxBufferMemorySizeLimit is a value in bytes, so it's divided by
+        // 16 (for RGBA32) too to get to the maximum texel count that is allowed.  Vulkan's required
+        // limit for maxMemoryAllocationSize is 2^30 for this value, which divided by 16 is 64
+        // million, which is always higher than the desired value of 16 million.
+        constexpr uint32_t kTextureBufferLimit = 16 * 1024 * 1024;
+        ASSERT(kTextureBufferLimit < mMaxBufferMemorySizeLimit);
+        mNativeCaps.maxTextureBufferSize =
+            std::min(limitsVk.maxTexelBufferElements, kTextureBufferLimit);
+    }
 
     mNativeCaps.textureBufferOffsetAlignment =
         rx::LimitToInt(limitsVk.minTexelBufferOffsetAlignment);
