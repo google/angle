@@ -8520,11 +8520,23 @@ angle::Result ImageHelper::updateSubresourceOnHost(ContextVk *contextVk,
         ANGLE_VK_TRY(contextVk, vkTransitionImageLayoutEXT(renderer->getDevice(), 1, &transition));
         mCurrentAccess = ImageAccess::HostCopy;
     }
-    else if (mCurrentAccess != ImageAccess::HostCopy &&
-             !IsAnyLayout(getCurrentLayout(renderer), hostImageCopyProperties.pCopyDstLayouts,
-                          hostImageCopyProperties.copyDstLayoutCount))
+    else if (mCurrentAccess == ImageAccess::HostCopy)
     {
-        return angle::Result::Continue;
+        // If last access to the image was a host-copy, continue to copy to it on the host; this
+        // frequently happens because uploads to mips or layers can be done by separate calls.
+    }
+    else
+    {
+        // If host-copy is disallowed post-initialization, or if the layout is not supported for
+        // host-copy, fall back to the buffer-copy path.
+        const bool canHostCopyAfterGpuUse =
+            renderer->getFeatures().allowHostImageCopyAfterInitialUpload.enabled &&
+            IsAnyLayout(getCurrentLayout(renderer), hostImageCopyProperties.pCopyDstLayouts,
+                        hostImageCopyProperties.copyDstLayoutCount);
+        if (!canHostCopyAfterGpuUse)
+        {
+            return angle::Result::Continue;
+        }
     }
 
     onWrite(updateLevelGL, 1, baseArrayLayer, layerCount, aspectMask);
