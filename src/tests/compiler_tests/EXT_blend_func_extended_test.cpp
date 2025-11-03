@@ -177,19 +177,6 @@ TEST_P(EXTBlendFuncExtendedTest, CompileFailsWithExtensionWithoutPragma)
     EXPECT_FALSE(TestShaderCompile(""));
 }
 
-// With extension flag and extension directive, compiling succeeds.
-// Also test that the extension directive state is reset correctly.
-TEST_P(EXTBlendFuncExtendedTest, CompileSucceedsWithExtensionAndPragma)
-{
-    mResources.EXT_blend_func_extended  = 1;
-    mResources.MaxDualSourceDrawBuffers = 1;
-    InitializeCompiler();
-    EXPECT_TRUE(TestShaderCompile(EXTBFEPragma));
-    // Test reset functionality.
-    EXPECT_FALSE(TestShaderCompile(""));
-    EXPECT_TRUE(TestShaderCompile(EXTBFEPragma));
-}
-
 // The SL #version 100 shaders that are correct work similarly
 // in both GL2 and GL3, with and without the version string.
 INSTANTIATE_TEST_SUITE_P(CorrectESSL100Shaders,

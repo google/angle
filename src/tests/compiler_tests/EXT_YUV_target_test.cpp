@@ -48,13 +48,6 @@ const char ESSL300_FragColorShader[] =
         fragColor = texture(uSampler, vec2(0.0));
     })";
 
-// Shader that specifies yuv layout qualifier multiple times.
-const char ESSL300_YUVQualifierMultipleTimesShader[] =
-    R"(precision mediump float;
-    layout(yuv, yuv, yuv) out vec4 fragColor;
-    void main() {
-    })";
-
 // Shader that specifies yuv layout qualifier for not output fails to compile.
 const char ESSL300_YUVQualifierFailureShader1[] =
     R"(precision mediump float;
@@ -172,79 +165,6 @@ const char ESSL300_YuvCscStandardEXTQualifiersFailureShader3[] =
     void main() {
     })";
 
-// Shader with nested yuv_to_rgb() and rgb_to_yuv() built-in functions.
-const char ESSL300_BuiltInFunctionsNested1Shader[] =
-    R"(precision mediump float;
-    yuvCscStandardEXT conv = itu_601;
-
-    out vec4 my_color;
-
-    void main()
-    {
-        vec3 rgb = yuv_2_rgb(rgb_2_yuv(vec3(0.0f), conv), conv);
-        my_color = vec4(rgb, 1.0);
-    })";
-const char ESSL300_BuiltInFunctionsNested2Shader[] =
-    R"(precision mediump float;
-    yuvCscStandardEXT conv = itu_601_full_range;
-
-    out vec4 my_color;
-
-    void main()
-    {
-        vec3 rgb = yuv_2_rgb(vec3(0.1) + rgb_2_yuv(vec3(0.0f), conv), conv);
-        my_color = vec4(rgb, 1.0);
-    })";
-const char ESSL300_BuiltInFunctionsNested3Shader[] =
-    R"(precision mediump float;
-    yuvCscStandardEXT conv = itu_709;
-
-    out vec4 my_color;
-
-    vec3 f(vec3 v) { return v + vec3(0.1); }
-
-    void main()
-    {
-        vec3 rgb = yuv_2_rgb(f(rgb_2_yuv(vec3(0.0f), conv)), conv);
-        my_color = vec4(rgb, 1.0);
-    })";
-const char ESSL300_BuiltInFunctionsNested4Shader[] =
-    R"(precision mediump float;
-    yuvCscStandardEXT conv = itu_601;
-
-    out vec4 my_color;
-
-    vec3 f(vec3 v) { return v + vec3(0.1); }
-
-    void main()
-    {
-        vec3 rgb = f(yuv_2_rgb(f(rgb_2_yuv(vec3(0.0f), conv)), conv));
-        my_color = vec4(rgb, 1.0);
-    })";
-
-// Shader with yuv_to_rgb() and rgb_to_yuv() built-in functions with different precision.
-const char ESSL300_BuiltInFunctionsPrecisionShader[] =
-    R"(precision mediump float;
-    yuvCscStandardEXT conv = itu_601;
-
-    out vec4 my_color;
-
-    void main()
-    {
-        lowp vec3 rgbLow = vec3(0.1);
-        mediump vec3 rgbMedium = vec3(0.2);
-        highp vec3 rgbHigh = vec3(0.3);
-
-        lowp vec3 yuvLow = vec3(0.4);
-        mediump vec3 yuvMedium = vec3(0.5);
-        highp vec3 yuvHigh = vec3(0.6);
-
-        my_color = vec4(
-                rgb_2_yuv(rgbLow, conv) - rgb_2_yuv(rgbMedium, conv) + rgb_2_yuv(rgbHigh, conv) -
-                yuv_2_rgb(yuvLow, conv) - yuv_2_rgb(yuvMedium, conv) + yuv_2_rgb(yuvHigh, conv),
-            1.0);
-    })";
-
 const char ESSL300_OverloadRgb2Yuv[] =
     R"(precision mediump float;
     float rgb_2_yuv(float x) { return x + 1.0; }
@@ -292,39 +212,6 @@ INSTANTIATE_TEST_SUITE_P(CorrectVariantsWithExtensionAndPragma,
                          Combine(Values(SH_GLES3_SPEC),
                                  Values(sh::ESSLVersion300),
                                  Values(ESSL300_SimpleShader, ESSL300_FragColorShader)));
-
-class EXTYUVTargetCompileSuccessTest : public EXTYUVTargetTest
-{};
-
-TEST_P(EXTYUVTargetCompileSuccessTest, CompileSucceeds)
-{
-    // Expect compile success.
-    mResources.EXT_YUV_target = 1;
-    InitializeCompiler();
-    EXPECT_TRUE(TestShaderCompile(EXTYTPragma));
-}
-
-#ifdef ANGLE_ENABLE_VULKAN
-// Test that YUV built-in emulation works on Vulkan
-TEST_P(EXTYUVTargetCompileSuccessTest, CompileSucceedsWithExtensionAndPragmaOnVulkan)
-{
-    mResources.EXT_YUV_target   = 1;
-    mCompileOptions.validateAST = 1;
-    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
-    EXPECT_TRUE(TestShaderCompile(EXTYTPragma));
-}
-#endif
-
-INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
-                         EXTYUVTargetCompileSuccessTest,
-                         Combine(Values(SH_GLES3_SPEC),
-                                 Values(sh::ESSLVersion300),
-                                 Values(ESSL300_YUVQualifierMultipleTimesShader,
-                                        ESSL300_BuiltInFunctionsNested1Shader,
-                                        ESSL300_BuiltInFunctionsNested2Shader,
-                                        ESSL300_BuiltInFunctionsNested3Shader,
-                                        ESSL300_BuiltInFunctionsNested4Shader,
-                                        ESSL300_BuiltInFunctionsPrecisionShader)));
 
 class EXTYUVTargetCompileFailureTest : public EXTYUVTargetTest
 {};

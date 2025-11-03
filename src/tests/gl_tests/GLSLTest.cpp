@@ -21192,6 +21192,140 @@ TEST_P(GLSLTest, NestedInoutVars3)
     }
 }
 
+// Tested that nesting rgb_2_yuv and yuv_2_rgb works.
+TEST_P(GLSLTest_ES3, rgbYuvBuiltInNesting1)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] = R"(#version 300 es
+#extension GL_EXT_YUV_target: require
+precision mediump float;
+const yuvCscStandardEXT conv = itu_601;
+
+out vec4 color;
+
+void main()
+{
+    vec3 rgb = yuv_2_rgb(rgb_2_yuv(vec3(0.2, 0.3, 0.4), conv), conv);
+    color = vec4(rgb, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 77, 102, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tested that nesting rgb_2_yuv and yuv_2_rgb works.
+TEST_P(GLSLTest_ES3, rgbYuvBuiltInNesting2)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] = R"(#version 300 es
+#extension GL_EXT_YUV_target: require
+precision mediump float;
+const yuvCscStandardEXT conv = itu_601_full_range;
+
+out vec4 color;
+
+void main()
+{
+    vec3 rgb = yuv_2_rgb(vec3(0.1, 0.2, 0.3) + rgb_2_yuv(vec3(0.15, 0.25, 0.35), conv), conv);
+    color = vec4(rgb, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(171, 17, 205, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tested that nesting rgb_2_yuv and yuv_2_rgb works.
+TEST_P(GLSLTest_ES3, rgbYuvBuiltInNesting3)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] = R"(#version 300 es
+#extension GL_EXT_YUV_target: require
+precision mediump float;
+const yuvCscStandardEXT conv = itu_709;
+
+out vec4 color;
+
+vec3 f(vec3 v) { return v + vec3(0.1); }
+
+void main()
+{
+    vec3 rgb = yuv_2_rgb(f(rgb_2_yuv(vec3(0.1, 0.2, 0.3), conv)), conv);
+    color = vec4(rgb, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(102, 62, 161, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tested that nesting rgb_2_yuv and yuv_2_rgb works.
+TEST_P(GLSLTest_ES3, rgbYuvBuiltInNesting4)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] = R"(#version 300 es
+#extension GL_EXT_YUV_target: require
+precision mediump float;
+const yuvCscStandardEXT conv = itu_601;
+
+out vec4 color;
+
+vec3 f(vec3 v) { return v + vec3(0.1); }
+
+void main()
+{
+    vec3 rgb = f(yuv_2_rgb(f(rgb_2_yuv(vec3(0.1, 0.2, 0.3), conv)), conv));
+    color = vec4(rgb, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(122, 75, 183, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tested that using rgb_2_yuv and yuv_2_rgb with different precisions work.
+TEST_P(GLSLTest_ES3, rgbYuvBuiltInUsedWithDifferentPrecisions)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] = R"(#version 300 es
+#extension GL_EXT_YUV_target: require
+precision mediump float;
+const yuvCscStandardEXT conv = itu_601;
+
+out vec4 color;
+
+void main()
+{
+    lowp vec3 rgbLow = vec3(0.1);
+    mediump vec3 rgbMedium = vec3(0.2);
+    highp vec3 rgbHigh = vec3(0.3);
+
+    lowp vec3 yuvLow = vec3(0.4);
+    mediump vec3 yuvMedium = vec3(0.5);
+    highp vec3 yuvHigh = vec3(0.6);
+
+    color = vec4(
+            rgb_2_yuv(rgbLow, conv) - rgb_2_yuv(rgbMedium, conv) + rgb_2_yuv(rgbHigh, conv) -
+            yuv_2_rgb(yuvLow, conv) - yuv_2_rgb(yuvMedium, conv) + yuv_2_rgb(yuvHigh, conv),
+        1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(72, 0, 161, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(

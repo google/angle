@@ -426,6 +426,23 @@ void main()
 })";
     }
 
+    // Same as getRenderYUVFS(), but with the yuv layout specified multiple times, which should not
+    // make a difference.  Some tests use this shader instead of getRenderYUVFS() just to exercise
+    // compiling such a shader.
+    const char *getRenderYUV2FS() const
+    {
+        return R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision highp float;
+uniform vec4 u_color;
+layout (yuv, yuv, yuv) out vec4 color;
+
+void main()
+{
+    color = u_color;
+})";
+    }
+
     void testSetUp() override
     {
         mTextureProgram = CompileProgram(getVS(), getTextureFS());
@@ -496,6 +513,11 @@ void main()
             ASSERT_NE(0u, mRenderYUVProgram) << "shader compilation failed.";
 
             mRenderYUVUniformLocation = glGetUniformLocation(mRenderYUVProgram, "u_color");
+
+            mRenderYUVProgram2 = CompileProgram(getVSESSL3(), getRenderYUV2FS());
+            ASSERT_NE(0u, mRenderYUVProgram2) << "shader compilation failed.";
+
+            mRenderYUVUniformLocation = glGetUniformLocation(mRenderYUVProgram2, "u_color");
         }
 
         if (IsGLExtensionEnabled(kExternalESSL3Ext))
@@ -1814,6 +1836,7 @@ void main()
     GLint mFetchYUVVSUniformLocation = -1;
 
     GLuint mRenderYUVProgram        = 0;
+    GLuint mRenderYUVProgram2       = 0;
     GLint mRenderYUVUniformLocation = -1;
 
     CounterNameToIndexMap mCounterNameToIndexMap;
@@ -4719,11 +4742,11 @@ TEST_P(ImageTestES3, RenderToYUVAHB)
     ASSERT_GL_NO_ERROR();
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
-    glUseProgram(mRenderYUVProgram);
+    glUseProgram(mRenderYUVProgram2);
     glUniform4f(mRenderYUVUniformLocation, kYUVColorRedY[0] / 255.0f, kYUVColorRedCb[0] / 255.0f,
                 kYUVColorRedCr[0] / 255.0f, 1.0f);
 
-    drawQuad(mRenderYUVProgram, "position", 0.0f);
+    drawQuad(mRenderYUVProgram2, "position", 0.0f);
     ASSERT_GL_NO_ERROR();
 
     // ReadPixels returns the RGB converted color
