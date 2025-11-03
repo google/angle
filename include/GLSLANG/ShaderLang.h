@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 383
+#define ANGLE_SH_VERSION 384
 
 enum ShShaderSpec
 {
@@ -543,7 +543,7 @@ struct ShBuiltInResources
     int ANGLE_shader_pixel_local_storage;
     int ANGLE_texture_multisample;
     int ANGLE_multi_draw;
-    // TODO(angleproject:3402) remove after chromium side removal to pass compilation
+    // TODO(http://anglebug.com/40096583) remove after chromium side removal to pass compilation
     int ANGLE_base_vertex_base_instance;
     int WEBGL_video_texture;
     int APPLE_clip_distance;

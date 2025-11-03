@@ -666,7 +666,7 @@ bool SyncvalMessageMatchesSkip(const char *messageId,
                                const char *message,
                                const vk::SkippedSyncvalMessage &skip)
 {
-    // TODO(http://angleproject:391284743): Ongoing transition: textual matches -> extraProperties.
+    // TODO(http://anglebug.com/391284743): Ongoing transition: textual matches -> extraProperties.
     // The skip should include at least one extraProperty
     ASSERT(skip.extraProperties[0]);
 

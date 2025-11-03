@@ -106,9 +106,8 @@ struct TLSData
 TLSData::TLSData() : errorScratchSpace(0) {}
 
 #if defined(ANGLE_PLATFORM_APPLE)
-// TODO(angleproject:6479): Due to a bug in Apple's dyld loader, `thread_local` will cause
-// excessive memory use. Temporarily avoid it by using pthread's thread
-// local storage instead.
+// TODO(http://anglebug.com/42264979): Due to a bug in Apple's dyld loader, `thread_local` will
+// cause excessive memory use. Temporarily avoid it by using pthread's thread local storage instead.
 static angle::TLSIndex GetDisplayTLSIndex()
 {
     static angle::TLSIndex DisplayIndex = TLS_INVALID_INDEX;
