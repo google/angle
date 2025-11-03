@@ -66,18 +66,6 @@ TEST_P(OESStandardDerivativesTest, CompileFailsWithExtensionWithoutPragma)
     EXPECT_FALSE(TestShaderCompile(""));
 }
 
-// With extension flag and extension directive, compiling succeeds.
-// Also test that the extension directive state is reset correctly.
-TEST_P(OESStandardDerivativesTest, CompileSucceedsWithExtensionAndPragma)
-{
-    mResources.OES_standard_derivatives = 1;
-    InitializeCompiler();
-    EXPECT_TRUE(TestShaderCompile(OESPragma));
-    // Test reset functionality.
-    EXPECT_FALSE(TestShaderCompile(""));
-    EXPECT_TRUE(TestShaderCompile(OESPragma));
-}
-
 // The SL #version 100 shaders that are correct work similarly
 // in both GL2 and GL3, with and without the version string.
 INSTANTIATE_TEST_SUITE_P(

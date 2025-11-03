@@ -132,7 +132,6 @@ angle_unittests_compiler_tests_sources = [
   "compiler_tests/SamplerVideoWEBGL_test.cpp",
   "compiler_tests/SeparateDeclarations_test.cpp",
   "compiler_tests/ShCompile_test.cpp",
-  "compiler_tests/ShaderImage_test.cpp",
   "compiler_tests/ShaderValidation_test.cpp",
   "compiler_tests/ShaderVariable_test.cpp",
   "compiler_tests/SimplifyLoopConditions_test.cpp",

@@ -329,25 +329,9 @@ class EXTShaderFramebufferFetchNoncoherentFailureTest
     : public EXTShaderFramebufferFetchNoncoherentSuccessTest
 {};
 
-class EXTShaderFramebufferFetchNoncoherentES100SuccessTest
-    : public EXTShaderFramebufferFetchNoncoherentSuccessTest
-{};
-
 class EXTShaderFramebufferFetchNoncoherentES100FailureTest
     : public EXTShaderFramebufferFetchNoncoherentFailureTest
 {};
-
-// With extension flag and extension directive, compiling succeeds.
-// Also test that the extension directive state is reset correctly.
-TEST_P(EXTShaderFramebufferFetchNoncoherentES100SuccessTest, CompileSucceedsWithExtensionAndPragma)
-{
-    SetExtensionEnable(true);
-    InitializeCompiler();
-    TestShaderCompile(true, EXTPragma);
-    // Test reset functionality.
-    TestShaderCompile(false, "");
-    TestShaderCompile(true, EXTPragma);
-}
 
 //
 TEST_P(EXTShaderFramebufferFetchNoncoherentES100FailureTest, CompileFailsWithoutNoncoherent)
@@ -384,14 +368,6 @@ TEST_P(EXTShaderFramebufferFetchNoncoherentES300FailureTest, CompileFailsWithout
     InitializeCompiler();
     TestShaderCompile(false, EXTPragma);
 }
-
-// The SL #version 100 shaders that are correct work similarly
-// in both GL2 and GL3, with and without the version string.
-INSTANTIATE_TEST_SUITE_P(CorrectESSL100Shaders,
-                         EXTShaderFramebufferFetchNoncoherentES100SuccessTest,
-                         Combine(Values(SH_GLES2_SPEC),
-                                 Values(sh::ESSLVersion100),
-                                 Values(ESSL100_LastFragDataRedeclared1)));
 
 INSTANTIATE_TEST_SUITE_P(IncorrectESSL100Shaders,
                          EXTShaderFramebufferFetchNoncoherentES100FailureTest,

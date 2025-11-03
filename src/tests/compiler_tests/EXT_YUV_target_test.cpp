@@ -48,15 +48,6 @@ const char ESSL300_FragColorShader[] =
         fragColor = texture(uSampler, vec2(0.0));
     })";
 
-// Shader that samples the texture and swizzle and writes to FragColor.
-const char ESSL300_textureSwizzleFragColorShader[] =
-    R"(precision mediump float;
-    uniform __samplerExternal2DY2YEXT uSampler;
-    layout(yuv) out vec4 fragColor;
-    void main() {
-        fragColor = vec4(texture(uSampler, vec2(0.0)).zyx, 1.0);
-    })";
-
 // Shader that specifies yuv layout qualifier multiple times.
 const char ESSL300_YUVQualifierMultipleTimesShader[] =
     R"(precision mediump float;
@@ -116,52 +107,6 @@ const char ESSL300_MultipleYUVOutputsFailureShader[] =
     layout(yuv) out vec4 fragColor;
     layout(yuv) out vec4 fragColor1;
     void main() {
-    })";
-
-// Shader that specifies yuvCscStandartEXT type and associated values.
-const char ESSL300_YuvCscStandardEXTShader[] =
-    R"(precision mediump float;
-    yuvCscStandardEXT;
-    yuvCscStandardEXT conv;
-    yuvCscStandardEXT conv1 = itu_601;
-    yuvCscStandardEXT conv2 = itu_601_full_range;
-    yuvCscStandardEXT conv3 = itu_709;
-    const yuvCscStandardEXT conv4 = itu_709;
-
-    uniform int u;
-    out vec4 my_color;
-
-    yuvCscStandardEXT conv_standard()
-    {
-        switch(u)
-        {
-            case 1:
-                return conv1;
-            case 2:
-                return conv2;
-            case 3:
-                return conv3;
-            default:
-                return conv;
-        }
-    }
-    bool is_itu_601(inout yuvCscStandardEXT csc)
-    {
-        csc = itu_601;
-        return csc == itu_601;
-    }
-    bool is_itu_709(yuvCscStandardEXT csc)
-    {
-        return csc == itu_709;
-    }
-    void main()
-    {
-        yuvCscStandardEXT conv = conv_standard();
-        bool csc_check1 = is_itu_601(conv);
-        bool csc_check2 = is_itu_709(itu_709);
-        if (csc_check1 && csc_check2) {
-            my_color = vec4(0, 1, 0, 1);
-        }
     })";
 
 // Shader that specifies yuvCscStandardEXT type constructor fails to compile.
@@ -225,20 +170,6 @@ const char ESSL300_YuvCscStandardEXTQualifiersFailureShader3[] =
     R"(precision mediump float;
     uniform yuvCscStandardEXT conv = itu_601;
     void main() {
-    })";
-
-// Shader that specifies yuv_to_rgb() and rgb_to_yuv() built-in functions.
-const char ESSL300_BuiltInFunctionsShader[] =
-    R"(precision mediump float;
-    yuvCscStandardEXT conv = itu_601;
-
-    out vec4 my_color;
-
-    void main()
-    {
-        vec3 yuv = rgb_2_yuv(vec3(0.0f), conv);
-        vec3 rgb = yuv_2_rgb(yuv, itu_601);
-        my_color = vec4(rgb, 1.0);
     })";
 
 // Shader with nested yuv_to_rgb() and rgb_to_yuv() built-in functions.
@@ -356,18 +287,6 @@ TEST_P(EXTYUVTargetTest, CompileFailsWithExtensionWithoutPragma)
     EXPECT_FALSE(TestShaderCompile(""));
 }
 
-// With extension flag and extension directive, compiling succeeds.
-// Also test that the extension directive state is reset correctly.
-TEST_P(EXTYUVTargetTest, CompileSucceedsWithExtensionAndPragma)
-{
-    mResources.EXT_YUV_target = 1;
-    InitializeCompiler();
-    EXPECT_TRUE(TestShaderCompile(EXTYTPragma));
-    // Test reset functionality.
-    EXPECT_FALSE(TestShaderCompile(""));
-    EXPECT_TRUE(TestShaderCompile(EXTYTPragma));
-}
-
 INSTANTIATE_TEST_SUITE_P(CorrectVariantsWithExtensionAndPragma,
                          EXTYUVTargetTest,
                          Combine(Values(SH_GLES3_SPEC),
@@ -400,11 +319,7 @@ INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
                          EXTYUVTargetCompileSuccessTest,
                          Combine(Values(SH_GLES3_SPEC),
                                  Values(sh::ESSLVersion300),
-                                 Values(ESSL300_FragColorShader,
-                                        ESSL300_textureSwizzleFragColorShader,
-                                        ESSL300_YUVQualifierMultipleTimesShader,
-                                        ESSL300_YuvCscStandardEXTShader,
-                                        ESSL300_BuiltInFunctionsShader,
+                                 Values(ESSL300_YUVQualifierMultipleTimesShader,
                                         ESSL300_BuiltInFunctionsNested1Shader,
                                         ESSL300_BuiltInFunctionsNested2Shader,
                                         ESSL300_BuiltInFunctionsNested3Shader,

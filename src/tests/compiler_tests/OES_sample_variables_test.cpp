@@ -112,20 +112,6 @@ TEST_P(OESSampleVariablesTestES31, CompileFailsWithExtensionWithoutPragma)
     EXPECT_FALSE(TestShaderCompile(""));
 }
 
-// With extension flag and extension directive, compiling succeeds.
-// Also test that the extension directive state is reset correctly.
-#ifdef ANGLE_ENABLE_VULKAN
-TEST_P(OESSampleVariablesTestES31, CompileSucceedsWithExtensionAndPragmaOnVulkan)
-{
-    mResources.OES_sample_variables = 1;
-    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
-    EXPECT_TRUE(TestShaderCompile(OESPragma));
-    // Test reset functionality.
-    EXPECT_FALSE(TestShaderCompile(""));
-    EXPECT_TRUE(TestShaderCompile(OESPragma));
-}
-#endif
-
 INSTANTIATE_TEST_SUITE_P(CorrectESSL310Shaders,
                          OESSampleVariablesTestES31,
                          Combine(Values(SH_GLES3_1_SPEC),

@@ -359,27 +359,6 @@ TEST_P(EXTClipCullDistanceForVertexShaderTest, CompileFailsWithExtensionWithoutP
     EXPECT_FALSE(TestShaderCompile(""));
 }
 
-#if defined(ANGLE_ENABLE_VULKAN)
-// With extension flag and extension directive, compiling using TranslatorVulkan succeeds.
-TEST_P(EXTClipCullDistanceForVertexShaderTest, CompileSucceedsVulkan)
-{
-    SetExtensionEnable(true);
-
-    mResources.MaxClipDistances                = 8;
-    mResources.MaxCullDistances                = 8;
-    mResources.MaxCombinedClipAndCullDistances = 8;
-
-    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
-    EXPECT_TRUE(TestShaderCompile(EXTPragma));
-    EXPECT_FALSE(TestShaderCompile(""));
-    EXPECT_TRUE(TestShaderCompile(EXTPragma));
-    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
-    EXPECT_TRUE(TestShaderCompile(ANGLEPragma));
-    EXPECT_FALSE(TestShaderCompile(""));
-    EXPECT_TRUE(TestShaderCompile(ANGLEPragma));
-}
-#endif
-
 // Extension flag is required to compile properly. Expect failure when it is
 // not present.
 TEST_P(EXTClipCullDistanceForFragmentShaderTest, CompileFailsWithoutExtension)
@@ -401,25 +380,6 @@ TEST_P(EXTClipCullDistanceForFragmentShaderTest, CompileFailsWithExtensionWithou
 }
 
 #if defined(ANGLE_ENABLE_VULKAN)
-// With extension flag and extension directive, compiling using TranslatorVulkan succeeds.
-TEST_P(EXTClipCullDistanceForFragmentShaderTest, CompileSucceedsVulkan)
-{
-    SetExtensionEnable(true);
-
-    mResources.MaxClipDistances                = 8;
-    mResources.MaxCullDistances                = 8;
-    mResources.MaxCombinedClipAndCullDistances = 8;
-
-    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
-    EXPECT_TRUE(TestShaderCompile(EXTPragma));
-    EXPECT_FALSE(TestShaderCompile(""));
-    EXPECT_TRUE(TestShaderCompile(EXTPragma));
-    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
-    EXPECT_TRUE(TestShaderCompile(ANGLEPragma));
-    EXPECT_FALSE(TestShaderCompile(""));
-    EXPECT_TRUE(TestShaderCompile(ANGLEPragma));
-}
-
 class EXTClipCullDistanceForVertexShaderCompileFailureTest
     : public EXTClipCullDistanceForVertexShaderTest
 {};

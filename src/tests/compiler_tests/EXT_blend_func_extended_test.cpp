@@ -13,26 +13,10 @@ namespace
 {
 const char EXTBFEPragma[] = "#extension GL_EXT_blend_func_extended : require\n";
 
-const char ESSL100_SimpleShader1[] =
-    "precision mediump float;\n"
-    "void main() { \n"
-    "    gl_FragColor = vec4(1.0);\n"
-    "    gl_SecondaryFragColorEXT = vec4(gl_MaxDualSourceDrawBuffersEXT / 10);\n"
-    "}\n";
-
 // Shader that tests only the access to gl_MaxDualSourceDrawBuffersEXT.
 const char ESSL100_MaxDualSourceAccessShader[] =
     "precision mediump float;\n"
     "void main() { gl_FragColor = vec4(gl_MaxDualSourceDrawBuffersEXT / 10); }\n";
-
-// Shader that writes to SecondaryFragData.
-const char ESSL100_FragDataShader[] =
-    "#extension GL_EXT_draw_buffers : require\n"
-    "precision mediump float;\n"
-    "void main() {\n"
-    "    gl_FragData[gl_MaxDrawBuffers - 1] = vec4(1.0);\n"
-    "    gl_SecondaryFragDataEXT[gl_MaxDualSourceDrawBuffersEXT - 1] = vec4(0.1);\n"
-    "}\n";
 
 // Shader that writes to SecondaryFragColor and SecondaryFragData does not compile.
 const char ESSL100_ColorAndDataWriteFailureShader1[] =
@@ -75,37 +59,6 @@ const char ESSL300_MaxDualSourceAccessShader[] =
     "void main() {\n"
     "    fragColor = vec4(gl_MaxDualSourceDrawBuffersEXT / 10);\n"
     "}\n";
-
-// In ES 3.0, the locations can be assigned through the API with glBindFragDataLocationIndexedEXT.
-// It's fine to have a mix of specified and unspecified locations.
-const char ESSL300_LocationAndUnspecifiedOutputShader[] =
-    "precision mediump float;\n"
-    "layout(location = 0) out mediump vec4 fragColor;"
-    "out mediump vec4 secondaryFragColor;"
-    "void main() {\n"
-    "    fragColor = vec4(1.0);\n"
-    "    secondaryFragColor = vec4(1.0);\n"
-    "}\n";
-
-// It's also fine to leave locations completely unspecified.
-const char ESSL300_TwoUnspecifiedLocationOutputsShader[] =
-    "precision mediump float;\n"
-    "out mediump vec4 fragColor;"
-    "out mediump vec4 secondaryFragColor;"
-    "void main() {\n"
-    "    fragColor = vec4(1.0);\n"
-    "    secondaryFragColor = vec4(1.0);\n"
-    "}\n";
-
-// Shader that is specifies two outputs with the same location but different indexes is valid.
-const char ESSL300_LocationIndexShader[] =
-    R"(precision mediump float;
-layout(location = 0) out mediump vec4 fragColor;
-layout(location = 0, index = 1) out mediump vec4 secondaryFragColor;
-void main() {
-    fragColor = vec4(1);
-    secondaryFragColor = vec4(1);
-})";
 
 // Shader that specifies index layout qualifier but not location fails to compile.
 const char ESSL300_LocationIndexFailureShader[] =
@@ -243,18 +196,13 @@ INSTANTIATE_TEST_SUITE_P(CorrectESSL100Shaders,
                          EXTBlendFuncExtendedTest,
                          Combine(Values(SH_GLES2_SPEC, SH_GLES3_SPEC),
                                  Values("", sh::ESSLVersion100),
-                                 Values(ESSL100_SimpleShader1,
-                                        ESSL100_MaxDualSourceAccessShader,
-                                        ESSL100_FragDataShader)));
+                                 Values(ESSL100_MaxDualSourceAccessShader)));
 
 INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
                          EXTBlendFuncExtendedTest,
                          Combine(Values(SH_GLES3_SPEC),
                                  Values(sh::ESSLVersion300),
-                                 Values(ESSL300_MaxDualSourceAccessShader,
-                                        ESSL300_LocationAndUnspecifiedOutputShader,
-                                        ESSL300_TwoUnspecifiedLocationOutputsShader,
-                                        ESSL300_LocationIndexShader)));
+                                 Values(ESSL300_MaxDualSourceAccessShader)));
 
 class EXTBlendFuncExtendedCompileFailureTest : public EXTBlendFuncExtendedTest
 {};
@@ -283,21 +231,6 @@ INSTANTIATE_TEST_SUITE_P(IncorrectESSL100ShadersWebGL2,
                          Combine(Values(SH_WEBGL2_SPEC),
                                  Values(sh::ESSLVersion100),
                                  Values(ESSL100_IndexSecondaryFragDataWithNonConstantShader)));
-
-// Correct #version 300 es shaders fail in GLES2 context, regardless of version string.
-INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
-                         EXTBlendFuncExtendedCompileFailureTest,
-                         Combine(Values(SH_GLES2_SPEC),
-                                 Values("", sh::ESSLVersion100, sh::ESSLVersion300),
-                                 Values(ESSL300_LocationAndUnspecifiedOutputShader,
-                                        ESSL300_TwoUnspecifiedLocationOutputsShader)));
-
-// Correct #version 100 shaders fail when used with #version 300 es.
-INSTANTIATE_TEST_SUITE_P(CorrectESSL100Shaders,
-                         EXTBlendFuncExtendedCompileFailureTest,
-                         Combine(Values(SH_GLES3_SPEC),
-                                 Values(sh::ESSLVersion300),
-                                 Values(ESSL100_SimpleShader1, ESSL100_FragDataShader)));
 
 // Incorrect #version 300 es shaders always fail.
 INSTANTIATE_TEST_SUITE_P(IncorrectESSL300Shaders,

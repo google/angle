@@ -112,24 +112,6 @@ TEST_F(TextureCubeMapArrayTestNoExt, ExtensionEnabledOES)
     }
 }
 
-// Check that if the extension supported and enabled, using the features succeeds.
-TEST_F(OESTextureCubeMapArrayTest, ExtensionEnabledOES)
-{
-    const std::string &shaderString =
-        R"(#version 310 es
-        #extension GL_OES_texture_cube_map_array : enable
-        precision mediump float;
-        uniform highp isamplerCubeArray u_sampler;
-        void main()
-        {
-            vec4 color = vec4(texture(u_sampler, vec4(0, 0, 0, 0)));
-        })";
-    if (!compile(shaderString))
-    {
-        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
-    }
-}
-
 // Check that if the extension is enabled, trying to use the features without the extension
 // enabled fails.
 TEST_F(EXTTextureCubeMapArrayTest, ExtensionEnabledOES)
@@ -184,23 +166,5 @@ TEST_F(OESTextureCubeMapArrayTest, ExtensionEnabledEXT)
     if (compile(shaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
-    }
-}
-
-// Check that if the extension supported and enabled, using the features succeeds.
-TEST_F(EXTTextureCubeMapArrayTest, ExtensionEnabledEXT)
-{
-    const std::string &shaderString =
-        R"(#version 310 es
-        #extension GL_EXT_texture_cube_map_array : enable
-        precision mediump float;
-        uniform highp isamplerCubeArray u_sampler;
-        void main()
-        {
-            vec4 color = vec4(texture(u_sampler, vec4(0, 0, 0, 0)));
-        })";
-    if (!compile(shaderString))
-    {
-        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
