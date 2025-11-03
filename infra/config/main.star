@@ -352,9 +352,8 @@ def angle_builder(name, cpu):
         "android-arm64-exp-test",
         "android-arm64-exp-pixel10-test",
         "android-arm64-exp-s24-test",
-        "linux-exp-test",
-        "mac-exp-test",
-        "win-exp-test",
+        "mac-exp-test",  # temporarily used for AMD Radeon Pro 555X
+        "win-exp-test",  # temporarily used for Intel UHD770
     ]
 
     if (not is_exp) or (name in active_experimental_builders):

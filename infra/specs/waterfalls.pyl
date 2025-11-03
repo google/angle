@@ -115,8 +115,6 @@
           'linux_nvidia_gtx_1660_experimental',
         ],
         'test_suites': {
-          'gtest_tests': 'linux_nvidia_gtests',
-          'isolated_scripts': 'isolated_scripts_group_common',
         },
       },
       'linux-exp-swiftshader': {
