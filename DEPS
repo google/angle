@@ -1077,12 +1077,12 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@fd4a777ae606b97da8db95cfca72fea9fef7c459',
+    'url': Var('chromium_git') + '/vulkan-deps@21faa8523a5d04f27a829fc80ca09990b9b06aa8',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/glslang/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@ffcdd3ea9acf4fd70746250731e93c6c73f1cba3',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@ee528d73f7ffe63079f61a3e783cc621c5e7bd57',
     'condition': 'not build_with_chromium',
   },
 
@@ -1102,7 +1102,7 @@ deps = {
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@6570fd4076d3f6ba7e1349af042d9f97f7378884',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@5b2630a6dc43ab5a04f9c49c0c716bbf3fea0435',
     'condition': 'not build_with_chromium',
   },
 
@@ -1112,7 +1112,7 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@6f557a4ff7dfc0f5eb58eb1f492d3d3de723b6c4',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@8a25939012fb114404594ac0a64478275faa88e6',
     'condition': 'not build_with_chromium',
   },
 
@@ -1122,12 +1122,12 @@ deps = {
   },
 
   'third_party/vulkan-utility-libraries/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Utility-Libraries@cd5b255b5c1932797bbf552c6773d9aa44f800f7',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Utility-Libraries@e7f2656f161f578e000ec967d4c0cc3fc33c5c52',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@43638d7e3fa160088beedfdabf781d4122e5733e',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@d574203312ee58d733f4ca78e8a51ff409c8016c',
     'condition': 'not build_with_chromium',
   },
 
