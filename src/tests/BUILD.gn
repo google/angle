@@ -1542,7 +1542,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     public_deps = [ ":angle_deqp_framework_debase" ]
   }
 
-  config("angle_deqp_framework_common_config") {
+  config("angle_deqp_framework_common_public_config") {
     include_dirs = [
       "$deqp_path/framework/common",
       "$deqp_path/framework/randomshaders",
@@ -1550,9 +1550,18 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     ]
   }
 
+  config("angle_deqp_framework_common_private_config") {
+    cflags_cc = [
+      # Usage of deprecated std::float_denorm_style.
+      # https://github.com/KhronosGroup/VK-GL-CTS/blob/84f86d999680e3d8a416b578bfc6e86ce8910853/framework/common/tcuFloatFormat.cpp#L275C32-L279
+      "-Wno-deprecated-declarations",
+    ]
+  }
+
   angle_deqp_source_set("angle_deqp_framework_common") {
     sources = deqp_framework_common_sources
-    public_configs = [ ":angle_deqp_framework_common_config" ]
+    public_configs = [ ":angle_deqp_framework_common_public_config" ]
+    configs += [ ":angle_deqp_framework_common_private_config" ]
     public_deps = [
       ":angle_deqp_framework_decpp",
       ":angle_deqp_framework_qphelper",
