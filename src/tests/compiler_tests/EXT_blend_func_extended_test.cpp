@@ -13,11 +13,6 @@ namespace
 {
 const char EXTBFEPragma[] = "#extension GL_EXT_blend_func_extended : require\n";
 
-// Shader that tests only the access to gl_MaxDualSourceDrawBuffersEXT.
-const char ESSL100_MaxDualSourceAccessShader[] =
-    "precision mediump float;\n"
-    "void main() { gl_FragColor = vec4(gl_MaxDualSourceDrawBuffersEXT / 10); }\n";
-
 // Shader that writes to SecondaryFragColor and SecondaryFragData does not compile.
 const char ESSL100_ColorAndDataWriteFailureShader1[] =
     "precision mediump float;\n"
@@ -50,14 +45,6 @@ const char ESSL100_IndexSecondaryFragDataWithNonConstantShader[] =
     "    for (int i = 0; i < 2; ++i) {\n"
     "        gl_SecondaryFragDataEXT[true ? 0 : i] = vec4(0.0);\n"
     "    }\n"
-    "}\n";
-
-// In GLSL version 300 es, the gl_MaxDualSourceDrawBuffersEXT is available.
-const char ESSL300_MaxDualSourceAccessShader[] =
-    "precision mediump float;\n"
-    "layout(location = 0) out mediump vec4 fragColor;"
-    "void main() {\n"
-    "    fragColor = vec4(gl_MaxDualSourceDrawBuffersEXT / 10);\n"
     "}\n";
 
 // Shader that specifies index layout qualifier but not location fails to compile.
@@ -146,7 +133,7 @@ void main() {
     fragColor = vec4(1.0);
 })";
 
-class EXTBlendFuncExtendedTest : public sh::ShaderExtensionTest
+class EXTBlendFuncExtendedCompileFailureTest : public sh::ShaderExtensionTest
 {
   protected:
     void SetUp() override
@@ -157,42 +144,6 @@ class EXTBlendFuncExtendedTest : public sh::ShaderExtensionTest
         mResources.NV_draw_buffers  = 2;
     }
 };
-
-// Extension flag is required to compile properly. Expect failure when it is
-// not present.
-TEST_P(EXTBlendFuncExtendedTest, CompileFailsWithoutExtension)
-{
-    mResources.EXT_blend_func_extended = 0;
-    InitializeCompiler();
-    EXPECT_FALSE(TestShaderCompile(EXTBFEPragma));
-}
-
-// Extension directive is required to compile properly. Expect failure when
-// it is not present.
-TEST_P(EXTBlendFuncExtendedTest, CompileFailsWithExtensionWithoutPragma)
-{
-    mResources.EXT_blend_func_extended  = 1;
-    mResources.MaxDualSourceDrawBuffers = 1;
-    InitializeCompiler();
-    EXPECT_FALSE(TestShaderCompile(""));
-}
-
-// The SL #version 100 shaders that are correct work similarly
-// in both GL2 and GL3, with and without the version string.
-INSTANTIATE_TEST_SUITE_P(CorrectESSL100Shaders,
-                         EXTBlendFuncExtendedTest,
-                         Combine(Values(SH_GLES2_SPEC, SH_GLES3_SPEC),
-                                 Values("", sh::ESSLVersion100),
-                                 Values(ESSL100_MaxDualSourceAccessShader)));
-
-INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
-                         EXTBlendFuncExtendedTest,
-                         Combine(Values(SH_GLES3_SPEC),
-                                 Values(sh::ESSLVersion300),
-                                 Values(ESSL300_MaxDualSourceAccessShader)));
-
-class EXTBlendFuncExtendedCompileFailureTest : public EXTBlendFuncExtendedTest
-{};
 
 TEST_P(EXTBlendFuncExtendedCompileFailureTest, CompileFails)
 {

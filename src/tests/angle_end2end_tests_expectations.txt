@@ -648,6 +648,8 @@
 42264513 PIXEL4ORXL GLES : GLSLTest.NestedInoutVars2/* = SKIP
 42264513 PIXEL4ORXL GLES : GLSLTest.NestedInoutVars3/* = SKIP
 42264513 PIXEL4ORXL GLES : SimpleUniformUsageTestES3.TernarySelectAnArrayThenIndex/* = SKIP
+458082809 PIXEL4ORXL GLES : GLSLValidationExtensionDirectiveTest_ES3.Sampler2DShadow/* = SKIP
+458082810 PIXEL4ORXL GLES : GLSLValidationExtensionDirectiveTest_ES31.TextureCubeMapArray/* = SKIP
 
 42267082 PIXEL4ORXL GLES : BlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42267082 PIXEL4ORXL GLES : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP

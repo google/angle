@@ -3161,7 +3161,34 @@ class GLSLValidationExtensionDirectiveTest_ES3 : public GLSLValidationTest_ES3
                                             const char *shaderSource,
                                             const char *version,
                                             const char *extension,
-                                            bool extensionTokenIsReserved)
+                                            bool isExtensionSupported,
+                                            const char *expectWithoutPragma,
+                                            const char *expectWithExtDisabled)
+    {
+        testCompileNeedsExtensionDirectiveImpl(shaderType, shaderSource, version, extension,
+                                               isExtensionSupported, true, expectWithoutPragma,
+                                               expectWithExtDisabled);
+    }
+
+    void testCompileNeedsExtensionDirectiveGenericKeyword(GLenum shaderType,
+                                                          const char *shaderSource,
+                                                          const char *version,
+                                                          const char *extension,
+                                                          bool isExtensionSupported,
+                                                          const char *expect)
+    {
+        testCompileNeedsExtensionDirectiveImpl(shaderType, shaderSource, version, extension,
+                                               isExtensionSupported, false, expect, expect);
+    }
+
+    void testCompileNeedsExtensionDirectiveImpl(GLenum shaderType,
+                                                const char *shaderSource,
+                                                const char *version,
+                                                const char *extension,
+                                                bool isExtensionSupported,
+                                                bool willWarnOnUse,
+                                                const char *expectWithoutPragma,
+                                                const char *expectWithExtDisabled)
     {
         {
             std::stringstream src;
@@ -3172,8 +3199,7 @@ class GLSLValidationExtensionDirectiveTest_ES3 : public GLSLValidationTest_ES3
             src << shaderSource;
             const CompiledShader &shader = compile(shaderType, src.str().c_str());
             EXPECT_FALSE(shader.success());
-            EXPECT_TRUE(shader.hasError(extensionTokenIsReserved ? "extension is disabled"
-                                                                 : "syntax error"));
+            EXPECT_TRUE(shader.hasError(expectWithoutPragma));
             reset();
         }
 
@@ -3186,8 +3212,7 @@ class GLSLValidationExtensionDirectiveTest_ES3 : public GLSLValidationTest_ES3
             src << "#extension " << extension << ": disable\n" << shaderSource;
             const CompiledShader &shader = compile(shaderType, src.str().c_str());
             EXPECT_FALSE(shader.success());
-            EXPECT_TRUE(shader.hasError(extensionTokenIsReserved ? "extension is disabled"
-                                                                 : "syntax error"));
+            EXPECT_TRUE(shader.hasError(expectWithExtDisabled));
             reset();
         }
 
@@ -3198,10 +3223,25 @@ class GLSLValidationExtensionDirectiveTest_ES3 : public GLSLValidationTest_ES3
                 src << version << "\n";
             }
             src << "#extension " << extension << ": enable\n" << shaderSource;
-            EXPECT_TRUE(compile(shaderType, src.str().c_str()).success());
+            if (isExtensionSupported)
+            {
+                EXPECT_TRUE(compile(shaderType, src.str().c_str()).success());
+            }
+            else
+            {
+                const CompiledShader &shader = compile(shaderType, src.str().c_str());
+                EXPECT_FALSE(shader.success());
+                EXPECT_TRUE(shader.hasError("extension is not supported"));
+            }
             reset();
         }
 
+        // The Nvidia/GLES driver doesn't treat warn like enable and gives an error, declaring that
+        // using a token from the extension needs `#extension EXT: enable`.  Don't run these tests
+        // on that config.
+        const bool driverMishandlesWarn = IsOpenGLES() && IsNVIDIA();
+
+        if (!driverMishandlesWarn)
         {
             std::stringstream src;
             if (version)
@@ -3210,71 +3250,546 @@ class GLSLValidationExtensionDirectiveTest_ES3 : public GLSLValidationTest_ES3
             }
             src << "#extension " << extension << ": warn\n" << shaderSource;
             const CompiledShader &shader = compile(shaderType, src.str().c_str());
-            EXPECT_TRUE(shader.success());
-            EXPECT_TRUE(shader.hasError("WARNING"));
-            EXPECT_TRUE(shader.hasError("extension is being used"));
+            if (!isExtensionSupported)
+            {
+                EXPECT_FALSE(shader.success());
+                EXPECT_TRUE(shader.hasError("extension is not supported"));
+            }
+            else
+            {
+                EXPECT_TRUE(shader.success());
+                if (willWarnOnUse)
+                {
+                    EXPECT_TRUE(shader.hasError("WARNING"));
+                    EXPECT_TRUE(shader.hasError("extension is being used"));
+                }
+            }
             reset();
         }
     }
 };
 
+class GLSLValidationExtensionDirectiveTest_ES31 : public GLSLValidationExtensionDirectiveTest_ES3
+{};
+
 // OES_EGL_image_external needs to be enabled in GLSL to be able to use samplerExternalOES.
-TEST_P(GLSLValidationExtensionDirectiveTest_ES3,
-       SamplerExternalOESUsageNeedsImageExtensionDirective)
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, SamplerExternalOESWithImage)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_EGL_image_external"));
+    const bool hasExt    = IsGLExtensionEnabled("GL_OES_EGL_image_external");
+    const bool hasAnyExt = hasExt || IsGLExtensionEnabled("GL_NV_EGL_stream_consumer_external");
 
     constexpr char kFS[] = R"(precision mediump float;
 uniform samplerExternalOES s;
 void main()
 {})";
-    testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS, nullptr,
-                                       "GL_OES_EGL_image_external", true);
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, nullptr, "GL_OES_EGL_image_external", hasExt,
+        hasAnyExt ? "extension is disabled" : "extension is not supported",
+        hasAnyExt ? "extension is disabled" : "extension is not supported");
 }
 
 // NV_EGL_stream_consumer_external needs to be enabled in GLSL to be able to use samplerExternalOES.
-TEST_P(GLSLValidationExtensionDirectiveTest_ES3,
-       SamplerExternalOESUsageNeedsStreamExtensionDirective)
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, SamplerExternalOESWithStreamConstumer)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_EGL_stream_consumer_external"));
+    const bool hasExt    = IsGLExtensionEnabled("GL_NV_EGL_stream_consumer_external");
+    const bool hasAnyExt = hasExt || IsGLExtensionEnabled("GL_OES_EGL_image_external");
 
     constexpr char kFS[] = R"(precision mediump float;
 uniform samplerExternalOES s;
 void main()
 {})";
-    testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS, nullptr,
-                                       "GL_NV_EGL_stream_consumer_external", true);
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, nullptr, "GL_NV_EGL_stream_consumer_external", hasExt,
+        hasAnyExt ? "extension is disabled" : "extension is not supported",
+        hasAnyExt ? "extension is disabled" : "extension is not supported");
 }
 
 // GL_EXT_YUV_target needs to be enabled in GLSL to be able to use samplerExternal2DY2YEXT.
-TEST_P(GLSLValidationExtensionDirectiveTest_ES3,
-       SamplerExternal2DY2YEXTUsageNeedsExtensionDirective)
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, SamplerExternal2DY2YEXT)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+    const bool hasExt = IsGLExtensionEnabled("GL_EXT_YUV_target");
 
     constexpr char kFS[] = R"(precision mediump float;
 uniform __samplerExternal2DY2YEXT s;
 void main()
 {})";
-    // The translator does not complain about __samplerExternal2DY2YEXT used if the extension is not
-    // enabled (i.e. doesn't treat this as a reserved word).  In that case, the complaint from the
-    // compiler would be a syntax error.
-    testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS, "#version 300 es",
-                                       "GL_EXT_YUV_target", false);
+    // __samplerExternal2DY2YEXT is not a reserved keyword, and the translator fails with syntax
+    // error if extension is not specified.
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, "#version 300 es", "GL_EXT_YUV_target", hasExt,
+        "'s' : syntax error", hasExt ? "'s' : syntax error" : "extension is not supported");
 }
 
 // GL_EXT_YUV_target needs to be enabled in GLSL to be able to use layout(yuv).
 TEST_P(GLSLValidationExtensionDirectiveTest_ES3, YUVLayoutNeedsExtensionDirective)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+    const bool hasExt = IsGLExtensionEnabled("GL_EXT_YUV_target");
 
     constexpr char kFS[] = R"(precision mediump float;
 layout(yuv) out vec4 color;
 void main()
 {})";
-    testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS, "#version 300 es",
-                                       "GL_EXT_YUV_target", true);
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, "#version 300 es", "GL_EXT_YUV_target", hasExt,
+        hasExt ? "extension is disabled" : "extension is not supported",
+        hasExt ? "extension is disabled" : "extension is not supported");
 }
+
+// GL_EXT_blend_func_extended needs to be enabled in GLSL to be able to use
+// gl_MaxDualSourceDrawBuffersEXT.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, MaxDualSourceDrawBuffersNeedsExtensionDirective)
+{
+    const bool hasExt = IsGLExtensionEnabled("GL_EXT_blend_func_extended");
+
+    {
+        constexpr char kFS[] = R"(precision mediump float;
+void main() {
+    gl_FragColor = vec4(gl_MaxDualSourceDrawBuffersEXT / 10);
+})";
+        testCompileNeedsExtensionDirective(
+            GL_FRAGMENT_SHADER, kFS, nullptr, "GL_EXT_blend_func_extended", hasExt,
+            hasExt ? "extension is disabled"
+                   : "'gl_MaxDualSourceDrawBuffersEXT' : undeclared identifier",
+            hasExt ? "extension is disabled"
+                   : "'gl_MaxDualSourceDrawBuffersEXT' : undeclared identifier");
+    }
+
+    {
+        constexpr char kFS[] = R"(precision mediump float;
+layout(location = 0) out mediump vec4 fragColor;
+void main() {
+    fragColor = vec4(gl_MaxDualSourceDrawBuffersEXT / 10);
+})";
+        testCompileNeedsExtensionDirective(
+            GL_FRAGMENT_SHADER, kFS, "#version 300 es", "GL_EXT_blend_func_extended", hasExt,
+            hasExt ? "extension is disabled"
+                   : "'gl_MaxDualSourceDrawBuffersEXT' : undeclared identifier",
+            hasExt ? "extension is disabled"
+                   : "'gl_MaxDualSourceDrawBuffersEXT' : undeclared identifier");
+    }
+}
+
+// GL_EXT_clip_cull_distance or GL_ANGLE_clip_cull_distance needs to be enabled in GLSL to be able
+// to use gl_ClipDistance and gl_CullDistance.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, ClipCullDistanceNeedsExtensionDirective)
+{
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+
+    GLint maxClipDistances = 0;
+    if (hasExt || hasAngle)
+    {
+        glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
+        EXPECT_GE(maxClipDistances, 8);
+    }
+
+    GLint maxCullDistances = 0;
+    if (hasExt || hasAngle)
+    {
+        glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+        EXPECT_TRUE(maxCullDistances == 0 || maxCullDistances >= 8);
+        if (hasExt)
+        {
+            EXPECT_GE(maxCullDistances, 8);
+        }
+    }
+
+    constexpr char kVS1[] = R"(uniform vec4 uPlane;
+in vec4 aPosition;
+
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[0] = dot(aPosition, uPlane);
+    gl_CullDistance[0] = dot(aPosition, uPlane);
+})";
+
+    constexpr char kVS2[] = R"(uniform vec4 uPlane;
+in vec4 aPosition;
+
+out highp float gl_ClipDistance[4];
+out highp float gl_CullDistance[4];
+
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[gl_MaxClipDistances - 6 + 1] = dot(aPosition, uPlane);
+    gl_ClipDistance[gl_MaxClipDistances - int(aPosition.x)] = dot(aPosition, uPlane);
+    gl_ClipDistance[gl_MaxCombinedClipAndCullDistances / 4 - 1] = dot(aPosition, uPlane);
+    gl_CullDistance[gl_MaxCullDistances - 6 + 1] = dot(aPosition, uPlane);
+    gl_CullDistance[gl_MaxCullDistances - int(aPosition.x)] = dot(aPosition, uPlane);
+})";
+
+    // Shader using gl_ClipDistance and gl_CullDistance
+    constexpr char kFS1[] = R"(out highp vec4 fragColor;
+void main()
+{
+    fragColor = vec4(gl_ClipDistance[0], gl_CullDistance[0], 0, 1);
+})";
+
+    // Shader redeclares gl_ClipDistance and gl_CullDistance
+    constexpr char kFS2[] = R"(in highp float gl_ClipDistance[4];
+in highp float gl_CullDistance[4];
+in highp vec4 aPosition;
+
+out highp vec4 fragColor;
+
+void main()
+{
+    fragColor.x = gl_ClipDistance[gl_MaxClipDistances - 6 + 1];
+    fragColor.y = gl_ClipDistance[gl_MaxClipDistances - int(aPosition.x)];
+    fragColor.z = gl_CullDistance[gl_MaxCullDistances - 6 + 1];
+    fragColor.w = gl_CullDistance[gl_MaxCullDistances - int(aPosition.x)];
+    fragColor *= gl_CullDistance[gl_MaxCombinedClipAndCullDistances / 4 - 1];
+})";
+
+    if (hasExt)
+    {
+        const char *expectWithoutPragma =
+            hasExt ? "extension is disabled" : "extension is not supported";
+        const char *expectWithExtDisabled =
+            hasExt ? "extension is disabled" : "extension is not supported";
+
+        testCompileNeedsExtensionDirective(GL_VERTEX_SHADER, kVS1, "#version 300 es",
+                                           "GL_EXT_clip_cull_distance", hasExt, expectWithoutPragma,
+                                           expectWithExtDisabled);
+        testCompileNeedsExtensionDirective(GL_VERTEX_SHADER, kVS2, "#version 300 es",
+                                           "GL_EXT_clip_cull_distance", hasExt, expectWithoutPragma,
+                                           expectWithExtDisabled);
+        testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS1, "#version 300 es",
+                                           "GL_EXT_clip_cull_distance", hasExt, expectWithoutPragma,
+                                           expectWithExtDisabled);
+        testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS2, "#version 300 es",
+                                           "GL_EXT_clip_cull_distance", hasExt, expectWithoutPragma,
+                                           expectWithExtDisabled);
+    }
+
+    if (hasAngle && maxCullDistances > 0)
+    {
+        const char *expectWithoutPragma =
+            hasAngle ? "extension is disabled" : "extension is not supported";
+        const char *expectWithExtDisabled =
+            hasAngle ? "extension is disabled" : "extension is not supported";
+
+        testCompileNeedsExtensionDirective(GL_VERTEX_SHADER, kVS1, "#version 300 es",
+                                           "GL_ANGLE_clip_cull_distance", hasAngle,
+                                           expectWithoutPragma, expectWithExtDisabled);
+        testCompileNeedsExtensionDirective(GL_VERTEX_SHADER, kVS2, "#version 300 es",
+                                           "GL_ANGLE_clip_cull_distance", hasAngle,
+                                           expectWithoutPragma, expectWithExtDisabled);
+        testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS1, "#version 300 es",
+                                           "GL_ANGLE_clip_cull_distance", hasAngle,
+                                           expectWithoutPragma, expectWithExtDisabled);
+        testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS2, "#version 300 es",
+                                           "GL_ANGLE_clip_cull_distance", hasAngle,
+                                           expectWithoutPragma, expectWithExtDisabled);
+    }
+}
+
+// GL_EXT_frag_depth needs to be enabled in GLSL 100 to be able to use gl_FragDepthEXT.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, FragDepth)
+{
+    const bool hasExt = IsGLExtensionEnabled("GL_EXT_frag_depth");
+
+    constexpr char kFS[] = R"(precision mediump float;
+void main()
+{
+    gl_FragDepthEXT = 1.0;
+})";
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, nullptr, "GL_EXT_frag_depth", hasExt,
+        hasExt ? "extension is disabled" : "'gl_FragDepthEXT' : undeclared identifier",
+        hasExt ? "extension is disabled" : "extension is not supported");
+}
+
+// GL_EXT_shader_framebuffer_fetch or GL_EXT_shader_framebuffer_fetch_non_coherent needs to be
+// enabled in GLSL 100 to be able to use gl_LastFragData and in GLSL 300+ to use inout.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, LastFragData)
+{
+    const bool hasCoherent = IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch");
+    const bool hasNonCoherent =
+        IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent");
+
+    const char kFS100Coherent[] = R"(
+uniform highp vec4 u_color;
+highp vec4 gl_LastFragData[gl_MaxDrawBuffers];
+
+void main (void)
+{
+    gl_FragColor = u_color + gl_LastFragData[0] + gl_LastFragData[2];
+})";
+
+    const char kFS300Coherent[] = R"(
+inout highp vec4 o_color;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color = clamp(o_color + u_color, vec4(0.0f), vec4(1.0f));
+})";
+
+    const char kFS100NonCoherent[] = R"(
+uniform highp vec4 u_color;
+layout(noncoherent) highp vec4 gl_LastFragData[gl_MaxDrawBuffers];
+
+void main (void)
+{
+    gl_FragColor = u_color + gl_LastFragData[0] + gl_LastFragData[2];
+})";
+
+    const char kFS300NonCoherent[] = R"(
+layout(noncoherent, location = 0) inout highp vec4 o_color;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color = clamp(o_color + u_color, vec4(0.0f), vec4(1.0f));
+})";
+
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS100Coherent, nullptr, "GL_EXT_shader_framebuffer_fetch", hasCoherent,
+        hasCoherent ? hasNonCoherent ? "extension is disabled" : "extension is not supported"
+                    : "'gl_' : reserved built-in name",
+        hasCoherent ? hasNonCoherent ? "extension is disabled" : "extension is not supported"
+                    : "extension is not supported");
+    testCompileNeedsExtensionDirectiveGenericKeyword(
+        GL_FRAGMENT_SHADER, kFS300Coherent, "#version 300 es", "GL_EXT_shader_framebuffer_fetch",
+        hasCoherent, "'inout' : invalid qualifier");
+
+    testCompileNeedsExtensionDirectiveGenericKeyword(GL_FRAGMENT_SHADER, kFS100NonCoherent, nullptr,
+                                                     "GL_EXT_shader_framebuffer_fetch_non_coherent",
+                                                     hasNonCoherent, "'layout' : syntax error");
+    testCompileNeedsExtensionDirectiveGenericKeyword(GL_FRAGMENT_SHADER, kFS300NonCoherent,
+                                                     "#version 300 es",
+                                                     "GL_EXT_shader_framebuffer_fetch_non_coherent",
+                                                     hasNonCoherent, "'inout' : invalid qualifier");
+}
+
+// GL_EXT_shader_texture_lod needs to be enabled to be able to use texture2DLodEXT.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, Texture2DLod)
+{
+    const bool hasExt = IsGLExtensionEnabled("GL_EXT_shader_texture_lod");
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec2 texCoord0v;
+uniform float lod;
+uniform sampler2D tex;
+void main()
+{
+    vec4 color = texture2DLodEXT(tex, texCoord0v, lod);
+})";
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, nullptr, "GL_EXT_shader_texture_lod", hasExt,
+        hasExt ? "extension is disabled"
+               : "'texture2DLodEXT' : no matching overloaded function found",
+        hasExt ? "extension is disabled" : "extension is not supported");
+}
+
+// GL_EXT_shadow_samplers needs to be enabled to be able to use shadow2DEXT.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, Sampler2DShadow)
+{
+    const bool hasExt = IsGLExtensionEnabled("GL_EXT_shadow_samplers");
+
+    constexpr char kFS[] = R"(precision mediump float;
+varying vec3 texCoord0v;
+uniform mediump sampler2DShadow tex;
+void main()
+{
+    float color = shadow2DEXT(tex, texCoord0v);
+})";
+    testCompileNeedsExtensionDirective(GL_FRAGMENT_SHADER, kFS, nullptr, "GL_EXT_shadow_samplers",
+                                       hasExt, "'sampler2DShadow' : Illegal use of reserved word",
+                                       "'sampler2DShadow' : Illegal use of reserved word");
+}
+
+// GL_KHR_blend_equation_advanced needs to be enabled to be able to use layout(blend_support_*).
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, AdvancedBlendSupport)
+{
+    const bool hasExt = IsGLExtensionEnabled("GL_KHR_blend_equation_advanced");
+    const bool hasAnyExt =
+        hasExt || IsGLExtensionEnabled("GL_KHR_blend_equation_advanced_coherent");
+
+    constexpr char kFS[] = R"(precision highp float;
+layout (blend_support_multiply) out;
+layout (location = 0) out vec4 oCol;
+
+uniform vec4 uSrcCol;
+
+void main (void)
+{
+    oCol = uSrcCol;
+})";
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, "#version 300 es", "GL_KHR_blend_equation_advanced", hasExt,
+        hasAnyExt ? "extension is disabled" : "extension is not supported",
+        hasAnyExt ? "extension is disabled" : "extension is not supported");
+}
+
+// GL_OES_sample_variables needs to be enabled to be able to use gl_SampleMask.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, SampleMask)
+{
+    const bool hasExt = IsGLExtensionEnabled("GL_OES_sample_variables");
+
+    // This shader is in the deqp test
+    // functional_shaders_sample_variables_sample_mask_discard_half_per_sample_default_framebuffer
+    constexpr char kFS[] = R"(layout(location = 0) out mediump vec4 fragColor;
+void main (void)
+{
+    for (int i = 0; i < gl_SampleMask.length(); ++i)
+            gl_SampleMask[i] = int(0xAAAAAAAA);
+
+    // force per-sample shading
+    highp float blue = float(gl_SampleID);
+
+    fragColor = vec4(0.0, 1.0, blue, 1.0);
+})";
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, "#version 300 es", "GL_OES_sample_variables", hasExt,
+        hasExt ? "extension is disabled" : "'gl_SampleMask' : undeclared identifier",
+        hasExt ? "extension is disabled" : "extension is not supported");
+}
+
+// GL_OES_sample_variables needs to be enabled to be able to use gl_SampleMaskIn.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, SampleMaskIn)
+{
+    const bool hasExt = IsGLExtensionEnabled("GL_OES_sample_variables");
+
+    // This shader is in the deqp test
+    // functional_shaders_sample_variables_sample_mask_in_bit_count_per_sample_multisample_texture_2
+    constexpr char kFS[] = R"(layout(location = 0) out mediump vec4 fragColor;
+void main (void)
+{
+    mediump int maskBitCount = 0;
+    for (int j = 0; j < gl_SampleMaskIn.length(); ++j)
+    {
+        for (int i = 0; i < 32; ++i)
+        {
+            if (((gl_SampleMaskIn[j] >> i) & 0x01) == 0x01)
+            {
+                ++maskBitCount;
+            }
+        }
+    }
+
+    // force per-sample shading
+    highp float blue = float(gl_SampleID);
+
+    if (maskBitCount != 1)
+        fragColor = vec4(1.0, 0.0, blue, 1.0);
+    else
+        fragColor = vec4(0.0, 1.0, blue, 1.0);
+})";
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, "#version 300 es", "GL_OES_sample_variables", hasExt,
+        hasExt ? "extension is disabled" : "'gl_SampleMaskIn' : undeclared identifier",
+        hasExt ? "extension is disabled" : "extension is not supported");
+}
+
+// GL_OES_standard_derivatives needs to be enabled to be able to use dFdx, dFdy and fwidth.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, StandardDerivatives)
+{
+    const bool hasExt = IsGLExtensionEnabled("GL_OES_standard_derivatives");
+
+    {
+        constexpr char kFS[] = R"(precision mediump float;
+varying float x;
+
+void main()
+{
+    gl_FragColor = vec4(dFdx(x));
+})";
+        testCompileNeedsExtensionDirective(
+            GL_FRAGMENT_SHADER, kFS, nullptr, "GL_OES_standard_derivatives", hasExt,
+            hasExt ? "extension is disabled" : "extension is not supported",
+            hasExt ? "extension is disabled" : "extension is not supported");
+    }
+
+    {
+        constexpr char kFS[] = R"(precision mediump float;
+varying float x;
+
+void main()
+{
+    gl_FragColor = vec4(dFdy(x));
+})";
+        testCompileNeedsExtensionDirective(
+            GL_FRAGMENT_SHADER, kFS, nullptr, "GL_OES_standard_derivatives", hasExt,
+            hasExt ? "extension is disabled" : "extension is not supported",
+            hasExt ? "extension is disabled" : "extension is not supported");
+    }
+
+    {
+        constexpr char kFS[] = R"(precision mediump float;
+varying float x;
+
+void main()
+{
+    gl_FragColor = vec4(fwidth(x));
+})";
+        testCompileNeedsExtensionDirective(
+            GL_FRAGMENT_SHADER, kFS, nullptr, "GL_OES_standard_derivatives", hasExt,
+            hasExt ? "extension is disabled" : "extension is not supported",
+            hasExt ? "extension is disabled" : "extension is not supported");
+    }
+}
+
+// GL_OES_texture_cube_map_array or GL_EXT_texture_cube_map_array needs to be enabled to be able to
+// use *samplerCubeArray.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES31, TextureCubeMapArray)
+{
+    const bool hasExt    = IsGLExtensionEnabled("GL_EXT_texture_cube_map_array");
+    const bool hasOes    = IsGLExtensionEnabled("GL_OES_texture_cube_map_array");
+    const bool hasAnyExt = hasExt || hasOes;
+
+    {
+        constexpr char kFS[] = R"(precision mediump float;
+uniform highp isamplerCubeArray u_sampler;
+void main()
+{
+    vec4 color = vec4(texture(u_sampler, vec4(0, 0, 0, 0)));
+})";
+
+        testCompileNeedsExtensionDirective(
+            GL_FRAGMENT_SHADER, kFS, "#version 310 es", "GL_EXT_texture_cube_map_array", hasExt,
+            "'isamplerCubeArray' : Illegal use of reserved word",
+            hasAnyExt ? "'isamplerCubeArray' : Illegal use of reserved word"
+                      : "extension is not supported");
+        testCompileNeedsExtensionDirective(
+            GL_FRAGMENT_SHADER, kFS, "#version 310 es", "GL_OES_texture_cube_map_array", hasOes,
+            "'isamplerCubeArray' : Illegal use of reserved word",
+            hasAnyExt ? "'isamplerCubeArray' : Illegal use of reserved word"
+                      : "extension is not supported");
+    }
+
+    // Make sure support for EXT or OES doesn't imply support for the other.
+    if (hasExt && !hasOes)
+    {
+        constexpr char kFS[] = R"(#version 310 es
+#extension GL_OES_texture_cube_map_array: enable
+precision mediump float;
+uniform highp isamplerCubeArray u_sampler;
+void main()
+{
+    vec4 color = vec4(texture(u_sampler, vec4(0, 0, 0, 0)));
+})";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "'isamplerCubeArray' : Illegal use of reserved word");
+    }
+    if (!hasExt && hasOes)
+    {
+        constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_texture_cube_map_array: enable
+precision mediump float;
+uniform highp isamplerCubeArray u_sampler;
+void main()
+{
+    vec4 color = vec4(texture(u_sampler, vec4(0, 0, 0, 0)));
+})";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "'isamplerCubeArray' : Illegal use of reserved word");
+    }
+}
+
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -3328,3 +3843,6 @@ ANGLE_INSTANTIATE_TEST(
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationExtensionDirectiveTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3(GLSLValidationExtensionDirectiveTest_ES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationExtensionDirectiveTest_ES31);
+ANGLE_INSTANTIATE_TEST_ES31(GLSLValidationExtensionDirectiveTest_ES31);
