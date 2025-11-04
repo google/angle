@@ -96,6 +96,7 @@ enum class Feature
     DisableMetalOnNvidia,
     DisableMultisampledRenderToTexture,
     DisableNativeParallelCompile,
+    DisablePassthroughShaders,
     DisablePipelineCacheLoadForTesting,
     DisableProgramBinary,
     DisableProgramCaching,
