@@ -785,8 +785,6 @@ void Context::initializeDefaultResources()
 
     mDefaultFramebuffer = std::make_unique<Framebuffer>(this, mImplementation.get());
 
-    mFenceNVHandleAllocator.setBaseHandle(0);
-
     // [OpenGL ES 2.0.24] section 3.7 page 83:
     // In the initial state, TEXTURE_2D and TEXTURE_CUBE_MAP have two-dimensional
     // and cube map texture state vectors respectively associated with them.

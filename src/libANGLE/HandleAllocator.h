@@ -27,8 +27,6 @@ class HandleAllocator final : angle::NonCopyable
 
     ~HandleAllocator();
 
-    void setBaseHandle(GLuint value);
-
     GLuint allocate();
     void release(GLuint handle);
     void reserve(GLuint handle);
@@ -38,8 +36,6 @@ class HandleAllocator final : angle::NonCopyable
     void enableLogging(bool enabled);
 
   private:
-    GLuint mBaseValue;
-    GLuint mNextValue;
     const GLuint mMaxValue;
 
     // Represents an inclusive range [begin, end]

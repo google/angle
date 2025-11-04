@@ -25,28 +25,18 @@ struct HandleAllocator::HandleRangeComparator
 };
 
 HandleAllocator::HandleAllocator()
-    : mBaseValue(1),
-      mNextValue(1),
-      mMaxValue(std::numeric_limits<GLuint>::max()),
-      mLoggingEnabled(false)
+    : mMaxValue(std::numeric_limits<GLuint>::max()), mLoggingEnabled(false)
 {
     mUnallocatedList.push_back(HandleRange(1, mMaxValue));
 }
 
 HandleAllocator::HandleAllocator(GLuint maximumHandleValue)
-    : mBaseValue(1), mNextValue(1), mMaxValue(maximumHandleValue), mLoggingEnabled(false)
+    : mMaxValue(maximumHandleValue), mLoggingEnabled(false)
 {
     mUnallocatedList.push_back(HandleRange(1, mMaxValue));
 }
 
 HandleAllocator::~HandleAllocator() {}
-
-void HandleAllocator::setBaseHandle(GLuint value)
-{
-    ASSERT(mBaseValue == mNextValue);
-    mBaseValue = value;
-    mNextValue = value;
-}
 
 GLuint HandleAllocator::allocate()
 {
@@ -182,8 +172,6 @@ void HandleAllocator::reset()
     mUnallocatedList.clear();
     mUnallocatedList.push_back(HandleRange(1, mMaxValue));
     mReleasedList.clear();
-    mBaseValue = 1;
-    mNextValue = 1;
 }
 
 bool HandleAllocator::anyHandleAvailableForAllocation() const
