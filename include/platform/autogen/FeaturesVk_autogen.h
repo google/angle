@@ -1670,6 +1670,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo clBestUniformFitWGS = {
+        "clBestUniformFitWGS",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

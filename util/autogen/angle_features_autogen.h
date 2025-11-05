@@ -69,6 +69,7 @@ enum class Feature
     ClampFragDepth,
     ClampMscRate,
     ClampPointSize,
+    ClBestUniformFitWGS,
     ClDumpVkSpirv,
     ClearsWithGapsNeedFlush,
     ClipCullDistanceBrokenWithPassthroughShaders,

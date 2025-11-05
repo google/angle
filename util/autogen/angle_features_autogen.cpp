@@ -69,6 +69,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ClampFragDepth, "clampFragDepth"},
     {Feature::ClampMscRate, "clampMscRate"},
     {Feature::ClampPointSize, "clampPointSize"},
+    {Feature::ClBestUniformFitWGS, "clBestUniformFitWGS"},
     {Feature::ClDumpVkSpirv, "clDumpVkSpirv"},
     {Feature::ClearsWithGapsNeedFlush, "clearsWithGapsNeedFlush"},
     {Feature::ClipCullDistanceBrokenWithPassthroughShaders, "clipCullDistanceBrokenWithPassthroughShaders"},

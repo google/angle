@@ -2200,6 +2200,13 @@
             "description": [
                 "Enable the use of the cl_khr_subgroups OpenCL extension."
             ]
+        },
+        {
+            "name": "cl_best_uniform_fit_WGS",
+            "category": "Features",
+            "description": [
+                "Optimization feature (for when OpenCL driver chooses WGS) to attempt best-fit WGS for the given global work size."
+            ]
         }
     ]
 }
