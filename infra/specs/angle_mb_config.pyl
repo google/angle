@@ -68,12 +68,12 @@
     'angle_asan_lsan_ubsan_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'asan', 'lsan', 'ubsan', 'release', 'smoke_traces'],
     'angle_non_clang_debug_bot': ['angle', 'non_clang', 'debug'],
     'angle_non_clang_release_bot': ['angle', 'non_clang', 'release'],
-    'angle_non_clang_x86_debug_bot': ['angle', 'non_clang', 'x86', 'debug', 'cxx17'],
+    'angle_non_clang_x86_debug_bot': ['angle', 'non_clang', 'x86', 'debug'],
     'angle_non_clang_x86_release_bot': ['angle', 'non_clang', 'x86', 'release'],
     'angle_remoteexec_android_arm64_debug_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'android', 'arm64', 'debug'],
     'angle_remoteexec_android_arm64_release_bot': ['angle', 'capture', 'opencl', 'openclcts', 'remoteexec', 'android', 'arm64', 'release'],
     'angle_remoteexec_android_arm64_release_ir_bot': ['angle', 'capture', 'ir', 'opencl', 'remoteexec', 'android', 'arm64', 'release'],
-    'angle_remoteexec_android_arm_debug_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'android', 'arm', 'debug', 'cxx17'],
+    'angle_remoteexec_android_arm_debug_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'android', 'arm', 'debug'],
     'angle_remoteexec_android_arm_release_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'android', 'arm', 'release'],
     'angle_remoteexec_android_perf_bot': ['angle', 'remoteexec', 'android', 'arm64', 'perf'],
     'angle_remoteexec_arm64_release_bot':  ['angle', 'capture', 'remoteexec', 'arm64', 'release'],
@@ -114,10 +114,6 @@
     },
     'capture': {
       'gn_args': 'angle_with_capture_by_default=true',
-    },
-    'cxx17': {
-      # Skia does not support C++20 yet: b/330910097
-      'gn_args': 'use_cxx17=true use_cxx23=false',
     },
     'debug': {
       'gn_args': 'is_debug=true',
