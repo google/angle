@@ -129,6 +129,7 @@ b/415852525 GALAXYS24EXYNOS : black_beacon = SKIP
 42264759 WIN INTEL NATIVE : pubg_mobile_skydive = SKIP
 442286882 WIN INTEL NATIVE : minecraft_vibrant_visuals = SKIP
 448110252 WIN INTEL NATIVE : puzzle_and_dragons = SKIP
+459511105 WIN INTEL NATIVE : love_and_deepspace = SKIP
 40096690 WIN INTEL VULKAN : manhattan_10 = SKIP
 42266346 WIN INTEL VULKAN : black_desert_mobile = SKIP
 42266346 WIN INTEL VULKAN : the_gardens_between = SKIP

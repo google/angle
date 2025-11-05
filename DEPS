@@ -322,6 +322,7 @@ vars = {
   'checkout_angle_restricted_trace_loop_hero': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_lords_mobile': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_lotsa_slots': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_love_and_deepspace': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_ludo_king': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_lumino_city': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_magic_rush_heroes': 'checkout_angle_restricted_traces',
@@ -3064,6 +3065,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_lotsa_slots',
+  },
+  'src/tests/restricted_traces/love_and_deepspace': {
+      'packages': [
+        {
+            'package': 'angle/traces/love_and_deepspace',
+            'version': 'version:2',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_love_and_deepspace',
   },
   'src/tests/restricted_traces/ludo_king': {
       'packages': [

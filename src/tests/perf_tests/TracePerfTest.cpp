@@ -1323,6 +1323,11 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addIntegerPrerequisite(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, 1024);
     }
 
+    if (traceNameIs("love_and_deepspace"))
+    {
+        addIntegerPrerequisite(GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS, 6);
+    }
+
     // GL_KHR_debug does not work on Android for GLES1
     if (IsAndroid() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
