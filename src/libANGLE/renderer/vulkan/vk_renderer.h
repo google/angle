@@ -434,7 +434,8 @@ class Renderer : angle::NonCopyable
                                  const vk::Semaphore *signalSemaphore,
                                  const vk::SharedExternalFence *externalFence,
                                  std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
-                                 const QueueSerial &submitQueueSerial);
+                                 const QueueSerial &submitQueueSerial,
+                                 CommandsState &&commandsState);
 
     angle::Result submitPriorityDependency(vk::ErrorContext *context,
                                            vk::ProtectionTypes protectionTypes,
@@ -454,22 +455,6 @@ class Renderer : angle::NonCopyable
     angle::Result checkCompletedCommandsAndCleanup(vk::ErrorContext *context);
     angle::Result releaseFinishedCommands(vk::ErrorContext *context);
 
-    angle::Result flushWaitSemaphores(vk::ProtectionType protectionType,
-                                      egl::ContextPriority priority,
-                                      std::vector<VkSemaphore> &&waitSemaphores,
-                                      std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
-    angle::Result flushRenderPassCommands(vk::Context *context,
-                                          vk::ProtectionType protectionType,
-                                          egl::ContextPriority priority,
-                                          const vk::RenderPass &renderPass,
-                                          VkFramebuffer framebufferOverride,
-                                          vk::RenderPassCommandBufferHelper **renderPassCommands);
-    angle::Result flushOutsideRPCommands(
-        vk::Context *context,
-        vk::ProtectionType protectionType,
-        egl::ContextPriority priority,
-        vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands);
-
     VkResult queuePresent(vk::ErrorContext *context,
                           egl::ContextPriority priority,
                           const VkPresentInfoKHR &presentInfo);
@@ -486,6 +471,8 @@ class Renderer : angle::NonCopyable
     void recycleOutsideRenderPassCommandBufferHelper(
         vk::OutsideRenderPassCommandBufferHelper **commandBuffer);
     void recycleRenderPassCommandBufferHelper(vk::RenderPassCommandBufferHelper **commandBuffer);
+
+    CommandPoolAccess &getCommandPoolAccess() { return mCommandQueue.getCommandPoolAccess(); }
 
     // Process GPU memory reports
     void processMemoryReportCallback(const VkDeviceMemoryReportCallbackDataEXT &callbackData)

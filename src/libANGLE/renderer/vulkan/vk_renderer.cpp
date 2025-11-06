@@ -7281,7 +7281,8 @@ angle::Result Renderer::submitCommands(
     const vk::Semaphore *signalSemaphore,
     const vk::SharedExternalFence *externalFence,
     std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
-    const QueueSerial &submitQueueSerial)
+    const QueueSerial &submitQueueSerial,
+    CommandsState &&commandsState)
 {
     ASSERT(signalSemaphore == nullptr || signalSemaphore->valid());
     const VkSemaphore signalVkSemaphore =
@@ -7295,7 +7296,7 @@ angle::Result Renderer::submitCommands(
 
     ANGLE_TRY(mCommandQueue.submitCommands(
         context, protectionType, contextPriority, signalVkSemaphore, std::move(externalFenceCopy),
-        std::move(imagesToTransitionToForeign), submitQueueSerial));
+        std::move(imagesToTransitionToForeign), submitQueueSerial, std::move(commandsState)));
 
     ANGLE_TRY(mCommandQueue.postSubmitCheck(context));
 
@@ -7310,6 +7311,7 @@ angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
 {
     RendererScoped<vk::ReleasableResource<vk::Semaphore>> semaphore(this);
     ANGLE_VK_TRY(context, semaphore.get().get().init(mDevice, VK_SEMAPHORE_TYPE_BINARY));
+    CommandsState commandsState(this);
 
     // First, submit already flushed commands / wait semaphores into the source Priority VkQueue.
     // Commands that are in the Secondary Command Buffers will be flushed into the new VkQueue.
@@ -7331,7 +7333,7 @@ angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
             signalSemaphore = &semaphore.get().get();
         }
         ANGLE_TRY(submitCommands(context, protectionType, srcContextPriority, signalSemaphore,
-                                 nullptr, {}, queueSerial));
+                                 nullptr, {}, queueSerial, std::move(commandsState)));
         mSubmittedResourceUse.setQueueSerial(queueSerial);
     }
 
@@ -7367,43 +7369,6 @@ angle::Result Renderer::waitForResourceUseToFinishWithUserTimeout(vk::ErrorConte
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::waitForResourceUseToFinishWithUserTimeout");
     return mCommandQueue.waitForResourceUseToFinishWithUserTimeout(context, use, timeout, result);
-}
-
-angle::Result Renderer::flushWaitSemaphores(
-    vk::ProtectionType protectionType,
-    egl::ContextPriority priority,
-    std::vector<VkSemaphore> &&waitSemaphores,
-    std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::flushWaitSemaphores");
-    mCommandQueue.flushWaitSemaphores(protectionType, priority, std::move(waitSemaphores),
-                                      std::move(waitSemaphoreStageMasks));
-
-    return angle::Result::Continue;
-}
-
-angle::Result Renderer::flushRenderPassCommands(
-    vk::Context *context,
-    vk::ProtectionType protectionType,
-    egl::ContextPriority priority,
-    const vk::RenderPass &renderPass,
-    VkFramebuffer framebufferOverride,
-    vk::RenderPassCommandBufferHelper **renderPassCommands)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::flushRenderPassCommands");
-    return mCommandQueue.flushRenderPassCommands(context, protectionType, priority, renderPass,
-                                                 framebufferOverride, renderPassCommands);
-}
-
-angle::Result Renderer::flushOutsideRPCommands(
-    vk::Context *context,
-    vk::ProtectionType protectionType,
-    egl::ContextPriority priority,
-    vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::flushOutsideRPCommands");
-    return mCommandQueue.flushOutsideRPCommands(context, protectionType, priority,
-                                                outsideRPCommands);
 }
 
 VkResult Renderer::queuePresent(vk::ErrorContext *context,

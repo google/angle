@@ -1142,12 +1142,12 @@ void CommandBufferHelperCommon::executeBarriers(Renderer *renderer, CommandsStat
     // Add ANI semaphore to the command submission.
     if (mAcquireNextImageSemaphore.valid())
     {
-        commandsState->waitSemaphores.emplace_back(mAcquireNextImageSemaphore.release());
-        commandsState->waitSemaphoreStageMasks.emplace_back(kSwapchainAcquireImageWaitStageFlags);
+        commandsState->addWaitSemaphore(mAcquireNextImageSemaphore.release(),
+                                        kSwapchainAcquireImageWaitStageFlags);
     }
 
-    mPipelineBarriers.execute(renderer, &commandsState->primaryCommands);
-    mEventBarriers.execute(renderer, &commandsState->primaryCommands);
+    mPipelineBarriers.execute(renderer, commandsState->getPrimaryCommands());
+    mEventBarriers.execute(renderer, commandsState->getPrimaryCommands());
 }
 
 void CommandBufferHelperCommon::addCommandDiagnosticsCommon(std::ostringstream *out)
@@ -1265,17 +1265,17 @@ angle::Result OutsideRenderPassCommandBufferHelper::flushToPrimary(Context *cont
 
     ANGLE_TRY(endCommandBuffer(context));
     ASSERT(mIsCommandBufferEnded);
-    mCommandBuffer.executeCommands(&commandsState->primaryCommands);
+    mCommandBuffer.executeCommands(commandsState->getPrimaryCommands());
 
     // Call VkCmdSetEvent to track the completion of this renderPass.
-    flushSetEventsImpl(context, &commandsState->primaryCommands);
+    flushSetEventsImpl(context, commandsState->getPrimaryCommands());
 
     // Proactively reset all released events before ending command buffer.
     context->getRenderer()->getRefCountedEventRecycler()->resetEvents(
-        context, mQueueSerial, &commandsState->primaryCommands);
+        context, mQueueSerial, commandsState->getPrimaryCommands());
 
     // Restart the command buffer.
-    return reset(context, &commandsState->secondaryCommands);
+    return reset(context, commandsState->getSecondaryCommands());
 }
 
 angle::Result OutsideRenderPassCommandBufferHelper::endCommandBuffer(ErrorContext *context)
@@ -2336,7 +2336,7 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
 
     ANGLE_TRACE_EVENT0("gpu.angle", "RenderPassCommandBufferHelper::flushToPrimary");
     ASSERT(mRenderPassStarted);
-    PrimaryCommandBuffer &primary = commandsState->primaryCommands;
+    PrimaryCommandBuffer *primary = commandsState->getPrimaryCommands();
 
     // Commands that are added to primary before beginRenderPass command
     executeBarriers(renderer, commandsState);
@@ -2347,7 +2347,7 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
 
     if (!renderPass.valid())
     {
-        mRenderPassDesc.beginRendering(context, &primary, mRenderArea, kSubpassContents,
+        mRenderPassDesc.beginRendering(context, primary, mRenderArea, kSubpassContents,
                                        mFramebuffer.getUnpackedImageViews(), mAttachmentOps,
                                        mClearValues, mFramebuffer.getLayers());
     }
@@ -2367,7 +2367,7 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
         }
 
         mRenderPassDesc.beginRenderPass(
-            context, &primary, renderPass,
+            context, primary, renderPass,
             framebufferOverride ? framebufferOverride : mFramebuffer.getFramebuffer().getHandle(),
             mRenderArea, kSubpassContents, mClearValues,
             mFramebuffer.isImageless() ? &attachmentBeginInfo : nullptr);
@@ -2379,14 +2379,14 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
         if (subpass > 0)
         {
             ASSERT(!context->getFeatures().preferDynamicRendering.enabled);
-            primary.nextSubpass(kSubpassContents);
+            primary->nextSubpass(kSubpassContents);
         }
-        mCommandBuffers[subpass].executeCommands(&primary);
+        mCommandBuffers[subpass].executeCommands(primary);
     }
 
     if (!renderPass.valid())
     {
-        primary.endRendering();
+        primary->endRendering();
 
         if (mImageOptimizeForPresent != nullptr)
         {
@@ -2399,22 +2399,22 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
             mImageOptimizeForPresent->setCurrentImageAccess(renderer,
                                                             mImageOptimizeForPresentOriginalLayout);
             mImageOptimizeForPresent->recordWriteBarrierOneOff(renderer, ImageAccess::Present,
-                                                               &primary, nullptr);
+                                                               primary, nullptr);
             mImageOptimizeForPresent               = nullptr;
             mImageOptimizeForPresentOriginalLayout = ImageAccess::Undefined;
         }
     }
     else
     {
-        primary.endRenderPass();
+        primary->endRenderPass();
     }
 
     // Now issue VkCmdSetEvents to primary command buffer
     ASSERT(mRefCountedEvents.empty());
-    mVkEventArray.flushSetEvents(&primary);
+    mVkEventArray.flushSetEvents(primary);
 
     // Restart the command buffer.
-    return reset(context, &commandsState->secondaryCommands);
+    return reset(context, commandsState->getSecondaryCommands());
 }
 
 void RenderPassCommandBufferHelper::addColorResolveAttachment(size_t colorIndexGL,

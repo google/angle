@@ -623,7 +623,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result submitStagedTextureUpdates()
     {
         // Staged updates are recorded in outside RP command buffer, submit them.
-        return flushOutsideRenderPassCommands();
+        return flushAndSubmitOutsideRenderPassCommands();
     }
 
     angle::Result beginNewRenderPass(vk::RenderPassFramebuffer &&framebuffer,
@@ -1598,6 +1598,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     RenderPassCache mRenderPassCache;
     // Used with dynamic rendering as it doesn't use render passes.
     vk::RenderPass mNullRenderPass;
+
+    // vulkan primary command buffer
+    vk::CommandsState mCommandState;
 
     vk::OutsideRenderPassCommandBufferHelper *mOutsideRenderPassCommands;
     vk::RenderPassCommandBufferHelper *mRenderPassCommands;

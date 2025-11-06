@@ -549,6 +549,9 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     vk::SecondaryCommandPools mCommandPool;
     vk::OutsideRenderPassCommandBufferHelper *mComputePassCommands;
 
+    // vulkan primary command buffer
+    vk::CommandsState mCommandState;
+
     // Queue Serials for this command queue
     SerialIndex mQueueSerialIndex;
     QueueSerial mLastSubmittedQueueSerial;

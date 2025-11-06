@@ -458,11 +458,72 @@ void CleanUpThread::destroy(ErrorContext *context)
     }
 }
 
-CommandPoolAccess::CommandPoolAccess()  = default;
-CommandPoolAccess::~CommandPoolAccess() = default;
+// CommandsState implementation.
+CommandsState::CommandsState(Renderer *renderer)
+    : mCmdPoolMutex(renderer->getCommandPoolAccess().mCmdPoolMutex)
+{}
+
+CommandsState::~CommandsState()
+{
+    ASSERT(mWaitSemaphores.empty());
+    ASSERT(mWaitSemaphoreStageMasks.empty());
+    ASSERT(!mPrimaryCommands.valid());
+}
+
+angle::Result CommandsState::ensurePrimaryCommandBufferValidLocked(
+    ErrorContext *context,
+    const ProtectionType &protectionType)
+{
+    Renderer *renderer = context->getRenderer();
+
+    if (mPrimaryCommands.valid())
+    {
+        return angle::Result::Continue;
+    }
+    else
+    {
+        ANGLE_TRY(renderer->getCommandPoolAccess().allocatePrimaryCommandBufferLocked(
+            context, protectionType, &mPrimaryCommands));
+
+        VkCommandBufferBeginInfo beginInfo = {};
+        beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+        beginInfo.pInheritanceInfo         = nullptr;
+        ANGLE_VK_TRY(context, mPrimaryCommands.begin(beginInfo));
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result CommandsState::flushOutsideRPCommands(
+    Context *context,
+    ProtectionType protectionType,
+    OutsideRenderPassCommandBufferHelper **outsideRPCommands)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandsState::flushOutsideRPCommands");
+    std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
+    ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context, protectionType));
+    return (*outsideRPCommands)->flushToPrimary(context, this);
+}
+
+angle::Result CommandsState::flushRenderPassCommands(
+    Context *context,
+    const ProtectionType &protectionType,
+    const RenderPass &renderPass,
+    VkFramebuffer framebufferOverride,
+    RenderPassCommandBufferHelper **renderPassCommands)
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandsState::flushRenderPassCommands");
+    std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
+    ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context, protectionType));
+    return (*renderPassCommands)->flushToPrimary(context, this, renderPass, framebufferOverride);
+}
 
 // CommandPoolAccess public API implementation. These must be thread safe and never called from
 // CommandPoolAccess class itself.
+CommandPoolAccess::CommandPoolAccess()  = default;
+CommandPoolAccess::~CommandPoolAccess() = default;
+
 angle::Result CommandPoolAccess::initCommandPool(ErrorContext *context,
                                                  ProtectionType protectionType,
                                                  const uint32_t queueFamilyIndex)
@@ -475,17 +536,6 @@ angle::Result CommandPoolAccess::initCommandPool(ErrorContext *context,
 void CommandPoolAccess::destroy(VkDevice device)
 {
     std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
-    for (auto &protectionMap : mCommandsStateMap)
-    {
-        for (CommandsState &state : protectionMap)
-        {
-            state.waitSemaphores.clear();
-            state.waitSemaphoreStageMasks.clear();
-            state.primaryCommands.destroy(device);
-            state.secondaryCommands.releaseCommandBuffers();
-        }
-    }
-
     for (PersistentCommandPool &commandPool : mPrimaryCommandPoolMap)
     {
         commandPool.destroy(device);
@@ -515,58 +565,35 @@ angle::Result CommandPoolAccess::collectPrimaryCommandBuffer(ErrorContext *conte
     return angle::Result::Continue;
 }
 
-angle::Result CommandPoolAccess::flushOutsideRPCommands(
-    Context *context,
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    OutsideRenderPassCommandBufferHelper **outsideRPCommands)
+void CommandsState::destroy(VkDevice device)
 {
     std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
-    ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context, protectionType, priority));
-    CommandsState &state = mCommandsStateMap[priority][protectionType];
-    return (*outsideRPCommands)->flushToPrimary(context, &state);
+    mWaitSemaphores.clear();
+    mWaitSemaphoreStageMasks.clear();
+    mPrimaryCommands.destroy(device);
+    mSecondaryCommands.releaseCommandBuffers();
 }
 
-angle::Result CommandPoolAccess::flushRenderPassCommands(
-    Context *context,
-    const ProtectionType &protectionType,
-    const egl::ContextPriority &priority,
-    const RenderPass &renderPass,
-    VkFramebuffer framebufferOverride,
-    RenderPassCommandBufferHelper **renderPassCommands)
+void CommandsState::flushWaitSemaphores(ProtectionType protectionType,
+                                        std::vector<VkSemaphore> &&waitSemaphores,
+                                        std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
 {
-    std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
-    ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context, protectionType, priority));
-    CommandsState &state = mCommandsStateMap[priority][protectionType];
-    return (*renderPassCommands)->flushToPrimary(context, &state, renderPass, framebufferOverride);
-}
-
-void CommandPoolAccess::flushWaitSemaphores(
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    std::vector<VkSemaphore> &&waitSemaphores,
-    std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
-{
+    ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::flushWaitSemaphores");
     ASSERT(!waitSemaphores.empty());
     ASSERT(waitSemaphores.size() == waitSemaphoreStageMasks.size());
     std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
 
-    CommandsState &state = mCommandsStateMap[priority][protectionType];
-
-    state.waitSemaphores.insert(state.waitSemaphores.end(), waitSemaphores.begin(),
-                                waitSemaphores.end());
-    state.waitSemaphoreStageMasks.insert(state.waitSemaphoreStageMasks.end(),
-                                         waitSemaphoreStageMasks.begin(),
-                                         waitSemaphoreStageMasks.end());
+    mWaitSemaphores.insert(mWaitSemaphores.end(), waitSemaphores.begin(), waitSemaphores.end());
+    mWaitSemaphoreStageMasks.insert(mWaitSemaphoreStageMasks.end(), waitSemaphoreStageMasks.begin(),
+                                    waitSemaphoreStageMasks.end());
 
     waitSemaphores.clear();
     waitSemaphoreStageMasks.clear();
 }
 
-angle::Result CommandPoolAccess::getCommandsAndWaitSemaphores(
+angle::Result CommandsState::getCommandsAndWaitSemaphores(
     ErrorContext *context,
     ProtectionType protectionType,
-    egl::ContextPriority priority,
     CommandBatch *batchOut,
     std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
     std::vector<VkSemaphore> *waitSemaphoresOut,
@@ -574,8 +601,7 @@ angle::Result CommandPoolAccess::getCommandsAndWaitSemaphores(
 {
     std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
 
-    CommandsState &state = mCommandsStateMap[priority][protectionType];
-    ASSERT(state.primaryCommands.valid() || state.secondaryCommands.empty());
+    ASSERT(mPrimaryCommands.valid() || mSecondaryCommands.empty());
 
     // If there are foreign images to transition, issue the barrier now.
     if (!imagesToTransitionToForeign.empty())
@@ -583,9 +609,9 @@ angle::Result CommandPoolAccess::getCommandsAndWaitSemaphores(
         // It is possible for another thread to have made a submission just now, such that there is
         // no primary command buffer anymore.  In that case, one has to be allocated to hold the
         // barriers.
-        ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context, protectionType, priority));
+        ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context, protectionType));
 
-        state.primaryCommands.pipelineBarrier(
+        mPrimaryCommands.pipelineBarrier(
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0,
             nullptr, static_cast<uint32_t>(imagesToTransitionToForeign.size()),
             imagesToTransitionToForeign.data());
@@ -593,18 +619,14 @@ angle::Result CommandPoolAccess::getCommandsAndWaitSemaphores(
     }
 
     // Store the primary CommandBuffer and the reference to CommandPoolAccess in the in-flight list.
-    if (state.primaryCommands.valid())
+    if (mPrimaryCommands.valid())
     {
-        ANGLE_VK_TRY(context, state.primaryCommands.end());
+        ANGLE_VK_TRY(context, mPrimaryCommands.end());
     }
-    batchOut->setPrimaryCommands(std::move(state.primaryCommands), this);
-
-    // Store secondary Command Buffers.
-    batchOut->setSecondaryCommands(std::move(state.secondaryCommands));
 
     // Store wait semaphores.
-    *waitSemaphoresOut          = std::move(state.waitSemaphores);
-    *waitSemaphoreStageMasksOut = std::move(state.waitSemaphoreStageMasks);
+    *waitSemaphoresOut          = std::move(mWaitSemaphores);
+    *waitSemaphoreStageMasksOut = std::move(mWaitSemaphoreStageMasks);
 
     return angle::Result::Continue;
 }
@@ -854,7 +876,8 @@ angle::Result CommandQueue::submitCommands(
     VkSemaphore signalSemaphore,
     SharedExternalFence &&externalFence,
     std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
-    const QueueSerial &submitQueueSerial)
+    const QueueSerial &submitQueueSerial,
+    CommandsState &&commandsState)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitCommands");
     std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
@@ -873,9 +896,13 @@ angle::Result CommandQueue::submitCommands(
     std::vector<VkSemaphore> waitSemaphores;
     std::vector<VkPipelineStageFlags> waitSemaphoreStageMasks;
 
-    ANGLE_TRY(mCommandPoolAccess.getCommandsAndWaitSemaphores(
-        context, protectionType, priority, &batch, std::move(imagesToTransitionToForeign),
-        &waitSemaphores, &waitSemaphoreStageMasks));
+    ANGLE_TRY(commandsState.getCommandsAndWaitSemaphores(
+        context, protectionType, &batch, std::move(imagesToTransitionToForeign), &waitSemaphores,
+        &waitSemaphoreStageMasks));
+
+    batch.setPrimaryCommands(std::move(*commandsState.getPrimaryCommands()), &mCommandPoolAccess);
+    // Store secondary Command Buffers.
+    batch.setSecondaryCommands(std::move(*commandsState.getSecondaryCommands()));
 
     mPerfCounters.commandQueueWaitSemaphoresTotal += waitSemaphores.size();
 

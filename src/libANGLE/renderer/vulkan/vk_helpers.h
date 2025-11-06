@@ -71,6 +71,7 @@ using StagingBufferOffsetArray = std::array<VkDeviceSize, 2>;
 VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType);
 
 class ImageHelper;
+class CommandsState;
 
 // Abstracts contexts where command recording is done in response to API calls, and includes
 // data structures that are Vulkan-related, need to be accessed by the internals of |namespace vk|
@@ -1269,14 +1270,6 @@ class SecondaryCommandBufferCollector final
 
   private:
     std::vector<VulkanSecondaryCommandBuffer> mCollectedCommandBuffers;
-};
-
-struct CommandsState
-{
-    std::vector<VkSemaphore> waitSemaphores;
-    std::vector<VkPipelineStageFlags> waitSemaphoreStageMasks;
-    PrimaryCommandBuffer primaryCommands;
-    SecondaryCommandBufferCollector secondaryCommands;
 };
 
 // How the ImageHelper object is being used by the renderpass

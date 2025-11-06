@@ -848,6 +848,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mFlipViewportForReadFramebuffer(false),
       mIsAnyHostVisibleBufferWritten(false),
       mCurrentQueueSerialIndex(kInvalidQueueSerialIndex),
+      mCommandState(renderer),
       mOutsideRenderPassCommands(nullptr),
       mRenderPassCommands(nullptr),
       mQueryEventType(GraphicsEventCmdBuf::NotInQueryCmd),
@@ -1221,6 +1222,10 @@ ContextVk::~ContextVk() {}
 
 void ContextVk::onDestroy(const gl::Context *context)
 {
+    VkDevice device = getDevice();
+
+    mCommandState.destroy(device);
+
     // If there is a context lost, destroy all the command buffers and resources regardless of
     // whether they finished execution on GPU.
     if (mRenderer->isDeviceLost())
@@ -1242,8 +1247,6 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     // Everything must be finished
     ASSERT(mRenderer->hasResourceUseFinished(mSubmittedResourceUse));
-
-    VkDevice device = getDevice();
 
     mShareGroupVk->cleanupRefCountedEventGarbage();
 
@@ -3739,9 +3742,10 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
         dumpCommandStreamDiagnostics();
     }
 
-    ANGLE_TRY(mRenderer->submitCommands(
-        this, getProtectionType(), mContextPriority, signalSemaphore, externalFence,
-        std::move(mImagesToTransitionToForeign), mLastFlushedQueueSerial));
+    ANGLE_TRY(mRenderer->submitCommands(this, getProtectionType(), mContextPriority,
+                                        signalSemaphore, externalFence,
+                                        std::move(mImagesToTransitionToForeign),
+                                        mLastFlushedQueueSerial, std::move(mCommandState)));
 
     mLastSubmittedQueueSerial = mLastFlushedQueueSerial;
     mSubmittedResourceUse.setQueueSerial(mLastSubmittedQueueSerial);
@@ -8281,9 +8285,8 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassCl
     mCommandsPendingSubmissionCount +=
         mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount();
 
-    ANGLE_TRY(mRenderer->flushRenderPassCommands(this, getProtectionType(), mContextPriority,
-                                                 *renderPass, framebufferOverride,
-                                                 &mRenderPassCommands));
+    ANGLE_TRY(mCommandState.flushRenderPassCommands(this, getProtectionType(), *renderPass,
+                                                    framebufferOverride, &mRenderPassCommands));
 
     // We just flushed outSideRenderPassCommands above, and any future use of
     // outsideRenderPassCommands must have a queueSerial bigger than renderPassCommands. To ensure
@@ -8540,9 +8543,8 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
     if (!mWaitSemaphores.empty())
     {
         ASSERT(mHasWaitSemaphoresPendingSubmission);
-        ANGLE_TRY(mRenderer->flushWaitSemaphores(getProtectionType(), mContextPriority,
-                                                 std::move(mWaitSemaphores),
-                                                 std::move(mWaitSemaphoreStageMasks)));
+        mCommandState.flushWaitSemaphores(getProtectionType(), std::move(mWaitSemaphores),
+                                          std::move(mWaitSemaphoreStageMasks));
     }
     ASSERT(mWaitSemaphores.empty());
     ASSERT(mWaitSemaphoreStageMasks.empty());
@@ -8577,8 +8579,8 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
     {
         mIsAnyHostVisibleBufferWritten = true;
     }
-    ANGLE_TRY(mRenderer->flushOutsideRPCommands(this, getProtectionType(), mContextPriority,
-                                                &mOutsideRenderPassCommands));
+    ANGLE_TRY(mCommandState.flushOutsideRPCommands(this, getProtectionType(),
+                                                   &mOutsideRenderPassCommands));
 
     // Make sure appropriate dirty bits are set, in case another thread makes a submission before
     // the next dispatch call.

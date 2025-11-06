@@ -206,6 +206,57 @@ class DeviceQueueMap final
     angle::PackedEnumMap<egl::ContextPriority, QueueAndIndex> mQueueAndIndices;
 };
 
+class CommandsState : angle::NonCopyable
+{
+  public:
+    CommandsState(Renderer *renderer);
+    ~CommandsState();
+
+    void destroy(VkDevice device);
+
+    angle::Result flushOutsideRPCommands(Context *context,
+                                         ProtectionType protectionType,
+                                         OutsideRenderPassCommandBufferHelper **outsideRPCommands);
+    angle::Result flushRenderPassCommands(Context *context,
+                                          const ProtectionType &protectionType,
+                                          const RenderPass &renderPass,
+                                          VkFramebuffer framebufferOverride,
+                                          RenderPassCommandBufferHelper **renderPassCommands);
+
+    void flushWaitSemaphores(ProtectionType protectionType,
+                             std::vector<VkSemaphore> &&waitSemaphores,
+                             std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
+
+    angle::Result getCommandsAndWaitSemaphores(
+        ErrorContext *context,
+        ProtectionType protectionType,
+        CommandBatch *batchOut,
+        std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
+        std::vector<VkSemaphore> *waitSemaphoresOut,
+        std::vector<VkPipelineStageFlags> *waitSemaphoreStageMasksOut);
+
+    void addWaitSemaphore(VkSemaphore waitSemaphores, VkPipelineStageFlags waitSemaphoreStageMasks)
+    {
+        mWaitSemaphores.emplace_back(waitSemaphores);
+        mWaitSemaphoreStageMasks.emplace_back(waitSemaphoreStageMasks);
+    }
+
+    PrimaryCommandBuffer *getPrimaryCommands() { return &mPrimaryCommands; }
+    SecondaryCommandBufferCollector *getSecondaryCommands() { return &mSecondaryCommands; }
+
+  private:
+    angle::Result ensurePrimaryCommandBufferValidLocked(ErrorContext *context,
+                                                        const ProtectionType &protectionType);
+
+    // Command pool mutex lock shared with CommandPoolAccess
+    angle::SimpleMutex &mCmdPoolMutex;
+
+    std::vector<VkSemaphore> mWaitSemaphores;
+    std::vector<VkPipelineStageFlags> mWaitSemaphoreStageMasks;
+    PrimaryCommandBuffer mPrimaryCommands;
+    SecondaryCommandBufferCollector mSecondaryCommands;
+};
+
 class CommandPoolAccess : angle::NonCopyable
 {
   public:
@@ -220,48 +271,13 @@ class CommandPoolAccess : angle::NonCopyable
                                               const ProtectionType protectionType,
                                               PrimaryCommandBuffer *primaryCommands,
                                               WhenToResetCommandBuffer whenToReset);
-    angle::Result flushOutsideRPCommands(Context *context,
-                                         ProtectionType protectionType,
-                                         egl::ContextPriority priority,
-                                         OutsideRenderPassCommandBufferHelper **outsideRPCommands);
-    angle::Result flushRenderPassCommands(Context *context,
-                                          const ProtectionType &protectionType,
-                                          const egl::ContextPriority &priority,
-                                          const RenderPass &renderPass,
-                                          VkFramebuffer framebufferOverride,
-                                          RenderPassCommandBufferHelper **renderPassCommands);
-
-    void flushWaitSemaphores(ProtectionType protectionType,
-                             egl::ContextPriority priority,
-                             std::vector<VkSemaphore> &&waitSemaphores,
-                             std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
-
-    angle::Result getCommandsAndWaitSemaphores(
-        ErrorContext *context,
-        ProtectionType protectionType,
-        egl::ContextPriority priority,
-        CommandBatch *batchOut,
-        std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
-        std::vector<VkSemaphore> *waitSemaphoresOut,
-        std::vector<VkPipelineStageFlags> *waitSemaphoreStageMasksOut);
 
   private:
-    angle::Result ensurePrimaryCommandBufferValidLocked(ErrorContext *context,
-                                                        const ProtectionType &protectionType,
-                                                        const egl::ContextPriority &priority)
+    angle::Result allocatePrimaryCommandBufferLocked(ErrorContext *context,
+                                                     const ProtectionType &protectionType,
+                                                     PrimaryCommandBuffer *primaryCommandsOut)
     {
-        CommandsState &state = mCommandsStateMap[priority][protectionType];
-        if (state.primaryCommands.valid())
-        {
-            return angle::Result::Continue;
-        }
-        ANGLE_TRY(mPrimaryCommandPoolMap[protectionType].allocate(context, &state.primaryCommands));
-        VkCommandBufferBeginInfo beginInfo = {};
-        beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        beginInfo.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-        beginInfo.pInheritanceInfo         = nullptr;
-        ANGLE_VK_TRY(context, state.primaryCommands.begin(beginInfo));
-        return angle::Result::Continue;
+        return mPrimaryCommandPoolMap[protectionType].allocate(context, primaryCommandsOut);
     }
 
     // This mutex ensures vulkan command pool is externally synchronized.
@@ -271,14 +287,10 @@ class CommandPoolAccess : angle::NonCopyable
     // 1) recording commands on any command buffers allocated from the same command pool
     // 2) allocate, free, reset command buffers from the same command pool.
     // 3) any operations on the command pool itself
+    friend class CommandsState;
     mutable angle::SimpleMutex mCmdPoolMutex;
 
     using PrimaryCommandPoolMap = angle::PackedEnumMap<ProtectionType, PersistentCommandPool>;
-    using CommandsStateMap =
-        angle::PackedEnumMap<egl::ContextPriority,
-                             angle::PackedEnumMap<ProtectionType, CommandsState>>;
-
-    CommandsStateMap mCommandsStateMap;
     // Keeps a free list of reusable primary command buffers.
     PrimaryCommandPoolMap mPrimaryCommandPoolMap;
 };
@@ -359,7 +371,8 @@ class CommandQueue : angle::NonCopyable
                                  VkSemaphore signalSemaphore,
                                  SharedExternalFence &&externalFence,
                                  std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
-                                 const QueueSerial &submitQueueSerial);
+                                 const QueueSerial &submitQueueSerial,
+                                 CommandsState &&commandsState);
 
     angle::Result queueSubmitOneOff(ErrorContext *context,
                                     ProtectionType protectionType,
@@ -393,36 +406,7 @@ class CommandQueue : angle::NonCopyable
         return angle::Result::Continue;
     }
 
-    ANGLE_INLINE void flushWaitSemaphores(
-        ProtectionType protectionType,
-        egl::ContextPriority priority,
-        std::vector<VkSemaphore> &&waitSemaphores,
-        std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
-    {
-        return mCommandPoolAccess.flushWaitSemaphores(protectionType, priority,
-                                                      std::move(waitSemaphores),
-                                                      std::move(waitSemaphoreStageMasks));
-    }
-    ANGLE_INLINE angle::Result flushOutsideRPCommands(
-        Context *context,
-        ProtectionType protectionType,
-        egl::ContextPriority priority,
-        OutsideRenderPassCommandBufferHelper **outsideRPCommands)
-    {
-        return mCommandPoolAccess.flushOutsideRPCommands(context, protectionType, priority,
-                                                         outsideRPCommands);
-    }
-    ANGLE_INLINE angle::Result flushRenderPassCommands(
-        Context *context,
-        ProtectionType protectionType,
-        const egl::ContextPriority &priority,
-        const RenderPass &renderPass,
-        VkFramebuffer framebufferOverride,
-        RenderPassCommandBufferHelper **renderPassCommands)
-    {
-        return mCommandPoolAccess.flushRenderPassCommands(
-            context, protectionType, priority, renderPass, framebufferOverride, renderPassCommands);
-    }
+    CommandPoolAccess &getCommandPoolAccess() { return mCommandPoolAccess; }
 
     const angle::VulkanPerfCounters getPerfCounters() const;
     void resetPerFramePerfCounters();
