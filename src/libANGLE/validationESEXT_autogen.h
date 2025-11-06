@@ -2892,8 +2892,7 @@ bool ValidateDeleteVertexArraysOES(const Context *context,
                                    angle::EntryPoint entryPoint,
                                    GLsizei n,
                                    const VertexArrayID *arraysPacked);
-bool ValidateGenVertexArraysOES(const PrivateState &state,
-                                ErrorSet *errors,
+bool ValidateGenVertexArraysOES(const Context *context,
                                 angle::EntryPoint entryPoint,
                                 GLsizei n,
                                 const VertexArrayID *arraysPacked);

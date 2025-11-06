@@ -2900,13 +2900,12 @@ bool ValidateDeleteTransformFeedbacks(const Context *context,
     return true;
 }
 
-bool ValidateGenVertexArrays(const PrivateState &state,
-                             ErrorSet *errors,
+bool ValidateGenVertexArrays(const Context *context,
                              angle::EntryPoint entryPoint,
                              GLsizei n,
                              const VertexArrayID *arrays)
 {
-    return ValidateGenOrDelete(errors, entryPoint, n, arrays);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, arrays);
 }
 
 bool ValidateDeleteVertexArrays(const Context *context,

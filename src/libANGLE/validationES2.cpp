@@ -1949,13 +1949,12 @@ bool ValidateDeleteVertexArraysOES(const Context *context,
     return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, arrays);
 }
 
-bool ValidateGenVertexArraysOES(const PrivateState &state,
-                                ErrorSet *errors,
+bool ValidateGenVertexArraysOES(const Context *context,
                                 angle::EntryPoint entryPoint,
                                 GLsizei n,
                                 const VertexArrayID *arrays)
 {
-    return ValidateGenOrDelete(errors, entryPoint, n, arrays);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, arrays);
 }
 
 bool ValidateIsVertexArrayOES(const PrivateState &state,

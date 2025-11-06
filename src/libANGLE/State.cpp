@@ -402,7 +402,8 @@ PrivateState::PrivateState(const Version &clientVersion,
       mRobustResourceInit(robustResourceInit),
       mProgramBinaryCacheEnabled(programBinaryCacheEnabled),
       mVertexArrayPrivate(nullptr),
-      mDebug(debug)
+      mDebug(debug),
+      mVertexArrayHandleAllocator(IMPLEMENTATION_MAX_OBJECT_HANDLES)
 {}
 
 PrivateState::~PrivateState() = default;

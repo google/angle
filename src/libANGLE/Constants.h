@@ -105,6 +105,9 @@ enum
     // TODO (anglebug.com/42266906): Implement support for multiple layers
     IMPLEMENTATION_MAX_NUM_LAYERS   = 1,
     IMPLEMENTATION_MAX_FOCAL_POINTS = 2,
+
+    // Maximum simultaneous handles of an object type.
+    IMPLEMENTATION_MAX_OBJECT_HANDLES = 1 << 24,
 };
 
 namespace limits

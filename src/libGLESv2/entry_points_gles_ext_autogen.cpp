@@ -20157,6 +20157,7 @@ void GL_APIENTRY GL_GenVertexArraysOES(GLsizei n, GLuint *arrays)
     if (ANGLE_LIKELY(context != nullptr))
     {
         VertexArrayID *arraysPacked = PackParam<VertexArrayID *>(arrays);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -20166,10 +20167,9 @@ void GL_APIENTRY GL_GenVertexArraysOES(GLsizei n, GLuint *arrays)
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateGenVertexArraysOES(
-                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
-                    angle::EntryPoint::GLGenVertexArraysOES, n, arraysPacked);
+                    context, angle::EntryPoint::GLGenVertexArraysOES, n, arraysPacked);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
             }
             else
@@ -20179,8 +20179,7 @@ void GL_APIENTRY GL_GenVertexArraysOES(GLsizei n, GLuint *arrays)
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            ContextPrivateGenVertexArrays(context->getMutablePrivateState(),
-                                          context->getMutablePrivateStateCache(), n, arraysPacked);
+            context->genVertexArrays(n, arraysPacked);
         }
         ANGLE_CAPTURE_GL(GenVertexArraysOES, isCallValid, context, n, arraysPacked);
     }

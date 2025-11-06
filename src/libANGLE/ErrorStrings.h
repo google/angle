@@ -219,6 +219,7 @@ inline constexpr const char *kGetImageExtensionNotEnabled = "GL_ANGLE_get_image 
 inline constexpr const char *kGetImageCompressed = "Texture is compressed, call GetCompressedTexImage instead.";
 inline constexpr const char *kGetImageNotCompressed = "Texture is not compressed, call GetTexImage instead.";
 inline constexpr const char *kGLES1Only = "GLES1-only function.";
+inline constexpr const char *kHandleExhaustion = "Handle exhaustion.";
 inline constexpr const char *kImageSizeMustBeZero = "imageSize must be 0 if no texture data is provided.";
 inline constexpr const char *kImageSizeTooSmall = "imageSize is too small.";
 inline constexpr const char *kImmutableMemoryObject = "The memory object is immutable.";
