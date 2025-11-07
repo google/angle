@@ -2201,7 +2201,7 @@ angle::Result CLCommandQueueVk::submitCommands()
     // Kick off renderer submit
     ANGLE_TRY(mContext->getRenderer()->submitCommands(
         mContext, getProtectionType(), convertClToEglPriority(mCommandQueue.getPriority()), nullptr,
-        nullptr, {}, mLastFlushedQueueSerial, std::move(mCommandState)));
+        nullptr, mLastFlushedQueueSerial, std::move(mCommandState)));
 
     mLastSubmittedQueueSerial = mLastFlushedQueueSerial;
 

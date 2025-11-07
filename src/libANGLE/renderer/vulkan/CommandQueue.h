@@ -227,11 +227,23 @@ class CommandsState : angle::NonCopyable
                              std::vector<VkSemaphore> &&waitSemaphores,
                              std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
 
+    void flushImagesTransitionToForeign(
+        std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
+        // If we have foreign images to transit, we must have already issued some barrier, which
+        // means command buffer can't be empty.
+        ASSERT(mPrimaryCommands.valid());
+
+        mPrimaryCommands.pipelineBarrier(
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0,
+            nullptr, static_cast<uint32_t>(imagesToTransitionToForeign.size()),
+            imagesToTransitionToForeign.data());
+        imagesToTransitionToForeign.clear();
+    }
+
     angle::Result getCommandsAndWaitSemaphores(
         ErrorContext *context,
-        ProtectionType protectionType,
-        CommandBatch *batchOut,
-        std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
         std::vector<VkSemaphore> *waitSemaphoresOut,
         std::vector<VkPipelineStageFlags> *waitSemaphoreStageMasksOut);
 
@@ -370,7 +382,6 @@ class CommandQueue : angle::NonCopyable
                                  egl::ContextPriority priority,
                                  VkSemaphore signalSemaphore,
                                  SharedExternalFence &&externalFence,
-                                 std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
                                  const QueueSerial &submitQueueSerial,
                                  CommandsState &&commandsState);
 

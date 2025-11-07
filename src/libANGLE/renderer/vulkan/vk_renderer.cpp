@@ -7278,15 +7278,13 @@ void Renderer::initializeDeviceExtensionEntryPointsFromCore() const
     }
 }
 
-angle::Result Renderer::submitCommands(
-    vk::ErrorContext *context,
-    vk::ProtectionType protectionType,
-    egl::ContextPriority contextPriority,
-    const vk::Semaphore *signalSemaphore,
-    const vk::SharedExternalFence *externalFence,
-    std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
-    const QueueSerial &submitQueueSerial,
-    CommandsState &&commandsState)
+angle::Result Renderer::submitCommands(vk::ErrorContext *context,
+                                       vk::ProtectionType protectionType,
+                                       egl::ContextPriority contextPriority,
+                                       const vk::Semaphore *signalSemaphore,
+                                       const vk::SharedExternalFence *externalFence,
+                                       const QueueSerial &submitQueueSerial,
+                                       CommandsState &&commandsState)
 {
     ASSERT(signalSemaphore == nullptr || signalSemaphore->valid());
     const VkSemaphore signalVkSemaphore =
@@ -7298,9 +7296,9 @@ angle::Result Renderer::submitCommands(
         externalFenceCopy = *externalFence;
     }
 
-    ANGLE_TRY(mCommandQueue.submitCommands(
-        context, protectionType, contextPriority, signalVkSemaphore, std::move(externalFenceCopy),
-        std::move(imagesToTransitionToForeign), submitQueueSerial, std::move(commandsState)));
+    ANGLE_TRY(mCommandQueue.submitCommands(context, protectionType, contextPriority,
+                                           signalVkSemaphore, std::move(externalFenceCopy),
+                                           submitQueueSerial, std::move(commandsState)));
 
     ANGLE_TRY(mCommandQueue.postSubmitCheck(context));
 
@@ -7337,7 +7335,7 @@ angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
             signalSemaphore = &semaphore.get().get();
         }
         ANGLE_TRY(submitCommands(context, protectionType, srcContextPriority, signalSemaphore,
-                                 nullptr, {}, queueSerial, std::move(commandsState)));
+                                 nullptr, queueSerial, std::move(commandsState)));
         mSubmittedResourceUse.setQueueSerial(queueSerial);
     }
 

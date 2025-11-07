@@ -593,30 +593,12 @@ void CommandsState::flushWaitSemaphores(ProtectionType protectionType,
 
 angle::Result CommandsState::getCommandsAndWaitSemaphores(
     ErrorContext *context,
-    ProtectionType protectionType,
-    CommandBatch *batchOut,
-    std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
     std::vector<VkSemaphore> *waitSemaphoresOut,
     std::vector<VkPipelineStageFlags> *waitSemaphoreStageMasksOut)
 {
     std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
 
     ASSERT(mPrimaryCommands.valid() || mSecondaryCommands.empty());
-
-    // If there are foreign images to transition, issue the barrier now.
-    if (!imagesToTransitionToForeign.empty())
-    {
-        // It is possible for another thread to have made a submission just now, such that there is
-        // no primary command buffer anymore.  In that case, one has to be allocated to hold the
-        // barriers.
-        ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context, protectionType));
-
-        mPrimaryCommands.pipelineBarrier(
-            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0,
-            nullptr, static_cast<uint32_t>(imagesToTransitionToForeign.size()),
-            imagesToTransitionToForeign.data());
-        imagesToTransitionToForeign.clear();
-    }
 
     // Store the primary CommandBuffer and the reference to CommandPoolAccess in the in-flight list.
     if (mPrimaryCommands.valid())
@@ -869,15 +851,13 @@ bool CommandQueue::isBusy(Renderer *renderer) const
     return false;
 }
 
-angle::Result CommandQueue::submitCommands(
-    ErrorContext *context,
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    VkSemaphore signalSemaphore,
-    SharedExternalFence &&externalFence,
-    std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
-    const QueueSerial &submitQueueSerial,
-    CommandsState &&commandsState)
+angle::Result CommandQueue::submitCommands(ErrorContext *context,
+                                           ProtectionType protectionType,
+                                           egl::ContextPriority priority,
+                                           VkSemaphore signalSemaphore,
+                                           SharedExternalFence &&externalFence,
+                                           const QueueSerial &submitQueueSerial,
+                                           CommandsState &&commandsState)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitCommands");
     std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
@@ -896,9 +876,8 @@ angle::Result CommandQueue::submitCommands(
     std::vector<VkSemaphore> waitSemaphores;
     std::vector<VkPipelineStageFlags> waitSemaphoreStageMasks;
 
-    ANGLE_TRY(commandsState.getCommandsAndWaitSemaphores(
-        context, protectionType, &batch, std::move(imagesToTransitionToForeign), &waitSemaphores,
-        &waitSemaphoreStageMasks));
+    ANGLE_TRY(commandsState.getCommandsAndWaitSemaphores(context, &waitSemaphores,
+                                                         &waitSemaphoreStageMasks));
 
     batch.setPrimaryCommands(std::move(*commandsState.getPrimaryCommands()), &mCommandPoolAccess);
     // Store secondary Command Buffers.

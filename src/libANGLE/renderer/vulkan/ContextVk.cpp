@@ -3742,10 +3742,15 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
         dumpCommandStreamDiagnostics();
     }
 
+    // If there are foreign images to transition, issue the barrier now.
+    if (!mImagesToTransitionToForeign.empty())
+    {
+        mCommandState.flushImagesTransitionToForeign(std::move(mImagesToTransitionToForeign));
+    }
+
     ANGLE_TRY(mRenderer->submitCommands(this, getProtectionType(), mContextPriority,
-                                        signalSemaphore, externalFence,
-                                        std::move(mImagesToTransitionToForeign),
-                                        mLastFlushedQueueSerial, std::move(mCommandState)));
+                                        signalSemaphore, externalFence, mLastFlushedQueueSerial,
+                                        std::move(mCommandState)));
 
     mLastSubmittedQueueSerial = mLastFlushedQueueSerial;
     mSubmittedResourceUse.setQueueSerial(mLastSubmittedQueueSerial);
