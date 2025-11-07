@@ -7282,8 +7282,6 @@ void Renderer::initializeDeviceExtensionEntryPointsFromCore() const
 }
 
 angle::Result Renderer::submitCommands(vk::ErrorContext *context,
-                                       vk::ProtectionType protectionType,
-                                       egl::ContextPriority contextPriority,
                                        const vk::Semaphore *signalSemaphore,
                                        const vk::SharedExternalFence *externalFence,
                                        const QueueSerial &submitQueueSerial,
@@ -7299,8 +7297,7 @@ angle::Result Renderer::submitCommands(vk::ErrorContext *context,
         externalFenceCopy = *externalFence;
     }
 
-    ANGLE_TRY(mCommandQueue.submitCommands(context, protectionType, contextPriority,
-                                           signalVkSemaphore, std::move(externalFenceCopy),
+    ANGLE_TRY(mCommandQueue.submitCommands(context, signalVkSemaphore, std::move(externalFenceCopy),
                                            submitQueueSerial, std::move(commandsState)));
 
     ANGLE_TRY(mCommandQueue.postSubmitCheck(context));
@@ -7316,7 +7313,6 @@ angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
 {
     RendererScoped<vk::ReleasableResource<vk::Semaphore>> semaphore(this);
     ANGLE_VK_TRY(context, semaphore.get().get().init(mDevice, VK_SEMAPHORE_TYPE_BINARY));
-    CommandsState commandsState(this);
 
     // First, submit already flushed commands / wait semaphores into the source Priority VkQueue.
     // Commands that are in the Secondary Command Buffers will be flushed into the new VkQueue.
@@ -7327,6 +7323,7 @@ angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
     {
         vk::ProtectionType protectionType = protectionTypes.first();
         protectionTypes.reset(protectionType);
+        CommandsState commandsState(this, protectionType, srcContextPriority);
 
         QueueSerial queueSerial(index, generateQueueSerial(index));
         // Submit semaphore only if this is the last submission (all into the same VkQueue).
@@ -7337,8 +7334,8 @@ angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
             semaphore.get().setQueueSerial(queueSerial);
             signalSemaphore = &semaphore.get().get();
         }
-        ANGLE_TRY(submitCommands(context, protectionType, srcContextPriority, signalSemaphore,
-                                 nullptr, queueSerial, std::move(commandsState)));
+        ANGLE_TRY(submitCommands(context, signalSemaphore, nullptr, queueSerial,
+                                 std::move(commandsState)));
         mSubmittedResourceUse.setQueueSerial(queueSerial);
     }
 

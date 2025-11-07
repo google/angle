@@ -397,14 +397,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Sets effective Context Priority. Changed by ShareGroupVk.
     void setPriority(egl::ContextPriority newPriority)
     {
-        mContextPriority  = newPriority;
-        mDeviceQueueIndex = mRenderer->getDeviceQueueIndex(mContextPriority);
+        mCommandState.setPriority(newPriority);
+        mDeviceQueueIndex = mRenderer->getDeviceQueueIndex(newPriority);
     }
 
     VkDevice getDevice() const;
     // Effective Context Priority
-    egl::ContextPriority getPriority() const { return mContextPriority; }
-    vk::ProtectionType getProtectionType() const { return mProtectionType; }
+    egl::ContextPriority getPriority() const { return mCommandState.getPriority(); }
+    vk::ProtectionType getProtectionType() const { return mCommandState.getProtectionType(); }
 
     ANGLE_INLINE const angle::FeaturesVk &getFeatures() const { return mRenderer->getFeatures(); }
 
@@ -1593,6 +1593,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Current active transform feedback buffer queue serial. Invalid if TF not active.
     QueueSerial mCurrentTransformFeedbackQueueSerial;
 
+    egl::ContextPriority mInitialContextPriority;
+
     // The garbage list for single context use objects. The list will be GPU tracked by next
     // submission queueSerial. Note: Resource based shared object should always be added to
     // renderer's mSharedGarbageList.
@@ -1690,10 +1692,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::PerfMonitorCounterGroups mPerfMonitorCounters;
 
     gl::state::DirtyBits mPipelineDirtyBitsMask;
-
-    egl::ContextPriority mInitialContextPriority;
-    egl::ContextPriority mContextPriority;
-    vk::ProtectionType mProtectionType;
 
     ShareGroupVk *mShareGroupVk;
 

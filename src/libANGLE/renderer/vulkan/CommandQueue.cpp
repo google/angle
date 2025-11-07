@@ -459,8 +459,12 @@ void CleanUpThread::destroy(ErrorContext *context)
 }
 
 // CommandsState implementation.
-CommandsState::CommandsState(Renderer *renderer)
-    : mCmdPoolMutex(renderer->getCommandPoolAccess().mCmdPoolMutex)
+CommandsState::CommandsState(Renderer *renderer,
+                             ProtectionType protectionType,
+                             egl::ContextPriority priority)
+    : mCmdPoolMutex(renderer->getCommandPoolAccess().mCmdPoolMutex),
+      mProtectionType(protectionType),
+      mPriority(priority)
 {}
 
 CommandsState::~CommandsState()
@@ -841,8 +845,6 @@ bool CommandQueue::isBusy(Renderer *renderer) const
 }
 
 angle::Result CommandQueue::submitCommands(ErrorContext *context,
-                                           ProtectionType protectionType,
-                                           egl::ContextPriority priority,
                                            VkSemaphore signalSemaphore,
                                            SharedExternalFence &&externalFence,
                                            const QueueSerial &submitQueueSerial,
@@ -860,7 +862,7 @@ angle::Result CommandQueue::submitCommands(ErrorContext *context,
     CommandBatch &batch = scopedBatch.get();
 
     batch.setQueueSerial(submitQueueSerial);
-    batch.setProtectionType(protectionType);
+    batch.setProtectionType(commandsState.getProtectionType());
 
     std::vector<VkSemaphore> waitSemaphores;
     std::vector<VkPipelineStageFlags> waitSemaphoreStageMasks;
@@ -883,7 +885,8 @@ angle::Result CommandQueue::submitCommands(ErrorContext *context,
                              waitSemaphoreStageMasks, signalSemaphore);
 
         // No need protected submission if no commands to submit.
-        if (protectionType == ProtectionType::Protected && batch.getPrimaryCommands().valid())
+        if (commandsState.getProtectionType() == ProtectionType::Protected &&
+            batch.getPrimaryCommands().valid())
         {
             protectedSubmitInfo.sType           = VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO;
             protectedSubmitInfo.pNext           = nullptr;
@@ -908,7 +911,8 @@ angle::Result CommandQueue::submitCommands(ErrorContext *context,
         ++mPerfCounters.vkQueueSubmitCallsPerFrame;
     }
 
-    return queueSubmitLocked(context, priority, submitInfo, scopedBatch, submitQueueSerial);
+    return queueSubmitLocked(context, commandsState.getPriority(), submitInfo, scopedBatch,
+                             submitQueueSerial);
 }
 
 angle::Result CommandQueue::queueSubmitOneOff(ErrorContext *context,

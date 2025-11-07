@@ -848,7 +848,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mFlipViewportForReadFramebuffer(false),
       mIsAnyHostVisibleBufferWritten(false),
       mCurrentQueueSerialIndex(kInvalidQueueSerialIndex),
-      mCommandState(renderer),
+      mInitialContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
+      mCommandState(renderer,
+                    vk::ConvertProtectionBoolToType(state.hasProtectedContent()),
+                    mInitialContextPriority),
       mOutsideRenderPassCommands(nullptr),
       mRenderPassCommands(nullptr),
       mQueryEventType(GraphicsEventCmdBuf::NotInQueryCmd),
@@ -864,9 +867,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mRenderPassCountSinceSubmit(0),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
-      mInitialContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
-      mContextPriority(mInitialContextPriority),
-      mProtectionType(vk::ConvertProtectionBoolToType(state.hasProtectedContent())),
       mShareGroupVk(vk::GetImpl(state.getShareGroup())),
       mCommandsPendingSubmissionCount(0)
 {
@@ -1192,7 +1192,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     mShareGroupRefCountedEventsGarbageRecycler =
         mShareGroupVk->getRefCountedEventsGarbageRecycler();
 
-    mDeviceQueueIndex = renderer->getDeviceQueueIndex(mContextPriority);
+    mDeviceQueueIndex = renderer->getDeviceQueueIndex(getPriority());
 
     angle::PerfMonitorCounterGroup vulkanGroup;
     vulkanGroup.name = "vulkan";
@@ -3747,9 +3747,8 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
         mCommandState.flushImagesTransitionToForeign(std::move(mImagesToTransitionToForeign));
     }
 
-    ANGLE_TRY(mRenderer->submitCommands(this, getProtectionType(), mContextPriority,
-                                        signalSemaphore, externalFence, mLastFlushedQueueSerial,
-                                        std::move(mCommandState)));
+    ANGLE_TRY(mRenderer->submitCommands(this, signalSemaphore, externalFence,
+                                        mLastFlushedQueueSerial, std::move(mCommandState)));
 
     mLastSubmittedQueueSerial = mLastFlushedQueueSerial;
     mSubmittedResourceUse.setQueueSerial(mLastSubmittedQueueSerial);
@@ -3935,8 +3934,8 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         // vkEvent's are externally synchronized, therefore need work to be submitted before calling
         // vkGetEventStatus
         ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(scopedCommandBuffer),
-                                               getProtectionType(), mContextPriority,
-                                               VK_NULL_HANDLE, 0, &submitSerial));
+                                               getProtectionType(), getPriority(), VK_NULL_HANDLE,
+                                               0, &submitSerial));
 
         // Track it with the submitSerial.
         timestampQuery.setQueueSerial(submitSerial);
@@ -8015,7 +8014,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
 
     QueueSerial submitQueueSerial;
     ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(scopedCommandBuffer),
-                                           getProtectionType(), mContextPriority, VK_NULL_HANDLE, 0,
+                                           getProtectionType(), getPriority(), VK_NULL_HANDLE, 0,
                                            &submitQueueSerial));
     // Track it with the submitSerial.
     timestampQuery.setQueueSerial(submitQueueSerial);

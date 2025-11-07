@@ -209,7 +209,9 @@ class DeviceQueueMap final
 class CommandsState : angle::NonCopyable
 {
   public:
-    CommandsState(Renderer *renderer);
+    CommandsState(Renderer *renderer,
+                  ProtectionType protectionType,
+                  egl::ContextPriority contextPriority);
     ~CommandsState();
 
     void destroy(VkDevice device);
@@ -256,12 +258,19 @@ class CommandsState : angle::NonCopyable
 
     bool hasWaitSemaphoresPendingSubmission() const { return !mWaitSemaphores.empty(); }
 
+    void setPriority(egl::ContextPriority newPriority) { mPriority = newPriority; }
+    egl::ContextPriority getPriority() const { return mPriority; }
+    ProtectionType getProtectionType() const { return mProtectionType; }
+
   private:
     angle::Result ensurePrimaryCommandBufferValidLocked(ErrorContext *context,
                                                         const ProtectionType &protectionType);
 
     // Command pool mutex lock shared with CommandPoolAccess
     angle::SimpleMutex &mCmdPoolMutex;
+    // This is immutable
+    const vk::ProtectionType mProtectionType;
+    egl::ContextPriority mPriority;
 
     std::vector<VkSemaphore> mWaitSemaphores;
     std::vector<VkPipelineStageFlags> mWaitSemaphoreStageMasks;
@@ -378,8 +387,6 @@ class CommandQueue : angle::NonCopyable
     bool isBusy(Renderer *renderer) const;
 
     angle::Result submitCommands(ErrorContext *context,
-                                 ProtectionType protectionType,
-                                 egl::ContextPriority priority,
                                  VkSemaphore signalSemaphore,
                                  SharedExternalFence &&externalFence,
                                  const QueueSerial &submitQueueSerial,

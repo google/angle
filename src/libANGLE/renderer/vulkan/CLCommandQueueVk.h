@@ -490,7 +490,7 @@ class CLCommandQueueVk : public CLCommandQueueImpl
 
     angle::Result resetCommandBufferWithError(cl_int errorCode);
 
-    vk::ProtectionType getProtectionType() const { return vk::ProtectionType::Unprotected; }
+    vk::ProtectionType getProtectionType() const { return mCommandState.getProtectionType(); }
 
     // Create-update-bind the kernel's descriptor set, put push-constants in cmd buffer, capture
     // kernel resources, and handle kernel execution dependencies

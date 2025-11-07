@@ -429,8 +429,6 @@ class Renderer : angle::NonCopyable
     void cleanupPendingSubmissionGarbage();
 
     angle::Result submitCommands(vk::ErrorContext *context,
-                                 vk::ProtectionType protectionType,
-                                 egl::ContextPriority contextPriority,
                                  const vk::Semaphore *signalSemaphore,
                                  const vk::SharedExternalFence *externalFence,
                                  const QueueSerial &submitQueueSerial,
