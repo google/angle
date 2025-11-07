@@ -223,10 +223,6 @@ class CommandsState : angle::NonCopyable
                                           VkFramebuffer framebufferOverride,
                                           RenderPassCommandBufferHelper **renderPassCommands);
 
-    void flushWaitSemaphores(ProtectionType protectionType,
-                             std::vector<VkSemaphore> &&waitSemaphores,
-                             std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
-
     void flushImagesTransitionToForeign(
         std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign)
     {
@@ -244,6 +240,8 @@ class CommandsState : angle::NonCopyable
 
     angle::Result getCommandsAndWaitSemaphores(
         ErrorContext *context,
+        CommandPoolAccess *commandPoolAccess,
+        CommandBatch *batch,
         std::vector<VkSemaphore> *waitSemaphoresOut,
         std::vector<VkPipelineStageFlags> *waitSemaphoreStageMasksOut);
 
@@ -255,6 +253,8 @@ class CommandsState : angle::NonCopyable
 
     PrimaryCommandBuffer *getPrimaryCommands() { return &mPrimaryCommands; }
     SecondaryCommandBufferCollector *getSecondaryCommands() { return &mSecondaryCommands; }
+
+    bool hasWaitSemaphoresPendingSubmission() const { return !mWaitSemaphores.empty(); }
 
   private:
     angle::Result ensurePrimaryCommandBufferValidLocked(ErrorContext *context,

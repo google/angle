@@ -574,25 +574,10 @@ void CommandsState::destroy(VkDevice device)
     mSecondaryCommands.releaseCommandBuffers();
 }
 
-void CommandsState::flushWaitSemaphores(ProtectionType protectionType,
-                                        std::vector<VkSemaphore> &&waitSemaphores,
-                                        std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::flushWaitSemaphores");
-    ASSERT(!waitSemaphores.empty());
-    ASSERT(waitSemaphores.size() == waitSemaphoreStageMasks.size());
-    std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
-
-    mWaitSemaphores.insert(mWaitSemaphores.end(), waitSemaphores.begin(), waitSemaphores.end());
-    mWaitSemaphoreStageMasks.insert(mWaitSemaphoreStageMasks.end(), waitSemaphoreStageMasks.begin(),
-                                    waitSemaphoreStageMasks.end());
-
-    waitSemaphores.clear();
-    waitSemaphoreStageMasks.clear();
-}
-
 angle::Result CommandsState::getCommandsAndWaitSemaphores(
     ErrorContext *context,
+    CommandPoolAccess *commandPoolAccess,
+    CommandBatch *batch,
     std::vector<VkSemaphore> *waitSemaphoresOut,
     std::vector<VkPipelineStageFlags> *waitSemaphoreStageMasksOut)
 {
@@ -605,6 +590,10 @@ angle::Result CommandsState::getCommandsAndWaitSemaphores(
     {
         ANGLE_VK_TRY(context, mPrimaryCommands.end());
     }
+
+    batch->setPrimaryCommands(std::move(mPrimaryCommands), commandPoolAccess);
+    // Store secondary Command Buffers.
+    batch->setSecondaryCommands(std::move(mSecondaryCommands));
 
     // Store wait semaphores.
     *waitSemaphoresOut          = std::move(mWaitSemaphores);
@@ -876,12 +865,8 @@ angle::Result CommandQueue::submitCommands(ErrorContext *context,
     std::vector<VkSemaphore> waitSemaphores;
     std::vector<VkPipelineStageFlags> waitSemaphoreStageMasks;
 
-    ANGLE_TRY(commandsState.getCommandsAndWaitSemaphores(context, &waitSemaphores,
-                                                         &waitSemaphoreStageMasks));
-
-    batch.setPrimaryCommands(std::move(*commandsState.getPrimaryCommands()), &mCommandPoolAccess);
-    // Store secondary Command Buffers.
-    batch.setSecondaryCommands(std::move(*commandsState.getSecondaryCommands()));
+    ANGLE_TRY(commandsState.getCommandsAndWaitSemaphores(
+        context, &mCommandPoolAccess, &batch, &waitSemaphores, &waitSemaphoreStageMasks));
 
     mPerfCounters.commandQueueWaitSemaphoresTotal += waitSemaphores.size();
 

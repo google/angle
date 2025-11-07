@@ -479,7 +479,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     angle::Result finishImpl(RenderPassClosureReason renderPassClosureReason);
 
-    void addWaitSemaphore(VkSemaphore semaphore, VkPipelineStageFlags stageMask);
+    void addWaitSemaphore(VkSemaphore semaphore, VkPipelineStageFlags stageMask)
+    {
+        mCommandState.addWaitSemaphore(semaphore, stageMask);
+    }
 
     template <typename T>
     void addGarbage(T *object)
@@ -1674,13 +1677,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // The number of render passes since the last submission of all commands.
     VkDeviceSize mRenderPassCountSinceSubmit;
-
-    // Semaphores that must be flushed before the current commands. Flushed semaphores will be
-    // waited on in the next submission.
-    std::vector<VkSemaphore> mWaitSemaphores;
-    std::vector<VkPipelineStageFlags> mWaitSemaphoreStageMasks;
-    // Whether this context has wait semaphores (flushed and unflushed) that must be submitted.
-    bool mHasWaitSemaphoresPendingSubmission;
 
     // Hold information from the last gpu clock sync for future gpu-to-cpu timestamp conversions.
     GpuClockSyncInfo mGpuClockSync;
