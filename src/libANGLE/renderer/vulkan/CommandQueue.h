@@ -218,12 +218,31 @@ class CommandsState : angle::NonCopyable
 
     angle::Result flushOutsideRPCommands(Context *context,
                                          ProtectionType protectionType,
-                                         OutsideRenderPassCommandBufferHelper **outsideRPCommands);
+                                         OutsideRenderPassCommandBufferHelper **outsideRPCommands)
+    {
+        ANGLE_TRACE_EVENT0("gpu.angle", "CommandsState::flushOutsideRPCommands");
+        std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
+        ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context, protectionType));
+        ANGLE_TRY((*outsideRPCommands)->flushToPrimary(context, this, &mPrimaryCommands));
+        // Restart the command buffer.
+        return (*outsideRPCommands)->reset(context, &mSecondaryCommands);
+    }
+
     angle::Result flushRenderPassCommands(Context *context,
                                           const ProtectionType &protectionType,
                                           const RenderPass &renderPass,
                                           VkFramebuffer framebufferOverride,
-                                          RenderPassCommandBufferHelper **renderPassCommands);
+                                          RenderPassCommandBufferHelper **renderPassCommands)
+    {
+        ANGLE_TRACE_EVENT0("gpu.angle", "CommandsState::flushRenderPassCommands");
+        std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
+        ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context, protectionType));
+        ANGLE_TRY((*renderPassCommands)
+                      ->flushToPrimary(context, this, &mPrimaryCommands, renderPass,
+                                       framebufferOverride));
+        // Restart the command buffer.
+        return (*renderPassCommands)->reset(context, &mSecondaryCommands);
+    }
 
     void flushImagesTransitionToForeign(
         std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign)
@@ -252,9 +271,6 @@ class CommandsState : angle::NonCopyable
         mWaitSemaphores.emplace_back(waitSemaphores);
         mWaitSemaphoreStageMasks.emplace_back(waitSemaphoreStageMasks);
     }
-
-    PrimaryCommandBuffer *getPrimaryCommands() { return &mPrimaryCommands; }
-    SecondaryCommandBufferCollector *getSecondaryCommands() { return &mSecondaryCommands; }
 
     bool hasWaitSemaphoresPendingSubmission() const { return !mWaitSemaphores.empty(); }
 

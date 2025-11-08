@@ -1350,7 +1350,9 @@ class CommandBufferHelperCommon : angle::NonCopyable
         return hostBufferWrite;
     }
 
-    void executeBarriers(Renderer *renderer, CommandsState *commandsState);
+    void executeBarriers(Renderer *renderer,
+                         CommandsState *commandsState,
+                         PrimaryCommandBuffer *primaryCommands);
 
     // The markOpen and markClosed functions are to aid in proper use of the *CommandBufferHelper.
     // saw invalid use due to threading issues that can be easily caught by marking when it's safe
@@ -1545,7 +1547,9 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
 
     RefCountedEventCollector *getRefCountedEventCollector() { return &mRefCountedEventCollector; }
 
-    angle::Result flushToPrimary(Context *context, CommandsState *commandsState);
+    angle::Result flushToPrimary(Context *context,
+                                 CommandsState *commandsState,
+                                 PrimaryCommandBuffer *primaryCommands);
 
     void setGLMemoryBarrierIssued()
     {
@@ -1797,6 +1801,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     angle::Result flushToPrimary(Context *context,
                                  CommandsState *commandsState,
+                                 PrimaryCommandBuffer *primaryCommands,
                                  const RenderPass &renderPass,
                                  VkFramebuffer framebufferOverride);
 
