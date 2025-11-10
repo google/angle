@@ -478,13 +478,13 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // https://anglebug.com/456785955
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      false,
-     {"message_type = RenderPassLoadOpError", "hazard_type = WRITE_AFTER_WRITE",
+     {"hazard_type = WRITE_AFTER_WRITE",
       "access = "
       "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
       "BIT)",
       "prior_access = "
       "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)",
-      "command = vkCmdBeginRenderPass", "prior_command = vkCmdEndRenderPass",
+      "command = vkCmdBeginRender", "prior_command = vkCmdEndRender",
       "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE"}},
     {"SYNC-HAZARD-READ-AFTER-WRITE",
      false,
@@ -5735,13 +5735,17 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // tests to fail.
     ANGLE_FEATURE_CONDITION(&mFeatures, forceFragmentShaderPrecisionHighpToMediump, false);
 
-    // Testing shows that on ARM and Qualcomm GPU, doing implicit flush at framebuffer boundary
-    // improves performance. Most app traces shows frame time reduced and manhattan 3.1 offscreen
-    // score improves 7%.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitAtFBOBoundary,
-                            ((isTileBasedRenderer || isSwiftShader) && !isARMProprietary));
+    // TODO: Delete these two feature flags (https://issuetracker.google.com/422507974). More
+    // frequent submission may help benchmark score improvement, and in certain cases helps real
+    // performance as well (for things like bufferSubData able to go down faster path), but it
+    // increases power consumption by keeping GPU powered up longer for real world applications that
+    // runs in vsync mode. For now the feature is just disabled so that people can still do
+    // comparison if needed. They should be deleted in future.
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitAtFBOBoundary, false);
+    // This is relevant only if preferSubmitAtFBOBoundary is enabled
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceSubmitExceptionsAtFBOBoundary,
+                            mFeatures.preferSubmitAtFBOBoundary.enabled && !isQualcommProprietary);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, forceSubmitExceptionsAtFBOBoundary, !isQualcommProprietary);
     mMinCommandCountToSubmit = isQualcommProprietary ? 1024 : 32;
 
     // The number of minimum write commands in the command buffer to trigger one submission of
