@@ -303,6 +303,7 @@ enum class Feature
     SkipVSConstantRegisterZero,
     SlowDownMonolithicPipelineCreationForTesting,
     SrgbBlendingBroken,
+    SupportFragmentShadingRateExtExtensions,
     Supports16BitInputOutput,
     Supports16BitPushConstant,
     Supports16BitStorageBuffer,

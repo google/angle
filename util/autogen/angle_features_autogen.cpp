@@ -303,6 +303,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SkipVSConstantRegisterZero, "skipVSConstantRegisterZero"},
     {Feature::SlowDownMonolithicPipelineCreationForTesting, "slowDownMonolithicPipelineCreationForTesting"},
     {Feature::SrgbBlendingBroken, "srgbBlendingBroken"},
+    {Feature::SupportFragmentShadingRateExtExtensions, "supportFragmentShadingRateExtExtensions"},
     {Feature::Supports16BitInputOutput, "supports16BitInputOutput"},
     {Feature::Supports16BitPushConstant, "supports16BitPushConstant"},
     {Feature::Supports16BitStorageBuffer, "supports16BitStorageBuffer"},
