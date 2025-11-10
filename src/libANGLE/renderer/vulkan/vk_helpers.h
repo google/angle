@@ -2116,9 +2116,7 @@ class ImageHelper final : public Resource, public angle::Subject
                        uint32_t layerCount,
                        bool isRobustResourceInitEnabled,
                        bool hasProtectedContent);
-    angle::Result initFromCreateInfo(ErrorContext *context,
-                                     const VkImageCreateInfo &requestedCreateInfo,
-                                     VkMemoryPropertyFlags memoryPropertyFlags);
+
     angle::Result copyToBufferOneOff(ErrorContext *context,
                                      BufferHelper *stagingBuffer,
                                      VkBufferImageCopy copyRegion);

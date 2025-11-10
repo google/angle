@@ -2249,7 +2249,7 @@ angle::Result UtilsVk::clearTexture(ContextVk *contextVk,
     vk::ImageAccess imageAccess =
         isDepthOrStencil ? vk::ImageAccess::DepthWriteStencilWrite : vk::ImageAccess::ColorWrite;
 
-    ANGLE_TRY(startRenderPass(contextVk, dst, &destView.get(), renderPassDesc, renderArea,
+    ANGLE_TRY(startRenderPass(contextVk, &destView.get(), renderPassDesc, renderArea,
                               params.aspectFlags, &params.clearValue,
                               vk::RenderPassSource::InternalUtils, &commandBuffer));
 
@@ -2463,7 +2463,6 @@ angle::Result UtilsVk::convertVertexBufferImpl(
 }
 
 angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
-                                       vk::ImageHelper *image,
                                        const vk::ImageView *imageView,
                                        const vk::RenderPassDesc &renderPassDesc,
                                        const gl::Rectangle &renderArea,
@@ -2761,7 +2760,7 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     pipelineDesc.setRenderPassDesc(renderPassDesc);
 
     vk::RenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(startRenderPass(contextVk, dst, &destView.get(), renderPassDesc, renderArea,
+    ANGLE_TRY(startRenderPass(contextVk, &destView.get(), renderPassDesc, renderArea,
                               VK_IMAGE_ASPECT_COLOR_BIT, nullptr,
                               vk::RenderPassSource::InternalUtils, &commandBuffer));
 
@@ -3494,7 +3493,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     }
 
     vk::RenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(startRenderPass(contextVk, dst, destView, renderPassDesc, renderArea,
+    ANGLE_TRY(startRenderPass(contextVk, destView, renderPassDesc, renderArea,
                               VK_IMAGE_ASPECT_COLOR_BIT, nullptr,
                               vk::RenderPassSource::InternalUtils, &commandBuffer));
 
@@ -4385,7 +4384,7 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
                 1, currentLayer, 1, imageUsageFlags, actualFormatID, GL_NONE));
 
             vk::RenderPassCommandBuffer *commandBuffer = nullptr;
-            ANGLE_TRY(startRenderPass(contextVk, image, &dstImageView, renderPassDesc, renderArea,
+            ANGLE_TRY(startRenderPass(contextVk, &dstImageView, renderPassDesc, renderArea,
                                       VK_IMAGE_ASPECT_COLOR_BIT, nullptr,
                                       vk::RenderPassSource::InternalUtils, &commandBuffer));
 
@@ -4750,7 +4749,7 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     // A potential optimization is to reuse the already open render pass if it belongs to the
     // swapchain.
     vk::RenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(startRenderPass(contextVk, dst, destView, renderPassDesc, renderArea,
+    ANGLE_TRY(startRenderPass(contextVk, destView, renderPassDesc, renderArea,
                               VK_IMAGE_ASPECT_COLOR_BIT, nullptr,
                               vk::RenderPassSource::DefaultFramebuffer, &commandBuffer));
 

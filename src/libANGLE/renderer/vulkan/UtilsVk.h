@@ -660,7 +660,6 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureGenerateFragmentShadingRateResourcesInitialized(ContextVk *contextVk);
 
     angle::Result startRenderPass(ContextVk *contextVk,
-                                  vk::ImageHelper *image,
                                   const vk::ImageView *imageView,
                                   const vk::RenderPassDesc &renderPassDesc,
                                   const gl::Rectangle &renderArea,

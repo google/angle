@@ -5609,43 +5609,6 @@ angle::Result ImageHelper::init(ErrorContext *context,
                         nullptr);
 }
 
-angle::Result ImageHelper::initFromCreateInfo(ErrorContext *context,
-                                              const VkImageCreateInfo &requestedCreateInfo,
-                                              VkMemoryPropertyFlags memoryPropertyFlags)
-{
-    ASSERT(!valid());
-    ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
-    ASSERT(!IsAnySubresourceContentDefined(mStencilContentDefined));
-
-    mImageType          = requestedCreateInfo.imageType;
-    mExtents            = requestedCreateInfo.extent;
-    mRotatedAspectRatio = false;
-    mSamples            = std::max((int)requestedCreateInfo.samples, 1);
-    mImageSerial        = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
-    mLayerCount         = requestedCreateInfo.arrayLayers;
-    mLevelCount         = requestedCreateInfo.mipLevels;
-    mUsage              = requestedCreateInfo.usage;
-
-    // Validate that mLayerCount is compatible with the image type
-    ASSERT(requestedCreateInfo.imageType != VK_IMAGE_TYPE_3D || mLayerCount == 1);
-    ASSERT(requestedCreateInfo.imageType != VK_IMAGE_TYPE_2D || mExtents.depth == 1);
-
-    mCurrentAccess = ImageAccess::Undefined;
-
-    ANGLE_VK_TRY(context, mImage.init(context->getDevice(), requestedCreateInfo));
-
-    mVkImageCreateInfo               = requestedCreateInfo;
-    mVkImageCreateInfo.pNext         = nullptr;
-    mVkImageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-    MemoryProperties memoryProperties = {};
-
-    ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(context, false, memoryProperties,
-                                               memoryPropertyFlags,
-                                               vk::MemoryAllocationType::StagingImage));
-    return angle::Result::Continue;
-}
-
 angle::Result ImageHelper::copyToBufferOneOff(ErrorContext *context,
                                               BufferHelper *stagingBuffer,
                                               VkBufferImageCopy copyRegion)
