@@ -7450,7 +7450,8 @@ bool ValidatePixelPack(const Context *context,
 {
     // Check for pixel pack buffer related API errors
     Buffer *pixelPackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelPack);
-    if (pixelPackBuffer != nullptr && pixelPackBuffer->isMapped())
+    if (pixelPackBuffer != nullptr && pixelPackBuffer->isMapped() &&
+        !pixelPackBuffer->isPersistentlyMapped())
     {
         // ...the buffer object's data store is currently mapped.
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBufferMapped);
