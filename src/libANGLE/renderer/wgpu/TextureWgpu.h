@@ -216,6 +216,7 @@ class TextureWgpu : public TextureImpl, public angle::ObserverInterface
                                      bool unpackPremultiplyAlpha,
                                      bool unpackUnmultiplyAlpha,
                                      const webgpu::Format &dstWebgpuFormat,
+                                     const gl::InternalFormat &internalFormat,
                                      TextureWgpu *sourceTextureWgpu);
 
     angle::Result initializeImage(ContextWgpu *contextWgpu, ImageMipLevels mipLevels);

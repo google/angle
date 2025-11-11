@@ -386,7 +386,7 @@ angle::Result TextureWgpu::copyTexture(const gl::Context *context,
     return copySubTextureImpl(context, index, gl::kOffsetZero, sourceLevel,
                               gl::Box(gl::kOffsetZero, srcImageDesc.size), unpackFlipY,
                               unpackPremultiplyAlpha, unpackUnmultiplyAlpha, dstWebgpuFormat,
-                              sourceTextureWgpu);
+                              internalFormatInfo, sourceTextureWgpu);
 }
 
 angle::Result TextureWgpu::copySubTexture(const gl::Context *context,
@@ -420,7 +420,7 @@ angle::Result TextureWgpu::copySubTexture(const gl::Context *context,
     }
     return copySubTextureImpl(context, index, destOffset, sourceLevel, sourceBox, unpackFlipY,
                               unpackPremultiplyAlpha, unpackUnmultiplyAlpha, dstWebgpuFormat,
-                              sourceTextureWgpu);
+                              internalFormat, sourceTextureWgpu);
 }
 
 angle::Result TextureWgpu::copySubTextureImpl(const gl::Context *context,
@@ -432,6 +432,7 @@ angle::Result TextureWgpu::copySubTextureImpl(const gl::Context *context,
                                               bool unpackPremultiplyAlpha,
                                               bool unpackUnmultiplyAlpha,
                                               const webgpu::Format &dstWebgpuFormat,
+                                              const gl::InternalFormat &internalFormat,
                                               TextureWgpu *sourceTextureWgpu)
 {
     ContextWgpu *contextWgpu = webgpu::GetImpl(context);
@@ -449,8 +450,14 @@ angle::Result TextureWgpu::copySubTextureImpl(const gl::Context *context,
                                  sourceBox);
     }
 
-    UNIMPLEMENTED();
-    return angle::Result::Continue;
+    // TODO(crbug.com/438268609): Add blit with draw path.
+    const gl::ImageDesc &srcImageDesc = sourceTextureWgpu->mState.getImageDesc(
+        NonCubeTextureTypeToTarget(sourceTextureWgpu->mState.getType()),
+        gl::LevelIndex(sourceLevel).get());
+    return mImage->copyImageCpuReadback(
+        context, index, gl::Rectangle(sourceBox.x, sourceBox.y, sourceBox.width, sourceBox.height),
+        destOffset, gl::Extents(sourceBox.width, sourceBox.height, sourceBox.depth), internalFormat,
+        sourceTextureWgpu->getImage(), srcImageDesc.size);
 }
 
 angle::Result TextureWgpu::copyRenderbufferSubData(const gl::Context *context,

@@ -2061,27 +2061,19 @@
 438268609 WGPU : CopyTexImageTest.RGBAToA*/* = SKIP
 438268609 WGPU : CopyTexImageTest.SubImageRGB*To*/* = SKIP
 438268609 WGPU : CopyTexImageTest.DeleteAfterCopyingToTextures/* = SKIP
-// Unimplemented format conversions for texture copies
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__AToRGB* = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBToRGBUnmultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBToRGBPremultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBToRGBPremultiplyAlphaUnmultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBToRGBF* = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBToRGBA* = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGB = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBUnmultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBPremultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBPremultiplyAlphaUnmultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBF* = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBAUnmultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBAPremultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBAPremultiplyAlphaUnmultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBAF* = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__LToRGB* = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__LAToRGB* = SKIP
 438268609 WGPU : CopyTextureTest.InternalFormat/* = SKIP
 // WGPU does not currently resize textures
 438268609 WGPU : CopyTextureTest.CopyOutsideMipmap/* = SKIP
+// Unimplemented format conversions for texture copies 
+438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__AToRGB* = SKIP
+438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__LToRGB* = SKIP
+438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__LAToRGB* = SKIP
+438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBToRGB*F* = SKIP
+438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBUnmultiplyAlpha = SKIP
+438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBPremultiplyAlpha = SKIP
+438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGB*F* = SKIP
+438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBAUnmultiplyAlpha = SKIP
+438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBAPremultiplyAlpha = SKIP
 
 // SPIR-V compilation error
 384593678 VULKAN : SimpleUniformUsageTestES3.CopyOfUniformsWithArrays/* = SKIP
