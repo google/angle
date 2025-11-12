@@ -3483,6 +3483,66 @@ void main()
     validateSuccess(GL_FRAGMENT_SHADER, kFS);
 }
 
+// Use gl_LastFragData without redeclaration of gl_LastFragData with noncoherent qualifier
+TEST_P(GLSLValidationTest, FramebufferFetchNoLastFragDataRedeclaration)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+
+    const char kFS[] =
+        R"(#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    gl_FragColor = u_color + gl_LastFragData[0];
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'noncoherent' qualifier must be used when "
+                  "GL_EXT_shader_framebuffer_fetch_non_coherent extension is used");
+}
+
+// Redeclare gl_LastFragData without noncoherent qualifier
+TEST_P(GLSLValidationTest, FramebufferFetchLastFragDataWithoutNoncoherentQualifier)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+
+    const char kFS[] =
+        R"(#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+uniform highp vec4 u_color;
+highp vec4 gl_LastFragData[gl_MaxDrawBuffers];
+
+void main (void)
+{
+    gl_FragColor = u_color + gl_LastFragData[0];
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'noncoherent' qualifier must be used when "
+                  "GL_EXT_shader_framebuffer_fetch_non_coherent extension is used");
+}
+
+// Declare inout without noncoherent qualifier
+TEST_P(GLSLValidationTest_ES3, FramebufferFetchInoutWithoutNoncoherentQualifier)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(location = 0) inout highp vec4 o_color;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color = clamp(o_color + u_color, vec4(0.0f), vec4(1.0f));
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'noncoherent' qualifier must be used when "
+                  "GL_EXT_shader_framebuffer_fetch_non_coherent extension is used");
+}
+
 class GLSLValidationClipDistanceTest_ES3 : public GLSLValidationTest_ES3
 {};
 
