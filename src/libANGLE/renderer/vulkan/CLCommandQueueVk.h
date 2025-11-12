@@ -173,7 +173,7 @@ class DispatchWorkThread
     angle::Result notify(QueueSerial queueSerial);
 
   private:
-    static constexpr size_t kFixedQueueLimit = 4u;
+    static constexpr size_t kFixedQueueLimit = 1024u;
 
     angle::Result finishLoop();
 
@@ -229,10 +229,10 @@ class CommandsStateMap
         std::unique_lock<angle::SimpleMutex> ul(mMutex);
         mCommandsState[queueSerial].mHostTransferList.push_back(hostTransferEntry);
     }
-    void erase(const QueueSerial queueSerial)
+    void eraseUpTo(const QueueSerial queueSerial)
     {
         std::unique_lock<angle::SimpleMutex> ul(mMutex);
-        mCommandsState.erase(queueSerial);
+        mCommandsState.erase(mCommandsState.begin(), mCommandsState.upper_bound(queueSerial));
     }
     void clear()
     {
@@ -247,7 +247,7 @@ class CommandsStateMap
 
     angle::Result setEventsWithQueueSerialToState(const QueueSerial &queueSerial,
                                                   cl::ExecutionStatus executionStatus);
-    angle::Result processQueueSerial(const QueueSerial queueSerial);
+    angle::Result processQueueSerialUpTo(const QueueSerial queueSerial);
 
   private:
     struct CommandsState
@@ -263,7 +263,7 @@ class CommandsStateMap
     // The entries are added and removed in different threads, so protect the map during insertion
     // and removal.
     angle::SimpleMutex mMutex;
-    angle::HashMap<QueueSerial, CommandsState> mCommandsState;
+    std::map<QueueSerial, CommandsState> mCommandsState;
 };
 
 }  // namespace

@@ -2259,7 +2259,7 @@ angle::Result CLCommandQueueVk::resetCommandBufferWithError(cl_int errorCode)
 
     ANGLE_TRY(mCommandsStateMap.setEventsWithQueueSerialToState(currentSerial,
                                                                 cl::ExecutionStatus::InvalidEnum));
-    mCommandsStateMap.erase(currentSerial);
+    mCommandsStateMap.eraseUpTo(currentSerial);
     mExternalEvents.clear();
 
     // Command buffer has been reset and as such the associated queue serial will not get signaled
@@ -2278,8 +2278,8 @@ angle::Result CLCommandQueueVk::finishQueueSerialInternal(const QueueSerial queu
 
     ANGLE_TRY(mContext->getRenderer()->finishQueueSerial(mContext, queueSerial));
 
-    // Ensure memory  objects are synced back to host CPU
-    ANGLE_TRY(mCommandsStateMap.processQueueSerial(queueSerial));
+    // Ensure memory objects are synced back to host CPU
+    ANGLE_TRY(mCommandsStateMap.processQueueSerialUpTo(queueSerial));
 
     if (mNeedPrintfHandling)
     {
@@ -2290,7 +2290,7 @@ angle::Result CLCommandQueueVk::finishQueueSerialInternal(const QueueSerial queu
     ANGLE_TRY(mCommandsStateMap.setEventsWithQueueSerialToState(queueSerial,
                                                                 cl::ExecutionStatus::Complete));
 
-    mCommandsStateMap.erase(queueSerial);
+    mCommandsStateMap.eraseUpTo(queueSerial);
 
     return angle::Result::Continue;
 }
@@ -2466,39 +2466,41 @@ angle::Result CommandsStateMap::setEventsWithQueueSerialToState(const QueueSeria
     return angle::Result::Continue;
 }
 
-angle::Result CommandsStateMap::processQueueSerial(const QueueSerial queueSerial)
+angle::Result CommandsStateMap::processQueueSerialUpTo(const QueueSerial queueSerial)
 {
     std::unique_lock<angle::SimpleMutex> ul(mMutex);
-    HostTransferEntries list = mCommandsState[queueSerial].mHostTransferList;
-    for (const HostTransferEntry &hostTransferEntry : list)
-    {
-        ANGLE_TRY(std::visit(HostTransferConfigVisitor(
-                                 hostTransferEntry.transferBufferHandle->getImpl<CLBufferVk>()),
-                             hostTransferEntry.transferConfig));
-    }
-    list.clear();
 
-    cl::KernelPtrs kernels = mCommandsState[queueSerial].mKernels;
-
-    for (cl::KernelPtr kernel : kernels)
-    {
-        CLKernelVk *kernelVk = &kernel->getImpl<CLKernelVk>();
-
-        if (kernelVk->usesPrintf())
+    std::for_each(mCommandsState.begin(), mCommandsState.upper_bound(queueSerial), [](auto &pair) {
+        HostTransferEntries list = pair.second.mHostTransferList;
+        for (const HostTransferEntry &hostTransferEntry : list)
         {
-            ASSERT(kernels.size() == 1);
-
-            auto printfInfos =
-                kernelVk->getProgram()->getPrintfDescriptors(kernelVk->getKernelName());
-
-            CLBufferVk &vkMem = mCommandsState[queueSerial].mPrintfBuffer->getImpl<CLBufferVk>();
-
-            unsigned char *data = nullptr;
-            ANGLE_TRY(vkMem.map(data, 0));
-            ANGLE_TRY(ClspvProcessPrintfBuffer(data, vkMem.getSize(), printfInfos));
-            vkMem.unmap();
+            ANGLE_TRY(std::visit(HostTransferConfigVisitor(
+                                     hostTransferEntry.transferBufferHandle->getImpl<CLBufferVk>()),
+                                 hostTransferEntry.transferConfig));
         }
-    }
+        list.clear();
+
+        cl::KernelPtrs kernels = pair.second.mKernels;
+
+        for (cl::KernelPtr kernel : kernels)
+        {
+            CLKernelVk *kernelVk = &kernel->getImpl<CLKernelVk>();
+
+            if (kernelVk->usesPrintf())
+            {
+                auto printfInfos =
+                    kernelVk->getProgram()->getPrintfDescriptors(kernelVk->getKernelName());
+
+                CLBufferVk &vkMem = pair.second.mPrintfBuffer->template getImpl<CLBufferVk>();
+
+                unsigned char *data = nullptr;
+                ANGLE_TRY(vkMem.map(data, 0));
+                ANGLE_TRY(ClspvProcessPrintfBuffer(data, vkMem.getSize(), printfInfos));
+                vkMem.unmap();
+            }
+        }
+        return angle::Result::Continue;
+    });
 
     return angle::Result::Continue;
 }
