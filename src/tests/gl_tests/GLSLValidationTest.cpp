@@ -3142,6 +3142,347 @@ void main() {
                   "output in ESSL version >= 3.00 and EXT_blend_func_extended is enabled");
 }
 
+// Shader that specifies yuv layout qualifier for not output fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetYuvQualifierOnInput)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+layout(yuv) in vec4 fragColor;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'yuv' : invalid layout qualifier: only valid on program outputs");
+}
+
+// Shader that specifies yuv layout qualifier for not output fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetYuvQualifierOnUniform)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+layout(yuv) uniform;
+layout(yuv) uniform Transform {
+     mat4 M1;
+};
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'yuv' : invalid layout qualifier: only valid on program outputs");
+}
+
+// Shader that specifies yuv layout qualifier with location fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetYuvQualifierAndLocation)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+layout(location = 0, yuv) out vec4 fragColor;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "'yuv' : invalid layout qualifier combination");
+}
+
+// Shader that specifies yuv layout qualifier with multiple color outputs fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetYuvAndColorOutput)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+layout(yuv) out vec4 fragColor;
+out vec4 fragColor1;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'fragColor' : not allowed to specify yuv qualifier when using depth or multiple "
+                  "color fragment outputs");
+}
+
+// Shader that specifies yuv layout qualifier with multiple color outputs fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetYuvAndColorOutputWithLocation)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+layout(yuv) out vec4 fragColor;
+layout(location = 1) out vec4 fragColor1;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'fragColor' : not allowed to specify yuv qualifier when using depth or multiple "
+                  "color fragment outputs");
+}
+
+// Shader that specifies yuv layout qualifier with depth output fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetWithFragDepth)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+layout(yuv) out vec4 fragColor;
+void main() {
+    gl_FragDepth = 1.0f;
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'fragColor' : not allowed to specify yuv qualifier when using depth or multiple "
+                  "color fragment outputs");
+}
+
+// Shader that specifies yuv layout qualifier with multiple outputs fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetMultipleYuvOutputs)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+layout(yuv) out vec4 fragColor;
+layout(yuv) out vec4 fragColor1;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'fragColor' : not allowed to specify yuv qualifier when using depth or multiple "
+                  "color fragment outputs");
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'fragColor1' : not allowed to specify yuv qualifier when using depth or "
+                  "multiple color fragment outputs");
+}
+
+// Shader that specifies yuvCscStandardEXT type constructor fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetEmptyCscStandardConstructor)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+yuvCscStandardEXT conv = yuvCscStandardEXT();
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "'yuvCscStandardEXT' : cannot construct this type");
+}
+
+// Shader that specifies yuvCscStandardEXT type constructor fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetCscStandardConstructor)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+yuvCscStandardEXT conv = yuvCscStandardEXT(itu_601);
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "'yuvCscStandardEXT' : cannot construct this type");
+}
+
+// Shader that specifies yuvCscStandardEXT type conversion fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetImplicitTypeConversionToCscStandardFromBool)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+yuvCscStandardEXT conv = false;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "cannot convert from 'const bool' to 'yuvCscStandardEXT'");
+}
+
+// Shader that specifies yuvCscStandardEXT type conversion fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetImplicitTypeConversionToCscStandardFromInt)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+yuvCscStandardEXT conv = 0;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "cannot convert from 'const int' to 'yuvCscStandardEXT'");
+}
+
+// Shader that specifies yuvCscStandardEXT type conversion fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetImplicitTypeConversionToCscStandardFromFloat)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+yuvCscStandardEXT conv = 2.0f;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "cannot convert from 'const float' to 'yuvCscStandardEXT'");
+}
+
+// Shader that does arithmetics on yuvCscStandardEXT fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetCscStandardOr)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+yuvCscStandardEXT conv = itu_601 | itu_709;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "wrong operand types - no operation '|' exists that takes a left-hand operand of "
+                  "type 'const yuvCscStandardEXT' and a right operand of type 'const "
+                  "yuvCscStandardEXT' (or there is no acceptable conversion)");
+}
+
+// Shader that does arithmetics on yuvCscStandardEXT fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetCscStandardAnd)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+yuvCscStandardEXT conv = itu_601 & 3.0f;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "wrong operand types - no operation '&' exists that takes a left-hand operand of "
+                  "type 'const yuvCscStandardEXT' and a right operand of type 'const float' (or "
+                  "there is no acceptable conversion)");
+}
+
+// Shader that specifies yuvCscStandardEXT type qualifiers fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetCscStandardInput)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+in yuvCscStandardEXT conv = itu_601;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "'in' : cannot be used with a yuvCscStandardEXT");
+}
+
+// Shader that specifies yuvCscStandardEXT type qualifiers fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetCscStandardOutput)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+out yuvCscStandardEXT conv = itu_601;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "'out' : cannot be used with a yuvCscStandardEXT");
+}
+
+// Shader that specifies yuvCscStandardEXT type qualifiers fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetCscStandardUniform)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+uniform yuvCscStandardEXT conv = itu_601;
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "'uniform' : cannot be used with a yuvCscStandardEXT");
+}
+
+// Overloading rgb_2_yuv is ok if the extension is not supported.
+TEST_P(GLSLValidationTest_ES3, OverloadRgb2Yuv)
+{
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] = R"(#version 300 es
+precision mediump float;
+float rgb_2_yuv(float x) { return x + 1.0; }
+
+in float i;
+out float o;
+
+void main()
+{
+    o = rgb_2_yuv(i);
+})";
+
+    validateSuccess(GL_FRAGMENT_SHADER, kFS);
+}
+
+// Overloading yuv_2_rgb is ok if the extension is not supported.
+TEST_P(GLSLValidationTest_ES3, OverloadYuv2Rgb)
+{
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    const char kFS[] = R"(#version 300 es
+precision mediump float;
+float yuv_2_rgb(float x) { return x + 1.0; }
+
+in float i;
+out float o;
+
+void main()
+{
+    o = yuv_2_rgb(i);
+})";
+
+    validateSuccess(GL_FRAGMENT_SHADER, kFS);
+}
+
 class GLSLValidationClipDistanceTest_ES3 : public GLSLValidationTest_ES3
 {};
 
