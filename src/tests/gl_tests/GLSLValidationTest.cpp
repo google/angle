@@ -2896,6 +2896,252 @@ void main()
                   "'i' : Loop index cannot be statically assigned to within the body of the loop");
 }
 
+// Shader that writes to SecondaryFragColor and SecondaryFragData does not compile.
+TEST_P(GLSLValidationTest, BlendFuncExtendedSecondaryColorAndData)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char kFS[] = R"(#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    gl_SecondaryFragColorEXT = vec4(1.0);
+    gl_SecondaryFragDataEXT[gl_MaxDualSourceDrawBuffersEXT - 1] = vec4(0.1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "cannot use both output variable sets (gl_FragData, gl_SecondaryFragDataEXT) and "
+                  "(gl_FragColor, gl_SecondaryFragColorEXT)");
+}
+
+// Shader that writes to FragColor and SecondaryFragData does not compile.
+TEST_P(GLSLValidationTest, BlendFuncExtendedColorAndSecondaryData)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char kFS[] = R"(#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    gl_FragColor = vec4(1.0);
+    gl_SecondaryFragDataEXT[gl_MaxDualSourceDrawBuffersEXT - 1] = vec4(0.1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "cannot use both output variable sets (gl_FragData, gl_SecondaryFragDataEXT) and "
+                  "(gl_FragColor, gl_SecondaryFragColorEXT)");
+}
+
+// Shader that writes to FragData and SecondaryFragColor.
+TEST_P(GLSLValidationTest, BlendFuncExtendedDataAndSecondaryColor)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    const char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    gl_SecondaryFragColorEXT = vec4(1.0);
+    gl_FragData[gl_MaxDrawBuffers - 1] = vec4(0.1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "cannot use both output variable sets (gl_FragData, gl_SecondaryFragDataEXT) and "
+                  "(gl_FragColor, gl_SecondaryFragColorEXT)");
+}
+
+// Dynamic indexing of SecondaryFragData is not allowed in WebGL 2.0.
+TEST_P(WebGL2GLSLValidationTest, BlendFuncExtendedSecondaryDataIndexing)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char kFS[] = R"(#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    for (int i = 0; i < 2; ++i) {
+        gl_SecondaryFragDataEXT[true ? 0 : i] = vec4(0.0);
+    }
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "array index for gl_SecondaryFragDataEXT must be constant zero");
+}
+
+// Shader that specifies index layout qualifier but not location fails to compile.
+TEST_P(GLSLValidationTest_ES3, BlendFuncExtendedNoLocationQualifier)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+layout(index = 0) out vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'index' : If index layout qualifier is specified for a fragment output, "
+                  "location must also be specified");
+}
+
+// Shader that specifies index layout qualifier multiple times fails to compile.
+TEST_P(GLSLValidationTest_ES3, BlendFuncExtendedMultipleIndexQualifiers)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+layout(index = 0, location = 0, index = 1) out vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'index' : Cannot have multiple index specifiers");
+}
+
+// Shader that specifies an output with out-of-bounds location
+// for index 0 when another output uses index 1 is invalid.
+TEST_P(GLSLValidationTest_ES3, BlendFuncExtendedOutOfBoundsLocationQualifier)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    GLint maxDualSourceDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT, &maxDualSourceDrawBuffers);
+    ANGLE_SKIP_TEST_IF(maxDualSourceDrawBuffers > 1);
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+layout(location = 1, index = 0) out mediump vec4 fragColor;
+layout(location = 0, index = 1) out mediump vec4 secondaryFragColor;
+void main() {
+    fragColor = vec4(1);
+    secondaryFragColor = vec4(1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'fragColor' : output location must be < MAX_DUAL_SOURCE_DRAW_BUFFERS");
+}
+
+// Shader that specifies an output with out-of-bounds location for index 1 is invalid.
+TEST_P(GLSLValidationTest_ES3, BlendFuncExtendedOutOfBoundsLocationQualifierIndex1)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    GLint maxDualSourceDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT, &maxDualSourceDrawBuffers);
+    ANGLE_SKIP_TEST_IF(maxDualSourceDrawBuffers > 1);
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+layout(location = 1, index = 1) out mediump vec4 secondaryFragColor;
+void main() {
+    secondaryFragColor = vec4(1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'secondaryFragColor' : output location must be < MAX_DUAL_SOURCE_DRAW_BUFFERS");
+}
+
+// Shader that specifies two outputs with the same location
+// but different indices and different base types is invalid.
+TEST_P(GLSLValidationTest_ES3, BlendFuncExtendedLocationOverlap)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+layout(location = 0, index = 0) out mediump vec4 fragColor;
+layout(location = 0, index = 1) out mediump ivec4 secondaryFragColor;
+void main() {
+    fragColor = vec4(1);
+    secondaryFragColor = ivec4(1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'secondaryFragColor' : conflicting output types with previously defined output "
+                  "'fragColor' for location 0");
+}
+
+// Global index layout qualifier fails.
+TEST_P(GLSLValidationTest_ES3, BlendFuncExtendedGlobalIndexQualifier)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+layout(index = 0);
+out vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'index' : invalid layout qualifier: only valid when used with a fragment shader "
+                  "output in ESSL version >= 3.00 and EXT_blend_func_extended is enabled");
+}
+
+// Index layout qualifier on a non-output variable fails.
+TEST_P(GLSLValidationTest_ES3, BlendFuncExtendedIndexQualifierOnUniform)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+layout(index = 0) uniform vec4 u;
+out vec4 fragColor;
+void main() {
+    fragColor = u;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'index' : invalid layout qualifier: only valid when used with a fragment shader "
+                  "output in ESSL version >= 3.00 and EXT_blend_func_extended is enabled");
+}
+
+// Index layout qualifier on a struct fails.
+TEST_P(GLSLValidationTest_ES3, BlendFuncExtendedIndexQualifierOnStruct)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+layout(index = 0) struct S {
+    vec4 field;
+};
+out vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'index' : invalid layout qualifier: only valid when used with a fragment shader "
+                  "output in ESSL version >= 3.00 and EXT_blend_func_extended is enabled");
+}
+
+// Index layout qualifier on a struct member fails.
+TEST_P(GLSLValidationTest_ES3, BlendFuncExtendedIndexQualifierOnField)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    const char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+struct S {
+    layout(index = 0) vec4 field;
+};
+out mediump vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'index' : invalid layout qualifier: only valid when used with a fragment shader "
+                  "output in ESSL version >= 3.00 and EXT_blend_func_extended is enabled");
+}
+
 class GLSLValidationClipDistanceTest_ES3 : public GLSLValidationTest_ES3
 {};
 
