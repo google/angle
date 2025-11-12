@@ -3543,8 +3543,67 @@ void main (void)
                   "GL_EXT_shader_framebuffer_fetch_non_coherent extension is used");
 }
 
+// Validate that clip/cull distance extensions are not available in ESSL 100
+TEST_P(GLSLValidationTest, ClipCullDistance)
+{
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        const char kVS[] = R"(#extension GL_ANGLE_clip_cull_distance : require
+attribute vec4 aPosition;
+void main()
+{
+    gl_Position = aPosition;
+})";
+        validateError(GL_VERTEX_SHADER, kVS,
+                      "'GL_ANGLE_clip_cull_distance' : extension is not supported");
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        const char kVS[] = R"(#extension GL_EXT_clip_cull_distance : require
+attribute vec4 aPosition;
+void main()
+{
+    gl_Position = aPosition;
+})";
+        validateError(GL_VERTEX_SHADER, kVS,
+                      "'GL_EXT_clip_cull_distance' : extension is not supported");
+    }
+}
+
 class GLSLValidationClipDistanceTest_ES3 : public GLSLValidationTest_ES3
-{};
+{
+  protected:
+    void validateErrorWithExt(GLenum shaderType,
+                              const char *extension,
+                              const char *shaderSource,
+                              const char *expectedError)
+    {
+        std::stringstream src;
+        src << R"(#version 300 es
+#extension )"
+            << extension << ": require\n"
+            << shaderSource;
+        validateError(shaderType, src.str().c_str(), expectedError);
+    }
+};
+
+class GLSLValidationClipDistanceTest_ES31 : public GLSLValidationTest_ES31
+{
+  protected:
+    void validateErrorWithExt(GLenum shaderType,
+                              const char *extension,
+                              const char *shaderSource,
+                              const char *expectedError)
+    {
+        std::stringstream src;
+        src << R"(#version 310 es
+#extension )"
+            << extension << ": require\n"
+            << shaderSource;
+        validateError(shaderType, src.str().c_str(), expectedError);
+    }
+};
 
 // Extension support is required to compile properly.  Expect failure when it is not present.
 TEST_P(GLSLValidationClipDistanceTest_ES3, CompileFailsWithoutExtension)
@@ -3613,6 +3672,434 @@ void main()
     gl_ClipDistance[1] = dot(aPosition, uPlane);
 })";
         validateError(GL_VERTEX_SHADER, kVS, "'GL_APPLE_clip_distance' : extension is disabled");
+    }
+}
+
+// Shader using gl_ClipDistance and gl_CullDistance
+// But, the sum of the sizes is greater than gl_MaxCombinedClipAndCullDistances
+TEST_P(GLSLValidationClipDistanceTest_ES3, TooManyCombined)
+{
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+    ANGLE_SKIP_TEST_IF(!hasExt && !hasAngle);
+
+    GLint maxCombinedClipAndCullDistances = 0;
+    glGetIntegerv(GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT, &maxCombinedClipAndCullDistances);
+    ANGLE_SKIP_TEST_IF(maxCombinedClipAndCullDistances > 11);
+
+    const char kVS[] =
+        R"(uniform vec4 uPlane;
+
+in vec4 aPosition;
+
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[5] = dot(aPosition, uPlane);
+    gl_CullDistance[4] = dot(aPosition, uPlane);
+})";
+    constexpr char kExpect[] =
+        "The sum of 'gl_ClipDistance' and 'gl_CullDistance' size is greater than "
+        "gl_MaxCombinedClipAndCullDistance";
+
+    if (hasAngle)
+    {
+        GLint maxCullDistances = 0;
+        glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+        if (maxCullDistances > 0)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+        }
+    }
+
+    if (hasExt)
+    {
+        validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+    }
+}
+
+// Shader redeclares gl_ClipDistance and gl_CullDistance
+// But, the sum of the sizes is greater than gl_MaxCombinedClipAndCullDistances
+TEST_P(GLSLValidationClipDistanceTest_ES3, TooManyCombined2)
+{
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+    ANGLE_SKIP_TEST_IF(!hasExt && !hasAngle);
+
+    GLint maxCombinedClipAndCullDistances = 0;
+    glGetIntegerv(GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT, &maxCombinedClipAndCullDistances);
+    ANGLE_SKIP_TEST_IF(maxCombinedClipAndCullDistances > 9);
+
+    const char kVS[] =
+        R"(uniform vec4 uPlane;
+
+in vec4 aPosition;
+
+out highp float gl_ClipDistance[5];
+out highp float gl_CullDistance[4];
+
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[gl_MaxClipDistances - 6 + 1] = dot(aPosition, uPlane);
+    gl_ClipDistance[gl_MaxClipDistances - int(aPosition.x)] = dot(aPosition, uPlane);
+    gl_CullDistance[gl_MaxCullDistances - 6 + 1] = dot(aPosition, uPlane);
+    gl_CullDistance[gl_MaxCullDistances - int(aPosition.x)] = dot(aPosition, uPlane);
+})";
+    constexpr char kExpect[] =
+        "The sum of 'gl_ClipDistance' and 'gl_CullDistance' size is greater than "
+        "gl_MaxCombinedClipAndCullDistance";
+
+    if (hasAngle)
+    {
+        GLint maxCullDistances = 0;
+        glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+        if (maxCullDistances > 0)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+        }
+    }
+
+    if (hasExt)
+    {
+        validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+    }
+}
+
+// Shader redeclares gl_ClipDistance
+// But, the array size is greater than gl_MaxClipDistances
+TEST_P(GLSLValidationClipDistanceTest_ES3, TooManyClip)
+{
+    const char kVS[] =
+        R"(uniform vec4 uPlane;
+
+in vec4 aPosition;
+
+out highp float gl_ClipDistance[gl_MaxClipDistances + 1];
+
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[gl_MaxClipDistances - 6 + 1] = dot(aPosition, uPlane);
+    gl_ClipDistance[gl_MaxClipDistances - int(aPosition.x)] = dot(aPosition, uPlane);
+})";
+    constexpr char kExpect[] = "redeclaration of gl_ClipDistance with size > gl_MaxClipDistances";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+    }
+}
+
+// Access gl_CullDistance with integral constant index
+// But, the index is gl_MaxCullDistances, greater than gl_CullDistance array size.
+TEST_P(GLSLValidationClipDistanceTest_ES3, OutOfBoundsCullIndex)
+{
+    const char kVS[] =
+        R"(uniform vec4 uPlane;
+
+in vec4 aPosition;
+
+void main()
+{
+    gl_Position = aPosition;
+    gl_CullDistance[gl_MaxCullDistances] = dot(aPosition, uPlane);
+})";
+    constexpr char kExpect[] = "array index out of range";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        GLint maxCullDistances = 0;
+        glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+        if (maxCullDistances > 0)
+        {
+            validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+        }
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+    }
+}
+
+// Shader using gl_ClipDistance and gl_CullDistance
+// But, the sum of the sizes is greater than gl_MaxCombinedClipAndCullDistances
+TEST_P(GLSLValidationClipDistanceTest_ES3, TooManyCombinedFS)
+{
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+    ANGLE_SKIP_TEST_IF(!hasExt && !hasAngle);
+
+    GLint maxCombinedClipAndCullDistances = 0;
+    glGetIntegerv(GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT, &maxCombinedClipAndCullDistances);
+    ANGLE_SKIP_TEST_IF(maxCombinedClipAndCullDistances > 11);
+
+    const char kFS[] = R"(out highp vec4 fragColor;
+
+void main()
+{
+    fragColor = vec4(gl_ClipDistance[4], gl_CullDistance[5], 0, 1);
+})";
+    constexpr char kExpect[] =
+        "The sum of 'gl_ClipDistance' and 'gl_CullDistance' size is greater than "
+        "gl_MaxCombinedClipAndCullDistances";
+
+    if (hasAngle)
+    {
+        GLint maxCullDistances = 0;
+        glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+        if (maxCullDistances > 0)
+        {
+            validateErrorWithExt(GL_FRAGMENT_SHADER, "GL_ANGLE_clip_cull_distance", kFS, kExpect);
+        }
+    }
+
+    if (hasExt)
+    {
+        validateErrorWithExt(GL_FRAGMENT_SHADER, "GL_EXT_clip_cull_distance", kFS, kExpect);
+    }
+}
+
+// Shader redeclares gl_ClipDistance and gl_CullDistance
+// But, the sum of the sizes is greater than gl_MaxCombinedClipAndCullDistances
+TEST_P(GLSLValidationClipDistanceTest_ES3, TooManyCombinedFS2)
+{
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+    ANGLE_SKIP_TEST_IF(!hasExt && !hasAngle);
+
+    GLint maxCombinedClipAndCullDistances = 0;
+    glGetIntegerv(GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT, &maxCombinedClipAndCullDistances);
+    ANGLE_SKIP_TEST_IF(maxCombinedClipAndCullDistances > 9);
+
+    const char kFS[] = R"(in highp float gl_ClipDistance[5];
+in highp float gl_CullDistance[4];
+
+in highp vec4 aPosition;
+
+out highp vec4 fragColor;
+
+void main()
+{
+    fragColor.x = gl_ClipDistance[gl_MaxClipDistances - 6 + 1];
+    fragColor.y = gl_ClipDistance[gl_MaxClipDistances - int(aPosition.x)];
+    fragColor.z = gl_CullDistance[gl_MaxCullDistances - 6 + 1];
+    fragColor.w = gl_CullDistance[gl_MaxCullDistances - int(aPosition.x)];
+})";
+    constexpr char kExpect[] =
+        "The sum of 'gl_ClipDistance' and 'gl_CullDistance' size is greater than "
+        "gl_MaxCombinedClipAndCullDistances";
+
+    if (hasAngle)
+    {
+        GLint maxCullDistances = 0;
+        glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+        if (maxCullDistances > 0)
+        {
+            validateErrorWithExt(GL_FRAGMENT_SHADER, "GL_ANGLE_clip_cull_distance", kFS, kExpect);
+        }
+    }
+
+    if (hasExt)
+    {
+        validateErrorWithExt(GL_FRAGMENT_SHADER, "GL_EXT_clip_cull_distance", kFS, kExpect);
+    }
+}
+
+// In fragment shader, writing to gl_ClipDistance should be denied.
+TEST_P(GLSLValidationClipDistanceTest_ES3, FragmentWriteToClipDistance)
+{
+    const char kFS[] = R"(out highp vec4 fragColor;
+
+void main()
+{
+    gl_ClipDistance[0] = 0.0f;
+    fragColor = vec4(1, gl_ClipDistance[0], 0, 1);
+})";
+    constexpr char kExpect[] =
+        "l-value required (can't modify gl_ClipDistance in a fragment shader \"gl_ClipDistance\")";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_FRAGMENT_SHADER, "GL_ANGLE_clip_cull_distance", kFS, kExpect);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_FRAGMENT_SHADER, "GL_EXT_clip_cull_distance", kFS, kExpect);
+    }
+}
+
+// In fragment shader, writing to gl_CullDistance should be denied even if redeclaring it with the
+// array size
+TEST_P(GLSLValidationClipDistanceTest_ES3, FragmentWriteToCullDistance)
+{
+    const char kFS[] = R"(out highp vec4 fragColor;
+
+in highp float gl_CullDistance[1];
+
+void main()
+{
+    gl_CullDistance[0] = 0.0f;
+    fragColor = vec4(1, gl_CullDistance[0], 0, 1);
+})";
+    constexpr char kExpect[] =
+        "l-value required (can't modify gl_CullDistance in a fragment shader \"gl_CullDistance\")";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_FRAGMENT_SHADER, "GL_ANGLE_clip_cull_distance", kFS, kExpect);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_FRAGMENT_SHADER, "GL_EXT_clip_cull_distance", kFS, kExpect);
+    }
+}
+
+// Accessing to gl_Clip/CullDistance with non-const index should be denied if the size of
+// gl_Clip/CullDistance is not decided.
+TEST_P(GLSLValidationClipDistanceTest_ES3, FragmentDynamicIndexWhenNotRedeclared)
+{
+    const char kFS[] = R"(out highp vec4 fragColor;
+
+void main()
+{
+    mediump float color[3];
+    for(int i = 0 ; i < 3 ; i++)
+    {
+        color[i] = gl_CullDistance[i];
+    }
+    fragColor = vec4(color[0], color[1], color[2], 1.0f);
+})";
+    constexpr char kExpect[] =
+        "The gl_CullDistance array must be sized by the shader either redeclaring it with a size "
+        "or indexing it only with constant integral expressions";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_FRAGMENT_SHADER, "GL_ANGLE_clip_cull_distance", kFS, kExpect);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_FRAGMENT_SHADER, "GL_EXT_clip_cull_distance", kFS, kExpect);
+    }
+}
+
+// In compute shader, redeclaring gl_ClipDistance should be denied.
+TEST_P(GLSLValidationClipDistanceTest_ES31, ComputeDeclareClipDistance)
+{
+    const char kCS[]         = R"(layout(local_size_x = 1) in;
+highp float gl_ClipDistance[1];
+void main() {})";
+    constexpr char kExpect[] = "reserved built-in name";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_ANGLE_clip_cull_distance", kCS, kExpect);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_EXT_clip_cull_distance", kCS, kExpect);
+    }
+}
+
+// In compute shader, writing to gl_ClipDistance should be denied.
+TEST_P(GLSLValidationClipDistanceTest_ES31, ComputeWriteClipDistance)
+{
+    const char kCS[]         = R"(layout(local_size_x = 1) in;
+void main() { gl_ClipDistance[0] = 1.0; })";
+    constexpr char kExpect[] = "'gl_ClipDistance' : undeclared identifier";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_ANGLE_clip_cull_distance", kCS, kExpect);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_EXT_clip_cull_distance", kCS, kExpect);
+    }
+}
+
+// In compute shader, reading gl_ClipDistance should be denied.
+TEST_P(GLSLValidationClipDistanceTest_ES31, ComputeReadClipDistance)
+{
+    const char kCS[]         = R"(layout(local_size_x = 1) in;
+void main() { highp float c = gl_ClipDistance[0]; })";
+    constexpr char kExpect[] = "'gl_ClipDistance' : undeclared identifier";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_ANGLE_clip_cull_distance", kCS, kExpect);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_EXT_clip_cull_distance", kCS, kExpect);
+    }
+}
+
+// In compute shader, redeclaring gl_CullDistance should be denied.
+TEST_P(GLSLValidationClipDistanceTest_ES31, ComputeDeclareCullDistance)
+{
+    const char kCS[]         = R"(layout(local_size_x = 1) in;
+highp float gl_CullDistance[1];
+void main() {})";
+    constexpr char kExpect[] = "reserved built-in name";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_ANGLE_clip_cull_distance", kCS, kExpect);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_EXT_clip_cull_distance", kCS, kExpect);
+    }
+}
+
+// In compute shader, writing to gl_CullDistance should be denied.
+TEST_P(GLSLValidationClipDistanceTest_ES31, ComputeWriteCullDistance)
+{
+    const char kCS[]         = R"(layout(local_size_x = 1) in;
+void main() { gl_CullDistance[0] = 1.0; })";
+    constexpr char kExpect[] = "'gl_CullDistance' : undeclared identifier";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_ANGLE_clip_cull_distance", kCS, kExpect);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_EXT_clip_cull_distance", kCS, kExpect);
+    }
+}
+
+// In compute shader, reading gl_CullDistance should be denied.
+TEST_P(GLSLValidationClipDistanceTest_ES31, ComputeReadCullDistance)
+{
+    const char kCS[]         = R"(layout(local_size_x = 1) in;
+void main() { highp float c = gl_CullDistance[0]; })";
+    constexpr char kExpect[] = "'gl_CullDistance' : undeclared identifier";
+
+    if (IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_ANGLE_clip_cull_distance", kCS, kExpect);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_clip_cull_distance"))
+    {
+        validateErrorWithExt(GL_COMPUTE_SHADER, "GL_EXT_clip_cull_distance", kCS, kExpect);
     }
 }
 
@@ -4673,15 +5160,12 @@ TEST_P(GLSLValidationExtensionDirectiveTest_ES3, ClipCullDistanceNeedsExtensionD
     const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
 
     GLint maxClipDistances = 0;
+    GLint maxCullDistances = 0;
     if (hasExt || hasAngle)
     {
         glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
         EXPECT_GE(maxClipDistances, 8);
-    }
 
-    GLint maxCullDistances = 0;
-    if (hasExt || hasAngle)
-    {
         glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
         EXPECT_TRUE(maxCullDistances == 0 || maxCullDistances >= 8);
         if (hasExt)
@@ -5105,6 +5589,9 @@ ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLValidationTest);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationClipDistanceTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLValidationClipDistanceTest_ES3,
                                ES3_VULKAN().disable(Feature::SupportsAppleClipDistance));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationClipDistanceTest_ES31);
+ANGLE_INSTANTIATE_TEST_ES31(GLSLValidationClipDistanceTest_ES31);
 
 ANGLE_INSTANTIATE_TEST_ES2(GLSLValidationTextureRectangleTest);
 
