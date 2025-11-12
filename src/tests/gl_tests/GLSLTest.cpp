@@ -19933,6 +19933,10 @@ TEST_P(WebGLGLSLTest, InvalidGlobalsNotInlined)
 // fields having unique names.
 TEST_P(GLSLTest_ES3, LotsOfFieldsInStruct)
 {
+    int maxUniformBlockSize = 0;
+    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
+    ANGLE_SKIP_TEST_IF(maxUniformBlockSize < 16384 * 4);
+
     std::ostringstream fs;
     fs << R"(#version 300 es
 precision highp float;
@@ -19954,43 +19958,33 @@ void main() {
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.str().c_str());
 }
 
-// Make sure the shader in LargeInterfaceBlockArrayPassedToFunction works if the large local is
-// avoided.
-TEST_P(GLSLTest_ES3, LargeInterfaceBlockArray)
+// Make sure an SSBO with a large array links successfully.
+TEST_P(GLSLTest_ES31, LargeInterfaceBlockArray)
 {
-    int maxUniformBlockSize = 0;
-    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
-    ANGLE_SKIP_TEST_IF(maxUniformBlockSize < 16384 * 4);
-
-    constexpr char kFS[] = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 310 es
 precision highp float;
-uniform Large { float a[16384]; };
+layout(std430) buffer Large { float a[65536]; };
 out vec4 color;
 void main() {
     color = vec4(a[0], 0.0, 0.0, 1.0);
 })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
 }
 
-// Make sure the shader in LargeInterfaceBlockNestedArrayPassedToFunction works if the large local
-// is avoided.
-TEST_P(GLSLTest_ES3, LargeInterfaceBlockNestedArray)
+// Make sure an SSBO with a nested large array links successfully.
+TEST_P(GLSLTest_ES31, LargeInterfaceBlockNestedArray)
 {
-    int maxUniformBlockSize = 0;
-    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
-    ANGLE_SKIP_TEST_IF(maxUniformBlockSize < 16384 * 4);
-
-    constexpr char kFS[] = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 310 es
 precision highp float;
-struct S { float a[16384]; };
-uniform Large { S s; };
+struct S { float a[65536]; };
+layout(std430) buffer Large { S s; };
 out vec4 color;
 void main() {
     color = vec4(s.a[0], 0.0, 0.0, 1.0);
 })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
 }
 
 // Regression test for const globals losing const qualifiers during MSL
@@ -21192,7 +21186,7 @@ TEST_P(GLSLTest, NestedInoutVars3)
     }
 }
 
-// Tested that nesting rgb_2_yuv and yuv_2_rgb works.
+// Test that nesting rgb_2_yuv and yuv_2_rgb works.
 TEST_P(GLSLTest_ES3, rgbYuvBuiltInNesting1)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
@@ -21216,7 +21210,7 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
-// Tested that nesting rgb_2_yuv and yuv_2_rgb works.
+// Test that nesting rgb_2_yuv and yuv_2_rgb works.
 TEST_P(GLSLTest_ES3, rgbYuvBuiltInNesting2)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
@@ -21240,7 +21234,7 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
-// Tested that nesting rgb_2_yuv and yuv_2_rgb works.
+// Test that nesting rgb_2_yuv and yuv_2_rgb works.
 TEST_P(GLSLTest_ES3, rgbYuvBuiltInNesting3)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
@@ -21266,7 +21260,7 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
-// Tested that nesting rgb_2_yuv and yuv_2_rgb works.
+// Test that nesting rgb_2_yuv and yuv_2_rgb works.
 TEST_P(GLSLTest_ES3, rgbYuvBuiltInNesting4)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
@@ -21292,7 +21286,7 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
-// Tested that using rgb_2_yuv and yuv_2_rgb with different precisions work.
+// Test that using rgb_2_yuv and yuv_2_rgb with different precisions work.
 TEST_P(GLSLTest_ES3, rgbYuvBuiltInUsedWithDifferentPrecisions)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
@@ -21324,6 +21318,66 @@ void main()
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.0);
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(72, 0, 161, 255), 1);
     ASSERT_GL_NO_ERROR();
+}
+
+// Test that link fails if UBO size is larger than MAX.
+TEST_P(GLSLTest_ES3, UBOExceedsMaxSize)
+{
+    int maxUniformBlockSize = 0;
+    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
+    // ANGLE limits the UBO size to 64KB, so in practice the test always runs.
+    ANGLE_SKIP_TEST_IF(maxUniformBlockSize > 65536);
+
+    const char kFS[] = R"(#version 300 es
+precision mediump float;
+struct S64
+{
+    vec4 f[64];
+};
+
+layout(std140) uniform Block {
+    S64 arr[256];
+};
+
+out vec4 color;
+
+void main()
+{
+    color = vec4(arr[10].f[15]);
+})";
+
+    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Test that link fails if SSBO size is larger than MAX.
+TEST_P(GLSLTest_ES31, SSBOExceedsMaxSize)
+{
+    int maxShaderStorageBlockSize = 0;
+    glGetIntegerv(GL_MAX_SHADER_STORAGE_BLOCK_SIZE, &maxShaderStorageBlockSize);
+    // ANGLE limits the SSBO size to INT_MAX, so in practice the test always runs.
+    ANGLE_SKIP_TEST_IF(maxShaderStorageBlockSize > 0x7FFF'FFFF);
+
+    const char kFS[] = R"(#version 310 es
+precision mediump float;
+struct S
+{
+    vec4 f[8192];
+};
+
+layout(std140) buffer Block {
+    S arr[32768];
+};
+
+out vec4 color;
+
+void main()
+{
+    color = vec4(arr[10].f[15]);
+})";
+
+    GLuint program = CompileProgram(essl31_shaders::vs::Simple(), kFS);
+    EXPECT_EQ(0u, program);
 }
 
 }  // anonymous namespace

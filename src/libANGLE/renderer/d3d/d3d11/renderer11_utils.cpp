@@ -1549,7 +1549,8 @@ void GenerateCaps(ID3D11Device *device,
     // Aggregate shader limits
     caps->maxUniformBufferBindings = caps->maxShaderUniformBlocks[gl::ShaderType::Vertex] +
                                      caps->maxShaderUniformBlocks[gl::ShaderType::Fragment];
-    caps->maxUniformBlockSize = static_cast<GLuint64>(GetMaximumConstantBufferSize(featureLevel));
+    caps->maxUniformBlockSize = static_cast<GLuint>(std::min<size_t>(
+        gl::IMPLEMENTATION_MAX_UNIFORM_BLOCK_SIZE, GetMaximumConstantBufferSize(featureLevel)));
 
     // TODO(oetuaho): Get a more accurate limit. For now using the minimum requirement for GLES 3.1.
     caps->maxUniformLocations = 1024;
