@@ -846,6 +846,7 @@ void PixelLocalStorageTest::doR32Test(bool noncoherent)
 TEST_P(PixelLocalStorageTest, R32)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
     doR32Test(/*noncoherent=*/false);
 }
 
@@ -854,6 +855,7 @@ TEST_P(PixelLocalStorageTest, R32)
 TEST_P(PixelLocalStorageTest, R32_noncoherent)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
     doR32Test(/*noncoherent=*/true);
 }
 
@@ -1030,6 +1032,7 @@ TEST_P(PixelLocalStorageTest, ClearValues_rgba8)
 TEST_P(PixelLocalStorageTest, ClearValues_r32)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -1406,6 +1409,7 @@ TEST_P(PixelLocalStorageTest, FragmentReject_viewport)
 TEST_P(PixelLocalStorageTest, ForgetBarrier)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
 
     mProgram.compile(R"(
     layout(binding=0, r32f) uniform highp pixelLocalANGLE framebuffer;
@@ -1744,6 +1748,7 @@ TEST_P(PixelLocalStorageTest, ProgramCache)
 TEST_P(PixelLocalStorageTest, LoadOnly)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
 
     PLSTestTexture tex(GL_RGBA8);
 
@@ -1859,6 +1864,7 @@ TEST_P(PixelLocalStorageTest, LoadOnly)
 TEST_P(PixelLocalStorageTest, LoadAfterStore)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
 
     // Run a fibonacci loop that stores and loads the same PLS multiple times.
     mProgram.compile(R"(
@@ -1941,6 +1947,7 @@ TEST_P(PixelLocalStorageTest, LoadAfterStore)
 TEST_P(PixelLocalStorageTest, FunctionArguments)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
 
     mProgram.compile(R"(
     layout(binding=0, rgba8) uniform lowp pixelLocalANGLE dst;
@@ -3717,7 +3724,7 @@ TEST_P(PixelLocalStorageTest, LeakFramebufferAndTexture)
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8UI, 10, 10);
     glFramebufferTexturePixelLocalStorageANGLE(0, tex0, 0, 0);
 
-    PLSTestTexture tex1(GL_R32F);
+    PLSTestTexture tex1(GL_R32UI);
     glFramebufferTexturePixelLocalStorageANGLE(1, tex1, 0, 0);
 
     glFramebufferMemorylessPixelLocalStorageANGLE(3, GL_RGBA8I);
@@ -4612,14 +4619,10 @@ static void do_implicitly_enabled_extensions_test(const char *plsExtensionToRequ
 {
     bool hasDrawBuffersIndexedOES = IsGLExtensionRequestable("GL_OES_draw_buffers_indexed");
     bool hasDrawBuffersIndexedEXT = IsGLExtensionRequestable("GL_EXT_draw_buffers_indexed");
-    bool hasColorBufferFloat      = IsGLExtensionRequestable("GL_EXT_color_buffer_float");
-    bool hasColorBufferHalfFloat  = IsGLExtensionRequestable("GL_EXT_color_buffer_half_float");
     bool hasCoherent = IsGLExtensionRequestable("GL_ANGLE_shader_pixel_local_storage_coherent");
 
     EXPECT_TRUE(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
     EXPECT_TRUE(!IsGLExtensionEnabled("GL_EXT_draw_buffers_indexed"));
-    EXPECT_TRUE(!IsGLExtensionEnabled("GL_EXT_color_buffer_float"));
-    EXPECT_TRUE(!IsGLExtensionEnabled("GL_EXT_color_buffer_half_float"));
     EXPECT_TRUE(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent"));
     EXPECT_TRUE(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
@@ -4633,14 +4636,6 @@ static void do_implicitly_enabled_extensions_test(const char *plsExtensionToRequ
     if (hasDrawBuffersIndexedEXT)
     {
         EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_draw_buffers_indexed"));
-    }
-    if (hasColorBufferFloat)
-    {
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_color_buffer_float"));
-    }
-    if (hasColorBufferHalfFloat)
-    {
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_color_buffer_half_float"));
     }
     if (hasCoherent)
     {
@@ -4668,26 +4663,6 @@ static void do_implicitly_enabled_extensions_test(const char *plsExtensionToRequ
         EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_draw_buffers_indexed"));
     }
 
-    if (hasColorBufferFloat)
-    {
-        // If EXT_color_buffer_float ever becomes disablable, it will have to implicitly disable
-        // ANGLE_shader_pixel_local_storage.
-        glDisableExtensionANGLE("GL_EXT_color_buffer_float");
-        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_color_buffer_float"));
-    }
-
-    if (hasColorBufferHalfFloat)
-    {
-        // If EXT_color_buffer_half_float ever becomes disablable, it will have to implicitly
-        // disable ANGLE_shader_pixel_local_storage.
-        glDisableExtensionANGLE("GL_EXT_color_buffer_half_float");
-        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_color_buffer_half_float"));
-    }
-
     if (hasCoherent)
     {
         // ANGLE_shader_pixel_local_storage_coherent is not disablable.
@@ -4709,14 +4684,6 @@ static void do_implicitly_enabled_extensions_test(const char *plsExtensionToRequ
     if (hasDrawBuffersIndexedEXT)
     {
         EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_draw_buffers_indexed"));
-    }
-    if (hasColorBufferFloat)
-    {
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_color_buffer_float"));
-    }
-    if (hasColorBufferHalfFloat)
-    {
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_color_buffer_half_float"));
     }
     if (hasCoherent)
     {
@@ -4749,8 +4716,6 @@ TEST_P(PixelLocalStorageRequestableExtensionTest, ImplicitlyEnabledExtensionsCoh
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
         EXPECT_TRUE(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
         EXPECT_TRUE(!IsGLExtensionEnabled("GL_EXT_draw_buffers_indexed"));
-        EXPECT_TRUE(!IsGLExtensionEnabled("GL_EXT_color_buffer_float"));
-        EXPECT_TRUE(!IsGLExtensionEnabled("GL_EXT_color_buffer_half_float"));
         EXPECT_TRUE(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent"));
         EXPECT_TRUE(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
     }
@@ -4769,8 +4734,6 @@ TEST_P(PixelLocalStorageRequestableExtensionTest, ANGLEShaderPixelLocalStorageNo
 
     EnsureGLExtensionEnabled("GL_OES_draw_buffers_indexed");
     EnsureGLExtensionEnabled("GL_EXT_draw_buffers_indexed");
-    EnsureGLExtensionEnabled("GL_EXT_color_buffer_float");
-    EnsureGLExtensionEnabled("GL_EXT_color_buffer_half_float");
     EXPECT_TRUE(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent"));
     EXPECT_TRUE(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
@@ -4896,9 +4859,9 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferMemorylessPixelLocalStorageAN
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-    glFramebufferMemorylessPixelLocalStorageANGLE(0, GL_R32F);
+    glFramebufferMemorylessPixelLocalStorageANGLE(0, GL_R32UI);
     EXPECT_GL_NO_ERROR();
-    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_R32F);
+    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_R32UI);
     EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, GL_NONE);
     EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, GL_NONE);
     EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, GL_NONE);
@@ -4963,6 +4926,20 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferMemorylessPixelLocalStorageAN
     EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, GL_NONE);
     EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, GL_NONE);
     EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, GL_NONE);
+
+    // INVALID_OPERATION is generated if <internalformat> is not color-renderable.
+    glFramebufferMemorylessPixelLocalStorageANGLE(0, GL_R32F);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Internal format is not renderable.");
+    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_RGBA8I);
+
+    // Repeat after enabling the extension
+    if (EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"))
+    {
+        glFramebufferMemorylessPixelLocalStorageANGLE(0, GL_R32F);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_R32F);
+    }
 
     ASSERT_GL_NO_ERROR();
 }
@@ -5211,6 +5188,25 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferTexturePixelLocalStorageANGLE
     glFramebufferTexturePixelLocalStorageANGLE(2, tex, 1, 0);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Invalid pixel local storage internal format.");
+
+    // INVALID_OPERATION is generated if <backingtexture> is nonzero and its internalformat is not
+    // color-renderable.
+    tex.reset();
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 3, GL_R32F, 10, 10);
+    EXPECT_GL_NO_ERROR();
+    glFramebufferTexturePixelLocalStorageANGLE(2, tex, 1, 0);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Internal format is not renderable.");
+    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_RGBA8I);
+
+    // Repeat after enabling the extension
+    if (EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"))
+    {
+        glFramebufferTexturePixelLocalStorageANGLE(2, tex, 1, 0);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_R32F);
+    }
 
     ASSERT_GL_NO_ERROR();
 }
@@ -7854,7 +7850,7 @@ TEST_P(PixelLocalStorageValidationTest, LeakFramebufferAndTexture)
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8UI, 10, 10);
     glFramebufferTexturePixelLocalStorageANGLE(0, tex0, 0, 0);
 
-    PLSTestTexture tex1(GL_R32F);
+    PLSTestTexture tex1(GL_R32UI);
     glFramebufferTexturePixelLocalStorageANGLE(1, tex1, 0, 0);
 
     glFramebufferMemorylessPixelLocalStorageANGLE(3, GL_RGBA8I);
@@ -7882,7 +7878,7 @@ TEST_P(PixelLocalStorageValidationTest, LoseContext)
     glBindTexture(GL_TEXTURE_2D, tex0);
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8UI, 10, 10);
 
-    PLSTestTexture tex1(GL_R32F);
+    PLSTestTexture tex1(GL_R32UI);
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo0);
     glFramebufferTexturePixelLocalStorageANGLE(0, tex0, 0, 0);

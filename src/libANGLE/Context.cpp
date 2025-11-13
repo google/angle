@@ -3773,8 +3773,6 @@ void Context::setExtensionEnabled(const char *name, bool enabled)
             };
             enableIfRequestable("GL_OES_draw_buffers_indexed");
             enableIfRequestable("GL_EXT_draw_buffers_indexed");
-            enableIfRequestable("GL_EXT_color_buffer_float");
-            enableIfRequestable("GL_EXT_color_buffer_half_float");
             enableIfRequestable("GL_EXT_shader_framebuffer_fetch_non_coherent");
             enableIfRequestable("GL_ANGLE_shader_pixel_local_storage_coherent");
             enableIfRequestable("GL_ANGLE_shader_pixel_local_storage");

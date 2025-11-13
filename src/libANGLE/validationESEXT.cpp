@@ -2029,6 +2029,13 @@ bool ValidateFramebufferMemorylessPixelLocalStorageANGLE(const Context *context,
         {
             return false;
         }
+
+        // INVALID_OPERATION is generated if <internalformat> is not NONE and not color-renderable.
+        if (!context->getTextureCaps().get(internalformat).textureAttachment)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kFormatNotRenderable);
+            return false;
+        }
     }
 
     return true;
@@ -2108,6 +2115,14 @@ bool ValidateFramebufferTexturePixelLocalStorageANGLE(const Context *context,
         GLenum internalformat = tex->getState().getBaseLevelDesc().format.info->internalFormat;
         if (!ValidatePLSInternalformat(context, entryPoint, internalformat))
         {
+            return false;
+        }
+
+        // INVALID_OPERATION is generated if <backingtexture> is nonzero and its internalformat
+        // is not color-renderable.
+        if (!context->getTextureCaps().get(internalformat).textureAttachment)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kFormatNotRenderable);
             return false;
         }
     }

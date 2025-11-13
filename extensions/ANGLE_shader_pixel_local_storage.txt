@@ -698,6 +698,9 @@ Additions to the OpenGL ES Specification, Version 3.0.6
       * INVALID_ENUM is generated if <internalformat> is not one of the
         acceptable values in Table X.3, or NONE.
 
+      * INVALID_OPERATION is generated if <internalformat> is not NONE and not
+        color-renderable.
+
     If <internalformat> is NONE, the pixel local storage plane at index <plane>
     is deinitialized and any internal storage is released.
 
@@ -789,6 +792,9 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
       * INVALID_ENUM is generated if <backingtexture> is nonzero and its
         internalformat is not one of the acceptable values in Table X.3.
+
+      * INVALID_OPERATION is generated if <backingtexture> is nonzero and its
+        internalformat is not color-renderable.
 
     If <backingtexture> is 0, <level> and <layer> are ignored and the pixel
     local storage plane <plane> is deinitialized.
@@ -995,8 +1001,6 @@ Interactions with the ANGLE_request_extension specification
 
       * OES_draw_buffers_indexed
       * EXT_draw_buffers_indexed
-      * EXT_color_buffer_float
-      * EXT_color_buffer_half_float
       * EXT_shader_framebuffer_fetch_non_coherent
       * ANGLE_shader_pixel_local_storage_coherent
       * ANGLE_shader_pixel_local_storage
