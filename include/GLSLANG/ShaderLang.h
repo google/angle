@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 388
+#define ANGLE_SH_VERSION 389
 
 enum ShShaderSpec
 {
@@ -114,6 +114,7 @@ enum class ShPixelLocalStorageFormat : uint8_t
     RGBA8I,
     RGBA8UI,
     R32F,
+    R32I,
     R32UI,
 };
 

@@ -1889,6 +1889,7 @@ bool ValidatePLSInternalformat(const Context *context,
         case GL_RGBA8I:
         case GL_RGBA8UI:
         case GL_R32F:
+        case GL_R32I:
         case GL_R32UI:
             return true;
         default:

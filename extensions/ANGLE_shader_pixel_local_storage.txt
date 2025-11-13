@@ -670,6 +670,7 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         RGBA8I           INT                ipixelLocalANGLE   rgba8i
         RGBA8UI          UNSIGNED_INT       upixelLocalANGLE   rgba8ui
         R32F             FLOAT              pixelLocalANGLE    r32f
+        R32I             INT                ipixelLocalANGLE   r32i
         R32UI            UNSIGNED_INT       upixelLocalANGLE   r32ui
 
         Table X.3: Supported pixel local storage internalformats, with the Clear
@@ -678,9 +679,6 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
         Note that all pixel local storage formats consume exactly 4 bytes of
         storage.
-
-        Note that r32i is excluded from this table because it is not supported
-        by EXT_shader_pixel_local_storage.
 
     Errors:
 

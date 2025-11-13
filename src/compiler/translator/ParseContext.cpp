@@ -194,6 +194,7 @@ constexpr bool IsValidWithPixelLocalStorage(TLayoutImageInternalFormat internalF
         case EiifRGBA8I:
         case EiifRGBA8UI:
         case EiifR32F:
+        case EiifR32I:
         case EiifR32UI:
             return true;
         default:
@@ -215,6 +216,8 @@ constexpr ShPixelLocalStorageFormat ImageFormatToPLSFormat(TLayoutImageInternalF
             return ShPixelLocalStorageFormat::RGBA8UI;
         case EiifR32F:
             return ShPixelLocalStorageFormat::R32F;
+        case EiifR32I:
+            return ShPixelLocalStorageFormat::R32I;
         case EiifR32UI:
             return ShPixelLocalStorageFormat::R32UI;
     }
@@ -2308,6 +2311,7 @@ void TParseContext::nonEmptyDeclarationErrorCheck(const TPublicType &publicType,
                           getImageInternalFormatString(layoutQualifier.imageInternalFormat));
                 }
                 break;
+            case EiifR32I:
             case EiifRGBA8I:
                 if (publicType.getBasicType() != EbtIPixelLocalANGLE)
                 {
@@ -2325,7 +2329,6 @@ void TParseContext::nonEmptyDeclarationErrorCheck(const TPublicType &publicType,
                           getImageInternalFormatString(layoutQualifier.imageInternalFormat));
                 }
                 break;
-            case EiifR32I:
             case EiifRGBA8_SNORM:
             case EiifRGBA16F:
             case EiifRGBA32F:
@@ -7047,7 +7050,10 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
     }
     else if (qualifierType == "r32i")
     {
-        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        if (!isExtensionEnabled(TExtension::ANGLE_shader_pixel_local_storage))
+        {
+            checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        }
         qualifier.imageInternalFormat = EiifR32I;
     }
     else if (qualifierType == "rgba32ui")

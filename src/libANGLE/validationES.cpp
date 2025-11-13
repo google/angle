@@ -652,10 +652,12 @@ ANGLE_INLINE GLenum ShPixelLocalStorageFormatToGLenum(ShPixelLocalStorageFormat 
             return GL_RGBA8I;
         case ShPixelLocalStorageFormat::RGBA8UI:
             return GL_RGBA8UI;
-        case ShPixelLocalStorageFormat::R32UI:
-            return GL_R32UI;
         case ShPixelLocalStorageFormat::R32F:
             return GL_R32F;
+        case ShPixelLocalStorageFormat::R32I:
+            return GL_R32I;
+        case ShPixelLocalStorageFormat::R32UI:
+            return GL_R32UI;
     }
     UNREACHABLE();
     return GL_NONE;
