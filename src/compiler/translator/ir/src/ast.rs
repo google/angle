@@ -244,77 +244,69 @@ pub trait Target {
     fn end_function(&mut self, block: Self::BlockResult, id: FunctionId);
 }
 
-pub struct Generator<'ir> {
-    ir_meta: &'ir IRMeta,
+pub struct Generator {
+    ir: IR,
 }
 
-impl<'ir> Generator<'ir> {
-    pub fn new(ir_meta: &'ir IRMeta) -> Generator<'ir> {
-        Generator { ir_meta }
+impl Generator {
+    pub fn new(ir: IR) -> Generator {
+        Generator { ir }
     }
 
     // Note: call transform::dealias::run() beforehand, as well as transform::astify::run().
-    pub fn generate<T: Target>(
-        &mut self,
-        function_entries: &Vec<Option<Block>>,
-        target: &mut T,
-    ) -> T::BlockResult {
-        // Declare the base types, variables and functions up-front so they can be referred to
-        // by ids when generating the AST itself.
-        self.create_base_types(target);
+    pub fn generate<T: Target>(&mut self, target: &mut T) -> T::BlockResult {
+        // Declare the types, variables and functions up-front so they can be referred to by ids
+        // when generating the AST itself.
+        self.create_types(target);
         self.create_constants(target);
         self.create_variables(target);
         self.create_functions(target);
 
-        self.generate_ast(function_entries, target)
+        self.generate_ast(target)
     }
 
-    fn create_base_types<T: Target>(&mut self, target: &mut T) {
+    fn create_types<T: Target>(&self, target: &mut T) {
         // TODO(http://anglebug.com/349994211): Don't declare types that have been eliminated (such
         // as unused structs)
-        self.ir_meta.all_types().iter().enumerate().for_each(|(id, type_info)| {
-            target.new_type(self.ir_meta, TypeId { id: id as u32 }, type_info)
+        self.ir.meta.all_types().iter().enumerate().for_each(|(id, type_info)| {
+            target.new_type(&self.ir.meta, TypeId { id: id as u32 }, type_info)
         });
     }
 
-    fn create_constants<T: Target>(&mut self, target: &mut T) {
+    fn create_constants<T: Target>(&self, target: &mut T) {
         // TODO(http://anglebug.com/349994211): Don't declare constants that have been eliminated
         // (such as constants created out of unused structs).  See for example:
         // GLSLTest.StructUsedWithoutVariable/*
-        self.ir_meta.all_constants().iter().enumerate().for_each(|(id, constant)| {
-            target.new_constant(self.ir_meta, ConstantId { id: id as u32 }, constant)
+        self.ir.meta.all_constants().iter().enumerate().for_each(|(id, constant)| {
+            target.new_constant(&self.ir.meta, ConstantId { id: id as u32 }, constant)
         });
     }
 
-    fn create_variables<T: Target>(&mut self, target: &mut T) {
-        self.ir_meta.all_variables().iter().enumerate().for_each(|(id, variable)| {
-            target.new_variable(self.ir_meta, VariableId { id: id as u32 }, variable)
+    fn create_variables<T: Target>(&self, target: &mut T) {
+        self.ir.meta.all_variables().iter().enumerate().for_each(|(id, variable)| {
+            target.new_variable(&self.ir.meta, VariableId { id: id as u32 }, variable)
         });
     }
 
-    fn create_functions<T: Target>(&mut self, target: &mut T) {
-        self.ir_meta.all_functions().iter().enumerate().for_each(|(id, function)| {
-            target.new_function(self.ir_meta, FunctionId { id: id as u32 }, function)
+    fn create_functions<T: Target>(&self, target: &mut T) {
+        self.ir.meta.all_functions().iter().enumerate().for_each(|(id, function)| {
+            target.new_function(&self.ir.meta, FunctionId { id: id as u32 }, function)
         });
     }
 
-    fn generate_ast<T: Target>(
-        &mut self,
-        function_entries: &Vec<Option<Block>>,
-        target: &mut T,
-    ) -> T::BlockResult {
+    fn generate_ast<T: Target>(&self, target: &mut T) -> T::BlockResult {
         target.begin();
 
         // Prepare the global scope
-        target.global_scope(self.ir_meta);
+        target.global_scope(&self.ir.meta);
 
         // Visit the functions in DAG-sorted order, so that forward declarations are
         // unnecessary.
         let function_decl_order =
-            util::calculate_function_decl_order(self.ir_meta, function_entries);
+            util::calculate_function_decl_order(&self.ir.meta, &self.ir.function_entries);
 
         for function_id in function_decl_order {
-            let entry = &function_entries[function_id.id as usize].as_ref().unwrap();
+            let entry = &self.ir.function_entries[function_id.id as usize].as_ref().unwrap();
 
             let result_body = self.generate_block(entry, target);
             target.end_function(result_body, function_id);
@@ -323,14 +315,14 @@ impl<'ir> Generator<'ir> {
         target.end()
     }
 
-    fn generate_block<T: Target>(&mut self, block: &Block, target: &mut T) -> T::BlockResult {
+    fn generate_block<T: Target>(&self, block: &Block, target: &mut T) -> T::BlockResult {
         traverser::visitor::visit_block_instructions(
             &mut (self, target),
             block,
             &|(generator, target), block: &Block| {
                 // transform::astify::run() should have gotten rid of merge block inputs.
                 debug_assert!(block.input.is_none());
-                target.begin_block(generator.ir_meta, &block.variables)
+                target.begin_block(&generator.ir.meta, &block.variables)
             },
             &|(generator, target), block_result, instructions| {
                 generator.generate_instructions(block_result, instructions, *target);
@@ -357,14 +349,14 @@ impl<'ir> Generator<'ir> {
     }
 
     fn generate_instructions<T: Target>(
-        &mut self,
+        &self,
         block_result: &mut T::BlockResult,
         instructions: &[BlockInstruction],
         target: &mut T,
     ) {
         // Generate nodes for all instructions except the terminating branch instruction.
         instructions.iter().for_each(|instruction| {
-            let (op, result) = instruction.get_op_and_result(self.ir_meta);
+            let (op, result) = instruction.get_op_and_result(&self.ir.meta);
             match op {
                 &OpCode::ExtractVectorComponent(id, index)
                 | &OpCode::AccessVectorComponent(id, index) => {
@@ -387,17 +379,17 @@ impl<'ir> Generator<'ir> {
                     result.unwrap().id,
                     id,
                     index,
-                    self.ir_meta.get_type(id.type_id).get_struct_field(index),
+                    &self.ir.meta.get_type(id.type_id).get_struct_field(index),
                 ),
                 &OpCode::AccessStructField(id, index) => {
                     let struct_type_id =
-                        self.ir_meta.get_type(id.type_id).get_element_type_id().unwrap();
+                        self.ir.meta.get_type(id.type_id).get_element_type_id().unwrap();
                     target.select_field(
                         block_result,
                         result.unwrap().id,
                         id,
                         index,
-                        self.ir_meta.get_type(struct_type_id).get_struct_field(index),
+                        &self.ir.meta.get_type(struct_type_id).get_struct_field(index),
                     )
                 }
 
@@ -437,7 +429,7 @@ impl<'ir> Generator<'ir> {
                 }
                 &OpCode::Texture(TextureOpCode::Implicit { is_proj, offset }, sampler, coord) => {
                     target.texture(
-                        self.ir_meta,
+                        &self.ir.meta,
                         block_result,
                         result.unwrap().id,
                         sampler,
@@ -448,7 +440,7 @@ impl<'ir> Generator<'ir> {
                 }
                 &OpCode::Texture(TextureOpCode::Compare { compare }, sampler, coord) => target
                     .texture_compare(
-                        self.ir_meta,
+                        &self.ir.meta,
                         block_result,
                         result.unwrap().id,
                         sampler,
@@ -457,7 +449,7 @@ impl<'ir> Generator<'ir> {
                     ),
                 &OpCode::Texture(TextureOpCode::Lod { is_proj, lod, offset }, sampler, coord) => {
                     target.texture_lod(
-                        self.ir_meta,
+                        &self.ir.meta,
                         block_result,
                         result.unwrap().id,
                         sampler,
@@ -469,7 +461,7 @@ impl<'ir> Generator<'ir> {
                 }
                 &OpCode::Texture(TextureOpCode::CompareLod { compare, lod }, sampler, coord) => {
                     target.texture_compare_lod(
-                        self.ir_meta,
+                        &self.ir.meta,
                         block_result,
                         result.unwrap().id,
                         sampler,
@@ -480,7 +472,7 @@ impl<'ir> Generator<'ir> {
                 }
                 &OpCode::Texture(TextureOpCode::Bias { is_proj, bias, offset }, sampler, coord) => {
                     target.texture_bias(
-                        self.ir_meta,
+                        &self.ir.meta,
                         block_result,
                         result.unwrap().id,
                         sampler,
@@ -492,7 +484,7 @@ impl<'ir> Generator<'ir> {
                 }
                 &OpCode::Texture(TextureOpCode::CompareBias { compare, bias }, sampler, coord) => {
                     target.texture_compare_bias(
-                        self.ir_meta,
+                        &self.ir.meta,
                         block_result,
                         result.unwrap().id,
                         sampler,
@@ -506,7 +498,7 @@ impl<'ir> Generator<'ir> {
                     sampler,
                     coord,
                 ) => target.texture_grad(
-                    self.ir_meta,
+                    &self.ir.meta,
                     block_result,
                     result.unwrap().id,
                     sampler,
@@ -518,7 +510,7 @@ impl<'ir> Generator<'ir> {
                 ),
                 &OpCode::Texture(TextureOpCode::Gather { offset }, sampler, coord) => target
                     .texture_gather(
-                        self.ir_meta,
+                        &self.ir.meta,
                         block_result,
                         result.unwrap().id,
                         sampler,
@@ -530,7 +522,7 @@ impl<'ir> Generator<'ir> {
                     sampler,
                     coord,
                 ) => target.texture_gather_component(
-                    self.ir_meta,
+                    &self.ir.meta,
                     block_result,
                     result.unwrap().id,
                     sampler,
@@ -540,7 +532,7 @@ impl<'ir> Generator<'ir> {
                 ),
                 &OpCode::Texture(TextureOpCode::GatherRef { refz, offset }, sampler, coord) => {
                     target.texture_gather_ref(
-                        self.ir_meta,
+                        &self.ir.meta,
                         block_result,
                         result.unwrap().id,
                         sampler,
@@ -555,7 +547,7 @@ impl<'ir> Generator<'ir> {
     }
 
     fn generate_branch_instruction<T: Target>(
-        &mut self,
+        &self,
         block_result: &mut T::BlockResult,
         op: &OpCode,
         loop_condition_block_result: Option<T::BlockResult>,

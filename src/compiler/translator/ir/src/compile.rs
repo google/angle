@@ -155,8 +155,8 @@ unsafe fn generate_ast(
     transform::astify::run(&mut ir);
 
     let mut ast_gen = output::legacy::Generator::new(compiler, options);
-    let mut generator = ast::Generator::new(&ir.meta);
-    let ast = generator.generate(&ir.function_entries, &mut ast_gen);
+    let mut generator = ast::Generator::new(*ir);
+    let ast = generator.generate(&mut ast_gen);
 
     ffi::Output { ast, variables: vec![] }
 }
