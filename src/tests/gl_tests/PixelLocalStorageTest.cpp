@@ -748,7 +748,7 @@ void PixelLocalStorageTest::doRGBA8Test(bool noncoherent)
 TEST_P(PixelLocalStorageTest, RGBA8)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
-    doR32Test(/*noncoherent=*/false);
+    doRGBA8Test(/*noncoherent=*/false);
 }
 
 // Verify that rgba8, rgba8i, and rgba8ui pixel local storage behaves as specified when using the
@@ -756,7 +756,7 @@ TEST_P(PixelLocalStorageTest, RGBA8)
 TEST_P(PixelLocalStorageTest, RGBA8_noncoherent)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
-    doR32Test(/*noncoherent=*/true);
+    doRGBA8Test(/*noncoherent=*/true);
 }
 
 // Verify that r32f and r32ui pixel local storage behaves as specified.
