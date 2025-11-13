@@ -8,9 +8,7 @@
 #endif
 
 #include "test_utils/CompilerTest.h"
-
 #include "test_utils/angle_test_configs.h"
-#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -768,6 +766,180 @@ TEST_P(GLSLValidationTest_ES3, LayoutQualifierInFunctionReturnType)
     )";
 
     validateError(GL_FRAGMENT_SHADER, kFS, "'layout' : no qualifiers allowed for function return");
+}
+
+// If there is more than one output, the location must be specified for all outputs.
+// (ESSL 3.00.04 section 4.3.8.2)
+TEST_P(GLSLValidationTest_ES3, TwoOutputsNoLayoutQualifiers)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        uniform vec4 u;
+        out vec4 my_FragColor;
+        out vec4 my_SecondaryFragColor;
+        void main() {
+            my_FragColor = vec4(1.0);
+            my_SecondaryFragColor = vec4(0.5);
+        }
+      )";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'my_FragColor' : must explicitly specify all locations when using multiple "
+                  "fragment outputs");
+}
+
+// (ESSL 3.00.04 section 4.3.8.2)
+TEST_P(GLSLValidationTest_ES3, TwoOutputsFirstLayoutQualifier)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        uniform vec4 u;
+        layout(location = 0) out vec4 my_FragColor;
+        out vec4 my_SecondaryFragColor;
+        void main() {
+            my_FragColor = vec4(1.0);
+            my_SecondaryFragColor = vec4(0.5);
+        })";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'my_SecondaryFragColor' : must explicitly specify all locations when using "
+                  "multiple fragment outputs");
+}
+
+// (ESSL 3.00.04 section 4.3.8.2)
+TEST_P(GLSLValidationTest_ES3, TwoOutputsSecondLayoutQualifier)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        uniform vec4 u;
+        out vec4 my_FragColor;
+        layout(location = 0) out vec4 my_SecondaryFragColor;
+        void main() {
+            my_FragColor = vec4(1.0);
+            my_SecondaryFragColor = vec4(0.5);
+    })";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'my_FragColor' : must explicitly specify all locations when using multiple "
+                  "fragment outputs");
+}
+
+// Uniforms can be arrays (ESSL 3.00 section 4.3.5)
+TEST_P(GLSLValidationTest_ES3, UniformArray)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        uniform vec4[2] u;
+        out vec4 my_FragColor;
+        void main() {
+            my_FragColor = u[0];
+      })";
+
+    validateSuccess(GL_FRAGMENT_SHADER, kFS);
+}
+
+// Fragment shader input variables cannot be arrays of structs (ESSL 3.00 section 4.3.4)
+TEST_P(GLSLValidationTest_ES3, FragmentInputArrayOfStructs)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        struct S {
+            vec4 foo;
+        };
+        in S i[2];
+        out vec4 my_FragColor;
+        void main() {
+            my_FragColor = i[0].foo;
+      })";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "cannot declare arrays of structs of this qualifier");
+}
+
+// Vertex shader inputs can't be arrays (ESSL 3.00 section 4.3.4)
+// This test is testing the case where the array brackets are after the variable name, so
+// the arrayness isn't known when the type and qualifiers are initially parsed.
+TEST_P(GLSLValidationTest_ES3, VertexShaderInputArray)
+{
+    constexpr char kVS[] = R"(#version 300 es
+        precision mediump float;
+        in vec4 i[2];
+        void main() {
+            gl_Position = i[0];
+        })";
+
+    validateError(GL_VERTEX_SHADER, kVS, "'in' : cannot declare arrays of this qualifier");
+}
+
+// Vertex shader inputs can't be arrays (ESSL 3.00 section 4.3.4)
+// This test is testing the case where the array brackets are after the type.
+TEST_P(GLSLValidationTest_ES3, VertexShaderInputArrayType)
+{
+    constexpr char kVS[] = R"(#version 300 es
+        precision mediump float;
+        in vec4[2] i;
+        void main() {
+            gl_Position = i[0];
+        })";
+
+    validateError(GL_VERTEX_SHADER, kVS, "'in' : cannot be array");
+}
+
+// Fragment shader inputs can't contain booleans (ESSL 3.00 section 4.3.4)
+TEST_P(GLSLValidationTest_ES3, FragmentShaderInputStructWithBool)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        struct S { bool foo; };
+        in S s;
+        out vec4 my_FragColor;
+        void main() {
+            my_FragColor = vec4(0.0);
+        })";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, " 'in' : cannot be a structure containing a bool");
+}
+
+// Fragment shader inputs without a flat qualifier can't contain integers (ESSL 3.00 section 4.3.4)
+TEST_P(GLSLValidationTest_ES3, FragmentShaderInputStructWithInt)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        struct S { int foo; };
+        in S s;
+        out vec4 my_FragColor;
+        void main() {
+            my_FragColor = vec4(0.0);
+        })";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "'in' : must use 'flat' interpolation here");
+}
+
+// Test that out-of-range integer literal generates an error in ESSL 3.00.
+TEST_P(GLSLValidationTest_ES3, OutOfRangeIntegerLiteral)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        precision highp int;
+        out vec4 my_FragColor;
+        void main() {
+            my_FragColor = vec4(0x100000000);
+        })";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "'0x100000000' : Integer overflow");
+}
+
+// Test that a ternary operator with one unevaluated non-constant operand is not a constant
+// expression.
+TEST_P(GLSLValidationTest, TernaryOperatorNonConstantOperand)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+        uniform float u;
+        void main() {
+            const float f = true ? 1.0 : u;
+            gl_FragColor = vec4(f);
+        })";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "'=' : assigning non-constant to 'const mediump float'");
 }
 
 // Verify that using maximum size as atomic counter offset results in compilation failure.

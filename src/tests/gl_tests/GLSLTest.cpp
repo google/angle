@@ -558,6 +558,172 @@ class GLSLTest_ES3_InitShaderVariables : public GLSLTest
 class GLSLTest_ES31_InitShaderVariables : public GLSLTest
 {};
 
+// Selecting a field of a vector that's the result of dynamic indexing a constant array should work.
+TEST_P(GLSLTest_ES3, ShaderSelectingFieldOfVectorIndexedFromArray)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        out vec4 my_FragColor;
+        uniform int i;
+        void main() {
+            float f = vec2[1](vec2(0.5, 0.1))[i].x;
+            my_FragColor = vec4(f);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 127, 127, 127), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Passing an array into a function and then passing a value from that array into another function
+// should work. This is a regression test for a bug where the mangled name of a TType was not
+// properly updated when determining the type resulting from array indexing.
+TEST_P(GLSLTest, ArrayValueFromFunctionParameterAsParameter)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+        uniform float u;
+        float foo(float f) { return f * 2.0 + 0.1; }
+        float bar(float[2] f) { return foo(f[0]); }
+        void main() {
+            float arr[2];
+            arr[0] = u;
+            gl_FragColor = vec4(bar(arr));
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(26, 26, 26, 26), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that vector field selection from a value taken from an array constructor is accepted as a
+// constant expression.
+TEST_P(GLSLTest_ES3, FieldSelectionFromVectorArrayConstructorIsConst)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        out vec4 my_FragColor;
+        void main() {
+            const float f = vec2[1](vec2(0.5, 1.0))[0].x;
+            my_FragColor = vec4(f);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 127, 127, 127), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that structure field selection from a value taken from an array constructor is accepted as a
+// constant expression.
+TEST_P(GLSLTest_ES3, FieldSelectionFromStructArrayConstructorIsConst)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        out vec4 my_FragColor;
+        struct S { float member; };
+        void main() {
+            const float f = S[1](S(0.5))[0].member;
+            my_FragColor = vec4(f);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 127, 127, 127), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that a reference to a const array is accepted as a constant expression.
+TEST_P(GLSLTest_ES3, ArraySymbolIsConst)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        out vec4 my_FragColor;
+        void main() {
+            const float[2] arr = float[2](0.5, 1.0);
+            const float f = arr[0];
+            my_FragColor = vec4(f);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 127, 127, 127), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that using an array constructor in a parameter to a built-in function is accepted as a
+// constant expression.
+TEST_P(GLSLTest_ES3, BuiltInFunctionAppliedToArrayConstructorIsConst)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        out vec4 my_FragColor;
+        void main() {
+            const float f = sin(float[2](0.5, 1.0)[0]);
+            my_FragColor = vec4(f);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(122, 122, 122, 122), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that using an array constructor in a parameter to a built-in function is accepted as a
+// constant expression.
+TEST_P(GLSLTest_ES3, BuiltInFunctionWithMultipleParametersAppliedToArrayConstructorIsConst)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        out vec4 my_FragColor;
+        void main() {
+            const float f = pow(1.0, float[2](0.5, 1.0)[0]);
+            my_FragColor = vec4(f);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that using an array constructor in a parameter to a constructor is accepted as a constant
+// expression.
+TEST_P(GLSLTest_ES3, ConstructorWithMultipleParametersAppliedToArrayConstructorIsConst)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        out vec4 my_FragColor;
+        void main() {
+            const vec2 f = vec2(1.0, float[2](0.5, 1.0)[0]);
+            my_FragColor = vec4(f.x);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that using an array constructor in an operand of the ternary selection operator is accepted
+// as a constant expression.
+TEST_P(GLSLTest_ES3, TernaryOperatorAppliedToArrayConstructorIsConst)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision mediump float;
+        out vec4 my_FragColor;
+        void main() {
+            const float f = true ? float[2](0.5, 1.0)[0] : 1.0;
+            my_FragColor = vec4(f);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(128, 128, 128, 128), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests a shader from conformance.olges/GL/build/build_017_to_024
 // This shader uses chained assign-equals ops with swizzle, often reusing the same variable
 // as part of a swizzle.
