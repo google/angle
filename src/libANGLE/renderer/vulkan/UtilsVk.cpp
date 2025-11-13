@@ -3084,8 +3084,7 @@ angle::Result UtilsVk::colorBlitResolve(ContextVk *contextVk,
 
     // Set dynamic state
     VkViewport viewport;
-    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
-    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, false, false, completeRenderArea.height,
+    gl_vk::GetViewport(params.renderArea, 0.0f, 1.0f, false, false, params.renderArea.height,
                        &viewport);
     commandBuffer->setViewport(0, 1, &viewport);
 
@@ -3107,7 +3106,10 @@ angle::Result UtilsVk::colorBlitResolve(ContextVk *contextVk,
 }
 
 angle::Result UtilsVk::depthStencilBlitResolve(ContextVk *contextVk,
-                                               FramebufferVk *framebuffer,
+                                               vk::ImageHelper *dstImage,
+                                               const vk::ImageView &dstImageView,
+                                               gl::LevelIndex dstImageLevel,
+                                               uint32_t dstImageLayer,
                                                vk::ImageHelper *srcImage,
                                                const vk::ImageView *srcDepthView,
                                                const vk::ImageView *srcStencilView,
@@ -3153,6 +3155,10 @@ angle::Result UtilsVk::depthStencilBlitResolve(ContextVk *contextVk,
     // etc are identical.
     ASSERT(srcImage->getType() != VK_IMAGE_TYPE_3D);
 
+    vk::RenderPassDesc renderPassDesc;
+    renderPassDesc.setSamples(dstImage->getSamples());
+    renderPassDesc.packDepthStencilAttachment(dstImage->getActualFormatID());
+
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete,
                               contextVk->pipelineRobustness(),
@@ -3161,7 +3167,7 @@ angle::Result UtilsVk::depthStencilBlitResolve(ContextVk *contextVk,
     vk::ImageAccess srcImagelayout = vk::ImageAccess::DepthReadStencilReadFragmentShaderRead;
 
     pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
-    pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
+    pipelineDesc.setRenderPassDesc(renderPassDesc);
     if (blitDepth)
     {
         SetDepthStateForWrite(renderer, &pipelineDesc);
@@ -3172,21 +3178,21 @@ angle::Result UtilsVk::depthStencilBlitResolve(ContextVk *contextVk,
         SetStencilStateForWrite(renderer, &pipelineDesc);
     }
 
-    if (&framebuffer->getDepthStencilRenderTarget()->getImageForWrite() == srcImage)
+    if (dstImage == srcImage)
     {
         srcImagelayout = vk::ImageAccess::DepthStencilFragmentShaderFeedback;
     }
 
-    // All deferred clear must have been flushed, otherwise it will conflict with params.blitArea.
-    ASSERT(!framebuffer->hasDeferredClears());
     vk::RenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, params.blitArea, &commandBuffer, nullptr));
 
+    ANGLE_TRY(startRenderPass(contextVk, &dstImageView, renderPassDesc, params.renderArea,
+                              dstImage->getAspectFlags(), nullptr,
+                              vk::RenderPassSource::InternalUtils, &commandBuffer));
+
+    contextVk->onDepthStencilDraw(dstImageLevel, dstImageLayer, 1, dstImage, nullptr, {});
     // Pick layout consistent with GetImageReadAccess() to avoid unnecessary layout change.
     contextVk->onImageRenderPassRead(srcImage->getAspectFlags(), srcImagelayout, srcImage);
 
-    UpdateColorAccess(contextVk, framebuffer->getState().getColorAttachmentsMask(),
-                      framebuffer->getState().getEnabledDrawBuffers());
     UpdateDepthStencilAccess(contextVk, blitDepth, blitStencil);
 
     if (srcImagelayout == vk::ImageAccess::DepthStencilFragmentShaderFeedback)
@@ -3201,15 +3207,13 @@ angle::Result UtilsVk::depthStencilBlitResolve(ContextVk *contextVk,
         }
     }
 
-    ANGLE_TRY(setupBlitResolveGraphicsProgram(
-        contextVk, *srcImage, nullptr, srcDepthView, srcStencilView, pipelineDesc, flags,
-        framebuffer->getState().getEnabledDrawBuffers().bits(), params, commandBuffer, false,
-        blitDepth, blitStencil));
+    ANGLE_TRY(setupBlitResolveGraphicsProgram(contextVk, *srcImage, nullptr, srcDepthView,
+                                              srcStencilView, pipelineDesc, flags, 0, params,
+                                              commandBuffer, false, blitDepth, blitStencil));
 
     // Set dynamic state
     VkViewport viewport;
-    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
-    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, false, false, completeRenderArea.height,
+    gl_vk::GetViewport(params.renderArea, 0.0f, 1.0f, false, false, params.renderArea.height,
                        &viewport);
     commandBuffer->setViewport(0, 1, &viewport);
 
@@ -3253,11 +3257,14 @@ angle::Result UtilsVk::depthStencilBlitResolve(ContextVk *contextVk,
 }
 
 angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
-                                                        FramebufferVk *framebuffer,
+                                                        vk::ImageHelper *dstImage,
+                                                        gl::LevelIndex dstLevelIndex,
+                                                        uint32_t dstLayerIndex,
                                                         vk::ImageHelper *srcImage,
                                                         const vk::ImageView *srcStencilView,
                                                         const BlitResolveParameters &params)
 {
+    ASSERT((dstImage->getAspectFlags() & VK_IMAGE_ASPECT_STENCIL_BIT) != 0);
     vk::Renderer *renderer = contextVk->getRenderer();
 
     // When VK_EXT_shader_stencil_export is not available, stencil is blitted/resolved into a
@@ -3339,25 +3346,18 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
 
     uint32_t flags = isResolve ? BlitResolveStencilNoExport_comp::kIsResolve : 0;
 
-    RenderTargetVk *depthStencilRenderTarget = framebuffer->getDepthStencilRenderTarget();
-    ASSERT(depthStencilRenderTarget != nullptr);
-    vk::ImageHelper *depthStencilImage = &depthStencilRenderTarget->getImageForWrite();
-
     // Change layouts prior to computation.
     vk::CommandResources resources;
-    if (&depthStencilRenderTarget->getImageForWrite() != srcImage)
+    if (dstImage != srcImage)
     {
         resources.onImageComputeShaderRead(srcImage->getAspectFlags(), srcImage);
-        resources.onImageTransferWrite(depthStencilRenderTarget->getLevelIndex(), 1,
-                                       depthStencilRenderTarget->getLayerIndex(), 1,
-                                       depthStencilImage->getAspectFlags(), depthStencilImage);
+        resources.onImageTransferWrite(dstLevelIndex, 1, dstLayerIndex, 1,
+                                       dstImage->getAspectFlags(), dstImage);
     }
     else
     {
-        resources.onImageSelfCopy(depthStencilRenderTarget->getLevelIndex(), 1,
-                                  depthStencilRenderTarget->getLayerIndex(), 1,
-                                  depthStencilRenderTarget->getLevelIndex(), 1, params.srcLayer, 1,
-                                  srcImage->getAspectFlags(), srcImage);
+        resources.onImageSelfCopy(dstLevelIndex, 1, dstLayerIndex, 1, dstLevelIndex, 1,
+                                  params.srcLayer, 1, srcImage->getAspectFlags(), srcImage);
     }
     resources.onBufferComputeShaderWrite(&blitBuffer.get());
 
@@ -3431,9 +3431,8 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     region.bufferRowLength             = bufferRowLengthInUints * sizeof(uint32_t);
     region.bufferImageHeight           = params.blitArea.height;
     region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_STENCIL_BIT;
-    region.imageSubresource.mipLevel =
-        depthStencilImage->toVkLevel(depthStencilRenderTarget->getLevelIndex()).get();
-    region.imageSubresource.baseArrayLayer = depthStencilRenderTarget->getLayerIndex();
+    region.imageSubresource.mipLevel       = dstImage->toVkLevel(dstLevelIndex).get();
+    region.imageSubresource.baseArrayLayer = dstLayerIndex;
     region.imageSubresource.layerCount     = 1;
     region.imageOffset.x                   = params.blitArea.x;
     region.imageOffset.y                   = params.blitArea.y;
@@ -3442,9 +3441,8 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     region.imageExtent.height              = params.blitArea.height;
     region.imageExtent.depth               = 1;
 
-    commandBuffer->copyBufferToImage(blitBuffer.get().getBuffer().getHandle(),
-                                     depthStencilImage->getImage(),
-                                     depthStencilImage->getCurrentLayout(renderer), 1, &region);
+    commandBuffer->copyBufferToImage(blitBuffer.get().getBuffer().getHandle(), dstImage->getImage(),
+                                     dstImage->getCurrentLayout(renderer), 1, &region);
 
     return angle::Result::Continue;
 }

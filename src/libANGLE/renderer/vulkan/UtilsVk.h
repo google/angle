@@ -135,6 +135,8 @@ class UtilsVk : angle::NonCopyable
         float stretch[2];
         // |srcExtents| is used to normalize source coordinates for sampling.
         int srcExtents[2];
+        // render area, which maps to VkViewport
+        gl::Rectangle renderArea;
         // |blitArea| is the area in destination where blit happens.  It's expected that scissor
         // and source clipping effects have already been applied to it.
         gl::Rectangle blitArea;
@@ -285,14 +287,19 @@ class UtilsVk : angle::NonCopyable
                                    const BlitResolveParameters &params);
 
     angle::Result depthStencilBlitResolve(ContextVk *contextVk,
-                                          FramebufferVk *framebuffer,
+                                          vk::ImageHelper *dstImage,
+                                          const vk::ImageView &dstImageView,
+                                          gl::LevelIndex dstImageLevel,
+                                          uint32_t dstImageLayer,
                                           vk::ImageHelper *srcImage,
                                           const vk::ImageView *srcDepthView,
                                           const vk::ImageView *srcStencilView,
                                           const BlitResolveParameters &params);
 
     angle::Result stencilBlitResolveNoShaderExport(ContextVk *contextVk,
-                                                   FramebufferVk *framebuffer,
+                                                   vk::ImageHelper *dstImage,
+                                                   gl::LevelIndex dstLevelIndex,
+                                                   uint32_t dstLayerIndex,
                                                    vk::ImageHelper *srcImage,
                                                    const vk::ImageView *srcStencilView,
                                                    const BlitResolveParameters &params);

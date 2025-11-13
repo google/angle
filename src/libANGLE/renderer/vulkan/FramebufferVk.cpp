@@ -1423,6 +1423,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     UtilsVk::BlitResolveParameters params;
     params.stretch[0] = static_cast<float>(stretch[0]);
     params.stretch[1] = static_cast<float>(stretch[1]);
+    params.renderArea = getRotatedCompleteRenderArea(contextVk);
     params.blitArea   = blitArea;
     params.linear     = filter == GL_LINEAR && !isResolve;
     params.rotation   = rotation;
@@ -1690,20 +1691,25 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                 AdjustBlitResolveParametersForPreRotation(rotation, srcFramebufferRotation,
                                                           &params);
 
+                vk::ImageHelper *srcImage = &readRenderTarget->getImageForCopy();
                 // Get depth- and stencil-only views for reading.
-                const vk::ImageView *depthView   = nullptr;
-                const vk::ImageView *stencilView = nullptr;
+                const vk::ImageView *srcDepthView   = nullptr;
+                const vk::ImageView *srcStencilView = nullptr;
+
+                vk::ImageHelper *dstImage    = &drawRenderTarget->getImageForWrite();
+                gl::LevelIndex dstLevelIndex = drawRenderTarget->getLevelIndex();
+                uint32_t dstLayerIndex       = drawRenderTarget->getLayerIndex();
 
                 if (blitDepthBuffer)
                 {
                     ANGLE_TRY(readRenderTarget->getDepthOrStencilImageViewForCopy(
-                        contextVk, VK_IMAGE_ASPECT_DEPTH_BIT, &depthView));
+                        contextVk, VK_IMAGE_ASPECT_DEPTH_BIT, &srcDepthView));
                 }
 
                 if (blitStencilBuffer)
                 {
                     ANGLE_TRY(readRenderTarget->getDepthOrStencilImageViewForCopy(
-                        contextVk, VK_IMAGE_ASPECT_STENCIL_BIT, &stencilView));
+                        contextVk, VK_IMAGE_ASPECT_STENCIL_BIT, &srcStencilView));
                 }
 
                 // If shader stencil export is not possible, defer stencil blit/resolve to another
@@ -1714,9 +1720,17 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                 // Blit depth. If shader stencil export is present, blit stencil as well.
                 if (blitDepthBuffer || (blitStencilBuffer && hasShaderStencilExport))
                 {
+                    // All deferred clear must have been flushed, otherwise it will conflict with
+                    // params.blitArea.
+                    ASSERT(!hasDeferredClears());
+
+                    const vk::ImageView *dstDepthStencilView = nullptr;
+                    ANGLE_TRY(drawRenderTarget->getImageView(contextVk, &dstDepthStencilView));
+
                     ANGLE_TRY(utilsVk.depthStencilBlitResolve(
-                        contextVk, this, depthStencilImage, depthView,
-                        hasShaderStencilExport ? stencilView : nullptr, params));
+                        contextVk, dstImage, *dstDepthStencilView, dstLevelIndex, dstLayerIndex,
+                        srcImage, srcDepthView, hasShaderStencilExport ? srcStencilView : nullptr,
+                        params));
                 }
 
                 // If shader stencil export is not present, blit stencil through a different path.
@@ -1727,7 +1741,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                         "Inefficient BlitFramebuffer operation on the stencil aspect "
                         "due to lack of shader stencil export support");
                     ANGLE_TRY(utilsVk.stencilBlitResolveNoShaderExport(
-                        contextVk, this, depthStencilImage, stencilView, params));
+                        contextVk, dstImage, dstLevelIndex, dstLayerIndex, srcImage, srcStencilView,
+                        params));
                 }
             }
         }
