@@ -255,42 +255,49 @@ impl Generator {
 
     // Note: call transform::dealias::run() beforehand, as well as transform::astify::run().
     pub fn generate<T: Target>(&mut self, target: &mut T) -> T::BlockResult {
+        // Prune unused variables, constants and types.  Constants and types cannot be removed from
+        // the IR, so they are simply filtered out during generation.
+        let referenced = transform::prune_unused_variables::run(&mut self.ir);
+
         // Declare the types, variables and functions up-front so they can be referred to by ids
         // when generating the AST itself.
-        self.create_types(target);
-        self.create_constants(target);
-        self.create_variables(target);
+        self.create_types(target, referenced.types);
+        self.create_constants(target, referenced.constants);
+        self.create_variables(target, referenced.variables);
         self.create_functions(target);
 
         self.generate_ast(target)
     }
 
-    fn create_types<T: Target>(&self, target: &mut T) {
-        // TODO(http://anglebug.com/349994211): Don't declare types that have been eliminated (such
-        // as unused structs)
+    fn create_types<T: Target>(&self, target: &mut T, referenced: Vec<bool>) {
         self.ir.meta.all_types().iter().enumerate().for_each(|(id, type_info)| {
-            target.new_type(&self.ir.meta, TypeId { id: id as u32 }, type_info)
+            if referenced[id] {
+                target.new_type(&self.ir.meta, TypeId { id: id as u32 }, type_info)
+            }
         });
     }
 
-    fn create_constants<T: Target>(&self, target: &mut T) {
-        // TODO(http://anglebug.com/349994211): Don't declare constants that have been eliminated
-        // (such as constants created out of unused structs).  See for example:
-        // GLSLTest.StructUsedWithoutVariable/*
+    fn create_constants<T: Target>(&self, target: &mut T, referenced: Vec<bool>) {
         self.ir.meta.all_constants().iter().enumerate().for_each(|(id, constant)| {
-            target.new_constant(&self.ir.meta, ConstantId { id: id as u32 }, constant)
+            if referenced[id] {
+                target.new_constant(&self.ir.meta, ConstantId { id: id as u32 }, constant)
+            }
         });
     }
 
-    fn create_variables<T: Target>(&self, target: &mut T) {
+    fn create_variables<T: Target>(&self, target: &mut T, referenced: Vec<bool>) {
         self.ir.meta.all_variables().iter().enumerate().for_each(|(id, variable)| {
-            target.new_variable(&self.ir.meta, VariableId { id: id as u32 }, variable)
+            if referenced[id] {
+                target.new_variable(&self.ir.meta, VariableId { id: id as u32 }, variable)
+            }
         });
     }
 
     fn create_functions<T: Target>(&self, target: &mut T) {
         self.ir.meta.all_functions().iter().enumerate().for_each(|(id, function)| {
-            target.new_function(&self.ir.meta, FunctionId { id: id as u32 }, function)
+            if self.ir.function_entries[id].is_some() {
+                target.new_function(&self.ir.meta, FunctionId { id: id as u32 }, function)
+            }
         });
     }
 

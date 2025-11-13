@@ -1753,8 +1753,6 @@ impl Field {
 #[derive(PartialEq, Copy, Clone)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub enum StructSpecialization {
-    // TODO(http://anglebug.com/349994211): Perhaps add an entry for structs that have been
-    // dead-code-eliminated so they aren't forward declared?
     Struct,
     InterfaceBlock,
 }
@@ -2240,6 +2238,12 @@ impl IRMeta {
     }
     pub fn all_global_variables(&self) -> &Vec<VariableId> {
         &self.global_variables
+    }
+    pub fn prune_global_variables<Keep>(&mut self, keep: Keep)
+    where
+        Keep: Fn(VariableId) -> bool,
+    {
+        self.global_variables.retain(|&variable_id| keep(variable_id));
     }
 
     pub fn get_main_function_id(&self) -> Option<FunctionId> {
