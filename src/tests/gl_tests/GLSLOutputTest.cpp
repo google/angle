@@ -89,7 +89,36 @@ void main()
     verifyIsNotInTranslation(GL_FRAGMENT_SHADER, "gl_FragData[0]");
     verifyIsNotInTranslation(GL_FRAGMENT_SHADER, "gl_FragData[1]");
 }
+
+class GLSLOutputGLSLVerifyIRUseTest : public GLSLOutputGLSLTest
+{};
+
+// A basic test that makes sure the `useIr` feature is actually effective.
+TEST_P(GLSLOutputGLSLVerifyIRUseTest, Basic)
+{
+    constexpr char kFS[] = R"(void main()
+{
+})";
+    compileShader(GL_FRAGMENT_SHADER, kFS);
+    // With AST, implicit `return` remains implicit.  With IR, every block ends in a branch, so the
+    // `return` is explicit.
+    if (getEGLWindow()->isFeatureEnabled(Feature::UseIr))
+    {
+        verifyIsInTranslation(GL_FRAGMENT_SHADER, "return");
+    }
+    else
+    {
+        verifyIsNotInTranslation(GL_FRAGMENT_SHADER, "return");
+    }
+}
 }  // namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLOutputGLSLTest);
 ANGLE_INSTANTIATE_TEST(GLSLOutputGLSLTest, ES2_OPENGL(), ES2_OPENGLES());
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLOutputGLSLVerifyIRUseTest);
+ANGLE_INSTANTIATE_TEST(GLSLOutputGLSLVerifyIRUseTest,
+                       ES2_OPENGL(),
+                       ES2_OPENGLES(),
+                       ES2_OPENGL().disable(Feature::UseIr),
+                       ES2_OPENGLES().disable(Feature::UseIr));

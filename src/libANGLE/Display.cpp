@@ -2426,6 +2426,11 @@ void Display::initializeFrontendFeatures()
     // Reject shaders with undefined behavior.  In the compiler, this only applies to WebGL.
     ANGLE_FEATURE_CONDITION(&mFrontendFeatures, rejectWebglShadersWithUndefinedBehavior, true);
 
+    // When the IR is built, use it by default.
+#ifdef ANGLE_IR
+    ANGLE_FEATURE_CONDITION(&mFrontendFeatures, useIr, true);
+#endif
+
     mImplementation->initializeFrontendFeatures(&mFrontendFeatures);
 }
 

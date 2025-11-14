@@ -273,6 +273,11 @@ void Builder::updateFunctionParamNames(FunctionId id,
                                        const angle::Span<ImmutableString> &paramNames,
                                        const angle::Span<VariableId> &paramIdsOut)
 {
+    if (mHasError)
+    {
+        return;
+    }
+
     std::vector<rust::Str> paramNameStrs;
     paramNameStrs.reserve(paramNames.size());
 
@@ -281,7 +286,7 @@ void Builder::updateFunctionParamNames(FunctionId id,
         paramNameStrs.push_back(Str(param));
     }
 
-    return mBuilder->update_function_param_names(id, Slice(paramNameStrs), SliceMut(paramIdsOut));
+    mBuilder->update_function_param_names(id, Slice(paramNameStrs), SliceMut(paramIdsOut));
 }
 VariableId Builder::declareFunctionParam(const ImmutableString &name,
                                          TypeId typeId,

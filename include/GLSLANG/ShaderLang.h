@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 384
+#define ANGLE_SH_VERSION 385
 
 enum ShShaderSpec
 {
@@ -474,6 +474,9 @@ struct ShCompileOptions
     uint64_t skipAllValidationAndTransforms : 1;
 
     uint64_t transformFloatUniformTo16Bits : 1;
+
+    // Whether the ANGLE IR should be used.  Ineffective if ANGLE is built without IR support.
+    uint64_t useIR : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;

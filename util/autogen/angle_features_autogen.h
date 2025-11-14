@@ -465,6 +465,7 @@ enum class Feature
     UseEmptyBlobsToEraseOldPipelineCacheFromBlobCache,
     UseFrontFaceDynamicState,
     UseIntermediateTextureForGenerateMipmap,
+    UseIr,
     UseMultipleDescriptorsForExternalFormats,
     UseNonZeroStencilWriteMaskStaticState,
     UsePrimitiveRestartEnableDynamicState,

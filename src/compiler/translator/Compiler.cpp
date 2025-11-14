@@ -585,14 +585,18 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         return nullptr;
     }
 
-#ifdef ANGLE_IR
-    ir::IR ir = parseContext.getIR();
-
-    // Create an AST out of the IR while the rest of the translator is still AST based.
-    TIntermBlock *root = ir::GenerateAST(std::move(ir), this, compileOptions).root;
-#else
     TIntermBlock *root = parseContext.getTreeRoot();
+#ifdef ANGLE_IR
+    if (compileOptions.useIR)
+    {
+        ASSERT(root == nullptr);
+        ir::IR ir = parseContext.getIR();
+
+        // Create an AST out of the IR while the rest of the translator is still AST based.
+        root = ir::GenerateAST(std::move(ir), this, compileOptions).root;
+    }
 #endif
+    ASSERT(root != nullptr);
     if (compileOptions.skipAllValidationAndTransforms)
     {
         collectVariables(root);
@@ -861,6 +865,12 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 {
     mValidateASTOptions = {};
 
+#if defined(ANGLE_IR)
+    const bool useIR = compileOptions.useIR;
+#else
+    const bool useIR = false;
+#endif
+
     // Disallow expressions deemed too complex.
     // This needs to be checked before other functions that will traverse the AST
     // to prevent potential stack overflow crashes.
@@ -887,16 +897,17 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-#if !defined(ANGLE_IR)
-    // Fold expressions that could not be folded before validation that was done as a part of
-    // parsing.
-    if (!FoldExpressions(this, root, &mDiagnostics))
+    if (!useIR)
     {
-        return false;
+        // Fold expressions that could not be folded before validation that was done as a part of
+        // parsing.
+        if (!FoldExpressions(this, root, &mDiagnostics))
+        {
+            return false;
+        }
+        // Folding should only be able to generate warnings.
+        ASSERT(mDiagnostics.numErrors() == 0);
     }
-    // Folding should only be able to generate warnings.
-    ASSERT(mDiagnostics.numErrors() == 0);
-#endif  // !defined(ANGLE_IR)
 
     if (parseContext.isExtensionEnabled(TExtension::ANGLE_clip_cull_distance) ||
         parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance) ||
@@ -906,42 +917,44 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         mCullDistanceSize = static_cast<uint8_t>(parseContext.getCullDistanceArraySize());
         mMetadataFlags[MetadataFlags::HasClipDistance] = parseContext.isClipDistanceUsed();
 
-#if !defined(ANGLE_IR)
-        // gl_ClipDistance and gl_CullDistance built-in arrays have unique semantics.
-        // They are pre-declared as unsized and must be sized by the shader either
-        // redeclaring them or indexing them only with integral constant expressions.
-        // The translator treats them as having the maximum allowed size and this pass
-        // applies the actual sizes if needed.
-        if (mClipDistanceSize > 0 && !parseContext.isClipDistanceRedeclared() &&
-            !SizeClipCullDistance(this, root, ImmutableString("gl_ClipDistance"),
-                                  mClipDistanceSize))
+        if (!useIR)
         {
+            // gl_ClipDistance and gl_CullDistance built-in arrays have unique semantics.
+            // They are pre-declared as unsized and must be sized by the shader either
+            // redeclaring them or indexing them only with integral constant expressions.
+            // The translator treats them as having the maximum allowed size and this pass
+            // applies the actual sizes if needed.
+            if (mClipDistanceSize > 0 && !parseContext.isClipDistanceRedeclared() &&
+                !SizeClipCullDistance(this, root, ImmutableString("gl_ClipDistance"),
+                                      mClipDistanceSize))
+            {
 
-            return false;
+                return false;
+            }
+            if (mCullDistanceSize > 0 && !parseContext.isCullDistanceRedeclared() &&
+                !SizeClipCullDistance(this, root, ImmutableString("gl_CullDistance"),
+                                      mCullDistanceSize))
+            {
+                return false;
+            }
         }
-        if (mCullDistanceSize > 0 && !parseContext.isCullDistanceRedeclared() &&
-            !SizeClipCullDistance(this, root, ImmutableString("gl_CullDistance"),
-                                  mCullDistanceSize))
-        {
-            return false;
-        }
-#endif  // !defined(ANGLE_IR)
     }
 
-#if !defined(ANGLE_IR)
-    // We prune no-ops to work around driver bugs and to keep AST processing and output simple.
-    // The following kinds of no-ops are pruned:
-    //   1. Empty declarations "int;".
-    //   2. Literal statements: "1.0;". The ESSL output doesn't define a default precision
-    //      for float, so float literal statements would end up with no precision which is
-    //      invalid ESSL.
-    //   3. Any unreachable statement after a discard, return, break or continue.
-    // After this empty declarations are not allowed in the AST.
-    if (!PruneNoOps(this, root, &mSymbolTable))
+    if (!useIR)
     {
-        return false;
+        // We prune no-ops to work around driver bugs and to keep AST processing and output simple.
+        // The following kinds of no-ops are pruned:
+        //   1. Empty declarations "int;".
+        //   2. Literal statements: "1.0;". The ESSL output doesn't define a default precision
+        //      for float, so float literal statements would end up with no precision which is
+        //      invalid ESSL.
+        //   3. Any unreachable statement after a discard, return, break or continue.
+        // After this empty declarations are not allowed in the AST.
+        if (!PruneNoOps(this, root, &mSymbolTable))
+        {
+            return false;
+        }
     }
-#endif  // !defined(ANGLE_IR)
     mValidateASTOptions.validateNoStatementsAfterBranch = true;
 
     // We need to generate globals early if we have non constant initializers enabled
@@ -976,17 +989,18 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // Create the function DAG.
     initCallDag(root);
 
-#if !defined(ANGLE_IR)
-    // Checks which functions are used
-    mFunctionMetadata.clear();
-    mFunctionMetadata.resize(mCallDag.size());
-    tagUsedFunctions();
-
-    if (!pruneUnusedFunctions(root))
+    if (!useIR)
     {
-        return false;
+        // Checks which functions are used
+        mFunctionMetadata.clear();
+        mFunctionMetadata.resize(mCallDag.size());
+        tagUsedFunctions();
+
+        if (!pruneUnusedFunctions(root))
+        {
+            return false;
+        }
     }
-#endif  // !defined(ANGLE_IR)
 
     if (IsSpecWithFunctionBodyNewScope(mShaderSpec, mShaderVersion))
     {
@@ -1055,31 +1069,32 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-#if !defined(ANGLE_IR)
-    if (compileOptions.addAndTrueToLoopCondition)
+    if (!useIR)
     {
-        if (!AddAndTrueToLoopCondition(this, root))
+        if (compileOptions.addAndTrueToLoopCondition)
         {
-            return false;
+            if (!AddAndTrueToLoopCondition(this, root))
+            {
+                return false;
+            }
         }
-    }
 
-    if (compileOptions.unfoldShortCircuit)
-    {
-        if (!UnfoldShortCircuitAST(this, root))
+        if (compileOptions.unfoldShortCircuit)
         {
-            return false;
+            if (!UnfoldShortCircuitAST(this, root))
+            {
+                return false;
+            }
         }
-    }
 
-    if (compileOptions.regenerateStructNames)
-    {
-        if (!RegenerateStructNames(this, root, &mSymbolTable))
+        if (compileOptions.regenerateStructNames)
         {
-            return false;
+            if (!RegenerateStructNames(this, root, &mSymbolTable))
+            {
+                return false;
+            }
         }
     }
-#endif  // !defined(ANGLE_IR)
 
     // https://crbug.com/437678149:
     // On Mac, if ANGLE internal uniforms are not placed on the top of ANGLE_UserUniforms struct,
@@ -1138,35 +1153,36 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-#if !defined(ANGLE_IR)
-    if (compileOptions.simplifyLoopConditions)
+    if (!useIR)
     {
-        if (!SimplifyLoopConditions(this, root, &getSymbolTable()))
+        if (compileOptions.simplifyLoopConditions)
         {
-            return false;
+            if (!SimplifyLoopConditions(this, root, &getSymbolTable()))
+            {
+                return false;
+            }
         }
-    }
-    else
-    {
-        // Split multi declarations and remove calls to array length().
-        // Note that SimplifyLoopConditions needs to be run before any other AST transformations
-        // that may need to generate new statements from loop conditions or loop expressions.
-        if (!SimplifyLoopConditions(this, root,
-                                    IntermNodePatternMatcher::kMultiDeclaration |
-                                        IntermNodePatternMatcher::kArrayLengthMethod,
-                                    &getSymbolTable()))
+        else
         {
-            return false;
+            // Split multi declarations and remove calls to array length().
+            // Note that SimplifyLoopConditions needs to be run before any other AST transformations
+            // that may need to generate new statements from loop conditions or loop expressions.
+            if (!SimplifyLoopConditions(this, root,
+                                        IntermNodePatternMatcher::kMultiDeclaration |
+                                            IntermNodePatternMatcher::kArrayLengthMethod,
+                                        &getSymbolTable()))
+            {
+                return false;
+            }
         }
-    }
 
-    // Note that separate declarations need to be run before other AST transformations that
-    // generate new statements from expressions.
-    if (!SeparateDeclarations(*this, *root, mCompileOptions.separateCompoundStructDeclarations))
-    {
-        return false;
+        // Note that separate declarations need to be run before other AST transformations that
+        // generate new statements from expressions.
+        if (!SeparateDeclarations(*this, *root, mCompileOptions.separateCompoundStructDeclarations))
+        {
+            return false;
+        }
     }
-#endif  // !defined(ANGLE_IR)
 
     if (compileOptions.rescopeGlobalVariables)
     {
@@ -1178,28 +1194,30 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     mValidateASTOptions.validateMultiDeclarations = true;
 
-#if !defined(ANGLE_IR)
-    if (!SplitSequenceOperator(this, root, IntermNodePatternMatcher::kArrayLengthMethod,
-                               &getSymbolTable()))
+    if (!useIR)
     {
-        return false;
-    }
+        if (!SplitSequenceOperator(this, root, IntermNodePatternMatcher::kArrayLengthMethod,
+                                   &getSymbolTable()))
+        {
+            return false;
+        }
 
-    if (!RemoveArrayLengthMethod(this, root))
-    {
-        return false;
-    }
-    // Fold the expressions again, because |RemoveArrayLengthMethod| can introduce new constants.
-    if (!FoldExpressions(this, root, &mDiagnostics))
-    {
-        return false;
-    }
+        if (!RemoveArrayLengthMethod(this, root))
+        {
+            return false;
+        }
+        // Fold the expressions again, because |RemoveArrayLengthMethod| can introduce new
+        // constants.
+        if (!FoldExpressions(this, root, &mDiagnostics))
+        {
+            return false;
+        }
 
-    if (!RemoveUnreferencedVariables(this, root, &mSymbolTable))
-    {
-        return false;
+        if (!RemoveUnreferencedVariables(this, root, &mSymbolTable))
+        {
+            return false;
+        }
     }
-#endif  // !defined(ANGLE_IR)
 
     // In case the last case inside a switch statement is a certain type of no-op, GLSL compilers in
     // drivers may not accept it. In this case we clean up the dead code from the end of switch

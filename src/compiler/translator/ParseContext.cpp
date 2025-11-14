@@ -485,6 +485,12 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mIRBuilder(gl::FromGLenum<gl::ShaderType>(type))
 {
     mDiagnostics->setIRBuilder(&mIRBuilder);
+
+    // If not using the IR, don't build it by pretending there's been an error.
+    if (!mCompileOptions.useIR)
+    {
+        mIRBuilder.onError();
+    }
 }
 
 TParseContext::~TParseContext()
@@ -699,13 +705,17 @@ void TParseContext::outOfRangeError(bool isError,
 
 void TParseContext::setTreeRoot(TIntermBlock *treeRoot)
 {
+#ifdef ANGLE_IR
     // When the IR is used, make sure the temporary tree created during parse is not used by anyone.
     // With IR, eventually this tree doesn't need to be created at all, a stack of node properties
     // to verify / propagate is sufficient during parse for validation purposes.
-#ifndef ANGLE_IR
+    if (mCompileOptions.useIR)
+    {
+        return;
+    }
+#endif
     mTreeRoot = treeRoot;
     mTreeRoot->setIsTreeRoot();
-#endif
 }
 
 //
@@ -1415,10 +1425,13 @@ unsigned int TParseContext::checkIsValidArraySize(const TSourceLoc &line, TInter
     }
 
 #ifdef ANGLE_IR
-    // Pop the array size from the IR too.  IR's evaluation should be equal to the AST constant
-    // fold; when the AST goes away, the size as evaluated by IR is going to be used.
-    const uint32_t sizeAccordingToIr = mIRBuilder.popArraySize();
-    ASSERT(mDiagnostics->numErrors() != 0 || size == sizeAccordingToIr);
+    if (mCompileOptions.useIR)
+    {
+        // Pop the array size from the IR too.  IR's evaluation should be equal to the AST constant
+        // fold; when the AST goes away, the size as evaluated by IR is going to be used.
+        const uint32_t sizeAccordingToIr = mIRBuilder.popArraySize();
+        ASSERT(mDiagnostics->numErrors() != 0 || size == sizeAccordingToIr);
+    }
 #endif
 
     if (size == 0u)
@@ -6722,7 +6735,8 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
             {
                 const uint32_t irIndex = mIRBuilder.popArraySize();
 #ifdef ANGLE_IR
-                ASSERT(mDiagnostics->numErrors() > 0 || irIndex == static_cast<uint32_t>(index));
+                ASSERT(!mCompileOptions.useIR || mDiagnostics->numErrors() > 0 ||
+                       irIndex == static_cast<uint32_t>(index));
 #endif
                 mIRBuilder.vectorComponent(irIndex);
             }
@@ -9692,7 +9706,7 @@ bool TParseContext::postParseChecks()
 {
 #ifndef ANGLE_IR
     // If parse failed, we shouldn't reach here.
-    ASSERT(mTreeRoot != nullptr);
+    ASSERT(!mCompileOptions.useIR || mTreeRoot != nullptr);
 #endif
 
     if (mMainFunction == nullptr)

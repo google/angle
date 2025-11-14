@@ -465,6 +465,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UseEmptyBlobsToEraseOldPipelineCacheFromBlobCache, "useEmptyBlobsToEraseOldPipelineCacheFromBlobCache"},
     {Feature::UseFrontFaceDynamicState, "useFrontFaceDynamicState"},
     {Feature::UseIntermediateTextureForGenerateMipmap, "useIntermediateTextureForGenerateMipmap"},
+    {Feature::UseIr, "useIr"},
     {Feature::UseMultipleDescriptorsForExternalFormats, "useMultipleDescriptorsForExternalFormats"},
     {Feature::UseNonZeroStencilWriteMaskStaticState, "useNonZeroStencilWriteMaskStaticState"},
     {Feature::UsePrimitiveRestartEnableDynamicState, "usePrimitiveRestartEnableDynamicState"},
