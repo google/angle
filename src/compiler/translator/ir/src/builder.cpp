@@ -364,11 +364,11 @@ void Builder::beginTernaryTrueExpression()
     }
 }
 
-void Builder::endTernaryTrueExpression()
+void Builder::endTernaryTrueExpression(TBasicType basicType)
 {
     if (!mHasError)
     {
-        mBuilder->end_ternary_true_expression();
+        mBuilder->end_ternary_true_expression(basicType == EbtVoid);
     }
 }
 
@@ -380,19 +380,19 @@ void Builder::beginTernaryFalseExpression()
     }
 }
 
-void Builder::endTernaryFalseExpression()
+void Builder::endTernaryFalseExpression(TBasicType basicType)
 {
     if (!mHasError)
     {
-        mBuilder->end_ternary_false_expression();
+        mBuilder->end_ternary_false_expression(basicType == EbtVoid);
     }
 }
 
-void Builder::endTernary()
+void Builder::endTernary(TBasicType basicType)
 {
     if (!mHasError)
     {
-        mBuilder->end_ternary();
+        mBuilder->end_ternary(basicType == EbtVoid);
     }
 }
 

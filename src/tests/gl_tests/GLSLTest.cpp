@@ -3335,22 +3335,21 @@ TEST_P(GLSLTest_ES3, InitConstantMatrixArray)
 // return the correct value (true).
 TEST_P(GLSLTest_ES3, SequenceOperatorEvaluationOrderArray)
 {
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor; \n"
-        "int[2] func(int param) {\n"
-        "    return int[2](param, param);\n"
-        "}\n"
-        "void main() {\n"
-        "    int a[2]; \n"
-        "    for (int i = 0; i < 2; ++i) {\n"
-        "        a[i] = 1;\n"
-        "    }\n"
-        "    int j = 0; \n"
-        "    bool result = ((++j), (a == func(j)));\n"
-        "    my_FragColor = vec4(0.0, (result ? 1.0 : 0.0), 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 my_FragColor;
+int[2] func(int param) {
+    return int[2](param, param);
+}
+void main() {
+    int a[2];
+    for (int i = 0; i < 2; ++i) {
+        a[i] = 1;
+    }
+    int j = 0;
+    bool result = ((++j), (a == func(j)));
+    my_FragColor = vec4(0.0, (result ? 1.0 : 0.0), 0.0, 1.0);
+})";
 
     GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFS);
     ASSERT_NE(0u, program);
@@ -3365,15 +3364,14 @@ TEST_P(GLSLTest_ES3, SequenceOperatorEvaluationOrderArray)
 // correct value (true).
 TEST_P(GLSLTest_ES3, SequenceOperatorEvaluationOrderShortCircuit)
 {
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor; \n"
-        "void main() {\n"
-        "    int j = 0; \n"
-        "    bool result = ((++j), (j == 1 ? true : (++j == 3)));\n"
-        "    my_FragColor = vec4(0.0, ((result && j == 1) ? 1.0 : 0.0), 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 my_FragColor;
+void main() {
+    int j = 0;
+    bool result = ((++j), (j == 1 ? true : (++j == 3)));
+    my_FragColor = vec4(0.0, ((result && j == 1) ? 1.0 : 0.0), 0.0, 1.0);
+})";
 
     GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFS);
     ASSERT_NE(0u, program);
@@ -3387,22 +3385,21 @@ TEST_P(GLSLTest_ES3, SequenceOperatorEvaluationOrderShortCircuit)
 // Indexing the vector needs to be evaluated after func() for the right result.
 TEST_P(GLSLTest_ES3, SequenceOperatorEvaluationOrderDynamicVectorIndexingInLValue)
 {
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "uniform int u_zero;\n"
-        "int sideEffectCount = 0;\n"
-        "float func() {\n"
-        "    ++sideEffectCount;\n"
-        "    return -1.0;\n"
-        "}\n"
-        "void main() {\n"
-        "    vec4 v = vec4(0.0, 2.0, 4.0, 6.0); \n"
-        "    float f = (func(), (++v[u_zero + sideEffectCount]));\n"
-        "    bool green = abs(f - 3.0) < 0.01 && abs(v[1] - 3.0) < 0.01 && sideEffectCount == 1;\n"
-        "    my_FragColor = vec4(0.0, (green ? 1.0 : 0.0), 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 my_FragColor;
+uniform int u_zero;
+int sideEffectCount = 0;
+float func() {
+    ++sideEffectCount;
+    return -1.0;
+}
+void main() {
+    vec4 v = vec4(0.0, 2.0, 4.0, 6.0);
+    float f = (func(), (++v[u_zero + sideEffectCount]));
+    bool green = abs(f - 3.0) < 0.01 && abs(v[1] - 3.0) < 0.01 && sideEffectCount == 1;
+    my_FragColor = vec4(0.0, (green ? 1.0 : 0.0), 0.0, 1.0);
+})";
 
     GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFS);
     ASSERT_NE(0u, program);
@@ -3417,19 +3414,17 @@ TEST_P(GLSLTest_ES3, SequenceOperatorEvaluationOrderDynamicVectorIndexingInLValu
 // See http://anglebug.com/42260376
 TEST_P(GLSLTest, RenderTrisWithPointCoord)
 {
-    constexpr char kVS[] =
-        "attribute vec2 aPosition;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(aPosition, 0, 1);\n"
-        "    gl_PointSize = 1.0;\n"
-        "}";
-    constexpr char kFS[] =
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(gl_PointCoord.xy, 0, 1);\n"
-        "    gl_FragColor = vec4(0, 1, 0, 1);\n"
-        "}";
+    constexpr char kVS[] = R"(attribute vec2 aPosition;
+void main()
+{
+    gl_Position = vec4(aPosition, 0, 1);
+    gl_PointSize = 1.0;
+})";
+    constexpr char kFS[] = R"(void main()
+{
+    gl_FragColor = vec4(gl_PointCoord.xy, 0, 1);
+    gl_FragColor = vec4(0, 1, 0, 1);
+})";
 
     ANGLE_GL_PROGRAM(prog, kVS, kFS);
     drawQuad(prog, "aPosition", 0.5f);
@@ -3442,18 +3437,17 @@ TEST_P(GLSLTest, NestedPowStatements)
     // https://crbug.com/1127866 - possible NVIDIA driver issue
     ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsVulkan() && IsWindows());
 
-    constexpr char kFS[] =
-        "precision mediump float;\n"
-        "float func(float v)\n"
-        "{\n"
-        "   float f1 = pow(v, 2.0);\n"
-        "   return pow(f1 + v, 2.0);\n"
-        "}\n"
-        "void main()\n"
-        "{\n"
-        "    float v = func(2.0);\n"
-        "    gl_FragColor = abs(v - 36.0) < 0.001 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
-        "}";
+    constexpr char kFS[] = R"(precision mediump float;
+float func(float v)
+{
+   float f1 = pow(v, 2.0);
+   return pow(f1 + v, 2.0);
+}
+void main()
+{
+    float v = func(2.0);
+    gl_FragColor = abs(v - 36.0) < 0.001 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
 
     ANGLE_GL_PROGRAM(prog, essl1_shaders::vs::Simple(), kFS);
     drawQuad(prog, essl1_shaders::PositionAttrib(), 0.5f);
@@ -3534,15 +3528,14 @@ void main()
 // Test that -float calculation is correct.
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorFloat)
 {
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "out highp vec4 o_color;\n"
-        "void main() {\n"
-        "    highp float f = -1.0;\n"
-        "    // atan(tan(0.5), -f) should be 0.5.\n"
-        "    highp float v = atan(tan(0.5), -f);\n"
-        "    o_color = abs(v - 0.5) < 0.001 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 300 es
+out highp vec4 o_color;
+void main() {
+    highp float f = -1.0;
+    // atan(tan(0.5), -f) should be 0.5.
+    highp float v = atan(tan(0.5), -f);
+    o_color = abs(v - 0.5) < 0.001 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
 
     ANGLE_GL_PROGRAM(prog, essl3_shaders::vs::Simple(), kFS);
     drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
@@ -3552,16 +3545,15 @@ TEST_P(GLSLTest_ES3, UnaryMinusOperatorFloat)
 // Test that atan(vec2, vec2) calculation is correct.
 TEST_P(GLSLTest_ES3, AtanVec2)
 {
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "out highp vec4 o_color;\n"
-        "void main() {\n"
-        "    highp float f = 1.0;\n"
-        "    // atan(tan(0.5), f) should be 0.5.\n"
-        "    highp vec2 v = atan(vec2(tan(0.5)), vec2(f));\n"
-        "    o_color = (abs(v[0] - 0.5) < 0.001 && abs(v[1] - 0.5) < 0.001) ? vec4(0, 1, 0, 1) : "
-        "vec4(1, 0, 0, 1);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 300 es
+out highp vec4 o_color;
+void main() {
+    highp float f = 1.0;
+    // atan(tan(0.5), f) should be 0.5.
+    highp vec2 v = atan(vec2(tan(0.5)), vec2(f));
+    o_color = (abs(v[0] - 0.5) < 0.001 && abs(v[1] - 0.5) < 0.001) ?
+                vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
 
     ANGLE_GL_PROGRAM(prog, essl3_shaders::vs::Simple(), kFS);
     drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
@@ -3571,32 +3563,30 @@ TEST_P(GLSLTest_ES3, AtanVec2)
 // Convers a bug with the unary minus operator on signed integer workaround.
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorSignedInt)
 {
-    constexpr char kVS[] =
-        "#version 300 es\n"
-        "in highp vec4 position;\n"
-        "out mediump vec4 v_color;\n"
-        "uniform int ui_one;\n"
-        "uniform int ui_two;\n"
-        "uniform int ui_three;\n"
-        "void main() {\n"
-        "    int s[3];\n"
-        "    s[0] = ui_one;\n"
-        "    s[1] = -(-(-ui_two + 1) + 1);\n"  // s[1] = -ui_two
-        "    s[2] = ui_three;\n"
-        "    int result = 0;\n"
-        "    for (int i = 0; i < ui_three; i++) {\n"
-        "        result += s[i];\n"
-        "    }\n"
-        "    v_color = (result == 2) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
-        "    gl_Position = position;\n"
-        "}\n";
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "in mediump vec4 v_color;\n"
-        "layout(location=0) out mediump vec4 o_color;\n"
-        "void main() {\n"
-        "    o_color = v_color;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 300 es
+in highp vec4 position;
+out mediump vec4 v_color;
+uniform int ui_one;
+uniform int ui_two;
+uniform int ui_three;
+void main() {
+    int s[3];
+    s[0] = ui_one;
+    s[1] = -(-(-ui_two + 1) + 1);  // s[1] = -ui_two
+    s[2] = ui_three;
+    int result = 0;
+    for (int i = 0; i < ui_three; i++) {
+        result += s[i];
+    }
+    v_color = (result == 2) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+    gl_Position = position;
+})";
+    constexpr char kFS[] = R"(#version 300 es
+in mediump vec4 v_color;
+layout(location=0) out mediump vec4 o_color;
+void main() {
+    o_color = v_color;
+})";
 
     ANGLE_GL_PROGRAM(prog, kVS, kFS);
 
@@ -3618,32 +3608,30 @@ TEST_P(GLSLTest_ES3, UnaryMinusOperatorSignedInt)
 // Convers a bug with the unary minus operator on unsigned integer workaround.
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorUnsignedInt)
 {
-    constexpr char kVS[] =
-        "#version 300 es\n"
-        "in highp vec4 position;\n"
-        "out mediump vec4 v_color;\n"
-        "uniform uint ui_one;\n"
-        "uniform uint ui_two;\n"
-        "uniform uint ui_three;\n"
-        "void main() {\n"
-        "    uint s[3];\n"
-        "    s[0] = ui_one;\n"
-        "    s[1] = -(-(-ui_two + 1u) + 1u);\n"  // s[1] = -ui_two
-        "    s[2] = ui_three;\n"
-        "    uint result = 0u;\n"
-        "    for (uint i = 0u; i < ui_three; i++) {\n"
-        "        result += s[i];\n"
-        "    }\n"
-        "    v_color = (result == 2u) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
-        "    gl_Position = position;\n"
-        "}\n";
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "in mediump vec4 v_color;\n"
-        "layout(location=0) out mediump vec4 o_color;\n"
-        "void main() {\n"
-        "    o_color = v_color;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 300 es
+in highp vec4 position;
+out mediump vec4 v_color;
+uniform uint ui_one;
+uniform uint ui_two;
+uniform uint ui_three;
+void main() {
+    uint s[3];
+    s[0] = ui_one;
+    s[1] = -(-(-ui_two + 1u) + 1u);  // s[1] = -ui_two
+    s[2] = ui_three;
+    uint result = 0u;
+    for (uint i = 0u; i < ui_three; i++) {
+        result += s[i];
+    }
+    v_color = (result == 2u) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+    gl_Position = position;
+})";
+    constexpr char kFS[] = R"(#version 300 es
+in mediump vec4 v_color;
+layout(location=0) out mediump vec4 o_color;
+void main() {
+    o_color = v_color;
+})";
 
     ANGLE_GL_PROGRAM(prog, kVS, kFS);
 
@@ -3662,22 +3650,47 @@ TEST_P(GLSLTest_ES3, UnaryMinusOperatorUnsignedInt)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test ternaries with a void type.  This is not allowed in WebGL2 (tested in
+// glsl3/forbidden-operators.html) but is allowed in GLES.
+TEST_P(GLSLTest_ES3, TernaryVoidType)
+{
+    // Most backends mishandle this shader.  Some OpenGL drivers do not accept the shader either.
+    // The test is run only with IR.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform bool falseBool;
+vec4 global;
+out vec4 color;
+
+void f() { global = vec4(1, 0, 0, 1); }
+void g() { global = vec4(0, 1, 0, 1); }
+void main() {
+    falseBool ? f() : g();
+    color = global;
+})";
+
+    ANGLE_GL_PROGRAM(prog, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test a nested sequence operator with a ternary operator inside. The ternary operator is
 // intended to be such that it gets converted to an if statement on the HLSL backend.
 TEST_P(GLSLTest, NestedSequenceOperatorWithTernaryInside)
 {
     // Note that the uniform keep_flop_positive doesn't need to be set - the test expects it to have
     // its default value false.
-    constexpr char kFS[] =
-        "precision mediump float;\n"
-        "uniform bool keep_flop_positive;\n"
-        "float flop;\n"
-        "void main() {\n"
-        "    flop = -1.0,\n"
-        "    (flop *= -1.0,\n"
-        "    keep_flop_positive ? 0.0 : flop *= -1.0),\n"
-        "    gl_FragColor = vec4(0, -flop, 0, 1);\n"
-        "}";
+    constexpr char kFS[] = R"(precision mediump float;
+uniform bool keep_flop_positive;
+float flop;
+void main() {
+    flop = -1.0,
+    (flop *= -1.0,
+    keep_flop_positive ? 0.0 : flop *= -1.0),
+    gl_FragColor = vec4(0, -flop, 0, 1);
+})";
 
     ANGLE_GL_PROGRAM(prog, essl1_shaders::vs::Simple(), kFS);
     drawQuad(prog, essl1_shaders::PositionAttrib(), 0.5f);

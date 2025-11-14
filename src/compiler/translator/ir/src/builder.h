@@ -121,10 +121,10 @@ class Builder
     void endIf();
 
     void beginTernaryTrueExpression();
-    void endTernaryTrueExpression();
+    void endTernaryTrueExpression(TBasicType basicType);
     void beginTernaryFalseExpression();
-    void endTernaryFalseExpression();
-    void endTernary();
+    void endTernaryFalseExpression(TBasicType basicType);
+    void endTernary(TBasicType basicType);
 
     void beginShortCircuitOr();
     void endShortCircuitOr();
@@ -278,10 +278,10 @@ class Builder
     void endIf() {}
 
     void beginTernaryTrueExpression() {}
-    void endTernaryTrueExpression() {}
+    void endTernaryTrueExpression(TBasicType) {}
     void beginTernaryFalseExpression() {}
-    void endTernaryFalseExpression() {}
-    void endTernary() {}
+    void endTernaryFalseExpression(TBasicType) {}
+    void endTernary(TBasicType) {}
 
     void beginShortCircuitOr() {}
     void endShortCircuitOr() {}

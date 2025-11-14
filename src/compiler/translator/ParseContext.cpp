@@ -9332,7 +9332,7 @@ void TParseContext::onTernaryConditionParsed(TIntermTyped *cond, const TSourceLo
 void TParseContext::onTernaryTrueExpressionParsed(TIntermTyped *trueExpression,
                                                   const TSourceLoc &line)
 {
-    mIRBuilder.endTernaryTrueExpression();
+    mIRBuilder.endTernaryTrueExpression(trueExpression->getBasicType());
     mIRBuilder.beginTernaryFalseExpression();
 }
 
@@ -9354,7 +9354,8 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
         error(loc, reasonStream.c_str(), "?:");
         return falseExpression;
     }
-    if (IsOpaqueType(trueExpression->getBasicType()))
+    const TBasicType basicType = trueExpression->getBasicType();
+    if (IsOpaqueType(basicType))
     {
         // ESSL 1.00 section 4.1.7
         // ESSL 3.00.6 section 4.1.7
@@ -9384,13 +9385,12 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
         error(loc, "ternary operator is not allowed for arrays in ESSL 1.0 and webgl", "?:");
         return falseExpression;
     }
-    if ((mShaderVersion < 300 || mShaderSpec == SH_WEBGL2_SPEC) &&
-        trueExpression->getBasicType() == EbtStruct)
+    if ((mShaderVersion < 300 || mShaderSpec == SH_WEBGL2_SPEC) && basicType == EbtStruct)
     {
         error(loc, "ternary operator is not allowed for structures in ESSL 1.0 and webgl", "?:");
         return falseExpression;
     }
-    if (trueExpression->getBasicType() == EbtInterfaceBlock)
+    if (basicType == EbtInterfaceBlock)
     {
         error(loc, "ternary operator is not allowed for interface blocks", "?:");
         return falseExpression;
@@ -9398,14 +9398,14 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
 
     // WebGL2 section 5.26, the following results in an error:
     // "Ternary operator applied to void, arrays, or structs containing arrays"
-    if (mShaderSpec == SH_WEBGL2_SPEC && trueExpression->getBasicType() == EbtVoid)
+    if (mShaderSpec == SH_WEBGL2_SPEC && basicType == EbtVoid)
     {
         error(loc, "ternary operator is not allowed for void", "?:");
         return falseExpression;
     }
 
-    mIRBuilder.endTernaryFalseExpression();
-    mIRBuilder.endTernary();
+    mIRBuilder.endTernaryFalseExpression(basicType);
+    mIRBuilder.endTernary(basicType);
 
     TIntermTernary *node = new TIntermTernary(cond, trueExpression, falseExpression);
     markStaticUseIfSymbol(cond);

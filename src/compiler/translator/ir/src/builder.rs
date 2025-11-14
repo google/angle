@@ -1119,10 +1119,11 @@ impl Builder {
     //
     // In the end, the result id is found in the input of the merge block of the if/else used to
     // implement it.
+    //
+    // If the expressions are `void`, then end_ternary_true_expression_void,
+    // end_ternary_false_expression_void, and end_ternary_void are called.
     pub fn begin_ternary_true_expression(&mut self) {
-        // The condition must be at the top of the stack.
-        let condition = self.load();
-        self.scope().begin_if_true_block(condition);
+        self.begin_if_true_block();
     }
     pub fn end_ternary_true_expression(&mut self) {
         let true_value = self.load();
@@ -1135,8 +1136,11 @@ impl Builder {
             self.ir.meta.new_register(OpCode::MergeInput, true_value.type_id, true_value.precision);
         self.interm_ids.push(TypedId::from_register_id(new_id));
     }
+    pub fn end_ternary_true_expression_void(&mut self) {
+        self.end_if_true_block();
+    }
     pub fn begin_ternary_false_expression(&mut self) {
-        self.scope().begin_if_false_block();
+        self.begin_if_false_block();
     }
     pub fn end_ternary_false_expression(&mut self) {
         let false_value = self.load();
@@ -1149,11 +1153,17 @@ impl Builder {
         self.ir.meta.get_instruction_mut(result.id.get_register()).result.precision =
             result.precision;
     }
+    pub fn end_ternary_false_expression_void(&mut self) {
+        self.end_if_false_block();
+    }
     pub fn end_ternary(&mut self) {
         let merge_input = self.interm_ids.pop().unwrap();
         let constant_folded_merge_input = self.scope().end_if(Some(merge_input));
         let result = constant_folded_merge_input.unwrap_or(merge_input);
         self.interm_ids.push(TypedId::new(result.id, merge_input.type_id, merge_input.precision));
+    }
+    pub fn end_ternary_void(&mut self) {
+        self.end_if();
     }
 
     // Short circuit support is implemented over ?: and uses the same mechanism:
@@ -3039,10 +3049,10 @@ pub mod ffi {
         fn end_if_false_block(self: &mut BuilderWrapper);
         fn end_if(self: &mut BuilderWrapper);
         fn begin_ternary_true_expression(self: &mut BuilderWrapper);
-        fn end_ternary_true_expression(self: &mut BuilderWrapper);
+        fn end_ternary_true_expression(self: &mut BuilderWrapper, is_void: bool);
         fn begin_ternary_false_expression(self: &mut BuilderWrapper);
-        fn end_ternary_false_expression(self: &mut BuilderWrapper);
-        fn end_ternary(self: &mut BuilderWrapper);
+        fn end_ternary_false_expression(self: &mut BuilderWrapper, is_void: bool);
+        fn end_ternary(self: &mut BuilderWrapper, is_void: bool);
         fn begin_short_circuit_or(self: &mut BuilderWrapper);
         fn end_short_circuit_or(self: &mut BuilderWrapper);
         fn begin_short_circuit_and(self: &mut BuilderWrapper);
@@ -4437,20 +4447,32 @@ impl BuilderWrapper {
         self.builder.begin_ternary_true_expression();
     }
 
-    fn end_ternary_true_expression(&mut self) {
-        self.builder.end_ternary_true_expression();
+    fn end_ternary_true_expression(&mut self, is_void: bool) {
+        if is_void {
+            self.builder.end_ternary_true_expression_void();
+        } else {
+            self.builder.end_ternary_true_expression();
+        }
     }
 
     fn begin_ternary_false_expression(&mut self) {
         self.builder.begin_ternary_false_expression();
     }
 
-    fn end_ternary_false_expression(&mut self) {
-        self.builder.end_ternary_false_expression();
+    fn end_ternary_false_expression(&mut self, is_void: bool) {
+        if is_void {
+            self.builder.end_ternary_false_expression_void();
+        } else {
+            self.builder.end_ternary_false_expression();
+        }
     }
 
-    fn end_ternary(&mut self) {
-        self.builder.end_ternary();
+    fn end_ternary(&mut self, is_void: bool) {
+        if is_void {
+            self.builder.end_ternary_void();
+        } else {
+            self.builder.end_ternary();
+        }
     }
 
     fn begin_short_circuit_or(&mut self) {
