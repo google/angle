@@ -388,7 +388,13 @@ mod const_fold {
                 if let ConstantValue::Float(f) = constant.value {
                     match basic_type {
                         BasicType::Int => ir_meta.get_constant_int(f as i32),
-                        BasicType::Uint => ir_meta.get_constant_uint(f as u32),
+                        // Note: ESSL 3.00.6 section 5.4.1. It is undefined to convert a negative
+                        // floating-point value to an uint
+                        BasicType::Uint => ir_meta.get_constant_uint(if f < 0.0 {
+                            f as i32 as u32
+                        } else {
+                            f as u32
+                        }),
                         BasicType::Bool => ir_meta.get_constant_bool(f != 0.0),
                         _ => arg,
                     }
@@ -676,7 +682,9 @@ mod const_fold {
             rhs_constant_id,
             result_type_id,
             |_, _| panic!("Internal error: Cannot use % to calculate remainder of floats"),
-            |i1, i2| i1.checked_rem(i2).unwrap_or(0),
+            // ESSL 3.00.6 section 5.9: Results of modulus are undefined when either one of the
+            // operands is negative.
+            |i1, i2| if i1 < 0 || i2 < 0 { 0 } else { i1.checked_rem(i2).unwrap_or(0) },
             |u1, u2| u1.checked_rem(u2).unwrap_or(0),
             |_, _| panic!("Internal error: Cannot use % on bools"),
         )
@@ -2804,9 +2812,9 @@ mod const_fold {
     }
     fn built_in_rgb_yuv_transform(r: f32, g: f32, b: f32, m: &[f32; 12]) -> [f32; 3] {
         [
-            r * m[0] + g * m[1] + b * m[2] + m[3],
-            r * m[4] + g * m[5] + b * m[6] + m[7],
-            r * m[8] + g * m[9] + b * m[10] + m[11],
+            r * m[0] + g * m[3] + b * m[6] + m[9],
+            r * m[1] + g * m[4] + b * m[7] + m[10],
+            r * m[2] + g * m[5] + b * m[8] + m[11],
         ]
     }
     pub fn built_in_rgb_yuv_helper(

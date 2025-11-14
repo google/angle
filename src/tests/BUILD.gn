@@ -110,6 +110,9 @@ angle_static_library("angle_test_expectations") {
     sources += test_expectation_sources_ios
     frameworks = [ "Foundation.framework" ]
   }
+  if (angle_ir) {
+    configs += [ "${angle_root}:angle_translator_ir" ]
+  }
 }
 
 config("angle_common_test_utils_config") {

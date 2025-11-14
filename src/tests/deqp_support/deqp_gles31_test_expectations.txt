@@ -436,3 +436,8 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.synchronization.in* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.texture.border_clamp.* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.texture.*cube_array* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.texture.gather.basic.cube* = SKIP
+
+// Translator IR failures
+// A really large matrix (that is ultimately unused) ends up zero-initialized in the shader, crashing the d3d compiler.
+349994211 IR D3D11 : dEQP-GLES31.functional.shaders.arrays_of_arrays.es31.length.mat3_* = SKIP
+349994211 IR D3D11 : dEQP-GLES31.functional.shaders.arrays_of_arrays.es31.length.struct_* = SKIP

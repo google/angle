@@ -2435,7 +2435,7 @@ void main() {
     color = vec4(f(a), 0.0, 0.0, 1.0);
 })";
     validateError(GL_FRAGMENT_SHADER, kFS,
-                  "'b' : Size of declared private variable exceeds implementation-defined limit");
+                  "Size of declared private variable exceeds implementation-defined limit");
 }
 
 // Similar to LargeInterfaceBlockArrayPassedToFunction, but the array is nested in a struct.
@@ -2455,7 +2455,7 @@ void main() {
     color = vec4(f(s.a), 0.0, 0.0, 1.0);
 })";
     validateError(GL_FRAGMENT_SHADER, kFS,
-                  "'b' : Size of declared private variable exceeds implementation-defined limit");
+                  "Size of declared private variable exceeds implementation-defined limit");
 }
 
 // Similar to LargeInterfaceBlockArrayPassedToFunction, but the large array is copied to a local
@@ -2471,7 +2471,7 @@ void main() {
     color = vec4(b[0], 0.0, 0.0, 1.0);
 })";
     validateError(GL_FRAGMENT_SHADER, kFS,
-                  "'b' : Size of declared private variable exceeds implementation-defined limit");
+                  "Size of declared private variable exceeds implementation-defined limit");
 }
 
 // Similar to LargeInterfaceBlockArrayCopiedToLocal, but the array is nested in a struct
@@ -2487,7 +2487,7 @@ void main() {
     color = vec4(s2.a[0], 0.0, 0.0, 1.0);
 })";
     validateError(GL_FRAGMENT_SHADER, kFS,
-                  "'s2' : Size of declared private variable exceeds implementation-defined limit");
+                  "Size of declared private variable exceeds implementation-defined limit");
 }
 
 // Test that too large varyings are rejected.
