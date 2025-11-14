@@ -133,6 +133,9 @@ namespace vk
 {
 class Renderer;
 
+constexpr VkImageUsageFlags kImageUsageTransferBits =
+    VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+
 // Used for memory allocation tracking.
 enum class MemoryAllocationType;
 
@@ -540,10 +543,15 @@ class MemoryProperties final : angle::NonCopyable
         return mMemoryProperties.memoryHeaps[heapIndex].size;
     }
 
-    const VkMemoryType &getMemoryType(uint32_t i) const { return mMemoryProperties.memoryTypes[i]; }
+    const VkMemoryType &getMemoryType(uint32_t memoryTypeIndex) const
+    {
+        return mMemoryProperties.memoryTypes[memoryTypeIndex];
+    }
 
     uint32_t getMemoryHeapCount() const { return mMemoryProperties.memoryHeapCount; }
     uint32_t getMemoryTypeCount() const { return mMemoryProperties.memoryTypeCount; }
+
+    void log(std::ostringstream &out) const;
 
   private:
     VkPhysicalDeviceMemoryProperties mMemoryProperties;

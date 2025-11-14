@@ -1734,9 +1734,9 @@ void DumpPipelineCacheGraph(Renderer *renderer, const std::ostringstream &graph)
 bool CanSupportMSRTSSForRGBA8(Renderer *renderer)
 {
     // The support is checked for a basic 2D texture.
-    constexpr VkImageUsageFlags kImageUsageFlags =
-        VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-        VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    constexpr VkImageUsageFlags kImageUsageFlags = vk::kImageUsageTransferBits |
+                                                   VK_IMAGE_USAGE_SAMPLED_BIT |
+                                                   VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     VkImageCreateFlags imageCreateFlags =
         GetMinimalImageCreateFlags(renderer, gl::TextureType::_2D, kImageUsageFlags) |
         VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT;

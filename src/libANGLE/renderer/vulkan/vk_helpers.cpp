@@ -5759,6 +5759,9 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
         mCreateFlags |= VK_IMAGE_CREATE_PROTECTED_BIT;
     }
 
+    VkSampleCountFlagBits sampleCountFlagBits =
+        gl_vk::GetSamples(mSamples, context->getFeatures().limitSampleCountTo2.enabled);
+
     VkImageCreateInfo imageInfo = {};
     imageInfo.sType             = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.pNext             = imageCreateInfoPNext;
@@ -5768,8 +5771,7 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
     imageInfo.extent            = mExtents;
     imageInfo.mipLevels         = mLevelCount;
     imageInfo.arrayLayers       = mLayerCount;
-    imageInfo.samples =
-        gl_vk::GetSamples(mSamples, context->getFeatures().limitSampleCountTo2.enabled);
+    imageInfo.samples               = sampleCountFlagBits;
     imageInfo.tiling                = mTilingMode;
     imageInfo.usage                 = mUsage;
     imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
@@ -5890,7 +5892,7 @@ void ImageHelper::setImageFormatsFromActualFormat(VkFormat actualFormat,
     imageFormatsOut.push_back(actualFormat);
 }
 
-void ImageHelper::deriveImageViewFormatFromCreateInfoPNext(VkImageCreateInfo &imageInfo,
+void ImageHelper::deriveImageViewFormatFromCreateInfoPNext(const VkImageCreateInfo &imageInfo,
                                                            ImageFormats &formatOut)
 {
     const VkBaseInStructure *pNextChain =
@@ -11007,9 +11009,7 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
         ANGLE_TRY(resolvedImage.get().init2DStaging(
             contextVk, contextVk->getState().hasProtectedContent(), renderer->getMemoryProperties(),
             gl::Extents(area.width, area.height, 1), mIntendedFormatID, mActualFormatID,
-            VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-                VK_IMAGE_USAGE_SAMPLED_BIT,
-            1));
+            vk::kImageUsageTransferBits | VK_IMAGE_USAGE_SAMPLED_BIT, 1));
     }
     else if (isExternalFormat)
     {
@@ -11017,8 +11017,8 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
             contextVk, contextVk->getState().hasProtectedContent(), renderer->getMemoryProperties(),
             gl::Extents(area.width, area.height, 1), angle::FormatID::R8G8B8A8_UNORM,
             angle::FormatID::R8G8B8A8_UNORM,
-            VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-                VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+            vk::kImageUsageTransferBits | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
+                VK_IMAGE_USAGE_SAMPLED_BIT,
             1));
     }
 

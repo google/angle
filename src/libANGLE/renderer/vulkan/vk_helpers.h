@@ -2319,7 +2319,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Helper for initExternal and users to extract the view formats of the image from the pNext
     // chain in VkImageCreateInfo.
-    void deriveImageViewFormatFromCreateInfoPNext(VkImageCreateInfo &imageInfo,
+    void deriveImageViewFormatFromCreateInfoPNext(const VkImageCreateInfo &imageInfo,
                                                   ImageFormats &formatOut);
 
     // Release the underlying VkImage object for garbage collection.

@@ -5573,7 +5573,7 @@ TEST_P(Texture2DTestES3, ChangeTexSizeWithTexStorage)
 
 // Regression test for http://crbug.com/949985 to make sure dirty bits are propagated up from
 // TextureImpl and the texture is synced before being used in a draw call.
-TEST_P(Texture2DTestES3, TextureImplPropogatesDirtyBits)
+TEST_P(Texture2DTestES3, TextureImplPropagatesDirtyBits)
 {
     ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL());
     // Flaky hangs on Win10 AMD RX 550 GL. http://anglebug.com/42262039

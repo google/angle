@@ -580,8 +580,7 @@ CLImageVk *CLImageVk::getParent<CLImageVk>() const
 
 VkImageUsageFlags CLImageVk::getVkImageUsageFlags()
 {
-    VkImageUsageFlags usageFlags =
-        VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    VkImageUsageFlags usageFlags = vk::kImageUsageTransferBits;
 
     if (mMemory.getFlags().intersects(CL_MEM_WRITE_ONLY))
     {

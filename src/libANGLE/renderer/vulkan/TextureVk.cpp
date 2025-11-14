@@ -38,14 +38,11 @@ namespace rx
 {
 namespace
 {
-constexpr VkImageUsageFlags kTransferImageFlags =
-    VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
-
 constexpr VkImageUsageFlags kColorAttachmentImageFlags =
     VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
 
 constexpr VkImageUsageFlags kDrawStagingImageFlags =
-    kTransferImageFlags | kColorAttachmentImageFlags;
+    vk::kImageUsageTransferBits | kColorAttachmentImageFlags;
 
 constexpr VkFormatFeatureFlags kBlitFeatureFlags =
     VK_FORMAT_FEATURE_BLIT_SRC_BIT | VK_FORMAT_FEATURE_BLIT_DST_BIT;
@@ -505,8 +502,8 @@ GLint GetFormatSupportedCompressionRates(vk::Renderer *renderer,
                 renderer,
                 vk::GetVkFormatFromFormatID(renderer, format.getActualRenderableImageFormatID()),
                 VK_IMAGE_TYPE_2D, VK_IMAGE_TILING_OPTIMAL,
-                VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-                    VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+                vk::kImageUsageTransferBits | VK_IMAGE_USAGE_SAMPLED_BIT |
+                    VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
                 0, &compressionInfo, &compressionProp,
                 vk::ImageHelper::FormatSupportCheck::OnlyQuerySuccess))
         {
@@ -1857,8 +1854,8 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
         ANGLE_TRY(stagingImage->get().init2DStaging(
             contextVk, mState.hasProtectedContent(), renderer->getMemoryProperties(),
             gl::Extents(sourceBox.width, sourceBox.height, 1), dstFormat.getIntendedFormatID(),
-            dstFormat.getActualImageFormatID(getRequiredFormatSupport()), kTransferImageFlags,
-            layerCount));
+            dstFormat.getActualImageFormatID(getRequiredFormatSupport()),
+            vk::kImageUsageTransferBits, layerCount));
 
         resources.onImageTransferWrite(gl::LevelIndex(0), 1, 0, layerCount,
                                        VK_IMAGE_ASPECT_COLOR_BIT, &stagingImage->get());
@@ -2414,7 +2411,7 @@ void TextureVk::initImageUsageFlags(ContextVk *contextVk,
 {
     ASSERT(actualFormatID != angle::FormatID::NONE);
 
-    mImageUsageFlags = kTransferImageFlags | VK_IMAGE_USAGE_SAMPLED_BIT;
+    mImageUsageFlags = vk::kImageUsageTransferBits | VK_IMAGE_USAGE_SAMPLED_BIT;
 
     // If the image has depth/stencil support, add those as possible usage.
     vk::Renderer *renderer = contextVk->getRenderer();
@@ -2963,8 +2960,8 @@ angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
     ANGLE_TRY(stagingImage->get().initStaging(
         contextVk, mState.hasProtectedContent(), renderer->getMemoryProperties(),
         srcImage->getType(), srcImage->getExtents(), srcImage->getIntendedFormatID(),
-        srcImage->getActualFormatID(), srcImage->getSamples(), kTransferImageFlags, levelCount,
-        layerCount));
+        srcImage->getActualFormatID(), srcImage->getSamples(), vk::kImageUsageTransferBits,
+        levelCount, layerCount));
 
     // Copy the src image wholly into the staging image
     const VkImageAspectFlags aspectFlags = srcImage->getAspectFlags();

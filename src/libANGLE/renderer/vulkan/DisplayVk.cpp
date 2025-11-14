@@ -728,8 +728,8 @@ egl::Error DisplayVk::querySupportedCompressionRates(const egl::Config *configur
         vk::GetVkFormatFromFormatID(mRenderer, format.getActualRenderableImageFormatID());
     imageFormatInfo.type   = VK_IMAGE_TYPE_2D;
     imageFormatInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-    imageFormatInfo.usage  = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-                            VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
+    imageFormatInfo.usage  = vk::kImageUsageTransferBits | VK_IMAGE_USAGE_SAMPLED_BIT |
+                            VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
                             VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
 
     VkImageCompressionPropertiesEXT compressionProperties = {};
