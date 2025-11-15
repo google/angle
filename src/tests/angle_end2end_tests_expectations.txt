@@ -210,6 +210,7 @@
 
 // Intel/windows does not ignore gl_Layer for non-layered framebuffers
 374790899 WIN INTEL OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
+462344532 WIN INTEL OPENGL : GLSLTest_ES3.SingleStructArrayConstructor/* = SKIP
 
 // Linux
 42264596 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
@@ -2057,7 +2058,7 @@
 418022112 WGPU : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 423702346 WGPU : SimpleUniformTestES3.PackUniformFP16Test/* = SKIP
 438268609 WGPU : CopyTexImageTest.CopyTex*Cube*/* = SKIP
-// Unimplemented format conversions for image copies 
+// Unimplemented format conversions for image copies
 438268609 WGPU : CopyTexImageTest.RGBAToL*/* = SKIP
 438268609 WGPU : CopyTexImageTest.RGBAToRGB8/* = SKIP
 438268609 WGPU : CopyTexImageTest.RGBToL/* = SKIP
@@ -2067,7 +2068,7 @@
 438268609 WGPU : CopyTextureTest.InternalFormat/* = SKIP
 // WGPU does not currently resize textures
 438268609 WGPU : CopyTextureTest.CopyOutsideMipmap/* = SKIP
-// Unimplemented format conversions for texture copies 
+// Unimplemented format conversions for texture copies
 438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__AToRGB* = SKIP
 438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__LToRGB* = SKIP
 438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__LAToRGB* = SKIP
