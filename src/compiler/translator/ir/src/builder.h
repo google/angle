@@ -14,7 +14,6 @@
 #include <GLSLANG/ShaderVars.h>
 
 #include "common/PackedEnums.h"
-#include "common/hash_containers.h"
 #include "common/span.h"
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Common.h"

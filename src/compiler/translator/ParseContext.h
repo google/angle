@@ -6,6 +6,7 @@
 #ifndef COMPILER_TRANSLATOR_PARSECONTEXT_H_
 #define COMPILER_TRANSLATOR_PARSECONTEXT_H_
 
+#include "common/hash_containers.h"
 #include "compiler/preprocessor/Preprocessor.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/Declarator.h"
