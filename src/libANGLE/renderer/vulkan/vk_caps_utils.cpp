@@ -1681,7 +1681,6 @@ egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
 
     gl::SupportedSampleSet colorSampleCounts;
     gl::SupportedSampleSet depthStencilSampleCounts;
-    gl::SupportedSampleSet sampleCounts;
 
     const VkPhysicalDeviceLimits &limits =
         display->getRenderer()->getPhysicalDeviceProperties().limits;
@@ -1697,9 +1696,7 @@ egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
     colorSampleCounts.insert(0);
     depthStencilSampleCounts.insert(0);
 
-    std::set_intersection(colorSampleCounts.begin(), colorSampleCounts.end(),
-                          depthStencilSampleCounts.begin(), depthStencilSampleCounts.end(),
-                          std::inserter(sampleCounts, sampleCounts.begin()));
+    gl::SupportedSampleSet sampleCounts = colorSampleCounts & depthStencilSampleCounts;
 
     egl::ConfigSet configSet;
 
@@ -1729,7 +1726,7 @@ egl::ConfigSet GenerateConfigs(const GLenum *colorFormats,
                 configSampleCounts = &depthStencilSampleCounts;
             }
 
-            for (EGLint sampleCount : *configSampleCounts)
+            for (EGLint sampleCount : configSampleCounts->sampleCounts())
             {
                 egl::Config config = GenerateDefaultConfig(display, colorFormatInfo,
                                                            depthStencilFormatInfo, sampleCount);

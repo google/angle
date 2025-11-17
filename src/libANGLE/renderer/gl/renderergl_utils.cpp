@@ -622,7 +622,15 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
                 }
                 if (conformant == GL_TRUE)
                 {
-                    textureCaps.sampleCounts.insert(samples[sampleIndex]);
+                    if (gl::isPow2(samples[sampleIndex]))
+                    {
+                        textureCaps.sampleCounts.insert(samples[sampleIndex]);
+                    }
+                    else
+                    {
+                        WARN() << "Skipping unexpected sample count " << samples[sampleIndex]
+                               << " for internal format " << gl::FmtHex(queryInternalFormat) << ".";
+                    }
                 }
             }
         }
@@ -634,7 +642,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
     const gl::InternalFormat &glFormatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
     if (textureCaps.renderbuffer && !glFormatInfo.isInt() &&
         glFormatInfo.isRequiredRenderbufferFormat(gl::Version(3, 0)) &&
-        textureCaps.getMaxSamples() < 4)
+        textureCaps.sampleCounts.getMaxSamples() < 4)
     {
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
     }

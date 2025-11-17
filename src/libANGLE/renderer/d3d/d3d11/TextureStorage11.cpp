@@ -3764,7 +3764,7 @@ angle::Result TextureStorage11_2DMultisample::ensureTextureExists(const gl::Cont
 
         const gl::TextureCaps &textureCaps =
             mRenderer->getNativeTextureCaps().get(mFormatInfo.internalFormat);
-        GLuint supportedSamples = textureCaps.getNearestSamples(mSamples);
+        GLuint supportedSamples = textureCaps.sampleCounts.getNearestSamples(mSamples);
         desc.SampleDesc.Count   = (supportedSamples == 0) ? 1 : supportedSamples;
         desc.SampleDesc.Quality = mRenderer->getSampleDescQuality(supportedSamples);
 
@@ -3983,7 +3983,7 @@ angle::Result TextureStorage11_2DMultisampleArray::ensureTextureExists(const gl:
 
         const gl::TextureCaps &textureCaps =
             mRenderer->getNativeTextureCaps().get(mFormatInfo.internalFormat);
-        GLuint supportedSamples = textureCaps.getNearestSamples(mSamples);
+        GLuint supportedSamples = textureCaps.sampleCounts.getNearestSamples(mSamples);
         desc.SampleDesc.Count   = (supportedSamples == 0) ? 1 : supportedSamples;
         desc.SampleDesc.Quality = mRenderer->getSampleDescQuality(supportedSamples);
 

@@ -4633,7 +4633,7 @@ void Context::updateCaps()
         {
             // We may have limited the max samples for some required renderbuffer formats due to
             // non-conformant formats. In this case MAX_SAMPLES needs to be lowered accordingly.
-            GLuint formatMaxSamples = formatCaps.getMaxSamples();
+            GLuint formatMaxSamples = formatCaps.sampleCounts.getMaxSamples();
 
             // GLES 3.0.5 section 4.4.2.2: "Implementations must support creation of renderbuffers
             // in these required formats with up to the value of MAX_SAMPLES multisamples, with the

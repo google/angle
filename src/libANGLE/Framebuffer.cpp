@@ -226,7 +226,7 @@ FramebufferStatus CheckAttachmentSampleCompleteness(const Context *context,
         ASSERT(texture);
         GLenum sizedInternalFormat    = attachment.getFormat().info->sizedInternalFormat;
         const TextureCaps &formatCaps = context->getTextureCaps().get(sizedInternalFormat);
-        if (static_cast<GLuint>(attachment.getSamples()) > formatCaps.getMaxSamples())
+        if (static_cast<GLuint>(attachment.getSamples()) > formatCaps.sampleCounts.getMaxSamples())
         {
             return FramebufferStatus::Incomplete(
                 GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE,
@@ -1931,7 +1931,7 @@ void Framebuffer::setAttachment(const Context *context,
         ASSERT(info);
         GLenum sizedInternalFormat    = info->sizedInternalFormat;
         const TextureCaps &formatCaps = context->getTextureCaps().get(sizedInternalFormat);
-        samples                       = formatCaps.getNearestSamples(samples);
+        samples                       = formatCaps.sampleCounts.getNearestSamples(samples);
     }
 
     // Context may be null in unit tests.

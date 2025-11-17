@@ -3450,7 +3450,7 @@ bool ValidateRenderbufferStorageMultisample(const Context *context,
 
     // The behavior is different than the ANGLE version, which would generate a GL_OUT_OF_MEMORY.
     const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
-    if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+    if (static_cast<GLuint>(samples) > formatCaps.sampleCounts.getMaxSamples())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kSamplesOutOfRange);
         return false;
@@ -3844,7 +3844,7 @@ bool ValidateFramebufferTextureMultisampleMultiviewOVR(const Context *context,
     // for FramebufferTexture2DMultisampleEXT and has the same restrictions and errors.
     // EXT_multisampled_render_to_texture returns INVALID_OPERATION when a sample number higher than
     // the maximum sample number supported by this format is passed.
-    // The TextureCaps::getMaxSamples method is only guaranteed to be valid when the context is ES3.
+    // The getMaxSamples method is only guaranteed to be valid when the context is ES3.
     if (texturePacked.value != 0 && context->getClientVersion() >= ES_3_0)
     {
         Texture *tex = context->getTexture(texturePacked);
@@ -3852,7 +3852,7 @@ bool ValidateFramebufferTextureMultisampleMultiviewOVR(const Context *context,
             tex->getFormat(TextureTypeToTarget(tex->getType(), baseViewIndex), level)
                 .info->sizedInternalFormat;
         const TextureCaps &formatCaps = context->getTextureCaps().get(sizedInternalFormat);
-        if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+        if (static_cast<GLuint>(samples) > formatCaps.sampleCounts.getMaxSamples())
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kSamplesOutOfRange);
             return false;

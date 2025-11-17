@@ -8652,7 +8652,7 @@ bool ValidateTexStorageMultisample(const Context *context,
         return false;
     }
 
-    if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+    if (static_cast<GLuint>(samples) > formatCaps.sampleCounts.getMaxSamples())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kSamplesOutOfRange);
         return false;

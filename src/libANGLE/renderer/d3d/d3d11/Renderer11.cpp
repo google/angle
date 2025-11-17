@@ -1222,23 +1222,18 @@ gl::SupportedSampleSet Renderer11::generateSampleSetForEGLConfig(
     const gl::TextureCaps &colorBufferFormatCaps,
     const gl::TextureCaps &depthStencilBufferFormatCaps) const
 {
-    gl::SupportedSampleSet sampleCounts;
-
     // Generate a new set from the set intersection of sample counts between the color and depth
     // format caps.
-    std::set_intersection(colorBufferFormatCaps.sampleCounts.begin(),
-                          colorBufferFormatCaps.sampleCounts.end(),
-                          depthStencilBufferFormatCaps.sampleCounts.begin(),
-                          depthStencilBufferFormatCaps.sampleCounts.end(),
-                          std::inserter(sampleCounts, sampleCounts.begin()));
+    gl::SupportedSampleSet sampleCounts =
+        colorBufferFormatCaps.sampleCounts & depthStencilBufferFormatCaps.sampleCounts;
 
     // Format of GL_NONE results in no supported sample counts.
     // Add back the color sample counts to the supported sample set.
-    if (depthStencilBufferFormatCaps.sampleCounts.empty())
+    if (depthStencilBufferFormatCaps.sampleCounts.getMaxSamples() == 0)
     {
         sampleCounts = colorBufferFormatCaps.sampleCounts;
     }
-    else if (colorBufferFormatCaps.sampleCounts.empty())
+    else if (colorBufferFormatCaps.sampleCounts.getMaxSamples() == 0)
     {
         // Likewise, add back the depth sample counts to the supported sample set.
         sampleCounts = depthStencilBufferFormatCaps.sampleCounts;
@@ -1321,7 +1316,7 @@ egl::ConfigSet Renderer11::generateConfigs()
             const gl::SupportedSampleSet sampleCounts =
                 generateSampleSetForEGLConfig(colorBufferFormatCaps, depthStencilBufferFormatCaps);
 
-            for (GLuint sampleCount : sampleCounts)
+            for (GLuint sampleCount : sampleCounts.sampleCounts())
             {
                 egl::Config config;
                 config.renderTargetFormat = colorBufferInternalFormat;
@@ -2904,7 +2899,7 @@ angle::Result Renderer11::createRenderTarget(const gl::Context *context,
     const d3d11::Format &formatInfo = d3d11::Format::Get(format, mRenderer11DeviceCaps);
 
     const gl::TextureCaps &textureCaps = getNativeTextureCaps().get(format);
-    GLuint supportedSamples            = textureCaps.getNearestSamples(samples);
+    GLuint supportedSamples            = textureCaps.sampleCounts.getNearestSamples(samples);
 
     Context11 *context11 = GetImplAs<Context11>(context);
 

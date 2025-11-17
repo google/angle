@@ -2613,7 +2613,7 @@ angle::Result Renderer9::createRenderTarget(const gl::Context *context,
     const d3d9::TextureFormat &d3d9FormatInfo = d3d9::GetTextureFormatInfo(format);
 
     const gl::TextureCaps &textureCaps = getNativeTextureCaps().get(format);
-    GLuint supportedSamples            = textureCaps.getNearestSamples(samples);
+    GLuint supportedSamples            = textureCaps.sampleCounts.getNearestSamples(samples);
 
     IDirect3DTexture9 *texture      = nullptr;
     IDirect3DSurface9 *renderTarget = nullptr;
