@@ -2842,6 +2842,10 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
 
             if (color->isRenderToTexture())
             {
+                ASSERT(
+                    !contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled ||
+                    (colorRenderTargets[colorIndexGL]->getImageForRenderPass().getCreateFlags() &
+                     VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT) != 0);
                 isRenderToTexture = true;
                 break;
             }
@@ -2849,6 +2853,9 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
         const gl::FramebufferAttachment *depthStencil = mState.getDepthStencilAttachment();
         if (depthStencil && depthStencil->isRenderToTexture())
         {
+            ASSERT(!contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled ||
+                   (depthStencilRenderTarget->getImageForRenderPass().getCreateFlags() &
+                    VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT) != 0);
             isRenderToTexture = true;
         }
 
