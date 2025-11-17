@@ -6584,9 +6584,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Disable on driver implementations other than ARM proprietary until the performance impact on
     // them is verified.
     ANGLE_FEATURE_CONDITION(&mFeatures, convertLowpAndMediumpFloatUniformsTo16Bits,
-                            m16BitStorageFeatures.uniformAndStorageBuffer16BitAccess == VK_TRUE &&
-                                mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE &&
-                                isARMProprietary);
+                            mFeatures.supports16BitUniformAndStorageBuffer.enabled &&
+                                mFeatures.supportsShaderFloat16.enabled && isARMProprietary);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsUnifiedImageLayouts,
                             mUnifiedImageLayoutsFeatures.unifiedImageLayouts == VK_TRUE);
