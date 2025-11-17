@@ -8668,6 +8668,7 @@ ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_Prerotation,
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest_SingleBuffer);
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_SingleBuffer, ES3_VULKAN());
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest_RGBSurface);
 ANGLE_INSTANTIATE_TEST(
     VulkanPerformanceCounterTest_RGBSurface,
     ES3_VULKAN(),
