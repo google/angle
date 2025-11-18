@@ -117,7 +117,7 @@
     },
     'cxx17': {
       # Skia does not support C++20 yet: b/330910097
-      'gn_args': 'use_cxx17=true',
+      'gn_args': 'use_cxx17=true use_cxx23=false',
     },
     'debug': {
       'gn_args': 'is_debug=true',
