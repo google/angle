@@ -4555,7 +4555,7 @@ BufferHelper &BufferHelper::operator=(BufferHelper &&other)
     {
         mCurrentReadEvents = std::move(other.mCurrentReadEvents);
     }
-    mTransformFeedbackWriteHeuristicBits = std::move(other.mTransformFeedbackWriteHeuristicBits);
+    mXFBOrComputeWriteHeuristicBits = std::move(other.mXFBOrComputeWriteHeuristicBits);
     mSerial                  = other.mSerial;
     mClientBuffer            = std::move(other.mClientBuffer);
 
@@ -5128,7 +5128,7 @@ void BufferHelper::recordReadEvent(Context *context,
         // dependency between fragment and vertex/transfer/compute stages. But it also comes with
         // higher overhead. In order to strike the balance, right now we only track it with VkEvent
         // if it ever written by transform feedback.
-        useVkEvent = mTransformFeedbackWriteHeuristicBits.any();
+        useVkEvent = mXFBOrComputeWriteHeuristicBits.any();
     }
 
     if (useVkEvent && refCountedEventArray->initEventAtStage(context, eventStage))
@@ -5170,6 +5170,8 @@ void BufferHelper::recordWriteBarrier(Context *context,
                                       RefCountedEventCollector *eventCollector)
 {
     Renderer *renderer = context->getRenderer();
+
+    updatePipelineStageWriteHistory(context, stageIndex);
 
     // Barrier against prior read VkEvents.
     if (!mCurrentReadEvents.empty())
@@ -5263,13 +5265,12 @@ void BufferHelper::recordWriteEvent(Context *context,
         eventStage != EventStage::InvalidEnum)
     {
         ASSERT(mCurrentReadEvents.empty());
-        updatePipelineStageWriteHistory(writeStage);
 
         // VkCmdSetEvent can remove the unnecessary GPU pipeline bubble that comes from false
         // dependency between fragment and vertex/transfer/compute stages. But it also comes with
         // higher overhead. In order to strike the balance, right now we only track it with VkEvent
         // if it ever written by transform feedback.
-        useVkEvent = mTransformFeedbackWriteHeuristicBits.any();
+        useVkEvent = mXFBOrComputeWriteHeuristicBits.any();
 
         // We only track one write event. In case of multiple writes like write from different
         // shader stages in the same render pass, only the first write is tracked by event,

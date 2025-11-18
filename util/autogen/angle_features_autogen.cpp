@@ -224,6 +224,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::InitFragmentOutputVariables, "initFragmentOutputVariables"},
     {Feature::InitializeCurrentVertexAttributes, "initializeCurrentVertexAttributes"},
     {Feature::InjectAsmStatementIntoLoopBodies, "injectAsmStatementIntoLoopBodies"},
+    {Feature::IsVertexSyncDeferred, "isVertexSyncDeferred"},
     {Feature::KeepBufferShadowCopy, "keepBufferShadowCopy"},
     {Feature::LimitMax3dArrayTextureSizeTo1024, "limitMax3dArrayTextureSizeTo1024"},
     {Feature::LimitMaxColorTargetBitsForTesting, "limitMaxColorTargetBitsForTesting"},

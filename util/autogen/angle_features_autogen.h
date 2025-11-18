@@ -224,6 +224,7 @@ enum class Feature
     InitFragmentOutputVariables,
     InitializeCurrentVertexAttributes,
     InjectAsmStatementIntoLoopBodies,
+    IsVertexSyncDeferred,
     KeepBufferShadowCopy,
     LimitMax3dArrayTextureSizeTo1024,
     LimitMaxColorTargetBitsForTesting,

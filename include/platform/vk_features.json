@@ -1690,6 +1690,14 @@
             "issue": "https://issues.angleproject.org/360274928"
         },
         {
+            "name": "is_vertex_sync_deferred",
+            "category": "Features",
+            "description": [
+                "Prefer VkEvent instead of VkCmdPipelineBarrier if vertex synchronization is deferred"
+            ],
+            "issue": "https://issues.angleproject.org/issues/414630743"
+        },
+        {
             "name": "recycle_vkEvent",
             "category": "Features",
             "description": [

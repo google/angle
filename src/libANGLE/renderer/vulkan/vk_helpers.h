@@ -1036,12 +1036,22 @@ class BufferHelper : public ReadWriteResource
 
     void releaseImpl(Renderer *renderer);
 
-    void updatePipelineStageWriteHistory(PipelineStage writeStage)
+    void updatePipelineStageWriteHistory(Context *context, PipelineStage writeStage)
     {
-        mTransformFeedbackWriteHeuristicBits <<= 1;
+        mXFBOrComputeWriteHeuristicBits <<= 1;
+
         if (writeStage == PipelineStage::TransformFeedback)
         {
-            mTransformFeedbackWriteHeuristicBits |= 1;
+            mXFBOrComputeWriteHeuristicBits |= 1;
+        }
+        else if ((writeStage == PipelineStage::ComputeShader) &&
+                 (mCurrentReadStages & VK_PIPELINE_STAGE_VERTEX_INPUT_BIT) != 0 &&
+                 context->getFeatures().isVertexSyncDeferred.enabled)
+        {
+            // When a buffer is written in compute after read in vertex stage, using vkEvent
+            // for synchronization is generally more performance-friendly than a pipeline barrier,
+            // especially on deferred rendering GPUs.
+            mXFBOrComputeWriteHeuristicBits |= 1;
         }
     }
 
@@ -1072,9 +1082,8 @@ class BufferHelper : public ReadWriteResource
 
     // Track history of pipeline stages being used. This information provides
     // heuristic for making decisions if a VkEvent should be used to track the operation.
-    static constexpr uint32_t kTransformFeedbackWriteHeuristicWindowSize = 16;
-    angle::BitSet16<kTransformFeedbackWriteHeuristicWindowSize>
-        mTransformFeedbackWriteHeuristicBits;
+    static constexpr uint32_t kXFBOrComputeWriteHeuristicWindowSize = 16;
+    angle::BitSet16<kXFBOrComputeWriteHeuristicWindowSize> mXFBOrComputeWriteHeuristicBits;
 
     BufferSerial mSerial;
     // Manages the descriptorSet cache that created with this BufferHelper object.

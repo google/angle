@@ -6415,6 +6415,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             isTileBasedRenderer || isSoftwareRenderer);
     ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForBufferBarrier,
                             isTileBasedRenderer || isSoftwareRenderer);
+
+    // VkEvent is better than pipeline barriers on Mali GPUs with vertex sync deferred mode enabled.
+    // Be unable to query GPU features currently, we restrict it to Mali non-JobManagerBased GPUs.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, isVertexSyncDeferred,
+        mFeatures.useVkEventForBufferBarrier.enabled && isARM && !isMaliJobManagerBasedGPU);
+
     // vkCmdResetEvent adds extra GPU overhead and ARM prefers CPU overhead of creating/destroying
     // VkEvent instead of GPU overhead associated with vkCmdResetEvent.
     ANGLE_FEATURE_CONDITION(&mFeatures, recycleVkEvent, isSwiftShader);

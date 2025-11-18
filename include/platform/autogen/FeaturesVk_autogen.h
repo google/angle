@@ -1286,6 +1286,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo isVertexSyncDeferred = {
+        "isVertexSyncDeferred",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo recycleVkEvent = {
         "recycleVkEvent",
         FeatureCategory::VulkanFeatures,
