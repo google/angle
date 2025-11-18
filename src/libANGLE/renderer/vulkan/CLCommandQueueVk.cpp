@@ -584,6 +584,9 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
                                                       VkBufferImageCopy copyRegion,
                                                       ImageBufferCopyDirection direction)
 {
+    // 1D image buffers are treated separately
+    ASSERT(!cl::Is1DImageBuffer(imageVk.getType()));
+
     vk::Renderer *renderer = mContext->getRenderer();
 
     vk::CommandResources resources;
@@ -882,6 +885,16 @@ angle::Result CLCommandQueueVk::enqueueReadImage(const cl::Image &image,
                                                  cl::EventPtr &event)
 
 {
+    // If its a 1Dbuffer we route this to ReadBuffer
+    if (cl::Is1DImageBuffer(image.getType()))
+    {
+        cl::Buffer *parentBuffer = cl::Buffer::Cast(image.getParent()->getNative());
+        size_t offset            = origin.x * image.getElementSize() + parentBuffer->getOffset();
+        size_t readSize          = region.width * image.getElementSize();
+
+        return enqueueReadBuffer(*parentBuffer, blocking, offset, readSize, ptr, waitEvents, event);
+    }
+
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
     ANGLE_TRY(preEnqueueOps(
@@ -890,15 +903,6 @@ angle::Result CLCommandQueueVk::enqueueReadImage(const cl::Image &image,
 
     CLImageVk &imageVk = image.getImpl<CLImageVk>();
     cl::BufferRect ptrRect{cl::kOffsetZero, region, rowPitch, slicePitch, imageVk.getElementSize()};
-
-    if (cl::Is1DImageBuffer(image.getType()) ||
-        (image.getParent() && cl::Is2DImage(image.getParent()->getType())))
-    {
-        // TODO: need to implement buffer-based parent image ops later
-        // http://anglebug.com/444481344
-        UNIMPLEMENTED();
-        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
-    }
 
     // Create a transfer buffer and push it in update list
     HostReadTransferConfig transferConfig(CL_COMMAND_READ_IMAGE, ptrRect.getRectSize(), ptr,
@@ -925,6 +929,17 @@ angle::Result CLCommandQueueVk::enqueueWriteImage(const cl::Image &image,
                                                   const cl::EventPtrs &waitEvents,
                                                   cl::EventPtr &event)
 {
+    // If its a 1Dbuffer we route this to WriteBuffer
+    if (cl::Is1DImageBuffer(image.getType()))
+    {
+        cl::Buffer *parentBuffer = cl::Buffer::Cast(image.getParent()->getNative());
+        size_t offset            = origin.x * image.getElementSize() + parentBuffer->getOffset();
+        size_t writeSize         = region.width * image.getElementSize();
+
+        return enqueueWriteBuffer(*parentBuffer, blocking, offset, writeSize, ptr, waitEvents,
+                                  event);
+    }
+
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
     ANGLE_TRY(preEnqueueOps(
@@ -934,15 +949,6 @@ angle::Result CLCommandQueueVk::enqueueWriteImage(const cl::Image &image,
     CLImageVk &imageVk = image.getImpl<CLImageVk>();
     cl::BufferRect ptrRect{cl::kOffsetZero, region, inputRowPitch, inputSlicePitch,
                            imageVk.getElementSize()};
-
-    if (cl::Is1DImageBuffer(image.getType()) ||
-        (image.getParent() && cl::Is2DImage(image.getParent()->getType())))
-    {
-        // TODO: need to implement buffer-based parent image ops later
-        // http://anglebug.com/444481344
-        UNIMPLEMENTED();
-        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
-    }
 
     // Create a transfer buffer and push it in update list
     HostWriteTransferConfig transferConfig(CL_COMMAND_WRITE_IMAGE, ptrRect.getRectSize(),
@@ -967,9 +973,45 @@ angle::Result CLCommandQueueVk::enqueueCopyImage(const cl::Image &srcImage,
                                                  const cl::EventPtrs &waitEvents,
                                                  cl::EventPtr &event)
 {
+    // If any of the image is 1Dbuffer route it to an appropriate buffer equivalent
+    if (cl::Is1DImageBuffer(srcImage.getType()) && cl::Is1DImageBuffer(dstImage.getType()))
+    {
+        cl::Buffer *parentSrc = cl::Buffer::Cast(srcImage.getParent()->getNative());
+        cl::Buffer *parentDst = cl::Buffer::Cast(dstImage.getParent()->getNative());
+
+        size_t srcOffset = srcOrigin.x * srcImage.getElementSize() + parentSrc->getOffset();
+        size_t dstOffset = dstOrigin.x * dstImage.getElementSize() + parentDst->getOffset();
+
+        return enqueueCopyBuffer(*parentSrc, *parentDst, srcOffset, dstOffset,
+                                 region.width * srcImage.getElementSize(), waitEvents, event);
+    }
+    if (cl::Is1DImageBuffer(srcImage.getType()))
+    {
+        ASSERT(region.height == 1 && region.depth == 1);
+
+        cl::Buffer *parentSrc = cl::Buffer::Cast(srcImage.getParent()->getNative());
+
+        size_t srcOffset = srcOrigin.x * srcImage.getElementSize() + parentSrc->getOffset();
+
+        return enqueueCopyBufferToImage(*parentSrc, dstImage, srcOffset, dstOrigin, region,
+                                        waitEvents, event);
+    }
+    if (cl::Is1DImageBuffer(dstImage.getType()))
+    {
+        ASSERT(region.height == 1 && region.depth == 1);
+
+        cl::Buffer *parentDst = cl::Buffer::Cast(dstImage.getParent()->getNative());
+
+        size_t dstOffset = dstOrigin.x * dstImage.getElementSize() + parentDst->getOffset();
+
+        return enqueueCopyImageToBuffer(srcImage, *parentDst, srcOrigin, region, dstOffset,
+                                        waitEvents, event);
+    }
+
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
     ANGLE_TRY(preEnqueueOps(event, cl::ExecutionStatus::Queued));
+
     ANGLE_TRY(processWaitlist(waitEvents));
 
     auto srcImageVk = &srcImage.getImpl<CLImageVk>();
@@ -1014,13 +1056,25 @@ angle::Result CLCommandQueueVk::enqueueFillImage(const cl::Image &image,
                                                  const cl::EventPtrs &waitEvents,
                                                  cl::EventPtr &event)
 {
+    CLImageVk &imageVk = image.getImpl<CLImageVk>();
+    cl::Extents extent = imageVk.getImageExtent();
+
+    // If its 1Dbuffer route it to FillBuffer
+    if (cl::Is1DImageBuffer(image.getType()))
+    {
+        cl::Buffer *parentBuffer   = cl::Buffer::Cast(image.getParent()->getNative());
+        size_t offset              = origin.x * image.getElementSize() + parentBuffer->getOffset();
+        size_t fillSize            = region.width * image.getElementSize();
+        cl::PixelColor packedColor = image.packPixels(fillColor);
+
+        return enqueueFillBuffer(*parentBuffer, (void *)&packedColor, image.getElementSize(),
+                                 offset, fillSize, waitEvents, event);
+    }
+
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
     ANGLE_TRY(preEnqueueOps(event, cl::ExecutionStatus::Queued));
     ANGLE_TRY(processWaitlist(waitEvents));
-
-    CLImageVk &imageVk = image.getImpl<CLImageVk>();
-    cl::Extents extent = imageVk.getImageExtent();
 
     CLBufferVk *stagingBuffer = nullptr;
     ANGLE_TRY(imageVk.getOrCreateStagingBuffer(&stagingBuffer));
@@ -1049,6 +1103,17 @@ angle::Result CLCommandQueueVk::enqueueCopyImageToBuffer(const cl::Image &srcIma
                                                          const cl::EventPtrs &waitEvents,
                                                          cl::EventPtr &event)
 {
+    // If its 1Dbuffer route it to buffer equivalent
+    if (cl::Is1DImageBuffer(srcImage.getType()))
+    {
+        cl::Buffer *parentSrc = cl::Buffer::Cast(srcImage.getParent()->getNative());
+
+        size_t srcOffset = srcOrigin.x * srcImage.getElementSize() + parentSrc->getOffset();
+
+        return enqueueCopyBuffer(*parentSrc, dstBuffer, srcOffset, dstOffset,
+                                 region.width * srcImage.getElementSize(), waitEvents, event);
+    }
+
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
     ANGLE_TRY(preEnqueueOps(event, cl::ExecutionStatus::Queued));
@@ -1072,13 +1137,26 @@ angle::Result CLCommandQueueVk::enqueueCopyBufferToImage(const cl::Buffer &srcBu
                                                          const cl::EventPtrs &waitEvents,
                                                          cl::EventPtr &event)
 {
+    CLBufferVk &srcBufferVk = srcBuffer.getImpl<CLBufferVk>();
+    CLImageVk &dstImageVk   = dstImage.getImpl<CLImageVk>();
+
+    // If the parent is 1Dbuffer we route this to copyBuffer
+    if (cl::Is1DImageBuffer(dstImage.getType()))
+    {
+        cl::Buffer *parentBuffer = cl::Buffer::Cast(dstImage.getParent()->getNative());
+
+        size_t dstOffset = dstOrigin.x * dstImage.getElementSize() + parentBuffer->getOffset();
+        size_t copySize  = region.width * dstImage.getElementSize();
+
+        return enqueueCopyBuffer(srcBuffer, *parentBuffer, srcOffset, dstOffset, copySize,
+                                 waitEvents, event);
+    }
+
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
     ANGLE_TRY(preEnqueueOps(event, cl::ExecutionStatus::Queued));
     ANGLE_TRY(processWaitlist(waitEvents));
 
-    CLBufferVk &srcBufferVk = srcBuffer.getImpl<CLBufferVk>();
-    CLImageVk &dstImageVk   = dstImage.getImpl<CLImageVk>();
     VkBufferImageCopy copyRegion =
         cl_vk::CalculateBufferImageCopyRegion(srcOffset, 0, 0, dstOrigin, region, &dstImageVk);
     ANGLE_TRY(copyImageToFromBuffer(dstImageVk, srcBufferVk, copyRegion,
@@ -1098,18 +1176,27 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
                                                 cl::EventPtr &event,
                                                 void *&mapPtr)
 {
+    CLImageVk *imageVk = &image.getImpl<CLImageVk>();
+    cl::Extents extent = imageVk->getImageExtent();
+    size_t elementSize = image.getElementSize();
+    size_t rowPitch    = image.getRowSize();
+    size_t offset =
+        (origin.x * elementSize) + (origin.y * rowPitch) + (origin.z * extent.height * rowPitch);
+    size_t size = (region.width * region.height * region.depth * elementSize);
+
+    // If its 1Dbuffer do a map buffer
+    if (cl::Is1DImageBuffer(image.getType()))
+    {
+        cl::Buffer *parentBuffer = cl::Buffer::Cast(image.getParent()->getNative());
+
+        return enqueueMapBuffer(*parentBuffer, blocking, mapFlags, offset, size, waitEvents, event,
+                                mapPtr);
+    }
+
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
     ANGLE_TRY(preEnqueueOps(event, cl::ExecutionStatus::Complete));
     ANGLE_TRY(processWaitlist(waitEvents));
-
-    CLImageVk *imageVk = &image.getImpl<CLImageVk>();
-    cl::Extents extent = imageVk->getImageExtent();
-    size_t elementSize = imageVk->getElementSize();
-    size_t rowPitch    = imageVk->getRowPitch();
-    size_t offset =
-        (origin.x * elementSize) + (origin.y * rowPitch) + (origin.z * extent.height * rowPitch);
-    size_t size = (region.width * region.height * region.depth * elementSize);
 
     mComputePassCommands->imageRead(mContext, imageVk->getImage().getAspectFlags(),
                                     vk::ImageAccess::TransferSrc, &imageVk->getImage());
@@ -1179,9 +1266,11 @@ angle::Result CLCommandQueueVk::enqueueUnmapMemObject(const cl::Memory &memory,
         ANGLE_TRY(finishInternal());
     }
 
-    if (memory.getType() == cl::MemObjectType::Buffer)
+    if (cl::IsBufferType(memory.getType()) || cl::Is1DImageBuffer(memory.getType()))
     {
-        CLBufferVk &bufferVk = memory.getImpl<CLBufferVk>();
+        CLBufferVk &bufferVk = cl::Is1DImageBuffer(memory.getType())
+                                   ? memory.getParent()->getImpl<CLBufferVk>()
+                                   : memory.getImpl<CLBufferVk>();
         if (memory.getFlags().intersects(CL_MEM_USE_HOST_PTR))
         {
             ANGLE_TRY(finishInternal());
@@ -1571,7 +1660,7 @@ angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem, MemoryH
     }
 
     // Insert a layout transition for images
-    if (cl::IsImageType(clMem->getType()))
+    if (cl::IsImageType(clMem->getType()) && !cl::Is1DImageBuffer(clMem->getType()))
     {
         CLImageVk &vkMem = clMem->getImpl<CLImageVk>();
         mComputePassCommands->imageWrite(mContext, gl::OwnerLevel(0), gl::OwnerLayer(0), 1,

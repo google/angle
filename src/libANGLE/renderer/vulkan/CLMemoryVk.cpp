@@ -993,7 +993,14 @@ void CLImageVk::unmapBufferHelper()
 {
     if (mParent)
     {
-        getParent<CLImageVk>()->unmapBufferHelper();
+        if (cl::IsBufferType(mParent->getType()))
+        {
+            getParent<CLBufferVk>()->unmapBufferHelper();
+        }
+        else
+        {
+            getParent<CLImageVk>()->unmapBufferHelper();
+        }
         return;
     }
     ASSERT(mStagingBuffer);
