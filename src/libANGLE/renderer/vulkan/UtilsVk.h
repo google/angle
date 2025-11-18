@@ -280,20 +280,18 @@ class UtilsVk : angle::NonCopyable
     // Resolve images if multisampled.  Blit otherwise.
     angle::Result colorBlitResolve(ContextVk *contextVk,
                                    FramebufferVk *framebuffer,
-                                   vk::ImageHelper *srcImage,
+                                   vk::ImageHelper *src,
                                    const vk::ImageView *srcView,
                                    const BlitResolveParameters &params);
-
     angle::Result depthStencilBlitResolve(ContextVk *contextVk,
                                           FramebufferVk *framebuffer,
-                                          vk::ImageHelper *srcImage,
+                                          vk::ImageHelper *src,
                                           const vk::ImageView *srcDepthView,
                                           const vk::ImageView *srcStencilView,
                                           const BlitResolveParameters &params);
-
     angle::Result stencilBlitResolveNoShaderExport(ContextVk *contextVk,
                                                    FramebufferVk *framebuffer,
-                                                   vk::ImageHelper *srcImage,
+                                                   vk::ImageHelper *src,
                                                    const vk::ImageView *srcStencilView,
                                                    const BlitResolveParameters &params);
 
@@ -680,6 +678,15 @@ class UtilsVk : angle::NonCopyable
         const ConvertVertexShaderParams &shaderParams,
         const OffsetAndVertexCounts &additionalOffsetVertexCounts);
 
+    // Blits or resolves either color or depth/stencil, based on which view is given.
+    angle::Result blitResolveImpl(ContextVk *contextVk,
+                                  FramebufferVk *framebuffer,
+                                  vk::ImageHelper *src,
+                                  const vk::ImageView *srcColorView,
+                                  const vk::ImageView *srcDepthView,
+                                  const vk::ImageView *srcStencilView,
+                                  const BlitResolveParameters &params);
+
     // Allocates a single descriptor set.
     angle::Result allocateDescriptorSetWithLayout(
         ContextVk *contextVk,
@@ -698,20 +705,6 @@ class UtilsVk : angle::NonCopyable
         vk::CommandBufferHelperCommon *commandBufferHelper,
         const vk::SamplerDesc &samplerDesc,
         VkDescriptorSet *descriptorSetOut);
-
-    angle::Result setupBlitResolveGraphicsProgram(ContextVk *contextVk,
-                                                  const vk::ImageHelper &srcImage,
-                                                  const vk::ImageView *srcColorView,
-                                                  const vk::ImageView *srcDepthView,
-                                                  const vk::ImageView *srcStencilView,
-                                                  const vk::GraphicsPipelineDesc &pipelineDesc,
-                                                  uint32_t flags,
-                                                  uint32_t outputMask,
-                                                  const BlitResolveParameters &params,
-                                                  vk::RenderPassCommandBuffer *commandBuffer,
-                                                  bool blitColor,
-                                                  bool blitDepth,
-                                                  bool blitStencil);
 
     angle::PackedEnumMap<Function, vk::DescriptorSetLayoutPointerArray> mDescriptorSetLayouts;
     angle::PackedEnumMap<Function, vk::PipelineLayoutPtr> mPipelineLayouts;
