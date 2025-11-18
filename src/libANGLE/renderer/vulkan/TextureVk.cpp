@@ -4277,14 +4277,15 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         }
     }
 
-    ANGLE_TRY(mImage->initExternal(
-        contextVk, mState.getType(), vkExtent, intendedImageFormatID, actualImageFormatID, samples,
-        mImageUsageFlags, mImageCreateFlags, vk::ImageAccess::Undefined, nullptr,
-        gl::LevelIndex(firstLevel), levelCount, layerCount,
-        contextVk->isRobustResourceInitEnabled(), mState.hasProtectedContent(),
-        vk::ImageHelper::deriveConversionDesc(contextVk, actualImageFormatID,
-                                              intendedImageFormatID),
-        compressionInfo));
+    ANGLE_TRY(mImage->initExternal(contextVk, mState.getType(), vkExtent, intendedImageFormatID,
+                                   actualImageFormatID, samples, mImageUsageFlags,
+                                   mImageCreateFlags, vk::ImageAccess::Undefined, nullptr,
+                                   gl::LevelIndex(firstLevel), levelCount, layerCount,
+                                   contextVk->isRobustResourceInitEnabled(),
+                                   mState.hasProtectedContent(), vk::TileMemory::Prohibited,
+                                   vk::ImageHelper::deriveConversionDesc(
+                                       contextVk, actualImageFormatID, intendedImageFormatID),
+                                   compressionInfo));
 
     ANGLE_TRY(updateTextureLabel(contextVk));
 

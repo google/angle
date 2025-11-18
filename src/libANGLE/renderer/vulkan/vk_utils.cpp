@@ -445,6 +445,38 @@ VkResult MemoryProperties::findCompatibleMemoryIndex(
     return VK_ERROR_INCOMPATIBLE_DRIVER;
 }
 
+uint32_t MemoryProperties::findTileMemoryTypeIndex() const
+{
+    uint32_t tileMemoryHeapIndex = kInvalidMemoryHeapIndex;
+    for (uint32_t heapIndex = 0; heapIndex < mMemoryProperties.memoryTypeCount; heapIndex++)
+    {
+        if (mMemoryProperties.memoryHeaps[heapIndex].flags & VK_MEMORY_HEAP_TILE_MEMORY_BIT_QCOM)
+        {
+            // There should be only one tile memory heap
+            ASSERT(tileMemoryHeapIndex == kInvalidMemoryHeapIndex);
+            tileMemoryHeapIndex = heapIndex;
+            break;
+        }
+    }
+
+    uint32_t tileMemoryTypeIndex = kInvalidMemoryTypeIndex;
+    if (tileMemoryHeapIndex != kInvalidMemoryHeapIndex)
+    {
+        for (uint32_t memoryTypeIndex = 0; memoryTypeIndex < mMemoryProperties.memoryTypeCount;
+             memoryTypeIndex++)
+        {
+            if (mMemoryProperties.memoryTypes[memoryTypeIndex].heapIndex == tileMemoryHeapIndex)
+            {
+                // There should be only one memoryTypeIndex that matches the tile memory heap
+                ASSERT(tileMemoryTypeIndex == kInvalidMemoryTypeIndex);
+                tileMemoryTypeIndex = memoryTypeIndex;
+                break;
+            }
+        }
+    }
+    return tileMemoryTypeIndex;
+}
+
 void MemoryProperties::log(std::ostringstream &out) const
 {
     out << "\nmMemoryProperties.memoryHeaps[" << mMemoryProperties.memoryHeapCount << "] = {\n"
@@ -619,6 +651,66 @@ VkResult AllocateImageMemoryWithRequirements(ErrorContext *context,
                                       &memoryPropertyFlagsOut, memoryRequirements,
                                       extraAllocationInfo, extraBindInfo, image, memoryTypeIndexOut,
                                       deviceMemoryOut);
+}
+
+VkResult AllocateImageMemoryFromTileHeap(ErrorContext *context,
+                                         MemoryAllocationType memoryAllocationType,
+                                         VkMemoryPropertyFlags requestedMemoryPropertyFlags,
+                                         VkMemoryPropertyFlags *memoryPropertyFlagsOut,
+                                         Image *image,
+                                         uint32_t *memoryTypeIndexOut,
+                                         DeviceMemory *deviceMemoryOut,
+                                         VkDeviceSize *sizeOut)
+{
+    vk::Renderer *renderer = context->getRenderer();
+    VkDevice device        = renderer->getDevice();
+
+    VkImageMemoryRequirementsInfo2 info       = {VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2,
+                                                 nullptr, image->getHandle()};
+    VkTileMemoryRequirementsQCOM tileMemReqs  = {VK_STRUCTURE_TYPE_TILE_MEMORY_REQUIREMENTS_QCOM,
+                                                 nullptr, 0, 0};
+    VkMemoryRequirements2 memoryRequirements2 = {
+        VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2, &tileMemReqs, {}};
+    image->getMemoryRequirements2(device, info, &memoryRequirements2);
+
+    if (tileMemReqs.size == 0)
+    {
+        return VK_ERROR_OUT_OF_DEVICE_MEMORY;
+    }
+
+    uint32_t tileMemoryTypeIndex = renderer->getTileMemoyTypeIndex();
+    ASSERT(tileMemoryTypeIndex != kInvalidMemoryTypeIndex);
+
+    VkMemoryAllocateInfo allocInfo = {};
+    allocInfo.sType                = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocInfo.pNext                = nullptr;
+    allocInfo.memoryTypeIndex      = tileMemoryTypeIndex;
+    allocInfo.allocationSize       = tileMemReqs.size;
+
+    // Add the new allocation for tracking.
+    renderer->getMemoryAllocationTracker()->setPendingMemoryAlloc(
+        memoryAllocationType, allocInfo.allocationSize, tileMemoryTypeIndex);
+
+    DeviceScoped<DeviceMemory> deviceMemory(device);
+    VK_RESULT_TRY(deviceMemory.get().allocate(device, allocInfo));
+
+    VK_RESULT_TRY(image->bindMemory(device, *deviceMemoryOut));
+
+    renderer->onMemoryAlloc(memoryAllocationType, allocInfo.allocationSize, tileMemoryTypeIndex,
+                            deviceMemoryOut->getHandle());
+
+    *deviceMemoryOut    = deviceMemory.release();
+    *memoryTypeIndexOut = tileMemoryTypeIndex;
+    *memoryPropertyFlagsOut =
+        renderer->getMemoryProperties().getMemoryType(tileMemoryTypeIndex).propertyFlags;
+    *sizeOut = tileMemReqs.size;
+
+    // The tile memory are lazily allocated at vkCmdBindTileMemoryQCOM() time.
+    requestedMemoryPropertyFlags |= VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT;
+    ASSERT((*memoryPropertyFlagsOut & requestedMemoryPropertyFlags) ==
+           requestedMemoryPropertyFlags);
+
+    return VK_SUCCESS;
 }
 
 VkResult AllocateBufferMemoryWithRequirements(ErrorContext *context,

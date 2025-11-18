@@ -466,6 +466,9 @@ class Image final : public WrappedObject<Image, VkImage>
     VkResult init(VkDevice device, const VkImageCreateInfo &createInfo);
 
     void getMemoryRequirements(VkDevice device, VkMemoryRequirements *requirementsOut) const;
+    void getMemoryRequirements2(VkDevice device,
+                                const VkImageMemoryRequirementsInfo2 &info,
+                                VkMemoryRequirements2 *requirements2Out) const;
     VkResult bindMemory(VkDevice device, const DeviceMemory &deviceMemory);
     VkResult bindMemory2(VkDevice device, const VkBindImageMemoryInfoKHR &bindInfo);
 
@@ -1573,6 +1576,14 @@ ANGLE_INLINE void Image::getMemoryRequirements(VkDevice device,
 {
     ASSERT(valid());
     vkGetImageMemoryRequirements(device, mHandle, requirementsOut);
+}
+
+ANGLE_INLINE void Image::getMemoryRequirements2(VkDevice device,
+                                                const VkImageMemoryRequirementsInfo2 &info,
+                                                VkMemoryRequirements2 *requirements2Out) const
+{
+    ASSERT(valid());
+    vkGetImageMemoryRequirements2(device, &info, requirements2Out);
 }
 
 ANGLE_INLINE VkResult Image::bindMemory(VkDevice device, const vk::DeviceMemory &deviceMemory)

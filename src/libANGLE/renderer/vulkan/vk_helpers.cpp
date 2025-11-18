@@ -538,6 +538,36 @@ class [[nodiscard]] ScopedOverrideYCbCrFilter final
     ImageHelper *mImage;
     VkFilter mOriginalFilter;
 };
+
+// image usage flags that allowed for VK_QCOM_tile_memory_heap
+constexpr VkImageUsageFlags kQCOMTileMemoryAllowedImageUsageBits =
+    VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
+    VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+
+// Returns true if it is compatible with VK_QCOM_tile_memory_heap
+bool IsTileMemoryCompatible(const vk::Renderer *renderer, const VkImageCreateInfo &createInfo)
+{
+    // First check general conditions specified in
+    // https://github.com/KhronosGroup/Vulkan-Docs/blob/main/proposals/VK_QCOM_tile_memory_heap.adoc
+    bool compatible = createInfo.imageType == VK_IMAGE_TYPE_2D &&
+                      createInfo.tiling == VK_IMAGE_TILING_OPTIMAL && createInfo.flags == 0 &&
+                      createInfo.mipLevels == 1 && createInfo.arrayLayers == 1 &&
+                      createInfo.samples == VK_SAMPLE_COUNT_1_BIT &&
+                      (createInfo.usage & ~kQCOMTileMemoryAllowedImageUsageBits) == 0;
+
+    // If the driver actually supports VK_QCOM_tile_memory_heap, we must also check the format with
+    // vulkan driver. Otherwise we just skip format check for simulation.
+    if (renderer->getFeatures().supportsTileMemoryHeap.enabled && compatible)
+    {
+        VkImageUsageFlags usage = createInfo.usage | VK_IMAGE_USAGE_TILE_MEMORY_BIT_QCOM;
+        compatible              = vk::ImageHelper::FormatSupportsUsage(
+            renderer, createInfo.format, createInfo.imageType, createInfo.tiling, usage,
+            createInfo.flags, nullptr, nullptr,
+            vk::ImageHelper::FormatSupportCheck::OnlyQuerySuccess);
+    }
+
+    return compatible;
+}
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -5437,7 +5467,7 @@ void ImageHelper::resetCachedProperties()
     mImageType                   = VK_IMAGE_TYPE_2D;
     mTilingMode                  = VK_IMAGE_TILING_OPTIMAL;
     mCreateFlags                 = kVkImageCreateFlagsNone;
-    mUsage                       = 0;
+    mRequestedUsage              = 0;
     mExtents                     = {};
     mRotatedAspectRatio          = false;
     mIntendedFormatID            = angle::FormatID::NONE;
@@ -5457,11 +5487,14 @@ void ImageHelper::resetCachedProperties()
     mAllocationSize              = 0;
     mMemoryAllocationType        = MemoryAllocationType::InvalidEnum;
     mMemoryTypeIndex             = kInvalidMemoryTypeIndex;
+    mTileMemoryCompatible        = false;
+    mUseTileMemory               = false;
     std::fill(mViewFormats.begin(), mViewFormats.begin() + mViewFormats.max_size(),
               VK_FORMAT_UNDEFINED);
     mYcbcrConversionDesc.reset();
     mCurrentSingleClearValue.reset();
     mRenderPassUsageFlags.reset();
+    mVkImageCreateInfo = {};
 
     setEntireContentUndefined();
 }
@@ -5623,12 +5656,14 @@ angle::Result ImageHelper::init(ErrorContext *context,
                                 uint32_t mipLevels,
                                 uint32_t layerCount,
                                 bool isRobustResourceInitEnabled,
-                                bool hasProtectedContent)
+                                bool hasProtectedContent,
+                                TileMemory tileMemoryPreference)
 {
     return initExternal(context, textureType, extents, format.getIntendedFormatID(),
                         format.getActualRenderableImageFormatID(), samples, usage,
                         kVkImageCreateFlagsNone, ImageAccess::Undefined, nullptr, firstLevel,
                         mipLevels, layerCount, isRobustResourceInitEnabled, hasProtectedContent,
+                        tileMemoryPreference,
                         deriveConversionDesc(context, format.getActualRenderableImageFormatID(),
                                              format.getIntendedFormatID()),
                         nullptr);
@@ -5681,7 +5716,8 @@ angle::Result ImageHelper::initMSAASwapchain(ErrorContext *context,
     ANGLE_TRY(initExternal(context, textureType, extents, intendedFormatID, actualFormatID, samples,
                            usage, kVkImageCreateFlagsNone, ImageAccess::Undefined, nullptr,
                            firstLevel, mipLevels, layerCount, isRobustResourceInitEnabled,
-                           hasProtectedContent, YcbcrConversionDesc{}, nullptr));
+                           hasProtectedContent, TileMemory::Prohibited, YcbcrConversionDesc{},
+                           nullptr));
     if (rotatedAspectRatio)
     {
         std::swap(mExtents.width, mExtents.height);
@@ -5705,6 +5741,7 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
                                         uint32_t layerCount,
                                         bool isRobustResourceInitEnabled,
                                         bool hasProtectedContent,
+                                        TileMemory tileMemoryPreference,
                                         YcbcrConversionDesc conversionDesc,
                                         const void *compressionControl)
 {
@@ -5726,7 +5763,7 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
     mLayerCount          = layerCount;
     mCreateFlags =
         vk::GetMinimalImageCreateFlags(renderer, textureType, usage) | additionalCreateFlags;
-    mUsage = usage;
+    mRequestedUsage = usage;
 
     // Validate that mLayerCount is compatible with the texture type
     ASSERT(textureType != gl::TextureType::_3D || mLayerCount == 1);
@@ -5745,7 +5782,7 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
     if (externalImageCreateInfo == nullptr)
     {
         imageCreateInfoPNext = DeriveCreateInfoPNext(
-            context, mUsage, actualFormatID, compressionControl, &imageFormatListInfoStorage,
+            context, usage, actualFormatID, compressionControl, &imageFormatListInfoStorage,
             &imageListFormatsStorage, &mCreateFlags);
     }
     else
@@ -5799,11 +5836,42 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
     imageInfo.arrayLayers       = mLayerCount;
     imageInfo.samples               = sampleCountFlagBits;
     imageInfo.tiling                = mTilingMode;
-    imageInfo.usage                 = mUsage;
+    imageInfo.usage                 = mRequestedUsage;
     imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.queueFamilyIndexCount = 0;
     imageInfo.pQueueFamilyIndices   = nullptr;
     imageInfo.initialLayout         = renderer->getVkImageLayout(initialAccess);
+
+    // DepthStencil format that has emulated channels needs re-stage emulated channel clear after
+    // reallocate, for now just disable the tile memory for that.
+    if (tileMemoryPreference == TileMemory::Preferred &&
+        (renderer->getFeatures().simulateTileMemoryForTesting.enabled ||
+         renderer->getFeatures().supportsTileMemoryHeap.enabled) &&
+        !HasEmulatedImageChannels(angle::Format::Get(mIntendedFormatID),
+                                  angle::Format::Get(mActualFormatID)))
+    {
+        ASSERT(initialAccess == ImageAccess::Undefined);
+        ASSERT(angle::Format::Get(actualFormatID).hasDepthOrStencilBits());
+        ASSERT(imageCreateInfoPNext == nullptr);
+
+        // Remove transfer bits when determining tile memory compatible or not, since tile memory
+        // does not support transfers.
+        imageInfo.usage &= ~kImageUsageTransferBits;
+        mTileMemoryCompatible = IsTileMemoryCompatible(renderer, imageInfo);
+        if (mTileMemoryCompatible)
+        {
+            if (renderer->getFeatures().supportsTileMemoryHeap.enabled)
+            {
+                imageInfo.usage |= VK_IMAGE_USAGE_TILE_MEMORY_BIT_QCOM;
+            }
+            mUseTileMemory = true;
+        }
+        else
+        {
+            // Restore usage bits
+            imageInfo.usage = mRequestedUsage;
+        }
+    }
 
     mCurrentAccess               = initialAccess;
     mCurrentDeviceQueueIndex     = kInvalidDeviceQueueIndex;
@@ -6218,7 +6286,35 @@ VkResult ImageHelper::initMemory(ErrorContext *context,
     // To allocate memory here, if possible, we use the image memory suballocator which uses VMA.
     ASSERT(excludedFlags < VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM);
     Renderer *renderer = context->getRenderer();
-    if (renderer->getFeatures().useVmaForImageSuballocation.enabled)
+
+    // First try allocate tile memory if requested
+    ASSERT(!mDeviceMemory.valid());
+    if (mUseTileMemory)
+    {
+        if (renderer->getFeatures().supportsTileMemoryHeap.enabled)
+        {
+            AllocateImageMemoryFromTileHeap(context, mMemoryAllocationType, flags, flagsOut,
+                                            &mImage, &mMemoryTypeIndex, &mDeviceMemory,
+                                            &mAllocationSize);
+        }
+        else
+        {
+            ASSERT(renderer->getFeatures().simulateTileMemoryForTesting.enabled);
+            AllocateImageMemory(context, mMemoryAllocationType, flags, flagsOut, nullptr, &mImage,
+                                &mMemoryTypeIndex, &mDeviceMemory, &mAllocationSize);
+        }
+
+        if (mDeviceMemory.valid())
+        {
+            context->getPerfCounters().tileMemoryImages++;
+        }
+        else
+        {
+            mUseTileMemory = false;
+        }
+    }
+
+    if (!mDeviceMemory.valid() && renderer->getFeatures().useVmaForImageSuballocation.enabled)
     {
         // While it may be preferable to allocate the image on the device, it should also be
         // possible to allocate on other memory types if the device is out of memory.
@@ -6229,7 +6325,7 @@ VkResult ImageHelper::initMemory(ErrorContext *context,
             memoryRequirements, allocateDedicatedMemory, mMemoryAllocationType, &mVmaAllocation,
             flagsOut, &mMemoryTypeIndex, &mAllocationSize));
     }
-    else
+    else if (!mDeviceMemory.valid())
     {
         const void *extraAllocationInfoPtr =
             context->getFeatures().supportsBufferDeviceAddress.enabled
@@ -6278,7 +6374,7 @@ angle::Result ImageHelper::initMemoryAndNonZeroFillIfNeeded(
     // the case, but not with |initImplicitMultisampledRenderToTexture| which creates a
     // lazy-allocated transient image.
     if (renderer->getFeatures().allocateNonZeroMemory.enabled &&
-        (mUsage & VK_IMAGE_USAGE_TRANSFER_DST_BIT) != 0)
+        (mVkImageCreateInfo.usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT) != 0)
     {
         ANGLE_TRY(initializeNonZeroMemory(context, hasProtectedContent, outputFlags, outputSize));
     }
@@ -6547,7 +6643,7 @@ void ImageHelper::init2DWeakReference(ErrorContext *context,
     mIntendedFormatID        = intendedFormatID;
     mActualFormatID          = actualFormatID;
     mCreateFlags             = createFlags;
-    mUsage                   = usage;
+    mRequestedUsage          = usage;
     mSamples                 = std::max(samples, 1);
     mImageSerial             = renderer->getResourceSerialFactory().generateImageSerial();
     mCurrentDeviceQueueIndex = context->getDeviceQueueIndex();
@@ -6564,6 +6660,9 @@ void ImageHelper::init2DWeakReference(ErrorContext *context,
                                     mViewFormats);
 
     mImage.setHandle(handle);
+    // Even though we did not use mVkImageCreateInfo to create mImage, mVkImageCreateInfo.usage  is
+    // being used for actual usage of mImage, so we always keep it updated.
+    mVkImageCreateInfo.usage = mRequestedUsage;
 
     stageClearIfEmulatedFormat(isRobustResourceInitEnabled, false);
 }
@@ -6607,7 +6706,7 @@ angle::Result ImageHelper::initStaging(ErrorContext *context,
     mImageSerial        = renderer->getResourceSerialFactory().generateImageSerial();
     mLayerCount         = layerCount;
     mLevelCount         = mipLevels;
-    mUsage              = usage;
+    mRequestedUsage     = usage;
 
     // Validate that mLayerCount is compatible with the image type
     ASSERT(imageType != VK_IMAGE_TYPE_3D || mLayerCount == 1);
@@ -6704,7 +6803,8 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
                            samples, kMultisampledUsageFlags, kMultisampledCreateFlags,
                            ImageAccess::Undefined, nullptr, resolveImage.getFirstAllocatedLevel(),
                            kLevelCount, resolveImage.getLayerCount(), isRobustResourceInitEnabled,
-                           hasProtectedContent, YcbcrConversionDesc{}, nullptr));
+                           hasProtectedContent, TileMemory::Prohibited, YcbcrConversionDesc{},
+                           nullptr));
 
     // Remove the emulated format clear from the multisampled image if any.  There is one already
     // staged on the resolve image if needed.
@@ -6743,11 +6843,11 @@ angle::Result ImageHelper::initRgbDrawImageForYuvResolve(ErrorContext *context,
         (resolveImage.getCreateFlags() & VK_IMAGE_CREATE_PROTECTED_BIT) != 0;
     const VkImageCreateFlags createFlags = hasProtectedContent ? VK_IMAGE_CREATE_PROTECTED_BIT : 0;
 
-    ANGLE_TRY(initExternal(context, gl::TextureType::_2D, resolveImage.getExtents(), formatID,
-                           formatID, 1, usageFlags, createFlags, ImageAccess::Undefined, nullptr,
-                           resolveImage.getFirstAllocatedLevel(), resolveImage.getLevelCount(),
-                           resolveImage.getLayerCount(), isRobustResourceInitEnabled,
-                           hasProtectedContent, YcbcrConversionDesc{}, nullptr));
+    ANGLE_TRY(initExternal(
+        context, gl::TextureType::_2D, resolveImage.getExtents(), formatID, formatID, 1, usageFlags,
+        createFlags, ImageAccess::Undefined, nullptr, resolveImage.getFirstAllocatedLevel(),
+        resolveImage.getLevelCount(), resolveImage.getLayerCount(), isRobustResourceInitEnabled,
+        hasProtectedContent, TileMemory::Prohibited, YcbcrConversionDesc{}, nullptr));
 
     ASSERT(!hasEmulatedImageChannels());
 
@@ -8444,7 +8544,7 @@ angle::Result ImageHelper::updateSubresourceOnHost(ContextVk *contextVk,
                                                    bool *copiedOut)
 {
     // If the image is not set up for host copy, it can't be done.
-    if (!valid() || (mUsage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT) == 0)
+    if (!valid() || (mVkImageCreateInfo.usage & VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT) == 0)
     {
         return angle::Result::Continue;
     }
@@ -9524,7 +9624,7 @@ void ImageHelper::copyStateAndMoveStorageFrom(ImageHelper *other)
     mImageType          = other->mImageType;
     mTilingMode         = other->mTilingMode;
     mCreateFlags        = other->mCreateFlags;
-    mUsage              = other->mUsage;
+    mRequestedUsage     = other->mRequestedUsage;
     mExtents            = other->mExtents;
     mRotatedAspectRatio = other->mRotatedAspectRatio;
     mIntendedFormatID   = other->mIntendedFormatID;
@@ -9553,6 +9653,8 @@ void ImageHelper::copyStateAndMoveStorageFrom(ImageHelper *other)
     mAllocationSize       = other->mAllocationSize;
     mMemoryAllocationType = other->mMemoryAllocationType;
     mMemoryTypeIndex      = other->mMemoryTypeIndex;
+    mTileMemoryCompatible = other->mTileMemoryCompatible;
+    mUseTileMemory        = other->mUseTileMemory;
 
     mSubresourcesWrittenSinceBarrier = other->mSubresourcesWrittenSinceBarrier;
 
@@ -9566,6 +9668,8 @@ void ImageHelper::copyStateAndMoveStorageFrom(ImageHelper *other)
     other->mImageSerial                 = kInvalidImageSerial;
     other->mMemoryAllocationType        = MemoryAllocationType::InvalidEnum;
     other->setEntireContentUndefined();
+    other->mTileMemoryCompatible = false;
+    other->mUseTileMemory        = false;
 }
 
 void ImageHelper::stageSelfAsSubresourceUpdates(

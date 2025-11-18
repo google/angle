@@ -279,6 +279,7 @@ class WindowSurfaceVk : public SurfaceVk
 
     egl::Error initialize(const egl::Display *display) override;
 
+    egl::Error makeCurrent(const gl::Context *context) override;
     egl::Error unMakeCurrent(const gl::Context *context) override;
 
     angle::Result getAttachmentRenderTarget(const gl::Context *context,

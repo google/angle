@@ -2105,6 +2105,12 @@ enum class ApplyImageUpdate
     Defer,
 };
 
+enum class TileMemory
+{
+    Preferred,
+    Prohibited,
+};
+
 constexpr VkImageAspectFlagBits IMAGE_ASPECT_DEPTH_STENCIL =
     static_cast<VkImageAspectFlagBits>(VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
 
@@ -2135,7 +2141,8 @@ class ImageHelper final : public Resource, public angle::Subject
                        uint32_t mipLevels,
                        uint32_t layerCount,
                        bool isRobustResourceInitEnabled,
-                       bool hasProtectedContent);
+                       bool hasProtectedContent,
+                       TileMemory tileMemoryPreference);
 
     angle::Result copyToBufferOneOff(ErrorContext *context,
                                      BufferHelper *stagingBuffer,
@@ -2168,6 +2175,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                uint32_t layerCount,
                                bool isRobustResourceInitEnabled,
                                bool hasProtectedContent,
+                               TileMemory tileMemoryPreference,
                                YcbcrConversionDesc conversionDesc,
                                const void *compressionControl);
     VkResult initMemory(ErrorContext *context,
@@ -2358,7 +2366,14 @@ class ImageHelper final : public Resource, public angle::Subject
     void setTilingMode(VkImageTiling tilingMode) { mTilingMode = tilingMode; }
     VkImageTiling getTilingMode() const { return mTilingMode; }
     VkImageCreateFlags getCreateFlags() const { return mCreateFlags; }
-    VkImageUsageFlags getUsage() const { return mUsage; }
+    VkImageUsageFlags getUsage() const
+    {
+        // The only difference between mRequestedUsage and mVkImageCreateInfo.usage should be
+        // VK_IMAGE_USAGE_TILE_MEMORY_BIT_QCOM and kImageUsageTransferBits.
+        ASSERT(((mVkImageCreateInfo.usage ^ mRequestedUsage) &
+                ~(VK_IMAGE_USAGE_TILE_MEMORY_BIT_QCOM | kImageUsageTransferBits)) == 0);
+        return mVkImageCreateInfo.usage;
+    }
     VkImageType getType() const { return mImageType; }
     const VkExtent3D &getExtents() const { return mExtents; }
     const VkExtent3D getRotatedExtents() const;
@@ -2889,6 +2904,10 @@ class ImageHelper final : public Resource, public angle::Subject
 
     bool areStagedUpdatesClearOnly();
 
+    // VK_QCOM_tile_memory_heap
+    bool isTileMemoryCompatible() const { return mTileMemoryCompatible; }
+    bool useTileMemory() const { return mUseTileMemory; }
+
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct ClearUpdate
@@ -3277,7 +3296,7 @@ class ImageHelper final : public Resource, public angle::Subject
     VkImageType mImageType;
     VkImageTiling mTilingMode;
     VkImageCreateFlags mCreateFlags;
-    VkImageUsageFlags mUsage;
+    VkImageUsageFlags mRequestedUsage;
     // For Android swapchain images, the Vulkan VkImage must be "rotated".  However, most of ANGLE
     // uses non-rotated extents (i.e. the way the application views the extents--see "Introduction
     // to Android rotation and pre-rotation" in "SurfaceVk.cpp").  Thus, mExtents are non-rotated.
@@ -3356,6 +3375,11 @@ class ImageHelper final : public Resource, public angle::Subject
     MemoryAllocationType mMemoryAllocationType;
     // Memory type index used for the allocation. It can be used to determine the heap index.
     uint32_t mMemoryTypeIndex;
+
+    // True if image is compatible with tile memory
+    bool mTileMemoryCompatible;
+    // True if it actually uses tile memory.
+    bool mUseTileMemory;
 
     // Only used for swapChain images. This is set when an image is acquired and is waited on
     // by the next submission (which uses this image), at which point it is released.

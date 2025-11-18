@@ -551,6 +551,8 @@ class MemoryProperties final : angle::NonCopyable
     uint32_t getMemoryHeapCount() const { return mMemoryProperties.memoryHeapCount; }
     uint32_t getMemoryTypeCount() const { return mMemoryProperties.memoryTypeCount; }
 
+    uint32_t findTileMemoryTypeIndex() const;
+
     void log(std::ostringstream &out) const;
 
   private:
@@ -614,6 +616,15 @@ VkResult AllocateImageMemoryWithRequirements(ErrorContext *context,
                                              Image *image,
                                              uint32_t *memoryTypeIndexOut,
                                              DeviceMemory *deviceMemoryOut);
+
+VkResult AllocateImageMemoryFromTileHeap(ErrorContext *context,
+                                         MemoryAllocationType memoryAllocationType,
+                                         VkMemoryPropertyFlags requestedMemoryPropertyFlags,
+                                         VkMemoryPropertyFlags *memoryPropertyFlagsOut,
+                                         Image *image,
+                                         uint32_t *memoryTypeIndexOut,
+                                         DeviceMemory *deviceMemoryOut,
+                                         VkDeviceSize *sizeOut);
 
 VkResult AllocateBufferMemoryWithRequirements(ErrorContext *context,
                                               MemoryAllocationType memoryAllocationType,

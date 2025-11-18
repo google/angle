@@ -402,6 +402,11 @@ constexpr const char *kSkippedMessagesWithVulkanSecondaryCommandBuffer[] = {
     "VUID-vkCmdWaitEvents-srcStageMask-parameter",
 };
 
+// http://issuetracker.google.com/447633563 VVL appears not aware of existence of tile memory heap.
+constexpr const char *kSkippedMessagesWithTileMemoryHeap[] = {
+    "VUID-vkBindImageMemory-memory-01047",
+};
+
 // When using Vulkan secondary command buffers, the command buffer is begun with the current
 // framebuffer specified in pInheritanceInfo::framebuffer.  If the framebuffer is multisampled
 // and is resolved, an optimization would change the framebuffer to add the resolve target and
@@ -2696,6 +2701,13 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
 
 angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 {
+    mTileMemoyTypeIndex = kInvalidMemoryTypeIndex;
+    if (mFeatures.supportsTileMemoryHeap.enabled)
+    {
+        mTileMemoyTypeIndex = mMemoryProperties.findTileMemoryTypeIndex();
+        ASSERT(mTileMemoyTypeIndex != kInvalidMemoryTypeIndex);
+    }
+
     // The preferred heap block size was picked by looking at memory usage of
     // Android apps. The allocator will start making blocks at 1/8 the max size
     // and builds up block size as needed before capping at the max set here.
@@ -4789,6 +4801,13 @@ void Renderer::initializeValidationMessageSuppressions()
         mSkippedValidationMessages.insert(
             mSkippedValidationMessages.end(), kSkippedMessagesWithDynamicRendering,
             kSkippedMessagesWithDynamicRendering + ArraySize(kSkippedMessagesWithDynamicRendering));
+    }
+
+    if (getFeatures().supportsTileMemoryHeap.enabled)
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kSkippedMessagesWithTileMemoryHeap,
+            kSkippedMessagesWithTileMemoryHeap + ArraySize(kSkippedMessagesWithTileMemoryHeap));
     }
 
     // Build the list of syncval errors that are currently expected and should be skipped.
