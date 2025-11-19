@@ -1061,6 +1061,7 @@ const TField &OutputWGSLTraverser::getDirectField(const TIntermTyped &fieldsNode
     return field;
 }
 
+// Indexes arrays but also matrices.
 void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &rightNode)
 {
     TType leftType = leftNode.getType();
@@ -1090,7 +1091,16 @@ void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &r
         ASSERT(!needsUnwrapping || !isUniformMatrixNeedingConversion);
     }
 
-    // Emit the left side, which should be of type array.
+    enum class ConversionScope
+    {
+        kNoConversionFunction,
+        kConvertTheIndexedMatrix,
+        kConvertTheWholeArrayIndexExpression,
+    };
+
+    ConversionScope conversionFunctionScope = ConversionScope::kNoConversionFunction;
+
+    // Emit the left side, which should be of type matrix or array (including array of matrices).
     if (needsUnwrapping || isUniformMatrixNeedingConversion || isUniformBoolNeedingConversion)
     {
         if (isUniformMatrixNeedingConversion)
@@ -1099,20 +1109,40 @@ void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &r
             // array<ANGLE_wrapped_vec2, C>), just convert the entire expression to a WGSL matCx2,
             // instead of converting the entire array of std140 matCx2s into an array of WGSL
             // matCx2s and then indexing into it.
+            //
+            // NOTE: this could also be indexing a column vector of a matrix.
             TType baseType = leftType;
             baseType.toArrayBaseType();
             mSink << MakeMatCx2ConversionFunctionName(&baseType) << "(";
             // Make sure the conversion function referenced here is actually generated in the
             // resulting WGSL.
             mWGSLGenerationMetadataForUniforms->outputMatCx2Conversion.insert(baseType);
+
+            // If this an index of a single matrix, it needs conversion *before* indexing.
+            // Otherwise, if this is a index of an array of matrices, it needs conversion *after*
+            // indexing.
+            if (leftType.isArray())
+            {
+                conversionFunctionScope = ConversionScope::kConvertTheWholeArrayIndexExpression;
+            }
+            else
+            {
+                conversionFunctionScope = ConversionScope::kConvertTheIndexedMatrix;
+            }
         }
         else if (isUniformBoolNeedingConversion)
         {
             // Convert just this one array element into a bool instead of converting the entire
             // array into an array of booleans and indexing into that.
             OutputUniformBoolOrBvecConversion(mSink, leftType);
+            conversionFunctionScope = ConversionScope::kConvertTheWholeArrayIndexExpression;
         }
         emitStructIndexNoUnwrapping(leftNodeBinary);
+
+        if (conversionFunctionScope == ConversionScope::kConvertTheIndexedMatrix)
+        {
+            mSink << ")";
+        }
     }
     else
     {
@@ -1173,7 +1203,7 @@ void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &r
         mSink << "." << kWrappedStructFieldName;
     }
 
-    if (isUniformMatrixNeedingConversion || isUniformBoolNeedingConversion)
+    if (conversionFunctionScope == ConversionScope::kConvertTheWholeArrayIndexExpression)
     {
         // Close conversion function call
         mSink << ")";

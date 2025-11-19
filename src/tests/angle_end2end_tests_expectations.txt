@@ -447,7 +447,7 @@
 40644744 MAC METAL AMD : BlitFramebufferTest.MultisampleDepth/* = SKIP
 40644777 MAC METAL AMD : ColorMaskForDrawBuffersTest.Blit/* = SKIP
 440536251 MAC METAL AMD : GLSLValidationTest_ES3.ManySamplerFieldsInStructComplex/* = SKIP
-443101808 MAC METAL AMD : SimpleUniformUsageTestES3.BoolInArray/* = SKIP
+443101808 MAC METAL AMD : SimpleUniformTestES3.BoolInArray/* = SKIP
 409867243 MAC METAL : Texture2DTestES3.RGB565RenderAndReadIntoRGB565PBO/* = SKIP
 448658625 MAC METAL : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
 448658625 IOS METAL : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
@@ -654,7 +654,7 @@
 384314370 PIXEL4ORXL GLES : FramebufferFetchES31.WriteOnlyInOutVariablePartial/* = SKIP
 42264513 PIXEL4ORXL GLES : GLSLTest.NestedInoutVars2/* = SKIP
 42264513 PIXEL4ORXL GLES : GLSLTest.NestedInoutVars3/* = SKIP
-42264513 PIXEL4ORXL GLES : SimpleUniformUsageTestES3.TernarySelectAnArrayThenIndex/* = SKIP
+42264513 PIXEL4ORXL GLES : SimpleUniformTestES3.TernarySelectAnArrayThenIndex/* = SKIP
 458082809 PIXEL4ORXL GLES : GLSLValidationExtensionDirectiveTest_ES3.Sampler2DShadow/* = SKIP
 458082810 PIXEL4ORXL GLES : GLSLValidationExtensionDirectiveTest_ES31.TextureCubeMapArray/* = SKIP
 
@@ -1825,7 +1825,7 @@
 // BasicUniformUsage tests fail too frequently with WGPU
 376553328 LINUX INTEL WGPU : BasicUniformUsageTest.* = SKIP
 // Can't use a uniform struct outside of uniform address space.
-376553328 WGPU : SimpleUniformUsageTestES3.UseUniformStructOutsideOfUniformAddressSpace/* = SKIP
+376553328 WGPU : SimpleUniformTestES3.UseUniformStructOutsideOfUniformAddressSpace/* = SKIP
 42267012 WGPU : ClearTest.*Scissor* = SKIP
 42267012 WGPU : ClearTest.*Mask* = SKIP
 42267012 WGPU : ClearTest.DefaultFramebuffer* = SKIP
@@ -2055,7 +2055,7 @@
 418022112 WGPU : ImageTest.MipLevels/* = SKIP
 418022112 WGPU : ImageTest.RespecificationOfOtherLevel/* = SKIP
 418022112 WGPU : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
-423702346 WGPU : SimpleUniformUsageTestES3.PackUniformFP16Test/* = SKIP
+423702346 WGPU : SimpleUniformTestES3.PackUniformFP16Test/* = SKIP
 438268609 WGPU : CopyTexImageTest.CopyTex*Cube*/* = SKIP
 // Unimplemented format conversions for image copies 
 438268609 WGPU : CopyTexImageTest.RGBAToL*/* = SKIP
@@ -2079,7 +2079,7 @@
 438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBAPremultiplyAlpha = SKIP
 
 // SPIR-V compilation error
-384593678 VULKAN : SimpleUniformUsageTestES3.CopyOfUniformsWithArrays/* = SKIP
+384593678 VULKAN : SimpleUniformTestES3.CopyOfUniformsWithArrays/* = SKIP
 
 // Linux/UHD 630 failures caused by OS/driver upgrade.
 42267119 LINUX INTEL OPENGL : AtomicCounterBufferTest31.AtomicCounterReadCompute/* = SKIP

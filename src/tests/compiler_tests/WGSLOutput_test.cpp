@@ -2966,7 +2966,7 @@ struct ANGLE_DefaultUniformBlock
 
 fn _umain()
 {
-  (ANGLE_output_global._ufragColor) = (vec4<f32>(((ANGLE_defaultUniformBlock)._ux1) + (f32((ANGLE_defaultUniformBlock)._uy1)), ((ANGLE_defaultUniformBlock)._uz1).x, (ANGLE_Convert_Mat3x2((ANGLE_defaultUniformBlock)._ua1[0i]))[0i], (((ANGLE_defaultUniformBlock)._ub1)[0i])[0i]));
+  (ANGLE_output_global._ufragColor) = (vec4<f32>(((ANGLE_defaultUniformBlock)._ux1) + (f32((ANGLE_defaultUniformBlock)._uy1)), ((ANGLE_defaultUniformBlock)._uz1).x, (ANGLE_Convert_Mat3x2((ANGLE_defaultUniformBlock)._ua1)[0i])[0i], (((ANGLE_defaultUniformBlock)._ub1)[0i])[0i]));
   (ANGLE_output_global._ufragColor) += (vec4<f32>(((ANGLE_defaultUniformBlock)._ux2[0i].elem) + (f32((ANGLE_defaultUniformBlock)._uy2[0i].elem)), ((ANGLE_defaultUniformBlock)._uz2[0i].elem).x, ((ANGLE_Convert_Mat3x2((ANGLE_defaultUniformBlock)._ua2[0i]))[0i])[0i], ((((ANGLE_defaultUniformBlock)._ub2)[0i])[0i])[0i]));
 }
 @fragment
