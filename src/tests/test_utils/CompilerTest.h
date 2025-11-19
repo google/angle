@@ -33,9 +33,8 @@ class CompiledShader
     const std::string &getInfoLog() const { return mInfoLog; }
     const std::string &getTranslatedSource() const { return mTranslatedSource; }
 
-    // Returns true if the expected message is found in the info log.
-    bool hasInfoLog(const char *expect) const;
-
+    // Returns true if the expected error is found in the info log.
+    bool hasError(const char *expect) const;
     // Returns true if either the translated source does not exist or it contains this substring.
     bool verifyInTranslatedSource(const char *expect) const;
     // Returns true if either the translated source does not exist or it does not contains this

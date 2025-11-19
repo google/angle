@@ -73,7 +73,7 @@ void CompiledShader::destroy()
     mTranslatedSource.clear();
 }
 
-bool CompiledShader::hasInfoLog(const char *expect) const
+bool CompiledShader::hasError(const char *expect) const
 {
     return mInfoLog.find(expect) != std::string::npos;
 }

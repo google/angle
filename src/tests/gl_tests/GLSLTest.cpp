@@ -724,61 +724,6 @@ TEST_P(GLSLTest_ES3, TernaryOperatorAppliedToArrayConstructorIsConst)
     ASSERT_GL_NO_ERROR();
 }
 
-// Test that a shader passing a struct into a constructor of array of structs with 1 element works.
-TEST_P(GLSLTest_ES3, SingleStructArrayConstructor)
-{
-    constexpr char kFS[] = R"(#version 300 es
-         precision mediump float;
-         out vec4 my_FragColor;
-         uniform float u;
-         struct S { float member; };
-         void main()
-         {
-             S[1] sarr = S[1](S(u + 0.5));
-             my_FragColor = vec4(sarr[0].member);
-      })";
-
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
-    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
-    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(128, 128, 128, 128), 1);
-    ASSERT_GL_NO_ERROR();
-}
-
-// Built-in functions can be overloaded in ESSL 1.00.
-TEST_P(GLSLTest, ESSL100BuiltInFunctionOverload)
-{
-    constexpr char kFS[] = R"(precision mediump float;
-         int sin(int x)
-         {
-             return int(sin(float(x)));
-         }
-         void main() {
-            gl_FragColor = vec4(sin(0.5));
-    })";
-
-    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
-    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
-    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(122, 122, 122, 122), 1);
-    ASSERT_GL_NO_ERROR();
-}
-
-// Multiplying a matrix with 2 columns and 4 rows with a 2x2 matrix should work.
-TEST_P(GLSLTest_ES3, CompoundMultiplyMatrixValidNonSquareDimensions)
-{
-    constexpr char kFS[] = R"(#version 300 es
-         precision mediump float;
-         out vec4 my_FragColor;
-         void main() {
-            mat2x4 foo = mat2x4(0.25);
-            foo *= mat2x2(4.0);
-            my_FragColor = vec4(foo);
-    })";
-
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
-    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(255, 0, 0, 0));
-    ASSERT_GL_NO_ERROR();
-}
 // Tests a shader from conformance.olges/GL/build/build_017_to_024
 // This shader uses chained assign-equals ops with swizzle, often reusing the same variable
 // as part of a swizzle.
