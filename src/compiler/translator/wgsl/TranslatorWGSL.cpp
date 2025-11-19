@@ -2283,27 +2283,29 @@ void OutputWGSLTraverser::emitVariableDeclaration(const VarDecl &decl,
 
     if (evdConfig.isDeclaration)
     {
-        // "const" and "let" typically don't need to be emitted because they are more for
-        // readability, and the GLSL compiler constant folds most (all?) the consts anyway.
-        // However, pointers in WGSL must be declared with let.
+        // Pointers in WGSL must be declared with let.
         if (evdConfig.emitAsPointer)
         {
             mSink << "let";
         }
+        else if (decl.type.getQualifier() == EvqConst)
+        {
+            mSink << "const";
+        }
         else
         {
             mSink << "var";
-        }
-        if (evdConfig.isGlobalScope)
-        {
-            if (decl.type.getQualifier() == EvqUniform)
+            if (evdConfig.isGlobalScope)
             {
-                ASSERT(IsOpaqueType(decl.type.getBasicType()));
-                mSink << "<uniform>";
-            }
-            else
-            {
-                mSink << "<private>";
+                if (decl.type.getQualifier() == EvqUniform)
+                {
+                    ASSERT(IsOpaqueType(decl.type.getBasicType()));
+                    mSink << "<uniform>";
+                }
+                else
+                {
+                    mSink << "<private>";
+                }
             }
         }
         mSink << " ";
