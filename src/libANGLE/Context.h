@@ -947,7 +947,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // Needed by capture serialization logic that works with a "const" Context pointer.
     void finishImmutable() const;
 
-    const angle::PerfMonitorCounterGroups &getPerfMonitorCounterGroups() const;
+    const angle::PerfMonitorCounterGroupsInfo &getPerfMonitorCounterGroups() const;
 
     // Ends the currently active pixel local storage session with GL_STORE_OP_STORE on all planes.
     void endPixelLocalStorageImplicit();

@@ -1194,22 +1194,20 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
 
     mDeviceQueueIndex = renderer->getDeviceQueueIndex(getPriority());
 
+    angle::PerfMonitorCounterGroupInfo vulkanGroupInfo;
     angle::PerfMonitorCounterGroup vulkanGroup;
-    vulkanGroup.name = "vulkan";
+    vulkanGroupInfo.name = "vulkan";
 
 #define ANGLE_ADD_PERF_MONITOR_COUNTER_GROUP(COUNTER) \
-    {                                                 \
-        angle::PerfMonitorCounter counter;            \
-        counter.name  = #COUNTER;                     \
-        counter.value = 0;                            \
-        vulkanGroup.counters.push_back(counter);      \
-    }
+    vulkanGroupInfo.counters.emplace_back(#COUNTER);  \
+    vulkanGroup.counters.emplace_back(0);
 
     ANGLE_VK_PERF_COUNTERS_X(ANGLE_ADD_PERF_MONITOR_COUNTER_GROUP)
 
 #undef ANGLE_ADD_PERF_MONITOR_COUNTER_GROUP
 
-    mPerfMonitorCounters.push_back(vulkanGroup);
+    mPerfMonitorCountersInfo.emplace_back(std::move(vulkanGroupInfo));
+    mPerfMonitorCounters.emplace_back(std::move(vulkanGroup));
 
     mCurrentGarbage.reserve(32);
 
@@ -9145,15 +9143,30 @@ angle::Result ContextVk::endRenderPassIfComputeAccessAfterGraphicsImageAccess()
     return angle::Result::Continue;
 }
 
+const angle::PerfMonitorCounterGroupsInfo &ContextVk::getPerfMonitorCountersInfo() const
+{
+    return mPerfMonitorCountersInfo;
+}
+
 const angle::PerfMonitorCounterGroups &ContextVk::getPerfMonitorCounters()
 {
     syncObjectPerfCounters(mRenderer->getCommandQueuePerfCounters());
 
-    angle::PerfMonitorCounters &counters =
-        angle::GetPerfMonitorCounterGroup(mPerfMonitorCounters, "vulkan").counters;
+    ASSERT(mPerfMonitorCountersInfo.size() == 1);
+    ASSERT(mPerfMonitorCounters.size() == 1);
 
-#define ANGLE_UPDATE_PERF_MAP(COUNTER) \
-    angle::GetPerfMonitorCounter(counters, #COUNTER).value = mPerfCounters.COUNTER;
+    const angle::PerfMonitorCounterGroupInfo &info = mPerfMonitorCountersInfo[0];
+    angle::PerfMonitorCounters &counters           = mPerfMonitorCounters[0].counters;
+
+    ASSERT(info.name == "vulkan");
+    ASSERT(info.counters.size() == counters.size());
+
+    uint32_t counterIndex = 0;
+
+#define ANGLE_UPDATE_PERF_MAP(COUNTER)                    \
+    ASSERT(info.counters.size() > counterIndex);          \
+    ASSERT(info.counters[counterIndex].name == #COUNTER); \
+    counters[counterIndex++].value = mPerfCounters.COUNTER;
 
     ANGLE_VK_PERF_COUNTERS_X(ANGLE_UPDATE_PERF_MAP)
 
