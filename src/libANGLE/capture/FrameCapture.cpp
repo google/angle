@@ -3698,7 +3698,8 @@ void CaptureShareGroupMidExecutionSetup(
                 static_cast<GLsizeiptr>(buffer->getMapOffset()),
                 static_cast<GLsizeiptr>(buffer->getMapLength()),
                 (buffer->getAccessFlags() & GL_MAP_WRITE_BIT) != 0,
-                (buffer->getStorageExtUsageFlags() & GL_MAP_COHERENT_BIT_EXT) != 0);
+                (buffer->getStorageExtUsageFlags() & GL_MAP_COHERENT_BIT_EXT) != 0,
+                (buffer->getStorageExtUsageFlags() & GL_MAP_PERSISTENT_BIT_EXT) != 0);
         }
         else
         {
@@ -6386,7 +6387,8 @@ void FrameCaptureShared::trackBufferMapping(const gl::Context *context,
                                             GLintptr offset,
                                             GLsizeiptr length,
                                             bool writable,
-                                            bool coherent)
+                                            bool coherent,
+                                            bool persistent)
 {
     // Track that the buffer was mapped
     mResourceTracker.setBufferMapped(context->id(), id.value);
@@ -6405,11 +6407,18 @@ void FrameCaptureShared::trackBufferMapping(const gl::Context *context,
         // Track coherent buffer
         // Check if capture is active to not initialize the coherent buffer tracker on the
         // first coherent glMapBufferRange call.
-        if (coherent && isCaptureActive())
+        if ((coherent || persistent) && isCaptureActive())
         {
             if (mCoherentBufferTracker.hasBeenReset())
             {
                 FATAL() << "Multi-capture not supprted for apps using persistent coherent memory";
+            }
+
+            // To allow for incomplete synchronization seen in popular apps, treat persistent
+            // writable memory as coherent. See http://issuetracker.google.com/460704266.
+            if (!coherent)
+            {
+                WARN() << "Treating persistent, non-coherent buffer " << id.value << " as coherent";
             }
 
             mCoherentBufferTracker.enable();
@@ -6726,7 +6735,8 @@ void FrameCaptureShared::captureCustomMapBufferFromContext(const gl::Context *co
             call.params.getParam("access", ParamType::TGLbitfield, 3).value.GLbitfieldVal;
 
         trackBufferMapping(context, &call, buffer->id(), buffer, offset, length,
-                           access & GL_MAP_WRITE_BIT, access & GL_MAP_COHERENT_BIT_EXT);
+                           access & GL_MAP_WRITE_BIT, access & GL_MAP_COHERENT_BIT_EXT,
+                           access & GL_MAP_PERSISTENT_BIT_EXT);
     }
     else
     {
@@ -6735,7 +6745,7 @@ void FrameCaptureShared::captureCustomMapBufferFromContext(const gl::Context *co
         bool writeAccess =
             (access == GL_WRITE_ONLY_OES || access == GL_WRITE_ONLY || access == GL_READ_WRITE);
         trackBufferMapping(context, &call, buffer->id(), buffer, 0,
-                           static_cast<GLsizeiptr>(buffer->getSize()), writeAccess, false);
+                           static_cast<GLsizeiptr>(buffer->getSize()), writeAccess, false, false);
     }
 
     CaptureCustomMapBuffer(entryPointName, call, callsOut, buffer->id());
@@ -7432,7 +7442,7 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             FrameCaptureShared *frameCaptureShared =
                 context->getShareGroup()->getFrameCaptureShared();
             frameCaptureShared->trackBufferMapping(context, &call, buffer->id(), buffer, offset,
-                                                   length, writable, false);
+                                                   length, writable, false, false);
             break;
         }
 
@@ -8410,6 +8420,10 @@ void FrameCaptureShared::onEndFrame(gl::Context *context)
     if (!enabled() || mFrameIndex > mCaptureEndFrame)
     {
         setCaptureInactive();
+
+        // Note: If this call were deferred until shutdown, multi-capture could be
+        // supported for traces using persistent/coherent mapped memory, see
+        // http://issuetracker.google.com/394107532
         mCoherentBufferTracker.onEndFrame();
         if (enabled())
         {
