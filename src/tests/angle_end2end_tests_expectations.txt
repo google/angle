@@ -205,6 +205,7 @@
 42267037 WIN NVIDIA VULKAN : Texture2DTestES3.TexImageWithStencilData/ES3_Vulkan_AllocateNonZeroMemory = SKIP
 42267037 WIN NVIDIA VULKAN : Texture2DTestES3.TexImageWithStencilPBO/ES3_Vulkan_AllocateNonZeroMemory = SKIP
 42267037 WIN NVIDIA VULKAN : Texture2DTestES3.TexStorage2DSimultaneousUseOfMultipleYuvSourcesNoData/* = SKIP
+42267037 LINUX NVIDIA VULKAN : ParallelShaderCompileTestES31.LinkAndDispatchManyPrograms/ES3_1_Vulkan_EnableParallelCompileAndLink_VaryingsRequireMatchingPrecisionInSpirv = SKIP
 42267037 WIN NVIDIA GLES : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
 42267037 WIN NVIDIA OPENGL : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
 
