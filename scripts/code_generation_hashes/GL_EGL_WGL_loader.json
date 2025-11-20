@@ -16,11 +16,11 @@
   "third_party/OpenCL-Docs/src/xml/cl.xml":
     "3c93f136de5049f4d9eca8240df1a025",
   "third_party/OpenGL-Registry/src/xml/gl.xml":
-    "d7ed846c15f72e084763c22d70adf1e2",
+    "00c18abda09593ce770fd184bd8f6255",
   "third_party/OpenGL-Registry/src/xml/glx.xml":
-    "6e1745b04a1ac673c60aaa5dd819f3c4",
+    "649f24094c1938779ada7db2dc092d35",
   "third_party/OpenGL-Registry/src/xml/wgl.xml":
-    "eae784bf4d1b983a42af5671b140b7c4",
+    "da69debd6646f79119fcdaaf5969af2f",
   "util/capture/trace_egl_loader_autogen.cpp":
     "a05c41eb1cc6e24c006cb3f462b694cf",
   "util/capture/trace_egl_loader_autogen.h":

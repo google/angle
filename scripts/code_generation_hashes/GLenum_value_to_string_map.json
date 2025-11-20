@@ -6,9 +6,9 @@
   "scripts/registry_xml.py":
     "fd47bbee1fd821ad30dea26d3b38066f",
   "src/common/gl_enum_utils_autogen.cpp":
-    "6ec62ec3a5d0e4da8b8e34280c36e1e7",
+    "aa875f38ef9dab5d108f526337cf4a45",
   "src/common/gl_enum_utils_autogen.h":
-    "a9e54e40452d5bc6092d2fbb1884130e",
+    "58964ba04f5eb150a03742e62c16ad07",
   "third_party/OpenGL-Registry/src/xml/gl.xml":
-    "d7ed846c15f72e084763c22d70adf1e2"
+    "00c18abda09593ce770fd184bd8f6255"
 }
