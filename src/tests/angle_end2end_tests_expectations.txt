@@ -536,6 +536,8 @@
 448658631 WIN D3D11 : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFold/* = SKIP
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
+462718915 WIN D3D11 : ShaderStorageBufferTest31.ScalarDataInMatrixInSSBOWithRowMajorQualifier/* = SKIP
+462718915 WIN D3D11 : ShaderStorageBufferTest31.ScalarDataInMatrixInStructureInSSBOWithRowMajorQualifier/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -2265,13 +2267,15 @@
 349994211 IR D3D11 : UniformBufferTest.BlockContainingArrayOfStructsContainingArrays/* = SKIP
 349994211 IR D3D11 : UniformBufferTest.BlockContainingNestedStructs/* = SKIP
 349994211 IR D3D11 : UniformBufferTest.Std140UniformBlockInstanceWithNestedStructsContainingVec3s/* = SKIP
-// Untriaged failures with HLSL
-349994211 IR D3D11 : GLSLTest_ES3.SwitchWithConstantExpr/* = SKIP
-349994211 IR D3D11 : ShaderStorageBufferTest31.ScalarDataInMatrixInSSBOWithRowMajorQualifier/* = SKIP
-349994211 IR D3D11 : ShaderStorageBufferTest31.ScalarDataInMatrixInStructureInSSBOWithRowMajorQualifier/* = SKIP
+// The astify pass generates a temp variable to hold the result of a function call that returns a large array.
+// That leads to an extra copy that makes the shader run slower and time out.
+// Apparently the unnecessary copy is not optimized out by the d3d compiler.
 349994211 IR D3D11 : UniformBlockWithOneLargeArrayMemberTest.MemberArrayOperations/* = SKIP
-// Untriaged failure on Pixel 6 / Vulkan
-349994211 IR PIXEL6 VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = SKIP
+// When the IR prunes cases that do not match the constant switch expression, and there is only the `default` case left,
+// the d3d compiler miscompiles the shader it seems.
+349994211 IR D3D11 : GLSLTest_ES3.SwitchWithConstantExpr/* = SKIP
+// The workaround in b/274859104 is not applied because the IR does not generate non-constant initializers
+274859104 IR PIXEL6 VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = SKIP
 // Turning short-circuit && to if/else leads to incorrect evaluation on the Pixel 4 compiler
 349994211 IR PIXEL4ORXL GLES : GLSLTest.AliasingFunctionInOutParamsMultiple/* = SKIP
 349994211 IR PIXEL4ORXL GLES : GLSLTest.AliasingFunctionOutParamsMultiple/* = SKIP

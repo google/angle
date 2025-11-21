@@ -489,5 +489,5 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.
 392542001 WGPU : dEQP-GLES2.functional.vertex_arrays.multiple_attributes* = FAIL
 
 // Translator IR failures
-// Untriaged failure on Pixel 6
-349994211 IR PIXEL6 VULKAN : dEQP-GLES2.functional.shaders.algorithm.rgb_to_hsl_vertex = SKIP
+// The workaround in b/274859104 is not applied because the IR does not generate non-constant initializers
+274859104 IR PIXEL6 VULKAN : dEQP-GLES2.functional.shaders.algorithm.rgb_to_hsl_vertex = SKIP
