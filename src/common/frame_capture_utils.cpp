@@ -196,7 +196,7 @@ void WriteParamValueReplay<ParamType::TGLboolean>(std::ostream &os,
             os << "GL_FALSE";
             break;
         default:
-            os << "0x" << std::hex << std::uppercase << GLint(value);
+            os << "0x" << std::hex << std::uppercase << GLint(value) << std::dec;
     }
 }
 
