@@ -239,6 +239,8 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                                     const VkDeviceSize *offsets,
                                     const VkDeviceSize *sizes);
 
+    void bindTileMemory(const DeviceMemory &tileMemory);
+
     void blitImage(const Image &srcImage,
                    VkImageLayout srcImageLayout,
                    const Image &dstImage,
@@ -1479,6 +1481,15 @@ ANGLE_INLINE void CommandBuffer::bindVertexBuffers2NoStride(uint32_t firstBindin
                                                             const VkDeviceSize *sizes)
 {
     bindVertexBuffers2(firstBinding, bindingCount, buffers, offsets, sizes, nullptr);
+}
+
+ANGLE_INLINE void CommandBuffer::bindTileMemory(const DeviceMemory &tileMemory)
+{
+    ASSERT(valid());
+    ASSERT(tileMemory.valid());
+    const VkTileMemoryBindInfoQCOM tileMemoryBindInfo = {
+        VK_STRUCTURE_TYPE_TILE_MEMORY_BIND_INFO_QCOM, nullptr, tileMemory.getHandle()};
+    vkCmdBindTileMemoryQCOM(mHandle, &tileMemoryBindInfo);
 }
 
 ANGLE_INLINE void CommandBuffer::beginTransformFeedback(uint32_t firstCounterBuffer,

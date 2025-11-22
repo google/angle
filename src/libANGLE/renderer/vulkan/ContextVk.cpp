@@ -697,6 +697,8 @@ constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPas
      "Render pass closed due to running out of reserved serials"},
     {RenderPassClosureReason::LegacyDithering, "Render pass closed due to updating legacy dither"},
     {RenderPassClosureReason::SubmitCommands, "Render pass closed at command buffer submission"},
+    {RenderPassClosureReason::TileMemorySimulatedClear,
+     "Temporary render pass used for tile memory clear simulation"},
 }};
 
 VkDependencyFlags GetLocalDependencyFlags(ContextVk *contextVk)
@@ -1227,6 +1229,8 @@ void ContextVk::onDestroy(const gl::Context *context)
 {
     VkDevice device = getDevice();
 
+    ASSERT(mImagesWithTileMemory.empty());
+
     mCommandState.destroy(device);
 
     // If there is a context lost, destroy all the command buffers and resources regardless of
@@ -1430,6 +1434,11 @@ angle::Result ContextVk::initialize(const angle::ImageLoadContext &imageLoadCont
         {
             ANGLE_TRY(vk::GetImpl(context.second)->flushOutsideRenderPassCommands());
         }
+    }
+
+    if (getFeatures().supportsTileMemoryHeap.enabled)
+    {
+        mImagesWithTileMemory.reserve(4);
     }
 
     return angle::Result::Continue;
@@ -3733,7 +3742,13 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
         mCommandState.flushImagesTransitionToForeign(std::move(mImagesToTransitionToForeign));
     }
 
+    if (!mImagesWithTileMemory.empty())
+    {
+        ANGLE_TRY(finalizeImagesWithTileMemory());
+    }
+
     ANGLE_TRY(mCommandState.insertSubmitDebugMarker(this, reason));
+
     ANGLE_TRY(mRenderer->submitCommands(this, signalSemaphore, externalFence,
                                         mLastFlushedQueueSerial, std::move(mCommandState)));
 
@@ -9024,6 +9039,92 @@ angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask dirtyAttri
     }
 
     mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
+    return angle::Result::Continue;
+}
+
+void ContextVk::addImageWithTileMemory(vk::ImageHelper *imageToAdd)
+{
+    ASSERT(imageToAdd->useTileMemory());
+    if (std::find(mImagesWithTileMemory.begin(), mImagesWithTileMemory.end(), imageToAdd) !=
+        mImagesWithTileMemory.end())
+    {
+        // Already added.
+        return;
+    }
+
+    // If this is first time added, it must have no valid data
+    ASSERT(!imageToAdd->isVkImageContentDefined());
+
+    if (getFeatures().supportsTileMemoryHeap.enabled)
+    {
+        mOutsideRenderPassCommands->getCommandBuffer().bindTileMemory(
+            imageToAdd->getDeviceMemory());
+    }
+
+    mImagesWithTileMemory.emplace_back(imageToAdd);
+}
+
+void ContextVk::removeImageWithTileMemory(const vk::ImageHelper *imageToRemove)
+{
+    ASSERT(imageToRemove->useTileMemory());
+    (void)std::remove(mImagesWithTileMemory.begin(), mImagesWithTileMemory.end(), imageToRemove);
+}
+
+bool ContextVk::isImageWithTileMemoryFinalized(const vk::ImageHelper *image) const
+{
+    ASSERT(image->useTileMemory());
+    if (std::find(mImagesWithTileMemory.begin(), mImagesWithTileMemory.end(), image) !=
+        mImagesWithTileMemory.end())
+    {
+        return false;
+    }
+    return true;
+}
+
+angle::Result ContextVk::finalizeImagesWithTileMemory()
+{
+    if (getFeatures().supportsTileMemoryHeap.enabled)
+    {
+        // We dont explicitly unbind tileMemory here. They occur implicitly at endCommandBiuffer
+        // time
+    }
+    else
+    {
+        ASSERT(getFeatures().simulateTileMemoryForTesting.enabled);
+
+        // clear VkImage to simulate the transient nature of tile memory
+        UtilsVk::ClearTextureParameters params = {};
+        params.level                           = vk::LevelIndex(0);
+        params.layer                           = 0;
+        params.clearValue                      = {};
+        params.clearArea                       = gl::Box(0, 0, 0, 0, 0, 1);
+        for (vk::ImageHelper *image : mImagesWithTileMemory)
+        {
+            // Other context may have triggered fallback already, so check
+            // again.
+            if (image->useTileMemory() && !image->isVkImageContentDefined())
+            {
+                params.aspectFlags      = image->getAspectFlags();
+                params.clearArea.width  = image->getExtents().width;
+                params.clearArea.height = image->getExtents().height;
+                ANGLE_TRY(mUtils.clearTextureNoFlush(this, image, params));
+
+                // Since this may called from submitCommands, use no submit version to avoid
+                // recursion.
+                ANGLE_TRY(flushCommandsAndEndRenderPassWithoutSubmit(
+                    RenderPassClosureReason::TileMemorySimulatedClear));
+                ASSERT(mLastFlushedQueueSerial > mLastSubmittedQueueSerial);
+
+                // clearTextureNoFlush may have set content valid again, remove the bits to keep
+                // content as invalid.
+                image->invalidateEntireLevelContent(this, gl::LevelIndex(0));
+                image->invalidateEntireLevelStencilContent(this, gl::LevelIndex(0));
+            }
+        }
+    }
+
+    mImagesWithTileMemory.clear();
+
     return angle::Result::Continue;
 }
 }  // namespace rx

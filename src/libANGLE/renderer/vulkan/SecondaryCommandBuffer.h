@@ -52,6 +52,7 @@ enum class CommandID : uint16_t
     BindGraphicsPipeline,
     BindIndexBuffer,
     BindIndexBuffer2,
+    BindTileMemory,
     BindTransformFeedbackBuffers,
     BindVertexBuffers,
     BindVertexBuffers2,
@@ -246,6 +247,14 @@ struct BufferBarrier2Params
     VkBufferMemoryBarrier2 bufferMemoryBarrier2;
 };
 VERIFY_8_BYTE_ALIGNMENT(BufferBarrier2Params)
+
+struct BindTileMemoryParams
+{
+    CommandHeader header;
+    uint32_t padding;
+    VkDeviceMemory tileMemory;
+};
+VERIFY_8_BYTE_ALIGNMENT(BindTileMemoryParams)
 
 struct ClearAttachmentsParams
 {
@@ -904,6 +913,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                           VkDeviceSize size,
                           VkIndexType indexType);
 
+    void bindTileMemory(const DeviceMemory &tileMemory);
+
     void bindTransformFeedbackBuffers(uint32_t firstBinding,
                                       uint32_t bindingCount,
                                       const VkBuffer *buffers,
@@ -1439,6 +1450,13 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindIndexBuffer2(const Buffer &buffer,
     paramStruct->offset    = offset;
     paramStruct->size      = size;
     paramStruct->indexType = indexType;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::bindTileMemory(const DeviceMemory &tileMemory)
+{
+    BindTileMemoryParams *paramStruct =
+        initCommand<BindTileMemoryParams>(CommandID::BindTileMemory);
+    paramStruct->tileMemory = tileMemory.getHandle();
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::bindTransformFeedbackBuffers(uint32_t firstBinding,

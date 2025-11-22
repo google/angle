@@ -1505,6 +1505,9 @@ void InitFragmentShadingRateKHRDeviceFunction(VkDevice device);
 // VK_KHR_maintenance5
 void InitMaintenance5Functions(VkDevice device);
 
+// VK_QCOM_tile_memory_heap
+void InitTileMemoryHeapFunctions(VkDevice device);
+
 // VK_GOOGLE_display_timing
 void InitGetPastPresentationTimingGoogleFunction(VkDevice device);
 
@@ -1695,6 +1698,9 @@ enum class RenderPassClosureReason
     CopyTextureOnCPU,
     TextureReformatToRenderable,
     OutOfReservedQueueSerialForOutsideCommands,
+
+    // VK_QCOM_tile_memory_heap
+    TileMemorySimulatedClear,
 
     // UtilsVk
     GenerateMipmapWithDraw,

@@ -6040,7 +6040,7 @@ void ImageHelper::releaseImage(Renderer *renderer)
         garbageObjects.reserve(2);
         garbageObjects.emplace_back(GarbageObject::Get(&mImage));
 
-        // mDeviceMemory and mVmaAllocation should not be valid at the same time.
+        //  mDeviceMemory and mVmaAllocation should not be valid at the same time.
         ASSERT(!mDeviceMemory.valid() || !mVmaAllocation.valid());
         if (mDeviceMemory.valid())
         {
@@ -6089,6 +6089,13 @@ void ImageHelper::finalizeImageLayoutInShareContexts(Renderer *renderer,
         for (auto context : contextVk->getShareGroup()->getContexts())
         {
             vk::GetImpl(context.second)->finalizeImageLayout(this, imageSiblingSerial);
+        }
+        if (mUseTileMemory)
+        {
+            for (auto context : contextVk->getShareGroup()->getContexts())
+            {
+                vk::GetImpl(context.second)->removeImageWithTileMemory(this);
+            }
         }
     }
 }

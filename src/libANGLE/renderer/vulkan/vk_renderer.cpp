@@ -4393,6 +4393,10 @@ void Renderer::initDeviceExtensionEntryPoints()
     {
         InitMaintenance5Functions(mDevice);
     }
+    if (mFeatures.supportsTileMemoryHeap.enabled)
+    {
+        InitTileMemoryHeapFunctions(mDevice);
+    }
     // Extensions promoted to Vulkan 1.2
     {
         if (mFeatures.supportsHostQueryReset.enabled)

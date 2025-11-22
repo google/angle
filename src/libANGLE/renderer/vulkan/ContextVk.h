@@ -561,6 +561,15 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         ASSERT(mRenderPassCommands->started());
         mRenderPassCommands->depthStencilImagesDraw(level, layerStart, layerCount, image,
                                                     resolveImage, imageSiblingSerial);
+
+        if (image && image->useTileMemory())
+        {
+            addImageWithTileMemory(image);
+        }
+        if (resolveImage && resolveImage->useTileMemory())
+        {
+            addImageWithTileMemory(resolveImage);
+        }
     }
     void onDepthStencilResolve(gl::LevelIndex level,
                                uint32_t layerStart,
@@ -878,6 +887,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result onFrameBoundary(const gl::Context *contextGL);
 
     uint32_t getCurrentFrameCount() const { return mShareGroupVk->getCurrentFrameCount(); }
+
+    bool isImageWithTileMemoryFinalized(const vk::ImageHelper *image) const;
+    void addImageWithTileMemory(vk::ImageHelper *imageToAdd);
+    void removeImageWithTileMemory(const vk::ImageHelper *imageToRemove);
 
   private:
     // Dirty bits.
@@ -1398,6 +1411,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void generateOutsideRenderPassCommandsQueueSerial();
     void generateRenderPassCommandsQueueSerial(QueueSerial *queueSerialOut);
 
+    angle::Result finalizeImagesWithTileMemory();
+
     angle::ImageLoadContext mImageLoadContext;
 
     std::array<GraphicsDirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
@@ -1534,6 +1549,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // in-flight buffer or not that we need to release at submission time.
     gl::AttribArray<vk::DynamicBuffer> mStreamedVertexBuffers;
     gl::AttributesMask mHasInFlightStreamedVertexBuffers;
+
+    std::vector<vk::ImageHelper *> mImagesWithTileMemory;
 
     // We use a single pool for recording commands. We also keep a free list for pool recycling.
     vk::SecondaryCommandPools mCommandPools;

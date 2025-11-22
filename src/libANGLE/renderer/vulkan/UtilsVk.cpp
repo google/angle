@@ -2217,11 +2217,24 @@ angle::Result UtilsVk::convertLineLoopArrayIndirectBuffer(
 // Used to clear a layer of a renderable texture in part or whole (EXT_clear_texture).
 angle::Result UtilsVk::clearTexture(ContextVk *contextVk,
                                     vk::ImageHelper *dst,
-                                    ClearTextureParameters &params)
+                                    const ClearTextureParameters &params)
+{
+    ANGLE_TRY(clearTextureNoFlush(contextVk, dst, params));
+
+    // Close the render pass for this temporary framebuffer. If the render pass is not immediately
+    // closed and the render area grows due to scissor change, the clear area unexpectedly changes.
+    // This can be avoided if the scissor code takes LOAD_OP_CLEAR into account before deciding to
+    // grow the render pass's render area.
+    return contextVk->flushCommandsAndEndRenderPass(
+        RenderPassClosureReason::TemporaryForClearTexture);
+}
+
+angle::Result UtilsVk::clearTextureNoFlush(ContextVk *contextVk,
+                                           vk::ImageHelper *dst,
+                                           const ClearTextureParameters &params)
 {
     const angle::Format &dstActualFormat = dst->getActualFormat();
     bool isDepthOrStencil                = dstActualFormat.hasDepthOrStencilBits();
-    bool isFormatDS                      = dstActualFormat.hasDepthAndStencilBits();
 
     vk::DeviceScoped<vk::ImageView> destView(contextVk->getDevice());
     const gl::TextureType destViewType = vk::Get2DTextureType(1, dst->getSamples());
@@ -2239,16 +2252,13 @@ angle::Result UtilsVk::clearTexture(ContextVk *contextVk,
     vk::RenderPassDesc renderPassDesc;
     renderPassDesc.setSamples(dst->getSamples());
 
-    vk::ImageAccess imageAccess;
     if (isDepthOrStencil)
     {
         renderPassDesc.packDepthStencilAttachment(dstActualFormat.id);
-        imageAccess = vk::ImageAccess::DepthWriteStencilWrite;
     }
     else
     {
         renderPassDesc.packColorAttachment(0, dstActualFormat.id);
-        imageAccess = vk::ImageAccess::ColorWrite;
     }
 
     vk::RenderPassCommandBuffer *commandBuffer;
@@ -2257,22 +2267,21 @@ angle::Result UtilsVk::clearTexture(ContextVk *contextVk,
                               params.aspectFlags, &params.clearValue,
                               vk::RenderPassSource::InternalUtils, &commandBuffer));
 
-    // If the format contains both depth and stencil, the barrier aspect mask for the image should
-    // include both bits.
-    contextVk->onImageRenderPassWrite(
-        dst->toGLLevel(params.level), params.layer, 1,
-        isFormatDS ? VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT : params.aspectFlags,
-        imageAccess, dst);
+    if (isDepthOrStencil)
+    {
+        contextVk->onDepthStencilDraw(dst->toGLLevel(params.level), params.layer, 1, dst, nullptr,
+                                      {});
+    }
+    else
+    {
+        contextVk->onColorDraw(dst->toGLLevel(params.level), params.layer, 1, dst, nullptr, {},
+                               vk::PackedAttachmentIndex(0));
+    }
 
     vk::ImageView destViewObject = destView.release();
     contextVk->addGarbage(&destViewObject);
 
-    // Close the render pass for this temporary framebuffer. If the render pass is not immediately
-    // closed and the render area grows due to scissor change, the clear area unexpectedly changes.
-    // This can be avoided if the scissor code takes LOAD_OP_CLEAR into account before deciding to
-    // grow the render pass's render area.
-    return contextVk->flushCommandsAndEndRenderPass(
-        RenderPassClosureReason::TemporaryForClearTexture);
+    return angle::Result::Continue;
 }
 
 angle::Result UtilsVk::convertVertexBuffer(

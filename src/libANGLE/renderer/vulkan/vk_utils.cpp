@@ -1161,6 +1161,9 @@ PFN_vkBindImageMemory2KHR vkBindImageMemory2KHR   = nullptr;
 // VK_KHR_maintenance5
 PFN_vkCmdBindIndexBuffer2KHR vkCmdBindIndexBuffer2KHR = nullptr;
 
+// VK_QCOM_tile_memory_heap
+PFN_vkCmdBindTileMemoryQCOM vkCmdBindTileMemoryQCOM = nullptr;
+
 // VK_KHR_external_fence_capabilities
 PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR vkGetPhysicalDeviceExternalFencePropertiesKHR =
     nullptr;
@@ -1399,6 +1402,12 @@ void InitFragmentShadingRateKHRDeviceFunction(VkDevice device)
 void InitMaintenance5Functions(VkDevice device)
 {
     GET_DEVICE_FUNC(vkCmdBindIndexBuffer2KHR);
+}
+
+// VK_QCOM_tile_memory_heap
+void InitTileMemoryHeapFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkCmdBindTileMemoryQCOM);
 }
 
 // VK_GOOGLE_display_timing
