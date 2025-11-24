@@ -1616,6 +1616,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo dropDepthStencilClearOnInvalidate = {
+        "dropDepthStencilClearOnInvalidate",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

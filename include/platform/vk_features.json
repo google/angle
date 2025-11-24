@@ -2127,6 +2127,15 @@
                 "- GL_EXT_fragment_shading_rate_attachment"
             ],
             "issue": "https://anglebug.com/397255625"
+        },
+        {
+            "name": "drop_depth_stencil_clear_on_invalidate",
+            "category": "Workarounds",
+            "description": [
+                "There are old Unity titles that expect depth/stencil to be cleared for later re-use, ",
+                "so this we have to disable our optimization that drops the clears on invalidate."
+            ],
+            "issue": "https://issuetracker.google.com/462484277"
         }
     ]
 }

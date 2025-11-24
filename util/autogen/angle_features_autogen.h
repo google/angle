@@ -119,6 +119,7 @@ enum class Feature
     DontInitializeUninitializedLocals,
     DontUseLoopsToInitializeVariables,
     DoubleDepthBiasConstantFactor,
+    DropDepthStencilClearOnInvalidate,
     DumpShaderSource,
     DumpTranslatedShaders,
     EglColorspaceAttributePassthrough,

@@ -6633,6 +6633,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportFragmentShadingRateExtExtensions,
                             mFeatures.supportsFragmentShadingRate.enabled && !isSamsung);
+
+    // http://issuetracker.google.com/372273294
+    // Older Unity titles are calling glClear on depth/stencil followed by a call to
+    // glInvalidateFramebuffer, but expect the contents of the framebuffer to still be valid.
+    // In this case, we can't drop the clears that we've deferred.
+    ANGLE_FEATURE_CONDITION(&mFeatures, dropDepthStencilClearOnInvalidate, false);
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}
