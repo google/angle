@@ -6790,9 +6790,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // In this case, we can't drop the clears that we've deferred.
     ANGLE_FEATURE_CONDITION(&mFeatures, dropDepthStencilClearOnInvalidate, false);
 
-    // VK_QCOM_tile_memory_heap is available
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsTileMemoryHeap,
-                            /*mTileMemoryHeapFeatures.tileMemoryHeap == VK_TRUE*/ false);
+    // VK_QCOM_tile_memory_heap is available. Earlier qualcomm driver has a bug with copying stencil
+    // data from tile memory.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsTileMemoryHeap,
+        mTileMemoryHeapFeatures.tileMemoryHeap == VK_TRUE &&
+            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 868, 1)));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsAstc3d,
                             mTextureCompressionASTC3DFeatures.textureCompressionASTC_3D == VK_TRUE);
