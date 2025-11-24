@@ -3728,6 +3728,32 @@ egl::Error WindowSurfaceVk::getCompressionRate(const egl::Display *display,
 
 void WindowSurfaceVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
+    if (message == angle::SubjectMessage::VkImageChanged)
+    {
+        const vk::ResourceUse &use = mDepthStencilImage.getResourceUse();
+
+        // Free all cached VkFramebuffers
+        if (isMultiSampled())
+        {
+            mRenderer->collectGarbage(use, &mFramebufferMS);
+        }
+
+        for (auto &image : mSwapchainImages)
+        {
+            if (mFramebufferFetchMode == vk::FramebufferFetchMode::Color)
+            {
+                mRenderer->collectGarbage(use, &image.fetchFramebuffer);
+            }
+            else
+            {
+                mRenderer->collectGarbage(use, &image.framebuffer);
+            }
+        }
+
+        // Release ImageViews
+        mDepthStencilImageViews.release(mRenderer, use);
+    }
+
     // Forward the notification to observing class that the staging buffer changed.
     onStateChange(angle::SubjectMessage::SubjectChanged);
 }

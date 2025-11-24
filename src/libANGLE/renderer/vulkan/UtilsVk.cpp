@@ -3461,6 +3461,99 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+angle::Result UtilsVk::copyImageFromTileMemory(ContextVk *contextVk,
+                                               const VkImageAspectFlags aspectFlags,
+                                               vk::ImageHelper *dstImage,
+                                               vk::ImageHelper *srcImage)
+{
+    ASSERT(srcImage->useTileMemory());
+    ASSERT(!dstImage->useTileMemory());
+    // tile memory image are simple 2D single sampled depth stencil image
+    ASSERT(srcImage->getSamples() == 1 && dstImage->getSamples() == 1);
+    ASSERT(srcImage->getLayerCount() == 1 && dstImage->getLayerCount() == 1);
+    ASSERT(srcImage->getLevelCount() == 1 && dstImage->getLevelCount() == 1);
+    ASSERT(srcImage->getActualFormatID() == dstImage->getActualFormatID());
+    ASSERT(srcImage->getActualFormat().hasDepthOrStencilBits());
+    ASSERT(srcImage->isVkImageContentDefined());
+
+    const angle::FormatID formatID = srcImage->getActualFormatID();
+    const bool blitDepthBuffer     = (aspectFlags & VK_IMAGE_ASPECT_DEPTH_BIT) != 0;
+    const bool blitStencilBuffer   = (aspectFlags & VK_IMAGE_ASPECT_STENCIL_BIT) != 0;
+
+    const int width                = static_cast<int>(dstImage->getExtents().width);
+    const int height               = static_cast<int>(dstImage->getExtents().height);
+    const gl::Rectangle renderArea = {0, 0, width, height};
+
+    UtilsVk::BlitResolveParameters params = {};
+    params.stretch[0]                     = 1.0f;
+    params.stretch[1]                     = 1.0f;
+    params.srcExtents[0]                  = width;
+    params.srcExtents[1]                  = height;
+    params.renderArea.width               = width;
+    params.renderArea.height              = height;
+    params.blitArea.width                 = width;
+    params.blitArea.height                = height;
+    params.rotation                       = SurfaceRotation::Identity;
+
+    const bool hasShaderStencilExport =
+        contextVk->getFeatures().supportsShaderStencilExport.enabled;
+
+    vk::DeviceScoped<vk::ImageView> srcDepthView(contextVk->getDevice());
+    vk::DeviceScoped<vk::ImageView> srcStencilView(contextVk->getDevice());
+
+    if (blitDepthBuffer)
+    {
+        ANGLE_TRY(srcImage->initReinterpretedLayerImageView(
+            contextVk, gl::TextureType::_2D, VK_IMAGE_ASPECT_DEPTH_BIT, gl::SwizzleState(),
+            &srcDepthView.get(), vk::LevelIndex(0), 1, 0, 1,
+            vk::ImageHelper::kDefaultImageViewUsageFlags, formatID, GL_NONE));
+    }
+
+    if (blitStencilBuffer)
+    {
+        ANGLE_TRY(srcImage->initReinterpretedLayerImageView(
+            contextVk, gl::TextureType::_2D, VK_IMAGE_ASPECT_STENCIL_BIT, gl::SwizzleState(),
+            &srcStencilView.get(), vk::LevelIndex(0), 1, 0, 1,
+            vk::ImageHelper::kDefaultImageViewUsageFlags, formatID, GL_NONE));
+    }
+
+    if (blitDepthBuffer || (blitStencilBuffer && hasShaderStencilExport))
+    {
+        vk::DeviceScoped<vk::ImageView> dstDepthStencilImageView(contextVk->getDevice());
+        ANGLE_TRY(dstImage->initReinterpretedLayerImageView(
+            contextVk, gl::TextureType::_2D, aspectFlags, gl::SwizzleState(),
+            &dstDepthStencilImageView.get(), vk::LevelIndex(0), 1, 0, 1,
+            vk::ImageHelper::kDefaultImageViewUsageFlags, formatID, GL_NONE));
+
+        ANGLE_TRY(depthStencilBlitResolve(
+            contextVk, dstImage, dstDepthStencilImageView.get(), gl::LevelIndex(0), 0, srcImage,
+            blitDepthBuffer ? &srcDepthView.get() : nullptr,
+            (blitStencilBuffer && hasShaderStencilExport) ? &srcStencilView.get() : nullptr,
+            params));
+
+        vk::ImageView dstDepthViewObject = dstDepthStencilImageView.release();
+        contextVk->addGarbage(&dstDepthViewObject);
+    }
+
+    // If shader stencil export is not present, blit stencil through a different path.
+    if (blitStencilBuffer && !hasShaderStencilExport)
+    {
+        ANGLE_TRY(stencilBlitResolveNoShaderExport(contextVk, dstImage, gl::LevelIndex(0), 0,
+                                                   srcImage, &srcStencilView.get(), params));
+    }
+
+    vk::ImageView srcDepthViewObject = srcDepthView.release();
+    contextVk->addGarbage(&srcDepthViewObject);
+
+    vk::ImageView stencilViewObject = srcStencilView.release();
+    contextVk->addGarbage(&stencilViewObject);
+
+    ANGLE_TRY(contextVk->flushCommandsAndEndRenderPassWithoutSubmit(
+        RenderPassClosureReason::TileMemorySimulatedClear));
+
+    return angle::Result::Continue;
+}
+
 angle::Result UtilsVk::copyImage(ContextVk *contextVk,
                                  vk::ImageHelper *dst,
                                  const vk::ImageView *destView,

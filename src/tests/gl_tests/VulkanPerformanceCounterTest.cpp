@@ -8797,6 +8797,7 @@ TEST_P(VulkanPerformanceCounterTest_TileMemory, SurfaceDepthStencilBufferShouldU
 
     // depthStencil should be using tile memory
     EXPECT_EQ(1u, getPerfCounters().tileMemoryImages);
+    EXPECT_EQ(0u, getPerfCounters().fallbackFromTileMemory);
 }
 
 // Test that depth buffer of FBO should use tile memory if invalidateFramebuffer is called.
@@ -8844,6 +8845,7 @@ TEST_P(VulkanPerformanceCounterTest_TileMemory, OneDSBufferUsedInOneRenderPassTh
 
     // depthStencil should be using tile memory
     EXPECT_EQ(expectedTileMemoryImageCount, getPerfCounters().tileMemoryImages);
+    EXPECT_EQ(0u, getPerfCounters().fallbackFromTileMemory);
 }
 
 // depth buffer of FBO should use tile memory if was valid in first render pass but invalidate in
@@ -8901,6 +8903,7 @@ TEST_P(VulkanPerformanceCounterTest_TileMemory, OneDSBufferUsedInTwoRenderPasses
 
     // depthStencil should also be using tile memory
     EXPECT_EQ(expectedTileMemoryImageCount, getPerfCounters().tileMemoryImages);
+    EXPECT_EQ(0u, getPerfCounters().fallbackFromTileMemory);
 }
 
 // Similar to OneDepthStencilRenderBufferUsedInTwoRenderPasses, but repeat. This will create many
@@ -8964,6 +8967,96 @@ TEST_P(VulkanPerformanceCounterTest_TileMemory, ManyDSBufferUsedInOneSubmit)
         glBindFramebuffer(GL_FRAMEBUFFER, fbos2[i]);
         EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
     }
+    EXPECT_EQ(0u, getPerfCounters().fallbackFromTileMemory);
+}
+
+// Test that depth buffer of FBO that uses tile memory will switch back to regular memory if it has
+// valid data across submissions
+TEST_P(VulkanPerformanceCounterTest_TileMemory, OneDSBufferUsedInTwoRenderPassesWithTwoSubmission)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    ANGLE_SKIP_TEST_IF(!isFeatureEnabled(Feature::SimulateTileMemoryForTesting) &&
+                       !isFeatureEnabled(Feature::SupportsTileMemoryHeap));
+
+    setupPrograms();
+
+    uint64_t tileMemoryStartingImageCount = getPerfCounters().tileMemoryImages;
+
+    constexpr GLsizei kWidth  = 4;
+    constexpr GLsizei kHeight = 4;
+
+    GLTexture colorTexture1, colorTexture2;
+    GLRenderbuffer depthStencil;
+    GLFramebuffer fbo1, fbo2;
+
+    // Setup two fbos share the same depth stencil buffer
+    setupFBO(colorTexture1, depthStencil, fbo1, kWidth, kHeight);
+    setupFBO(colorTexture2, depthStencil, fbo2, kWidth, kHeight);
+
+    GLfloat depthValue = 0.0f;
+    // draw to fbo1, keep depth buffer valid
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(depthValue * 0.5f + 0.5f);
+    glClearStencil(0x55);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    drawQuadToVerifyDepthValue(depthValue);
+    EXPECT_GL_NO_ERROR();
+    // depthStencil should also be using tile memory
+    EXPECT_EQ(tileMemoryStartingImageCount + 1, getPerfCounters().tileMemoryImages);
+    EXPECT_EQ(0u, getPerfCounters().fallbackFromTileMemory);
+    // Submit
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+    // depthStencil should not be using tile memory
+    EXPECT_EQ(tileMemoryStartingImageCount, getPerfCounters().tileMemoryImages);
+    EXPECT_EQ(1u, getPerfCounters().fallbackFromTileMemory);
+
+    // draw to fbo2 without modifying depth buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glClear(GL_COLOR_BUFFER_BIT);
+    // Verify depth buffer has correct value
+    drawQuadToVerifyDepthValue(depthValue);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+}
+
+// Test that depth buffer of surface that uses tile memory will switch back to regular memory if it
+// has valid data across submissions
+TEST_P(VulkanPerformanceCounterTest_TileMemory,
+       SurfaceDepthBufferUsedInTwoRenderPassesWithTwoSubmission)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    ANGLE_SKIP_TEST_IF(!isFeatureEnabled(Feature::SimulateTileMemoryForTesting) &&
+                       !isFeatureEnabled(Feature::SupportsTileMemoryHeap));
+
+    setupPrograms();
+
+    constexpr GLsizei kWidth  = 4;
+    constexpr GLsizei kHeight = 4;
+
+    GLfloat depthValue = 0.0f;
+    // draw to depth depth buffer and keep data valid
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(depthValue * 0.5f + 0.5f);
+    glClearStencil(0x55);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    drawQuadToVerifyDepthValue(depthValue);
+    EXPECT_GL_NO_ERROR();
+    // depthStencil should also be using tile memory
+    EXPECT_EQ(1u, getPerfCounters().tileMemoryImages);
+    EXPECT_EQ(0u, getPerfCounters().fallbackFromTileMemory);
+    // Submit
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+    // depthStencil should not be using tile memory
+    EXPECT_EQ(0u, getPerfCounters().tileMemoryImages);
+    EXPECT_EQ(1u, getPerfCounters().fallbackFromTileMemory);
+
+    // draw again without modifying depth buffer
+    glClear(GL_COLOR_BUFFER_BIT);
+    // Verify depth buffer has correct value
+    drawQuadToVerifyDepthValue(depthValue);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest);

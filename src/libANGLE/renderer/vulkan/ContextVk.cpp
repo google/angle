@@ -9067,22 +9067,44 @@ void ContextVk::addImageWithTileMemory(vk::ImageHelper *imageToAdd)
 void ContextVk::removeImageWithTileMemory(const vk::ImageHelper *imageToRemove)
 {
     ASSERT(imageToRemove->useTileMemory());
-    (void)std::remove(mImagesWithTileMemory.begin(), mImagesWithTileMemory.end(), imageToRemove);
+    auto iter =
+        std::find(mImagesWithTileMemory.begin(), mImagesWithTileMemory.end(), imageToRemove);
+    if (iter != mImagesWithTileMemory.end())
+    {
+        mImagesWithTileMemory.erase(iter);
+    }
 }
 
 bool ContextVk::isImageWithTileMemoryFinalized(const vk::ImageHelper *image) const
 {
     ASSERT(image->useTileMemory());
-    if (std::find(mImagesWithTileMemory.begin(), mImagesWithTileMemory.end(), image) !=
-        mImagesWithTileMemory.end())
-    {
-        return false;
-    }
-    return true;
+    return std::find(mImagesWithTileMemory.begin(), mImagesWithTileMemory.end(), image) ==
+           mImagesWithTileMemory.end();
 }
 
 angle::Result ContextVk::finalizeImagesWithTileMemory()
 {
+    ASSERT(!mImagesWithTileMemory.empty());
+
+    // Check all images with tile memory to see if they have valid content or not. tile memory are
+    // transient, we must reallocate to keep data valid across command buffer boundary.
+    for (auto iter = mImagesWithTileMemory.begin(); iter != mImagesWithTileMemory.end();)
+    {
+        vk::ImageHelper *image = *iter;
+        // Other context may have submitted command buffer and causes it fallback already, so check
+        // again.
+        if (image->isVkImageContentDefined() && image->useTileMemory())
+        {
+            ANGLE_TRY(image->fallbackFromTileMemory(this));
+            ASSERT(!image->useTileMemory());
+            iter = mImagesWithTileMemory.erase(iter);
+        }
+        else
+        {
+            ++iter;
+        }
+    }
+
     if (getFeatures().supportsTileMemoryHeap.enabled)
     {
         // We dont explicitly unbind tileMemory here. They occur implicitly at endCommandBiuffer

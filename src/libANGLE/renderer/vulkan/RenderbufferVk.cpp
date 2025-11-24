@@ -396,10 +396,17 @@ void RenderbufferVk::onSubjectStateChange(angle::SubjectIndex index, angle::Subj
 {
     ASSERT(index == kRenderbufferImageSubjectIndex &&
            (message == angle::SubjectMessage::SubjectChanged ||
-            message == angle::SubjectMessage::InitializationComplete));
+            message == angle::SubjectMessage::InitializationComplete ||
+            message == angle::SubjectMessage::VkImageChanged));
+
+    if (message == angle::SubjectMessage::VkImageChanged)
+    {
+        mImageViews.release(mRenderer, mImage->getResourceUse());
+    }
 
     // Forward the notification to the parent class that the staging buffer changed.
-    if (message == angle::SubjectMessage::SubjectChanged)
+    if (message == angle::SubjectMessage::SubjectChanged ||
+        message == angle::SubjectMessage::VkImageChanged)
     {
         onStateChange(angle::SubjectMessage::SubjectChanged);
     }

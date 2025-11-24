@@ -313,6 +313,11 @@ class UtilsVk : angle::NonCopyable
                              vk::ImageHelper *dst,
                              const ClearImageParameters &params);
 
+    angle::Result copyImageFromTileMemory(ContextVk *contextVk,
+                                          const VkImageAspectFlags aspectFlags,
+                                          vk::ImageHelper *dstImage,
+                                          vk::ImageHelper *srcImage);
+
     angle::Result copyImage(ContextVk *contextVk,
                             vk::ImageHelper *dst,
                             const vk::ImageView *dstView,

@@ -2907,6 +2907,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // VK_QCOM_tile_memory_heap
     bool isTileMemoryCompatible() const { return mTileMemoryCompatible; }
     bool useTileMemory() const { return mUseTileMemory; }
+    angle::Result fallbackFromTileMemory(ContextVk *contextVk);
 
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
