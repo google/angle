@@ -155,8 +155,11 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
 
     void testSetUp() override
     {
-        glGenPerfMonitorsAMD(1, &monitor);
-        glBeginPerfMonitorAMD(monitor);
+        // Using local variable so that ASAN can catch "stack-buffer-overflow" error.
+        GLuint localMonitor;
+        glGenPerfMonitorsAMD(1, &localMonitor);
+        glBeginPerfMonitorAMD(localMonitor);
+        monitor = localMonitor;
     }
 
     void testTearDown() override

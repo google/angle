@@ -9665,7 +9665,7 @@ void Context::genPerfMonitors(GLsizei n, GLuint *monitors)
 {
     for (GLsizei monitorIndex = 0; monitorIndex < n; ++monitorIndex)
     {
-        monitors[n] = static_cast<GLuint>(monitorIndex);
+        monitors[monitorIndex] = static_cast<GLuint>(monitorIndex);
     }
 }
 
