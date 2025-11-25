@@ -2609,6 +2609,8 @@ class ImageHelper final : public Resource, public angle::Subject
     // as with renderbuffers or surface images.
     angle::Result flushAllStagedUpdates(ContextVk *contextVk);
 
+    // Returns true if any subresource within {levelGL, [layer, layer+layerCount)} has a staged
+    // update
     bool hasStagedUpdatesForSubresource(gl::LevelIndex levelGL,
                                         uint32_t layer,
                                         uint32_t layerCount) const;
@@ -2833,6 +2835,8 @@ class ImageHelper final : public Resource, public angle::Subject
     bool hasSubresourceDefinedStencilContent(gl::LevelIndex level,
                                              uint32_t layerIndex,
                                              uint32_t layerCount) const;
+    // Returns true if VkImage has valid content at any level/layer
+    bool isVkImageContentDefined() const;
     void invalidateEntireLevelContent(vk::ErrorContext *context, gl::LevelIndex level);
     void invalidateSubresourceContent(ContextVk *contextVk,
                                       gl::LevelIndex level,
@@ -3177,19 +3181,19 @@ class ImageHelper final : public Resource, public angle::Subject
                                           uint32_t layerIndex,
                                           uint32_t layerCount,
                                           VkImageAspectFlagBits aspect,
-                                          LevelContentDefinedMask *contentDefinedMask,
                                           bool *preferToKeepContentsDefinedOut,
                                           bool *layerLimitReachedOut);
     void restoreSubresourceContentImpl(gl::LevelIndex level,
                                        uint32_t layerIndex,
                                        uint32_t layerCount,
-                                       VkImageAspectFlagBits aspect,
-                                       LevelContentDefinedMask *contentDefinedMask);
+                                       VkImageAspectFlagBits aspect);
 
     // Use the following functions to access m*ContentDefined to make sure the correct level index
     // is used (i.e. vk::LevelIndex and not gl::LevelIndex).
-    LevelContentDefinedMask &getLevelContentDefined(LevelIndex level);
-    LevelContentDefinedMask &getLevelStencilContentDefined(LevelIndex level);
+    void setLevelContentDefined(LevelIndex level, const uint8_t layerRangeBits);
+    void clearLevelContentDefined(LevelIndex level, const uint8_t layerRangeBits);
+    void setLevelStencilContentDefined(LevelIndex level, const uint8_t layerRangeBits);
+    void clearLevelStencilContentDefined(LevelIndex level, const uint8_t layerRangeBits);
     const LevelContentDefinedMask &getLevelContentDefined(LevelIndex level) const;
     const LevelContentDefinedMask &getLevelStencilContentDefined(LevelIndex level) const;
 
@@ -3336,10 +3340,11 @@ class ImageHelper final : public Resource, public angle::Subject
     // the exact same clear value, we will detect and skip the clear call.
     Optional<ClearUpdate> mCurrentSingleClearValue;
 
-    // Track whether each subresource has defined contents.  Up to 8 layers are tracked per level,
-    // above which the contents are considered unconditionally defined.
-    gl::TexLevelArray<LevelContentDefinedMask> mContentDefined;
-    gl::TexLevelArray<LevelContentDefinedMask> mStencilContentDefined;
+    // Track whether each subresource of VkImage has defined contents. Up to 8 layers are tracked
+    // per level, above which the contents are considered unconditionally defined. Note that this is
+    // only tracking VkImage. Staged update will not set this bit until it is flushed.
+    gl::TexLevelArray<LevelContentDefinedMask> mVkImageContentDefined;
+    gl::TexLevelArray<LevelContentDefinedMask> mVkImageStencilContentDefined;
 
     // Used for memory allocation tracking.
     // Memory size allocated for the image in the memory during the initialization.

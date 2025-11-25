@@ -861,8 +861,8 @@ bool RenderPassAttachment::onAccessImpl(ResourceAccess access, uint32_t currentC
         // invalidated.
         mInvalidatedCmdCount = kInfiniteCmdCount;
         mDisabledCmdCount    = kInfiniteCmdCount;
-        // Return true to indicate that the store op should remain STORE and that mContentDefined
-        // should be set to true;
+        // Return true to indicate that the store op should remain STORE and that
+        // mVkImageContentDefined should be set to true;
         return true;
     }
     // Drawing to this attachment is being disabled.
@@ -871,8 +871,8 @@ bool RenderPassAttachment::onAccessImpl(ResourceAccess access, uint32_t currentC
         // The attachment was previously drawn while enabled, and so is no longer invalidated.
         mInvalidatedCmdCount = kInfiniteCmdCount;
         mDisabledCmdCount    = kInfiniteCmdCount;
-        // Return true to indicate that the store op should remain STORE and that mContentDefined
-        // should be set to true;
+        // Return true to indicate that the store op should remain STORE and that
+        // mVkImageContentDefined should be set to true;
         return true;
     }
 
@@ -5457,25 +5457,25 @@ void ImageHelper::resetCachedProperties()
     setEntireContentUndefined();
 }
 
-void ImageHelper::setEntireContentDefined()
+ANGLE_INLINE void ImageHelper::setEntireContentDefined()
 {
-    for (LevelContentDefinedMask &levelContentDefined : mContentDefined)
+    for (LevelContentDefinedMask &levelContentDefined : mVkImageContentDefined)
     {
         levelContentDefined.set();
     }
-    for (LevelContentDefinedMask &levelContentDefined : mStencilContentDefined)
+    for (LevelContentDefinedMask &levelContentDefined : mVkImageStencilContentDefined)
     {
         levelContentDefined.set();
     }
 }
 
-void ImageHelper::setEntireContentUndefined()
+ANGLE_INLINE void ImageHelper::setEntireContentUndefined()
 {
-    for (LevelContentDefinedMask &levelContentDefined : mContentDefined)
+    for (LevelContentDefinedMask &levelContentDefined : mVkImageContentDefined)
     {
         levelContentDefined.reset();
     }
-    for (LevelContentDefinedMask &levelContentDefined : mStencilContentDefined)
+    for (LevelContentDefinedMask &levelContentDefined : mVkImageStencilContentDefined)
     {
         levelContentDefined.reset();
     }
@@ -5485,11 +5485,11 @@ void ImageHelper::setEntireContentUndefined()
     // emulated formats have a clear staged.
 }
 
-void ImageHelper::setContentDefined(LevelIndex levelStart,
-                                    uint32_t levelCount,
-                                    uint32_t layerStart,
-                                    uint32_t layerCount,
-                                    VkImageAspectFlags aspectFlags)
+ANGLE_INLINE void ImageHelper::setContentDefined(LevelIndex levelStart,
+                                                 uint32_t levelCount,
+                                                 uint32_t layerStart,
+                                                 uint32_t layerCount,
+                                                 VkImageAspectFlags aspectFlags)
 {
     // Mark the range as defined.  Layers above 8 are discarded, and are always assumed to have
     // defined contents.
@@ -5507,35 +5507,49 @@ void ImageHelper::setContentDefined(LevelIndex levelStart,
 
         if ((aspectFlags & ~VK_IMAGE_ASPECT_STENCIL_BIT) != 0)
         {
-            getLevelContentDefined(level) |= layerRangeBits;
+            setLevelContentDefined(level, layerRangeBits);
         }
         if ((aspectFlags & VK_IMAGE_ASPECT_STENCIL_BIT) != 0)
         {
-            getLevelStencilContentDefined(level) |= layerRangeBits;
+            setLevelStencilContentDefined(level, layerRangeBits);
         }
     }
 }
 
-ImageHelper::LevelContentDefinedMask &ImageHelper::getLevelContentDefined(LevelIndex level)
+ANGLE_INLINE void ImageHelper::setLevelContentDefined(LevelIndex level,
+                                                      const uint8_t layerRangeBits)
 {
-    return mContentDefined[level.get()];
+    mVkImageContentDefined[level.get()] |= layerRangeBits;
 }
 
-ImageHelper::LevelContentDefinedMask &ImageHelper::getLevelStencilContentDefined(LevelIndex level)
+ANGLE_INLINE void ImageHelper::clearLevelContentDefined(LevelIndex level,
+                                                        const uint8_t layerRangeBits)
 {
-    return mStencilContentDefined[level.get()];
+    mVkImageContentDefined[level.get()] &= ~layerRangeBits;
 }
 
-const ImageHelper::LevelContentDefinedMask &ImageHelper::getLevelContentDefined(
+ANGLE_INLINE void ImageHelper::setLevelStencilContentDefined(LevelIndex level,
+                                                             const uint8_t layerRangeBits)
+{
+    mVkImageStencilContentDefined[level.get()] |= layerRangeBits;
+}
+
+ANGLE_INLINE void ImageHelper::clearLevelStencilContentDefined(LevelIndex level,
+                                                               const uint8_t layerRangeBits)
+{
+    mVkImageStencilContentDefined[level.get()] &= ~layerRangeBits;
+}
+
+ANGLE_INLINE const ImageHelper::LevelContentDefinedMask &ImageHelper::getLevelContentDefined(
     LevelIndex level) const
 {
-    return mContentDefined[level.get()];
+    return mVkImageContentDefined[level.get()];
 }
 
-const ImageHelper::LevelContentDefinedMask &ImageHelper::getLevelStencilContentDefined(
+ANGLE_INLINE const ImageHelper::LevelContentDefinedMask &ImageHelper::getLevelStencilContentDefined(
     LevelIndex level) const
 {
-    return mStencilContentDefined[level.get()];
+    return mVkImageStencilContentDefined[level.get()];
 }
 
 YcbcrConversionDesc ImageHelper::deriveConversionDesc(ErrorContext *context,
@@ -5683,8 +5697,8 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
                                         const void *compressionControl)
 {
     ASSERT(!valid());
-    ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
-    ASSERT(!IsAnySubresourceContentDefined(mStencilContentDefined));
+    ASSERT(!IsAnySubresourceContentDefined(mVkImageContentDefined));
+    ASSERT(!IsAnySubresourceContentDefined(mVkImageStencilContentDefined));
 
     Renderer *renderer = context->getRenderer();
 
@@ -6512,8 +6526,8 @@ void ImageHelper::init2DWeakReference(ErrorContext *context,
                                       bool isRobustResourceInitEnabled)
 {
     ASSERT(!valid());
-    ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
-    ASSERT(!IsAnySubresourceContentDefined(mStencilContentDefined));
+    ASSERT(!IsAnySubresourceContentDefined(mVkImageContentDefined));
+    ASSERT(!IsAnySubresourceContentDefined(mVkImageStencilContentDefined));
     vk::Renderer *renderer = context->getRenderer();
 
     gl_vk::GetExtent(glExtents, &mExtents);
@@ -6570,8 +6584,8 @@ angle::Result ImageHelper::initStaging(ErrorContext *context,
                                        uint32_t layerCount)
 {
     ASSERT(!valid());
-    ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
-    ASSERT(!IsAnySubresourceContentDefined(mStencilContentDefined));
+    ASSERT(!IsAnySubresourceContentDefined(mVkImageContentDefined));
+    ASSERT(!IsAnySubresourceContentDefined(mVkImageStencilContentDefined));
     vk::Renderer *renderer = context->getRenderer();
 
     mImageType          = imageType;
@@ -6639,8 +6653,8 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
 {
     ASSERT(!valid());
     ASSERT(samples > 1);
-    ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
-    ASSERT(!IsAnySubresourceContentDefined(mStencilContentDefined));
+    ASSERT(!IsAnySubresourceContentDefined(mVkImageContentDefined));
+    ASSERT(!IsAnySubresourceContentDefined(mVkImageStencilContentDefined));
 
     // The image is used as either color or depth/stencil attachment.  Additionally, its memory is
     // lazily allocated as the contents are discarded at the end of the renderpass and with tiling
@@ -8751,7 +8765,7 @@ void ImageHelper::invalidateEntireLevelContent(vk::ErrorContext *context, gl::Le
     invalidateSubresourceContentImpl(
         context, level, 0, mLayerCount,
         static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT),
-        &getLevelContentDefined(toVkLevel(level)), nullptr, nullptr);
+        nullptr, nullptr);
 }
 
 void ImageHelper::invalidateSubresourceContent(ContextVk *contextVk,
@@ -8764,7 +8778,6 @@ void ImageHelper::invalidateSubresourceContent(ContextVk *contextVk,
         static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT);
     bool layerLimitReached = false;
     invalidateSubresourceContentImpl(contextVk, level, layerIndex, layerCount, aspect,
-                                     &getLevelContentDefined(toVkLevel(level)),
                                      preferToKeepContentsDefinedOut, &layerLimitReached);
     if (layerLimitReached)
     {
@@ -8779,8 +8792,7 @@ void ImageHelper::invalidateEntireLevelStencilContent(vk::ErrorContext *context,
                                                       gl::LevelIndex level)
 {
     invalidateSubresourceContentImpl(context, level, 0, mLayerCount, VK_IMAGE_ASPECT_STENCIL_BIT,
-                                     &getLevelStencilContentDefined(toVkLevel(level)), nullptr,
-                                     nullptr);
+                                     nullptr, nullptr);
 }
 
 void ImageHelper::invalidateSubresourceStencilContent(ContextVk *contextVk,
@@ -8792,7 +8804,6 @@ void ImageHelper::invalidateSubresourceStencilContent(ContextVk *contextVk,
     bool layerLimitReached = false;
     invalidateSubresourceContentImpl(contextVk, level, layerIndex, layerCount,
                                      VK_IMAGE_ASPECT_STENCIL_BIT,
-                                     &getLevelStencilContentDefined(toVkLevel(level)),
                                      preferToKeepContentsDefinedOut, &layerLimitReached);
     if (layerLimitReached)
     {
@@ -8807,7 +8818,6 @@ void ImageHelper::invalidateSubresourceContentImpl(vk::ErrorContext *context,
                                                    uint32_t layerIndex,
                                                    uint32_t layerCount,
                                                    VkImageAspectFlagBits aspect,
-                                                   LevelContentDefinedMask *contentDefinedMask,
                                                    bool *preferToKeepContentsDefinedOut,
                                                    bool *layerLimitReachedOut)
 {
@@ -8865,7 +8875,20 @@ void ImageHelper::invalidateSubresourceContentImpl(vk::ErrorContext *context,
 
     uint8_t layerRangeBits =
         GetContentDefinedLayerRangeBits(layerIndex, layerCount, kMaxContentDefinedLayerCount);
-    *contentDefinedMask &= static_cast<uint8_t>(~layerRangeBits);
+    LevelIndex levelVk = toVkLevel(level);
+    if (aspect == VK_IMAGE_ASPECT_STENCIL_BIT)
+    {
+        clearLevelStencilContentDefined(levelVk, layerRangeBits);
+    }
+    else
+    {
+        clearLevelContentDefined(levelVk, layerRangeBits);
+    }
+
+    // The VkImage data has been invalidated, the previous storeOp maybe turned into DontCare, which
+    // means there is no grantee that it still contains mCurrentSingleClearValue data. THis is also
+    // consistent with mVkImageContentDefined since we have just cleared the bits.
+    mCurrentSingleClearValue.reset();
 
     // If there are emulated channels, stage a clear to make sure those channels continue to contain
     // valid values.
@@ -8886,72 +8909,60 @@ void ImageHelper::restoreSubresourceContent(gl::LevelIndex level,
 {
     restoreSubresourceContentImpl(
         level, layerIndex, layerCount,
-        static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT),
-        &getLevelContentDefined(toVkLevel(level)));
+        static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT));
 }
 
 void ImageHelper::restoreSubresourceStencilContent(gl::LevelIndex level,
                                                    uint32_t layerIndex,
                                                    uint32_t layerCount)
 {
-    restoreSubresourceContentImpl(level, layerIndex, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT,
-                                  &getLevelStencilContentDefined(toVkLevel(level)));
+    restoreSubresourceContentImpl(level, layerIndex, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT);
 }
 
 void ImageHelper::restoreSubresourceContentImpl(gl::LevelIndex level,
                                                 uint32_t layerIndex,
                                                 uint32_t layerCount,
-                                                VkImageAspectFlagBits aspect,
-                                                LevelContentDefinedMask *contentDefinedMask)
+                                                VkImageAspectFlagBits aspect)
 {
     if (layerIndex >= kMaxContentDefinedLayerCount)
     {
         return;
     }
 
-    uint8_t layerRangeBits =
-        GetContentDefinedLayerRangeBits(layerIndex, layerCount, kMaxContentDefinedLayerCount);
-
-    switch (aspect)
-    {
-        case VK_IMAGE_ASPECT_DEPTH_BIT:
-            // Emulated depth channel should never have been marked invalid, so it can retain its
-            // cleared value.
-            ASSERT(!hasEmulatedDepthChannel() ||
-                   (contentDefinedMask->bits() & layerRangeBits) == layerRangeBits);
-            break;
-        case VK_IMAGE_ASPECT_STENCIL_BIT:
-            // Emulated stencil channel should never have been marked invalid, so it can retain its
-            // cleared value.
-            ASSERT(!hasEmulatedStencilChannel() ||
-                   (contentDefinedMask->bits() & layerRangeBits) == layerRangeBits);
-            break;
-        case VK_IMAGE_ASPECT_COLOR_BIT:
-        {
-            // This function is called on attachments during a render pass when it's determined that
-            // they should no longer be considered invalidated.  For an attachment with emulated
-            // format that has extra channels, invalidateSubresourceContentImpl may have proactively
-            // inserted a clear so that the extra channels continue to have defined values.
-            // |FramebufferVk::invalidateImpl| closes the render pass right away however in that
-            // case, so it should be impossible for the contents of such formats to need to be
-            // restored.
-            const bool hasClearAfterInvalidateUpdate =
-                getLevelUpdates(level) != nullptr && getLevelUpdates(level)->size() != 0 &&
-                getLevelUpdates(level)->at(0).updateSource == UpdateSource::ClearAfterInvalidate;
-            ASSERT(!hasEmulatedImageChannels() || !hasClearAfterInvalidateUpdate);
-
-            break;
-        }
-        default:
-            UNREACHABLE();
-            break;
-    }
+    // This function is called on attachments during a render pass when it's determined that
+    // they should no longer be considered invalidated.  For an attachment with emulated
+    // format that has extra channels, invalidateSubresourceContentImpl may have proactively
+    // inserted a clear so that the extra channels continue to have defined values.
+    // |FramebufferVk::invalidateImpl| closes the render pass right away however in that
+    // case, so it should be impossible for the contents of such formats to need to be
+    // restored.
+    const bool hasClearAfterInvalidateUpdate =
+        getLevelUpdates(level) != nullptr && getLevelUpdates(level)->size() != 0 &&
+        getLevelUpdates(level)->at(0).updateSource == UpdateSource::ClearAfterInvalidate;
+    ASSERT(!hasEmulatedImageChannels() || !hasClearAfterInvalidateUpdate);
 
     // Additionally, as the resource has been rewritten to in the render pass, its no longer cleared
     // to the cached value.
     mCurrentSingleClearValue.reset();
 
-    *contentDefinedMask |= layerRangeBits;
+    uint8_t layerRangeBits =
+        GetContentDefinedLayerRangeBits(layerIndex, layerCount, kMaxContentDefinedLayerCount);
+    LevelIndex levelVk = toVkLevel(level);
+
+    if (aspect == VK_IMAGE_ASPECT_STENCIL_BIT)
+    {
+        setLevelStencilContentDefined(levelVk, layerRangeBits);
+    }
+    else
+    {
+        setLevelContentDefined(levelVk, layerRangeBits);
+    }
+}
+
+bool ImageHelper::isVkImageContentDefined() const
+{
+    return IsAnySubresourceContentDefined(mVkImageContentDefined) ||
+           IsAnySubresourceContentDefined(mVkImageStencilContentDefined);
 }
 
 angle::Result ImageHelper::stagePartialClear(ContextVk *contextVk,
@@ -9607,10 +9618,6 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
             // Note that this set command handles combined or separate depth/stencil clears.
             deferredClears->store(deferredClearIndex, update.aspectFlags, update.value);
 
-            // Do not call onWrite as it removes mCurrentSingleClearValue, but instead call
-            // setContentDefined directly.
-            setContentDefined(toVkLevel(levelGL), 1, layer, layerCount, update.aspectFlags);
-
             // We process the updates again to erase any clears for this level.
             removeSingleSubresourceStagedUpdates(contextVk, levelGL, layer, layerCount);
             return angle::Result::Continue;
@@ -10025,8 +10032,6 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 mCurrentSingleClearValue.value() == update.data.clear)
             {
                 ASSERT(levelGLStart + 1 == levelGLEnd);
-                setContentDefined(toVkLevel(levelGLStart), 1, layerStart, layerEnd - layerStart,
-                                  update.data.clear.aspectFlags);
                 ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_LOW,
                                       "Repeated Clear on framebuffer attachment dropped");
                 update.release(renderer);
