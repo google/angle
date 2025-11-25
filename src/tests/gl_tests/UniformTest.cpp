@@ -2887,6 +2887,182 @@ TEST_P(UniformTestES31, UniformReorderDoesNotBreakStructUniformsV2)
     ASSERT_NE(program, 0u);
 }
 
+// Test that with the PackedSPIRVBlockEncoder applies to "defaultUniform" ubo interface block,
+// it does not incorrectly interfere with other structs that are also named "defaultUniforms"
+TEST_P(UniformTestES31, PackedEncoderDoesNotApplyToStructNamedDefaultUniforms)
+{
+    setWindowWidth(1);
+    setWindowHeight(1);
+    constexpr char kFragShader[] = R"(#version 310 es
+        layout(std140, binding=0) buffer debugBlock {
+            uvec4 data[];
+        };
+
+        precision mediump float;
+        uniform vec3 vec3Uniform1;
+        uniform vec3 vec3Uniform2;
+        struct defaultUniforms {
+          vec3 vec3Uniform1;
+          vec3 vec3Uniform2;
+        };
+
+        out highp vec4 my_color;
+        void main() {
+            defaultUniforms nonDefaultUniform = defaultUniforms(vec3(1.0, 2.0, 3.0), vec3(4.0, 5.0, 6.0));
+            data[0] = floatBitsToUint(vec4(nonDefaultUniform.vec3Uniform1.x, nonDefaultUniform.vec3Uniform1.y, nonDefaultUniform.vec3Uniform1.z, 1.0));
+            data[1] = floatBitsToUint(vec4(nonDefaultUniform.vec3Uniform2.x, nonDefaultUniform.vec3Uniform2.y, nonDefaultUniform.vec3Uniform2.z, 1.0));
+            data[2] = floatBitsToUint(vec4(vec3Uniform1.x, vec3Uniform1.y, vec3Uniform1.z, 1.0));
+            data[3] = floatBitsToUint(vec4(vec3Uniform2.x, vec3Uniform2.y, vec3Uniform2.z, 1.0));
+            my_color = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
+    GLuint program               = CompileProgram(essl31_shaders::vs::Simple(), kFragShader);
+    ASSERT_NE(program, 0u);
+    glUseProgram(program);
+
+    GLint vec3Uniform1Location = glGetUniformLocation(program, "vec3Uniform1");
+    ASSERT_NE(vec3Uniform1Location, -1);
+    GLfloat vec3Uniform1Value[3] = {11.0f, 12.0f, 13.0f};
+    glUniform3fv(vec3Uniform1Location, 1, vec3Uniform1Value);
+
+    GLint vec3Uniform2Location = glGetUniformLocation(program, "vec3Uniform2");
+    ASSERT_NE(vec3Uniform2Location, -1);
+    GLfloat vec3Uniform2Value[3] = {14.0f, 15.0f, 16.0f};
+    glUniform3fv(vec3Uniform2Location, 1, vec3Uniform2Value);
+
+    constexpr GLint kBufferSize = 4 * 4 * sizeof(GLuint);
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, nullptr, GL_STATIC_DRAW);
+    glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, buffer, 0, kBufferSize);
+
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    ASSERT_GL_NO_ERROR();
+
+    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_GL_NO_ERROR();
+    ASSERT(ptr);
+    float *data = static_cast<float *>(ptr);
+
+    ASSERT_EQ(data[0], 1);
+    ASSERT_EQ(data[1], 2);
+    ASSERT_EQ(data[2], 3);
+    ASSERT_EQ(data[3], 1);
+    ASSERT_EQ(data[4], 4);
+    ASSERT_EQ(data[5], 5);
+    ASSERT_EQ(data[6], 6);
+    ASSERT_EQ(data[7], 1);
+    ASSERT_EQ(data[8], 11);
+    ASSERT_EQ(data[9], 12);
+    ASSERT_EQ(data[10], 13);
+    ASSERT_EQ(data[11], 1);
+    ASSERT_EQ(data[12], 14);
+    ASSERT_EQ(data[13], 15);
+    ASSERT_EQ(data[14], 16);
+    ASSERT_EQ(data[15], 1);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    glDeleteProgram(program);
+}
+
+// Test that with the PackedSPIRVBlockEncoder applies to "defaultUniform" ubo interface block,
+// it does not incorrectly interfere with other ubo created that are also named "defaultUniforms"
+TEST_P(UniformTestES31, PackedEncoderDoesNotApplyToCustomizedUBONamedDefaultUniforms)
+{
+    setWindowWidth(1);
+    setWindowHeight(1);
+
+    constexpr char kFragShader[] = R"(#version 310 es
+        layout(std140, binding=0) buffer debugBlock {
+            uvec4 data[];
+        };
+
+        precision mediump float;
+        uniform vec3 vec3Uniform1;
+        uniform vec3 vec3Uniform2;
+        layout(std140) uniform defaultUniforms {
+            vec3 vec3Uniform1;
+            vec3 vec3Uniform2;
+        } defaultUniformsBufferInstance;
+
+        out highp vec4 my_color;
+        void main() {
+            data[0] = floatBitsToUint(vec4(defaultUniformsBufferInstance.vec3Uniform1.x, defaultUniformsBufferInstance.vec3Uniform1.y, defaultUniformsBufferInstance.vec3Uniform1.z, 1.0));
+            data[1] = floatBitsToUint(vec4(defaultUniformsBufferInstance.vec3Uniform2.x, defaultUniformsBufferInstance.vec3Uniform2.y, defaultUniformsBufferInstance.vec3Uniform2.z, 1.0));
+            data[2] = floatBitsToUint(vec4(vec3Uniform1.x, vec3Uniform1.y, vec3Uniform1.z, 1.0));
+            data[3] = floatBitsToUint(vec4(vec3Uniform2.x, vec3Uniform2.y, vec3Uniform2.z, 1.0));
+            my_color = vec4(1.0, 0.0, 0.0, 1.0);
+        })";
+
+    GLuint program = CompileProgram(essl31_shaders::vs::Simple(), kFragShader);
+    ASSERT_NE(program, 0u);
+    glUseProgram(program);
+
+    GLint vec3Uniform1Location = glGetUniformLocation(program, "vec3Uniform1");
+    ASSERT_NE(vec3Uniform1Location, -1);
+    GLfloat vec3Uniform1Value[3] = {11.0f, 12.0f, 13.0f};
+    glUniform3fv(vec3Uniform1Location, 1, vec3Uniform1Value);
+
+    GLint vec3Uniform2Location = glGetUniformLocation(program, "vec3Uniform2");
+    ASSERT_NE(vec3Uniform2Location, -1);
+    GLfloat vec3Uniform2Value[3] = {14.0f, 15.0f, 16.0f};
+    glUniform3fv(vec3Uniform2Location, 1, vec3Uniform2Value);
+
+    std::vector<float> uboData;
+    uboData.insert(uboData.end(), {1.0f, 2.0f, 3.0f, 0.0f});
+    uboData.insert(uboData.end(), {4.0f, 5.0f, 6.0f, 0.0f});
+    GLBuffer ubo;
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
+    glBufferData(GL_UNIFORM_BUFFER, uboData.size() * sizeof(float), uboData.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    GLuint uboIndex = glGetUniformBlockIndex(program, "defaultUniforms");
+    EXPECT_NE(GL_INVALID_INDEX, uboIndex);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, uboData.size() * sizeof(float));
+    glUniformBlockBinding(program, uboIndex, 0);
+
+    constexpr GLint kBufferSize = 4 * 4 * sizeof(GLuint);
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, nullptr, GL_STATIC_DRAW);
+    glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, buffer, 0, kBufferSize);
+
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    ASSERT_GL_NO_ERROR();
+
+    void *ptr = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_GL_NO_ERROR();
+    ASSERT(ptr);
+    float *data = static_cast<float *>(ptr);
+
+    ASSERT_EQ(data[0], 1);
+    ASSERT_EQ(data[1], 2);
+    ASSERT_EQ(data[2], 3);
+    ASSERT_EQ(data[3], 1);
+    ASSERT_EQ(data[4], 4);
+    ASSERT_EQ(data[5], 5);
+    ASSERT_EQ(data[6], 6);
+    ASSERT_EQ(data[7], 1);
+    ASSERT_EQ(data[8], 11);
+    ASSERT_EQ(data[9], 12);
+    ASSERT_EQ(data[10], 13);
+    ASSERT_EQ(data[11], 1);
+    ASSERT_EQ(data[12], 14);
+    ASSERT_EQ(data[13], 15);
+    ASSERT_EQ(data[14], 16);
+    ASSERT_EQ(data[15], 1);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    glDeleteProgram(program);
+}
+
 // Test a uniform struct containing a non-square matrix and a boolean.
 // Minimal test case for a bug revealed by dEQP tests.
 TEST_P(UniformTestES3, StructWithNonSquareMatrixAndBool)

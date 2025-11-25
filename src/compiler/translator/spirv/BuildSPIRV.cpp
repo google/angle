@@ -146,7 +146,13 @@ ShaderVariable SpirvTypeToShaderVariable(const SpirvType &type)
     return ToShaderVariable(type.block, glType, type.arraySizes, isRowMajor);
 }
 
-// The following function encodes a variable in a std140 or std430 block.  The variable could be:
+// The following function encodes a variable in a
+// 1) std140 layout block
+// 2) std430 layout block
+// 3) tighter packed layout block. This only applies to default uniform buffer block, and when
+// 16-bit float is allowed in the default uniform buffer block
+//
+// The variable could be:
 //
 // - An interface block: In this case, |decorationsBlob| is provided and SPIR-V decorations are
 //   output to this blob.
@@ -157,12 +163,23 @@ ShaderVariable SpirvTypeToShaderVariable(const SpirvType &type)
 //
 uint32_t Encode(const ShaderVariable &var,
                 bool isStd140,
+                bool isDefaultUniform,
+                bool usePackedEncoder,
                 spirv::IdRef blockTypeId,
                 spirv::Blob *decorationsBlob)
 {
     Std140BlockEncoder std140;
     Std430BlockEncoder std430;
-    BlockLayoutEncoder *encoder = isStd140 ? &std140 : &std430;
+    PackedSPIRVBlockEncoder packSPIRV;
+    BlockLayoutEncoder *encoder = nullptr;
+    if (isDefaultUniform && usePackedEncoder)
+    {
+        encoder = &packSPIRV;
+    }
+    else
+    {
+        encoder = isStd140 ? &std140 : &std430;
+    }
 
     ASSERT(var.isStruct());
     encoder->enterAggregateType(var);
@@ -177,7 +194,8 @@ uint32_t Encode(const ShaderVariable &var,
         if (fieldVar.isStruct())
         {
             // For structs, recursively encode it.
-            const uint32_t structSize = Encode(fieldVar, isStd140, {}, nullptr);
+            const uint32_t structSize =
+                Encode(fieldVar, isStd140, isDefaultUniform, usePackedEncoder, {}, nullptr);
 
             encoder->enterAggregateType(fieldVar);
             fieldInfo = encoder->encodeArrayOfPreEncodedStructs(structSize, fieldVar.arraySizes);
@@ -217,11 +235,23 @@ uint32_t Encode(const ShaderVariable &var,
     return static_cast<uint32_t>(encoder->getCurrentOffset());
 }
 
-uint32_t GetArrayStrideInBlock(const ShaderVariable &var, bool isStd140)
+uint32_t GetArrayStrideInBlock(const ShaderVariable &var,
+                               bool isStd140,
+                               bool isDefaultUniform,
+                               bool usePackedEncoder)
 {
     Std140BlockEncoder std140;
     Std430BlockEncoder std430;
-    BlockLayoutEncoder *encoder = isStd140 ? &std140 : &std430;
+    PackedSPIRVBlockEncoder packSPIRV;
+    BlockLayoutEncoder *encoder = nullptr;
+    if (isDefaultUniform && usePackedEncoder)
+    {
+        encoder = &packSPIRV;
+    }
+    else
+    {
+        encoder = isStd140 ? &std140 : &std430;
+    }
 
     ASSERT(var.isArray());
 
@@ -232,7 +262,8 @@ uint32_t GetArrayStrideInBlock(const ShaderVariable &var, bool isStd140)
         ShaderVariable element = var;
         element.arraySizes.clear();
 
-        const uint32_t structSize = Encode(element, isStd140, {}, nullptr);
+        const uint32_t structSize =
+            Encode(element, isStd140, isDefaultUniform, usePackedEncoder, {}, nullptr);
 
         // Stride is struct size by inner array size
         return structSize * var.getInnerArraySizeProduct();
@@ -426,6 +457,9 @@ void SpirvTypeSpec::inferDefaults(const TType &type,
                                           type.getBasicType() == EbtBool;
         }
 
+        isDefaultUniform = (type.getInterfaceBlock() != nullptr &&
+                            type.getInterfaceBlock()->isDefaultUniformBlock());
+
         if (precision == SPIRVPrecisionChoice::Unset)
         {
             // For a struct uniform and a float uniform declared as below:
@@ -461,9 +495,7 @@ void SpirvTypeSpec::inferDefaults(const TType &type,
 
             if ((type.getBasicType() == EbtInterfaceBlock || type.getBasicType() == EbtFloat ||
                  type.getBasicType() == EbtStruct) &&
-                type.getQualifier() == EvqUniform &&
-                (type.getInterfaceBlock() != nullptr &&
-                 type.getInterfaceBlock()->isDefaultUniformBlock()) &&
+                type.getQualifier() == EvqUniform && isDefaultUniform &&
                 type.getPrecision() < EbpHigh)
             {
                 precision = transformFloatUniformToFP16 ? SPIRVPrecisionChoice::UseFP16
@@ -1233,13 +1265,15 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
 
         const bool isInterfaceBlock = block != nullptr && block->isInterfaceBlock();
         const bool isStd140         = type.typeSpec.blockStorage != EbsStd430;
+        const bool usePackEncoder   = mCompileOptions.transformFloatUniformTo16Bits;
 
         if (!type.arraySizes.empty() && !isInterfaceBlock)
         {
             // Write the ArrayStride decoration for arrays inside interface blocks.  An array of
             // interface blocks doesn't need a stride.
             const ShaderVariable var = SpirvTypeToShaderVariable(type);
-            const uint32_t stride    = GetArrayStrideInBlock(var, isStd140);
+            const uint32_t stride    = GetArrayStrideInBlock(
+                var, isStd140, type.typeSpec.isDefaultUniform, usePackEncoder);
 
             spirv::WriteDecorate(&mSpirvDecorations, typeId, spv::DecorationArrayStride,
                                  {spirv::LiteralInteger(stride)});
@@ -1248,7 +1282,8 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
         {
             // Write the Offset decoration for interface blocks and structs in them.
             const ShaderVariable var = SpirvTypeToShaderVariable(type);
-            Encode(var, isStd140, typeId, &mSpirvDecorations);
+            Encode(var, isStd140, type.typeSpec.isDefaultUniform, usePackEncoder, typeId,
+                   &mSpirvDecorations);
         }
     }
 

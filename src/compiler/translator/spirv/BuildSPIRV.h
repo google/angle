@@ -57,6 +57,10 @@ class SpirvTypeSpec
     // except for non-block non-array types.
     TLayoutBlockStorage blockStorage = EbsUnspecified;
 
+    // The encoder ANGLE uses to calculate the member offsets within the default uniform block is
+    // different from encoder used to calculate the member offsets in other interface blocks.
+    bool isDefaultUniform = false;
+
     // If a structure is used in two I/O blocks or output varyings with and without the invariant
     // qualifier, it would also have to generate two SPIR-V types, as its fields' Invariant
     // decorations would be different.

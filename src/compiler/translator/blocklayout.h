@@ -182,6 +182,30 @@ class StubBlockEncoder : public BlockLayoutEncoder
     {}
 };
 
+class PackedSPIRVBlockEncoder : public BlockLayoutEncoder
+{
+  public:
+    PackedSPIRVBlockEncoder();
+
+    void enterAggregateType(const ShaderVariable &structVar) override;
+    void exitAggregateType(const ShaderVariable &structVar) override;
+
+  protected:
+    void getBlockLayoutInfo(GLenum type,
+                            const std::vector<unsigned int> &arraySizes,
+                            bool isRowMajorMatrix,
+                            int *arrayStrideOut,
+                            int *matrixStrideOut) override;
+    void advanceOffset(GLenum type,
+                       const std::vector<unsigned int> &arraySizes,
+                       bool isRowMajorMatrix,
+                       int arrayStride,
+                       int matrixStride) override;
+
+    virtual size_t getBaseAlignment(const ShaderVariable &variable) const;
+    virtual size_t getTypeBaseAlignment(GLenum type, bool isRowMajorMatrix) const;
+};
+
 // Block layout according to the std140 block layout
 // See "Standard Uniform Block Layout" in Section 2.11.6 of the OpenGL ES 3.0 specification
 

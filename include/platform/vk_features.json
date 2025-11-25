@@ -2144,8 +2144,8 @@
                 "so this we have to disable our optimization that drops the clears on invalidate."
             ],
             "issue": "https://issuetracker.google.com/462484277"
-    	},
-	{
+        },
+        {
             "name": "supports_tile_memory_heap",
             "category": "Features",
             "description": [
@@ -2153,7 +2153,7 @@
             ],
             "issue": "https://issuetracker.google.com/447633563"
         },
-	{
+        {
             "name": "simulate_tile_memory_for_testing",
             "category": "Features",
             "description": [

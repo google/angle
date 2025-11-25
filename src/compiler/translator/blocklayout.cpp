@@ -290,6 +290,105 @@ void StubBlockEncoder::getBlockLayoutInfo(GLenum type,
     *matrixStrideOut = 0;
 }
 
+// PackedSPIRVBlockEncoder implementation.
+PackedSPIRVBlockEncoder::PackedSPIRVBlockEncoder() {}
+
+void PackedSPIRVBlockEncoder::enterAggregateType(const ShaderVariable &structVar)
+{
+    // Placeholder implementations copied from Std140BlockEncoder.
+    align(getBaseAlignment(structVar));
+}
+
+void PackedSPIRVBlockEncoder::exitAggregateType(const ShaderVariable &structVar)
+{
+    // Placeholder implementations copied from Std140BlockEncoder.
+    align(getBaseAlignment(structVar));
+}
+
+void PackedSPIRVBlockEncoder::getBlockLayoutInfo(GLenum type,
+                                                 const std::vector<unsigned int> &arraySizes,
+                                                 bool isRowMajorMatrix,
+                                                 int *arrayStrideOut,
+                                                 int *matrixStrideOut)
+{
+    // Placeholder implementations copied from Std140BlockEncoder.
+    // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
+    ASSERT(gl::VariableComponentSize(gl::VariableComponentType(type)) == kBytesPerComponent);
+
+    size_t baseAlignment = 0;
+    int matrixStride     = 0;
+    int arrayStride      = 0;
+
+    if (gl::IsMatrixType(type))
+    {
+        baseAlignment = getTypeBaseAlignment(type, isRowMajorMatrix);
+        matrixStride  = static_cast<int>(getTypeBaseAlignment(type, isRowMajorMatrix));
+
+        if (!arraySizes.empty())
+        {
+            const int numRegisters = gl::MatrixRegisterCount(type, isRowMajorMatrix);
+            arrayStride =
+                static_cast<int>(getTypeBaseAlignment(type, isRowMajorMatrix) * numRegisters);
+        }
+    }
+    else if (!arraySizes.empty())
+    {
+        baseAlignment = static_cast<int>(getTypeBaseAlignment(type, false));
+        arrayStride   = static_cast<int>(getTypeBaseAlignment(type, false));
+    }
+    else
+    {
+        const size_t numComponents = static_cast<size_t>(gl::VariableComponentCount(type));
+        baseAlignment              = ComponentAlignment(numComponents);
+    }
+
+    align(baseAlignment);
+
+    *matrixStrideOut = matrixStride;
+    *arrayStrideOut  = arrayStride;
+}
+
+void PackedSPIRVBlockEncoder::advanceOffset(GLenum type,
+                                            const std::vector<unsigned int> &arraySizes,
+                                            bool isRowMajorMatrix,
+                                            int arrayStride,
+                                            int matrixStride)
+{
+    // Placeholder implementations copied from Std140BlockEncoder.
+    if (!arraySizes.empty())
+    {
+        angle::base::CheckedNumeric<size_t> checkedOffset(arrayStride);
+        checkedOffset *= gl::ArraySizeProduct(arraySizes);
+        checkedOffset += mCurrentOffset;
+        mCurrentOffset = checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
+    }
+    else if (gl::IsMatrixType(type))
+    {
+        angle::base::CheckedNumeric<size_t> checkedOffset(matrixStride);
+        checkedOffset *= gl::MatrixRegisterCount(type, isRowMajorMatrix);
+        checkedOffset += mCurrentOffset;
+        mCurrentOffset = checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
+    }
+    else
+    {
+        angle::base::CheckedNumeric<size_t> checkedOffset(mCurrentOffset);
+        checkedOffset += gl::VariableComponentCount(type);
+        mCurrentOffset = checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
+    }
+}
+
+size_t PackedSPIRVBlockEncoder::getBaseAlignment(const ShaderVariable &variable) const
+{
+    // Placeholder implementations copied from Std140BlockEncoder.
+    return kComponentsPerRegister;
+}
+
+size_t PackedSPIRVBlockEncoder::getTypeBaseAlignment(GLenum type, bool isRowMajorMatrix) const
+{
+    // Placeholder implementations copied from Std140BlockEncoder.
+    return kComponentsPerRegister;
+}
+
 // Std140BlockEncoder implementation.
 Std140BlockEncoder::Std140BlockEncoder() {}
 
