@@ -1887,8 +1887,6 @@ angle::Result Renderer11::drawArrays(const gl::Context *context,
 
     Context11 *context11 = GetImplAs<Context11>(context);
 
-    ANGLE_TRY(markRawBufferUsage(context));
-
     ProgramExecutableD3D *executableD3D = mStateManager.getProgramExecutableD3D();
     GLsizei adjustedInstanceCount       = GetAdjustedInstanceCount(executableD3D, instanceCount);
 
@@ -1948,8 +1946,6 @@ angle::Result Renderer11::drawElements(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    ANGLE_TRY(markRawBufferUsage(context));
-
     // Transform feedback is not allowed for DrawElements, this error should have been caught at the
     // API validation layer.
     const gl::State &glState = context->getState();
@@ -1992,8 +1988,6 @@ angle::Result Renderer11::drawArraysIndirect(const gl::Context *context, const v
         return angle::Result::Continue;
     }
 
-    ANGLE_TRY(markRawBufferUsage(context));
-
     const gl::State &glState = context->getState();
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
@@ -2018,8 +2012,6 @@ angle::Result Renderer11::drawElementsIndirect(const gl::Context *context, const
     {
         return angle::Result::Continue;
     }
-
-    ANGLE_TRY(markRawBufferUsage(context));
 
     const gl::State &glState = context->getState();
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
@@ -3107,13 +3099,6 @@ angle::Result Renderer11::loadExecutable(d3d::Context *context,
             *outExecutable = new ShaderExecutable11(function, length, std::move(geometryShader));
         }
         break;
-        case gl::ShaderType::Compute:
-        {
-            d3d11::ComputeShader computeShader;
-            ANGLE_TRY(allocateResource(context, shaderData, &computeShader));
-            *outExecutable = new ShaderExecutable11(function, length, std::move(computeShader));
-        }
-        break;
         default:
             ANGLE_HR_UNREACHABLE(context);
     }
@@ -3142,9 +3127,6 @@ angle::Result Renderer11::compileToExecutable(d3d::Context *context,
             break;
         case gl::ShaderType::Geometry:
             profileStream << "gs";
-            break;
-        case gl::ShaderType::Compute:
-            profileStream << "cs";
             break;
         default:
             ANGLE_HR_UNREACHABLE(context);
@@ -4198,63 +4180,12 @@ gl::Version Renderer11::getMaxSupportedESVersion() const
 
 gl::Version Renderer11::getMaxConformantESVersion() const
 {
-    // 3.1 support is in progress.
-    return std::min(getMaxSupportedESVersion(), gl::Version(3, 0));
+    return getMaxSupportedESVersion();
 }
 
 DebugAnnotatorContext11 *Renderer11::getDebugAnnotatorContext()
 {
     return &mAnnotatorContext;
-}
-
-angle::Result Renderer11::dispatchCompute(const gl::Context *context,
-                                          GLuint numGroupsX,
-                                          GLuint numGroupsY,
-                                          GLuint numGroupsZ)
-{
-    const gl::State &glState                = context->getState();
-    const gl::ProgramExecutable *executable = glState.getProgramExecutable();
-    if (executable->getShaderStorageBlocks().size() > 0 ||
-        executable->getAtomicCounterBuffers().size() > 0)
-    {
-        ANGLE_TRY(markRawBufferUsage(context));
-    }
-    ANGLE_TRY(markTypedBufferUsage(context));
-    ANGLE_TRY(mStateManager.updateStateForCompute(context, numGroupsX, numGroupsY, numGroupsZ));
-    mDeviceContext->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
-
-    return angle::Result::Continue;
-}
-angle::Result Renderer11::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
-{
-    const auto &glState                     = context->getState();
-    const gl::ProgramExecutable *executable = glState.getProgramExecutable();
-    if (executable->getShaderStorageBlocks().size() > 0 ||
-        executable->getAtomicCounterBuffers().size() > 0)
-    {
-        ANGLE_TRY(markRawBufferUsage(context));
-    }
-
-    auto *dispatchIndirectBuffer = glState.getTargetBuffer(gl::BufferBinding::DispatchIndirect);
-    ASSERT(dispatchIndirectBuffer);
-
-    Buffer11 *storage         = GetImplAs<Buffer11>(dispatchIndirectBuffer);
-    const uint8_t *bufferData = nullptr;
-    // TODO(jie.a.chen@intel.com): num_groups_x,y,z have to be written into the driver constant
-    // buffer for the built-in variable gl_NumWorkGroups. There is an opportunity for optimization
-    // to use GPU->GPU copy instead.
-    // http://anglebug.com/42261508
-    ANGLE_TRY(storage->getData(context, &bufferData));
-    const GLuint *groups = reinterpret_cast<const GLuint *>(bufferData + indirect);
-    ANGLE_TRY(mStateManager.updateStateForCompute(context, groups[0], groups[1], groups[2]));
-
-    ID3D11Buffer *buffer = nullptr;
-    BufferFeedback feedback;
-    ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDIRECT, &buffer, &feedback));
-    dispatchIndirectBuffer->applyImplFeedback(context, feedback);
-
-    mDeviceContext->DispatchIndirect(buffer, static_cast<UINT>(indirect));
-    return angle::Result::Continue;
 }
 
 angle::Result Renderer11::createStagingTexture(const gl::Context *context,
@@ -4430,65 +4361,6 @@ angle::Result Renderer11::mapResource(const gl::Context *context,
 {
     HRESULT hr = mDeviceContext->Map(resource, subResource, mapType, mapFlags, mappedResource);
     ANGLE_TRY_HR(GetImplAs<Context11>(context), hr, "Failed to map D3D11 resource.");
-    return angle::Result::Continue;
-}
-
-angle::Result Renderer11::markTypedBufferUsage(const gl::Context *context)
-{
-    const gl::State &glState = context->getState();
-    ProgramExecutableD3D *executableD3D =
-        GetImplAs<ProgramExecutableD3D>(glState.getProgramExecutable());
-    gl::RangeUI imageRange = executableD3D->getUsedImageRange(gl::ShaderType::Compute, false);
-    for (unsigned int imageIndex = imageRange.low(); imageIndex < imageRange.high(); imageIndex++)
-    {
-        GLint imageUnitIndex = executableD3D->getImageMapping(gl::ShaderType::Compute, imageIndex,
-                                                              false, context->getCaps());
-        ASSERT(imageUnitIndex != -1);
-        const gl::ImageUnit &imageUnit = glState.getImageUnit(imageUnitIndex);
-        if (imageUnit.texture.get()->getType() == gl::TextureType::Buffer)
-        {
-            Buffer11 *buffer11 = GetImplAs<Buffer11>(imageUnit.texture.get()->getBuffer().get());
-            BufferFeedback feedback;
-            ANGLE_TRY(buffer11->markTypedBufferUsage(context, &feedback));
-            imageUnit.texture.get()->getBuffer().get()->applyImplFeedback(context, feedback);
-        }
-    }
-    return angle::Result::Continue;
-}
-
-angle::Result Renderer11::markRawBufferUsage(const gl::Context *context)
-{
-    const gl::State &glState                = context->getState();
-    const gl::ProgramExecutable *executable = glState.getProgramExecutable();
-    for (size_t blockIndex = 0; blockIndex < executable->getShaderStorageBlocks().size();
-         blockIndex++)
-    {
-        GLuint binding = executable->getShaderStorageBlockBinding(static_cast<GLuint>(blockIndex));
-        const auto &shaderStorageBuffer = glState.getIndexedShaderStorageBuffer(binding);
-        if (shaderStorageBuffer.get() != nullptr)
-        {
-            Buffer11 *bufferStorage = GetImplAs<Buffer11>(shaderStorageBuffer.get());
-            BufferFeedback feedback;
-            ANGLE_TRY(bufferStorage->markRawBufferUsage(context, &feedback));
-            shaderStorageBuffer.get()->applyImplFeedback(context, feedback);
-        }
-    }
-
-    const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers =
-        executable->getAtomicCounterBuffers();
-    for (size_t index = 0; index < atomicCounterBuffers.size(); ++index)
-    {
-        const GLuint binding = executable->getAtomicCounterBufferBinding(index);
-        const auto &buffer   = glState.getIndexedAtomicCounterBuffer(binding);
-
-        if (buffer.get() != nullptr)
-        {
-            Buffer11 *bufferStorage = GetImplAs<Buffer11>(buffer.get());
-            BufferFeedback feedback;
-            ANGLE_TRY(bufferStorage->markRawBufferUsage(context, &feedback));
-            buffer.get()->applyImplFeedback(context, feedback);
-        }
-    }
     return angle::Result::Continue;
 }
 

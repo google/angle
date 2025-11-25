@@ -1538,7 +1538,6 @@ void main()
         ES3_METAL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions)
 
 #define ANGLE_ALL_MULTIDRAW_TEST_PLATFORMS_ES3_1                                            \
-    ES31_D3D11().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),                  \
         ES31_OPENGL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),             \
         ES31_OPENGLES().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),           \
         ES31_VULKAN().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),             \

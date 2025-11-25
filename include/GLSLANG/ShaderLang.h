@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 385
+#define ANGLE_SH_VERSION 386
 
 enum ShShaderSpec
 {
@@ -340,12 +340,7 @@ struct ShCompileOptions
     // read undefined values that could be coming from another webpage/application.
     uint64_t initSharedVariables : 1;
 
-    // Forces the value returned from an atomic operations to be always be resolved. This is
-    // targeted to workaround a bug in NVIDIA D3D driver where the return value from
-    // RWByteAddressBuffer.InterlockedAdd does not get resolved when used in the .yzw components of
-    // a RWByteAddressBuffer.Store operation. Only has an effect on HLSL translation.
-    // http://anglebug.com/42261924
-    uint64_t forceAtomicValueResolution : 1;
+    uint64_t unused : 1;
 
     // Rewrite gl_BaseVertex and gl_BaseInstance as uniform int
     uint64_t emulateGLBaseVertexBaseInstance : 1;
@@ -906,17 +901,6 @@ uint32_t GetShaderSpecConstUsageBits(const ShHandle handle);
 // variables: an array of variables.
 bool CheckVariablesWithinPackingLimits(int maxVectors,
                                        const std::vector<sh::ShaderVariable> &variables);
-
-// Gives the compiler-assigned register for a shader storage block.
-// The method writes the value to the output variable "indexOut".
-// Returns true if it found a valid shader storage block, false otherwise.
-// Parameters:
-// handle: Specifies the compiler
-// shaderStorageBlockName: Specifies the shader storage block
-// indexOut: output variable that stores the assigned register
-bool GetShaderStorageBlockRegister(const ShHandle handle,
-                                   const std::string &shaderStorageBlockName,
-                                   unsigned int *indexOut);
 
 // Gives the compiler-assigned register for a uniform block.
 // The method writes the value to the output variable "indexOut".

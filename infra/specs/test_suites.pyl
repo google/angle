@@ -384,22 +384,6 @@
       },
     },
 
-    'angle_deqp_gles31_d3d11_gtests': {
-      'angle_deqp_gles31_d3d11_tests': {
-        'args': [
-          '--use-angle=d3d11',
-        ],
-        'merge': {
-          'script': '//scripts/angle_deqp_test_merge.py',
-        },
-        'swarming': {
-          'shards': 2,
-        },
-        'test': 'angle_deqp_gles31_tests',
-        'use_isolated_scripts_api': True,
-      },
-    },
-
     'angle_deqp_gles31_gl_gtests': {
       'angle_deqp_gles31_gl_tests': {
         'args': [
@@ -1789,7 +1773,6 @@
       'angle_deqp_gles2_gl_gtests',
       'angle_deqp_gles2_vulkan_gtests',
       'angle_deqp_gles2_webgpu_gtests',
-      'angle_deqp_gles31_d3d11_gtests',
       'angle_deqp_gles31_gl_gtests',
       'angle_deqp_gles31_multisample_vulkan_gtests',
       'angle_deqp_gles31_vulkan_gtests',

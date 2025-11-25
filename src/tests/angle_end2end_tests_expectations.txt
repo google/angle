@@ -98,7 +98,6 @@
 40096654 WIN VULKAN : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 40096654 WIN OPENGL : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 40096654 WIN GLES : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
-42264595 WIN D3D11 : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
 42264632 WIN OPENGL INTEL : BlitFramebufferTest.OOBWrite/* = SKIP
 1229184 WIN NVIDIA VULKAN : SimpleStateChangeTest.RedefineFramebufferTexture/* = SKIP
 42264699 WIN INTEL OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
@@ -111,8 +110,6 @@
 42263316 WIN NVIDIA GLES : CopyTextureTest.CopyOutsideMipmap/* = SKIP
 42265771 WIN INTEL D3D11 : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
 42265885 WIN NVIDIA VULKAN : DebugTestES3.MessageControl1/* = SKIP
-42266168 WIN INTEL D3D11 : FramebufferTest_ES31.ChangeFBOSizeAndAttachmentsCount/* = SKIP
-42266132 WIN NVIDIA D3D11 : FramebufferTest_ES31.ChangeFBOSizeAndAttachmentsCount/* = SKIP
 42266165 WIN INTEL VULKAN : FramebufferTest_ES31.ChangeFBOSizeAndAttachmentsCount/* = SKIP
 42266132 WIN INTEL OPENGL : FramebufferTest_ES31.ChangeFBOSizeWithNoAttachments/* = SKIP
 42266165 WIN INTEL VULKAN : FramebufferTest_ES31.ChangeFBOSizeWithNoAttachments/* = SKIP
@@ -139,7 +136,6 @@
 402532204 WIN GLES : PbufferTest.ZeroSizedSurfaceFormatQuery/* = SKIP
 410591534 WIN INTEL OPENGL : Texture2DTestES3.SampleThenFullUpdateThenSampleAgain/* = SKIP
 410591534 WIN INTEL OPENGL : TextureCubeTestES3.IncompatibleCubeFacesThenSingleFaceCompatibleUploadAndIncompatibleAgain*/* = SKIP
-411157348 WIN D3D11 : ImageTestES31.UseSourceTextureAsStorageImage/* = SKIP
 409821658 WIN INTEL OPENGL : SRGBTextureTestES3.SRGBSkipEncodeAndDecodeInGenerateMipmap/ES3_OpenGL* = SKIP
 447556589 WIN INTEL OPENGL : GeometryShaderTest.ImplicitSizedArrayMatchesExplicitSizedArray/* = SKIP
 447556589 WIN INTEL OPENGL : GeometryShaderTest.ImplicitSizedArrayMatchesExplicitSizedArray2/* = SKIP
@@ -168,6 +164,7 @@
 40644896 WIN INTEL OPENGL : ViewportTest.DoubleWindowCentered/* = SKIP
 42266866 WIN INTEL OPENGL : GLSLTest_ES3.LargeInterfaceBlockArray/* = SKIP
 42266866 WIN INTEL OPENGL : GLSLTest_ES3.LargeInterfaceBlockNestedArray/* = SKIP
+463961767 WIN INTEL OPENGL : EGLSurfacelessContextTest.Switcheroo/* = SKIP
 
 // Failures on Intel Alder Lake S UHD Graphics 770 (8086:4680-31.0.101.5333)
 352085732 WIN INTEL OPENGL : GeometryShaderTest.LayeredFramebufferClear2DArrayColor/* = SKIP
@@ -502,12 +499,6 @@
 42264944 WIN D3D9 : GLSLValidationTest.HandleExcessiveLoopBug/* = SKIP
 42264620 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 42264653 WIN D3D11 : GLSLTestLoops.*ContinueInSwitch/* = SKIP
-42264675 WIN D3D11 : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
-// Fails on assertion in translation to D3D
-42262486 WIN D3D11 : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
-42262486 WIN D3D11 : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
-// Mistranslation
-42264738 WIN D3D11 : GLSLTest_ES31.StorageBufferBoolVectorPassedToFunctions/* = SKIP
 // D3D does not support compressed textures where the base mip level is not a multiple of 4
 40644741 WIN D3D9 : DXT1CompressedTextureTest.NonBlockSizesMipLevels/* = SKIP
 40644741 WIN D3D11 : DXT1CompressedTextureTest.NonBlockSizesMipLevels/* = SKIP
@@ -527,7 +518,6 @@
 1456243 WIN D3D11 : WebGL2CompatibilityTest.DrawWithZeroSizedBuffer/* = SKIP
 42266836 WIN D3D9 : GLSLValidationTest.VectorScalarArithmeticWithSideEffectInLoop/* = SKIP
 42267092 WIN D3D11 : BlitFramebufferTest.FlippedBlits/* = SKIP
-343249129 WIN D3D11 : GLSLTest_ES31.TernaryOnStructsInDifferentBlockStorages/* = SKIP
 432303915 WIN D3D11 : GLSLTest.VerifyMaxFragmentUniformVectorsWithSamplers/* = SKIP
 432303915 WIN D3D11 : GLSLTest.VerifyMaxVertexUniformVectors/* = SKIP
 432303915 WIN D3D11 : GLSLTest.VerifyMaxVertexUniformVectorsWithSamplers/* = SKIP
@@ -536,8 +526,6 @@
 448658631 WIN D3D11 : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFold/* = SKIP
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
-462718915 WIN D3D11 : ShaderStorageBufferTest31.ScalarDataInMatrixInSSBOWithRowMajorQualifier/* = SKIP
-462718915 WIN D3D11 : ShaderStorageBufferTest31.ScalarDataInMatrixInStructureInSSBOWithRowMajorQualifier/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -1115,7 +1103,6 @@
 
 // // Cannot create 2D (array) view of 3D texture.  These fail with validation errors, and cause a crash in syncval.
 42262531 VULKAN : ComputeShaderTest.BindImageTexture3D/* = SKIP
-42262531 D3D11 : ComputeShaderTest.BindImageTexture3D/* = SKIP
 
 // Produces VVL errors
 42265827 VULKAN : FramebufferTest_ES3.FramebufferConditionalFeedbackLoop/* = SKIP
@@ -1129,17 +1116,10 @@
 343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerTypeShadow_TextureTypeStencil_* = SKIP
 
 // Intel Mesa 19.0.2 appears to have a driver bug.
-// imageLoad isn't fully implemented for fragment shaders on D3D11.
 42265826 INTEL OPENGL : GLSLTest_ES31.ImageLoadAfterClear/* = SKIP
-42265826 D3D11 : GLSLTest_ES31.ImageLoadAfterClear/* = SKIP
 
-// On D3D: UAVs don't allow aliasing.
 // On OpenGL, there's also an issue with this test.
-42261718 D3D11 : GLSLTest_ES31.AliasedLoadStore/* = SKIP
 42265869 OpenGL : GLSLTest_ES31.AliasedLoadStore/* = SKIP
-
-// On D3D: readonly image2D handles don't return the texture's existing contents.
-42266078 D3D11 : GLSLTest_ES31.ReadOnlyImage2DAsFunctionArg/* = SKIP
 
 // Flaky timeouts - SwiftShader hits a heavy emulation path in this test
 42266366 WIN SWIFTSHADER : InstancingTestES3.LargeDivisor/* = SKIP
@@ -1163,8 +1143,6 @@
 42266575 WIN OpenGL : RGBTextureBufferTestES31.*/* = SKIP
 42266575 WIN GLES : RGBTextureBufferTestES31.*/* = SKIP
 42266575 LINUX NVIDIA OpenGL : RGBTextureBufferTestES31.*/* = SKIP
-// Misbehaves on D3D11 (pixels remain black or reading from wrong offsets)
-42266575 D3D11 : RGBTextureBufferTestES31.*/* = SKIP
 
 42266091 WIN INTEL : *EmulateCopyTexImage2DFromRenderbuffers* = SKIP
 
@@ -1308,7 +1286,6 @@
 
 // SSBO Alias Overwrite
 42264522 PIXEL4ORXL VULKAN : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
-266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 
 // Samsung Galaxy S22 (Xclipse)
 267953710 GALAXYS22 GLES : VulkanImageTest.DeviceVulkan/* = SKIP
@@ -2211,10 +2188,6 @@
 
 404581995 ANDROID PIXEL4ORXL   : EGLDisplayTestES3.GetPlatformDisplayAndroidValidation/* = SKIP
 404581995 ANDROID GALAXYS22    : EGLDisplayTestES3.GetPlatformDisplayAndroidValidation/* = SKIP
-
-// Fails on D3D11
-412738262 D3D11 : AtomicCounterBufferTest31.AtomicCounterQueries/* = SKIP
-416573908 D3D11 : ComputeShaderTest.AdvancedSyncVertexArray/* = SKIP
 
 351867710 NVIDIA VULKAN : CopyImageTestES31.CompressedToNorm16/* = SKIP
 351867710 NVIDIA VULKAN : CopyImageTestES31.Norm16ToCompressed/* = SKIP

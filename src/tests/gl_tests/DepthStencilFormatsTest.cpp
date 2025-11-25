@@ -1485,8 +1485,7 @@ TEST_P(TinyDepthStencilWorkaroundTest, DepthTexturesStick)
 }
 
 // Initialize a depth texture by writing to it in a fragment shader then attempt to read it from a
-// compute shader. Regression test for D3D11 not unbinding the depth texture and the sampler binding
-// failing.
+// compute shader.
 TEST_P(DepthStencilFormatsTestES31, ReadDepthStencilInComputeShader)
 {
     constexpr char kTestVertexShader[] = R"(#version 310 es
