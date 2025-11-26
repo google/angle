@@ -182,10 +182,24 @@ class StubBlockEncoder : public BlockLayoutEncoder
     {}
 };
 
+// The unit of mCurrentOffset in PackedSPIRVBlockEncoder is byte, instead of 4-byte as used by
+// Std140BlockEncoder. The data type that the PackedSPIRVBlockEncoder processes can be half float,
+// which is 2 bytes, and the VK_KHR_relaxed_block_layout allows 2 byte alignment, therefore changing
+// mCurrentOffset unit from 4-byte to byte to allow more fine-grained offsets.
 class PackedSPIRVBlockEncoder : public BlockLayoutEncoder
 {
   public:
     PackedSPIRVBlockEncoder();
+
+    BlockMemberInfo encodeType(GLenum type,
+                               const std::vector<unsigned int> &arraySizes,
+                               bool isRowMajorMatrix) override;
+
+    BlockMemberInfo encodeArrayOfPreEncodedStructs(
+        size_t size,
+        const std::vector<unsigned int> &arraySizes) override;
+
+    size_t getCurrentOffset() const override;
 
     void enterAggregateType(const ShaderVariable &structVar) override;
     void exitAggregateType(const ShaderVariable &structVar) override;
