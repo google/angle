@@ -119,6 +119,7 @@ class BlockLayoutEncoder
     virtual ~BlockLayoutEncoder() {}
 
     virtual BlockMemberInfo encodeType(GLenum type,
+                                       size_t bytesPerComponent,
                                        const std::vector<unsigned int> &arraySizes,
                                        bool isRowMajorMatrix);
     // Advance the offset based on struct size and array dimensions.  Size can be calculated with
@@ -138,6 +139,8 @@ class BlockLayoutEncoder
     static constexpr size_t kBytesPerComponent           = 4u;
     static constexpr unsigned int kComponentsPerRegister = 4u;
 
+    static constexpr size_t kBytesPer16BitComponent = 2u;
+
     static size_t GetBlockRegister(const BlockMemberInfo &info);
     static size_t GetBlockRegisterElement(const BlockMemberInfo &info);
 
@@ -145,11 +148,13 @@ class BlockLayoutEncoder
     void align(size_t baseAlignment);
 
     virtual void getBlockLayoutInfo(GLenum type,
+                                    size_t bytesPerComponent,
                                     const std::vector<unsigned int> &arraySizes,
                                     bool isRowMajorMatrix,
                                     int *arrayStrideOut,
                                     int *matrixStrideOut) = 0;
     virtual void advanceOffset(GLenum type,
+                               size_t bytesPerComponent,
                                const std::vector<unsigned int> &arraySizes,
                                bool isRowMajorMatrix,
                                int arrayStride,
@@ -169,12 +174,14 @@ class StubBlockEncoder : public BlockLayoutEncoder
 
   protected:
     void getBlockLayoutInfo(GLenum type,
+                            size_t bytesPerComponent,
                             const std::vector<unsigned int> &arraySizes,
                             bool isRowMajorMatrix,
                             int *arrayStrideOut,
                             int *matrixStrideOut) override;
 
     void advanceOffset(GLenum type,
+                       size_t bytesPerComponent,
                        const std::vector<unsigned int> &arraySizes,
                        bool isRowMajorMatrix,
                        int arrayStride,
@@ -192,6 +199,7 @@ class PackedSPIRVBlockEncoder : public BlockLayoutEncoder
     PackedSPIRVBlockEncoder();
 
     BlockMemberInfo encodeType(GLenum type,
+                               size_t bytesPerComponent,
                                const std::vector<unsigned int> &arraySizes,
                                bool isRowMajorMatrix) override;
 
@@ -206,11 +214,13 @@ class PackedSPIRVBlockEncoder : public BlockLayoutEncoder
 
   protected:
     void getBlockLayoutInfo(GLenum type,
+                            size_t bytesPerComponent,
                             const std::vector<unsigned int> &arraySizes,
                             bool isRowMajorMatrix,
                             int *arrayStrideOut,
                             int *matrixStrideOut) override;
     void advanceOffset(GLenum type,
+                       size_t bytesPerComponent,
                        const std::vector<unsigned int> &arraySizes,
                        bool isRowMajorMatrix,
                        int arrayStride,
@@ -218,6 +228,10 @@ class PackedSPIRVBlockEncoder : public BlockLayoutEncoder
 
     virtual size_t getBaseAlignment(const ShaderVariable &variable) const;
     virtual size_t getTypeBaseAlignment(GLenum type, bool isRowMajorMatrix) const;
+
+  private:
+    bool isVectorStraddle(GLenum type);
+    void adjustAlignmentForStraddleVector();
 };
 
 // Block layout according to the std140 block layout
@@ -233,11 +247,13 @@ class Std140BlockEncoder : public BlockLayoutEncoder
 
   protected:
     void getBlockLayoutInfo(GLenum type,
+                            size_t bytesPerComponent,
                             const std::vector<unsigned int> &arraySizes,
                             bool isRowMajorMatrix,
                             int *arrayStrideOut,
                             int *matrixStrideOut) override;
     void advanceOffset(GLenum type,
+                       size_t bytesPerComponent,
                        const std::vector<unsigned int> &arraySizes,
                        bool isRowMajorMatrix,
                        int arrayStride,

@@ -25,6 +25,7 @@ class VulkanDefaultBlockEncoder : public sh::Std140BlockEncoder
 {
   protected:
     void advanceOffset(GLenum type,
+                       const size_t bytesPerComponent,
                        const std::vector<unsigned int> &arraySizes,
                        bool isRowMajorMatrix,
                        int arrayStride,
@@ -35,8 +36,8 @@ class VulkanDefaultBlockEncoder : public sh::Std140BlockEncoder
             return;
         }
 
-        sh::Std140BlockEncoder::advanceOffset(type, arraySizes, isRowMajorMatrix, arrayStride,
-                                              matrixStride);
+        sh::Std140BlockEncoder::advanceOffset(type, bytesPerComponent, arraySizes, isRowMajorMatrix,
+                                              arrayStride, matrixStride);
     }
 };
 // Identical to PackedSPIRVBlockEncoder encoder in all aspects, except it ignores opaque uniform
@@ -45,6 +46,7 @@ class VulkanDefaultBlockPackedEncoder : public sh::PackedSPIRVBlockEncoder
 {
   protected:
     void advanceOffset(GLenum type,
+                       const size_t bytesPerComponent,
                        const std::vector<unsigned int> &arraySizes,
                        bool isRowMajorMatrix,
                        int arrayStride,
@@ -55,8 +57,8 @@ class VulkanDefaultBlockPackedEncoder : public sh::PackedSPIRVBlockEncoder
             return;
         }
 
-        sh::PackedSPIRVBlockEncoder::advanceOffset(type, arraySizes, isRowMajorMatrix, arrayStride,
-                                                   matrixStride);
+        sh::PackedSPIRVBlockEncoder::advanceOffset(type, bytesPerComponent, arraySizes,
+                                                   isRowMajorMatrix, arrayStride, matrixStride);
     }
 };
 

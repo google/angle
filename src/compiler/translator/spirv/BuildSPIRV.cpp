@@ -105,13 +105,15 @@ TLayoutBlockStorage GetBlockStorage(const TType &type)
 ShaderVariable ToShaderVariable(const TFieldListCollection *block,
                                 GLenum type,
                                 const angle::Span<const unsigned int> arraySizes,
-                                bool isRowMajor)
+                                bool isRowMajor,
+                                bool isFloat16)
 {
     ShaderVariable var;
 
     var.type             = type;
     var.arraySizes       = {arraySizes.begin(), arraySizes.end()};
     var.isRowMajorLayout = isRowMajor;
+    var.isFloat16        = isFloat16;
 
     if (block != nullptr)
     {
@@ -126,8 +128,40 @@ ShaderVariable ToShaderVariable(const TFieldListCollection *block,
             const GLenum glType =
                 fieldType.getStruct() != nullptr ? GL_NONE : GLVariableType(fieldType);
 
+            // In the following case:
+
+            // precision mediump float
+            // struct S {
+            //    float floatMember;
+            //    vec2 vec2Member;
+            //    int intMember;
+            // }
+            // uniform float floatUniform;
+            // uniform highp float highpFloatUniform;
+            // uniform S structUniform;
+
+            // defaultUniform interface block looks like:
+            // defaultUniform {
+            //   float floatUniform;
+            //   highp float highpFloatUniform;
+            //   S structUniform;
+            // }
+
+            // iSFieldFloat16 for each defaultUniform member should be:
+            // defaultUniform.floatUniform: true
+            // defaultUniform.highpFloatUniform: false
+            // defaultUniform.structUniform.floatMember: true
+            // defaultUniform.structUniform.vec2Member: true
+            // defaultUniform.structUniform.intMember: false
+
+            const bool isFieldFloat16 =
+                isFloat16 &&
+                ((fieldType.getBasicType() == EbtFloat || fieldType.getBasicType() == EbtStruct) &&
+                 (fieldType.getPrecision() < EbpHigh));
+
             var.fields.push_back(ToShaderVariable(fieldType.getStruct(), glType,
-                                                  fieldType.getArraySizes(), isFieldRowMajor));
+                                                  fieldType.getArraySizes(), isFieldRowMajor,
+                                                  isFieldFloat16));
         }
     }
 
@@ -142,8 +176,9 @@ ShaderVariable SpirvTypeToShaderVariable(const SpirvType &type)
         type.block != nullptr
             ? EbtStruct
             : GLVariableType(TType(type.type, type.primarySize, type.secondarySize));
+    const bool isFloat16 = (type.typeSpec.precision == SPIRVPrecisionChoice::UseFP16);
 
-    return ToShaderVariable(type.block, glType, type.arraySizes, isRowMajor);
+    return ToShaderVariable(type.block, glType, type.arraySizes, isRowMajor, isFloat16);
 }
 
 // The following function encodes a variable in a
@@ -204,7 +239,10 @@ uint32_t Encode(const ShaderVariable &var,
         else
         {
             fieldInfo =
-                encoder->encodeType(fieldVar.type, fieldVar.arraySizes, fieldVar.isRowMajorLayout);
+                encoder->encodeType(fieldVar.type,
+                                    fieldVar.isFloat16 ? BlockLayoutEncoder::kBytesPer16BitComponent
+                                                       : BlockLayoutEncoder::kBytesPerComponent,
+                                    fieldVar.arraySizes, fieldVar.isRowMajorLayout);
         }
 
         if (decorationsBlob)
@@ -271,7 +309,10 @@ uint32_t GetArrayStrideInBlock(const ShaderVariable &var,
 
     // Otherwise encode the basic type.
     BlockMemberInfo memberInfo =
-        encoder->encodeType(var.type, var.arraySizes, var.isRowMajorLayout);
+        encoder->encodeType(var.type,
+                            var.isFloat16 ? BlockLayoutEncoder::kBytesPer16BitComponent
+                                          : BlockLayoutEncoder::kBytesPerComponent,
+                            var.arraySizes, var.isRowMajorLayout);
 
     // The encoder returns the array stride for the base element type (which is not an array!), so
     // need to multiply by the inner array sizes to get the outermost array's stride.

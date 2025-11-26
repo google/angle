@@ -190,20 +190,22 @@ class BaseAlignmentVisitor : public ShaderVariableVisitor
 BlockLayoutEncoder::BlockLayoutEncoder() : mCurrentOffset(0) {}
 
 BlockMemberInfo BlockLayoutEncoder::encodeType(GLenum type,
+                                               const size_t bytesPerComponent,
                                                const std::vector<unsigned int> &arraySizes,
                                                bool isRowMajorMatrix)
 {
     int arrayStride;
     int matrixStride;
 
-    getBlockLayoutInfo(type, arraySizes, isRowMajorMatrix, &arrayStride, &matrixStride);
+    getBlockLayoutInfo(type, bytesPerComponent, arraySizes, isRowMajorMatrix, &arrayStride,
+                       &matrixStride);
 
     const BlockMemberInfo memberInfo(type, static_cast<int>(mCurrentOffset * kBytesPerComponent),
                                      static_cast<int>(arrayStride * kBytesPerComponent),
                                      static_cast<int>(matrixStride * kBytesPerComponent),
                                      gl::ArraySizeProduct(arraySizes), isRowMajorMatrix);
 
-    advanceOffset(type, arraySizes, isRowMajorMatrix, arrayStride, matrixStride);
+    advanceOffset(type, bytesPerComponent, arraySizes, isRowMajorMatrix, arrayStride, matrixStride);
 
     return memberInfo;
 }
@@ -281,6 +283,7 @@ void BlockLayoutEncoder::align(size_t baseAlignment)
 
 // StubBlockEncoder implementation.
 void StubBlockEncoder::getBlockLayoutInfo(GLenum type,
+                                          const size_t bytesPerComponent,
                                           const std::vector<unsigned int> &arraySizes,
                                           bool isRowMajorMatrix,
                                           int *arrayStrideOut,
@@ -294,22 +297,23 @@ void StubBlockEncoder::getBlockLayoutInfo(GLenum type,
 PackedSPIRVBlockEncoder::PackedSPIRVBlockEncoder() {}
 
 BlockMemberInfo PackedSPIRVBlockEncoder::encodeType(GLenum type,
+                                                    const size_t bytesPerComponent,
                                                     const std::vector<unsigned int> &arraySizes,
                                                     bool isRowMajorMatrix)
 {
-    // Placeholder implementations copied from BlockLayoutEncoder. mCurrentOffset is no longer
-    // multiplied by kBytesPerComponent because mCurrentOffset tracks offset in number of byte,
-    // instead of number of 4-byte.
+    // Similar to BlockLayoutEncoder::encodeType(), except mCurrentOffset tracks offset in number
+    // of byte, instead of number of 4-byte.
     int arrayStride;
     int matrixStride;
 
-    getBlockLayoutInfo(type, arraySizes, isRowMajorMatrix, &arrayStride, &matrixStride);
+    getBlockLayoutInfo(type, bytesPerComponent, arraySizes, isRowMajorMatrix, &arrayStride,
+                       &matrixStride);
 
     const BlockMemberInfo memberInfo(type, static_cast<int>(mCurrentOffset), arrayStride,
                                      matrixStride, gl::ArraySizeProduct(arraySizes),
                                      isRowMajorMatrix);
 
-    advanceOffset(type, arraySizes, isRowMajorMatrix, arrayStride, matrixStride);
+    advanceOffset(type, bytesPerComponent, arraySizes, isRowMajorMatrix, arrayStride, matrixStride);
 
     return memberInfo;
 }
@@ -318,9 +322,8 @@ BlockMemberInfo PackedSPIRVBlockEncoder::encodeArrayOfPreEncodedStructs(
     size_t size,
     const std::vector<unsigned int> &arraySizes)
 {
-    // Placeholder implementations copied from BlockLayoutEncoder. mCurrentOffset is no longer
-    // multiplied by kBytesPerComponent because mCurrentOffset tracks offset in number of byte,
-    // instead of number of 4-byte.
+    // Similar to BlockLayoutEncoder::encodeArrayOfPreEncodedStructs, except mCurrentOffset tracks
+    // offset in number of byte, instead of number of 4-byte.
     const unsigned int innerArraySizeProduct = gl::InnerArraySizeProduct(arraySizes);
     const unsigned int outermostArraySize    = gl::OutermostArraySize(arraySizes);
 
@@ -341,34 +344,36 @@ BlockMemberInfo PackedSPIRVBlockEncoder::encodeArrayOfPreEncodedStructs(
 
 size_t PackedSPIRVBlockEncoder::getCurrentOffset() const
 {
-    // Placeholder implementations copied from BlockLayoutEncoder. mCurrentOffset is no longer
-    // multiplied by kBytesPerComponent because mCurrentOffset tracks offset in number of byte,
-    // instead of number of 4-byte.
+    // Similar to BlockLayoutEncoder::getCurrentOffset(), except mCurrentOffset tracks offset in
+    // number of byte, instead of number of 4-byte.
     angle::base::CheckedNumeric<size_t> checkedOffset(mCurrentOffset);
     return checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
 }
 
 void PackedSPIRVBlockEncoder::enterAggregateType(const ShaderVariable &structVar)
 {
-    // Placeholder implementations copied from Std140BlockEncoder.
+    // Similar to Std140BlockEncoder::enterAggregateType(), except mCurrentOffset tracks offset in
+    // number of byte, instead of number of 4-byte.
     align(getBaseAlignment(structVar));
 }
 
 void PackedSPIRVBlockEncoder::exitAggregateType(const ShaderVariable &structVar)
 {
-    // Placeholder implementations copied from Std140BlockEncoder.
+    // Similar to Std140BlockEncoder::exitAggregateType(), except mCurrentOffset tracks offset in
+    // number of byte, instead of number of 4-byte.
     align(getBaseAlignment(structVar));
 }
 
 void PackedSPIRVBlockEncoder::getBlockLayoutInfo(GLenum type,
+                                                 const size_t bytesPerComponent,
                                                  const std::vector<unsigned int> &arraySizes,
                                                  bool isRowMajorMatrix,
                                                  int *arrayStrideOut,
                                                  int *matrixStrideOut)
 {
-    // Placeholder implementations copied from Std140BlockEncoder.
-    // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
-    ASSERT(gl::VariableComponentSize(gl::VariableComponentType(type)) == kBytesPerComponent);
+    // Right now we only pass kBytesPer16BitComponent for 16-bit float and vectors: half, half2,
+    // half3, half4. For all other data types, we pass kBytesPerComponent.
+    ASSERT(bytesPerComponent == kBytesPer16BitComponent || bytesPerComponent == kBytesPerComponent);
     size_t baseAlignment = 0;
     int matrixStride     = 0;
     int arrayStride      = 0;
@@ -392,23 +397,42 @@ void PackedSPIRVBlockEncoder::getBlockLayoutInfo(GLenum type,
     }
     else
     {
-        const size_t numComponents = static_cast<size_t>(gl::VariableComponentCount(type));
-        baseAlignment              = ComponentAlignment(numComponents) * kBytesPerComponent;
+        if (bytesPerComponent == kBytesPer16BitComponent)
+        {
+            ASSERT(gl::IsFloatScalarAndVectorType(type));
+            baseAlignment = bytesPerComponent;
+        }
+        else
+        {
+            ASSERT(bytesPerComponent == kBytesPerComponent);
+            const size_t numComponents = static_cast<size_t>(gl::VariableComponentCount(type));
+            baseAlignment              = ComponentAlignment(numComponents) * bytesPerComponent;
+        }
     }
 
     align(baseAlignment);
+
+    if (bytesPerComponent == kBytesPer16BitComponent && gl::IsFloatVectorType(type))
+    {
+        if (isVectorStraddle(type))
+        {
+            adjustAlignmentForStraddleVector();
+        }
+    }
 
     *matrixStrideOut = matrixStride;
     *arrayStrideOut  = arrayStride;
 }
 
 void PackedSPIRVBlockEncoder::advanceOffset(GLenum type,
+                                            const size_t bytesPerComponent,
                                             const std::vector<unsigned int> &arraySizes,
                                             bool isRowMajorMatrix,
                                             int arrayStride,
                                             int matrixStride)
 {
-    // Placeholder implementations copied from Std140BlockEncoder.
+    // Similar to Std140BlockEncoder::advanceOffset(), except mCurrentOffset tracks offset in
+    // number of byte, instead of number of 4-byte.
     if (!arraySizes.empty())
     {
         angle::base::CheckedNumeric<size_t> checkedOffset(arrayStride);
@@ -426,21 +450,48 @@ void PackedSPIRVBlockEncoder::advanceOffset(GLenum type,
     else
     {
         angle::base::CheckedNumeric<size_t> checkedOffset(mCurrentOffset);
-        checkedOffset += (gl::VariableComponentCount(type) * kBytesPerComponent);
+        checkedOffset += (gl::VariableComponentCount(type) * bytesPerComponent);
         mCurrentOffset = checkedOffset.ValueOrDefault(std::numeric_limits<size_t>::max());
     }
 }
 
 size_t PackedSPIRVBlockEncoder::getBaseAlignment(const ShaderVariable &variable) const
 {
-    // Placeholder implementations copied from Std140BlockEncoder.
+    // Similar to Std140BlockEncoder::getBaseAlignment(), except it returns the number of byte
+    // count, instead of number of 4-byte count.
     return kComponentsPerRegister * kBytesPerComponent;
 }
 
 size_t PackedSPIRVBlockEncoder::getTypeBaseAlignment(GLenum type, bool isRowMajorMatrix) const
 {
-    // Placeholder implementations copied from Std140BlockEncoder.
+    // Similar to Std140BlockEncoder::getTypeBaseAlignment(), except it returns the number of byte
+    // count, instead of number of 4-byte count.
     return kComponentsPerRegister * kBytesPerComponent;
+}
+
+// Check if the memory occupied by data crosses 16-byte boundary:
+// startMemory / 16 != (startMemory + dataSize) / 16 ? crosses boundary : does not cross boundary
+bool PackedSPIRVBlockEncoder::isVectorStraddle(GLenum type)
+{
+    angle::base::CheckedNumeric<size_t> checked16ByteOffset(mCurrentOffset);
+    checked16ByteOffset /= 16;
+    const size_t vectorSize =
+        kBytesPer16BitComponent * static_cast<size_t>(gl::VariableComponentCount(type));
+    angle::base::CheckedNumeric<size_t> checkedOffsetWithVector(mCurrentOffset);
+    checkedOffsetWithVector += vectorSize;
+    checkedOffsetWithVector /= 16;
+    if (checked16ByteOffset.ValueOrDefault(std::numeric_limits<size_t>::max()) !=
+        checkedOffsetWithVector.ValueOrDefault(std::numeric_limits<size_t>::max()))
+    {
+        return true;
+    }
+    return false;
+}
+
+void PackedSPIRVBlockEncoder::adjustAlignmentForStraddleVector()
+{
+    // align the mCurrentOffset to the next 16 byte
+    align(16u);
 }
 
 // Std140BlockEncoder implementation.
@@ -457,6 +508,7 @@ void Std140BlockEncoder::exitAggregateType(const ShaderVariable &structVar)
 }
 
 void Std140BlockEncoder::getBlockLayoutInfo(GLenum type,
+                                            const size_t bytesPerComponent,
                                             const std::vector<unsigned int> &arraySizes,
                                             bool isRowMajorMatrix,
                                             int *arrayStrideOut,
@@ -499,6 +551,7 @@ void Std140BlockEncoder::getBlockLayoutInfo(GLenum type,
 }
 
 void Std140BlockEncoder::advanceOffset(GLenum type,
+                                       const size_t bytesPerComponent,
                                        const std::vector<unsigned int> &arraySizes,
                                        bool isRowMajorMatrix,
                                        int arrayStride,
@@ -786,7 +839,10 @@ void BlockEncoderVisitor::visitNamedVariable(const ShaderVariable &variable,
         innermostArraySize.push_back(variable.getNestedArraySize(0));
     }
     BlockMemberInfo variableInfo =
-        mEncoder->encodeType(variable.type, innermostArraySize, isRowMajor);
+        mEncoder->encodeType(variable.type,
+                             variable.isFloat16 ? BlockLayoutEncoder::kBytesPer16BitComponent
+                                                : BlockLayoutEncoder::kBytesPerComponent,
+                             innermostArraySize, isRowMajor);
     if (!mIsTopLevelArrayStrideReady)
     {
         ASSERT(mTopLevelArrayStride);
