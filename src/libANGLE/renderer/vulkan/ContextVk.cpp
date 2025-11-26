@@ -8275,8 +8275,8 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassCl
     mCommandsPendingSubmissionCount +=
         mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount();
 
-    ANGLE_TRY(mCommandState.flushRenderPassCommands(this, getProtectionType(), *renderPass,
-                                                    framebufferOverride, &mRenderPassCommands));
+    ANGLE_TRY(mCommandState.flushRenderPassCommands(this, *renderPass, framebufferOverride,
+                                                    &mRenderPassCommands));
 
     // We just flushed outSideRenderPassCommands above, and any future use of
     // outsideRenderPassCommands must have a queueSerial bigger than renderPassCommands. To ensure
@@ -8560,8 +8560,7 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
     {
         mIsAnyHostVisibleBufferWritten = true;
     }
-    ANGLE_TRY(mCommandState.flushOutsideRPCommands(this, getProtectionType(),
-                                                   &mOutsideRenderPassCommands));
+    ANGLE_TRY(mCommandState.flushOutsideRPCommands(this, &mOutsideRenderPassCommands));
 
     // Make sure appropriate dirty bits are set, in case another thread makes a submission before
     // the next dispatch call.

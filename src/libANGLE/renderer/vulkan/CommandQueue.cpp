@@ -514,9 +514,7 @@ angle::Result CommandsState::getCommandsAndWaitSemaphores(
     return angle::Result::Continue;
 }
 
-angle::Result CommandsState::ensurePrimaryCommandBufferValidLocked(
-    ErrorContext *context,
-    const ProtectionType &protectionType)
+angle::Result CommandsState::ensurePrimaryCommandBufferValidLocked(ErrorContext *context)
 {
     Renderer *renderer = context->getRenderer();
 
@@ -527,7 +525,7 @@ angle::Result CommandsState::ensurePrimaryCommandBufferValidLocked(
     else
     {
         ANGLE_TRY(renderer->getCommandPoolAccess().allocatePrimaryCommandBufferLocked(
-            context, protectionType, &mPrimaryCommands));
+            context, mProtectionType, &mPrimaryCommands));
 
         VkCommandBufferBeginInfo beginInfo = {};
         beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
