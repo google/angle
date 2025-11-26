@@ -1686,7 +1686,7 @@
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : Texture3DTestES3.PixelUnpackReloadTexImage/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : TextureTestES31.Texture2DArrayChangeLayerLevel/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : TextureTestES31.Texture2DChangeLevel/* = SKIP
-410630704 SAMSUNG GALAXYS24EXYNOS GLES : TextureUploadFormatTest.AllWithPBO/* = SKIP
+410630704 SAMSUNG GALAXYS24EXYNOS GLES : TextureUploadFormatTest_ES3.AllWithPBO/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : UniformBufferMemoryTest.BufferDataInLoopManyTimes/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : WebGLCompatibilityTest.GenerateMipmapUnsizedFloatingPointTexture/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS : PixelLocalStorageTest.Coherency_noncoherent/* = SKIP
@@ -2174,11 +2174,8 @@
 // WebGPU does not support BGRA
 42267264 WGPU : ClearTest.*BGRA* = SKIP
 
-// Fails on Vulkan
-406807990 VULKAN : TextureUploadFormatTest.AllWithPBO/* = SKIP
-
 // Fails on Mac & OpenGL & NVIDIA
-406807990 MAC NVIDIA OPENGL : TextureUploadFormatTest.AllWithPBO/* = SKIP
+406807990 MAC NVIDIA OPENGL : TextureUploadFormatTest_ES3.AllWithPBO/* = SKIP
 
 405286904 SWIFTSHADER : TextureBufferTestES31.UseAsXFBThenAsTextureBuffer/* = SKIP
 
