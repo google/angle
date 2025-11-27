@@ -21017,6 +21017,82 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Make sure unnamed `out` function parameters are initialized correctly.
+TEST_P(GLSLTest_ES3_InitShaderVariables, UnnamedOutParamInPrototype)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 o;
+void f(out float, out float);
+void main()
+{
+    o = vec4(0.5);
+    // o.g is reset to 0 because of the forceInitShaderVariables feature
+    f(o.r, o.g);
+}
+void f(out float r, out float)
+{
+    r = 1.0;
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 0, 127, 127), 1);
+}
+
+// Same as UnnamedOutParamInPrototype, but with nested calls.
+TEST_P(GLSLTest_ES3_InitShaderVariables, UnnamedOutParamInPrototype2)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 o;
+void f(out float, out float);
+void g(out float a, out float b)
+{
+    f(a, b);
+}
+void main()
+{
+    o = vec4(0.75);
+    // o.g is reset to 0 because of the forceInitShaderVariables feature
+    g(o.r, o.g);
+}
+void f(out float r, out float)
+{
+    r = 0.5;
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 0, 191, 191), 1);
+}
+
+// Same as UnnamedOutParamInPrototype, but with a non-void function.
+TEST_P(GLSLTest_ES3_InitShaderVariables, UnnamedOutParamInPrototype3)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 o;
+float f(out float r, out float)
+{
+    r = 0.75;
+    return 0.25;
+}
+void main()
+{
+    o = vec4(0.5);
+    float z = f(o.r, o.g);
+    o.z = z;
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(191, 0, 63, 127), 1);
+}
+
 // Test that lowp and mediump varyings can be correctly matched between VS and FS.
 TEST_P(GLSLTest, LowpMediumpVarying)
 {
@@ -21680,6 +21756,10 @@ ANGLE_INSTANTIATE_TEST_ES31_AND(
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES3_InitShaderVariables);
 ANGLE_INSTANTIATE_TEST(
     GLSLTest_ES3_InitShaderVariables,
+    ES3_D3D11().enable(Feature::ForceInitShaderVariables),
+    ES3_OPENGL().enable(Feature::ForceInitShaderVariables),
+    ES3_OPENGLES().enable(Feature::ForceInitShaderVariables),
+    ES3_METAL().enable(Feature::ForceInitShaderVariables),
     ES3_VULKAN().enable(Feature::ForceInitShaderVariables),
     ES3_VULKAN().disable(Feature::SupportsSPIRV14).enable(Feature::ForceInitShaderVariables));
 
