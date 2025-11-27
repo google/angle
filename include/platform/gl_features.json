@@ -763,6 +763,14 @@
             "issue": "https://anglebug.com/41488638"
         },
         {
+            "name": "emit_max_glsl_400_for_testing",
+            "category": "Workarounds",
+            "description": [
+                "Avoid GLSL versions above 4.0 for testing purposes."
+            ],
+            "issue": "https://anglebug.com/42267207"
+        },
+        {
             "name": "use_intermediate_texture_for_generate_mipmap",
             "category": "Workarounds",
             "description": [

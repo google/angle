@@ -123,6 +123,7 @@ enum class Feature
     DumpShaderSource,
     DumpTranslatedShaders,
     EglColorspaceAttributePassthrough,
+    EmitMaxGlsl400ForTesting,
     EmulateAbsIntFunction,
     EmulateAdvancedBlendEquations,
     EmulateAlphaToCoverage,

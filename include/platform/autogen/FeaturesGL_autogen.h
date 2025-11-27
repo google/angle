@@ -590,6 +590,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo emitMaxGlsl400ForTesting = {
+        "emitMaxGlsl400ForTesting",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo useIntermediateTextureForGenerateMipmap = {
         "useIntermediateTextureForGenerateMipmap",
         FeatureCategory::OpenGLWorkarounds,
