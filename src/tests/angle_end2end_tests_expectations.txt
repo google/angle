@@ -2186,9 +2186,6 @@
 406827038 SWIFTSHADER : GLSLTest_ES3.DenormFloatsToIntValues/* = SKIP
 406827038 PIXEL6 VULKAN : GLSLTest_ES3.DenormFloatsToIntValues/* = SKIP
 
-404581995 ANDROID PIXEL4ORXL   : EGLDisplayTestES3.GetPlatformDisplayAndroidValidation/* = SKIP
-404581995 ANDROID GALAXYS22    : EGLDisplayTestES3.GetPlatformDisplayAndroidValidation/* = SKIP
-
 351867710 NVIDIA VULKAN : CopyImageTestES31.CompressedToNorm16/* = SKIP
 351867710 NVIDIA VULKAN : CopyImageTestES31.Norm16ToCompressed/* = SKIP
 
