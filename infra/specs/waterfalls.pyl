@@ -357,6 +357,15 @@
           'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
+      'mac-x64-amd-555x-test': {
+        'os_type': 'mac',
+        'mixins': [
+          'mac_retina_amd_555x_gpu_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'mac_amd_and_intel_gtests',
+        },
+      },
       'win10-x64-exp-intel': {
         'os_type': 'win',
         'mixins': [
