@@ -973,14 +973,6 @@
             "issue": "http://anglebug.com/42264446"
         },
         {
-            "name": "use_primitive_topology_dynamic_state",
-            "category": "Workarounds",
-            "description": [
-                "Use the Primitive Topology dynamic state from VK_EXT_extended_dynamic_state"
-            ],
-            "issue": "http://anglebug.com/42264446"
-        },
-        {
             "name": "use_depth_test_enable_dynamic_state",
             "category": "Workarounds",
             "description": [

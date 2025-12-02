@@ -378,7 +378,6 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setLineWidth(float lineWidth);
     void setLogicOp(VkLogicOp logicOp);
     void setPrimitiveRestartEnable(VkBool32 primitiveRestartEnable);
-    void setPrimitiveTopology(VkPrimitiveTopology primitiveTopology);
     void setRasterizerDiscardEnable(VkBool32 rasterizerDiscardEnable);
     void setRenderingAttachmentLocations(const VkRenderingAttachmentLocationInfoKHR *info);
     void setRenderingInputAttachmentIndicates(const VkRenderingInputAttachmentIndexInfoKHR *info);
@@ -1193,12 +1192,6 @@ ANGLE_INLINE void CommandBuffer::setPrimitiveRestartEnable(VkBool32 primitiveRes
 {
     ASSERT(valid());
     vkCmdSetPrimitiveRestartEnableEXT(mHandle, primitiveRestartEnable);
-}
-
-ANGLE_INLINE void CommandBuffer::setPrimitiveTopology(VkPrimitiveTopology primitiveTopology)
-{
-    ASSERT(valid());
-    vkCmdSetPrimitiveTopologyEXT(mHandle, primitiveTopology);
 }
 
 ANGLE_INLINE void CommandBuffer::setRasterizerDiscardEnable(VkBool32 rasterizerDiscardEnable)
