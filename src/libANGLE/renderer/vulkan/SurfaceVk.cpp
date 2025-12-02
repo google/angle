@@ -2465,6 +2465,14 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         ANGLE_TRY(recordPresentLayoutBarrierIfNecessary(contextVk));
     }
 
+    if (mDepthStencilImage.valid())
+    {
+        // EGL specification says depth/stencil buffer data is no longer valid after swap. Set their
+        // content invalid right before last submission so that we dont need to store.
+        mDepthStencilImage.invalidateEntireLevelContent(contextVk, gl::LevelIndex(0));
+        mDepthStencilImage.invalidateEntireLevelStencilContent(contextVk, gl::LevelIndex(0));
+    }
+
     ANGLE_TRY(contextVk->flushAndSubmitCommands(shouldDrawOverlay ? nullptr : &presentSemaphore,
                                                 nullptr, RenderPassClosureReason::EGLSwapBuffers));
 
@@ -3045,7 +3053,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
     // - When EGL_BUFFER_DESTROYED is specified, the contents of the color image can be
     //   invalidated.
     //    * This is disabled when buffer age has been queried to work around a dEQP test bug.
-    // - Depth/Stencil can always be invalidated
+    // - Depth/Stencil is always invalidated before last submission.
     //
     // In all cases, when in shared present mode, swap is implicit and the swap behavior
     // doesn't apply so no invalidation is done.
@@ -3059,12 +3067,9 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
                 mColorImageMS.invalidateEntireLevelContent(context, gl::LevelIndex(0));
             }
         }
-        if (mDepthStencilImage.valid())
-        {
-            mDepthStencilImage.invalidateEntireLevelContent(context, gl::LevelIndex(0));
-            mDepthStencilImage.invalidateEntireLevelStencilContent(context, gl::LevelIndex(0));
-        }
     }
+    // Depth buffer should have been invalidated before the last submission of previous frame
+    ASSERT(!mDepthStencilImage.valid() || !mDepthStencilImage.isVkImageContentDefined());
 
     // Note that an acquire and result processing is no longer needed.
     mAcquireOperation.state = ImageAcquireState::Ready;
