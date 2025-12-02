@@ -7819,11 +7819,24 @@ void FrameCaptureShared::updateResourceCountsFromParamCapture(const ParamCapture
     {
         mHasResourceType.set(idType);
 
+        // Lambda to update the max accessed resource if ID was valid
+        auto updateMaxAccessedID = [&](GLuint id) -> void {
+            // We could check each ID using calls like isHandleGenerated or Context::isTexture,
+            // but let's keep it simple (and fast) for now.
+            constexpr unsigned int kMaxTrackedResourceID = 1000000;
+            if (id >= kMaxTrackedResourceID)
+            {
+                INFO() << "Not tracking potentially invalid resourceID (" << id << ") for idType "
+                       << GetResourceIDTypeName(idType);
+                return;
+            }
+            mMaxAccessedResourceIDs[idType] = std::max(mMaxAccessedResourceIDs[idType], id);
+        };
+
         // Capture resource IDs for non-pointer types.
         if (strcmp(ParamTypeToString(param.type), "GLuint") == 0)
         {
-            mMaxAccessedResourceIDs[idType] =
-                std::max(mMaxAccessedResourceIDs[idType], param.value.GLuintVal);
+            updateMaxAccessedID(param.value.GLuintVal);
         }
         // Capture resource IDs for pointer types.
         if (strstr(ParamTypeToString(param.type), "GLuint *") != nullptr)
@@ -7834,15 +7847,13 @@ void FrameCaptureShared::updateResourceCountsFromParamCapture(const ParamCapture
                 size_t numHandles     = param.data[0].size() / sizeof(GLuint);
                 for (size_t handleIndex = 0; handleIndex < numHandles; ++handleIndex)
                 {
-                    mMaxAccessedResourceIDs[idType] =
-                        std::max(mMaxAccessedResourceIDs[idType], dataPtr[handleIndex]);
+                    updateMaxAccessedID(dataPtr[handleIndex]);
                 }
             }
         }
         if (idType == ResourceIDType::Sync)
         {
-            mMaxAccessedResourceIDs[idType] =
-                std::max(mMaxAccessedResourceIDs[idType], param.value.GLuintVal);
+            updateMaxAccessedID(param.value.GLuintVal);
         }
     }
 }
