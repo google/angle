@@ -27,7 +27,8 @@ RenderbufferVk::RenderbufferVk(const gl::RenderbufferState &state)
     : RenderbufferImpl(state),
       mOwnsImage(false),
       mImage(nullptr),
-      mImageObserverBinding(this, kRenderbufferImageSubjectIndex)
+      mImageObserverBinding(this, kRenderbufferImageSubjectIndex),
+      mRenderer(nullptr)
 {}
 
 RenderbufferVk::~RenderbufferVk() {}
@@ -46,8 +47,8 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
                                              gl::MultisamplingMode mode)
 {
     ContextVk *contextVk            = vk::GetImpl(context);
-    vk::Renderer *renderer          = contextVk->getRenderer();
-    const vk::Format &format        = renderer->getFormat(internalformat);
+    mRenderer                       = contextVk->getRenderer();
+    const vk::Format &format        = mRenderer->getFormat(internalformat);
     angle::FormatID textureFormatID = format.getActualRenderableImageFormatID();
 
     if (!mOwnsImage)
@@ -77,7 +78,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         mOwnsImage          = true;
         mImageSiblingSerial = {};
         mImageObserverBinding.bind(mImage);
-        mImageViews.init(renderer);
+        mImageViews.init(mRenderer);
     }
 
     const angle::Format &textureFormat = format.getActualRenderableImageFormat();
@@ -86,7 +87,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
 
     const bool isRenderToTexture = mode == gl::MultisamplingMode::MultisampledRenderToTexture;
     const bool hasRenderToTextureEXT =
-        renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
+        mRenderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
 
     // Transfer and sampled usage are used for various utilities such as readback or blit.
     VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
@@ -105,14 +106,14 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     // For framebuffer fetch and advanced blend emulation, color will be read as input attachment.
     // For depth/stencil framebuffer fetch, depth/stencil will also be read as input attachment.
     if (!isDepthStencilFormat ||
-        renderer->getFeatures().supportsShaderFramebufferFetchDepthStencil.enabled)
+        mRenderer->getFeatures().supportsShaderFramebufferFetchDepthStencil.enabled)
     {
         usage |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     }
 
     VkImageCreateFlags createFlags = vk::kVkImageCreateFlagsNone;
     if (isRenderToTexture &&
-        renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled)
+        mRenderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled)
     {
         createFlags |= VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT;
     }
@@ -133,7 +134,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         1, robustInit, false, vk::YcbcrConversionDesc{}, nullptr));
 
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    ANGLE_TRY(contextVk->initImageAllocation(mImage, false, renderer->getMemoryProperties(), flags,
+    ANGLE_TRY(contextVk->initImageAllocation(mImage, false, mRenderer->getMemoryProperties(), flags,
                                              vk::MemoryAllocationType::RenderBufferStorageImage));
 
     // If multisampled render to texture, an implicit multisampled image is created which is used as
@@ -141,10 +142,10 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     // automatically resolved into |mImage| and its contents are discarded.
     if (isRenderToTexture && !hasRenderToTextureEXT)
     {
-        mMultisampledImageViews.init(renderer);
+        mMultisampledImageViews.init(mRenderer);
 
         ANGLE_TRY(mMultisampledImage.initImplicitMultisampledRenderToTexture(
-            contextVk, false, renderer->getMemoryProperties(), gl::TextureType::_2D, samples,
+            contextVk, false, mRenderer->getMemoryProperties(), gl::TextureType::_2D, samples,
             *mImage, mImage->getExtents(), robustInit));
 
         mRenderTarget.init(&mMultisampledImage, &mMultisampledImageViews, mImage, &mImageViews,
@@ -185,7 +186,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
                                                        egl::Image *image)
 {
     ContextVk *contextVk   = vk::GetImpl(context);
-    vk::Renderer *renderer = contextVk->getRenderer();
+    mRenderer              = contextVk->getRenderer();
 
     ANGLE_TRY(contextVk->getShareGroup()->lockDefaultContextsPriority(contextVk));
 
@@ -196,7 +197,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
     mOwnsImage          = false;
     mImageSiblingSerial = imageVk->generateSiblingSerial();
     mImageObserverBinding.bind(mImage);
-    mImageViews.init(renderer);
+    mImageViews.init(mRenderer);
 
     // Update ImageViewHelper's colorspace related state
     EGLenum imageColorspaceAttribute = image->getColorspaceAttribute();

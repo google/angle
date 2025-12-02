@@ -1032,7 +1032,8 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mColorImageMSBinding(this, kAnySurfaceImageSubjectIndex),
       mFrameCount(1),
       mPresentID(0),
-      mIsBufferAgeQueried(false)
+      mIsBufferAgeQueried(false),
+      mRenderer(nullptr)
 {
     // Initialize the color render target with the multisampled targets.  If not multisampled, the
     // render target will be updated to refer to a swapchain image on every acquire.
@@ -1218,28 +1219,28 @@ bool WindowSurfaceVk::updateColorSpace(DisplayVk *displayVk)
 
 angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMatchesOut)
 {
-    vk::Renderer *renderer = displayVk->getRenderer();
+    mRenderer = displayVk->getRenderer();
 
-    mColorImageMSViews.init(renderer);
-    mDepthStencilImageViews.init(renderer);
+    mColorImageMSViews.init(mRenderer);
+    mDepthStencilImageViews.init(mRenderer);
 
-    renderer->reloadVolkIfNeeded();
+    mRenderer->reloadVolkIfNeeded();
 
     ANGLE_TRY(createSurfaceVk(displayVk));
 
     // Check if the selected queue created supports present to this surface.
     bool presentSupported = false;
-    ANGLE_TRY(renderer->checkQueueForSurfacePresent(displayVk, mSurface, &presentSupported));
+    ANGLE_TRY(mRenderer->checkQueueForSurfacePresent(displayVk, mSurface, &presentSupported));
     if (!presentSupported)
     {
         return angle::Result::Continue;
     }
 
-    const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
+    const VkPhysicalDevice &physicalDevice = mRenderer->getPhysicalDevice();
 
     VkSurfaceCapabilitiesKHR surfaceCaps;
 
-    if (renderer->getFeatures().supportsSurfaceCapabilities2Extension.enabled)
+    if (mRenderer->getFeatures().supportsSurfaceCapabilities2Extension.enabled)
     {
         VkPhysicalDeviceSurfaceInfo2KHR surfaceInfo2 = {};
         surfaceInfo2.sType   = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR;
@@ -1249,7 +1250,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
         surfaceCaps2.sType                     = VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR;
 
         VkSharedPresentSurfaceCapabilitiesKHR sharedPresentSurfaceCaps = {};
-        if (renderer->getFeatures().supportsSharedPresentableImageExtension.enabled)
+        if (mRenderer->getFeatures().supportsSharedPresentableImageExtension.enabled)
         {
             sharedPresentSurfaceCaps.sType =
                 VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR;
@@ -1260,7 +1261,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
         }
 
         VkSurfaceProtectedCapabilitiesKHR surfaceProtectedCaps = {};
-        if (renderer->getFeatures().supportsSurfaceProtectedCapabilitiesExtension.enabled)
+        if (mRenderer->getFeatures().supportsSurfaceProtectedCapabilitiesExtension.enabled)
         {
             surfaceProtectedCaps.sType = VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR;
 
@@ -1341,15 +1342,15 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
     // before communicating the values to Vulkan.
 
     // Set emulated pre-transform if any emulated prerotation features are set.
-    if (renderer->getFeatures().emulatedPrerotation90.enabled)
+    if (mRenderer->getFeatures().emulatedPrerotation90.enabled)
     {
         mEmulatedPreTransform = VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR;
     }
-    else if (renderer->getFeatures().emulatedPrerotation180.enabled)
+    else if (mRenderer->getFeatures().emulatedPrerotation180.enabled)
     {
         mEmulatedPreTransform = VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR;
     }
-    else if (renderer->getFeatures().emulatedPrerotation270.enabled)
+    else if (mRenderer->getFeatures().emulatedPrerotation270.enabled)
     {
         mEmulatedPreTransform = VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR;
     }
@@ -1397,7 +1398,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
 
     mCompressionFlags    = VK_IMAGE_COMPRESSION_DISABLED_EXT;
     mFixedRateFlags      = 0;
-    VkFormat imageFormat = vk::GetVkFormatFromFormatID(renderer, getActualFormatID(renderer));
+    VkFormat imageFormat = vk::GetVkFormatFromFormatID(mRenderer, getActualFormatID(mRenderer));
     EGLenum surfaceCompressionRate = static_cast<EGLenum>(mState.attributes.get(
         EGL_SURFACE_COMPRESSION_EXT, EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT));
     bool useFixedRateCompression =
@@ -1406,8 +1407,8 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
         (surfaceCompressionRate == EGL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT);
     if (useFixedRateCompression)
     {
-        ASSERT(renderer->getFeatures().supportsImageCompressionControl.enabled);
-        ASSERT(renderer->getFeatures().supportsImageCompressionControlSwapchain.enabled);
+        ASSERT(mRenderer->getFeatures().supportsImageCompressionControl.enabled);
+        ASSERT(mRenderer->getFeatures().supportsImageCompressionControlSwapchain.enabled);
         if (imageFormat == VK_FORMAT_R8G8B8A8_UNORM || imageFormat == VK_FORMAT_R8_UNORM ||
             imageFormat == VK_FORMAT_R5G6B5_UNORM_PACK16 ||
             imageFormat == VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16)
@@ -1415,7 +1416,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
             mCompressionFlags = fixedRateDefault ? VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT
                                                  : VK_IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT;
             mFixedRateFlags   = gl_vk::ConvertEGLFixedRateToVkFixedRate(surfaceCompressionRate,
-                                                                        getActualFormatID(renderer));
+                                                                        getActualFormatID(mRenderer));
         }
     }
 
@@ -3675,4 +3676,9 @@ egl::Error WindowSurfaceVk::getCompressionRate(const egl::Display *display,
     return egl::NoError();
 }
 
+void WindowSurfaceVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
+{
+    // Forward the notification to observing class that the staging buffer changed.
+    onStateChange(angle::SubjectMessage::SubjectChanged);
+}
 }  // namespace rx
