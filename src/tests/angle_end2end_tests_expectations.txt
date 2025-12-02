@@ -476,7 +476,6 @@
 40644833 MAC METAL NVIDIA : Texture2DBaseMaxTestES3.Fuzz545ImmutableTexRenderFeedback/* = SKIP
 
 // Skipped because these tests crash with these backends
-457495647 VULKAN : Texture2DBaseMaxTestES3.BaseExceedsMaxFboAttachAtBase/ES3_Vulkan* = SKIP
 457478042 OPENGL : Texture2DBaseMaxTestES3.BaseExceedsMaxFboAttachAtBase/ES3_OpenGL* = SKIP
 
 40644834 MAC METAL INTEL : Texture2DTest.TextureSizeCase1/* = SKIP

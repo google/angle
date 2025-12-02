@@ -2897,7 +2897,9 @@ angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk,
     }
 
     gl::LevelIndex newBaseLevel = gl::LevelIndex(mState.getEffectiveBaseLevel());
-    gl::LevelIndex newMaxLevel  = gl::LevelIndex(mState.getEffectiveMaxLevel());
+    // In edge case where base level > max level, clamp up to base level.
+    gl::LevelIndex newMaxLevel =
+        std::max(gl::LevelIndex(mState.getEffectiveMaxLevel()), newBaseLevel);
     ASSERT(newBaseLevel <= newMaxLevel);
 
     if (!mImage->valid())
@@ -4225,7 +4227,8 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     ANGLE_TRY(initImageViews(contextVk, viewLevelCount));
 
     mCurrentBaseLevel = gl::LevelIndex(mState.getBaseLevel());
-    mCurrentMaxLevel  = gl::LevelIndex(mState.getMaxLevel());
+    // In edge case where base level > max level, clamp up to base level.
+    mCurrentMaxLevel = std::max(gl::LevelIndex(mState.getMaxLevel()), mCurrentBaseLevel);
 
     return angle::Result::Continue;
 }
