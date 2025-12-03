@@ -4557,7 +4557,12 @@ BufferHelper &BufferHelper::operator=(BufferHelper &&other)
     }
     mXFBOrComputeWriteHeuristicBits = std::move(other.mXFBOrComputeWriteHeuristicBits);
     mSerial                  = other.mSerial;
-    mClientBuffer            = std::move(other.mClientBuffer);
+
+    // BufferHelper is usually std::move()'ed when the GL buffer backing is internally recreated as
+    // an optimization, or for other internal buffer allocation reasons.  It should never happen for
+    // buffers that are backed by external memory.
+    ASSERT(other.mClientBuffer == nullptr);
+    mClientBuffer = nullptr;
 
     return *this;
 }
