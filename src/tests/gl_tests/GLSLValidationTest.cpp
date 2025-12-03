@@ -4712,6 +4712,39 @@ void main (void)
                   "GL_EXT_shader_framebuffer_fetch_non_coherent extension is used");
 }
 
+// Ensure that a negative index after a comma generates an error.
+TEST_P(GLSLValidationTest_ES3, NegativeIndexAfterComma)
+{
+    const char kFS[] = R"(#version 300 es
+layout(location = 0) out mediump vec4 o_color;
+uniform mediump float u;
+uniform mediump vec4 u_color[4];
+
+void main (void)
+{
+    o_color = u_color[u,-2];
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "index expression is negative");
+}
+
+// Ensure that a negative const-variable index after a comma generates an error.
+TEST_P(GLSLValidationTest_ES3, NegativeConstVarIndexAfterComma)
+{
+    const char kFS[] = R"(#version 300 es
+layout(location = 0) out mediump vec4 o_color;
+uniform mediump float u;
+uniform mediump vec4 u_color[4];
+
+void main (void)
+{
+    const int index = -2;
+    o_color = u_color[u,index];
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "index expression is negative");
+}
+
 // Validate that clip/cull distance extensions are not available in ESSL 100
 TEST_P(GLSLValidationTest, ClipCullDistance)
 {

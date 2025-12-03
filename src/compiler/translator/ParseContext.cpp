@@ -6649,29 +6649,55 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         }
     }
 
+    int index                   = 0;
+    bool outOfRangeIndexIsError = false;
+
+    // If the index is using the comma operator, descend to the right-most value, see if that's a
+    // constant.  This is used for validating the index only, we can't constant fold the expression
+    // due to the left-hand-side of the comma.
+    TIntermTyped *commaRHS = indexExpression;
+    while (true)
+    {
+        TIntermConstantUnion *constant = commaRHS->getAsConstantUnion();
+        if (constant)
+        {
+            // If an out-of-range index is not qualified as constant, the behavior in the spec is
+            // undefined. This applies even if ANGLE has been able to constant fold it (ANGLE may
+            // constant fold expressions that are not constant expressions). The most compatible way
+            // to handle this case is to report a warning instead of an error and force the index to
+            // be in the correct range.
+            outOfRangeIndexIsError = commaRHS->getQualifier() == EvqConst;
+            index                  = 0;
+            if (constant->getBasicType() == EbtInt)
+            {
+                index = constant->getIConst(0);
+            }
+            else if (constant->getBasicType() == EbtUInt)
+            {
+                index = static_cast<int>(constant->getUConst(0));
+            }
+
+            if (index < 0)
+            {
+                outOfRangeError(outOfRangeIndexIsError, location, "index expression is negative",
+                                "[]");
+            }
+            break;
+        }
+
+        TIntermBinary *asBinary = commaRHS->getAsBinaryNode();
+        if (asBinary == nullptr || asBinary->getOp() != EOpComma)
+        {
+            break;
+        }
+        commaRHS = asBinary->getRight();
+    }
+
     if (indexConstantUnion)
     {
-        // If an out-of-range index is not qualified as constant, the behavior in the spec is
-        // undefined. This applies even if ANGLE has been able to constant fold it (ANGLE may
-        // constant fold expressions that are not constant expressions). The most compatible way to
-        // handle this case is to report a warning instead of an error and force the index to be in
-        // the correct range.
-        bool outOfRangeIndexIsError = indexExpression->getQualifier() == EvqConst;
-        int index                   = 0;
-        if (indexConstantUnion->getBasicType() == EbtInt)
-        {
-            index = indexConstantUnion->getIConst(0);
-        }
-        else if (indexConstantUnion->getBasicType() == EbtUInt)
-        {
-            index = static_cast<int>(indexConstantUnion->getUConst(0));
-        }
-
         int safeIndex = -1;
-
         if (index < 0)
         {
-            outOfRangeError(outOfRangeIndexIsError, location, "index expression is negative", "[]");
             safeIndex = 0;
         }
 
