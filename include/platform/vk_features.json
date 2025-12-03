@@ -701,14 +701,6 @@
             "issue": "http://anglebug.com/42264071"
         },
         {
-            "name": "force_fragment_shader_precision_highp_to_mediump",
-            "category": "Workarounds",
-            "description": [
-                "Forces highp precision in fragment shader to mediump."
-            ],
-            "issue": "https://issuetracker.google.com/184850002"
-        },
-        {
             "name": "prefer_submit_at_FBO_boundary",
             "category": "Workarounds",
             "description": [

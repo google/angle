@@ -75,11 +75,6 @@ std::shared_ptr<ShaderTranslateTask> ShaderVk::compile(const gl::Context *contex
         options->ignorePrecisionQualifiers = true;
     }
 
-    if (contextVk->getFeatures().forceFragmentShaderPrecisionHighpToMediump.enabled)
-    {
-        options->forceShaderPrecisionHighpToMediump = true;
-    }
-
     if (contextVk->getFeatures().clampFragDepth.enabled)
     {
         options->clampFragDepth = true;

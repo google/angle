@@ -542,12 +542,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo forceFragmentShaderPrecisionHighpToMediump = {
-        "forceFragmentShaderPrecisionHighpToMediump",
-        FeatureCategory::VulkanWorkarounds,
-        &members,
-    };
-
     FeatureInfo preferSubmitAtFBOBoundary = {
         "preferSubmitAtFBOBoundary",
         FeatureCategory::VulkanWorkarounds,

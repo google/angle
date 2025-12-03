@@ -39,7 +39,6 @@
 #include "compiler/translator/tree_ops/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h"
 #include "compiler/translator/tree_ops/FoldExpressions.h"
-#include "compiler/translator/tree_ops/ForcePrecisionQualifier.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/PruneEmptyCases.h"
@@ -1245,14 +1244,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (compileOptions.scalarizeVecAndMatConstructorArgs)
     {
         if (!ScalarizeVecAndMatConstructorArgs(this, root, &mSymbolTable))
-        {
-            return false;
-        }
-    }
-
-    if (compileOptions.forceShaderPrecisionHighpToMediump)
-    {
-        if (!ForceShaderPrecisionToMediump(root, &mSymbolTable, mShaderType))
         {
             return false;
         }

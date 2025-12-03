@@ -5768,10 +5768,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsMemoryBudget,
         ExtensionFound(VK_EXT_MEMORY_BUDGET_EXTENSION_NAME, deviceExtensionNames));
 
-    // Disabled by default. Only enable it for experimental purpose, as this will cause various
-    // tests to fail.
-    ANGLE_FEATURE_CONDITION(&mFeatures, forceFragmentShaderPrecisionHighpToMediump, false);
-
     // TODO: Delete these two feature flags (https://issuetracker.google.com/422507974). More
     // frequent submission may help benchmark score improvement, and in certain cases helps real
     // performance as well (for things like bufferSubData able to go down faster path), but it

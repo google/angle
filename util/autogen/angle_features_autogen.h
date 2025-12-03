@@ -188,7 +188,6 @@ enum class Feature
     ForceDisableFullScreenExclusive,
     ForceFallbackFormat,
     ForceFlushAfterDrawcallUsingShadowmap,
-    ForceFragmentShaderPrecisionHighpToMediump,
     ForceGlErrorChecking,
     ForceHostImageCopyForLuma,
     ForceInitShaderVariables,
