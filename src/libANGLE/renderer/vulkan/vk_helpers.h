@@ -3264,6 +3264,12 @@ class ImageHelper final : public Resource, public angle::Subject
                           uint32_t *layerStart,
                           uint32_t *layerEnd);
 
+    // Copy most of state and move VkImage/VkDeviceMemory from other ImageHelper. This should not be
+    // used for general usage. It is specifically for stageSelfUpdate and falling back from tile
+    // memory where the VkImage and storage will be reallocated but most of ImageHelper property
+    // will keep the same.
+    void copyStateAndMoveStorageFrom(ImageHelper *other);
+
     // Vulkan objects.
     Image mImage;
     DeviceMemory mDeviceMemory;
@@ -3288,8 +3294,8 @@ class ImageHelper final : public Resource, public angle::Subject
     ImageSerial mImageSerial;
 
     // Current state.
-    ImageAccess mCurrentAccess;
     DeviceQueueIndex mCurrentDeviceQueueIndex;
+    ImageAccess mCurrentAccess;
     // For optimizing transition between different shader readonly layouts
     ImageAccess mLastNonShaderReadOnlyAccess;
     VkPipelineStageFlags mCurrentShaderReadStageMask;

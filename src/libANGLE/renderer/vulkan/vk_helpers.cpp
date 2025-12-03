@@ -9479,12 +9479,77 @@ bool ImageHelper::verifyEmulatedClearsAreBeforeOtherUpdates(const SubresourceUpd
     return true;
 }
 
+void ImageHelper::copyStateAndMoveStorageFrom(ImageHelper *other)
+{
+    // move these vulkan objects
+    mImage         = std::move(other->mImage);
+    mDeviceMemory  = std::move(other->mDeviceMemory);
+    mVmaAllocation = std::move(other->mVmaAllocation);
+    if (other->mCurrentEvent.valid())
+    {
+        mCurrentEvent = std::move(other->mCurrentEvent);
+    }
+    if (other->mLastNonShaderReadOnlyEvent.valid())
+    {
+        mLastNonShaderReadOnlyEvent = std::move(other->mLastNonShaderReadOnlyEvent);
+    }
+
+    // Copy over state
+    mUse = other->mUse;
+
+    mVkImageCreateInfo  = other->mVkImageCreateInfo;
+    mImageType          = other->mImageType;
+    mTilingMode         = other->mTilingMode;
+    mCreateFlags        = other->mCreateFlags;
+    mUsage              = other->mUsage;
+    mExtents            = other->mExtents;
+    mRotatedAspectRatio = other->mRotatedAspectRatio;
+    mIntendedFormatID   = other->mIntendedFormatID;
+    mActualFormatID     = other->mActualFormatID;
+    mSamples            = other->mSamples;
+    mImageSerial        = other->mImageSerial;
+
+    mCurrentAccess                = other->mCurrentAccess;
+    mCurrentDeviceQueueIndex      = other->mCurrentDeviceQueueIndex;
+    mLastNonShaderReadOnlyAccess  = other->mLastNonShaderReadOnlyAccess;
+    mCurrentShaderReadStageMask   = other->mCurrentShaderReadStageMask;
+    mRenderPassUsageFlags         = other->mRenderPassUsageFlags;
+    mBarrierQueueSerial           = other->mBarrierQueueSerial;
+    mPipelineStageAccessHeuristic = other->mPipelineStageAccessHeuristic;
+
+    mIsReleasedToExternal = other->mIsReleasedToExternal;
+    mIsForeignImage       = other->mIsForeignImage;
+    mYcbcrConversionDesc  = other->mYcbcrConversionDesc;
+
+    mFirstAllocatedLevel          = other->mFirstAllocatedLevel;
+    mLayerCount                   = other->mLayerCount;
+    mLevelCount                   = other->mLevelCount;
+    mVkImageContentDefined        = other->mVkImageContentDefined;
+    mVkImageStencilContentDefined = other->mVkImageStencilContentDefined;
+
+    mAllocationSize       = other->mAllocationSize;
+    mMemoryAllocationType = other->mMemoryAllocationType;
+    mMemoryTypeIndex      = other->mMemoryTypeIndex;
+
+    mSubresourcesWrittenSinceBarrier = other->mSubresourcesWrittenSinceBarrier;
+
+    // Reset information for other (invalid) image.
+    other->mCurrentAccess               = ImageAccess::Undefined;
+    other->mCurrentDeviceQueueIndex     = kInvalidDeviceQueueIndex;
+    other->mIsReleasedToExternal        = false;
+    other->mIsForeignImage              = false;
+    other->mLastNonShaderReadOnlyAccess = ImageAccess::Undefined;
+    other->mCurrentShaderReadStageMask  = 0;
+    other->mImageSerial                 = kInvalidImageSerial;
+    other->mMemoryAllocationType        = MemoryAllocationType::InvalidEnum;
+    other->setEntireContentUndefined();
+}
+
 void ImageHelper::stageSelfAsSubresourceUpdates(
     ContextVk *contextVk,
     uint32_t levelCount,
     gl::TextureType textureType,
     const gl::CubeFaceArray<gl::TexLevelMask> &skipLevels)
-
 {
     // Nothing to do if every level must be skipped
     const gl::TexLevelMask levelsMask(angle::BitMask<uint32_t>(levelCount)
@@ -9504,43 +9569,8 @@ void ImageHelper::stageSelfAsSubresourceUpdates(
     std::unique_ptr<RefCounted<ImageHelper>> prevImage =
         std::make_unique<RefCounted<ImageHelper>>();
 
-    // Move the necessary information for staged update to work, and keep the rest as part of this
-    // object.
-
-    // Usage info
-    prevImage->get().Resource::operator=(std::move(*this));
-
-    // Vulkan objects
-    prevImage->get().mImage         = std::move(mImage);
-    prevImage->get().mDeviceMemory  = std::move(mDeviceMemory);
-    prevImage->get().mVmaAllocation = std::move(mVmaAllocation);
-
-    // Barrier information.  Note: mLevelCount is set to levelCount so that only the necessary
-    // levels are transitioned when flushing the update.
-    prevImage->get().mIntendedFormatID            = mIntendedFormatID;
-    prevImage->get().mActualFormatID              = mActualFormatID;
-    prevImage->get().mCurrentAccess               = mCurrentAccess;
-    prevImage->get().mCurrentDeviceQueueIndex     = mCurrentDeviceQueueIndex;
-    prevImage->get().mLastNonShaderReadOnlyAccess = mLastNonShaderReadOnlyAccess;
-    prevImage->get().mCurrentShaderReadStageMask  = mCurrentShaderReadStageMask;
-    prevImage->get().mLevelCount                  = levelCount;
-    prevImage->get().mLayerCount                  = mLayerCount;
-    prevImage->get().mImageSerial                 = mImageSerial;
-    prevImage->get().mAllocationSize              = mAllocationSize;
-    prevImage->get().mMemoryAllocationType        = mMemoryAllocationType;
-    prevImage->get().mMemoryTypeIndex             = mMemoryTypeIndex;
-
-    // Reset information for current (invalid) image.
-    mCurrentAccess               = ImageAccess::Undefined;
-    mCurrentDeviceQueueIndex     = kInvalidDeviceQueueIndex;
-    mIsReleasedToExternal        = false;
-    mIsForeignImage              = false;
-    mLastNonShaderReadOnlyAccess = ImageAccess::Undefined;
-    mCurrentShaderReadStageMask  = 0;
-    mImageSerial                 = kInvalidImageSerial;
-    mMemoryAllocationType        = MemoryAllocationType::InvalidEnum;
-
-    setEntireContentUndefined();
+    // Move storage from this object to prevImage
+    prevImage->get().copyStateAndMoveStorageFrom(this);
 
     // Stage updates from the previous image.
     for (LevelIndex levelVk(0); levelVk < LevelIndex(levelCount); ++levelVk)
