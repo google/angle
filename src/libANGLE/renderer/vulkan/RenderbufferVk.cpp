@@ -134,7 +134,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         1, robustInit, false, vk::YcbcrConversionDesc{}, nullptr));
 
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    ANGLE_TRY(contextVk->initImageAllocation(mImage, false, mRenderer->getMemoryProperties(), flags,
+    ANGLE_TRY(contextVk->initImageAllocation(mImage, false, flags,
                                              vk::MemoryAllocationType::RenderBufferStorageImage));
 
     // If multisampled render to texture, an implicit multisampled image is created which is used as
@@ -145,8 +145,8 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         mMultisampledImageViews.init(mRenderer);
 
         ANGLE_TRY(mMultisampledImage.initImplicitMultisampledRenderToTexture(
-            contextVk, false, mRenderer->getMemoryProperties(), gl::TextureType::_2D, samples,
-            *mImage, mImage->getExtents(), robustInit));
+            contextVk, false, gl::TextureType::_2D, samples, *mImage, mImage->getExtents(),
+            robustInit));
 
         mRenderTarget.init(&mMultisampledImage, &mMultisampledImageViews, mImage, &mImageViews,
                            mImageSiblingSerial, gl::LevelIndex(0), 0, 1,

@@ -863,8 +863,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                        BufferUsageType bufferUsageType);
     angle::Result initImageAllocation(vk::ImageHelper *imageHelper,
                                       bool hasProtectedContent,
-                                      const vk::MemoryProperties &memoryProperties,
-                                      VkMemoryPropertyFlags flags,
+                                      VkMemoryPropertyFlags memoryPropertyFlags,
                                       vk::MemoryAllocationType allocationType);
 
     angle::Result releaseBufferAllocation(vk::BufferHelper *bufferHelper);

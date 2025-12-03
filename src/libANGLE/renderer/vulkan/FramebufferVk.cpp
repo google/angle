@@ -1834,9 +1834,9 @@ angle::Result FramebufferVk::ensureFragmentShadingRateImageAndViewInitialized(
             renderer->getFormat(angle::FormatID::R8_UINT), 1, imageUsageFlags, gl::LevelIndex(0), 1,
             1, false, contextVk->getProtectionType() == vk::ProtectionType::Protected));
 
-        ANGLE_TRY(contextVk->initImageAllocation(
-            &mFragmentShadingRateImage, false, renderer->getMemoryProperties(),
-            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vk::MemoryAllocationType::TextureImage));
+        ANGLE_TRY(contextVk->initImageAllocation(&mFragmentShadingRateImage, false,
+                                                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+                                                 vk::MemoryAllocationType::TextureImage));
 
         mFragmentShadingRateImageView.init(renderer);
         ANGLE_TRY(mFragmentShadingRateImageView.initFragmentShadingRateView(

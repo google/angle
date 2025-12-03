@@ -7415,7 +7415,6 @@ angle::Result ContextVk::initBufferAllocation(vk::BufferHelper *bufferHelper,
 
 angle::Result ContextVk::initImageAllocation(vk::ImageHelper *imageHelper,
                                              bool hasProtectedContent,
-                                             const vk::MemoryProperties &memoryProperties,
                                              VkMemoryPropertyFlags flags,
                                              vk::MemoryAllocationType allocationType)
 {
@@ -7434,9 +7433,9 @@ angle::Result ContextVk::initImageAllocation(vk::ImageHelper *imageHelper,
     bool allocateDedicatedMemory =
         mRenderer->getImageMemorySuballocator().needsDedicatedMemory(memoryRequirements.size);
 
-    VkResult result = imageHelper->initMemory(this, memoryProperties, flags, oomExcludedFlags,
-                                              &memoryRequirements, allocateDedicatedMemory,
-                                              allocationType, &outputFlags, &outputSize);
+    VkResult result =
+        imageHelper->initMemory(this, flags, oomExcludedFlags, &memoryRequirements,
+                                allocateDedicatedMemory, allocationType, &outputFlags, &outputSize);
     if (ANGLE_LIKELY(result == VK_SUCCESS))
     {
         if (mRenderer->getFeatures().allocateNonZeroMemory.enabled)
@@ -7463,9 +7462,9 @@ angle::Result ContextVk::initImageAllocation(vk::ImageHelper *imageHelper,
         if (anyGarbageCleaned)
         {
             someGarbageCleaned = true;
-            result = imageHelper->initMemory(this, memoryProperties, flags, oomExcludedFlags,
-                                             &memoryRequirements, allocateDedicatedMemory,
-                                             allocationType, &outputFlags, &outputSize);
+            result = imageHelper->initMemory(this, flags, oomExcludedFlags, &memoryRequirements,
+                                             allocateDedicatedMemory, allocationType, &outputFlags,
+                                             &outputSize);
         }
     } while (result != VK_SUCCESS && anyGarbageCleaned);
 
@@ -7481,9 +7480,9 @@ angle::Result ContextVk::initImageAllocation(vk::ImageHelper *imageHelper,
     {
         ANGLE_TRY(finishImpl(RenderPassClosureReason::OutOfMemory));
         INFO() << "Context flushed due to out-of-memory error.";
-        result = imageHelper->initMemory(this, memoryProperties, flags, oomExcludedFlags,
-                                         &memoryRequirements, allocateDedicatedMemory,
-                                         allocationType, &outputFlags, &outputSize);
+        result = imageHelper->initMemory(this, flags, oomExcludedFlags, &memoryRequirements,
+                                         allocateDedicatedMemory, allocationType, &outputFlags,
+                                         &outputSize);
     }
 
     // If no fallback has worked so far, we should record the failed allocation information in case
@@ -7506,9 +7505,9 @@ angle::Result ContextVk::initImageAllocation(vk::ImageHelper *imageHelper,
     if (result != VK_SUCCESS)
     {
         oomExcludedFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        result           = imageHelper->initMemory(this, memoryProperties, flags, oomExcludedFlags,
-                                                   &memoryRequirements, allocateDedicatedMemory,
-                                                   allocationType, &outputFlags, &outputSize);
+        result = imageHelper->initMemory(this, flags, oomExcludedFlags, &memoryRequirements,
+                                         allocateDedicatedMemory, allocationType, &outputFlags,
+                                         &outputSize);
         INFO()
             << "Allocation failed. Removed the DEVICE_LOCAL bit requirement | Allocation result: "
             << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");

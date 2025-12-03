@@ -6196,7 +6196,6 @@ angle::Result ImageHelper::initializeNonZeroMemory(ErrorContext *context,
 }
 
 VkResult ImageHelper::initMemory(ErrorContext *context,
-                                 const MemoryProperties &memoryProperties,
                                  VkMemoryPropertyFlags flags,
                                  VkMemoryPropertyFlags excludedFlags,
                                  const VkMemoryRequirements *memoryRequirements,
@@ -6244,7 +6243,6 @@ VkResult ImageHelper::initMemory(ErrorContext *context,
 angle::Result ImageHelper::initMemoryAndNonZeroFillIfNeeded(
     ErrorContext *context,
     bool hasProtectedContent,
-    const MemoryProperties &memoryProperties,
     VkMemoryPropertyFlags flags,
     MemoryAllocationType allocationType)
 {
@@ -6264,8 +6262,8 @@ angle::Result ImageHelper::initMemoryAndNonZeroFillIfNeeded(
         renderer->getImageMemorySuballocator().needsDedicatedMemory(memoryRequirements.size);
 
     ANGLE_VK_TRY(context,
-                 initMemory(context, memoryProperties, flags, 0, &memoryRequirements,
-                            allocateDedicatedMemory, allocationType, &outputFlags, &outputSize));
+                 initMemory(context, flags, 0, &memoryRequirements, allocateDedicatedMemory,
+                            allocationType, &outputFlags, &outputSize));
 
     // Memory can only be non-zero initialized if the TRANSFER_DST usage is set.  This is normally
     // the case, but not with |initImplicitMultisampledRenderToTexture| which creates a
@@ -6563,7 +6561,6 @@ void ImageHelper::init2DWeakReference(ErrorContext *context,
 
 angle::Result ImageHelper::init2DStaging(ErrorContext *context,
                                          bool hasProtectedContent,
-                                         const MemoryProperties &memoryProperties,
                                          const gl::Extents &glExtents,
                                          angle::FormatID intendedFormatID,
                                          angle::FormatID actualFormatID,
@@ -6572,13 +6569,12 @@ angle::Result ImageHelper::init2DStaging(ErrorContext *context,
 {
     gl_vk::GetExtent(glExtents, &mExtents);
 
-    return initStaging(context, hasProtectedContent, memoryProperties, VK_IMAGE_TYPE_2D, mExtents,
-                       intendedFormatID, actualFormatID, 1, usage, 1, layerCount);
+    return initStaging(context, hasProtectedContent, VK_IMAGE_TYPE_2D, mExtents, intendedFormatID,
+                       actualFormatID, 1, usage, 1, layerCount);
 }
 
 angle::Result ImageHelper::initStaging(ErrorContext *context,
                                        bool hasProtectedContent,
-                                       const MemoryProperties &memoryProperties,
                                        VkImageType imageType,
                                        const VkExtent3D &extents,
                                        angle::FormatID intendedFormatID,
@@ -6640,8 +6636,7 @@ angle::Result ImageHelper::initStaging(ErrorContext *context,
         memoryPropertyFlags |= VK_MEMORY_PROPERTY_PROTECTED_BIT;
     }
 
-    ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(context, hasProtectedContent, memoryProperties,
-                                               memoryPropertyFlags,
+    ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(context, hasProtectedContent, memoryPropertyFlags,
                                                vk::MemoryAllocationType::StagingImage));
     return angle::Result::Continue;
 }
@@ -6649,7 +6644,6 @@ angle::Result ImageHelper::initStaging(ErrorContext *context,
 angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
     ErrorContext *context,
     bool hasProtectedContent,
-    const MemoryProperties &memoryProperties,
     gl::TextureType textureType,
     GLint samples,
     const ImageHelper &resolveImage,
@@ -6671,7 +6665,8 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
     // supports LAZILY_ALLOCATED.  However, based on actual image requirements, such a memory may
     // not be suitable for the image.  We don't support such a case, which will result in the
     // |initMemory| call below failing.
-    const bool hasLazilyAllocatedMemory = memoryProperties.hasLazilyAllocatedMemory();
+    const bool hasLazilyAllocatedMemory =
+        context->getRenderer()->getMemoryProperties().hasLazilyAllocatedMemory();
 
     const VkImageUsageFlags kLazyFlags =
         hasLazilyAllocatedMemory ? VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT : 0;
@@ -6715,13 +6710,12 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
     // still fail), but ideally that means GL_EXT_multisampled_render_to_texture should not be
     // advertised on this platform in the first place.
     ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(
-        context, hasProtectedContent, memoryProperties, kMultisampledMemoryFlags,
+        context, hasProtectedContent, kMultisampledMemoryFlags,
         vk::MemoryAllocationType::ImplicitMultisampledRenderToTextureImage));
     return angle::Result::Continue;
 }
 
 angle::Result ImageHelper::initRgbDrawImageForYuvResolve(ErrorContext *context,
-                                                         const MemoryProperties &memoryProperties,
                                                          const ImageHelper &resolveImage,
                                                          bool isRobustResourceInitEnabled)
 {
@@ -6752,8 +6746,7 @@ angle::Result ImageHelper::initRgbDrawImageForYuvResolve(ErrorContext *context,
         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
         (hasProtectedContent ? VK_MEMORY_PROPERTY_PROTECTED_BIT : 0);
 
-    ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(context, hasProtectedContent, memoryProperties,
-                                               yuvMemoryFlags,
+    ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(context, hasProtectedContent, yuvMemoryFlags,
                                                vk::MemoryAllocationType::ImplicitYuvTargetImage));
 
     return angle::Result::Continue;
@@ -11047,14 +11040,14 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
     if (isMultisampled)
     {
         ANGLE_TRY(resolvedImage.get().init2DStaging(
-            contextVk, contextVk->getState().hasProtectedContent(), renderer->getMemoryProperties(),
+            contextVk, contextVk->getState().hasProtectedContent(),
             gl::Extents(area.width, area.height, 1), mIntendedFormatID, mActualFormatID,
             vk::kImageUsageTransferBits | VK_IMAGE_USAGE_SAMPLED_BIT, 1));
     }
     else if (isExternalFormat)
     {
         ANGLE_TRY(resolvedImage.get().init2DStaging(
-            contextVk, contextVk->getState().hasProtectedContent(), renderer->getMemoryProperties(),
+            contextVk, contextVk->getState().hasProtectedContent(),
             gl::Extents(area.width, area.height, 1), angle::FormatID::R8G8B8A8_UNORM,
             angle::FormatID::R8G8B8A8_UNORM,
             vk::kImageUsageTransferBits | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |

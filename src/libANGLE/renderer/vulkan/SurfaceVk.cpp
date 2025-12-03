@@ -643,7 +643,7 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initialize(DisplayVk *display
         flags |= VK_MEMORY_PROPERTY_PROTECTED_BIT;
     }
     ANGLE_TRY(image.initMemoryAndNonZeroFillIfNeeded(
-        displayVk, hasProtectedContent, renderer->getMemoryProperties(), flags,
+        displayVk, hasProtectedContent, flags,
         vk::MemoryAllocationType::OffscreenSurfaceAttachmentImage));
 
     imageViews.init(renderer);
@@ -1798,8 +1798,8 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context)
             intendedFormatID, actualFormatID, samples, usage, gl::LevelIndex(0), 1, 1, robustInit,
             mState.hasProtectedContent()));
         ANGLE_TRY(mColorImageMS.initMemoryAndNonZeroFillIfNeeded(
-            context, mState.hasProtectedContent(), renderer->getMemoryProperties(),
-            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vk::MemoryAllocationType::SwapchainMSAAImage));
+            context, mState.hasProtectedContent(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+            vk::MemoryAllocationType::SwapchainMSAAImage));
 
         // Initialize the color render target with the multisampled targets.  If not multisampled,
         // the render target will be updated to refer to a swapchain image on every acquire.
@@ -1843,8 +1843,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context)
                                           samples, dsUsage, gl::LevelIndex(0), 1, 1, robustInit,
                                           mState.hasProtectedContent()));
         ANGLE_TRY(mDepthStencilImage.initMemoryAndNonZeroFillIfNeeded(
-            context, mState.hasProtectedContent(), renderer->getMemoryProperties(),
-            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+            context, mState.hasProtectedContent(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
             vk::MemoryAllocationType::SwapchainDepthStencilImage));
 
         mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageViews, nullptr,
