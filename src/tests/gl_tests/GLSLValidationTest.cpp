@@ -6451,6 +6451,41 @@ void main()
         hasExt ? "extension is disabled" : "extension is not supported");
 }
 
+// The GLES SL 3.0 built-in variable gl_FragDepth fails to compile with GLES SL 1.0.
+TEST_P(GLSLValidationTest, FragDepthFailsESSL100)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+void main() {
+    gl_FragDepth = 1.0;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "'gl_FragDepth' : undeclared identifier");
+
+    // Even with GL_EXT_frag_depth extension enabled, gl_FragDepth (ES3 built-in) should fail in
+    // ESSL 100. Note: The extension provides gl_FragDepthEXT, not gl_FragDepth.
+    if (IsGLExtensionEnabled("GL_EXT_frag_depth"))
+    {
+        constexpr char kFSWithExt[] = R"(#extension GL_EXT_frag_depth : enable
+precision mediump float;
+void main() {
+    gl_FragDepth = 1.0;
+})";
+        validateError(GL_FRAGMENT_SHADER, kFSWithExt, "'gl_FragDepth' : undeclared identifier");
+    }
+}
+
+// Using #extension GL_EXT_frag_depth in GLSL ES 3.0 shader fails to compile.
+TEST_P(GLSLValidationTest_ES3, FragDepthExtensionFailsESSL300)
+{
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_frag_depth : require
+precision mediump float;
+out vec4 fragColor;
+void main() {
+    fragColor = vec4(1.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "extension is not supported");
+}
+
 // GL_EXT_shader_framebuffer_fetch or GL_EXT_shader_framebuffer_fetch_non_coherent needs to be
 // enabled in GLSL 100 to be able to use gl_LastFragData and in GLSL 300+ to use inout.
 TEST_P(GLSLValidationExtensionDirectiveTest_ES3, LastFragData)
