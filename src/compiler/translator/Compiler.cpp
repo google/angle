@@ -1001,11 +1001,14 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (IsSpecWithFunctionBodyNewScope(mShaderSpec, mShaderVersion))
+    if (!useIR)
     {
-        if (!ReplaceShadowingVariables(this, root, &mSymbolTable))
+        if (IsSpecWithFunctionBodyNewScope(mShaderSpec, mShaderVersion))
         {
-            return false;
+            if (!ReplaceShadowingVariables(this, root, &mSymbolTable))
+            {
+                return false;
+            }
         }
     }
 
@@ -1218,15 +1221,18 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    // In case the last case inside a switch statement is a certain type of no-op, GLSL compilers in
-    // drivers may not accept it. In this case we clean up the dead code from the end of switch
-    // statements. This is also required because PruneNoOps or RemoveUnreferencedVariables may have
-    // left switch statements that only contained an empty declaration inside the final case in an
-    // invalid state. Relies on that PruneNoOps and RemoveUnreferencedVariables have already been
-    // run.
-    if (!PruneEmptyCases(this, root))
+    if (!useIR)
     {
-        return false;
+        // In case the last case inside a switch statement is a certain type of no-op, GLSL
+        // compilers in drivers may not accept it. In this case we clean up the dead code from the
+        // end of switch statements. This is also required because PruneNoOps or
+        // RemoveUnreferencedVariables may have left switch statements that only contained an empty
+        // declaration inside the final case in an invalid state. Relies on that PruneNoOps and
+        // RemoveUnreferencedVariables have already been run.
+        if (!PruneEmptyCases(this, root))
+        {
+            return false;
+        }
     }
 
     // Run after RemoveUnreferencedVariables, validate that the shader does not have excessively
@@ -1386,11 +1392,14 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions.rewriteRepeatedAssignToSwizzled)
+    if (!useIR)
     {
-        if (!sh::RewriteRepeatedAssignToSwizzled(this, root))
+        if (compileOptions.rewriteRepeatedAssignToSwizzled)
         {
-            return false;
+            if (!sh::RewriteRepeatedAssignToSwizzled(this, root))
+            {
+                return false;
+            }
         }
     }
 

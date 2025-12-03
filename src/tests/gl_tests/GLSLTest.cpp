@@ -21961,6 +21961,40 @@ void main()
     glUniform1ui(glGetUniformLocation(program, "u"), 0xCD2C'51E1);
     testFloat(program, 47.03125, -20.6875, 0, 0);
 }
+
+// Regression test for a bug where the translator assumed the last case can be simply pruned because
+// it is no-op.
+TEST_P(GLSLTest_ES3, EmptyLastCaseInSwitch)
+{
+    // Incorrect translation before IR.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    constexpr char kFS[] = R"(#version 300 es
+uniform int ui;
+out mediump vec4 color;
+
+void main(void)
+{
+    color = vec4(1, 0, 0, 1);
+
+    int i = ui;
+    switch (i)
+    {
+        default:
+            // This shouldn't run, because `ui` is zero.
+            color = vec4(0, 1, 0, 1);
+            break;
+        case 0:
+            int j;
+            1;
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
