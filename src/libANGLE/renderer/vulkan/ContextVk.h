@@ -475,9 +475,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     angle::Result flushAndSubmitCommands(const vk::Semaphore *semaphore,
                                          const vk::SharedExternalFence *externalFence,
-                                         RenderPassClosureReason renderPassClosureReason);
+                                         QueueSubmitReason queueSubmitReason);
 
-    angle::Result finishImpl(RenderPassClosureReason renderPassClosureReason);
+    angle::Result finishImpl(QueueSubmitReason queueSubmitReason);
 
     void addWaitSemaphore(VkSemaphore semaphore, VkPipelineStageFlags stageMask)
     {
@@ -626,7 +626,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result submitStagedTextureUpdates()
     {
         // Staged updates are recorded in outside RP command buffer, submit them.
-        return flushAndSubmitOutsideRenderPassCommands();
+        return flushAndSubmitOutsideRenderPassCommands(QueueSubmitReason::ForceSubmitStagedTexture);
     }
 
     angle::Result beginNewRenderPass(vk::RenderPassFramebuffer &&framebuffer,
@@ -700,7 +700,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result startNextSubpass();
     angle::Result flushCommandsAndEndRenderPass(RenderPassClosureReason reason);
     angle::Result flushCommandsAndEndRenderPassWithoutSubmit(RenderPassClosureReason reason);
-    angle::Result flushAndSubmitOutsideRenderPassCommands();
+    angle::Result flushAndSubmitOutsideRenderPassCommands(QueueSubmitReason reason);
 
     angle::Result syncExternalMemory();
 
@@ -1343,7 +1343,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void prepareToSubmitAllCommands();
     angle::Result submitCommands(const vk::Semaphore *signalSemaphore,
-                                 const vk::SharedExternalFence *externalFence);
+                                 const vk::SharedExternalFence *externalFence,
+                                 QueueSubmitReason reason);
     angle::Result flushImpl(const gl::Context *context);
 
     angle::Result synchronizeCpuGpuTime();

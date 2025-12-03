@@ -440,6 +440,13 @@ class Renderer : angle::NonCopyable
                                            egl::ContextPriority dstContextPriority,
                                            SerialIndex index);
 
+    angle::Result insertOneOffSubmitDebugMarker(vk::ErrorContext *context,
+                                                vk::ProtectionType protectionType,
+                                                egl::ContextPriority priority,
+                                                QueueSubmitReason reason);
+    void insertSubmitDebugMarkerInCommandBuffer(PrimaryCommandBuffer &commandBuffer,
+                                                QueueSubmitReason reason);
+
     void handleDeviceLost();
     angle::Result finishResourceUse(vk::ErrorContext *context, const vk::ResourceUse &use);
     angle::Result finishQueueSerial(vk::ErrorContext *context, const QueueSerial &queueSerial);

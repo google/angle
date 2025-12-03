@@ -537,6 +537,22 @@ angle::Result CommandsState::ensurePrimaryCommandBufferValidLocked(ErrorContext 
     return angle::Result::Continue;
 }
 
+angle::Result CommandsState::insertSubmitDebugMarker(ErrorContext *context,
+                                                     QueueSubmitReason reason)
+{
+    Renderer *renderer = context->getRenderer();
+    if (!renderer->enableDebugUtils() && !renderer->angleDebuggerMode())
+    {
+        return angle::Result::Continue;
+    }
+
+    std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
+    ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context));
+
+    renderer->insertSubmitDebugMarkerInCommandBuffer(mPrimaryCommands, reason);
+    return angle::Result::Continue;
+}
+
 // CommandPoolAccess public API implementation. These must be thread safe and never called from
 // CommandPoolAccess class itself.
 CommandPoolAccess::CommandPoolAccess()  = default;

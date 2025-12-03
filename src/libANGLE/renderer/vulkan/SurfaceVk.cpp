@@ -2499,7 +2499,7 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     }
 
     ANGLE_TRY(contextVk->flushAndSubmitCommands(shouldDrawOverlay ? nullptr : &presentSemaphore,
-                                                nullptr, RenderPassClosureReason::EGLSwapBuffers));
+                                                nullptr, QueueSubmitReason::EGLSwapBuffers));
 
     if (shouldDrawOverlay)
     {
@@ -2508,8 +2508,8 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
 
         ANGLE_TRY(recordPresentLayoutBarrierIfNecessary(contextVk));
 
-        ANGLE_TRY(contextVk->flushAndSubmitCommands(
-            &presentSemaphore, nullptr, RenderPassClosureReason::AlreadySpecifiedElsewhere));
+        ANGLE_TRY(contextVk->flushAndSubmitCommands(&presentSemaphore, nullptr,
+                                                    QueueSubmitReason::DrawOverlay));
     }
 
     ASSERT(image.image->getCurrentImageAccess() ==
@@ -3041,6 +3041,9 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
             image.image->recordWriteBarrierOneOff(renderer, vk::ImageAccess::SharedPresent,
                                                   &primaryCommandBuffer, &semaphore);
             ASSERT(semaphore == acquireImageSemaphore);
+
+            renderer->insertSubmitDebugMarkerInCommandBuffer(primaryCommandBuffer,
+                                                             QueueSubmitReason::AcquireNextImage);
             if (primaryCommandBuffer.end() != VK_SUCCESS)
             {
                 setDesiredSwapInterval(mState.swapInterval);

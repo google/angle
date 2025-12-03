@@ -75,6 +75,75 @@ constexpr bool kEnableVulkanAPIDumpLayer = false;
 
 namespace rx
 {
+namespace
+{
+constexpr angle::PackedEnumMap<QueueSubmitReason, const char *> kQueueSubmitReason = {{
+    {QueueSubmitReason::EGLSwapBuffers, "Queue submission imminent due to eglSwapBuffers()"},
+    {QueueSubmitReason::EGLWaitClient, "Queue submission imminent due to eglWaitClient()"},
+    {QueueSubmitReason::DeferredFlush, "Queue submission imminent due to deferred flushing"},
+    {QueueSubmitReason::GLFinish, "Queue submission imminent due to glFinish()"},
+    {QueueSubmitReason::GLFlush, "Queue submission imminent due to glFlush()"},
+    {QueueSubmitReason::GLReadPixels, "Queue submission imminent due to glReadPixels()"},
+    {QueueSubmitReason::AcquireNextImage, "Queue submission imminent due to acquiring next image"},
+    {QueueSubmitReason::ContextChange, "Queue submission imminent due to context change"},
+    {QueueSubmitReason::ContextDestruction, "Queue submission imminent due to context destruction"},
+    {QueueSubmitReason::ContextPriorityChange,
+     "Queue submission imminent due to context priority change"},
+    {QueueSubmitReason::SurfaceUnMakeCurrent,
+     "Queue submission imminent due to unmaking current on surface"},
+    {QueueSubmitReason::CopyBufferToImageOneOff,
+     "Queue submission imminent after one-off copying buffer to image"},
+    {QueueSubmitReason::CopyBufferToSurfaceImage,
+     "Queue submission imminent after copying buffer to surface image"},
+    {QueueSubmitReason::CopySurfaceImageToBuffer,
+     "Queue submission imminent after copying surface image to buffer"},
+    {QueueSubmitReason::ForeignImageRelease,
+     "Queue submission imminent due to releasing foreign image"},
+    {QueueSubmitReason::ImageUseThenReleaseToExternal,
+     "Queue submission imminent due to image used in render pass being released"},
+    {QueueSubmitReason::TextureReformatToRenderable,
+     "Queue submission imminent due to reformatting texture to a renderable fallback"},
+    {QueueSubmitReason::CopyTextureOnCPU,
+     "Queue submission imminent due to fallback to CPU when copying texture"},
+    {QueueSubmitReason::GenerateMipmapOnCPU,
+     "Queue submission imminent due to fallback to CPU when generating mipmaps"},
+    {QueueSubmitReason::ExternalSemaphoreSignal,
+     "Queue submission imminent due to external semaphore signal"},
+    {QueueSubmitReason::GetQueryResult, "Queue submission imminent after getting query result"},
+    {QueueSubmitReason::GetTimestamp, "Queue submission imminent after getting the timestamp"},
+    {QueueSubmitReason::SyncCPUGPUTime,
+     "Queue submission imminent due to synchronizing CPU and GPU time"},
+    {QueueSubmitReason::SyncObjectInit, "Queue submission imminent after initializing sync object"},
+    {QueueSubmitReason::SyncObjectClientWait,
+     "Queue submission imminent due to sync object client wait"},
+    {QueueSubmitReason::SyncObjectWithFdInit,
+     "Queue submission imminent due to inserting sync object with file descriptor"},
+    {QueueSubmitReason::DeviceLocalBufferMap,
+     "Queue submission imminent due to mapping device local buffer"},
+    {QueueSubmitReason::BufferWriteThenMap,
+     "Queue submission imminent due to mapping buffer being written to by render pass"},
+    {QueueSubmitReason::BufferInUseWhenSynchronizedMap,
+     "Queue submission imminent due to mapping buffer in use by GPU without "
+     "GL_MAP_UNSYNCHRONIZED_BIT"},
+    {QueueSubmitReason::WaitSemaphore, "Queue submission imminent after waiting for semaphore"},
+    {QueueSubmitReason::ExcessivePendingGarbage,
+     "Queue submission imminent due to exceeding pending garbage memory size threshold"},
+    {QueueSubmitReason::OutOfMemory,
+     "Queue submission imminent due to context finish to mitigate running out of device memory"},
+    {QueueSubmitReason::RenderPassCountLimitReached,
+     "Queue submission imminent due to exceeding the threshold for render pass command count"},
+    {QueueSubmitReason::RenderPassCommandLimitReached,
+     "Queue submission imminent due to exceeding write command limit at draw time"},
+    {QueueSubmitReason::BufferToImageUpdateLimitReached,
+     "Queue submission imminent due to exceeding buffer-to-image update size limit"},
+    {QueueSubmitReason::ForceSubmitStagedTexture,
+     "Queue submission imminent due to staged texture updates"},
+    {QueueSubmitReason::DrawOverlay, "Queue submission imminent due to drawing overlay"},
+    {QueueSubmitReason::InitNonZeroMemory,
+     "Queue submission imminent due to initializing non-zero memory"},
+}};
+}  // namespace
+
 namespace vk
 {
 namespace
@@ -7363,6 +7432,40 @@ angle::Result Renderer::submitCommands(vk::ErrorContext *context,
     return angle::Result::Continue;
 }
 
+angle::Result Renderer::insertOneOffSubmitDebugMarker(vk::ErrorContext *context,
+                                                      vk::ProtectionType protectionType,
+                                                      egl::ContextPriority priority,
+                                                      QueueSubmitReason reason)
+{
+    if (!enableDebugUtils() && !angleDebuggerMode())
+    {
+        return angle::Result::Continue;
+    }
+
+    ScopedPrimaryCommandBuffer scopedCommandBuffer(getDevice());
+    ANGLE_TRY(getCommandBufferOneOff(context, protectionType, &scopedCommandBuffer));
+    PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
+    insertSubmitDebugMarkerInCommandBuffer(commandBuffer, reason);
+    ANGLE_VK_TRY(context, commandBuffer.end());
+
+    QueueSerial queueSerial;
+    return queueSubmitOneOff(context, std::move(scopedCommandBuffer), protectionType, priority,
+                             VK_NULL_HANDLE, 0, &queueSerial);
+}
+
+void Renderer::insertSubmitDebugMarkerInCommandBuffer(PrimaryCommandBuffer &commandBuffer,
+                                                      QueueSubmitReason reason)
+{
+    if (!enableDebugUtils() && !angleDebuggerMode())
+    {
+        return;
+    }
+
+    VkDebugUtilsLabelEXT labelInfo;
+    vk::MakeDebugUtilsLabel(GL_DEBUG_SOURCE_API, kQueueSubmitReason[reason], &labelInfo);
+    commandBuffer.insertDebugUtilsLabelEXT(labelInfo);
+}
+
 angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
                                                  vk::ProtectionTypes protectionTypes,
                                                  egl::ContextPriority srcContextPriority,
@@ -7392,6 +7495,9 @@ angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
             semaphore.get().setQueueSerial(queueSerial);
             signalSemaphore = &semaphore.get().get();
         }
+
+        ANGLE_TRY(insertOneOffSubmitDebugMarker(context, protectionType, srcContextPriority,
+                                                QueueSubmitReason::ContextPriorityChange));
         ANGLE_TRY(submitCommands(context, signalSemaphore, nullptr, queueSerial,
                                  std::move(commandsState)));
         mSubmittedResourceUse.setQueueSerial(queueSerial);
@@ -7400,6 +7506,9 @@ angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
     // Submit only Wait Semaphore into the destination Priority (VkQueue).
     QueueSerial queueSerial(index, generateQueueSerial(index));
     semaphore.get().setQueueSerial(queueSerial);
+
+    ANGLE_TRY(insertOneOffSubmitDebugMarker(context, ProtectionType::Unprotected,
+                                            dstContextPriority, QueueSubmitReason::WaitSemaphore));
     ANGLE_TRY(queueSubmitWaitSemaphore(context, dstContextPriority, semaphore.get().get(),
                                        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, queueSerial));
 

@@ -1688,8 +1688,8 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     vk::RendererScoped<vk::BufferHelper> bufferHelper(renderer);
     uint8_t *sourceData = nullptr;
     ANGLE_TRY(source->copyImageDataToBufferAndGetData(
-        contextVk, sourceLevelGL, sourceBox.depth, sourceBox,
-        RenderPassClosureReason::CopyTextureOnCPU, &bufferHelper.get(), &sourceData));
+        contextVk, sourceLevelGL, sourceBox.depth, sourceBox, QueueSubmitReason::CopyTextureOnCPU,
+        &bufferHelper.get(), &sourceData));
 
     const angle::Format &srcTextureFormat = source->getImage().getActualFormat();
     const angle::Format &dstTextureFormat =
@@ -2572,7 +2572,7 @@ angle::Result TextureVk::copyImageDataToBufferAndGetData(ContextVk *contextVk,
                                                          gl::LevelIndex sourceLevelGL,
                                                          uint32_t layerCount,
                                                          const gl::Box &sourceArea,
-                                                         RenderPassClosureReason reason,
+                                                         QueueSubmitReason reason,
                                                          vk::BufferHelper *copyBuffer,
                                                          uint8_t **outDataPtr)
 {
@@ -2793,7 +2793,7 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
 
     vk::RendererScoped<vk::BufferHelper> bufferHelper(contextVk->getRenderer());
     ANGLE_TRY(copyImageDataToBufferAndGetData(contextVk, baseLevelGL, imageLayerCount, imageArea,
-                                              RenderPassClosureReason::GenerateMipmapOnCPU,
+                                              QueueSubmitReason::GenerateMipmapOnCPU,
                                               &bufferHelper.get(), &imageData));
 
     const angle::Format &angleFormat = mImage->getActualFormat();
@@ -3069,7 +3069,7 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk, const vk:
 
         // Explicitly finish. If new use cases arise where we don't want to block we can change
         // this.
-        ANGLE_TRY(contextVk->finishImpl(RenderPassClosureReason::TextureReformatToRenderable));
+        ANGLE_TRY(contextVk->finishImpl(QueueSubmitReason::TextureReformatToRenderable));
         // invalidate must be called after wait for finish.
         ANGLE_TRY(srcBuffer->invalidate(renderer));
 

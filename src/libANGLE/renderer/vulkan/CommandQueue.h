@@ -276,6 +276,8 @@ class CommandsState : angle::NonCopyable
     egl::ContextPriority getPriority() const { return mPriority; }
     ProtectionType getProtectionType() const { return mProtectionType; }
 
+    angle::Result insertSubmitDebugMarker(ErrorContext *context, QueueSubmitReason reason);
+
   private:
     angle::Result ensurePrimaryCommandBufferValidLocked(ErrorContext *context);
 

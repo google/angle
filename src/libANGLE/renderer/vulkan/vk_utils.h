@@ -1635,12 +1635,6 @@ enum class RenderPassClosureReason
     AlreadySpecifiedElsewhere,
 
     // Implicit closures due to flush/wait/etc.
-    ContextDestruction,
-    ContextChange,
-    GLFlush,
-    GLFinish,
-    EGLSwapBuffers,
-    EGLWaitClient,
     SurfaceUnMakeCurrent,
 
     // Closure due to switching rendering to another framebuffer.
@@ -1659,7 +1653,6 @@ enum class RenderPassClosureReason
     XfbWriteThenTextureBuffer,
 
     // Use of resource after render pass
-    BufferWriteThenMap,
     BufferWriteThenOutOfRPRead,
     BufferUseThenOutOfRPWrite,
     ImageUseThenOutOfRPRead,
@@ -1668,25 +1661,18 @@ enum class RenderPassClosureReason
     XfbWriteThenIndirectDispatchBuffer,
     ImageAttachmentThenComputeRead,
     GraphicsTextureImageAccessThenComputeAccess,
-    GetQueryResult,
     BeginNonRenderPassQuery,
     EndNonRenderPassQuery,
     TimestampQuery,
     EndRenderPassQuery,
-    GLReadPixels,
 
     // Synchronization
     BufferUseThenReleaseToExternal,
     ImageUseThenReleaseToExternal,
-    BufferInUseWhenSynchronizedMap,
     GLMemoryBarrierThenStorageResource,
     StorageResourceUseThenGLMemoryBarrier,
-    ExternalSemaphoreSignal,
     SyncObjectInit,
-    SyncObjectWithFdInit,
     SyncObjectClientWait,
-    SyncObjectServerWait,
-    SyncObjectGetStatus,
     ForeignImageRelease,
 
     // Closures that ANGLE could have avoided, but doesn't for simplicity or optimization of more
@@ -1697,7 +1683,6 @@ enum class RenderPassClosureReason
     GenerateMipmapOnCPU,
     CopyTextureOnCPU,
     TextureReformatToRenderable,
-    DeviceLocalBufferMap,
     OutOfReservedQueueSerialForOutsideCommands,
 
     // UtilsVk
@@ -1712,12 +1697,68 @@ enum class RenderPassClosureReason
     // LegacyDithering requires updating the render pass
     LegacyDithering,
 
+    // Flushing and submitting the command buffer requires render pass closure.
+    SubmitCommands,
+
+    InvalidEnum,
+    EnumCount = InvalidEnum,
+};
+
+enum class QueueSubmitReason
+{
+    // Flush/Finish/Wait
+    EGLSwapBuffers,
+    EGLWaitClient,
+    GLFinish,
+    GLFlush,
+    GLReadPixels,
+
+    // Context/Surface
+    AcquireNextImage,
+    ContextChange,
+    ContextDestruction,
+    ContextPriorityChange,
+    SurfaceUnMakeCurrent,
+
+    // Buffer/Image
+    CopyBufferToImageOneOff,
+    CopyBufferToSurfaceImage,
+    CopySurfaceImageToBuffer,
+    ForeignImageRelease,
+    ImageUseThenReleaseToExternal,
+    InitNonZeroMemory,
+    TextureReformatToRenderable,
+    CopyTextureOnCPU,
+    GenerateMipmapOnCPU,
+
+    // Sync/Query/Timestamp
+    ExternalSemaphoreSignal,
+    GetQueryResult,
+    GetTimestamp,
+    SyncCPUGPUTime,
+    SyncObjectInit,
+    SyncObjectClientWait,
+    SyncObjectWithFdInit,
+    DeviceLocalBufferMap,
+    BufferWriteThenMap,
+    BufferInUseWhenSynchronizedMap,
+    WaitSemaphore,
+
     // In case of memory budget issues, pending garbage needs to be freed.
     ExcessivePendingGarbage,
     OutOfMemory,
 
     // In case of reaching the render pass limit in the command buffer, it should be submitted.
     RenderPassCountLimitReached,
+    RenderPassCommandLimitReached,
+
+    // Outside command buffer submission
+    BufferToImageUpdateLimitReached,
+    ForceSubmitStagedTexture,
+
+    // Others
+    DeferredFlush,
+    DrawOverlay,
 
     InvalidEnum,
     EnumCount = InvalidEnum,
