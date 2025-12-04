@@ -8509,6 +8509,70 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferAssertIsOpen)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Demonstrate the WAW syncVal bug https://anglebug.com/400789178
+TEST_P(VulkanPerformanceCounterTest, DepthBufferWriteThenReadThenWriteInThreeRenderPasses)
+{
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(drawBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    constexpr GLsizei kWidth  = 4;
+    constexpr GLsizei kHeight = 4;
+
+    GLTexture colorTexture1;
+    glBindTexture(GL_TEXTURE_2D, colorTexture1);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+
+    GLTexture colorTexture2;
+    glBindTexture(GL_TEXTURE_2D, colorTexture2);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kWidth, kHeight);
+
+    GLFramebuffer fbo1;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture1, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthStencil);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencil);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, kWidth, kHeight);
+
+    GLFramebuffer fbo2;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture2, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthStencil);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencil);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, kWidth, kHeight);
+
+    GLfloat depthValue = 0.0f;
+    // Draw to fbo1 with depth buffer write
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(depthValue * 0.5f + 0.5f);
+    glClearStencil(0x55);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), depthValue);
+
+    // Draw to fbo2 with read only depth buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDepthMask(GL_FALSE);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), depthValue);
+
+    std::array<GLenum, 2> attachments = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
+    glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 2, attachments.data());
+
+    // Draw to fbo1 with depth buffer write
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glDepthMask(GL_TRUE);
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), depthValue);
+    glFinish();
+}
+
 // Verifies that clear followed by eglSwapBuffers() on multisampled FBO does not result
 // extra resolve pass, if the surface is double-buffered and when the egl swap behavior
 // is EGL_BUFFER_DESTROYED

@@ -455,14 +455,15 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "BIT)",
       "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "prior_command = vkCmdPipelineBarrier",
       "command = vkCmdBeginRenderingKHR", "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE"}},
-    // https://anglebug.com/400789178
+    // https://anglebug.com/400789178, prior_command could be vkCmdEndRenderPass or
+    // vkCmdEndRenderingKHR
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      false,
      {"message_type = ImageBarrierError", "hazard_type = WRITE_AFTER_WRITE",
       "access = SYNC_IMAGE_LAYOUT_TRANSITION",
       "prior_access = "
       "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)",
-      "command = vkCmdPipelineBarrier", "prior_command = vkCmdEndRenderPass"}},
+      "command = vkCmdPipelineBarrier", "prior_command = vkCmdEndRender"}},
     // https://anglebug.com/400789178
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      false,
