@@ -3820,6 +3820,99 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
 }
 
+// Test that short circuit doesn't evaluate out of bounds expressions.
+TEST_P(GLSLTest_ES31, ShortCircuitOutOfBoundsAccess)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
+
+    // Note that the uniform doesn't need to be set, and will contain the default value of false.
+    constexpr char kCS[] = R"(#version 310 es
+#extension GL_OES_texture_buffer : require
+layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
+
+uniform bool falseValue;
+uniform uint zero;
+
+layout(binding = 0) readonly buffer Input
+{
+    uint inData[];
+};
+
+layout(binding = 1, std430) writeonly buffer Output
+{
+    uint outData[];
+};
+
+layout(r32ui, binding = 0) uniform highp uimageBuffer image;
+
+void main()
+{
+    outData[0] = falseValue ? inData[123456] : 1u;
+    outData[1] = falseValue ? inData[~zero] : 2u;
+    outData[2] = falseValue ? inData[123456] : 3u;
+    outData[3] = !falseValue ? 4u : inData[~zero];
+    outData[4] = !falseValue ? 5u : imageLoad(image, 1234567).x;
+    outData[5] = falseValue ? imageLoad(image, int(~zero)).x : 6u;
+
+    bool eval6 = falseValue && bool(inData[123456]);
+    bool eval7 = falseValue && bool(inData[~zero]);
+    bool eval8 = !falseValue || bool(inData[123456]);
+    bool eval9 = !falseValue || bool(inData[~zero]);
+    bool eval10 = falseValue && bool(imageLoad(image, 1234567).x);
+    bool eval11 = !falseValue || bool(imageLoad(image, int(~zero)).x);
+
+    outData[6] = eval6 ? 1234u : 7u;
+    outData[7] = eval7 ? 2345u : 8u;
+    outData[8] = eval8 ? 9u : 3456u;
+    outData[9] = eval9 ? 10u : 4567u;
+    outData[10] = eval10 ? 5678u : 11u;
+    outData[11] = eval11 ? 12u : 6789u;
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+
+    GLBuffer input;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, input);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(uint32_t), nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, input);
+
+    constexpr std::array<uint32_t, 12> kInitialData = {};
+
+    GLBuffer output;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, output);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kInitialData), kInitialData.data(),
+                 GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, output);
+
+    GLBuffer imageBufferStorage;
+    GLTexture imageBuffer;
+
+    glBindBuffer(GL_TEXTURE_BUFFER, imageBufferStorage);
+    glBufferData(GL_TEXTURE_BUFFER, sizeof(uint32_t), nullptr, GL_STATIC_DRAW);
+
+    glBindTexture(GL_TEXTURE_BUFFER, imageBuffer);
+    glTexBufferEXT(GL_TEXTURE_BUFFER, GL_R32UI, imageBufferStorage);
+    glBindImageTexture(0, imageBuffer, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    glFinish();
+
+    std::array<uint32_t, 12> readback = {};
+    void *mapped =
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kInitialData), GL_MAP_READ_BIT);
+    memcpy(readback.data(), mapped, sizeof(kInitialData));
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    for (size_t i = 0; i < kInitialData.size(); ++i)
+    {
+        EXPECT_EQ(readback[i], i + 1) << i;
+    }
+}
+
 // Test that nesting ternary and short-circuitting operators work.
 TEST_P(GLSLTest, NestedTernaryAndShortCircuit)
 {

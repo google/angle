@@ -1153,6 +1153,7 @@
 42266091 WIN INTEL : *EmulateCopyTexImage2DFromRenderbuffers* = SKIP
 
 42266092 WIN SWIFTSHADER : VulkanPerformanceCounterTest.EndXfbAfterRenderPassClosed/* = SKIP
+466331749 WIN SWIFTSHADER : GLSLTest_ES31.ShortCircuitOutOfBoundsAccess/* = SKIP
 
 // Flat shading bug with lighting
 42264726 VULKAN : LightsTest.FlatLitMesh/* = SKIP
@@ -1812,6 +1813,12 @@
 42264369 ANDROID GLES : TextureBufferTestES31.DrawIncompleteNonZeroTexture/* = SKIP
 42264369 ANDROID GLES : TextureBufferTestES31.DrawCompleteZeroTexture/* = SKIP
 42264369 ANDROID GLES : TextureBufferTestES31.DrawCompleteNonZeroTexture/* = SKIP
+42264369 ANDROID GLES : TextureBufferTestES31.TexBufferDrawTwice/* = SKIP
+42264369 ANDROID GLES : TextureBufferTestES31.UseAsUBOThenUpdateThenAsTextureBuffer/* = SKIP
+42264369 ANDROID GLES : TextureBufferTestES31.MapTextureBufferInvalidateThenWrite/* = SKIP
+42264369 ANDROID GLES : ComputeShaderTest.ImageBufferMapWrite/* = SKIP
+42264369 ANDROID GLES : ComputeShaderTest.ImageBufferMapWriteAndBufferSubData/* = SKIP
+42264369 ANDROID GLES : GLSLTest_ES31.ShortCircuitOutOfBoundsAccess/* = SKIP
 
 // WebGPU failures
 // All tests are flaky on Linux Intel due to X errors.

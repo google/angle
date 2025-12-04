@@ -5096,10 +5096,6 @@ TEST_P(ComputeShaderTest, ImageBufferMapWrite)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
 
-    // Claims to support GL_OES_texture_buffer, but fails compilation of shader because "extension
-    // 'GL_OES_texture_buffer' is not supported".  http://anglebug.com/42264369
-    ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
-
     constexpr char kComputeImageBuffer[] = R"(#version 310 es
 #extension GL_OES_texture_buffer : require
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
@@ -5166,10 +5162,6 @@ void main()
 TEST_P(ComputeShaderTest, ImageBufferMapWriteAndBufferSubData)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
-
-    // Claims to support GL_OES_texture_buffer, but fails compilation of shader because "extension
-    // 'GL_OES_texture_buffer' is not supported".  http://anglebug.com/42264369
-    ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
 
     // http://anglebug.com/42265043. Known bug.
     ANGLE_SKIP_TEST_IF(IsVulkan());
