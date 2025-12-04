@@ -5730,8 +5730,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsPipelineStatisticsQuery,
                             mPhysicalDeviceFeatures.pipelineStatisticsQuery == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, allowPipelineStatisticsForPrimitivesGeneratedQuery,
-                            mFeatures.supportsPipelineStatisticsQuery.enabled && isSamsung);
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, allowPipelineStatisticsForPrimitivesGeneratedQuery,
+        mFeatures.supportsPipelineStatisticsQuery.enabled && (isSamsung || isQualcommProprietary));
 
     // Android mistakenly destroys the old swapchain when creating a new one.
     ANGLE_FEATURE_CONDITION(&mFeatures, waitIdleBeforeSwapchainRecreation,
