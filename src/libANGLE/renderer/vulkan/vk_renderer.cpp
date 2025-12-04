@@ -1974,7 +1974,6 @@ Renderer::Renderer()
       mNativeVectorWidthHalf(0),
       mPreferredVectorWidthDouble(0),
       mPreferredVectorWidthHalf(0),
-      mMinCommandCountToSubmit(0),
       mMinRPWriteCommandCountToEarlySubmit(UINT32_MAX)
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
@@ -5778,8 +5777,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // This is relevant only if preferSubmitAtFBOBoundary is enabled
     ANGLE_FEATURE_CONDITION(&mFeatures, forceSubmitExceptionsAtFBOBoundary,
                             mFeatures.preferSubmitAtFBOBoundary.enabled && !isQualcommProprietary);
-
-    mMinCommandCountToSubmit = isQualcommProprietary ? 1024 : 32;
 
     // The number of minimum write commands in the command buffer to trigger one submission of
     // pending commands at draw call time

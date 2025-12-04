@@ -74,6 +74,10 @@ static constexpr GLbitfield kWriteAfterAccessImageMemoryBarriers =
 static constexpr GLbitfield kWriteAfterAccessMemoryBarriers =
     kWriteAfterAccessImageMemoryBarriers | GL_SHADER_STORAGE_BARRIER_BIT;
 
+// The number of minimum commands in the command buffer to prefer submit at FBO boundary or
+// immediately submit when the device is idle after calling to flush.
+static constexpr size_t kMinCommandCountToSubmit = 1024;
+
 // For shader uniforms such as gl_DepthRange and the viewport size.
 struct GraphicsDriverUniforms
 {
@@ -1520,7 +1524,7 @@ angle::Result ContextVk::flushImpl(const gl::Context *context)
     uint32_t currentRPCommandCount =
         mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount() +
         mCommandsPendingSubmissionCount;
-    if (currentRPCommandCount >= mRenderer->getMinCommandCountToSubmit())
+    if (currentRPCommandCount >= kMinCommandCountToSubmit)
     {
         if (!mRenderer->isInFlightCommandsEmpty())
         {
@@ -5908,7 +5912,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
 
                 // To reduce CPU overhead if submission at FBO boundary is preferred, the deferred
                 // flush is triggered after the currently accumulated command count for the render
-                // pass command buffer hits a threshold (Renderer::getMinCommandCountToSubmit()).
+                // pass command buffer hits a threshold kMinCommandCountToSubmit).
                 uint32_t currentRPCommandCount =
                     mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount() +
                     mCommandsPendingSubmissionCount;
@@ -5924,7 +5928,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
 
                 bool shouldSubmitAtFBOBoundary =
                     getFeatures().preferSubmitAtFBOBoundary.enabled &&
-                    (currentRPCommandCount >= mRenderer->getMinCommandCountToSubmit() ||
+                    (currentRPCommandCount >= kMinCommandCountToSubmit ||
                      allowExceptionForSubmitAtBoundary);
 
                 if ((shouldSubmitAtFBOBoundary || mState.getDrawFramebuffer()->isDefault()) &&

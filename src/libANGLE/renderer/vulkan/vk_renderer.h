@@ -708,8 +708,6 @@ class Renderer : angle::NonCopyable
                mVertexAttributeDivisorFeatures.vertexAttributeInstanceRateZeroDivisor == VK_TRUE;
     }
 
-    uint32_t getMinCommandCountToSubmit() const { return mMinCommandCountToSubmit; }
-
     angle::Result onFrameBoundary(const gl::Context *contextGL);
 
     uint32_t getMinRenderPassWriteCommandCountToEarlySubmit() const
@@ -1119,10 +1117,6 @@ class Renderer : angle::NonCopyable
     uint32_t mNativeVectorWidthHalf;
     uint32_t mPreferredVectorWidthDouble;
     uint32_t mPreferredVectorWidthHalf;
-
-    // The number of minimum commands in the command buffer to prefer submit at FBO boundary or
-    // immediately submit when the device is idle after calling to flush.
-    uint32_t mMinCommandCountToSubmit;
 
     // The number of minimum write commands in the command buffer to trigger one submission of
     // pending commands at draw call time
