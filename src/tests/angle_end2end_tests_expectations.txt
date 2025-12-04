@@ -29,6 +29,8 @@
 42266349 VULKAN : MultithreadingTestES3.UnsynchronizedTextureReads2/* = SKIP
 377614665 VULKAN : GLSLValidationTest.StructSamplerVsComma/* = SKIP
 410584007 VULKAN : ImageTestES31.UseSourceTextureAsStorageImage/* = SKIP
+// GL_WEBGL_video_texture extension doesn't work correctly with ESSL 100 on OpenGL backend.
+466412253 OPENGL : GLSLValidationExtensionDirectiveTest_ES3.SamplerVideoWEBGL_ESSL100/* = SKIP
 // Incorrectly handled pretty much in all backends
 42266871 : CopyTexImageTestES3.RedefineSameLevel/* = SKIP
 // Fails in Android with EGL_BAD_ALLOC

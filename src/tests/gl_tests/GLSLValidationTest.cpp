@@ -6305,6 +6305,41 @@ void main()
         "'s' : syntax error", hasExt ? "'s' : syntax error" : "extension is not supported");
 }
 
+// GL_WEBGL_video_texture needs to be enabled in GLSL to be able to use samplerVideoWEBGL.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, SamplerVideoWEBGL_ESSL100)
+{
+    const bool hasExt = IsGLExtensionEnabled("GL_WEBGL_video_texture");
+
+    constexpr char kFS[] = R"(precision mediump float;
+uniform mediump samplerVideoWEBGL s;
+void main() {
+    gl_FragColor = textureVideoWEBGL(s, vec2(0.0, 0.0));
+})";
+    // samplerVideoWEBGL is not a reserved keyword, and the translator fails with syntax
+    // error if extension is not specified.
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, nullptr, "GL_WEBGL_video_texture", hasExt, "'s' : syntax error",
+        hasExt ? "'s' : syntax error" : "extension is not supported");
+}
+
+// GL_WEBGL_video_texture needs to be enabled in GLSL to be able to use samplerVideoWEBGL.
+TEST_P(GLSLValidationExtensionDirectiveTest_ES3, SamplerVideoWEBGL_ESSL300)
+{
+    const bool hasExt = IsGLExtensionEnabled("GL_WEBGL_video_texture");
+
+    constexpr char kFS[] = R"(precision mediump float;
+uniform mediump samplerVideoWEBGL s;
+out vec4 my_FragColor;
+void main() {
+    my_FragColor = texture(s, vec2(0.0, 0.0));
+})";
+    // samplerVideoWEBGL is not a reserved keyword, and the translator fails with syntax
+    // error if extension is not specified.
+    testCompileNeedsExtensionDirective(
+        GL_FRAGMENT_SHADER, kFS, "#version 300 es", "GL_WEBGL_video_texture", hasExt,
+        "'s' : syntax error", hasExt ? "'s' : syntax error" : "extension is not supported");
+}
+
 // GL_EXT_YUV_target needs to be enabled in GLSL to be able to use layout(yuv).
 TEST_P(GLSLValidationExtensionDirectiveTest_ES3, YUVLayoutNeedsExtensionDirective)
 {
