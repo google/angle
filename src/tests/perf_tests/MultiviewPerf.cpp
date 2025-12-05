@@ -230,7 +230,17 @@ class MultiviewCPUBoundBenchmark : public MultiviewBenchmark
 class MultiviewGPUBoundBenchmark : public MultiviewBenchmark
 {
   public:
-    MultiviewGPUBoundBenchmark() : MultiviewBenchmark("MultiviewGPUBoundBenchmark") {}
+    MultiviewGPUBoundBenchmark() : MultiviewBenchmark("MultiviewGPUBoundBenchmark")
+    {
+        if (IsPixel6() &&
+            GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
+            GetParam().multiviewOption == MultiviewOption::NoAcceleration)
+        {
+            skipTest(
+                "http://anglebug.com/463416137 Fails on Pixel 6 Vulkan with no "
+                "acceleration.");
+        }
+    }
 
     void initializeBenchmark() override;
 
