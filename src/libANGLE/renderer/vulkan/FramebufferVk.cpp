@@ -47,13 +47,15 @@ constexpr unsigned int kEmulatedAlphaValue = 1;
 bool HasSrcBlitFeature(vk::Renderer *renderer, RenderTargetVk *srcRenderTarget)
 {
     angle::FormatID srcFormatID = srcRenderTarget->getImageActualFormatID();
-    return renderer->hasImageFormatFeatureBits(srcFormatID, VK_FORMAT_FEATURE_BLIT_SRC_BIT);
+    return renderer->hasImageFormatFeatureBits(srcFormatID, VK_FORMAT_FEATURE_BLIT_SRC_BIT) &&
+           srcRenderTarget->getImageForCopy().canTransferFrom();
 }
 
 bool HasDstBlitFeature(vk::Renderer *renderer, RenderTargetVk *dstRenderTarget)
 {
     angle::FormatID dstFormatID = dstRenderTarget->getImageActualFormatID();
-    return renderer->hasImageFormatFeatureBits(dstFormatID, VK_FORMAT_FEATURE_BLIT_DST_BIT);
+    return renderer->hasImageFormatFeatureBits(dstFormatID, VK_FORMAT_FEATURE_BLIT_DST_BIT) &&
+           dstRenderTarget->getImageForWrite().canTransferTo();
 }
 
 // Returns false if destination has any channel the source doesn't.  This means that channel was
@@ -1266,13 +1268,35 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         srcFramebufferVk->restageDeferredClearsForReadFramebuffer(contextVk);
     }
 
-    // We can sometimes end up in a blit with some clear commands saved. Ensure all clear commands
-    // are issued before we issue the blit command.
-    ANGLE_TRY(flushDeferredClears(contextVk));
-
     const bool blitColorBuffer   = (mask & GL_COLOR_BUFFER_BIT) != 0;
     const bool blitDepthBuffer   = (mask & GL_DEPTH_BUFFER_BIT) != 0;
     const bool blitStencilBuffer = (mask & GL_STENCIL_BUFFER_BIT) != 0;
+
+    if (blitDepthBuffer || blitStencilBuffer)
+    {
+        RenderTargetVk *readRenderTarget = srcFramebufferVk->getDepthStencilRenderTarget();
+        RenderTargetVk *drawRenderTarget = mRenderTargetCache.getDepthStencil();
+        vk::ImageHelper &readImage       = readRenderTarget->getImageForCopy();
+        vk::ImageHelper &drawImage       = drawRenderTarget->getImageForWrite();
+
+        if (!readImage.canTransferFrom())
+        {
+            ASSERT(readImage.useTileMemory());
+            readImage.finalizeImageLayoutInShareContexts(renderer, contextVk, {});
+            ANGLE_TRY(readImage.fallbackFromTileMemory(contextVk));
+        }
+
+        if (!drawImage.canTransferTo())
+        {
+            ASSERT(drawImage.useTileMemory());
+            drawImage.finalizeImageLayoutInShareContexts(renderer, contextVk, {});
+            ANGLE_TRY(drawImage.fallbackFromTileMemory(contextVk));
+        }
+    }
+
+    // We can sometimes end up in a blit with some clear commands saved. Ensure all clear commands
+    // are issued before we issue the blit command.
+    ANGLE_TRY(flushDeferredClears(contextVk));
 
     // If a framebuffer contains a mixture of multisampled and multisampled-render-to-texture
     // attachments, this function could be simultaneously doing a blit on one attachment and resolve

@@ -580,6 +580,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                UniqueSerial imageSiblingSerial)
     {
         ASSERT(mRenderPassCommands->started());
+        if (image && image->useTileMemory())
+        {
+            addImageWithTileMemory(image);
+        }
         mRenderPassCommands->addDepthStencilResolveAttachment(
             image, view, aspects, level, layerStart, layerCount, imageSiblingSerial);
     }

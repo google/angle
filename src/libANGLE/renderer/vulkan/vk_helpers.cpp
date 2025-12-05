@@ -9938,6 +9938,10 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
         transferAccess.onImageTransferDstAndComputeWrite(
             levelGLStart, 1, kMaxContentDefinedLayerCount, 0, aspectFlags, this);
     }
+    else if (mUseTileMemory)
+    {
+        ASSERT(areStagedUpdatesClearOnly());
+    }
     else
     {
         transferAccess.onImageTransferWrite(levelGLStart, 1, kMaxContentDefinedLayerCount, 0,
@@ -10087,9 +10091,23 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                 case UpdateSource::Clear:
                 case UpdateSource::ClearAfterInvalidate:
                 {
-                    clear(renderer, update.data.clear.aspectFlags, update.data.clear.value,
-                          updateMipLevelVk, updateBaseLayer, updateLayerCount,
-                          &commandBuffer->getCommandBuffer());
+                    if (canTransferTo())
+                    {
+                        clear(renderer, update.data.clear.aspectFlags, update.data.clear.value,
+                              updateMipLevelVk, updateBaseLayer, updateLayerCount,
+                              &commandBuffer->getCommandBuffer());
+                    }
+                    else
+                    {
+                        ASSERT(mUseTileMemory);
+                        UtilsVk::ClearTextureParameters params = {};
+                        params.aspectFlags                     = getAspectFlags();
+                        params.level                           = updateMipLevelVk;
+                        params.clearArea  = gl::Box(0, 0, 0, mExtents.width, mExtents.height, 1);
+                        params.clearValue = update.data.clear.value;
+                        params.layer      = updateBaseLayer;
+                        ANGLE_TRY(contextVk->getUtils().clearTexture(contextVk, this, params));
+                    }
                     contextVk->getPerfCounters().fullImageClears++;
                     // Remember the latest operation is a clear call.
                     mCurrentSingleClearValue = update.data.clear;
@@ -11074,7 +11092,8 @@ bool ImageHelper::canCopyWithTransformForReadPixels(const PackPixelsParams &pack
 
     // Don't allow copies from emulated formats for simplicity.
     return !hasEmulatedImageFormat() && isSameFormatCopy && !needsTransformation &&
-           isPitchMultipleOfTexelSize && isOffsetMultipleOfTexelSize && isRowLengthEnough;
+           isPitchMultipleOfTexelSize && isOffsetMultipleOfTexelSize && isRowLengthEnough &&
+           canTransferFrom();
 }
 
 bool ImageHelper::canCopyWithComputeForReadPixels(const PackPixelsParams &packPixelsParams,
@@ -11332,6 +11351,16 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
         // Mark our temp views as garbage immediately
         contextVk->addGarbage(&srcView);
         contextVk->addGarbage(&stagingView);
+    }
+
+    if (!canTransferFrom())
+    {
+        ASSERT(useTileMemory());
+        if (useTileMemory())
+        {
+            ANGLE_TRY(fallbackFromTileMemory(contextVk));
+            ASSERT(canTransferFrom());
+        }
     }
 
     if (isMultisampled)

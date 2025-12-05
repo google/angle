@@ -2904,6 +2904,15 @@ class ImageHelper final : public Resource, public angle::Subject
 
     bool areStagedUpdatesClearOnly();
 
+    bool canTransferFrom() const
+    {
+        return (mVkImageCreateInfo.usage & VK_IMAGE_USAGE_TRANSFER_SRC_BIT) != 0;
+    }
+    bool canTransferTo() const
+    {
+        return (mVkImageCreateInfo.usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT) != 0;
+    }
+
     // VK_QCOM_tile_memory_heap
     bool isTileMemoryCompatible() const { return mTileMemoryCompatible; }
     bool useTileMemory() const { return mUseTileMemory; }
@@ -3984,6 +3993,7 @@ class CommandResources : angle::NonCopyable
 
     void onImageTransferRead(VkImageAspectFlags aspectFlags, ImageHelper *image)
     {
+        ASSERT(image->canTransferFrom());
         onImageRead(aspectFlags, ImageAccess::TransferSrc, image);
     }
     void onImageTransferWrite(gl::LevelIndex levelStart,
@@ -3993,6 +4003,7 @@ class CommandResources : angle::NonCopyable
                               VkImageAspectFlags aspectFlags,
                               ImageHelper *image)
     {
+        ASSERT(image->canTransferTo());
         onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
                      ImageAccess::TransferDst, image);
     }
@@ -4007,6 +4018,7 @@ class CommandResources : angle::NonCopyable
                          VkImageAspectFlags aspectFlags,
                          ImageHelper *image)
     {
+        ASSERT(image->canTransferFrom() && image->canTransferTo());
         onImageReadSubresources(readLevelStart, readLevelCount, readLayerStart, readLayerCount,
                                 aspectFlags, ImageAccess::TransferSrcDst, image);
         onImageWrite(writeLevelStart, writeLevelCount, writeLayerStart, writeLayerCount,
@@ -4053,6 +4065,7 @@ class CommandResources : angle::NonCopyable
                                            VkImageAspectFlags aspectFlags,
                                            ImageHelper *image)
     {
+        ASSERT(image->canTransferTo());
         onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
                      ImageAccess::TransferDstAndComputeWrite, image);
     }
