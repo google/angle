@@ -607,6 +607,7 @@ void OnImageBufferWrite(vk::Context *context,
     vk::BufferHelper &buffer = bufferVk->getBuffer();
     VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
     commandBufferHelper->bufferWrite(context, accessFlags, stages, &buffer);
+    bufferVk->onDataChanged();
 }
 
 constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPassClosureReason = {{

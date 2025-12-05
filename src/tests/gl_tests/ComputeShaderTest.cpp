@@ -5163,9 +5163,6 @@ TEST_P(ComputeShaderTest, ImageBufferMapWriteAndBufferSubData)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
 
-    // http://anglebug.com/42265043. Known bug.
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char kComputeImageBuffer[] = R"(#version 310 es
 #extension GL_OES_texture_buffer : require
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
@@ -5221,9 +5218,9 @@ void main()
 
         if (loop == 1)
         {
-            // Make write operation finished but read operation pending. We don't care actual
-            // rendering result but just to have a unflushed rendering using the buffer so that it
-            // will appears as pending.
+            // Make write operation finished but read operation pending. We don't care about the
+            // actual rendering result but just to have unflushed commands using the buffer so that
+            // it appears as pending.
             glFinish();
             constexpr char kVS[] = R"(attribute vec4 in_attrib;
                                     varying vec4 v_attrib;
