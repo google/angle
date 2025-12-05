@@ -141,7 +141,7 @@
                                                                 'pool': 'chromium.tests.gpu'}}},
   'win10_nvidia_gtx_1660_experimental': { 'fail_if_unused': False,
                                           'swarming': { 'dimensions': { 'display_attached': '1',
-                                                                        'gpu': '10de:2184-32.0.15.7602',
+                                                                        'gpu': '10de:2184-32.0.15.8180',
                                                                         'os': 'Windows-11-26100',
                                                                         'pool': 'chromium.tests.gpu'}}},
   'win10_nvidia_gtx_1660_stable': { 'fail_if_unused': False,
