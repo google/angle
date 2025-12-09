@@ -15,6 +15,8 @@
 #include <gtest/gtest.h>
 
 #include <array>
+#include <string>
+#include <string_view>
 #include <type_traits>
 #include <vector>
 
@@ -105,7 +107,7 @@ TEST(SpanTest, Constructors)
         ASSERT_FALSE(sp.empty());
     }
 
-    // Constexpr construct from std::array
+    // Constexpr construct from constexpr std::array<const>
     {
         constexpr Span sp(kSpanArr);
         static_assert(std::is_same_v<decltype(sp), const Span<const unsigned int, kSpanDataSize>>);
@@ -114,13 +116,83 @@ TEST(SpanTest, Constructors)
         ASSERT_FALSE(sp.empty());
     }
 
-    // Construct from container providing data() and size()
+    // Construct from const std::array<non-const>.
+    {
+        const std::array<int, 2> kArr = {1, 2};
+        Span sp(kArr);
+        static_assert(std::is_same_v<decltype(sp), Span<const int, 2u>>);
+        ASSERT_EQ(sp.data(), kArr.data());
+        ASSERT_EQ(sp.size(), kArr.size());
+        ASSERT_FALSE(sp.empty());
+    }
+
+    // Construct from std::array<const>.
+    {
+        std::array<const int, 2> arr = {1, 2};
+        Span sp(arr);
+        static_assert(std::is_same_v<decltype(sp), Span<const int, 2u>>);
+        ASSERT_EQ(sp.data(), arr.data());
+        ASSERT_EQ(sp.size(), arr.size());
+        ASSERT_FALSE(sp.empty());
+    }
+
+    // Construct from std::array<non-const>.
+    {
+        std::array<int, 2> arr = {1, 2};
+        Span sp(arr);
+        static_assert(std::is_same_v<decltype(sp), Span<int, 2u>>);
+        ASSERT_EQ(sp.data(), arr.data());
+        ASSERT_EQ(sp.size(), arr.size());
+        ASSERT_FALSE(sp.empty());
+    }
+
+    // Construct from std::vector
     {
         std::vector<unsigned int> vec({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
         Span sp(vec);
         static_assert(std::is_same_v<decltype(sp), Span<unsigned int, dynamic_extent>>);
         ASSERT_EQ(sp.data(), vec.data());
         ASSERT_EQ(sp.size(), vec.size());
+        ASSERT_FALSE(sp.empty());
+    }
+
+    // Construct from const std::vector
+    {
+        const std::vector<unsigned int> vec({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
+        Span sp(vec);
+        static_assert(std::is_same_v<decltype(sp), Span<const unsigned int, dynamic_extent>>);
+        ASSERT_EQ(sp.data(), vec.data());
+        ASSERT_EQ(sp.size(), vec.size());
+        ASSERT_FALSE(sp.empty());
+    }
+
+    // Construct from std::string
+    {
+        std::string str = "hooray";
+        Span sp(str);
+        static_assert(std::is_same_v<decltype(sp), Span<char, dynamic_extent>>);
+        ASSERT_EQ(sp.data(), str.data());
+        ASSERT_EQ(sp.size(), str.size());
+        ASSERT_FALSE(sp.empty());
+    }
+
+    // Construct from const std::string
+    {
+        const std::string str = "hooray";
+        Span sp(str);
+        static_assert(std::is_same_v<decltype(sp), Span<const char, dynamic_extent>>);
+        ASSERT_EQ(sp.data(), str.data());
+        ASSERT_EQ(sp.size(), str.size());
+        ASSERT_FALSE(sp.empty());
+    }
+
+    // Construct from std::string_view
+    {
+        std::string_view view = "hooray";
+        Span sp(view);
+        static_assert(std::is_same_v<decltype(sp), Span<const char, dynamic_extent>>);
+        ASSERT_EQ(sp.data(), view.data());
+        ASSERT_EQ(sp.size(), view.size());
         ASSERT_FALSE(sp.empty());
     }
 

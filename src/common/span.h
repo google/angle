@@ -17,8 +17,11 @@
 #include <algorithm>
 #include <array>
 #include <iterator>
+#include <string>
+#include <string_view>
 #include <type_traits>
 #include <utility>
+#include <vector>
 
 #include "common/base/anglebase/logging.h"
 #include "common/unsafe_buffers.h"
@@ -184,8 +187,8 @@ class Span
         static_assert(Extent == dynamic_extent || Extent == N);
     }
 
-    template <size_t N>
-    constexpr Span(const std::array<T, N> &array) noexcept
+    template <typename U, size_t N, typename = std::enable_if_t<std::is_convertible_v<U *, T *>>>
+    constexpr Span(const std::array<U, N> &array) noexcept
         // SAFETY: The type signature guarantees `array` contains `N` elements.
         : ANGLE_UNSAFE_BUFFERS(Span(array.data(), N))
     {
@@ -369,6 +372,15 @@ Span(std::vector<T> &) -> Span<T>;
 
 template <typename T>
 Span(const std::vector<T> &) -> Span<const T>;
+
+template <typename T>
+Span(std::basic_string<T> &) -> Span<T>;
+
+template <typename T>
+Span(const std::basic_string<T> &) -> Span<const T>;
+
+template <typename T>
+Span(std::basic_string_view<T>) -> Span<const T>;
 
 // [span.objectrep], views of object representation
 template <typename T, size_t N, typename P>
