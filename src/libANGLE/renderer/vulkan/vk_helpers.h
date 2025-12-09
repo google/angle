@@ -2331,6 +2331,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     bool valid() const { return mImage.valid(); }
 
+    VkImageAspectFlags getIntendedAspectFlags() const;
     VkImageAspectFlags getAspectFlags() const;
     // True if image contains both depth & stencil aspects
     bool isCombinedDepthStencilFormat() const;
@@ -2829,7 +2830,9 @@ class ImageHelper final : public Resource, public angle::Subject
     bool hasSubresourceDefinedStencilContent(gl::LevelIndex level,
                                              uint32_t layerIndex,
                                              uint32_t layerCount) const;
-    // Returns true if VkImage has valid content at any level/layer
+
+    // Returns true if VkImage has valid user content at any level/layer/aspect (emulated channel is
+    // ignored).
     bool isVkImageContentDefined() const;
     void invalidateEntireLevelContent(vk::ErrorContext *context, gl::LevelIndex level);
     void invalidateSubresourceContent(ContextVk *contextVk,

@@ -6752,6 +6752,11 @@ angle::Result ImageHelper::initRgbDrawImageForYuvResolve(ErrorContext *context,
     return angle::Result::Continue;
 }
 
+VkImageAspectFlags ImageHelper::getIntendedAspectFlags() const
+{
+    return GetFormatAspectFlags(angle::Format::Get(mIntendedFormatID));
+}
+
 VkImageAspectFlags ImageHelper::getAspectFlags() const
 {
     return GetFormatAspectFlags(angle::Format::Get(mActualFormatID));
@@ -8762,7 +8767,7 @@ void ImageHelper::invalidateEntireLevelContent(vk::ErrorContext *context, gl::Le
 {
     invalidateSubresourceContentImpl(
         context, level, 0, mLayerCount,
-        static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT),
+        static_cast<VkImageAspectFlagBits>(getIntendedAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT),
         nullptr, nullptr);
 }
 
@@ -8789,8 +8794,11 @@ void ImageHelper::invalidateSubresourceContent(ContextVk *contextVk,
 void ImageHelper::invalidateEntireLevelStencilContent(vk::ErrorContext *context,
                                                       gl::LevelIndex level)
 {
-    invalidateSubresourceContentImpl(context, level, 0, mLayerCount, VK_IMAGE_ASPECT_STENCIL_BIT,
-                                     nullptr, nullptr);
+    if (getIntendedFormat().stencilBits > 0)
+    {
+        invalidateSubresourceContentImpl(context, level, 0, mLayerCount,
+                                         VK_IMAGE_ASPECT_STENCIL_BIT, nullptr, nullptr);
+    }
 }
 
 void ImageHelper::invalidateSubresourceStencilContent(ContextVk *contextVk,
@@ -8957,10 +8965,23 @@ void ImageHelper::restoreSubresourceContentImpl(gl::LevelIndex level,
     }
 }
 
+// Returns true if we have valid data in any non-emulated channel.
 bool ImageHelper::isVkImageContentDefined() const
 {
-    return IsAnySubresourceContentDefined(mVkImageContentDefined) ||
-           IsAnySubresourceContentDefined(mVkImageStencilContentDefined);
+    if (isDepthOrStencil())
+    {
+        // The emulated channel will always have valid content since we stage clear for emulated
+        // channel. When we query if VkImage has defined content or not, we only care about user
+        // content. So ignore the emulated channel when checking content defined.
+        return (getIntendedFormat().depthBits > 0 &&
+                IsAnySubresourceContentDefined(mVkImageContentDefined)) ||
+               (getIntendedFormat().stencilBits > 0 &&
+                IsAnySubresourceContentDefined(mVkImageStencilContentDefined));
+    }
+    else
+    {
+        return IsAnySubresourceContentDefined(mVkImageContentDefined);
+    }
 }
 
 angle::Result ImageHelper::stagePartialClear(ContextVk *contextVk,
