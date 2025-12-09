@@ -800,8 +800,7 @@ bool TCompiler::getShaderBinary(const ShHandle compilerHandle,
 
     state.serialize(stream);
 
-    ASSERT(binaryOut);
-    *binaryOut = std::move(stream.getData());
+    *binaryOut = stream.takeData();
     return true;
 }
 
