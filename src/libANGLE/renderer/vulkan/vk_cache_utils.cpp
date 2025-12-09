@@ -407,10 +407,14 @@ void DeriveRenderingInfo(Renderer *renderer,
                 static_cast<vk::ImageAccess>(ops[attachmentCount].initialLayout));
             const VkImageLayout resolveImageLayout = renderer->getVkImageLayout(
                 static_cast<vk::ImageAccess>(ops[attachmentCount].finalResolveLayout));
+            const bool hasColorResolveAttachment = desc.hasColorResolveAttachment(colorIndexGL);
+            const bool isIntegerFormat           = angle::Format::Get(attachmentFormatID).isInt();
             const VkResolveModeFlagBits resolveMode =
                 isYUVExternalFormat ? VK_RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID
-                : desc.hasColorResolveAttachment(colorIndexGL) ? VK_RESOLVE_MODE_AVERAGE_BIT
-                                                               : VK_RESOLVE_MODE_NONE;
+                : hasColorResolveAttachment || desc.isRenderToTexture()
+                    ? isIntegerFormat ? VK_RESOLVE_MODE_SAMPLE_ZERO_BIT
+                                      : VK_RESOLVE_MODE_AVERAGE_BIT
+                    : VK_RESOLVE_MODE_NONE;
             const RenderPassLoadOp loadOp =
                 static_cast<RenderPassLoadOp>(ops[attachmentCount].loadOp);
             const RenderPassStoreOp storeOp =
@@ -437,7 +441,7 @@ void DeriveRenderingInfo(Renderer *renderer,
             }
             infoOut->colorAttachmentInfo[attachmentCount.get()].imageView =
                 attachmentViews[attachmentCount.get()];
-            if (resolveMode != VK_RESOLVE_MODE_NONE)
+            if (resolveMode != VK_RESOLVE_MODE_NONE && !desc.isRenderToTexture())
             {
                 infoOut->colorAttachmentInfo[attachmentCount.get()].resolveImageView =
                     attachmentViews[RenderPassFramebuffer::kColorResolveAttachmentBegin +
