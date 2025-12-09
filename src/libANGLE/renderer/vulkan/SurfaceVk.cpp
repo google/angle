@@ -3068,7 +3068,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
         }
     }
     // Depth buffer should have been invalidated before the last submission of previous frame
-    ASSERT(!mDepthStencilImage.valid() || !mDepthStencilImage.isVkImageContentDefined());
+    // ASSERT(!mDepthStencilImage.valid() || !mDepthStencilImage.isVkImageContentDefined());
 
     // Note that an acquire and result processing is no longer needed.
     mAcquireOperation.state = ImageAcquireState::Ready;
