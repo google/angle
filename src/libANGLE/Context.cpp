@@ -6069,16 +6069,7 @@ void *Context::mapBufferRange(BufferBinding target,
         return nullptr;
     }
 
-    // TODO: (anglebug.com/42266294): Modify return value in entry point layer
-    angle::FrameCaptureShared *frameCaptureShared = getShareGroup()->getFrameCaptureShared();
-    if (frameCaptureShared->enabled())
-    {
-        return frameCaptureShared->maybeGetShadowMemoryPointer(buffer, length, access);
-    }
-    else
-    {
-        return buffer->getMapPointer();
-    }
+    return buffer->getMapPointer();
 }
 
 void Context::flushMappedBufferRange(BufferBinding /*target*/,

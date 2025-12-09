@@ -10172,6 +10172,17 @@ void *GL_APIENTRY GL_MapBufferRangeEXT(GLenum target,
         if (ANGLE_LIKELY(isCallValid))
         {
             returnValue = context->mapBufferRange(targetPacked, offset, length, access);
+#if ANGLE_CAPTURE_ENABLED
+            angle::FrameCaptureShared *frameCaptureShared =
+                context->getShareGroup()->getFrameCaptureShared();
+            if (returnValue != nullptr && frameCaptureShared->enabled())
+            {
+                Buffer *buffer = context->getState().getTargetBuffer(targetPacked);
+                ASSERT(buffer);
+                returnValue =
+                    frameCaptureShared->maybeGetShadowMemoryPointer(buffer, length, access);
+            }
+#endif
         }
         else
         {
