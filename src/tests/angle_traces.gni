@@ -52,6 +52,7 @@ template("angle_trace") {
         "//build/config/compiler:afdo_optimize_size",
         "//build/config/compiler:optimize_max",
         "//build/config/compiler/pgo:default_pgo_flags",
+        "//build/config/compiler:default_symbols",
       ]
       configs += [ "//build/config/compiler:no_optimize" ]
     }
