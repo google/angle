@@ -10,9 +10,16 @@
 #    pragma allow_unsafe_buffers
 #endif
 
-#include <gtest/gtest.h>
-
 #include "common/BinaryStream.h"
+
+#include <stdint.h>
+
+#include <string>
+#include <vector>
+
+#include "common/PackedEnums.h"
+#include "common/span_util.h"
+#include "gtest/gtest.h"
 
 namespace angle
 {
@@ -70,8 +77,52 @@ TEST(BinaryInputStream, Overflow)
     }
 }
 
+// Test that readInt<> and writeInt<> match.
+TEST(BinaryStream, Int)
+{
+    gl::BinaryOutputStream out;
+    out.writeInt<int8_t>(-100);
+    out.writeInt<int16_t>(-200);
+    out.writeInt<int32_t>(-300);
+    out.writeInt<int64_t>(-400);
+    out.writeInt<uint8_t>(100);
+    out.writeInt<uint16_t>(200);
+    out.writeInt<uint32_t>(300);
+    out.writeInt<uint64_t>(400);
+    out.writeInt<size_t>(500);
+
+    gl::BinaryInputStream in(out.data(), out.length());
+    EXPECT_EQ(in.readInt<int8_t>(), -100);
+    EXPECT_EQ(in.readInt<int16_t>(), -200);
+    EXPECT_EQ(in.readInt<int32_t>(), -300);
+    EXPECT_EQ(in.readInt<int64_t>(), -400);
+    EXPECT_EQ(in.readInt<uint8_t>(), 100u);
+    EXPECT_EQ(in.readInt<uint16_t>(), 200u);
+    EXPECT_EQ(in.readInt<uint32_t>(), 300u);
+    EXPECT_EQ(in.readInt<uint64_t>(), 400u);
+    EXPECT_EQ(in.readInt<size_t>(), 500u);
+
+    EXPECT_FALSE(in.error());
+    EXPECT_TRUE(in.endOfStream());
+}
+
+// Test that readBool and writeBool match.
+TEST(BinaryStream, Bool)
+{
+    gl::BinaryOutputStream out;
+    out.writeBool(true);
+    out.writeBool(false);
+
+    gl::BinaryInputStream in(out.data(), out.length());
+    EXPECT_EQ(in.readBool(), true);
+    EXPECT_EQ(in.readBool(), false);
+
+    EXPECT_FALSE(in.error());
+    EXPECT_TRUE(in.endOfStream());
+}
+
 // Test that readVector and writeVector match.
-TEST(BinaryStream, IntVector)
+TEST(BinaryStream, Vector)
 {
     std::vector<unsigned int> writeData = {1, 2, 3, 4, 5};
     std::vector<unsigned int> readData;
@@ -89,4 +140,150 @@ TEST(BinaryStream, IntVector)
         ASSERT_EQ(writeData[i], readData[i]);
     }
 }
+
+// Test that readString and writeString match.
+TEST(BinaryStream, String)
+{
+    std::string empty;
+    std::string hello("hello");
+    std::string nulls("\0\0\0", 3u);
+    EXPECT_EQ(3u, nulls.size());
+
+    gl::BinaryOutputStream out;
+    out.writeString(empty);
+    out.writeString(hello);
+    out.writeString(nulls);
+    out.writeString(empty);
+    out.writeString(empty);
+    out.writeString(hello);
+
+    gl::BinaryInputStream in(out.data(), out.length());
+    EXPECT_EQ(in.readString(), empty);
+    EXPECT_EQ(in.readString(), hello);
+    EXPECT_EQ(in.readString(), nulls);
+    EXPECT_EQ(in.readString(), empty);
+    EXPECT_EQ(in.readString(), empty);
+    EXPECT_EQ(in.readString(), hello);
+
+    EXPECT_FALSE(in.error());
+    EXPECT_TRUE(in.endOfStream());
+}
+
+// Test that readStruct and writeStruct match.
+TEST(BinaryStream, Struct)
+{
+    struct Pod
+    {
+        int count;
+        char array[3];
+    };
+
+    Pod pod1 = {123, {1, 2, 3}};
+    gl::BinaryOutputStream out;
+    out.writeStruct(pod1);
+
+    Pod pod2;
+    gl::BinaryInputStream in(out.data(), out.length());
+    in.readStruct(&pod2);
+    EXPECT_TRUE(angle::byte_span_from_ref(pod1) == angle::byte_span_from_ref(pod2));
+
+    EXPECT_FALSE(in.error());
+    EXPECT_TRUE(in.endOfStream());
+}
+
+// Test that readEnum and writeEnum match.
+TEST(BinaryStream, Enum)
+{
+    enum class Color : uint8_t
+    {
+        kRed,
+        kGreen,
+        kBlue
+    };
+    enum class Shorty : int16_t
+    {
+        kNeg = -1,
+        kMax = 32767
+    };
+
+    gl::BinaryOutputStream out;
+    out.writeEnum(Color::kRed);
+    out.writeEnum(Shorty::kNeg);
+    out.writeEnum(Color::kGreen);
+    out.writeEnum(Shorty::kMax);
+    out.writeEnum(Color::kBlue);
+
+    gl::BinaryInputStream in(out.data(), out.length());
+    EXPECT_EQ(Color::kRed, in.readEnum<Color>());
+    EXPECT_EQ(Shorty::kNeg, in.readEnum<Shorty>());
+    EXPECT_EQ(Color::kGreen, in.readEnum<Color>());
+    EXPECT_EQ(Shorty::kMax, in.readEnum<Shorty>());
+    EXPECT_EQ(Color::kBlue, in.readEnum<Color>());
+
+    EXPECT_FALSE(in.error());
+    EXPECT_TRUE(in.endOfStream());
+}
+
+// Test that readFloat and writeFloat match.
+TEST(BinaryStream, Float)
+{
+    gl::BinaryOutputStream out;
+    out.writeFloat(123.456f);
+    out.writeFloat(-100.0f);
+    out.writeFloat(0.0f);
+
+    gl::BinaryInputStream in(out.data(), out.length());
+    EXPECT_EQ(123.456f, in.readFloat());
+    EXPECT_EQ(-100.0f, in.readFloat());
+    EXPECT_EQ(0.0f, in.readFloat());
+
+    EXPECT_FALSE(in.error());
+    EXPECT_TRUE(in.endOfStream());
+}
+
+// Test that readPackedEnumMap and writePackedEnumMap match.
+TEST(BinaryStream, PackedEnumMap)
+{
+    enum class Color : int16_t
+    {
+        kRed,
+        kGreen,
+        kBlue,
+        EnumCount = 3
+    };
+
+    angle::PackedEnumMap<Color, float> map1;
+    map1[Color::kRed]   = 1.0f;
+    map1[Color::kGreen] = 2.0f;
+    map1[Color::kBlue]  = 3.0f;
+
+    gl::BinaryOutputStream out;
+    out.writePackedEnumMap(map1);
+
+    angle::PackedEnumMap<Color, float> map2;
+    gl::BinaryInputStream in(out.data(), out.length());
+    in.readPackedEnumMap(&map2);
+    EXPECT_EQ(map2[Color::kRed], 1.0f);
+    EXPECT_EQ(map2[Color::kGreen], 2.0f);
+    EXPECT_EQ(map2[Color::kBlue], 3.0f);
+
+    EXPECT_FALSE(in.error());
+    EXPECT_TRUE(in.endOfStream());
+}
+
+// Test that skipping ahead works as expected.
+TEST(BinaryStream, Skip)
+{
+    gl::BinaryOutputStream out;
+    out.writeFloat(123.456f);
+    out.writeFloat(-100.0f);
+
+    gl::BinaryInputStream in(out.data(), out.length());
+    in.skip(sizeof(float));
+    EXPECT_EQ(-100.0f, in.readFloat());
+
+    EXPECT_FALSE(in.error());
+    EXPECT_TRUE(in.endOfStream());
+}
+
 }  // namespace angle
