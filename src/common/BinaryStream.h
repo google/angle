@@ -317,7 +317,7 @@ class BinaryOutputStream : angle::NonCopyable
     const void *data() const { return mData.size() ? &mData[0] : nullptr; }
 
     // No further use of this stream allowed after data is taken.
-    std::vector<uint8_t> takeData() const { return std::move(mData); }
+    std::vector<uint8_t> takeData() { return std::move(mData); }
 
   private:
     template <typename T>
