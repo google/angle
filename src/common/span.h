@@ -17,11 +17,8 @@
 #include <algorithm>
 #include <array>
 #include <iterator>
-#include <string>
-#include <string_view>
 #include <type_traits>
 #include <utility>
-#include <vector>
 
 #include "common/base/anglebase/logging.h"
 #include "common/unsafe_buffers.h"
@@ -367,20 +364,11 @@ Span(std::array<T, N> &) -> Span<T, N>;
 template <typename T, size_t N>
 Span(const std::array<T, N> &) -> Span<const T, N>;
 
-template <typename T>
-Span(std::vector<T> &) -> Span<T>;
-
-template <typename T>
-Span(const std::vector<T> &) -> Span<const T>;
-
-template <typename T>
-Span(std::basic_string<T> &) -> Span<T>;
-
-template <typename T>
-Span(const std::basic_string<T> &) -> Span<const T>;
-
-template <typename T>
-Span(std::basic_string_view<T>) -> Span<const T>;
+template <typename Container,
+          typename = internal::EnableIfSpanCompatibleContainer<
+              Container,
+              std::remove_pointer_t<decltype(std::declval<Container>().data())>>>
+Span(Container &&) -> Span<std::remove_pointer_t<decltype(std::declval<Container>().data())>>;
 
 // [span.objectrep], views of object representation
 template <typename T, size_t N, typename P>

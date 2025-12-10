@@ -31,6 +31,13 @@ constexpr unsigned int kSpanData[kSpanDataSize]                  = {0, 1, 2,  3,
 constexpr std::array<const unsigned int, kSpanDataSize> kSpanArr = {
     {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}};
 
+class FakeRange
+{
+  public:
+    size_t size() const { return kSpanDataSize; }
+    const unsigned int *data() { return kSpanData; }
+};
+
 // Test that comparing spans work
 TEST(SpanTest, Comparison)
 {
@@ -194,6 +201,14 @@ TEST(SpanTest, Constructors)
         ASSERT_EQ(sp.data(), view.data());
         ASSERT_EQ(sp.size(), view.size());
         ASSERT_FALSE(sp.empty());
+    }
+
+    // Construction from any class that provides data() and size().
+    {
+        FakeRange range;
+        Span sp(range);
+        ASSERT_EQ(sp.data(), kSpanData);
+        ASSERT_EQ(sp.size(), kSpanDataSize);
     }
 
     // Copy constructor and copy assignment
