@@ -1448,36 +1448,18 @@ impl<'options> Generator<'options> {
         {
             ffi::ASTQualifier::SpecConst
         } else {
-            let is_input =
-                decorations.decorations.iter().any(|&decoration| decoration == Decoration::Input);
-            let is_output =
-                decorations.decorations.iter().any(|&decoration| decoration == Decoration::Output);
-            let is_inout = decorations
-                .decorations
-                .iter()
-                .any(|&decoration| decoration == Decoration::InputOutput);
-            let is_uniform =
-                decorations.decorations.iter().any(|&decoration| decoration == Decoration::Uniform);
-            let is_buffer =
-                decorations.decorations.iter().any(|&decoration| decoration == Decoration::Buffer);
-            let is_shared =
-                decorations.decorations.iter().any(|&decoration| decoration == Decoration::Shared);
-            let is_smooth =
-                decorations.decorations.iter().any(|&decoration| decoration == Decoration::Smooth);
-            let is_flat =
-                decorations.decorations.iter().any(|&decoration| decoration == Decoration::Flat);
-            let is_noperspective = decorations
-                .decorations
-                .iter()
-                .any(|&decoration| decoration == Decoration::NoPerspective);
-            let is_centroid = decorations
-                .decorations
-                .iter()
-                .any(|&decoration| decoration == Decoration::Centroid);
-            let is_sample =
-                decorations.decorations.iter().any(|&decoration| decoration == Decoration::Sample);
-            let is_patch =
-                decorations.decorations.iter().any(|&decoration| decoration == Decoration::Patch);
+            let is_input = decorations.has(Decoration::Input);
+            let is_output = decorations.has(Decoration::Output);
+            let is_inout = decorations.has(Decoration::InputOutput);
+            let is_uniform = decorations.has(Decoration::Uniform);
+            let is_buffer = decorations.has(Decoration::Buffer);
+            let is_shared = decorations.has(Decoration::Shared);
+            let is_smooth = decorations.has(Decoration::Smooth);
+            let is_flat = decorations.has(Decoration::Flat);
+            let is_noperspective = decorations.has(Decoration::NoPerspective);
+            let is_centroid = decorations.has(Decoration::Centroid);
+            let is_sample = decorations.has(Decoration::Sample);
+            let is_patch = decorations.has(Decoration::Patch);
 
             if is_uniform {
                 ffi::ASTQualifier::Uniform
@@ -1637,16 +1619,11 @@ impl<'options> Generator<'options> {
     }
 
     fn get_memory_qualifier(decorations: &Decorations) -> ffi::ASTMemoryQualifier {
-        let readonly =
-            decorations.decorations.iter().any(|&decoration| decoration == Decoration::ReadOnly);
-        let writeonly =
-            decorations.decorations.iter().any(|&decoration| decoration == Decoration::WriteOnly);
-        let coherent =
-            decorations.decorations.iter().any(|&decoration| decoration == Decoration::Coherent);
-        let restrict_qualifier =
-            decorations.decorations.iter().any(|&decoration| decoration == Decoration::Restrict);
-        let volatile_qualifier =
-            decorations.decorations.iter().any(|&decoration| decoration == Decoration::Volatile);
+        let readonly = decorations.has(Decoration::ReadOnly);
+        let writeonly = decorations.has(Decoration::WriteOnly);
+        let coherent = decorations.has(Decoration::Coherent);
+        let restrict_qualifier = decorations.has(Decoration::Restrict);
+        let volatile_qualifier = decorations.has(Decoration::Volatile);
 
         ffi::ASTMemoryQualifier {
             readonly,
@@ -1665,12 +1642,9 @@ impl<'options> Generator<'options> {
         built_in: Option<BuiltIn>,
         is_global: bool,
     ) -> ffi::ASTType {
-        let invariant =
-            decorations.decorations.iter().any(|&decoration| decoration == Decoration::Invariant);
-        let precise =
-            decorations.decorations.iter().any(|&decoration| decoration == Decoration::Precise);
-        let interpolant =
-            decorations.decorations.iter().any(|&decoration| decoration == Decoration::Interpolant);
+        let invariant = decorations.has(Decoration::Invariant);
+        let precise = decorations.has(Decoration::Precise);
+        let interpolant = decorations.has(Decoration::Interpolant);
 
         ffi::ASTType {
             // Note: TypeId is unused after going back to AST.

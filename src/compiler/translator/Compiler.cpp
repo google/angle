@@ -882,21 +882,21 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    // Turn |inout| variables that are never read from into |out| before collecting variables and
-    // before PLS uses them.
-    if (mShaderVersion >= 300 &&
-        (IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_shader_framebuffer_fetch) ||
-         IsExtensionEnabled(mExtensionBehavior,
-                            TExtension::EXT_shader_framebuffer_fetch_non_coherent)))
-    {
-        if (!RemoveUnusedFramebufferFetch(this, root, &mSymbolTable))
-        {
-            return false;
-        }
-    }
-
     if (!useIR)
     {
+        // Turn |inout| variables that are never read from into |out| before collecting variables
+        // and before PLS uses them.
+        if (mShaderVersion >= 300 &&
+            (IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_shader_framebuffer_fetch) ||
+             IsExtensionEnabled(mExtensionBehavior,
+                                TExtension::EXT_shader_framebuffer_fetch_non_coherent)))
+        {
+            if (!RemoveUnusedFramebufferFetch(this, root, &mSymbolTable))
+            {
+                return false;
+            }
+        }
+
         // Fold expressions that could not be folded before validation that was done as a part of
         // parsing.
         if (!FoldExpressions(this, root, &mDiagnostics))

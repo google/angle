@@ -222,8 +222,7 @@ pub enum UnaryOpCode {
     //   %result = BitwiseNot %operand
     BitwiseNot,
 
-    // Calculate ++operand, --operand, operand++ and operand--.  The operand must be an access
-    // chain.
+    // Calculate ++operand, --operand, operand++ and operand--.  The operand must be a pointer.
     //   %result = PrefixIncrement %operand
     //   %result = PrefixDecrement %operand
     //   %result = PostfixIncrement %operand
@@ -294,9 +293,9 @@ pub enum UnaryOpCode {
     DFdy,
     Fwidth,
     InterpolateAtCentroid,
-    AtomicCounter,
-    AtomicCounterIncrement,
-    AtomicCounterDecrement,
+    AtomicCounter,          // The parameter is a pointer
+    AtomicCounterIncrement, // The parameter is a pointer
+    AtomicCounterDecrement, // The parameter is a pointer
     ImageSize,
     PixelLocalLoadANGLE,
 }
@@ -382,8 +381,8 @@ pub enum BinaryOpCode {
     Min,
     Max,
     Step,
-    Modf,
-    Frexp,
+    Modf,  // Second parameter is a pointer
+    Frexp, // Second paarameter is a pointer
     Ldexp,
     Distance,
     Dot,
@@ -399,13 +398,13 @@ pub enum BinaryOpCode {
     NotEqualVec,
     InterpolateAtSample,
     InterpolateAtOffset,
-    AtomicAdd,
-    AtomicMin,
-    AtomicMax,
-    AtomicAnd,
-    AtomicOr,
-    AtomicXor,
-    AtomicExchange,
+    AtomicAdd,      // First parameter is a pointer
+    AtomicMin,      // First parameter is a pointer
+    AtomicMax,      // First parameter is a pointer
+    AtomicAnd,      // First parameter is a pointer
+    AtomicOr,       // First parameter is a pointer
+    AtomicXor,      // First parameter is a pointer
+    AtomicExchange, // First parameter is a pointer
 }
 
 #[derive(Copy, Clone, PartialEq)]
@@ -423,10 +422,10 @@ pub enum BuiltInOpCode {
     Refract,
     BitfieldExtract,
     BitfieldInsert,
-    UaddCarry,
-    UsubBorrow,
-    UmulExtended,
-    ImulExtended,
+    UaddCarry,    // The third parameter is a pointer
+    UsubBorrow,   // The third parameter is a pointer
+    UmulExtended, // The third and fourth parameters are pointers
+    ImulExtended, // The third and fourth parameters are pointers
     TextureSize,
     TextureQueryLod,
     TexelFetch,
@@ -1667,14 +1666,18 @@ impl Decorations {
         Decorations { decorations }
     }
     pub fn add_invariant(&mut self) {
-        if !self.decorations.iter().any(|decoration| matches!(decoration, Decoration::Invariant)) {
+        if !self.has(Decoration::Invariant) {
             self.decorations.push(Decoration::Invariant);
         }
     }
     pub fn add_precise(&mut self) {
-        if !self.decorations.iter().any(|decoration| matches!(decoration, Decoration::Precise)) {
+        if !self.has(Decoration::Precise) {
             self.decorations.push(Decoration::Precise);
         }
+    }
+
+    pub fn has(&self, query: Decoration) -> bool {
+        self.decorations.iter().any(|&decoration| decoration == query)
     }
 }
 
