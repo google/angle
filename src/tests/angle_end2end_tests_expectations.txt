@@ -2089,12 +2089,8 @@
 438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__AToRGB* = SKIP
 438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__LToRGB* = SKIP
 438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__LAToRGB* = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBToRGB*F* = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBUnmultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBPremultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGB*F* = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBAUnmultiplyAlpha = SKIP
-438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__RGBAToRGBAPremultiplyAlpha = SKIP
+// WGPU y-flip transforms have a bug when run on NVIDIA GPUs on Linux or Windows.
+468025322 NVIDIA WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__*YFlip* = SKIP
 
 // SPIR-V compilation error
 384593678 VULKAN : SimpleUniformTestES3.CopyOfUniformsWithArrays/* = SKIP
