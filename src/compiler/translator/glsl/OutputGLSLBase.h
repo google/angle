@@ -90,6 +90,7 @@ class TOutputGLSLBase : public TIntermTraverser
     const char *mapQualifierToString(TQualifier qualifier);
 
     sh::GLenum getShaderType() const { return mShaderType; }
+    int getShaderVersion() const { return mShaderVersion; }
     bool isHighPrecisionSupported() const { return mHighPrecisionSupported; }
     const char *getIndentPrefix(int extraIndentDepth = 0);
 
