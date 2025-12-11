@@ -958,8 +958,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // We need to generate globals early if we have non constant initializers enabled
     bool initializeLocalsAndGlobals =
         compileOptions.initializeUninitializedLocals && !IsOutputHLSL(getOutputType());
-    bool canUseLoopsToInitialize       = !compileOptions.dontUseLoopsToInitializeVariables;
-    bool highPrecisionSupported        = isHighPrecisionSupported();
+    bool canUseLoopsToInitialize =
+        !compileOptions.dontUseLoopsToInitializeVariables && isHighPrecisionSupported();
     bool enableNonConstantInitializers = IsExtensionEnabled(
         mExtensionBehavior, TExtension::EXT_shader_non_constant_global_initializers);
     // forceDeferNonConstGlobalInitializers is needed for MSL
@@ -978,8 +978,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     if (enableNonConstantInitializers &&
         !DeferGlobalInitializers(this, root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
-                                 highPrecisionSupported, forceDeferNonConstGlobalInitializers,
-                                 &mSymbolTable))
+                                 forceDeferNonConstGlobalInitializers, &mSymbolTable))
     {
         return false;
     }
@@ -1340,8 +1339,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // be optimized out
     if (!enableNonConstantInitializers &&
         !DeferGlobalInitializers(this, root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
-                                 highPrecisionSupported, forceDeferNonConstGlobalInitializers,
-                                 &mSymbolTable))
+                                 forceDeferNonConstGlobalInitializers, &mSymbolTable))
     {
         return false;
     }
@@ -1368,7 +1366,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
 
         if (!InitializeUninitializedLocals(this, root, getShaderVersion(), canUseLoopsToInitialize,
-                                           highPrecisionSupported, &getSymbolTable()))
+                                           &getSymbolTable()))
         {
             return false;
         }
@@ -1863,7 +1861,7 @@ bool TCompiler::initializeGLPosition(TIntermBlock *root)
     if (!list.empty())
     {
         return InitializeVariables(this, root, list, &mSymbolTable, mShaderVersion,
-                                   mExtensionBehavior, false, false);
+                                   mExtensionBehavior, false);
     }
 
     return true;
@@ -1961,7 +1959,7 @@ bool TCompiler::initializeOutputVariables(TIntermBlock *root)
     }
 
     return InitializeVariables(this, root, list, &mSymbolTable, mShaderVersion, mExtensionBehavior,
-                               false, false);
+                               false);
 }
 
 const TExtensionBehavior &TCompiler::getExtensionBehavior() const
