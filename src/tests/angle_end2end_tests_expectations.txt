@@ -1129,12 +1129,12 @@
 42265827 VULKAN : FramebufferTest_ES3.FramebufferConditionalFeedbackLoop/* = SKIP
 42265967 VULKAN : Texture2DTest.TextureMaxSize/* = SKIP
 
-343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerTypeShadow_TextureTypeUnsignedNormalized_* = SKIP
-343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerTypeShadow_TextureTypeSignedNormalized_* = SKIP
-343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerTypeShadow_TextureTypeFloat_* = SKIP
-343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerTypeShadow_TextureTypeUnsignedInteger_* = SKIP
-343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerTypeShadow_TextureTypeSignedInteger_* = SKIP
-343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerTypeShadow_TextureTypeStencil_* = SKIP
+343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerSD_TexNorm_* = SKIP
+343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerSD_TexSNorm_* = SKIP
+343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerSD_TexF_* = SKIP
+343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerSD_TexUI_* = SKIP
+343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerSD_TexSI_* = SKIP
+343922404 VULKAN : IncompatibleTextureTest.Test/ES3_*__SamplerSD_TexS_* = SKIP
 
 // Intel Mesa 19.0.2 appears to have a driver bug.
 42265826 INTEL OPENGL : GLSLTest_ES31.ImageLoadAfterClear/* = SKIP
