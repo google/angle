@@ -20,11 +20,6 @@ bool TOutputESSL::writeVariablePrecision(TPrecision precision)
     if (precision == EbpUndefined)
         return false;
 
-    if (precision == EbpHigh && !isHighPrecisionSupported())
-    {
-        precision = EbpMedium;
-    }
-
     TInfoSinkBase &out = objSink();
     out << getPrecisionString(precision);
     return true;

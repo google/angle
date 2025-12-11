@@ -21,8 +21,6 @@ typedef std::vector<const TVariable *> InitVariableList;
 
 // For all of the functions below: If canUseLoopsToInitialize is set, for loops are used instead of
 // a large number of initializers where it can make sense, such as for initializing large arrays.
-// This is only supported if highp is available (ESSL 3+, not fragment shader, or
-// FragmentPrecisionHigh is set) because the loop index is highp.
 
 // Populate a sequence of assignment operations to initialize "initializedSymbol". initializedSymbol
 // may be an array, struct or any combination of these, as long as it contains only basic types.

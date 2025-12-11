@@ -463,12 +463,6 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
 
 TCompiler::~TCompiler() {}
 
-bool TCompiler::isHighPrecisionSupported() const
-{
-    return mShaderVersion > 100 || mShaderType != GL_FRAGMENT_SHADER ||
-           mResources.FragmentPrecisionHigh == 1;
-}
-
 bool TCompiler::shouldRunLoopAndIndexingValidation(const ShCompileOptions &compileOptions) const
 {
     // If compiling an ESSL 1.00 shader for WebGL, or if its been requested through the API,
@@ -557,8 +551,6 @@ TIntermBlock *TCompiler::compileTreeImpl(angle::Span<const char *const> shaderSt
 
     TParseContext parseContext(mSymbolTable, mExtensionBehavior, mShaderType, mShaderSpec,
                                compileOptions, &mDiagnostics, getResources(), getOutputType());
-
-    parseContext.setFragmentPrecisionHighOnESSL1(mResources.FragmentPrecisionHigh == 1);
 
     // We preserve symbols at the built-in level from compile-to-compile.
     // Start pushing the user-defined symbols at global level.
@@ -956,8 +948,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // We need to generate globals early if we have non constant initializers enabled
     bool initializeLocalsAndGlobals =
         compileOptions.initializeUninitializedLocals && !IsOutputHLSL(getOutputType());
-    bool canUseLoopsToInitialize =
-        !compileOptions.dontUseLoopsToInitializeVariables && isHighPrecisionSupported();
+    bool canUseLoopsToInitialize       = !compileOptions.dontUseLoopsToInitializeVariables;
     bool enableNonConstantInitializers = IsExtensionEnabled(
         mExtensionBehavior, TExtension::EXT_shader_non_constant_global_initializers);
     if (enableNonConstantInitializers &&
@@ -1518,7 +1509,6 @@ void TCompiler::setResourceString()
         << ":NV_EGL_stream_consumer_external:" << mResources.NV_EGL_stream_consumer_external
         << ":ARB_texture_rectangle:" << mResources.ARB_texture_rectangle
         << ":EXT_draw_buffers:" << mResources.EXT_draw_buffers
-        << ":FragmentPrecisionHigh:" << mResources.FragmentPrecisionHigh
         << ":MaxExpressionComplexity:" << mResources.MaxExpressionComplexity
         << ":MaxStatementDepth:" << mResources.MaxStatementDepth
         << ":MaxCallStackDepth:" << mResources.MaxCallStackDepth

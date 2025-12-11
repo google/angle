@@ -671,30 +671,8 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDataUniform)
 }
 
 // Test that gl_FragDataEXT built-in usage in ESSL1 fragment shader is reflected in the output
-// variables list. Also test that the precision is mediump.
-TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthMediump)
-{
-    const std::string &fragDepthShader =
-        "#extension GL_EXT_frag_depth : require\n"
-        "precision mediump float;\n"
-        "void main() {\n"
-        "   gl_FragDepthEXT = 0.7;"
-        "}\n";
-
-    ShBuiltInResources resources = mTranslator->getResources();
-    resources.EXT_frag_depth     = 1;
-    initTranslator(resources);
-
-    const ShaderVariable *outputVariable = nullptr;
-    validateOutputVariableForShader(fragDepthShader, 0u, "gl_FragDepthEXT", &outputVariable);
-    ASSERT_NE(outputVariable, nullptr);
-    EXPECT_FALSE(outputVariable->isArray());
-    EXPECT_GLENUM_EQ(GL_FLOAT, outputVariable->type);
-    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, outputVariable->precision);
-}
-
-// Test that gl_FragDataEXT built-in usage in ESSL1 fragment shader is reflected in the output
-// variables list. Also test that the precision is highp if user requests it.
+// variables list. Also test that the precision is highp because the translator assumes it's always
+// supported.
 TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthHighp)
 {
     const std::string &fragDepthHighShader =
@@ -705,7 +683,6 @@ TEST_F(CollectFragmentVariablesTest, OutputVarESSL1FragDepthHighp)
 
     ShBuiltInResources resources    = mTranslator->getResources();
     resources.EXT_frag_depth        = 1;
-    resources.FragmentPrecisionHigh = 1;
     initTranslator(resources);
 
     const ShaderVariable *outputVariable = nullptr;

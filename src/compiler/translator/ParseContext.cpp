@@ -422,7 +422,6 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mStructNestingLevel(0),
       mCurrentFunction(nullptr),
       mFunctionReturnsValue(false),
-      mFragmentPrecisionHighOnESSL1(false),
       mEarlyFragmentTestsSpecified(false),
       mHasDiscard(false),
       mSampleQualifierSpecified(false),
@@ -4923,12 +4922,6 @@ void TParseContext::parseDefaultPrecisionQualifier(const TPrecision precision,
                                                    const TPublicType &type,
                                                    const TSourceLoc &loc)
 {
-    if ((precision == EbpHigh) && (getShaderType() == GL_FRAGMENT_SHADER) &&
-        !getFragmentPrecisionHigh())
-    {
-        error(loc, "precision is not supported in fragment shader", "highp");
-    }
-
     if (!CanSetDefaultPrecisionOnType(type))
     {
         error(loc, "illegal type argument for default precision qualifier",

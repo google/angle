@@ -144,8 +144,6 @@ class TCompiler : public TShHandleBase
     const ShBuiltInResources &getBuiltInResources() const { return mResources; }
     const std::string &getBuiltInResourcesString() const { return mBuiltInResourcesString; }
 
-    bool isHighPrecisionSupported() const;
-
     bool shouldRunLoopAndIndexingValidation(const ShCompileOptions &compileOptions) const;
     bool shouldLimitTypeSizes() const;
 

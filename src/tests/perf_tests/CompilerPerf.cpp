@@ -275,7 +275,6 @@ void CompilerPerfTest::SetUp()
 
     mTranslator = sh::ConstructCompiler(GL_FRAGMENT_SHADER, SH_WEBGL2_SPEC, params.output);
     sh::InitBuiltInResources(&mResources);
-    mResources.FragmentPrecisionHigh = true;
     if (!mTranslator->Init(mResources))
     {
         SafeDelete(mTranslator);

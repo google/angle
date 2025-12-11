@@ -442,6 +442,12 @@ constexpr const TVariable kgl_FragDepth(BuiltInId::gl_FragDepth,
                                         SymbolType::BuiltIn,
                                         std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
                                         StaticType::Get<EbtFloat, EbpHigh, EvqFragDepth, 1, 1>());
+constexpr const TVariable kgl_FragDepthEXT(
+    BuiltInId::gl_FragDepthEXT,
+    BuiltInName::gl_FragDepthEXT,
+    SymbolType::BuiltIn,
+    std::array<TExtension, 1u>{{TExtension::EXT_frag_depth}},
+    StaticType::Get<EbtFloat, EbpHigh, EvqFragDepth, 1, 1>());
 constexpr const TVariable kgl_FrontFacing(
     BuiltInId::gl_FrontFacing,
     BuiltInName::gl_FrontFacing,
@@ -1342,6 +1348,11 @@ const TVariable *gl_FragCoord300()
 const TVariable *gl_FragDepth()
 {
     return &kgl_FragDepth;
+}
+
+const TVariable *gl_FragDepthEXT()
+{
+    return &kgl_FragDepthEXT;
 }
 
 const TVariable *gl_FrontFacing()
@@ -19493,7 +19504,7 @@ constexpr SymbolRule kRules[] = {
         &BuiltInVariable::kgl_SecondaryFragColorEXT),
     Rule::Get<100, Shader::FRAGMENT, EXT_INDEX(EXT_blend_func_extended)>(
         &TableBase::m_gl_SecondaryFragDataEXT),
-    Rule::Get<100, Shader::FRAGMENT, EXT_INDEX(EXT_frag_depth)>(&TableBase::m_gl_FragDepthEXT),
+    Rule::Get<100, Shader::FRAGMENT, EXT_INDEX(EXT_frag_depth)>(&BuiltInVariable::kgl_FragDepthEXT),
     Rule::Get<100, Shader::FRAGMENT, EXT_INDEX(EXT_shader_framebuffer_fetch)>(
         &TableBase::m_gl_LastFragData),
     Rule::Get<100, Shader::FRAGMENT, EXT_INDEX(EXT_shader_framebuffer_fetch_non_coherent)>(
@@ -23820,12 +23831,6 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
         BuiltInId::gl_SecondaryFragDataEXT, BuiltInName::gl_SecondaryFragDataEXT,
         SymbolType::BuiltIn, std::array<TExtension, 1u>{{TExtension::EXT_blend_func_extended}},
         type_gl_SecondaryFragDataEXT);
-    TType *type_gl_FragDepthEXT =
-        new TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium, EvqFragDepth, 1);
-    type_gl_FragDepthEXT->realize();
-    m_gl_FragDepthEXT = new TVariable(
-        BuiltInId::gl_FragDepthEXT, BuiltInName::gl_FragDepthEXT, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_frag_depth}}, type_gl_FragDepthEXT);
     TType *type_gl_LastFragData = new TType(EbtFloat, EbpMedium, EvqLastFragData, 4, 1);
     type_gl_LastFragData->makeArray(resources.MaxDrawBuffers);
     type_gl_LastFragData->realize();

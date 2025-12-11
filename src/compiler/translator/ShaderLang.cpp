@@ -257,9 +257,6 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxCullDistances                = 8;
     resources->MaxCombinedClipAndCullDistances = 8;
 
-    // Disable highp precision in fragment shader by default.
-    resources->FragmentPrecisionHigh = 0;
-
     // GLSL ES 3.0 constants.
     resources->MaxVertexOutputVectors  = 16;
     resources->MaxFragmentInputVectors = 15;

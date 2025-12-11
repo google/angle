@@ -3111,6 +3111,7 @@ const TVariable *gl_FragColor();
 const TVariable *gl_FragCoord();
 const TVariable *gl_FragCoord300();
 const TVariable *gl_FragDepth();
+const TVariable *gl_FragDepthEXT();
 const TVariable *gl_FrontFacing();
 const TVariable *gl_GlobalInvocationID();
 const TVariable *gl_HelperInvocation();

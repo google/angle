@@ -98,15 +98,6 @@ class TParseContext : angle::NonCopyable
 
     ir::IR getIR();
 
-    bool getFragmentPrecisionHigh() const
-    {
-        return mFragmentPrecisionHighOnESSL1 || mShaderVersion >= 300;
-    }
-    void setFragmentPrecisionHighOnESSL1(bool fragmentPrecisionHigh)
-    {
-        mFragmentPrecisionHighOnESSL1 = fragmentPrecisionHigh;
-    }
-
     bool usesDerivatives() const { return mUsesDerivatives; }
     bool isEarlyFragmentTestsSpecified() const { return mEarlyFragmentTestsSpecified; }
     bool hasDiscard() const { return mHasDiscard; }
@@ -848,8 +839,6 @@ class TParseContext : angle::NonCopyable
     int mStructNestingLevel;  // incremented while parsing a struct declaration
     const TFunction *mCurrentFunction;   // the function that's currently being parsed
     bool mFunctionReturnsValue;          // true if a non-void function has a return
-    bool mFragmentPrecisionHighOnESSL1;  // true if highp precision is supported when compiling
-                                         // ESSL1.
     bool mEarlyFragmentTestsSpecified;   // true if layout(early_fragment_tests) in; is specified.
     bool mHasDiscard;                    // true if |discard| is encountered in the shader.
     bool mSampleQualifierSpecified;      // true if the |sample| qualifier is used
