@@ -6638,9 +6638,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsUnifiedImageLayouts,
                             mUnifiedImageLayoutsFeatures.unifiedImageLayouts == VK_TRUE);
 
+    // Disable the feature on Samsung devices - http://anglebug.com/467875813
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsGlobalPriority,
-        ExtensionFound(VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME, deviceExtensionNames));
+        ExtensionFound(VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME, deviceExtensionNames) && !isSamsung);
 
     // REALTIME priority is not permitted on most operating systems.  This feature is limited to
     // Android for now.
