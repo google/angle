@@ -794,7 +794,7 @@
 42267061 PIXEL4ORXL : FramebufferTest_ES31.MultisampleResolveBothAttachments/* = SKIP
 42267061 PIXEL4ORXL VULKAN : VulkanPerformanceCounterTest_ES31.MultisampleResolveBothAttachments/* = SKIP
 
-42267094 PIXEL4ORXL VULKAN : MultisampledRenderToTextureES3Test.RenderbufferDrawThenBlitDepthStencilOnly/* = SKIP
+42267094 PIXEL4ORXL VULKAN : MSRTTES3Test.RenderbufferDrawThenBlitDepthStencilOnly/* = SKIP
 
 42266019 PIXEL4ORXL VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.MultisampleDepthStencilResolveSeparately/* = SKIP
 
@@ -867,9 +867,9 @@
 42266173 PIXEL6 GLES : FramebufferTest_ES31.ChangeFBOSizeWithNoAttachments/* = SKIP
 // New failures after UQ1A.240105.002 upgrade
 42267029 PIXEL6 VULKAN : ImageTest.SourceNativeClientBufferTargetRenderbuffer/* = SKIP
-42267029 PIXEL6 VULKAN : MultisampledRenderToTextureES31Test.BlitFramebufferAttachment1/* = SKIP
-42267029 PIXEL6 VULKAN : MultisampledRenderToTextureES31Test.MixedMultisampledAndMultisampledRenderToTexture/* = SKIP
-42267029 PIXEL6 VULKAN : MultisampledRenderToTextureES31Test.RenderbufferBlitFramebufferAttachment1/* = SKIP
+42267029 PIXEL6 VULKAN : MSRTTES31Test.BlitFramebufferAttachment1/* = SKIP
+42267029 PIXEL6 VULKAN : MSRTTES31Test.MixedMultisampledAndMultisampledRenderToTexture/* = SKIP
+42267029 PIXEL6 VULKAN : MSRTTES31Test.RenderbufferBlitFramebufferAttachment1/* = SKIP
 42267029 PIXEL6 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.ClearThenDraw/* = SKIP
 42267029 PIXEL6 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.LoadThenDraw/* = SKIP
 42267029 PIXEL6 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.RenderbufferClearThenDraw/* = SKIP
@@ -1318,8 +1318,8 @@
 267953710 GALAXYS22 VULKAN : ImageTestES3.RGBAHBUploadDataColorspace/* = SKIP
 267953710 GALAXYS22 VULKAN : ImageTestES3.SourceAHBMipTarget2DMip/* = SKIP
 267953710 GALAXYS22 VULKAN : ImageTestES3.SourceAHBMipTarget2DMipGenerateMipmap/* = SKIP
-267953710 GALAXYS22 VULKAN : MultisampledRenderToTextureES3Test.DrawCopyDrawAttachDepthStencilClearThenDraw/* = SKIP
-267953710 GALAXYS22 VULKAN : MultisampledRenderToTextureES3Test.RenderbufferDrawCopyDrawAttachDepthStencilClearThenDraw/* = SKIP
+267953710 GALAXYS22 VULKAN : MSRTTES3Test.DrawCopyDrawAttachDepthStencilClearThenDraw/* = SKIP
+267953710 GALAXYS22 VULKAN : MSRTTES3Test.RenderbufferDrawCopyDrawAttachDepthStencilClearThenDraw/* = SKIP
 267953710 GALAXYS22 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.LoadThenDraw/* = SKIP
 267953710 GALAXYS22 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.RenderbufferLoadThenDraw/* = SKIP
 267953710 GALAXYS22 VULKAN : MultithreadingTestES3.SimultaneousUploadAndDraw/* = SKIP
@@ -1776,9 +1776,9 @@
 42266649 MALIG710 VULKAN : ImageTest.ANGLEExtensionAvailability/* = SKIP
 42266649 MALIG710 VULKAN : ImageTestES3.SourceAHBCubeTargetCube/* = SKIP
 42266649 MALIG710 VULKAN : ImageTestES31.SourceAHBCubeArrayTargetCubeArray/* = SKIP
-42266649 MALIG710 VULKAN : MultisampledRenderToTextureES31Test.BlitFramebufferAttachment1/* = SKIP
-42266649 MALIG710 VULKAN : MultisampledRenderToTextureES31Test.MixedMultisampledAndMultisampledRenderToTexture/* = SKIP
-42266649 MALIG710 VULKAN : MultisampledRenderToTextureES31Test.RenderbufferBlitFramebufferAttachment1/* = SKIP
+42266649 MALIG710 VULKAN : MSRTTES31Test.BlitFramebufferAttachment1/* = SKIP
+42266649 MALIG710 VULKAN : MSRTTES31Test.MixedMultisampledAndMultisampledRenderToTexture/* = SKIP
+42266649 MALIG710 VULKAN : MSRTTES31Test.RenderbufferBlitFramebufferAttachment1/* = SKIP
 42266649 MALIG710 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.ClearThenDraw/* = SKIP
 42266649 MALIG710 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.LoadThenDraw/* = SKIP
 42266649 MALIG710 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.RenderbufferClearThenDraw/* = SKIP
@@ -2134,7 +2134,7 @@
 347060511 D3D11 : EGLPresentPathD3D11.ClientBufferPresentPathFast/* = SKIP
 
 // Metal backend doesn't support different sized attachments.
-42261786 METAL : MultisampledRenderToTextureES3Test.MultipleLevelsMultisampleMRTDraw2DColor/* = SKIP
+42261786 METAL : MSRTTES3Test.MultipleLevelsMultisampleMRTDraw2DColor/* = SKIP
 
 // Blit on out-of-bounds regions failures on NVIDIA, INTEL and AMD
 404959030 METAL : BlitFramebufferTest.BlitWithDifferentSizesColorAttachments/* = SKIP
