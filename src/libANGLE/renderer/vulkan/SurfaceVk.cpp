@@ -175,6 +175,22 @@ bool DepthStencilNeedsInputAttachmentUsage(const angle::FeaturesVk &features)
     return features.supportsShaderFramebufferFetchDepthStencil.enabled;
 }
 
+bool IsKnownAnglePresentMode(VkPresentModeKHR mode)
+{
+    switch (vk::ConvertVkPresentModeToPresentMode(mode))
+    {
+        case vk::PresentMode::ImmediateKHR:
+        case vk::PresentMode::MailboxKHR:
+        case vk::PresentMode::FifoKHR:
+        case vk::PresentMode::FifoRelaxedKHR:
+        case vk::PresentMode::SharedDemandRefreshKHR:
+        case vk::PresentMode::SharedContinuousRefreshKHR:
+            return true;
+        default:
+            return false;
+    }
+}
+
 angle::Result InitImageHelper(DisplayVk *displayVk,
                               EGLint width,
                               EGLint height,
@@ -1933,6 +1949,16 @@ angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(
             else
             {
                 compatiblePresentModesOut->resize(compatibleModes.presentModeCount);
+
+                // Drop anything ANGLE can't handle.
+                auto it = std::remove_if(
+                    compatiblePresentModesOut->begin(), compatiblePresentModesOut->end(),
+                    [](VkPresentModeKHR mode) { return !IsKnownAnglePresentMode(mode); });
+                compatiblePresentModesOut->resize(
+                    std::distance(compatiblePresentModesOut->begin(), it));
+
+                // Ensure at least one mode remains.
+                ASSERT(!compatiblePresentModesOut->empty());
 
                 // The implementation must always return the given present mode as compatible with
                 // itself.
