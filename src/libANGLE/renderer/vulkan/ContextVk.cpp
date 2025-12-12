@@ -2363,7 +2363,8 @@ angle::Result ContextVk::handleDirtyGraphicsReadOnlyDepthFeedbackLoopMode(
 angle::Result ContextVk::handleDirtyAnySamplePassedQueryEnd(DirtyBits::Iterator *dirtyBitsIterator,
                                                             DirtyBits dirtyBitMask)
 {
-    if (mRenderPassCommands->started())
+    // If we are using tile memory, don't enable this optimization to prevent fallback.
+    if (mRenderPassCommands->started() && mImagesWithTileMemory.empty())
     {
         // When we switch from query enabled draw to query disabled draw, we do immediate flush to
         // ensure the query result will be ready early so that application thread calling
@@ -3787,8 +3788,10 @@ angle::Result ContextVk::onCopyUpdate(VkDeviceSize size, bool *commandBufferWasF
     *commandBufferWasFlushedOut = false;
 
     mTotalBufferToImageCopySize += size;
-    // If the copy size exceeds the specified threshold, submit the outside command buffer.
-    if (mTotalBufferToImageCopySize >= kMaxBufferToImageCopySize)
+    // If the copy size exceeds the specified threshold, submit the outside command buffer. When
+    // there are images with tile memory in use, avoid submission by trying to avoid triggering tile
+    // memory fallback.
+    if (mTotalBufferToImageCopySize >= kMaxBufferToImageCopySize && mImagesWithTileMemory.empty())
     {
         ANGLE_TRY(flushAndSubmitOutsideRenderPassCommands(
             QueueSubmitReason::BufferToImageUpdateLimitReached));
@@ -5588,8 +5591,9 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     (currentRPCommandCount >= kMinCommandCountToSubmit ||
                      allowExceptionForSubmitAtBoundary);
 
+                // If we are using tile memory, don't enable this optimization to prevent fallback.
                 if ((shouldSubmitAtFBOBoundary || mState.getDrawFramebuffer()->isDefault()) &&
-                    mRenderPassCommands->started())
+                    mRenderPassCommands->started() && mImagesWithTileMemory.empty())
                 {
                     // This will behave as if user called glFlush, but the actual flush will be
                     // triggered at endRenderPass time.
