@@ -1599,12 +1599,6 @@ angle::Result WindowSurfaceVk::recreateSwapchain(vk::ErrorContext *context)
             vkDestroySwapchainKHR(context->getDevice(), mLastSwapchain, nullptr);
             mLastSwapchain = VK_NULL_HANDLE;
         }
-        // On Android, vkCreateSwapchainKHR destroys mLastSwapchain, which is incorrect.  Wait idle
-        // in that case as a workaround.
-        else if (context->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
-        {
-            ANGLE_TRY(finish(context));
-        }
     }
 
     // Save the handle since it is going to be updated in the createSwapChain call below.

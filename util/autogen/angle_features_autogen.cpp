@@ -492,7 +492,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::VaryingsRequireMatchingPrecisionInSpirv, "varyingsRequireMatchingPrecisionInSpirv"},
     {Feature::VerifyPipelineCacheInBlobCache, "verifyPipelineCacheInBlobCache"},
     {Feature::VertexIDDoesNotIncludeBaseVertex, "vertexIDDoesNotIncludeBaseVertex"},
-    {Feature::WaitIdleBeforeSwapchainRecreation, "waitIdleBeforeSwapchainRecreation"},
     {Feature::WarmUpPipelineCacheAtLink, "warmUpPipelineCacheAtLink"},
     {Feature::WrapSwitchInIfTrue, "wrapSwitchInIfTrue"},
     {Feature::WriteHelperSampleMask, "writeHelperSampleMask"},

@@ -582,15 +582,6 @@
             "issue": "http://anglebug.com/40644747"
         },
         {
-            "name": "wait_idle_before_swapchain_recreation",
-            "category": "Workarounds",
-            "description": [
-                "Before passing an oldSwapchain to VkSwapchainCreateInfoKHR, wait for queue to be idle. ",
-                "Works around a bug on platforms which destroy oldSwapchain in vkCreateSwapchainKHR."
-            ],
-            "issue": "http://anglebug.com/42263629"
-        },
-        {
             "name": "destroy_old_swapchain_in_shared_present_mode",
             "category": "Workarounds",
             "description": [

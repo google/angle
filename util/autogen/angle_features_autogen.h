@@ -492,7 +492,6 @@ enum class Feature
     VaryingsRequireMatchingPrecisionInSpirv,
     VerifyPipelineCacheInBlobCache,
     VertexIDDoesNotIncludeBaseVertex,
-    WaitIdleBeforeSwapchainRecreation,
     WarmUpPipelineCacheAtLink,
     WrapSwitchInIfTrue,
     WriteHelperSampleMask,

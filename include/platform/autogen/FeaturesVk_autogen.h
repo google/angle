@@ -452,12 +452,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo waitIdleBeforeSwapchainRecreation = {
-        "waitIdleBeforeSwapchainRecreation",
-        FeatureCategory::VulkanWorkarounds,
-        &members,
-    };
-
     FeatureInfo destroyOldSwapchainInSharedPresentMode = {
         "destroyOldSwapchainInSharedPresentMode",
         FeatureCategory::VulkanWorkarounds,
