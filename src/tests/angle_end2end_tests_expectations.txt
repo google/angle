@@ -10,9 +10,6 @@
 42266467 TSAN : MultithreadingTest.CreateMultiSharedContextAndDraw/* = SKIP
 
 // Generic
-// Fails in the flush thread when calling eglMakeCurrent.
-42264594 OPENGL : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
-42264594 GLES : SimpleStateChangeTestES31.DrawThenChangeFBOThenDrawThenFlushInAnotherThreadThenDrawIndexed/* = SKIP
 // Crashes in setUniformValuesFromBindingQualifiers() because mUniformRealLocationMap is not
 // initialized when the program is loaded from cache.
 42264670 VULKAN : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
