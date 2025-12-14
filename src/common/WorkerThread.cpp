@@ -302,19 +302,19 @@ std::shared_ptr<WorkerThreadPool> WorkerThreadPool::Create(size_t numThreads,
     const bool hasPostWorkerTaskImpl = platform->postWorkerTask != nullptr;
     if (hasPostWorkerTaskImpl && multithreaded)
     {
-        pool = std::shared_ptr<WorkerThreadPool>(new DelegateWorkerPool(platform));
+        pool = std::make_shared<DelegateWorkerPool>(platform);
     }
 #endif
 #if ANGLE_STD_ASYNC_WORKERS
     if (!pool && multithreaded)
     {
-        pool = std::shared_ptr<WorkerThreadPool>(new AsyncWorkerPool(
-            numThreads == 0 ? std::thread::hardware_concurrency() : numThreads));
+        pool = std::make_shared<AsyncWorkerPool>(
+            numThreads == 0 ? std::thread::hardware_concurrency() : numThreads);
     }
 #endif
     if (!pool)
     {
-        return std::shared_ptr<WorkerThreadPool>(new SingleThreadedWorkerPool());
+        return std::make_shared<SingleThreadedWorkerPool>();
     }
     return pool;
 }
