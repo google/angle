@@ -74,55 +74,84 @@ TEST(MemoryBuffer, ReserveThenResize)
     buffer.assertTotalCopiedBytes(100u);
 }
 
-// Test usage of MemoryBuffer with clearAndReserve and then multiple resizes
-TEST(MemoryBuffer, ClearAndReserveThenResize)
+// Test that clear() of a memory buffer retains the buffer.
+TEST(MemoryBuffer, Clear)
 {
     MemoryBuffer buffer;
+    ASSERT_TRUE(buffer.resize(100));
+    ASSERT_EQ(buffer.size(), 100u);
+    ASSERT_NE(buffer.data(), nullptr);
+    buffer.assertTotalAllocatedBytes(100u);
+    buffer.assertTotalCopiedBytes(0u);
 
-    ASSERT_TRUE(buffer.clearAndReserve(300));
-    ASSERT_EQ(buffer.size(), 0u);
+    uint8_t *oldPtr = buffer.data();
+
+    buffer.clear();
+    EXPECT_EQ(buffer.size(), 0u);
+    EXPECT_EQ(buffer.data(), oldPtr);
+    buffer.assertTotalAllocatedBytes(100u);
+    buffer.assertTotalCopiedBytes(0u);
 
     ASSERT_TRUE(buffer.resize(100));
     ASSERT_EQ(buffer.size(), 100u);
-    buffer.assertTotalAllocatedBytes(300u);
-    buffer.assertTotalCopiedBytes(0u);
-
-    ASSERT_TRUE(buffer.resize(300));
-    ASSERT_EQ(buffer.size(), 300u);
-    buffer.assertTotalAllocatedBytes(300u);
-    buffer.assertTotalCopiedBytes(0u);
-
-    ASSERT_TRUE(buffer.resize(100));
-    ASSERT_EQ(buffer.size(), 100u);
-    buffer.assertTotalAllocatedBytes(300u);
-    buffer.assertTotalCopiedBytes(0u);
-
-    ASSERT_TRUE(buffer.clearAndReserve(400));
-    ASSERT_EQ(buffer.size(), 0u);
-
-    ASSERT_TRUE(buffer.resize(400));
-    ASSERT_EQ(buffer.size(), 400u);
-    buffer.assertTotalAllocatedBytes(700u);
+    EXPECT_EQ(buffer.data(), oldPtr);
+    buffer.assertTotalAllocatedBytes(100u);
     buffer.assertTotalCopiedBytes(0u);
 }
 
+// Test that destroy() of a memory buffer does not retain the buffer.
 // Test destroying MemoryBuffer
 TEST(MemoryBuffer, Destroy)
 {
     MemoryBuffer buffer;
-
-    ASSERT_TRUE(buffer.clearAndReserve(100));
-    ASSERT_EQ(buffer.size(), 0u);
-
     ASSERT_TRUE(buffer.resize(100));
     ASSERT_EQ(buffer.size(), 100u);
+    ASSERT_NE(buffer.data(), nullptr);
     buffer.assertTotalAllocatedBytes(100u);
     buffer.assertTotalCopiedBytes(0u);
 
     buffer.destroy();
-    ASSERT_EQ(buffer.size(), 0u);
+    EXPECT_EQ(buffer.size(), 0u);
+    buffer.assertDataBufferFreed();
     buffer.assertTotalAllocatedBytes(0u);
     buffer.assertTotalCopiedBytes(0u);
+
+    ASSERT_TRUE(buffer.resize(100));
+    ASSERT_EQ(buffer.size(), 100u);
+    ASSERT_NE(buffer.data(), nullptr);
+    buffer.assertTotalAllocatedBytes(100u);
+    buffer.assertTotalCopiedBytes(0u);
+}
+
+// Test usage of MemoryBuffer with clearAndReserve() and then multiple resizes.
+TEST(MemoryBuffer, ClearAndReserve)
+{
+    MemoryBuffer buffer;
+    ASSERT_TRUE(buffer.resize(200));
+    ASSERT_EQ(buffer.size(), 200u);
+    ASSERT_NE(buffer.data(), nullptr);
+    buffer.assertTotalAllocatedBytes(200u);
+    buffer.assertTotalCopiedBytes(0u);
+
+    uint8_t *oldPtr = buffer.data();
+
+    ASSERT_TRUE(buffer.clearAndReserve(100));
+    ASSERT_EQ(buffer.size(), 0u);
+    EXPECT_EQ(buffer.data(), oldPtr);
+    buffer.assertTotalAllocatedBytes(200u);
+    buffer.assertTotalCopiedBytes(0u);
+
+    ASSERT_TRUE(buffer.resize(200));
+    ASSERT_EQ(buffer.size(), 200u);
+    EXPECT_EQ(buffer.data(), oldPtr);
+    buffer.assertTotalAllocatedBytes(200u);
+    buffer.assertTotalCopiedBytes(0u);
+
+    ASSERT_TRUE(buffer.resize(300));
+    ASSERT_EQ(buffer.size(), 300u);
+    EXPECT_NE(buffer.data(), oldPtr);
+    buffer.assertTotalAllocatedBytes(500u);
+    buffer.assertTotalCopiedBytes(200u);
 }
 
 // Test that the span() method returns entire buffer.
@@ -248,6 +277,35 @@ TEST(MemoryBuffer, Fill)
     buf.fill(0x41);
     EXPECT_EQ(0x41u, buf[0]);
     EXPECT_EQ(0x41u, buf[1]);
+}
+
+// Demonstrate current behavior of ScratchBuffer lifetime mechanism
+TEST(ScratchBuffer, Lifetime)
+{
+    ScratchBuffer scratch(2);  // Live for two ticks.
+    MemoryBuffer *out;
+
+    ASSERT_TRUE(scratch.get(100u, &out));
+    ASSERT_NE(out, nullptr);
+    ASSERT_NE(out->data(), nullptr);
+
+    uint8_t *oldPtr = out->data();
+
+    // NOTE: buffer never actually freed.
+    scratch.tick();
+    EXPECT_EQ(out->data(), oldPtr);
+
+    scratch.tick();
+    EXPECT_EQ(out->data(), oldPtr);
+
+    scratch.tick();
+    EXPECT_EQ(out->data(), oldPtr);
+
+    scratch.tick();
+    EXPECT_EQ(out->data(), oldPtr);
+
+    scratch.tick();
+    EXPECT_EQ(out->data(), oldPtr);
 }
 
 }  // namespace

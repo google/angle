@@ -80,10 +80,10 @@ bool MemoryBuffer::reserve(size_t newCapacity)
     return true;
 }
 
-bool MemoryBuffer::clearAndReserve(size_t newSize)
+bool MemoryBuffer::clearAndReserve(size_t newCapacity)
 {
     clear();
-    return reserve(newSize);
+    return reserve(newCapacity);
 }
 
 void MemoryBuffer::fill(uint8_t datum)

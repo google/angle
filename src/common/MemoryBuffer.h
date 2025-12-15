@@ -30,17 +30,20 @@ class MemoryBuffer final : NonCopyable
     MemoryBuffer(MemoryBuffer &&other);
     MemoryBuffer &operator=(MemoryBuffer &&other);
 
-    // Destroy underlying memory
+    // Free underlying memory. After this call, the MemoryBuffer has zero size
+    // but can be reused given a subsequent resize()/reserve().
     void destroy();
 
-    // Updates mSize to newSize. Updates mCapacity iff newSize > mCapacity
+    // Updates mSize to newSize. May cause a reallocation iff newSize > mCapacity.
     [[nodiscard]] bool resize(size_t newSize);
 
-    // Resets mSize to 0. Reserves memory and updates mCapacity iff newSize > mCapacity
-    [[nodiscard]] bool clearAndReserve(size_t newSize);
+    // Updates mCapacity iff newCapacity > mCapacity. May cause a reallocation if
+    // newCapacity > mCapacity.
+    [[nodiscard]] bool reserve(size_t newCapacity);
 
-    // Updates mCapacity iff newSize > mCapacity
-    [[nodiscard]] bool reserve(size_t newSize);
+    // Sets size to zero and updates mCapacity iff newCapacity > mCapacity. May cause
+    // a reallocation if newCapacity is greater than mCapacity prior to the clear.
+    [[nodiscard]] bool clearAndReserve(size_t newCapacity);
 
     // Sets size bound by capacity.
     void setSize(size_t size)
@@ -50,7 +53,7 @@ class MemoryBuffer final : NonCopyable
     }
     void setSizeToCapacity() { setSize(mCapacity); }
 
-    // Invalidate current content
+    // Sets current size to 0, but retains buffer for future use.
     void clear() { (void)resize(0); }
 
     size_t size() const { return mSize; }
@@ -116,6 +119,9 @@ class MemoryBuffer final : NonCopyable
         ASSERT(totalCopiedBytes == mTotalCopiedBytes);
 #endif  // ANGLE_ENABLE_ASSERTS
     }
+    // Validate data buffer is no longer present. Needed because data() may
+    // assert a non-null buffer.
+    void assertDataBufferFreed() const { ASSERT(mData == nullptr); }
 
   private:
     size_t mSize     = 0;
