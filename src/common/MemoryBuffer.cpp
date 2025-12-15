@@ -190,7 +190,7 @@ void ScratchBuffer::tick()
         --mResetCounter;
         if (mResetCounter == 0)
         {
-            clear();
+            destroy();
         }
     }
 }
@@ -198,10 +198,12 @@ void ScratchBuffer::tick()
 void ScratchBuffer::clear()
 {
     mResetCounter = mLifetime;
-    if (mScratchMemory.size() > 0)
-    {
-        mScratchMemory.clear();
-    }
+    mScratchMemory.clear();
+}
+
+void ScratchBuffer::destroy()
+{
+    mScratchMemory.destroy();
 }
 
 }  // namespace angle

@@ -137,9 +137,9 @@ class ScratchBuffer final : NonCopyable
 {
   public:
     ScratchBuffer();
-    // If we request a scratch buffer requesting a smaller size this many times, release and
-    // recreate the scratch buffer. This ensures we don't have a degenerate case where we are stuck
-    // hogging memory.
+    // If we request a scratch buffer requesting a smaller size this many times, release the
+    // scratch buffer. This ensures we don't have a degenerate case where we are stuck
+    // hogging memory. Zero means eternal lifetime.
     ScratchBuffer(uint32_t lifetime);
     ~ScratchBuffer();
 
@@ -152,10 +152,17 @@ class ScratchBuffer final : NonCopyable
     // Same as get, but ensures new values are initialized to a fixed constant.
     bool getInitialized(size_t requestedSize, MemoryBuffer **memoryBufferOut, uint8_t initValue);
 
-    // Ticks the release counter for the scratch buffer. Also done implicitly in get().
+    // Ticks the release counter for the scratch buffer. Also done implicitly in get(). Memory
+    // will be returned to the system after tick expiration.
     void tick();
 
+    // clear() the underlying MemoryBuffer, setting size to zero but retaining
+    // any allocated memory.
     void clear();
+
+    // destroy() the underlying MemoryBuffer, setting size to zero and freeing
+    // any allocated memory.
+    void destroy();
 
     MemoryBuffer *getMemoryBuffer() { return &mScratchMemory; }
 

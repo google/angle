@@ -291,9 +291,27 @@ TEST(ScratchBuffer, Lifetime)
 
     uint8_t *oldPtr = out->data();
 
-    // NOTE: buffer never actually freed.
     scratch.tick();
     EXPECT_EQ(out->data(), oldPtr);
+
+    scratch.tick();
+    out->assertDataBufferFreed();
+
+    scratch.tick();
+    out->assertDataBufferFreed();
+}
+
+// Test that an initial lifetime of zero means it never expires.
+TEST(ScratchBuffer, EternalLifetime)
+{
+    ScratchBuffer scratch(0);
+    MemoryBuffer *out;
+
+    ASSERT_TRUE(scratch.get(100u, &out));
+    ASSERT_NE(out, nullptr);
+    ASSERT_NE(out->data(), nullptr);
+
+    uint8_t *oldPtr = out->data();
 
     scratch.tick();
     EXPECT_EQ(out->data(), oldPtr);
