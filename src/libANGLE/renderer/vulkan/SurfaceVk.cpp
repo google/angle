@@ -1951,11 +1951,8 @@ angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(
                 compatiblePresentModesOut->resize(compatibleModes.presentModeCount);
 
                 // Drop anything ANGLE can't handle.
-                auto it = std::remove_if(
-                    compatiblePresentModesOut->begin(), compatiblePresentModesOut->end(),
-                    [](VkPresentModeKHR mode) { return !IsKnownAnglePresentMode(mode); });
-                compatiblePresentModesOut->resize(
-                    std::distance(compatiblePresentModesOut->begin(), it));
+                std::erase_if(*compatiblePresentModesOut,
+                              [](VkPresentModeKHR mode) { return !IsKnownAnglePresentMode(mode); });
 
                 // Ensure at least one mode remains.
                 ASSERT(!compatiblePresentModesOut->empty());
