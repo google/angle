@@ -787,6 +787,17 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
             }
         }
 
+        bool isSelfCopy = false;
+        if (readBuffer && readBuffer->type() == GL_TEXTURE)
+        {
+            TextureGL *sourceTexture = GetImplAs<TextureGL>(readBuffer->getTexture());
+            const bool isSameCubeFace =
+                readBuffer->cubeMapFace() == gl::TextureTarget::InvalidEnum ||
+                readBuffer->cubeMapFace() == target;
+            isSelfCopy = sourceTexture && sourceTexture->mTextureID == mTextureID &&
+                         readBuffer->mipLevel() == static_cast<GLint>(level) && isSameCubeFace;
+        }
+
         LevelInfoGL levelInfo =
             GetLevelInfo(features, originalInternalFormatInfo, copyTexImageFormat.internalFormat);
         gl::Offset destOffset(clippedArea.x - sourceArea.x, clippedArea.y - sourceArea.y, 0);
@@ -832,7 +843,72 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
             }
             else
             {
-                if (features.emulateCopyTexImage2D.enabled)
+                if (isSelfCopy)
+                {
+                    if (type == GL_HALF_FLOAT_OES && functions->standard == STANDARD_GL_DESKTOP)
+                    {
+                        type = GL_HALF_FLOAT;
+                    }
+
+                    // Avoid redefining the texture before the copy, as that would invalidate the
+                    // source attachment. Copy through a temporary texture first.
+                    const GLenum unsizedFormat =
+                        gl::GetUnsizedFormat(copyTexImageFormat.internalFormat);
+
+                    GLuint tempTex = 0;
+                    ANGLE_GL_TRY(context, functions->genTextures(1, &tempTex));
+
+                    // Always use a 2D temp texture to keep the attachment complete (especially for
+                    // cube maps in ES, which require all faces to be defined).
+                    stateManager->bindTexture(gl::TextureType::_2D, tempTex);
+                    ANGLE_GL_TRY(context,
+                                 functions->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0));
+                    ANGLE_GL_TRY(context,
+                                 functions->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0));
+                    ANGLE_GL_TRY(context, functions->texParameteri(
+                                              GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+                    ANGLE_GL_TRY(context, functions->texParameteri(
+                                              GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+                    ANGLE_GL_TRY_ALWAYS_CHECK(
+                        context,
+                        functions->texImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat,
+                                              clippedArea.width, clippedArea.height, 0,
+                                              unsizedFormat, type, nullptr));
+                    ANGLE_GL_TRY(context, functions->copyTexSubImage2D(
+                                              GL_TEXTURE_2D, 0, 0, 0, clippedArea.x, clippedArea.y,
+                                              clippedArea.width, clippedArea.height));
+
+                    GLuint tempFBO = 0;
+                    ANGLE_GL_TRY(context, functions->genFramebuffers(1, &tempFBO));
+                    const GLenum readFramebufferTarget =
+                        stateManager->getHasSeparateFramebufferBindings() ? GL_READ_FRAMEBUFFER
+                                                                          : GL_FRAMEBUFFER;
+                    stateManager->bindFramebuffer(readFramebufferTarget, tempFBO);
+                    ANGLE_GL_TRY(context, functions->framebufferTexture2D(
+                                              readFramebufferTarget, GL_COLOR_ATTACHMENT0,
+                                              GL_TEXTURE_2D, tempTex, 0));
+
+                    // Redefine the destination texture after the temp framebuffer is set up.
+                    stateManager->bindTexture(getType(), mTextureID);
+                    ANGLE_GL_TRY_ALWAYS_CHECK(
+                        context,
+                        functions->texImage2D(ToGLenum(target), static_cast<GLint>(level),
+                                              copyTexImageFormat.internalFormat, sourceArea.width,
+                                              sourceArea.height, 0, unsizedFormat, type, nullptr));
+
+                    ANGLE_GL_TRY(context,
+                                 functions->copyTexSubImage2D(
+                                     ToGLenum(target), static_cast<GLint>(level), destOffset.x,
+                                     destOffset.y, 0, 0, clippedArea.width, clippedArea.height));
+
+                    stateManager->deleteFramebuffer(tempFBO);
+                    stateManager->deleteTexture(tempTex);
+
+                    // Restore the read framebuffer binding for the rest of this function.
+                    stateManager->bindFramebuffer(readFramebufferTarget,
+                                                  sourceFramebufferGL->getFramebufferID());
+                }
+                else if (features.emulateCopyTexImage2D.enabled)
                 {
                     if (type == GL_HALF_FLOAT_OES && functions->standard == STANDARD_GL_DESKTOP)
                     {

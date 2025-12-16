@@ -26,8 +26,6 @@
 42266349 VULKAN : MultithreadingTestES3.UnsynchronizedTextureReads2/* = SKIP
 377614665 VULKAN : GLSLValidationTest.StructSamplerVsComma/* = SKIP
 410584007 VULKAN : ImageTestES31.UseSourceTextureAsStorageImage/* = SKIP
-// Incorrectly handled pretty much in all backends
-42266871 : CopyTexImageTestES3.RedefineSameLevel/* = SKIP
 // Fails in Android with EGL_BAD_ALLOC
 374797737 : EGLSurfaceTest.CreateMultiWindowsSurfaceNoDestroy/* = SKIP
 

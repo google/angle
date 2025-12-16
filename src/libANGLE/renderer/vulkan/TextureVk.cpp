@@ -1355,9 +1355,6 @@ angle::Result TextureVk::copyImage(const gl::Context *context,
     // the dst format is accessed anywhere (in |redefineLevel| and |copySubImageImpl|).
     ANGLE_TRY(ensureRenderableIfCopyTexImageCannotTransfer(contextVk, internalFormatInfo, source));
 
-    // The texture level being redefined might be the same as the one bound to the framebuffer.
-    // This _could_ be supported by using a temp image before redefining the level (and potentially
-    // discarding the image).  However, this is currently unimplemented.
     FramebufferVk *framebufferVk = vk::GetImpl(source);
     RenderTargetVk *colorReadRT  = framebufferVk->getColorReadRenderTarget();
     vk::ImageHelper *srcImage    = &colorReadRT->getImageForCopy();
@@ -1369,11 +1366,97 @@ angle::Result TextureVk::copyImage(const gl::Context *context,
     const bool isSelfCopy = mImage == srcImage && levelIndex == colorReadRT->getLevelIndex() &&
                             redefinedFace == sourceFace;
 
+    // The texture level being redefined might be the same as the one bound to the framebuffer.
+    // In that case, snapshot the source image first, then redefine, then copy from the snapshot.
+    vk::RendererScoped<vk::ImageHelper> sourceImageCopy(renderer);
+    gl::Rectangle clippedSourceArea;
+    gl::Offset modifiedDestOffset(0, 0, 0);
+    bool hasCopyArea = false;
+
+    if (isSelfCopy)
+    {
+        gl::Extents fbSize = source->getReadColorAttachment()->getSize();
+        hasCopyArea = ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
+                                    &clippedSourceArea);
+
+        if (hasCopyArea)
+        {
+            modifiedDestOffset = gl::Offset(clippedSourceArea.x - sourceArea.x,
+                                            clippedSourceArea.y - sourceArea.y, 0);
+
+            // Make sure the source image exists and any updates are already flushed.
+            ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+
+            ANGLE_TRY(sourceImageCopy.get().init2DStaging(
+                contextVk, mState.hasProtectedContent(),
+                gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1),
+                srcImage->getIntendedFormatID(), srcImage->getActualFormatID(),
+                vk::kImageUsageTransferBits | VK_IMAGE_USAGE_SAMPLED_BIT, 1));
+
+            vk::CommandResources resources;
+            resources.onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, srcImage);
+            resources.onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
+                                           &sourceImageCopy.get());
+
+            vk::OutsideRenderPassCommandBuffer *commandBuffer;
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
+
+            gl::Offset srcOffset(clippedSourceArea.x, clippedSourceArea.y, 0);
+            gl::Extents copyExtents(clippedSourceArea.width, clippedSourceArea.height, 1);
+
+            VkImageSubresourceLayers srcSubresource = {};
+            srcSubresource.aspectMask               = VK_IMAGE_ASPECT_COLOR_BIT;
+            srcSubresource.mipLevel       = srcImage->toVkLevel(colorReadRT->getLevelIndex()).get();
+            srcSubresource.baseArrayLayer = sourceFace;
+            srcSubresource.layerCount     = 1;
+
+            if (srcImage->getExtents().depth > 1)
+            {
+                Set3DBaseArrayLayerAndLayerCount(&srcSubresource);
+                srcOffset.z = static_cast<int>(colorReadRT->getLayerIndex());
+            }
+
+            VkImageSubresourceLayers destSubresource = {};
+            destSubresource.aspectMask               = VK_IMAGE_ASPECT_COLOR_BIT;
+            destSubresource.mipLevel                 = 0;
+            destSubresource.baseArrayLayer           = 0;
+            destSubresource.layerCount               = 1;
+
+            vk::ImageHelper::Copy(renderer, srcImage, &sourceImageCopy.get(), srcOffset,
+                                  gl::kOffsetZero, copyExtents, srcSubresource, destSubresource,
+                                  commandBuffer);
+        }
+    }
+
     ANGLE_TRY(redefineLevel(context, index, vkFormat, newImageSize));
 
     if (isSelfCopy)
     {
-        UNIMPLEMENTED();
+        if (!hasCopyArea)
+        {
+            return angle::Result::Continue;
+        }
+
+        // Use a draw copy for format conversion.
+        ANGLE_TRY(
+            contextVk->flushCommandsAndEndRenderPass(RenderPassClosureReason::PrepareForImageCopy));
+
+        vk::DeviceScoped<vk::ImageView> sourceCopyView(contextVk->getDevice());
+        gl::TextureType sourceCopyTextureType =
+            vk::Get2DTextureType(1, sourceImageCopy.get().getSamples());
+        ANGLE_TRY(sourceImageCopy.get().initLayerImageView(
+            contextVk, sourceCopyTextureType, VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
+            &sourceCopyView.get(), vk::LevelIndex(0), 1, 0, 1));
+
+        ANGLE_TRY(copySubImageImplWithDraw(
+            contextVk, index, modifiedDestOffset, vkFormat, gl::LevelIndex(0),
+            gl::Box(gl::kOffsetZero,
+                    gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1)),
+            false, false, false, false, &sourceImageCopy.get(), &sourceCopyView.get(),
+            SurfaceRotation::Identity));
+
+        vk::ImageView sourceCopyViewObject = sourceCopyView.release();
+        contextVk->addGarbage(&sourceCopyViewObject);
         return angle::Result::Continue;
     }
 
