@@ -60,6 +60,9 @@
 359729255 METAL : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
 359729255 WGPU : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
 
+// Using a non-zero offset non-aligned with the stride.
+468923885 WGPU : VertexAttributeTest.BufferOffsetNonAlignedWithStride/* = SKIP
+
 // Propagate buffer changes to VertexArray fail on some desktop drivers
 433331119 LINUX NVIDIA OPENGL : ValidationStateChangeTest.RebindBufferShouldPickupBufferChange/* = SKIP
 433331119 LINUX NVIDIA OPENGL : ValidationStateChangeTestES31.RebindVertexBufferShouldPickupBufferChange/* = SKIP
