@@ -158,7 +158,7 @@ constexpr uint32_t kPreferredDefaultUniformBufferSize = 64 * 1024u;
 
 // Maximum size to use VMA image suballocation. Any allocation greater than or equal to this
 // value will use a dedicated VkDeviceMemory.
-constexpr size_t kImageSizeThresholdForDedicatedMemoryAllocation = 4 * 1024 * 1024;
+constexpr size_t kImageSizeThresholdForDedicatedMemoryAllocation = 8 * 1024 * 1024;
 
 // Pipeline cache header version. It should be incremented any time there is an update to the cache
 // header or data structure.
@@ -2697,7 +2697,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
     // The preferred heap block size was picked by looking at memory usage of
     // Android apps. The allocator will start making blocks at 1/8 the max size
     // and builds up block size as needed before capping at the max set here.
-    mPreferredLargeHeapBlockSize = 4 * 1024 * 1024;
+    mPreferredLargeHeapBlockSize = 8 * 1024 * 1024;
 
     // The first allocated buffer block from an empty buffer pool has a smaller size in order to
     // reduce the memory footprint.
