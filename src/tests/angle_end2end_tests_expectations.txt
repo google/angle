@@ -15,10 +15,6 @@
 42264670 VULKAN : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
 42264678 VULKAN WIN INTEL : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 42264678 VULKAN PIXEL4ORXL : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
-42264866 OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_BlitCopyTexImage/* = SKIP
-42264866 OPENGL : FramebufferTestWithFormatFallback.RGBA4444_BlitCopyTexImage/* = SKIP
-42264866 GLES : FramebufferTestWithFormatFallback.R5G5B5A1_BlitCopyTexImage/* = SKIP
-42264866 GLES : FramebufferTestWithFormatFallback.RGBA4444_BlitCopyTexImage/* = SKIP
 42265462 OPENGL : BlitFramebufferTestES31.OOBResolve/* = SKIP
 42265462 GLES : BlitFramebufferTestES31.OOBResolve/* = SKIP
 410584013 GLES : ImageTestES3.ImmutableTextureOverwriteBaseLevelAndGenerateMipmapWhileInUse/* = SKIP
@@ -352,10 +348,6 @@
 772651 MAC NVIDIA OPENGL : GLSLTest.VectorScalarMultiplyAndAddInLoop/* = SKIP
 42264835 MAC NVIDIA METAL : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42264835 MAC NVIDIA METAL : BlobCacheTest.FragmentOutputLocationKey/* = SKIP
-42264866 MAC OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_TexImage/* = SKIP
-42264866 MAC OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_CopyTexImage/* = SKIP
-42264866 MAC OPENGL : FramebufferTestWithFormatFallback.R5G5B5A1_CubeTexImage/* = SKIP
-42264866 MAC OPENGL : FramebufferTestWithFormatFallback.R4G4B4A4_OutOfRangeStagedUpdateReformated/* = SKIP
 40644820 MAC AMD METAL : GLSLTest_ES3.ValidIndexClampES300/* = SKIP
 42265067 MAC INTEL OPENGL : WebGLCompatibilityTest.L32FTextures/* = SKIP
 42265067 MAC INTEL OPENGL : WebGLCompatibilityTest.R32FTextures/* = SKIP
