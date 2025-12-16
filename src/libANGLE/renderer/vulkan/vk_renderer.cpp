@@ -6083,12 +6083,16 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // On Qualcomm drivers prior to 777, this feature had a bug.
     // http://anglebug.com/381384988
+    //
+    // Use of vertexInputDynamicState on PowerVR devices is disabled for performance reasons
+    // (http://issuetracker.google.com/469320616).
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsVertexInputDynamicState,
         mVertexInputDynamicStateFeatures.vertexInputDynamicState == VK_TRUE &&
             !(IsWindows() && isIntel) &&
             !(isARMProprietary && driverVersion < angle::VersionTriple(48, 0, 0)) &&
-            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 777, 0)));
+            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 777, 0)) &&
+            !isPowerVR);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState,
                             mExtendedDynamicStateFeatures.extendedDynamicState == VK_TRUE &&
