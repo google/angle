@@ -94,6 +94,7 @@ enum class Feature
     DisableFlippingBlitWithCommand,
     DisableGPUSwitchingSupport,
     DisableMetalOnNvidia,
+    DisableMSAASampleCount1,
     DisableMultisampledRenderToTexture,
     DisableNativeParallelCompile,
     DisablePassthroughShaders,

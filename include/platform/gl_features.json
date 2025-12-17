@@ -258,6 +258,14 @@
             "issue": "http://crbug.com/797243"
         },
         {
+            "name": "disable_MSAA_sample_count_1",
+            "category": "Workarounds",
+            "description": [
+                "Do not expose multisample sample count 1 to avoid driver bugs"
+            ],
+            "issue": "http://anglebug.com/467164245"
+        },
+        {
             "name": "allow_clear_for_robust_resource_init",
             "category": "Workarounds",
             "description": [

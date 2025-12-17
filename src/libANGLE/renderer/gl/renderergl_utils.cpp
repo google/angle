@@ -210,6 +210,14 @@ bool IsPowerVrRogue(const FunctionsGL *functions)
     return angle::BeginsWith(nativeGLRenderer, powerVRRogue);
 }
 
+bool IsHuaweiMaleoon(const FunctionsGL *functions)
+{
+    const char *nativeGLVendor   = GetString(functions, GL_VENDOR);
+    const char *nativeGLRenderer = GetString(functions, GL_RENDERER);
+    return (std::string(nativeGLVendor).find("HUAWEI") != std::string::npos) &&
+           (std::string(nativeGLRenderer).find("Maleoon") != std::string::npos);
+}
+
 }  // namespace
 
 SwapControlData::SwapControlData()
@@ -594,6 +602,12 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
             for (size_t sampleIndex = 0; sampleIndex < samples.size(); sampleIndex++)
             {
                 if (features.limitMaxMSAASamplesTo4.enabled && samples[sampleIndex] > 4)
+                {
+                    continue;
+                }
+
+                // Supporting MSAA=1 is not required on OpenGL for non-conformant drivers.
+                if (features.disableMSAASampleCount1.enabled && samples[sampleIndex] == 1)
                 {
                     continue;
                 }
@@ -2273,6 +2287,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     bool isVMWare   = IsVMWare(vendor);
     bool hasAMD     = systemInfo.hasAMDGPU();
     bool isMali     = IsARM(vendor);
+    bool isHuaweiMaleoon = IsHuaweiMaleoon(functions);
 
     std::array<int, 3> mesaVersion = {0, 0, 0};
     bool isMesa                    = IsMesa(functions, &mesaVersion);
@@ -2387,6 +2402,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // 4 is a lowest common denominator that is always supported.
     ANGLE_FEATURE_CONDITION(features, limitMaxMSAASamplesTo4,
                             IsAndroid() || (IsApple() && (isIntel || isAMD || isNvidia)));
+    ANGLE_FEATURE_CONDITION(features, disableMSAASampleCount1, isHuaweiMaleoon);
     ANGLE_FEATURE_CONDITION(features, limitMax3dArrayTextureSizeTo1024,
                             isIntelLinuxLessThanKernelVersion5);
 

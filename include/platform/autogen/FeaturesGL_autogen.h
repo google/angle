@@ -218,6 +218,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo disableMSAASampleCount1 = {
+        "disableMSAASampleCount1",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo allowClearForRobustResourceInit = {
         "allowClearForRobustResourceInit",
         FeatureCategory::OpenGLWorkarounds,
