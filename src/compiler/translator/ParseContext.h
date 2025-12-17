@@ -7,6 +7,7 @@
 #define COMPILER_TRANSLATOR_PARSECONTEXT_H_
 
 #include "common/hash_containers.h"
+#include "common/span.h"
 #include "compiler/preprocessor/Preprocessor.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/Declarator.h"
@@ -1028,8 +1029,7 @@ class TParseContext : angle::NonCopyable
     angle::HashMap<const TFunction *, ir::FunctionId> mFunctionToId;
 };
 
-int PaParseStrings(size_t count,
-                   const char *const string[],
+int PaParseStrings(angle::Span<const char *const> string,
                    const int length[],
                    TParseContext *context);
 

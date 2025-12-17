@@ -9843,18 +9843,19 @@ bool TParseContext::postParseChecks()
 //
 // Returns 0 for success.
 //
-int PaParseStrings(size_t count,
-                   const char *const string[],
+int PaParseStrings(angle::Span<const char *const> string,
                    const int length[],
                    TParseContext *context)
 {
-    if ((count == 0) || (string == nullptr))
+    if (string.empty())
+    {
         return 1;
+    }
 
     if (glslang_initialize(context))
         return 1;
 
-    int error = glslang_scan(count, string, length, context);
+    int error = glslang_scan(string.size(), string.data(), length, context);
     if (!error)
         error = glslang_parse(context);
 

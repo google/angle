@@ -62,7 +62,7 @@ class CollectVariablesTest : public testing::Test
     {
         const char *shaderStrings[]     = {shaderString.c_str()};
         ShCompileOptions compileOptions = {};
-        ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, compileOptions));
+        ASSERT_TRUE(mTranslator->compile(shaderStrings, compileOptions));
 
         const std::vector<ShaderVariable> &uniforms = mTranslator->getUniforms();
         ASSERT_EQ(1u, uniforms.size());
@@ -113,7 +113,7 @@ class CollectVariablesTest : public testing::Test
     {
         const char *shaderStrings[]     = {shaderString.c_str()};
         ShCompileOptions compileOptions = {};
-        ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, compileOptions))
+        ASSERT_TRUE(mTranslator->compile(shaderStrings, compileOptions))
             << mTranslator->getInfoSink().info.str();
 
         const auto &outputVariables = mTranslator->getOutputVariables();
@@ -129,7 +129,7 @@ class CollectVariablesTest : public testing::Test
     void compile(const std::string &shaderString, ShCompileOptions *compileOptions)
     {
         const char *shaderStrings[] = {shaderString.c_str()};
-        ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, *compileOptions));
+        ASSERT_TRUE(mTranslator->compile(shaderStrings, *compileOptions));
     }
 
     void compile(const std::string &shaderString)

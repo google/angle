@@ -504,15 +504,13 @@ bool TCompiler::Init(const ShBuiltInResources &resources)
     return true;
 }
 
-TIntermBlock *TCompiler::compileTreeForTesting(const char *const shaderStrings[],
-                                               size_t numStrings,
+TIntermBlock *TCompiler::compileTreeForTesting(angle::Span<const char *const> shaderStrings,
                                                const ShCompileOptions &compileOptions)
 {
-    return compileTreeImpl(shaderStrings, numStrings, compileOptions);
+    return compileTreeImpl(shaderStrings, compileOptions);
 }
 
-TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
-                                         size_t numStrings,
+TIntermBlock *TCompiler::compileTreeImpl(angle::Span<const char *const> shaderStrings,
                                          const ShCompileOptions &compileOptions)
 {
     // Remember the compile options for helper functions such as validateAST.
@@ -520,7 +518,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
     clearResults();
 
-    ASSERT(numStrings > 0);
+    ASSERT(!shaderStrings.empty());
     ASSERT(GetGlobalPoolAllocator());
 
     // Reset the extension behavior for each compilation unit.
@@ -568,8 +566,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     ASSERT(mSymbolTable.atGlobalLevel());
 
     // Parse shader.
-    if (PaParseStrings(numStrings - firstSource, &shaderStrings[firstSource], nullptr,
-                       &parseContext) != 0)
+    if (PaParseStrings(shaderStrings.subspan(firstSource), nullptr, &parseContext) != 0)
     {
         return nullptr;
     }
@@ -765,12 +762,11 @@ unsigned int TCompiler::getSharedMemorySize() const
 }
 
 bool TCompiler::getShaderBinary(const ShHandle compilerHandle,
-                                const char *const shaderStrings[],
-                                size_t numStrings,
+                                angle::Span<const char *const> shaderStrings,
                                 const ShCompileOptions &compileOptions,
                                 ShaderBinaryBlob *const binaryOut)
 {
-    if (!compile(shaderStrings, numStrings, compileOptions))
+    if (!compile(shaderStrings, compileOptions))
     {
         return false;
     }
@@ -791,9 +787,9 @@ bool TCompiler::getShaderBinary(const ShHandle compilerHandle,
     // Serialize the full source string for the shader. Ignore the source path if it is provided.
     std::string sourceString;
     size_t startingIndex = compileOptions.sourcePath ? 1 : 0;
-    for (size_t i = startingIndex; i < numStrings; ++i)
+    for (const char *str : shaderStrings.subspan(startingIndex))
     {
-        sourceString.append(shaderStrings[i]);
+        sourceString.append(str);
     }
     stream.writeString(sourceString);
 
@@ -1401,17 +1397,18 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     return true;
 }
 
-bool TCompiler::compile(const char *const shaderStrings[],
-                        size_t numStrings,
+bool TCompiler::compile(angle::Span<const char *const> shaderStrings,
                         const ShCompileOptions &compileOptionsIn)
 {
 #if defined(ANGLE_FUZZER_CORPUS_OUTPUT_DIR)
-    DumpFuzzerCase(shaderStrings, numStrings, mShaderType, mShaderSpec, mOutputType,
-                   compileOptionsIn);
+    DumpFuzzerCase(shaderStrings.data(), shaderStrings.size(), mShaderType, mShaderSpec,
+                   mOutputType, compileOptionsIn);
 #endif  // defined(ANGLE_FUZZER_CORPUS_OUTPUT_DIR)
 
-    if (numStrings == 0)
+    if (shaderStrings.empty())
+    {
         return true;
+    }
 
     ShCompileOptions compileOptions = compileOptionsIn;
 
@@ -1423,7 +1420,7 @@ bool TCompiler::compile(const char *const shaderStrings[],
     }
 
     TScopedPoolAllocator scopedAlloc;
-    TIntermBlock *root = compileTreeImpl(shaderStrings, numStrings, compileOptions);
+    TIntermBlock *root = compileTreeImpl(shaderStrings, compileOptions);
 
     if (root)
     {
