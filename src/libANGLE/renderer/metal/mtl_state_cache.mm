@@ -18,6 +18,7 @@
 
 #include "common/debug.h"
 #include "common/hash_utils.h"
+#include "common/span.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/mtl_resources.h"
 #include "libANGLE/renderer/metal/mtl_utils.h"
@@ -402,7 +403,7 @@ void DepthStencilDesc::updateStencilBackWriteMask(const gl::DepthStencilState &d
 
 size_t DepthStencilDesc::hash() const
 {
-    return angle::ComputeGenericHash(*this);
+    return angle::ComputeGenericHash(angle::byte_span_from_ref(*this));
 }
 
 // SamplerDesc implementation
@@ -470,7 +471,7 @@ bool SamplerDesc::operator==(const SamplerDesc &rhs) const
 
 size_t SamplerDesc::hash() const
 {
-    return angle::ComputeGenericHash(*this);
+    return angle::ComputeGenericHash(angle::byte_span_from_ref(*this));
 }
 
 // BlendDesc implementation
@@ -625,7 +626,7 @@ bool RenderPipelineDesc::operator==(const RenderPipelineDesc &rhs) const
 
 size_t RenderPipelineDesc::hash() const
 {
-    return angle::ComputeGenericHash(*this);
+    return angle::ComputeGenericHash(angle::byte_span_from_ref(*this));
 }
 
 bool RenderPipelineDesc::rasterizationEnabled() const
@@ -907,7 +908,7 @@ bool ProvokingVertexComputePipelineDesc::operator!=(
 }
 size_t ProvokingVertexComputePipelineDesc::hash() const
 {
-    return angle::ComputeGenericHash(*this);
+    return angle::ComputeGenericHash(angle::byte_span_from_ref(*this));
 }
 
 // StateCache implementation

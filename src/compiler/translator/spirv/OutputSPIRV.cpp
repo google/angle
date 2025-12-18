@@ -164,7 +164,7 @@ struct BuiltInResultStructHash
             static_cast<uint8_t>(key.msbPrimarySize),
         };
 
-        return angle::ComputeGenericHash(properties, sizeof(properties));
+        return angle::ComputeGenericHash(properties);
     }
 };
 

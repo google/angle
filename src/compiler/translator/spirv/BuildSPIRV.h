@@ -185,13 +185,12 @@ struct SpirvTypeHash
 
         if (!type.arraySizes.empty())
         {
-            result = angle::ComputeGenericHash(type.arraySizes.data(),
-                                               type.arraySizes.size() * sizeof(type.arraySizes[0]));
+            result = angle::ComputeGenericHash(angle::as_byte_span(type.arraySizes));
         }
 
         if (type.block != nullptr)
         {
-            return result ^ angle::ComputeGenericHash(&type.block, sizeof(type.block)) ^
+            return result ^ angle::ComputeGenericHash(angle::byte_span_from_ref(type.block)) ^
                    static_cast<size_t>(type.typeSpec.isInvariantBlock) ^
                    (static_cast<size_t>(type.typeSpec.isRowMajorQualifiedBlock) << 1) ^
                    (static_cast<size_t>(type.typeSpec.isRowMajorQualifiedArray) << 2) ^
@@ -213,7 +212,7 @@ struct SpirvTypeHash
             // Padding because ComputeGenericHash expects a key size divisible by 4
         };
 
-        return result ^ angle::ComputeGenericHash(properties, sizeof(properties));
+        return result ^ angle::ComputeGenericHash(properties);
     }
 };
 
@@ -221,9 +220,7 @@ struct SpirvIdAndIdListHash
 {
     size_t operator()(const SpirvIdAndIdList &key) const
     {
-        return angle::ComputeGenericHash(key.idList.data(),
-                                         key.idList.size() * sizeof(key.idList[0])) ^
-               key.id;
+        return angle::ComputeGenericHash(angle::as_byte_span(key.idList)) ^ key.id;
     }
 };
 

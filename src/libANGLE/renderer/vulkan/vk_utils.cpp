@@ -13,6 +13,7 @@
 
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
+#include "common/span.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
@@ -1010,7 +1011,7 @@ void ApplyPipelineCreationFeedback(ErrorContext *context,
 
 size_t MemoryAllocInfoMapKey::hash() const
 {
-    return angle::ComputeGenericHash(*this);
+    return angle::ComputeGenericHash(angle::byte_span_from_ref(*this));
 }
 
 PipelineStage GetPipelineStage(gl::ShaderType stage)

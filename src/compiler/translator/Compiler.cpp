@@ -172,7 +172,7 @@ void DumpFuzzerCase(char const *const *shaderStrings,
         memcpy(data, shaderStrings[i], length);
         data += length;
     }
-    auto hash = angle::ComputeGenericHash(contents.data(), contents.size());
+    auto hash = angle::ComputeGenericHash(contents);
 
     std::ostringstream o = sh::InitializeStream<std::ostringstream>();
     o << ANGLE_FUZZER_CORPUS_OUTPUT_DIR << std::hex << std::setw(16) << std::setfill('0') << hash
