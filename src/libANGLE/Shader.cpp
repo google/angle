@@ -306,7 +306,7 @@ angle::Result CompileTask::postTranslate()
         while (std::getline(inputSourceStream, line))
         {
             // Remove null characters from the source line
-            std::erase(line, '\0');
+            line.erase(std::remove(line.begin(), line.end(), '\0'), line.end());
 
             shaderStream << "// " << line;
 

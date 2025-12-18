@@ -3528,9 +3528,12 @@ void Context::initRendererString()
         std::string versionString(mDisplay->getBackendVersionString(!isWebGL()));
         // Commas are used as a separator in ANGLE's renderer string, so remove commas from each
         // element.
-        std::erase(vendorString, ',');
-        std::erase(rendererString, ',');
-        std::erase(versionString, ',');
+        vendorString.erase(std::remove(vendorString.begin(), vendorString.end(), ','),
+                           vendorString.end());
+        rendererString.erase(std::remove(rendererString.begin(), rendererString.end(), ','),
+                             rendererString.end());
+        versionString.erase(std::remove(versionString.begin(), versionString.end(), ','),
+                            versionString.end());
         frontendRendererString << "ANGLE (";
         frontendRendererString << vendorString;
         frontendRendererString << ", ";

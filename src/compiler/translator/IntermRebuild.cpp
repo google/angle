@@ -81,7 +81,8 @@ void TIntermRebuild::BaseResult::moveAssignImpl(BaseResult &other)
 
 TIntermRebuild::BaseResult TIntermRebuild::BaseResult::Multi(std::vector<TIntermNode *> &&nodes)
 {
-    std::erase(nodes, nullptr);
+    auto it = std::remove(nodes.begin(), nodes.end(), nullptr);
+    nodes.erase(it, nodes.end());
     return std::move(nodes);
 }
 
