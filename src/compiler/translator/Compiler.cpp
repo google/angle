@@ -771,8 +771,10 @@ bool TCompiler::getShaderBinary(const ShHandle compilerHandle,
         mOutputType);
 
     stream.writeBytes(
-        reinterpret_cast<const unsigned char *>(angle::GetANGLEShaderProgramVersion()),
-        angle::GetANGLEShaderProgramVersionHashSize());
+        // NOTE: version api could return a string view.
+        ANGLE_UNSAFE_TODO(angle::Span(
+            reinterpret_cast<const unsigned char *>(angle::GetANGLEShaderProgramVersion()),
+            angle::GetANGLEShaderProgramVersionHashSize())));
     stream.writeEnum(shaderType);
     stream.writeEnum(mOutputType);
 
@@ -785,8 +787,8 @@ bool TCompiler::getShaderBinary(const ShHandle compilerHandle,
     }
     stream.writeString(sourceString);
 
-    stream.writeBytes(reinterpret_cast<const uint8_t *>(&compileOptions), sizeof(compileOptions));
-    stream.writeBytes(reinterpret_cast<const uint8_t *>(&mResources), sizeof(mResources));
+    stream.writeBytes(angle::byte_span_from_ref(compileOptions));
+    stream.writeBytes(angle::byte_span_from_ref(mResources));
 
     state.serialize(stream);
 

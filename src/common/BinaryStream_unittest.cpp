@@ -6,10 +6,6 @@
 
 // BinaryStream_unittest.cpp: Unit tests of the binary stream classes.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "common/BinaryStream.h"
 
 #include <stdint.h>
@@ -18,7 +14,9 @@
 #include <vector>
 
 #include "common/PackedEnums.h"
+#include "common/span.h"
 #include "common/span_util.h"
+#include "common/unsafe_buffers.h"
 #include "gtest/gtest.h"
 
 namespace angle
@@ -34,17 +32,18 @@ TEST(BinaryInputStream, Overflow)
     const size_t slopSize = 1024;
 
     std::vector<uint8_t> data(dataSize + slopSize);
-    std::fill(data.begin(), data.begin() + dataSize, goodValue);
-    std::fill(data.begin() + dataSize, data.end(), badValue);
-
-    std::vector<uint8_t> outputData(dataSize);
+    angle::Span<uint8_t> good_data = angle::Span(data).first(dataSize);
+    angle::Span<uint8_t> bad_data  = angle::Span(data).subspan(dataSize);
+    std::fill(good_data.begin(), good_data.end(), goodValue);
+    std::fill(bad_data.begin(), bad_data.end(), badValue);
 
     auto checkDataIsSafe = [=](uint8_t item) { return item == goodValue; };
 
     {
         // One large read
-        gl::BinaryInputStream stream(data.data(), dataSize);
-        stream.readBytes(outputData.data(), dataSize);
+        std::vector<uint8_t> outputData(dataSize);
+        gl::BinaryInputStream stream(good_data);
+        stream.readBytes(outputData);
         ASSERT_FALSE(stream.error());
         ASSERT_TRUE(std::all_of(outputData.begin(), outputData.end(), checkDataIsSafe));
         ASSERT_TRUE(stream.endOfStream());
@@ -52,10 +51,11 @@ TEST(BinaryInputStream, Overflow)
 
     {
         // Two half-sized reads
-        gl::BinaryInputStream stream(data.data(), dataSize);
-        stream.readBytes(outputData.data(), dataSize / 2);
+        std::vector<uint8_t> outputData(dataSize);
+        gl::BinaryInputStream stream(good_data);
+        stream.readBytes(angle::Span(outputData).first(dataSize / 2));
         ASSERT_FALSE(stream.error());
-        stream.readBytes(outputData.data() + dataSize / 2, dataSize / 2);
+        stream.readBytes(angle::Span(outputData).subspan(dataSize / 2));
         ASSERT_FALSE(stream.error());
         ASSERT_TRUE(std::all_of(outputData.begin(), outputData.end(), checkDataIsSafe));
         ASSERT_TRUE(stream.endOfStream());
@@ -63,17 +63,22 @@ TEST(BinaryInputStream, Overflow)
 
     {
         // One large read that is too big
-        gl::BinaryInputStream stream(data.data(), dataSize);
-        stream.readBytes(outputData.data(), dataSize + 1);
+        std::vector<uint8_t> outputData(dataSize + 1);
+        gl::BinaryInputStream stream(good_data);
+        stream.readBytes(outputData);
         ASSERT_TRUE(stream.error());
     }
 
     {
         // Two reads, one that overflows the offset
-        gl::BinaryInputStream stream(data.data(), dataSize);
-        stream.readBytes(outputData.data(), dataSize - 1);
+        std::vector<uint8_t> outputData(dataSize - 1);
+        gl::BinaryInputStream stream(good_data);
+        stream.readBytes(outputData);
         ASSERT_FALSE(stream.error());
-        stream.readBytes(outputData.data(), std::numeric_limits<size_t>::max() - dataSize - 2);
+        // SAFETY: required for test, span is not legitimate.
+        ANGLE_UNSAFE_BUFFERS(stream.readBytes(
+            angle::Span(outputData.data(), std::numeric_limits<size_t>::max() - dataSize - 2)));
+        ASSERT_TRUE(stream.error());
     }
 }
 
@@ -91,7 +96,7 @@ TEST(BinaryStream, Int)
     out.writeInt<uint64_t>(400);
     out.writeInt<size_t>(500);
 
-    gl::BinaryInputStream in(out.data(), out.length());
+    gl::BinaryInputStream in(out);
     EXPECT_EQ(in.readInt<int8_t>(), -100);
     EXPECT_EQ(in.readInt<int16_t>(), -200);
     EXPECT_EQ(in.readInt<int32_t>(), -300);
@@ -113,7 +118,7 @@ TEST(BinaryStream, Bool)
     out.writeBool(true);
     out.writeBool(false);
 
-    gl::BinaryInputStream in(out.data(), out.length());
+    gl::BinaryInputStream in(out);
     EXPECT_EQ(in.readBool(), true);
     EXPECT_EQ(in.readBool(), false);
 
@@ -130,7 +135,7 @@ TEST(BinaryStream, Vector)
     gl::BinaryOutputStream out;
     out.writeVector(writeData);
 
-    gl::BinaryInputStream in(out.data(), out.length());
+    gl::BinaryInputStream in(out);
     in.readVector(&readData);
 
     ASSERT_EQ(writeData.size(), readData.size());
@@ -157,7 +162,7 @@ TEST(BinaryStream, String)
     out.writeString(empty);
     out.writeString(hello);
 
-    gl::BinaryInputStream in(out.data(), out.length());
+    gl::BinaryInputStream in(out);
     EXPECT_EQ(in.readString(), empty);
     EXPECT_EQ(in.readString(), hello);
     EXPECT_EQ(in.readString(), nulls);
@@ -183,7 +188,7 @@ TEST(BinaryStream, Struct)
     out.writeStruct(pod1);
 
     Pod pod2;
-    gl::BinaryInputStream in(out.data(), out.length());
+    gl::BinaryInputStream in(out);
     in.readStruct(&pod2);
     EXPECT_TRUE(angle::byte_span_from_ref(pod1) == angle::byte_span_from_ref(pod2));
 
@@ -213,7 +218,7 @@ TEST(BinaryStream, Enum)
     out.writeEnum(Shorty::kMax);
     out.writeEnum(Color::kBlue);
 
-    gl::BinaryInputStream in(out.data(), out.length());
+    gl::BinaryInputStream in(out);
     EXPECT_EQ(Color::kRed, in.readEnum<Color>());
     EXPECT_EQ(Shorty::kNeg, in.readEnum<Shorty>());
     EXPECT_EQ(Color::kGreen, in.readEnum<Color>());
@@ -232,7 +237,7 @@ TEST(BinaryStream, Float)
     out.writeFloat(-100.0f);
     out.writeFloat(0.0f);
 
-    gl::BinaryInputStream in(out.data(), out.length());
+    gl::BinaryInputStream in(out);
     EXPECT_EQ(123.456f, in.readFloat());
     EXPECT_EQ(-100.0f, in.readFloat());
     EXPECT_EQ(0.0f, in.readFloat());
@@ -261,7 +266,7 @@ TEST(BinaryStream, PackedEnumMap)
     out.writePackedEnumMap(map1);
 
     angle::PackedEnumMap<Color, float> map2;
-    gl::BinaryInputStream in(out.data(), out.length());
+    gl::BinaryInputStream in(out);
     in.readPackedEnumMap(&map2);
     EXPECT_EQ(map2[Color::kRed], 1.0f);
     EXPECT_EQ(map2[Color::kGreen], 2.0f);
@@ -278,7 +283,7 @@ TEST(BinaryStream, Skip)
     out.writeFloat(123.456f);
     out.writeFloat(-100.0f);
 
-    gl::BinaryInputStream in(out.data(), out.length());
+    gl::BinaryInputStream in(out);
     in.skip(sizeof(float));
     EXPECT_EQ(-100.0f, in.readFloat());
 
