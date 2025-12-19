@@ -455,7 +455,6 @@ uint32_t MemoryProperties::findTileMemoryTypeIndex() const
             // There should be only one tile memory heap
             ASSERT(tileMemoryHeapIndex == kInvalidMemoryHeapIndex);
             tileMemoryHeapIndex = heapIndex;
-            break;
         }
     }
 
@@ -470,7 +469,6 @@ uint32_t MemoryProperties::findTileMemoryTypeIndex() const
                 // There should be only one memoryTypeIndex that matches the tile memory heap
                 ASSERT(tileMemoryTypeIndex == kInvalidMemoryTypeIndex);
                 tileMemoryTypeIndex = memoryTypeIndex;
-                break;
             }
         }
     }
