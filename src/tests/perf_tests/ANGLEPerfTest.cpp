@@ -15,7 +15,6 @@
 #    include <dlfcn.h>
 #endif
 #include "ANGLEPerfTestArgs.h"
-#include "common/base/anglebase/trace_event/trace_event.h"
 #include "common/debug.h"
 #include "common/gl_enum_utils.h"
 #include "common/mathutil.h"
@@ -23,6 +22,7 @@
 #include "common/string_utils.h"
 #include "common/system_utils.h"
 #include "common/utilities.h"
+#include "libANGLE/trace.h"
 #include "test_utils/runner/TestSuite.h"
 #include "third_party/perf/perf_test.h"
 #include "util/shader_utils.h"
@@ -50,12 +50,18 @@
 #    include "util/windows/WGLWindow.h"
 #endif  // defined(ANGLE_USE_UTIL_LOADER) &&defined(ANGLE_PLATFORM_WINDOWS)
 
+#if defined(ANGLE_USE_PERFETTO)
+#    include <perfetto/tracing/core/trace_config.h>
+#    include <perfetto/tracing/tracing.h>
+#    include <perfetto/tracing/track_event.h>
+#    include <mutex>
+#endif
+
 using namespace angle;
 namespace js = rapidjson;
 
 namespace
 {
-constexpr size_t kInitialTraceEventBufferSize            = 50000;
 constexpr double kMilliSecondsPerSecond                  = 1e3;
 constexpr double kMicroSecondsPerSecond                  = 1e6;
 constexpr double kNanoSecondsPerSecond                   = 1e9;
@@ -63,16 +69,54 @@ constexpr size_t kNumberOfStepsPerformedToComputeGPUTime = 16;
 constexpr char kPeakMemoryMetric[]                       = ".memory_max";
 constexpr char kMedianMemoryMetric[]                     = ".memory_median";
 
-struct TraceCategory
+#if defined(ANGLE_USE_PERFETTO)
+void InitializePerfetto()
 {
-    unsigned char enabled;
-    const char *name;
-};
+    static std::once_flag initialized;
+    std::call_once(initialized, []() {
+        perfetto::TracingInitArgs args;
+        args.backends = perfetto::kInProcessBackend;
+        perfetto::Tracing::Initialize(args);
+        angle_tracing::TrackEvent::Register();
+    });
+}
 
-constexpr TraceCategory gTraceCategories[2] = {
-    {1, "gpu.angle"},
-    {1, "gpu.angle.gpu"},
-};
+std::unique_ptr<perfetto::TracingSession> StartPerfettoTracing()
+{
+    InitializePerfetto();
+
+    perfetto::TraceConfig cfg;
+    // Use a large enough buffer (e.g. 100MB) to avoid dropping events during the test.
+    cfg.add_buffers()->set_size_kb(102400);
+
+    auto *ds_cfg = cfg.add_data_sources()->mutable_config();
+    ds_cfg->set_name("track_event");
+
+    auto tracingSession = perfetto::Tracing::NewTrace();
+    tracingSession->Setup(cfg);
+    tracingSession->StartBlocking();
+    return tracingSession;
+}
+
+void StopPerfettoTracing(perfetto::TracingSession *tracingSession, const std::string &filename)
+{
+    tracingSession->StopBlocking();
+    std::vector<char> traceData = tracingSession->ReadTraceBlocking();
+
+    // Write traceData to file
+    std::ofstream ofs(filename, std::ios::binary);
+    if (ofs)
+    {
+        ofs.write(traceData.data(), traceData.size());
+        ofs.close();
+        printf("Wrote Perfetto trace to %s\n", filename.c_str());
+    }
+    else
+    {
+        printf("Error opening trace file %s for writing\n", filename.c_str());
+    }
+}
+#endif  // defined(ANGLE_USE_PERFETTO)
 
 void EmptyPlatformMethod(PlatformMethods *, const char *) {}
 
@@ -82,132 +126,11 @@ void CustomLogError(PlatformMethods *platform, const char *errorMessage)
     angleRenderTest->onErrorMessage(errorMessage);
 }
 
-TraceEventHandle AddPerfTraceEvent(PlatformMethods *platform,
-                                   char phase,
-                                   const unsigned char *categoryEnabledFlag,
-                                   const char *name,
-                                   unsigned long long id,
-                                   double /*timestamp*/,
-                                   int numArgs,
-                                   const char **argNames,
-                                   const unsigned char *argTypes,
-                                   const unsigned long long *argValues,
-                                   unsigned char flags)
-{
-    if (!gEnableTrace)
-        return 0;
-
-    // Discover the category name based on categoryEnabledFlag.  This flag comes from the first
-    // parameter of TraceCategory, and corresponds to one of the entries in gTraceCategories.
-    static_assert(offsetof(TraceCategory, enabled) == 0,
-                  "|enabled| must be the first field of the TraceCategory class.");
-    const TraceCategory *category = reinterpret_cast<const TraceCategory *>(categoryEnabledFlag);
-
-    ANGLERenderTest *renderTest = static_cast<ANGLERenderTest *>(platform->context);
-
-    std::lock_guard<std::mutex> lock(renderTest->getTraceEventMutex());
-
-    uint32_t tid = renderTest->getCurrentThreadSerial();
-
-    std::vector<TraceEvent> &buffer = renderTest->getTraceEventBuffer();
-    buffer.emplace_back(phase, category->name, name,
-                        platform->monotonicallyIncreasingTime(platform), tid);
-    return buffer.size();
-}
-
-const unsigned char *GetPerfTraceCategoryEnabled(PlatformMethods *platform,
-                                                 const char *categoryName)
-{
-    if (gEnableTrace)
-    {
-        for (const TraceCategory &category : gTraceCategories)
-        {
-            if (ANGLE_UNSAFE_TODO(strcmp(category.name, categoryName)) == 0)
-            {
-                return &category.enabled;
-            }
-        }
-    }
-
-    constexpr static unsigned char kZero = 0;
-    return &kZero;
-}
-
-void UpdateTraceEventDuration(PlatformMethods *platform,
-                              const unsigned char *categoryEnabledFlag,
-                              const char *name,
-                              TraceEventHandle eventHandle)
-{
-    // Not implemented.
-}
-
 double MonotonicallyIncreasingTime(PlatformMethods *platform)
 {
     return GetHostTimeSeconds();
 }
 
-bool WriteJsonFile(const std::string &outputFile, js::Document *doc)
-{
-    FILE *fp = fopen(outputFile.c_str(), "w");
-    if (!fp)
-    {
-        return false;
-    }
-
-    constexpr size_t kBufferSize = 0xFFFF;
-    std::vector<char> writeBuffer(kBufferSize);
-    js::FileWriteStream os(fp, writeBuffer.data(), kBufferSize);
-    js::PrettyWriter<js::FileWriteStream> writer(os);
-    if (!doc->Accept(writer))
-    {
-        fclose(fp);
-        return false;
-    }
-    fclose(fp);
-    return true;
-}
-
-void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
-                               const char *outputFileName)
-{
-    js::Document doc(js::kObjectType);
-    js::Document::AllocatorType &allocator = doc.GetAllocator();
-
-    js::Value events(js::kArrayType);
-
-    for (const TraceEvent &traceEvent : traceEvents)
-    {
-        js::Value value(js::kObjectType);
-
-        const uint64_t microseconds = static_cast<uint64_t>(traceEvent.timestamp * 1000.0 * 1000.0);
-
-        js::Document::StringRefType eventName(traceEvent.name);
-        js::Document::StringRefType categoryName(traceEvent.categoryName);
-        js::Document::StringRefType pidName(
-            ANGLE_UNSAFE_TODO(strcmp(traceEvent.categoryName, "gpu.angle.gpu")) == 0 ? "GPU"
-                                                                                     : "ANGLE");
-
-        value.AddMember("name", eventName, allocator);
-        value.AddMember("cat", categoryName, allocator);
-        value.AddMember("ph", std::string(1, traceEvent.phase), allocator);
-        value.AddMember("ts", microseconds, allocator);
-        value.AddMember("pid", pidName, allocator);
-        value.AddMember("tid", traceEvent.tid, allocator);
-
-        events.PushBack(value, allocator);
-    }
-
-    doc.AddMember("traceEvents", events, allocator);
-
-    if (WriteJsonFile(outputFileName, &doc))
-    {
-        ANGLE_UNSAFE_TODO(printf("Wrote trace file to %s\n", outputFileName));
-    }
-    else
-    {
-        ANGLE_UNSAFE_TODO(printf("Error writing trace file to %s\n", outputFileName));
-    }
-}
 
 [[maybe_unused]] void KHRONOS_APIENTRY PerfTestDebugCallback(GLenum source,
                                                              GLenum type,
@@ -289,16 +212,6 @@ bool ATraceEnabled()
 #endif
 }  // anonymous namespace
 
-TraceEvent::TraceEvent(char phaseIn,
-                       const char *categoryNameIn,
-                       const char *nameIn,
-                       double timestampIn,
-                       uint32_t tidIn)
-    : phase(phaseIn), categoryName(categoryNameIn), name{}, timestamp(timestampIn), tid(tidIn)
-{
-    ASSERT(strlen(nameIn) < kMaxNameLen);
-    ANGLE_UNSAFE_TODO(strcpy(name, nameIn));
-}
 
 ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
                              const std::string &backend,
@@ -365,6 +278,19 @@ void ANGLEPerfTest::run()
     }
 
     atraceCounter("TraceStage", 3);
+
+    std::string traceFile = gTraceFile;
+    if (traceFile == "ANGLETrace.json")
+    {
+        traceFile = "ANGLETrace.perfetto-trace";
+    }
+
+#if defined(ANGLE_USE_PERFETTO)
+    if (gEnableTrace)
+    {
+        mTracingSession = StartPerfettoTracing();
+    }
+#endif
 
     for (uint32_t trial = 0; trial < numTrials; ++trial)
     {
@@ -584,7 +510,21 @@ void ANGLEPerfTest::SetUp()
     }
 }
 
-void ANGLEPerfTest::TearDown() {}
+void ANGLEPerfTest::TearDown()
+{
+#if defined(ANGLE_USE_PERFETTO)
+    if (mTracingSession)
+    {
+        std::string traceFile = gTraceFile;
+        if (traceFile == "ANGLETrace.json")
+        {
+            traceFile = "ANGLETrace.perfetto-trace";
+        }
+        StopPerfettoTracing(mTracingSession.get(), traceFile);
+        mTracingSession.reset();
+    }
+#endif
+}
 
 void ANGLEPerfTest::recordIntegerMetric(const char *metric, size_t value, const std::string &units)
 {
@@ -884,8 +824,6 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name,
         const_cast<RenderTestParams &>(testParams).iterationsPerStep = 1;
     }
 
-    // Try to ensure we don't trigger allocation during execution.
-    mTraceEventBuffer.reserve(kInitialTraceEventBufferSize);
 
     switch (testParams.driver)
     {
@@ -963,9 +901,6 @@ void ANGLERenderTest::SetUp()
     mPlatformMethods.logError                    = CustomLogError;
     mPlatformMethods.logWarning                  = EmptyPlatformMethod;
     mPlatformMethods.logInfo                     = EmptyPlatformMethod;
-    mPlatformMethods.addTraceEvent               = AddPerfTraceEvent;
-    mPlatformMethods.getTraceCategoryEnabledFlag = GetPerfTraceCategoryEnabled;
-    mPlatformMethods.updateTraceEventDuration    = UpdateTraceEventDuration;
     mPlatformMethods.monotonicallyIncreasingTime = MonotonicallyIncreasingTime;
     mPlatformMethods.context                     = this;
 
@@ -1174,12 +1109,6 @@ void ANGLERenderTest::TearDown()
         mOSWindow = nullptr;
     }
 
-    // Dump trace events to json file.
-    if (gEnableTrace)
-    {
-        DumpTraceEventsToJSONFile(mTraceEventBuffer, gTraceFile);
-    }
-
     ANGLEPerfTest::TearDown();
 }
 
@@ -1274,47 +1203,9 @@ void ANGLERenderTest::updatePerfCounters()
     }
 }
 
-void ANGLERenderTest::beginInternalTraceEvent(const char *name)
-{
-    if (gEnableTrace)
-    {
-        mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_BEGIN, gTraceCategories[0].name, name,
-                                       MonotonicallyIncreasingTime(&mPlatformMethods),
-                                       getCurrentThreadSerial());
-    }
-}
-
-void ANGLERenderTest::endInternalTraceEvent(const char *name)
-{
-    if (gEnableTrace)
-    {
-        mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_END, gTraceCategories[0].name, name,
-                                       MonotonicallyIncreasingTime(&mPlatformMethods),
-                                       getCurrentThreadSerial());
-    }
-}
-
-void ANGLERenderTest::beginGLTraceEvent(const char *name, double hostTimeSec)
-{
-    if (gEnableTrace)
-    {
-        mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_BEGIN, gTraceCategories[1].name, name,
-                                       hostTimeSec, getCurrentThreadSerial());
-    }
-}
-
-void ANGLERenderTest::endGLTraceEvent(const char *name, double hostTimeSec)
-{
-    if (gEnableTrace)
-    {
-        mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_END, gTraceCategories[1].name, name,
-                                       hostTimeSec, getCurrentThreadSerial());
-    }
-}
-
 void ANGLERenderTest::step()
 {
-    beginInternalTraceEvent("step");
+    ANGLE_TRACE_EVENT("gpu.angle", "step");
 
     // Clear events that the application did not process from this frame
     Event event;
@@ -1361,8 +1252,6 @@ void ANGLERenderTest::step()
             mProcessMemoryUsageKBSamples.push_back(processMemoryUsageKB);
         }
     }
-
-    endInternalTraceEvent("step");
 }
 
 void ANGLERenderTest::startGpuTimer()
@@ -1516,11 +1405,6 @@ void ANGLERenderTest::setHardenedContextEnabled(bool hardenedContext)
 void ANGLERenderTest::setRobustResourceInit(bool enabled)
 {
     mConfigParams.robustResourceInit = enabled;
-}
-
-std::vector<TraceEvent> &ANGLERenderTest::getTraceEventBuffer()
-{
-    return mTraceEventBuffer;
 }
 
 void ANGLERenderTest::onErrorMessage(const char *errorMessage)

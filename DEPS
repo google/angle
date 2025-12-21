@@ -1141,8 +1141,8 @@ deps = {
   },
 
   'third_party/perfetto': {
-    'url': Var('android_git') + '/platform/external/perfetto.git@5c17fc6e089cecec6bd75073875f57c99dcd2f02',
-    'condition': 'not build_with_chromium and checkout_angle_perfetto',
+    'url': Var('chromium_git') + '/external/github.com/google/perfetto.git' + '@' + 'be28dac0fa653fa627e0b1f0e58549d730bfb28d',
+    'condition': 'not build_with_chromium',
   },
 
   'third_party/partition_alloc': {

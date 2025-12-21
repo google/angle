@@ -606,7 +606,7 @@ template("angle_perftests_common") {
       check_includes = false
     }
     sources = [
-      "../common/base/anglebase/trace_event/trace_event.h",
+      "../libANGLE/trace.h",
       "perf_tests/ANGLEComputeTestCL.cpp",
       "perf_tests/ANGLEComputeTestCL.h",
       "perf_tests/ANGLEPerfTest.cpp",
