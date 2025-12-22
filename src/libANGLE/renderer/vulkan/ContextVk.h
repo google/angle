@@ -896,6 +896,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void addImageWithTileMemory(vk::ImageHelper *imageToAdd);
     void removeImageWithTileMemory(const vk::ImageHelper *imageToRemove);
 
+    // Restore all graphics state based on current gl::State.
+    void restoreAllGraphicsState();
+    bool hasActiveRenderPassQuery() const { return mActiveRenderPassQueryBitmask.any(); }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -1475,6 +1479,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // - Occlusion queries
     // - Transform feedback queries, if not emulated
     gl::QueryTypeMap<QueryVk *> mActiveRenderPassQueries;
+    gl::QueryTypeBitSet mActiveRenderPassQueryBitmask;
 
     // Dirty bits.
     DirtyBits mGraphicsDirtyBits;

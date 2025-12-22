@@ -8305,6 +8305,7 @@ angle::Result ContextVk::beginRenderPassQuery(QueryVk *queryVk)
 
     ASSERT(mActiveRenderPassQueries[type] == nullptr);
     mActiveRenderPassQueries[type] = queryVk;
+    mActiveRenderPassQueryBitmask.set(type);
 
     return angle::Result::Continue;
 }
@@ -8341,6 +8342,7 @@ angle::Result ContextVk::endRenderPassQuery(QueryVk *queryVk)
 
     ASSERT(mActiveRenderPassQueries[type] == queryVk);
     mActiveRenderPassQueries[type] = nullptr;
+    mActiveRenderPassQueryBitmask.reset(type);
 
     return angle::Result::Continue;
 }
@@ -8425,6 +8427,8 @@ bool ContextVk::isEmulatingRasterizerDiscardDuringPrimitivesGeneratedQuery(
 
 QueryVk *ContextVk::getActiveRenderPassQuery(gl::QueryType queryType) const
 {
+    ASSERT(mActiveRenderPassQueryBitmask[queryType] ==
+           (mActiveRenderPassQueries[queryType] != nullptr));
     return mActiveRenderPassQueries[queryType];
 }
 
@@ -9156,5 +9160,14 @@ angle::Result ContextVk::finalizeImagesWithTileMemory()
     mImagesWithTileMemory.clear();
 
     return angle::Result::Continue;
+}
+
+void ContextVk::restoreAllGraphicsState()
+{
+    // Recover states that may have been changed by UtilsVk::depthStencilBlitResolve. We dirty all
+    // states except DIRTY_BIT_RENDER_PASS so that render pass could still reused.
+    DirtyBits allDrawStateDirtyBits =
+        mNewGraphicsCommandBufferDirtyBits & ~DirtyBits{DIRTY_BIT_RENDER_PASS};
+    mGraphicsDirtyBits |= allDrawStateDirtyBits;
 }
 }  // namespace rx
