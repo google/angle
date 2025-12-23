@@ -453,6 +453,7 @@ enum class Feature
     SyncAllVertexArraysToDefault,
     SyncDefaultVertexArraysToDefault,
     SyncMonolithicPipelinesToBlobCache,
+    SyncPipelineCacheToBlobCacheEveryFrame,
     UnbindFBOBeforeSwitchingContext,
     UncurrentEglSurfaceUponSurfaceDestroy,
     UnfoldShortCircuits,

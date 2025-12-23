@@ -4693,6 +4693,12 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context, uint32_t
     // Log the memory heap stats when the device has been initialized (when debugging).
     mMemoryAllocationTracker.onDeviceInit();
 
+    // Synchronize the Vulkan pipeline cache to the blob cache every frame
+    if (mFeatures.syncPipelineCacheToBlobCacheEveryFrame.enabled)
+    {
+        mPipelineCacheVkUpdateTimeout = 1;
+    }
+
     return angle::Result::Continue;
 }
 
@@ -6989,7 +6995,8 @@ angle::Result Renderer::syncPipelineCacheVk(const gl::Context *contextGL)
         return angle::Result::Continue;
     }
 
-    mPipelineCacheVkUpdateTimeout = kPipelineCacheVkUpdatePeriod;
+    mPipelineCacheVkUpdateTimeout =
+        mFeatures.syncPipelineCacheToBlobCacheEveryFrame.enabled ? 1 : kPipelineCacheVkUpdatePeriod;
 
     ContextVk *contextVk = vk::GetImpl(contextGL);
 

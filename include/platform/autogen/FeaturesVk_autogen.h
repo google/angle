@@ -998,6 +998,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo syncPipelineCacheToBlobCacheEveryFrame = {
+        "syncPipelineCacheToBlobCacheEveryFrame",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo enableExtraSubmitFence = {
         "enableExtraSubmitFence",
         FeatureCategory::VulkanWorkarounds,

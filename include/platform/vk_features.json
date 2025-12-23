@@ -1306,6 +1306,15 @@
             "issue": "http://anglebug.com/42263322"
         },
         {
+            "name": "sync_pipeline_cache_to_blob_cache_every_frame",
+            "category": "Workarounds",
+            "description": [
+                "Synchronize the Vulkan pipeline cache to the blob cache every frame",
+                "for testing purposes."
+            ],
+            "issue": "https://issuetracker.google.com/467732555"
+        },
+        {
             "name": "enable_extra_submit_fence",
             "category": "Workarounds",
             "description": [

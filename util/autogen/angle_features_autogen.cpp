@@ -453,6 +453,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SyncAllVertexArraysToDefault, "syncAllVertexArraysToDefault"},
     {Feature::SyncDefaultVertexArraysToDefault, "syncDefaultVertexArraysToDefault"},
     {Feature::SyncMonolithicPipelinesToBlobCache, "syncMonolithicPipelinesToBlobCache"},
+    {Feature::SyncPipelineCacheToBlobCacheEveryFrame, "syncPipelineCacheToBlobCacheEveryFrame"},
     {Feature::UnbindFBOBeforeSwitchingContext, "unbindFBOBeforeSwitchingContext"},
     {Feature::UncurrentEglSurfaceUponSurfaceDestroy, "uncurrentEglSurfaceUponSurfaceDestroy"},
     {Feature::UnfoldShortCircuits, "unfoldShortCircuits"},
