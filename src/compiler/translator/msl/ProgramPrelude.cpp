@@ -117,7 +117,6 @@ class ProgramPrelude : public TIntermTraverser
     void degrees();
     void radians();
     void mod();
-    void mixBool();
     void postIncrementMatrix();
     void preIncrementMatrix();
     void postDecrementMatrix();
@@ -433,15 +432,6 @@ template <typename X, typename Y>
 ANGLE_ALWAYS_INLINE X ANGLE_mod(X x, Y y)
 {
     return x - y * metal::floor(x / y);
-}
-)")
-
-PROGRAM_PRELUDE_DECLARE(mixBool,
-                        R"(
-template <typename T, int N>
-ANGLE_ALWAYS_INLINE metal::vec<T,N> ANGLE_mix_bool(metal::vec<T, N> a, metal::vec<T, N> b, metal::vec<bool, N> c)
-{
-    return metal::mix(a, b, static_cast<metal::vec<T,N>>(c));
 }
 )")
 
@@ -3415,14 +3405,7 @@ void ProgramPrelude::visitOperator(TOperator op,
         case TOperator::EOpMax:
         case TOperator::EOpStep:
         case TOperator::EOpSmoothstep:
-            break;
         case TOperator::EOpMix:
-            if (argType2->getBasicType() == TBasicType::EbtBool)
-            {
-                mixBool();
-            }
-            break;
-
         case TOperator::EOpAll:
         case TOperator::EOpAny:
         case TOperator::EOpIsnan:

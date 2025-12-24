@@ -18261,6 +18261,32 @@ void main() {
     ASSERT_GL_NO_ERROR();
 }
 
+// Test mix(float, float, bool) is not affected by an invalid value not selected.
+TEST_P(GLSLTest_ES3, MixFloatFloatBoolInvalid)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform vec2 xy;
+uniform bool a;
+out vec4 fragColor;
+void main() {
+    fragColor = vec4(mix(xy.x, xy.y, a) == xy.y, 0.0, 0.0, 1.0);
+}
+)";
+    ANGLE_GL_PROGRAM(testProgram, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(testProgram);
+    auto xy = glGetUniformLocation(testProgram, "xy");
+    auto a  = glGetUniformLocation(testProgram, "a");
+    ASSERT_GL_NO_ERROR();
+    glUniform2f(xy, NAN, 0.5f);
+    glUniform1i(a, 1);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(testProgram, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(255, 0, 0, 255));
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test coverage of the mix(uint, uint, bool) overload which was missing in D3D11 translation
 TEST_P(GLSLTest_ES31, MixUintUintBool)
 {
