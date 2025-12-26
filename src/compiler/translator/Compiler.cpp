@@ -186,21 +186,7 @@ void DumpFuzzerCase(char const *const *shaderStrings,
 }
 #endif  // defined(ANGLE_FUZZER_CORPUS_OUTPUT_DIR)
 
-// Helper function to check if the TIntermNode is a uniform type declaration
-bool IsCurrentNodeUniformDeclaration(TIntermNode *node)
-{
-    TIntermDeclaration *declarationNode = node->getAsDeclarationNode();
-    if (declarationNode != nullptr)
-    {
-        TIntermTyped *typeNode = declarationNode->getSequence()->front()->getAsTyped();
-        if (typeNode != nullptr && typeNode->getType().getQualifier() == TQualifier::EvqUniform)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
+// Helper function to check if the TIntermNode is a struct specifier
 bool IsCurrentNodeStructTypeDeclaration(TIntermNode *node)
 {
     TIntermDeclaration *declarationNode = node->getAsDeclarationNode();
@@ -208,8 +194,24 @@ bool IsCurrentNodeStructTypeDeclaration(TIntermNode *node)
     {
         TIntermTyped *typeNode = declarationNode->getSequence()->front()->getAsTyped();
         if (typeNode != nullptr && (typeNode->getType().getBasicType() == EbtStruct &&
-                                    typeNode->getType().getQualifier() != EvqUniform &&
                                     typeNode->getType().isStructSpecifier()))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Helper function to check if the TIntermNode is a uniform type declaration, and it is not a struct
+// specifier
+bool IsCurrentNodeUniformDeclaration(TIntermNode *node)
+{
+    TIntermDeclaration *declarationNode = node->getAsDeclarationNode();
+    if (declarationNode != nullptr)
+    {
+        TIntermTyped *typeNode = declarationNode->getSequence()->front()->getAsTyped();
+        if (typeNode != nullptr && typeNode->getType().getQualifier() == TQualifier::EvqUniform &&
+            !IsCurrentNodeStructTypeDeclaration(node))
         {
             return true;
         }
