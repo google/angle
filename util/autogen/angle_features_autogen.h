@@ -267,6 +267,7 @@ enum class Feature
     PreferDrawClearOverVkCmdClearAttachments,
     PreferDynamicRendering,
     PreferGlobalPipelineCache,
+    PreferGPUForCopyBufferSubData,
     PreferHostCachedForNonStaticBufferUsage,
     PreferLinearFilterForYUV,
     PreferMonolithicPipelinesOverLibraries,

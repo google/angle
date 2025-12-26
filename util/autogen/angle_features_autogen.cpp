@@ -267,6 +267,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::PreferDrawClearOverVkCmdClearAttachments, "preferDrawClearOverVkCmdClearAttachments"},
     {Feature::PreferDynamicRendering, "preferDynamicRendering"},
     {Feature::PreferGlobalPipelineCache, "preferGlobalPipelineCache"},
+    {Feature::PreferGPUForCopyBufferSubData, "preferGPUForCopyBufferSubData"},
     {Feature::PreferHostCachedForNonStaticBufferUsage, "preferHostCachedForNonStaticBufferUsage"},
     {Feature::PreferLinearFilterForYUV, "preferLinearFilterForYUV"},
     {Feature::PreferMonolithicPipelinesOverLibraries, "preferMonolithicPipelinesOverLibraries"},

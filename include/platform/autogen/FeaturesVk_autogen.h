@@ -326,6 +326,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo preferGPUForCopyBufferSubData = {
+        "preferGPUForCopyBufferSubData",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo persistentlyMappedBuffers = {
         "persistentlyMappedBuffers",
         FeatureCategory::VulkanFeatures,

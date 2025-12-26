@@ -408,6 +408,14 @@
             "issue": "http://issuetracker.google.com/200067929"
         },
         {
+            "name": "prefer_GPU_for_copy_buffer_sub_data",
+            "category": "Features",
+            "description": [
+                "Prefer use GPU to do dirty region buffer update for glCopyBufferSubData."
+            ],
+            "issue": "https://issues.angleproject.org/issues/479982202"
+        },
+        {
             "name": "persistently_mapped_buffers",
             "category": "Features",
             "description": [
