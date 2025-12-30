@@ -1370,11 +1370,9 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
             isArrayed = true;
             break;
         case EbtSampler2DMS:
-        case EbtImage2DMS:
             isMultisampled = true;
             break;
         case EbtSampler2DMSArray:
-        case EbtImage2DMSArray:
             isArrayed      = true;
             isMultisampled = true;
             break;
@@ -1398,12 +1396,10 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
             isArrayed   = true;
             break;
         case EbtISampler2DMS:
-        case EbtIImage2DMS:
             sampledType    = EbtInt;
             isMultisampled = true;
             break;
         case EbtISampler2DMSArray:
-        case EbtIImage2DMSArray:
             sampledType    = EbtInt;
             isArrayed      = true;
             isMultisampled = true;
@@ -1421,12 +1417,10 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
             isArrayed   = true;
             break;
         case EbtUSampler2DMS:
-        case EbtUImage2DMS:
             sampledType    = EbtUInt;
             isMultisampled = true;
             break;
         case EbtUSampler2DMSArray:
-        case EbtUImage2DMSArray:
             sampledType    = EbtUInt;
             isArrayed      = true;
             isMultisampled = true;
@@ -1496,16 +1490,13 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
 
         // Rect images
         case EbtSampler2DRect:
-        case EbtImageRect:
             *dimOut = spv::DimRect;
             break;
         case EbtISampler2DRect:
-        case EbtIImageRect:
             sampledType = EbtInt;
             *dimOut     = spv::DimRect;
             break;
         case EbtUSampler2DRect:
-        case EbtUImageRect:
             sampledType = EbtUInt;
             *dimOut     = spv::DimRect;
             break;
@@ -1554,10 +1545,10 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
     //
     //     Dim          Sampled         Storage            Storage Array
     //     --------------------------------------------------------------
-    //     2D           Shader                             ImageMSArray
+    //     2D           Shader                             ImageMSArray (desktop GLSL)
     //     3D
     //     Cube         Shader                             ImageCubeArray
-    //     Rect         SampledRect     ImageRect
+    //     Rect         SampledRect     ImageRect (desktop GLSL)
     //     Buffer       SampledBuffer   ImageBuffer
     //
     // Additionally, the SubpassData Dim requires the InputAttachment capability.
@@ -1581,7 +1572,8 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
             }
             break;
         case spv::DimRect:
-            addCapability(isSampledImage ? spv::CapabilitySampledRect : spv::CapabilityImageRect);
+            ASSERT(!isSampledImage);
+            addCapability(spv::CapabilitySampledRect);
             break;
         case spv::DimBuffer:
             addCapability(isSampledImage ? spv::CapabilitySampledBuffer

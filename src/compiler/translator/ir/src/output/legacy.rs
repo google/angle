@@ -1198,11 +1198,12 @@ impl<'options> Generator<'options> {
                             }
                         }
                     } else {
-                        match (image_type.is_ms, image_type.is_array) {
-                            (false, false) => ffi::ASTBasicType::Image2D,
-                            (false, true) => ffi::ASTBasicType::Image2DArray,
-                            (true, false) => ffi::ASTBasicType::Image2DMS,
-                            (true, true) => ffi::ASTBasicType::Image2DMSArray,
+                        // Multisampled storage images are a desktop GLSL feature
+                        debug_assert!(!image_type.is_ms);
+                        if image_type.is_array {
+                            ffi::ASTBasicType::Image2DArray
+                        } else {
+                            ffi::ASTBasicType::Image2D
                         }
                     }
                 }
@@ -1215,11 +1216,11 @@ impl<'options> Generator<'options> {
                             (true, true) => ffi::ASTBasicType::ISampler2DMSArray,
                         }
                     } else {
-                        match (image_type.is_ms, image_type.is_array) {
-                            (false, false) => ffi::ASTBasicType::IImage2D,
-                            (false, true) => ffi::ASTBasicType::IImage2DArray,
-                            (true, false) => ffi::ASTBasicType::IImage2DMS,
-                            (true, true) => ffi::ASTBasicType::IImage2DMSArray,
+                        debug_assert!(!image_type.is_ms);
+                        if image_type.is_array {
+                            ffi::ASTBasicType::IImage2DArray
+                        } else {
+                            ffi::ASTBasicType::IImage2D
                         }
                     }
                 }
@@ -1232,11 +1233,10 @@ impl<'options> Generator<'options> {
                             (true, true) => ffi::ASTBasicType::USampler2DMSArray,
                         }
                     } else {
-                        match (image_type.is_ms, image_type.is_array) {
-                            (false, false) => ffi::ASTBasicType::UImage2D,
-                            (false, true) => ffi::ASTBasicType::UImage2DArray,
-                            (true, false) => ffi::ASTBasicType::UImage2DMS,
-                            (true, true) => ffi::ASTBasicType::UImage2DMSArray,
+                        if image_type.is_array {
+                            ffi::ASTBasicType::UImage2DArray
+                        } else {
+                            ffi::ASTBasicType::UImage2D
                         }
                     }
                 }
@@ -1321,25 +1321,17 @@ impl<'options> Generator<'options> {
             },
             ImageDimension::Rect => match image_basic_type {
                 ImageBasicType::Float => {
-                    if image_type.is_sampled {
-                        ffi::ASTBasicType::Sampler2DRect
-                    } else {
-                        ffi::ASTBasicType::ImageRect
-                    }
+                    // Rect storage images are a desktop GLSL feature
+                    debug_assert!(image_type.is_sampled);
+                    ffi::ASTBasicType::Sampler2DRect
                 }
                 ImageBasicType::Int => {
-                    if image_type.is_sampled {
-                        ffi::ASTBasicType::ISampler2DRect
-                    } else {
-                        ffi::ASTBasicType::IImageRect
-                    }
+                    debug_assert!(image_type.is_sampled);
+                    ffi::ASTBasicType::ISampler2DRect
                 }
                 ImageBasicType::Uint => {
-                    if image_type.is_sampled {
-                        ffi::ASTBasicType::USampler2DRect
-                    } else {
-                        ffi::ASTBasicType::UImageRect
-                    }
+                    debug_assert!(image_type.is_sampled);
+                    ffi::ASTBasicType::USampler2DRect
                 }
             },
             ImageDimension::Buffer => match image_basic_type {
