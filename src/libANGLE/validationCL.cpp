@@ -2753,6 +2753,19 @@ cl_int ValidateCreateCommandQueue(cl_context context,
         return CL_INVALID_VALUE;
     }
 
+    // CL_INVALID_QUEUE_PROPERTIES if values specified in properties are valid but are not supported
+    // by the device.
+    cl_command_queue_properties supportedQueueProperties;
+    angle::Result getInfoResult = device->cast<Device>().getInfo(
+        DeviceInfo::QueueOnHostProperties, sizeof(cl_command_queue_properties),
+        &supportedQueueProperties, nullptr);
+    ASSERT(!IsError(getInfoResult));
+
+    if (properties.hasOtherBitsThan(supportedQueueProperties))
+    {
+        return CL_INVALID_QUEUE_PROPERTIES;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -3840,6 +3853,12 @@ cl_int ValidateCreateCommandQueueWithProperties(cl_context context,
     // CL_INVALID_VALUE if values specified in properties are not valid.
     if (properties != nullptr)
     {
+        cl_command_queue_properties supportedQueueProperties;
+        angle::Result getInfoResult = device->cast<Device>().getInfo(
+            DeviceInfo::QueueOnHostProperties, sizeof(cl_command_queue_properties),
+            &supportedQueueProperties, nullptr);
+        ASSERT(!IsError(getInfoResult));
+
         bool isQueueOnDevice  = false;
         bool hasQueueSize     = false;
         bool hasQueuePriority = false;
@@ -3864,6 +3883,14 @@ cl_int ValidateCreateCommandQueueWithProperties(cl_context context,
                     {
                         return CL_INVALID_VALUE;
                     }
+
+                    // CL_INVALID_QUEUE_PROPERTIES if values specified in properties are valid but
+                    // are not supported by the device.
+                    if (props.hasOtherBitsThan(supportedQueueProperties))
+                    {
+                        return CL_INVALID_QUEUE_PROPERTIES;
+                    }
+
                     isQueueOnDevice = props.intersects(CL_QUEUE_ON_DEVICE);
                     break;
                 }
