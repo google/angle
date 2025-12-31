@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '7ae5d8fe7f152e81fe52cc50380ad8507f1ef063',
+  'chromium_revision': '2248515e4f5349d4768ea5d7cfb6c8a9057ff9da',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -526,7 +526,7 @@ deps = {
   },
 
   'buildtools': {
-    'url': Var('chromium_git') + '/chromium/src/buildtools.git@f75789afaad7ad40cc75c38d1ac339f96950d14d',
+    'url': Var('chromium_git') + '/chromium/src/buildtools.git@751914f3667258d3d6057aa084f82942a0b7fbff',
     'condition': 'not build_with_chromium',
   },
 
@@ -580,12 +580,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@49e4afe902e2f62e042cad1b65ba7306cff94f84',
+    'url': '{chromium_git}/chromium/src/testing@c7774172408b44d5a1f587a346ebf2aafe9fa0be',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/abseil-cpp@9706f1cfd268bc926a2cb4092e04e59ddb801b7b',
+    'url': Var('chromium_git') + '/chromium/src/third_party/abseil-cpp@1597226b825a16493de66c1732171efe89b271d9',
     'condition': 'not build_with_chromium',
   },
 
@@ -902,7 +902,7 @@ deps = {
    },
 
   'third_party/libc++/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@4f8b0c69c009b83cfb09041d33aea50b3af23c70',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@faedab19a5c6018779391b615624590d5fab696a',
     'condition': 'not build_with_chromium',
   },
 
@@ -912,7 +912,7 @@ deps = {
   },
 
   'third_party/llvm-libc/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@2d2d975b843504bea8c42b2b77c72feb6998bda3',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@6e2cebb83c900f5c33bfc9645d89a318ebfaf9b2',
     'condition': 'not build_with_chromium',
   },
 
@@ -1040,7 +1040,7 @@ deps = {
   },
 
   'third_party/rust': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/rust@41f18dd7a6aefbb149511998bb5e7bfb4601ae34',
+    'url': Var('chromium_git') + '/chromium/src/third_party/rust@81fd11895def93aec7f27ec543f1df039bef17c5',
     'condition': 'not build_with_chromium',
   },
 
