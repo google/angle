@@ -42,9 +42,6 @@ class WindowSurfaceVk;
 class OffscreenSurfaceVk;
 class ShareGroupVk;
 
-static constexpr uint32_t kMaxGpuEventNameLen = 32;
-using EventName                               = std::array<char, kMaxGpuEventNameLen>;
-
 using ContextVkDescriptorSetList = angle::PackedEnumMap<PipelineType, uint32_t>;
 using CounterPipelineTypeMap     = angle::PackedEnumMap<PipelineType, uint32_t>;
 
@@ -503,18 +500,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     UtilsVk &getUtils() { return mUtils; }
 
     angle::Result getTimestamp(uint64_t *timestampOut);
-
-    // Create Begin/End/Instant GPU trace events, which take their timestamps from GPU queries.
-    // The events are queued until the query results are available.  Possible values for `phase`
-    // are TRACE_EVENT_PHASE_*
-    ANGLE_INLINE angle::Result traceGpuEvent(vk::OutsideRenderPassCommandBuffer *commandBuffer,
-                                             char phase,
-                                             const EventName &name)
-    {
-        if (mGpuEventsEnabled)
-            return traceGpuEventImpl(commandBuffer, phase, name);
-        return angle::Result::Continue;
-    }
 
     const gl::Debug &getDebug() const { return mState.getDebug(); }
     const gl::OverlayType *getOverlay() const { return mState.getOverlay(); }
@@ -1070,39 +1055,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     using ComputeDirtyBitHandler =
         angle::Result (ContextVk::*)(DirtyBits::Iterator *dirtyBitsIterator);
 
-    // The GpuEventQuery struct holds together a timestamp query and enough data to create a
-    // trace event based on that. Use traceGpuEvent to insert such queries.  They will be readback
-    // when the results are available, without inserting a GPU bubble.
-    //
-    // - eventName will be the reported name of the event
-    // - phase is either 'B' (duration begin), 'E' (duration end) or 'i' (instant // event).
-    //   See Google's "Trace Event Format":
-    //   https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU
-    // - serial is the serial of the batch the query was submitted on.  Until the batch is
-    //   submitted, the query is not checked to avoid incuring a flush.
-    struct GpuEventQuery final
-    {
-        EventName name;
-        char phase;
-        vk::QueryHelper queryHelper;
-    };
-
-    // Once a query result is available, the timestamp is read and a GpuEvent object is kept until
-    // the next clock sync, at which point the clock drift is compensated in the results before
-    // handing them off to the application.
-    struct GpuEvent final
-    {
-        uint64_t gpuTimestampCycles;
-        std::array<char, kMaxGpuEventNameLen> name;
-        char phase;
-    };
-
-    struct GpuClockSyncInfo
-    {
-        double gpuTimestampS;
-        double cpuTimestampS;
-    };
-
     class ScopedDescriptorSetUpdates;
 
     bool isSingleBufferedWindowCurrent() const;
@@ -1347,12 +1299,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                  QueueSubmitReason reason);
     angle::Result flushImpl(const gl::Context *context);
 
-    angle::Result synchronizeCpuGpuTime();
-    angle::Result traceGpuEventImpl(vk::OutsideRenderPassCommandBuffer *commandBuffer,
-                                    char phase,
-                                    const EventName &name);
-    angle::Result checkCompletedGpuEvents();
-    void flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuTimestampS);
     void handleDeviceLost();
     bool shouldEmulateSeamfulCubeMapSampling() const;
     void clearAllGarbage();
@@ -1633,13 +1579,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     vk::ShaderLibrary mShaderLibrary;
     UtilsVk mUtils;
 
-    bool mGpuEventsEnabled;
-    vk::DynamicQueryPool mGpuEventQueryPool;
-    // A list of queries that have yet to be turned into an event (their result is not yet
-    // available).
-    std::vector<GpuEventQuery> mInFlightGpuEventQueries;
-    // A list of gpu events since the last clock sync.
-    std::vector<GpuEvent> mGpuEvents;
     // The current frame index, used to generate a submission-encompassing event tagged with it.
     uint32_t mPrimaryBufferEventCounter;
 
@@ -1687,14 +1626,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // The number of render passes since the last submission of all commands.
     VkDeviceSize mRenderPassCountSinceSubmit;
-
-    // Hold information from the last gpu clock sync for future gpu-to-cpu timestamp conversions.
-    GpuClockSyncInfo mGpuClockSync;
-
-    // The very first timestamp queried for a GPU event is used as origin, so event timestamps would
-    // have a value close to zero, to avoid losing 12 bits when converting these 64 bit values to
-    // double.
-    uint64_t mGpuEventTimestampOrigin;
 
     // A mix of per-frame and per-run counters.
     angle::PerfMonitorCounterGroupsInfo mPerfMonitorCountersInfo;
