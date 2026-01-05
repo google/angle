@@ -1587,7 +1587,6 @@ void TCompiler::setResourceString()
         << ":MaxCombinedAtomicCounterBuffers:" << mResources.MaxCombinedAtomicCounterBuffers
         << ":MaxAtomicCounterBufferSize:" << mResources.MaxAtomicCounterBufferSize
         << ":MaxGeometryUniformComponents:" << mResources.MaxGeometryUniformComponents
-        << ":MaxGeometryUniformBlocks:" << mResources.MaxGeometryUniformBlocks
         << ":MaxGeometryInputComponents:" << mResources.MaxGeometryInputComponents
         << ":MaxGeometryOutputComponents:" << mResources.MaxGeometryOutputComponents
         << ":MaxGeometryOutputVertices:" << mResources.MaxGeometryOutputVertices
@@ -1595,7 +1594,6 @@ void TCompiler::setResourceString()
         << ":MaxGeometryTextureImageUnits:" << mResources.MaxGeometryTextureImageUnits
         << ":MaxGeometryAtomicCounterBuffers:" << mResources.MaxGeometryAtomicCounterBuffers
         << ":MaxGeometryAtomicCounters:" << mResources.MaxGeometryAtomicCounters
-        << ":MaxGeometryShaderStorageBlocks:" << mResources.MaxGeometryShaderStorageBlocks
         << ":MaxGeometryShaderInvocations:" << mResources.MaxGeometryShaderInvocations
         << ":MaxGeometryImageUniforms:" << mResources.MaxGeometryImageUniforms
         << ":MaxClipDistances" << mResources.MaxClipDistances

@@ -323,7 +323,6 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxShaderStorageBufferBindings = 4;
 
     resources->MaxGeometryUniformComponents     = 1024;
-    resources->MaxGeometryUniformBlocks         = 12;
     resources->MaxGeometryInputComponents       = 64;
     resources->MaxGeometryOutputComponents      = 64;
     resources->MaxGeometryOutputVertices        = 256;
@@ -331,7 +330,6 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxGeometryTextureImageUnits     = 16;
     resources->MaxGeometryAtomicCounterBuffers  = 0;
     resources->MaxGeometryAtomicCounters        = 0;
-    resources->MaxGeometryShaderStorageBlocks   = 0;
     resources->MaxGeometryShaderInvocations     = 32;
     resources->MaxGeometryImageUniforms         = 0;
 
@@ -355,8 +353,6 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxTessEvaluationImageUniforms        = 0;
     resources->MaxTessEvaluationAtomicCounters       = 0;
     resources->MaxTessEvaluationAtomicCounterBuffers = 0;
-
-    resources->SubPixelBits = 8;
 
     resources->MaxSamples = 4;
 }
