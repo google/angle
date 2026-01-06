@@ -52,9 +52,13 @@ class FunctionsGL : public DispatchTableGL
     bool hasGLExtension(const std::string &ext) const;
     bool hasGLESExtension(const std::string &ext) const;
 
+    bool isNullEntryPoints() const { return mIsNullEntryPoints; }
+
   private:
     void *loadProcAddress(const std::string &function) const override = 0;
     void initializeStubFunctionsForNULLDriver(const std::set<std::string> &extensionSet);
+
+    bool mIsNullEntryPoints;
 };
 
 }  // namespace rx

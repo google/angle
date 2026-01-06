@@ -97,7 +97,7 @@ static void INTERNAL_GL_APIENTRY StubGetShaderiv(GLuint program, GLenum pname, G
 
 #define ASSIGN(NAME, FP) FP = reinterpret_cast<decltype(FP)>(loadProcAddress(NAME))
 
-FunctionsGL::FunctionsGL() : version(), standard(), extensions() {}
+FunctionsGL::FunctionsGL() : version(), standard(), extensions(), mIsNullEntryPoints(false) {}
 
 FunctionsGL::~FunctionsGL() {}
 
@@ -136,6 +136,7 @@ void FunctionsGL::initialize(const egl::AttributeMap &displayAttributes)
 #if defined(ANGLE_ENABLE_OPENGL_NULL)
     EGLint deviceType =
         static_cast<EGLint>(displayAttributes.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_NONE));
+    mIsNullEntryPoints = deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE;
 #endif  // defined(ANGLE_ENABLE_GL_NULL)
 
     switch (standard)

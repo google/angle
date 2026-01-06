@@ -218,6 +218,10 @@ bool IsHuaweiMaleoon(const FunctionsGL *functions)
            (std::string(nativeGLRenderer).find("Maleoon") != std::string::npos);
 }
 
+bool PrecisionMeetsSpecForHighpFloat(const gl::TypePrecision &precision)
+{
+    return precision.range[0] >= 62 && precision.range[1] >= 62 && precision.precision >= 16;
+}
 }  // namespace
 
 SwapControlData::SwapControlData()
@@ -947,6 +951,14 @@ void GenerateCaps(const FunctionsGL *functions,
         caps->fragmentHighpInt   = QueryTypePrecision(functions, GL_FRAGMENT_SHADER, GL_HIGH_INT);
         caps->fragmentMediumpInt = QueryTypePrecision(functions, GL_FRAGMENT_SHADER, GL_MEDIUM_INT);
         caps->fragmentLowpInt    = QueryTypePrecision(functions, GL_FRAGMENT_SHADER, GL_LOW_INT);
+
+        // highp support is required.  This check is skipped with the null entry points, as they
+        // produce no data.
+        if (!functions->isNullEntryPoints() &&
+            !PrecisionMeetsSpecForHighpFloat(caps->fragmentHighpFloat))
+        {
+            LimitVersion(maxSupportedESVersion, gl::Version(0, 0));
+        }
     }
     else
     {
