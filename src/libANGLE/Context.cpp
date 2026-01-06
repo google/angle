@@ -3077,6 +3077,7 @@ void Context::insertEventMarker(GLsizei length, const char *marker)
 
 void Context::pushGroupMarker(GLsizei length, const char *marker)
 {
+    ASSERT(mState.getGroupMarkerCount() < getCaps().maxDebugGroupStackDepth);
     if (length < 0)
     {
         return;  // no-op, not an error
@@ -3093,11 +3094,18 @@ void Context::pushGroupMarker(GLsizei length, const char *marker)
         ANGLE_CONTEXT_TRY(
             mImplementation->pushGroupMarker(GetMarkerLength(length, marker), marker));
     }
+    mState.incrementGroupMarkers();
 }
 
 void Context::popGroupMarker()
 {
+    // According to the spec, if there is no group marker to pop, the pop command should be ignored.
+    if (mState.getGroupMarkerCount() == 0)
+    {
+        return;
+    }
     ANGLE_CONTEXT_TRY(mImplementation->popGroupMarker());
+    mState.decrementGroupMarkers();
 }
 
 void Context::bindUniformLocation(ShaderProgramID program,

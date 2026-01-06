@@ -366,8 +366,6 @@
 
 42265173 UBSAN : dEQP-GLES2.functional.shaders.random.* = SKIP
 
-417757002 : dEQP-GLES2.functional.debug_marker.random = SKIP
-
 // Samsung Galaxy S23
 42266598 GALAXYS23 VULKAN : dEQP-GLES2.functional.fbo.render.color_clear.* = SKIP
 42266598 GALAXYS23 VULKAN : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.* = SKIP
