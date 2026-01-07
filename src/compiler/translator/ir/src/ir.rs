@@ -5,7 +5,7 @@
 // The IR itself, consisting of a number of enums and structs.
 
 use super::instruction;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 // Strong types for ids that refer to constants, registers, variables, types etc.  They are used to
 // look information up in different tables.  In all cases, 0 means no applicable ID.
@@ -1083,6 +1083,21 @@ impl Block {
         self.instructions.rotate_right(1);
     }
 
+    pub fn prepend_code(&mut self, mut block: Block) {
+        // Prepend the code in `block` to the code in `self`.  There may be other blocks that
+        // reference `self`, so this operation simply makes `self` the merge block of `block`, then
+        // swaps the contents of `self` and `block` to make existing references effectively point
+        // to the new code being prepended.
+        std::mem::swap(self, &mut block);
+        // If there's a merge input, it should remain in place.
+        std::mem::swap(&mut self.input, &mut block.input);
+
+        let last_block = self.get_merge_chain_last_block_mut();
+        last_block.terminate(OpCode::NextBlock);
+        // Note: after the above swap, `block` now contains what was previously in `self`.
+        last_block.set_merge_block(block);
+    }
+
     // Whether the block is already terminated.  This is used for assertions, but also ensures that
     // dead code after return/break/continue/etc is dropped automatically.
     pub fn is_terminated(&self) -> bool {
@@ -1471,7 +1486,7 @@ pub enum BuiltIn {
 }
 
 // Whether a function parameter is `in`, `out` or `inout`.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub enum FunctionParamDirection {
     Input,
@@ -2118,6 +2133,11 @@ pub struct IRMeta {
     per_vertex_out_is_redeclared: bool,
     // TODO(http://anglebug.com/349994211): invariant and others that can be globally set, do they
     // need to be tracked here?
+
+    // Set of variables that are required to be zero-initialized before output generation.  This
+    // set is determined during parse, but zero-initialization needs to be done late in
+    // compilation.
+    variables_pending_zero_initialization: HashSet<VariableId>,
 }
 
 impl IRMeta {
@@ -2260,6 +2280,7 @@ impl IRMeta {
             gs_max_vertices: 0,
             per_vertex_in_is_redeclared: false,
             per_vertex_out_is_redeclared: false,
+            variables_pending_zero_initialization: HashSet::new(),
         }
     }
 
@@ -2707,9 +2728,28 @@ impl IRMeta {
         self.add_variable(var)
     }
 
+    // Used only by builder.rs.  Transformations should set the initializer at the same time as
+    // declaring the variable with `declare_variable`.
     pub fn set_variable_initializer(&mut self, id: VariableId, constant_id: ConstantId) {
         debug_assert!(self.variables[id.id as usize].initializer.is_none());
         self.variables[id.id as usize].initializer = Some(constant_id);
+        self.on_variable_initialized(id);
+    }
+    pub fn on_variable_initialized(&mut self, id: VariableId) {
+        // Now that the initializer is visited (during parse), the variable won't need
+        // zero-initialization.
+        self.variables_pending_zero_initialization.remove(&id);
+    }
+    pub fn require_variable_zero_initialization(&mut self, id: VariableId) {
+        debug_assert!(!self.variable_needs_zero_initialization(id));
+        self.variables_pending_zero_initialization.insert(id);
+    }
+    pub fn variable_needs_zero_initialization(&self, id: VariableId) -> bool {
+        self.variables_pending_zero_initialization.contains(&id)
+    }
+    pub fn on_variable_zero_initialization_done(&mut self, id: VariableId) {
+        debug_assert!(self.variable_needs_zero_initialization(id));
+        self.variables_pending_zero_initialization.remove(&id);
     }
 
     pub fn add_function(&mut self, function: Function) -> FunctionId {

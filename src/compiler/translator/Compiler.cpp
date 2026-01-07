@@ -856,9 +856,28 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
+    // Some AST validation cannot be done until an AST pass is done. With IR, those passes (if
+    // needed) are done before AST is generated.
+    if (!useIR)
+    {
+        mValidateASTOptions.validateNoStatementsAfterBranch = false;
+        mValidateASTOptions.validateMultiDeclarations       = false;
+    }
+
     if (!validateAST(root))
     {
         return false;
+    }
+
+    const bool hasAnyClipCullDistance =
+        parseContext.isExtensionEnabled(TExtension::ANGLE_clip_cull_distance) ||
+        parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance) ||
+        parseContext.isExtensionEnabled(TExtension::APPLE_clip_distance);
+    if (hasAnyClipCullDistance)
+    {
+        mClipDistanceSize = static_cast<uint8_t>(parseContext.getClipDistanceArraySize());
+        mCullDistanceSize = static_cast<uint8_t>(parseContext.getCullDistanceArraySize());
+        mMetadataFlags[MetadataFlags::HasClipDistance] = parseContext.isClipDistanceUsed();
     }
 
     if (!useIR)
@@ -884,17 +903,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
         // Folding should only be able to generate warnings.
         ASSERT(mDiagnostics.numErrors() == 0);
-    }
 
-    if (parseContext.isExtensionEnabled(TExtension::ANGLE_clip_cull_distance) ||
-        parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance) ||
-        parseContext.isExtensionEnabled(TExtension::APPLE_clip_distance))
-    {
-        mClipDistanceSize = static_cast<uint8_t>(parseContext.getClipDistanceArraySize());
-        mCullDistanceSize = static_cast<uint8_t>(parseContext.getCullDistanceArraySize());
-        mMetadataFlags[MetadataFlags::HasClipDistance] = parseContext.isClipDistanceUsed();
-
-        if (!useIR)
+        if (hasAnyClipCullDistance)
         {
             // gl_ClipDistance and gl_CullDistance built-in arrays have unique semantics.
             // They are pre-declared as unsized and must be sized by the shader either
@@ -915,10 +925,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-    }
 
-    if (!useIR)
-    {
         // We prune no-ops to work around driver bugs and to keep AST processing and output simple.
         // The following kinds of no-ops are pruned:
         //   1. Empty declarations "int;".
@@ -931,18 +938,19 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
+        mValidateASTOptions.validateNoStatementsAfterBranch = true;
     }
-    mValidateASTOptions.validateNoStatementsAfterBranch = true;
 
     // We need to generate globals early if we have non constant initializers enabled.
     bool initializeLocalsAndGlobals    = compileOptions.initializeUninitializedLocals;
     bool canUseLoopsToInitialize       = !compileOptions.dontUseLoopsToInitializeVariables;
     bool enableNonConstantInitializers = IsExtensionEnabled(
         mExtensionBehavior, TExtension::EXT_shader_non_constant_global_initializers);
+
     if (enableNonConstantInitializers &&
-        !DeferGlobalInitializers(this, root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
-                                 compileOptions.forceDeferNonConstGlobalInitializers,
-                                 &mSymbolTable))
+        !DeferGlobalInitializers(
+            this, root, initializeLocalsAndGlobals && !useIR, canUseLoopsToInitialize,
+            compileOptions.forceDeferNonConstGlobalInitializers, &mSymbolTable))
     {
         return false;
     }
@@ -961,10 +969,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
-    }
 
-    if (!useIR)
-    {
         if (IsSpecWithFunctionBodyNewScope(mShaderSpec, mShaderVersion))
         {
             if (!ReplaceShadowingVariables(this, root, &mSymbolTable))
@@ -1181,10 +1186,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
-    }
 
-    if (!useIR)
-    {
         // In case the last case inside a switch statement is a certain type of no-op, GLSL
         // compilers in drivers may not accept it. In this case we clean up the dead code from the
         // end of switch statements. This is also required because PruneNoOps or
@@ -1290,9 +1292,9 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // initializers before we generate the DAG, since initializers may call functions which must not
     // be optimized out
     if (!enableNonConstantInitializers &&
-        !DeferGlobalInitializers(this, root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
-                                 compileOptions.forceDeferNonConstGlobalInitializers,
-                                 &mSymbolTable))
+        !DeferGlobalInitializers(
+            this, root, initializeLocalsAndGlobals && !useIR, canUseLoopsToInitialize,
+            compileOptions.forceDeferNonConstGlobalInitializers, &mSymbolTable))
     {
         return false;
     }
@@ -1318,10 +1320,13 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
             }
         }
 
-        if (!InitializeUninitializedLocals(this, root, getShaderVersion(), canUseLoopsToInitialize,
-                                           &getSymbolTable()))
+        if (!useIR)
         {
-            return false;
+            if (!InitializeUninitializedLocals(this, root, getShaderVersion(),
+                                               canUseLoopsToInitialize, &getSymbolTable()))
+            {
+                return false;
+            }
         }
     }
 

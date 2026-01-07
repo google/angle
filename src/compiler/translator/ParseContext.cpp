@@ -522,7 +522,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mAdvancedBlendEquations(0),
       mFunctionBodyNewScope(false),
       mOutputType(outputType),
-      mIRBuilder(gl::FromGLenum<gl::ShaderType>(type))
+      mIRBuilder(gl::FromGLenum<gl::ShaderType>(type), options)
 {
     mDiagnostics->setIRBuilder(&mIRBuilder);
 
@@ -3122,13 +3122,14 @@ void TParseContext::declareFunction(const TFunction *function, FunctionDeclarati
         for (size_t i = 0; i < function->getParamCount(); ++i)
         {
             const TVariable *param = function->getParam(i);
+            const TType &paramType = param->getType();
 
             ir::VariableId paramId = mIRBuilder.declareFunctionParam(
-                param->name(), getTypeId(param->getType()), param->getType());
+                param->name(), getTypeId(paramType), paramType, paramType.getQualifier());
             mVariableToId[param] = VariableToIdInfo{paramId, VariableToIdInfo::kNoImplicitField};
 
             params.push_back(paramId);
-            paramDirections.push_back(param->getType().getQualifier());
+            paramDirections.push_back(paramType.getQualifier());
         }
 
         mFunctionToId[function] =

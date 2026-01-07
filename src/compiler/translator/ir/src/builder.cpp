@@ -39,6 +39,13 @@ rust::Str Str(const ImmutableString &str)
     return rust::Str(str.data(), str.length());
 }
 
+ffi::BuildOptions MakeBuildOptions(const ShCompileOptions &options)
+{
+    return ffi::BuildOptions{
+        .initialize_uninitialized_variables = options.initializeUninitializedLocals,
+    };
+}
+
 ffi::ASTLayoutQualifier MakeASTLayoutQualifier(const TLayoutQualifier &qualifier)
 {
     return ffi::ASTLayoutQualifier{
@@ -82,9 +89,10 @@ ffi::ASTType MakeASTType(const TType &type, TypeId typeId)
 }
 }  // anonymous namespace
 
-Builder::Builder(gl::ShaderType shaderType)
+Builder::Builder(gl::ShaderType shaderType, const ShCompileOptions &options)
     :  // C++ and Rust enums are identically defined.
-      mBuilder(ffi::builder_new(static_cast<ffi::ASTShaderType>(shaderType)))
+      mBuilder(
+          ffi::builder_new(static_cast<ffi::ASTShaderType>(shaderType), MakeBuildOptions(options)))
 
 {}
 
@@ -290,14 +298,16 @@ void Builder::updateFunctionParamNames(FunctionId id,
 }
 VariableId Builder::declareFunctionParam(const ImmutableString &name,
                                          TypeId typeId,
-                                         const TType &type)
+                                         const TType &type,
+                                         TQualifier direction)
 {
     if (mHasError)
     {
         return {};
     }
 
-    return mBuilder->declare_function_param(Str(name), typeId, MakeASTType(type, typeId));
+    return mBuilder->declare_function_param(Str(name), typeId, MakeASTType(type, typeId),
+                                            static_cast<ffi::ASTQualifier>(direction));
 }
 
 void Builder::beginFunction(FunctionId id)

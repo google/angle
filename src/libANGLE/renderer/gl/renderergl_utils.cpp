@@ -2556,12 +2556,12 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     ANGLE_FEATURE_CONDITION(features, promotePackedFormatsTo8BitPerChannel, IsApple() && hasAMD);
 
-    // crbug.com/1171371
+    // http://crbug.com/40166134
     // If output variable gl_FragColor is written by fragment shader, it may cause context lost with
     // Adreno 42x and 3xx.
     ANGLE_FEATURE_CONDITION(features, initFragmentOutputVariables, IsAdreno42xOr3xx(functions));
 
-    // http://crbug.com/1144207
+    // http://crbug.com/40155422
     // The Mac bot with Intel Iris GPU seems unaffected by this bug. Exclude the Haswell family for
     // now.
     ANGLE_FEATURE_CONDITION(features, shiftInstancedArrayDataWithOffset,

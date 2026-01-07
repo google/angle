@@ -45,7 +45,7 @@ pub fn run(ir: &mut IR) {
 
     traverser::visitor::for_each_function(
         &mut state,
-        &mut ir.function_entries,
+        &ir.function_entries,
         |state, function_id| {
             state.is_in_main =
                 state.ir_meta.get_main_function_id().map(|id| id == function_id).unwrap();

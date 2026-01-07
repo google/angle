@@ -993,6 +993,9 @@ fn dump_variables(ir_meta: &IRMeta, result: &mut String) {
         let initializer = v
             .initializer
             .map(|constant_id| format!("={}", constant_id_str(constant_id)))
+            .or(ir_meta
+                .variable_needs_zero_initialization(VariableId { id: id as u32 })
+                .then_some("=TO_BE_ZERO_INIT".to_string()))
             .unwrap_or("".to_string());
         let built_in = v
             .built_in

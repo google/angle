@@ -49,7 +49,7 @@ pub fn run(ir: &mut IR) {
     // Visit all instructions and mark types, constants and variables that are visited.
     traverser::visitor::for_each_function(
         &mut state,
-        &mut ir.function_entries,
+        &ir.function_entries,
         |state, function_id| {
             state
                 .ir_meta

@@ -701,10 +701,12 @@ impl CFGBuilder {
 // A helper to build the IR from scratch.  The helper is invoked while parsing the shader, and
 // its main purpose is to maintain in-progress items until completed, and adapt the incoming GLSL
 // syntax to the IR.
-#[cfg_attr(debug_assertions, derive(Debug))]
 pub struct Builder {
     // The IR being built
     ir: IR,
+
+    // Flags controlling the IR generation
+    options: Options,
 
     // The current function that is being built (if any).
     current_function: Option<FunctionId>,
@@ -742,9 +744,10 @@ pub struct Builder {
 }
 
 impl Builder {
-    pub fn new(shader_type: ShaderType) -> Builder {
+    pub fn new(shader_type: ShaderType, options: Options) -> Builder {
         Builder {
             ir: IR::new(shader_type),
+            options,
             current_function: None,
             current_function_cfg: CFGBuilder::new(),
             global_initializers_cfg: CFGBuilder::new(),
@@ -804,6 +807,27 @@ impl Builder {
         std::mem::replace(&mut self.ir, IR::new(ShaderType::Vertex))
     }
 
+    fn variable_can_be_initialized(
+        &self,
+        type_id: TypeId,
+        decorations: &Decorations,
+        built_in: Option<BuiltIn>,
+    ) -> bool {
+        let type_info = self.ir.meta.get_type(type_id);
+        debug_assert!(!type_info.is_pointer());
+
+        // Some variables cannot be initialized, like uniforms, inputs, etc.
+        !(type_info.is_image()
+            || type_info.is_unsized_array()
+            || built_in.is_some()
+            || decorations.has(Decoration::Input)
+            || decorations.has(Decoration::Output)
+            || decorations.has(Decoration::InputOutput)
+            || decorations.has(Decoration::Uniform)
+            || decorations.has(Decoration::Buffer)
+            || decorations.has(Decoration::Shared))
+    }
+
     // Internal helper to declare a new variable.
     fn declare_variable(
         &mut self,
@@ -814,6 +838,13 @@ impl Builder {
         built_in: Option<BuiltIn>,
         scope: VariableScope,
     ) -> VariableId {
+        // The declared variable may be uninitialized.  If the build flags indicate the need,
+        // the variable is marked such that it is zero-initialized before output generation.  Note
+        // that function parameters are handled in declare_function_param.
+        let needs_zero_initialization = self.options.initialize_uninitialized_variables
+            && scope != VariableScope::FunctionParam
+            && self.variable_can_be_initialized(type_id, &decorations, built_in);
+
         let variable_id = self.ir.meta.declare_variable(
             name,
             type_id,
@@ -829,6 +860,10 @@ impl Builder {
         // needing declaration.
         if scope == VariableScope::Local {
             self.current_function_cfg.add_variable_declaration(variable_id);
+        }
+
+        if needs_zero_initialization {
+            self.ir.meta.require_variable_zero_initialization(variable_id);
         }
 
         variable_id
@@ -979,15 +1014,24 @@ impl Builder {
         type_id: TypeId,
         precision: Precision,
         decorations: Decorations,
+        direction: FunctionParamDirection,
     ) -> VariableId {
-        self.declare_variable(
+        let variable_id = self.declare_variable(
             Name::new_temp(name),
             type_id,
             precision,
             decorations,
             None,
             VariableScope::FunctionParam,
-        )
+        );
+
+        if self.options.initialize_uninitialized_variables
+            && direction == FunctionParamDirection::Output
+        {
+            self.ir.meta.require_variable_zero_initialization(variable_id);
+        }
+
+        variable_id
     }
 
     // Once the entire function body is visited, `end_function` puts the graph in the function.
@@ -1062,6 +1106,7 @@ impl Builder {
         match value.id {
             Id::Constant(constant_id) => self.ir.meta.set_variable_initializer(id, constant_id),
             _ => {
+                self.ir.meta.on_variable_initialized(id);
                 let id = TypedId::from_variable_id(&self.ir.meta, id);
                 self.scope().add_void_instruction(OpCode::Store(id, value))
             }
@@ -1651,7 +1696,7 @@ impl Builder {
 
         if let Some(length_variable_id) = length_variable {
             let length = self.ir.meta.get_constant_int(length as i32);
-            self.ir.meta.get_variable_mut(length_variable_id).initializer = Some(length);
+            self.ir.meta.set_variable_initializer(length_variable_id, length);
         }
     }
 
@@ -2599,6 +2644,12 @@ impl Builder {
 
 #[cxx::bridge(namespace = "sh::ir::ffi")]
 pub mod ffi {
+    // Flags controlling the way the IR is built, applying transformations during IR generation.
+    struct BuildOptions {
+        // Whether uninitialized local and global variables should be initialized to 0 values.
+        initialize_uninitialized_variables: bool,
+    }
+
     // The following enums and types must be identical to what's found in BaseTypes.h.  This
     // duplication is not ideal, but necessary during the transition to IR.  Once the translator
     // switches over to IR completely, it can directly use the types exported from here (or better
@@ -2966,7 +3017,7 @@ pub mod ffi {
         #[derive(ExternType)]
         type IR;
 
-        fn builder_new(shader_type: ASTShaderType) -> Box<BuilderWrapper>;
+        fn builder_new(shader_type: ASTShaderType, options: BuildOptions) -> Box<BuilderWrapper>;
         fn builder_finish(mut builder: Box<BuilderWrapper>) -> Box<IR>;
         fn builder_fail(mut builder: Box<BuilderWrapper>) -> Box<IR>;
 
@@ -3029,6 +3080,7 @@ pub mod ffi {
             name: &'static str,
             type_id: TypeId,
             ast_type: &ASTType,
+            direction: ASTQualifier,
         ) -> VariableId;
         fn begin_function(self: &mut BuilderWrapper, id: FunctionId);
         fn end_function(self: &mut BuilderWrapper);
@@ -3283,6 +3335,8 @@ pub mod ffi {
     }
 }
 
+pub use ffi::BuildOptions as Options;
+
 impl From<TypeId> for ffi::TypeId {
     fn from(id: TypeId) -> Self {
         ffi::TypeId { id: id.id }
@@ -3410,7 +3464,7 @@ impl From<ffi::ASTLayoutPrimitiveType> for GeometryPrimitive {
     }
 }
 
-fn builder_new(shader_type: ffi::ASTShaderType) -> Box<BuilderWrapper> {
+fn builder_new(shader_type: ffi::ASTShaderType, options: ffi::BuildOptions) -> Box<BuilderWrapper> {
     let shader_type = match shader_type {
         ffi::ASTShaderType::Vertex => ShaderType::Vertex,
         ffi::ASTShaderType::TessControl => ShaderType::TessellationControl,
@@ -3420,7 +3474,7 @@ fn builder_new(shader_type: ffi::ASTShaderType) -> Box<BuilderWrapper> {
         ffi::ASTShaderType::Compute => ShaderType::Compute,
         _ => panic!("Internal error: Impossible shader type enum value"),
     };
-    Box::new(BuilderWrapper { builder: Builder::new(shader_type) })
+    Box::new(BuilderWrapper { builder: Builder::new(shader_type, options) })
 }
 
 fn builder_finish(mut builder: Box<BuilderWrapper>) -> Box<IR> {
@@ -4360,6 +4414,7 @@ impl BuilderWrapper {
         name: &'static str,
         type_id: ffi::TypeId,
         ast_type: &ffi::ASTType,
+        direction: ffi::ASTQualifier,
     ) -> ffi::VariableId {
         self.builder
             .declare_function_param(
@@ -4367,6 +4422,7 @@ impl BuilderWrapper {
                 type_id.into(),
                 ast_type.precision.into(),
                 Self::ast_type_decorations(&ast_type),
+                Self::function_param_direction(direction),
             )
             .into()
     }

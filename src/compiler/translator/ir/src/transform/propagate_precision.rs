@@ -30,7 +30,7 @@ pub fn run(ir: &mut IR) {
     // Prepare a map of functions to the precision of their arguments.
     traverser::visitor::for_each_function(
         &mut state,
-        &mut ir.function_entries,
+        &ir.function_entries,
         |state, function_id| {
             let argument_precision = state
                 .ir_meta

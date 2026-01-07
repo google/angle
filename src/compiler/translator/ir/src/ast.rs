@@ -284,7 +284,9 @@ impl Generator {
     fn create_variables<T: Target>(&self, target: &mut T) {
         self.ir.meta.all_variables().iter().enumerate().for_each(|(id, variable)| {
             if !variable.is_dead_code_eliminated {
-                target.new_variable(&self.ir.meta, VariableId { id: id as u32 }, variable)
+                let variable_id = VariableId { id: id as u32 };
+                debug_assert!(!self.ir.meta.variable_needs_zero_initialization(variable_id));
+                target.new_variable(&self.ir.meta, variable_id, variable)
             }
         });
     }
