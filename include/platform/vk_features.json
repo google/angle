@@ -1956,6 +1956,15 @@
             "issue": "https://anglebug.com/416095435"
         },
         {
+            "name": "supports_astc_3d",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_texture_compression_astc_3d extension",
+                "Enable use of astc_3d"
+            ],
+            "issue": "https://anglebug.com/473593137"
+        },
+        {
             "name": "supports_image_compression_control_swapchain",
             "category": "Features",
             "description": [

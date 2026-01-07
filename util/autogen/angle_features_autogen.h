@@ -317,6 +317,7 @@ enum class Feature
     SupportsAndroidNativeFenceSync,
     SupportsAngleRgbxInternalFormat,
     SupportsAppleClipDistance,
+    SupportsAstc3d,
     SupportsAstcDecodeMode,
     SupportsAstcDecodeModeRgb9e5,
     SupportsAstcHdr3dTextures,

@@ -1506,6 +1506,12 @@ bool ValidateES3TexStorageParametersFormat(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
             return false;
         }
+
+        if (formatInfo.compressedBlockDepth > 1 && target != TextureType::_3D)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidTextureTarget);
+            return false;
+        }
     }
 
     // From the ES 3.0 spec section 3.8.3:

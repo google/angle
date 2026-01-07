@@ -1175,6 +1175,7 @@
 // Adreno drivers erroneously reject certain sub-image uploads
 42265943 PIXEL4ORXL GLES : CompressedTextureASTCTest.Test/* = SKIP
 42265943 PIXEL4ORXL GLES : CompressedTextureASTCSliced3DTest.Test/* = SKIP
+42265943 PIXEL4ORXL GLES : CompressedTextureASTC3DTest.Test/* = SKIP
 42265943 PIXEL4ORXL GLES : CompressedTextureETC1SubTest.Test/* = SKIP
 42265943 PIXEL4ORXL GLES : CompressedTextureEACR11STest.Test/* = SKIP
 42265943 PIXEL4ORXL GLES : CompressedTextureEACR11UTest.Test/* = SKIP

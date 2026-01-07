@@ -2949,6 +2949,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 // - VK_EXT_external_memory_host                       minImportedHostPointerAlignment (property)
 // - VK_QCOM_tile_memory_heap                          tileMemoryHeapFeatures (feature)
 //                                                     tileMemoryHeapProperties (property)
+// - VK_EXT_texture_compression_astc_3d                textureCompressionASTC_3D (feature)
 //
 
 void Renderer::appendDeviceExtensionFeaturesNotPromoted(
@@ -3154,6 +3155,10 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     if (ExtensionFound(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceProperties, &mExternalMemoryHostProperties);
+    }
+    if (ExtensionFound(VK_EXT_TEXTURE_COMPRESSION_ASTC_3D_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mTextureCompressionASTC3DFeatures);
     }
 
     if (ExtensionFound(VK_QCOM_TILE_MEMORY_HEAP_EXTENSION_NAME, deviceExtensionNames))
@@ -3610,6 +3615,10 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mShaderAtomicInt64Features.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES;
 
+    mTextureCompressionASTC3DFeatures = {};
+    mTextureCompressionASTC3DFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT;
+
 #if defined(ANGLE_PLATFORM_ANDROID)
     mExternalFormatResolveFeatures = {};
     mExternalFormatResolveFeatures.sType =
@@ -3712,6 +3721,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mExternalMemoryHostProperties.pNext               = nullptr;
     mBufferDeviceAddressFeatures.pNext                = nullptr;
     mShaderAtomicInt64Features.pNext                  = nullptr;
+    mTextureCompressionASTC3DFeatures.pNext           = nullptr;
 #if defined(ANGLE_PLATFORM_ANDROID)
     mExternalFormatResolveFeatures.pNext   = nullptr;
     mExternalFormatResolveProperties.pNext = nullptr;
@@ -4062,6 +4072,12 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mPhysicalDeviceAstcDecodeFeatures);
+    }
+
+    if (mFeatures.supportsAstc3d.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_EXT_TEXTURE_COMPRESSION_ASTC_3D_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mTextureCompressionASTC3DFeatures);
     }
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
@@ -6738,6 +6754,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // VK_QCOM_tile_memory_heap is available
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsTileMemoryHeap,
                             /*mTileMemoryHeapFeatures.tileMemoryHeap == VK_TRUE*/ false);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsAstc3d,
+                            mTextureCompressionASTC3DFeatures.textureCompressionASTC_3D == VK_TRUE);
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // Features specific to OpenCL backend
