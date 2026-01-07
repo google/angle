@@ -40,6 +40,7 @@ pub struct TypeId {
 }
 
 // Fixed enums for faster type lookup
+// Note: if more types are added here or the values are changed, adjust MAX_PREDEFINED_TYPE_ID.
 // TODO(http://anglebug.com/349994211): In the future, we can duplicate the reserved ids in an
 // enum, so that static types, autogen'ed symbols etc already know their (type) ids.
 pub const TYPE_ID_VOID: TypeId = TypeId { id: 0 };
@@ -72,9 +73,12 @@ pub const TYPE_ID_MAT3X4: TypeId = TypeId { id: 24 };
 pub const TYPE_ID_MAT4X2: TypeId = TypeId { id: 25 };
 pub const TYPE_ID_MAT4X3: TypeId = TypeId { id: 26 };
 pub const TYPE_ID_MAT4: TypeId = TypeId { id: 27 };
+const MAX_PREDEFINED_TYPE_ID: u32 = TYPE_ID_MAT4.id;
 
 // Fixed enums for bool constants to avoid tracking whether they are defined or not, plus other
 // constants for convenience.
+// Note: if more constants are added here or the values are changed, adjust
+// MAX_PREDEFINED_CONSTANT_ID.
 pub const CONSTANT_ID_FALSE: ConstantId = ConstantId { id: 0 };
 pub const CONSTANT_ID_TRUE: ConstantId = ConstantId { id: 1 };
 pub const CONSTANT_ID_FLOAT_ZERO: ConstantId = ConstantId { id: 2 };
@@ -86,6 +90,7 @@ pub const CONSTANT_ID_UINT_ONE: ConstantId = ConstantId { id: 7 };
 pub const CONSTANT_ID_YUV_CSC_ITU601: ConstantId = ConstantId { id: 8 };
 pub const CONSTANT_ID_YUV_CSC_ITU601_FULL_RANGE: ConstantId = ConstantId { id: 9 };
 pub const CONSTANT_ID_YUV_CSC_ITU709: ConstantId = ConstantId { id: 10 };
+const MAX_PREDEFINED_CONSTANT_ID: u32 = CONSTANT_ID_YUV_CSC_ITU709.id;
 
 // Prefixes used for symbols.
 pub const USER_SYMBOL_PREFIX: &str = "_u";
@@ -1240,26 +1245,51 @@ impl ConstantValue {
 pub struct Constant {
     pub type_id: TypeId,
     pub value: ConstantValue,
+    pub is_dead_code_eliminated: bool,
 }
 
 impl Constant {
     pub fn new_bool(value: bool) -> Constant {
-        Constant { type_id: TYPE_ID_BOOL, value: ConstantValue::Bool(value) }
+        Constant {
+            type_id: TYPE_ID_BOOL,
+            value: ConstantValue::Bool(value),
+            is_dead_code_eliminated: false,
+        }
     }
     pub fn new_int(value: i32) -> Constant {
-        Constant { type_id: TYPE_ID_INT, value: ConstantValue::Int(value) }
+        Constant {
+            type_id: TYPE_ID_INT,
+            value: ConstantValue::Int(value),
+            is_dead_code_eliminated: false,
+        }
     }
     pub fn new_uint(value: u32) -> Constant {
-        Constant { type_id: TYPE_ID_UINT, value: ConstantValue::Uint(value) }
+        Constant {
+            type_id: TYPE_ID_UINT,
+            value: ConstantValue::Uint(value),
+            is_dead_code_eliminated: false,
+        }
     }
     pub fn new_float(value: f32) -> Constant {
-        Constant { type_id: TYPE_ID_FLOAT, value: ConstantValue::Float(value) }
+        Constant {
+            type_id: TYPE_ID_FLOAT,
+            value: ConstantValue::Float(value),
+            is_dead_code_eliminated: false,
+        }
     }
     pub fn new_yuv_csc(value: YuvCscStandard) -> Constant {
-        Constant { type_id: TYPE_ID_YUV_CSC_STANDARD, value: ConstantValue::YuvCsc(value) }
+        Constant {
+            type_id: TYPE_ID_YUV_CSC_STANDARD,
+            value: ConstantValue::YuvCsc(value),
+            is_dead_code_eliminated: false,
+        }
     }
     pub fn new_composite(type_id: TypeId, params: Vec<ConstantId>) -> Constant {
-        Constant { type_id, value: ConstantValue::Composite(params) }
+        Constant {
+            type_id,
+            value: ConstantValue::Composite(params),
+            is_dead_code_eliminated: false,
+        }
     }
 }
 
@@ -1336,6 +1366,7 @@ pub struct Variable {
     // Reflection info
     pub is_const: bool,
     pub is_static_use: bool,
+    pub is_dead_code_eliminated: bool,
 }
 
 impl Variable {
@@ -1358,6 +1389,7 @@ impl Variable {
             scope,
             is_const: false,
             is_static_use: false,
+            is_dead_code_eliminated: false,
         }
     }
 
@@ -1375,6 +1407,7 @@ impl Variable {
             scope: VariableScope::Global,
             is_const: true,
             is_static_use: false,
+            is_dead_code_eliminated: false,
         }
     }
 }
@@ -1779,6 +1812,8 @@ pub enum Type {
     UnsizedArray(TypeId),
     // A pointer to a type, includes variables, access chains etc
     Pointer(TypeId),
+    // An eliminated type that doesn't need to be declared in the output.
+    DeadCodeEliminated,
 }
 
 impl Type {
@@ -1844,6 +1879,10 @@ impl Type {
 
     pub fn is_pointer(&self) -> bool {
         matches!(self, Type::Pointer(_))
+    }
+
+    pub fn is_dead_code_eliminated(&self) -> bool {
+        matches!(self, Type::DeadCodeEliminated)
     }
 
     pub fn get_scalar_basic_type(&self) -> BasicType {
@@ -2508,6 +2547,72 @@ impl IRMeta {
         constant_id
     }
 
+    pub fn dead_code_eliminate_variable(&mut self, id: VariableId) {
+        // The variable is expected to already be removed from the IR, and this is just marking it
+        // as eliminated.
+        self.variables[id.id as usize].is_dead_code_eliminated = true;
+    }
+    pub fn dead_code_eliminate_constant(&mut self, id: ConstantId) {
+        // Don't dead-code-eliminate predefined constants, they may be referenced by future
+        // transformations.
+        if id.id <= MAX_PREDEFINED_CONSTANT_ID {
+            return;
+        }
+
+        // Mark the constant as dead-code-eliminated.
+        let constant = &mut self.constants[id.id as usize];
+        constant.is_dead_code_eliminated = true;
+
+        // Remove the constant from the constant map, so this id is never returned in future
+        // lookups.
+        match constant.value {
+            ConstantValue::Float(f) => {
+                self.float_constant_map.remove(&f.to_bits());
+            }
+            ConstantValue::Int(i) => {
+                self.int_constant_map.remove(&i);
+            }
+            ConstantValue::Uint(u) => {
+                self.uint_constant_map.remove(&u);
+            }
+            ConstantValue::Bool(_) | ConstantValue::YuvCsc(_) => {
+                // Nothing to do, all possible values are predefined.
+            }
+            ConstantValue::Composite(ref components) => {
+                self.composite_constant_map.remove(&(constant.type_id, components.clone()));
+            }
+        };
+    }
+    pub fn dead_code_eliminate_type(&mut self, id: TypeId) {
+        // Don't dead-code-eliminate predefined types, they may be referenced by future
+        // transformations.
+        if id.id <= MAX_PREDEFINED_TYPE_ID {
+            return;
+        }
+
+        let type_info = &mut self.types[id.id as usize];
+
+        // Remove the type from the type map, so this id is never returned in future lookups.
+        match *type_info {
+            Type::Image(basic_type, image_type) => {
+                self.image_type_map.remove(&(basic_type, image_type));
+            }
+            Type::Array(element_type_id, count) => {
+                self.array_type_map.remove(&(element_type_id, count));
+            }
+            Type::UnsizedArray(element_type_id) => {
+                self.array_type_map.remove(&(element_type_id, 0));
+            }
+            Type::Pointer(pointee_type_id) => {
+                self.pointer_type_map.remove(&pointee_type_id);
+            }
+            _ => {}
+        }
+
+        // Mark the type as dead-code-eliminated.
+        *type_info = Type::DeadCodeEliminated;
+    }
+
     // Generate the "null" value of a given type.  That is 0 for numeric types, false for boolean,
     // etc.
     pub fn get_constant_scalar_null(&mut self, basic_type: BasicType) -> ConstantId {
@@ -2543,7 +2648,7 @@ impl IRMeta {
                     .collect();
                 self.get_constant_composite(type_id, components)
             }
-            Type::Struct(.., StructSpecialization::InterfaceBlock) => {
+            Type::Struct(..) => {
                 panic!("Internal error: Cannot create a null value of interface block type")
             }
             Type::UnsizedArray(_) => {
@@ -2553,6 +2658,9 @@ impl IRMeta {
                 panic!("Internal error: Cannot create a null value of pointer type")
             }
             Type::Image(..) => panic!("Internal error: Cannot create a null value of image type"),
+            Type::DeadCodeEliminated => {
+                panic!("Internal error: Cannot create a null value of dead-code-eliminated type")
+            }
         }
     }
 

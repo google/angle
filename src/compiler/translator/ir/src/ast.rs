@@ -255,39 +255,35 @@ impl Generator {
 
     // Note: call transform::dealias::run() beforehand, as well as transform::astify::run().
     pub fn generate<T: Target>(&mut self, target: &mut T) -> T::BlockResult {
-        // Prune unused variables, constants and types.  Constants and types cannot be removed from
-        // the IR, so they are simply filtered out during generation.
-        let referenced = transform::prune_unused_variables::run(&mut self.ir);
-
         // Declare the types, variables and functions up-front so they can be referred to by ids
         // when generating the AST itself.
-        self.create_types(target, referenced.types);
-        self.create_constants(target, referenced.constants);
-        self.create_variables(target, referenced.variables);
+        self.create_types(target);
+        self.create_constants(target);
+        self.create_variables(target);
         self.create_functions(target);
 
         self.generate_ast(target)
     }
 
-    fn create_types<T: Target>(&self, target: &mut T, referenced: Vec<bool>) {
+    fn create_types<T: Target>(&self, target: &mut T) {
         self.ir.meta.all_types().iter().enumerate().for_each(|(id, type_info)| {
-            if referenced[id] {
+            if !type_info.is_dead_code_eliminated() {
                 target.new_type(&self.ir.meta, TypeId { id: id as u32 }, type_info)
             }
         });
     }
 
-    fn create_constants<T: Target>(&self, target: &mut T, referenced: Vec<bool>) {
+    fn create_constants<T: Target>(&self, target: &mut T) {
         self.ir.meta.all_constants().iter().enumerate().for_each(|(id, constant)| {
-            if referenced[id] {
+            if !constant.is_dead_code_eliminated {
                 target.new_constant(&self.ir.meta, ConstantId { id: id as u32 }, constant)
             }
         });
     }
 
-    fn create_variables<T: Target>(&self, target: &mut T, referenced: Vec<bool>) {
+    fn create_variables<T: Target>(&self, target: &mut T) {
         self.ir.meta.all_variables().iter().enumerate().for_each(|(id, variable)| {
-            if referenced[id] {
+            if !variable.is_dead_code_eliminated {
                 target.new_variable(&self.ir.meta, VariableId { id: id as u32 }, variable)
             }
         });

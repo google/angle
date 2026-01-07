@@ -3,12 +3,15 @@
 // found in the LICENSE file.
 //
 // Remove unreferenced variables from the IR.  During traversal, additionally unreferenced
-// constants and types are tracked and returned.
+// constants and types are tracked and marked as dead-code-eliminated.
+//
+// Eventually this transformation should be replaced with a more comprehensive
+// dead-code-elimination algorithm.
 use crate::ir::*;
 use crate::*;
 
 #[cfg_attr(debug_assertions, derive(Debug))]
-pub struct Referenced {
+struct Referenced {
     pub variables: Vec<bool>,
     pub constants: Vec<bool>,
     pub types: Vec<bool>,
@@ -19,7 +22,7 @@ struct State<'a> {
     referenced: Referenced,
 }
 
-pub fn run(ir: &mut IR) -> Referenced {
+pub fn run(ir: &mut IR) {
     let referenced_variables = vec![false; ir.meta.all_variables().len()];
     let referenced_constants = vec![false; ir.meta.all_constants().len()];
     let referenced_types = vec![false; ir.meta.all_types().len()];
@@ -32,11 +35,6 @@ pub fn run(ir: &mut IR) -> Referenced {
             types: referenced_types,
         },
     };
-
-    // `void` is always referenced by the return value of `main()`.  This is set ahead of time
-    // because otherwise it's not referenced elsewhere.  The function return type doesn't need to
-    // be inspected with this done.
-    state.referenced.types[TYPE_ID_VOID.id as usize] = true;
 
     // Don't prune interface variables, as reflection info is not yet gathered.
     // TODO(http://anglebug.com/349994211): Once reflection info is collected before this step,
@@ -97,7 +95,23 @@ pub fn run(ir: &mut IR) -> Referenced {
     mark_referenced_constant_components(state.ir_meta, &mut state.referenced.constants);
     mark_referenced_type_components(state.ir_meta, &mut state.referenced.types);
 
-    state.referenced
+    // Mark the variables, types and constants that are no longer referenced as
+    // dead-code-eliminated.
+    state.referenced.variables.iter().enumerate().for_each(|(id, is_referenced)| {
+        if !is_referenced {
+            state.ir_meta.dead_code_eliminate_variable(VariableId { id: id as u32 });
+        }
+    });
+    state.referenced.constants.iter().enumerate().for_each(|(id, is_referenced)| {
+        if !is_referenced {
+            state.ir_meta.dead_code_eliminate_constant(ConstantId { id: id as u32 });
+        }
+    });
+    state.referenced.types.iter().enumerate().for_each(|(id, is_referenced)| {
+        if !is_referenced {
+            state.ir_meta.dead_code_eliminate_type(TypeId { id: id as u32 });
+        }
+    });
 }
 
 fn record_reference(referenced: &mut Referenced, id: TypedId) {
@@ -262,7 +276,9 @@ fn mark_referenced_constant_components(ir_meta: &IRMeta, referenced: &mut Vec<bo
     }
 }
 
-// For types that are live, mark their subtypes as live too.
+// For types that are live, mark their subtypes as live too.  We don't prune basic types (float,
+// uvec4, etc), only structs have any reason to be dead-code-eliminated so that we don't need to
+// unnecessarily declare them.
 fn mark_referenced_type_components(ir_meta: &IRMeta, referenced: &mut Vec<bool>) {
     let mut to_process = referenced
         .iter()
@@ -274,18 +290,19 @@ fn mark_referenced_type_components(ir_meta: &IRMeta, referenced: &mut Vec<bool>)
         let id = to_process.pop().unwrap();
         let type_info = ir_meta.get_type(TypeId { id: id as u32 });
         match type_info {
-            Type::Scalar(_) | Type::Image(..) => (),
+            Type::Scalar(_) | Type::Vector(..) | Type::Matrix(..) | Type::Image(..) => (),
             Type::Struct(_, fields, _) => {
                 for field in fields {
                     mark_referenced(field.type_id.id, referenced, &mut to_process);
                 }
             }
-            Type::Vector(element_id, _)
-            | Type::Matrix(element_id, _)
-            | Type::Array(element_id, _)
+            Type::Array(element_id, _)
             | Type::UnsizedArray(element_id)
             | Type::Pointer(element_id) => {
                 mark_referenced(element_id.id, referenced, &mut to_process);
+            }
+            Type::DeadCodeEliminated => {
+                panic!("Internal error: A dead-code-eliminated type cannot be referenced");
             }
         }
     }

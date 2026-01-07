@@ -1825,6 +1825,9 @@ impl ast::Target for Generator<'_> {
                 legacy_type
             }
             &Type::Pointer(pointee_type_id) => self.types[&pointee_type_id],
+            Type::DeadCodeEliminated => {
+                return;
+            }
         };
 
         self.types.insert(id, legacy_type);

@@ -179,6 +179,10 @@ fn common_transforms(ir: &mut IR, options: &Options) {
     {
         transform::remove_unused_framebuffer_fetch::run(ir);
     }
+
+    // Basic dead-code-elimination to avoid outputting variables, constants and types that are not
+    // used by the shader.
+    transform::prune_unused_variables::run(ir);
 }
 
 fn initialize_global_pool_index_workaround() {
