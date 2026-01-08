@@ -325,14 +325,12 @@ pub fn single_typed_instruction(inst: instruction::Result) -> Vec<Transform> {
 pub mod transformer {
     use super::*;
 
-    pub fn for_each_function<State, PreVisit, TreeTransform>(
+    pub fn for_each_function<State, TreeTransform>(
         state: &mut State,
         function_entries: &mut Vec<Option<Block>>,
-        pre_visit: PreVisit,
         tree_transform: &TreeTransform,
     ) where
-        PreVisit: Fn(&mut State, FunctionId),
-        TreeTransform: Fn(&mut State, &mut Block),
+        TreeTransform: Fn(&mut State, FunctionId, &mut Block),
     {
         for (id, entry) in function_entries.iter_mut().enumerate() {
             if entry.is_none() {
@@ -340,11 +338,9 @@ pub mod transformer {
                 continue;
             }
 
-            let func_id = FunctionId { id: id as u32 };
-            pre_visit(state, func_id);
-
             // Let the transformer freely transform the function blocks as it sees fit.
-            tree_transform(state, entry.as_mut().unwrap());
+            let func_id = FunctionId { id: id as u32 };
+            tree_transform(state, func_id, entry.as_mut().unwrap());
         }
     }
 
@@ -396,7 +392,7 @@ pub mod transformer {
     ) where
         InstTransform: Fn(&mut State, &BlockInstruction) -> Vec<Transform>,
     {
-        for_each_function(state, function_entries, |_, _| {}, &|state, entry| {
+        for_each_function(state, function_entries, &|state, _, entry| {
             for_each_block(
                 state,
                 entry,

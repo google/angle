@@ -69,8 +69,7 @@ pub fn run(ir: &mut IR) {
     traverser::transformer::for_each_function(
         &mut state,
         &mut ir.function_entries,
-        |_, _| {},
-        &|state, entry| {
+        &|state, _, entry| {
             traverser::transformer::for_each_block(
                 state,
                 entry,

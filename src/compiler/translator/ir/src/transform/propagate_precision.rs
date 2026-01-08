@@ -56,11 +56,9 @@ pub fn run(ir: &mut IR) {
     traverser::transformer::for_each_function(
         &mut state,
         &mut ir.function_entries,
-        |state, function_id| {
+        &|state, function_id, entry| {
             state.current_function_return_precision =
                 state.ir_meta.get_function(function_id).return_precision;
-        },
-        &|state, entry| {
             propagate_precision_in_block(state, entry, Precision::NotApplicable);
         },
     );
