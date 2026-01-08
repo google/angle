@@ -88,6 +88,7 @@ enum class Feature
     DisableB5G6R5Support,
     DisableBaseInstanceVertex,
     DisableBlendEquationAdvanced,
+    DisableClearTexImageForRobustInit,
     DisableClipControl,
     DisableDepthStencilResolveThroughAttachment,
     DisableDrawBuffersIndexed,

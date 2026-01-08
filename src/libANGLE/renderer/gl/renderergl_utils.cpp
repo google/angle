@@ -2741,6 +2741,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // Mali 400 series drivers fail linking shaders when passthrough shaders are enabled. Likely due
     // to not querying correct information from varyings and uniforms.
     ANGLE_FEATURE_CONDITION(features, disablePassthroughShaders, IsAdreno4xx(functions));
+
+    // IMG GL drivers crash in glClearTexImage on various format/type combinations such as packed
+    // types, LUMA and depth stencil.
+    ANGLE_FEATURE_CONDITION(features, disableClearTexImageForRobustInit, IsPowerVR(vendor));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
