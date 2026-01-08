@@ -952,10 +952,8 @@ void GenerateCaps(const FunctionsGL *functions,
         caps->fragmentMediumpInt = QueryTypePrecision(functions, GL_FRAGMENT_SHADER, GL_MEDIUM_INT);
         caps->fragmentLowpInt    = QueryTypePrecision(functions, GL_FRAGMENT_SHADER, GL_LOW_INT);
 
-        // highp support is required.  This check is skipped with the null entry points, as they
-        // produce no data.
-        if (!functions->isNullEntryPoints() &&
-            !PrecisionMeetsSpecForHighpFloat(caps->fragmentHighpFloat))
+        // highp support is required.
+        if (!PrecisionMeetsSpecForHighpFloat(caps->fragmentHighpFloat))
         {
             LimitVersion(maxSupportedESVersion, gl::Version(0, 0));
         }
