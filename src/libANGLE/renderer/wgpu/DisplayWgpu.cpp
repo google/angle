@@ -61,6 +61,14 @@ egl::Error DisplayWgpu::initialize(egl::Display *display)
         attribs.get(EGL_PLATFORM_ANGLE_DAWN_PROC_TABLE_ANGLE,
                                           reinterpret_cast<EGLAttrib>(&webgpu::GetDefaultProcTable())));
 
+    WGPUInstance providedInstance =
+        reinterpret_cast<WGPUInstance>(attribs.get(EGL_PLATFORM_ANGLE_WEBGPU_INSTANCE_ANGLE, 0));
+    if (providedInstance)
+    {
+        mProcTable.instanceAddRef(providedInstance);
+        mInstance = webgpu::InstanceHandle::Acquire(&mProcTable, providedInstance);
+    }
+
     WGPUDevice providedDevice =
         reinterpret_cast<WGPUDevice>(attribs.get(EGL_PLATFORM_ANGLE_WEBGPU_DEVICE_ANGLE, 0));
     if (providedDevice)
@@ -70,8 +78,12 @@ egl::Error DisplayWgpu::initialize(egl::Display *display)
 
         mAdapter =
             webgpu::AdapterHandle::Acquire(&mProcTable, mProcTable.deviceGetAdapter(mDevice.get()));
-        mInstance = webgpu::InstanceHandle::Acquire(&mProcTable,
-                                                    mProcTable.adapterGetInstance(mAdapter.get()));
+
+        if (!mInstance)
+        {
+            mInstance = webgpu::InstanceHandle::Acquire(
+                &mProcTable, mProcTable.adapterGetInstance(mAdapter.get()));
+        }
     }
     else
     {
