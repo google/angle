@@ -21098,15 +21098,22 @@ TEST_P(GLSLTest_ES3_InitShaderVariables, NameLookup)
 {
     constexpr char kFS[] = R"(#version 300 es
 out highp vec4 color;
+
+void make_color_active()
+{
+    color.zw = vec2(1.0);
+}
+
 void main()
 {
     highp vec4 color;
     color.x = 1.0;
+    make_color_active();
 }
 )";
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
     ASSERT_GL_NO_ERROR();
 }
 

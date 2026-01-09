@@ -1231,16 +1231,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
 
     collectVariables(root);
-    const bool hlslFragmentOutputsNeedInit =
-        IsOutputHLSL(mOutputType) && mShaderType == GL_FRAGMENT_SHADER &&
-        (compileOptions.initOutputVariables || compileOptions.initFragmentOutputVariables);
-    if (hlslFragmentOutputsNeedInit)
-    {
-        for (sh::ShaderVariable &outputVariable : mOutputVariables)
-        {
-            outputVariable.active = true;
-        }
-    }
 
     if (compileOptions.useUnusedStandardSharedBlocks)
     {
@@ -1273,9 +1263,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // For the MSL output, keep the inactive fragment outputs, but remove them otherwise.
     if (compileOptions.removeInactiveVariables)
     {
-        const bool keepInactiveFragmentOutputsForInit = hlslFragmentOutputsNeedInit;
-        const bool removeFragmentOutputs =
-            mOutputType != SH_MSL_METAL_OUTPUT && !keepInactiveFragmentOutputsForInit;
+        const bool removeFragmentOutputs = mOutputType != SH_MSL_METAL_OUTPUT;
 
         if (!RemoveInactiveInterfaceVariables(
                 this, root, &getSymbolTable(), getAttributes(), getInputVaryings(),
