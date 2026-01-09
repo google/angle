@@ -635,9 +635,10 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     // This error is generated for multiple reasons:
     //
     // - http://anglebug.com/42264926
-    // When feature supportsRenderPassLoadStoreOpNone is disabled, observed below VVL on AMD when
-    // running following test,
-    // dEQP-GLES2.functional.shaders.builtin_variable.pointcoord
+    //
+    // Observed on AMD when running the following test:
+    //
+    //     dEQP-GLES2.functional.shaders.builtin_variable.pointcoord
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      false,
      {
@@ -654,11 +655,10 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
          "prior_command = vkCmdPipelineBarrier",
          "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE",
      }},
-    // When feature supportsRenderPassLoadStoreOpNone is disabled, observed below VVL on SwiftShader
-    // when
-    // running following test,
-    // dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgb8
-    // TraceTest.life_is_strange
+    // Observed on SwiftShader when running the following tests:
+    //
+    //     dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgb8
+    //     TraceTest.life_is_strange
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      false,
      {
@@ -672,12 +672,11 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
          "command = vkCmdPipelineBarrier",
          "prior_command = vkCmdEndRenderingKHR",
      }},
-    // When feature supportsRenderPassLoadStoreOpNone is disabled, observed below VVL on SwiftShader
-    // when
-    // running following test,
-    // ReadOnlyFeedbackLoopTest.ReadOnlyDepthFeedbackLoopDrawThenDepthStencilClear/ES3_Vulkan_SwiftShader
-    // VulkanPerformanceCounterTest.ClearColorBufferAndReadOnlyDepthStencilUsesSingleRenderPass*
-    // VulkanPerformanceCounterTest.ReadOnlyDepthStencilFeedbackLoopUsesSingleRenderPass/ES3_Vulkan_SwiftShader_PreferMonolithicPipelinesOverLibraries_NoMergeProgramPipelineCachesToGlobalCache
+    // Observed on SwiftShader when running the following tests:
+    //
+    //     ReadOnlyFeedbackLoopTest.ReadOnlyDepthFeedbackLoopDrawThenDepthStencilClear/ES3_Vulkan_SwiftShader
+    //     VulkanPerformanceCounterTest.ClearColorBufferAndReadOnlyDepthStencilUsesSingleRenderPass*
+    //     VulkanPerformanceCounterTest.ReadOnlyDepthStencilFeedbackLoopUsesSingleRenderPass/ES3_Vulkan_SwiftShader_PreferMonolithicPipelinesOverLibraries_NoMergeProgramPipelineCachesToGlobalCache
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      false,
      {
@@ -690,6 +689,51 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
          "write_barriers = 0",
          "command = vkCmdWaitEvents",
          "prior_command = vkCmdEndRenderingKHR",
+     }},
+    // Observed on old drivers without dynamic rendering and no support for the S8 format when
+    // running the following test:
+    //
+    //     ClearTextureEXTTest.StencilTexture/ES3_Vulkan
+    //
+    // In this case ANGLE uses LOAD_OP_DONT_CARE and STORE_OP_DONT_CARE for the emulated depth
+    // channel.
+    //
+    // Similarly, in the following test:
+    //
+    //     TraceTest.scary_teacher_3d
+    //
+    // LOAD_OP_LOAD and STORE_OP_STORE are used to preserve the depth channel without the NONE ops.
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     false,
+     {
+         "message_type = RenderPassStoreOpError",
+         "hazard_type = WRITE_AFTER_WRITE",
+         "access = "
+         "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
+         "BIT)",
+         "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
+         "write_barriers = "
+         "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT|VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT("
+         "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
+         "command = vkCmdEndRenderPass",
+         "prior_command = vkCmdPipelineBarrier",
+         "store_op = VK_ATTACHMENT_STORE_OP_DONT_CARE",
+     }},
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     false,
+     {
+         "message_type = RenderPassStoreOpError",
+         "hazard_type = WRITE_AFTER_WRITE",
+         "access = "
+         "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
+         "BIT)",
+         "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
+         "write_barriers = "
+         "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT|VK_"
+         "PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
+         "command = vkCmdEndRenderPass",
+         "prior_command = vkCmdPipelineBarrier",
+         "store_op = VK_ATTACHMENT_STORE_OP_STORE",
      }},
 };
 
