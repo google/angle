@@ -21802,6 +21802,113 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that inactive fragment inout variable compiles fine, with inout locations start from
+// non-zero
+TEST_P(GLSLTest_ES31, InactiveFragmentInout)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    const char kVS[] = R"(#version 310 es
+        in vec3 POSITION;
+        void main()
+        {
+            gl_Position = vec4(POSITION, 1.0);
+        })";
+    const char kFS[] = R"(#version 310 es
+        #extension GL_EXT_shader_framebuffer_fetch : require
+        precision mediump float;
+        precision highp int;
+        layout(location = 1) inout highp vec4 activeVar;
+        layout(location = 2) inout highp vec4 inactiveVar;
+        void main()
+        {
+            activeVar = vec4(0.0, 0.0, 0.0, 1.0);
+        })";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+}
+
+// Test that inactive fragment inout variable used in an unused function compiles fine, with inout
+// locations start from non-zero
+TEST_P(GLSLTest_ES31, InactiveFragmentInoutReferencedInUnusedFunction)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    const char kVS[] = R"(#version 310 es
+        in vec3 POSITION;
+        void main()
+        {
+            gl_Position = vec4(POSITION, 1.0);
+        })";
+    const char kFS[] = R"(#version 310 es
+        #extension GL_EXT_shader_framebuffer_fetch : require
+        precision mediump float;
+        precision highp int;
+        layout(location = 1) inout highp vec4 activeVar;
+        layout(location = 2) inout highp vec4 inactiveVar;
+
+        void unusedFunction() {
+            vec4 unusedVar = inactiveVar;
+        }
+
+        void main()
+        {
+            activeVar = vec4(0.0, 0.0, 0.0, 1.0);
+        })";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+}
+
+// Test that if the inout variable is inactive, its' location attachment content is preserved
+TEST_P(GLSLTest_ES31, testInactiveInoutPreservesAttachmentContent)
+{
+    const unsigned int kWidth  = 2;
+    const unsigned int kHeight = 2;
+
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    const char kFS[] = R"(#version 310 es
+        #extension GL_EXT_shader_framebuffer_fetch : require
+        precision mediump float;
+        precision highp int;
+        layout(location = 1) inout highp vec4 activeVar;
+        layout(location = 2) inout highp vec4 inactiveVar;
+
+        void main()
+        {
+            activeVar = vec4(0.0, 1.0, 0.0, 1.0);
+        })";
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+
+    GLTexture texture1;
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    // Fill texture1 with red color
+    const std::array<GLColor, kHeight * kHeight> texture1Data = {GLColor::red, GLColor::red,
+                                                                 GLColor::red, GLColor::red};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 &texture1Data[0]);
+    GLTexture texture2;
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    // Fill texture2 with blue color
+    const std::array<GLColor, kHeight * kHeight> texture2Data = {GLColor::blue, GLColor::blue,
+                                                                 GLColor::blue, GLColor::blue};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kHeight, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 &texture2Data[0]);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texture1, 0);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, texture2, 0);
+
+    GLenum drawBuffers[] = {GL_NONE, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2};
+    glDrawBuffers(3, drawBuffers);
+    glUseProgram(program);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f);
+
+    // Verify that texture1 changes to green, texture2 remains unchanged.
+    GLFramebuffer verifyTextureFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, verifyTextureFBO);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture1, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
 // Tests pack/unpack emulation in the shader translator.
 class GLSLTest_ES3_PackUnpackEmulation : public GLSLTest_ES3
 {
