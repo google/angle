@@ -233,8 +233,7 @@ cl_int SetContextDestructorCallback(cl_context context,
                                                                   void *user_data),
                                     void *user_data)
 {
-    WARN_NOT_SUPPORTED(SetContextDestructorCallback);
-    return CL_INVALID_OPERATION;
+    CL_RETURN_ERROR(context->cast<Context>().setDestructorCallback(pfn_notify, user_data));
 }
 
 cl_command_queue CreateCommandQueueWithProperties(cl_context context,
