@@ -387,6 +387,7 @@ vars = {
   'checkout_angle_restricted_trace_plants_vs_zombies_2': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_plants_vs_zombies_heroes': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_pokemon_go': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_pokemon_go_combat': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_pokemon_masters_ex': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_pokemon_unite': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_poppy_playtime': 'checkout_angle_restricted_traces',
@@ -3718,6 +3719,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_pokemon_go',
+  },
+  'src/tests/restricted_traces/pokemon_go_combat': {
+      'packages': [
+        {
+            'package': 'angle/traces/pokemon_go_combat',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_pokemon_go_combat',
   },
   'src/tests/restricted_traces/pokemon_masters_ex': {
       'packages': [
