@@ -126,7 +126,6 @@
 42266963 WIN NVIDIA OPENGL : PbufferTest.BindTexImageOverwriteNoCrashOnReleaseTexImage/* = SKIP
 42266963 WIN NVIDIA GLES : PbufferTest.UseAsFramebufferColorThenDeferredDestroy/* = SKIP
 42266963 WIN NVIDIA OPENGL : PbufferTest.UseAsFramebufferColorThenDeferredDestroy/* = SKIP
-377537290 WIN D3D11 : ReadPixelsMultisampleTest.DefaultFramebufferPBO/* = SKIP
 234602034 WIN INTEL D3D9 : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 234602034 WIN NVIDIA D3D9 : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 42266127 WIN INTEL OPENGL : StateChangeTestES3.LogicOp/* = SKIP
