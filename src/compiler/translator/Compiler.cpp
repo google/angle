@@ -1293,11 +1293,9 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    // gl_Position is always written in compatibility output mode.
-    // It may have been already initialized among other output variables, in that case we don't
-    // need to initialize it twice.
-    if (mShaderType == GL_VERTEX_SHADER && !mGLPositionInitialized &&
-        (compileOptions.initGLPosition || mOutputType == SH_GLSL_COMPATIBILITY_OUTPUT))
+    // gl_Position may have already been initialized among other output variables, in that case we
+    // don't need to initialize it twice.
+    if (mShaderType == GL_VERTEX_SHADER && !mGLPositionInitialized && compileOptions.initGLPosition)
     {
         if (!initializeGLPosition(root))
         {
@@ -1408,6 +1406,12 @@ bool TCompiler::compile(angle::Span<const char *const> shaderStrings,
     {
         // This should be harmless to do in all cases, but for the moment, do it only conditionally.
         compileOptions.flattenPragmaSTDGLInvariantAll = true;
+    }
+
+    // gl_Position should always be written in GLSL compatibility output mode.
+    if (mOutputType == SH_GLSL_COMPATIBILITY_OUTPUT && mShaderType == GL_VERTEX_SHADER)
+    {
+        compileOptions.initGLPosition = true;
     }
 
     TScopedPoolAllocator scopedAlloc;
