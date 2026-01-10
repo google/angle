@@ -1273,10 +1273,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    bool needInitializeOutputVariables =
+    const bool needInitializeOutputVariables =
         compileOptions.initOutputVariables && mShaderType != GL_COMPUTE_SHADER;
-    needInitializeOutputVariables |=
-        compileOptions.initFragmentOutputVariables && mShaderType == GL_FRAGMENT_SHADER;
     if (needInitializeOutputVariables)
     {
         if (!initializeOutputVariables(root))

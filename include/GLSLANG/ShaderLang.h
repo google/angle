@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 392
+#define ANGLE_SH_VERSION 393
 
 enum ShShaderSpec
 {
@@ -231,7 +231,8 @@ struct ShCompileOptions
     uint64_t unfoldShortCircuit : 1;
 
     // This flag initializes output variables to 0 at the beginning of main().  It is to avoid
-    // undefined behaviors.
+    // undefined behaviors. Additionally, it is intended as a workaround for drivers which get
+    // context lost if gl_FragColor is not written.
     uint64_t initOutputVariables : 1;
 
     // This flag scalarizes vec/ivec/bvec/mat constructor args.  It is intended as a workaround for
@@ -393,10 +394,7 @@ struct ShCompileOptions
     // VK_EXT_transform_feedback extension.
     uint64_t addVulkanXfbExtensionSupportCode : 1;
 
-    // This flag initializes fragment shader's output variables to zero at the beginning of the
-    // fragment shader's main(). It is intended as a workaround for drivers which get context lost
-    // if gl_FragColor is not written.
-    uint64_t initFragmentOutputVariables : 1;
+    uint64_t unused : 1;
 
     // Always write explicit location layout qualifiers for fragment outputs.
     uint64_t explicitFragmentLocations : 1;
