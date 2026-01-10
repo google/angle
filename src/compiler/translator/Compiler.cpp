@@ -436,14 +436,14 @@ TShHandleBase::~TShHandleBase()
 }
 
 TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
-    : mVariablesCollected(false),
-      mGLPositionInitialized(false),
-      mShaderType(type),
+    : mShaderType(type),
       mShaderSpec(spec),
       mOutputType(output),
       mBuiltInFunctionEmulator(),
       mDiagnostics(mInfoSink.info),
       mSourcePath(nullptr),
+      mVariablesCollected(false),
+      mGLPositionInitialized(false),
       mComputeShaderLocalSizeDeclared(false),
       mComputeShaderLocalSize(1),
       mGeometryShaderMaxVertices(-1),
@@ -1273,9 +1273,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    const bool needInitializeOutputVariables =
-        compileOptions.initOutputVariables && mShaderType != GL_COMPUTE_SHADER;
-    if (needInitializeOutputVariables)
+    if (compileOptions.initOutputVariables)
     {
         if (!initializeOutputVariables(root))
         {
@@ -1295,7 +1293,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     // gl_Position may have already been initialized among other output variables, in that case we
     // don't need to initialize it twice.
-    if (mShaderType == GL_VERTEX_SHADER && !mGLPositionInitialized && compileOptions.initGLPosition)
+    if (!mGLPositionInitialized && compileOptions.initGLPosition)
     {
         if (!initializeGLPosition(root))
         {
@@ -1386,6 +1384,36 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     return true;
 }
 
+ShCompileOptions TCompiler::adjustOptions(const ShCompileOptions &compileOptionsIn)
+{
+    ShCompileOptions compileOptions = compileOptionsIn;
+
+    // Apply key workarounds.
+    if (shouldFlattenPragmaStdglInvariantAll())
+    {
+        // This should be harmless to do in all cases, but for the moment, do it only conditionally.
+        compileOptions.flattenPragmaSTDGLInvariantAll = true;
+    }
+
+    // Disable options that are not applicable.
+    if (mShaderType == GL_COMPUTE_SHADER)
+    {
+        compileOptions.initOutputVariables = false;
+    }
+    if (mShaderType != GL_VERTEX_SHADER)
+    {
+        compileOptions.initGLPosition = false;
+    }
+
+    // gl_Position should always be written in GLSL compatibility output mode.
+    if (mOutputType == SH_GLSL_COMPATIBILITY_OUTPUT && mShaderType == GL_VERTEX_SHADER)
+    {
+        compileOptions.initGLPosition = true;
+    }
+
+    return compileOptions;
+}
+
 bool TCompiler::compile(angle::Span<const char *const> shaderStrings,
                         const ShCompileOptions &compileOptionsIn)
 {
@@ -1399,20 +1427,7 @@ bool TCompiler::compile(angle::Span<const char *const> shaderStrings,
         return true;
     }
 
-    ShCompileOptions compileOptions = compileOptionsIn;
-
-    // Apply key workarounds.
-    if (shouldFlattenPragmaStdglInvariantAll())
-    {
-        // This should be harmless to do in all cases, but for the moment, do it only conditionally.
-        compileOptions.flattenPragmaSTDGLInvariantAll = true;
-    }
-
-    // gl_Position should always be written in GLSL compatibility output mode.
-    if (mOutputType == SH_GLSL_COMPATIBILITY_OUTPUT && mShaderType == GL_VERTEX_SHADER)
-    {
-        compileOptions.initGLPosition = true;
-    }
+    const ShCompileOptions compileOptions = adjustOptions(compileOptionsIn);
 
     TScopedPoolAllocator scopedAlloc;
     TIntermBlock *root = compileTreeImpl(shaderStrings, compileOptions);
