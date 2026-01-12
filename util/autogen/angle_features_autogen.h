@@ -278,7 +278,6 @@ enum class Feature
     ReapplyUBOBindingsAfterUsingBinaryProgram,
     RecycleVkEvent,
     RegenerateStructNames,
-    RejectWebglShadersWithUndefinedBehavior,
     RemoveDynamicIndexingOfSwizzledVector,
     RemoveInvariantAndCentroidForESSL3,
     RequireGpuFamily2,

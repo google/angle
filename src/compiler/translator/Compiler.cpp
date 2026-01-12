@@ -478,9 +478,8 @@ bool TCompiler::shouldLimitTypeSizes() const
     // around int-size limits (such as 2GB).  The limits are generously large enough that no real
     // shader should ever hit it.
     //
-    // The size check does not take std430 into account, so this is limited to WebGL and shaders
-    // up to ES3.
-    return mShaderVersion <= 300;
+    // The size check does not take std430 into account as it is intended for WebGL shaders.
+    return mCompileOptions.rejectWebglShadersWithLargeVariables;
 }
 
 bool TCompiler::Init(const ShBuiltInResources &resources)

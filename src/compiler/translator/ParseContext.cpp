@@ -1442,20 +1442,6 @@ unsigned int TParseContext::checkIsValidArraySize(const TSourceLoc &line, TInter
         return 1u;
     }
 
-    if (IsOutputHLSL(getOutputType()))
-    {
-        // The size of arrays is restricted here to prevent issues further down the
-        // compiler/translator/driver stack. Shader Model 5 generation hardware is limited to
-        // 4096 registers so this should be reasonable even for aggressively optimizable code.
-        const unsigned int sizeLimit = 65536;
-
-        if (size > sizeLimit)
-        {
-            error(line, "array size too large", "");
-            return 1u;
-        }
-    }
-
     return size;
 }
 

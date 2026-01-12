@@ -647,11 +647,8 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
         options.limitExpressionComplexity  = true;
         options.enforcePackingRestrictions = true;
         options.initSharedVariables        = true;
-
-        if (context->getFrontendFeatures().rejectWebglShadersWithUndefinedBehavior.enabled)
-        {
-            options.rejectWebglShadersWithUndefinedBehavior = true;
-        }
+        options.rejectWebglShadersWithLargeVariables    = true;
+        options.rejectWebglShadersWithUndefinedBehavior = true;
     }
     else if (!context->isWebGL())
     {

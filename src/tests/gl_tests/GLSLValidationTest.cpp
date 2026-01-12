@@ -79,14 +79,7 @@ class WebGL2GLSLValidationTest : public GLSLValidationTest_ES3
     void testInfiniteLoop(const char *fs)
     {
         const CompiledShader &shader = compile(GL_FRAGMENT_SHADER, fs);
-        if (getEGLWindow()->isFeatureEnabled(Feature::RejectWebglShadersWithUndefinedBehavior))
-        {
-            EXPECT_FALSE(shader.success());
-        }
-        else
-        {
-            EXPECT_TRUE(shader.success());
-        }
+        EXPECT_FALSE(shader.success());
         reset();
     }
 };
@@ -2420,7 +2413,7 @@ void main()
 // SPIR-V generator that made a copy of the array to pass to the function, by decomposing and
 // reconstructing it (in the absence of OpCopyLogical), but the reconstruction instruction has a
 // length higher than can fit in SPIR-V.
-TEST_P(GLSLValidationTest_ES3, LargeInterfaceBlockArrayPassedToFunction)
+TEST_P(WebGL2GLSLValidationTest, LargeInterfaceBlockArrayPassedToFunction)
 {
     constexpr char kFS[] = R"(#version 300 es
 precision highp float;
@@ -2439,7 +2432,7 @@ void main() {
 }
 
 // Similar to LargeInterfaceBlockArrayPassedToFunction, but the array is nested in a struct.
-TEST_P(GLSLValidationTest_ES3, LargeInterfaceBlockNestedArrayPassedToFunction)
+TEST_P(WebGL2GLSLValidationTest, LargeInterfaceBlockNestedArrayPassedToFunction)
 {
     constexpr char kFS[] = R"(#version 300 es
 precision highp float;
@@ -2460,7 +2453,7 @@ void main() {
 
 // Similar to LargeInterfaceBlockArrayPassedToFunction, but the large array is copied to a local
 // variable instead.
-TEST_P(GLSLValidationTest_ES3, LargeInterfaceBlockArrayCopiedToLocal)
+TEST_P(WebGL2GLSLValidationTest, LargeInterfaceBlockArrayCopiedToLocal)
 {
     constexpr char kFS[] = R"(#version 300 es
 precision highp float;
@@ -2475,7 +2468,7 @@ void main() {
 }
 
 // Similar to LargeInterfaceBlockArrayCopiedToLocal, but the array is nested in a struct
-TEST_P(GLSLValidationTest_ES3, LargeInterfaceBlockNestedArrayCopiedToLocal)
+TEST_P(WebGL2GLSLValidationTest, LargeInterfaceBlockNestedArrayCopiedToLocal)
 {
     constexpr char kFS[] = R"(#version 300 es
 precision highp float;
@@ -2491,7 +2484,7 @@ void main() {
 }
 
 // Test that too large varyings are rejected.
-TEST_P(GLSLValidationTest_ES3, LargeArrayVarying)
+TEST_P(WebGL2GLSLValidationTest, LargeArrayVarying)
 {
     constexpr char kFS[] = R"(#version 300 es
 precision highp float;
@@ -2504,8 +2497,21 @@ void main() {
                   "'a' : Size of declared private variable exceeds implementation-defined limit");
 }
 
+// Test that too large array, where cast to signed int would produce negative sizes, does not crash.
+TEST_P(WebGL2GLSLValidationTest, LargeArrayUintMaxSize)
+{
+    constexpr char kFS[] = R"(#version 300 es
+int rr[~1U];
+out int o;
+void main() {
+    o = rr[1];
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'rr' : Size of declared variable exceeds implementation-defined limit");
+}
+
 // Test that too large color outputs are rejected
-TEST_P(GLSLValidationTest_ES3, LargeColorOutput)
+TEST_P(WebGL2GLSLValidationTest, LargeColorOutput)
 {
     GLint maxDrawBuffers = 0;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
@@ -2525,7 +2531,7 @@ void main()
 }
 
 // Test that too large color outputs are rejected
-TEST_P(GLSLValidationTest_ES3, LargeColorOutputWithLocation)
+TEST_P(WebGL2GLSLValidationTest, LargeColorOutputWithLocation)
 {
     GLint maxDrawBuffers = 0;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);

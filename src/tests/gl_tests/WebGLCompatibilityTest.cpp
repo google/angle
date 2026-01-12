@@ -5384,10 +5384,9 @@ TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionLossyDecode)
 // This is an implementation-defined limit - crbug.com/1220237 .
 TEST_P(WebGLCompatibilityTest, ValidateArraySizes)
 {
-    // Note: on macOS with ANGLE's OpenGL backend, getting anywhere
-    // close to this limit causes pathologically slow shader
-    // compilation in the driver. For the "ok" case, therefore, use a
-    // fairly small array.
+    // Note: on macOS/Intel with ANGLE's OpenGL backend, loops are not used to initialize arrays, so
+    // getting anywhere close to this limit results in gigantic shaders that are too slow to
+    // compile. For the "ok" case, therefore, use a fairly small array.
     constexpr char kVSArrayOK[] =
         R"(varying vec4 color;
 const int array_size = 500;
@@ -5448,10 +5447,9 @@ void main()
 // This is an implementation-defined limit - crbug.com/1220237 .
 TEST_P(WebGLCompatibilityTest, ValidateStructSizes)
 {
-    // Note: on macOS with ANGLE's OpenGL backend, getting anywhere
-    // close to this limit causes pathologically slow shader
-    // compilation in the driver. For this reason, only perform a
-    // negative test.
+    // Note: on macOS/Intel with ANGLE's OpenGL backend, loops are not used to initialize arrays, so
+    // getting anywhere close to this limit results in gigantic shaders that are too slow to
+    // compile. For this reason, only perform a negative test.
     constexpr char kFSStructTooLarge[] =
         R"(precision mediump float;
 struct Light {
@@ -5938,7 +5936,7 @@ TEST_P(WebGL2CompatibilityTest, RenderToLevelsOfSampledTexture)
 }
 
 // Reject attempts to allocate too-large variables in shaders.
-// This is an implementation-defined limit - crbug.com/1220237 .
+// This is an implementation-defined limit - http://crbug.com/40056230.
 TEST_P(WebGL2CompatibilityTest, ValidateTypeSizes)
 {
     constexpr char kFSArrayBlockTooLarge[] = R"(#version 300 es
@@ -5994,7 +5992,7 @@ void main()
 }
 
 // Ensure that new type size validation code added for
-// crbug.com/1220237 does not crash.
+// http://crbug.com/40056230 does not crash.
 TEST_P(WebGL2CompatibilityTest, ValidatingTypeSizesShouldNotCrash)
 {
     constexpr char kFS1[] = R"(#version 300 es

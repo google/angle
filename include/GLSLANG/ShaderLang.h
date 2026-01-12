@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 393
+#define ANGLE_SH_VERSION 394
 
 enum ShShaderSpec
 {
@@ -394,7 +394,9 @@ struct ShCompileOptions
     // VK_EXT_transform_feedback extension.
     uint64_t addVulkanXfbExtensionSupportCode : 1;
 
-    uint64_t unused : 1;
+    // Reject shaders with variables that go above set limits; 2GB for uniform buffer objects, 64KB
+    // for private variables and 16MB for the total size of private variables.
+    uint64_t rejectWebglShadersWithLargeVariables : 1;
 
     // Always write explicit location layout qualifiers for fragment outputs.
     uint64_t explicitFragmentLocations : 1;
