@@ -151,6 +151,7 @@
 385226328 WIN INTEL VULKAN : monopoly_go = SKIP
 413358136 WIN INTEL VULKAN : black_beacon = SKIP
 445419190 WIN INTEL VULKAN : lineage_2m = SKIP
+474664078 WIN INTEL VULKAN : pokemon_go_combat = SKIP
 
 42264147 LINUX NVIDIA NATIVE : car_parking_multiplayer = SKIP
 42264759 LINUX NVIDIA NATIVE : pubg_mobile_battle_royale = SKIP
