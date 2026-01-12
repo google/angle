@@ -279,7 +279,6 @@ enum class Feature
     RecreateMipmapLevelsBeforeGenerate,
     RecycleVkEvent,
     RegenerateStructNames,
-    RejectWebglShadersWithUndefinedBehavior,
     RemoveDynamicIndexingOfSwizzledVector,
     RemoveInvariantAndCentroidForESSL3,
     RequireGpuFamily2,

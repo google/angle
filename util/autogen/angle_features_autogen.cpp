@@ -279,7 +279,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::RecreateMipmapLevelsBeforeGenerate, "recreateMipmapLevelsBeforeGenerate"},
     {Feature::RecycleVkEvent, "recycleVkEvent"},
     {Feature::RegenerateStructNames, "regenerateStructNames"},
-    {Feature::RejectWebglShadersWithUndefinedBehavior, "rejectWebglShadersWithUndefinedBehavior"},
     {Feature::RemoveDynamicIndexingOfSwizzledVector, "removeDynamicIndexingOfSwizzledVector"},
     {Feature::RemoveInvariantAndCentroidForESSL3, "removeInvariantAndCentroidForESSL3"},
     {Feature::RequireGpuFamily2, "requireGpuFamily2"},
