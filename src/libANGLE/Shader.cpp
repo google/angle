@@ -640,7 +640,7 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
 
     // Add default options to WebGL shaders to prevent unexpected behavior during
     // compilation.
-    if (context->isWebGL())
+    if (context->isWebGL() || context->isHardenedContext())
     {
         options.initGLPosition             = true;
         options.limitCallStackDepth        = true;
@@ -653,7 +653,7 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
             options.rejectWebglShadersWithUndefinedBehavior = true;
         }
     }
-    else
+    else if (!context->isWebGL())
     {
         // Per https://github.com/KhronosGroup/WebGL/pull/3278 gl_BaseVertex/gl_BaseInstance are
         // removed from WebGL

@@ -357,6 +357,47 @@ void main()
 class WebGL2CompatibilityTest : public WebGLCompatibilityTest
 {};
 
+class HardenedContextTest : public ANGLETest<>
+{
+  protected:
+    EGLContext setupHardenedContext()
+    {
+        EGLWindow *window                = getEGLWindow();
+        const EGLDisplay display         = window->getDisplay();
+        const EGLConfig config           = window->getConfig();
+        const EGLSurface surface         = window->getSurface();
+        const EGLint contextAttributes[] = {
+            EGL_CONTEXT_MAJOR_VERSION_KHR,
+            GetParam().majorVersion,
+            EGL_CONTEXT_MINOR_VERSION_KHR,
+            GetParam().minorVersion,
+            EGL_CONTEXT_HARDENED_ANGLE,
+            EGL_TRUE,
+            EGL_NONE,
+        };
+
+        mOriginalContext = eglGetCurrentContext();
+
+        EGLContext context = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttributes);
+        EXPECT_NE(context, EGL_NO_CONTEXT);
+        eglMakeCurrent(display, surface, surface, context);
+        return context;
+    }
+
+    void destroyHardenedContext(EGLContext context)
+    {
+        EGLWindow *window        = getEGLWindow();
+        const EGLDisplay display = window->getDisplay();
+        const EGLSurface surface = window->getSurface();
+
+        eglMakeCurrent(display, surface, surface, mOriginalContext);
+        eglDestroyContext(display, context);
+    }
+
+  private:
+    EGLContext mOriginalContext = EGL_NO_CONTEXT;
+};
+
 // Context creation would fail if EGL_ANGLE_create_context_webgl_compatibility was not available so
 // the GL extension should always be present
 TEST_P(WebGLCompatibilityTest, ExtensionStringExposed)
@@ -5922,6 +5963,36 @@ void main()
     EXPECT_EQ(0u, program);
 }
 
+// Similar to WebGL2CompatibilityTest.ValidateTypeSizes, but ensure the same validation is done in
+// non-webgl contexts with the EGL_CONTEXT_HARDENED_ANGLE flag.
+TEST_P(HardenedContextTest, ValidateTypeSizes)
+{
+    constexpr char kFSArrayBlockTooLarge[] = R"(#version 300 es
+precision mediump float;
+// 1 + the maximum size this implementation allows.
+uniform LargeArrayBlock {
+    vec4 large_array[134217729];
+};
+
+out vec4 out_FragColor;
+
+void main()
+{
+    if (large_array[1].x == 2.0)
+        out_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    else
+        out_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+}
+)";
+
+    EGLContext hardenedContext = setupHardenedContext();
+
+    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFSArrayBlockTooLarge);
+    EXPECT_EQ(0u, program);
+
+    destroyHardenedContext(hardenedContext);
+}
+
 // Ensure that new type size validation code added for
 // crbug.com/1220237 does not crash.
 TEST_P(WebGL2CompatibilityTest, ValidatingTypeSizesShouldNotCrash)
@@ -6966,4 +7037,7 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLCompatibilityTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2CompatibilityTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2CompatibilityTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(HardenedContextTest);
+ANGLE_INSTANTIATE_TEST_ES3(HardenedContextTest);
 }  // namespace angle
