@@ -749,6 +749,10 @@ class TParseContext : angle::NonCopyable
     bool parseTessControlShaderOutputLayoutQualifier(const TTypeQualifier &typeQualifier);
     bool parseTessEvaluationShaderInputLayoutQualifier(const TTypeQualifier &typeQualifier);
 
+    void checkVariableSize(const TSourceLoc &line,
+                           const ImmutableString &identifier,
+                           const TType *type);
+
     void sizeUnsizedArrayTypes(uint32_t arraySize);
 
     enum class ControlFlowType
@@ -866,16 +870,16 @@ class TParseContext : angle::NonCopyable
     int mMinProgramTextureGatherOffset;
     int mMaxProgramTextureGatherOffset;
 
-    // keep track of clip/cull distance redeclaration, accessed indices, etc so that gl_ClipDistance
+    // Keep track of clip/cull distance redeclaration, accessed indices, etc so that gl_ClipDistance
     // and gl_CullDistance can be validated and sized at the end of compilation.
     int mMaxCombinedClipAndCullDistances;
     ClipCullDistanceInfo mClipDistanceInfo;
     ClipCullDistanceInfo mCullDistanceInfo;
 
-    // keep track of local group size declared in layout. It should be declared only once.
+    // Keep track of local group size declared in layout. It should be declared only once.
     bool mComputeShaderLocalSizeDeclared;
     sh::WorkGroupSize mComputeShaderLocalSize;
-    // keep track of number of views declared in layout.
+    // Keep track of number of views declared in layout.
     int mNumViews;
     int mMaxNumViews;
     int mMaxImageUnits;
@@ -890,7 +894,7 @@ class TParseContext : angle::NonCopyable
     int mMaxFunctionParameters;
     int mMaxCallStackDepth;
 
-    // keeps track of whether any of the built-ins that can be redeclared (see
+    // Keeps track of whether any of the built-ins that can be redeclared (see
     // IsRedeclarableBuiltIn()) has been marked as invariant/precise before the possible
     // redeclaration.
     //
@@ -900,15 +904,18 @@ class TParseContext : angle::NonCopyable
     // and there are no known users.
     TUnorderedMap<TQualifier, bool> mBuiltInQualified;
 
-    // keeps track whether we are declaring / defining a function
+    // Keeps track whether we are declaring / defining a function
     bool mDeclaringFunction;
 
-    // keeps track whether we are declaring / defining the function main().
+    // Keeps track whether we are declaring / defining the function main().
     bool mDeclaringMain;
     const TFunction *mMainFunction;
     // Whether `return` has been observed in `main()`.  Used to validate barrier() in tessellation
     // control shaders which are not allowed after `return`.
     bool mIsReturnVisitedInMain;
+    // Keeps track of the total size of shader-private variables, if validating that this size
+    // should not exceed a sensible threshold.
+    angle::base::CheckedNumeric<size_t> mTotalPrivateVariablesSize;
 
     // Track state related to control flow, used for various validation:
     //

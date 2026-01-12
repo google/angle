@@ -45,6 +45,15 @@ namespace
 {
 const int kWebGLMaxStructNesting = 4;
 
+// Arbitrarily enforce that all types declared with a size in bytes of over 2 GB will cause
+// compilation failure.
+//
+// For local and global variables, the limit is much lower (64KB) as that much memory won't fit in
+// the GPU registers anyway.
+constexpr size_t kWebGLMaxVariableSizeInBytes        = static_cast<size_t>(2) * 1024 * 1024 * 1024;
+constexpr size_t kWebGLMaxPrivateVariableSizeInBytes = static_cast<size_t>(64) * 1024;
+constexpr size_t kWebGLMaxTotalPrivateVariableSizeInBytes = static_cast<size_t>(16) * 1024 * 1024;
+
 bool ShouldEnforceESSL100LoopAndIndexingLimitations(ShShaderSpec spec,
                                                     int shaderVersion,
                                                     const ShCompileOptions &compileOptions)
@@ -369,6 +378,58 @@ bool ValidateFragColorAndFragData(GLenum shaderType,
 bool IsESSL100ConstantExpression(TIntermNode *node)
 {
     return node->getAsConstantUnion() != nullptr && node->getAsTyped()->getQualifier() == EvqConst;
+}
+
+// Calculate the size of a variable for validation purposes.  If the variable is a UBO, add padding
+// that makes the calculated size _at least_ as large as std140 requires.  Given the limits are
+// arbitrary and overly large, there is no need to be precise about this calculation as long as the
+// calculated size is an overestimation of the real size (which could be, by a small amount).
+angle::base::CheckedNumeric<size_t> CalculateVariableSize(const TType *type, bool isStd140)
+{
+    constexpr size_t kVec4Size = sizeof(float) * 4;
+
+    if (type->isArray())
+    {
+        TType elementType = *type;
+        elementType.toArrayElementType();
+        angle::base::CheckedNumeric<size_t> elementSize =
+            CalculateVariableSize(&elementType, isStd140);
+
+        return elementSize * type->getArraySizeProduct();
+    }
+
+    if (type->getBasicType() == EbtStruct)
+    {
+        const TStructure *structure                   = type->getStruct();
+        angle::base::CheckedNumeric<size_t> totalSize = 0;
+        for (const TField *field : structure->fields())
+        {
+            const TType *fieldType = field->type();
+            totalSize += CalculateVariableSize(fieldType, isStd140);
+        }
+        return totalSize;
+    }
+
+    if (type->isMatrix())
+    {
+        if (isStd140)
+        {
+            // Ignore row vs column major, and get the biggest size of the two possibilities as a
+            // possibly slight overestimation.  Note that the size according to std140 is either
+            // rows times vec4 or cols times vec4 based on how the matrix is laid out.
+            return std::max(type->getRows(), type->getCols()) * kVec4Size;
+        }
+        else
+        {
+            return type->getRows() * type->getCols() * sizeof(float);
+        }
+    }
+
+    // For vectors and scalars, return the size of a vec4 for std140.  This is a slight
+    // overestimation.  If this is the element of an array though, it's accurate (which is why it's
+    // a slight overestimation, e.g. the size of a large array of a scalar type is not
+    // overestimated).
+    return isStd140 ? kVec4Size : type->getNominalSize() * sizeof(float);
 }
 }  // namespace
 
@@ -1604,6 +1665,92 @@ void TParseContext::checkDeclarationIsValidArraySize(const TSourceLoc &line,
     }
 }
 
+void TParseContext::checkVariableSize(const TSourceLoc &line,
+                                      const ImmutableString &identifier,
+                                      const TType *type)
+{
+    // Prevent unrealistically large variable sizes in shaders.  This works around driver bugs
+    // around int-size limits (such as 2GB).  The limits are generously large enough that no real
+    // shader should ever hit it.
+    //
+    // The size check does not take std430 into account as it is intended for WebGL shaders.  For
+    // the same reason, other shader stages than vertex/fragment are ignored as defer-sized
+    // variables e.g. in geometry shaders are not handled.
+    //
+    // Additionally, if the shader has already failed compilation, do not validate the type sizes.
+    // For example, if previously an error is generated due to too-deep struct nesting the
+    // calculation here could overflow the stack if performed.
+    if (!mCompileOptions.rejectWebglShadersWithLargeVariables || numErrors() > 0 ||
+        (mShaderType != GL_VERTEX_SHADER && mShaderType != GL_FRAGMENT_SHADER))
+    {
+        return;
+    }
+
+    // Note: the only allowed interface block in webgl shaders is UBOs in std140 mode, so the size
+    // is unconditionally calculated with std140 rules if the variable is an interface block.
+    // Uniform variables are treated the same way as UBOs, as they are often packed the same way
+    // later on.
+    const size_t variableSize =
+        CalculateVariableSize(type, type->isInterfaceBlock() || type->getQualifier() == EvqUniform)
+            .ValueOrDefault(std::numeric_limits<size_t>::max());
+    if (variableSize > kWebGLMaxVariableSizeInBytes)
+    {
+        error(line, "Size of declared variable exceeds implementation-defined limit", identifier);
+        return;
+    }
+
+    switch (type->getQualifier())
+    {
+        // List of all types that need to be limited (for example because they cause overflows
+        // in drivers, or create trouble for the SPIR-V gen as the number of an instruction's
+        // arguments cannot be more than 64KB (see OutputSPIRVTraverser::cast)).
+
+        // Local/global variables
+        case EvqTemporary:
+        case EvqGlobal:
+        case EvqConst:
+
+        // Function arguments
+        case EvqParamIn:
+        case EvqParamOut:
+        case EvqParamInOut:
+        case EvqParamConst:
+
+        // Varyings
+        case EvqVaryingIn:
+        case EvqVaryingOut:
+        case EvqSmoothOut:
+        case EvqFlatOut:
+        case EvqNoPerspectiveOut:
+        case EvqCentroidOut:
+        case EvqSampleOut:
+        case EvqNoPerspectiveCentroidOut:
+        case EvqNoPerspectiveSampleOut:
+        case EvqSmoothIn:
+        case EvqFlatIn:
+        case EvqNoPerspectiveIn:
+        case EvqCentroidIn:
+        case EvqNoPerspectiveCentroidIn:
+        case EvqNoPerspectiveSampleIn:
+        case EvqVertexOut:
+        case EvqFragmentIn:
+        case EvqPerVertexIn:
+        case EvqPerVertexOut:
+
+            if (variableSize > kWebGLMaxPrivateVariableSizeInBytes)
+            {
+                error(line,
+                      "Size of declared private variable exceeds implementation-defined limit",
+                      identifier);
+                return;
+            }
+            mTotalPrivateVariablesSize += variableSize;
+            break;
+        default:
+            break;
+    }
+}
+
 // Do some simple checks that are shared between all variable declarations,
 // and update the symbol table.
 //
@@ -1846,6 +1993,8 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
 
     if (!checkIsNonVoid(line, identifier, type->getBasicType()))
         return false;
+
+    checkVariableSize(line, identifier, type);
 
     // Declare the variable in IR
     declareIRVariable(*variable, sized);
@@ -5525,6 +5674,8 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
     TIntermBlock *functionBody,
     const TSourceLoc &location)
 {
+    ASSERT(functionPrototype->getFunction() == mCurrentFunction);
+
     // Undo push at end of parseFunctionDefinitionHeader() below for ESSL1.00 case
     if (mFunctionBodyNewScope)
     {
@@ -5535,15 +5686,18 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
     // Check that non-void functions have at least one return statement.
     if (mCurrentFunction->getReturnType().getBasicType() != EbtVoid && !mFunctionReturnsValue)
     {
-        error(location, "Function does not return a value",
-              functionPrototype->getFunction()->name());
+        error(location, "Function does not return a value", mCurrentFunction->name());
     }
     if (mCompileOptions.limitExpressionComplexity &&
-        functionPrototype->getFunction()->getParamCount() >
-            static_cast<unsigned int>(mMaxFunctionParameters))
+        mCurrentFunction->getParamCount() > static_cast<unsigned int>(mMaxFunctionParameters))
     {
-        error(location, "Function has too many parameters",
-              functionPrototype->getFunction()->name());
+        error(location, "Function has too many parameters", mCurrentFunction->name());
+    }
+
+    for (size_t paramIndex = 0; paramIndex < mCurrentFunction->getParamCount(); ++paramIndex)
+    {
+        const TVariable *param = mCurrentFunction->getParam(paramIndex);
+        checkVariableSize(functionPrototype->getLine(), param->name(), &param->getType());
     }
 
     if (functionBody == nullptr)
@@ -5555,7 +5709,6 @@ TIntermFunctionDefinition *TParseContext::addFunctionDefinition(
         new TIntermFunctionDefinition(functionPrototype, functionBody);
     functionNode->setLine(location);
 
-    ASSERT(functionPrototype->getFunction() == mCurrentFunction);
     if (mDeclaringMain)
     {
         mMainFunction = mCurrentFunction;
@@ -9797,6 +9950,17 @@ bool TParseContext::postParseChecks()
     }
 
     ValidateFragColorAndFragData(mShaderType, mShaderVersion, symbolTable, mDiagnostics);
+
+    if (mCompileOptions.rejectWebglShadersWithLargeVariables)
+    {
+        if (mTotalPrivateVariablesSize.ValueOrDefault(std::numeric_limits<size_t>::max()) >
+            kWebGLMaxTotalPrivateVariableSizeInBytes)
+        {
+            error(TSourceLoc{},
+                  "Total size of declared private variables exceeds implementation-defined limit",
+                  "");
+        }
+    }
 
     if (mCompileOptions.rejectWebglShadersWithUndefinedBehavior)
     {

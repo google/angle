@@ -100,8 +100,6 @@ angle_translator_sources = [
   "src/compiler/translator/ValidateGlobalInitializer.h",
   "src/compiler/translator/ValidateOutputs.cpp",
   "src/compiler/translator/ValidateOutputs.h",
-  "src/compiler/translator/ValidateTypeSizeLimitations.cpp",
-  "src/compiler/translator/ValidateTypeSizeLimitations.h",
   "src/compiler/translator/ValidateVaryingLocations.cpp",
   "src/compiler/translator/ValidateVaryingLocations.h",
   "src/compiler/translator/VariablePacker.cpp",

@@ -27,7 +27,6 @@
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/SizeClipCullDistance.h"
 #include "compiler/translator/ValidateOutputs.h"
-#include "compiler/translator/ValidateTypeSizeLimitations.h"
 #include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/VariablePacker.h"
 #include "compiler/translator/ir/src/compile.h"
@@ -470,16 +469,6 @@ bool TCompiler::shouldRunLoopAndIndexingValidation(const ShCompileOptions &compi
     // of ESSL 1.00 as in Appendix A of the spec).
     return (IsWebGLBasedSpec(mShaderSpec) && mShaderVersion == 100) ||
            compileOptions.validateLoopIndexing;
-}
-
-bool TCompiler::shouldLimitTypeSizes() const
-{
-    // Prevent unrealistically large variable sizes in shaders.  This works around driver bugs
-    // around int-size limits (such as 2GB).  The limits are generously large enough that no real
-    // shader should ever hit it.
-    //
-    // The size check does not take std430 into account as it is intended for WebGL shaders.
-    return mCompileOptions.rejectWebglShadersWithLargeVariables;
 }
 
 bool TCompiler::Init(const ShBuiltInResources &resources)
@@ -1207,13 +1196,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
-    }
-
-    // Run after RemoveUnreferencedVariables, validate that the shader does not have excessively
-    // large variables.
-    if (shouldLimitTypeSizes() && !ValidateTypeSizeLimitations(root, &mSymbolTable, &mDiagnostics))
-    {
-        return false;
     }
 
     GetGlobalPoolAllocator()->lock();
