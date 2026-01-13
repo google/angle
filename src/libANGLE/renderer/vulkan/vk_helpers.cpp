@@ -11353,16 +11353,6 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
         contextVk->addGarbage(&stagingView);
     }
 
-    if (!canTransferFrom())
-    {
-        ASSERT(useTileMemory());
-        if (useTileMemory())
-        {
-            ANGLE_TRY(fallbackFromTileMemory(contextVk));
-            ASSERT(canTransferFrom());
-        }
-    }
-
     if (isMultisampled)
     {
         CommandResources resources;
@@ -11394,6 +11384,16 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
         srcSubresource.baseArrayLayer = 0;
         srcSubresource.layerCount     = 1;
         srcSubresource.mipLevel       = 0;
+    }
+
+    if (!src->canTransferFrom())
+    {
+        ASSERT(src->useTileMemory());
+        if (src->useTileMemory())
+        {
+            ANGLE_TRY(src->fallbackFromTileMemory(contextVk));
+            ASSERT(src->canTransferFrom());
+        }
     }
 
     // If PBO and if possible, copy directly on the GPU.
