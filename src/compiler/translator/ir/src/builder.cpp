@@ -43,6 +43,8 @@ ffi::BuildOptions MakeBuildOptions(const ShCompileOptions &options)
 {
     return ffi::BuildOptions{
         .initialize_uninitialized_variables = options.initializeUninitializedLocals,
+        .initializer_allowed_on_non_const_global_variables =
+            !options.forceDeferNonConstGlobalInitializers,
     };
 }
 

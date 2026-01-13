@@ -947,12 +947,15 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     bool enableNonConstantInitializers = IsExtensionEnabled(
         mExtensionBehavior, TExtension::EXT_shader_non_constant_global_initializers);
 
-    if (enableNonConstantInitializers &&
-        !DeferGlobalInitializers(
-            this, root, initializeLocalsAndGlobals && !useIR, canUseLoopsToInitialize,
-            compileOptions.forceDeferNonConstGlobalInitializers, &mSymbolTable))
+    if (!useIR)
     {
-        return false;
+        if (enableNonConstantInitializers &&
+            !DeferGlobalInitializers(
+                this, root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
+                compileOptions.forceDeferNonConstGlobalInitializers, &mSymbolTable))
+        {
+            return false;
+        }
     }
 
     // Create the function DAG.
@@ -1284,19 +1287,22 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         mGLPositionInitialized = true;
     }
 
-    // DeferGlobalInitializers needs to be run before other AST transformations that generate new
-    // statements from expressions. But it's fine to run DeferGlobalInitializers after the above
-    // SplitSequenceOperator and RemoveArrayLengthMethod since they only have an effect on the AST
-    // on ESSL >= 3.00, and the initializers that need to be deferred can only exist in ESSL < 3.00.
-    // Exception: if EXT_shader_non_constant_global_initializers is enabled, we must generate global
-    // initializers before we generate the DAG, since initializers may call functions which must not
-    // be optimized out
-    if (!enableNonConstantInitializers &&
-        !DeferGlobalInitializers(
-            this, root, initializeLocalsAndGlobals && !useIR, canUseLoopsToInitialize,
-            compileOptions.forceDeferNonConstGlobalInitializers, &mSymbolTable))
+    if (!useIR)
     {
-        return false;
+        // DeferGlobalInitializers needs to be run before other AST transformations that generate
+        // new statements from expressions. But it's fine to run DeferGlobalInitializers after the
+        // above SplitSequenceOperator and RemoveArrayLengthMethod since they only have an effect on
+        // the AST on ESSL >= 3.00, and the initializers that need to be deferred can only exist in
+        // ESSL < 3.00.  Exception: if EXT_shader_non_constant_global_initializers is enabled, we
+        // must generate global initializers before we generate the DAG, since initializers may call
+        // functions which must not be optimized out
+        if (!enableNonConstantInitializers &&
+            !DeferGlobalInitializers(
+                this, root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
+                compileOptions.forceDeferNonConstGlobalInitializers, &mSymbolTable))
+        {
+            return false;
+        }
     }
 
     if (initializeLocalsAndGlobals)

@@ -1101,14 +1101,20 @@ impl Builder {
     pub fn initialize(&mut self, id: VariableId) {
         let value = self.load();
 
-        match value.id {
-            Id::Constant(constant_id) => self.ir.meta.set_variable_initializer(id, constant_id),
-            _ => {
-                self.ir.meta.on_variable_initialized(id);
-                let id = TypedId::from_variable_id(&self.ir.meta, id);
-                self.scope().add_void_instruction(OpCode::Store(id, value))
-            }
-        };
+        // For some generators, non-const global variables cannot have an initializer.
+        let initializer_allowed = self.options.initializer_allowed_on_non_const_global_variables
+            || self.current_function.is_some()
+            || self.ir.meta.get_variable(id).is_const;
+
+        if let Id::Constant(constant_id) = value.id
+            && initializer_allowed
+        {
+            self.ir.meta.set_variable_initializer(id, constant_id);
+        } else {
+            self.ir.meta.on_variable_initialized(id);
+            let id = TypedId::from_variable_id(&self.ir.meta, id);
+            self.scope().add_void_instruction(OpCode::Store(id, value));
+        }
     }
 
     // Flow control helpers.
@@ -2646,6 +2652,8 @@ pub mod ffi {
     struct BuildOptions {
         // Whether uninitialized local and global variables should be initialized to 0 values.
         initialize_uninitialized_variables: bool,
+        // Whether non-const global variables are allowed to have an initializer.
+        initializer_allowed_on_non_const_global_variables: bool,
     }
 
     // The following enums and types must be identical to what's found in BaseTypes.h.  This
