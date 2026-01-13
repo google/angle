@@ -1838,6 +1838,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
 
                 ANGLE_TRY(addMemoryDependencies(&arg));
 
+                // update push constants for image channel info
                 cl_image_format imageFormat = vkMem.getFormat();
                 const VkPushConstantRange *imageDataChannelOrderRange =
                     devProgramData->getImageDataChannelOrderRange(index);
@@ -1890,6 +1891,29 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
 
                 ANGLE_TRY(addMemoryDependencies(&arg));
 
+                // update push constants for image channel info
+                cl_image_format imageFormat = vkMem.getFormat();
+                const VkPushConstantRange *imageDataChannelOrderRange =
+                    devProgramData->getImageDataChannelOrderRange(index);
+                if (imageDataChannelOrderRange != nullptr)
+                {
+                    mComputePassCommands->getCommandBuffer().pushConstants(
+                        kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT,
+                        imageDataChannelOrderRange->offset, imageDataChannelOrderRange->size,
+                        &imageFormat.image_channel_order);
+                }
+
+                const VkPushConstantRange *imageDataChannelDataTypeRange =
+                    devProgramData->getImageDataChannelDataTypeRange(index);
+                if (imageDataChannelDataTypeRange != nullptr)
+                {
+                    mComputePassCommands->getCommandBuffer().pushConstants(
+                        kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT,
+                        imageDataChannelDataTypeRange->offset, imageDataChannelDataTypeRange->size,
+                        &imageFormat.image_channel_data_type);
+                }
+
+                // Update buffer/descriptor info
                 VkBufferView &bufferView           = kernelArgDescSetBuilder.allocBufferView();
                 const vk::BufferView *vkBufferView = nullptr;
                 ANGLE_TRY(vkMem.getBufferView(&vkBufferView));
