@@ -317,7 +317,7 @@ void GL_APIENTRY GL_{name}({params})
 {{
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = {context_getter};
-    {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+    {event_comment}ANGLE_UNSAFE_TODO(EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params}));
 
     if ({valid_context_check})
     {{{packed_gl_enum_conversions}
@@ -342,7 +342,7 @@ void GL_APIENTRY GL_{name}({params})
 {{
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = {context_getter};
-    {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+    {event_comment}ANGLE_UNSAFE_TODO(EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params}));
 
     if ({valid_context_check})
     {{{packed_gl_enum_conversions}
@@ -366,7 +366,7 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
 {{
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = {context_getter};
-    {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+    {event_comment}ANGLE_UNSAFE_TODO(EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params}));
 
     {return_type} returnValue;
     if ({valid_context_check})
@@ -398,7 +398,7 @@ TEMPLATE_GLES_CONTEXT_PRIVATE_ENTRY_POINT_WITH_RETURN = """\
 {{
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = {context_getter};
-    {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+    {event_comment}ANGLE_UNSAFE_TODO(EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params}));
 
     {return_type} returnValue;
     if ({valid_context_check})
@@ -432,7 +432,7 @@ void EGLAPIENTRY EGL_{name}({params})
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     {{
         ANGLE_SCOPED_GLOBAL_LOCK();
-        EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+        ANGLE_UNSAFE_TODO(EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params}));
 
         {packed_gl_enum_conversions}
 
@@ -463,7 +463,7 @@ void EGLAPIENTRY EGL_{name}({params})
     Thread *thread = egl::GetCurrentThread();
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 
-    EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+    ANGLE_UNSAFE_TODO(EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params}));
 
     {packed_gl_enum_conversions}
 
@@ -494,7 +494,7 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
     {return_type} returnValue;
     {{
         {egl_lock}
-        EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+        ANGLE_UNSAFE_TODO(EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params}));
 
         {packed_gl_enum_conversions}
 
@@ -527,7 +527,7 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN_NO_LOCKS = """\
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     {return_type} returnValue;
 
-    EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+    ANGLE_UNSAFE_TODO(EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params}));
 
     {packed_gl_enum_conversions}
 
@@ -552,7 +552,7 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN_NO_LOCKS = """\
 TEMPLATE_CL_ENTRY_POINT_NO_RETURN = """\
 void CL_API_CALL cl{name}({params})
 {{
-    CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+    ANGLE_UNSAFE_TODO(CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params}));
 
     {packed_gl_enum_conversions}
 
@@ -567,7 +567,7 @@ void CL_API_CALL cl{name}({params})
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_ERROR = """\
 cl_int CL_API_CALL cl{name}({params})
 {{{initialization}
-    CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+    ANGLE_UNSAFE_TODO(CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params}));
 
     {packed_gl_enum_conversions}
 
@@ -583,7 +583,7 @@ cl_int CL_API_CALL cl{name}({params})
 TEMPLATE_CL_ENTRY_POINT_WITH_ERRCODE_RET = """\
 {return_type} CL_API_CALL cl{name}({params})
 {{{initialization}
-    CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+    ANGLE_UNSAFE_TODO(CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params}));
 
     {packed_gl_enum_conversions}
 
@@ -605,7 +605,7 @@ TEMPLATE_CL_ENTRY_POINT_WITH_ERRCODE_RET = """\
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_POINTER = """\
 {return_type} CL_API_CALL cl{name}({params})
 {{{initialization}
-    CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+    ANGLE_UNSAFE_TODO(CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params}));
 
     {packed_gl_enum_conversions}
 

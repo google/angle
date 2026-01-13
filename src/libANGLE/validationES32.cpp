@@ -234,7 +234,8 @@ bool ValidateDisablei(const PrivateState &state,
     {
         if (IsIndexedCapBannedWithActivePLS(target))
         {
-            errors->validationErrorF(entryPoint, GL_INVALID_OPERATION, kPLSCapNotAllowed, target);
+            ANGLE_UNSAFE_TODO(errors->validationErrorF(entryPoint, GL_INVALID_OPERATION,
+                                                       kPLSCapNotAllowed, target));
             return false;
         }
     }
@@ -249,7 +250,8 @@ bool ValidateDisablei(const PrivateState &state,
             }
             break;
         default:
-            errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target);
+            ANGLE_UNSAFE_TODO(
+                errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target));
             return false;
     }
     return true;
@@ -320,7 +322,8 @@ bool ValidateEnablei(const PrivateState &state,
     {
         if (IsIndexedCapBannedWithActivePLS(target))
         {
-            errors->validationErrorF(entryPoint, GL_INVALID_OPERATION, kPLSCapNotAllowed, target);
+            ANGLE_UNSAFE_TODO(errors->validationErrorF(entryPoint, GL_INVALID_OPERATION,
+                                                       kPLSCapNotAllowed, target));
             return false;
         }
     }
@@ -335,7 +338,8 @@ bool ValidateEnablei(const PrivateState &state,
             }
             break;
         default:
-            errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target);
+            ANGLE_UNSAFE_TODO(
+                errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target));
             return false;
     }
     return true;
@@ -522,7 +526,8 @@ bool ValidateIsEnabledi(const PrivateState &state,
             }
             break;
         default:
-            errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target);
+            ANGLE_UNSAFE_TODO(
+                errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target));
             return false;
     }
     return true;

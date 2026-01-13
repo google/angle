@@ -38,8 +38,9 @@ class Shader;
 
 #define ANGLE_VALIDATION_ERROR(errorCode, message) \
     context->getMutableErrorSetForValidation()->validationError(entryPoint, errorCode, message)
-#define ANGLE_VALIDATION_ERRORF(errorCode, ...) \
-    context->getMutableErrorSetForValidation()->validationErrorF(entryPoint, errorCode, __VA_ARGS__)
+#define ANGLE_VALIDATION_ERRORF(errorCode, ...)                                     \
+    ANGLE_UNSAFE_TODO(context->getMutableErrorSetForValidation()->validationErrorF( \
+        entryPoint, errorCode, __VA_ARGS__))
 
 void SetRobustLengthParam(const GLsizei *length, GLsizei value);
 bool ValidTextureTarget(const Context *context, TextureType type);
