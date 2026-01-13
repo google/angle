@@ -332,11 +332,15 @@ bool RemoveInvariant(sh::GLenum shaderType,
 {
     if (shaderType == GL_FRAGMENT_SHADER &&
         (IsGLSL420OrNewer(outputType) || IsOutputSPIRV(outputType)))
+    {
         return true;
+    }
 
     if (compileOptions.removeInvariantAndCentroidForESSL3 && shaderVersion >= 300 &&
         shaderType == GL_VERTEX_SHADER)
+    {
         return true;
+    }
 
     return false;
 }
@@ -367,7 +371,9 @@ class [[nodiscard]] TScopedSymbolTableLevel
     ~TScopedSymbolTableLevel()
     {
         while (!mTable->isEmpty())
+        {
             mTable->pop();
+        }
     }
 
   private:
@@ -449,7 +455,9 @@ bool TCompiler::Init(const ShBuiltInResources &resources)
 
     // Generate built-in symbol table.
     if (!initBuiltInSymbolTable(resources))
+    {
         return false;
+    }
 
     mResources = resources;
     setResourceString();
@@ -629,15 +637,14 @@ void TCompiler::setShaderMetadata(const TParseContext &parseContext)
     if (mShaderType == GL_FRAGMENT_SHADER)
     {
         mAdvancedBlendEquations = parseContext.getAdvancedBlendEquations();
-        const std::map<int, ShPixelLocalStorageFormat> &plsFormats =
-            parseContext.pixelLocalStorageFormats();
+        const std::map<int, ShPixelLocalStorageLayout> &plsLayouts =
+            parseContext.pixelLocalStorageLayouts();
         // std::map keys are in sorted order, so the PLS uniform with the largest binding will be at
         // rbegin().
-        mPixelLocalStorageFormats.resize(plsFormats.empty() ? 0 : plsFormats.rbegin()->first + 1,
-                                         ShPixelLocalStorageFormat::NotPLS);
-        for (auto [binding, format] : plsFormats)
+        mPixelLocalStorageLayouts.resize(plsLayouts.empty() ? 0 : plsLayouts.rbegin()->first + 1);
+        for (const auto &[binding, layout] : plsLayouts)
         {
-            mPixelLocalStorageFormats[binding] = format;
+            mPixelLocalStorageLayouts[binding] = layout;
         }
     }
     if (mShaderType == GL_GEOMETRY_SHADER_EXT)
@@ -703,9 +710,7 @@ bool TCompiler::getShaderBinary(const ShHandle compilerHandle,
     gl::BinaryOutputStream stream;
     gl::ShaderType shaderType = gl::FromGLenum<gl::ShaderType>(mShaderType);
     gl::CompiledShaderState state(shaderType);
-    state.buildCompiledShaderState(
-        compilerHandle,
-        mOutputType);
+    state.buildCompiledShaderState(compilerHandle, mOutputType);
 
     stream.writeBytes(
         // NOTE: version api could return a string view.

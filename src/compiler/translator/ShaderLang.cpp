@@ -638,12 +638,12 @@ int GetVertexShaderNumViews(const ShHandle handle)
     return compiler->getNumViews();
 }
 
-const std::vector<ShPixelLocalStorageFormat> *GetPixelLocalStorageFormats(const ShHandle handle)
+const std::vector<ShPixelLocalStorageLayout> *GetPixelLocalStorageLayouts(const ShHandle handle)
 {
     TCompiler *compiler = GetCompilerFromHandle(handle);
     ASSERT(compiler);
 
-    return &compiler->getPixelLocalStorageFormats();
+    return &compiler->getPixelLocalStorageLayouts();
 }
 
 uint32_t GetShaderSpecConstUsageBits(const ShHandle handle)

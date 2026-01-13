@@ -1018,7 +1018,8 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
             break;
         case angle::EntryPoint::GLFramebufferMemorylessPixelLocalStorageANGLE:
             glFramebufferMemorylessPixelLocalStorageANGLE(captures[0].value.GLintVal,
-                                                          captures[1].value.GLenumVal);
+                                                          captures[1].value.GLenumVal,
+                                                          captures[2].value.GLbitfieldVal);
             break;
         case angle::EntryPoint::GLFramebufferParameteri:
             glFramebufferParameteri(captures[0].value.GLenumVal, captures[1].value.GLenumVal,
@@ -1122,7 +1123,8 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
         case angle::EntryPoint::GLFramebufferTexturePixelLocalStorageANGLE:
             glFramebufferTexturePixelLocalStorageANGLE(
                 captures[0].value.GLintVal, gTextureMap[captures[1].value.GLuintVal],
-                captures[2].value.GLintVal, captures[3].value.GLintVal);
+                captures[2].value.GLintVal, captures[3].value.GLintVal,
+                captures[4].value.GLbitfieldVal);
             break;
         case angle::EntryPoint::GLFrontFace:
             glFrontFace(captures[0].value.GLenumVal);

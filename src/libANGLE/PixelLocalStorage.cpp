@@ -227,11 +227,14 @@ void PixelLocalStoragePlane::deinitialize(Context *context)
         mMemoryless     = false;
         mTextureID      = TextureID();
         mTextureObserver.reset();
+        mUsage = GL_NONE;
     }
     ASSERT(isDeinitialized());
 }
 
-void PixelLocalStoragePlane::setMemoryless(Context *context, GLenum internalformat)
+void PixelLocalStoragePlane::setMemoryless(Context *context,
+                                           GLenum internalformat,
+                                           GLbitfield usage)
 {
     deinitialize(context);
     mInternalformat = internalformat;
@@ -239,9 +242,14 @@ void PixelLocalStoragePlane::setMemoryless(Context *context, GLenum internalform
     // The backing texture will get allocated lazily, once we know what dimensions it should be.
     ASSERT(mTextureID.value == 0);
     mTextureImageIndex = ImageIndex::MakeFromType(TextureType::_2D, 0, 0);
+    mUsage             = usage;
 }
 
-void PixelLocalStoragePlane::setTextureBacked(Context *context, Texture *tex, int level, int layer)
+void PixelLocalStoragePlane::setTextureBacked(Context *context,
+                                              Texture *tex,
+                                              int level,
+                                              int layer,
+                                              GLbitfield usage)
 {
     deinitialize(context);
     ASSERT(tex->getImmutableFormat());
@@ -250,6 +258,7 @@ void PixelLocalStoragePlane::setTextureBacked(Context *context, Texture *tex, in
     mTextureID      = tex->id();
     mTextureObserver.bind(tex);
     mTextureImageIndex = ImageIndex::MakeFromType(tex->getType(), level, layer);
+    mUsage             = usage;
 }
 
 void PixelLocalStoragePlane::onSubjectStateChange(angle::SubjectIndex index,
@@ -296,6 +305,8 @@ GLint PixelLocalStoragePlane::getIntegeri(GLenum target) const
                 return isMemoryless() ? 0 : mTextureImageIndex.getLevelIndex();
             case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
                 return isMemoryless() ? 0 : mTextureImageIndex.getLayerIndex();
+            case GL_PIXEL_LOCAL_USAGE_ANGLE:
+                return mUsage;
         }
     }
     // Since GL_NONE == 0, PLS queries all return 0 when the plane is deinitialized.
@@ -344,7 +355,7 @@ void PixelLocalStoragePlane::ensureBackingTextureIfMemoryless(Context *context, 
         static_cast<GLsizei>(tex->getHeight(TextureTarget::_2D, 0)) != plsExtents.height)
     {
         // Call setMemoryless() to release our current data, if any.
-        setMemoryless(context, mInternalformat);
+        setMemoryless(context, mInternalformat, mUsage);
         ASSERT(mTextureID.value == 0);
 
         // Create a new texture that backs the memoryless plane.
