@@ -5785,8 +5785,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsYUVSamplerConversion,
                             mSamplerYcbcrConversionFeatures.samplerYcbcrConversion != VK_FALSE);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFloat16,
-                            mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE);
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderInt8,
                             mShaderFloat16Int8Features.shaderInt8 == VK_TRUE);
 
@@ -6562,9 +6560,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supports16BitStorageBuffer,
                             m16BitStorageFeatures.storageBuffer16BitAccess == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, supports16BitUniformAndStorageBuffer,
-                            m16BitStorageFeatures.uniformAndStorageBuffer16BitAccess == VK_TRUE);
-
     ANGLE_FEATURE_CONDITION(&mFeatures, supports16BitPushConstant,
                             m16BitStorageFeatures.storagePushConstant16 == VK_TRUE);
 
@@ -6759,6 +6754,14 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsAstcDecodeModeRgb9e5,
                             mPhysicalDeviceAstcDecodeFeatures.decodeModeSharedExponent == VK_TRUE &&
                                 mFeatures.supportsAstcDecodeMode.enabled);
+
+    // Disable uniformAndStorageBuffer16BitAccess and supportsShaderFloat16 on Samsung devices
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supports16BitUniformAndStorageBuffer,
+        m16BitStorageFeatures.uniformAndStorageBuffer16BitAccess == VK_TRUE && !isSamsung);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFloat16,
+                            mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE && !isSamsung);
 
     // http://anglebug.com/440941211:
     // Disable the feature on Windows Intel because some shaders using 16-bit floats crash
