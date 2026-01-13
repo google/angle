@@ -112,8 +112,8 @@ fn initialize_with_zeros<'block>(
     let type_id = type_info.get_element_type_id().unwrap();
     let type_info = ir_meta.get_type(type_id);
 
-    match type_info {
-        &Type::Struct(_, ref fields, _) => {
+    match *type_info {
+        Type::Struct(_, ref fields, _) => {
             // For structs, initialize field by field.
             for index in 0..fields.len() {
                 // selected_field = AccessStructField id index
@@ -126,7 +126,7 @@ fn initialize_with_zeros<'block>(
                 block = initialize_with_zeros(ir_meta, block, selected_field, options);
             }
         }
-        &Type::Array(element_id, count) => {
+        Type::Array(element_id, count) => {
             // For arrays, initialize element by element, either with a loop or unrolled.
             let element_type_info = ir_meta.get_type(element_id);
             let is_small_array = count <= 1
@@ -255,7 +255,7 @@ fn make_init_block(
         debug_assert!(
             !type_info.is_image()
                 && !type_info.is_unsized_array()
-                && !variable.built_in.is_some()
+                && variable.built_in.is_none()
                 && !variable.decorations.has(Decoration::Input)
                 && !variable.decorations.has(Decoration::Output)
                 && !variable.decorations.has(Decoration::InputOutput)

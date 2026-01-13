@@ -307,7 +307,7 @@ impl CFGBuilder {
                     // merge block.
                     self.interm_blocks.push(if_block);
                     self.current_block.is_merge_block = true;
-                    self.current_block.block.input = input.map(|id| id.to_register_id());
+                    self.current_block.block.input = input.map(|id| id.as_register_id());
                     None
                 }
             }
@@ -331,7 +331,7 @@ impl CFGBuilder {
                 // If there was a merge parameter, replace the merge input with this id directly.
                 let last_block = self.current_block.block.get_merge_chain_last_block_mut();
                 let terminating_op = last_block.get_terminating_op();
-                let merge_param = if matches!(terminating_op, OpCode::Merge(..)) {
+                if matches!(terminating_op, OpCode::Merge(..)) {
                     let merge_param = terminating_op.get_merge_parameter();
                     last_block.unterminate();
                     merge_param
@@ -340,9 +340,7 @@ impl CFGBuilder {
                     // dead code.
                     self.current_block.new_instructions_are_dead_code = true;
                     None
-                };
-
-                merge_param
+                }
             }
             None => {
                 // The if should be entirely eliminated, as there is nothing to replace it with.
@@ -599,7 +597,7 @@ impl CFGBuilder {
         }
 
         // Expression is not a constant, assume the switch is not no-op.
-        return (true, None);
+        (true, None)
     }
 
     fn end_switch(&mut self) {
@@ -773,12 +771,12 @@ impl Builder {
             util::calculate_function_decl_order(&self.ir.meta, &self.ir.function_entries);
         let function_count = self.ir.function_entries.len();
         // Take all entry blocks out ...
-        let mut function_entries = std::mem::replace(&mut self.ir.function_entries, vec![]);
+        let mut function_entries = std::mem::take(&mut self.ir.function_entries);
         self.ir.function_entries.resize_with(function_count, || None);
         // ... and only place back the ones that are reachable from `main` (i.e. are in the DAG).
         for function_id in function_decl_order {
             let id = function_id.id as usize;
-            self.ir.function_entries[id] = std::mem::replace(&mut function_entries[id], None);
+            self.ir.function_entries[id] = function_entries[id].take();
         }
 
         // `main()` is always reachable from `main()`!
@@ -1722,8 +1720,8 @@ impl Builder {
             (false, false)
         };
 
-        match type_info {
-            &Type::Pointer(type_id) => {
+        match *type_info {
+            Type::Pointer(type_id) => {
                 let array_type_info = self.ir.meta.get_type(type_id);
                 if let &Type::Array(_, size) = array_type_info {
                     // The length is a constant, so push that on the stack.
@@ -1759,7 +1757,7 @@ impl Builder {
                     self.add_instruction(result);
                 }
             }
-            &Type::Array(_, size) => {
+            Type::Array(_, size) => {
                 self.push_constant_int(size as i32);
             }
             _ => panic!("Internal error: length() called on non-array"),
@@ -4024,7 +4022,7 @@ impl BuilderWrapper {
                 .push(Decoration::NumViews(ast_type.layout_qualifier.num_views as u32));
         }
         if ast_type.layout_qualifier.yuv {
-            decorations.decorations.push(Decoration::YUV);
+            decorations.decorations.push(Decoration::Yuv);
         }
         if ast_type.layout_qualifier.noncoherent {
             decorations.decorations.push(Decoration::NonCoherent);
@@ -4300,12 +4298,12 @@ impl BuilderWrapper {
         ast_type: &ffi::ASTType,
         is_declaration_internal: bool,
     ) -> ffi::VariableId {
-        if let Some(built_in) = Self::ast_type_built_in(&ast_type) {
+        if let Some(built_in) = Self::ast_type_built_in(ast_type) {
             let variable_id = self.builder.declare_built_in_variable(
                 built_in,
                 ast_type.type_id.into(),
                 ast_type.precision.into(),
-                Self::ast_type_decorations(&ast_type),
+                Self::ast_type_decorations(ast_type),
             );
 
             if !is_declaration_internal {
@@ -4327,7 +4325,7 @@ impl BuilderWrapper {
                 name,
                 ast_type.type_id.into(),
                 ast_type.precision.into(),
-                Self::ast_type_decorations(&ast_type),
+                Self::ast_type_decorations(ast_type),
             )
         }
         .into()
@@ -4345,7 +4343,7 @@ impl BuilderWrapper {
                 name,
                 ast_type.type_id.into(),
                 ast_type.precision.into(),
-                Self::ast_type_decorations(&ast_type),
+                Self::ast_type_decorations(ast_type),
             )
         }
         .into()
@@ -4392,7 +4390,7 @@ impl BuilderWrapper {
                 params,
                 return_type_id.into(),
                 return_ast_type.precision.into(),
-                Self::ast_type_decorations(&return_ast_type),
+                Self::ast_type_decorations(return_ast_type),
             )
             .into()
     }
@@ -4421,7 +4419,7 @@ impl BuilderWrapper {
                 name,
                 type_id.into(),
                 ast_type.precision.into(),
-                Self::ast_type_decorations(&ast_type),
+                Self::ast_type_decorations(ast_type),
                 Self::function_param_direction(direction),
             )
             .into()

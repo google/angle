@@ -11,7 +11,7 @@ use crate::*;
 // there is no need for forward declarations.  Returns an empty vector if there is recursion.
 pub fn calculate_function_decl_order(
     ir_meta: &IRMeta,
-    function_entries: &Vec<Option<Block>>,
+    function_entries: &[Option<Block>],
 ) -> Vec<FunctionId> {
     // Build the function call graph first.
     let mut call_graph = vec![HashSet::new(); function_entries.len()];
@@ -55,8 +55,7 @@ pub fn calculate_function_decl_order(
     let mut visit_state = vec![VisitState::NotVisited; function_entries.len()];
     let mut visit_stack = vec![(ir_meta.get_main_function_id().unwrap(), VisitOrder::Pre)];
 
-    while !visit_stack.is_empty() {
-        let (function_id, visit) = visit_stack.pop().unwrap();
+    while let Some((function_id, visit)) = visit_stack.pop() {
         let state = &mut visit_state[function_id.id as usize];
 
         match visit {
@@ -144,7 +143,7 @@ pub fn duplicate_block(
 
 fn new_block_to_duplicate(
     context: &mut DuplicateBlockContext,
-    block_variables: &Vec<VariableId>,
+    block_variables: &[VariableId],
     block_input: Option<TypedRegisterId>,
 ) -> Block {
     let mut new_block = Block::new();
@@ -288,48 +287,48 @@ fn duplicate_instructions(
                 OpCode::BuiltIn(built_in_op, mapped_ids!(context, ids))
             }
             &OpCode::Texture(ref texture_op, sampler, coord) => {
-                let texture_op = match texture_op {
-                    &TextureOpCode::Implicit { is_proj, offset } => TextureOpCode::Implicit {
+                let texture_op = match *texture_op {
+                    TextureOpCode::Implicit { is_proj, offset } => TextureOpCode::Implicit {
                         is_proj,
                         offset: offset.map(|id| mapped_id!(context, id)),
                     },
-                    &TextureOpCode::Compare { compare } => {
+                    TextureOpCode::Compare { compare } => {
                         TextureOpCode::Compare { compare: mapped_id!(context, compare) }
                     }
-                    &TextureOpCode::Lod { is_proj, lod, offset } => TextureOpCode::Lod {
+                    TextureOpCode::Lod { is_proj, lod, offset } => TextureOpCode::Lod {
                         is_proj,
                         lod: mapped_id!(context, lod),
                         offset: offset.map(|id| mapped_id!(context, id)),
                     },
-                    &TextureOpCode::CompareLod { compare, lod } => TextureOpCode::CompareLod {
+                    TextureOpCode::CompareLod { compare, lod } => TextureOpCode::CompareLod {
                         compare: mapped_id!(context, compare),
                         lod: mapped_id!(context, lod),
                     },
-                    &TextureOpCode::Bias { is_proj, bias, offset } => TextureOpCode::Bias {
+                    TextureOpCode::Bias { is_proj, bias, offset } => TextureOpCode::Bias {
                         is_proj,
                         bias: mapped_id!(context, bias),
                         offset: offset.map(|id| mapped_id!(context, id)),
                     },
-                    &TextureOpCode::CompareBias { compare, bias } => TextureOpCode::CompareBias {
+                    TextureOpCode::CompareBias { compare, bias } => TextureOpCode::CompareBias {
                         compare: mapped_id!(context, compare),
                         bias: mapped_id!(context, bias),
                     },
-                    &TextureOpCode::Grad { is_proj, dx, dy, offset } => TextureOpCode::Grad {
+                    TextureOpCode::Grad { is_proj, dx, dy, offset } => TextureOpCode::Grad {
                         is_proj,
                         dx: mapped_id!(context, dx),
                         dy: mapped_id!(context, dy),
                         offset: offset.map(|id| mapped_id!(context, id)),
                     },
-                    &TextureOpCode::Gather { offset } => {
+                    TextureOpCode::Gather { offset } => {
                         TextureOpCode::Gather { offset: offset.map(|id| mapped_id!(context, id)) }
                     }
-                    &TextureOpCode::GatherComponent { component, offset } => {
+                    TextureOpCode::GatherComponent { component, offset } => {
                         TextureOpCode::GatherComponent {
                             component: mapped_id!(context, component),
                             offset: offset.map(|id| mapped_id!(context, id)),
                         }
                     }
-                    &TextureOpCode::GatherRef { refz, offset } => TextureOpCode::GatherRef {
+                    TextureOpCode::GatherRef { refz, offset } => TextureOpCode::GatherRef {
                         refz: mapped_id!(context, refz),
                         offset: offset.map(|id| mapped_id!(context, id)),
                     },
@@ -375,21 +374,19 @@ fn duplicate_branch_instruction(
         case_block_results,
     );
 
-    match op {
-        &OpCode::Discard => block.terminate(OpCode::Discard),
-        &OpCode::Return(id) => {
-            block.terminate(OpCode::Return(id.map(|id| mapped_id!(context, id))))
-        }
-        &OpCode::Break => block.terminate(OpCode::Break),
-        &OpCode::Continue => block.terminate(OpCode::Continue),
-        &OpCode::Passthrough => block.terminate(OpCode::Passthrough),
-        &OpCode::NextBlock => block.terminate(OpCode::NextBlock),
-        &OpCode::Merge(id) => block.terminate(OpCode::Merge(id.map(|id| mapped_id!(context, id)))),
-        &OpCode::If(id) => block.terminate(OpCode::If(mapped_id!(context, id))),
-        &OpCode::Loop => block.terminate(OpCode::Loop),
-        &OpCode::DoLoop => block.terminate(OpCode::DoLoop),
-        &OpCode::LoopIf(id) => block.terminate(OpCode::LoopIf(mapped_id!(context, id))),
-        &OpCode::Switch(id, ref case_ids) => {
+    match *op {
+        OpCode::Discard => block.terminate(OpCode::Discard),
+        OpCode::Return(id) => block.terminate(OpCode::Return(id.map(|id| mapped_id!(context, id)))),
+        OpCode::Break => block.terminate(OpCode::Break),
+        OpCode::Continue => block.terminate(OpCode::Continue),
+        OpCode::Passthrough => block.terminate(OpCode::Passthrough),
+        OpCode::NextBlock => block.terminate(OpCode::NextBlock),
+        OpCode::Merge(id) => block.terminate(OpCode::Merge(id.map(|id| mapped_id!(context, id)))),
+        OpCode::If(id) => block.terminate(OpCode::If(mapped_id!(context, id))),
+        OpCode::Loop => block.terminate(OpCode::Loop),
+        OpCode::DoLoop => block.terminate(OpCode::DoLoop),
+        OpCode::LoopIf(id) => block.terminate(OpCode::LoopIf(mapped_id!(context, id))),
+        OpCode::Switch(id, ref case_ids) => {
             block.terminate(OpCode::Switch(mapped_id!(context, id), case_ids.clone()))
         }
         _ => panic!("Internal error: unexpected branch op when duplicating block"),
@@ -412,5 +409,5 @@ pub fn is_precision_applicable_to_type(ir_meta: &IRMeta, type_id: TypeId) -> boo
     while let Some(id) = ir_meta.get_type(base_type_id).get_element_type_id() {
         base_type_id = id;
     }
-    return matches!(base_type_id, TYPE_ID_FLOAT | TYPE_ID_INT | TYPE_ID_UINT);
+    matches!(base_type_id, TYPE_ID_FLOAT | TYPE_ID_INT | TYPE_ID_UINT)
 }

@@ -96,7 +96,7 @@ fn propagate_precision_in_block(
     });
 
     // At the end, if the merge input has gotten a precision, update it.
-    block.input.as_mut().map(|id| {
+    if let Some(id) = block.input.as_mut() {
         if let Some(&precision) = state.updated_precisions.get(&id.id) {
             // See comment above, it's unexpected for this register to have been used
             // multiple times if it didn't have a precision (and so was derived from
@@ -119,7 +119,7 @@ fn propagate_precision_in_block(
             instruction.result.precision = Precision::High;
             id.precision = Precision::High;
         }
-    });
+    }
 }
 
 fn propagate_precision_in_instructions(
