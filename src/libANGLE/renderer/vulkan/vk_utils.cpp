@@ -692,7 +692,7 @@ VkResult AllocateImageMemoryFromTileHeap(ErrorContext *context,
     DeviceScoped<DeviceMemory> deviceMemory(device);
     VK_RESULT_TRY(deviceMemory.get().allocate(device, allocInfo));
 
-    VK_RESULT_TRY(image->bindMemory(device, *deviceMemoryOut));
+    VK_RESULT_TRY(image->bindMemory(device, deviceMemory.get()));
 
     renderer->onMemoryAlloc(memoryAllocationType, allocInfo.allocationSize, tileMemoryTypeIndex,
                             deviceMemoryOut->getHandle());
