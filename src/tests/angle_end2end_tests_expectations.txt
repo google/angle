@@ -391,6 +391,7 @@
 448658625 MAC OPENGL : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
 448658630 MAC OPENGL : GLSLTestLoops.ForContinueInConstSwitch/* = SKIP
 448658630 MAC OPENGL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
+475587478 MAC OPENGL : VertexAttributeTestES3.MaxAttribsWithBuiltInAttribs/* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 42262159 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
