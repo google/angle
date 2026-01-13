@@ -630,8 +630,8 @@ def collect_cpu_inst(done_event, test_fixedtime, results):
         # Filter simpleperf record within actual test running time
         temp_filter_file = run_adb_shell_command('mktemp /data/local/tmp/tmp.XXXXXX').strip()
         run_adb_shell_command(f'echo "CLOCK monotonic\n\
-            GLOBAL_BEGIN {start_ns}\n\
-            GLOBAL_END {end_ns}" > {temp_filter_file}')
+                GLOBAL_BEGIN {start_ns}\n\
+                GLOBAL_END {end_ns}" > {temp_filter_file}')
 
         perf_output = run_adb_shell_command(f'''simpleperf report \
             --sort dso \
@@ -808,137 +808,6 @@ def safe_cast_int(x):
 
 def percent(x):
     return "%.2f%%" % (x * 100)
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--filter', help='Trace filter. Defaults to all.', default='*')
-    parser.add_argument('-l', '--log', help='Logging level.', default=DEFAULT_LOG_LEVEL)
-    parser.add_argument(
-        '--renderer',
-        help='Which renderer to use: native, vulkan (via ANGLE), or default (' +
-        'GLES driver selected by system). Providing no option will run twice, native and vulkan',
-        default='both')
-    parser.add_argument(
-        '--walltimeonly',
-        help='Limit output to just wall time',
-        action='store_true',
-        default=False)
-    parser.add_argument(
-        '--power', help='Include CPU/GPU power used per trace', action='store_true', default=False)
-    parser.add_argument(
-        '--cpu-inst',
-        help='Include cpu instruction count of gpu user mode driver per trace',
-        action='store_true',
-        default=False)
-    parser.add_argument(
-        '--memory',
-        help='Include CPU/GPU memory used per trace',
-        action='store_true',
-        default=False)
-    parser.add_argument('--maxsteps', help='Run for fixed set of frames', default='')
-    parser.add_argument('--fixedtime', help='Run for fixed set of time', default='')
-    parser.add_argument(
-        '--minimizegpuwork',
-        help='Whether to run with minimized GPU work',
-        action='store_true',
-        default=False)
-    parser.add_argument('--output-tag', help='Tag for output files.', required=True)
-    parser.add_argument('--angle-version', help='Specify ANGLE version string.', default='')
-    parser.add_argument(
-        '--loop-count', help='How many times to loop through the traces', default=5)
-    parser.add_argument(
-        '--device', help='Which device to run the tests on (use serial)', default='')
-    parser.add_argument(
-        '--sleep', help='Add a sleep of this many seconds between each test)', type=int, default=0)
-    parser.add_argument(
-        '--custom-throttling-temp',
-        help='Custom thermal throttling with limit set to this temperature (off by default)',
-        type=float)
-    parser.add_argument(
-        '--custom-throttling-thermalservice-temp',
-        help='Custom thermal throttling (thermalservice) with limit set to this temperature (off by default)',
-        type=float)
-    parser.add_argument(
-        '--min-battery-level',
-        help='Sleep between tests if battery level drops below this value (off by default)',
-        type=int)
-    parser.add_argument(
-        '--angle-package',
-        help='Where to load ANGLE libraries from. This will load from the test APK by default, ' +
-        'but you can point to any APK that contains ANGLE. Specify \'system\' to use libraries ' +
-        'already on the device',
-        default=DEFAULT_ANGLE_PACKAGE)
-    parser.add_argument(
-        '--build-dir',
-        help='Where to find the APK on the host, i.e. out/Android. If unset, it is assumed you ' +
-        'are running from the build dir already, or are using the wrapper script ' +
-        'out/<config>/restricted_trace_perf.',
-        default='')
-    parser.add_argument(
-        '--screenshot-dir',
-        help='Host (local) directory to store screenshots of keyframes, which is frame 1 unless ' +
-        'the trace JSON file contains \'KeyFrames\'.',
-        default='')
-    parser.add_argument(
-        '--screenshot-frame',
-        help='Specify a specific frame to screenshot. Uses --screenshot-dir if provied.',
-        default='')
-    parser.add_argument(
-        '--fps-limit', help='Limit replay framerate to specified value', default='')
-
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(
-        '--vsync',
-        help='Whether to run the trace in vsync mode',
-        action='store_true',
-        default=False)
-    group.add_argument(
-        '--offscreen',
-        help='Whether to run the trace in offscreen mode',
-        action='store_true',
-        default=False)
-    parser.add_argument(
-        '--fps-limit-uses-busy-wait',
-        help='Use busy wait instead of sleep to limit the framerate.',
-        action='store_true',
-        default=False)
-    parser.add_argument(
-        '--track-gpu-time', help='Enables GPU time tracking', action='store_true', default=False)
-    parser.add_argument(
-        '--add-swap-into-gpu-time',
-        help='Adds swap/offscreen blit into the gpu_time tracking',
-        action='store_true',
-        default=False)
-    parser.add_argument(
-        '--add-swap-into-frame-wall-time',
-        help='Adds swap/offscreen blit into the frame_wall_time tracking',
-        action='store_true',
-        default=False)
-
-    args = parser.parse_args()
-
-    angle_test_util.SetupLogging(args.log.upper())
-
-    with run_from_dir(args.build_dir):
-        android_helper.Initialize("angle_trace_tests")  # includes adb root
-
-    # Determine some starting parameters
-    init()
-
-    try:
-        if args.custom_throttling_temp:
-            set_vendor_thermal_control(disabled=1)
-        run_traces(args)
-    finally:
-        if args.custom_throttling_temp:
-            set_vendor_thermal_control(disabled=0)
-        # Clean up settings, including in case of exceptions (including Ctrl-C)
-        run_adb_shell_command('settings delete global angle_debug_package')
-        run_adb_shell_command('settings delete global angle_gl_driver_selection_pkgs')
-        run_adb_shell_command('settings delete global angle_gl_driver_selection_values')
-
-    return 0
 
 
 def logged_args():
@@ -1686,6 +1555,137 @@ def run_traces(args):
                     percent(data["vulkan"][27]),
                     percent(safe_divide(data["native"][26], data["vulkan"][26])),
                 ])
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--filter', help='Trace filter. Defaults to all.', default='*')
+    parser.add_argument('-l', '--log', help='Logging level.', default=DEFAULT_LOG_LEVEL)
+    parser.add_argument(
+        '--renderer',
+        help='Which renderer to use: native, vulkan (via ANGLE), or default (' +
+        'GLES driver selected by system). Providing no option will run twice, native and vulkan',
+        default='both')
+    parser.add_argument(
+        '--walltimeonly',
+        help='Limit output to just wall time',
+        action='store_true',
+        default=False)
+    parser.add_argument(
+        '--power', help='Include CPU/GPU power used per trace', action='store_true', default=False)
+    parser.add_argument(
+        '--cpu-inst',
+        help='Include cpu instruction count of gpu user mode driver per trace',
+        action='store_true',
+        default=False)
+    parser.add_argument(
+        '--memory',
+        help='Include CPU/GPU memory used per trace',
+        action='store_true',
+        default=False)
+    parser.add_argument('--maxsteps', help='Run for fixed set of frames', default='')
+    parser.add_argument('--fixedtime', help='Run for fixed set of time', default='')
+    parser.add_argument(
+        '--minimizegpuwork',
+        help='Whether to run with minimized GPU work',
+        action='store_true',
+        default=False)
+    parser.add_argument('--output-tag', help='Tag for output files.', required=True)
+    parser.add_argument('--angle-version', help='Specify ANGLE version string.', default='')
+    parser.add_argument(
+        '--loop-count', help='How many times to loop through the traces', default=5)
+    parser.add_argument(
+        '--device', help='Which device to run the tests on (use serial)', default='')
+    parser.add_argument(
+        '--sleep', help='Add a sleep of this many seconds between each test)', type=int, default=0)
+    parser.add_argument(
+        '--custom-throttling-temp',
+        help='Custom thermal throttling with limit set to this temperature (off by default)',
+        type=float)
+    parser.add_argument(
+        '--custom-throttling-thermalservice-temp',
+        help='Custom thermal throttling (thermalservice) with limit set to this temperature (off by default)',
+        type=float)
+    parser.add_argument(
+        '--min-battery-level',
+        help='Sleep between tests if battery level drops below this value (off by default)',
+        type=int)
+    parser.add_argument(
+        '--angle-package',
+        help='Where to load ANGLE libraries from. This will load from the test APK by default, ' +
+        'but you can point to any APK that contains ANGLE. Specify \'system\' to use libraries ' +
+        'already on the device',
+        default=DEFAULT_ANGLE_PACKAGE)
+    parser.add_argument(
+        '--build-dir',
+        help='Where to find the APK on the host, i.e. out/Android. If unset, it is assumed you ' +
+        'are running from the build dir already, or are using the wrapper script ' +
+        'out/<config>/restricted_trace_perf.',
+        default='')
+    parser.add_argument(
+        '--screenshot-dir',
+        help='Host (local) directory to store screenshots of keyframes, which is frame 1 unless ' +
+        'the trace JSON file contains \'KeyFrames\'.',
+        default='')
+    parser.add_argument(
+        '--screenshot-frame',
+        help='Specify a specific frame to screenshot. Uses --screenshot-dir if provied.',
+        default='')
+    parser.add_argument(
+        '--fps-limit', help='Limit replay framerate to specified value', default='')
+
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        '--vsync',
+        help='Whether to run the trace in vsync mode',
+        action='store_true',
+        default=False)
+    group.add_argument(
+        '--offscreen',
+        help='Whether to run the trace in offscreen mode',
+        action='store_true',
+        default=False)
+    parser.add_argument(
+        '--fps-limit-uses-busy-wait',
+        help='Use busy wait instead of sleep to limit the framerate.',
+        action='store_true',
+        default=False)
+    parser.add_argument(
+        '--track-gpu-time', help='Enables GPU time tracking', action='store_true', default=False)
+    parser.add_argument(
+        '--add-swap-into-gpu-time',
+        help='Adds swap/offscreen blit into the gpu_time tracking',
+        action='store_true',
+        default=False)
+    parser.add_argument(
+        '--add-swap-into-frame-wall-time',
+        help='Adds swap/offscreen blit into the frame_wall_time tracking',
+        action='store_true',
+        default=False)
+
+    args = parser.parse_args()
+
+    angle_test_util.SetupLogging(args.log.upper())
+
+    with run_from_dir(args.build_dir):
+        android_helper.Initialize("angle_trace_tests")  # includes adb root
+
+    # Determine some starting parameters
+    init()
+
+    try:
+        if args.custom_throttling_temp:
+            set_vendor_thermal_control(disabled=1)
+        run_traces(args)
+    finally:
+        if args.custom_throttling_temp:
+            set_vendor_thermal_control(disabled=0)
+        # Clean up settings, including in case of exceptions (including Ctrl-C)
+        run_adb_shell_command('settings delete global angle_debug_package')
+        run_adb_shell_command('settings delete global angle_gl_driver_selection_pkgs')
+        run_adb_shell_command('settings delete global angle_gl_driver_selection_values')
+
+    return 0
 
 
 if __name__ == '__main__':
