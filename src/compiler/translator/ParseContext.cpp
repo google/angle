@@ -3091,6 +3091,18 @@ ir::VariableId TParseContext::declareBuiltInOnFirstUse(const TVariable *variable
             variableType = unsizedArrayType;
         }
 
+        // For gl_FragData, change the array size to 1 if MRT is not supported; only index 0 is
+        // valid for access.  Note that gl_FragData usage itself is restricted to ESSL 100, so a
+        // version check is unnecessary.
+        if (variableType->getQualifier() == EvqFragData &&
+            !isExtensionEnabled(TExtension::EXT_draw_buffers))
+        {
+            TType *singleElementArrayType = new TType(*variableType);
+            singleElementArrayType->toArrayBaseType();
+            singleElementArrayType->makeArray(1);
+            variableType = singleElementArrayType;
+        }
+
         const ir::TypeId typeId = getTypeId(*variableType);
         const ir::VariableId id = mIRBuilder.declareInterfaceVariable(
             variable->name(), typeId, *variableType, ir::DeclarationSource::Internal);
