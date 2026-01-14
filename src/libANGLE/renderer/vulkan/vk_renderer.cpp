@@ -6145,8 +6145,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // On Samsung, it was observed that the combination of primitive topology dynamic state
     // _enabled_ and primitive restart dynamic state _disabled_ is buggy.  However, the feature is
     // not disabled because primitive restart is not disabled outside tests.
-    ANGLE_FEATURE_CONDITION(&mFeatures, usePrimitiveTopologyDynamicState,
-                            mFeatures.supportsExtendedDynamicState.enabled && !isARMProprietary);
+    //
+    // Also seeing rendering issues on PowerVR (http://b/472763050)
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, usePrimitiveTopologyDynamicState,
+        mFeatures.supportsExtendedDynamicState.enabled && !isARMProprietary && !isPowerVR);
     ANGLE_FEATURE_CONDITION(&mFeatures, useStencilOpDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useStencilTestEnableDynamicState,
