@@ -3229,8 +3229,8 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo11(
 //                                          shaderSignedZeroInfNanPreserveFloat64 (property)
 // - VK_KHR_uniform_buffer_standard_layout: uniformBufferStandardLayout (feature)
 // - VK_KHR_buffer_device_address:          bufferDeviceAddress (feature)
-// - VK_KHR_shader_atomic_int64:            shaderBufferAtomicInt64 (feature)
-//                                          shaderSharedAtomicInt64 (feature)
+// - VK_KHR_shader_atomic_int64:            shaderBufferInt64Atomics (feature)
+//                                          shaderSharedInt64Atomics (feature)
 //
 // Note that supportedDepthResolveModes is used just to check if the property struct is populated.
 // ANGLE always uses VK_RESOLVE_MODE_SAMPLE_ZERO_BIT for both depth and stencil, and support for
@@ -5784,10 +5784,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, preferCachedNoncoherentForDynamicStreamBufferUsage,
                             IsMeteorLake(mPhysicalDeviceProperties.deviceID));
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderAtomicInt64,
-                            mShaderAtomicInt64Features.shaderBufferInt64Atomics == VK_TRUE &&
-                                mShaderAtomicInt64Features.shaderSharedInt64Atomics == VK_TRUE);
-
     // The compute shader used to generate mipmaps needs -
     // 1. subgroup quad operations in compute shader stage.
     // 2. subgroup operations that can use extended types.
@@ -6764,8 +6760,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         ANGLE_FEATURE_CONDITION(
             &mFeatures, supportsShaderIntegerDotProduct,
             mShaderIntegerDotProductFeatures.shaderIntegerDotProduct == VK_TRUE);
+
         ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFloat64,
                                 mPhysicalDeviceFeatures.shaderFloat64 == VK_TRUE);
+
+        ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderAtomicInt64,
+                                mShaderAtomicInt64Features.shaderBufferInt64Atomics == VK_TRUE &&
+                                    mShaderAtomicInt64Features.shaderSharedInt64Atomics == VK_TRUE);
 
         // Rounding features from VK_KHR_float_controls extension
         ANGLE_FEATURE_CONDITION(&mFeatures, supportsDenormFtzFp16,
