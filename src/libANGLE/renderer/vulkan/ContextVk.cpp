@@ -7795,9 +7795,12 @@ angle::Result ContextVk::beginNewRenderPass(
     const vk::PackedClearValuesArray &clearValues,
     vk::RenderPassCommandBuffer **commandBufferOut)
 {
-    // End any currently outstanding render pass. The render pass is normally closed before reaching
-    // here for various reasons, except typically when UtilsVk needs to start one.
-    ANGLE_TRY(flushCommandsAndEndRenderPass(RenderPassClosureReason::NewRenderPass));
+    if (mRenderPassCommands->started())
+    {
+        // End any currently outstanding render pass. The render pass is normally closed before
+        // reaching here for various reasons, except typically when UtilsVk needs to start one.
+        ANGLE_TRY(flushCommandsAndEndRenderPass(RenderPassClosureReason::NewRenderPass));
+    }
 
     // Now generate queueSerial for the renderPass.
     QueueSerial renderPassQueueSerial;
