@@ -787,8 +787,8 @@ TEST_P(GLSLValidationTest_ES3, TwoOutputsNoLayoutQualifiers)
       )";
 
     validateError(GL_FRAGMENT_SHADER, kFS,
-                  "'my_FragColor' : must explicitly specify all locations when using multiple "
-                  "fragment outputs");
+                  "'my_FragColor' : when EXT_blend_func_extended extension is not enabled, must "
+                  "explicitly specify all locations when using multiple fragment outputs");
 }
 
 // (ESSL 3.00.04 section 4.3.8.2)
@@ -804,9 +804,10 @@ TEST_P(GLSLValidationTest_ES3, TwoOutputsFirstLayoutQualifier)
             my_SecondaryFragColor = vec4(0.5);
         })";
 
-    validateError(GL_FRAGMENT_SHADER, kFS,
-                  "'my_SecondaryFragColor' : must explicitly specify all locations when using "
-                  "multiple fragment outputs");
+    validateError(
+        GL_FRAGMENT_SHADER, kFS,
+        "'my_SecondaryFragColor' : when EXT_blend_func_extended extension is not enabled, must "
+        "explicitly specify all locations when using multiple fragment outputs");
 }
 
 // (ESSL 3.00.04 section 4.3.8.2)
@@ -823,8 +824,8 @@ TEST_P(GLSLValidationTest_ES3, TwoOutputsSecondLayoutQualifier)
     })";
 
     validateError(GL_FRAGMENT_SHADER, kFS,
-                  "'my_FragColor' : must explicitly specify all locations when using multiple "
-                  "fragment outputs");
+                  "'my_FragColor' : when EXT_blend_func_extended extension is not enabled, must "
+                  "explicitly specify all locations when using multiple fragment outputs");
 }
 
 // Uniforms can be arrays (ESSL 3.00 section 4.3.5)

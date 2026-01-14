@@ -26,7 +26,6 @@
 #include "compiler/translator/OutputTree.h"
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/SizeClipCullDistance.h"
-#include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/VariablePacker.h"
 #include "compiler/translator/ir/src/compile.h"
 #include "compiler/translator/tree_ops/ClampFragDepth.h"
@@ -684,7 +683,7 @@ void TCompiler::setShaderMetadata(const TParseContext &parseContext)
         // rbegin().
         mPixelLocalStorageFormats.resize(plsFormats.empty() ? 0 : plsFormats.rbegin()->first + 1,
                                          ShPixelLocalStorageFormat::NotPLS);
-        for (auto [binding, format] : parseContext.pixelLocalStorageFormats())
+        for (auto [binding, format] : plsFormats)
         {
             mPixelLocalStorageFormats[binding] = format;
         }
@@ -983,13 +982,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (mShaderVersion >= 310 && !MonomorphizeUnsupportedFunctions(
                                      this, root, &mSymbolTable,
                                      UnsupportedFunctionArgsBitSet{UnsupportedFunctionArgs::Image}))
-    {
-        return false;
-    }
-
-    if (mShaderVersion >= 300 && mShaderType == GL_FRAGMENT_SHADER &&
-        !ValidateOutputs(root, getExtensionBehavior(), mResources, hasPixelLocalStorageUniforms(),
-                         IsWebGLBasedSpec(mShaderSpec), &mDiagnostics))
     {
         return false;
     }

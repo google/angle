@@ -330,14 +330,14 @@ void MarkClipCullIndex(const TSourceLoc &line, TIntermTyped *indexExpr, ClipCull
     }
 }
 
-bool ValidateFragColorAndFragData(GLenum shaderType,
+void ValidateFragColorAndFragData(GLenum shaderType,
                                   int shaderVersion,
                                   const TSymbolTable &symbolTable,
                                   TDiagnostics *diagnostics)
 {
     if (shaderVersion > 100 || shaderType != GL_FRAGMENT_SHADER)
     {
-        return true;
+        return;
     }
 
     bool usesFragColor = false;
@@ -370,9 +370,7 @@ bool ValidateFragColorAndFragData(GLenum shaderType,
                 " and (gl_FragColor, gl_SecondaryFragColorEXT)";
         }
         diagnostics->globalError(errorMessage);
-        return false;
     }
-    return true;
 }
 
 bool IsESSL100ConstantExpression(TIntermNode *node)
@@ -508,6 +506,8 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mIsReturnVisitedInMain(false),
       mValidateESSL100Limitations(
           ShouldEnforceESSL100LoopAndIndexingLimitations(spec, mShaderVersion, options)),
+      mFragmentOutputIndex1Used(false),
+      mFragmentOutputFragDepthUsed(false),
       mGeometryShaderInputPrimitiveType(EptUndefined),
       mGeometryShaderOutputPrimitiveType(EptUndefined),
       mGeometryShaderInvocations(0),
@@ -1729,16 +1729,10 @@ void TParseContext::checkVariableSize(const TSourceLoc &line,
     }
 }
 
-void TParseContext::checkVariableLocations(const TSourceLoc &line, const TVariable *variable)
+void TParseContext::checkVaryingLocations(const TSourceLoc &line, const TVariable *variable)
 {
-    // The ability to specify location on varyings is a feature of ESSL 310.  This function only
-    // checks those varyings with explicit locations for the purposes of conflict detection.
-    if (mShaderVersion < 310 || variable->symbolType() == SymbolType::Empty ||
-        mCurrentFunction != nullptr)
-    {
-        return;
-    }
-
+    // This function only checks those varyings with explicit locations for the purposes of conflict
+    // detection.
     const TType &type = variable->getType();
     if (type.getLayoutQualifier().location == -1)
     {
@@ -1772,6 +1766,63 @@ void TParseContext::checkVariableLocations(const TSourceLoc &line, const TVariab
         }
         strstr << "'";
         error(line, strstr.str().c_str(), variable->name());
+    }
+}
+
+void TParseContext::checkFragmentOutputLocations(const TSourceLoc &line, const TVariable *variable)
+{
+    const TType &type                       = variable->getType();
+    const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
+    if (type.getQualifier() != EvqFragmentOut && type.getQualifier() != EvqFragmentInOut)
+    {
+        return;
+    }
+
+    VariableAndLocation fragmentOutput;
+    fragmentOutput.line     = line;
+    fragmentOutput.variable = variable;
+
+    // Keep track of the variables for conflict check at the end.  In particular, the limit check
+    // and error messages should use either |MAX_DRAW_BUFFERS| or |MAX_DUAL_SOURCE_DRAW_BUFFERS|,
+    // and that depends on whether |index=1| is used by any declaration.
+    if (layoutQualifier.location != -1)
+    {
+        mFragmentOutputsWithLocation.push_back(fragmentOutput);
+        if (layoutQualifier.index == 1)
+        {
+            mFragmentOutputIndex1Used = true;
+        }
+    }
+    else if (layoutQualifier.yuv == true)
+    {
+        mFragmentOutputsYuv.push_back(fragmentOutput);
+    }
+    else
+    {
+        mFragmentOutputsWithoutLocation.push_back(fragmentOutput);
+    }
+}
+
+void TParseContext::checkVariableLocations(const TSourceLoc &line, const TVariable *variable)
+{
+    // Interface variables cannot be declared inside functions.
+    if (mCurrentFunction != nullptr || variable->symbolType() == SymbolType::Empty)
+    {
+        return;
+    }
+
+    // In ESSL 310, the shader may assign explicit locations to varyings, which need to be checked
+    // for conflicts.
+    if (mShaderVersion >= 310)
+    {
+        checkVaryingLocations(line, variable);
+    }
+
+    // In ESSL 300, the shader may assign explicit locations to fragment outputs, which need to be
+    // checked for conflicts.
+    if (mShaderVersion >= 300 && mShaderType == GL_FRAGMENT_SHADER)
+    {
+        checkFragmentOutputLocations(line, variable);
     }
 }
 
@@ -3297,6 +3348,11 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
         // For built-ins, declare them in the IR on first reference.
         declareBuiltInOnFirstUse(variable);
         pushVariable(variable);
+
+        if (variableType.getQualifier() == EvqFragDepth)
+        {
+            mFragmentOutputFragDepthUsed = true;
+        }
     }
 
     return node;
@@ -3849,11 +3905,11 @@ void TParseContext::popControlFlow()
         {
             // But we can't know whether the variable will stay unchanged until the end of the
             // shader, so the decision to produce a compile error is deferred.
-            PossiblyInfiniteLoop loop;
-            loop.line         = justEndedControlFlow.loopLocation;
-            loop.loopVariable = justEndedControlFlow.loopConditionConstantTrueSymbol;
+            VariableAndLocation loopVariable;
+            loopVariable.line     = justEndedControlFlow.loopLocation;
+            loopVariable.variable = justEndedControlFlow.loopConditionConstantTrueSymbol;
 
-            mPossiblyInfiniteLoops.push_back(loop);
+            mPossiblyInfiniteLoops.push_back(loopVariable);
         }
     }
 }
@@ -9911,6 +9967,137 @@ void TParseContext::checkCallGraph()
     }
 }
 
+void TParseContext::postParseValidateFragmentOutputLocations()
+{
+    TVector<VariableAndLocation> validOutputs(mFragmentOutputIndex1Used
+                                                  ? mResources.MaxDualSourceDrawBuffers
+                                                  : mResources.MaxDrawBuffers);
+    TVector<VariableAndLocation> validSecondaryOutputs(mResources.MaxDualSourceDrawBuffers);
+
+    for (const VariableAndLocation &variable : mFragmentOutputsWithLocation)
+    {
+        const TType &type = variable.variable->getType();
+        ASSERT(!type.isArrayOfArrays());  // Disallowed in GLSL ES 3.10 section 4.3.6.
+        const size_t elementCount =
+            static_cast<size_t>(type.isArray() ? type.getOutermostArraySize() : 1u);
+        const size_t location = static_cast<size_t>(type.getLayoutQualifier().location);
+
+        ASSERT(type.getLayoutQualifier().location != -1);
+
+        TVector<VariableAndLocation> *validOutputsToUse = &validOutputs;
+        TVector<VariableAndLocation> *otherOutputsToUse = &validSecondaryOutputs;
+        // The default index is 0, so we only assign the output to secondary outputs in case the
+        // index is explicitly set to 1.
+        if (type.getLayoutQualifier().index == 1)
+        {
+            validOutputsToUse = &validSecondaryOutputs;
+            otherOutputsToUse = &validOutputs;
+        }
+
+        if (location + elementCount <= validOutputsToUse->size())
+        {
+            for (size_t elementIndex = 0; elementIndex < elementCount; elementIndex++)
+            {
+                const size_t offsetLocation = location + elementIndex;
+                if ((*validOutputsToUse)[offsetLocation].variable != nullptr)
+                {
+                    std::stringstream strstr = sh::InitializeStream<std::stringstream>();
+                    strstr << "conflicting output locations with previously defined output '"
+                           << (*validOutputsToUse)[offsetLocation].variable->name() << "'";
+                    error(variable.line, strstr.str().c_str(), variable.variable->name());
+                }
+                else
+                {
+                    (*validOutputsToUse)[offsetLocation] = variable;
+                    if (offsetLocation < otherOutputsToUse->size())
+                    {
+                        VariableAndLocation other = (*otherOutputsToUse)[offsetLocation];
+                        if (other.variable != nullptr &&
+                            other.variable->getType().getBasicType() != type.getBasicType())
+                        {
+                            std::stringstream strstr = sh::InitializeStream<std::stringstream>();
+                            strstr << "conflicting output types with previously defined output '"
+                                   << other.variable->name() << "' for location " << offsetLocation;
+                            error(variable.line, strstr.str().c_str(), variable.variable->name());
+                        }
+                    }
+                }
+            }
+        }
+        else if (elementCount > 0)
+        {
+            std::stringstream strstr = sh::InitializeStream<std::stringstream>();
+            strstr << (elementCount > 1 ? "output array locations would exceed "
+                                        : "output location must be < ")
+                   << "MAX_" << (mFragmentOutputIndex1Used ? "DUAL_SOURCE_" : "") << "DRAW_BUFFERS";
+            error(variable.line, strstr.str().c_str(), variable.variable->name());
+        }
+    }
+
+    // For outputs without a location, one may be provided with glBindFragDataLocationEXT or
+    // glBindFragDataLocationIndexedEXT, so we can't validate conflicts until link time.  However,
+    // we _can_ validate that no single array is larger than MAX_DRAW_BUFFERS.
+    for (const VariableAndLocation &variable : mFragmentOutputsWithoutLocation)
+    {
+        const TType &type = variable.variable->getType();
+        ASSERT(!type.isArrayOfArrays());  // Disallowed in GLSL ES 3.10 section 4.3.6.
+        const size_t elementCount =
+            static_cast<size_t>(type.isArray() ? type.getOutermostArraySize() : 1u);
+        if (elementCount > validOutputs.size())
+        {
+            std::stringstream strstr = sh::InitializeStream<std::stringstream>();
+            strstr << "output array locations would exceed "
+                   << "MAX_" << (mFragmentOutputIndex1Used ? "DUAL_SOURCE_" : "") << "DRAW_BUFFERS";
+            error(variable.line, strstr.str().c_str(), variable.variable->name());
+        }
+    }
+
+    const bool isWebGL = IsWebGLBasedSpec(mShaderSpec);
+    if ((!mFragmentOutputsWithLocation.empty() && !mFragmentOutputsWithoutLocation.empty()) ||
+        mFragmentOutputsWithoutLocation.size() > 1)
+    {
+        const char *unspecifiedLocationErrorMessage = nullptr;
+        if (!isExtensionEnabled(TExtension::EXT_blend_func_extended))
+        {
+            unspecifiedLocationErrorMessage =
+                "when EXT_blend_func_extended extension is not enabled, must explicitly specify "
+                "all locations when using multiple fragment outputs";
+        }
+        else if (!mPLSFormats.empty())
+        {
+            unspecifiedLocationErrorMessage =
+                "must explicitly specify all locations when using multiple fragment outputs and "
+                "pixel local storage, even if EXT_blend_func_extended is enabled";
+        }
+        else if (isWebGL)
+        {
+            unspecifiedLocationErrorMessage =
+                "must explicitly specify all locations when using multiple fragment outputs "
+                "in WebGL contexts, even if EXT_blend_func_extended is enabled";
+        }
+        if (unspecifiedLocationErrorMessage != nullptr)
+        {
+            for (const VariableAndLocation &variable : mFragmentOutputsWithoutLocation)
+            {
+                error(variable.line, unspecifiedLocationErrorMessage, variable.variable->name());
+            }
+        }
+    }
+
+    if (!mFragmentOutputsYuv.empty() &&
+        (mFragmentOutputsYuv.size() > 1 || mFragmentOutputFragDepthUsed ||
+         !mFragmentOutputsWithLocation.empty() || !mFragmentOutputsWithoutLocation.empty()))
+    {
+        for (const VariableAndLocation &variable : mFragmentOutputsYuv)
+        {
+            error(variable.line,
+                  "not allowed to specify yuv qualifier when using depth or multiple color "
+                  "fragment outputs",
+                  variable.variable->name());
+        }
+    }
+}
+
 bool TParseContext::postParseChecks()
 {
 #ifndef ANGLE_IR
@@ -10006,6 +10193,7 @@ bool TParseContext::postParseChecks()
     }
 
     ValidateFragColorAndFragData(mShaderType, mShaderVersion, symbolTable, mDiagnostics);
+    postParseValidateFragmentOutputLocations();
 
     if (mCompileOptions.rejectWebglShadersWithLargeVariables)
     {
@@ -10022,12 +10210,13 @@ bool TParseContext::postParseChecks()
     {
         // For any possibly infinite loops, check if the loop variable remained unchanged and so the
         // loop is in fact definitely an infinite loop.
-        for (PossiblyInfiniteLoop loop : mPossiblyInfiniteLoops)
+        for (VariableAndLocation loopVariable : mPossiblyInfiniteLoops)
         {
-            if (mConstantTrueVariables.find(loop.loopVariable->uniqueId()) !=
+            if (mConstantTrueVariables.find(loopVariable.variable->uniqueId()) !=
                 mConstantTrueVariables.end())
             {
-                error(loop.line, "Infinite loop detected in the shader", loop.loopVariable->name());
+                error(loopVariable.line, "Infinite loop detected in the shader",
+                      loopVariable.variable->name());
             }
         }
     }

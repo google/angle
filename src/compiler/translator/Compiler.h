@@ -187,7 +187,7 @@ class TCompiler : public TShHandleBase
     AdvancedBlendEquations getAdvancedBlendEquations() const { return mAdvancedBlendEquations; }
 
     bool hasPixelLocalStorageUniforms() const { return !mPixelLocalStorageFormats.empty(); }
-    const std::vector<ShPixelLocalStorageFormat> &GetPixelLocalStorageFormats() const
+    const std::vector<ShPixelLocalStorageFormat> &getPixelLocalStorageFormats() const
     {
         return mPixelLocalStorageFormats;
     }
