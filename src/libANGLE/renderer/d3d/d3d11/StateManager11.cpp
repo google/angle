@@ -954,6 +954,7 @@ void StateManager11::syncState(const gl::Context *context,
                 invalidateProgramUniforms();
                 invalidateProgramUniformBuffers();
                 invalidateDriverUniforms();
+                mInternalDirtyBits.set(DIRTY_BIT_GRAPHICS_UAV_STATE);
                 const gl::ProgramExecutable *executable = state.getProgramExecutable();
                 ASSERT(executable);
                 mExecutableD3D = GetImplAs<ProgramExecutableD3D>(executable);
