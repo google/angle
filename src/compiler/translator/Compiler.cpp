@@ -412,7 +412,6 @@ int GetMaxShaderVersionForSpec(ShShaderSpec spec)
         case SH_WEBGL2_SPEC:
             return 300;
         case SH_GLES3_1_SPEC:
-        case SH_WEBGL3_SPEC:
             return 310;
         case SH_GLES3_2_SPEC:
             return 320;

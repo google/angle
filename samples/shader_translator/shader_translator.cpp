@@ -144,11 +144,7 @@ int main(int argc, char *argv[])
                                 }
                                 break;
                             case 'w':
-                                if (argv[0][4] == '3')
-                                {
-                                    spec = SH_WEBGL3_SPEC;
-                                }
-                                else if (argv[0][4] == '2')
+                                if (argv[0][4] == '2')
                                 {
                                     spec = SH_WEBGL2_SPEC;
                                 }

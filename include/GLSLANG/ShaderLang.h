@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 394
+#define ANGLE_SH_VERSION 395
 
 enum ShShaderSpec
 {
@@ -37,7 +37,6 @@ enum ShShaderSpec
     SH_WEBGL2_SPEC,
 
     SH_GLES3_1_SPEC,
-    SH_WEBGL3_SPEC,
 
     SH_GLES3_2_SPEC,
 };
@@ -957,7 +956,7 @@ uint32_t GetAdvancedBlendEquations(const ShHandle handle);
 //
 inline bool IsWebGLBasedSpec(ShShaderSpec spec)
 {
-    return (spec == SH_WEBGL_SPEC || spec == SH_WEBGL2_SPEC || spec == SH_WEBGL3_SPEC);
+    return (spec == SH_WEBGL_SPEC || spec == SH_WEBGL2_SPEC);
 }
 
 // Can't prefix with just _ because then we might introduce a double underscore, which is not safe
