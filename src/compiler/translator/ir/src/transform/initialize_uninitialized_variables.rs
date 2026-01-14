@@ -6,9 +6,9 @@
 //
 // - If required, all local, global and function parameter variables that were not initialized
 //   during parse are zero-initialized.
-// - TODO(http://anglebug.com/349994211): If required, all shader output variables, or just fragment
-//   shader output variables are zero-initialized.
-// - TODO(http://anglebug.com/349994211): If required, gl_Position is zero-initialized
+// - If required, all shader output variables, or just fragment shader output variables are
+//   zero-initialized.
+// - If required, gl_Position is zero-initialized
 //
 // Either way, zero initialization may either be done via an initializer or assignment
 // instructions.  If the variable being initialized via instructions is a global variable, it is
@@ -18,7 +18,6 @@ use crate::ir::*;
 use crate::*;
 
 pub struct Options {
-    pub initialize_uninitialized_variables: bool,
     pub loops_allowed_when_initializing_variables: bool,
     pub initializer_allowed_on_non_constant_global_variables: bool,
 }
@@ -85,7 +84,13 @@ pub fn run(ir: &mut IR, options: &Options) {
     }
 }
 
-fn is_initializer_allowed(ir_meta: &IRMeta, id: VariableId, options: &Options) -> bool {
+fn is_initializer_allowed(
+    ir_meta: &IRMeta,
+    id: VariableId,
+    decorations: &Decorations,
+    built_in: Option<BuiltIn>,
+    options: &Options,
+) -> bool {
     // If the initializer value is a constant, it can be set as the initializer.  However, that
     // is disallowed in the following case:
     //
@@ -93,9 +98,12 @@ fn is_initializer_allowed(ir_meta: &IRMeta, id: VariableId, options: &Options) -
     // * It's the global scope
     // * The variable is not `const`.
     //
-    // Additionally, function parameters cannot have an initializer.
+    // Additionally, function parameters cannot have an initializer, neither can built-ins and
+    // interface variables.
     let variable = ir_meta.get_variable(id);
     variable.scope != VariableScope::FunctionParam
+        && built_in.is_none()
+        && decorations.decorations.is_empty()
         && (variable.scope == VariableScope::Local
             || options.initializer_allowed_on_non_constant_global_variables
             || variable.is_const)
@@ -105,7 +113,7 @@ fn initialize_with_zeros<'block>(
     ir_meta: &mut IRMeta,
     mut block: &'block mut Block,
     id: TypedId,
-    options: &Options,
+    allow_loops: bool,
 ) -> &'block mut Block {
     let type_info = ir_meta.get_type(id.type_id);
     debug_assert!(type_info.is_pointer());
@@ -123,7 +131,7 @@ fn initialize_with_zeros<'block>(
                     index as u32,
                 ));
                 // Recursively set the field to zeros.
-                block = initialize_with_zeros(ir_meta, block, selected_field, options);
+                block = initialize_with_zeros(ir_meta, block, selected_field, allow_loops);
             }
         }
         Type::Array(element_id, count) => {
@@ -131,7 +139,7 @@ fn initialize_with_zeros<'block>(
             let element_type_info = ir_meta.get_type(element_id);
             let is_small_array = count <= 1
                 || (!element_type_info.is_struct() && !element_type_info.is_array() && count <= 3);
-            let use_loop = options.loops_allowed_when_initializing_variables && !is_small_array;
+            let use_loop = allow_loops && !is_small_array;
             if use_loop {
                 // Note: `uint` would be a better loop index type, but ESSL 100 doesn't support
                 // that.
@@ -190,8 +198,12 @@ fn initialize_with_zeros<'block>(
                         loaded_index,
                     ));
                     // Recursively set the element to zeros.
-                    let body_last_block =
-                        initialize_with_zeros(ir_meta, &mut body_block, selected_element, options);
+                    let body_last_block = initialize_with_zeros(
+                        ir_meta,
+                        &mut body_block,
+                        selected_element,
+                        allow_loops,
+                    );
 
                     body_last_block.terminate(OpCode::Continue);
                     block.set_loop_body_block(body_block);
@@ -202,6 +214,8 @@ fn initialize_with_zeros<'block>(
                 block.set_merge_block(next_block);
                 block = block.get_merge_chain_last_block_mut();
             } else {
+                // Note that it is important to have the array init in the right order to
+                // workaround a driver bug per http://crbug.com/40514481.
                 for index in 0..count {
                     let index_constant = TypedId::from_constant_id(
                         ir_meta.get_constant_int(index as i32),
@@ -214,7 +228,7 @@ fn initialize_with_zeros<'block>(
                         index_constant,
                     ));
                     // Recursively set the element to zeros.
-                    block = initialize_with_zeros(ir_meta, block, selected_element, options);
+                    block = initialize_with_zeros(ir_meta, block, selected_element, allow_loops);
                 }
             }
         }
@@ -255,9 +269,7 @@ fn make_init_block(
         debug_assert!(
             !type_info.is_image()
                 && !type_info.is_unsized_array()
-                && variable.built_in.is_none()
                 && !variable.decorations.has(Decoration::Input)
-                && !variable.decorations.has(Decoration::Output)
                 && !variable.decorations.has(Decoration::InputOutput)
                 && !variable.decorations.has(Decoration::Uniform)
                 && !variable.decorations.has(Decoration::Buffer)
@@ -266,7 +278,11 @@ fn make_init_block(
 
         // If using an initializer is allowed and the type is simple, create a zero initializer and
         // set it as the initializer for the variable.
-        let is_initializer_allowed = is_initializer_allowed(ir_meta, id, options);
+        let is_initializer_allowed =
+            is_initializer_allowed(ir_meta, id, &variable.decorations, variable.built_in, options);
+        let is_fragment_output_array = matches!(variable.built_in, Some(BuiltIn::FragData))
+            || (ir_meta.get_shader_type() == ShaderType::Fragment
+                && variable.decorations.has(Decoration::Output));
 
         // TODO(http://anglebug.com/349994211): Eventually it's best for SPIR-V if
         // initialize_with_value is always used because it can use OpConstantNull as the
@@ -281,7 +297,14 @@ fn make_init_block(
             ir_meta.set_variable_initializer(id, null_value);
         } else {
             let variable = TypedId::from_variable_id(ir_meta, id);
-            current_block = initialize_with_zeros(ir_meta, current_block, variable, options);
+            // For gl_FragData, the array elements are assigned one by one to keep the AST
+            // compatible with ESSL 1.00 which doesn't have array assignment.
+            current_block = initialize_with_zeros(
+                ir_meta,
+                current_block,
+                variable,
+                options.loops_allowed_when_initializing_variables && !is_fragment_output_array,
+            );
             ir_meta.on_variable_zero_initialization_done(id);
             any_code_generated = true;
         }

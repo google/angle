@@ -92,9 +92,9 @@ mod ffi {
         // version is, not the input.
         is_es1: bool,
 
-        // Whether uninitialized local and global variables should be initialized to 0 values.
+        // Whether uninitialized local and global variables should be zero-initialized.
         initialize_uninitialized_variables: bool,
-        // Whether loops can be used when 0-initializing variables.
+        // Whether loops can be used when zero-initializing variables.
         loops_allowed_when_initializing_variables: bool,
         // Whether non-const variables in global scope can have an initializer
         initializer_allowed_on_non_constant_global_variables: bool,
@@ -192,9 +192,8 @@ fn common_transforms(ir: &mut IR, options: &Options) {
     transform::prune_unused_variables::run(ir);
 
     // Run after unused variables are removed, initialize local and output variables if necessary.
-    {
+    if options.initialize_uninitialized_variables {
         let transform_options = transform::initialize_uninitialized_variables::Options {
-            initialize_uninitialized_variables: options.initialize_uninitialized_variables,
             loops_allowed_when_initializing_variables: options
                 .loops_allowed_when_initializing_variables,
             initializer_allowed_on_non_constant_global_variables: options

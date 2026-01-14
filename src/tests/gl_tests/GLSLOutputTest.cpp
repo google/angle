@@ -163,7 +163,15 @@ void main() {
   out1.a += 0.0001;
 })";
     compileShader(GL_VERTEX_SHADER, kVS);
-    verifyIsInTranslation(GL_VERTEX_SHADER, "_uout1 = _uMyS(");
+    if (getEGLWindow()->isFeatureEnabled(Feature::UseIr))
+    {
+        verifyIsInTranslation(GL_VERTEX_SHADER, "_uout1._ua = 0.0");
+        verifyIsInTranslation(GL_VERTEX_SHADER, "_uout1._ub = 0.0");
+    }
+    else
+    {
+        verifyIsInTranslation(GL_VERTEX_SHADER, "_uout1 = _uMyS(");
+    }
 }
 
 // Test the initialization of a varying variable in an ESSL1 vertex shader.

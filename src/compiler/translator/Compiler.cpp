@@ -1258,11 +1258,14 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions.initOutputVariables)
+    if (!useIR)
     {
-        if (!initializeOutputVariables(root))
+        if (compileOptions.initOutputVariables)
         {
-            return false;
+            if (!initializeOutputVariables(root))
+            {
+                return false;
+            }
         }
     }
 
@@ -1276,15 +1279,18 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    // gl_Position may have already been initialized among other output variables, in that case we
-    // don't need to initialize it twice.
-    if (!mGLPositionInitialized && compileOptions.initGLPosition)
+    if (!useIR)
     {
-        if (!initializeGLPosition(root))
+        // gl_Position may have already been initialized among other output variables, in that case
+        // we don't need to initialize it twice.
+        if (!mGLPositionInitialized && compileOptions.initGLPosition)
         {
-            return false;
+            if (!initializeGLPosition(root))
+            {
+                return false;
+            }
+            mGLPositionInitialized = true;
         }
-        mGLPositionInitialized = true;
     }
 
     if (!useIR)

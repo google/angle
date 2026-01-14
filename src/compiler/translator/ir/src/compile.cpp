@@ -122,7 +122,8 @@ void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::Compi
     opt->shader_version = compiler->getShaderVersion();
     opt->is_es1         = compiler->getShaderVersion() == 100;
 
-    opt->initialize_uninitialized_variables        = options.initializeUninitializedLocals;
+    opt->initialize_uninitialized_variables = options.initializeUninitializedLocals ||
+                                              options.initOutputVariables || options.initGLPosition;
     opt->loops_allowed_when_initializing_variables = !options.dontUseLoopsToInitializeVariables;
     opt->initializer_allowed_on_non_constant_global_variables =
         !options.forceDeferNonConstGlobalInitializers;

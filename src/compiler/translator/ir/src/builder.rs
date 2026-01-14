@@ -805,7 +805,7 @@ impl Builder {
         std::mem::replace(&mut self.ir, IR::new(ShaderType::Vertex))
     }
 
-    fn variable_can_be_initialized(
+    fn variable_is_private_and_can_be_initialized(
         &self,
         type_id: TypeId,
         decorations: &Decorations,
@@ -826,6 +826,45 @@ impl Builder {
             || decorations.has(Decoration::Shared))
     }
 
+    fn built_in_is_output(&self, built_in: BuiltIn) -> bool {
+        // gl_PrimitiveID is an output in geometry shaders, but input in tessellation and fragment
+        // shaders.  gl_Layer is an output in geometry shaders, but input in vertex shaders (for
+        // multiview).
+        //
+        // gl_ClipDistance and gl_CullDistance are inputs in fragment shader, output otherwise.
+        //
+        // gl_TessLevelOuter and gl_TessLevelInner are outputs in tessellation control shaders, but
+        // input in tessellation evaluation shaders.
+        match built_in {
+            BuiltIn::FragColor
+            | BuiltIn::FragData
+            | BuiltIn::FragDepth
+            | BuiltIn::SecondaryFragColorEXT
+            | BuiltIn::SecondaryFragDataEXT
+            | BuiltIn::SampleMask
+            | BuiltIn::Position
+            | BuiltIn::PointSize
+            | BuiltIn::PrimitiveShadingRateEXT
+            | BuiltIn::BoundingBoxOES
+            | BuiltIn::PerVertexOut => true,
+            BuiltIn::PrimitiveID | BuiltIn::LayerOut => {
+                self.ir.meta.get_shader_type() == ShaderType::Geometry
+            }
+            BuiltIn::ClipDistance | BuiltIn::CullDistance => {
+                self.ir.meta.get_shader_type() != ShaderType::Fragment
+            }
+            BuiltIn::TessLevelOuter | BuiltIn::TessLevelInner => {
+                self.ir.meta.get_shader_type() == ShaderType::TessellationControl
+            }
+            _ => false,
+        }
+    }
+
+    fn variable_is_output(&self, decorations: &Decorations, built_in: Option<BuiltIn>) -> bool {
+        decorations.has(Decoration::Output)
+            || built_in.is_some_and(|built_in| self.built_in_is_output(built_in))
+    }
+
     // Internal helper to declare a new variable.
     fn declare_variable(
         &mut self,
@@ -839,9 +878,17 @@ impl Builder {
         // The declared variable may be uninitialized.  If the build flags indicate the need,
         // the variable is marked such that it is zero-initialized before output generation.  Note
         // that function parameters are handled in declare_function_param.
-        let needs_zero_initialization = self.options.initialize_uninitialized_variables
-            && scope != VariableScope::FunctionParam
-            && self.variable_can_be_initialized(type_id, &decorations, built_in);
+        let needs_zero_initialization = scope != VariableScope::FunctionParam
+            && ((self.options.initialize_uninitialized_variables
+                && self.variable_is_private_and_can_be_initialized(
+                    type_id,
+                    &decorations,
+                    built_in,
+                ))
+                || (self.options.initialize_output_variables
+                    && self.variable_is_output(&decorations, built_in))
+                || (self.options.initialize_gl_position
+                    && matches!(built_in, Some(BuiltIn::Position))));
 
         let variable_id = self.ir.meta.declare_variable(
             name,
@@ -2650,10 +2697,14 @@ impl Builder {
 pub mod ffi {
     // Flags controlling the way the IR is built, applying transformations during IR generation.
     struct BuildOptions {
-        // Whether uninitialized local and global variables should be initialized to 0 values.
+        // Whether uninitialized local and global variables should be zero-initialized.
         initialize_uninitialized_variables: bool,
         // Whether non-const global variables are allowed to have an initializer.
         initializer_allowed_on_non_const_global_variables: bool,
+        // Whether output variables should be zero-initialized.
+        initialize_output_variables: bool,
+        // Whether gl_Position should be zero-initialized.
+        initialize_gl_position: bool,
     }
 
     // The following enums and types must be identical to what's found in BaseTypes.h.  This

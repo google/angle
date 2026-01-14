@@ -9870,6 +9870,16 @@ bool TParseContext::postParseChecks()
     ASSERT(!mCompileOptions.useIR || mTreeRoot != nullptr);
 #endif
 
+    // If gl_Position is expected to be zero-initialized, make sure it's declared to the IR; it
+    // should still be done if gl_Position is statically not used by the shader.
+    if (mCompileOptions.initGLPosition)
+    {
+        const TSymbol *glPosition =
+            symbolTable.find(ImmutableString("gl_Position"), getShaderVersion());
+        ASSERT(glPosition != nullptr && glPosition->isVariable());
+        declareBuiltInOnFirstUse(static_cast<const TVariable *>(glPosition));
+    }
+
     if (mMainFunction == nullptr)
     {
         error(kNoSourceLoc, "Missing main()", "");
