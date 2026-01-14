@@ -537,7 +537,7 @@ TIntermBlock *TCompiler::compileTreeImpl(angle::Span<const char *const> shaderSt
     }
 
     TParseContext parseContext(mSymbolTable, mExtensionBehavior, mShaderType, mShaderSpec,
-                               compileOptions, &mDiagnostics, getResources(), getOutputType());
+                               compileOptions, &mDiagnostics, mResources, getOutputType());
 
     // We preserve symbols at the built-in level from compile-to-compile.
     // Start pushing the user-defined symbols at global level.

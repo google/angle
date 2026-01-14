@@ -567,9 +567,6 @@ class TParseContext : angle::NonCopyable
 
     ShShaderOutput getOutputType() const { return mOutputType; }
 
-    size_t getMaxExpressionComplexity() const { return mMaxExpressionComplexity; }
-    size_t getMaxStatementDepth() const { return mMaxStatementDepth; }
-
     // Pop the side effect of a statement when it's discarded, like when ; is encountered.
     void endStatementWithValue(TIntermNode *statement);
 
@@ -838,6 +835,8 @@ class TParseContext : angle::NonCopyable
     sh::GLenum mShaderType;    // vertex/fragment/geometry/etc shader
     ShShaderSpec mShaderSpec;  // The language specification compiler conforms to - GLES/WebGL/etc.
     ShCompileOptions mCompileOptions;  // Options passed to TCompiler
+    const ShBuiltInResources &mResources;  // Limits passed to TCompiler
+
     int mShaderVersion;
     TIntermBlock *mTreeRoot;  // root of parse tree being created
     int mStructNestingLevel;  // incremented while parsing a struct declaration
@@ -862,17 +861,9 @@ class TParseContext : angle::NonCopyable
     TDirectiveHandler mDirectiveHandler;
     angle::pp::Preprocessor mPreprocessor;
     void *mScanner;
-    const size_t mMaxExpressionComplexity;
-    const size_t mMaxStatementDepth;
-    int mMinProgramTexelOffset;
-    int mMaxProgramTexelOffset;
-
-    int mMinProgramTextureGatherOffset;
-    int mMaxProgramTextureGatherOffset;
 
     // Keep track of clip/cull distance redeclaration, accessed indices, etc so that gl_ClipDistance
     // and gl_CullDistance can be validated and sized at the end of compilation.
-    int mMaxCombinedClipAndCullDistances;
     ClipCullDistanceInfo mClipDistanceInfo;
     ClipCullDistanceInfo mCullDistanceInfo;
 
@@ -881,18 +872,6 @@ class TParseContext : angle::NonCopyable
     sh::WorkGroupSize mComputeShaderLocalSize;
     // Keep track of number of views declared in layout.
     int mNumViews;
-    int mMaxNumViews;
-    int mMaxImageUnits;
-    int mMaxCombinedTextureImageUnits;
-    int mMaxUniformLocations;
-    int mMaxUniformBufferBindings;
-    int mMaxVertexAttribs;
-    int mMaxAtomicCounterBindings;
-    int mMaxAtomicCounterBufferSize;
-    int mMaxShaderStorageBufferBindings;
-    int mMaxPixelLocalStoragePlanes;
-    int mMaxFunctionParameters;
-    int mMaxCallStackDepth;
 
     // Keeps track of whether any of the built-ins that can be redeclared (see
     // IsRedeclarableBuiltIn()) has been marked as invariant/precise before the possible
@@ -981,11 +960,8 @@ class TParseContext : angle::NonCopyable
     TLayoutPrimitiveType mGeometryShaderOutputPrimitiveType;
     int mGeometryShaderInvocations;
     int mGeometryShaderMaxVertices;
-    int mMaxGeometryShaderInvocations;
-    int mMaxGeometryShaderMaxVertices;
     unsigned int mGeometryInputArraySize;
 
-    int mMaxPatchVertices;
     int mTessControlShaderOutputVertices;
     TLayoutTessEvaluationType mTessEvaluationShaderInputPrimitiveType;
     TLayoutTessEvaluationType mTessEvaluationShaderInputVertexSpacingType;
