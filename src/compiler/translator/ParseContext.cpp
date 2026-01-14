@@ -1729,6 +1729,52 @@ void TParseContext::checkVariableSize(const TSourceLoc &line,
     }
 }
 
+void TParseContext::checkVariableLocations(const TSourceLoc &line, const TVariable *variable)
+{
+    // The ability to specify location on varyings is a feature of ESSL 310.  This function only
+    // checks those varyings with explicit locations for the purposes of conflict detection.
+    if (mShaderVersion < 310 || variable->symbolType() == SymbolType::Empty ||
+        mCurrentFunction != nullptr)
+    {
+        return;
+    }
+
+    const TType &type = variable->getType();
+    if (type.getLayoutQualifier().location == -1)
+    {
+        return;
+    }
+
+    const bool isVaryingIn  = IsVaryingIn(type.getQualifier());
+    const bool isVaryingOut = IsVaryingOut(type.getQualifier());
+    if (!isVaryingIn && !isVaryingOut)
+    {
+        return;
+    }
+
+    VariableAndField conflictingSymbol;
+    const TField *conflictingFieldInNewSymbol = nullptr;
+
+    if (!ValidateVaryingLocation(variable,
+                                 isVaryingIn ? &mInputVaryingLocations : &mOutputVaryingLocations,
+                                 mShaderType, &conflictingSymbol, &conflictingFieldInNewSymbol))
+    {
+        std::stringstream strstr = sh::InitializeStream<std::stringstream>();
+        strstr << "'" << variable->name();
+        if (conflictingFieldInNewSymbol != nullptr)
+        {
+            strstr << "." << conflictingFieldInNewSymbol->name();
+        }
+        strstr << "' conflicting location with '" << conflictingSymbol.variable->name();
+        if (conflictingSymbol.field)
+        {
+            strstr << "." << conflictingSymbol.field->name();
+        }
+        strstr << "'";
+        error(line, strstr.str().c_str(), variable->name());
+    }
+}
+
 // Do some simple checks that are shared between all variable declarations,
 // and update the symbol table.
 //
@@ -1973,6 +2019,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         return false;
 
     checkVariableSize(line, identifier, type);
+    checkVariableLocations(line, *variable);
 
     // Declare the variable in IR
     declareIRVariable(*variable, sized);
@@ -6509,6 +6556,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         new TVariable(&symbolTable, instanceName, interfaceBlockType,
                       instanceName.empty() ? SymbolType::Empty : instanceSymbolType);
 
+    checkVariableLocations(nameLine, instanceVariable);
     declareIRVariable(instanceVariable, sized);
 
     if (instanceVariable->symbolType() == SymbolType::Empty)

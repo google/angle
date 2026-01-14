@@ -27,7 +27,6 @@
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/SizeClipCullDistance.h"
 #include "compiler/translator/ValidateOutputs.h"
-#include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/VariablePacker.h"
 #include "compiler/translator/ir/src/compile.h"
 #include "compiler/translator/tree_ops/ClampFragDepth.h"
@@ -956,13 +955,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
-    }
 
-    // Create the function DAG.
-    initCallDag(root);
+        // Create the function DAG.
+        initCallDag(root);
 
-    if (!useIR)
-    {
         // Checks which functions are used
         mFunctionMetadata.clear();
         mFunctionMetadata.resize(mCallDag.size());
@@ -980,11 +976,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-    }
-
-    if (mShaderVersion >= 310 && !ValidateVaryingLocations(root, &mDiagnostics, mShaderType))
-    {
-        return false;
     }
 
     // anglebug.com/42265954: The ESSL spec has a bug with images as function arguments. The
@@ -1291,10 +1282,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
             }
             mGLPositionInitialized = true;
         }
-    }
 
-    if (!useIR)
-    {
         // DeferGlobalInitializers needs to be run before other AST transformations that generate
         // new statements from expressions. But it's fine to run DeferGlobalInitializers after the
         // above SplitSequenceOperator and RemoveArrayLengthMethod since they only have an effect on

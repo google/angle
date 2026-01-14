@@ -16,6 +16,7 @@
 #include "compiler/translator/FunctionLookup.h"
 #include "compiler/translator/QualifierTypes.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/ValidateVaryingLocations.h"
 
 namespace sh
 {
@@ -749,6 +750,7 @@ class TParseContext : angle::NonCopyable
     void checkVariableSize(const TSourceLoc &line,
                            const ImmutableString &identifier,
                            const TType *type);
+    void checkVariableLocations(const TSourceLoc &line, const TVariable *variable);
 
     void sizeUnsizedArrayTypes(uint32_t arraySize);
 
@@ -954,6 +956,10 @@ class TParseContext : angle::NonCopyable
 
     // Potential errors to generate immediately upon encountering a pixel local storage uniform.
     std::vector<std::tuple<const TSourceLoc, PLSIllegalOperations>> mPLSPotentialErrors;
+
+    // Track the locations used by input and output varyings to detect conflicts.
+    LocationValidationMap mInputVaryingLocations;
+    LocationValidationMap mOutputVaryingLocations;
 
     // Track the geometry shader global parameters declared in layout.
     TLayoutPrimitiveType mGeometryShaderInputPrimitiveType;
