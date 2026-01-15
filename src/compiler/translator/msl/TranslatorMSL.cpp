@@ -33,6 +33,7 @@
 #include "compiler/translator/tree_ops/msl/FixTypeConstructors.h"
 #include "compiler/translator/tree_ops/msl/HoistConstants.h"
 #include "compiler/translator/tree_ops/msl/IntroduceVertexIndexID.h"
+#include "compiler/translator/tree_ops/msl/RescopeGlobalVariables.h"
 #include "compiler/translator/tree_ops/msl/RewriteCaseDeclarations.h"
 #include "compiler/translator/tree_ops/msl/RewriteInterpolants.h"
 #include "compiler/translator/tree_ops/msl/RewriteOutArgs.h"
@@ -898,6 +899,14 @@ bool TranslatorMSL::translateImpl(TInfoSinkBase &sink,
         if (uniform.active && gl::IsAtomicCounterType(uniform.type))
         {
             ++atomicCounterCount;
+        }
+    }
+
+    if (compileOptions.rescopeGlobalVariables)
+    {
+        if (!RescopeGlobalVariables(*this, *root))
+        {
+            return false;
         }
     }
 
