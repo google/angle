@@ -1173,8 +1173,9 @@ cl_mem ImportMemoryARM(cl_context context,
                        void *memory,
                        size_t size)
 {
-    WARN_NOT_SUPPORTED(ImportMemoryARM);
-    return nullptr;
+    Memory::PropArray convertedProperties = Context::ConvertArmMemPropToMemProp(properties, memory);
+    CL_RETURN_OBJ(
+        context->cast<Context>().createBuffer(convertedProperties.data(), flags, size, nullptr));
 }
 
 void *GetExtensionFunctionAddressForPlatform(cl_platform_id platform, const char *func_name)

@@ -95,6 +95,19 @@ CLPlatformImpl::Info CLPlatformVk::createInfo() const
     if (info.populateSupportedExternalMemoryHandleTypes(supportedHandles))
     {
         extList.push_back(cl_name_version{CL_MAKE_VERSION(1, 0, 0), "cl_khr_external_memory"});
+
+        // cl_arm_import_memory is layered on top of cl_arm_import_memory
+        bool reportBaseArmImportMemString = false;
+        if (supportedHandles.test(cl::ExternalMemoryHandle::DmaBuf))
+        {
+            extList.push_back(
+                cl_name_version{CL_MAKE_VERSION(1, 0, 0), "cl_arm_import_memory_dma_buf"});
+            reportBaseArmImportMemString = true;
+        }
+        if (reportBaseArmImportMemString)
+        {
+            extList.push_back(cl_name_version{CL_MAKE_VERSION(1, 11, 0), "cl_arm_import_memory"});
+        }
     }
     if (platformSupportsBaseInt64Atomics)
     {
