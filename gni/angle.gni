@@ -2,7 +2,16 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+import("//build/config/gclient_args.gni")
 import("//build_overrides/angle.gni")
+
+if (!defined(checkout_angle_cl_deps)) {
+  checkout_angle_cl_deps = true
+}
+
+if (!defined(checkout_angle_dawn_deps)) {
+  checkout_angle_dawn_deps = true
+}
 
 declare_args() {
   # Extract native libs in ANGLE apk. Useful for flamegraph generation.
@@ -17,6 +26,9 @@ declare_args() {
 
   # Enables OpenCL support, off by default.
   angle_enable_cl = false
+  if (!checkout_angle_cl_deps) {
+    angle_enable_cl = false
+  }
 
   angle_restricted_traces = []
 
@@ -216,7 +228,7 @@ declare_args() {
   angle_enable_wgpu =
       !is_official_build && !(is_android || is_fuchsia || angle_is_winuwp) &&
       (!is_win || is_clang) && (!is_linux || angle_use_x11) &&
-      defined(angle_dawn_dir)
+      defined(angle_dawn_dir) && checkout_angle_dawn_deps
 }
 
 declare_args() {

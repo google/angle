@@ -10,6 +10,8 @@ gclient_gn_args_file = 'build/config/gclient_args.gni'
 git_dependencies = "SYNC"
 
 gclient_gn_args = [
+  'checkout_angle_cl_deps',
+  'checkout_angle_dawn_deps',
   'checkout_angle_internal',
   'checkout_angle_mesa',
   'checkout_angle_restricted_traces',
@@ -517,6 +519,12 @@ vars = {
   # === ANGLE Restricted Trace Generated Var End ===
 
   'checkout_angle_perfetto': 'checkout_angle_restricted_traces',
+
+  # Check out OpenCL related deps conditionally. This can be overridden with custom_vars.
+  'checkout_angle_cl_deps': True,
+
+  # Check out dawn related deps conditionally. This can be overridden with custom_vars.
+  'checkout_angle_dawn_deps': True,
 }
 
 deps = {
@@ -781,7 +789,7 @@ deps = {
 
   'third_party/clspv/src': {
     'url': Var('chromium_git') + '/external/github.com/google/clspv@8f35aa835ae973e1c802421ba5a873f5e967278c',
-    'condition': 'not build_with_chromium',
+    'condition': 'checkout_angle_cl_deps and not build_with_chromium',
   },
 
   'third_party/cpu_features/src': {
@@ -792,7 +800,7 @@ deps = {
 
   'third_party/dawn': {
     'url': Var('dawn_git') + '/dawn.git' + '@' +  Var('dawn_revision'),
-    'condition': 'not build_with_chromium'
+    'condition': 'checkout_angle_dawn_deps and not build_with_chromium'
   },
 
   'third_party/depot_tools': {
@@ -878,7 +886,7 @@ deps = {
 
   'third_party/llvm/src': {
     'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project@67790d3fb06b184b7be9c4d3e36ab01f0ac4198e',
-    'condition': 'not build_with_chromium',
+    'condition': 'checkout_angle_cl_deps and not build_with_chromium',
   },
 
   'third_party/jdk/current': {
@@ -957,7 +965,7 @@ deps = {
 
   'third_party/OpenCL-CTS/src': {
     'url': Var('chromium_git') + '/external/github.com/KhronosGroup/OpenCL-CTS@9fc0d23b4cfccd84be8927363a77107dc554de30',
-    'condition': 'not build_with_chromium',
+    'condition': 'checkout_angle_cl_deps and not build_with_chromium',
   },
 
   'third_party/OpenCL-Docs/src': {
@@ -967,7 +975,7 @@ deps = {
 
   'third_party/OpenCL-ICD-Loader/src': {
     'url': Var('chromium_git') + '/external/github.com/KhronosGroup/OpenCL-ICD-Loader@ddf6c70230a79cdb8fcccfd3c775b09e6820f42e',
-    'condition': 'not build_with_chromium',
+    'condition': 'checkout_angle_cl_deps and not build_with_chromium',
   },
 
   'third_party/OpenGL-Registry/src': {
