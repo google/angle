@@ -949,6 +949,7 @@ void Format::initialize(Renderer *renderer, const angle::Format &angleFormat)
                 static constexpr ImageFormatInitInfo kInfo[] = {
                     {angle::FormatID::D24_UNORM_X8_UINT, nullptr},
                     {angle::FormatID::D24_UNORM_S8_UINT, nullptr},
+                    {angle::FormatID::D32_FLOAT, nullptr},
                     {angle::FormatID::D32_FLOAT_S8X24_UINT, nullptr},
                 };
                 initImageFallback(renderer, kInfo, ArraySize(kInfo));
