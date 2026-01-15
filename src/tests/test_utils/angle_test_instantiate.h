@@ -47,6 +47,7 @@ bool IsAndroid14OrNewer();
 // GPU vendors.
 bool IsIntel();
 bool IsAMD();
+bool IsSamsung();
 bool IsAppleGPU();
 bool IsARM();
 bool IsNVIDIA();

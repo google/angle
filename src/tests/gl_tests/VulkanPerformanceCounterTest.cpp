@@ -8848,7 +8848,8 @@ class VulkanPerformanceCounterTest_TileMemory : public VulkanPerformanceCounterT
         EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
 
         // depthStencil should be using tile memory.
-        if (depthStencilFormat == GL_DEPTH_COMPONENT24 && (IsAMD() || isSwiftshader()))
+        if (depthStencilFormat == GL_DEPTH_COMPONENT24 &&
+            (IsAMD() || isSwiftshader() || IsSamsung()))
         {
             // AMD uses emulated format for D24 which will not use tile memory
             EXPECT_EQ(0u, getPerfCounters().tileMemoryImages - tileMemoryImageCountBefore);
