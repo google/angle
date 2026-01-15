@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 395
+#define ANGLE_SH_VERSION 396
 
 enum ShShaderSpec
 {
@@ -147,11 +147,6 @@ struct ShPixelLocalStorageOptions
     // ShPixelLocalStorageType::ImageLoadStore only: Can we use rgba8/rgba8i/rgba8ui image formats?
     // Or do we need to manually pack and unpack from r32i/r32ui?
     bool supportsNativeRGBA8ImageFormats = false;
-
-    // anglebug.com/42266263 -- Metal [[raster_order_group()]] does not work for read_write textures
-    // on AMD when the render pass doesn't have a color attachment on slot 0. To work around this we
-    // attach one of the PLS textures to GL_COLOR_ATTACHMENT0, if there isn't one already.
-    bool renderPassNeedsAMDRasterOrderGroupsWorkaround = false;
 };
 
 struct ShCompileOptions
