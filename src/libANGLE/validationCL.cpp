@@ -228,7 +228,7 @@ cl_int ValidateMemoryProperties(cl_context context,
             case CL_EXTERNAL_MEMORY_HANDLE_OPAQUE_FD_KHR:
             {
                 // just validate the basics for dma_buf and posix fd for now
-                uint32_t fdDmaBuf = *reinterpret_cast<uint32_t *>(propertiesIterator->value);
+                uint32_t fdDmaBuf = *reinterpret_cast<uint32_t *>(pMemoryHandle->value);
                 if (host_ptr != nullptr)
                 {
                     // CL_INVALID_HOST_PTR if properties includes a supported external memory handle
