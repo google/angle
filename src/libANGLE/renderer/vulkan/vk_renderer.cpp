@@ -5654,7 +5654,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // framebuffer.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferMSRTSSFlagByDefault,
-        mFeatures.supportsMultisampledRenderToSingleSampled.enabled &&
+        mFeatures.supportsMultisampledRenderToSingleSampled.enabled && !isMesaPanVK &&
             !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 777, 0)));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsImage2dViewOf3d,
