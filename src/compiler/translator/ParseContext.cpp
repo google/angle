@@ -10220,6 +10220,17 @@ bool TParseContext::postParseChecks()
         }
     }
 
+    // When PLS planes are emulated with storage images, early_fragment_tests has to be specified.
+    // Until codegen is done from the IR itself, set this flag here in anticipation, avoiding a need
+    // for the PLS transformation in IR to make an FFI call to set it in TCompiler.  This can be
+    // removed after codegen is no longer done from AST.
+    if (mCompileOptions.useIR && !mPLSFormats.empty() &&
+        mCompileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore)
+    {
+        mEarlyFragmentTestsSpecified = true;
+        // No need to set it for the IR, the PLS rewrite transformation will do that.
+    }
+
     checkCallGraph();
 
     return numErrors() == 0;

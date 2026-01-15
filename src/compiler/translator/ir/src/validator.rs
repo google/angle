@@ -25,7 +25,7 @@
 //     sure precision is always assigned.
 //   - Case values are always ConstantId (int/uint only too?)
 //   - Variables are Pointers
-//   - Pointers only valid in the right arg of load/store/access/call
+//   - Pointers only valid in the left arg of load/store/access/call
 //   - Loop blocks ends in the appropriate instructions.
 //   - Do blocks end in DoLoop (unless already terminated by something else, like Return)
 //   - If condition is a bool.

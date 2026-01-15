@@ -238,7 +238,7 @@ class RewritePLSTraverser : public TIntermTraverser
             {
                 // Clamp r,g,b,a to their min/max 8-bit values:
                 //
-                //     plsVar = clamp(plsVar, -128, 127) & 0xff
+                //     plsVar = clamp(plsVar, -128, 127)
                 //
                 TIntermTyped *newPLSValue = CreateBuiltInFunctionCallNode(
                     "clamp",
@@ -574,6 +574,9 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
                 // Pack r,g,b,a into a single 32-bit (signed or unsigned) int:
                 //
                 //     r | (g << 8) | (b << 16) | (a << 24)
+                //
+                // Note that this calculation needs to be done in highp, which coincidentally works
+                // out as |CreateUIntNode| returns a highp constant.
                 //
                 auto shiftComponent = [=](int componentIdx) {
                     return new TIntermBinary(EOpBitShiftLeft,

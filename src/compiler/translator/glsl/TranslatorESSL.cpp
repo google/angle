@@ -76,20 +76,18 @@ bool TranslatorESSL::translate(TIntermBlock *root,
         // Although ANGLE supports all these extensions with ESSL 3.00,
         // some drivers may support the required functionality only
         // with ESSL 3.10.
+        //
+        // When PLS is implemented with shader images, ESSL 3.10 output is required.
         const bool hasExtensionsThatMayRequireES31 =
             getResources().EXT_clip_cull_distance || getResources().ANGLE_clip_cull_distance ||
             getResources().NV_shader_noperspective_interpolation ||
             getResources().OES_shader_multisample_interpolation ||
             getResources().ANGLE_texture_multisample ||
-            getResources().OES_texture_storage_multisample_2d_array;
+            getResources().OES_texture_storage_multisample_2d_array ||
+            (getResources().ANGLE_shader_pixel_local_storage &&
+             compileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore);
 
-        // When PLS is implemented with shader images,
-        // ESSL 3.10 output is required.
-        const bool usesShaderImagesForPLS =
-            hasPixelLocalStorageUniforms() &&
-            compileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore;
-
-        if (hasExtensionsThatMayRequireES31 || usesShaderImagesForPLS)
+        if (hasExtensionsThatMayRequireES31)
         {
             shaderVer = 310;
         }
