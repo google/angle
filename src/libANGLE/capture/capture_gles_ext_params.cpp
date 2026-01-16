@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// capture_glesext_params.cpp:
+// capture_gles_ext_params.cpp:
 //   Pointer parameter capture functions for the OpenGL ES extension entry points.
 
 #include "libANGLE/capture/capture_gles_ext_autogen.h"
@@ -16,6 +16,176 @@ using namespace angle;
 
 namespace gl
 {
+
+// GL_AMD_performance_monitor
+void CaptureDeletePerfMonitorsAMD_monitors(const State &glState,
+                                           bool isCallValid,
+                                           GLsizei n,
+                                           GLuint *monitors,
+                                           angle::ParamCapture *paramCapture)
+{
+    CaptureArray(monitors, n, paramCapture);
+}
+
+void CaptureGenPerfMonitorsAMD_monitors(const State &glState,
+                                        bool isCallValid,
+                                        GLsizei n,
+                                        GLuint *monitors,
+                                        angle::ParamCapture *paramCapture)
+{
+    CaptureArray(monitors, n, paramCapture);
+}
+
+void CaptureGetPerfMonitorCounterDataAMD_data(const State &glState,
+                                              bool isCallValid,
+                                              GLuint monitor,
+                                              GLenum pname,
+                                              GLsizei dataSize,
+                                              GLuint *data,
+                                              GLint *bytesWritten,
+                                              angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = dataSize;
+}
+
+void CaptureGetPerfMonitorCounterDataAMD_bytesWritten(const State &glState,
+                                                      bool isCallValid,
+                                                      GLuint monitor,
+                                                      GLenum pname,
+                                                      GLsizei dataSize,
+                                                      GLuint *data,
+                                                      GLint *bytesWritten,
+                                                      angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
+}
+
+void CaptureGetPerfMonitorCounterInfoAMD_data(const State &glState,
+                                              bool isCallValid,
+                                              GLuint group,
+                                              GLuint counter,
+                                              GLenum pname,
+                                              void *data,
+                                              angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorCounterStringAMD_length(const State &glState,
+                                                  bool isCallValid,
+                                                  GLuint group,
+                                                  GLuint counter,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLchar *counterString,
+                                                  angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
+}
+
+void CaptureGetPerfMonitorCounterStringAMD_counterString(const State &glState,
+                                                         bool isCallValid,
+                                                         GLuint group,
+                                                         GLuint counter,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLchar *counterString,
+                                                         angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = bufSize;
+}
+
+void CaptureGetPerfMonitorCountersAMD_numCounters(const State &glState,
+                                                  bool isCallValid,
+                                                  GLuint group,
+                                                  GLint *numCounters,
+                                                  GLint *maxActiveCounters,
+                                                  GLsizei counterSize,
+                                                  GLuint *counters,
+                                                  angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
+}
+
+void CaptureGetPerfMonitorCountersAMD_maxActiveCounters(const State &glState,
+                                                        bool isCallValid,
+                                                        GLuint group,
+                                                        GLint *numCounters,
+                                                        GLint *maxActiveCounters,
+                                                        GLsizei counterSize,
+                                                        GLuint *counters,
+                                                        angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
+}
+
+void CaptureGetPerfMonitorCountersAMD_counters(const State &glState,
+                                               bool isCallValid,
+                                               GLuint group,
+                                               GLint *numCounters,
+                                               GLint *maxActiveCounters,
+                                               GLsizei counterSize,
+                                               GLuint *counters,
+                                               angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = counterSize * sizeof(GLuint);
+}
+
+void CaptureGetPerfMonitorGroupStringAMD_length(const State &glState,
+                                                bool isCallValid,
+                                                GLuint group,
+                                                GLsizei bufSize,
+                                                GLsizei *length,
+                                                GLchar *groupString,
+                                                angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
+}
+
+void CaptureGetPerfMonitorGroupStringAMD_groupString(const State &glState,
+                                                     bool isCallValid,
+                                                     GLuint group,
+                                                     GLsizei bufSize,
+                                                     GLsizei *length,
+                                                     GLchar *groupString,
+                                                     angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = bufSize;
+}
+
+void CaptureGetPerfMonitorGroupsAMD_numGroups(const State &glState,
+                                              bool isCallValid,
+                                              GLint *numGroups,
+                                              GLsizei groupsSize,
+                                              GLuint *groups,
+                                              angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetPerfMonitorGroupsAMD_groups(const State &glState,
+                                           bool isCallValid,
+                                           GLint *numGroups,
+                                           GLsizei groupsSize,
+                                           GLuint *groups,
+                                           angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureSelectPerfMonitorCountersAMD_counterList(const State &glState,
+                                                     bool isCallValid,
+                                                     GLuint monitor,
+                                                     GLboolean enable,
+                                                     GLuint group,
+                                                     GLint numCounters,
+                                                     GLuint *counterList,
+                                                     angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_ANGLE_base_vertex_base_instance
 void CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE_indices(
     const State &glState,
     bool isCallValid,
@@ -42,7 +212,7 @@ void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_firsts(const State &glStat
                                                              angle::ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
-}  // namespace gl
+}
 
 void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_counts(const State &glState,
                                                              bool isCallValid,
@@ -165,6 +335,121 @@ void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseInstances(
     UNIMPLEMENTED();
 }
 
+// GL_ANGLE_blob_cache
+void CaptureBlobCacheCallbacksANGLE_userParam(const State &glState,
+                                              bool isCallValid,
+                                              GLSETBLOBPROCANGLE set,
+                                              GLGETBLOBPROCANGLE get,
+                                              const void *userParam,
+                                              angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetPointervANGLE_params(const State &glState,
+                                    bool isCallValid,
+                                    GLenum pname,
+                                    void **params,
+                                    angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+// GL_ANGLE_get_image
+void CaptureGetTexImageANGLE_pixels(const State &glState,
+                                    bool isCallValid,
+                                    TextureTarget target,
+                                    GLint level,
+                                    GLenum format,
+                                    GLenum type,
+                                    void *pixels,
+                                    angle::ParamCapture *paramCapture)
+{
+    if (glState.getTargetBuffer(gl::BufferBinding::PixelPack))
+    {
+        // If a pixel pack buffer is bound, this is an offset, not a pointer
+        paramCapture->value.voidPointerVal = pixels;
+        return;
+    }
+
+    const Texture *texture = glState.getTargetTexture(TextureTargetToType(target));
+    ASSERT(texture);
+
+    // Use a conservative upper bound instead of an exact size to be simple.
+    static constexpr GLsizei kMaxPixelSize = 32;
+    size_t width                           = texture->getWidth(target, level);
+    size_t height                          = texture->getHeight(target, level);
+    size_t depth                           = texture->getDepth(target, level);
+    paramCapture->readBufferSizeBytes      = kMaxPixelSize * width * height * depth;
+}
+
+void CaptureGetCompressedTexImageANGLE_pixels(const State &glState,
+                                              bool isCallValid,
+                                              TextureTarget target,
+                                              GLint level,
+                                              void *pixels,
+                                              angle::ParamCapture *paramCapture)
+{
+    const Texture *texture = glState.getTargetTexture(TextureTargetToType(target));
+    ASSERT(texture);
+    const gl::InternalFormat *formatInfo = texture->getFormat(target, level).info;
+    const gl::Extents &levelExtents      = texture->getExtents(target, level);
+
+    GLuint size;
+    bool result = formatInfo->computeCompressedImageSize(levelExtents, &size);
+    ASSERT(result);
+    paramCapture->readBufferSizeBytes = size;
+}
+
+void CaptureGetRenderbufferImageANGLE_pixels(const State &glState,
+                                             bool isCallValid,
+                                             GLenum target,
+                                             GLenum format,
+                                             GLenum type,
+                                             void *pixels,
+                                             angle::ParamCapture *paramCapture)
+{
+    if (glState.getTargetBuffer(gl::BufferBinding::PixelPack))
+    {
+        // If a pixel pack buffer is bound, this is an offset, not a pointer
+        paramCapture->value.voidPointerVal = pixels;
+        return;
+    }
+
+    const Renderbuffer *renderbuffer = glState.getCurrentRenderbuffer();
+    ASSERT(renderbuffer);
+
+    // Use a conservative upper bound instead of an exact size to be simple.
+    static constexpr GLsizei kMaxPixelSize = 32;
+    size_t width                           = renderbuffer->getWidth();
+    size_t height                          = renderbuffer->getHeight();
+    paramCapture->readBufferSizeBytes      = kMaxPixelSize * width * height;
+}
+
+// GL_ANGLE_get_tex_level_parameter
+void CaptureGetTexLevelParameterivANGLE_params(const State &glState,
+                                               bool isCallValid,
+                                               TextureTarget targetPacked,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLint *params,
+                                               ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
+}
+
+void CaptureGetTexLevelParameterfvANGLE_params(const State &glState,
+                                               bool isCallValid,
+                                               TextureTarget targetPacked,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLfloat *params,
+                                               ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLfloat);
+}
+
+// GL_ANGLE_instanced_arrays
 void CaptureDrawElementsInstancedANGLE_indices(const State &glState,
                                                bool isCallValid,
                                                PrimitiveMode modePacked,
@@ -178,233 +463,82 @@ void CaptureDrawElementsInstancedANGLE_indices(const State &glState,
                                 paramCapture);
 }
 
-void CaptureDrawElementsInstancedBaseInstanceEXT_indices(const State &glState,
-                                                         bool isCallValid,
-                                                         PrimitiveMode mode,
-                                                         GLsizei count,
-                                                         DrawElementsType type,
-                                                         const void *indices,
-                                                         GLsizei instancecount,
-                                                         GLuint baseinstance,
-                                                         angle::ParamCapture *indicesParam)
+// GL_ANGLE_memory_object_flags
+void CaptureTexStorageMemFlags2DANGLE_imageCreateInfoPNext(const State &glState,
+                                                           bool isCallValid,
+                                                           TextureType targetPacked,
+                                                           GLsizei levels,
+                                                           GLenum internalFormat,
+                                                           GLsizei width,
+                                                           GLsizei height,
+                                                           MemoryObjectID memoryPacked,
+                                                           GLuint64 offset,
+                                                           GLbitfield createFlags,
+                                                           GLbitfield usageFlags,
+                                                           const void *imageCreateInfoPNext,
+                                                           angle::ParamCapture *paramCapture)
 {
-    CaptureDrawElements_indices(glState, isCallValid, mode, count, type, indices, indicesParam);
+    UNIMPLEMENTED();
 }
 
-void CaptureDrawElementsInstancedBaseVertexBaseInstanceEXT_indices(
+void CaptureTexStorageMemFlags2DMultisampleANGLE_imageCreateInfoPNext(
     const State &glState,
     bool isCallValid,
-    PrimitiveMode modePacked,
-    GLsizei count,
-    DrawElementsType typePacked,
-    const void *indices,
-    GLsizei instancecount,
-    GLint basevertex,
-    GLuint baseInstance,
-    angle::ParamCapture *indicesParam)
-{
-    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
-                                indicesParam);
-}
-
-void CaptureDrawElementsBaseVertexEXT_indices(const State &glState,
-                                              bool isCallValid,
-                                              PrimitiveMode modePacked,
-                                              GLsizei count,
-                                              DrawElementsType typePacked,
-                                              const void *indices,
-                                              GLint basevertex,
-                                              ParamCapture *indicesParam)
+    TextureType targetPacked,
+    GLsizei samples,
+    GLenum internalFormat,
+    GLsizei width,
+    GLsizei height,
+    GLboolean fixedSampleLocations,
+    MemoryObjectID memoryPacked,
+    GLuint64 offset,
+    GLbitfield createFlags,
+    GLbitfield usageFlags,
+    const void *imageCreateInfoPNext,
+    angle::ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
-void CaptureDrawElementsInstancedBaseVertexEXT_indices(const State &glState,
-                                                       bool isCallValid,
-                                                       PrimitiveMode modePacked,
-                                                       GLsizei count,
-                                                       DrawElementsType typePacked,
-                                                       const void *indices,
-                                                       GLsizei instancecount,
-                                                       GLint basevertex,
-                                                       ParamCapture *indicesParam)
+void CaptureTexStorageMemFlags3DANGLE_imageCreateInfoPNext(const State &glState,
+                                                           bool isCallValid,
+                                                           TextureType targetPacked,
+                                                           GLsizei levels,
+                                                           GLenum internalFormat,
+                                                           GLsizei width,
+                                                           GLsizei height,
+                                                           GLsizei depth,
+                                                           MemoryObjectID memoryPacked,
+                                                           GLuint64 offset,
+                                                           GLbitfield createFlags,
+                                                           GLbitfield usageFlags,
+                                                           const void *imageCreateInfoPNext,
+                                                           angle::ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
-void CaptureMultiDrawArraysEXT_first(const State &glState,
-                                     bool isCallValid,
-                                     PrimitiveMode modePacked,
-                                     const GLint *first,
-                                     const GLsizei *count,
-                                     GLsizei primcount,
-                                     angle::ParamCapture *paramCapture)
+void CaptureTexStorageMemFlags3DMultisampleANGLE_imageCreateInfoPNext(
+    const State &glState,
+    bool isCallValid,
+    TextureType targetPacked,
+    GLsizei samples,
+    GLenum internalFormat,
+    GLsizei width,
+    GLsizei height,
+    GLsizei depth,
+    GLboolean fixedSampleLocations,
+    MemoryObjectID memoryPacked,
+    GLuint64 offset,
+    GLbitfield createFlags,
+    GLbitfield usageFlags,
+    const void *imageCreateInfoPNext,
+    angle::ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();
 }
 
-void CaptureMultiDrawArraysEXT_count(const State &glState,
-                                     bool isCallValid,
-                                     PrimitiveMode modePacked,
-                                     const GLint *first,
-                                     const GLsizei *count,
-                                     GLsizei primcount,
-                                     angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureMultiDrawElementsEXT_count(const State &glState,
-                                       bool isCallValid,
-                                       PrimitiveMode modePacked,
-                                       const GLsizei *count,
-                                       DrawElementsType typePacked,
-                                       const void *const *indices,
-                                       GLsizei primcount,
-                                       angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureMultiDrawElementsEXT_indices(const State &glState,
-                                         bool isCallValid,
-                                         PrimitiveMode modePacked,
-                                         const GLsizei *count,
-                                         DrawElementsType typePacked,
-                                         const void *const *indices,
-                                         GLsizei primcount,
-                                         angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureMultiDrawArraysIndirectEXT_indirect(const State &glState,
-                                                bool isCallValid,
-                                                PrimitiveMode modePacked,
-                                                const void *indirect,
-                                                GLsizei drawcount,
-                                                GLsizei stride,
-                                                angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureMultiDrawElementsIndirectEXT_indirect(const State &glState,
-                                                  bool isCallValid,
-                                                  PrimitiveMode modePacked,
-                                                  DrawElementsType typePacked,
-                                                  const void *indirect,
-                                                  GLsizei drawcount,
-                                                  GLsizei stride,
-                                                  angle::ParamCapture *paramCapture)
-{
-    if (glState.getTargetBuffer(gl::BufferBinding::DrawIndirect) != nullptr)
-    {
-        paramCapture->value.voidConstPointerVal = indirect;
-    }
-    else
-    {
-        if (stride == 0)
-        {
-            stride = sizeof(DrawElementsIndirectCommand);
-        }
-        CaptureMemory(indirect, stride * drawcount, paramCapture);
-    }
-}
-
-void CaptureDrawRangeElementsBaseVertexEXT_indices(const State &glState,
-                                                   bool isCallValid,
-                                                   PrimitiveMode modePacked,
-                                                   GLuint start,
-                                                   GLuint end,
-                                                   GLsizei count,
-                                                   DrawElementsType typePacked,
-                                                   const void *indices,
-                                                   GLint basevertex,
-                                                   ParamCapture *indicesParam)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureMultiDrawElementsBaseVertexEXT_count(const State &glState,
-                                                 bool isCallValid,
-                                                 PrimitiveMode modePacked,
-                                                 const GLsizei *count,
-                                                 DrawElementsType typePacked,
-                                                 const void *const *indices,
-                                                 GLsizei drawcount,
-                                                 const GLint *basevertex,
-                                                 ParamCapture *countParam)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureMultiDrawElementsBaseVertexEXT_indices(const State &glState,
-                                                   bool isCallValid,
-                                                   PrimitiveMode modePacked,
-                                                   const GLsizei *count,
-                                                   DrawElementsType typePacked,
-                                                   const void *const *indices,
-                                                   GLsizei drawcount,
-                                                   const GLint *basevertex,
-                                                   ParamCapture *indicesParam)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureMultiDrawElementsBaseVertexEXT_basevertex(const State &glState,
-                                                      bool isCallValid,
-                                                      PrimitiveMode modePacked,
-                                                      const GLsizei *count,
-                                                      DrawElementsType typePacked,
-                                                      const void *const *indices,
-                                                      GLsizei drawcount,
-                                                      const GLint *basevertex,
-                                                      ParamCapture *basevertexParam)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureDrawElementsBaseVertexOES_indices(const State &glState,
-                                              bool isCallValid,
-                                              PrimitiveMode modePacked,
-                                              GLsizei count,
-                                              DrawElementsType typePacked,
-                                              const void *indices,
-                                              GLint basevertex,
-                                              ParamCapture *indicesParam)
-{
-    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
-                                indicesParam);
-}
-
-void CaptureDrawElementsInstancedBaseVertexOES_indices(const State &glState,
-                                                       bool isCallValid,
-                                                       PrimitiveMode modePacked,
-                                                       GLsizei count,
-                                                       DrawElementsType typePacked,
-                                                       const void *indices,
-                                                       GLsizei instancecount,
-                                                       GLint basevertex,
-                                                       ParamCapture *indicesParam)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureDrawRangeElementsBaseVertexOES_indices(const State &glState,
-                                                   bool isCallValid,
-                                                   PrimitiveMode modePacked,
-                                                   GLuint start,
-                                                   GLuint end,
-                                                   GLsizei count,
-                                                   DrawElementsType typePacked,
-                                                   const void *indices,
-                                                   GLint basevertex,
-                                                   ParamCapture *indicesParam)
-{
-    UNIMPLEMENTED();
-}
-
+// GL_ANGLE_multi_draw
 void CaptureMultiDrawArraysANGLE_firsts(const State &glState,
                                         bool isCallValid,
                                         PrimitiveMode modePacked,
@@ -526,6 +660,7 @@ void CaptureMultiDrawElementsInstancedANGLE_instanceCounts(const State &glState,
     UNIMPLEMENTED();
 }
 
+// GL_ANGLE_request_extension
 void CaptureRequestExtensionANGLE_name(const State &glState,
                                        bool isCallValid,
                                        const GLchar *name,
@@ -542,6 +677,7 @@ void CaptureDisableExtensionANGLE_name(const State &glState,
     CaptureString(name, paramCapture);
 }
 
+// GL_ANGLE_robust_client_memory
 void CaptureGetBooleanvRobustANGLE_length(const State &glState,
                                           bool isCallValid,
                                           GLenum pname,
@@ -2073,28 +2209,147 @@ void CaptureGetQueryObjectui64vRobustANGLE_params(const State &glState,
     UNIMPLEMENTED();
 }
 
-void CaptureGetTexLevelParameterivANGLE_params(const State &glState,
-                                               bool isCallValid,
-                                               TextureTarget targetPacked,
-                                               GLint level,
-                                               GLenum pname,
-                                               GLint *params,
-                                               ParamCapture *paramCapture)
+void CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_length(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLsizei bufSize,
+    GLsizei *length,
+    GLfloat *params,
+    angle::ParamCapture *paramCapture)
 {
-    paramCapture->readBufferSizeBytes = sizeof(GLint);
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
-void CaptureGetTexLevelParameterfvANGLE_params(const State &glState,
-                                               bool isCallValid,
-                                               TextureTarget targetPacked,
-                                               GLint level,
-                                               GLenum pname,
-                                               GLfloat *params,
-                                               ParamCapture *paramCapture)
+void CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_params(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLsizei bufSize,
+    GLsizei *length,
+    GLfloat *params,
+    angle::ParamCapture *paramCapture)
 {
-    paramCapture->readBufferSizeBytes = sizeof(GLfloat);
+    CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(glState, isCallValid, plane,
+                                                                  pname, params, paramCapture);
 }
 
+void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_length(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLsizei bufSize,
+    GLsizei *length,
+    GLint *params,
+    angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
+}
+
+void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_params(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLsizei bufSize,
+    GLsizei *length,
+    GLint *params,
+    angle::ParamCapture *paramCapture)
+{
+    CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(glState, isCallValid, plane,
+                                                                  pname, params, paramCapture);
+}
+
+// GL_ANGLE_shader_pixel_local_storage
+void CaptureFramebufferPixelLocalClearValuefvANGLE_value(const State &glState,
+                                                         bool isCallValid,
+                                                         GLint plane,
+                                                         const GLfloat *value,
+                                                         angle::ParamCapture *paramCapture)
+{
+    CaptureArray(value, 4, paramCapture);
+}
+
+void CaptureFramebufferPixelLocalClearValueivANGLE_value(const State &glState,
+                                                         bool isCallValid,
+                                                         GLint plane,
+                                                         const GLint *value,
+                                                         angle::ParamCapture *paramCapture)
+{
+    CaptureArray(value, 4, paramCapture);
+}
+
+void CaptureFramebufferPixelLocalClearValueuivANGLE_value(const State &glState,
+                                                          bool isCallValid,
+                                                          GLint plane,
+                                                          const GLuint *value,
+                                                          angle::ParamCapture *paramCapture)
+{
+    CaptureArray(value, 4, paramCapture);
+}
+
+void CaptureBeginPixelLocalStorageANGLE_loadops(const State &glState,
+                                                bool isCallValid,
+                                                GLsizei n,
+                                                const GLenum loadops[],
+                                                angle::ParamCapture *paramCapture)
+{
+    CaptureArray(loadops, n, paramCapture);
+}
+
+void CaptureEndPixelLocalStorageANGLE_storeops(const State &glState,
+                                               bool isCallValid,
+                                               GLsizei n,
+                                               const GLenum *storeops,
+                                               angle::ParamCapture *paramCapture)
+{
+    CaptureArray(storeops, n, paramCapture);
+}
+
+void CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLfloat *params,
+    angle::ParamCapture *paramCapture)
+{
+    size_t numParams = 1;
+    switch (pname)
+    {
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+            numParams = 4;
+            break;
+    }
+    paramCapture->readBufferSizeBytes = sizeof(GLfloat) * numParams;
+}
+
+void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLint *params,
+    angle::ParamCapture *paramCapture)
+{
+    size_t numParams = 1;
+    switch (pname)
+    {
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+            numParams = 4;
+            break;
+    }
+    paramCapture->readBufferSizeBytes = sizeof(GLint) * numParams;
+}
+
+// GL_ANGLE_texture_multisample
 void CaptureGetMultisamplefvANGLE_val(const State &glState,
                                       bool isCallValid,
                                       GLenum pname,
@@ -2106,6 +2361,7 @@ void CaptureGetMultisamplefvANGLE_val(const State &glState,
     paramCapture->readBufferSizeBytes = sizeof(GLfloat) * 2;
 }
 
+// GL_ANGLE_translated_shader_source
 void CaptureGetTranslatedShaderSourceANGLE_length(const State &glState,
                                                   bool isCallValid,
                                                   ShaderProgramID shader,
@@ -2128,6 +2384,48 @@ void CaptureGetTranslatedShaderSourceANGLE_source(const State &glState,
     UNIMPLEMENTED();
 }
 
+// GL_ANGLE_vulkan_image
+void CaptureAcquireTexturesANGLE_texturesPacked(const State &glState,
+                                                bool isCallValid,
+                                                GLuint numTextures,
+                                                const TextureID *textures,
+                                                const GLenum *layouts,
+                                                angle::ParamCapture *paramCapture)
+{
+    CaptureArray(textures, numTextures, paramCapture);
+}
+
+void CaptureAcquireTexturesANGLE_layouts(const State &glState,
+                                         bool isCallValid,
+                                         GLuint numTextures,
+                                         const TextureID *texturesPacked,
+                                         const GLenum *layouts,
+                                         angle::ParamCapture *paramCapture)
+{
+    CaptureArray(layouts, numTextures * sizeof(GLenum), paramCapture);
+}
+
+void CaptureReleaseTexturesANGLE_texturesPacked(const State &glState,
+                                                bool isCallValid,
+                                                GLuint numTextures,
+                                                const TextureID *textures,
+                                                GLenum *layouts,
+                                                angle::ParamCapture *paramCapture)
+{
+    CaptureArray(textures, numTextures, paramCapture);
+}
+
+void CaptureReleaseTexturesANGLE_layouts(const State &glState,
+                                         bool isCallValid,
+                                         GLuint numTextures,
+                                         const TextureID *texturesPacked,
+                                         GLenum *layouts,
+                                         angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_CHROMIUM_bind_uniform_location
 void CaptureBindUniformLocationCHROMIUM_name(const State &glState,
                                              bool isCallValid,
                                              ShaderProgramID program,
@@ -2138,6 +2436,48 @@ void CaptureBindUniformLocationCHROMIUM_name(const State &glState,
     CaptureString(name, paramCapture);
 }
 
+// GL_EXT_EGL_image_storage
+void CaptureEGLImageTargetTexStorageEXT_attrib_list(const State &glState,
+                                                    bool isCallValid,
+                                                    GLenum target,
+                                                    egl::ImageID image,
+                                                    const GLint *attrib_list,
+                                                    angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_EXT_base_instance
+void CaptureDrawElementsInstancedBaseInstanceEXT_indices(const State &glState,
+                                                         bool isCallValid,
+                                                         PrimitiveMode mode,
+                                                         GLsizei count,
+                                                         DrawElementsType type,
+                                                         const void *indices,
+                                                         GLsizei instancecount,
+                                                         GLuint baseinstance,
+                                                         angle::ParamCapture *indicesParam)
+{
+    CaptureDrawElements_indices(glState, isCallValid, mode, count, type, indices, indicesParam);
+}
+
+void CaptureDrawElementsInstancedBaseVertexBaseInstanceEXT_indices(
+    const State &glState,
+    bool isCallValid,
+    PrimitiveMode modePacked,
+    GLsizei count,
+    DrawElementsType typePacked,
+    const void *indices,
+    GLsizei instancecount,
+    GLint basevertex,
+    GLuint baseInstance,
+    angle::ParamCapture *indicesParam)
+{
+    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
+                                indicesParam);
+}
+
+// GL_EXT_blend_func_extended
 void CaptureBindFragDataLocationEXT_name(const State &glState,
                                          bool isCallValid,
                                          ShaderProgramID program,
@@ -2178,6 +2518,103 @@ void CaptureGetProgramResourceLocationIndexEXT_name(const State &glState,
     CaptureString(name, paramCapture);
 }
 
+// GL_EXT_buffer_storage
+void CaptureBufferStorageEXT_data(const State &glState,
+                                  bool isCallValid,
+                                  BufferBinding targetPacked,
+                                  GLsizeiptr size,
+                                  const void *data,
+                                  GLbitfield flags,
+                                  angle::ParamCapture *paramCapture)
+{
+    if (data)
+    {
+        CaptureMemory(data, size, paramCapture);
+    }
+}
+
+// GL_EXT_clear_texture
+void CaptureClearTexImageEXT_data(const State &glState,
+                                  bool isCallValid,
+                                  TextureID texturePacked,
+                                  GLint level,
+                                  GLenum format,
+                                  GLenum type,
+                                  const void *data,
+                                  angle::ParamCapture *paramCapture)
+{
+    if (!data)
+    {
+        return;
+    }
+
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(format, type);
+    GLuint captureSize                           = internalFormatInfo.computePixelBytes(type);
+    CaptureMemory(data, captureSize, paramCapture);
+}
+
+void CaptureClearTexSubImageEXT_data(const State &glState,
+                                     bool isCallValid,
+                                     TextureID texturePacked,
+                                     GLint level,
+                                     GLint xoffset,
+                                     GLint yoffset,
+                                     GLint zoffset,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLsizei depth,
+                                     GLenum format,
+                                     GLenum type,
+                                     const void *data,
+                                     angle::ParamCapture *paramCapture)
+{
+    if (!data)
+    {
+        return;
+    }
+
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(format, type);
+    GLuint captureSize                           = internalFormatInfo.computePixelBytes(type);
+    CaptureMemory(data, captureSize, paramCapture);
+}
+
+// GL_EXT_debug_label
+void CaptureGetObjectLabelEXT_length(const State &glState,
+                                     bool isCallValid,
+                                     GLenum type,
+                                     GLuint object,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLchar *label,
+                                     angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetObjectLabelEXT_label(const State &glState,
+                                    bool isCallValid,
+                                    GLenum type,
+                                    GLuint object,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLchar *label,
+                                    angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureLabelObjectEXT_label(const State &glState,
+                                 bool isCallValid,
+                                 GLenum type,
+                                 GLuint object,
+                                 GLsizei length,
+                                 const GLchar *label,
+                                 angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+// GL_EXT_debug_marker
 void CaptureInsertEventMarkerEXT_marker(const State &glState,
                                         bool isCallValid,
                                         GLsizei length,
@@ -2196,6 +2633,7 @@ void CapturePushGroupMarkerEXT_marker(const State &glState,
     // Skipped
 }
 
+// GL_EXT_discard_framebuffer
 void CaptureDiscardFramebufferEXT_attachments(const State &glState,
                                               bool isCallValid,
                                               GLenum target,
@@ -2206,6 +2644,7 @@ void CaptureDiscardFramebufferEXT_attachments(const State &glState,
     CaptureArray(attachments, numAttachments, paramCapture);
 }
 
+// GL_EXT_disjoint_timer_query
 void CaptureDeleteQueriesEXT_idsPacked(const State &glState,
                                        bool isCallValid,
                                        GLsizei n,
@@ -2224,26 +2663,15 @@ void CaptureGenQueriesEXT_idsPacked(const State &glState,
     CaptureGenHandles(n, ids, paramCapture);
 }
 
-// For each of the GetQueryObject functions below, the spec states:
-//
-//  There may be an indeterminate delay before a query object's
-//  result value is available. If pname is QUERY_RESULT_AVAILABLE,
-//  FALSE is returned if such a delay would be required; otherwise
-//  TRUE is returned. It must always be true that if any query
-//  object returns a result available of TRUE, all queries of the
-//  same type issued prior to that query must also return TRUE.
-//  Repeatedly querying QUERY_RESULT_AVAILABLE for any given query
-//  object is guaranteed to return TRUE eventually.
-//
-//  If pname is QUERY_RESULT, then the query object's result value is
-//  returned as a single integer in params. If the value is so large
-//  in magnitude that it cannot be represented with the requested
-//  type, then the nearest value representable using the requested type
-//  is returned. Querying QUERY_RESULT for any given query object
-//  forces that query to complete within a finite amount of time.
-//
-// Thus, return a single value for each param.
-//
+void CaptureGetInteger64vEXT_data(const State &glState,
+                                  bool isCallValid,
+                                  GLenum pname,
+                                  GLint64 *data,
+                                  angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
 void CaptureGetQueryObjecti64vEXT_params(const State &glState,
                                          bool isCallValid,
                                          QueryID id,
@@ -2252,15 +2680,6 @@ void CaptureGetQueryObjecti64vEXT_params(const State &glState,
                                          ParamCapture *paramCapture)
 {
     paramCapture->readBufferSizeBytes = sizeof(GLint64);
-}
-
-void CaptureGetInteger64vEXT_data(const State &glState,
-                                  bool isCallValid,
-                                  GLenum pname,
-                                  GLint64 *data,
-                                  angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
 }
 
 void CaptureGetQueryObjectivEXT_params(const State &glState,
@@ -2303,6 +2722,7 @@ void CaptureGetQueryivEXT_params(const State &glState,
     CaptureMemory(params, sizeof(GLint), paramCapture);
 }
 
+// GL_EXT_draw_buffers
 void CaptureDrawBuffersEXT_bufs(const State &glState,
                                 bool isCallValid,
                                 GLsizei n,
@@ -2312,6 +2732,86 @@ void CaptureDrawBuffersEXT_bufs(const State &glState,
     CaptureDrawBuffers_bufs(glState, isCallValid, n, bufs, paramCapture);
 }
 
+// GL_EXT_draw_elements_base_vertex
+void CaptureDrawElementsBaseVertexEXT_indices(const State &glState,
+                                              bool isCallValid,
+                                              PrimitiveMode modePacked,
+                                              GLsizei count,
+                                              DrawElementsType typePacked,
+                                              const void *indices,
+                                              GLint basevertex,
+                                              ParamCapture *indicesParam)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureDrawElementsInstancedBaseVertexEXT_indices(const State &glState,
+                                                       bool isCallValid,
+                                                       PrimitiveMode modePacked,
+                                                       GLsizei count,
+                                                       DrawElementsType typePacked,
+                                                       const void *indices,
+                                                       GLsizei instancecount,
+                                                       GLint basevertex,
+                                                       ParamCapture *indicesParam)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureDrawRangeElementsBaseVertexEXT_indices(const State &glState,
+                                                   bool isCallValid,
+                                                   PrimitiveMode modePacked,
+                                                   GLuint start,
+                                                   GLuint end,
+                                                   GLsizei count,
+                                                   DrawElementsType typePacked,
+                                                   const void *indices,
+                                                   GLint basevertex,
+                                                   ParamCapture *indicesParam)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureMultiDrawElementsBaseVertexEXT_count(const State &glState,
+                                                 bool isCallValid,
+                                                 PrimitiveMode modePacked,
+                                                 const GLsizei *count,
+                                                 DrawElementsType typePacked,
+                                                 const void *const *indices,
+                                                 GLsizei drawcount,
+                                                 const GLint *basevertex,
+                                                 ParamCapture *countParam)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureMultiDrawElementsBaseVertexEXT_indices(const State &glState,
+                                                   bool isCallValid,
+                                                   PrimitiveMode modePacked,
+                                                   const GLsizei *count,
+                                                   DrawElementsType typePacked,
+                                                   const void *const *indices,
+                                                   GLsizei drawcount,
+                                                   const GLint *basevertex,
+                                                   ParamCapture *indicesParam)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureMultiDrawElementsBaseVertexEXT_basevertex(const State &glState,
+                                                      bool isCallValid,
+                                                      PrimitiveMode modePacked,
+                                                      const GLsizei *count,
+                                                      DrawElementsType typePacked,
+                                                      const void *const *indices,
+                                                      GLsizei drawcount,
+                                                      const GLint *basevertex,
+                                                      ParamCapture *basevertexParam)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_EXT_draw_instanced
 void CaptureDrawElementsInstancedEXT_indices(const State &glState,
                                              bool isCallValid,
                                              PrimitiveMode modePacked,
@@ -2325,6 +2825,7 @@ void CaptureDrawElementsInstancedEXT_indices(const State &glState,
                                 paramCapture);
 }
 
+// GL_EXT_fragment_shading_rate
 void CaptureGetFragmentShadingRatesEXT_count(const State &glState,
                                              bool isCallValid,
                                              GLsizei samples,
@@ -2346,6 +2847,7 @@ void CaptureGetFragmentShadingRatesEXT_shadingRates(const State &glState,
     UNIMPLEMENTED();
 }
 
+// GL_EXT_memory_object
 void CaptureCreateMemoryObjectsEXT_memoryObjectsPacked(const State &glState,
                                                        bool isCallValid,
                                                        GLsizei n,
@@ -2403,6 +2905,89 @@ void CaptureMemoryObjectParameterivEXT_params(const State &glState,
     CaptureMemory(params, sizeof(GLint), paramCapture);
 }
 
+// GL_EXT_multi_draw_arrays
+void CaptureMultiDrawArraysEXT_first(const State &glState,
+                                     bool isCallValid,
+                                     PrimitiveMode modePacked,
+                                     const GLint *first,
+                                     const GLsizei *count,
+                                     GLsizei primcount,
+                                     angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureMultiDrawArraysEXT_count(const State &glState,
+                                     bool isCallValid,
+                                     PrimitiveMode modePacked,
+                                     const GLint *first,
+                                     const GLsizei *count,
+                                     GLsizei primcount,
+                                     angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureMultiDrawElementsEXT_count(const State &glState,
+                                       bool isCallValid,
+                                       PrimitiveMode modePacked,
+                                       const GLsizei *count,
+                                       DrawElementsType typePacked,
+                                       const void *const *indices,
+                                       GLsizei primcount,
+                                       angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureMultiDrawElementsEXT_indices(const State &glState,
+                                         bool isCallValid,
+                                         PrimitiveMode modePacked,
+                                         const GLsizei *count,
+                                         DrawElementsType typePacked,
+                                         const void *const *indices,
+                                         GLsizei primcount,
+                                         angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_EXT_multi_draw_indirect
+void CaptureMultiDrawArraysIndirectEXT_indirect(const State &glState,
+                                                bool isCallValid,
+                                                PrimitiveMode modePacked,
+                                                const void *indirect,
+                                                GLsizei drawcount,
+                                                GLsizei stride,
+                                                angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureMultiDrawElementsIndirectEXT_indirect(const State &glState,
+                                                  bool isCallValid,
+                                                  PrimitiveMode modePacked,
+                                                  DrawElementsType typePacked,
+                                                  const void *indirect,
+                                                  GLsizei drawcount,
+                                                  GLsizei stride,
+                                                  angle::ParamCapture *paramCapture)
+{
+    if (glState.getTargetBuffer(gl::BufferBinding::DrawIndirect) != nullptr)
+    {
+        paramCapture->value.voidConstPointerVal = indirect;
+    }
+    else
+    {
+        if (stride == 0)
+        {
+            stride = sizeof(DrawElementsIndirectCommand);
+        }
+        CaptureMemory(indirect, stride * drawcount, paramCapture);
+    }
+}
+
+// GL_EXT_robustness
 void CaptureGetnUniformfvEXT_params(const State &glState,
                                     bool isCallValid,
                                     ShaderProgramID program,
@@ -2440,54 +3025,7 @@ void CaptureReadnPixelsEXT_data(const State &glState,
     UNIMPLEMENTED();
 }
 
-void CaptureGetnUniformfvKHR_params(const State &glState,
-                                    bool isCallValid,
-                                    ShaderProgramID programPacked,
-                                    UniformLocation locationPacked,
-                                    GLsizei bufSize,
-                                    GLfloat *params,
-                                    angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureGetnUniformivKHR_params(const State &glState,
-                                    bool isCallValid,
-                                    ShaderProgramID programPacked,
-                                    UniformLocation locationPacked,
-                                    GLsizei bufSize,
-                                    GLint *params,
-                                    angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureGetnUniformuivKHR_params(const State &glState,
-                                     bool isCallValid,
-                                     ShaderProgramID programPacked,
-                                     UniformLocation locationPacked,
-                                     GLsizei bufSize,
-                                     GLuint *params,
-                                     angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureReadnPixelsKHR_data(const State &glState,
-                                bool isCallValid,
-                                GLint x,
-                                GLint y,
-                                GLsizei width,
-                                GLsizei height,
-                                GLenum format,
-                                GLenum type,
-                                GLsizei bufSize,
-                                void *data,
-                                angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
+// GL_EXT_semaphore
 void CaptureDeleteSemaphoresEXT_semaphoresPacked(const State &glState,
                                                  bool isCallValid,
                                                  GLsizei n,
@@ -2603,970 +3141,6 @@ void CaptureWaitSemaphoreEXT_srcLayouts(const State &glState,
                                         ParamCapture *paramCapture)
 {
     CaptureArray(srcLayouts, (numBufferBarriers + numTextureBarriers), paramCapture);
-}
-
-void CaptureGetSamplerParameterIivEXT_params(const State &glState,
-                                             bool isCallValid,
-                                             SamplerID samplerPacked,
-                                             GLenum pname,
-                                             GLint *params,
-                                             angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetSamplerParameterIuivEXT_params(const State &glState,
-                                              bool isCallValid,
-                                              SamplerID samplerPacked,
-                                              GLenum pname,
-                                              GLuint *params,
-                                              angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetTexParameterIivEXT_params(const State &glState,
-                                         bool isCallValid,
-                                         TextureType targetPacked,
-                                         GLenum pname,
-                                         GLint *params,
-                                         angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetTexParameterIuivEXT_params(const State &glState,
-                                          bool isCallValid,
-                                          TextureType targetPacked,
-                                          GLenum pname,
-                                          GLuint *params,
-                                          angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureSamplerParameterIivEXT_param(const State &glState,
-                                         bool isCallValid,
-                                         SamplerID samplerPacked,
-                                         GLenum pname,
-                                         const GLint *param,
-                                         angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureSamplerParameterIuivEXT_param(const State &glState,
-                                          bool isCallValid,
-                                          SamplerID samplerPacked,
-                                          GLenum pname,
-                                          const GLuint *param,
-                                          angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureTexParameterIivEXT_params(const State &glState,
-                                      bool isCallValid,
-                                      TextureType targetPacked,
-                                      GLenum pname,
-                                      const GLint *params,
-                                      angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureTexParameterIuivEXT_params(const State &glState,
-                                       bool isCallValid,
-                                       TextureType targetPacked,
-                                       GLenum pname,
-                                       const GLuint *params,
-                                       angle::ParamCapture *paramCapture)
-{
-    CaptureTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params, paramCapture);
-}
-
-void CaptureDebugMessageCallbackKHR_userParam(const State &glState,
-                                              bool isCallValid,
-                                              GLDEBUGPROCKHR callback,
-                                              const void *userParam,
-                                              ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureDebugMessageControlKHR_ids(const State &glState,
-                                       bool isCallValid,
-                                       GLenum source,
-                                       GLenum type,
-                                       GLenum severity,
-                                       GLsizei count,
-                                       const GLuint *ids,
-                                       GLboolean enabled,
-                                       ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureDebugMessageInsertKHR_buf(const State &glState,
-                                      bool isCallValid,
-                                      GLenum source,
-                                      GLenum type,
-                                      GLuint id,
-                                      GLenum severity,
-                                      GLsizei length,
-                                      const GLchar *buf,
-                                      ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetDebugMessageLogKHR_sources(const State &glState,
-                                          bool isCallValid,
-                                          GLuint count,
-                                          GLsizei bufSize,
-                                          GLenum *sources,
-                                          GLenum *types,
-                                          GLuint *ids,
-                                          GLenum *severities,
-                                          GLsizei *lengths,
-                                          GLchar *messageLog,
-                                          ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetDebugMessageLogKHR_types(const State &glState,
-                                        bool isCallValid,
-                                        GLuint count,
-                                        GLsizei bufSize,
-                                        GLenum *sources,
-                                        GLenum *types,
-                                        GLuint *ids,
-                                        GLenum *severities,
-                                        GLsizei *lengths,
-                                        GLchar *messageLog,
-                                        ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetDebugMessageLogKHR_ids(const State &glState,
-                                      bool isCallValid,
-                                      GLuint count,
-                                      GLsizei bufSize,
-                                      GLenum *sources,
-                                      GLenum *types,
-                                      GLuint *ids,
-                                      GLenum *severities,
-                                      GLsizei *lengths,
-                                      GLchar *messageLog,
-                                      ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetDebugMessageLogKHR_severities(const State &glState,
-                                             bool isCallValid,
-                                             GLuint count,
-                                             GLsizei bufSize,
-                                             GLenum *sources,
-                                             GLenum *types,
-                                             GLuint *ids,
-                                             GLenum *severities,
-                                             GLsizei *lengths,
-                                             GLchar *messageLog,
-                                             ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetDebugMessageLogKHR_lengths(const State &glState,
-                                          bool isCallValid,
-                                          GLuint count,
-                                          GLsizei bufSize,
-                                          GLenum *sources,
-                                          GLenum *types,
-                                          GLuint *ids,
-                                          GLenum *severities,
-                                          GLsizei *lengths,
-                                          GLchar *messageLog,
-                                          ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetDebugMessageLogKHR_messageLog(const State &glState,
-                                             bool isCallValid,
-                                             GLuint count,
-                                             GLsizei bufSize,
-                                             GLenum *sources,
-                                             GLenum *types,
-                                             GLuint *ids,
-                                             GLenum *severities,
-                                             GLsizei *lengths,
-                                             GLchar *messageLog,
-                                             ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetObjectLabelKHR_length(const State &glState,
-                                     bool isCallValid,
-                                     GLenum identifier,
-                                     GLuint name,
-                                     GLsizei bufSize,
-                                     GLsizei *length,
-                                     GLchar *label,
-                                     ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetObjectLabelKHR_label(const State &glState,
-                                    bool isCallValid,
-                                    GLenum identifier,
-                                    GLuint name,
-                                    GLsizei bufSize,
-                                    GLsizei *length,
-                                    GLchar *label,
-                                    ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetObjectLabelEXT_length(const State &glState,
-                                     bool isCallValid,
-                                     GLenum type,
-                                     GLuint object,
-                                     GLsizei bufSize,
-                                     GLsizei *length,
-                                     GLchar *label,
-                                     angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetObjectLabelEXT_label(const State &glState,
-                                    bool isCallValid,
-                                    GLenum type,
-                                    GLuint object,
-                                    GLsizei bufSize,
-                                    GLsizei *length,
-                                    GLchar *label,
-                                    angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureLabelObjectEXT_label(const State &glState,
-                                 bool isCallValid,
-                                 GLenum type,
-                                 GLuint object,
-                                 GLsizei length,
-                                 const GLchar *label,
-                                 angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetObjectPtrLabelKHR_ptr(const State &glState,
-                                     bool isCallValid,
-                                     const void *ptr,
-                                     GLsizei bufSize,
-                                     GLsizei *length,
-                                     GLchar *label,
-                                     ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetObjectPtrLabelKHR_length(const State &glState,
-                                        bool isCallValid,
-                                        const void *ptr,
-                                        GLsizei bufSize,
-                                        GLsizei *length,
-                                        GLchar *label,
-                                        ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetObjectPtrLabelKHR_label(const State &glState,
-                                       bool isCallValid,
-                                       const void *ptr,
-                                       GLsizei bufSize,
-                                       GLsizei *length,
-                                       GLchar *label,
-                                       ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetPointervKHR_params(const State &glState,
-                                  bool isCallValid,
-                                  GLenum pname,
-                                  void **params,
-                                  ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureObjectLabelKHR_label(const State &glState,
-                                 bool isCallValid,
-                                 GLenum identifier,
-                                 GLuint name,
-                                 GLsizei length,
-                                 const GLchar *label,
-                                 ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureObjectPtrLabelKHR_ptr(const State &glState,
-                                  bool isCallValid,
-                                  const void *ptr,
-                                  GLsizei length,
-                                  const GLchar *label,
-                                  ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureObjectPtrLabelKHR_label(const State &glState,
-                                    bool isCallValid,
-                                    const void *ptr,
-                                    GLsizei length,
-                                    const GLchar *label,
-                                    ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CapturePushDebugGroupKHR_message(const State &glState,
-                                      bool isCallValid,
-                                      GLenum source,
-                                      GLuint id,
-                                      GLsizei length,
-                                      const GLchar *message,
-                                      ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetFramebufferParameterivMESA_params(const State &glState,
-                                                 bool isCallValid,
-                                                 GLenum target,
-                                                 GLenum pname,
-                                                 GLint *params,
-                                                 angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureDeleteFencesNV_fencesPacked(const State &glState,
-                                        bool isCallValid,
-                                        GLsizei n,
-                                        const FenceNVID *fences,
-                                        ParamCapture *paramCapture)
-{
-    CaptureMemory(fences, n * sizeof(FenceNVID), paramCapture);
-}
-
-void CaptureGenFencesNV_fencesPacked(const State &glState,
-                                     bool isCallValid,
-                                     GLsizei n,
-                                     FenceNVID *fences,
-                                     ParamCapture *paramCapture)
-{
-    CaptureGenHandles(n, fences, paramCapture);
-}
-
-void CaptureGetFenceivNV_params(const State &glState,
-                                bool isCallValid,
-                                FenceNVID fence,
-                                GLenum pname,
-                                GLint *params,
-                                ParamCapture *paramCapture)
-{
-    CaptureMemory(params, sizeof(GLint), paramCapture);
-}
-
-void CaptureDrawTexfvOES_coords(const State &glState,
-                                bool isCallValid,
-                                const GLfloat *coords,
-                                ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureDrawTexivOES_coords(const State &glState,
-                                bool isCallValid,
-                                const GLint *coords,
-                                ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureDrawTexsvOES_coords(const State &glState,
-                                bool isCallValid,
-                                const GLshort *coords,
-                                ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureDrawTexxvOES_coords(const State &glState,
-                                bool isCallValid,
-                                const GLfixed *coords,
-                                ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureDeleteFramebuffersOES_framebuffersPacked(const State &glState,
-                                                     bool isCallValid,
-                                                     GLsizei n,
-                                                     const FramebufferID *framebuffers,
-                                                     ParamCapture *paramCapture)
-{
-    CaptureArray(framebuffers, n, paramCapture);
-}
-
-void CaptureDeleteRenderbuffersOES_renderbuffersPacked(const State &glState,
-                                                       bool isCallValid,
-                                                       GLsizei n,
-                                                       const RenderbufferID *renderbuffers,
-                                                       ParamCapture *paramCapture)
-{
-    CaptureArray(renderbuffers, n, paramCapture);
-}
-
-void CaptureGenFramebuffersOES_framebuffersPacked(const State &glState,
-                                                  bool isCallValid,
-                                                  GLsizei n,
-                                                  FramebufferID *framebuffers,
-                                                  ParamCapture *paramCapture)
-{
-    CaptureGenHandles(n, framebuffers, paramCapture);
-}
-
-void CaptureGenRenderbuffersOES_renderbuffersPacked(const State &glState,
-                                                    bool isCallValid,
-                                                    GLsizei n,
-                                                    RenderbufferID *renderbuffers,
-                                                    ParamCapture *paramCapture)
-{
-    CaptureGenHandles(n, renderbuffers, paramCapture);
-}
-
-void CaptureGetFramebufferAttachmentParameterivOES_params(const State &glState,
-                                                          bool isCallValid,
-                                                          GLenum target,
-                                                          GLenum attachment,
-                                                          GLenum pname,
-                                                          GLint *params,
-                                                          ParamCapture *paramCapture)
-{
-    CaptureMemory(params, sizeof(GLint), paramCapture);
-}
-
-void CaptureGetRenderbufferParameterivOES_params(const State &glState,
-                                                 bool isCallValid,
-                                                 GLenum target,
-                                                 GLenum pname,
-                                                 GLint *params,
-                                                 ParamCapture *paramCapture)
-{
-    CaptureMemory(params, sizeof(GLint), paramCapture);
-}
-
-void CaptureGetProgramBinaryOES_length(const State &glState,
-                                       bool isCallValid,
-                                       ShaderProgramID program,
-                                       GLsizei bufSize,
-                                       GLsizei *length,
-                                       GLenum *binaryFormat,
-                                       void *binary,
-                                       ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
-}
-
-void CaptureGetProgramBinaryOES_binaryFormat(const State &glState,
-                                             bool isCallValid,
-                                             ShaderProgramID program,
-                                             GLsizei bufSize,
-                                             GLsizei *length,
-                                             GLenum *binaryFormat,
-                                             void *binary,
-                                             ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = sizeof(GLenum);
-}
-
-void CaptureGetProgramBinaryOES_binary(const State &glState,
-                                       bool isCallValid,
-                                       ShaderProgramID program,
-                                       GLsizei bufSize,
-                                       GLsizei *length,
-                                       GLenum *binaryFormat,
-                                       void *binary,
-                                       ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = bufSize;
-}
-
-void CaptureProgramBinaryOES_binary(const State &glState,
-                                    bool isCallValid,
-                                    ShaderProgramID program,
-                                    GLenum binaryFormat,
-                                    const void *binary,
-                                    GLint length,
-                                    ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureGetBufferPointervOES_params(const State &glState,
-                                        bool isCallValid,
-                                        BufferBinding targetPacked,
-                                        GLenum pname,
-                                        void **params,
-                                        ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureMatrixIndexPointerOES_pointer(const State &glState,
-                                          bool isCallValid,
-                                          GLint size,
-                                          GLenum type,
-                                          GLsizei stride,
-                                          const void *pointer,
-                                          ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureWeightPointerOES_pointer(const State &glState,
-                                     bool isCallValid,
-                                     GLint size,
-                                     GLenum type,
-                                     GLsizei stride,
-                                     const void *pointer,
-                                     ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CapturePointSizePointerOES_pointer(const State &glState,
-                                        bool isCallValid,
-                                        VertexAttribType typePacked,
-                                        GLsizei stride,
-                                        const void *pointer,
-                                        ParamCapture *paramCapture)
-{
-    CaptureVertexPointerGLES1(glState, ClientVertexArrayType::PointSize, pointer, paramCapture);
-}
-
-void CaptureQueryMatrixxOES_mantissa(const State &glState,
-                                     bool isCallValid,
-                                     GLfixed *mantissa,
-                                     GLint *exponent,
-                                     ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureQueryMatrixxOES_exponent(const State &glState,
-                                     bool isCallValid,
-                                     GLfixed *mantissa,
-                                     GLint *exponent,
-                                     ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureCompressedTexImage3DOES_data(const State &glState,
-                                         bool isCallValid,
-                                         TextureTarget targetPacked,
-                                         GLint level,
-                                         GLenum internalformat,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLsizei depth,
-                                         GLint border,
-                                         GLsizei imageSize,
-                                         const void *data,
-                                         ParamCapture *paramCapture)
-{
-    CaptureCompressedTexImage3D_data(glState, isCallValid, targetPacked, level, internalformat,
-                                     width, height, depth, border, imageSize, data, paramCapture);
-}
-
-void CaptureCompressedTexSubImage3DOES_data(const State &glState,
-                                            bool isCallValid,
-                                            TextureTarget targetPacked,
-                                            GLint level,
-                                            GLint xoffset,
-                                            GLint yoffset,
-                                            GLint zoffset,
-                                            GLsizei width,
-                                            GLsizei height,
-                                            GLsizei depth,
-                                            GLenum format,
-                                            GLsizei imageSize,
-                                            const void *data,
-                                            ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureTexImage3DOES_pixels(const State &glState,
-                                 bool isCallValid,
-                                 TextureTarget targetPacked,
-                                 GLint level,
-                                 GLenum internalformat,
-                                 GLsizei width,
-                                 GLsizei height,
-                                 GLsizei depth,
-                                 GLint border,
-                                 GLenum format,
-                                 GLenum type,
-                                 const void *pixels,
-                                 ParamCapture *paramCapture)
-{
-    CaptureTexImage3D_pixels(glState, isCallValid, targetPacked, level, internalformat, width,
-                             height, depth, border, format, type, pixels, paramCapture);
-}
-
-void CaptureTexSubImage3DOES_pixels(const State &glState,
-                                    bool isCallValid,
-                                    TextureTarget targetPacked,
-                                    GLint level,
-                                    GLint xoffset,
-                                    GLint yoffset,
-                                    GLint zoffset,
-                                    GLsizei width,
-                                    GLsizei height,
-                                    GLsizei depth,
-                                    GLenum format,
-                                    GLenum type,
-                                    const void *pixels,
-                                    ParamCapture *paramCapture)
-{
-    CaptureTexSubImage3D_pixels(glState, isCallValid, targetPacked, level, xoffset, yoffset,
-                                zoffset, width, height, depth, format, type, pixels, paramCapture);
-}
-
-void CaptureGetSamplerParameterIivOES_params(const State &glState,
-                                             bool isCallValid,
-                                             SamplerID sampler,
-                                             GLenum pname,
-                                             GLint *params,
-                                             ParamCapture *paramCapture)
-{
-    CaptureGetSamplerParameterIiv_params(glState, isCallValid, sampler, pname, params,
-                                         paramCapture);
-}
-
-void CaptureGetSamplerParameterIuivOES_params(const State &glState,
-                                              bool isCallValid,
-                                              SamplerID sampler,
-                                              GLenum pname,
-                                              GLuint *params,
-                                              ParamCapture *paramCapture)
-{
-    CaptureGetSamplerParameterIuiv_params(glState, isCallValid, sampler, pname, params,
-                                          paramCapture);
-}
-
-void CaptureGetTexParameterIivOES_params(const State &glState,
-                                         bool isCallValid,
-                                         TextureType targetPacked,
-                                         GLenum pname,
-                                         GLint *params,
-                                         ParamCapture *paramCapture)
-{
-    CaptureGetTexParameterIiv_params(glState, isCallValid, targetPacked, pname, params,
-                                     paramCapture);
-}
-
-void CaptureGetTexParameterIuivOES_params(const State &glState,
-                                          bool isCallValid,
-                                          TextureType targetPacked,
-                                          GLenum pname,
-                                          GLuint *params,
-                                          ParamCapture *paramCapture)
-{
-    CaptureGetTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params,
-                                      paramCapture);
-}
-
-void CaptureSamplerParameterIivOES_param(const State &glState,
-                                         bool isCallValid,
-                                         SamplerID sampler,
-                                         GLenum pname,
-                                         const GLint *param,
-                                         ParamCapture *paramCapture)
-{
-    CaptureSamplerParameterIiv_param(glState, isCallValid, sampler, pname, param, paramCapture);
-}
-
-void CaptureSamplerParameterIuivOES_param(const State &glState,
-                                          bool isCallValid,
-                                          SamplerID sampler,
-                                          GLenum pname,
-                                          const GLuint *param,
-                                          ParamCapture *paramCapture)
-{
-    CaptureSamplerParameterIuiv_param(glState, isCallValid, sampler, pname, param, paramCapture);
-}
-
-void CaptureTexParameterIivOES_params(const State &glState,
-                                      bool isCallValid,
-                                      TextureType targetPacked,
-                                      GLenum pname,
-                                      const GLint *params,
-                                      ParamCapture *paramCapture)
-{
-    CaptureTexParameterIiv_params(glState, isCallValid, targetPacked, pname, params, paramCapture);
-}
-
-void CaptureTexParameterIuivOES_params(const State &glState,
-                                       bool isCallValid,
-                                       TextureType targetPacked,
-                                       GLenum pname,
-                                       const GLuint *params,
-                                       ParamCapture *paramCapture)
-{
-    CaptureTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params, paramCapture);
-}
-
-void CaptureGetTexGenfvOES_params(const State &glState,
-                                  bool isCallValid,
-                                  GLenum coord,
-                                  GLenum pname,
-                                  GLfloat *params,
-                                  ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureGetTexGenivOES_params(const State &glState,
-                                  bool isCallValid,
-                                  GLenum coord,
-                                  GLenum pname,
-                                  GLint *params,
-                                  ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureGetTexGenxvOES_params(const State &glState,
-                                  bool isCallValid,
-                                  GLenum coord,
-                                  GLenum pname,
-                                  GLfixed *params,
-                                  ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureTexGenfvOES_params(const State &glState,
-                               bool isCallValid,
-                               GLenum coord,
-                               GLenum pname,
-                               const GLfloat *params,
-                               ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureTexGenivOES_params(const State &glState,
-                               bool isCallValid,
-                               GLenum coord,
-                               GLenum pname,
-                               const GLint *params,
-                               ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureTexGenxvOES_params(const State &glState,
-                               bool isCallValid,
-                               GLenum coord,
-                               GLenum pname,
-                               const GLfixed *params,
-                               ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureDeleteVertexArraysOES_arraysPacked(const State &glState,
-                                               bool isCallValid,
-                                               GLsizei n,
-                                               const VertexArrayID *arrays,
-                                               ParamCapture *paramCapture)
-{
-    CaptureDeleteVertexArrays_arraysPacked(glState, isCallValid, n, arrays, paramCapture);
-}
-
-void CaptureGenVertexArraysOES_arraysPacked(const State &glState,
-                                            bool isCallValid,
-                                            GLsizei n,
-                                            VertexArrayID *arrays,
-                                            ParamCapture *paramCapture)
-{
-    CaptureGenVertexArrays_arraysPacked(glState, isCallValid, n, arrays, paramCapture);
-}
-
-void CaptureBlobCacheCallbacksANGLE_userParam(const State &glState,
-                                              bool isCallValid,
-                                              GLSETBLOBPROCANGLE set,
-                                              GLGETBLOBPROCANGLE get,
-                                              const void *userParam,
-                                              angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetPointervANGLE_params(const State &glState,
-                                    bool isCallValid,
-                                    GLenum pname,
-                                    void **params,
-                                    angle::ParamCapture *paramCapture)
-{
-    // Skipped
-}
-
-void CaptureGetTexImageANGLE_pixels(const State &glState,
-                                    bool isCallValid,
-                                    TextureTarget target,
-                                    GLint level,
-                                    GLenum format,
-                                    GLenum type,
-                                    void *pixels,
-                                    angle::ParamCapture *paramCapture)
-{
-    if (glState.getTargetBuffer(gl::BufferBinding::PixelPack))
-    {
-        // If a pixel pack buffer is bound, this is an offset, not a pointer
-        paramCapture->value.voidPointerVal = pixels;
-        return;
-    }
-
-    const Texture *texture = glState.getTargetTexture(TextureTargetToType(target));
-    ASSERT(texture);
-
-    // Use a conservative upper bound instead of an exact size to be simple.
-    static constexpr GLsizei kMaxPixelSize = 32;
-    size_t width                           = texture->getWidth(target, level);
-    size_t height                          = texture->getHeight(target, level);
-    size_t depth                           = texture->getDepth(target, level);
-    paramCapture->readBufferSizeBytes      = kMaxPixelSize * width * height * depth;
-}
-
-void CaptureGetCompressedTexImageANGLE_pixels(const State &glState,
-                                              bool isCallValid,
-                                              TextureTarget target,
-                                              GLint level,
-                                              void *pixels,
-                                              angle::ParamCapture *paramCapture)
-{
-    const Texture *texture = glState.getTargetTexture(TextureTargetToType(target));
-    ASSERT(texture);
-    const gl::InternalFormat *formatInfo = texture->getFormat(target, level).info;
-    const gl::Extents &levelExtents      = texture->getExtents(target, level);
-
-    GLuint size;
-    bool result = formatInfo->computeCompressedImageSize(levelExtents, &size);
-    ASSERT(result);
-    paramCapture->readBufferSizeBytes = size;
-}
-
-void CaptureGetRenderbufferImageANGLE_pixels(const State &glState,
-                                             bool isCallValid,
-                                             GLenum target,
-                                             GLenum format,
-                                             GLenum type,
-                                             void *pixels,
-                                             angle::ParamCapture *paramCapture)
-{
-    if (glState.getTargetBuffer(gl::BufferBinding::PixelPack))
-    {
-        // If a pixel pack buffer is bound, this is an offset, not a pointer
-        paramCapture->value.voidPointerVal = pixels;
-        return;
-    }
-
-    const Renderbuffer *renderbuffer = glState.getCurrentRenderbuffer();
-    ASSERT(renderbuffer);
-
-    // Use a conservative upper bound instead of an exact size to be simple.
-    static constexpr GLsizei kMaxPixelSize = 32;
-    size_t width                           = renderbuffer->getWidth();
-    size_t height                          = renderbuffer->getHeight();
-    paramCapture->readBufferSizeBytes      = kMaxPixelSize * width * height;
-}
-
-void CaptureBufferStorageEXT_data(const State &glState,
-                                  bool isCallValid,
-                                  BufferBinding targetPacked,
-                                  GLsizeiptr size,
-                                  const void *data,
-                                  GLbitfield flags,
-                                  angle::ParamCapture *paramCapture)
-{
-    if (data)
-    {
-        CaptureMemory(data, size, paramCapture);
-    }
-}
-
-// GL_EXT_clear_texture
-void CaptureClearTexImageEXT_data(const State &glState,
-                                  bool isCallValid,
-                                  TextureID texturePacked,
-                                  GLint level,
-                                  GLenum format,
-                                  GLenum type,
-                                  const void *data,
-                                  angle::ParamCapture *paramCapture)
-{
-    if (!data)
-    {
-        return;
-    }
-
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(format, type);
-    GLuint captureSize                           = internalFormatInfo.computePixelBytes(type);
-    CaptureMemory(data, captureSize, paramCapture);
-}
-
-void CaptureClearTexSubImageEXT_data(const State &glState,
-                                     bool isCallValid,
-                                     TextureID texturePacked,
-                                     GLint level,
-                                     GLint xoffset,
-                                     GLint yoffset,
-                                     GLint zoffset,
-                                     GLsizei width,
-                                     GLsizei height,
-                                     GLsizei depth,
-                                     GLenum format,
-                                     GLenum type,
-                                     const void *data,
-                                     angle::ParamCapture *paramCapture)
-{
-    if (!data)
-    {
-        return;
-    }
-
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(format, type);
-    GLuint captureSize                           = internalFormatInfo.computePixelBytes(type);
-    CaptureMemory(data, captureSize, paramCapture);
 }
 
 // GL_EXT_separate_shader_objects
@@ -3870,449 +3444,88 @@ void CaptureProgramUniformMatrix4x3fvEXT_value(const State &glState,
     UNIMPLEMENTED();
 }
 
-void CaptureEGLImageTargetTexStorageEXT_attrib_list(const State &glState,
-                                                    bool isCallValid,
-                                                    GLenum target,
-                                                    egl::ImageID image,
-                                                    const GLint *attrib_list,
-                                                    angle::ParamCapture *paramCapture)
+// GL_EXT_texture_border_clamp
+void CaptureGetSamplerParameterIivEXT_params(const State &glState,
+                                             bool isCallValid,
+                                             SamplerID samplerPacked,
+                                             GLenum pname,
+                                             GLint *params,
+                                             angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
-void CaptureTexStorageMemFlags2DANGLE_imageCreateInfoPNext(const State &glState,
-                                                           bool isCallValid,
-                                                           TextureType targetPacked,
-                                                           GLsizei levels,
-                                                           GLenum internalFormat,
-                                                           GLsizei width,
-                                                           GLsizei height,
-                                                           MemoryObjectID memoryPacked,
-                                                           GLuint64 offset,
-                                                           GLbitfield createFlags,
-                                                           GLbitfield usageFlags,
-                                                           const void *imageCreateInfoPNext,
-                                                           angle::ParamCapture *paramCapture)
+void CaptureGetSamplerParameterIuivEXT_params(const State &glState,
+                                              bool isCallValid,
+                                              SamplerID samplerPacked,
+                                              GLenum pname,
+                                              GLuint *params,
+                                              angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
-void CaptureTexStorageMemFlags2DMultisampleANGLE_imageCreateInfoPNext(
-    const State &glState,
-    bool isCallValid,
-    TextureType targetPacked,
-    GLsizei samples,
-    GLenum internalFormat,
-    GLsizei width,
-    GLsizei height,
-    GLboolean fixedSampleLocations,
-    MemoryObjectID memoryPacked,
-    GLuint64 offset,
-    GLbitfield createFlags,
-    GLbitfield usageFlags,
-    const void *imageCreateInfoPNext,
-    angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureTexStorageMemFlags3DANGLE_imageCreateInfoPNext(const State &glState,
-                                                           bool isCallValid,
-                                                           TextureType targetPacked,
-                                                           GLsizei levels,
-                                                           GLenum internalFormat,
-                                                           GLsizei width,
-                                                           GLsizei height,
-                                                           GLsizei depth,
-                                                           MemoryObjectID memoryPacked,
-                                                           GLuint64 offset,
-                                                           GLbitfield createFlags,
-                                                           GLbitfield usageFlags,
-                                                           const void *imageCreateInfoPNext,
-                                                           angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureTexStorageMemFlags3DMultisampleANGLE_imageCreateInfoPNext(
-    const State &glState,
-    bool isCallValid,
-    TextureType targetPacked,
-    GLsizei samples,
-    GLenum internalFormat,
-    GLsizei width,
-    GLsizei height,
-    GLsizei depth,
-    GLboolean fixedSampleLocations,
-    MemoryObjectID memoryPacked,
-    GLuint64 offset,
-    GLbitfield createFlags,
-    GLbitfield usageFlags,
-    const void *imageCreateInfoPNext,
-    angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureAcquireTexturesANGLE_texturesPacked(const State &glState,
-                                                bool isCallValid,
-                                                GLuint numTextures,
-                                                const TextureID *textures,
-                                                const GLenum *layouts,
-                                                angle::ParamCapture *paramCapture)
-{
-    CaptureArray(textures, numTextures, paramCapture);
-}
-
-void CaptureAcquireTexturesANGLE_layouts(const State &glState,
+void CaptureGetTexParameterIivEXT_params(const State &glState,
                                          bool isCallValid,
-                                         GLuint numTextures,
-                                         const TextureID *texturesPacked,
-                                         const GLenum *layouts,
+                                         TextureType targetPacked,
+                                         GLenum pname,
+                                         GLint *params,
                                          angle::ParamCapture *paramCapture)
 {
-    CaptureArray(layouts, numTextures * sizeof(GLenum), paramCapture);
+    // Skipped
 }
 
-void CaptureReleaseTexturesANGLE_texturesPacked(const State &glState,
-                                                bool isCallValid,
-                                                GLuint numTextures,
-                                                const TextureID *textures,
-                                                GLenum *layouts,
-                                                angle::ParamCapture *paramCapture)
+void CaptureGetTexParameterIuivEXT_params(const State &glState,
+                                          bool isCallValid,
+                                          TextureType targetPacked,
+                                          GLenum pname,
+                                          GLuint *params,
+                                          angle::ParamCapture *paramCapture)
 {
-    CaptureArray(textures, numTextures, paramCapture);
+    // Skipped
 }
 
-void CaptureReleaseTexturesANGLE_layouts(const State &glState,
+void CaptureSamplerParameterIivEXT_param(const State &glState,
                                          bool isCallValid,
-                                         GLuint numTextures,
-                                         const TextureID *texturesPacked,
-                                         GLenum *layouts,
+                                         SamplerID samplerPacked,
+                                         GLenum pname,
+                                         const GLint *param,
                                          angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // Skipped
 }
 
-void CaptureDeletePerfMonitorsAMD_monitors(const State &glState,
-                                           bool isCallValid,
-                                           GLsizei n,
-                                           GLuint *monitors,
-                                           angle::ParamCapture *paramCapture)
+void CaptureSamplerParameterIuivEXT_param(const State &glState,
+                                          bool isCallValid,
+                                          SamplerID samplerPacked,
+                                          GLenum pname,
+                                          const GLuint *param,
+                                          angle::ParamCapture *paramCapture)
 {
-    CaptureArray(monitors, n, paramCapture);
+    // Skipped
 }
 
-void CaptureGenPerfMonitorsAMD_monitors(const State &glState,
-                                        bool isCallValid,
-                                        GLsizei n,
-                                        GLuint *monitors,
-                                        angle::ParamCapture *paramCapture)
+void CaptureTexParameterIivEXT_params(const State &glState,
+                                      bool isCallValid,
+                                      TextureType targetPacked,
+                                      GLenum pname,
+                                      const GLint *params,
+                                      angle::ParamCapture *paramCapture)
 {
-    CaptureArray(monitors, n, paramCapture);
+    // Skipped
 }
 
-void CaptureGetPerfMonitorCounterDataAMD_data(const State &glState,
-                                              bool isCallValid,
-                                              GLuint monitor,
-                                              GLenum pname,
-                                              GLsizei dataSize,
-                                              GLuint *data,
-                                              GLint *bytesWritten,
-                                              angle::ParamCapture *paramCapture)
+void CaptureTexParameterIuivEXT_params(const State &glState,
+                                       bool isCallValid,
+                                       TextureType targetPacked,
+                                       GLenum pname,
+                                       const GLuint *params,
+                                       angle::ParamCapture *paramCapture)
 {
-    paramCapture->readBufferSizeBytes = dataSize;
+    CaptureTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params, paramCapture);
 }
 
-void CaptureGetPerfMonitorCounterDataAMD_bytesWritten(const State &glState,
-                                                      bool isCallValid,
-                                                      GLuint monitor,
-                                                      GLenum pname,
-                                                      GLsizei dataSize,
-                                                      GLuint *data,
-                                                      GLint *bytesWritten,
-                                                      angle::ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = sizeof(GLint);
-}
-
-void CaptureGetPerfMonitorCounterInfoAMD_data(const State &glState,
-                                              bool isCallValid,
-                                              GLuint group,
-                                              GLuint counter,
-                                              GLenum pname,
-                                              void *data,
-                                              angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureGetPerfMonitorCounterStringAMD_length(const State &glState,
-                                                  bool isCallValid,
-                                                  GLuint group,
-                                                  GLuint counter,
-                                                  GLsizei bufSize,
-                                                  GLsizei *length,
-                                                  GLchar *counterString,
-                                                  angle::ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
-}
-
-void CaptureGetPerfMonitorCounterStringAMD_counterString(const State &glState,
-                                                         bool isCallValid,
-                                                         GLuint group,
-                                                         GLuint counter,
-                                                         GLsizei bufSize,
-                                                         GLsizei *length,
-                                                         GLchar *counterString,
-                                                         angle::ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = bufSize;
-}
-
-void CaptureGetPerfMonitorCountersAMD_numCounters(const State &glState,
-                                                  bool isCallValid,
-                                                  GLuint group,
-                                                  GLint *numCounters,
-                                                  GLint *maxActiveCounters,
-                                                  GLsizei counterSize,
-                                                  GLuint *counters,
-                                                  angle::ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = sizeof(GLint);
-}
-
-void CaptureGetPerfMonitorCountersAMD_maxActiveCounters(const State &glState,
-                                                        bool isCallValid,
-                                                        GLuint group,
-                                                        GLint *numCounters,
-                                                        GLint *maxActiveCounters,
-                                                        GLsizei counterSize,
-                                                        GLuint *counters,
-                                                        angle::ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = sizeof(GLint);
-}
-
-void CaptureGetPerfMonitorCountersAMD_counters(const State &glState,
-                                               bool isCallValid,
-                                               GLuint group,
-                                               GLint *numCounters,
-                                               GLint *maxActiveCounters,
-                                               GLsizei counterSize,
-                                               GLuint *counters,
-                                               angle::ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = counterSize * sizeof(GLuint);
-}
-
-void CaptureGetPerfMonitorGroupStringAMD_length(const State &glState,
-                                                bool isCallValid,
-                                                GLuint group,
-                                                GLsizei bufSize,
-                                                GLsizei *length,
-                                                GLchar *groupString,
-                                                angle::ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
-}
-
-void CaptureGetPerfMonitorGroupStringAMD_groupString(const State &glState,
-                                                     bool isCallValid,
-                                                     GLuint group,
-                                                     GLsizei bufSize,
-                                                     GLsizei *length,
-                                                     GLchar *groupString,
-                                                     angle::ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = bufSize;
-}
-
-void CaptureGetPerfMonitorGroupsAMD_numGroups(const State &glState,
-                                              bool isCallValid,
-                                              GLint *numGroups,
-                                              GLsizei groupsSize,
-                                              GLuint *groups,
-                                              angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureGetPerfMonitorGroupsAMD_groups(const State &glState,
-                                           bool isCallValid,
-                                           GLint *numGroups,
-                                           GLsizei groupsSize,
-                                           GLuint *groups,
-                                           angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-void CaptureSelectPerfMonitorCountersAMD_counterList(const State &glState,
-                                                     bool isCallValid,
-                                                     GLuint monitor,
-                                                     GLboolean enable,
-                                                     GLuint group,
-                                                     GLint numCounters,
-                                                     GLuint *counterList,
-                                                     angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
-// ANGLE_shader_pixel_local_storage.
-void CaptureFramebufferPixelLocalClearValuefvANGLE_value(const State &glState,
-                                                         bool isCallValid,
-                                                         GLint plane,
-                                                         const GLfloat *value,
-                                                         angle::ParamCapture *paramCapture)
-{
-    CaptureArray(value, 4, paramCapture);
-}
-
-void CaptureFramebufferPixelLocalClearValueivANGLE_value(const State &glState,
-                                                         bool isCallValid,
-                                                         GLint plane,
-                                                         const GLint *value,
-                                                         angle::ParamCapture *paramCapture)
-{
-    CaptureArray(value, 4, paramCapture);
-}
-
-void CaptureFramebufferPixelLocalClearValueuivANGLE_value(const State &glState,
-                                                          bool isCallValid,
-                                                          GLint plane,
-                                                          const GLuint *value,
-                                                          angle::ParamCapture *paramCapture)
-{
-    CaptureArray(value, 4, paramCapture);
-}
-
-void CaptureBeginPixelLocalStorageANGLE_loadops(const State &glState,
-                                                bool isCallValid,
-                                                GLsizei n,
-                                                const GLenum loadops[],
-                                                angle::ParamCapture *paramCapture)
-{
-    CaptureArray(loadops, n, paramCapture);
-}
-
-void CaptureEndPixelLocalStorageANGLE_storeops(const State &glState,
-                                               bool isCallValid,
-                                               GLsizei n,
-                                               const GLenum *storeops,
-                                               angle::ParamCapture *paramCapture)
-{
-    CaptureArray(storeops, n, paramCapture);
-}
-
-void CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(
-    const State &glState,
-    bool isCallValid,
-    GLint plane,
-    GLenum pname,
-    GLfloat *params,
-    angle::ParamCapture *paramCapture)
-{
-    size_t numParams = 1;
-    switch (pname)
-    {
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
-            numParams = 4;
-            break;
-    }
-    paramCapture->readBufferSizeBytes = sizeof(GLfloat) * numParams;
-}
-
-void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
-    const State &glState,
-    bool isCallValid,
-    GLint plane,
-    GLenum pname,
-    GLint *params,
-    angle::ParamCapture *paramCapture)
-{
-    size_t numParams = 1;
-    switch (pname)
-    {
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
-            numParams = 4;
-            break;
-    }
-    paramCapture->readBufferSizeBytes = sizeof(GLint) * numParams;
-}
-
-void CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_length(
-    const State &glState,
-    bool isCallValid,
-    GLint plane,
-    GLenum pname,
-    GLsizei bufSize,
-    GLsizei *length,
-    GLfloat *params,
-    angle::ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
-}
-
-void CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_params(
-    const State &glState,
-    bool isCallValid,
-    GLint plane,
-    GLenum pname,
-    GLsizei bufSize,
-    GLsizei *length,
-    GLfloat *params,
-    angle::ParamCapture *paramCapture)
-{
-    CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(glState, isCallValid, plane,
-                                                                  pname, params, paramCapture);
-}
-
-void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_length(
-    const State &glState,
-    bool isCallValid,
-    GLint plane,
-    GLenum pname,
-    GLsizei bufSize,
-    GLsizei *length,
-    GLint *params,
-    angle::ParamCapture *paramCapture)
-{
-    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
-}
-
-void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_params(
-    const State &glState,
-    bool isCallValid,
-    GLint plane,
-    GLenum pname,
-    GLsizei bufSize,
-    GLsizei *length,
-    GLint *params,
-    angle::ParamCapture *paramCapture)
-{
-    CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(glState, isCallValid, plane,
-                                                                  pname, params, paramCapture);
-}
-
-void CaptureFramebufferFoveationConfigQCOM_providedFeatures(const State &glState,
-                                                            bool isCallValid,
-                                                            FramebufferID framebufferPacked,
-                                                            GLuint numLayers,
-                                                            GLuint focalPointsPerLayer,
-                                                            GLuint requestedFeatures,
-                                                            GLuint *providedFeatures,
-                                                            angle::ParamCapture *paramCapture)
-{
-    UNIMPLEMENTED();
-}
-
+// GL_EXT_texture_storage_compression
 void CaptureTexStorageAttribs2DEXT_attrib_list(const State &glState,
                                                bool isCallValid,
                                                GLenum target,
@@ -4339,4 +3552,823 @@ void CaptureTexStorageAttribs3DEXT_attrib_list(const State &glState,
 {
     UNIMPLEMENTED();
 }
+
+// GL_KHR_debug
+void CaptureDebugMessageCallbackKHR_userParam(const State &glState,
+                                              bool isCallValid,
+                                              GLDEBUGPROCKHR callback,
+                                              const void *userParam,
+                                              ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureDebugMessageControlKHR_ids(const State &glState,
+                                       bool isCallValid,
+                                       GLenum source,
+                                       GLenum type,
+                                       GLenum severity,
+                                       GLsizei count,
+                                       const GLuint *ids,
+                                       GLboolean enabled,
+                                       ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureDebugMessageInsertKHR_buf(const State &glState,
+                                      bool isCallValid,
+                                      GLenum source,
+                                      GLenum type,
+                                      GLuint id,
+                                      GLenum severity,
+                                      GLsizei length,
+                                      const GLchar *buf,
+                                      ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetDebugMessageLogKHR_sources(const State &glState,
+                                          bool isCallValid,
+                                          GLuint count,
+                                          GLsizei bufSize,
+                                          GLenum *sources,
+                                          GLenum *types,
+                                          GLuint *ids,
+                                          GLenum *severities,
+                                          GLsizei *lengths,
+                                          GLchar *messageLog,
+                                          ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetDebugMessageLogKHR_types(const State &glState,
+                                        bool isCallValid,
+                                        GLuint count,
+                                        GLsizei bufSize,
+                                        GLenum *sources,
+                                        GLenum *types,
+                                        GLuint *ids,
+                                        GLenum *severities,
+                                        GLsizei *lengths,
+                                        GLchar *messageLog,
+                                        ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetDebugMessageLogKHR_ids(const State &glState,
+                                      bool isCallValid,
+                                      GLuint count,
+                                      GLsizei bufSize,
+                                      GLenum *sources,
+                                      GLenum *types,
+                                      GLuint *ids,
+                                      GLenum *severities,
+                                      GLsizei *lengths,
+                                      GLchar *messageLog,
+                                      ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetDebugMessageLogKHR_severities(const State &glState,
+                                             bool isCallValid,
+                                             GLuint count,
+                                             GLsizei bufSize,
+                                             GLenum *sources,
+                                             GLenum *types,
+                                             GLuint *ids,
+                                             GLenum *severities,
+                                             GLsizei *lengths,
+                                             GLchar *messageLog,
+                                             ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetDebugMessageLogKHR_lengths(const State &glState,
+                                          bool isCallValid,
+                                          GLuint count,
+                                          GLsizei bufSize,
+                                          GLenum *sources,
+                                          GLenum *types,
+                                          GLuint *ids,
+                                          GLenum *severities,
+                                          GLsizei *lengths,
+                                          GLchar *messageLog,
+                                          ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetDebugMessageLogKHR_messageLog(const State &glState,
+                                             bool isCallValid,
+                                             GLuint count,
+                                             GLsizei bufSize,
+                                             GLenum *sources,
+                                             GLenum *types,
+                                             GLuint *ids,
+                                             GLenum *severities,
+                                             GLsizei *lengths,
+                                             GLchar *messageLog,
+                                             ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetObjectLabelKHR_length(const State &glState,
+                                     bool isCallValid,
+                                     GLenum identifier,
+                                     GLuint name,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLchar *label,
+                                     ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetObjectLabelKHR_label(const State &glState,
+                                    bool isCallValid,
+                                    GLenum identifier,
+                                    GLuint name,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLchar *label,
+                                    ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetObjectPtrLabelKHR_ptr(const State &glState,
+                                     bool isCallValid,
+                                     const void *ptr,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLchar *label,
+                                     ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetObjectPtrLabelKHR_length(const State &glState,
+                                        bool isCallValid,
+                                        const void *ptr,
+                                        GLsizei bufSize,
+                                        GLsizei *length,
+                                        GLchar *label,
+                                        ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetObjectPtrLabelKHR_label(const State &glState,
+                                       bool isCallValid,
+                                       const void *ptr,
+                                       GLsizei bufSize,
+                                       GLsizei *length,
+                                       GLchar *label,
+                                       ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetPointervKHR_params(const State &glState,
+                                  bool isCallValid,
+                                  GLenum pname,
+                                  void **params,
+                                  ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureObjectLabelKHR_label(const State &glState,
+                                 bool isCallValid,
+                                 GLenum identifier,
+                                 GLuint name,
+                                 GLsizei length,
+                                 const GLchar *label,
+                                 ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureObjectPtrLabelKHR_ptr(const State &glState,
+                                  bool isCallValid,
+                                  const void *ptr,
+                                  GLsizei length,
+                                  const GLchar *label,
+                                  ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureObjectPtrLabelKHR_label(const State &glState,
+                                    bool isCallValid,
+                                    const void *ptr,
+                                    GLsizei length,
+                                    const GLchar *label,
+                                    ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CapturePushDebugGroupKHR_message(const State &glState,
+                                      bool isCallValid,
+                                      GLenum source,
+                                      GLuint id,
+                                      GLsizei length,
+                                      const GLchar *message,
+                                      ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+// GL_KHR_robustness
+void CaptureGetnUniformfvKHR_params(const State &glState,
+                                    bool isCallValid,
+                                    ShaderProgramID programPacked,
+                                    UniformLocation locationPacked,
+                                    GLsizei bufSize,
+                                    GLfloat *params,
+                                    angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetnUniformivKHR_params(const State &glState,
+                                    bool isCallValid,
+                                    ShaderProgramID programPacked,
+                                    UniformLocation locationPacked,
+                                    GLsizei bufSize,
+                                    GLint *params,
+                                    angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetnUniformuivKHR_params(const State &glState,
+                                     bool isCallValid,
+                                     ShaderProgramID programPacked,
+                                     UniformLocation locationPacked,
+                                     GLsizei bufSize,
+                                     GLuint *params,
+                                     angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureReadnPixelsKHR_data(const State &glState,
+                                bool isCallValid,
+                                GLint x,
+                                GLint y,
+                                GLsizei width,
+                                GLsizei height,
+                                GLenum format,
+                                GLenum type,
+                                GLsizei bufSize,
+                                void *data,
+                                angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_MESA_framebuffer_flip_y
+void CaptureGetFramebufferParameterivMESA_params(const State &glState,
+                                                 bool isCallValid,
+                                                 GLenum target,
+                                                 GLenum pname,
+                                                 GLint *params,
+                                                 angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+// GL_NV_fence
+void CaptureDeleteFencesNV_fencesPacked(const State &glState,
+                                        bool isCallValid,
+                                        GLsizei n,
+                                        const FenceNVID *fences,
+                                        ParamCapture *paramCapture)
+{
+    CaptureMemory(fences, n * sizeof(FenceNVID), paramCapture);
+}
+
+void CaptureGenFencesNV_fencesPacked(const State &glState,
+                                     bool isCallValid,
+                                     GLsizei n,
+                                     FenceNVID *fences,
+                                     ParamCapture *paramCapture)
+{
+    CaptureGenHandles(n, fences, paramCapture);
+}
+
+void CaptureGetFenceivNV_params(const State &glState,
+                                bool isCallValid,
+                                FenceNVID fence,
+                                GLenum pname,
+                                GLint *params,
+                                ParamCapture *paramCapture)
+{
+    CaptureMemory(params, sizeof(GLint), paramCapture);
+}
+
+// GL_OES_draw_elements_base_vertex
+void CaptureDrawElementsBaseVertexOES_indices(const State &glState,
+                                              bool isCallValid,
+                                              PrimitiveMode modePacked,
+                                              GLsizei count,
+                                              DrawElementsType typePacked,
+                                              const void *indices,
+                                              GLint basevertex,
+                                              ParamCapture *indicesParam)
+{
+    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
+                                indicesParam);
+}
+
+void CaptureDrawElementsInstancedBaseVertexOES_indices(const State &glState,
+                                                       bool isCallValid,
+                                                       PrimitiveMode modePacked,
+                                                       GLsizei count,
+                                                       DrawElementsType typePacked,
+                                                       const void *indices,
+                                                       GLsizei instancecount,
+                                                       GLint basevertex,
+                                                       ParamCapture *indicesParam)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureDrawRangeElementsBaseVertexOES_indices(const State &glState,
+                                                   bool isCallValid,
+                                                   PrimitiveMode modePacked,
+                                                   GLuint start,
+                                                   GLuint end,
+                                                   GLsizei count,
+                                                   DrawElementsType typePacked,
+                                                   const void *indices,
+                                                   GLint basevertex,
+                                                   ParamCapture *indicesParam)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_OES_draw_texture
+void CaptureDrawTexfvOES_coords(const State &glState,
+                                bool isCallValid,
+                                const GLfloat *coords,
+                                ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureDrawTexivOES_coords(const State &glState,
+                                bool isCallValid,
+                                const GLint *coords,
+                                ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureDrawTexsvOES_coords(const State &glState,
+                                bool isCallValid,
+                                const GLshort *coords,
+                                ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureDrawTexxvOES_coords(const State &glState,
+                                bool isCallValid,
+                                const GLfixed *coords,
+                                ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_OES_framebuffer_object
+void CaptureDeleteFramebuffersOES_framebuffersPacked(const State &glState,
+                                                     bool isCallValid,
+                                                     GLsizei n,
+                                                     const FramebufferID *framebuffers,
+                                                     ParamCapture *paramCapture)
+{
+    CaptureArray(framebuffers, n, paramCapture);
+}
+
+void CaptureDeleteRenderbuffersOES_renderbuffersPacked(const State &glState,
+                                                       bool isCallValid,
+                                                       GLsizei n,
+                                                       const RenderbufferID *renderbuffers,
+                                                       ParamCapture *paramCapture)
+{
+    CaptureArray(renderbuffers, n, paramCapture);
+}
+
+void CaptureGenFramebuffersOES_framebuffersPacked(const State &glState,
+                                                  bool isCallValid,
+                                                  GLsizei n,
+                                                  FramebufferID *framebuffers,
+                                                  ParamCapture *paramCapture)
+{
+    CaptureGenHandles(n, framebuffers, paramCapture);
+}
+
+void CaptureGenRenderbuffersOES_renderbuffersPacked(const State &glState,
+                                                    bool isCallValid,
+                                                    GLsizei n,
+                                                    RenderbufferID *renderbuffers,
+                                                    ParamCapture *paramCapture)
+{
+    CaptureGenHandles(n, renderbuffers, paramCapture);
+}
+
+void CaptureGetFramebufferAttachmentParameterivOES_params(const State &glState,
+                                                          bool isCallValid,
+                                                          GLenum target,
+                                                          GLenum attachment,
+                                                          GLenum pname,
+                                                          GLint *params,
+                                                          ParamCapture *paramCapture)
+{
+    CaptureMemory(params, sizeof(GLint), paramCapture);
+}
+
+void CaptureGetRenderbufferParameterivOES_params(const State &glState,
+                                                 bool isCallValid,
+                                                 GLenum target,
+                                                 GLenum pname,
+                                                 GLint *params,
+                                                 ParamCapture *paramCapture)
+{
+    CaptureMemory(params, sizeof(GLint), paramCapture);
+}
+
+// GL_OES_get_program_binary
+void CaptureGetProgramBinaryOES_length(const State &glState,
+                                       bool isCallValid,
+                                       ShaderProgramID program,
+                                       GLsizei bufSize,
+                                       GLsizei *length,
+                                       GLenum *binaryFormat,
+                                       void *binary,
+                                       ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
+}
+
+void CaptureGetProgramBinaryOES_binaryFormat(const State &glState,
+                                             bool isCallValid,
+                                             ShaderProgramID program,
+                                             GLsizei bufSize,
+                                             GLsizei *length,
+                                             GLenum *binaryFormat,
+                                             void *binary,
+                                             ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLenum);
+}
+
+void CaptureGetProgramBinaryOES_binary(const State &glState,
+                                       bool isCallValid,
+                                       ShaderProgramID program,
+                                       GLsizei bufSize,
+                                       GLsizei *length,
+                                       GLenum *binaryFormat,
+                                       void *binary,
+                                       ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = bufSize;
+}
+
+void CaptureProgramBinaryOES_binary(const State &glState,
+                                    bool isCallValid,
+                                    ShaderProgramID program,
+                                    GLenum binaryFormat,
+                                    const void *binary,
+                                    GLint length,
+                                    ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_OES_mapbuffer
+void CaptureGetBufferPointervOES_params(const State &glState,
+                                        bool isCallValid,
+                                        BufferBinding targetPacked,
+                                        GLenum pname,
+                                        void **params,
+                                        ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_OES_matrix_palette
+void CaptureMatrixIndexPointerOES_pointer(const State &glState,
+                                          bool isCallValid,
+                                          GLint size,
+                                          GLenum type,
+                                          GLsizei stride,
+                                          const void *pointer,
+                                          ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureWeightPointerOES_pointer(const State &glState,
+                                     bool isCallValid,
+                                     GLint size,
+                                     GLenum type,
+                                     GLsizei stride,
+                                     const void *pointer,
+                                     ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_OES_point_size_array
+void CapturePointSizePointerOES_pointer(const State &glState,
+                                        bool isCallValid,
+                                        VertexAttribType typePacked,
+                                        GLsizei stride,
+                                        const void *pointer,
+                                        ParamCapture *paramCapture)
+{
+    CaptureVertexPointerGLES1(glState, ClientVertexArrayType::PointSize, pointer, paramCapture);
+}
+
+// GL_OES_query_matrix
+void CaptureQueryMatrixxOES_mantissa(const State &glState,
+                                     bool isCallValid,
+                                     GLfixed *mantissa,
+                                     GLint *exponent,
+                                     ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureQueryMatrixxOES_exponent(const State &glState,
+                                     bool isCallValid,
+                                     GLfixed *mantissa,
+                                     GLint *exponent,
+                                     ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_OES_texture_3D
+void CaptureCompressedTexImage3DOES_data(const State &glState,
+                                         bool isCallValid,
+                                         TextureTarget targetPacked,
+                                         GLint level,
+                                         GLenum internalformat,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLsizei depth,
+                                         GLint border,
+                                         GLsizei imageSize,
+                                         const void *data,
+                                         ParamCapture *paramCapture)
+{
+    CaptureCompressedTexImage3D_data(glState, isCallValid, targetPacked, level, internalformat,
+                                     width, height, depth, border, imageSize, data, paramCapture);
+}
+
+void CaptureCompressedTexSubImage3DOES_data(const State &glState,
+                                            bool isCallValid,
+                                            TextureTarget targetPacked,
+                                            GLint level,
+                                            GLint xoffset,
+                                            GLint yoffset,
+                                            GLint zoffset,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLsizei depth,
+                                            GLenum format,
+                                            GLsizei imageSize,
+                                            const void *data,
+                                            ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureTexImage3DOES_pixels(const State &glState,
+                                 bool isCallValid,
+                                 TextureTarget targetPacked,
+                                 GLint level,
+                                 GLenum internalformat,
+                                 GLsizei width,
+                                 GLsizei height,
+                                 GLsizei depth,
+                                 GLint border,
+                                 GLenum format,
+                                 GLenum type,
+                                 const void *pixels,
+                                 ParamCapture *paramCapture)
+{
+    CaptureTexImage3D_pixels(glState, isCallValid, targetPacked, level, internalformat, width,
+                             height, depth, border, format, type, pixels, paramCapture);
+}
+
+void CaptureTexSubImage3DOES_pixels(const State &glState,
+                                    bool isCallValid,
+                                    TextureTarget targetPacked,
+                                    GLint level,
+                                    GLint xoffset,
+                                    GLint yoffset,
+                                    GLint zoffset,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLsizei depth,
+                                    GLenum format,
+                                    GLenum type,
+                                    const void *pixels,
+                                    ParamCapture *paramCapture)
+{
+    CaptureTexSubImage3D_pixels(glState, isCallValid, targetPacked, level, xoffset, yoffset,
+                                zoffset, width, height, depth, format, type, pixels, paramCapture);
+}
+
+// GL_OES_texture_border_clamp
+void CaptureGetSamplerParameterIivOES_params(const State &glState,
+                                             bool isCallValid,
+                                             SamplerID sampler,
+                                             GLenum pname,
+                                             GLint *params,
+                                             ParamCapture *paramCapture)
+{
+    CaptureGetSamplerParameterIiv_params(glState, isCallValid, sampler, pname, params,
+                                         paramCapture);
+}
+
+void CaptureGetSamplerParameterIuivOES_params(const State &glState,
+                                              bool isCallValid,
+                                              SamplerID sampler,
+                                              GLenum pname,
+                                              GLuint *params,
+                                              ParamCapture *paramCapture)
+{
+    CaptureGetSamplerParameterIuiv_params(glState, isCallValid, sampler, pname, params,
+                                          paramCapture);
+}
+
+void CaptureGetTexParameterIivOES_params(const State &glState,
+                                         bool isCallValid,
+                                         TextureType targetPacked,
+                                         GLenum pname,
+                                         GLint *params,
+                                         ParamCapture *paramCapture)
+{
+    CaptureGetTexParameterIiv_params(glState, isCallValid, targetPacked, pname, params,
+                                     paramCapture);
+}
+
+void CaptureGetTexParameterIuivOES_params(const State &glState,
+                                          bool isCallValid,
+                                          TextureType targetPacked,
+                                          GLenum pname,
+                                          GLuint *params,
+                                          ParamCapture *paramCapture)
+{
+    CaptureGetTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params,
+                                      paramCapture);
+}
+
+void CaptureSamplerParameterIivOES_param(const State &glState,
+                                         bool isCallValid,
+                                         SamplerID sampler,
+                                         GLenum pname,
+                                         const GLint *param,
+                                         ParamCapture *paramCapture)
+{
+    CaptureSamplerParameterIiv_param(glState, isCallValid, sampler, pname, param, paramCapture);
+}
+
+void CaptureSamplerParameterIuivOES_param(const State &glState,
+                                          bool isCallValid,
+                                          SamplerID sampler,
+                                          GLenum pname,
+                                          const GLuint *param,
+                                          ParamCapture *paramCapture)
+{
+    CaptureSamplerParameterIuiv_param(glState, isCallValid, sampler, pname, param, paramCapture);
+}
+
+void CaptureTexParameterIivOES_params(const State &glState,
+                                      bool isCallValid,
+                                      TextureType targetPacked,
+                                      GLenum pname,
+                                      const GLint *params,
+                                      ParamCapture *paramCapture)
+{
+    CaptureTexParameterIiv_params(glState, isCallValid, targetPacked, pname, params, paramCapture);
+}
+
+void CaptureTexParameterIuivOES_params(const State &glState,
+                                       bool isCallValid,
+                                       TextureType targetPacked,
+                                       GLenum pname,
+                                       const GLuint *params,
+                                       ParamCapture *paramCapture)
+{
+    CaptureTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params, paramCapture);
+}
+
+// GL_OES_texture_cube_map
+void CaptureGetTexGenfvOES_params(const State &glState,
+                                  bool isCallValid,
+                                  GLenum coord,
+                                  GLenum pname,
+                                  GLfloat *params,
+                                  ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetTexGenivOES_params(const State &glState,
+                                  bool isCallValid,
+                                  GLenum coord,
+                                  GLenum pname,
+                                  GLint *params,
+                                  ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetTexGenxvOES_params(const State &glState,
+                                  bool isCallValid,
+                                  GLenum coord,
+                                  GLenum pname,
+                                  GLfixed *params,
+                                  ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureTexGenfvOES_params(const State &glState,
+                               bool isCallValid,
+                               GLenum coord,
+                               GLenum pname,
+                               const GLfloat *params,
+                               ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureTexGenivOES_params(const State &glState,
+                               bool isCallValid,
+                               GLenum coord,
+                               GLenum pname,
+                               const GLint *params,
+                               ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureTexGenxvOES_params(const State &glState,
+                               bool isCallValid,
+                               GLenum coord,
+                               GLenum pname,
+                               const GLfixed *params,
+                               ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+// GL_OES_vertex_array_object
+void CaptureDeleteVertexArraysOES_arraysPacked(const State &glState,
+                                               bool isCallValid,
+                                               GLsizei n,
+                                               const VertexArrayID *arrays,
+                                               ParamCapture *paramCapture)
+{
+    CaptureDeleteVertexArrays_arraysPacked(glState, isCallValid, n, arrays, paramCapture);
+}
+
+void CaptureGenVertexArraysOES_arraysPacked(const State &glState,
+                                            bool isCallValid,
+                                            GLsizei n,
+                                            VertexArrayID *arrays,
+                                            ParamCapture *paramCapture)
+{
+    CaptureGenVertexArrays_arraysPacked(glState, isCallValid, n, arrays, paramCapture);
+}
+
+// GL_QCOM_framebuffer_foveated
+void CaptureFramebufferFoveationConfigQCOM_providedFeatures(const State &glState,
+                                                            bool isCallValid,
+                                                            FramebufferID framebufferPacked,
+                                                            GLuint numLayers,
+                                                            GLuint focalPointsPerLayer,
+                                                            GLuint requestedFeatures,
+                                                            GLuint *providedFeatures,
+                                                            angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
 }  // namespace gl
