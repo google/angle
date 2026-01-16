@@ -2064,7 +2064,7 @@ angle::Result OneOffCommandPool::getCommandBuffer(vk::ErrorContext *context,
             VkCommandPoolCreateInfo createInfo = {};
             createInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
             createInfo.flags                   = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT |
-                               VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+                                                 VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
             ASSERT(mProtectionType == vk::ProtectionType::Unprotected ||
                    mProtectionType == vk::ProtectionType::Protected);
             if (mProtectionType == vk::ProtectionType::Protected)
@@ -2629,9 +2629,9 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
         {name, "thread_safety", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_thread_safety},
         {name, "check_shaders", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_check_shaders},
         {name, "syncval_submit_time_validation", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1,
-                         &setting_syncval_submit_time_validation},
+         &setting_syncval_submit_time_validation},
         {name, "syncval_message_extra_properties", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1,
-                         &setting_syncval_message_extra_properties},
+         &setting_syncval_message_extra_properties},
     };
     VkLayerSettingsCreateInfoEXT layerSettingsCreateInfo = {
         VK_STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT, nullptr,
@@ -7497,6 +7497,16 @@ VkFormatFeatureFlags Renderer::getFormatFeatureBits(angle::FormatID formatID,
         {
             VkFormat vkFormat = vk::GetVkFormatFromFormatID(this, formatID);
             ASSERT(vkFormat != VK_FORMAT_UNDEFINED);
+
+            if (vkFormat == VK_FORMAT_A8_UNORM &&
+                (!mFeatures.supportsMaintenance5.enabled ||
+                 mGlobalOps->getFrontendApi() != GlobalOps::Api::OpenCL))
+            {
+                // TODO: VK_FORMAT_A8_UNORM currently only available in (VK_KHR_maintenance5 +
+                // OpenCL) usage - GLES should go to fallback format (R8_UNORM)
+                // http://anglebug.com/42266715
+                return 0;
+            }
 
             // Otherwise query the format features and cache it.
             vkGetPhysicalDeviceFormatProperties(mPhysicalDevice, vkFormat, &deviceProperties);
