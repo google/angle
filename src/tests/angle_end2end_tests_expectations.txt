@@ -574,6 +574,7 @@
 42264513 PIXEL4ORXL GLES : CubeMapTextureTest.SampleCoordinateTransform/* = SKIP
 42265301 PIXEL4ORXL GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 452919815 PIXEL4ORXL GLES : GLSLTest_ES3.VaryingAnonymousStructEquality/* = SKIP
+479224190 PIXEL4ORXL GLES : GLSLTest_ES31.StructArraySamplerWithShortCircuitedSideEffectInIndex/* = SKIP
 454827197 PIXEL4ORXL GLES : GLSLConstantFoldingTest_ES31.NamedArrayOfArrayIndex/* = SKIP
 42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlIn/* = SKIP
 42265301 PIXEL4ORXL GLES : GeometryShaderTest.RedeclareGlInBeforeInputSize/* = SKIP

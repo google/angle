@@ -5730,16 +5730,15 @@ void main()
 // Test that structs containing arrays of samplers work as expected.
 TEST_P(GLSLTest_ES31, StructArraySampler)
 {
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "struct Data { mediump sampler2D data[2]; };\n"
-        "uniform Data test;\n"
-        "void main() {\n"
-        "    my_FragColor = vec4(texture(test.data[0], vec2(0.0, 0.0)).rg,\n"
-        "                        texture(test.data[1], vec2(0.0, 0.0)).rg);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+struct Data { mediump sampler2D data[2]; };
+uniform Data test;
+void main() {
+    my_FragColor = vec4(texture(test.data[0], vec2(0.0, 0.0)).rg,
+                        texture(test.data[1], vec2(0.0, 0.0)).rg);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -5765,27 +5764,82 @@ TEST_P(GLSLTest_ES31, StructArraySampler)
     EXPECT_PIXEL_COLOR_EQ(0, 0, expected);
 }
 
+// Test that structs containing arrays of samplers work as expected if the index has side effect
+// that shouldn't execute, when the sampler is passed to a function.
+TEST_P(GLSLTest_ES31, StructArraySamplerWithShortCircuitedSideEffectInIndex)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_gpu_shader5"));
+
+    // The monomorphization AST pass run by multiple backends does not correctly handle side effects
+    // in the presence of short-circuit.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_OES_gpu_shader5 : require
+precision mediump float;
+out vec4 my_FragColor;
+struct Data { mediump sampler2D data; };
+uniform Data test[2];
+
+vec4 sampleFromTexture(Data d) {
+    return texture(d.data, vec2(0.0, 0.0));
+}
+
+void main() {
+    float red = 0.5;
+    float green = 1.0;
+    if (sampleFromTexture(test[0]).r > 0.5 && // false, the next expression shouldn't run
+        sampleFromTexture(test[int(red = 1.0)]).r > 0.5)
+    {
+        green = 0.7;
+    }
+    my_FragColor = vec4(red, green, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    GLTexture textures[2];
+    GLColor expected = MakeGLColor(32, 64, 96, 255);
+    GLubyte data[6]  = {};  // Two bytes of padding, so that texture can be initialized with 4 bytes
+    memcpy(data, expected.data(), sizeof(expected));
+    for (int i = 0; i < 2; i++)
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+        // Each element provides two components.
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data + 2 * i);
+        std::stringstream uniformName;
+        uniformName << "test[" << i << "].data";
+        // Then send it as a uniform
+        GLint uniformLocation = glGetUniformLocation(program, uniformName.str().c_str());
+        // The uniform should be active.
+        EXPECT_NE(uniformLocation, -1);
+        glUniform1i(uniformLocation, i);
+    }
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_NEAR(0, 0, 127, 255, 0, 255, 1);
+}
+
 // Test that arrays of arrays of samplers inside structs work as expected.
 TEST_P(GLSLTest_ES31, StructArrayArraySampler)
 {
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "struct Data { mediump isampler2D data[2][2]; };\n"
-        "uniform Data test;\n"
-        "void main() {\n"
-        "    bool passed = true;\n"
-        "#define DO_CHECK(i,j) \\\n"
-        "    if (texture(test.data[i][j], vec2(0.0, 0.0)) != ivec4(i + 1, j + 1, 0, 1)) { \\\n"
-        "        passed = false; \\\n"
-        "    }\n"
-        "    DO_CHECK(0, 0)\n"
-        "    DO_CHECK(0, 1)\n"
-        "    DO_CHECK(1, 0)\n"
-        "    DO_CHECK(1, 1)\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+struct Data { mediump isampler2D data[2][2]; };
+uniform Data test;
+void main() {
+    bool passed = true;
+#define DO_CHECK(i,j) \
+    if (texture(test.data[i][j], vec2(0.0, 0.0)) != ivec4(i + 1, j + 1, 0, 1)) { \
+        passed = false; \
+    }
+    DO_CHECK(0, 0)
+    DO_CHECK(0, 1)
+    DO_CHECK(1, 0)
+    DO_CHECK(1, 1)
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -5821,31 +5875,30 @@ TEST_P(GLSLTest_ES31, ArrayStructArrayArraySampler)
     GLint numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextures);
     ANGLE_SKIP_TEST_IF(numTextures < 2 * (2 * 2 + 2 * 2));
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "struct Data { mediump isampler2D data0[2][2]; mediump isampler2D data1[2][2]; };\n"
-        "uniform Data test[2];\n"
-        "void main() {\n"
-        "    bool passed = true;\n"
-        "#define DO_CHECK_ikl(i,k,l) \\\n"
-        "    if (texture(test[i].data0[k][l], vec2(0.0, 0.0)) != ivec4(i, 0, k, l)+1) { \\\n"
-        "        passed = false; \\\n"
-        "    } \\\n"
-        "    if (texture(test[i].data1[k][l], vec2(0.0, 0.0)) != ivec4(i, 1, k, l)+1) { \\\n"
-        "        passed = false; \\\n"
-        "    }\n"
-        "#define DO_CHECK_ik(i,k) \\\n"
-        "    DO_CHECK_ikl(i, k, 0) \\\n"
-        "    DO_CHECK_ikl(i, k, 1)\n"
-        "#define DO_CHECK_i(i) \\\n"
-        "    DO_CHECK_ik(i, 0) \\\n"
-        "    DO_CHECK_ik(i, 1)\n"
-        "    DO_CHECK_i(0)\n"
-        "    DO_CHECK_i(1)\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+struct Data { mediump isampler2D data0[2][2]; mediump isampler2D data1[2][2]; };
+uniform Data test[2];
+void main() {
+    bool passed = true;
+#define DO_CHECK_ikl(i,k,l) \
+    if (texture(test[i].data0[k][l], vec2(0.0, 0.0)) != ivec4(i, 0, k, l)+1) { \
+        passed = false; \
+    } \
+    if (texture(test[i].data1[k][l], vec2(0.0, 0.0)) != ivec4(i, 1, k, l)+1) { \
+        passed = false; \
+    }
+#define DO_CHECK_ik(i,k) \
+    DO_CHECK_ikl(i, k, 0) \
+    DO_CHECK_ikl(i, k, 1)
+#define DO_CHECK_i(i) \
+    DO_CHECK_ik(i, 0) \
+    DO_CHECK_ik(i, 1)
+    DO_CHECK_i(0)
+    DO_CHECK_i(1)
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -5889,37 +5942,36 @@ TEST_P(GLSLTest_ES31, ComplexStructArraySampler)
     GLint numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextures);
     ANGLE_SKIP_TEST_IF(numTextures < 2 * 3 * (2 + 3));
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "struct Data { mediump isampler2D data0[2]; mediump isampler2D data1[3]; };\n"
-        "uniform Data test[2][3];\n"
-        "const vec2 ZERO = vec2(0.0, 0.0);\n"
-        "void main() {\n"
-        "    bool passed = true;\n"
-        "#define DO_CHECK_INNER0(i,j,l) \\\n"
-        "    if (texture(test[i][j].data0[l], ZERO) != ivec4(i, j, 0, l) + 1) { \\\n"
-        "        passed = false; \\\n"
-        "    }\n"
-        "#define DO_CHECK_INNER1(i,j,l) \\\n"
-        "    if (texture(test[i][j].data1[l], ZERO) != ivec4(i, j, 1, l) + 1) { \\\n"
-        "        passed = false; \\\n"
-        "    }\n"
-        "#define DO_CHECK(i,j) \\\n"
-        "    DO_CHECK_INNER0(i, j, 0) \\\n"
-        "    DO_CHECK_INNER0(i, j, 1) \\\n"
-        "    DO_CHECK_INNER1(i, j, 0) \\\n"
-        "    DO_CHECK_INNER1(i, j, 1) \\\n"
-        "    DO_CHECK_INNER1(i, j, 2)\n"
-        "    DO_CHECK(0, 0)\n"
-        "    DO_CHECK(0, 1)\n"
-        "    DO_CHECK(0, 2)\n"
-        "    DO_CHECK(1, 0)\n"
-        "    DO_CHECK(1, 1)\n"
-        "    DO_CHECK(1, 2)\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+struct Data { mediump isampler2D data0[2]; mediump isampler2D data1[3]; };
+uniform Data test[2][3];
+const vec2 ZERO = vec2(0.0, 0.0);
+void main() {
+    bool passed = true;
+#define DO_CHECK_INNER0(i,j,l) \
+    if (texture(test[i][j].data0[l], ZERO) != ivec4(i, j, 0, l) + 1) { \
+        passed = false; \
+    }
+#define DO_CHECK_INNER1(i,j,l) \
+    if (texture(test[i][j].data1[l], ZERO) != ivec4(i, j, 1, l) + 1) { \
+        passed = false; \
+    }
+#define DO_CHECK(i,j) \
+    DO_CHECK_INNER0(i, j, 0) \
+    DO_CHECK_INNER0(i, j, 1) \
+    DO_CHECK_INNER1(i, j, 0) \
+    DO_CHECK_INNER1(i, j, 1) \
+    DO_CHECK_INNER1(i, j, 2)
+    DO_CHECK(0, 0)
+    DO_CHECK(0, 1)
+    DO_CHECK(0, 2)
+    DO_CHECK(1, 0)
+    DO_CHECK(1, 1)
+    DO_CHECK(1, 2)
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -5974,30 +6026,29 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysStructDifferentTypesSampler)
     GLint numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextures);
     ANGLE_SKIP_TEST_IF(numTextures < 3 * (2 + 2));
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "struct Data { mediump isampler2D data0[2]; mediump sampler2D data1[2]; };\n"
-        "uniform Data test[3];\n"
-        "ivec4 f2i(vec4 x) { return ivec4(x * 4.0 + 0.5); }"
-        "void main() {\n"
-        "    bool passed = true;\n"
-        "#define DO_CHECK_ik(i,k) \\\n"
-        "    if (texture(test[i].data0[k], vec2(0.0, 0.0)) != ivec4(i, 0, k, 0)+1) { \\\n"
-        "        passed = false; \\\n"
-        "    } \\\n"
-        "    if (f2i(texture(test[i].data1[k], vec2(0.0, 0.0))) != ivec4(i, 1, k, 0)+1) { \\\n"
-        "        passed = false; \\\n"
-        "    }\n"
-        "#define DO_CHECK_i(i) \\\n"
-        "    DO_CHECK_ik(i, 0) \\\n"
-        "    DO_CHECK_ik(i, 1)\n"
-        "    DO_CHECK_i(0)\n"
-        "    DO_CHECK_i(1)\n"
-        "    DO_CHECK_i(2)\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+struct Data { mediump isampler2D data0[2]; mediump sampler2D data1[2]; };
+uniform Data test[3];
+ivec4 f2i(vec4 x) { return ivec4(x * 4.0 + 0.5); }
+void main() {
+    bool passed = true;
+#define DO_CHECK_ik(i,k) \
+    if (texture(test[i].data0[k], vec2(0.0, 0.0)) != ivec4(i, 0, k, 0)+1) { \
+        passed = false; \
+    } \
+    if (f2i(texture(test[i].data1[k], vec2(0.0, 0.0))) != ivec4(i, 1, k, 0)+1) { \
+        passed = false; \
+    }
+#define DO_CHECK_i(i) \
+    DO_CHECK_ik(i, 0) \
+    DO_CHECK_ik(i, 1)
+    DO_CHECK_i(0)
+    DO_CHECK_i(1)
+    DO_CHECK_i(2)
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -6048,31 +6099,30 @@ TEST_P(GLSLTest_ES31, ParameterArraysOfArraysSampler)
     // anglebug.com/42262476 - no sampler array params on Android
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "uniform mediump isampler2D test[2][3];\n"
-        "const vec2 ZERO = vec2(0.0, 0.0);\n"
-        "\n"
-        "bool check(mediump isampler2D data[2][3]);\n"
-        "bool check(mediump isampler2D data[2][3]) {\n"
-        "#define DO_CHECK(i,j) \\\n"
-        "    if (texture(data[i][j], ZERO) != ivec4(i+1, j+1, 0, 1)) { \\\n"
-        "        return false; \\\n"
-        "    }\n"
-        "    DO_CHECK(0, 0)\n"
-        "    DO_CHECK(0, 1)\n"
-        "    DO_CHECK(0, 2)\n"
-        "    DO_CHECK(1, 0)\n"
-        "    DO_CHECK(1, 1)\n"
-        "    DO_CHECK(1, 2)\n"
-        "    return true;\n"
-        "}\n"
-        "void main() {\n"
-        "    bool passed = check(test);\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+uniform mediump isampler2D test[2][3];
+const vec2 ZERO = vec2(0.0, 0.0);
+
+bool check(mediump isampler2D data[2][3]);
+bool check(mediump isampler2D data[2][3]) {
+#define DO_CHECK(i,j) \
+    if (texture(data[i][j], ZERO) != ivec4(i+1, j+1, 0, 1)) { \
+        return false; \
+    }
+    DO_CHECK(0, 0)
+    DO_CHECK(0, 1)
+    DO_CHECK(0, 2)
+    DO_CHECK(1, 0)
+    DO_CHECK(1, 1)
+    DO_CHECK(1, 2)
+    return true;
+}
+void main() {
+    bool passed = check(test);
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -6108,31 +6158,30 @@ TEST_P(GLSLTest_ES31, ParameterStructArrayArraySampler)
     // anglebug.com/42262476 - no sampler array params on Android
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "struct Data { mediump isampler2D data[2][3]; };\n"
-        "uniform Data test;\n"
-        "const vec2 ZERO = vec2(0.0, 0.0);\n"
-        "\n"
-        "bool check(Data data) {\n"
-        "#define DO_CHECK(i,j) \\\n"
-        "    if (texture(data.data[i][j], ZERO) != ivec4(i+1, j+1, 0, 1)) { \\\n"
-        "        return false; \\\n"
-        "    }\n"
-        "    DO_CHECK(0, 0)\n"
-        "    DO_CHECK(0, 1)\n"
-        "    DO_CHECK(0, 2)\n"
-        "    DO_CHECK(1, 0)\n"
-        "    DO_CHECK(1, 1)\n"
-        "    DO_CHECK(1, 2)\n"
-        "    return true;\n"
-        "}\n"
-        "void main() {\n"
-        "    bool passed = check(test);\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+struct Data { mediump isampler2D data[2][3]; };
+uniform Data test;
+const vec2 ZERO = vec2(0.0, 0.0);
+
+bool check(Data data) {
+#define DO_CHECK(i,j) \
+    if (texture(data.data[i][j], ZERO) != ivec4(i+1, j+1, 0, 1)) { \
+        return false; \
+    }
+    DO_CHECK(0, 0)
+    DO_CHECK(0, 1)
+    DO_CHECK(0, 2)
+    DO_CHECK(1, 0)
+    DO_CHECK(1, 1)
+    DO_CHECK(1, 2)
+    return true;
+}
+void main() {
+    bool passed = check(test);
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -6172,36 +6221,35 @@ TEST_P(GLSLTest_ES31, ParameterArrayArrayStructArrayArraySampler)
     GLint numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextures);
     ANGLE_SKIP_TEST_IF(numTextures < 3 * 2 * 2 * 2);
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "struct Data { mediump isampler2D data[2][2]; };\n"
-        "uniform Data test[3][2];\n"
-        "const vec2 ZERO = vec2(0.0, 0.0);\n"
-        "\n"
-        "bool check(Data data[3][2]) {\n"
-        "#define DO_CHECK_ijkl(i,j,k,l) \\\n"
-        "    if (texture(data[i][j].data[k][l], ZERO) != ivec4(i, j, k, l) + 1) { \\\n"
-        "        return false; \\\n"
-        "    }\n"
-        "#define DO_CHECK_ij(i,j) \\\n"
-        "    DO_CHECK_ijkl(i, j, 0, 0) \\\n"
-        "    DO_CHECK_ijkl(i, j, 0, 1) \\\n"
-        "    DO_CHECK_ijkl(i, j, 1, 0) \\\n"
-        "    DO_CHECK_ijkl(i, j, 1, 1)\n"
-        "    DO_CHECK_ij(0, 0)\n"
-        "    DO_CHECK_ij(1, 0)\n"
-        "    DO_CHECK_ij(2, 0)\n"
-        "    DO_CHECK_ij(0, 1)\n"
-        "    DO_CHECK_ij(1, 1)\n"
-        "    DO_CHECK_ij(2, 1)\n"
-        "    return true;\n"
-        "}\n"
-        "void main() {\n"
-        "    bool passed = check(test);\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+struct Data { mediump isampler2D data[2][2]; };
+uniform Data test[3][2];
+const vec2 ZERO = vec2(0.0, 0.0);
+
+bool check(Data data[3][2]) {
+#define DO_CHECK_ijkl(i,j,k,l) \
+    if (texture(data[i][j].data[k][l], ZERO) != ivec4(i, j, k, l) + 1) { \
+        return false; \
+    }
+#define DO_CHECK_ij(i,j) \
+    DO_CHECK_ijkl(i, j, 0, 0) \
+    DO_CHECK_ijkl(i, j, 0, 1) \
+    DO_CHECK_ijkl(i, j, 1, 0) \
+    DO_CHECK_ijkl(i, j, 1, 1)
+    DO_CHECK_ij(0, 0)
+    DO_CHECK_ij(1, 0)
+    DO_CHECK_ij(2, 0)
+    DO_CHECK_ij(0, 1)
+    DO_CHECK_ij(1, 1)
+    DO_CHECK_ij(2, 1)
+    return true;
+}
+void main() {
+    bool passed = check(test);
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -6252,36 +6300,35 @@ TEST_P(GLSLTest_ES31, ParameterArrayArrayArraySampler)
     // http://anglebug.com/42264082
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsOpenGL());
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "uniform mediump isampler2D test[2][3][4];\n"
-        "uniform mediump isampler2D test2[4];\n"
-        "const vec2 ZERO = vec2(0.0, 0.0);\n"
-        "\n"
-        "bool check1D(mediump isampler2D arr[4], int x, int y) {\n"
-        "    if (texture(arr[0], ZERO) != ivec4(x, y, 0, 0)+1) return false;\n"
-        "    if (texture(arr[1], ZERO) != ivec4(x, y, 1, 0)+1) return false;\n"
-        "    if (texture(arr[2], ZERO) != ivec4(x, y, 2, 0)+1) return false;\n"
-        "    if (texture(arr[3], ZERO) != ivec4(x, y, 3, 0)+1) return false;\n"
-        "    return true;\n"
-        "}\n"
-        "bool check2D(mediump isampler2D arr[3][4], int x) {\n"
-        "    if (!check1D(arr[0], x, 0)) return false;\n"
-        "    if (!check1D(arr[1], x, 1)) return false;\n"
-        "    if (!check1D(arr[2], x, 2)) return false;\n"
-        "    return true;\n"
-        "}\n"
-        "bool check3D(mediump isampler2D arr[2][3][4]) {\n"
-        "    if (!check2D(arr[0], 0)) return false;\n"
-        "    if (!check2D(arr[1], 1)) return false;\n"
-        "    return true;\n"
-        "}\n"
-        "void main() {\n"
-        "    bool passed = check3D(test) && check1D(test2, 7, 8);\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+uniform mediump isampler2D test[2][3][4];
+uniform mediump isampler2D test2[4];
+const vec2 ZERO = vec2(0.0, 0.0);
+
+bool check1D(mediump isampler2D arr[4], int x, int y) {
+    if (texture(arr[0], ZERO) != ivec4(x, y, 0, 0)+1) return false;
+    if (texture(arr[1], ZERO) != ivec4(x, y, 1, 0)+1) return false;
+    if (texture(arr[2], ZERO) != ivec4(x, y, 2, 0)+1) return false;
+    if (texture(arr[3], ZERO) != ivec4(x, y, 3, 0)+1) return false;
+    return true;
+}
+bool check2D(mediump isampler2D arr[3][4], int x) {
+    if (!check1D(arr[0], x, 0)) return false;
+    if (!check1D(arr[1], x, 1)) return false;
+    if (!check1D(arr[2], x, 2)) return false;
+    return true;
+}
+bool check3D(mediump isampler2D arr[2][3][4]) {
+    if (!check2D(arr[0], 0)) return false;
+    if (!check2D(arr[1], 1)) return false;
+    return true;
+}
+void main() {
+    bool passed = check3D(test) && check1D(test2, 7, 8);
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -6343,28 +6390,28 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysNameCollisionSampler)
     ANGLE_SKIP_TEST_IF(numTextures < 2 * 2 + 3 * 3 + 4 * 4);
     // anglebug.com/42262476 - no sampler array params on Android
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump sampler2D;\n"
-        "precision mediump float;\n"
-        "uniform sampler2D test_field1_field2[2][2];\n"
-        "struct S1 { sampler2D field2[3][3]; }; uniform S1 test_field1;\n"
-        "struct S2 { sampler2D field1_field2[4][4]; }; uniform S2 test;\n"
-        "vec4 func1(sampler2D param_field1_field2[2][2],\n"
-        "           int param_field1_field2_offset,\n"
-        "           S1 param_field1,\n"
-        "           S2 param) {\n"
-        "    return vec4(0.0, 1.0, 0.0, 0.0);\n"
-        "}\n"
-        "out vec4 my_FragColor;\n"
-        "void main() {\n"
-        "    my_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n"
-        "    my_FragColor += func1(test_field1_field2, 0, test_field1, test);\n"
-        "    vec2 uv = vec2(0.0);\n"
-        "    my_FragColor += texture(test_field1_field2[0][0], uv) +\n"
-        "                    texture(test_field1.field2[0][0], uv) +\n"
-        "                    texture(test.field1_field2[0][0], uv);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump sampler2D;
+precision mediump float;
+uniform sampler2D test_field1_field2[2][2];
+struct S1 { sampler2D field2[3][3]; }; uniform S1 test_field1;
+struct S2 { sampler2D field1_field2[4][4]; }; uniform S2 test;
+vec4 func1(sampler2D param_field1_field2[2][2],
+           int param_field1_field2_offset,
+           S1 param_field1,
+           S2 param) {
+    return vec4(0.0, 1.0, 0.0, 0.0);
+}
+out vec4 my_FragColor;
+void main() {
+    my_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    my_FragColor += func1(test_field1_field2, 0, test_field1, test);
+    vec2 uv = vec2(0.0);
+    my_FragColor += texture(test_field1_field2[0][0], uv) +
+                    texture(test_field1.field2[0][0], uv) +
+                    texture(test.field1_field2[0][0], uv);
+})";
+
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glActiveTexture(GL_TEXTURE0);
     GLTexture tex;
@@ -6378,21 +6425,21 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysNameCollisionSampler)
 // Test that regular arrays are unmodified.
 TEST_P(GLSLTest_ES31, BasicTypeArrayAndArrayOfSampler)
 {
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump sampler2D;\n"
-        "precision mediump float;\n"
-        "uniform sampler2D sampler_array[2][2];\n"
-        "uniform int array[3][2];\n"
-        "vec4 func1(int param[2],\n"
-        "           int param2[3]) {\n"
-        "    return vec4(0.0, 1.0, 0.0, 0.0);\n"
-        "}\n"
-        "out vec4 my_FragColor;\n"
-        "void main() {\n"
-        "    my_FragColor = texture(sampler_array[0][0], vec2(0.0));\n"
-        "    my_FragColor += func1(array[1], int[](1, 2, 3));\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump sampler2D;
+precision mediump float;
+uniform sampler2D sampler_array[2][2];
+uniform int array[3][2];
+vec4 func1(int param[2],
+           int param2[3]) {
+    return vec4(0.0, 1.0, 0.0, 0.0);
+}
+out vec4 my_FragColor;
+void main() {
+    my_FragColor = texture(sampler_array[0][0], vec2(0.0));
+    my_FragColor += func1(array[1], int[](1, 2, 3));
+})";
+
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glActiveTexture(GL_TEXTURE0);
     GLTexture tex;

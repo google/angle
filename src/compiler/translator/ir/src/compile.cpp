@@ -120,6 +120,7 @@ void SetEnabledExtensions(const TExtensionBehavior &behavior, ffi::ExtensionsEna
 void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::CompileOptions *opt)
 {
     opt->shader_version = compiler->getShaderVersion();
+    opt->output         = static_cast<ffi::OutputLanguage>(compiler->getOutputType());
     opt->is_es1         = compiler->getShaderVersion() == 100;
 
     opt->initialize_uninitialized_variables = options.initializeUninitializedLocals ||

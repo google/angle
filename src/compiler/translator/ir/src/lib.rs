@@ -25,5 +25,5 @@ mod transform;
 mod traverser;
 mod util;
 mod validator;
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Write;

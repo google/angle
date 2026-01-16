@@ -482,8 +482,9 @@ bool TCompiler::Init(const ShBuiltInResources &resources)
 }
 
 TIntermBlock *TCompiler::compileTreeForTesting(angle::Span<const char *const> shaderStrings,
-                                               const ShCompileOptions &compileOptions)
+                                               const ShCompileOptions &compileOptionsIn)
 {
+    const ShCompileOptions compileOptions = adjustOptions(compileOptionsIn);
     return compileTreeImpl(shaderStrings, compileOptions);
 }
 
@@ -838,11 +839,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 {
     mValidateASTOptions = {};
 
-#if defined(ANGLE_IR)
     const bool useIR = compileOptions.useIR;
-#else
-    const bool useIR = false;
-#endif
 
     // Disallow expressions deemed too complex.
     // This needs to be checked before other functions that will traverse the AST
@@ -1369,6 +1366,10 @@ ShCompileOptions TCompiler::adjustOptions(const ShCompileOptions &compileOptions
     {
         compileOptions.initGLPosition = true;
     }
+
+#if !defined(ANGLE_IR)
+    compileOptions.useIR = false;
+#endif
 
     return compileOptions;
 }

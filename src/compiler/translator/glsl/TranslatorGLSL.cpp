@@ -99,14 +99,17 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
         }
     }
 
-    // anglebug.com/42265954: The ESSL spec has a bug with images as function arguments. The
-    // recommended workaround is to inline functions that accept image arguments.
-    if (getShaderVersion() >= 310 &&
-        !MonomorphizeUnsupportedFunctions(
-            this, root, &getSymbolTable(),
-            UnsupportedFunctionArgsBitSet{UnsupportedFunctionArgs::Image}))
+    if (!compileOptions.useIR)
     {
-        return false;
+        // anglebug.com/42265954: The ESSL spec has a bug with images as function arguments. The
+        // recommended workaround is to inline functions that accept image arguments.
+        if (getShaderVersion() >= 310 &&
+            !MonomorphizeUnsupportedFunctions(
+                this, root, &getSymbolTable(),
+                UnsupportedFunctionArgsBitSet{UnsupportedFunctionArgs::Image}))
+        {
+            return false;
+        }
     }
 
     if (compileOptions.rewriteTexelFetchOffsetToTexelFetch)

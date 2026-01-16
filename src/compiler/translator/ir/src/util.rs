@@ -101,6 +101,21 @@ struct DuplicateBlockContext<'a, 'b, 'c> {
     register_map: &'c mut HashMap<RegisterId, RegisterId>,
 }
 
+// Duplicate a variable, helper for monomorphization and block duplication.
+pub fn duplicate_variable(ir_meta: &mut IRMeta, variable_id: VariableId) -> VariableId {
+    let variable = ir_meta.get_variable(variable_id);
+    let replacement = Variable::new(
+        variable.name,
+        variable.type_id,
+        variable.precision,
+        variable.decorations.clone(),
+        variable.built_in,
+        variable.initializer,
+        variable.scope,
+    );
+    ir_meta.add_variable(replacement)
+}
+
 // Duplicate a block (including its sub-blocks) with new temp ids.  This is useful for example
 // to monomorphize functions.
 pub fn duplicate_block(
@@ -150,24 +165,14 @@ fn new_block_to_duplicate(
     new_block.variables = block_variables
         .iter()
         .map(|&variable_id| {
-            let variable = context.ir_meta.get_variable(variable_id);
-
             // Note that variables inside blocks should always be Temporary, not Internal or
             // ShaderInterface.  As such, it's ok to reuse the same name, they will be
             // disambiguated during codegen if necessary.
-            debug_assert!(variable.name.source == NameSource::Temporary);
-
-            let replacement = Variable::new(
-                variable.name,
-                variable.type_id,
-                variable.precision,
-                variable.decorations.clone(),
-                variable.built_in,
-                variable.initializer,
-                variable.scope,
+            debug_assert!(
+                context.ir_meta.get_variable(variable_id).name.source == NameSource::Temporary
             );
-            let replacement = context.ir_meta.add_variable(replacement);
 
+            let replacement = duplicate_variable(context.ir_meta, variable_id);
             context.variable_map.insert(variable_id, Id::new_variable(replacement));
             replacement
         })

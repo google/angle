@@ -146,6 +146,15 @@ impl Id {
             _ => None,
         }
     }
+
+    pub fn get_variable(&self) -> VariableId {
+        match self {
+            &Id::Variable(id) => id,
+            _ => {
+                panic!("Internal error: unexpected non-variable id");
+            }
+        }
+    }
 }
 
 #[derive(Copy, Clone)]
@@ -1111,6 +1120,7 @@ impl Block {
     }
 
     pub fn terminate(&mut self, op: OpCode) {
+        debug_assert!(!self.is_terminated());
         self.add_void_instruction(op);
     }
     pub fn unterminate(&mut self) {
@@ -1494,6 +1504,7 @@ pub enum FunctionParamDirection {
     InputOutput,
 }
 
+#[derive(Copy, Clone)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub struct FunctionParam {
     pub variable_id: VariableId,
@@ -1867,6 +1878,9 @@ impl Type {
     pub fn is_scalar(&self) -> bool {
         matches!(self, Type::Scalar(_))
     }
+    pub fn is_scalar_atomic_counter(&self) -> bool {
+        matches!(self, Type::Scalar(BasicType::AtomicCounter))
+    }
 
     pub fn is_vector(&self) -> bool {
         matches!(self, Type::Vector(..))
@@ -1879,9 +1893,21 @@ impl Type {
     pub fn is_image(&self) -> bool {
         matches!(self, Type::Image(..))
     }
+    pub fn is_sampled_image(&self) -> bool {
+        matches!(self, Type::Image(_, ImageType { is_sampled: true, .. }))
+    }
+    pub fn is_pixel_local_storage_plane(&self) -> bool {
+        matches!(self, Type::Image(_, ImageType { dimension: ImageDimension::PixelLocal, .. }))
+    }
 
     pub fn is_array(&self) -> bool {
         matches!(self, Type::Array(..))
+    }
+    pub fn is_array_of_array(&self, ir_meta: &IRMeta) -> bool {
+        match *self {
+            Type::Array(element_id, _) => ir_meta.get_type(element_id).is_array(),
+            _ => false,
+        }
     }
 
     pub fn is_unsized_array(&self) -> bool {
@@ -1890,6 +1916,28 @@ impl Type {
 
     pub fn is_struct(&self) -> bool {
         matches!(self, Type::Struct(..))
+    }
+    fn is_struct_containing_samplers_helper(&self, ir_meta: &IRMeta) -> bool {
+        // The parser puts samplers at the end of the struct, so check the fields from the back for
+        // any sampler or struct that contains samplers.  Samplers in struct are only valid in ESSL
+        // 100, so this function is unnecessary to call for higher versions.
+        self.is_sampled_image()
+            || match self {
+                Type::Struct(_, fields, StructSpecialization::Struct) => {
+                    fields.iter().rev().any(|field| {
+                        let type_info = ir_meta.get_type(field.type_id);
+                        type_info.is_struct_containing_samplers_helper(ir_meta)
+                    })
+                }
+                &Type::Array(element_type_id, _) => {
+                    let type_info = ir_meta.get_type(element_type_id);
+                    type_info.is_struct_containing_samplers_helper(ir_meta)
+                }
+                _ => false,
+            }
+    }
+    pub fn is_struct_containing_samplers(&self, ir_meta: &IRMeta) -> bool {
+        self.is_struct() && self.is_struct_containing_samplers_helper(ir_meta)
     }
 
     pub fn is_pointer(&self) -> bool {
@@ -2883,6 +2931,10 @@ impl IR {
     pub fn set_function_entry(&mut self, id: FunctionId, entry: Block) {
         debug_assert!(self.function_entries[id.id as usize].is_none());
         self.function_entries[id.id as usize] = Some(entry);
+    }
+
+    pub fn dead_code_eliminate_function(&mut self, id: FunctionId) {
+        self.function_entries[id.id as usize] = None;
     }
 
     pub fn prepend_to_main(&mut self, mut new_entry: Block) {
