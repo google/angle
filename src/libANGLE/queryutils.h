@@ -197,7 +197,7 @@ void QueryProgramResourceiv(const Program *program,
                             UniformBlockIndex index,
                             GLsizei propCount,
                             const GLenum *props,
-                            GLsizei bufSize,
+                            GLsizei count,
                             GLsizei *length,
                             GLint *params);
 

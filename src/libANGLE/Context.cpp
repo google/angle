@@ -3156,12 +3156,12 @@ void Context::getProgramResourceiv(ShaderProgramID program,
                                    GLuint index,
                                    GLsizei propCount,
                                    const GLenum *props,
-                                   GLsizei bufSize,
+                                   GLsizei count,
                                    GLsizei *length,
                                    GLint *params)
 {
     const Program *programObject = getProgramResolveLink(program);
-    QueryProgramResourceiv(programObject, programInterface, {index}, propCount, props, bufSize,
+    QueryProgramResourceiv(programObject, programInterface, {index}, propCount, props, count,
                            length, params);
 }
 

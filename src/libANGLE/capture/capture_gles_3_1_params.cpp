@@ -210,7 +210,7 @@ void CaptureGetProgramResourceiv_props(const State &glState,
                                        GLuint index,
                                        GLsizei propCount,
                                        const GLenum *props,
-                                       GLsizei bufSize,
+                                       GLsizei count,
                                        GLsizei *length,
                                        GLint *params,
                                        ParamCapture *paramCapture)
@@ -225,7 +225,7 @@ void CaptureGetProgramResourceiv_length(const State &glState,
                                         GLuint index,
                                         GLsizei propCount,
                                         const GLenum *props,
-                                        GLsizei bufSize,
+                                        GLsizei count,
                                         GLsizei *length,
                                         GLint *params,
                                         ParamCapture *paramCapture)
@@ -240,14 +240,14 @@ void CaptureGetProgramResourceiv_params(const State &glState,
                                         GLuint index,
                                         GLsizei propCount,
                                         const GLenum *props,
-                                        GLsizei bufSize,
+                                        GLsizei count,
                                         GLsizei *length,
                                         GLint *params,
                                         ParamCapture *paramCapture)
 {
     // Prefer to only capture as many parameters as are returned,
     // but if this is not known, then capture the whole buffer
-    int paramLength = length != nullptr ? *length : bufSize;
+    int paramLength = length != nullptr ? *length : count;
     CaptureMemory(params, sizeof(GLint) * paramLength, paramCapture);
 }
 
