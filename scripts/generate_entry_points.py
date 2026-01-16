@@ -2194,8 +2194,11 @@ def format_capture_method(api, command, cmd_name, proto, params, all_param_types
         api, cmd_name,
         ([context_param_typed, "bool isCallValid"] if api != apis.CL else ["bool isCallValid"]) +
         params, cmd_packed_gl_enums, packed_param_types)
+    params_with_type_param_header = get_internal_params(
+        api, cmd_name, ([context_param_typed] if api != apis.CL else []) + params,
+        cmd_packed_gl_enums, packed_param_types)
     params_just_name = ", ".join(
-        ([context_param_name, "isCallValid"] if api != apis.CL else ["isCallValid"]) +
+        ([context_param_name] if api != apis.CL else []) +
         [just_the_name_packed(param, packed_gl_enums) for param in params])
 
     parameter_captures = []
@@ -2226,7 +2229,8 @@ def format_capture_method(api, command, cmd_name, proto, params, all_param_types
                 cast_type=param_type)
 
             capture_pointer_func = TEMPLATE_PARAMETER_CAPTURE_POINTER_FUNC.format(
-                name=capture_name, params=params_with_type + ", angle::ParamCapture *paramCapture")
+                name=capture_name,
+                params=params_with_type_param_header + ", angle::ParamCapture *paramCapture")
             capture_pointer_funcs += [capture_pointer_func]
         elif capture_param_type in ('GLenum', 'GLbitfield'):
             gl_enum_group = find_gl_enum_group_in_command(command, param_name)

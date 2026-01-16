@@ -19,7 +19,6 @@ namespace gl
 
 // GL_AMD_performance_monitor
 void CaptureDeletePerfMonitorsAMD_monitors(const State &glState,
-                                           bool isCallValid,
                                            GLsizei n,
                                            GLuint *monitors,
                                            angle::ParamCapture *paramCapture)
@@ -28,7 +27,6 @@ void CaptureDeletePerfMonitorsAMD_monitors(const State &glState,
 }
 
 void CaptureGenPerfMonitorsAMD_monitors(const State &glState,
-                                        bool isCallValid,
                                         GLsizei n,
                                         GLuint *monitors,
                                         angle::ParamCapture *paramCapture)
@@ -37,7 +35,6 @@ void CaptureGenPerfMonitorsAMD_monitors(const State &glState,
 }
 
 void CaptureGetPerfMonitorCounterDataAMD_data(const State &glState,
-                                              bool isCallValid,
                                               GLuint monitor,
                                               GLenum pname,
                                               GLsizei dataSize,
@@ -49,7 +46,6 @@ void CaptureGetPerfMonitorCounterDataAMD_data(const State &glState,
 }
 
 void CaptureGetPerfMonitorCounterDataAMD_bytesWritten(const State &glState,
-                                                      bool isCallValid,
                                                       GLuint monitor,
                                                       GLenum pname,
                                                       GLsizei dataSize,
@@ -61,7 +57,6 @@ void CaptureGetPerfMonitorCounterDataAMD_bytesWritten(const State &glState,
 }
 
 void CaptureGetPerfMonitorCounterInfoAMD_data(const State &glState,
-                                              bool isCallValid,
                                               GLuint group,
                                               GLuint counter,
                                               GLenum pname,
@@ -72,7 +67,6 @@ void CaptureGetPerfMonitorCounterInfoAMD_data(const State &glState,
 }
 
 void CaptureGetPerfMonitorCounterStringAMD_length(const State &glState,
-                                                  bool isCallValid,
                                                   GLuint group,
                                                   GLuint counter,
                                                   GLsizei bufSize,
@@ -84,7 +78,6 @@ void CaptureGetPerfMonitorCounterStringAMD_length(const State &glState,
 }
 
 void CaptureGetPerfMonitorCounterStringAMD_counterString(const State &glState,
-                                                         bool isCallValid,
                                                          GLuint group,
                                                          GLuint counter,
                                                          GLsizei bufSize,
@@ -96,7 +89,6 @@ void CaptureGetPerfMonitorCounterStringAMD_counterString(const State &glState,
 }
 
 void CaptureGetPerfMonitorCountersAMD_numCounters(const State &glState,
-                                                  bool isCallValid,
                                                   GLuint group,
                                                   GLint *numCounters,
                                                   GLint *maxActiveCounters,
@@ -108,7 +100,6 @@ void CaptureGetPerfMonitorCountersAMD_numCounters(const State &glState,
 }
 
 void CaptureGetPerfMonitorCountersAMD_maxActiveCounters(const State &glState,
-                                                        bool isCallValid,
                                                         GLuint group,
                                                         GLint *numCounters,
                                                         GLint *maxActiveCounters,
@@ -120,7 +111,6 @@ void CaptureGetPerfMonitorCountersAMD_maxActiveCounters(const State &glState,
 }
 
 void CaptureGetPerfMonitorCountersAMD_counters(const State &glState,
-                                               bool isCallValid,
                                                GLuint group,
                                                GLint *numCounters,
                                                GLint *maxActiveCounters,
@@ -132,7 +122,6 @@ void CaptureGetPerfMonitorCountersAMD_counters(const State &glState,
 }
 
 void CaptureGetPerfMonitorGroupStringAMD_length(const State &glState,
-                                                bool isCallValid,
                                                 GLuint group,
                                                 GLsizei bufSize,
                                                 GLsizei *length,
@@ -143,7 +132,6 @@ void CaptureGetPerfMonitorGroupStringAMD_length(const State &glState,
 }
 
 void CaptureGetPerfMonitorGroupStringAMD_groupString(const State &glState,
-                                                     bool isCallValid,
                                                      GLuint group,
                                                      GLsizei bufSize,
                                                      GLsizei *length,
@@ -154,7 +142,6 @@ void CaptureGetPerfMonitorGroupStringAMD_groupString(const State &glState,
 }
 
 void CaptureGetPerfMonitorGroupsAMD_numGroups(const State &glState,
-                                              bool isCallValid,
                                               GLint *numGroups,
                                               GLsizei groupsSize,
                                               GLuint *groups,
@@ -164,7 +151,6 @@ void CaptureGetPerfMonitorGroupsAMD_numGroups(const State &glState,
 }
 
 void CaptureGetPerfMonitorGroupsAMD_groups(const State &glState,
-                                           bool isCallValid,
                                            GLint *numGroups,
                                            GLsizei groupsSize,
                                            GLuint *groups,
@@ -174,7 +160,6 @@ void CaptureGetPerfMonitorGroupsAMD_groups(const State &glState,
 }
 
 void CaptureSelectPerfMonitorCountersAMD_counterList(const State &glState,
-                                                     bool isCallValid,
                                                      GLuint monitor,
                                                      GLboolean enable,
                                                      GLuint group,
@@ -188,7 +173,6 @@ void CaptureSelectPerfMonitorCountersAMD_counterList(const State &glState,
 // GL_ANGLE_base_vertex_base_instance
 void CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE_indices(
     const State &glState,
-    bool isCallValid,
     PrimitiveMode modePacked,
     GLsizei count,
     DrawElementsType typePacked,
@@ -202,7 +186,6 @@ void CaptureDrawElementsInstancedBaseVertexBaseInstanceANGLE_indices(
 }
 
 void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_firsts(const State &glState,
-                                                             bool isCallValid,
                                                              PrimitiveMode modePacked,
                                                              const GLint *firsts,
                                                              const GLsizei *counts,
@@ -215,7 +198,6 @@ void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_firsts(const State &glStat
 }
 
 void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_counts(const State &glState,
-                                                             bool isCallValid,
                                                              PrimitiveMode modePacked,
                                                              const GLint *firsts,
                                                              const GLsizei *counts,
@@ -229,7 +211,6 @@ void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_counts(const State &glStat
 
 void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_instanceCounts(
     const State &glState,
-    bool isCallValid,
     PrimitiveMode modePacked,
     const GLint *firsts,
     const GLsizei *counts,
@@ -243,7 +224,6 @@ void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_instanceCounts(
 
 void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_baseInstances(
     const State &glState,
-    bool isCallValid,
     PrimitiveMode modePacked,
     const GLint *firsts,
     const GLsizei *counts,
@@ -257,7 +237,6 @@ void CaptureMultiDrawArraysInstancedBaseInstanceANGLE_baseInstances(
 
 void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_counts(
     const State &glState,
-    bool isCallValid,
     PrimitiveMode modePacked,
     const GLsizei *counts,
     DrawElementsType typePacked,
@@ -273,7 +252,6 @@ void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_counts(
 
 void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_indices(
     const State &glState,
-    bool isCallValid,
     PrimitiveMode modePacked,
     const GLsizei *counts,
     DrawElementsType typePacked,
@@ -289,7 +267,6 @@ void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_indices(
 
 void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_instanceCounts(
     const State &glState,
-    bool isCallValid,
     PrimitiveMode modePacked,
     const GLsizei *counts,
     DrawElementsType typePacked,
@@ -305,7 +282,6 @@ void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_instanceCounts
 
 void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseVertices(
     const State &glState,
-    bool isCallValid,
     PrimitiveMode modePacked,
     const GLsizei *counts,
     DrawElementsType typePacked,
@@ -321,7 +297,6 @@ void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseVertices(
 
 void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseInstances(
     const State &glState,
-    bool isCallValid,
     PrimitiveMode modePacked,
     const GLsizei *counts,
     DrawElementsType typePacked,
@@ -337,7 +312,6 @@ void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseInstances(
 
 // GL_ANGLE_blob_cache
 void CaptureBlobCacheCallbacksANGLE_userParam(const State &glState,
-                                              bool isCallValid,
                                               GLSETBLOBPROCANGLE set,
                                               GLGETBLOBPROCANGLE get,
                                               const void *userParam,
@@ -347,7 +321,6 @@ void CaptureBlobCacheCallbacksANGLE_userParam(const State &glState,
 }
 
 void CaptureGetPointervANGLE_params(const State &glState,
-                                    bool isCallValid,
                                     GLenum pname,
                                     void **params,
                                     angle::ParamCapture *paramCapture)
@@ -357,7 +330,6 @@ void CaptureGetPointervANGLE_params(const State &glState,
 
 // GL_ANGLE_get_image
 void CaptureGetTexImageANGLE_pixels(const State &glState,
-                                    bool isCallValid,
                                     TextureTarget target,
                                     GLint level,
                                     GLenum format,
@@ -384,7 +356,6 @@ void CaptureGetTexImageANGLE_pixels(const State &glState,
 }
 
 void CaptureGetCompressedTexImageANGLE_pixels(const State &glState,
-                                              bool isCallValid,
                                               TextureTarget target,
                                               GLint level,
                                               void *pixels,
@@ -402,7 +373,6 @@ void CaptureGetCompressedTexImageANGLE_pixels(const State &glState,
 }
 
 void CaptureGetRenderbufferImageANGLE_pixels(const State &glState,
-                                             bool isCallValid,
                                              GLenum target,
                                              GLenum format,
                                              GLenum type,
@@ -428,7 +398,6 @@ void CaptureGetRenderbufferImageANGLE_pixels(const State &glState,
 
 // GL_ANGLE_get_tex_level_parameter
 void CaptureGetTexLevelParameterivANGLE_params(const State &glState,
-                                               bool isCallValid,
                                                TextureTarget targetPacked,
                                                GLint level,
                                                GLenum pname,
@@ -439,7 +408,6 @@ void CaptureGetTexLevelParameterivANGLE_params(const State &glState,
 }
 
 void CaptureGetTexLevelParameterfvANGLE_params(const State &glState,
-                                               bool isCallValid,
                                                TextureTarget targetPacked,
                                                GLint level,
                                                GLenum pname,
@@ -451,7 +419,6 @@ void CaptureGetTexLevelParameterfvANGLE_params(const State &glState,
 
 // GL_ANGLE_instanced_arrays
 void CaptureDrawElementsInstancedANGLE_indices(const State &glState,
-                                               bool isCallValid,
                                                PrimitiveMode modePacked,
                                                GLsizei count,
                                                DrawElementsType typePacked,
@@ -459,13 +426,11 @@ void CaptureDrawElementsInstancedANGLE_indices(const State &glState,
                                                GLsizei primcount,
                                                ParamCapture *paramCapture)
 {
-    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
-                                paramCapture);
+    CaptureDrawElements_indices(glState, modePacked, count, typePacked, indices, paramCapture);
 }
 
 // GL_ANGLE_memory_object_flags
 void CaptureTexStorageMemFlags2DANGLE_imageCreateInfoPNext(const State &glState,
-                                                           bool isCallValid,
                                                            TextureType targetPacked,
                                                            GLsizei levels,
                                                            GLenum internalFormat,
@@ -483,7 +448,6 @@ void CaptureTexStorageMemFlags2DANGLE_imageCreateInfoPNext(const State &glState,
 
 void CaptureTexStorageMemFlags2DMultisampleANGLE_imageCreateInfoPNext(
     const State &glState,
-    bool isCallValid,
     TextureType targetPacked,
     GLsizei samples,
     GLenum internalFormat,
@@ -501,7 +465,6 @@ void CaptureTexStorageMemFlags2DMultisampleANGLE_imageCreateInfoPNext(
 }
 
 void CaptureTexStorageMemFlags3DANGLE_imageCreateInfoPNext(const State &glState,
-                                                           bool isCallValid,
                                                            TextureType targetPacked,
                                                            GLsizei levels,
                                                            GLenum internalFormat,
@@ -520,7 +483,6 @@ void CaptureTexStorageMemFlags3DANGLE_imageCreateInfoPNext(const State &glState,
 
 void CaptureTexStorageMemFlags3DMultisampleANGLE_imageCreateInfoPNext(
     const State &glState,
-    bool isCallValid,
     TextureType targetPacked,
     GLsizei samples,
     GLenum internalFormat,
@@ -540,7 +502,6 @@ void CaptureTexStorageMemFlags3DMultisampleANGLE_imageCreateInfoPNext(
 
 // GL_ANGLE_multi_draw
 void CaptureMultiDrawArraysANGLE_firsts(const State &glState,
-                                        bool isCallValid,
                                         PrimitiveMode modePacked,
                                         const GLint *firsts,
                                         const GLsizei *counts,
@@ -551,7 +512,6 @@ void CaptureMultiDrawArraysANGLE_firsts(const State &glState,
 }
 
 void CaptureMultiDrawArraysANGLE_counts(const State &glState,
-                                        bool isCallValid,
                                         PrimitiveMode modePacked,
                                         const GLint *firsts,
                                         const GLsizei *counts,
@@ -562,7 +522,6 @@ void CaptureMultiDrawArraysANGLE_counts(const State &glState,
 }
 
 void CaptureMultiDrawArraysInstancedANGLE_firsts(const State &glState,
-                                                 bool isCallValid,
                                                  PrimitiveMode modePacked,
                                                  const GLint *firsts,
                                                  const GLsizei *counts,
@@ -574,7 +533,6 @@ void CaptureMultiDrawArraysInstancedANGLE_firsts(const State &glState,
 }
 
 void CaptureMultiDrawArraysInstancedANGLE_counts(const State &glState,
-                                                 bool isCallValid,
                                                  PrimitiveMode modePacked,
                                                  const GLint *firsts,
                                                  const GLsizei *counts,
@@ -586,7 +544,6 @@ void CaptureMultiDrawArraysInstancedANGLE_counts(const State &glState,
 }
 
 void CaptureMultiDrawArraysInstancedANGLE_instanceCounts(const State &glState,
-                                                         bool isCallValid,
                                                          PrimitiveMode modePacked,
                                                          const GLint *firsts,
                                                          const GLsizei *counts,
@@ -598,7 +555,6 @@ void CaptureMultiDrawArraysInstancedANGLE_instanceCounts(const State &glState,
 }
 
 void CaptureMultiDrawElementsANGLE_counts(const State &glState,
-                                          bool isCallValid,
                                           PrimitiveMode modePacked,
                                           const GLsizei *counts,
                                           DrawElementsType typePacked,
@@ -610,7 +566,6 @@ void CaptureMultiDrawElementsANGLE_counts(const State &glState,
 }
 
 void CaptureMultiDrawElementsANGLE_indices(const State &glState,
-                                           bool isCallValid,
                                            PrimitiveMode modePacked,
                                            const GLsizei *counts,
                                            DrawElementsType typePacked,
@@ -622,7 +577,6 @@ void CaptureMultiDrawElementsANGLE_indices(const State &glState,
 }
 
 void CaptureMultiDrawElementsInstancedANGLE_counts(const State &glState,
-                                                   bool isCallValid,
                                                    PrimitiveMode modePacked,
                                                    const GLsizei *counts,
                                                    DrawElementsType typePacked,
@@ -635,7 +589,6 @@ void CaptureMultiDrawElementsInstancedANGLE_counts(const State &glState,
 }
 
 void CaptureMultiDrawElementsInstancedANGLE_indices(const State &glState,
-                                                    bool isCallValid,
                                                     PrimitiveMode modePacked,
                                                     const GLsizei *counts,
                                                     DrawElementsType typePacked,
@@ -648,7 +601,6 @@ void CaptureMultiDrawElementsInstancedANGLE_indices(const State &glState,
 }
 
 void CaptureMultiDrawElementsInstancedANGLE_instanceCounts(const State &glState,
-                                                           bool isCallValid,
                                                            PrimitiveMode modePacked,
                                                            const GLsizei *counts,
                                                            DrawElementsType typePacked,
@@ -662,7 +614,6 @@ void CaptureMultiDrawElementsInstancedANGLE_instanceCounts(const State &glState,
 
 // GL_ANGLE_request_extension
 void CaptureRequestExtensionANGLE_name(const State &glState,
-                                       bool isCallValid,
                                        const GLchar *name,
                                        ParamCapture *paramCapture)
 {
@@ -670,7 +621,6 @@ void CaptureRequestExtensionANGLE_name(const State &glState,
 }
 
 void CaptureDisableExtensionANGLE_name(const State &glState,
-                                       bool isCallValid,
                                        const GLchar *name,
                                        ParamCapture *paramCapture)
 {
@@ -679,7 +629,6 @@ void CaptureDisableExtensionANGLE_name(const State &glState,
 
 // GL_ANGLE_robust_client_memory
 void CaptureGetBooleanvRobustANGLE_length(const State &glState,
-                                          bool isCallValid,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -690,7 +639,6 @@ void CaptureGetBooleanvRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetBooleanvRobustANGLE_params(const State &glState,
-                                          bool isCallValid,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -701,7 +649,6 @@ void CaptureGetBooleanvRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetBufferParameterivRobustANGLE_length(const State &glState,
-                                                   bool isCallValid,
                                                    BufferBinding targetPacked,
                                                    GLenum pname,
                                                    GLsizei bufSize,
@@ -713,7 +660,6 @@ void CaptureGetBufferParameterivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetBufferParameterivRobustANGLE_params(const State &glState,
-                                                   bool isCallValid,
                                                    BufferBinding targetPacked,
                                                    GLenum pname,
                                                    GLsizei bufSize,
@@ -725,7 +671,6 @@ void CaptureGetBufferParameterivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetFloatvRobustANGLE_length(const State &glState,
-                                        bool isCallValid,
                                         GLenum pname,
                                         GLsizei bufSize,
                                         GLsizei *length,
@@ -736,18 +681,16 @@ void CaptureGetFloatvRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetFloatvRobustANGLE_params(const State &glState,
-                                        bool isCallValid,
                                         GLenum pname,
                                         GLsizei bufSize,
                                         GLsizei *length,
                                         GLfloat *params,
                                         ParamCapture *paramCapture)
 {
-    CaptureGetFloatv_data(glState, isCallValid, pname, params, paramCapture);
+    CaptureGetFloatv_data(glState, pname, params, paramCapture);
 }
 
 void CaptureGetFramebufferAttachmentParameterivRobustANGLE_length(const State &glState,
-                                                                  bool isCallValid,
                                                                   GLenum target,
                                                                   GLenum attachment,
                                                                   GLenum pname,
@@ -760,7 +703,6 @@ void CaptureGetFramebufferAttachmentParameterivRobustANGLE_length(const State &g
 }
 
 void CaptureGetFramebufferAttachmentParameterivRobustANGLE_params(const State &glState,
-                                                                  bool isCallValid,
                                                                   GLenum target,
                                                                   GLenum attachment,
                                                                   GLenum pname,
@@ -773,7 +715,6 @@ void CaptureGetFramebufferAttachmentParameterivRobustANGLE_params(const State &g
 }
 
 void CaptureGetIntegervRobustANGLE_length(const State &glState,
-                                          bool isCallValid,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -784,7 +725,6 @@ void CaptureGetIntegervRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetIntegervRobustANGLE_data(const State &glState,
-                                        bool isCallValid,
                                         GLenum pname,
                                         GLsizei bufSize,
                                         GLsizei *length,
@@ -795,7 +735,6 @@ void CaptureGetIntegervRobustANGLE_data(const State &glState,
 }
 
 void CaptureGetProgramivRobustANGLE_length(const State &glState,
-                                           bool isCallValid,
                                            ShaderProgramID program,
                                            GLenum pname,
                                            GLsizei bufSize,
@@ -807,7 +746,6 @@ void CaptureGetProgramivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetProgramivRobustANGLE_params(const State &glState,
-                                           bool isCallValid,
                                            ShaderProgramID program,
                                            GLenum pname,
                                            GLsizei bufSize,
@@ -819,7 +757,6 @@ void CaptureGetProgramivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetRenderbufferParameterivRobustANGLE_length(const State &glState,
-                                                         bool isCallValid,
                                                          GLenum target,
                                                          GLenum pname,
                                                          GLsizei bufSize,
@@ -831,7 +768,6 @@ void CaptureGetRenderbufferParameterivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetRenderbufferParameterivRobustANGLE_params(const State &glState,
-                                                         bool isCallValid,
                                                          GLenum target,
                                                          GLenum pname,
                                                          GLsizei bufSize,
@@ -843,7 +779,6 @@ void CaptureGetRenderbufferParameterivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetShaderivRobustANGLE_length(const State &glState,
-                                          bool isCallValid,
                                           ShaderProgramID shader,
                                           GLenum pname,
                                           GLsizei bufSize,
@@ -855,7 +790,6 @@ void CaptureGetShaderivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetShaderivRobustANGLE_params(const State &glState,
-                                          bool isCallValid,
                                           ShaderProgramID shader,
                                           GLenum pname,
                                           GLsizei bufSize,
@@ -863,11 +797,10 @@ void CaptureGetShaderivRobustANGLE_params(const State &glState,
                                           GLint *params,
                                           ParamCapture *paramCapture)
 {
-    CaptureGetShaderiv_params(glState, isCallValid, shader, pname, params, paramCapture);
+    CaptureGetShaderiv_params(glState, shader, pname, params, paramCapture);
 }
 
 void CaptureGetTexParameterfvRobustANGLE_length(const State &glState,
-                                                bool isCallValid,
                                                 TextureType targetPacked,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -879,7 +812,6 @@ void CaptureGetTexParameterfvRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetTexParameterfvRobustANGLE_params(const State &glState,
-                                                bool isCallValid,
                                                 TextureType targetPacked,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -891,7 +823,6 @@ void CaptureGetTexParameterfvRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetTexParameterivRobustANGLE_length(const State &glState,
-                                                bool isCallValid,
                                                 TextureType targetPacked,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -903,7 +834,6 @@ void CaptureGetTexParameterivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetTexParameterivRobustANGLE_params(const State &glState,
-                                                bool isCallValid,
                                                 TextureType targetPacked,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -915,7 +845,6 @@ void CaptureGetTexParameterivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetUniformfvRobustANGLE_length(const State &glState,
-                                           bool isCallValid,
                                            ShaderProgramID program,
                                            UniformLocation location,
                                            GLsizei bufSize,
@@ -927,7 +856,6 @@ void CaptureGetUniformfvRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetUniformfvRobustANGLE_params(const State &glState,
-                                           bool isCallValid,
                                            ShaderProgramID program,
                                            UniformLocation location,
                                            GLsizei bufSize,
@@ -939,7 +867,6 @@ void CaptureGetUniformfvRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetUniformivRobustANGLE_length(const State &glState,
-                                           bool isCallValid,
                                            ShaderProgramID program,
                                            UniformLocation location,
                                            GLsizei bufSize,
@@ -951,7 +878,6 @@ void CaptureGetUniformivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetUniformivRobustANGLE_params(const State &glState,
-                                           bool isCallValid,
                                            ShaderProgramID program,
                                            UniformLocation location,
                                            GLsizei bufSize,
@@ -963,7 +889,6 @@ void CaptureGetUniformivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetVertexAttribfvRobustANGLE_length(const State &glState,
-                                                bool isCallValid,
                                                 GLuint index,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -975,7 +900,6 @@ void CaptureGetVertexAttribfvRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetVertexAttribfvRobustANGLE_params(const State &glState,
-                                                bool isCallValid,
                                                 GLuint index,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -987,7 +911,6 @@ void CaptureGetVertexAttribfvRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetVertexAttribivRobustANGLE_length(const State &glState,
-                                                bool isCallValid,
                                                 GLuint index,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -999,7 +922,6 @@ void CaptureGetVertexAttribivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetVertexAttribivRobustANGLE_params(const State &glState,
-                                                bool isCallValid,
                                                 GLuint index,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -1011,7 +933,6 @@ void CaptureGetVertexAttribivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetVertexAttribPointervRobustANGLE_length(const State &glState,
-                                                      bool isCallValid,
                                                       GLuint index,
                                                       GLenum pname,
                                                       GLsizei bufSize,
@@ -1023,7 +944,6 @@ void CaptureGetVertexAttribPointervRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetVertexAttribPointervRobustANGLE_pointer(const State &glState,
-                                                       bool isCallValid,
                                                        GLuint index,
                                                        GLenum pname,
                                                        GLsizei bufSize,
@@ -1035,7 +955,6 @@ void CaptureGetVertexAttribPointervRobustANGLE_pointer(const State &glState,
 }
 
 void CaptureReadPixelsRobustANGLE_length(const State &glState,
-                                         bool isCallValid,
                                          GLint x,
                                          GLint y,
                                          GLsizei width,
@@ -1059,7 +978,6 @@ void CaptureReadPixelsRobustANGLE_length(const State &glState,
 }
 
 void CaptureReadPixelsRobustANGLE_columns(const State &glState,
-                                          bool isCallValid,
                                           GLint x,
                                           GLint y,
                                           GLsizei width,
@@ -1083,7 +1001,6 @@ void CaptureReadPixelsRobustANGLE_columns(const State &glState,
 }
 
 void CaptureReadPixelsRobustANGLE_rows(const State &glState,
-                                       bool isCallValid,
                                        GLint x,
                                        GLint y,
                                        GLsizei width,
@@ -1107,7 +1024,6 @@ void CaptureReadPixelsRobustANGLE_rows(const State &glState,
 }
 
 void CaptureReadPixelsRobustANGLE_pixels(const State &glState,
-                                         bool isCallValid,
                                          GLint x,
                                          GLint y,
                                          GLsizei width,
@@ -1132,7 +1048,6 @@ void CaptureReadPixelsRobustANGLE_pixels(const State &glState,
 }
 
 void CaptureTexImage2DRobustANGLE_pixels(const State &glState,
-                                         bool isCallValid,
                                          TextureTarget targetPacked,
                                          GLint level,
                                          GLint internalformat,
@@ -1159,7 +1074,6 @@ void CaptureTexImage2DRobustANGLE_pixels(const State &glState,
 }
 
 void CaptureTexParameterfvRobustANGLE_params(const State &glState,
-                                             bool isCallValid,
                                              TextureType targetPacked,
                                              GLenum pname,
                                              GLsizei bufSize,
@@ -1170,7 +1084,6 @@ void CaptureTexParameterfvRobustANGLE_params(const State &glState,
 }
 
 void CaptureTexParameterivRobustANGLE_params(const State &glState,
-                                             bool isCallValid,
                                              TextureType targetPacked,
                                              GLenum pname,
                                              GLsizei bufSize,
@@ -1181,7 +1094,6 @@ void CaptureTexParameterivRobustANGLE_params(const State &glState,
 }
 
 void CaptureTexSubImage2DRobustANGLE_pixels(const State &glState,
-                                            bool isCallValid,
                                             TextureTarget targetPacked,
                                             GLint level,
                                             GLint xoffset,
@@ -1208,7 +1120,6 @@ void CaptureTexSubImage2DRobustANGLE_pixels(const State &glState,
 }
 
 void CaptureTexImage3DRobustANGLE_pixels(const State &glState,
-                                         bool isCallValid,
                                          TextureTarget targetPacked,
                                          GLint level,
                                          GLint internalformat,
@@ -1222,12 +1133,11 @@ void CaptureTexImage3DRobustANGLE_pixels(const State &glState,
                                          const void *pixels,
                                          ParamCapture *paramCapture)
 {
-    CaptureTexImage3D_pixels(glState, isCallValid, targetPacked, level, internalformat, width,
-                             height, depth, border, format, type, pixels, paramCapture);
+    CaptureTexImage3D_pixels(glState, targetPacked, level, internalformat, width, height, depth,
+                             border, format, type, pixels, paramCapture);
 }
 
 void CaptureTexSubImage3DRobustANGLE_pixels(const State &glState,
-                                            bool isCallValid,
                                             TextureTarget targetPacked,
                                             GLint level,
                                             GLint xoffset,
@@ -1242,12 +1152,11 @@ void CaptureTexSubImage3DRobustANGLE_pixels(const State &glState,
                                             const void *pixels,
                                             ParamCapture *paramCapture)
 {
-    CaptureTexSubImage3D_pixels(glState, isCallValid, targetPacked, level, xoffset, yoffset,
-                                zoffset, width, height, depth, format, type, pixels, paramCapture);
+    CaptureTexSubImage3D_pixels(glState, targetPacked, level, xoffset, yoffset, zoffset, width,
+                                height, depth, format, type, pixels, paramCapture);
 }
 
 void CaptureCompressedTexImage2DRobustANGLE_data(const State &glState,
-                                                 bool isCallValid,
                                                  TextureTarget targetPacked,
                                                  GLint level,
                                                  GLenum internalformat,
@@ -1259,12 +1168,11 @@ void CaptureCompressedTexImage2DRobustANGLE_data(const State &glState,
                                                  const GLvoid *data,
                                                  ParamCapture *paramCapture)
 {
-    CaptureCompressedTexImage2D_data(glState, isCallValid, targetPacked, level, internalformat,
-                                     width, height, border, imageSize, data, paramCapture);
+    CaptureCompressedTexImage2D_data(glState, targetPacked, level, internalformat, width, height,
+                                     border, imageSize, data, paramCapture);
 }
 
 void CaptureCompressedTexSubImage2DRobustANGLE_data(const State &glState,
-                                                    bool isCallValid,
                                                     TextureTarget targetPacked,
                                                     GLint level,
                                                     GLsizei xoffset,
@@ -1277,12 +1185,11 @@ void CaptureCompressedTexSubImage2DRobustANGLE_data(const State &glState,
                                                     const GLvoid *data,
                                                     ParamCapture *paramCapture)
 {
-    CaptureCompressedTexSubImage2D_data(glState, isCallValid, targetPacked, level, xoffset, yoffset,
-                                        width, height, format, imageSize, data, paramCapture);
+    CaptureCompressedTexSubImage2D_data(glState, targetPacked, level, xoffset, yoffset, width,
+                                        height, format, imageSize, data, paramCapture);
 }
 
 void CaptureCompressedTexImage3DRobustANGLE_data(const State &glState,
-                                                 bool isCallValid,
                                                  TextureTarget targetPacked,
                                                  GLint level,
                                                  GLenum internalformat,
@@ -1295,12 +1202,11 @@ void CaptureCompressedTexImage3DRobustANGLE_data(const State &glState,
                                                  const GLvoid *data,
                                                  ParamCapture *paramCapture)
 {
-    CaptureCompressedTexImage3D_data(glState, isCallValid, targetPacked, level, internalformat,
-                                     width, height, depth, border, imageSize, data, paramCapture);
+    CaptureCompressedTexImage3D_data(glState, targetPacked, level, internalformat, width, height,
+                                     depth, border, imageSize, data, paramCapture);
 }
 
 void CaptureCompressedTexSubImage3DRobustANGLE_data(const State &glState,
-                                                    bool isCallValid,
                                                     TextureTarget targetPacked,
                                                     GLint level,
                                                     GLint xoffset,
@@ -1315,13 +1221,12 @@ void CaptureCompressedTexSubImage3DRobustANGLE_data(const State &glState,
                                                     const GLvoid *data,
                                                     ParamCapture *paramCapture)
 {
-    CaptureCompressedTexSubImage3D_data(glState, isCallValid, targetPacked, level, xoffset, yoffset,
-                                        zoffset, width, height, depth, format, imageSize, data,
+    CaptureCompressedTexSubImage3D_data(glState, targetPacked, level, xoffset, yoffset, zoffset,
+                                        width, height, depth, format, imageSize, data,
                                         paramCapture);
 }
 
 void CaptureGetQueryivRobustANGLE_length(const State &glState,
-                                         bool isCallValid,
                                          QueryType targetPacked,
                                          GLenum pname,
                                          GLsizei bufSize,
@@ -1333,7 +1238,6 @@ void CaptureGetQueryivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetQueryivRobustANGLE_params(const State &glState,
-                                         bool isCallValid,
                                          QueryType targetPacked,
                                          GLenum pname,
                                          GLsizei bufSize,
@@ -1345,7 +1249,6 @@ void CaptureGetQueryivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetQueryObjectuivRobustANGLE_length(const State &glState,
-                                                bool isCallValid,
                                                 QueryID id,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -1357,7 +1260,6 @@ void CaptureGetQueryObjectuivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetQueryObjectuivRobustANGLE_params(const State &glState,
-                                                bool isCallValid,
                                                 QueryID id,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -1369,7 +1271,6 @@ void CaptureGetQueryObjectuivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetBufferPointervRobustANGLE_length(const State &glState,
-                                                bool isCallValid,
                                                 BufferBinding targetPacked,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -1381,7 +1282,6 @@ void CaptureGetBufferPointervRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetBufferPointervRobustANGLE_params(const State &glState,
-                                                bool isCallValid,
                                                 BufferBinding targetPacked,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -1393,7 +1293,6 @@ void CaptureGetBufferPointervRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetIntegeri_vRobustANGLE_length(const State &glState,
-                                            bool isCallValid,
                                             GLenum target,
                                             GLuint index,
                                             GLsizei bufSize,
@@ -1405,7 +1304,6 @@ void CaptureGetIntegeri_vRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetIntegeri_vRobustANGLE_data(const State &glState,
-                                          bool isCallValid,
                                           GLenum target,
                                           GLuint index,
                                           GLsizei bufSize,
@@ -1417,7 +1315,6 @@ void CaptureGetIntegeri_vRobustANGLE_data(const State &glState,
 }
 
 void CaptureGetInternalformativRobustANGLE_length(const State &glState,
-                                                  bool isCallValid,
                                                   GLenum target,
                                                   GLenum internalformat,
                                                   GLenum pname,
@@ -1430,7 +1327,6 @@ void CaptureGetInternalformativRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetInternalformativRobustANGLE_params(const State &glState,
-                                                  bool isCallValid,
                                                   GLenum target,
                                                   GLenum internalformat,
                                                   GLenum pname,
@@ -1439,12 +1335,11 @@ void CaptureGetInternalformativRobustANGLE_params(const State &glState,
                                                   GLint *params,
                                                   ParamCapture *paramCapture)
 {
-    CaptureGetInternalformativ_params(glState, isCallValid, target, internalformat, pname, bufSize,
-                                      params, paramCapture);
+    CaptureGetInternalformativ_params(glState, target, internalformat, pname, bufSize, params,
+                                      paramCapture);
 }
 
 void CaptureGetVertexAttribIivRobustANGLE_length(const State &glState,
-                                                 bool isCallValid,
                                                  GLuint index,
                                                  GLenum pname,
                                                  GLsizei bufSize,
@@ -1456,7 +1351,6 @@ void CaptureGetVertexAttribIivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetVertexAttribIivRobustANGLE_params(const State &glState,
-                                                 bool isCallValid,
                                                  GLuint index,
                                                  GLenum pname,
                                                  GLsizei bufSize,
@@ -1468,7 +1362,6 @@ void CaptureGetVertexAttribIivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetVertexAttribIuivRobustANGLE_length(const State &glState,
-                                                  bool isCallValid,
                                                   GLuint index,
                                                   GLenum pname,
                                                   GLsizei bufSize,
@@ -1480,7 +1373,6 @@ void CaptureGetVertexAttribIuivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetVertexAttribIuivRobustANGLE_params(const State &glState,
-                                                  bool isCallValid,
                                                   GLuint index,
                                                   GLenum pname,
                                                   GLsizei bufSize,
@@ -1492,7 +1384,6 @@ void CaptureGetVertexAttribIuivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetUniformuivRobustANGLE_length(const State &glState,
-                                            bool isCallValid,
                                             ShaderProgramID program,
                                             UniformLocation location,
                                             GLsizei bufSize,
@@ -1504,7 +1395,6 @@ void CaptureGetUniformuivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetUniformuivRobustANGLE_params(const State &glState,
-                                            bool isCallValid,
                                             ShaderProgramID program,
                                             UniformLocation location,
                                             GLsizei bufSize,
@@ -1516,7 +1406,6 @@ void CaptureGetUniformuivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetActiveUniformBlockivRobustANGLE_length(const State &glState,
-                                                      bool isCallValid,
                                                       ShaderProgramID program,
                                                       UniformBlockIndex uniformBlockIndex,
                                                       GLenum pname,
@@ -1529,7 +1418,6 @@ void CaptureGetActiveUniformBlockivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetActiveUniformBlockivRobustANGLE_params(const State &glState,
-                                                      bool isCallValid,
                                                       ShaderProgramID program,
                                                       UniformBlockIndex uniformBlockIndex,
                                                       GLenum pname,
@@ -1542,7 +1430,6 @@ void CaptureGetActiveUniformBlockivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetInteger64vRobustANGLE_length(const State &glState,
-                                            bool isCallValid,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             GLsizei *length,
@@ -1553,7 +1440,6 @@ void CaptureGetInteger64vRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetInteger64vRobustANGLE_data(const State &glState,
-                                          bool isCallValid,
                                           GLenum pname,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -1564,7 +1450,6 @@ void CaptureGetInteger64vRobustANGLE_data(const State &glState,
 }
 
 void CaptureGetInteger64i_vRobustANGLE_length(const State &glState,
-                                              bool isCallValid,
                                               GLenum target,
                                               GLuint index,
                                               GLsizei bufSize,
@@ -1576,7 +1461,6 @@ void CaptureGetInteger64i_vRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetInteger64i_vRobustANGLE_data(const State &glState,
-                                            bool isCallValid,
                                             GLenum target,
                                             GLuint index,
                                             GLsizei bufSize,
@@ -1588,7 +1472,6 @@ void CaptureGetInteger64i_vRobustANGLE_data(const State &glState,
 }
 
 void CaptureGetBufferParameteri64vRobustANGLE_length(const State &glState,
-                                                     bool isCallValid,
                                                      BufferBinding targetPacked,
                                                      GLenum pname,
                                                      GLsizei bufSize,
@@ -1600,7 +1483,6 @@ void CaptureGetBufferParameteri64vRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetBufferParameteri64vRobustANGLE_params(const State &glState,
-                                                     bool isCallValid,
                                                      BufferBinding targetPacked,
                                                      GLenum pname,
                                                      GLsizei bufSize,
@@ -1612,7 +1494,6 @@ void CaptureGetBufferParameteri64vRobustANGLE_params(const State &glState,
 }
 
 void CaptureSamplerParameterivRobustANGLE_param(const State &glState,
-                                                bool isCallValid,
                                                 SamplerID sampler,
                                                 GLuint pname,
                                                 GLsizei bufSize,
@@ -1623,7 +1504,6 @@ void CaptureSamplerParameterivRobustANGLE_param(const State &glState,
 }
 
 void CaptureSamplerParameterfvRobustANGLE_param(const State &glState,
-                                                bool isCallValid,
                                                 SamplerID sampler,
                                                 GLenum pname,
                                                 GLsizei bufSize,
@@ -1634,7 +1514,6 @@ void CaptureSamplerParameterfvRobustANGLE_param(const State &glState,
 }
 
 void CaptureGetSamplerParameterivRobustANGLE_length(const State &glState,
-                                                    bool isCallValid,
                                                     SamplerID sampler,
                                                     GLenum pname,
                                                     GLsizei bufSize,
@@ -1646,7 +1525,6 @@ void CaptureGetSamplerParameterivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetSamplerParameterivRobustANGLE_params(const State &glState,
-                                                    bool isCallValid,
                                                     SamplerID sampler,
                                                     GLenum pname,
                                                     GLsizei bufSize,
@@ -1658,7 +1536,6 @@ void CaptureGetSamplerParameterivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetSamplerParameterfvRobustANGLE_length(const State &glState,
-                                                    bool isCallValid,
                                                     SamplerID sampler,
                                                     GLenum pname,
                                                     GLsizei bufSize,
@@ -1670,7 +1547,6 @@ void CaptureGetSamplerParameterfvRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetSamplerParameterfvRobustANGLE_params(const State &glState,
-                                                    bool isCallValid,
                                                     SamplerID sampler,
                                                     GLenum pname,
                                                     GLsizei bufSize,
@@ -1682,7 +1558,6 @@ void CaptureGetSamplerParameterfvRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetFramebufferParameterivRobustANGLE_length(const State &glState,
-                                                        bool isCallValid,
                                                         GLenum target,
                                                         GLenum pname,
                                                         GLsizei bufSize,
@@ -1694,7 +1569,6 @@ void CaptureGetFramebufferParameterivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetFramebufferParameterivRobustANGLE_params(const State &glState,
-                                                        bool isCallValid,
                                                         GLenum target,
                                                         GLenum pname,
                                                         GLsizei bufSize,
@@ -1706,7 +1580,6 @@ void CaptureGetFramebufferParameterivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetProgramInterfaceivRobustANGLE_length(const State &glState,
-                                                    bool isCallValid,
                                                     ShaderProgramID program,
                                                     GLenum programInterface,
                                                     GLenum pname,
@@ -1719,7 +1592,6 @@ void CaptureGetProgramInterfaceivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetProgramInterfaceivRobustANGLE_params(const State &glState,
-                                                    bool isCallValid,
                                                     ShaderProgramID program,
                                                     GLenum programInterface,
                                                     GLenum pname,
@@ -1732,7 +1604,6 @@ void CaptureGetProgramInterfaceivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetBooleani_vRobustANGLE_length(const State &glState,
-                                            bool isCallValid,
                                             GLenum target,
                                             GLuint index,
                                             GLsizei bufSize,
@@ -1744,7 +1615,6 @@ void CaptureGetBooleani_vRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetBooleani_vRobustANGLE_data(const State &glState,
-                                          bool isCallValid,
                                           GLenum target,
                                           GLuint index,
                                           GLsizei bufSize,
@@ -1756,7 +1626,6 @@ void CaptureGetBooleani_vRobustANGLE_data(const State &glState,
 }
 
 void CaptureGetMultisamplefvRobustANGLE_length(const State &glState,
-                                               bool isCallValid,
                                                GLenum pname,
                                                GLuint index,
                                                GLsizei bufSize,
@@ -1768,7 +1637,6 @@ void CaptureGetMultisamplefvRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetMultisamplefvRobustANGLE_val(const State &glState,
-                                            bool isCallValid,
                                             GLenum pname,
                                             GLuint index,
                                             GLsizei bufSize,
@@ -1780,7 +1648,6 @@ void CaptureGetMultisamplefvRobustANGLE_val(const State &glState,
 }
 
 void CaptureGetTexLevelParameterivRobustANGLE_length(const State &glState,
-                                                     bool isCallValid,
                                                      TextureTarget targetPacked,
                                                      GLint level,
                                                      GLenum pname,
@@ -1793,7 +1660,6 @@ void CaptureGetTexLevelParameterivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetTexLevelParameterivRobustANGLE_params(const State &glState,
-                                                     bool isCallValid,
                                                      TextureTarget targetPacked,
                                                      GLint level,
                                                      GLenum pname,
@@ -1806,7 +1672,6 @@ void CaptureGetTexLevelParameterivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetTexLevelParameterfvRobustANGLE_length(const State &glState,
-                                                     bool isCallValid,
                                                      TextureTarget targetPacked,
                                                      GLint level,
                                                      GLenum pname,
@@ -1819,7 +1684,6 @@ void CaptureGetTexLevelParameterfvRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetTexLevelParameterfvRobustANGLE_params(const State &glState,
-                                                     bool isCallValid,
                                                      TextureTarget targetPacked,
                                                      GLint level,
                                                      GLenum pname,
@@ -1832,7 +1696,6 @@ void CaptureGetTexLevelParameterfvRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetPointervRobustANGLERobustANGLE_length(const State &glState,
-                                                     bool isCallValid,
                                                      GLenum pname,
                                                      GLsizei bufSize,
                                                      GLsizei *length,
@@ -1843,7 +1706,6 @@ void CaptureGetPointervRobustANGLERobustANGLE_length(const State &glState,
 }
 
 void CaptureGetPointervRobustANGLERobustANGLE_params(const State &glState,
-                                                     bool isCallValid,
                                                      GLenum pname,
                                                      GLsizei bufSize,
                                                      GLsizei *length,
@@ -1854,7 +1716,6 @@ void CaptureGetPointervRobustANGLERobustANGLE_params(const State &glState,
 }
 
 void CaptureReadnPixelsRobustANGLE_length(const State &glState,
-                                          bool isCallValid,
                                           GLint x,
                                           GLint y,
                                           GLsizei width,
@@ -1872,7 +1733,6 @@ void CaptureReadnPixelsRobustANGLE_length(const State &glState,
 }
 
 void CaptureReadnPixelsRobustANGLE_columns(const State &glState,
-                                           bool isCallValid,
                                            GLint x,
                                            GLint y,
                                            GLsizei width,
@@ -1890,7 +1750,6 @@ void CaptureReadnPixelsRobustANGLE_columns(const State &glState,
 }
 
 void CaptureReadnPixelsRobustANGLE_rows(const State &glState,
-                                        bool isCallValid,
                                         GLint x,
                                         GLint y,
                                         GLsizei width,
@@ -1908,7 +1767,6 @@ void CaptureReadnPixelsRobustANGLE_rows(const State &glState,
 }
 
 void CaptureReadnPixelsRobustANGLE_data(const State &glState,
-                                        bool isCallValid,
                                         GLint x,
                                         GLint y,
                                         GLsizei width,
@@ -1926,7 +1784,6 @@ void CaptureReadnPixelsRobustANGLE_data(const State &glState,
 }
 
 void CaptureGetnUniformfvRobustANGLE_length(const State &glState,
-                                            bool isCallValid,
                                             ShaderProgramID program,
                                             UniformLocation location,
                                             GLsizei bufSize,
@@ -1938,7 +1795,6 @@ void CaptureGetnUniformfvRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetnUniformfvRobustANGLE_params(const State &glState,
-                                            bool isCallValid,
                                             ShaderProgramID program,
                                             UniformLocation location,
                                             GLsizei bufSize,
@@ -1950,7 +1806,6 @@ void CaptureGetnUniformfvRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetnUniformivRobustANGLE_length(const State &glState,
-                                            bool isCallValid,
                                             ShaderProgramID program,
                                             UniformLocation location,
                                             GLsizei bufSize,
@@ -1962,7 +1817,6 @@ void CaptureGetnUniformivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetnUniformivRobustANGLE_params(const State &glState,
-                                            bool isCallValid,
                                             ShaderProgramID program,
                                             UniformLocation location,
                                             GLsizei bufSize,
@@ -1974,7 +1828,6 @@ void CaptureGetnUniformivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetnUniformuivRobustANGLE_length(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID program,
                                              UniformLocation location,
                                              GLsizei bufSize,
@@ -1986,7 +1839,6 @@ void CaptureGetnUniformuivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetnUniformuivRobustANGLE_params(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID program,
                                              UniformLocation location,
                                              GLsizei bufSize,
@@ -1998,7 +1850,6 @@ void CaptureGetnUniformuivRobustANGLE_params(const State &glState,
 }
 
 void CaptureTexParameterIivRobustANGLE_params(const State &glState,
-                                              bool isCallValid,
                                               TextureType targetPacked,
                                               GLenum pname,
                                               GLsizei bufSize,
@@ -2009,7 +1860,6 @@ void CaptureTexParameterIivRobustANGLE_params(const State &glState,
 }
 
 void CaptureTexParameterIuivRobustANGLE_params(const State &glState,
-                                               bool isCallValid,
                                                TextureType targetPacked,
                                                GLenum pname,
                                                GLsizei bufSize,
@@ -2020,7 +1870,6 @@ void CaptureTexParameterIuivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetTexParameterIivRobustANGLE_length(const State &glState,
-                                                 bool isCallValid,
                                                  TextureType targetPacked,
                                                  GLenum pname,
                                                  GLsizei bufSize,
@@ -2032,7 +1881,6 @@ void CaptureGetTexParameterIivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetTexParameterIivRobustANGLE_params(const State &glState,
-                                                 bool isCallValid,
                                                  TextureType targetPacked,
                                                  GLenum pname,
                                                  GLsizei bufSize,
@@ -2044,7 +1892,6 @@ void CaptureGetTexParameterIivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetTexParameterIuivRobustANGLE_length(const State &glState,
-                                                  bool isCallValid,
                                                   TextureType targetPacked,
                                                   GLenum pname,
                                                   GLsizei bufSize,
@@ -2056,7 +1903,6 @@ void CaptureGetTexParameterIuivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetTexParameterIuivRobustANGLE_params(const State &glState,
-                                                  bool isCallValid,
                                                   TextureType targetPacked,
                                                   GLenum pname,
                                                   GLsizei bufSize,
@@ -2068,7 +1914,6 @@ void CaptureGetTexParameterIuivRobustANGLE_params(const State &glState,
 }
 
 void CaptureSamplerParameterIivRobustANGLE_param(const State &glState,
-                                                 bool isCallValid,
                                                  SamplerID sampler,
                                                  GLenum pname,
                                                  GLsizei bufSize,
@@ -2079,7 +1924,6 @@ void CaptureSamplerParameterIivRobustANGLE_param(const State &glState,
 }
 
 void CaptureSamplerParameterIuivRobustANGLE_param(const State &glState,
-                                                  bool isCallValid,
                                                   SamplerID sampler,
                                                   GLenum pname,
                                                   GLsizei bufSize,
@@ -2090,7 +1934,6 @@ void CaptureSamplerParameterIuivRobustANGLE_param(const State &glState,
 }
 
 void CaptureGetSamplerParameterIivRobustANGLE_length(const State &glState,
-                                                     bool isCallValid,
                                                      SamplerID sampler,
                                                      GLenum pname,
                                                      GLsizei bufSize,
@@ -2102,7 +1945,6 @@ void CaptureGetSamplerParameterIivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetSamplerParameterIivRobustANGLE_params(const State &glState,
-                                                     bool isCallValid,
                                                      SamplerID sampler,
                                                      GLenum pname,
                                                      GLsizei bufSize,
@@ -2114,7 +1956,6 @@ void CaptureGetSamplerParameterIivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetSamplerParameterIuivRobustANGLE_length(const State &glState,
-                                                      bool isCallValid,
                                                       SamplerID sampler,
                                                       GLenum pname,
                                                       GLsizei bufSize,
@@ -2126,7 +1967,6 @@ void CaptureGetSamplerParameterIuivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetSamplerParameterIuivRobustANGLE_params(const State &glState,
-                                                      bool isCallValid,
                                                       SamplerID sampler,
                                                       GLenum pname,
                                                       GLsizei bufSize,
@@ -2138,7 +1978,6 @@ void CaptureGetSamplerParameterIuivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetQueryObjectivRobustANGLE_length(const State &glState,
-                                               bool isCallValid,
                                                QueryID id,
                                                GLenum pname,
                                                GLsizei bufSize,
@@ -2150,7 +1989,6 @@ void CaptureGetQueryObjectivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetQueryObjectivRobustANGLE_params(const State &glState,
-                                               bool isCallValid,
                                                QueryID id,
                                                GLenum pname,
                                                GLsizei bufSize,
@@ -2162,7 +2000,6 @@ void CaptureGetQueryObjectivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetQueryObjecti64vRobustANGLE_length(const State &glState,
-                                                 bool isCallValid,
                                                  QueryID id,
                                                  GLenum pname,
                                                  GLsizei bufSize,
@@ -2174,7 +2011,6 @@ void CaptureGetQueryObjecti64vRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetQueryObjecti64vRobustANGLE_params(const State &glState,
-                                                 bool isCallValid,
                                                  QueryID id,
                                                  GLenum pname,
                                                  GLsizei bufSize,
@@ -2186,7 +2022,6 @@ void CaptureGetQueryObjecti64vRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetQueryObjectui64vRobustANGLE_length(const State &glState,
-                                                  bool isCallValid,
                                                   QueryID id,
                                                   GLenum pname,
                                                   GLsizei bufSize,
@@ -2198,7 +2033,6 @@ void CaptureGetQueryObjectui64vRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetQueryObjectui64vRobustANGLE_params(const State &glState,
-                                                  bool isCallValid,
                                                   QueryID id,
                                                   GLenum pname,
                                                   GLsizei bufSize,
@@ -2211,7 +2045,6 @@ void CaptureGetQueryObjectui64vRobustANGLE_params(const State &glState,
 
 void CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_length(
     const State &glState,
-    bool isCallValid,
     GLint plane,
     GLenum pname,
     GLsizei bufSize,
@@ -2224,7 +2057,6 @@ void CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_length(
 
 void CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_params(
     const State &glState,
-    bool isCallValid,
     GLint plane,
     GLenum pname,
     GLsizei bufSize,
@@ -2232,13 +2064,12 @@ void CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_params(
     GLfloat *params,
     angle::ParamCapture *paramCapture)
 {
-    CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(glState, isCallValid, plane,
-                                                                  pname, params, paramCapture);
+    CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(glState, plane, pname, params,
+                                                                  paramCapture);
 }
 
 void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_length(
     const State &glState,
-    bool isCallValid,
     GLint plane,
     GLenum pname,
     GLsizei bufSize,
@@ -2251,7 +2082,6 @@ void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_length(
 
 void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_params(
     const State &glState,
-    bool isCallValid,
     GLint plane,
     GLenum pname,
     GLsizei bufSize,
@@ -2259,13 +2089,12 @@ void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_params(
     GLint *params,
     angle::ParamCapture *paramCapture)
 {
-    CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(glState, isCallValid, plane,
-                                                                  pname, params, paramCapture);
+    CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(glState, plane, pname, params,
+                                                                  paramCapture);
 }
 
 // GL_ANGLE_shader_pixel_local_storage
 void CaptureFramebufferPixelLocalClearValuefvANGLE_value(const State &glState,
-                                                         bool isCallValid,
                                                          GLint plane,
                                                          const GLfloat *value,
                                                          angle::ParamCapture *paramCapture)
@@ -2274,7 +2103,6 @@ void CaptureFramebufferPixelLocalClearValuefvANGLE_value(const State &glState,
 }
 
 void CaptureFramebufferPixelLocalClearValueivANGLE_value(const State &glState,
-                                                         bool isCallValid,
                                                          GLint plane,
                                                          const GLint *value,
                                                          angle::ParamCapture *paramCapture)
@@ -2283,7 +2111,6 @@ void CaptureFramebufferPixelLocalClearValueivANGLE_value(const State &glState,
 }
 
 void CaptureFramebufferPixelLocalClearValueuivANGLE_value(const State &glState,
-                                                          bool isCallValid,
                                                           GLint plane,
                                                           const GLuint *value,
                                                           angle::ParamCapture *paramCapture)
@@ -2292,7 +2119,6 @@ void CaptureFramebufferPixelLocalClearValueuivANGLE_value(const State &glState,
 }
 
 void CaptureBeginPixelLocalStorageANGLE_loadops(const State &glState,
-                                                bool isCallValid,
                                                 GLsizei n,
                                                 const GLenum loadops[],
                                                 angle::ParamCapture *paramCapture)
@@ -2301,7 +2127,6 @@ void CaptureBeginPixelLocalStorageANGLE_loadops(const State &glState,
 }
 
 void CaptureEndPixelLocalStorageANGLE_storeops(const State &glState,
-                                               bool isCallValid,
                                                GLsizei n,
                                                const GLenum *storeops,
                                                angle::ParamCapture *paramCapture)
@@ -2311,7 +2136,6 @@ void CaptureEndPixelLocalStorageANGLE_storeops(const State &glState,
 
 void CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(
     const State &glState,
-    bool isCallValid,
     GLint plane,
     GLenum pname,
     GLfloat *params,
@@ -2331,7 +2155,6 @@ void CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(
 
 void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
     const State &glState,
-    bool isCallValid,
     GLint plane,
     GLenum pname,
     GLint *params,
@@ -2351,7 +2174,6 @@ void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
 
 // GL_ANGLE_texture_multisample
 void CaptureGetMultisamplefvANGLE_val(const State &glState,
-                                      bool isCallValid,
                                       GLenum pname,
                                       GLuint index,
                                       GLfloat *val,
@@ -2363,7 +2185,6 @@ void CaptureGetMultisamplefvANGLE_val(const State &glState,
 
 // GL_ANGLE_translated_shader_source
 void CaptureGetTranslatedShaderSourceANGLE_length(const State &glState,
-                                                  bool isCallValid,
                                                   ShaderProgramID shader,
                                                   GLsizei bufsize,
                                                   GLsizei *length,
@@ -2374,7 +2195,6 @@ void CaptureGetTranslatedShaderSourceANGLE_length(const State &glState,
 }
 
 void CaptureGetTranslatedShaderSourceANGLE_source(const State &glState,
-                                                  bool isCallValid,
                                                   ShaderProgramID shader,
                                                   GLsizei bufsize,
                                                   GLsizei *length,
@@ -2386,7 +2206,6 @@ void CaptureGetTranslatedShaderSourceANGLE_source(const State &glState,
 
 // GL_ANGLE_vulkan_image
 void CaptureAcquireTexturesANGLE_texturesPacked(const State &glState,
-                                                bool isCallValid,
                                                 GLuint numTextures,
                                                 const TextureID *textures,
                                                 const GLenum *layouts,
@@ -2396,7 +2215,6 @@ void CaptureAcquireTexturesANGLE_texturesPacked(const State &glState,
 }
 
 void CaptureAcquireTexturesANGLE_layouts(const State &glState,
-                                         bool isCallValid,
                                          GLuint numTextures,
                                          const TextureID *texturesPacked,
                                          const GLenum *layouts,
@@ -2406,7 +2224,6 @@ void CaptureAcquireTexturesANGLE_layouts(const State &glState,
 }
 
 void CaptureReleaseTexturesANGLE_texturesPacked(const State &glState,
-                                                bool isCallValid,
                                                 GLuint numTextures,
                                                 const TextureID *textures,
                                                 GLenum *layouts,
@@ -2416,7 +2233,6 @@ void CaptureReleaseTexturesANGLE_texturesPacked(const State &glState,
 }
 
 void CaptureReleaseTexturesANGLE_layouts(const State &glState,
-                                         bool isCallValid,
                                          GLuint numTextures,
                                          const TextureID *texturesPacked,
                                          GLenum *layouts,
@@ -2427,7 +2243,6 @@ void CaptureReleaseTexturesANGLE_layouts(const State &glState,
 
 // GL_CHROMIUM_bind_uniform_location
 void CaptureBindUniformLocationCHROMIUM_name(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID program,
                                              UniformLocation location,
                                              const GLchar *name,
@@ -2438,7 +2253,6 @@ void CaptureBindUniformLocationCHROMIUM_name(const State &glState,
 
 // GL_EXT_EGL_image_storage
 void CaptureEGLImageTargetTexStorageEXT_attrib_list(const State &glState,
-                                                    bool isCallValid,
                                                     GLenum target,
                                                     egl::ImageID image,
                                                     const GLint *attrib_list,
@@ -2449,7 +2263,6 @@ void CaptureEGLImageTargetTexStorageEXT_attrib_list(const State &glState,
 
 // GL_EXT_base_instance
 void CaptureDrawElementsInstancedBaseInstanceEXT_indices(const State &glState,
-                                                         bool isCallValid,
                                                          PrimitiveMode mode,
                                                          GLsizei count,
                                                          DrawElementsType type,
@@ -2458,12 +2271,11 @@ void CaptureDrawElementsInstancedBaseInstanceEXT_indices(const State &glState,
                                                          GLuint baseinstance,
                                                          angle::ParamCapture *indicesParam)
 {
-    CaptureDrawElements_indices(glState, isCallValid, mode, count, type, indices, indicesParam);
+    CaptureDrawElements_indices(glState, mode, count, type, indices, indicesParam);
 }
 
 void CaptureDrawElementsInstancedBaseVertexBaseInstanceEXT_indices(
     const State &glState,
-    bool isCallValid,
     PrimitiveMode modePacked,
     GLsizei count,
     DrawElementsType typePacked,
@@ -2473,13 +2285,11 @@ void CaptureDrawElementsInstancedBaseVertexBaseInstanceEXT_indices(
     GLuint baseInstance,
     angle::ParamCapture *indicesParam)
 {
-    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
-                                indicesParam);
+    CaptureDrawElements_indices(glState, modePacked, count, typePacked, indices, indicesParam);
 }
 
 // GL_EXT_blend_func_extended
 void CaptureBindFragDataLocationEXT_name(const State &glState,
-                                         bool isCallValid,
                                          ShaderProgramID program,
                                          GLuint color,
                                          const GLchar *name,
@@ -2489,7 +2299,6 @@ void CaptureBindFragDataLocationEXT_name(const State &glState,
 }
 
 void CaptureBindFragDataLocationIndexedEXT_name(const State &glState,
-                                                bool isCallValid,
                                                 ShaderProgramID program,
                                                 GLuint colorNumber,
                                                 GLuint index,
@@ -2500,7 +2309,6 @@ void CaptureBindFragDataLocationIndexedEXT_name(const State &glState,
 }
 
 void CaptureGetFragDataIndexEXT_name(const State &glState,
-                                     bool isCallValid,
                                      ShaderProgramID program,
                                      const GLchar *name,
                                      ParamCapture *paramCapture)
@@ -2509,7 +2317,6 @@ void CaptureGetFragDataIndexEXT_name(const State &glState,
 }
 
 void CaptureGetProgramResourceLocationIndexEXT_name(const State &glState,
-                                                    bool isCallValid,
                                                     ShaderProgramID program,
                                                     GLenum programInterface,
                                                     const GLchar *name,
@@ -2520,7 +2327,6 @@ void CaptureGetProgramResourceLocationIndexEXT_name(const State &glState,
 
 // GL_EXT_buffer_storage
 void CaptureBufferStorageEXT_data(const State &glState,
-                                  bool isCallValid,
                                   BufferBinding targetPacked,
                                   GLsizeiptr size,
                                   const void *data,
@@ -2535,7 +2341,6 @@ void CaptureBufferStorageEXT_data(const State &glState,
 
 // GL_EXT_clear_texture
 void CaptureClearTexImageEXT_data(const State &glState,
-                                  bool isCallValid,
                                   TextureID texturePacked,
                                   GLint level,
                                   GLenum format,
@@ -2554,7 +2359,6 @@ void CaptureClearTexImageEXT_data(const State &glState,
 }
 
 void CaptureClearTexSubImageEXT_data(const State &glState,
-                                     bool isCallValid,
                                      TextureID texturePacked,
                                      GLint level,
                                      GLint xoffset,
@@ -2580,7 +2384,6 @@ void CaptureClearTexSubImageEXT_data(const State &glState,
 
 // GL_EXT_debug_label
 void CaptureGetObjectLabelEXT_length(const State &glState,
-                                     bool isCallValid,
                                      GLenum type,
                                      GLuint object,
                                      GLsizei bufSize,
@@ -2592,7 +2395,6 @@ void CaptureGetObjectLabelEXT_length(const State &glState,
 }
 
 void CaptureGetObjectLabelEXT_label(const State &glState,
-                                    bool isCallValid,
                                     GLenum type,
                                     GLuint object,
                                     GLsizei bufSize,
@@ -2604,7 +2406,6 @@ void CaptureGetObjectLabelEXT_label(const State &glState,
 }
 
 void CaptureLabelObjectEXT_label(const State &glState,
-                                 bool isCallValid,
                                  GLenum type,
                                  GLuint object,
                                  GLsizei length,
@@ -2616,7 +2417,6 @@ void CaptureLabelObjectEXT_label(const State &glState,
 
 // GL_EXT_debug_marker
 void CaptureInsertEventMarkerEXT_marker(const State &glState,
-                                        bool isCallValid,
                                         GLsizei length,
                                         const GLchar *marker,
                                         ParamCapture *paramCapture)
@@ -2625,7 +2425,6 @@ void CaptureInsertEventMarkerEXT_marker(const State &glState,
 }
 
 void CapturePushGroupMarkerEXT_marker(const State &glState,
-                                      bool isCallValid,
                                       GLsizei length,
                                       const GLchar *marker,
                                       ParamCapture *paramCapture)
@@ -2635,7 +2434,6 @@ void CapturePushGroupMarkerEXT_marker(const State &glState,
 
 // GL_EXT_discard_framebuffer
 void CaptureDiscardFramebufferEXT_attachments(const State &glState,
-                                              bool isCallValid,
                                               GLenum target,
                                               GLsizei numAttachments,
                                               const GLenum *attachments,
@@ -2646,7 +2444,6 @@ void CaptureDiscardFramebufferEXT_attachments(const State &glState,
 
 // GL_EXT_disjoint_timer_query
 void CaptureDeleteQueriesEXT_idsPacked(const State &glState,
-                                       bool isCallValid,
                                        GLsizei n,
                                        const QueryID *ids,
                                        ParamCapture *paramCapture)
@@ -2655,7 +2452,6 @@ void CaptureDeleteQueriesEXT_idsPacked(const State &glState,
 }
 
 void CaptureGenQueriesEXT_idsPacked(const State &glState,
-                                    bool isCallValid,
                                     GLsizei n,
                                     QueryID *ids,
                                     ParamCapture *paramCapture)
@@ -2664,7 +2460,6 @@ void CaptureGenQueriesEXT_idsPacked(const State &glState,
 }
 
 void CaptureGetInteger64vEXT_data(const State &glState,
-                                  bool isCallValid,
                                   GLenum pname,
                                   GLint64 *data,
                                   angle::ParamCapture *paramCapture)
@@ -2673,7 +2468,6 @@ void CaptureGetInteger64vEXT_data(const State &glState,
 }
 
 void CaptureGetQueryObjecti64vEXT_params(const State &glState,
-                                         bool isCallValid,
                                          QueryID id,
                                          GLenum pname,
                                          GLint64 *params,
@@ -2683,7 +2477,6 @@ void CaptureGetQueryObjecti64vEXT_params(const State &glState,
 }
 
 void CaptureGetQueryObjectivEXT_params(const State &glState,
-                                       bool isCallValid,
                                        QueryID id,
                                        GLenum pname,
                                        GLint *params,
@@ -2693,7 +2486,6 @@ void CaptureGetQueryObjectivEXT_params(const State &glState,
 }
 
 void CaptureGetQueryObjectui64vEXT_params(const State &glState,
-                                          bool isCallValid,
                                           QueryID id,
                                           GLenum pname,
                                           GLuint64 *params,
@@ -2703,7 +2495,6 @@ void CaptureGetQueryObjectui64vEXT_params(const State &glState,
 }
 
 void CaptureGetQueryObjectuivEXT_params(const State &glState,
-                                        bool isCallValid,
                                         QueryID id,
                                         GLenum pname,
                                         GLuint *params,
@@ -2713,7 +2504,6 @@ void CaptureGetQueryObjectuivEXT_params(const State &glState,
 }
 
 void CaptureGetQueryivEXT_params(const State &glState,
-                                 bool isCallValid,
                                  QueryType targetPacked,
                                  GLenum pname,
                                  GLint *params,
@@ -2724,17 +2514,15 @@ void CaptureGetQueryivEXT_params(const State &glState,
 
 // GL_EXT_draw_buffers
 void CaptureDrawBuffersEXT_bufs(const State &glState,
-                                bool isCallValid,
                                 GLsizei n,
                                 const GLenum *bufs,
                                 ParamCapture *paramCapture)
 {
-    CaptureDrawBuffers_bufs(glState, isCallValid, n, bufs, paramCapture);
+    CaptureDrawBuffers_bufs(glState, n, bufs, paramCapture);
 }
 
 // GL_EXT_draw_elements_base_vertex
 void CaptureDrawElementsBaseVertexEXT_indices(const State &glState,
-                                              bool isCallValid,
                                               PrimitiveMode modePacked,
                                               GLsizei count,
                                               DrawElementsType typePacked,
@@ -2746,7 +2534,6 @@ void CaptureDrawElementsBaseVertexEXT_indices(const State &glState,
 }
 
 void CaptureDrawElementsInstancedBaseVertexEXT_indices(const State &glState,
-                                                       bool isCallValid,
                                                        PrimitiveMode modePacked,
                                                        GLsizei count,
                                                        DrawElementsType typePacked,
@@ -2759,7 +2546,6 @@ void CaptureDrawElementsInstancedBaseVertexEXT_indices(const State &glState,
 }
 
 void CaptureDrawRangeElementsBaseVertexEXT_indices(const State &glState,
-                                                   bool isCallValid,
                                                    PrimitiveMode modePacked,
                                                    GLuint start,
                                                    GLuint end,
@@ -2773,7 +2559,6 @@ void CaptureDrawRangeElementsBaseVertexEXT_indices(const State &glState,
 }
 
 void CaptureMultiDrawElementsBaseVertexEXT_count(const State &glState,
-                                                 bool isCallValid,
                                                  PrimitiveMode modePacked,
                                                  const GLsizei *count,
                                                  DrawElementsType typePacked,
@@ -2786,7 +2571,6 @@ void CaptureMultiDrawElementsBaseVertexEXT_count(const State &glState,
 }
 
 void CaptureMultiDrawElementsBaseVertexEXT_indices(const State &glState,
-                                                   bool isCallValid,
                                                    PrimitiveMode modePacked,
                                                    const GLsizei *count,
                                                    DrawElementsType typePacked,
@@ -2799,7 +2583,6 @@ void CaptureMultiDrawElementsBaseVertexEXT_indices(const State &glState,
 }
 
 void CaptureMultiDrawElementsBaseVertexEXT_basevertex(const State &glState,
-                                                      bool isCallValid,
                                                       PrimitiveMode modePacked,
                                                       const GLsizei *count,
                                                       DrawElementsType typePacked,
@@ -2813,7 +2596,6 @@ void CaptureMultiDrawElementsBaseVertexEXT_basevertex(const State &glState,
 
 // GL_EXT_draw_instanced
 void CaptureDrawElementsInstancedEXT_indices(const State &glState,
-                                             bool isCallValid,
                                              PrimitiveMode modePacked,
                                              GLsizei count,
                                              DrawElementsType typePacked,
@@ -2821,13 +2603,11 @@ void CaptureDrawElementsInstancedEXT_indices(const State &glState,
                                              GLsizei primcount,
                                              ParamCapture *paramCapture)
 {
-    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
-                                paramCapture);
+    CaptureDrawElements_indices(glState, modePacked, count, typePacked, indices, paramCapture);
 }
 
 // GL_EXT_fragment_shading_rate
 void CaptureGetFragmentShadingRatesEXT_count(const State &glState,
-                                             bool isCallValid,
                                              GLsizei samples,
                                              GLsizei maxCount,
                                              GLsizei *count,
@@ -2837,7 +2617,6 @@ void CaptureGetFragmentShadingRatesEXT_count(const State &glState,
     UNIMPLEMENTED();
 }
 void CaptureGetFragmentShadingRatesEXT_shadingRates(const State &glState,
-                                                    bool isCallValid,
                                                     GLsizei samples,
                                                     GLsizei maxCount,
                                                     GLsizei *count,
@@ -2849,7 +2628,6 @@ void CaptureGetFragmentShadingRatesEXT_shadingRates(const State &glState,
 
 // GL_EXT_memory_object
 void CaptureCreateMemoryObjectsEXT_memoryObjectsPacked(const State &glState,
-                                                       bool isCallValid,
                                                        GLsizei n,
                                                        MemoryObjectID *memoryObjects,
                                                        ParamCapture *paramCapture)
@@ -2858,7 +2636,6 @@ void CaptureCreateMemoryObjectsEXT_memoryObjectsPacked(const State &glState,
 }
 
 void CaptureDeleteMemoryObjectsEXT_memoryObjectsPacked(const State &glState,
-                                                       bool isCallValid,
                                                        GLsizei n,
                                                        const MemoryObjectID *memoryObjects,
                                                        ParamCapture *paramCapture)
@@ -2867,7 +2644,6 @@ void CaptureDeleteMemoryObjectsEXT_memoryObjectsPacked(const State &glState,
 }
 
 void CaptureGetMemoryObjectParameterivEXT_params(const State &glState,
-                                                 bool isCallValid,
                                                  MemoryObjectID memoryObject,
                                                  GLenum pname,
                                                  GLint *params,
@@ -2877,7 +2653,6 @@ void CaptureGetMemoryObjectParameterivEXT_params(const State &glState,
 }
 
 void CaptureGetUnsignedBytevEXT_data(const State &glState,
-                                     bool isCallValid,
                                      GLenum pname,
                                      GLubyte *data,
                                      ParamCapture *paramCapture)
@@ -2886,7 +2661,6 @@ void CaptureGetUnsignedBytevEXT_data(const State &glState,
 }
 
 void CaptureGetUnsignedBytei_vEXT_data(const State &glState,
-                                       bool isCallValid,
                                        GLenum target,
                                        GLuint index,
                                        GLubyte *data,
@@ -2896,7 +2670,6 @@ void CaptureGetUnsignedBytei_vEXT_data(const State &glState,
 }
 
 void CaptureMemoryObjectParameterivEXT_params(const State &glState,
-                                              bool isCallValid,
                                               MemoryObjectID memoryObject,
                                               GLenum pname,
                                               const GLint *params,
@@ -2907,7 +2680,6 @@ void CaptureMemoryObjectParameterivEXT_params(const State &glState,
 
 // GL_EXT_multi_draw_arrays
 void CaptureMultiDrawArraysEXT_first(const State &glState,
-                                     bool isCallValid,
                                      PrimitiveMode modePacked,
                                      const GLint *first,
                                      const GLsizei *count,
@@ -2918,7 +2690,6 @@ void CaptureMultiDrawArraysEXT_first(const State &glState,
 }
 
 void CaptureMultiDrawArraysEXT_count(const State &glState,
-                                     bool isCallValid,
                                      PrimitiveMode modePacked,
                                      const GLint *first,
                                      const GLsizei *count,
@@ -2929,7 +2700,6 @@ void CaptureMultiDrawArraysEXT_count(const State &glState,
 }
 
 void CaptureMultiDrawElementsEXT_count(const State &glState,
-                                       bool isCallValid,
                                        PrimitiveMode modePacked,
                                        const GLsizei *count,
                                        DrawElementsType typePacked,
@@ -2941,7 +2711,6 @@ void CaptureMultiDrawElementsEXT_count(const State &glState,
 }
 
 void CaptureMultiDrawElementsEXT_indices(const State &glState,
-                                         bool isCallValid,
                                          PrimitiveMode modePacked,
                                          const GLsizei *count,
                                          DrawElementsType typePacked,
@@ -2954,7 +2723,6 @@ void CaptureMultiDrawElementsEXT_indices(const State &glState,
 
 // GL_EXT_multi_draw_indirect
 void CaptureMultiDrawArraysIndirectEXT_indirect(const State &glState,
-                                                bool isCallValid,
                                                 PrimitiveMode modePacked,
                                                 const void *indirect,
                                                 GLsizei drawcount,
@@ -2965,7 +2733,6 @@ void CaptureMultiDrawArraysIndirectEXT_indirect(const State &glState,
 }
 
 void CaptureMultiDrawElementsIndirectEXT_indirect(const State &glState,
-                                                  bool isCallValid,
                                                   PrimitiveMode modePacked,
                                                   DrawElementsType typePacked,
                                                   const void *indirect,
@@ -2989,7 +2756,6 @@ void CaptureMultiDrawElementsIndirectEXT_indirect(const State &glState,
 
 // GL_EXT_robustness
 void CaptureGetnUniformfvEXT_params(const State &glState,
-                                    bool isCallValid,
                                     ShaderProgramID program,
                                     UniformLocation location,
                                     GLsizei bufSize,
@@ -3000,7 +2766,6 @@ void CaptureGetnUniformfvEXT_params(const State &glState,
 }
 
 void CaptureGetnUniformivEXT_params(const State &glState,
-                                    bool isCallValid,
                                     ShaderProgramID program,
                                     UniformLocation location,
                                     GLsizei bufSize,
@@ -3011,7 +2776,6 @@ void CaptureGetnUniformivEXT_params(const State &glState,
 }
 
 void CaptureReadnPixelsEXT_data(const State &glState,
-                                bool isCallValid,
                                 GLint x,
                                 GLint y,
                                 GLsizei width,
@@ -3027,7 +2791,6 @@ void CaptureReadnPixelsEXT_data(const State &glState,
 
 // GL_EXT_semaphore
 void CaptureDeleteSemaphoresEXT_semaphoresPacked(const State &glState,
-                                                 bool isCallValid,
                                                  GLsizei n,
                                                  const SemaphoreID *semaphores,
                                                  ParamCapture *paramCapture)
@@ -3036,7 +2799,6 @@ void CaptureDeleteSemaphoresEXT_semaphoresPacked(const State &glState,
 }
 
 void CaptureGenSemaphoresEXT_semaphoresPacked(const State &glState,
-                                              bool isCallValid,
                                               GLsizei n,
                                               SemaphoreID *semaphores,
                                               ParamCapture *paramCapture)
@@ -3045,7 +2807,6 @@ void CaptureGenSemaphoresEXT_semaphoresPacked(const State &glState,
 }
 
 void CaptureGetSemaphoreParameterui64vEXT_params(const State &glState,
-                                                 bool isCallValid,
                                                  SemaphoreID semaphore,
                                                  GLenum pname,
                                                  GLuint64 *params,
@@ -3055,7 +2816,6 @@ void CaptureGetSemaphoreParameterui64vEXT_params(const State &glState,
 }
 
 void CaptureSemaphoreParameterui64vEXT_params(const State &glState,
-                                              bool isCallValid,
                                               SemaphoreID semaphore,
                                               GLenum pname,
                                               const GLuint64 *params,
@@ -3065,7 +2825,6 @@ void CaptureSemaphoreParameterui64vEXT_params(const State &glState,
 }
 
 void CaptureSignalSemaphoreEXT_buffersPacked(const State &glState,
-                                             bool isCallValid,
                                              SemaphoreID semaphore,
                                              GLuint numBufferBarriers,
                                              const BufferID *buffers,
@@ -3078,7 +2837,6 @@ void CaptureSignalSemaphoreEXT_buffersPacked(const State &glState,
 }
 
 void CaptureSignalSemaphoreEXT_texturesPacked(const State &glState,
-                                              bool isCallValid,
                                               SemaphoreID semaphore,
                                               GLuint numBufferBarriers,
                                               const BufferID *buffers,
@@ -3091,7 +2849,6 @@ void CaptureSignalSemaphoreEXT_texturesPacked(const State &glState,
 }
 
 void CaptureSignalSemaphoreEXT_dstLayouts(const State &glState,
-                                          bool isCallValid,
                                           SemaphoreID semaphore,
                                           GLuint numBufferBarriers,
                                           const BufferID *buffers,
@@ -3105,7 +2862,6 @@ void CaptureSignalSemaphoreEXT_dstLayouts(const State &glState,
 }
 
 void CaptureWaitSemaphoreEXT_buffersPacked(const State &glState,
-                                           bool isCallValid,
                                            SemaphoreID semaphore,
                                            GLuint numBufferBarriers,
                                            const BufferID *buffers,
@@ -3118,7 +2874,6 @@ void CaptureWaitSemaphoreEXT_buffersPacked(const State &glState,
 }
 
 void CaptureWaitSemaphoreEXT_texturesPacked(const State &glState,
-                                            bool isCallValid,
                                             SemaphoreID semaphore,
                                             GLuint numBufferBarriers,
                                             const BufferID *buffers,
@@ -3131,7 +2886,6 @@ void CaptureWaitSemaphoreEXT_texturesPacked(const State &glState,
 }
 
 void CaptureWaitSemaphoreEXT_srcLayouts(const State &glState,
-                                        bool isCallValid,
                                         SemaphoreID semaphore,
                                         GLuint numBufferBarriers,
                                         const BufferID *buffers,
@@ -3145,7 +2899,6 @@ void CaptureWaitSemaphoreEXT_srcLayouts(const State &glState,
 
 // GL_EXT_separate_shader_objects
 void CaptureCreateShaderProgramvEXT_strings(const State &glState,
-                                            bool isCallValid,
                                             ShaderType typePacked,
                                             GLsizei count,
                                             const GLchar *const *strings,
@@ -3155,7 +2908,6 @@ void CaptureCreateShaderProgramvEXT_strings(const State &glState,
 }
 
 void CaptureDeleteProgramPipelinesEXT_pipelinesPacked(const State &glState,
-                                                      bool isCallValid,
                                                       GLsizei n,
                                                       const ProgramPipelineID *pipelinesPacked,
                                                       angle::ParamCapture *paramCapture)
@@ -3164,7 +2916,6 @@ void CaptureDeleteProgramPipelinesEXT_pipelinesPacked(const State &glState,
 }
 
 void CaptureGenProgramPipelinesEXT_pipelinesPacked(const State &glState,
-                                                   bool isCallValid,
                                                    GLsizei n,
                                                    ProgramPipelineID *pipelinesPacked,
                                                    angle::ParamCapture *paramCapture)
@@ -3173,7 +2924,6 @@ void CaptureGenProgramPipelinesEXT_pipelinesPacked(const State &glState,
 }
 
 void CaptureGetProgramPipelineInfoLogEXT_length(const State &glState,
-                                                bool isCallValid,
                                                 ProgramPipelineID pipelinePacked,
                                                 GLsizei bufSize,
                                                 GLsizei *length,
@@ -3184,7 +2934,6 @@ void CaptureGetProgramPipelineInfoLogEXT_length(const State &glState,
 }
 
 void CaptureGetProgramPipelineInfoLogEXT_infoLog(const State &glState,
-                                                 bool isCallValid,
                                                  ProgramPipelineID pipelinePacked,
                                                  GLsizei bufSize,
                                                  GLsizei *length,
@@ -3195,7 +2944,6 @@ void CaptureGetProgramPipelineInfoLogEXT_infoLog(const State &glState,
 }
 
 void CaptureGetProgramPipelineivEXT_params(const State &glState,
-                                           bool isCallValid,
                                            ProgramPipelineID pipelinePacked,
                                            GLenum pname,
                                            GLint *params,
@@ -3205,7 +2953,6 @@ void CaptureGetProgramPipelineivEXT_params(const State &glState,
 }
 
 void CaptureProgramUniform1fvEXT_value(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID programPacked,
                                        UniformLocation locationPacked,
                                        GLsizei count,
@@ -3216,7 +2963,6 @@ void CaptureProgramUniform1fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform1ivEXT_value(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID programPacked,
                                        UniformLocation locationPacked,
                                        GLsizei count,
@@ -3227,7 +2973,6 @@ void CaptureProgramUniform1ivEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform1uivEXT_value(const State &glState,
-                                        bool isCallValid,
                                         ShaderProgramID programPacked,
                                         UniformLocation locationPacked,
                                         GLsizei count,
@@ -3238,7 +2983,6 @@ void CaptureProgramUniform1uivEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform2fvEXT_value(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID programPacked,
                                        UniformLocation locationPacked,
                                        GLsizei count,
@@ -3249,7 +2993,6 @@ void CaptureProgramUniform2fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform2ivEXT_value(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID programPacked,
                                        UniformLocation locationPacked,
                                        GLsizei count,
@@ -3260,7 +3003,6 @@ void CaptureProgramUniform2ivEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform2uivEXT_value(const State &glState,
-                                        bool isCallValid,
                                         ShaderProgramID programPacked,
                                         UniformLocation locationPacked,
                                         GLsizei count,
@@ -3271,7 +3013,6 @@ void CaptureProgramUniform2uivEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform3fvEXT_value(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID programPacked,
                                        UniformLocation locationPacked,
                                        GLsizei count,
@@ -3282,7 +3023,6 @@ void CaptureProgramUniform3fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform3ivEXT_value(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID programPacked,
                                        UniformLocation locationPacked,
                                        GLsizei count,
@@ -3293,7 +3033,6 @@ void CaptureProgramUniform3ivEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform3uivEXT_value(const State &glState,
-                                        bool isCallValid,
                                         ShaderProgramID programPacked,
                                         UniformLocation locationPacked,
                                         GLsizei count,
@@ -3304,7 +3043,6 @@ void CaptureProgramUniform3uivEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform4fvEXT_value(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID programPacked,
                                        UniformLocation locationPacked,
                                        GLsizei count,
@@ -3315,7 +3053,6 @@ void CaptureProgramUniform4fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform4ivEXT_value(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID programPacked,
                                        UniformLocation locationPacked,
                                        GLsizei count,
@@ -3326,7 +3063,6 @@ void CaptureProgramUniform4ivEXT_value(const State &glState,
 }
 
 void CaptureProgramUniform4uivEXT_value(const State &glState,
-                                        bool isCallValid,
                                         ShaderProgramID programPacked,
                                         UniformLocation locationPacked,
                                         GLsizei count,
@@ -3337,7 +3073,6 @@ void CaptureProgramUniform4uivEXT_value(const State &glState,
 }
 
 void CaptureProgramUniformMatrix2fvEXT_value(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID programPacked,
                                              UniformLocation locationPacked,
                                              GLsizei count,
@@ -3349,7 +3084,6 @@ void CaptureProgramUniformMatrix2fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniformMatrix2x3fvEXT_value(const State &glState,
-                                               bool isCallValid,
                                                ShaderProgramID programPacked,
                                                UniformLocation locationPacked,
                                                GLsizei count,
@@ -3361,7 +3095,6 @@ void CaptureProgramUniformMatrix2x3fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniformMatrix2x4fvEXT_value(const State &glState,
-                                               bool isCallValid,
                                                ShaderProgramID programPacked,
                                                UniformLocation locationPacked,
                                                GLsizei count,
@@ -3373,7 +3106,6 @@ void CaptureProgramUniformMatrix2x4fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniformMatrix3fvEXT_value(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID programPacked,
                                              UniformLocation locationPacked,
                                              GLsizei count,
@@ -3385,7 +3117,6 @@ void CaptureProgramUniformMatrix3fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniformMatrix3x2fvEXT_value(const State &glState,
-                                               bool isCallValid,
                                                ShaderProgramID programPacked,
                                                UniformLocation locationPacked,
                                                GLsizei count,
@@ -3397,7 +3128,6 @@ void CaptureProgramUniformMatrix3x2fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniformMatrix3x4fvEXT_value(const State &glState,
-                                               bool isCallValid,
                                                ShaderProgramID programPacked,
                                                UniformLocation locationPacked,
                                                GLsizei count,
@@ -3409,7 +3139,6 @@ void CaptureProgramUniformMatrix3x4fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniformMatrix4fvEXT_value(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID programPacked,
                                              UniformLocation locationPacked,
                                              GLsizei count,
@@ -3421,7 +3150,6 @@ void CaptureProgramUniformMatrix4fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniformMatrix4x2fvEXT_value(const State &glState,
-                                               bool isCallValid,
                                                ShaderProgramID programPacked,
                                                UniformLocation locationPacked,
                                                GLsizei count,
@@ -3433,7 +3161,6 @@ void CaptureProgramUniformMatrix4x2fvEXT_value(const State &glState,
 }
 
 void CaptureProgramUniformMatrix4x3fvEXT_value(const State &glState,
-                                               bool isCallValid,
                                                ShaderProgramID programPacked,
                                                UniformLocation locationPacked,
                                                GLsizei count,
@@ -3446,7 +3173,6 @@ void CaptureProgramUniformMatrix4x3fvEXT_value(const State &glState,
 
 // GL_EXT_texture_border_clamp
 void CaptureGetSamplerParameterIivEXT_params(const State &glState,
-                                             bool isCallValid,
                                              SamplerID samplerPacked,
                                              GLenum pname,
                                              GLint *params,
@@ -3456,7 +3182,6 @@ void CaptureGetSamplerParameterIivEXT_params(const State &glState,
 }
 
 void CaptureGetSamplerParameterIuivEXT_params(const State &glState,
-                                              bool isCallValid,
                                               SamplerID samplerPacked,
                                               GLenum pname,
                                               GLuint *params,
@@ -3466,7 +3191,6 @@ void CaptureGetSamplerParameterIuivEXT_params(const State &glState,
 }
 
 void CaptureGetTexParameterIivEXT_params(const State &glState,
-                                         bool isCallValid,
                                          TextureType targetPacked,
                                          GLenum pname,
                                          GLint *params,
@@ -3476,7 +3200,6 @@ void CaptureGetTexParameterIivEXT_params(const State &glState,
 }
 
 void CaptureGetTexParameterIuivEXT_params(const State &glState,
-                                          bool isCallValid,
                                           TextureType targetPacked,
                                           GLenum pname,
                                           GLuint *params,
@@ -3486,7 +3209,6 @@ void CaptureGetTexParameterIuivEXT_params(const State &glState,
 }
 
 void CaptureSamplerParameterIivEXT_param(const State &glState,
-                                         bool isCallValid,
                                          SamplerID samplerPacked,
                                          GLenum pname,
                                          const GLint *param,
@@ -3496,7 +3218,6 @@ void CaptureSamplerParameterIivEXT_param(const State &glState,
 }
 
 void CaptureSamplerParameterIuivEXT_param(const State &glState,
-                                          bool isCallValid,
                                           SamplerID samplerPacked,
                                           GLenum pname,
                                           const GLuint *param,
@@ -3506,7 +3227,6 @@ void CaptureSamplerParameterIuivEXT_param(const State &glState,
 }
 
 void CaptureTexParameterIivEXT_params(const State &glState,
-                                      bool isCallValid,
                                       TextureType targetPacked,
                                       GLenum pname,
                                       const GLint *params,
@@ -3516,18 +3236,16 @@ void CaptureTexParameterIivEXT_params(const State &glState,
 }
 
 void CaptureTexParameterIuivEXT_params(const State &glState,
-                                       bool isCallValid,
                                        TextureType targetPacked,
                                        GLenum pname,
                                        const GLuint *params,
                                        angle::ParamCapture *paramCapture)
 {
-    CaptureTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params, paramCapture);
+    CaptureTexParameterIuiv_params(glState, targetPacked, pname, params, paramCapture);
 }
 
 // GL_EXT_texture_storage_compression
 void CaptureTexStorageAttribs2DEXT_attrib_list(const State &glState,
-                                               bool isCallValid,
                                                GLenum target,
                                                GLsizei levels,
                                                GLenum internalformat,
@@ -3540,7 +3258,6 @@ void CaptureTexStorageAttribs2DEXT_attrib_list(const State &glState,
 }
 
 void CaptureTexStorageAttribs3DEXT_attrib_list(const State &glState,
-                                               bool isCallValid,
                                                GLenum target,
                                                GLsizei levels,
                                                GLenum internalformat,
@@ -3555,7 +3272,6 @@ void CaptureTexStorageAttribs3DEXT_attrib_list(const State &glState,
 
 // GL_KHR_debug
 void CaptureDebugMessageCallbackKHR_userParam(const State &glState,
-                                              bool isCallValid,
                                               GLDEBUGPROCKHR callback,
                                               const void *userParam,
                                               ParamCapture *paramCapture)
@@ -3564,7 +3280,6 @@ void CaptureDebugMessageCallbackKHR_userParam(const State &glState,
 }
 
 void CaptureDebugMessageControlKHR_ids(const State &glState,
-                                       bool isCallValid,
                                        GLenum source,
                                        GLenum type,
                                        GLenum severity,
@@ -3577,7 +3292,6 @@ void CaptureDebugMessageControlKHR_ids(const State &glState,
 }
 
 void CaptureDebugMessageInsertKHR_buf(const State &glState,
-                                      bool isCallValid,
                                       GLenum source,
                                       GLenum type,
                                       GLuint id,
@@ -3590,7 +3304,6 @@ void CaptureDebugMessageInsertKHR_buf(const State &glState,
 }
 
 void CaptureGetDebugMessageLogKHR_sources(const State &glState,
-                                          bool isCallValid,
                                           GLuint count,
                                           GLsizei bufSize,
                                           GLenum *sources,
@@ -3605,7 +3318,6 @@ void CaptureGetDebugMessageLogKHR_sources(const State &glState,
 }
 
 void CaptureGetDebugMessageLogKHR_types(const State &glState,
-                                        bool isCallValid,
                                         GLuint count,
                                         GLsizei bufSize,
                                         GLenum *sources,
@@ -3620,7 +3332,6 @@ void CaptureGetDebugMessageLogKHR_types(const State &glState,
 }
 
 void CaptureGetDebugMessageLogKHR_ids(const State &glState,
-                                      bool isCallValid,
                                       GLuint count,
                                       GLsizei bufSize,
                                       GLenum *sources,
@@ -3635,7 +3346,6 @@ void CaptureGetDebugMessageLogKHR_ids(const State &glState,
 }
 
 void CaptureGetDebugMessageLogKHR_severities(const State &glState,
-                                             bool isCallValid,
                                              GLuint count,
                                              GLsizei bufSize,
                                              GLenum *sources,
@@ -3650,7 +3360,6 @@ void CaptureGetDebugMessageLogKHR_severities(const State &glState,
 }
 
 void CaptureGetDebugMessageLogKHR_lengths(const State &glState,
-                                          bool isCallValid,
                                           GLuint count,
                                           GLsizei bufSize,
                                           GLenum *sources,
@@ -3665,7 +3374,6 @@ void CaptureGetDebugMessageLogKHR_lengths(const State &glState,
 }
 
 void CaptureGetDebugMessageLogKHR_messageLog(const State &glState,
-                                             bool isCallValid,
                                              GLuint count,
                                              GLsizei bufSize,
                                              GLenum *sources,
@@ -3680,7 +3388,6 @@ void CaptureGetDebugMessageLogKHR_messageLog(const State &glState,
 }
 
 void CaptureGetObjectLabelKHR_length(const State &glState,
-                                     bool isCallValid,
                                      GLenum identifier,
                                      GLuint name,
                                      GLsizei bufSize,
@@ -3692,7 +3399,6 @@ void CaptureGetObjectLabelKHR_length(const State &glState,
 }
 
 void CaptureGetObjectLabelKHR_label(const State &glState,
-                                    bool isCallValid,
                                     GLenum identifier,
                                     GLuint name,
                                     GLsizei bufSize,
@@ -3704,7 +3410,6 @@ void CaptureGetObjectLabelKHR_label(const State &glState,
 }
 
 void CaptureGetObjectPtrLabelKHR_ptr(const State &glState,
-                                     bool isCallValid,
                                      const void *ptr,
                                      GLsizei bufSize,
                                      GLsizei *length,
@@ -3715,7 +3420,6 @@ void CaptureGetObjectPtrLabelKHR_ptr(const State &glState,
 }
 
 void CaptureGetObjectPtrLabelKHR_length(const State &glState,
-                                        bool isCallValid,
                                         const void *ptr,
                                         GLsizei bufSize,
                                         GLsizei *length,
@@ -3726,7 +3430,6 @@ void CaptureGetObjectPtrLabelKHR_length(const State &glState,
 }
 
 void CaptureGetObjectPtrLabelKHR_label(const State &glState,
-                                       bool isCallValid,
                                        const void *ptr,
                                        GLsizei bufSize,
                                        GLsizei *length,
@@ -3737,7 +3440,6 @@ void CaptureGetObjectPtrLabelKHR_label(const State &glState,
 }
 
 void CaptureGetPointervKHR_params(const State &glState,
-                                  bool isCallValid,
                                   GLenum pname,
                                   void **params,
                                   ParamCapture *paramCapture)
@@ -3746,7 +3448,6 @@ void CaptureGetPointervKHR_params(const State &glState,
 }
 
 void CaptureObjectLabelKHR_label(const State &glState,
-                                 bool isCallValid,
                                  GLenum identifier,
                                  GLuint name,
                                  GLsizei length,
@@ -3757,7 +3458,6 @@ void CaptureObjectLabelKHR_label(const State &glState,
 }
 
 void CaptureObjectPtrLabelKHR_ptr(const State &glState,
-                                  bool isCallValid,
                                   const void *ptr,
                                   GLsizei length,
                                   const GLchar *label,
@@ -3767,7 +3467,6 @@ void CaptureObjectPtrLabelKHR_ptr(const State &glState,
 }
 
 void CaptureObjectPtrLabelKHR_label(const State &glState,
-                                    bool isCallValid,
                                     const void *ptr,
                                     GLsizei length,
                                     const GLchar *label,
@@ -3777,7 +3476,6 @@ void CaptureObjectPtrLabelKHR_label(const State &glState,
 }
 
 void CapturePushDebugGroupKHR_message(const State &glState,
-                                      bool isCallValid,
                                       GLenum source,
                                       GLuint id,
                                       GLsizei length,
@@ -3789,7 +3487,6 @@ void CapturePushDebugGroupKHR_message(const State &glState,
 
 // GL_KHR_robustness
 void CaptureGetnUniformfvKHR_params(const State &glState,
-                                    bool isCallValid,
                                     ShaderProgramID programPacked,
                                     UniformLocation locationPacked,
                                     GLsizei bufSize,
@@ -3800,7 +3497,6 @@ void CaptureGetnUniformfvKHR_params(const State &glState,
 }
 
 void CaptureGetnUniformivKHR_params(const State &glState,
-                                    bool isCallValid,
                                     ShaderProgramID programPacked,
                                     UniformLocation locationPacked,
                                     GLsizei bufSize,
@@ -3811,7 +3507,6 @@ void CaptureGetnUniformivKHR_params(const State &glState,
 }
 
 void CaptureGetnUniformuivKHR_params(const State &glState,
-                                     bool isCallValid,
                                      ShaderProgramID programPacked,
                                      UniformLocation locationPacked,
                                      GLsizei bufSize,
@@ -3822,7 +3517,6 @@ void CaptureGetnUniformuivKHR_params(const State &glState,
 }
 
 void CaptureReadnPixelsKHR_data(const State &glState,
-                                bool isCallValid,
                                 GLint x,
                                 GLint y,
                                 GLsizei width,
@@ -3838,7 +3532,6 @@ void CaptureReadnPixelsKHR_data(const State &glState,
 
 // GL_MESA_framebuffer_flip_y
 void CaptureGetFramebufferParameterivMESA_params(const State &glState,
-                                                 bool isCallValid,
                                                  GLenum target,
                                                  GLenum pname,
                                                  GLint *params,
@@ -3849,7 +3542,6 @@ void CaptureGetFramebufferParameterivMESA_params(const State &glState,
 
 // GL_NV_fence
 void CaptureDeleteFencesNV_fencesPacked(const State &glState,
-                                        bool isCallValid,
                                         GLsizei n,
                                         const FenceNVID *fences,
                                         ParamCapture *paramCapture)
@@ -3858,7 +3550,6 @@ void CaptureDeleteFencesNV_fencesPacked(const State &glState,
 }
 
 void CaptureGenFencesNV_fencesPacked(const State &glState,
-                                     bool isCallValid,
                                      GLsizei n,
                                      FenceNVID *fences,
                                      ParamCapture *paramCapture)
@@ -3867,7 +3558,6 @@ void CaptureGenFencesNV_fencesPacked(const State &glState,
 }
 
 void CaptureGetFenceivNV_params(const State &glState,
-                                bool isCallValid,
                                 FenceNVID fence,
                                 GLenum pname,
                                 GLint *params,
@@ -3878,7 +3568,6 @@ void CaptureGetFenceivNV_params(const State &glState,
 
 // GL_OES_draw_elements_base_vertex
 void CaptureDrawElementsBaseVertexOES_indices(const State &glState,
-                                              bool isCallValid,
                                               PrimitiveMode modePacked,
                                               GLsizei count,
                                               DrawElementsType typePacked,
@@ -3886,12 +3575,10 @@ void CaptureDrawElementsBaseVertexOES_indices(const State &glState,
                                               GLint basevertex,
                                               ParamCapture *indicesParam)
 {
-    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
-                                indicesParam);
+    CaptureDrawElements_indices(glState, modePacked, count, typePacked, indices, indicesParam);
 }
 
 void CaptureDrawElementsInstancedBaseVertexOES_indices(const State &glState,
-                                                       bool isCallValid,
                                                        PrimitiveMode modePacked,
                                                        GLsizei count,
                                                        DrawElementsType typePacked,
@@ -3904,7 +3591,6 @@ void CaptureDrawElementsInstancedBaseVertexOES_indices(const State &glState,
 }
 
 void CaptureDrawRangeElementsBaseVertexOES_indices(const State &glState,
-                                                   bool isCallValid,
                                                    PrimitiveMode modePacked,
                                                    GLuint start,
                                                    GLuint end,
@@ -3919,7 +3605,6 @@ void CaptureDrawRangeElementsBaseVertexOES_indices(const State &glState,
 
 // GL_OES_draw_texture
 void CaptureDrawTexfvOES_coords(const State &glState,
-                                bool isCallValid,
                                 const GLfloat *coords,
                                 ParamCapture *paramCapture)
 {
@@ -3927,7 +3612,6 @@ void CaptureDrawTexfvOES_coords(const State &glState,
 }
 
 void CaptureDrawTexivOES_coords(const State &glState,
-                                bool isCallValid,
                                 const GLint *coords,
                                 ParamCapture *paramCapture)
 {
@@ -3935,7 +3619,6 @@ void CaptureDrawTexivOES_coords(const State &glState,
 }
 
 void CaptureDrawTexsvOES_coords(const State &glState,
-                                bool isCallValid,
                                 const GLshort *coords,
                                 ParamCapture *paramCapture)
 {
@@ -3943,7 +3626,6 @@ void CaptureDrawTexsvOES_coords(const State &glState,
 }
 
 void CaptureDrawTexxvOES_coords(const State &glState,
-                                bool isCallValid,
                                 const GLfixed *coords,
                                 ParamCapture *paramCapture)
 {
@@ -3952,7 +3634,6 @@ void CaptureDrawTexxvOES_coords(const State &glState,
 
 // GL_OES_framebuffer_object
 void CaptureDeleteFramebuffersOES_framebuffersPacked(const State &glState,
-                                                     bool isCallValid,
                                                      GLsizei n,
                                                      const FramebufferID *framebuffers,
                                                      ParamCapture *paramCapture)
@@ -3961,7 +3642,6 @@ void CaptureDeleteFramebuffersOES_framebuffersPacked(const State &glState,
 }
 
 void CaptureDeleteRenderbuffersOES_renderbuffersPacked(const State &glState,
-                                                       bool isCallValid,
                                                        GLsizei n,
                                                        const RenderbufferID *renderbuffers,
                                                        ParamCapture *paramCapture)
@@ -3970,7 +3650,6 @@ void CaptureDeleteRenderbuffersOES_renderbuffersPacked(const State &glState,
 }
 
 void CaptureGenFramebuffersOES_framebuffersPacked(const State &glState,
-                                                  bool isCallValid,
                                                   GLsizei n,
                                                   FramebufferID *framebuffers,
                                                   ParamCapture *paramCapture)
@@ -3979,7 +3658,6 @@ void CaptureGenFramebuffersOES_framebuffersPacked(const State &glState,
 }
 
 void CaptureGenRenderbuffersOES_renderbuffersPacked(const State &glState,
-                                                    bool isCallValid,
                                                     GLsizei n,
                                                     RenderbufferID *renderbuffers,
                                                     ParamCapture *paramCapture)
@@ -3988,7 +3666,6 @@ void CaptureGenRenderbuffersOES_renderbuffersPacked(const State &glState,
 }
 
 void CaptureGetFramebufferAttachmentParameterivOES_params(const State &glState,
-                                                          bool isCallValid,
                                                           GLenum target,
                                                           GLenum attachment,
                                                           GLenum pname,
@@ -3999,7 +3676,6 @@ void CaptureGetFramebufferAttachmentParameterivOES_params(const State &glState,
 }
 
 void CaptureGetRenderbufferParameterivOES_params(const State &glState,
-                                                 bool isCallValid,
                                                  GLenum target,
                                                  GLenum pname,
                                                  GLint *params,
@@ -4010,7 +3686,6 @@ void CaptureGetRenderbufferParameterivOES_params(const State &glState,
 
 // GL_OES_get_program_binary
 void CaptureGetProgramBinaryOES_length(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID program,
                                        GLsizei bufSize,
                                        GLsizei *length,
@@ -4022,7 +3697,6 @@ void CaptureGetProgramBinaryOES_length(const State &glState,
 }
 
 void CaptureGetProgramBinaryOES_binaryFormat(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID program,
                                              GLsizei bufSize,
                                              GLsizei *length,
@@ -4034,7 +3708,6 @@ void CaptureGetProgramBinaryOES_binaryFormat(const State &glState,
 }
 
 void CaptureGetProgramBinaryOES_binary(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID program,
                                        GLsizei bufSize,
                                        GLsizei *length,
@@ -4046,7 +3719,6 @@ void CaptureGetProgramBinaryOES_binary(const State &glState,
 }
 
 void CaptureProgramBinaryOES_binary(const State &glState,
-                                    bool isCallValid,
                                     ShaderProgramID program,
                                     GLenum binaryFormat,
                                     const void *binary,
@@ -4058,7 +3730,6 @@ void CaptureProgramBinaryOES_binary(const State &glState,
 
 // GL_OES_mapbuffer
 void CaptureGetBufferPointervOES_params(const State &glState,
-                                        bool isCallValid,
                                         BufferBinding targetPacked,
                                         GLenum pname,
                                         void **params,
@@ -4069,7 +3740,6 @@ void CaptureGetBufferPointervOES_params(const State &glState,
 
 // GL_OES_matrix_palette
 void CaptureMatrixIndexPointerOES_pointer(const State &glState,
-                                          bool isCallValid,
                                           GLint size,
                                           GLenum type,
                                           GLsizei stride,
@@ -4080,7 +3750,6 @@ void CaptureMatrixIndexPointerOES_pointer(const State &glState,
 }
 
 void CaptureWeightPointerOES_pointer(const State &glState,
-                                     bool isCallValid,
                                      GLint size,
                                      GLenum type,
                                      GLsizei stride,
@@ -4092,7 +3761,6 @@ void CaptureWeightPointerOES_pointer(const State &glState,
 
 // GL_OES_point_size_array
 void CapturePointSizePointerOES_pointer(const State &glState,
-                                        bool isCallValid,
                                         VertexAttribType typePacked,
                                         GLsizei stride,
                                         const void *pointer,
@@ -4103,7 +3771,6 @@ void CapturePointSizePointerOES_pointer(const State &glState,
 
 // GL_OES_query_matrix
 void CaptureQueryMatrixxOES_mantissa(const State &glState,
-                                     bool isCallValid,
                                      GLfixed *mantissa,
                                      GLint *exponent,
                                      ParamCapture *paramCapture)
@@ -4112,7 +3779,6 @@ void CaptureQueryMatrixxOES_mantissa(const State &glState,
 }
 
 void CaptureQueryMatrixxOES_exponent(const State &glState,
-                                     bool isCallValid,
                                      GLfixed *mantissa,
                                      GLint *exponent,
                                      ParamCapture *paramCapture)
@@ -4122,7 +3788,6 @@ void CaptureQueryMatrixxOES_exponent(const State &glState,
 
 // GL_OES_texture_3D
 void CaptureCompressedTexImage3DOES_data(const State &glState,
-                                         bool isCallValid,
                                          TextureTarget targetPacked,
                                          GLint level,
                                          GLenum internalformat,
@@ -4134,12 +3799,11 @@ void CaptureCompressedTexImage3DOES_data(const State &glState,
                                          const void *data,
                                          ParamCapture *paramCapture)
 {
-    CaptureCompressedTexImage3D_data(glState, isCallValid, targetPacked, level, internalformat,
-                                     width, height, depth, border, imageSize, data, paramCapture);
+    CaptureCompressedTexImage3D_data(glState, targetPacked, level, internalformat, width, height,
+                                     depth, border, imageSize, data, paramCapture);
 }
 
 void CaptureCompressedTexSubImage3DOES_data(const State &glState,
-                                            bool isCallValid,
                                             TextureTarget targetPacked,
                                             GLint level,
                                             GLint xoffset,
@@ -4157,7 +3821,6 @@ void CaptureCompressedTexSubImage3DOES_data(const State &glState,
 }
 
 void CaptureTexImage3DOES_pixels(const State &glState,
-                                 bool isCallValid,
                                  TextureTarget targetPacked,
                                  GLint level,
                                  GLenum internalformat,
@@ -4170,12 +3833,11 @@ void CaptureTexImage3DOES_pixels(const State &glState,
                                  const void *pixels,
                                  ParamCapture *paramCapture)
 {
-    CaptureTexImage3D_pixels(glState, isCallValid, targetPacked, level, internalformat, width,
-                             height, depth, border, format, type, pixels, paramCapture);
+    CaptureTexImage3D_pixels(glState, targetPacked, level, internalformat, width, height, depth,
+                             border, format, type, pixels, paramCapture);
 }
 
 void CaptureTexSubImage3DOES_pixels(const State &glState,
-                                    bool isCallValid,
                                     TextureTarget targetPacked,
                                     GLint level,
                                     GLint xoffset,
@@ -4189,98 +3851,85 @@ void CaptureTexSubImage3DOES_pixels(const State &glState,
                                     const void *pixels,
                                     ParamCapture *paramCapture)
 {
-    CaptureTexSubImage3D_pixels(glState, isCallValid, targetPacked, level, xoffset, yoffset,
-                                zoffset, width, height, depth, format, type, pixels, paramCapture);
+    CaptureTexSubImage3D_pixels(glState, targetPacked, level, xoffset, yoffset, zoffset, width,
+                                height, depth, format, type, pixels, paramCapture);
 }
 
 // GL_OES_texture_border_clamp
 void CaptureGetSamplerParameterIivOES_params(const State &glState,
-                                             bool isCallValid,
                                              SamplerID sampler,
                                              GLenum pname,
                                              GLint *params,
                                              ParamCapture *paramCapture)
 {
-    CaptureGetSamplerParameterIiv_params(glState, isCallValid, sampler, pname, params,
-                                         paramCapture);
+    CaptureGetSamplerParameterIiv_params(glState, sampler, pname, params, paramCapture);
 }
 
 void CaptureGetSamplerParameterIuivOES_params(const State &glState,
-                                              bool isCallValid,
                                               SamplerID sampler,
                                               GLenum pname,
                                               GLuint *params,
                                               ParamCapture *paramCapture)
 {
-    CaptureGetSamplerParameterIuiv_params(glState, isCallValid, sampler, pname, params,
-                                          paramCapture);
+    CaptureGetSamplerParameterIuiv_params(glState, sampler, pname, params, paramCapture);
 }
 
 void CaptureGetTexParameterIivOES_params(const State &glState,
-                                         bool isCallValid,
                                          TextureType targetPacked,
                                          GLenum pname,
                                          GLint *params,
                                          ParamCapture *paramCapture)
 {
-    CaptureGetTexParameterIiv_params(glState, isCallValid, targetPacked, pname, params,
-                                     paramCapture);
+    CaptureGetTexParameterIiv_params(glState, targetPacked, pname, params, paramCapture);
 }
 
 void CaptureGetTexParameterIuivOES_params(const State &glState,
-                                          bool isCallValid,
                                           TextureType targetPacked,
                                           GLenum pname,
                                           GLuint *params,
                                           ParamCapture *paramCapture)
 {
-    CaptureGetTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params,
-                                      paramCapture);
+    CaptureGetTexParameterIuiv_params(glState, targetPacked, pname, params, paramCapture);
 }
 
 void CaptureSamplerParameterIivOES_param(const State &glState,
-                                         bool isCallValid,
                                          SamplerID sampler,
                                          GLenum pname,
                                          const GLint *param,
                                          ParamCapture *paramCapture)
 {
-    CaptureSamplerParameterIiv_param(glState, isCallValid, sampler, pname, param, paramCapture);
+    CaptureSamplerParameterIiv_param(glState, sampler, pname, param, paramCapture);
 }
 
 void CaptureSamplerParameterIuivOES_param(const State &glState,
-                                          bool isCallValid,
                                           SamplerID sampler,
                                           GLenum pname,
                                           const GLuint *param,
                                           ParamCapture *paramCapture)
 {
-    CaptureSamplerParameterIuiv_param(glState, isCallValid, sampler, pname, param, paramCapture);
+    CaptureSamplerParameterIuiv_param(glState, sampler, pname, param, paramCapture);
 }
 
 void CaptureTexParameterIivOES_params(const State &glState,
-                                      bool isCallValid,
                                       TextureType targetPacked,
                                       GLenum pname,
                                       const GLint *params,
                                       ParamCapture *paramCapture)
 {
-    CaptureTexParameterIiv_params(glState, isCallValid, targetPacked, pname, params, paramCapture);
+    CaptureTexParameterIiv_params(glState, targetPacked, pname, params, paramCapture);
 }
 
 void CaptureTexParameterIuivOES_params(const State &glState,
-                                       bool isCallValid,
                                        TextureType targetPacked,
                                        GLenum pname,
                                        const GLuint *params,
                                        ParamCapture *paramCapture)
 {
-    CaptureTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params, paramCapture);
+    CaptureTexParameterIuiv_params(glState, targetPacked, pname, params, paramCapture);
 }
 
 // GL_OES_texture_cube_map
 void CaptureGetTexGenfvOES_params(const State &glState,
-                                  bool isCallValid,
                                   GLenum coord,
                                   GLenum pname,
                                   GLfloat *params,
@@ -4290,7 +3939,6 @@ void CaptureGetTexGenfvOES_params(const State &glState,
 }
 
 void CaptureGetTexGenivOES_params(const State &glState,
-                                  bool isCallValid,
                                   GLenum coord,
                                   GLenum pname,
                                   GLint *params,
@@ -4300,7 +3948,6 @@ void CaptureGetTexGenivOES_params(const State &glState,
 }
 
 void CaptureGetTexGenxvOES_params(const State &glState,
-                                  bool isCallValid,
                                   GLenum coord,
                                   GLenum pname,
                                   GLfixed *params,
@@ -4310,7 +3957,6 @@ void CaptureGetTexGenxvOES_params(const State &glState,
 }
 
 void CaptureTexGenfvOES_params(const State &glState,
-                               bool isCallValid,
                                GLenum coord,
                                GLenum pname,
                                const GLfloat *params,
@@ -4320,7 +3966,6 @@ void CaptureTexGenfvOES_params(const State &glState,
 }
 
 void CaptureTexGenivOES_params(const State &glState,
-                               bool isCallValid,
                                GLenum coord,
                                GLenum pname,
                                const GLint *params,
@@ -4330,7 +3975,6 @@ void CaptureTexGenivOES_params(const State &glState,
 }
 
 void CaptureTexGenxvOES_params(const State &glState,
-                               bool isCallValid,
                                GLenum coord,
                                GLenum pname,
                                const GLfixed *params,
@@ -4341,26 +3985,23 @@ void CaptureTexGenxvOES_params(const State &glState,
 
 // GL_OES_vertex_array_object
 void CaptureDeleteVertexArraysOES_arraysPacked(const State &glState,
-                                               bool isCallValid,
                                                GLsizei n,
                                                const VertexArrayID *arrays,
                                                ParamCapture *paramCapture)
 {
-    CaptureDeleteVertexArrays_arraysPacked(glState, isCallValid, n, arrays, paramCapture);
+    CaptureDeleteVertexArrays_arraysPacked(glState, n, arrays, paramCapture);
 }
 
 void CaptureGenVertexArraysOES_arraysPacked(const State &glState,
-                                            bool isCallValid,
                                             GLsizei n,
                                             VertexArrayID *arrays,
                                             ParamCapture *paramCapture)
 {
-    CaptureGenVertexArrays_arraysPacked(glState, isCallValid, n, arrays, paramCapture);
+    CaptureGenVertexArrays_arraysPacked(glState, n, arrays, paramCapture);
 }
 
 // GL_QCOM_framebuffer_foveated
 void CaptureFramebufferFoveationConfigQCOM_providedFeatures(const State &glState,
-                                                            bool isCallValid,
                                                             FramebufferID framebufferPacked,
                                                             GLuint numLayers,
                                                             GLuint focalPointsPerLayer,

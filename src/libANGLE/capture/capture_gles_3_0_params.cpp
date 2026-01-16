@@ -19,7 +19,6 @@ using namespace angle;
 namespace gl
 {
 void CaptureClearBufferfv_value(const State &glState,
-                                bool isCallValid,
                                 GLenum buffer,
                                 GLint drawbuffer,
                                 const GLfloat *value,
@@ -29,7 +28,6 @@ void CaptureClearBufferfv_value(const State &glState,
 }
 
 void CaptureClearBufferiv_value(const State &glState,
-                                bool isCallValid,
                                 GLenum buffer,
                                 GLint drawbuffer,
                                 const GLint *value,
@@ -39,7 +37,6 @@ void CaptureClearBufferiv_value(const State &glState,
 }
 
 void CaptureClearBufferuiv_value(const State &glState,
-                                 bool isCallValid,
                                  GLenum buffer,
                                  GLint drawbuffer,
                                  const GLuint *value,
@@ -49,7 +46,6 @@ void CaptureClearBufferuiv_value(const State &glState,
 }
 
 void CaptureCompressedTexImage3D_data(const State &glState,
-                                      bool isCallValid,
                                       TextureTarget targetPacked,
                                       GLint level,
                                       GLenum internalformat,
@@ -75,7 +71,6 @@ void CaptureCompressedTexImage3D_data(const State &glState,
 }
 
 void CaptureCompressedTexSubImage3D_data(const State &glState,
-                                         bool isCallValid,
                                          TextureTarget targetPacked,
                                          GLint level,
                                          GLint xoffset,
@@ -89,12 +84,11 @@ void CaptureCompressedTexSubImage3D_data(const State &glState,
                                          const void *data,
                                          ParamCapture *paramCapture)
 {
-    CaptureCompressedTexImage3D_data(glState, isCallValid, targetPacked, level, 0, width, height,
-                                     depth, 0, imageSize, data, paramCapture);
+    CaptureCompressedTexImage3D_data(glState, targetPacked, level, 0, width, height, depth, 0,
+                                     imageSize, data, paramCapture);
 }
 
 void CaptureDeleteQueries_idsPacked(const State &glState,
-                                    bool isCallValid,
                                     GLsizei n,
                                     const QueryID *ids,
                                     ParamCapture *paramCapture)
@@ -103,7 +97,6 @@ void CaptureDeleteQueries_idsPacked(const State &glState,
 }
 
 void CaptureDeleteSamplers_samplersPacked(const State &glState,
-                                          bool isCallValid,
                                           GLsizei count,
                                           const SamplerID *samplers,
                                           ParamCapture *paramCapture)
@@ -112,7 +105,6 @@ void CaptureDeleteSamplers_samplersPacked(const State &glState,
 }
 
 void CaptureDeleteTransformFeedbacks_idsPacked(const State &glState,
-                                               bool isCallValid,
                                                GLsizei n,
                                                const TransformFeedbackID *ids,
                                                ParamCapture *paramCapture)
@@ -121,7 +113,6 @@ void CaptureDeleteTransformFeedbacks_idsPacked(const State &glState,
 }
 
 void CaptureDeleteVertexArrays_arraysPacked(const State &glState,
-                                            bool isCallValid,
                                             GLsizei n,
                                             const VertexArrayID *arrays,
                                             ParamCapture *paramCapture)
@@ -130,7 +121,6 @@ void CaptureDeleteVertexArrays_arraysPacked(const State &glState,
 }
 
 void CaptureDrawBuffers_bufs(const State &glState,
-                             bool isCallValid,
                              GLsizei n,
                              const GLenum *bufs,
                              ParamCapture *paramCapture)
@@ -139,7 +129,6 @@ void CaptureDrawBuffers_bufs(const State &glState,
 }
 
 void CaptureDrawElementsInstanced_indices(const State &glState,
-                                          bool isCallValid,
                                           PrimitiveMode modePacked,
                                           GLsizei count,
                                           DrawElementsType typePacked,
@@ -147,12 +136,10 @@ void CaptureDrawElementsInstanced_indices(const State &glState,
                                           GLsizei instancecount,
                                           ParamCapture *paramCapture)
 {
-    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
-                                paramCapture);
+    CaptureDrawElements_indices(glState, modePacked, count, typePacked, indices, paramCapture);
 }
 
 void CaptureDrawRangeElements_indices(const State &glState,
-                                      bool isCallValid,
                                       PrimitiveMode modePacked,
                                       GLuint start,
                                       GLuint end,
@@ -161,12 +148,10 @@ void CaptureDrawRangeElements_indices(const State &glState,
                                       const void *indices,
                                       ParamCapture *paramCapture)
 {
-    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
-                                paramCapture);
+    CaptureDrawElements_indices(glState, modePacked, count, typePacked, indices, paramCapture);
 }
 
 void CaptureGenQueries_idsPacked(const State &glState,
-                                 bool isCallValid,
                                  GLsizei n,
                                  QueryID *ids,
                                  ParamCapture *paramCapture)
@@ -175,7 +160,6 @@ void CaptureGenQueries_idsPacked(const State &glState,
 }
 
 void CaptureGenSamplers_samplersPacked(const State &glState,
-                                       bool isCallValid,
                                        GLsizei count,
                                        SamplerID *samplers,
                                        ParamCapture *paramCapture)
@@ -184,7 +168,6 @@ void CaptureGenSamplers_samplersPacked(const State &glState,
 }
 
 void CaptureGenTransformFeedbacks_idsPacked(const State &glState,
-                                            bool isCallValid,
                                             GLsizei n,
                                             TransformFeedbackID *ids,
                                             ParamCapture *paramCapture)
@@ -193,7 +176,6 @@ void CaptureGenTransformFeedbacks_idsPacked(const State &glState,
 }
 
 void CaptureGenVertexArrays_arraysPacked(const State &glState,
-                                         bool isCallValid,
                                          GLsizei n,
                                          VertexArrayID *arrays,
                                          ParamCapture *paramCapture)
@@ -202,7 +184,6 @@ void CaptureGenVertexArrays_arraysPacked(const State &glState,
 }
 
 void CaptureGetActiveUniformBlockName_length(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID program,
                                              UniformBlockIndex uniformBlockIndex,
                                              GLsizei bufSize,
@@ -220,7 +201,6 @@ void CaptureGetActiveUniformBlockName_length(const State &glState,
 }
 
 void CaptureGetActiveUniformBlockName_uniformBlockName(const State &glState,
-                                                       bool isCallValid,
                                                        ShaderProgramID program,
                                                        UniformBlockIndex uniformBlockIndex,
                                                        GLsizei bufSize,
@@ -235,7 +215,6 @@ void CaptureGetActiveUniformBlockName_uniformBlockName(const State &glState,
 }
 
 void CaptureGetActiveUniformBlockiv_params(const State &glState,
-                                           bool isCallValid,
                                            ShaderProgramID program,
                                            UniformBlockIndex uniformBlockIndex,
                                            GLenum pname,
@@ -247,7 +226,6 @@ void CaptureGetActiveUniformBlockiv_params(const State &glState,
 }
 
 void CaptureGetActiveUniformsiv_uniformIndices(const State &glState,
-                                               bool isCallValid,
                                                ShaderProgramID program,
                                                GLsizei uniformCount,
                                                const GLuint *uniformIndices,
@@ -263,7 +241,6 @@ void CaptureGetActiveUniformsiv_uniformIndices(const State &glState,
 }
 
 void CaptureGetActiveUniformsiv_params(const State &glState,
-                                       bool isCallValid,
                                        ShaderProgramID program,
                                        GLsizei uniformCount,
                                        const GLuint *uniformIndices,
@@ -279,7 +256,6 @@ void CaptureGetActiveUniformsiv_params(const State &glState,
 }
 
 void CaptureGetBufferParameteri64v_params(const State &glState,
-                                          bool isCallValid,
                                           BufferBinding targetPacked,
                                           GLenum pname,
                                           GLint64 *params,
@@ -290,7 +266,6 @@ void CaptureGetBufferParameteri64v_params(const State &glState,
 }
 
 void CaptureGetBufferPointerv_params(const State &glState,
-                                     bool isCallValid,
                                      BufferBinding targetPacked,
                                      GLenum pname,
                                      void **params,
@@ -300,7 +275,6 @@ void CaptureGetBufferPointerv_params(const State &glState,
 }
 
 void CaptureGetFragDataLocation_name(const State &glState,
-                                     bool isCallValid,
                                      ShaderProgramID program,
                                      const GLchar *name,
                                      ParamCapture *paramCapture)
@@ -309,7 +283,6 @@ void CaptureGetFragDataLocation_name(const State &glState,
 }
 
 void CaptureGetInteger64i_v_data(const State &glState,
-                                 bool isCallValid,
                                  GLenum target,
                                  GLuint index,
                                  GLint64 *data,
@@ -319,7 +292,6 @@ void CaptureGetInteger64i_v_data(const State &glState,
 }
 
 void CaptureGetInteger64v_data(const State &glState,
-                               bool isCallValid,
                                GLenum pname,
                                GLint64 *data,
                                ParamCapture *paramCapture)
@@ -328,7 +300,6 @@ void CaptureGetInteger64v_data(const State &glState,
 }
 
 void CaptureGetIntegeri_v_data(const State &glState,
-                               bool isCallValid,
                                GLenum target,
                                GLuint index,
                                GLint *data,
@@ -338,7 +309,6 @@ void CaptureGetIntegeri_v_data(const State &glState,
 }
 
 void CaptureGetInternalformativ_params(const State &glState,
-                                       bool isCallValid,
                                        GLenum target,
                                        GLenum internalformat,
                                        GLenum pname,
@@ -367,7 +337,6 @@ void CaptureGetInternalformativ_params(const State &glState,
 }
 
 void CaptureGetProgramBinary_length(const State &glState,
-                                    bool isCallValid,
                                     ShaderProgramID program,
                                     GLsizei bufSize,
                                     GLsizei *length,
@@ -382,7 +351,6 @@ void CaptureGetProgramBinary_length(const State &glState,
 }
 
 void CaptureGetProgramBinary_binaryFormat(const State &glState,
-                                          bool isCallValid,
                                           ShaderProgramID program,
                                           GLsizei bufSize,
                                           GLsizei *length,
@@ -394,7 +362,6 @@ void CaptureGetProgramBinary_binaryFormat(const State &glState,
 }
 
 void CaptureGetProgramBinary_binary(const State &glState,
-                                    bool isCallValid,
                                     ShaderProgramID program,
                                     GLsizei bufSize,
                                     GLsizei *length,
@@ -421,7 +388,6 @@ void CaptureGetProgramBinary_binary(const State &glState,
 }
 
 void CaptureGetQueryObjectuiv_params(const State &glState,
-                                     bool isCallValid,
                                      QueryID id,
                                      GLenum pname,
                                      GLuint *params,
@@ -432,7 +398,6 @@ void CaptureGetQueryObjectuiv_params(const State &glState,
 }
 
 void CaptureGetQueryiv_params(const State &glState,
-                              bool isCallValid,
                               QueryType targetPacked,
                               GLenum pname,
                               GLint *params,
@@ -443,7 +408,6 @@ void CaptureGetQueryiv_params(const State &glState,
 }
 
 void CaptureGetSamplerParameterfv_params(const State &glState,
-                                         bool isCallValid,
                                          SamplerID sampler,
                                          GLenum pname,
                                          GLfloat *params,
@@ -454,7 +418,6 @@ void CaptureGetSamplerParameterfv_params(const State &glState,
 }
 
 void CaptureGetSamplerParameteriv_params(const State &glState,
-                                         bool isCallValid,
                                          SamplerID sampler,
                                          GLenum pname,
                                          GLint *params,
@@ -465,7 +428,6 @@ void CaptureGetSamplerParameteriv_params(const State &glState,
 }
 
 void CaptureGetSynciv_length(const State &glState,
-                             bool isCallValid,
                              SyncID syncPacked,
                              GLenum pname,
                              GLsizei count,
@@ -480,7 +442,6 @@ void CaptureGetSynciv_length(const State &glState,
 }
 
 void CaptureGetSynciv_values(const State &glState,
-                             bool isCallValid,
                              SyncID syncPacked,
                              GLenum pname,
                              GLsizei count,
@@ -496,7 +457,6 @@ void CaptureGetSynciv_values(const State &glState,
 }
 
 void CaptureGetTransformFeedbackVarying_length(const State &glState,
-                                               bool isCallValid,
                                                ShaderProgramID program,
                                                GLuint index,
                                                GLsizei bufSize,
@@ -510,7 +470,6 @@ void CaptureGetTransformFeedbackVarying_length(const State &glState,
 }
 
 void CaptureGetTransformFeedbackVarying_size(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID program,
                                              GLuint index,
                                              GLsizei bufSize,
@@ -524,7 +483,6 @@ void CaptureGetTransformFeedbackVarying_size(const State &glState,
 }
 
 void CaptureGetTransformFeedbackVarying_type(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID program,
                                              GLuint index,
                                              GLsizei bufSize,
@@ -538,7 +496,6 @@ void CaptureGetTransformFeedbackVarying_type(const State &glState,
 }
 
 void CaptureGetTransformFeedbackVarying_name(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID program,
                                              GLuint index,
                                              GLsizei bufSize,
@@ -552,7 +509,6 @@ void CaptureGetTransformFeedbackVarying_name(const State &glState,
 }
 
 void CaptureGetUniformBlockIndex_uniformBlockName(const State &glState,
-                                                  bool isCallValid,
                                                   ShaderProgramID program,
                                                   const GLchar *uniformBlockName,
                                                   ParamCapture *paramCapture)
@@ -561,7 +517,6 @@ void CaptureGetUniformBlockIndex_uniformBlockName(const State &glState,
 }
 
 void CaptureGetUniformIndices_uniformNames(const State &glState,
-                                           bool isCallValid,
                                            ShaderProgramID program,
                                            GLsizei uniformCount,
                                            const GLchar *const *uniformNames,
@@ -575,7 +530,6 @@ void CaptureGetUniformIndices_uniformNames(const State &glState,
 }
 
 void CaptureGetUniformIndices_uniformIndices(const State &glState,
-                                             bool isCallValid,
                                              ShaderProgramID program,
                                              GLsizei uniformCount,
                                              const GLchar *const *uniformNames,
@@ -586,7 +540,6 @@ void CaptureGetUniformIndices_uniformIndices(const State &glState,
 }
 
 void CaptureGetUniformuiv_params(const State &glState,
-                                 bool isCallValid,
                                  ShaderProgramID program,
                                  UniformLocation location,
                                  GLuint *params,
@@ -597,7 +550,6 @@ void CaptureGetUniformuiv_params(const State &glState,
 }
 
 void CaptureGetVertexAttribIiv_params(const State &glState,
-                                      bool isCallValid,
                                       GLuint index,
                                       GLenum pname,
                                       GLint *params,
@@ -609,7 +561,6 @@ void CaptureGetVertexAttribIiv_params(const State &glState,
 }
 
 void CaptureGetVertexAttribIuiv_params(const State &glState,
-                                       bool isCallValid,
                                        GLuint index,
                                        GLenum pname,
                                        GLuint *params,
@@ -621,7 +572,6 @@ void CaptureGetVertexAttribIuiv_params(const State &glState,
 }
 
 void CaptureInvalidateFramebuffer_attachments(const State &glState,
-                                              bool isCallValid,
                                               GLenum target,
                                               GLsizei numAttachments,
                                               const GLenum *attachments,
@@ -632,7 +582,6 @@ void CaptureInvalidateFramebuffer_attachments(const State &glState,
 }
 
 void CaptureInvalidateSubFramebuffer_attachments(const State &glState,
-                                                 bool isCallValid,
                                                  GLenum target,
                                                  GLsizei numAttachments,
                                                  const GLenum *attachments,
@@ -646,7 +595,6 @@ void CaptureInvalidateSubFramebuffer_attachments(const State &glState,
 }
 
 void CaptureProgramBinary_binary(const State &glState,
-                                 bool isCallValid,
                                  ShaderProgramID program,
                                  GLenum binaryFormat,
                                  const void *binary,
@@ -657,7 +605,6 @@ void CaptureProgramBinary_binary(const State &glState,
 }
 
 void CaptureSamplerParameterfv_param(const State &glState,
-                                     bool isCallValid,
                                      SamplerID sampler,
                                      GLenum pname,
                                      const GLfloat *param,
@@ -667,7 +614,6 @@ void CaptureSamplerParameterfv_param(const State &glState,
 }
 
 void CaptureSamplerParameteriv_param(const State &glState,
-                                     bool isCallValid,
                                      SamplerID sampler,
                                      GLenum pname,
                                      const GLint *param,
@@ -677,7 +623,6 @@ void CaptureSamplerParameteriv_param(const State &glState,
 }
 
 void CaptureTexImage3D_pixels(const State &glState,
-                              bool isCallValid,
                               TextureTarget targetPacked,
                               GLint level,
                               GLint internalformat,
@@ -714,7 +659,6 @@ void CaptureTexImage3D_pixels(const State &glState,
 }
 
 void CaptureTexSubImage3D_pixels(const State &glState,
-                                 bool isCallValid,
                                  TextureTarget targetPacked,
                                  GLint level,
                                  GLint xoffset,
@@ -728,12 +672,11 @@ void CaptureTexSubImage3D_pixels(const State &glState,
                                  const void *pixels,
                                  ParamCapture *paramCapture)
 {
-    CaptureTexImage3D_pixels(glState, isCallValid, targetPacked, level, 0, width, height, depth, 0,
-                             format, type, pixels, paramCapture);
+    CaptureTexImage3D_pixels(glState, targetPacked, level, 0, width, height, depth, 0, format, type,
+                             pixels, paramCapture);
 }
 
 void CaptureTransformFeedbackVaryings_varyings(const State &glState,
-                                               bool isCallValid,
                                                ShaderProgramID program,
                                                GLsizei count,
                                                const GLchar *const *varyings,
@@ -747,7 +690,6 @@ void CaptureTransformFeedbackVaryings_varyings(const State &glState,
 }
 
 void CaptureUniform1uiv_value(const State &glState,
-                              bool isCallValid,
                               UniformLocation location,
                               GLsizei count,
                               const GLuint *value,
@@ -757,7 +699,6 @@ void CaptureUniform1uiv_value(const State &glState,
 }
 
 void CaptureUniform2uiv_value(const State &glState,
-                              bool isCallValid,
                               UniformLocation location,
                               GLsizei count,
                               const GLuint *value,
@@ -767,7 +708,6 @@ void CaptureUniform2uiv_value(const State &glState,
 }
 
 void CaptureUniform3uiv_value(const State &glState,
-                              bool isCallValid,
                               UniformLocation location,
                               GLsizei count,
                               const GLuint *value,
@@ -777,7 +717,6 @@ void CaptureUniform3uiv_value(const State &glState,
 }
 
 void CaptureUniform4uiv_value(const State &glState,
-                              bool isCallValid,
                               UniformLocation location,
                               GLsizei count,
                               const GLuint *value,
@@ -787,7 +726,6 @@ void CaptureUniform4uiv_value(const State &glState,
 }
 
 void CaptureUniformMatrix2x3fv_value(const State &glState,
-                                     bool isCallValid,
                                      UniformLocation location,
                                      GLsizei count,
                                      GLboolean transpose,
@@ -798,7 +736,6 @@ void CaptureUniformMatrix2x3fv_value(const State &glState,
 }
 
 void CaptureUniformMatrix2x4fv_value(const State &glState,
-                                     bool isCallValid,
                                      UniformLocation location,
                                      GLsizei count,
                                      GLboolean transpose,
@@ -809,7 +746,6 @@ void CaptureUniformMatrix2x4fv_value(const State &glState,
 }
 
 void CaptureUniformMatrix3x2fv_value(const State &glState,
-                                     bool isCallValid,
                                      UniformLocation location,
                                      GLsizei count,
                                      GLboolean transpose,
@@ -820,7 +756,6 @@ void CaptureUniformMatrix3x2fv_value(const State &glState,
 }
 
 void CaptureUniformMatrix3x4fv_value(const State &glState,
-                                     bool isCallValid,
                                      UniformLocation location,
                                      GLsizei count,
                                      GLboolean transpose,
@@ -831,7 +766,6 @@ void CaptureUniformMatrix3x4fv_value(const State &glState,
 }
 
 void CaptureUniformMatrix4x2fv_value(const State &glState,
-                                     bool isCallValid,
                                      UniformLocation location,
                                      GLsizei count,
                                      GLboolean transpose,
@@ -842,7 +776,6 @@ void CaptureUniformMatrix4x2fv_value(const State &glState,
 }
 
 void CaptureUniformMatrix4x3fv_value(const State &glState,
-                                     bool isCallValid,
                                      UniformLocation location,
                                      GLsizei count,
                                      GLboolean transpose,
@@ -853,7 +786,6 @@ void CaptureUniformMatrix4x3fv_value(const State &glState,
 }
 
 void CaptureVertexAttribI4iv_v(const State &glState,
-                               bool isCallValid,
                                GLuint index,
                                const GLint *v,
                                ParamCapture *paramCapture)
@@ -862,7 +794,6 @@ void CaptureVertexAttribI4iv_v(const State &glState,
 }
 
 void CaptureVertexAttribI4uiv_v(const State &glState,
-                                bool isCallValid,
                                 GLuint index,
                                 const GLuint *v,
                                 ParamCapture *paramCapture)
@@ -871,7 +802,6 @@ void CaptureVertexAttribI4uiv_v(const State &glState,
 }
 
 void CaptureVertexAttribIPointer_pointer(const State &glState,
-                                         bool isCallValid,
                                          GLuint index,
                                          GLint size,
                                          VertexAttribType typePacked,
@@ -879,8 +809,8 @@ void CaptureVertexAttribIPointer_pointer(const State &glState,
                                          const void *pointer,
                                          ParamCapture *paramCapture)
 {
-    CaptureVertexAttribPointer_pointer(glState, isCallValid, index, size, typePacked, false, stride,
-                                       pointer, paramCapture);
+    CaptureVertexAttribPointer_pointer(glState, index, size, typePacked, false, stride, pointer,
+                                       paramCapture);
 }
 
 }  // namespace gl

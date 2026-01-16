@@ -90,7 +90,7 @@ CallCapture CaptureClipPlanef(const State &glState, bool isCallValid, GLenum p, 
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatConstPointer, eqn, &eqnParam.value);
-        CaptureClipPlanef_eqn(glState, isCallValid, p, eqn, &eqnParam);
+        CaptureClipPlanef_eqn(glState, p, eqn, &eqnParam);
     }
     else
     {
@@ -115,7 +115,7 @@ CallCapture CaptureClipPlanex(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedConstPointer, equation, &equationParam.value);
-        CaptureClipPlanex_equation(glState, isCallValid, plane, equation, &equationParam);
+        CaptureClipPlanex_equation(glState, plane, equation, &equationParam);
     }
     else
     {
@@ -195,8 +195,7 @@ CallCapture CaptureColorPointer(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidConstPointer, pointer, &pointerParam.value);
-        CaptureColorPointer_pointer(glState, isCallValid, size, typePacked, stride, pointer,
-                                    &pointerParam);
+        CaptureColorPointer_pointer(glState, size, typePacked, stride, pointer, &pointerParam);
     }
     else
     {
@@ -263,7 +262,7 @@ CallCapture CaptureFogfv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatConstPointer, params, &paramsParam.value);
-        CaptureFogfv_params(glState, isCallValid, pname, params, &paramsParam);
+        CaptureFogfv_params(glState, pname, params, &paramsParam);
     }
     else
     {
@@ -295,7 +294,7 @@ CallCapture CaptureFogxv(const State &glState, bool isCallValid, GLenum pname, c
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedConstPointer, param, &paramParam.value);
-        CaptureFogxv_param(glState, isCallValid, pname, param, &paramParam);
+        CaptureFogxv_param(glState, pname, param, &paramParam);
     }
     else
     {
@@ -362,7 +361,7 @@ CallCapture CaptureGetClipPlanef(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatPointer, equation, &equationParam.value);
-        CaptureGetClipPlanef_equation(glState, isCallValid, plane, equation, &equationParam);
+        CaptureGetClipPlanef_equation(glState, plane, equation, &equationParam);
     }
     else
     {
@@ -387,7 +386,7 @@ CallCapture CaptureGetClipPlanex(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedPointer, equation, &equationParam.value);
-        CaptureGetClipPlanex_equation(glState, isCallValid, plane, equation, &equationParam);
+        CaptureGetClipPlanex_equation(glState, plane, equation, &equationParam);
     }
     else
     {
@@ -409,7 +408,7 @@ CallCapture CaptureGetFixedv(const State &glState, bool isCallValid, GLenum pnam
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedPointer, params, &paramsParam.value);
-        CaptureGetFixedv_params(glState, isCallValid, pname, params, &paramsParam);
+        CaptureGetFixedv_params(glState, pname, params, &paramsParam);
     }
     else
     {
@@ -436,7 +435,7 @@ CallCapture CaptureGetLightfv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-        CaptureGetLightfv_params(glState, isCallValid, light, pnamePacked, params, &paramsParam);
+        CaptureGetLightfv_params(glState, light, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -463,7 +462,7 @@ CallCapture CaptureGetLightxv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedPointer, params, &paramsParam.value);
-        CaptureGetLightxv_params(glState, isCallValid, light, pnamePacked, params, &paramsParam);
+        CaptureGetLightxv_params(glState, light, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -490,7 +489,7 @@ CallCapture CaptureGetMaterialfv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-        CaptureGetMaterialfv_params(glState, isCallValid, face, pnamePacked, params, &paramsParam);
+        CaptureGetMaterialfv_params(glState, face, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -517,7 +516,7 @@ CallCapture CaptureGetMaterialxv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedPointer, params, &paramsParam.value);
-        CaptureGetMaterialxv_params(glState, isCallValid, face, pnamePacked, params, &paramsParam);
+        CaptureGetMaterialxv_params(glState, face, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -544,8 +543,7 @@ CallCapture CaptureGetTexEnvfv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-        CaptureGetTexEnvfv_params(glState, isCallValid, targetPacked, pnamePacked, params,
-                                  &paramsParam);
+        CaptureGetTexEnvfv_params(glState, targetPacked, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -572,8 +570,7 @@ CallCapture CaptureGetTexEnviv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-        CaptureGetTexEnviv_params(glState, isCallValid, targetPacked, pnamePacked, params,
-                                  &paramsParam);
+        CaptureGetTexEnviv_params(glState, targetPacked, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -599,8 +596,7 @@ CallCapture CaptureGetTexEnvxv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedPointer, params, &paramsParam.value);
-        CaptureGetTexEnvxv_params(glState, isCallValid, targetPacked, pnamePacked, params,
-                                  &paramsParam);
+        CaptureGetTexEnvxv_params(glState, targetPacked, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -627,8 +623,7 @@ CallCapture CaptureGetTexParameterxv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedPointer, params, &paramsParam.value);
-        CaptureGetTexParameterxv_params(glState, isCallValid, targetPacked, pname, params,
-                                        &paramsParam);
+        CaptureGetTexParameterxv_params(glState, targetPacked, pname, params, &paramsParam);
     }
     else
     {
@@ -663,7 +658,7 @@ CallCapture CaptureLightModelfv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatConstPointer, params, &paramsParam.value);
-        CaptureLightModelfv_params(glState, isCallValid, pname, params, &paramsParam);
+        CaptureLightModelfv_params(glState, pname, params, &paramsParam);
     }
     else
     {
@@ -698,7 +693,7 @@ CallCapture CaptureLightModelxv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedConstPointer, param, &paramParam.value);
-        CaptureLightModelxv_param(glState, isCallValid, pname, param, &paramParam);
+        CaptureLightModelxv_param(glState, pname, param, &paramParam);
     }
     else
     {
@@ -740,7 +735,7 @@ CallCapture CaptureLightfv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatConstPointer, params, &paramsParam.value);
-        CaptureLightfv_params(glState, isCallValid, light, pnamePacked, params, &paramsParam);
+        CaptureLightfv_params(glState, light, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -782,7 +777,7 @@ CallCapture CaptureLightxv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedConstPointer, params, &paramsParam.value);
-        CaptureLightxv_params(glState, isCallValid, light, pnamePacked, params, &paramsParam);
+        CaptureLightxv_params(glState, light, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -818,7 +813,7 @@ CallCapture CaptureLoadMatrixf(const State &glState, bool isCallValid, const GLf
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatConstPointer, m, &mParam.value);
-        CaptureLoadMatrixf_m(glState, isCallValid, m, &mParam);
+        CaptureLoadMatrixf_m(glState, m, &mParam);
     }
     else
     {
@@ -838,7 +833,7 @@ CallCapture CaptureLoadMatrixx(const State &glState, bool isCallValid, const GLf
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedConstPointer, m, &mParam.value);
-        CaptureLoadMatrixx_m(glState, isCallValid, m, &mParam);
+        CaptureLoadMatrixx_m(glState, m, &mParam);
     }
     else
     {
@@ -889,7 +884,7 @@ CallCapture CaptureMaterialfv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatConstPointer, params, &paramsParam.value);
-        CaptureMaterialfv_params(glState, isCallValid, face, pnamePacked, params, &paramsParam);
+        CaptureMaterialfv_params(glState, face, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -931,7 +926,7 @@ CallCapture CaptureMaterialxv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedConstPointer, param, &paramParam.value);
-        CaptureMaterialxv_param(glState, isCallValid, face, pnamePacked, param, &paramParam);
+        CaptureMaterialxv_param(glState, face, pnamePacked, param, &paramParam);
     }
     else
     {
@@ -960,7 +955,7 @@ CallCapture CaptureMultMatrixf(const State &glState, bool isCallValid, const GLf
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatConstPointer, m, &mParam.value);
-        CaptureMultMatrixf_m(glState, isCallValid, m, &mParam);
+        CaptureMultMatrixf_m(glState, m, &mParam);
     }
     else
     {
@@ -980,7 +975,7 @@ CallCapture CaptureMultMatrixx(const State &glState, bool isCallValid, const GLf
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedConstPointer, m, &mParam.value);
-        CaptureMultMatrixx_m(glState, isCallValid, m, &mParam);
+        CaptureMultMatrixx_m(glState, m, &mParam);
     }
     else
     {
@@ -1075,8 +1070,7 @@ CallCapture CaptureNormalPointer(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidConstPointer, pointer, &pointerParam.value);
-        CaptureNormalPointer_pointer(glState, isCallValid, typePacked, stride, pointer,
-                                     &pointerParam);
+        CaptureNormalPointer_pointer(glState, typePacked, stride, pointer, &pointerParam);
     }
     else
     {
@@ -1156,7 +1150,7 @@ CallCapture CapturePointParameterfv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatConstPointer, params, &paramsParam.value);
-        CapturePointParameterfv_params(glState, isCallValid, pnamePacked, params, &paramsParam);
+        CapturePointParameterfv_params(glState, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -1194,7 +1188,7 @@ CallCapture CapturePointParameterxv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedConstPointer, params, &paramsParam.value);
-        CapturePointParameterxv_params(glState, isCallValid, pnamePacked, params, &paramsParam);
+        CapturePointParameterxv_params(glState, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -1346,8 +1340,7 @@ CallCapture CaptureTexCoordPointer(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidConstPointer, pointer, &pointerParam.value);
-        CaptureTexCoordPointer_pointer(glState, isCallValid, size, typePacked, stride, pointer,
-                                       &pointerParam);
+        CaptureTexCoordPointer_pointer(glState, size, typePacked, stride, pointer, &pointerParam);
     }
     else
     {
@@ -1389,8 +1382,7 @@ CallCapture CaptureTexEnvfv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatConstPointer, params, &paramsParam.value);
-        CaptureTexEnvfv_params(glState, isCallValid, targetPacked, pnamePacked, params,
-                               &paramsParam);
+        CaptureTexEnvfv_params(glState, targetPacked, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -1432,8 +1424,7 @@ CallCapture CaptureTexEnviv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintConstPointer, params, &paramsParam.value);
-        CaptureTexEnviv_params(glState, isCallValid, targetPacked, pnamePacked, params,
-                               &paramsParam);
+        CaptureTexEnviv_params(glState, targetPacked, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -1475,8 +1466,7 @@ CallCapture CaptureTexEnvxv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedConstPointer, params, &paramsParam.value);
-        CaptureTexEnvxv_params(glState, isCallValid, targetPacked, pnamePacked, params,
-                               &paramsParam);
+        CaptureTexEnvxv_params(glState, targetPacked, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -1518,8 +1508,7 @@ CallCapture CaptureTexParameterxv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfixedConstPointer, params, &paramsParam.value);
-        CaptureTexParameterxv_params(glState, isCallValid, targetPacked, pname, params,
-                                     &paramsParam);
+        CaptureTexParameterxv_params(glState, targetPacked, pname, params, &paramsParam);
     }
     else
     {
@@ -1578,8 +1567,7 @@ CallCapture CaptureVertexPointer(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidConstPointer, pointer, &pointerParam.value);
-        CaptureVertexPointer_pointer(glState, isCallValid, size, typePacked, stride, pointer,
-                                     &pointerParam);
+        CaptureVertexPointer_pointer(glState, size, typePacked, stride, pointer, &pointerParam);
     }
     else
     {

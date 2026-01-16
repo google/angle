@@ -160,8 +160,7 @@ CallCapture CaptureDebugMessageCallback(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidConstPointer, userParam, &userParamParam.value);
-        CaptureDebugMessageCallback_userParam(glState, isCallValid, callback, userParam,
-                                              &userParamParam);
+        CaptureDebugMessageCallback_userParam(glState, callback, userParam, &userParamParam);
     }
     else
     {
@@ -193,8 +192,8 @@ CallCapture CaptureDebugMessageControl(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLuintConstPointer, ids, &idsParam.value);
-        CaptureDebugMessageControl_ids(glState, isCallValid, source, type, severity, count, ids,
-                                       enabled, &idsParam);
+        CaptureDebugMessageControl_ids(glState, source, type, severity, count, ids, enabled,
+                                       &idsParam);
     }
     else
     {
@@ -229,8 +228,7 @@ CallCapture CaptureDebugMessageInsert(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLcharConstPointer, buf, &bufParam.value);
-        CaptureDebugMessageInsert_buf(glState, isCallValid, source, type, id, severity, length, buf,
-                                      &bufParam);
+        CaptureDebugMessageInsert_buf(glState, source, type, id, severity, length, buf, &bufParam);
     }
     else
     {
@@ -270,8 +268,8 @@ CallCapture CaptureDrawElementsBaseVertex(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidConstPointer, indices, &indicesParam.value);
-        CaptureDrawElementsBaseVertex_indices(glState, isCallValid, modePacked, count, typePacked,
-                                              indices, basevertex, &indicesParam);
+        CaptureDrawElementsBaseVertex_indices(glState, modePacked, count, typePacked, indices,
+                                              basevertex, &indicesParam);
     }
     else
     {
@@ -304,9 +302,9 @@ CallCapture CaptureDrawElementsInstancedBaseVertex(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidConstPointer, indices, &indicesParam.value);
-        CaptureDrawElementsInstancedBaseVertex_indices(glState, isCallValid, modePacked, count,
-                                                       typePacked, indices, instancecount,
-                                                       basevertex, &indicesParam);
+        CaptureDrawElementsInstancedBaseVertex_indices(glState, modePacked, count, typePacked,
+                                                       indices, instancecount, basevertex,
+                                                       &indicesParam);
     }
     else
     {
@@ -344,9 +342,8 @@ CallCapture CaptureDrawRangeElementsBaseVertex(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidConstPointer, indices, &indicesParam.value);
-        CaptureDrawRangeElementsBaseVertex_indices(glState, isCallValid, modePacked, start, end,
-                                                   count, typePacked, indices, basevertex,
-                                                   &indicesParam);
+        CaptureDrawRangeElementsBaseVertex_indices(glState, modePacked, start, end, count,
+                                                   typePacked, indices, basevertex, &indicesParam);
     }
     else
     {
@@ -409,8 +406,8 @@ CallCapture CaptureGetDebugMessageLog(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLenumPointer, sources, &sourcesParam.value);
-        CaptureGetDebugMessageLog_sources(glState, isCallValid, count, bufSize, sources, types, ids,
-                                          severities, lengths, messageLog, &sourcesParam);
+        CaptureGetDebugMessageLog_sources(glState, count, bufSize, sources, types, ids, severities,
+                                          lengths, messageLog, &sourcesParam);
     }
     else
     {
@@ -423,8 +420,8 @@ CallCapture CaptureGetDebugMessageLog(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLenumPointer, types, &typesParam.value);
-        CaptureGetDebugMessageLog_types(glState, isCallValid, count, bufSize, sources, types, ids,
-                                        severities, lengths, messageLog, &typesParam);
+        CaptureGetDebugMessageLog_types(glState, count, bufSize, sources, types, ids, severities,
+                                        lengths, messageLog, &typesParam);
     }
     else
     {
@@ -437,8 +434,8 @@ CallCapture CaptureGetDebugMessageLog(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLuintPointer, ids, &idsParam.value);
-        CaptureGetDebugMessageLog_ids(glState, isCallValid, count, bufSize, sources, types, ids,
-                                      severities, lengths, messageLog, &idsParam);
+        CaptureGetDebugMessageLog_ids(glState, count, bufSize, sources, types, ids, severities,
+                                      lengths, messageLog, &idsParam);
     }
     else
     {
@@ -450,9 +447,8 @@ CallCapture CaptureGetDebugMessageLog(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLenumPointer, severities, &severitiesParam.value);
-        CaptureGetDebugMessageLog_severities(glState, isCallValid, count, bufSize, sources, types,
-                                             ids, severities, lengths, messageLog,
-                                             &severitiesParam);
+        CaptureGetDebugMessageLog_severities(glState, count, bufSize, sources, types, ids,
+                                             severities, lengths, messageLog, &severitiesParam);
     }
     else
     {
@@ -465,8 +461,8 @@ CallCapture CaptureGetDebugMessageLog(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLsizeiPointer, lengths, &lengthsParam.value);
-        CaptureGetDebugMessageLog_lengths(glState, isCallValid, count, bufSize, sources, types, ids,
-                                          severities, lengths, messageLog, &lengthsParam);
+        CaptureGetDebugMessageLog_lengths(glState, count, bufSize, sources, types, ids, severities,
+                                          lengths, messageLog, &lengthsParam);
     }
     else
     {
@@ -479,9 +475,8 @@ CallCapture CaptureGetDebugMessageLog(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLcharPointer, messageLog, &messageLogParam.value);
-        CaptureGetDebugMessageLog_messageLog(glState, isCallValid, count, bufSize, sources, types,
-                                             ids, severities, lengths, messageLog,
-                                             &messageLogParam);
+        CaptureGetDebugMessageLog_messageLog(glState, count, bufSize, sources, types, ids,
+                                             severities, lengths, messageLog, &messageLogParam);
     }
     else
     {
@@ -529,7 +524,7 @@ CallCapture CaptureGetObjectLabel(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-        CaptureGetObjectLabel_length(glState, isCallValid, identifier, name, bufSize, length, label,
+        CaptureGetObjectLabel_length(glState, identifier, name, bufSize, length, label,
                                      &lengthParam);
     }
     else
@@ -543,8 +538,7 @@ CallCapture CaptureGetObjectLabel(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLcharPointer, label, &labelParam.value);
-        CaptureGetObjectLabel_label(glState, isCallValid, identifier, name, bufSize, length, label,
-                                    &labelParam);
+        CaptureGetObjectLabel_label(glState, identifier, name, bufSize, length, label, &labelParam);
     }
     else
     {
@@ -569,7 +563,7 @@ CallCapture CaptureGetObjectPtrLabel(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidConstPointer, ptr, &ptrParam.value);
-        CaptureGetObjectPtrLabel_ptr(glState, isCallValid, ptr, bufSize, length, label, &ptrParam);
+        CaptureGetObjectPtrLabel_ptr(glState, ptr, bufSize, length, label, &ptrParam);
     }
     else
     {
@@ -584,8 +578,7 @@ CallCapture CaptureGetObjectPtrLabel(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-        CaptureGetObjectPtrLabel_length(glState, isCallValid, ptr, bufSize, length, label,
-                                        &lengthParam);
+        CaptureGetObjectPtrLabel_length(glState, ptr, bufSize, length, label, &lengthParam);
     }
     else
     {
@@ -598,8 +591,7 @@ CallCapture CaptureGetObjectPtrLabel(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLcharPointer, label, &labelParam.value);
-        CaptureGetObjectPtrLabel_label(glState, isCallValid, ptr, bufSize, length, label,
-                                       &labelParam);
+        CaptureGetObjectPtrLabel_label(glState, ptr, bufSize, length, label, &labelParam);
     }
     else
     {
@@ -621,7 +613,7 @@ CallCapture CaptureGetPointerv(const State &glState, bool isCallValid, GLenum pn
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidPointerPointer, params, &paramsParam.value);
-        CaptureGetPointerv_params(glState, isCallValid, pname, params, &paramsParam);
+        CaptureGetPointerv_params(glState, pname, params, &paramsParam);
     }
     else
     {
@@ -648,8 +640,7 @@ CallCapture CaptureGetSamplerParameterIiv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-        CaptureGetSamplerParameterIiv_params(glState, isCallValid, samplerPacked, pname, params,
-                                             &paramsParam);
+        CaptureGetSamplerParameterIiv_params(glState, samplerPacked, pname, params, &paramsParam);
     }
     else
     {
@@ -675,8 +666,7 @@ CallCapture CaptureGetSamplerParameterIuiv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-        CaptureGetSamplerParameterIuiv_params(glState, isCallValid, samplerPacked, pname, params,
-                                              &paramsParam);
+        CaptureGetSamplerParameterIuiv_params(glState, samplerPacked, pname, params, &paramsParam);
     }
     else
     {
@@ -703,8 +693,7 @@ CallCapture CaptureGetTexParameterIiv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-        CaptureGetTexParameterIiv_params(glState, isCallValid, targetPacked, pname, params,
-                                         &paramsParam);
+        CaptureGetTexParameterIiv_params(glState, targetPacked, pname, params, &paramsParam);
     }
     else
     {
@@ -730,8 +719,7 @@ CallCapture CaptureGetTexParameterIuiv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-        CaptureGetTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params,
-                                          &paramsParam);
+        CaptureGetTexParameterIuiv_params(glState, targetPacked, pname, params, &paramsParam);
     }
     else
     {
@@ -760,8 +748,8 @@ CallCapture CaptureGetnUniformfv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLfloatPointer, params, &paramsParam.value);
-        CaptureGetnUniformfv_params(glState, isCallValid, programPacked, locationPacked, bufSize,
-                                    params, &paramsParam);
+        CaptureGetnUniformfv_params(glState, programPacked, locationPacked, bufSize, params,
+                                    &paramsParam);
     }
     else
     {
@@ -790,8 +778,8 @@ CallCapture CaptureGetnUniformiv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-        CaptureGetnUniformiv_params(glState, isCallValid, programPacked, locationPacked, bufSize,
-                                    params, &paramsParam);
+        CaptureGetnUniformiv_params(glState, programPacked, locationPacked, bufSize, params,
+                                    &paramsParam);
     }
     else
     {
@@ -819,8 +807,8 @@ CallCapture CaptureGetnUniformuiv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-        CaptureGetnUniformuiv_params(glState, isCallValid, programPacked, locationPacked, bufSize,
-                                     params, &paramsParam);
+        CaptureGetnUniformuiv_params(glState, programPacked, locationPacked, bufSize, params,
+                                     &paramsParam);
     }
     else
     {
@@ -877,8 +865,7 @@ CallCapture CaptureObjectLabel(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLcharConstPointer, label, &labelParam.value);
-        CaptureObjectLabel_label(glState, isCallValid, identifier, name, length, label,
-                                 &labelParam);
+        CaptureObjectLabel_label(glState, identifier, name, length, label, &labelParam);
     }
     else
     {
@@ -902,7 +889,7 @@ CallCapture CaptureObjectPtrLabel(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidConstPointer, ptr, &ptrParam.value);
-        CaptureObjectPtrLabel_ptr(glState, isCallValid, ptr, length, label, &ptrParam);
+        CaptureObjectPtrLabel_ptr(glState, ptr, length, label, &ptrParam);
     }
     else
     {
@@ -917,7 +904,7 @@ CallCapture CaptureObjectPtrLabel(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLcharConstPointer, label, &labelParam.value);
-        CaptureObjectPtrLabel_label(glState, isCallValid, ptr, length, label, &labelParam);
+        CaptureObjectPtrLabel_label(glState, ptr, length, label, &labelParam);
     }
     else
     {
@@ -991,8 +978,7 @@ CallCapture CapturePushDebugGroup(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLcharConstPointer, message, &messageParam.value);
-        CapturePushDebugGroup_message(glState, isCallValid, source, id, length, message,
-                                      &messageParam);
+        CapturePushDebugGroup_message(glState, source, id, length, message, &messageParam);
     }
     else
     {
@@ -1029,8 +1015,8 @@ CallCapture CaptureReadnPixels(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TvoidPointer, data, &dataParam.value);
-        CaptureReadnPixels_data(glState, isCallValid, x, y, width, height, format, type, bufSize,
-                                data, &dataParam);
+        CaptureReadnPixels_data(glState, x, y, width, height, format, type, bufSize, data,
+                                &dataParam);
     }
     else
     {
@@ -1056,8 +1042,7 @@ CallCapture CaptureSamplerParameterIiv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintConstPointer, param, &paramParam.value);
-        CaptureSamplerParameterIiv_param(glState, isCallValid, samplerPacked, pname, param,
-                                         &paramParam);
+        CaptureSamplerParameterIiv_param(glState, samplerPacked, pname, param, &paramParam);
     }
     else
     {
@@ -1084,8 +1069,7 @@ CallCapture CaptureSamplerParameterIuiv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLuintConstPointer, param, &paramParam.value);
-        CaptureSamplerParameterIuiv_param(glState, isCallValid, samplerPacked, pname, param,
-                                          &paramParam);
+        CaptureSamplerParameterIuiv_param(glState, samplerPacked, pname, param, &paramParam);
     }
     else
     {
@@ -1148,8 +1132,7 @@ CallCapture CaptureTexParameterIiv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintConstPointer, params, &paramsParam.value);
-        CaptureTexParameterIiv_params(glState, isCallValid, targetPacked, pname, params,
-                                      &paramsParam);
+        CaptureTexParameterIiv_params(glState, targetPacked, pname, params, &paramsParam);
     }
     else
     {
@@ -1176,8 +1159,7 @@ CallCapture CaptureTexParameterIuiv(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLuintConstPointer, params, &paramsParam.value);
-        CaptureTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params,
-                                       &paramsParam);
+        CaptureTexParameterIuiv_params(glState, targetPacked, pname, params, &paramsParam);
     }
     else
     {
