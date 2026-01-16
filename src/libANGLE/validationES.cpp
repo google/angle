@@ -3141,12 +3141,6 @@ bool ValidateStateQuery(const Context *context,
             break;
     }
 
-    // pname is valid, but there are no parameters to return
-    if (*numParams == 0)
-    {
-        return false;
-    }
-
     return true;
 }
 
