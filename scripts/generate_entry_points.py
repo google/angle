@@ -938,19 +938,17 @@ TEMPLATE_PARAMETER_CAPTURE_VALUE = """paramBuffer.addValueParam("{name}", ParamT
 TEMPLATE_PARAMETER_CAPTURE_GL_ENUM = """paramBuffer.addEnumParam("{name}", {api_enum}::{group}, ParamType::T{type}, {name});"""
 
 TEMPLATE_PARAMETER_CAPTURE_POINTER = """
+    ParamCapture {name}Param("{name}", ParamType::T{type});
     if (isCallValid)
     {{
-        ParamCapture {name}Param("{name}", ParamType::T{type});
         InitParamValue(ParamType::T{type}, {name}, &{name}Param.value);
         {capture_name}({params}, &{name}Param);
-        paramBuffer.addParam(std::move({name}Param));
     }}
     else
     {{
-        ParamCapture {name}Param("{name}", ParamType::T{type});
         InitParamValue(ParamType::T{type}, static_cast<{cast_type}>(nullptr), &{name}Param.value);
-        paramBuffer.addParam(std::move({name}Param));
     }}
+    paramBuffer.addParam(std::move({name}Param));
 """
 
 TEMPLATE_PARAMETER_CAPTURE_POINTER_FUNC = """void {name}({params});"""
