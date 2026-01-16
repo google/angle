@@ -15216,7 +15216,7 @@ void main()
     EXPECT_EQ(0u, program);
 }
 
-// Verify I/O block array locations
+// Verify I/O block locations
 TEST_P(GLSLTest_ES31, IOBlockLocations)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
@@ -15343,6 +15343,100 @@ void main()
 })";
 
     ANGLE_GL_PROGRAM_WITH_GS(program, kVS, kGS, kFS);
+    EXPECT_GL_NO_ERROR();
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+
+    drawQuad(program, "position", 0);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Verify I/O block array locations
+TEST_P(GLSLTest_ES31, IOBlockArrayLocations)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+
+in highp vec4 position;
+
+layout(location = 0) out vec4 a;
+
+// This should consume locations [3, 8]
+layout(location = 3) out Block
+{
+    vec4 b;
+    vec4 c;
+} block[3];
+
+layout(location = 1) out vec4 d[2];
+layout(location = 9) out vec4 e[4];
+
+void main()
+{
+    a = vec4(0.03, 0.06, 0.09, 0.12);
+    block[0].b = vec4(0.15, 0.18, 0.21, 0.24);
+    block[0].c = vec4(0.27, 0.30, 0.33, 0.36);
+    block[1].b = vec4(0.39, 0.42, 0.45, 0.48);
+    block[1].c = vec4(0.51, 0.54, 0.57, 0.6);
+    block[2].b = vec4(0.63, 0.66, 0.66, 0.69);
+    block[2].c = vec4(0.72, 0.75, 0.78, 0.81);
+    d[0] = vec4(0.84, 0.87, 0.9, 0.93);
+    d[1] = vec4(0.96, 0.99, 0.94, 0.89);
+    e[0] = vec4(0.84, 0.79, 0.74, 0.69);
+    e[1] = vec4(0.64, 0.59, 0.54, 0.49);
+    e[2] = vec4(0.44, 0.39, 0.34, 0.29);
+    e[3] = vec4(0.24, 0.19, 0.14, 0.09);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+
+layout(location = 0) out mediump vec4 color;
+
+layout(location = 0) in vec4 a;
+
+layout(location = 3) in Block
+{
+    vec4 b;
+    vec4 c;
+} block[3];
+
+layout(location = 1) in vec4 d[2];
+layout(location = 9) in vec4 e[4];
+
+bool isEq(vec4 a, vec4 b) { return all(lessThan(abs(a-b), vec4(0.001))); }
+
+void main()
+{
+    bool passR = isEq(a, vec4(0.03, 0.06, 0.09, 0.12));
+    bool passG = isEq(block[0].b, vec4(0.15, 0.18, 0.21, 0.24)) &&
+                 isEq(block[0].c, vec4(0.27, 0.30, 0.33, 0.36)) &&
+                 isEq(block[1].b, vec4(0.39, 0.42, 0.45, 0.48)) &&
+                 isEq(block[1].c, vec4(0.51, 0.54, 0.57, 0.6)) &&
+                 isEq(block[2].b, vec4(0.63, 0.66, 0.66, 0.69)) &&
+                 isEq(block[2].c, vec4(0.72, 0.75, 0.78, 0.81));
+    bool passB = isEq(d[0], vec4(0.84, 0.87, 0.9, 0.93)) &&
+                 isEq(d[1], vec4(0.96, 0.99, 0.94, 0.89));
+    bool passA = isEq(e[0], vec4(0.84, 0.79, 0.74, 0.69)) &&
+                 isEq(e[1], vec4(0.64, 0.59, 0.54, 0.49)) &&
+                 isEq(e[2], vec4(0.44, 0.39, 0.34, 0.29)) &&
+                 isEq(e[3], vec4(0.24, 0.19, 0.14, 0.09));
+
+    color = vec4(passR, passG, passB, passA);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     EXPECT_GL_NO_ERROR();
 
     GLTexture color;

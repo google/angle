@@ -207,6 +207,7 @@ bool ValidateVaryingLocation(const TVariable *newVariable,
 
     if (type.isInterfaceBlock())
     {
+        const int startLocation   = location;
         int currentLocation       = location;
         bool anyFieldWithLocation = false;
 
@@ -249,7 +250,8 @@ bool ValidateVaryingLocation(const TVariable *newVariable,
             // further mark locations occupied by instances [1, N).  |currentLocation| is
             // already just past the end of instance[0], which is the beginning of instance[1].
             //
-            int remainingLocations = currentLocation * (type.getArraySizeProduct() - 1);
+            int remainingLocations =
+                (currentLocation - startLocation) * (type.getArraySizeProduct() - 1);
             if (!MarkVaryingLocations(newVariable, nullptr, currentLocation, remainingLocations,
                                       locationMap, conflictingSymbolOut,
                                       conflictingFieldInNewSymbolOut))
