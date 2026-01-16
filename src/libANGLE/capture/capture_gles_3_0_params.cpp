@@ -477,12 +477,12 @@ void CaptureGetSynciv_length(const State &glState,
                              bool isCallValid,
                              SyncID syncPacked,
                              GLenum pname,
-                             GLsizei bufSize,
+                             GLsizei count,
                              GLsizei *length,
                              GLint *values,
                              ParamCapture *paramCapture)
 {
-    if (length)
+    if (length != nullptr)
     {
         paramCapture->readBufferSizeBytes = sizeof(GLsizei);
     }
@@ -492,20 +492,15 @@ void CaptureGetSynciv_values(const State &glState,
                              bool isCallValid,
                              SyncID syncPacked,
                              GLenum pname,
-                             GLsizei bufSize,
+                             GLsizei count,
                              GLsizei *length,
                              GLint *values,
                              ParamCapture *paramCapture)
 {
-    // Spec: On success, GetSynciv replaces up to bufSize integers in values with the corresponding
-    // property values of the object being queried. The actual number of integers replaced is
-    // returned in *length.If length is NULL, no length is returned.
-    if (bufSize == 0)
-        return;
-
-    if (values)
+    // All sync parameters return only one value.
+    if (values != nullptr)
     {
-        paramCapture->readBufferSizeBytes = sizeof(GLint) * bufSize;
+        paramCapture->readBufferSizeBytes = sizeof(GLint);
     }
 }
 

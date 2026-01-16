@@ -145,7 +145,7 @@ void QueryFramebufferPixelLocalStorageParameteriv(Context *context,
 angle::Result QuerySynciv(const Context *context,
                           const Sync *sync,
                           GLenum pname,
-                          GLsizei bufSize,
+                          GLsizei count,
                           GLsizei *length,
                           GLint *values);
 

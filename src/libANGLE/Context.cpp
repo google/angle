@@ -6675,7 +6675,7 @@ void Context::framebufferTexture2DMultisample(GLenum target,
 
 void Context::getSynciv(SyncID syncPacked,
                         GLenum pname,
-                        GLsizei bufSize,
+                        GLsizei count,
                         GLsizei *length,
                         GLint *values)
 {
@@ -6684,7 +6684,7 @@ void Context::getSynciv(SyncID syncPacked,
     {
         syncObject = getSync(syncPacked);
     }
-    ANGLE_CONTEXT_TRY(QuerySynciv(this, syncObject, pname, bufSize, length, values));
+    ANGLE_CONTEXT_TRY(QuerySynciv(this, syncObject, pname, count, length, values));
 }
 
 void Context::getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params)

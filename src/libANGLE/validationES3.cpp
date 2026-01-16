@@ -3538,13 +3538,13 @@ bool ValidateGetSynciv(const Context *context,
                        angle::EntryPoint entryPoint,
                        SyncID syncPacked,
                        GLenum pname,
-                       GLsizei bufSize,
+                       GLsizei count,
                        const GLsizei *length,
                        const GLint *values)
 {
-    if (bufSize < 0)
+    if (count < 0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufSize);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeCount);
         return false;
     }
 
