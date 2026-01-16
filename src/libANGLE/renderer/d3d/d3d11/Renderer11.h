@@ -49,7 +49,6 @@ struct Renderer11DeviceCaps
     Renderer11DeviceCaps();
 
     D3D_FEATURE_LEVEL featureLevel;
-    bool supportsDXGI1_2;                         // Support for DXGI 1.2
     bool supportsClearView;                       // Support for ID3D11DeviceContext1::ClearView
     bool supportsConstantBufferOffsets;           // Support for Constant buffer offset
     bool supportsVpRtIndexWriteFromVertexShader;  // VP/RT can be selected in the Vertex Shader

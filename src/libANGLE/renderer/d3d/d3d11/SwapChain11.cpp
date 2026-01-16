@@ -654,10 +654,7 @@ EGLint SwapChain11::reset(DisplayD3D *displayD3D,
             }
         }
 
-        if (mRenderer->getRenderer11DeviceCaps().supportsDXGI1_2)
-        {
-            mSwapChain1 = d3d11::DynamicCastComObject<IDXGISwapChain1>(mSwapChain);
-        }
+        mSwapChain1 = d3d11::DynamicCastComObject<IDXGISwapChain1>(mSwapChain);
 
         ID3D11Texture2D *backbufferTex = nullptr;
         hr                             = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
