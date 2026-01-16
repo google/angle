@@ -4215,12 +4215,16 @@ void CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(
     GLfloat *params,
     angle::ParamCapture *paramCapture)
 {
+    size_t numParams = 1;
     switch (pname)
     {
         case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
-            CaptureGetParameter(glState, pname, sizeof(GLfloat) * 4, paramCapture);
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+            numParams = 4;
             break;
     }
+    paramCapture->readBufferSizeBytes = sizeof(GLfloat) * numParams;
 }
 
 void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
@@ -4231,19 +4235,16 @@ void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
     GLint *params,
     angle::ParamCapture *paramCapture)
 {
+    size_t numParams = 1;
     switch (pname)
     {
-        case GL_PIXEL_LOCAL_FORMAT_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
-            CaptureGetParameter(glState, pname, sizeof(GLint), paramCapture);
-            break;
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
         case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
         case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
-            CaptureGetParameter(glState, pname, sizeof(GLint) * 4, paramCapture);
+            numParams = 4;
             break;
     }
+    paramCapture->readBufferSizeBytes = sizeof(GLint) * numParams;
 }
 
 void CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_length(
@@ -4269,7 +4270,8 @@ void CaptureGetFramebufferPixelLocalStorageParameterfvRobustANGLE_params(
     GLfloat *params,
     angle::ParamCapture *paramCapture)
 {
-    CaptureGetParameter(glState, pname, sizeof(GLfloat) * bufSize, paramCapture);
+    CaptureGetFramebufferPixelLocalStorageParameterfvANGLE_params(glState, isCallValid, plane,
+                                                                  pname, params, paramCapture);
 }
 
 void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_length(
@@ -4295,7 +4297,8 @@ void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_params(
     GLint *params,
     angle::ParamCapture *paramCapture)
 {
-    CaptureGetParameter(glState, pname, sizeof(GLint) * bufSize, paramCapture);
+    CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(glState, isCallValid, plane,
+                                                                  pname, params, paramCapture);
 }
 
 void CaptureFramebufferFoveationConfigQCOM_providedFeatures(const State &glState,
