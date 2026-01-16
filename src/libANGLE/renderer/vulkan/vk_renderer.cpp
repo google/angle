@@ -402,11 +402,6 @@ constexpr const char *kSkippedMessagesWithVulkanSecondaryCommandBuffer[] = {
     "VUID-vkCmdWaitEvents-srcStageMask-parameter",
 };
 
-// http://issuetracker.google.com/447633563 VVL appears not aware of VkCmdBindTileMemory.
-constexpr const char *kSkippedMessagesWithTileMemoryHeap[] = {
-    "VUID-vkCmdDraw-commandBuffer-10746",
-};
-
 // When using Vulkan secondary command buffers, the command buffer is begun with the current
 // framebuffer specified in pInheritanceInfo::framebuffer.  If the framebuffer is multisampled
 // and is resolved, an optimization would change the framebuffer to add the resolve target and
@@ -4865,13 +4860,6 @@ void Renderer::initializeValidationMessageSuppressions()
         mSkippedValidationMessages.insert(
             mSkippedValidationMessages.end(), kSkippedMessagesWithDynamicRendering,
             kSkippedMessagesWithDynamicRendering + ArraySize(kSkippedMessagesWithDynamicRendering));
-    }
-
-    if (getFeatures().supportsTileMemoryHeap.enabled)
-    {
-        mSkippedValidationMessages.insert(
-            mSkippedValidationMessages.end(), kSkippedMessagesWithTileMemoryHeap,
-            kSkippedMessagesWithTileMemoryHeap + ArraySize(kSkippedMessagesWithTileMemoryHeap));
     }
 
     // Build the list of syncval errors that are currently expected and should be skipped.

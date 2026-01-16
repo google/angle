@@ -8770,6 +8770,7 @@ class VulkanPerformanceCounterTest_TileMemory : public VulkanPerformanceCounterT
     void drawQuadToVerifyDepthValue(GLfloat depthValue)
     {
         GLfloat kErrorTolerance = 0.01f;
+        glDisable(GL_STENCIL_TEST);
         // Don't modify depth buffer
         glDepthMask(GL_FALSE);
         glEnable(GL_DEPTH_TEST);
@@ -8780,6 +8781,15 @@ class VulkanPerformanceCounterTest_TileMemory : public VulkanPerformanceCounterT
         drawQuad(drawRed, essl1_shaders::PositionAttrib(), depthValue + kErrorTolerance);
         glDepthFunc(GL_GREATER);
         drawQuad(drawBlue, essl1_shaders::PositionAttrib(), depthValue - kErrorTolerance);
+    }
+
+    void drawQuadToVerifyStencilValue(GLint stencilValue)
+    {
+        glDisable(GL_DEPTH_TEST);
+        glStencilMask(0x00);
+        glEnable(GL_STENCIL_TEST);
+        glStencilFunc(GL_EQUAL, stencilValue, 0xFF);
+        drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.0f);
     }
 
     void drawQuadToVerifyDepthStencilValue(GLfloat depthValue, GLint stencilValue)
@@ -9096,8 +9106,12 @@ TEST_P(VulkanPerformanceCounterTest_TileMemory, OneDSBufferUsedInTwoRenderPasses
     // draw to fbo2 without modifying depth buffer
     glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
     glClear(GL_COLOR_BUFFER_BIT);
-    // Verify depth buffer has correct value
-    drawQuadToVerifyDepthStencilValue(depthValue, 0x55);
+    // Verify depth has correct value
+    drawQuadToVerifyDepthValue(depthValue);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+    glClear(GL_COLOR_BUFFER_BIT);
+    // Verify stencil has correct value
+    drawQuadToVerifyStencilValue(0x55);
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
 }
 
