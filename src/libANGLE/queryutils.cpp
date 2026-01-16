@@ -1762,21 +1762,23 @@ void QueryInternalFormativ(const Context *context,
                            GLenum internalformat,
                            const TextureCaps &format,
                            GLenum pname,
-                           GLsizei bufSize,
+                           GLsizei count,
                            GLint *params)
 {
+    if (count < 1)
+    {
+        return;
+    }
+
     switch (pname)
     {
         case GL_NUM_SAMPLE_COUNTS:
-            if (bufSize != 0)
-            {
-                *params = clampCast<GLint>(format.sampleCounts.size());
-            }
+            *params = clampCast<GLint>(format.sampleCounts.size());
             break;
 
         case GL_SAMPLES:
         {
-            size_t returnCount   = std::min<size_t>(bufSize, format.sampleCounts.size());
+            size_t returnCount   = std::min<size_t>(count, format.sampleCounts.size());
             auto sampleCounts    = format.sampleCounts.sampleCounts();
             auto sampleReverseIt = sampleCounts.rbegin();
             for (size_t sampleIndex = 0; sampleIndex < returnCount; ++sampleIndex)
@@ -1790,15 +1792,14 @@ void QueryInternalFormativ(const Context *context,
             if (texture != nullptr)
             {
                 *params = texture->getFormatSupportedCompressionRates(context, internalformat,
-                                                                      bufSize, nullptr);
+                                                                      count, nullptr);
             }
             break;
 
         case GL_SURFACE_COMPRESSION_EXT:
             if (texture != nullptr)
             {
-                texture->getFormatSupportedCompressionRates(context, internalformat, bufSize,
-                                                            params);
+                texture->getFormatSupportedCompressionRates(context, internalformat, count, params);
             }
             break;
 

@@ -4736,11 +4736,11 @@ bool ValidateGetInternalformativ(const Context *context,
                                  GLenum target,
                                  GLenum internalformat,
                                  GLenum pname,
-                                 GLsizei bufSize,
+                                 GLsizei count,
                                  const GLint *params)
 {
     return ValidateGetInternalFormativBase(context, entryPoint, target, internalformat, pname,
-                                           bufSize, nullptr);
+                                           count, nullptr);
 }
 
 bool ValidateBindFragDataLocationIndexedEXT(const Context *context,

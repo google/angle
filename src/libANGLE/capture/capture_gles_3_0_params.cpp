@@ -342,35 +342,26 @@ void CaptureGetInternalformativ_params(const State &glState,
                                        GLenum target,
                                        GLenum internalformat,
                                        GLenum pname,
-                                       GLsizei bufSize,
+                                       GLsizei count,
                                        GLint *params,
                                        ParamCapture *paramCapture)
 {
-    // From the OpenGL ES 3.0 spec:
-    //
-    // The information retrieved will be written to memory addressed by the pointer specified in
-    // params.
-    //
-    // No more than bufSize integers will be written to this memory.
-    //
-    // If pname is GL_NUM_SAMPLE_COUNTS, the number of sample counts that would be returned by
-    // querying GL_SAMPLES will be returned in params.
-    //
-    // If pname is GL_SAMPLES, the sample counts supported for internalformat and target are written
-    // into params in descending numeric order. Only positive values are returned.
-    //
-    // Querying GL_SAMPLES with bufSize of one will return just the maximum supported number of
-    // samples for this format.
-
-    if (bufSize == 0)
-        return;
-
-    if (params)
+    if (params != nullptr)
     {
-        // For GL_NUM_SAMPLE_COUNTS, only one value is returned
-        // For GL_SAMPLES, two values will be returned, unless bufSize limits it to one
-        uint32_t paramCount = (pname == GL_SAMPLES && bufSize > 1) ? 2 : 1;
-
+        // GL_NUM_SAMPLE_COUNTS and GL_NUM_SURFACE_COMPRESSION_FIXED_RATES_EXT
+        size_t paramCount = 1;
+        switch (pname)
+        {
+            case GL_SAMPLES:
+                // Maximum case: 1, 2, 4, 8, 16, 32 (IMPLEMENTATION_MAX_SAMPLES)
+                paramCount = rx::Log2(gl::IMPLEMENTATION_MAX_SAMPLES) + 1;
+                break;
+            case GL_SURFACE_COMPRESSION_EXT:
+                // From SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT to
+                // SURFACE_COMPRESSION_FIXED_RATE_12BPC_EXT
+                paramCount = 12;
+                break;
+        }
         paramCapture->readBufferSizeBytes = sizeof(GLint) * paramCount;
     }
 }

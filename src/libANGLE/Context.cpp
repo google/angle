@@ -8108,7 +8108,7 @@ void Context::deleteSamplers(GLsizei count, const SamplerID *samplers)
 void Context::getInternalformativ(GLenum target,
                                   GLenum internalformat,
                                   GLenum pname,
-                                  GLsizei bufSize,
+                                  GLsizei count,
                                   GLint *params)
 {
     Texture *texture    = nullptr;
@@ -8118,7 +8118,7 @@ void Context::getInternalformativ(GLenum target,
         texture = getTextureByType(textype);
     }
     const TextureCaps &formatCaps = mState.getTextureCap(internalformat);
-    QueryInternalFormativ(this, texture, internalformat, formatCaps, pname, bufSize, params);
+    QueryInternalFormativ(this, texture, internalformat, formatCaps, pname, count, params);
 }
 
 void Context::getInternalformativRobust(GLenum target,

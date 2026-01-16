@@ -126,7 +126,7 @@ void QueryInternalFormativ(const Context *context,
                            GLenum internalformat,
                            const TextureCaps &format,
                            GLenum pname,
-                           GLsizei bufSize,
+                           GLsizei count,
                            GLint *params);
 
 void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, GLint *params);
