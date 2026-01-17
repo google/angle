@@ -389,6 +389,11 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
         return isFeatureEnabled(Feature::SupportsDepthStencilResolve) &&
                !isFeatureEnabled(Feature::DisableDepthStencilResolveThroughAttachment);
     }
+    bool hasSupportsTileMemoryOrSimulation() const
+    {
+        return isFeatureEnabled(Feature::SupportsTileMemoryHeap) ||
+               isFeatureEnabled(Feature::SimulateTileMemoryForTesting);
+    }
 
     GLuint monitor;
     CounterNameToIndexMap mIndexMap;
@@ -671,7 +676,7 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotBreakR
     constexpr size_t kMaxBufferToImageCopySize = 64 * 1024 * 1024;
     constexpr uint64_t kNumSubmits             = 2;
     uint64_t expectedRenderPassCount           = getPerfCounters().renderPasses + 1;
-    uint64_t expectedSubmitCommandsCount = getPerfCounters().vkQueueSubmitCallsTotal + kNumSubmits;
+    uint64_t submitCommandsCountBefore         = getPerfCounters().vkQueueSubmitCallsTotal;
 
     // Step 1: Set up a simple 2D texture.
     GLTexture texture;
@@ -724,7 +729,16 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferDoesNotBreakR
 
     // Verify render pass and submitted frame counts.
     EXPECT_EQ(getPerfCounters().renderPasses, expectedRenderPassCount);
-    EXPECT_EQ(getPerfCounters().vkQueueSubmitCallsTotal, expectedSubmitCommandsCount);
+    if (hasSupportsTileMemoryOrSimulation())
+    {
+        // When tile memory is used we may not submit if depthStencil has valid data.
+        EXPECT_EQ(getPerfCounters().vkQueueSubmitCallsTotal - submitCommandsCountBefore, 0ul);
+    }
+    else
+    {
+        EXPECT_EQ(getPerfCounters().vkQueueSubmitCallsTotal - submitCommandsCountBefore,
+                  kNumSubmits);
+    }
 }
 
 // Tests that submitting the outside command buffer due to texture upload size does not result in
@@ -4507,9 +4521,7 @@ TEST_P(VulkanPerformanceCounterTest,
 
     ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
-    uint64_t expectedRenderPassCount =
-        getPerfCounters().renderPasses +
-        (isFeatureEnabled(Feature::PreferSubmitOnAnySamplesPassedQueryEnd) ? 2 : 1);
+    uint64_t renderPassCountBefore = getPerfCounters().renderPasses;
 
     GLQueryEXT query1, query2;
     // Draw inside query
@@ -4528,8 +4540,17 @@ TEST_P(VulkanPerformanceCounterTest,
     glGetQueryObjectuivEXT(query2, GL_QUERY_RESULT_EXT, &results[1]);
     EXPECT_GL_NO_ERROR();
 
-    uint64_t actualRenderPassCount = getPerfCounters().renderPasses;
-    EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+    uint64_t actualRenderPassCount = getPerfCounters().renderPasses - renderPassCountBefore;
+    if (hasSupportsTileMemoryOrSimulation() ||
+        !isFeatureEnabled(Feature::PreferSubmitOnAnySamplesPassedQueryEnd))
+    {
+        // When tile memory is used we may not submit if depthStencil has valid data.
+        EXPECT_EQ(1ul, actualRenderPassCount);
+    }
+    else
+    {
+        EXPECT_EQ(2ul, actualRenderPassCount);
+    }
 }
 
 // Tests that depth/stencil texture clear/load works correctly.
