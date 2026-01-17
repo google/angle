@@ -218,7 +218,7 @@ angle::Result Context::getSupportedImageFormats(MemFlags flags,
                                                 MemObjectType imageType,
                                                 cl_uint numEntries,
                                                 cl_image_format *imageFormats,
-                                                cl_uint *numImageFormats)
+                                                cl_uint *numImageFormats) const
 {
     return mImpl->getSupportedImageFormats(flags, imageType, numEntries, imageFormats,
                                            numImageFormats);

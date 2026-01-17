@@ -65,7 +65,7 @@ class Context final : public _cl_context, public Object
                                            MemObjectType imageType,
                                            cl_uint numEntries,
                                            cl_image_format *imageFormats,
-                                           cl_uint *numImageFormats);
+                                           cl_uint *numImageFormats) const;
 
     cl_sampler createSamplerWithProperties(const cl_sampler_properties *properties);
 
