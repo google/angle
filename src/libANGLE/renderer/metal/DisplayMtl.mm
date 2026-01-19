@@ -1306,15 +1306,8 @@ void DisplayMtl::initializeFeatures()
            mFeatures.allowSamplerCompareGradient.enabled);
 
     // Metal compiler optimizations may remove infinite loops causing crashes later in shader
-    // execution. http://crbug.com/1513738
-    ANGLE_FEATURE_CONDITION((&mFeatures), ensureLoopForwardProgress, false);
-
-    // Once not used, injectAsmStatementIntoLoopBodies should be removed and
-    // ensureLoopForwardProgress should default to true.
-    // http://crbug.com/1522730
-    bool shouldUseInjectAsmIntoLoopBodies = !mFeatures.ensureLoopForwardProgress.enabled;
-    ANGLE_FEATURE_CONDITION((&mFeatures), injectAsmStatementIntoLoopBodies,
-                            shouldUseInjectAsmIntoLoopBodies);
+    // execution. http://crbug.com/41486305
+    ANGLE_FEATURE_CONDITION((&mFeatures), ensureLoopForwardProgress, true);
 }
 
 angle::Result DisplayMtl::initializeShaderLibrary()
