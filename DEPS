@@ -2094,7 +2094,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/dc_dark_legion',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
