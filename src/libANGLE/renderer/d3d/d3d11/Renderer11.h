@@ -385,7 +385,6 @@ class Renderer11 : public RendererD3D
     RendererClass getRendererClass() const override;
     StateManager11 *getStateManager() { return &mStateManager; }
 
-    void onSwap();
     void onBufferCreate(const Buffer11 *created);
     void onBufferDelete(const Buffer11 *deleted);
 
@@ -596,8 +595,6 @@ class Renderer11 : public RendererD3D
 
     // Created objects state tracking
     std::set<const Buffer11 *> mAliveBuffers;
-
-    double mLastHistogramUpdateTime;
 
     angle::ComPtr<ID3D12Device> mDevice12;
     angle::ComPtr<ID3D12CommandQueue> mCommandQueue;

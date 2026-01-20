@@ -418,8 +418,6 @@ Renderer11::Renderer11(egl::Display *display)
       mCreateDebugDevice(false),
       mStateCache(),
       mStateManager(this),
-      mLastHistogramUpdateTime(
-          ANGLEPlatformCurrent()->monotonicallyIncreasingTime(ANGLEPlatformCurrent())),
       mDebug(nullptr),
       mScratchMemoryBuffer(ScratchMemoryBufferLifetime)
 {
@@ -3962,37 +3960,6 @@ bool Renderer11::isES3Capable() const
 RendererClass Renderer11::getRendererClass() const
 {
     return RENDERER_D3D11;
-}
-
-void Renderer11::onSwap()
-{
-    // Send histogram updates every half hour
-    const double kHistogramUpdateInterval = 30 * 60;
-
-    auto *platform                   = ANGLEPlatformCurrent();
-    const double currentTime         = platform->monotonicallyIncreasingTime(platform);
-    const double timeSinceLastUpdate = currentTime - mLastHistogramUpdateTime;
-
-    if (timeSinceLastUpdate > kHistogramUpdateInterval)
-    {
-        updateHistograms();
-        mLastHistogramUpdateTime = currentTime;
-    }
-}
-
-void Renderer11::updateHistograms()
-{
-    // Update the buffer CPU memory histogram
-    {
-        size_t sizeSum = 0;
-        for (const Buffer11 *buffer : mAliveBuffers)
-        {
-            sizeSum += buffer->getTotalCPUBufferMemoryBytes();
-        }
-        const int kOneMegaByte = 1024 * 1024;
-        ANGLE_HISTOGRAM_MEMORY_MB("GPU.ANGLE.Buffer11CPUMemoryMB",
-                                  static_cast<int>(sizeSum) / kOneMegaByte);
-    }
 }
 
 void Renderer11::onBufferCreate(const Buffer11 *created)

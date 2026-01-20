@@ -802,14 +802,7 @@ EGLint SwapChain11::swapRect(DisplayD3D *displayD3D,
     }
 
     EGLint result = present(displayD3D, x, y, width, height);
-    if (result != EGL_SUCCESS)
-    {
-        return result;
-    }
-
-    mRenderer->onSwap();
-
-    return EGL_SUCCESS;
+    return result;
 }
 
 EGLint SwapChain11::copyOffscreenToBackbuffer(DisplayD3D *displayD3D,
