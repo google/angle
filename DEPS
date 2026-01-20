@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '612203b61a4314a1e82bc828591ca9c61702caf8',
+  'chromium_revision': '294ebb2115d0ef46fa25a919e5a2e9cf5336cc4f',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -522,7 +522,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@2bd1bf44a4218a0dfaf3086a7ed86e693261acdc',
+    'url': Var('chromium_git') + '/chromium/src/build.git@4927700117c86cdc3ed54adab1e741ae26a43a5f',
     'condition': 'not build_with_chromium',
   },
 
@@ -581,7 +581,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@2ce3007b7a11c8a4102954a142b87e4e30395589',
+    'url': '{chromium_git}/chromium/src/testing@a1fbe91aec15a21683e200a03233d4d4858eaa36',
     'condition': 'not build_with_chromium',
   },
 
@@ -913,7 +913,7 @@ deps = {
   },
 
   'third_party/llvm-libc/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@869153a967d9e3a28b658b4aa6265b78a95b3540',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@2862259f0f6eec72be0ae943bf5bd24003eb89db',
     'condition': 'not build_with_chromium',
   },
 
@@ -1041,7 +1041,7 @@ deps = {
   },
 
   'third_party/rust': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/rust@0e9442b0ef893d86651b0d0ca195064925fdc704',
+    'url': Var('chromium_git') + '/chromium/src/third_party/rust@56481c54e2811ef599e7c2fb8420676236cc9cef',
     'condition': 'not build_with_chromium',
   },
 
@@ -1070,7 +1070,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/turbine',
-              'version': 'nJDryxCoihRuUxDq-oC-PbBAn1u8HeKRHU44sn9Cd7MC',
+              'version': 'j49Y1F_PAMGZdDf53rGaEzVXdT6jXWDhEm7UMfGhjswC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
