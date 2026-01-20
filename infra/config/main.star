@@ -15,6 +15,7 @@ lucicfg.enable_experiment("crbug.com/1182002")
 
 luci.project(
     name = "angle",
+    config_dir = "luci",
     buildbucket = "cr-buildbucket.appspot.com",
     logdog = "luci-logdog.appspot.com",
     milo = "luci-milo.appspot.com",
