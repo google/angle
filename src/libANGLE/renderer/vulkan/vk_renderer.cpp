@@ -7086,6 +7086,11 @@ void Renderer::initOpenCLFeatures(const vk::ExtensionNameList &deviceExtensionNa
         (mSubgroupProperties.supportedStages & VK_SHADER_STAGE_COMPUTE_BIT) != 0 &&
             (mSubgroupProperties.supportedOperations & kRequiredSubgroupBits) ==
                 kRequiredSubgroupBits);
+
+    // TODO: some vendors have issues with alpha channel images, this feature/workaround
+    // serves as a allowlist around this support/feature http://anglebug.com/540157153
+    const bool vendorsSupportingAlphaChannel = isSamsung;
+    ANGLE_FEATURE_CONDITION(&mFeatures, enableAlphaChannelImages, vendorsSupportingAlphaChannel);
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

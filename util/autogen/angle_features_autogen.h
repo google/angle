@@ -158,6 +158,7 @@ enum class Feature
     EmulateTinyStencilTextures,
     EmulateTransformFeedback,
     EnableAdditionalBlendFactorsForDithering,
+    EnableAlphaChannelImages,
     EnableAsyncPipelineCacheCompression,
     EnableCaptureLimits,
     EnableCreateContextBackwardsCompatible,

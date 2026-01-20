@@ -1712,6 +1712,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo enableAlphaChannelImages = {
+        "enableAlphaChannelImages",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

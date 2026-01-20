@@ -2252,6 +2252,13 @@
             "description": [
                 "Initialize color tetxure attachment with white color for app bug workaround."
             ]
+        },
+        {
+            "name": "enable_alpha_channel_images",
+            "category": "Workarounds",
+            "description": [
+                "Enables alpha channel image format."
+            ]
         }
     ]
 }
