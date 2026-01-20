@@ -2049,10 +2049,6 @@
 42267100 WGPU : Texture2DTest.NegativeAPISubImage* = SKIP
 42267100 WGPU : Texture2DTest.ZeroSizedUploads* = SKIP
 406204357 WGPU : LineLoopPrimitiveRestartTest.PrimitiveRestartRestartOnlyIndicesNoCrash/* = SKIP
-360083331 LINUX INTEL WGPU : ClearTest.ClearColorThenClearNonExistingDepthStencil/* = SKIP
-360083331 LINUX INTEL WGPU : ClearTest.DepthRangefIsClamped/* = SKIP
-360083331 LINUX INTEL WGPU : ClearTest.RGBA8Framebuffer/* = SKIP
-360083331 LINUX INTEL WGPU : ClearTest.TextureUploadAndRGBA8Framebuffer/* = SKIP
 360083331 LINUX INTEL WGPU : RendererTest.BufferData/* = SKIP
 360083331 LINUX INTEL WGPU : RendererTest.RequestedRendererCreated/* = SKIP
 360083331 LINUX INTEL WGPU : Texture2DTest.NPOTSubImageParameters/* = SKIP
@@ -2070,10 +2066,9 @@
 438268609 WGPU : CopyTexImageTest.CopyTex*Cube*/* = SKIP
 // Unimplemented format conversions for image copies
 438268609 WGPU : CopyTexImageTest.RGBAToL*/* = SKIP
-438268609 WGPU : CopyTexImageTest.RGBAToRGB8/* = SKIP
 438268609 WGPU : CopyTexImageTest.RGBToL/* = SKIP
 438268609 WGPU : CopyTexImageTest.RGBAToA*/* = SKIP
-438268609 WGPU : CopyTexImageTest.SubImageRGB*To*/* = SKIP
+438268609 WGPU : CopyTexImageTest.SubImageRGB*ToL*/* = SKIP
 438268609 WGPU : CopyTexImageTest.DeleteAfterCopyingToTextures/* = SKIP
 438268609 WGPU : CopyTextureTest.InternalFormat/* = SKIP
 // WGPU does not currently resize textures
