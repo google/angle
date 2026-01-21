@@ -324,6 +324,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsAstcHdr3dTextures, "supportsAstcHdr3dTextures"},
     {Feature::SupportsAstcSliced3d, "supportsAstcSliced3d"},
     {Feature::SupportsBindMemory2, "supportsBindMemory2"},
+    {Feature::SupportsBindVertexBuffers2, "supportsBindVertexBuffers2"},
     {Feature::SupportsBlendOperationAdvanced, "supportsBlendOperationAdvanced"},
     {Feature::SupportsBlendOperationAdvancedCoherent, "supportsBlendOperationAdvancedCoherent"},
     {Feature::SupportsBufferDeviceAddress, "supportsBufferDeviceAddress"},

@@ -1610,6 +1610,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsBindVertexBuffers2 = {
+        "supportsBindVertexBuffers2",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo forceSizePointerForBoundVertexBuffers = {
         "forceSizePointerForBoundVertexBuffers",
         FeatureCategory::VulkanFeatures,

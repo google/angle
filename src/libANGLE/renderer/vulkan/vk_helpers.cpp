@@ -4889,7 +4889,7 @@ const Buffer &BufferHelper::getBufferForVertexArray(ContextVk *contextVk,
                                                     VkDeviceSize actualDataSize,
                                                     VkDeviceSize *offsetOut)
 {
-    ASSERT(!contextVk->getFeatures().useVertexInputBindingStrideDynamicState.enabled);
+    ASSERT(!contextVk->getFeatures().supportsBindVertexBuffers2.enabled);
     return getBufferForVertexArrayImpl(contextVk, actualDataSize, offsetOut);
 }
 

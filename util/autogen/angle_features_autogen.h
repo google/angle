@@ -324,6 +324,7 @@ enum class Feature
     SupportsAstcHdr3dTextures,
     SupportsAstcSliced3d,
     SupportsBindMemory2,
+    SupportsBindVertexBuffers2,
     SupportsBlendOperationAdvanced,
     SupportsBlendOperationAdvancedCoherent,
     SupportsBufferDeviceAddress,

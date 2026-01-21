@@ -2679,11 +2679,9 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
 
     if (maxAttrib > 0)
     {
-        if (getFeatures().useVertexInputBindingStrideDynamicState.enabled)
+        if (getFeatures().supportsBindVertexBuffers2.enabled)
         {
-            // bindVertexBuffers2EXT() requires extended dynamic state or shader object extension.
             // Since the strides are already set in setVertexInput(), they need not be set here.
-            ASSERT(getFeatures().supportsExtendedDynamicState.enabled);
             if (mUseSizePointerForBindingVertexBuffers)
             {
                 const gl::AttribArray<VkDeviceSize> &bufferSizes =
@@ -2748,8 +2746,7 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
                 mismatchingType ? 0 : vertexArrayVk->getCurrentArrayBufferStride(attribIndex);
         }
 
-        // bindVertexBuffers2EXT() requires the extension extended dynamic state or shader object.
-        ASSERT(getFeatures().supportsExtendedDynamicState.enabled);
+        ASSERT(getFeatures().supportsBindVertexBuffers2.enabled);
         if (mUseSizePointerForBindingVertexBuffers)
         {
             const gl::AttribArray<VkDeviceSize> &bufferSizes =

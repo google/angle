@@ -2119,6 +2119,14 @@
             ]
         },
         {
+            "name": "supports_bind_vertex_buffers_2",
+            "category": "Features",
+            "description": [
+                "Using BindVertexBuffers2 is supported"
+            ],
+            "issue": "https://anglebug.com/474385503"
+        },
+        {
             "name": "force_size_pointer_for_bound_vertex_buffers",
             "category": "Features",
             "description": [
