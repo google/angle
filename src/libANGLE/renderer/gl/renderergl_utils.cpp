@@ -1734,6 +1734,8 @@ void GenerateCaps(const FunctionsGL *functions,
         extensions->shaderPixelLocalStorageCoherentANGLE = true;
         plsOptions->type             = ShPixelLocalStorageType::FramebufferFetch;
         plsOptions->fragmentSyncType = ShFragmentSynchronizationType::Automatic;
+        plsOptions->supportsNoncoherent =
+            features.supportsShaderFramebufferFetchNonCoherentEXT.enabled;
     }
     else
     {
@@ -1790,17 +1792,20 @@ void GenerateCaps(const FunctionsGL *functions,
         }
         else if (features.supportsShaderFramebufferFetchNonCoherentEXT.enabled)
         {
+            ASSERT(plsOptions->fragmentSyncType == ShFragmentSynchronizationType::NotSupported);
             extensions->shaderPixelLocalStorageANGLE = true;
             plsOptions->type                         = ShPixelLocalStorageType::FramebufferFetch;
         }
         else if (hasFragmentShaderImageLoadStore)
         {
+            ASSERT(plsOptions->fragmentSyncType == ShFragmentSynchronizationType::NotSupported);
             extensions->shaderPixelLocalStorageANGLE = true;
             plsOptions->type                         = ShPixelLocalStorageType::ImageLoadStore;
             // OpenGL ES only allows read/write access to "r32*" images.
             plsOptions->supportsNativeRGBA8ImageFormats =
                 functions->standard != StandardGL::STANDARD_GL_ES;
         }
+        plsOptions->supportsNoncoherent = true;
     }
 
     // EXT_shader_framebuffer_fetch.
@@ -2286,14 +2291,14 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     bool isGetSystemInfoSuccess =
         GetSystemInfoVendorIDAndDeviceID(functions, &systemInfo, &vendor, &device);
 
-    bool isAMD      = IsAMD(vendor);
-    bool isApple    = IsAppleGPU(vendor);
-    bool isIntel    = IsIntel(vendor);
-    bool isNvidia   = IsNvidia(vendor);
-    bool isQualcomm = IsQualcomm(vendor);
-    bool isVMWare   = IsVMWare(vendor);
-    bool hasAMD     = systemInfo.hasAMDGPU();
-    bool isMali     = IsARM(vendor);
+    bool isAMD           = IsAMD(vendor);
+    bool isApple         = IsAppleGPU(vendor);
+    bool isIntel         = IsIntel(vendor);
+    bool isNvidia        = IsNvidia(vendor);
+    bool isQualcomm      = IsQualcomm(vendor);
+    bool isVMWare        = IsVMWare(vendor);
+    bool hasAMD          = systemInfo.hasAMDGPU();
+    bool isMali          = IsARM(vendor);
     bool isHuaweiMaleoon = IsHuaweiMaleoon(functions);
 
     std::array<int, 3> mesaVersion = {0, 0, 0};

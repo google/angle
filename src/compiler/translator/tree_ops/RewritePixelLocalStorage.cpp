@@ -394,16 +394,21 @@ class RewritePLSToImagesTraverser : public RewritePLSTraverser
             default:
                 UNREACHABLE();
         }
-        const bool noncoherentPLS = plsSymbol->getType().getLayoutQualifier().noncoherent;
+        ASSERT(mCompileOptions->pls.fragmentSyncType !=
+                   ShFragmentSynchronizationType::NotSupported ||
+               mCompileOptions->pls.supportsNoncoherent);
+        const bool wantsNoncoherent = mCompileOptions->pls.supportsNoncoherent &&
+                                      plsSymbol->getType().getLayoutQualifier().noncoherent;
+        const bool supportsRasterOrderQualifier =
+            mCompileOptions->pls.fragmentSyncType ==
+                ShFragmentSynchronizationType::RasterizerOrderViews_D3D ||
+            mCompileOptions->pls.fragmentSyncType ==
+                ShFragmentSynchronizationType::RasterOrderGroups_Metal;
         // Clear the noncoherent qualifier for the image, in case it got copied over from the PLS
         // variable. (noncoherent is not valid for images.)
-        imageLayoutQualifier.noncoherent = false;
-        imageLayoutQualifier.rasterOrdered =
-            !noncoherentPLS && (mCompileOptions->pls.fragmentSyncType ==
-                                    ShFragmentSynchronizationType::RasterizerOrderViews_D3D ||
-                                mCompileOptions->pls.fragmentSyncType ==
-                                    ShFragmentSynchronizationType::RasterOrderGroups_Metal);
-        if (!noncoherentPLS)
+        imageLayoutQualifier.noncoherent   = false;
+        imageLayoutQualifier.rasterOrdered = !wantsNoncoherent && supportsRasterOrderQualifier;
+        if (!wantsNoncoherent)
         {
             mAllPLSVarsNoncoherent = false;
         }
@@ -821,7 +826,10 @@ class RewritePLSToFramebufferFetchTraverser : public RewritePLSTraverser
                 compiler->getResources().MaxCombinedDrawBuffersAndPixelLocalStoragePlanes -
                 plsType.getLayoutQualifier().binding - 1;
             layoutQualifier.locationsSpecified = 1;
-            if (compiler->getBuiltInResources().EXT_shader_framebuffer_fetch_non_coherent)
+            ASSERT(compileOptions.pls.fragmentSyncType !=
+                       ShFragmentSynchronizationType::NotSupported ||
+                   compileOptions.pls.supportsNoncoherent);
+            if (compileOptions.pls.supportsNoncoherent)
             {
                 // EXT_shader_framebuffer_fetch_non_coherent requires the "noncoherent" qualifier if
                 // the coherent version of the extension isn't supported. The extension also allows

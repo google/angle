@@ -1320,7 +1320,7 @@ struct TLayoutQualifier
     // KHR_blend_equation_advanced layout qualifiers.
     AdvancedBlendEquations advancedBlendEquations;
 
-    // D3D 11.3 Rasterizer Order Views (ROVs).
+    // D3D 11.3 Rasterizer Order Views (ROVs) and Metal raster_order_groups.
     // This qualifier is only used internally by ANGLE; it is not visible to the application.
     bool rasterOrdered;
 

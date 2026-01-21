@@ -453,9 +453,6 @@
 464927523 METAL : GLSLTest_ES3_PackUnpackEmulation.PackHalf2x16/* = SKIP
 464927523 METAL : GLSLTest_ES3_PackUnpackEmulation.PackSnorm2x16/* = SKIP
 464927523 METAL : GLSLTest_ES3_PackUnpackEmulation.PackUnorm2x16/* = SKIP
-42266214 MAC APPLE METAL : PixelLocalStorageTest.Coherency_noncoherent/ES3_Metal_EmulatePixelLocalStorage_DisableProgrammableBlending* = SKIP
-42266214 MAC APPLE METAL : PixelLocalStorageTest.R32_noncoherent/ES3_Metal_EmulatePixelLocalStorage_DisableProgrammableBlending* = SKIP
-42266214 MAC APPLE METAL : PixelLocalStorageTest.RGBA8_noncoherent/ES3_Metal_EmulatePixelLocalStorage_DisableProgrammableBlending* = SKIP
 42266214 MAC APPLE METAL : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
 
 // The workaround is not intended to be enabled in this configuration so

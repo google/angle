@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 396
+#define ANGLE_SH_VERSION 397
 
 enum ShShaderSpec
 {
@@ -143,6 +143,11 @@ struct ShPixelLocalStorageOptions
 
     // For ANGLE_shader_pixel_local_storage_coherent.
     ShFragmentSynchronizationType fragmentSyncType = ShFragmentSynchronizationType::NotSupported;
+
+    // Apple Silicon doesn't support image memory barriers, and many GL devices don't support
+    // noncoherent framebuffer fetch. On these platforms, we simply ignore the "noncoherent" PLS
+    // qualifier.
+    bool supportsNoncoherent = false;
 
     // ShPixelLocalStorageType::ImageLoadStore only: Can we use rgba8/rgba8i/rgba8ui image formats?
     // Or do we need to manually pack and unpack from r32i/r32ui?

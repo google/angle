@@ -425,7 +425,7 @@ void Renderer::ensureCapsInitialized() const
     mNativeLimitations.multidrawEmulated   = false;
 
     // Enable EXT_base_instance
-    mNativeExtensions.baseInstanceEXT       = true;
+    mNativeExtensions.baseInstanceEXT = true;
 
     // Enable ANGLE_base_vertex_base_instance
     mNativeExtensions.baseVertexBaseInstanceANGLE              = true;
@@ -1437,6 +1437,8 @@ void Renderer::ensureCapsInitialized() const
                 mNativePLSOptions.fragmentSyncType = ShFragmentSynchronizationType::NotSupported;
             }
         }
+
+        mNativePLSOptions.supportsNoncoherent = true;
     }
 
     // If framebuffer fetch is to be enabled/used, cap maxColorAttachments/maxDrawBuffers to
