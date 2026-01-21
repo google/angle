@@ -134,7 +134,8 @@ LIBRARY_TYPES = ('shared_library', 'static_library')
 def flattened_target(target_name: str, descs: dict, stop_at_lib: bool =True) -> dict:
     flattened = dict(descs[target_name])
 
-    EXPECTED_TYPES = LIBRARY_TYPES + ('source_set', 'group', 'action')
+    EXPECTED_TYPES = LIBRARY_TYPES + ('source_set', 'group', 'action', 'action_foreach',
+                                      'executable')
 
     def pre(k):
         dep = descs[k]
