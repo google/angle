@@ -10,8 +10,32 @@
 main.star: lucicfg configuration for Angle's standalone builders.
 """
 
+load("@chromium-luci//builders.star", "os")
+load("@chromium-luci//chromium_luci.star", "chromium_luci")
+
 # Use LUCI Scheduler BBv2 names and add Scheduler realms configs.
 lucicfg.enable_experiment("crbug.com/1182002")
+
+lucicfg.config(
+    config_dir = "generated",
+    tracked_files = [
+        "builders/*/*/*",
+        "builders/*/*/*/*",
+        "builders/gn_args_locations.json",
+        "luci/commit-queue.cfg",
+        "luci/cr-buildbucket.cfg",
+        "luci/luci-logdog.cfg",
+        "luci/luci-milo.cfg",
+        "luci/luci-notify.cfg",
+        "luci/luci-scheduler.cfg",
+        "luci/project.cfg",
+        "luci/realms.cfg",
+        # TODO(crbug.com/475260235): Remove project.pyl once all builders are
+        # defined src-side.
+        "project.pyl",
+    ],
+    fail_on_warnings = True,
+)
 
 luci.project(
     name = "angle",
@@ -68,6 +92,45 @@ luci.project(
             ],
         ),
     ],
+)
+
+chromium_luci.configure_project(
+    name = "angle",
+    is_main = True,
+    platforms = {},
+)
+
+chromium_luci.configure_builder_health_indicators(
+    unhealthy_period_days = 7,
+    pending_time_p50_min = 20,
+)
+
+chromium_luci.configure_ci(
+    test_results_bq_dataset_name = "chromium",
+    resultdb_index_by_timestamp = True,
+)
+
+chromium_luci.configure_try(
+    test_results_bq_dataset_name = "chromium",
+    resultdb_index_by_timestamp = True,
+)
+
+chromium_luci.configure_builders(
+    os_dimension_overrides = {
+        os.LINUX_DEFAULT: os.LINUX_JAMMY,
+        os.MAC_DEFAULT: os.MAC_15,
+        os.WINDOWS_DEFAULT: os.WINDOWS_10,
+    },
+)
+
+chromium_luci.configure_per_builder_outputs(
+    root_dir = "builders",
+)
+
+chromium_luci.configure_recipe_experiments(
+    # This can be removed once all builders use the chromium-luci wrappers for
+    # creating builders instead of directly calling luci.builder().
+    require_builder_wrappers = False,
 )
 
 # Swarming permissions
