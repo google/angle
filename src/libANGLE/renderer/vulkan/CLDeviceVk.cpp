@@ -169,7 +169,23 @@ cl_ulong CLDeviceVk::getGlobalMemSize() const
 
 cl_ulong CLDeviceVk::getMaxMemAllocSize() const
 {
-    return std::min(getGlobalMemSize(), mRenderer->getMaxMemoryAllocationSize());
+    constexpr cl_ulong MB = 1024 * 1024UL;
+    constexpr cl_ulong GB = 1024 * MB;
+
+    const cl_ulong globalMemorySize = getGlobalMemSize();
+    const cl_ulong quarterGlobalMem = globalMemorySize >> 2;
+    const cl_ulong maxAllocSize     = mRenderer->getMaxMemoryAllocationSize();
+    const cl_ulong specMinimum      = gl::clamp(quarterGlobalMem, 32 * MB, 1 * GB);
+
+    if (maxAllocSize < specMinimum)
+    {  // vulkan device is not conformant
+        ERR() << "vk device (0x" << this
+              << ") CL_DEVICE_MAX_MEM_ALLOC_SIZE is less than CL spec minimum (i.e. "
+              << maxAllocSize << " < " << specMinimum << ")!";
+        return cl::kMaxAllocSentinel;
+    }
+
+    return specMinimum;
 }
 
 size_t CLDeviceVk::getImageMaxBufferSize() const
@@ -218,6 +234,7 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
     };
 
     mInfoULong = {
+        {cl::DeviceInfo::MaxMemAllocSize, getMaxMemAllocSize()},
         {cl::DeviceInfo::LocalMemSize, props.limits.maxComputeSharedMemorySize},
         {cl::DeviceInfo::SVM_Capabilities, 0ULL},
         {cl::DeviceInfo::QueueOnDeviceProperties, 0ULL},
@@ -334,9 +351,14 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
     info.maxWorkItemSizes.push_back(properties.limits.maxComputeWorkGroupSize[1]);
     info.maxWorkItemSizes.push_back(properties.limits.maxComputeWorkGroupSize[2]);
 
+    info.maxMemAllocSize = mInfoULong.at(cl::DeviceInfo::MaxMemAllocSize);
+    if (info.maxMemAllocSize == cl::kMaxAllocSentinel)
+    {  // got sentinel - skips/removes device via CLDeviceImpl::Info::isValid check
+        return info;
+    }
+
     // TODO(aannestrand) Update these hardcoded platform/device queries
     // http://anglebug.com/42266935
-    info.maxMemAllocSize  = getMaxMemAllocSize();
     info.memBaseAddrAlign = 1024;
 
     info.imageSupport = CL_TRUE;

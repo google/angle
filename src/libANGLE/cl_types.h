@@ -407,6 +407,8 @@ class Defer : public angle::Closure
     F mFunc;
 };
 
+constexpr cl_ulong kMaxAllocSentinel = 0;
+
 }  // namespace cl
 
 #endif  // ANGLE_ENABLE_CL
