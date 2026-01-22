@@ -304,7 +304,10 @@ luci.list_view_entry(
 )
 
 # Run other non-builder setup.
+exec("//gn_args.star")
 exec("//recipes.star")
 
 # Handle any other builders defined in other files.
+exec("//angle_v2_ci.star")
+exec("//angle_v2_try.star")
 exec("//legacy_builders.star")
