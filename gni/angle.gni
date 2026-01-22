@@ -2,8 +2,10 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//build/config/gclient_args.gni")
 import("//build_overrides/angle.gni")
+if (angle_has_build) {
+  import("//build/config/gclient_args.gni")
+}
 
 if (!defined(checkout_angle_cl_deps)) {
   checkout_angle_cl_deps = true
