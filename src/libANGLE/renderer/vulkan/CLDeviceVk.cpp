@@ -136,7 +136,7 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
         // TODO(aannestrand) Update these hardcoded platform/device queries
         // http://anglebug.com/42266935
         {cl::DeviceInfo::MaxParameterSize, 1024},
-        {cl::DeviceInfo::ProfilingTimerResolution, 1},
+        {cl::DeviceInfo::ProfilingTimerResolution, props.limits.timestampPeriod},
         {cl::DeviceInfo::PrintfBufferSize, 1024 * 1024},
         {cl::DeviceInfo::PreferredWorkGroupSizeMultiple, getWorkGroupSizeMultiple()},
     };
