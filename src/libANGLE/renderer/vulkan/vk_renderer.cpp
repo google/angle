@@ -6100,8 +6100,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // wrong index, according to the errata:
     // https://developer.arm.com/documentation/SDEN-3735689/0100/?lang=en
     //
-    // On Qualcomm drivers prior to 777, this feature had a bug.
-    // http://anglebug.com/381384988
+    // On Qualcomm proprietary drivers prior to 777, this feature had a bug
+    // (http://anglebug.com/381384988). Further data also shows that disable vertexInputDynamicState
+    // has less overall CPU overhead.
     //
     // Use of vertexInputDynamicState on PowerVR devices is disabled for performance reasons
     // (http://issuetracker.google.com/469320616).
@@ -6110,8 +6111,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mVertexInputDynamicStateFeatures.vertexInputDynamicState == VK_TRUE &&
             !(IsWindows() && isIntel) &&
             !(isARMProprietary && driverVersion < angle::VersionTriple(48, 0, 0)) &&
-            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 777, 0)) &&
-            !isPowerVR);
+            !isQualcommProprietary && !isPowerVR);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState,
                             mExtendedDynamicStateFeatures.extendedDynamicState == VK_TRUE &&
