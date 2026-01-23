@@ -444,6 +444,52 @@ TEST_P(DepthStencilTest, StencilDisable)
     glDisable(GL_STENCIL_TEST);
 }
 
+// Tests that stencil ref values work correctly with a scissor.
+TEST_P(DepthStencilTest, StencilRefWithScissor)
+{
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    bindColorStencilFBO();
+
+    // Clear color to black and stencil to 0
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearStencil(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Set scissor to the left half of the window.
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, getWindowWidth() / 2, getWindowHeight());
+
+    // In the scissored area, set stencil to 1 and draw red.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // The left half should be red, the right half should be black.
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() * 3 / 4, getWindowHeight() / 2, GLColor::black);
+
+    // Disable the scissor to show that the stencil test alone is responsible for the masking.
+    glDisable(GL_SCISSOR_TEST);
+
+    // Now, with scissor still enabled, draw a green quad where stencil is 1. This should
+    // succeed in the left half, turning it green.
+    glStencilFunc(GL_EQUAL, 1, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // The left half should be green, the right half should still be black.
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 2, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() * 3 / 4, getWindowHeight() / 2, GLColor::black);
+
+    glDisable(GL_STENCIL_TEST);
+}
+
 // Tests that clearing depth/stencil followed by draw works when the depth/stencil attachment is a
 // texture.
 TEST_P(DepthStencilTestES3, ClearThenDraw)

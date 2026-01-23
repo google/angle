@@ -132,7 +132,12 @@ angle::Result FramebufferWgpu::clearImpl(const gl::Context *context,
     const bool maskedClearColor =
         clearColor && (context->getState().getBlendStateExt().getColorMaskBits() !=
                        context->getState().getBlendStateExt().getAllColorMaskBits());
-    const bool clearWithDraw = scissoredClear || maskedClearColor;
+    GLuint allStencilBits =
+        angle::BitMask<GLuint>(context->getState().getDrawFramebuffer()->getStencilBitCount());
+    const bool maskedClearStencil =
+        clearStencil && ((context->getState().getDepthStencilState().stencilWritemask &
+                          allStencilBits) != allStencilBits);
+    const bool clearWithDraw = scissoredClear || maskedClearColor || maskedClearStencil;
 
     if (clearWithDraw)
     {
@@ -156,11 +161,15 @@ angle::Result FramebufferWgpu::clearImpl(const gl::Context *context,
             // draw.
             .clearColorValue =
                 clearColor ? std::optional<gl::ColorF>(clearColorValue) : std::nullopt,
-            .clearDepthValue    = std::nullopt,
-            .clearStencilValue  = std::nullopt,
-            .stencilWriteMask   = std::nullopt,
+            .clearDepthValue = std::nullopt,
+            .clearStencilValue =
+                clearStencil ? std::optional<uint32_t>(clearStencilValue) : std::nullopt,
+            .stencilWriteMask =
+                clearStencil ? std::optional<uint32_t>(
+                                   context->getState().getDepthStencilState().stencilWritemask)
+                             : std::nullopt,
             .colorTargets       = clearColor ? &mRenderTargetCache.getColors() : nullptr,
-            .depthStencilTarget = nullptr,
+            .depthStencilTarget = clearStencil ? mRenderTargetCache.getDepthStencil() : nullptr,
         };
 
         return contextWgpu->getUtils()->clear(contextWgpu, std::move(clearParams));

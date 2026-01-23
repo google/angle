@@ -486,6 +486,7 @@
 
 // New failures on MacBook Pro 2019 macOS 13.2.1
 42266544 MAC METAL AMD : ClearTest.ClearStencilMask/* = SKIP
+42266544 MAC METAL AMD : ClearTest.StencilScissoredClearThenFullClear/* = SKIP
 42266544 MAC METAL AMD : ClearTestES3.ClearBufferivStencilMask/* = SKIP
 42266544 MAC METAL AMD : ClearTestES3.RepeatedStencilClear/* = SKIP
 42266544 MAC METAL AMD : DepthWriteTest.Test/* = SKIP
@@ -1836,7 +1837,6 @@
 376553328 LINUX INTEL WGPU : BasicUniformUsageTest.* = SKIP
 // Can't use a uniform struct outside of uniform address space.
 376553328 WGPU : SimpleUniformTestES3.UseUniformStructOutsideOfUniformAddressSpace/* = SKIP
-42267012 WGPU : ClearTest.Stencil8Scissored/* = SKIP
 42267012 WGPU : ClearTest.Depth16Scissored/* = SKIP
 42267012 WGPU : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB* = SKIP
 42266974 WGPU : Texture2DTest.Tex* = SKIP
