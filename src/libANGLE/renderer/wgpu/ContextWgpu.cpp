@@ -70,6 +70,8 @@ constexpr angle::PackedEnumMap<webgpu::RenderPassClosureReason, const char *>
         {webgpu::RenderPassClosureReason::CopyTextureToTexture,
          "Render pass closed to copy texture"},
         {webgpu::RenderPassClosureReason::CopyImage, "Render pass closed to copy image"},
+        {webgpu::RenderPassClosureReason::ClearWithDraw,
+         "Render pass closed to clear with a draw call (e.g. for scissored or masked clears)"},
     }};
 
 }  // namespace
@@ -1406,16 +1408,7 @@ angle::Result ContextWgpu::handleDirtyScissor(DirtyBits::Iterator *dirtyBitsIter
     const gl::Extents &framebufferSize = framebuffer->getExtents();
     const gl::Rectangle framebufferRect(0, 0, framebufferSize.width, framebufferSize.height);
 
-    gl::Rectangle clampedScissor = framebufferRect;
-
-    // When the GL scissor test is disabled, set the scissor to the entire size of the framebuffer
-    if (mState.isScissorTestEnabled())
-    {
-        if (!ClipRectangle(mState.getScissor(), framebufferRect, &clampedScissor))
-        {
-            clampedScissor = gl::Rectangle(0, 0, 0, 0);
-        }
-    }
+    gl::Rectangle clampedScissor = ClipRectToScissor(mState, framebufferRect, false);
 
     bool isDefaultScissor = clampedScissor == framebufferRect;
     if (isDefaultScissor && !mCommandBuffer.hasSetScissorCommand())

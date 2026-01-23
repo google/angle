@@ -1836,11 +1836,9 @@
 376553328 LINUX INTEL WGPU : BasicUniformUsageTest.* = SKIP
 // Can't use a uniform struct outside of uniform address space.
 376553328 WGPU : SimpleUniformTestES3.UseUniformStructOutsideOfUniformAddressSpace/* = SKIP
-42267012 WGPU : ClearTest.*Scissor* = SKIP
-42267012 WGPU : ClearTest.*Mask* = SKIP
-42267012 WGPU : ClearTest.DefaultFramebuffer* = SKIP
+42267012 WGPU : ClearTest.Stencil8Scissored/* = SKIP
+42267012 WGPU : ClearTest.Depth16Scissored/* = SKIP
 42267012 WGPU : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB* = SKIP
-42267012 WGPU : ClearTest.ClearIssue*  = SKIP
 42266974 WGPU : Texture2DTest.Tex* = SKIP
 42266974 WGPU : Texture2DTest.Upload* = SKIP
 42266974 WGPU : Texture2DTest.*Superseding* = SKIP

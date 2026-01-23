@@ -122,6 +122,16 @@ class FramebufferWgpu : public FramebufferImpl
     bool flipY() const { return mFlipY; }
 
   private:
+    gl::ColorF getClearColorWithCorrectAlpha(const gl::ColorF &clearValue, size_t drawBufferIndex);
+
+    angle::Result clearImpl(const gl::Context *context,
+                            gl::DrawBufferMask clearColorBuffers,
+                            bool clearDepth,
+                            bool clearStencil,
+                            const gl::ColorF &clearColorValue,
+                            float clearDepthValue,
+                            uint32_t clearStencilValue);
+
     void mergeClearWithDeferredClears(const gl::ColorF &clearValue,
                                       gl::DrawBufferMask clearColorBuffers,
                                       float depthValue,
