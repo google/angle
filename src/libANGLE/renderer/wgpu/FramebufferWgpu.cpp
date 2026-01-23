@@ -249,7 +249,25 @@ angle::Result FramebufferWgpu::clearBufferfv(const gl::Context *context,
                                              GLint drawbuffer,
                                              const GLfloat *values)
 {
-    return angle::Result::Continue;
+    bool clearDepth       = false;
+    float clearDepthValue = 0.0;
+
+    gl::DrawBufferMask clearColorBuffers;
+    gl::ColorF clearColorValue;
+
+    if (buffer == GL_DEPTH)
+    {
+        clearDepth      = true;
+        clearDepthValue = values[0];
+    }
+    else
+    {
+        clearColorBuffers.set(drawbuffer);
+        clearColorValue = gl::ColorF(values[0], values[1], values[2], values[3]);
+    }
+
+    return clearImpl(context, clearColorBuffers, clearDepth, /*clearStencil=*/false,
+                     clearColorValue, clearDepthValue, /*clearStencilValue=*/0);
 }
 
 angle::Result FramebufferWgpu::clearBufferuiv(const gl::Context *context,
@@ -257,7 +275,15 @@ angle::Result FramebufferWgpu::clearBufferuiv(const gl::Context *context,
                                               GLint drawbuffer,
                                               const GLuint *values)
 {
-    return angle::Result::Continue;
+    gl::DrawBufferMask clearColorBuffers;
+    gl::ColorF clearColorValue;
+
+    clearColorBuffers.set(drawbuffer);
+    clearColorValue = gl::ColorF(gl::bitCast<float>(values[0]), gl::bitCast<float>(values[1]),
+                                 gl::bitCast<float>(values[2]), gl::bitCast<float>(values[3]));
+
+    return clearImpl(context, clearColorBuffers, /*clearDepth=*/false, /*clearStencil=*/false,
+                     clearColorValue, /*clearDepthValue=*/0.0, /*clearStencilValue=*/0);
 }
 
 angle::Result FramebufferWgpu::clearBufferiv(const gl::Context *context,
@@ -265,7 +291,26 @@ angle::Result FramebufferWgpu::clearBufferiv(const gl::Context *context,
                                              GLint drawbuffer,
                                              const GLint *values)
 {
-    return angle::Result::Continue;
+    bool clearStencil          = false;
+    uint32_t clearStencilValue = 0;
+
+    gl::DrawBufferMask clearColorBuffers;
+    gl::ColorF clearColorValue;
+
+    if (buffer == GL_STENCIL)
+    {
+        clearStencil      = true;
+        clearStencilValue = static_cast<uint32_t>(values[0]);
+    }
+    else
+    {
+        clearColorBuffers.set(drawbuffer);
+        clearColorValue = gl::ColorF(gl::bitCast<float>(values[0]), gl::bitCast<float>(values[1]),
+                                     gl::bitCast<float>(values[2]), gl::bitCast<float>(values[3]));
+    }
+
+    return clearImpl(context, clearColorBuffers, /*clearDepth=*/false, clearStencil,
+                     clearColorValue, /*clearDepthValue=*/0.0, clearStencilValue);
 }
 
 angle::Result FramebufferWgpu::clearBufferfi(const gl::Context *context,
@@ -274,7 +319,8 @@ angle::Result FramebufferWgpu::clearBufferfi(const gl::Context *context,
                                              GLfloat depth,
                                              GLint stencil)
 {
-    return angle::Result::Continue;
+    return clearImpl(context, gl::DrawBufferMask(), /*clearDepth=*/true, /*clearStencil=*/true,
+                     gl::ColorF(), depth, static_cast<uint32_t>(stencil));
 }
 
 angle::Result FramebufferWgpu::readPixels(const gl::Context *context,
@@ -459,6 +505,10 @@ angle::Result FramebufferWgpu::syncState(const gl::Context *context,
                 ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
                 break;
             case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
+                // The context needs to set the render pipeline to mask out the disabled draw
+                // buffers, or reset the color masks of the now-enabled draw buffers.
+                contextWgpu->updatePipelineColorMasks();
+                break;
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_WIDTH:
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_HEIGHT:
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_SAMPLES:
@@ -486,6 +536,13 @@ angle::Result FramebufferWgpu::syncState(const gl::Context *context,
 
                 ANGLE_TRY(
                     mRenderTargetCache.updateColorRenderTarget(context, mState, colorIndexGL));
+
+                // Window system framebuffer only have one color attachment and its property should
+                // never change unless via DIRTY_BIT_DRAW_BUFFERS bit.
+                if (!mState.isDefault())
+                {
+                    contextWgpu->updatePipelineColorMasks();
+                }
 
                 // Update the current color texture formats let the context know if this framebuffer
                 // is bound for draw

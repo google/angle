@@ -2239,6 +2239,15 @@
 // Can't use a uniform struct outside of uniform address space.
 376553328 WGPU : SimpleUniformTestES3.UseUniformStructOutsideOfUniformAddressSpace/* = SKIP
 42267012 WGPU : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB* = SKIP
+42267012 WGPU : ClearTestES3.TextureArrayRGB8/* = SKIP
+42267012 WGPU : ClearTestES3.ClearAndReadPixels3DTexture/* = SKIP
+42267012 WGPU : ClearTestES3.DrawAfterClearWithGaps/* = SKIP
+42267012 WGPU : ClearTestES3.*WithBlit*/* = SKIP
+// Some tests use too many attachments
+483423899 WGPU : ClearTestES3.ClearStencilAfterDraw/* = SKIP
+483423899 WGPU : ClearTestES3.ClearMaxAttachments*/* = SKIP
+// Shader compilation failure
+42267012 WGPU : ClearTestES3.MidRenderPassClearWithGaps/* = SKIP
 42266974 WGPU : Texture2DTest.Tex* = SKIP
 42266974 WGPU : Texture2DTest.Upload* = SKIP
 42266974 WGPU : Texture2DTest.*Superseding* = SKIP
