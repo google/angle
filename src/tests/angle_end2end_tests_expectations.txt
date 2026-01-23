@@ -1282,6 +1282,11 @@
 // GL program cache failure with shader images.
 42266268 WIN OPENGL : PixelLocalStorageTest.ProgramCache/* = SKIP
 
+479742973 OPENGL : SRGBFramebufferDefaultLinearTest.BlitFromSrgbFbo/* = SKIP
+479742973 NVIDIA GLES : SRGBFramebufferDefaultLinearTest.BlitFromSrgbFbo/* = SKIP
+479742973 INTEL OPENGL : SRGBFramebufferDefaultLinearTest.BlitToLinearFbo/* = SKIP
+479742973 INTEL OPENGL : SRGBFramebufferDefaultLinearTest.BlitToSrgbFbo/* = SKIP
+
 // Skip device OOM tests for Linux/NVIDIA.
 42266674 LINUX NVIDIA : VulkanMemoryTest.* = SKIP
 42266674 LINUX NVIDIA : UniformBufferMemoryTest.* = SKIP
