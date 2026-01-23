@@ -502,7 +502,6 @@
 
 // D3D
 42264944 WIN D3D9 : GLSLValidationTest.HandleExcessiveLoopBug/* = SKIP
-42264620 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 42264653 WIN D3D11 : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 // D3D does not support compressed textures where the base mip level is not a multiple of 4
 40644741 WIN D3D9 : DXT1CompressedTextureTest.NonBlockSizesMipLevels/* = SKIP
