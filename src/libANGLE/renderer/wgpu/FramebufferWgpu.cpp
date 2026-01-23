@@ -82,7 +82,7 @@ angle::Result FramebufferWgpu::clear(const gl::Context *context, GLbitfield mask
     {
         depthValue             = context->getState().getDepthClearValue();
         stencilValue           = static_cast<uint32_t>(context->getState().getStencilClearValue());
-        clearRenderPassDesc.depthStencilAttachment = webgpu::CreateNewDepthStencilAttachment(
+        clearRenderPassDesc.depthStencilAttachment = webgpu::CreateNewClearDepthStencilAttachment(
             depthValue, stencilValue, mRenderTargetCache.getDepthStencil()->getTextureView(),
             clearDepth, clearStencil);
     }
@@ -497,7 +497,7 @@ angle::Result FramebufferWgpu::flushDeferredClears(ContextWgpu *contextWgpu)
     if (mRenderTargetCache.getDepthStencil() &&
         (mDeferredClears.hasDepth() || mDeferredClears.hasStencil()))
     {
-        clearRenderPassDesc.depthStencilAttachment = webgpu::CreateNewDepthStencilAttachment(
+        clearRenderPassDesc.depthStencilAttachment = webgpu::CreateNewClearDepthStencilAttachment(
             mDeferredClears.getDepthValue(), mDeferredClears.getStencilValue(),
             mRenderTargetCache.getDepthStencil()->getTextureView(), !mDeferredClears.hasDepth(),
             !mDeferredClears.hasStencil());
@@ -555,8 +555,6 @@ angle::Result FramebufferWgpu::startNewRenderPass(ContextWgpu *contextWgpu)
     {
         webgpu::PackedRenderPassDepthStencilAttachment dsAttachment =
             webgpu::CreateNewDepthStencilAttachment(
-                contextWgpu->getState().getDepthClearValue(),
-                static_cast<uint32_t>(contextWgpu->getState().getStencilClearValue()),
                 mRenderTargetCache.getDepthStencil()->getTextureView(), mState.hasDepth(),
                 mState.hasStencil());
 
