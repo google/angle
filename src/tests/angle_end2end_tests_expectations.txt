@@ -1873,6 +1873,7 @@
 42266907 WGPU : DebugMarkerTest.Rendering/* = SKIP
 42266907 WGPU : DepthStencilFormatsTest.DepthBuffer16/* = SKIP
 42266907 WGPU : DepthStencilTest.StencilOnlyEmulatedWithPacked/* = SKIP
+42266907 WGPU : DepthStencilTestES3.ReadOnlyDepthStencilThenOutputDepthStencil/* = SKIP
 42266907 WGPU : FramebufferFormatsTest.RGB565Renderbuffer/* = SKIP
 42266907 WGPU : FramebufferFormatsTest.RGB8AndRGBA8Renderbuffers/* = SKIP
 42266907 WGPU : FramebufferFormatsTest.RGB8Renderbuffer/* = SKIP

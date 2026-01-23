@@ -10,6 +10,7 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include "test_utils/angle_test_configs.h"
 #include "test_utils/gl_raii.h"
 
 using namespace angle;
@@ -295,6 +296,90 @@ TEST_P(DepthStencilTest, StencilOnlyDrawThenCopyThenDraw)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
     ASSERT_GL_NO_ERROR();
+}
+
+// Tests that stencil ref values work correctly.
+TEST_P(DepthStencilTest, StencilRef)
+{
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(drawBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    bindColorStencilFBO();
+
+    // Clear color to black and stencil to 1
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearStencil(1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Draw red quad with stencil test that should pass
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 1, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // The color should now be red
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Draw blue quad with stencil test that should fail
+    glStencilFunc(GL_EQUAL, 2, 0xFF);
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // The color should still be red
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Draw green quad with stencil test that should still pass
+    glStencilFunc(GL_EQUAL, 1, 0xFF);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // The color should be green now
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glDisable(GL_STENCIL_TEST);
+}
+
+// Tests replacing the stencil value.
+TEST_P(DepthStencilTest, StencilReplace)
+{
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    bindColorStencilFBO();
+
+    // Clear color to black and stencil to 1.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearStencil(1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Draw a red quad, replacing the stencil value from 1 to 5.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 5, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // The color should now be red.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Draw a green quad, but only where the stencil value is 5.
+    glStencilFunc(GL_EQUAL, 5, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // The color should now be green, proving the stencil was replaced.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glDisable(GL_STENCIL_TEST);
 }
 
 // Tests that clearing depth/stencil followed by draw works when the depth/stencil attachment is a
@@ -742,6 +827,7 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     DepthStencilTestES3,
     ES3_VULKAN().enable(Feature::ForceFallbackFormat),
     ES3_VULKAN().enable(Feature::DisallowMixedDepthStencilLoadOpNoneAndLoad),
-    ES3_VULKAN_SWIFTSHADER().enable(Feature::ForceFallbackFormat));
+    ES3_VULKAN_SWIFTSHADER().enable(Feature::ForceFallbackFormat),
+    ES3_WEBGPU());
 
 }  // anonymous namespace

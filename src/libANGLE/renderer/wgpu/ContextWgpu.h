@@ -356,6 +356,7 @@ class ContextWgpu : public ContextImpl
         DIRTY_BIT_RENDER_PIPELINE_BINDING,
         DIRTY_BIT_VIEWPORT,
         DIRTY_BIT_SCISSOR,
+        DIRTY_BIT_STENCIL_REF,
         DIRTY_BIT_BLEND_CONSTANT,
 
         DIRTY_BIT_VERTEX_BUFFERS,
@@ -405,6 +406,7 @@ class ContextWgpu : public ContextImpl
     angle::Result handleDirtyRenderPipelineBinding(DirtyBits::Iterator *dirtyBitsIterator);
     angle::Result handleDirtyViewport(DirtyBits::Iterator *dirtyBitsIterator);
     angle::Result handleDirtyScissor(DirtyBits::Iterator *dirtyBitsIterator);
+    angle::Result handleDirtyStencilRef(DirtyBits::Iterator *dirtyBitsIterator);
     angle::Result handleDirtyBlendConstant(DirtyBits::Iterator *dirtyBitsIterator);
     angle::Result handleDirtyVertexBuffers(const gl::AttributesMask &slots,
                                            DirtyBits::Iterator *dirtyBitsIterator);

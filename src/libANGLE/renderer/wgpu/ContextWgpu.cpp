@@ -81,6 +81,7 @@ ContextWgpu::ContextWgpu(const gl::State &state, gl::ErrorSet *errorSet, Display
         DIRTY_BIT_RENDER_PIPELINE_BINDING,  // The pipeline needs to be bound for each renderpass
         DIRTY_BIT_VIEWPORT,
         DIRTY_BIT_SCISSOR,
+        DIRTY_BIT_STENCIL_REF,
         DIRTY_BIT_BLEND_CONSTANT,
         DIRTY_BIT_VERTEX_BUFFERS,
         DIRTY_BIT_INDEX_BUFFER,
@@ -759,7 +760,9 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_DEPTH_MASK:
                 break;
             case gl::state::DIRTY_BIT_STENCIL_TEST_ENABLED:
-                // Changing the state of stencil test affects both the front and back funcs.
+                // Changing the state of stencil test affects both the front and back funcs, which
+                // also dirties the stencil reference value (whcih won't be recorded in the render
+                // pass while stencil testing is disabled).
                 iter.setLaterBit(gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT);
                 iter.setLaterBit(gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK);
                 break;
@@ -770,6 +773,14 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
                 {
                     invalidateCurrentRenderPipeline();
                 }
+
+                if (mRenderPipelineDesc.setStencilReadMask(
+                        glState.getDepthStencilState().stencilMask))
+                {
+                    invalidateCurrentRenderPipeline();
+                }
+
+                mDirtyBits.set(DIRTY_BIT_STENCIL_REF);
                 break;
             case gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK:
                 if (mRenderPipelineDesc.setStencilBackFunc(
@@ -778,6 +789,13 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
                 {
                     invalidateCurrentRenderPipeline();
                 }
+
+                // Stencil back read mask and ref value are ignored here. WebGL and WebGPU do not
+                // support separate stencil read masks/write masks/ref values and so this backend
+                // sets `noSeparateStencilRefsAndMasks`, which will cause a validation error on draw
+                // if the stencil read masks/write masks/ref values differ between the front and the
+                // back. See https://registry.khronos.org/webgl/specs/latest/1.0/#6.12 and
+                // https://www.w3.org/TR/webgpu/#depth-stencil-state.
                 break;
             case gl::state::DIRTY_BIT_STENCIL_OPS_FRONT:
             {
@@ -815,6 +833,12 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
                 }
                 break;
             case gl::state::DIRTY_BIT_STENCIL_WRITEMASK_BACK:
+                // Stencil back write mask is ignored here. WebGL and WebGPU do not support
+                // separate stencil read masks/write masks/ref values and so this backend sets
+                // `noSeparateStencilRefsAndMasks`, which will cause a validation error on draw if
+                // the stencil read masks/write masks/ref values differ between the front and the
+                // back. See https://registry.khronos.org/webgl/specs/latest/1.0/#6.12 and
+                // https://www.w3.org/TR/webgpu/#depth-stencil-state.
                 break;
             case gl::state::DIRTY_BIT_CULL_FACE_ENABLED:
             case gl::state::DIRTY_BIT_CULL_FACE:
@@ -1247,6 +1271,10 @@ angle::Result ContextWgpu::setupDraw(const gl::Context *context,
                     ANGLE_TRY(handleDirtyScissor(&dirtyBitIter));
                     break;
 
+                case DIRTY_BIT_STENCIL_REF:
+                    ANGLE_TRY(handleDirtyStencilRef(&dirtyBitIter));
+                    break;
+
                 case DIRTY_BIT_BLEND_CONSTANT:
                     ANGLE_TRY(handleDirtyBlendConstant(&dirtyBitIter));
                     break;
@@ -1400,6 +1428,31 @@ angle::Result ContextWgpu::handleDirtyScissor(DirtyBits::Iterator *dirtyBitsIter
     ASSERT(mCurrentGraphicsPipeline);
     mCommandBuffer.setScissorRect(clampedScissor.x, clampedScissor.y, clampedScissor.width,
                                   clampedScissor.height);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextWgpu::handleDirtyStencilRef(DirtyBits::Iterator *dirtyBitsIterator)
+{
+    if (!mState.getDepthStencilState().stencilTest)
+    {
+        // The stencil ref doesn't matter when stencil testing is disabled.
+        return angle::Result::Continue;
+    }
+
+    const int refVal = mState.getStencilRef();
+
+    // This backend sets `noSeparateStencilRefsAndMasks`, and WebGPU does not
+    // support different ref values for front and back.
+    ASSERT(refVal == mState.getStencilBackRef());
+
+    const bool isDefaultStencilValue = refVal == 0;
+    if (!mCommandBuffer.hasSetStencilRefCommand() && isDefaultStencilValue)
+    {
+        // Each render pass has a default stencil reference set to zero. We can skip setting it.
+        return angle::Result::Continue;
+    }
+
+    mCommandBuffer.setStencilReference(mState.getStencilRef());
     return angle::Result::Continue;
 }
 
