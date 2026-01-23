@@ -2668,6 +2668,10 @@ fn _umain()
   (ANGLE_output_global.gl_Position_) += (textureSampleLevel(ANGLE_texture_samp2D, ANGLE_sampler_samp2D, (vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f)).xy / (vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f)).w, 0.0f));
   (ANGLE_output_global.gl_Position_) += (textureSampleLevel(ANGLE_texture_sampCube, ANGLE_sampler_sampCube, (vec3<f32>(0.0f, 0.0f, 0.0f)).xyz, 0.0f));
   ((ANGLE_output_global.gl_Position_).y) = (((ANGLE_output_global.gl_Position_).y) * ((unpack4x8snorm((ANGLEUniforms).flipXY)).w));
+  if (bool((((ANGLEUniforms).misc) >> (20u)) & (1u)))
+  {
+    ((ANGLE_output_global.gl_Position_).z) = ((((ANGLE_output_global.gl_Position_).z) + ((ANGLE_output_global.gl_Position_).w)) * (0.5f));
+  }
 }
 @vertex
 fn wgslMain() -> ANGLE_Output_Annotated
@@ -2751,6 +2755,10 @@ fn _umain()
 {
   (ANGLE_output_global._uoutMatArr) = (ANGLE_input_global._uinMat);
   ((ANGLE_output_global.gl_Position_).y) = (((ANGLE_output_global.gl_Position_).y) * ((unpack4x8snorm((ANGLEUniforms).flipXY)).w));
+  if (bool((((ANGLEUniforms).misc) >> (20u)) & (1u)))
+  {
+    ((ANGLE_output_global.gl_Position_).z) = ((((ANGLE_output_global.gl_Position_).z) + ((ANGLE_output_global.gl_Position_).w)) * (0.5f));
+  }
 }
 @vertex
 fn wgslMain(ANGLE_input_annotated : ANGLE_Input_Annotated) -> ANGLE_Output_Annotated

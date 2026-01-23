@@ -161,15 +161,16 @@ angle::Result FramebufferWgpu::clearImpl(const gl::Context *context,
             // draw.
             .clearColorValue =
                 clearColor ? std::optional<gl::ColorF>(clearColorValue) : std::nullopt,
-            .clearDepthValue = std::nullopt,
+            .clearDepthValue = clearDepth ? std::optional<float>(clearDepthValue) : std::nullopt,
             .clearStencilValue =
                 clearStencil ? std::optional<uint32_t>(clearStencilValue) : std::nullopt,
             .stencilWriteMask =
                 clearStencil ? std::optional<uint32_t>(
                                    context->getState().getDepthStencilState().stencilWritemask)
                              : std::nullopt,
-            .colorTargets       = clearColor ? &mRenderTargetCache.getColors() : nullptr,
-            .depthStencilTarget = clearStencil ? mRenderTargetCache.getDepthStencil() : nullptr,
+            .colorTargets = clearColor ? &mRenderTargetCache.getColors() : nullptr,
+            .depthStencilTarget =
+                clearDepth || clearStencil ? mRenderTargetCache.getDepthStencil() : nullptr,
         };
 
         return contextWgpu->getUtils()->clear(contextWgpu, std::move(clearParams));

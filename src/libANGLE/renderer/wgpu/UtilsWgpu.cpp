@@ -53,6 +53,8 @@ fn vs_main(in: VertexInput) -> VertexOutput {
 struct ClearParamsUniforms
 {
     float clearColor[4];
+    float clearDepth;
+    float padding[3];
 };
 
 const char *GetWgslTextureComponentTypeFromGlComponent(GLenum componentType)
@@ -230,6 +232,7 @@ webgpu::ShaderModuleHandle UtilsWgpu::getClearShaderModule(ContextWgpu *context,
 
     ss << R"(struct ClearUniforms {
     color : vec4<f32>,
+    depth : f32,
 };
 
 @group(0) @binding(0)
@@ -243,7 +246,7 @@ fn vs_main(@builtin(vertex_index) vertex_index : u32) -> @builtin(position) vec4
         vec2<f32>(3.0, -1.0),
         vec2<f32>(-1.0, 3.0)
     );
-    return vec4<f32>(pos[vertex_index], 0.0, 1.0);
+    return vec4<f32>(pos[vertex_index], clearUniforms.depth, 1.0);
 })";
 
     if (hasColorOutputs)
@@ -456,7 +459,8 @@ angle::Result UtilsWgpu::getClearPipeline(ContextWgpu *context,
         depthStencilState.format =
             webgpu::GetWgpuTextureFormatFromFormatID(key.depthStencilFormat.value());
 
-        depthStencilState.depthWriteEnabled = WGPUOptionalBool_False;
+        // Enable depth writing if clearing depth. The vertex shader will set the depth value.
+        depthStencilState.depthWriteEnabled = static_cast<WGPUOptionalBool>(key.clearDepth);
         depthStencilState.depthCompare      = WGPUCompareFunction_Always;
 
         if (key.clearStencil)
@@ -551,9 +555,10 @@ angle::Result UtilsWgpu::clear(ContextWgpu *context, ClearParams params)
             enabledDrawBuffer, params.colorMasks));
     }
 
-    if (params.clearStencilValue)
+    if (params.clearDepthValue || params.clearStencilValue)
     {
         key.depthStencilFormat = params.depthStencilTarget->getImage()->getActualFormatID();
+        key.clearDepth         = params.clearDepthValue.has_value();
         key.clearStencil       = params.clearStencilValue.has_value();
         key.stencilWriteMask   = params.stencilWriteMask;
     }
@@ -561,7 +566,7 @@ angle::Result UtilsWgpu::clear(ContextWgpu *context, ClearParams params)
     const CachedPipeline *cachedPipeline = nullptr;
     ANGLE_TRY(getClearPipeline(context, key, &cachedPipeline));
 
-    // Upload the clear color to a new GPU buffer for use as a uniform.
+    // Upload the clear color and depth clear value to a new GPU buffer for use as a uniform.
     // TODO(anglebug.com/474131922): cache this. Treat like program uniforms and use dynamic offset.
     webgpu::BufferHelper clearParamsUniformBuffer;
 
@@ -577,6 +582,7 @@ angle::Result UtilsWgpu::clear(ContextWgpu *context, ClearParams params)
         memcpy(&bufferData->clearColor,
                params.clearColorValue.value_or(gl::ColorF(0.0, 0.0, 0.0, 0.0)).data(),
                sizeof(bufferData->clearColor)));
+    bufferData->clearDepth = params.clearDepthValue.value_or(0.0);
 
     ANGLE_TRY(clearParamsUniformBuffer.unmap());
 
@@ -618,7 +624,16 @@ angle::Result UtilsWgpu::clear(ContextWgpu *context, ClearParams params)
 
         depthStencilAttachment.view = params.depthStencilTarget->getTextureView();
 
-        depthStencilAttachment.depthReadOnly = true;
+        if (params.clearDepthValue)
+        {
+            depthStencilAttachment.depthReadOnly = false;
+            depthStencilAttachment.depthLoadOp   = WGPULoadOp_Load;
+            depthStencilAttachment.depthStoreOp  = WGPUStoreOp_Store;
+        }
+        else
+        {
+            depthStencilAttachment.depthReadOnly = true;
+        }
 
         if (params.clearStencilValue)
         {
