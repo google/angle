@@ -5826,6 +5826,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         ExtensionFound(VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsSwapchainMutableFormat,
+        useVulkanSwapchain == UseVulkanSwapchain::Yes &&
+            mFeatures.supportsImageFormatList.enabled &&
+            ExtensionFound(VK_KHR_SWAPCHAIN_MUTABLE_FORMAT_EXTENSION_NAME, deviceExtensionNames));
+
+    ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsSamplerMirrorClampToEdge,
         ExtensionFound(VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME, deviceExtensionNames));
 

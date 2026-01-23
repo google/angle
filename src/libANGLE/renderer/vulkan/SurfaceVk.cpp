@@ -1747,6 +1747,29 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context)
         swapchainInfo.flags |= VK_SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT;
     }
 
+    // Enable mutable swapchain if VK_KHR_swapchain_mutable_format is supported
+    // This enables us to fully support GL_EXT_sRGB_write_control for default framebuffers
+    VkImageFormatListCreateInfo imageFormatListInfo = {};
+    vk::ImageHelper::ImageListFormats formatsList;
+    if (renderer->getFeatures().supportsSwapchainMutableFormat.enabled)
+    {
+        ASSERT(renderer->getFeatures().supportsImageFormatList.enabled);
+
+        // Request mutable image irrespective of intended image usage
+        VkImageUsageFlags unusedUsageFlags   = 0;
+        VkImageCreateFlags unusedCreateFlags = 0;
+        const void *pNext                    = nullptr;
+        pNext = vk::ImageHelper::DeriveCreateInfoPNext(context, unusedUsageFlags, actualFormatID,
+                                                       pNext, &imageFormatListInfo, &formatsList,
+                                                       &unusedCreateFlags);
+        if (pNext != nullptr)
+        {
+            ASSERT(imageFormatListInfo.viewFormatCount == vk::ImageHelper::kImageListFormatCount);
+            swapchainInfo.flags |= VK_SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR;
+            vk::AddToPNextChain(&swapchainInfo, &imageFormatListInfo);
+        }
+    }
+
     ASSERT(!mCompatiblePresentModes.empty());
     VkSwapchainPresentModesCreateInfoEXT compatibleModesInfo = {};
     if (renderer->getFeatures().supportsSwapchainMaintenance1.enabled &&

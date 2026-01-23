@@ -188,7 +188,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     void updateWriteColorspace(gl::SrgbWriteControlMode srgbWriteControlMode)
     {
         ASSERT(mImage && mImage->valid() && mImageViews);
-        mImageViews->updateSrgbWiteControlMode(*mImage, srgbWriteControlMode);
+        mImageViews->updateSrgbWriteControlMode(*mImage, srgbWriteControlMode);
     }
     bool hasColorspaceOverrideForRead() const
     {

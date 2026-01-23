@@ -3648,8 +3648,8 @@ class ImageViewHelper final : angle::NonCopyable
             updateColorspace(image);
         }
     }
-    void updateSrgbWiteControlMode(const ImageHelper &image,
-                                   gl::SrgbWriteControlMode srgbWriteControl) const
+    void updateSrgbWriteControlMode(const ImageHelper &image,
+                                    gl::SrgbWriteControlMode srgbWriteControl) const
     {
         if (mColorspaceState.srgbWriteControl != srgbWriteControl)
         {

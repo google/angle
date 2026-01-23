@@ -4469,6 +4469,119 @@ TEST_P(EGLSurfaceTest, ResizeAndBlitFramebufferANGLE)
         EXPECT_GL_NO_ERROR();
     }
 }
+
+class EGLWindowSurfaceColorspaceTestES3 : public EGLSurfaceTest
+{
+  public:
+    bool isFeatureEnabled(const angle::Feature feature)
+    {
+        const char *featureNameToLookup = GetFeatureName(feature);
+
+        EGLAttrib featureCount = -1;
+        eglQueryDisplayAttribANGLE(mDisplay, EGL_FEATURE_COUNT_ANGLE, &featureCount);
+
+        for (int index = 0; index < featureCount; index++)
+        {
+            const char *featureName = eglQueryStringiANGLE(mDisplay, EGL_FEATURE_NAME_ANGLE, index);
+            const char *featureStatus =
+                eglQueryStringiANGLE(mDisplay, EGL_FEATURE_STATUS_ANGLE, index);
+            ASSERT(featureName != nullptr);
+            ASSERT(featureStatus != nullptr);
+
+            if (strcmp(featureName, featureNameToLookup) == 0)
+            {
+                return strcmp(featureStatus, "enabled") == 0;
+            }
+        }
+        return false;
+    }
+};
+
+// Test interaction between GL_EXT_sRGB_write_control and default framebuffer
+TEST_P(EGLWindowSurfaceColorspaceTestES3, ToggleSrgbWriteControl)
+{
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+
+    ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_feature_control"));
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_gl_colorspace"));
+
+    // Choose an EGLConfig
+    constexpr EGLint kConfigAttributes[] = {EGL_RED_SIZE,     8,
+                                            EGL_GREEN_SIZE,   8,
+                                            EGL_BLUE_SIZE,    8,
+                                            EGL_ALPHA_SIZE,   8,
+                                            EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                                            EGL_NONE};
+    EGLint configCount                   = 0;
+    EGLConfig config                     = nullptr;
+    ANGLE_SKIP_TEST_IF(!eglChooseConfig(mDisplay, kConfigAttributes, &config, 1, &configCount));
+    ANGLE_SKIP_TEST_IF(configCount == 0);
+    ASSERT_NE(config, nullptr);
+
+    // Create a window surface with sRGB colorspace
+    std::vector<EGLint> sutfaceAttribs;
+    sutfaceAttribs.push_back(EGL_GL_COLORSPACE);
+    sutfaceAttribs.push_back(EGL_GL_COLORSPACE_SRGB);
+    sutfaceAttribs.push_back(EGL_NONE);
+    initializeSurfaceWithAttribs(config, sutfaceAttribs);
+    EXPECT_EGL_SUCCESS();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    // Create a context
+    initializeMainContext();
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(mContext, EGL_NO_CONTEXT);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    EXPECT_EGL_SUCCESS();
+
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_sRGB_write_control"));
+
+    constexpr angle::GLColor uniformColor(13, 54, 133, 255);
+    constexpr angle::GLColor linearColor = uniformColor;
+    constexpr angle::GLColor srgbColor(64, 127, 191, 255);
+
+    // Bind default framebuffer
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Clear and expect values in sRGB colorspace
+    glClearColor(uniformColor[0] / 255.0, uniformColor[1] / 255.0, uniformColor[2] / 255.0,
+                 uniformColor[3] / 255.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, srgbColor, 1.0);
+    EXPECT_GL_NO_ERROR();
+
+    // Disable encoding to sRGB colorspace.
+    glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+
+    // Clear again but this time expect values in linear colorspace
+    glClearColor(uniformColor[0] / 255.0, uniformColor[1] / 255.0, uniformColor[2] / 255.0,
+                 uniformColor[3] / 255.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+    if (isFeatureEnabled(Feature::SupportsSwapchainMutableFormat))
+    {
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, linearColor, 1.0);
+        EXPECT_GL_NO_ERROR();
+    }
+    else
+    {
+        // If mutable swapchains aren't supported, the rendered content is implementation defined.
+        // Either linear or sRGB color is acceptable.
+        GLColor pixelValue = GLColor::transparentBlack;
+        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelValue.data());
+        EXPECT_GL_NO_ERROR();
+        constexpr GLColor kThreshold(1, 1, 1, 1);
+        const bool isLinearColor = pixelValue.ExpectNear(linearColor, kThreshold);
+        const bool isSrgbColor   = pixelValue.ExpectNear(srgbColor, kThreshold);
+        EXPECT_TRUE(isLinearColor || isSrgbColor);
+    }
+}
+
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSingleBufferTest);
@@ -4511,3 +4624,6 @@ ANGLE_INSTANTIATE_TEST(EGLSurfaceTest3,
 #if defined(ANGLE_ENABLE_D3D11)
 ANGLE_INSTANTIATE_TEST(EGLSurfaceTestD3D11, WithNoFixture(ES2_D3D11()), WithNoFixture(ES3_D3D11()));
 #endif
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLWindowSurfaceColorspaceTestES3);
+ANGLE_INSTANTIATE_TEST(EGLWindowSurfaceColorspaceTestES3, WithNoFixture(ES3_VULKAN()));
