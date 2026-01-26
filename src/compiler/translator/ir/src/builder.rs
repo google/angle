@@ -1731,10 +1731,7 @@ impl Builder {
         length_variable: Option<VariableId>,
     ) {
         let type_id = self.ir.meta.get_variable(id).type_id;
-        let type_info = self.ir.meta.get_type(type_id);
-        debug_assert!(type_info.is_pointer());
-
-        let type_id = type_info.get_element_type_id().unwrap();
+        let type_id = self.ir.meta.get_pointee_type(type_id);
         let type_info = self.ir.meta.get_type(type_id);
         debug_assert!(type_info.is_unsized_array());
 
