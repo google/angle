@@ -3941,6 +3941,39 @@ void main()
     validateSuccess(GL_VERTEX_SHADER, kVS);
 }
 
+// Test that structs-with-samplers cannot be the result of the ternary operator.  The spec says for
+// the ternary operator that:
+//
+// > The second and third expressions cannot be opaque types, or there will be an error.
+//
+// While it doesn't specifically rule out structs with samplers in them, it's reasonable to also
+// disallow that.
+TEST_P(GLSLValidationTest_ES31, StructWithSamplerAsTernaryResult)
+{
+    constexpr char kVS[] = R"(#version 310 es
+struct A {
+    vec4 v;
+    sampler2D s;
+};
+struct B {
+    A a[2];
+};
+uniform B b1[3];
+uniform B b2[4];
+uniform bool choose;
+
+vec4 f(A a[2])
+{
+    return texture(a[0].s, vec2(0));
+}
+
+void main()
+{
+    gl_Position = f(choose ? b1[0].a : b2[0].a);
+})";
+    validateError(GL_VERTEX_SHADER, kVS, "'?:' : ternary operator is not allowed for opaque types");
+}
+
 // Test that gl_FragDepth can be marked invariant.
 TEST_P(GLSLValidationTest_ES3, FragDepthInvariant)
 {

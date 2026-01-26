@@ -9620,13 +9620,12 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
         return falseExpression;
     }
     const TBasicType basicType = trueExpression->getBasicType();
-    if (IsOpaqueType(basicType))
+    if (IsOpaqueType(basicType) || trueExpression->getType().isStructureContainingSamplers())
     {
         // ESSL 1.00 section 4.1.7
         // ESSL 3.00.6 section 4.1.7
-        // Opaque/sampler types are not allowed in most types of expressions, including ternary.
-        // Note that structs containing opaque types don't need to be checked as structs are
-        // forbidden below.
+        // Opaque/sampler types are not allowed in the ternary operator, including structs with
+        // samplers in them.
         error(loc, "ternary operator is not allowed for opaque types", "?:");
         return falseExpression;
     }
