@@ -1908,7 +1908,7 @@ mtl::RenderCommandEncoder *ContextMtl::getRenderPassCommandEncoder(const mtl::Re
     }
 
     endEncoding(false);
-
+    flushCommandBufferIfNeeded();
     ensureCommandBufferReady();
     ++mRenderPassesSinceFlush;
 
@@ -2004,6 +2004,7 @@ mtl::BlitCommandEncoder *ContextMtl::getBlitCommandEncoder()
         return &mBlitEncoder;
     }
 
+    flushCommandBufferIfNeeded();
     ensureCommandBufferReady();
 
     return &mBlitEncoder.restart();
@@ -2034,6 +2035,7 @@ mtl::ComputeCommandEncoder *ContextMtl::getComputeCommandEncoder()
         return &mComputeEncoder;
     }
 
+    flushCommandBufferIfNeeded();
     ensureCommandBufferReady();
 
     return &mComputeEncoder.restart();
@@ -2059,8 +2061,6 @@ mtl::ComputeCommandEncoder *ContextMtl::getIndexPreprocessingCommandEncoder()
 
 void ContextMtl::ensureCommandBufferReady()
 {
-    flushCommandBufferIfNeeded();
-
     if (!mCmdBuffer.ready())
     {
         mCmdBuffer.restart();
