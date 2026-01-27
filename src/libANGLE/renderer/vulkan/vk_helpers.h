@@ -1812,7 +1812,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void fragmentShadingRateImageRead(ImageHelper *image);
 
     bool usesImage(const ImageHelper &image) const;
-    bool startedAndUsesImageWithBarrier(const ImageHelper &image) const;
 
     angle::Result flushToPrimary(Context *context,
                                  CommandsState *commandsState,
@@ -3404,12 +3403,6 @@ class ImageHelper final : public Resource, public angle::Subject
 ANGLE_INLINE bool RenderPassCommandBufferHelper::usesImage(const ImageHelper &image) const
 {
     return image.usedByCommandBuffer(mQueueSerial);
-}
-
-ANGLE_INLINE bool RenderPassCommandBufferHelper::startedAndUsesImageWithBarrier(
-    const ImageHelper &image) const
-{
-    return mRenderPassStarted && image.getBarrierQueueSerial() == mQueueSerial;
 }
 
 // A vector of image views, such as one per level or one per layer.
