@@ -953,6 +953,11 @@ class GraphicsPipelineDesc final
                            GLuint divisor,
                            angle::FormatID format,
                            GLuint relativeOffset);
+    void updateVertexInputWithStride(ContextVk *contextVk,
+                                     GraphicsPipelineTransitionBits *transition,
+                                     uint32_t attribIndex,
+                                     GLuint stride);
+
     void setVertexShaderComponentTypes(gl::AttributesMask activeAttribLocations,
                                        gl::ComponentTypeMask componentTypeMask);
     void updateVertexShaderComponentTypes(GraphicsPipelineTransitionBits *transition,

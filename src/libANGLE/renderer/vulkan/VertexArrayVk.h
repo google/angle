@@ -49,7 +49,8 @@ class VertexArrayVk : public VertexArrayImpl
                                         GLsizei vertexOrIndexCount,
                                         GLsizei instanceCount,
                                         gl::DrawElementsType indexTypeOrInvalid,
-                                        const void *indices);
+                                        const void *indices,
+                                        gl::AttributesMask *strideDirtyAttribMaskOut);
 
     angle::Result handleLineLoop(ContextVk *contextVk,
                                  GLint firstVertex,

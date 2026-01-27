@@ -4250,6 +4250,17 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
     }
 }
 
+void GraphicsPipelineDesc::updateVertexInputWithStride(ContextVk *contextVk,
+                                                       GraphicsPipelineTransitionBits *transition,
+                                                       uint32_t attribIndex,
+                                                       GLuint stride)
+{
+    SetBitField(mVertexInput.vertex.strides[attribIndex], stride);
+    transition->set(
+        ANGLE_GET_INDEXED_TRANSITION_BIT(mVertexInput.vertex.strides, attribIndex,
+                                         sizeof(mVertexInput.vertex.strides[0]) * kBitsPerByte));
+}
+
 void GraphicsPipelineDesc::updateVertexInput(ContextVk *contextVk,
                                              GraphicsPipelineTransitionBits *transition,
                                              uint32_t attribIndex,
@@ -4281,10 +4292,7 @@ void GraphicsPipelineDesc::updateVertexInput(ContextVk *contextVk,
 
     if (!contextVk->getFeatures().useVertexInputBindingStrideDynamicState.enabled)
     {
-        SetBitField(mVertexInput.vertex.strides[attribIndex], stride);
-        transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(
-            mVertexInput.vertex.strides, attribIndex,
-            sizeof(mVertexInput.vertex.strides[0]) * kBitsPerByte));
+        updateVertexInputWithStride(contextVk, transition, attribIndex, stride);
     }
 }
 
