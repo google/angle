@@ -506,19 +506,25 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     const gl::TextureType textureType = AhbDescUsageToTextureType(ahbDescription, layerCount);
     const angle::FormatID actualRenderableFormatID = vkFormat->getActualRenderableImageFormatID();
 
+    // If VkExternalFormatANDROID::externalFormat is non-zero disallow format reinterpretability
+    vk::ImageFormatReinterpretability formatReinterpretability =
+        (externalFormat.externalFormat != 0)
+            ? vk::ImageFormatReinterpretability::None
+            : vk::ImageFormatReinterpretability::ColorspaceOverrides;
     VkImageFormatListCreateInfoKHR imageFormatListInfoStorage;
     vk::ImageHelper::ImageListFormats imageListFormatsStorage;
 
     const void *imageCreateInfoPNext = vk::ImageHelper::DeriveCreateInfoPNext(
-        displayVk, usage, actualRenderableFormatID, &externalMemoryImageCreateInfo,
-        &imageFormatListInfoStorage, &imageListFormatsStorage, &imageCreateFlags);
+        displayVk, actualRenderableFormatID, &externalMemoryImageCreateInfo,
+        &imageFormatListInfoStorage, &imageListFormatsStorage, formatReinterpretability,
+        &imageCreateFlags);
 
-    ANGLE_TRY(mImage->initExternal(displayVk, textureType, vkExtents,
-                                   vkFormat->getIntendedFormatID(), actualRenderableFormatID, 1,
-                                   usage, imageCreateFlags, vk::ImageAccess::ExternalPreInitialized,
-                                   imageCreateInfoPNext, gl::LevelIndex(0), mLevelCount, layerCount,
-                                   robustInitEnabled, hasProtectedContent(),
-                                   vk::TileMemory::Prohibited, conversionDesc, nullptr));
+    ANGLE_TRY(mImage->initExternal(
+        displayVk, textureType, vkExtents, vkFormat->getIntendedFormatID(),
+        actualRenderableFormatID, 1, usage, imageCreateFlags,
+        vk::ImageAccess::ExternalPreInitialized, imageCreateInfoPNext, gl::LevelIndex(0),
+        mLevelCount, layerCount, robustInitEnabled, hasProtectedContent(),
+        vk::TileMemory::Prohibited, conversionDesc, nullptr, formatReinterpretability));
 
     VkImportAndroidHardwareBufferInfoANDROID importHardwareBufferInfo = {};
     importHardwareBufferInfo.sType  = VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID;

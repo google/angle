@@ -652,6 +652,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     UniqueSerial mImageSiblingSerial;
 
     bool mRequiresMutableStorage;
+    vk::ImageFormatReinterpretability mFormatReinterpretability;
     vk::ImageFormatSupport mRequiredFormatSupport;
     bool mImmutableSamplerDirty;
 

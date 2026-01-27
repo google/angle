@@ -5666,7 +5666,7 @@ angle::Result ImageHelper::init(ErrorContext *context,
                         tileMemoryPreference,
                         deriveConversionDesc(context, format.getActualRenderableImageFormatID(),
                                              format.getIntendedFormatID()),
-                        nullptr);
+                        nullptr, ImageFormatReinterpretability::ColorspaceOverrides);
 }
 
 angle::Result ImageHelper::copyToBufferOneOff(ErrorContext *context,
@@ -5717,7 +5717,7 @@ angle::Result ImageHelper::initMSAASwapchain(ErrorContext *context,
                            usage, kVkImageCreateFlagsNone, ImageAccess::Undefined, nullptr,
                            firstLevel, mipLevels, layerCount, isRobustResourceInitEnabled,
                            hasProtectedContent, TileMemory::Prohibited, YcbcrConversionDesc{},
-                           nullptr));
+                           nullptr, ImageFormatReinterpretability::ColorspaceOverrides));
     if (rotatedAspectRatio)
     {
         std::swap(mExtents.width, mExtents.height);
@@ -5743,7 +5743,8 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
                                         bool hasProtectedContent,
                                         TileMemory tileMemoryPreference,
                                         YcbcrConversionDesc conversionDesc,
-                                        const void *compressionControl)
+                                        const void *compressionControl,
+                                        ImageFormatReinterpretability formatReinterpretability)
 {
     ASSERT(!valid());
     ASSERT(!IsAnySubresourceContentDefined(mVkImageContentDefined));
@@ -5782,8 +5783,8 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
     if (externalImageCreateInfo == nullptr)
     {
         imageCreateInfoPNext = DeriveCreateInfoPNext(
-            context, usage, actualFormatID, compressionControl, &imageFormatListInfoStorage,
-            &imageListFormatsStorage, &mCreateFlags);
+            context, actualFormatID, compressionControl, &imageFormatListInfoStorage,
+            &imageListFormatsStorage, formatReinterpretability, &mCreateFlags);
     }
     else
     {
@@ -5793,8 +5794,8 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
 
     mYcbcrConversionDesc = conversionDesc;
 
-    const angle::Format &actualFormat   = angle::Format::Get(actualFormatID);
-    VkFormat actualVkFormat             = GetVkFormatFromFormatID(renderer, actualFormatID);
+    const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
+    VkFormat actualVkFormat           = GetVkFormatFromFormatID(renderer, actualFormatID);
 
     ANGLE_TRACE_EVENT_INSTANT(
         "gpu.angle.texture_metrics", "ImageHelper::initExternal", "intended_format",
@@ -5825,15 +5826,15 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
     VkSampleCountFlagBits sampleCountFlagBits =
         gl_vk::GetSamples(mSamples, context->getFeatures().limitSampleCountTo2.enabled);
 
-    VkImageCreateInfo imageInfo = {};
-    imageInfo.sType             = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-    imageInfo.pNext             = imageCreateInfoPNext;
-    imageInfo.flags             = mCreateFlags;
-    imageInfo.imageType         = mImageType;
-    imageInfo.format            = actualVkFormat;
-    imageInfo.extent            = mExtents;
-    imageInfo.mipLevels         = mLevelCount;
-    imageInfo.arrayLayers       = mLayerCount;
+    VkImageCreateInfo imageInfo     = {};
+    imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.pNext                 = imageCreateInfoPNext;
+    imageInfo.flags                 = mCreateFlags;
+    imageInfo.imageType             = mImageType;
+    imageInfo.format                = actualVkFormat;
+    imageInfo.extent                = mExtents;
+    imageInfo.mipLevels             = mLevelCount;
+    imageInfo.arrayLayers           = mLayerCount;
     imageInfo.samples               = sampleCountFlagBits;
     imageInfo.tiling                = mTilingMode;
     imageInfo.usage                 = mRequestedUsage;
@@ -5904,35 +5905,46 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
 // static
 const void *ImageHelper::DeriveCreateInfoPNext(
     ErrorContext *context,
-    VkImageUsageFlags usage,
     angle::FormatID actualFormatID,
     const void *pNext,
     VkImageFormatListCreateInfoKHR *imageFormatListInfoStorage,
     std::array<VkFormat, kImageListFormatCount> *imageListFormatsStorage,
+    ImageFormatReinterpretability formatReinterpretability,
     VkImageCreateFlags *createFlagsOut)
 {
+    // Early-return if format reinterpretability was "None"
+    if (formatReinterpretability == ImageFormatReinterpretability::None)
+    {
+        return pNext;
+    }
+
+    // For full format reinterpretability just update the VkImage create flags and return
+    if (formatReinterpretability == ImageFormatReinterpretability::Full)
+    {
+        *createFlagsOut |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+        return pNext;
+    }
+
+    ASSERT(formatReinterpretability == ImageFormatReinterpretability::ColorspaceOverrides);
+
     // With the introduction of sRGB related GLES extensions any sample/render target could be
-    // respecified causing it to be interpreted in a different colorspace.  Create the VkImage
-    // accordingly.
+    // respecified causing it to be interpreted in a different colorspace.
     Renderer *renderer                = context->getRenderer();
     const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
-    angle::FormatID additionalFormat =
+    angle::FormatID additionalFormatID =
         actualFormat.isSRGB ? ConvertToLinear(actualFormatID) : ConvertToSRGB(actualFormatID);
-    (*imageListFormatsStorage)[0] = vk::GetVkFormatFromFormatID(renderer, actualFormatID);
-    (*imageListFormatsStorage)[1] = vk::GetVkFormatFromFormatID(renderer, additionalFormat);
 
-    // Don't add the format list if the storage bit is enabled for the image; framebuffer
-    // compression is already disabled in that case, and GL allows many formats to alias
-    // the original format for storage images (more than ANGLE provides in the format list).
+    // Allow linear and sRGB variants if image format list is supported and format features match
     if (renderer->getFeatures().supportsImageFormatList.enabled &&
-        renderer->haveSameFormatFeatureBits(actualFormatID, additionalFormat) &&
-        (usage & VK_IMAGE_USAGE_STORAGE_BIT) == 0)
+        renderer->haveSameFormatFeatureBits(actualFormatID, additionalFormatID))
     {
-        // Add VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
+        // Add the VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
         *createFlagsOut |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
 
-        // There is just 1 additional format we might use to create a VkImageView for this
-        // VkImage
+        // VkImageView can be created with either the linear or sRGB variant of the format
+        (*imageListFormatsStorage)[0] = vk::GetVkFormatFromFormatID(renderer, actualFormatID);
+        (*imageListFormatsStorage)[1] = vk::GetVkFormatFromFormatID(renderer, additionalFormatID);
+
         imageFormatListInfoStorage->sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
         imageFormatListInfoStorage->pNext = pNext;
         imageFormatListInfoStorage->viewFormatCount = kImageListFormatCount;
@@ -6864,7 +6876,7 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
                            ImageAccess::Undefined, nullptr, resolveImage.getFirstAllocatedLevel(),
                            kLevelCount, resolveImage.getLayerCount(), isRobustResourceInitEnabled,
                            hasProtectedContent, TileMemory::Prohibited, YcbcrConversionDesc{},
-                           nullptr));
+                           nullptr, ImageFormatReinterpretability::ColorspaceOverrides));
 
     // Remove the emulated format clear from the multisampled image if any.  There is one already
     // staged on the resolve image if needed.
@@ -6903,11 +6915,12 @@ angle::Result ImageHelper::initRgbDrawImageForYuvResolve(ErrorContext *context,
         (resolveImage.getCreateFlags() & VK_IMAGE_CREATE_PROTECTED_BIT) != 0;
     const VkImageCreateFlags createFlags = hasProtectedContent ? VK_IMAGE_CREATE_PROTECTED_BIT : 0;
 
-    ANGLE_TRY(initExternal(
-        context, gl::TextureType::_2D, resolveImage.getExtents(), formatID, formatID, 1, usageFlags,
-        createFlags, ImageAccess::Undefined, nullptr, resolveImage.getFirstAllocatedLevel(),
-        resolveImage.getLevelCount(), resolveImage.getLayerCount(), isRobustResourceInitEnabled,
-        hasProtectedContent, TileMemory::Prohibited, YcbcrConversionDesc{}, nullptr));
+    ANGLE_TRY(initExternal(context, gl::TextureType::_2D, resolveImage.getExtents(), formatID,
+                           formatID, 1, usageFlags, createFlags, ImageAccess::Undefined, nullptr,
+                           resolveImage.getFirstAllocatedLevel(), resolveImage.getLevelCount(),
+                           resolveImage.getLayerCount(), isRobustResourceInitEnabled,
+                           hasProtectedContent, TileMemory::Prohibited, YcbcrConversionDesc{},
+                           nullptr, ImageFormatReinterpretability::None));
 
     ASSERT(!hasEmulatedImageChannels());
 

@@ -233,7 +233,8 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
         displayVk, gl::TextureType::_2D, extents, vkFormat.getIntendedFormatID(),
         renderableFormatId, samples, usage, imageCreateFlags, vk::ImageAccess::Undefined, nullptr,
         gl::LevelIndex(0), 1, 1, isRobustResourceInitEnabled, hasProtectedContent,
-        vk::TileMemory::Prohibited, vk::YcbcrConversionDesc{}, nullptr));
+        vk::TileMemory::Prohibited, vk::YcbcrConversionDesc{}, nullptr,
+        vk::ImageFormatReinterpretability::ColorspaceOverrides));
 
     return angle::Result::Continue;
 }
@@ -1756,12 +1757,11 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context)
         ASSERT(renderer->getFeatures().supportsImageFormatList.enabled);
 
         // Request mutable image irrespective of intended image usage
-        VkImageUsageFlags unusedUsageFlags   = 0;
         VkImageCreateFlags unusedCreateFlags = 0;
         const void *pNext                    = nullptr;
-        pNext = vk::ImageHelper::DeriveCreateInfoPNext(context, unusedUsageFlags, actualFormatID,
-                                                       pNext, &imageFormatListInfo, &formatsList,
-                                                       &unusedCreateFlags);
+        pNext                                = vk::ImageHelper::DeriveCreateInfoPNext(
+            context, actualFormatID, pNext, &imageFormatListInfo, &formatsList,
+            vk::ImageFormatReinterpretability::ColorspaceOverrides, &unusedCreateFlags);
         if (pNext != nullptr)
         {
             ASSERT(imageFormatListInfo.viewFormatCount == vk::ImageHelper::kImageListFormatCount);
