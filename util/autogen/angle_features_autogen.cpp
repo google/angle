@@ -243,6 +243,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::MergeProgramPipelineCachesToGlobalCache, "mergeProgramPipelineCachesToGlobalCache"},
     {Feature::MrtPerfWorkaround, "mrtPerfWorkaround"},
     {Feature::MultisampleColorFormatShaderReadWorkaround, "multisampleColorFormatShaderReadWorkaround"},
+    {Feature::MultiviewViaViewportArray, "multiviewViaViewportArray"},
     {Feature::MutableMipmapTextureUpload, "mutableMipmapTextureUpload"},
     {Feature::NoperspectiveInterpolationBrokenWithPassthroughShaders, "noperspectiveInterpolationBrokenWithPassthroughShaders"},
     {Feature::OverrideSurfaceFormatRGB8ToRGBA8, "overrideSurfaceFormatRGB8ToRGBA8"},

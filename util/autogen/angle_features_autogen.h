@@ -243,6 +243,7 @@ enum class Feature
     MergeProgramPipelineCachesToGlobalCache,
     MrtPerfWorkaround,
     MultisampleColorFormatShaderReadWorkaround,
+    MultiviewViaViewportArray,
     MutableMipmapTextureUpload,
     NoperspectiveInterpolationBrokenWithPassthroughShaders,
     OverrideSurfaceFormatRGB8ToRGBA8,

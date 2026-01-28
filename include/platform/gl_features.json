@@ -852,6 +852,14 @@
                 "IMG drivers are unable to handle glClearTexImage with various format combinations."
             ],
             "issue": "https://crbug.com/465918231"
+        },
+        {
+            "name": "multiview_via_viewport_array",
+            "category": "Features",
+            "description": [
+                "Use ARB_shader_viewport_layer_array or NV_viewport_array2 to implement multiview"
+            ],
+            "issue": "http://anglebug.com/42260809"
         }
     ]
 }

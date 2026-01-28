@@ -656,6 +656,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo multiviewViaViewportArray = {
+        "multiviewViaViewportArray",
+        FeatureCategory::OpenGLFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

@@ -755,7 +755,6 @@ void GenerateCaps(const FunctionsGL *functions,
                   gl::Extensions *extensions,
                   gl::Limitations *limitations,
                   gl::Version *maxSupportedESVersion,
-                  MultiviewImplementationTypeGL *multiviewImplementationType,
                   ShPixelLocalStorageOptions *plsOptions)
 {
     // Start by assuming ES3.1 support and work down
@@ -1605,8 +1604,7 @@ void GenerateCaps(const FunctionsGL *functions,
     // TODO(crbug.com/776222): support Android and Apple devices.
     extensions->videoTextureWEBGL = !IsAndroid() && !IsApple();
 
-    if (functions->hasGLExtension("GL_ARB_shader_viewport_layer_array") ||
-        functions->hasGLExtension("GL_NV_viewport_array2"))
+    if (features.multiviewViaViewportArray.enabled)
     {
         extensions->multiviewOVR  = true;
         extensions->multiview2OVR = true;
@@ -1615,7 +1613,6 @@ void GenerateCaps(const FunctionsGL *functions,
         // GL_MAX_VIEWPORTS is guaranteed to be at least 16.
         const int maxViewports       = QuerySingleGLInt(functions, GL_MAX_VIEWPORTS);
         caps->maxViews               = static_cast<GLuint>(std::min(maxLayers, maxViewports));
-        *multiviewImplementationType = MultiviewImplementationTypeGL::NV_VIEWPORT_ARRAY2;
     }
 
     extensions->fboRenderMipmapOES = functions->isAtLeastGL(gl::Version(3, 0)) ||
@@ -2658,6 +2655,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, supportsFragmentShaderInterlockARB,
                             functions->isAtLeastGL(gl::Version(4, 5)) &&
                                 functions->hasGLExtension("GL_ARB_fragment_shader_interlock"));
+
+    ANGLE_FEATURE_CONDITION(features, multiviewViaViewportArray,
+                            functions->hasGLExtension("GL_ARB_shader_viewport_layer_array") ||
+                                functions->hasGLExtension("GL_NV_viewport_array2"));
 
     // EXT_shader_framebuffer_fetch
     ANGLE_FEATURE_CONDITION(features, supportsShaderFramebufferFetchEXT,

@@ -195,8 +195,7 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
         options->preTransformTextureCubeGradDerivatives = true;
     }
 
-    if (contextGL->getMultiviewImplementationType() ==
-        MultiviewImplementationTypeGL::NV_VIEWPORT_ARRAY2)
+    if (features.multiviewViaViewportArray.enabled)
     {
         options->initializeBuiltinsForInstancedMultiview = true;
         options->selectViewInNvGLSLVertexShader          = true;
