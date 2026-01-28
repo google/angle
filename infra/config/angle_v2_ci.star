@@ -13,7 +13,7 @@ load("//constants.star", "default_experiments", "siso")
 
 ci.defaults.set(
     executable = "recipe:angle_v2/angle_v2",
-    builder_group = "angle",
+    builder_group = "ci",
     bucket = "ci",
     pool = "luci.chromium.gpu.ci",
     triggered_by = ["main-poller"],

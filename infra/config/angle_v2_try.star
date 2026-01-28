@@ -10,7 +10,7 @@ load("//constants.star", "default_experiments", "siso")
 
 try_.defaults.set(
     executable = "recipe:angle_v2/angle_v2_trybot",
-    builder_group = "angle",
+    builder_group = "try",
     bucket = "try",
     pool = "luci.chromium.gpu.try",
     builderless = True,
