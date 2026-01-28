@@ -6863,6 +6863,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             mPreferredVectorWidthHalf = 8;
         }
     }
+
+    // This feature flag shows reduced CPU instruction.
+    ANGLE_FEATURE_CONDITION(&mFeatures, enableMergeClientAttribBuffer, true);
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}
