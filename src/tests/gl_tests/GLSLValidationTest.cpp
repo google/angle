@@ -6946,6 +6946,348 @@ void main()
     }
 }
 
+class GLSLValidationMultiviewTest_ES3 : public GLSLValidationTest_ES3
+{
+  protected:
+    std::string makeShader(const char *extension, const char *shader)
+    {
+        std::stringstream src;
+        src << R"(#version 300 es
+#extension )"
+            << extension << " : require\n"
+            << shader;
+        return src.str();
+    }
+};
+
+// Make sure either both OVR_multiview and OVR_multiview2 are exposed or neither are.
+TEST_P(GLSLValidationMultiviewTest_ES3, MultiviewBothOrNone)
+{
+    EXPECT_EQ(IsGLExtensionEnabled("GL_OVR_multiview2"), IsGLExtensionEnabled("GL_OVR_multiview"));
+}
+
+// Invalid combination of non-matching num_views declarations.
+TEST_P(GLSLValidationMultiviewTest_ES3, InvalidNumViewsMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kVS[]     = R"(
+layout(num_views = 2) in;
+layout(num_views = 1) in;
+void main()
+{
+    gl_Position.x = (gl_ViewID_OVR == 0u) ? 1.0 : 0.0;
+    gl_Position.yzw = vec3(0, 0, 1);
+})";
+    constexpr char kExpect[] = "'layout' : Number of views does not match the previous declaration";
+
+    validateError(GL_VERTEX_SHADER, makeShader("GL_OVR_multiview", kVS).c_str(), kExpect);
+    validateError(GL_VERTEX_SHADER, makeShader("GL_OVR_multiview2", kVS).c_str(), kExpect);
+}
+
+// Invalid value zero for num_views.
+TEST_P(GLSLValidationMultiviewTest_ES3, InvalidNumViewsZero)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kVS[]     = R"(
+layout(num_views = 0) in;
+void main()
+{
+    gl_Position.x = (gl_ViewID_OVR == 0u) ? 1.0 : 0.0;
+    gl_Position.yzw = vec3(0, 0, 1);
+})";
+    constexpr char kExpect[] = "'0' : out of range: num_views must be positive";
+
+    validateError(GL_VERTEX_SHADER, makeShader("GL_OVR_multiview", kVS).c_str(), kExpect);
+    validateError(GL_VERTEX_SHADER, makeShader("GL_OVR_multiview2", kVS).c_str(), kExpect);
+}
+
+// Too large value for num_views.
+TEST_P(GLSLValidationMultiviewTest_ES3, InvalidNumViewsGreaterThanMax)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    GLint maxViews = 0;
+    glGetIntegerv(GL_MAX_VIEWS_OVR, &maxViews);
+    // Max views is typically 2 or 4.
+    ANGLE_SKIP_TEST_IF(maxViews >= 50);
+
+    constexpr char kVS[]     = R"(
+layout(num_views = 50) in;
+void main()
+{
+    gl_Position.x = (gl_ViewID_OVR == 0u) ? 1.0 : 0.0;
+    gl_Position.yzw = vec3(0, 0, 1);
+})";
+    constexpr char kExpect[] = "'layout' : num_views greater than the value of GL_MAX_VIEWS_OVR";
+
+    validateError(GL_VERTEX_SHADER, makeShader("GL_OVR_multiview", kVS).c_str(), kExpect);
+    validateError(GL_VERTEX_SHADER, makeShader("GL_OVR_multiview2", kVS).c_str(), kExpect);
+}
+
+// Test that GL_OVR_multiview cannot be used in an ESSL 1.00 vertex shader.
+TEST_P(GLSLValidationMultiviewTest_ES3, InvalidShaderVersion)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kVS1[] = R"(#extension GL_OVR_multiview : require
+void main()
+{
+})";
+    constexpr char kVS2[] = R"(#extension GL_OVR_multiview2 : require
+void main()
+{
+})";
+
+    validateError(GL_VERTEX_SHADER, kVS1, "'GL_OVR_multiview' : extension is not supported");
+    validateError(GL_VERTEX_SHADER, kVS2, "'GL_OVR_multiview2' : extension is not supported");
+}
+
+// Valid use of gl_ViewID_OVR.
+TEST_P(GLSLValidationMultiviewTest_ES3, ViewIDUsed)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kVS[] = R"(
+layout(num_views = 2) in;
+layout(num_views = 2) in;  // Duplicated on purpose
+in vec4 pos;
+out float myOutput;
+void main()
+{
+    if (gl_ViewID_OVR == 0u)
+    {
+        gl_Position = pos;
+        myOutput = 1.0;
+    }
+    else
+    {
+        gl_Position = pos + vec4(1.0, 0.0, 0.0, 0.0);
+        myOutput = 2.0;
+    }
+    gl_Position += (gl_ViewID_OVR == 0u) ? 1.0 : 0.0;
+})";
+
+    validateSuccess(GL_VERTEX_SHADER, makeShader("GL_OVR_multiview", kVS).c_str());
+    validateSuccess(GL_VERTEX_SHADER, makeShader("GL_OVR_multiview2", kVS).c_str());
+}
+
+// Read gl_FragCoord in a OVR_multiview2 fragment shader.
+TEST_P(GLSLValidationMultiviewTest_ES3, ReadOfFragCoord)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kFS[] = R"(
+precision highp float;
+out vec4 outColor;
+void main()
+{
+    outColor = vec4(gl_FragCoord.xy, 0, 1);
+})";
+
+    validateSuccess(GL_FRAGMENT_SHADER, makeShader("GL_OVR_multiview", kFS).c_str());
+    validateSuccess(GL_FRAGMENT_SHADER, makeShader("GL_OVR_multiview2", kFS).c_str());
+}
+
+// Read gl_ViewID_OVR in an OVR_multiview2 fragment shader.
+TEST_P(GLSLValidationMultiviewTest_ES3, ReadOfViewID)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kFS[] = R"(
+precision highp float;
+out vec4 outColor;
+void main()
+{
+    outColor = vec4(gl_ViewID_OVR, 0, 0, 1);
+})";
+
+    validateSuccess(GL_FRAGMENT_SHADER, makeShader("GL_OVR_multiview", kFS).c_str());
+    validateSuccess(GL_FRAGMENT_SHADER, makeShader("GL_OVR_multiview2", kFS).c_str());
+}
+
+// Correct use of GL_OVR_multiview macro.
+TEST_P(GLSLValidationMultiviewTest_ES3, UseOfExtensionMacro)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kVS1[] = R"(#version 300 es
+#ifdef GL_OVR_multiview
+#if (GL_OVR_multiview == 1)
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+}
+#endif
+#endif)";
+
+    constexpr char kVS2[] = R"(#version 300 es
+#ifdef GL_OVR_multiview2
+#if (GL_OVR_multiview2 == 1)
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+}
+#endif
+#endif)";
+
+    validateSuccess(GL_VERTEX_SHADER, kVS1);
+    validateSuccess(GL_VERTEX_SHADER, kVS2);
+}
+
+// Test that gl_ViewID_OVR can't be used as an l-value.
+TEST_P(GLSLValidationMultiviewTest_ES3, ViewIdAsLValue)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kVS[]     = R"(
+layout(num_views = 2) in;
+void foo(out uint u)
+{
+    u = 3u;
+}
+void main()
+{
+    foo(gl_ViewID_OVR);
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+})";
+    constexpr char kExpect[] = "l-value required (can't modify gl_ViewID_OVR \"gl_ViewID_OVR\")";
+
+    validateError(GL_VERTEX_SHADER, makeShader("GL_OVR_multiview", kVS).c_str(), kExpect);
+    validateError(GL_VERTEX_SHADER, makeShader("GL_OVR_multiview2", kVS).c_str(), kExpect);
+}
+
+// Test that compiling an ESSL 1.00 shader with multiview support fails.
+TEST_P(GLSLValidationMultiviewTest_ES3, ESSL1Shader)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kVS1[] = R"(#extension GL_OVR_multiview : require
+layout(num_views = 2) in;
+void main()
+{
+    if (gl_ViewID_OVR == 0)
+    {
+        gl_Position = vec4(-1.0, 0.0, 0.0, 1.0);
+    }
+    else
+    {
+        gl_Position = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+})";
+    constexpr char kVS2[] = R"(#extension GL_OVR_multiview2 : require
+layout(num_views = 2) in;
+void main()
+{
+    if (gl_ViewID_OVR == 0)
+    {
+        gl_Position = vec4(-1.0, 0.0, 0.0, 1.0);
+    }
+    else
+    {
+        gl_Position = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+})";
+
+    validateError(GL_VERTEX_SHADER, kVS1, "'GL_OVR_multiview' : extension is not supported");
+    validateError(GL_VERTEX_SHADER, kVS2, "'GL_OVR_multiview2' : extension is not supported");
+}
+
+// Test that compiling an ESSL 1.00 shader with an unsupported global layout qualifier fails.
+TEST_P(GLSLValidationMultiviewTest_ES3, ESSL1ShaderUnsupportedGlobalLayoutQualifier)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kVS1[] = R"(#extension GL_OVR_multiview : require
+layout(num_views = 2) in;
+layout(std140) uniform;
+void main()
+{
+    gl_Position = vec4(gl_ViewID_OVR == 0 ? -1.0 : 1.0, 0.0, 0.0, 1.0);
+})";
+    constexpr char kVS2[] = R"(#extension GL_OVR_multiview2 : require
+layout(num_views = 2) in;
+layout(std140) uniform;
+void main()
+{
+    gl_Position = vec4(gl_ViewID_OVR == 0 ? -1.0 : 1.0, 0.0, 0.0, 1.0);
+})";
+
+    validateError(GL_VERTEX_SHADER, kVS1, "'GL_OVR_multiview' : extension is not supported");
+    validateError(GL_VERTEX_SHADER, kVS2, "'GL_OVR_multiview2' : extension is not supported");
+}
+
+// Test that compiling an ESSL 1.00 vertex shader with an unsupported input storage qualifier fails.
+TEST_P(GLSLValidationMultiviewTest_ES3, ESSL1ShaderUnsupportedInputStorageQualifier)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kVS1[] = R"(#extension GL_OVR_multiview : require
+layout(num_views = 2) in;
+in vec4 pos;
+void main()
+{
+    gl_Position = vec4(gl_ViewID_OVR == 0 ? -1.0 : 1.0, 0.0, 0.0, 1.0);
+})";
+    constexpr char kVS2[] = R"(#extension GL_OVR_multiview2 : require
+layout(num_views = 2) in;
+in vec4 pos;
+void main()
+{
+    gl_Position = vec4(gl_ViewID_OVR == 0 ? -1.0 : 1.0, 0.0, 0.0, 1.0);
+})";
+
+    validateError(GL_VERTEX_SHADER, kVS1, "'GL_OVR_multiview' : extension is not supported");
+    validateError(GL_VERTEX_SHADER, kVS2, "'GL_OVR_multiview2' : extension is not supported");
+}
+
+// Test that compiling an ESSL 1.00 fragment shader with an unsupported input storage qualifier
+// fails.
+TEST_P(GLSLValidationMultiviewTest_ES3, ESSL1ShaderUnsupportedInStorageQualifier)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview"));
+
+    constexpr char kFS1[] = R"(#extension GL_OVR_multiview : require
+precision highp float;
+in vec4 color;
+void main()
+{
+    gl_FragColor = color + (gl_ViewID_OVR == 0 ? vec4(0) : vec4(1));
+})";
+    constexpr char kFS2[] = R"(#extension GL_OVR_multiview2 : require
+precision highp float;
+in vec4 color;
+void main()
+{
+    gl_FragColor = color + (gl_ViewID_OVR == 0 ? vec4(0) : vec4(1));
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS1, "'GL_OVR_multiview' : extension is not supported");
+    validateError(GL_FRAGMENT_SHADER, kFS2, "'GL_OVR_multiview2' : extension is not supported");
+}
+
+// Test that GL_OVR_multiview is not defined by the preprocessor for WebGL spec shader.
+// Test that GL_OVR_multiview2 is defined by the preprocessor for WebGL spec shader.
+TEST_P(WebGL2GLSLValidationTest, OnlyMultiview2)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OVR_multiview2"));
+
+    constexpr char kShader[] = R"(#version 300 es
+#extension GL_OVR_multiview2 : require
+#ifdef GL_OVR_multiview
+    #error legacy GL_OVR_multiview support must be forbidden
+#endif
+#ifndef GL_OVR_multiview2
+    #error GL_OVR_multiview2 support must be enabled
+#endif
+void main()
+{
+})";
+    validateSuccess(GL_VERTEX_SHADER, kShader);
+    validateSuccess(GL_FRAGMENT_SHADER, kShader);
+}
+
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -7005,3 +7347,6 @@ ANGLE_INSTANTIATE_TEST_ES3(GLSLValidationExtensionDirectiveTest_ES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationExtensionDirectiveTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31(GLSLValidationExtensionDirectiveTest_ES31);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationMultiviewTest_ES3);
+ANGLE_INSTANTIATE_TEST_ES3(GLSLValidationMultiviewTest_ES3);
