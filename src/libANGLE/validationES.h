@@ -508,7 +508,6 @@ bool ValidateGetBufferParameterBase(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     BufferBinding target,
                                     GLenum pname,
-                                    bool pointerVersion,
                                     GLsizei *numParams);
 
 bool ValidateGetProgramivBase(const Context *context,

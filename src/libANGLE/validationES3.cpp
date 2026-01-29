@@ -3288,7 +3288,7 @@ bool ValidateCopyBufferSubData(const Context *context,
 {
     if (!context->isValidBufferBinding(readTarget) || !context->isValidBufferBinding(writeTarget))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
         return false;
     }
 
@@ -4629,7 +4629,7 @@ bool ValidateGetBufferParameteri64v(const Context *context,
                                     GLenum pname,
                                     const GLint64 *params)
 {
-    return ValidateGetBufferParameterBase(context, entryPoint, target, pname, false, nullptr);
+    return ValidateGetBufferParameterBase(context, entryPoint, target, pname, nullptr);
 }
 
 bool ValidateGetSamplerParameterfv(const Context *context,

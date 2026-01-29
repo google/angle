@@ -387,7 +387,7 @@ ANGLE_INLINE bool ValidateGetBufferParameteriv(const Context *context,
                                                GLenum pname,
                                                const GLint *params)
 {
-    return ValidateGetBufferParameterBase(context, entryPoint, target, pname, false, nullptr);
+    return ValidateGetBufferParameterBase(context, entryPoint, target, pname, nullptr);
 }
 
 ANGLE_INLINE bool ValidateGetRenderbufferParameteriv(const Context *context,
@@ -534,7 +534,7 @@ ANGLE_INLINE bool ValidateBindBuffer(const Context *context,
 {
     if (!context->isValidBufferBinding(target))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, err::kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, err::kInvalidBufferTarget);
         return false;
     }
 

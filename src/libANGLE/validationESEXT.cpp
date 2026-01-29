@@ -2670,7 +2670,7 @@ bool ValidateBufferStorageEXT(const Context *context,
 {
     if (!context->isValidBufferBinding(targetPacked))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
         return false;
     }
 

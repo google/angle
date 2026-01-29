@@ -5209,7 +5209,7 @@ bool ValidateGetBufferPointervBase(const Context *context,
 
     if (!context->isValidBufferBinding(target))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
         return false;
     }
 
@@ -5246,7 +5246,7 @@ bool ValidateUnmapBufferBase(const Context *context,
 {
     if (!context->isValidBufferBinding(target))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
         return false;
     }
 
@@ -5270,7 +5270,7 @@ bool ValidateMapBufferRangeBase(const Context *context,
 {
     if (!context->isValidBufferBinding(target))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
         return false;
     }
 
@@ -5396,7 +5396,7 @@ bool ValidateFlushMappedBufferRangeBase(const Context *context,
 
     if (!context->isValidBufferBinding(target))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
         return false;
     }
 
@@ -5868,7 +5868,7 @@ bool ValidateGetBufferParameterivRobustANGLE(const Context *context,
 
     GLsizei numParams = 0;
 
-    if (!ValidateGetBufferParameterBase(context, entryPoint, target, pname, false, &numParams))
+    if (!ValidateGetBufferParameterBase(context, entryPoint, target, pname, &numParams))
     {
         return false;
     }
@@ -5903,7 +5903,7 @@ bool ValidateGetBufferParameteri64vRobustANGLE(const Context *context,
         return false;
     }
 
-    if (!ValidateGetBufferParameterBase(context, entryPoint, target, pname, false, &numParams))
+    if (!ValidateGetBufferParameterBase(context, entryPoint, target, pname, &numParams))
     {
         return false;
     }
@@ -6667,7 +6667,6 @@ bool ValidateGetBufferParameterBase(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     BufferBinding target,
                                     GLenum pname,
-                                    bool pointerVersion,
                                     GLsizei *numParams)
 {
     if (numParams)
@@ -6677,7 +6676,7 @@ bool ValidateGetBufferParameterBase(const Context *context,
 
     if (!context->isValidBufferBinding(target))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
         return false;
     }
 
@@ -6711,14 +6710,6 @@ bool ValidateGetBufferParameterBase(const Context *context,
                 !extensions.mapBufferRangeEXT)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
-                return false;
-            }
-            break;
-
-        case GL_BUFFER_MAP_POINTER:
-            if (!pointerVersion)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidMapPointerQuery);
                 return false;
             }
             break;

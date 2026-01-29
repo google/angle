@@ -3103,7 +3103,7 @@ bool ValidateMapBufferOES(const Context *context,
 {
     if (!context->isValidBufferBinding(target))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
         return false;
     }
 
@@ -3663,7 +3663,7 @@ bool ValidateBufferData(const Context *context,
 
     if (!context->isValidBufferBinding(target))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
         return false;
     }
 
@@ -3725,7 +3725,7 @@ bool ValidateBufferSubData(const Context *context,
 
     if (!context->isValidBufferBinding(target))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
         return false;
     }
 
