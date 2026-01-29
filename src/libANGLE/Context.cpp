@@ -2668,19 +2668,19 @@ void Context::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     }
 }
 
-void Context::getBufferParameteriv(BufferBinding target, GLenum pname, GLint *params)
+void Context::getBufferParameteriv(BufferBinding target, BufferParam pnamePacked, GLint *params)
 {
     Buffer *buffer = mState.getTargetBuffer(target);
-    QueryBufferParameteriv(buffer, pname, params);
+    QueryBufferParameteriv(buffer, pnamePacked, params);
 }
 
 void Context::getBufferParameterivRobust(BufferBinding target,
-                                         GLenum pname,
+                                         BufferParam pnamePacked,
                                          GLsizei paramCount,
                                          GLsizei *length,
                                          GLint *params)
 {
-    getBufferParameteriv(target, pname, params);
+    getBufferParameteriv(target, pnamePacked, params);
 }
 
 void Context::getFramebufferAttachmentParameteriv(GLenum target,
@@ -7981,19 +7981,19 @@ void Context::getInteger64vRobust(GLenum pname, GLsizei paramCount, GLsizei *len
     }
 }
 
-void Context::getBufferParameteri64v(BufferBinding target, GLenum pname, GLint64 *params)
+void Context::getBufferParameteri64v(BufferBinding target, BufferParam pnamePacked, GLint64 *params)
 {
     Buffer *buffer = mState.getTargetBuffer(target);
-    QueryBufferParameteri64v(buffer, pname, params);
+    QueryBufferParameteri64v(buffer, pnamePacked, params);
 }
 
 void Context::getBufferParameteri64vRobust(BufferBinding target,
-                                           GLenum pname,
+                                           BufferParam pnamePacked,
                                            GLsizei paramCount,
                                            GLsizei *length,
                                            GLint64 *params)
 {
-    getBufferParameteri64v(target, pname, params);
+    getBufferParameteri64v(target, pnamePacked, params);
 }
 
 void Context::genSamplers(GLsizei count, SamplerID *samplers)

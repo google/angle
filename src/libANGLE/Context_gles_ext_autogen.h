@@ -483,8 +483,8 @@
     /* GL_ANGLE_rgbx_internal_format */                                                            \
     /* GL_ANGLE_robust_client_memory */                                                            \
     void getBooleanvRobust(GLenum pname, GLsizei paramCount, GLsizei *length, GLboolean *data);    \
-    void getBufferParameterivRobust(BufferBinding targetPacked, GLenum pname, GLsizei paramCount,  \
-                                    GLsizei *length, GLint *params);                               \
+    void getBufferParameterivRobust(BufferBinding targetPacked, BufferParam pnamePacked,           \
+                                    GLsizei paramCount, GLsizei *length, GLint *params);           \
     void getFloatvRobust(GLenum pname, GLsizei paramCount, GLsizei *length, GLfloat *data);        \
     void getFramebufferAttachmentParameterivRobust(GLenum target, GLenum attachment, GLenum pname, \
                                                    GLsizei paramCount, GLsizei *length,            \
@@ -566,7 +566,7 @@
     void getInteger64vRobust(GLenum pname, GLsizei paramCount, GLsizei *length, GLint64 *data);    \
     void getInteger64i_vRobust(GLenum target, GLuint index, GLsizei paramCount, GLsizei *length,   \
                                GLint64 *data);                                                     \
-    void getBufferParameteri64vRobust(BufferBinding targetPacked, GLenum pname,                    \
+    void getBufferParameteri64vRobust(BufferBinding targetPacked, BufferParam pnamePacked,         \
                                       GLsizei paramCount, GLsizei *length, GLint64 *params);       \
     void samplerParameterivRobust(SamplerID samplerPacked, GLuint pname, GLsizei paramCount,       \
                                   const GLint *param);                                             \

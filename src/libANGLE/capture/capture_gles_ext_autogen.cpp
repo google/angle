@@ -1553,7 +1553,7 @@ CallCapture CaptureGetBooleanvRobustANGLE(const State &glState,
 CallCapture CaptureGetBufferParameterivRobustANGLE(const State &glState,
                                                    bool isCallValid,
                                                    BufferBinding targetPacked,
-                                                   GLenum pname,
+                                                   BufferParam pnamePacked,
                                                    GLsizei paramCount,
                                                    GLsizei *length,
                                                    GLint *params)
@@ -1561,15 +1561,15 @@ CallCapture CaptureGetBufferParameterivRobustANGLE(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
-    paramBuffer.addEnumParam("pname", GLESEnum::AllEnums, ParamType::TGLenum, pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TBufferParam, pnamePacked);
     paramBuffer.addValueParam("paramCount", ParamType::TGLsizei, paramCount);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-        CaptureGetBufferParameterivRobustANGLE_length(glState, targetPacked, pname, paramCount,
-                                                      length, params, &lengthParam);
+        CaptureGetBufferParameterivRobustANGLE_length(glState, targetPacked, pnamePacked,
+                                                      paramCount, length, params, &lengthParam);
     }
     else
     {
@@ -1582,8 +1582,8 @@ CallCapture CaptureGetBufferParameterivRobustANGLE(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-        CaptureGetBufferParameterivRobustANGLE_params(glState, targetPacked, pname, paramCount,
-                                                      length, params, &paramsParam);
+        CaptureGetBufferParameterivRobustANGLE_params(glState, targetPacked, pnamePacked,
+                                                      paramCount, length, params, &paramsParam);
     }
     else
     {
@@ -3173,7 +3173,7 @@ CallCapture CaptureGetInteger64i_vRobustANGLE(const State &glState,
 CallCapture CaptureGetBufferParameteri64vRobustANGLE(const State &glState,
                                                      bool isCallValid,
                                                      BufferBinding targetPacked,
-                                                     GLenum pname,
+                                                     BufferParam pnamePacked,
                                                      GLsizei paramCount,
                                                      GLsizei *length,
                                                      GLint64 *params)
@@ -3181,15 +3181,15 @@ CallCapture CaptureGetBufferParameteri64vRobustANGLE(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
-    paramBuffer.addEnumParam("pname", GLESEnum::AllEnums, ParamType::TGLenum, pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TBufferParam, pnamePacked);
     paramBuffer.addValueParam("paramCount", ParamType::TGLsizei, paramCount);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-        CaptureGetBufferParameteri64vRobustANGLE_length(glState, targetPacked, pname, paramCount,
-                                                        length, params, &lengthParam);
+        CaptureGetBufferParameteri64vRobustANGLE_length(glState, targetPacked, pnamePacked,
+                                                        paramCount, length, params, &lengthParam);
     }
     else
     {
@@ -3202,8 +3202,8 @@ CallCapture CaptureGetBufferParameteri64vRobustANGLE(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLint64Pointer, params, &paramsParam.value);
-        CaptureGetBufferParameteri64vRobustANGLE_params(glState, targetPacked, pname, paramCount,
-                                                        length, params, &paramsParam);
+        CaptureGetBufferParameteri64vRobustANGLE_params(glState, targetPacked, pnamePacked,
+                                                        paramCount, length, params, &paramsParam);
     }
     else
     {

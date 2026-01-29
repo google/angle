@@ -383,11 +383,11 @@ ANGLE_INLINE bool ValidateGenerateMipmap(const Context *context,
 
 ANGLE_INLINE bool ValidateGetBufferParameteriv(const Context *context,
                                                angle::EntryPoint entryPoint,
-                                               BufferBinding target,
-                                               GLenum pname,
+                                               BufferBinding targetPacked,
+                                               BufferParam pnamePacked,
                                                const GLint *params)
 {
-    return ValidateGetBufferParameterBase(context, entryPoint, target, pname, nullptr);
+    return ValidateGetBufferParameterBase(context, entryPoint, targetPacked, pnamePacked, nullptr);
 }
 
 ANGLE_INLINE bool ValidateGetRenderbufferParameteriv(const Context *context,

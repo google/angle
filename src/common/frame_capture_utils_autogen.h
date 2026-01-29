@@ -42,6 +42,7 @@ enum class ParamType
     TBufferID,
     TBufferIDConstPointer,
     TBufferIDPointer,
+    TBufferParam,
     TBufferUsage,
     TClientVertexArrayType,
     TClipDepthMode,
@@ -274,7 +275,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 237;
+constexpr uint32_t kParamTypeCount = 238;
 
 union ParamValue
 {
@@ -286,6 +287,7 @@ union ParamValue
     gl::BufferID BufferIDVal;
     const gl::BufferID *BufferIDConstPointerVal;
     gl::BufferID *BufferIDPointerVal;
+    gl::BufferParam BufferParamVal;
     gl::BufferUsage BufferUsageVal;
     gl::ClientVertexArrayType ClientVertexArrayTypeVal;
     gl::ClipDepthMode ClipDepthModeVal;
@@ -563,6 +565,13 @@ inline gl::BufferID *GetParamVal<ParamType::TBufferIDPointer, gl::BufferID *>(
     const ParamValue &value)
 {
     return value.BufferIDPointerVal;
+}
+
+template <>
+inline gl::BufferParam GetParamVal<ParamType::TBufferParam, gl::BufferParam>(
+    const ParamValue &value)
+{
+    return value.BufferParamVal;
 }
 
 template <>
@@ -2122,6 +2131,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TBufferIDConstPointer, T>(value);
         case ParamType::TBufferIDPointer:
             return GetParamVal<ParamType::TBufferIDPointer, T>(value);
+        case ParamType::TBufferParam:
+            return GetParamVal<ParamType::TBufferParam, T>(value);
         case ParamType::TBufferUsage:
             return GetParamVal<ParamType::TBufferUsage, T>(value);
         case ParamType::TClientVertexArrayType:
@@ -2626,6 +2637,12 @@ template <>
 inline void SetParamVal<ParamType::TBufferIDPointer>(gl::BufferID *valueIn, ParamValue *valueOut)
 {
     valueOut->BufferIDPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TBufferParam>(gl::BufferParam valueIn, ParamValue *valueOut)
+{
+    valueOut->BufferParamVal = valueIn;
 }
 
 template <>
@@ -4154,6 +4171,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TBufferIDPointer:
             SetParamVal<ParamType::TBufferIDPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TBufferParam:
+            SetParamVal<ParamType::TBufferParam>(valueIn, valueOut);
             break;
         case ParamType::TBufferUsage:
             SetParamVal<ParamType::TBufferUsage>(valueIn, valueOut);
