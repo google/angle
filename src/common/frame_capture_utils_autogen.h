@@ -179,6 +179,8 @@ enum class ParamType
     TQueryID,
     TQueryIDConstPointer,
     TQueryIDPointer,
+    TQueryObjectParameter,
+    TQueryParameter,
     TQueryType,
     TRenderbufferID,
     TRenderbufferIDConstPointer,
@@ -275,7 +277,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 238;
+constexpr uint32_t kParamTypeCount = 240;
 
 union ParamValue
 {
@@ -401,6 +403,8 @@ union ParamValue
     gl::QueryID QueryIDVal;
     const gl::QueryID *QueryIDConstPointerVal;
     gl::QueryID *QueryIDPointerVal;
+    gl::QueryObjectParameter QueryObjectParameterVal;
+    gl::QueryParameter QueryParameterVal;
     gl::QueryType QueryTypeVal;
     gl::RenderbufferID RenderbufferIDVal;
     const gl::RenderbufferID *RenderbufferIDConstPointerVal;
@@ -1306,6 +1310,20 @@ template <>
 inline gl::QueryID *GetParamVal<ParamType::TQueryIDPointer, gl::QueryID *>(const ParamValue &value)
 {
     return value.QueryIDPointerVal;
+}
+
+template <>
+inline gl::QueryObjectParameter
+GetParamVal<ParamType::TQueryObjectParameter, gl::QueryObjectParameter>(const ParamValue &value)
+{
+    return value.QueryObjectParameterVal;
+}
+
+template <>
+inline gl::QueryParameter GetParamVal<ParamType::TQueryParameter, gl::QueryParameter>(
+    const ParamValue &value)
+{
+    return value.QueryParameterVal;
 }
 
 template <>
@@ -2405,6 +2423,10 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TQueryIDConstPointer, T>(value);
         case ParamType::TQueryIDPointer:
             return GetParamVal<ParamType::TQueryIDPointer, T>(value);
+        case ParamType::TQueryObjectParameter:
+            return GetParamVal<ParamType::TQueryObjectParameter, T>(value);
+        case ParamType::TQueryParameter:
+            return GetParamVal<ParamType::TQueryParameter, T>(value);
         case ParamType::TQueryType:
             return GetParamVal<ParamType::TQueryType, T>(value);
         case ParamType::TRenderbufferID:
@@ -3361,6 +3383,20 @@ template <>
 inline void SetParamVal<ParamType::TQueryIDPointer>(gl::QueryID *valueIn, ParamValue *valueOut)
 {
     valueOut->QueryIDPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TQueryObjectParameter>(gl::QueryObjectParameter valueIn,
+                                                          ParamValue *valueOut)
+{
+    valueOut->QueryObjectParameterVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TQueryParameter>(gl::QueryParameter valueIn,
+                                                    ParamValue *valueOut)
+{
+    valueOut->QueryParameterVal = valueIn;
 }
 
 template <>
@@ -4582,6 +4618,12 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TQueryIDPointer:
             SetParamVal<ParamType::TQueryIDPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TQueryObjectParameter:
+            SetParamVal<ParamType::TQueryObjectParameter>(valueIn, valueOut);
+            break;
+        case ParamType::TQueryParameter:
+            SetParamVal<ParamType::TQueryParameter>(valueIn, valueOut);
             break;
         case ParamType::TQueryType:
             SetParamVal<ParamType::TQueryType>(valueIn, valueOut);

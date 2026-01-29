@@ -388,8 +388,8 @@ void CaptureGetProgramBinary_binary(const State &glState,
 }
 
 void CaptureGetQueryObjectuiv_params(const State &glState,
-                                     QueryID id,
-                                     GLenum pname,
+                                     QueryID idPacked,
+                                     QueryObjectParameter pnamePacked,
                                      GLuint *params,
                                      ParamCapture *paramCapture)
 {
@@ -399,7 +399,7 @@ void CaptureGetQueryObjectuiv_params(const State &glState,
 
 void CaptureGetQueryiv_params(const State &glState,
                               QueryType targetPacked,
-                              GLenum pname,
+                              QueryParameter pnamePacked,
                               GLint *params,
                               ParamCapture *paramCapture)
 {

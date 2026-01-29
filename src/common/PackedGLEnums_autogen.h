@@ -420,6 +420,34 @@ ProvokingVertexConvention FromGLenum<ProvokingVertexConvention>(GLenum from);
 GLenum ToGLenum(ProvokingVertexConvention from);
 std::ostream &operator<<(std::ostream &os, ProvokingVertexConvention value);
 
+enum class QueryObjectParameter : uint8_t
+{
+    QueryResult          = 0,
+    QueryResultAvailable = 1,
+
+    InvalidEnum = 2,
+    EnumCount   = 2,
+};
+
+template <>
+QueryObjectParameter FromGLenum<QueryObjectParameter>(GLenum from);
+GLenum ToGLenum(QueryObjectParameter from);
+std::ostream &operator<<(std::ostream &os, QueryObjectParameter value);
+
+enum class QueryParameter : uint8_t
+{
+    QueryCounterBits = 0,
+    CurrentQuery     = 1,
+
+    InvalidEnum = 2,
+    EnumCount   = 2,
+};
+
+template <>
+QueryParameter FromGLenum<QueryParameter>(GLenum from);
+GLenum ToGLenum(QueryParameter from);
+std::ostream &operator<<(std::ostream &os, QueryParameter value);
+
 enum class QueryType : uint8_t
 {
     AnySamples                         = 0,

@@ -740,35 +740,44 @@
         "buffer": "BufferID"
     },
     "glGetQueryiv": {
-        "target": "QueryType"
+        "target": "QueryType",
+        "pname": "QueryParameter"
     },
     "glGetQueryivRobust": {
-        "id": "QueryID",
-        "target": "QueryType"
+        "target": "QueryType",
+        "pname": "QueryParameter"
     },
     "glGetQueryObjecti64v": {
-        "id": "QueryID"
+        "id": "QueryID",
+        "pname": "QueryObjectParameter"
     },
     "glGetQueryObjecti64vRobust": {
-        "id": "QueryID"
+        "id": "QueryID",
+        "pname": "QueryObjectParameter"
     },
     "glGetQueryObjectiv": {
-        "id": "QueryID"
+        "id": "QueryID",
+        "pname": "QueryObjectParameter"
     },
     "glGetQueryObjectivRobust": {
-        "id": "QueryID"
+        "id": "QueryID",
+        "pname": "QueryObjectParameter"
     },
     "glGetQueryObjectui64v": {
-        "id": "QueryID"
+        "id": "QueryID",
+        "pname": "QueryObjectParameter"
     },
     "glGetQueryObjectui64vRobust": {
-        "id": "QueryID"
+        "id": "QueryID",
+        "pname": "QueryObjectParameter"
     },
     "glGetQueryObjectuiv": {
-        "id": "QueryID"
+        "id": "QueryID",
+        "pname": "QueryObjectParameter"
     },
     "glGetQueryObjectuivRobust": {
-        "id": "QueryID"
+        "id": "QueryID",
+        "pname": "QueryObjectParameter"
     },
     "glGetSamplerParameterfv": {
         "sampler": "SamplerID"

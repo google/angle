@@ -195,14 +195,14 @@ bool ValidateBeginQueryBase(const Context *context,
 bool ValidateEndQueryBase(const Context *context, angle::EntryPoint entryPoint, QueryType target);
 bool ValidateGetQueryivBase(const Context *context,
                             angle::EntryPoint entryPoint,
-                            QueryType target,
-                            GLenum pname,
-                            GLsizei *numParams);
-bool ValidateGetQueryObjectValueBase(const Context *context,
-                                     angle::EntryPoint entryPoint,
-                                     QueryID id,
-                                     GLenum pname,
-                                     GLsizei *numParams);
+                            QueryType targetPacked,
+                            QueryParameter pnamePacked,
+                            GLsizei *outNumParams);
+bool ValidateGetQueryObjectBase(const Context *context,
+                                angle::EntryPoint entryPoint,
+                                QueryID idPacked,
+                                QueryObjectParameter pnamePacked,
+                                GLsizei *outNumParams);
 
 ANGLE_INLINE bool ValidateUniformCommonBase(const Context *context,
                                             angle::EntryPoint entryPoint,

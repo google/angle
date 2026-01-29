@@ -193,19 +193,22 @@ egl::ContextMutex *AllocateOrUseContextMutex(egl::ContextMutex *sharedContextMut
 }
 
 template <typename T>
-angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLenum pname, T *params)
+angle::Result GetQueryObjectParameter(const Context *context,
+                                      Query *query,
+                                      QueryObjectParameter pnamePacked,
+                                      T *params)
 {
-    if (!query)
+    if (ANGLE_UNLIKELY(query == nullptr))
     {
         // Some applications call into glGetQueryObjectuiv(...) prior to calling glBeginQuery(...)
         // This wouldn't be an issue since the validation layer will handle such a usecases but when
         // the app enables EGL_KHR_create_context_no_error extension, we skip the validation layer.
-        switch (pname)
+        switch (pnamePacked)
         {
-            case GL_QUERY_RESULT_EXT:
+            case QueryObjectParameter::QueryResult:
                 *params = 0;
                 break;
-            case GL_QUERY_RESULT_AVAILABLE_EXT:
+            case QueryObjectParameter::QueryResultAvailable:
                 *params = GL_FALSE;
                 if (context->isContextLost())
                 {
@@ -220,11 +223,11 @@ angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLen
         return angle::Result::Continue;
     }
 
-    switch (pname)
+    switch (pnamePacked)
     {
-        case GL_QUERY_RESULT_EXT:
+        case QueryObjectParameter::QueryResult:
             return query->getResult(context, params);
-        case GL_QUERY_RESULT_AVAILABLE_EXT:
+        case QueryObjectParameter::QueryResultAvailable:
         {
             bool available = false;
             if (context->isContextLost())
@@ -236,7 +239,7 @@ angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLen
             {
                 ANGLE_TRY(query->isResultAvailable(context, &available));
             }
-            *params = CastFromStateValue<T>(pname, static_cast<GLuint>(available));
+            *params = static_cast<T>(available);
             return angle::Result::Continue;
         }
         default:
@@ -1718,49 +1721,53 @@ void Context::queryCounter(QueryID id, QueryType target)
     ANGLE_CONTEXT_TRY(queryObject->queryCounter(this));
 }
 
-void Context::getQueryiv(QueryType target, GLenum pname, GLint *params)
+void Context::getQueryiv(QueryType targetPacked, QueryParameter pnamePacked, GLint *params)
 {
-    switch (pname)
+    switch (pnamePacked)
     {
-        case GL_CURRENT_QUERY_EXT:
-            params[0] = mState.getActiveQueryId(target).value;
+        case QueryParameter::CurrentQuery:
+            *params = mState.getActiveQueryId(targetPacked).value;
             break;
-        case GL_QUERY_COUNTER_BITS_EXT:
-            switch (target)
+        case QueryParameter::QueryCounterBits:
+            switch (targetPacked)
             {
                 case QueryType::AnySamples:
                 case QueryType::AnySamplesConservative:
-                    params[0] = 1;
+                    *params = 1;
                     break;
                 case QueryType::PrimitivesGenerated:
                 case QueryType::TransformFeedbackPrimitivesWritten:
-                    params[0] = 32;
+                    *params = 32;
                     break;
                 case QueryType::TimeElapsed:
-                    params[0] = getCaps().queryCounterBitsTimeElapsed;
+                    *params = getCaps().queryCounterBitsTimeElapsed;
                     break;
                 case QueryType::Timestamp:
-                    params[0] = getCaps().queryCounterBitsTimestamp;
+                    *params = getCaps().queryCounterBitsTimestamp;
                     break;
                 default:
                     UNREACHABLE();
-                    params[0] = 0;
                     break;
             }
             break;
         default:
             UNREACHABLE();
-            return;
+            break;
     }
 }
 
-void Context::getQueryivRobust(QueryType target,
-                               GLenum pname,
+void Context::getQueryivRobust(QueryType targetPacked,
+                               QueryParameter pnamePacked,
                                GLsizei paramCount,
                                GLsizei *length,
                                GLint *params)
 {
-    getQueryiv(target, pname, params);
+    getQueryiv(targetPacked, pnamePacked, params);
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
 void Context::getUnsignedBytev(GLenum pname, GLubyte *data)
@@ -1773,60 +1780,84 @@ void Context::getUnsignedBytei_v(GLenum target, GLuint index, GLubyte *data)
     UNIMPLEMENTED();
 }
 
-void Context::getQueryObjectiv(QueryID id, GLenum pname, GLint *params)
+void Context::getQueryObjectiv(QueryID idPacked, QueryObjectParameter pnamePacked, GLint *params)
 {
-    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(idPacked), pnamePacked, params));
 }
 
-void Context::getQueryObjectivRobust(QueryID id,
-                                     GLenum pname,
+void Context::getQueryObjectivRobust(QueryID idPacked,
+                                     QueryObjectParameter pnamePacked,
                                      GLsizei paramCount,
                                      GLsizei *length,
                                      GLint *params)
 {
-    getQueryObjectiv(id, pname, params);
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(idPacked), pnamePacked, params));
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
-void Context::getQueryObjectuiv(QueryID id, GLenum pname, GLuint *params)
+void Context::getQueryObjectuiv(QueryID idPacked, QueryObjectParameter pnamePacked, GLuint *params)
 {
-    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(idPacked), pnamePacked, params));
 }
 
-void Context::getQueryObjectuivRobust(QueryID id,
-                                      GLenum pname,
+void Context::getQueryObjectuivRobust(QueryID idPacked,
+                                      QueryObjectParameter pnamePacked,
                                       GLsizei paramCount,
                                       GLsizei *length,
                                       GLuint *params)
 {
-    getQueryObjectuiv(id, pname, params);
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(idPacked), pnamePacked, params));
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
-void Context::getQueryObjecti64v(QueryID id, GLenum pname, GLint64 *params)
+void Context::getQueryObjecti64v(QueryID idPacked,
+                                 QueryObjectParameter pnamePacked,
+                                 GLint64 *params)
 {
-    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(idPacked), pnamePacked, params));
 }
 
-void Context::getQueryObjecti64vRobust(QueryID id,
-                                       GLenum pname,
+void Context::getQueryObjecti64vRobust(QueryID idPacked,
+                                       QueryObjectParameter pnamePacked,
                                        GLsizei paramCount,
                                        GLsizei *length,
                                        GLint64 *params)
 {
-    getQueryObjecti64v(id, pname, params);
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(idPacked), pnamePacked, params));
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
-void Context::getQueryObjectui64v(QueryID id, GLenum pname, GLuint64 *params)
+void Context::getQueryObjectui64v(QueryID idPacked,
+                                  QueryObjectParameter pnamePacked,
+                                  GLuint64 *params)
 {
-    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(id), pname, params));
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(idPacked), pnamePacked, params));
 }
 
-void Context::getQueryObjectui64vRobust(QueryID id,
-                                        GLenum pname,
+void Context::getQueryObjectui64vRobust(QueryID idPacked,
+                                        QueryObjectParameter pnamePacked,
                                         GLsizei paramCount,
                                         GLsizei *length,
                                         GLuint64 *params)
 {
-    getQueryObjectui64v(id, pname, params);
+    ANGLE_CONTEXT_TRY(GetQueryObjectParameter(this, getQuery(idPacked), pnamePacked, params));
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
 Framebuffer *Context::getFramebuffer(FramebufferID handle) const

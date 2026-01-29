@@ -1160,20 +1160,19 @@ CallCapture CaptureGetProgramBinary(const State &glState,
 CallCapture CaptureGetQueryObjectuiv(const State &glState,
                                      bool isCallValid,
                                      QueryID idPacked,
-                                     GLenum pname,
+                                     QueryObjectParameter pnamePacked,
                                      GLuint *params)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("idPacked", ParamType::TQueryID, idPacked);
-    paramBuffer.addEnumParam("pname", GLESEnum::QueryObjectParameterName, ParamType::TGLenum,
-                             pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TQueryObjectParameter, pnamePacked);
 
     ParamCapture paramsParam("params", ParamType::TGLuintPointer);
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLuintPointer, params, &paramsParam.value);
-        CaptureGetQueryObjectuiv_params(glState, idPacked, pname, params, &paramsParam);
+        CaptureGetQueryObjectuiv_params(glState, idPacked, pnamePacked, params, &paramsParam);
     }
     else
     {
@@ -1188,19 +1187,19 @@ CallCapture CaptureGetQueryObjectuiv(const State &glState,
 CallCapture CaptureGetQueryiv(const State &glState,
                               bool isCallValid,
                               QueryType targetPacked,
-                              GLenum pname,
+                              QueryParameter pnamePacked,
                               GLint *params)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("targetPacked", ParamType::TQueryType, targetPacked);
-    paramBuffer.addEnumParam("pname", GLESEnum::QueryParameterName, ParamType::TGLenum, pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TQueryParameter, pnamePacked);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-        CaptureGetQueryiv_params(glState, targetPacked, pname, params, &paramsParam);
+        CaptureGetQueryiv_params(glState, targetPacked, pnamePacked, params, &paramsParam);
     }
     else
     {

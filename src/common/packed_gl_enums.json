@@ -130,6 +130,16 @@
         "Timestamp": "GL_TIMESTAMP_EXT",
         "TransformFeedbackPrimitivesWritten": "GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN"
     },
+    "QueryObjectParameter":
+    {
+        "QueryResult": "GL_QUERY_RESULT",
+        "QueryResultAvailable": "GL_QUERY_RESULT_AVAILABLE"
+    },
+    "QueryParameter":
+    {
+        "QueryCounterBits": "GL_QUERY_COUNTER_BITS_EXT",
+        "CurrentQuery": "GL_CURRENT_QUERY"
+    },
     "ShaderType":
     {
         "Vertex": "GL_VERTEX_SHADER",

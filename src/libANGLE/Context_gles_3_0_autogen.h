@@ -79,8 +79,8 @@
                              GLint *params);                                                       \
     void getProgramBinary(ShaderProgramID programPacked, GLsizei bufSize, GLsizei *length,         \
                           GLenum *binaryFormat, void *binary);                                     \
-    void getQueryObjectuiv(QueryID idPacked, GLenum pname, GLuint *params);                        \
-    void getQueryiv(QueryType targetPacked, GLenum pname, GLint *params);                          \
+    void getQueryObjectuiv(QueryID idPacked, QueryObjectParameter pnamePacked, GLuint *params);    \
+    void getQueryiv(QueryType targetPacked, QueryParameter pnamePacked, GLint *params);            \
     void getSamplerParameterfv(SamplerID samplerPacked, GLenum pname, GLfloat *params);            \
     void getSamplerParameteriv(SamplerID samplerPacked, GLenum pname, GLint *params);              \
     const GLubyte *getStringi(GLenum name, GLuint index);                                          \

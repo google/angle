@@ -449,6 +449,14 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TQueryIDPointer>(os, call,
                                                               param.value.QueryIDPointerVal);
             break;
+        case ParamType::TQueryObjectParameter:
+            WriteParamValueReplay<ParamType::TQueryObjectParameter>(
+                os, call, param.value.QueryObjectParameterVal);
+            break;
+        case ParamType::TQueryParameter:
+            WriteParamValueReplay<ParamType::TQueryParameter>(os, call,
+                                                              param.value.QueryParameterVal);
+            break;
         case ParamType::TQueryType:
             WriteParamValueReplay<ParamType::TQueryType>(os, call, param.value.QueryTypeVal);
             break;
@@ -1134,6 +1142,10 @@ const char *ParamTypeToString(ParamType paramType)
             return "const GLuint *";
         case ParamType::TQueryIDPointer:
             return "GLuint *";
+        case ParamType::TQueryObjectParameter:
+            return "GLenum";
+        case ParamType::TQueryParameter:
+            return "GLenum";
         case ParamType::TQueryType:
             return "GLenum";
         case ParamType::TRenderbufferID:

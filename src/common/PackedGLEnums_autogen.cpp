@@ -1629,6 +1629,96 @@ std::ostream &operator<<(std::ostream &os, ProvokingVertexConvention value)
 }
 
 template <>
+QueryObjectParameter FromGLenum<QueryObjectParameter>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_QUERY_RESULT:
+            return QueryObjectParameter::QueryResult;
+        case GL_QUERY_RESULT_AVAILABLE:
+            return QueryObjectParameter::QueryResultAvailable;
+        default:
+            return QueryObjectParameter::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(QueryObjectParameter from)
+{
+    switch (from)
+    {
+        case QueryObjectParameter::QueryResult:
+            return GL_QUERY_RESULT;
+        case QueryObjectParameter::QueryResultAvailable:
+            return GL_QUERY_RESULT_AVAILABLE;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+std::ostream &operator<<(std::ostream &os, QueryObjectParameter value)
+{
+    switch (value)
+    {
+        case QueryObjectParameter::QueryResult:
+            os << "GL_QUERY_RESULT";
+            break;
+        case QueryObjectParameter::QueryResultAvailable:
+            os << "GL_QUERY_RESULT_AVAILABLE";
+            break;
+        default:
+            os << "GL_INVALID_ENUM";
+            break;
+    }
+    return os;
+}
+
+template <>
+QueryParameter FromGLenum<QueryParameter>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_QUERY_COUNTER_BITS_EXT:
+            return QueryParameter::QueryCounterBits;
+        case GL_CURRENT_QUERY:
+            return QueryParameter::CurrentQuery;
+        default:
+            return QueryParameter::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(QueryParameter from)
+{
+    switch (from)
+    {
+        case QueryParameter::QueryCounterBits:
+            return GL_QUERY_COUNTER_BITS_EXT;
+        case QueryParameter::CurrentQuery:
+            return GL_CURRENT_QUERY;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+std::ostream &operator<<(std::ostream &os, QueryParameter value)
+{
+    switch (value)
+    {
+        case QueryParameter::QueryCounterBits:
+            os << "GL_QUERY_COUNTER_BITS_EXT";
+            break;
+        case QueryParameter::CurrentQuery:
+            os << "GL_CURRENT_QUERY";
+            break;
+        default:
+            os << "GL_INVALID_ENUM";
+            break;
+    }
+    return os;
+}
+
+template <>
 QueryType FromGLenum<QueryType>(GLenum from)
 {
     switch (from)

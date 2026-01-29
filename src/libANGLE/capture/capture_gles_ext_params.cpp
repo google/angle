@@ -1228,7 +1228,7 @@ void CaptureCompressedTexSubImage3DRobustANGLE_data(const State &glState,
 
 void CaptureGetQueryivRobustANGLE_length(const State &glState,
                                          QueryType targetPacked,
-                                         GLenum pname,
+                                         QueryParameter pnamePacked,
                                          GLsizei paramCount,
                                          GLsizei *length,
                                          GLint *params,
@@ -1239,7 +1239,7 @@ void CaptureGetQueryivRobustANGLE_length(const State &glState,
 
 void CaptureGetQueryivRobustANGLE_params(const State &glState,
                                          QueryType targetPacked,
-                                         GLenum pname,
+                                         QueryParameter pnamePacked,
                                          GLsizei paramCount,
                                          GLsizei *length,
                                          GLint *params,
@@ -1249,8 +1249,8 @@ void CaptureGetQueryivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetQueryObjectuivRobustANGLE_length(const State &glState,
-                                                QueryID id,
-                                                GLenum pname,
+                                                QueryID idPacked,
+                                                QueryObjectParameter pnamePacked,
                                                 GLsizei paramCount,
                                                 GLsizei *length,
                                                 GLuint *params,
@@ -1260,8 +1260,8 @@ void CaptureGetQueryObjectuivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetQueryObjectuivRobustANGLE_params(const State &glState,
-                                                QueryID id,
-                                                GLenum pname,
+                                                QueryID idPacked,
+                                                QueryObjectParameter pnamePacked,
                                                 GLsizei paramCount,
                                                 GLsizei *length,
                                                 GLuint *params,
@@ -1628,8 +1628,8 @@ void CaptureGetTexLevelParameterfvRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetQueryObjectivRobustANGLE_length(const State &glState,
-                                               QueryID id,
-                                               GLenum pname,
+                                               QueryID idPacked,
+                                               QueryObjectParameter pnamePacked,
                                                GLsizei paramCount,
                                                GLsizei *length,
                                                GLint *params,
@@ -1639,8 +1639,8 @@ void CaptureGetQueryObjectivRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetQueryObjectivRobustANGLE_params(const State &glState,
-                                               QueryID id,
-                                               GLenum pname,
+                                               QueryID idPacked,
+                                               QueryObjectParameter pnamePacked,
                                                GLsizei paramCount,
                                                GLsizei *length,
                                                GLint *params,
@@ -1650,8 +1650,8 @@ void CaptureGetQueryObjectivRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetQueryObjecti64vRobustANGLE_length(const State &glState,
-                                                 QueryID id,
-                                                 GLenum pname,
+                                                 QueryID idPacked,
+                                                 QueryObjectParameter pnamePacked,
                                                  GLsizei paramCount,
                                                  GLsizei *length,
                                                  GLint64 *params,
@@ -1661,8 +1661,8 @@ void CaptureGetQueryObjecti64vRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetQueryObjecti64vRobustANGLE_params(const State &glState,
-                                                 QueryID id,
-                                                 GLenum pname,
+                                                 QueryID idPacked,
+                                                 QueryObjectParameter pnamePacked,
                                                  GLsizei paramCount,
                                                  GLsizei *length,
                                                  GLint64 *params,
@@ -1672,8 +1672,8 @@ void CaptureGetQueryObjecti64vRobustANGLE_params(const State &glState,
 }
 
 void CaptureGetQueryObjectui64vRobustANGLE_length(const State &glState,
-                                                  QueryID id,
-                                                  GLenum pname,
+                                                  QueryID idPacked,
+                                                  QueryObjectParameter pnamePacked,
                                                   GLsizei paramCount,
                                                   GLsizei *length,
                                                   GLuint64 *params,
@@ -1683,8 +1683,8 @@ void CaptureGetQueryObjectui64vRobustANGLE_length(const State &glState,
 }
 
 void CaptureGetQueryObjectui64vRobustANGLE_params(const State &glState,
-                                                  QueryID id,
-                                                  GLenum pname,
+                                                  QueryID idPacked,
+                                                  QueryObjectParameter pnamePacked,
                                                   GLsizei paramCount,
                                                   GLsizei *length,
                                                   GLuint64 *params,
@@ -2118,8 +2118,8 @@ void CaptureGetInteger64vEXT_data(const State &glState,
 }
 
 void CaptureGetQueryObjecti64vEXT_params(const State &glState,
-                                         QueryID id,
-                                         GLenum pname,
+                                         QueryID idPacked,
+                                         QueryObjectParameter pnamePacked,
                                          GLint64 *params,
                                          ParamCapture *paramCapture)
 {
@@ -2127,8 +2127,8 @@ void CaptureGetQueryObjecti64vEXT_params(const State &glState,
 }
 
 void CaptureGetQueryObjectivEXT_params(const State &glState,
-                                       QueryID id,
-                                       GLenum pname,
+                                       QueryID idPacked,
+                                       QueryObjectParameter pnamePacked,
                                        GLint *params,
                                        ParamCapture *paramCapture)
 {
@@ -2136,8 +2136,8 @@ void CaptureGetQueryObjectivEXT_params(const State &glState,
 }
 
 void CaptureGetQueryObjectui64vEXT_params(const State &glState,
-                                          QueryID id,
-                                          GLenum pname,
+                                          QueryID idPacked,
+                                          QueryObjectParameter pnamePacked,
                                           GLuint64 *params,
                                           ParamCapture *paramCapture)
 {
@@ -2145,8 +2145,8 @@ void CaptureGetQueryObjectui64vEXT_params(const State &glState,
 }
 
 void CaptureGetQueryObjectuivEXT_params(const State &glState,
-                                        QueryID id,
-                                        GLenum pname,
+                                        QueryID idPacked,
+                                        QueryObjectParameter pnamePacked,
                                         GLuint *params,
                                         ParamCapture *paramCapture)
 {
@@ -2155,7 +2155,7 @@ void CaptureGetQueryObjectuivEXT_params(const State &glState,
 
 void CaptureGetQueryivEXT_params(const State &glState,
                                  QueryType targetPacked,
-                                 GLenum pname,
+                                 QueryParameter pnamePacked,
                                  GLint *params,
                                  ParamCapture *paramCapture)
 {
