@@ -6164,6 +6164,11 @@ void Context::getVertexAttribPointervRobust(GLuint index,
                                             void **pointer)
 {
     getVertexAttribPointerv(index, pname, pointer);
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
 void Context::debugMessageControl(GLenum source,
