@@ -1032,19 +1032,19 @@ CallCapture CaptureReadnPixels(const State &glState,
 CallCapture CaptureSamplerParameterIiv(const State &glState,
                                        bool isCallValid,
                                        SamplerID samplerPacked,
-                                       GLenum pname,
+                                       SamplerParameter pnamePacked,
                                        const GLint *param)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("samplerPacked", ParamType::TSamplerID, samplerPacked);
-    paramBuffer.addEnumParam("pname", GLESEnum::SamplerParameterI, ParamType::TGLenum, pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TSamplerParameter, pnamePacked);
 
     ParamCapture paramParam("param", ParamType::TGLintConstPointer);
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintConstPointer, param, &paramParam.value);
-        CaptureSamplerParameterIiv_param(glState, samplerPacked, pname, param, &paramParam);
+        CaptureSamplerParameterIiv_param(glState, samplerPacked, pnamePacked, param, &paramParam);
     }
     else
     {
@@ -1059,19 +1059,19 @@ CallCapture CaptureSamplerParameterIiv(const State &glState,
 CallCapture CaptureSamplerParameterIuiv(const State &glState,
                                         bool isCallValid,
                                         SamplerID samplerPacked,
-                                        GLenum pname,
+                                        SamplerParameter pnamePacked,
                                         const GLuint *param)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("samplerPacked", ParamType::TSamplerID, samplerPacked);
-    paramBuffer.addEnumParam("pname", GLESEnum::SamplerParameterI, ParamType::TGLenum, pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TSamplerParameter, pnamePacked);
 
     ParamCapture paramParam("param", ParamType::TGLuintConstPointer);
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLuintConstPointer, param, &paramParam.value);
-        CaptureSamplerParameterIuiv_param(glState, samplerPacked, pname, param, &paramParam);
+        CaptureSamplerParameterIuiv_param(glState, samplerPacked, pnamePacked, param, &paramParam);
     }
     else
     {

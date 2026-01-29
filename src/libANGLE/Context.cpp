@@ -3373,62 +3373,72 @@ void Context::detachProgramPipeline(ProgramPipelineID pipeline)
     mState.detachProgramPipeline(this, pipeline);
 }
 
-void Context::samplerParameteri(SamplerID sampler, GLenum pname, GLint param)
+void Context::samplerParameteri(SamplerID samplerPacked, SamplerParameter pnamePacked, GLint param)
 {
     Sampler *const samplerObject =
-        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
-    SetSamplerParameteri(this, samplerObject, pname, param);
+        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerPacked);
+    SetSamplerParameteriv(this, samplerObject, pnamePacked, &param);
 }
 
-void Context::samplerParameteriv(SamplerID sampler, GLenum pname, const GLint *param)
+void Context::samplerParameteriv(SamplerID samplerPacked,
+                                 SamplerParameter pnamePacked,
+                                 const GLint *param)
 {
     Sampler *const samplerObject =
-        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
-    SetSamplerParameteriv(this, samplerObject, pname, param);
+        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerPacked);
+    SetSamplerParameteriv(this, samplerObject, pnamePacked, param);
 }
 
-void Context::samplerParameterIiv(SamplerID sampler, GLenum pname, const GLint *param)
+void Context::samplerParameterIiv(SamplerID samplerPacked,
+                                  SamplerParameter pnamePacked,
+                                  const GLint *param)
 {
     Sampler *const samplerObject =
-        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
-    SetSamplerParameterIiv(this, samplerObject, pname, param);
+        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerPacked);
+    SetSamplerParameterIiv(this, samplerObject, pnamePacked, param);
 }
 
-void Context::samplerParameterIuiv(SamplerID sampler, GLenum pname, const GLuint *param)
+void Context::samplerParameterIuiv(SamplerID samplerPacked,
+                                   SamplerParameter pnamePacked,
+                                   const GLuint *param)
 {
     Sampler *const samplerObject =
-        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
-    SetSamplerParameterIuiv(this, samplerObject, pname, param);
+        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerPacked);
+    SetSamplerParameterIuiv(this, samplerObject, pnamePacked, param);
 }
 
-void Context::samplerParameterivRobust(SamplerID sampler,
-                                       GLenum pname,
+void Context::samplerParameterivRobust(SamplerID samplerPacked,
+                                       SamplerParameter pnamePacked,
                                        GLsizei paramCount,
                                        const GLint *param)
 {
-    samplerParameteriv(sampler, pname, param);
+    samplerParameteriv(samplerPacked, pnamePacked, param);
 }
 
-void Context::samplerParameterf(SamplerID sampler, GLenum pname, GLfloat param)
+void Context::samplerParameterf(SamplerID samplerPacked,
+                                SamplerParameter pnamePacked,
+                                GLfloat param)
 {
     Sampler *const samplerObject =
-        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
-    SetSamplerParameterf(this, samplerObject, pname, param);
+        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerPacked);
+    SetSamplerParameterfv(this, samplerObject, pnamePacked, &param);
 }
 
-void Context::samplerParameterfv(SamplerID sampler, GLenum pname, const GLfloat *param)
+void Context::samplerParameterfv(SamplerID samplerPacked,
+                                 SamplerParameter pnamePacked,
+                                 const GLfloat *param)
 {
     Sampler *const samplerObject =
-        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
-    SetSamplerParameterfv(this, samplerObject, pname, param);
+        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerPacked);
+    SetSamplerParameterfv(this, samplerObject, pnamePacked, param);
 }
 
-void Context::samplerParameterfvRobust(SamplerID sampler,
-                                       GLenum pname,
+void Context::samplerParameterfvRobust(SamplerID samplerPacked,
+                                       SamplerParameter pnamePacked,
                                        GLsizei paramCount,
                                        const GLfloat *param)
 {
-    samplerParameterfv(sampler, pname, param);
+    samplerParameterfv(samplerPacked, pnamePacked, param);
 }
 
 void Context::getSamplerParameteriv(SamplerID samplerPacked,

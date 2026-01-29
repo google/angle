@@ -58,8 +58,10 @@
     void pushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message);          \
     void readnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,  \
                      GLsizei bufSize, void *data);                                                 \
-    void samplerParameterIiv(SamplerID samplerPacked, GLenum pname, const GLint *param);           \
-    void samplerParameterIuiv(SamplerID samplerPacked, GLenum pname, const GLuint *param);         \
+    void samplerParameterIiv(SamplerID samplerPacked, SamplerParameter pnamePacked,                \
+                             const GLint *param);                                                  \
+    void samplerParameterIuiv(SamplerID samplerPacked, SamplerParameter pnamePacked,               \
+                              const GLuint *param);                                                \
     void texBuffer(TextureType targetPacked, GLenum internalformat, BufferID bufferPacked);        \
     void texBufferRange(TextureType targetPacked, GLenum internalformat, BufferID bufferPacked,    \
                         GLintptr offset, GLsizeiptr size);                                         \

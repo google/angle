@@ -1479,34 +1479,36 @@
         "textures": "const TextureID *"
     },
     "glSamplerParameterf": {
-        "sampler": "SamplerID"
+        "sampler": "SamplerID",
+        "pname": "SamplerParameter"
     },
     "glSamplerParameterfv": {
-        "sampler": "SamplerID"
+        "sampler": "SamplerID",
+        "pname": "SamplerParameter"
     },
     "glSamplerParameterfvRobust": {
-        "sampler": "SamplerID"
+        "sampler": "SamplerID",
+        "pname": "SamplerParameter"
     },
     "glSamplerParameteri": {
-        "sampler": "SamplerID"
-    },
-    "glSamplerParameterIiv": {
-        "sampler": "SamplerID"
-    },
-    "glSamplerParameterIivRobust": {
-        "sampler": "SamplerID"
-    },
-    "glSamplerParameterIuiv": {
-        "sampler": "SamplerID"
-    },
-    "glSamplerParameterIuivRobust": {
-        "sampler": "SamplerID"
+        "sampler": "SamplerID",
+        "pname": "SamplerParameter"
     },
     "glSamplerParameteriv": {
-        "sampler": "SamplerID"
+        "sampler": "SamplerID",
+        "pname": "SamplerParameter"
     },
     "glSamplerParameterivRobust": {
-        "sampler": "SamplerID"
+        "sampler": "SamplerID",
+        "pname": "SamplerParameter"
+    },
+    "glSamplerParameterIiv": {
+        "sampler": "SamplerID",
+        "pname": "SamplerParameter"
+    },
+    "glSamplerParameterIuiv": {
+        "sampler": "SamplerID",
+        "pname": "SamplerParameter"
     },
     "glSemaphoreParameterui64v": {
         "semaphore": "SemaphoreID"

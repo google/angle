@@ -604,11 +604,6 @@ bool IsBlitSameResource(const FramebufferAttachment *read, const FramebufferAtta
     return false;
 }
 
-unsigned int GetSamplerParameterCount(GLenum pname)
-{
-    return pname == GL_TEXTURE_BORDER_COLOR ? 4 : 1;
-}
-
 const char *ValidateProgramDrawAdvancedBlendState(const Context *context,
                                                   const ProgramExecutable &executable)
 {
@@ -6201,32 +6196,34 @@ bool ValidateGetSamplerParameterivRobustANGLE(const Context *context,
 
 bool ValidateSamplerParameterfvRobustANGLE(const Context *context,
                                            angle::EntryPoint entryPoint,
-                                           SamplerID sampler,
-                                           GLenum pname,
-                                           GLsizei bufSize,
+                                           SamplerID samplerPacked,
+                                           SamplerParameter pnamePacked,
+                                           GLsizei paramCount,
                                            const GLfloat *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    const GLsizei numParams = (pnamePacked == SamplerParameter::BorderColor) ? 4 : 1;
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
 
-    return ValidateSamplerParameterBase(context, entryPoint, sampler, pname, bufSize, true, params);
+    return ValidateSamplerParameterBase(context, entryPoint, samplerPacked, pnamePacked, params);
 }
 
 bool ValidateSamplerParameterivRobustANGLE(const Context *context,
                                            angle::EntryPoint entryPoint,
-                                           SamplerID sampler,
-                                           GLenum pname,
-                                           GLsizei bufSize,
+                                           SamplerID samplerPacked,
+                                           SamplerParameter pnamePacked,
+                                           GLsizei paramCount,
                                            const GLint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    const GLsizei numParams = (pnamePacked == SamplerParameter::BorderColor) ? 4 : 1;
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
 
-    return ValidateSamplerParameterBase(context, entryPoint, sampler, pname, bufSize, true, params);
+    return ValidateSamplerParameterBase(context, entryPoint, samplerPacked, pnamePacked, params);
 }
 
 bool ValidateGetVertexAttribfvRobustANGLE(const Context *context,
@@ -7790,109 +7787,91 @@ bool ValidateGetActiveUniformBlockivBase(const Context *context,
 template <typename ParamType>
 bool ValidateSamplerParameterBase(const Context *context,
                                   angle::EntryPoint entryPoint,
-                                  SamplerID sampler,
-                                  GLenum pname,
-                                  GLsizei bufSize,
-                                  bool vectorParams,
+                                  SamplerID samplerPacked,
+                                  SamplerParameter pnamePacked,
                                   const ParamType *params)
 {
-    if (!context->isSampler(sampler))
+    if (ANGLE_UNLIKELY(!context->isSampler(samplerPacked)))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidSampler);
         return false;
     }
 
-    if (params == nullptr)
+    bool isPnameSupported = true;
+    switch (pnamePacked)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
-        return false;
-    }
-
-    const GLsizei minBufSize = GetSamplerParameterCount(pname);
-    if (bufSize >= 0 && bufSize < minBufSize)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientBufferSize);
-        return false;
-    }
-
-    switch (pname)
-    {
-        case GL_TEXTURE_WRAP_S:
-        case GL_TEXTURE_WRAP_T:
-        case GL_TEXTURE_WRAP_R:
-            if (!ValidateTextureWrapModeValue(context, entryPoint, params, false))
-            {
-                return false;
-            }
-            break;
-
-        case GL_TEXTURE_MIN_FILTER:
-            if (!ValidateTextureMinFilterValue(context, entryPoint, params, false))
-            {
-                return false;
-            }
-            break;
-
-        case GL_TEXTURE_MAG_FILTER:
+        case SamplerParameter::MagFilter:
             if (!ValidateTextureMagFilterValue(context, entryPoint, params))
             {
                 return false;
             }
             break;
-
-        case GL_TEXTURE_MIN_LOD:
-        case GL_TEXTURE_MAX_LOD:
-            // any value is permissible
+        case SamplerParameter::MinFilter:
+            if (!ValidateTextureMinFilterValue(context, entryPoint, params, false))
+            {
+                return false;
+            }
             break;
-
-        case GL_TEXTURE_COMPARE_MODE:
+        case SamplerParameter::WrapS:
+        case SamplerParameter::WrapT:
+        case SamplerParameter::WrapR:
+            if (!ValidateTextureWrapModeValue(context, entryPoint, params, false))
+            {
+                return false;
+            }
+            break;
+        case SamplerParameter::MinLod:
+        case SamplerParameter::MaxLod:
+            // Any value is permissible
+            break;
+        case SamplerParameter::CompareMode:
             if (!ValidateTextureCompareModeValue(context, entryPoint, params))
             {
                 return false;
             }
             break;
-
-        case GL_TEXTURE_COMPARE_FUNC:
+        case SamplerParameter::CompareFunc:
             if (!ValidateTextureCompareFuncValue(context, entryPoint, params))
             {
                 return false;
             }
             break;
-
-        case GL_TEXTURE_SRGB_DECODE_EXT:
-            if (!ValidateTextureSRGBDecodeValue(context, entryPoint, params))
+        case SamplerParameter::BorderColor:
+            isPnameSupported = (entryPoint != angle::EntryPoint::GLSamplerParameterf &&
+                                entryPoint != angle::EntryPoint::GLSamplerParameteri) &&
+                               (context->getClientVersion() >= ES_3_2 ||
+                                context->getExtensions().textureBorderClampAny());
+            break;
+        case SamplerParameter::MaxAnisotropy:
+            isPnameSupported = context->getExtensions().textureFilterAnisotropicEXT;
+            if (isPnameSupported && !ValidateTextureMaxAnisotropyValue(
+                                        context, entryPoint, static_cast<GLfloat>(params[0])))
             {
                 return false;
             }
             break;
-
-        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
-        {
-            GLfloat paramValue = static_cast<GLfloat>(params[0]);
-            if (!ValidateTextureMaxAnisotropyValue(context, entryPoint, paramValue))
+        case SamplerParameter::SrgbDecode:
+            isPnameSupported = context->getExtensions().textureSRGBDecodeEXT;
+            if (isPnameSupported && !ValidateTextureSRGBDecodeValue(context, entryPoint, params))
             {
-                return false;
-            }
-        }
-        break;
-
-        case GL_TEXTURE_BORDER_COLOR:
-            if (!context->getExtensions().textureBorderClampAny() &&
-                context->getClientVersion() < ES_3_2)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kExtensionNotEnabled);
-                return false;
-            }
-            if (!vectorParams)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInsufficientBufferSize);
                 return false;
             }
             break;
-
         default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
+            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kParameterNameUnknown);
             return false;
+    }
+
+    if (ANGLE_UNLIKELY(!isPnameSupported))
+    {
+        ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kParameterNameUnsupported, ToGLenum(pnamePacked));
+        return false;
+    }
+
+    if (ANGLE_UNLIKELY(params == nullptr))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kParamsNULL);
+        return false;
     }
 
     return true;
@@ -7901,23 +7880,17 @@ bool ValidateSamplerParameterBase(const Context *context,
 template bool ValidateSamplerParameterBase(const Context *,
                                            angle::EntryPoint,
                                            SamplerID,
-                                           GLenum,
-                                           GLsizei,
-                                           bool,
+                                           SamplerParameter,
                                            const GLfloat *);
 template bool ValidateSamplerParameterBase(const Context *,
                                            angle::EntryPoint,
                                            SamplerID,
-                                           GLenum,
-                                           GLsizei,
-                                           bool,
+                                           SamplerParameter,
                                            const GLint *);
 template bool ValidateSamplerParameterBase(const Context *,
                                            angle::EntryPoint,
                                            SamplerID,
-                                           GLenum,
-                                           GLsizei,
-                                           bool,
+                                           SamplerParameter,
                                            const GLuint *);
 
 bool ValidateGetSamplerParameterBase(const Context *context,

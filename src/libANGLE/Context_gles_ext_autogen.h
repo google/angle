@@ -569,10 +569,10 @@
                                GLint64 *data);                                                     \
     void getBufferParameteri64vRobust(BufferBinding targetPacked, BufferParam pnamePacked,         \
                                       GLsizei paramCount, GLsizei *length, GLint64 *params);       \
-    void samplerParameterivRobust(SamplerID samplerPacked, GLuint pname, GLsizei paramCount,       \
-                                  const GLint *param);                                             \
-    void samplerParameterfvRobust(SamplerID samplerPacked, GLenum pname, GLsizei paramCount,       \
-                                  const GLfloat *param);                                           \
+    void samplerParameterivRobust(SamplerID samplerPacked, SamplerParameter pnamePacked,           \
+                                  GLsizei paramCount, const GLint *param);                         \
+    void samplerParameterfvRobust(SamplerID samplerPacked, SamplerParameter pnamePacked,           \
+                                  GLsizei paramCount, const GLfloat *param);                       \
     void getSamplerParameterivRobust(SamplerID samplerPacked, SamplerParameter pnamePacked,        \
                                      GLsizei paramCount, GLsizei *length, GLint *params);          \
     void getSamplerParameterfvRobust(SamplerID samplerPacked, SamplerParameter pnamePacked,        \

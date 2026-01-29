@@ -351,21 +351,21 @@ void CaptureReadnPixels_data(const State &glState,
 }
 
 void CaptureSamplerParameterIiv_param(const State &glState,
-                                      SamplerID sampler,
-                                      GLenum pname,
+                                      SamplerID samplerPacked,
+                                      SamplerParameter pnamePacked,
                                       const GLint *param,
                                       ParamCapture *paramParam)
 {
-    CaptureTextureAndSamplerParameter_params<GLint>(pname, param, paramParam);
+    CaptureTextureAndSamplerParameter_params<GLint>(ToGLenum(pnamePacked), param, paramParam);
 }
 
 void CaptureSamplerParameterIuiv_param(const State &glState,
-                                       SamplerID sampler,
-                                       GLenum pname,
+                                       SamplerID samplerPacked,
+                                       SamplerParameter pnamePacked,
                                        const GLuint *param,
                                        ParamCapture *paramParam)
 {
-    CaptureTextureAndSamplerParameter_params<GLuint>(pname, param, paramParam);
+    CaptureTextureAndSamplerParameter_params<GLuint>(ToGLenum(pnamePacked), param, paramParam);
 }
 
 void CaptureTexParameterIiv_params(const State &glState,

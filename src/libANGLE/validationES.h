@@ -672,10 +672,8 @@ bool ValidateGetSamplerParameterBase(const Context *context,
 template <typename ParamType>
 bool ValidateSamplerParameterBase(const Context *context,
                                   angle::EntryPoint entryPoint,
-                                  SamplerID sampler,
-                                  GLenum pname,
-                                  GLsizei bufSize,
-                                  bool vectorParams,
+                                  SamplerID samplerPacked,
+                                  SamplerParameter pnamePacked,
                                   const ParamType *params);
 
 bool ValidateGetInternalFormativBase(const Context *context,

@@ -405,22 +405,22 @@ angle::CallCapture CaptureResumeTransformFeedback(const State &glState, bool isC
 angle::CallCapture CaptureSamplerParameterf(const State &glState,
                                             bool isCallValid,
                                             SamplerID samplerPacked,
-                                            GLenum pname,
+                                            SamplerParameter pnamePacked,
                                             GLfloat param);
 angle::CallCapture CaptureSamplerParameterfv(const State &glState,
                                              bool isCallValid,
                                              SamplerID samplerPacked,
-                                             GLenum pname,
+                                             SamplerParameter pnamePacked,
                                              const GLfloat *param);
 angle::CallCapture CaptureSamplerParameteri(const State &glState,
                                             bool isCallValid,
                                             SamplerID samplerPacked,
-                                            GLenum pname,
+                                            SamplerParameter pnamePacked,
                                             GLint param);
 angle::CallCapture CaptureSamplerParameteriv(const State &glState,
                                              bool isCallValid,
                                              SamplerID samplerPacked,
-                                             GLenum pname,
+                                             SamplerParameter pnamePacked,
                                              const GLint *param);
 angle::CallCapture CaptureTexImage3D(const State &glState,
                                      bool isCallValid,
@@ -899,12 +899,12 @@ void CaptureProgramBinary_binary(const State &glState,
                                  angle::ParamCapture *paramCapture);
 void CaptureSamplerParameterfv_param(const State &glState,
                                      SamplerID samplerPacked,
-                                     GLenum pname,
+                                     SamplerParameter pnamePacked,
                                      const GLfloat *param,
                                      angle::ParamCapture *paramCapture);
 void CaptureSamplerParameteriv_param(const State &glState,
                                      SamplerID samplerPacked,
-                                     GLenum pname,
+                                     SamplerParameter pnamePacked,
                                      const GLint *param,
                                      angle::ParamCapture *paramCapture);
 void CaptureTexImage3D_pixels(const State &glState,

@@ -115,10 +115,12 @@
     void renderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat,     \
                                         GLsizei width, GLsizei height);                            \
     void resumeTransformFeedback();                                                                \
-    void samplerParameterf(SamplerID samplerPacked, GLenum pname, GLfloat param);                  \
-    void samplerParameterfv(SamplerID samplerPacked, GLenum pname, const GLfloat *param);          \
-    void samplerParameteri(SamplerID samplerPacked, GLenum pname, GLint param);                    \
-    void samplerParameteriv(SamplerID samplerPacked, GLenum pname, const GLint *param);            \
+    void samplerParameterf(SamplerID samplerPacked, SamplerParameter pnamePacked, GLfloat param);  \
+    void samplerParameterfv(SamplerID samplerPacked, SamplerParameter pnamePacked,                 \
+                            const GLfloat *param);                                                 \
+    void samplerParameteri(SamplerID samplerPacked, SamplerParameter pnamePacked, GLint param);    \
+    void samplerParameteriv(SamplerID samplerPacked, SamplerParameter pnamePacked,                 \
+                            const GLint *param);                                                   \
     void texImage3D(TextureTarget targetPacked, GLint level, GLint internalformat, GLsizei width,  \
                     GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type,       \
                     const void *pixels);                                                           \

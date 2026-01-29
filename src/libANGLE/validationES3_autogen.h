@@ -390,22 +390,22 @@ bool ValidateResumeTransformFeedback(const Context *context, angle::EntryPoint e
 bool ValidateSamplerParameterf(const Context *context,
                                angle::EntryPoint entryPoint,
                                SamplerID samplerPacked,
-                               GLenum pname,
+                               SamplerParameter pnamePacked,
                                GLfloat param);
 bool ValidateSamplerParameterfv(const Context *context,
                                 angle::EntryPoint entryPoint,
                                 SamplerID samplerPacked,
-                                GLenum pname,
+                                SamplerParameter pnamePacked,
                                 const GLfloat *param);
 bool ValidateSamplerParameteri(const Context *context,
                                angle::EntryPoint entryPoint,
                                SamplerID samplerPacked,
-                               GLenum pname,
+                               SamplerParameter pnamePacked,
                                GLint param);
 bool ValidateSamplerParameteriv(const Context *context,
                                 angle::EntryPoint entryPoint,
                                 SamplerID samplerPacked,
-                                GLenum pname,
+                                SamplerParameter pnamePacked,
                                 const GLint *param);
 bool ValidateTexImage3D(const Context *context,
                         angle::EntryPoint entryPoint,

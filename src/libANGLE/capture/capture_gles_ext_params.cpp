@@ -1494,8 +1494,8 @@ void CaptureGetBufferParameteri64vRobustANGLE_params(const State &glState,
 }
 
 void CaptureSamplerParameterivRobustANGLE_param(const State &glState,
-                                                SamplerID sampler,
-                                                GLuint pname,
+                                                SamplerID samplerPacked,
+                                                SamplerParameter pnamePacked,
                                                 GLsizei paramCount,
                                                 const GLint *param,
                                                 ParamCapture *paramCapture)
@@ -1504,8 +1504,8 @@ void CaptureSamplerParameterivRobustANGLE_param(const State &glState,
 }
 
 void CaptureSamplerParameterfvRobustANGLE_param(const State &glState,
-                                                SamplerID sampler,
-                                                GLenum pname,
+                                                SamplerID samplerPacked,
+                                                SamplerParameter pnamePacked,
                                                 GLsizei paramCount,
                                                 const GLfloat *param,
                                                 ParamCapture *paramCapture)
@@ -2860,7 +2860,7 @@ void CaptureGetTexParameterIuivEXT_params(const State &glState,
 
 void CaptureSamplerParameterIivEXT_param(const State &glState,
                                          SamplerID samplerPacked,
-                                         GLenum pname,
+                                         SamplerParameter pnamePacked,
                                          const GLint *param,
                                          angle::ParamCapture *paramCapture)
 {
@@ -2869,7 +2869,7 @@ void CaptureSamplerParameterIivEXT_param(const State &glState,
 
 void CaptureSamplerParameterIuivEXT_param(const State &glState,
                                           SamplerID samplerPacked,
-                                          GLenum pname,
+                                          SamplerParameter pnamePacked,
                                           const GLuint *param,
                                           angle::ParamCapture *paramCapture)
 {
@@ -3544,21 +3544,21 @@ void CaptureGetTexParameterIuivOES_params(const State &glState,
 }
 
 void CaptureSamplerParameterIivOES_param(const State &glState,
-                                         SamplerID sampler,
-                                         GLenum pname,
+                                         SamplerID samplerPacked,
+                                         SamplerParameter pnamePacked,
                                          const GLint *param,
                                          ParamCapture *paramCapture)
 {
-    CaptureSamplerParameterIiv_param(glState, sampler, pname, param, paramCapture);
+    CaptureSamplerParameterIiv_param(glState, samplerPacked, pnamePacked, param, paramCapture);
 }
 
 void CaptureSamplerParameterIuivOES_param(const State &glState,
-                                          SamplerID sampler,
-                                          GLenum pname,
+                                          SamplerID samplerPacked,
+                                          SamplerParameter pnamePacked,
                                           const GLuint *param,
                                           ParamCapture *paramCapture)
 {
-    CaptureSamplerParameterIuiv_param(glState, sampler, pname, param, paramCapture);
+    CaptureSamplerParameterIuiv_param(glState, samplerPacked, pnamePacked, param, paramCapture);
 }
 
 void CaptureTexParameterIivOES_params(const State &glState,

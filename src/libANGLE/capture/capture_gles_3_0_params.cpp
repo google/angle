@@ -605,21 +605,21 @@ void CaptureProgramBinary_binary(const State &glState,
 }
 
 void CaptureSamplerParameterfv_param(const State &glState,
-                                     SamplerID sampler,
-                                     GLenum pname,
+                                     SamplerID samplerPacked,
+                                     SamplerParameter pnamePacked,
                                      const GLfloat *param,
                                      ParamCapture *paramCapture)
 {
-    CaptureTextureAndSamplerParameter_params<GLfloat>(pname, param, paramCapture);
+    CaptureTextureAndSamplerParameter_params<GLfloat>(ToGLenum(pnamePacked), param, paramCapture);
 }
 
 void CaptureSamplerParameteriv_param(const State &glState,
-                                     SamplerID sampler,
-                                     GLenum pname,
+                                     SamplerID samplerPacked,
+                                     SamplerParameter pnamePacked,
                                      const GLint *param,
                                      ParamCapture *paramCapture)
 {
-    CaptureTextureAndSamplerParameter_params<GLint>(pname, param, paramCapture);
+    CaptureTextureAndSamplerParameter_params<GLint>(ToGLenum(pnamePacked), param, paramCapture);
 }
 
 void CaptureTexImage3D_pixels(const State &glState,

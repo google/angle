@@ -636,20 +636,20 @@ bool ValidateReadnPixels(const Context *context,
 
 bool ValidateSamplerParameterIiv(const Context *context,
                                  angle::EntryPoint entryPoint,
-                                 SamplerID sampler,
-                                 GLenum pname,
+                                 SamplerID samplerPacked,
+                                 SamplerParameter pnamePacked,
                                  const GLint *param)
 {
-    return ValidateSamplerParameterBase(context, entryPoint, sampler, pname, -1, true, param);
+    return ValidateSamplerParameterBase(context, entryPoint, samplerPacked, pnamePacked, param);
 }
 
 bool ValidateSamplerParameterIuiv(const Context *context,
                                   angle::EntryPoint entryPoint,
-                                  SamplerID sampler,
-                                  GLenum pname,
+                                  SamplerID samplerPacked,
+                                  SamplerParameter pnamePacked,
                                   const GLuint *param)
 {
-    return ValidateSamplerParameterBase(context, entryPoint, sampler, pname, -1, true, param);
+    return ValidateSamplerParameterBase(context, entryPoint, samplerPacked, pnamePacked, param);
 }
 
 bool ValidateTexBuffer(const Context *context,
