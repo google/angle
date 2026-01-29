@@ -3150,92 +3150,92 @@ void GL_APIENTRY glDisableExtensionANGLE(const GLchar *name)
 
 // GL_ANGLE_robust_client_memory
 void GL_APIENTRY glGetBooleanvRobustANGLE(GLenum pname,
-                                          GLsizei bufSize,
+                                          GLsizei paramCount,
                                           GLsizei *length,
-                                          GLboolean *params)
+                                          GLboolean *data)
 {
-    return GL_GetBooleanvRobustANGLE(pname, bufSize, length, params);
+    return GL_GetBooleanvRobustANGLE(pname, paramCount, length, data);
 }
 
 void GL_APIENTRY glGetBufferParameterivRobustANGLE(GLenum target,
                                                    GLenum pname,
-                                                   GLsizei bufSize,
+                                                   GLsizei paramCount,
                                                    GLsizei *length,
                                                    GLint *params)
 {
-    return GL_GetBufferParameterivRobustANGLE(target, pname, bufSize, length, params);
+    return GL_GetBufferParameterivRobustANGLE(target, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetFloatvRobustANGLE(GLenum pname,
-                                        GLsizei bufSize,
+                                        GLsizei paramCount,
                                         GLsizei *length,
-                                        GLfloat *params)
+                                        GLfloat *data)
 {
-    return GL_GetFloatvRobustANGLE(pname, bufSize, length, params);
+    return GL_GetFloatvRobustANGLE(pname, paramCount, length, data);
 }
 
 void GL_APIENTRY glGetFramebufferAttachmentParameterivRobustANGLE(GLenum target,
                                                                   GLenum attachment,
                                                                   GLenum pname,
-                                                                  GLsizei bufSize,
+                                                                  GLsizei paramCount,
                                                                   GLsizei *length,
                                                                   GLint *params)
 {
-    return GL_GetFramebufferAttachmentParameterivRobustANGLE(target, attachment, pname, bufSize,
+    return GL_GetFramebufferAttachmentParameterivRobustANGLE(target, attachment, pname, paramCount,
                                                              length, params);
 }
 
 void GL_APIENTRY glGetIntegervRobustANGLE(GLenum pname,
-                                          GLsizei bufSize,
+                                          GLsizei paramCount,
                                           GLsizei *length,
                                           GLint *data)
 {
-    return GL_GetIntegervRobustANGLE(pname, bufSize, length, data);
+    return GL_GetIntegervRobustANGLE(pname, paramCount, length, data);
 }
 
 void GL_APIENTRY glGetProgramivRobustANGLE(GLuint program,
                                            GLenum pname,
-                                           GLsizei bufSize,
+                                           GLsizei paramCount,
                                            GLsizei *length,
                                            GLint *params)
 {
-    return GL_GetProgramivRobustANGLE(program, pname, bufSize, length, params);
+    return GL_GetProgramivRobustANGLE(program, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetRenderbufferParameterivRobustANGLE(GLenum target,
                                                          GLenum pname,
-                                                         GLsizei bufSize,
+                                                         GLsizei paramCount,
                                                          GLsizei *length,
                                                          GLint *params)
 {
-    return GL_GetRenderbufferParameterivRobustANGLE(target, pname, bufSize, length, params);
+    return GL_GetRenderbufferParameterivRobustANGLE(target, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetShaderivRobustANGLE(GLuint shader,
                                           GLenum pname,
-                                          GLsizei bufSize,
+                                          GLsizei paramCount,
                                           GLsizei *length,
                                           GLint *params)
 {
-    return GL_GetShaderivRobustANGLE(shader, pname, bufSize, length, params);
+    return GL_GetShaderivRobustANGLE(shader, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetTexParameterfvRobustANGLE(GLenum target,
                                                 GLenum pname,
-                                                GLsizei bufSize,
+                                                GLsizei paramCount,
                                                 GLsizei *length,
                                                 GLfloat *params)
 {
-    return GL_GetTexParameterfvRobustANGLE(target, pname, bufSize, length, params);
+    return GL_GetTexParameterfvRobustANGLE(target, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetTexParameterivRobustANGLE(GLenum target,
                                                 GLenum pname,
-                                                GLsizei bufSize,
+                                                GLsizei paramCount,
                                                 GLsizei *length,
                                                 GLint *params)
 {
-    return GL_GetTexParameterivRobustANGLE(target, pname, bufSize, length, params);
+    return GL_GetTexParameterivRobustANGLE(target, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetUniformfvRobustANGLE(GLuint program,
@@ -3258,29 +3258,29 @@ void GL_APIENTRY glGetUniformivRobustANGLE(GLuint program,
 
 void GL_APIENTRY glGetVertexAttribfvRobustANGLE(GLuint index,
                                                 GLenum pname,
-                                                GLsizei bufSize,
+                                                GLsizei paramCount,
                                                 GLsizei *length,
                                                 GLfloat *params)
 {
-    return GL_GetVertexAttribfvRobustANGLE(index, pname, bufSize, length, params);
+    return GL_GetVertexAttribfvRobustANGLE(index, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetVertexAttribivRobustANGLE(GLuint index,
                                                 GLenum pname,
-                                                GLsizei bufSize,
+                                                GLsizei paramCount,
                                                 GLsizei *length,
                                                 GLint *params)
 {
-    return GL_GetVertexAttribivRobustANGLE(index, pname, bufSize, length, params);
+    return GL_GetVertexAttribivRobustANGLE(index, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetVertexAttribPointervRobustANGLE(GLuint index,
                                                       GLenum pname,
-                                                      GLsizei bufSize,
+                                                      GLsizei paramCount,
                                                       GLsizei *length,
                                                       void **pointer)
 {
-    return GL_GetVertexAttribPointervRobustANGLE(index, pname, bufSize, length, pointer);
+    return GL_GetVertexAttribPointervRobustANGLE(index, pname, paramCount, length, pointer);
 }
 
 void GL_APIENTRY glReadPixelsRobustANGLE(GLint x,
@@ -3316,18 +3316,18 @@ void GL_APIENTRY glTexImage2DRobustANGLE(GLenum target,
 
 void GL_APIENTRY glTexParameterfvRobustANGLE(GLenum target,
                                              GLenum pname,
-                                             GLsizei bufSize,
+                                             GLsizei paramCount,
                                              const GLfloat *params)
 {
-    return GL_TexParameterfvRobustANGLE(target, pname, bufSize, params);
+    return GL_TexParameterfvRobustANGLE(target, pname, paramCount, params);
 }
 
 void GL_APIENTRY glTexParameterivRobustANGLE(GLenum target,
                                              GLenum pname,
-                                             GLsizei bufSize,
+                                             GLsizei paramCount,
                                              const GLint *params)
 {
-    return GL_TexParameterivRobustANGLE(target, pname, bufSize, params);
+    return GL_TexParameterivRobustANGLE(target, pname, paramCount, params);
 }
 
 void GL_APIENTRY glTexSubImage2DRobustANGLE(GLenum target,
@@ -3385,11 +3385,11 @@ void GL_APIENTRY glCompressedTexImage2DRobustANGLE(GLenum target,
                                                    GLsizei height,
                                                    GLint border,
                                                    GLsizei imageSize,
-                                                   GLsizei dataSize,
+                                                   GLsizei bufSize,
                                                    const void *data)
 {
     return GL_CompressedTexImage2DRobustANGLE(target, level, internalformat, width, height, border,
-                                              imageSize, dataSize, data);
+                                              imageSize, bufSize, data);
 }
 
 void GL_APIENTRY glCompressedTexSubImage2DRobustANGLE(GLenum target,
@@ -3400,11 +3400,11 @@ void GL_APIENTRY glCompressedTexSubImage2DRobustANGLE(GLenum target,
                                                       GLsizei height,
                                                       GLenum format,
                                                       GLsizei imageSize,
-                                                      GLsizei dataSize,
+                                                      GLsizei bufSize,
                                                       const void *data)
 {
     return GL_CompressedTexSubImage2DRobustANGLE(target, level, xoffset, yoffset, width, height,
-                                                 format, imageSize, dataSize, data);
+                                                 format, imageSize, bufSize, data);
 }
 
 void GL_APIENTRY glCompressedTexImage3DRobustANGLE(GLenum target,
@@ -3415,11 +3415,11 @@ void GL_APIENTRY glCompressedTexImage3DRobustANGLE(GLenum target,
                                                    GLsizei depth,
                                                    GLint border,
                                                    GLsizei imageSize,
-                                                   GLsizei dataSize,
+                                                   GLsizei bufSize,
                                                    const void *data)
 {
     return GL_CompressedTexImage3DRobustANGLE(target, level, internalformat, width, height, depth,
-                                              border, imageSize, dataSize, data);
+                                              border, imageSize, bufSize, data);
 }
 
 void GL_APIENTRY glCompressedTexSubImage3DRobustANGLE(GLenum target,
@@ -3432,76 +3432,76 @@ void GL_APIENTRY glCompressedTexSubImage3DRobustANGLE(GLenum target,
                                                       GLsizei depth,
                                                       GLenum format,
                                                       GLsizei imageSize,
-                                                      GLsizei dataSize,
+                                                      GLsizei bufSize,
                                                       const void *data)
 {
     return GL_CompressedTexSubImage3DRobustANGLE(target, level, xoffset, yoffset, zoffset, width,
-                                                 height, depth, format, imageSize, dataSize, data);
+                                                 height, depth, format, imageSize, bufSize, data);
 }
 
 void GL_APIENTRY glGetQueryivRobustANGLE(GLenum target,
                                          GLenum pname,
-                                         GLsizei bufSize,
+                                         GLsizei paramCount,
                                          GLsizei *length,
                                          GLint *params)
 {
-    return GL_GetQueryivRobustANGLE(target, pname, bufSize, length, params);
+    return GL_GetQueryivRobustANGLE(target, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetQueryObjectuivRobustANGLE(GLuint id,
                                                 GLenum pname,
-                                                GLsizei bufSize,
+                                                GLsizei paramCount,
                                                 GLsizei *length,
                                                 GLuint *params)
 {
-    return GL_GetQueryObjectuivRobustANGLE(id, pname, bufSize, length, params);
+    return GL_GetQueryObjectuivRobustANGLE(id, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetBufferPointervRobustANGLE(GLenum target,
                                                 GLenum pname,
-                                                GLsizei bufSize,
+                                                GLsizei paramCount,
                                                 GLsizei *length,
                                                 void **params)
 {
-    return GL_GetBufferPointervRobustANGLE(target, pname, bufSize, length, params);
+    return GL_GetBufferPointervRobustANGLE(target, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetIntegeri_vRobustANGLE(GLenum target,
                                             GLuint index,
-                                            GLsizei bufSize,
+                                            GLsizei paramCount,
                                             GLsizei *length,
                                             GLint *data)
 {
-    return GL_GetIntegeri_vRobustANGLE(target, index, bufSize, length, data);
+    return GL_GetIntegeri_vRobustANGLE(target, index, paramCount, length, data);
 }
 
 void GL_APIENTRY glGetInternalformativRobustANGLE(GLenum target,
                                                   GLenum internalformat,
                                                   GLenum pname,
-                                                  GLsizei bufSize,
+                                                  GLsizei paramCount,
                                                   GLsizei *length,
                                                   GLint *params)
 {
-    return GL_GetInternalformativRobustANGLE(target, internalformat, pname, bufSize, length,
+    return GL_GetInternalformativRobustANGLE(target, internalformat, pname, paramCount, length,
                                              params);
 }
 
 void GL_APIENTRY glGetVertexAttribIivRobustANGLE(GLuint index,
                                                  GLenum pname,
-                                                 GLsizei bufSize,
+                                                 GLsizei paramCount,
                                                  GLsizei *length,
                                                  GLint *params)
 {
-    return GL_GetVertexAttribIivRobustANGLE(index, pname, bufSize, length, params);
+    return GL_GetVertexAttribIivRobustANGLE(index, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetVertexAttribIuivRobustANGLE(GLuint index,
                                                   GLenum pname,
-                                                  GLsizei bufSize,
+                                                  GLsizei paramCount,
                                                   GLsizei *length,
                                                   GLuint *params)
 {
-    return GL_GetVertexAttribIuivRobustANGLE(index, pname, bufSize, length, params);
+    return GL_GetVertexAttribIuivRobustANGLE(index, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetUniformuivRobustANGLE(GLuint program,
@@ -3516,148 +3516,148 @@ void GL_APIENTRY glGetUniformuivRobustANGLE(GLuint program,
 void GL_APIENTRY glGetActiveUniformBlockivRobustANGLE(GLuint program,
                                                       GLuint uniformBlockIndex,
                                                       GLenum pname,
-                                                      GLsizei bufSize,
+                                                      GLsizei paramCount,
                                                       GLsizei *length,
                                                       GLint *params)
 {
-    return GL_GetActiveUniformBlockivRobustANGLE(program, uniformBlockIndex, pname, bufSize, length,
-                                                 params);
+    return GL_GetActiveUniformBlockivRobustANGLE(program, uniformBlockIndex, pname, paramCount,
+                                                 length, params);
 }
 
 void GL_APIENTRY glGetInteger64vRobustANGLE(GLenum pname,
-                                            GLsizei bufSize,
+                                            GLsizei paramCount,
                                             GLsizei *length,
                                             GLint64 *data)
 {
-    return GL_GetInteger64vRobustANGLE(pname, bufSize, length, data);
+    return GL_GetInteger64vRobustANGLE(pname, paramCount, length, data);
 }
 
 void GL_APIENTRY glGetInteger64i_vRobustANGLE(GLenum target,
                                               GLuint index,
-                                              GLsizei bufSize,
+                                              GLsizei paramCount,
                                               GLsizei *length,
                                               GLint64 *data)
 {
-    return GL_GetInteger64i_vRobustANGLE(target, index, bufSize, length, data);
+    return GL_GetInteger64i_vRobustANGLE(target, index, paramCount, length, data);
 }
 
 void GL_APIENTRY glGetBufferParameteri64vRobustANGLE(GLenum target,
                                                      GLenum pname,
-                                                     GLsizei bufSize,
+                                                     GLsizei paramCount,
                                                      GLsizei *length,
                                                      GLint64 *params)
 {
-    return GL_GetBufferParameteri64vRobustANGLE(target, pname, bufSize, length, params);
+    return GL_GetBufferParameteri64vRobustANGLE(target, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glSamplerParameterivRobustANGLE(GLuint sampler,
                                                  GLuint pname,
-                                                 GLsizei bufSize,
+                                                 GLsizei paramCount,
                                                  const GLint *param)
 {
-    return GL_SamplerParameterivRobustANGLE(sampler, pname, bufSize, param);
+    return GL_SamplerParameterivRobustANGLE(sampler, pname, paramCount, param);
 }
 
 void GL_APIENTRY glSamplerParameterfvRobustANGLE(GLuint sampler,
                                                  GLenum pname,
-                                                 GLsizei bufSize,
+                                                 GLsizei paramCount,
                                                  const GLfloat *param)
 {
-    return GL_SamplerParameterfvRobustANGLE(sampler, pname, bufSize, param);
+    return GL_SamplerParameterfvRobustANGLE(sampler, pname, paramCount, param);
 }
 
 void GL_APIENTRY glGetSamplerParameterivRobustANGLE(GLuint sampler,
                                                     GLenum pname,
-                                                    GLsizei bufSize,
+                                                    GLsizei paramCount,
                                                     GLsizei *length,
                                                     GLint *params)
 {
-    return GL_GetSamplerParameterivRobustANGLE(sampler, pname, bufSize, length, params);
+    return GL_GetSamplerParameterivRobustANGLE(sampler, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetSamplerParameterfvRobustANGLE(GLuint sampler,
                                                     GLenum pname,
-                                                    GLsizei bufSize,
+                                                    GLsizei paramCount,
                                                     GLsizei *length,
                                                     GLfloat *params)
 {
-    return GL_GetSamplerParameterfvRobustANGLE(sampler, pname, bufSize, length, params);
+    return GL_GetSamplerParameterfvRobustANGLE(sampler, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetMultisamplefvRobustANGLE(GLenum pname,
                                                GLuint index,
-                                               GLsizei bufSize,
+                                               GLsizei paramCount,
                                                GLsizei *length,
                                                GLfloat *val)
 {
-    return GL_GetMultisamplefvRobustANGLE(pname, index, bufSize, length, val);
+    return GL_GetMultisamplefvRobustANGLE(pname, index, paramCount, length, val);
 }
 
 void GL_APIENTRY glGetTexLevelParameterivRobustANGLE(GLenum target,
                                                      GLint level,
                                                      GLenum pname,
-                                                     GLsizei bufSize,
+                                                     GLsizei paramCount,
                                                      GLsizei *length,
                                                      GLint *params)
 {
-    return GL_GetTexLevelParameterivRobustANGLE(target, level, pname, bufSize, length, params);
+    return GL_GetTexLevelParameterivRobustANGLE(target, level, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetTexLevelParameterfvRobustANGLE(GLenum target,
                                                      GLint level,
                                                      GLenum pname,
-                                                     GLsizei bufSize,
+                                                     GLsizei paramCount,
                                                      GLsizei *length,
                                                      GLfloat *params)
 {
-    return GL_GetTexLevelParameterfvRobustANGLE(target, level, pname, bufSize, length, params);
+    return GL_GetTexLevelParameterfvRobustANGLE(target, level, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetQueryObjectivRobustANGLE(GLuint id,
                                                GLenum pname,
-                                               GLsizei bufSize,
+                                               GLsizei paramCount,
                                                GLsizei *length,
                                                GLint *params)
 {
-    return GL_GetQueryObjectivRobustANGLE(id, pname, bufSize, length, params);
+    return GL_GetQueryObjectivRobustANGLE(id, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetQueryObjecti64vRobustANGLE(GLuint id,
                                                  GLenum pname,
-                                                 GLsizei bufSize,
+                                                 GLsizei paramCount,
                                                  GLsizei *length,
                                                  GLint64 *params)
 {
-    return GL_GetQueryObjecti64vRobustANGLE(id, pname, bufSize, length, params);
+    return GL_GetQueryObjecti64vRobustANGLE(id, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetQueryObjectui64vRobustANGLE(GLuint id,
                                                   GLenum pname,
-                                                  GLsizei bufSize,
+                                                  GLsizei paramCount,
                                                   GLsizei *length,
                                                   GLuint64 *params)
 {
-    return GL_GetQueryObjectui64vRobustANGLE(id, pname, bufSize, length, params);
+    return GL_GetQueryObjectui64vRobustANGLE(id, pname, paramCount, length, params);
 }
 
 void GL_APIENTRY glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint plane,
                                                                          GLenum pname,
-                                                                         GLsizei bufSize,
+                                                                         GLsizei paramCount,
                                                                          GLsizei *length,
                                                                          GLfloat *params)
 {
-    return GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(plane, pname, bufSize, length,
-                                                                    params);
+    return GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(plane, pname, paramCount,
+                                                                    length, params);
 }
 
 void GL_APIENTRY glGetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint plane,
                                                                          GLenum pname,
-                                                                         GLsizei bufSize,
+                                                                         GLsizei paramCount,
                                                                          GLsizei *length,
                                                                          GLint *params)
 {
-    return GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(plane, pname, bufSize, length,
-                                                                    params);
+    return GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(plane, pname, paramCount,
+                                                                    length, params);
 }
 
 // GL_ANGLE_robust_fragment_shader_output

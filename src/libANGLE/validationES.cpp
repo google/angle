@@ -3101,7 +3101,7 @@ bool ValidateGetBooleanvRobustANGLE(const Context *context,
                                     GLenum pname,
                                     GLsizei bufSize,
                                     const GLsizei *length,
-                                    const GLboolean *params)
+                                    const GLboolean *data)
 {
     GLenum nativeType;
     unsigned int numParams = 0;
@@ -3121,7 +3121,7 @@ bool ValidateGetFloatvRobustANGLE(const Context *context,
                                   GLenum pname,
                                   GLsizei bufSize,
                                   const GLsizei *length,
-                                  const GLfloat *params)
+                                  const GLfloat *data)
 {
     GLenum nativeType;
     unsigned int numParams = 0;

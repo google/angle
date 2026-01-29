@@ -2382,17 +2382,17 @@ void GL_APIENTRY GL_DisableExtensionANGLE(const GLchar *name)
 
 // GL_ANGLE_robust_client_memory
 void GL_APIENTRY GL_GetBooleanvRobustANGLE(GLenum pname,
-                                           GLsizei bufSize,
+                                           GLsizei paramCount,
                                            GLsizei *length,
-                                           GLboolean *params)
+                                           GLboolean *data)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(EVENT(context, GLGetBooleanvRobustANGLE,
-                            "context = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-                            ", params = 0x%016" PRIxPTR "",
-                            CID(context), GLenumToString(GLESEnum::AllEnums, pname), bufSize,
-                            (uintptr_t)length, (uintptr_t)params));
+                            "context = %d, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
+                            ", data = 0x%016" PRIxPTR "",
+                            CID(context), GLenumToString(GLESEnum::GetPName, pname), paramCount,
+                            (uintptr_t)length, (uintptr_t)data));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -2406,8 +2406,8 @@ void GL_APIENTRY GL_GetBooleanvRobustANGLE(GLenum pname,
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateGetBooleanvRobustANGLE(
-                    context, angle::EntryPoint::GLGetBooleanvRobustANGLE, pname, bufSize, length,
-                    params);
+                    context, angle::EntryPoint::GLGetBooleanvRobustANGLE, pname, paramCount, length,
+                    data);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -2419,10 +2419,10 @@ void GL_APIENTRY GL_GetBooleanvRobustANGLE(GLenum pname,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getBooleanvRobust(pname, bufSize, length, params);
+            context->getBooleanvRobust(pname, paramCount, length, data);
         }
-        ANGLE_CAPTURE_GL(GetBooleanvRobustANGLE, isCallValid, context, pname, bufSize, length,
-                         params);
+        ANGLE_CAPTURE_GL(GetBooleanvRobustANGLE, isCallValid, context, pname, paramCount, length,
+                         data);
     }
     else
     {
@@ -2433,18 +2433,19 @@ void GL_APIENTRY GL_GetBooleanvRobustANGLE(GLenum pname,
 
 void GL_APIENTRY GL_GetBufferParameterivRobustANGLE(GLenum target,
                                                     GLenum pname,
-                                                    GLsizei bufSize,
+                                                    GLsizei paramCount,
                                                     GLsizei *length,
                                                     GLint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLGetBufferParameterivRobustANGLE,
-        "context = %d, target = %s, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-        ", params = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target),
-        GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(
+        EVENT(context, GLGetBufferParameterivRobustANGLE,
+              "context = %d, target = %s, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
+              ", params = 0x%016" PRIxPTR "",
+              CID(context), GLenumToString(GLESEnum::BufferTargetARB, target),
+              GLenumToString(GLESEnum::AllEnums, pname), paramCount, (uintptr_t)length,
+              (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -2460,7 +2461,7 @@ void GL_APIENTRY GL_GetBufferParameterivRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetBufferParameterivRobustANGLE(
                     context, angle::EntryPoint::GLGetBufferParameterivRobustANGLE, targetPacked,
-                    pname, bufSize, length, params);
+                    pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -2473,10 +2474,10 @@ void GL_APIENTRY GL_GetBufferParameterivRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getBufferParameterivRobust(targetPacked, pname, bufSize, length, params);
+            context->getBufferParameterivRobust(targetPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetBufferParameterivRobustANGLE, isCallValid, context, targetPacked, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -2487,17 +2488,17 @@ void GL_APIENTRY GL_GetBufferParameterivRobustANGLE(GLenum target,
 }
 
 void GL_APIENTRY GL_GetFloatvRobustANGLE(GLenum pname,
-                                         GLsizei bufSize,
+                                         GLsizei paramCount,
                                          GLsizei *length,
-                                         GLfloat *params)
+                                         GLfloat *data)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(EVENT(context, GLGetFloatvRobustANGLE,
-                            "context = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-                            ", params = 0x%016" PRIxPTR "",
-                            CID(context), GLenumToString(GLESEnum::AllEnums, pname), bufSize,
-                            (uintptr_t)length, (uintptr_t)params));
+                            "context = %d, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
+                            ", data = 0x%016" PRIxPTR "",
+                            CID(context), GLenumToString(GLESEnum::GetPName, pname), paramCount,
+                            (uintptr_t)length, (uintptr_t)data));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -2512,7 +2513,7 @@ void GL_APIENTRY GL_GetFloatvRobustANGLE(GLenum pname,
 #endif
                 isCallValid =
                     ValidateGetFloatvRobustANGLE(context, angle::EntryPoint::GLGetFloatvRobustANGLE,
-                                                 pname, bufSize, length, params);
+                                                 pname, paramCount, length, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -2524,10 +2525,10 @@ void GL_APIENTRY GL_GetFloatvRobustANGLE(GLenum pname,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFloatvRobust(pname, bufSize, length, params);
+            context->getFloatvRobust(pname, paramCount, length, data);
         }
-        ANGLE_CAPTURE_GL(GetFloatvRobustANGLE, isCallValid, context, pname, bufSize, length,
-                         params);
+        ANGLE_CAPTURE_GL(GetFloatvRobustANGLE, isCallValid, context, pname, paramCount, length,
+                         data);
     }
     else
     {
@@ -2539,19 +2540,19 @@ void GL_APIENTRY GL_GetFloatvRobustANGLE(GLenum pname,
 void GL_APIENTRY GL_GetFramebufferAttachmentParameterivRobustANGLE(GLenum target,
                                                                    GLenum attachment,
                                                                    GLenum pname,
-                                                                   GLsizei bufSize,
+                                                                   GLsizei paramCount,
                                                                    GLsizei *length,
                                                                    GLint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(EVENT(context, GLGetFramebufferAttachmentParameterivRobustANGLE,
-                            "context = %d, target = %s, attachment = %s, pname = %s, bufSize = %d, "
-                            "length = 0x%016" PRIxPTR ", params = 0x%016" PRIxPTR "",
-                            CID(context), GLenumToString(GLESEnum::AllEnums, target),
-                            GLenumToString(GLESEnum::AllEnums, attachment),
-                            GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length,
-                            (uintptr_t)params));
+                            "context = %d, target = %s, attachment = %s, pname = %s, paramCount = "
+                            "%d, length = 0x%016" PRIxPTR ", params = 0x%016" PRIxPTR "",
+                            CID(context), GLenumToString(GLESEnum::FramebufferTarget, target),
+                            GLenumToString(GLESEnum::FramebufferAttachment, attachment),
+                            GLenumToString(GLESEnum::FramebufferAttachmentParameterName, pname),
+                            paramCount, (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -2566,7 +2567,7 @@ void GL_APIENTRY GL_GetFramebufferAttachmentParameterivRobustANGLE(GLenum target
 #endif
                 isCallValid = ValidateGetFramebufferAttachmentParameterivRobustANGLE(
                     context, angle::EntryPoint::GLGetFramebufferAttachmentParameterivRobustANGLE,
-                    target, attachment, pname, bufSize, length, params);
+                    target, attachment, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -2579,11 +2580,11 @@ void GL_APIENTRY GL_GetFramebufferAttachmentParameterivRobustANGLE(GLenum target
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFramebufferAttachmentParameterivRobust(target, attachment, pname, bufSize,
-                                                               length, params);
+            context->getFramebufferAttachmentParameterivRobust(target, attachment, pname,
+                                                               paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferAttachmentParameterivRobustANGLE, isCallValid, context,
-                         target, attachment, pname, bufSize, length, params);
+                         target, attachment, pname, paramCount, length, params);
     }
     else
     {
@@ -2594,16 +2595,16 @@ void GL_APIENTRY GL_GetFramebufferAttachmentParameterivRobustANGLE(GLenum target
 }
 
 void GL_APIENTRY GL_GetIntegervRobustANGLE(GLenum pname,
-                                           GLsizei bufSize,
+                                           GLsizei paramCount,
                                            GLsizei *length,
                                            GLint *data)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(EVENT(context, GLGetIntegervRobustANGLE,
-                            "context = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+                            "context = %d, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
                             ", data = 0x%016" PRIxPTR "",
-                            CID(context), GLenumToString(GLESEnum::AllEnums, pname), bufSize,
+                            CID(context), GLenumToString(GLESEnum::GetPName, pname), paramCount,
                             (uintptr_t)length, (uintptr_t)data));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -2618,7 +2619,7 @@ void GL_APIENTRY GL_GetIntegervRobustANGLE(GLenum pname,
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateGetIntegervRobustANGLE(
-                    context, angle::EntryPoint::GLGetIntegervRobustANGLE, pname, bufSize, length,
+                    context, angle::EntryPoint::GLGetIntegervRobustANGLE, pname, paramCount, length,
                     data);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
@@ -2631,9 +2632,9 @@ void GL_APIENTRY GL_GetIntegervRobustANGLE(GLenum pname,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getIntegervRobust(pname, bufSize, length, data);
+            context->getIntegervRobust(pname, paramCount, length, data);
         }
-        ANGLE_CAPTURE_GL(GetIntegervRobustANGLE, isCallValid, context, pname, bufSize, length,
+        ANGLE_CAPTURE_GL(GetIntegervRobustANGLE, isCallValid, context, pname, paramCount, length,
                          data);
     }
     else
@@ -2645,7 +2646,7 @@ void GL_APIENTRY GL_GetIntegervRobustANGLE(GLenum pname,
 
 void GL_APIENTRY GL_GetProgramivRobustANGLE(GLuint program,
                                             GLenum pname,
-                                            GLsizei bufSize,
+                                            GLsizei paramCount,
                                             GLsizei *length,
                                             GLint *params)
 {
@@ -2653,10 +2654,10 @@ void GL_APIENTRY GL_GetProgramivRobustANGLE(GLuint program,
     Context *context = GetGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetProgramivRobustANGLE,
-              "context = %d, program = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, program = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), program, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
-              (uintptr_t)length, (uintptr_t)params));
+              CID(context), program, GLenumToString(GLESEnum::ProgramPropertyARB, pname),
+              paramCount, (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -2672,7 +2673,7 @@ void GL_APIENTRY GL_GetProgramivRobustANGLE(GLuint program,
 #endif
                 isCallValid = ValidateGetProgramivRobustANGLE(
                     context, angle::EntryPoint::GLGetProgramivRobustANGLE, programPacked, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -2684,10 +2685,10 @@ void GL_APIENTRY GL_GetProgramivRobustANGLE(GLuint program,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getProgramivRobust(programPacked, pname, bufSize, length, params);
+            context->getProgramivRobust(programPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetProgramivRobustANGLE, isCallValid, context, programPacked, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -2697,18 +2698,19 @@ void GL_APIENTRY GL_GetProgramivRobustANGLE(GLuint program,
 
 void GL_APIENTRY GL_GetRenderbufferParameterivRobustANGLE(GLenum target,
                                                           GLenum pname,
-                                                          GLsizei bufSize,
+                                                          GLsizei paramCount,
                                                           GLsizei *length,
                                                           GLint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLGetRenderbufferParameterivRobustANGLE,
-        "context = %d, target = %s, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-        ", params = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target),
-        GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(
+        EVENT(context, GLGetRenderbufferParameterivRobustANGLE,
+              "context = %d, target = %s, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
+              ", params = 0x%016" PRIxPTR "",
+              CID(context), GLenumToString(GLESEnum::RenderbufferTarget, target),
+              GLenumToString(GLESEnum::RenderbufferParameterName, pname), paramCount,
+              (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -2723,7 +2725,7 @@ void GL_APIENTRY GL_GetRenderbufferParameterivRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetRenderbufferParameterivRobustANGLE(
                     context, angle::EntryPoint::GLGetRenderbufferParameterivRobustANGLE, target,
-                    pname, bufSize, length, params);
+                    pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -2736,10 +2738,10 @@ void GL_APIENTRY GL_GetRenderbufferParameterivRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getRenderbufferParameterivRobust(target, pname, bufSize, length, params);
+            context->getRenderbufferParameterivRobust(target, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetRenderbufferParameterivRobustANGLE, isCallValid, context, target, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -2751,7 +2753,7 @@ void GL_APIENTRY GL_GetRenderbufferParameterivRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_GetShaderivRobustANGLE(GLuint shader,
                                            GLenum pname,
-                                           GLsizei bufSize,
+                                           GLsizei paramCount,
                                            GLsizei *length,
                                            GLint *params)
 {
@@ -2759,10 +2761,10 @@ void GL_APIENTRY GL_GetShaderivRobustANGLE(GLuint shader,
     Context *context = GetGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetShaderivRobustANGLE,
-              "context = %d, shader = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, shader = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), shader, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
-              (uintptr_t)length, (uintptr_t)params));
+              CID(context), shader, GLenumToString(GLESEnum::ShaderParameterName, pname),
+              paramCount, (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -2778,7 +2780,7 @@ void GL_APIENTRY GL_GetShaderivRobustANGLE(GLuint shader,
 #endif
                 isCallValid = ValidateGetShaderivRobustANGLE(
                     context, angle::EntryPoint::GLGetShaderivRobustANGLE, shaderPacked, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -2790,10 +2792,10 @@ void GL_APIENTRY GL_GetShaderivRobustANGLE(GLuint shader,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getShaderivRobust(shaderPacked, pname, bufSize, length, params);
+            context->getShaderivRobust(shaderPacked, pname, paramCount, length, params);
         }
-        ANGLE_CAPTURE_GL(GetShaderivRobustANGLE, isCallValid, context, shaderPacked, pname, bufSize,
-                         length, params);
+        ANGLE_CAPTURE_GL(GetShaderivRobustANGLE, isCallValid, context, shaderPacked, pname,
+                         paramCount, length, params);
     }
     else
     {
@@ -2803,18 +2805,19 @@ void GL_APIENTRY GL_GetShaderivRobustANGLE(GLuint shader,
 
 void GL_APIENTRY GL_GetTexParameterfvRobustANGLE(GLenum target,
                                                  GLenum pname,
-                                                 GLsizei bufSize,
+                                                 GLsizei paramCount,
                                                  GLsizei *length,
                                                  GLfloat *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLGetTexParameterfvRobustANGLE,
-        "context = %d, target = %s, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-        ", params = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target),
-        GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(
+        EVENT(context, GLGetTexParameterfvRobustANGLE,
+              "context = %d, target = %s, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
+              ", params = 0x%016" PRIxPTR "",
+              CID(context), GLenumToString(GLESEnum::TextureTarget, target),
+              GLenumToString(GLESEnum::TextureParameterName, pname), paramCount, (uintptr_t)length,
+              (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -2830,7 +2833,7 @@ void GL_APIENTRY GL_GetTexParameterfvRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetTexParameterfvRobustANGLE(
                     context, angle::EntryPoint::GLGetTexParameterfvRobustANGLE, targetPacked, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -2842,10 +2845,10 @@ void GL_APIENTRY GL_GetTexParameterfvRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getTexParameterfvRobust(targetPacked, pname, bufSize, length, params);
+            context->getTexParameterfvRobust(targetPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetTexParameterfvRobustANGLE, isCallValid, context, targetPacked, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -2857,18 +2860,19 @@ void GL_APIENTRY GL_GetTexParameterfvRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_GetTexParameterivRobustANGLE(GLenum target,
                                                  GLenum pname,
-                                                 GLsizei bufSize,
+                                                 GLsizei paramCount,
                                                  GLsizei *length,
                                                  GLint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLGetTexParameterivRobustANGLE,
-        "context = %d, target = %s, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-        ", params = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target),
-        GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(
+        EVENT(context, GLGetTexParameterivRobustANGLE,
+              "context = %d, target = %s, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
+              ", params = 0x%016" PRIxPTR "",
+              CID(context), GLenumToString(GLESEnum::TextureTarget, target),
+              GLenumToString(GLESEnum::TextureParameterName, pname), paramCount, (uintptr_t)length,
+              (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -2884,7 +2888,7 @@ void GL_APIENTRY GL_GetTexParameterivRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetTexParameterivRobustANGLE(
                     context, angle::EntryPoint::GLGetTexParameterivRobustANGLE, targetPacked, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -2896,10 +2900,10 @@ void GL_APIENTRY GL_GetTexParameterivRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getTexParameterivRobust(targetPacked, pname, bufSize, length, params);
+            context->getTexParameterivRobust(targetPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetTexParameterivRobustANGLE, isCallValid, context, targetPacked, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -3019,7 +3023,7 @@ void GL_APIENTRY GL_GetUniformivRobustANGLE(GLuint program,
 
 void GL_APIENTRY GL_GetVertexAttribfvRobustANGLE(GLuint index,
                                                  GLenum pname,
-                                                 GLsizei bufSize,
+                                                 GLsizei paramCount,
                                                  GLsizei *length,
                                                  GLfloat *params)
 {
@@ -3027,9 +3031,9 @@ void GL_APIENTRY GL_GetVertexAttribfvRobustANGLE(GLuint index,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetVertexAttribfvRobustANGLE,
-              "context = %d, index = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, index = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), index, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
+              CID(context), index, GLenumToString(GLESEnum::AllEnums, pname), paramCount,
               (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -3045,7 +3049,7 @@ void GL_APIENTRY GL_GetVertexAttribfvRobustANGLE(GLuint index,
 #endif
                 isCallValid = ValidateGetVertexAttribfvRobustANGLE(
                     context, angle::EntryPoint::GLGetVertexAttribfvRobustANGLE, index, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3057,10 +3061,10 @@ void GL_APIENTRY GL_GetVertexAttribfvRobustANGLE(GLuint index,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getVertexAttribfvRobust(index, pname, bufSize, length, params);
+            context->getVertexAttribfvRobust(index, pname, paramCount, length, params);
         }
-        ANGLE_CAPTURE_GL(GetVertexAttribfvRobustANGLE, isCallValid, context, index, pname, bufSize,
-                         length, params);
+        ANGLE_CAPTURE_GL(GetVertexAttribfvRobustANGLE, isCallValid, context, index, pname,
+                         paramCount, length, params);
     }
     else
     {
@@ -3072,7 +3076,7 @@ void GL_APIENTRY GL_GetVertexAttribfvRobustANGLE(GLuint index,
 
 void GL_APIENTRY GL_GetVertexAttribivRobustANGLE(GLuint index,
                                                  GLenum pname,
-                                                 GLsizei bufSize,
+                                                 GLsizei paramCount,
                                                  GLsizei *length,
                                                  GLint *params)
 {
@@ -3080,9 +3084,9 @@ void GL_APIENTRY GL_GetVertexAttribivRobustANGLE(GLuint index,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetVertexAttribivRobustANGLE,
-              "context = %d, index = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, index = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), index, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
+              CID(context), index, GLenumToString(GLESEnum::AllEnums, pname), paramCount,
               (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -3098,7 +3102,7 @@ void GL_APIENTRY GL_GetVertexAttribivRobustANGLE(GLuint index,
 #endif
                 isCallValid = ValidateGetVertexAttribivRobustANGLE(
                     context, angle::EntryPoint::GLGetVertexAttribivRobustANGLE, index, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3110,10 +3114,10 @@ void GL_APIENTRY GL_GetVertexAttribivRobustANGLE(GLuint index,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getVertexAttribivRobust(index, pname, bufSize, length, params);
+            context->getVertexAttribivRobust(index, pname, paramCount, length, params);
         }
-        ANGLE_CAPTURE_GL(GetVertexAttribivRobustANGLE, isCallValid, context, index, pname, bufSize,
-                         length, params);
+        ANGLE_CAPTURE_GL(GetVertexAttribivRobustANGLE, isCallValid, context, index, pname,
+                         paramCount, length, params);
     }
     else
     {
@@ -3125,7 +3129,7 @@ void GL_APIENTRY GL_GetVertexAttribivRobustANGLE(GLuint index,
 
 void GL_APIENTRY GL_GetVertexAttribPointervRobustANGLE(GLuint index,
                                                        GLenum pname,
-                                                       GLsizei bufSize,
+                                                       GLsizei paramCount,
                                                        GLsizei *length,
                                                        void **pointer)
 {
@@ -3133,9 +3137,9 @@ void GL_APIENTRY GL_GetVertexAttribPointervRobustANGLE(GLuint index,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetVertexAttribPointervRobustANGLE,
-              "context = %d, index = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, index = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", pointer = 0x%016" PRIxPTR "",
-              CID(context), index, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
+              CID(context), index, GLenumToString(GLESEnum::AllEnums, pname), paramCount,
               (uintptr_t)length, (uintptr_t)pointer));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -3151,7 +3155,7 @@ void GL_APIENTRY GL_GetVertexAttribPointervRobustANGLE(GLuint index,
 #endif
                 isCallValid = ValidateGetVertexAttribPointervRobustANGLE(
                     context, angle::EntryPoint::GLGetVertexAttribPointervRobustANGLE, index, pname,
-                    bufSize, length, pointer);
+                    paramCount, length, pointer);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3164,10 +3168,10 @@ void GL_APIENTRY GL_GetVertexAttribPointervRobustANGLE(GLuint index,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getVertexAttribPointervRobust(index, pname, bufSize, length, pointer);
+            context->getVertexAttribPointervRobust(index, pname, paramCount, length, pointer);
         }
         ANGLE_CAPTURE_GL(GetVertexAttribPointervRobustANGLE, isCallValid, context, index, pname,
-                         bufSize, length, pointer);
+                         paramCount, length, pointer);
     }
     else
     {
@@ -3196,8 +3200,8 @@ void GL_APIENTRY GL_ReadPixelsRobustANGLE(GLint x,
               "context = %d, x = %d, y = %d, width = %d, height = %d, format = %s, type = %s, "
               "bufSize = %d, length = 0x%016" PRIxPTR ", columns = 0x%016" PRIxPTR
               ", rows = 0x%016" PRIxPTR ", pixels = 0x%016" PRIxPTR "",
-              CID(context), x, y, width, height, GLenumToString(GLESEnum::AllEnums, format),
-              GLenumToString(GLESEnum::AllEnums, type), bufSize, (uintptr_t)length,
+              CID(context), x, y, width, height, GLenumToString(GLESEnum::PixelFormat, format),
+              GLenumToString(GLESEnum::PixelType, type), bufSize, (uintptr_t)length,
               (uintptr_t)columns, (uintptr_t)rows, (uintptr_t)pixels));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -3255,9 +3259,9 @@ void GL_APIENTRY GL_TexImage2DRobustANGLE(GLenum target,
         EVENT(context, GLTexImage2DRobustANGLE,
               "context = %d, target = %s, level = %d, internalformat = %d, width = %d, height = "
               "%d, border = %d, format = %s, type = %s, bufSize = %d, pixels = 0x%016" PRIxPTR "",
-              CID(context), GLenumToString(GLESEnum::AllEnums, target), level, internalformat,
-              width, height, border, GLenumToString(GLESEnum::AllEnums, format),
-              GLenumToString(GLESEnum::AllEnums, type), bufSize, (uintptr_t)pixels));
+              CID(context), GLenumToString(GLESEnum::TextureTarget, target), level, internalformat,
+              width, height, border, GLenumToString(GLESEnum::PixelFormat, format),
+              GLenumToString(GLESEnum::PixelType, type), bufSize, (uintptr_t)pixels));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3300,16 +3304,16 @@ void GL_APIENTRY GL_TexImage2DRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_TexParameterfvRobustANGLE(GLenum target,
                                               GLenum pname,
-                                              GLsizei bufSize,
+                                              GLsizei paramCount,
                                               const GLfloat *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(
-        EVENT(context, GLTexParameterfvRobustANGLE,
-              "context = %d, target = %s, pname = %s, bufSize = %d, params = 0x%016" PRIxPTR "",
-              CID(context), GLenumToString(GLESEnum::AllEnums, target),
-              GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(EVENT(
+        context, GLTexParameterfvRobustANGLE,
+        "context = %d, target = %s, pname = %s, paramCount = %d, params = 0x%016" PRIxPTR "",
+        CID(context), GLenumToString(GLESEnum::TextureTarget, target),
+        GLenumToString(GLESEnum::TextureParameterName, pname), paramCount, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3325,7 +3329,7 @@ void GL_APIENTRY GL_TexParameterfvRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateTexParameterfvRobustANGLE(
                     context, angle::EntryPoint::GLTexParameterfvRobustANGLE, targetPacked, pname,
-                    bufSize, params);
+                    paramCount, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3337,10 +3341,10 @@ void GL_APIENTRY GL_TexParameterfvRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->texParameterfvRobust(targetPacked, pname, bufSize, params);
+            context->texParameterfvRobust(targetPacked, pname, paramCount, params);
         }
         ANGLE_CAPTURE_GL(TexParameterfvRobustANGLE, isCallValid, context, targetPacked, pname,
-                         bufSize, params);
+                         paramCount, params);
     }
     else
     {
@@ -3352,16 +3356,16 @@ void GL_APIENTRY GL_TexParameterfvRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_TexParameterivRobustANGLE(GLenum target,
                                               GLenum pname,
-                                              GLsizei bufSize,
+                                              GLsizei paramCount,
                                               const GLint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(
-        EVENT(context, GLTexParameterivRobustANGLE,
-              "context = %d, target = %s, pname = %s, bufSize = %d, params = 0x%016" PRIxPTR "",
-              CID(context), GLenumToString(GLESEnum::AllEnums, target),
-              GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(EVENT(
+        context, GLTexParameterivRobustANGLE,
+        "context = %d, target = %s, pname = %s, paramCount = %d, params = 0x%016" PRIxPTR "",
+        CID(context), GLenumToString(GLESEnum::TextureTarget, target),
+        GLenumToString(GLESEnum::TextureParameterName, pname), paramCount, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3377,7 +3381,7 @@ void GL_APIENTRY GL_TexParameterivRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateTexParameterivRobustANGLE(
                     context, angle::EntryPoint::GLTexParameterivRobustANGLE, targetPacked, pname,
-                    bufSize, params);
+                    paramCount, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3389,10 +3393,10 @@ void GL_APIENTRY GL_TexParameterivRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->texParameterivRobust(targetPacked, pname, bufSize, params);
+            context->texParameterivRobust(targetPacked, pname, paramCount, params);
         }
         ANGLE_CAPTURE_GL(TexParameterivRobustANGLE, isCallValid, context, targetPacked, pname,
-                         bufSize, params);
+                         paramCount, params);
     }
     else
     {
@@ -3419,9 +3423,9 @@ void GL_APIENTRY GL_TexSubImage2DRobustANGLE(GLenum target,
         EVENT(context, GLTexSubImage2DRobustANGLE,
               "context = %d, target = %s, level = %d, xoffset = %d, yoffset = %d, width = %d, "
               "height = %d, format = %s, type = %s, bufSize = %d, pixels = 0x%016" PRIxPTR "",
-              CID(context), GLenumToString(GLESEnum::AllEnums, target), level, xoffset, yoffset,
-              width, height, GLenumToString(GLESEnum::AllEnums, format),
-              GLenumToString(GLESEnum::AllEnums, type), bufSize, (uintptr_t)pixels));
+              CID(context), GLenumToString(GLESEnum::TextureTarget, target), level, xoffset,
+              yoffset, width, height, GLenumToString(GLESEnum::PixelFormat, format),
+              GLenumToString(GLESEnum::PixelType, type), bufSize, (uintptr_t)pixels));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3481,9 +3485,9 @@ void GL_APIENTRY GL_TexImage3DRobustANGLE(GLenum target,
         context, GLTexImage3DRobustANGLE,
         "context = %d, target = %s, level = %d, internalformat = %d, width = %d, height = %d, "
         "depth = %d, border = %d, format = %s, type = %s, bufSize = %d, pixels = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target), level, internalformat, width,
-        height, depth, border, GLenumToString(GLESEnum::AllEnums, format),
-        GLenumToString(GLESEnum::AllEnums, type), bufSize, (uintptr_t)pixels));
+        CID(context), GLenumToString(GLESEnum::TextureTarget, target), level, internalformat, width,
+        height, depth, border, GLenumToString(GLESEnum::PixelFormat, format),
+        GLenumToString(GLESEnum::PixelType, type), bufSize, (uintptr_t)pixels));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3545,9 +3549,9 @@ void GL_APIENTRY GL_TexSubImage3DRobustANGLE(GLenum target,
         "context = %d, target = %s, level = %d, xoffset = %d, yoffset = %d, zoffset = %d, width = "
         "%d, height = %d, depth = %d, format = %s, type = %s, bufSize = %d, pixels = 0x%016" PRIxPTR
         "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target), level, xoffset, yoffset, zoffset,
-        width, height, depth, GLenumToString(GLESEnum::AllEnums, format),
-        GLenumToString(GLESEnum::AllEnums, type), bufSize, (uintptr_t)pixels));
+        CID(context), GLenumToString(GLESEnum::TextureTarget, target), level, xoffset, yoffset,
+        zoffset, width, height, depth, GLenumToString(GLESEnum::PixelFormat, format),
+        GLenumToString(GLESEnum::PixelType, type), bufSize, (uintptr_t)pixels));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3597,7 +3601,7 @@ void GL_APIENTRY GL_CompressedTexImage2DRobustANGLE(GLenum target,
                                                     GLsizei height,
                                                     GLint border,
                                                     GLsizei imageSize,
-                                                    GLsizei dataSize,
+                                                    GLsizei bufSize,
                                                     const void *data)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
@@ -3605,10 +3609,10 @@ void GL_APIENTRY GL_CompressedTexImage2DRobustANGLE(GLenum target,
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLCompressedTexImage2DRobustANGLE,
               "context = %d, target = %s, level = %d, internalformat = %s, width = %d, height = "
-              "%d, border = %d, imageSize = %d, dataSize = %d, data = 0x%016" PRIxPTR "",
-              CID(context), GLenumToString(GLESEnum::AllEnums, target), level,
-              GLenumToString(GLESEnum::AllEnums, internalformat), width, height, border, imageSize,
-              dataSize, (uintptr_t)data));
+              "%d, border = %d, imageSize = %d, bufSize = %d, data = 0x%016" PRIxPTR "",
+              CID(context), GLenumToString(GLESEnum::TextureTarget, target), level,
+              GLenumToString(GLESEnum::InternalFormat, internalformat), width, height, border,
+              imageSize, bufSize, (uintptr_t)data));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3624,7 +3628,7 @@ void GL_APIENTRY GL_CompressedTexImage2DRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateCompressedTexImage2DRobustANGLE(
                     context, angle::EntryPoint::GLCompressedTexImage2DRobustANGLE, targetPacked,
-                    level, internalformat, width, height, border, imageSize, dataSize, data);
+                    level, internalformat, width, height, border, imageSize, bufSize, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3638,10 +3642,10 @@ void GL_APIENTRY GL_CompressedTexImage2DRobustANGLE(GLenum target,
         if (ANGLE_LIKELY(isCallValid))
         {
             context->compressedTexImage2DRobust(targetPacked, level, internalformat, width, height,
-                                                border, imageSize, dataSize, data);
+                                                border, imageSize, bufSize, data);
         }
         ANGLE_CAPTURE_GL(CompressedTexImage2DRobustANGLE, isCallValid, context, targetPacked, level,
-                         internalformat, width, height, border, imageSize, dataSize, data);
+                         internalformat, width, height, border, imageSize, bufSize, data);
     }
     else
     {
@@ -3659,17 +3663,18 @@ void GL_APIENTRY GL_CompressedTexSubImage2DRobustANGLE(GLenum target,
                                                        GLsizei height,
                                                        GLenum format,
                                                        GLsizei imageSize,
-                                                       GLsizei dataSize,
+                                                       GLsizei bufSize,
                                                        const void *data)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLCompressedTexSubImage2DRobustANGLE,
-        "context = %d, target = %s, level = %d, xoffset = %d, yoffset = %d, width = %d, height = "
-        "%d, format = %s, imageSize = %d, dataSize = %d, data = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target), level, xoffset, yoffset, width,
-        height, GLenumToString(GLESEnum::AllEnums, format), imageSize, dataSize, (uintptr_t)data));
+    ANGLE_UNSAFE_TODO(
+        EVENT(context, GLCompressedTexSubImage2DRobustANGLE,
+              "context = %d, target = %s, level = %d, xoffset = %d, yoffset = %d, width = %d, "
+              "height = %d, format = %s, imageSize = %d, bufSize = %d, data = 0x%016" PRIxPTR "",
+              CID(context), GLenumToString(GLESEnum::TextureTarget, target), level, xoffset,
+              yoffset, width, height, GLenumToString(GLESEnum::InternalFormat, format), imageSize,
+              bufSize, (uintptr_t)data));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3685,7 +3690,7 @@ void GL_APIENTRY GL_CompressedTexSubImage2DRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateCompressedTexSubImage2DRobustANGLE(
                     context, angle::EntryPoint::GLCompressedTexSubImage2DRobustANGLE, targetPacked,
-                    level, xoffset, yoffset, width, height, format, imageSize, dataSize, data);
+                    level, xoffset, yoffset, width, height, format, imageSize, bufSize, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3699,10 +3704,10 @@ void GL_APIENTRY GL_CompressedTexSubImage2DRobustANGLE(GLenum target,
         if (ANGLE_LIKELY(isCallValid))
         {
             context->compressedTexSubImage2DRobust(targetPacked, level, xoffset, yoffset, width,
-                                                   height, format, imageSize, dataSize, data);
+                                                   height, format, imageSize, bufSize, data);
         }
         ANGLE_CAPTURE_GL(CompressedTexSubImage2DRobustANGLE, isCallValid, context, targetPacked,
-                         level, xoffset, yoffset, width, height, format, imageSize, dataSize, data);
+                         level, xoffset, yoffset, width, height, format, imageSize, bufSize, data);
     }
     else
     {
@@ -3720,18 +3725,18 @@ void GL_APIENTRY GL_CompressedTexImage3DRobustANGLE(GLenum target,
                                                     GLsizei depth,
                                                     GLint border,
                                                     GLsizei imageSize,
-                                                    GLsizei dataSize,
+                                                    GLsizei bufSize,
                                                     const void *data)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLCompressedTexImage3DRobustANGLE,
-        "context = %d, target = %s, level = %d, internalformat = %s, width = %d, height = %d, "
-        "depth = %d, border = %d, imageSize = %d, dataSize = %d, data = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target), level,
-        GLenumToString(GLESEnum::AllEnums, internalformat), width, height, depth, border, imageSize,
-        dataSize, (uintptr_t)data));
+    ANGLE_UNSAFE_TODO(
+        EVENT(context, GLCompressedTexImage3DRobustANGLE,
+              "context = %d, target = %s, level = %d, internalformat = %s, width = %d, height = "
+              "%d, depth = %d, border = %d, imageSize = %d, bufSize = %d, data = 0x%016" PRIxPTR "",
+              CID(context), GLenumToString(GLESEnum::TextureTarget, target), level,
+              GLenumToString(GLESEnum::InternalFormat, internalformat), width, height, depth,
+              border, imageSize, bufSize, (uintptr_t)data));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3747,7 +3752,7 @@ void GL_APIENTRY GL_CompressedTexImage3DRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateCompressedTexImage3DRobustANGLE(
                     context, angle::EntryPoint::GLCompressedTexImage3DRobustANGLE, targetPacked,
-                    level, internalformat, width, height, depth, border, imageSize, dataSize, data);
+                    level, internalformat, width, height, depth, border, imageSize, bufSize, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3761,10 +3766,10 @@ void GL_APIENTRY GL_CompressedTexImage3DRobustANGLE(GLenum target,
         if (ANGLE_LIKELY(isCallValid))
         {
             context->compressedTexImage3DRobust(targetPacked, level, internalformat, width, height,
-                                                depth, border, imageSize, dataSize, data);
+                                                depth, border, imageSize, bufSize, data);
         }
         ANGLE_CAPTURE_GL(CompressedTexImage3DRobustANGLE, isCallValid, context, targetPacked, level,
-                         internalformat, width, height, depth, border, imageSize, dataSize, data);
+                         internalformat, width, height, depth, border, imageSize, bufSize, data);
     }
     else
     {
@@ -3784,7 +3789,7 @@ void GL_APIENTRY GL_CompressedTexSubImage3DRobustANGLE(GLenum target,
                                                        GLsizei depth,
                                                        GLenum format,
                                                        GLsizei imageSize,
-                                                       GLsizei dataSize,
+                                                       GLsizei bufSize,
                                                        const void *data)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
@@ -3792,10 +3797,10 @@ void GL_APIENTRY GL_CompressedTexSubImage3DRobustANGLE(GLenum target,
     ANGLE_UNSAFE_TODO(EVENT(context, GLCompressedTexSubImage3DRobustANGLE,
                             "context = %d, target = %s, level = %d, xoffset = %d, yoffset = %d, "
                             "zoffset = %d, width = %d, height = %d, depth = %d, format = %s, "
-                            "imageSize = %d, dataSize = %d, data = 0x%016" PRIxPTR "",
-                            CID(context), GLenumToString(GLESEnum::AllEnums, target), level,
+                            "imageSize = %d, bufSize = %d, data = 0x%016" PRIxPTR "",
+                            CID(context), GLenumToString(GLESEnum::TextureTarget, target), level,
                             xoffset, yoffset, zoffset, width, height, depth,
-                            GLenumToString(GLESEnum::AllEnums, format), imageSize, dataSize,
+                            GLenumToString(GLESEnum::InternalFormat, format), imageSize, bufSize,
                             (uintptr_t)data));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -3813,7 +3818,7 @@ void GL_APIENTRY GL_CompressedTexSubImage3DRobustANGLE(GLenum target,
                 isCallValid = ValidateCompressedTexSubImage3DRobustANGLE(
                     context, angle::EntryPoint::GLCompressedTexSubImage3DRobustANGLE, targetPacked,
                     level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize,
-                    dataSize, data);
+                    bufSize, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3827,12 +3832,12 @@ void GL_APIENTRY GL_CompressedTexSubImage3DRobustANGLE(GLenum target,
         if (ANGLE_LIKELY(isCallValid))
         {
             context->compressedTexSubImage3DRobust(targetPacked, level, xoffset, yoffset, zoffset,
-                                                   width, height, depth, format, imageSize,
-                                                   dataSize, data);
+                                                   width, height, depth, format, imageSize, bufSize,
+                                                   data);
         }
         ANGLE_CAPTURE_GL(CompressedTexSubImage3DRobustANGLE, isCallValid, context, targetPacked,
                          level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize,
-                         dataSize, data);
+                         bufSize, data);
     }
     else
     {
@@ -3844,18 +3849,19 @@ void GL_APIENTRY GL_CompressedTexSubImage3DRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_GetQueryivRobustANGLE(GLenum target,
                                           GLenum pname,
-                                          GLsizei bufSize,
+                                          GLsizei paramCount,
                                           GLsizei *length,
                                           GLint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLGetQueryivRobustANGLE,
-        "context = %d, target = %s, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-        ", params = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target),
-        GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(
+        EVENT(context, GLGetQueryivRobustANGLE,
+              "context = %d, target = %s, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
+              ", params = 0x%016" PRIxPTR "",
+              CID(context), GLenumToString(GLESEnum::QueryTarget, target),
+              GLenumToString(GLESEnum::QueryParameterName, pname), paramCount, (uintptr_t)length,
+              (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3871,7 +3877,7 @@ void GL_APIENTRY GL_GetQueryivRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetQueryivRobustANGLE(
                     context, angle::EntryPoint::GLGetQueryivRobustANGLE, targetPacked, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3883,10 +3889,10 @@ void GL_APIENTRY GL_GetQueryivRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getQueryivRobust(targetPacked, pname, bufSize, length, params);
+            context->getQueryivRobust(targetPacked, pname, paramCount, length, params);
         }
-        ANGLE_CAPTURE_GL(GetQueryivRobustANGLE, isCallValid, context, targetPacked, pname, bufSize,
-                         length, params);
+        ANGLE_CAPTURE_GL(GetQueryivRobustANGLE, isCallValid, context, targetPacked, pname,
+                         paramCount, length, params);
     }
     else
     {
@@ -3897,7 +3903,7 @@ void GL_APIENTRY GL_GetQueryivRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_GetQueryObjectuivRobustANGLE(GLuint id,
                                                  GLenum pname,
-                                                 GLsizei bufSize,
+                                                 GLsizei paramCount,
                                                  GLsizei *length,
                                                  GLuint *params)
 {
@@ -3905,10 +3911,10 @@ void GL_APIENTRY GL_GetQueryObjectuivRobustANGLE(GLuint id,
     Context *context = GetGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetQueryObjectuivRobustANGLE,
-              "context = %d, id = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, id = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), id, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
-              (uintptr_t)length, (uintptr_t)params));
+              CID(context), id, GLenumToString(GLESEnum::QueryObjectParameterName, pname),
+              paramCount, (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3924,7 +3930,7 @@ void GL_APIENTRY GL_GetQueryObjectuivRobustANGLE(GLuint id,
 #endif
                 isCallValid = ValidateGetQueryObjectuivRobustANGLE(
                     context, angle::EntryPoint::GLGetQueryObjectuivRobustANGLE, idPacked, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3936,10 +3942,10 @@ void GL_APIENTRY GL_GetQueryObjectuivRobustANGLE(GLuint id,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getQueryObjectuivRobust(idPacked, pname, bufSize, length, params);
+            context->getQueryObjectuivRobust(idPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetQueryObjectuivRobustANGLE, isCallValid, context, idPacked, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -3949,18 +3955,19 @@ void GL_APIENTRY GL_GetQueryObjectuivRobustANGLE(GLuint id,
 
 void GL_APIENTRY GL_GetBufferPointervRobustANGLE(GLenum target,
                                                  GLenum pname,
-                                                 GLsizei bufSize,
+                                                 GLsizei paramCount,
                                                  GLsizei *length,
                                                  void **params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLGetBufferPointervRobustANGLE,
-        "context = %d, target = %s, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-        ", params = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target),
-        GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(
+        EVENT(context, GLGetBufferPointervRobustANGLE,
+              "context = %d, target = %s, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
+              ", params = 0x%016" PRIxPTR "",
+              CID(context), GLenumToString(GLESEnum::BufferTargetARB, target),
+              GLenumToString(GLESEnum::AllEnums, pname), paramCount, (uintptr_t)length,
+              (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -3976,7 +3983,7 @@ void GL_APIENTRY GL_GetBufferPointervRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetBufferPointervRobustANGLE(
                     context, angle::EntryPoint::GLGetBufferPointervRobustANGLE, targetPacked, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -3988,10 +3995,10 @@ void GL_APIENTRY GL_GetBufferPointervRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getBufferPointervRobust(targetPacked, pname, bufSize, length, params);
+            context->getBufferPointervRobust(targetPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetBufferPointervRobustANGLE, isCallValid, context, targetPacked, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -4003,7 +4010,7 @@ void GL_APIENTRY GL_GetBufferPointervRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_GetIntegeri_vRobustANGLE(GLenum target,
                                              GLuint index,
-                                             GLsizei bufSize,
+                                             GLsizei paramCount,
                                              GLsizei *length,
                                              GLint *data)
 {
@@ -4011,9 +4018,9 @@ void GL_APIENTRY GL_GetIntegeri_vRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetIntegeri_vRobustANGLE,
-              "context = %d, target = %s, index = %u, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, target = %s, index = %u, paramCount = %d, length = 0x%016" PRIxPTR
               ", data = 0x%016" PRIxPTR "",
-              CID(context), GLenumToString(GLESEnum::AllEnums, target), index, bufSize,
+              CID(context), GLenumToString(GLESEnum::GetPName, target), index, paramCount,
               (uintptr_t)length, (uintptr_t)data));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -4028,8 +4035,8 @@ void GL_APIENTRY GL_GetIntegeri_vRobustANGLE(GLenum target,
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateGetIntegeri_vRobustANGLE(
-                    context, angle::EntryPoint::GLGetIntegeri_vRobustANGLE, target, index, bufSize,
-                    length, data);
+                    context, angle::EntryPoint::GLGetIntegeri_vRobustANGLE, target, index,
+                    paramCount, length, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4041,9 +4048,9 @@ void GL_APIENTRY GL_GetIntegeri_vRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getIntegeri_vRobust(target, index, bufSize, length, data);
+            context->getIntegeri_vRobust(target, index, paramCount, length, data);
         }
-        ANGLE_CAPTURE_GL(GetIntegeri_vRobustANGLE, isCallValid, context, target, index, bufSize,
+        ANGLE_CAPTURE_GL(GetIntegeri_vRobustANGLE, isCallValid, context, target, index, paramCount,
                          length, data);
     }
     else
@@ -4057,19 +4064,20 @@ void GL_APIENTRY GL_GetIntegeri_vRobustANGLE(GLenum target,
 void GL_APIENTRY GL_GetInternalformativRobustANGLE(GLenum target,
                                                    GLenum internalformat,
                                                    GLenum pname,
-                                                   GLsizei bufSize,
+                                                   GLsizei paramCount,
                                                    GLsizei *length,
                                                    GLint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(EVENT(context, GLGetInternalformativRobustANGLE,
-                            "context = %d, target = %s, internalformat = %s, pname = %s, bufSize = "
-                            "%d, length = 0x%016" PRIxPTR ", params = 0x%016" PRIxPTR "",
-                            CID(context), GLenumToString(GLESEnum::AllEnums, target),
-                            GLenumToString(GLESEnum::AllEnums, internalformat),
-                            GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length,
-                            (uintptr_t)params));
+                            "context = %d, target = %s, internalformat = %s, pname = %s, "
+                            "paramCount = %d, length = 0x%016" PRIxPTR ", params = 0x%016" PRIxPTR
+                            "",
+                            CID(context), GLenumToString(GLESEnum::TextureTarget, target),
+                            GLenumToString(GLESEnum::InternalFormat, internalformat),
+                            GLenumToString(GLESEnum::InternalFormatPName, pname), paramCount,
+                            (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -4084,7 +4092,7 @@ void GL_APIENTRY GL_GetInternalformativRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetInternalformativRobustANGLE(
                     context, angle::EntryPoint::GLGetInternalformativRobustANGLE, target,
-                    internalformat, pname, bufSize, length, params);
+                    internalformat, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4097,11 +4105,11 @@ void GL_APIENTRY GL_GetInternalformativRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getInternalformativRobust(target, internalformat, pname, bufSize, length,
+            context->getInternalformativRobust(target, internalformat, pname, paramCount, length,
                                                params);
         }
         ANGLE_CAPTURE_GL(GetInternalformativRobustANGLE, isCallValid, context, target,
-                         internalformat, pname, bufSize, length, params);
+                         internalformat, pname, paramCount, length, params);
     }
     else
     {
@@ -4113,7 +4121,7 @@ void GL_APIENTRY GL_GetInternalformativRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_GetVertexAttribIivRobustANGLE(GLuint index,
                                                   GLenum pname,
-                                                  GLsizei bufSize,
+                                                  GLsizei paramCount,
                                                   GLsizei *length,
                                                   GLint *params)
 {
@@ -4121,9 +4129,9 @@ void GL_APIENTRY GL_GetVertexAttribIivRobustANGLE(GLuint index,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetVertexAttribIivRobustANGLE,
-              "context = %d, index = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, index = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), index, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
+              CID(context), index, GLenumToString(GLESEnum::VertexAttribEnum, pname), paramCount,
               (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -4139,7 +4147,7 @@ void GL_APIENTRY GL_GetVertexAttribIivRobustANGLE(GLuint index,
 #endif
                 isCallValid = ValidateGetVertexAttribIivRobustANGLE(
                     context, angle::EntryPoint::GLGetVertexAttribIivRobustANGLE, index, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4152,10 +4160,10 @@ void GL_APIENTRY GL_GetVertexAttribIivRobustANGLE(GLuint index,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getVertexAttribIivRobust(index, pname, bufSize, length, params);
+            context->getVertexAttribIivRobust(index, pname, paramCount, length, params);
         }
-        ANGLE_CAPTURE_GL(GetVertexAttribIivRobustANGLE, isCallValid, context, index, pname, bufSize,
-                         length, params);
+        ANGLE_CAPTURE_GL(GetVertexAttribIivRobustANGLE, isCallValid, context, index, pname,
+                         paramCount, length, params);
     }
     else
     {
@@ -4167,7 +4175,7 @@ void GL_APIENTRY GL_GetVertexAttribIivRobustANGLE(GLuint index,
 
 void GL_APIENTRY GL_GetVertexAttribIuivRobustANGLE(GLuint index,
                                                    GLenum pname,
-                                                   GLsizei bufSize,
+                                                   GLsizei paramCount,
                                                    GLsizei *length,
                                                    GLuint *params)
 {
@@ -4175,9 +4183,9 @@ void GL_APIENTRY GL_GetVertexAttribIuivRobustANGLE(GLuint index,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetVertexAttribIuivRobustANGLE,
-              "context = %d, index = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, index = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), index, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
+              CID(context), index, GLenumToString(GLESEnum::VertexAttribEnum, pname), paramCount,
               (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -4193,7 +4201,7 @@ void GL_APIENTRY GL_GetVertexAttribIuivRobustANGLE(GLuint index,
 #endif
                 isCallValid = ValidateGetVertexAttribIuivRobustANGLE(
                     context, angle::EntryPoint::GLGetVertexAttribIuivRobustANGLE, index, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4206,10 +4214,10 @@ void GL_APIENTRY GL_GetVertexAttribIuivRobustANGLE(GLuint index,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getVertexAttribIuivRobust(index, pname, bufSize, length, params);
+            context->getVertexAttribIuivRobust(index, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetVertexAttribIuivRobustANGLE, isCallValid, context, index, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -4276,7 +4284,7 @@ void GL_APIENTRY GL_GetUniformuivRobustANGLE(GLuint program,
 void GL_APIENTRY GL_GetActiveUniformBlockivRobustANGLE(GLuint program,
                                                        GLuint uniformBlockIndex,
                                                        GLenum pname,
-                                                       GLsizei bufSize,
+                                                       GLsizei paramCount,
                                                        GLsizei *length,
                                                        GLint *params)
 {
@@ -4284,10 +4292,11 @@ void GL_APIENTRY GL_GetActiveUniformBlockivRobustANGLE(GLuint program,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(EVENT(context, GLGetActiveUniformBlockivRobustANGLE,
                             "context = %d, program = %u, uniformBlockIndex = %u, pname = %s, "
-                            "bufSize = %d, length = 0x%016" PRIxPTR ", params = 0x%016" PRIxPTR "",
+                            "paramCount = %d, length = 0x%016" PRIxPTR ", params = 0x%016" PRIxPTR
+                            "",
                             CID(context), program, uniformBlockIndex,
-                            GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length,
-                            (uintptr_t)params));
+                            GLenumToString(GLESEnum::UniformBlockPName, pname), paramCount,
+                            (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -4304,7 +4313,7 @@ void GL_APIENTRY GL_GetActiveUniformBlockivRobustANGLE(GLuint program,
 #endif
                 isCallValid = ValidateGetActiveUniformBlockivRobustANGLE(
                     context, angle::EntryPoint::GLGetActiveUniformBlockivRobustANGLE, programPacked,
-                    uniformBlockIndexPacked, pname, bufSize, length, params);
+                    uniformBlockIndexPacked, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4318,10 +4327,10 @@ void GL_APIENTRY GL_GetActiveUniformBlockivRobustANGLE(GLuint program,
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getActiveUniformBlockivRobust(programPacked, uniformBlockIndexPacked, pname,
-                                                   bufSize, length, params);
+                                                   paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetActiveUniformBlockivRobustANGLE, isCallValid, context, programPacked,
-                         uniformBlockIndexPacked, pname, bufSize, length, params);
+                         uniformBlockIndexPacked, pname, paramCount, length, params);
     }
     else
     {
@@ -4332,16 +4341,16 @@ void GL_APIENTRY GL_GetActiveUniformBlockivRobustANGLE(GLuint program,
 }
 
 void GL_APIENTRY GL_GetInteger64vRobustANGLE(GLenum pname,
-                                             GLsizei bufSize,
+                                             GLsizei paramCount,
                                              GLsizei *length,
                                              GLint64 *data)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(EVENT(context, GLGetInteger64vRobustANGLE,
-                            "context = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+                            "context = %d, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
                             ", data = 0x%016" PRIxPTR "",
-                            CID(context), GLenumToString(GLESEnum::AllEnums, pname), bufSize,
+                            CID(context), GLenumToString(GLESEnum::GetPName, pname), paramCount,
                             (uintptr_t)length, (uintptr_t)data));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -4356,8 +4365,8 @@ void GL_APIENTRY GL_GetInteger64vRobustANGLE(GLenum pname,
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateGetInteger64vRobustANGLE(
-                    context, angle::EntryPoint::GLGetInteger64vRobustANGLE, pname, bufSize, length,
-                    data);
+                    context, angle::EntryPoint::GLGetInteger64vRobustANGLE, pname, paramCount,
+                    length, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4369,9 +4378,9 @@ void GL_APIENTRY GL_GetInteger64vRobustANGLE(GLenum pname,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getInteger64vRobust(pname, bufSize, length, data);
+            context->getInteger64vRobust(pname, paramCount, length, data);
         }
-        ANGLE_CAPTURE_GL(GetInteger64vRobustANGLE, isCallValid, context, pname, bufSize, length,
+        ANGLE_CAPTURE_GL(GetInteger64vRobustANGLE, isCallValid, context, pname, paramCount, length,
                          data);
     }
     else
@@ -4384,7 +4393,7 @@ void GL_APIENTRY GL_GetInteger64vRobustANGLE(GLenum pname,
 
 void GL_APIENTRY GL_GetInteger64i_vRobustANGLE(GLenum target,
                                                GLuint index,
-                                               GLsizei bufSize,
+                                               GLsizei paramCount,
                                                GLsizei *length,
                                                GLint64 *data)
 {
@@ -4392,9 +4401,9 @@ void GL_APIENTRY GL_GetInteger64i_vRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetInteger64i_vRobustANGLE,
-              "context = %d, target = %s, index = %u, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, target = %s, index = %u, paramCount = %d, length = 0x%016" PRIxPTR
               ", data = 0x%016" PRIxPTR "",
-              CID(context), GLenumToString(GLESEnum::AllEnums, target), index, bufSize,
+              CID(context), GLenumToString(GLESEnum::GetPName, target), index, paramCount,
               (uintptr_t)length, (uintptr_t)data));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -4410,7 +4419,7 @@ void GL_APIENTRY GL_GetInteger64i_vRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetInteger64i_vRobustANGLE(
                     context, angle::EntryPoint::GLGetInteger64i_vRobustANGLE, target, index,
-                    bufSize, length, data);
+                    paramCount, length, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4422,10 +4431,10 @@ void GL_APIENTRY GL_GetInteger64i_vRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getInteger64i_vRobust(target, index, bufSize, length, data);
+            context->getInteger64i_vRobust(target, index, paramCount, length, data);
         }
-        ANGLE_CAPTURE_GL(GetInteger64i_vRobustANGLE, isCallValid, context, target, index, bufSize,
-                         length, data);
+        ANGLE_CAPTURE_GL(GetInteger64i_vRobustANGLE, isCallValid, context, target, index,
+                         paramCount, length, data);
     }
     else
     {
@@ -4437,18 +4446,19 @@ void GL_APIENTRY GL_GetInteger64i_vRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_GetBufferParameteri64vRobustANGLE(GLenum target,
                                                       GLenum pname,
-                                                      GLsizei bufSize,
+                                                      GLsizei paramCount,
                                                       GLsizei *length,
                                                       GLint64 *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLGetBufferParameteri64vRobustANGLE,
-        "context = %d, target = %s, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-        ", params = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target),
-        GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(
+        EVENT(context, GLGetBufferParameteri64vRobustANGLE,
+              "context = %d, target = %s, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
+              ", params = 0x%016" PRIxPTR "",
+              CID(context), GLenumToString(GLESEnum::BufferTargetARB, target),
+              GLenumToString(GLESEnum::AllEnums, pname), paramCount, (uintptr_t)length,
+              (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -4464,7 +4474,7 @@ void GL_APIENTRY GL_GetBufferParameteri64vRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetBufferParameteri64vRobustANGLE(
                     context, angle::EntryPoint::GLGetBufferParameteri64vRobustANGLE, targetPacked,
-                    pname, bufSize, length, params);
+                    pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4477,10 +4487,10 @@ void GL_APIENTRY GL_GetBufferParameteri64vRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getBufferParameteri64vRobust(targetPacked, pname, bufSize, length, params);
+            context->getBufferParameteri64vRobust(targetPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetBufferParameteri64vRobustANGLE, isCallValid, context, targetPacked,
-                         pname, bufSize, length, params);
+                         pname, paramCount, length, params);
     }
     else
     {
@@ -4492,15 +4502,15 @@ void GL_APIENTRY GL_GetBufferParameteri64vRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_SamplerParameterivRobustANGLE(GLuint sampler,
                                                   GLuint pname,
-                                                  GLsizei bufSize,
+                                                  GLsizei paramCount,
                                                   const GLint *param)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLSamplerParameterivRobustANGLE,
-              "context = %d, sampler = %u, pname = %u, bufSize = %d, param = 0x%016" PRIxPTR "",
-              CID(context), sampler, pname, bufSize, (uintptr_t)param));
+              "context = %d, sampler = %u, pname = %u, paramCount = %d, param = 0x%016" PRIxPTR "",
+              CID(context), sampler, pname, paramCount, (uintptr_t)param));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -4516,7 +4526,7 @@ void GL_APIENTRY GL_SamplerParameterivRobustANGLE(GLuint sampler,
 #endif
                 isCallValid = ValidateSamplerParameterivRobustANGLE(
                     context, angle::EntryPoint::GLSamplerParameterivRobustANGLE, samplerPacked,
-                    pname, bufSize, param);
+                    pname, paramCount, param);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4529,10 +4539,10 @@ void GL_APIENTRY GL_SamplerParameterivRobustANGLE(GLuint sampler,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->samplerParameterivRobust(samplerPacked, pname, bufSize, param);
+            context->samplerParameterivRobust(samplerPacked, pname, paramCount, param);
         }
         ANGLE_CAPTURE_GL(SamplerParameterivRobustANGLE, isCallValid, context, samplerPacked, pname,
-                         bufSize, param);
+                         paramCount, param);
     }
     else
     {
@@ -4544,15 +4554,15 @@ void GL_APIENTRY GL_SamplerParameterivRobustANGLE(GLuint sampler,
 
 void GL_APIENTRY GL_SamplerParameterfvRobustANGLE(GLuint sampler,
                                                   GLenum pname,
-                                                  GLsizei bufSize,
+                                                  GLsizei paramCount,
                                                   const GLfloat *param)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLSamplerParameterfvRobustANGLE,
-              "context = %d, sampler = %u, pname = %s, bufSize = %d, param = 0x%016" PRIxPTR "",
-              CID(context), sampler, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
+              "context = %d, sampler = %u, pname = %s, paramCount = %d, param = 0x%016" PRIxPTR "",
+              CID(context), sampler, GLenumToString(GLESEnum::AllEnums, pname), paramCount,
               (uintptr_t)param));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -4569,7 +4579,7 @@ void GL_APIENTRY GL_SamplerParameterfvRobustANGLE(GLuint sampler,
 #endif
                 isCallValid = ValidateSamplerParameterfvRobustANGLE(
                     context, angle::EntryPoint::GLSamplerParameterfvRobustANGLE, samplerPacked,
-                    pname, bufSize, param);
+                    pname, paramCount, param);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4582,10 +4592,10 @@ void GL_APIENTRY GL_SamplerParameterfvRobustANGLE(GLuint sampler,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->samplerParameterfvRobust(samplerPacked, pname, bufSize, param);
+            context->samplerParameterfvRobust(samplerPacked, pname, paramCount, param);
         }
         ANGLE_CAPTURE_GL(SamplerParameterfvRobustANGLE, isCallValid, context, samplerPacked, pname,
-                         bufSize, param);
+                         paramCount, param);
     }
     else
     {
@@ -4597,7 +4607,7 @@ void GL_APIENTRY GL_SamplerParameterfvRobustANGLE(GLuint sampler,
 
 void GL_APIENTRY GL_GetSamplerParameterivRobustANGLE(GLuint sampler,
                                                      GLenum pname,
-                                                     GLsizei bufSize,
+                                                     GLsizei paramCount,
                                                      GLsizei *length,
                                                      GLint *params)
 {
@@ -4605,9 +4615,9 @@ void GL_APIENTRY GL_GetSamplerParameterivRobustANGLE(GLuint sampler,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetSamplerParameterivRobustANGLE,
-              "context = %d, sampler = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, sampler = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), sampler, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
+              CID(context), sampler, GLenumToString(GLESEnum::AllEnums, pname), paramCount,
               (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -4624,7 +4634,7 @@ void GL_APIENTRY GL_GetSamplerParameterivRobustANGLE(GLuint sampler,
 #endif
                 isCallValid = ValidateGetSamplerParameterivRobustANGLE(
                     context, angle::EntryPoint::GLGetSamplerParameterivRobustANGLE, samplerPacked,
-                    pname, bufSize, length, params);
+                    pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4637,10 +4647,10 @@ void GL_APIENTRY GL_GetSamplerParameterivRobustANGLE(GLuint sampler,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getSamplerParameterivRobust(samplerPacked, pname, bufSize, length, params);
+            context->getSamplerParameterivRobust(samplerPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetSamplerParameterivRobustANGLE, isCallValid, context, samplerPacked,
-                         pname, bufSize, length, params);
+                         pname, paramCount, length, params);
     }
     else
     {
@@ -4652,7 +4662,7 @@ void GL_APIENTRY GL_GetSamplerParameterivRobustANGLE(GLuint sampler,
 
 void GL_APIENTRY GL_GetSamplerParameterfvRobustANGLE(GLuint sampler,
                                                      GLenum pname,
-                                                     GLsizei bufSize,
+                                                     GLsizei paramCount,
                                                      GLsizei *length,
                                                      GLfloat *params)
 {
@@ -4660,9 +4670,9 @@ void GL_APIENTRY GL_GetSamplerParameterfvRobustANGLE(GLuint sampler,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetSamplerParameterfvRobustANGLE,
-              "context = %d, sampler = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, sampler = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), sampler, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
+              CID(context), sampler, GLenumToString(GLESEnum::AllEnums, pname), paramCount,
               (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -4679,7 +4689,7 @@ void GL_APIENTRY GL_GetSamplerParameterfvRobustANGLE(GLuint sampler,
 #endif
                 isCallValid = ValidateGetSamplerParameterfvRobustANGLE(
                     context, angle::EntryPoint::GLGetSamplerParameterfvRobustANGLE, samplerPacked,
-                    pname, bufSize, length, params);
+                    pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4692,10 +4702,10 @@ void GL_APIENTRY GL_GetSamplerParameterfvRobustANGLE(GLuint sampler,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getSamplerParameterfvRobust(samplerPacked, pname, bufSize, length, params);
+            context->getSamplerParameterfvRobust(samplerPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetSamplerParameterfvRobustANGLE, isCallValid, context, samplerPacked,
-                         pname, bufSize, length, params);
+                         pname, paramCount, length, params);
     }
     else
     {
@@ -4707,7 +4717,7 @@ void GL_APIENTRY GL_GetSamplerParameterfvRobustANGLE(GLuint sampler,
 
 void GL_APIENTRY GL_GetMultisamplefvRobustANGLE(GLenum pname,
                                                 GLuint index,
-                                                GLsizei bufSize,
+                                                GLsizei paramCount,
                                                 GLsizei *length,
                                                 GLfloat *val)
 {
@@ -4715,9 +4725,9 @@ void GL_APIENTRY GL_GetMultisamplefvRobustANGLE(GLenum pname,
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetMultisamplefvRobustANGLE,
-              "context = %d, pname = %s, index = %u, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, pname = %s, index = %u, paramCount = %d, length = 0x%016" PRIxPTR
               ", val = 0x%016" PRIxPTR "",
-              CID(context), GLenumToString(GLESEnum::AllEnums, pname), index, bufSize,
+              CID(context), GLenumToString(GLESEnum::AllEnums, pname), index, paramCount,
               (uintptr_t)length, (uintptr_t)val));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -4733,7 +4743,7 @@ void GL_APIENTRY GL_GetMultisamplefvRobustANGLE(GLenum pname,
 #endif
                 isCallValid = ValidateGetMultisamplefvRobustANGLE(
                     context, angle::EntryPoint::GLGetMultisamplefvRobustANGLE, pname, index,
-                    bufSize, length, val);
+                    paramCount, length, val);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4745,10 +4755,10 @@ void GL_APIENTRY GL_GetMultisamplefvRobustANGLE(GLenum pname,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getMultisamplefvRobust(pname, index, bufSize, length, val);
+            context->getMultisamplefvRobust(pname, index, paramCount, length, val);
         }
-        ANGLE_CAPTURE_GL(GetMultisamplefvRobustANGLE, isCallValid, context, pname, index, bufSize,
-                         length, val);
+        ANGLE_CAPTURE_GL(GetMultisamplefvRobustANGLE, isCallValid, context, pname, index,
+                         paramCount, length, val);
     }
     else
     {
@@ -4761,18 +4771,18 @@ void GL_APIENTRY GL_GetMultisamplefvRobustANGLE(GLenum pname,
 void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLE(GLenum target,
                                                       GLint level,
                                                       GLenum pname,
-                                                      GLsizei bufSize,
+                                                      GLsizei paramCount,
                                                       GLsizei *length,
                                                       GLint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLGetTexLevelParameterivRobustANGLE,
-        "context = %d, target = %s, level = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-        ", params = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target), level,
-        GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(EVENT(context, GLGetTexLevelParameterivRobustANGLE,
+                            "context = %d, target = %s, level = %d, pname = %s, paramCount = %d, "
+                            "length = 0x%016" PRIxPTR ", params = 0x%016" PRIxPTR "",
+                            CID(context), GLenumToString(GLESEnum::TextureTarget, target), level,
+                            GLenumToString(GLESEnum::AllEnums, pname), paramCount,
+                            (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -4788,7 +4798,7 @@ void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetTexLevelParameterivRobustANGLE(
                     context, angle::EntryPoint::GLGetTexLevelParameterivRobustANGLE, targetPacked,
-                    level, pname, bufSize, length, params);
+                    level, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4801,11 +4811,11 @@ void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getTexLevelParameterivRobust(targetPacked, level, pname, bufSize, length,
+            context->getTexLevelParameterivRobust(targetPacked, level, pname, paramCount, length,
                                                   params);
         }
         ANGLE_CAPTURE_GL(GetTexLevelParameterivRobustANGLE, isCallValid, context, targetPacked,
-                         level, pname, bufSize, length, params);
+                         level, pname, paramCount, length, params);
     }
     else
     {
@@ -4818,18 +4828,18 @@ void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLE(GLenum target,
 void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target,
                                                       GLint level,
                                                       GLenum pname,
-                                                      GLsizei bufSize,
+                                                      GLsizei paramCount,
                                                       GLsizei *length,
                                                       GLfloat *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(
-        context, GLGetTexLevelParameterfvRobustANGLE,
-        "context = %d, target = %s, level = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-        ", params = 0x%016" PRIxPTR "",
-        CID(context), GLenumToString(GLESEnum::AllEnums, target), level,
-        GLenumToString(GLESEnum::AllEnums, pname), bufSize, (uintptr_t)length, (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(EVENT(context, GLGetTexLevelParameterfvRobustANGLE,
+                            "context = %d, target = %s, level = %d, pname = %s, paramCount = %d, "
+                            "length = 0x%016" PRIxPTR ", params = 0x%016" PRIxPTR "",
+                            CID(context), GLenumToString(GLESEnum::AllEnums, target), level,
+                            GLenumToString(GLESEnum::AllEnums, pname), paramCount,
+                            (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -4845,7 +4855,7 @@ void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetTexLevelParameterfvRobustANGLE(
                     context, angle::EntryPoint::GLGetTexLevelParameterfvRobustANGLE, targetPacked,
-                    level, pname, bufSize, length, params);
+                    level, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4858,11 +4868,11 @@ void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getTexLevelParameterfvRobust(targetPacked, level, pname, bufSize, length,
+            context->getTexLevelParameterfvRobust(targetPacked, level, pname, paramCount, length,
                                                   params);
         }
         ANGLE_CAPTURE_GL(GetTexLevelParameterfvRobustANGLE, isCallValid, context, targetPacked,
-                         level, pname, bufSize, length, params);
+                         level, pname, paramCount, length, params);
     }
     else
     {
@@ -4874,7 +4884,7 @@ void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target,
 
 void GL_APIENTRY GL_GetQueryObjectivRobustANGLE(GLuint id,
                                                 GLenum pname,
-                                                GLsizei bufSize,
+                                                GLsizei paramCount,
                                                 GLsizei *length,
                                                 GLint *params)
 {
@@ -4882,10 +4892,10 @@ void GL_APIENTRY GL_GetQueryObjectivRobustANGLE(GLuint id,
     Context *context = GetGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetQueryObjectivRobustANGLE,
-              "context = %d, id = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, id = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), id, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
-              (uintptr_t)length, (uintptr_t)params));
+              CID(context), id, GLenumToString(GLESEnum::QueryObjectParameterName, pname),
+              paramCount, (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -4901,7 +4911,7 @@ void GL_APIENTRY GL_GetQueryObjectivRobustANGLE(GLuint id,
 #endif
                 isCallValid = ValidateGetQueryObjectivRobustANGLE(
                     context, angle::EntryPoint::GLGetQueryObjectivRobustANGLE, idPacked, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4913,10 +4923,10 @@ void GL_APIENTRY GL_GetQueryObjectivRobustANGLE(GLuint id,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getQueryObjectivRobust(idPacked, pname, bufSize, length, params);
+            context->getQueryObjectivRobust(idPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetQueryObjectivRobustANGLE, isCallValid, context, idPacked, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -4926,7 +4936,7 @@ void GL_APIENTRY GL_GetQueryObjectivRobustANGLE(GLuint id,
 
 void GL_APIENTRY GL_GetQueryObjecti64vRobustANGLE(GLuint id,
                                                   GLenum pname,
-                                                  GLsizei bufSize,
+                                                  GLsizei paramCount,
                                                   GLsizei *length,
                                                   GLint64 *params)
 {
@@ -4934,10 +4944,10 @@ void GL_APIENTRY GL_GetQueryObjecti64vRobustANGLE(GLuint id,
     Context *context = GetGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetQueryObjecti64vRobustANGLE,
-              "context = %d, id = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, id = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), id, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
-              (uintptr_t)length, (uintptr_t)params));
+              CID(context), id, GLenumToString(GLESEnum::QueryObjectParameterName, pname),
+              paramCount, (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -4953,7 +4963,7 @@ void GL_APIENTRY GL_GetQueryObjecti64vRobustANGLE(GLuint id,
 #endif
                 isCallValid = ValidateGetQueryObjecti64vRobustANGLE(
                     context, angle::EntryPoint::GLGetQueryObjecti64vRobustANGLE, idPacked, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -4966,10 +4976,10 @@ void GL_APIENTRY GL_GetQueryObjecti64vRobustANGLE(GLuint id,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getQueryObjecti64vRobust(idPacked, pname, bufSize, length, params);
+            context->getQueryObjecti64vRobust(idPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetQueryObjecti64vRobustANGLE, isCallValid, context, idPacked, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -4979,7 +4989,7 @@ void GL_APIENTRY GL_GetQueryObjecti64vRobustANGLE(GLuint id,
 
 void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
                                                    GLenum pname,
-                                                   GLsizei bufSize,
+                                                   GLsizei paramCount,
                                                    GLsizei *length,
                                                    GLuint64 *params)
 {
@@ -4987,10 +4997,10 @@ void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
     Context *context = GetGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetQueryObjectui64vRobustANGLE,
-              "context = %d, id = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, id = %u, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), id, GLenumToString(GLESEnum::AllEnums, pname), bufSize,
-              (uintptr_t)length, (uintptr_t)params));
+              CID(context), id, GLenumToString(GLESEnum::QueryObjectParameterName, pname),
+              paramCount, (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -5006,7 +5016,7 @@ void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
 #endif
                 isCallValid = ValidateGetQueryObjectui64vRobustANGLE(
                     context, angle::EntryPoint::GLGetQueryObjectui64vRobustANGLE, idPacked, pname,
-                    bufSize, length, params);
+                    paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5019,10 +5029,10 @@ void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getQueryObjectui64vRobust(idPacked, pname, bufSize, length, params);
+            context->getQueryObjectui64vRobust(idPacked, pname, paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetQueryObjectui64vRobustANGLE, isCallValid, context, idPacked, pname,
-                         bufSize, length, params);
+                         paramCount, length, params);
     }
     else
     {
@@ -5032,7 +5042,7 @@ void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
 
 void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint plane,
                                                                           GLenum pname,
-                                                                          GLsizei bufSize,
+                                                                          GLsizei paramCount,
                                                                           GLsizei *length,
                                                                           GLfloat *params)
 {
@@ -5040,9 +5050,9 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint 
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE,
-              "context = %d, plane = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, plane = %d, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), plane, GLenumToString(GLESEnum::PLSQueryFloat, pname), bufSize,
+              CID(context), plane, GLenumToString(GLESEnum::AllEnums, pname), paramCount,
               (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -5059,7 +5069,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint 
                 isCallValid = ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
                     context,
                     angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE,
-                    plane, pname, bufSize, length, params);
+                    plane, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5073,11 +5083,11 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint 
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFramebufferPixelLocalStorageParameterfvRobust(plane, pname, bufSize, length,
-                                                                      params);
+            context->getFramebufferPixelLocalStorageParameterfvRobust(plane, pname, paramCount,
+                                                                      length, params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterfvRobustANGLE, isCallValid,
-                         context, plane, pname, bufSize, length, params);
+                         context, plane, pname, paramCount, length, params);
     }
     else
     {
@@ -5089,7 +5099,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint 
 
 void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint plane,
                                                                           GLenum pname,
-                                                                          GLsizei bufSize,
+                                                                          GLsizei paramCount,
                                                                           GLsizei *length,
                                                                           GLint *params)
 {
@@ -5097,9 +5107,9 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint 
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
-              "context = %d, plane = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+              "context = %d, plane = %d, pname = %s, paramCount = %d, length = 0x%016" PRIxPTR
               ", params = 0x%016" PRIxPTR "",
-              CID(context), plane, GLenumToString(GLESEnum::PLSQueryInt, pname), bufSize,
+              CID(context), plane, GLenumToString(GLESEnum::AllEnums, pname), paramCount,
               (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -5116,7 +5126,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint 
                 isCallValid = ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(
                     context,
                     angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
-                    plane, pname, bufSize, length, params);
+                    plane, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5130,11 +5140,11 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint 
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFramebufferPixelLocalStorageParameterivRobust(plane, pname, bufSize, length,
-                                                                      params);
+            context->getFramebufferPixelLocalStorageParameterivRobust(plane, pname, paramCount,
+                                                                      length, params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterivRobustANGLE, isCallValid,
-                         context, plane, pname, bufSize, length, params);
+                         context, plane, pname, paramCount, length, params);
     }
     else
     {
