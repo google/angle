@@ -1464,7 +1464,7 @@ bool ValidateImportSemaphoreFdEXT(const Context *context,
 
 bool ValidateGetTexParameterIivOES(const Context *context,
                                    angle::EntryPoint entryPoint,
-                                   TextureType target,
+                                   TextureType targetPacked,
                                    GLenum pname,
                                    const GLint *params)
 {
@@ -1474,12 +1474,12 @@ bool ValidateGetTexParameterIivOES(const Context *context,
         return false;
     }
 
-    return ValidateGetTexParameterBase(context, entryPoint, target, pname, nullptr);
+    return ValidateGetTexParameterBase(context, entryPoint, targetPacked, pname, nullptr);
 }
 
 bool ValidateGetTexParameterIuivOES(const Context *context,
                                     angle::EntryPoint entryPoint,
-                                    TextureType target,
+                                    TextureType targetPacked,
                                     GLenum pname,
                                     const GLuint *params)
 {
@@ -1489,12 +1489,12 @@ bool ValidateGetTexParameterIuivOES(const Context *context,
         return false;
     }
 
-    return ValidateGetTexParameterBase(context, entryPoint, target, pname, nullptr);
+    return ValidateGetTexParameterBase(context, entryPoint, targetPacked, pname, nullptr);
 }
 
 bool ValidateTexParameterIivOES(const Context *context,
                                 angle::EntryPoint entryPoint,
-                                TextureType target,
+                                TextureType targetPacked,
                                 GLenum pname,
                                 const GLint *params)
 {
@@ -1504,12 +1504,12 @@ bool ValidateTexParameterIivOES(const Context *context,
         return false;
     }
 
-    return ValidateTexParameterBase(context, entryPoint, target, pname, -1, true, params);
+    return ValidateTexParameterBase(context, entryPoint, targetPacked, pname, params);
 }
 
 bool ValidateTexParameterIuivOES(const Context *context,
                                  angle::EntryPoint entryPoint,
-                                 TextureType target,
+                                 TextureType targetPacked,
                                  GLenum pname,
                                  const GLuint *params)
 {
@@ -1519,7 +1519,7 @@ bool ValidateTexParameterIuivOES(const Context *context,
         return false;
     }
 
-    return ValidateTexParameterBase(context, entryPoint, target, pname, -1, true, params);
+    return ValidateTexParameterBase(context, entryPoint, targetPacked, pname, params);
 }
 
 bool ValidateGetSamplerParameterIivOES(const Context *context,
@@ -1688,7 +1688,7 @@ bool ValidateTexParameterIivEXT(const Context *context,
         return false;
     }
 
-    return ValidateTexParameterBase(context, entryPoint, targetPacked, pname, -1, true, params);
+    return ValidateTexParameterBase(context, entryPoint, targetPacked, pname, params);
 }
 
 bool ValidateTexParameterIuivEXT(const Context *context,
@@ -1703,7 +1703,7 @@ bool ValidateTexParameterIuivEXT(const Context *context,
         return false;
     }
 
-    return ValidateTexParameterBase(context, entryPoint, targetPacked, pname, -1, true, params);
+    return ValidateTexParameterBase(context, entryPoint, targetPacked, pname, params);
 }
 
 bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,

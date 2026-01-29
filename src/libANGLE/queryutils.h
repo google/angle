@@ -282,8 +282,6 @@ void GetPointParameter(const GLES1State *state, PointParameter pname, GLfloat *p
 void SetPointSize(GLES1State *state, GLfloat size);
 void GetPointSize(const GLES1State *state, GLfloat *sizeOut);
 
-unsigned int GetTexParameterCount(GLenum pname);
-
 bool GetQueryParameterInfo(const State &glState,
                            GLenum pname,
                            GLenum *type,

@@ -2785,46 +2785,56 @@ void Context::texBufferRange(TextureType target,
     ANGLE_CONTEXT_TRY(texture->setBufferRange(this, bufferObj, internalformat, offset, size));
 }
 
-void Context::getTexParameterfv(TextureType target, GLenum pname, GLfloat *params)
+void Context::getTexParameterfv(TextureType targetPacked, GLenum pname, GLfloat *params)
 {
-    const Texture *const texture = getTextureByType(target);
+    const Texture *const texture = getTextureByType(targetPacked);
     QueryTexParameterfv(this, texture, pname, params);
 }
 
-void Context::getTexParameterfvRobust(TextureType target,
+void Context::getTexParameterfvRobust(TextureType targetPacked,
                                       GLenum pname,
                                       GLsizei paramCount,
                                       GLsizei *length,
                                       GLfloat *params)
 {
-    getTexParameterfv(target, pname, params);
+    getTexParameterfv(targetPacked, pname, params);
+
+    if (length != nullptr)
+    {
+        *length = (pname == GL_TEXTURE_BORDER_COLOR) ? 4 : 1;
+    }
 }
 
-void Context::getTexParameteriv(TextureType target, GLenum pname, GLint *params)
+void Context::getTexParameteriv(TextureType targetPacked, GLenum pname, GLint *params)
 {
-    const Texture *const texture = getTextureByType(target);
+    const Texture *const texture = getTextureByType(targetPacked);
     QueryTexParameteriv(this, texture, pname, params);
 }
 
-void Context::getTexParameterIiv(TextureType target, GLenum pname, GLint *params)
+void Context::getTexParameterIiv(TextureType targetPacked, GLenum pname, GLint *params)
 {
-    const Texture *const texture = getTextureByType(target);
+    const Texture *const texture = getTextureByType(targetPacked);
     QueryTexParameterIiv(this, texture, pname, params);
 }
 
-void Context::getTexParameterIuiv(TextureType target, GLenum pname, GLuint *params)
+void Context::getTexParameterIuiv(TextureType targetPacked, GLenum pname, GLuint *params)
 {
-    const Texture *const texture = getTextureByType(target);
+    const Texture *const texture = getTextureByType(targetPacked);
     QueryTexParameterIuiv(this, texture, pname, params);
 }
 
-void Context::getTexParameterivRobust(TextureType target,
+void Context::getTexParameterivRobust(TextureType targetPacked,
                                       GLenum pname,
                                       GLsizei paramCount,
                                       GLsizei *length,
                                       GLint *params)
 {
-    getTexParameteriv(target, pname, params);
+    getTexParameteriv(targetPacked, pname, params);
+
+    if (length != nullptr)
+    {
+        *length = (pname == GL_TEXTURE_BORDER_COLOR) ? 4 : 1;
+    }
 }
 
 void Context::getTexLevelParameteriv(TextureTarget target, GLint level, GLenum pname, GLint *params)
@@ -2862,63 +2872,63 @@ void Context::getTexLevelParameterfvRobust(TextureTarget target,
     UNIMPLEMENTED();
 }
 
-void Context::texParameterf(TextureType target, GLenum pname, GLfloat param)
+void Context::texParameterf(TextureType targetPacked, GLenum pname, GLfloat param)
 {
-    Texture *const texture = getTextureByType(target);
+    Texture *const texture = getTextureByType(targetPacked);
     SetTexParameterf(this, texture, pname, param);
 }
 
-void Context::texParameterfv(TextureType target, GLenum pname, const GLfloat *params)
+void Context::texParameterfv(TextureType targetPacked, GLenum pname, const GLfloat *params)
 {
-    Texture *const texture = getTextureByType(target);
+    Texture *const texture = getTextureByType(targetPacked);
     SetTexParameterfv(this, texture, pname, params);
 }
 
-void Context::texParameterfvRobust(TextureType target,
+void Context::texParameterfvRobust(TextureType targetPacked,
                                    GLenum pname,
                                    GLsizei paramCount,
                                    const GLfloat *params)
 {
-    texParameterfv(target, pname, params);
+    texParameterfv(targetPacked, pname, params);
 }
 
-void Context::texParameteri(TextureType target, GLenum pname, GLint param)
+void Context::texParameteri(TextureType targetPacked, GLenum pname, GLint param)
 {
     // Some apps enable KHR_create_context_no_error but pass in an invalid texture type.
     // Workaround this by silently returning in such situations.
-    if (target == TextureType::InvalidEnum)
+    if (targetPacked == TextureType::InvalidEnum)
     {
         return;
     }
 
-    Texture *const texture = getTextureByType(target);
+    Texture *const texture = getTextureByType(targetPacked);
     SetTexParameteri(this, texture, pname, param);
 }
 
-void Context::texParameteriv(TextureType target, GLenum pname, const GLint *params)
+void Context::texParameteriv(TextureType targetPacked, GLenum pname, const GLint *params)
 {
-    Texture *const texture = getTextureByType(target);
+    Texture *const texture = getTextureByType(targetPacked);
     SetTexParameteriv(this, texture, pname, params);
 }
 
-void Context::texParameterIiv(TextureType target, GLenum pname, const GLint *params)
+void Context::texParameterIiv(TextureType targetPacked, GLenum pname, const GLint *params)
 {
-    Texture *const texture = getTextureByType(target);
+    Texture *const texture = getTextureByType(targetPacked);
     SetTexParameterIiv(this, texture, pname, params);
 }
 
-void Context::texParameterIuiv(TextureType target, GLenum pname, const GLuint *params)
+void Context::texParameterIuiv(TextureType targetPacked, GLenum pname, const GLuint *params)
 {
-    Texture *const texture = getTextureByType(target);
+    Texture *const texture = getTextureByType(targetPacked);
     SetTexParameterIuiv(this, texture, pname, params);
 }
 
-void Context::texParameterivRobust(TextureType target,
+void Context::texParameterivRobust(TextureType targetPacked,
                                    GLenum pname,
                                    GLsizei paramCount,
                                    const GLint *params)
 {
-    texParameteriv(target, pname, params);
+    texParameteriv(targetPacked, pname, params);
 }
 
 void Context::drawArraysInstanced(PrimitiveMode mode,

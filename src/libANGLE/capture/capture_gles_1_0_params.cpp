@@ -153,8 +153,7 @@ void CaptureGetTexParameterxv_params(const State &glState,
                                      GLfixed *params,
                                      ParamCapture *paramCapture)
 {
-    unsigned int size = GetTexParameterCount(pname);
-    CaptureMemory(params, sizeof(GLfloat) * size, paramCapture);
+    paramCapture->readBufferSizeBytes = sizeof(GLfixed) * 4;
 }
 
 void CaptureLightModelfv_params(const State &glState,
@@ -304,8 +303,7 @@ void CaptureTexParameterxv_params(const State &glState,
                                   const GLfixed *params,
                                   ParamCapture *paramCapture)
 {
-    unsigned int size = GetTexParameterCount(pname);
-    CaptureMemory(params, sizeof(GLfloat) * size, paramCapture);
+    CaptureTextureAndSamplerParameter_params<GLfixed>(pname, params, paramCapture);
 }
 
 void CaptureVertexPointer_pointer(const State &glState,

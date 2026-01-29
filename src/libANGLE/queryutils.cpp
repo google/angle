@@ -3257,43 +3257,6 @@ void GetPointSize(const GLES1State *state, GLfloat *sizeOut)
     *sizeOut                      = params.pointSize;
 }
 
-unsigned int GetTexParameterCount(GLenum pname)
-{
-    switch (pname)
-    {
-        case GL_TEXTURE_CROP_RECT_OES:
-        case GL_TEXTURE_BORDER_COLOR:
-            return 4;
-        case GL_TEXTURE_MAG_FILTER:
-        case GL_TEXTURE_MIN_FILTER:
-        case GL_TEXTURE_WRAP_S:
-        case GL_TEXTURE_WRAP_T:
-        case GL_TEXTURE_USAGE_ANGLE:
-        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
-        case GL_TEXTURE_IMMUTABLE_FORMAT:
-        case GL_TEXTURE_WRAP_R:
-        case GL_TEXTURE_IMMUTABLE_LEVELS:
-        case GL_TEXTURE_SWIZZLE_R:
-        case GL_TEXTURE_SWIZZLE_G:
-        case GL_TEXTURE_SWIZZLE_B:
-        case GL_TEXTURE_SWIZZLE_A:
-        case GL_TEXTURE_BASE_LEVEL:
-        case GL_TEXTURE_MAX_LEVEL:
-        case GL_TEXTURE_MIN_LOD:
-        case GL_TEXTURE_MAX_LOD:
-        case GL_TEXTURE_COMPARE_MODE:
-        case GL_TEXTURE_COMPARE_FUNC:
-        case GL_TEXTURE_SRGB_DECODE_EXT:
-        case GL_DEPTH_STENCIL_TEXTURE_MODE:
-        case GL_TEXTURE_NATIVE_ID_ANGLE:
-        case GL_REQUIRED_TEXTURE_IMAGE_UNITS_OES:
-        case GL_RENDERABILITY_VALIDATION_ANGLE:
-            return 1;
-        default:
-            return 0;
-    }
-}
-
 bool GetQueryParameterInfo(const State &glState,
                            GLenum pname,
                            GLenum *type,
