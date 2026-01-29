@@ -494,7 +494,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
                                                      GLenum target,
                                                      GLenum attachment,
                                                      GLenum pname,
-                                                     GLsizei *numParams);
+                                                     GLsizei *outNumParams);
 
 bool ValidateGetFramebufferParameterivBase(const Context *context,
                                            angle::EntryPoint entryPoint,
@@ -518,7 +518,7 @@ bool ValidateGetRenderbufferParameterivBase(const Context *context,
                                             angle::EntryPoint entryPoint,
                                             GLenum target,
                                             GLenum pname,
-                                            GLsizei *length);
+                                            GLsizei *outNumParams);
 
 bool ValidateGetShaderivBase(const Context *context,
                              angle::EntryPoint entryPoint,

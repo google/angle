@@ -2705,6 +2705,11 @@ void Context::getFramebufferAttachmentParameterivRobust(GLenum target,
                                                         GLint *params)
 {
     getFramebufferAttachmentParameteriv(target, attachment, pname, params);
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
 void Context::getRenderbufferParameteriv(GLenum target, GLenum pname, GLint *params)
@@ -2720,6 +2725,11 @@ void Context::getRenderbufferParameterivRobust(GLenum target,
                                                GLint *params)
 {
     getRenderbufferParameteriv(target, pname, params);
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
 void Context::texBuffer(TextureType target, GLenum internalformat, BufferID buffer)
