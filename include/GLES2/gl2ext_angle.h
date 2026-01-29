@@ -391,8 +391,6 @@ GL_APICALL void GL_APIENTRY glGetFramebufferPixelLocalStorageParameterivRobustAN
 #define GL_MAX_DEPTH_TEXTURE_SAMPLES_ANGLE 0x910F
 #define GL_MAX_INTEGER_SAMPLES_ANGLE 0x9110
 #define GL_TEXTURE_BINDING_2D_MULTISAMPLE_ANGLE 0x9104
-#define GL_TEXTURE_SAMPLES_ANGLE 0x9106
-#define GL_TEXTURE_FIXED_SAMPLE_LOCATIONS_ANGLE 0x9107
 typedef void(GL_APIENTRYP PFNGLTEXSTORAGE2DMULTISAMPLEANGLEPROC)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations);
 typedef void (GL_APIENTRYP PFNGLGETMULTISAMPLEFVANGLEPROC)(GLenum pname, GLuint index, GLfloat *val);
 typedef void (GL_APIENTRYP PFNGLSAMPLEMASKIANGLEPROC)(GLuint maskNumber, GLbitfield mask);
@@ -405,6 +403,27 @@ GL_APICALL void GL_APIENTRY glSampleMaskiANGLE(GLuint maskNumber, GLbitfield mas
 
 #ifndef GL_ANGLE_get_tex_level_parameter
 #define GL_ANGLE_get_tex_level_parameter 1
+#define GL_TEXTURE_WIDTH_ANGLE                  0x1000
+#define GL_TEXTURE_HEIGHT_ANGLE                 0x1001
+#define GL_TEXTURE_DEPTH_ANGLE                  0x8071
+#define GL_TEXTURE_INTERNAL_FORMAT_ANGLE        0x1003
+#define GL_TEXTURE_RED_SIZE_ANGLE               0x805C
+#define GL_TEXTURE_GREEN_SIZE_ANGLE             0x805D
+#define GL_TEXTURE_BLUE_SIZE_ANGLE              0x805E
+#define GL_TEXTURE_ALPHA_SIZE_ANGLE             0x805F
+#define GL_TEXTURE_DEPTH_SIZE_ANGLE             0x884A
+#define GL_TEXTURE_STENCIL_SIZE_ANGLE           0x88F1
+#define GL_TEXTURE_SHARED_SIZE_ANGLE            0x8C3F
+#define GL_TEXTURE_RED_TYPE_ANGLE               0x8C10
+#define GL_TEXTURE_GREEN_TYPE_ANGLE             0x8C11
+#define GL_TEXTURE_BLUE_TYPE_ANGLE              0x8C12
+#define GL_TEXTURE_ALPHA_TYPE_ANGLE             0x8C13
+#define GL_TEXTURE_DEPTH_TYPE_ANGLE             0x8C16
+#define GL_TEXTURE_COMPRESSED_ANGLE             0x86A1
+#define GL_TEXTURE_SAMPLES_ANGLE                0x9106
+#define GL_TEXTURE_FIXED_SAMPLE_LOCATIONS_ANGLE 0x9107
+#define GL_UNSIGNED_NORMALIZED_ANGLE            0x8C17
+#define GL_SIGNED_NORMALIZED_ANGLE              0x8F9C
 typedef void(GL_APIENTRYP PFNGLGETTEXLEVELPARAMETERFVANGLEPROC)(GLenum target, GLint level, GLenum pname, GLfloat *params);
 typedef void(GL_APIENTRYP PFNGLGETTEXLEVELPARAMETERIVANGLEPROC)(GLenum target, GLint level, GLenum pname, GLint *params);
 #ifdef GL_GLEXT_PROTOTYPES

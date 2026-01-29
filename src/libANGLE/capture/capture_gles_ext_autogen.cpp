@@ -892,7 +892,8 @@ CallCapture CaptureGetTexLevelParameterivANGLE(const State &glState,
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
-    paramBuffer.addEnumParam("pname", GLESEnum::GetTextureParameter, ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLESEnum::TextureImageParameterName, ParamType::TGLenum,
+                             pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     if (isCallValid)
@@ -921,7 +922,8 @@ CallCapture CaptureGetTexLevelParameterfvANGLE(const State &glState,
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
-    paramBuffer.addEnumParam("pname", GLESEnum::AllEnums, ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLESEnum::TextureImageParameterName, ParamType::TGLenum,
+                             pname);
 
     ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
     if (isCallValid)
@@ -3424,7 +3426,8 @@ CallCapture CaptureGetTexLevelParameterivRobustANGLE(const State &glState,
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
-    paramBuffer.addEnumParam("pname", GLESEnum::AllEnums, ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLESEnum::TextureImageParameterName, ParamType::TGLenum,
+                             pname);
     paramBuffer.addValueParam("paramCount", ParamType::TGLsizei, paramCount);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
@@ -3471,7 +3474,8 @@ CallCapture CaptureGetTexLevelParameterfvRobustANGLE(const State &glState,
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
-    paramBuffer.addEnumParam("pname", GLESEnum::AllEnums, ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLESEnum::TextureImageParameterName, ParamType::TGLenum,
+                             pname);
     paramBuffer.addValueParam("paramCount", ParamType::TGLsizei, paramCount);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);

@@ -7834,6 +7834,53 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
             }
         }
 
+        case GLESEnum::TextureImageParameterName:
+        {
+            switch (value)
+            {
+                case 0x1000:
+                    return "GL_TEXTURE_WIDTH_ANGLE";
+                case 0x1001:
+                    return "GL_TEXTURE_HEIGHT_ANGLE";
+                case 0x1003:
+                    return "GL_TEXTURE_INTERNAL_FORMAT_ANGLE";
+                case 0x805C:
+                    return "GL_TEXTURE_RED_SIZE_ANGLE";
+                case 0x805D:
+                    return "GL_TEXTURE_GREEN_SIZE_ANGLE";
+                case 0x805E:
+                    return "GL_TEXTURE_BLUE_SIZE_ANGLE";
+                case 0x805F:
+                    return "GL_TEXTURE_ALPHA_SIZE_ANGLE";
+                case 0x8071:
+                    return "GL_TEXTURE_DEPTH_ANGLE";
+                case 0x86A1:
+                    return "GL_TEXTURE_COMPRESSED_ANGLE";
+                case 0x884A:
+                    return "GL_TEXTURE_DEPTH_SIZE_ANGLE";
+                case 0x88F1:
+                    return "GL_TEXTURE_STENCIL_SIZE_ANGLE";
+                case 0x8C10:
+                    return "GL_TEXTURE_RED_TYPE_ANGLE";
+                case 0x8C11:
+                    return "GL_TEXTURE_GREEN_TYPE_ANGLE";
+                case 0x8C12:
+                    return "GL_TEXTURE_BLUE_TYPE_ANGLE";
+                case 0x8C13:
+                    return "GL_TEXTURE_ALPHA_TYPE_ANGLE";
+                case 0x8C16:
+                    return "GL_TEXTURE_DEPTH_TYPE_ANGLE";
+                case 0x8C3F:
+                    return "GL_TEXTURE_SHARED_SIZE_ANGLE";
+                case 0x9106:
+                    return "GL_TEXTURE_SAMPLES_ANGLE";
+                case 0x9107:
+                    return "GL_TEXTURE_FIXED_SAMPLE_LOCATIONS_ANGLE";
+                default:
+                    return UnknownEnumToString(value);
+            }
+        }
+
         case GLESEnum::TextureLayout:
         {
             switch (value)
@@ -13369,6 +13416,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_SIGNED_LUMINANCE_NV", 0x8701},
     {"GL_SIGNED_NEGATE_NV", 0x853D},
     {"GL_SIGNED_NORMALIZED", 0x8F9C},
+    {"GL_SIGNED_NORMALIZED_ANGLE", 0x8F9C},
     {"GL_SIGNED_RGB8_NV", 0x86FF},
     {"GL_SIGNED_RGB8_UNSIGNED_ALPHA8_NV", 0x870D},
     {"GL_SIGNED_RGBA8_NV", 0x86FC},
@@ -13815,8 +13863,10 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_TEXTURE_4D_SGIS", 0x8134},
     {"GL_TEXTURE_ALPHA_MODULATE_IMG", 0x8C06},
     {"GL_TEXTURE_ALPHA_SIZE", 0x805F},
+    {"GL_TEXTURE_ALPHA_SIZE_ANGLE", 0x805F},
     {"GL_TEXTURE_ALPHA_SIZE_EXT", 0x805F},
     {"GL_TEXTURE_ALPHA_TYPE", 0x8C13},
+    {"GL_TEXTURE_ALPHA_TYPE_ANGLE", 0x8C13},
     {"GL_TEXTURE_ALPHA_TYPE_ARB", 0x8C13},
     {"GL_TEXTURE_APPLICATION_MODE_EXT", 0x834F},
     {"GL_TEXTURE_ASTC_DECODE_PRECISION_EXT", 0x8F69},
@@ -13853,8 +13903,10 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_TEXTURE_BINDING_RENDERBUFFER_NV", 0x8E53},
     {"GL_TEXTURE_BIT", 0x40000},
     {"GL_TEXTURE_BLUE_SIZE", 0x805E},
+    {"GL_TEXTURE_BLUE_SIZE_ANGLE", 0x805E},
     {"GL_TEXTURE_BLUE_SIZE_EXT", 0x805E},
     {"GL_TEXTURE_BLUE_TYPE", 0x8C12},
+    {"GL_TEXTURE_BLUE_TYPE_ANGLE", 0x8C12},
     {"GL_TEXTURE_BLUE_TYPE_ARB", 0x8C12},
     {"GL_TEXTURE_BORDER", 0x1005},
     {"GL_TEXTURE_BORDER_COLOR", 0x1004},
@@ -13905,6 +13957,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_TEXTURE_COMPARE_SGIX", 0x819A},
     {"GL_TEXTURE_COMPONENTS", 0x1003},
     {"GL_TEXTURE_COMPRESSED", 0x86A1},
+    {"GL_TEXTURE_COMPRESSED_ANGLE", 0x86A1},
     {"GL_TEXTURE_COMPRESSED_ARB", 0x86A1},
     {"GL_TEXTURE_COMPRESSED_BLOCK_HEIGHT", 0x82B2},
     {"GL_TEXTURE_COMPRESSED_BLOCK_SIZE", 0x82B3},
@@ -13971,11 +14024,14 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_TEXTURE_DEFORMATION_BIT_SGIX", 0x0001},
     {"GL_TEXTURE_DEFORMATION_SGIX", 0x8195},
     {"GL_TEXTURE_DEPTH", 0x8071},
+    {"GL_TEXTURE_DEPTH_ANGLE", 0x8071},
     {"GL_TEXTURE_DEPTH_EXT", 0x8071},
     {"GL_TEXTURE_DEPTH_QCOM", 0x8BD4},
     {"GL_TEXTURE_DEPTH_SIZE", 0x884A},
+    {"GL_TEXTURE_DEPTH_SIZE_ANGLE", 0x884A},
     {"GL_TEXTURE_DEPTH_SIZE_ARB", 0x884A},
     {"GL_TEXTURE_DEPTH_TYPE", 0x8C16},
+    {"GL_TEXTURE_DEPTH_TYPE_ANGLE", 0x8C16},
     {"GL_TEXTURE_DEPTH_TYPE_ARB", 0x8C16},
     {"GL_TEXTURE_DS_SIZE_NV", 0x871D},
     {"GL_TEXTURE_DT_SIZE_NV", 0x871E},
@@ -14011,10 +14067,13 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_TEXTURE_GEN_T", 0x0C61},
     {"GL_TEXTURE_GEQUAL_R_SGIX", 0x819D},
     {"GL_TEXTURE_GREEN_SIZE", 0x805D},
+    {"GL_TEXTURE_GREEN_SIZE_ANGLE", 0x805D},
     {"GL_TEXTURE_GREEN_SIZE_EXT", 0x805D},
     {"GL_TEXTURE_GREEN_TYPE", 0x8C11},
+    {"GL_TEXTURE_GREEN_TYPE_ANGLE", 0x8C11},
     {"GL_TEXTURE_GREEN_TYPE_ARB", 0x8C11},
     {"GL_TEXTURE_HEIGHT", 0x1001},
+    {"GL_TEXTURE_HEIGHT_ANGLE", 0x1001},
     {"GL_TEXTURE_HEIGHT_QCOM", 0x8BD3},
     {"GL_TEXTURE_HI_SIZE_NV", 0x871B},
     {"GL_TEXTURE_IMAGE_FORMAT", 0x828F},
@@ -14029,6 +14088,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_TEXTURE_INTENSITY_TYPE", 0x8C15},
     {"GL_TEXTURE_INTENSITY_TYPE_ARB", 0x8C15},
     {"GL_TEXTURE_INTERNAL_FORMAT", 0x1003},
+    {"GL_TEXTURE_INTERNAL_FORMAT_ANGLE", 0x1003},
     {"GL_TEXTURE_INTERNAL_FORMAT_QCOM", 0x8BD5},
     {"GL_TEXTURE_LEQUAL_R_SGIX", 0x819C},
     {"GL_TEXTURE_LIGHTING_MODE_HP", 0x8167},
@@ -14081,8 +14141,10 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_TEXTURE_REDUCTION_MODE_ARB", 0x9366},
     {"GL_TEXTURE_REDUCTION_MODE_EXT", 0x9366},
     {"GL_TEXTURE_RED_SIZE", 0x805C},
+    {"GL_TEXTURE_RED_SIZE_ANGLE", 0x805C},
     {"GL_TEXTURE_RED_SIZE_EXT", 0x805C},
     {"GL_TEXTURE_RED_TYPE", 0x8C10},
+    {"GL_TEXTURE_RED_TYPE_ANGLE", 0x8C10},
     {"GL_TEXTURE_RED_TYPE_ARB", 0x8C10},
     {"GL_TEXTURE_RENDERBUFFER_DATA_STORE_BINDING_NV", 0x8E54},
     {"GL_TEXTURE_RENDERBUFFER_NV", 0x8E55},
@@ -14094,12 +14156,14 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_TEXTURE_SHADER_NV", 0x86DE},
     {"GL_TEXTURE_SHADOW", 0x82A1},
     {"GL_TEXTURE_SHARED_SIZE", 0x8C3F},
+    {"GL_TEXTURE_SHARED_SIZE_ANGLE", 0x8C3F},
     {"GL_TEXTURE_SHARED_SIZE_EXT", 0x8C3F},
     {"GL_TEXTURE_SPARSE_ARB", 0x91A6},
     {"GL_TEXTURE_SPARSE_EXT", 0x91A6},
     {"GL_TEXTURE_SRGB_DECODE_EXT", 0x8A48},
     {"GL_TEXTURE_STACK_DEPTH", 0x0BA5},
     {"GL_TEXTURE_STENCIL_SIZE", 0x88F1},
+    {"GL_TEXTURE_STENCIL_SIZE_ANGLE", 0x88F1},
     {"GL_TEXTURE_STENCIL_SIZE_EXT", 0x88F1},
     {"GL_TEXTURE_STORAGE_HINT_APPLE", 0x85BC},
     {"GL_TEXTURE_STORAGE_SPARSE_BIT_AMD", 0x0001},
@@ -14138,6 +14202,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_TEXTURE_VIEW_NUM_LEVELS_EXT", 0x82DC},
     {"GL_TEXTURE_VIEW_NUM_LEVELS_OES", 0x82DC},
     {"GL_TEXTURE_WIDTH", 0x1000},
+    {"GL_TEXTURE_WIDTH_ANGLE", 0x1000},
     {"GL_TEXTURE_WIDTH_QCOM", 0x8BD2},
     {"GL_TEXTURE_WRAP_Q_SGIS", 0x8137},
     {"GL_TEXTURE_WRAP_R", 0x8072},
@@ -14445,6 +14510,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_UNSIGNED_INT_VEC4_EXT", 0x8DC8},
     {"GL_UNSIGNED_INVERT_NV", 0x8537},
     {"GL_UNSIGNED_NORMALIZED", 0x8C17},
+    {"GL_UNSIGNED_NORMALIZED_ANGLE", 0x8C17},
     {"GL_UNSIGNED_NORMALIZED_ARB", 0x8C17},
     {"GL_UNSIGNED_NORMALIZED_EXT", 0x8C17},
     {"GL_UNSIGNED_SHORT", 0x1403},

@@ -8231,31 +8231,16 @@ bool ValidateGetTexLevelParameterBase(const Context *context,
         case GL_TEXTURE_INTERNAL_FORMAT:
         case GL_TEXTURE_WIDTH:
         case GL_TEXTURE_HEIGHT:
+        case GL_TEXTURE_DEPTH:
         case GL_TEXTURE_COMPRESSED:
+        case GL_TEXTURE_SAMPLES:
+        case GL_TEXTURE_FIXED_SAMPLE_LOCATIONS:
             break;
 
         case GL_MEMORY_SIZE_ANGLE:
             if (!context->getExtensions().memorySizeANGLE)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-
-        case GL_TEXTURE_DEPTH:
-            if (context->getClientVersion() < ES_3_0 && !context->getExtensions().texture3DOES)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            }
-            break;
-
-        case GL_TEXTURE_SAMPLES:
-        case GL_TEXTURE_FIXED_SAMPLE_LOCATIONS:
-            if (context->getClientVersion() < ES_3_1 &&
-                !context->getExtensions().textureMultisampleANGLE)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleTextureExtensionOrES31Required);
                 return false;
             }
             break;

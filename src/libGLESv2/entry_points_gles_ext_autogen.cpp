@@ -1335,7 +1335,7 @@ void GL_APIENTRY GL_GetTexLevelParameterivANGLE(GLenum target,
         EVENT(context, GLGetTexLevelParameterivANGLE,
               "context = %d, target = %s, level = %d, pname = %s, params = 0x%016" PRIxPTR "",
               CID(context), GLenumToString(GLESEnum::TextureTarget, target), level,
-              GLenumToString(GLESEnum::GetTextureParameter, pname), (uintptr_t)params));
+              GLenumToString(GLESEnum::TextureImageParameterName, pname), (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -1386,8 +1386,8 @@ void GL_APIENTRY GL_GetTexLevelParameterfvANGLE(GLenum target,
     ANGLE_UNSAFE_TODO(
         EVENT(context, GLGetTexLevelParameterfvANGLE,
               "context = %d, target = %s, level = %d, pname = %s, params = 0x%016" PRIxPTR "",
-              CID(context), GLenumToString(GLESEnum::AllEnums, target), level,
-              GLenumToString(GLESEnum::AllEnums, pname), (uintptr_t)params));
+              CID(context), GLenumToString(GLESEnum::TextureTarget, target), level,
+              GLenumToString(GLESEnum::TextureImageParameterName, pname), (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -4978,7 +4978,7 @@ void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLE(GLenum target,
                             "context = %d, target = %s, level = %d, pname = %s, paramCount = %d, "
                             "length = 0x%016" PRIxPTR ", params = 0x%016" PRIxPTR "",
                             CID(context), GLenumToString(GLESEnum::TextureTarget, target), level,
-                            GLenumToString(GLESEnum::AllEnums, pname), paramCount,
+                            GLenumToString(GLESEnum::TextureImageParameterName, pname), paramCount,
                             (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -5043,8 +5043,8 @@ void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target,
     ANGLE_UNSAFE_TODO(EVENT(context, GLGetTexLevelParameterfvRobustANGLE,
                             "context = %d, target = %s, level = %d, pname = %s, paramCount = %d, "
                             "length = 0x%016" PRIxPTR ", params = 0x%016" PRIxPTR "",
-                            CID(context), GLenumToString(GLESEnum::AllEnums, target), level,
-                            GLenumToString(GLESEnum::AllEnums, pname), paramCount,
+                            CID(context), GLenumToString(GLESEnum::TextureTarget, target), level,
+                            GLenumToString(GLESEnum::TextureImageParameterName, pname), paramCount,
                             (uintptr_t)length, (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
