@@ -6267,28 +6267,23 @@ bool ValidateGetVertexAttribfvRobustANGLE(const Context *context,
                                           angle::EntryPoint entryPoint,
                                           GLuint index,
                                           GLenum pname,
-                                          GLsizei bufSize,
+                                          GLsizei paramCount,
                                           const GLsizei *length,
                                           const GLfloat *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetVertexAttribBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &numParams))
+    {
+        return false;
+    }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
+
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
 
-    GLsizei writeLength = 0;
-
-    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false))
-    {
-        return false;
-    }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, writeLength))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, writeLength);
     return true;
 }
 
@@ -6296,28 +6291,22 @@ bool ValidateGetVertexAttribivRobustANGLE(const Context *context,
                                           angle::EntryPoint entryPoint,
                                           GLuint index,
                                           GLenum pname,
-                                          GLsizei bufSize,
+                                          GLsizei paramCount,
                                           const GLsizei *length,
                                           const GLint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetVertexAttribBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
-    GLsizei writeLength = 0;
-
-    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, writeLength))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, writeLength);
 
     return true;
 }
@@ -6350,28 +6339,22 @@ bool ValidateGetVertexAttribIivRobustANGLE(const Context *context,
                                            angle::EntryPoint entryPoint,
                                            GLuint index,
                                            GLenum pname,
-                                           GLsizei bufSize,
+                                           GLsizei paramCount,
                                            const GLsizei *length,
                                            const GLint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetVertexAttribBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
-    GLsizei writeLength = 0;
-
-    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, writeLength))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, writeLength);
 
     return true;
 }
@@ -6380,28 +6363,22 @@ bool ValidateGetVertexAttribIuivRobustANGLE(const Context *context,
                                             angle::EntryPoint entryPoint,
                                             GLuint index,
                                             GLenum pname,
-                                            GLsizei bufSize,
+                                            GLsizei paramCount,
                                             const GLsizei *length,
                                             const GLuint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetVertexAttribBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
-    GLsizei writeLength = 0;
-
-    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, writeLength))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, writeLength);
 
     return true;
 }
@@ -6948,21 +6925,14 @@ bool ValidateGetVertexAttribBase(const Context *context,
                                  angle::EntryPoint entryPoint,
                                  GLuint index,
                                  GLenum pname,
-                                 GLsizei *length,
-                                 bool pointer)
+                                 GLsizei *outNumParams)
 {
-    if (length)
-    {
-        *length = 0;
-    }
-
     if (index >= static_cast<GLuint>(context->getCaps().maxVertexAttributes))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
         return false;
     }
 
-    ASSERT(!pointer);
     {
         switch (pname)
         {
@@ -7010,16 +6980,9 @@ bool ValidateGetVertexAttribBase(const Context *context,
         }
     }
 
-    if (length)
+    if (outNumParams != nullptr)
     {
-        if (pname == GL_CURRENT_VERTEX_ATTRIB)
-        {
-            *length = 4;
-        }
-        else
-        {
-            *length = 1;
-        }
+        *outNumParams = (pname == GL_CURRENT_VERTEX_ATTRIB) ? 4 : 1;
     }
 
     return true;

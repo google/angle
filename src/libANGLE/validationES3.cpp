@@ -4654,7 +4654,7 @@ bool ValidateGetVertexAttribIiv(const Context *context,
                                 GLenum pname,
                                 const GLint *params)
 {
-    return ValidateGetVertexAttribBase(context, entryPoint, index, pname, nullptr, false);
+    return ValidateGetVertexAttribBase(context, entryPoint, index, pname, nullptr);
 }
 
 bool ValidateGetVertexAttribIuiv(const Context *context,
@@ -4663,7 +4663,7 @@ bool ValidateGetVertexAttribIuiv(const Context *context,
                                  GLenum pname,
                                  const GLuint *params)
 {
-    return ValidateGetVertexAttribBase(context, entryPoint, index, pname, nullptr, false);
+    return ValidateGetVertexAttribBase(context, entryPoint, index, pname, nullptr);
 }
 
 bool ValidateGetInternalformativ(const Context *context,

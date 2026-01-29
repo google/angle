@@ -6102,6 +6102,11 @@ void Context::getVertexAttribivRobust(GLuint index,
                                       GLint *params)
 {
     getVertexAttribiv(index, pname, params);
+
+    if (length != nullptr)
+    {
+        *length = (pname == GL_CURRENT_VERTEX_ATTRIB) ? 4 : 1;
+    }
 }
 
 void Context::getVertexAttribfv(GLuint index, GLenum pname, GLfloat *params)
@@ -6121,6 +6126,11 @@ void Context::getVertexAttribfvRobust(GLuint index,
                                       GLfloat *params)
 {
     getVertexAttribfv(index, pname, params);
+
+    if (length != nullptr)
+    {
+        *length = (pname == GL_CURRENT_VERTEX_ATTRIB) ? 4 : 1;
+    }
 }
 
 void Context::getVertexAttribIiv(GLuint index, GLenum pname, GLint *params)
@@ -6140,6 +6150,11 @@ void Context::getVertexAttribIivRobust(GLuint index,
                                        GLint *params)
 {
     getVertexAttribIiv(index, pname, params);
+
+    if (length != nullptr)
+    {
+        *length = (pname == GL_CURRENT_VERTEX_ATTRIB) ? 4 : 1;
+    }
 }
 
 void Context::getVertexAttribIuiv(GLuint index, GLenum pname, GLuint *params)
@@ -6159,6 +6174,11 @@ void Context::getVertexAttribIuivRobust(GLuint index,
                                         GLuint *params)
 {
     getVertexAttribIuiv(index, pname, params);
+
+    if (length != nullptr)
+    {
+        *length = (pname == GL_CURRENT_VERTEX_ATTRIB) ? 4 : 1;
+    }
 }
 
 void Context::getVertexAttribPointerv(GLuint index, GLenum pname, void **pointer)
