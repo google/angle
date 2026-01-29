@@ -546,22 +546,6 @@ ANGLE_EXPORT void GL_APIENTRY GL_GetSamplerParameterfvRobustANGLE(GLuint sampler
                                                                   GLsizei bufSize,
                                                                   GLsizei *length,
                                                                   GLfloat *params);
-ANGLE_EXPORT void GL_APIENTRY GL_GetFramebufferParameterivRobustANGLE(GLenum target,
-                                                                      GLenum pname,
-                                                                      GLsizei bufSize,
-                                                                      GLsizei *length,
-                                                                      GLint *params);
-ANGLE_EXPORT void GL_APIENTRY GL_GetProgramInterfaceivRobustANGLE(GLuint program,
-                                                                  GLenum programInterface,
-                                                                  GLenum pname,
-                                                                  GLsizei bufSize,
-                                                                  GLsizei *length,
-                                                                  GLint *params);
-ANGLE_EXPORT void GL_APIENTRY GL_GetBooleani_vRobustANGLE(GLenum target,
-                                                          GLuint index,
-                                                          GLsizei bufSize,
-                                                          GLsizei *length,
-                                                          GLboolean *data);
 ANGLE_EXPORT void GL_APIENTRY GL_GetMultisamplefvRobustANGLE(GLenum pname,
                                                              GLuint index,
                                                              GLsizei bufSize,
@@ -579,72 +563,6 @@ ANGLE_EXPORT void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target
                                                                    GLsizei bufSize,
                                                                    GLsizei *length,
                                                                    GLfloat *params);
-ANGLE_EXPORT void GL_APIENTRY GL_GetPointervRobustANGLERobustANGLE(GLenum pname,
-                                                                   GLsizei bufSize,
-                                                                   GLsizei *length,
-                                                                   void **params);
-ANGLE_EXPORT void GL_APIENTRY GL_ReadnPixelsRobustANGLE(GLint x,
-                                                        GLint y,
-                                                        GLsizei width,
-                                                        GLsizei height,
-                                                        GLenum format,
-                                                        GLenum type,
-                                                        GLsizei bufSize,
-                                                        GLsizei *length,
-                                                        GLsizei *columns,
-                                                        GLsizei *rows,
-                                                        void *data);
-ANGLE_EXPORT void GL_APIENTRY GL_GetnUniformfvRobustANGLE(GLuint program,
-                                                          GLint location,
-                                                          GLsizei bufSize,
-                                                          GLsizei *length,
-                                                          GLfloat *params);
-ANGLE_EXPORT void GL_APIENTRY GL_GetnUniformivRobustANGLE(GLuint program,
-                                                          GLint location,
-                                                          GLsizei bufSize,
-                                                          GLsizei *length,
-                                                          GLint *params);
-ANGLE_EXPORT void GL_APIENTRY GL_GetnUniformuivRobustANGLE(GLuint program,
-                                                           GLint location,
-                                                           GLsizei bufSize,
-                                                           GLsizei *length,
-                                                           GLuint *params);
-ANGLE_EXPORT void GL_APIENTRY GL_TexParameterIivRobustANGLE(GLenum target,
-                                                            GLenum pname,
-                                                            GLsizei bufSize,
-                                                            const GLint *params);
-ANGLE_EXPORT void GL_APIENTRY GL_TexParameterIuivRobustANGLE(GLenum target,
-                                                             GLenum pname,
-                                                             GLsizei bufSize,
-                                                             const GLuint *params);
-ANGLE_EXPORT void GL_APIENTRY GL_GetTexParameterIivRobustANGLE(GLenum target,
-                                                               GLenum pname,
-                                                               GLsizei bufSize,
-                                                               GLsizei *length,
-                                                               GLint *params);
-ANGLE_EXPORT void GL_APIENTRY GL_GetTexParameterIuivRobustANGLE(GLenum target,
-                                                                GLenum pname,
-                                                                GLsizei bufSize,
-                                                                GLsizei *length,
-                                                                GLuint *params);
-ANGLE_EXPORT void GL_APIENTRY GL_SamplerParameterIivRobustANGLE(GLuint sampler,
-                                                                GLenum pname,
-                                                                GLsizei bufSize,
-                                                                const GLint *param);
-ANGLE_EXPORT void GL_APIENTRY GL_SamplerParameterIuivRobustANGLE(GLuint sampler,
-                                                                 GLenum pname,
-                                                                 GLsizei bufSize,
-                                                                 const GLuint *param);
-ANGLE_EXPORT void GL_APIENTRY GL_GetSamplerParameterIivRobustANGLE(GLuint sampler,
-                                                                   GLenum pname,
-                                                                   GLsizei bufSize,
-                                                                   GLsizei *length,
-                                                                   GLint *params);
-ANGLE_EXPORT void GL_APIENTRY GL_GetSamplerParameterIuivRobustANGLE(GLuint sampler,
-                                                                    GLenum pname,
-                                                                    GLsizei bufSize,
-                                                                    GLsizei *length,
-                                                                    GLuint *params);
 ANGLE_EXPORT void GL_APIENTRY GL_GetQueryObjectivRobustANGLE(GLuint id,
                                                              GLenum pname,
                                                              GLsizei bufSize,

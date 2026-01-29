@@ -576,46 +576,12 @@
                                      GLsizei *length, GLint *params);                              \
     void getSamplerParameterfvRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,       \
                                      GLsizei *length, GLfloat *params);                            \
-    void getFramebufferParameterivRobust(GLenum target, GLenum pname, GLsizei bufSize,             \
-                                         GLsizei *length, GLint *params);                          \
-    void getProgramInterfaceivRobust(ShaderProgramID programPacked, GLenum programInterface,       \
-                                     GLenum pname, GLsizei bufSize, GLsizei *length,               \
-                                     GLint *params);                                               \
-    void getBooleani_vRobust(GLenum target, GLuint index, GLsizei bufSize, GLsizei *length,        \
-                             GLboolean *data);                                                     \
     void getMultisamplefvRobust(GLenum pname, GLuint index, GLsizei bufSize, GLsizei *length,      \
                                 GLfloat *val);                                                     \
     void getTexLevelParameterivRobust(TextureTarget targetPacked, GLint level, GLenum pname,       \
                                       GLsizei bufSize, GLsizei *length, GLint *params);            \
     void getTexLevelParameterfvRobust(TextureTarget targetPacked, GLint level, GLenum pname,       \
                                       GLsizei bufSize, GLsizei *length, GLfloat *params);          \
-    void getPointervRobustANGLERobust(GLenum pname, GLsizei bufSize, GLsizei *length,              \
-                                      void **params);                                              \
-    void readnPixelsRobust(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,         \
-                           GLenum type, GLsizei bufSize, GLsizei *length, GLsizei *columns,        \
-                           GLsizei *rows, void *data);                                             \
-    void getnUniformfvRobust(ShaderProgramID programPacked, UniformLocation locationPacked,        \
-                             GLsizei bufSize, GLsizei *length, GLfloat *params);                   \
-    void getnUniformivRobust(ShaderProgramID programPacked, UniformLocation locationPacked,        \
-                             GLsizei bufSize, GLsizei *length, GLint *params);                     \
-    void getnUniformuivRobust(ShaderProgramID programPacked, UniformLocation locationPacked,       \
-                              GLsizei bufSize, GLsizei *length, GLuint *params);                   \
-    void texParameterIivRobust(TextureType targetPacked, GLenum pname, GLsizei bufSize,            \
-                               const GLint *params);                                               \
-    void texParameterIuivRobust(TextureType targetPacked, GLenum pname, GLsizei bufSize,           \
-                                const GLuint *params);                                             \
-    void getTexParameterIivRobust(TextureType targetPacked, GLenum pname, GLsizei bufSize,         \
-                                  GLsizei *length, GLint *params);                                 \
-    void getTexParameterIuivRobust(TextureType targetPacked, GLenum pname, GLsizei bufSize,        \
-                                   GLsizei *length, GLuint *params);                               \
-    void samplerParameterIivRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,         \
-                                   const GLint *param);                                            \
-    void samplerParameterIuivRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,        \
-                                    const GLuint *param);                                          \
-    void getSamplerParameterIivRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,      \
-                                      GLsizei *length, GLint *params);                             \
-    void getSamplerParameterIuivRobust(SamplerID samplerPacked, GLenum pname, GLsizei bufSize,     \
-                                       GLsizei *length, GLuint *params);                           \
     void getQueryObjectivRobust(QueryID idPacked, GLenum pname, GLsizei bufSize, GLsizei *length,  \
                                 GLint *params);                                                    \
     void getQueryObjecti64vRobust(QueryID idPacked, GLenum pname, GLsizei bufSize,                 \

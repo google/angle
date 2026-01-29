@@ -1046,8 +1046,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetAttribLocation";
         case EntryPoint::GLGetBooleani_v:
             return "glGetBooleani_v";
-        case EntryPoint::GLGetBooleani_vRobustANGLE:
-            return "glGetBooleani_vRobustANGLE";
         case EntryPoint::GLGetBooleanv:
             return "glGetBooleanv";
         case EntryPoint::GLGetBooleanvRobustANGLE:
@@ -1102,8 +1100,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetFramebufferParameteriv";
         case EntryPoint::GLGetFramebufferParameterivMESA:
             return "glGetFramebufferParameterivMESA";
-        case EntryPoint::GLGetFramebufferParameterivRobustANGLE:
-            return "glGetFramebufferParameterivRobustANGLE";
         case EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvANGLE:
             return "glGetFramebufferPixelLocalStorageParameterfvANGLE";
         case EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE:
@@ -1184,8 +1180,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetPointervANGLE";
         case EntryPoint::GLGetPointervKHR:
             return "glGetPointervKHR";
-        case EntryPoint::GLGetPointervRobustANGLERobustANGLE:
-            return "glGetPointervRobustANGLERobustANGLE";
         case EntryPoint::GLGetProgramBinary:
             return "glGetProgramBinary";
         case EntryPoint::GLGetProgramBinaryOES:
@@ -1194,8 +1188,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetProgramInfoLog";
         case EntryPoint::GLGetProgramInterfaceiv:
             return "glGetProgramInterfaceiv";
-        case EntryPoint::GLGetProgramInterfaceivRobustANGLE:
-            return "glGetProgramInterfaceivRobustANGLE";
         case EntryPoint::GLGetProgramPipelineInfoLog:
             return "glGetProgramPipelineInfoLog";
         case EntryPoint::GLGetProgramPipelineInfoLogEXT:
@@ -1256,16 +1248,12 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetSamplerParameterIivEXT";
         case EntryPoint::GLGetSamplerParameterIivOES:
             return "glGetSamplerParameterIivOES";
-        case EntryPoint::GLGetSamplerParameterIivRobustANGLE:
-            return "glGetSamplerParameterIivRobustANGLE";
         case EntryPoint::GLGetSamplerParameterIuiv:
             return "glGetSamplerParameterIuiv";
         case EntryPoint::GLGetSamplerParameterIuivEXT:
             return "glGetSamplerParameterIuivEXT";
         case EntryPoint::GLGetSamplerParameterIuivOES:
             return "glGetSamplerParameterIuivOES";
-        case EntryPoint::GLGetSamplerParameterIuivRobustANGLE:
-            return "glGetSamplerParameterIuivRobustANGLE";
         case EntryPoint::GLGetSamplerParameterfv:
             return "glGetSamplerParameterfv";
         case EntryPoint::GLGetSamplerParameterfvRobustANGLE:
@@ -1324,16 +1312,12 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetTexParameterIivEXT";
         case EntryPoint::GLGetTexParameterIivOES:
             return "glGetTexParameterIivOES";
-        case EntryPoint::GLGetTexParameterIivRobustANGLE:
-            return "glGetTexParameterIivRobustANGLE";
         case EntryPoint::GLGetTexParameterIuiv:
             return "glGetTexParameterIuiv";
         case EntryPoint::GLGetTexParameterIuivEXT:
             return "glGetTexParameterIuivEXT";
         case EntryPoint::GLGetTexParameterIuivOES:
             return "glGetTexParameterIuivOES";
-        case EntryPoint::GLGetTexParameterIuivRobustANGLE:
-            return "glGetTexParameterIuivRobustANGLE";
         case EntryPoint::GLGetTexParameterfv:
             return "glGetTexParameterfv";
         case EntryPoint::GLGetTexParameterfvRobustANGLE:
@@ -1396,22 +1380,16 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetnUniformfvEXT";
         case EntryPoint::GLGetnUniformfvKHR:
             return "glGetnUniformfvKHR";
-        case EntryPoint::GLGetnUniformfvRobustANGLE:
-            return "glGetnUniformfvRobustANGLE";
         case EntryPoint::GLGetnUniformiv:
             return "glGetnUniformiv";
         case EntryPoint::GLGetnUniformivEXT:
             return "glGetnUniformivEXT";
         case EntryPoint::GLGetnUniformivKHR:
             return "glGetnUniformivKHR";
-        case EntryPoint::GLGetnUniformivRobustANGLE:
-            return "glGetnUniformivRobustANGLE";
         case EntryPoint::GLGetnUniformuiv:
             return "glGetnUniformuiv";
         case EntryPoint::GLGetnUniformuivKHR:
             return "glGetnUniformuivKHR";
-        case EntryPoint::GLGetnUniformuivRobustANGLE:
-            return "glGetnUniformuivRobustANGLE";
         case EntryPoint::GLHint:
             return "glHint";
         case EntryPoint::GLImportMemoryFdEXT:
@@ -1810,8 +1788,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glReadnPixelsEXT";
         case EntryPoint::GLReadnPixelsKHR:
             return "glReadnPixelsKHR";
-        case EntryPoint::GLReadnPixelsRobustANGLE:
-            return "glReadnPixelsRobustANGLE";
         case EntryPoint::GLReleaseShaderCompiler:
             return "glReleaseShaderCompiler";
         case EntryPoint::GLReleaseTexturesANGLE:
@@ -1848,16 +1824,12 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glSamplerParameterIivEXT";
         case EntryPoint::GLSamplerParameterIivOES:
             return "glSamplerParameterIivOES";
-        case EntryPoint::GLSamplerParameterIivRobustANGLE:
-            return "glSamplerParameterIivRobustANGLE";
         case EntryPoint::GLSamplerParameterIuiv:
             return "glSamplerParameterIuiv";
         case EntryPoint::GLSamplerParameterIuivEXT:
             return "glSamplerParameterIuivEXT";
         case EntryPoint::GLSamplerParameterIuivOES:
             return "glSamplerParameterIuivOES";
-        case EntryPoint::GLSamplerParameterIuivRobustANGLE:
-            return "glSamplerParameterIuivRobustANGLE";
         case EntryPoint::GLSamplerParameterf:
             return "glSamplerParameterf";
         case EntryPoint::GLSamplerParameterfv:
@@ -1968,16 +1940,12 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glTexParameterIivEXT";
         case EntryPoint::GLTexParameterIivOES:
             return "glTexParameterIivOES";
-        case EntryPoint::GLTexParameterIivRobustANGLE:
-            return "glTexParameterIivRobustANGLE";
         case EntryPoint::GLTexParameterIuiv:
             return "glTexParameterIuiv";
         case EntryPoint::GLTexParameterIuivEXT:
             return "glTexParameterIuivEXT";
         case EntryPoint::GLTexParameterIuivOES:
             return "glTexParameterIuivOES";
-        case EntryPoint::GLTexParameterIuivRobustANGLE:
-            return "glTexParameterIuivRobustANGLE";
         case EntryPoint::GLTexParameterf:
             return "glTexParameterf";
         case EntryPoint::GLTexParameterfv:

@@ -421,41 +421,6 @@ bool ValidateGetBooleani_v(const Context *context,
     return true;
 }
 
-bool ValidateGetBooleani_vRobustANGLE(const Context *context,
-                                      angle::EntryPoint entryPoint,
-                                      GLenum target,
-                                      GLuint index,
-                                      GLsizei bufSize,
-                                      const GLsizei *length,
-                                      const GLboolean *data)
-{
-    if (context->getClientVersion() < ES_3_1)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES31Required);
-        return false;
-    }
-
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
-    {
-        return false;
-    }
-
-    GLsizei numParams = 0;
-
-    if (!ValidateIndexedStateQuery(context, entryPoint, target, index, &numParams))
-    {
-        return false;
-    }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
-    return true;
-}
-
 bool ValidateDrawIndirectBase(const Context *context,
                               angle::EntryPoint entryPoint,
                               PrimitiveMode mode,
@@ -1098,18 +1063,6 @@ bool ValidateGetFramebufferParameteriv(const Context *context,
     return ValidateGetFramebufferParameterivBase(context, entryPoint, target, pname, params);
 }
 
-bool ValidateGetFramebufferParameterivRobustANGLE(const Context *context,
-                                                  angle::EntryPoint entryPoint,
-                                                  GLenum target,
-                                                  GLenum pname,
-                                                  GLsizei bufSize,
-                                                  const GLsizei *length,
-                                                  const GLint *params)
-{
-    UNIMPLEMENTED();
-    return false;
-}
-
 bool ValidateGetProgramResourceIndex(const Context *context,
                                      angle::EntryPoint entryPoint,
                                      ShaderProgramID program,
@@ -1605,19 +1558,6 @@ bool ValidateGetProgramInterfaceiv(const Context *context,
     }
 
     return true;
-}
-
-bool ValidateGetProgramInterfaceivRobustANGLE(const Context *context,
-                                              angle::EntryPoint entryPoint,
-                                              ShaderProgramID program,
-                                              GLenum programInterface,
-                                              GLenum pname,
-                                              GLsizei bufSize,
-                                              const GLsizei *length,
-                                              const GLint *params)
-{
-    UNIMPLEMENTED();
-    return false;
 }
 
 bool ValidateGenProgramPipelinesBase(const Context *context,

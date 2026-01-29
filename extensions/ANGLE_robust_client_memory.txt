@@ -94,26 +94,9 @@ New Procedures and Functions
     void GetSamplerParameterivRobustANGLE(uint sampler, enum pname, sizei bufSize, sizei *length, int *params)
     void GetSamplerParameterfvRobustANGLE(uint sampler, enum pname, sizei bufSize, sizei *length, float *params)
 
-    void GetFramebufferParameterivRobustANGLE(enum target, enum pname, sizei bufSize, sizei *length, int *params)
-    void GetProgramInterfaceivRobustANGLE(uint program, enum programInterface, enum pname, sizei bufSize, sizei *length, int *params)
-    void GetBooleani_vRobustANGLE(enum target, uint index, sizei bufSize, sizei *length, boolean *data)
     void GetMultisamplefvRobustANGLE(enum pname, uint index, sizei bufSize, sizei *length, float *val)
     void GetTexLevelParameterivRobustANGLE(enum target, int level, enum pname, sizei bufSize, sizei *length, int *params)
     void GetTexLevelParameterfvRobustANGLE(enum target, int level, enum pname, sizei bufSize, sizei *length, float *params)
-
-    void GetPointervRobustANGLERobustANGLE(enum pname, sizei bufSize, sizei *length, void **params)
-    void ReadnPixelsRobustANGLE(int x, int y, sizei width, sizei height, enum format, enum type, sizei bufSize, sizei *length, sizei *columns, sizei *rows, void *data)
-    void GetnUniformfvRobustANGLE(uint program, int location, sizei bufSize, sizei *length, float *params)
-    void GetnUniformivRobustANGLE(uint program, int location, sizei bufSize, sizei *length, int *params)
-    void GetnUniformuivRobustANGLE(uint program, int location, sizei bufSize, sizei *length, uint *params)
-    void TexParameterIivRobustANGLE(enum target, enum pname, sizei bufSize, const GLint *params)
-    void TexParameterIuivRobustANGLE(enum target, enum pname, sizei bufSize, const GLuint *params)
-    void GetTexParameterIivRobustANGLE(enum target, enum pname, sizei bufSize, sizei *length, int *params)
-    void GetTexParameterIuivRobustANGLE(enum target, enum pname, sizei bufSize, sizei *length, uint *params)
-    void SamplerParameterIivRobustANGLE(uint sampler, enum pname, sizei bufSize, const GLint *param)
-    void SamplerParameterIuivRobustANGLE(uint sampler, enum pname, sizei bufSize, const GLuint *param)
-    void GetSamplerParameterIivRobustANGLE(uint sampler, enum pname, sizei bufSize, sizei *length, int *params)
-    void GetSamplerParameterIuivRobustANGLE(uint sampler, enum pname, sizei bufSize, sizei *length, uint *params)
 
     void GetQueryObjectivRobustANGLE(uint id, enum pname, sizei bufSize, sizei *length, int *params)
     void GetQueryObjecti64vRobustANGLE(uint id, enum pname, sizei bufSize, sizei *length, int64 *params)
@@ -140,9 +123,9 @@ Additions to the OpenGL ES Specification:
 
     Calls to "xRobustANGLE" will generate errors under the same conditions as
     "x". Any instances of undefined behaviour in "x" will also be undefined in
-    "xRobustANGLE".  For example, it is invalid to call
-    GetPointervRobustANGLERobustANGLE without first verifying that the context
-    is at least OpenGL ES version 3.2 or the GL_KHR_debug extension is present.
+    "xRobustANGLE".  For example, it is invalid to call GetQueryivRobustANGLE
+    without first verifying that the context is at least OpenGL ES version 3.0
+    or the GL_EXT_disjoint_timer_query extension is present.
 
 Issues
 

@@ -2548,17 +2548,6 @@ bool ValidateGetPointervKHR(const Context *context,
     return ValidateGetPointerv(context, entryPoint, pname, params);
 }
 
-bool ValidateGetPointervRobustANGLERobustANGLE(const Context *context,
-                                               angle::EntryPoint entryPoint,
-                                               GLenum pname,
-                                               GLsizei bufSize,
-                                               const GLsizei *length,
-                                               void *const *params)
-{
-    UNIMPLEMENTED();
-    return false;
-}
-
 bool ValidateBlitFramebufferANGLE(const Context *context,
                                   angle::EntryPoint entryPoint,
                                   GLint srcX0,
