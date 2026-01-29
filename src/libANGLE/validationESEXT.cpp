@@ -34,6 +34,11 @@ void RecordVersionErrorESEXT(const Context *context, angle::EntryPoint entryPoin
     ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointRequiresESEXT);
 }
 
+void RecordEntryPointBaseUnsupportedError(const Context *context, angle::EntryPoint entryPoint)
+{
+    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
+}
+
 namespace
 {
 template <typename ObjectT>
@@ -2501,12 +2506,6 @@ bool ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(const Context
                                                                    const GLsizei *length,
                                                                    const GLfloat *params)
 {
-    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGetFramebufferPixelLocalStorageParameterRobustCommon(context, entryPoint, plane,
                                                                         pname, bufSize, params);
 }
@@ -2519,12 +2518,6 @@ bool ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(const Context
                                                                    const GLsizei *length,
                                                                    const GLint *params)
 {
-    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGetFramebufferPixelLocalStorageParameterRobustCommon(context, entryPoint, plane,
                                                                         pname, bufSize, params);
 }

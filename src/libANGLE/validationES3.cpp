@@ -1998,12 +1998,6 @@ bool ValidateCompressedTexImage3DRobustANGLE(const Context *context,
                                              GLsizei dataSize,
                                              const void *data)
 {
-    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
-        return false;
-    }
-
     if (!ValidateRobustCompressedTexImageBase(context, entryPoint, imageSize, dataSize))
     {
         return false;
@@ -2687,12 +2681,6 @@ bool ValidateTexImage3DRobustANGLE(const Context *context,
                                    GLsizei bufSize,
                                    const void *pixels)
 {
-    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
-        return false;
-    }
-
     if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
     {
         return false;
@@ -2737,12 +2725,6 @@ bool ValidateTexSubImage3DRobustANGLE(const Context *context,
                                       GLsizei bufSize,
                                       const void *pixels)
 {
-    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
-        return false;
-    }
-
     if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
     {
         return false;
@@ -2823,12 +2805,6 @@ bool ValidateCompressedTexSubImage3DRobustANGLE(const Context *context,
                                                 GLsizei dataSize,
                                                 const void *data)
 {
-    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
-        return false;
-    }
-
     if (!ValidateRobustCompressedTexImageBase(context, entryPoint, imageSize, dataSize))
     {
         return false;
@@ -3020,13 +2996,6 @@ bool ValidateGetBufferPointervRobustANGLE(const Context *context,
     }
 
     GLsizei numParams = 0;
-
-    if (context->getClientVersion() < ES_3_0 && !context->getExtensions().mapbufferOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
-        return false;
-    }
-
     if (!ValidateGetBufferPointervBase(context, entryPoint, target, pname, &numParams, params))
     {
         return false;
@@ -3221,12 +3190,6 @@ bool ValidateGetIntegeri_vRobustANGLE(const Context *context,
                                       const GLsizei *length,
                                       const GLint *data)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
-        return false;
-    }
-
     // Make sure ValidateIndexedStateQuery sets numParams
     GLsizei numParams = std::numeric_limits<GLsizei>::max();
     if (!ValidateIndexedStateQuery(context, entryPoint, target, index, data, &numParams))
@@ -3260,12 +3223,6 @@ bool ValidateGetInteger64i_vRobustANGLE(const Context *context,
                                         const GLsizei *length,
                                         const GLint64 *data)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
-        return false;
-    }
-
     // Make sure ValidateIndexedStateQuery sets numParams
     GLsizei numParams = std::numeric_limits<GLsizei>::max();
     if (!ValidateIndexedStateQuery(context, entryPoint, target, index, data, &numParams))

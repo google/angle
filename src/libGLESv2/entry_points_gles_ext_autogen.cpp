@@ -3498,15 +3498,25 @@ void GL_APIENTRY GL_TexImage3DRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0 ||
+                                 context->getExtensions().texture3DOES))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateTexImage3DRobustANGLE(
-                    context, angle::EntryPoint::GLTexImage3DRobustANGLE, targetPacked, level,
-                    internalformat, width, height, depth, border, format, type, bufSize, pixels);
+                    isCallValid = ValidateTexImage3DRobustANGLE(
+                        context, angle::EntryPoint::GLTexImage3DRobustANGLE, targetPacked, level,
+                        internalformat, width, height, depth, border, format, type, bufSize,
+                        pixels);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLTexImage3DRobustANGLE);
+                }
             }
             else
             {
@@ -3562,15 +3572,25 @@ void GL_APIENTRY GL_TexSubImage3DRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0 ||
+                                 context->getExtensions().texture3DOES))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateTexSubImage3DRobustANGLE(
-                    context, angle::EntryPoint::GLTexSubImage3DRobustANGLE, targetPacked, level,
-                    xoffset, yoffset, zoffset, width, height, depth, format, type, bufSize, pixels);
+                    isCallValid = ValidateTexSubImage3DRobustANGLE(
+                        context, angle::EntryPoint::GLTexSubImage3DRobustANGLE, targetPacked, level,
+                        xoffset, yoffset, zoffset, width, height, depth, format, type, bufSize,
+                        pixels);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLTexSubImage3DRobustANGLE);
+                }
             }
             else
             {
@@ -3747,15 +3767,25 @@ void GL_APIENTRY GL_CompressedTexImage3DRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0 ||
+                                 context->getExtensions().texture3DOES))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateCompressedTexImage3DRobustANGLE(
-                    context, angle::EntryPoint::GLCompressedTexImage3DRobustANGLE, targetPacked,
-                    level, internalformat, width, height, depth, border, imageSize, bufSize, data);
+                    isCallValid = ValidateCompressedTexImage3DRobustANGLE(
+                        context, angle::EntryPoint::GLCompressedTexImage3DRobustANGLE, targetPacked,
+                        level, internalformat, width, height, depth, border, imageSize, bufSize,
+                        data);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLCompressedTexImage3DRobustANGLE);
+                }
             }
             else
             {
@@ -3812,16 +3842,25 @@ void GL_APIENTRY GL_CompressedTexSubImage3DRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0 ||
+                                 context->getExtensions().texture3DOES))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateCompressedTexSubImage3DRobustANGLE(
-                    context, angle::EntryPoint::GLCompressedTexSubImage3DRobustANGLE, targetPacked,
-                    level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize,
-                    bufSize, data);
+                    isCallValid = ValidateCompressedTexSubImage3DRobustANGLE(
+                        context, angle::EntryPoint::GLCompressedTexSubImage3DRobustANGLE,
+                        targetPacked, level, xoffset, yoffset, zoffset, width, height, depth,
+                        format, imageSize, bufSize, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLCompressedTexSubImage3DRobustANGLE);
+                }
             }
             else
             {
@@ -3872,15 +3911,25 @@ void GL_APIENTRY GL_GetQueryivRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0 ||
+                                 context->getExtensions().disjointTimerQueryEXT ||
+                                 context->getExtensions().occlusionQueryBooleanEXT))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetQueryivRobustANGLE(
-                    context, angle::EntryPoint::GLGetQueryivRobustANGLE, targetPacked, pname,
-                    paramCount, length, params);
+                    isCallValid = ValidateGetQueryivRobustANGLE(
+                        context, angle::EntryPoint::GLGetQueryivRobustANGLE, targetPacked, pname,
+                        paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetQueryivRobustANGLE);
+                }
             }
             else
             {
@@ -3925,15 +3974,25 @@ void GL_APIENTRY GL_GetQueryObjectuivRobustANGLE(GLuint id,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0 ||
+                                 context->getExtensions().disjointTimerQueryEXT ||
+                                 context->getExtensions().occlusionQueryBooleanEXT))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetQueryObjectuivRobustANGLE(
-                    context, angle::EntryPoint::GLGetQueryObjectuivRobustANGLE, idPacked, pname,
-                    paramCount, length, params);
+                    isCallValid = ValidateGetQueryObjectuivRobustANGLE(
+                        context, angle::EntryPoint::GLGetQueryObjectuivRobustANGLE, idPacked, pname,
+                        paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetQueryObjectuivRobustANGLE);
+                }
             }
             else
             {
@@ -3978,15 +4037,24 @@ void GL_APIENTRY GL_GetBufferPointervRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0 ||
+                                 context->getExtensions().mapbufferOES))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetBufferPointervRobustANGLE(
-                    context, angle::EntryPoint::GLGetBufferPointervRobustANGLE, targetPacked, pname,
-                    paramCount, length, params);
+                    isCallValid = ValidateGetBufferPointervRobustANGLE(
+                        context, angle::EntryPoint::GLGetBufferPointervRobustANGLE, targetPacked,
+                        pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetBufferPointervRobustANGLE);
+                }
             }
             else
             {
@@ -4031,15 +4099,23 @@ void GL_APIENTRY GL_GetIntegeri_vRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetIntegeri_vRobustANGLE(
-                    context, angle::EntryPoint::GLGetIntegeri_vRobustANGLE, target, index,
-                    paramCount, length, data);
+                    isCallValid = ValidateGetIntegeri_vRobustANGLE(
+                        context, angle::EntryPoint::GLGetIntegeri_vRobustANGLE, target, index,
+                        paramCount, length, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetIntegeri_vRobustANGLE);
+                }
             }
             else
             {
@@ -4087,15 +4163,23 @@ void GL_APIENTRY GL_GetInternalformativRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetInternalformativRobustANGLE(
-                    context, angle::EntryPoint::GLGetInternalformativRobustANGLE, target,
-                    internalformat, pname, paramCount, length, params);
+                    isCallValid = ValidateGetInternalformativRobustANGLE(
+                        context, angle::EntryPoint::GLGetInternalformativRobustANGLE, target,
+                        internalformat, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetInternalformativRobustANGLE);
+                }
             }
             else
             {
@@ -4142,15 +4226,23 @@ void GL_APIENTRY GL_GetVertexAttribIivRobustANGLE(GLuint index,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetVertexAttribIivRobustANGLE(
-                    context, angle::EntryPoint::GLGetVertexAttribIivRobustANGLE, index, pname,
-                    paramCount, length, params);
+                    isCallValid = ValidateGetVertexAttribIivRobustANGLE(
+                        context, angle::EntryPoint::GLGetVertexAttribIivRobustANGLE, index, pname,
+                        paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetVertexAttribIivRobustANGLE);
+                }
             }
             else
             {
@@ -4196,15 +4288,23 @@ void GL_APIENTRY GL_GetVertexAttribIuivRobustANGLE(GLuint index,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetVertexAttribIuivRobustANGLE(
-                    context, angle::EntryPoint::GLGetVertexAttribIuivRobustANGLE, index, pname,
-                    paramCount, length, params);
+                    isCallValid = ValidateGetVertexAttribIuivRobustANGLE(
+                        context, angle::EntryPoint::GLGetVertexAttribIuivRobustANGLE, index, pname,
+                        paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetVertexAttribIuivRobustANGLE);
+                }
             }
             else
             {
@@ -4251,15 +4351,23 @@ void GL_APIENTRY GL_GetUniformuivRobustANGLE(GLuint program,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetUniformuivRobustANGLE(
-                    context, angle::EntryPoint::GLGetUniformuivRobustANGLE, programPacked,
-                    locationPacked, bufSize, length, params);
+                    isCallValid = ValidateGetUniformuivRobustANGLE(
+                        context, angle::EntryPoint::GLGetUniformuivRobustANGLE, programPacked,
+                        locationPacked, bufSize, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetUniformuivRobustANGLE);
+                }
             }
             else
             {
@@ -4308,15 +4416,23 @@ void GL_APIENTRY GL_GetActiveUniformBlockivRobustANGLE(GLuint program,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetActiveUniformBlockivRobustANGLE(
-                    context, angle::EntryPoint::GLGetActiveUniformBlockivRobustANGLE, programPacked,
-                    uniformBlockIndexPacked, pname, paramCount, length, params);
+                    isCallValid = ValidateGetActiveUniformBlockivRobustANGLE(
+                        context, angle::EntryPoint::GLGetActiveUniformBlockivRobustANGLE,
+                        programPacked, uniformBlockIndexPacked, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetActiveUniformBlockivRobustANGLE);
+                }
             }
             else
             {
@@ -4361,15 +4477,24 @@ void GL_APIENTRY GL_GetInteger64vRobustANGLE(GLenum pname,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0 ||
+                                 context->getExtensions().disjointTimerQueryEXT))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetInteger64vRobustANGLE(
-                    context, angle::EntryPoint::GLGetInteger64vRobustANGLE, pname, paramCount,
-                    length, data);
+                    isCallValid = ValidateGetInteger64vRobustANGLE(
+                        context, angle::EntryPoint::GLGetInteger64vRobustANGLE, pname, paramCount,
+                        length, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetInteger64vRobustANGLE);
+                }
             }
             else
             {
@@ -4414,15 +4539,23 @@ void GL_APIENTRY GL_GetInteger64i_vRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetInteger64i_vRobustANGLE(
-                    context, angle::EntryPoint::GLGetInteger64i_vRobustANGLE, target, index,
-                    paramCount, length, data);
+                    isCallValid = ValidateGetInteger64i_vRobustANGLE(
+                        context, angle::EntryPoint::GLGetInteger64i_vRobustANGLE, target, index,
+                        paramCount, length, data);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetInteger64i_vRobustANGLE);
+                }
             }
             else
             {
@@ -4469,15 +4602,23 @@ void GL_APIENTRY GL_GetBufferParameteri64vRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetBufferParameteri64vRobustANGLE(
-                    context, angle::EntryPoint::GLGetBufferParameteri64vRobustANGLE, targetPacked,
-                    pname, paramCount, length, params);
+                    isCallValid = ValidateGetBufferParameteri64vRobustANGLE(
+                        context, angle::EntryPoint::GLGetBufferParameteri64vRobustANGLE,
+                        targetPacked, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetBufferParameteri64vRobustANGLE);
+                }
             }
             else
             {
@@ -4521,15 +4662,23 @@ void GL_APIENTRY GL_SamplerParameterivRobustANGLE(GLuint sampler,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateSamplerParameterivRobustANGLE(
-                    context, angle::EntryPoint::GLSamplerParameterivRobustANGLE, samplerPacked,
-                    pname, paramCount, param);
+                    isCallValid = ValidateSamplerParameterivRobustANGLE(
+                        context, angle::EntryPoint::GLSamplerParameterivRobustANGLE, samplerPacked,
+                        pname, paramCount, param);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLSamplerParameterivRobustANGLE);
+                }
             }
             else
             {
@@ -4574,15 +4723,23 @@ void GL_APIENTRY GL_SamplerParameterfvRobustANGLE(GLuint sampler,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateSamplerParameterfvRobustANGLE(
-                    context, angle::EntryPoint::GLSamplerParameterfvRobustANGLE, samplerPacked,
-                    pname, paramCount, param);
+                    isCallValid = ValidateSamplerParameterfvRobustANGLE(
+                        context, angle::EntryPoint::GLSamplerParameterfvRobustANGLE, samplerPacked,
+                        pname, paramCount, param);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLSamplerParameterfvRobustANGLE);
+                }
             }
             else
             {
@@ -4629,15 +4786,23 @@ void GL_APIENTRY GL_GetSamplerParameterivRobustANGLE(GLuint sampler,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetSamplerParameterivRobustANGLE(
-                    context, angle::EntryPoint::GLGetSamplerParameterivRobustANGLE, samplerPacked,
-                    pname, paramCount, length, params);
+                    isCallValid = ValidateGetSamplerParameterivRobustANGLE(
+                        context, angle::EntryPoint::GLGetSamplerParameterivRobustANGLE,
+                        samplerPacked, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetSamplerParameterivRobustANGLE);
+                }
             }
             else
             {
@@ -4684,15 +4849,23 @@ void GL_APIENTRY GL_GetSamplerParameterfvRobustANGLE(GLuint sampler,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_0))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetSamplerParameterfvRobustANGLE(
-                    context, angle::EntryPoint::GLGetSamplerParameterfvRobustANGLE, samplerPacked,
-                    pname, paramCount, length, params);
+                    isCallValid = ValidateGetSamplerParameterfvRobustANGLE(
+                        context, angle::EntryPoint::GLGetSamplerParameterfvRobustANGLE,
+                        samplerPacked, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetSamplerParameterfvRobustANGLE);
+                }
             }
             else
             {
@@ -4738,15 +4911,24 @@ void GL_APIENTRY GL_GetMultisamplefvRobustANGLE(GLenum pname,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1 ||
+                                 context->getExtensions().textureMultisampleANGLE))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetMultisamplefvRobustANGLE(
-                    context, angle::EntryPoint::GLGetMultisamplefvRobustANGLE, pname, index,
-                    paramCount, length, val);
+                    isCallValid = ValidateGetMultisamplefvRobustANGLE(
+                        context, angle::EntryPoint::GLGetMultisamplefvRobustANGLE, pname, index,
+                        paramCount, length, val);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetMultisamplefvRobustANGLE);
+                }
             }
             else
             {
@@ -4793,15 +4975,24 @@ void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1 ||
+                                 context->getExtensions().getTexLevelParameterANGLE))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetTexLevelParameterivRobustANGLE(
-                    context, angle::EntryPoint::GLGetTexLevelParameterivRobustANGLE, targetPacked,
-                    level, pname, paramCount, length, params);
+                    isCallValid = ValidateGetTexLevelParameterivRobustANGLE(
+                        context, angle::EntryPoint::GLGetTexLevelParameterivRobustANGLE,
+                        targetPacked, level, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetTexLevelParameterivRobustANGLE);
+                }
             }
             else
             {
@@ -4850,15 +5041,24 @@ void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1 ||
+                                 context->getExtensions().getTexLevelParameterANGLE))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetTexLevelParameterfvRobustANGLE(
-                    context, angle::EntryPoint::GLGetTexLevelParameterfvRobustANGLE, targetPacked,
-                    level, pname, paramCount, length, params);
+                    isCallValid = ValidateGetTexLevelParameterfvRobustANGLE(
+                        context, angle::EntryPoint::GLGetTexLevelParameterfvRobustANGLE,
+                        targetPacked, level, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetTexLevelParameterfvRobustANGLE);
+                }
             }
             else
             {
@@ -4906,15 +5106,23 @@ void GL_APIENTRY GL_GetQueryObjectivRobustANGLE(GLuint id,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getExtensions().disjointTimerQueryEXT))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetQueryObjectivRobustANGLE(
-                    context, angle::EntryPoint::GLGetQueryObjectivRobustANGLE, idPacked, pname,
-                    paramCount, length, params);
+                    isCallValid = ValidateGetQueryObjectivRobustANGLE(
+                        context, angle::EntryPoint::GLGetQueryObjectivRobustANGLE, idPacked, pname,
+                        paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetQueryObjectivRobustANGLE);
+                }
             }
             else
             {
@@ -4958,15 +5166,23 @@ void GL_APIENTRY GL_GetQueryObjecti64vRobustANGLE(GLuint id,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getExtensions().disjointTimerQueryEXT))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetQueryObjecti64vRobustANGLE(
-                    context, angle::EntryPoint::GLGetQueryObjecti64vRobustANGLE, idPacked, pname,
-                    paramCount, length, params);
+                    isCallValid = ValidateGetQueryObjecti64vRobustANGLE(
+                        context, angle::EntryPoint::GLGetQueryObjecti64vRobustANGLE, idPacked,
+                        pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetQueryObjecti64vRobustANGLE);
+                }
             }
             else
             {
@@ -5011,15 +5227,23 @@ void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getExtensions().disjointTimerQueryEXT))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetQueryObjectui64vRobustANGLE(
-                    context, angle::EntryPoint::GLGetQueryObjectui64vRobustANGLE, idPacked, pname,
-                    paramCount, length, params);
+                    isCallValid = ValidateGetQueryObjectui64vRobustANGLE(
+                        context, angle::EntryPoint::GLGetQueryObjectui64vRobustANGLE, idPacked,
+                        pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context, angle::EntryPoint::GLGetQueryObjectui64vRobustANGLE);
+                }
             }
             else
             {
@@ -5063,16 +5287,25 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint 
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
-                    context,
-                    angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE,
-                    plane, pname, paramCount, length, params);
+                    isCallValid = ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
+                        context,
+                        angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE,
+                        plane, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context,
+                        angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE);
+                }
             }
             else
             {
@@ -5120,16 +5353,25 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint 
         {
             if (ANGLE_LIKELY(context->getExtensions().robustClientMemoryANGLE))
             {
+                if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+                {
 #if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
+                    const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(
-                    context,
-                    angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
-                    plane, pname, paramCount, length, params);
+                    isCallValid = ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(
+                        context,
+                        angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
+                        plane, pname, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
+                }
+                else
+                {
+                    RecordEntryPointBaseUnsupportedError(
+                        context,
+                        angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE);
+                }
             }
             else
             {
