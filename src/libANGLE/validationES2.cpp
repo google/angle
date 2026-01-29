@@ -5211,11 +5211,11 @@ bool ValidateGetFramebufferAttachmentParameteriv(const Context *context,
 
 bool ValidateGetProgramiv(const Context *context,
                           angle::EntryPoint entryPoint,
-                          ShaderProgramID program,
+                          ShaderProgramID programPacked,
                           GLenum pname,
                           const GLint *params)
 {
-    return ValidateGetProgramivBase(context, entryPoint, program, pname, nullptr);
+    return ValidateGetProgramivBase(context, entryPoint, programPacked, pname, nullptr);
 }
 
 bool ValidateCopyTexImage2D(const Context *context,

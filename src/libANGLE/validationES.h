@@ -510,9 +510,9 @@ bool ValidateGetBufferParameterBase(const Context *context,
 
 bool ValidateGetProgramivBase(const Context *context,
                               angle::EntryPoint entryPoint,
-                              ShaderProgramID program,
+                              ShaderProgramID programPacked,
                               GLenum pname,
-                              GLsizei *numParams);
+                              GLsizei *outNumParams);
 
 bool ValidateGetRenderbufferParameterivBase(const Context *context,
                                             angle::EntryPoint entryPoint,

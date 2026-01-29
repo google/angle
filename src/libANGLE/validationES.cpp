@@ -5790,22 +5790,21 @@ bool ValidateGetBufferParameteri64vRobustANGLE(const Context *context,
 
 bool ValidateGetProgramivBase(const Context *context,
                               angle::EntryPoint entryPoint,
-                              ShaderProgramID program,
+                              ShaderProgramID programPacked,
                               GLenum pname,
-                              GLsizei *numParams)
+                              GLsizei *outNumParams)
 {
-    // Currently, all GetProgramiv queries return 1 parameter
-    if (numParams)
-    {
-        *numParams = 1;
-    }
-
-    if (context->isContextLost())
+    if (ANGLE_UNLIKELY(context->isContextLost()))
     {
         if (context->getExtensions().parallelShaderCompileKHR && pname == GL_COMPLETION_STATUS_KHR)
         {
             // The context needs to return a value in this case.
             // It will also generate a CONTEXT_LOST error.
+            if (outNumParams != nullptr)
+            {
+                *outNumParams = 1;
+            }
+
             return true;
         }
         else
@@ -5817,8 +5816,8 @@ bool ValidateGetProgramivBase(const Context *context,
 
     // Special case for GL_COMPLETION_STATUS_KHR: don't resolve the link. Otherwise resolve it now.
     Program *programObject = (pname == GL_COMPLETION_STATUS_KHR)
-                                 ? GetValidProgramNoResolve(context, entryPoint, program)
-                                 : GetValidProgram(context, entryPoint, program);
+                                 ? GetValidProgramNoResolve(context, entryPoint, programPacked)
+                                 : GetValidProgram(context, entryPoint, programPacked);
     if (programObject == nullptr)
     {
         // Error already generated.
@@ -5981,35 +5980,34 @@ bool ValidateGetProgramivBase(const Context *context,
             return false;
     }
 
+    if (outNumParams != nullptr)
+    {
+        *outNumParams = (pname == GL_COMPUTE_WORK_GROUP_SIZE) ? 3 : 1;
+    }
+
     return true;
 }
 
 bool ValidateGetProgramivRobustANGLE(const Context *context,
                                      angle::EntryPoint entryPoint,
-                                     ShaderProgramID program,
+                                     ShaderProgramID programPacked,
                                      GLenum pname,
-                                     GLsizei bufSize,
+                                     GLsizei paramCount,
                                      const GLsizei *length,
                                      const GLint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetProgramivBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetProgramivBase(context, entryPoint, programPacked, pname, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
-    GLsizei numParams = 0;
-
-    if (!ValidateGetProgramivBase(context, entryPoint, program, pname, &numParams))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
 
     return true;
 }

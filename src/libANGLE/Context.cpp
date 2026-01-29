@@ -7265,25 +7265,30 @@ void Context::getIntegervRobust(GLenum pname, GLsizei paramCount, GLsizei *lengt
     }
 }
 
-void Context::getProgramiv(ShaderProgramID program, GLenum pname, GLint *params)
+void Context::getProgramiv(ShaderProgramID programPacked, GLenum pname, GLint *params)
 {
     // Don't resolve link if checking the link completion status.
-    Program *programObject = getProgramNoResolveLink(program);
+    Program *programObject = getProgramNoResolveLink(programPacked);
     if (!isContextLost() && pname != GL_COMPLETION_STATUS_KHR)
     {
-        programObject = getProgramResolveLink(program);
+        programObject = getProgramResolveLink(programPacked);
     }
-    ASSERT(programObject);
+    ASSERT(programObject != nullptr);
     QueryProgramiv(this, programObject, pname, params);
 }
 
-void Context::getProgramivRobust(ShaderProgramID program,
+void Context::getProgramivRobust(ShaderProgramID programPacked,
                                  GLenum pname,
                                  GLsizei paramCount,
                                  GLsizei *length,
                                  GLint *params)
 {
-    getProgramiv(program, pname, params);
+    getProgramiv(programPacked, pname, params);
+
+    if (length != nullptr)
+    {
+        *length = (pname == GL_COMPUTE_WORK_GROUP_SIZE) ? 3 : 1;
+    }
 }
 
 void Context::getProgramPipelineiv(ProgramPipelineID pipeline, GLenum pname, GLint *params)
