@@ -99,8 +99,6 @@ void QueryVertexAttribiv(const VertexAttribute &attrib,
                          GLenum pname,
                          GLint *params);
 
-void QueryVertexAttribPointerv(const VertexAttribute &attrib, GLenum pname, void **pointer);
-
 void QueryVertexAttribIiv(const VertexAttribute &attrib,
                           const VertexBinding &binding,
                           const Buffer *buffer,

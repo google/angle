@@ -1697,20 +1697,6 @@ void QueryVertexAttribiv(const VertexAttribute &attrib,
                           params);
 }
 
-void QueryVertexAttribPointerv(const VertexAttribute &attrib, GLenum pname, void **pointer)
-{
-    switch (pname)
-    {
-        case GL_VERTEX_ATTRIB_ARRAY_POINTER:
-            *pointer = const_cast<void *>(attrib.pointer);
-            break;
-
-        default:
-            UNREACHABLE();
-            break;
-    }
-}
-
 void QueryVertexAttribIiv(const VertexAttribute &attrib,
                           const VertexBinding &binding,
                           const Buffer *buffer,

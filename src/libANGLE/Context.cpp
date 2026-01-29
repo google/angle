@@ -6153,8 +6153,9 @@ void Context::getVertexAttribIuivRobust(GLuint index,
 
 void Context::getVertexAttribPointerv(GLuint index, GLenum pname, void **pointer)
 {
+    ASSERT(pname == GL_VERTEX_ATTRIB_ARRAY_POINTER);
     const VertexAttribute &attrib = getState().getVertexArray()->getVertexAttribute(index);
-    QueryVertexAttribPointerv(attrib, pname, pointer);
+    *pointer                      = const_cast<void *>(attrib.pointer);
 }
 
 void Context::getVertexAttribPointervRobust(GLuint index,
