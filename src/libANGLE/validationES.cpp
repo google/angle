@@ -5821,28 +5821,23 @@ bool ValidateGetBufferParameterivRobustANGLE(const Context *context,
                                              angle::EntryPoint entryPoint,
                                              BufferBinding targetPacked,
                                              BufferParam pnamePacked,
-                                             GLsizei bufSize,
+                                             GLsizei paramCount,
                                              const GLsizei *length,
                                              const GLint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
-    {
-        return false;
-    }
-
-    GLsizei numParams = 0;
-
+    // Make sure ValidateGetBufferParameterBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
     if (!ValidateGetBufferParameterBase(context, entryPoint, targetPacked, pnamePacked, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
 
-    SetRobustLengthParam(length, numParams);
     return true;
 }
 
@@ -5850,28 +5845,22 @@ bool ValidateGetBufferParameteri64vRobustANGLE(const Context *context,
                                                angle::EntryPoint entryPoint,
                                                BufferBinding targetPacked,
                                                BufferParam pnamePacked,
-                                               GLsizei bufSize,
+                                               GLsizei paramCount,
                                                const GLsizei *length,
                                                const GLint64 *params)
 {
-    GLsizei numParams = 0;
-
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
-    {
-        return false;
-    }
-
+    // Make sure ValidateGetBufferParameterBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
     if (!ValidateGetBufferParameterBase(context, entryPoint, targetPacked, pnamePacked, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    SetRobustLengthParam(length, numParams);
 
     return true;
 }
@@ -6577,13 +6566,8 @@ bool ValidateGetBufferParameterBase(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     BufferBinding targetPacked,
                                     BufferParam pnamePacked,
-                                    GLsizei *numParams)
+                                    GLsizei *outNumParams)
 {
-    if (numParams)
-    {
-        *numParams = 0;
-    }
-
     if (ANGLE_UNLIKELY(!context->isValidBufferBinding(targetPacked)))
     {
         if (targetPacked == BufferBinding::InvalidEnum)
@@ -6649,9 +6633,9 @@ bool ValidateGetBufferParameterBase(const Context *context,
     }
 
     // All buffer parameter queries return one value.
-    if (numParams)
+    if (outNumParams != nullptr)
     {
-        *numParams = 1;
+        *outNumParams = 1;
     }
 
     return true;

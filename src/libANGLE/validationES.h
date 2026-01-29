@@ -508,7 +508,7 @@ bool ValidateGetBufferParameterBase(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     BufferBinding targetPacked,
                                     BufferParam pnamePacked,
-                                    GLsizei *numParams);
+                                    GLsizei *outNumParams);
 
 bool ValidateGetProgramivBase(const Context *context,
                               angle::EntryPoint entryPoint,

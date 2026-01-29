@@ -2681,6 +2681,11 @@ void Context::getBufferParameterivRobust(BufferBinding target,
                                          GLint *params)
 {
     getBufferParameteriv(target, pnamePacked, params);
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
 void Context::getFramebufferAttachmentParameteriv(GLenum target,
@@ -7994,6 +7999,11 @@ void Context::getBufferParameteri64vRobust(BufferBinding target,
                                            GLint64 *params)
 {
     getBufferParameteri64v(target, pnamePacked, params);
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
 void Context::genSamplers(GLsizei count, SamplerID *samplers)
