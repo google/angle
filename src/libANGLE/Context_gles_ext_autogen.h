@@ -495,8 +495,8 @@
                             GLsizei *length, GLint *params);                                       \
     void getRenderbufferParameterivRobust(GLenum target, GLenum pname, GLsizei paramCount,         \
                                           GLsizei *length, GLint *params);                         \
-    void getShaderivRobust(ShaderProgramID shaderPacked, GLenum pname, GLsizei paramCount,         \
-                           GLsizei *length, GLint *params);                                        \
+    void getShaderivRobust(ShaderProgramID shaderPacked, ShaderParameter pnamePacked,              \
+                           GLsizei paramCount, GLsizei *length, GLint *params);                    \
     void getTexParameterfvRobust(TextureType targetPacked, GLenum pname, GLsizei paramCount,       \
                                  GLsizei *length, GLfloat *params);                                \
     void getTexParameterivRobust(TextureType targetPacked, GLenum pname, GLsizei paramCount,       \

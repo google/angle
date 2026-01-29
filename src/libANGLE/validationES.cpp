@@ -6040,30 +6040,25 @@ bool ValidateGetRenderbufferParameterivRobustANGLE(const Context *context,
 
 bool ValidateGetShaderivRobustANGLE(const Context *context,
                                     angle::EntryPoint entryPoint,
-                                    ShaderProgramID shader,
-                                    GLenum pname,
-                                    GLsizei bufSize,
+                                    ShaderProgramID shaderPacked,
+                                    ShaderParameter pnamePacked,
+                                    GLsizei paramCount,
                                     const GLsizei *length,
                                     const GLint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetShaderivBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetShaderivBase(context, entryPoint, shaderPacked, pnamePacked, params,
+                                 &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
-    GLsizei numParams = 0;
-
-    if (!ValidateGetShaderivBase(context, entryPoint, shader, pname, &numParams))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
 
     return true;
 }
@@ -6611,21 +6606,23 @@ bool ValidateGetRenderbufferParameterivBase(const Context *context,
 
 bool ValidateGetShaderivBase(const Context *context,
                              angle::EntryPoint entryPoint,
-                             ShaderProgramID shader,
-                             GLenum pname,
-                             GLsizei *length)
+                             ShaderProgramID shaderPacked,
+                             ShaderParameter pnamePacked,
+                             const GLint *params,
+                             GLsizei *outNumParams)
 {
-    if (length)
+    if (ANGLE_UNLIKELY(context->isContextLost()))
     {
-        *length = 0;
-    }
-
-    if (context->isContextLost())
-    {
-        if (context->getExtensions().parallelShaderCompileKHR && pname == GL_COMPLETION_STATUS_KHR)
+        if (pnamePacked == ShaderParameter::CompletionStatus &&
+            context->getExtensions().parallelShaderCompileKHR)
         {
             // The context needs to return a value in this case.
             // It will also generate a CONTEXT_LOST error.
+            if (outNumParams != nullptr)
+            {
+                *outNumParams = 1;
+            }
+
             return true;
         }
         else
@@ -6635,47 +6632,51 @@ bool ValidateGetShaderivBase(const Context *context,
         }
     }
 
-    Shader *shaderObject = GetValidShader(context, entryPoint, shader);
-    if (shaderObject == nullptr)
+    Shader *shaderObject = GetValidShader(context, entryPoint, shaderPacked);
+    if (ANGLE_UNLIKELY(shaderObject == nullptr))
     {
         // Error already generated.
         return false;
     }
 
-    switch (pname)
+    bool isPnameSupported = false;
+    switch (pnamePacked)
     {
-        case GL_SHADER_TYPE:
-        case GL_DELETE_STATUS:
-        case GL_COMPILE_STATUS:
-        case GL_INFO_LOG_LENGTH:
-        case GL_SHADER_SOURCE_LENGTH:
+        case ShaderParameter::ShaderType:
+        case ShaderParameter::DeleteStatus:
+        case ShaderParameter::CompileStatus:
+        case ShaderParameter::InfoLogLength:
+        case ShaderParameter::ShaderSourceLength:
+            isPnameSupported = true;
             break;
-
-        case GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE:
-            if (!context->getExtensions().translatedShaderSourceANGLE)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kExtensionNotEnabled);
-                return false;
-            }
+        case ShaderParameter::CompletionStatus:
+            isPnameSupported = context->getExtensions().parallelShaderCompileKHR;
             break;
-
-        case GL_COMPLETION_STATUS_KHR:
-            if (!context->getExtensions().parallelShaderCompileKHR)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-                return false;
-            }
+        case ShaderParameter::TranslatedShaderSourceLength:
+            isPnameSupported = context->getExtensions().translatedShaderSourceANGLE;
             break;
-
         default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
+            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kParameterNameUnknown);
             return false;
     }
 
-    if (length)
+    if (ANGLE_UNLIKELY(!isPnameSupported))
     {
-        *length = 1;
+        ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kParameterNameUnsupported, ToGLenum(pnamePacked));
+        return false;
     }
+
+    if (ANGLE_UNLIKELY(params == nullptr))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kParamsNULL);
+        return false;
+    }
+
+    if (outNumParams != nullptr)
+    {
+        *outNumParams = 1;
+    }
+
     return true;
 }
 

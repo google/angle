@@ -435,7 +435,7 @@ bool ValidateGetRenderbufferParameterivRobustANGLE(const Context *context,
 bool ValidateGetShaderivRobustANGLE(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     ShaderProgramID shaderPacked,
-                                    GLenum pname,
+                                    ShaderParameter pnamePacked,
                                     GLsizei paramCount,
                                     const GLsizei *length,
                                     const GLint *params);

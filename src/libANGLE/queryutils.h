@@ -47,7 +47,10 @@ void QueryRenderbufferiv(const Context *context,
                          const Renderbuffer *renderbuffer,
                          GLenum pname,
                          GLint *params);
-void QueryShaderiv(const Context *context, Shader *shader, GLenum pname, GLint *params);
+void QueryShaderiv(const Context *context,
+                   Shader *shader,
+                   ShaderParameter pnamePacked,
+                   GLint *params);
 void QueryTexLevelParameterfv(const Texture *texture,
                               TextureTarget target,
                               GLint level,

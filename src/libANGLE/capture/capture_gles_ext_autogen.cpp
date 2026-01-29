@@ -1819,7 +1819,7 @@ CallCapture CaptureGetRenderbufferParameterivRobustANGLE(const State &glState,
 CallCapture CaptureGetShaderivRobustANGLE(const State &glState,
                                           bool isCallValid,
                                           ShaderProgramID shaderPacked,
-                                          GLenum pname,
+                                          ShaderParameter pnamePacked,
                                           GLsizei paramCount,
                                           GLsizei *length,
                                           GLint *params)
@@ -1827,14 +1827,14 @@ CallCapture CaptureGetShaderivRobustANGLE(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("shaderPacked", ParamType::TShaderProgramID, shaderPacked);
-    paramBuffer.addEnumParam("pname", GLESEnum::ShaderParameterName, ParamType::TGLenum, pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TShaderParameter, pnamePacked);
     paramBuffer.addValueParam("paramCount", ParamType::TGLsizei, paramCount);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
-        CaptureGetShaderivRobustANGLE_length(glState, shaderPacked, pname, paramCount, length,
+        CaptureGetShaderivRobustANGLE_length(glState, shaderPacked, pnamePacked, paramCount, length,
                                              params, &lengthParam);
     }
     else
@@ -1848,7 +1848,7 @@ CallCapture CaptureGetShaderivRobustANGLE(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-        CaptureGetShaderivRobustANGLE_params(glState, shaderPacked, pname, paramCount, length,
+        CaptureGetShaderivRobustANGLE_params(glState, shaderPacked, pnamePacked, paramCount, length,
                                              params, &paramsParam);
     }
     else

@@ -1556,22 +1556,31 @@ void QueryRenderbufferiv(const Context *context,
     }
 }
 
-void QueryShaderiv(const Context *context, Shader *shader, GLenum pname, GLint *params)
+void QueryShaderiv(const Context *context,
+                   Shader *shader,
+                   ShaderParameter pnamePacked,
+                   GLint *params)
 {
-    ASSERT(shader != nullptr || pname == GL_COMPLETION_STATUS_KHR);
+    ASSERT(shader != nullptr || pnamePacked == ShaderParameter::CompletionStatus);
 
-    switch (pname)
+    switch (pnamePacked)
     {
-        case GL_SHADER_TYPE:
+        case ShaderParameter::ShaderType:
             *params = static_cast<GLint>(ToGLenum(shader->getType()));
-            return;
-        case GL_DELETE_STATUS:
-            *params = shader->isFlaggedForDeletion();
-            return;
-        case GL_COMPILE_STATUS:
+            break;
+        case ShaderParameter::DeleteStatus:
+            *params = shader->isFlaggedForDeletion() ? GL_TRUE : GL_FALSE;
+            break;
+        case ShaderParameter::CompileStatus:
             *params = shader->isCompiled(context) ? GL_TRUE : GL_FALSE;
-            return;
-        case GL_COMPLETION_STATUS_KHR:
+            break;
+        case ShaderParameter::InfoLogLength:
+            *params = shader->getInfoLogLength(context);
+            break;
+        case ShaderParameter::ShaderSourceLength:
+            *params = shader->getSourceLength();
+            break;
+        case ShaderParameter::CompletionStatus:
             if (context->isContextLost())
             {
                 context->contextLostErrorOnBlockingCall(angle::EntryPoint::GLGetShaderiv);
@@ -1581,16 +1590,10 @@ void QueryShaderiv(const Context *context, Shader *shader, GLenum pname, GLint *
             {
                 *params = shader->isCompleted() ? GL_TRUE : GL_FALSE;
             }
-            return;
-        case GL_INFO_LOG_LENGTH:
-            *params = shader->getInfoLogLength(context);
-            return;
-        case GL_SHADER_SOURCE_LENGTH:
-            *params = shader->getSourceLength();
-            return;
-        case GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE:
+            break;
+        case ShaderParameter::TranslatedShaderSourceLength:
             *params = shader->getTranslatedSourceWithDebugInfoLength(context);
-            return;
+            break;
         default:
             UNREACHABLE();
             break;

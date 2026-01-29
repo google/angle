@@ -514,6 +514,7 @@ inline constexpr const char *kOtherQueryActive = "Other query is active.";
 inline constexpr const char *kOutsideOfBounds = "Parameter outside of bounds.";
 inline constexpr const char *kParameterNameUnknown = "The <pname> is unknown.";
 inline constexpr const char *kParameterNameUnsupported = "The 0x%04X <pname> is unsupported in the current context or incompatible with other parameters of the command.";
+inline constexpr const char *kParamsNULL = "The <params> is null.";
 inline constexpr const char *kParamOverflow = "The provided parameters overflow with the provided buffer.";
 inline constexpr const char *kBufferOffsetNotAligned = "Buffer offset in ReadPixels not aligned with type.";
 inline constexpr const char *kPerfMonitorNotActive = "Perf monitor is not started.";

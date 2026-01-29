@@ -193,6 +193,7 @@ enum class ParamType
     TSemaphoreID,
     TSemaphoreIDConstPointer,
     TSemaphoreIDPointer,
+    TShaderParameter,
     TShaderProgramID,
     TShaderProgramIDConstPointer,
     TShaderProgramIDPointer,
@@ -277,7 +278,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 240;
+constexpr uint32_t kParamTypeCount = 241;
 
 union ParamValue
 {
@@ -415,6 +416,7 @@ union ParamValue
     gl::SemaphoreID SemaphoreIDVal;
     const gl::SemaphoreID *SemaphoreIDConstPointerVal;
     gl::SemaphoreID *SemaphoreIDPointerVal;
+    gl::ShaderParameter ShaderParameterVal;
     gl::ShaderProgramID ShaderProgramIDVal;
     const gl::ShaderProgramID *ShaderProgramIDConstPointerVal;
     gl::ShaderProgramID *ShaderProgramIDPointerVal;
@@ -1392,6 +1394,13 @@ inline gl::SemaphoreID *GetParamVal<ParamType::TSemaphoreIDPointer, gl::Semaphor
     const ParamValue &value)
 {
     return value.SemaphoreIDPointerVal;
+}
+
+template <>
+inline gl::ShaderParameter GetParamVal<ParamType::TShaderParameter, gl::ShaderParameter>(
+    const ParamValue &value)
+{
+    return value.ShaderParameterVal;
 }
 
 template <>
@@ -2451,6 +2460,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TSemaphoreIDConstPointer, T>(value);
         case ParamType::TSemaphoreIDPointer:
             return GetParamVal<ParamType::TSemaphoreIDPointer, T>(value);
+        case ParamType::TShaderParameter:
+            return GetParamVal<ParamType::TShaderParameter, T>(value);
         case ParamType::TShaderProgramID:
             return GetParamVal<ParamType::TShaderProgramID, T>(value);
         case ParamType::TShaderProgramIDConstPointer:
@@ -3463,6 +3474,13 @@ inline void SetParamVal<ParamType::TSemaphoreIDPointer>(gl::SemaphoreID *valueIn
                                                         ParamValue *valueOut)
 {
     valueOut->SemaphoreIDPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TShaderParameter>(gl::ShaderParameter valueIn,
+                                                     ParamValue *valueOut)
+{
+    valueOut->ShaderParameterVal = valueIn;
 }
 
 template <>
@@ -4660,6 +4678,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TSemaphoreIDPointer:
             SetParamVal<ParamType::TSemaphoreIDPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TShaderParameter:
+            SetParamVal<ParamType::TShaderParameter>(valueIn, valueOut);
             break;
         case ParamType::TShaderProgramID:
             SetParamVal<ParamType::TShaderProgramID>(valueIn, valueOut);

@@ -401,17 +401,11 @@ ANGLE_INLINE bool ValidateGetRenderbufferParameteriv(const Context *context,
 
 ANGLE_INLINE bool ValidateGetShaderiv(const Context *context,
                                       angle::EntryPoint entryPoint,
-                                      ShaderProgramID shader,
-                                      GLenum pname,
+                                      ShaderProgramID shaderPacked,
+                                      ShaderParameter pnamePacked,
                                       const GLint *params)
 {
-    if (params == nullptr)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, err::kPLSParamsNULL);
-        return false;
-    }
-
-    return ValidateGetShaderivBase(context, entryPoint, shader, pname, nullptr);
+    return ValidateGetShaderivBase(context, entryPoint, shaderPacked, pnamePacked, params, nullptr);
 }
 
 ANGLE_INLINE bool ValidateGetTexParameterfv(const Context *context,

@@ -7340,24 +7340,29 @@ void Context::getProgramPipelineInfoLog(ProgramPipelineID pipeline,
     }
 }
 
-void Context::getShaderiv(ShaderProgramID shader, GLenum pname, GLint *params)
+void Context::getShaderiv(ShaderProgramID shaderPacked, ShaderParameter pnamePacked, GLint *params)
 {
     Shader *shaderObject = nullptr;
     if (!isContextLost())
     {
-        shaderObject = getShaderNoResolveCompile(shader);
-        ASSERT(shaderObject);
+        shaderObject = getShaderNoResolveCompile(shaderPacked);
+        ASSERT(shaderObject != nullptr);
     }
-    QueryShaderiv(this, shaderObject, pname, params);
+    QueryShaderiv(this, shaderObject, pnamePacked, params);
 }
 
-void Context::getShaderivRobust(ShaderProgramID shader,
-                                GLenum pname,
+void Context::getShaderivRobust(ShaderProgramID shaderPacked,
+                                ShaderParameter pnamePacked,
                                 GLsizei paramCount,
                                 GLsizei *length,
                                 GLint *params)
 {
-    getShaderiv(shader, pname, params);
+    getShaderiv(shaderPacked, pnamePacked, params);
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
 void Context::getShaderInfoLog(ShaderProgramID shader,

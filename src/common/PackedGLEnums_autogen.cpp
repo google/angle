@@ -1792,6 +1792,86 @@ std::ostream &operator<<(std::ostream &os, QueryType value)
 }
 
 template <>
+ShaderParameter FromGLenum<ShaderParameter>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_SHADER_TYPE:
+            return ShaderParameter::ShaderType;
+        case GL_DELETE_STATUS:
+            return ShaderParameter::DeleteStatus;
+        case GL_COMPILE_STATUS:
+            return ShaderParameter::CompileStatus;
+        case GL_INFO_LOG_LENGTH:
+            return ShaderParameter::InfoLogLength;
+        case GL_SHADER_SOURCE_LENGTH:
+            return ShaderParameter::ShaderSourceLength;
+        case GL_COMPLETION_STATUS_KHR:
+            return ShaderParameter::CompletionStatus;
+        case GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE:
+            return ShaderParameter::TranslatedShaderSourceLength;
+        default:
+            return ShaderParameter::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(ShaderParameter from)
+{
+    switch (from)
+    {
+        case ShaderParameter::ShaderType:
+            return GL_SHADER_TYPE;
+        case ShaderParameter::DeleteStatus:
+            return GL_DELETE_STATUS;
+        case ShaderParameter::CompileStatus:
+            return GL_COMPILE_STATUS;
+        case ShaderParameter::InfoLogLength:
+            return GL_INFO_LOG_LENGTH;
+        case ShaderParameter::ShaderSourceLength:
+            return GL_SHADER_SOURCE_LENGTH;
+        case ShaderParameter::CompletionStatus:
+            return GL_COMPLETION_STATUS_KHR;
+        case ShaderParameter::TranslatedShaderSourceLength:
+            return GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+std::ostream &operator<<(std::ostream &os, ShaderParameter value)
+{
+    switch (value)
+    {
+        case ShaderParameter::ShaderType:
+            os << "GL_SHADER_TYPE";
+            break;
+        case ShaderParameter::DeleteStatus:
+            os << "GL_DELETE_STATUS";
+            break;
+        case ShaderParameter::CompileStatus:
+            os << "GL_COMPILE_STATUS";
+            break;
+        case ShaderParameter::InfoLogLength:
+            os << "GL_INFO_LOG_LENGTH";
+            break;
+        case ShaderParameter::ShaderSourceLength:
+            os << "GL_SHADER_SOURCE_LENGTH";
+            break;
+        case ShaderParameter::CompletionStatus:
+            os << "GL_COMPLETION_STATUS_KHR";
+            break;
+        case ShaderParameter::TranslatedShaderSourceLength:
+            os << "GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE";
+            break;
+        default:
+            os << "GL_INVALID_ENUM";
+            break;
+    }
+    return os;
+}
+
+template <>
 ShaderType FromGLenum<ShaderType>(GLenum from)
 {
     switch (from)

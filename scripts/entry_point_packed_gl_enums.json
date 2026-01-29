@@ -810,10 +810,12 @@
         "shader": "ShaderProgramID"
     },
     "glGetShaderiv": {
-        "shader": "ShaderProgramID"
+        "shader": "ShaderProgramID",
+        "pname": "ShaderParameter"
     },
     "glGetShaderivRobust": {
-        "shader": "ShaderProgramID"
+        "shader": "ShaderProgramID",
+        "pname": "ShaderParameter"
     },
     "glGetShaderPrecisionFormat": {
         "shader": "ShaderProgramID"
