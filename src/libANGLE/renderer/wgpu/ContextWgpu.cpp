@@ -765,6 +765,9 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
                 // pass while stencil testing is disabled).
                 iter.setLaterBit(gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT);
                 iter.setLaterBit(gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK);
+                // Disabling the stencil test is partially done by setting the writemask to 0, so it
+                // must be marked as dirty as well.
+                iter.setLaterBit(gl::state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
                 break;
             case gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT:
                 if (mRenderPipelineDesc.setStencilFrontFunc(
@@ -775,7 +778,9 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
                 }
 
                 if (mRenderPipelineDesc.setStencilReadMask(
-                        glState.getDepthStencilState().stencilMask))
+                        glState.getDepthStencilState().stencilTest
+                            ? glState.getDepthStencilState().stencilMask
+                            : 0))
                 {
                     invalidateCurrentRenderPipeline();
                 }
@@ -827,7 +832,9 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
             break;
             case gl::state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT:
                 if (mRenderPipelineDesc.setStencilWriteMask(
-                        glState.getDepthStencilState().stencilWritemask))
+                        glState.getDepthStencilState().stencilTest
+                            ? glState.getDepthStencilState().stencilWritemask
+                            : 0))
                 {
                     invalidateCurrentRenderPipeline();
                 }

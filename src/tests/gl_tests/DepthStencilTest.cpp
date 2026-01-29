@@ -382,6 +382,68 @@ TEST_P(DepthStencilTest, StencilReplace)
     glDisable(GL_STENCIL_TEST);
 }
 
+// Tests that disabling GL_STENCIL_TEST prevents the stencil values from changing.
+TEST_P(DepthStencilTest, StencilDisable)
+{
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(drawBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    bindColorStencilFBO();
+
+    // Clear color to black and stencil to 1.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearStencil(1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Always increment the stencil value.
+    glStencilOp(GL_INCR, GL_INCR, GL_INCR);
+
+    // Draw a red quad because all stencil values should be 1.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 1, 0xFF);
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // The color should now be red.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Draw a green quad, but only where the stencil value is 2, which should be everywhere because
+    // the stencil value should have been incrmeented.
+    glStencilFunc(GL_EQUAL, 2, 0xFF);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // The color should now be green, proving the stencil was incremented correctly.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Disable the stencil test.
+    glDisable(GL_STENCIL_TEST);
+
+    // Draw without stencil
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // We drew without stencil, so the color should have changed. Stencil values should NOT have
+    // changed since stencil testing was disabled. We'll test this next.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Re-enable the stencil test to prove the stencil values haven't changed.
+    glEnable(GL_STENCIL_TEST);
+
+    // Should be 3 (because it was incremented after drawing green with the stencil test enabled.)
+    glStencilFunc(GL_EQUAL, 3, 0xFF);
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Finish
+    glDisable(GL_STENCIL_TEST);
+}
+
 // Tests that clearing depth/stencil followed by draw works when the depth/stencil attachment is a
 // texture.
 TEST_P(DepthStencilTestES3, ClearThenDraw)
