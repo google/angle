@@ -3431,50 +3431,68 @@ void Context::samplerParameterfvRobust(SamplerID sampler,
     samplerParameterfv(sampler, pname, param);
 }
 
-void Context::getSamplerParameteriv(SamplerID sampler, GLenum pname, GLint *params)
+void Context::getSamplerParameteriv(SamplerID samplerPacked,
+                                    SamplerParameter pnamePacked,
+                                    GLint *params)
 {
     const Sampler *const samplerObject =
-        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
-    QuerySamplerParameteriv(samplerObject, pname, params);
+        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerPacked);
+    QuerySamplerParameteriv(samplerObject, pnamePacked, params);
 }
 
-void Context::getSamplerParameterIiv(SamplerID sampler, GLenum pname, GLint *params)
+void Context::getSamplerParameterIiv(SamplerID samplerPacked,
+                                     SamplerParameter pnamePacked,
+                                     GLint *params)
 {
     const Sampler *const samplerObject =
-        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
-    QuerySamplerParameterIiv(samplerObject, pname, params);
+        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerPacked);
+    QuerySamplerParameterIiv(samplerObject, pnamePacked, params);
 }
 
-void Context::getSamplerParameterIuiv(SamplerID sampler, GLenum pname, GLuint *params)
+void Context::getSamplerParameterIuiv(SamplerID samplerPacked,
+                                      SamplerParameter pnamePacked,
+                                      GLuint *params)
 {
     const Sampler *const samplerObject =
-        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
-    QuerySamplerParameterIuiv(samplerObject, pname, params);
+        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerPacked);
+    QuerySamplerParameterIuiv(samplerObject, pnamePacked, params);
 }
 
-void Context::getSamplerParameterivRobust(SamplerID sampler,
-                                          GLenum pname,
+void Context::getSamplerParameterivRobust(SamplerID samplerPacked,
+                                          SamplerParameter pnamePacked,
                                           GLsizei paramCount,
                                           GLsizei *length,
                                           GLint *params)
 {
-    getSamplerParameteriv(sampler, pname, params);
+    getSamplerParameteriv(samplerPacked, pnamePacked, params);
+
+    if (length != nullptr)
+    {
+        *length = (pnamePacked == SamplerParameter::BorderColor) ? 4 : 1;
+    }
 }
 
-void Context::getSamplerParameterfv(SamplerID sampler, GLenum pname, GLfloat *params)
+void Context::getSamplerParameterfv(SamplerID samplerPacked,
+                                    SamplerParameter pnamePacked,
+                                    GLfloat *params)
 {
     const Sampler *const samplerObject =
-        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), sampler);
-    QuerySamplerParameterfv(samplerObject, pname, params);
+        mState.mSamplerManager->checkSamplerAllocation(mImplementation.get(), samplerPacked);
+    QuerySamplerParameterfv(samplerObject, pnamePacked, params);
 }
 
-void Context::getSamplerParameterfvRobust(SamplerID sampler,
-                                          GLenum pname,
+void Context::getSamplerParameterfvRobust(SamplerID samplerPacked,
+                                          SamplerParameter pnamePacked,
                                           GLsizei paramCount,
                                           GLsizei *length,
                                           GLfloat *params)
 {
-    getSamplerParameterfv(sampler, pname, params);
+    getSamplerParameterfv(samplerPacked, pnamePacked, params);
+
+    if (length != nullptr)
+    {
+        *length = (pnamePacked == SamplerParameter::BorderColor) ? 4 : 1;
+    }
 }
 
 void Context::programParameteri(ShaderProgramID program, GLenum pname, GLint value)

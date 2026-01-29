@@ -81,10 +81,12 @@ void QueryTexParameterIuiv(const Context *context,
                            const Texture *texture,
                            GLenum pname,
                            GLuint *params);
-void QuerySamplerParameterfv(const Sampler *sampler, GLenum pname, GLfloat *params);
-void QuerySamplerParameteriv(const Sampler *sampler, GLenum pname, GLint *params);
-void QuerySamplerParameterIiv(const Sampler *sampler, GLenum pname, GLint *params);
-void QuerySamplerParameterIuiv(const Sampler *sampler, GLenum pname, GLuint *params);
+void QuerySamplerParameterfv(const Sampler *sampler, SamplerParameter pnamePacked, GLfloat *params);
+void QuerySamplerParameteriv(const Sampler *sampler, SamplerParameter pnamePacked, GLint *params);
+void QuerySamplerParameterIiv(const Sampler *sampler, SamplerParameter pnamePacked, GLint *params);
+void QuerySamplerParameterIuiv(const Sampler *sampler,
+                               SamplerParameter pnamePacked,
+                               GLuint *params);
 
 // Warning: you should ensure binding really matches attrib.bindingIndex before using the following
 // functions.

@@ -662,13 +662,12 @@ bool ValidateGetActiveUniformBlockivBase(const Context *context,
                                          UniformBlockParameter pnamePacked,
                                          GLsizei *outNumParams);
 
-template <typename ParamType>
 bool ValidateGetSamplerParameterBase(const Context *context,
                                      angle::EntryPoint entryPoint,
-                                     SamplerID sampler,
-                                     GLenum pname,
-                                     GLsizei *length,
-                                     const ParamType *params);
+                                     SamplerID samplerPacked,
+                                     SamplerParameter pnamePacked,
+                                     const void *params,
+                                     GLsizei *outNumParams);
 
 template <typename ParamType>
 bool ValidateSamplerParameterBase(const Context *context,

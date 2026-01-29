@@ -573,10 +573,10 @@
                                   const GLint *param);                                             \
     void samplerParameterfvRobust(SamplerID samplerPacked, GLenum pname, GLsizei paramCount,       \
                                   const GLfloat *param);                                           \
-    void getSamplerParameterivRobust(SamplerID samplerPacked, GLenum pname, GLsizei paramCount,    \
-                                     GLsizei *length, GLint *params);                              \
-    void getSamplerParameterfvRobust(SamplerID samplerPacked, GLenum pname, GLsizei paramCount,    \
-                                     GLsizei *length, GLfloat *params);                            \
+    void getSamplerParameterivRobust(SamplerID samplerPacked, SamplerParameter pnamePacked,        \
+                                     GLsizei paramCount, GLsizei *length, GLint *params);          \
+    void getSamplerParameterfvRobust(SamplerID samplerPacked, SamplerParameter pnamePacked,        \
+                                     GLsizei paramCount, GLsizei *length, GLfloat *params);        \
     void getMultisamplefvRobust(GLenum pname, GLuint index, GLsizei paramCount, GLsizei *length,   \
                                 GLfloat *val);                                                     \
     void getTexLevelParameterivRobust(TextureTarget targetPacked, GLint level, GLenum pname,       \

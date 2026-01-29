@@ -40,8 +40,10 @@
                         GLchar *label);                                                            \
     void getObjectPtrLabel(const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label);      \
     void getPointerv(GLenum pname, void **params);                                                 \
-    void getSamplerParameterIiv(SamplerID samplerPacked, GLenum pname, GLint *params);             \
-    void getSamplerParameterIuiv(SamplerID samplerPacked, GLenum pname, GLuint *params);           \
+    void getSamplerParameterIiv(SamplerID samplerPacked, SamplerParameter pnamePacked,             \
+                                GLint *params);                                                    \
+    void getSamplerParameterIuiv(SamplerID samplerPacked, SamplerParameter pnamePacked,            \
+                                 GLuint *params);                                                  \
     void getTexParameterIiv(TextureType targetPacked, GLenum pname, GLint *params);                \
     void getTexParameterIuiv(TextureType targetPacked, GLenum pname, GLuint *params);              \
     void getnUniformfv(ShaderProgramID programPacked, UniformLocation locationPacked,              \

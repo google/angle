@@ -466,6 +466,30 @@ QueryType FromGLenum<QueryType>(GLenum from);
 GLenum ToGLenum(QueryType from);
 std::ostream &operator<<(std::ostream &os, QueryType value);
 
+enum class SamplerParameter : uint8_t
+{
+    MagFilter     = 0,
+    MinFilter     = 1,
+    WrapS         = 2,
+    WrapT         = 3,
+    WrapR         = 4,
+    MinLod        = 5,
+    MaxLod        = 6,
+    CompareMode   = 7,
+    CompareFunc   = 8,
+    BorderColor   = 9,
+    MaxAnisotropy = 10,
+    SrgbDecode    = 11,
+
+    InvalidEnum = 12,
+    EnumCount   = 12,
+};
+
+template <>
+SamplerParameter FromGLenum<SamplerParameter>(GLenum from);
+GLenum ToGLenum(SamplerParameter from);
+std::ostream &operator<<(std::ostream &os, SamplerParameter value);
+
 enum class ShaderParameter : uint8_t
 {
     ShaderType                   = 0,

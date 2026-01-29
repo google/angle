@@ -190,6 +190,7 @@ enum class ParamType
     TSamplerIDConstPointer,
     TSamplerIDPointer,
     TSamplerInfo,
+    TSamplerParameter,
     TSemaphoreID,
     TSemaphoreIDConstPointer,
     TSemaphoreIDPointer,
@@ -279,7 +280,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 242;
+constexpr uint32_t kParamTypeCount = 243;
 
 union ParamValue
 {
@@ -414,6 +415,7 @@ union ParamValue
     gl::SamplerID SamplerIDVal;
     const gl::SamplerID *SamplerIDConstPointerVal;
     gl::SamplerID *SamplerIDPointerVal;
+    gl::SamplerParameter SamplerParameterVal;
     gl::SemaphoreID SemaphoreIDVal;
     const gl::SemaphoreID *SemaphoreIDConstPointerVal;
     gl::SemaphoreID *SemaphoreIDPointerVal;
@@ -1375,6 +1377,13 @@ inline gl::SamplerID *GetParamVal<ParamType::TSamplerIDPointer, gl::SamplerID *>
     const ParamValue &value)
 {
     return value.SamplerIDPointerVal;
+}
+
+template <>
+inline gl::SamplerParameter GetParamVal<ParamType::TSamplerParameter, gl::SamplerParameter>(
+    const ParamValue &value)
+{
+    return value.SamplerParameterVal;
 }
 
 template <>
@@ -2463,6 +2472,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TSamplerIDPointer, T>(value);
         case ParamType::TSamplerInfo:
             return GetParamVal<ParamType::TSamplerInfo, T>(value);
+        case ParamType::TSamplerParameter:
+            return GetParamVal<ParamType::TSamplerParameter, T>(value);
         case ParamType::TSemaphoreID:
             return GetParamVal<ParamType::TSemaphoreID, T>(value);
         case ParamType::TSemaphoreIDConstPointer:
@@ -3465,6 +3476,13 @@ template <>
 inline void SetParamVal<ParamType::TSamplerIDPointer>(gl::SamplerID *valueIn, ParamValue *valueOut)
 {
     valueOut->SamplerIDPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TSamplerParameter>(gl::SamplerParameter valueIn,
+                                                      ParamValue *valueOut)
+{
+    valueOut->SamplerParameterVal = valueIn;
 }
 
 template <>
@@ -4687,6 +4705,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TSamplerInfo:
             SetParamVal<ParamType::TSamplerInfo>(valueIn, valueOut);
+            break;
+        case ParamType::TSamplerParameter:
+            SetParamVal<ParamType::TSamplerParameter>(valueIn, valueOut);
             break;
         case ParamType::TSemaphoreID:
             SetParamVal<ParamType::TSemaphoreID>(valueIn, valueOut);

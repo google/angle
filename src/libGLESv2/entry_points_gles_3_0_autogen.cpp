@@ -2360,6 +2360,7 @@ void GL_APIENTRY GL_GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat 
     if (ANGLE_LIKELY(context != nullptr))
     {
         SamplerID samplerPacked = PackParam<SamplerID>(sampler);
+        SamplerParameter pnamePacked = PackParam<SamplerParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -2370,7 +2371,7 @@ void GL_APIENTRY GL_GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat 
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateGetSamplerParameterfv(
-                    context, angle::EntryPoint::GLGetSamplerParameterfv, samplerPacked, pname,
+                    context, angle::EntryPoint::GLGetSamplerParameterfv, samplerPacked, pnamePacked,
                     params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
@@ -2383,9 +2384,10 @@ void GL_APIENTRY GL_GetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat 
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getSamplerParameterfv(samplerPacked, pname, params);
+            context->getSamplerParameterfv(samplerPacked, pnamePacked, params);
         }
-        ANGLE_CAPTURE_GL(GetSamplerParameterfv, isCallValid, context, samplerPacked, pname, params);
+        ANGLE_CAPTURE_GL(GetSamplerParameterfv, isCallValid, context, samplerPacked, pnamePacked,
+                         params);
     }
     else
     {
@@ -2406,6 +2408,7 @@ void GL_APIENTRY GL_GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint *p
     if (ANGLE_LIKELY(context != nullptr))
     {
         SamplerID samplerPacked = PackParam<SamplerID>(sampler);
+        SamplerParameter pnamePacked = PackParam<SamplerParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -2416,7 +2419,7 @@ void GL_APIENTRY GL_GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint *p
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateGetSamplerParameteriv(
-                    context, angle::EntryPoint::GLGetSamplerParameteriv, samplerPacked, pname,
+                    context, angle::EntryPoint::GLGetSamplerParameteriv, samplerPacked, pnamePacked,
                     params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
@@ -2429,9 +2432,10 @@ void GL_APIENTRY GL_GetSamplerParameteriv(GLuint sampler, GLenum pname, GLint *p
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getSamplerParameteriv(samplerPacked, pname, params);
+            context->getSamplerParameteriv(samplerPacked, pnamePacked, params);
         }
-        ANGLE_CAPTURE_GL(GetSamplerParameteriv, isCallValid, context, samplerPacked, pname, params);
+        ANGLE_CAPTURE_GL(GetSamplerParameteriv, isCallValid, context, samplerPacked, pnamePacked,
+                         params);
     }
     else
     {

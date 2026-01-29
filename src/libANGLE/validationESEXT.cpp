@@ -1524,8 +1524,8 @@ bool ValidateTexParameterIuivOES(const Context *context,
 
 bool ValidateGetSamplerParameterIivOES(const Context *context,
                                        angle::EntryPoint entryPoint,
-                                       SamplerID sampler,
-                                       GLenum pname,
+                                       SamplerID samplerPacked,
+                                       SamplerParameter pnamePacked,
                                        const GLint *params)
 {
     if (context->getClientVersion() < ES_3_0)
@@ -1534,13 +1534,14 @@ bool ValidateGetSamplerParameterIivOES(const Context *context,
         return false;
     }
 
-    return ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, nullptr, params);
+    return ValidateGetSamplerParameterBase(context, entryPoint, samplerPacked, pnamePacked, params,
+                                           nullptr);
 }
 
 bool ValidateGetSamplerParameterIuivOES(const Context *context,
                                         angle::EntryPoint entryPoint,
-                                        SamplerID sampler,
-                                        GLenum pname,
+                                        SamplerID samplerPacked,
+                                        SamplerParameter pnamePacked,
                                         const GLuint *params)
 {
     if (context->getClientVersion() < ES_3_0)
@@ -1549,7 +1550,8 @@ bool ValidateGetSamplerParameterIuivOES(const Context *context,
         return false;
     }
 
-    return ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, nullptr, params);
+    return ValidateGetSamplerParameterBase(context, entryPoint, samplerPacked, pnamePacked, params,
+                                           nullptr);
 }
 
 bool ValidateSamplerParameterIivOES(const Context *context,
@@ -1585,7 +1587,7 @@ bool ValidateSamplerParameterIuivOES(const Context *context,
 bool ValidateGetSamplerParameterIivEXT(const Context *context,
                                        angle::EntryPoint entryPoint,
                                        SamplerID samplerPacked,
-                                       GLenum pname,
+                                       SamplerParameter pnamePacked,
                                        const GLint *params)
 {
     if (context->getClientVersion() < ES_3_0)
@@ -1594,14 +1596,14 @@ bool ValidateGetSamplerParameterIivEXT(const Context *context,
         return false;
     }
 
-    return ValidateGetSamplerParameterBase(context, entryPoint, samplerPacked, pname, nullptr,
-                                           params);
+    return ValidateGetSamplerParameterBase(context, entryPoint, samplerPacked, pnamePacked, params,
+                                           nullptr);
 }
 
 bool ValidateGetSamplerParameterIuivEXT(const Context *context,
                                         angle::EntryPoint entryPoint,
                                         SamplerID samplerPacked,
-                                        GLenum pname,
+                                        SamplerParameter pnamePacked,
                                         const GLuint *params)
 {
     if (context->getClientVersion() < ES_3_0)
@@ -1610,8 +1612,8 @@ bool ValidateGetSamplerParameterIuivEXT(const Context *context,
         return false;
     }
 
-    return ValidateGetSamplerParameterBase(context, entryPoint, samplerPacked, pname, nullptr,
-                                           params);
+    return ValidateGetSamplerParameterBase(context, entryPoint, samplerPacked, pnamePacked, params,
+                                           nullptr);
 }
 
 bool ValidateGetTexParameterIivEXT(const Context *context,

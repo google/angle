@@ -227,8 +227,8 @@ void CaptureGetPointerv_params(const State &glState,
 }
 
 void CaptureGetSamplerParameterIiv_params(const State &glState,
-                                          SamplerID sampler,
-                                          GLenum pname,
+                                          SamplerID samplerPacked,
+                                          SamplerParameter pnamePacked,
                                           GLint *params,
                                           ParamCapture *paramsParam)
 {
@@ -237,8 +237,8 @@ void CaptureGetSamplerParameterIiv_params(const State &glState,
 }
 
 void CaptureGetSamplerParameterIuiv_params(const State &glState,
-                                           SamplerID sampler,
-                                           GLenum pname,
+                                           SamplerID samplerPacked,
+                                           SamplerParameter pnamePacked,
                                            GLuint *params,
                                            ParamCapture *paramsParam)
 {

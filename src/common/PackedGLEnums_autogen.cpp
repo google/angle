@@ -1792,6 +1792,121 @@ std::ostream &operator<<(std::ostream &os, QueryType value)
 }
 
 template <>
+SamplerParameter FromGLenum<SamplerParameter>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_TEXTURE_MAG_FILTER:
+            return SamplerParameter::MagFilter;
+        case GL_TEXTURE_MIN_FILTER:
+            return SamplerParameter::MinFilter;
+        case GL_TEXTURE_WRAP_S:
+            return SamplerParameter::WrapS;
+        case GL_TEXTURE_WRAP_T:
+            return SamplerParameter::WrapT;
+        case GL_TEXTURE_WRAP_R:
+            return SamplerParameter::WrapR;
+        case GL_TEXTURE_MIN_LOD:
+            return SamplerParameter::MinLod;
+        case GL_TEXTURE_MAX_LOD:
+            return SamplerParameter::MaxLod;
+        case GL_TEXTURE_COMPARE_MODE:
+            return SamplerParameter::CompareMode;
+        case GL_TEXTURE_COMPARE_FUNC:
+            return SamplerParameter::CompareFunc;
+        case GL_TEXTURE_BORDER_COLOR:
+            return SamplerParameter::BorderColor;
+        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+            return SamplerParameter::MaxAnisotropy;
+        case GL_TEXTURE_SRGB_DECODE_EXT:
+            return SamplerParameter::SrgbDecode;
+        default:
+            return SamplerParameter::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(SamplerParameter from)
+{
+    switch (from)
+    {
+        case SamplerParameter::MagFilter:
+            return GL_TEXTURE_MAG_FILTER;
+        case SamplerParameter::MinFilter:
+            return GL_TEXTURE_MIN_FILTER;
+        case SamplerParameter::WrapS:
+            return GL_TEXTURE_WRAP_S;
+        case SamplerParameter::WrapT:
+            return GL_TEXTURE_WRAP_T;
+        case SamplerParameter::WrapR:
+            return GL_TEXTURE_WRAP_R;
+        case SamplerParameter::MinLod:
+            return GL_TEXTURE_MIN_LOD;
+        case SamplerParameter::MaxLod:
+            return GL_TEXTURE_MAX_LOD;
+        case SamplerParameter::CompareMode:
+            return GL_TEXTURE_COMPARE_MODE;
+        case SamplerParameter::CompareFunc:
+            return GL_TEXTURE_COMPARE_FUNC;
+        case SamplerParameter::BorderColor:
+            return GL_TEXTURE_BORDER_COLOR;
+        case SamplerParameter::MaxAnisotropy:
+            return GL_TEXTURE_MAX_ANISOTROPY_EXT;
+        case SamplerParameter::SrgbDecode:
+            return GL_TEXTURE_SRGB_DECODE_EXT;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+std::ostream &operator<<(std::ostream &os, SamplerParameter value)
+{
+    switch (value)
+    {
+        case SamplerParameter::MagFilter:
+            os << "GL_TEXTURE_MAG_FILTER";
+            break;
+        case SamplerParameter::MinFilter:
+            os << "GL_TEXTURE_MIN_FILTER";
+            break;
+        case SamplerParameter::WrapS:
+            os << "GL_TEXTURE_WRAP_S";
+            break;
+        case SamplerParameter::WrapT:
+            os << "GL_TEXTURE_WRAP_T";
+            break;
+        case SamplerParameter::WrapR:
+            os << "GL_TEXTURE_WRAP_R";
+            break;
+        case SamplerParameter::MinLod:
+            os << "GL_TEXTURE_MIN_LOD";
+            break;
+        case SamplerParameter::MaxLod:
+            os << "GL_TEXTURE_MAX_LOD";
+            break;
+        case SamplerParameter::CompareMode:
+            os << "GL_TEXTURE_COMPARE_MODE";
+            break;
+        case SamplerParameter::CompareFunc:
+            os << "GL_TEXTURE_COMPARE_FUNC";
+            break;
+        case SamplerParameter::BorderColor:
+            os << "GL_TEXTURE_BORDER_COLOR";
+            break;
+        case SamplerParameter::MaxAnisotropy:
+            os << "GL_TEXTURE_MAX_ANISOTROPY_EXT";
+            break;
+        case SamplerParameter::SrgbDecode:
+            os << "GL_TEXTURE_SRGB_DECODE_EXT";
+            break;
+        default:
+            os << "GL_INVALID_ENUM";
+            break;
+    }
+    return os;
+}
+
+template <>
 ShaderParameter FromGLenum<ShaderParameter>(GLenum from)
 {
     switch (from)

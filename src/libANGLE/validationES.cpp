@@ -6151,59 +6151,51 @@ bool ValidateTexParameterivRobustANGLE(const Context *context,
 
 bool ValidateGetSamplerParameterfvRobustANGLE(const Context *context,
                                               angle::EntryPoint entryPoint,
-                                              SamplerID sampler,
-                                              GLenum pname,
-                                              GLsizei bufSize,
+                                              SamplerID samplerPacked,
+                                              SamplerParameter pnamePacked,
+                                              GLsizei paramCount,
                                               const GLsizei *length,
                                               const GLfloat *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetSamplerParameterBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetSamplerParameterBase(context, entryPoint, samplerPacked, pnamePacked, params,
+                                         &numParams))
+    {
+        return false;
+    }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
+
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
 
-    GLsizei numParams = 0;
-
-    if (!ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, &numParams, params))
-    {
-        return false;
-    }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
     return true;
 }
 
 bool ValidateGetSamplerParameterivRobustANGLE(const Context *context,
                                               angle::EntryPoint entryPoint,
-                                              SamplerID sampler,
-                                              GLenum pname,
-                                              GLsizei bufSize,
+                                              SamplerID samplerPacked,
+                                              SamplerParameter pnamePacked,
+                                              GLsizei paramCount,
                                               const GLsizei *length,
                                               const GLint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetSamplerParameterBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetSamplerParameterBase(context, entryPoint, samplerPacked, pnamePacked, params,
+                                         &numParams))
+    {
+        return false;
+    }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
+
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
 
-    GLsizei numParams = 0;
-
-    if (!ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, &numParams, params))
-    {
-        return false;
-    }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
     return true;
 }
 
@@ -7928,99 +7920,67 @@ template bool ValidateSamplerParameterBase(const Context *,
                                            bool,
                                            const GLuint *);
 
-template <typename ParamType>
 bool ValidateGetSamplerParameterBase(const Context *context,
                                      angle::EntryPoint entryPoint,
-                                     SamplerID sampler,
-                                     GLenum pname,
-                                     GLsizei *length,
-                                     const ParamType *params)
+                                     SamplerID samplerPacked,
+                                     SamplerParameter pnamePacked,
+                                     const void *params,
+                                     GLsizei *outNumParams)
 {
-    if (length)
-    {
-        *length = 0;
-    }
-
-    if (!context->isSampler(sampler))
+    if (ANGLE_UNLIKELY(!context->isSampler(samplerPacked)))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidSampler);
         return false;
     }
 
-    switch (pname)
+    bool isPnameSupported = false;
+    switch (pnamePacked)
     {
-        case GL_TEXTURE_WRAP_S:
-        case GL_TEXTURE_WRAP_T:
-        case GL_TEXTURE_WRAP_R:
-        case GL_TEXTURE_MIN_FILTER:
-        case GL_TEXTURE_MAG_FILTER:
-        case GL_TEXTURE_MIN_LOD:
-        case GL_TEXTURE_MAX_LOD:
-        case GL_TEXTURE_COMPARE_MODE:
-        case GL_TEXTURE_COMPARE_FUNC:
+        case SamplerParameter::MagFilter:
+        case SamplerParameter::MinFilter:
+        case SamplerParameter::WrapS:
+        case SamplerParameter::WrapT:
+        case SamplerParameter::WrapR:
+        case SamplerParameter::MinLod:
+        case SamplerParameter::MaxLod:
+        case SamplerParameter::CompareMode:
+        case SamplerParameter::CompareFunc:
+            isPnameSupported = true;
             break;
-
-        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
-            if (!ValidateTextureMaxAnisotropyExtensionEnabled(context, entryPoint))
-            {
-                return false;
-            }
+        case SamplerParameter::BorderColor:
+            isPnameSupported = context->getClientVersion() >= ES_3_2 ||
+                               context->getExtensions().textureBorderClampAny();
             break;
-
-        case GL_TEXTURE_SRGB_DECODE_EXT:
-            if (!context->getExtensions().textureSRGBDecodeEXT)
-            {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
-                return false;
-            }
+        case SamplerParameter::MaxAnisotropy:
+            isPnameSupported = context->getExtensions().textureFilterAnisotropicEXT;
             break;
-
-        case GL_TEXTURE_BORDER_COLOR:
-            if (!context->getExtensions().textureBorderClampAny() &&
-                context->getClientVersion() < ES_3_2)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kExtensionNotEnabled);
-                return false;
-            }
+        case SamplerParameter::SrgbDecode:
+            isPnameSupported = context->getExtensions().textureSRGBDecodeEXT;
             break;
-
         default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
+            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kParameterNameUnknown);
             return false;
     }
 
-    if (length)
+    if (ANGLE_UNLIKELY(!isPnameSupported))
     {
-        *length = GetSamplerParameterCount(pname);
+        ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kParameterNameUnsupported, ToGLenum(pnamePacked));
+        return false;
     }
 
-    if (params == nullptr)
+    if (ANGLE_UNLIKELY(params == nullptr))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kParamsNULL);
         return false;
+    }
+
+    if (outNumParams != nullptr)
+    {
+        *outNumParams = (pnamePacked == SamplerParameter::BorderColor) ? 4 : 1;
     }
 
     return true;
 }
-
-template bool ValidateGetSamplerParameterBase(const Context *,
-                                              angle::EntryPoint,
-                                              SamplerID,
-                                              GLenum,
-                                              GLsizei *,
-                                              const GLfloat *);
-template bool ValidateGetSamplerParameterBase(const Context *,
-                                              angle::EntryPoint,
-                                              SamplerID,
-                                              GLenum,
-                                              GLsizei *,
-                                              const GLint *);
-template bool ValidateGetSamplerParameterBase(const Context *,
-                                              angle::EntryPoint,
-                                              SamplerID,
-                                              GLenum,
-                                              GLsizei *,
-                                              const GLuint *);
 
 bool ValidateGetInternalFormativBase(const Context *context,
                                      angle::EntryPoint entryPoint,

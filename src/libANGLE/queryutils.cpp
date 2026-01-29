@@ -535,45 +535,50 @@ void SetTexParameterBase(Context *context, Texture *texture, GLenum pname, const
 }
 
 template <bool isPureInteger, typename ParamType>
-void QuerySamplerParameterBase(const Sampler *sampler, GLenum pname, ParamType *params)
+void QuerySamplerParameterBase(const Sampler *sampler,
+                               SamplerParameter pnamePacked,
+                               ParamType *params)
 {
-    switch (pname)
+    switch (pnamePacked)
     {
-        case GL_TEXTURE_MIN_FILTER:
-            *params = CastFromGLintStateValue<ParamType>(pname, sampler->getMinFilter());
+        case SamplerParameter::MagFilter:
+            *params = static_cast<ParamType>(sampler->getMagFilter());
             break;
-        case GL_TEXTURE_MAG_FILTER:
-            *params = CastFromGLintStateValue<ParamType>(pname, sampler->getMagFilter());
+        case SamplerParameter::MinFilter:
+            *params = static_cast<ParamType>(sampler->getMinFilter());
             break;
-        case GL_TEXTURE_WRAP_S:
-            *params = CastFromGLintStateValue<ParamType>(pname, sampler->getWrapS());
+        case SamplerParameter::WrapS:
+            *params = static_cast<ParamType>(sampler->getWrapS());
             break;
-        case GL_TEXTURE_WRAP_T:
-            *params = CastFromGLintStateValue<ParamType>(pname, sampler->getWrapT());
+        case SamplerParameter::WrapT:
+            *params = static_cast<ParamType>(sampler->getWrapT());
             break;
-        case GL_TEXTURE_WRAP_R:
-            *params = CastFromGLintStateValue<ParamType>(pname, sampler->getWrapR());
+        case SamplerParameter::WrapR:
+            *params = static_cast<ParamType>(sampler->getWrapR());
             break;
-        case GL_TEXTURE_MAX_ANISOTROPY_EXT:
-            *params = CastFromStateValue<ParamType>(pname, sampler->getMaxAnisotropy());
+        case SamplerParameter::MinLod:
+            // TODO(http://anglebug.com/487944776): remove the first parameter
+            *params = CastFromStateValue<ParamType>(0, sampler->getMinLod());
             break;
-        case GL_TEXTURE_MIN_LOD:
-            *params = CastFromStateValue<ParamType>(pname, sampler->getMinLod());
+        case SamplerParameter::MaxLod:
+            // TODO(http://anglebug.com/487944776): remove the first parameter
+            *params = CastFromStateValue<ParamType>(0, sampler->getMaxLod());
             break;
-        case GL_TEXTURE_MAX_LOD:
-            *params = CastFromStateValue<ParamType>(pname, sampler->getMaxLod());
+        case SamplerParameter::CompareMode:
+            *params = static_cast<ParamType>(sampler->getCompareMode());
             break;
-        case GL_TEXTURE_COMPARE_MODE:
-            *params = CastFromGLintStateValue<ParamType>(pname, sampler->getCompareMode());
+        case SamplerParameter::CompareFunc:
+            *params = static_cast<ParamType>(sampler->getCompareFunc());
             break;
-        case GL_TEXTURE_COMPARE_FUNC:
-            *params = CastFromGLintStateValue<ParamType>(pname, sampler->getCompareFunc());
-            break;
-        case GL_TEXTURE_SRGB_DECODE_EXT:
-            *params = CastFromGLintStateValue<ParamType>(pname, sampler->getSRGBDecode());
-            break;
-        case GL_TEXTURE_BORDER_COLOR:
+        case SamplerParameter::BorderColor:
             ConvertFromColor<isPureInteger>(sampler->getBorderColor(), params);
+            break;
+        case SamplerParameter::MaxAnisotropy:
+            // TODO(http://anglebug.com/487944776): remove the first parameter
+            *params = CastFromStateValue<ParamType>(0, sampler->getMaxAnisotropy());
+            break;
+        case SamplerParameter::SrgbDecode:
+            *params = static_cast<ParamType>(sampler->getSRGBDecode());
             break;
         default:
             UNREACHABLE();
@@ -1652,24 +1657,24 @@ void QueryTexParameterIuiv(const Context *context,
     QueryTexParameterBase<true, false>(context, texture, pname, params);
 }
 
-void QuerySamplerParameterfv(const Sampler *sampler, GLenum pname, GLfloat *params)
+void QuerySamplerParameterfv(const Sampler *sampler, SamplerParameter pnamePacked, GLfloat *params)
 {
-    QuerySamplerParameterBase<false>(sampler, pname, params);
+    QuerySamplerParameterBase<false>(sampler, pnamePacked, params);
 }
 
-void QuerySamplerParameteriv(const Sampler *sampler, GLenum pname, GLint *params)
+void QuerySamplerParameteriv(const Sampler *sampler, SamplerParameter pnamePacked, GLint *params)
 {
-    QuerySamplerParameterBase<false>(sampler, pname, params);
+    QuerySamplerParameterBase<false>(sampler, pnamePacked, params);
 }
 
-void QuerySamplerParameterIiv(const Sampler *sampler, GLenum pname, GLint *params)
+void QuerySamplerParameterIiv(const Sampler *sampler, SamplerParameter pnamePacked, GLint *params)
 {
-    QuerySamplerParameterBase<true>(sampler, pname, params);
+    QuerySamplerParameterBase<true>(sampler, pnamePacked, params);
 }
 
-void QuerySamplerParameterIuiv(const Sampler *sampler, GLenum pname, GLuint *params)
+void QuerySamplerParameterIuiv(const Sampler *sampler, SamplerParameter pnamePacked, GLuint *params)
 {
-    QuerySamplerParameterBase<true>(sampler, pname, params);
+    QuerySamplerParameterBase<true>(sampler, pnamePacked, params);
 }
 
 void QueryVertexAttribfv(const VertexAttribute &attrib,

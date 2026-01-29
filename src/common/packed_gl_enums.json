@@ -140,6 +140,21 @@
         "QueryCounterBits": "GL_QUERY_COUNTER_BITS_EXT",
         "CurrentQuery": "GL_CURRENT_QUERY"
     },
+    "SamplerParameter":
+    {
+        "MagFilter": "GL_TEXTURE_MAG_FILTER",
+        "MinFilter": "GL_TEXTURE_MIN_FILTER",
+        "WrapS": "GL_TEXTURE_WRAP_S",
+        "WrapT": "GL_TEXTURE_WRAP_T",
+        "WrapR": "GL_TEXTURE_WRAP_R",
+        "MinLod": "GL_TEXTURE_MIN_LOD",
+        "MaxLod": "GL_TEXTURE_MAX_LOD",
+        "CompareMode": "GL_TEXTURE_COMPARE_MODE",
+        "CompareFunc": "GL_TEXTURE_COMPARE_FUNC",
+        "BorderColor": "GL_TEXTURE_BORDER_COLOR",
+        "MaxAnisotropy": "GL_TEXTURE_MAX_ANISOTROPY_EXT",
+        "SrgbDecode": "GL_TEXTURE_SRGB_DECODE_EXT"
+    },
     "ShaderParameter":
     {
         "ShaderType": "GL_SHADER_TYPE",

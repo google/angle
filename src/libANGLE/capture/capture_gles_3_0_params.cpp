@@ -408,8 +408,8 @@ void CaptureGetQueryiv_params(const State &glState,
 }
 
 void CaptureGetSamplerParameterfv_params(const State &glState,
-                                         SamplerID sampler,
-                                         GLenum pname,
+                                         SamplerID samplerPacked,
+                                         SamplerParameter pnamePacked,
                                          GLfloat *params,
                                          ParamCapture *paramCapture)
 {
@@ -418,8 +418,8 @@ void CaptureGetSamplerParameterfv_params(const State &glState,
 }
 
 void CaptureGetSamplerParameteriv_params(const State &glState,
-                                         SamplerID sampler,
-                                         GLenum pname,
+                                         SamplerID samplerPacked,
+                                         SamplerParameter pnamePacked,
                                          GLint *params,
                                          ParamCapture *paramCapture)
 {

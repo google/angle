@@ -81,8 +81,10 @@
                           GLenum *binaryFormat, void *binary);                                     \
     void getQueryObjectuiv(QueryID idPacked, QueryObjectParameter pnamePacked, GLuint *params);    \
     void getQueryiv(QueryType targetPacked, QueryParameter pnamePacked, GLint *params);            \
-    void getSamplerParameterfv(SamplerID samplerPacked, GLenum pname, GLfloat *params);            \
-    void getSamplerParameteriv(SamplerID samplerPacked, GLenum pname, GLint *params);              \
+    void getSamplerParameterfv(SamplerID samplerPacked, SamplerParameter pnamePacked,              \
+                               GLfloat *params);                                                   \
+    void getSamplerParameteriv(SamplerID samplerPacked, SamplerParameter pnamePacked,              \
+                               GLint *params);                                                     \
     const GLubyte *getStringi(GLenum name, GLuint index);                                          \
     void getSynciv(SyncID syncPacked, GLenum pname, GLsizei count, GLsizei *length,                \
                    GLint *values);                                                                 \

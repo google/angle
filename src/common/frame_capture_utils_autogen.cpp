@@ -483,6 +483,10 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TSamplerIDPointer>(os, call,
                                                                 param.value.SamplerIDPointerVal);
             break;
+        case ParamType::TSamplerParameter:
+            WriteParamValueReplay<ParamType::TSamplerParameter>(os, call,
+                                                                param.value.SamplerParameterVal);
+            break;
         case ParamType::TSemaphoreID:
             WriteParamValueReplay<ParamType::TSemaphoreID>(os, call, param.value.SemaphoreIDVal);
             break;
@@ -1168,6 +1172,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "const GLuint *";
         case ParamType::TSamplerIDPointer:
             return "GLuint *";
+        case ParamType::TSamplerParameter:
+            return "GLenum";
         case ParamType::TSemaphoreID:
             return "GLuint";
         case ParamType::TSemaphoreIDConstPointer:
