@@ -1025,19 +1025,31 @@ bool ValidateGetMultisamplefv(const Context *context,
                               GLuint index,
                               const GLfloat *val)
 {
-    return ValidateGetMultisamplefvBase(context, entryPoint, pname, index, val);
+    return ValidateGetMultisamplefvBase(context, entryPoint, pname, index, nullptr);
 }
 
 bool ValidateGetMultisamplefvRobustANGLE(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          GLenum pname,
                                          GLuint index,
-                                         GLsizei bufSize,
+                                         GLsizei paramCount,
                                          const GLsizei *length,
                                          const GLfloat *val)
 {
-    UNIMPLEMENTED();
-    return false;
+    // Make sure ValidateGetMultisamplefvBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetMultisamplefvBase(context, entryPoint, pname, index, &numParams))
+    {
+        return false;
+    }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
+
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateFramebufferParameteri(const Context *context,

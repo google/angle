@@ -6485,16 +6485,9 @@ void Context::getMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
     // According to spec 3.1 Table 20.49: Framebuffer Dependent Values,
     // the sample position should be queried by DRAW_FRAMEBUFFER.
     ANGLE_CONTEXT_TRY(mState.syncDirtyObject(this, GL_DRAW_FRAMEBUFFER, Command::GetMultisample));
-    const Framebuffer *framebuffer = mState.getDrawFramebuffer();
 
-    switch (pname)
-    {
-        case GL_SAMPLE_POSITION:
-            ANGLE_CONTEXT_TRY(framebuffer->getSamplePosition(this, index, val));
-            break;
-        default:
-            UNREACHABLE();
-    }
+    ASSERT(pname == GL_SAMPLE_POSITION);
+    ANGLE_CONTEXT_TRY(mState.getDrawFramebuffer()->getSamplePosition(this, index, val));
 }
 
 void Context::getMultisamplefvRobust(GLenum pname,
@@ -6503,7 +6496,13 @@ void Context::getMultisamplefvRobust(GLenum pname,
                                      GLsizei *length,
                                      GLfloat *val)
 {
-    UNIMPLEMENTED();
+    getMultisamplefv(pname, index, val);
+
+    if (length != nullptr)
+    {
+        ASSERT(pname == GL_SAMPLE_POSITION);
+        *length = 2;
+    }
 }
 
 void Context::renderbufferStorage(GLenum target,
