@@ -271,8 +271,10 @@ Additions to the OpenGL ES Specification:
     provided buffer.
 
     The optional <length> parameter specifies an address of a variable to
-    receive the number of values or bytes written to the buffer.  If <length>
-    is NULL or an error is generated, nothing is written to <length>.
+    receive the number of values or bytes written to the buffer.  Only
+    ReadPixelsRobustANGLE outputs the number of bytes; all other entry points
+    defined in this extension output the number of values.  If <length> is NULL
+    or an error is generated, nothing is written to <length>.
 
     The optional <columns> and <rows> parameters of ReadPixelsRobustANGLE
     specify addresses of variables to receive the number of columns and rows of

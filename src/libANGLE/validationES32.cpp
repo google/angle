@@ -482,32 +482,32 @@ bool ValidateGetTexParameterIuiv(const Context *context,
 
 bool ValidateGetnUniformfv(const Context *context,
                            angle::EntryPoint entryPoint,
-                           ShaderProgramID program,
-                           UniformLocation location,
+                           ShaderProgramID programPacked,
+                           UniformLocation locationPacked,
                            GLsizei bufSize,
                            const GLfloat *params)
 {
-    return ValidateSizedGetUniform(context, entryPoint, program, location, bufSize, nullptr);
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateGetnUniformiv(const Context *context,
                            angle::EntryPoint entryPoint,
-                           ShaderProgramID program,
-                           UniformLocation location,
+                           ShaderProgramID programPacked,
+                           UniformLocation locationPacked,
                            GLsizei bufSize,
                            const GLint *params)
 {
-    return ValidateSizedGetUniform(context, entryPoint, program, location, bufSize, nullptr);
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateGetnUniformuiv(const Context *context,
                             angle::EntryPoint entryPoint,
-                            ShaderProgramID program,
-                            UniformLocation location,
+                            ShaderProgramID programPacked,
+                            UniformLocation locationPacked,
                             GLsizei bufSize,
                             const GLuint *params)
 {
-    return ValidateSizedGetUniform(context, entryPoint, program, location, bufSize, nullptr);
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateIsEnabledi(const PrivateState &state,

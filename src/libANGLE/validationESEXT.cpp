@@ -824,8 +824,7 @@ bool ValidateGetnUniformfvKHR(const Context *context,
         return false;
     }
 
-    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize,
-                                   nullptr);
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateGetnUniformivKHR(const Context *context,
@@ -841,8 +840,7 @@ bool ValidateGetnUniformivKHR(const Context *context,
         return false;
     }
 
-    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize,
-                                   nullptr);
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateGetnUniformuivKHR(const Context *context,
@@ -860,8 +858,7 @@ bool ValidateGetnUniformuivKHR(const Context *context,
         return false;
     }
 
-    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize,
-                                   nullptr);
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateReadnPixelsKHR(const Context *context,

@@ -1868,11 +1868,11 @@ bool ValidateDrawRangeElements(const Context *context,
 
 bool ValidateGetUniformuiv(const Context *context,
                            angle::EntryPoint entryPoint,
-                           ShaderProgramID program,
-                           UniformLocation location,
+                           ShaderProgramID programPacked,
+                           UniformLocation locationPacked,
                            const GLuint *params)
 {
-    return ValidateGetUniformBase(context, entryPoint, program, location);
+    return ValidateGetUniformBase(context, entryPoint, programPacked, locationPacked);
 }
 
 bool ValidateReadBuffer(const Context *context, angle::EntryPoint entryPoint, GLenum src)

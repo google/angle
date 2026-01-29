@@ -416,14 +416,13 @@ bool ValidateDrawInstancedANGLE(const Context *context, angle::EntryPoint entryP
 
 bool ValidateGetUniformBase(const Context *context,
                             angle::EntryPoint entryPoint,
-                            ShaderProgramID program,
-                            UniformLocation location);
+                            ShaderProgramID programPacked,
+                            UniformLocation locationPacked);
 bool ValidateSizedGetUniform(const Context *context,
                              angle::EntryPoint entryPoint,
-                             ShaderProgramID program,
-                             UniformLocation location,
-                             GLsizei bufSize,
-                             GLsizei *length);
+                             ShaderProgramID programPacked,
+                             UniformLocation locationPacked,
+                             GLsizei bufSize);
 
 bool ValidateDiscardFramebufferBase(const Context *context,
                                     angle::EntryPoint entryPoint,

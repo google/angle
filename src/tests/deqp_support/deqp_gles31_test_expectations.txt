@@ -8,6 +8,10 @@
 //// Desktop expectations
 ////
 
+// Invalid tests
+484215148 : dEQP-GLES31.functional.debug.negative_coverage.get_error.state.get_nuniformiv = SKIP
+484215148 : dEQP-GLES31.functional.debug.negative_coverage.get_error.state.get_nuniformuiv = SKIP
+
 // Crashing Tests
 42260436 OPENGL : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.resource_list.vertex_fragment.builtin_gl_position = SKIP
 

@@ -434,20 +434,20 @@ ANGLE_INLINE bool ValidateGetTexParameteriv(const Context *context,
 
 ANGLE_INLINE bool ValidateGetUniformfv(const Context *context,
                                        angle::EntryPoint entryPoint,
-                                       ShaderProgramID program,
-                                       UniformLocation location,
+                                       ShaderProgramID programPacked,
+                                       UniformLocation locationPacked,
                                        const GLfloat *params)
 {
-    return ValidateGetUniformBase(context, entryPoint, program, location);
+    return ValidateGetUniformBase(context, entryPoint, programPacked, locationPacked);
 }
 
 ANGLE_INLINE bool ValidateGetUniformiv(const Context *context,
                                        angle::EntryPoint entryPoint,
-                                       ShaderProgramID program,
-                                       UniformLocation location,
+                                       ShaderProgramID programPacked,
+                                       UniformLocation locationPacked,
                                        const GLint *params)
 {
-    return ValidateGetUniformBase(context, entryPoint, program, location);
+    return ValidateGetUniformBase(context, entryPoint, programPacked, locationPacked);
 }
 
 ANGLE_INLINE bool ValidateGetVertexAttribfv(const Context *context,

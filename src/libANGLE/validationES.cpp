@@ -4608,16 +4608,16 @@ bool ValidateDrawElementsInstancedEXT(const Context *context,
 
 bool ValidateGetUniformBase(const Context *context,
                             angle::EntryPoint entryPoint,
-                            ShaderProgramID program,
-                            UniformLocation location)
+                            ShaderProgramID programPacked,
+                            UniformLocation locationPacked)
 {
-    if (program.value == 0)
+    if (programPacked.value == 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kProgramDoesNotExist);
         return false;
     }
 
-    Program *programObject = GetValidProgram(context, entryPoint, program);
+    Program *programObject = GetValidProgram(context, entryPoint, programPacked);
     if (programObject == nullptr)
     {
         // Error already generated.
@@ -4630,7 +4630,7 @@ bool ValidateGetUniformBase(const Context *context,
         return false;
     }
 
-    if (!programObject->getExecutable().isValidUniformLocation(location))
+    if (!programObject->getExecutable().isValidUniformLocation(locationPacked))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidUniformLocation);
         return false;
@@ -4641,142 +4641,88 @@ bool ValidateGetUniformBase(const Context *context,
 
 bool ValidateSizedGetUniform(const Context *context,
                              angle::EntryPoint entryPoint,
-                             ShaderProgramID program,
-                             UniformLocation location,
-                             GLsizei bufSize,
-                             GLsizei *length)
+                             ShaderProgramID programPacked,
+                             UniformLocation locationPacked,
+                             GLsizei bufSize)
 {
-    if (length)
-    {
-        *length = 0;
-    }
-
-    if (!ValidateGetUniformBase(context, entryPoint, program, location))
+    if (!ValidateGetUniformBase(context, entryPoint, programPacked, locationPacked))
     {
         return false;
     }
 
-    if (bufSize < 0)
+    if (ANGLE_UNLIKELY(bufSize < 0))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kNegativeBufSize);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufSize);
         return false;
     }
 
-    Program *programObject = context->getProgramResolveLink(program);
+    Program *programObject = context->getProgramResolveLink(programPacked);
     ASSERT(programObject);
 
     // sized queries -- ensure the provided buffer is large enough
-    const LinkedUniform &uniform = programObject->getExecutable().getUniformByLocation(location);
+    const LinkedUniform &uniform =
+        programObject->getExecutable().getUniformByLocation(locationPacked);
     size_t requiredBytes         = VariableExternalSize(uniform.getType());
-    if (static_cast<size_t>(bufSize) < requiredBytes)
+    if (ANGLE_UNLIKELY(static_cast<size_t>(bufSize) < requiredBytes))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientBufferSize);
         return false;
     }
 
-    if (length)
-    {
-        *length = VariableComponentCount(uniform.getType());
-    }
     return true;
 }
 
 bool ValidateGetnUniformfvEXT(const Context *context,
                               angle::EntryPoint entryPoint,
-                              ShaderProgramID program,
-                              UniformLocation location,
+                              ShaderProgramID programPacked,
+                              UniformLocation locationPacked,
                               GLsizei bufSize,
                               const GLfloat *params)
 {
-    return ValidateSizedGetUniform(context, entryPoint, program, location, bufSize, nullptr);
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateGetnUniformivEXT(const Context *context,
                               angle::EntryPoint entryPoint,
-                              ShaderProgramID program,
-                              UniformLocation location,
+                              ShaderProgramID programPacked,
+                              UniformLocation locationPacked,
                               GLsizei bufSize,
                               const GLint *params)
 {
-    return ValidateSizedGetUniform(context, entryPoint, program, location, bufSize, nullptr);
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateGetUniformfvRobustANGLE(const Context *context,
                                      angle::EntryPoint entryPoint,
-                                     ShaderProgramID program,
-                                     UniformLocation location,
+                                     ShaderProgramID programPacked,
+                                     UniformLocation locationPacked,
                                      GLsizei bufSize,
                                      const GLsizei *length,
                                      const GLfloat *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
-    {
-        return false;
-    }
-
-    GLsizei writeLength = 0;
-
-    // bufSize is validated in ValidateSizedGetUniform
-    if (!ValidateSizedGetUniform(context, entryPoint, program, location, bufSize, &writeLength))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, writeLength);
-
-    return true;
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateGetUniformivRobustANGLE(const Context *context,
                                      angle::EntryPoint entryPoint,
-                                     ShaderProgramID program,
-                                     UniformLocation location,
+                                     ShaderProgramID programPacked,
+                                     UniformLocation locationPacked,
                                      GLsizei bufSize,
                                      const GLsizei *length,
                                      const GLint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
-    {
-        return false;
-    }
-
-    GLsizei writeLength = 0;
-
-    // bufSize is validated in ValidateSizedGetUniform
-    if (!ValidateSizedGetUniform(context, entryPoint, program, location, bufSize, &writeLength))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, writeLength);
-
-    return true;
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateGetUniformuivRobustANGLE(const Context *context,
                                       angle::EntryPoint entryPoint,
-                                      ShaderProgramID program,
-                                      UniformLocation location,
+                                      ShaderProgramID programPacked,
+                                      UniformLocation locationPacked,
                                       GLsizei bufSize,
                                       const GLsizei *length,
                                       const GLuint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
-    {
-        return false;
-    }
-
-    GLsizei writeLength = 0;
-
-    // bufSize is validated in ValidateSizedGetUniform
-    if (!ValidateSizedGetUniform(context, entryPoint, program, location, bufSize, &writeLength))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, writeLength);
-
-    return true;
+    return ValidateSizedGetUniform(context, entryPoint, programPacked, locationPacked, bufSize);
 }
 
 bool ValidateDiscardFramebufferBase(const Context *context,
