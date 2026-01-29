@@ -220,13 +220,13 @@ bool ValidateGetTexLevelParameterivANGLE(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          TextureTarget targetPacked,
                                          GLint level,
-                                         GLenum pname,
+                                         TextureImageParameter pnamePacked,
                                          const GLint *params);
 bool ValidateGetTexLevelParameterfvANGLE(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          TextureTarget targetPacked,
                                          GLint level,
-                                         GLenum pname,
+                                         TextureImageParameter pnamePacked,
                                          const GLfloat *params);
 
 // GL_ANGLE_instanced_arrays
@@ -735,7 +735,7 @@ bool ValidateGetTexLevelParameterivRobustANGLE(const Context *context,
                                                angle::EntryPoint entryPoint,
                                                TextureTarget targetPacked,
                                                GLint level,
-                                               GLenum pname,
+                                               TextureImageParameter pnamePacked,
                                                GLsizei paramCount,
                                                const GLsizei *length,
                                                const GLint *params);
@@ -743,7 +743,7 @@ bool ValidateGetTexLevelParameterfvRobustANGLE(const Context *context,
                                                angle::EntryPoint entryPoint,
                                                TextureTarget targetPacked,
                                                GLint level,
-                                               GLenum pname,
+                                               TextureImageParameter pnamePacked,
                                                GLsizei paramCount,
                                                const GLsizei *length,
                                                const GLfloat *params);

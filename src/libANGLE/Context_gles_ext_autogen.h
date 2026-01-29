@@ -579,10 +579,12 @@
                                      GLsizei paramCount, GLsizei *length, GLfloat *params);        \
     void getMultisamplefvRobust(GLenum pname, GLuint index, GLsizei paramCount, GLsizei *length,   \
                                 GLfloat *val);                                                     \
-    void getTexLevelParameterivRobust(TextureTarget targetPacked, GLint level, GLenum pname,       \
-                                      GLsizei paramCount, GLsizei *length, GLint *params);         \
-    void getTexLevelParameterfvRobust(TextureTarget targetPacked, GLint level, GLenum pname,       \
-                                      GLsizei paramCount, GLsizei *length, GLfloat *params);       \
+    void getTexLevelParameterivRobust(TextureTarget targetPacked, GLint level,                     \
+                                      TextureImageParameter pnamePacked, GLsizei paramCount,       \
+                                      GLsizei *length, GLint *params);                             \
+    void getTexLevelParameterfvRobust(TextureTarget targetPacked, GLint level,                     \
+                                      TextureImageParameter pnamePacked, GLsizei paramCount,       \
+                                      GLsizei *length, GLfloat *params);                           \
     void getQueryObjectivRobust(QueryID idPacked, QueryObjectParameter pnamePacked,                \
                                 GLsizei paramCount, GLsizei *length, GLint *params);               \
     void getQueryObjecti64vRobust(QueryID idPacked, QueryObjectParameter pnamePacked,              \

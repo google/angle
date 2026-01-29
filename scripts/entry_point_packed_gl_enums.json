@@ -850,16 +850,20 @@
         "target": "TextureTarget"
     },
     "glGetTexLevelParameterfv": {
-        "target": "TextureTarget"
+        "target": "TextureTarget",
+        "pname": "TextureImageParameter"
     },
     "glGetTexLevelParameterfvRobust": {
-        "target": "TextureTarget"
+        "target": "TextureTarget",
+        "pname": "TextureImageParameter"
     },
     "glGetTexLevelParameteriv": {
-        "target": "TextureTarget"
+        "target": "TextureTarget",
+        "pname": "TextureImageParameter"
     },
     "glGetTexLevelParameterivRobust": {
-        "target": "TextureTarget"
+        "target": "TextureTarget",
+        "pname": "TextureImageParameter"
     },
     "glGetTexParameterfv": {
         "target": "TextureType"

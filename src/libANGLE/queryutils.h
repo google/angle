@@ -52,14 +52,14 @@ void QueryShaderiv(const Context *context,
                    ShaderParameter pnamePacked,
                    GLint *params);
 void QueryTexLevelParameterfv(const Texture *texture,
-                              TextureTarget target,
+                              TextureTarget targetPacked,
                               GLint level,
-                              GLenum pname,
+                              TextureImageParameter pnamePacked,
                               GLfloat *params);
 void QueryTexLevelParameteriv(const Texture *texture,
-                              TextureTarget target,
+                              TextureTarget targetPacked,
                               GLint level,
-                              GLenum pname,
+                              TextureImageParameter pnamePacked,
                               GLint *params);
 void QueryTexParameterfv(const Context *context,
                          const Texture *texture,

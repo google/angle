@@ -208,6 +208,7 @@ enum class ParamType
     TTextureID,
     TTextureIDConstPointer,
     TTextureIDPointer,
+    TTextureImageParameter,
     TTextureTarget,
     TTextureType,
     TTimestamp,
@@ -280,7 +281,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 243;
+constexpr uint32_t kParamTypeCount = 244;
 
 union ParamValue
 {
@@ -433,6 +434,7 @@ union ParamValue
     gl::TextureID TextureIDVal;
     const gl::TextureID *TextureIDConstPointerVal;
     gl::TextureID *TextureIDPointerVal;
+    gl::TextureImageParameter TextureImageParameterVal;
     gl::TextureTarget TextureTargetVal;
     gl::TextureType TextureTypeVal;
     egl::Timestamp TimestampVal;
@@ -1502,6 +1504,13 @@ inline gl::TextureID *GetParamVal<ParamType::TTextureIDPointer, gl::TextureID *>
 }
 
 template <>
+inline gl::TextureImageParameter
+GetParamVal<ParamType::TTextureImageParameter, gl::TextureImageParameter>(const ParamValue &value)
+{
+    return value.TextureImageParameterVal;
+}
+
+template <>
 inline gl::TextureTarget GetParamVal<ParamType::TTextureTarget, gl::TextureTarget>(
     const ParamValue &value)
 {
@@ -2508,6 +2517,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TTextureIDConstPointer, T>(value);
         case ParamType::TTextureIDPointer:
             return GetParamVal<ParamType::TTextureIDPointer, T>(value);
+        case ParamType::TTextureImageParameter:
+            return GetParamVal<ParamType::TTextureImageParameter, T>(value);
         case ParamType::TTextureTarget:
             return GetParamVal<ParamType::TTextureTarget, T>(value);
         case ParamType::TTextureType:
@@ -3594,6 +3605,13 @@ template <>
 inline void SetParamVal<ParamType::TTextureIDPointer>(gl::TextureID *valueIn, ParamValue *valueOut)
 {
     valueOut->TextureIDPointerVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TTextureImageParameter>(gl::TextureImageParameter valueIn,
+                                                           ParamValue *valueOut)
+{
+    valueOut->TextureImageParameterVal = valueIn;
 }
 
 template <>
@@ -4759,6 +4777,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TTextureIDPointer:
             SetParamVal<ParamType::TTextureIDPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TTextureImageParameter:
+            SetParamVal<ParamType::TTextureImageParameter>(valueIn, valueOut);
             break;
         case ParamType::TTextureTarget:
             SetParamVal<ParamType::TTextureTarget>(valueIn, valueOut);

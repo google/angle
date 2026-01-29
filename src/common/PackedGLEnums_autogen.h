@@ -646,6 +646,42 @@ TextureEnvTarget FromGLenum<TextureEnvTarget>(GLenum from);
 GLenum ToGLenum(TextureEnvTarget from);
 std::ostream &operator<<(std::ostream &os, TextureEnvTarget value);
 
+enum class TextureImageParameter : uint8_t
+{
+    Width                  = 0,
+    Height                 = 1,
+    Depth                  = 2,
+    InternalFormat         = 3,
+    RedSize                = 4,
+    GreenSize              = 5,
+    BlueSize               = 6,
+    AlphaSize              = 7,
+    DepthSize              = 8,
+    StencilSize            = 9,
+    SharedSize             = 10,
+    RedType                = 11,
+    GreenType              = 12,
+    BlueType               = 13,
+    AlphaType              = 14,
+    DepthType              = 15,
+    Compressed             = 16,
+    Samples                = 17,
+    FixedSampleLocations   = 18,
+    BufferDataStoreBinding = 19,
+    BufferOffset           = 20,
+    BufferSize             = 21,
+    MemorySize             = 22,
+    ResourceInitialized    = 23,
+
+    InvalidEnum = 24,
+    EnumCount   = 24,
+};
+
+template <>
+TextureImageParameter FromGLenum<TextureImageParameter>(GLenum from);
+GLenum ToGLenum(TextureImageParameter from);
+std::ostream &operator<<(std::ostream &os, TextureImageParameter value);
+
 enum class TextureOp : uint8_t
 {
     OneMinusSrcAlpha = 0,

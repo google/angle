@@ -1340,6 +1340,7 @@ void GL_APIENTRY GL_GetTexLevelParameterivANGLE(GLenum target,
     if (ANGLE_LIKELY(context != nullptr))
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
+        TextureImageParameter pnamePacked = PackParam<TextureImageParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -1351,7 +1352,7 @@ void GL_APIENTRY GL_GetTexLevelParameterivANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetTexLevelParameterivANGLE(
                     context, angle::EntryPoint::GLGetTexLevelParameterivANGLE, targetPacked, level,
-                    pname, params);
+                    pnamePacked, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -1363,10 +1364,10 @@ void GL_APIENTRY GL_GetTexLevelParameterivANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getTexLevelParameteriv(targetPacked, level, pname, params);
+            context->getTexLevelParameteriv(targetPacked, level, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetTexLevelParameterivANGLE, isCallValid, context, targetPacked, level,
-                         pname, params);
+                         pnamePacked, params);
     }
     else
     {
@@ -1392,6 +1393,7 @@ void GL_APIENTRY GL_GetTexLevelParameterfvANGLE(GLenum target,
     if (ANGLE_LIKELY(context != nullptr))
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
+        TextureImageParameter pnamePacked = PackParam<TextureImageParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -1403,7 +1405,7 @@ void GL_APIENTRY GL_GetTexLevelParameterfvANGLE(GLenum target,
 #endif
                 isCallValid = ValidateGetTexLevelParameterfvANGLE(
                     context, angle::EntryPoint::GLGetTexLevelParameterfvANGLE, targetPacked, level,
-                    pname, params);
+                    pnamePacked, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -1415,10 +1417,10 @@ void GL_APIENTRY GL_GetTexLevelParameterfvANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getTexLevelParameterfv(targetPacked, level, pname, params);
+            context->getTexLevelParameterfv(targetPacked, level, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetTexLevelParameterfvANGLE, isCallValid, context, targetPacked, level,
-                         pname, params);
+                         pnamePacked, params);
     }
     else
     {
@@ -4984,6 +4986,7 @@ void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLE(GLenum target,
     if (ANGLE_LIKELY(context != nullptr))
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
+        TextureImageParameter pnamePacked = PackParam<TextureImageParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -4998,7 +5001,7 @@ void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLE(GLenum target,
 #endif
                     isCallValid = ValidateGetTexLevelParameterivRobustANGLE(
                         context, angle::EntryPoint::GLGetTexLevelParameterivRobustANGLE,
-                        targetPacked, level, pname, paramCount, length, params);
+                        targetPacked, level, pnamePacked, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                     ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5017,11 +5020,11 @@ void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getTexLevelParameterivRobust(targetPacked, level, pname, paramCount, length,
-                                                  params);
+            context->getTexLevelParameterivRobust(targetPacked, level, pnamePacked, paramCount,
+                                                  length, params);
         }
         ANGLE_CAPTURE_GL(GetTexLevelParameterivRobustANGLE, isCallValid, context, targetPacked,
-                         level, pname, paramCount, length, params);
+                         level, pnamePacked, paramCount, length, params);
     }
     else
     {
@@ -5050,6 +5053,7 @@ void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target,
     if (ANGLE_LIKELY(context != nullptr))
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
+        TextureImageParameter pnamePacked = PackParam<TextureImageParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -5064,7 +5068,7 @@ void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target,
 #endif
                     isCallValid = ValidateGetTexLevelParameterfvRobustANGLE(
                         context, angle::EntryPoint::GLGetTexLevelParameterfvRobustANGLE,
-                        targetPacked, level, pname, paramCount, length, params);
+                        targetPacked, level, pnamePacked, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                     ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5083,11 +5087,11 @@ void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getTexLevelParameterfvRobust(targetPacked, level, pname, paramCount, length,
-                                                  params);
+            context->getTexLevelParameterfvRobust(targetPacked, level, pnamePacked, paramCount,
+                                                  length, params);
         }
         ANGLE_CAPTURE_GL(GetTexLevelParameterfvRobustANGLE, isCallValid, context, targetPacked,
-                         level, pname, paramCount, length, params);
+                         level, pnamePacked, paramCount, length, params);
     }
     else
     {

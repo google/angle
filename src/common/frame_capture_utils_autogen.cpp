@@ -548,6 +548,10 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TTextureIDPointer>(os, call,
                                                                 param.value.TextureIDPointerVal);
             break;
+        case ParamType::TTextureImageParameter:
+            WriteParamValueReplay<ParamType::TTextureImageParameter>(
+                os, call, param.value.TextureImageParameterVal);
+            break;
         case ParamType::TTextureTarget:
             WriteParamValueReplay<ParamType::TTextureTarget>(os, call,
                                                              param.value.TextureTargetVal);
@@ -1208,6 +1212,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "const GLuint *";
         case ParamType::TTextureIDPointer:
             return "GLuint *";
+        case ParamType::TTextureImageParameter:
+            return "GLenum";
         case ParamType::TTextureTarget:
             return "GLenum";
         case ParamType::TTextureType:

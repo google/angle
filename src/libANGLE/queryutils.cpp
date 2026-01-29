@@ -136,103 +136,90 @@ void ConvertFromColor(const ColorGeneric &color, GLuint *outParams)
 
 template <typename ParamType>
 void QueryTexLevelParameterBase(const Texture *texture,
-                                TextureTarget target,
+                                TextureTarget targetPacked,
                                 GLint level,
-                                GLenum pname,
+                                TextureImageParameter pnamePacked,
                                 ParamType *params)
 {
     ASSERT(texture != nullptr);
-    const InternalFormat *info = texture->getTextureState().getImageDesc(target, level).format.info;
+    const InternalFormat *info =
+        texture->getTextureState().getImageDesc(targetPacked, level).format.info;
 
-    switch (pname)
+    switch (pnamePacked)
     {
-        case GL_TEXTURE_RED_TYPE:
-            *params = CastFromGLintStateValue<ParamType>(
-                pname, info->redBits ? info->componentType : GL_NONE);
+        case TextureImageParameter::Width:
+            *params = clampCast<ParamType>(texture->getWidth(targetPacked, level));
             break;
-        case GL_TEXTURE_GREEN_TYPE:
-            *params = CastFromGLintStateValue<ParamType>(
-                pname, info->greenBits ? info->componentType : GL_NONE);
+        case TextureImageParameter::Height:
+            *params = clampCast<ParamType>(texture->getHeight(targetPacked, level));
             break;
-        case GL_TEXTURE_BLUE_TYPE:
-            *params = CastFromGLintStateValue<ParamType>(
-                pname, info->blueBits ? info->componentType : GL_NONE);
+        case TextureImageParameter::Depth:
+            *params = clampCast<ParamType>(texture->getDepth(targetPacked, level));
             break;
-        case GL_TEXTURE_ALPHA_TYPE:
-            *params = CastFromGLintStateValue<ParamType>(
-                pname, info->alphaBits ? info->componentType : GL_NONE);
+        case TextureImageParameter::InternalFormat:
+            *params = static_cast<ParamType>(info->internalFormat ? info->internalFormat : GL_RGBA);
             break;
-        case GL_TEXTURE_DEPTH_TYPE:
-            *params = CastFromGLintStateValue<ParamType>(
-                pname, info->depthBits ? info->componentType : GL_NONE);
+        case TextureImageParameter::RedSize:
+            *params = static_cast<ParamType>(info->redBits);
             break;
-        case GL_TEXTURE_RED_SIZE:
-            *params = CastFromGLintStateValue<ParamType>(pname, info->redBits);
+        case TextureImageParameter::GreenSize:
+            *params = static_cast<ParamType>(info->greenBits);
             break;
-        case GL_TEXTURE_GREEN_SIZE:
-            *params = CastFromGLintStateValue<ParamType>(pname, info->greenBits);
+        case TextureImageParameter::BlueSize:
+            *params = static_cast<ParamType>(info->blueBits);
             break;
-        case GL_TEXTURE_BLUE_SIZE:
-            *params = CastFromGLintStateValue<ParamType>(pname, info->blueBits);
+        case TextureImageParameter::AlphaSize:
+            *params = static_cast<ParamType>(info->alphaBits);
             break;
-        case GL_TEXTURE_ALPHA_SIZE:
-            *params = CastFromGLintStateValue<ParamType>(pname, info->alphaBits);
+        case TextureImageParameter::DepthSize:
+            *params = static_cast<ParamType>(info->depthBits);
             break;
-        case GL_TEXTURE_DEPTH_SIZE:
-            *params = CastFromGLintStateValue<ParamType>(pname, info->depthBits);
+        case TextureImageParameter::StencilSize:
+            *params = static_cast<ParamType>(info->stencilBits);
             break;
-        case GL_TEXTURE_STENCIL_SIZE:
-            *params = CastFromGLintStateValue<ParamType>(pname, info->stencilBits);
+        case TextureImageParameter::SharedSize:
+            *params = static_cast<ParamType>(info->sharedBits);
             break;
-        case GL_TEXTURE_SHARED_SIZE:
-            *params = CastFromGLintStateValue<ParamType>(pname, info->sharedBits);
+        case TextureImageParameter::RedType:
+            *params = static_cast<ParamType>(info->redBits != 0 ? info->componentType : GL_NONE);
             break;
-        case GL_TEXTURE_INTERNAL_FORMAT:
-            *params = CastFromGLintStateValue<ParamType>(
-                pname, info->internalFormat ? info->internalFormat : GL_RGBA);
+        case TextureImageParameter::GreenType:
+            *params = static_cast<ParamType>(info->greenBits != 0 ? info->componentType : GL_NONE);
             break;
-        case GL_TEXTURE_WIDTH:
-            *params = CastFromGLintStateValue<ParamType>(
-                pname, static_cast<uint32_t>(texture->getWidth(target, level)));
+        case TextureImageParameter::BlueType:
+            *params = static_cast<ParamType>(info->blueBits != 0 ? info->componentType : GL_NONE);
             break;
-        case GL_TEXTURE_HEIGHT:
-            *params = CastFromGLintStateValue<ParamType>(
-                pname, static_cast<uint32_t>(texture->getHeight(target, level)));
+        case TextureImageParameter::AlphaType:
+            *params = static_cast<ParamType>(info->alphaBits != 0 ? info->componentType : GL_NONE);
             break;
-        case GL_TEXTURE_DEPTH:
-            *params = CastFromGLintStateValue<ParamType>(
-                pname, static_cast<uint32_t>(texture->getDepth(target, level)));
+        case TextureImageParameter::DepthType:
+            *params = static_cast<ParamType>(info->depthBits != 0 ? info->componentType : GL_NONE);
             break;
-        case GL_TEXTURE_SAMPLES:
-            *params = CastFromStateValue<ParamType>(pname, texture->getSamples(target, level));
+        case TextureImageParameter::Compressed:
+            *params = static_cast<ParamType>(info->compressed);
             break;
-        case GL_TEXTURE_FIXED_SAMPLE_LOCATIONS:
-            *params = CastFromStateValue<ParamType>(
-                pname, static_cast<GLint>(texture->getFixedSampleLocations(target, level)));
+        case TextureImageParameter::Samples:
+            *params = static_cast<ParamType>(texture->getSamples(targetPacked, level));
             break;
-        case GL_TEXTURE_COMPRESSED:
-            *params = CastFromStateValue<ParamType>(pname, static_cast<GLint>(info->compressed));
+        case TextureImageParameter::FixedSampleLocations:
+            *params = static_cast<ParamType>(texture->getFixedSampleLocations(targetPacked, level));
             break;
-        case GL_MEMORY_SIZE_ANGLE:
-            *params =
-                CastFromStateValue<ParamType>(pname, texture->getLevelMemorySize(target, level));
+        case TextureImageParameter::BufferDataStoreBinding:
+            *params = static_cast<ParamType>(texture->getBuffer().id().value);
             break;
-        case GL_RESOURCE_INITIALIZED_ANGLE:
-            *params = CastFromGLintStateValue<ParamType>(
-                pname, texture->initState(GL_NONE, ImageIndex::MakeFromTarget(target, level)) ==
-                           InitState::Initialized);
+        case TextureImageParameter::BufferOffset:
+            *params = clampCast<ParamType>(texture->getBuffer().getOffset());
             break;
-        case GL_TEXTURE_BUFFER_DATA_STORE_BINDING:
-            *params = CastFromStateValue<ParamType>(
-                pname, static_cast<GLint>(texture->getBuffer().id().value));
+        case TextureImageParameter::BufferSize:
+            *params = clampCast<ParamType>(GetBoundBufferAvailableSize(texture->getBuffer()));
             break;
-        case GL_TEXTURE_BUFFER_OFFSET:
-            *params = CastFromStateValue<ParamType>(
-                pname, static_cast<GLint>(texture->getBuffer().getOffset()));
+        case TextureImageParameter::MemorySize:
+            *params = clampCast<ParamType>(texture->getLevelMemorySize(targetPacked, level));
             break;
-        case GL_TEXTURE_BUFFER_SIZE:
-            *params = CastFromStateValue<ParamType>(
-                pname, static_cast<GLint>(GetBoundBufferAvailableSize(texture->getBuffer())));
+        case TextureImageParameter::ResourceInitialized:
+            *params = static_cast<ParamType>(
+                texture->initState(GL_NONE, ImageIndex::MakeFromTarget(targetPacked, level)) ==
+                InitState::Initialized);
             break;
         default:
             UNREACHABLE();
@@ -1600,21 +1587,21 @@ void QueryShaderiv(const Context *context,
 }
 
 void QueryTexLevelParameterfv(const Texture *texture,
-                              TextureTarget target,
+                              TextureTarget targetPacked,
                               GLint level,
-                              GLenum pname,
+                              TextureImageParameter pnamePacked,
                               GLfloat *params)
 {
-    QueryTexLevelParameterBase(texture, target, level, pname, params);
+    QueryTexLevelParameterBase(texture, targetPacked, level, pnamePacked, params);
 }
 
 void QueryTexLevelParameteriv(const Texture *texture,
-                              TextureTarget target,
+                              TextureTarget targetPacked,
                               GLint level,
-                              GLenum pname,
+                              TextureImageParameter pnamePacked,
                               GLint *params)
 {
-    QueryTexLevelParameterBase(texture, target, level, pname, params);
+    QueryTexLevelParameterBase(texture, targetPacked, level, pnamePacked, params);
 }
 
 void QueryTexParameterfv(const Context *context,

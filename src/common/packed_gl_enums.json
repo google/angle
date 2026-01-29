@@ -226,6 +226,33 @@
         "Op2Alpha": "GL_OPERAND2_ALPHA",
         "PointCoordReplace": "GL_COORD_REPLACE_OES"
     },
+    "TextureImageParameter":
+    {
+        "Width": "GL_TEXTURE_WIDTH",
+        "Height": "GL_TEXTURE_HEIGHT",
+        "Depth": "GL_TEXTURE_DEPTH",
+        "InternalFormat": "GL_TEXTURE_INTERNAL_FORMAT",
+        "RedSize": "GL_TEXTURE_RED_SIZE",
+        "GreenSize": "GL_TEXTURE_GREEN_SIZE",
+        "BlueSize": "GL_TEXTURE_BLUE_SIZE",
+        "AlphaSize": "GL_TEXTURE_ALPHA_SIZE",
+        "DepthSize": "GL_TEXTURE_DEPTH_SIZE",
+        "StencilSize": "GL_TEXTURE_STENCIL_SIZE",
+        "SharedSize": "GL_TEXTURE_SHARED_SIZE",
+        "RedType": "GL_TEXTURE_RED_TYPE",
+        "GreenType": "GL_TEXTURE_GREEN_TYPE",
+        "BlueType": "GL_TEXTURE_BLUE_TYPE",
+        "AlphaType": "GL_TEXTURE_ALPHA_TYPE",
+        "DepthType": "GL_TEXTURE_DEPTH_TYPE",
+        "Compressed": "GL_TEXTURE_COMPRESSED",
+        "Samples": "GL_TEXTURE_SAMPLES",
+        "FixedSampleLocations": "GL_TEXTURE_FIXED_SAMPLE_LOCATIONS",
+        "BufferDataStoreBinding": "GL_TEXTURE_BUFFER_DATA_STORE_BINDING",
+        "BufferOffset": "GL_TEXTURE_BUFFER_OFFSET",
+        "BufferSize": "GL_TEXTURE_BUFFER_SIZE",
+        "MemorySize": "GL_MEMORY_SIZE_ANGLE",
+        "ResourceInitialized": "GL_RESOURCE_INITIALIZED_ANGLE"
+    },
     "TextureOp":
     {
         "OneMinusSrcAlpha": "GL_ONE_MINUS_SRC_ALPHA",

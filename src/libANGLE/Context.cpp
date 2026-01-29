@@ -2837,39 +2837,52 @@ void Context::getTexParameterivRobust(TextureType targetPacked,
     }
 }
 
-void Context::getTexLevelParameteriv(TextureTarget target, GLint level, GLenum pname, GLint *params)
+void Context::getTexLevelParameteriv(TextureTarget targetPacked,
+                                     GLint level,
+                                     TextureImageParameter pnamePacked,
+                                     GLint *params)
 {
-    Texture *texture = getTextureByTarget(target);
-    QueryTexLevelParameteriv(texture, target, level, pname, params);
+    Texture *texture = getTextureByTarget(targetPacked);
+    QueryTexLevelParameteriv(texture, targetPacked, level, pnamePacked, params);
 }
 
-void Context::getTexLevelParameterivRobust(TextureTarget target,
+void Context::getTexLevelParameterivRobust(TextureTarget targetPacked,
                                            GLint level,
-                                           GLenum pname,
+                                           TextureImageParameter pnamePacked,
                                            GLsizei paramCount,
                                            GLsizei *length,
                                            GLint *params)
 {
-    UNIMPLEMENTED();
+    getTexLevelParameteriv(targetPacked, level, pnamePacked, params);
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
-void Context::getTexLevelParameterfv(TextureTarget target,
+void Context::getTexLevelParameterfv(TextureTarget targetPacked,
                                      GLint level,
-                                     GLenum pname,
+                                     TextureImageParameter pnamePacked,
                                      GLfloat *params)
 {
-    Texture *texture = getTextureByTarget(target);
-    QueryTexLevelParameterfv(texture, target, level, pname, params);
+    Texture *texture = getTextureByTarget(targetPacked);
+    QueryTexLevelParameterfv(texture, targetPacked, level, pnamePacked, params);
 }
 
-void Context::getTexLevelParameterfvRobust(TextureTarget target,
+void Context::getTexLevelParameterfvRobust(TextureTarget targetPacked,
                                            GLint level,
-                                           GLenum pname,
+                                           TextureImageParameter pnamePacked,
                                            GLsizei paramCount,
                                            GLsizei *length,
                                            GLfloat *params)
 {
-    UNIMPLEMENTED();
+    getTexLevelParameterfv(targetPacked, level, pnamePacked, params);
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
 void Context::texParameterf(TextureType targetPacked, GLenum pname, GLfloat param)
