@@ -1154,7 +1154,7 @@ class State : angle::NonCopyable
     void getFloatv(GLenum pname, GLfloat *params) const { mPrivateState.getFloatv(pname, params); }
     angle::Result getIntegerv(const Context *context, GLenum pname, GLint *params) const;
     void getPointerv(const Context *context, GLenum pname, void **params) const;
-    void getIntegeri_v(const Context *context, GLenum target, GLuint index, GLint *data) const;
+    void getIntegeri_v(GLenum target, GLuint index, GLint *data) const;
     void getInteger64i_v(GLenum target, GLuint index, GLint64 *data) const;
     void getBooleani_v(GLenum target, GLuint index, GLboolean *data) const;
 

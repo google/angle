@@ -739,7 +739,8 @@ bool ValidateIndexedStateQuery(const Context *context,
                                angle::EntryPoint entryPoint,
                                GLenum pname,
                                GLuint index,
-                               GLsizei *length);
+                               const void *data,
+                               GLsizei *outNumParams);
 bool ValidateES3TexImage2DParameters(const Context *context,
                                      angle::EntryPoint entryPoint,
                                      TextureTarget target,

@@ -3070,11 +3070,13 @@ bool ValidateIndexedStateQuery(const Context *context,
                                angle::EntryPoint entryPoint,
                                GLenum pname,
                                GLuint index,
-                               GLsizei *length)
+                               const void *data,
+                               GLsizei *outNumParams)
 {
-    if (length)
+    if (data == nullptr)
     {
-        *length = 0;
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kDataNULL);
+        return false;
     }
 
     GLenum nativeType;
@@ -3194,16 +3196,9 @@ bool ValidateIndexedStateQuery(const Context *context,
             return false;
     }
 
-    if (length)
+    if (outNumParams != nullptr)
     {
-        if (pname == GL_COLOR_WRITEMASK)
-        {
-            *length = 4;
-        }
-        else
-        {
-            *length = 1;
-        }
+        *outNumParams = numParams;
     }
 
     return true;
@@ -3215,41 +3210,33 @@ bool ValidateGetIntegeri_v(const Context *context,
                            GLuint index,
                            const GLint *data)
 {
-    return ValidateIndexedStateQuery(context, entryPoint, target, index, nullptr);
+    return ValidateIndexedStateQuery(context, entryPoint, target, index, data, nullptr);
 }
 
 bool ValidateGetIntegeri_vRobustANGLE(const Context *context,
                                       angle::EntryPoint entryPoint,
                                       GLenum target,
                                       GLuint index,
-                                      GLsizei bufSize,
+                                      GLsizei paramCount,
                                       const GLsizei *length,
                                       const GLint *data)
 {
     if (context->getClientVersion() < ES_3_0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
         return false;
     }
 
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    GLsizei numParams;
+    if (!ValidateIndexedStateQuery(context, entryPoint, target, index, data, &numParams))
     {
         return false;
     }
 
-    GLsizei numParams = 0;
-
-    if (!ValidateIndexedStateQuery(context, entryPoint, target, index, &numParams))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
 
     return true;
 }
@@ -3260,41 +3247,33 @@ bool ValidateGetInteger64i_v(const Context *context,
                              GLuint index,
                              const GLint64 *data)
 {
-    return ValidateIndexedStateQuery(context, entryPoint, target, index, nullptr);
+    return ValidateIndexedStateQuery(context, entryPoint, target, index, data, nullptr);
 }
 
 bool ValidateGetInteger64i_vRobustANGLE(const Context *context,
                                         angle::EntryPoint entryPoint,
                                         GLenum target,
                                         GLuint index,
-                                        GLsizei bufSize,
+                                        GLsizei paramCount,
                                         const GLsizei *length,
                                         const GLint64 *data)
 {
     if (context->getClientVersion() < ES_3_0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
         return false;
     }
 
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    GLsizei numParams;
+    if (!ValidateIndexedStateQuery(context, entryPoint, target, index, data, &numParams))
     {
         return false;
     }
 
-    GLsizei numParams = 0;
-
-    if (!ValidateIndexedStateQuery(context, entryPoint, target, index, &numParams))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
 
     return true;
 }

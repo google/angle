@@ -413,12 +413,7 @@ bool ValidateGetBooleani_v(const Context *context,
                            GLuint index,
                            const GLboolean *data)
 {
-    if (!ValidateIndexedStateQuery(context, entryPoint, target, index, nullptr))
-    {
-        return false;
-    }
-
-    return true;
+    return ValidateIndexedStateQuery(context, entryPoint, target, index, data, nullptr);
 }
 
 bool ValidateDrawIndirectBase(const Context *context,

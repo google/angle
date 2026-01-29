@@ -3712,7 +3712,7 @@ void State::getPointerv(const Context *context, GLenum pname, void **params) con
     }
 }
 
-void State::getIntegeri_v(const Context *context, GLenum target, GLuint index, GLint *data) const
+void State::getIntegeri_v(GLenum target, GLuint index, GLint *data) const
 {
     switch (target)
     {

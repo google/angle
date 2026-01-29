@@ -2570,6 +2570,15 @@ void Context::getPointerv(GLenum pname, void **params)
 
 void Context::getIntegeri_v(GLenum target, GLuint index, GLint *data)
 {
+    getIntegeri_vRobust(target, index, 0, nullptr, data);
+}
+
+void Context::getIntegeri_vRobust(GLenum target,
+                                  GLuint index,
+                                  GLsizei paramCount,
+                                  GLsizei *length,
+                                  GLint *data)
+{
     // Queries about context capabilities and maximums are answered by Context.
     // Queries about current GL state values are answered by State.
 
@@ -2591,25 +2600,30 @@ void Context::getIntegeri_v(GLenum target, GLuint index, GLint *data)
                 *data = mState.getCaps().maxComputeWorkGroupSize[index];
                 break;
             default:
-                mState.getIntegeri_v(this, target, index, data);
+                mState.getIntegeri_v(target, index, data);
         }
     }
     else
     {
         CastIndexedStateValues(this, nativeType, target, index, numParams, data);
     }
-}
 
-void Context::getIntegeri_vRobust(GLenum target,
-                                  GLuint index,
-                                  GLsizei paramCount,
-                                  GLsizei *length,
-                                  GLint *data)
-{
-    getIntegeri_v(target, index, data);
+    if (length != nullptr)
+    {
+        *length = numParams;
+    }
 }
 
 void Context::getInteger64i_v(GLenum target, GLuint index, GLint64 *data)
+{
+    getInteger64i_vRobust(target, index, 0, nullptr, data);
+}
+
+void Context::getInteger64i_vRobust(GLenum target,
+                                    GLuint index,
+                                    GLsizei paramCount,
+                                    GLsizei *length,
+                                    GLint64 *data)
 {
     // Queries about context capabilities and maximums are answered by Context.
     // Queries about current GL state values are answered by State.
@@ -2627,15 +2641,11 @@ void Context::getInteger64i_v(GLenum target, GLuint index, GLint64 *data)
     {
         CastIndexedStateValues(this, nativeType, target, index, numParams, data);
     }
-}
 
-void Context::getInteger64i_vRobust(GLenum target,
-                                    GLuint index,
-                                    GLsizei paramCount,
-                                    GLsizei *length,
-                                    GLint64 *data)
-{
-    getInteger64i_v(target, index, data);
+    if (length != nullptr)
+    {
+        *length = numParams;
+    }
 }
 
 void Context::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
