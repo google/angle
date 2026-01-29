@@ -328,7 +328,7 @@ bool ValidateStateQuery(const Context *context,
                         angle::EntryPoint entryPoint,
                         GLenum pname,
                         const void *data,
-                        unsigned int *outNumParams);
+                        GLsizei *outNumParams);
 bool ValidateRobustStateQuery(const Context *context,
                               angle::EntryPoint entryPoint,
                               GLenum pname,

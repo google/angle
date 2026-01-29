@@ -926,8 +926,7 @@ bool ValidateGetFixedv(const Context *context,
                        GLenum pname,
                        const GLfixed *params)
 {
-    unsigned int numParams;
-    return ValidateStateQuery(context, entryPoint, pname, params, &numParams);
+    return ValidateStateQuery(context, entryPoint, pname, params, nullptr);
 }
 
 bool ValidateGetLightfv(const PrivateState &state,

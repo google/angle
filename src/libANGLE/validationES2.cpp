@@ -4580,8 +4580,7 @@ bool ValidateGetBooleanv(const Context *context,
                          GLenum pname,
                          const GLboolean *data)
 {
-    unsigned int numParams;
-    return ValidateStateQuery(context, entryPoint, pname, data, &numParams);
+    return ValidateStateQuery(context, entryPoint, pname, data, nullptr);
 }
 
 bool ValidateGetError(const Context *context, angle::EntryPoint entryPoint)
@@ -4594,8 +4593,7 @@ bool ValidateGetFloatv(const Context *context,
                        GLenum pname,
                        const GLfloat *data)
 {
-    unsigned int numParams;
-    return ValidateStateQuery(context, entryPoint, pname, data, &numParams);
+    return ValidateStateQuery(context, entryPoint, pname, data, nullptr);
 }
 
 bool ValidateGetIntegerv(const Context *context,
@@ -4603,8 +4601,7 @@ bool ValidateGetIntegerv(const Context *context,
                          GLenum pname,
                          const GLint *data)
 {
-    unsigned int numParams;
-    return ValidateStateQuery(context, entryPoint, pname, data, &numParams);
+    return ValidateStateQuery(context, entryPoint, pname, data, nullptr);
 }
 
 bool ValidateGetProgramInfoLog(const Context *context,

@@ -2961,7 +2961,7 @@ bool ValidateStateQuery(const Context *context,
                         angle::EntryPoint entryPoint,
                         GLenum pname,
                         const void *data,
-                        unsigned int *outNumParams)
+                        GLsizei *outNumParams)
 {
     if (data == nullptr)
     {
@@ -2970,7 +2970,8 @@ bool ValidateStateQuery(const Context *context,
     }
 
     GLenum nativeType;
-    if (!context->getQueryParameterInfo(pname, &nativeType, outNumParams))
+    unsigned int numParams;
+    if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidPname);
         return false;
@@ -3100,6 +3101,11 @@ bool ValidateStateQuery(const Context *context,
             break;
     }
 
+    if (outNumParams != nullptr)
+    {
+        *outNumParams = numParams;
+    }
+
     return true;
 }
 
@@ -3155,11 +3161,13 @@ bool ValidateRobustStateQuery(const Context *context,
                               GLsizei paramCount,
                               const void *data)
 {
-    unsigned int numParams;
+    // Make sure ValidateStateQuery sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
     if (!ValidateStateQuery(context, entryPoint, pname, data, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
     if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {

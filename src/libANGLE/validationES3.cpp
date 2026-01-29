@@ -3227,11 +3227,13 @@ bool ValidateGetIntegeri_vRobustANGLE(const Context *context,
         return false;
     }
 
-    GLsizei numParams;
+    // Make sure ValidateIndexedStateQuery sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
     if (!ValidateIndexedStateQuery(context, entryPoint, target, index, data, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
     if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
@@ -3264,11 +3266,13 @@ bool ValidateGetInteger64i_vRobustANGLE(const Context *context,
         return false;
     }
 
-    GLsizei numParams;
+    // Make sure ValidateIndexedStateQuery sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
     if (!ValidateIndexedStateQuery(context, entryPoint, target, index, data, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
     if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
@@ -4550,8 +4554,7 @@ bool ValidateGetInteger64v(const Context *context,
                            GLenum pname,
                            const GLint64 *data)
 {
-    unsigned int numParams;
-    return ValidateStateQuery(context, entryPoint, pname, data, &numParams);
+    return ValidateStateQuery(context, entryPoint, pname, data, nullptr);
 }
 
 bool ValidateIsSampler(const Context *context, angle::EntryPoint entryPoint, SamplerID sampler)

@@ -2584,8 +2584,8 @@ void Context::getIntegeri_vRobust(GLenum target,
 
     GLenum nativeType;
     unsigned int numParams;
-    bool queryStatus = getIndexedQueryParameterInfo(target, &nativeType, &numParams);
-    ASSERT(queryStatus);
+    const bool paramFound = getIndexedQueryParameterInfo(target, &nativeType, &numParams);
+    ASSERT(paramFound);
 
     if (nativeType == GL_INT)
     {
@@ -2630,8 +2630,8 @@ void Context::getInteger64i_vRobust(GLenum target,
 
     GLenum nativeType;
     unsigned int numParams;
-    bool queryStatus = getIndexedQueryParameterInfo(target, &nativeType, &numParams);
-    ASSERT(queryStatus);
+    const bool paramFound = getIndexedQueryParameterInfo(target, &nativeType, &numParams);
+    ASSERT(paramFound);
 
     if (nativeType == GL_INT_64_ANGLEX)
     {
@@ -2655,8 +2655,8 @@ void Context::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
 
     GLenum nativeType;
     unsigned int numParams;
-    bool queryStatus = getIndexedQueryParameterInfo(target, &nativeType, &numParams);
-    ASSERT(queryStatus);
+    const bool paramFound = getIndexedQueryParameterInfo(target, &nativeType, &numParams);
+    ASSERT(paramFound);
 
     if (nativeType == GL_BOOL)
     {
@@ -7108,7 +7108,11 @@ void Context::getBooleanvRobust(GLenum pname, GLsizei paramCount, GLsizei *lengt
 {
     GLenum nativeType;
     unsigned int numParams;
-    getQueryParameterInfo(pname, &nativeType, &numParams);
+    const bool paramFound = getQueryParameterInfo(pname, &nativeType, &numParams);
+    if (ANGLE_UNLIKELY(!paramFound))
+    {
+        return;  // Avoid crashing with invalid apps running with no validation.
+    }
 
     if (nativeType == GL_BOOL)
     {
@@ -7134,7 +7138,11 @@ void Context::getFloatvRobust(GLenum pname, GLsizei paramCount, GLsizei *length,
 {
     GLenum nativeType;
     unsigned int numParams;
-    getQueryParameterInfo(pname, &nativeType, &numParams);
+    const bool paramFound = getQueryParameterInfo(pname, &nativeType, &numParams);
+    if (ANGLE_UNLIKELY(!paramFound))
+    {
+        return;  // Avoid crashing with invalid apps running with no validation.
+    }
 
     if (nativeType == GL_FLOAT)
     {
@@ -7160,7 +7168,11 @@ void Context::getIntegervRobust(GLenum pname, GLsizei paramCount, GLsizei *lengt
 {
     GLenum nativeType;
     unsigned int numParams;
-    getQueryParameterInfo(pname, &nativeType, &numParams);
+    const bool paramFound = getQueryParameterInfo(pname, &nativeType, &numParams);
+    if (ANGLE_UNLIKELY(!paramFound))
+    {
+        return;  // Avoid crashing with invalid apps running with no validation.
+    }
 
     if (nativeType == GL_INT)
     {
@@ -7948,7 +7960,11 @@ void Context::getInteger64vRobust(GLenum pname, GLsizei paramCount, GLsizei *len
 {
     GLenum nativeType;
     unsigned int numParams;
-    getQueryParameterInfo(pname, &nativeType, &numParams);
+    const bool paramFound = getQueryParameterInfo(pname, &nativeType, &numParams);
+    if (ANGLE_UNLIKELY(!paramFound))
+    {
+        return;  // Avoid crashing with invalid apps running with no validation.
+    }
 
     if (nativeType == GL_INT_64_ANGLEX)
     {

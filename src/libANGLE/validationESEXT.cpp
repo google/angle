@@ -1088,8 +1088,7 @@ bool ValidateGetInteger64vEXT(const Context *context,
                               GLenum pname,
                               const GLint64 *data)
 {
-    unsigned int numParams;
-    return ValidateStateQuery(context, entryPoint, pname, data, &numParams);
+    return ValidateStateQuery(context, entryPoint, pname, data, nullptr);
 }
 
 bool ValidateCopyImageSubDataEXT(const Context *context,
