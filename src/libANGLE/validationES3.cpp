@@ -4569,16 +4569,10 @@ bool ValidateWaitSync(const Context *context,
 bool ValidateGetInteger64v(const Context *context,
                            angle::EntryPoint entryPoint,
                            GLenum pname,
-                           const GLint64 *params)
+                           const GLint64 *data)
 {
-    GLenum nativeType      = GL_NONE;
-    unsigned int numParams = 0;
-    if (!ValidateStateQuery(context, entryPoint, pname, &nativeType, &numParams))
-    {
-        return false;
-    }
-
-    return true;
+    unsigned int numParams;
+    return ValidateStateQuery(context, entryPoint, pname, data, &numParams);
 }
 
 bool ValidateIsSampler(const Context *context, angle::EntryPoint entryPoint, SamplerID sampler)

@@ -4578,18 +4578,10 @@ bool ValidateGetAttribLocation(const Context *context,
 bool ValidateGetBooleanv(const Context *context,
                          angle::EntryPoint entryPoint,
                          GLenum pname,
-                         const GLboolean *params)
+                         const GLboolean *data)
 {
-    GLenum nativeType;
-    unsigned int numParams = 0;
-
-    if (params == nullptr)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
-        return false;
-    }
-
-    return ValidateStateQuery(context, entryPoint, pname, &nativeType, &numParams);
+    unsigned int numParams;
+    return ValidateStateQuery(context, entryPoint, pname, data, &numParams);
 }
 
 bool ValidateGetError(const Context *context, angle::EntryPoint entryPoint)
@@ -4600,35 +4592,19 @@ bool ValidateGetError(const Context *context, angle::EntryPoint entryPoint)
 bool ValidateGetFloatv(const Context *context,
                        angle::EntryPoint entryPoint,
                        GLenum pname,
-                       const GLfloat *params)
+                       const GLfloat *data)
 {
-    GLenum nativeType;
-    unsigned int numParams = 0;
-
-    if (params == nullptr)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
-        return false;
-    }
-
-    return ValidateStateQuery(context, entryPoint, pname, &nativeType, &numParams);
+    unsigned int numParams;
+    return ValidateStateQuery(context, entryPoint, pname, data, &numParams);
 }
 
 bool ValidateGetIntegerv(const Context *context,
                          angle::EntryPoint entryPoint,
                          GLenum pname,
-                         const GLint *params)
+                         const GLint *data)
 {
-    GLenum nativeType;
-    unsigned int numParams = 0;
-
-    if (params == nullptr)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
-        return false;
-    }
-
-    return ValidateStateQuery(context, entryPoint, pname, &nativeType, &numParams);
+    unsigned int numParams;
+    return ValidateStateQuery(context, entryPoint, pname, data, &numParams);
 }
 
 bool ValidateGetProgramInfoLog(const Context *context,

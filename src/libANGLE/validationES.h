@@ -327,14 +327,13 @@ bool ValidateUniformMatrix(const Context *context,
 bool ValidateStateQuery(const Context *context,
                         angle::EntryPoint entryPoint,
                         GLenum pname,
-                        GLenum *nativeType,
-                        unsigned int *numParams);
+                        const void *data,
+                        unsigned int *outNumParams);
 bool ValidateRobustStateQuery(const Context *context,
                               angle::EntryPoint entryPoint,
                               GLenum pname,
-                              GLsizei bufSize,
-                              GLenum *nativeType,
-                              unsigned int *numParams);
+                              GLsizei paramCount,
+                              const void *data);
 
 bool ValidateCopyImageSubDataBase(const Context *context,
                                   angle::EntryPoint entryPoint,
@@ -486,6 +485,10 @@ bool ValidateRobustEntryPoint(const Context *context,
 bool ValidateRobustBufferSize(const Context *context,
                               angle::EntryPoint entryPoint,
                               GLsizei bufSize,
+                              GLsizei numParams);
+bool ValidateRobustParamCount(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              GLsizei paramCount,
                               GLsizei numParams);
 
 bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,

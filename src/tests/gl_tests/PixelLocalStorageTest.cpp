@@ -6756,49 +6756,49 @@ TEST_P(PixelLocalStorageValidationTest, GetFramebufferPixelLocalStorageParameter
     glGetFramebufferPixelLocalStorageParameterivRobustANGLE(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, 0,
                                                             &length, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_GL_SINGLE_ERROR_MSG("The paramCount is less than the number of returned values.");
     EXPECT_EQ(length, kLengthInitValue);
 
     length = kLengthInitValue;
     glGetFramebufferPixelLocalStorageParameterivRobustANGLE(0, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0,
                                                             &length, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_GL_SINGLE_ERROR_MSG("The paramCount is less than the number of returned values.");
     EXPECT_EQ(length, kLengthInitValue);
 
     length = kLengthInitValue;
     glGetFramebufferPixelLocalStorageParameterivRobustANGLE(0, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE,
                                                             0, &length, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_GL_SINGLE_ERROR_MSG("The paramCount is less than the number of returned values.");
     EXPECT_EQ(length, kLengthInitValue);
 
     length = kLengthInitValue;
     glGetFramebufferPixelLocalStorageParameterivRobustANGLE(0, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE,
                                                             0, &length, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_GL_SINGLE_ERROR_MSG("The paramCount is less than the number of returned values.");
     EXPECT_EQ(length, kLengthInitValue);
 
     length = kLengthInitValue;
     glGetFramebufferPixelLocalStorageParameterivRobustANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE,
                                                             3, &length, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_GL_SINGLE_ERROR_MSG("The paramCount is less than the number of returned values.");
     EXPECT_EQ(length, kLengthInitValue);
 
     length = kLengthInitValue;
     glGetFramebufferPixelLocalStorageParameterivRobustANGLE(
         0, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, 3, &length, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_GL_SINGLE_ERROR_MSG("The paramCount is less than the number of returned values.");
     EXPECT_EQ(length, kLengthInitValue);
 
     length = kLengthInitValue;
     glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
         0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 3, &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("More parameters are required than were provided.");
+    EXPECT_GL_SINGLE_ERROR_MSG("The paramCount is less than the number of returned values.");
     EXPECT_EQ(length, kLengthInitValue);
 
     // Not quite pure validation, but also ensure that <length> gets written properly.

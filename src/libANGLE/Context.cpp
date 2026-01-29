@@ -7089,67 +7089,82 @@ GLint Context::getAttribLocation(ShaderProgramID program, const GLchar *name)
     return programObject->getExecutable().getAttributeLocation(name);
 }
 
-void Context::getBooleanv(GLenum pname, GLboolean *params)
+void Context::getBooleanv(GLenum pname, GLboolean *data)
 {
-    GLenum nativeType;
-    unsigned int numParams = 0;
-    getQueryParameterInfo(pname, &nativeType, &numParams);
-
-    if (nativeType == GL_BOOL)
-    {
-        getBooleanvImpl(pname, params);
-    }
-    else
-    {
-        CastStateValues(this, nativeType, pname, numParams, params);
-    }
+    getBooleanvRobust(pname, 0, nullptr, data);
 }
 
 void Context::getBooleanvRobust(GLenum pname, GLsizei paramCount, GLsizei *length, GLboolean *data)
 {
-    getBooleanv(pname, data);
-}
-
-void Context::getFloatv(GLenum pname, GLfloat *params)
-{
     GLenum nativeType;
-    unsigned int numParams = 0;
+    unsigned int numParams;
     getQueryParameterInfo(pname, &nativeType, &numParams);
 
-    if (nativeType == GL_FLOAT)
+    if (nativeType == GL_BOOL)
     {
-        getFloatvImpl(pname, params);
+        getBooleanvImpl(pname, data);
     }
     else
     {
-        CastStateValues(this, nativeType, pname, numParams, params);
+        CastStateValues(this, nativeType, pname, numParams, data);
     }
+
+    if (length != nullptr)
+    {
+        *length = numParams;
+    }
+}
+
+void Context::getFloatv(GLenum pname, GLfloat *data)
+{
+    getFloatvRobust(pname, 0, nullptr, data);
 }
 
 void Context::getFloatvRobust(GLenum pname, GLsizei paramCount, GLsizei *length, GLfloat *data)
 {
-    getFloatv(pname, data);
-}
-
-void Context::getIntegerv(GLenum pname, GLint *params)
-{
-    GLenum nativeType      = GL_NONE;
-    unsigned int numParams = 0;
+    GLenum nativeType;
+    unsigned int numParams;
     getQueryParameterInfo(pname, &nativeType, &numParams);
 
-    if (nativeType == GL_INT)
+    if (nativeType == GL_FLOAT)
     {
-        getIntegervImpl(pname, params);
+        getFloatvImpl(pname, data);
     }
     else
     {
-        CastStateValues(this, nativeType, pname, numParams, params);
+        CastStateValues(this, nativeType, pname, numParams, data);
     }
+
+    if (length != nullptr)
+    {
+        *length = numParams;
+    }
+}
+
+void Context::getIntegerv(GLenum pname, GLint *data)
+{
+    getIntegervRobust(pname, 0, nullptr, data);
 }
 
 void Context::getIntegervRobust(GLenum pname, GLsizei paramCount, GLsizei *length, GLint *data)
 {
-    getIntegerv(pname, data);
+    GLenum nativeType;
+    unsigned int numParams;
+    getQueryParameterInfo(pname, &nativeType, &numParams);
+
+    if (nativeType == GL_INT)
+    {
+        getIntegervImpl(pname, data);
+    }
+    else
+    {
+        CastStateValues(this, nativeType, pname, numParams, data);
+    }
+
+    if (length != nullptr)
+    {
+        *length = numParams;
+    }
 }
 
 void Context::getProgramiv(ShaderProgramID program, GLenum pname, GLint *params)
@@ -7914,25 +7929,30 @@ void Context::waitSync(SyncID syncPacked, GLbitfield flags, GLuint64 timeout)
     ANGLE_CONTEXT_TRY(syncObject->serverWait(this, flags, timeout));
 }
 
-void Context::getInteger64v(GLenum pname, GLint64 *params)
+void Context::getInteger64v(GLenum pname, GLint64 *data)
 {
-    GLenum nativeType      = GL_NONE;
-    unsigned int numParams = 0;
-    getQueryParameterInfo(pname, &nativeType, &numParams);
-
-    if (nativeType == GL_INT_64_ANGLEX)
-    {
-        getInteger64vImpl(pname, params);
-    }
-    else
-    {
-        CastStateValues(this, nativeType, pname, numParams, params);
-    }
+    getInteger64vRobust(pname, 0, nullptr, data);
 }
 
 void Context::getInteger64vRobust(GLenum pname, GLsizei paramCount, GLsizei *length, GLint64 *data)
 {
-    getInteger64v(pname, data);
+    GLenum nativeType;
+    unsigned int numParams;
+    getQueryParameterInfo(pname, &nativeType, &numParams);
+
+    if (nativeType == GL_INT_64_ANGLEX)
+    {
+        getInteger64vImpl(pname, data);
+    }
+    else
+    {
+        CastStateValues(this, nativeType, pname, numParams, data);
+    }
+
+    if (length != nullptr)
+    {
+        *length = numParams;
+    }
 }
 
 void Context::getBufferParameteri64v(BufferBinding target, GLenum pname, GLint64 *params)

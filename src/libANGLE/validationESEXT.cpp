@@ -1088,14 +1088,8 @@ bool ValidateGetInteger64vEXT(const Context *context,
                               GLenum pname,
                               const GLint64 *data)
 {
-    GLenum nativeType      = GL_NONE;
-    unsigned int numParams = 0;
-    if (!ValidateStateQuery(context, entryPoint, pname, &nativeType, &numParams))
-    {
-        return false;
-    }
-
-    return true;
+    unsigned int numParams;
+    return ValidateStateQuery(context, entryPoint, pname, data, &numParams);
 }
 
 bool ValidateCopyImageSubDataEXT(const Context *context,
@@ -1870,7 +1864,7 @@ bool ValidateGetFramebufferPixelLocalStorageParameterRobustCommon(const Context 
 
     if (paramCount > bufSize)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientParams);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientParamCount);
         return false;
     }
 

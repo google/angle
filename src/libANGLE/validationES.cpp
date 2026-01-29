@@ -2960,10 +2960,17 @@ bool ValidateUniformMatrix(const Context *context,
 bool ValidateStateQuery(const Context *context,
                         angle::EntryPoint entryPoint,
                         GLenum pname,
-                        GLenum *nativeType,
-                        unsigned int *numParams)
+                        const void *data,
+                        unsigned int *outNumParams)
 {
-    if (!context->getQueryParameterInfo(pname, nativeType, numParams))
+    if (data == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kDataNULL);
+        return false;
+    }
+
+    GLenum nativeType;
+    if (!context->getQueryParameterInfo(pname, &nativeType, outNumParams))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidPname);
         return false;
@@ -3099,67 +3106,37 @@ bool ValidateStateQuery(const Context *context,
 bool ValidateGetBooleanvRobustANGLE(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     GLenum pname,
-                                    GLsizei bufSize,
+                                    GLsizei paramCount,
                                     const GLsizei *length,
                                     const GLboolean *data)
 {
-    GLenum nativeType;
-    unsigned int numParams = 0;
-
-    if (!ValidateRobustStateQuery(context, entryPoint, pname, bufSize, &nativeType, &numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
-
-    return true;
+    return ValidateRobustStateQuery(context, entryPoint, pname, paramCount, data);
 }
 
 bool ValidateGetFloatvRobustANGLE(const Context *context,
                                   angle::EntryPoint entryPoint,
                                   GLenum pname,
-                                  GLsizei bufSize,
+                                  GLsizei paramCount,
                                   const GLsizei *length,
                                   const GLfloat *data)
 {
-    GLenum nativeType;
-    unsigned int numParams = 0;
-
-    if (!ValidateRobustStateQuery(context, entryPoint, pname, bufSize, &nativeType, &numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
-
-    return true;
+    return ValidateRobustStateQuery(context, entryPoint, pname, paramCount, data);
 }
 
 bool ValidateGetIntegervRobustANGLE(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     GLenum pname,
-                                    GLsizei bufSize,
+                                    GLsizei paramCount,
                                     const GLsizei *length,
                                     const GLint *data)
 {
-    GLenum nativeType;
-    unsigned int numParams = 0;
-
-    if (!ValidateRobustStateQuery(context, entryPoint, pname, bufSize, &nativeType, &numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
-
-    return true;
+    return ValidateRobustStateQuery(context, entryPoint, pname, paramCount, data);
 }
 
 bool ValidateGetInteger64vRobustANGLE(const Context *context,
                                       angle::EntryPoint entryPoint,
                                       GLenum pname,
-                                      GLsizei bufSize,
+                                      GLsizei paramCount,
                                       const GLsizei *length,
                                       const GLint64 *data)
 {
@@ -3169,36 +3146,22 @@ bool ValidateGetInteger64vRobustANGLE(const Context *context,
         return false;
     }
 
-    GLenum nativeType;
-    unsigned int numParams = 0;
-
-    if (!ValidateRobustStateQuery(context, entryPoint, pname, bufSize, &nativeType, &numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
-    return true;
+    return ValidateRobustStateQuery(context, entryPoint, pname, paramCount, data);
 }
 
 bool ValidateRobustStateQuery(const Context *context,
                               angle::EntryPoint entryPoint,
                               GLenum pname,
-                              GLsizei bufSize,
-                              GLenum *nativeType,
-                              unsigned int *numParams)
+                              GLsizei paramCount,
+                              const void *data)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    unsigned int numParams;
+    if (!ValidateStateQuery(context, entryPoint, pname, data, &numParams))
     {
         return false;
     }
 
-    if (!ValidateStateQuery(context, entryPoint, pname, nativeType, numParams))
-    {
-        return false;
-    }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, *numParams))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
@@ -5500,7 +5463,27 @@ bool ValidateRobustBufferSize(const Context *context,
 {
     if (bufSize < numParams)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientParams);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientParamCount);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateRobustParamCount(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              GLsizei paramCount,
+                              GLsizei numParams)
+{
+    if (paramCount < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeParamCount);
+        return false;
+    }
+
+    if (paramCount < numParams)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientParamCount);
         return false;
     }
 
