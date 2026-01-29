@@ -833,7 +833,7 @@ CallCapture CaptureGetActiveUniformBlockiv(const State &glState,
                                            bool isCallValid,
                                            ShaderProgramID programPacked,
                                            UniformBlockIndex uniformBlockIndexPacked,
-                                           GLenum pname,
+                                           UniformBlockParameter pnamePacked,
                                            GLint *params)
 {
     ParamBuffer paramBuffer;
@@ -841,14 +841,14 @@ CallCapture CaptureGetActiveUniformBlockiv(const State &glState,
     paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("uniformBlockIndexPacked", ParamType::TUniformBlockIndex,
                               uniformBlockIndexPacked);
-    paramBuffer.addEnumParam("pname", GLESEnum::UniformBlockPName, ParamType::TGLenum, pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TUniformBlockParameter, pnamePacked);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
         CaptureGetActiveUniformBlockiv_params(glState, programPacked, uniformBlockIndexPacked,
-                                              pname, params, &paramsParam);
+                                              pnamePacked, params, &paramsParam);
     }
     else
     {

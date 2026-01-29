@@ -719,6 +719,25 @@ TilingMode FromGLenum<TilingMode>(GLenum from);
 GLenum ToGLenum(TilingMode from);
 std::ostream &operator<<(std::ostream &os, TilingMode value);
 
+enum class UniformBlockParameter : uint8_t
+{
+    Binding                    = 0,
+    DataSize                   = 1,
+    NameLength                 = 2,
+    ActiveUniforms             = 3,
+    ActiveUniformIndices       = 4,
+    ReferencedByVertexShader   = 5,
+    ReferencedByFragmentShader = 6,
+
+    InvalidEnum = 7,
+    EnumCount   = 7,
+};
+
+template <>
+UniformBlockParameter FromGLenum<UniformBlockParameter>(GLenum from);
+GLenum ToGLenum(UniformBlockParameter from);
+std::ostream &operator<<(std::ostream &os, UniformBlockParameter value);
+
 enum class VertexArrayType : uint8_t
 {
     Color        = 0,

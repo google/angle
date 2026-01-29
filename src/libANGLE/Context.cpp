@@ -7985,23 +7985,24 @@ GLuint Context::getUniformBlockIndex(ShaderProgramID program, const GLchar *unif
     return programObject->getExecutable().getUniformBlockIndex(uniformBlockName);
 }
 
-void Context::getActiveUniformBlockiv(ShaderProgramID program,
-                                      UniformBlockIndex uniformBlockIndex,
-                                      GLenum pname,
+void Context::getActiveUniformBlockiv(ShaderProgramID programPacked,
+                                      UniformBlockIndex uniformBlockIndexPacked,
+                                      UniformBlockParameter pnamePacked,
                                       GLint *params)
 {
-    const Program *programObject = getProgramResolveLink(program);
-    QueryActiveUniformBlockiv(programObject, uniformBlockIndex, pname, params);
+    const Program *programObject = getProgramResolveLink(programPacked);
+    QueryActiveUniformBlockiv(programObject, uniformBlockIndexPacked, pnamePacked, nullptr, params);
 }
 
-void Context::getActiveUniformBlockivRobust(ShaderProgramID program,
-                                            UniformBlockIndex uniformBlockIndex,
-                                            GLenum pname,
+void Context::getActiveUniformBlockivRobust(ShaderProgramID programPacked,
+                                            UniformBlockIndex uniformBlockIndexPacked,
+                                            UniformBlockParameter pnamePacked,
                                             GLsizei paramCount,
                                             GLsizei *length,
                                             GLint *params)
 {
-    getActiveUniformBlockiv(program, uniformBlockIndex, pname, params);
+    const Program *programObject = getProgramResolveLink(programPacked);
+    QueryActiveUniformBlockiv(programObject, uniformBlockIndexPacked, pnamePacked, length, params);
 }
 
 void Context::getActiveUniformBlockName(ShaderProgramID program,

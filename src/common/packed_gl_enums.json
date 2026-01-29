@@ -367,5 +367,15 @@
     {
         "Optimal": "GL_OPTIMAL_TILING_EXT",
         "Linear": "GL_LINEAR_TILING_EXT"
+    },
+    "UniformBlockParameter":
+    {
+        "Binding": "GL_UNIFORM_BLOCK_BINDING",
+        "DataSize": "GL_UNIFORM_BLOCK_DATA_SIZE",
+        "NameLength": "GL_UNIFORM_BLOCK_NAME_LENGTH",
+        "ActiveUniforms": "GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS",
+        "ActiveUniformIndices": "GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES",
+        "ReferencedByVertexShader": "GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER",
+        "ReferencedByFragmentShader": "GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER"
     }
 }

@@ -3036,7 +3036,7 @@ CallCapture CaptureGetActiveUniformBlockivRobustANGLE(const State &glState,
                                                       bool isCallValid,
                                                       ShaderProgramID programPacked,
                                                       UniformBlockIndex uniformBlockIndexPacked,
-                                                      GLenum pname,
+                                                      UniformBlockParameter pnamePacked,
                                                       GLsizei paramCount,
                                                       GLsizei *length,
                                                       GLint *params)
@@ -3046,7 +3046,7 @@ CallCapture CaptureGetActiveUniformBlockivRobustANGLE(const State &glState,
     paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
     paramBuffer.addValueParam("uniformBlockIndexPacked", ParamType::TUniformBlockIndex,
                               uniformBlockIndexPacked);
-    paramBuffer.addEnumParam("pname", GLESEnum::UniformBlockPName, ParamType::TGLenum, pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TUniformBlockParameter, pnamePacked);
     paramBuffer.addValueParam("paramCount", ParamType::TGLsizei, paramCount);
 
     ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
@@ -3054,8 +3054,8 @@ CallCapture CaptureGetActiveUniformBlockivRobustANGLE(const State &glState,
     {
         InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
         CaptureGetActiveUniformBlockivRobustANGLE_length(glState, programPacked,
-                                                         uniformBlockIndexPacked, pname, paramCount,
-                                                         length, params, &lengthParam);
+                                                         uniformBlockIndexPacked, pnamePacked,
+                                                         paramCount, length, params, &lengthParam);
     }
     else
     {
@@ -3069,8 +3069,8 @@ CallCapture CaptureGetActiveUniformBlockivRobustANGLE(const State &glState,
     {
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
         CaptureGetActiveUniformBlockivRobustANGLE_params(glState, programPacked,
-                                                         uniformBlockIndexPacked, pname, paramCount,
-                                                         length, params, &paramsParam);
+                                                         uniformBlockIndexPacked, pnamePacked,
+                                                         paramCount, length, params, &paramsParam);
     }
     else
     {

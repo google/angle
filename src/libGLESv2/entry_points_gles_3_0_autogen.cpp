@@ -1785,6 +1785,7 @@ void GL_APIENTRY GL_GetActiveUniformBlockiv(GLuint program,
     {
         ShaderProgramID programPacked             = PackParam<ShaderProgramID>(program);
         UniformBlockIndex uniformBlockIndexPacked = PackParam<UniformBlockIndex>(uniformBlockIndex);
+        UniformBlockParameter pnamePacked         = PackParam<UniformBlockParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -1796,7 +1797,7 @@ void GL_APIENTRY GL_GetActiveUniformBlockiv(GLuint program,
 #endif
                 isCallValid = ValidateGetActiveUniformBlockiv(
                     context, angle::EntryPoint::GLGetActiveUniformBlockiv, programPacked,
-                    uniformBlockIndexPacked, pname, params);
+                    uniformBlockIndexPacked, pnamePacked, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -1808,10 +1809,11 @@ void GL_APIENTRY GL_GetActiveUniformBlockiv(GLuint program,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getActiveUniformBlockiv(programPacked, uniformBlockIndexPacked, pname, params);
+            context->getActiveUniformBlockiv(programPacked, uniformBlockIndexPacked, pnamePacked,
+                                             params);
         }
         ANGLE_CAPTURE_GL(GetActiveUniformBlockiv, isCallValid, context, programPacked,
-                         uniformBlockIndexPacked, pname, params);
+                         uniformBlockIndexPacked, pnamePacked, params);
     }
     else
     {

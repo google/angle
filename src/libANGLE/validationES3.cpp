@@ -4344,13 +4344,13 @@ bool ValidateGetUniformBlockIndex(const Context *context,
 
 bool ValidateGetActiveUniformBlockiv(const Context *context,
                                      angle::EntryPoint entryPoint,
-                                     ShaderProgramID program,
-                                     UniformBlockIndex uniformBlockIndex,
-                                     GLenum pname,
+                                     ShaderProgramID programPacked,
+                                     UniformBlockIndex uniformBlockIndexPacked,
+                                     UniformBlockParameter pnamePacked,
                                      const GLint *params)
 {
-    return ValidateGetActiveUniformBlockivBase(context, entryPoint, program, uniformBlockIndex,
-                                               pname, nullptr);
+    return ValidateGetActiveUniformBlockivBase(context, entryPoint, programPacked,
+                                               uniformBlockIndexPacked, pnamePacked, nullptr);
 }
 
 bool ValidateGetActiveUniformBlockName(const Context *context,

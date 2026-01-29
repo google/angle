@@ -2874,6 +2874,86 @@ std::ostream &operator<<(std::ostream &os, TilingMode value)
 }
 
 template <>
+UniformBlockParameter FromGLenum<UniformBlockParameter>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_UNIFORM_BLOCK_BINDING:
+            return UniformBlockParameter::Binding;
+        case GL_UNIFORM_BLOCK_DATA_SIZE:
+            return UniformBlockParameter::DataSize;
+        case GL_UNIFORM_BLOCK_NAME_LENGTH:
+            return UniformBlockParameter::NameLength;
+        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
+            return UniformBlockParameter::ActiveUniforms;
+        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
+            return UniformBlockParameter::ActiveUniformIndices;
+        case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
+            return UniformBlockParameter::ReferencedByVertexShader;
+        case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
+            return UniformBlockParameter::ReferencedByFragmentShader;
+        default:
+            return UniformBlockParameter::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(UniformBlockParameter from)
+{
+    switch (from)
+    {
+        case UniformBlockParameter::Binding:
+            return GL_UNIFORM_BLOCK_BINDING;
+        case UniformBlockParameter::DataSize:
+            return GL_UNIFORM_BLOCK_DATA_SIZE;
+        case UniformBlockParameter::NameLength:
+            return GL_UNIFORM_BLOCK_NAME_LENGTH;
+        case UniformBlockParameter::ActiveUniforms:
+            return GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS;
+        case UniformBlockParameter::ActiveUniformIndices:
+            return GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES;
+        case UniformBlockParameter::ReferencedByVertexShader:
+            return GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER;
+        case UniformBlockParameter::ReferencedByFragmentShader:
+            return GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+std::ostream &operator<<(std::ostream &os, UniformBlockParameter value)
+{
+    switch (value)
+    {
+        case UniformBlockParameter::Binding:
+            os << "GL_UNIFORM_BLOCK_BINDING";
+            break;
+        case UniformBlockParameter::DataSize:
+            os << "GL_UNIFORM_BLOCK_DATA_SIZE";
+            break;
+        case UniformBlockParameter::NameLength:
+            os << "GL_UNIFORM_BLOCK_NAME_LENGTH";
+            break;
+        case UniformBlockParameter::ActiveUniforms:
+            os << "GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS";
+            break;
+        case UniformBlockParameter::ActiveUniformIndices:
+            os << "GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES";
+            break;
+        case UniformBlockParameter::ReferencedByVertexShader:
+            os << "GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER";
+            break;
+        case UniformBlockParameter::ReferencedByFragmentShader:
+            os << "GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER";
+            break;
+        default:
+            os << "GL_INVALID_ENUM";
+            break;
+    }
+    return os;
+}
+
+template <>
 VertexArrayType FromGLenum<VertexArrayType>(GLenum from)
 {
     switch (from)

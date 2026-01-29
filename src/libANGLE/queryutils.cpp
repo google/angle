@@ -1019,33 +1019,27 @@ GLenum GetUniformPropertyEnum(GLenum prop)
     }
 }
 
-GLenum GetUniformBlockPropertyEnum(GLenum prop)
+GLenum GetUniformBlockPropertyEnum(UniformBlockParameter pnamePacked)
 {
-    switch (prop)
+    switch (pnamePacked)
     {
-        case GL_UNIFORM_BLOCK_BINDING:
+        case UniformBlockParameter::Binding:
             return GL_BUFFER_BINDING;
-
-        case GL_UNIFORM_BLOCK_DATA_SIZE:
+        case UniformBlockParameter::DataSize:
             return GL_BUFFER_DATA_SIZE;
-
-        case GL_UNIFORM_BLOCK_NAME_LENGTH:
+        case UniformBlockParameter::NameLength:
             return GL_NAME_LENGTH;
-
-        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
+        case UniformBlockParameter::ActiveUniforms:
             return GL_NUM_ACTIVE_VARIABLES;
-
-        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
+        case UniformBlockParameter::ActiveUniformIndices:
             return GL_ACTIVE_VARIABLES;
-
-        case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
+        case UniformBlockParameter::ReferencedByVertexShader:
             return GL_REFERENCED_BY_VERTEX_SHADER;
-
-        case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
+        case UniformBlockParameter::ReferencedByFragmentShader:
             return GL_REFERENCED_BY_FRAGMENT_SHADER;
-
         default:
-            return prop;
+            UNREACHABLE();
+            return 0;
     }
 }
 
@@ -1723,13 +1717,14 @@ void QueryVertexAttribIuiv(const VertexAttribute &attrib,
 }
 
 void QueryActiveUniformBlockiv(const Program *program,
-                               UniformBlockIndex uniformBlockIndex,
-                               GLenum pname,
+                               UniformBlockIndex uniformBlockIndexPacked,
+                               UniformBlockParameter pnamePacked,
+                               GLsizei *length,
                                GLint *params)
 {
-    GLenum prop = GetUniformBlockPropertyEnum(pname);
-    QueryProgramResourceiv(program, GL_UNIFORM_BLOCK, uniformBlockIndex, 1, &prop,
-                           std::numeric_limits<GLsizei>::max(), nullptr, params);
+    const GLenum prop = GetUniformBlockPropertyEnum(pnamePacked);
+    QueryProgramResourceiv(program, GL_UNIFORM_BLOCK, uniformBlockIndexPacked, 1, &prop,
+                           std::numeric_limits<GLsizei>::max(), length, params);
 }
 
 void QueryInternalFormativ(const Context *context,

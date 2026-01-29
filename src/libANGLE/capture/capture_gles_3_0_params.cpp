@@ -215,14 +215,14 @@ void CaptureGetActiveUniformBlockName_uniformBlockName(const State &glState,
 }
 
 void CaptureGetActiveUniformBlockiv_params(const State &glState,
-                                           ShaderProgramID program,
-                                           UniformBlockIndex uniformBlockIndex,
-                                           GLenum pname,
+                                           ShaderProgramID programPacked,
+                                           UniformBlockIndex uniformBlockIndexPacked,
+                                           UniformBlockParameter pnamePacked,
                                            GLint *params,
                                            ParamCapture *paramCapture)
 {
-    CaptureGetActiveUniformBlockivParameters(glState, program, uniformBlockIndex, pname,
-                                             paramCapture);
+    CaptureGetActiveUniformBlockivParameters(glState, programPacked, uniformBlockIndexPacked,
+                                             pnamePacked, paramCapture);
 }
 
 void CaptureGetActiveUniformsiv_uniformIndices(const State &glState,

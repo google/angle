@@ -6359,32 +6359,26 @@ bool ValidateGetVertexAttribIuivRobustANGLE(const Context *context,
 
 bool ValidateGetActiveUniformBlockivRobustANGLE(const Context *context,
                                                 angle::EntryPoint entryPoint,
-                                                ShaderProgramID program,
-                                                UniformBlockIndex uniformBlockIndex,
-                                                GLenum pname,
-                                                GLsizei bufSize,
+                                                ShaderProgramID programPacked,
+                                                UniformBlockIndex uniformBlockIndexPacked,
+                                                UniformBlockParameter pnamePacked,
+                                                GLsizei paramCount,
                                                 const GLsizei *length,
                                                 const GLint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetActiveUniformBlockivBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetActiveUniformBlockivBase(context, entryPoint, programPacked,
+                                             uniformBlockIndexPacked, pnamePacked, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
-    GLsizei writeLength = 0;
-
-    if (!ValidateGetActiveUniformBlockivBase(context, entryPoint, program, uniformBlockIndex, pname,
-                                             &writeLength))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, writeLength))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, writeLength);
 
     return true;
 }
@@ -7761,57 +7755,45 @@ template bool ValidateTexParameterBase(const Context *,
 
 bool ValidateGetActiveUniformBlockivBase(const Context *context,
                                          angle::EntryPoint entryPoint,
-                                         ShaderProgramID program,
-                                         UniformBlockIndex uniformBlockIndex,
-                                         GLenum pname,
-                                         GLsizei *length)
+                                         ShaderProgramID programPacked,
+                                         UniformBlockIndex uniformBlockIndexPacked,
+                                         UniformBlockParameter pnamePacked,
+                                         GLsizei *outNumParams)
 {
-    if (length)
-    {
-        *length = 0;
-    }
-
-    Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (programObject == nullptr)
+    Program *programObject = GetValidProgram(context, entryPoint, programPacked);
+    if (ANGLE_UNLIKELY(programObject == nullptr))
     {
         // Error already generated.
         return false;
     }
 
     const ProgramExecutable &executable = programObject->getExecutable();
-    if (uniformBlockIndex.value >= executable.getUniformBlocks().size())
+    if (ANGLE_UNLIKELY(uniformBlockIndexPacked.value >= executable.getUniformBlocks().size()))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsActiveUniformBlockCount);
         return false;
     }
 
-    switch (pname)
+    if (ANGLE_UNLIKELY(pnamePacked == UniformBlockParameter::InvalidEnum))
     {
-        case GL_UNIFORM_BLOCK_BINDING:
-        case GL_UNIFORM_BLOCK_DATA_SIZE:
-        case GL_UNIFORM_BLOCK_NAME_LENGTH:
-        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
-        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
-        case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
-        case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
-            break;
-
-        default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
-            return false;
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kParameterNameUnknown);
+        return false;
     }
 
-    if (length)
+    if (outNumParams != nullptr)
     {
-        if (pname == GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES)
+        if (pnamePacked == UniformBlockParameter::ActiveUniformIndices)
         {
             const InterfaceBlock &uniformBlock =
-                executable.getUniformBlockByIndex(uniformBlockIndex.value);
-            *length = static_cast<GLsizei>(uniformBlock.memberIndexes.size());
+                executable.getUniformBlockByIndex(uniformBlockIndexPacked.value);
+
+            ASSERT(uniformBlock.memberIndexes.size() <=
+                   static_cast<size_t>(std::numeric_limits<GLsizei>::max()));
+            *outNumParams = static_cast<GLsizei>(uniformBlock.memberIndexes.size());
         }
         else
         {
-            *length = 1;
+            *outNumParams = 1;
         }
     }
 

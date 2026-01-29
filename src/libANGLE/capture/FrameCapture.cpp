@@ -9445,9 +9445,9 @@ gl::Program *GetProgramForCapture(const gl::State &glState, gl::ShaderProgramID 
 }
 
 void CaptureGetActiveUniformBlockivParameters(const gl::State &glState,
-                                              gl::ShaderProgramID handle,
-                                              gl::UniformBlockIndex uniformBlockIndex,
-                                              GLenum pname,
+                                              gl::ShaderProgramID programPacked,
+                                              gl::UniformBlockIndex uniformBlockIndexPacked,
+                                              gl::UniformBlockParameter pnamePacked,
                                               ParamCapture *paramCapture)
 {
     int numParams = 1;
@@ -9457,13 +9457,14 @@ void CaptureGetActiveUniformBlockivParameters(const gl::State &glState,
     // active uniform indices for the uniform block identified by uniformBlockIndex is
     // returned. The number of elements that will be written to params is the value of
     // UNIFORM_BLOCK_ACTIVE_UNIFORMS for uniformBlockIndex
-    if (pname == GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES)
+    if (pnamePacked == gl::UniformBlockParameter::ActiveUniformIndices)
     {
-        gl::Program *program = GetProgramForCapture(glState, handle);
-        if (program)
+        gl::Program *programObject = GetProgramForCapture(glState, programPacked);
+        if (programObject != nullptr)
         {
-            gl::QueryActiveUniformBlockiv(program, uniformBlockIndex,
-                                          GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &numParams);
+            gl::QueryActiveUniformBlockiv(programObject, uniformBlockIndexPacked,
+                                          gl::UniformBlockParameter::ActiveUniforms, nullptr,
+                                          &numParams);
         }
     }
 

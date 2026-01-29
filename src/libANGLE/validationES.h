@@ -657,10 +657,10 @@ bool ValidateVertexAttribIndex(const PrivateState &state,
 
 bool ValidateGetActiveUniformBlockivBase(const Context *context,
                                          angle::EntryPoint entryPoint,
-                                         ShaderProgramID program,
-                                         UniformBlockIndex uniformBlockIndex,
-                                         GLenum pname,
-                                         GLsizei *length);
+                                         ShaderProgramID programPacked,
+                                         UniformBlockIndex uniformBlockIndexPacked,
+                                         UniformBlockParameter pnamePacked,
+                                         GLsizei *outNumParams);
 
 template <typename ParamType>
 bool ValidateGetSamplerParameterBase(const Context *context,

@@ -64,8 +64,8 @@
                                    UniformBlockIndex uniformBlockIndexPacked, GLsizei bufSize,     \
                                    GLsizei *length, GLchar *uniformBlockName);                     \
     void getActiveUniformBlockiv(ShaderProgramID programPacked,                                    \
-                                 UniformBlockIndex uniformBlockIndexPacked, GLenum pname,          \
-                                 GLint *params);                                                   \
+                                 UniformBlockIndex uniformBlockIndexPacked,                        \
+                                 UniformBlockParameter pnamePacked, GLint *params);                \
     void getActiveUniformsiv(ShaderProgramID programPacked, GLsizei uniformCount,                  \
                              const GLuint *uniformIndices, GLenum pname, GLint *params);           \
     void getBufferParameteri64v(BufferBinding targetPacked, BufferParam pnamePacked,               \

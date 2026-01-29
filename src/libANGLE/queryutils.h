@@ -117,8 +117,9 @@ void QueryVertexAttribIuiv(const VertexAttribute &attrib,
                            GLuint *params);
 
 void QueryActiveUniformBlockiv(const Program *program,
-                               UniformBlockIndex uniformBlockIndex,
-                               GLenum pname,
+                               UniformBlockIndex uniformBlockIndexPacked,
+                               UniformBlockParameter pnamePacked,
+                               GLsizei *length,
                                GLint *params);
 
 void QueryInternalFormativ(const Context *context,

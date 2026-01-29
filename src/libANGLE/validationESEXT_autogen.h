@@ -674,7 +674,7 @@ bool ValidateGetActiveUniformBlockivRobustANGLE(const Context *context,
                                                 angle::EntryPoint entryPoint,
                                                 ShaderProgramID programPacked,
                                                 UniformBlockIndex uniformBlockIndexPacked,
-                                                GLenum pname,
+                                                UniformBlockParameter pnamePacked,
                                                 GLsizei paramCount,
                                                 const GLsizei *length,
                                                 const GLint *params);

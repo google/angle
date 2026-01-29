@@ -218,7 +218,7 @@ bool ValidateGetActiveUniformBlockiv(const Context *context,
                                      angle::EntryPoint entryPoint,
                                      ShaderProgramID programPacked,
                                      UniformBlockIndex uniformBlockIndexPacked,
-                                     GLenum pname,
+                                     UniformBlockParameter pnamePacked,
                                      const GLint *params);
 bool ValidateGetActiveUniformsiv(const Context *context,
                                  angle::EntryPoint entryPoint,
