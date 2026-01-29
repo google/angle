@@ -2975,38 +2975,33 @@ bool ValidateBeginTransformFeedback(const Context *context,
 
 bool ValidateGetBufferPointerv(const Context *context,
                                angle::EntryPoint entryPoint,
-                               BufferBinding target,
+                               BufferBinding targetPacked,
                                GLenum pname,
                                void *const *params)
 {
-    return ValidateGetBufferPointervBase(context, entryPoint, target, pname, nullptr, params);
+    return ValidateGetBufferPointervBase(context, entryPoint, targetPacked, pname, nullptr);
 }
 
 bool ValidateGetBufferPointervRobustANGLE(const Context *context,
                                           angle::EntryPoint entryPoint,
-                                          BufferBinding target,
+                                          BufferBinding targetPacked,
                                           GLenum pname,
-                                          GLsizei bufSize,
+                                          GLsizei paramCount,
                                           const GLsizei *length,
                                           void *const *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetBufferPointervBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    if (!ValidateGetBufferPointervBase(context, entryPoint, targetPacked, pname, &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
-    GLsizei numParams = 0;
-    if (!ValidateGetBufferPointervBase(context, entryPoint, target, pname, &numParams, params))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
 
     return true;
 }

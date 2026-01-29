@@ -5161,44 +5161,39 @@ bool ValidateDrawBuffersBase(const Context *context,
 
 bool ValidateGetBufferPointervBase(const Context *context,
                                    angle::EntryPoint entryPoint,
-                                   BufferBinding target,
+                                   BufferBinding targetPacked,
                                    GLenum pname,
-                                   GLsizei *length,
-                                   void *const *params)
+                                   GLsizei *outNumParams)
 {
-    if (length)
+    if (ANGLE_UNLIKELY(!context->isValidBufferBinding(targetPacked)))
     {
-        *length = 0;
-    }
-
-    if (!context->isValidBufferBinding(target))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTarget);
+        if (targetPacked == BufferBinding::InvalidEnum)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kTargetUnknown);
+        }
+        else
+        {
+            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kTargetUnsupported, ToGLenum(targetPacked));
+        }
         return false;
     }
 
-    switch (pname)
+    const Buffer *buffer = context->getState().getTargetBuffer(targetPacked);
+    if (ANGLE_UNLIKELY(buffer == nullptr))
     {
-        case GL_BUFFER_MAP_POINTER:
-            break;
-
-        default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
-            return false;
-    }
-
-    // GLES 3.0 section 2.10.1: "Attempts to attempts to modify or query buffer object state for a
-    // target bound to zero generate an INVALID_OPERATION error."
-    // GLES 3.1 section 6.6 explicitly specifies this error.
-    if (context->getState().getTargetBuffer(target) == nullptr)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBufferPointerNotAvailable);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBufferNotBound);
         return false;
     }
 
-    if (length)
+    if (ANGLE_UNLIKELY(pname != GL_BUFFER_MAP_POINTER))
     {
-        *length = 1;
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kParameterNameUnknown);
+        return false;
+    }
+
+    if (outNumParams != nullptr)
+    {
+        *outNumParams = 1;
     }
 
     return true;

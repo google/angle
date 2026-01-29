@@ -1358,20 +1358,6 @@ void QueryBufferParameteri64v(const Buffer *buffer, BufferParam pnamePacked, GLi
     QueryBufferParameterBase(buffer, pnamePacked, params);
 }
 
-void QueryBufferPointerv(const Buffer *buffer, GLenum pname, void **params)
-{
-    switch (pname)
-    {
-        case GL_BUFFER_MAP_POINTER:
-            *params = buffer->getMapPointer();
-            break;
-
-        default:
-            UNREACHABLE();
-            break;
-    }
-}
-
 void QueryProgramiv(Context *context, Program *program, GLenum pname, GLint *params)
 {
     ASSERT(program != nullptr || pname == GL_COMPLETION_STATUS_KHR);

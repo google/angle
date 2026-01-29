@@ -42,7 +42,6 @@ void QueryFramebufferAttachmentParameteriv(const Context *context,
                                            GLint *params);
 void QueryBufferParameteriv(const Buffer *buffer, BufferParam pnamePacked, GLint *params);
 void QueryBufferParameteri64v(const Buffer *buffer, BufferParam pnamePacked, GLint64 *params);
-void QueryBufferPointerv(const Buffer *buffer, GLenum pname, void **params);
 void QueryProgramiv(Context *context, Program *program, GLenum pname, GLint *params);
 void QueryRenderbufferiv(const Context *context,
                          const Renderbuffer *renderbuffer,

@@ -458,10 +458,9 @@ bool ValidateDrawBuffersBase(const Context *context,
 
 bool ValidateGetBufferPointervBase(const Context *context,
                                    angle::EntryPoint entryPoint,
-                                   BufferBinding target,
+                                   BufferBinding targetPacked,
                                    GLenum pname,
-                                   GLsizei *length,
-                                   void *const *params);
+                                   GLsizei *outNumParams);
 bool ValidateUnmapBufferBase(const Context *context,
                              angle::EntryPoint entryPoint,
                              BufferBinding target);

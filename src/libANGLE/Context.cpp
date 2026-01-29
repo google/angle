@@ -5917,21 +5917,26 @@ void Context::compressedCopyTexture(TextureID sourceId, TextureID destId)
     ANGLE_CONTEXT_TRY(destTexture->copyCompressedTexture(this, sourceTexture));
 }
 
-void Context::getBufferPointerv(BufferBinding target, GLenum pname, void **params)
+void Context::getBufferPointerv(BufferBinding targetPacked, GLenum pname, void **params)
 {
-    Buffer *buffer = mState.getTargetBuffer(target);
-    ASSERT(buffer);
-
-    QueryBufferPointerv(buffer, pname, params);
+    const Buffer *buffer = mState.getTargetBuffer(targetPacked);
+    ASSERT(buffer != nullptr);
+    ASSERT(pname == GL_BUFFER_MAP_POINTER);
+    *params = buffer->getMapPointer();
 }
 
-void Context::getBufferPointervRobust(BufferBinding target,
+void Context::getBufferPointervRobust(BufferBinding targetPacked,
                                       GLenum pname,
                                       GLsizei paramCount,
                                       GLsizei *length,
                                       void **params)
 {
-    getBufferPointerv(target, pname, params);
+    getBufferPointerv(targetPacked, pname, params);
+
+    if (length != nullptr)
+    {
+        *length = 1;
+    }
 }
 
 void *Context::mapBuffer(BufferBinding target, GLenum access)

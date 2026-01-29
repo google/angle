@@ -68,7 +68,6 @@ inline constexpr const char *kBufferNotMappable = "Attempted to map buffer objec
 inline constexpr const char *kBufferNotMapped = "Buffer is not mapped.";
 inline constexpr const char *kBufferNotUpdatable = "Buffer is not updatable.";
 inline constexpr const char *kBufferOffsetOverflow = "Buffer offset overflow.";
-inline constexpr const char *kBufferPointerNotAvailable = "Can not get pointer for reserved buffer name zero.";
 inline constexpr const char *kBufferTextureNotAllowed = "Buffer textures are not allowed.";
 inline constexpr const char *kCannotPopDefaultDebugGroup = "Cannot pop the default debug group.";
 inline constexpr const char *kClientBufferInvalid = "Size must not exceed the size of clientbuffer.";

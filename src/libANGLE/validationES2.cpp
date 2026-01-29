@@ -3089,11 +3089,11 @@ bool ValidateCompressedTexSubImage3DOES(const Context *context,
 
 bool ValidateGetBufferPointervOES(const Context *context,
                                   angle::EntryPoint entryPoint,
-                                  BufferBinding target,
+                                  BufferBinding targetPacked,
                                   GLenum pname,
                                   void *const *params)
 {
-    return ValidateGetBufferPointervBase(context, entryPoint, target, pname, nullptr, params);
+    return ValidateGetBufferPointervBase(context, entryPoint, targetPacked, pname, nullptr);
 }
 
 bool ValidateMapBufferOES(const Context *context,
