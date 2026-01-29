@@ -12,6 +12,7 @@ main.star: lucicfg configuration for Angle's standalone builders.
 
 load("@chromium-luci//builders.star", "os")
 load("@chromium-luci//chromium_luci.star", "chromium_luci")
+load("@chromium-luci//consoles.star", "consoles")
 
 # Use LUCI Scheduler BBv2 names and add Scheduler realms configs.
 lucicfg.enable_experiment("crbug.com/1182002")
@@ -282,18 +283,18 @@ luci.gitiles_poller(
 
 # Views
 
-luci.console_view(
+consoles.console_view(
     name = "ci",
     title = "ANGLE CI Builders",
     repo = "https://chromium.googlesource.com/angle/angle",
 )
 
-luci.list_view(
+consoles.list_view(
     name = "exp",
     title = "ANGLE Experimental CI Builders",
 )
 
-luci.list_view(
+consoles.list_view(
     name = "try",
     title = "ANGLE Try Builders",
 )

@@ -7,6 +7,7 @@
 load("@chromium-luci//builder_config.star", "builder_config")
 load("@chromium-luci//builders.star", "os")
 load("@chromium-luci//ci.star", "ci")
+load("@chromium-luci//consoles.star", "consoles")
 load("@chromium-luci//gardener_rotations.star", "gardener_rotations")
 load("@chromium-luci//gn_args.star", "gn_args")
 load("//constants.star", "default_experiments", "siso")
@@ -69,9 +70,10 @@ angle_linux_parent_builder(
             "x64",
         ],
     ),
-    # TODO(crbug.com/475260235): Move this to the main view once it is at
-    # parity with the older equivalent.
-    list_view = "exp",
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|linux|x64",
+        short_name = "rel",
+    ),
 )
 
 ################################################################################
@@ -96,7 +98,8 @@ ci.thin_tester(
         ),
         run_tests_serially = True,
     ),
-    # TODO(crbug.com/475260235): Move this to the main view once it is at
-    # parity with the older equivalent.
-    list_view = "exp",
+    console_view_entry = consoles.console_view_entry(
+        category = "test|linux|x64|rel",
+        short_name = "sws",
+    ),
 )
