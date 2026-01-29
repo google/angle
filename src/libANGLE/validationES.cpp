@@ -6388,29 +6388,24 @@ bool ValidateGetInternalformativRobustANGLE(const Context *context,
                                             GLenum target,
                                             GLenum internalformat,
                                             GLenum pname,
-                                            GLsizei bufSize,
+                                            GLsizei paramCount,
                                             const GLsizei *length,
                                             const GLint *params)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
+    // Make sure ValidateGetInternalFormativBase sets numParams
+    GLsizei numParams = std::numeric_limits<GLsizei>::max();
+    // The <paramCount> parameter has different validation than <count>; pass 0 for the latter.
+    if (!ValidateGetInternalFormativBase(context, entryPoint, target, internalformat, pname, 0,
+                                         &numParams))
     {
         return false;
     }
+    ASSERT(numParams != std::numeric_limits<GLsizei>::max());
 
-    GLsizei numParams = 0;
-
-    if (!ValidateGetInternalFormativBase(context, entryPoint, target, internalformat, pname,
-                                         bufSize, &numParams))
+    if (!ValidateRobustParamCount(context, entryPoint, paramCount, numParams))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, numParams))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, numParams);
 
     return true;
 }
@@ -8033,13 +8028,8 @@ bool ValidateGetInternalFormativBase(const Context *context,
                                      GLenum internalformat,
                                      GLenum pname,
                                      GLsizei count,
-                                     GLsizei *numParams)
+                                     GLsizei *outNumParams)
 {
-    if (numParams)
-    {
-        *numParams = 0;
-    }
-
     const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
     if (!formatCaps.renderbuffer)
     {
@@ -8115,6 +8105,15 @@ bool ValidateGetInternalFormativBase(const Context *context,
                                        kTextureStorageCompressionExtensionRequired);
                 return false;
             }
+            if (pname == GL_NUM_SURFACE_COMPRESSION_FIXED_RATES_EXT)
+            {
+                maxWriteParams = 1;
+            }
+            else
+            {
+                // Unimplemented, let the robust command fail in this case.
+                maxWriteParams = std::numeric_limits<GLsizei>::max();
+            }
             break;
 
         default:
@@ -8122,10 +8121,9 @@ bool ValidateGetInternalFormativBase(const Context *context,
             return false;
     }
 
-    if (numParams)
+    if (outNumParams != nullptr)
     {
-        // glGetInternalFormativ will not overflow count
-        *numParams = std::min(count, maxWriteParams);
+        *outNumParams = maxWriteParams;
     }
 
     return true;

@@ -685,7 +685,7 @@ bool ValidateGetInternalFormativBase(const Context *context,
                                      GLenum internalformat,
                                      GLenum pname,
                                      GLsizei count,
-                                     GLsizei *numParams);
+                                     GLsizei *outNumParams);
 
 bool ValidateFramebufferNotMultisampled(const Context *context,
                                         angle::EntryPoint entryPoint,

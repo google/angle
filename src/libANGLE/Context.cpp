@@ -8167,6 +8167,19 @@ void Context::getInternalformativRobust(GLenum target,
                                         GLint *params)
 {
     getInternalformativ(target, internalformat, pname, paramCount, params);
+
+    if (length != nullptr)
+    {
+        if (pname == GL_SAMPLES)
+        {
+            *length = clampCast<GLsizei>(mState.getTextureCap(internalformat).sampleCounts.size());
+        }
+        else
+        {
+            ASSERT(pname != GL_SURFACE_COMPRESSION_EXT);
+            *length = 1;
+        }
+    }
 }
 
 void Context::programUniform1i(ShaderProgramID program, UniformLocation location, GLint v0)
