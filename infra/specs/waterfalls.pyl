@@ -264,10 +264,7 @@
           'timeout_15m',
           'x86-64',
         ],
-        'test_suites': {
-          'gtest_tests': 'swangle_gtests',
-          'isolated_scripts': 'swangle_restricted_trace_gold_isolated_scripts',
-        },
+        'test_suites': {},
       },
       'linux-swiftshader-asan': {
         'os_type': 'linux',

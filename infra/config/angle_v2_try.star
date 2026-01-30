@@ -32,6 +32,7 @@ try_.defaults.set(
 
 def apply_cq_builder_defaults(kwargs):
     kwargs.setdefault("max_concurrent_builds", 4)
+    kwargs.setdefault("tryjob", try_.job())
     return kwargs
 
 def apply_linux_cq_builder_defaults(kwargs):
@@ -51,9 +52,6 @@ def apply_linux_cq_builder_defaults(kwargs):
 
 def angle_linux_functional_cq_tester(**kwargs):
     kwargs = apply_linux_cq_builder_defaults(kwargs)
-
-    # TODO(crbug.com/475260235): Actually add the try_.job() entry when we are
-    # ready to add chromium-luci builders to the CQ.
     try_.builder(**kwargs)
 
 ## Functional testers
