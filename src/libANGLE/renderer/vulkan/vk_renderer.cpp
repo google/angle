@@ -6064,7 +6064,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // - Nvidia drivers - Crashes when creating pipelines, not using any SPIR-V 1.4 features.  Known
     //                    good since at least version 525.  http://anglebug.com/343249127
     // - Qualcomm drivers - Crashes when creating pipelines in the presence of OpCopyLogical with
-    //                      some types.  http://anglebug.com/343218484
+    //                      some types.
+    //                      Known good since at least version 512.829.0.
+    //                      http://anglebug.com/343218484
     // - ARM proprietary drivers - Fail tests when OpSelect uses a scalar to select between vectors.
     //                             Known good since at least version 47.
     //                             http://anglebug.com/343218491
@@ -6072,7 +6074,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsSPIRV14,
         ExtensionFound(VK_KHR_SPIRV_1_4_EXTENSION_NAME, deviceExtensionNames) &&
             !(isNvidia && driverVersion < angle::VersionTriple(525, 0, 0)) &&
-            !isQualcommProprietary &&
+            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 829, 0)) &&
             !(isARMProprietary && driverVersion < angle::VersionTriple(47, 0, 0)));
 
     // Retain debug info in SPIR-V blob.
