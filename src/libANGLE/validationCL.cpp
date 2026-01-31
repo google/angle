@@ -728,6 +728,12 @@ cl_int ValidateGetDeviceIDs(cl_platform_id platform,
         return CL_INVALID_DEVICE_TYPE;
     }
 
+    // CL_DEVICE_NOT_FOUND if no OpenCL devices that matched device_type were found.
+    if (!platform->cast<cl::Platform>().hasDeviceType(device_type))
+    {
+        return CL_DEVICE_NOT_FOUND;
+    }
+
     // CL_INVALID_VALUE if num_entries is equal to zero and devices is not NULL
     // or if both num_devices and devices are NULL.
     if ((num_entries == 0u && devices != nullptr) || (num_devices == nullptr && devices == nullptr))
