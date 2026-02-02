@@ -836,6 +836,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo explicitlyCastMediumpFloatTo16Bit = {
+        "explicitlyCastMediumpFloatTo16Bit",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo forceContinuousRefreshOnSharedPresent = {
         "forceContinuousRefreshOnSharedPresent",
         FeatureCategory::VulkanFeatures,

@@ -407,10 +407,13 @@ struct ShCompileOptions
     // ceil()ed instead.
     uint64_t roundOutputAfterDithering : 1;
 
-    // placeholder bit for removed castMediumpFloatTo16Bit option. This is needed because chromium
-    // fuzzer needs the ShCompileOptions memory layout remains unchanged to be able to map the bugs
-    // filed.
-    uint64_t unused3 : 1;
+    // issuetracker.google.com/274859104 add OpQuantizeToF16 instruction to cast
+    // mediump floating-point values to 16 bit. ARM compiler utilized RelaxedPrecision
+    // to minimize type case and keep a mediump float as 32 bit when assigning it with
+    // a highp floating-point value. It is possible that GLSL shader code is comparing
+    // two meiump values, but ARM compiler is comparing a 32 bit value with a 16 bit value,
+    // causing the comparison to fail.
+    uint64_t castMediumpFloatTo16Bit : 1;
 
     // anglebug.com/42265995: packUnorm4x8 fails on Pixel 4 if it is not passed a highp vec4.
     // TODO(anglebug.com/42265995): This workaround is currently only applied for pixel local
