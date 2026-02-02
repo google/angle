@@ -544,8 +544,14 @@ void Renderer::ensureCapsInitialized() const
         vk::GetTextureSRGBOverrideSupport(this, mNativeExtensions);
     mNativeExtensions.textureSRGBDecodeEXT = vk::GetTextureSRGBDecodeSupport(this);
 
-    // EXT_srgb_write_control requires image_format_list
-    mNativeExtensions.sRGBWriteControlEXT = getFeatures().supportsImageFormatList.enabled;
+    // Enable EXT_srgb_write_control if either of these conditions are met -
+    // - VK_KHR_swapchain_mutable_format is supported
+    // - VK_KHR_image_format_list is supported and exposeNonConformantExtensionsAndVersions is
+    // enabled
+    mNativeExtensions.sRGBWriteControlEXT =
+        getFeatures().supportsSwapchainMutableFormat.enabled ||
+        (getFeatures().supportsImageFormatList.enabled &&
+         getFeatures().exposeNonConformantExtensionsAndVersions.enabled);
 
     // Vulkan natively supports io interface block.
     mNativeExtensions.shaderIoBlocksOES = true;

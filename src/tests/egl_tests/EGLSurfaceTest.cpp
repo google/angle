@@ -4471,31 +4471,7 @@ TEST_P(EGLSurfaceTest, ResizeAndBlitFramebufferANGLE)
 }
 
 class EGLWindowSurfaceColorspaceTestES3 : public EGLSurfaceTest
-{
-  public:
-    bool isFeatureEnabled(const angle::Feature feature)
-    {
-        const char *featureNameToLookup = GetFeatureName(feature);
-
-        EGLAttrib featureCount = -1;
-        eglQueryDisplayAttribANGLE(mDisplay, EGL_FEATURE_COUNT_ANGLE, &featureCount);
-
-        for (int index = 0; index < featureCount; index++)
-        {
-            const char *featureName = eglQueryStringiANGLE(mDisplay, EGL_FEATURE_NAME_ANGLE, index);
-            const char *featureStatus =
-                eglQueryStringiANGLE(mDisplay, EGL_FEATURE_STATUS_ANGLE, index);
-            ASSERT(featureName != nullptr);
-            ASSERT(featureStatus != nullptr);
-
-            if (strcmp(featureName, featureNameToLookup) == 0)
-            {
-                return strcmp(featureStatus, "enabled") == 0;
-            }
-        }
-        return false;
-    }
-};
+{};
 
 // Test interaction between GL_EXT_sRGB_write_control and default framebuffer
 TEST_P(EGLWindowSurfaceColorspaceTestES3, ToggleSrgbWriteControl)
@@ -4504,7 +4480,6 @@ TEST_P(EGLWindowSurfaceColorspaceTestES3, ToggleSrgbWriteControl)
 
     initializeDisplay();
 
-    ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_ANGLE_feature_control"));
     ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_gl_colorspace"));
 
     // Choose an EGLConfig
@@ -4563,23 +4538,9 @@ TEST_P(EGLWindowSurfaceColorspaceTestES3, ToggleSrgbWriteControl)
                  uniformColor[3] / 255.0);
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_GL_NO_ERROR();
-    if (isFeatureEnabled(Feature::SupportsSwapchainMutableFormat))
-    {
-        EXPECT_PIXEL_COLOR_NEAR(0, 0, linearColor, 1.0);
-        EXPECT_GL_NO_ERROR();
-    }
-    else
-    {
-        // If mutable swapchains aren't supported, the rendered content is implementation defined.
-        // Either linear or sRGB color is acceptable.
-        GLColor pixelValue = GLColor::transparentBlack;
-        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelValue.data());
-        EXPECT_GL_NO_ERROR();
-        constexpr GLColor kThreshold(1, 1, 1, 1);
-        const bool isLinearColor = pixelValue.ExpectNear(linearColor, kThreshold);
-        const bool isSrgbColor   = pixelValue.ExpectNear(srgbColor, kThreshold);
-        EXPECT_TRUE(isLinearColor || isSrgbColor);
-    }
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, linearColor, 1.0);
+    EXPECT_GL_NO_ERROR();
 }
 
 }  // anonymous namespace
