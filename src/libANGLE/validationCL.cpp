@@ -1749,6 +1749,22 @@ cl_int ValidateSetKernelArg(cl_kernel kernel,
                 return CL_INVALID_MEM_OBJECT;
             }
 
+            if ((image->cast<Image>().getFlags().intersects(CL_MEM_READ_ONLY)) &&
+                (krnl.getInfo().args[arg_index].accessQualifier == CL_KERNEL_ARG_ACCESS_WRITE_ONLY))
+            {
+                // CL_INVALID_ARG_VALUE when an image is created with CL_MEM_READ_ONLY is passed to
+                // a write_only kernel argument
+                return CL_INVALID_ARG_VALUE;
+            }
+
+            if ((image->cast<Image>().getFlags().intersects(CL_MEM_WRITE_ONLY)) &&
+                (krnl.getInfo().args[arg_index].accessQualifier == CL_KERNEL_ARG_ACCESS_READ_ONLY))
+            {
+                // CL_INVALID_ARG_VALUE when an image is created with CL_MEM_WRITE_ONLY is passed to
+                // a read_only kernel argument
+                return CL_INVALID_ARG_VALUE;
+            }
+
             if (arg_size != sizeof(cl_mem))
             {
                 // if the argument is a memory object and arg_size != sizeof(cl_mem)
