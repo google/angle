@@ -585,6 +585,14 @@ bool AreAllFencesSignaled(VkDevice device, const std::vector<vk::Fence> &fences)
     }
     return true;
 }
+impl::FramebufferIndex GetSwapchainImageFramebufferIndex(vk::FramebufferFetchMode fetchMode,
+                                                         gl::SrgbWriteControlMode writeControlMode)
+{
+    impl::SwapchainImageFramebufferDesc desc;
+    SetBitField(desc.framebufferFetchMode, fetchMode);
+    SetBitField(desc.writeControlMode, writeControlMode);
+    return desc.index;
+}
 }  // namespace
 
 SurfaceVk::SurfaceVk(const egl::SurfaceState &surfaceState)
@@ -1022,8 +1030,7 @@ SwapchainImage::~SwapchainImage() = default;
 SwapchainImage::SwapchainImage(SwapchainImage &&other)
     : image(std::move(other.image)),
       imageViews(std::move(other.imageViews)),
-      framebuffer(std::move(other.framebuffer)),
-      fetchFramebuffer(std::move(other.fetchFramebuffer)),
+      framebuffers(std::move(other.framebuffers)),
       frameNumber(other.frameNumber)
 {}
 }  // namespace impl
@@ -2210,12 +2217,13 @@ void WindowSurfaceVk::releaseSwapchainImages(vk::Renderer *renderer)
         ASSERT(swapchainImage.image);
         ASSERT(!swapchainImage.image->hasAnyRenderPassUsageFlags());
 
-        renderer->collectGarbage(swapchainImage.image->getResourceUse(),
-                                 &swapchainImage.framebuffer);
-        renderer->collectGarbage(swapchainImage.image->getResourceUse(),
-                                 &swapchainImage.fetchFramebuffer);
+        const vk::ResourceUse &use = swapchainImage.image->getResourceUse();
+        for (auto &entry : swapchainImage.framebuffers)
+        {
+            renderer->collectGarbage(use, &entry.second);
+        }
 
-        swapchainImage.imageViews.release(renderer, swapchainImage.image->getResourceUse());
+        swapchainImage.imageViews.release(renderer, use);
         // swapchain image must not have ANI semaphore assigned here, since acquired image must be
         // presented before swapchain recreation.
         swapchainImage.image->resetImageWeakReference();
@@ -2267,10 +2275,13 @@ void WindowSurfaceVk::destroySwapchainImages(DisplayVk *displayVk)
         swapchainImage.image->resetImageWeakReference();
         swapchainImage.image->destroy(renderer);
         swapchainImage.imageViews.destroy(device);
-        swapchainImage.framebuffer.destroy(device);
-        if (swapchainImage.fetchFramebuffer.valid())
+        for (auto &entry : swapchainImage.framebuffers)
         {
-            swapchainImage.fetchFramebuffer.destroy(device);
+            vk::Framebuffer &framebuffer = entry.second;
+            if (framebuffer.valid())
+            {
+                framebuffer.destroy(device);
+            }
         }
     }
 
@@ -2441,10 +2452,20 @@ vk::Framebuffer &WindowSurfaceVk::chooseFramebuffer()
         return mAncillaryFramebuffer;
     }
 
-    // Choose which framebuffer to use based on fetch, so it will have a matching renderpass
-    return mFramebufferFetchMode == vk::FramebufferFetchMode::Color
-               ? mSwapchainImages[mCurrentSwapchainImageIndex].fetchFramebuffer
-               : mSwapchainImages[mCurrentSwapchainImageIndex].framebuffer;
+    // Choose which framebuffer to use based on fetch and write control,
+    // so it will have a matching renderpass
+    FramebufferIndex index =
+        GetSwapchainImageFramebufferIndex(mFramebufferFetchMode, mWriteControlMode);
+    SwapchainImageFramebuffers &framebuffers =
+        mSwapchainImages[mCurrentSwapchainImageIndex].framebuffers;
+
+    if (!framebuffers.contains(index))
+    {
+        framebuffers[index] = vk::Framebuffer();
+    }
+    ASSERT(framebuffers.contains(index));
+
+    return framebuffers[index];
 }
 
 bool WindowSurfaceVk::shouldRetainColor() const
@@ -3480,6 +3501,7 @@ EGLint WindowSurfaceVk::getSwapBehavior() const
 
 angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
                                                      vk::FramebufferFetchMode fetchMode,
+                                                     gl::SrgbWriteControlMode writeControlMode,
                                                      const vk::RenderPass &compatibleRenderPass,
                                                      vk::Framebuffer *framebufferOut)
 {
@@ -3492,6 +3514,8 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
 
     // Track the new fetch mode
     mFramebufferFetchMode = fetchMode;
+    // Track the new write control mode
+    mWriteControlMode = writeControlMode;
 
     SwapchainImage &swapchainImage = mSwapchainImages[mCurrentSwapchainImageIndex];
 
@@ -3890,13 +3914,9 @@ void WindowSurfaceVk::onSubjectStateChange(angle::SubjectIndex index, angle::Sub
 
         for (auto &image : mSwapchainImages)
         {
-            if (mFramebufferFetchMode == vk::FramebufferFetchMode::Color)
+            for (auto &entry : image.framebuffers)
             {
-                mRenderer->collectGarbage(use, &image.fetchFramebuffer);
-            }
-            else
-            {
-                mRenderer->collectGarbage(use, &image.framebuffer);
+                mRenderer->collectGarbage(use, &entry.second);
             }
         }
 

@@ -3256,7 +3256,8 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
                 contextVk,
                 mRenderPassDesc.hasColorFramebufferFetch() ? vk::FramebufferFetchMode::Color
                                                            : vk::FramebufferFetchMode::None,
-                *compatibleRenderPass, &framebufferHandle));
+                mCurrentFramebufferDesc.getWriteControlMode(), *compatibleRenderPass,
+                &framebufferHandle));
         }
     }
 

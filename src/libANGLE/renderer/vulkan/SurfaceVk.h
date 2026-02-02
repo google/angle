@@ -188,6 +188,19 @@ struct ImagePresentOperation : angle::NonCopyable
     std::deque<SwapchainCleanupData> oldSwapchains;
 };
 
+using FramebufferIndex = uint8_t;
+union SwapchainImageFramebufferDesc final
+{
+    struct
+    {
+        uint8_t framebufferFetchMode : 4;
+        uint8_t writeControlMode : 4;
+    };
+    FramebufferIndex index;
+};
+static_assert(sizeof(SwapchainImageFramebufferDesc) == 1, "Size check failed");
+using SwapchainImageFramebuffers = angle::HashMap<FramebufferIndex, vk::Framebuffer>;
+
 // Swapchain images and their associated objects.
 struct SwapchainImage : angle::NonCopyable
 {
@@ -197,8 +210,7 @@ struct SwapchainImage : angle::NonCopyable
 
     std::unique_ptr<vk::ImageHelper> image;
     vk::ImageViewHelper imageViews;
-    vk::Framebuffer framebuffer;
-    vk::Framebuffer fetchFramebuffer;
+    SwapchainImageFramebuffers framebuffers;
 
     uint64_t frameNumber = 0;
 };
@@ -326,6 +338,7 @@ class WindowSurfaceVk : public SurfaceVk
 
     angle::Result getCurrentFramebuffer(ContextVk *context,
                                         vk::FramebufferFetchMode fetchMode,
+                                        gl::SrgbWriteControlMode writeControlMode,
                                         const vk::RenderPass &compatibleRenderPass,
                                         vk::Framebuffer *framebufferOut);
 
@@ -573,6 +586,9 @@ class WindowSurfaceVk : public SurfaceVk
 
     // EGL_KHR_partial_update
     bool mIsBufferAgeQueried;
+
+    // GL_EXT_sRGB_write_control
+    gl::SrgbWriteControlMode mWriteControlMode = gl::SrgbWriteControlMode::Default;
 
     // GL_EXT_shader_framebuffer_fetch
     vk::FramebufferFetchMode mFramebufferFetchMode = vk::FramebufferFetchMode::None;

@@ -4543,6 +4543,82 @@ TEST_P(EGLWindowSurfaceColorspaceTestES3, ToggleSrgbWriteControl)
     EXPECT_GL_NO_ERROR();
 }
 
+// Regression test for a vulkan backend bug where toggling colorspace within a renderpass
+// wouldn't refresh the framebuffer
+TEST_P(EGLWindowSurfaceColorspaceTestES3, ToggleSrgbWriteControlWithinRenderPass)
+{
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_gl_colorspace"));
+
+    // Choose an EGLConfig
+    constexpr EGLint kConfigAttributes[] = {EGL_RED_SIZE,     8,
+                                            EGL_GREEN_SIZE,   8,
+                                            EGL_BLUE_SIZE,    8,
+                                            EGL_ALPHA_SIZE,   8,
+                                            EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                                            EGL_NONE};
+    EGLint configCount                   = 0;
+    EGLConfig config                     = nullptr;
+    ANGLE_SKIP_TEST_IF(!eglChooseConfig(mDisplay, kConfigAttributes, &config, 1, &configCount));
+    ANGLE_SKIP_TEST_IF(configCount == 0);
+    ASSERT_NE(config, nullptr);
+
+    // Create a window surface with sRGB colorspace
+    std::vector<EGLint> sutfaceAttribs;
+    sutfaceAttribs.push_back(EGL_GL_COLORSPACE);
+    sutfaceAttribs.push_back(EGL_GL_COLORSPACE_SRGB);
+    sutfaceAttribs.push_back(EGL_NONE);
+    initializeSurfaceWithAttribs(config, sutfaceAttribs);
+    EXPECT_EGL_SUCCESS();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    // Create a context
+    initializeMainContext();
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(mContext, EGL_NO_CONTEXT);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    EXPECT_EGL_SUCCESS();
+
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_sRGB_write_control"));
+
+    constexpr angle::GLColor uniformColor(13, 54, 133, 255);
+    constexpr angle::GLColor srgbColor(64, 127, 191, 255);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+    GLint colorLocation = glGetUniformLocation(program, essl1_shaders::ColorUniform());
+    ASSERT_NE(-1, colorLocation);
+    Vector4 uniformColorNormalized = uniformColor.toNormalizedVector();
+    glUniform4f(colorLocation, uniformColorNormalized.x(), uniformColorNormalized.y(),
+                uniformColorNormalized.z(), uniformColorNormalized.w());
+    EXPECT_GL_NO_ERROR();
+
+    // Bind default framebuffer
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Disable encoding to sRGB colorspace.
+    glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+
+    // Draw
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Don't break the renderpass, toggle colorspace and draw again
+
+    // Enable encoding to sRGB colorspace.
+    glEnable(GL_FRAMEBUFFER_SRGB_EXT);
+
+    // Draw
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, srgbColor, 1.0);
+}
+
 // Test that a PRESERVED surface can be cleared to black (emulated-format clear color).
 TEST_P(EGLSurfaceTest, PreserveThenClearToBlack)
 {
