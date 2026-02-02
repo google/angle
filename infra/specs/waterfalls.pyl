@@ -59,8 +59,8 @@
           'gpu_pixel_4_stable',
         ],
         'test_suites': {
-          'gtest_tests': 'android_gtests',
-          'isolated_scripts': 'isolated_scripts_group_common',
+          'gtest_tests': 'android_novulkan_gtests',
+          'isolated_scripts': 'isolated_scripts_group_common_notrace',
         },
       },
       'android-arm64-ir-pixel6': {
@@ -79,8 +79,8 @@
           'gpu_pixel_4_stable',
         ],
         'test_suites': {
-          'gtest_tests': 'android_gtests',
-          'isolated_scripts': 'isolated_scripts_group_common',
+          'gtest_tests': 'android_novulkan_gtests',
+          'isolated_scripts': 'isolated_scripts_group_common_notrace',
         },
       },
       'android-arm64-pixel4-perf': {
@@ -91,7 +91,7 @@
           'timeout_120m',
         ],
         'test_suites': {
-          'isolated_scripts': 'isolated_scripts_group_perf',
+          'isolated_scripts': 'isolated_scripts_group_perf_notrace',
         },
       },
       'android-arm64-pixel6': {

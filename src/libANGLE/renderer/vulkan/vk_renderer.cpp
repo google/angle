@@ -5827,15 +5827,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsImageDrmFormatModifier,
         ExtensionFound(VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME, deviceExtensionNames));
 
-    // http://anglebug.com/42261756
-    // Precision qualifiers are disabled for Pixel 2 before the driver included relaxed precision.
-    const bool isPixel4 =
-        IsPixel4(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, enablePrecisionQualifiers,
-        !(IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) &&
-          (driverVersion < angle::VersionTriple(512, 490, 0))) &&
-            !isPixel4);
+    ANGLE_FEATURE_CONDITION(&mFeatures, enablePrecisionQualifiers, true);
 
     // http://anglebug.com/42265957
     ANGLE_FEATURE_CONDITION(&mFeatures, varyingsRequireMatchingPrecisionInSpirv,
@@ -5968,7 +5960,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // ES 3.2, it should be unlisted.
     ANGLE_FEATURE_CONDITION(&mFeatures, exposeES32ForTesting,
                             mFeatures.exposeNonConformantExtensionsAndVersions.enabled &&
-                                (isSoftwareRenderer || isPixel4 || (IsWindows() && isIntel)));
+                                (isSoftwareRenderer || (IsWindows() && isIntel)));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsMemoryBudget,
@@ -6135,8 +6127,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Some platforms perform better using BGR565 than RGB565.
     bool isBGR565Renderable = hasImageFormatFeatureBits(angle::FormatID::B5G6R5_UNORM,
                                                         VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferBGR565ToRGB565,
-                            isBGR565Renderable && isQualcomm && !isPixel4);
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferBGR565ToRGB565, isBGR565Renderable && isQualcomm);
 
     // Emit SPIR-V 1.4 when supported.  The following old drivers have various bugs with SPIR-V 1.4:
     //
