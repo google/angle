@@ -356,6 +356,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdEndQuery-None-07007",
     // https://anglebug.com/475549551
     "VUID-VkGraphicsPipelineCreateInfo-renderPass-09652",
+    // https://anglebug.com/481069415
+    "VUID-vkCmdDraw-viewMask-06178",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is

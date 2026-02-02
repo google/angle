@@ -1091,7 +1091,7 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@ee1ba742bd72e64a9c2e645d394454ac8a97080a',
+    'url': Var('chromium_git') + '/vulkan-deps@cb5b93c401f2f40a4aada463595829a63fcb8ad4',
     'condition': 'not build_with_chromium',
   },
 
@@ -1116,7 +1116,7 @@ deps = {
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@d4671f690ac42f196795272114daadc5088967ce',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@ede19b60a859aee4e7c3ab2b9b0e2cbda1d754bb',
     'condition': 'not build_with_chromium',
   },
 
@@ -1126,22 +1126,22 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@11aa53eab96b546c7fce5f5cb29e33069eeb9e9b',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@075488ccd6600fea664e10ee2f946c76086827d2',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Tools@48a4bcbdf619e57204783f8c1a04c76c160ddd5b',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Tools@362c28b8e13292f0fca1b0c9ce3ba515fe9b71a1',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan-utility-libraries/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Utility-Libraries@a663eca87ba71294dd4b74ba9d3e64a72d725453',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Utility-Libraries@906b27a77f4857fae6da3062df4cf6ab0c06e8d4',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@14de3c0d7b396853d81e6975aad3713984a697a6',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@7bdb79f243831ccf642309d0be69b53a533dff46',
     'condition': 'not build_with_chromium',
   },
 
