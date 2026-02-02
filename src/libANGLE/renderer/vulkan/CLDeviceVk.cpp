@@ -35,8 +35,7 @@ uint32_t CLDeviceVk::getNumComputeUnits() const
                shaderCoreProperties.shaderArraysPerEngineCount *
                shaderCoreProperties.computeUnitsPerShaderArray / workGroupFactor;
     }
-
-    return cl::IMPLEMENATION_NUM_COMPUTE_UNITS;
+    return cl::IMPLEMENTATION_NUM_COMPUTE_UNITS;
 }
 
 uint32_t CLDeviceVk::getWorkGroupSizeMultiple() const
@@ -45,8 +44,7 @@ uint32_t CLDeviceVk::getWorkGroupSizeMultiple() const
     {
         return getRenderer()->getPhysicalDeviceShaderCorePropertiesAMD().wavefrontSize;
     }
-
-    return cl::IMPLEMENATION_PREFERRED_WORKGROUP_SIZE_MULTIPLE;
+    return cl::IMPLEMENTATION_PREFERRED_WORKGROUP_SIZE_MULTIPLE;
 }
 
 cl_ulong CLDeviceVk::getSingleFpConfig() const
@@ -183,9 +181,9 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
 
     mInfoUInt = {
         {cl::DeviceInfo::VendorID, props.vendorID},
-        {cl::DeviceInfo::MaxReadImageArgs, cl::IMPLEMENATION_MAX_READ_IMAGES},
-        {cl::DeviceInfo::MaxWriteImageArgs, cl::IMPLEMENATION_MAX_WRITE_IMAGES},
-        {cl::DeviceInfo::MaxReadWriteImageArgs, cl::IMPLEMENATION_MAX_WRITE_IMAGES},
+        {cl::DeviceInfo::MaxReadImageArgs, cl::IMPLEMENTATION_MAX_READ_IMAGES},
+        {cl::DeviceInfo::MaxWriteImageArgs, cl::IMPLEMENTATION_MAX_WRITE_IMAGES},
+        {cl::DeviceInfo::MaxReadWriteImageArgs, cl::IMPLEMENTATION_MAX_WRITE_IMAGES},
         {cl::DeviceInfo::GlobalMemCachelineSize,
          static_cast<cl_uint>(props.limits.nonCoherentAtomSize)},
         {cl::DeviceInfo::Available, CL_TRUE},
