@@ -134,6 +134,26 @@ chromium_luci.configure_recipe_experiments(
     require_builder_wrappers = False,
 )
 
+# Allow builders to write baselines and query ResultDB for new tests.
+luci.realm(
+    name = "@project",
+    bindings = [
+        luci.binding(
+            roles = "role/resultdb.baselineWriter",
+            users = [
+                "angle-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
+                "angle-try-builder@chops-service-accounts.iam.gserviceaccount.com",
+            ],
+        ),
+        luci.binding(
+            roles = "role/resultdb.baselineReader",
+            users = [
+                "angle-try-builder@chops-service-accounts.iam.gserviceaccount.com",
+            ],
+        ),
+    ],
+)
+
 # Swarming permissions
 luci.realm(name = "pools/ci")
 luci.realm(name = "pools/try")
