@@ -707,7 +707,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result onSyncObjectInit(vk::SyncHelper *syncHelper, SyncFenceScope scope);
     // Called when a sync object is waited on while its submission was deferred in onSyncObjectInit.
     // It's a no-op if this context doesn't have a pending submission.  Note that due to
-    // mHasDeferredFlush being set, flushing the render pass leads to a submission automatically.
+    // mHasDeferredRenderPassFlush being set, flushing the render pass leads to a submission
+    // automatically.
     angle::Result flushCommandsAndEndRenderPassIfDeferredSyncInit(RenderPassClosureReason reason);
 
     void addCommandBufferDiagnostics(const std::string &commandBufferDiagnostics);
@@ -1616,7 +1617,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // Whether a flush was requested, but is deferred as an optimization to avoid breaking the
     // render pass.
-    bool mHasDeferredFlush;
+    bool mHasDeferredRenderPassFlush;
 
     // Whether this context has produced any commands so far.  While the renderer already skips
     // vkQueueSubmit when there is no command recorded, this variable allows glFlush itself to be
