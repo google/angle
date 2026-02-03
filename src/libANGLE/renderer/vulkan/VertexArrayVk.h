@@ -246,8 +246,9 @@ class VertexArrayVk : public VertexArrayImpl
 
     gl::ComponentTypeMask mCurrentVertexAttributesTypeMask;
 
-    // This maybe 0 or 1 depends on feature bit
-    uint32_t mZeroDivisor;
+    // Divisor value if vertex inputRate is VK_VERTEX_INPUT_RATE_VERTEX. This maybe 0 or 1 depends
+    // on feature bit.
+    uint32_t mDivisorForVertexInputRateVertex;
 };
 }  // namespace rx
 

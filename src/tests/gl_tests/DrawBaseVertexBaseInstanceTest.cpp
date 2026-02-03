@@ -1312,6 +1312,7 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DrawBaseVertexBaseInstanceTest);
         ES3_OPENGL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),             \
         ES3_OPENGLES().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),           \
         ES3_VULKAN().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),             \
+        ES3_VULKAN().disable(Feature::SupportsVertexInputDynamicState),                    \
         ES3_VULKAN_SWIFTSHADER().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions), \
         ES3_METAL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions)
 

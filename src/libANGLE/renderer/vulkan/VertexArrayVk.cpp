@@ -460,10 +460,13 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk,
     mCurrentArrayBufferSizes.fill(0);
     mCurrentArrayBuffers.fill(&emptyBuffer);
 
-    // Divisor value is ignored by the implementation when using VK_VERTEX_INPUT_RATE_VERTEX, but it
-    // is set to 1 to avoid a validation error due to a validation layer issue.
-    mZeroDivisor =
-        contextVk->getRenderer()->isVertexAttributeInstanceRateZeroDivisorAllowed() ? 0 : 1;
+    // When supportsVertexInputDynamicState is enabled,
+    // VUID-VkVertexInputBindingDescription2EXT-divisor-06227 requires divisor to be 1 when
+    // inputRate is VK_VERTEX_INPUT_RATE_VERTEX. When supportsVertexInputDynamicState is disabled,
+    // the divisor goes through GraphicsPipelineDesc struct, which is a packed structure. It uses
+    // "0" divisor value to indicate it is VK_VERTEX_INPUT_RATE_VERTEX.
+    mDivisorForVertexInputRateVertex =
+        contextVk->getFeatures().supportsVertexInputDynamicState.enabled ? 1 : 0;
 
     for (uint32_t attribIndex = 0; attribIndex < mVertexInputBindingDescs.size(); attribIndex++)
     {
@@ -473,7 +476,7 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk,
             attribIndex,
             0,
             static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_VERTEX),
-            mZeroDivisor};
+            mDivisorForVertexInputRateVertex};
     }
 
     for (uint32_t attribIndex = 0; attribIndex < mVertexInputAttribDescs.size(); attribIndex++)
@@ -1697,7 +1700,7 @@ ANGLE_INLINE void VertexArrayVk::setVertexInputBindingDescDivisor(vk::Renderer *
     {
         mVertexInputBindingDescs[attribIndex].inputRate =
             static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_VERTEX);
-        mVertexInputBindingDescs[attribIndex].divisor = mZeroDivisor;
+        mVertexInputBindingDescs[attribIndex].divisor = mDivisorForVertexInputRateVertex;
     }
 }
 }  // namespace rx
