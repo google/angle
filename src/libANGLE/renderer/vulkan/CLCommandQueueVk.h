@@ -16,7 +16,6 @@
 #include "common/SimpleMutex.h"
 #include "common/hash_containers.h"
 
-#include "libANGLE/CLBuffer.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLEventVk.h"
 #include "libANGLE/renderer/vulkan/CLKernelVk.h"
@@ -30,6 +29,7 @@
 #include "libANGLE/renderer/CLCommandQueueImpl.h"
 #include "libANGLE/renderer/serial_utils.h"
 
+#include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLKernel.h"
 #include "libANGLE/CLMemory.h"
 #include "libANGLE/cl_types.h"
@@ -497,6 +497,8 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     angle::Result processKernelResources(CLKernelVk &kernelVk);
     // Updates global push constants for a given CL kernel
     angle::Result processGlobalPushConstants(CLKernelVk &kernelVk, const cl::NDRange &ndrange);
+    // Process dependent events that are external to this queue
+    angle::Result processExternalEvents();
 
     angle::Result submitCommands();
     angle::Result finishInternal();
