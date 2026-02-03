@@ -255,17 +255,6 @@
           'isolated_scripts': 'isolated_scripts_group_perf',
         },
       },
-      'linux-swiftshader': {
-        'os_type': 'linux',
-        'mixins': [
-          'gpu-swarming-pool',
-          'no_gpu',
-          'linux-jammy',
-          'timeout_15m',
-          'x86-64',
-        ],
-        'test_suites': {},
-      },
       'linux-swiftshader-asan': {
         'os_type': 'linux',
         'mixins': [

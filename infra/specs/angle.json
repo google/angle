@@ -7730,7 +7730,6 @@
       }
     ]
   },
-  "linux-swiftshader": {},
   "linux-swiftshader-asan": {
     "gtest_tests": [
       {
