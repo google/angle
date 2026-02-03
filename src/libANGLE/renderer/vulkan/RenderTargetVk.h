@@ -189,6 +189,11 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     {
         ASSERT(mImage && mImage->valid() && mImageViews);
         mImageViews->updateSrgbWriteControlMode(*mImage, srgbWriteControlMode);
+        if (hasResolveAttachment() && !isYuvResolve())
+        {
+            ASSERT(mResolveImage && mResolveImage->valid() && mResolveImageViews);
+            mResolveImageViews->updateSrgbWriteControlMode(*mResolveImage, srgbWriteControlMode);
+        }
     }
     bool hasColorspaceOverrideForRead() const
     {
