@@ -95,6 +95,7 @@ class TracePerfTest : public ANGLERenderTest
     EGLint onEglClientWaitSyncKHR(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTimeKHR timeout);
     EGLint onEglGetError();
     EGLDisplay onEglGetCurrentDisplay();
+    EGLSurface onEglGetCurrentSurface(EGLint readdraw);
 
     void onReplayFramebufferChange(GLenum target, GLuint framebuffer);
     void onReplayInvalidateFramebuffer(GLenum target,
@@ -165,6 +166,9 @@ class TracePerfTest : public ANGLERenderTest
     };
     void saveScreenshotIfEnabled(ScreenshotType screenshotType);
     void saveScreenshot(const std::string &screenshotName);
+
+    void MaybeSwitchToMainContext(EGLContext currentEglContext);
+    void MaybeSwitchToTraceContext(EGLContext currentEglContext);
 
     std::unique_ptr<const TracePerfParams> mParams;
 
@@ -1487,7 +1491,7 @@ void TracePerfTest::initializeBenchmark()
         renderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mWindowWidth, mWindowHeight);
         bindRenderbuffer(GL_RENDERBUFFER, 0);
 
-        mEglContext = eglGetCurrentContext();
+        mEglContext = getGLWindow()->getCurrentContext();
 
         genFramebuffers(mMaxOffscreenBufferCount, mOffscreenFramebuffers.data());
         glGenTextures(mMaxOffscreenBufferCount, mOffscreenTextures.data());
@@ -1572,6 +1576,24 @@ void TracePerfTest::sampleTime()
     }
 }
 
+void TracePerfTest::MaybeSwitchToMainContext(EGLContext currentEglContext)
+{
+    if (currentEglContext != mEglContext)
+    {
+        onEglMakeCurrent(onEglGetCurrentDisplay(), onEglGetCurrentSurface(EGL_DRAW),
+                         onEglGetCurrentSurface(EGL_READ), mEglContext);
+    }
+}
+
+void TracePerfTest::MaybeSwitchToTraceContext(EGLContext currentEglContext)
+{
+    if (currentEglContext != mEglContext)
+    {
+        onEglMakeCurrent(onEglGetCurrentDisplay(), onEglGetCurrentSurface(EGL_DRAW),
+                         onEglGetCurrentSurface(EGL_READ), currentEglContext);
+    }
+}
+
 void TracePerfTest::drawBenchmark()
 {
     constexpr uint32_t kFramesPerX  = 6;
@@ -1649,12 +1671,8 @@ void TracePerfTest::drawBenchmark()
         {
             GLuint offscreenBuffer = mOffscreenFramebuffers[offscreenBufferIndex];
 
-            EGLContext currentEglContext = eglGetCurrentContext();
-            if (currentEglContext != mEglContext)
-            {
-                eglMakeCurrent(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW),
-                               eglGetCurrentSurface(EGL_READ), mEglContext);
-            }
+            EGLContext currentEglContext = getGLWindow()->getCurrentContext();
+            MaybeSwitchToMainContext(currentEglContext);
 
             GLint currentDrawFBO, currentReadFBO;
             if (gles1)
@@ -1744,11 +1762,7 @@ void TracePerfTest::drawBenchmark()
                 glDeleteSync(sync);
             }
 
-            if (currentEglContext != mEglContext)
-            {
-                eglMakeCurrent(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW),
-                               eglGetCurrentSurface(EGL_READ), currentEglContext);
-            }
+            MaybeSwitchToTraceContext(currentEglContext);
         }
     }
     else
@@ -1968,6 +1982,11 @@ EGLint TracePerfTest::onEglGetError()
 EGLDisplay TracePerfTest::onEglGetCurrentDisplay()
 {
     return getGLWindow()->getCurrentDisplay();
+}
+
+EGLSurface TracePerfTest::onEglGetCurrentSurface(EGLint readdraw)
+{
+    return getGLWindow()->getCurrentSurface(readdraw);
 }
 
 // Triggered when the replay calls glBindFramebuffer.
