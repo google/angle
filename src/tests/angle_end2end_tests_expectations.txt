@@ -182,7 +182,7 @@
 352085732 WIN INTEL VULKAN : OcclusionQueriesTest.MultiQueries/* = SKIP
 373818282 WIN INTEL OPENGL : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB/* = SKIP
 388144480 WIN INTEL VULKAN : OcclusionQueriesTest.WrongSkippedQuery/* = SKIP
-478807229 WIN INTEL VULKAN : OcclusionQueriesTest.QueryReuseWithMultipleFBOs/* = SKIP
+478807229 WIN INTEL VULKAN : OcclusionQueriesTestES3.QueryReuseWithMultipleFBOs/* = SKIP
 
 434453468 WIN INTEL VULKAN : LineLoopIndirectTest.TwoIndirectDrawsInDifferentIndirectBuffer/* = SKIP
 
