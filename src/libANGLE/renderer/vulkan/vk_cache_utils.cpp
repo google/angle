@@ -6999,7 +6999,7 @@ void SharedCacheKeyManager<SharedCacheKeyT>::releaseKeys(ContextVk *contextVk)
     {
         if (sharedCacheKey->valid())
         {
-            // Immediate destroy the cached object and the key itself when first releaseRef call is
+            // Immediate destroy the cached object and the key itself when first releaseKeys call is
             // made
             sharedCacheKey->releaseCachedObject(contextVk);
         }
@@ -7066,7 +7066,7 @@ bool SharedCacheKeyManager<SharedCacheKeyT>::containsKeyWithOwnerEqual(
 }
 
 template <class SharedCacheKeyT>
-void SharedCacheKeyManager<SharedCacheKeyT>::assertAllEntriesDestroyed() const
+ANGLE_INLINE void SharedCacheKeyManager<SharedCacheKeyT>::assertAllEntriesDestroyed() const
 {
     // Caller must have already freed all caches
     for (const SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
