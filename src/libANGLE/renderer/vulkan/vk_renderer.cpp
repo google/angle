@@ -6763,8 +6763,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsAstc3d,
                             mTextureCompressionASTC3DFeatures.textureCompressionASTC_3D == VK_TRUE);
 
-    // This feature flag shows reduced CPU instruction.
-    ANGLE_FEATURE_CONDITION(&mFeatures, enableMergeClientAttribBuffer, true);
+    // This feature flag shows reduced CPU instruction. Samsung GPU appears have some test failures
+    // needs to figure out.
+    ANGLE_FEATURE_CONDITION(&mFeatures, enableMergeClientAttribBuffer, !isSamsung);
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
