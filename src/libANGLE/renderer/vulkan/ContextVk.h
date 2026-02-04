@@ -1209,7 +1209,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsIndexBuffer(DirtyBits::Iterator *dirtyBitsIterator,
                                                  DirtyBits dirtyBitMask);
-    angle::Result handleDirtyGraphicsDriverUniformsImpl(const vk::PipelineLayout &pipelineLayout);
     angle::Result handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *dirtyBitsIterator,
                                                     DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsDriverUniformsWithXFBEmulation(
@@ -1315,8 +1314,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result handleDirtyDescriptorSetsImpl(CommandBufferHelperT *commandBufferHelper,
                                                 PipelineType pipelineType);
     void handleDirtyGraphicsDynamicScissorImpl(bool isPrimitivesGeneratedQueryActive);
-
-    void writeAtomicCounterBufferDriverUniformOffsets(uint32_t *offsetsOut, size_t offsetsSize);
 
     void updateUniformBufferBlocksOffset();
 
