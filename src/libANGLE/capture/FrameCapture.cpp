@@ -7086,11 +7086,12 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
 
             if (call.params.hasClientArrayData())
             {
-                mClientVertexArrayMap[index] = static_cast<int>(mFrameCalls.size());
+                mClientVertexArrayData[index] =
+                    call.params.getClientArrayPointerParameter().value.voidConstPointerVal;
             }
             else
             {
-                mClientVertexArrayMap[index] = -1;
+                mClientVertexArrayData[index] = nullptr;
             }
             break;
         }
@@ -8150,9 +8151,9 @@ void FrameCaptureShared::captureClientArraySnapshot(const gl::Context *context,
         const gl::VertexAttribute &attrib = vao->getVertexAttribute(attribIndex);
         const gl::VertexBinding &binding  = vao->getVertexBinding(attrib.bindingIndex);
 
-        int callIndex = mClientVertexArrayMap[attribIndex];
+        const void *clientSideAddress = mClientVertexArrayData[attribIndex];
 
-        if (callIndex != -1)
+        if (clientSideAddress)
         {
             size_t count = vertexCount;
 
@@ -8165,16 +8166,12 @@ void FrameCaptureShared::captureClientArraySnapshot(const gl::Context *context,
             // The last capture element doesn't take up the full stride.
             size_t bytesToCapture = (count - 1) * binding.getStride() + attrib.format->pixelBytes;
 
-            CallCapture &call   = mFrameCalls[callIndex];
-            ParamCapture &param = call.params.getClientArrayPointerParameter();
-            ASSERT(param.type == ParamType::TvoidConstPointer);
-
             ParamBuffer updateParamBuffer;
             updateParamBuffer.addValueParam<GLint>("arrayIndex", ParamType::TGLint,
                                                    static_cast<uint32_t>(attribIndex));
 
             ParamCapture updateMemory("pointer", ParamType::TvoidConstPointer);
-            CaptureMemory(param.value.voidConstPointerVal, bytesToCapture, &updateMemory);
+            CaptureMemory(clientSideAddress, bytesToCapture, &updateMemory);
             updateParamBuffer.addParam(std::move(updateMemory));
 
             updateParamBuffer.addValueParam<GLuint64>("size", ParamType::TGLuint64, bytesToCapture);
