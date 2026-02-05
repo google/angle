@@ -65,6 +65,8 @@ class TracePerfTest : public ANGLERenderTest
     void initializeBenchmark() override;
     void destroyBenchmark() override;
     void drawBenchmark() override;
+    void startGpuTimer() override;
+    void stopGpuTimer(bool mayNeedFlush = true) override;
 
     // TODO(http://anglebug.com/42264418): Add support for creating EGLSurface:
     // - eglCreatePbufferSurface()
@@ -1465,6 +1467,10 @@ void TracePerfTest::initializeBenchmark()
         getWindow()->setOrientation(mTestParams.windowWidth, mTestParams.windowHeight);
     }
 
+    // Track the context we're using to run this test so we can switch to it for queries and
+    // offscreen rendering.
+    mEglContext = getGLWindow()->getCurrentContext();
+
     // If we're rendering offscreen we set up a default back buffer.
     if (mParams->surfaceType == SurfaceType::Offscreen)
     {
@@ -1490,8 +1496,6 @@ void TracePerfTest::initializeBenchmark()
         bindRenderbuffer(GL_RENDERBUFFER, mOffscreenDepthStencil);
         renderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mWindowWidth, mWindowHeight);
         bindRenderbuffer(GL_RENDERBUFFER, 0);
-
-        mEglContext = getGLWindow()->getCurrentContext();
 
         genFramebuffers(mMaxOffscreenBufferCount, mOffscreenFramebuffers.data());
         glGenTextures(mMaxOffscreenBufferCount, mOffscreenTextures.data());
@@ -1840,6 +1844,26 @@ void TracePerfTest::drawBenchmark()
             queryIndex++;
         }
     }
+}
+
+void TracePerfTest::startGpuTimer()
+{
+    // Some traces will switch contexts mid-frame and not switch back.  Since our
+    // queries are per context, we need to switch back before gathering data.
+    EGLContext currentEglContext = getGLWindow()->getCurrentContext();
+    MaybeSwitchToMainContext(currentEglContext);
+    // Call the base class to start timer on the correct context.
+    ANGLERenderTest::startGpuTimer();
+    MaybeSwitchToTraceContext(currentEglContext);
+}
+
+void TracePerfTest::stopGpuTimer(bool mayNeedFlush)
+{
+    EGLContext currentEglContext = getGLWindow()->getCurrentContext();
+    MaybeSwitchToMainContext(currentEglContext);
+    // Call the base class to stop timer on the correct context.
+    ANGLERenderTest::stopGpuTimer(mayNeedFlush);
+    MaybeSwitchToTraceContext(currentEglContext);
 }
 
 // Converts a GL timestamp into a host-side CPU time aligned with "GetHostTimeSeconds".
