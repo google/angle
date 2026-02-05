@@ -121,6 +121,8 @@ void SetLimits(const ShBuiltInResources &resources, ffi::Limits *limits)
 {
     limits->max_combined_draw_buffers_and_pixel_local_storage_planes =
         resources.MaxCombinedDrawBuffersAndPixelLocalStoragePlanes;
+    limits->min_point_size = resources.MinPointSize;
+    limits->max_point_size = resources.MaxPointSize;
 }
 
 void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::CompileOptions *opt)
@@ -135,6 +137,7 @@ void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::Compi
     opt->initializer_allowed_on_non_constant_global_variables =
         !options.forceDeferNonConstGlobalInitializers;
     opt->pass_highp_to_pack_unorm_snorm_built_ins = options.passHighpToPackUnormSnormBuiltins;
+    opt->clamp_point_size                         = options.clampPointSize;
 
     opt->rewrite_pixel_local_storage = compiler->hasPixelLocalStorageUniforms();
     opt->pls_options.implementation  = static_cast<ffi::PixelLocalStorageImpl>(options.pls.type);
