@@ -5733,7 +5733,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // ARM proprietary driver does buffer copy on geometry pipeline, which may create a GPU pipeline
     // bubble that prevents vertex shader to overlap with fragment shader on job manager based
     // architecture. For now we always choose CPU to do copy on ARM job manager based GPU.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferCPUForBufferSubData, isARMProprietary);
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferCPUForBufferSubData,
+                            isARMProprietary || isQualcommProprietary);
 
     // On android, we usually are GPU limited, we try to use CPU to do data copy when other
     // conditions are the same. Set to zero will use GPU to do copy. This is subject to further
