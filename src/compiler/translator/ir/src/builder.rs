@@ -739,6 +739,12 @@ pub struct Builder {
     // with it.
     gl_clip_distance_length_var_id: Option<VariableId>,
     gl_cull_distance_length_var_id: Option<VariableId>,
+
+    // Whether `main()` should be wrapped to simplify transformations is decided by whether it ends
+    // in a single `return` (don't wrap) or if it has early `return`s or any `discard`s (do
+    // wrap).
+    main_discard_count: u32,
+    main_return_count: u32,
 }
 
 impl Builder {
@@ -752,6 +758,8 @@ impl Builder {
             interm_ids: Vec::new(),
             gl_clip_distance_length_var_id: None,
             gl_cull_distance_length_var_id: None,
+            main_discard_count: 0,
+            main_return_count: 0,
         }
     }
 
@@ -759,6 +767,7 @@ impl Builder {
     // initialization code to the beginning of `main()`.
     pub fn finish(&mut self) {
         debug_assert!(self.ir.meta.get_main_function_id().is_some());
+        let main_id = self.ir.meta.get_main_function_id().unwrap();
 
         if !self.global_initializers_cfg.is_empty() {
             self.global_initializers_cfg.current_block.block.terminate(OpCode::NextBlock);
@@ -780,10 +789,41 @@ impl Builder {
         }
 
         // `main()` is always reachable from `main()`!
-        debug_assert!(
-            self.ir.function_entries[self.ir.meta.get_main_function_id().unwrap().id as usize]
-                .is_some()
-        );
+        debug_assert!(self.ir.function_entries[main_id.id as usize].is_some());
+
+        // If `main()` has an early `return`, wrap it and create a new `main` that calls that.
+        // This helps transformations run things at the end of the shader, by appending code right
+        // before `main`'s terminating branch (typically `return`).
+        // If `main()` has `discard`, similarly wrap it so that the behavior of transformations is
+        // identical for a `main()` that ends in `discard`, regardless of whether it's wrapped or
+        // not; if `main()` is not wrapped, appending code would either be placed before the
+        // terminating `discard` (and would run instead of being eliminated), or would be dropped
+        // by the transformation (in which case helper lanes don't run it).
+
+        // `main` has an early `return` if more than one `return` is encountered.  If `main` ends
+        // in `discard` and has only one `return`, it's still an early return, but it's wrapped
+        // because of having `discard` anyway.
+        let main_has_early_return = self.main_return_count > 1;
+        let main_has_discard = self.main_discard_count > 0;
+        if main_has_early_return || main_has_discard {
+            let wrapped_main = Function::new(
+                "wrapped_main",
+                vec![],
+                TYPE_ID_VOID,
+                Precision::NotApplicable,
+                Decorations::new_none(),
+            );
+            let wrapped_main = self.ir.add_function(wrapped_main);
+
+            // Move the body of `main` to `wrapped_main`.
+            self.ir.function_entries.swap(wrapped_main.id as usize, main_id.id as usize);
+
+            // Set a new body for `main` that calls `wrapped_main`.
+            let mut body = Block::new();
+            body.add_void_instruction(OpCode::Call(wrapped_main, vec![]));
+            body.terminate(OpCode::Return(None));
+            self.ir.function_entries[main_id.id as usize] = Some(body);
+        }
     }
 
     // Called at the end of the shader after it has failed validation.  At this point, the IR is no
@@ -1378,9 +1418,15 @@ impl Builder {
 
     pub fn branch_discard(&mut self) {
         self.add_instruction(instruction::branch_discard());
+        if self.ir.meta.get_main_function_id() == self.current_function {
+            self.main_discard_count += 1;
+        }
     }
     pub fn branch_return(&mut self) {
         self.add_instruction(instruction::branch_return(None));
+        if self.ir.meta.get_main_function_id() == self.current_function {
+            self.main_return_count += 1;
+        }
     }
     pub fn branch_return_value(&mut self) {
         let value = self.load();
