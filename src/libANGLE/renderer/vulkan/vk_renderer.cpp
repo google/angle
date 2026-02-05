@@ -6764,9 +6764,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsAstc3d,
                             mTextureCompressionASTC3DFeatures.textureCompressionASTC_3D == VK_TRUE);
 
-    // This feature flag shows reduced CPU instruction. Samsung GPU appears have some test failures
-    // needs to figure out.
-    ANGLE_FEATURE_CONDITION(&mFeatures, enableMergeClientAttribBuffer, !isSamsung);
+    // This feature flag shows reduced CPU instruction.
+    // Older Samsung drivers with version < 25.0.0 have a bug in vertex attribute packing that
+    // causes failures in some deqp tests when enableMergeClientAttribBuffer feature is enabled.
+    const bool isSamsungDriverWithVertexAttributePackingBug =
+        isSamsung && driverVersion < angle::VersionTriple(25, 0, 0);
+    ANGLE_FEATURE_CONDITION(&mFeatures, enableMergeClientAttribBuffer,
+                            !isSamsungDriverWithVertexAttributePackingBug);
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
