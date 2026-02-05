@@ -7365,26 +7365,26 @@ bool Renderer::cleanupOrphanedSamplers()
     }
 
     // Destroy any sampler that is no longer referenced.
-    std::vector<SharedSamplerPtr> remainingSamplers;
-    for (SharedSamplerPtr &sampler : mOrphanedSamplers)
-    {
-        if (!sampler.unique())
-        {
-            remainingSamplers.push_back(sampler);
-        }
-    }
-    const uint32_t destroyedSamplerCount =
-        static_cast<uint32_t>(mOrphanedSamplers.size() - remainingSamplers.size());
-    onDeallocateHandle(vk::HandleType::Sampler, destroyedSamplerCount);
-    mOrphanedSamplers = std::move(remainingSamplers);
+    const size_t samplerCountBefore = mOrphanedSamplers.size();
+    // Using remove_if to avoid unnecessary reference counter updates.
+    mOrphanedSamplers.erase(
+        std::remove_if(mOrphanedSamplers.begin(), mOrphanedSamplers.end(),
+                       [](SharedSamplerPtr &sampler) { return sampler.unique(); }),
+        mOrphanedSamplers.end());
+    const size_t destroyedSamplerCount = samplerCountBefore - mOrphanedSamplers.size();
 
     bool anyCleaned = destroyedSamplerCount > 0;
 
+    if (anyCleaned)
+    {
+        onDeallocateHandle(vk::HandleType::Sampler, static_cast<uint32_t>(destroyedSamplerCount));
+    }
+
     // If all samplers are gone, destroy all the ycbcr conversion objects too.  We don't track which
     // samplers use which ycbcr conversion objects, so they are destroyed conservatively.
-    if (remainingSamplers.empty())
+    if (mOrphanedSamplers.empty() && !mOrphanedSamplerYcbcrConversions.empty())
     {
-        anyCleaned = anyCleaned || !mOrphanedSamplerYcbcrConversions.empty();
+        anyCleaned = true;
         for (VkSamplerYcbcrConversion handle : mOrphanedSamplerYcbcrConversions)
         {
             vk::SamplerYcbcrConversion conversion;
