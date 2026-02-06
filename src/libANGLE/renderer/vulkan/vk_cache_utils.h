@@ -1832,7 +1832,6 @@ static constexpr size_t kFastDescriptorSetDescLimit = 8;
 struct DescriptorDescHandles
 {
     VkBuffer buffer;
-    VkSampler sampler;
     VkImageView imageView;
     VkBufferView bufferView;
 };

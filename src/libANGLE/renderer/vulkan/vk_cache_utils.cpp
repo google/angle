@@ -7344,9 +7344,10 @@ void UpdateDescriptorSetsBuilder::updateWriteDescriptorSet(
                 writeSet.pBufferInfo = writeBuffers;
                 break;
             }
-            case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
+            // VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE is not possible.
+            // VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER is handled exclusively by
+            // |UpdateFullTexturesDescriptorSet|.
             case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT:
-            case VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE:
             case VK_DESCRIPTOR_TYPE_STORAGE_IMAGE:
             {
                 VkDescriptorImageInfo *writeImages =
@@ -7360,7 +7361,6 @@ void UpdateDescriptorSetsBuilder::updateWriteDescriptorSet(
 
                     imageInfo.imageLayout = static_cast<VkImageLayout>(infoDesc.imageLayoutOrRange);
                     imageInfo.imageView   = handles[infoDescIndex + arrayElement].imageView;
-                    imageInfo.sampler     = handles[infoDescIndex + arrayElement].sampler;
                 }
                 writeSet.pImageInfo = writeImages;
                 break;
