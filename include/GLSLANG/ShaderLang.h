@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 399
+#define ANGLE_SH_VERSION 400
 
 enum ShShaderSpec
 {
@@ -201,11 +201,7 @@ struct ShCompileOptions
     // This flag works around bug in Intel Mac drivers related to abs(i) where i is an integer.
     uint64_t emulateAbsIntFunction : 1;
 
-    // Enforce the GLSL 1.017 Appendix A section 7 packing restrictions.  This flag only enforces
-    // (and can only enforce) the packing restrictions for uniform variables in both vertex and
-    // fragment shaders. ShCheckVariablesWithinPackingLimits() lets embedders enforce the packing
-    // restrictions for varying variables during program link time.
-    uint64_t enforcePackingRestrictions : 1;
+    uint64_t unused : 1;
 
     // This flag ensures all indirect (expression-based) array indexing is clamped to the bounds of
     // the array. This ensures, for example, that you cannot read off the end of a uniform, whether

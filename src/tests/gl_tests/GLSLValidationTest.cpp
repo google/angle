@@ -2069,34 +2069,6 @@ TEST_P(GLSLValidationTest, BVecMultiplyAssign)
                   "vector of bool'");
 }
 
-// Test that packing of excessive 3-column variables does not overflow the count of 3-column
-// variables in VariablePacker
-TEST_P(WebGL2GLSLValidationTest, ExcessiveMat3UniformPacking)
-{
-    std::ostringstream vs;
-
-    vs << R"(#version 300 es
-precision mediump float;
-out vec4 finalColor;
-in vec4 color;
-uniform mat4 r[254];
-
-uniform mat3 )";
-
-    constexpr size_t kNumUniforms = 10000;
-    for (size_t i = 0; i < kNumUniforms; ++i)
-    {
-        if (i > 0)
-        {
-            vs << ", ";
-        }
-        vs << "m3a_" << i << "[256]";
-    }
-    vs << R"(;
-void main(void) { finalColor = color; })";
-    validateError(GL_VERTEX_SHADER, vs.str().c_str(), "too many uniforms");
-}
-
 // Test that infinite loop with while(true) is rejected
 TEST_P(WebGL2GLSLValidationTest, InfiniteLoopWhileTrue)
 {

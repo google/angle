@@ -26,7 +26,6 @@
 #include "compiler/translator/OutputTree.h"
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/SizeClipCullDistance.h"
-#include "compiler/translator/VariablePacker.h"
 #include "compiler/translator/ir/src/compile.h"
 #include "compiler/translator/tree_ops/ClampFragDepth.h"
 #include "compiler/translator/tree_ops/ClampIndirectIndices.h"
@@ -355,30 +354,8 @@ size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
     }
 }
 
-int GetMaxUniformVectorsForShaderType(GLenum shaderType, const ShBuiltInResources &resources)
-{
-    switch (shaderType)
-    {
-        case GL_VERTEX_SHADER:
-            return resources.MaxVertexUniformVectors;
-        case GL_FRAGMENT_SHADER:
-            return resources.MaxFragmentUniformVectors;
-
-        // TODO (jiawei.shao@intel.com): check if we need finer-grained component counting
-        case GL_COMPUTE_SHADER:
-            return resources.MaxComputeUniformComponents / 4;
-        case GL_GEOMETRY_SHADER_EXT:
-            return resources.MaxGeometryUniformComponents / 4;
-        default:
-            UNREACHABLE();
-            return -1;
-    }
-}
-
 namespace
 {
-
-
 class [[nodiscard]] TScopedSymbolTableLevel
 {
   public:
@@ -1125,21 +1102,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         if (!useAllMembersInUnusedStandardAndSharedBlocks(root))
         {
-            return false;
-        }
-    }
-    if (compileOptions.enforcePackingRestrictions)
-    {
-        int maxUniformVectors = GetMaxUniformVectorsForShaderType(mShaderType, mResources);
-        if (mShaderType == GL_VERTEX_SHADER && compileOptions.emulateClipOrigin)
-        {
-            --maxUniformVectors;
-        }
-        // Returns true if, after applying the packing rules in the GLSL ES 1.00.17 spec
-        // Appendix A, section 7, the shader does not use too many uniforms.
-        if (!CheckVariablesInPackingLimits(maxUniformVectors, mUniforms))
-        {
-            mDiagnostics.globalError("too many uniforms");
             return false;
         }
     }

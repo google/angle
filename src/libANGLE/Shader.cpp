@@ -646,7 +646,6 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
         options.initGLPosition             = true;
         options.limitCallStackDepth        = true;
         options.limitExpressionComplexity  = true;
-        options.enforcePackingRestrictions = true;
         options.initSharedVariables        = true;
         options.rejectWebglShadersWithLargeVariables    = true;
         options.rejectWebglShadersWithUndefinedBehavior = true;
