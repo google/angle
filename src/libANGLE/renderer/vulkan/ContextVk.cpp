@@ -5128,6 +5128,7 @@ void ContextVk::updateDither()
         mGraphicsPipelineDesc->updateEmulatedDitherControl(&mGraphicsPipelineTransition,
                                                            ditherControl);
         mGraphicsDriverUniforms.updateEmulatedDitherControl(ditherControl);
+        invalidateGraphicsDriverUniforms();
         invalidateCurrentGraphicsPipeline();
     }
 }
@@ -5784,6 +5785,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                         case gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
                             mGraphicsDriverUniforms.updateEnabledClipDistances(
                                 mState.getEnabledClipDistances().bits());
+                            invalidateGraphicsDriverUniforms();
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
                             // TODO(https://anglebug.com/42266182): Use EDS3
@@ -7771,6 +7773,8 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassCl
 
     // Set dirty bits if render pass was open (and thus will be closed).
     mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
+    // Always update all pushConstants for new render pass
+    mGraphicsDriverUniforms.setAllDirtyBits();
 
     mCurrentTransformFeedbackQueueSerial = QueueSerial();
 
@@ -7896,6 +7900,8 @@ angle::Result ContextVk::flushDirtyGraphicsRenderPass(DirtyBits::Iterator *dirty
     // processing.  Note that |dirtyBitMask| is removed from |mNewGraphicsCommandBufferDirtyBits|
     // after dirty bits are iterated, so there's no need to mask them out.
     mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
+    // Always update all pushConstants for new render pass
+    mGraphicsDriverUniforms.setAllDirtyBits();
 
     ASSERT(mGraphicsPipelineDesc->getSubpass() == 0);
 
@@ -9011,5 +9017,7 @@ void ContextVk::restoreAllGraphicsState()
     DirtyBits allDrawStateDirtyBits =
         mNewGraphicsCommandBufferDirtyBits & ~DirtyBits{DIRTY_BIT_RENDER_PASS};
     mGraphicsDirtyBits |= allDrawStateDirtyBits;
+    // update all pushConstants
+    mGraphicsDriverUniforms.setAllDirtyBits();
 }
 }  // namespace rx
