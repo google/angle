@@ -499,6 +499,8 @@ class GarbageObject
     template <typename DerivedT, typename HandleT>
     static GarbageObject Get(WrappedObject<DerivedT, HandleT> *object)
     {
+        static_assert(HandleTypeHelper<DerivedT>::kHandleType != HandleType::CommandBuffer);
+        static_assert(HandleTypeHelper<DerivedT>::kHandleType != HandleType::Sampler);
         // Using c-style cast here to avoid conditional compile for MSVC 32-bit
         //  which fails to compile with reinterpret_cast, requiring static_cast.
         return GarbageObject(HandleTypeHelper<DerivedT>::kHandleType,
