@@ -1257,7 +1257,7 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("life_is_strange"))
     {
-        addExtensionPrerequisite("GL_EXT_srgb_write_control");
+        addExtensionPrerequisite("GL_EXT_sRGB_write_control");
         addExtensionPrerequisite("GL_EXT_texture_buffer");
         addExtensionPrerequisite("GL_EXT_texture_cube_map_array");
     }
@@ -1327,7 +1327,7 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("minecraft_vibrant_visuals"))
     {
-        addExtensionPrerequisite("GL_EXT_srgb_write_control");
+        addExtensionPrerequisite("GL_EXT_sRGB_write_control");
         addIntegerPrerequisite(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, 1024);
     }
 
@@ -1340,7 +1340,7 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         traceNameIs("my_talking_angela_2") || traceNameIs("my_talking_tom_friends") ||
         traceNameIs("my_talking_tom2") || traceNameIs("tower_of_fantasy"))
     {
-        addExtensionPrerequisite("GL_EXT_srgb_write_control");
+        addExtensionPrerequisite("GL_EXT_sRGB_write_control");
     }
 
     // GL_KHR_debug does not work on Android for GLES1
