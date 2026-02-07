@@ -1726,7 +1726,8 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     gl::ActiveTextureArray<TextureVk *> *activeTextures)
 {
     const gl::ShaderBitSet &linkedShaderStages = mExecutable->getLinkedShaderStages();
-    uint32_t pushConstantSize                  = sizeof(GraphicsDriverUniforms);
+    uint32_t pushConstantSize =
+        GraphicsDriverUniforms::GetMaxUniformDataSize(context->getRenderer());
 
     // Store a reference to the pipeline and descriptor set layouts. This will create them if they
     // don't already exist in the cache.
@@ -1752,7 +1753,6 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
                           !mExecutable->getLinkedTransformFeedbackVaryings().empty();
     if (context->getFeatures().emulateTransformFeedback.enabled)
     {
-        pushConstantSize += sizeof(XFBEmulationGraphicsDriverUniforms);
         if (hasXfbVaryings)
         {
             size_t xfbBufferCount = mExecutable->getTransformFeedbackBufferCount();

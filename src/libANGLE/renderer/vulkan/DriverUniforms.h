@@ -86,7 +86,9 @@ void UpdateAtomicCounterBufferOffset(vk::Renderer *renderer,
 class GraphicsDriverUniforms
 {
   public:
-    GraphicsDriverUniforms()
+    GraphicsDriverUniforms(vk::Renderer *renderer)
+        : mAllDirtyBits({DIRTY_BIT_ATOMIC_COUNTER_BUFFER, DIRTY_BIT_DEPTH_RANGE,
+                         DIRTY_BIT_RENDER_AREA, DIRTY_BIT_FLIP_XY, DIRTY_BIT_MISC})
     {
         std::ranges::fill(mUniformData.acbBufferOffsets, 0);
         std::ranges::fill(mUniformData.depthRange, 0.0f);
@@ -95,7 +97,15 @@ class GraphicsDriverUniforms
         mUniformData.dither     = 0;
         mUniformData.uint32Misc = 0;
 
-        mAllDirtyBits.set();
+        if (renderer->getFeatures().emulateDithering.enabled)
+        {
+            mAllDirtyBits.set(DIRTY_BIT_EMULATED_DITHER_CONTROL);
+        }
+        if (renderer->getFeatures().emulateTransformFeedback.enabled)
+        {
+            mAllDirtyBits.set(DIRTY_BIT_EMULATED_TRANSFORM_FEEDBACK);
+        }
+
         mDirtyBits = mAllDirtyBits;
     }
 
@@ -197,6 +207,14 @@ class GraphicsDriverUniforms
         mDirtyBits.set(DIRTY_BIT_MISC);
     }
 
+    std::array<int32_t, 4> &updateTransformFeedbackData(int32_t xfbVerticesPerInstance)
+    {
+        mUniformData.xfbVerticesPerInstance = xfbVerticesPerInstance;
+        mDirtyBits.set(DIRTY_BIT_EMULATED_TRANSFORM_FEEDBACK);
+
+        return mUniformData.xfbBufferOffsets;
+    }
+
     void setAllDirtyBits() { mDirtyBits = mAllDirtyBits; }
 
     // Update push constant driver uniforms.
@@ -216,6 +234,7 @@ class GraphicsDriverUniforms
             offsetof(struct UniformData, flipXY),
             offsetof(struct UniformData, dither),
             offsetof(struct UniformData, misc),
+            offsetof(struct UniformData, xfbBufferOffsets),
             sizeof(struct UniformData)};
 
         // Push constant data from first dirty bit to the last dirty bit
@@ -230,8 +249,14 @@ class GraphicsDriverUniforms
         mDirtyBits.reset();
     }
 
-    uint32_t getUniformDataSize() const { return sizeof(mUniformData); }
     uint32_t getRenderArea() const { return mUniformData.renderArea; }
+
+    static uint32_t GetMaxUniformDataSize(vk::Renderer *renderer)
+    {
+        return renderer->getFeatures().emulateTransformFeedback.enabled
+                   ? sizeof(struct UniformData)
+                   : offsetof(struct UniformData, xfbBufferOffsets);
+    }
 
   private:
     enum DirtyBitType : uint8_t
@@ -242,6 +267,7 @@ class GraphicsDriverUniforms
         DIRTY_BIT_FLIP_XY,
         DIRTY_BIT_EMULATED_DITHER_CONTROL,
         DIRTY_BIT_MISC,
+        DIRTY_BIT_EMULATED_TRANSFORM_FEEDBACK,
 
         EnumCount
     };
@@ -312,6 +338,11 @@ class GraphicsDriverUniforms
             } misc;
             uint32_t uint32Misc;
         };
+
+        // Only used when transform feedback is emulated.
+        std::array<int32_t, 4> xfbBufferOffsets;
+        int32_t xfbVerticesPerInstance;
+        int32_t padding[3];
     } UniformData;
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
@@ -322,28 +353,19 @@ class GraphicsDriverUniforms
                       sh::vk::kDriverUniformsMiscEnabledClipPlanesMask,
                   "Not enough bits for enabled clip planes");
 
+    // Driver uniforms are updated using push constants and Vulkan spec guarantees universal support
+    // for 128 bytes worth of push constants. For maximum compatibility ensure
+    // GraphicsDriverUniforms plus extended size are within that limit.
+    static_assert(sizeof(UniformData) <= 128, "Only 128 bytes are guaranteed for push constants");
+
     struct UniformData mUniformData;
+
     // Track which constant is dirty
     DirtyBits mDirtyBits;
     // All possible dirty bits. Note that depends on feature bit, it may not be all bits in the
     // DirtyBits.
     DirtyBits mAllDirtyBits;
 };
-
-// Only used when transform feedback is emulated.
-struct XFBEmulationGraphicsDriverUniforms
-{
-    std::array<int32_t, 4> xfbBufferOffsets;
-    int32_t xfbVerticesPerInstance;
-    int32_t padding[3];
-};
-static_assert(sizeof(XFBEmulationGraphicsDriverUniforms) % (sizeof(uint32_t) * 4) == 0,
-              "GraphicsDriverUniformsExtended should be 16bytes aligned");
-// Driver uniforms are updated using push constants and Vulkan spec guarantees universal support for
-// 128 bytes worth of push constants. For maximum compatibility ensure
-// GraphicsDriverUniforms plus extended size are within that limit.
-static_assert(sizeof(GraphicsDriverUniforms) + sizeof(XFBEmulationGraphicsDriverUniforms) <= 128,
-              "Only 128 bytes are guaranteed for push constants");
 
 struct ComputeDriverUniforms
 {

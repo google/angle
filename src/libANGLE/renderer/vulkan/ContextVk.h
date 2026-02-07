@@ -1226,9 +1226,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                  DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *dirtyBitsIterator,
                                                     DirtyBits dirtyBitMask);
-    angle::Result handleDirtyGraphicsDriverUniformsWithXFBEmulation(
-        DirtyBits::Iterator *dirtyBitsIterator,
-        DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsShaderResources(DirtyBits::Iterator *dirtyBitsIterator,
                                                      DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsUniformBuffers(DirtyBits::Iterator *dirtyBitsIterator,
@@ -1531,14 +1528,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     gl::DrawElementsType mCurrentDrawElementsType;
     angle::PackedEnumMap<gl::DrawElementsType, VkIndexType> mIndexTypeMap;
 
-    // Cache the current draw call's firstVertex to be passed to
-    // TransformFeedbackVk::getBufferOffsets.  Unfortunately, gl_BaseVertex support in Vulkan is
-    // not yet ubiquitous, which would have otherwise removed the need for this value to be passed
-    // as a uniform.
-    GLint mXfbBaseVertex;
-    // Cache the current draw call's vertex count as well to support instanced draw calls
-    GLuint mXfbVertexCountPerInstance;
-
     // Cached clear value/mask for color and depth/stencil.
     VkClearValue mClearColorValue;
     VkClearValue mClearDepthStencilValue;
@@ -1704,7 +1693,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     uint32_t mCommandsPendingSubmissionCount;
 
     GraphicsDriverUniforms mGraphicsDriverUniforms;
-    XFBEmulationGraphicsDriverUniforms mXFBEmulationDriverUniforms;
 };
 
 ANGLE_INLINE angle::Result ContextVk::endRenderPassIfTransformFeedbackBuffer(

@@ -761,8 +761,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mCurrentIndexBuffer(nullptr),
       mCurrentIndexBufferOffset(0),
       mCurrentDrawElementsType(gl::DrawElementsType::InvalidEnum),
-      mXfbBaseVertex(0),
-      mXfbVertexCountPerInstance(0),
       mClearColorValue{},
       mClearDepthStencilValue{},
       mClearColorMasks(0),
@@ -790,14 +788,14 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mEstimatedPendingImageGarbageSize(0),
       mRenderPassCountSinceSubmit(0),
       mShareGroupVk(vk::GetImpl(state.getShareGroup())),
-      mCommandsPendingSubmissionCount(0)
+      mCommandsPendingSubmissionCount(0),
+      mGraphicsDriverUniforms(renderer)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::ContextVk");
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
     memset(&mClearDepthStencilValue, 0, sizeof(mClearDepthStencilValue));
     memset(&mViewport, 0, sizeof(mViewport));
     memset(&mScissor, 0, sizeof(mScissor));
-    memset(&mXFBEmulationDriverUniforms, 0, sizeof(mXFBEmulationDriverUniforms));
 
     // Ensure viewport is within Vulkan requirements
     vk::ClampViewport(&mViewport);
@@ -929,17 +927,15 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     mGraphicsDirtyBitHandlers[DIRTY_BIT_BLEND_BARRIER] =
         &ContextVk::handleDirtyGraphicsBlendBarrier;
 
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DRIVER_UNIFORMS] =
+        &ContextVk::handleDirtyGraphicsDriverUniforms;
     if (getFeatures().emulateTransformFeedback.enabled)
     {
-        mGraphicsDirtyBitHandlers[DIRTY_BIT_DRIVER_UNIFORMS] =
-            &ContextVk::handleDirtyGraphicsDriverUniformsWithXFBEmulation;
         mGraphicsDirtyBitHandlers[DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS] =
             &ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation;
     }
     else
     {
-        mGraphicsDirtyBitHandlers[DIRTY_BIT_DRIVER_UNIFORMS] =
-            &ContextVk::handleDirtyGraphicsDriverUniforms;
         mGraphicsDirtyBitHandlers[DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS] =
             &ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension;
         mGraphicsDirtyBitHandlers[DIRTY_BIT_TRANSFORM_FEEDBACK_RESUME] =
@@ -1547,8 +1543,13 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         mState.isTransformFeedbackActiveUnpaused())
     {
         ASSERT(firstVertexOrInvalid != -1);
-        mXfbBaseVertex             = firstVertexOrInvalid;
-        mXfbVertexCountPerInstance = vertexOrIndexCount;
+        TransformFeedbackVk *transformFeedbackVk =
+            vk::GetImpl(mState.getCurrentTransformFeedback());
+        std::array<int32_t, 4> &bufferOffsets = mGraphicsDriverUniforms.updateTransformFeedbackData(
+            static_cast<int32_t>(vertexOrIndexCount));
+
+        transformFeedbackVk->getBufferOffsets(this, firstVertexOrInvalid, bufferOffsets.data(),
+                                              bufferOffsets.size());
         invalidateGraphicsDriverUniforms();
     }
 
@@ -6753,7 +6754,6 @@ void ContextVk::pauseTransformFeedbackIfActiveUnpaused()
 angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *dirtyBitsIterator,
                                                            DirtyBits dirtyBitMask)
 {
-    ASSERT(!getFeatures().emulateTransformFeedback.enabled);
     ProgramExecutableVk *executableVk        = vk::GetImpl(mState.getProgramExecutable());
     const vk::PipelineLayout &pipelineLayout = executableVk->getPipelineLayout();
 
@@ -6770,40 +6770,6 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
 
     mPerfCounters.graphicsDriverUniformsUpdated++;
 
-    return angle::Result::Continue;
-}
-
-angle::Result ContextVk::handleDirtyGraphicsDriverUniformsWithXFBEmulation(
-    DirtyBits::Iterator *dirtyBitsIterator,
-    DirtyBits dirtyBitMask)
-{
-    ASSERT(getFeatures().emulateTransformFeedback.enabled);
-    ProgramExecutableVk *executableVk        = vk::GetImpl(mState.getProgramExecutable());
-    const vk::PipelineLayout &pipelineLayout = executableVk->getPipelineLayout();
-
-    // Update push constant driver uniforms.
-    mGraphicsDriverUniforms.pushConstants(mRenderer, pipelineLayout,
-                                          &mRenderPassCommands->getCommandBuffer());
-
-    if (mState.isTransformFeedbackActiveUnpaused())
-    {
-        TransformFeedbackVk *transformFeedbackVk =
-            vk::GetImpl(mState.getCurrentTransformFeedback());
-        transformFeedbackVk->getBufferOffsets(this, mXfbBaseVertex,
-                                              mXFBEmulationDriverUniforms.xfbBufferOffsets.data(),
-                                              mXFBEmulationDriverUniforms.xfbBufferOffsets.size());
-    }
-
-    mXFBEmulationDriverUniforms.xfbVerticesPerInstance =
-        static_cast<int32_t>(mXfbVertexCountPerInstance);
-
-    // This is appended after GraphicsDriverUniforms
-    uint32_t offset = mGraphicsDriverUniforms.getUniformDataSize();
-    mRenderPassCommands->getCommandBuffer().pushConstants(
-        pipelineLayout, mRenderer->getSupportedVulkanShaderStageMask(), offset,
-        sizeof(XFBEmulationGraphicsDriverUniforms), &mXFBEmulationDriverUniforms);
-
-    mPerfCounters.graphicsDriverUniformsUpdated++;
     return angle::Result::Continue;
 }
 
