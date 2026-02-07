@@ -543,11 +543,11 @@ class WindowSurfaceVk : public SurfaceVk
     vk::ImageViewHelper mDepthStencilImageViews;
     angle::ObserverBinding mDepthStencilImageBinding;
 
-    // Multisample color image, view and framebuffer, if multisampling enabled.
-    vk::ImageHelper mColorImageMS;
-    vk::ImageViewHelper mColorImageMSViews;
-    angle::ObserverBinding mColorImageMSBinding;
-    vk::Framebuffer mFramebufferMS;
+    // Ancillary color image, view and framebuffer, if multisampling is enabled.
+    vk::ImageHelper mAncillaryColorImage;
+    vk::ImageViewHelper mAncillaryColorImageViews;
+    angle::ObserverBinding mAncillaryColorImageBinding;
+    vk::Framebuffer mAncillaryFramebuffer;
 
     impl::ImageAcquireOperation mAcquireOperation;
 
