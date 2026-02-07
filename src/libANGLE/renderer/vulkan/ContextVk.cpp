@@ -4251,7 +4251,7 @@ angle::Result ContextVk::multiDrawElementsInstancedBaseVertexBaseInstance(
 angle::Result ContextVk::optimizeRenderPassForPresent(
     vk::ImageViewHelper *colorImageView,
     vk::ImageHelper *colorImage,
-    vk::ImageHelper *colorImageMS,
+    vk::ImageHelper *ancillaryColorImage,
     PresentImageLayout layout,
     SurfaceAncillaryColorBehavior ancillaryBehavior,
     bool *imageResolved)
@@ -4282,16 +4282,18 @@ angle::Result ContextVk::optimizeRenderPassForPresent(
     // Resolve the multisample image
     vk::RenderPassCommandBufferHelper &commandBufferHelper = getStartedRenderPassCommands();
     gl::Rectangle renderArea                               = commandBufferHelper.getRenderArea();
-    const gl::Rectangle fullExtent(0, 0, colorImageMS->getRotatedExtents().width,
-                                   colorImageMS->getRotatedExtents().height);
-    const bool resolveWithRenderPass = colorImageMS->valid() && renderArea == fullExtent;
+    const gl::Rectangle fullExtent(0, 0, ancillaryColorImage->getRotatedExtents().width,
+                                   ancillaryColorImage->getRotatedExtents().height);
+    const bool resolveWithRenderPass = ancillaryColorImage->valid() &&
+                                       ancillaryColorImage->getSamples() > 1 &&
+                                       renderArea == fullExtent;
 
     // Handle transition to PRESENT_SRC automatically as part of the render pass.  If the swapchain
     // image is the target of resolve, but that resolve cannot happen with the render pass, do not
     // apply this optimization; the image has to be moved out of PRESENT_SRC to be resolved after
     // this call.
     if (getFeatures().supportsPresentation.enabled && layout == PresentImageLayout::PresentSrc &&
-        (!colorImageMS->valid() || resolveWithRenderPass))
+        (!ancillaryColorImage->valid() || resolveWithRenderPass))
     {
         ASSERT(colorImage != nullptr);
         mRenderPassCommands->setImageOptimizeForPresent(colorImage);

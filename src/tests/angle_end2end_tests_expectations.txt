@@ -1814,6 +1814,9 @@
 // Workaround feature that is only supposed to be enabled on vulkan backend
 292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = SKIP
 
+483088593 PIXEL4ORXL GLES : EGLSurfaceTest.ClearThenPreserve/* = SKIP
+483088593 PIXEL4ORXL GLES : EGLSurfaceTest.PreserveThenBlend/* = SKIP
+
 // NVIDIA driver has a bug in its YCbCr implementation
 42267014 NVIDIA VULKAN : Texture2DTestES3.TexStorage2DMultipleYuvSamplersSwitchSamplerUniformValues/* = SKIP
 42267014 NVIDIA VULKAN : Texture2DTestES3.TexStorage2DMultipleYuvSamplersSwitchBoundTextures/* = SKIP

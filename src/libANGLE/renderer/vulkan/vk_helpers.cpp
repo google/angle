@@ -5699,19 +5699,19 @@ angle::Result ImageHelper::copyToBufferOneOff(ErrorContext *context,
     return renderer->finishQueueSerial(context, submitQueueSerial);
 }
 
-angle::Result ImageHelper::initMSAASwapchain(ErrorContext *context,
-                                             gl::TextureType textureType,
-                                             const VkExtent3D &extents,
-                                             bool rotatedAspectRatio,
-                                             angle::FormatID intendedFormatID,
-                                             angle::FormatID actualFormatID,
-                                             GLint samples,
-                                             VkImageUsageFlags usage,
-                                             gl::LevelIndex firstLevel,
-                                             uint32_t mipLevels,
-                                             uint32_t layerCount,
-                                             bool isRobustResourceInitEnabled,
-                                             bool hasProtectedContent)
+angle::Result ImageHelper::initAncillarySwapchain(ErrorContext *context,
+                                                  gl::TextureType textureType,
+                                                  const VkExtent3D &extents,
+                                                  bool rotatedAspectRatio,
+                                                  angle::FormatID intendedFormatID,
+                                                  angle::FormatID actualFormatID,
+                                                  GLint samples,
+                                                  VkImageUsageFlags usage,
+                                                  gl::LevelIndex firstLevel,
+                                                  uint32_t mipLevels,
+                                                  uint32_t layerCount,
+                                                  bool isRobustResourceInitEnabled,
+                                                  bool hasProtectedContent)
 {
     ANGLE_TRY(initExternal(context, textureType, extents, intendedFormatID, actualFormatID, samples,
                            usage, kVkImageCreateFlagsNone, ImageAccess::Undefined, nullptr,
@@ -8208,6 +8208,27 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+void ImageHelper::copy(Renderer *renderer,
+                       ImageHelper *dst,
+                       const VkImageCopy &region,
+                       OutsideRenderPassCommandBuffer *commandBuffer)
+{
+    ASSERT(mCurrentAccess == ImageAccess::TransferSrc ||
+           mCurrentAccess == ImageAccess::SharedPresent);
+    ASSERT(dst->getCurrentImageAccess() == ImageAccess::TransferDst ||
+           dst->getCurrentImageAccess() == ImageAccess::SharedPresent);
+    // Source image must be up-to-date.
+    ASSERT(verifyNoStagedUpdates());
+    // Dest image might have clears staged due to robustness or format emulation, which can be
+    // dropped.  Note that this function is only used with swapchain images, so there is no need to
+    // be specific about which subresource updates to drop.
+    ASSERT(dst->getLevelCount() == 1 && dst->getLayerCount() == 1);
+    ASSERT(dst->verifyNoStagedUpdates() || dst->areStagedUpdatesClearOnly());
+    dst->mSubresourceUpdates.clear();
+    commandBuffer->copyImage(getImage(), getCurrentLayout(renderer), dst->getImage(),
+                             dst->getCurrentLayout(renderer), 1, &region);
+}
+
 void ImageHelper::resolve(Renderer *renderer,
                           ImageHelper *dst,
                           const VkImageResolve &region,
@@ -9644,6 +9665,18 @@ void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled, b
                                      SubresourceUpdate(aspectFlags, clearValue, index));
         }
     }
+}
+
+bool ImageHelper::verifyNoStagedUpdates() const
+{
+    for (const SubresourceUpdates &updates : mSubresourceUpdates)
+    {
+        if (!updates.empty())
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool ImageHelper::verifyEmulatedClearsAreBeforeOtherUpdates(const SubresourceUpdates &updates)

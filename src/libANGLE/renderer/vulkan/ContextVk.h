@@ -461,7 +461,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     angle::Result optimizeRenderPassForPresent(vk::ImageViewHelper *colorImageView,
                                                vk::ImageHelper *colorImage,
-                                               vk::ImageHelper *colorImageMS,
+                                               vk::ImageHelper *ancillaryColorImage,
                                                PresentImageLayout layout,
                                                SurfaceAncillaryColorBehavior ancillaryBehavior,
                                                bool *imageResolved);

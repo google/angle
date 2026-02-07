@@ -418,7 +418,7 @@ class WindowSurfaceVk : public SurfaceVk
     // Invalidates the swapchain pointer, releases images, and defers acquire next swapchain image.
     void invalidateSwapchain(vk::Renderer *renderer);
     angle::Result recreateSwapchain(vk::ErrorContext *context);
-    angle::Result createSwapChain(vk::ErrorContext *context);
+    angle::Result createSwapchain(vk::ErrorContext *context);
     angle::Result collectOldSwapchain(vk::ErrorContext *context, VkSwapchainKHR swapchain);
     angle::Result queryAndAdjustSurfaceCaps(
         vk::ErrorContext *context,
@@ -431,7 +431,8 @@ class WindowSurfaceVk : public SurfaceVk
     angle::Result prepareSwapchainForAcquireNextImage(vk::ErrorContext *context);
     void createSwapchainImages(uint32_t imageCount);
     void releaseSwapchainImages(vk::Renderer *renderer);
-    void destroySwapChainImages(DisplayVk *displayVk);
+    void destroySwapchainImages(DisplayVk *displayVk);
+    angle::Result createAncillaryColorImage(vk::ErrorContext *context);
     // Called when a swapchain image whose acquisition was deferred must be acquired or unlocked
     // ANI result processed.  This method will recreate the swapchain (if needed due to surface size
     // changing etc, by calling prepareSwapchainForAcquireNextImage()) and call the
@@ -475,7 +476,8 @@ class WindowSurfaceVk : public SurfaceVk
     bool overlayHasEnabledWidget(ContextVk *contextVk) const;
     angle::Result drawOverlay(ContextVk *contextVk, impl::SwapchainImage *image) const;
 
-    bool isMultiSampled() const;
+    bool isMultisampledSurface() const;
+    bool hasAncillaryColor() const;
 
     bool supportsPresentMode(vk::PresentMode presentMode) const;
 
@@ -560,7 +562,7 @@ class WindowSurfaceVk : public SurfaceVk
     // EGL_EXT_buffer_age: Track frame count.
     uint64_t mFrameCount;
     // The frame in which swap behavior is set to PRESERVE.
-    uint64_t mPreserveFrameCount;
+    uint64_t mPreserveStartFrame;
     // EGL_ANDROID_presentation_time: Next frame's id and presentation time
     // used for VK_GOOGLE_display_timing.
     uint32_t mPresentID;
