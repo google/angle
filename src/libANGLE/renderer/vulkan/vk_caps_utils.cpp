@@ -1649,7 +1649,8 @@ egl::Config GenerateDefaultConfig(DisplayVk *display,
     config.renderableType     = es1Support | es2Support | es3Support;
     config.sampleBuffers      = (sampleCount > 0) ? 1 : 0;
     config.samples            = sampleCount;
-    config.surfaceType        = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
+    config.surfaceType =
+        EGL_WINDOW_BIT | EGL_PBUFFER_BIT | (sampleCount > 0 ? EGL_SWAP_BEHAVIOR_PRESERVED_BIT : 0);
     if (display->getExtensions().mutableRenderBufferKHR)
     {
         config.surfaceType |= EGL_MUTABLE_RENDER_BUFFER_BIT_KHR;

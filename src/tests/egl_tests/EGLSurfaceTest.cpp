@@ -3488,7 +3488,7 @@ TEST_P(EGLSurfaceTest, SurfaceFixedRateCompression)
     EGLint rates[3];
     // Success, actual values of rates are depended on each platform
     EXPECT_EGL_TRUE(
-        eglQuerySupportedCompressionRatesEXT(mDisplay, mConfig, NULL, rates, 3, &numRates));
+        eglQuerySupportedCompressionRatesEXT(mDisplay, mConfig, nullptr, rates, 3, &numRates));
     ASSERT_EGL_SUCCESS();
 
     if (numRates > 0 && rates[0] != EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)

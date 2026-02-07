@@ -306,6 +306,7 @@ class WindowSurfaceVk : public SurfaceVk
     egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc) override;
     egl::Error getMscRate(EGLint *numerator, EGLint *denominator) override;
     void setSwapInterval(const egl::Display *display, EGLint interval) override;
+    void setSwapBehavior(EGLenum behavior) override;
 
     // Explicitly resolves surface size to use before state synchronization (e.g. validation).
     angle::Result ensureSizeResolved(const gl::Context *context) final;
@@ -458,6 +459,8 @@ class WindowSurfaceVk : public SurfaceVk
     angle::Result cleanUpPresentHistory(vk::ErrorContext *context);
     angle::Result cleanUpOldSwapchains(vk::ErrorContext *context);
 
+    bool shouldRetainColor() const;
+
     // Throttle the CPU such that application's logic and command buffer recording doesn't get more
     // than two frame ahead of the frame being rendered (and three frames ahead of the one being
     // presented).  This is a failsafe, as the application should ensure command buffer recording is
@@ -497,6 +500,8 @@ class WindowSurfaceVk : public SurfaceVk
     // Cached information used to recreate swapchains.
     vk::PresentMode mSwapchainPresentMode;                      // Current swapchain mode
     std::atomic<vk::PresentMode> mDesiredSwapchainPresentMode;  // Desired swapchain mode
+    bool mPreserveOnSwap;                                       // Current swapchain behavior
+    std::atomic_bool mDesiredPreserveOnSwap;                    // Desired swapchain behavior
     uint32_t mMinImageCount;
     VkSurfaceTransformFlagBitsKHR mPreTransform;
     VkSurfaceTransformFlagBitsKHR mEmulatedPreTransform;
@@ -543,7 +548,8 @@ class WindowSurfaceVk : public SurfaceVk
     vk::ImageViewHelper mDepthStencilImageViews;
     angle::ObserverBinding mDepthStencilImageBinding;
 
-    // Ancillary color image, view and framebuffer, if multisampling is enabled.
+    // Ancillary color image, view and framebuffer, if multisampling or preserved swap behavior is
+    // enabled.
     vk::ImageHelper mAncillaryColorImage;
     vk::ImageViewHelper mAncillaryColorImageViews;
     angle::ObserverBinding mAncillaryColorImageBinding;
@@ -553,6 +559,8 @@ class WindowSurfaceVk : public SurfaceVk
 
     // EGL_EXT_buffer_age: Track frame count.
     uint64_t mFrameCount;
+    // The frame in which swap behavior is set to PRESERVE.
+    uint64_t mPreserveFrameCount;
     // EGL_ANDROID_presentation_time: Next frame's id and presentation time
     // used for VK_GOOGLE_display_timing.
     uint32_t mPresentID;

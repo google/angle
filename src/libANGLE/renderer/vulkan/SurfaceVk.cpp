@@ -1039,6 +1039,8 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mLastSwapchain(VK_NULL_HANDLE),
       mSwapchainPresentMode(vk::PresentMode::FifoKHR),
       mDesiredSwapchainPresentMode(vk::PresentMode::FifoKHR),
+      mPreserveOnSwap(false),
+      mDesiredPreserveOnSwap(false),
       mMinImageCount(0),
       mPreTransform(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR),
       mEmulatedPreTransform(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR),
@@ -1048,6 +1050,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mDepthStencilImageBinding(this, kAnySurfaceImageSubjectIndex),
       mAncillaryColorImageBinding(this, kAnySurfaceImageSubjectIndex),
       mFrameCount(1),
+      mPreserveFrameCount(0),
       mPresentID(0),
       mIsBufferAgeQueried(false),
       mRenderer(nullptr)
@@ -2411,10 +2414,36 @@ vk::Framebuffer &WindowSurfaceVk::chooseFramebuffer()
                : mSwapchainImages[mCurrentSwapchainImageIndex].framebuffer;
 }
 
+bool WindowSurfaceVk::shouldRetainColor() const
+{
+    // According to EGL, on swap:
+    //
+    // - When EGL_BUFFER_DESTROYED is specified, the contents of the color image can be invalidated.
+    //    * This is disabled when buffer age has been queried, as expected for the
+    //      EGL_KHR_partial_update extension.
+    // - Depth/Stencil is always invalidated before last submission.
+    //
+    // In all cases, when in shared present mode, swap is implicit and the swap behavior doesn't
+    // apply so no invalidation is done.
+    return mPreserveOnSwap || mIsBufferAgeQueried || isSharedPresentMode();
+}
+
 angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
                                                 const vk::Semaphore &presentSemaphore)
 {
     vk::Renderer *renderer = contextVk->getRenderer();
+
+    // If switching to preserve mode, take that into account before deciding if content needs to be
+    // preserved in the rest of the function.
+    {
+        const bool desiredPreserveOnSwap = mDesiredPreserveOnSwap.load(std::memory_order_relaxed);
+        if (!mPreserveOnSwap && desiredPreserveOnSwap)
+        {
+            // Remember in which frame the behavior is set to preserve.
+            mPreserveFrameCount = mFrameCount;
+        }
+        mPreserveOnSwap = desiredPreserveOnSwap;
+    }
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
@@ -2433,8 +2462,7 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         // certain situations, we must also ensure msaa buffer contains the right content.
         // Under that situation, this optimization will not apply.
 
-        if (!isSharedPresentMode() &&
-            (mState.swapBehavior == EGL_BUFFER_DESTROYED && !mIsBufferAgeQueried))
+        if (!shouldRetainColor())
         {
             vk::ClearValuesArray deferredClearValues;
             ANGLE_TRY(mAncillaryColorImage.flushSingleSubresourceStagedUpdates(
@@ -2488,9 +2516,14 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         // If image is resolved above, render pass is necessary closed.
         ASSERT(!imageResolved);
 
+        const PresentImageLayout layout =
+            isSharedPresentMode() ? PresentImageLayout::Keep : PresentImageLayout::PresentSrc;
+        const SurfaceAncillaryColorBehavior ancillaryBehavior =
+            shouldRetainColor() ? SurfaceAncillaryColorBehavior::Retain
+                                : SurfaceAncillaryColorBehavior::InvalidateOnPresent;
         ANGLE_TRY(contextVk->optimizeRenderPassForPresent(&image.imageViews, image.image.get(),
-                                                          &mAncillaryColorImage,
-                                                          isSharedPresentMode(), &imageResolved));
+                                                          &mAncillaryColorImage, layout,
+                                                          ancillaryBehavior, &imageResolved));
     }
 
     if (mAncillaryColorImage.valid() && !imageResolved)
@@ -3057,7 +3090,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
     const VkSemaphore acquireImageSemaphore =
         mAcquireOperation.unlockedAcquireResult.acquireSemaphore;
 
-    // Let Image keep the ani semaphore so that it can add to the semaphore wait list if it is
+    // Let Image keep the ANI semaphore so that it can add to the semaphore wait list if it is
     // being used. Image's barrier code will move the semaphore into CommandBufferHelper object
     // and then added to waitSemaphores when commands gets flushed and submitted. Since all
     // image use after ANI must go through barrier code, this approach is very robust. And since
@@ -3116,24 +3149,14 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
                                                 nullptr);
     }
 
-    // Auto-invalidate the contents of the surface.  According to EGL, on swap:
-    //
-    // - When EGL_BUFFER_DESTROYED is specified, the contents of the color image can be
-    //   invalidated.
-    //    * This is disabled when buffer age has been queried to work around a dEQP test bug.
-    // - Depth/Stencil is always invalidated before last submission.
-    //
-    // In all cases, when in shared present mode, swap is implicit and the swap behavior
-    // doesn't apply so no invalidation is done.
-    if (!isSharedPresentMode())
+    // Auto-invalidate the contents of the surface.  Depth/Stencil is always invalidated before last
+    // submission.
+    if (!shouldRetainColor())
     {
-        if (mState.swapBehavior == EGL_BUFFER_DESTROYED && !mIsBufferAgeQueried)
+        image.image->invalidateEntireLevelContent(context, gl::LevelIndex(0));
+        if (mAncillaryColorImage.valid())
         {
-            image.image->invalidateEntireLevelContent(context, gl::LevelIndex(0));
-            if (mAncillaryColorImage.valid())
-            {
-                mAncillaryColorImage.invalidateEntireLevelContent(context, gl::LevelIndex(0));
-            }
+            mAncillaryColorImage.invalidateEntireLevelContent(context, gl::LevelIndex(0));
         }
     }
     // Depth buffer (excluding emulated channel) should have been invalidated before the last
@@ -3219,6 +3242,15 @@ void WindowSurfaceVk::setSwapInterval(const egl::Display *display, EGLint interv
     if (!isSharedPresentModeDesired())
     {
         setDesiredSwapInterval(interval);
+    }
+}
+
+void WindowSurfaceVk::setSwapBehavior(EGLenum behavior)
+{
+    // Don't change behavior if using SHARED present, it's always preserved.
+    if (!isSharedPresentModeDesired())
+    {
+        mDesiredPreserveOnSwap.store(behavior == EGL_BUFFER_PRESERVED, std::memory_order_relaxed);
     }
 }
 
@@ -3349,7 +3381,8 @@ EGLint WindowSurfaceVk::isPostSubBufferSupported() const
 
 EGLint WindowSurfaceVk::getSwapBehavior() const
 {
-    // TODO(jmadill)
+    // Default behavior is to not preserve the contents of the surface across swaps, which is more
+    // efficient than trying to preserve it.
     return EGL_BUFFER_DESTROYED;
 }
 
@@ -3548,7 +3581,7 @@ egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age
     // ANI may be skipped in case of multi sampled surface.
     if (isMultiSampled())
     {
-        *age = 0;
+        *age = mPreserveOnSwap && mFrameCount > mPreserveFrameCount ? 1 : 0;
         return egl::NoError();
     }
 
@@ -3579,7 +3612,7 @@ egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age
 
     if (age != nullptr)
     {
-        if (mState.swapBehavior == EGL_BUFFER_PRESERVED)
+        if (mPreserveOnSwap)
         {
             // EGL_EXT_buffer_age
             //
@@ -3588,8 +3621,7 @@ egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age
             //     RESOLVED: The age will always be 1 in this case.
 
             // Note: if the query is made before the 1st swap then age needs to be 0
-            *age = (mFrameCount == 1) ? 0 : 1;
-
+            *age = mFrameCount > mPreserveFrameCount ? 1 : 0;
             return egl::NoError();
         }
 
