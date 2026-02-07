@@ -8503,8 +8503,6 @@ TEST_P(VulkanPerformanceCounterTest, NoUpdatesToGraphicsDriverUniformsOnProgramC
     uint64_t program1Count = getPerfCounters().graphicsDriverUniformsUpdated;
 
     glUseProgram(program2);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
     drawQuad(program2, essl1_shaders::PositionAttrib(), 0);
     uint64_t program2Count = getPerfCounters().graphicsDriverUniformsUpdated;
 
@@ -8512,8 +8510,6 @@ TEST_P(VulkanPerformanceCounterTest, NoUpdatesToGraphicsDriverUniformsOnProgramC
     EXPECT_EQ(program1Count, program2Count);
 
     glUseProgram(program1);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
     drawQuad(program1, essl1_shaders::PositionAttrib(), 0);
     program1Count = getPerfCounters().graphicsDriverUniformsUpdated;
 

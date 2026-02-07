@@ -90,12 +90,12 @@ class GraphicsDriverUniforms
         : mAllDirtyBits({DIRTY_BIT_ATOMIC_COUNTER_BUFFER, DIRTY_BIT_DEPTH_RANGE,
                          DIRTY_BIT_RENDER_AREA, DIRTY_BIT_FLIP_XY, DIRTY_BIT_MISC})
     {
-        std::ranges::fill(mUniformData.acbBufferOffsets, 0);
         std::ranges::fill(mUniformData.depthRange, 0.0f);
         mUniformData.renderArea = 0;
         mUniformData.flipXY     = 0;
         mUniformData.dither     = 0;
         mUniformData.uint32Misc = 0;
+        std::ranges::fill(mUniformData.acbBufferOffsets, 0);
 
         if (renderer->getFeatures().emulateDithering.enabled)
         {
@@ -228,12 +228,12 @@ class GraphicsDriverUniforms
         }
 
         static constexpr std::array<uint32_t, DirtyBitType::EnumCount + 1> kPushConstantOffsets = {
-            offsetof(struct UniformData, acbBufferOffsets),
             offsetof(struct UniformData, depthRange),
             offsetof(struct UniformData, renderArea),
             offsetof(struct UniformData, flipXY),
             offsetof(struct UniformData, dither),
             offsetof(struct UniformData, misc),
+            offsetof(struct UniformData, acbBufferOffsets),
             offsetof(struct UniformData, xfbBufferOffsets),
             sizeof(struct UniformData)};
 
@@ -261,12 +261,12 @@ class GraphicsDriverUniforms
   private:
     enum DirtyBitType : uint8_t
     {
-        DIRTY_BIT_ATOMIC_COUNTER_BUFFER,
         DIRTY_BIT_DEPTH_RANGE,
         DIRTY_BIT_RENDER_AREA,
         DIRTY_BIT_FLIP_XY,
         DIRTY_BIT_EMULATED_DITHER_CONTROL,
         DIRTY_BIT_MISC,
+        DIRTY_BIT_ATOMIC_COUNTER_BUFFER,
         DIRTY_BIT_EMULATED_TRANSFORM_FEEDBACK,
 
         EnumCount
@@ -276,11 +276,6 @@ class GraphicsDriverUniforms
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct UniformData
     {
-        // Contain packed 8-bit values for atomic counter buffer offsets.  These offsets are within
-        // Vulkan's minStorageBufferOffsetAlignment limit and are used to support unaligned offsets
-        // allowed in GL.
-        std::array<uint32_t, 2> acbBufferOffsets;
-
         // .x is near, .y is far
         std::array<float, 2> depthRange;
 
@@ -338,6 +333,11 @@ class GraphicsDriverUniforms
             } misc;
             uint32_t uint32Misc;
         };
+
+        // Contain packed 8-bit values for atomic counter buffer offsets.  These offsets are within
+        // Vulkan's minStorageBufferOffsetAlignment limit and are used to support unaligned offsets
+        // allowed in GL.
+        std::array<uint32_t, 2> acbBufferOffsets;
 
         // Only used when transform feedback is emulated.
         std::array<int32_t, 4> xfbBufferOffsets;
