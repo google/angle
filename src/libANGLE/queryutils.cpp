@@ -4854,7 +4854,7 @@ egl::Error QuerySurfaceAttrib(const Display *display,
             }
             break;
         case EGL_SWAP_BEHAVIOR:
-            *value = surface->getSwapBehavior();
+            *value = surface->getRequestedSwapBehavior();
             break;
         case EGL_TEXTURE_FORMAT:
             // The EGL spec states that value is not written if the surface is not a pbuffer
@@ -4991,7 +4991,7 @@ egl::Error SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value)
             surface->setMultisampleResolve(value);
             break;
         case EGL_SWAP_BEHAVIOR:
-            surface->setSwapBehavior(value);
+            surface->setRequestedSwapBehavior(value);
             break;
         case EGL_WIDTH:
             surface->setFixedWidth(value);
