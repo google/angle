@@ -1116,12 +1116,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
-    }
+        mValidateASTOptions.validateMultiDeclarations = true;
 
-    mValidateASTOptions.validateMultiDeclarations = true;
-
-    if (!useIR)
-    {
         if (!SplitSequenceOperator(this, root, IntermNodePatternMatcher::kArrayLengthMethod,
                                    &getSymbolTable()))
         {

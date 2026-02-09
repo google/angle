@@ -2873,6 +2873,7 @@ pub mod ffi {
         SecondaryFragColorEXT,
         SecondaryFragDataEXT,
         ViewIDOVR,
+        EmulatedViewIDOVR,
         ClipDistance,
         CullDistance,
         LastFragColor,
@@ -3907,6 +3908,9 @@ impl BuilderWrapper {
             ffi::ASTQualifier::SecondaryFragColorEXT => Some(BuiltIn::SecondaryFragColorEXT),
             ffi::ASTQualifier::SecondaryFragDataEXT => Some(BuiltIn::SecondaryFragDataEXT),
             ffi::ASTQualifier::ViewIDOVR => Some(BuiltIn::ViewIDOVR),
+            ffi::ASTQualifier::EmulatedViewIDOVR => {
+                panic!("Internal error: gl_ViewID_OVR emulation happens during transformations")
+            }
             ffi::ASTQualifier::ClipDistance => Some(BuiltIn::ClipDistance),
             ffi::ASTQualifier::CullDistance => Some(BuiltIn::CullDistance),
             ffi::ASTQualifier::LastFragColor => Some(BuiltIn::LastFragColor),
