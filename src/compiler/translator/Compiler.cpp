@@ -964,24 +964,20 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-    }
 
-    if (compileOptions.initializeBuiltinsForInstancedMultiview &&
-        (parseContext.isExtensionEnabled(TExtension::OVR_multiview2) ||
-         parseContext.isExtensionEnabled(TExtension::OVR_multiview)) &&
-        getShaderType() != GL_COMPUTE_SHADER)
-    {
-        // Note: if multiview is enabled via #extension all, num_views may not be set.
-        if (!DeclareAndInitBuiltinsForInstancedMultiview(this, root, std::max(mNumViews, 1),
-                                                         mShaderType, compileOptions, mOutputType,
-                                                         &mSymbolTable))
+        if (compileOptions.initializeBuiltinsForInstancedMultiview &&
+            (parseContext.isExtensionEnabled(TExtension::OVR_multiview2) ||
+             parseContext.isExtensionEnabled(TExtension::OVR_multiview)))
         {
-            return false;
+            // Note: if multiview is enabled via #extension all, num_views may not be set.
+            if (!DeclareAndInitBuiltinsForInstancedMultiview(this, root, std::max(mNumViews, 1),
+                                                             mShaderType, compileOptions,
+                                                             mOutputType, &mSymbolTable))
+            {
+                return false;
+            }
         }
-    }
 
-    if (!useIR)
-    {
         if (compileOptions.addAndTrueToLoopCondition)
         {
             if (!AddAndTrueToLoopCondition(this, root))
@@ -1326,6 +1322,7 @@ ShCompileOptions TCompiler::adjustOptions(const ShCompileOptions &compileOptions
     if (mShaderType == GL_COMPUTE_SHADER)
     {
         compileOptions.initOutputVariables = false;
+        compileOptions.initializeBuiltinsForInstancedMultiview = false;
     }
     if (mShaderType != GL_VERTEX_SHADER)
     {

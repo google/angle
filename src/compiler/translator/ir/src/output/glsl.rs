@@ -236,7 +236,9 @@ impl Generator {
             Decoration::ImageInternalFormat(format) => {
                 layout_qualifiers.push(Self::image_internal_format_str(format))
             }
-            Decoration::RasterOrdered => layout_qualifiers.push("d3d_raster_ordered".to_string()),
+            Decoration::RasterOrdered => layout_qualifiers.push("raster_ordered".to_string()),
+            Decoration::EmulatedViewIDOut => layout_qualifiers.push("flat out".to_string()),
+            Decoration::EmulatedViewIDIn => layout_qualifiers.push("flat in".to_string()),
         }
     }
 

@@ -181,7 +181,11 @@ mod ffi {
         // Note: This is currently not a generalized workaround, just applied to Pixel Local
         // Storage emulation, but in theory it should be.
         pass_highp_to_pack_unorm_snorm_built_ins: bool,
-
+        // Whether gl_ViewID_OVR and gl_InstanceID variables need to be emulated for multiview.
+        emulate_instanced_multiview: bool,
+        // Select viewport layer/index if ARB_shader_viewport_layer_array/NV_viewport_array2 is
+        // used to implement multiview.  Requires emulate_instanced_multiview.
+        select_viewport_layer_in_emulated_multiview: bool,
         // If the flag is enabled, gl_PointSize is clamped to the maximum point size specified in
         // ShBuiltInResources in vertex shaders.
         clamp_point_size: bool,
@@ -316,6 +320,16 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
         };
         transform::rewrite_pixel_local_storage::run(ir, &transform_options);
     }
+
+    if options.emulate_instanced_multiview
+        && (options.extensions.OVR_multiview || options.extensions.OVR_multiview2)
+    {
+        let transform_options = transform::emulate_instanced_multiview::Options {
+            shader_type: ir.meta.get_shader_type(),
+            select_viewport_layer: options.select_viewport_layer_in_emulated_multiview,
+        };
+        transform::emulate_instanced_multiview::run(ir, &transform_options);
+    }
 }
 
 fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
@@ -344,9 +358,7 @@ fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
 
     // Note: this is a per-generator transformation, not really "common", so it should be moved to
     // the right section when the IR part of the compilation actually starts to deviate per
-    // generator.  For now, this is run to test the transformation, with a future change calling it
-    // earlier (pre variable collection) for Pixel Local Storage, and later for the rest of the
-    // options.
+    // generator.  For now, this is run here to test the transformation.
     {
         let transform_options = transform::monomorphize_unsupported_functions::Options {
             // Samplers in structs are unsupported by most generators.

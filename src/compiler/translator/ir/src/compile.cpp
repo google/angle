@@ -138,6 +138,8 @@ void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::Compi
         !options.forceDeferNonConstGlobalInitializers;
     opt->pass_highp_to_pack_unorm_snorm_built_ins = options.passHighpToPackUnormSnormBuiltins;
     opt->clamp_point_size                         = options.clampPointSize;
+    opt->emulate_instanced_multiview              = options.initializeBuiltinsForInstancedMultiview;
+    opt->select_viewport_layer_in_emulated_multiview = options.selectViewInNvGLSLVertexShader;
 
     opt->rewrite_pixel_local_storage = compiler->hasPixelLocalStorageUniforms();
     opt->pls_options.implementation  = static_cast<ffi::PixelLocalStorageImpl>(options.pls.type);

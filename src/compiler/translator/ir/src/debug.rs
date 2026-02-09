@@ -351,7 +351,9 @@ fn decoration_str(decoration: Decoration) -> String {
         Decoration::MatrixPacking(packing) => matrix_packing_str(packing),
         Decoration::Depth(depth) => depth_str(depth),
         Decoration::ImageInternalFormat(format) => image_internal_format_str(format),
-        Decoration::RasterOrdered => "raster_ordered(D3D)".to_string(),
+        Decoration::RasterOrdered => "raster_ordered".to_string(),
+        Decoration::EmulatedViewIDOut => "emulated_ViewID(VS)".to_string(),
+        Decoration::EmulatedViewIDIn => "emulated_ViewID(FS)".to_string(),
     }
 }
 
@@ -439,7 +441,7 @@ fn built_in_str(built_in: BuiltIn) -> String {
         BuiltIn::PrimitiveIDIn => "PrimitiveIDIn",
         BuiltIn::InvocationID => "InvocationID",
         BuiltIn::PrimitiveID => "PrimitiveID",
-        BuiltIn::LayerOut => "Layer(GS)",
+        BuiltIn::LayerOut => "Layer(GS/VS)",
         BuiltIn::LayerIn => "Layer(FS)",
         BuiltIn::PatchVerticesIn => "PatchVerticesIn",
         BuiltIn::TessLevelOuter => "TessLevelOuter",

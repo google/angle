@@ -1531,7 +1531,7 @@ pub enum BuiltIn {
     PrimitiveIDIn,
     InvocationID,
     PrimitiveID,
-    // gl_Layer as GS output
+    // gl_Layer as GS output (or VS output, used internally to emulate multiview)
     LayerOut,
     // gl_Layer as FS input
     LayerIn,
@@ -1753,6 +1753,9 @@ pub enum Decoration {
     // Used internally to implement ANGLE_pixel_local_storage, indicates a D3D 11.3 Rasterizer
     // Order Views (ROV) and Metal raster_order_groups.
     RasterOrdered,
+    // Used internally to emulate instanced multiview.
+    EmulatedViewIDOut,
+    EmulatedViewIDIn,
 }
 
 // A set of decorations that only affect variables.  They are placed in a vector that's expected to
@@ -2907,6 +2910,8 @@ impl IRMeta {
                 // Note: gl_FragCoord is mediump in ESSL 100, but highp in ESSL 300+.  Declare it
                 // as highp to conform to newer standards.
                 BuiltIn::FragCoord => (TYPE_ID_VEC4, Precision::High),
+                BuiltIn::InstanceID => (TYPE_ID_INT, Precision::High),
+                BuiltIn::LayerOut => (TYPE_ID_INT, Precision::High),
                 _ => panic!("Internal error: Unexpected built-in declared by transformations"),
             };
 
@@ -3094,17 +3099,23 @@ impl IR {
         self.function_entries[id.id as usize] = None;
     }
 
+    // By prepending code to main, it will run at the start of the shader.
     pub fn prepend_to_main(&mut self, block: Block) {
         let main_function_id = self.meta.get_main_function_id().unwrap();
         let main_entry = self.function_entries[main_function_id.id as usize].as_mut().unwrap();
         main_entry.prepend_code(block);
     }
 
+    // By appending code to main, it will run at the end of the shader unless the shader is
+    // discarded.
+    //
+    // Note that appending to main only correctly has this effect if `main` itself does not include
+    // early `return` or any `discard` branches.  The builder wraps `main` in a helper function if
+    // so, such that code appended to the final `main` always runs to the last instruction (again,
+    // assuming the fragment is not `discard`ed).
     pub fn append_to_main(&mut self, block: Block) {
         let main_function_id = self.meta.get_main_function_id().unwrap();
         let main_entry = self.function_entries[main_function_id.id as usize].as_mut().unwrap();
-        // TODO(http://anglebug.com/349994211): This function will not work correctly if there is
-        // `Return` anywhere in `main` other than at the end.
         main_entry.append_code(block);
     }
 }

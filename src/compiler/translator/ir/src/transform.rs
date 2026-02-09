@@ -4,6 +4,7 @@
 pub mod astify;
 pub mod clamp_point_size;
 pub mod dealias;
+pub mod emulate_instanced_multiview;
 pub mod initialize_uninitialized_variables;
 pub mod monomorphize_unsupported_functions;
 pub mod propagate_precision;

@@ -13,6 +13,7 @@
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/Types.h"
+#include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/util.h"
 
@@ -370,6 +371,16 @@ TIntermTyped *make_variable(TCompiler *compiler,
         compiler->getSymbolTable().markStaticUse(*variable);
     }
     return new TIntermSymbol(variable);
+}
+
+TIntermTyped *make_internal_variable_gl_layer_vs()
+{
+    return new TIntermSymbol(BuiltInVariable::gl_LayerVS());
+}
+
+TIntermTyped *make_internal_variable_gl_instance_es100()
+{
+    return new TIntermSymbol(BuiltInVariable::gl_InstanceID());
 }
 
 TIntermTyped *make_nameless_block_field_variable(TCompiler *compiler,
