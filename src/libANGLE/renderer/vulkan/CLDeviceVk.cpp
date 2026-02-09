@@ -20,6 +20,8 @@
 
 #include "libANGLE/cl_utils.h"
 
+#include "common/mathutil.h"
+
 namespace rx
 {
 
@@ -95,6 +97,16 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
                                                       // non-mandatory
                                                       CL_DEVICE_ATOMIC_SCOPE_WORK_ITEM},
     };
+
+    cl_uint maxNumSubGroups = 0u;
+    if (mRenderer->getFeatures().supportsClKhrSubgroups.enabled)
+    {
+        const uint32_t subgroupSize = mRenderer->getPhysicalDeviceSubgroupProperties().subgroupSize;
+        ASSERT(subgroupSize > 0);
+        maxNumSubGroups =
+            static_cast<uint32_t>(mInfoSizeT[cl::DeviceInfo::MaxWorkGroupSize]) / subgroupSize;
+    }
+
     mInfoUInt = {
         {cl::DeviceInfo::VendorID, props.vendorID},
         {cl::DeviceInfo::MaxReadImageArgs, cl::IMPLEMENATION_MAX_READ_IMAGES},
@@ -127,7 +139,7 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
         // need that many and set it to minimum req for now.
         {cl::DeviceInfo::MaxSamplers, 16u},
         {cl::DeviceInfo::MaxConstantArgs, 8},
-        {cl::DeviceInfo::MaxNumSubGroups, 0},
+        {cl::DeviceInfo::MaxNumSubGroups, maxNumSubGroups},
         {cl::DeviceInfo::MaxComputeUnits, 4},
         {cl::DeviceInfo::MaxClockFrequency, 555},
         {cl::DeviceInfo::MaxWorkItemDimensions, 3},
@@ -154,7 +166,8 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
         {cl::DeviceInfo::PreferredPlatformAtomicAlignment, 0},
         {cl::DeviceInfo::NonUniformWorkGroupSupport, CL_TRUE},
         {cl::DeviceInfo::GenericAddressSpaceSupport, CL_FALSE},
-        {cl::DeviceInfo::SubGroupIndependentForwardProgress, CL_FALSE},
+        {cl::DeviceInfo::SubGroupIndependentForwardProgress,
+         maxNumSubGroups > 0 ? CL_TRUE : CL_FALSE},
         {cl::DeviceInfo::WorkGroupCollectiveFunctionsSupport, CL_FALSE},
     };
 }
@@ -303,6 +316,13 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
                                                          .name    = "cl_khr_image2d_from_buffer"});
     }
 
+    // cl_khr_subgroups
+    if (mRenderer->getFeatures().supportsClKhrSubgroups.enabled)
+    {
+        versionedExtensionList.push_back(
+            cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0), .name = "cl_khr_subgroups"});
+    }
+
     info.initializeVersionedExtensions(std::move(versionedExtensionList));
 
     if (!mRenderer->getFeatures().supportsUniformBufferStandardLayout.enabled)
@@ -343,6 +363,12 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
                                                      .name    = "__opencl_c_atomic_order_seq_cst"});
     info.OpenCL_C_Features.push_back(cl_name_version{.version = CL_MAKE_VERSION(3, 0, 0),
                                                      .name    = "__opencl_c_atomic_scope_device"});
+
+    if (mRenderer->getFeatures().supportsClKhrSubgroups.enabled)
+    {
+        info.OpenCL_C_Features.push_back(
+            cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0), .name = "__opencl_c_subgroups"});
+    }
 
     return info;
 }

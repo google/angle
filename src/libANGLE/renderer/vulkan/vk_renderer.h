@@ -190,16 +190,20 @@ class Renderer : angle::NonCopyable
     {
         return mHostImageCopyProperties;
     }
-    const VkPhysicalDeviceFeatures &getPhysicalDeviceFeatures() const
-    {
-        return mPhysicalDeviceFeatures;
-    }
     const VkPhysicalDeviceShaderIntegerDotProductProperties &
     getPhysicalDeviceShaderIntegerDotProductProperties() const
     {
         return mShaderIntegerDotProductProperties;
     }
+    const VkPhysicalDeviceSubgroupProperties &getPhysicalDeviceSubgroupProperties() const
+    {
+        return mSubgroupProperties;
+    }
 
+    const VkPhysicalDeviceFeatures &getPhysicalDeviceFeatures() const
+    {
+        return mPhysicalDeviceFeatures;
+    }
     const VkPhysicalDeviceFeatures2KHR &getEnabledFeatures() const { return mEnabledFeatures; }
     VkDevice getDevice() const { return mDevice; }
 

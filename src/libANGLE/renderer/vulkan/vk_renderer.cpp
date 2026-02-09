@@ -6917,6 +6917,20 @@ void Renderer::initOpenCLFeatures(const vk::ExtensionNameList &deviceExtensionNa
         mNativeVectorWidthHalf    = 2;
         mPreferredVectorWidthHalf = 8;
     }
+
+    // The OpenCL extension cl_khr_subgroups needs support for
+    // Basic - for subgroup size and related ops and barrier ops
+    // Vote - for subgroup all/any ops
+    // Arithmetic - for subgroup reduce and scan ops
+    constexpr VkSubgroupFeatureFlags kRequiredSubgroupBits = VK_SUBGROUP_FEATURE_BASIC_BIT |
+                                                             VK_SUBGROUP_FEATURE_VOTE_BIT |
+                                                             VK_SUBGROUP_FEATURE_ARITHMETIC_BIT;
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsClKhrSubgroups,
+        (mSubgroupProperties.supportedStages & VK_SHADER_STAGE_COMPUTE_BIT) != 0 &&
+            (mSubgroupProperties.supportedOperations & kRequiredSubgroupBits) ==
+                kRequiredSubgroupBits);
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}

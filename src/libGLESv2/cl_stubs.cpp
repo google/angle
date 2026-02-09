@@ -660,8 +660,9 @@ cl_int GetKernelSubGroupInfo(cl_kernel kernel,
                              void *param_value,
                              size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetKernelSubGroupInfo);
-    return CL_INVALID_OPERATION;
+    CL_RETURN_ERROR(kernel->cast<Kernel>().getSubWorkGroupInfo(device, param_name, input_value_size,
+                                                               input_value, param_value_size,
+                                                               param_value, param_value_size_ret));
 }
 
 cl_int WaitForEvents(cl_uint num_events, const cl_event *event_list)

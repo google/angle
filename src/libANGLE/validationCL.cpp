@@ -4157,6 +4157,36 @@ cl_int ValidateGetKernelSubGroupInfo(cl_kernel kernel,
         return CL_INVALID_OPERATION;
     }
 
+    // CL_INVALID_VALUE if the size in bytes specified by param_value_size is less than
+    // size of the return type specified in the Kernel Object Sub-group Queries table
+    // and param_value is not NULL.
+    size_t maxWorkItemDimensions = 0;
+    angle::Result getInfoResult  = device->cast<Device>().getInfo(
+        DeviceInfo::MaxWorkItemDimensions, sizeof(size_t), &maxWorkItemDimensions, nullptr);
+    ASSERT(!IsError(getInfoResult));  // MaxWorkItemDimensions is always handled
+    switch (param_name)
+    {
+        case KernelSubGroupInfo::SubGroupCountForNdrange:
+        case KernelSubGroupInfo::MaxSubGroupSizeForNdrange:
+            if (param_value_size < sizeof(size_t))
+            {
+                return CL_INVALID_VALUE;
+            }
+            break;
+        case KernelSubGroupInfo::LocalSizeForSubGroupCount:
+        {
+            const size_t dims     = param_value_size / sizeof(size_t);
+            const bool isMultiple = (param_value_size % sizeof(size_t) == 0);
+            if (!param_value || !isMultiple || dims > maxWorkItemDimensions)
+            {
+                return CL_INVALID_VALUE;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+
     switch (param_name)
     {
         case KernelSubGroupInfo::SubGroupCountForNdrange:
@@ -4179,15 +4209,8 @@ cl_int ValidateGetKernelSubGroupInfo(cl_kernel kernel,
             }
             else
             {
-                const size_t dims            = input_value_size / sizeof(size_t);
-                const bool isMultiple        = (input_value_size % sizeof(size_t) == 0);
-                size_t maxWorkItemDimensions = 0;
-                angle::Result getInfoResult =
-                    device->cast<Device>().getInfo(DeviceInfo::MaxWorkItemDimensions,
-                                                   sizeof(size_t), &maxWorkItemDimensions, nullptr);
-                // MaxWorkItemDimensions is always handled
-                ASSERT(!IsError(getInfoResult));
-
+                const size_t dims     = input_value_size / sizeof(size_t);
+                const bool isMultiple = (input_value_size % sizeof(size_t) == 0);
                 if (!isMultiple || dims == 0 || dims > maxWorkItemDimensions)
                 {
                     // CL_INVALID_VALUE if param_name is CL_KERNEL_MAX_SUB_GROUP_SIZE_FOR_NDRANGE,
