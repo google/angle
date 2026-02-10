@@ -4792,7 +4792,7 @@ angle::Result TextureVk::refreshImageViews(ContextVk *contextVk)
         }
     }
 
-    ANGLE_TRY(initImageViews(contextVk, getImageViewLevelCount()));
+    ANGLE_TRY(initImageViews(contextVk, getMipLevelCount(ImageMipLevels::EnabledLevels)));
 
     // Let any Framebuffers know we need to refresh the RenderTarget cache.
     onStateChange(angle::SubjectMessage::SubjectChanged);

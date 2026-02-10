@@ -18725,6 +18725,145 @@ void main()
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(191, 0, 0, 255), 1);
 }
 
+// Mutable texture + update base level then change swizzle
+TEST_P(TextureTestES31, MutableTextureBaseLevelWithSwizzleChange)
+{
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 GLColor::blue.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    GLint textureLocation = glGetUniformLocation(program, essl3_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLocation);
+    GLint lodLocation = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLocation);
+
+    // Sample from level 1 and verify rendered color
+    glUseProgram(program);
+    glUniform1i(textureLocation, 0);
+    glUniform1f(lodLocation, 1.0);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    EXPECT_GL_NO_ERROR();
+
+    // Set Swizzle for G and then sample from level 1 and verify rendered color
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Mutable texture + update base and max levels then change swizzle
+TEST_P(TextureTestES31, MutableTextureBaseMaxLevelWithSwizzleChange)
+{
+    const std::vector<GLColor> blue(4 * 4, GLColor::blue);
+    const std::vector<GLColor> red(2 * 2, GLColor::red);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, blue.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, red.data());
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 GLColor::cyan.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    GLint textureLocation = glGetUniformLocation(program, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLocation);
+
+    // Sample from smallest level (should be 1) and verify rendered color
+    glUseProgram(program);
+    glUniform1i(textureLocation, 0);
+    glViewport(0, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+
+    // Set Swizzle for G and then sample from smallest level (should be 1) and verify rendered color
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_RED);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Immutable texture + update base level then change swizzle
+TEST_P(TextureTestES31, ImmutableTextureBaseLevelWithSwizzleChange)
+{
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_RGBA8, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, GLColor::blue.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    GLint textureLocation = glGetUniformLocation(program, essl3_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLocation);
+    GLint lodLocation = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLocation);
+
+    // Sample from level 1 and verify rendered color
+    glUseProgram(program);
+    glUniform1i(textureLocation, 0);
+    glUniform1f(lodLocation, 1.0);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    EXPECT_GL_NO_ERROR();
+
+    // Set Swizzle for G and then sample from level 1 and verify rendered color
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Immutable texture + update base and max levels then change swizzle
+TEST_P(TextureTestES31, ImmutableTextureBaseMaxLevelWithSwizzleChange)
+{
+    const std::vector<GLColor> blue(4 * 4, GLColor::blue);
+    const std::vector<GLColor> red(2 * 2, GLColor::red);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 3, GL_RGBA8, 4, 4);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, blue.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, red.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 2, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, GLColor::cyan.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    GLint textureLocation = glGetUniformLocation(program, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLocation);
+
+    // Sample from smallest level (should be 1) and verify rendered color
+    glUseProgram(program);
+    glUniform1i(textureLocation, 0);
+    glViewport(0, 0, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+
+    // Set Swizzle for G and then sample from smallest level (should be 1) and verify rendered color
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_RED);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 #define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
