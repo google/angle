@@ -277,7 +277,7 @@ def _upload_to_skia_perf(benchmark_directory_map, benchmark_enabled_map, build_p
             json.dump(skia_data, f, indent=2)
         gs_dir = 'gs://angle-perf-skia/angle_perftests/%s/' % (
             datetime.datetime.now().strftime('%Y/%m/%d/%H'))
-        upload_cmd = ['vpython3', GSUTIL_PY_PATH, 'cp', local_file, gs_dir]
+        upload_cmd = ['gcloud', 'storage', 'cp', local_file, gs_dir]
         logging.info('Skia upload: %s', ' '.join(upload_cmd))
         subprocess.check_call(upload_cmd)
     finally:

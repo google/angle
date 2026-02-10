@@ -104,7 +104,7 @@ def add_skia_gold_args(parser):
         action='store_true',
         default=False,
         help='Don\'t use the service account provided by LUCI for '
-        'authentication for Skia Gold, instead relying on gsutil to be '
+        'authentication for Skia Gold, instead relying on gcloud to be '
         'pre-authenticated. Meant for testing locally instead of on the bots.')
 
 
