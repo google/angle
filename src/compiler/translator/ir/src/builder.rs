@@ -930,15 +930,11 @@ impl Builder {
                 || (self.options.initialize_gl_position
                     && matches!(built_in, Some(BuiltIn::Position))));
 
-        let variable_id = self.ir.meta.declare_variable(
-            name,
-            type_id,
-            precision,
-            decorations,
-            built_in,
-            None,
-            scope,
-        );
+        let variable_id = self
+            .ir
+            .meta
+            .declare_variable(name, type_id, precision, decorations, built_in, None, scope)
+            .0;
 
         // Add the variable to the list of local variables in this scope, if not global.  Function
         // parameters are part of the `Function` and so don't need to be explicitly marked as

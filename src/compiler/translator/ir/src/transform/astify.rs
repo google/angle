@@ -1044,13 +1044,16 @@ fn transform_continue_add_variable_to_enclosing_switch_blocks(
         let variable_id = match scope.propagate_break_var {
             Some(variable_id) => variable_id,
             None => {
-                let (variable_id, _) = state.ir_meta.declare_private_variable(
-                    Name::new_temp("propagate_break"),
-                    TYPE_ID_BOOL,
-                    Precision::NotApplicable,
-                    Some(CONSTANT_ID_FALSE),
-                    VariableScope::Local,
-                );
+                let variable_id = state
+                    .ir_meta
+                    .declare_private_variable(
+                        Name::new_temp("propagate_break"),
+                        TYPE_ID_BOOL,
+                        Precision::NotApplicable,
+                        Some(CONSTANT_ID_FALSE),
+                        VariableScope::Local,
+                    )
+                    .0;
                 scope.propagate_break_var = Some(variable_id);
                 variable_id
             }

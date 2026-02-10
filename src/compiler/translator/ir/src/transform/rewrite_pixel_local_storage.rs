@@ -334,19 +334,22 @@ fn transform_variable(
 fn declare_fragcoord_global(state: &mut State, preamble: &mut Block) -> Option<TypedId> {
     let has_image = state.has_image;
     has_image.then(|| {
-        let built_in_fragcoord = state.ir_meta.get_or_declare_built_in_variable(BuiltIn::FragCoord);
-        let built_in_fragcoord = TypedId::from_variable_id(state.ir_meta, built_in_fragcoord);
+        let built_in_fragcoord =
+            state.ir_meta.get_or_declare_built_in_variable(BuiltIn::FragCoord).1;
 
         // We need to use `ivec2(floor(gl_FragCoord.xy))` as coordinates of this pixel when
         // accessing the image associated with the plane.  To avoid recalculating this every time,
         // the result of this expression is cached in a global variable.
-        let (_, fragcoord) = state.ir_meta.declare_private_variable(
-            Name::new_temp("fragcoord"),
-            TYPE_ID_IVEC2,
-            Precision::High,
-            None,
-            VariableScope::Global,
-        );
+        let fragcoord = state
+            .ir_meta
+            .declare_private_variable(
+                Name::new_temp("fragcoord"),
+                TYPE_ID_IVEC2,
+                Precision::High,
+                None,
+                VariableScope::Global,
+            )
+            .1;
 
         let built_in_fragcoord =
             preamble.add_typed_instruction(instruction::load(state.ir_meta, built_in_fragcoord));
