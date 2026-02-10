@@ -144,8 +144,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -312,8 +312,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -462,8 +462,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -577,8 +577,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -692,8 +692,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -869,8 +869,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -1030,8 +1030,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -1115,8 +1115,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -1227,8 +1227,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -1345,8 +1345,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -1542,8 +1542,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -1673,8 +1673,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -1861,8 +1861,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -1971,8 +1971,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -2144,8 +2144,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -2314,8 +2314,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -2442,8 +2442,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -2544,8 +2544,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -2649,8 +2649,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -2744,8 +2744,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -2838,8 +2838,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 
@@ -2949,8 +2949,8 @@ struct ANGLEUniformBlock
   @align(16) depthRange : vec2<f32>,
   renderArea : u32,
   flipXY : u32,
-  dither : u32,
   misc : u32,
+  dither : u32,
   acbBufferOffsets : vec2<u32>,
 };
 

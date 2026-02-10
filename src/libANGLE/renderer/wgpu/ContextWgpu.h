@@ -44,9 +44,6 @@ class ContextWgpu : public ContextImpl
         // Packed vec4 of snorm8
         uint32_t flipXY;
 
-        // Only the lower 16 bits used
-        uint32_t dither;
-
         // Various bits of state:
         // - Surface rotation
         // - Advanced blend equation
@@ -55,6 +52,9 @@ class ContextWgpu : public ContextImpl
         // - Depth transformation
         // - layered FBO
         uint32_t misc;
+
+        // Only the lower 16 bits used
+        uint32_t dither;
 
         std::array<uint32_t, 2> acbBufferOffsets;
     };

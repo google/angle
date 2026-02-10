@@ -569,8 +569,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
         float depthRange[2];
         uint32_t renderArea;
         uint32_t flipXY;
-        uint32_t unused;
         uint32_t misc;
+        uint32_t unused;
         uint32_t acbBufferOffsets[2];
 
         int32_t xfbBufferOffsets[4];

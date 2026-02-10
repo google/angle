@@ -25,8 +25,8 @@ namespace
 constexpr const char kDepthRange[]       = "depthRange";
 constexpr const char kRenderArea[]       = "renderArea";
 constexpr const char kFlipXY[]           = "flipXY";
-constexpr const char kDither[]           = "dither";
 constexpr const char kMisc[]             = "misc";
+constexpr const char kDither[]           = "dither";
 constexpr const char kAcbBufferOffsets[] = "acbBufferOffsets";
 
 // Extended uniforms
@@ -80,8 +80,8 @@ TFieldList *DriverUniform::createUniformFields(TSymbolTable *symbolTable)
         kDepthRange,
         kRenderArea,
         kFlipXY,
-        kDither,
         kMisc,
+        kDither,
         kAcbBufferOffsets,
     }};
 
@@ -95,9 +95,9 @@ TFieldList *DriverUniform::createUniformFields(TSymbolTable *symbolTable)
         new TType(EbtUInt, EbpHigh, EvqGlobal),
         // flipXY: Packed snorm4
         new TType(EbtUInt, EbpHigh, EvqGlobal),
-        // dither: ushort
-        new TType(EbtUInt, EbpHigh, EvqGlobal),
         // misc: Various bits of state
+        new TType(EbtUInt, EbpHigh, EvqGlobal),
+        // emulated dither: ushort
         new TType(EbtUInt, EbpHigh, EvqGlobal),
         // acbBufferOffsets: Packed ubyte8
         new TType(EbtUInt, EbpHigh, EvqGlobal, 2),
