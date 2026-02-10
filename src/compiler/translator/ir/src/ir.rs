@@ -1750,8 +1750,6 @@ pub enum Decoration {
     Depth(Depth),
     // Internal format declared on storage images
     ImageInternalFormat(ImageInternalFormat),
-    // Number of views in OVR_multiview
-    NumViews(u32),
     // Used internally to implement ANGLE_pixel_local_storage, indicates a D3D 11.3 Rasterizer
     // Order Views (ROV) and Metal raster_order_groups.
     RasterOrdered,
@@ -2202,6 +2200,9 @@ pub struct IRMeta {
     // Data that globally affects the shader:
     shader_type: ShaderType,
 
+    // Affecting vertex shaders:
+    num_views: u32,
+
     // Affecting fragment shaders:
     early_fragment_tests: bool,
     advanced_blend_equations: AdvancedBlendEquations,
@@ -2363,6 +2364,7 @@ impl IRMeta {
             uint_constant_map,
             composite_constant_map: HashMap::new(),
             shader_type,
+            num_views: 0,
             early_fragment_tests: false,
             advanced_blend_equations: AdvancedBlendEquations::new(),
             tcs_vertices: 0,
@@ -2419,6 +2421,9 @@ impl IRMeta {
     pub fn get_early_fragment_tests(&self) -> bool {
         self.early_fragment_tests
     }
+    pub fn get_num_views(&self) -> u32 {
+        self.num_views
+    }
     pub fn get_advanced_blend_equations(&self) -> &AdvancedBlendEquations {
         &self.advanced_blend_equations
     }
@@ -2458,6 +2463,9 @@ impl IRMeta {
 
     pub fn set_early_fragment_tests(&mut self, value: bool) {
         self.early_fragment_tests = value;
+    }
+    pub fn set_num_views(&mut self, value: u32) {
+        self.num_views = value;
     }
     pub fn add_advanced_blend_equations(&mut self, equations: AdvancedBlendEquations) {
         self.advanced_blend_equations.add(equations);

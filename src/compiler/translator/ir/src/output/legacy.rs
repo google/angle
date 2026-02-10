@@ -1561,7 +1561,6 @@ impl<'options> Generator<'options> {
             offset: -1,
             depth: ffi::ASTLayoutDepth::Unspecified,
             image_internal_format: ffi::ASTLayoutImageInternalFormat::Unspecified,
-            num_views: -1,
             yuv: false,
             index: -1,
             noncoherent: false,
@@ -1591,7 +1590,6 @@ impl<'options> Generator<'options> {
                 Decoration::ImageInternalFormat(format) => {
                     layout_qualifier.image_internal_format = format.into()
                 }
-                Decoration::NumViews(num_views) => layout_qualifier.num_views = num_views as i32,
                 Decoration::RasterOrdered => layout_qualifier.raster_ordered = true,
                 _ => (),
             };

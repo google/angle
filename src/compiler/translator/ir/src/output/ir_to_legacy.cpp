@@ -66,7 +66,6 @@ TType *Type(const TType *baseType, const ASTType &astType)
     layoutQualifier.depth        = static_cast<TLayoutDepth>(astLayoutQualifier.depth);
     layoutQualifier.imageInternalFormat =
         static_cast<TLayoutImageInternalFormat>(astLayoutQualifier.image_internal_format);
-    layoutQualifier.numViews             = astLayoutQualifier.num_views;
     layoutQualifier.yuv                  = astLayoutQualifier.yuv;
     layoutQualifier.index                = astLayoutQualifier.index;
     layoutQualifier.inputAttachmentIndex = astLayoutQualifier.input_attachment_index;
