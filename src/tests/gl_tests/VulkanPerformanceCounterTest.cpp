@@ -9639,6 +9639,39 @@ TEST_P(VulkanPerformanceCounterTest_TileMemory,
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
 }
 
+class VulkanPerformanceCounterTest_Dither : public VulkanPerformanceCounterTest
+{};
+
+// Switch dither should update driver uniforms if it is emulated.
+TEST_P(VulkanPerformanceCounterTest_Dither, ToggleEmulatedDitherShouldUpdateDriverUniform)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    ANGLE_SKIP_TEST_IF(!isFeatureEnabled(Feature::EmulateDithering));
+
+    ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    constexpr GLsizei kWidth  = 4;
+    constexpr GLsizei kHeight = 4;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB565, kWidth, kHeight);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, kWidth, kHeight);
+
+    glDisable(GL_DITHER);
+    drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    uint64_t program1Count = getPerfCounters().graphicsDriverUniformsUpdated;
+    glEnable(GL_DITHER);
+    drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    uint64_t program2Count = getPerfCounters().graphicsDriverUniformsUpdated;
+    EXPECT_EQ(program2Count, program1Count + 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest);
 ANGLE_INSTANTIATE_TEST(
     VulkanPerformanceCounterTest,
@@ -9706,4 +9739,10 @@ ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_TileMemory,
                        ES3_VULKAN(),
                        ES3_VULKAN().enable(Feature::SimulateTileMemoryForTesting),
                        ES3_VULKAN_SWIFTSHADER().enable(Feature::SimulateTileMemoryForTesting));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest_Dither);
+ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_Dither,
+                       ES3_VULKAN_SWIFTSHADER()
+                           .enable(Feature::EmulateDithering)
+                           .disable(Feature::SupportsLegacyDithering));
 }  // anonymous namespace
