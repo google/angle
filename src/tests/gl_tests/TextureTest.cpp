@@ -18864,6 +18864,152 @@ TEST_P(TextureTestES31, ImmutableTextureBaseMaxLevelWithSwizzleChange)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test repeated calls to glBindImageTexture with format respecification
+TEST_P(TextureTestES31, BindImageTextureWithFormatRespecification)
+{
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    GLColor::transparentBlack.data());
+    ASSERT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    GLint textureLocation = glGetUniformLocation(program, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLocation);
+
+    // CS for RGBA8 format
+    constexpr char kCS1[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba8, binding = 0) writeonly uniform highp image2D image;
+void main()
+{
+    imageStore(image, ivec2(gl_GlobalInvocationID.xy), vec4(1, 1, 0, 1));
+})";
+
+    // Dispatch with texture bound as image
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram1, kCS1);
+    glUseProgram(csProgram1);
+    glBindImageTexture(0, tex, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
+
+    // Verify rendered color
+    glUseProgram(program);
+    glUniform1i(textureLocation, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::yellow, 1.0);
+
+    // CS for RGBA8UI format
+    constexpr char kCS2[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba8ui, binding = 0) writeonly uniform highp uimage2D image;
+void main()
+{
+    imageStore(image, ivec2(gl_GlobalInvocationID.xy), uvec4(255, 0, 255, 255));
+})";
+
+    // Dispatch again but with texture format respecified
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram2, kCS2);
+    glUseProgram(csProgram2);
+    glBindImageTexture(0, tex, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8UI);
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
+
+    // Verify rendered color
+    glUseProgram(program);
+    glUniform1i(textureLocation, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::magenta, 1.0);
+}
+
+// Test repeated calls to glBindImageTexture on a texture buffer with format respecification
+TEST_P(TextureBufferTestES32, BindImageTextureBufferWithFormatRespecification)
+{
+    GLBuffer buffer;
+    glBindBuffer(GL_TEXTURE_BUFFER, buffer);
+    glBufferData(GL_TEXTURE_BUFFER, 4, GLColor::magenta.data(), GL_DYNAMIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kVS[] = R"(#version 320 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(#version 320 es
+precision mediump float;
+uniform highp samplerBuffer s;
+out vec4 colorOut;
+void main()
+{
+    colorOut = texelFetch(s, 0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture tex;
+
+    // Sample and verify color
+    glBindTexture(GL_TEXTURE_BUFFER, tex);
+    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA8, buffer);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, "a_position", 0.5);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+
+    // CS for RGBA8 format
+    constexpr char kCS1[] = R"(#version 320 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba8, binding = 0) writeonly uniform highp imageBuffer image;
+void main()
+{
+    imageStore(image, 0, vec4(1.0, 1.0, 0.0, 1.0));
+})";
+
+    // Dispatch with texture bound as image
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram1, kCS1);
+    glUseProgram(csProgram1);
+    glBindImageTexture(0, tex, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
+
+    // Sample and verify color
+    glBindTexture(GL_TEXTURE_BUFFER, tex);
+    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA8, buffer);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, "a_position", 0.5);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+
+    // CS for RGBA8UI format
+    constexpr char kCS2[] = R"(#version 320 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba8ui, binding = 0) writeonly uniform highp uimageBuffer image;
+void main()
+{
+    imageStore(image, 0, uvec4(0, 255, 255, 255));
+})";
+
+    // Dispatch with texture bound as image
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram2, kCS2);
+    glUseProgram(csProgram2);
+    glBindImageTexture(0, tex, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8UI);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
+
+    // Sample and verify color
+    glBindTexture(GL_TEXTURE_BUFFER, tex);
+    glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA8, buffer);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, "a_position", 0.5);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 #define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \

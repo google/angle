@@ -12108,8 +12108,20 @@ void ImageViewHelper::release(Renderer *renderer, const ResourceUse &use)
     ReleaseSubresourceImageViews(&mSubresourceStencilOnlyImageViews, &garbage);
 
     // Release the storage views
-    ReleaseImageViews(&mLevelStorageImageViews, &garbage);
-    ReleaseLayerLevelImageViews(&mLayerLevelStorageImageViews, &garbage);
+    for (auto &iter : mLevelStorageImageViews)
+    {
+        std::unique_ptr<ImageViewVector> &imageViewVector = iter.second;
+        ReleaseImageViews(imageViewVector.get(), &garbage);
+        imageViewVector.reset();
+    }
+    mLevelStorageImageViews.clear();
+    for (auto &iter : mLayerLevelStorageImageViews)
+    {
+        std::unique_ptr<LayerLevelImageViewVector> &layerLevelImageViewVector = iter.second;
+        ReleaseLayerLevelImageViews(layerLevelImageViewVector.get(), &garbage);
+        layerLevelImageViewVector.reset();
+    }
+    mLayerLevelStorageImageViews.clear();
 
     // Release fragment shading rate view
     if (mFragmentShadingRateImageView.valid())
@@ -12168,8 +12180,20 @@ void ImageViewHelper::destroy(VkDevice device)
     DestroySubresourceImageViews(&mSubresourceStencilOnlyImageViews, device);
 
     // Release the storage views
-    DestroyImageViews(&mLevelStorageImageViews, device);
-    DestroyLayerLevelImageViews(&mLayerLevelStorageImageViews, device);
+    for (auto &iter : mLevelStorageImageViews)
+    {
+        std::unique_ptr<ImageViewVector> &imageViewVector = iter.second;
+        DestroyImageViews(imageViewVector.get(), device);
+        imageViewVector.reset();
+    }
+    mLevelStorageImageViews.clear();
+    for (auto &iter : mLayerLevelStorageImageViews)
+    {
+        std::unique_ptr<LayerLevelImageViewVector> &layerLevelImageViewVector = iter.second;
+        DestroyLayerLevelImageViews(layerLevelImageViewVector.get(), device);
+        layerLevelImageViewVector.reset();
+    }
+    mLayerLevelStorageImageViews.clear();
 
     // Destroy fragment shading rate view
     mFragmentShadingRateImageView.destroy(device);
@@ -12403,8 +12427,17 @@ angle::Result ImageViewHelper::getLevelStorageImageView(ContextVk *contextVk,
 {
     ASSERT(mImageViewSerial.valid());
 
+    if (!mLevelStorageImageViews.contains(formatID))
+    {
+        mLevelStorageImageViews[formatID] = std::make_unique<ImageViewVector>();
+    }
+    ASSERT(mLevelStorageImageViews.contains(formatID));
+
+    ImageViewVector *levelStorageImageViews = mLevelStorageImageViews[formatID].get();
+    ASSERT(levelStorageImageViews);
+
     ImageView *imageView =
-        GetLevelImageView(&mLevelStorageImageViews, levelVk, image.getLevelCount());
+        GetLevelImageView(levelStorageImageViews, levelVk, image.getLevelCount());
 
     *imageViewOut = imageView;
     if (imageView->valid())
@@ -12430,8 +12463,18 @@ angle::Result ImageViewHelper::getLevelLayerStorageImageView(ContextVk *contextV
     ASSERT(mImageViewSerial.valid());
     ASSERT(!image.getActualFormat().isBlock);
 
+    if (!mLayerLevelStorageImageViews.contains(formatID))
+    {
+        mLayerLevelStorageImageViews[formatID] = std::make_unique<LayerLevelImageViewVector>();
+    }
+    ASSERT(mLayerLevelStorageImageViews.contains(formatID));
+
+    LayerLevelImageViewVector *layerLevelStorageImageViews =
+        mLayerLevelStorageImageViews[formatID].get();
+    ASSERT(layerLevelStorageImageViews);
+
     ImageView *imageView =
-        GetLevelLayerImageView(&mLayerLevelStorageImageViews, levelVk, layer, image.getLevelCount(),
+        GetLevelLayerImageView(layerLevelStorageImageViews, levelVk, layer, image.getLevelCount(),
                                GetImageLayerCountForView(image));
     *imageViewOut = imageView;
 

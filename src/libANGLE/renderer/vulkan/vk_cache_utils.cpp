@@ -6215,8 +6215,9 @@ std::ostream &operator<<(std::ostream &os, const DescriptorSetDesc &desc)
     for (uint32_t index = 0; index < desc.size(); ++index)
     {
         const DescriptorInfoDesc &infoDesc = desc.getInfoDesc(index);
-        os << "{" << infoDesc.samplerOrBufferSerial << ", " << infoDesc.imageViewSerialOrOffset
-           << ", " << infoDesc.imageLayoutOrRange << ", " << infoDesc.imageSubresourceRange << "}";
+        os << "{" << infoDesc.samplerOrBufferSerialOrStorageFormat << ", "
+           << infoDesc.imageViewSerialOrOffset << ", " << infoDesc.imageLayoutOrRange << ", "
+           << infoDesc.imageSubresourceRange << "}";
     }
     return os;
 }
@@ -6271,8 +6272,8 @@ void DescriptorSetDescBuilder::updateUniformBuffer(uint32_t bindingIndex,
     uint32_t infoIndex           = writeDescriptorDescs[bindingIndex].descriptorInfoIndex;
     DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
 
-    infoDesc.samplerOrBufferSerial   = bufferHelper.getBlockSerial().getValue();
-    infoDesc.imageViewSerialOrOffset = 0;
+    infoDesc.samplerOrBufferSerialOrStorageFormat = bufferHelper.getBlockSerial().getValue();
+    infoDesc.imageViewSerialOrOffset              = 0;
     SetBitField(infoDesc.imageLayoutOrRange, bufferRange);
     infoDesc.imageSubresourceRange = 0;
 
@@ -6298,8 +6299,8 @@ void DescriptorSetDescBuilder::updateTransformFeedbackBuffer(
     VkDeviceSize adjustedRange = bufferRange + (bufferOffset - alignedOffset);
 
     uint32_t infoIndex = writeDescriptorDescs[baseBinding].descriptorInfoIndex + xfbBufferIndex;
-    DescriptorInfoDesc &infoDesc   = mDesc.getInfoDesc(infoIndex);
-    infoDesc.samplerOrBufferSerial = bufferHelper.getBufferSerial().getValue();
+    DescriptorInfoDesc &infoDesc                  = mDesc.getInfoDesc(infoIndex);
+    infoDesc.samplerOrBufferSerialOrStorageFormat = bufferHelper.getBufferSerial().getValue();
     SetBitField(infoDesc.imageViewSerialOrOffset, alignedOffset);
     SetBitField(infoDesc.imageLayoutOrRange, adjustedRange);
     infoDesc.imageSubresourceRange = 0;
@@ -6398,8 +6399,8 @@ void DescriptorSetDescBuilder::updatePreCacheActiveTextures(
                     textureVk->getBufferViewSerial();
                 infoDesc.imageViewSerialOrOffset = imageViewSerial.viewSerial.getValue();
                 infoDesc.imageLayoutOrRange      = 0;
-                infoDesc.samplerOrBufferSerial   = 0;
-                infoDesc.imageSubresourceRange   = 0;
+                infoDesc.samplerOrBufferSerialOrStorageFormat = 0;
+                infoDesc.imageSubresourceRange                = 0;
             }
             else
             {
@@ -6419,7 +6420,8 @@ void DescriptorSetDescBuilder::updatePreCacheActiveTextures(
                 VkImageLayout imageLayout = textureVk->getImage().getCurrentLayout(renderer);
                 SetBitField(infoDesc.imageLayoutOrRange, imageLayout);
                 infoDesc.imageViewSerialOrOffset = imageViewSerial.viewSerial.getValue();
-                infoDesc.samplerOrBufferSerial   = samplerHelper.getSamplerSerial().getValue();
+                infoDesc.samplerOrBufferSerialOrStorageFormat =
+                    samplerHelper.getSamplerSerial().getValue();
                 memcpy(&infoDesc.imageSubresourceRange, &imageViewSerial.subresource,
                        sizeof(uint32_t));
             }
@@ -6433,8 +6435,8 @@ void DescriptorSetDescBuilder::setEmptyBuffer(uint32_t infoDescIndex,
 {
     DescriptorInfoDesc &emptyDesc = mDesc.getInfoDesc(infoDescIndex);
     SetBitField(emptyDesc.imageLayoutOrRange, emptyBuffer.getSize());
-    emptyDesc.imageViewSerialOrOffset = 0;
-    emptyDesc.samplerOrBufferSerial   = emptyBuffer.getBlockSerial().getValue();
+    emptyDesc.imageViewSerialOrOffset              = 0;
+    emptyDesc.samplerOrBufferSerialOrStorageFormat = emptyBuffer.getBlockSerial().getValue();
 
     mHandles[infoDescIndex].buffer = emptyBuffer.getBuffer().getHandle();
 
@@ -6469,8 +6471,8 @@ void DescriptorSetDescBuilder::updateOneShaderBuffer(
     BufferHelper &bufferHelper = bufferVk->getBuffer();
     VkDeviceSize offset        = bufferBinding.getOffset() + bufferHelper.getOffset();
 
-    DescriptorInfoDesc &infoDesc   = mDesc.getInfoDesc(infoDescIndex);
-    infoDesc.samplerOrBufferSerial = bufferHelper.getBlockSerial().getValue();
+    DescriptorInfoDesc &infoDesc                  = mDesc.getInfoDesc(infoDescIndex);
+    infoDesc.samplerOrBufferSerialOrStorageFormat = bufferHelper.getBlockSerial().getValue();
     if (IsDynamicDescriptor(descriptorType))
     {
         SetBitField(mDynamicOffsets[infoDescIndex], offset);
@@ -6529,7 +6531,8 @@ void DescriptorSetDescBuilder::updateOneUniformBufferOffset(
 
     DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoDescIndex);
     BufferHelper &bufferHelper   = vk::GetImpl(bufferBinding.get())->getBuffer();
-    ASSERT(infoDesc.samplerOrBufferSerial == bufferHelper.getBlockSerial().getValue());
+    ASSERT(infoDesc.samplerOrBufferSerialOrStorageFormat ==
+           bufferHelper.getBlockSerial().getValue());
     // Reachable only by program executables with dynamic descriptor type
     ASSERT(infoDesc.imageViewSerialOrOffset == 0);
 
@@ -6687,8 +6690,8 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
         DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
         SetBitField(infoDesc.imageLayoutOrRange, range);
         SetBitField(infoDesc.imageViewSerialOrOffset, offset);
-        infoDesc.samplerOrBufferSerial = bufferHelper.getBlockSerial().getValue();
-        infoDesc.imageSubresourceRange = 0;
+        infoDesc.samplerOrBufferSerialOrStorageFormat = bufferHelper.getBlockSerial().getValue();
+        infoDesc.imageSubresourceRange                = 0;
 
         mHandles[infoIndex].buffer = bufferHelper.getBuffer().getHandle();
     }
@@ -6759,11 +6762,11 @@ angle::Result DescriptorSetDescBuilder::updateImages(
                 DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
                 infoDesc.imageViewSerialOrOffset =
                     textureVk->getBufferViewSerial().viewSerial.getValue();
-                infoDesc.imageLayoutOrRange    = 0;
+                infoDesc.imageLayoutOrRange = 0;
                 // special handling for texture buffer to store the VK format here.
                 infoDesc.imageSubresourceRange = static_cast<uint32_t>(viewFormat);
 
-                infoDesc.samplerOrBufferSerial = 0;
+                infoDesc.samplerOrBufferSerialOrStorageFormat = 0;
 
                 mHandles[infoIndex].bufferView = view->getHandle();
             }
@@ -6797,7 +6800,9 @@ angle::Result DescriptorSetDescBuilder::updateImages(
                 SetBitField(infoDesc.imageLayoutOrRange, image->getCurrentLayout(renderer));
                 memcpy(&infoDesc.imageSubresourceRange, &serial.subresource, sizeof(uint32_t));
                 infoDesc.imageViewSerialOrOffset = serial.viewSerial.getValue();
-                infoDesc.samplerOrBufferSerial   = 0;
+                // special handling for storage images to store binding format here.
+                infoDesc.samplerOrBufferSerialOrStorageFormat =
+                    static_cast<uint32_t>(binding.format);
 
                 mHandles[infoIndex].imageView = imageView->getHandle();
             }
@@ -6917,7 +6922,7 @@ void DescriptorSetDescBuilder::updateInputAttachment(
     SetBitField(infoDesc.imageLayoutOrRange, layout);
     infoDesc.imageViewSerialOrOffset = serial.viewSerial.getValue();
     memcpy(&infoDesc.imageSubresourceRange, &serial.subresource, sizeof(uint32_t));
-    infoDesc.samplerOrBufferSerial = 0;
+    infoDesc.samplerOrBufferSerialOrStorageFormat = 0;
 
     mHandles[infoIndex].imageView = imageView->getHandle();
 }

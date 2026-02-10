@@ -3430,9 +3430,14 @@ ANGLE_INLINE bool RenderPassCommandBufferHelper::usesImage(const ImageHelper &im
 
 // A vector of image views, such as one per level or one per layer.
 using ImageViewVector = std::vector<ImageView>;
+// A map between FormatID and vector of image views.
+using ImageViewVectorMap = angle::HashMap<angle::FormatID, std::unique_ptr<ImageViewVector>>;
 
 // A vector of vector of image views.  Primary index is layer, secondary index is level.
 using LayerLevelImageViewVector = std::vector<ImageViewVector>;
+// A map between FormatID and vector of vector of image views.
+using LayerLevelImageViewVectorMap =
+    angle::HashMap<angle::FormatID, std::unique_ptr<LayerLevelImageViewVector>>;
 
 using SubresourceImageViewMap = angle::HashMap<ImageSubresourceRange, std::unique_ptr<ImageView>>;
 
@@ -3816,8 +3821,8 @@ class ImageViewHelper final : angle::NonCopyable
     SubresourceImageViewMap mSubresourceStencilOnlyImageViews;
 
     // Storage views
-    ImageViewVector mLevelStorageImageViews;
-    LayerLevelImageViewVector mLayerLevelStorageImageViews;
+    ImageViewVectorMap mLevelStorageImageViews;
+    LayerLevelImageViewVectorMap mLayerLevelStorageImageViews;
 
     // Fragment shading rate view
     ImageView mFragmentShadingRateImageView;
