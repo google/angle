@@ -276,14 +276,6 @@ unsafe fn generate_ast(
 }
 
 fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
-    if ir.meta.get_shader_type() == ShaderType::Vertex && options.clamp_point_size {
-        transform::clamp_point_size::run(
-            ir,
-            options.limits.min_point_size,
-            options.limits.max_point_size,
-        );
-    }
-
     // Turn |inout| variables that are never read from into |out| before collecting variables and
     // before PLS uses them.
     if ir.meta.get_shader_type() == ShaderType::Fragment
@@ -340,6 +332,14 @@ fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
                 .initializer_allowed_on_non_constant_global_variables,
         };
         transform::initialize_uninitialized_variables::run(ir, &transform_options);
+    }
+
+    if options.clamp_point_size {
+        transform::clamp_point_size::run(
+            ir,
+            options.limits.min_point_size,
+            options.limits.max_point_size,
+        );
     }
 
     // Note: this is a per-generator transformation, not really "common", so it should be moved to

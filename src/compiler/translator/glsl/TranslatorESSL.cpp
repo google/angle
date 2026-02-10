@@ -284,13 +284,11 @@ void TranslatorESSL::writeExtensionBehavior(const ShCompileOptions &compileOptio
             else if (iter->first == TExtension::ANGLE_multi_draw)
             {
                 // Don't emit anything. This extension is emulated
-                ASSERT(compileOptions.emulateGLDrawID);
                 continue;
             }
             else if (iter->first == TExtension::ANGLE_base_vertex_base_instance_shader_builtin)
             {
                 // Don't emit anything. This extension is emulated
-                ASSERT(compileOptions.emulateGLBaseVertexBaseInstance);
                 continue;
             }
             else if (iter->first == TExtension::EXT_clip_cull_distance ||
