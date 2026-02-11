@@ -1865,8 +1865,11 @@ angle::Result UtilsVk::setupComputeProgram(
     {
         commandBuffer->pushConstants(*pipelineLayout, VK_SHADER_STAGE_COMPUTE_BIT, 0,
                                      static_cast<uint32_t>(pushConstantsSize), pushConstants);
-        // Since we just modified pushConstants for compute, we have to ensure next dispatch/draw
-        // will restore them.
+
+        // Since we just issued pushConstants in outsideRenderPass and renderPassCommands uses
+        // different secondary command buffer, we don't really need to dirty driver uniforms for the
+        // next draw call. But the next new RenderPassCommands and the current already stared
+        // renderPassCommands do need to issue full pushConstants to restore driver uniforms.
         contextVk->invalidateDriverUniforms();
     }
 
@@ -5073,7 +5076,7 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
         commandBuffer->drawInstanced(4, params.textWidgetCount, 0);
     }
 
-    contextVk->invalidateDriverUniforms();
+    contextVk->invalidateGraphicsDriverUniforms();
 
     // Overlay is always drawn as the last render pass before present.  Automatically move the
     // layout to PresentSrc.

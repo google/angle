@@ -1446,6 +1446,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     vk::RenderPassCommandBuffer *mRenderPassCommandBuffer;
 
+    const vk::PipelineLayout *mCurrentPipelineLayout;
+
     vk::PipelineHelper *mCurrentGraphicsPipeline;
     vk::PipelineHelper *mCurrentGraphicsPipelineShaders;
     vk::PipelineHelper *mCurrentComputePipeline;
@@ -1504,6 +1506,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     DirtyBits mComputeDirtyBits;
     DirtyBits mNonIndexedDirtyBitsMask;
     DirtyBits mIndexedDirtyBitsMask;
+    DirtyBits mNewRenderPassDirtyBits;
     DirtyBits mNewGraphicsCommandBufferDirtyBits;
     DirtyBits mNewComputeCommandBufferDirtyBits;
     DirtyBits mDynamicStateDirtyBits;

@@ -105,8 +105,16 @@ class GraphicsDriverUniforms
         {
             mAllDirtyBits.set(DIRTY_BIT_EMULATED_TRANSFORM_FEEDBACK);
         }
+        mMaxUniformDataSize = kPushConstantOffsets[mAllDirtyBits.last() + 1];
 
         mDirtyBits = mAllDirtyBits;
+    }
+
+    void copyGraphicsDriverUniformsData(const GraphicsDriverUniforms &other)
+    {
+        memcpy(&mUniformData, &other.mUniformData, mMaxUniformDataSize);
+        // By default we should not need to call pushConstants
+        mDirtyBits.reset();
     }
 
     void updateDepthRange(float nearPlane, float farPlane)
@@ -239,26 +247,18 @@ class GraphicsDriverUniforms
     }
 
     void setAllDirtyBits() { mDirtyBits = mAllDirtyBits; }
+    bool isAllDataDirty() { return mDirtyBits == mAllDirtyBits; }
 
     // Update push constant driver uniforms.
+    template <typename CommandBufferT>
     void pushConstants(vk::Renderer *renderer,
                        const vk::PipelineLayout &pipelineLayout,
-                       vk::RenderPassCommandBuffer *commandBuffer)
+                       CommandBufferT *commandBuffer)
     {
         if (mDirtyBits.none())
         {
             return;
         }
-
-        static constexpr std::array<uint32_t, DirtyBitType::EnumCount + 1> kPushConstantOffsets = {
-            offsetof(struct UniformData, depthRange),
-            offsetof(struct UniformData, renderArea),
-            offsetof(struct UniformData, flipXY),
-            offsetof(struct UniformData, misc),
-            offsetof(struct UniformData, dither),
-            offsetof(struct UniformData, acbBufferOffsets),
-            offsetof(struct UniformData, xfbBufferOffsets),
-            sizeof(struct UniformData)};
 
         // Push constant data from first dirty bit to the last dirty bit
         DirtyBitType firstDirtyBit = mDirtyBits.first();
@@ -381,6 +381,16 @@ class GraphicsDriverUniforms
     // GraphicsDriverUniforms plus extended size are within that limit.
     static_assert(sizeof(UniformData) <= 128, "Only 128 bytes are guaranteed for push constants");
 
+    static constexpr std::array<uint32_t, DirtyBitType::EnumCount + 1> kPushConstantOffsets = {
+        offsetof(struct UniformData, depthRange),
+        offsetof(struct UniformData, renderArea),
+        offsetof(struct UniformData, flipXY),
+        offsetof(struct UniformData, misc),
+        offsetof(struct UniformData, dither),
+        offsetof(struct UniformData, acbBufferOffsets),
+        offsetof(struct UniformData, xfbBufferOffsets),
+        sizeof(struct UniformData)};
+
     struct UniformData mUniformData;
 
     // Track which constant is dirty
@@ -388,6 +398,8 @@ class GraphicsDriverUniforms
     // All possible dirty bits. Note that depends on feature bit, it may not be all bits in the
     // DirtyBits.
     DirtyBits mAllDirtyBits;
+
+    uint32_t mMaxUniformDataSize;
 };
 
 struct ComputeDriverUniforms

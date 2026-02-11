@@ -78,6 +78,12 @@ static constexpr GLbitfield kWriteAfterAccessMemoryBarriers =
 // immediately submit when the device is idle after calling to flush.
 static constexpr size_t kMinCommandCountToSubmit = 1024;
 
+constexpr bool useVulkanSecondaryCommandBuffer()
+{
+    return !vk::RenderPassCommandBuffer::ExecutesInline() ||
+           !vk::OutsideRenderPassCommandBuffer::ExecutesInline();
+}
+
 GLenum DefaultGLErrorCode(VkResult result)
 {
     switch (result)
@@ -750,6 +756,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mGraphicsDirtyBitHandlers{},
       mComputeDirtyBitHandlers{},
       mRenderPassCommandBuffer(nullptr),
+      mCurrentPipelineLayout(nullptr),
       mCurrentGraphicsPipeline(nullptr),
       mCurrentGraphicsPipelineShaders(nullptr),
       mCurrentComputePipeline(nullptr),
@@ -813,16 +820,16 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     // Note that currently these dirty bits are set every time a new render pass command buffer is
     // begun.  However, using ANGLE's SecondaryCommandBuffer, the Vulkan command buffer (which is
     // the primary command buffer) is not ended, so technically we don't need to rebind these.
-    mNewGraphicsCommandBufferDirtyBits = DirtyBits{
+    mNewRenderPassDirtyBits = DirtyBits{
         DIRTY_BIT_RENDER_PASS,      DIRTY_BIT_COLOR_ACCESS,    DIRTY_BIT_DEPTH_STENCIL_ACCESS,
         DIRTY_BIT_PIPELINE_BINDING, DIRTY_BIT_TEXTURES,        DIRTY_BIT_VERTEX_BUFFERS,
         DIRTY_BIT_INDEX_BUFFER,     DIRTY_BIT_UNIFORM_BUFFERS, DIRTY_BIT_SHADER_RESOURCES,
-        DIRTY_BIT_DESCRIPTOR_SETS,  DIRTY_BIT_DRIVER_UNIFORMS,
+        DIRTY_BIT_DESCRIPTOR_SETS,
     };
     if (getFeatures().supportsTransformFeedbackExtension.enabled ||
         getFeatures().emulateTransformFeedback.enabled)
     {
-        mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
+        mNewRenderPassDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
     }
 
     mNewComputeCommandBufferDirtyBits =
@@ -893,7 +900,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
     }
 
-    mNewGraphicsCommandBufferDirtyBits |= mDynamicStateDirtyBits;
+    mNewRenderPassDirtyBits |= mDynamicStateDirtyBits;
+
+    // We need to update driver uniform for every new vulkan command buffer.
+    mNewGraphicsCommandBufferDirtyBits = DirtyBits{DIRTY_BIT_DRIVER_UNIFORMS};
 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_MEMORY_BARRIER] =
         &ContextVk::handleDirtyGraphicsMemoryBarrier;
@@ -2380,6 +2390,23 @@ angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirt
                                                RenderPassClosureReason::AlreadySpecifiedElsewhere));
     }
 
+    // If we are using vulkan secondary command buffer, we must push constants for every renderPass.
+    // Or, from vulkan spec: When multiview is enabled, ... push constants must be set before they
+    // are used.
+    if (useVulkanSecondaryCommandBuffer() || drawFramebufferVk->getState().isMultiview())
+    {
+        mGraphicsDriverUniforms.setAllDirtyBits();
+        dirtyBitsIterator->setLaterBit(DIRTY_BIT_DRIVER_UNIFORMS);
+    }
+    else if (mGraphicsDirtyBits[DIRTY_BIT_DRIVER_UNIFORMS])
+    {
+        // If flushDirtyGraphicsRenderPass end up did command buffer submission, it will insert
+        // DIRTY_BIT_DRIVER_UNIFORMS to mGraphicsDirtyBits. But if this is called from dirty bit
+        // handler, we have to copy the DIRTY_BIT_DRIVER_UNIFORMS bit to dirtyBitsIterator so that
+        // it can be processed right now for this draw call.
+        dirtyBitsIterator->setLaterBit(DIRTY_BIT_DRIVER_UNIFORMS);
+    }
+
     bool renderPassDescChanged = false;
 
     ANGLE_TRY(startRenderPass(renderArea, nullptr, &renderPassDescChanged));
@@ -3718,6 +3745,18 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
     mShareGroupVk->cleanupExcessiveRefCountedEventGarbage();
 
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
+    mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
+    // Always update all pushConstants for new command buffer
+    mGraphicsDriverUniforms.setAllDirtyBits();
+
+    // If we are using ANGLE's secondary command buffer, and still have un-flushed
+    // renderPass commands, the DIRTY_BIT_DRIVER_UNIFORMS we inserted above won't take effect for
+    // them. We must explicitly add pushConstants in the new primary command buffer before this
+    // renderPass gets flushed.
+    if (!useVulkanSecondaryCommandBuffer() && mRenderPassCommands->started())
+    {
+        mRenderPassCommands->dirtyCurrentDriverUniforms();
+    }
 
     mTotalBufferToImageCopySize       = 0;
     mEstimatedPendingImageGarbageSize = 0;
@@ -5686,7 +5725,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                         }
                     }
                 }
-
+                mCurrentPipelineLayout = &vk::GetImpl(programExecutable)->getPipelineLayout();
                 break;
             }
             case gl::state::DIRTY_BIT_SAMPLER_BINDINGS:
@@ -6293,12 +6332,24 @@ angle::Result ContextVk::invalidateCurrentShaderUniformBuffers()
 
 void ContextVk::invalidateGraphicsDriverUniforms()
 {
+    // update all pushConstants for future draw calls
+    mGraphicsDriverUniforms.setAllDirtyBits();
     mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
 }
 
 void ContextVk::invalidateDriverUniforms()
 {
-    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+    if (mRenderPassCommands->started())
+    {
+        // dirty already started renderPass
+        mRenderPassCommands->dirtyCurrentDriverUniforms();
+    }
+    else
+    {
+        // For future new renderPass
+        invalidateGraphicsDriverUniforms();
+    }
+    // For next compute dispatch
     mComputeDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
 }
 
@@ -6830,6 +6881,21 @@ angle::Result ContextVk::handleDirtyComputeDriverUniforms(DirtyBits::Iterator *d
         executableVk->getPipelineLayout(), getRenderer()->getSupportedVulkanShaderStageMask(), 0,
         sizeof(ComputeDriverUniforms), &driverUniforms);
     mPerfCounters.graphicsDriverUniformsUpdated++;
+
+    // Since we just issued pushConstants in outsideRenderPass and renderPassCommands uses different
+    // secondary command buffer, we don't really need to dirty driver uniforms for the next draw
+    // call. But the next new RenderPassCommands and the current already started renderPassCommands
+    // do need to issue full pushConstants to restore driver uniforms.
+    if (mRenderPassCommands->started())
+    {
+        // dirty already started renderPass
+        mRenderPassCommands->dirtyCurrentDriverUniforms();
+    }
+    else
+    {
+        // For future new renderPass
+        invalidateGraphicsDriverUniforms();
+    }
 
     return angle::Result::Continue;
 }
@@ -7684,6 +7750,20 @@ angle::Result ContextVk::beginNewRenderPass(
         commandBufferOut));
     mRenderPassCountSinceSubmit++;
 
+    bool pushConstantAlreadyDirty =
+        mGraphicsDirtyBits[DIRTY_BIT_DRIVER_UNIFORMS] && mGraphicsDriverUniforms.isAllDataDirty();
+    // If pushConstant already dirty, we dont need to stash driver uniforms. We could just rely on
+    // DIRTY_BIT_DRIVER_UNIFORMS handler to avoid the extra data copy.
+    if (!pushConstantAlreadyDirty)
+    {
+        // For each renderPass, stash the current graphicsDriverUniforms for possible later usage.
+        // If for whatever reason that we have to submitCommands while still the open renderPass, or
+        // if issued pushConstants in outsideRenderPassCommands (which flushes to primary before
+        // renderPassCommands), we have to issue this stashed driver uniforms.
+        mRenderPassCommands->addCurrentDriverUniforms(mCurrentPipelineLayout,
+                                                      mGraphicsDriverUniforms);
+    }
+
     // By default all render pass should allow to be reactivated.
     mAllowRenderPassToReactivate = true;
 
@@ -7778,9 +7858,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassCl
     }
 
     // Set dirty bits if render pass was open (and thus will be closed).
-    mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
-    // Always update all pushConstants for new render pass
-    mGraphicsDriverUniforms.setAllDirtyBits();
+    mGraphicsDirtyBits |= mNewRenderPassDirtyBits;
 
     mCurrentTransformFeedbackQueueSerial = QueueSerial();
 
@@ -7900,14 +7978,15 @@ angle::Result ContextVk::flushDirtyGraphicsRenderPass(DirtyBits::Iterator *dirty
 
     // Set dirty bits that need processing on new render pass on the dirty bits iterator that's
     // being processed right now.
-    dirtyBitsIterator->setLaterBits(mNewGraphicsCommandBufferDirtyBits & dirtyBitMask);
+    dirtyBitsIterator->setLaterBits(mNewRenderPassDirtyBits & dirtyBitMask);
 
     // Additionally, make sure any dirty bits not included in the mask are left for future
     // processing.  Note that |dirtyBitMask| is removed from |mNewGraphicsCommandBufferDirtyBits|
     // after dirty bits are iterated, so there's no need to mask them out.
-    mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
-    // Always update all pushConstants for new render pass
-    mGraphicsDriverUniforms.setAllDirtyBits();
+    mGraphicsDirtyBits |= mNewRenderPassDirtyBits;
+    // Because dirtyBitMask always contains DIRTY_BIT_DRIVER_UNIFORMS, we don't need to explicitly
+    // add DIRTY_BIT_DRIVER_UNIFORMS to mGraphicsDirtyBits here.
+    ASSERT(dirtyBitMask.test(DIRTY_BIT_DRIVER_UNIFORMS));
 
     ASSERT(mGraphicsPipelineDesc->getSubpass() == 0);
 
@@ -9020,10 +9099,9 @@ void ContextVk::restoreAllGraphicsState()
 {
     // Recover states that may have been changed by UtilsVk::depthStencilBlitResolve. We dirty all
     // states except DIRTY_BIT_RENDER_PASS so that render pass could still reused.
-    DirtyBits allDrawStateDirtyBits =
-        mNewGraphicsCommandBufferDirtyBits & ~DirtyBits{DIRTY_BIT_RENDER_PASS};
+    DirtyBits allDrawStateDirtyBits = mNewRenderPassDirtyBits & ~DirtyBits{DIRTY_BIT_RENDER_PASS};
     mGraphicsDirtyBits |= allDrawStateDirtyBits;
-    // update all pushConstants
-    mGraphicsDriverUniforms.setAllDirtyBits();
+    // update all pushConstants for future draw calls
+    invalidateGraphicsDriverUniforms();
 }
 }  // namespace rx
