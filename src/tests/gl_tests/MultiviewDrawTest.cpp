@@ -1282,14 +1282,14 @@ layout(num_views = 2) in;
 in vec4 vPosition;
 void main()
 {
-       vec4 p = vPosition;
-       if (gl_InstanceID == 1){
-               p.y = p.y * 0.5 + 0.5;
-       } else {
-               p.y = p.y * 0.5 - 0.5;
-       }
-       gl_Position.x = (gl_ViewID_OVR == 0u ? p.x * 0.5 + 0.5 : p.x * 0.5 - 0.5);
-       gl_Position.yzw = p.yzw;
+    vec4 p = vPosition;
+    if (gl_InstanceID == 1){
+        p.y = p.y * 0.5 + 0.5;
+    } else {
+        p.y = p.y * 0.5 - 0.5;
+    }
+    gl_Position.x = (gl_ViewID_OVR == 0u ? p.x * 0.5 + 0.5 : p.x * 0.5 - 0.5);
+    gl_Position.yzw = p.yzw;
 })";
 
     const std::string FS = R"(#version 300 es
@@ -1351,14 +1351,14 @@ in vec4 vPosition;
 out vec4 vColor;
 void main()
 {
-       vec4 p = vPosition;
-       // There will be four instance IDs, with four views each.  Make each instance draw to
-       // a different region of the framebuffer.  The view ID selects the color
-       p.x = p.x * 0.5 + ((gl_InstanceID & 0x1) == 0 ? -0.5 : 0.5);
-       p.y = p.y * 0.5 + ((gl_InstanceID & 0x2) == 0 ? -0.5 : 0.5);
+    vec4 p = vPosition;
+    // There will be four instance IDs, with four views each.  Make each instance draw to
+    // a different region of the framebuffer.  The view ID selects the color
+    p.x = p.x * 0.5 + ((gl_InstanceID & 0x1) == 0 ? -0.5 : 0.5);
+    p.y = p.y * 0.5 + ((gl_InstanceID & 0x2) == 0 ? -0.5 : 0.5);
 
-       gl_Position = p;
-       vColor = vec4(float(gl_ViewID_OVR) * 0.25, float(gl_InstanceID % 4) * 0.25, 0, 1);
+    gl_Position = p;
+    vColor = vec4(float(gl_ViewID_OVR) * 0.25, float(gl_InstanceID % 4) * 0.25, 0, 1);
 })";
 
     const std::string FS = R"(#version 300 es
@@ -1394,6 +1394,69 @@ void main()
             }
         }
     }
+}
+
+// The test verifies that gl_InstanceID increments correctly if #extension all is used to enable the
+// multi-view extension, but num_views is not set.  This is not an error as evidenced by dEQP tests
+// that generate such shaders.
+TEST_P(MultiviewRenderTest, InstancedButNoNumViews)
+{
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension(isMultisampled()));
+
+    constexpr char kVS[] = R"(#version 300 es
+#extension all : warn
+in vec4 vPosition;
+out vec4 vColor;
+void main()
+{
+    vec4 p = vPosition;
+    // There will be four instance IDs.  Make each instance draw to a different region of the
+    // framebuffer with a different color.
+    p.x = p.x * 0.5 + ((gl_InstanceID & 0x1) == 0 ? -0.5 : 0.5);
+    p.y = p.y * 0.5 + ((gl_InstanceID & 0x2) == 0 ? -0.5 : 0.5);
+
+    gl_Position = p;
+    switch (gl_InstanceID)
+    {
+    case 0:
+        vColor = vec4(1, 0, 0, 1);
+        break;
+    case 1:
+        vColor = vec4(0, 1, 0, 1);
+        break;
+    case 2:
+        vColor = vec4(0, 0, 1, 1);
+        break;
+    case 3:
+        vColor = vec4(1, 1, 0, 1);
+        break;
+    default:
+        vColor = vec4(1, 1, 1, 1);
+        break;
+    }
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension all : warn
+precision mediump float;
+in vec4 vColor;
+out vec4 col;
+void main()
+{
+    col = vColor;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuadInstanced(program, "vPosition", 0.0f, 1.0f, true, 4u);
+    ASSERT_GL_NO_ERROR();
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h / 2 - 1, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w / 2 - 1, h / 2 - 1, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2 + 1, w / 2 - 1, h / 2 - 1, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, h / 2 + 1, w / 2 - 1, h / 2 - 1, GLColor::yellow);
 }
 
 // The test verifies that the attribute divisor is correctly adjusted when drawing with a multi-view

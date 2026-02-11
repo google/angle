@@ -971,8 +971,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
          parseContext.isExtensionEnabled(TExtension::OVR_multiview)) &&
         getShaderType() != GL_COMPUTE_SHADER)
     {
-        if (!DeclareAndInitBuiltinsForInstancedMultiview(
-                this, root, mNumViews, mShaderType, compileOptions, mOutputType, &mSymbolTable))
+        // Note: if multiview is enabled via #extension all, num_views may not be set.
+        if (!DeclareAndInitBuiltinsForInstancedMultiview(this, root, std::max(mNumViews, 1),
+                                                         mShaderType, compileOptions, mOutputType,
+                                                         &mSymbolTable))
         {
             return false;
         }
