@@ -806,6 +806,7 @@ void ProgramExecutable::reset()
     mPod.hasYUVOutput              = false;
     mPod.hasDepthInputAttachment   = false;
     mPod.hasStencilInputAttachment = false;
+    mPod.hasFragCoord              = false;
 
     mPod.advancedBlendEquations.reset();
 

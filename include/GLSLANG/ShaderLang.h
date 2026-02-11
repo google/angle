@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 397
+#define ANGLE_SH_VERSION 398
 
 enum ShShaderSpec
 {
@@ -971,6 +971,7 @@ enum class MetadataFlags
     HasClipDistance,
     // Applicable to fragment shaders
     HasDiscard,
+    HasFragCoord,
     EnablesPerSampleShading,
     HasInputAttachment0,
     // Flag for attachment i is HasInputAttachment0 + i

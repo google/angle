@@ -5591,9 +5591,14 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // surfaces, which always result in DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING being set
                 // from angle::SubjectMessage::SurfaceChanged. For FBOs we leave them stale since
                 // this dirty bit may not get set for attachment dimension change.
-                mGraphicsDriverUniforms.updateRenderArea(
-                    drawFramebufferVk->getState().getDimensions().width,
-                    drawFramebufferVk->getState().getDimensions().height);
+                if (mState.getDrawFramebuffer()->isDefault() && programExecutable != nullptr &&
+                    programExecutable->hasFragCoord())
+                {
+                    mGraphicsDriverUniforms.updateRenderArea(
+                        drawFramebufferVk->getState().getDimensions().width,
+                        drawFramebufferVk->getState().getDimensions().height);
+                    invalidateGraphicsDriverUniforms();
+                }
                 mGraphicsDriverUniforms.updateflipXY(
                     mCurrentRotationDrawFramebuffer, isViewportFlipEnabledForDrawFBO(),
                     drawFramebufferVk->getSamples(), drawFramebufferVk->getLayerCount() > 1);
@@ -5650,6 +5655,15 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                         iter.setLaterBit(gl::state::DIRTY_BIT_SAMPLE_SHADING);
                     }
                     mSampleShadingEnabled = programEnablesSampleShading;
+
+                    if (mState.getDrawFramebuffer()->isDefault() &&
+                        programExecutable->hasFragCoord())
+                    {
+                        mGraphicsDriverUniforms.updateRenderArea(
+                            drawFramebufferVk->getState().getDimensions().width,
+                            drawFramebufferVk->getState().getDimensions().height);
+                        invalidateGraphicsDriverUniforms();
+                    }
                 }
 
                 break;
@@ -6762,6 +6776,7 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
 
     // renderArea must have been up to date for surface drawables
     ASSERT(!mState.getDrawFramebuffer()->isDefault() ||
+           !mState.getProgramExecutable()->hasFragCoord() ||
            (getDrawFramebuffer()->getState().getDimensions().width ==
             (mGraphicsDriverUniforms.getRenderArea() & 0xffff)) &&
                (getDrawFramebuffer()->getState().getDimensions().height ==
