@@ -662,6 +662,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo validateMaxPerStageUniformBlocksAtCompileTime = {
+        "validateMaxPerStageUniformBlocksAtCompileTime",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

@@ -266,6 +266,11 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
         options->pls = contextGL->getNativePixelLocalStorageOptions();
     }
 
+    if (features.validateMaxPerStageUniformBlocksAtCompileTime.enabled)
+    {
+        options->validatePerStageMaxUniformBlocks = true;
+    }
+
     return std::shared_ptr<ShaderTranslateTask>(
         new ShaderTranslateTaskGL(functions, mShaderID, contextGL->hasNativeParallelCompile()));
 }

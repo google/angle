@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 398
+#define ANGLE_SH_VERSION 399
 
 enum ShShaderSpec
 {
@@ -384,7 +384,9 @@ struct ShCompileOptions
     // VK_EXT_depth_clip_control is supported, this code is not generated, saving a uniform look up.
     uint64_t addVulkanDepthCorrection : 1;
 
-    uint64_t unused2 : 1;
+    // Validate that the count of uniform blocks is within the GL_MAX_*_UNIFORM_BLOCKS limits. These
+    // limits must be supplied in the BuiltinResources.
+    uint64_t validatePerStageMaxUniformBlocks : 1;
 
     // Ask compiler to generate Vulkan transform feedback emulation support code.
     uint64_t addVulkanXfbEmulationSupportCode : 1;
@@ -586,6 +588,12 @@ struct ShBuiltInResources
     int MinProgramTexelOffset;
     int MaxProgramTexelOffset;
 
+    // GL_MAX_FRAGMENT_UNIFORM_BLOCKS
+    int MaxFragmentUniformBlocks;
+
+    // GL_MAX_VERTEX_UNIFORM_BLOCKS
+    int MaxVertexUniformBlocks;
+
     // Extension constants.
 
     // Value of GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT for OpenGL ES output context.
@@ -703,6 +711,9 @@ struct ShBuiltInResources
     // maximum point size (higher limit from ALIASED_POINT_SIZE_RANGE)
     float MaxPointSize;
 
+    // GL_MAX_COMPUTE_UNIFORM_BLOCKS
+    int MaxComputeUniformBlocks;
+
     // EXT_geometry_shader constants
     int MaxGeometryUniformComponents;
     int MaxGeometryInputComponents;
@@ -714,6 +725,7 @@ struct ShBuiltInResources
     int MaxGeometryAtomicCounters;
     int MaxGeometryShaderInvocations;
     int MaxGeometryImageUniforms;
+    int MaxGeometryUniformBlocks;
 
     // EXT_tessellation_shader constants
     int MaxTessControlInputComponents;
@@ -724,6 +736,7 @@ struct ShBuiltInResources
     int MaxTessControlImageUniforms;
     int MaxTessControlAtomicCounters;
     int MaxTessControlAtomicCounterBuffers;
+    int MaxTessControlUniformBlocks;
 
     int MaxTessPatchComponents;
     int MaxPatchVertices;
@@ -736,6 +749,7 @@ struct ShBuiltInResources
     int MaxTessEvaluationImageUniforms;
     int MaxTessEvaluationAtomicCounters;
     int MaxTessEvaluationAtomicCounterBuffers;
+    int MaxTessEvaluationUniformBlocks;
 
     // APPLE_clip_distance / EXT_clip_cull_distance / ANGLE_clip_cull_distance constants
     int MaxClipDistances;
