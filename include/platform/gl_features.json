@@ -860,6 +860,14 @@
                 "Use ARB_shader_viewport_layer_array or NV_viewport_array2 to implement multiview"
             ],
             "issue": "http://anglebug.com/42260809"
+        },
+        {
+            "name": "validate_max_per_stage_uniform_blocks_at_compile_time",
+            "category": "Workarounds",
+            "description": [
+                "Validate GL_MAX_*_UNIFORM_BLOCKS at compile time instead of link time to work around compiler bugs."
+            ],
+            "issue": "http://crbug.com/475877320"
         }
     ]
 }

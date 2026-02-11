@@ -7288,6 +7288,61 @@ void main()
     validateSuccess(GL_FRAGMENT_SHADER, kShader);
 }
 
+class GLSLValidationTest_ES3_ValidateUniformBlocks : public GLSLValidationTest_ES3
+{};
+
+// Test the validate_max_per_stage_uniform_blocks_at_compile_time feature which validates the
+// uniform block count at compile time instead of link time.
+TEST_P(GLSLValidationTest_ES3_ValidateUniformBlocks,
+       MaxPerStageUniformBlockLimitsValidatedByCompile)
+{
+    GLint maxVertexUniformBlocks, maxFragmentUniformBlocks;
+    glGetIntegerv(GL_MAX_VERTEX_UNIFORM_BLOCKS, &maxVertexUniformBlocks);
+    glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_BLOCKS, &maxFragmentUniformBlocks);
+
+    // Test with one large array that is larger than the limit
+    std::ostringstream vsStream;
+    vsStream << R"(#version 300 es
+precision mediump float;
+#define BLOCK_COUNT )"
+             << maxVertexUniformBlocks + 1 << R"(
+layout(std140) uniform MyBlock {
+    float x;
+} blocks[BLOCK_COUNT];
+
+void main() {
+    gl_Position = vec4(blocks[BLOCK_COUNT - 1].x);
+})";
+
+    const std::string vertexShader = vsStream.str();
+    validateError(GL_VERTEX_SHADER, vertexShader.c_str(),
+                  "uniform block count greater than per stage maximum uniform blocks");
+
+    // Test with one array that reaches the limit and a single block which overflows the limit
+    std::ostringstream fsStream;
+    fsStream << R"(#version 300 es
+precision mediump float;
+#define BLOCK_COUNT )"
+             << maxFragmentUniformBlocks + 1 << R"(
+layout(std140) uniform MyBlock0 {
+    float x;
+} blocks0[BLOCK_COUNT - 1];
+
+layout(std140) uniform MyBlock1 {
+    float x;
+} block1;
+
+out vec4 fragColor;
+
+void main() {
+    fragColor = vec4(blocks0[BLOCK_COUNT-2].x, block1.x, 0.0, 1.0);
+})";
+
+    const std::string fragmentShader = fsStream.str();
+    validateError(GL_FRAGMENT_SHADER, fragmentShader.c_str(),
+                  "uniform block count greater than per stage maximum uniform blocks");
+}
+
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -7295,6 +7350,12 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTestNoValidation);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3(GLSLValidationTest_ES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationTest_ES3_ValidateUniformBlocks);
+ANGLE_INSTANTIATE_TEST(
+    GLSLValidationTest_ES3_ValidateUniformBlocks,
+    ES3_OPENGL().enable(Feature::ValidateMaxPerStageUniformBlocksAtCompileTime),
+    ES3_OPENGLES().enable(Feature::ValidateMaxPerStageUniformBlocksAtCompileTime));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31(GLSLValidationTest_ES31);

@@ -2751,6 +2751,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // IMG GL drivers crash in glClearTexImage on various format/type combinations such as packed
     // types, LUMA and depth stencil.
     ANGLE_FEATURE_CONDITION(features, disableClearTexImageForRobustInit, IsPowerVR(vendor));
+
+    // IMG GL drivers crash while compiling shaders with more than the limit of uniform blocks.
+    ANGLE_FEATURE_CONDITION(features, validateMaxPerStageUniformBlocksAtCompileTime,
+                            IsPowerVR(vendor));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

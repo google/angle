@@ -884,6 +884,12 @@ class TParseContext : angle::NonCopyable
     // Keep track of number of views declared in layout.
     int mNumViews;
 
+    // Maximum number of uniform blocks allowed to be declared in this shader. Taken from the
+    // built-in resources and resolved to this shader type.
+    unsigned int mMaxUniformBlocks;
+    // Current count of declared uniform blocks.
+    unsigned int mNumUniformBlocks;
+
     // Keeps track of whether any of the built-ins that can be redeclared (see
     // IsRedeclarableBuiltIn()) has been marked as invariant/precise before the possible
     // redeclaration.

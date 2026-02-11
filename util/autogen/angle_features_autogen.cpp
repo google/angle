@@ -491,6 +491,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UseVkEventForBufferBarrier, "useVkEventForBufferBarrier"},
     {Feature::UseVkEventForImageBarrier, "useVkEventForImageBarrier"},
     {Feature::UseVmaForImageSuballocation, "useVmaForImageSuballocation"},
+    {Feature::ValidateMaxPerStageUniformBlocksAtCompileTime, "validateMaxPerStageUniformBlocksAtCompileTime"},
     {Feature::VaryingsRequireMatchingPrecisionInSpirv, "varyingsRequireMatchingPrecisionInSpirv"},
     {Feature::VerifyPipelineCacheInBlobCache, "verifyPipelineCacheInBlobCache"},
     {Feature::VertexIDDoesNotIncludeBaseVertex, "vertexIDDoesNotIncludeBaseVertex"},
