@@ -204,13 +204,7 @@ angle::Result CLProgramVk::init(const size_t *lengths,
     return angle::Result::Continue;
 }
 
-CLProgramVk::~CLProgramVk()
-{
-    if (mModuleConstantDataBuffer)
-    {
-        mModuleConstantDataBuffer.release();
-    }
-}
+CLProgramVk::~CLProgramVk() {}
 
 angle::Result CLProgramVk::build(const cl::DevicePtrs &devices,
                                  const char *options,
@@ -546,7 +540,7 @@ const CLProgramVk::DeviceProgramData *CLProgramVk::getDeviceProgramData(
     return nullptr;
 }
 
-cl::MemoryPtr CLProgramVk::getOrCreateModuleConstantDataBuffer(const std::string &kernelName)
+cl::BufferPtr CLProgramVk::getOrCreateModuleConstantDataBuffer(const std::string &kernelName)
 {
     const DeviceProgramData *devProgram = getDeviceProgramData(kernelName.c_str());
     ASSERT(devProgram);
@@ -556,17 +550,16 @@ cl::MemoryPtr CLProgramVk::getOrCreateModuleConstantDataBuffer(const std::string
 
     if (!mModuleConstantDataBuffer)
     {
-        mModuleConstantDataBuffer =
-            cl::MemoryPtr(cl::Buffer::Cast(this->mContext->getFrontendObject().createBuffer(
-                nullptr, cl::MemFlags(CL_MEM_USE_HOST_PTR), initData.size(), initDataPtr)));
-        // Release initialization reference, lifetime controlled by RefPointer.
-        mModuleConstantDataBuffer->release();
+        mModuleConstantDataBuffer = cl::BufferPtr::Create(
+            const_cast<cl::Context &>(mProgram.getContext()), cl::Memory::PropArray{},
+            cl::MemFlags(CL_MEM_USE_HOST_PTR), initData.size(), initDataPtr);
     }
     else
     {
         // reading that this buffer is already present and is sufficient to hold initData
         ASSERT(mModuleConstantDataBuffer->getSize() == initData.size());
     }
+
     return mModuleConstantDataBuffer;
 }
 

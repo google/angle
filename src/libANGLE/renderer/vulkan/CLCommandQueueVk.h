@@ -151,7 +151,7 @@ using HostReadTransferConfig  = HostTransferConfig<void>;
 struct HostTransferEntry
 {
     std::variant<HostReadTransferConfig, HostWriteTransferConfig> transferConfig;
-    cl::MemoryPtr transferBufferHandle;
+    cl::BufferPtr transferBufferHandle;
 };
 using HostTransferEntries = std::vector<HostTransferEntry>;
 
@@ -194,10 +194,10 @@ class CommandsStateMap
     CommandsStateMap()  = default;
     ~CommandsStateMap() = default;
 
-    void addPrintfBuffer(const QueueSerial queueSerial, cl::Memory *printfBuffer)
+    void addPrintfBuffer(const QueueSerial queueSerial, cl::BufferPtr printfBuffer)
     {
         std::unique_lock<angle::SimpleMutex> ul(mMutex);
-        mCommandsState[queueSerial].mPrintfBuffer = cl::MemoryPtr(printfBuffer);
+        mCommandsState[queueSerial].mPrintfBuffer = printfBuffer;
     }
     void addMemory(const QueueSerial queueSerial, cl::Memory *mem)
     {
@@ -234,7 +234,7 @@ class CommandsStateMap
         std::unique_lock<angle::SimpleMutex> ul(mMutex);
         mCommandsState.clear();
     }
-    cl::MemoryPtr getPrintfBuffer(const QueueSerial queueSerial)
+    cl::BufferPtr getPrintfBuffer(const QueueSerial queueSerial)
     {
         std::unique_lock<angle::SimpleMutex> ul(mMutex);
         return mCommandsState[queueSerial].mPrintfBuffer;
@@ -251,7 +251,7 @@ class CommandsStateMap
         cl::MemoryPtrs mMemories;
         cl::KernelPtrs mKernels;
         cl::SamplerPtrs mSamplers;
-        cl::MemoryPtr mPrintfBuffer;
+        cl::BufferPtr mPrintfBuffer;
         HostTransferEntries mHostTransferList;
     };
 
@@ -468,7 +468,7 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     CLPlatformVk *getPlatform() { return mContext->getPlatform(); }
     CLContextVk *getContext() { return mContext; }
 
-    cl::MemoryPtr getOrCreatePrintfBuffer();
+    cl::BufferPtr getOrCreatePrintfBuffer();
 
     angle::Result finishQueueSerial(const QueueSerial queueSerial);
 
@@ -541,7 +541,7 @@ class CLCommandQueueVk : public CLCommandQueueImpl
 
     CLContextVk *mContext;
     const CLDeviceVk *mDevice;
-    cl::Memory *mPrintfBuffer;
+    cl::BufferPtr mPrintfBuffer;
 
     vk::SecondaryCommandPools mCommandPool;
     vk::OutsideRenderPassCommandBufferHelper *mComputePassCommands;

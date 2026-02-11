@@ -271,14 +271,6 @@ CLCommandQueueVk::~CLCommandQueueVk()
     ASSERT(mComputePassCommands->empty());
     ASSERT(!mNeedPrintfHandling);
 
-    if (mPrintfBuffer)
-    {
-        // The lifetime of printf buffer is scoped to command queue, release and destroy.
-        const bool wasLastUser = mPrintfBuffer->release();
-        ASSERT(wasLastUser);
-        delete mPrintfBuffer;
-    }
-
     if (mQueueSerialIndex != kInvalidQueueSerialIndex)
     {
         mContext->getRenderer()->releaseQueueSerialIndex(mQueueSerialIndex);
@@ -647,7 +639,6 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
     // TODO(aannestrand): Flush here if we reach some max-transfer-buffer heuristic
     // http://anglebug.com/377545840
 
-    cl::Memory *transferBufferHandle   = nullptr;
     cl::MemFlags transferBufferMemFlag = cl::MemFlags(CL_MEM_READ_WRITE);
 
     // We insert an appropriate copy command in the command stream. For the host ptr, we create CL
@@ -664,18 +655,17 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
             break;
     }
 
-    transferBufferHandle = cl::Buffer::Cast(this->mContext->getFrontendObject().createBuffer(
-        nullptr, transferBufferMemFlag, transferConfig.getSize(),
-        const_cast<void *>(transferConfig.getHostPtr())));
+    cl::BufferPtr transferBufferHandle = cl::BufferPtr::Create(
+        const_cast<cl::Context &>(mCommandQueue.getContext()), cl::Memory::PropArray{},
+        transferBufferMemFlag, transferConfig.getSize(),
+        const_cast<void *>(transferConfig.getHostPtr()));
     if (transferBufferHandle == nullptr)
     {
         ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
     }
-    HostTransferEntry transferEntry{transferConfig, cl::MemoryPtr{transferBufferHandle}};
-    mCommandsStateMap.addHostTransferEntry(mComputePassCommands->getQueueSerial(), transferEntry);
 
-    // Release initialization reference, lifetime controlled by RefPointer.
-    transferBufferHandle->release();
+    HostTransferEntry transferEntry{transferConfig, transferBufferHandle};
+    mCommandsStateMap.addHostTransferEntry(mComputePassCommands->getQueueSerial(), transferEntry);
 
     // We need an execution barrier if buffer can be written to by kernel
     if (!mComputePassCommands->getCommandBuffer().empty() && srcBuffer->isWritable())
@@ -807,7 +797,6 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLImageVk *srcImage,
     // TODO(aannestrand): Flush here if we reach some max-transfer-buffer heuristic
     // http://anglebug.com/377545840
 
-    cl::Memory *transferBufferHandle   = nullptr;
     cl::MemFlags transferBufferMemFlag = cl::MemFlags(CL_MEM_READ_WRITE);
 
     // We insert an appropriate copy command in the command stream. For the host ptr, we create CL
@@ -822,19 +811,17 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLImageVk *srcImage,
             break;
     }
 
-    transferBufferHandle = cl::Buffer::Cast(this->mContext->getFrontendObject().createBuffer(
-        nullptr, transferBufferMemFlag, transferConfig.getSize(),
-        const_cast<void *>(transferConfig.getHostPtr())));
+    cl::BufferPtr transferBufferHandle = cl::BufferPtr::Create(
+        const_cast<cl::Context &>(mCommandQueue.getContext()), cl::Memory::PropArray{},
+        transferBufferMemFlag, transferConfig.getSize(),
+        const_cast<void *>(transferConfig.getHostPtr()));
     if (transferBufferHandle == nullptr)
     {
         ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
     }
 
-    HostTransferEntry transferEntry{transferConfig, cl::MemoryPtr{transferBufferHandle}};
+    HostTransferEntry transferEntry{transferConfig, transferBufferHandle};
     mCommandsStateMap.addHostTransferEntry(mComputePassCommands->getQueueSerial(), transferEntry);
-
-    // Release initialization reference, lifetime controlled by RefPointer.
-    transferBufferHandle->release();
 
     CLBufferVk &transferBufferHandleVk = transferBufferHandle->getImpl<CLBufferVk>();
     ImageBufferCopyDirection direction = ImageBufferCopyDirection::ToBuffer;
@@ -1710,12 +1697,10 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
     for (const ClspvLiteralSampler &literalSampler : devProgramData->reflectionData.literalSamplers)
     {
         cl::SamplerPtr clLiteralSampler =
-            cl::SamplerPtr(cl::Sampler::Cast(this->mContext->getFrontendObject().createSampler(
-                literalSampler.normalizedCoords, literalSampler.addressingMode,
-                literalSampler.filterMode)));
+            cl::SamplerPtr::Create(const_cast<cl::Context &>(mCommandQueue.getContext()),
+                                   cl::Sampler::PropArray{}, literalSampler.normalizedCoords,
+                                   literalSampler.addressingMode, literalSampler.filterMode);
 
-        // Release immediately to ensure correct refcount
-        clLiteralSampler->release();
         ASSERT(clLiteralSampler != nullptr);
         CLSamplerVk &vkLiteralSampler = clLiteralSampler->getImpl<CLSamplerVk>();
 
@@ -2023,7 +2008,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
     {
         // POD arguments exceeded the push constant size and are packaged in a storage buffer. Setup
         // commands and dependencies accordingly.
-        cl::MemoryPtr clMem = kernelVk.getPodBuffer();
+        cl::BufferPtr clMem = kernelVk.getPodBuffer();
         ASSERT(clMem != nullptr);
         CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
 
@@ -2058,7 +2043,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
     if (devProgramData->reflectionData.pushConstants.contains(
             NonSemanticClspvReflectionConstantDataPointerPushConstant))
     {
-        cl::MemoryPtr clMem =
+        cl::BufferPtr clMem =
             kernelVk.getProgram()->getOrCreateModuleConstantDataBuffer(kernelVk.getKernelName());
         CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
         uint64_t devAddr  = vkMem.getBuffer().getDeviceAddress(mContext) + vkMem.getOffset();
@@ -2086,7 +2071,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
         UpdateDescriptorSetsBuilder &printfDescSetBuilder =
             updateDescriptorSetsBuilders[DescriptorSetIndex::Printf];
 
-        cl::MemoryPtr clMem = getOrCreatePrintfBuffer();
+        cl::BufferPtr clMem = getOrCreatePrintfBuffer();
         CLBufferVk &vkMem   = clMem->getImpl<CLBufferVk>();
         uint8_t *mapPointer = nullptr;
         ANGLE_TRY(vkMem.map(mapPointer, 0));
@@ -2552,16 +2537,17 @@ angle::Result CLCommandQueueVk::onResourceAccess(const vk::CommandResources &res
 
 // A single CL buffer is setup for every command queue of size kPrintfBufferSize. This can be
 // expanded later, if more storage is needed.
-cl::MemoryPtr CLCommandQueueVk::getOrCreatePrintfBuffer()
+cl::BufferPtr CLCommandQueueVk::getOrCreatePrintfBuffer()
 {
     if (!mPrintfBuffer)
     {
-        mPrintfBuffer = cl::Buffer::Cast(mContext->getFrontendObject().createBuffer(
-            nullptr, cl::MemFlags(CL_MEM_READ_WRITE), kPrintfBufferSize, nullptr));
+        mPrintfBuffer = cl::BufferPtr::Create(
+            const_cast<cl::Context &>(mCommandQueue.getContext()), cl::Memory::PropArray{},
+            cl::MemFlags(CL_MEM_READ_WRITE), kPrintfBufferSize, nullptr);
     }
     mCommandsStateMap.addPrintfBuffer(mComputePassCommands->getQueueSerial(), mPrintfBuffer);
 
-    return cl::MemoryPtr(mPrintfBuffer);
+    return mPrintfBuffer;
 }
 
 bool CLCommandQueueVk::hasUserEventDependency() const

@@ -101,6 +101,8 @@ class Platform final : public _cl_platform_id, public Object
     static constexpr char kIcdSuffix[] = "ANGLE";
 
     static angle::FrameCaptureShared *mFrameCaptureShared;
+
+    friend class Object;
 };
 
 inline Platform *Platform::GetDefault()

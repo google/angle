@@ -185,7 +185,8 @@ angle::Result Program::createKernels(cl_uint numKernels, cl_kernel *kernels, cl_
     krnls.reserve(createFuncs.size());
     while (!createFuncs.empty())
     {
-        krnls.emplace_back(new Kernel(*this, createFuncs.front()));
+        krnls.emplace_back(KernelPtr::Create(*this, createFuncs.front()));
+
         if (krnls.back()->mImpl == nullptr)
         {
             return angle::Result::Stop;

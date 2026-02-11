@@ -365,9 +365,9 @@ angle::Result Device::createSubDevices(const cl_device_partition_property *prope
     devices.reserve(subDeviceCreateFuncs.size());
     while (!subDeviceCreateFuncs.empty())
     {
-        devices.emplace_back(new Device(mPlatform, this, type, subDeviceCreateFuncs.front()));
-        // Release initialization reference, lifetime controlled by RefPointer.
-        devices.back()->release();
+        devices.emplace_back(
+            DevicePtr::Create(mPlatform, this, type, subDeviceCreateFuncs.front()));
+
         if (!devices.back()->mInfo.isValid())
         {
             return angle::Result::Stop;

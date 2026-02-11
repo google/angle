@@ -26,6 +26,7 @@
 #include "libANGLE/CLEvent.h"
 #include "libANGLE/CLImage.h"
 #include "libANGLE/CLProgram.h"
+#include "libANGLE/CLSampler.h"
 #include "libANGLE/cl_utils.h"
 
 namespace rx

@@ -73,6 +73,7 @@ class Device final : public _cl_device_id, public Object
 
     friend class CommandQueue;
     friend class Platform;
+    friend class Object;
 };
 
 inline Platform &Device::getPlatform() noexcept

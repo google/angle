@@ -584,11 +584,12 @@ angle::Result CLImageVk::getOrCreateStagingBuffer(CLBufferVk **clBufferOut)
 
     std::lock_guard<angle::SimpleMutex> lock(mMutex);
 
-    if (!cl::Buffer::IsValid(mStagingBuffer))
+    if (!mStagingBuffer)
     {
-        mStagingBuffer = cl::Buffer::Cast(mContext->getFrontendObject().createBuffer(
-            nullptr, cl::MemFlags(CL_MEM_READ_WRITE), getSize(), nullptr));
-        if (!cl::Buffer::IsValid(mStagingBuffer))
+        mStagingBuffer = cl::BufferPtr::Create(const_cast<cl::Context &>(mMemory.getContext()),
+                                               cl::Memory::PropArray{},
+                                               cl::MemFlags(CL_MEM_READ_WRITE), getSize(), nullptr);
+        if (!mStagingBuffer)
         {
             ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
         }
@@ -693,10 +694,6 @@ CLImageVk::~CLImageVk()
 
     mImage.destroy(mRenderer);
     mImageView.destroy(mContext->getDevice());
-    if (cl::Memory::IsValid(mStagingBuffer) && mStagingBuffer->release())
-    {
-        SafeDelete(mStagingBuffer);
-    }
 }
 
 angle::Result CLImageVk::createFromBuffer()

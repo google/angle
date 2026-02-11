@@ -8,9 +8,9 @@
 #ifndef LIBANGLE_CLOBJECT_H_
 #define LIBANGLE_CLOBJECT_H_
 
-#include "CL/cl_platform.h"
 #include "common/log_utils.h"
 
+#include <angle_cl.h>
 #include <atomic>
 
 namespace cl

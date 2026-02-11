@@ -225,7 +225,7 @@ class CLImageVk : public CLMemoryVk
     cl::Extents mExtent;
     angle::FormatID mAngleFormat;
 
-    cl::Buffer *mStagingBuffer;
+    cl::BufferPtr mStagingBuffer;
     vk::ImageView mImageView;
     VkImageViewType mImageViewType;
     bool mIsImage2DFromBuffer;

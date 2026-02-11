@@ -75,10 +75,7 @@ void Platform::Initialize(const cl_icd_dispatch &dispatch,
     platforms.reserve(createFuncs.size());
     while (!createFuncs.empty())
     {
-        platforms.emplace_back(new Platform(createFuncs.front()));
-
-        // Release initialization reference, lifetime controlled by RefPointer.
-        platforms.back()->release();
+        platforms.emplace_back(PlatformPtr::Create(createFuncs.front()));
 
         // Remove platform on any errors
         if (!platforms.back()->mInfo.isValid() || platforms.back()->mDevices.empty())
@@ -321,10 +318,9 @@ DevicePtrs Platform::createDevices(rx::CLDeviceImpl::CreateDatas &&createDatas)
     devices.reserve(createDatas.size());
     while (!createDatas.empty())
     {
-        devices.emplace_back(
-            new Device(*this, nullptr, createDatas.front().first, createDatas.front().second));
-        // Release initialization reference, lifetime controlled by RefPointer.
-        devices.back()->release();
+        devices.emplace_back(RefPointer<Device>::Create(*this, nullptr, createDatas.front().first,
+                                                        createDatas.front().second));
+
         if (!devices.back()->mInfo.isValid())
         {
             devices.pop_back();
