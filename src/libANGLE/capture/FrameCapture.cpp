@@ -7607,14 +7607,6 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             break;
         }
         case EntryPoint::GLBlendFunc:
-        {
-            if (isCaptureActive())
-            {
-                context->getFrameCapture()->getStateResetHelper().setEntryPointDirty(
-                    EntryPoint::GLBlendFunc);
-            }
-            break;
-        }
         case EntryPoint::GLBlendFuncSeparate:
         {
             if (isCaptureActive())
@@ -8629,19 +8621,25 @@ void StateResetHelper::setDefaultResetCalls(const gl::Context *context,
             break;
         }
         case angle::EntryPoint::GLBlendFunc:
-        {
-            Capture(&mResetCalls[angle::EntryPoint::GLBlendFunc],
-                    CaptureBlendFunc(context->getState(), true, kDefaultBlendState.sourceBlendRGB,
-                                     kDefaultBlendState.destBlendRGB));
-            break;
-        }
         case angle::EntryPoint::GLBlendFuncSeparate:
         {
-            Capture(&mResetCalls[angle::EntryPoint::GLBlendFuncSeparate],
-                    CaptureBlendFuncSeparate(
-                        context->getState(), true, kDefaultBlendState.sourceBlendRGB,
-                        kDefaultBlendState.destBlendRGB, kDefaultBlendState.sourceBlendAlpha,
-                        kDefaultBlendState.destBlendAlpha));
+            // Though BlendFunc state tracking is unified, exclusively use BlendFuncSeparate for
+            // non-GLES1 apps as it covers all cases
+            if (context->isGLES1())
+            {
+                Capture(
+                    &mResetCalls[angle::EntryPoint::GLBlendFunc],
+                    CaptureBlendFunc(context->getState(), true, kDefaultBlendState.sourceBlendRGB,
+                                     kDefaultBlendState.destBlendRGB));
+            }
+            else
+            {
+                Capture(&mResetCalls[angle::EntryPoint::GLBlendFuncSeparate],
+                        CaptureBlendFuncSeparate(
+                            context->getState(), true, kDefaultBlendState.sourceBlendRGB,
+                            kDefaultBlendState.destBlendRGB, kDefaultBlendState.sourceBlendAlpha,
+                            kDefaultBlendState.destBlendAlpha));
+            }
             break;
         }
         case angle::EntryPoint::GLBlendEquation:
