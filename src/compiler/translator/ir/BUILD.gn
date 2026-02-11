@@ -29,6 +29,7 @@ angle_translator_ir_sources = [
   "src/transform/prune_unused_variables.rs",
   "src/transform/remove_unused_framebuffer_fetch.rs",
   "src/transform/rewrite_pixel_local_storage.rs",
+  "src/transform/sort_uniforms.rs",
   "src/traverser.rs",
   "src/util.rs",
   "src/validator.rs",

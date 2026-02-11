@@ -11,3 +11,4 @@ pub mod propagate_precision;
 pub mod prune_unused_variables;
 pub mod remove_unused_framebuffer_fetch;
 pub mod rewrite_pixel_local_storage;
+pub mod sort_uniforms;

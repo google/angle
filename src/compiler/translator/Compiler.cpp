@@ -1012,9 +1012,12 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (!sortUniforms(root))
+    if (!useIR)
     {
-        return false;
+        if (!sortUniforms(root))
+        {
+            return false;
+        }
     }
 
     // Needs to run before SimplifyLoopConditions to be able to detect |for| loops correctly.

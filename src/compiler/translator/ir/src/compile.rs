@@ -330,6 +330,9 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
         };
         transform::emulate_instanced_multiview::run(ir, &transform_options);
     }
+
+    // Sort uniforms based on their precisions and data types for better packing.
+    transform::sort_uniforms::run(ir);
 }
 
 fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {

@@ -2409,6 +2409,10 @@ impl IRMeta {
     {
         self.global_variables.retain(|&variable_id| keep(variable_id));
     }
+    // Used by transformations that non-trivially modify the list of global variables.
+    pub fn replace_global_variables(&mut self, replacement: Vec<VariableId>) {
+        self.global_variables = replacement;
+    }
 
     pub fn get_main_function_id(&self) -> Option<FunctionId> {
         self.main_function_id
