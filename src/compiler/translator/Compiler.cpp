@@ -1021,7 +1021,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (compileOptions.emulateGLDrawID &&
         IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw))
     {
-        if (!EmulateGLDrawID(this, root, &mSymbolTable, &mUniforms))
+        if (!EmulateGLDrawID(this, root, &mSymbolTable))
         {
             return false;
         }
@@ -1031,7 +1031,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         IsExtensionEnabled(mExtensionBehavior,
                            TExtension::ANGLE_base_vertex_base_instance_shader_builtin))
     {
-        if (!EmulateGLBaseVertexBaseInstance(this, root, &mSymbolTable, &mUniforms,
+        if (!EmulateGLBaseVertexBaseInstance(this, root, &mSymbolTable,
                                              compileOptions.addBaseVertexToVertexID))
         {
             return false;
@@ -1389,6 +1389,9 @@ bool TCompiler::compile(angle::Span<const char *const> shaderStrings,
             }
         }
 
+        // For simplicity, this substitution of the name is done after all the transformations are
+        // done.  A number of transformations and generators rely on being able to find
+        // ShaderVariables by matching the |name| field with |TVariable::name|.
         bool lookForDrawID = IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw) &&
                              compileOptions.emulateGLDrawID;
         bool lookForBaseVertexBaseInstance =
