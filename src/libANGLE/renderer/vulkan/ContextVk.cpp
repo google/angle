@@ -5701,8 +5701,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     mGraphicsDriverUniforms.updateAtomicCounterBufferOffset(
                         mRenderer, mState.getAtomicCounterBufferCount(),
                         mState.getOffsetBindingPointerAtomicCounterBuffers());
+                    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                    // atomicCounterBuffers also affects compute
+                    mComputeDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                 }
-                invalidateDriverUniforms();
                 break;
             case gl::state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
                 ANGLE_TRY(invalidateCurrentShaderResources(command));
@@ -5932,8 +5934,6 @@ angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
     updateFlipViewportReadFramebuffer(glState);
     updateSurfaceRotationDrawFramebuffer(glState, drawSurface);
     updateSurfaceRotationReadFramebuffer(glState, readSurface);
-
-    invalidateDriverUniforms();
 
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     if (executable && executable->hasTransformFeedbackOutput() &&
