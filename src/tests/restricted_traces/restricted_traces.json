@@ -248,6 +248,7 @@
     "paper_io2 1",
     "passmark_complex 1",
     "passmark_simple 1",
+    "passmark_simple_multiview 1",
     "passmark_unity 1",
     "piano_fire 1",
     "piano_kids 1",
