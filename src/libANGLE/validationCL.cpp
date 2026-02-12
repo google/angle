@@ -4506,6 +4506,18 @@ cl_int ValidateSetContextDestructorCallback(cl_context context,
                                                                           void *user_data),
                                             const void *user_data)
 {
+    if (!Context::IsValid(context))
+    {
+        // CL_INVALID_CONTEXT if context is not a valid context.
+        return CL_INVALID_CONTEXT;
+    }
+
+    if (pfn_notify == nullptr)
+    {
+        // CL_INVALID_VALUE if pfn_notify is NULL.
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 
