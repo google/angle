@@ -9,9 +9,6 @@
 // EmulateGLBaseVertexBaseInstance is an AST traverser to convert the gl_BaseVertex and
 // gl_BaseInstance builtin to uniform ints
 //
-// EmulateGLBaseInstance is an AST traverser to convert the gl_BaseInstance builtin
-// to a uniform int
-//
 
 #ifndef COMPILER_TRANSLATOR_TREEOPS_EMULATEMULTIDRAWSHADERBUILTINS_H_
 #define COMPILER_TRANSLATOR_TREEOPS_EMULATEMULTIDRAWSHADERBUILTINS_H_

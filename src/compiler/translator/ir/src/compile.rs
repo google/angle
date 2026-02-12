@@ -186,6 +186,8 @@ mod ffi {
         // Select viewport layer/index if ARB_shader_viewport_layer_array/NV_viewport_array2 is
         // used to implement multiview.  Requires emulate_instanced_multiview.
         select_viewport_layer_in_emulated_multiview: bool,
+        // Whether gl_DrawID need to be emulated.
+        emulate_draw_id: bool,
         // If the flag is enabled, gl_PointSize is clamped to the maximum point size specified in
         // ShBuiltInResources in vertex shaders.
         clamp_point_size: bool,
@@ -329,6 +331,10 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
             select_viewport_layer: options.select_viewport_layer_in_emulated_multiview,
         };
         transform::emulate_instanced_multiview::run(ir, &transform_options);
+    }
+
+    if options.emulate_draw_id && options.extensions.ANGLE_multi_draw {
+        transform::emulate_multi_draw::run(ir);
     }
 
     // Sort uniforms based on their precisions and data types for better packing.

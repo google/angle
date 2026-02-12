@@ -978,14 +978,14 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-    }
 
-    if (compileOptions.emulateGLDrawID &&
-        IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw))
-    {
-        if (!EmulateGLDrawID(this, root, &mSymbolTable))
+        if (compileOptions.emulateGLDrawID &&
+            IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw))
         {
-            return false;
+            if (!EmulateGLDrawID(this, root, &mSymbolTable))
+            {
+                return false;
+            }
         }
     }
 

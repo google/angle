@@ -9,9 +9,6 @@
 // EmulateGLBaseVertex is an AST traverser to convert the gl_BaseVertex builtin
 // to a uniform int
 //
-// EmulateGLBaseInstance is an AST traverser to convert the gl_BaseInstance builtin
-// to a uniform int
-//
 
 #include "compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h"
 
