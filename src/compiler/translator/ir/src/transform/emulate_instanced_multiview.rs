@@ -10,13 +10,13 @@
 // When instanced multiview is emulated, the input gl_InstanceID (unaware of multiview) is used as
 // such:
 //
-//     instanceID = gl_InstanceID / N;
-//     viewID = gl_InstanceID % N;
+//     InstanceID = gl_InstanceID / N;
+//     ViewID_OVR = gl_InstanceID % N;
 //
-// The rest of the shader would use `instanceID` and `viewID` instead of gl_InstanceID and
+// The rest of the shader would use `InstanceID` and `ViewID_OVR` instead of gl_InstanceID and
 // gl_ViewID_OVR.
 //
-// If required, a new uniform `multiviewBaseViewLayerIndex` is created and added to `viewID`.
+// If required, a new uniform `multiviewBaseViewLayerIndex` is created and added to `ViewID_OVR`.
 use crate::ir::*;
 use crate::*;
 
@@ -82,27 +82,10 @@ fn replace_instance_id(state: &mut State) -> (TypedId, TypedId) {
         state.ir_meta.get_or_declare_built_in_variable(BuiltIn::InstanceID);
 
     // Make a duplicate of gl_InstanceID to add to globals, and let the shader use the replacement.
-    let instance_id_variable = state.ir_meta.get_variable_mut(replaced_instance_id);
-    let original_name =
-        std::mem::replace(&mut instance_id_variable.name, Name::new_temp("InstanceID"));
-    let original_decorations =
-        std::mem::replace(&mut instance_id_variable.decorations, Decorations::new_none());
-    instance_id_variable.built_in = None;
-
-    let new_instance_id_built_in = state
-        .ir_meta
-        .declare_variable(
-            original_name,
-            TYPE_ID_INT,
-            Precision::High,
-            original_decorations,
-            Some(BuiltIn::InstanceID),
-            None,
-            VariableScope::Global,
-        )
-        .1;
-
-    (new_instance_id_built_in, replaced_instance_id_typed)
+    (
+        state.ir_meta.declare_cached_global_for_variable(replaced_instance_id, "InstanceID").1,
+        replaced_instance_id_typed,
+    )
 }
 
 fn generate_preamble(
@@ -116,10 +99,10 @@ fn generate_preamble(
     // Note: if multiview is enabled via #extension all, num_views may not be set.
     let num_views = state.ir_meta.get_constant_uint_typed(state.ir_meta.get_num_views().max(1));
 
-    // Initialize instanceID and viewID_OVR as such:
+    // Initialize InstanceID and ViewID_OVR as such:
     //
-    //     instanceID = int(uint(gl_InstanceID) / num_views);
-    //     viewID_OVR = uint(gl_InstanceID) % num_views;
+    //     InstanceID = int(uint(gl_InstanceID) / num_views);
+    //     ViewID_OVR = uint(gl_InstanceID) % num_views;
     //
     // Which translates to:
     //

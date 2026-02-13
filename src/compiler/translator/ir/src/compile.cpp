@@ -140,6 +140,8 @@ void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::Compi
     opt->emulate_instanced_multiview              = options.initializeBuiltinsForInstancedMultiview;
     opt->select_viewport_layer_in_emulated_multiview = options.selectViewInNvGLSLVertexShader;
     opt->emulate_draw_id                             = options.emulateGLDrawID;
+    opt->emulate_base_vertex_instance                = options.emulateGLBaseVertexBaseInstance;
+    opt->add_base_vertex_to_vertex_id                = options.addBaseVertexToVertexID;
     opt->clamp_point_size                            = options.clampPointSize;
 
     opt->rewrite_pixel_local_storage = compiler->hasPixelLocalStorageUniforms();

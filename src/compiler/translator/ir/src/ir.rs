@@ -2847,9 +2847,14 @@ impl IRMeta {
         initializer: Option<ConstantId>,
         scope: VariableScope,
     ) -> (VariableId, TypedId) {
-        // Automatically turn the type into a pointer
-        debug_assert!(!self.get_type(type_id).is_pointer());
-        let type_id = self.get_pointer_type_id(type_id);
+        // Automatically turn the type into a pointer if not already.  Typically the given type is
+        // not a pointer, but it could sometimes be if we're duplicating an existing variable and
+        // the pointer type is readily available.
+        let type_id = if self.get_type(type_id).is_pointer() {
+            type_id
+        } else {
+            self.get_pointer_type_id(type_id)
+        };
         let var =
             Variable::new(name, type_id, precision, decorations, built_in, initializer, scope);
         let variable_id = self.add_variable(var);
@@ -2914,8 +2919,9 @@ impl IRMeta {
                 // Note: gl_FragCoord is mediump in ESSL 100, but highp in ESSL 300+.  Declare it
                 // as highp to conform to newer standards.
                 BuiltIn::FragCoord => (TYPE_ID_VEC4, Precision::High),
-                BuiltIn::InstanceID => (TYPE_ID_INT, Precision::High),
-                BuiltIn::LayerOut => (TYPE_ID_INT, Precision::High),
+                BuiltIn::BaseVertex | BuiltIn::InstanceID | BuiltIn::LayerOut => {
+                    (TYPE_ID_INT, Precision::High)
+                }
                 _ => panic!("Internal error: Unexpected built-in declared by transformations"),
             };
 
@@ -2929,6 +2935,47 @@ impl IRMeta {
                 VariableScope::Global,
             )
         }
+    }
+    // Declare a global variable to cache the contents of an interface variable.  The original
+    // variable is replaced with the global variable and a new id is assigned to the interface
+    // variable and returned.  This way, the shader does not need to be modified except for
+    // possibly writing to the cache variable at the start of shader and reading from it at the
+    // end.
+    pub fn declare_cached_global_for_variable(
+        &mut self,
+        variable_id: VariableId,
+        cache_name: &'static str,
+    ) -> (VariableId, TypedId) {
+        let variable = self.get_variable_mut(variable_id);
+
+        // Replace the variable with a private global.
+        let original_name = std::mem::replace(&mut variable.name, Name::new_temp(cache_name));
+        let type_id = variable.type_id;
+        let precision = variable.precision;
+        let original_decorations =
+            std::mem::replace(&mut variable.decorations, Decorations::new_none());
+        let original_built_in = std::mem::take(&mut variable.built_in);
+        let is_static_use = variable.is_static_use;
+        debug_assert!(variable.initializer.is_none());
+        debug_assert!(variable.scope == VariableScope::Global);
+        debug_assert!(!variable.is_const);
+        debug_assert!(!variable.is_dead_code_eliminated);
+
+        // Create a new variable for the original one.
+        let (new_id, new_typed_id) = self.declare_variable(
+            original_name,
+            type_id,
+            precision,
+            original_decorations,
+            original_built_in,
+            None,
+            VariableScope::Global,
+        );
+        if is_static_use {
+            self.get_variable_mut(new_id).is_static_use = true;
+        }
+
+        (new_id, new_typed_id)
     }
 
     // Used only by builder.rs.  Transformations should set the initializer at the same time as

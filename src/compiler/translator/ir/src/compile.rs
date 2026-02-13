@@ -188,6 +188,11 @@ mod ffi {
         select_viewport_layer_in_emulated_multiview: bool,
         // Whether gl_DrawID need to be emulated.
         emulate_draw_id: bool,
+        // Whether gl_BaseVertex and gl_BaseInstance need to be emulated.
+        emulate_base_vertex_instance: bool,
+        // Whether gl_BaseVertex should be added to gl_VertexID as a driver bug workaround.  Only
+        // effective if `emulate_base_vertex_instance`.
+        add_base_vertex_to_vertex_id: bool,
         // If the flag is enabled, gl_PointSize is clamped to the maximum point size specified in
         // ShBuiltInResources in vertex shaders.
         clamp_point_size: bool,
@@ -333,8 +338,16 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
         transform::emulate_instanced_multiview::run(ir, &transform_options);
     }
 
-    if options.emulate_draw_id && options.extensions.ANGLE_multi_draw {
-        transform::emulate_multi_draw::run(ir);
+    let emulate_draw_id = options.emulate_draw_id && options.extensions.ANGLE_multi_draw;
+    let emulate_base_vertex_instance = options.emulate_base_vertex_instance
+        && options.extensions.ANGLE_base_vertex_base_instance_shader_builtin;
+    if emulate_draw_id || emulate_base_vertex_instance {
+        let transform_options = transform::emulate_multi_draw::Options {
+            emulate_draw_id,
+            emulate_base_vertex_instance,
+            add_base_vertex_to_vertex_id: options.add_base_vertex_to_vertex_id,
+        };
+        transform::emulate_multi_draw::run(ir, &transform_options);
     }
 
     // Sort uniforms based on their precisions and data types for better packing.
