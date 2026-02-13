@@ -140,6 +140,22 @@ class FramebufferWgpu : public FramebufferImpl
                                       bool clearDepth,
                                       bool clearStencil);
 
+    bool formatsAndSizesMatchForDirectCopy(const gl::Context *context,
+                                           const FramebufferWgpu *readFramebuffer,
+                                           RenderTargetWgpu *readRenderTarget,
+                                           RenderTargetWgpu *drawRenderTarget,
+                                           const gl::Rectangle &sourceArea,
+                                           const gl::Rectangle &destArea) const;
+
+    angle::Result blitWithDirectCopy(ContextWgpu *contextWgpu,
+                                     RenderTargetWgpu *readRenderTarget,
+                                     RenderTargetWgpu *drawRenderTarget,
+                                     const gl::Rectangle &sourceArea,
+                                     const gl::Rectangle &destArea,
+                                     bool srcFlipY,
+                                     bool dstFlipY,
+                                     WGPUTextureAspect aspect);
+
     RenderTargetCache<RenderTargetWgpu> mRenderTargetCache;
     webgpu::PackedRenderPassDescriptor mCurrentRenderPassDesc;
 

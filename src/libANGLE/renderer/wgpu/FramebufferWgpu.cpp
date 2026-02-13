@@ -342,6 +342,76 @@ angle::Result FramebufferWgpu::blit(const gl::Context *context,
                                     GLbitfield mask,
                                     GLenum filter)
 {
+    ContextWgpu *contextWgpu = GetImplAs<ContextWgpu>(context);
+    bool blitColor           = IsMaskFlagSet(mask, static_cast<GLbitfield>(GL_COLOR_BUFFER_BIT));
+    bool blitDepth           = IsMaskFlagSet(mask, static_cast<GLbitfield>(GL_DEPTH_BUFFER_BIT));
+    bool blitStencil         = IsMaskFlagSet(mask, static_cast<GLbitfield>(GL_STENCIL_BUFFER_BIT));
+
+    const gl::Framebuffer *readFBO = context->getState().getReadFramebuffer();
+    FramebufferWgpu *readFBOWgpu   = GetImplAs<FramebufferWgpu>(readFBO);
+    bool srcFlipY                  = readFBOWgpu->flipY();
+    bool dstFlipY                  = flipY();
+
+    if (blitColor)
+    {
+        RenderTargetWgpu *readRenderTarget = readFBOWgpu->getReadPixelsRenderTarget();
+        ASSERT(readRenderTarget);
+
+        const gl::DrawBufferMask &drawBufferMask = mState.getEnabledDrawBuffers();
+        for (size_t drawBufferIdx : drawBufferMask)
+        {
+            RenderTargetWgpu *drawRenderTarget =
+                mRenderTargetCache.getColorDraw(mState, drawBufferIdx);
+            ASSERT(drawRenderTarget);
+
+            if (formatsAndSizesMatchForDirectCopy(context, readFBOWgpu, readRenderTarget,
+                                                  drawRenderTarget, sourceArea, destArea))
+            {
+                ANGLE_TRY(blitWithDirectCopy(contextWgpu, readRenderTarget, drawRenderTarget,
+                                             sourceArea, destArea, srcFlipY, dstFlipY,
+                                             WGPUTextureAspect_All));
+            }
+            else
+            {
+                UNIMPLEMENTED();
+            }
+        }
+    }
+
+    if (blitDepth || blitStencil)
+    {
+        RenderTargetWgpu *readRT = readFBOWgpu->mRenderTargetCache.getDepthStencil();
+        RenderTargetWgpu *drawRT = mRenderTargetCache.getDepthStencil();
+
+        if (readRT && drawRT)
+        {
+            WGPUTextureAspect aspect = WGPUTextureAspect_All;
+            if (blitDepth && blitStencil)
+            {
+                aspect = WGPUTextureAspect_All;
+            }
+            else if (blitDepth)
+            {
+                aspect = WGPUTextureAspect_DepthOnly;
+            }
+            else if (blitStencil)
+            {
+                aspect = WGPUTextureAspect_StencilOnly;
+            }
+
+            if (formatsAndSizesMatchForDirectCopy(context, readFBOWgpu, readRT, drawRT, sourceArea,
+                                                  destArea))
+            {
+                ANGLE_TRY(blitWithDirectCopy(contextWgpu, readRT, drawRT, sourceArea, destArea,
+                                             srcFlipY, dstFlipY, aspect));
+            }
+            else
+            {
+                UNIMPLEMENTED();
+            }
+        }
+    }
+
     return angle::Result::Continue;
 }
 
@@ -721,6 +791,85 @@ gl::Rectangle FramebufferWgpu::getReadArea(const gl::Context *context,
     }
 
     return flippedArea;
+}
+
+bool FramebufferWgpu::formatsAndSizesMatchForDirectCopy(const gl::Context *context,
+                                                        const FramebufferWgpu *readFramebuffer,
+                                                        RenderTargetWgpu *readRenderTarget,
+                                                        RenderTargetWgpu *drawRenderTarget,
+                                                        const gl::Rectangle &sourceArea,
+                                                        const gl::Rectangle &destArea) const
+{
+    bool isScissorEnabled = context->getState().isScissorTestEnabled();
+    bool scissorMatches = !isScissorEnabled || context->getState().getScissor().encloses(destArea);
+    bool geometryMatches =
+        sourceArea.width == destArea.width && sourceArea.height == destArea.height;
+    bool flipsMatch = readFramebuffer->flipY() == flipY();
+
+    webgpu::ImageHelper *srcImage = readRenderTarget->getImage();
+    webgpu::ImageHelper *dstImage = drawRenderTarget->getImage();
+
+    bool formatsMatch      = srcImage->getActualFormatID() == dstImage->getActualFormatID();
+    bool srcIsMultisampled = srcImage->getSamples() > 1;
+
+    WGPUExtent3D srcLevelSize =
+        srcImage->getLevelSize(srcImage->toWgpuLevel(readRenderTarget->getGlLevel()));
+    WGPUExtent3D dstLevelSize =
+        dstImage->getLevelSize(dstImage->toWgpuLevel(drawRenderTarget->getGlLevel()));
+
+    auto isWithinBounds = [](const gl::Rectangle &rect, const WGPUExtent3D &size) {
+        return rect.x >= 0 && rect.y >= 0 && rect.width >= 0 && rect.height >= 0 &&
+               static_cast<uint32_t>(rect.x + rect.width) <= size.width &&
+               static_cast<uint32_t>(rect.y + rect.height) <= size.height;
+    };
+
+    bool boundsMatch =
+        isWithinBounds(sourceArea, srcLevelSize) && isWithinBounds(destArea, dstLevelSize);
+
+    return scissorMatches && geometryMatches && flipsMatch && formatsMatch && !srcIsMultisampled &&
+           boundsMatch;
+}
+
+angle::Result FramebufferWgpu::blitWithDirectCopy(ContextWgpu *contextWgpu,
+                                                  RenderTargetWgpu *readRenderTarget,
+                                                  RenderTargetWgpu *drawRenderTarget,
+                                                  const gl::Rectangle &sourceArea,
+                                                  const gl::Rectangle &destArea,
+                                                  bool srcFlipY,
+                                                  bool dstFlipY,
+                                                  WGPUTextureAspect aspect)
+{
+    webgpu::ImageHelper *srcImage = readRenderTarget->getImage();
+    webgpu::ImageHelper *dstImage = drawRenderTarget->getImage();
+
+    ANGLE_TRY(srcImage->flushStagedUpdates(contextWgpu));
+    ANGLE_TRY(dstImage->flushStagedUpdates(contextWgpu));
+
+    WGPUExtent3D srcLevelSize =
+        srcImage->getLevelSize(srcImage->toWgpuLevel(readRenderTarget->getGlLevel()));
+    WGPUExtent3D dstLevelSize =
+        dstImage->getLevelSize(dstImage->toWgpuLevel(drawRenderTarget->getGlLevel()));
+
+    gl::Box sourceBox(sourceArea.x, sourceArea.y, 0, sourceArea.width, sourceArea.height, 1);
+    if (srcFlipY)
+    {
+        sourceBox.y = srcLevelSize.height - sourceArea.y - sourceArea.height;
+    }
+
+    gl::Offset dstOffset(destArea.x, destArea.y, 0);
+    if (dstFlipY)
+    {
+        dstOffset.y = dstLevelSize.height - destArea.y - destArea.height;
+    }
+    dstOffset.z = drawRenderTarget->getLayer();
+
+    gl::ImageIndex dstIndex = gl::ImageIndex::Make2D(drawRenderTarget->getGlLevel().get());
+
+    ANGLE_TRY(dstImage->CopyImage(contextWgpu, srcImage, dstIndex, dstOffset,
+                                  readRenderTarget->getGlLevel(), readRenderTarget->getLayer(),
+                                  sourceBox, aspect));
+
+    return angle::Result::Continue;
 }
 
 }  // namespace rx
