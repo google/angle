@@ -90,12 +90,12 @@ class GraphicsDriverUniforms
         : mAllDirtyBits({DIRTY_BIT_ATOMIC_COUNTER_BUFFER, DIRTY_BIT_DEPTH_RANGE,
                          DIRTY_BIT_RENDER_AREA, DIRTY_BIT_FLIP_XY, DIRTY_BIT_MISC})
     {
-        std::ranges::fill(mUniformData.depthRange, 0.0f);
+        std::fill(mUniformData.depthRange.begin(), mUniformData.depthRange.end(), 0.0f);
         mUniformData.renderArea = 0;
         mUniformData.flipXY     = 0;
         mUniformData.uint32Misc = 0;
         mUniformData.dither     = 0;
-        std::ranges::fill(mUniformData.acbBufferOffsets, 0);
+        std::fill(mUniformData.acbBufferOffsets.begin(), mUniformData.acbBufferOffsets.end(), 0);
 
         if (renderer->getFeatures().emulateDithering.enabled)
         {
