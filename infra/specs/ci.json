@@ -504,5 +504,10 @@
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       }
     ]
+  },
+  "angle-linux-x64-sws-trace": {
+    "additional_compile_targets": [
+      "noop_target"
+    ]
   }
 }

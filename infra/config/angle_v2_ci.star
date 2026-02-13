@@ -103,3 +103,41 @@ ci.thin_tester(
         short_name = "sws",
     ),
 )
+
+################################################################################
+# Trace Tests                                                                  #
+################################################################################
+
+angle_linux_parent_builder(
+    name = "angle-linux-x64-trace",
+    description_html = "Runs ANGLE GLES trace tests on Linux/x64 with SwiftShader",
+    schedule = "triggered",
+    properties = {
+        "run_trace_tests": True,
+    },
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.LINUX,
+        ),
+    ),
+    # These GN args are not actually used since the trace tests do compilation
+    # as part of running, but the recipe may try to "compile" as a side effect
+    # of reusing the Chromium recipe code, so have some valid args.
+    gn_args = gn_args.config(
+        configs = [
+            "linux_clang",
+            "x64",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "trace|linux|x64",
+        short_name = "rel",
+    ),
+)

@@ -93,3 +93,17 @@ angle_linux_manual_builder(
     ],
     gn_args = "ci/angle-linux-x64-builder-rel",
 )
+
+# TODO(anglebug.com/475260235): Move this to be a CQ builder once it is
+# confirmed to work properly.
+angle_linux_manual_builder(
+    name = "angle-cq-linux-x64-trace",
+    description_html = "Runs ANGLE GLES trace tests on Linux/x64 with SwiftShader.",
+    mirrors = [
+        "ci/angle-linux-x64-trace",
+    ],
+    properties = {
+        "run_trace_tests": True,
+    },
+    gn_args = "ci/angle-linux-x64-trace",
+)
