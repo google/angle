@@ -6,6 +6,7 @@
   "try": {
     "angle-cq-linux-x64-rel": "try/angle-cq-linux-x64-rel/gn-args.json",
     "angle-cq-linux-x64-trace": "try/angle-cq-linux-x64-trace/gn-args.json",
+    "angle-try-linux-x64-nvidia-gtx1660-rel": "try/angle-try-linux-x64-nvidia-gtx1660-rel/gn-args.json",
     "angle-try-linux-x64-sws-rel": "try/angle-try-linux-x64-sws-rel/gn-args.json"
   }
 }
