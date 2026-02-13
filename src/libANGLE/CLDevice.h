@@ -113,7 +113,7 @@ inline T &Device::getImpl() const
 
 inline bool Device::IsValidType(DeviceType type)
 {
-    return type.get() <= CL_DEVICE_TYPE_CUSTOM || type == CL_DEVICE_TYPE_ALL;
+    return (0 < type.get() && type.get() <= CL_DEVICE_TYPE_CUSTOM) || type == CL_DEVICE_TYPE_ALL;
 }
 
 }  // namespace cl
