@@ -6463,7 +6463,6 @@
       }
     ]
   },
-  "linux-nvidia": {},
   "linux-nvidia-perf": {
     "isolated_scripts": [
       {

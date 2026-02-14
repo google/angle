@@ -235,13 +235,6 @@
           'isolated_scripts': 'swangle_restricted_trace_gold_isolated_scripts',
         },
       },
-      'linux-nvidia': {
-        'os_type': 'linux',
-        'mixins': [
-          'linux_nvidia_gtx_1660_stable',
-        ],
-        'test_suites': {},
-      },
       'linux-nvidia-perf': {
         'os_type': 'linux',
         'mixins': [
