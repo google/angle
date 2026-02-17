@@ -26,11 +26,11 @@ pub fn run(ir: &mut IR) {
     // - mat4x2
     // - mat4x3
     // - mat4x4
+    // - Other scalar
+    // - Other vector
     // - float[]
     // - vec*[] (with the same suborder as above)
     // - mat*[] (with the same suborder as above)
-    // - Other scalar
-    // - Other vector
     // - Other scalar array
     // - Other vector array
     // - Structs and Opaque types
