@@ -488,10 +488,10 @@ angle::Result DmaBufImageSiblingVkLinux::initWithFormat(DisplayVk *displayVk,
     }
 
     VkImageFormatListCreateInfoKHR imageFormatListCreateInfo;
-    vk::ImageHelper::ImageListFormats imageListFormatsStorage;
+    vk::ImageHelper::ImageFormats imageFormats;
     const void *imageCreateInfoPNext = vk::ImageHelper::DeriveCreateInfoPNext(
         displayVk, actualImageFormatID, &externalMemoryImageCreateInfo, &imageFormatListCreateInfo,
-        &imageListFormatsStorage, formatReinterpretability, &createFlags);
+        &imageFormats, formatReinterpretability, &createFlags);
 
     if (!FindSupportedFlagsForFormat(renderer, vulkanFormat, plane0Modifier,
                                      imageFormatListCreateInfo, &usageFlags, createFlags,

@@ -1764,7 +1764,7 @@ angle::Result WindowSurfaceVk::createSwapchain(vk::ErrorContext *context)
     // Enable mutable swapchain if VK_KHR_swapchain_mutable_format is supported
     // This enables us to fully support GL_EXT_sRGB_write_control for default framebuffers
     VkImageFormatListCreateInfo imageFormatListInfo = {};
-    vk::ImageHelper::ImageListFormats formatsList;
+    vk::ImageHelper::ImageFormats imageFormats;
     if (renderer->getFeatures().supportsSwapchainMutableFormat.enabled)
     {
         ASSERT(renderer->getFeatures().supportsImageFormatList.enabled);
@@ -1773,11 +1773,12 @@ angle::Result WindowSurfaceVk::createSwapchain(vk::ErrorContext *context)
         VkImageCreateFlags unusedCreateFlags = 0;
         const void *pNext                    = nullptr;
         pNext                                = vk::ImageHelper::DeriveCreateInfoPNext(
-            context, actualFormatID, pNext, &imageFormatListInfo, &formatsList,
+            context, actualFormatID, pNext, &imageFormatListInfo, &imageFormats,
             vk::ImageFormatReinterpretability::ColorspaceOverrides, &unusedCreateFlags);
         if (pNext != nullptr)
         {
-            ASSERT(imageFormatListInfo.viewFormatCount == vk::ImageHelper::kImageListFormatCount);
+            ASSERT(imageFormatListInfo.viewFormatCount ==
+                   vk::ImageHelper::kImageColorspaceOverrideFormatCount);
             swapchainInfo.flags |= VK_SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR;
             vk::AddToPNextChain(&swapchainInfo, &imageFormatListInfo);
         }
@@ -1858,16 +1859,19 @@ angle::Result WindowSurfaceVk::createSwapchain(vk::ErrorContext *context)
         SwapchainImage &member = mSwapchainImages[imageIndex];
 
         // Convert swapchain create flags to image create flags
-        const VkImageCreateFlags createFlags =
+        VkImageCreateFlags createFlags =
             (swapchainInfo.flags & VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR) != 0
                 ? VK_IMAGE_CREATE_PROTECTED_BIT
                 : 0;
+        createFlags |= (swapchainInfo.flags & VK_SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR) != 0
+                           ? VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT
+                           : 0;
 
         ASSERT(member.image);
         member.image->init2DWeakReference(
             context, swapchainImages[imageIndex], nonZeroSurfaceExtents,
             Is90DegreeRotation(getPreTransform()), intendedFormatID, actualFormatID, createFlags,
-            imageUsageFlags, 1, robustInit);
+            imageUsageFlags, 1, robustInit, imageFormats);
         member.imageViews.init(renderer);
         member.frameNumber = 0;
     }

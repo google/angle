@@ -5489,8 +5489,7 @@ void ImageHelper::resetCachedProperties()
     mMemoryTypeIndex             = kInvalidMemoryTypeIndex;
     mTileMemoryCompatible        = false;
     mUseTileMemory               = false;
-    std::fill(mViewFormats.begin(), mViewFormats.begin() + mViewFormats.max_size(),
-              VK_FORMAT_UNDEFINED);
+    mViewFormats.clear();
     mYcbcrConversionDesc.reset();
     mCurrentSingleClearValue.reset();
     mRenderPassUsageFlags.reset();
@@ -5778,13 +5777,13 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
     // pNext chain.
     const void *imageCreateInfoPNext = externalImageCreateInfo;
     VkImageFormatListCreateInfoKHR imageFormatListInfoStorage;
-    ImageListFormats imageListFormatsStorage;
+    ImageFormats imageFormats;
 
     if (externalImageCreateInfo == nullptr)
     {
-        imageCreateInfoPNext = DeriveCreateInfoPNext(
-            context, actualFormatID, compressionControl, &imageFormatListInfoStorage,
-            &imageListFormatsStorage, formatReinterpretability, &mCreateFlags);
+        imageCreateInfoPNext = DeriveCreateInfoPNext(context, actualFormatID, compressionControl,
+                                                     &imageFormatListInfoStorage, &imageFormats,
+                                                     formatReinterpretability, &mCreateFlags);
     }
     else
     {
@@ -5884,7 +5883,7 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
     ANGLE_VK_TRY(context, mImage.init(context->getDevice(), imageInfo));
 
     // Find the image formats in pNext chain in imageInfo.
-    deriveImageViewFormatFromCreateInfoPNext(imageInfo, mViewFormats);
+    deriveImageViewFormatFromCreateInfoPNext(imageInfo);
 
     mVkImageCreateInfo               = imageInfo;
     mVkImageCreateInfo.pNext         = nullptr;
@@ -5908,7 +5907,7 @@ const void *ImageHelper::DeriveCreateInfoPNext(
     angle::FormatID actualFormatID,
     const void *pNext,
     VkImageFormatListCreateInfoKHR *imageFormatListInfoStorage,
-    std::array<VkFormat, kImageListFormatCount> *imageListFormatsStorage,
+    ImageFormats *imageFormats,
     ImageFormatReinterpretability formatReinterpretability,
     VkImageCreateFlags *createFlagsOut)
 {
@@ -5941,14 +5940,22 @@ const void *ImageHelper::DeriveCreateInfoPNext(
         // Add the VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
         *createFlagsOut |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
 
+        ASSERT(imageFormats);
+        imageFormats->clear();
+
         // VkImageView can be created with either the linear or sRGB variant of the format
-        (*imageListFormatsStorage)[0] = vk::GetVkFormatFromFormatID(renderer, actualFormatID);
-        (*imageListFormatsStorage)[1] = vk::GetVkFormatFromFormatID(renderer, additionalFormatID);
+        imageFormats->push_back(vk::GetVkFormatFromFormatID(renderer, actualFormatID));
+        imageFormats->push_back(vk::GetVkFormatFromFormatID(renderer, additionalFormatID));
+        // VUID-VkImageFormatListCreateInfo-viewFormatCount-09540
+        //    If viewFormatCount is not 0, each element of pViewFormats
+        //    must not be VK_FORMAT_UNDEFINED
+        ASSERT(imageFormats->at(0) != VK_FORMAT_UNDEFINED);
+        ASSERT(imageFormats->at(1) != VK_FORMAT_UNDEFINED);
 
         imageFormatListInfoStorage->sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
         imageFormatListInfoStorage->pNext = pNext;
-        imageFormatListInfoStorage->viewFormatCount = kImageListFormatCount;
-        imageFormatListInfoStorage->pViewFormats    = imageListFormatsStorage->data();
+        imageFormatListInfoStorage->viewFormatCount = kImageColorspaceOverrideFormatCount;
+        imageFormatListInfoStorage->pViewFormats    = imageFormats->data();
 
         pNext = imageFormatListInfoStorage;
     }
@@ -5992,14 +5999,7 @@ bool ImageHelper::FormatSupportsUsage(const Renderer *renderer,
     return result == VK_SUCCESS;
 }
 
-void ImageHelper::setImageFormatsFromActualFormat(VkFormat actualFormat,
-                                                  ImageFormats &imageFormatsOut)
-{
-    imageFormatsOut.push_back(actualFormat);
-}
-
-void ImageHelper::deriveImageViewFormatFromCreateInfoPNext(const VkImageCreateInfo &imageInfo,
-                                                           ImageFormats &formatOut)
+void ImageHelper::deriveImageViewFormatFromCreateInfoPNext(const VkImageCreateInfo &imageInfo)
 {
     const VkBaseInStructure *pNextChain =
         reinterpret_cast<const VkBaseInStructure *>(imageInfo.pNext);
@@ -6011,7 +6011,7 @@ void ImageHelper::deriveImageViewFormatFromCreateInfoPNext(const VkImageCreateIn
 
     // Clear formatOut in case it has leftovers from previous VkImage in the case of releaseImage
     // followed by initExternal.
-    std::fill(formatOut.begin(), formatOut.begin() + formatOut.max_size(), VK_FORMAT_UNDEFINED);
+    mViewFormats.clear();
     if (pNextChain != nullptr)
     {
         const VkImageFormatListCreateInfoKHR *imageFormatCreateInfo =
@@ -6019,12 +6019,12 @@ void ImageHelper::deriveImageViewFormatFromCreateInfoPNext(const VkImageCreateIn
 
         for (uint32_t i = 0; i < imageFormatCreateInfo->viewFormatCount; i++)
         {
-            formatOut.push_back(*(imageFormatCreateInfo->pViewFormats + i));
+            mViewFormats.push_back(*(imageFormatCreateInfo->pViewFormats + i));
         }
     }
     else
     {
-        setImageFormatsFromActualFormat(imageInfo.format, formatOut);
+        mViewFormats.push_back(imageInfo.format);
     }
 }
 
@@ -6703,7 +6703,8 @@ void ImageHelper::init2DWeakReference(ErrorContext *context,
                                       VkImageCreateFlags createFlags,
                                       VkImageUsageFlags usage,
                                       GLint samples,
-                                      bool isRobustResourceInitEnabled)
+                                      bool isRobustResourceInitEnabled,
+                                      const ImageFormats &imageFormats)
 {
     ASSERT(!valid());
     ASSERT(!IsAnySubresourceContentDefined(mVkImageContentDefined));
@@ -6725,11 +6726,8 @@ void ImageHelper::init2DWeakReference(ErrorContext *context,
     mLayerCount              = 1;
     mLevelCount              = 1;
 
-    // The view formats and usage flags are used for imageless framebuffers. Here, the former is set
-    // similar to deriveImageViewFormatFromCreateInfoPNext() when there is no pNext from a
-    // VkImageCreateInfo object.
-    setImageFormatsFromActualFormat(GetVkFormatFromFormatID(renderer, actualFormatID),
-                                    mViewFormats);
+    // The view formats and usage flags are used for imageless framebuffers.
+    mViewFormats = imageFormats;
 
     mImage.setHandle(handle);
     // Even though we did not use mVkImageCreateInfo to create mImage, mVkImageCreateInfo.usage  is

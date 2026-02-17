@@ -512,12 +512,11 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
             ? vk::ImageFormatReinterpretability::None
             : vk::ImageFormatReinterpretability::ColorspaceOverrides;
     VkImageFormatListCreateInfoKHR imageFormatListInfoStorage;
-    vk::ImageHelper::ImageListFormats imageListFormatsStorage;
+    vk::ImageHelper::ImageFormats imageFormats;
 
     const void *imageCreateInfoPNext = vk::ImageHelper::DeriveCreateInfoPNext(
         displayVk, actualRenderableFormatID, &externalMemoryImageCreateInfo,
-        &imageFormatListInfoStorage, &imageListFormatsStorage, formatReinterpretability,
-        &imageCreateFlags);
+        &imageFormatListInfoStorage, &imageFormats, formatReinterpretability, &imageCreateFlags);
 
     ANGLE_TRY(mImage->initExternal(
         displayVk, textureType, vkExtents, vkFormat->getIntendedFormatID(),
