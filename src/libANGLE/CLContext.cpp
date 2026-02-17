@@ -426,6 +426,9 @@ Memory::PropArray Context::ConvertArmMemPropToMemProp(const cl_import_properties
                 {
                     case CL_IMPORT_TYPE_DMA_BUF_ARM:
                         convertedProperties.push_back(CL_EXTERNAL_MEMORY_HANDLE_DMA_BUF_KHR);
+                        // cl_khr_external_memory expects DMA_BUF to be an integral type
+                        convertedProperties.push_back(
+                            static_cast<cl_mem_properties>(*static_cast<const int32_t *>(handle)));
                         break;
                     case CL_IMPORT_TYPE_HOST_ARM:
                     case CL_IMPORT_TYPE_ANDROID_HARDWARE_BUFFER_ARM:
@@ -434,7 +437,6 @@ Memory::PropArray Context::ConvertArmMemPropToMemProp(const cl_import_properties
                         UNIMPLEMENTED();
                         continue;
                 }
-                convertedProperties.push_back(reinterpret_cast<cl_mem_properties>(handle));
             }
             else if (propertiesIterator->name == CL_IMPORT_TYPE_PROTECTED_ARM)
             {

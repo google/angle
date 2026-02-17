@@ -227,15 +227,14 @@ cl_int ValidateMemoryProperties(cl_context context,
             case CL_EXTERNAL_MEMORY_HANDLE_DMA_BUF_KHR:
             case CL_EXTERNAL_MEMORY_HANDLE_OPAQUE_FD_KHR:
             {
-                // just validate the basics for dma_buf and posix fd for now
-                uint32_t fdDmaBuf = *reinterpret_cast<uint32_t *>(pMemoryHandle->value);
                 if (host_ptr != nullptr)
                 {
                     // CL_INVALID_HOST_PTR if properties includes a supported external memory handle
                     // and host_ptr is not NULL
                     return CL_INVALID_HOST_PTR;
                 }
-                if (fdDmaBuf < 0)
+                // Ensure cl_properties is signed or cast to a signed type before comparison
+                if (static_cast<std::intptr_t>(pMemoryHandle->value) < 0)
                 {
                     return CL_INVALID_PROPERTY;
                 }
@@ -243,7 +242,6 @@ cl_int ValidateMemoryProperties(cl_context context,
             }
             default:
             {
-                ASSERT(false);  // should not reach here
                 return CL_INVALID_PROPERTY;
             }
         }
