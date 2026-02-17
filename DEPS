@@ -295,6 +295,7 @@ vars = {
   'checkout_angle_restricted_trace_honkai_star_rail': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_hungry_shark_evolution': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_hunter_assassin': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_huuuge_casino': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_i9_inferno_nine': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_identity_v': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_idle_heroes': 'checkout_angle_restricted_traces',
@@ -2788,6 +2789,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_hunter_assassin',
+  },
+  'src/tests/restricted_traces/huuuge_casino': {
+      'packages': [
+        {
+            'package': 'angle/traces/huuuge_casino',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_huuuge_casino',
   },
   'src/tests/restricted_traces/i9_inferno_nine': {
       'packages': [
