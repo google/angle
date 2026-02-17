@@ -754,19 +754,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithMSRTTEmulation[] 
          "old_layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL",
          "new_layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL",
      }},
-    // http://anglebug.com/485227776
-    {"SYNC-HAZARD-READ-AFTER-WRITE",
-     false,
-     {
-         "message_type = RenderPassResolveError",
-         "access = "
-         "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT)",
-         "prior_access = "
-         "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
-         "BIT)",
-         "command = vkCmdEndRenderPass",
-         "prior_command = vkCmdBeginRenderPass",
-     }},
 };
 
 enum class DebugMessageReport

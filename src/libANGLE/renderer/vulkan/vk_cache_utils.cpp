@@ -1092,8 +1092,9 @@ void InitializeUnresolveSubpassDependencies(const SubpassVector<VkSubpassDescrip
     constexpr VkAccessFlags kColorReadWriteFlags =
         kColorWriteFlags | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
 
+    // Note that LOAD_OP_LOAD happens in the EARLY_FRAGMENT_TESTS stage.
     constexpr VkPipelineStageFlags kDepthStencilWriteStage =
-        VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+        VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
     constexpr VkPipelineStageFlags kDepthStencilReadWriteStage =
         VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
     constexpr VkAccessFlags kDepthStencilWriteFlags = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
@@ -1115,10 +1116,12 @@ void InitializeUnresolveSubpassDependencies(const SubpassVector<VkSubpassDescrip
 
     if (unresolveDepthStencil)
     {
+        // Note that depth/stencil resolve happens in the color output stage and uses the color
+        // write access flag.
         attachmentWriteStages |= kDepthStencilWriteStage;
-        attachmentReadWriteStages |= kDepthStencilReadWriteStage;
+        attachmentReadWriteStages |= kDepthStencilReadWriteStage | kColorReadWriteStage;
         attachmentWriteFlags |= kDepthStencilWriteFlags;
-        attachmentReadWriteFlags |= kDepthStencilReadWriteFlags;
+        attachmentReadWriteFlags |= kDepthStencilReadWriteFlags | kColorReadWriteFlags;
     }
 
     dependency->sType           = VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2;
