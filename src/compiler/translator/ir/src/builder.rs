@@ -167,6 +167,25 @@ impl CFGBuilder {
     fn add_variable_declaration(&mut self, variable_id: VariableId) {
         if !self.current_block.new_instructions_are_dead_code {
             self.current_block.block.add_variable_declaration(variable_id);
+        } else {
+            // GLSL supports declaring a variable in one case and using it in the next, even if the
+            // declaration is in dead code!  To support this, the variable declaration is added to
+            // the block anyway if inside a switch case.
+            let mut non_merge_blocks =
+                self.interm_blocks.iter().rev().filter(|&block| !block.is_merge_block);
+            // If this is the first block of the first `case`, the parent would be the `switch`.
+            let parent_is_switch = matches!(
+                non_merge_blocks.next().unwrap().block.get_terminating_op(),
+                OpCode::Switch(..)
+            );
+            // Otherwise the grandparent is the `switch`.
+            let grandparent = non_merge_blocks.next();
+            let grandparent_is_switch = grandparent
+                .map(|block| matches!(block.block.get_terminating_op(), OpCode::Switch(..)))
+                .unwrap_or(false);
+            if parent_is_switch || grandparent_is_switch {
+                self.current_block.block.add_variable_declaration(variable_id);
+            }
         }
     }
 
@@ -540,7 +559,11 @@ impl CFGBuilder {
                     // To support this, pull the variable declaration to the parent scope so it's
                     // not declared only in one case block.
                     let switch_block = &mut self.interm_blocks.last_mut().unwrap().block;
-                    switch_block.variables.append(&mut std::mem::take(&mut case_block.variables));
+                    let mut case_block_iter = Some(&mut case_block);
+                    while let Some(block) = case_block_iter {
+                        switch_block.variables.append(&mut std::mem::take(&mut block.variables));
+                        case_block_iter = block.merge_block.as_mut().map(|block| block.as_mut());
+                    }
                     switch_block.add_switch_case_block(case_block);
                 }
             }
