@@ -173,13 +173,6 @@
         'test_suites': {
         },
       },
-      'linux-intel': {
-        'os_type': 'linux',
-        'mixins': [
-          'linux_intel_uhd_630_stable',
-        ],
-        'test_suites': {},
-      },
       'linux-intel-perf': {
         'os_type': 'linux',
         'mixins': [

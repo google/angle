@@ -4461,7 +4461,6 @@
   "linux-exp-swiftshader": {},
   "linux-exp-swiftshader-asan": {},
   "linux-exp-swiftshader-tsan": {},
-  "linux-intel": {},
   "linux-intel-perf": {
     "isolated_scripts": [
       {
