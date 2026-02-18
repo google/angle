@@ -868,6 +868,14 @@
                 "Validate GL_MAX_*_UNIFORM_BLOCKS at compile time instead of link time to work around compiler bugs."
             ],
             "issue": "http://crbug.com/475877320"
+        },
+        {
+            "name": "limit_max_buffer_size_to_1gb",
+            "category": "Workarounds",
+            "description": [
+                "Some drivers have internal failures when attempting to allocate and initialize buffers larger than 1gb."
+            ],
+            "issue": "http://crbug.com/475877320"
         }
     ]
 }

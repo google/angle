@@ -2681,6 +2681,13 @@ bool ValidateBufferStorageEXT(const Context *context,
         return false;
     }
 
+    const Limitations &limitations = context->getLimitations();
+    if (size > limitations.bufferSizeLimit)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBufferSizeLimitation);
+        return false;
+    }
+
     constexpr GLbitfield kAllUsageFlags =
         (GL_DYNAMIC_STORAGE_BIT_EXT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT |
          GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT | GL_CLIENT_STORAGE_BIT_EXT);
@@ -2797,6 +2804,13 @@ bool ValidateBufferStorageExternalEXT(const Context *context,
     if (clientBuffer == nullptr && size > 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kClientBufferInvalid);
+        return false;
+    }
+
+    const Limitations &limitations = context->getLimitations();
+    if (size > limitations.bufferSizeLimit)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kBufferSizeLimitation);
         return false;
     }
 

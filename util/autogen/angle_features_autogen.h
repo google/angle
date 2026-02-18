@@ -228,6 +228,7 @@ enum class Feature
     IsVertexSyncDeferred,
     KeepBufferShadowCopy,
     LimitMax3dArrayTextureSizeTo1024,
+    LimitMaxBufferSizeTo1gb,
     LimitMaxColorTargetBitsForTesting,
     LimitMaxDrawBuffersForTesting,
     LimitMaxMSAASamplesTo4,

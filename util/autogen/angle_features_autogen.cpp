@@ -228,6 +228,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::IsVertexSyncDeferred, "isVertexSyncDeferred"},
     {Feature::KeepBufferShadowCopy, "keepBufferShadowCopy"},
     {Feature::LimitMax3dArrayTextureSizeTo1024, "limitMax3dArrayTextureSizeTo1024"},
+    {Feature::LimitMaxBufferSizeTo1gb, "limitMaxBufferSizeTo1gb"},
     {Feature::LimitMaxColorTargetBitsForTesting, "limitMaxColorTargetBitsForTesting"},
     {Feature::LimitMaxDrawBuffersForTesting, "limitMaxDrawBuffersForTesting"},
     {Feature::LimitMaxMSAASamplesTo4, "limitMaxMSAASamplesTo4"},
