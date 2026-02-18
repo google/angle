@@ -1941,7 +1941,7 @@
       }
     ]
   },
-  "angle-linux-x64-sws-trace": {
+  "angle-linux-x64-trace": {
     "additional_compile_targets": [
       "noop_target"
     ]

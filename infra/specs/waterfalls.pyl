@@ -483,7 +483,7 @@
           'isolated_scripts': 'swangle_restricted_trace_gold_isolated_scripts',
         },
       },
-      'angle-linux-x64-sws-trace': {
+      'angle-linux-x64-trace': {
         'os_type': 'linux',
         'additional_compile_targets': [
           'noop_target',
