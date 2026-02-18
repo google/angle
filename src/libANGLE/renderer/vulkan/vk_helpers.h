@@ -2325,10 +2325,6 @@ class ImageHelper final : public Resource, public angle::Subject
     ImageFormats &getViewFormats() { return mViewFormats; }
     const ImageFormats &getViewFormats() const { return mViewFormats; }
 
-    // Helper for initExternal and users to extract the view formats of the image from the pNext
-    // chain in VkImageCreateInfo.
-    void deriveImageViewFormatFromCreateInfoPNext(const VkImageCreateInfo &imageInfo);
-
     // Release the underlying VkImage object for garbage collection.
     void releaseImage(Renderer *renderer);
     // Similar to releaseImage, but also notify all contexts in the same share group to stop
