@@ -462,6 +462,16 @@
       'swarming_containment_auto',
     ],
     'machines': {
+      'angle-linux-x64-intel-uhd630-rel': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_intel_uhd_630_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'linux_intel_gtests',
+          'isolated_scripts': 'isolated_scripts_group_common',
+        },
+      },
       'angle-linux-x64-nvidia-gtx1660-rel': {
         'os_type': 'linux',
         'mixins': [

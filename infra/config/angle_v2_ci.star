@@ -81,6 +81,30 @@ angle_linux_parent_builder(
 ################################################################################
 
 ci.thin_tester(
+    name = "angle-linux-x64-intel-uhd630-rel",
+    description_html = "Tests release ANGLE on Linux/x64 on Intel UHD 630 GPUs",
+    parent = "angle-linux-x64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.LINUX,
+        ),
+        run_tests_serially = True,
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|linux|x64|rel",
+        short_name = "630",
+    ),
+)
+
+ci.thin_tester(
     name = "angle-linux-x64-nvidia-gtx1660-rel",
     description_html = "Tests release ANGLE on Linux/x64 on NVIDIA GTX 1660 GPUs",
     parent = "angle-linux-x64-builder-rel",

@@ -94,6 +94,16 @@ def angle_linux_manual_builder(*, name, **kwargs):
 ## Functional testers
 
 angle_linux_manual_builder(
+    name = "angle-try-linux-x64-intel-uhd630-rel",
+    description_html = "Tests release ANGLE on Linux/x64 on Intel UHD 630 GPUs. Manual only.",
+    mirrors = [
+        "ci/angle-linux-x64-builder-rel",
+        "ci/angle-linux-x64-intel-uhd630-rel",
+    ],
+    gn_args = "ci/angle-linux-x64-builder-rel",
+)
+
+angle_linux_manual_builder(
     name = "angle-try-linux-x64-nvidia-gtx1660-rel",
     description_html = "Tests release ANGLE on Linux/x64 on NVIDIA GTX 1660 GPUs. Manual only.",
     mirrors = [
