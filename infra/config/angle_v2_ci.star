@@ -141,7 +141,7 @@ angle_linux_parent_builder(
     },
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle_v2_nointernal",
         ),
         chromium_config = builder_config.chromium_config(
             config = "angle_v2_clang",
