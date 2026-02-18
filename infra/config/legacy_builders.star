@@ -343,7 +343,6 @@ angle_builder("win-x86-test", cpu = "x86")
 angle_builder("winuwp-compile", cpu = "x64")
 angle_builder("winuwp-dbg-compile", cpu = "x64")
 
-angle_builder("linux-trace", cpu = "x64")
 angle_builder("win-trace", cpu = "x64")
 
 angle_builder("android-pixel4-perf", cpu = "arm64")
