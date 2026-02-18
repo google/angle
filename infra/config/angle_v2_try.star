@@ -4,6 +4,7 @@
 
 """Try ANGLE builders using the angle_v2 recipe."""
 
+load("@chromium-luci//builder_config.star", "builder_config")
 load("@chromium-luci//builders.star", "os")
 load("@chromium-luci//try.star", "try_")
 load("//constants.star", "default_experiments", "siso")
@@ -22,6 +23,13 @@ try_.defaults.set(
     siso_project = siso.project.DEFAULT_UNTRUSTED,
     siso_remote_jobs = siso.remote_jobs.DEFAULT,
     experiments = default_experiments,
+    builder_config_settings = builder_config.try_settings(
+        analyze_names = [
+            "angle",
+        ],
+        retry_failed_shards = False,
+        retry_without_patch = False,
+    ),
 )
 
 ################################################################################
