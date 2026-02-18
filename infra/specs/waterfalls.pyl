@@ -178,10 +178,7 @@
         'mixins': [
           'linux_intel_uhd_630_stable',
         ],
-        'test_suites': {
-          'gtest_tests': 'linux_intel_gtests',
-          'isolated_scripts': 'isolated_scripts_group_common',
-        },
+        'test_suites': {},
       },
       'linux-intel-perf': {
         'os_type': 'linux',

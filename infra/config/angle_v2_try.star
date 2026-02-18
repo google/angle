@@ -69,6 +69,7 @@ angle_linux_functional_cq_tester(
     description_html = "Tests release ANGLE on Linux/x64 on multiple hardware configs. Blocks CL submission.",
     mirrors = [
         "ci/angle-linux-x64-builder-rel",
+        "ci/angle-linux-x64-intel-uhd630-rel",
         "ci/angle-linux-x64-nvidia-gtx1660-rel",
         "ci/angle-linux-x64-sws-rel",
     ],
