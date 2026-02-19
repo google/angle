@@ -983,8 +983,16 @@ fn transform_continue_instructions_pre_visit<'block>(
 
 fn transform_continue_pre_visit_loop(state: &mut State, block: &mut Block) {
     // Transformation 1: Take the loop continue block and push in `continue_stack`.
-    let continue_block = block.block2.take().map(|block| *block);
-    state.continue_stack.push(continue_block);
+    //
+    // To support retaining trivial `for` loops, pretend there's no `continue` block for them so
+    // they aren't replicated.
+    //
+    if util::block_ends_in_trivial_for_loop(state.ir_meta, block).is_some() {
+        state.continue_stack.push(None);
+    } else {
+        let continue_block = block.block2.take().map(|block| *block);
+        state.continue_stack.push(continue_block);
+    }
 
     // Transformation 2: Add an entry to `break_stack`
     state.break_stack.push(BreakInfo::new_loop());

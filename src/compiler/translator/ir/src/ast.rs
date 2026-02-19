@@ -35,7 +35,12 @@ pub trait Target {
     // variables, geometry/tessellation info, etc.
     fn global_scope(&mut self, ir_meta: &IRMeta);
 
-    fn begin_block(&mut self, ir_meta: &IRMeta, variables: &[VariableId]) -> Self::BlockResult;
+    fn begin_block(
+        &mut self,
+        ir_meta: &IRMeta,
+        variables: &[VariableId],
+        for_loop_variable: Option<VariableId>,
+    ) -> Self::BlockResult;
     fn merge_blocks(&mut self, blocks: Vec<Self::BlockResult>) -> Self::BlockResult;
 
     // Instructions
@@ -243,6 +248,12 @@ pub trait Target {
         block: &mut Self::BlockResult,
         body_block: Option<Self::BlockResult>,
     );
+    fn branch_for_loop(
+        &mut self,
+        block: &mut Self::BlockResult,
+        info: &util::TrivialLoopInfo,
+        body_block: Option<Self::BlockResult>,
+    );
     fn branch_loop_if(&mut self, block: &mut Self::BlockResult, condition: TypedId);
     fn branch_switch(
         &mut self,
@@ -343,30 +354,55 @@ impl Generator {
             &|(generator, target), block: &Block| {
                 // transform::astify::run() should have gotten rid of merge block inputs.
                 debug_assert!(block.input.is_none());
-                target.begin_block(&generator.ir.meta, &block.variables)
+
+                // Keep trivial `for` loops as `for` loops, multiple backends rely on it currently.
+                //
+                // Eventually, this check should move to the backend-specific code (when ported to
+                // the IR) where the information is needed, while the loop is not
+                // necessarily generated as a `for` ultimately.
+                let for_loop_info = util::block_ends_in_trivial_for_loop(&self.ir.meta, block);
+                (
+                    target.begin_block(
+                        &generator.ir.meta,
+                        &block.variables,
+                        for_loop_info.as_ref().map(|info| info.loop_variable),
+                    ),
+                    for_loop_info,
+                )
             },
-            &|(generator, target), block_result, instructions| {
+            &|(generator, target), (block_result, _), instructions| {
                 generator.generate_instructions(block_result, instructions, *target);
             },
             &|(generator, target),
-              block_result,
+              (block_result, for_loop_info),
               branch_opcode,
               loop_condition_block_result,
               block1_result,
               block2_result,
               case_block_results| {
-                generator.generate_branch_instruction(
-                    block_result,
-                    branch_opcode,
-                    loop_condition_block_result,
-                    block1_result,
-                    block2_result,
-                    case_block_results,
-                    *target,
-                );
+                if let Some(info) = &for_loop_info {
+                    target.branch_for_loop(block_result, info, block1_result.map(|result| result.0))
+                } else {
+                    let case_block_results =
+                        case_block_results.into_iter().map(|result| result.0).collect();
+                    generator.generate_branch_instruction(
+                        block_result,
+                        branch_opcode,
+                        loop_condition_block_result.map(|result| result.0),
+                        block1_result.map(|result| result.0),
+                        block2_result.map(|result| result.0),
+                        case_block_results,
+                        *target,
+                    );
+                }
             },
-            &|(_, target), block_result_chain| target.merge_blocks(block_result_chain),
+            &|(_, target), block_result_chain| {
+                let block_result_chain =
+                    block_result_chain.into_iter().map(|result| result.0).collect();
+                (target.merge_blocks(block_result_chain), None)
+            },
         )
+        .0
     }
 
     fn generate_instructions<T: Target>(
