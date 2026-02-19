@@ -39,7 +39,6 @@
       'linux-intel-uhd630-perf': 'angle_remoteexec_perf_bot',
       'linux-ir-test': 'angle_remoteexec_release_ir_bot',
       'linux-nvidia-gtx1660-perf': 'angle_remoteexec_perf_bot',
-      'linux-test': 'angle_remoteexec_release_openclcts_bot',
       'linux-tsan-test': 'angle_tsan_bot',
       'linux-ubsan-test': 'angle_ubsan_bot',
       'mac-arm64-test': 'angle_remoteexec_arm64_release_bot',

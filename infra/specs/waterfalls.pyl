@@ -115,14 +115,6 @@
           'isolated_scripts': 'isolated_scripts_group_perf',
         },
       },
-      'linux-amd': {
-        'os_type': 'linux',
-        'mixins': [
-          'linux_amd_rx_5500_xt',
-        ],
-        'test_suites': {
-        },
-      },
       'linux-exp-intel': {
         'os_type': 'linux',
         'mixins': [
