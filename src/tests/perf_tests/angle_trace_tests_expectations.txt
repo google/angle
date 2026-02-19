@@ -13,6 +13,9 @@
 42266627 PIXEL6 NATIVE : respawnables = SKIP
 42266034 LINUX SWIFTSHADER : star_wars_kotor = SKIP
 
+// This trace is missing clouds due to precision diffs between stages
+183647942 ANDROID ARM : minecraft = SKIP
+
 267953710 GALAXYS22 : cod_mobile = SKIP
 267953710 GALAXYS22 : dota_underlords = SKIP
 267953710 GALAXYS22 : marvel_snap = SKIP
