@@ -207,6 +207,7 @@
 349994211 IR NVIDIA VULKAN : subway_princess_runner = SKIP
 349994211 IR NVIDIA VULKAN : war_planet_online = SKIP
 349994211 IR NVIDIA VULKAN : wuthering_waves = SKIP
+349994211 IR NVIDIA VULKAN : dr_parking_4 = SKIP
 
 349994211 IR LINUX INTEL VULKAN : into_the_dead_2 = SKIP
 
