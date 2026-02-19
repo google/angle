@@ -452,6 +452,14 @@
       'swarming_containment_auto',
     ],
     'machines': {
+      'angle-linux-x64-amd-rx5500xt-rel': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_amd_rx_5500_xt',
+        ],
+        'test_suites': {
+        },
+      },
       'angle-linux-x64-intel-uhd630-rel': {
         'os_type': 'linux',
         'mixins': [
