@@ -20,6 +20,7 @@ angle_translator_ir_sources = [
   "src/output/legacy.rs",
   "src/transform.rs",
   "src/transform/astify.rs",
+  "src/transform/broadcast_fragcolor.rs",
   "src/transform/clamp_point_size.rs",
   "src/transform/dealias.rs",
   "src/transform/emulate_instanced_multiview.rs",

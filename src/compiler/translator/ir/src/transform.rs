@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 pub mod astify;
+pub mod broadcast_fragcolor;
 pub mod clamp_point_size;
 pub mod dealias;
 pub mod emulate_instanced_multiview;

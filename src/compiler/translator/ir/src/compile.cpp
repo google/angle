@@ -119,6 +119,8 @@ void SetEnabledExtensions(const TExtensionBehavior &behavior, ffi::ExtensionsEna
 
 void SetLimits(const ShBuiltInResources &resources, ffi::Limits *limits)
 {
+    limits->max_draw_buffers             = resources.MaxDrawBuffers;
+    limits->max_dual_source_draw_buffers = resources.MaxDualSourceDrawBuffers;
     limits->max_combined_draw_buffers_and_pixel_local_storage_planes =
         resources.MaxCombinedDrawBuffersAndPixelLocalStoragePlanes;
     limits->min_point_size = resources.MinPointSize;

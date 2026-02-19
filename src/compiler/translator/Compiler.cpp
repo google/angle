@@ -1003,22 +1003,19 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-    }
 
-    if (mShaderType == GL_FRAGMENT_SHADER && mShaderVersion == 100 && mResources.EXT_draw_buffers &&
-        mResources.MaxDrawBuffers > 1 &&
-        IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_draw_buffers))
-    {
-        if (!EmulateGLFragColorBroadcast(this, root, mResources.MaxDrawBuffers,
-                                         mResources.MaxDualSourceDrawBuffers, &mOutputVariables,
-                                         &mSymbolTable, mShaderVersion))
+        if (mShaderType == GL_FRAGMENT_SHADER && mShaderVersion == 100 &&
+            mResources.EXT_draw_buffers && mResources.MaxDrawBuffers > 1 &&
+            IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_draw_buffers))
         {
-            return false;
+            if (!EmulateGLFragColorBroadcast(this, root, mResources.MaxDrawBuffers,
+                                             mResources.MaxDualSourceDrawBuffers, &mSymbolTable,
+                                             mShaderVersion))
+            {
+                return false;
+            }
         }
-    }
 
-    if (!useIR)
-    {
         if (!sortUniforms(root))
         {
             return false;

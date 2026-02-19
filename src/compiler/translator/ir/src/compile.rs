@@ -99,8 +99,9 @@ mod ffi {
 
     // Limits corresponding to ShBuiltInResources
     struct Limits {
+        max_draw_buffers: u32,
+        max_dual_source_draw_buffers: u32,
         max_combined_draw_buffers_and_pixel_local_storage_planes: u32,
-
         min_point_size: f32,
         max_point_size: f32,
     }
@@ -348,6 +349,18 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
             add_base_vertex_to_vertex_id: options.add_base_vertex_to_vertex_id,
         };
         transform::run!(emulate_multi_draw, ir, &transform_options);
+    }
+
+    if ir.meta.get_shader_type() == ShaderType::Fragment
+        && options.shader_version == 100
+        && options.extensions.EXT_draw_buffers
+        && options.limits.max_draw_buffers > 1
+    {
+        let transform_options = transform::broadcast_fragcolor::Options {
+            max_draw_buffers: options.limits.max_draw_buffers,
+            max_dual_source_draw_buffers: options.limits.max_dual_source_draw_buffers,
+        };
+        transform::run!(broadcast_fragcolor, ir, &transform_options);
     }
 
     // Sort uniforms based on their precisions and data types for better packing.

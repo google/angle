@@ -2912,6 +2912,22 @@ impl IRMeta {
             .find(|&id| matches!(self.get_variable(*id).built_in, Some(value) if value == built_in))
             .copied()
     }
+    pub fn declare_built_in_variable(
+        &mut self,
+        type_id: TypeId,
+        precision: Precision,
+        built_in: BuiltIn,
+    ) -> (VariableId, TypedId) {
+        self.declare_variable(
+            Name::new_exact(""),
+            type_id,
+            precision,
+            Decorations::new_none(),
+            Some(built_in),
+            None,
+            VariableScope::Global,
+        )
+    }
     // If already declared, return a built-in variable, otherwise declare it.  Used by
     // transformations to reference a built-in that the shader might not have originally used.
     //
@@ -2931,15 +2947,7 @@ impl IRMeta {
                 _ => panic!("Internal error: Unexpected built-in declared by transformations"),
             };
 
-            self.declare_variable(
-                Name::new_exact(""),
-                type_id,
-                precision,
-                Decorations::new_none(),
-                Some(built_in),
-                None,
-                VariableScope::Global,
-            )
+            self.declare_built_in_variable(type_id, precision, built_in)
         }
     }
     // Declare a global variable to cache the contents of an interface variable.  The original
