@@ -394,8 +394,15 @@ angle::Result BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *con
         GL_ZERO,
         GL_ZERO,
     };
+    // Using per-channel swizzles because this workaround may be used with OpenGL ES backend.
     ANGLE_GL_TRY(context,
-                 mFunctions->texParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzle));
+                 mFunctions->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, swizzle[0]));
+    ANGLE_GL_TRY(context,
+                 mFunctions->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swizzle[1]));
+    ANGLE_GL_TRY(context,
+                 mFunctions->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swizzle[2]));
+    ANGLE_GL_TRY(context,
+                 mFunctions->texParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, swizzle[3]));
 
     // Make a temporary framebuffer using the second scratch texture to render the swizzled result
     // to.

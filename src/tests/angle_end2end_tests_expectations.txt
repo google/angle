@@ -556,6 +556,19 @@
 // Test is not suitable for GLES.
 444335354 ANDROID GLES : ImageTestES3.RGBXAHBUploadDataRGBA/* = SKIP
 
+// CopyTexImageLumaWorkaroundTestES3 known failures across platforms
+488042710 QUALCOMM VULKAN : CopyTexImageLumaWorkaroundTestES3.SameTextureDifferentLevelLuminanceAlpha/* = SKIP
+488042710 QUALCOMM VULKAN : CopyTexImageLumaWorkaroundTestES3.DifferentCubeFacesLuminanceAlpha/* = SKIP
+488042710 QUALCOMM VULKAN : CopyTexImageLumaWorkaroundTestES3.DifferentTexturesBothLuminanceAlpha/* = SKIP
+492439208 QUALCOMM GLES : CopyTexImageLumaWorkaroundTestES3.DifferentCubeFacesLuminanceAlpha/* = SKIP
+
+// Cubemap incompleteness on Desktop GL per spec
+492439210 OPENGL : CopyTexImageLumaWorkaroundTestES3.DifferentCubeFacesLuminanceAlpha/* = SKIP
+// Windows NVIDIA driver crash and FBO incompleteness
+492439210 WIN NVIDIA GLES : CopyTexImageLumaWorkaroundTestES3.DifferentCubeFacesLuminanceAlpha/* = SKIP
+// Incorrect pixel values on Windows GL for same-texture copies
+492462323 WIN OPENGL : CopyTexImageLumaWorkaroundTestES3.SameTextureDifferentLevelLuminanceAlpha/* = SKIP
+
 // Nexus 5X expectations.
 42264673 NEXUS5X GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 42264717 NEXUS5X GLES : GLSLTest_ES31.BuiltInsWithOutParameters/* = SKIP

@@ -1101,6 +1101,9 @@ class CopyTexImageTestES3 : public CopyTexImageTest
     const GLint kYOffset = getWindowHeight() - kSubImageHeight;
 };
 
+class CopyTexImageLumaWorkaroundTestES3 : public CopyTexImageTestES3
+{};
+
 //  The test verifies that glCopyTexSubImage2D generates a GL_INVALID_OPERATION error
 //  when the read buffer is GL_NONE.
 //  Reference: GLES 3.0.4, Section 3.8.5 Alternate Texture Image Specification Commands
@@ -1654,6 +1657,187 @@ TEST_P(CopyTexImageTestES3, RedefineSameLevel)
                          GLColor::yellow);
 }
 
+// Based on the WebGL conformance test copy-texture-image-same-texture.html.
+TEST_P(CopyTexImageLumaWorkaroundTestES3, SameTextureDifferentLevelLuminanceAlpha)
+{
+    constexpr GLsizei kSize        = 64;
+    constexpr GLsizei kSrcMipLevel = 1;
+    constexpr GLsizei kDstMipLevel = 2;
+    constexpr GLsizei kCopyMipSize = 16;
+    constexpr GLenum kSourceFormat = GL_RGBA8;
+    constexpr GLenum kSourceType   = GL_UNSIGNED_BYTE;
+    constexpr GLenum kLumaFormat   = GL_LUMINANCE_ALPHA;
+
+    std::vector<GLColor> redData(kSize * kSize, GLColor::red);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, kSourceFormat, kSize, kSize, 0, GL_RGBA, kSourceType,
+                 redData.data());
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture,
+                           kSrcMipLevel);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glCopyTexImage2D(GL_TEXTURE_2D, kDstMipLevel, kLumaFormat, 0, 0, kCopyMipSize, kCopyMipSize, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, kDstMipLevel);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, kDstMipLevel);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    constexpr std::array<GLubyte, 4> kExpected = {255, 255, 255, 255};
+    verifyResults(texture, kExpected.data(), getWindowWidth(), 0, 0, getWindowWidth(),
+                  getWindowHeight(), 1.0);
+}
+
+// Test for same-texture copy where source and destination are different cube faces.
+//
+// Copying from +X to -X with GL_LUMINANCE_ALPHA redefines only one face first, which can make the
+// cubemap temporarily incomplete on some GLES drivers. We therefore:
+// 1) verify the temporary incomplete state,
+// 2) restore cube completeness by redefining the remaining faces to the same format/size, and
+// 3) sample the -X face to verify luminance data was copied correctly.
+TEST_P(CopyTexImageLumaWorkaroundTestES3, DifferentCubeFacesLuminanceAlpha)
+{
+    constexpr GLsizei kSize        = 16;
+    constexpr GLenum kSourceFormat = GL_RGBA8;
+    constexpr GLenum kSourceType   = GL_UNSIGNED_BYTE;
+    constexpr GLenum kLumaFormat   = GL_LUMINANCE_ALPHA;
+
+    std::vector<GLColor> redData(kSize * kSize, GLColor::red);
+
+    GLTexture cubemap;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         ++face)
+    {
+        glTexImage2D(face, 0, kSourceFormat, kSize, kSize, 0, GL_RGBA, kSourceType, redData.data());
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind Positive X face to FBO as source
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+                           cubemap, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Copy from Positive X (FBO) to Negative X (Target) as Luminance Alpha
+    // This is the "same texture" scenario but across faces.
+    glCopyTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, kLumaFormat, 0, 0, kSize, kSize, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // The cube map can become temporarily incomplete after redefining only one face.
+    // Verify this state explicitly on drivers that enforce strict completeness.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+                           cubemap, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Restore cube-map completeness by redefining the remaining faces to the same format/size.
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         ++face)
+    {
+        if (face == GL_TEXTURE_CUBE_MAP_NEGATIVE_X)
+        {
+            continue;
+        }
+
+        glTexImage2D(face, 0, kLumaFormat, kSize, kSize, 0, kLumaFormat, GL_UNSIGNED_BYTE, nullptr);
+    }
+    ASSERT_GL_NO_ERROR();
+
+    // Verify Negative X face contains white (Red -> Luminance) through cube sampling now that the
+    // cubemap is complete.
+    constexpr char kCubeSampleFS[] = R"(#version 300 es
+precision mediump float;
+uniform mediump samplerCube texCube;
+out vec4 fragColor;
+void main() {
+    fragColor = texture(texCube, vec3(-1.0, 0.0, 0.0));
+})";
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    ANGLE_GL_PROGRAM(cubeProgram, essl3_shaders::vs::Simple(), kCubeSampleFS);
+    glUseProgram(cubeProgram);
+    glUniform1i(glGetUniformLocation(cubeProgram, "texCube"), 0);
+    drawQuad(cubeProgram, essl3_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Verifies GL_LUMINANCE_ALPHA copy between different textures.
+//
+// Source and destination are separate textures, both LUMA. Since LUMA textures are not guaranteed
+// to be color-renderable on all GLES backends, the source texture is first sampled into an RGBA
+// render target, then glCopyTexImage2D(GL_LUMINANCE_ALPHA) is executed from that framebuffer into
+// the destination texture.
+TEST_P(CopyTexImageLumaWorkaroundTestES3, DifferentTexturesBothLuminanceAlpha)
+{
+    constexpr GLsizei kSize      = 16;
+    constexpr GLenum kLumaFormat = GL_LUMINANCE_ALPHA;
+
+    std::vector<GLubyte> srcData(kSize * kSize * 2u, 255u);
+
+    GLTexture srcTexture;
+    glBindTexture(GL_TEXTURE_2D, srcTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, kLumaFormat, kSize, kSize, 0, kLumaFormat, GL_UNSIGNED_BYTE,
+                 srcData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Stage source through an RGBA render target, then copy into destination LUMA texture.
+    GLTexture renderTexture;
+    glBindTexture(GL_TEXTURE_2D, renderTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glViewport(0, 0, kSize, kSize);
+    glUseProgram(mTextureProgram);
+    // Draw srcTexture (LUMA) to renderTexture (RGBA)
+    glBindTexture(GL_TEXTURE_2D, srcTexture);
+    glUniform1i(mTextureUniformLocation, 0);
+    drawQuad(mTextureProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Copy from renderTexture (RGBA FBO) to dstTexture (LUMA)
+    GLTexture dstTexture;
+    glBindTexture(GL_TEXTURE_2D, dstTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, kLumaFormat, 0, 0, kSize, kSize, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    constexpr std::array<GLubyte, 4> kExpected = {255, 255, 255, 255};
+    verifyResults(dstTexture, kExpected.data(), kSize, 0, 0, kSize, kSize, 1.0);
+}
+
 class CopyTexImagePreRotationTest : public ANGLETest<>
 {
   protected:
@@ -1834,6 +2018,12 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     ES3_OPENGLES().enable(Feature::EmulateCopyTexImage2D),
     ES3_OPENGL().enable(Feature::EmulateCopyTexImage2DFromRenderbuffers),
     ES3_OPENGLES().enable(Feature::EmulateCopyTexImage2DFromRenderbuffers));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(CopyTexImageLumaWorkaroundTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    CopyTexImageLumaWorkaroundTestES3,
+    ES3_OPENGL().enable(Feature::ForceLumaWorkaroundForSameTextureCopyTexImage2D),
+    ES3_OPENGLES().enable(Feature::ForceLumaWorkaroundForSameTextureCopyTexImage2D));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND(
     CopyTexImageTestRobustResourceInit,

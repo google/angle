@@ -2511,6 +2511,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // Replace copyTexImage2D with texImage2D + copyTexSubImage2D to bypass driver bug.
     ANGLE_FEATURE_CONDITION(features, emulateCopyTexImage2D, isApple);
 
+    // anglebug.com/486067696
+    ANGLE_FEATURE_CONDITION(features, forceLumaWorkaroundForSameTextureCopyTexImage2D,
+                            isHuaweiMaleoon && functions->isAtLeastGLES(gl::Version(3, 0)));
+
     // Don't attempt to use the discrete GPU on NVIDIA-based MacBook Pros, since the
     // driver is unstable in this situation.
     //

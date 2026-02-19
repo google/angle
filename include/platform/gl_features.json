@@ -451,6 +451,14 @@
             "issue": "https://anglebug.com/42263273"
         },
         {
+            "name": "force_luma_workaround_for_same_texture_CopyTexImage2D",
+            "category": "Workarounds",
+            "description": [
+                "Work around incorrect channel results in same-texture LUMA CopyTexImage2D."
+            ],
+            "issue": "https://anglebug.com/486067696"
+        },
+        {
             "name": "disable_GPU_switching_support",
             "category": "Workarounds",
             "description": [

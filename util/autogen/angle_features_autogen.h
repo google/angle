@@ -194,6 +194,7 @@ enum class Feature
     ForceGlErrorChecking,
     ForceHostImageCopyForLuma,
     ForceInitShaderVariables,
+    ForceLumaWorkaroundForSameTextureCopyTexImage2D,
     ForceMaxCombinedShaderOutputResources,
     ForceMaxUniformBufferSize16KB,
     ForceMinimumMaxVertexAttributes,

@@ -356,6 +356,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo forceLumaWorkaroundForSameTextureCopyTexImage2D = {
+        "forceLumaWorkaroundForSameTextureCopyTexImage2D",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo disableGPUSwitchingSupport = {
         "disableGPUSwitchingSupport",
         FeatureCategory::OpenGLWorkarounds,

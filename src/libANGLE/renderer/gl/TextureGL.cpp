@@ -786,19 +786,31 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
             }
         }
 
-        bool isSelfCopy = false;
+        bool isSourceTextureSame = false;
+        bool isSelfCopy          = false;
         if (readBuffer && readBuffer->type() == GL_TEXTURE)
         {
             TextureGL *sourceTexture = GetImplAs<TextureGL>(readBuffer->getTexture());
             const bool isSameCubeFace =
                 readBuffer->cubeMapFace() == gl::TextureTarget::InvalidEnum ||
                 readBuffer->cubeMapFace() == target;
-            isSelfCopy = sourceTexture && sourceTexture->mTextureID == mTextureID &&
-                         readBuffer->mipLevel() == static_cast<GLint>(level) && isSameCubeFace;
+            isSourceTextureSame = sourceTexture && sourceTexture->mTextureID == mTextureID;
+            isSelfCopy          = isSourceTextureSame && isSameCubeFace &&
+                         readBuffer->mipLevel() == static_cast<GLint>(level);
         }
 
         LevelInfoGL levelInfo =
             GetLevelInfo(features, originalInternalFormatInfo, copyTexImageFormat.internalFormat);
+        if (features.forceLumaWorkaroundForSameTextureCopyTexImage2D.enabled &&
+            !levelInfo.lumaWorkaround.enabled && originalInternalFormatInfo.isLUMA() &&
+            isSourceTextureSame)
+        {
+            ASSERT(functions->isAtLeastGLES(gl::Version(3, 0)));
+            const GLenum workaroundFormat =
+                (originalInternalFormatInfo.format == GL_LUMINANCE_ALPHA) ? GL_RG : GL_RED;
+            levelInfo.lumaWorkaround = LUMAWorkaroundGL(true, workaroundFormat);
+        }
+
         gl::Offset destOffset(clippedArea.x - sourceArea.x, clippedArea.y - sourceArea.y, 0);
 
         if (levelInfo.lumaWorkaround.enabled)

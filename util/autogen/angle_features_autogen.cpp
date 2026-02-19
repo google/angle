@@ -194,6 +194,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ForceGlErrorChecking, "forceGlErrorChecking"},
     {Feature::ForceHostImageCopyForLuma, "forceHostImageCopyForLuma"},
     {Feature::ForceInitShaderVariables, "forceInitShaderVariables"},
+    {Feature::ForceLumaWorkaroundForSameTextureCopyTexImage2D, "forceLumaWorkaroundForSameTextureCopyTexImage2D"},
     {Feature::ForceMaxCombinedShaderOutputResources, "forceMaxCombinedShaderOutputResources"},
     {Feature::ForceMaxUniformBufferSize16KB, "forceMaxUniformBufferSize16KB"},
     {Feature::ForceMinimumMaxVertexAttributes, "forceMinimumMaxVertexAttributes"},
