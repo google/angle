@@ -473,6 +473,11 @@ TIntermBlock *make_interm_block()
     return new TIntermBlock;
 }
 
+void append_typed_instruction_to_block(TIntermBlock *block, TIntermTyped *node)
+{
+    block->getSequence()->push_back(node);
+}
+
 void append_instructions_to_block(TIntermBlock *block, rust::Slice<TIntermNode *const> nodes)
 {
     block->getSequence()->insert(block->getSequence()->end(), nodes.begin(), nodes.end());

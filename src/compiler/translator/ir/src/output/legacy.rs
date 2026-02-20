@@ -152,6 +152,10 @@ pub mod ffi {
         ) -> *mut TIntermNode;
 
         unsafe fn make_interm_block() -> *mut TIntermBlock;
+        unsafe fn append_typed_instruction_to_block(
+            block: *mut TIntermBlock,
+            node: *mut TIntermTyped,
+        );
         unsafe fn append_instructions_to_block(
             block: *mut TIntermBlock,
             nodes: &[*mut TIntermNode],
@@ -2213,13 +2217,18 @@ impl ast::Target for Generator<'_> {
         result: Option<RegisterId>,
         function_id: FunctionId,
         params: &[TypedId],
+        has_side_effect_with_unused_result: bool,
     ) {
         let params = params.iter().map(|&id| self.get_expression(id)).collect::<Vec<_>>();
         let function = self.functions[&function_id];
         match result {
             Some(result) => {
                 let expr = unsafe { ffi::call(function, &params) };
-                self.expressions.insert(result, expr);
+                if has_side_effect_with_unused_result {
+                    unsafe { ffi::append_typed_instruction_to_block(*block_result, expr) };
+                } else {
+                    self.expressions.insert(result, expr);
+                }
             }
             None => {
                 let statement = unsafe { ffi::call_void(function, &params) };
@@ -2230,10 +2239,11 @@ impl ast::Target for Generator<'_> {
 
     fn unary(
         &mut self,
-        _block_result: &mut *mut TIntermBlock,
+        block_result: &mut *mut TIntermBlock,
         result: RegisterId,
         unary_op: UnaryOpCode,
         id: TypedId,
+        has_side_effect_with_unused_result: bool,
     ) {
         let operand = self.get_expression(id);
         let expr = unsafe {
@@ -2357,16 +2367,21 @@ impl ast::Target for Generator<'_> {
                 }
             }
         };
-        self.expressions.insert(result, expr);
+        if has_side_effect_with_unused_result {
+            unsafe { ffi::append_typed_instruction_to_block(*block_result, expr) };
+        } else {
+            self.expressions.insert(result, expr);
+        }
     }
 
     fn binary(
         &mut self,
-        _block_result: &mut *mut TIntermBlock,
+        block_result: &mut *mut TIntermBlock,
         result: RegisterId,
         binary_op: BinaryOpCode,
         lhs: TypedId,
         rhs: TypedId,
+        has_side_effect_with_unused_result: bool,
     ) {
         let lhs = self.get_expression(lhs);
         let rhs = self.get_expression(rhs);
@@ -2456,7 +2471,11 @@ impl ast::Target for Generator<'_> {
                 }
             }
         };
-        self.expressions.insert(result, expr);
+        if has_side_effect_with_unused_result {
+            unsafe { ffi::append_typed_instruction_to_block(*block_result, expr) };
+        } else {
+            self.expressions.insert(result, expr);
+        }
     }
 
     fn built_in(
@@ -2465,6 +2484,7 @@ impl ast::Target for Generator<'_> {
         result: Option<RegisterId>,
         built_in_op: BuiltInOpCode,
         args: &[TypedId],
+        has_side_effect_with_unused_result: bool,
     ) {
         let args = args.iter().map(|&arg| self.get_expression(arg)).collect::<Vec<_>>();
         let (expr, statement) = unsafe {
@@ -2627,7 +2647,11 @@ impl ast::Target for Generator<'_> {
             }
         };
         if let Some(result) = result {
-            self.expressions.insert(result, expr.unwrap());
+            if has_side_effect_with_unused_result {
+                unsafe { ffi::append_typed_instruction_to_block(*block_result, expr.unwrap()) };
+            } else {
+                self.expressions.insert(result, expr.unwrap());
+            }
         } else {
             unsafe { ffi::append_instructions_to_block(*block_result, &[statement.unwrap()]) };
         }

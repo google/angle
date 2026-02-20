@@ -972,28 +972,29 @@ impl ast::Target for Generator {
         result: Option<RegisterId>,
         function_id: FunctionId,
         params: &[TypedId],
+        has_side_effect_with_unused_result: bool,
     ) {
         let statement = format!(
             "{}({})",
             self.functions[&function_id].name,
             params.iter().map(|&id| self.get_expression(id).clone()).collect::<Vec<_>>().join(", ")
         );
-        match result {
-            Some(result) => {
-                self.expressions.insert(result, statement);
-            }
-            None => {
-                writeln!(block_result, "{statement};").unwrap();
-            }
-        };
+        if let Some(result) = result
+            && !has_side_effect_with_unused_result
+        {
+            self.expressions.insert(result, statement);
+        } else {
+            writeln!(block_result, "{statement};").unwrap();
+        }
     }
 
     fn unary(
         &mut self,
-        _block_result: &mut String,
+        block_result: &mut String,
         result: RegisterId,
         unary_op: UnaryOpCode,
         id: TypedId,
+        has_side_effect_with_unused_result: bool,
     ) {
         let id = self.get_expression(id);
         let expr = match unary_op {
@@ -1073,16 +1074,21 @@ impl ast::Target for Generator {
                 panic!("Internal error: Unexpected non-GLSL opcode for GLSL generator")
             }
         };
-        self.expressions.insert(result, expr);
+        if has_side_effect_with_unused_result {
+            writeln!(block_result, "{expr};").unwrap();
+        } else {
+            self.expressions.insert(result, expr);
+        }
     }
 
     fn binary(
         &mut self,
-        _block_result: &mut String,
+        block_result: &mut String,
         result: RegisterId,
         binary_op: BinaryOpCode,
         lhs: TypedId,
         rhs: TypedId,
+        has_side_effect_with_unused_result: bool,
     ) {
         let lhs = self.get_expression(lhs);
         let rhs = self.get_expression(rhs);
@@ -1142,7 +1148,11 @@ impl ast::Target for Generator {
         };
         let expr =
             if call { format!("{op}({lhs}, {rhs})") } else { format!("({lhs}) {op} ({rhs})") };
-        self.expressions.insert(result, expr);
+        if has_side_effect_with_unused_result {
+            writeln!(block_result, "{expr};").unwrap();
+        } else {
+            self.expressions.insert(result, expr);
+        }
     }
 
     fn built_in(
@@ -1151,6 +1161,7 @@ impl ast::Target for Generator {
         result: Option<RegisterId>,
         built_in_op: BuiltInOpCode,
         args: &[TypedId],
+        has_side_effect_with_unused_result: bool,
     ) {
         let built_in = match built_in_op {
             BuiltInOpCode::Clamp => "clamp",
@@ -1207,7 +1218,9 @@ impl ast::Target for Generator {
             }
         };
         let expr = format!("{built_in}({})", self.get_expressions(&mut args.iter()));
-        if let Some(result) = result {
+        if let Some(result) = result
+            && !has_side_effect_with_unused_result
+        {
             self.expressions.insert(result, expr);
         } else {
             writeln!(block_result, "{expr};").unwrap();

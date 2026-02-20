@@ -18,8 +18,11 @@ pub mod sort_uniforms;
 // Helper macro to run a transformation and automatically validate the IR afterwards
 macro_rules! run {
     ($func:ident $(::$path:ident)*, $ir:expr $(, $params:expr)*) => {
-        $crate::transform::$func$(::$path)*::run($ir $(, $params)*);
-        $crate::ir::validate!($ir);
+        {
+            let result = $crate::transform::$func$(::$path)*::run($ir $(, $params)*);
+            $crate::ir::validate!($ir);
+            result
+        }
     };
 }
 pub(crate) use run;

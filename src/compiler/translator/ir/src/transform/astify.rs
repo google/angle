@@ -96,9 +96,13 @@ struct State<'a> {
     // `NextBlock`, instead of `LoopIf`.
     break_stack: Vec<BreakInfo>,
     condition_stack: Vec<Option<Block>>,
+    // List of registers that have side effect but are never read.  They are not cached in
+    // variables, and the generator should be aware of them so as to not defer them until use
+    // (which will be never).
+    uncached_but_with_side_effect: ast::UncachedRegistersWithSideEffect,
 }
 
-pub fn run(ir: &mut IR) {
+pub fn run(ir: &mut IR) -> ast::UncachedRegistersWithSideEffect {
     let mut state = State {
         ir_meta: &mut ir.meta,
         register_info: HashMap::new(),
@@ -106,13 +110,33 @@ pub fn run(ir: &mut IR) {
         continue_stack: Vec::new(),
         break_stack: Vec::new(),
         condition_stack: Vec::new(),
+        uncached_but_with_side_effect: ast::UncachedRegistersWithSideEffect::new(),
     };
+
+    // First, duplicate the continue block, if any, before each `continue` branch, because
+    // it may be too complicated to be placed inside a `for ()` expression.  Afterwards,
+    // the IR no longer has continue blocks.
+    //
+    // At the same time, duplicate the condition block of do-loops before each `continue`
+    // branch.
+    traverser::transformer::for_each_function(
+        &mut state,
+        &mut ir.function_entries,
+        &|state, _, entry| {
+            traverser::transformer::for_each_block(
+                state,
+                entry,
+                &|state, block| transform_continue_instructions_pre_visit(state, block),
+                &|state, block| transform_continue_instructions_post_visit(state, block),
+            );
+        },
+    );
 
     // Pre-process the registers to determine when temporary variables are needed.
     preprocess_registers(&mut state, &ir.function_entries);
 
-    // First, create temporary variables for the result of instructions that have side
-    // effects and yet are read from multiple times.
+    // Create temporary variables for the result of instructions that have side effects and yet are
+    // read from multiple times.
     traverser::transformer::for_each_instruction(
         &mut state,
         &mut ir.function_entries,
@@ -134,24 +158,7 @@ pub fn run(ir: &mut IR) {
         },
     );
 
-    // Finally, duplicate the continue block, if any, before each `continue` branch, because
-    // it may be too complicated to be placed inside a `for ()` expression.  Afterwards,
-    // the IR no longer has continue blocks.
-    //
-    // At the same time, duplicate the condition block of do-loops before each `continue`
-    // branch.
-    traverser::transformer::for_each_function(
-        &mut state,
-        &mut ir.function_entries,
-        &|state, _, entry| {
-            traverser::transformer::for_each_block(
-                state,
-                entry,
-                &|state, block| transform_continue_instructions_pre_visit(state, block),
-                &|state, block| transform_continue_instructions_post_visit(state, block),
-            );
-        },
-    );
+    state.uncached_but_with_side_effect
 }
 
 fn get_op_read_ids(opcode: &OpCode) -> Vec<TypedId> {
@@ -738,28 +745,36 @@ fn transform_instruction(
 ) -> Vec<traverser::Transform> {
     // If the instruction is:
     //
-    // - a register
-    // - with side effect or it's complex
+    // - a register, and
+    // - with side effects
+    //
+    // Then a temporary variable must be created to hold the result, otherwise the generator may
+    // reorder it incorrectly as it caches expressions until they are used later.  The exception
+    // here is when the instruction has a side effect but its result is never used.  In that case,
+    // a temporary variable is not generated, but the instruction is marked as such.  When the
+    // generator sees such an instruction, it should treat it as a Void instruction, which cannot
+    // be cached for later.  This leads to simpler output, e.g. `i++` in a `for` loop wouldn't need
+    // a variable to hold its unused result.
+    //
+    // To avoid duplicating complex code, similarly the result of the instruction is cached in a
+    // variable if it's:
+    //
+    // - a register, and
+    // - complex, and
     // - read multiple times
     //
-    // Then a temporary variable must be created to hold the result.  For the sake of
-    // simplicity, any register with a side effect is placed in a temporary, because
-    // otherwise it's hard to tell when generating the AST if that statement should be
-    // placed directly in the block, or whether it's used in another expression that will
-    // eventually turn into a statement in the *same* block.
-    //
-    // TODO(http://anglebug.com/349994211): if the result of the expression with side effect is
-    // never used, for example in a common `i++`, then a variable can be eliminated if
-    // `has_side_effect` is `&& read_count > 0` in the `if` below, but then the read count
-    // information needs to be provided to `ast::Generator` so that expressions with side effect
-    // but also read_count == 0 could be placed in the block they are executed and their value
-    // discarded.
     if let &BlockInstruction::Register(id) = instruction {
         let info = &state.register_info[&id];
-        let cache_in_variable_if_necessary = info.has_side_effect || info.is_complex;
+        let read_any_times = info.read_count > 0;
         let read_multiple_times = info.read_count > 1;
+        let cache_in_variable_if_necessary =
+            (info.has_side_effect && read_any_times) || (info.is_complex && read_multiple_times);
 
-        if cache_in_variable_if_necessary && read_multiple_times || info.has_side_effect {
+        if info.has_side_effect && !read_any_times {
+            state.uncached_but_with_side_effect.insert(id);
+        }
+
+        if cache_in_variable_if_necessary {
             let instruction = state.ir_meta.get_instruction(id);
             let id = instruction.result;
 
