@@ -800,15 +800,13 @@ angle::CallCapture CaptureImportSemaphoreZirconHandleANGLE(const State &glState,
 angle::CallCapture CaptureFramebufferMemorylessPixelLocalStorageANGLE(const State &glState,
                                                                       bool isCallValid,
                                                                       GLint plane,
-                                                                      GLenum internalformat,
-                                                                      GLbitfield usage);
+                                                                      GLenum internalformat);
 angle::CallCapture CaptureFramebufferTexturePixelLocalStorageANGLE(const State &glState,
                                                                    bool isCallValid,
                                                                    GLint plane,
                                                                    TextureID backingtexturePacked,
                                                                    GLint level,
-                                                                   GLint layer,
-                                                                   GLbitfield usage);
+                                                                   GLint layer);
 angle::CallCapture CaptureFramebufferPixelLocalClearValuefvANGLE(const State &glState,
                                                                  bool isCallValid,
                                                                  GLint plane,

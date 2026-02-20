@@ -279,11 +279,11 @@ class PixelLocalStorageLinker final : angle::NonCopyable
     PixelLocalStorageLinker();
     ~PixelLocalStorageLinker();
 
-    void init(std::vector<ShPixelLocalStorageLayout> *pixelLocalStorageLayoutsOut);
-    void link(const std::vector<ShPixelLocalStorageLayout> &pixelLocalStorageLayouts) const;
+    void init(std::vector<ShPixelLocalStorageFormat> *pixelLocalStorageFormatsOut);
+    void link(const std::vector<ShPixelLocalStorageFormat> &pixelLocalStorageFormats) const;
 
   private:
-    std::vector<ShPixelLocalStorageLayout> *mPixelLocalStorageLayoutsOut = nullptr;
+    std::vector<ShPixelLocalStorageFormat> *mPixelLocalStorageFormatsOut = nullptr;
 };
 
 struct ProgramLinkedResources
@@ -298,7 +298,7 @@ struct ProgramLinkedResources
               std::vector<InterfaceBlock> *shaderStorageBlocksOut,
               std::vector<BufferVariable> *bufferVariablesOut,
               std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut,
-              std::vector<ShPixelLocalStorageLayout> *pixelLocalStorageLayoutsOut);
+              std::vector<ShPixelLocalStorageFormat> *pixelLocalStorageFormatsOut);
 
     ProgramVaryingPacking varyingPacking;
     UniformBlockLinker uniformBlockLinker;

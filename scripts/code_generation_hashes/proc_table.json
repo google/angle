@@ -4,7 +4,7 @@
   "scripts/gen_proc_table.py":
     "23ebf460dda78d2c21625e0d41d3cb97",
   "scripts/gl_angle_ext.xml":
-    "c621f104dee4a300fada54167e078cb3",
+    "0a899dd0782d39209e17d7cbe4b2ca40",
   "scripts/registry_xml.py":
     "788e8f48cf7298bd34555c7255e26826",
   "src/libGLESv2/egl_stubs_getprocaddress_autogen.cpp":

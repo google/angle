@@ -800,15 +800,13 @@ bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,
 bool ValidateFramebufferMemorylessPixelLocalStorageANGLE(const Context *context,
                                                          angle::EntryPoint entryPoint,
                                                          GLint plane,
-                                                         GLenum internalformat,
-                                                         GLbitfield usage);
+                                                         GLenum internalformat);
 bool ValidateFramebufferTexturePixelLocalStorageANGLE(const Context *context,
                                                       angle::EntryPoint entryPoint,
                                                       GLint plane,
                                                       TextureID backingtexturePacked,
                                                       GLint level,
-                                                      GLint layer,
-                                                      GLbitfield usage);
+                                                      GLint layer);
 bool ValidateFramebufferPixelLocalClearValuefvANGLE(const Context *context,
                                                     angle::EntryPoint entryPoint,
                                                     GLint plane,

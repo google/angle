@@ -3789,26 +3789,26 @@ Extensions Context::generateSupportedExtensions() const
     if (getClientVersion() < ES_3_0)
     {
         // Disable ES3+ extensions
-        supportedExtensions.colorBufferFloatEXT                     = false;
-        supportedExtensions.EGLImageExternalEssl3OES                = false;
-        supportedExtensions.multiviewOVR                            = false;
-        supportedExtensions.multiview2OVR                           = false;
-        supportedExtensions.multiviewMultisampleANGLE               = false;
+        supportedExtensions.colorBufferFloatEXT          = false;
+        supportedExtensions.EGLImageExternalEssl3OES     = false;
+        supportedExtensions.multiviewOVR                 = false;
+        supportedExtensions.multiview2OVR                = false;
+        supportedExtensions.multiviewMultisampleANGLE    = false;
         supportedExtensions.multiviewMultisampledRenderToTextureOVR = false;
-        supportedExtensions.copyTexture3dANGLE                      = false;
-        supportedExtensions.textureMultisampleANGLE                 = false;
-        supportedExtensions.textureQueryLodEXT                      = false;
-        supportedExtensions.textureShadowLodEXT                     = false;
-        supportedExtensions.textureStorageCompressionEXT            = false;
-        supportedExtensions.textureStencil8OES                      = false;
-        supportedExtensions.conservativeDepthEXT                    = false;
-        supportedExtensions.drawBuffersIndexedEXT                   = false;
-        supportedExtensions.drawBuffersIndexedOES                   = false;
-        supportedExtensions.EGLImageArrayEXT                        = false;
-        supportedExtensions.stencilTexturingANGLE                   = false;
-        supportedExtensions.textureFormatSRGBOverrideEXT            = false;
-        supportedExtensions.renderSharedExponentQCOM                = false;
-        supportedExtensions.renderSnormEXT                          = false;
+        supportedExtensions.copyTexture3dANGLE           = false;
+        supportedExtensions.textureMultisampleANGLE      = false;
+        supportedExtensions.textureQueryLodEXT           = false;
+        supportedExtensions.textureShadowLodEXT          = false;
+        supportedExtensions.textureStorageCompressionEXT = false;
+        supportedExtensions.textureStencil8OES           = false;
+        supportedExtensions.conservativeDepthEXT         = false;
+        supportedExtensions.drawBuffersIndexedEXT        = false;
+        supportedExtensions.drawBuffersIndexedOES        = false;
+        supportedExtensions.EGLImageArrayEXT             = false;
+        supportedExtensions.stencilTexturingANGLE        = false;
+        supportedExtensions.textureFormatSRGBOverrideEXT = false;
+        supportedExtensions.renderSharedExponentQCOM     = false;
+        supportedExtensions.renderSnormEXT               = false;
 
         // Support GL_EXT_texture_norm16 on non-WebGL ES2 contexts. This is needed for R16/RG16
         // texturing for HDR video playback in Chromium which uses ES2 for compositor contexts.
@@ -4937,7 +4937,7 @@ void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *valu
     {
         clampedDepth = clamp01(values[0]);
         values       = &clampedDepth;
-        attachment   = framebufferObject->getDepthAttachment();
+        attachment = framebufferObject->getDepthAttachment();
     }
     else if (buffer == GL_COLOR &&
              static_cast<size_t>(drawbuffer) < framebufferObject->getNumColorAttachments())
@@ -7960,7 +7960,7 @@ GLsync Context::fenceSync(GLenum condition, GLbitfield flags)
         return nullptr;
     }
 
-    Sync *syncObject = getSync(syncHandle);
+    Sync *syncObject  = getSync(syncHandle);
     if (syncObject->set(this, condition, flags) == angle::Result::Stop)
     {
         deleteSync(syncHandle);
@@ -8911,9 +8911,7 @@ void Context::importSemaphoreZirconHandle(SemaphoreID semaphore,
     ANGLE_CONTEXT_TRY(semaphoreObject->importZirconHandle(this, handleType, handle));
 }
 
-void Context::framebufferMemorylessPixelLocalStorage(GLint plane,
-                                                     GLenum internalformat,
-                                                     GLbitfield usage)
+void Context::framebufferMemorylessPixelLocalStorage(GLint plane, GLenum internalformat)
 {
     Framebuffer *framebuffer = mState.getDrawFramebuffer();
     ASSERT(framebuffer);
@@ -8926,15 +8924,14 @@ void Context::framebufferMemorylessPixelLocalStorage(GLint plane,
     }
     else
     {
-        pls.setMemoryless(this, plane, internalformat, usage);
+        pls.setMemoryless(this, plane, internalformat);
     }
 }
 
 void Context::framebufferTexturePixelLocalStorage(GLint plane,
                                                   TextureID backingtexture,
                                                   GLint level,
-                                                  GLint layer,
-                                                  GLbitfield usage)
+                                                  GLint layer)
 {
     Framebuffer *framebuffer = mState.getDrawFramebuffer();
     ASSERT(framebuffer);
@@ -8949,7 +8946,7 @@ void Context::framebufferTexturePixelLocalStorage(GLint plane,
     {
         Texture *tex = getTexture(backingtexture);
         ASSERT(tex);  // Validation guarantees this.
-        pls.setTextureBacked(this, plane, tex, level, layer, usage);
+        pls.setTextureBacked(this, plane, tex, level, layer);
     }
 }
 
@@ -9620,7 +9617,7 @@ void Context::getPerfMonitorCounterData(GLuint monitor,
                                         GLint *bytesWritten)
 {
     using namespace angle;
-    GLint byteCount = 0;
+    GLint byteCount                                   = 0;
     switch (pname)
     {
         case GL_PERFMON_RESULT_AVAILABLE_AMD:

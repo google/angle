@@ -1669,15 +1669,15 @@ PixelLocalStorageLinker::PixelLocalStorageLinker() = default;
 PixelLocalStorageLinker::~PixelLocalStorageLinker() = default;
 
 void PixelLocalStorageLinker::init(
-    std::vector<ShPixelLocalStorageLayout> *pixelLocalStorageLayoutsOut)
+    std::vector<ShPixelLocalStorageFormat> *pixelLocalStorageFormatsOut)
 {
-    mPixelLocalStorageLayoutsOut = pixelLocalStorageLayoutsOut;
+    mPixelLocalStorageFormatsOut = pixelLocalStorageFormatsOut;
 }
 
 void PixelLocalStorageLinker::link(
-    const std::vector<ShPixelLocalStorageLayout> &pixelLocalStorageLayouts) const
+    const std::vector<ShPixelLocalStorageFormat> &pixelLocalStorageFormats) const
 {
-    *mPixelLocalStorageLayoutsOut = pixelLocalStorageLayouts;
+    *mPixelLocalStorageFormatsOut = pixelLocalStorageFormats;
 }
 
 LinkingVariables::LinkingVariables()  = default;
@@ -1724,14 +1724,14 @@ void ProgramLinkedResources::init(
     std::vector<InterfaceBlock> *shaderStorageBlocksOut,
     std::vector<BufferVariable> *bufferVariablesOut,
     std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut,
-    std::vector<ShPixelLocalStorageLayout> *pixelLocalStorageLayoutsOut)
+    std::vector<ShPixelLocalStorageFormat> *pixelLocalStorageFormatsOut)
 {
     uniformBlockLinker.init(uniformBlocksOut, uniformsOut, uniformNamesOut, uniformMappedNamesOut,
                             &unusedInterfaceBlocks);
     shaderStorageBlockLinker.init(shaderStorageBlocksOut, bufferVariablesOut,
                                   &unusedInterfaceBlocks);
     atomicCounterBufferLinker.init(atomicCounterBuffersOut);
-    pixelLocalStorageLinker.init(pixelLocalStorageLayoutsOut);
+    pixelLocalStorageLinker.init(pixelLocalStorageFormatsOut);
 }
 
 void ProgramLinkedResourcesLinker::linkResources(const ProgramState &programState,
@@ -1797,7 +1797,7 @@ void ProgramLinkedResourcesLinker::linkResources(const ProgramState &programStat
         programState.getAttachedShader(gl::ShaderType::Fragment);
     if (fragmentShader != nullptr)
     {
-        resources.pixelLocalStorageLinker.link(fragmentShader->pixelLocalStorageLayouts);
+        resources.pixelLocalStorageLinker.link(fragmentShader->pixelLocalStorageFormats);
     }
 }
 

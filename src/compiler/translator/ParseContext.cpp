@@ -97,9 +97,7 @@ bool ContainsOpaque(const TStructure *structType)
     for (const auto &field : structType->fields())
     {
         if (ContainsOpaque<OpaqueFunc>(*field->type()))
-        {
             return true;
-        }
     }
     return false;
 }
@@ -730,7 +728,7 @@ void TParseContext::errorIfPLSDeclared(const TSourceLoc &loc, PLSIllegalOperatio
     {
         return;
     }
-    if (mPLSLayouts.empty())
+    if (mPLSFormats.empty())
     {
         // No pixel local storage uniforms have been declared yet. Remember this potential error in
         // case PLS gets declared later.
@@ -2093,9 +2091,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
     }
 
     if (needsReservedCheck && !checkIsNotReserved(line, identifier))
-    {
         return false;
-    }
 
     if (!symbolTable.declare(*variable))
     {
@@ -2104,9 +2100,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
     }
 
     if (!checkIsNonVoid(line, identifier, type->getBasicType()))
-    {
         return false;
-    }
 
     checkVariableSize(line, identifier, type);
     checkVariableLocations(line, *variable);
@@ -2847,19 +2841,17 @@ void TParseContext::checkPixelLocalStorageBindingIsValid(const TSourceLoc &locat
     {
         error(location, "pixel local storage binding out of range", "layout qualifier");
     }
-    else if (mPLSLayouts.find(layoutQualifier.binding) != mPLSLayouts.end())
+    else if (mPLSFormats.find(layoutQualifier.binding) != mPLSFormats.end())
     {
         error(location, "duplicate pixel local storage binding index",
               std::to_string(layoutQualifier.binding).c_str());
     }
     else
     {
-        mPLSLayouts[layoutQualifier.binding] = {
-            .format      = ImageFormatToPLSFormat(layoutQualifier.imageInternalFormat),
-            .noncoherent = layoutQualifier.noncoherent,
-        };
-        // "mPLSLayouts" is how we know whether any pixel local storage uniforms have been declared,
-        // so flush the queue of potential errors once mPLSLayouts isn't empty.
+        mPLSFormats[layoutQualifier.binding] =
+            ImageFormatToPLSFormat(layoutQualifier.imageInternalFormat);
+        // "mPLSFormats" is how we know whether any pixel local storage uniforms have been declared,
+        // so flush the queue of potential errors once mPLSFormats isn't empty.
         if (!mPLSPotentialErrors.empty())
         {
             for (const auto &[loc, op] : mPLSPotentialErrors)
@@ -3011,9 +3003,7 @@ void TParseContext::checkInvariantVariableQualifier(bool invariant,
                                                     const TSourceLoc &invariantLocation)
 {
     if (!invariant)
-    {
         return;
-    }
 
     if (mShaderVersion < 300)
     {
@@ -5990,7 +5980,7 @@ TFunction *TParseContext::parseFunctionDeclarator(const TSourceLoc &location, TF
         }
     }
 
-    mDeclaringMain         = function->isMain();
+    mDeclaringMain = function->isMain();
     mIsReturnVisitedInMain = false;
 
     //
@@ -8705,9 +8695,7 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
                 // If the nominal sizes of operands do not match:
                 // One of them must be a scalar.
                 if (!left->isScalar() && !right->isScalar())
-                {
                     return false;
-                }
 
                 // In the case of compound assignment other than multiply-assign,
                 // the right side needs to be a scalar. Otherwise a vector/matrix
@@ -8715,9 +8703,7 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
                 // vector either.
                 if (!right->isScalar() &&
                     (IsAssignment(op) || op == EOpBitShiftLeft || op == EOpBitShiftRight))
-                {
                     return false;
-                }
             }
             break;
         default:
@@ -9306,9 +9292,7 @@ void TParseContext::checkInterpolationFS(TIntermAggregate *functionCall)
     {
         const TIntermSequence *argp = functionCall->getSequence();
         if (argp->size() > 0)
-        {
             arg0 = (*argp)[0]->getAsTyped();
-        }
     }
     else
     {
@@ -9323,11 +9307,9 @@ void TParseContext::checkInterpolationFS(TIntermAggregate *functionCall)
         const TIntermTyped *base = FindLValueBase(arg0);
 
         if (base == nullptr || (!IsVaryingIn(base->getType().getQualifier())))
-        {
             error(arg0->getLine(),
                   "first argument must be an interpolant, or interpolant-array element",
                   func->name());
-        }
     }
 }
 
@@ -10130,7 +10112,7 @@ void TParseContext::postParseValidateFragmentOutputLocations()
                 "when EXT_blend_func_extended extension is not enabled, must explicitly specify "
                 "all locations when using multiple fragment outputs";
         }
-        else if (!mPLSLayouts.empty())
+        else if (!mPLSFormats.empty())
         {
             unspecifiedLocationErrorMessage =
                 "must explicitly specify all locations when using multiple fragment outputs and "
@@ -10292,7 +10274,7 @@ bool TParseContext::postParseChecks()
     // Until codegen is done from the IR itself, set this flag here in anticipation, avoiding a need
     // for the PLS transformation in IR to make an FFI call to set it in TCompiler.  This can be
     // removed after codegen is no longer done from AST.
-    if (mCompileOptions.useIR && !mPLSLayouts.empty() &&
+    if (mCompileOptions.useIR && !mPLSFormats.empty() &&
         mCompileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore)
     {
         mEarlyFragmentTestsSpecified = true;
@@ -10319,15 +10301,11 @@ int PaParseStrings(angle::Span<const char *const> string,
     }
 
     if (glslang_initialize(context))
-    {
         return 1;
-    }
 
     int error = glslang_scan(string.size(), string.data(), length, context);
     if (!error)
-    {
         error = glslang_parse(context);
-    }
 
     glslang_finalize(context);
 

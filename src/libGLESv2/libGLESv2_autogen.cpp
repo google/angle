@@ -3675,20 +3675,17 @@ void GL_APIENTRY glImportSemaphoreZirconHandleANGLE(GLuint semaphore,
 // GL_ANGLE_shader_binary
 
 // GL_ANGLE_shader_pixel_local_storage
-void GL_APIENTRY glFramebufferMemorylessPixelLocalStorageANGLE(GLint plane,
-                                                               GLenum internalformat,
-                                                               GLbitfield usage)
+void GL_APIENTRY glFramebufferMemorylessPixelLocalStorageANGLE(GLint plane, GLenum internalformat)
 {
-    return GL_FramebufferMemorylessPixelLocalStorageANGLE(plane, internalformat, usage);
+    return GL_FramebufferMemorylessPixelLocalStorageANGLE(plane, internalformat);
 }
 
 void GL_APIENTRY glFramebufferTexturePixelLocalStorageANGLE(GLint plane,
                                                             GLuint backingtexture,
                                                             GLint level,
-                                                            GLint layer,
-                                                            GLbitfield usage)
+                                                            GLint layer)
 {
-    return GL_FramebufferTexturePixelLocalStorageANGLE(plane, backingtexture, level, layer, usage);
+    return GL_FramebufferTexturePixelLocalStorageANGLE(plane, backingtexture, level, layer);
 }
 
 void GL_APIENTRY glFramebufferPixelLocalClearValuefvANGLE(GLint plane, const GLfloat *value)

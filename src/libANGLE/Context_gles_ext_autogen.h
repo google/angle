@@ -599,10 +599,9 @@
                                      GLuint handle);                                               \
     /* GL_ANGLE_shader_binary */                                                                   \
     /* GL_ANGLE_shader_pixel_local_storage */                                                      \
-    void framebufferMemorylessPixelLocalStorage(GLint plane, GLenum internalformat,                \
-                                                GLbitfield usage);                                 \
+    void framebufferMemorylessPixelLocalStorage(GLint plane, GLenum internalformat);               \
     void framebufferTexturePixelLocalStorage(GLint plane, TextureID backingtexturePacked,          \
-                                             GLint level, GLint layer, GLbitfield usage);          \
+                                             GLint level, GLint layer);                            \
     void framebufferPixelLocalClearValuefv(GLint plane, const GLfloat *value);                     \
     void framebufferPixelLocalClearValueiv(GLint plane, const GLint *value);                       \
     void framebufferPixelLocalClearValueuiv(GLint plane, const GLuint *value);                     \

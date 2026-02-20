@@ -109,7 +109,7 @@ struct CompiledShaderState
 
     // ANGLE_shader_pixel_local_storage: A mapping from binding index to the PLS uniform format at
     // that index.
-    std::vector<ShPixelLocalStorageLayout> pixelLocalStorageLayouts;
+    std::vector<ShPixelLocalStorageFormat> pixelLocalStorageFormats;
 };
 
 using SharedCompiledShaderState = std::shared_ptr<CompiledShaderState>;

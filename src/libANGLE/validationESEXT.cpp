@@ -1724,8 +1724,6 @@ bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,
 
 namespace
 {
-constexpr static GLbitfield kValidPLSUsages = GL_PIXEL_LOCAL_USAGE_ALWAYS_NONCOHERENT_BIT_ANGLE;
-
 enum class PLSExpectedStatus
 {
     Inactive,
@@ -1835,7 +1833,6 @@ bool ValidateGetFramebufferPixelLocalStorageParameterCommon(const Context *conte
         case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
-        case GL_PIXEL_LOCAL_USAGE_ANGLE:
         case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
         case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
         case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
@@ -2024,8 +2021,7 @@ bool ValidatePLSStoreOperation(const Context *context, angle::EntryPoint entryPo
 bool ValidateFramebufferMemorylessPixelLocalStorageANGLE(const Context *context,
                                                          angle::EntryPoint entryPoint,
                                                          GLint plane,
-                                                         GLenum internalformat,
-                                                         GLbitfield usage)
+                                                         GLenum internalformat)
 {
     if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
     {
@@ -2049,12 +2045,6 @@ bool ValidateFramebufferMemorylessPixelLocalStorageANGLE(const Context *context,
         }
     }
 
-    if ((usage & kValidPLSUsages) != usage)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSInvalidUsage);
-        return false;
-    }
-
     return true;
 }
 
@@ -2063,8 +2053,7 @@ bool ValidateFramebufferTexturePixelLocalStorageANGLE(const Context *context,
                                                       GLint plane,
                                                       TextureID backingtexture,
                                                       GLint level,
-                                                      GLint layer,
-                                                      GLbitfield usage)
+                                                      GLint layer)
 {
     if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
     {
@@ -2143,12 +2132,6 @@ bool ValidateFramebufferTexturePixelLocalStorageANGLE(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kFormatNotRenderable);
             return false;
         }
-    }
-
-    if ((usage & kValidPLSUsages) != usage)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSInvalidUsage);
-        return false;
     }
 
     return true;

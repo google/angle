@@ -5460,16 +5460,13 @@ void GL_APIENTRY GL_ImportSemaphoreZirconHandleANGLE(GLuint semaphore,
 // GL_ANGLE_shader_binary
 
 // GL_ANGLE_shader_pixel_local_storage
-void GL_APIENTRY GL_FramebufferMemorylessPixelLocalStorageANGLE(GLint plane,
-                                                                GLenum internalformat,
-                                                                GLbitfield usage)
+void GL_APIENTRY GL_FramebufferMemorylessPixelLocalStorageANGLE(GLint plane, GLenum internalformat)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
     ANGLE_UNSAFE_TODO(EVENT(context, GLFramebufferMemorylessPixelLocalStorageANGLE,
-                            "context = %d, plane = %d, internalformat = %s, usage = %s",
-                            CID(context), plane, GLenumToString(GLESEnum::AllEnums, internalformat),
-                            GLbitfieldToString(GLESEnum::AllEnums, usage).c_str()));
+                            "context = %d, plane = %d, internalformat = %s", CID(context), plane,
+                            GLenumToString(GLESEnum::AllEnums, internalformat)));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -5488,7 +5485,7 @@ void GL_APIENTRY GL_FramebufferMemorylessPixelLocalStorageANGLE(GLint plane,
 #endif
                 isCallValid = ValidateFramebufferMemorylessPixelLocalStorageANGLE(
                     context, angle::EntryPoint::GLFramebufferMemorylessPixelLocalStorageANGLE,
-                    plane, internalformat, usage);
+                    plane, internalformat);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5501,10 +5498,10 @@ void GL_APIENTRY GL_FramebufferMemorylessPixelLocalStorageANGLE(GLint plane,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->framebufferMemorylessPixelLocalStorage(plane, internalformat, usage);
+            context->framebufferMemorylessPixelLocalStorage(plane, internalformat);
         }
         ANGLE_CAPTURE_GL(FramebufferMemorylessPixelLocalStorageANGLE, isCallValid, context, plane,
-                         internalformat, usage);
+                         internalformat);
     }
     else
     {
@@ -5517,16 +5514,13 @@ void GL_APIENTRY GL_FramebufferMemorylessPixelLocalStorageANGLE(GLint plane,
 void GL_APIENTRY GL_FramebufferTexturePixelLocalStorageANGLE(GLint plane,
                                                              GLuint backingtexture,
                                                              GLint level,
-                                                             GLint layer,
-                                                             GLbitfield usage)
+                                                             GLint layer)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(
-        EVENT(context, GLFramebufferTexturePixelLocalStorageANGLE,
-              "context = %d, plane = %d, backingtexture = %u, level = %d, layer = %d, usage = %s",
-              CID(context), plane, backingtexture, level, layer,
-              GLbitfieldToString(GLESEnum::AllEnums, usage).c_str()));
+    ANGLE_UNSAFE_TODO(EVENT(context, GLFramebufferTexturePixelLocalStorageANGLE,
+                            "context = %d, plane = %d, backingtexture = %u, level = %d, layer = %d",
+                            CID(context), plane, backingtexture, level, layer));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -5546,7 +5540,7 @@ void GL_APIENTRY GL_FramebufferTexturePixelLocalStorageANGLE(GLint plane,
 #endif
                 isCallValid = ValidateFramebufferTexturePixelLocalStorageANGLE(
                     context, angle::EntryPoint::GLFramebufferTexturePixelLocalStorageANGLE, plane,
-                    backingtexturePacked, level, layer, usage);
+                    backingtexturePacked, level, layer);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5559,11 +5553,10 @@ void GL_APIENTRY GL_FramebufferTexturePixelLocalStorageANGLE(GLint plane,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->framebufferTexturePixelLocalStorage(plane, backingtexturePacked, level, layer,
-                                                         usage);
+            context->framebufferTexturePixelLocalStorage(plane, backingtexturePacked, level, layer);
         }
         ANGLE_CAPTURE_GL(FramebufferTexturePixelLocalStorageANGLE, isCallValid, context, plane,
-                         backingtexturePacked, level, layer, usage);
+                         backingtexturePacked, level, layer);
     }
     else
     {
@@ -5940,10 +5933,10 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvANGLE(GLint plane,
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(
-        EVENT(context, GLGetFramebufferPixelLocalStorageParameterfvANGLE,
-              "context = %d, plane = %d, pname = %s, params = 0x%016" PRIxPTR "", CID(context),
-              plane, GLenumToString(GLESEnum::PLSPlaneParameterName, pname), (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(EVENT(context, GLGetFramebufferPixelLocalStorageParameterfvANGLE,
+                            "context = %d, plane = %d, pname = %s, params = 0x%016" PRIxPTR "",
+                            CID(context), plane, GLenumToString(GLESEnum::PLSQueryFloat, pname),
+                            (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -5990,10 +5983,10 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE(GLint plane,
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(
-        EVENT(context, GLGetFramebufferPixelLocalStorageParameterivANGLE,
-              "context = %d, plane = %d, pname = %s, params = 0x%016" PRIxPTR "", CID(context),
-              plane, GLenumToString(GLESEnum::PLSPlaneParameterName, pname), (uintptr_t)params));
+    ANGLE_UNSAFE_TODO(EVENT(context, GLGetFramebufferPixelLocalStorageParameterivANGLE,
+                            "context = %d, plane = %d, pname = %s, params = 0x%016" PRIxPTR "",
+                            CID(context), plane, GLenumToString(GLESEnum::PLSQueryInt, pname),
+                            (uintptr_t)params));
 
     if (ANGLE_LIKELY(context != nullptr))
     {

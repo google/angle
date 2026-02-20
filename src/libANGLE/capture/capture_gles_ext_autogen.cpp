@@ -3754,15 +3754,13 @@ CallCapture CaptureImportSemaphoreZirconHandleANGLE(const State &glState,
 CallCapture CaptureFramebufferMemorylessPixelLocalStorageANGLE(const State &glState,
                                                                bool isCallValid,
                                                                GLint plane,
-                                                               GLenum internalformat,
-                                                               GLbitfield usage)
+                                                               GLenum internalformat)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("plane", ParamType::TGLint, plane);
     paramBuffer.addEnumParam("internalformat", GLESEnum::AllEnums, ParamType::TGLenum,
                              internalformat);
-    paramBuffer.addEnumParam("usage", GLESEnum::AllEnums, ParamType::TGLbitfield, usage);
 
     return CallCapture(angle::EntryPoint::GLFramebufferMemorylessPixelLocalStorageANGLE,
                        std::move(paramBuffer));
@@ -3773,8 +3771,7 @@ CallCapture CaptureFramebufferTexturePixelLocalStorageANGLE(const State &glState
                                                             GLint plane,
                                                             TextureID backingtexturePacked,
                                                             GLint level,
-                                                            GLint layer,
-                                                            GLbitfield usage)
+                                                            GLint layer)
 {
     ParamBuffer paramBuffer;
 
@@ -3782,7 +3779,6 @@ CallCapture CaptureFramebufferTexturePixelLocalStorageANGLE(const State &glState
     paramBuffer.addValueParam("backingtexturePacked", ParamType::TTextureID, backingtexturePacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
     paramBuffer.addValueParam("layer", ParamType::TGLint, layer);
-    paramBuffer.addEnumParam("usage", GLESEnum::AllEnums, ParamType::TGLbitfield, usage);
 
     return CallCapture(angle::EntryPoint::GLFramebufferTexturePixelLocalStorageANGLE,
                        std::move(paramBuffer));
@@ -3949,7 +3945,7 @@ CallCapture CaptureGetFramebufferPixelLocalStorageParameterfvANGLE(const State &
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("plane", ParamType::TGLint, plane);
-    paramBuffer.addEnumParam("pname", GLESEnum::PLSPlaneParameterName, ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLESEnum::PLSQueryFloat, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLfloatPointer);
     if (isCallValid)
@@ -3978,7 +3974,7 @@ CallCapture CaptureGetFramebufferPixelLocalStorageParameterivANGLE(const State &
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("plane", ParamType::TGLint, plane);
-    paramBuffer.addEnumParam("pname", GLESEnum::PLSPlaneParameterName, ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLESEnum::PLSQueryInt, ParamType::TGLenum, pname);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     if (isCallValid)
