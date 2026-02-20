@@ -557,7 +557,6 @@ bool GetCompressionFixedRate(VkImageCompressionControlEXT *compressionInfo,
 TextureVk::TextureVk(const gl::TextureState &state, vk::Renderer *renderer)
     : TextureImpl(state),
       mOwnsImage(false),
-      mRequiresMutableStorage(false),
       mFormatReinterpretability(vk::ImageFormatReinterpretability::ColorspaceOverrides),
       mRequiredFormatSupport(vk::ImageFormatSupport::SampleOnly),
       mImmutableSamplerDirty(false),
@@ -2467,7 +2466,6 @@ void TextureVk::releaseAndDeleteImageAndViews(ContextVk *contextVk)
         }
         releaseImage(contextVk);
         mImageObserverBinding.bind(nullptr);
-        mRequiresMutableStorage   = false;
         mFormatReinterpretability = vk::ImageFormatReinterpretability::ColorspaceOverrides;
         mRequiredFormatSupport    = vk::ImageFormatSupport::SampleOnly;
         mImageCreateFlags         = 0;
@@ -2587,7 +2585,6 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
         // Inherit a few VkImage's create attributes from ImageHelper.
         mImageCreateFlags       = mImage->getCreateFlags();
         mImageUsageFlags        = mImage->getUsage();
-        mRequiresMutableStorage = (mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0;
     }
 
     vk::Renderer *renderer = contextVk->getRenderer();
@@ -3627,7 +3624,7 @@ angle::Result TextureVk::respecifyImageStorageIfNecessary(ContextVk *contextVk, 
     if (mState.hasBeenBoundAsImage())
     {
         mImageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
-        mRequiresMutableStorage   = true;
+        mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
         mFormatReinterpretability = vk::ImageFormatReinterpretability::Full;
     }
 
@@ -3635,11 +3632,6 @@ angle::Result TextureVk::respecifyImageStorageIfNecessary(ContextVk *contextVk, 
     // VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT. Vulkan requires this bit to be set in order to use
     // imageviews with a format that does not match the texture's internal format.
     if (isSRGBOverrideEnabled())
-    {
-        mRequiresMutableStorage = true;
-    }
-
-    if (mRequiresMutableStorage)
     {
         mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
     }
@@ -4319,7 +4311,6 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
     // Update create flags with mImage's create flags
     mImageCreateFlags |= mImage->getCreateFlags();
-    mRequiresMutableStorage = (mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0;
 
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     if (mState.hasProtectedContent())
@@ -4359,7 +4350,7 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk, uint32_t levelCoun
 
     // Use this as a proxy for the SRGB override & skip decode settings.
     bool createExtraSRGBViews =
-        mRequiresMutableStorage &&
+        (mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0 &&
         mFormatReinterpretability != vk::ImageFormatReinterpretability::None;
 
     GLenum astcDecodePrecision = GL_NONE;
@@ -4811,12 +4802,11 @@ angle::Result TextureVk::refreshImageViews(ContextVk *contextVk)
 
 angle::Result TextureVk::ensureMutable(ContextVk *contextVk)
 {
-    if (mRequiresMutableStorage)
+    if ((mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0)
     {
         return angle::Result::Continue;
     }
 
-    mRequiresMutableStorage = true;
     mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
 
     ANGLE_TRY(respecifyImageStorage(contextVk));
