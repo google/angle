@@ -5733,8 +5733,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // ARM proprietary driver does buffer copy on geometry pipeline, which may create a GPU pipeline
     // bubble that prevents vertex shader to overlap with fragment shader on job manager based
     // architecture. For now we always choose CPU to do copy on ARM job manager based GPU.
+    // http://issuetracker.google.com/200067929 - ARM
+    // http://issuetracker.google.com/477725737 - Qualcomm
+    // http://issuetracker.google.com/485970552 - PowerVR
     ANGLE_FEATURE_CONDITION(&mFeatures, preferCPUForBufferSubData,
-                            isARMProprietary || isQualcommProprietary);
+                            isARMProprietary || isQualcommProprietary || isPowerVR);
 
     // On android, we usually are GPU limited, we try to use CPU to do data copy when other
     // conditions are the same. Set to zero will use GPU to do copy. This is subject to further
