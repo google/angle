@@ -264,6 +264,8 @@ def run_trace(trace, args, screenshot_device_dir):
         flags.append('--' + mode)
     if args.maxsteps != '':
         flags += ['--max-steps-performed', args.maxsteps]
+    if args.run_to_key_frame:
+        flags.append('--run-to-key-frame')
     if args.fixedtime != '':
         flags += ['--fixed-test-time-with-warmup', args.fixedtime]
     if args.minimizegpuwork:
@@ -665,9 +667,12 @@ def collect_cpu_inst(done_event, test_fixedtime, results):
 
         # Filter simpleperf record within actual test running time
         temp_filter_file = run_adb_shell_command('mktemp /data/local/tmp/tmp.XXXXXX').strip()
-        run_adb_shell_command(f'echo "CLOCK monotonic\n\
-                GLOBAL_BEGIN {start_ns}\n\
-                GLOBAL_END {end_ns}" > {temp_filter_file}')
+
+        # Build filter content separately to avoid clang-format issues
+        filter_content = ("CLOCK monotonic\n"
+                          f"GLOBAL_BEGIN {start_ns}\n"
+                          f"GLOBAL_END {end_ns}")
+        run_adb_shell_command(f'echo "{filter_content}" > {temp_filter_file}')
 
         perf_output = run_adb_shell_command(f'''simpleperf report \
             --sort dso \
@@ -1765,6 +1770,8 @@ def main():
         action='store_true',
         default=False)
     parser.add_argument('--maxsteps', help='Run for fixed set of frames', default='')
+    parser.add_argument(
+        '--run-to-key-frame', help='Run to key-frame', action='store_true', default=False)
     parser.add_argument('--fixedtime', help='Run for fixed set of time', default='')
     parser.add_argument(
         '--minimizegpuwork',
