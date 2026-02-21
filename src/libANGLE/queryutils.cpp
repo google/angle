@@ -1826,6 +1826,7 @@ void QueryFramebufferPixelLocalStorageParameterBase(Context *context,
         case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
+        case GL_PIXEL_LOCAL_USAGE_ANGLE:
             if (length != nullptr)
             {
                 *length = 1;

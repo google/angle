@@ -732,17 +732,17 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
     {
         const Framebuffer *framebuffer = state.getDrawFramebuffer();
         const PixelLocalStorage *pls   = framebuffer->peekPixelLocalStorage();
-        const auto &shaderPLSFormats   = executable.getPixelLocalStorageFormats();
+        const auto &shaderPLSLayouts   = executable.getPixelLocalStorageLayouts();
         size_t activePLSCount          = context->getState().getPixelLocalStorageActivePlanes();
 
-        if (ANGLE_UNLIKELY(shaderPLSFormats.size() > activePLSCount))
+        if (ANGLE_UNLIKELY(shaderPLSLayouts.size() > activePLSCount))
         {
             // INVALID_OPERATION is generated if a draw is issued with a fragment shader that has a
             // pixel local uniform bound to an inactive pixel local storage plane.
             return gl::err::kPLSDrawProgramPlanesInactive;
         }
 
-        if (ANGLE_UNLIKELY(shaderPLSFormats.size() < activePLSCount))
+        if (ANGLE_UNLIKELY(shaderPLSLayouts.size() < activePLSCount))
         {
             // INVALID_OPERATION is generated if a draw is issued with a fragment shader that does
             // _not_ have a pixel local uniform bound to an _active_ pixel local storage plane
@@ -755,7 +755,7 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
         {
             const auto &plsPlane = pls->getPlane(static_cast<GLint>(i));
             ASSERT(plsPlane.isActive());
-            if (ANGLE_UNLIKELY(shaderPLSFormats[i] == ShPixelLocalStorageFormat::NotPLS))
+            if (ANGLE_UNLIKELY(shaderPLSLayouts[i].format == ShPixelLocalStorageFormat::NotPLS))
             {
                 // INVALID_OPERATION is generated if a draw is issued with a fragment shader that
                 // does _not_ have a pixel local uniform bound to an _active_ pixel local storage
@@ -764,7 +764,7 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
                 return gl::err::kPLSDrawProgramActivePlanesUnused;
             }
 
-            if (ANGLE_UNLIKELY(ShPixelLocalStorageFormatToGLenum(shaderPLSFormats[i]) !=
+            if (ANGLE_UNLIKELY(ShPixelLocalStorageFormatToGLenum(shaderPLSLayouts[i].format) !=
                                plsPlane.getInternalformat()))
             {
                 // INVALID_OPERATION is generated if a draw is issued with a fragment shader that
@@ -772,6 +772,13 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
                 // identically match the internalformat of its associated pixel local storage plane
                 // on the current draw framebuffer, as enumerated in Table X.3.
                 return gl::err::kPLSDrawProgramFormatMismatch;
+            }
+            if (ANGLE_UNLIKELY(plsPlane.isAlwaysNoncoherent() && !shaderPLSLayouts[i].noncoherent))
+            {
+                // INVALID_OPERATION is generated if a draw is issued with active pixel local
+                // storage plane(s) that specify PIXEL_LOCAL_USAGE_ALWAYS_NONCOHERENT_BIT_ANGLE, but
+                // whose corresponding shader uniforms lack the "noncoherent" layout qualifier.
+                return gl::err::kPLSDrawProgramNoncoherentMismatch;
             }
         }
     }
@@ -3734,7 +3741,7 @@ bool ValidateCopyImageSubDataBase(const Context *context,
         return false;
     }
 
-    gl::Texture *srcTexture           = context->getTexture({srcName});
+    gl::Texture *srcTexture = context->getTexture({srcName});
     if (srcFormatInfo->compressed &&
         !ValidateCompressedRegion(context, entryPoint, *srcTexture, srcTarget, srcLevel,
                                   *srcFormatInfo, srcX, srcY, srcZ, srcWidth, srcHeight, srcDepth))
@@ -3742,7 +3749,7 @@ bool ValidateCopyImageSubDataBase(const Context *context,
         return false;
     }
 
-    gl::Texture *dstTexture           = context->getTexture({dstName});
+    gl::Texture *dstTexture = context->getTexture({dstName});
     if (dstFormatInfo->compressed &&
         !ValidateCompressedRegion(context, entryPoint, *dstTexture, dstTarget, dstLevel,
                                   *dstFormatInfo, dstX, dstY, dstZ, dstWidth, dstHeight, dstDepth))
