@@ -1423,6 +1423,7 @@ impl Name {
 pub enum VariableScope {
     Global,
     Local,
+    ForLoopVariable,
     FunctionParam,
 }
 

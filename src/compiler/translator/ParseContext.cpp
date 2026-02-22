@@ -3995,6 +3995,45 @@ void TParseContext::onLoopConditionBegin(TIntermNode *init, const TSourceLoc &li
         checkESSL100ForLoopInit(init, line);
     }
 
+    // Make sure variables declared in |init| are scoped to the for loop in the IR.  This is to aid
+    // generators distinguish between:
+    //
+    //     for (int i = 0; ...) { }
+    //
+    // and:
+    //
+    //     int i = 0;
+    //     for (; ...) { }
+    //
+    // because they otherwise look identical in the IR.  The difference between the two is that in
+    // the second case, |i| might be used after the `for` loop.  This rescoping of the variable is
+    // purely an optimization; the IR would be able to tell if |i| is later used or not by visiting
+    // the rest of the block, which is simply less efficient.
+    if (init != nullptr)
+    {
+        TIntermDeclaration *declaration = init->getAsDeclarationNode();
+        if (declaration != nullptr)
+        {
+            for (TIntermNode *singleDecl : *declaration->getSequence())
+            {
+                // Extract the symbol and scope it to the `for` loop.  All the `nullptr` checks here
+                // are there to avoid crashes in the presence of compile errors.
+                TIntermBinary *symbolInit = singleDecl->getAsBinaryNode();
+                TIntermSymbol *symbol =
+                    symbolInit != nullptr && symbolInit->getOp() == EOpInitialize
+                        ? symbolInit->getLeft()->getAsSymbolNode()
+                        : singleDecl->getAsSymbolNode();
+                // The struct check makes sure sole struct declarations are skipped, like
+                // `struct S { ... };` which the translator declares with an "empty" variable.
+                if (symbol != nullptr && !(symbol->getType().isStructSpecifier() &&
+                                           symbol->variable().symbolType() == SymbolType::Empty))
+                {
+                    mIRBuilder.rescopeAsForLoopVariable(mVariableToId.at(&symbol->variable()).id);
+                }
+            }
+        }
+    }
+
     mIRBuilder.beginLoopCondition();
 }
 

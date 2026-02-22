@@ -1038,6 +1038,16 @@ impl Builder {
         self.ir.meta.declare_const_variable(Name::new_temp(""), type_id, precision)
     }
 
+    // Rescope a temporary variable to a `for` loop variable declared in its initializer
+    // expression.  This is nearly identically treated as a `Local` variable, except it's easier to
+    // identify its scope by the generators, since the variable declaration is otherwise moved to
+    // the block leading to the `for` loop.
+    pub fn rescope_as_for_loop_variable(&mut self, variable_id: VariableId) {
+        let variable = self.ir.meta.get_variable_mut(variable_id);
+        debug_assert!(variable.scope == VariableScope::Local);
+        variable.scope = VariableScope::ForLoopVariable;
+    }
+
     // In GLSL, it's possible to mark a variable as invariant or precise in a separate line,
     // especially useful for built-ins that are otherwise not necessarily declared explicitly.
     // The following allow these declarations to add invariant and precise decorations.
@@ -3179,6 +3189,7 @@ pub mod ffi {
             name: &'static str,
             ast_type: &ASTType,
         ) -> VariableId;
+        fn rescope_as_for_loop_variable(self: &mut BuilderWrapper, variable_id: VariableId);
         fn mark_variable_invariant(self: &mut BuilderWrapper, variable_id: VariableId);
         fn mark_variable_precise(self: &mut BuilderWrapper, variable_id: VariableId);
         fn new_function(
@@ -4471,6 +4482,10 @@ impl BuilderWrapper {
             )
         }
         .into()
+    }
+
+    fn rescope_as_for_loop_variable(&mut self, variable_id: ffi::VariableId) {
+        self.builder.rescope_as_for_loop_variable(variable_id.into());
     }
 
     fn mark_variable_invariant(&mut self, variable_id: ffi::VariableId) {

@@ -1009,9 +1009,20 @@ fn dump_variables(ir_meta: &IRMeta, result: &mut String) {
             .built_in
             .map(|built_in| format!(" <{}>", built_in_str(built_in)))
             .unwrap_or("".to_string());
+        let loop_variable = if v.scope == VariableScope::ForLoopVariable {
+            " {loop_variable}".to_string()
+        } else {
+            "".to_string()
+        };
 
-        let mut formatted =
-            format!("v{id} ({}): {}{}{}", type_id_str(v.type_id), name, initializer, built_in);
+        let mut formatted = format!(
+            "v{id} ({}): {}{}{}{}",
+            type_id_str(v.type_id),
+            name,
+            initializer,
+            built_in,
+            loop_variable
+        );
         append_decorations(&mut formatted, v.precision, &v.decorations);
 
         append_on_new_line(result, formatted, 1);
