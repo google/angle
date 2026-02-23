@@ -110,6 +110,7 @@ enum class Feature
     DisableSemaphoreFd,
     DisableSeparateShaderObjects,
     DisableStagedInitializationOfPackedTextureFormats,
+    DisableSubmitCommandsOnSyncStatusCheckForTesting,
     DisableSyncControlSupport,
     DisableTextureClampToBorder,
     DisableTextureMirrorClampToEdge,

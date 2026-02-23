@@ -585,6 +585,14 @@
             "issue": "http://anglebug.com/42262606"
         },
         {
+            "name": "disable_submit_commands_on_sync_status_check_for_testing",
+            "category": "Workarounds",
+            "description": [
+                "Disable implicit submission of commands in contexts of the sharegroup during ",
+                "GLSync status check. Used in some end2end tests."
+            ]
+        },
+        {
             "name": "force_texture_lod_offset_1",
             "category": "Workarounds",
             "description": [

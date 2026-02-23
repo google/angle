@@ -110,6 +110,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DisableSemaphoreFd, "disableSemaphoreFd"},
     {Feature::DisableSeparateShaderObjects, "disableSeparateShaderObjects"},
     {Feature::DisableStagedInitializationOfPackedTextureFormats, "disableStagedInitializationOfPackedTextureFormats"},
+    {Feature::DisableSubmitCommandsOnSyncStatusCheckForTesting, "disableSubmitCommandsOnSyncStatusCheckForTesting"},
     {Feature::DisableSyncControlSupport, "disableSyncControlSupport"},
     {Feature::DisableTextureClampToBorder, "disableTextureClampToBorder"},
     {Feature::DisableTextureMirrorClampToEdge, "disableTextureMirrorClampToEdge"},
