@@ -428,7 +428,7 @@ pub fn is_precision_applicable_to_type(ir_meta: &IRMeta, type_id: TypeId) -> boo
 // Also noteworthy is that this helper simplifies transformation by letting them generally be
 // oblivious to `Alias` instructions as it automatically skips over them.
 //
-// The callbacks must return `None` if recursion needs to stop, or `Some(id)` to continue
+// The register callback must return `None` if recursion needs to stop, or `Some(id)` to continue
 // exploring.
 pub fn trace_back<State, InspectConstant, InspectVariable, InspectRegister>(
     ir_meta: &IRMeta,
@@ -438,36 +438,30 @@ pub fn trace_back<State, InspectConstant, InspectVariable, InspectRegister>(
     inspect_variable: &mut InspectVariable,
     inspect_register: &mut InspectRegister,
 ) where
-    InspectConstant: FnMut(&mut State, ConstantId) -> Option<Id>,
-    InspectVariable: FnMut(&mut State, VariableId) -> Option<Id>,
+    InspectConstant: FnMut(&mut State, ConstantId),
+    InspectVariable: FnMut(&mut State, VariableId),
     InspectRegister: FnMut(&mut State, RegisterId, &OpCode) -> Option<Id>,
 {
     let mut id = id;
     loop {
-        match id {
+        id = match id {
             Id::Constant(constant_id) => {
-                if let Some(to_inspect) = inspect_constant(state, constant_id) {
-                    id = to_inspect;
-                } else {
-                    break;
-                }
+                inspect_constant(state, constant_id);
+                break;
             }
             Id::Variable(variable_id) => {
-                if let Some(to_inspect) = inspect_variable(state, variable_id) {
-                    id = to_inspect;
-                } else {
-                    break;
-                }
+                inspect_variable(state, variable_id);
+                break;
             }
             Id::Register(register_id) => {
                 let instruction = ir_meta.get_instruction(register_id);
                 // Automatically skip over `Alias` instructions.
                 if let OpCode::Alias(alias_id) = instruction.op {
-                    id = alias_id.id;
+                    alias_id.id
                 } else if let Some(to_inspect) =
                     inspect_register(state, register_id, &instruction.op)
                 {
-                    id = to_inspect;
+                    to_inspect
                 } else {
                     break;
                 }

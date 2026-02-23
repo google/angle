@@ -153,6 +153,9 @@ void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::Compi
     opt->pls_options.supports_noncoherent = options.pls.supportsNoncoherent;
     opt->pls_options.supports_native_rgba8_image_formats =
         options.pls.supportsNativeRGBA8ImageFormats;
+
+    // MSL-specific flags
+    opt->ensure_loop_forward_progress = options.ensureLoopForwardProgress;
 }
 }  // namespace
 

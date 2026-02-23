@@ -202,7 +202,9 @@ mod ffi {
         // to rewrite.
         rewrite_pixel_local_storage: bool,
         pls_options: PixelLocalStorageOptions,
-        // TODO(http://anglebug.com/349994211): equivalent to ShCompileOptions flags
+
+        // MSL: Ensure all loops execute side-effects or terminate.
+        ensure_loop_forward_progress: bool,
     }
 
     // TODO(http://anglebug.com/349994211): Equivalent to sh::ShaderVariable, to be done after

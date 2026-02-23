@@ -198,6 +198,7 @@ int main(int argc, char *argv[])
                                 compileOptions.forceDeferNonConstGlobalInitializers = true;
                                 compileOptions.clampPointSize                       = true;
                                 compileOptions.removeInactiveVariables              = true;
+                                compileOptions.ensureLoopForwardProgress            = true;
                                 break;
                             default:
                                 failCode = EFailUsage;

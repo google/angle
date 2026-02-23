@@ -153,9 +153,8 @@ fn is_unsupported_argument(ir_meta: &IRMeta, arg: TypedId, options: &Options) ->
         base_variable.id,
         &mut |is_definitely_supported, _| {
             *is_definitely_supported = true;
-            None
         },
-        &mut |_, _| None,
+        &mut |_, _| {},
         &mut |is_definitely_supported, _, opcode| {
             match *opcode {
                 OpCode::AccessStructField(base_id, _) => {
@@ -224,7 +223,6 @@ fn get_access_chain(ir_meta: &IRMeta, id: TypedId) -> Vec<Id> {
         },
         &mut |access_chain, variable_id| {
             access_chain.push(Id::new_variable(variable_id));
-            None
         },
         &mut |access_chain, register_id, opcode| {
             access_chain.push(Id::new_register(register_id));

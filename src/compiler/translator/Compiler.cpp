@@ -1019,19 +1019,16 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
-    }
 
-    // Needs to run before SimplifyLoopConditions to be able to detect |for| loops correctly.
-    if (compileOptions.ensureLoopForwardProgress)
-    {
-        if (!EnsureLoopForwardProgress(this, root))
+        // Needs to run before SimplifyLoopConditions to be able to detect |for| loops correctly.
+        if (compileOptions.ensureLoopForwardProgress)
         {
-            return false;
+            if (!EnsureLoopForwardProgress(this, root))
+            {
+                return false;
+            }
         }
-    }
 
-    if (!useIR)
-    {
         if (compileOptions.simplifyLoopConditions)
         {
             if (!SimplifyLoopConditions(this, root, &getSymbolTable()))

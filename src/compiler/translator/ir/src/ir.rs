@@ -1037,6 +1037,12 @@ impl Block {
     pub fn set_loop_body_block(&mut self, block: Block) {
         self.set_sub_block1(block);
     }
+    pub fn get_loop_body_block(&self) -> &Block {
+        self.block1.as_ref().unwrap()
+    }
+    pub fn get_loop_body_block_mut(&mut self) -> &mut Block {
+        self.block1.as_mut().unwrap()
+    }
 
     pub fn set_loop_continue_block(&mut self, block: Block) {
         self.set_sub_block2(block);

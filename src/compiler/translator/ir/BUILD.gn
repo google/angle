@@ -50,7 +50,10 @@ if (angle_enable_hlsl) {
   angle_translator_ir_sources += [ "src/output/hlsl.rs" ]
 }
 if (angle_enable_msl) {
-  angle_translator_ir_sources += [ "src/output/msl.rs" ]
+  angle_translator_ir_sources += [
+    "src/output/msl.rs",
+    "src/transform/msl/ensure_loop_forward_progress.rs",
+  ]
 }
 if (angle_enable_vulkan) {
   angle_translator_ir_sources += [ "src/output/spirv.rs" ]

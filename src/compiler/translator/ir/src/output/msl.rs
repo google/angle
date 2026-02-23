@@ -5,7 +5,11 @@
 use crate::ir::*;
 use crate::*;
 
-pub fn generate(ir: &mut IR, _options: &compile::Options) {
+pub fn generate(ir: &mut IR, options: &compile::Options) {
+    if options.ensure_loop_forward_progress {
+        transform::msl::ensure_loop_forward_progress::run(ir);
+    }
+
     {
         let transform_options = transform::monomorphize_unsupported_functions::Options {
             struct_containing_samplers: true,

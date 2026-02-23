@@ -25,7 +25,9 @@ pub mod glsl_common {}
 #[cfg(angle_enable_hlsl)]
 pub mod hlsl {}
 #[cfg(angle_enable_msl)]
-pub mod msl {}
+pub mod msl {
+    pub mod ensure_loop_forward_progress;
+}
 #[cfg(angle_enable_spirv)]
 pub mod spirv {}
 #[cfg(angle_enable_wgsl)]
