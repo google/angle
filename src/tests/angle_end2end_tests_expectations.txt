@@ -2131,6 +2131,7 @@
 362486580 LINUX NVIDIA VULKAN : FramebufferTestWithFormatFallback.R4G4B4A4_OutOfRangeStagedUpdateReformated/* = SKIP
 362486580 LINUX NVIDIA VULKAN : FramebufferTest_ES3.SurfaceDimensionsChangeAndFragCoord/* = SKIP
 362486580 LINUX NVIDIA VULKAN : InstancingTestES31.UpdateAttribBindingByVertexAttribDivisor/* = SKIP
+362486580 LINUX NVIDIA VULKAN : SimpleStateChangeTestES31.MultipleVertexArrayObjectRendering/* = SKIP
 362486580 LINUX NVIDIA VULKAN : SixteenBppTextureTest.RGBA5551Validation/* = SKIP
 362486580 LINUX NVIDIA VULKAN : SixteenBppTextureTestES3.RGB5A1UploadRGB10A2/* = SKIP
 362486580 LINUX NVIDIA VULKAN : VertexAttributeTestES31.DrawArraysWithLargeStride/* = SKIP
