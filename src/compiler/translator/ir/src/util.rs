@@ -475,3 +475,80 @@ pub fn trace_back<State, InspectConstant, InspectVariable, InspectRegister>(
         }
     }
 }
+
+// Transformations may need to know when variables are read from or written to.  Since read and
+// write can be done in a number of instructions, this helper can be used to avoid having to
+// enumerate all of them.
+pub fn inspect_pointer_access<State, OnRead, OnWrite, OnReadWrite>(
+    ir_meta: &IRMeta,
+    state: &mut State,
+    opcode: &OpCode,
+    on_read: &OnRead,
+    on_write: &OnWrite,
+    on_read_write: &OnReadWrite,
+) where
+    OnRead: Fn(&mut State, TypedId),
+    OnWrite: Fn(&mut State, TypedId),
+    OnReadWrite: Fn(&mut State, TypedId),
+{
+    match opcode {
+        // Read accesses
+        &OpCode::Load(pointer)
+        | &OpCode::Binary(BinaryOpCode::AtomicAdd, pointer, _)
+        | &OpCode::Binary(BinaryOpCode::AtomicMin, pointer, _)
+        | &OpCode::Binary(BinaryOpCode::AtomicMax, pointer, _)
+        | &OpCode::Binary(BinaryOpCode::AtomicAnd, pointer, _)
+        | &OpCode::Binary(BinaryOpCode::AtomicOr, pointer, _)
+        | &OpCode::Binary(BinaryOpCode::AtomicXor, pointer, _)
+        | &OpCode::Binary(BinaryOpCode::AtomicExchange, pointer, _) => {
+            on_read(state, pointer);
+        }
+
+        // Write accesses
+        &OpCode::Store(pointer, _)
+        | &OpCode::Binary(BinaryOpCode::Modf, _, pointer)
+        | &OpCode::Binary(BinaryOpCode::Frexp, _, pointer) => {
+            on_write(state, pointer);
+        }
+        OpCode::BuiltIn(BuiltInOpCode::UaddCarry, args)
+        | OpCode::BuiltIn(BuiltInOpCode::UsubBorrow, args) => {
+            on_write(state, args[2]);
+        }
+        OpCode::BuiltIn(BuiltInOpCode::UmulExtended, args)
+        | OpCode::BuiltIn(BuiltInOpCode::ImulExtended, args) => {
+            on_write(state, args[3]);
+            on_write(state, args[2]);
+        }
+
+        // Read/write access
+        &OpCode::Unary(UnaryOpCode::PrefixIncrement, pointer)
+        | &OpCode::Unary(UnaryOpCode::PrefixDecrement, pointer)
+        | &OpCode::Unary(UnaryOpCode::PostfixIncrement, pointer)
+        | &OpCode::Unary(UnaryOpCode::PostfixDecrement, pointer) => {
+            on_read_write(state, pointer);
+        }
+
+        // Calls could read or write from variables depending on the parameter direction.
+        &OpCode::Call(function_id, ref args) => {
+            let param_directions =
+                ir_meta.get_function(function_id).params.iter().map(|param| param.direction);
+            args.iter().zip(param_directions).for_each(|(&arg, direction)| {
+                // `out` and `inout` parameters are always pointers.
+                match direction {
+                    FunctionParamDirection::Input => {
+                        if ir_meta.get_type(arg.type_id).is_pointer() {
+                            on_read(state, arg);
+                        }
+                    }
+                    FunctionParamDirection::InputOutput => {
+                        on_read_write(state, arg);
+                    }
+                    FunctionParamDirection::Output => {
+                        on_write(state, arg);
+                    }
+                };
+            });
+        }
+        _ => {}
+    };
+}
