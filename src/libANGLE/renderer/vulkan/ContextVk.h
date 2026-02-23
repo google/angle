@@ -917,6 +917,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void restoreAllGraphicsState();
     bool hasActiveRenderPassQuery() const { return mActiveRenderPassQueryBitmask.any(); }
 
+    angle::Result onBindTexImage();
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t

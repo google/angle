@@ -78,6 +78,7 @@ namespace rx
 namespace
 {
 constexpr angle::PackedEnumMap<QueueSubmitReason, const char *> kQueueSubmitReason = {{
+    {QueueSubmitReason::EGLBindTexImage, "Queue submission imminent due to eglBindTexImage()"},
     {QueueSubmitReason::EGLSwapBuffers, "Queue submission imminent due to eglSwapBuffers()"},
     {QueueSubmitReason::EGLWaitClient, "Queue submission imminent due to eglWaitClient()"},
     {QueueSubmitReason::DeferredFlush, "Queue submission imminent due to deferred flushing"},

@@ -1369,6 +1369,16 @@ bool ContextVk::isSingleBufferedWindowCurrent() const
     return (mCurrentWindowSurface != nullptr && mCurrentWindowSurface->isSharedPresentMode());
 }
 
+angle::Result ContextVk::onBindTexImage()
+{
+    // EGL 1.5 spec, 3.6.1: Binding a Surface to a OpenGL ES Texture
+    //     If dpy and surface are the display and surface for the calling thread's
+    //     current context, eglBindTexImage performs an implicit glFlush.
+    //
+    // To ensure the flush doesn't get deferred, explicitly submit any outstanding commands
+    return flushAndSubmitCommands(nullptr, nullptr, QueueSubmitReason::EGLBindTexImage);
+}
+
 bool ContextVk::hasSomethingToFlush() const
 {
     // Don't skip flushes for single-buffered windows with staged updates. It is expected that a

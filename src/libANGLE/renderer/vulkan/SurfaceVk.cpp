@@ -800,11 +800,13 @@ egl::Error OffscreenSurfaceVk::querySurfacePointerANGLE(EGLint /*attribute*/, vo
     return egl::Error(EGL_BAD_CURRENT_SURFACE);
 }
 
-egl::Error OffscreenSurfaceVk::bindTexImage(const gl::Context * /*context*/,
+egl::Error OffscreenSurfaceVk::bindTexImage(const gl::Context *context,
                                             gl::Texture * /*texture*/,
                                             EGLint /*buffer*/)
 {
-    return egl::NoError();
+    ContextVk *contextVk = vk::GetImpl(context);
+    ASSERT(contextVk);
+    return angle::ResultToEGL(contextVk->onBindTexImage());
 }
 
 egl::Error OffscreenSurfaceVk::releaseTexImage(const gl::Context * /*context*/, EGLint /*buffer*/)
@@ -3306,7 +3308,14 @@ egl::Error WindowSurfaceVk::bindTexImage(const gl::Context *context,
                                          gl::Texture *texture,
                                          EGLint buffer)
 {
-    return egl::NoError();
+    // EGL 1.5 spec, 3.6.1: Binding a Surface to a OpenGL ES Texture
+    //     ...
+    //     The texture target, the texture format and the size of the texture components are
+    //     derived from attributes of the specified surface, which must be a pbuffer ...
+    //
+    // It is invalid to call "eglBindTexImage" on a window surface
+    UNREACHABLE();
+    return egl::Error(EGL_BAD_SURFACE);
 }
 
 egl::Error WindowSurfaceVk::releaseTexImage(const gl::Context *context, EGLint buffer)
