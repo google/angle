@@ -24,6 +24,8 @@ use crate::*;
 pub struct Options {
     // Which kind of arguments are unsupported:
     pub struct_containing_samplers: bool,
+    // http://anglebug.com/42265954: The ESSL spec has a bug with images as function arguments. The
+    // recommended workaround is to inline functions that accept image arguments.
     pub image: bool,
     pub atomic_counter: bool,
     pub array_of_array_of_sampler_or_image: bool,

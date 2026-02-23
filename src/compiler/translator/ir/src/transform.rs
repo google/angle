@@ -15,6 +15,22 @@ pub mod remove_unused_framebuffer_fetch;
 pub mod rewrite_pixel_local_storage;
 pub mod sort_uniforms;
 
+// Transformations that only a single code generator uses.
+#[cfg(angle_enable_essl)]
+pub mod essl {}
+#[cfg(angle_enable_glsl)]
+pub mod glsl {}
+#[cfg(any(angle_enable_essl, angle_enable_glsl))]
+pub mod glsl_common {}
+#[cfg(angle_enable_hlsl)]
+pub mod hlsl {}
+#[cfg(angle_enable_msl)]
+pub mod msl {}
+#[cfg(angle_enable_spirv)]
+pub mod spirv {}
+#[cfg(angle_enable_wgsl)]
+pub mod wgsl {}
+
 // Helper macro to run a transformation and automatically validate the IR afterwards
 macro_rules! run {
     ($func:ident $(::$path:ident)*, $ir:expr $(, $params:expr)*) => {

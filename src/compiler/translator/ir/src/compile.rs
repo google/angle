@@ -276,6 +276,60 @@ unsafe fn generate_ast(
     // these two transforms.
     common_post_variable_collection_transforms(&mut ir, options);
 
+    // Generator-specific transformations and codegen.  Note that currently no codegen is actually
+    // implemented from IR, so these would only do transformations and the common IR->AST generator
+    // is used for all.
+    match options.output {
+        OutputLanguage::Null => output::null::generate(&mut ir, options),
+        OutputLanguage::Essl => {
+            #[cfg(angle_enable_essl)]
+            output::essl::generate(&mut ir, options);
+            #[cfg(not(angle_enable_essl))]
+            panic!("Internal error: ESSL generator is not built");
+        }
+        OutputLanguage::GlslCompatibility
+        | OutputLanguage::Glsl130
+        | OutputLanguage::Glsl140
+        | OutputLanguage::Glsl150Core
+        | OutputLanguage::Glsl330Core
+        | OutputLanguage::Glsl400Core
+        | OutputLanguage::Glsl410Core
+        | OutputLanguage::Glsl420Core
+        | OutputLanguage::Glsl430Core
+        | OutputLanguage::Glsl440Core
+        | OutputLanguage::Glsl450Core => {
+            #[cfg(angle_enable_glsl)]
+            output::glsl::generate(&mut ir, options);
+            #[cfg(not(angle_enable_glsl))]
+            panic!("Internal error: GLSL generator is not built");
+        }
+        OutputLanguage::Hlsl3 | OutputLanguage::Hlsl41 => {
+            #[cfg(angle_enable_hlsl)]
+            output::hlsl::generate(&mut ir, options);
+            #[cfg(not(angle_enable_hlsl))]
+            panic!("Internal error: HLSL generator is not built");
+        }
+        OutputLanguage::Spirv => {
+            #[cfg(angle_enable_spirv)]
+            output::spirv::generate(&mut ir, options);
+            #[cfg(not(angle_enable_spirv))]
+            panic!("Internal error: SPIR-V generator is not built");
+        }
+        OutputLanguage::Msl => {
+            #[cfg(angle_enable_msl)]
+            output::msl::generate(&mut ir, options);
+            #[cfg(not(angle_enable_msl))]
+            panic!("Internal error: MSL generator is not built");
+        }
+        OutputLanguage::Wgsl => {
+            #[cfg(angle_enable_wgsl)]
+            output::wgsl::generate(&mut ir, options);
+            #[cfg(not(angle_enable_wgsl))]
+            panic!("Internal error: WGSL generator is not built");
+        }
+        _ => panic!("Internal error: Invalid generator"),
+    };
+
     // Passes required before AST can be generated:
     transform::run!(dealias, &mut ir);
     let uncached_registers_with_side_effect = transform::run!(astify, &mut ir);
@@ -390,31 +444,6 @@ fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
             options.limits.min_point_size,
             options.limits.max_point_size
         );
-    }
-
-    // Note: this is a per-generator transformation, not really "common", so it should be moved to
-    // the right section when the IR part of the compilation actually starts to deviate per
-    // generator.  For now, this is run here to test the transformation.
-    {
-        let transform_options = transform::monomorphize_unsupported_functions::Options {
-            // Samplers in structs are unsupported by most generators.
-            // TODO(http://anglebug.com/349994211): The HLSL generator should also take advantage
-            // of this transformation, instead of dealing with samplers-in-structs independently.
-            struct_containing_samplers: matches!(
-                options.output,
-                OutputLanguage::Spirv | OutputLanguage::Msl | OutputLanguage::Wgsl
-            ),
-            // http://anglebug.com/42265954: The ESSL spec has a bug with images as function
-            // arguments. The recommended workaround is to inline functions that accept image
-            // arguments.
-            image: options.shader_version >= 310,
-            atomic_counter: options.shader_version >= 310
-                && matches!(options.output, OutputLanguage::Spirv),
-            array_of_array_of_sampler_or_image: options.shader_version >= 310
-                && matches!(options.output, OutputLanguage::Spirv),
-            pixel_local_storage: false,
-        };
-        transform::run!(monomorphize_unsupported_functions, ir, &transform_options);
     }
 }
 

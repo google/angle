@@ -1508,3 +1508,17 @@ impl ast::Target for Generator {
         .unwrap();
     }
 }
+
+pub fn generate(ir: &mut IR, options: &compile::Options) {
+    {
+        let transform_options = transform::monomorphize_unsupported_functions::Options {
+            struct_containing_samplers: false,
+            image: options.shader_version >= 310,
+            atomic_counter: false,
+            array_of_array_of_sampler_or_image: false,
+            // Already done by common code.
+            pixel_local_storage: false,
+        };
+        transform::run!(monomorphize_unsupported_functions, ir, &transform_options);
+    }
+}
