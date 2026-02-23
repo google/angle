@@ -416,3 +416,62 @@ pub fn is_precision_applicable_to_type(ir_meta: &IRMeta, type_id: TypeId) -> boo
     }
     matches!(base_type_id, TYPE_ID_FLOAT | TYPE_ID_INT | TYPE_ID_UINT)
 }
+
+// Helper to walk back the instructions starting from an id, in search of some origin.
+//
+// For example, if a transformation encounters `OpLoad id` and wants to find out if `id`
+// corresponds to a uniform, it has to look into the `id`.  If it's a variable, it can check its
+// properties directly, but if it's a register it has to find out what instruction produces it.
+// For example, it could be `AccessArrayElement base index`, in which case it has to recursively
+// repeat this process until it arrives at the base variable.
+//
+// Also noteworthy is that this helper simplifies transformation by letting them generally be
+// oblivious to `Alias` instructions as it automatically skips over them.
+//
+// The callbacks must return `None` if recursion needs to stop, or `Some(id)` to continue
+// exploring.
+pub fn trace_back<State, InspectConstant, InspectVariable, InspectRegister>(
+    ir_meta: &IRMeta,
+    state: &mut State,
+    id: Id,
+    inspect_constant: &mut InspectConstant,
+    inspect_variable: &mut InspectVariable,
+    inspect_register: &mut InspectRegister,
+) where
+    InspectConstant: FnMut(&mut State, ConstantId) -> Option<Id>,
+    InspectVariable: FnMut(&mut State, VariableId) -> Option<Id>,
+    InspectRegister: FnMut(&mut State, RegisterId, &OpCode) -> Option<Id>,
+{
+    let mut id = id;
+    loop {
+        match id {
+            Id::Constant(constant_id) => {
+                if let Some(to_inspect) = inspect_constant(state, constant_id) {
+                    id = to_inspect;
+                } else {
+                    break;
+                }
+            }
+            Id::Variable(variable_id) => {
+                if let Some(to_inspect) = inspect_variable(state, variable_id) {
+                    id = to_inspect;
+                } else {
+                    break;
+                }
+            }
+            Id::Register(register_id) => {
+                let instruction = ir_meta.get_instruction(register_id);
+                // Automatically skip over `Alias` instructions.
+                if let OpCode::Alias(alias_id) = instruction.op {
+                    id = alias_id.id;
+                } else if let Some(to_inspect) =
+                    inspect_register(state, register_id, &instruction.op)
+                {
+                    id = to_inspect;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+}
