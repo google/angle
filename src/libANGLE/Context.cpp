@@ -3876,6 +3876,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.parallelShaderCompileKHR = false;
         supportedExtensions.texture3DOES             = false;
         supportedExtensions.clipDistanceAPPLE        = false;
+        supportedExtensions.disjointTimerQueryEXT    = false;
     }
 
     if (getClientVersion() < ES_3_0)
