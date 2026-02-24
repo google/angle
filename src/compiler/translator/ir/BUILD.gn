@@ -55,6 +55,14 @@ if (angle_ir) {
       "src/output/legacy.rs",
     ]
 
+    # dcheck_always_on automatically sets -Cdebug-assertions, but ANGLE builds
+    # could technically set that to false but enable asserts via
+    # angle_assert_always_on.
+    rustflags = []
+    if (angle_assert_always_on) {
+      rustflags += [ "-Cdebug-assertions" ]
+    }
+
     configs += [
       "$angle_root:internal_config",
       ":gen_src_include",

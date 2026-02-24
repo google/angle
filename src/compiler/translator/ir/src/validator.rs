@@ -92,7 +92,7 @@ impl<'a> Validator<'a> {
     // Validator constructor
     fn new(ir: &'a IR) -> Validator<'a> {
         Validator {
-            ir: ir,
+            ir,
             max_type_count: ir.meta.all_types().len() as u32,
             max_variable_count: ir.meta.all_variables().len() as u32,
             max_constant_count: ir.meta.all_constants().len() as u32,
@@ -193,13 +193,13 @@ impl<'a> Validator<'a> {
             ));
         }
         // Check initializer
-        if let Some(valid_initializer) = variable.initializer {
-            if valid_initializer.id >= self.max_constant_count {
-                self.on_error(format_args!(
-                    "Variable id {variable_id} has invalid constant initializer {}",
-                    valid_initializer.id
-                ));
-            }
+        if let Some(valid_initializer) = variable.initializer
+            && valid_initializer.id >= self.max_constant_count
+        {
+            self.on_error(format_args!(
+                "Variable id {variable_id} has invalid constant initializer {}",
+                valid_initializer.id
+            ));
         }
     }
 
@@ -518,7 +518,7 @@ impl<'a> Validator<'a> {
     // Helper Function to print the invalid IR and then panic!
     fn on_error(&self, validation_error_msg: fmt::Arguments) {
         println!("Internal error: Invalid ANGLE IR! {}", validation_error_msg);
-        debug::dump(&self.ir);
+        debug::dump(self.ir);
         panic!();
     }
 }

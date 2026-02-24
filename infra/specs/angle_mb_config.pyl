@@ -126,7 +126,7 @@
       'gn_args': 'is_debug=true',
     },
     'ir': {
-      'gn_args': 'angle_ir=true',
+      'gn_args': 'angle_ir=true enable_rust_clippy = true',
     },
     'lsan': {
       'gn_args': 'is_lsan=true',
