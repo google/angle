@@ -643,9 +643,9 @@ def collect_cpu_inst(done_event, test_fixedtime, results):
         # Collect cpu instructions of "com.android.angle.test:test_process"
         run_adb_shell_command(f'''simpleperf record \
             -o {tmp_data_file} \
-            -e instructions \
+            -e instructions:u \
             -f 4000 \
-            -p $(pidof com.android.angle.test:test_process)''')
+            --app com.android.angle.test''')
 
         # Get the start time of simple perf to filter simpleperf data file
         start_ns = run_adb_shell_command(f'''simpleperf report-sample \
