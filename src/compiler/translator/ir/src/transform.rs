@@ -13,3 +13,12 @@ pub mod prune_unused_variables;
 pub mod remove_unused_framebuffer_fetch;
 pub mod rewrite_pixel_local_storage;
 pub mod sort_uniforms;
+
+// Helper macro to run a transformation and automatically validate the IR afterwards
+macro_rules! run {
+    ($func:ident $(::$path:ident)*, $ir:expr $(, $params:expr)*) => {
+        $crate::transform::$func$(::$path)*::run($ir $(, $params)*);
+        $crate::ir::validate!($ir);
+    };
+}
+pub(crate) use run;

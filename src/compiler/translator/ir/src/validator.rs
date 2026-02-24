@@ -53,24 +53,11 @@
 //     block being merge and the other discard/return/break/continue, but no such code can be
 //     generated right now).
 
-#[macro_export]
-macro_rules! validate_in_debug_build_only {
-    ($arg:expr) => {
-        #[cfg(debug_assertions)]
-        $crate::validator::validate($arg);
-    };
-}
-
-#[cfg(debug_assertions)]
 use crate::debug;
-#[cfg(debug_assertions)]
 use crate::ir::*;
-#[cfg(debug_assertions)]
 use crate::traverser;
-#[cfg(debug_assertions)]
 use std::fmt;
 
-#[cfg(debug_assertions)]
 pub fn validate(ir: &IR) {
     let validator = Validator::new(ir);
     validator.validate();
@@ -78,7 +65,6 @@ pub fn validate(ir: &IR) {
 
 // Validator takes a reference of IR object, and its' lifetime is the same as the lifetime of IR
 // object
-#[cfg(debug_assertions)]
 struct Validator<'a> {
     ir: &'a IR,
     max_type_count: u32,
@@ -87,7 +73,6 @@ struct Validator<'a> {
     max_register_count: u32,
 }
 
-#[cfg(debug_assertions)]
 impl<'a> Validator<'a> {
     // Validator constructor
     fn new(ir: &'a IR) -> Validator<'a> {

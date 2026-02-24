@@ -297,7 +297,8 @@ fn transform_plane_variable(
             Some(transform_plane_variable_to_inout(state, variable_id, format, options))
         }
         _ => panic!(
-            "Internal error: Encountered pixel local storage plane, but that feature is not supported"
+            "Internal error: Encountered pixel local storage plane, but that feature is not \
+             supported"
         ),
     };
 
@@ -833,7 +834,8 @@ fn get_loaded_pls_variable(ir_meta: &IRMeta, register_id: RegisterId) -> TypedId
         variable
     } else {
         panic!(
-            "Internal error: Expected pixel local storage built-in's first parameter to be a plain variable"
+            "Internal error: Expected pixel local storage built-in's first parameter to be a \
+             plain variable"
         );
     }
 }
@@ -965,7 +967,8 @@ fn add_pre_and_post_pls_code_for_image(
             }
             PixelLocalStorageSync::Automatic => {
                 panic!(
-                    "Internal error: pixel local storage implemented by storage images cannot be automatically coherent"
+                    "Internal error: pixel local storage implemented by storage images cannot be \
+                     automatically coherent"
                 );
             }
             _ => {

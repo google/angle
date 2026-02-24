@@ -228,7 +228,8 @@ fn get_access_chain(ir_meta: &IRMeta, id: TypedId) -> Vec<Id> {
                     }
                     _ => {
                         panic!(
-                            "Internal error: Only opaque uniforms should cause function to monomorphize"
+                            "Internal error: Only opaque uniforms should cause function to \
+                             monomorphize"
                         );
                     }
                 };

@@ -33,8 +33,11 @@ angle_translator_ir_sources = [
   "src/transform/sort_uniforms.rs",
   "src/traverser.rs",
   "src/util.rs",
-  "src/validator.rs",
 ]
+
+if (angle_assert_always_on) {
+  angle_translator_ir_sources += [ "src/validator.rs" ]
+}
 
 if (angle_ir) {
   config("gen_src_include") {

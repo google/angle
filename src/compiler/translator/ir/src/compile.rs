@@ -276,8 +276,8 @@ unsafe fn generate_ast(
     common_post_variable_collection_transforms(&mut ir, options);
 
     // Passes required before AST can be generated:
-    transform::dealias::run(&mut ir);
-    transform::astify::run(&mut ir);
+    transform::run!(dealias, &mut ir);
+    transform::run!(astify, &mut ir);
 
     let mut ast_gen = output::legacy::Generator::new(compiler, options);
     let mut generator = ast::Generator::new(*ir);
@@ -294,7 +294,7 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
         && (options.extensions.EXT_shader_framebuffer_fetch
             || options.extensions.EXT_shader_framebuffer_fetch_non_coherent)
     {
-        transform::remove_unused_framebuffer_fetch::run(ir);
+        transform::run!(remove_unused_framebuffer_fetch, ir);
     }
 
     // For now, rewrite pixel local storage before collecting variables or any operations on images.
@@ -313,7 +313,7 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
             array_of_array_of_sampler_or_image: false,
             pixel_local_storage: true,
         };
-        transform::monomorphize_unsupported_functions::run(ir, &transform_options);
+        transform::run!(monomorphize_unsupported_functions, ir, &transform_options);
 
         let transform_options = transform::rewrite_pixel_local_storage::Options {
             pls: options.pls_options,
@@ -325,7 +325,7 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
             pass_highp_to_pack_unorm_snorm_built_ins: options
                 .pass_highp_to_pack_unorm_snorm_built_ins,
         };
-        transform::rewrite_pixel_local_storage::run(ir, &transform_options);
+        transform::run!(rewrite_pixel_local_storage, ir, &transform_options);
     }
 
     if options.emulate_instanced_multiview
@@ -335,7 +335,7 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
             shader_type: ir.meta.get_shader_type(),
             select_viewport_layer: options.select_viewport_layer_in_emulated_multiview,
         };
-        transform::emulate_instanced_multiview::run(ir, &transform_options);
+        transform::run!(emulate_instanced_multiview, ir, &transform_options);
     }
 
     let emulate_draw_id = options.emulate_draw_id && options.extensions.ANGLE_multi_draw;
@@ -347,17 +347,17 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
             emulate_base_vertex_instance,
             add_base_vertex_to_vertex_id: options.add_base_vertex_to_vertex_id,
         };
-        transform::emulate_multi_draw::run(ir, &transform_options);
+        transform::run!(emulate_multi_draw, ir, &transform_options);
     }
 
     // Sort uniforms based on their precisions and data types for better packing.
-    transform::sort_uniforms::run(ir);
+    transform::run!(sort_uniforms, ir);
 }
 
 fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
     // Basic dead-code-elimination to avoid outputting variables, constants and types that are not
     // used by the shader.
-    transform::prune_unused_variables::run(ir);
+    transform::run!(prune_unused_variables, ir);
 
     // Run after unused variables are removed, initialize local and output variables if necessary.
     if options.initialize_uninitialized_variables {
@@ -367,14 +367,15 @@ fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
             initializer_allowed_on_non_constant_global_variables: options
                 .initializer_allowed_on_non_constant_global_variables,
         };
-        transform::initialize_uninitialized_variables::run(ir, &transform_options);
+        transform::run!(initialize_uninitialized_variables, ir, &transform_options);
     }
 
     if options.clamp_point_size {
-        transform::clamp_point_size::run(
+        transform::run!(
+            clamp_point_size,
             ir,
             options.limits.min_point_size,
-            options.limits.max_point_size,
+            options.limits.max_point_size
         );
     }
 
@@ -400,7 +401,7 @@ fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
                 && matches!(options.output, OutputLanguage::Spirv),
             pixel_local_storage: false,
         };
-        transform::monomorphize_unsupported_functions::run(ir, &transform_options);
+        transform::run!(monomorphize_unsupported_functions, ir, &transform_options);
     }
 }
 

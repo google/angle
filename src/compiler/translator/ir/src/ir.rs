@@ -3176,3 +3176,12 @@ impl IR {
         main_entry.append_code(block);
     }
 }
+
+// Helper macro to run validation on the IR
+macro_rules! validate {
+    ($ir:expr) => {
+        #[cfg(debug_assertions)]
+        $crate::validator::validate($ir);
+    };
+}
+pub(crate) use validate;

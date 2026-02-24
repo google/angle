@@ -2095,11 +2095,24 @@ mod const_fold {
                     let rhs = ir_meta.get_constant(rhs_component_id).value.clone();
 
                     match lhs {
-                        ConstantValue::Float(lhs) => ir_meta.get_constant_bool(float_op(lhs, rhs.get_float())),
-                        ConstantValue::Int(lhs) => ir_meta.get_constant_bool(int_op(lhs, rhs.get_int())),
-                        ConstantValue::Uint(lhs) => ir_meta.get_constant_bool(uint_op(lhs, rhs.get_uint())),
-                        ConstantValue::Bool(lhs) => ir_meta.get_constant_bool(bool_op(lhs, rhs.get_bool())),
-                        _ => { panic!("Internal error: Comparison built-ins only valid on float, [u]int and bool values"); }
+                        ConstantValue::Float(lhs) => {
+                            ir_meta.get_constant_bool(float_op(lhs, rhs.get_float()))
+                        }
+                        ConstantValue::Int(lhs) => {
+                            ir_meta.get_constant_bool(int_op(lhs, rhs.get_int()))
+                        }
+                        ConstantValue::Uint(lhs) => {
+                            ir_meta.get_constant_bool(uint_op(lhs, rhs.get_uint()))
+                        }
+                        ConstantValue::Bool(lhs) => {
+                            ir_meta.get_constant_bool(bool_op(lhs, rhs.get_bool()))
+                        }
+                        _ => {
+                            panic!(
+                                "Internal error: Comparison built-ins only valid on float, [u]int \
+                                 and bool values"
+                            );
+                        }
                     }
                 })
                 .collect();
@@ -4115,7 +4128,8 @@ pub mod precision {
             | OpCode::LoopIf(_)
             | OpCode::Switch(..)
             | OpCode::Store(..) => panic!(
-                "Internal error: Unexpected void instruction when propagating precision to constants"
+                "Internal error: Unexpected void instruction when propagating precision to \
+                 constants"
             ),
         }
     }
