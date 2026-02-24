@@ -91,6 +91,14 @@
             ]
         },
         {
+            "name": "use_large_size_for_dynamic_buffers",
+            "category": "Workarounds",
+            "description": [
+                "Increase the size of the dynamic buffers used as streaming vertex buffers to allow more suballocation and reduce the allocation handle count."
+            ],
+            "issue": "http://issuetracker.google.com/485671640"
+        },
+        {
             "name": "supports_renderpass2",
             "category": "Features",
             "description": [

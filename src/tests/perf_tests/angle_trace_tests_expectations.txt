@@ -6,7 +6,6 @@
 
 42266611 SWIFTSHADER : gangstar_vegas = SKIP
 42266679 SWIFTSHADER : street_fighter_iv_ce = SKIP
-485671640 SWIFTSHADER : passmark_simple_multiview = SKIP
 42266627 WIN NATIVE : respawnables = SKIP
 42266627 LINUX NATIVE : respawnables = SKIP
 42266627 PIXEL4ORXL NATIVE : respawnables = SKIP
@@ -70,7 +69,6 @@
 42266157 PIXEL4ORXL VULKAN : eve_echoes = SKIP
 378464990 QUALCOMM VULKAN : genshin_impact = SKIP
 404436749 PIXEL4ORXL VULKAN : aliexpress = SKIP
-485671640 PIXEL4ORXL VULKAN : passmark_simple_multiview = SKIP
 
 449155595 ANDROID PIXEL10 NATIVE : infinity_ops = SKIP
 449155595 ANDROID PIXEL10 NATIVE : kentucky_route_zero = SKIP
@@ -198,8 +196,6 @@
 413358136 WIN INTEL VULKAN : black_beacon = SKIP
 445419190 WIN INTEL VULKAN : lineage_2m = SKIP
 474664078 WIN INTEL VULKAN : pokemon_go_combat = SKIP
-
-485671640 WIN NVIDIA : passmark_simple_multiview = SKIP
 
 461532426 NVIDIA NATIVE : ace_racer = SKIP
 42264147 NVIDIA NATIVE : car_parking_multiplayer = SKIP

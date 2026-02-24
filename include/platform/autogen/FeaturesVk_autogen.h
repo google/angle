@@ -86,6 +86,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo useLargeSizeForDynamicBuffers = {
+        "useLargeSizeForDynamicBuffers",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo supportsRenderpass2 = {
         "supportsRenderpass2",
         FeatureCategory::VulkanFeatures,

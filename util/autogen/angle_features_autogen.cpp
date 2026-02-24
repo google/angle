@@ -478,6 +478,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UseFrontFaceDynamicState, "useFrontFaceDynamicState"},
     {Feature::UseIntermediateTextureForGenerateMipmap, "useIntermediateTextureForGenerateMipmap"},
     {Feature::UseIr, "useIr"},
+    {Feature::UseLargeSizeForDynamicBuffers, "useLargeSizeForDynamicBuffers"},
     {Feature::UseMultipleDescriptorsForExternalFormats, "useMultipleDescriptorsForExternalFormats"},
     {Feature::UseNonZeroStencilWriteMaskStaticState, "useNonZeroStencilWriteMaskStaticState"},
     {Feature::UsePrimitiveRestartEnableDynamicState, "usePrimitiveRestartEnableDynamicState"},

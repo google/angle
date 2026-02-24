@@ -128,7 +128,8 @@ constexpr angle::PackedEnumMap<gl::PrimitiveMode, gl::PrimitiveMode> kPrimitiveT
 }};
 
 constexpr VkBufferUsageFlags kVertexBufferUsage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-constexpr size_t kDynamicVertexDataSize         = 16 * 1024;
+constexpr size_t kDynamicVertexDataSizeLarge    = 128 * 1024;
+constexpr size_t kDynamicVertexDataSizeSmall    = 16 * 1024;
 
 bool CanMultiDrawIndirectUseCmd(ContextVk *contextVk,
                                 VertexArrayVk *vertexArray,
@@ -1299,10 +1300,14 @@ angle::Result ContextVk::initialize(const angle::ImageLoadContext &imageLoadCont
                                         pipelineRobustness(), pipelineProtectedAccess());
 
     // Initialize current value/default attribute buffers.
+    const size_t vertexBufferInitSize =
+        (getFeatures().useLargeSizeForDynamicBuffers.enabled && mState.isGLES1())
+            ? kDynamicVertexDataSizeLarge
+            : kDynamicVertexDataSizeSmall;
     for (vk::DynamicBuffer &buffer : mStreamedVertexBuffers)
     {
-        buffer.init(mRenderer, kVertexBufferUsage, vk::kVertexBufferAlignment,
-                    kDynamicVertexDataSize, true);
+        buffer.init(mRenderer, kVertexBufferUsage, vk::kVertexBufferAlignment, vertexBufferInitSize,
+                    true);
     }
 
     // Assign initial command buffers from queue

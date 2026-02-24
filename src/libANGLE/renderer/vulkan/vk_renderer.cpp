@@ -153,9 +153,14 @@ constexpr uint32_t kMinDefaultUniformBufferSize = 16 * 1024u;
 // This size is picked based on experience. Majority of devices support 64K
 // maxUniformBufferSize. Since this is per context buffer, a bigger buffer size reduces the
 // number of descriptor set allocations, so we picked the maxUniformBufferSize that most
-// devices supports. It may needs further tuning based on specific device needs and balance
+// devices supports. It may need further tuning based on specific device needs and balance
 // between performance and memory usage.
 constexpr uint32_t kPreferredDefaultUniformBufferSize = 64 * 1024u;
+
+// The limit below is used to avoid allocating too many device memory handles. If the device has an
+// allocation count limit less than or equal to this threshold, the initial size for the dynamic
+// buffers will be larger.
+constexpr size_t kAllocationCountThresholdForDynamicVertexDataSize = 4096;
 
 // Maximum size to use VMA image suballocation. Any allocation greater than or equal to this
 // value will use a dedicated VkDeviceMemory.
@@ -6060,6 +6065,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // Use VMA for image suballocation.
     ANGLE_FEATURE_CONDITION(&mFeatures, useVmaForImageSuballocation, true);
+
+    // Use larger size for DynamicBuffer objects used as streaming vertex buffers (currently limited
+    // to GLES1).
+    ANGLE_FEATURE_CONDITION(&mFeatures, useLargeSizeForDynamicBuffers,
+                            mPhysicalDeviceProperties.limits.maxMemoryAllocationCount <=
+                                kAllocationCountThresholdForDynamicVertexDataSize);
 
     // Some platforms perform better using BGR565 than RGB565.
     bool isBGR565Renderable = hasImageFormatFeatureBits(angle::FormatID::B5G6R5_UNORM,

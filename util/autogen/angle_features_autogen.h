@@ -478,6 +478,7 @@ enum class Feature
     UseFrontFaceDynamicState,
     UseIntermediateTextureForGenerateMipmap,
     UseIr,
+    UseLargeSizeForDynamicBuffers,
     UseMultipleDescriptorsForExternalFormats,
     UseNonZeroStencilWriteMaskStaticState,
     UsePrimitiveRestartEnableDynamicState,
