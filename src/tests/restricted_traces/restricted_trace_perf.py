@@ -809,6 +809,25 @@ def sleep_until_battery_level(min_battery_level):
 
 
 def drop_high_low_and_average(values):
+    # Get rid of any unique outliers, requires high loop count (suggest 10)
+    if len(values) > 5:
+        values.remove(min(values))
+        values.remove(max(values))
+
+        # Drop values that are more than 50% off the fastest time.
+        # Check against zero in case negative (error code) values come through
+        values.sort()
+        original_values = list(values)  # Keep a copy of the original values
+        if values[0] >= 0:
+            fastest_time = values[0]
+            threshold = fastest_time * 1.5
+            values = [v for v in values if v <= threshold]
+
+        if len(original_values) != len(values):
+            logging.info('Dropped unstable values. Original: %s, After: %s', original_values,
+                         values)
+
+    # Now drop high and low
     if len(values) >= 3:
         values.remove(min(values))
         values.remove(max(values))
