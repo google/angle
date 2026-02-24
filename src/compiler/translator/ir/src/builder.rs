@@ -3604,6 +3604,8 @@ fn builder_finish(mut builder: Box<BuilderWrapper>) -> Box<IR> {
     let mut ir = builder.builder.take_ir();
     transform::propagate_precision::run(&mut ir);
 
+    validate_in_debug_build_only!(&ir);
+
     Box::new(ir)
 }
 

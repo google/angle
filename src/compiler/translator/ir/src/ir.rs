@@ -2403,6 +2403,9 @@ impl IRMeta {
     pub fn all_global_variables(&self) -> &Vec<VariableId> {
         &self.global_variables
     }
+    pub fn total_register_count(&self) -> u32 {
+        self.instructions.len() as u32
+    }
     pub fn prune_global_variables<Keep>(&mut self, keep: Keep)
     where
         Keep: Fn(VariableId) -> bool,
@@ -2509,6 +2512,9 @@ impl IRMeta {
     }
     pub fn on_per_vertex_out_redeclaration(&mut self) {
         self.per_vertex_out_is_redeclared = true;
+    }
+    pub fn get_variables_pending_zero_initialization(&self) -> &HashSet<VariableId> {
+        &self.variables_pending_zero_initialization
     }
 
     fn add_item_and_get_id<T>(items: &mut Vec<T>, new_item: T) -> u32 {
