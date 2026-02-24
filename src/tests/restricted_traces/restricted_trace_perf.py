@@ -842,8 +842,11 @@ def safe_divide(x, y):
 def safe_cast_float(x):
     if x == '':
         return 0
-    return float(x)
-
+    try:
+        float_value = float(x)
+        return float_value
+    except ValueError:  # e.g. 'crashed'
+        return -1
 
 def safe_cast_int(x):
     if x == '':
@@ -1194,11 +1197,7 @@ def run_traces(args):
 
                 if len(wall_times[test]) == 0:
                     wall_times[test] = defaultdict(list)
-                try:
-                    wt = safe_cast_float(wall_time)
-                except ValueError:  # e.g. 'crashed'
-                    wt = -1
-                wall_times[test][renderer].append(wt)
+                wall_times[test][renderer].append(safe_cast_float(wall_time))
 
                 if len(gpu_times[test]) == 0:
                     gpu_times[test] = defaultdict(list)
