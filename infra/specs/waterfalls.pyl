@@ -115,34 +115,6 @@
           'isolated_scripts': 'isolated_scripts_group_perf',
         },
       },
-      'linux-exp-intel': {
-        'os_type': 'linux',
-        'mixins': [
-          'linux_intel_uhd_630_experimental',
-        ],
-        'test_suites': {
-        },
-      },
-      'linux-exp-nvidia': {
-        'os_type': 'linux',
-        'mixins': [
-          'linux_nvidia_gtx_1660_experimental',
-        ],
-        'test_suites': {
-        },
-      },
-      'linux-exp-swiftshader': {
-        'os_type': 'linux',
-        'mixins': [
-          'gpu-swarming-pool',
-          'no_gpu',
-          'linux-jammy',
-          'timeout_15m',
-          'x86-64',
-        ],
-        'test_suites': {
-        },
-      },
       'linux-exp-swiftshader-asan': {
         'os_type': 'linux',
         'mixins': [

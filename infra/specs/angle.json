@@ -5291,9 +5291,6 @@
       }
     ]
   },
-  "linux-exp-intel": {},
-  "linux-exp-nvidia": {},
-  "linux-exp-swiftshader": {},
   "linux-exp-swiftshader-asan": {},
   "linux-exp-swiftshader-tsan": {},
   "linux-intel-perf": {

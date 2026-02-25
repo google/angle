@@ -15,7 +15,6 @@
     'remove_from': [
       # Occasionally hangs the machine http://anglebug.com/368553850
       'angle-linux-x64-nvidia-gtx1660-exp-rel',
-      'linux-exp-nvidia',
     ],
   },
   'angle_deqp_gles2_d3d11_tests': {
