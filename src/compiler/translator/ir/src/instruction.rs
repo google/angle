@@ -4598,7 +4598,7 @@ pub fn construct(ir_meta: &mut IRMeta, type_id: TypeId, args: Vec<TypedId>) -> R
     if all_constants {
         let folded = const_fold::construct(
             ir_meta,
-            &mut args.iter().map(|id| id.id.get_constant().unwrap()),
+            &mut args.iter().map(|id| id.id.get_constant()),
             type_id,
         );
         make_constant(folded, type_id, promoted_precision)
@@ -5194,7 +5194,7 @@ pub fn built_in(ir_meta: &mut IRMeta, op: BuiltInOpCode, operands: Vec<TypedId>)
         // Note: No built-in that returns `void` can possibly take all-constant arguments.
         debug_assert!(result_type_id != TYPE_ID_VOID);
 
-        let constants = operands.iter().map(|id| id.id.get_constant().unwrap()).collect();
+        let constants = operands.iter().map(|id| id.id.get_constant()).collect();
         let folded = const_fold::built_in(ir_meta, op, constants, result_type_id);
         make_constant(folded, result_type_id, precision.unwrap())
     } else {
@@ -5223,7 +5223,7 @@ pub fn built_in_texture(
     let result_type_id = promote::built_in_texture(ir_meta, &op, sampler.type_id);
 
     // Constant folding is impossible, as the sampler cannot be a constant.
-    debug_assert!(sampler.id.get_constant().is_none());
+    debug_assert!(!sampler.id.is_constant());
 
     // Make an instruction
     let precision = precision::built_in_texture(&op, sampler.precision);

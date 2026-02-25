@@ -289,7 +289,8 @@ impl CFGBuilder {
 
         // If the condition of the if is a constant, it can be constant-folded.
         let mut if_block = self.interm_blocks.pop().unwrap();
-        let if_condition = if_block.block.get_terminating_op().get_if_condition().id.get_constant();
+        let if_condition =
+            if_block.block.get_terminating_op().get_if_condition().id.get_if_constant();
 
         match if_condition {
             Some(condition) => {
@@ -449,7 +450,7 @@ impl CFGBuilder {
             .get_merge_chain_terminating_op()
             .get_loop_condition()
             .id
-            .get_constant();
+            .get_if_constant();
 
         match loop_condition {
             Some(condition) if condition == CONSTANT_ID_FALSE => {
@@ -586,7 +587,7 @@ impl CFGBuilder {
     }
 
     fn begin_case(&mut self, value: TypedId) {
-        self.begin_case_impl(value.id.get_constant());
+        self.begin_case_impl(value.id.get_if_constant());
     }
 
     fn begin_default(&mut self) {
@@ -606,7 +607,7 @@ impl CFGBuilder {
 
         // If the expression is constant, but no matching cases (or default) exists, the switch is
         // a no-op.
-        if let Some(switch_expr) = switch_expr.id.get_constant() {
+        if let Some(switch_expr) = switch_expr.id.get_if_constant() {
             // First check if there's an exact match
             let any_exact = switch_cases
                 .iter()
@@ -1471,7 +1472,7 @@ impl Builder {
     // Called when a constant expression used as an array size is evaluated.  The result is found
     // on the stack, but is not used by an instruction; it's returned to the parser instead.
     pub fn pop_array_size(&mut self) -> u32 {
-        let size_id = self.interm_ids.pop().unwrap().id.get_constant().unwrap();
+        let size_id = self.interm_ids.pop().unwrap().id.get_constant();
         // Use get_index() because the expression may either be int or uint, both of which are
         // acceptable; get_index() returns a u32 for either case.
         self.ir.meta.get_constant(size_id).value.get_index()

@@ -126,7 +126,7 @@ pub const TEMP_STRUCT_FIELD_PREFIX: &str = "m";
 pub const ANGLE_SYMBOL_PREFIX: &str = "ANGLE";
 
 // An ID that can be referred to by an operand of an instruction.
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub enum Id {
     Register(RegisterId),
@@ -164,10 +164,19 @@ impl Id {
         }
     }
 
-    pub fn get_constant(&self) -> Option<ConstantId> {
+    pub fn get_if_constant(&self) -> Option<ConstantId> {
         match self {
             &Id::Constant(id) => Some(id),
             _ => None,
+        }
+    }
+
+    pub fn get_constant(&self) -> ConstantId {
+        match self {
+            &Id::Constant(id) => id,
+            _ => {
+                panic!("Internal error: unexpected non-constant id");
+            }
         }
     }
 
@@ -1021,6 +1030,9 @@ impl Block {
         debug_assert!(self.loop_condition.is_none());
         self.loop_condition = Some(Box::new(block));
     }
+    pub fn get_loop_condition_block(&self) -> &Block {
+        self.loop_condition.as_ref().unwrap()
+    }
 
     pub fn set_loop_body_block(&mut self, block: Block) {
         self.set_sub_block1(block);
@@ -1028,6 +1040,12 @@ impl Block {
 
     pub fn set_loop_continue_block(&mut self, block: Block) {
         self.set_sub_block2(block);
+    }
+    pub fn has_loop_continue_block(&self) -> bool {
+        self.block2.is_some()
+    }
+    pub fn get_loop_continue_block(&self) -> &Block {
+        self.block2.as_ref().unwrap()
     }
 
     pub fn set_switch_case_blocks(&mut self, blocks: Vec<Block>) {
