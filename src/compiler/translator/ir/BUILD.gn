@@ -36,7 +36,7 @@ angle_translator_ir_sources = [
   "src/util.rs",
 ]
 
-if (angle_assert_always_on) {
+if (angle_debug_layers_enabled) {
   angle_translator_ir_sources += [ "src/validator.rs" ]
 }
 
