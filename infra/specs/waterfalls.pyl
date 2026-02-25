@@ -454,6 +454,14 @@
         'test_suites': {
         },
       },
+      'angle-linux-x64-intel-uhd630-exp-rel': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_intel_uhd_630_experimental',
+        ],
+        'test_suites': {
+        },
+      },
       'angle-linux-x64-intel-uhd630-rel': {
         'os_type': 'linux',
         'mixins': [
@@ -464,6 +472,14 @@
           'isolated_scripts': 'isolated_scripts_group_common',
         },
       },
+      'angle-linux-x64-nvidia-gtx1660-exp-rel': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_nvidia_gtx_1660_experimental',
+        ],
+        'test_suites': {
+        },
+      },
       'angle-linux-x64-nvidia-gtx1660-rel': {
         'os_type': 'linux',
         'mixins': [
@@ -472,6 +488,18 @@
         'test_suites': {
           'gtest_tests': 'linux_nvidia_gtests',
           'isolated_scripts': 'isolated_scripts_group_common',
+        },
+      },
+      'angle-linux-x64-sws-exp-rel': {
+        'os_type': 'linux',
+        'mixins': [
+          'gpu-swarming-pool',
+          'no_gpu',
+          'linux-jammy',
+          'timeout_15m',
+          'x86-64',
+        ],
+        'test_suites': {
         },
       },
       'angle-linux-x64-sws-rel': {
