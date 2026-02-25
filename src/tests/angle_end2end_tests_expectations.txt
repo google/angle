@@ -2668,6 +2668,8 @@
 // When the IR prunes cases that do not match the constant switch expression, and there is only the `default` case left,
 // the d3d compiler miscompiles the shader it seems.
 349994211 IR D3D11 : GLSLTest_ES3.SwitchWithConstantExpr/* = SKIP
+/// IR's use of `while` and `if (!condition) break` instead of `for(..)` makes the HLSL generator think the loops are discontinuous, and as a result it drops the derivative built-ins!
+349994211 IR D3D11 : GLSLTest_ES3.DerivativeInLoopWithUniformBranch/* = SKIP
 // The workaround in b/274859104 is not applied because the IR does not generate non-constant initializers
 274859104 IR PIXEL6 VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = SKIP
 // Turning short-circuit && to if/else leads to incorrect evaluation on the Pixel 4 compiler

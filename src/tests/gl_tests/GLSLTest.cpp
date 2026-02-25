@@ -7208,9 +7208,7 @@ TEST_P(GLSLTest, InactiveVaryingInVertexActiveInFragment)
 // might have flipped viewport orientation.
 TEST_P(GLSLTest, ScreenFlipCauseStandardDerivativesWrong)
 {
-    constexpr char kFS[] =
-        R"(
-#extension GL_OES_standard_derivatives : enable
+    constexpr char kFS[] = R"(#extension GL_OES_standard_derivatives : enable
 precision mediump float;
 
 void main()
@@ -7220,8 +7218,7 @@ void main()
         dFdy(gl_FragCoord.y),
         0.0, 1.0
     );
-}
-        )";
+})";
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -7231,6 +7228,34 @@ void main()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::yellow);
+}
+
+// Test that derivative works in a loop that ends in continue or break.
+TEST_P(GLSLTest_ES3, DerivativeInLoopWithUniformBranch)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+
+void main()
+{
+    color = vec4(0, 0, 0, 1);
+    for (int i = 0; i < 1; ++i)
+    {
+        color.x += dFdx(gl_FragCoord.x);
+        continue;
+    }
+    for (int i = 0; i < 10; ++i)
+    {
+        color.y += dFdy(gl_FragCoord.y);
+        break;
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::yellow);
 }
