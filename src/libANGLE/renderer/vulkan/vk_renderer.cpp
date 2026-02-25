@@ -6569,7 +6569,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Disable for Samsung, details here -> http://anglebug.com/386749841#comment21
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsDynamicRenderingLocalRead,
-        mDynamicRenderingLocalReadFeatures.dynamicRenderingLocalRead == VK_TRUE &&
+        mFeatures.supportsDynamicRendering.enabled &&
+            mDynamicRenderingLocalReadFeatures.dynamicRenderingLocalRead == VK_TRUE &&
             !(isNvidia || isSamsung));
 
     // Using dynamic rendering when VK_KHR_dynamic_rendering_local_read is available, because that's
