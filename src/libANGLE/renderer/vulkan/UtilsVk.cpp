@@ -1865,6 +1865,9 @@ angle::Result UtilsVk::setupComputeProgram(
     {
         commandBuffer->pushConstants(*pipelineLayout, VK_SHADER_STAGE_COMPUTE_BIT, 0,
                                      static_cast<uint32_t>(pushConstantsSize), pushConstants);
+        // Since we just modified pushConstants for compute, we have to ensure next dispatch/draw
+        // will restore them.
+        contextVk->invalidateDriverUniforms();
     }
 
     return angle::Result::Continue;
@@ -1929,6 +1932,7 @@ angle::Result UtilsVk::setupGraphicsProgramWithLayout(
     {
         commandBuffer->pushConstants(pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0,
                                      static_cast<uint32_t>(pushConstantsSize), pushConstants);
+        contextVk->invalidateGraphicsDriverUniforms();
     }
 
     ResetDynamicState(contextVk, commandBuffer);
@@ -4921,6 +4925,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
 
             commandBuffer->draw(3, 0);
         }
+        contextVk->invalidateGraphicsDriverUniforms();
     }
 
     return angle::Result::Continue;
@@ -5067,6 +5072,8 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
                                      sizeof(shaderParams), &shaderParams);
         commandBuffer->drawInstanced(4, params.textWidgetCount, 0);
     }
+
+    contextVk->invalidateDriverUniforms();
 
     // Overlay is always drawn as the last render pass before present.  Automatically move the
     // layout to PresentSrc.

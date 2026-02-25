@@ -919,6 +919,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     angle::Result onBindTexImage();
 
+    void invalidateGraphicsDriverUniforms();
+    void invalidateDriverUniforms();
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -1188,8 +1191,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result invalidateCurrentTextures(const gl::Context *context, gl::Command command);
     angle::Result invalidateCurrentShaderResources(gl::Command command);
     angle::Result invalidateCurrentShaderUniformBuffers();
-    void invalidateGraphicsDriverUniforms();
-    void invalidateDriverUniforms();
 
     angle::Result handleNoopDrawEvent() override;
     angle::Result handleNoopMultiDrawEvent() override;

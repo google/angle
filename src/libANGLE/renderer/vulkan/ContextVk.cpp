@@ -1565,7 +1565,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
 
         transformFeedbackVk->getBufferOffsets(this, firstVertexOrInvalid, bufferOffsets.data(),
                                               bufferOffsets.size());
-        invalidateGraphicsDriverUniforms();
+        mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
     }
 
     DirtyBits dirtyBits = mGraphicsDirtyBits & dirtyBitMask;
@@ -4842,7 +4842,7 @@ void ContextVk::updateDepthRange(float nearPlane, float farPlane)
     mViewport.maxDepth = farPlane;
 
     mGraphicsDriverUniforms.updateDepthRange(nearPlane, farPlane);
-    invalidateGraphicsDriverUniforms();
+    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
     mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_VIEWPORT);
 }
 
@@ -5046,7 +5046,7 @@ void ContextVk::updateAdvancedBlendEquations(const gl::ProgramExecutable *execut
             }
         }
         mGraphicsDriverUniforms.updateAdvancedBlendEquation(advancedBlendEquation);
-        invalidateGraphicsDriverUniforms();
+        mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
     }
 }
 
@@ -5145,7 +5145,7 @@ void ContextVk::updateDither()
         mGraphicsPipelineDesc->updateEmulatedDitherControl(&mGraphicsPipelineTransition,
                                                            ditherControl);
         mGraphicsDriverUniforms.updateEmulatedDitherControl(ditherControl);
-        invalidateGraphicsDriverUniforms();
+        mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
         invalidateCurrentGraphicsPipeline();
     }
 }
@@ -5612,12 +5612,12 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     mGraphicsDriverUniforms.updateRenderArea(
                         drawFramebufferVk->getState().getDimensions().width,
                         drawFramebufferVk->getState().getDimensions().height);
-                    invalidateGraphicsDriverUniforms();
+                    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                 }
                 mGraphicsDriverUniforms.updateflipXY(
                     mCurrentRotationDrawFramebuffer, isViewportFlipEnabledForDrawFBO(),
                     drawFramebufferVk->getSamples(), drawFramebufferVk->getLayerCount() > 1);
-                invalidateGraphicsDriverUniforms();
+                mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                 break;
             }
             case gl::state::DIRTY_BIT_RENDERBUFFER_BINDING:
@@ -5677,7 +5677,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                         mGraphicsDriverUniforms.updateRenderArea(
                             drawFramebufferVk->getState().getDimensions().width,
                             drawFramebufferVk->getState().getDimensions().height);
-                        invalidateGraphicsDriverUniforms();
+                        mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                     }
                 }
 
@@ -5815,13 +5815,13 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                             {
                                 const uint32_t transformDepth = !mState.isClipDepthModeZeroToOne();
                                 mGraphicsDriverUniforms.updateTransformDepth(transformDepth);
-                                invalidateGraphicsDriverUniforms();
+                                mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                             }
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
                             mGraphicsDriverUniforms.updateEnabledClipDistances(
                                 mState.getEnabledClipDistances().bits());
-                            invalidateGraphicsDriverUniforms();
+                            mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
                             // TODO(https://anglebug.com/42266182): Use EDS3
@@ -6389,7 +6389,7 @@ void ContextVk::onTransformFeedbackStateChanged()
     }
     else if (getFeatures().emulateTransformFeedback.enabled)
     {
-        invalidateGraphicsDriverUniforms();
+        mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
         invalidateCurrentTransformFeedbackBuffers();
 
         // Invalidate the graphics pipeline too.  On transform feedback state change, the current
