@@ -259,7 +259,7 @@ impl<'a> Validator<'a> {
             | OpCode::ConstructArray(params)
             | OpCode::BuiltIn(_, params) => {
                 for param in params {
-                    self.validate_opcode_instruction_typed_id_params(op_code, param);
+                    self.validate_typed_id_params(op_code, param);
                 }
             }
             // OpCode that takes in TypedId params, verify TypedId
@@ -281,7 +281,7 @@ impl<'a> Validator<'a> {
             | OpCode::Load(id)
             | OpCode::Alias(id)
             | OpCode::Unary(_, id) => {
-                self.validate_opcode_instruction_typed_id_params(op_code, id);
+                self.validate_typed_id_params(op_code, id);
             }
             // OpCode that takes two TypedId, verify both TypedId
             OpCode::ExtractVectorComponentDynamic(lhs, rhs)
@@ -292,87 +292,61 @@ impl<'a> Validator<'a> {
             | OpCode::AccessArrayElement(lhs, rhs)
             | OpCode::Store(lhs, rhs)
             | OpCode::Binary(_, lhs, rhs) => {
-                self.validate_opcode_instruction_typed_id_params(op_code, lhs);
-                self.validate_opcode_instruction_typed_id_params(op_code, rhs);
+                self.validate_typed_id_params(op_code, lhs);
+                self.validate_typed_id_params(op_code, rhs);
             }
             // OpCode that takes Another OpCode (texture_op) as Parameter
             OpCode::Texture(texture_op, sampler, coord) => {
-                self.validate_textureopcode_instruction_typed_id_params(texture_op, sampler);
-                self.validate_textureopcode_instruction_typed_id_params(texture_op, coord);
+                self.validate_typed_id_params(texture_op, sampler);
+                self.validate_typed_id_params(texture_op, coord);
                 match texture_op {
                     TextureOpCode::Implicit { is_proj: _, offset }
                     | TextureOpCode::Gather { offset } => {
                         if let Some(valid_offset) = offset {
-                            self.validate_textureopcode_instruction_typed_id_params(
-                                texture_op,
-                                valid_offset,
-                            );
+                            self.validate_typed_id_params(texture_op, valid_offset);
                         }
                     }
                     TextureOpCode::Compare { compare } => {
-                        self.validate_textureopcode_instruction_typed_id_params(
-                            texture_op, compare,
-                        );
+                        self.validate_typed_id_params(texture_op, compare);
                     }
                     TextureOpCode::Lod { is_proj: _, lod, offset } => {
-                        self.validate_textureopcode_instruction_typed_id_params(texture_op, lod);
+                        self.validate_typed_id_params(texture_op, lod);
 
                         if let Some(valid_offset) = offset {
-                            self.validate_textureopcode_instruction_typed_id_params(
-                                texture_op,
-                                valid_offset,
-                            );
+                            self.validate_typed_id_params(texture_op, valid_offset);
                         }
                     }
                     TextureOpCode::CompareLod { compare, lod } => {
-                        self.validate_textureopcode_instruction_typed_id_params(
-                            texture_op, compare,
-                        );
-                        self.validate_textureopcode_instruction_typed_id_params(texture_op, lod);
+                        self.validate_typed_id_params(texture_op, compare);
+                        self.validate_typed_id_params(texture_op, lod);
                     }
                     TextureOpCode::Bias { is_proj: _, bias, offset } => {
-                        self.validate_textureopcode_instruction_typed_id_params(texture_op, bias);
+                        self.validate_typed_id_params(texture_op, bias);
                         if let Some(valid_offset) = offset {
-                            self.validate_textureopcode_instruction_typed_id_params(
-                                texture_op,
-                                valid_offset,
-                            );
+                            self.validate_typed_id_params(texture_op, valid_offset);
                         }
                     }
                     TextureOpCode::CompareBias { compare, bias } => {
-                        self.validate_textureopcode_instruction_typed_id_params(
-                            texture_op, compare,
-                        );
-                        self.validate_textureopcode_instruction_typed_id_params(texture_op, bias);
+                        self.validate_typed_id_params(texture_op, compare);
+                        self.validate_typed_id_params(texture_op, bias);
                     }
                     TextureOpCode::Grad { is_proj: _, dx, dy, offset } => {
-                        self.validate_textureopcode_instruction_typed_id_params(texture_op, dx);
-                        self.validate_textureopcode_instruction_typed_id_params(texture_op, dy);
+                        self.validate_typed_id_params(texture_op, dx);
+                        self.validate_typed_id_params(texture_op, dy);
                         if let Some(valid_offset) = offset {
-                            self.validate_textureopcode_instruction_typed_id_params(
-                                texture_op,
-                                valid_offset,
-                            );
+                            self.validate_typed_id_params(texture_op, valid_offset);
                         }
                     }
                     TextureOpCode::GatherComponent { component, offset } => {
-                        self.validate_textureopcode_instruction_typed_id_params(
-                            texture_op, component,
-                        );
+                        self.validate_typed_id_params(texture_op, component);
                         if let Some(valid_offset) = offset {
-                            self.validate_textureopcode_instruction_typed_id_params(
-                                texture_op,
-                                valid_offset,
-                            );
+                            self.validate_typed_id_params(texture_op, valid_offset);
                         }
                     }
                     TextureOpCode::GatherRef { refz, offset } => {
-                        self.validate_textureopcode_instruction_typed_id_params(texture_op, refz);
+                        self.validate_typed_id_params(texture_op, refz);
                         if let Some(valid_offset) = offset {
-                            self.validate_textureopcode_instruction_typed_id_params(
-                                texture_op,
-                                valid_offset,
-                            );
+                            self.validate_typed_id_params(texture_op, valid_offset);
                         }
                     }
                 }
@@ -420,50 +394,7 @@ impl<'a> Validator<'a> {
 
     // Helper function to check OpCode instruction TypedId parameters contain valid id and
     // type_id members
-    fn validate_opcode_instruction_typed_id_params(&self, op_code: &OpCode, typed_id: &TypedId) {
-        // validate id
-        match typed_id.id {
-            Id::Register(register_id) => {
-                if register_id.id >= self.max_register_count {
-                    self.on_error(format_args!(
-                        "invalid {:?} instruction: invalid register id {}",
-                        op_code, register_id.id
-                    ));
-                }
-            }
-            Id::Constant(constant_id) => {
-                if constant_id.id >= self.max_constant_count {
-                    self.on_error(format_args!(
-                        "invalid {:?} instruction: invalid constant id {}",
-                        op_code, constant_id.id
-                    ));
-                }
-            }
-            Id::Variable(variable_id) => {
-                if variable_id.id >= self.max_variable_count {
-                    self.on_error(format_args!(
-                        "invalid {:?} instruction: invalid variable id {}",
-                        op_code, variable_id.id
-                    ));
-                }
-            }
-        }
-        // validate typed_id
-        if typed_id.type_id.id >= self.max_type_count {
-            self.on_error(format_args!(
-                "invalid {:?} instruction: invalid type id {}",
-                op_code, typed_id.type_id.id
-            ));
-        }
-    }
-
-    // Helper function to check TextureOpCode instruction TypedId parameters contain valid id
-    // and type_id members
-    fn validate_textureopcode_instruction_typed_id_params(
-        &self,
-        op_code: &TextureOpCode,
-        typed_id: &TypedId,
-    ) {
+    fn validate_typed_id_params(&self, op_code: &dyn fmt::Debug, typed_id: &TypedId) {
         // validate id
         match typed_id.id {
             Id::Register(register_id) => {
