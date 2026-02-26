@@ -10488,9 +10488,10 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     // used in this function to be of some combined depth and stencil format.
     ASSERT(getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT);
 
-    uint32_t pixelBytes = imageFormat.pixelBytes;
-    size_t bufferSize =
-        sourceArea.width * sourceArea.height * sourceArea.depth * pixelBytes * layerCount;
+    size_t pixelBytes = imageFormat.pixelBytes;
+    size_t bufferSize = static_cast<size_t>(sourceArea.width) *
+                        static_cast<size_t>(sourceArea.height) *
+                        static_cast<size_t>(sourceArea.depth) * pixelBytes * layerCount;
 
     const VkImageAspectFlags aspectFlags = getAspectFlags();
 
