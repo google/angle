@@ -242,7 +242,6 @@
           'mac_arm64_apple_m2_retina_gpu_stable',
         ],
         'test_suites': {
-          'gtest_tests': 'mac_apple_gtests',
         },
       },
       'mac-exp-amd': {

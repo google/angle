@@ -102,9 +102,6 @@ angle_mac_functional_cq_tester(
         "ci/angle-mac-arm64-builder-rel",
     ],
     gn_args = "ci/angle-mac-arm64-builder-rel",
-    # TODO(anglebug.com/475260235): Make this an actual CQ builder once we
-    # confirm the CI builder works as expected.
-    tryjob = try_.job(includable_only = True),
 )
 
 ################################################################################
