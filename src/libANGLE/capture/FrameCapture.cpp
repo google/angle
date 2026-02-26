@@ -4181,25 +4181,45 @@ void CaptureShareGroupMidExecutionSetup(
 
         GLenum internalformat = renderbuffer->getFormat().info->internalFormat;
 
-        if (renderbuffer->getSamples() > 0)
+        // Depending on the multisampling mode, we have to issue different commands
+        switch (renderbuffer->getMultisamplingMode())
         {
-            // Note: We could also use extensions if available.
-            for (std::vector<CallCapture> *calls : rbGenCalls)
-            {
-                Capture(calls,
-                        CaptureRenderbufferStorageMultisample(
-                            replayState, true, GL_RENDERBUFFER, renderbuffer->getSamples(),
-                            internalformat, renderbuffer->getWidth(), renderbuffer->getHeight()));
-            }
-        }
-        else
-        {
-            for (std::vector<CallCapture> *calls : rbGenCalls)
-            {
-                Capture(calls, framebufferFuncs.renderbufferStorage(
-                                   replayState, true, GL_RENDERBUFFER, internalformat,
-                                   renderbuffer->getWidth(), renderbuffer->getHeight()));
-            }
+            case gl::MultisamplingMode::Regular:
+                if (renderbuffer->getSamples() > 0)
+                {
+                    for (std::vector<CallCapture> *calls : rbGenCalls)
+                    {
+                        Capture(calls, CaptureRenderbufferStorageMultisample(
+                                           replayState, true, GL_RENDERBUFFER,
+                                           renderbuffer->getSamples(), internalformat,
+                                           renderbuffer->getWidth(), renderbuffer->getHeight()));
+                    }
+                }
+                else
+                {
+                    for (std::vector<CallCapture> *calls : rbGenCalls)
+                    {
+                        Capture(calls, framebufferFuncs.renderbufferStorage(
+                                           replayState, true, GL_RENDERBUFFER, internalformat,
+                                           renderbuffer->getWidth(), renderbuffer->getHeight()));
+                    }
+                }
+                break;
+            case gl::MultisamplingMode::MultisampledRenderToTexture:
+                // Note we use getState().getSamples() here because MSRTT means this reports as
+                // single sampled, but was created with <n> samples internally, and we have to
+                // recreate that.
+                for (std::vector<CallCapture> *calls : rbGenCalls)
+                {
+                    Capture(calls, CaptureRenderbufferStorageMultisampleEXT(
+                                       replayState, true, GL_RENDERBUFFER,
+                                       renderbuffer->getState().getSamples(), internalformat,
+                                       renderbuffer->getWidth(), renderbuffer->getHeight()));
+                }
+                break;
+            default:
+                UNREACHABLE();
+                break;
         }
 
         // TODO: Capture renderbuffer contents. http://anglebug.com/42262323
