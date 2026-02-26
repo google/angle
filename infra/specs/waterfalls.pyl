@@ -236,14 +236,6 @@
           'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
-      'mac-arm64-apple': {
-        'os_type': 'mac',
-        'mixins': [
-          'mac_arm64_apple_m2_retina_gpu_stable',
-        ],
-        'test_suites': {
-        },
-      },
       'mac-exp-amd': {
         'os_type': 'mac',
         'mixins': [
