@@ -491,6 +491,15 @@
           'noop_target',
         ],
       },
+      'angle-mac-arm64-apple-m2-rel': {
+        'os_type': 'mac',
+        'mixins': [
+          'mac_arm64_apple_m2_retina_gpu_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'mac_apple_gtests',
+        },
+      },
     },
   },
 ]

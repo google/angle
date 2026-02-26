@@ -7,6 +7,13 @@
 load("@chromium-luci//gn_args.star", "gn_args")
 
 gn_args.config(
+    name = "arm64",
+    args = {
+        "target_cpu": "arm64",
+    },
+)
+
+gn_args.config(
     name = "capture",
     args = {
         "angle_with_capture_by_default": True,
@@ -39,6 +46,22 @@ gn_args.config(
     configs = [
         "clang",
         "linux",
+        "siso",
+    ],
+)
+
+gn_args.config(
+    name = "mac",
+    args = {
+        "target_os": "mac",
+    },
+)
+
+gn_args.config(
+    name = "mac_clang",
+    configs = [
+        "clang",
+        "mac",
         "siso",
     ],
 )

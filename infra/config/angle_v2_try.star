@@ -58,8 +58,26 @@ def apply_linux_cq_builder_defaults(kwargs):
     kwargs.setdefault("ssd", None)
     return kwargs
 
+def apply_mac_cq_builder_defaults(kwargs):
+    """Applies default builder settings for a Mac CQ builder.
+
+    Args:
+        kwargs: The args being used for the builder as a dict.
+
+    Returns:
+        |kwargs| with default vaules set for a Mac CQ builder.
+    """
+    kwargs = apply_cq_builder_defaults(kwargs)
+    kwargs.setdefault("cpu", "arm64")
+    kwargs.setdefault("os", os.MAC_DEFAULT)
+    return kwargs
+
 def angle_linux_functional_cq_tester(**kwargs):
     kwargs = apply_linux_cq_builder_defaults(kwargs)
+    try_.builder(**kwargs)
+
+def angle_mac_functional_cq_tester(**kwargs):
+    kwargs = apply_mac_cq_builder_defaults(kwargs)
     try_.builder(**kwargs)
 
 ## Functional testers
@@ -74,6 +92,19 @@ angle_linux_functional_cq_tester(
         "ci/angle-linux-x64-sws-rel",
     ],
     gn_args = "ci/angle-linux-x64-builder-rel",
+)
+
+angle_mac_functional_cq_tester(
+    name = "angle-cq-mac-arm64-rel",
+    description_html = "Tests release ANGLE on Mac/arm64 on multiple hardware configs. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-mac-arm64-apple-m2-rel",
+        "ci/angle-mac-arm64-builder-rel",
+    ],
+    gn_args = "ci/angle-mac-arm64-builder-rel",
+    # TODO(anglebug.com/475260235): Make this an actual CQ builder once we
+    # confirm the CI builder works as expected.
+    tryjob = try_.job(includable_only = True),
 )
 
 ################################################################################
@@ -130,6 +161,15 @@ def angle_linux_manual_builder(*, name, **kwargs):
         cores = 8,
         os = os.LINUX_DEFAULT,
         ssd = None,
+        **kwargs
+    )
+
+def angle_mac_manual_builder(*, name, **kwargs):
+    return try_.builder(
+        name = name,
+        max_concurrent_builds = 1,
+        cpu = "arm64",
+        os = os.MAC_DEFAULT,
         **kwargs
     )
 
@@ -203,4 +243,14 @@ angle_linux_manual_builder(
         "ci/angle-linux-x64-sws-rel",
     ],
     gn_args = "ci/angle-linux-x64-builder-rel",
+)
+
+angle_mac_manual_builder(
+    name = "angle-try-mac-arm64-m2-rel",
+    description_html = "Tests release ANGLE on Mac/arm64 on Apple M2 SoCs. Manual only.",
+    mirrors = [
+        "ci/angle-mac-arm64-apple-m2-rel",
+        "ci/angle-mac-arm64-builder-rel",
+    ],
+    gn_args = "ci/angle-mac-arm64-builder-rel",
 )
