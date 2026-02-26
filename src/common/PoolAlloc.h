@@ -106,14 +106,7 @@ class PoolAllocator : angle::NonCopyable
     // user of it, as the model of use is to simultaneously deallocate everything at once by
     // destroying the instance or reset().
 
-    // Catch unwanted allocations.
-    // TODO(jmadill): Remove this when we remove the global allocator.
-    void lock();
-    void unlock();
-
   private:
-    size_t mAlignment;  // all returned allocations will be aligned at
-                        // this granularity, which will be a power of 2
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
     // Slow path of allocation when we have to get a new page.
     uint8_t *allocateNewPage(size_t numBytes);
@@ -143,7 +136,8 @@ class PoolAllocator : angle::NonCopyable
     std::vector<std::unique_ptr<uint8_t[]>> mStack;
 #endif
 
-    bool mLocked;
+    size_t mAlignment;  // all returned allocations will be aligned at
+                        // this granularity, which will be a power of 2
 };
 
 }  // namespace angle

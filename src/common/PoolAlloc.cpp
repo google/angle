@@ -152,7 +152,7 @@ class PageHeader
 // is documented in PoolAlloc.h.
 //
 PoolAllocator::PoolAllocator(int growthIncrement, int allocationAlignment)
-    : mAlignment(allocationAlignment),
+    :
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
       mPageSize(growthIncrement),
       mFreeList(nullptr),
@@ -160,7 +160,7 @@ PoolAllocator::PoolAllocator(int growthIncrement, int allocationAlignment)
       mNumCalls(0),
       mTotalBytes(0),
 #endif
-      mLocked(false)
+      mAlignment(allocationAlignment)
 {
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
     mPageHeaderSkip = sizeof(PageHeader);
@@ -276,8 +276,6 @@ void PoolAllocator::reset()
 
 void *PoolAllocator::allocate(size_t numBytes)
 {
-    ASSERT(!mLocked);
-
 #if !defined(ANGLE_DISABLE_POOL_ALLOC)
     //
     // Just keep some interesting statistics.
@@ -397,18 +395,6 @@ void *PoolAllocator::initializeAllocation(uint8_t *memory, size_t numBytes)
     return Allocation::GetDataPointer(memory, mAlignment);
 }
 #endif
-
-void PoolAllocator::lock()
-{
-    ASSERT(!mLocked);
-    mLocked = true;
-}
-
-void PoolAllocator::unlock()
-{
-    ASSERT(mLocked);
-    mLocked = false;
-}
 
 //
 // Check all allocations in a list for damage by calling check on each.
