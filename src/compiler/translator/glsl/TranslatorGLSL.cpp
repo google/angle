@@ -7,6 +7,7 @@
 #include "compiler/translator/glsl/TranslatorGLSL.h"
 
 #include "angle_gl.h"
+#include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/glsl/BuiltInFunctionEmulatorGLSL.h"
 #include "compiler/translator/glsl/ExtensionGLSL.h"
 #include "compiler/translator/glsl/OutputGLSL.h"
@@ -22,23 +23,6 @@ namespace sh
 TranslatorGLSL::TranslatorGLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
     : TCompiler(type, spec, output)
 {}
-
-void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
-                                                 const ShCompileOptions &compileOptions)
-{
-    if (compileOptions.emulateAbsIntFunction)
-    {
-        InitBuiltInAbsFunctionEmulatorForGLSLWorkarounds(emu, getShaderType());
-    }
-
-    if (compileOptions.emulateAtan2FloatFunction)
-    {
-        InitBuiltInAtanFunctionEmulatorForGLSLWorkarounds(emu);
-    }
-
-    int targetGLSLVersion = ShaderOutputTypeToGLSLVersion(getOutputType());
-    InitBuiltInFunctionEmulatorForGLSLMissingFunctions(emu, getShaderType(), targetGLSLVersion);
-}
 
 bool TranslatorGLSL::translate(TIntermBlock *root,
                                const ShCompileOptions &compileOptions,
@@ -129,11 +113,25 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
     }
 
     // Write emulated built-in functions if needed.
-    if (!getBuiltInFunctionEmulator().isOutputEmpty())
+    BuiltInFunctionEmulator builtInFunctionEmulator;
+    if (compileOptions.emulateAbsIntFunction)
+    {
+        InitBuiltInAbsFunctionEmulatorForGLSLWorkarounds(&builtInFunctionEmulator, getShaderType());
+    }
+    if (compileOptions.emulateAtan2FloatFunction)
+    {
+        InitBuiltInAtanFunctionEmulatorForGLSLWorkarounds(&builtInFunctionEmulator);
+    }
+    int targetGLSLVersion = ShaderOutputTypeToGLSLVersion(getOutputType());
+    InitBuiltInFunctionEmulatorForGLSLMissingFunctions(&builtInFunctionEmulator, getShaderType(),
+                                                       targetGLSLVersion);
+    builtInFunctionEmulator.markBuiltInFunctionsForEmulation(root);
+
+    if (!builtInFunctionEmulator.isOutputEmpty())
     {
         sink << "// BEGIN: Generated code for built-in function emulation\n\n";
         sink << "#define emu_precision\n\n";
-        getBuiltInFunctionEmulator().outputEmulatedFunctions(sink);
+        builtInFunctionEmulator.outputEmulatedFunctions(sink);
         sink << "// END: Generated code for built-in function emulation\n\n";
     }
 

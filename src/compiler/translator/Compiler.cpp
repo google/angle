@@ -416,7 +416,6 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
     : mShaderType(type),
       mShaderSpec(spec),
       mOutputType(output),
-      mBuiltInFunctionEmulator(),
       mDiagnostics(mInfoSink.info),
       mSourcePath(nullptr),
       mVariablesCollected(false),
@@ -1096,9 +1095,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    initBuiltInFunctionEmulator(&mBuiltInFunctionEmulator, compileOptions);
-    mBuiltInFunctionEmulator.markBuiltInFunctionsForEmulation(root);
-
     collectVariables(root);
 
     if (compileOptions.useUnusedStandardSharedBlocks)
@@ -1603,8 +1599,6 @@ void TCompiler::clearResults()
     mTessEvaluationShaderInputOrderingType      = EtetUndefined;
     mTessEvaluationShaderInputPointType         = EtetUndefined;
 
-    mBuiltInFunctionEmulator.cleanup();
-
     mNameMap.clear();
 
     mSourcePath = nullptr;
@@ -1872,11 +1866,6 @@ const char *TCompiler::getSourcePath() const
 const ShBuiltInResources &TCompiler::getResources() const
 {
     return mResources;
-}
-
-const BuiltInFunctionEmulator &TCompiler::getBuiltInFunctionEmulator() const
-{
-    return mBuiltInFunctionEmulator;
 }
 
 bool TCompiler::isVaryingDefined(const char *varyingName)

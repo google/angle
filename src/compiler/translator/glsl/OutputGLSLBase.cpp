@@ -13,6 +13,7 @@
 #include "angle_gl.h"
 #include "common/debug.h"
 #include "common/mathutil.h"
+#include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/util.h"
 
