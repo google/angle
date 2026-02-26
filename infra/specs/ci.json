@@ -1440,7 +1440,6 @@
       }
     ]
   },
-  "angle-linux-x64-sws-exp-rel": {},
   "angle-linux-x64-sws-rel": {
     "gtest_tests": [
       {

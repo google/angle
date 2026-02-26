@@ -461,18 +461,6 @@
           'isolated_scripts': 'isolated_scripts_group_common',
         },
       },
-      'angle-linux-x64-sws-exp-rel': {
-        'os_type': 'linux',
-        'mixins': [
-          'gpu-swarming-pool',
-          'no_gpu',
-          'linux-jammy',
-          'timeout_15m',
-          'x86-64',
-        ],
-        'test_suites': {
-        },
-      },
       'angle-linux-x64-sws-rel': {
         'os_type': 'linux',
         'mixins': [

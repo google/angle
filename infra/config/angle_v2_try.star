@@ -223,16 +223,6 @@ angle_linux_manual_builder(
 )
 
 angle_linux_manual_builder(
-    name = "angle-try-linux-x64-sws-exp-rel",
-    description_html = "Tests release ANGLE on Linux/x64 with experimental SwiftShader configs. Manual only.",
-    mirrors = [
-        "ci/angle-linux-x64-builder-rel",
-        "ci/angle-linux-x64-sws-exp-rel",
-    ],
-    gn_args = "ci/angle-linux-x64-builder-rel",
-)
-
-angle_linux_manual_builder(
     name = "angle-try-linux-x64-sws-rel",
     description_html = "Tests release ANGLE on Linux/x64 with SwiftShader. Manual only.",
     mirrors = [
