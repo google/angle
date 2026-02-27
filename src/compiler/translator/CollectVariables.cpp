@@ -1278,9 +1278,7 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
         // NOTE: we do not determine static use / activeness for individual blocks of an array.
         TIntermTyped *blockNode = binaryNode->getLeft()->getAsTyped();
         ASSERT(blockNode);
-
-        TIntermConstantUnion *constantUnion = binaryNode->getRight()->getAsConstantUnion();
-        ASSERT(constantUnion);
+        ASSERT(binaryNode->getRight()->getAsConstantUnion());
 
         InterfaceBlock *namedBlock = nullptr;
 
@@ -1333,13 +1331,18 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
             ASSERT(namedBlock);
             ASSERT(namedBlock->staticUse);
             namedBlock->active      = true;
-            unsigned int fieldIndex = static_cast<unsigned int>(constantUnion->getIConst(0));
-            ASSERT(fieldIndex < namedBlock->fields.size());
-            // TODO(oetuaho): Would be nicer to record static use of fields of named interface
-            // blocks more accurately at parse time - now we only mark the fields statically used if
-            // they are active. http://anglebug.com/42261150 We need to mark this field and all of
-            // its sub-fields, as static/active
-            MarkActive(&namedBlock->fields[fieldIndex]);
+            // Even though a single field is identified to be active, mark all the fields active.
+            // The layout of the block cannot be changed by the translator based on which fields are
+            // active, and there isn't anything else that ANGLE or the application would
+            // realistically do with a knowledge that some fields may be inactive.
+            for (size_t fieldIndex = 0; fieldIndex < namedBlock->fields.size(); ++fieldIndex)
+            {
+                // TODO(oetuaho): Would be nicer to record static use of fields of named interface
+                // blocks more accurately at parse time - now we only mark the fields statically
+                // used if they are active. http://anglebug.com/42261150 We need to mark this field
+                // and all of its sub-fields, as static/active
+                MarkActive(&namedBlock->fields[fieldIndex]);
+            }
         }
 
         if (traverseIndexExpression)
