@@ -28,6 +28,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     }
     XXH64_hash_t unusedHash64bit = XXH64(&data[seedSize64], size - seedSize64, seed64);
     (void)unusedHash64bit;
+    XXH64_hash_t unusedXXH3Hash =
+        XXH3_64bits_withSeed(&data[seedSize64], size - seedSize64, seed64);
+    (void)unusedXXH3Hash;
 #endif  // !defined(XXH_NO_LONG_LONG)
 
     // Test 32-bit hash.
