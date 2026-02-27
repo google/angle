@@ -38,7 +38,7 @@ VkImageType GetImageType(cl::MemObjectType memObjectType);
 VkImageViewType GetImageViewType(cl::MemObjectType memObjectType);
 VkMemoryPropertyFlags GetMemoryPropertyFlags(cl::MemFlags memFlags);
 VkBufferUsageFlags GetBufferUsageFlags(cl::MemFlags memFlags, bool physicalAddressing);
-
+VkComponentMapping GetChannelComponentMapping(cl_channel_order order);
 }  // namespace cl_vk
 }  // namespace rx
 

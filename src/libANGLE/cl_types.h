@@ -79,8 +79,21 @@ using EventStatusMap = std::array<T, 3>;
 
 using Extents = angle::Extents<size_t>;
 constexpr Extents kExtentsZero(0, 0, 0);
-using Offset  = angle::Offset<size_t>;
+using Offset = angle::Offset<size_t>;
 constexpr Offset kOffsetZero(0, 0, 0);
+
+using ChannelMapping = std::array<uint32_t, 4>;
+union PixelColor
+{
+    uint8_t u8[4];
+    int8_t s8[4];
+    uint16_t u16[4];
+    int16_t s16[4];
+    uint32_t u32[4];
+    int32_t s32[4];
+    cl_half fp16[4];
+    cl_float fp32[4];
+};
 
 struct KernelArg
 {

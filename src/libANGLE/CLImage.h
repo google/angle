@@ -46,6 +46,7 @@ class Image final : public Memory
     size_t getWidth() const { return mDesc.width; }
     size_t getHeight() const { return mDesc.height; }
     size_t getDepth() const { return mDesc.depth; }
+    PixelColor packPixels(const void *fillColor) const;
 
     static Image *Cast(cl_mem memobj);
 

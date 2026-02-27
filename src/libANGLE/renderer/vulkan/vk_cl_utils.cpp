@@ -163,5 +163,53 @@ VkBufferUsageFlags GetBufferUsageFlags(cl::MemFlags memFlags, bool physicalAddre
     return usageFlags;
 }
 
+// Added Vulkan component swizzle mapper
+VkComponentMapping GetChannelComponentMapping(cl_channel_order order)
+{
+    // Default swizzle values
+    VkComponentMapping m{};
+    m.r = VK_COMPONENT_SWIZZLE_R;
+    m.g = VK_COMPONENT_SWIZZLE_G;
+    m.b = VK_COMPONENT_SWIZZLE_B;
+    m.a = VK_COMPONENT_SWIZZLE_A;
+
+    switch (order)
+    {
+        case CL_A:
+            // A-only: rgb = 0, a = R
+            m.r = VK_COMPONENT_SWIZZLE_ZERO;
+            m.g = VK_COMPONENT_SWIZZLE_ZERO;
+            m.b = VK_COMPONENT_SWIZZLE_ZERO;
+            m.a = VK_COMPONENT_SWIZZLE_R;
+            break;
+        case CL_LUMINANCE:
+            // L replicated to RGB, alpha = 1
+            m.r = VK_COMPONENT_SWIZZLE_R;
+            m.g = VK_COMPONENT_SWIZZLE_R;
+            m.b = VK_COMPONENT_SWIZZLE_R;
+            m.a = VK_COMPONENT_SWIZZLE_ONE;
+            break;
+        case CL_INTENSITY:
+            // I replicated to RGBA
+            m.r = VK_COMPONENT_SWIZZLE_R;
+            m.g = VK_COMPONENT_SWIZZLE_R;
+            m.b = VK_COMPONENT_SWIZZLE_R;
+            m.a = VK_COMPONENT_SWIZZLE_R;
+            break;
+        // ARGB re-mapping
+        case CL_ARGB:
+            // Storage is RGBA, backing format is VK_FORMAT_R8G8B8A8
+            m.r = VK_COMPONENT_SWIZZLE_G;
+            m.g = VK_COMPONENT_SWIZZLE_B;
+            m.b = VK_COMPONENT_SWIZZLE_A;
+            m.a = VK_COMPONENT_SWIZZLE_R;
+            break;
+        default:
+            break;
+    }
+
+    return m;
+}
+
 }  // namespace cl_vk
 }  // namespace rx

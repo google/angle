@@ -1030,10 +1030,7 @@ angle::Result CLCommandQueueVk::enqueueFillImage(const cl::Image &image,
     ANGLE_TRY(processWaitlist(waitEvents));
 
     CLImageVk &imageVk = image.getImpl<CLImageVk>();
-    PixelColor packedColor;
     cl::Extents extent = imageVk.getImageExtent();
-
-    imageVk.packPixels(fillColor, &packedColor);
 
     CLBufferVk *stagingBuffer = nullptr;
     ANGLE_TRY(imageVk.getOrCreateStagingBuffer(&stagingBuffer));
@@ -1045,7 +1042,7 @@ angle::Result CLCommandQueueVk::enqueueFillImage(const cl::Image &image,
                                     ImageBufferCopyDirection::ToBuffer));
     ANGLE_TRY(finishInternal());
 
-    ANGLE_TRY(imageVk.fillImageWithColor(origin, region, &packedColor));
+    ANGLE_TRY(imageVk.fillImageWithColor(origin, region, image.packPixels(fillColor)));
 
     copyRegion = cl_vk::CalculateBufferImageCopyRegion(0, 0, 0, cl::kOffsetZero, extent, &imageVk);
     ANGLE_TRY(copyImageToFromBuffer(imageVk, *stagingBuffer, copyRegion,
