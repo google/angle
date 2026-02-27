@@ -2108,6 +2108,12 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
 
     if (instances > 0)
     {
+        // D3D11 requires that indexCount * instances fits in 32 bits.
+        ANGLE_CHECK(GetImplAs<Context11>(context),
+                    static_cast<uint64_t>(indexCount) * static_cast<uint64_t>(instances) <=
+                        std::numeric_limits<uint32_t>::max(),
+                    "Failed to draw: instance count * index count overflows 32 bits.",
+                    GL_OUT_OF_MEMORY);
         mDeviceContext->DrawIndexedInstanced(indexCount, instances, 0, baseVertex, 0);
     }
     else
@@ -2188,6 +2194,12 @@ angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
 
     if (instances > 0)
     {
+        // D3D11 requires that indexCount * instances fits in 32 bits.
+        ANGLE_CHECK(GetImplAs<Context11>(context),
+                    static_cast<uint64_t>(indexCount) * static_cast<uint64_t>(instances) <=
+                        std::numeric_limits<uint32_t>::max(),
+                    "Failed to draw: instance count * index count overflows 32 bits.",
+                    GL_OUT_OF_MEMORY);
         mDeviceContext->DrawIndexedInstanced(indexCount, instances, 0, baseVertex, 0);
     }
     else
