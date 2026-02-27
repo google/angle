@@ -3918,7 +3918,11 @@ angle::Result Renderer11::blitRenderbufferRect(const gl::Context *context,
 
         // D3D11 needs depth-stencil CopySubresourceRegions to have a NULL pSrcBox
         // We also require complete framebuffer copies for depth-stencil blit.
-        D3D11_BOX *pSrcBox = wholeBufferCopy && readLayer == 0 ? nullptr : &readBox;
+        // For 3D source textures, always provide a srcBox to limit the copy to a single
+        // depth slice; a NULL pSrcBox would copy all depth slices of the source subresource
+        // which does not fit in a 2D destination.
+        D3D11_BOX *pSrcBox =
+            wholeBufferCopy && readLayer == 0 && !readTexture.is3D() ? nullptr : &readBox;
 
         mDeviceContext->CopySubresourceRegion(drawTexture.get(), drawSubresource, dstX, dstY, dstZ,
                                               readTexture.get(), readSubresource, pSrcBox);
