@@ -5609,10 +5609,12 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 if (mState.getDrawFramebuffer()->isDefault() && programExecutable != nullptr &&
                     programExecutable->hasFragCoord())
                 {
-                    mGraphicsDriverUniforms.updateRenderArea(
-                        drawFramebufferVk->getState().getDimensions().width,
-                        drawFramebufferVk->getState().getDimensions().height);
-                    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                    if (mGraphicsDriverUniforms.updateRenderArea(
+                            drawFramebufferVk->getState().getDimensions().width,
+                            drawFramebufferVk->getState().getDimensions().height))
+                    {
+                        mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                    }
                 }
                 if (mGraphicsDriverUniforms.updateflipXY(
                         mCurrentRotationDrawFramebuffer, isViewportFlipEnabledForDrawFBO(),
@@ -5676,10 +5678,12 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     if (mState.getDrawFramebuffer()->isDefault() &&
                         programExecutable->hasFragCoord())
                     {
-                        mGraphicsDriverUniforms.updateRenderArea(
-                            drawFramebufferVk->getState().getDimensions().width,
-                            drawFramebufferVk->getState().getDimensions().height);
-                        mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                        if (mGraphicsDriverUniforms.updateRenderArea(
+                                drawFramebufferVk->getState().getDimensions().width,
+                                drawFramebufferVk->getState().getDimensions().height))
+                        {
+                            mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                        }
                     }
                 }
 

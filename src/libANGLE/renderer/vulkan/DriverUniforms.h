@@ -115,18 +115,27 @@ class GraphicsDriverUniforms
         mDirtyBits.set(DIRTY_BIT_DEPTH_RANGE);
     }
 
-    void updateRenderArea(int width, int height)
+    bool updateRenderArea(int width, int height)
     {
         static_assert(gl::IMPLEMENTATION_MAX_FRAMEBUFFER_SIZE <= 0xFFFF,
                       "Not enough bits for render area");
         static_assert(gl::IMPLEMENTATION_MAX_RENDERBUFFER_SIZE <= 0xFFFF,
                       "Not enough bits for render area");
 
+        uint32_t prevRenderArea = mUniformData.renderArea;
         uint16_t renderAreaWidth, renderAreaHeight;
         SetBitField(renderAreaWidth, width);
         SetBitField(renderAreaHeight, height);
         mUniformData.renderArea = renderAreaHeight << 16 | renderAreaWidth;
+
+        if (prevRenderArea == mUniformData.renderArea)
+        {
+            // No change.
+            return false;
+        }
+
         mDirtyBits.set(DIRTY_BIT_RENDER_AREA);
+        return true;
     }
 
     bool updateflipXY(SurfaceRotation rotation,
