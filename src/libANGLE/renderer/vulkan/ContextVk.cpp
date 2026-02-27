@@ -5614,10 +5614,12 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                         drawFramebufferVk->getState().getDimensions().height);
                     mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                 }
-                mGraphicsDriverUniforms.updateflipXY(
-                    mCurrentRotationDrawFramebuffer, isViewportFlipEnabledForDrawFBO(),
-                    drawFramebufferVk->getSamples(), drawFramebufferVk->getLayerCount() > 1);
-                mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                if (mGraphicsDriverUniforms.updateflipXY(
+                        mCurrentRotationDrawFramebuffer, isViewportFlipEnabledForDrawFBO(),
+                        drawFramebufferVk->getSamples(), drawFramebufferVk->getLayerCount() > 1))
+                {
+                    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                }
                 break;
             }
             case gl::state::DIRTY_BIT_RENDERBUFFER_BINDING:
