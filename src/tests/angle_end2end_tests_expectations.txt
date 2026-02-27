@@ -2533,6 +2533,7 @@
 
 362486580 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.Clear/*__GL_RGB5_A1_GL_RGBA_GL_UNSIGNED_INT_2_10_10_10_REV_* = SKIP
 362486580 LINUX NVIDIA VULKAN : EGLSurfaceTest.ResizeBeforeMakeCurrent*/* = SKIP
+362486580 LINUX NVIDIA VULKAN : EGLSurfaceTest.ResizeLargeWindow/* = SKIP
 362486580 LINUX NVIDIA VULKAN : EXTBlendFuncExtendedDrawTestES31.UseProgramPipeline/* = SKIP
 362486580 LINUX NVIDIA VULKAN : EXTBlendFuncExtendedDrawTestES31.UseTwoProgramStages/* = SKIP
 362486580 LINUX NVIDIA VULKAN : FramebufferTestWithFormatFallback.R4G4B4A4_OutOfRangeStagedUpdateReformated/* = SKIP
