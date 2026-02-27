@@ -6304,10 +6304,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Some unacceptable performance degradation has been observed on device with ARM proprietary
     // driver when graphics pipeline is enabled, therefore it's recommended to disable it until the
     // problematic area gets addressed and fixed. http://anglebug.com/404581992
+    //
+    // PowerVR graphics pipeline support is in development and not yet tested with ANGLE.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsGraphicsPipelineLibrary,
                             mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE &&
                                 (!isNvidia || driverVersion >= angle::VersionTriple(531, 0, 0)) &&
-                                !isRADV && !isARMProprietary);
+                                !isRADV && !isARMProprietary && !isPowerVR);
 
     // When VK_EXT_graphics_pipeline_library is not used:
     //
