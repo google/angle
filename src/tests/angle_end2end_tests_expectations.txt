@@ -1276,6 +1276,7 @@
 480069042 PIXEL10 VULKAN : TransformFeedbackTestES32.PrimitivesGeneratedVsRasterizerDiscard/* = SKIP
 480069042 PIXEL10 VULKAN : TransformFeedbackTestES32.PrimitivesGeneratedVsRasterizerDiscardAndFramebufferChange/* = SKIP
 480069042 PIXEL10 VULKAN : VulkanExternalImageTest.TextureFormatCompatChromiumWithFlagsFd/* = SKIP
+480069042 PIXEL10 VULKAN : VulkanImageTest.PixelTestDrawQuad/ES3_Vulkan_EnableParallelCompileAndLink_VaryingsRequireMatchingPrecisionInSpirv = SKIP
 480069042 PIXEL10 VULKAN : VulkanPerformanceCounterTest.RenderToTextureDepthStencilTextureShouldNotLoad/* = SKIP
 480069042 PIXEL10 VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.MultisampleDepthStencilResolveSeparately/* = SKIP
 480069042 PIXEL10 VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.RenderToTextureDepthStencilRenderbufferShouldNotLoad/* = SKIP
