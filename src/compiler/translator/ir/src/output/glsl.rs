@@ -329,7 +329,6 @@ impl Generator {
             BuiltIn::TessLevelInner => "gl_TessLevelInner",
             BuiltIn::TessCoord => "gl_TessCoord",
             BuiltIn::BoundingBoxOES => "gl_BoundingBoxOES",
-            BuiltIn::PixelLocalEXT => "gl_PixelLocalEXT",
         })
         .to_string()
     }

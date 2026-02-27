@@ -1565,7 +1565,6 @@ pub enum BuiltIn {
     TessLevelInner,
     TessCoord,
     BoundingBoxOES,
-    PixelLocalEXT,
 }
 
 // Whether a function parameter is `in`, `out` or `inout`.
@@ -1746,8 +1745,6 @@ pub enum Decoration {
     PushConstant,
     NonCoherent,
     Yuv,
-    // TODO(http://anglebug.com/349994211): handle __pixel_localEXT, likely in combination with
-    // Input/Output/InputOutput
     // Indicates that a variable (excluding built-ins) is an input to the shader
     Input,
     // Indicates that a variable (excluding built-ins) is an output of the shader

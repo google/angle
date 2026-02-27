@@ -448,7 +448,6 @@ fn built_in_str(built_in: BuiltIn) -> String {
         BuiltIn::TessLevelInner => "TessLevelInner",
         BuiltIn::TessCoord => "TessCoord",
         BuiltIn::BoundingBoxOES => "BoundingBoxOES",
-        BuiltIn::PixelLocalEXT => "PixelLocalEXT",
     })
     .to_string()
 }

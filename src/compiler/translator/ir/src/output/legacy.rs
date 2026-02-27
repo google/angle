@@ -1452,7 +1452,6 @@ impl<'options> Generator<'options> {
                 BuiltIn::TessLevelInner => ffi::ASTQualifier::TessLevelInner,
                 BuiltIn::TessCoord => ffi::ASTQualifier::TessCoord,
                 BuiltIn::BoundingBoxOES => ffi::ASTQualifier::BoundingBox,
-                BuiltIn::PixelLocalEXT => ffi::ASTQualifier::PixelLocalEXT,
             }
         } else if decorations
             .decorations
@@ -1737,7 +1736,6 @@ impl<'options> Generator<'options> {
             BuiltIn::TessLevelInner => "gl_TessLevelInner",
             BuiltIn::TessCoord => "gl_TessCoord",
             BuiltIn::BoundingBoxOES => "gl_BoundingBoxOES",
-            BuiltIn::PixelLocalEXT => "gl_PixelLocalEXT",
         }
     }
 

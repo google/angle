@@ -2973,7 +2973,6 @@ pub mod ffi {
         TessEvaluationOut,
         TessCoord,
         SpecConst,
-        PixelLocalEXT,
     }
 
     #[derive(Copy, Clone)]
@@ -3974,7 +3973,6 @@ impl BuilderWrapper {
             ffi::ASTQualifier::TessLevelInner => Some(BuiltIn::TessLevelInner),
             ffi::ASTQualifier::TessCoord => Some(BuiltIn::TessCoord),
             ffi::ASTQualifier::BoundingBox => Some(BuiltIn::BoundingBoxOES),
-            ffi::ASTQualifier::PixelLocalEXT => Some(BuiltIn::PixelLocalEXT),
             _ => None,
         }
     }
@@ -4105,7 +4103,6 @@ impl BuilderWrapper {
             }
             ffi::ASTQualifier::PatchIn => vec![Decoration::Input, Decoration::Patch],
 
-            ffi::ASTQualifier::PixelLocalEXT => unimplemented!(),
             _ => panic!("Internal error: Unexpected qualifier"),
         });
 

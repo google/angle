@@ -1523,13 +1523,6 @@ bool TOutputGLSLBase::needsToWriteLayoutQualifier(const TType &type)
 
     if (type.getBasicType() == EbtInterfaceBlock)
     {
-        if (type.getQualifier() == EvqPixelLocalEXT)
-        {
-            // We only use per-member EXT_shader_pixel_local_storage formats, so the PLS interface
-            // block will never have a layout qualifier.
-            ASSERT(layoutQualifier.imageInternalFormat == EiifUnspecified);
-            return false;
-        }
         return true;
     }
 

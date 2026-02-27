@@ -50,8 +50,6 @@ BlockType GetBlockType(TQualifier qualifier)
             return BlockType::kBlockUniform;
         case EvqBuffer:
             return BlockType::kBlockBuffer;
-        case EvqPixelLocalEXT:
-            return BlockType::kPixelLocalExt;
         default:
             UNREACHABLE();
             return BlockType::kBlockUniform;
@@ -1217,10 +1215,6 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
                 case EvqBuffer:
                     mShaderStorageBlocks->push_back(interfaceBlock);
                     break;
-                case EvqPixelLocalEXT:
-                    // EXT_shader_pixel_local_storage is completely self-contained within the
-                    // shader, so we don't need to gather any info on it.
-                    break;
                 default:
                     UNREACHABLE();
             }
@@ -1333,7 +1327,7 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
         {
             MarkActive(ioBlockVar);
         }
-        else if (qualifier != EvqPixelLocalEXT)
+        else
         {
             namedBlock = findNamedInterfaceBlock(interfaceBlock->name());
             ASSERT(namedBlock);
