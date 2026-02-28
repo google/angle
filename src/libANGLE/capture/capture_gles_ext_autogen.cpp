@@ -3916,6 +3916,14 @@ CallCapture CaptureEndPixelLocalStorageANGLE(const State &glState,
     return CallCapture(angle::EntryPoint::GLEndPixelLocalStorageANGLE, std::move(paramBuffer));
 }
 
+CallCapture CaptureEndPixelLocalStorageImplicitANGLE(const State &glState, bool isCallValid)
+{
+    ParamBuffer paramBuffer;
+
+    return CallCapture(angle::EntryPoint::GLEndPixelLocalStorageImplicitANGLE,
+                       std::move(paramBuffer));
+}
+
 CallCapture CapturePixelLocalStorageBarrierANGLE(const State &glState, bool isCallValid)
 {
     ParamBuffer paramBuffer;

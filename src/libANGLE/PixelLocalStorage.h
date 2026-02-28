@@ -60,7 +60,7 @@ class PixelLocalStoragePlane : angle::NonCopyable, public angle::ObserverInterfa
         return mUsage & GL_PIXEL_LOCAL_USAGE_ALWAYS_NONCOHERENT_BIT_ANGLE;
     }
 
-    // Implements glGetIntegeri_v() for GL_PIXEL_LOCAL_FORMAT_ANGLE,
+    // Implements glGetIntegeri_v() for GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE,
     // GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE,
     // GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, GL_PIXEL_LOCAL_USAGE_ANGLE
     GLint getIntegeri(GLenum target) const;

@@ -619,6 +619,7 @@ ANGLE_EXPORT void GL_APIENTRY GL_FramebufferPixelLocalClearValueuivANGLE(GLint p
                                                                          const GLuint *value);
 ANGLE_EXPORT void GL_APIENTRY GL_BeginPixelLocalStorageANGLE(GLsizei n, const GLenum *loadops);
 ANGLE_EXPORT void GL_APIENTRY GL_EndPixelLocalStorageANGLE(GLsizei n, const GLenum *storeops);
+ANGLE_EXPORT void GL_APIENTRY GL_EndPixelLocalStorageImplicitANGLE();
 ANGLE_EXPORT void GL_APIENTRY GL_PixelLocalStorageBarrierANGLE();
 ANGLE_EXPORT void GL_APIENTRY GL_FramebufferPixelLocalStorageInterruptANGLE();
 ANGLE_EXPORT void GL_APIENTRY GL_FramebufferPixelLocalStorageRestoreANGLE();

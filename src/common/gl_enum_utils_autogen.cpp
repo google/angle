@@ -2909,7 +2909,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x96E6:
                     return "GL_STORE_OP_STORE_ANGLE";
                 case 0x96E7:
-                    return "GL_PIXEL_LOCAL_FORMAT_ANGLE";
+                    return "GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE";
                 case 0x96E8:
                     return "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE";
                 case 0x96E9:
@@ -6282,7 +6282,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
             switch (value)
             {
                 case 0x96E7:
-                    return "GL_PIXEL_LOCAL_FORMAT_ANGLE";
+                    return "GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE";
                 case 0x96E8:
                     return "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE";
                 case 0x96E9:
@@ -12385,7 +12385,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE", 0x96EC},
     {"GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE", 0x96ED},
     {"GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE", 0x96EE},
-    {"GL_PIXEL_LOCAL_FORMAT_ANGLE", 0x96E7},
+    {"GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE", 0x96E7},
     {"GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE", 0x96E2},
     {"GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE", 0x96EA},
     {"GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE", 0x96E9},

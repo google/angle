@@ -184,6 +184,8 @@ New Procedures and Functions
 
     void EndPixelLocalStorageANGLE(sizei n, const enum storeops[])
 
+    void EndPixelLocalStorageImplicitANGLE()
+
     void PixelLocalStorageBarrierANGLE()
 
     void FramebufferPixelLocalStorageInterruptANGLE()
@@ -227,7 +229,7 @@ New Tokens
     GetFramebufferPixelLocalStorageParameter{f,i}vANGLE() and
     GetFramebufferPixelLocalStorageParameter{f,i}vRobustANGLE():
 
-        PIXEL_LOCAL_FORMAT_ANGLE                                          0x96E7
+        PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE                                 0x96E7
         PIXEL_LOCAL_TEXTURE_NAME_ANGLE                                    0x96E8
         PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE                                   0x96E9
         PIXEL_LOCAL_TEXTURE_LAYER_ANGLE                                   0x96EA
@@ -556,6 +558,19 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     When PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE is zero, any draw issued with a
     fragment shader that declares pixel local storage uniforms generates an
     INVALID_FRAMEBUFFER_OPERATION error.
+
+    The command:
+
+      void EndPixelLocalStorageImplicitANGLE()
+
+    is as if EndPixelLocalStorageANGLE() had been called with
+    <n>=PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE and <storeops> of
+    STORE_OP_STORE_ANGLE. EndPixelLocalStorageImplicitANGLE() does not generate
+    errors. It is not recommended that applications call
+    EndPixelLocalStorageImplicitANGLE; this call is provided for implementations
+    such as web browsers which must make best-effort attempts to synchronize
+    pixel local storage state between processes.
+
 
   Section 2.X.1 "Non-coherent Pixel Local Storage"
 
@@ -909,8 +924,8 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
     Description:
 
-      * If <pname> is PIXEL_LOCAL_FORMAT_ANGLE, <params> will contain the
-        internalformat of the plane from Table X.3, or NONE if the selected
+      * If <pname> is PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE, <params> will contain
+        the internalformat of the plane from Table X.3, or NONE if the selected
         pixel local storage plane is in a deinitialized state.
 
       * If <pname> is PIXEL_LOCAL_TEXTURE_NAME_ANGLE, <params> will contain the
@@ -1000,8 +1015,8 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     PIXEL_LOCAL_STORAGE-
     _ACTIVE_PLANES_ANGLE        Z+   GetIntegerv                   0       2.X
 
-    PIXEL_LOCAL_FORMAT-              GetFramebufferPixelLocal-
-    _ANGLE                      Z+   StorageParameterivANGLE     NONE    6.1.X
+    PIXEL_LOCAL_INTERNAL-            GetFramebufferPixelLocal-
+    _FORMAT_ANGLE               Z+   StorageParameterivANGLE     NONE    6.1.X
 
     PIXEL_LOCAL_TEXTURE-             GetFramebufferPixelLocal-
     _NAME_ANGLE                 Z+   StorageParameterivANGLE       0     6.1.X
@@ -1011,6 +1026,9 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
     PIXEL_LOCAL_TEXTURE-             GetFramebufferPixelLocal-
     _LAYER_ANGLE                Z    StorageParameterivANGLE       0     6.1.X
+
+    PIXEL_LOCAL_TEXTURE-             GetFramebufferPixelLocal-
+    _USAGE_ANGLE                Z    StorageParameterivANGLE       0     6.1.X
 
     PIXEL_LOCAL_CLEAR-               GetFramebufferPixelLocal-
     _VALUE_FLOAT_ANGLE         4*R   StorageParameterfvANGLE    0,0,0,0  6.1.X

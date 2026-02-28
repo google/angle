@@ -625,6 +625,7 @@ EXPORTS
     ; GL_ANGLE_shader_pixel_local_storage
     glBeginPixelLocalStorageANGLE
     glEndPixelLocalStorageANGLE
+    glEndPixelLocalStorageImplicitANGLE
     glFramebufferMemorylessPixelLocalStorageANGLE
     glFramebufferPixelLocalClearValuefvANGLE
     glFramebufferPixelLocalClearValueivANGLE

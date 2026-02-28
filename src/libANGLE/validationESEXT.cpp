@@ -1833,7 +1833,7 @@ bool ValidateGetFramebufferPixelLocalStorageParameterCommon(const Context *conte
 
     switch (pname)
     {
-        case GL_PIXEL_LOCAL_FORMAT_ANGLE:
+        case GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
@@ -2460,6 +2460,12 @@ bool ValidateEndPixelLocalStorageANGLE(const Context *context,
         }
     }
 
+    return true;
+}
+
+bool ValidateEndPixelLocalStorageImplicitANGLE(const Context *context, angle::EntryPoint entryPoint)
+{
+    // The entry point for implicitly ending PLS deliberately does not generate GL errors.
     return true;
 }
 

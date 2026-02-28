@@ -950,9 +950,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     const angle::PerfMonitorCounterGroupsInfo &getPerfMonitorCounterGroups() const;
 
-    // Ends the currently active pixel local storage session with GL_STORE_OP_STORE on all planes.
-    void endPixelLocalStorageImplicit();
-
     bool areBlobCacheFuncsSet() const;
 
     size_t getMemoryUsage() const;

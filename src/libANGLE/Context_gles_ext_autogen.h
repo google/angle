@@ -609,6 +609,7 @@
     void framebufferPixelLocalClearValueuiv(GLint plane, const GLuint *value);                     \
     void beginPixelLocalStorage(GLsizei n, const GLenum *loadops);                                 \
     void endPixelLocalStorage(GLsizei n, const GLenum *storeops);                                  \
+    void endPixelLocalStorageImplicit();                                                           \
     void pixelLocalStorageBarrier();                                                               \
     void framebufferPixelLocalStorageInterrupt();                                                  \
     void framebufferPixelLocalStorageRestore();                                                    \

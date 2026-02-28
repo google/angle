@@ -297,7 +297,7 @@ GLint PixelLocalStoragePlane::getIntegeri(GLenum target) const
     {
         switch (target)
         {
-            case GL_PIXEL_LOCAL_FORMAT_ANGLE:
+            case GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE:
                 return mInternalformat;
             case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
                 return isMemoryless() ? 0 : mTextureID.value;

@@ -829,6 +829,7 @@ angle::CallCapture CaptureEndPixelLocalStorageANGLE(const State &glState,
                                                     bool isCallValid,
                                                     GLsizei n,
                                                     const GLenum *storeops);
+angle::CallCapture CaptureEndPixelLocalStorageImplicitANGLE(const State &glState, bool isCallValid);
 angle::CallCapture CapturePixelLocalStorageBarrierANGLE(const State &glState, bool isCallValid);
 angle::CallCapture CaptureFramebufferPixelLocalStorageInterruptANGLE(const State &glState,
                                                                      bool isCallValid);

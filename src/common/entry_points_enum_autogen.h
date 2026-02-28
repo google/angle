@@ -460,6 +460,7 @@ enum class EntryPoint
     GLEnableiOES,
     GLEndPerfMonitorAMD,
     GLEndPixelLocalStorageANGLE,
+    GLEndPixelLocalStorageImplicitANGLE,
     GLEndQuery,
     GLEndQueryEXT,
     GLEndTilingQCOM,

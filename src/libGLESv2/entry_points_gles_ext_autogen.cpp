@@ -5816,6 +5816,50 @@ void GL_APIENTRY GL_EndPixelLocalStorageANGLE(GLsizei n, const GLenum *storeops)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+void GL_APIENTRY GL_EndPixelLocalStorageImplicitANGLE()
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    ANGLE_UNSAFE_TODO(
+        EVENT(context, GLEndPixelLocalStorageImplicitANGLE, "context = %d", CID(context)));
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateEndPixelLocalStorageImplicitANGLE(
+                    context, angle::EntryPoint::GLEndPixelLocalStorageImplicitANGLE);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context,
+                                        angle::EntryPoint::GLEndPixelLocalStorageImplicitANGLE);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->endPixelLocalStorageImplicit();
+        }
+        ANGLE_CAPTURE_GL(EndPixelLocalStorageImplicitANGLE, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLEndPixelLocalStorageImplicitANGLE);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 void GL_APIENTRY GL_PixelLocalStorageBarrierANGLE()
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());

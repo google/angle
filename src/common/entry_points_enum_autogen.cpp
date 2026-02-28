@@ -908,6 +908,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glEndPerfMonitorAMD";
         case EntryPoint::GLEndPixelLocalStorageANGLE:
             return "glEndPixelLocalStorageANGLE";
+        case EntryPoint::GLEndPixelLocalStorageImplicitANGLE:
+            return "glEndPixelLocalStorageImplicitANGLE";
         case EntryPoint::GLEndQuery:
             return "glEndQuery";
         case EntryPoint::GLEndQueryEXT:

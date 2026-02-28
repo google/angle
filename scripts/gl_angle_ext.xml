@@ -901,6 +901,9 @@
             <param len="n">const <ptype>GLenum</ptype> *<name>storeops</name></param>
         </command>
         <command>
+            <proto>void <name>glEndPixelLocalStorageImplicitANGLE</name></proto>
+        </command>
+        <command>
             <proto>void <name>glPixelLocalStorageBarrierANGLE</name></proto>
         </command>
         <command>
@@ -1223,7 +1226,7 @@
                 <enum name="GL_LOAD_OP_CLEAR_ANGLE"/>
                 <enum name="GL_LOAD_OP_LOAD_ANGLE"/>
                 <enum name="GL_STORE_OP_STORE_ANGLE"/>
-                <enum name="GL_PIXEL_LOCAL_FORMAT_ANGLE"/>
+                <enum name="GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE"/>
                 <enum name="GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE"/>
                 <enum name="GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE"/>
                 <enum name="GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE"/>
@@ -1239,6 +1242,7 @@
                 <command name="glFramebufferPixelLocalClearValueuivANGLE"/>
                 <command name="glBeginPixelLocalStorageANGLE"/>
                 <command name="glEndPixelLocalStorageANGLE"/>
+                <command name="glEndPixelLocalStorageImplicitANGLE"/>
                 <command name="glPixelLocalStorageBarrierANGLE"/>
                 <command name="glFramebufferPixelLocalStorageInterruptANGLE"/>
                 <command name="glFramebufferPixelLocalStorageRestoreANGLE"/>
@@ -1488,7 +1492,7 @@
         <enum value="0x96E4" name="GL_LOAD_OP_CLEAR_ANGLE"/>
         <enum value="0x96E5" name="GL_LOAD_OP_LOAD_ANGLE"/>
         <enum value="0x96E6" name="GL_STORE_OP_STORE_ANGLE"/>
-        <enum value="0x96E7" name="GL_PIXEL_LOCAL_FORMAT_ANGLE" group="PLSPlaneParameterName"/>
+        <enum value="0x96E7" name="GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE" group="PLSPlaneParameterName"/>
         <enum value="0x96E8" name="GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE" group="PLSPlaneParameterName"/>
         <enum value="0x96E9" name="GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE" group="PLSPlaneParameterName"/>
         <enum value="0x96EA" name="GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE" group="PLSPlaneParameterName"/>

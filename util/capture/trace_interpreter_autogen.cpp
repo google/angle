@@ -2128,6 +2128,13 @@ CallCapture ParseCallCapture(const Token &nameToken,
                 paramTokens, strings);
         return CallCapture(EntryPoint::GLEndPixelLocalStorageANGLE, std::move(params));
     }
+    if (strcmp(nameToken, "glEndPixelLocalStorageImplicitANGLE") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<std::remove_pointer<PFNGLENDPIXELLOCALSTORAGEIMPLICITANGLEPROC>::type>(
+                paramTokens, strings);
+        return CallCapture(EntryPoint::GLEndPixelLocalStorageImplicitANGLE, std::move(params));
+    }
     if (strcmp(nameToken, "glEndQuery") == 0)
     {
         ParamBuffer params =

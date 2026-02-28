@@ -1825,7 +1825,7 @@ void QueryFramebufferPixelLocalStorageParameterBase(Context *context,
         context->getState().getDrawFramebuffer()->getPixelLocalStorage(context).getPlane(plane);
     switch (pname)
     {
-        case GL_PIXEL_LOCAL_FORMAT_ANGLE:
+        case GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
         case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:

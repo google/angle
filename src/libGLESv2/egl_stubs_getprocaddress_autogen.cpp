@@ -368,6 +368,7 @@ const ProcEntry g_procTable[] = {
     {"glEnableiOES", P(GL_EnableiOES)},
     {"glEndPerfMonitorAMD", P(GL_EndPerfMonitorAMD)},
     {"glEndPixelLocalStorageANGLE", P(GL_EndPixelLocalStorageANGLE)},
+    {"glEndPixelLocalStorageImplicitANGLE", P(GL_EndPixelLocalStorageImplicitANGLE)},
     {"glEndQuery", P(GL_EndQuery)},
     {"glEndQueryEXT", P(GL_EndQueryEXT)},
     {"glEndTilingQCOM", P(GL_EndTilingQCOM)},

@@ -9124,8 +9124,13 @@ void Context::endPixelLocalStorage(GLsizei n, const GLenum storeops[])
 
 void Context::endPixelLocalStorageImplicit()
 {
+    // Ends the currently active pixel local storage session with GL_STORE_OP_STORE on all planes.
     GLsizei n = mState.getPixelLocalStorageActivePlanes();
-    ASSERT(n != 0);
+    if (n == 0)
+    {
+        // This command may be called when PLS is not active.
+        return;
+    }
     angle::FixedVector<GLenum, IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES> storeops(
         n, GL_STORE_OP_STORE_ANGLE);
     endPixelLocalStorage(n, storeops.data());

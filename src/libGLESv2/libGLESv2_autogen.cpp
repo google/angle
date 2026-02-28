@@ -3716,6 +3716,11 @@ void GL_APIENTRY glEndPixelLocalStorageANGLE(GLsizei n, const GLenum *storeops)
     return GL_EndPixelLocalStorageANGLE(n, storeops);
 }
 
+void GL_APIENTRY glEndPixelLocalStorageImplicitANGLE()
+{
+    return GL_EndPixelLocalStorageImplicitANGLE();
+}
+
 void GL_APIENTRY glPixelLocalStorageBarrierANGLE()
 {
     return GL_PixelLocalStorageBarrierANGLE();
