@@ -37,6 +37,7 @@ fn replace_with_uniform(ir_meta: &mut IRMeta, built_in: BuiltIn, name: &'static 
         var.built_in = None;
         debug_assert!(var.decorations.decorations.is_empty());
         var.decorations.decorations.push(Decoration::Uniform);
+        var.decorations.decorations.push(Decoration::EmulatedMultiDrawBuiltIn);
     }
 }
 

@@ -525,13 +525,44 @@ TIntermBlock *TCompiler::compileTreeImpl(angle::Span<const char *const> shaderSt
         ir::IR ir = parseContext.getIR();
 
         // Create an AST out of the IR while the rest of the translator is still AST based.
-        root = ir::GenerateAST(std::move(ir), this, compileOptions).root;
+        ir::Output output = ir::GenerateAST(std::move(ir), this, compileOptions);
+        root              = output.root;
+
+        // Vertex shader inputs and compute shader built-ins are gathered as "inputs" in IR, but are
+        // exposed as an "attributes" list.
+        if (mShaderType == GL_VERTEX_SHADER || mShaderType == GL_COMPUTE_SHADER)
+        {
+            mAttributes = std::move(output.inputs);
+        }
+        else
+        {
+            mInputVaryings = std::move(output.inputs);
+        }
+        // Fragment shader outputs are exposed in a separate list from the other shader stages.
+        if (mShaderType == GL_FRAGMENT_SHADER)
+        {
+            mOutputVariables = std::move(output.outputs);
+        }
+        else
+        {
+            mOutputVaryings = std::move(output.outputs);
+        }
+        mUniforms            = std::move(output.uniforms);
+        mSharedVariables     = std::move(output.shared);
+        mUniformBlocks       = std::move(output.uniformBlocks);
+        mShaderStorageBlocks = std::move(output.storageBlocks);
+        collectInterfaceBlocks();
+
+        mVariablesCollected = true;
     }
 #endif
     ASSERT(root != nullptr);
     if (compileOptions.skipAllValidationAndTransforms)
     {
-        collectVariables(root);
+        if (!compileOptions.useIR)
+        {
+            collectVariables(root);
+        }
     }
     else
     {
@@ -1088,15 +1119,15 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         {
             return false;
         }
-    }
 
-    collectVariables(root);
+        collectVariables(root);
 
-    if (compileOptions.useUnusedStandardSharedBlocks)
-    {
-        if (!useAllMembersInUnusedStandardAndSharedBlocks(root))
+        if (compileOptions.useUnusedStandardSharedBlocks)
         {
-            return false;
+            if (!useAllMembersInUnusedStandardAndSharedBlocks(root))
+            {
+                return false;
+            }
         }
     }
 
@@ -1116,25 +1147,25 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    // Remove declarations of inactive shader interface variables so backends don't need to account
-    // for them.  Note that currently, CollectVariables marks every field of an active uniform
-    // that's of struct type as active, i.e. no extracted sampler is inactive, so this can be done
-    // before extracting samplers from structs.
-    //
-    // For the MSL output, keep the inactive fragment outputs, but remove them otherwise.
-    if (compileOptions.removeInactiveVariables)
-    {
-        if (!RemoveInactiveInterfaceVariables(this, root, &getSymbolTable(), getAttributes(),
-                                              getInputVaryings(), getOutputVariables(),
-                                              getUniforms(), getInterfaceBlocks(),
-                                              !compileOptions.retainInactiveFragmentOutputs))
-        {
-            return false;
-        }
-    }
-
     if (!useIR)
     {
+        // Remove declarations of inactive shader interface variables so backends don't need to
+        // account for them.  Note that currently, CollectVariables marks every field of an active
+        // uniform that's of struct type as active, i.e. no extracted sampler is inactive, so this
+        // can be done before extracting samplers from structs.
+        //
+        // For the MSL output, keep the inactive fragment outputs, but remove them otherwise.
+        if (compileOptions.removeInactiveVariables)
+        {
+            if (!RemoveInactiveInterfaceVariables(this, root, &getSymbolTable(), getAttributes(),
+                                                  getInputVaryings(), getOutputVariables(),
+                                                  getUniforms(), getInterfaceBlocks(),
+                                                  !compileOptions.retainInactiveFragmentOutputs))
+            {
+                return false;
+            }
+        }
+
         if (compileOptions.initOutputVariables)
         {
             if (!initializeOutputVariables(root))
@@ -1532,6 +1563,8 @@ void TCompiler::setResourceString()
 
 void TCompiler::collectVariables(TIntermBlock *root)
 {
+    // Variable collection is done from the IR already.
+    ASSERT(!mCompileOptions.useIR);
     ASSERT(!mVariablesCollected);
     CollectVariables(root, &mAttributes, &mOutputVariables, &mUniforms, &mInputVaryings,
                      &mOutputVaryings, &mSharedVariables, &mUniformBlocks, &mShaderStorageBlocks,

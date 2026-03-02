@@ -354,6 +354,7 @@ fn decoration_str(decoration: Decoration) -> String {
         Decoration::RasterOrdered => "raster_ordered".to_string(),
         Decoration::EmulatedViewIDOut => "emulated_ViewID(VS)".to_string(),
         Decoration::EmulatedViewIDIn => "emulated_ViewID(FS)".to_string(),
+        Decoration::EmulatedMultiDrawBuiltIn => "emulated_multidraw_built_in".to_string(),
     }
 }
 

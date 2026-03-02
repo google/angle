@@ -493,6 +493,29 @@ pub fn trace_back<State, InspectConstant, InspectVariable, InspectRegister>(
     }
 }
 
+// A specialized version of trace_back that automatically traces `Access*` instructions until a
+// variable is found (or not).
+pub fn trace_back_to_variable(ir_meta: &IRMeta, id: Id) -> Option<VariableId> {
+    let mut result = None;
+    trace_back(
+        ir_meta,
+        &mut result,
+        id,
+        &mut |_, _| {},
+        &mut |result, variable_id| *result = Some(variable_id),
+        &mut |_, _, opcode| match *opcode {
+            OpCode::AccessVectorComponent(base_id, _)
+            | OpCode::AccessVectorComponentMulti(base_id, _)
+            | OpCode::AccessVectorComponentDynamic(base_id, _)
+            | OpCode::AccessMatrixColumn(base_id, _)
+            | OpCode::AccessStructField(base_id, _)
+            | OpCode::AccessArrayElement(base_id, _) => Some(base_id.id),
+            _ => None,
+        },
+    );
+    result
+}
+
 // ESSL 100 Appendix A.4 Control Flow specifies the shape of supported `for` loops.  The format is:
 //
 //     for (type variable = constant; variable op constant; expression)
@@ -727,6 +750,8 @@ pub fn inspect_pointer_access<State, OnAccess>(
     match opcode {
         // Read accesses
         &OpCode::Load(pointer)
+        | &OpCode::Unary(UnaryOpCode::ArrayLength, pointer)
+        | &OpCode::Unary(UnaryOpCode::AtomicCounter, pointer)
         | &OpCode::Binary(BinaryOpCode::AtomicAdd, pointer, _)
         | &OpCode::Binary(BinaryOpCode::AtomicMin, pointer, _)
         | &OpCode::Binary(BinaryOpCode::AtomicMax, pointer, _)
@@ -757,7 +782,9 @@ pub fn inspect_pointer_access<State, OnAccess>(
         &OpCode::Unary(UnaryOpCode::PrefixIncrement, pointer)
         | &OpCode::Unary(UnaryOpCode::PrefixDecrement, pointer)
         | &OpCode::Unary(UnaryOpCode::PostfixIncrement, pointer)
-        | &OpCode::Unary(UnaryOpCode::PostfixDecrement, pointer) => {
+        | &OpCode::Unary(UnaryOpCode::PostfixDecrement, pointer)
+        | &OpCode::Unary(UnaryOpCode::AtomicCounterIncrement, pointer)
+        | &OpCode::Unary(UnaryOpCode::AtomicCounterDecrement, pointer) => {
             on_access(state, pointer, PointerAccess::ReadWrite);
         }
 

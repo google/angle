@@ -239,6 +239,7 @@ impl Generator {
             Decoration::RasterOrdered => layout_qualifiers.push("raster_ordered".to_string()),
             Decoration::EmulatedViewIDOut => layout_qualifiers.push("flat out".to_string()),
             Decoration::EmulatedViewIDIn => layout_qualifiers.push("flat in".to_string()),
+            Decoration::EmulatedMultiDrawBuiltIn => (),
         }
     }
 

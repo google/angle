@@ -72,7 +72,6 @@ impl BreakInfo {
     }
 }
 
-#[cfg_attr(debug_assertions, derive(Debug))]
 struct State<'a> {
     ir_meta: &'a mut IRMeta,
     // Used to know when temporary variables are needed
