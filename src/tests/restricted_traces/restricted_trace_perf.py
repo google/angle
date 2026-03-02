@@ -695,6 +695,8 @@ def collect_cpu_inst(done_event, test_fixedtime, results):
             if re.search('vulkan\..*\.so', line):
                 results['vulkan_lib'] = safe_cast_float(line.split()[-2].strip())
 
+            if 'libc.so' in line:
+                results['libc_lib'] = safe_cast_float(line.split()[-2].strip())
     finally:
         run_adb_shell_command(f'rm -f {tmp_data_file}')
         run_adb_shell_command(f'rm -f {temp_filter_file}')
@@ -953,13 +955,14 @@ def run_traces(args):
         'angle_cpuinst': 20,
         'vulkan_cpuinst': 20,
         'gles_cpuinst': 20,
+        'libc_cpuinst': 20,
     }
 
     if args.walltimeonly:
         print('%-*s' % (trace_width, 'wall_time_per_frame'))
     else:
         print(
-            '%-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s'
+            '%-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s'
             % (
                 column_width['trace'],
                 'trace',
@@ -995,13 +998,15 @@ def run_traces(args):
                 'vulkan_cpuinst',
                 column_width['gles_cpuinst'],
                 'gles_cpuinst',
+                column_width['libc_cpuinst'],
+                'libc_cpuinst',
             ))
         if output_writer:
             output_writer.writerow([
                 'trace', 'wall_time(ms)', 'gpu_time(ms)', 'frame_wall_time(ms)', 'cpu_time(ms)',
                 'gpu_power(W)', 'cpu_power(W)', 'infra_power(W)', 'gpu_mem_sustained',
                 'gpu_mem_peak', 'proc_mem_median', 'proc_mem_peak', 'process_cpuinst',
-                'gfxlib_cpuinst', 'angle_cpuinst', 'vulkan_cpuinst', 'gles_cpuinst'
+                'gfxlib_cpuinst', 'angle_cpuinst', 'vulkan_cpuinst', 'gles_cpuinst', 'libc_cpuinst'
             ])
 
     if args.power:
@@ -1030,6 +1035,7 @@ def run_traces(args):
     angle_cpuinsts = defaultdict(dict)
     vulkan_cpuinsts = defaultdict(dict)
     gles_cpuinsts = defaultdict(dict)
+    libc_cpuinsts = defaultdict(dict)
 
     # Organize the data for writing out
     rows = defaultdict(dict)
@@ -1064,6 +1070,7 @@ def run_traces(args):
         angle_cpuinsts.clear()
         vulkan_cpuinsts.clear()
         gles_cpuinsts.clear()
+        libc_cpuinsts.clear()
 
         for i in range(int(args.loop_count)):
 
@@ -1122,6 +1129,7 @@ def run_traces(args):
                         "gles_lib": 0,
                         "angle_lib": 0,
                         "vulkan_lib": 0,
+                        "libc_lib": 0,
                     }  # output arg
                     cpu_inst_thread = threading.Thread(
                         target=collect_cpu_inst,
@@ -1159,6 +1167,7 @@ def run_traces(args):
                 angle_cpuinst = 0
                 vulkan_cpuinst = 0
                 gles_cpuinst = 0
+                libc_cpuinst = 0
                 if args.cpu_inst:
                     cpu_inst_thread.join(timeout=10)
                     if cpu_inst_thread.is_alive():
@@ -1182,6 +1191,9 @@ def run_traces(args):
 
                         gles_cpuinst = cpu_inst_results["gles_lib"]
                         gles_cpuinst = safe_divide(gles_cpuinst, frame_count)
+
+                        libc_cpuinst = cpu_inst_results["libc_lib"]
+                        libc_cpuinst = safe_divide(libc_cpuinst, frame_count)
 
                 gpu_power, cpu_power, infra_power = 0, 0, 0
 
@@ -1278,11 +1290,15 @@ def run_traces(args):
                     gles_cpuinsts[test] = defaultdict(list)
                 gles_cpuinsts[test][renderer].append(safe_cast_float(gles_cpuinst))
 
+                if len(libc_cpuinsts[test]) == 0:
+                    libc_cpuinsts[test] = defaultdict(list)
+                libc_cpuinsts[test][renderer].append(safe_cast_float(libc_cpuinst))
+
                 if args.walltimeonly:
                     print('%-*s' % (trace_width, wall_time))
                 else:
                     print(
-                        '%-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*i %-*i %-*i %-*i %-*s %-*s %-*s %-*s %-*s'
+                        '%-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*s %-*i %-*i %-*i %-*i %-*s %-*s %-*s %-*s %-*s %-*s'
                         % (
                             column_width['trace'],
                             trace_name,
@@ -1318,13 +1334,16 @@ def run_traces(args):
                             vulkan_cpuinst,
                             column_width['gles_cpuinst'],
                             gles_cpuinst,
+                            column_width['libc_cpuinst'],
+                            libc_cpuinst,
                         ))
                     if output_writer:
                         output_writer.writerow([
                             mode + renderer + '_' + test, wall_time, gpu_time, frame_wall_time,
                             cpu_time, gpu_power, cpu_power, infra_power, gpu_mem_sustained,
                             gpu_mem_peak, proc_mem_median, proc_mem_peak, process_cpuinst,
-                            gfxlib_cpuinst, angle_cpuinst, vulkan_cpuinst, gles_cpuinst
+                            gfxlib_cpuinst, angle_cpuinst, vulkan_cpuinst, gles_cpuinst,
+                            libc_cpuinst
                         ])
 
 
@@ -1369,6 +1388,7 @@ def generate_summary(raw_data_filename, summary_filename):
     angle_cpuinsts = defaultdict(lambda: defaultdict(list))
     vulkan_cpuinsts = defaultdict(lambda: defaultdict(list))
     gles_cpuinsts = defaultdict(lambda: defaultdict(list))
+    libc_cpuinsts = defaultdict(lambda: defaultdict(list))
 
     renderers = set()
 
@@ -1406,6 +1426,7 @@ def generate_summary(raw_data_filename, summary_filename):
                 angle_cpuinsts[trace][renderer].append(safe_cast_float(row['angle_cpuinst']))
                 vulkan_cpuinsts[trace][renderer].append(safe_cast_float(row['vulkan_cpuinst']))
                 gles_cpuinsts[trace][renderer].append(safe_cast_float(row['gles_cpuinst']))
+                libc_cpuinsts[trace][renderer].append(safe_cast_float(row['libc_cpuinst']))
 
     except FileNotFoundError:
         logging.error(f"Error: Raw data file '{raw_data_filename}' not found.")
@@ -1464,7 +1485,9 @@ def generate_summary(raw_data_filename, summary_filename):
             f"\"{renderer_name}\nvulkan\ncpu\ninst\n\"",
             f"\"{renderer_name}\nvulkan\ncpu\ninst\nvariance\"",
             f"\"{renderer_name}\ngles\ncpu\ninst\n\"",
-            f"\"{renderer_name}\ngles\ncpu\ninst\nvariance\""
+            f"\"{renderer_name}\ngles\ncpu\ninst\nvariance\"",
+            f"\"{renderer_name}\nlibc\ncpu\ninst\n\"",
+            f"\"{renderer_name}\nlibc\ncpu\ninst\nvariance\""
         ])
     else:
         summary_writer.writerow([
@@ -1550,6 +1573,11 @@ def generate_summary(raw_data_filename, summary_filename):
             "\"ANGLE\ngles\ncpu\ninst\"",
             "\"ANGLE\ngles\ncpu\ninst\nvariance\"",
             "\"gles\ncpu\ninst\ncompare\"",
+            "\"Native\nlibc\ncpu\ninst\"",
+            "\"Native\nlibc\ncpu\ninst\nvariance\"",
+            "\"ANGLE\nlibc\ncpu\ninst\"",
+            "\"ANGLE\nlibc\ncpu\ninst\nvariance\"",
+            "\"libc\ncpu\ninst\ncompare\"",
         ])
 
     for name, results in wall_times.items():
@@ -1598,6 +1626,9 @@ def generate_summary(raw_data_filename, summary_filename):
         populate_summary_row(rows, name, results)
 
     for name, results in gles_cpuinsts.items():
+        populate_summary_row(rows, name, results)
+
+    for name, results in libc_cpuinsts.items():
         populate_summary_row(rows, name, results)
 
     if (len(renderers) == 1) and "both" not in renderers:
@@ -1655,6 +1686,9 @@ def generate_summary(raw_data_filename, summary_filename):
                 # gles cpuinst
                 "%.3f" % data[renderer_name][30],
                 percent(data[renderer_name][31]),
+                # libc cpuinst
+                "%.3f" % data[renderer_name][32],
+                percent(data[renderer_name][33]),
             ])
     else:
         for name, data in rows.items():
@@ -1758,6 +1792,12 @@ def generate_summary(raw_data_filename, summary_filename):
                 "%.3f" % data["vulkan"][30],
                 percent(data["vulkan"][31]),
                 percent(safe_divide(data["native"][30], data["vulkan"][30])),
+                # libc cpuinst
+                "%.3f" % data["native"][32],
+                percent(data["native"][33]),
+                "%.3f" % data["vulkan"][32],
+                percent(data["vulkan"][33]),
+                percent(safe_divide(data["native"][32], data["vulkan"][32])),
             ])
 
 
