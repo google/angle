@@ -112,6 +112,37 @@ angle_mac_parent_builder(
     ),
 )
 
+angle_mac_parent_builder(
+    name = "angle-mac-x64-builder-rel",
+    description_html = "Compiles release ANGLE test binaries for Mac/x64",
+    schedule = "triggered",
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.MAC,
+        ),
+    ),
+    gn_args = gn_args.config(
+        configs = [
+            "capture",
+            "component",
+            "mac_clang",
+            "release_with_dchecks",
+            "x64",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|mac|x64",
+        short_name = "rel",
+    ),
+)
+
 ################################################################################
 # Child Testers                                                                #
 ################################################################################
@@ -285,6 +316,78 @@ ci.thin_tester(
     console_view_entry = consoles.console_view_entry(
         category = "test|mac|arm64|rel",
         short_name = "m2",
+    ),
+)
+
+ci.thin_tester(
+    name = "angle-mac-x64-amd-5300m-rel",
+    description_html = "Tests release ANGLE on Mac/x64 on 16\" 2019 Macbook Pros w/ 5300M GPUs",
+    parent = "angle-mac-x64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.MAC,
+        ),
+        run_tests_serially = True,
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|mac|x64|rel",
+        short_name = "5300m",
+    ),
+)
+
+ci.thin_tester(
+    name = "angle-mac-x64-amd-555x-rel",
+    description_html = "Tests release ANGLE on Mac/x64 on 15\" 2019 Macbook Pros w/ Radeon Pro 555X GPUs",
+    parent = "angle-mac-x64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.MAC,
+        ),
+        run_tests_serially = True,
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|mac|x64|rel",
+        short_name = "555x",
+    ),
+)
+
+ci.thin_tester(
+    name = "angle-mac-x64-intel-uhd630-rel",
+    description_html = "Tests release ANGLE on Mac/x64 on 2018 Mac Minis w/ Intel UHD 630 GPUs",
+    parent = "angle-mac-x64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.MAC,
+        ),
+        run_tests_serially = True,
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|mac|x64|rel",
+        short_name = "630",
     ),
 )
 
