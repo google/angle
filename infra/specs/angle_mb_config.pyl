@@ -43,7 +43,6 @@
       'mac-dbg-compile': 'angle_remoteexec_x64_debug_bot',
       'mac-exp-test': 'angle_remoteexec_x64_release_bot',
       'mac-ir-test': 'angle_remoteexec_x64_release_ir_bot',
-      'mac-test': 'angle_remoteexec_x64_release_bot',
       'win-asan-test': 'angle_asan_bot',
       'win-dbg-compile': 'angle_remoteexec_debug_bot',
       'win-exp-test': 'angle_remoteexec_release_bot',

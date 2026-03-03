@@ -227,14 +227,6 @@
           'gtest_tests': 'swangle_slow_flaky_gtests',
         },
       },
-      'mac-amd': {
-        'os_type': 'mac',
-        'mixins': [
-          'mac_retina_amd_gpu_stable',
-        ],
-        'test_suites': {
-        },
-      },
       'mac-exp-amd': {
         'os_type': 'mac',
         'mixins': [
@@ -250,14 +242,6 @@
         ],
         'test_suites': {
           'gtest_tests': 'mac_amd_and_intel_gtests',
-        },
-      },
-      'mac-intel': {
-        'os_type': 'mac',
-        'mixins': [
-          'mac_mini_intel_gpu_stable',
-        ],
-        'test_suites': {
         },
       },
       'mac-ir-amd': {
@@ -276,14 +260,6 @@
         ],
         'test_suites': {
           'gtest_tests': 'mac_amd_and_intel_gtests',
-        },
-      },
-      'mac-x64-amd-555x-test': {
-        'os_type': 'mac',
-        'mixins': [
-          'mac_retina_amd_555x_gpu_stable',
-        ],
-        'test_suites': {
         },
       },
       'win10-x64-exp-intel': {

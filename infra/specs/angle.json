@@ -7785,7 +7785,6 @@
       }
     ]
   },
-  "mac-amd": {},
   "mac-exp-amd": {},
   "mac-exp-intel": {
     "gtest_tests": [
@@ -8005,7 +8004,6 @@
       }
     ]
   },
-  "mac-intel": {},
   "mac-ir-amd": {
     "gtest_tests": [
       {
@@ -8460,7 +8458,6 @@
       }
     ]
   },
-  "mac-x64-amd-555x-test": {},
   "win10-x64-exp-intel": {
     "gtest_tests": [
       {
