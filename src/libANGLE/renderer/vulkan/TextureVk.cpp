@@ -4173,7 +4173,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     const VkImageType imageType     = gl_vk::GetImageType(mState.getType());
     const VkImageTiling imageTiling = mImage->getTilingMode();
 
-    if (mipLevels == ImageMipLevels::FullMipChainForGenerateMipmap &&
+    if (mipLevels == ImageMipLevels::FullMipChainForGenerateMipmap && levelCount > 1 &&
         CanGenerateMipmapWithCompute(renderer, imageType, actualImageFormatID, samples, mOwnsImage))
     {
         mImageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
