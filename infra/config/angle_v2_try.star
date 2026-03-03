@@ -114,9 +114,6 @@ angle_mac_functional_cq_tester(
         "ci/angle-mac-x64-intel-uhd630-rel",
     ],
     gn_args = "ci/angle-mac-x64-builder-rel",
-    # TODO(anglebug.com/475260235): Actually add this to the CQ once we confirm
-    # that the CI builders work as expected.
-    tryjob = try_.job(includable_only = True),
 )
 
 ################################################################################

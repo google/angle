@@ -233,7 +233,6 @@
           'mac_retina_amd_gpu_stable',
         ],
         'test_suites': {
-          'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
       'mac-exp-amd': {
@@ -259,7 +258,6 @@
           'mac_mini_intel_gpu_stable',
         ],
         'test_suites': {
-          'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
       'mac-ir-amd': {
@@ -286,7 +284,6 @@
           'mac_retina_amd_555x_gpu_stable',
         ],
         'test_suites': {
-          'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
       'win10-x64-exp-intel': {
