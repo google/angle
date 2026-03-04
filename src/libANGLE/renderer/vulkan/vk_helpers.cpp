@@ -6615,7 +6615,8 @@ angle::Result ImageHelper::initLayerImageViewImpl(ContextVk *contextVk,
     const angle::Format &angleFormat               = getActualFormat();
     GLenum glFormat                                = angleFormat.glInternalFormat;
     VkImageViewASTCDecodeModeEXT astcDecodeModeEXT = {};
-    if (astcDecodePrecision != GL_NONE && gl::IsASTC2DFormat(glFormat))
+    if (astcDecodePrecision != GL_NONE &&
+        (gl::IsASTC2DFormat(glFormat) || gl::IsASTC3DFormat(glFormat)))
     {
         astcDecodeModeEXT.sType      = VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT;
         astcDecodeModeEXT.pNext      = nullptr;
