@@ -367,53 +367,23 @@ static bool ValidateES3CompressedFormatForTexture2DArray(const Context *context,
     return true;
 }
 
-static bool ValidateES3CompressedFormatForTexture3D(const Context *context,
-                                                    angle::EntryPoint entryPoint,
-                                                    GLenum format)
+static bool ValidCompressedFormatForTexture3D(GLenum format, const Extensions &extensions)
 {
-    if (IsETC1Format(format) || IsPVRTC1Format(format))
+    if (IsASTC2DFormat(format))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2D);
-        return false;
+        return extensions.textureCompressionAstcHdrKHR ||
+               extensions.textureCompressionAstcSliced3dKHR;
     }
 
-    if (IsETC2EACFormat(format))
+    if (IsASTC3DFormat(format) || IsBPTCFormat(format))
     {
-        // ES 3.1, Section 8.7, page 169.
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArray);
-        return false;
+        return true;
     }
 
-    if (IsASTC2DFormat(format) && !(context->getExtensions().textureCompressionAstcHdrKHR ||
-                                    context->getExtensions().textureCompressionAstcSliced3dKHR))
-    {
-        // GL_KHR_texture_compression_astc_hdr, TEXTURE_3D is not supported without HDR profile
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArrayASTC);
-        return false;
-    }
-
-    if (IsS3TCFormat(format))
-    {
-        // GL_EXT_texture_compression_s3tc
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArrayS3TC);
-        return false;
-    }
-
-    if (IsRGTCFormat(format))
-    {
-        // GL_EXT_texture_compression_rgtc
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArrayRGTC);
-        return false;
-    }
-
-    if (IsBPTCFormat(format) && (context->getLimitations().noCompressedTexture3D))
-    {
-        // GL_EXT_texture_compression_bptc
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2DArrayBPTC);
-        return false;
-    }
-
-    return true;
+    // All other compressed formats are specified to not support 3D textures.
+    ASSERT((IsS3TCFormat(format) || IsRGTCFormat(format)) ||
+           (IsETC1Format(format) || IsETC2EACFormat(format)) || IsPVRTC1Format(format));
+    return false;
 }
 
 bool ValidateES3TexImageParametersBase(const Context *context,
@@ -644,13 +614,12 @@ bool ValidateES3TexImageParametersBase(const Context *context,
                 return false;
             }
         }
-
-        if (texType == TextureType::_3D)
+        else if (texType == TextureType::_3D)
         {
             GLenum compressedDataFormat = isSubImage ? format : internalformat;
-            if (!ValidateES3CompressedFormatForTexture3D(context, entryPoint, compressedDataFormat))
+            if (!ValidCompressedFormatForTexture3D(compressedDataFormat, context->getExtensions()))
             {
-                // Error already generated.
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInternalFormatNotSupportedTexture3D);
                 return false;
             }
         }
@@ -1490,13 +1459,12 @@ bool ValidateES3TexStorageParametersFormat(const Context *context,
                 return false;
             }
         }
-
-        if (target == TextureType::_3D)
+        else if (target == TextureType::_3D)
         {
-            if (!ValidateES3CompressedFormatForTexture3D(context, entryPoint,
-                                                         formatInfo.internalFormat))
+            if (!ValidCompressedFormatForTexture3D(formatInfo.internalFormat,
+                                                   context->getExtensions()))
             {
-                // Error already generated.
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInternalFormatNotSupportedTexture3D);
                 return false;
             }
         }
