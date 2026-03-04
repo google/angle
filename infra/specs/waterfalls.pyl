@@ -227,22 +227,6 @@
           'gtest_tests': 'swangle_slow_flaky_gtests',
         },
       },
-      'mac-exp-amd': {
-        'os_type': 'mac',
-        'mixins': [
-          'mac_retina_amd_gpu_experimental',
-        ],
-        'test_suites': {
-        },
-      },
-      'mac-exp-intel': {
-        'os_type': 'mac',
-        'mixins': [
-          'mac_mini_intel_gpu_experimental',
-        ],
-        'test_suites': {
-        },
-      },
       'mac-ir-amd': {
         'os_type': 'mac',
         'mixins': [

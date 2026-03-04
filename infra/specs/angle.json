@@ -7785,8 +7785,6 @@
       }
     ]
   },
-  "mac-exp-amd": {},
-  "mac-exp-intel": {},
   "mac-ir-amd": {
     "gtest_tests": [
       {
