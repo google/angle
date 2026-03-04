@@ -320,6 +320,32 @@ ci.thin_tester(
 )
 
 ci.thin_tester(
+    name = "angle-mac-x64-amd-5300m-exp-rel",
+    description_html = "Tests release ANGLE on Mac/x64 on experimental configs of 16\" 2019 Macbook Pros w/ 5300M GPUs",
+    parent = "angle-mac-x64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.MAC,
+        ),
+        run_tests_serially = True,
+    ),
+    # Uncomment this entry when this experimental tester is actually in use.
+    # console_view_entry = consoles.console_view_entry(
+    #     category = "test|mac|x64|rel|exp",
+    #     short_name = "5300m",
+    # ),
+    list_view = "exp",
+)
+
+ci.thin_tester(
     name = "angle-mac-x64-amd-5300m-rel",
     description_html = "Tests release ANGLE on Mac/x64 on 16\" 2019 Macbook Pros w/ 5300M GPUs",
     parent = "angle-mac-x64-builder-rel",
@@ -365,6 +391,32 @@ ci.thin_tester(
         category = "test|mac|x64|rel",
         short_name = "555x",
     ),
+)
+
+ci.thin_tester(
+    name = "angle-mac-x64-intel-uhd630-exp-rel",
+    description_html = "Tests release ANGLE on Mac/x64 on experimental configs of 2018 Mac Minis w/ Intel UHD 630 GPUs",
+    parent = "angle-mac-x64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.MAC,
+        ),
+        run_tests_serially = True,
+    ),
+    # Uncomment this entry when this experimental tester is actually in use.
+    console_view_entry = consoles.console_view_entry(
+        category = "test|mac|x64|rel|exp",
+        short_name = "630",
+    ),
+    list_view = "exp",
 )
 
 ci.thin_tester(

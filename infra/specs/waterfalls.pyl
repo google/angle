@@ -452,6 +452,14 @@
           'gtest_tests': 'mac_apple_gtests',
         },
       },
+      'angle-mac-x64-amd-5300m-exp-rel': {
+        'os_type': 'mac',
+        'mixins': [
+          'mac_retina_amd_gpu_experimental',
+        ],
+        'test_suites': {
+        },
+      },
       'angle-mac-x64-amd-5300m-rel': {
         'os_type': 'mac',
         'mixins': [
@@ -465,6 +473,15 @@
         'os_type': 'mac',
         'mixins': [
           'mac_retina_amd_555x_gpu_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'mac_amd_and_intel_gtests',
+        },
+      },
+      'angle-mac-x64-intel-uhd630-exp-rel': {
+        'os_type': 'mac',
+        'mixins': [
+          'mac_mini_intel_gpu_experimental',
         ],
         'test_suites': {
           'gtest_tests': 'mac_amd_and_intel_gtests',
