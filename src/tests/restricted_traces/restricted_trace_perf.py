@@ -414,7 +414,7 @@ def get_gpu_memory(trace_duration):
 
     gpu_mem_average = 0
     if len(gpu_mem_sustained) != 0:
-        gpu_mem_average = statistics.mean(gpu_mem_sustained)
+        gpu_mem_average = safe_cast_int(statistics.mean(gpu_mem_sustained))
 
     return gpu_mem_average, gpu_mem_max
 
