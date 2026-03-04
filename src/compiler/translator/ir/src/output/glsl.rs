@@ -338,12 +338,7 @@ impl Generator {
             "{}{}{}",
             match name.source {
                 // Make sure unnamed interface blocks remain unnamed.
-                NameSource::ShaderInterface =>
-                    if !name.name.is_empty() {
-                        USER_SYMBOL_PREFIX
-                    } else {
-                        ""
-                    },
+                NameSource::ShaderInterface if !name.name.is_empty() => USER_SYMBOL_PREFIX,
                 NameSource::Temporary => temp_prefix,
                 _ => "",
             },
@@ -813,12 +808,10 @@ impl ast::Target for Generator {
 
     fn global_scope(&mut self, ir_meta: &IRMeta) {
         match ir_meta.get_shader_type() {
-            ShaderType::Vertex => {
-                if ir_meta.get_num_views() > 0 {
-                    // Note: not to be done if emulate_instanced_multiview is set
-                    writeln!(self.preamble, "layout(num_views = {}) in;", ir_meta.get_num_views())
-                        .unwrap();
-                }
+            ShaderType::Vertex if ir_meta.get_num_views() > 0 => {
+                // Note: not to be done if emulate_instanced_multiview is set
+                writeln!(self.preamble, "layout(num_views = {}) in;", ir_meta.get_num_views())
+                    .unwrap();
             }
             ShaderType::Fragment => {
                 if ir_meta.get_early_fragment_tests() {

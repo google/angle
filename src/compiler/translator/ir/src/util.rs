@@ -545,29 +545,25 @@ pub fn block_ends_in_trivial_for_loop(ir_meta: &IRMeta, block: &Block) -> Option
                         expect_loaded_value,
                         expect_comparator_constant,
                     ),
-                ) => {
-                    if expect_variable.id.is_variable()
-                        && expect_loaded_value.id == Id::new_register(expect_load.result.id)
-                        && expect_op_result.id == Id::new_register(expect_op.result.id)
-                        && expect_comparator_constant.id.is_constant()
-                        && matches!(
-                            expect_compare_op,
-                            BinaryOpCode::Equal
-                                | BinaryOpCode::NotEqual
-                                | BinaryOpCode::LessThan
-                                | BinaryOpCode::GreaterThan
-                                | BinaryOpCode::LessThanEqual
-                                | BinaryOpCode::GreaterThanEqual
-                        )
-                    {
-                        (
-                            expect_variable.id.get_variable(),
-                            expect_compare_op,
-                            expect_comparator_constant.id.get_constant(),
-                        )
-                    } else {
-                        return None;
-                    }
+                ) if expect_variable.id.is_variable()
+                    && expect_loaded_value.id == Id::new_register(expect_load.result.id)
+                    && expect_op_result.id == Id::new_register(expect_op.result.id)
+                    && expect_comparator_constant.id.is_constant()
+                    && matches!(
+                        expect_compare_op,
+                        BinaryOpCode::Equal
+                            | BinaryOpCode::NotEqual
+                            | BinaryOpCode::LessThan
+                            | BinaryOpCode::GreaterThan
+                            | BinaryOpCode::LessThanEqual
+                            | BinaryOpCode::GreaterThanEqual
+                    ) =>
+                {
+                    (
+                        expect_variable.id.get_variable(),
+                        expect_compare_op,
+                        expect_comparator_constant.id.get_constant(),
+                    )
                 }
                 _ => {
                     return None;
@@ -618,7 +614,7 @@ pub fn block_ends_in_trivial_for_loop(ir_meta: &IRMeta, block: &Block) -> Option
                 // Note that while ESSL 100 requires postfix operators, we also detect prefix
                 // operators which are functionality identical in this case, to help with the other
                 // generators that need to detect this sort of `for` loop.
-                OpCode::Unary(expect_inc_dec_op, expect_loop_variable) => {
+                OpCode::Unary(expect_inc_dec_op, expect_loop_variable)
                     if expect_loop_variable.id.is_variable()
                         && expect_loop_variable.id.get_variable() == loop_variable
                         && matches!(
@@ -627,18 +623,15 @@ pub fn block_ends_in_trivial_for_loop(ir_meta: &IRMeta, block: &Block) -> Option
                                 | UnaryOpCode::PrefixDecrement
                                 | UnaryOpCode::PostfixIncrement
                                 | UnaryOpCode::PostfixDecrement
-                        )
-                    {
-                        (
-                            matches!(
-                                expect_inc_dec_op,
-                                UnaryOpCode::PrefixIncrement | UnaryOpCode::PostfixIncrement
-                            ),
-                            None,
-                        )
-                    } else {
-                        return None;
-                    }
+                        ) =>
+                {
+                    (
+                        matches!(
+                            expect_inc_dec_op,
+                            UnaryOpCode::PrefixIncrement | UnaryOpCode::PostfixIncrement
+                        ),
+                        None,
+                    )
                 }
                 _ => {
                     return None;
@@ -657,23 +650,19 @@ pub fn block_ends_in_trivial_for_loop(ir_meta: &IRMeta, block: &Block) -> Option
                 (
                     &OpCode::Load(expect_loop_variable),
                     &OpCode::Binary(expect_step_op, expect_loaded_value, expect_step_constant),
-                ) => {
-                    if expect_loop_variable.id.is_variable()
-                        && expect_loop_variable_store.id.is_variable()
-                        && expect_loop_variable.id.get_variable() == loop_variable
-                        && expect_loop_variable_store.id.get_variable() == loop_variable
-                        && expect_loaded_value.id == Id::new_register(expect_load.result.id)
-                        && expect_op_result.id == Id::new_register(expect_step.result.id)
-                        && expect_step_constant.id.is_constant()
-                        && matches!(expect_step_op, BinaryOpCode::Add | BinaryOpCode::Sub)
-                    {
-                        (
-                            matches!(expect_step_op, BinaryOpCode::Add),
-                            expect_step_constant.id.get_if_constant(),
-                        )
-                    } else {
-                        return None;
-                    }
+                ) if expect_loop_variable.id.is_variable()
+                    && expect_loop_variable_store.id.is_variable()
+                    && expect_loop_variable.id.get_variable() == loop_variable
+                    && expect_loop_variable_store.id.get_variable() == loop_variable
+                    && expect_loaded_value.id == Id::new_register(expect_load.result.id)
+                    && expect_op_result.id == Id::new_register(expect_step.result.id)
+                    && expect_step_constant.id.is_constant()
+                    && matches!(expect_step_op, BinaryOpCode::Add | BinaryOpCode::Sub) =>
+                {
+                    (
+                        matches!(expect_step_op, BinaryOpCode::Add),
+                        expect_step_constant.id.get_if_constant(),
+                    )
                 }
                 _ => {
                     return None;
