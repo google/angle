@@ -2083,8 +2083,14 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
     {
         return angle::Result::Continue;
     }
-    unsigned int spaceNeeded =
-        static_cast<unsigned int>(sizeof(GLuint) * mScratchIndexDataBuffer.size());
+
+    uint64_t spaceNeeded64 = sizeof(GLuint) * mScratchIndexDataBuffer.size();
+    ANGLE_CHECK(GetImplAs<Context11>(context), spaceNeeded64 <= std::numeric_limits<int>::max(),
+                "Failed to create a 32-bit looping index buffer for "
+                "a GL_LINE_LOOP of <32-bit element type; too many indices required.",
+                GL_OUT_OF_MEMORY);
+    int spaceNeeded = static_cast<int>(spaceNeeded64);
+
     ANGLE_TRY(
         mLineLoopIB->reserveBufferSpace(context, spaceNeeded, gl::DrawElementsType::UnsignedInt));
 
@@ -2165,8 +2171,12 @@ angle::Result Renderer11::drawTriangleFan(const gl::Context *context,
     GetTriFanIndices(indexPointer, type, count, glState.isPrimitiveRestartEnabled(),
                      &mScratchIndexDataBuffer);
 
-    const unsigned int spaceNeeded =
-        static_cast<unsigned int>(mScratchIndexDataBuffer.size() * sizeof(unsigned int));
+    uint64_t spaceNeeded64 = mScratchIndexDataBuffer.size() * sizeof(unsigned int);
+    ANGLE_CHECK(GetImplAs<Context11>(context), spaceNeeded64 <= std::numeric_limits<int>::max(),
+                "Failed to create a 32-bit looping index buffer for "
+                "a GL_TRIANGLE_FAN of <32-bit element type; too many indices required.",
+                GL_OUT_OF_MEMORY);
+    int spaceNeeded = static_cast<int>(spaceNeeded64);
     ANGLE_TRY(mTriangleFanIB->reserveBufferSpace(context, spaceNeeded,
                                                  gl::DrawElementsType::UnsignedInt));
 
