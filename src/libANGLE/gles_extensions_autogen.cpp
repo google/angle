@@ -175,7 +175,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_QCOM_shading_rate"] = enableableExtension(&Extensions::shadingRateQCOM);
         map["GL_EXT_shadow_samplers"] = enableableExtension(&Extensions::shadowSamplersEXT);
         map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGBEXT);
-        map["GL_EXT_sRGB_write_control"] = esOnlyExtension(&Extensions::sRGBWriteControlEXT);
+        map["GL_EXT_sRGB_write_control"] = enableableExtension(&Extensions::sRGBWriteControlEXT);
         map["GL_OES_standard_derivatives"] = enableableExtension(&Extensions::standardDerivativesOES);
         map["GL_OES_surfaceless_context"] = esOnlyExtension(&Extensions::surfacelessContextOES);
         map["GL_EXT_tessellation_shader"] = enableableExtension(&Extensions::tessellationShaderEXT);
@@ -205,7 +205,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_texture_float"] = enableableExtension(&Extensions::textureFloatOES);
         map["GL_OES_texture_float_linear"] = enableableExtension(&Extensions::textureFloatLinearOES);
         map["GL_EXT_texture_format_BGRA8888"] = enableableExtension(&Extensions::textureFormatBGRA8888EXT);
-        map["GL_EXT_texture_format_sRGB_override"] = esOnlyExtension(&Extensions::textureFormatSRGBOverrideEXT);
+        map["GL_EXT_texture_format_sRGB_override"] = enableableExtension(&Extensions::textureFormatSRGBOverrideEXT);
         map["GL_QCOM_texture_foveated"] = enableableExtension(&Extensions::textureFoveatedQCOM);
         map["GL_OES_texture_half_float"] = enableableExtension(&Extensions::textureHalfFloatOES);
         map["GL_OES_texture_half_float_linear"] = enableableExtension(&Extensions::textureHalfFloatLinearOES);
@@ -215,7 +215,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_texture_query_lod"] = enableableExtension(&Extensions::textureQueryLodEXT);
         map["GL_EXT_texture_rg"] = enableableExtension(&Extensions::textureRgEXT);
         map["GL_EXT_texture_shadow_lod"] = enableableExtension(&Extensions::textureShadowLodEXT);
-        map["GL_EXT_texture_sRGB_decode"] = esOnlyExtension(&Extensions::textureSRGBDecodeEXT);
+        map["GL_EXT_texture_sRGB_decode"] = enableableExtension(&Extensions::textureSRGBDecodeEXT);
         map["GL_EXT_texture_sRGB_R8"] = enableableExtension(&Extensions::textureSRGBR8EXT);
         map["GL_EXT_texture_sRGB_RG8"] = enableableExtension(&Extensions::textureSRGBRG8EXT);
         map["GL_OES_texture_stencil8"] = enableableExtension(&Extensions::textureStencil8OES);
