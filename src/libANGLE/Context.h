@@ -771,6 +771,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     const TextureCapsMap &getTextureCaps() const { return mState.getTextureCaps(); }
     const Extensions &getExtensions() const { return mState.getExtensions(); }
     const Limitations &getLimitations() const { return mState.getLimitations(); }
+    bool getExtensionsEnabled() const { return mExtensionsEnabled; }
     bool isGLES1() const;
 
     // To be used **only** directly by the entry points.

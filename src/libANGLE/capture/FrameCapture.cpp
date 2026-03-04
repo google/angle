@@ -8929,6 +8929,7 @@ void FrameCaptureShared::writeJSON(const gl::Context *context)
     json.addBool("IsBindGeneratesResourcesEnabled", glState.isBindGeneratesResourceEnabled());
     json.addBool("IsWebGLCompatibilityEnabled", glState.isWebGL());
     json.addBool("IsRobustResourceInitEnabled", glState.isRobustResourceInitEnabled());
+    json.addBool("AreExtensionsEnabled", context->getExtensionsEnabled());
     json.endGroup();
 
     json.startGroup("BinaryMetadata");
