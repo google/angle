@@ -590,6 +590,12 @@ GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint plane,
                                                          GLsizei paramCount,
                                                          GLsizei *length,
                                                          GLint *params);
+ANGLE_EXPORT void GL_APIENTRY
+GL_GetFramebufferPixelLocalStorageParameteruivRobustANGLE(GLint plane,
+                                                          GLenum pname,
+                                                          GLsizei paramCount,
+                                                          GLsizei *length,
+                                                          GLuint *params);
 
 // GL_ANGLE_robust_fragment_shader_output
 
@@ -629,6 +635,9 @@ ANGLE_EXPORT void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvANGLE
 ANGLE_EXPORT void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE(GLint plane,
                                                                                  GLenum pname,
                                                                                  GLint *params);
+ANGLE_EXPORT void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameteruivANGLE(GLint plane,
+                                                                                  GLenum pname,
+                                                                                  GLuint *params);
 
 // GL_ANGLE_stencil_texturing
 

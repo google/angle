@@ -524,6 +524,8 @@ ANGLE_UTIL_EXPORT PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERFVROBUSTANGLEPROC
     l_glGetFramebufferPixelLocalStorageParameterfvRobustANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERIVROBUSTANGLEPROC
     l_glGetFramebufferPixelLocalStorageParameterivRobustANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERUIVROBUSTANGLEPROC
+    l_glGetFramebufferPixelLocalStorageParameteruivRobustANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETINTEGER64I_VROBUSTANGLEPROC l_glGetInteger64i_vRobustANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETINTEGER64VROBUSTANGLEPROC l_glGetInteger64vRobustANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETINTEGERI_VROBUSTANGLEPROC l_glGetIntegeri_vRobustANGLE;
@@ -585,6 +587,8 @@ ANGLE_UTIL_EXPORT PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERFVANGLEPROC
     l_glGetFramebufferPixelLocalStorageParameterfvANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERIVANGLEPROC
     l_glGetFramebufferPixelLocalStorageParameterivANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERUIVANGLEPROC
+    l_glGetFramebufferPixelLocalStorageParameteruivANGLE;
 ANGLE_UTIL_EXPORT PFNGLPIXELLOCALSTORAGEBARRIERANGLEPROC l_glPixelLocalStorageBarrierANGLE;
 ANGLE_UTIL_EXPORT PFNGLINVALIDATETEXTUREANGLEPROC l_glInvalidateTextureANGLE;
 ANGLE_UTIL_EXPORT PFNGLTEXIMAGE2DEXTERNALANGLEPROC l_glTexImage2DExternalANGLE;
@@ -1643,6 +1647,9 @@ void LoadUtilGLES(LoadProc loadProc)
     l_glGetFramebufferPixelLocalStorageParameterivRobustANGLE =
         reinterpret_cast<PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERIVROBUSTANGLEPROC>(
             loadProc("glGetFramebufferPixelLocalStorageParameterivRobustANGLE"));
+    l_glGetFramebufferPixelLocalStorageParameteruivRobustANGLE =
+        reinterpret_cast<PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERUIVROBUSTANGLEPROC>(
+            loadProc("glGetFramebufferPixelLocalStorageParameteruivRobustANGLE"));
     l_glGetInteger64i_vRobustANGLE = reinterpret_cast<PFNGLGETINTEGER64I_VROBUSTANGLEPROC>(
         loadProc("glGetInteger64i_vRobustANGLE"));
     l_glGetInteger64vRobustANGLE =
@@ -1760,6 +1767,9 @@ void LoadUtilGLES(LoadProc loadProc)
     l_glGetFramebufferPixelLocalStorageParameterivANGLE =
         reinterpret_cast<PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERIVANGLEPROC>(
             loadProc("glGetFramebufferPixelLocalStorageParameterivANGLE"));
+    l_glGetFramebufferPixelLocalStorageParameteruivANGLE =
+        reinterpret_cast<PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERUIVANGLEPROC>(
+            loadProc("glGetFramebufferPixelLocalStorageParameteruivANGLE"));
     l_glPixelLocalStorageBarrierANGLE = reinterpret_cast<PFNGLPIXELLOCALSTORAGEBARRIERANGLEPROC>(
         loadProc("glPixelLocalStorageBarrierANGLE"));
     l_glInvalidateTextureANGLE =

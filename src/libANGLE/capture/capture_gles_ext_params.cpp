@@ -1743,6 +1743,31 @@ void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_params(
                                                                   paramCapture);
 }
 
+void CaptureGetFramebufferPixelLocalStorageParameteruivRobustANGLE_length(
+    const State &glState,
+    GLint plane,
+    GLenum pname,
+    GLsizei paramCount,
+    GLsizei *length,
+    GLuint *params,
+    angle::ParamCapture *paramCapture)
+{
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
+}
+
+void CaptureGetFramebufferPixelLocalStorageParameteruivRobustANGLE_params(
+    const State &glState,
+    GLint plane,
+    GLenum pname,
+    GLsizei paramCount,
+    GLsizei *length,
+    GLuint *params,
+    angle::ParamCapture *paramCapture)
+{
+    CaptureGetFramebufferPixelLocalStorageParameteruivANGLE_params(glState, plane, pname, params,
+                                                                   paramCapture);
+}
+
 // GL_ANGLE_shader_pixel_local_storage
 void CaptureFramebufferPixelLocalClearValuefvANGLE_value(const State &glState,
                                                          GLint plane,
@@ -1820,6 +1845,25 @@ void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
             break;
     }
     paramCapture->readBufferSizeBytes = sizeof(GLint) * numParams;
+}
+
+void CaptureGetFramebufferPixelLocalStorageParameteruivANGLE_params(
+    const State &glState,
+    GLint plane,
+    GLenum pname,
+    GLuint *params,
+    angle::ParamCapture *paramCapture)
+{
+    size_t numParams = 1;
+    switch (pname)
+    {
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+            numParams = 4;
+            break;
+    }
+    paramCapture->readBufferSizeBytes = sizeof(GLuint) * numParams;
 }
 
 // GL_ANGLE_texture_multisample

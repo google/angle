@@ -9195,6 +9195,11 @@ void Context::getFramebufferPixelLocalStorageParameteriv(GLint plane, GLenum pna
     QueryFramebufferPixelLocalStorageParameteriv(this, plane, pname, nullptr, params);
 }
 
+void Context::getFramebufferPixelLocalStorageParameteruiv(GLint plane, GLenum pname, GLuint *params)
+{
+    QueryFramebufferPixelLocalStorageParameteruiv(this, plane, pname, nullptr, params);
+}
+
 void Context::getFramebufferPixelLocalStorageParameterfvRobust(GLint plane,
                                                                GLenum pname,
                                                                GLsizei paramCount,
@@ -9211,6 +9216,15 @@ void Context::getFramebufferPixelLocalStorageParameterivRobust(GLint plane,
                                                                GLint *params)
 {
     QueryFramebufferPixelLocalStorageParameteriv(this, plane, pname, length, params);
+}
+
+void Context::getFramebufferPixelLocalStorageParameteruivRobust(GLint plane,
+                                                                GLenum pname,
+                                                                GLsizei paramCount,
+                                                                GLsizei *length,
+                                                                GLuint *params)
+{
+    QueryFramebufferPixelLocalStorageParameteruiv(this, plane, pname, length, params);
 }
 
 void Context::eGLImageTargetTexStorage(GLenum target, egl::ImageID image, const GLint *attrib_list)

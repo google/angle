@@ -562,6 +562,8 @@ enum class EntryPoint
     GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE,
     GLGetFramebufferPixelLocalStorageParameterivANGLE,
     GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
+    GLGetFramebufferPixelLocalStorageParameteruivANGLE,
+    GLGetFramebufferPixelLocalStorageParameteruivRobustANGLE,
     GLGetGraphicsResetStatus,
     GLGetGraphicsResetStatusEXT,
     GLGetGraphicsResetStatusKHR,

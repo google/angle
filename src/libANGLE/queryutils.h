@@ -144,6 +144,11 @@ void QueryFramebufferPixelLocalStorageParameteriv(Context *context,
                                                   GLenum pname,
                                                   GLsizei *length,
                                                   GLint *params);
+void QueryFramebufferPixelLocalStorageParameteruiv(Context *context,
+                                                   GLint plane,
+                                                   GLenum pname,
+                                                   GLsizei *length,
+                                                   GLuint *params);
 
 angle::Result QuerySynciv(const Context *context,
                           const Sync *sync,

@@ -1857,20 +1857,12 @@ void QueryFramebufferPixelLocalStorageParameterBase(Context *context,
             {
                 *length = 4;
             }
-            // There is no unsigned int PLS state query
-            if constexpr (std::numeric_limits<ParamType>::is_integer)
-            {
-                planeObject.getClearValueui(reinterpret_cast<GLuint *>(params));
-            }
-            else
-            {
-                GLuint p[4];
-                planeObject.getClearValueui(p);
-                params[0] = clampCast<ParamType>(p[0]);
-                params[1] = clampCast<ParamType>(p[1]);
-                params[2] = clampCast<ParamType>(p[2]);
-                params[3] = clampCast<ParamType>(p[3]);
-            }
+            GLuint p[4];
+            planeObject.getClearValueui(p);
+            params[0] = clampCast<ParamType>(p[0]);
+            params[1] = clampCast<ParamType>(p[1]);
+            params[2] = clampCast<ParamType>(p[2]);
+            params[3] = clampCast<ParamType>(p[3]);
             break;
         }
         default:
@@ -1893,6 +1885,15 @@ void QueryFramebufferPixelLocalStorageParameteriv(Context *context,
                                                   GLenum pname,
                                                   GLsizei *length,
                                                   GLint *params)
+{
+    QueryFramebufferPixelLocalStorageParameterBase(context, plane, pname, length, params);
+}
+
+void QueryFramebufferPixelLocalStorageParameteruiv(Context *context,
+                                                   GLint plane,
+                                                   GLenum pname,
+                                                   GLsizei *length,
+                                                   GLuint *params)
 {
     QueryFramebufferPixelLocalStorageParameterBase(context, plane, pname, length, params);
 }

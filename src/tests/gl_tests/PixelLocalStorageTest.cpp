@@ -85,21 +85,18 @@ using namespace angle;
         EXPECT_EQ(value, expected);                                                 \
     }
 
-#define EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(plane, rgba)                              \
-    {                                                                                         \
-        std::array<GLuint, 4> expected rgba;                                                  \
-        std::array<GLuint, 4> value;                                                          \
-        std::array<GLint, 4> valuei;                                                          \
-        valuei.fill(0xbaadc0de);                                                              \
-        glGetFramebufferPixelLocalStorageParameterivANGLE(                                    \
-            plane, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, valuei.data());             \
-        memcpy(value.data(), valuei.data(), sizeof(value));                                   \
-        EXPECT_EQ(value, expected);                                                           \
-        valuei.fill(0xbaadc0de);                                                              \
-        glGetFramebufferPixelLocalStorageParameterivRobustANGLE(                              \
-            plane, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, 4, nullptr, valuei.data()); \
-        memcpy(value.data(), valuei.data(), sizeof(value));                                   \
-        EXPECT_EQ(value, expected);                                                           \
+#define EXPECT_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT(plane, rgba)                             \
+    {                                                                                        \
+        std::array<GLuint, 4> expected rgba;                                                 \
+        std::array<GLuint, 4> value;                                                         \
+        value.fill(0xbaadc0de);                                                              \
+        glGetFramebufferPixelLocalStorageParameteruivANGLE(                                  \
+            plane, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, value.data());             \
+        EXPECT_EQ(value, expected);                                                          \
+        value.fill(0xbaadc0de);                                                              \
+        glGetFramebufferPixelLocalStorageParameteruivRobustANGLE(                            \
+            plane, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, 4, nullptr, value.data()); \
+        EXPECT_EQ(value, expected);                                                          \
     }
 
 #define EXPECT_FRAMEBUFFER_PARAMETER_INT_MESA(target, pname, expectedValue) \
@@ -1154,10 +1151,36 @@ TEST_P(PixelLocalStorageTest, ClearValueConversions)
         glGetFramebufferPixelLocalStorageParameterivANGLE(
             0, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, value);
         ASSERT_GL_NO_ERROR();
-        EXPECT_EQ(static_cast<GLuint>(value[0]), 2147483648);
-        EXPECT_EQ(static_cast<GLuint>(value[1]), 2147483649);
-        EXPECT_EQ(static_cast<GLuint>(value[2]), 2147483650);
-        EXPECT_EQ(static_cast<GLuint>(value[3]), 2147483651);
+        EXPECT_EQ(value[0], 2147483647);
+        EXPECT_EQ(value[1], 2147483647);
+        EXPECT_EQ(value[2], 2147483647);
+        EXPECT_EQ(value[3], 2147483647);
+    }
+    {
+        GLuint value[4]{};
+        glGetFramebufferPixelLocalStorageParameteruivANGLE(
+            0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, value);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(value[0], 1u);
+        EXPECT_EQ(value[1], 2u);
+        EXPECT_EQ(value[2], 3u);
+        EXPECT_EQ(value[3], 4u);
+
+        glGetFramebufferPixelLocalStorageParameteruivANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE,
+                                                           value);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(value[0], 0u);
+        EXPECT_EQ(value[1], 0u);
+        EXPECT_EQ(value[2], 0u);
+        EXPECT_EQ(value[3], 0u);
+
+        glGetFramebufferPixelLocalStorageParameteruivANGLE(
+            0, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, value);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(value[0], 2147483648);
+        EXPECT_EQ(value[1], 2147483649);
+        EXPECT_EQ(value[2], 2147483650);
+        EXPECT_EQ(value[3], 2147483651);
     }
 }
 

@@ -470,6 +470,8 @@ const ProcEntry g_procTable[] = {
     {"glGetFramebufferPixelLocalStorageParameterfvRobustANGLE", P(GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE)},
     {"glGetFramebufferPixelLocalStorageParameterivANGLE", P(GL_GetFramebufferPixelLocalStorageParameterivANGLE)},
     {"glGetFramebufferPixelLocalStorageParameterivRobustANGLE", P(GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE)},
+    {"glGetFramebufferPixelLocalStorageParameteruivANGLE", P(GL_GetFramebufferPixelLocalStorageParameteruivANGLE)},
+    {"glGetFramebufferPixelLocalStorageParameteruivRobustANGLE", P(GL_GetFramebufferPixelLocalStorageParameteruivRobustANGLE)},
     {"glGetGraphicsResetStatus", P(GL_GetGraphicsResetStatus)},
     {"glGetGraphicsResetStatusEXT", P(GL_GetGraphicsResetStatusEXT)},
     {"glGetGraphicsResetStatusKHR", P(GL_GetGraphicsResetStatusKHR)},

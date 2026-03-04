@@ -50,8 +50,6 @@ Dependencies
     This extension is written against the OpenGL ES 3.0 specification and the
     OpenGL ES Shading Language 3.00 specification.
 
-    This extension interacts with ANGLE_robust_client_memory.
-
     This extension interacts with ANGLE_request_extension.
 
     This extension interacts with ANGLE_polygon_mode.
@@ -192,18 +190,9 @@ New Procedures and Functions
 
     void FramebufferPixelLocalStorageRestoreANGLE()
 
-    void GetFramebufferPixelLocalStorageParameter{f,i}vANGLE(int plane,
-                                                             enum pname,
-                                                             T *params)
-
-    (the following commands are supported only if ANGLE_robust_client_memory is
-     supported)
-
-    void GetFramebufferPixelLocalStorageParameter{f,i}vRobustANGLE(int plane,
-                                                                   enum pname,
-                                                                   GLsizei bufSize,
-                                                                   GLsizei *length,
-                                                                   T *params)
+    void GetFramebufferPixelLocalStorageParameter{f,i,ui}vANGLE(int plane,
+                                                                enum pname,
+                                                                T *params)
 
 New Tokens
 
@@ -226,8 +215,7 @@ New Tokens
         STORE_OP_STORE_ANGLE                                              0x96E6
 
     Accepted by the <pname> parameter of
-    GetFramebufferPixelLocalStorageParameter{f,i}vANGLE() and
-    GetFramebufferPixelLocalStorageParameter{f,i}vRobustANGLE():
+    GetFramebufferPixelLocalStorageParameter{f,i,ui}vANGLE():
 
         PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE                                 0x96E7
         PIXEL_LOCAL_TEXTURE_NAME_ANGLE                                    0x96E8
@@ -906,11 +894,15 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
       void GetFramebufferPixelLocalStorageParameterfvANGLE(int plane,
                                                            enum pname,
-                                                           GLfloat *params)
+                                                           float *params)
 
       void GetFramebufferPixelLocalStorageParameterivANGLE(int plane,
                                                            enum pname,
-                                                           GLint *params)
+                                                           int *params)
+
+      void GetFramebufferPixelLocalStorageParameteruivANGLE(int plane,
+                                                            enum pname,
+                                                            uint *params)
 
     Parameters:
 
@@ -964,36 +956,6 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
       * INVALID_VALUE is generated if <params> is NULL.
 
-    If ANGLE_robust_client_memory is supported, the alternative query commands
-    may also be used:
-
-      void GetFramebufferPixelLocalStorageParameterfvRobustANGLE(int plane,
-                                                                 enum pname,
-                                                                 GLsizei bufSize,
-                                                                 GLsizei *length,
-                                                                 GLfloat *params)
-
-      void GetFramebufferPixelLocalStorageParameterivRobustANGLE(int plane,
-                                                                 enum pname,
-                                                                 GLsizei bufSize,
-                                                                 GLsizei *length,
-                                                                 GLint *params)
-
-    Additional Parameters:
-
-      * <bufSize> indicates the maximum number of values that can be written to
-        <params>.
-
-      * <length> may be NULL. If not NULL, it receives the number of values
-        written to <params>. When an error is generated, nothing is written to
-        <length>.
-
-    Additional Errors:
-
-      * INVALID_OPERATION is generated if <bufSize> is not large enough to
-        receive the requested parameter.
-
-
   Modify Section 6.1 "State Tables"
 
   (Insert two new numbered tables.)
@@ -1016,19 +978,19 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     _ACTIVE_PLANES_ANGLE        Z+   GetIntegerv                   0       2.X
 
     PIXEL_LOCAL_INTERNAL-            GetFramebufferPixelLocal-
-    _FORMAT_ANGLE               Z+   StorageParameterivANGLE     NONE    6.1.X
+    _FORMAT_ANGLE               E    StorageParameteruivANGLE    NONE    6.1.X
 
     PIXEL_LOCAL_TEXTURE-             GetFramebufferPixelLocal-
-    _NAME_ANGLE                 Z+   StorageParameterivANGLE       0     6.1.X
+    _NAME_ANGLE                 Z+   StorageParameteruivANGLE      0     6.1.X
 
     PIXEL_LOCAL_TEXTURE-             GetFramebufferPixelLocal-
-    _LEVEL_ANGLE                Z+   StorageParameterivANGLE       0     6.1.X
+    _LEVEL_ANGLE                Z+   StorageParameteruivANGLE      0     6.1.X
 
     PIXEL_LOCAL_TEXTURE-             GetFramebufferPixelLocal-
     _LAYER_ANGLE                Z    StorageParameterivANGLE       0     6.1.X
 
     PIXEL_LOCAL_TEXTURE-             GetFramebufferPixelLocal-
-    _USAGE_ANGLE                Z    StorageParameterivANGLE       0     6.1.X
+    _USAGE_ANGLE                Z+   StorageParameteruivANGLE      0     6.1.X
 
     PIXEL_LOCAL_CLEAR-               GetFramebufferPixelLocal-
     _VALUE_FLOAT_ANGLE         4*R   StorageParameterfvANGLE    0,0,0,0  6.1.X
@@ -1037,7 +999,7 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     _VALUE_INT_ANGLE           4*Z   StorageParameterivANGLE    0,0,0,0  6.1.X
 
     PIXEL_LOCAL_CLEAR_VALUE-         GetFramebufferPixelLocal-
-    _UNSIGNED_INT_ANGLE        4*Z+  StorageParameterivANGLE    0,0,0,0  6.1.X
+    _UNSIGNED_INT_ANGLE        4*Z+  StorageParameteruivANGLE   0,0,0,0  6.1.X
 
     Table 6.Y: Pixel Local Storage State
 

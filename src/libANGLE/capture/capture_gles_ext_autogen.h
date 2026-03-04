@@ -782,6 +782,14 @@ angle::CallCapture CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE(
     GLsizei paramCount,
     GLsizei *length,
     GLint *params);
+angle::CallCapture CaptureGetFramebufferPixelLocalStorageParameteruivRobustANGLE(
+    const State &glState,
+    bool isCallValid,
+    GLint plane,
+    GLenum pname,
+    GLsizei paramCount,
+    GLsizei *length,
+    GLuint *params);
 
 // GL_ANGLE_robust_fragment_shader_output
 
@@ -845,6 +853,11 @@ angle::CallCapture CaptureGetFramebufferPixelLocalStorageParameterivANGLE(const 
                                                                           GLint plane,
                                                                           GLenum pname,
                                                                           GLint *params);
+angle::CallCapture CaptureGetFramebufferPixelLocalStorageParameteruivANGLE(const State &glState,
+                                                                           bool isCallValid,
+                                                                           GLint plane,
+                                                                           GLenum pname,
+                                                                           GLuint *params);
 
 // GL_ANGLE_stencil_texturing
 
@@ -3934,6 +3947,22 @@ void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_params(
     GLsizei *length,
     GLint *params,
     angle::ParamCapture *paramCapture);
+void CaptureGetFramebufferPixelLocalStorageParameteruivRobustANGLE_length(
+    const State &glState,
+    GLint plane,
+    GLenum pname,
+    GLsizei paramCount,
+    GLsizei *length,
+    GLuint *params,
+    angle::ParamCapture *paramCapture);
+void CaptureGetFramebufferPixelLocalStorageParameteruivRobustANGLE_params(
+    const State &glState,
+    GLint plane,
+    GLenum pname,
+    GLsizei paramCount,
+    GLsizei *length,
+    GLuint *params,
+    angle::ParamCapture *paramCapture);
 void CaptureFramebufferPixelLocalClearValuefvANGLE_value(const State &glState,
                                                          GLint plane,
                                                          const GLfloat *value,
@@ -3965,6 +3994,12 @@ void CaptureGetFramebufferPixelLocalStorageParameterivANGLE_params(
     GLint plane,
     GLenum pname,
     GLint *params,
+    angle::ParamCapture *paramCapture);
+void CaptureGetFramebufferPixelLocalStorageParameteruivANGLE_params(
+    const State &glState,
+    GLint plane,
+    GLenum pname,
+    GLuint *params,
     angle::ParamCapture *paramCapture);
 void CaptureGetMultisamplefvANGLE_val(const State &glState,
                                       GLenum pname,

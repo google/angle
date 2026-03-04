@@ -4,7 +4,7 @@
   "scripts/gen_interpreter_utils.py":
     "7c21cda140a45527c02ddd003ebe7914",
   "scripts/gl_angle_ext.xml":
-    "2402a0dd5c9a41cdf4d9eae5b37260bb",
+    "679cd4aaf3794f040a894a13f4243cc1",
   "scripts/registry_xml.py":
     "788e8f48cf7298bd34555c7255e26826",
   "third_party/EGL-Registry/src/api/egl.xml":
@@ -20,5 +20,5 @@
   "util/capture/trace_fixture.h":
     "a519a497caa153876f3a5441bbd3b1f8",
   "util/capture/trace_interpreter_autogen.cpp":
-    "e1153dd80c49420ecf64b205618822b8"
+    "0ee3e2e2787f643702e6db226c2ac216"
 }

@@ -2815,6 +2815,22 @@ CallCapture ParseCallCapture(const Token &nameToken,
         return CallCapture(EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
                            std::move(params));
     }
+    if (strcmp(nameToken, "glGetFramebufferPixelLocalStorageParameteruivANGLE") == 0)
+    {
+        ParamBuffer params = ParseParameters<
+            std::remove_pointer<PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERUIVANGLEPROC>::type>(
+            paramTokens, strings);
+        return CallCapture(EntryPoint::GLGetFramebufferPixelLocalStorageParameteruivANGLE,
+                           std::move(params));
+    }
+    if (strcmp(nameToken, "glGetFramebufferPixelLocalStorageParameteruivRobustANGLE") == 0)
+    {
+        ParamBuffer params = ParseParameters<std::remove_pointer<
+            PFNGLGETFRAMEBUFFERPIXELLOCALSTORAGEPARAMETERUIVROBUSTANGLEPROC>::type>(paramTokens,
+                                                                                    strings);
+        return CallCapture(EntryPoint::GLGetFramebufferPixelLocalStorageParameteruivRobustANGLE,
+                           std::move(params));
+    }
     if (strcmp(nameToken, "glGetGraphicsResetStatus") == 0)
     {
         ParamBuffer params =

@@ -1112,6 +1112,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetFramebufferPixelLocalStorageParameterivANGLE";
         case EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE:
             return "glGetFramebufferPixelLocalStorageParameterivRobustANGLE";
+        case EntryPoint::GLGetFramebufferPixelLocalStorageParameteruivANGLE:
+            return "glGetFramebufferPixelLocalStorageParameteruivANGLE";
+        case EntryPoint::GLGetFramebufferPixelLocalStorageParameteruivRobustANGLE:
+            return "glGetFramebufferPixelLocalStorageParameteruivRobustANGLE";
         case EntryPoint::GLGetGraphicsResetStatus:
             return "glGetGraphicsResetStatus";
         case EntryPoint::GLGetGraphicsResetStatusEXT:

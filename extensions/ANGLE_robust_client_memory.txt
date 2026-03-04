@@ -259,6 +259,12 @@ New Procedures and Functions
                                                                sizei *length,
                                                                int *params);
 
+    void GetFramebufferPixelLocalStorageParameteruivRobustANGLE(int plane,
+                                                                enum pname,
+                                                                sizei paramCount,
+                                                                sizei *length,
+                                                                uint *params);
+
 New Tokens
 
     None
@@ -362,8 +368,7 @@ Interactions with ANGLE_shader_pixel_local_storage
 
     If ANGLE_shader_pixel_local_storage is not supported,
     remove all references to
-    GetFramebufferPixelLocalStorageParameterfvRobustANGLE and
-    GetFramebufferPixelLocalStorageParameterivRobustANGLE.
+    GetFramebufferPixelLocalStorageParameter{f,i,ui}vRobustANGLE.
 
 Issues
 
