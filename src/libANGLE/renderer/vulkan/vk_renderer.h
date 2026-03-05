@@ -715,6 +715,8 @@ class Renderer : angle::NonCopyable
         return mMinRPWriteCommandCountToEarlySubmit;
     }
 
+    void logFeatures() const;
+
   private:
     angle::Result setupDevice(vk::ErrorContext *context,
                               const angle::FeatureOverrides &featureOverrides,

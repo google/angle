@@ -7894,6 +7894,15 @@ void Renderer::addSamplerYcbcrConversionToOrphanList(VkSamplerYcbcrConversion co
     mOrphanedSamplerYcbcrConversions.push_back(conversion);
 }
 
+void Renderer::logFeatures() const
+{
+    INFO() << "List of all Renderer.mFeatures:";
+    for (const auto &featureInfo : mFeatures.getFeatures())
+    {
+        INFO() << "\tmFeatures." << featureInfo.second->name << ": " << featureInfo.second->enabled;
+    }
+}
+
 // static
 const char *Renderer::GetVulkanObjectTypeName(VkObjectType type)
 {
