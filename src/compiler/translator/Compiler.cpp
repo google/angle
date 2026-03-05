@@ -1227,18 +1227,15 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-    }
 
-    if (getShaderType() == GL_FRAGMENT_SHADER && compileOptions.clampFragDepth)
-    {
-        if (!ClampFragDepth(this, root, &getSymbolTable()))
+        if (compileOptions.clampFragDepth)
         {
-            return false;
+            if (!ClampFragDepth(this, root, &getSymbolTable()))
+            {
+                return false;
+            }
         }
-    }
 
-    if (!useIR)
-    {
         if (compileOptions.rewriteRepeatedAssignToSwizzled)
         {
             if (!sh::RewriteRepeatedAssignToSwizzled(this, root))
@@ -1284,6 +1281,10 @@ ShCompileOptions TCompiler::adjustOptions(const ShCompileOptions &compileOptions
         // Note: technically clamping gl_PointSize should be done in the last pre-rasterization
         // stage, but is currently only done in the vertex shader.
         compileOptions.clampPointSize = false;
+    }
+    if (mShaderType != GL_FRAGMENT_SHADER)
+    {
+        compileOptions.clampFragDepth = false;
     }
 
     // gl_Position should always be written in GLSL compatibility output mode.

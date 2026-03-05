@@ -145,6 +145,7 @@ void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::Compi
     opt->emulate_base_vertex_instance                = options.emulateGLBaseVertexBaseInstance;
     opt->add_base_vertex_to_vertex_id                = options.addBaseVertexToVertexID;
     opt->clamp_point_size                            = options.clampPointSize;
+    opt->clamp_frag_depth                            = options.clampFragDepth;
 
     opt->rewrite_pixel_local_storage = compiler->hasPixelLocalStorageUniforms();
     opt->pls_options.implementation  = static_cast<ffi::PixelLocalStorageImpl>(options.pls.type);
