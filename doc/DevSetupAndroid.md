@@ -17,6 +17,7 @@ Once the editor is up, paste the following GN args to generate an Android build,
 ```
 target_os = "android"
 target_cpu = "arm64"
+arm_control_flow_integrity = "none"
 is_component_build = false
 is_debug = false
 angle_assert_always_on = true   # Recommended for debugging. Turn off for performance.
@@ -204,6 +205,7 @@ Note: The oddly named `is_official_build` is a more aggressive optimization leve
 ```
 target_os = "android"
 target_cpu = "arm64"
+arm_control_flow_integrity = "none"
 angle_enable_vulkan = true
 is_component_build = false
 is_official_build = true
@@ -217,6 +219,7 @@ enables asserts and allows validation errors.
 ```
 target_os = "android"
 target_cpu = "arm64"
+arm_control_flow_integrity = "none"
 is_component_build = false
 is_debug = true
 ```
