@@ -13,9 +13,10 @@
 //     validate_all_variables_are_declared_in_scope()
 //   - Every accessed register must be declared in an accessible block:
 //     validate_all_registers_are_declared_in_scope()
+//   - Branches must have the appropriate targets set (merge, trueblock for if, etc):
+//     validate_all_branch_instructions_have_valid_target()
 
 // TODO(http://anglebug.com/349994211): to validate:
-//   - Branches must have the appropriate targets set (merge, trueblock for if, etc).
 //   - No branches inside a block, every block ends in branch. (i.e. no dead code)
 //   - For merge blocks that have an input, the branch instruction of blocks that jump to it have an
 //     output.
@@ -197,6 +198,31 @@ impl DeclaredRegisterTracker {
     }
 }
 
+#[derive(Clone)]
+struct BlockMetaData {
+    can_break: bool,
+    can_continue: bool,
+    can_passthrough: bool,
+    is_loop: bool,
+    has_merge_block: bool,
+    switch_case_count: i32,
+    case_block_index: i32,
+}
+
+impl BlockMetaData {
+    fn new() -> BlockMetaData {
+        BlockMetaData {
+            can_break: false,
+            can_continue: false,
+            can_passthrough: false,
+            is_loop: false,
+            has_merge_block: false,
+            switch_case_count: 0,
+            case_block_index: -1,
+        }
+    }
+}
+
 // Validator takes a reference of IR object, and its' lifetime is the same as the lifetime of IR
 // object
 struct Validator<'a> {
@@ -224,6 +250,7 @@ impl<'a> Validator<'a> {
         self.validate_all_ids_are_present();
         self.validate_all_variables_are_declared_in_scope();
         self.validate_all_registers_are_declared_in_scope();
+        self.validate_all_branch_instructions_have_valid_target();
     }
 
     fn validate_all_ids_are_present(&self) {
@@ -895,5 +922,278 @@ impl<'a> Validator<'a> {
         });
 
         registers_declared_map.remove_scope();
+    }
+
+    fn validate_all_branch_instructions_have_valid_target(&self) {
+        let mut block_meta_data_tracker = Vec::new();
+        for entry in &self.ir.function_entries {
+            if entry.is_none() {
+                // Skip over functions that have been dead-code eliminated.
+                continue;
+            }
+            // Add a default BlockMetaData as the root block's parent BlockMetaData
+            block_meta_data_tracker.clear();
+            block_meta_data_tracker.push(BlockMetaData::new());
+            // call validate_block_branch_instruction_have_valid_target()on root block, it will
+            // recursively validate all the child blocks
+            self.validate_block_branch_instruction_have_valid_target(
+                &mut block_meta_data_tracker,
+                entry.as_ref().unwrap(),
+            );
+        }
+    }
+
+    fn validate_block_branch_instruction_have_valid_target(
+        &self,
+        block_meta_data_tracker: &mut Vec<BlockMetaData>,
+        current_block: &Block,
+    ) {
+        // validate current block's branch instruction
+        let block_branch_op_code = current_block.get_terminating_op();
+        if !block_branch_op_code.is_branch() {
+            self.on_error(format_args!(
+                "block does not end with a branch OpCode {:?}",
+                block_branch_op_code
+            ));
+        }
+
+        // if the block branch_op_code requires current block to not contain certain children
+        // blocks, validate the children blocks are none
+        match block_branch_op_code {
+            OpCode::Discard
+            | OpCode::Return(_)
+            | OpCode::LoopIf(_)
+            | OpCode::Merge(_)
+            | OpCode::Continue
+                if current_block.merge_block.is_some() =>
+            {
+                self.on_error(format_args!(
+                    "block ends with OpCode::Discard, OpCode::Return, OpCode::LoopIf, \
+                     OpCode::Merge, OpCode::Continue should not have merge_block"
+                ));
+            }
+
+            _ => {
+                // Other OpCode does have enforce current block to not contain certain children
+                // blocks
+            }
+        }
+
+        // If the block_branch_op_code requires current block to contain certain children blocks,
+        // validate the children blocks are present
+        match block_branch_op_code {
+            OpCode::NextBlock if current_block.merge_block.is_none() => {
+                self.on_error(format_args!(
+                    "OpCode::NextBlock is missing a valid target. Current block should contain a \
+                     merge_block"
+                ));
+            }
+            OpCode::If(_) => {
+                if !current_block.has_if_true_block() {
+                    self.on_error(format_args!(
+                        "OpCode::If is a missing a valid target. Current block should contain a \
+                         true block (block1)"
+                    ));
+                }
+                if current_block.merge_block.is_none() {
+                    self.on_error(format_args!(
+                        "OpCode::If is missing a valid target. Current block should contain a \
+                         merge_block"
+                    ));
+                }
+            }
+            OpCode::Loop => {
+                if current_block.loop_condition.is_none() {
+                    self.on_error(format_args!(
+                        "OpCode::Loop is a missing a valid target. Current block should contain a \
+                         loop_condition block"
+                    ));
+                }
+                if !current_block.has_loop_body_block() {
+                    self.on_error(format_args!(
+                        "OpCode::Loop is missing a valid target. Current block should contain a \
+                         loop body block (block1)"
+                    ));
+                }
+                if current_block.merge_block.is_none() {
+                    self.on_error(format_args!(
+                        "OpCode::Loop is missing a valid target. Current block should contain a \
+                         merge_block"
+                    ));
+                }
+            }
+            OpCode::DoLoop => {
+                if !current_block.has_loop_body_block() {
+                    self.on_error(format_args!(
+                        "OpCode::DoLoop is missing a valid target. Current block should contain a \
+                         loop body block (block1)"
+                    ));
+                }
+                if current_block.merge_block.is_none() {
+                    self.on_error(format_args!(
+                        "OpCode::DoLoop is missing a valid target. Current block should contain a \
+                         merge_block"
+                    ));
+                }
+            }
+            OpCode::Switch(_, case_ids) => {
+                if current_block.case_blocks.len() != case_ids.len() {
+                    self.on_error(format_args!(
+                        "OpCode::Switch case_blocks length mismatches with case_ids length"
+                    ));
+                }
+                if current_block.case_blocks.is_empty() {
+                    self.on_error(format_args!(
+                        "OpCode::Switch is missing a valid target. Current block should contain \
+                         at lease 1 case_block"
+                    ));
+                }
+                if current_block.merge_block.is_none() {
+                    self.on_error(format_args!(
+                        "OpCode::Switch is missing a valid target. Current block should contain a \
+                         merge_block"
+                    ));
+                }
+            }
+            _ => {
+                // Other OpCode does not enforce the current_block to contain certain children
+                // blocks
+            }
+        }
+
+        // If the block branch_op_code requires its parent block to satisfy certain requirements,
+        // validate the requirements.
+        let parent_block_meta_data = block_meta_data_tracker.last().unwrap();
+        match block_branch_op_code {
+            OpCode::Break if !parent_block_meta_data.can_break => {
+                self.on_error(format_args!(
+                    "OpCode::Break is not within a Loop, DoLoop, or Switch"
+                ));
+            }
+            OpCode::Continue if !parent_block_meta_data.can_continue => {
+                self.on_error(format_args!("OpCode::Continue is not within a Loop, DoLoop"));
+            }
+            OpCode::Passthrough => {
+                // First check the Passthrough OpCode is inside a switch case block
+                if !parent_block_meta_data.can_passthrough {
+                    self.on_error(format_args!(
+                        "OpCode::Passthrough not within a Switch Case Block"
+                    ));
+                }
+                // Then check the Passthrough OpCode is not in the last case block
+                if parent_block_meta_data.case_block_index + 1
+                    >= parent_block_meta_data.switch_case_count
+                {
+                    self.on_error(format_args!(
+                        "OpCode::Passthrough is not allowed on the last Switch Case Block"
+                    ));
+                }
+            }
+            OpCode::Merge(_) if !parent_block_meta_data.has_merge_block => {
+                self.on_error(format_args!(
+                    "OpCode::Merge is missing a valid target. The parent block should contain a \
+                     merge block"
+                ));
+            }
+            OpCode::LoopIf(_) if !parent_block_meta_data.is_loop => {
+                self.on_error(format_args!(
+                    "The block ends with OpCode::LoopIf must be immediate child of the loop that \
+                     ends with OpCode::Loop"
+                ));
+            }
+            _ => {
+                // Other OpCode does not have enforcement on parent blocks to satitisfy certain
+                // conditions
+            }
+        }
+
+        // Set the BlockMetaData for current_block
+        // By default, we inherite the BlockMetaData from the parent
+        let mut current_block_meta_data = parent_block_meta_data.clone();
+
+        // Set the BlockMetaData fields that needs to be overwritten by current block
+        current_block_meta_data.is_loop =
+            matches!(block_branch_op_code, OpCode::Loop | OpCode::DoLoop);
+        current_block_meta_data.has_merge_block = current_block.merge_block.is_some();
+
+        // Call validate_block_branch_instruction_have_valid_target() on child blocks.
+        // Based on the child block type, the current_block_meta_data field will need different
+        // values. We will adjust the current_block_meta_data field values, push
+        // current_block_meta_data to the block_meta_data_tracker, and then pop it when we are done
+        // with the child block.
+        current_block.loop_condition.as_ref().inspect(|loop_condition| {
+            let mut current_block_meta_data_for_loop_condition = current_block_meta_data.clone();
+
+            current_block_meta_data_for_loop_condition.can_break = false;
+            current_block_meta_data_for_loop_condition.can_continue = false;
+            current_block_meta_data_for_loop_condition.can_passthrough = false;
+            block_meta_data_tracker.push(current_block_meta_data_for_loop_condition);
+            self.validate_block_branch_instruction_have_valid_target(
+                block_meta_data_tracker,
+                loop_condition,
+            );
+            block_meta_data_tracker.pop().unwrap();
+        });
+
+        current_block.block1.as_ref().inspect(|block1| {
+            let mut current_block_meta_data_for_block1 = current_block_meta_data.clone();
+
+            if current_block_meta_data.is_loop {
+                current_block_meta_data_for_block1.can_break = true;
+                current_block_meta_data_for_block1.can_continue = true;
+            }
+            block_meta_data_tracker.push(current_block_meta_data_for_block1);
+            self.validate_block_branch_instruction_have_valid_target(
+                block_meta_data_tracker,
+                block1,
+            );
+            block_meta_data_tracker.pop().unwrap();
+        });
+
+        current_block.block2.as_ref().inspect(|block2| {
+            let mut current_block_meta_data_for_block2 = current_block_meta_data.clone();
+
+            if current_block_meta_data.is_loop {
+                current_block_meta_data_for_block2.can_break = false;
+                current_block_meta_data_for_block2.can_continue = true;
+            }
+            block_meta_data_tracker.push(current_block_meta_data_for_block2);
+            self.validate_block_branch_instruction_have_valid_target(
+                block_meta_data_tracker,
+                block2,
+            );
+            block_meta_data_tracker.pop().unwrap();
+        });
+
+        if let OpCode::Switch(_, _) = block_branch_op_code {
+            let mut current_block_meta_data_for_case_block = current_block_meta_data.clone();
+            current_block_meta_data_for_case_block.can_break = true;
+            current_block_meta_data_for_case_block.can_continue = true;
+            current_block_meta_data_for_case_block.can_passthrough = true;
+            current_block_meta_data_for_case_block.switch_case_count =
+                current_block.case_blocks.len().try_into().unwrap();
+            current_block.case_blocks.iter().enumerate().for_each(
+                |(case_block_index, case_block)| {
+                    current_block_meta_data_for_case_block.case_block_index =
+                        case_block_index.try_into().unwrap();
+                    block_meta_data_tracker.push(current_block_meta_data_for_case_block.clone());
+                    self.validate_block_branch_instruction_have_valid_target(
+                        block_meta_data_tracker,
+                        case_block,
+                    );
+                    block_meta_data_tracker.pop().unwrap();
+                },
+            );
+        }
+
+        // For merge_block, it logically is continuation of current_block, we will use
+        // current_block's parent BlockMetaData. No need to push current_block_meta_data to
+        // the block_meta_data_tracker.
+        current_block.merge_block.as_ref().inspect(|merge_block| {
+            self.validate_block_branch_instruction_have_valid_target(
+                block_meta_data_tracker,
+                merge_block,
+            );
+        });
     }
 }

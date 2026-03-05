@@ -1020,6 +1020,10 @@ impl Block {
         self.set_sub_block1(block);
     }
 
+    pub fn has_if_true_block(&self) -> bool {
+        self.block1.is_some()
+    }
+
     pub fn set_if_false_block(&mut self, block: Block) {
         self.set_sub_block2(block);
     }
@@ -1040,6 +1044,9 @@ impl Block {
     }
     pub fn get_loop_body_block_mut(&mut self) -> &mut Block {
         self.block1.as_mut().unwrap()
+    }
+    pub fn has_loop_body_block(&self) -> bool {
+        self.block1.is_some()
     }
 
     pub fn set_loop_continue_block(&mut self, block: Block) {
