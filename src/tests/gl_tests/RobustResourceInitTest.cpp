@@ -2039,6 +2039,116 @@ TEST_P(RobustResourceInitTestES3, CompressedSubImage)
     }
 }
 
+// Test that using TexStorage3D with a large 2D array texture followed by TexSubImage works with
+// robust init.
+TEST_P(RobustResourceInitTestES3, LargeImage2DArray)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr int kWidth  = 256;
+    constexpr int kHeight = 256;
+    constexpr int kDepth  = 512;
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, kWidth, kHeight, kDepth);
+
+    // The bounds of the subimage copy should not cover the entire image. This will make sure that
+    // the robust resource clear is applied to the whole image before the subimage copy.
+    constexpr int kSubWidth  = 8;
+    constexpr int kSubHeight = 8;
+    constexpr int kSubDepth  = 8;
+    std::vector<GLColor> subData(kSubWidth * kSubHeight * kSubDepth, GLColor::red);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kSubWidth, kSubHeight, kSubDepth, GL_RGBA,
+                    GL_UNSIGNED_BYTE, subData.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Draw on FBO sampling from layer 0 of the texture.
+    GLTexture colorbuffer;
+    glBindTexture(GL_TEXTURE_2D, colorbuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuffer, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, kWidth, kHeight);
+
+    draw2DArrayTexturedQuad(0.5, 1.0, false, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the colors on the inside and the outside of the updated area.
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSubWidth, kSubHeight, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kSubWidth, 0, kWidth - kSubWidth, kHeight, GLColor::transparentBlack);
+    EXPECT_PIXEL_RECT_EQ(0, kSubHeight, kSubWidth, kHeight - kSubHeight, GLColor::transparentBlack);
+}
+
+// Test that using TexStorage3D with a large 2D array texture followed by CompressedTexSubImage
+// works with robust init, and does not crash by trying to copy beyond its memory bounds during
+// the initial robust clear.
+TEST_P(RobustResourceInitTestES3, LargeCompressedImage2DArray)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
+
+    constexpr int kWidth  = 256;
+    constexpr int kHeight = 256;
+    constexpr int kDepth  = 512;
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, kWidth, kHeight,
+                   kDepth);
+
+    // The bounds of the subimage copy should not cover the entire image. This will make sure that
+    // the robust resource clear is applied to the whole image before the subimage copy.
+    constexpr int kSubWidth         = 8;
+    constexpr int kSubHeight        = 8;
+    constexpr int kSubDepth         = 8;
+    constexpr int kSubImageByteSize = kSubWidth * kSubHeight * kSubDepth / 2;
+    std::vector<uint8_t> subData(kSubImageByteSize);
+    static constexpr uint8_t kRed_4x4_rgb_dxt1[] = {
+        0x00, 0xF8, 0x00, 0xF8, 0x00, 0x00, 0x00, 0x00,
+    };
+    static_assert(kSubImageByteSize % 8 == 0);
+    for (size_t i = 0; i < kSubImageByteSize; i += 8)
+    {
+        memcpy(&subData[i], kRed_4x4_rgb_dxt1, sizeof(kRed_4x4_rgb_dxt1));
+    }
+    glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kSubWidth, kSubHeight, kSubDepth,
+                              GL_COMPRESSED_RGB_S3TC_DXT1_EXT, kSubImageByteSize, subData.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Draw on FBO sampling from layer 0 of the texture.
+    GLTexture colorbuffer;
+    glBindTexture(GL_TEXTURE_2D, colorbuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorbuffer, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, kWidth, kHeight);
+
+    draw2DArrayTexturedQuad(0.5, 1.0, false, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the colors on the inside and the outside of the updated area.
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSubWidth, kSubHeight, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kSubWidth, 0, kWidth - kSubWidth, kHeight, GLColor::black);
+    EXPECT_PIXEL_RECT_EQ(0, kSubHeight, kSubWidth, kHeight - kSubHeight, GLColor::black);
+}
+
 // Test drawing to a framebuffer with not all draw buffers enabled
 TEST_P(RobustResourceInitTestES3, SparseDrawBuffers)
 {
