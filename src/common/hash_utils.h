@@ -10,7 +10,6 @@
 
 #include "common/debug.h"
 #include "common/span.h"
-#define XXH_INLINE_ALL
 #include "xxhash.h"
 
 namespace angle
