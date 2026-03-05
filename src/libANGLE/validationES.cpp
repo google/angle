@@ -776,6 +776,19 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
                 return gl::err::kPLSDrawProgramNoncoherentMismatch;
             }
         }
+
+        if (activePLSCount > 0 && executable.getActiveOutputVariablesMask().test(0))
+        {
+            // INVALID_OPERATION is generated if a draw is issued with a fragment shader that
+            // declares index zero output, but color attachment zero is not present or has an
+            // incompatible numeric type.
+            if (ANGLE_UNLIKELY(!ValidateComponentTypeMasks(
+                    executable.getFragmentOutputsTypeMask().bits(),
+                    framebuffer->getDrawBufferTypeMask().bits(), 0x1, 0x1)))
+            {
+                return kPLSDrawProgramColorAttachment0WorkaroundViolation;
+            }
+        }
     }
 
     // Enabled blend equation validation
@@ -4638,7 +4651,7 @@ bool ValidateSizedGetUniform(const Context *context,
     // sized queries -- ensure the provided buffer is large enough
     const LinkedUniform &uniform =
         programObject->getExecutable().getUniformByLocation(locationPacked);
-    size_t requiredBytes         = VariableExternalSize(uniform.getType());
+    size_t requiredBytes = VariableExternalSize(uniform.getType());
     if (ANGLE_UNLIKELY(static_cast<size_t>(bufSize) < requiredBytes))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientBufferSize);

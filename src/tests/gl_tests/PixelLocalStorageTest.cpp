@@ -3710,6 +3710,12 @@ TEST_P(PixelLocalStorageTest, ClearWithActivePLS)
         }
         glDrawBuffers(2, drawBuffers);
 
+        if (drawBuffers[0] == GL_NONE && numColorAttachments >= 1)
+        {
+            // PLS doesn't allow a colorAttachment0 with a disabled draw buffer.
+            glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        }
+
         glFramebufferPixelLocalClearValuefvANGLE(0, ClearF(0, 0, 1, 1));
         glFramebufferPixelLocalClearValuefvANGLE(1, ClearF(0, 1, 1, 1));
         glBeginPixelLocalStorageANGLE(
@@ -3730,6 +3736,14 @@ TEST_P(PixelLocalStorageTest, ClearWithActivePLS)
 
         glEndPixelLocalStorageANGLE(
             NUM_PLANES, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+
+        if (numColorAttachments >= 1)
+        {
+            // Restore colorAttachment0 since PLS doesn't allow a colorAttachment0 with a disabled
+            // draw buffer.
+            glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   colorAttachment0, 0);
+        }
 
         // Make sure glClear worked on the enabled color attachments, and did not clear the disabled
         // ones.
@@ -3810,13 +3824,6 @@ TEST_P(PixelLocalStorageTest, ColorAttachment0Workaround)
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
     ANGLE_SKIP_TEST_IF(MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES < 3);
 
-    mProgram.compile(R"(
-        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE tex;
-        void main()
-        {
-            pixelLocalStoreANGLE(tex, pixelLocalLoadANGLE(tex) + vec4(0, 1, 0, 1));
-        })");
-
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
@@ -3824,29 +3831,98 @@ TEST_P(PixelLocalStorageTest, ColorAttachment0Workaround)
     glFramebufferTexturePixelLocalStorageANGLE(0, pls, 0, 0, GL_NONE);
     glFramebufferPixelLocalClearValuefvANGLE(0, ClearF(1, 0, 0, 1));
 
-    GLTexture attachment0;
-    glBindTexture(GL_TEXTURE_2D_ARRAY, attachment0);
-    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 2, GL_RGBA8, W * 2, H * 2, 3);
-
     // Use PLS with:
-    //   1) GL_COLOR_ATTACHMENT0 attached.
+    //   1) GL_COLOR_ATTACHMENT0 not attached.
     //   2) drawbuffer 0 disabled.
-    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, attachment0, 1, 2);
-    glDrawBuffers(1, GLenumArray({GL_NONE}));
+    mProgram.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE tex;
+        void main()
+        {
+            pixelLocalStoreANGLE(tex, pixelLocalLoadANGLE(tex) + vec4(0, 1, 0, 1));
+        })");
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    glDrawBuffers(0, GLenumArray({GL_NONE}));
     glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
     mProgram.drawBoxes({{{FULLSCREEN}}});
     glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
     EXPECT_GL_NO_ERROR();
 
-    // Ensure our workaround didn't change the COLOR_ATTACHMENT0 binding.
-    EXPECT_FRAMEBUFFER_ATTACHMENT_TYPE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE);
-    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, attachment0);
-    EXPECT_FRAMEBUFFER_ATTACHMENT_LEVEL(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 1);
-    EXPECT_FRAMEBUFFER_ATTACHMENT_LAYER(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 2);
+    // Ensure our workaround didn't change the COLOR_ATTACHMENT0 binding or draw buffer.
+    EXPECT_FRAMEBUFFER_ATTACHMENT_TYPE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_NONE);
+    EXPECT_GL_INTEGER(GL_DRAW_BUFFER0, GL_NONE);
     EXPECT_GL_NO_ERROR();
 
     attachTexture2DToScratchFBO(pls);
     EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::yellow);
+
+    // Use PLS with:
+    //   1) GL_COLOR_ATTACHMENT0 still not attached.
+    //   2) drawbuffer 0 enabled.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glDrawBuffers(1, GLenumArray({GL_COLOR_ATTACHMENT0}));
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+    mProgram.drawBoxes({{{FULLSCREEN}}});
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+
+    // Ensure our workaround didn't change the COLOR_ATTACHMENT0 binding or draw buffer.
+    EXPECT_FRAMEBUFFER_ATTACHMENT_TYPE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_NONE);
+    EXPECT_GL_INTEGER(GL_DRAW_BUFFER0, GL_COLOR_ATTACHMENT0);
+    EXPECT_GL_NO_ERROR();
+
+    attachTexture2DToScratchFBO(pls);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::yellow);
+
+    // Use PLS with:
+    //   1) GL_COLOR_ATTACHMENT0 *not* attached.
+    //   2) GL_COLOR_ATTACHMENT1 attached.
+    //   3) GL_COLOR_ATTACHMENT2 attached.
+    //   4) drawbuffer 0 enabled.
+    //   5) drawbuffer 1 enabled.
+    //   6) drawbuffer 2 enabled but not written by the shader.
+    PLSTestTexture tex1(GL_RGBA8), tex2(GL_RGBA8);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    mProgram.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE pls;
+        layout(location=1) out lowp vec4 tex1;
+        layout(location=3) out lowp vec4 tex3;
+        void main()
+        {
+            pixelLocalStoreANGLE(pls, pixelLocalLoadANGLE(pls) + vec4(0, 1, 0, 1));
+            tex1 = vec4(0, 1, 0, 1);
+            tex3 = vec4(0, 0, 1, 1);
+        })");
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, tex1, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, tex2, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, 0, 0);
+    glDrawBuffers(4, GLenumArray({GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+                                  GL_COLOR_ATTACHMENT3}));
+
+    GLfloat red[] = {1, 0, 0, 1};
+    glClearBufferfv(GL_COLOR, 1, red);
+    glClearBufferfv(GL_COLOR, 2, red);
+
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+    mProgram.drawBoxes({{{FULLSCREEN}}});
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+
+    // Ensure our workaround didn't change the COLOR_ATTACHMENT0 binding or draw buffer.
+    EXPECT_FRAMEBUFFER_ATTACHMENT_TYPE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_NONE);
+    EXPECT_GL_INTEGER(GL_DRAW_BUFFER0, GL_COLOR_ATTACHMENT0);
+    EXPECT_GL_INTEGER(GL_DRAW_BUFFER1, GL_COLOR_ATTACHMENT1);
+    EXPECT_GL_INTEGER(GL_DRAW_BUFFER2, GL_COLOR_ATTACHMENT2);
+    EXPECT_GL_INTEGER(GL_DRAW_BUFFER3, GL_COLOR_ATTACHMENT3);
+    EXPECT_GL_NO_ERROR();
+
+    attachTexture2DToScratchFBO(pls);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::yellow);
+
+    attachTexture2DToScratchFBO(tex1);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::green);
 
     ASSERT_GL_NO_ERROR();
 }
@@ -6533,6 +6609,178 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_collisio
     glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
     EXPECT_GL_NO_ERROR();
     glEndPixelLocalStorageANGLE(2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check that glBeginPixelLocalStorageANGLE validates the Mac/AMD constraint as specified:
+//
+// INVALID_OPERATION is generated if color attachment zero is present, but draw buffer zero is
+// disabled.
+TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_color_attachment_0_constraint)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    PLSTestTexture pls(GL_RGBA8);
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls, 0, 0, GL_NONE);
+    glFramebufferPixelLocalClearValuefvANGLE(0, ClearF(1, 0, 0, 1));
+
+    GLTexture attachment0;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, attachment0);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 2, GL_RGBA8, W * 2, H * 2, 3);
+
+    // Use PLS with:
+    //   1) GL_COLOR_ATTACHMENT0 attached.
+    //   2) drawbuffer 0 disabled.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, attachment0, 1, 2);
+    glDrawBuffers(1, GLenumArray({GL_NONE}));
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "Color attachment zero is present, but draw buffer zero is disabled.");
+
+    // Ensure PLS didn't change the COLOR_ATTACHMENT0 binding.
+    EXPECT_FRAMEBUFFER_ATTACHMENT_TYPE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE);
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, attachment0);
+    EXPECT_FRAMEBUFFER_ATTACHMENT_LEVEL(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 1);
+    EXPECT_FRAMEBUFFER_ATTACHMENT_LAYER(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 2);
+
+    // INVALID_OPERATION is generated if a draw is issued with a fragment shader that declares index
+    // zero output, but color attachment zero is not present or has an incompatible numeric type.
+    PLSProgram programImplicitLocation0;
+    programImplicitLocation0.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE tex;
+        out lowp vec4 out0;
+        void main() { out0 = vec4(0); })");
+
+    PLSProgram programExplicitLocation0;
+    programExplicitLocation0.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE tex;
+        layout(location=0) out lowp vec4 out0;
+        void main() { out0 = vec4(0); })");
+
+    PLSProgram programMultipleOutputs;
+    programMultipleOutputs.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE tex;
+        layout(location=1) out lowp vec4 out1;
+        layout(location=0) out lowp vec4 out0;
+        void main()
+        {
+            out0 = vec4(0);
+            out1 = vec4(1);
+        })");
+
+    PLSProgram programNoLocation0;
+    programNoLocation0.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE tex;
+        layout(location=1) out lowp vec4 out1;
+        void main() { out1 = vec4(1); })");
+
+    PLSTestTexture texIncompatible(GL_RGBA8UI);
+    for (bool drawBuffer0Enabled : {false, true})
+    {
+        for (bool hasAttachment0 : {false, true})
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   hasAttachment0 ? texIncompatible.id() : 0, 0);
+            glDrawBuffers(drawBuffer0Enabled ? 1 : 0, GLenumArray({GL_COLOR_ATTACHMENT0}));
+
+            {
+                programImplicitLocation0.bind();
+                glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+                if (hasAttachment0 && !drawBuffer0Enabled)
+                {
+                    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+                    EXPECT_GL_SINGLE_ERROR_MSG(
+                        "Color attachment zero is present, but draw buffer zero is disabled.");
+                }
+                else
+                {
+                    EXPECT_GL_NO_ERROR();
+                    programImplicitLocation0.drawBoxes({{{FULLSCREEN}}});
+                    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+                    EXPECT_GL_SINGLE_ERROR_MSG(
+                        "Fragment shader declares index zero output, but color attachment zero is "
+                        "not "
+                        "present or of incompatible numeric type.");
+                    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+                }
+                ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+                EXPECT_GL_NO_ERROR();
+            }
+
+            {
+                programExplicitLocation0.bind();
+                glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+                if (hasAttachment0 && !drawBuffer0Enabled)
+                {
+                    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+                    EXPECT_GL_SINGLE_ERROR_MSG(
+                        "Color attachment zero is present, but draw buffer zero is disabled.");
+                }
+                else
+                {
+                    EXPECT_GL_NO_ERROR();
+                    programExplicitLocation0.drawBoxes({{{FULLSCREEN}}});
+                    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+                    EXPECT_GL_SINGLE_ERROR_MSG(
+                        "Fragment shader declares index zero output, but color attachment zero is "
+                        "not "
+                        "present or of incompatible numeric type.");
+                    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+                }
+                ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+                EXPECT_GL_NO_ERROR();
+            }
+
+            {
+                programMultipleOutputs.bind();
+                glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+                if (hasAttachment0 && !drawBuffer0Enabled)
+                {
+                    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+                    EXPECT_GL_SINGLE_ERROR_MSG(
+                        "Color attachment zero is present, but draw buffer zero is disabled.");
+                }
+                else
+                {
+                    EXPECT_GL_NO_ERROR();
+                    programMultipleOutputs.drawBoxes({{{FULLSCREEN}}});
+                    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+                    EXPECT_GL_SINGLE_ERROR_MSG(
+                        "Fragment shader declares index zero output, but color attachment zero is "
+                        "not "
+                        "present or of incompatible numeric type.");
+                    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+                }
+                ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+                EXPECT_GL_NO_ERROR();
+            }
+
+            {
+                programNoLocation0.bind();
+                glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+                if (hasAttachment0 && !drawBuffer0Enabled)
+                {
+                    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+                    EXPECT_GL_SINGLE_ERROR_MSG(
+                        "Color attachment zero is present, but draw buffer zero is disabled.");
+                }
+                else
+                {
+                    EXPECT_GL_NO_ERROR();
+                    programNoLocation0.drawBoxes({{{FULLSCREEN}}});
+                    // Location 1 doesn't care if the color attachment is disabled.
+                    EXPECT_GL_NO_ERROR();
+                    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+                }
+                ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+                EXPECT_GL_NO_ERROR();
+            }
+        }
+    }
+
     ASSERT_GL_NO_ERROR();
 }
 
