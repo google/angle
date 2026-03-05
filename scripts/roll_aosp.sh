@@ -91,6 +91,13 @@ function generate_Android_bp_file() {
             )
         fi
 
+        if [[ "$abi" == "arm64" ]]; then
+            gn_args=(
+                "${gn_args[@]}"
+                "arm_control_flow_integrity = \"none\""
+            )
+        fi
+
         gn gen ${GN_OUTPUT_DIRECTORY} --args="${gn_args[*]}"
         gn desc ${GN_OUTPUT_DIRECTORY} --format=json "*" > ${GN_OUTPUT_DIRECTORY}/desc.$abi.json
     done
