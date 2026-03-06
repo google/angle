@@ -143,9 +143,6 @@ angle_win_functional_cq_tester(
         "ci/angle-win-x64-nvidia-gtx1660-rel",
     ],
     gn_args = "ci/angle-win-x64-builder-rel",
-    # TODO(anglebug.com/475260235): Actually add this to the CQ after the CI
-    # builders are confirmed to work properly.
-    tryjob = try_.job(includable_only = True),
 )
 
 ################################################################################
