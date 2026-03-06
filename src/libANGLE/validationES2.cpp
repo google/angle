@@ -1669,7 +1669,15 @@ bool ValidateES2TexImageParametersBase(const Context *context,
             return false;
         }
 
-        if (format != textureInternalFormat.format)
+        bool formatsMatch = format == textureInternalFormat.format;
+        if (!formatsMatch && textureInternalFormat.sizedInternalFormat == GL_RGBX8_ANGLE)
+        {
+            // ANGLE_rgbx_internal_format allows GL_RGBA to be uploaded to GL_RGBX8_ANGLE textures
+            // even if the base format is GL_RGB.
+            formatsMatch = format == GL_RGBA;
+        }
+
+        if (!formatsMatch)
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureFormatMismatch);
             return false;
@@ -1677,8 +1685,23 @@ bool ValidateES2TexImageParametersBase(const Context *context,
 
         if (context->isWebGL())
         {
-            if (GetInternalFormatInfo(format, type).sizedInternalFormat !=
-                textureInternalFormat.sizedInternalFormat)
+            const GLenum textureSizedInternalFormat = textureInternalFormat.sizedInternalFormat;
+            auto isValid                            = false;
+
+            if (textureSizedInternalFormat == GL_RGBX8_ANGLE)
+            {
+                // Special case: As per extension ANGLE_rgbx_internal_format,
+                // ANGLE_rgbx_internal_format allows GL_RGB/GL_UNSIGNED_BYTE and
+                // GL_RGBA/GL_UNSIGNED_BYTE to be uploaded to GL_RGBX8_ANGLE textures even if sized
+                // internal formats mismatch.
+                isValid = (type == GL_UNSIGNED_BYTE && (format == GL_RGB || format == GL_RGBA));
+            }
+            else
+            {
+                isValid = (GetInternalFormatInfo(format, type).sizedInternalFormat ==
+                           textureSizedInternalFormat);
+            }
+            if (!isValid)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureTypeMismatch);
                 return false;

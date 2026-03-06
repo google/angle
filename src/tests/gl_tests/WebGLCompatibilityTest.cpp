@@ -1179,6 +1179,53 @@ TEST_P(WebGLCompatibilityTest, EnableRGB8RGBA8Extension)
     }
 }
 
+// Test for GL_ANGLE_rgbx_internal_format extension.
+TEST_P(WebGLCompatibilityTest, ANGLE_rgbx_internal_format)
+{
+    if (IsGLExtensionRequestable("GL_ANGLE_rgbx_internal_format"))
+    {
+        glRequestExtensionANGLE("GL_ANGLE_rgbx_internal_format");
+        EXPECT_GL_NO_ERROR();
+    }
+
+    // Skip test if extension not available
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
+
+    // Create a texture with GL_RGBX8_ANGLE using glTexStorage2D
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    GLubyte pixelData[4] = {255, 0, 0, 255};
+
+    // This should succeed as per the extension spec.
+    if (getClientMajorVersion() >= 3)
+    {
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBX8_ANGLE, 1, 1);
+    }
+    else
+    {
+        if (IsGLExtensionRequestable("GL_EXT_texture_storage"))
+        {
+            glRequestExtensionANGLE("GL_EXT_texture_storage");
+        }
+        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage"));
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBX8_ANGLE, 1, 1);
+    }
+    EXPECT_GL_NO_ERROR();
+
+    // Test allowed glTexSubImage2D combinations
+    // 1. format = GL_RGB, type = GL_UNSIGNED_BYTE
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixelData);
+    EXPECT_GL_NO_ERROR();
+
+    // 2. format = GL_RGBA, type = GL_UNSIGNED_BYTE
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
+    EXPECT_GL_NO_ERROR();
+
+    // Test disallowed glTexSubImage2D combination (e.g., GL_ALPHA, GL_UNSIGNED_BYTE)
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_ALPHA, GL_UNSIGNED_BYTE, pixelData);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Test enabling the GL_ANGLE_framebuffer_blit extension
 TEST_P(WebGLCompatibilityTest, EnableFramebufferBlitExtension)
 {
