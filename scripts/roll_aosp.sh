@@ -79,9 +79,6 @@ function generate_Android_bp_file() {
             "build_angle_end2end_tests_library = true"
             "build_angle_trace_tests = false"
 
-            # The default value is "standard", it has some CPU overhead on some android devices. Android does not require this security feature
-            "arm_control_flow_integrity = "none""
-
             # Uncomment when we are ready to test IR in Android
             # "angle_ir = true"
         )
