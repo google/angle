@@ -29,6 +29,15 @@
   },
   'angle_end2end_tests': {
     'modifications': {
+      # anglebug.com/40644897 suspecting device lost caused by multiprocess
+      'angle-win-x64-intel-uhd630-rel': {
+        'args': [
+          '--max-processes=1',
+        ],
+        'swarming': {
+          'shards': 10,
+        },
+      },
       # anglebug.com/352528974 suspecting OOM caused by multiprocess
       'win10-x64-exp-intel': {
         'args': [
@@ -90,6 +99,15 @@
   },
   'angle_restricted_trace_gold_tests': {
     'modifications': {
+      'angle-win-x64-intel-uhd630-rel': {
+        # anglebug.com/42263955 flaky 4x8 pixel artifacts on Win Intel
+        'args': [
+          '--flaky-retries=1',
+        ],
+        'swarming': {
+          'shards': 5,
+        },
+      },
       'win10-x64-exp-intel': {
         'swarming': {
           'shards': 4,
@@ -133,6 +151,11 @@
           '--custom-throttling-temp=38',
         ],
       },
+      'angle-win-x64-intel-uhd630-rel': {
+        'swarming': {
+          'shards': 3,
+        },
+      },
       'win10-x64-exp-intel': {
         'swarming': {
           'shards': 4,
@@ -152,6 +175,12 @@
   },
   'angle_white_box_tests': {
     'modifications': {
+      # anglebug.com/40644897 suspecting device lost caused by multiprocess
+      'angle-win-x64-intel-uhd630-rel': {
+        'args': [
+          '--max-processes=1',
+        ],
+      },
       # anglebug.com/40644897 suspecting device lost caused by multiprocess
       'win10-x64-intel': {
         'args': [

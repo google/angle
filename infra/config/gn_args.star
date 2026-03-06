@@ -110,6 +110,22 @@ gn_args.config(
 )
 
 gn_args.config(
+    name = "win",
+    args = {
+        "target_os": "win",
+    },
+)
+
+gn_args.config(
+    name = "win_clang",
+    configs = [
+        "clang",
+        "siso",
+        "win",
+    ],
+)
+
+gn_args.config(
     name = "x64",
     args = {
         "target_cpu": "x64",

@@ -65,11 +65,25 @@ def apply_mac_cq_builder_defaults(kwargs):
         kwargs: The args being used for the builder as a dict.
 
     Returns:
-        |kwargs| with default vaules set for a Mac CQ builder.
+        |kwargs| with default values set for a Mac CQ builder.
     """
     kwargs = apply_cq_builder_defaults(kwargs)
     kwargs.setdefault("cpu", "arm64")
     kwargs.setdefault("os", os.MAC_DEFAULT)
+    return kwargs
+
+def apply_win_cq_builder_defaults(kwargs):
+    """Applies default builder settings for a Windows CQ builder.
+
+    Args:
+        kwargs: The args being used for the builder as a dict.
+
+    Returns:
+        |kwargs| with default values set for a Windows CQ builder.
+    """
+    kwargs = apply_cq_builder_defaults(kwargs)
+    kwargs.setdefault("os", os.WINDOWS_DEFAULT)
+    kwargs.setdefault("ssd", None)
     return kwargs
 
 def angle_linux_functional_cq_tester(**kwargs):
@@ -78,6 +92,10 @@ def angle_linux_functional_cq_tester(**kwargs):
 
 def angle_mac_functional_cq_tester(**kwargs):
     kwargs = apply_mac_cq_builder_defaults(kwargs)
+    try_.builder(**kwargs)
+
+def angle_win_functional_cq_tester(**kwargs):
+    kwargs = apply_win_cq_builder_defaults(kwargs)
     try_.builder(**kwargs)
 
 ## Functional testers
@@ -114,6 +132,20 @@ angle_mac_functional_cq_tester(
         "ci/angle-mac-x64-intel-uhd630-rel",
     ],
     gn_args = "ci/angle-mac-x64-builder-rel",
+)
+
+angle_win_functional_cq_tester(
+    name = "angle-cq-win-x64-rel",
+    description_html = "Tests release ANGLE on Win/x64 on multiple hardware configs. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-win-x64-builder-rel",
+        "ci/angle-win-x64-intel-uhd630-rel",
+        "ci/angle-win-x64-nvidia-gtx1660-rel",
+    ],
+    gn_args = "ci/angle-win-x64-builder-rel",
+    # TODO(anglebug.com/475260235): Actually add this to the CQ after the CI
+    # builders are confirmed to work properly.
+    tryjob = try_.job(includable_only = True),
 )
 
 ################################################################################
@@ -179,6 +211,15 @@ def angle_mac_manual_builder(*, name, **kwargs):
         max_concurrent_builds = 1,
         cpu = "arm64",
         os = os.MAC_DEFAULT,
+        **kwargs
+    )
+
+def angle_win_manual_builder(*, name, **kwargs):
+    return try_.builder(
+        name = name,
+        max_concurrent_builds = 1,
+        os = os.WINDOWS_DEFAULT,
+        ssd = None,
         **kwargs
     )
 
@@ -302,4 +343,24 @@ angle_mac_manual_builder(
         "ci/angle-mac-x64-intel-uhd630-rel",
     ],
     gn_args = "ci/angle-mac-x64-builder-rel",
+)
+
+angle_win_manual_builder(
+    name = "angle-try-win-x64-intel-uhd630-rel",
+    description_html = "Tests release ANGLE on Win/x64 on Intel UHD 630 GPUs. Manual only.",
+    mirrors = [
+        "ci/angle-win-x64-builder-rel",
+        "ci/angle-win-x64-intel-uhd630-rel",
+    ],
+    gn_args = "ci/angle-win-x64-builder-rel",
+)
+
+angle_win_manual_builder(
+    name = "angle-try-win-x64-nvidia-gtx1660-rel",
+    description_html = "Tests release ANGLE on Win/x64 on NVIDIA GTX 1660 GPUs. Manual only.",
+    mirrors = [
+        "ci/angle-win-x64-builder-rel",
+        "ci/angle-win-x64-nvidia-gtx1660-rel",
+    ],
+    gn_args = "ci/angle-win-x64-builder-rel",
 )

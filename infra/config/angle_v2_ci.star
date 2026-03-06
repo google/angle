@@ -49,6 +49,12 @@ def angle_mac_parent_builder(**kwargs):
     kwargs.setdefault("os", os.MAC_DEFAULT)
     ci.builder(**kwargs)
 
+def angle_win_parent_builder(**kwargs):
+    kwargs.setdefault("cores", 8)
+    kwargs.setdefault("os", os.WINDOWS_DEFAULT)
+    kwargs.setdefault("ssd", None)
+    ci.builder(**kwargs)
+
 angle_linux_parent_builder(
     name = "angle-linux-x64-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Linux/x64",
@@ -139,6 +145,38 @@ angle_mac_parent_builder(
     ),
     console_view_entry = consoles.console_view_entry(
         category = "compile|mac|x64",
+        short_name = "rel",
+    ),
+)
+
+angle_win_parent_builder(
+    name = "angle-win-x64-builder-rel",
+    description_html = "Compiles release ANGLE test binaries for Win/x64",
+    schedule = "triggered",
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.WIN,
+        ),
+    ),
+    gn_args = gn_args.config(
+        configs = [
+            "capture",
+            "component",
+            "opencl",
+            "release_with_dchecks",
+            "win_clang",
+            "x64",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|win|x64",
         short_name = "rel",
     ),
 )
@@ -440,6 +478,54 @@ ci.thin_tester(
     console_view_entry = consoles.console_view_entry(
         category = "test|mac|x64|rel",
         short_name = "630",
+    ),
+)
+
+ci.thin_tester(
+    name = "angle-win-x64-intel-uhd630-rel",
+    description_html = "Tests release ANGLE on Win/x64 on Intel UHD 630 GPUs",
+    parent = "angle-win-x64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.WIN,
+        ),
+        run_tests_serially = True,
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|win|x64|rel",
+        short_name = "630",
+    ),
+)
+
+ci.thin_tester(
+    name = "angle-win-x64-nvidia-gtx1660-rel",
+    description_html = "Tests release ANGLE on Win/x64 on NVIDIA GTX 1660 GPUs",
+    parent = "angle-win-x64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.WIN,
+        ),
+        run_tests_serially = True,
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|win|x64|rel",
+        short_name = "1660",
     ),
 )
 
