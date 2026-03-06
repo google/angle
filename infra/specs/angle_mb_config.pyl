@@ -50,7 +50,6 @@
       'win-msvc-dbg-compile': 'angle_non_clang_debug_bot',
       'win-msvc-x86-compile': 'angle_non_clang_x86_release_bot',
       'win-msvc-x86-dbg-compile': 'angle_non_clang_x86_debug_bot',
-      'win-test': 'angle_remoteexec_release_bot',
       'win-x86-dbg-compile': 'angle_remoteexec_x86_debug_bot',
       'win-x86-test': 'angle_remoteexec_x86_release_bot',
       'win10-intel-uhd630-perf': 'angle_remoteexec_perf_bot',
