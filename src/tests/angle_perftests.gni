@@ -55,6 +55,7 @@ angle_white_box_perf_tests_sources = [
   "perf_tests/EGLInitializePerf.cpp",  # Uses ANGLEGetDisplayPlatform, a
                                        # non-standard EP.
   "perf_tests/ResultPerf.cpp",
+  "perf_tests/StreamingHasherPerf.cpp",
 ]
 
 angle_white_box_perf_tests_vulkan_sources =
