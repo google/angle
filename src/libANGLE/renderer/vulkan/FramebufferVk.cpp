@@ -754,8 +754,15 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
             contextVk->handleGraphicsEventLog(rx::GraphicsEventCmdBuf::InOutsideCmdBufQueryCmd));
     }
 
-    const bool preferDrawOverClearAttachments =
+    bool preferDrawOverClearAttachments =
         contextVk->getFeatures().preferDrawClearOverVkCmdClearAttachments.enabled;
+
+    // https://issuetracker.google.com/490503954. Temporary workaround the driver bug.
+    if (contextVk->getFeatures().supportsTileMemoryHeap.enabled && (clearDepth || clearStencil) &&
+        getDepthStencilRenderTarget()->getImageForRenderPass().useTileMemory())
+    {
+        preferDrawOverClearAttachments = true;
+    }
 
     // Merge current clears with the deferred clears, then proceed with only processing deferred
     // clears.  This simplifies the clear paths such that they don't need to consider both the
