@@ -289,10 +289,6 @@ struct InterfaceBlock
     unsigned int arraySize;
     BlockLayoutType layout;
 
-    // Deprecated. Matrix packing should only be queried from individual fields of the block.
-    // TODO(oetuaho): Remove this once it is no longer used in Chromium.
-    bool isRowMajorLayout;
-
     int binding;
     bool staticUse;
     bool active;
