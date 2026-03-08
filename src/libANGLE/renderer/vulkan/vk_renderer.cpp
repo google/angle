@@ -1226,27 +1226,28 @@ void ComputePipelineCacheVkChunkKey(const VkPhysicalDeviceProperties &physicalDe
                                     const size_t chunkIndex,
                                     angle::BlobCacheKey *hashOut)
 {
-    std::ostringstream hashStream("ANGLE Pipeline Cache: ", std::ios_base::ate);
+    angle::BlobCacheHasher hasher;
+    hasher.Init();
+
+    // Start with the name
+    const char *pipelineCacheName = "ANGLE Pipeline Cache: ";
+    hasher.Update(pipelineCacheName, strlen(pipelineCacheName));
+
     // Add the pipeline cache UUID to make sure the blob cache always gives a compatible pipeline
-    // cache.  It's not particularly necessary to write it as a hex number as done here, so long as
-    // there is no '\0' in the result.
-    for (const uint32_t c : physicalDeviceProperties.pipelineCacheUUID)
-    {
-        hashStream << std::hex << c;
-    }
+    // cache. pipelineCacheUUID is a uint8_t[VK_UUID_SIZE]
+    hasher.Update(&physicalDeviceProperties.pipelineCacheUUID, VK_UUID_SIZE);
+
     // Add the vendor and device id too for good measure.
-    hashStream << std::hex << physicalDeviceProperties.vendorID;
-    hashStream << std::hex << physicalDeviceProperties.deviceID;
+    angle::UpdateHashWithValue(hasher, physicalDeviceProperties.vendorID);
+    angle::UpdateHashWithValue(hasher, physicalDeviceProperties.deviceID);
 
-    // Add slotIndex to generate unique keys for each slot.
-    hashStream << std::hex << static_cast<uint32_t>(slotIndex);
+    // Add slotIndex and chunkIndex to generate unique keys.
+    angle::UpdateHashWithValue(hasher, slotIndex);
+    angle::UpdateHashWithValue(hasher, chunkIndex);
 
-    // Add chunkIndex to generate unique key for chunks.
-    hashStream << std::hex << static_cast<uint32_t>(chunkIndex);
-
-    const std::string &hashString = hashStream.str();
-    angle::base::SHA1HashBytes(reinterpret_cast<const unsigned char *>(hashString.c_str()),
-                               hashString.length(), hashOut->data());
+    ASSERT(hashOut);
+    hasher.Final();
+    memcpy(hashOut->data(), hasher.Digest(), angle::kBlobCacheKeyLength);
 }
 
 struct PipelineCacheVkChunkInfo

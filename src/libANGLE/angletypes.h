@@ -1348,10 +1348,12 @@ struct FeatureOverrides
     bool allDisabled = false;
 };
 
-// 160-bit SHA-1 hash key used for hasing a program.  BlobCache opts in using fixed keys for
-// simplicity and efficiency.
+// Key is a 160-bit SHA-1 hash. Using fixed keys for simplicity and efficiency.
 static constexpr size_t kBlobCacheKeyLength = angle::base::kSHA1Length;
-using BlobCacheKey                          = std::array<uint8_t, kBlobCacheKeyLength>;
+// The hasher used is a SHA-1 hasher.
+using BlobCacheHasher = angle::base::SecureHashAlgorithm;
+
+using BlobCacheKey = std::array<uint8_t, kBlobCacheKeyLength>;
 class BlobCacheValue  // To be replaced with std::span when C++20 is required
 {
   public:
