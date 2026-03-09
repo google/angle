@@ -135,6 +135,11 @@ std::shared_ptr<ShaderTranslateTask> ShaderVk::compile(const gl::Context *contex
         options->emulateR32fImageAtomicExchange = true;
     }
 
+    if (contextVk->getFeatures().supportsShaderDemoteToHelperInvocation.enabled)
+    {
+        options->useDemoteToHelperInvocation = true;
+    }
+
     // https://issuetracker.google.com/406827038
     // Unconditionally set this option to true for the Vulkan backend
     options->preserveDenorms = true;

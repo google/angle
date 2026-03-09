@@ -422,6 +422,7 @@ enum class Feature
     SupportsSampler2dViewOf3d,
     SupportsSamplerMirrorClampToEdge,
     SupportsShaderAtomicInt64,
+    SupportsShaderDemoteToHelperInvocation,
     SupportsShaderFloat16,
     SupportsShaderFloat64,
     SupportsShaderFramebufferFetch,

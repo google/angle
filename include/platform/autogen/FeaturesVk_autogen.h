@@ -1676,6 +1676,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsShaderDemoteToHelperInvocation = {
+        "supportsShaderDemoteToHelperInvocation",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

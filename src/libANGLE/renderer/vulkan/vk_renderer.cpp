@@ -3314,14 +3314,15 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo12(
 
 // The following features and properties used by ANGLE have been promoted to Vulkan 1.3:
 //
-// - VK_EXT_extended_dynamic_state:          extendedDynamicState (feature)
-// - VK_EXT_extended_dynamic_state2:         extendedDynamicState2 (feature),
-//                                           extendedDynamicState2LogicOp (feature)
-// - VK_KHR_synchronization2:                synchronization2 (feature)
-// - VK_KHR_dynamic_rendering:               dynamicRendering (feature)
-// - VK_KHR_maintenance5:                    maintenance5 (feature)
-// - VK_EXT_texture_compression_astc_hdr:    textureCompressionASTC_HDR(feature)
-// - VK_KHR_shader_integer_dot_product:      shaderIntegerDotProduct (feature)
+// - VK_EXT_extended_dynamic_state:             extendedDynamicState (feature)
+// - VK_EXT_extended_dynamic_state2:            extendedDynamicState2 (feature),
+//                                              extendedDynamicState2LogicOp (feature)
+// - VK_KHR_synchronization2:                   synchronization2 (feature)
+// - VK_KHR_dynamic_rendering:                  dynamicRendering (feature)
+// - VK_KHR_maintenance5:                       maintenance5 (feature)
+// - VK_EXT_texture_compression_astc_hdr:       textureCompressionASTC_HDR(feature)
+// - VK_KHR_shader_integer_dot_product:         shaderIntegerDotProduct (feature)
+// - VK_EXT_shader_demote_to_helper_invocation: shaderDemoteToHelperInvocation (feature)
 //
 // Note that VK_EXT_extended_dynamic_state2 is partially promoted to Vulkan 1.3.  If ANGLE creates a
 // Vulkan 1.3 device, it would still need to enable this extension separately for
@@ -3366,6 +3367,12 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo13(
     {
         vk::AddToPNextChain(deviceFeatures, &mShaderIntegerDotProductFeatures);
         vk::AddToPNextChain(deviceProperties, &mShaderIntegerDotProductProperties);
+    }
+
+    if (ExtensionFound(VK_EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME,
+                       deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mShaderDemoteToHelperInvocationFeatures);
     }
 }
 
@@ -3604,6 +3611,10 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mShaderIntegerDotProductProperties.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES;
 
+    mShaderDemoteToHelperInvocationFeatures = {};
+    mShaderDemoteToHelperInvocationFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DEMOTE_TO_HELPER_INVOCATION_FEATURES;
+
     mPhysicalDeviceGlobalPriorityQueryFeatures = {};
     mPhysicalDeviceGlobalPriorityQueryFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_EXT;
@@ -3722,6 +3733,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mUnifiedImageLayoutsFeatures.pNext                = nullptr;
     mShaderIntegerDotProductFeatures.pNext            = nullptr;
     mShaderIntegerDotProductProperties.pNext          = nullptr;
+    mShaderDemoteToHelperInvocationFeatures.pNext     = nullptr;
     mPhysicalDeviceGlobalPriorityQueryFeatures.pNext  = nullptr;
     mExternalMemoryHostProperties.pNext               = nullptr;
     mBufferDeviceAddressFeatures.pNext                = nullptr;
@@ -4303,6 +4315,13 @@ void Renderer::enableDeviceExtensionsPromotedTo13(const vk::ExtensionNameList &d
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_SHADER_INTEGER_DOT_PRODUCT_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mShaderIntegerDotProductFeatures);
+    }
+
+    if (mFeatures.supportsShaderDemoteToHelperInvocation.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(
+            VK_EXT_SHADER_DEMOTE_TO_HELPER_INVOCATION_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mShaderDemoteToHelperInvocationFeatures);
     }
 }
 
@@ -6740,6 +6759,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFloat16,
                             mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE && !isSamsung);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsShaderDemoteToHelperInvocation,
+        mShaderDemoteToHelperInvocationFeatures.shaderDemoteToHelperInvocation == VK_TRUE);
 
     // http://anglebug.com/440941211:
     // Disable the feature on Windows Intel because some shaders using 16-bit floats crash

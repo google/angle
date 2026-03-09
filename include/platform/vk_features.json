@@ -2207,6 +2207,14 @@
             "description": [
                 "Optimization feature (for when OpenCL driver chooses WGS) to attempt best-fit WGS for the given global work size."
             ]
+        },
+        {
+            "name": "supports_shader_demote_to_helper_invocation",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_shader_demote_to_helper_invocation extension"
+            ],
+            "issue": "http://anglebug.com/490910899"
         }
     ]
 }

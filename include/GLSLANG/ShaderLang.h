@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 403
+#define ANGLE_SH_VERSION 404
 
 enum ShShaderSpec
 {
@@ -209,7 +209,8 @@ struct ShCompileOptions
     // This flag works around bug in Intel Mac drivers related to abs(i) where i is an integer.
     uint64_t emulateAbsIntFunction : 1;
 
-    uint64_t unused : 1;
+    // Whether SPV_EXT_demote_to_helper_invocation can be used.
+    uint64_t useDemoteToHelperInvocation : 1;
 
     // This flag ensures all indirect (expression-based) array indexing is clamped to the bounds of
     // the array. This ensures, for example, that you cannot read off the end of a uniform, whether
