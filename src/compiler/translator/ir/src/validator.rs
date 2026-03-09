@@ -171,9 +171,14 @@ impl DeclaredRegisterTracker {
         self.declared_registers_in_current_scope.pop().unwrap();
     }
 
-    fn declare_register(&mut self, register_id: RegisterId) {
+    fn declare_register<'a>(&mut self, register_id: RegisterId, validator: &Validator<'a>) {
         // first check we have not declared this register yet
-        debug_assert!(!self.is_declared(register_id));
+        if self.is_declared(register_id) {
+            validator.on_error(format_args!(
+                "register {} is already declared, can't declare the same register twice",
+                register_id.id
+            ));
+        }
         // add the register to the declaration map
         self.declared_registers_in_current_scope.last_mut().unwrap().insert(register_id);
     }
@@ -847,7 +852,7 @@ impl<'a> Validator<'a> {
         registers_declared_map.add_scope();
 
         block.input.inspect(|input| {
-            registers_declared_map.declare_register(input.id);
+            registers_declared_map.declare_register(input.id, self);
         });
 
         for instruction in &block.instructions {
@@ -859,7 +864,7 @@ impl<'a> Validator<'a> {
                 Some(registers_declared_map),
             );
             result.inspect(|result| {
-                registers_declared_map.declare_register(result.id);
+                registers_declared_map.declare_register(result.id, self);
             });
         }
 
