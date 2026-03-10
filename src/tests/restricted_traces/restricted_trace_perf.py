@@ -985,7 +985,7 @@ def run_traces(args):
     output_columns = ['trace']
     if args.walltimeonly:
         output_columns.append('wall_time')
-    else:
+    elif args.minimal_output:
         output_columns.append('wall_time')
         if args.gpu_time:
             output_columns.append('gpu_time')
@@ -1002,6 +1002,14 @@ def run_traces(args):
                 'process_cpuinst', 'gfxlib_cpuinst', 'angle_cpuinst', 'vulkan_cpuinst',
                 'gles_cpuinst', 'libc_cpuinst'
             ])
+    else:
+        # Output all columns when minimal-output is not requested
+        output_columns.extend([
+            'wall_time', 'gpu_time', 'frame_wall_time', 'cpu_time', 'gpu_power', 'cpu_power',
+            'infra_power', 'gpu_mem_sustained', 'gpu_mem_peak', 'proc_mem_median', 'proc_mem_peak',
+            'process_cpuinst', 'gfxlib_cpuinst', 'angle_cpuinst', 'vulkan_cpuinst', 'gles_cpuinst',
+            'libc_cpuinst'
+        ])
 
     # Format string that easily sizes itself to the dynamically loaded variables
     format_str = ' '.join(['%-*s'] * len(output_columns))
@@ -1865,6 +1873,11 @@ def main():
     parser.add_argument(
         '--walltimeonly',
         help='Limit output to just wall time',
+        action='store_true',
+        default=False)
+    parser.add_argument(
+        '--minimal-output',
+        help='Only output the explicitly requested columns. Otherwise, all columns will be output.',
         action='store_true',
         default=False)
     parser.add_argument(
