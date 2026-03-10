@@ -337,6 +337,28 @@ void Renderer::ensureCapsInitialized() const
     // Enable GL_EXT_buffer_storage
     mNativeExtensions.bufferStorageEXT = true;
 
+    // If the BC compression formats device feature is not explicitly enabled, disable all of the
+    // corresponding OpenGL ES extensions even if the driver reports caps for individual formats.
+    // This allows the backend to assume that if any BC format is supported then all of them are.
+    if (mPhysicalDeviceFeatures.textureCompressionBC == VK_FALSE)
+    {
+        mNativeExtensions.textureCompressionDxt1EXT     = false;
+        mNativeExtensions.textureCompressionDxt3ANGLE   = false;
+        mNativeExtensions.textureCompressionDxt5ANGLE   = false;
+        mNativeExtensions.textureCompressionS3tcSrgbEXT = false;
+        mNativeExtensions.textureCompressionRgtcEXT     = false;
+        mNativeExtensions.textureCompressionBptcEXT     = false;
+    }
+    else
+    {
+        ASSERT(mNativeExtensions.textureCompressionDxt1EXT);
+        ASSERT(mNativeExtensions.textureCompressionDxt3ANGLE);
+        ASSERT(mNativeExtensions.textureCompressionDxt5ANGLE);
+        ASSERT(mNativeExtensions.textureCompressionS3tcSrgbEXT);
+        ASSERT(mNativeExtensions.textureCompressionRgtcEXT);
+        ASSERT(mNativeExtensions.textureCompressionBptcEXT);
+    }
+
     // When ETC2/EAC formats are natively supported, enable ANGLE-specific extension string to
     // expose them to WebGL. In other case, mark potentially-available ETC1 extension as emulated.
     if ((mPhysicalDeviceFeatures.textureCompressionETC2 == VK_TRUE) &&
