@@ -1348,10 +1348,17 @@ struct FeatureOverrides
     bool allDisabled = false;
 };
 
+#if defined ANGLE_USE_CRYPTO_HASHER
 // Key is a 160-bit SHA-1 hash. Using fixed keys for simplicity and efficiency.
 static constexpr size_t kBlobCacheKeyLength = angle::base::kSHA1Length;
 // The hasher used is a SHA-1 hasher.
 using BlobCacheHasher = angle::base::SecureHashAlgorithm;
+#else
+// Key is a 128-bit XXH3 hash. Using fixed keys for simplicity and efficiency.
+static constexpr size_t kBlobCacheKeyLength = angle::StreamingHasher::kHashSize;
+// The hasher used is an XXH3 streaming hasher.
+using BlobCacheHasher = angle::StreamingHasher;
+#endif  // ANGLE_USE_CRYPTO_HASHER
 
 using BlobCacheKey = std::array<uint8_t, kBlobCacheKeyLength>;
 class BlobCacheValue  // To be replaced with std::span when C++20 is required

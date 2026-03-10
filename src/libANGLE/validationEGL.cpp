@@ -5779,7 +5779,7 @@ bool ValidateProgramCacheQueryANGLE(const ValidationContext *val,
         return false;
     }
 
-    if (binary && *keysize != static_cast<EGLint>(egl::BlobCache::kKeyLength))
+    if (binary && *keysize != static_cast<EGLint>(angle::kProgramCacheControlKeySize))
     {
         val->setError(EGL_BAD_PARAMETER, "Invalid program key size.");
         return false;
@@ -5809,7 +5809,7 @@ bool ValidateProgramCachePopulateANGLE(const ValidationContext *val,
         return false;
     }
 
-    if (keysize != static_cast<EGLint>(egl::BlobCache::kKeyLength))
+    if (keysize != static_cast<EGLint>(angle::kProgramCacheControlKeySize))
     {
         val->setError(EGL_BAD_PARAMETER, "Invalid program key size.");
         return false;

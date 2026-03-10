@@ -223,7 +223,9 @@ angle::Result MemoryProgramCache::putProgram(const egl::BlobCache::Key &programH
         // tracked by http://anglebug.com/42261225. This issue has since been closed, but removing
         // this still causes a test failure.
         auto *platform = ANGLEPlatformCurrent();
-        platform->cacheProgram(platform, programHash, compressedData.size(), compressedData.data());
+        angle::ProgramKeyType key = {};
+        memcpy(key.data(), programHash.data(), angle::kBlobCacheKeyLength);
+        platform->cacheProgram(platform, key, compressedData.size(), compressedData.data());
     }
 
     mBlobCache.put(context, programHash, std::move(compressedData));
