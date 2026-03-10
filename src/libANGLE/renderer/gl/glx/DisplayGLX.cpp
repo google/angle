@@ -56,9 +56,13 @@ static int IgnoreX11Errors(Display *, XErrorEvent *)
 class FunctionsGLGLX : public FunctionsGL
 {
   public:
-    FunctionsGLGLX(PFNGETPROCPROC getProc) : mGetProc(getProc) {}
+    FunctionsGLGLX(PFNGETPROCPROC getProc, const char *screenDriver)
+        : mGetProc(getProc), mScreenDriver(screenDriver != nullptr ? screenDriver : "")
+    {}
 
     ~FunctionsGLGLX() override {}
+
+    const char *getDriverName() const override { return mScreenDriver.c_str(); }
 
   private:
     void *loadProcAddress(const std::string &function) const override
@@ -67,6 +71,7 @@ class FunctionsGLGLX : public FunctionsGL
     }
 
     PFNGETPROCPROC mGetProc;
+    std::string mScreenDriver;
 };
 
 DisplayGLX::DisplayGLX(const egl::DisplayState &state)
@@ -294,7 +299,8 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
                           "Could not make the initialization pbuffer current.");
     }
 
-    std::unique_ptr<FunctionsGL> functionsGL(new FunctionsGLGLX(mGLX.getProc));
+    std::unique_ptr<FunctionsGL> functionsGL(
+        new FunctionsGLGLX(mGLX.getProc, mGLX.getScreenDriver()));
     functionsGL->initialize(eglAttributes);
     if (mHasNVRobustnessVideoMemoryPurge)
     {
