@@ -7,7 +7,7 @@
 '''
 Pixel 6 (ARM based) specific script that measures the following for each restricted_trace:
 - Wall time per frame
-- GPU time per frame (if run with --track-gpu-time)
+- GPU time per frame (if run with --gpu-time)
 - CPU time per frame
 - GPU power per frame
 - CPU power per frame
@@ -278,7 +278,8 @@ def run_trace(trace, args, screenshot_device_dir):
         flags += ['--fps-limit', args.fps_limit]
     if args.fps_limit_uses_busy_wait:
         flags.append('--fps-limit-uses-busy-wait')
-    if args.track_gpu_time:
+    if args.gpu_time:
+        # Keep internal argument name the same for compatibility with the C++ executable
         flags.append('--track-gpu-time')
     if args.add_swap_into_gpu_time:
         flags.append('--add-swap-into-gpu-time')
@@ -984,7 +985,12 @@ def run_traces(args):
     if args.walltimeonly:
         output_columns.append('wall_time')
     else:
-        output_columns.extend(['wall_time', 'gpu_time', 'frame_wall_time', 'cpu_time'])
+        output_columns.append('wall_time')
+        if args.gpu_time:
+            output_columns.append('gpu_time')
+
+        output_columns.extend(['frame_wall_time', 'cpu_time'])
+
         if args.power:
             output_columns.extend(['gpu_power', 'cpu_power', 'infra_power'])
         if args.memory:
@@ -1208,7 +1214,7 @@ def run_traces(args):
 
                 wall_time = get_test_time()
 
-                gpu_time = get_gpu_time() if args.track_gpu_time else '0'
+                gpu_time = get_gpu_time() if args.gpu_time else '0'
 
                 frame_wall_time = get_frame_wall_time()
 
@@ -1393,6 +1399,7 @@ def generate_summary(raw_data_filename, summary_filename):
     libc_cpuinsts = defaultdict(lambda: defaultdict(list))
 
     renderers = set()
+    has_gpu_time = False
     has_power = False
     has_memory = False
     has_cpuinst = False
@@ -1409,6 +1416,8 @@ def generate_summary(raw_data_filename, summary_filename):
             reader = csv.DictReader(f, delimiter=',', skipinitialspace=True)
             fieldnames = reader.fieldnames or []
 
+            if 'gpu_time(ms)' in fieldnames:
+                has_gpu_time = True
             if 'gpu_power(W)' in fieldnames:
                 has_power = True
             if 'gpu_mem_sustained' in fieldnames:
@@ -1478,14 +1487,20 @@ def generate_summary(raw_data_filename, summary_filename):
         renderer_name = list(renderers)[0]
         header_row = [
             "#", "\"Trace\"", f"\"{renderer_name}\nwall\ntime\nper\nframe\n(ms)\"",
-            f"\"{renderer_name}\nwall\ntime\nvariance\"",
-            f"\"{renderer_name}\nGPU\ntime\nper\nframe\n(ms)\"",
-            f"\"{renderer_name}\nGPU\ntime\nvariance\"",
+            f"\"{renderer_name}\nwall\ntime\nvariance\""
+        ]
+        if has_gpu_time:
+            header_row.extend([
+                f"\"{renderer_name}\nGPU\ntime\nper\nframe\n(ms)\"",
+                f"\"{renderer_name}\nGPU\ntime\nvariance\""
+            ])
+        header_row.extend([
             f"\"{renderer_name}\nFrame\nwall\ntime\nper\nframe\n(ms)\"",
             f"\"{renderer_name}\nFrame\nwall\ntime\nvariance\"",
             f"\"{renderer_name}\nCPU\ntime\nper\nframe\n(ms)\"",
             f"\"{renderer_name}\nCPU\ntime\nvariance\""
-        ]
+        ])
+
         if has_power:
             header_row.extend([
                 f"\"{renderer_name}\nGPU\npower\n(W)\"",
@@ -1525,17 +1540,24 @@ def generate_summary(raw_data_filename, summary_filename):
         header_row = [
             "#", "\"Trace\"", "\"Native\nwall\ntime\nper\nframe\n(ms)\"",
             "\"Native\nwall\ntime\nvariance\"", "\"ANGLE\nwall\ntime\nper\nframe\n(ms)\"",
-            "\"ANGLE\nwall\ntime\nvariance\"", "\"wall\ntime\ncompare\"",
-            "\"Native\nGPU\ntime\nper\nframe\n(ms)\"", "\"Native\nGPU\ntime\nvariance\"",
-            "\"ANGLE\nGPU\ntime\nper\nframe\n(ms)\"", "\"ANGLE\nGPU\ntime\nvariance\"",
-            "\"GPU\ntime\ncompare\"", "\"Native\nFrame\nwall\ntime\nper\nframe\n(ms)\"",
+            "\"ANGLE\nwall\ntime\nvariance\"", "\"wall\ntime\ncompare\""
+        ]
+        if has_gpu_time:
+            header_row.extend([
+                "\"Native\nGPU\ntime\nper\nframe\n(ms)\"", "\"Native\nGPU\ntime\nvariance\"",
+                "\"ANGLE\nGPU\ntime\nper\nframe\n(ms)\"", "\"ANGLE\nGPU\ntime\nvariance\"",
+                "\"GPU\ntime\ncompare\""
+            ])
+        header_row.extend([
+            "\"Native\nFrame\nwall\ntime\nper\nframe\n(ms)\"",
             "\"Native\nFrame\nwall\ntime\nvariance\"",
             "\"ANGLE\nFrame\nwall\ntime\nper\nframe\n(ms)\"",
             "\"ANGLE\nFrame\nwall\ntime\nvariance\"", "\"Frame\nwall\ntime\ncompare\"",
             "\"Native\nCPU\ntime\nper\nframe\n(ms)\"", "\"Native\nCPU\ntime\nvariance\"",
             "\"ANGLE\nCPU\ntime\nper\nframe\n(ms)\"", "\"ANGLE\nCPU\ntime\nvariance\"",
             "\"CPU\ntime\ncompare\""
-        ]
+        ])
+
         if has_power:
             header_row.extend([
                 "\"Native\nGPU\npower\n(W)\"", "\"Native\nGPU\npower\nvariance\"",
@@ -1640,17 +1662,20 @@ def generate_summary(raw_data_filename, summary_filename):
                 name,
                 # wall_time
                 "%.3f" % data[renderer_name][0],
-                percent(data[renderer_name][1]),
+                percent(data[renderer_name][1])
+            ]
+            if has_gpu_time:
                 # GPU time
-                "%.3f" % data[renderer_name][2],
-                percent(data[renderer_name][3]),
+                data_row.extend(["%.3f" % data[renderer_name][2], percent(data[renderer_name][3])])
+            data_row.extend([
                 # Frame wall time
                 "%.3f" % data[renderer_name][4],
                 percent(data[renderer_name][5]),
                 # CPU time
                 "%.3f" % data[renderer_name][6],
                 percent(data[renderer_name][7])
-            ]
+            ])
+
             if has_power:
                 data_row.extend([
                     # GPU power
@@ -1711,14 +1736,19 @@ def generate_summary(raw_data_filename, summary_filename):
                 percent(data["native"][1]),
                 "%.3f" % data["vulkan"][0],
                 percent(data["vulkan"][1]),
-                percent(safe_divide(data["native"][0], data["vulkan"][0])),
-                # GPU time
-                "%.3f" % data["native"][2],
-                percent(data["native"][3]),
-                "%.3f" % data["vulkan"][2],
-                percent(data["vulkan"][3]),
-                percent(safe_divide(data["native"][2], data["vulkan"][2])),
-                # Frame wall time
+                percent(safe_divide(data["native"][0], data["vulkan"][0]))
+            ]
+            if has_gpu_time:
+                data_row.extend([
+                    # GPU time
+                    "%.3f" % data["native"][2],
+                    percent(data["native"][3]),
+                    "%.3f" % data["vulkan"][2],
+                    percent(data["vulkan"][3]),
+                    percent(safe_divide(data["native"][2], data["vulkan"][2]))
+                ])
+            data_row.extend([
+                # Frame wall_time
                 "%.3f" % data["native"][4],
                 percent(data["native"][5]),
                 "%.3f" % data["vulkan"][4],
@@ -1730,7 +1760,8 @@ def generate_summary(raw_data_filename, summary_filename):
                 "%.3f" % data["vulkan"][6],
                 percent(data["vulkan"][7]),
                 percent(safe_divide(data["native"][6], data["vulkan"][6]))
-            ]
+            ])
+
             if has_power:
                 data_row.extend([
                     # GPU power
@@ -1917,7 +1948,7 @@ def main():
         action='store_true',
         default=False)
     parser.add_argument(
-        '--track-gpu-time', help='Enables GPU time tracking', action='store_true', default=False)
+        '--gpu-time', help='Enables GPU time tracking', action='store_true', default=False)
     parser.add_argument(
         '--add-swap-into-gpu-time',
         help='Adds swap/offscreen blit into the gpu_time tracking',
