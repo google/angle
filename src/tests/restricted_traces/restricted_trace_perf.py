@@ -12,6 +12,7 @@ Pixel 6 (ARM based) specific script that measures the following for each restric
 - GPU power per frame
 - CPU power per frame
 - GPU memory per frame
+- CPU instructions per frame (if run with --cpu-inst)
 
 Setup:
 
@@ -996,11 +997,11 @@ def run_traces(args):
         if args.memory:
             output_columns.extend(
                 ['gpu_mem_sustained', 'gpu_mem_peak', 'proc_mem_median', 'proc_mem_peak'])
-
-        output_columns.extend([
-            'process_cpuinst', 'gfxlib_cpuinst', 'angle_cpuinst', 'vulkan_cpuinst', 'gles_cpuinst',
-            'libc_cpuinst'
-        ])
+        if args.cpu_inst:
+            output_columns.extend([
+                'process_cpuinst', 'gfxlib_cpuinst', 'angle_cpuinst', 'vulkan_cpuinst',
+                'gles_cpuinst', 'libc_cpuinst'
+            ])
 
     # Format string that easily sizes itself to the dynamically loaded variables
     format_str = ' '.join(['%-*s'] * len(output_columns))
