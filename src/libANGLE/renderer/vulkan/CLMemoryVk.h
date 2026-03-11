@@ -24,6 +24,8 @@
 namespace rx
 {
 
+class CLImageVk;
+
 class CLMemoryVk : public CLMemoryImpl
 {
   public:
@@ -128,6 +130,10 @@ class CLBufferVk : public CLMemoryVk
     angle::Result syncHost(CLBufferVk::SyncHostDirection direction);
     angle::Result syncHost(CLBufferVk::SyncHostDirection direction, cl::BufferRect hostRect);
 
+    angle::Result setImage(CLImageVk *image);
+    bool hasImage2DChild() const { return mImage2DFromThisBuffer != nullptr; }
+    CLImageVk *getImage() { return mImage2DFromThisBuffer; }
+
   private:
     angle::Result mapBufferHelper(uint8_t *&ptrOut) override;
     angle::Result mapParentBufferHelper(uint8_t *&ptrOut) override;
@@ -146,6 +152,8 @@ class CLBufferVk : public CLMemoryVk
 
     vk::BufferHelper mBuffer;
     VkBufferCreateInfo mDefaultBufferCreateInfo;
+
+    CLImageVk *mImage2DFromThisBuffer;
 
     // allows access to private buffer routines in the case where the image's parent memory is a
     // buffer type
@@ -172,8 +180,8 @@ class CLImageVk : public CLMemoryVk
     size_t getElementSize() const { return getFrontendObject().getElementSize(); }
     size_t getArraySize() const { return getFrontendObject().getArraySize(); }
     size_t getSize() const override { return mMemory.getSize(); }
-    size_t getRowPitch() const;
-    size_t getSlicePitch() const;
+    size_t getRowPitch() const { return getFrontendObject().getRowSize(); }
+    size_t getSlicePitch() const { return getFrontendObject().getSliceSize(); }
 
     cl::MemObjectType getParentType() const;
 
@@ -210,6 +218,8 @@ class CLImageVk : public CLMemoryVk
                                                          ImageCopyWith imageCopy);
 
     angle::Result getBufferView(const vk::BufferView **viewOut);
+
+    cl::Extents getExtentForCopy(const size_t size);
 
   private:
     angle::Result initImageViewImpl();

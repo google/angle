@@ -194,6 +194,7 @@ struct BufferRect
         return getRowOffset(mSize.depth - 1, mSize.height - 1) + mSize.width * mElementSize;
     }
     const Extents &getExtents() const { return mSize; }
+    const Offset &getOrigin() const { return mOrigin; }
     Offset mOrigin;
     Extents mSize;
     size_t mRowPitch;

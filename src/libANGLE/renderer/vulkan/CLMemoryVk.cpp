@@ -174,7 +174,8 @@ angle::Result CLMemoryVk::createSubBuffer(const cl::Buffer &buffer,
     return angle::Result::Continue;
 }
 
-CLBufferVk::CLBufferVk(const cl::Buffer &buffer) : CLMemoryVk(buffer)
+CLBufferVk::CLBufferVk(const cl::Buffer &buffer)
+    : CLMemoryVk(buffer), mImage2DFromThisBuffer(nullptr)
 {
     if (buffer.isSubBuffer())
     {
@@ -658,6 +659,16 @@ CLImageVk::CLImageVk(const cl::Image &image)
 
 CLImageVk::~CLImageVk()
 {
+    if (mIsImage2DFromBuffer)
+    {
+        // If this was image2d_from_buffer reset the pointer in the parent, so that syncing can be
+        // switched off.
+        if (IsError(getParent<CLBufferVk>()->setImage(nullptr)))
+        {
+            ASSERT(false);
+        }
+    }
+
     if (isMapped())
     {
         unmap();
@@ -697,9 +708,10 @@ angle::Result CLImageVk::create(void *hostPtr)
         }
         else if (mIsImage2DFromBuffer)
         {
-            // Request for image2d_from_buffer - nothing to do for now
             // We would liked to create this as a buffer view as well, clspv for now cannot mark
-            // this usage with texel buffer descriptor type usage.
+            // this usage with texel buffer descriptor type. So for now we copy the buffer contents
+            // to this image.
+            ANGLE_TRY(getParent<CLBufferVk>()->setImage(this));
         }
         else
         {
@@ -980,16 +992,6 @@ void CLImageVk::unmapBufferHelper()
     mStagingBuffer->getImpl<CLBufferVk>().unmapBufferHelper();
 }
 
-size_t CLImageVk::getRowPitch() const
-{
-    return getFrontendObject().getRowSize();
-}
-
-size_t CLImageVk::getSlicePitch() const
-{
-    return getFrontendObject().getSliceSize();
-}
-
 cl::MemObjectType CLImageVk::getParentType() const
 {
     if (mParent)
@@ -1011,6 +1013,27 @@ angle::Result CLImageVk::getBufferView(const vk::BufferView **viewOut)
     return mBufferViews.getView(
         mContext, parent->getBuffer(), parent->getOffset(),
         mContext->getRenderer()->getFormat(cl::GetImageAngleFormat(getFormat())), viewOut, nullptr);
+}
+
+angle::Result CLBufferVk::setImage(CLImageVk *image)
+{
+    if (image)
+    {
+        ASSERT(cl::Is2DImage(image->getType()) && cl::IsBufferType(image->getParentType()) &&
+               image->getParent<CLBufferVk>() == this);
+        if (mImage2DFromThisBuffer != nullptr)
+        {
+            // TODO: should be able to create create multiple 2D images from the same OpenCL buffer
+            // object? https://anglebug.com/487755327
+            WARN() << "An image2d_from_buffer already exists from this buffer in the descriptor. "
+                      "Cannot create multiple image2d's from the same buffer.";
+            UNIMPLEMENTED();
+            ANGLE_CL_RETURN_ERROR(CL_INVALID_IMAGE_DESCRIPTOR);
+        }
+    }
+    mImage2DFromThisBuffer = image;
+
+    return angle::Result::Continue;
 }
 
 }  // namespace rx

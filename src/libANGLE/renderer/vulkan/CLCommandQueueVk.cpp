@@ -443,21 +443,16 @@ angle::Result CLCommandQueueVk::enqueueCopyBuffer(const cl::Buffer &srcBuffer,
     CLBufferVk *srcBufferVk = &srcBuffer.getImpl<CLBufferVk>();
     CLBufferVk *dstBufferVk = &dstBuffer.getImpl<CLBufferVk>();
 
-    vk::CommandResources resources;
     if (srcBufferVk->isSubBuffer() && dstBufferVk->isSubBuffer() &&
         (srcBufferVk->getParent() == dstBufferVk->getParent()))
     {
         // this is a self copy
-        resources.onBufferSelfCopy(&srcBufferVk->getBuffer());
     }
     else
     {
-        resources.onBufferTransferRead(&srcBufferVk->getBuffer());
-        resources.onBufferTransferWrite(&dstBufferVk->getBuffer());
+        ANGLE_TRY(addMemoryDependencies(&srcBuffer, MemoryHandleAccess::ReadOnly));
     }
-
-    vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    ANGLE_TRY(getCommandBuffer(resources, &commandBuffer));
+    ANGLE_TRY(addMemoryDependencies(&dstBuffer, MemoryHandleAccess::Writeable));
 
     VkBufferCopy copyRegion = {srcOffset, dstOffset, size};
     // update the offset in the case of sub-buffers
@@ -469,8 +464,8 @@ angle::Result CLCommandQueueVk::enqueueCopyBuffer(const cl::Buffer &srcBuffer,
     {
         copyRegion.dstOffset += dstBufferVk->getOffset();
     }
-    commandBuffer->copyBuffer(srcBufferVk->getBuffer().getBuffer(),
-                              dstBufferVk->getBuffer().getBuffer(), 1, &copyRegion);
+    mComputePassCommands->getCommandBuffer().copyBuffer(
+        srcBufferVk->getBuffer().getBuffer(), dstBufferVk->getBuffer().getBuffer(), 1, &copyRegion);
 
     return postEnqueueOps(event);
 }
@@ -572,61 +567,33 @@ angle::Result CLCommandQueueVk::enqueueMapBuffer(const cl::Buffer &buffer,
 }
 
 angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
-                                                      CLBufferVk &buffer,
+                                                      CLBufferVk &bufferVk,
                                                       VkBufferImageCopy copyRegion,
                                                       ImageBufferCopyDirection direction)
 {
     // 1D image buffers are treated separately
     ASSERT(!cl::Is1DImageBuffer(imageVk.getType()));
 
-    vk::Renderer *renderer = mContext->getRenderer();
-
-    vk::CommandResources resources;
-    vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    VkImageAspectFlags aspectFlags = imageVk.getImage().getAspectFlags();
     if (direction == ImageBufferCopyDirection::ToBuffer)
     {
-        resources.onImageTransferRead(aspectFlags, &imageVk.getImage());
-        resources.onBufferTransferWrite(&buffer.getBuffer());
+        ANGLE_TRY(
+            addMemoryDependencies(&imageVk.getFrontendObject(), MemoryHandleAccess::ReadOnly));
+        ANGLE_TRY(
+            addMemoryDependencies(&bufferVk.getFrontendObject(), MemoryHandleAccess::Writeable));
+        mComputePassCommands->getCommandBuffer().copyImageToBuffer(
+            imageVk.getImage().getImage(),
+            imageVk.getImage().getCurrentLayout(mContext->getRenderer()),
+            bufferVk.getBuffer().getBuffer().getHandle(), 1, &copyRegion);
     }
     else
     {
-        resources.onImageTransferWrite(gl::OwnerLevel(0), 1, gl::OwnerLayer(0),
-                                       static_cast<uint32_t>(imageVk.getArraySize()), aspectFlags,
-                                       &imageVk.getImage());
-        resources.onBufferTransferRead(&buffer.getBuffer());
-    }
-    ANGLE_TRY(getCommandBuffer(resources, &commandBuffer));
-
-    if (imageVk.isWritable())
-    {
-        // We need an execution barrier if image can be written to by kernel
-        ANGLE_TRY(insertBarrier());
-    }
-
-    VkMemoryBarrier memBarrier = {};
-    memBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
-    memBarrier.srcAccessMask   = VK_ACCESS_MEMORY_WRITE_BIT;
-    memBarrier.dstAccessMask   = VK_ACCESS_MEMORY_READ_BIT;
-    if (direction == ImageBufferCopyDirection::ToBuffer)
-    {
-        commandBuffer->copyImageToBuffer(
-            imageVk.getImage().getImage(), imageVk.getImage().getCurrentLayout(renderer),
-            buffer.getBuffer().getBuffer().getHandle(), 1, &copyRegion);
-
-        mComputePassCommands->getCommandBuffer().pipelineBarrier(
-            VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_HOST_BIT, 0, 1, &memBarrier, 0,
-            nullptr, 0, nullptr);
-    }
-    else
-    {
-        commandBuffer->copyBufferToImage(
-            buffer.getBuffer().getBuffer().getHandle(), imageVk.getImage().getImage(),
-            imageVk.getImage().getCurrentLayout(renderer), 1, &copyRegion);
-
-        mComputePassCommands->getCommandBuffer().pipelineBarrier(
-            VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 0, 1, &memBarrier,
-            0, nullptr, 0, nullptr);
+        ANGLE_TRY(
+            addMemoryDependencies(&imageVk.getFrontendObject(), MemoryHandleAccess::Writeable));
+        ANGLE_TRY(
+            addMemoryDependencies(&bufferVk.getFrontendObject(), MemoryHandleAccess::ReadOnly));
+        mComputePassCommands->getCommandBuffer().copyBufferToImage(
+            bufferVk.getBuffer().getBuffer().getHandle(), imageVk.getImage().getImage(),
+            imageVk.getImage().getCurrentLayout(mContext->getRenderer()), 1, &copyRegion);
     }
 
     return angle::Result::Continue;
@@ -667,44 +634,28 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
     HostTransferEntry transferEntry{transferConfig, transferBufferHandle};
     mCommandsStateMap.addHostTransferEntry(mComputePassCommands->getQueueSerial(), transferEntry);
 
-    // We need an execution barrier if buffer can be written to by kernel
-    if (!mComputePassCommands->getCommandBuffer().empty() && srcBuffer->isWritable())
-    {
-        // TODO(aannestrand): Look into combining these kernel execution barriers
-        // http://anglebug.com/377545840
-        VkMemoryBarrier memoryBarrier = {VK_STRUCTURE_TYPE_MEMORY_BARRIER, nullptr,
-                                         VK_ACCESS_SHADER_WRITE_BIT,
-                                         VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT};
-        mComputePassCommands->getCommandBuffer().pipelineBarrier(
-            VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 0, 1,
-            &memoryBarrier, 0, nullptr, 0, nullptr);
-    }
-
     // Enqueue blit/transfer cmd
-    VkPipelineStageFlags srcStageMask  = {};
-    VkPipelineStageFlags dstStageMask  = {};
-    VkMemoryBarrier memBarrier         = {};
-    memBarrier.sType                   = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
     CLBufferVk &transferBufferHandleVk = transferBufferHandle->getImpl<CLBufferVk>();
     switch (transferConfig.getType())
     {
         case CL_COMMAND_WRITE_BUFFER:
         {
+            ANGLE_TRY(addMemoryDependencies(&srcBuffer->getFrontendObject(),
+                                            MemoryHandleAccess::Writeable));
+
             VkBufferCopy copyRegion = {0, transferConfig.getOffset(), transferConfig.getSize()};
             copyRegion.srcOffset += transferBufferHandleVk.getOffset();
             copyRegion.dstOffset += srcBuffer->getOffset();
             mComputePassCommands->getCommandBuffer().copyBuffer(
                 transferBufferHandleVk.getBuffer().getBuffer(), srcBuffer->getBuffer().getBuffer(),
                 1, &copyRegion);
-
-            srcStageMask             = VK_PIPELINE_STAGE_TRANSFER_BIT;
-            dstStageMask             = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
-            memBarrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT;
-            memBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
             break;
         }
         case CL_COMMAND_WRITE_BUFFER_RECT:
         {
+            ANGLE_TRY(addMemoryDependencies(&srcBuffer->getFrontendObject(),
+                                            MemoryHandleAccess::Writeable));
+
             for (VkBufferCopy &copyRegion : cl_vk::CalculateRectCopyRegions(
                      transferConfig.getHostRect(), transferConfig.getBufferRect()))
             {
@@ -714,16 +665,13 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
                     transferBufferHandleVk.getBuffer().getBuffer(),
                     srcBuffer->getBuffer().getBuffer(), 1, &copyRegion);
             }
-
-            // Config transfer barrier
-            srcStageMask             = VK_PIPELINE_STAGE_TRANSFER_BIT;
-            dstStageMask             = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
-            memBarrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT;
-            memBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
             break;
         }
         case CL_COMMAND_READ_BUFFER:
         {
+            ANGLE_TRY(addMemoryDependencies(&srcBuffer->getFrontendObject(),
+                                            MemoryHandleAccess::ReadOnly));
+
             VkBufferCopy copyRegion = {transferConfig.getOffset(), 0, transferConfig.getSize()};
             copyRegion.srcOffset += srcBuffer->getOffset();
             copyRegion.dstOffset += transferBufferHandleVk.getOffset();
@@ -731,14 +679,13 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
                 srcBuffer->getBuffer().getBuffer(), transferBufferHandleVk.getBuffer().getBuffer(),
                 1, &copyRegion);
 
-            srcStageMask             = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
-            dstStageMask             = VK_PIPELINE_STAGE_HOST_BIT;
-            memBarrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT;
-            memBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
             break;
         }
         case CL_COMMAND_READ_BUFFER_RECT:
         {
+            ANGLE_TRY(addMemoryDependencies(&srcBuffer->getFrontendObject(),
+                                            MemoryHandleAccess::ReadOnly));
+
             for (VkBufferCopy &copyRegion : cl_vk::CalculateRectCopyRegions(
                      transferConfig.getBufferRect(), transferConfig.getHostRect()))
             {
@@ -749,15 +696,13 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
                     transferBufferHandleVk.getBuffer().getBuffer(), 1, &copyRegion);
             }
 
-            // Config transfer barrier
-            srcStageMask             = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
-            dstStageMask             = VK_PIPELINE_STAGE_HOST_BIT;
-            memBarrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT;
-            memBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
             break;
         }
         case CL_COMMAND_FILL_BUFFER:
         {
+            ANGLE_TRY(addMemoryDependencies(&srcBuffer->getFrontendObject(),
+                                            MemoryHandleAccess::Writeable));
+
             // Fill the staging buffer with the pattern and then insert a copy command from staging
             // buffer to buffer
             ANGLE_TRY(transferBufferHandleVk.fillWithPattern(transferConfig.getHostPtr(),
@@ -770,11 +715,6 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
                 transferBufferHandleVk.getBuffer().getBuffer(), srcBuffer->getBuffer().getBuffer(),
                 1, &copyRegion);
 
-            // Config transfer barrier
-            srcStageMask             = VK_PIPELINE_STAGE_TRANSFER_BIT;
-            dstStageMask             = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
-            memBarrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT;
-            memBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
             break;
         }
         default:
@@ -782,10 +722,34 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
             break;
     }
 
-    // TODO(aannestrand): Look into combining these transfer barriers
-    // http://anglebug.com/377545840
-    mComputePassCommands->getCommandBuffer().pipelineBarrier(srcStageMask, dstStageMask, 0, 1,
-                                                             &memBarrier, 0, nullptr, 0, nullptr);
+    if (srcBuffer->hasImage2DChild())
+    {  // Update the contents of the child image as well
+        CLImageVk *childImage = srcBuffer->getImage();
+        ASSERT(childImage != nullptr);
+
+        switch (transferConfig.getType())
+        {
+            case CL_COMMAND_WRITE_BUFFER:
+            case CL_COMMAND_WRITE_BUFFER_RECT:
+            case CL_COMMAND_FILL_BUFFER:
+            {
+                // The buffer was written to, so refresh the contents of the child image from it.
+                // We refresh the whole image rather than only the written region: the transfer
+                // config describes the update in buffer bytes, and narrowing that to image
+                // coordinates has to account for the element size and for any padding in
+                // image_row_pitch. The over-copy is harmless since every other update to the
+                // image syncs back to this buffer at the point of the update.
+                VkBufferImageCopy bufferImageCopyRegion = cl_vk::CalculateBufferImageCopyRegion(
+                    srcBuffer->getOffset(), static_cast<uint32_t>(childImage->getRowPitch()), 0,
+                    cl::kOffsetZero, childImage->getImageExtent(), childImage);
+                ANGLE_TRY(copyImageToFromBuffer(*childImage, *srcBuffer, bufferImageCopyRegion,
+                                                ImageBufferCopyDirection::ToImage));
+                break;
+            }
+            default:
+                break;
+        }
+    }
 
     return angle::Result::Continue;
 }
@@ -1004,15 +968,6 @@ angle::Result CLCommandQueueVk::enqueueCopyImage(const cl::Image &srcImage,
     auto srcImageVk = &srcImage.getImpl<CLImageVk>();
     auto dstImageVk = &dstImage.getImpl<CLImageVk>();
 
-    vk::CommandResources resources;
-    vk::OutsideRenderPassCommandBuffer *commandBuffer;
-    VkImageAspectFlags dstAspectFlags = srcImageVk->getImage().getAspectFlags();
-    VkImageAspectFlags srcAspectFlags = dstImageVk->getImage().getAspectFlags();
-    resources.onImageTransferWrite(gl::OwnerLevel(0), 1, gl::OwnerLayer(0), 1, dstAspectFlags,
-                                   &dstImageVk->getImage());
-    resources.onImageTransferRead(srcAspectFlags, &srcImageVk->getImage());
-    ANGLE_TRY(getCommandBuffer(resources, &commandBuffer));
-
     VkImageCopy copyRegion    = {};
     copyRegion.extent         = cl_vk::GetExtent(srcImageVk->getExtentForCopy(region));
     copyRegion.srcOffset      = cl_vk::GetOffset(srcImageVk->getOffsetForCopy(srcOrigin));
@@ -1021,17 +976,25 @@ angle::Result CLCommandQueueVk::enqueueCopyImage(const cl::Image &srcImage,
         srcOrigin, region, dstImageVk->getType(), ImageCopyWith::Image);
     copyRegion.dstSubresource = dstImageVk->getSubresourceLayersForCopy(
         dstOrigin, region, srcImageVk->getType(), ImageCopyWith::Image);
-    if (srcImageVk->isWritable() || dstImageVk->isWritable())
-    {
-        // We need an execution barrier if buffer can be written to by kernel
-        ANGLE_TRY(insertBarrier());
-    }
+
+    ANGLE_TRY(addMemoryDependencies(&srcImage, MemoryHandleAccess::ReadOnly));
+    ANGLE_TRY(addMemoryDependencies(&dstImage, MemoryHandleAccess::Writeable));
 
     vk::Renderer *renderer = mContext->getRenderer();
-    commandBuffer->copyImage(srcImageVk->getImage().getImage(),
-                             srcImageVk->getImage().getCurrentLayout(renderer),
-                             dstImageVk->getImage().getImage(),
-                             dstImageVk->getImage().getCurrentLayout(renderer), 1, &copyRegion);
+    mComputePassCommands->getCommandBuffer().copyImage(
+        srcImageVk->getImage().getImage(), srcImageVk->getImage().getCurrentLayout(renderer),
+        dstImageVk->getImage().getImage(), dstImageVk->getImage().getCurrentLayout(renderer), 1,
+        &copyRegion);
+
+    if (dstImageVk->isImage2DFromBuffer())
+    {
+        CLBufferVk *parentBuffer                = dstImageVk->getParent<CLBufferVk>();
+        VkBufferImageCopy bufferImageCopyRegion = cl_vk::CalculateBufferImageCopyRegion(
+            parentBuffer->getOffset(), static_cast<uint32_t>(dstImageVk->getRowPitch()),
+            static_cast<uint32_t>(dstImageVk->getSlicePitch()), dstOrigin, region, dstImageVk);
+        ANGLE_TRY(copyImageToFromBuffer(*dstImageVk, *parentBuffer, bufferImageCopyRegion,
+                                        ImageBufferCopyDirection::ToBuffer));
+    }
 
     return postEnqueueOps(event);
 }
