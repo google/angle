@@ -8239,8 +8239,6 @@
       }
     ]
   },
-  "win10-x64-exp-intel": {},
-  "win10-x64-exp-nvidia": {},
   "win10-x64-intel-perf": {
     "isolated_scripts": [
       {

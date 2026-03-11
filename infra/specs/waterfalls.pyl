@@ -245,22 +245,6 @@
           'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
-      'win10-x64-exp-intel': {
-        'os_type': 'win',
-        'mixins': [
-          'win10_intel_uhd_770_stable',
-        ],
-        'test_suites': {
-        },
-      },
-      'win10-x64-exp-nvidia': {
-        'os_type': 'win',
-        'mixins': [
-          'win10_nvidia_gtx_1660_experimental',
-        ],
-        'test_suites': {
-        },
-      },
       'win10-x64-intel-perf': {
         'os_type': 'win',
         'mixins': [

@@ -25,12 +25,6 @@
           '--max-processes=2',
         ],
       },
-      # anglebug.com/352528974 suspecting OOM caused by multiprocess
-      'win10-x64-exp-intel': {
-        'args': [
-          '--max-processes=2',
-        ],
-      },
     },
   },
   'angle_end2end_tests': {
@@ -46,15 +40,6 @@
       },
       # anglebug.com/352528974 suspecting OOM caused by multiprocess
       'angle-win-x64-intel-uhd770-rel': {
-        'args': [
-          '--max-processes=2',
-        ],
-        'swarming': {
-          'shards': 5,
-        },
-      },
-      # anglebug.com/352528974 suspecting OOM caused by multiprocess
-      'win10-x64-exp-intel': {
         'args': [
           '--max-processes=2',
         ],
@@ -113,11 +98,6 @@
           'shards': 4,
         },
       },
-      'win10-x64-exp-intel': {
-        'swarming': {
-          'shards': 4,
-        },
-      },
       'win10-x64-ir-intel': {
         # anglebug.com/42263955 flaky 4x8 pixel artifacts on Win Intel
         'args': [
@@ -153,11 +133,6 @@
         },
       },
       'angle-win-x64-intel-uhd770-rel': {
-        'swarming': {
-          'shards': 4,
-        },
-      },
-      'win10-x64-exp-intel': {
         'swarming': {
           'shards': 4,
         },
