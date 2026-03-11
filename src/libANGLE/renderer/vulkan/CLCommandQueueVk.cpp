@@ -1127,20 +1127,22 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
                                                 void *&mapPtr)
 {
     CLImageVk *imageVk = &image.getImpl<CLImageVk>();
-    cl::Extents extent = imageVk->getImageExtent();
-    size_t elementSize = image.getElementSize();
-    size_t rowPitch    = image.getRowSize();
-    size_t offset =
-        (origin.x * elementSize) + (origin.y * rowPitch) + (origin.z * extent.height * rowPitch);
-    size_t size = (region.width * region.height * region.depth * elementSize);
+
+    // Spec leaves room for mapped pointer to have a different geometry than the image
+    // - e.g image is tightly packed -- but mapped pointer can have pitches
+    // Now in the case of UHP, mapPtr should be in range of the user pointer and should reflect the
+    // initial geometry, so to keeps things consistent we always return a mapped pointer that
+    // matches the geometry of the image.
+    cl::BufferRect bufferRect{origin, region, image.getRowSize(), image.getSliceSize(),
+                              image.getElementSize()};
 
     // If its 1Dbuffer do a map buffer
     if (cl::Is1DImageBuffer(image.getType()))
     {
         cl::Buffer *parentBuffer = cl::Buffer::Cast(image.getParent()->getNative());
 
-        return enqueueMapBuffer(*parentBuffer, blocking, mapFlags, offset, size, waitEvents, event,
-                                mapPtr);
+        return enqueueMapBuffer(*parentBuffer, blocking, mapFlags, bufferRect.getBufferOffset(),
+                                bufferRect.getRectSize(), waitEvents, event, mapPtr);
     }
 
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
@@ -1148,16 +1150,29 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
     ANGLE_TRY(preEnqueueOps(event, cl::ExecutionStatus::Complete));
     ANGLE_TRY(processWaitlist(waitEvents));
 
-    mComputePassCommands->imageRead(mContext, imageVk->getImage().getAspectFlags(),
-                                    vk::ImageAccess::TransferSrc, &imageVk->getImage());
-
     CLBufferVk *stagingBuffer = nullptr;
     ANGLE_TRY(imageVk->getOrCreateStagingBuffer(&stagingBuffer));
 
-    VkBufferImageCopy copyRegion =
-        cl_vk::CalculateBufferImageCopyRegion(0, 0, 0, cl::kOffsetZero, extent, imageVk);
-    ANGLE_TRY(copyImageToFromBuffer(*imageVk, *stagingBuffer, copyRegion,
-                                    ImageBufferCopyDirection::ToBuffer));
+    ANGLE_TRY(addMemoryDependencies(&image, MemoryHandleAccess::ReadOnly));
+    ANGLE_TRY(
+        addMemoryDependencies(&stagingBuffer->getFrontendObject(), MemoryHandleAccess::Writeable));
+
+    // We need contents to be reflected only for CL_MAP_READ | CL_MAP_WRITE
+    if (mapFlags.intersects(CL_MAP_READ | CL_MAP_WRITE))
+    {
+        // Trigger a copy from image to staging buffer
+        // TODO: We just need to trigger a copy for the requested region, but in unmap
+        // we do to full size copy as we dont yet track the regions of mapped memory, and unmap
+        // interface just includes the mapped pointer. So a map with a sub-region region followed by
+        // unmap will rewrite untouched device regions. So copy whole size until that is resolved.
+        // http://anglebug.com/444481344
+        VkBufferImageCopy copyRegion = cl_vk::CalculateBufferImageCopyRegion(
+            0, static_cast<uint32_t>(imageVk->getRowPitch()),
+            static_cast<uint32_t>(imageVk->getSlicePitch()), cl::kOffsetZero,
+            imageVk->getImageExtent(), imageVk);
+        ANGLE_TRY(copyImageToFromBuffer(*imageVk, *stagingBuffer, copyRegion,
+                                        ImageBufferCopyDirection::ToBuffer));
+    }
 
     if (blocking)
     {
@@ -1165,37 +1180,44 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
     }
 
     uint8_t *mapPointer = nullptr;
-    ANGLE_TRY(imageVk->map(mapPointer, offset));
+    ANGLE_TRY(imageVk->map(mapPointer, bufferRect.getBufferOffset()));
     mapPtr = mapPointer;
 
     if (image.getFlags().intersects(CL_MEM_USE_HOST_PTR))
     {
-        ANGLE_TRY(imageVk->copyTo(mapPointer, offset, size));
+        ANGLE_TRY(
+            imageVk->copyTo(mapPointer, bufferRect.getBufferOffset(), bufferRect.getRectSize()));
     }
 
-    // The staging buffer is tightly packed, with no rowpitch and slicepitch. And in UHP case, row
-    // and slice are always zero.
-    *imageRowPitch = extent.width * elementSize;
-    switch (imageVk->getDescriptor().type)
+    // Pass in the row and slice pitches to the user
+    // imageRowPitch must be non-Null value [1]
+    // [1]:
+    // https://registry.khronos.org/OpenCL/specs/3.0-unified/html/OpenCL_API.html#clEnqueueMapImage
+    // We are keeping the geometry of mapped pointer same as initial image creation geometry
+    *imageRowPitch = bufferRect.getRowPitch();
+    // imageSlicePitch could be null for 1D and 2D images, these cases are checked for in validation
+    // layer, here we just update them accordingly
+    if (imageSlicePitch)
     {
-        case cl::MemObjectType::Image1D:
-        case cl::MemObjectType::Image1D_Buffer:
-        case cl::MemObjectType::Image2D:
-            if (imageSlicePitch != nullptr)
-            {
+        switch (imageVk->getDescriptor().type)
+        {
+            case cl::MemObjectType::Image1D:
+            case cl::MemObjectType::Image1D_Buffer:
+            case cl::MemObjectType::Image2D:
+                // Required to be zero for these cases
                 *imageSlicePitch = 0;
-            }
-            break;
-        case cl::MemObjectType::Image2D_Array:
-        case cl::MemObjectType::Image3D:
-            *imageSlicePitch = (extent.height * (*imageRowPitch));
-            break;
-        case cl::MemObjectType::Image1D_Array:
-            *imageSlicePitch = *imageRowPitch;
-            break;
-        default:
-            UNREACHABLE();
-            break;
+                break;
+            case cl::MemObjectType::Image1D_Array:
+                *imageSlicePitch = *imageRowPitch;
+                break;
+            case cl::MemObjectType::Image2D_Array:
+            case cl::MemObjectType::Image3D:
+                *imageSlicePitch = bufferRect.getSlicePitch();
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
     }
 
     return postEnqueueOps(event);
@@ -1241,8 +1263,9 @@ angle::Result CLCommandQueueVk::enqueueUnmapMemObject(const cl::Memory &memory,
         ANGLE_TRY(imageVk.getOrCreateStagingBuffer(&stagingBuffer));
         ASSERT(stagingBuffer);
 
-        VkBufferImageCopy copyRegion =
-            cl_vk::CalculateBufferImageCopyRegion(0, 0, 0, cl::kOffsetZero, extent, &imageVk);
+        VkBufferImageCopy copyRegion = cl_vk::CalculateBufferImageCopyRegion(
+            0, static_cast<uint32_t>(imageVk.getRowPitch()),
+            static_cast<uint32_t>(imageVk.getSlicePitch()), cl::kOffsetZero, extent, &imageVk);
         ANGLE_TRY(copyImageToFromBuffer(imageVk, *stagingBuffer, copyRegion,
                                         ImageBufferCopyDirection::ToImage));
 
