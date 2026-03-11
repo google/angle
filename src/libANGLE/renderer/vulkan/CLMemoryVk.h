@@ -222,6 +222,10 @@ class CLImageVk : public CLMemoryVk
                                                          const cl::Extents &region,
                                                          cl::MemObjectType copyToType,
                                                          ImageCopyWith imageCopy) const;
+    cl::BufferRect getHostRectForCopy(const cl::Offset &origin,
+                                      const cl::Extents &region,
+                                      size_t hostRowPitch,
+                                      size_t hostSlicePitch) const;
 
     vk::ImageView &getImageView() { return mImageView; }
     angle::Result getBufferView(const vk::BufferView **viewOut);

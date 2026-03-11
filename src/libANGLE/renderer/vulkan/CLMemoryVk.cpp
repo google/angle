@@ -982,6 +982,36 @@ VkImageSubresourceLayers CLImageVk::getSubresourceLayersForCopy(const cl::Offset
     return subresource;
 }
 
+// Given an offset and region of the image and the hostRowPitch, hostSlicePitch will give a
+// cl::BufferRect that will be representative of the region in buffer form.
+cl::BufferRect CLImageVk::getHostRectForCopy(const cl::Offset &origin,
+                                             const cl::Extents &region,
+                                             size_t hostRowPitch,
+                                             size_t hostSlicePitch) const
+{
+    // BufferRect to be returned here determines the geometry of the linear buffer for the given
+    // host row and slice pitch. The region and origin are as supplied through the entry point API
+    // dictate the portions of this image.
+    // The mapping is straightforward except for 1D array, where the layer count information
+    // is encoded in region[1] component. For this type, we keep the linear buffer
+    // geometry similar to 3D image where layer dimension is treated as depth.
+    //
+    // For 2D array, layer count is encoded in region[2] component and for buffer purposes, we can
+    // treat it as depth. This should be sufficient as there is no type for 3Darray.
+    cl::Offset updatedOffset  = origin;
+    cl::Extents updatedRegion = region;
+    if (getType() == cl::MemObjectType::Image1D_Array)
+    {
+        // Keep the layer information in the depth portion.
+        updatedRegion.depth  = region.height;
+        updatedOffset.z      = origin.y;
+        updatedRegion.height = 1;
+        updatedOffset.y      = 0;
+    }
+    return cl::BufferRect{updatedOffset, updatedRegion, hostRowPitch, hostSlicePitch,
+                          getElementSize()};
+}
+
 angle::Result CLImageVk::getBufferView(const vk::BufferView **viewOut)
 {
     if (!mBufferViews.isInitialized())
