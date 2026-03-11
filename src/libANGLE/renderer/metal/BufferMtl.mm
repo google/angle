@@ -339,7 +339,8 @@ void BufferMtl::ensureShadowCopySyncedFromGPU(ContextMtl *contextMtl)
     if (mBuffer->isCPUReadMemDirty())
     {
         const uint8_t *ptr = mBuffer->mapReadOnly(contextMtl);
-        memcpy(mShadowCopy.data(), ptr, size());
+        ASSERT(mShadowCopy.size() == mBuffer->size());
+        memcpy(mShadowCopy.data(), ptr, mBuffer->size());
         mBuffer->unmap(contextMtl);
 
         mBuffer->resetCPUReadMemDirty();
