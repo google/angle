@@ -20,6 +20,12 @@
   'angle_deqp_gles2_d3d11_tests': {
     'modifications': {
       # anglebug.com/352528974 suspecting OOM caused by multiprocess
+      'angle-win-x64-intel-uhd770-rel': {
+        'args': [
+          '--max-processes=2',
+        ],
+      },
+      # anglebug.com/352528974 suspecting OOM caused by multiprocess
       'win10-x64-exp-intel': {
         'args': [
           '--max-processes=2',
@@ -36,6 +42,15 @@
         ],
         'swarming': {
           'shards': 10,
+        },
+      },
+      # anglebug.com/352528974 suspecting OOM caused by multiprocess
+      'angle-win-x64-intel-uhd770-rel': {
+        'args': [
+          '--max-processes=2',
+        ],
+        'swarming': {
+          'shards': 5,
         },
       },
       # anglebug.com/352528974 suspecting OOM caused by multiprocess
@@ -93,6 +108,11 @@
           'shards': 5,
         },
       },
+      'angle-win-x64-intel-uhd770-rel': {
+        'swarming': {
+          'shards': 4,
+        },
+      },
       'win10-x64-exp-intel': {
         'swarming': {
           'shards': 4,
@@ -130,6 +150,11 @@
       'angle-win-x64-intel-uhd630-rel': {
         'swarming': {
           'shards': 3,
+        },
+      },
+      'angle-win-x64-intel-uhd770-rel': {
+        'swarming': {
+          'shards': 4,
         },
       },
       'win10-x64-exp-intel': {

@@ -343,11 +343,41 @@ angle_mac_manual_builder(
 )
 
 angle_win_manual_builder(
+    name = "angle-try-win-x64-intel-uhd630-exp-rel",
+    description_html = "Tests release ANGLE on Win/x64 on experimental configs of Intel UHD 630 GPUs. Manual only.",
+    mirrors = [
+        "ci/angle-win-x64-builder-rel",
+        "ci/angle-win-x64-intel-uhd630-exp-rel",
+    ],
+    gn_args = "ci/angle-win-x64-builder-rel",
+)
+
+angle_win_manual_builder(
+    name = "angle-try-win-x64-intel-uhd770-rel",
+    description_html = "Tests release ANGLE on Win/x64 on Intel UHD 770 GPUs. Manual only.",
+    mirrors = [
+        "ci/angle-win-x64-builder-rel",
+        "ci/angle-win-x64-intel-uhd770-rel",
+    ],
+    gn_args = "ci/angle-win-x64-builder-rel",
+)
+
+angle_win_manual_builder(
     name = "angle-try-win-x64-intel-uhd630-rel",
     description_html = "Tests release ANGLE on Win/x64 on Intel UHD 630 GPUs. Manual only.",
     mirrors = [
         "ci/angle-win-x64-builder-rel",
         "ci/angle-win-x64-intel-uhd630-rel",
+    ],
+    gn_args = "ci/angle-win-x64-builder-rel",
+)
+
+angle_win_manual_builder(
+    name = "angle-try-win-x64-nvidia-gtx1660-exp-rel",
+    description_html = "Tests release ANGLE on Win/x64 on experimental configs of NVIDIA GTX 1660 GPUs. Manual only.",
+    mirrors = [
+        "ci/angle-win-x64-builder-rel",
+        "ci/angle-win-x64-nvidia-gtx1660-exp-rel",
     ],
     gn_args = "ci/angle-win-x64-builder-rel",
 )
