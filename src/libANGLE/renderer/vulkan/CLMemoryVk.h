@@ -166,6 +166,29 @@ class CLImageVk : public CLMemoryVk
     CLImageVk(const cl::Image &image);
     ~CLImageVk() override;
 
+    // Create and update routines
+    angle::Result create(void *hostPtr);
+    angle::Result createFromBuffer();
+
+    angle::Result fillImageWithColor(const cl::Offset &origin,
+                                     const cl::Extents &region,
+                                     cl::PixelColor packedColor);
+
+    // Copy routines
+    angle::Result copyStagingFrom(void *ptr, size_t offset, size_t size);
+    angle::Result copyStagingTo(void *ptr, size_t offset, size_t size);
+    angle::Result copyStagingToFromWithPitch(void *ptr,
+                                             const cl::Extents &region,
+                                             const size_t rowPitch,
+                                             const size_t slicePitch,
+                                             StagingBufferCopyDirection copyStagingTo);
+
+    // Predicate routines
+    bool isCurrentlyInUse() const override;
+    bool isImage2DFromBuffer() const { return mIsImage2DFromBuffer; }
+    bool containsHostMemExtension();
+
+    // State query routines
     vk::ImageHelper &getImage()
     {
         ASSERT(mImage.valid());
@@ -182,53 +205,33 @@ class CLImageVk : public CLMemoryVk
     size_t getSize() const override { return mMemory.getSize(); }
     size_t getRowPitch() const { return getFrontendObject().getRowSize(); }
     size_t getSlicePitch() const { return getFrontendObject().getSliceSize(); }
+    size_t getWidth() const { return getFrontendObject().getWidth(); }
+    size_t getHeight() const { return getFrontendObject().getHeight(); }
+    size_t getDepth() const { return getFrontendObject().getDepth(); }
 
     cl::MemObjectType getParentType() const;
-
     template <typename T>
     T *getParent() const;
 
-    angle::Result create(void *hostPtr);
-    angle::Result createFromBuffer();
-
-    bool isCurrentlyInUse() const override;
-    bool isImage2DFromBuffer() const { return mIsImage2DFromBuffer; }
-    bool containsHostMemExtension();
-
-    angle::Result getOrCreateStagingBuffer(CLBufferVk **clBufferOut);
-    angle::Result copyStagingFrom(void *ptr, size_t offset, size_t size);
-    angle::Result copyStagingTo(void *ptr, size_t offset, size_t size);
-    angle::Result copyStagingToFromWithPitch(void *ptr,
-                                             const cl::Extents &region,
-                                             const size_t rowPitch,
-                                             const size_t slicePitch,
-                                             StagingBufferCopyDirection copyStagingTo);
-    VkImageUsageFlags getVkImageUsageFlags();
-    VkImageType getVkImageType(const cl::ImageDescriptor &desc);
+    VkImageUsageFlags getVkImageUsageFlags() const;
     cl::Extents getImageExtent() const { return mExtent; }
-    vk::ImageView &getImageView() { return mImageView; }
-    angle::Result fillImageWithColor(const cl::Offset &origin,
-                                     const cl::Extents &region,
-                                     cl::PixelColor packedColor);
-    cl::Offset getOffsetForCopy(const cl::Offset &origin);
-    cl::Extents getExtentForCopy(const cl::Extents &region);
+    cl::Offset getOffsetForCopy(const cl::Offset &origin) const;
+    cl::Extents getExtentForCopy(const cl::Extents &region) const;
+    cl::Extents getExtentForCopy(const size_t size) const;
     VkImageSubresourceLayers getSubresourceLayersForCopy(const cl::Offset &origin,
                                                          const cl::Extents &region,
                                                          cl::MemObjectType copyToType,
-                                                         ImageCopyWith imageCopy);
+                                                         ImageCopyWith imageCopy) const;
 
+    vk::ImageView &getImageView() { return mImageView; }
     angle::Result getBufferView(const vk::BufferView **viewOut);
-
-    cl::Extents getExtentForCopy(const size_t size);
+    angle::Result getOrCreateStagingBuffer(CLBufferVk **clBufferOut);
 
   private:
     angle::Result initImageViewImpl();
     angle::Result mapBufferHelper(uint8_t *&ptrOut) override;
     angle::Result mapParentBufferHelper(uint8_t *&ptrOut) override;
     void unmapBufferHelper() override;
-    angle::Result setDataImpl(const uint8_t *data, size_t size, size_t offset);
-    size_t calculateRowPitch();
-    size_t calculateSlicePitch(size_t imageRowPitch);
 
     vk::ImageHelper mImage;
     cl::Extents mExtent;
