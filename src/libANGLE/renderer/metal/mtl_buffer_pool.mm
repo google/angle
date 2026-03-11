@@ -26,15 +26,7 @@ namespace mtl
 BufferPool::BufferPool() : BufferPool(false) {}
 
 BufferPool::BufferPool(bool alwaysAllocNewBuffer)
-    : mInitialSize(0),
-      mBuffer(nullptr),
-      mNextAllocationOffset(0),
-      mLastFlushOffset(0),
-      mSize(0),
-      mAlignment(1),
-      mBuffersAllocated(0),
-      mMaxBuffers(0),
-      mAlwaysAllocateNewBuffer(alwaysAllocNewBuffer)
+    : mBuffer(nullptr), mAlwaysAllocateNewBuffer(alwaysAllocNewBuffer)
 {}
 
 angle::Result BufferPool::reset(ContextMtl *contextMtl,
@@ -234,9 +226,9 @@ angle::Result BufferPool::allocate(ContextMtl *contextMtl,
 
     if (offsetOut)
     {
-        *offsetOut = static_cast<size_t>(mNextAllocationOffset);
+        *offsetOut = mNextAllocationOffset;
     }
-    mNextAllocationOffset += static_cast<uint32_t>(sizeToAllocate);
+    mNextAllocationOffset += sizeToAllocate;
     return angle::Result::Continue;
 }
 
@@ -347,7 +339,7 @@ void BufferPool::updateAlignment(Context *context, size_t alignment)
     // If alignment has changed, make sure the next allocation is done at an aligned offset.
     if (alignment != mAlignment)
     {
-        mNextAllocationOffset = roundUp(mNextAllocationOffset, static_cast<uint32_t>(alignment));
+        mNextAllocationOffset = roundUp(mNextAllocationOffset, alignment);
         mAlignment            = alignment;
     }
 }
