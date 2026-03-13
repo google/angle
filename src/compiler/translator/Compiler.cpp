@@ -1270,12 +1270,12 @@ ShCompileOptions TCompiler::adjustOptions(const ShCompileOptions &compileOptions
     // Disable options that are not applicable.
     if (mShaderType == GL_COMPUTE_SHADER)
     {
-        compileOptions.initOutputVariables = false;
+        compileOptions.initOutputVariables                     = false;
         compileOptions.initializeBuiltinsForInstancedMultiview = false;
     }
     if (mShaderType != GL_VERTEX_SHADER)
     {
-        compileOptions.initGLPosition = false;
+        compileOptions.initGLPosition                  = false;
         compileOptions.emulateGLDrawID                 = false;
         compileOptions.emulateGLBaseVertexBaseInstance = false;
         // Note: technically clamping gl_PointSize should be done in the last pre-rasterization

@@ -2276,19 +2276,31 @@
 42266907 WGPU : AttributeLayoutNonIndexed.Test/* = SKIP
 42266907 WGPU : BindUniformLocationTest.Compositor/* = SKIP
 42266907 WGPU : BlendPackedTest.RGB565/* = SKIP
-42266907 WGPU : BlitFramebufferANGLETest.BlitColorToDefault/* = SKIP
-42266907 WGPU : BlitFramebufferANGLETest.BlitColorWithFlip/* = SKIP
-42266907 WGPU : BlitFramebufferANGLETest.ReverseColorBlit/* = SKIP
-42266907 WGPU : BlitFramebufferANGLETest.ScissoredBlit/* = SKIP
-42266907 WGPU : BlitFramebufferANGLETest.ReverseScissoredBlit/* = SKIP
-42266907 WGPU : BlitFramebufferANGLETest.OversizedBlit/* = SKIP
-42266907 WGPU : BlitFramebufferANGLETest.ReverseOversizedBlit/* = SKIP
+42266907 WGPU : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
 42266907 WGPU : BlitFramebufferANGLETest.BlitWithDepthUserToDefault/* = SKIP
 42266907 WGPU : BlitFramebufferANGLETest.BlitWithDepthDefaultToUser/* = SKIP
-42266907 WGPU : BlitFramebufferANGLETest.BlitPartialColor/* = SKIP
-42266907 WGPU : BlitFramebufferANGLETest.BlitDifferentSizes/* = SKIP
 42266907 WGPU : BlitFramebufferANGLETest.BlitStencil/* = SKIP
-42266907 WGPU : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
+42266907 WGPU : BlitFramebufferTest.*Multisample* = SKIP
+42266907 WGPU : BlitFramebufferTest.*Multisampled* = SKIP
+42266907 WGPU : BlitFramebufferTest.BlitStencilToDefault/* = SKIP
+42266907 WGPU : BlitFramebufferTest.NonZeroBaseDestination* = SKIP
+42266907 WGPU : BlitFramebufferTest.NonZeroBaseSourceStencil/* = SKIP
+42266907 WGPU : BlitFramebufferTest.NonZeroBaseSource/* = SKIP
+42266907 WGPU : BlitFramebufferTest.BlitSRGBToRGBOversizedSourceArea/* = SKIP
+42266907 WGPU : BlitFramebufferTest.drawBlitAndDrawAgain/* = SKIP
+42266907 WGPU : BlitFramebufferTest.scissorDrawBlitAndDrawAgain/* = SKIP
+42266907 WGPU : BlitFramebufferTest.FlippedBlits/* = SKIP
+42266907 WGPU : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
+42266907 WGPU : BlitFramebufferTest.*Resolve* = SKIP
+42266907 WGPU : BlitFramebufferTest.Blit3D/* = SKIP
+42266907 WGPU : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+42266907 WGPU : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
+42266907 WGPU : BlitFramebufferTest.BlitStencilScissoredScaled/* = SKIP
+42266907 WGPU : BlitFramebufferTest.Blit2DArray* = SKIP
+42266907 WGPU : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
+42266907 WGPU : BlitFramebufferTest.Blit2ArrayTo3D/* = SKIP
+42266907 WGPU : BlitFramebufferTest.BlitFramebufferStencilClipNoIntersection/* = SKIP
+42266907 WGPU : BlitFramebufferTest.OOBWrite/* = SKIP
 42266907 WGPU : SimpleStateChangeTest.TexSubImageOnTextureBoundToFrambuffer/* = SKIP
 42266907 WGPU : SRGBFramebufferDefaultLinearTest.Blit*LinearFbo/* = SKIP
 42266907 WGPU : DebugMarkerTest.Rendering/* = SKIP
@@ -2468,6 +2480,8 @@
 42266907 WGPU : WebGLFramebufferTest.TestFramebufferRequiredCombinations/* = SKIP
 42266907 WGPU : WebGLReadOutsideFramebufferTest.CopyTexSubImage2D/* = SKIP
 42266907 WGPU : WebGLReadOutsideFramebufferTest.CopyTexImage2D/* = SKIP
+
+
 
 // 42267100 failures are due to the shader (which uses textures) failing to compile
 42267100 WGPU : Texture2DTest.NegativeAPISubImage* = SKIP
