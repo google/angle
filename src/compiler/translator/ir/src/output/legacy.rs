@@ -1444,11 +1444,7 @@ impl<'options> Generator<'options> {
                 BuiltIn::TessCoord => ffi::ASTQualifier::TessCoord,
                 BuiltIn::BoundingBoxOES => ffi::ASTQualifier::BoundingBox,
             }
-        } else if decorations
-            .decorations
-            .iter()
-            .any(|&decoration| matches!(decoration, Decoration::SpecConst(_)))
-        {
+        } else if has_decoration!(decorations, Decoration::SpecConst) {
             ffi::ASTQualifier::SpecConst
         } else if decorations.has(Decoration::EmulatedViewIDOut)
             || decorations.has(Decoration::EmulatedViewIDIn)

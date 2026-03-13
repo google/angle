@@ -1809,6 +1809,44 @@ impl Decorations {
     }
 }
 
+// For decorations with data, macros are needed to simplify querying and extracting them.
+//
+// has_decoration: Similar to Decorations::has, but for enums with data.  For example:
+//
+//     has_decoration!(decoration, Decoration::Location) // returns a bool
+//
+// get_decoration: Get a decoration matching a variant.  For example:
+//
+//     get_decoration!(decoration, Decoration::Location) // returns Some(Location(l)) or None
+//
+// get_decoration_value: Get the value inside a decoration matching a variant.  For example:
+//
+//     get_decoration_value!(decoration, Decoration::Location) // returns Some(l) or None
+macro_rules! has_decoration {
+    ($decorations:expr, $variant:path) => {
+        $decorations.decorations.iter().any(|decoration| matches!(decoration, $variant(..)))
+    };
+}
+macro_rules! get_decoration {
+    ($decorations:expr, $variant:path) => {
+        $decorations
+            .decorations
+            .iter()
+            .find(|decoration| matches!(decoration, $variant(..)))
+            .copied()
+    };
+}
+macro_rules! get_decoration_value {
+    ($decorations:expr, $variant:path) => {
+        $decorations.decorations.iter().find_map(|decoration| {
+            if let $variant(value) = decoration { Some(*value) } else { None }
+        })
+    };
+}
+pub(crate) use get_decoration;
+pub(crate) use get_decoration_value;
+pub(crate) use has_decoration;
+
 #[derive(Eq, PartialEq, Hash, Copy, Clone)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub enum BasicType {

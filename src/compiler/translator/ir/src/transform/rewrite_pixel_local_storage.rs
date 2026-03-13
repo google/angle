@@ -146,12 +146,7 @@ fn transform_plane_variable_to_image(
 
     // Add decorations required for implementation as image2D.  The PLS plane's binding is reused
     // for the storage image.
-    let binding = *variable
-        .decorations
-        .decorations
-        .iter()
-        .find(|decoration| matches!(decoration, Decoration::Binding(_)))
-        .unwrap();
+    let binding = get_decoration!(variable.decorations, Decoration::Binding).unwrap();
     let mut decorations = vec![
         Decoration::Uniform,
         binding,
@@ -214,15 +209,7 @@ fn transform_plane_variable_to_inout(
     variable.type_id = inout_variable_type;
 
     // Swap the Binding decoration with Location, and add a decoration if non-coherent.
-    let binding =
-        variable
-            .decorations
-            .decorations
-            .iter()
-            .find_map(|decoration| {
-                if let &Decoration::Binding(binding) = decoration { Some(binding) } else { None }
-            })
-            .unwrap();
+    let binding = get_decoration_value!(variable.decorations, Decoration::Binding).unwrap();
     // PLS attachments are bound in reverse order from the rear.
     let mut decorations = vec![
         Decoration::InputOutput,
@@ -269,18 +256,8 @@ fn transform_plane_variable(
 ) -> PlaneInfo {
     let variable = state.ir_meta.get_variable(variable_id);
 
-    let format = variable
-        .decorations
-        .decorations
-        .iter()
-        .find_map(|decoration| {
-            if let &Decoration::ImageInternalFormat(format) = decoration {
-                Some(format)
-            } else {
-                None
-            }
-        })
-        .unwrap();
+    let format =
+        get_decoration_value!(variable.decorations, Decoration::ImageInternalFormat).unwrap();
 
     // TODO: Decide implementation based on the properties of the plane itself, not just what is
     // supported.  http://anglebug.com/40096838
