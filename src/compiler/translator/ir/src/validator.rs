@@ -57,11 +57,15 @@
 //     and they both end in a Merge with an ID.  (Technically, we should be able to also support one
 //     block being merge and the other discard/return/break/continue, but no such code can be
 //     generated right now).
+//   - Images with the Rect dimension can only have a Float base type and be 2D samplers (not
+//     storage image, array, msaa, etc).
+//   - Between the Smooth, Flat, NoPerspective, Centroid and Sample decorations, they are all
+//     mutually exclusive, except NoPerspective can be combined with Centroid or Sample.  See
+//     ffi::Interpolation in reflection.rs for reference.
+//   - ReadOnly and WriteOnly decorations are mutually exclusive.
 
-use crate::debug;
 use crate::ir::*;
-use crate::traverser;
-use std::collections::HashSet;
+use crate::*;
 use std::fmt;
 
 pub fn validate(ir: &IR) {
@@ -229,35 +233,41 @@ impl<'a> Validator<'a> {
 
     fn validate_all_ids_are_present_in_ir_meta(&self) {
         // validate IRMeta.constants
-        for (constant_index, constant) in self.ir.meta.all_constants().iter().enumerate() {
+        for (constant_id, constant) in self.ir.meta.all_constants().iter().enumerate() {
             self.validate_all_ids_in_a_constant_are_present(
-                constant_index.try_into().unwrap(),
+                constant_id.try_into().unwrap(),
                 constant,
             );
         }
         // validate IRMeta.variables
-        for (variable_index, variable) in self.ir.meta.all_variables().iter().enumerate() {
-            self.validate_all_ids_in_a_variable_are_present(
-                variable_index.try_into().unwrap(),
-                variable,
-            );
+        for (variable_id, variable) in self.ir.meta.all_variables().iter().enumerate() {
+            if !variable.is_dead_code_eliminated {
+                self.validate_all_ids_in_a_variable_are_present(
+                    variable_id.try_into().unwrap(),
+                    variable,
+                );
+            }
         }
         // validate IRMeta.functions
-        for (function_index, function) in self.ir.meta.all_functions().iter().enumerate() {
-            self.validate_all_ids_in_a_function_are_present(
-                function_index.try_into().unwrap(),
-                function,
-            );
-        }
+        traverser::visitor::for_each_function(
+            &mut (),
+            &self.ir.function_entries,
+            |_, function_id| {
+                let function = self.ir.meta.get_function(function_id);
+                self.validate_all_ids_in_a_function_are_present(function_id.id, function);
+            },
+            |_, _, _, _| traverser::visitor::STOP,
+            |_, _| {},
+        );
 
         // Validate IRMeta.global_variables
-        for (global_variable_index, global_variable) in
+        for (global_variable_id, global_variable) in
             self.ir.meta.all_global_variables().iter().enumerate()
         {
             if global_variable.id >= self.max_variable_count {
                 self.on_error(format_args!(
-                    "invalid IRMeta: global_variable {global_variable_index} uses invalid \
-                     variable id {}",
+                    "invalid IRMeta: global_variable {global_variable_id} uses invalid variable \
+                     id {}",
                     global_variable.id
                 ));
             }
@@ -778,20 +788,28 @@ impl<'a> Validator<'a> {
         let mut vars_declared_map = DeclaredVarTracker::new();
         vars_declared_map.set_global_declared_vars(self.ir.meta.all_global_variables());
 
-        for (function_entry_index, entry) in self.ir.function_entries.iter().enumerate() {
-            if entry.is_none() {
-                // Skip over functions that have been dead-code eliminated.
-                continue;
-            }
-            let function_signature = &self.ir.meta.all_functions()[function_entry_index];
-            vars_declared_map
-                .add_function_param_vars_upon_enter_function(&function_signature.params);
-            self.validate_all_variables_in_a_block_are_declared_in_scope(
-                &mut vars_declared_map,
-                entry.as_ref().unwrap(),
-            );
-            vars_declared_map.remove_function_param_vars_upon_exit_function();
-        }
+        let current_function = FunctionId { id: 0 };
+        let mut state = (current_function, vars_declared_map);
+        traverser::visitor::for_each_function(
+            &mut state,
+            &self.ir.function_entries,
+            |(current_function, _), function_id| {
+                *current_function = function_id;
+            },
+            |(current_function, vars_declared_map), entry, _, _| {
+                let function = &self.ir.meta.get_function(*current_function);
+
+                vars_declared_map.add_function_param_vars_upon_enter_function(&function.params);
+                self.validate_all_variables_in_a_block_are_declared_in_scope(
+                    vars_declared_map,
+                    entry,
+                );
+                vars_declared_map.remove_function_param_vars_upon_exit_function();
+
+                traverser::visitor::STOP
+            },
+            |_, _| {},
+        );
     }
 
     fn validate_all_variables_in_a_block_are_declared_in_scope(
