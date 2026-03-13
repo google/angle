@@ -1340,21 +1340,13 @@ impl<'options> Generator<'options> {
                     }
                 }
             },
-            ImageDimension::Rect => match image_basic_type {
-                ImageBasicType::Float => {
-                    // Rect storage images are a desktop GLSL feature
-                    debug_assert!(image_type.is_sampled);
-                    ffi::ASTBasicType::Sampler2DRect
-                }
-                ImageBasicType::Int => {
-                    debug_assert!(image_type.is_sampled);
-                    ffi::ASTBasicType::ISampler2DRect
-                }
-                ImageBasicType::Uint => {
-                    debug_assert!(image_type.is_sampled);
-                    ffi::ASTBasicType::USampler2DRect
-                }
-            },
+            ImageDimension::Rect => {
+                // Only float rect samplers are exposed via GL_ANGLE_texture_rectangle.
+                debug_assert!(image_basic_type == ImageBasicType::Float);
+                // Rect storage images are a desktop GLSL feature
+                debug_assert!(image_type.is_sampled);
+                ffi::ASTBasicType::Sampler2DRect
+            }
             ImageDimension::Buffer => match image_basic_type {
                 ImageBasicType::Float => {
                     if image_type.is_sampled {
@@ -1435,7 +1427,6 @@ impl<'options> Generator<'options> {
                 BuiltIn::SampleMask => ffi::ASTQualifier::SampleMask,
                 BuiltIn::NumSamples => ffi::ASTQualifier::NumSamples,
                 BuiltIn::NumWorkGroups => ffi::ASTQualifier::NumWorkGroups,
-                BuiltIn::WorkGroupSize => ffi::ASTQualifier::WorkGroupSize,
                 BuiltIn::WorkGroupID => ffi::ASTQualifier::WorkGroupID,
                 BuiltIn::LocalInvocationID => ffi::ASTQualifier::LocalInvocationID,
                 BuiltIn::GlobalInvocationID => ffi::ASTQualifier::GlobalInvocationID,
@@ -1713,7 +1704,6 @@ impl<'options> Generator<'options> {
             BuiltIn::SampleMask => "gl_SampleMask",
             BuiltIn::NumSamples => "gl_NumSamples",
             BuiltIn::NumWorkGroups => "gl_NumWorkGroups",
-            BuiltIn::WorkGroupSize => "gl_WorkGroupSize",
             BuiltIn::WorkGroupID => "gl_WorkGroupID",
             BuiltIn::LocalInvocationID => "gl_LocalInvocationID",
             BuiltIn::GlobalInvocationID => "gl_GlobalInvocationID",

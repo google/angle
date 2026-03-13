@@ -122,8 +122,6 @@ pub const TEMP_VARIABLE_PREFIX: &str = "t";
 pub const TEMP_FUNCTION_PREFIX: &str = "f";
 pub const TEMP_STRUCT_PREFIX: &str = "s";
 pub const TEMP_STRUCT_FIELD_PREFIX: &str = "m";
-// Make sure ANGLE symbols start with this to avoid collision with the user symbol prefixes above.
-pub const ANGLE_SYMBOL_PREFIX: &str = "ANGLE";
 
 // An ID that can be referred to by an operand of an instruction.
 #[derive(Copy, Clone, Eq, PartialEq)]
@@ -1546,7 +1544,6 @@ pub enum BuiltIn {
     SampleMask,
     NumSamples,
     NumWorkGroups,
-    WorkGroupSize,
     WorkGroupID,
     LocalInvocationID,
     GlobalInvocationID,
@@ -1727,7 +1724,6 @@ pub enum Decoration {
     // Corresponding to GLSL qualifiers with the same name
     Invariant,
     Precise,
-    Interpolant,
     Smooth,
     Flat,
     NoPerspective,
@@ -1772,6 +1768,8 @@ pub enum Decoration {
     Depth(Depth),
     // Internal format declared on storage images
     ImageInternalFormat(ImageInternalFormat),
+    // Used internally to implement OES_shader_multisample_interpolation for Metal.
+    Interpolant,
     // Used internally to implement ANGLE_pixel_local_storage, indicates a D3D 11.3 Rasterizer
     // Order Views (ROV) and Metal raster_order_groups.
     RasterOrdered,

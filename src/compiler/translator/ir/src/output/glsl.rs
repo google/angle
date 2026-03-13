@@ -306,7 +306,6 @@ impl Generator {
             BuiltIn::SampleMask => "gl_SampleMask",
             BuiltIn::NumSamples => "gl_NumSamples",
             BuiltIn::NumWorkGroups => "gl_NumWorkGroups",
-            BuiltIn::WorkGroupSize => "gl_WorkGroupSize",
             BuiltIn::WorkGroupID => "gl_WorkGroupID",
             BuiltIn::LocalInvocationID => "gl_LocalInvocationID",
             BuiltIn::GlobalInvocationID => "gl_GlobalInvocationID",

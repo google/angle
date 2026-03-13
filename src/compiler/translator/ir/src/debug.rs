@@ -431,7 +431,6 @@ fn built_in_str(built_in: BuiltIn) -> String {
         BuiltIn::SampleMask => "SampleMask",
         BuiltIn::NumSamples => "NumSamples",
         BuiltIn::NumWorkGroups => "NumWorkGroups",
-        BuiltIn::WorkGroupSize => "WorkGroupSize",
         BuiltIn::WorkGroupID => "WorkGroupID",
         BuiltIn::LocalInvocationID => "LocalInvocationID",
         BuiltIn::GlobalInvocationID => "GlobalInvocationID",

@@ -3956,7 +3956,9 @@ impl BuilderWrapper {
             ffi::ASTQualifier::SampleMask => Some(BuiltIn::SampleMask),
             ffi::ASTQualifier::NumSamples => Some(BuiltIn::NumSamples),
             ffi::ASTQualifier::NumWorkGroups => Some(BuiltIn::NumWorkGroups),
-            ffi::ASTQualifier::WorkGroupSize => Some(BuiltIn::WorkGroupSize),
+            ffi::ASTQualifier::WorkGroupSize => {
+                panic!("Internal error: gl_WorkGroupSize should be constant folded")
+            }
             ffi::ASTQualifier::WorkGroupID => Some(BuiltIn::WorkGroupID),
             ffi::ASTQualifier::LocalInvocationID => Some(BuiltIn::LocalInvocationID),
             ffi::ASTQualifier::GlobalInvocationID => Some(BuiltIn::GlobalInvocationID),
