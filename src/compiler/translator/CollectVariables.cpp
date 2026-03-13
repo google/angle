@@ -1190,10 +1190,6 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
             continue;
         }
 
-        // SpirvTransformer::transform uses a map of ShaderVariables, it needs member variables and
-        // (named or unnamed) structure as ShaderVariable. at link between two shaders, validation
-        // between of named and unnamed, needs the same structure, its members, and members order
-        // except instance name.
         if (typedNode.getBasicType() == EbtInterfaceBlock && !IsShaderIoBlock(qualifier) &&
             qualifier != EvqPatchIn && qualifier != EvqPatchOut)
         {
@@ -1203,8 +1199,6 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
             recordInterfaceBlock(isUnnamed ? nullptr : variable.getName().data(), type,
                                  &interfaceBlock);
 
-            // all fields in interface block will be added for updating interface variables because
-            // the temporal structure variable will be ignored.
             switch (qualifier)
             {
                 case EvqUniform:
@@ -1380,6 +1374,19 @@ void CollectVariables(TIntermBlock *root,
                                       symbolTable, shaderType, extensionBehavior, resources,
                                       tessControlShaderOutputVertices, transformFloatUniformToFP16);
     root->traverse(&collect);
+
+    // Attributes are simply vertex shader inputs (and compute shader attributes),
+    // and are exclusive with input varyings.
+    ASSERT(shaderType != GL_VERTEX_SHADER || inputVaryings->empty());
+    ASSERT((shaderType == GL_VERTEX_SHADER || shaderType == GL_COMPUTE_SHADER) ||
+           attributes->empty());
+
+    // Outputs are simply fragment shader outputs, and are exclusive with output varyings.
+    ASSERT(shaderType != GL_FRAGMENT_SHADER || outputVaryings->empty());
+    ASSERT(shaderType == GL_FRAGMENT_SHADER || outputVariables->empty());
+
+    // Shared variables exist only in compute shaders.
+    ASSERT(shaderType == GL_COMPUTE_SHADER || sharedVariables->empty());
 }
 
 }  // namespace sh
