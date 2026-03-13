@@ -382,6 +382,12 @@ if (angle_has_build) {
   }
 }
 
+# Enable max lto optimization
+if (is_android && angle_enable_vulkan) {
+  angle_common_configs += [ "//build/config/compiler:thinlto_optimize_max" ]
+  angle_remove_configs += [ "//build/config/compiler:thinlto_optimize_default" ]
+}
+
 set_defaults("angle_executable") {
   configs = angle_common_configs
   public_configs = []
