@@ -5688,12 +5688,15 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // Qualcomm driver 512.821 is known to have rendering bugs with this extension.
     // http://crbug.com/413427770
+    //
+    // Lavapipe currently crashes in SysUI on Android 16 when ANGLE uses MSRTSS.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsMultisampledRenderToSingleSampled,
         mMultisampledRenderToSingleSampledFeatures.multisampledRenderToSingleSampled == VK_TRUE &&
             mFeatures.supportsRenderpass2.enabled &&
             mFeatures.supportsDepthStencilResolve.enabled && CanSupportMSRTSSForRGBA8(this) &&
-            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 822, 0)));
+            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 822, 0)) &&
+            !isLavapipe);
 
     // Preferring the MSRTSS flag is for texture initialization. If the MSRTSS is not used at first,
     // it will be used (if available) when recreating the image if it is bound to an MSRTT
