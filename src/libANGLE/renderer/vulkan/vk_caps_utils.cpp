@@ -80,10 +80,10 @@ bool GetTextureSRGBDecodeSupport(const Renderer *renderer)
 {
     static constexpr bool kLinearColorspace = true;
 
-    // In Vulkan, each compressed texture format is either equally supported with both its linear
-    // and sRGB variants (if they exist) or not supported at all. In OpenGL ES, that also applies
-    // except for some BC formats. However, the Vulkan backend treats all BC formats as a group.
-    // Therefore, compressed texture formats do not affect support for skipping sRGB decode.
+    // As per OpenGL ES specs, ASTC, ETC2, and BPTC compressed formats are either exposed with their
+    // sRGB variants or not exposed at all; the Vulkan backend treats S3TC formats similarly.
+    // Therefore, there is no need to check compressed formats here as they do not affect support
+    // for skipping sRGB decode.
 
     // GL_SRGB and GL_SRGB_ALPHA unsized formats are also required by the spec, but the only valid
     // type for them is GL_UNSIGNED_BYTE, so they are fully included in the sized formats listed
@@ -102,10 +102,10 @@ bool GetTextureSRGBOverrideSupport(const Renderer *renderer,
 {
     static constexpr bool kNonLinearColorspace = false;
 
-    // In Vulkan, each compressed texture format is either equally supported with both its linear
-    // and sRGB variants (if they exist) or not supported at all. In OpenGL ES, that also applies
-    // except for some BC formats. However, the Vulkan backend treats all BC formats as a group.
-    // Therefore, compressed texture formats do not affect support for sRGB overriding.
+    // As per OpenGL ES specs, ASTC, ETC2, and BPTC compressed formats are either exposed with their
+    // sRGB variants or not exposed at all; the Vulkan backend treats S3TC formats similarly.
+    // Therefore, there is no need to check compressed formats here as they do not affect support
+    // for sRGB overriding.
 
     // If the given linear format is supported, we also need to support its corresponding nonlinear
     // format. If the given linear format is NOT supported, we don't care about its corresponding
@@ -298,17 +298,20 @@ void Renderer::ensureCapsInitialized() const
     // Enable GL_EXT_buffer_storage
     mNativeExtensions.bufferStorageEXT = true;
 
-    // If the BC compression formats device feature is not explicitly enabled, disable all of the
-    // corresponding OpenGL ES extensions even if the driver reports caps for individual formats.
-    // This allows the backend to assume that if any BC format is supported then all of them are.
+    // If the BC compression formats device feature is not explicitly enabled, ensure that either
+    // all S3TC formats are supported or none to guarantee availability of their sRGB variants.
     if (mPhysicalDeviceFeatures.textureCompressionBC == VK_FALSE)
     {
-        mNativeExtensions.textureCompressionDxt1EXT     = false;
-        mNativeExtensions.textureCompressionDxt3ANGLE   = false;
-        mNativeExtensions.textureCompressionDxt5ANGLE   = false;
-        mNativeExtensions.textureCompressionS3tcSrgbEXT = false;
-        mNativeExtensions.textureCompressionRgtcEXT     = false;
-        mNativeExtensions.textureCompressionBptcEXT     = false;
+        if (!mNativeExtensions.textureCompressionDxt1EXT ||
+            !mNativeExtensions.textureCompressionDxt3ANGLE ||
+            !mNativeExtensions.textureCompressionDxt5ANGLE ||
+            !mNativeExtensions.textureCompressionS3tcSrgbEXT)
+        {
+            mNativeExtensions.textureCompressionDxt1EXT     = false;
+            mNativeExtensions.textureCompressionDxt3ANGLE   = false;
+            mNativeExtensions.textureCompressionDxt5ANGLE   = false;
+            mNativeExtensions.textureCompressionS3tcSrgbEXT = false;
+        }
     }
     else
     {
