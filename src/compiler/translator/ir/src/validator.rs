@@ -13,11 +13,11 @@
 //     validate_all_variables_are_declared_in_scope()
 //   - Every accessed register must be declared in an accessible block:
 //     validate_all_registers_are_declared_in_scope()
-//   - Branches must have the appropriate targets set (merge, trueblock for if, etc):
-//     validate_all_branch_instructions_have_valid_target()
+//   - Branches must have the appropriate targets set (merge, trueblock for if, etc); every block
+//     ends in branch: validate_all_branch_instructions_have_valid_target()
+//   - No branches inside a block (i.e. no dead code) validate_no_dead_code()
 
 // TODO(http://anglebug.com/349994211): to validate:
-//   - No branches inside a block, every block ends in branch. (i.e. no dead code)
 //   - For merge blocks that have an input, the branch instruction of blocks that jump to it have an
 //     output.
 //   - No identical types with different IDs.
@@ -250,6 +250,7 @@ impl<'a> Validator<'a> {
         self.validate_all_ids_are_present();
         self.validate_all_variables_are_declared_in_scope();
         self.validate_all_registers_are_declared_in_scope();
+        self.validate_no_dead_code();
         self.validate_all_branch_instructions_have_valid_target();
     }
 
@@ -1195,5 +1196,28 @@ impl<'a> Validator<'a> {
                 merge_block,
             );
         });
+    }
+
+    fn validate_no_dead_code(&self) {
+        traverser::visitor::for_each_function(
+            &mut (), // no state to track while traversing all functions
+            &self.ir.function_entries,
+            |_, _| {}, // do nothing in pre_visit
+            |_, block, _, _| {
+                self.validate_no_branch_in_the_middle_of_block_instructions(block);
+                traverser::visitor::VISIT_SUB_BLOCKS
+            }, // validate no branch instruction in the middle of a block during visit
+            |_, _| {}, // do nothing in post_visit
+        );
+    }
+
+    fn validate_no_branch_in_the_middle_of_block_instructions(&self, block: &Block) {
+        for instruction in &block.instructions[0..block.instructions.len() - 1] {
+            if instruction.is_branch() {
+                self.on_error(format_args!(
+                    "branch instruction is only allowed in the last instruction in the block"
+                ));
+            }
+        }
     }
 }
