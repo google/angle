@@ -328,6 +328,11 @@ struct Format
 const InternalFormat &GetSizedInternalFormatInfo(GLenum internalFormat);
 const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, GLenum type);
 
+// ES2 requires that format is equal to internal format at all glTex*Image2D entry points and the
+// implementation can decide the true, sized, internal format. The ES2FormatMap determines the
+// internal format for all valid format and type combinations.
+GLenum GetSizedFormatInternal(GLenum format, GLenum type);
+
 // Strip sizing information from an internal format.  Doesn't necessarily validate that the internal
 // format is valid.
 GLenum GetUnsizedFormat(GLenum internalFormat);
