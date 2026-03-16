@@ -364,7 +364,6 @@
 // Pixel 10
 449087811 PIXEL10 GLES : dEQP-GLES2.functional.shaders.fragdata.valid_dynamic_index = FAIL
 449087811 PIXEL10 GLES : dEQP-GLES2.functional.shaders.fragdata.valid_uniform_index = FAIL
-491718902 PIXEL10 VULKAN : dEQP-GLES2.functional.negative_api.texture.generatemipmap_zero_level_array_compressed = FAIL
 
 42265203 LINUX NVIDIA GTX1660 VULKAN : dEQP-GLES2.functional.shaders.random.all_features.fragment.13 = FAIL
 42265203 LINUX NVIDIA GTX1660 VULKAN : dEQP-GLES2.functional.shaders.random.all_features.fragment.26 = FAIL
@@ -387,9 +386,6 @@
 42266598 GALAXYS23 VULKAN : dEQP-GLES2.functional.polygon_offset.* = SKIP
 42266598 GALAXYS23 VULKAN : dEQP-GLES2.functional.rasterization.primitives.* = SKIP
 42266598 GALAXYS23 VULKAN : dEQP-GLES2.functional.shaders.random.* = SKIP
-
-// Samsung Galaxy S24 (Xclipse/Exynos)
-491718902 GALAXYS24EXYNOS VULKAN : dEQP-GLES2.functional.negative_api.texture.generatemipmap_zero_level_array_compressed = FAIL
 
 // Snapdragon 8 Gen3 Mobile Reference Device
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.fbo.render*stencil* = SKIP
