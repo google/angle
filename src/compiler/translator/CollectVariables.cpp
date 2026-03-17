@@ -1018,8 +1018,8 @@ ShaderVariable CollectVariablesTraverser::recordVarying(const TIntermSymbol &var
             else
             {
                 fieldVariable.location = location;
-                location += fieldType.getLocationCount();
             }
+            location += fieldType.getLocationCount();
 
             if (fieldType.getQualifier() != EvqGlobal)
             {
