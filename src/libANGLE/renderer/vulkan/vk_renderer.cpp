@@ -5462,13 +5462,15 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // http://anglebug.com/42266183
     //
     // http://b/381285096. On Intel platforms, we want to prevent protected queues being used as
-    // we cannot handle the teardown scenario if PXP termination occurs.
+    // we cannot handle the teardown scenario if PXP termination occurs. However, enable this for
+    // Android, since the issue is rare and the fallout is isolated to the specific app (rather than
+    // crashing the whole system like in ChromeOS).
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsProtectedMemory,
         mProtectedMemoryFeatures.protectedMemory == VK_TRUE &&
             (!isARMProprietary ||
              mPipelineProtectedAccessFeatures.pipelineProtectedAccess == VK_TRUE) &&
-            !isIntel);
+            (!isIntel || IsAndroid()));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostQueryReset,
                             mHostQueryResetFeatures.hostQueryReset == VK_TRUE);
