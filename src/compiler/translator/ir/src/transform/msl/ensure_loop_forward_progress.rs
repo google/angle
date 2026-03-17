@@ -75,15 +75,12 @@ fn mark_variable_writes(state: &mut State, instruction: &BlockInstruction) {
         state.ir_meta,
         &mut state.variable_store_count,
         opcode,
-        &|_, _| {
+        &|variable_store_count, pointer, access| {
             // Not interested in reads
-        },
-        &|variable_store_count, pointer| {
-            mark_variable_write(state.ir_meta, variable_store_count, pointer);
-        },
-        &|variable_store_count, pointer| {
-            // Treat `inout` parameters as being written to.
-            mark_variable_write(state.ir_meta, variable_store_count, pointer);
+            if access != util::PointerAccess::Read {
+                // Treat `inout` parameters as being written to.
+                mark_variable_write(state.ir_meta, variable_store_count, pointer);
+            }
         },
     );
 }

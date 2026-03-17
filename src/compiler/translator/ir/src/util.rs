@@ -687,17 +687,19 @@ pub fn block_ends_in_trivial_for_loop(ir_meta: &IRMeta, block: &Block) -> Option
 // Transformations may need to know when variables are read from or written to.  Since read and
 // write can be done in a number of instructions, this helper can be used to avoid having to
 // enumerate all of them.
-pub fn inspect_pointer_access<State, OnRead, OnWrite, OnReadWrite>(
+#[derive(Copy, Clone, PartialEq)]
+pub enum PointerAccess {
+    Read,
+    Write,
+    ReadWrite,
+}
+pub fn inspect_pointer_access<State, OnAccess>(
     ir_meta: &IRMeta,
     state: &mut State,
     opcode: &OpCode,
-    on_read: &OnRead,
-    on_write: &OnWrite,
-    on_read_write: &OnReadWrite,
+    on_access: &OnAccess,
 ) where
-    OnRead: Fn(&mut State, TypedId),
-    OnWrite: Fn(&mut State, TypedId),
-    OnReadWrite: Fn(&mut State, TypedId),
+    OnAccess: Fn(&mut State, TypedId, PointerAccess),
 {
     match opcode {
         // Read accesses
@@ -709,23 +711,23 @@ pub fn inspect_pointer_access<State, OnRead, OnWrite, OnReadWrite>(
         | &OpCode::Binary(BinaryOpCode::AtomicOr, pointer, _)
         | &OpCode::Binary(BinaryOpCode::AtomicXor, pointer, _)
         | &OpCode::Binary(BinaryOpCode::AtomicExchange, pointer, _) => {
-            on_read(state, pointer);
+            on_access(state, pointer, PointerAccess::Read);
         }
 
         // Write accesses
         &OpCode::Store(pointer, _)
         | &OpCode::Binary(BinaryOpCode::Modf, _, pointer)
         | &OpCode::Binary(BinaryOpCode::Frexp, _, pointer) => {
-            on_write(state, pointer);
+            on_access(state, pointer, PointerAccess::Write);
         }
         OpCode::BuiltIn(BuiltInOpCode::UaddCarry, args)
         | OpCode::BuiltIn(BuiltInOpCode::UsubBorrow, args) => {
-            on_write(state, args[2]);
+            on_access(state, args[2], PointerAccess::Write);
         }
         OpCode::BuiltIn(BuiltInOpCode::UmulExtended, args)
         | OpCode::BuiltIn(BuiltInOpCode::ImulExtended, args) => {
-            on_write(state, args[3]);
-            on_write(state, args[2]);
+            on_access(state, args[3], PointerAccess::Write);
+            on_access(state, args[2], PointerAccess::Write);
         }
 
         // Read/write access
@@ -733,7 +735,7 @@ pub fn inspect_pointer_access<State, OnRead, OnWrite, OnReadWrite>(
         | &OpCode::Unary(UnaryOpCode::PrefixDecrement, pointer)
         | &OpCode::Unary(UnaryOpCode::PostfixIncrement, pointer)
         | &OpCode::Unary(UnaryOpCode::PostfixDecrement, pointer) => {
-            on_read_write(state, pointer);
+            on_access(state, pointer, PointerAccess::ReadWrite);
         }
 
         // Calls could read or write from variables depending on the parameter direction.
@@ -745,14 +747,14 @@ pub fn inspect_pointer_access<State, OnRead, OnWrite, OnReadWrite>(
                 match direction {
                     FunctionParamDirection::Input => {
                         if ir_meta.get_type(arg.type_id).is_pointer() {
-                            on_read(state, arg);
+                            on_access(state, arg, PointerAccess::Read);
                         }
                     }
                     FunctionParamDirection::InputOutput => {
-                        on_read_write(state, arg);
+                        on_access(state, arg, PointerAccess::ReadWrite);
                     }
                     FunctionParamDirection::Output => {
-                        on_write(state, arg);
+                        on_access(state, arg, PointerAccess::Write);
                     }
                 };
             });

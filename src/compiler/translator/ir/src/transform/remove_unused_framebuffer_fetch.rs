@@ -195,21 +195,19 @@ fn visit_block(state: &mut State, block: &Block, depth: usize) {
                 state.ir_meta,
                 &mut (&mut state.written_channels, &mut state.is_read),
                 opcode,
-                &|(_, is_read), pointer| {
-                    read_pointer(state.ir_meta, is_read, pointer);
-                },
-                &|(written_channels, _), pointer| {
-                    write_pointer(
-                        state.ir_meta,
-                        written_channels,
-                        pointer,
-                        depth,
-                        state.is_in_main,
-                    );
-                },
-                &|(_, is_read), pointer| {
-                    // Treat `inout` parameters as being read.
-                    read_pointer(state.ir_meta, is_read, pointer);
+                &|(written_channels, is_read), pointer, access| {
+                    if access == util::PointerAccess::Write {
+                        write_pointer(
+                            state.ir_meta,
+                            written_channels,
+                            pointer,
+                            depth,
+                            state.is_in_main,
+                        );
+                    } else {
+                        // Treat `inout` parameters as being read.
+                        read_pointer(state.ir_meta, is_read, pointer);
+                    }
                 },
             );
         }
