@@ -38,6 +38,7 @@ angle_end2end_tests_sources = [
   "gl_tests/AtomicCounterBufferTest.cpp",
   "gl_tests/AttributeLayoutTest.cpp",
   "gl_tests/BPTCCompressedTextureTest.cpp",
+  "gl_tests/BaseInstanceOverflowTest.cpp",
   "gl_tests/BindGeneratesResourceTest.cpp",
   "gl_tests/BindUniformLocationTest.cpp",
   "gl_tests/BlendFuncExtendedTest.cpp",
