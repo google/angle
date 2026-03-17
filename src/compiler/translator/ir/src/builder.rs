@@ -4250,13 +4250,18 @@ impl BuilderWrapper {
     }
 
     fn get_struct_type_id(&mut self, struct_info: &ffi::ASTStruct) -> ffi::TypeId {
+        let is_internal = struct_info.is_internal;
+        let is_part_of_interface = !is_internal && struct_info.is_at_global_scope;
+
         let fields = struct_info
             .fields
             .iter()
             .map(|field| {
                 Field::new(
-                    if struct_info.is_internal {
+                    if is_internal {
                         Name::new_exact(field.name)
+                    } else if is_part_of_interface {
+                        Name::new_interface(field.name)
                     } else {
                         Name::new_temp(field.name)
                     },
@@ -4267,26 +4272,18 @@ impl BuilderWrapper {
             })
             .collect::<Vec<_>>();
 
-        let (name, specialization) = if struct_info.is_interface_block {
-            (
-                if struct_info.is_internal {
-                    Name::new_exact(struct_info.name)
-                } else {
-                    Name::new_interface(struct_info.name)
-                },
-                StructSpecialization::InterfaceBlock,
-            )
+        let name = if is_internal {
+            Name::new_exact(struct_info.name)
+        } else if is_part_of_interface {
+            Name::new_interface(struct_info.name)
         } else {
-            (
-                if struct_info.is_internal {
-                    Name::new_exact(struct_info.name)
-                } else if struct_info.is_at_global_scope {
-                    Name::new_interface(struct_info.name)
-                } else {
-                    Name::new_temp(struct_info.name)
-                },
-                StructSpecialization::Struct,
-            )
+            Name::new_temp(struct_info.name)
+        };
+
+        let specialization = if struct_info.is_interface_block {
+            StructSpecialization::InterfaceBlock
+        } else {
+            StructSpecialization::Struct
         };
 
         self.builder.ir().meta.get_struct_type_id(name, fields, specialization).into()
