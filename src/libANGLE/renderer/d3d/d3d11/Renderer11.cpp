@@ -4091,7 +4091,7 @@ angle::Result Renderer11::getVertexSpaceRequired(const gl::Context *context,
                                                  const gl::VertexBinding &binding,
                                                  size_t count,
                                                  GLsizei instances,
-                                                 GLuint baseInstance,
+                                                 uint64_t baseInstance,
                                                  unsigned int *bytesRequiredOut) const
 {
     if (!attrib.enabled)
@@ -4100,18 +4100,17 @@ angle::Result Renderer11::getVertexSpaceRequired(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    unsigned int elementCount  = 0;
+    size_t elementCount        = 0;
     const unsigned int divisor = binding.getDivisor();
     if (instances == 0 || divisor == 0)
     {
-        // This could be a clipped cast.
-        elementCount = gl::clampCast<unsigned int>(count);
+        elementCount = count;
     }
     else
     {
         // Round up to divisor, if possible
-        elementCount =
-            UnsignedCeilDivide(static_cast<unsigned int>(instances + baseInstance), divisor);
+        elementCount = static_cast<size_t>(UnsignedCeilDivide64(
+            static_cast<uint64_t>(instances) + baseInstance, static_cast<uint64_t>(divisor)));
     }
 
     ASSERT(elementCount > 0);
@@ -4122,11 +4121,13 @@ angle::Result Renderer11::getVertexSpaceRequired(const gl::Context *context,
     const d3d11::DXGIFormatSize &dxgiFormatInfo =
         d3d11::GetDXGIFormatSizeInfo(vertexFormatInfo.nativeFormat);
     unsigned int elementSize = dxgiFormatInfo.pixelBytes;
-    bool check = (elementSize > std::numeric_limits<unsigned int>::max() / elementCount);
-    ANGLE_CHECK(GetImplAs<Context11>(context), !check,
+
+    angle::CheckedNumeric<unsigned int> checkedByteCount =
+        angle::CheckedNumeric<size_t>(elementCount) * elementSize;
+    ANGLE_CHECK(GetImplAs<Context11>(context), checkedByteCount.IsValid(),
                 "New vertex buffer size would result in an overflow.", GL_OUT_OF_MEMORY);
 
-    *bytesRequiredOut = elementSize * elementCount;
+    *bytesRequiredOut = checkedByteCount.ValueOrDie();
     return angle::Result::Continue;
 }
 
