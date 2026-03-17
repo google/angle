@@ -37,6 +37,19 @@
 // ES 3.2 tests are skipped on SwS.
 376899587 VULKAN SWIFTSHADER : */ES3_2* = SKIP
 
+// sRGB vs SKIP_DECODE vs texelFetch bugs
+493505759 VULKAN : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
+493505759 VULKAN : SRGBTextureTestES3.SRGBDecodeTexelFetchInHelper/* = SKIP
+493505759 VULKAN : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStruct/* = SKIP
+493505759 LINUX INTEL OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
+493505759 LINUX AMD OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
+493505759 WIN INTEL OPENGL : SRGBTextureTestES31.SRGBDecodeTexelFetchArrayDynamicIndex/* = SKIP
+493505759 PIXEL4ORXL GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
+493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
+493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchInHelper/* = SKIP
+493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStruct/* = SKIP
+
+
 // Advanced blend ops currently fail on Windows/Intel.
 376899587 WIN INTEL VULKAN : AdvancedBlendTest.*/* = SKIP
 
@@ -208,7 +221,6 @@
 42264596 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
 // Crashes when compiling the shader
 42264699 LINUX INTEL OPENGL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
-1230024 LINUX AMD GLES : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 1230024 LINUX AMD OPENGL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 42264716 LINUX AMD OPENGL : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
 42264479 LINUX NVIDIA VULKAN : MultithreadingTest.MultiContextClear/* = SKIP
@@ -409,6 +421,9 @@
 42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetch/* = SKIP
 42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchArray/* = SKIP
 42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBSkipEncodeAndDecodeInGenerateMipmap/* = SKIP
+42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
+42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchInHelper/* = SKIP
+42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStruct/* = SKIP
 42266214 MAC APPLE OPENGL : Texture2DTestES3.SampleThenAddLevel0ThenSampleAgain/* = SKIP
 42266214 MAC APPLE OPENGL : TextureUploadFormatTest_ES3.AllWithPBO/* = SKIP
 
