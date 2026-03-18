@@ -330,19 +330,8 @@ ShShaderOutput GetShaderOutputType(const angle::FeaturesGL &features, const Func
         {
             return SH_GLSL_330_CORE_OUTPUT;
         }
-        if (functions->isAtLeastGL(gl::Version(3, 2)))
-        {
-            return SH_GLSL_150_CORE_OUTPUT;
-        }
-        if (functions->isAtLeastGL(gl::Version(3, 1)))
-        {
-            return SH_GLSL_140_OUTPUT;
-        }
-        if (functions->isAtLeastGL(gl::Version(3, 0)))
-        {
-            return SH_GLSL_130_OUTPUT;
-        }
-        return SH_GLSL_COMPATIBILITY_OUTPUT;
+        ASSERT(functions->isAtLeastGL(gl::Version(3, 2)));
+        return SH_GLSL_150_CORE_OUTPUT;
     }
     if (functions->standard == STANDARD_GL_ES)
     {
