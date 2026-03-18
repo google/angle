@@ -15777,6 +15777,71 @@ void main()
     glDeleteProgram(program);
 }
 
+// Test pragma STDGL invariant all with I/O blocks
+TEST_P(GLSLTest_ES31, IOBlockInvariantAll)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+
+#pragma STDGL invariant(all)
+
+in highp vec4 position;
+
+out VSBlock
+{
+    vec4 a;
+    vec4 b[2];
+} blockOut;
+
+void main()
+{
+    blockOut.a = vec4(0.15, 0.18, 0.21, 0.24);
+    blockOut.b[0] = vec4(0.27, 0.30, 0.33, 0.36);
+    blockOut.b[1] = vec4(0.39, 0.42, 0.45, 0.48);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+
+layout(location = 0) out mediump vec4 color;
+
+in VSBlock
+{
+    vec4 a;
+    vec4 b[2];
+} blockIn;
+
+bool isEq(vec4 a, vec4 b) { return all(lessThan(abs(a-b), vec4(0.001))); }
+
+void main()
+{
+    bool passR = isEq(blockIn.a, vec4(0.15, 0.18, 0.21, 0.24));
+    bool passG = isEq(blockIn.b[0], vec4(0.27, 0.30, 0.33, 0.36)) &&
+                 isEq(blockIn.b[1], vec4(0.39, 0.42, 0.45, 0.48));
+
+    color = vec4(passR, passG, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    EXPECT_GL_NO_ERROR();
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+
+    drawQuad(program, "position", 0);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
 // Test varying packing in presence of multiple I/O blocks
 TEST_P(GLSLTest_ES31, MultipleIOBlocks)
 {

@@ -4746,7 +4746,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
     const ImmutableString &identifier)
 {
     TType *type = new TType(publicType);
-    if (mCompileOptions.flattenPragmaSTDGLInvariantAll &&
+    if ((mCompileOptions.flattenPragmaSTDGLInvariantAll || mCompileOptions.useIR) &&
         mDirectiveHandler.pragma().stdgl.invariantAll)
     {
         TQualifier qualifier = type->getQualifier();
@@ -6548,6 +6548,12 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         if (fieldType->isInvariant() && !isOutputShaderIoBlock)
         {
             error(field->line(), "invalid qualifier on interface block member", "invariant");
+        }
+        // Set invariant on output I/O blocks if invariant(all) is globally specified
+        if (isOutputShaderIoBlock && mDirectiveHandler.pragma().stdgl.invariantAll &&
+            (mCompileOptions.flattenPragmaSTDGLInvariantAll || mCompileOptions.useIR))
+        {
+            fieldType->setInvariant(true);
         }
 
         // check layout qualifiers
