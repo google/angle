@@ -760,6 +760,12 @@ void GenerateCaps(const FunctionsGL *functions,
     // Start by assuming ES3.1 support and work down
     *maxSupportedESVersion = gl::Version(3, 1);
 
+    // Desktop GL below 3.2 is not supported
+    if (functions->standard == STANDARD_GL_DESKTOP && !functions->isAtLeastGL(gl::Version(3, 2)))
+    {
+        LimitVersion(maxSupportedESVersion, gl::Version(0, 0));
+    }
+
     // Texture format support checks
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (GLenum internalFormat : allFormats)
