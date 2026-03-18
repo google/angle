@@ -45,7 +45,7 @@ using SpecConstUsageBits = angle::PackedEnumBitSet<vk::SpecConstUsage, uint32_t>
 //
 // Helper function to check if the shader type is GLSL.
 //
-bool IsGLSL130OrNewer(ShShaderOutput output);
+bool IsGLSL150OrNewer(ShShaderOutput output);
 bool IsGLSL420OrNewer(ShShaderOutput output);
 bool IsGLSL410OrOlder(ShShaderOutput output);
 

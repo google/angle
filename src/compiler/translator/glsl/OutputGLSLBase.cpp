@@ -384,7 +384,7 @@ const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
                 break;
         }
     }
-    if (sh::IsGLSL130OrNewer(mOutput))
+    if (sh::IsGLSL150OrNewer(mOutput))
     {
         switch (qualifier)
         {
@@ -408,7 +408,7 @@ const char *TOutputGLSLBase::mapQualifierToString(TQualifier qualifier)
         // gl_ClipDistance / gl_CullDistance require different qualifiers based on shader type.
         case EvqClipDistance:
         case EvqCullDistance:
-            return (sh::IsGLSL130OrNewer(mOutput) || mShaderVersion > 100)
+            return (sh::IsGLSL150OrNewer(mOutput) || mShaderVersion > 100)
                        ? (mShaderType == GL_FRAGMENT_SHADER ? "in" : "out")
                        : "varying";
 

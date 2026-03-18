@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 405
+#define ANGLE_SH_VERSION 406
 
 enum ShShaderSpec
 {
@@ -50,10 +50,6 @@ enum ShShaderOutput
     SH_ESSL_OUTPUT,
 
     // GLSL output only supported in some configurations.
-    SH_GLSL_COMPATIBILITY_OUTPUT,
-    // Note: GL introduced core profiles in 1.5.
-    SH_GLSL_130_OUTPUT,
-    SH_GLSL_140_OUTPUT,
     SH_GLSL_150_CORE_OUTPUT,
     SH_GLSL_330_CORE_OUTPUT,
     SH_GLSL_400_CORE_OUTPUT,

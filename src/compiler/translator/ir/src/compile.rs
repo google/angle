@@ -18,9 +18,6 @@ mod ffi {
     enum OutputLanguage {
         Null,
         Essl,
-        GlslCompatibility,
-        Glsl130,
-        Glsl140,
         Glsl150Core,
         Glsl330Core,
         Glsl400Core,
@@ -291,10 +288,7 @@ unsafe fn generate_ast(
             #[cfg(not(angle_enable_essl))]
             panic!("Internal error: ESSL generator is not built");
         }
-        OutputLanguage::GlslCompatibility
-        | OutputLanguage::Glsl130
-        | OutputLanguage::Glsl140
-        | OutputLanguage::Glsl150Core
+        OutputLanguage::Glsl150Core
         | OutputLanguage::Glsl330Core
         | OutputLanguage::Glsl400Core
         | OutputLanguage::Glsl410Core

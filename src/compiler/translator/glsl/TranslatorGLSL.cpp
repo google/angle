@@ -28,6 +28,8 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
                                const ShCompileOptions &compileOptions,
                                PerformanceDiagnostics * /*perfDiagnostics*/)
 {
+    ASSERT(sh::IsGLSL150OrNewer(getOutputType()));
+
     TInfoSinkBase &sink = getInfoSink().obj;
 
     // Write GLSL version.
@@ -142,7 +144,6 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
         const bool mayHaveESSL1SecondaryOutputs =
             IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_blend_func_extended) &&
             getShaderVersion() == 100;
-        const bool declareGLFragmentOutputs = IsGLSL130OrNewer(getOutputType());
 
         bool hasGLFragColor          = false;
         bool hasGLFragData           = false;
@@ -151,20 +152,17 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
 
         for (const auto &outputVar : mOutputVariables)
         {
-            if (declareGLFragmentOutputs)
+            if (outputVar.name == "gl_FragColor")
             {
-                if (outputVar.name == "gl_FragColor")
-                {
-                    ASSERT(!hasGLFragColor);
-                    hasGLFragColor = true;
-                    continue;
-                }
-                else if (outputVar.name == "gl_FragData")
-                {
-                    ASSERT(!hasGLFragData);
-                    hasGLFragData = true;
-                    continue;
-                }
+                ASSERT(!hasGLFragColor);
+                hasGLFragColor = true;
+                continue;
+            }
+            else if (outputVar.name == "gl_FragData")
+            {
+                ASSERT(!hasGLFragData);
+                hasGLFragData = true;
+                continue;
             }
             if (mayHaveESSL1SecondaryOutputs)
             {
@@ -231,23 +229,18 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
 
 bool TranslatorGLSL::shouldFlattenPragmaStdglInvariantAll()
 {
-    // Required when outputting to any GLSL version greater than 1.20, but since ANGLE doesn't
-    // translate to that version, return true for the next higher version.
-    return IsGLSL130OrNewer(getOutputType());
+    // Required when outputting to any GLSL version greater than 1.20, but since ANGLE always
+    // translates to at least version 1.50, return true.
+    return true;
 }
 
 void TranslatorGLSL::writeVersion(TIntermNode *root)
 {
-    TVersionGLSL versionGLSL(getShaderType(), getPragma(), getOutputType());
-    root->traverse(&versionGLSL);
-    int version = versionGLSL.getVersion();
-    // We need to write version directive only if it is greater than 110.
-    // If there is no version directive in the shader, 110 is implied.
-    if (version > 110)
-    {
-        TInfoSinkBase &sink = getInfoSink().obj;
-        sink << "#version " << version << "\n";
-    }
+    int version = ShaderOutputTypeToGLSLVersion(getOutputType());
+    ASSERT(version >= GLSL_VERSION_150);
+
+    TInfoSinkBase &sink = getInfoSink().obj;
+    sink << "#version " << version << "\n";
 }
 
 void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root,
@@ -264,30 +257,6 @@ void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root,
         if (iter.second == EBhUndefined)
         {
             continue;
-        }
-
-        if (getOutputType() == SH_GLSL_COMPATIBILITY_OUTPUT)
-        {
-            // For GLSL output, we don't need to emit most extensions explicitly,
-            // but some we need to translate in GL compatibility profile.
-            if (iter.first == TExtension::EXT_shader_texture_lod)
-            {
-                sink << "#extension GL_ARB_shader_texture_lod : " << GetBehaviorString(iter.second)
-                     << "\n";
-            }
-
-            if (iter.first == TExtension::EXT_draw_buffers)
-            {
-                sink << "#extension GL_ARB_draw_buffers : " << GetBehaviorString(iter.second)
-                     << "\n";
-            }
-
-            if (iter.first == TExtension::EXT_geometry_shader ||
-                iter.first == TExtension::OES_geometry_shader)
-            {
-                sink << "#extension GL_ARB_geometry_shader4 : " << GetBehaviorString(iter.second)
-                     << "\n";
-            }
         }
 
         const bool isMultiview =
@@ -379,7 +348,7 @@ void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root,
     // Need to enable gpu_shader5 to have index constant sampler array indexing
     if (usesGPUShader5)
     {
-        if (getOutputType() >= SH_GLSL_COMPATIBILITY_OUTPUT &&
+        if (getOutputType() >= SH_GLSL_150_CORE_OUTPUT &&
             getOutputType() < SH_GLSL_400_CORE_OUTPUT && getShaderVersion() == 100)
         {
             // Don't use "require" on to avoid breaking WebGL 1 on drivers that silently
@@ -399,8 +368,7 @@ void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root,
 
     if (usesTextureCubeMapArray)
     {
-        if (getOutputType() >= SH_GLSL_COMPATIBILITY_OUTPUT &&
-            getOutputType() < SH_GLSL_400_CORE_OUTPUT)
+        if (getOutputType() >= SH_GLSL_150_CORE_OUTPUT && getOutputType() < SH_GLSL_400_CORE_OUTPUT)
         {
             sink << "#extension GL_ARB_texture_cube_map_array : enable\n";
         }
@@ -413,8 +381,7 @@ void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root,
 
     if (usesTextureBuffer)
     {
-        if (getOutputType() >= SH_GLSL_COMPATIBILITY_OUTPUT &&
-            getOutputType() < SH_GLSL_400_CORE_OUTPUT)
+        if (getOutputType() >= SH_GLSL_150_CORE_OUTPUT && getOutputType() < SH_GLSL_400_CORE_OUTPUT)
         {
             sink << "#extension GL_ARB_texture_buffer_objects : enable\n";
         }

@@ -303,10 +303,9 @@ struct UniformSortComparator
 
 }  // anonymous namespace
 
-bool IsGLSL130OrNewer(ShShaderOutput output)
+bool IsGLSL150OrNewer(ShShaderOutput output)
 {
-    return (output == SH_GLSL_130_OUTPUT || output == SH_GLSL_140_OUTPUT ||
-            output == SH_GLSL_150_CORE_OUTPUT || output == SH_GLSL_330_CORE_OUTPUT ||
+    return (output == SH_GLSL_150_CORE_OUTPUT || output == SH_GLSL_330_CORE_OUTPUT ||
             output == SH_GLSL_400_CORE_OUTPUT || output == SH_GLSL_410_CORE_OUTPUT ||
             output == SH_GLSL_420_CORE_OUTPUT || output == SH_GLSL_430_CORE_OUTPUT ||
             output == SH_GLSL_440_CORE_OUTPUT || output == SH_GLSL_450_CORE_OUTPUT);
@@ -320,8 +319,7 @@ bool IsGLSL420OrNewer(ShShaderOutput output)
 
 bool IsGLSL410OrOlder(ShShaderOutput output)
 {
-    return (output == SH_GLSL_130_OUTPUT || output == SH_GLSL_140_OUTPUT ||
-            output == SH_GLSL_150_CORE_OUTPUT || output == SH_GLSL_330_CORE_OUTPUT ||
+    return (output == SH_GLSL_150_CORE_OUTPUT || output == SH_GLSL_330_CORE_OUTPUT ||
             output == SH_GLSL_400_CORE_OUTPUT || output == SH_GLSL_410_CORE_OUTPUT);
 }
 
@@ -1285,12 +1283,6 @@ ShCompileOptions TCompiler::adjustOptions(const ShCompileOptions &compileOptions
     {
         compileOptions.clampFragDepth = false;
         compileOptions.retainInactiveFragmentOutputs = false;
-    }
-
-    // gl_Position should always be written in GLSL compatibility output mode.
-    if (mOutputType == SH_GLSL_COMPATIBILITY_OUTPUT && mShaderType == GL_VERTEX_SHADER)
-    {
-        compileOptions.initGLPosition = true;
     }
 
 #if !defined(ANGLE_IR)
