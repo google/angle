@@ -272,7 +272,7 @@
 448658624 NVIDIA OpenGL : GLSLTest_ES31.ConstantPrecisionPropagation/* = SKIP
 448658624 NVIDIA GLES : GLSLTest_ES31.ConstantPrecisionPropagation/* = SKIP
 42265449 LINUX NVIDIA OpenGL : MipmapTestES31.GenerateLowerMipsWithDraw/* = SKIP
-42265775 LINUX NVIDIA OpenGL : CopyTexImageTest.RGBAToRGB/ES2_OpenGL_EmulateCopyTexImage2DFromRenderbuffers = SKIP
+42265775 LINUX NVIDIA OpenGL : CopyTexImageTest.RGBAToRGB/*_EmulateCopyTexImage2DFromRenderbuffers = SKIP
 42265842 LINUX NVIDIA OpenGL : FramebufferTest_ES3.SurfaceDimensionsChangeAndFragCoord/* = SKIP
 42266866 NVIDIA OPENGL : GLSLTest_ES3.LargeInterfaceBlockArray/* = SKIP
 42266866 NVIDIA OPENGL : GLSLTest_ES3.LargeInterfaceBlockNestedArray/* = SKIP
@@ -402,7 +402,7 @@
 410601694 MAC NVIDIA OPENGL : Texture2DTestES3.SampleThenAddLevel0ThenSampleAgain/* = SKIP
 410601694 MAC AMD OPENGL : Texture2DTestES3.SampleThenAddLevel0ThenSampleAgain/* = SKIP
 409821658 MAC NVIDIA OPENGL : SRGBTextureTestES3.SRGBSkipEncodeAndDecodeInGenerateMipmap/ES3_OpenGL* = SKIP
-435683799 MAC OPENGL : CopyTexImageTest.MixedCubeMapFormats/ES2_OpenGL* = SKIP
+435683799 MAC OPENGL : CopyTexImageTest.MixedCubeMapFormats/* = SKIP
 448658625 MAC OPENGL : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
 448658630 MAC OPENGL : GLSLTestLoops.ForContinueInConstSwitch/* = SKIP
 448658630 MAC OPENGL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
@@ -478,7 +478,7 @@
 
 // The workaround is not intended to be enabled in this configuration so
 // skip it as the failure is likely a driver bug.
-40096747 PIXEL4ORXL GLES : CopyTexImageTestES3.CopyTexSubImageFromTexture3D/ES3_OpenGLES_EmulateCopyTexImage2D = SKIP
+40096747 PIXEL4ORXL GLES : CopyTexImageTest.CopyTexImageFromTexture3D/*_EmulateCopyTexImage2D = SKIP
 
 // Confirmed driver bug
 352496176 PIXEL4ORXL GLES : CopyTexImageTestES3.CopyTexSubImage3DFromTexture3D/* = SKIP
@@ -550,7 +550,8 @@
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFold/* = SKIP
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
 
-494938700 WIN D3D11 : CopyTexImageTestES3.CopyTexSubImageFromTexture3D/* = SKIP
+494938700 WIN D3D11 : CopyTexImageTest.CopyTexImageFromTexture3D/* = SKIP
+494938700 WIN D3D11 : CopyTexImageTest.CopyTexSubImageFromTexture3D/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -604,7 +605,7 @@
 42265770 PIXEL4ORXL GLES : BlitFramebufferTest.Blit2DArray/* = SKIP
 42265770 PIXEL4ORXL GLES : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
 42265770 PIXEL4ORXL GLES : BlitFramebufferTest.Blit2DArrayTo3D/* = SKIP
-42264513 PIXEL4ORXL GLES : CopyTexImageTest.CopyTexSubImageFrom3DTexureOES/* = SKIP
+42264513 PIXEL4ORXL GLES : CopyTexImageTest.CopyTexSubImageFromTexture3D/* = SKIP
 42264513 PIXEL4ORXL GLES : CubeMapTextureTest.SampleCoordinateTransform/* = SKIP
 42265301 PIXEL4ORXL GLES : GLSLTest_ES31.StructAndArrayEqualOperator/* = SKIP
 452919815 PIXEL4ORXL GLES : GLSLTest_ES3.VaryingAnonymousStructEquality/* = SKIP
