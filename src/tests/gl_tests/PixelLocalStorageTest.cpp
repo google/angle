@@ -8144,6 +8144,15 @@ TEST_P(PixelLocalStorageValidationTest, ReadPixels)
         EXPECT_GL_NO_ERROR();
         EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
         beginPLS();
+        if (IsGLExtensionEnabled("GL_ANGLE_robust_client_memory"))
+        {
+            glReadPixelsRobustANGLE(0, 0, W, H, GL_RGBA, GL_UNSIGNED_BYTE,
+                                    static_cast<GLsizei>(pixelData.size()), nullptr, nullptr,
+                                    nullptr, pixelData.data());
+            EXPECT_GL_NO_ERROR();
+            EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+            beginPLS();
+        }
         glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, W, H, 0);
         EXPECT_GL_NO_ERROR();
         EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);

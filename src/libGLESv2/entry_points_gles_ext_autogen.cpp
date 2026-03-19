@@ -3170,6 +3170,10 @@ void GL_APIENTRY GL_ReadPixelsRobustANGLE(GLint x,
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -10773,6 +10777,10 @@ void GL_APIENTRY GL_ReadnPixelsEXT(GLint x,
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -15136,6 +15144,10 @@ void GL_APIENTRY GL_ReadnPixelsKHR(GLint x,
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {

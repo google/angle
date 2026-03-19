@@ -1801,6 +1801,10 @@ void GL_APIENTRY GL_ReadnPixels(GLint x,
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
