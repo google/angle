@@ -1082,20 +1082,13 @@ void GenerateCaps(const FunctionsGL *functions,
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
     }
 
-    if (functions->standard == STANDARD_GL_DESKTOP &&
-        (functions->profile & GL_CONTEXT_CORE_PROFILE_BIT) != 0)
+    if (functions->standard == STANDARD_GL_DESKTOP || functions->isAtLeastGLES(gl::Version(3, 0)))
     {
         caps->maxVaryingComponents = QuerySingleGLInt(functions, GL_MAX_VERTEX_OUTPUT_COMPONENTS);
     }
-    else if (functions->standard == STANDARD_GL_DESKTOP ||
-             functions->isAtLeastGLES(gl::Version(2, 0)))
+    else if (functions->isAtLeastGLES(gl::Version(2, 0)))
     {
-        caps->maxVaryingComponents = QuerySingleGLInt(functions, GL_MAX_VARYING_COMPONENTS);
-    }
-    else if (functions->standard == STANDARD_GL_DESKTOP)
-    {
-        caps->maxVaryingComponents = QuerySingleGLInt(functions, GL_MAX_VARYING_FLOATS);
-        LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
+        caps->maxVaryingComponents = QuerySingleGLInt(functions, GL_MAX_VARYING_VECTORS) * 4;
     }
     else
     {
