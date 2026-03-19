@@ -609,7 +609,7 @@ void RobustResourceInitTest::checkNonZeroPixels3D(GLTexture *texture,
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture->get(), 0,
                               textureLayer);
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     checkFramebufferNonZeroPixels(skipX, skipY, skipWidth, skipHeight, skip);
 }
@@ -1958,6 +1958,40 @@ TEST_P(RobustResourceInitTestES3, Texture2DArray)
     {
         checkNonZeroPixels3D(&texture, 0, 0, 0, 0, layer, GLColor::transparentBlack);
     }
+}
+
+// Test that robust init is done correctly for array textures if a layer is cleared with glClear.
+TEST_P(RobustResourceInitTestES3, Texture2DArrayPartiallyCleared)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr int kSize       = 1024;
+    constexpr int kLayers     = 8;
+    constexpr int kClearLayer = 3;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kSize, kSize, kLayers, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+
+    // Clear one layer, expect the other layers to read back as transparent black.
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, kClearLayer);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    for (int layer = 0; layer < kLayers; ++layer)
+    {
+        if (layer != kClearLayer)
+        {
+            checkNonZeroPixels3D(&texture, 0, 0, 0, 0, layer, GLColor::transparentBlack);
+        }
+    }
+    checkNonZeroPixels3D(&texture, 0, 0, kSize, kSize, kClearLayer, GLColor::green);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Test that using TexStorage2D followed by CompressedSubImage works with robust init.
