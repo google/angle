@@ -1798,57 +1798,47 @@ bool ValidatePLSCommon(const Context *context,
 bool ValidateGetFramebufferPixelLocalStorageParameterBase(const Context *context,
                                                           angle::EntryPoint entryPoint,
                                                           GLint plane,
-                                                          GLenum pname,
+                                                          PlaneParameter pnamePacked,
                                                           const void *params,
                                                           GLsizei *outNumParams)
 {
-    if (context->getState().getDrawFramebuffer()->id().value == 0)
+    if (ANGLE_UNLIKELY(context->getState().getDrawFramebuffer()->id().value == 0))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION, kPLSDefaultFramebufferBound);
         return false;
     }
 
-    if (plane < 0)
+    if (ANGLE_UNLIKELY(plane < 0))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSPlaneLessThanZero);
         return false;
     }
 
-    if (plane >= static_cast<GLint>(context->getCaps().maxPixelLocalStoragePlanes))
+    if (ANGLE_UNLIKELY(plane >= static_cast<GLint>(context->getCaps().maxPixelLocalStoragePlanes)))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSPlaneOutOfRange);
         return false;
     }
 
-    switch (pname)
+    if (ANGLE_UNLIKELY(pnamePacked == PlaneParameter::InvalidEnum))
     {
-        case GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
-        case GL_PIXEL_LOCAL_USAGE_ANGLE:
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
-            break;
-        default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
-            return false;
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kParameterNameUnknown);
+        return false;
     }
 
-    if (params == nullptr)
+    if (ANGLE_UNLIKELY(params == nullptr))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kParamsNULL);
         return false;
     }
 
     if (outNumParams != nullptr)
     {
-        switch (pname)
+        switch (pnamePacked)
         {
-            case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
-            case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
-            case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+            case PlaneParameter::ClearValueFloat:
+            case PlaneParameter::ClearValueInt:
+            case PlaneParameter::ClearValueUnsignedInt:
                 *outNumParams = 4;
                 break;
             default:
@@ -1863,14 +1853,14 @@ bool ValidateGetFramebufferPixelLocalStorageParameterBase(const Context *context
 bool ValidateGetFramebufferPixelLocalStorageParameterRobustBase(const Context *context,
                                                                 angle::EntryPoint entryPoint,
                                                                 GLint plane,
-                                                                GLenum pname,
+                                                                PlaneParameter pnamePacked,
                                                                 GLsizei paramCount,
                                                                 const void *params)
 {
     // Make sure ValidateGetFramebufferPixelLocalStorageParameterBase sets numParams
     GLsizei numParams = std::numeric_limits<GLsizei>::max();
-    if (!ValidateGetFramebufferPixelLocalStorageParameterBase(context, entryPoint, plane, pname,
-                                                              params, &numParams))
+    if (!ValidateGetFramebufferPixelLocalStorageParameterBase(context, entryPoint, plane,
+                                                              pnamePacked, params, &numParams))
     {
         return false;
     }
@@ -2519,67 +2509,67 @@ bool ValidateFramebufferPixelLocalStorageRestoreANGLE(const Context *context,
 bool ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(const Context *context,
                                                              angle::EntryPoint entryPoint,
                                                              GLint plane,
-                                                             GLenum pname,
+                                                             PlaneParameter pnamePacked,
                                                              const GLfloat *params)
 {
-    return ValidateGetFramebufferPixelLocalStorageParameterBase(context, entryPoint, plane, pname,
-                                                                params, nullptr);
+    return ValidateGetFramebufferPixelLocalStorageParameterBase(context, entryPoint, plane,
+                                                                pnamePacked, params, nullptr);
 }
 
 bool ValidateGetFramebufferPixelLocalStorageParameterivANGLE(const Context *context,
                                                              angle::EntryPoint entryPoint,
                                                              GLint plane,
-                                                             GLenum pname,
+                                                             PlaneParameter pnamePacked,
                                                              const GLint *params)
 {
-    return ValidateGetFramebufferPixelLocalStorageParameterBase(context, entryPoint, plane, pname,
-                                                                params, nullptr);
+    return ValidateGetFramebufferPixelLocalStorageParameterBase(context, entryPoint, plane,
+                                                                pnamePacked, params, nullptr);
 }
 
 bool ValidateGetFramebufferPixelLocalStorageParameteruivANGLE(const Context *context,
                                                               angle::EntryPoint entryPoint,
                                                               GLint plane,
-                                                              GLenum pname,
+                                                              PlaneParameter pnamePacked,
                                                               const GLuint *params)
 {
-    return ValidateGetFramebufferPixelLocalStorageParameterBase(context, entryPoint, plane, pname,
-                                                                params, nullptr);
+    return ValidateGetFramebufferPixelLocalStorageParameterBase(context, entryPoint, plane,
+                                                                pnamePacked, params, nullptr);
 }
 
 bool ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(const Context *context,
                                                                    angle::EntryPoint entryPoint,
                                                                    GLint plane,
-                                                                   GLenum pname,
+                                                                   PlaneParameter pnamePacked,
                                                                    GLsizei paramCount,
                                                                    const GLsizei *length,
                                                                    const GLfloat *params)
 {
-    return ValidateGetFramebufferPixelLocalStorageParameterRobustBase(context, entryPoint, plane,
-                                                                      pname, paramCount, params);
+    return ValidateGetFramebufferPixelLocalStorageParameterRobustBase(
+        context, entryPoint, plane, pnamePacked, paramCount, params);
 }
 
 bool ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(const Context *context,
                                                                    angle::EntryPoint entryPoint,
                                                                    GLint plane,
-                                                                   GLenum pname,
+                                                                   PlaneParameter pnamePacked,
                                                                    GLsizei paramCount,
                                                                    const GLsizei *length,
                                                                    const GLint *params)
 {
-    return ValidateGetFramebufferPixelLocalStorageParameterRobustBase(context, entryPoint, plane,
-                                                                      pname, paramCount, params);
+    return ValidateGetFramebufferPixelLocalStorageParameterRobustBase(
+        context, entryPoint, plane, pnamePacked, paramCount, params);
 }
 
 bool ValidateGetFramebufferPixelLocalStorageParameteruivRobustANGLE(const Context *context,
                                                                     angle::EntryPoint entryPoint,
                                                                     GLint plane,
-                                                                    GLenum pname,
+                                                                    PlaneParameter pnamePacked,
                                                                     GLsizei paramCount,
                                                                     const GLsizei *length,
                                                                     const GLuint *params)
 {
-    return ValidateGetFramebufferPixelLocalStorageParameterRobustBase(context, entryPoint, plane,
-                                                                      pname, paramCount, params);
+    return ValidateGetFramebufferPixelLocalStorageParameterRobustBase(
+        context, entryPoint, plane, pnamePacked, paramCount, params);
 }
 
 bool ValidateFramebufferFetchBarrierEXT(const Context *context, angle::EntryPoint entryPoint)

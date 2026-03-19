@@ -165,6 +165,7 @@ enum class ParamType
     TMemoryObjectIDPointer,
     TObjectType,
     TPipeInfo,
+    TPlaneParameter,
     TPlatformInfo,
     TPointParameter,
     TPolygonMode,
@@ -281,7 +282,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 244;
+constexpr uint32_t kParamTypeCount = 245;
 
 union ParamValue
 {
@@ -397,6 +398,7 @@ union ParamValue
     const gl::MemoryObjectID *MemoryObjectIDConstPointerVal;
     gl::MemoryObjectID *MemoryObjectIDPointerVal;
     egl::ObjectType ObjectTypeVal;
+    gl::PlaneParameter PlaneParameterVal;
     gl::PointParameter PointParameterVal;
     gl::PolygonMode PolygonModeVal;
     gl::PrimitiveMode PrimitiveModeVal;
@@ -1248,6 +1250,13 @@ template <>
 inline egl::ObjectType GetParamVal<ParamType::TObjectType, egl::ObjectType>(const ParamValue &value)
 {
     return value.ObjectTypeVal;
+}
+
+template <>
+inline gl::PlaneParameter GetParamVal<ParamType::TPlaneParameter, gl::PlaneParameter>(
+    const ParamValue &value)
+{
+    return value.PlaneParameterVal;
 }
 
 template <>
@@ -2431,6 +2440,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TObjectType, T>(value);
         case ParamType::TPipeInfo:
             return GetParamVal<ParamType::TPipeInfo, T>(value);
+        case ParamType::TPlaneParameter:
+            return GetParamVal<ParamType::TPlaneParameter, T>(value);
         case ParamType::TPlatformInfo:
             return GetParamVal<ParamType::TPlatformInfo, T>(value);
         case ParamType::TPointParameter:
@@ -3359,6 +3370,13 @@ template <>
 inline void SetParamVal<ParamType::TObjectType>(egl::ObjectType valueIn, ParamValue *valueOut)
 {
     valueOut->ObjectTypeVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TPlaneParameter>(gl::PlaneParameter valueIn,
+                                                    ParamValue *valueOut)
+{
+    valueOut->PlaneParameterVal = valueIn;
 }
 
 template <>
@@ -4648,6 +4666,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TPipeInfo:
             SetParamVal<ParamType::TPipeInfo>(valueIn, valueOut);
+            break;
+        case ParamType::TPlaneParameter:
+            SetParamVal<ParamType::TPlaneParameter>(valueIn, valueOut);
             break;
         case ParamType::TPlatformInfo:
             SetParamVal<ParamType::TPlatformInfo>(valueIn, valueOut);

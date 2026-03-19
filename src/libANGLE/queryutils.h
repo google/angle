@@ -136,17 +136,17 @@ void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, G
 
 void QueryFramebufferPixelLocalStorageParameterfv(Context *context,
                                                   GLint plane,
-                                                  GLenum pname,
+                                                  PlaneParameter pnamePacked,
                                                   GLsizei *length,
                                                   GLfloat *params);
 void QueryFramebufferPixelLocalStorageParameteriv(Context *context,
                                                   GLint plane,
-                                                  GLenum pname,
+                                                  PlaneParameter pnamePacked,
                                                   GLsizei *length,
                                                   GLint *params);
 void QueryFramebufferPixelLocalStorageParameteruiv(Context *context,
                                                    GLint plane,
-                                                   GLenum pname,
+                                                   PlaneParameter pnamePacked,
                                                    GLsizei *length,
                                                    GLuint *params);
 

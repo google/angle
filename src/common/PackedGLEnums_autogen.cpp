@@ -1473,6 +1473,93 @@ std::ostream &operator<<(std::ostream &os, MatrixType value)
 }
 
 template <>
+PlaneParameter FromGLenum<PlaneParameter>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE:
+            return PlaneParameter::InternalFormat;
+        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
+            return PlaneParameter::TextureName;
+        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
+            return PlaneParameter::TextureLevel;
+        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
+            return PlaneParameter::TextureLayer;
+        case GL_PIXEL_LOCAL_USAGE_ANGLE:
+            return PlaneParameter::Usage;
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
+            return PlaneParameter::ClearValueFloat;
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+            return PlaneParameter::ClearValueInt;
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+            return PlaneParameter::ClearValueUnsignedInt;
+        default:
+            return PlaneParameter::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(PlaneParameter from)
+{
+    switch (from)
+    {
+        case PlaneParameter::InternalFormat:
+            return GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE;
+        case PlaneParameter::TextureName:
+            return GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE;
+        case PlaneParameter::TextureLevel:
+            return GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE;
+        case PlaneParameter::TextureLayer:
+            return GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE;
+        case PlaneParameter::Usage:
+            return GL_PIXEL_LOCAL_USAGE_ANGLE;
+        case PlaneParameter::ClearValueFloat:
+            return GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE;
+        case PlaneParameter::ClearValueInt:
+            return GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE;
+        case PlaneParameter::ClearValueUnsignedInt:
+            return GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+std::ostream &operator<<(std::ostream &os, PlaneParameter value)
+{
+    switch (value)
+    {
+        case PlaneParameter::InternalFormat:
+            os << "GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE";
+            break;
+        case PlaneParameter::TextureName:
+            os << "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE";
+            break;
+        case PlaneParameter::TextureLevel:
+            os << "GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE";
+            break;
+        case PlaneParameter::TextureLayer:
+            os << "GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE";
+            break;
+        case PlaneParameter::Usage:
+            os << "GL_PIXEL_LOCAL_USAGE_ANGLE";
+            break;
+        case PlaneParameter::ClearValueFloat:
+            os << "GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE";
+            break;
+        case PlaneParameter::ClearValueInt:
+            os << "GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE";
+            break;
+        case PlaneParameter::ClearValueUnsignedInt:
+            os << "GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE";
+            break;
+        default:
+            os << "GL_INVALID_ENUM";
+            break;
+    }
+    return os;
+}
+
+template <>
 PointParameter FromGLenum<PointParameter>(GLenum from)
 {
     switch (from)

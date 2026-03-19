@@ -375,6 +375,26 @@ MatrixType FromGLenum<MatrixType>(GLenum from);
 GLenum ToGLenum(MatrixType from);
 std::ostream &operator<<(std::ostream &os, MatrixType value);
 
+enum class PlaneParameter : uint8_t
+{
+    InternalFormat        = 0,
+    TextureName           = 1,
+    TextureLevel          = 2,
+    TextureLayer          = 3,
+    Usage                 = 4,
+    ClearValueFloat       = 5,
+    ClearValueInt         = 6,
+    ClearValueUnsignedInt = 7,
+
+    InvalidEnum = 8,
+    EnumCount   = 8,
+};
+
+template <>
+PlaneParameter FromGLenum<PlaneParameter>(GLenum from);
+GLenum ToGLenum(PlaneParameter from);
+std::ostream &operator<<(std::ostream &os, PlaneParameter value);
+
 enum class PointParameter : uint8_t
 {
     PointSizeMin             = 0,

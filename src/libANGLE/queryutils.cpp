@@ -1804,31 +1804,31 @@ void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, G
 template <typename ParamType>
 void QueryFramebufferPixelLocalStorageParameterBase(Context *context,
                                                     GLint plane,
-                                                    GLenum pname,
+                                                    PlaneParameter pnamePacked,
                                                     GLsizei *length,
                                                     ParamType *params)
 {
     const PixelLocalStoragePlane &planeObject =
         context->getState().getDrawFramebuffer()->getPixelLocalStorage(context).getPlane(plane);
-    switch (pname)
+    switch (pnamePacked)
     {
-        case GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
-        case GL_PIXEL_LOCAL_USAGE_ANGLE:
-            if (length != nullptr)
-            {
-                *length = 1;
-            }
-            *params = clampCast<ParamType>(planeObject.getIntegeri(pname));
+        case PlaneParameter::InternalFormat:
+            *params = clampCast<ParamType>(planeObject.getInternalformat());
             break;
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
+        case PlaneParameter::TextureName:
+            *params = clampCast<ParamType>(planeObject.getTextureName());
+            break;
+        case PlaneParameter::TextureLevel:
+            *params = clampCast<ParamType>(planeObject.getTextureLevel());
+            break;
+        case PlaneParameter::TextureLayer:
+            *params = clampCast<ParamType>(planeObject.getTextureLayer());
+            break;
+        case PlaneParameter::Usage:
+            *params = clampCast<ParamType>(planeObject.getUsage());
+            break;
+        case PlaneParameter::ClearValueFloat:
         {
-            if (length != nullptr)
-            {
-                *length = 4;
-            }
             GLfloat p[4];
             planeObject.getClearValuef(p);
             params[0] = clampCast<ParamType>(p[0]);
@@ -1837,12 +1837,8 @@ void QueryFramebufferPixelLocalStorageParameterBase(Context *context,
             params[3] = clampCast<ParamType>(p[3]);
             break;
         }
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+        case PlaneParameter::ClearValueInt:
         {
-            if (length != nullptr)
-            {
-                *length = 4;
-            }
             GLint p[4];
             planeObject.getClearValuei(p);
             params[0] = clampCast<ParamType>(p[0]);
@@ -1851,12 +1847,8 @@ void QueryFramebufferPixelLocalStorageParameterBase(Context *context,
             params[3] = clampCast<ParamType>(p[3]);
             break;
         }
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+        case PlaneParameter::ClearValueUnsignedInt:
         {
-            if (length != nullptr)
-            {
-                *length = 4;
-            }
             GLuint p[4];
             planeObject.getClearValueui(p);
             params[0] = clampCast<ParamType>(p[0]);
@@ -1869,33 +1861,48 @@ void QueryFramebufferPixelLocalStorageParameterBase(Context *context,
             UNREACHABLE();
             break;
     }
+
+    if (length != nullptr)
+    {
+        switch (pnamePacked)
+        {
+            case PlaneParameter::ClearValueFloat:
+            case PlaneParameter::ClearValueInt:
+            case PlaneParameter::ClearValueUnsignedInt:
+                *length = 4;
+                break;
+            default:
+                *length = 1;
+                break;
+        }
+    }
 }
 
 void QueryFramebufferPixelLocalStorageParameterfv(Context *context,
                                                   GLint plane,
-                                                  GLenum pname,
+                                                  PlaneParameter pnamePacked,
                                                   GLsizei *length,
                                                   GLfloat *params)
 {
-    QueryFramebufferPixelLocalStorageParameterBase(context, plane, pname, length, params);
+    QueryFramebufferPixelLocalStorageParameterBase(context, plane, pnamePacked, length, params);
 }
 
 void QueryFramebufferPixelLocalStorageParameteriv(Context *context,
                                                   GLint plane,
-                                                  GLenum pname,
+                                                  PlaneParameter pnamePacked,
                                                   GLsizei *length,
                                                   GLint *params)
 {
-    QueryFramebufferPixelLocalStorageParameterBase(context, plane, pname, length, params);
+    QueryFramebufferPixelLocalStorageParameterBase(context, plane, pnamePacked, length, params);
 }
 
 void QueryFramebufferPixelLocalStorageParameteruiv(Context *context,
                                                    GLint plane,
-                                                   GLenum pname,
+                                                   PlaneParameter pnamePacked,
                                                    GLsizei *length,
                                                    GLuint *params)
 {
-    QueryFramebufferPixelLocalStorageParameterBase(context, plane, pname, length, params);
+    QueryFramebufferPixelLocalStorageParameterBase(context, plane, pnamePacked, length, params);
 }
 
 angle::Result QuerySynciv(const Context *context,

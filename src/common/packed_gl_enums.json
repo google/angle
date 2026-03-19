@@ -121,6 +121,17 @@
         "Projection": "GL_PROJECTION",
         "Texture": "GL_TEXTURE"
     },
+    "PlaneParameter":
+    {
+        "InternalFormat": "GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE",
+        "TextureName": "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE",
+        "TextureLevel": "GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE",
+        "TextureLayer": "GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE",
+        "Usage": "GL_PIXEL_LOCAL_USAGE_ANGLE",
+        "ClearValueFloat": "GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE",
+        "ClearValueInt": "GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE",
+        "ClearValueUnsignedInt": "GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE"
+    },
     "QueryType":
     {
         "AnySamples": "GL_ANY_SAMPLES_PASSED",

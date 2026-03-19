@@ -599,6 +599,24 @@
     "glGetFragDataLocation": {
         "program": "ShaderProgramID"
     },
+    "glGetFramebufferPixelLocalStorageParameterfv": {
+        "pname": "PlaneParameter"
+    },
+    "glGetFramebufferPixelLocalStorageParameteriv": {
+        "pname": "PlaneParameter"
+    },
+    "glGetFramebufferPixelLocalStorageParameteruiv": {
+        "pname": "PlaneParameter"
+    },
+    "glGetFramebufferPixelLocalStorageParameterfvRobust": {
+        "pname": "PlaneParameter"
+    },
+    "glGetFramebufferPixelLocalStorageParameterivRobust": {
+        "pname": "PlaneParameter"
+    },
+    "glGetFramebufferPixelLocalStorageParameteruivRobust": {
+        "pname": "PlaneParameter"
+    },
     "glGetLightfv": {
         "pname": "LightParameter"
     },

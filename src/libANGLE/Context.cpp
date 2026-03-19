@@ -9108,46 +9108,52 @@ void Context::framebufferPixelLocalStorageRestore()
     }
 }
 
-void Context::getFramebufferPixelLocalStorageParameterfv(GLint plane, GLenum pname, GLfloat *params)
+void Context::getFramebufferPixelLocalStorageParameterfv(GLint plane,
+                                                         PlaneParameter pnamePacked,
+                                                         GLfloat *params)
 {
-    QueryFramebufferPixelLocalStorageParameterfv(this, plane, pname, nullptr, params);
+    QueryFramebufferPixelLocalStorageParameterfv(this, plane, pnamePacked, nullptr, params);
 }
 
-void Context::getFramebufferPixelLocalStorageParameteriv(GLint plane, GLenum pname, GLint *params)
+void Context::getFramebufferPixelLocalStorageParameteriv(GLint plane,
+                                                         PlaneParameter pnamePacked,
+                                                         GLint *params)
 {
-    QueryFramebufferPixelLocalStorageParameteriv(this, plane, pname, nullptr, params);
+    QueryFramebufferPixelLocalStorageParameteriv(this, plane, pnamePacked, nullptr, params);
 }
 
-void Context::getFramebufferPixelLocalStorageParameteruiv(GLint plane, GLenum pname, GLuint *params)
+void Context::getFramebufferPixelLocalStorageParameteruiv(GLint plane,
+                                                          PlaneParameter pnamePacked,
+                                                          GLuint *params)
 {
-    QueryFramebufferPixelLocalStorageParameteruiv(this, plane, pname, nullptr, params);
+    QueryFramebufferPixelLocalStorageParameteruiv(this, plane, pnamePacked, nullptr, params);
 }
 
 void Context::getFramebufferPixelLocalStorageParameterfvRobust(GLint plane,
-                                                               GLenum pname,
+                                                               PlaneParameter pnamePacked,
                                                                GLsizei paramCount,
                                                                GLsizei *length,
                                                                GLfloat *params)
 {
-    QueryFramebufferPixelLocalStorageParameterfv(this, plane, pname, length, params);
+    QueryFramebufferPixelLocalStorageParameterfv(this, plane, pnamePacked, length, params);
 }
 
 void Context::getFramebufferPixelLocalStorageParameterivRobust(GLint plane,
-                                                               GLenum pname,
+                                                               PlaneParameter pnamePacked,
                                                                GLsizei paramCount,
                                                                GLsizei *length,
                                                                GLint *params)
 {
-    QueryFramebufferPixelLocalStorageParameteriv(this, plane, pname, length, params);
+    QueryFramebufferPixelLocalStorageParameteriv(this, plane, pnamePacked, length, params);
 }
 
 void Context::getFramebufferPixelLocalStorageParameteruivRobust(GLint plane,
-                                                                GLenum pname,
+                                                                PlaneParameter pnamePacked,
                                                                 GLsizei paramCount,
                                                                 GLsizei *length,
                                                                 GLuint *params)
 {
-    QueryFramebufferPixelLocalStorageParameteruiv(this, plane, pname, length, params);
+    QueryFramebufferPixelLocalStorageParameteruiv(this, plane, pnamePacked, length, params);
 }
 
 void Context::eGLImageTargetTexStorage(GLenum target, egl::ImageID image, const GLint *attrib_list)

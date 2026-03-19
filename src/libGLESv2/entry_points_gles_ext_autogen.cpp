@@ -4993,6 +4993,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint 
 
     if (ANGLE_LIKELY(context != nullptr))
     {
+        PlaneParameter pnamePacked = PackParam<PlaneParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -5007,7 +5008,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint 
                     isCallValid = ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
                         context,
                         angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE,
-                        plane, pname, paramCount, length, params);
+                        plane, pnamePacked, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                     ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5028,11 +5029,11 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint 
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFramebufferPixelLocalStorageParameterfvRobust(plane, pname, paramCount,
-                                                                      length, params);
+            context->getFramebufferPixelLocalStorageParameterfvRobust(plane, pnamePacked,
+                                                                      paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterfvRobustANGLE, isCallValid,
-                         context, plane, pname, paramCount, length, params);
+                         context, plane, pnamePacked, paramCount, length, params);
     }
     else
     {
@@ -5059,6 +5060,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint 
 
     if (ANGLE_LIKELY(context != nullptr))
     {
+        PlaneParameter pnamePacked = PackParam<PlaneParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -5073,7 +5075,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint 
                     isCallValid = ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(
                         context,
                         angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
-                        plane, pname, paramCount, length, params);
+                        plane, pnamePacked, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                     ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5094,11 +5096,11 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint 
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFramebufferPixelLocalStorageParameterivRobust(plane, pname, paramCount,
-                                                                      length, params);
+            context->getFramebufferPixelLocalStorageParameterivRobust(plane, pnamePacked,
+                                                                      paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterivRobustANGLE, isCallValid,
-                         context, plane, pname, paramCount, length, params);
+                         context, plane, pnamePacked, paramCount, length, params);
     }
     else
     {
@@ -5125,6 +5127,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameteruivRobustANGLE(GLint
 
     if (ANGLE_LIKELY(context != nullptr))
     {
+        PlaneParameter pnamePacked = PackParam<PlaneParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -5139,7 +5142,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameteruivRobustANGLE(GLint
                     isCallValid = ValidateGetFramebufferPixelLocalStorageParameteruivRobustANGLE(
                         context,
                         angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameteruivRobustANGLE,
-                        plane, pname, paramCount, length, params);
+                        plane, pnamePacked, paramCount, length, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                     ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5160,11 +5163,11 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameteruivRobustANGLE(GLint
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFramebufferPixelLocalStorageParameteruivRobust(plane, pname, paramCount,
-                                                                       length, params);
+            context->getFramebufferPixelLocalStorageParameteruivRobust(plane, pnamePacked,
+                                                                       paramCount, length, params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameteruivRobustANGLE, isCallValid,
-                         context, plane, pname, paramCount, length, params);
+                         context, plane, pnamePacked, paramCount, length, params);
     }
     else
     {
@@ -5765,6 +5768,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvANGLE(GLint plane,
 
     if (ANGLE_LIKELY(context != nullptr))
     {
+        PlaneParameter pnamePacked = PackParam<PlaneParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -5776,7 +5780,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvANGLE(GLint plane,
 #endif
                 isCallValid = ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(
                     context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvANGLE,
-                    plane, pname, params);
+                    plane, pnamePacked, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5789,10 +5793,10 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvANGLE(GLint plane,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFramebufferPixelLocalStorageParameterfv(plane, pname, params);
+            context->getFramebufferPixelLocalStorageParameterfv(plane, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterfvANGLE, isCallValid, context,
-                         plane, pname, params);
+                         plane, pnamePacked, params);
     }
     else
     {
@@ -5815,6 +5819,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE(GLint plane,
 
     if (ANGLE_LIKELY(context != nullptr))
     {
+        PlaneParameter pnamePacked = PackParam<PlaneParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -5826,7 +5831,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE(GLint plane,
 #endif
                 isCallValid = ValidateGetFramebufferPixelLocalStorageParameterivANGLE(
                     context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE,
-                    plane, pname, params);
+                    plane, pnamePacked, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5839,10 +5844,10 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE(GLint plane,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFramebufferPixelLocalStorageParameteriv(plane, pname, params);
+            context->getFramebufferPixelLocalStorageParameteriv(plane, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterivANGLE, isCallValid, context,
-                         plane, pname, params);
+                         plane, pnamePacked, params);
     }
     else
     {
@@ -5865,6 +5870,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameteruivANGLE(GLint plane
 
     if (ANGLE_LIKELY(context != nullptr))
     {
+        PlaneParameter pnamePacked = PackParam<PlaneParameter>(pname);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -5876,7 +5882,7 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameteruivANGLE(GLint plane
 #endif
                 isCallValid = ValidateGetFramebufferPixelLocalStorageParameteruivANGLE(
                     context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameteruivANGLE,
-                    plane, pname, params);
+                    plane, pnamePacked, params);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif
@@ -5889,10 +5895,10 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameteruivANGLE(GLint plane
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFramebufferPixelLocalStorageParameteruiv(plane, pname, params);
+            context->getFramebufferPixelLocalStorageParameteruiv(plane, pnamePacked, params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameteruivANGLE, isCallValid, context,
-                         plane, pname, params);
+                         plane, pnamePacked, params);
     }
     else
     {
