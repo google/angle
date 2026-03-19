@@ -3802,19 +3802,6 @@ bool ValidateRequestExtensionANGLE(const Context *context,
     return true;
 }
 
-bool ValidateDisableExtensionANGLE(const Context *context,
-                                   angle::EntryPoint entryPoint,
-                                   const GLchar *name)
-{
-    if (!context->isExtensionDisablable(name))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotDisablable);
-        return false;
-    }
-
-    return true;
-}
-
 bool ValidateActiveTexture(const PrivateState &state,
                            ErrorSet *errors,
                            angle::EntryPoint entryPoint,

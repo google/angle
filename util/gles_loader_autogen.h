@@ -504,7 +504,6 @@
 #define glMultiDrawElementsInstancedANGLE l_glMultiDrawElementsInstancedANGLE
 #define glPolygonModeANGLE l_glPolygonModeANGLE
 #define glProvokingVertexANGLE l_glProvokingVertexANGLE
-#define glDisableExtensionANGLE l_glDisableExtensionANGLE
 #define glRequestExtensionANGLE l_glRequestExtensionANGLE
 #define glGetActiveUniformBlockivRobustANGLE l_glGetActiveUniformBlockivRobustANGLE
 #define glGetBooleanvRobustANGLE l_glGetBooleanvRobustANGLE
@@ -1357,7 +1356,6 @@ ANGLE_UTIL_EXPORT extern PFNGLMULTIDRAWELEMENTSINSTANCEDANGLEPROC
     l_glMultiDrawElementsInstancedANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPOLYGONMODEANGLEPROC l_glPolygonModeANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLPROVOKINGVERTEXANGLEPROC l_glProvokingVertexANGLE;
-ANGLE_UTIL_EXPORT extern PFNGLDISABLEEXTENSIONANGLEPROC l_glDisableExtensionANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLREQUESTEXTENSIONANGLEPROC l_glRequestExtensionANGLE;
 ANGLE_UTIL_EXPORT extern PFNGLGETACTIVEUNIFORMBLOCKIVROBUSTANGLEPROC
     l_glGetActiveUniformBlockivRobustANGLE;

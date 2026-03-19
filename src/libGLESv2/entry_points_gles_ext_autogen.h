@@ -286,7 +286,6 @@ ANGLE_EXPORT void GL_APIENTRY GL_ProvokingVertexANGLE(GLenum provokeMode);
 
 // GL_ANGLE_request_extension
 ANGLE_EXPORT void GL_APIENTRY GL_RequestExtensionANGLE(const GLchar *name);
-ANGLE_EXPORT void GL_APIENTRY GL_DisableExtensionANGLE(const GLchar *name);
 
 // GL_ANGLE_rgbx_internal_format
 

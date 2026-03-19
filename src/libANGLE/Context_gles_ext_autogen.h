@@ -480,7 +480,6 @@
     /* GL_ANGLE_renderability_validation */                                                        \
     /* GL_ANGLE_request_extension */                                                               \
     void requestExtension(const GLchar *name);                                                     \
-    void disableExtension(const GLchar *name);                                                     \
     /* GL_ANGLE_rgbx_internal_format */                                                            \
     /* GL_ANGLE_robust_client_memory */                                                            \
     void getBooleanvRobust(GLenum pname, GLsizei paramCount, GLsizei *length, GLboolean *data);    \

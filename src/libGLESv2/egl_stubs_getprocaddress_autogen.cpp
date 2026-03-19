@@ -310,7 +310,6 @@ const ProcEntry g_procTable[] = {
     {"glDetachShader", P(GL_DetachShader)},
     {"glDisable", P(GL_Disable)},
     {"glDisableClientState", P(GL_DisableClientState)},
-    {"glDisableExtensionANGLE", P(GL_DisableExtensionANGLE)},
     {"glDisableVertexAttribArray", P(GL_DisableVertexAttribArray)},
     {"glDisablei", P(GL_Disablei)},
     {"glDisableiEXT", P(GL_DisableiEXT)},

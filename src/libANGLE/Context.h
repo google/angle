@@ -719,9 +719,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     size_t getExtensionStringCount() const;
 
     bool isExtensionRequestable(const char *name) const;
-    bool isExtensionDisablable(const char *name) const;
     size_t getRequestableExtensionStringCount() const;
-    void setExtensionEnabled(const char *name, bool enabled);
     void reinitializeAfterExtensionsChanged();
 
     rx::ContextImpl *getImplementation() const { return mImplementation.get(); }

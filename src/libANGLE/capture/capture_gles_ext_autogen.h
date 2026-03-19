@@ -375,9 +375,6 @@ angle::CallCapture CaptureProvokingVertexANGLE(const State &glState,
 angle::CallCapture CaptureRequestExtensionANGLE(const State &glState,
                                                 bool isCallValid,
                                                 const GLchar *name);
-angle::CallCapture CaptureDisableExtensionANGLE(const State &glState,
-                                                bool isCallValid,
-                                                const GLchar *name);
 
 // GL_ANGLE_rgbx_internal_format
 
@@ -3191,9 +3188,6 @@ void CaptureMultiDrawElementsInstancedANGLE_instanceCounts(const State &glState,
                                                            GLsizei drawcount,
                                                            angle::ParamCapture *paramCapture);
 void CaptureRequestExtensionANGLE_name(const State &glState,
-                                       const GLchar *name,
-                                       angle::ParamCapture *paramCapture);
-void CaptureDisableExtensionANGLE_name(const State &glState,
                                        const GLchar *name,
                                        angle::ParamCapture *paramCapture);
 void CaptureGetBooleanvRobustANGLE_length(const State &glState,

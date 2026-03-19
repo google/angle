@@ -1743,13 +1743,6 @@ CallCapture ParseCallCapture(const Token &nameToken,
                                                                                     strings);
         return CallCapture(EntryPoint::GLDisableClientState, std::move(params));
     }
-    if (strcmp(nameToken, "glDisableExtensionANGLE") == 0)
-    {
-        ParamBuffer params =
-            ParseParameters<std::remove_pointer<PFNGLDISABLEEXTENSIONANGLEPROC>::type>(paramTokens,
-                                                                                       strings);
-        return CallCapture(EntryPoint::GLDisableExtensionANGLE, std::move(params));
-    }
     if (strcmp(nameToken, "glDisableVertexAttribArray") == 0)
     {
         ParamBuffer params =

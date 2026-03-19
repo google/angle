@@ -620,13 +620,6 @@ void CaptureRequestExtensionANGLE_name(const State &glState,
     CaptureString(name, paramCapture);
 }
 
-void CaptureDisableExtensionANGLE_name(const State &glState,
-                                       const GLchar *name,
-                                       ParamCapture *paramCapture)
-{
-    CaptureString(name, paramCapture);
-}
-
 // GL_ANGLE_robust_client_memory
 void CaptureGetBooleanvRobustANGLE_length(const State &glState,
                                           GLenum pname,

@@ -681,9 +681,6 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
         case angle::EntryPoint::GLDisableClientState:
             glDisableClientState(captures[0].value.GLenumVal);
             break;
-        case angle::EntryPoint::GLDisableExtensionANGLE:
-            glDisableExtensionANGLE(captures[0].value.GLcharConstPointerVal);
-            break;
         case angle::EntryPoint::GLDisableVertexAttribArray:
             glDisableVertexAttribArray(captures[0].value.GLuintVal);
             break;

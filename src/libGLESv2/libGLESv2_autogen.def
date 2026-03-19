@@ -556,7 +556,6 @@ EXPORTS
     ; GL_ANGLE_renderability_validation
 
     ; GL_ANGLE_request_extension
-    glDisableExtensionANGLE
     glRequestExtensionANGLE
 
     ; GL_ANGLE_rgbx_internal_format

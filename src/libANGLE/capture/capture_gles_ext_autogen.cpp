@@ -1488,26 +1488,6 @@ CallCapture CaptureRequestExtensionANGLE(const State &glState, bool isCallValid,
     return CallCapture(angle::EntryPoint::GLRequestExtensionANGLE, std::move(paramBuffer));
 }
 
-CallCapture CaptureDisableExtensionANGLE(const State &glState, bool isCallValid, const GLchar *name)
-{
-    ParamBuffer paramBuffer;
-
-    ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
-    if (isCallValid)
-    {
-        InitParamValue(ParamType::TGLcharConstPointer, name, &nameParam.value);
-        CaptureDisableExtensionANGLE_name(glState, name, &nameParam);
-    }
-    else
-    {
-        InitParamValue(ParamType::TGLcharConstPointer, static_cast<const GLchar *>(nullptr),
-                       &nameParam.value);
-    }
-    paramBuffer.addParam(std::move(nameParam));
-
-    return CallCapture(angle::EntryPoint::GLDisableExtensionANGLE, std::move(paramBuffer));
-}
-
 CallCapture CaptureGetBooleanvRobustANGLE(const State &glState,
                                           bool isCallValid,
                                           GLenum pname,

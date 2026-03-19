@@ -37,12 +37,8 @@ xml_inputs = sorted(khronos_xml_inputs + angle_xml_inputs)
 # Notes on categories of extensions:
 # 'Requestable' extensions are extensions that can be enabled with ANGLE_request_extension
 # 'ES-Only' extensions are always implicitly enabled.
-# 'Toggleable' extensions are like 'Requestable' except they can be also disabled.
 # 'ANGLE' extensions are extensions that are not yet officially upstreamed to Khronos.
 # We document those extensions in gl_angle_ext.xml instead of the canonical gl.xml.
-
-angle_toggleable_extensions = [
-]
 
 angle_requestable_extensions = [
     "GL_ANGLE_base_vertex_base_instance",
@@ -343,14 +339,13 @@ def check_sorted(name, l):
     assert not diff_lines, '\n\nPlease sort "%s":\n%s' % (name, '\n'.join(diff_lines))
 
 
-angle_extensions = angle_requestable_extensions + angle_es_only_extensions + angle_toggleable_extensions
+angle_extensions = angle_requestable_extensions + angle_es_only_extensions
 gles_extensions = gles_requestable_extensions + gles_es_only_extensions
 supported_extensions = sorted(angle_extensions + gles1_extensions + gles_extensions)
 
 assert len(supported_extensions) == len(set(supported_extensions)), 'Duplicates in extension list'
 check_sorted('angle_requestable_extensions', angle_requestable_extensions)
 check_sorted('angle_es_only_extensions', angle_es_only_extensions)
-check_sorted('angle_toggleable_extensions', angle_toggleable_extensions)
 check_sorted('gles_requestable_extensions', gles_requestable_extensions)
 check_sorted('gles_es_only_extensions', gles_es_only_extensions)
 check_sorted('gles_extensions', gles1_extensions)

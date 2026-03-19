@@ -131,10 +131,6 @@
             <param>const <ptype>GLchar</ptype> *<name>name</name></param>
         </command>
         <command>
-            <proto>void <name>glDisableExtensionANGLE</name></proto>
-            <param>const <ptype>GLchar</ptype> *<name>name</name></param>
-        </command>
-        <command>
             <proto>void <name>glGetBooleanvRobustANGLE</name></proto>
             <param group="GetPName"><ptype>GLenum</ptype> <name>pname</name></param>
             <param><ptype>GLsizei</ptype> <name>paramCount</name></param>
@@ -930,7 +926,6 @@
         <extension name="GL_ANGLE_request_extension" supported='gles2'>
             <require>
                 <command name="glRequestExtensionANGLE"/>
-                <command name="glDisableExtensionANGLE"/>
                 <enum name="GL_REQUESTABLE_EXTENSIONS_ANGLE"/>
                 <enum name="GL_NUM_REQUESTABLE_EXTENSIONS_ANGLE"/>
             </require>

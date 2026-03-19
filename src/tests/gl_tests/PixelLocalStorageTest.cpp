@@ -4932,54 +4932,6 @@ static void do_implicitly_enabled_extensions_test(const char *plsExtensionToRequ
         EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent"));
     }
     EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
-
-    if (hasDrawBuffersIndexedOES)
-    {
-        // If OES_draw_buffers_indexed ever becomes disablable, it will have to implicitly disable
-        // ANGLE_shader_pixel_local_storage.
-        glDisableExtensionANGLE("GL_OES_draw_buffers_indexed");
-        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
-    }
-
-    if (hasDrawBuffersIndexedEXT)
-    {
-        // If EXT_draw_buffers_indexed ever becomes disablable, it will have to implicitly disable
-        // ANGLE_shader_pixel_local_storage.
-        glDisableExtensionANGLE("GL_EXT_draw_buffers_indexed");
-        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_draw_buffers_indexed"));
-    }
-
-    if (hasCoherent)
-    {
-        // ANGLE_shader_pixel_local_storage_coherent is not disablable.
-        glDisableExtensionANGLE("GL_ANGLE_shader_pixel_local_storage_coherent");
-        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent"));
-    }
-
-    // ANGLE_shader_pixel_local_storage is not disablable.
-    glDisableExtensionANGLE("GL_ANGLE_shader_pixel_local_storage");
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
-    // All dependency extensions should have remained enabled.
-    if (hasDrawBuffersIndexedOES)
-    {
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
-    }
-    if (hasDrawBuffersIndexedEXT)
-    {
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_EXT_draw_buffers_indexed"));
-    }
-    if (hasCoherent)
-    {
-        EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage_coherent"));
-    }
-    EXPECT_TRUE(IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 }
 
 // Check that ANGLE_shader_pixel_local_storage implicitly enables its dependency extensions.
@@ -6980,8 +6932,7 @@ TEST_P(PixelLocalStorageValidationTest, InterruptMechanism)
 // specified.
 TEST_P(PixelLocalStorageValidationTest, GetFramebufferPixelLocalStorageParametersANGLE)
 {
-    // The "Get.*Robust" variants require ANGLE_robust_client_memory. ANGLE_robust_client_memory is
-    // not disableable and is therefore supported in every ANGLE context.
+    // The "Get.*Robust" variants require ANGLE_robust_client_memory.
     //
     // If ANGLE ever does find itself in a situation where ANGLE_robust_client_memory is not
     // supported, we will need to hide the "Get.*Robust" variants in order to be spec compliant.

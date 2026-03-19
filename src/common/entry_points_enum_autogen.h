@@ -402,7 +402,6 @@ enum class EntryPoint
     GLDetachShader,
     GLDisable,
     GLDisableClientState,
-    GLDisableExtensionANGLE,
     GLDisableVertexAttribArray,
     GLDisablei,
     GLDisableiEXT,

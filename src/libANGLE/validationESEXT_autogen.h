@@ -378,9 +378,6 @@ bool ValidateProvokingVertexANGLE(const PrivateState &state,
 bool ValidateRequestExtensionANGLE(const Context *context,
                                    angle::EntryPoint entryPoint,
                                    const GLchar *name);
-bool ValidateDisableExtensionANGLE(const Context *context,
-                                   angle::EntryPoint entryPoint,
-                                   const GLchar *name);
 
 // GL_ANGLE_rgbx_internal_format
 

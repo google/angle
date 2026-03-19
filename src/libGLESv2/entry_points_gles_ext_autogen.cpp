@@ -2337,48 +2337,6 @@ void GL_APIENTRY GL_RequestExtensionANGLE(const GLchar *name)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
-void GL_APIENTRY GL_DisableExtensionANGLE(const GLchar *name)
-{
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
-    ANGLE_UNSAFE_TODO(EVENT(context, GLDisableExtensionANGLE,
-                            "context = %d, name = 0x%016" PRIxPTR "", CID(context),
-                            (uintptr_t)name));
-
-    if (ANGLE_LIKELY(context != nullptr))
-    {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = context->skipValidation();
-        if (!isCallValid)
-        {
-            if (ANGLE_LIKELY(context->getExtensions().requestExtensionANGLE))
-            {
-#if defined(ANGLE_ENABLE_ASSERTS)
-                const uint32_t errorCount = context->getPushedErrorCount();
-#endif
-                isCallValid = ValidateDisableExtensionANGLE(
-                    context, angle::EntryPoint::GLDisableExtensionANGLE, name);
-#if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
-#endif
-            }
-            else
-            {
-                RecordVersionErrorESEXT(context, angle::EntryPoint::GLDisableExtensionANGLE);
-            }
-        }
-        if (ANGLE_LIKELY(isCallValid))
-        {
-            context->disableExtension(name);
-        }
-        ANGLE_CAPTURE_GL(DisableExtensionANGLE, isCallValid, context, name);
-    }
-    else
-    {
-        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLDisableExtensionANGLE);
-    }
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-}
 
 // GL_ANGLE_rgbx_internal_format
 

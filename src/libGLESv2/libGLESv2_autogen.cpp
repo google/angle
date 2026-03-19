@@ -3141,10 +3141,6 @@ void GL_APIENTRY glRequestExtensionANGLE(const GLchar *name)
     return GL_RequestExtensionANGLE(name);
 }
 
-void GL_APIENTRY glDisableExtensionANGLE(const GLchar *name)
-{
-    return GL_DisableExtensionANGLE(name);
-}
 
 // GL_ANGLE_rgbx_internal_format
 

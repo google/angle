@@ -22,12 +22,6 @@ const ExtensionInfoMap &GetExtensionInfoMap()
             return info;
         };
 
-        [[maybe_unused]] auto enableableDisablableExtension = [&](ExtensionBool member) {
-            ExtensionInfo info = enableableExtension(member);
-            info.Disablable    = true;
-            return info;
-        };
-
         auto esOnlyExtension = [](ExtensionBool member) {
             ExtensionInfo info;
             info.ExtensionsMember = member;

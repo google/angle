@@ -150,7 +150,6 @@ inline constexpr const char *kExceedsNumRequestableExtensions = "Index must be w
 inline constexpr const char *kExpectedProgramName = "Expected a program name, but found a shader name.";
 inline constexpr const char *kExpectedShaderName = "Expected a shader name, but found a program name.";
 inline constexpr const char *kExtensionNotEnabled = "Extension is not enabled.";
-inline constexpr const char *kExtensionNotDisablable = "Extension is not disablable.";
 inline constexpr const char *kExtensionNotRequestable = "Extension is not requestable.";
 inline constexpr const char *kExternalBufferInvalidOffset = "Offset must be zero for external buffers.";
 inline constexpr const char *kExternalTextureAttachmentNotYUV = "External texture attached to framebuffer is not YUV.";

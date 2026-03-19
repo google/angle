@@ -3735,25 +3735,7 @@ bool Context::isExtensionRequestable(const char *name) const
            mSupportedExtensions.*(extension->second.ExtensionsMember);
 }
 
-bool Context::isExtensionDisablable(const char *name) const
-{
-    const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
-    auto extension                         = extensionInfos.find(name);
-
-    return extension != extensionInfos.end() && extension->second.Disablable &&
-           mSupportedExtensions.*(extension->second.ExtensionsMember);
-}
-
 void Context::requestExtension(const char *name)
-{
-    setExtensionEnabled(name, true);
-}
-void Context::disableExtension(const char *name)
-{
-    setExtensionEnabled(name, false);
-}
-
-void Context::setExtensionEnabled(const char *name, bool enabled)
 {
     const ExtensionInfoMap &extensionInfos = GetExtensionInfoMap();
     ASSERT(extensionInfos.find(name) != extensionInfos.end());
@@ -3761,15 +3743,15 @@ void Context::setExtensionEnabled(const char *name, bool enabled)
     ASSERT(extension.Requestable);
     ASSERT(isExtensionRequestable(name));
 
-    if (mState.getExtensions().*(extension.ExtensionsMember) == enabled)
+    if (mState.getExtensions().*(extension.ExtensionsMember))
     {
         // No change
         return;
     }
 
-    mState.getMutableExtensions()->*(extension.ExtensionsMember) = enabled;
+    mState.getMutableExtensions()->*(extension.ExtensionsMember) = true;
 
-    if (enabled)
+    // Handle extension dependencies
     {
         if (strcmp(name, "GL_OVR_multiview2") == 0)
         {
