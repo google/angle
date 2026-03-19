@@ -297,7 +297,14 @@ void WriteCppReplayForCall(const CallCapture &call,
 
         if (param.arrayClientPointerIndex != -1 && param.value.voidConstPointerVal != nullptr)
         {
-            callOut << "gClientArrays[" << param.arrayClientPointerIndex << "]";
+            int clientIndex = (param.arrayClientPointerMergedIndex != -1)
+                                  ? param.arrayClientPointerMergedIndex
+                                  : param.arrayClientPointerIndex;
+            callOut << "gClientArrays[" << clientIndex << "]";
+            if (param.arrayClientPointerOffset != 0)
+            {
+                callOut << " + " << param.arrayClientPointerOffset;
+            }
         }
         else if (param.readBufferSizeBytes > 0)
         {
@@ -487,6 +494,144 @@ void DeleteResourcesInReset(std::stringstream &out,
             << ", gResourceIDBuffer);\n";
 
         *maxResourceIDBufferSize = std::max(*maxResourceIDBufferSize, count);
+    }
+}
+
+struct MergedAttribRanges
+{
+    gl::AttribArray<uintptr_t> startAddr;
+    gl::AttribArray<uintptr_t> endAddr;
+};
+
+void MaybeMergeClientAttributes(const gl::VertexArray *vao,
+                                const gl::AttributesMask clientVertexArrayAttrMask,
+                                const gl::AttribArray<const void *> clientVertexArrayData,
+                                std::vector<CallCapture> *frameCalls,
+                                const std::vector<size_t> &clientVACallIndices,
+                                bool shouldCaptureClientArrayData,
+                                size_t vertexCount,
+                                size_t instanceCount,
+                                MergedAttribRanges &mergedAddrRangesOut,
+                                gl::AttribArray<size_t> &mergedIndexMapOut)
+{
+    // In case the data should be captured (e.g., for draw time), the vertex or instance count
+    // should be given for address range calculations. Otherwise, both are expected to be 0 and
+    // neither is used.
+    ASSERT(shouldCaptureClientArrayData || (vertexCount == 0 && instanceCount == 0));
+
+    // Initialize the merge indices. In case there is no merging, each attribute is mapped to a
+    // gClientArray with the same index.
+    for (size_t i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    {
+        mergedIndexMapOut[i] = i;
+    }
+
+    if (!clientVertexArrayAttrMask.any())
+    {
+        // Nothing to merge.
+        return;
+    }
+
+    // Collect the start and end addresses for each attribute in the attribute mask.
+    gl::AttribArray<size_t> addrOffset;
+    gl::AttribArray<size_t> sortedIndices;
+    size_t sortedCount = 0;
+    for (size_t attribIndex : clientVertexArrayAttrMask)
+    {
+        const gl::VertexAttribute &attrib = vao->getVertexAttribute(attribIndex);
+        const gl::VertexBinding &binding  = vao->getVertexBinding(attrib.bindingIndex);
+
+        const void *clientSideAddress = clientVertexArrayData[attribIndex];
+        ASSERT(clientSideAddress != nullptr);
+
+        size_t bytesToCapture = attrib.format->pixelBytes;
+        if (shouldCaptureClientArrayData)
+        {
+            size_t count = binding.getDivisor() > 0
+                               ? rx::UnsignedCeilDivide(static_cast<uint32_t>(instanceCount),
+                                                        binding.getDivisor())
+                               : vertexCount;
+            // The last capture element doesn't take up the full stride.
+            bytesToCapture = (count - 1) * binding.getStride() + attrib.format->pixelBytes;
+        }
+
+        // Set the addresses for potential merge.
+        mergedAddrRangesOut.startAddr[attribIndex] = reinterpret_cast<uintptr_t>(clientSideAddress);
+        mergedAddrRangesOut.endAddr[attribIndex] =
+            mergedAddrRangesOut.startAddr[attribIndex] + bytesToCapture;
+        addrOffset[attribIndex]      = 0;
+        sortedIndices[sortedCount++] = attribIndex;
+    }
+
+    // Determine which attributes should be merged and their relative offset with respect to the
+    // leading attribute (i.e., attribute with offset 0).
+    auto compareRangesFunc = [&mergedAddrRangesOut](size_t a, size_t b) -> bool {
+        return mergedAddrRangesOut.startAddr[a] == mergedAddrRangesOut.startAddr[b]
+                   ? mergedAddrRangesOut.endAddr[a] < mergedAddrRangesOut.endAddr[b]
+                   : mergedAddrRangesOut.startAddr[a] < mergedAddrRangesOut.startAddr[b];
+    };
+    std::sort(sortedIndices.begin(), sortedIndices.begin() + sortedCount, compareRangesFunc);
+
+    size_t currentMergeIndex = 0;
+    if (sortedCount > 0)
+    {
+        currentMergeIndex                    = sortedIndices[0];
+        mergedIndexMapOut[currentMergeIndex] = currentMergeIndex;
+    }
+    for (size_t sortedAttribIndex = 1; sortedAttribIndex < sortedCount; sortedAttribIndex++)
+    {
+        size_t nextAttribIndex = sortedIndices[sortedAttribIndex];
+
+        // Check for overlap or adjacency:
+        // Current leader: [Start ............ End]
+        // Next:                    [Start ............ End]
+        if (mergedAddrRangesOut.endAddr[currentMergeIndex] >=
+            mergedAddrRangesOut.startAddr[nextAttribIndex])
+        {
+            // Overlap/Adjacency; the leader's end address is extended to cover the next attribute,
+            // and the next attribute is now mapped to the leader index, merging the two attributes.
+            // The offset of the next attribute will also be set with respect to the leader.
+            mergedAddrRangesOut.endAddr[currentMergeIndex] =
+                std::max(mergedAddrRangesOut.endAddr[currentMergeIndex],
+                         mergedAddrRangesOut.endAddr[nextAttribIndex]);
+            addrOffset[nextAttribIndex] = mergedAddrRangesOut.startAddr[nextAttribIndex] -
+                                          mergedAddrRangesOut.startAddr[currentMergeIndex];
+            mergedIndexMapOut[currentMergeIndex] = currentMergeIndex;
+            mergedIndexMapOut[nextAttribIndex]   = currentMergeIndex;
+        }
+        else
+        {
+            // No overlap; the next attribute becomes the new leader for subsequent attributes.
+            currentMergeIndex = nextAttribIndex;
+        }
+    }
+
+    // Update the pointers and offsets in the captured code for the corresponding vertex attribute
+    // calls. The last instance using a vertex client attribute for each called attribute should be
+    // updated.
+    for (size_t attribIndex : clientVertexArrayAttrMask)
+    {
+        size_t mergedIndex = mergedIndexMapOut[attribIndex];
+        size_t offset      = addrOffset[attribIndex];
+
+        for (auto vaIndex = clientVACallIndices.rbegin(); vaIndex != clientVACallIndices.rend();
+             vaIndex++)
+        {
+            CallCapture &framecall = frameCalls->at(*vaIndex);
+            ASSERT(framecall.params.hasClientArrayData());
+
+            // The client pointer index is originally set to the attribute index. It should now be
+            // changed to the merged index with an offset.
+            ParamCapture &clientArrayPointerParams =
+                framecall.params.getClientArrayPointerParameter();
+            if (clientArrayPointerParams.arrayClientPointerIndex == static_cast<int>(attribIndex))
+            {
+                clientArrayPointerParams.arrayClientPointerMergedIndex =
+                    static_cast<int>(mergedIndex);
+                clientArrayPointerParams.arrayClientPointerOffset = static_cast<int>(offset);
+                break;
+            }
+        }
     }
 }
 
@@ -2556,6 +2701,23 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
     }
 }
 
+void CaptureUpdateClientArrayPointer(uint32_t attribIndex,
+                                     const void *clientAttribAddress,
+                                     size_t bytesToCapture,
+                                     std::vector<CallCapture> *frameCalls)
+{
+    ParamBuffer updateParamBuffer;
+    updateParamBuffer.addValueParam<GLint>("arrayIndex", ParamType::TGLint, attribIndex);
+
+    ParamCapture updateMemory("pointer", ParamType::TvoidConstPointer);
+    CaptureMemory(clientAttribAddress, bytesToCapture, &updateMemory);
+    updateParamBuffer.addParam(std::move(updateMemory));
+
+    updateParamBuffer.addValueParam<GLuint64>("size", ParamType::TGLuint64, bytesToCapture);
+
+    frameCalls->emplace_back("UpdateClientArrayPointer", std::move(updateParamBuffer));
+}
+
 void CaptureVertexPointerES1(std::vector<CallCapture> *setupCalls,
                              gl::State *replayState,
                              GLuint attribIndex,
@@ -2697,6 +2859,9 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
     const gl::BufferManager &capturedBuffers = context->getState().getBufferManagerForCapture();
 
     gl::AttributesMask vertexPointerBindings;
+    gl::AttributesMask clientVertexArrayMask;
+    gl::AttribArray<const void *> clientVertexArrayData;
+    std::vector<size_t> clientVACallIndices;
 
     ASSERT(vertexAttribs.size() <= vertexBindings.size());
     for (GLuint attribIndex = 0; attribIndex < vertexAttribs.size(); ++attribIndex)
@@ -2811,7 +2976,31 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
                 Capture(setupCalls, CaptureVertexAttribBinding(*replayState, true, attribIndex,
                                                                attrib.bindingIndex));
             }
+            if (setupCalls->back().params.hasClientArrayData())
+            {
+                // The last call's index is kept so the call's pointer and offset can be updated if
+                // its corresponding attribute is merged into another attribute later.
+                const size_t currentSetupCallLastIndex = setupCalls->size() - 1;
+                ParamCapture &clientArrayPointerParams =
+                    setupCalls->back().params.getClientArrayPointerParameter();
+                clientVACallIndices.push_back(currentSetupCallLastIndex);
+                clientVertexArrayMask.set(clientArrayPointerParams.arrayClientPointerIndex);
+                clientVertexArrayData[clientArrayPointerParams.arrayClientPointerIndex] =
+                    clientArrayPointerParams.value.voidConstPointerVal;
+            }
         }
+    }
+
+    // Merge attribute pointers in the setup if possible.
+    if (clientVertexArrayMask.any())
+    {
+        ASSERT(!clientVACallIndices.empty());
+        MergedAttribRanges mergedAddrRanges;
+        gl::AttribArray<size_t> mergedIndexMap;
+
+        MaybeMergeClientAttributes(vertexArray, clientVertexArrayMask, clientVertexArrayData,
+                                   setupCalls, clientVACallIndices, false, 0, 0, mergedAddrRanges,
+                                   mergedIndexMap);
     }
 
     // The loop below expects attribs and bindings to have equal counts
@@ -8138,6 +8327,25 @@ void FrameCaptureShared::maybeCapturePostCallUpdates(const gl::Context *context)
             }
             break;
         }
+        case EntryPoint::GLVertexAttribPointer:
+        case EntryPoint::GLVertexAttribIPointer:
+        case EntryPoint::GLVertexPointer:
+        case EntryPoint::GLNormalPointer:
+        case EntryPoint::GLColorPointer:
+        case EntryPoint::GLPointSizePointerOES:
+        case EntryPoint::GLTexCoordPointer:
+        {
+            if (lastCall.params.hasClientArrayData())
+            {
+                // The last call's index is kept so the call's pointer and offset can be updated if
+                // its corresponding attribute is merged into another attribute later.
+                const size_t currentFrameCallsLastIndex = mFrameCalls.size() - 1;
+                mClientVertexArrayCallIndices.push_back(currentFrameCallsLastIndex);
+                mClientVertexArrayDirtyAttribMask.set(
+                    lastCall.params.getClientArrayPointerParameter().arrayClientPointerIndex);
+            }
+            break;
+        }
         default:
             break;
     }
@@ -8153,45 +8361,57 @@ void FrameCaptureShared::captureClientArraySnapshot(const gl::Context *context,
         return;
     }
 
-    const gl::VertexArray *vao = context->getState().getVertexArray();
+    // Capture client array data. If the address ranges for the vertex attribute pointers overlap,
+    // they should use a single memory space with different offsets.
+    MergedAttribRanges mergedAddrRanges;
+    gl::AttribArray<size_t> mergedIndexMap;
 
-    // Capture client array data.
-    for (size_t attribIndex : context->getActiveClientAttribsMask())
+    // For draw time, the data active client attributes should always be copied, even if there is no
+    // new call in the beginning of the frame to set the attribute pointer.
+    gl::AttributesMask clientVADirtyAndActiveAttribsMask =
+        mClientVertexArrayDirtyAttribMask | context->getActiveClientAttribsMask();
+
+    // If any updated attribute since the beginning or the last draw call is currently not using a
+    // client address (at draw time), there is no need for merging it.
+    for (size_t attribIndex : clientVADirtyAndActiveAttribsMask)
     {
-        const gl::VertexAttribute &attrib = vao->getVertexAttribute(attribIndex);
-        const gl::VertexBinding &binding  = vao->getVertexBinding(attrib.bindingIndex);
-
-        const void *clientSideAddress = mClientVertexArrayData[attribIndex];
-
-        if (clientSideAddress)
+        if (mClientVertexArrayData[attribIndex] == nullptr)
         {
-            size_t count = vertexCount;
-
-            if (binding.getDivisor() > 0)
-            {
-                count = rx::UnsignedCeilDivide(static_cast<uint32_t>(instanceCount),
-                                               binding.getDivisor());
-            }
-
-            // The last capture element doesn't take up the full stride.
-            size_t bytesToCapture = (count - 1) * binding.getStride() + attrib.format->pixelBytes;
-
-            ParamBuffer updateParamBuffer;
-            updateParamBuffer.addValueParam<GLint>("arrayIndex", ParamType::TGLint,
-                                                   static_cast<uint32_t>(attribIndex));
-
-            ParamCapture updateMemory("pointer", ParamType::TvoidConstPointer);
-            CaptureMemory(clientSideAddress, bytesToCapture, &updateMemory);
-            updateParamBuffer.addParam(std::move(updateMemory));
-
-            updateParamBuffer.addValueParam<GLuint64>("size", ParamType::TGLuint64, bytesToCapture);
-
-            mFrameCalls.emplace_back("UpdateClientArrayPointer", std::move(updateParamBuffer));
-
-            mClientArraySizes[attribIndex] =
-                std::max(mClientArraySizes[attribIndex], bytesToCapture);
+            clientVADirtyAndActiveAttribsMask.set(attribIndex, 0);
         }
     }
+
+    // Merge attribute pointers at draw if possible.
+    const gl::VertexArray *vao = context->getState().getVertexArray();
+    MaybeMergeClientAttributes(vao, clientVADirtyAndActiveAttribsMask, mClientVertexArrayData,
+                               &mFrameCalls, mClientVertexArrayCallIndices, true, vertexCount,
+                               instanceCount, mergedAddrRanges, mergedIndexMap);
+
+    // Capture the data used by the active vertex attribute pointers. So a merged attribute index is
+    // marked as active if at least one attribute merged into it is active. This ensures that only
+    // the data necessary for the draw is copied.
+    gl::AttributesMask activeMergedAttrMask;
+    for (size_t attribIndex : clientVADirtyAndActiveAttribsMask)
+    {
+        if (context->getActiveClientAttribsMask().test(attribIndex))
+        {
+            activeMergedAttrMask.set(mergedIndexMap[attribIndex]);
+        }
+    }
+    for (size_t attribIndex : activeMergedAttrMask)
+    {
+        size_t bytesToCapture =
+            mergedAddrRanges.endAddr[attribIndex] - mergedAddrRanges.startAddr[attribIndex];
+        CaptureUpdateClientArrayPointer(
+            static_cast<uint32_t>(attribIndex),
+            reinterpret_cast<const void *>(mergedAddrRanges.startAddr[attribIndex]), bytesToCapture,
+            &mFrameCalls);
+        mClientArraySizes[attribIndex] = std::max(mClientArraySizes[attribIndex], bytesToCapture);
+    }
+
+    // Clear the vertex attribute pointer calls after the merge processing is finished.
+    mClientVertexArrayCallIndices.clear();
+    mClientVertexArrayDirtyAttribMask.reset();
 }
 
 void FrameCaptureShared::captureCoherentBufferSnapshot(const gl::Context *context, gl::BufferID id)
@@ -8543,6 +8763,34 @@ void FrameCaptureShared::onEndFrame(gl::Context *context)
     if (mValidateSerializedState && mFrameIndex == mCaptureStartFrame)
     {
         CaptureValidateSerializedState(context, &mFrameCalls);
+    }
+
+    // Merge attribute pointers in the end of the frame if possible.
+    if (mClientVertexArrayDirtyAttribMask.any())
+    {
+        ASSERT(!mClientVertexArrayCallIndices.empty());
+        MergedAttribRanges mergedAddrRanges;
+        gl::AttribArray<size_t> mergedIndexMap;
+        const gl::VertexArray *vao = context->getState().getVertexArray();
+
+        // If any updated attribute since the beginning or the last draw call is currently not using
+        // a client address at the end of the frame, there is no need for merging it.
+        for (size_t attribIndex : mClientVertexArrayDirtyAttribMask)
+        {
+            const void *clientSideAddress = mClientVertexArrayData[attribIndex];
+            if (clientSideAddress == nullptr)
+            {
+                mClientVertexArrayDirtyAttribMask.set(attribIndex, 0);
+            }
+        }
+
+        MaybeMergeClientAttributes(vao, mClientVertexArrayDirtyAttribMask, mClientVertexArrayData,
+                                   &mFrameCalls, mClientVertexArrayCallIndices, false, 0, 0,
+                                   mergedAddrRanges, mergedIndexMap);
+
+        // Clear the vertex attribute pointer calls after the merge processing is finished.
+        mClientVertexArrayCallIndices.clear();
+        mClientVertexArrayDirtyAttribMask.reset();
     }
 
     writeMainContextCppReplay(context, frameCapture->getSetupCalls(),
