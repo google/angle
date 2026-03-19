@@ -1698,18 +1698,8 @@ bool ValidateES2TexImageParametersBase(const Context *context,
             }
             else
             {
-                if (format == GL_BGRA_EXT)
-                {
-                    // GL_BGRA_EXT is registered as a sized format in ANGLE, which can cause
-                    // GetInternalFormatInfo to return it as an alias for GL_BGRA8_EXT. We
-                    // check GetSizedFormatInternal directly to handle these cases.
-                    isValid = (GetSizedFormatInternal(format, type) == textureSizedInternalFormat);
-                }
-                else
-                {
-                    isValid = (GetInternalFormatInfo(format, type).sizedInternalFormat ==
-                               textureSizedInternalFormat);
-                }
+                isValid = (GetInternalFormatInfo(format, type).sizedInternalFormat ==
+                           textureSizedInternalFormat);
             }
             if (!isValid)
             {
