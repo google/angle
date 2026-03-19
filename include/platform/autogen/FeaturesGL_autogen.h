@@ -674,6 +674,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo recreateMipmapLevelsBeforeGenerate = {
+        "recreateMipmapLevelsBeforeGenerate",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo limitMaxBufferSizeTo1gb = {
         "limitMaxBufferSizeTo1gb",
         FeatureCategory::OpenGLWorkarounds,
