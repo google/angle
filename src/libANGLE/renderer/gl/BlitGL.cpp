@@ -1368,7 +1368,7 @@ angle::Result BlitGL::initializeResources(const gl::Context *context)
     }
 
     constexpr GLenum potentialSRGBMipmapGenerationFormats[] = {
-        GL_RGBA16, GL_RGBA16F, GL_RGBA32F,
+        GL_RGBA16F, GL_RGBA32F,
         GL_RGBA8,  // RGBA8 can have precision loss when generating mipmaps of a sRGBA8 texture
     };
     for (GLenum internalFormat : potentialSRGBMipmapGenerationFormats)
