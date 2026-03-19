@@ -282,6 +282,7 @@ enum class Feature
     QueryCounterBitsGeneratesErrors,
     ReadPixelsUsingImplementationColorReadFormatForNorm16,
     ReapplyUBOBindingsAfterUsingBinaryProgram,
+    RecreateMipmapLevelsBeforeGenerate,
     RecycleVkEvent,
     RegenerateStructNames,
     RemoveDynamicIndexingOfSwizzledVector,
