@@ -75,7 +75,6 @@ inline constexpr const char *kClientBufferInvalid = "Size must not exceed the si
 inline constexpr const char *kClientDataInVertexArray = "Client data cannot be used with a non-default vertex array object.";
 inline constexpr const char *kColorNumberGreaterThanMaxDrawBuffers = "Color number for primary color greater than or equal to MAX_DRAW_BUFFERS.";
 inline constexpr const char *kColorNumberGreaterThanMaxDualSourceDrawBuffers = "Color number for secondary color greater than or equal to MAX_DUAL_SOURCE_DRAW_BUFFERS.";
-inline constexpr const char *kCompressedDataSizeTooSmall = "dataSize is too small.";
 inline constexpr const char *kCompressedMismatch = "Compressed data is valid if-and-only-if the texture is compressed.";
 inline constexpr const char *kCompressedTextureDimensionsMustMatchData = "Compressed texture dimensions must exactly match the dimensions of the data passed in.";
 inline constexpr const char *kCompressedTexturesNotAttachable = "Compressed textures cannot be attached to a framebuffer.";

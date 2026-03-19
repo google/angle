@@ -1353,13 +1353,6 @@ CallCapture ParseCallCapture(const Token &nameToken,
                                                                                       strings);
         return CallCapture(EntryPoint::GLCompressedTexImage2D, std::move(params));
     }
-    if (strcmp(nameToken, "glCompressedTexImage2DRobustANGLE") == 0)
-    {
-        ParamBuffer params =
-            ParseParameters<std::remove_pointer<PFNGLCOMPRESSEDTEXIMAGE2DROBUSTANGLEPROC>::type>(
-                paramTokens, strings);
-        return CallCapture(EntryPoint::GLCompressedTexImage2DRobustANGLE, std::move(params));
-    }
     if (strcmp(nameToken, "glCompressedTexImage3D") == 0)
     {
         ParamBuffer params =
@@ -1374,26 +1367,12 @@ CallCapture ParseCallCapture(const Token &nameToken,
                 paramTokens, strings);
         return CallCapture(EntryPoint::GLCompressedTexImage3DOES, std::move(params));
     }
-    if (strcmp(nameToken, "glCompressedTexImage3DRobustANGLE") == 0)
-    {
-        ParamBuffer params =
-            ParseParameters<std::remove_pointer<PFNGLCOMPRESSEDTEXIMAGE3DROBUSTANGLEPROC>::type>(
-                paramTokens, strings);
-        return CallCapture(EntryPoint::GLCompressedTexImage3DRobustANGLE, std::move(params));
-    }
     if (strcmp(nameToken, "glCompressedTexSubImage2D") == 0)
     {
         ParamBuffer params =
             ParseParameters<std::remove_pointer<PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC>::type>(
                 paramTokens, strings);
         return CallCapture(EntryPoint::GLCompressedTexSubImage2D, std::move(params));
-    }
-    if (strcmp(nameToken, "glCompressedTexSubImage2DRobustANGLE") == 0)
-    {
-        ParamBuffer params =
-            ParseParameters<std::remove_pointer<PFNGLCOMPRESSEDTEXSUBIMAGE2DROBUSTANGLEPROC>::type>(
-                paramTokens, strings);
-        return CallCapture(EntryPoint::GLCompressedTexSubImage2DRobustANGLE, std::move(params));
     }
     if (strcmp(nameToken, "glCompressedTexSubImage3D") == 0)
     {
@@ -1408,13 +1387,6 @@ CallCapture ParseCallCapture(const Token &nameToken,
             ParseParameters<std::remove_pointer<PFNGLCOMPRESSEDTEXSUBIMAGE3DOESPROC>::type>(
                 paramTokens, strings);
         return CallCapture(EntryPoint::GLCompressedTexSubImage3DOES, std::move(params));
-    }
-    if (strcmp(nameToken, "glCompressedTexSubImage3DRobustANGLE") == 0)
-    {
-        ParamBuffer params =
-            ParseParameters<std::remove_pointer<PFNGLCOMPRESSEDTEXSUBIMAGE3DROBUSTANGLEPROC>::type>(
-                paramTokens, strings);
-        return CallCapture(EntryPoint::GLCompressedTexSubImage3DRobustANGLE, std::move(params));
     }
     if (strcmp(nameToken, "glCopyBufferSubData") == 0)
     {

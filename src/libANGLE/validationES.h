@@ -642,11 +642,6 @@ ANGLE_INLINE bool ValidateColorMasksForSharedExponentColorBuffers(const BlendSta
     return (sharedExponentBufferMask & incompatibleDiffMask).none();
 }
 
-bool ValidateRobustCompressedTexImageBase(const Context *context,
-                                          angle::EntryPoint entryPoint,
-                                          GLsizei imageSize,
-                                          GLsizei dataSize);
-
 bool ValidateVertexAttribIndex(const PrivateState &state,
                                ErrorSet *errors,
                                angle::EntryPoint entryPoint,

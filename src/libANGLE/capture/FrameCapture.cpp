@@ -1923,15 +1923,11 @@ bool IsTextureUpdate(CallCapture &call)
     {
         case EntryPoint::GLCompressedCopyTextureCHROMIUM:
         case EntryPoint::GLCompressedTexImage2D:
-        case EntryPoint::GLCompressedTexImage2DRobustANGLE:
         case EntryPoint::GLCompressedTexImage3D:
         case EntryPoint::GLCompressedTexImage3DOES:
-        case EntryPoint::GLCompressedTexImage3DRobustANGLE:
         case EntryPoint::GLCompressedTexSubImage2D:
-        case EntryPoint::GLCompressedTexSubImage2DRobustANGLE:
         case EntryPoint::GLCompressedTexSubImage3D:
         case EntryPoint::GLCompressedTexSubImage3DOES:
-        case EntryPoint::GLCompressedTexSubImage3DRobustANGLE:
         case EntryPoint::GLCopyTexImage2D:
         case EntryPoint::GLCopyTexSubImage2D:
         case EntryPoint::GLCopyTexSubImage3D:

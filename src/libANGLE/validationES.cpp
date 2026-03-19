@@ -6398,28 +6398,6 @@ bool ValidateGetInternalformativRobustANGLE(const Context *context,
     return true;
 }
 
-bool ValidateRobustCompressedTexImageBase(const Context *context,
-                                          angle::EntryPoint entryPoint,
-                                          GLsizei imageSize,
-                                          GLsizei dataSize)
-{
-    if (!ValidateRobustEntryPoint(context, entryPoint, dataSize))
-    {
-        return false;
-    }
-
-    Buffer *pixelUnpackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelUnpack);
-    if (pixelUnpackBuffer == nullptr)
-    {
-        if (dataSize < imageSize)
-        {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kCompressedDataSizeTooSmall);
-            return false;
-        }
-    }
-    return true;
-}
-
 bool ValidateGetBufferParameterBase(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     BufferBinding targetPacked,

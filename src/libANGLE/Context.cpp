@@ -5753,19 +5753,6 @@ void Context::compressedTexImage2D(TextureTarget target,
                                                   static_cast<const uint8_t *>(data)));
 }
 
-void Context::compressedTexImage2DRobust(TextureTarget target,
-                                         GLint level,
-                                         GLenum internalformat,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLint border,
-                                         GLsizei imageSize,
-                                         GLsizei bufSize,
-                                         const GLvoid *data)
-{
-    compressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
-}
-
 void Context::compressedTexImage3D(TextureTarget target,
                                    GLint level,
                                    GLenum internalformat,
@@ -5787,21 +5774,6 @@ void Context::compressedTexImage3D(TextureTarget target,
                                                   static_cast<const uint8_t *>(data)));
 }
 
-void Context::compressedTexImage3DRobust(TextureTarget target,
-                                         GLint level,
-                                         GLenum internalformat,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLsizei depth,
-                                         GLint border,
-                                         GLsizei imageSize,
-                                         GLsizei bufSize,
-                                         const GLvoid *data)
-{
-    compressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize,
-                         data);
-}
-
 void Context::compressedTexSubImage2D(TextureTarget target,
                                       GLint level,
                                       GLint xoffset,
@@ -5821,21 +5793,6 @@ void Context::compressedTexSubImage2D(TextureTarget target,
     ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(this, PixelUnpackState(), target, level, area,
                                                      format, imageSize,
                                                      static_cast<const uint8_t *>(data)));
-}
-
-void Context::compressedTexSubImage2DRobust(TextureTarget target,
-                                            GLint level,
-                                            GLint xoffset,
-                                            GLint yoffset,
-                                            GLsizei width,
-                                            GLsizei height,
-                                            GLenum format,
-                                            GLsizei imageSize,
-                                            GLsizei bufSize,
-                                            const GLvoid *data)
-{
-    compressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize,
-                            data);
 }
 
 void Context::compressedTexSubImage3D(TextureTarget target,
@@ -5865,23 +5822,6 @@ void Context::compressedTexSubImage3D(TextureTarget target,
     ANGLE_CONTEXT_TRY(texture->setCompressedSubImage(this, PixelUnpackState(), target, level, area,
                                                      format, imageSize,
                                                      static_cast<const uint8_t *>(data)));
-}
-
-void Context::compressedTexSubImage3DRobust(TextureTarget target,
-                                            GLint level,
-                                            GLint xoffset,
-                                            GLint yoffset,
-                                            GLint zoffset,
-                                            GLsizei width,
-                                            GLsizei height,
-                                            GLsizei depth,
-                                            GLenum format,
-                                            GLsizei imageSize,
-                                            GLsizei bufSize,
-                                            const GLvoid *data)
-{
-    compressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format,
-                            imageSize, data);
 }
 
 void Context::generateMipmap(TextureType target)

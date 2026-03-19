@@ -531,20 +531,6 @@
                              GLint yoffset, GLint zoffset, GLsizei width, GLsizei height,          \
                              GLsizei depth, GLenum format, GLenum type, GLsizei bufSize,           \
                              const void *pixels);                                                  \
-    void compressedTexImage2DRobust(                                                               \
-        TextureTarget targetPacked, GLint level, GLenum internalformat, GLsizei width,             \
-        GLsizei height, GLint border, GLsizei imageSize, GLsizei bufSize, const void *data);       \
-    void compressedTexSubImage2DRobust(                                                            \
-        TextureTarget targetPacked, GLint level, GLsizei xoffset, GLsizei yoffset, GLsizei width,  \
-        GLsizei height, GLenum format, GLsizei imageSize, GLsizei bufSize, const void *data);      \
-    void compressedTexImage3DRobust(TextureTarget targetPacked, GLint level,                       \
-                                    GLenum internalformat, GLsizei width, GLsizei height,          \
-                                    GLsizei depth, GLint border, GLsizei imageSize,                \
-                                    GLsizei bufSize, const void *data);                            \
-    void compressedTexSubImage3DRobust(TextureTarget targetPacked, GLint level, GLint xoffset,     \
-                                       GLint yoffset, GLint zoffset, GLsizei width,                \
-                                       GLsizei height, GLsizei depth, GLenum format,               \
-                                       GLsizei imageSize, GLsizei bufSize, const void *data);      \
     void getQueryivRobust(QueryType targetPacked, QueryParameter pnamePacked, GLsizei paramCount,  \
                           GLsizei *length, GLint *params);                                         \
     void getQueryObjectuivRobust(QueryID idPacked, QueryObjectParameter pnamePacked,               \

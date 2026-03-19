@@ -505,12 +505,6 @@ ANGLE_UTIL_EXPORT PFNGLPOLYGONMODEANGLEPROC l_glPolygonModeANGLE;
 ANGLE_UTIL_EXPORT PFNGLPROVOKINGVERTEXANGLEPROC l_glProvokingVertexANGLE;
 ANGLE_UTIL_EXPORT PFNGLDISABLEEXTENSIONANGLEPROC l_glDisableExtensionANGLE;
 ANGLE_UTIL_EXPORT PFNGLREQUESTEXTENSIONANGLEPROC l_glRequestExtensionANGLE;
-ANGLE_UTIL_EXPORT PFNGLCOMPRESSEDTEXIMAGE2DROBUSTANGLEPROC l_glCompressedTexImage2DRobustANGLE;
-ANGLE_UTIL_EXPORT PFNGLCOMPRESSEDTEXIMAGE3DROBUSTANGLEPROC l_glCompressedTexImage3DRobustANGLE;
-ANGLE_UTIL_EXPORT PFNGLCOMPRESSEDTEXSUBIMAGE2DROBUSTANGLEPROC
-    l_glCompressedTexSubImage2DRobustANGLE;
-ANGLE_UTIL_EXPORT PFNGLCOMPRESSEDTEXSUBIMAGE3DROBUSTANGLEPROC
-    l_glCompressedTexSubImage3DRobustANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETACTIVEUNIFORMBLOCKIVROBUSTANGLEPROC
     l_glGetActiveUniformBlockivRobustANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETBOOLEANVROBUSTANGLEPROC l_glGetBooleanvRobustANGLE;
@@ -1611,18 +1605,6 @@ void LoadUtilGLES(LoadProc loadProc)
         reinterpret_cast<PFNGLDISABLEEXTENSIONANGLEPROC>(loadProc("glDisableExtensionANGLE"));
     l_glRequestExtensionANGLE =
         reinterpret_cast<PFNGLREQUESTEXTENSIONANGLEPROC>(loadProc("glRequestExtensionANGLE"));
-    l_glCompressedTexImage2DRobustANGLE =
-        reinterpret_cast<PFNGLCOMPRESSEDTEXIMAGE2DROBUSTANGLEPROC>(
-            loadProc("glCompressedTexImage2DRobustANGLE"));
-    l_glCompressedTexImage3DRobustANGLE =
-        reinterpret_cast<PFNGLCOMPRESSEDTEXIMAGE3DROBUSTANGLEPROC>(
-            loadProc("glCompressedTexImage3DRobustANGLE"));
-    l_glCompressedTexSubImage2DRobustANGLE =
-        reinterpret_cast<PFNGLCOMPRESSEDTEXSUBIMAGE2DROBUSTANGLEPROC>(
-            loadProc("glCompressedTexSubImage2DRobustANGLE"));
-    l_glCompressedTexSubImage3DRobustANGLE =
-        reinterpret_cast<PFNGLCOMPRESSEDTEXSUBIMAGE3DROBUSTANGLEPROC>(
-            loadProc("glCompressedTexSubImage3DRobustANGLE"));
     l_glGetActiveUniformBlockivRobustANGLE =
         reinterpret_cast<PFNGLGETACTIVEUNIFORMBLOCKIVROBUSTANGLEPROC>(
             loadProc("glGetActiveUniformBlockivRobustANGLE"));

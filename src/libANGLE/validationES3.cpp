@@ -1953,28 +1953,6 @@ bool ValidateCompressedTexImage3D(const Context *context,
     return true;
 }
 
-bool ValidateCompressedTexImage3DRobustANGLE(const Context *context,
-                                             angle::EntryPoint entryPoint,
-                                             TextureTarget target,
-                                             GLint level,
-                                             GLenum internalformat,
-                                             GLsizei width,
-                                             GLsizei height,
-                                             GLsizei depth,
-                                             GLint border,
-                                             GLsizei imageSize,
-                                             GLsizei dataSize,
-                                             const void *data)
-{
-    if (!ValidateRobustCompressedTexImageBase(context, entryPoint, imageSize, dataSize))
-    {
-        return false;
-    }
-
-    return ValidateCompressedTexImage3D(context, entryPoint, target, level, internalformat, width,
-                                        height, depth, border, imageSize, data);
-}
-
 bool ValidateBindVertexArray(const Context *context,
                              angle::EntryPoint entryPoint,
                              VertexArrayID array)
@@ -2756,30 +2734,6 @@ bool ValidateCompressedTexSubImage3D(const Context *context,
     }
 
     return true;
-}
-
-bool ValidateCompressedTexSubImage3DRobustANGLE(const Context *context,
-                                                angle::EntryPoint entryPoint,
-                                                TextureTarget target,
-                                                GLint level,
-                                                GLint xoffset,
-                                                GLint yoffset,
-                                                GLint zoffset,
-                                                GLsizei width,
-                                                GLsizei height,
-                                                GLsizei depth,
-                                                GLenum format,
-                                                GLsizei imageSize,
-                                                GLsizei dataSize,
-                                                const void *data)
-{
-    if (!ValidateRobustCompressedTexImageBase(context, entryPoint, imageSize, dataSize))
-    {
-        return false;
-    }
-
-    return ValidateCompressedTexSubImage3D(context, entryPoint, target, level, xoffset, yoffset,
-                                           zoffset, width, height, depth, format, imageSize, data);
 }
 
 bool ValidateGenQueries(const Context *context,

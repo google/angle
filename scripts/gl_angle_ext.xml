@@ -336,59 +336,6 @@
             <param>const void *<name>pixels</name></param>
         </command>
         <command>
-            <proto>void <name>glCompressedTexImage2DRobustANGLE</name></proto>
-            <param group="TextureTarget"><ptype>GLenum</ptype> <name>target</name></param>
-            <param><ptype>GLint</ptype> <name>level</name></param>
-            <param group="InternalFormat"><ptype>GLenum</ptype> <name>internalformat</name></param>
-            <param><ptype>GLsizei</ptype> <name>width</name></param>
-            <param><ptype>GLsizei</ptype> <name>height</name></param>
-            <param><ptype>GLint</ptype> <name>border</name></param>
-            <param><ptype>GLsizei</ptype> <name>imageSize</name></param>
-            <param><ptype>GLsizei</ptype> <name>bufSize</name></param>
-            <param>const void *<name>data</name></param>
-        </command>
-        <command>
-            <proto>void <name>glCompressedTexSubImage2DRobustANGLE</name></proto>
-            <param group="TextureTarget"><ptype>GLenum</ptype> <name>target</name></param>
-            <param><ptype>GLint</ptype> <name>level</name></param>
-            <param><ptype>GLsizei</ptype> <name>xoffset</name></param>
-            <param><ptype>GLsizei</ptype> <name>yoffset</name></param>
-            <param><ptype>GLsizei</ptype> <name>width</name></param>
-            <param><ptype>GLsizei</ptype> <name>height</name></param>
-            <param group="InternalFormat"><ptype>GLenum</ptype> <name>format</name></param>
-            <param><ptype>GLsizei</ptype> <name>imageSize</name></param>
-            <param><ptype>GLsizei</ptype> <name>bufSize</name></param>
-            <param>const void *<name>data</name></param>
-        </command>
-        <command>
-            <proto>void <name>glCompressedTexImage3DRobustANGLE</name></proto>
-            <param group="TextureTarget"><ptype>GLenum</ptype> <name>target</name></param>
-            <param><ptype>GLint</ptype> <name>level</name></param>
-            <param group="InternalFormat"><ptype>GLenum</ptype> <name>internalformat</name></param>
-            <param><ptype>GLsizei</ptype> <name>width</name></param>
-            <param><ptype>GLsizei</ptype> <name>height</name></param>
-            <param><ptype>GLsizei</ptype> <name>depth</name></param>
-            <param><ptype>GLint</ptype> <name>border</name></param>
-            <param><ptype>GLsizei</ptype> <name>imageSize</name></param>
-            <param><ptype>GLsizei</ptype> <name>bufSize</name></param>
-            <param>const void *<name>data</name></param>
-        </command>
-        <command>
-            <proto>void <name>glCompressedTexSubImage3DRobustANGLE</name></proto>
-            <param group="TextureTarget"><ptype>GLenum</ptype> <name>target</name></param>
-            <param><ptype>GLint</ptype> <name>level</name></param>
-            <param><ptype>GLint</ptype> <name>xoffset</name></param>
-            <param><ptype>GLint</ptype> <name>yoffset</name></param>
-            <param><ptype>GLint</ptype> <name>zoffset</name></param>
-            <param><ptype>GLsizei</ptype> <name>width</name></param>
-            <param><ptype>GLsizei</ptype> <name>height</name></param>
-            <param><ptype>GLsizei</ptype> <name>depth</name></param>
-            <param group="InternalFormat"><ptype>GLenum</ptype> <name>format</name></param>
-            <param><ptype>GLsizei</ptype> <name>imageSize</name></param>
-            <param><ptype>GLsizei</ptype> <name>bufSize</name></param>
-            <param>const void *<name>data</name></param>
-        </command>
-        <command>
             <proto>void <name>glGetQueryivRobustANGLE</name></proto>
             <param group="QueryTarget"><ptype>GLenum</ptype> <name>target</name></param>
             <param group="QueryParameterName"><ptype>GLenum</ptype> <name>pname</name></param>
@@ -1019,10 +966,6 @@
                 <command name="glTexSubImage2DRobustANGLE"/>
                 <command name="glTexImage3DRobustANGLE"/>
                 <command name="glTexSubImage3DRobustANGLE"/>
-                <command name="glCompressedTexImage2DRobustANGLE"/>
-                <command name="glCompressedTexSubImage2DRobustANGLE"/>
-                <command name="glCompressedTexImage3DRobustANGLE"/>
-                <command name="glCompressedTexSubImage3DRobustANGLE"/>
                 <command name="glGetQueryivRobustANGLE"/>
                 <command name="glGetQueryObjectuivRobustANGLE"/>
                 <command name="glGetBufferPointervRobustANGLE"/>
