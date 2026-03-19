@@ -638,6 +638,11 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo recreateMipmapLevelsBeforeGenerate = {
+        "recreateMipmapLevelsBeforeGenerate",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

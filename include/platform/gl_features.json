@@ -828,6 +828,15 @@
                 "Some ES2 Mali drivers are unable to query enough information from a linked program to use passthrough shaders."
             ],
             "issue": "https://crbug.com/451796659"
+        },
+        {
+            "name": "recreate_mipmap_levels_before_generate",
+            "category": "Workarounds",
+            "description": [
+                "Before calling glGenerateMipmap on a mutable texture, recreate levels that the driver is ",
+                "supposed to recreate to work around driver bugs."
+            ],
+            "issue": "http://crbug.com/491732188"
         }
     ]
 }

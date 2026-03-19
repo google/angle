@@ -2693,6 +2693,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // exposed.
     ANGLE_FEATURE_CONDITION(features, bgraTexImageFormatsBroken, IsQualcomm(vendor));
 
+    // glGenerateMipmap may silently fail on mesa, leaving mips that are expected to be recreated to
+    // match the base level in their original shape, hidden from ANGLE and its validation.
+    ANGLE_FEATURE_CONDITION(features, recreateMipmapLevelsBeforeGenerate, isMesa);
+
     // https://github.com/flutter/flutter/issues/47164
     // https://github.com/flutter/flutter/issues/47804
     // Some devices expose the QCOM tiled memory extension string but don't actually provide the
