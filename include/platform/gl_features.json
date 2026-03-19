@@ -868,6 +868,15 @@
                 "Validate GL_MAX_*_UNIFORM_BLOCKS at compile time instead of link time to work around compiler bugs."
             ],
             "issue": "http://crbug.com/475877320"
+        },
+        {
+            "name": "recreate_mipmap_levels_before_generate",
+            "category": "Workarounds",
+            "description": [
+                "Before calling glGenerateMipmap on a mutable texture, recreate levels that the driver is ",
+                "supposed to recreate to work around driver bugs."
+            ],
+            "issue": "http://crbug.com/491732188"
         }
     ]
 }

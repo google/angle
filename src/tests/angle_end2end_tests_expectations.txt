@@ -158,6 +158,7 @@
 42266866 WIN INTEL OPENGL : GLSLTest_ES3.LargeInterfaceBlockArray/* = SKIP
 42266866 WIN INTEL OPENGL : GLSLTest_ES3.LargeInterfaceBlockNestedArray/* = SKIP
 463961767 WIN INTEL OPENGL : EGLSurfacelessContextTest.Switcheroo/* = SKIP
+494350632 WIN INTEL OPENGL : MipmapTestES3.MismatchingLevelFormats/* = SKIP
 
 // Failures on Intel Alder Lake S UHD Graphics 770 (8086:4680-31.0.101.5333)
 352085732 WIN INTEL OPENGL : GeometryShaderTest.LayeredFramebufferClear2DArrayColor/* = SKIP
@@ -456,6 +457,8 @@
 464927523 METAL : GLSLTest_ES3_PackUnpackEmulation.PackSnorm2x16/* = SKIP
 464927523 METAL : GLSLTest_ES3_PackUnpackEmulation.PackUnorm2x16/* = SKIP
 42266214 MAC APPLE METAL : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
+494392011 MAC METAL : MipmapTestES3.MismatchingLevelFormats/* = SKIP
+494341324 MAC OPENGL : MipmapTestES3.MismatchingLevelFormats/* = SKIP
 
 // The workaround is not intended to be enabled in this configuration so
 // skip it as the failure is likely a driver bug.
