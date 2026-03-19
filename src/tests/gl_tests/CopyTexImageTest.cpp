@@ -1170,13 +1170,10 @@ TEST_P(CopyTexImageTestES3, 2DArraySubImage)
 // GL_TEXTURE_2D.
 TEST_P(CopyTexImageTestES3, CopyTexSubImageFromTexture3D)
 {
-    // TODO(anglebug.com/42262446)
-    // Seems to fail on D3D11 Windows.
-    ANGLE_SKIP_TEST_IF(IsD3D11() && IsWindows());
-
     constexpr GLsizei kTexSize = 4;
     constexpr GLsizei kLayers  = 2;
-    std::vector<GLColor> red(kTexSize * kTexSize * kLayers, GLColor::red);
+    std::vector<GLColor> red(kTexSize * kTexSize, GLColor::red);
+    std::vector<GLColor> green(kTexSize * kTexSize, GLColor::green);
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
@@ -1191,6 +1188,8 @@ TEST_P(CopyTexImageTestES3, CopyTexSubImageFromTexture3D)
                  GL_UNSIGNED_BYTE, NULL);
     glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 1, kTexSize, kTexSize, 1, GL_RGBA, GL_UNSIGNED_BYTE,
                     red.data());
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, kTexSize, kTexSize, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    green.data());
     glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, src_object_id, 0, 1);
     ASSERT_GL_NO_ERROR();
 

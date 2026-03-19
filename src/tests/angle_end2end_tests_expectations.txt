@@ -550,6 +550,8 @@
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFold/* = SKIP
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
 
+494938700 WIN D3D11 : CopyTexImageTestES3.CopyTexSubImageFromTexture3D/* = SKIP
+
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 42264646 ANDROID GLES : GLSLTestLoops.ForNoCondition/* = SKIP
