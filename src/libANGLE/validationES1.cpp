@@ -924,9 +924,9 @@ bool ValidateGetClipPlanex(const PrivateState &state,
 bool ValidateGetFixedv(const Context *context,
                        angle::EntryPoint entryPoint,
                        GLenum pname,
-                       const GLfixed *params)
+                       const GLfixed *data)
 {
-    return ValidateStateQuery(context, entryPoint, pname, params, nullptr);
+    return ValidateStateQuery(context, entryPoint, pname, data, nullptr);
 }
 
 bool ValidateGetLightfv(const PrivateState &state,

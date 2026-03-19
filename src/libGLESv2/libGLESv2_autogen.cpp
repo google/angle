@@ -2398,9 +2398,9 @@ void GL_APIENTRY glGetClipPlanex(GLenum plane, GLfixed *equation)
     return GL_GetClipPlanex(plane, equation);
 }
 
-void GL_APIENTRY glGetFixedv(GLenum pname, GLfixed *params)
+void GL_APIENTRY glGetFixedv(GLenum pname, GLfixed *data)
 {
-    return GL_GetFixedv(pname, params);
+    return GL_GetFixedv(pname, data);
 }
 
 void GL_APIENTRY glGetLightfv(GLenum light, GLenum pname, GLfloat *params)

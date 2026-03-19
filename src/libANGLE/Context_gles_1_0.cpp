@@ -54,7 +54,7 @@ void Context::enableClientState(ClientVertexArrayType clientState)
     mStateCache.onGLES1ClientStateChange(this);
 }
 
-void Context::getFixedv(GLenum pname, GLfixed *params)
+void Context::getFixedv(GLenum pname, GLfixed *data)
 {
     GLenum nativeType;
     unsigned int numParams;
@@ -64,12 +64,12 @@ void Context::getFixedv(GLenum pname, GLfixed *params)
         return;  // Avoid crashing with invalid apps running with no validation.
     }
 
-    std::vector<GLfloat> paramsf(numParams, 0);
-    CastStateValues(this, nativeType, pname, numParams, paramsf.data());
+    std::vector<GLfloat> dataf(numParams, 0);
+    CastStateValues(this, nativeType, pname, numParams, dataf.data());
 
     for (unsigned int i = 0; i < numParams; i++)
     {
-        params[i] = ConvertFloatToFixed(paramsf[i]);
+        data[i] = ConvertFloatToFixed(dataf[i]);
     }
 }
 

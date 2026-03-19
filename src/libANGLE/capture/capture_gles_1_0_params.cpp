@@ -73,10 +73,10 @@ void CaptureGetClipPlanex_equation(const State &glState,
     UNIMPLEMENTED();
 }
 
-void CaptureGetFixedv_params(const State &glState,
-                             GLenum pname,
-                             GLfixed *params,
-                             ParamCapture *paramCapture)
+void CaptureGetFixedv_data(const State &glState,
+                           GLenum pname,
+                           GLfixed *data,
+                           ParamCapture *paramCapture)
 {
     CaptureGetParameter(glState, pname, sizeof(GLfixed), paramCapture);
 }

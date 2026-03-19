@@ -983,7 +983,7 @@ deps = {
   },
 
   'third_party/OpenGL-Registry/src': {
-    'url': Var('chromium_git') + '/external/github.com/KhronosGroup/OpenGL-Registry@d38ff693f3e99ac5a61e3858de76c6c02976fa67',
+    'url': Var('chromium_git') + '/external/github.com/KhronosGroup/OpenGL-Registry@9cb90ca4902d588bef3c830fbb1da484893bd5fb',
     'condition': 'not build_with_chromium',
   },
 

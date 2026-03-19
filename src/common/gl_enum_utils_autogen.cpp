@@ -5601,6 +5601,22 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_RGB16F";
                 case 0x88F0:
                     return "GL_DEPTH24_STENCIL8";
+                case 0x8A54:
+                    return "GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT";
+                case 0x8A55:
+                    return "GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT";
+                case 0x8A56:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT";
+                case 0x8A57:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT";
+                case 0x8C00:
+                    return "GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG";
+                case 0x8C01:
+                    return "GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG";
+                case 0x8C02:
+                    return "GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG";
+                case 0x8C03:
+                    return "GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG";
                 case 0x8C3A:
                     return "GL_R11F_G11F_B10F";
                 case 0x8C3D:
@@ -5693,6 +5709,10 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_SRG8_EXT";
                 case 0x906F:
                     return "GL_RGB10_A2UI";
+                case 0x9137:
+                    return "GL_COMPRESSED_RGBA_PVRTC_2BPPV2_IMG";
+                case 0x9138:
+                    return "GL_COMPRESSED_RGBA_PVRTC_4BPPV2_IMG";
                 case 0x9270:
                     return "GL_COMPRESSED_R11_EAC";
                 case 0x9271:
@@ -5809,6 +5829,10 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES";
                 case 0x93E9:
                     return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES";
+                case 0x93F0:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV2_IMG";
+                case 0x93F1:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV2_IMG";
                 case 0x9690:
                     return "GL_ETC1_RGB8_LOSSY_DECODE_ANGLE";
                 case 0x9691:
@@ -7261,6 +7285,22 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_RGB16F";
                 case 0x88F0:
                     return "GL_DEPTH24_STENCIL8";
+                case 0x8A54:
+                    return "GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT";
+                case 0x8A55:
+                    return "GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT";
+                case 0x8A56:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT";
+                case 0x8A57:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT";
+                case 0x8C00:
+                    return "GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG";
+                case 0x8C01:
+                    return "GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG";
+                case 0x8C02:
+                    return "GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG";
+                case 0x8C03:
+                    return "GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG";
                 case 0x8C3A:
                     return "GL_R11F_G11F_B10F";
                 case 0x8C3D:
@@ -7345,6 +7385,10 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_RGBA16_SNORM_EXT";
                 case 0x906F:
                     return "GL_RGB10_A2UI";
+                case 0x9137:
+                    return "GL_COMPRESSED_RGBA_PVRTC_2BPPV2_IMG";
+                case 0x9138:
+                    return "GL_COMPRESSED_RGBA_PVRTC_4BPPV2_IMG";
                 case 0x9270:
                     return "GL_COMPRESSED_R11_EAC";
                 case 0x9271:
@@ -7461,6 +7505,10 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x5_OES";
                 case 0x93E9:
                     return "GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6x6_OES";
+                case 0x93F0:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV2_IMG";
+                case 0x93F1:
+                    return "GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV2_IMG";
                 case 0x9690:
                     return "GL_ETC1_RGB8_LOSSY_DECODE_ANGLE";
                 case 0x9691:
@@ -8152,6 +8200,8 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_CLAMP_TO_EDGE";
                 case 0x8370:
                     return "GL_MIRRORED_REPEAT";
+                case 0x8743:
+                    return "GL_MIRROR_CLAMP_TO_EDGE_EXT";
                 default:
                     return UnknownEnumToString(value);
             }
@@ -8967,6 +9017,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_BUFFER_ACCESS_FLAGS", 0x911F},
     {"GL_BUFFER_ACCESS_OES", 0x88BB},
     {"GL_BUFFER_BINDING", 0x9302},
+    {"GL_BUFFER_CLIENT_POINTER_SIZE_MESA", 0x9790},
     {"GL_BUFFER_DATA_SIZE", 0x9303},
     {"GL_BUFFER_FLUSHING_UNMAP_APPLE", 0x8A13},
     {"GL_BUFFER_GPU_ADDRESS_NV", 0x8F1D},
@@ -10687,8 +10738,6 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_HSL_SATURATION", 0x92AE},
     {"GL_HSL_SATURATION_KHR", 0x92AE},
     {"GL_HSL_SATURATION_NV", 0x92AE},
-    {"GL_HUAWEI_PROGRAM_BINARY", 0x9771},
-    {"GL_HUAWEI_SHADER_BINARY", 0x9770},
     {"GL_IDENTITY_NV", 0x862A},
     {"GL_IGNORE_BORDER_HP", 0x8150},
     {"GL_IMAGE_1D", 0x904C},
@@ -11225,6 +11274,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_MAP2_VERTEX_ATTRIB9_4_NV", 0x8679},
     {"GL_MAP_ATTRIB_U_ORDER_NV", 0x86C3},
     {"GL_MAP_ATTRIB_V_ORDER_NV", 0x86C4},
+    {"GL_MAP_CLIENT_POINTER_BIT_MESA", 0x4000},
     {"GL_MAP_COHERENT_BIT", 0x0080},
     {"GL_MAP_COHERENT_BIT_EXT", 0x0080},
     {"GL_MAP_COLOR", 0x0D10},
@@ -12609,6 +12659,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_PROGRAM_BINARY_FORMATS", 0x87FF},
     {"GL_PROGRAM_BINARY_FORMATS_OES", 0x87FF},
     {"GL_PROGRAM_BINARY_FORMAT_MESA", 0x875F},
+    {"GL_PROGRAM_BINARY_HUAWEI", 0x9771},
     {"GL_PROGRAM_BINARY_LENGTH", 0x8741},
     {"GL_PROGRAM_BINARY_LENGTH_OES", 0x8741},
     {"GL_PROGRAM_BINARY_READY_ANGLE", 0x96BE},
@@ -13315,6 +13366,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_SHADER_BINARY_FORMATS", 0x8DF8},
     {"GL_SHADER_BINARY_FORMAT_SPIR_V", 0x9551},
     {"GL_SHADER_BINARY_FORMAT_SPIR_V_ARB", 0x9551},
+    {"GL_SHADER_BINARY_HUAWEI", 0x9770},
     {"GL_SHADER_BINARY_VIV", 0x8FC4},
     {"GL_SHADER_COMPILER", 0x8DFA},
     {"GL_SHADER_CONSISTENT_NV", 0x86DD},

@@ -18,9 +18,9 @@
   "third_party/OpenCL-Docs/src/xml/cl.xml":
     "3c93f136de5049f4d9eca8240df1a025",
   "third_party/OpenGL-Registry/src/xml/gl.xml":
-    "00c18abda09593ce770fd184bd8f6255",
+    "1eb37882507017323d5e447e42e74f62",
   "third_party/OpenGL-Registry/src/xml/glx.xml":
-    "649f24094c1938779ada7db2dc092d35",
+    "848c20fce49f58e42a23b93005202739",
   "third_party/OpenGL-Registry/src/xml/wgl.xml":
-    "da69debd6646f79119fcdaaf5969af2f"
+    "53f90180449a1abcd8fdfe56fc5c869c"
 }
