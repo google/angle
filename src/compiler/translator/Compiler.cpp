@@ -1126,11 +1126,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // For the MSL output, keep the inactive fragment outputs, but remove them otherwise.
     if (compileOptions.removeInactiveVariables)
     {
-        const bool removeFragmentOutputs = mOutputType != SH_MSL_METAL_OUTPUT;
-
-        if (!RemoveInactiveInterfaceVariables(
-                this, root, &getSymbolTable(), getAttributes(), getInputVaryings(),
-                getOutputVariables(), getUniforms(), getInterfaceBlocks(), removeFragmentOutputs))
+        if (!RemoveInactiveInterfaceVariables(this, root, &getSymbolTable(), getAttributes(),
+                                              getInputVaryings(), getOutputVariables(),
+                                              getUniforms(), getInterfaceBlocks(),
+                                              !compileOptions.retainInactiveFragmentOutputs))
         {
             return false;
         }
@@ -1285,6 +1284,7 @@ ShCompileOptions TCompiler::adjustOptions(const ShCompileOptions &compileOptions
     if (mShaderType != GL_FRAGMENT_SHADER)
     {
         compileOptions.clampFragDepth = false;
+        compileOptions.retainInactiveFragmentOutputs = false;
     }
 
     // gl_Position should always be written in GLSL compatibility output mode.

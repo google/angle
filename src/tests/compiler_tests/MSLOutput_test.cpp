@@ -31,6 +31,7 @@ class MSLOutputTestBase : public MatchOutputCodeTest
         options.initializeUninitializedLocals      = true;
         options.separateCompoundStructDeclarations = true;
         options.removeInactiveVariables            = true;
+        options.retainInactiveFragmentOutputs      = true;
         // The tests also test that validation succeeds. This should be also the
         // default forced option, but currently MSL backend does not generate
         // valid trees. Once validateAST is forced, move to above hunk.

@@ -181,6 +181,7 @@ int main(int argc, char *argv[])
                             case 'v':
                                 output = SH_SPIRV_VULKAN_OUTPUT;
                                 compileOptions.initializeUninitializedLocals = true;
+                                compileOptions.removeInactiveVariables       = true;
                                 break;
                             case 'h':
                                 if (argv[0][4] == '1' && argv[0][5] == '1')
@@ -198,6 +199,7 @@ int main(int argc, char *argv[])
                                 compileOptions.forceDeferNonConstGlobalInitializers = true;
                                 compileOptions.clampPointSize                       = true;
                                 compileOptions.removeInactiveVariables              = true;
+                                compileOptions.retainInactiveFragmentOutputs        = true;
                                 compileOptions.ensureLoopForwardProgress            = true;
                                 break;
                             default:

@@ -152,10 +152,12 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     if (IsOutputSPIRV(shaderOutput))
     {
         options.removeInactiveVariables = true;
+        options.retainInactiveFragmentOutputs = false;
     }
     if (IsOutputMSL(shaderOutput))
     {
         options.removeInactiveVariables = true;
+        options.retainInactiveFragmentOutputs = true;
     }
 
     std::vector<uint32_t> validOutputs;

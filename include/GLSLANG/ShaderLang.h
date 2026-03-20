@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 404
+#define ANGLE_SH_VERSION 405
 
 enum ShShaderSpec
 {
@@ -470,8 +470,10 @@ struct ShCompileOptions
     // Whether to preserve denorm floats in the lexer or convert to zero
     uint64_t preserveDenorms : 1;
 
-    // Whether inactive shader variables from the output.
+    // Whether inactive shader variables should be removed from the output.  For some backends,
+    // inactive fragment outputs should still be retained.
     uint64_t removeInactiveVariables : 1;
+    uint64_t retainInactiveFragmentOutputs : 1;
 
     // Ensure all loops execute side-effects or terminate.
     uint64_t ensureLoopForwardProgress : 1;
