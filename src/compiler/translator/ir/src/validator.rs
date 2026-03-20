@@ -17,11 +17,11 @@
 //     ends in branch: validate_all_branch_instructions_have_valid_target()
 //   - No branches inside a block (i.e. no dead code): validate_no_dead_code()
 //   - For merge blocks that have an input, the branch instruction of blocks that jump to it have an
-//     output: validate_merge_block_input_is_set()
+//     output: validate_merge_block_with_input()
+//   - For block that has a merge block with an input, the branch instruction must be If, and the
+//     block must contains block1: validate_merge_block_with_input()
 
 // TODO(http://anglebug.com/349994211): to validate:
-//   - For block that has a merge block with an input, the branch instruction must be If, and the
-//     block must contains block1
 //   - No identical types with different IDs.
 //   - If there's a cached "has side effect", that it's correct.
 //   - Validate that ImageType fields are valid in combination with ImageDimension
@@ -254,7 +254,7 @@ impl<'a> Validator<'a> {
         self.validate_all_registers_are_declared_in_scope();
         self.validate_no_dead_code();
         self.validate_all_branch_instructions_have_valid_target();
-        self.validate_merge_block_input_is_set();
+        self.validate_merge_block_with_input();
     }
 
     fn validate_all_ids_are_present(&self) {
@@ -1224,13 +1224,13 @@ impl<'a> Validator<'a> {
         }
     }
 
-    fn validate_merge_block_input_is_set(&self) {
+    fn validate_merge_block_with_input(&self) {
         traverser::visitor::for_each_function(
             &mut (),
             &self.ir.function_entries,
             |_, _| {}, // do nothing in pre_visit
             |_, block, block_kind, _| {
-                self.validate_current_block_merge_block_input_is_set(block, block_kind);
+                self.validate_merge_block_input_prerequisites(block, block_kind);
                 traverser::visitor::VISIT_SUB_BLOCKS
             }, /* validate if the current block has a merge_block with input, the input
                         * is set */
@@ -1238,12 +1238,21 @@ impl<'a> Validator<'a> {
         );
     }
 
-    fn validate_current_block_merge_block_input_is_set(
+    fn validate_merge_block_input_prerequisites(
         &self,
         block: &Block,
         block_kind: traverser::BlockKind,
     ) {
         if block.merge_block.as_ref().and_then(|merge_block| merge_block.input).is_some() {
+            // merge_block with input is only allowed when current block ends with OpCode::If, and
+            // "if true" block exists
+            if !matches!(block.get_terminating_op(), OpCode::If(_)) {
+                self.on_error(format_args!(
+                    "current {:?} block contains a merge block with input, but current block does \
+                     not end with OpCode::If",
+                    block_kind
+                ));
+            }
             if block.block1.is_none() {
                 self.on_error(format_args!(
                     "current {:?} block contains a merge block with input, at minimum current \
@@ -1252,6 +1261,7 @@ impl<'a> Validator<'a> {
                 ));
             }
 
+            // Branch instruction in block1 that jumps to the merge block should have an output
             let block1 = block.block1.as_ref().expect("block1 can't be none");
             let block1_last_op = block1.get_merge_chain_terminating_op();
             if !matches!(block1_last_op, OpCode::Merge(Some(_))) {
@@ -1262,6 +1272,8 @@ impl<'a> Validator<'a> {
                 ));
             }
 
+            // Branch instruction in block2 (if block2 exists) that jumps to the merge block should
+            // have an output
             if let Some(block2) = block.block2.as_ref() {
                 let block2_last_op = block2.get_merge_chain_terminating_op();
                 if !matches!(block2_last_op, OpCode::Merge(Some(_))) {
