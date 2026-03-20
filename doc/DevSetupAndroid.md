@@ -201,7 +201,6 @@ gn args --list <dir>
 ### Performance config
 
 This config is designed to get maximum performance by disabling debug configs and validation layers.
-Note: The oddly named `is_official_build` is a more aggressive optimization level than `Release`. Its name is historical.
 ```
 target_os = "android"
 target_cpu = "arm64"
@@ -210,7 +209,6 @@ use_thin_lto = true
 thin_lto_enable_optimizations = true
 angle_enable_vulkan = true
 is_component_build = false
-is_official_build = true
 is_debug = false
 ```
 
