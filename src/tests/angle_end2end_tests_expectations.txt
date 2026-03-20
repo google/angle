@@ -1243,6 +1243,7 @@
 480069042 PIXEL10 GLES : UniformBufferTest.Std140UniformBlockWithPerMemberColumnMajorQualifier/* = SKIP
 480069042 PIXEL10 GLES : WebGLCompatibilityTest.GenerateMipmapUnsizedFloatingPointTexture/* = SKIP
 480069042 PIXEL10 GLES : CopyTexImageLumaWorkaroundTestES3.DifferentCubeFacesLuminanceAlpha/ES3_OpenGLES_ForceLumaWorkaroundForSameTextureCopyTexImage2D = SKIP
+480069042 PIXEL10 GLES : GLSLTest_ES31.IOBlockInvariantAll/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP
