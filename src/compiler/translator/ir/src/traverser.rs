@@ -391,7 +391,7 @@ pub mod transformer {
 
             // Visit the sub-blocks after transforming the root block.
             cur_block.for_each_sub_block_mut(state, &|state, sub_block| {
-                for_each_block(state, sub_block, block_transform_pre, block_transform_post)
+                for_each_block(state, sub_block, block_transform_pre, block_transform_post);
             });
 
             // Visit the block again after visiting the sub-blocks.  It may be transformed further.

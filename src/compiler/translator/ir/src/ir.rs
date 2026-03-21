@@ -811,6 +811,76 @@ impl OpCode {
             _ => panic!("Internal error: Expected switch"),
         };
     }
+
+    // Whether an instruction is considered to have a side effect.  These instructions must execute
+    // exactly once; i.e. cannot be dead-code eliminated even if their result is never used, and
+    // cannot be evaluated twice in the generated output.
+    //
+    // Branch instructions are excluded, as they always have a side effect (flow control).
+    pub fn has_side_effect(&self) -> bool {
+        matches!(
+            self,
+            // TODO(http://anglebug.com/349994211): for now, assume every function call has a side
+            // effect.  This can be optimized with a prepass going over functions and checking if
+            // they have side effect.  AST assumes user functions have side effects, and mostly
+            // uses isKnownNotToHaveSideEffects for built-ins, which are separately
+            // checked here.  Some internal transformations mark a function as no-side
+            // effect, but no real benefit comes from that IMO.  This is probably fine
+            // as-is.
+            OpCode::Call(..)
+            // Instructions that produce a register:
+            | OpCode::Unary(UnaryOpCode::PrefixIncrement, _)
+            | OpCode::Unary(UnaryOpCode::PrefixDecrement, _)
+            | OpCode::Unary(UnaryOpCode::PostfixIncrement, _)
+            | OpCode::Unary(UnaryOpCode::PostfixDecrement, _)
+            | OpCode::Unary(UnaryOpCode::AtomicCounter, _)
+            | OpCode::Unary(UnaryOpCode::AtomicCounterIncrement, _)
+            | OpCode::Unary(UnaryOpCode::AtomicCounterDecrement, _)
+            | OpCode::Unary(UnaryOpCode::PixelLocalLoadANGLE, _)
+            | OpCode::Binary(BinaryOpCode::Modf, _, _)
+            | OpCode::Binary(BinaryOpCode::Frexp, _, _)
+            | OpCode::Binary(BinaryOpCode::AtomicAdd, _, _)
+            | OpCode::Binary(BinaryOpCode::AtomicMin, _, _)
+            | OpCode::Binary(BinaryOpCode::AtomicMax, _, _)
+            | OpCode::Binary(BinaryOpCode::AtomicAnd, _, _)
+            | OpCode::Binary(BinaryOpCode::AtomicOr, _, _)
+            | OpCode::Binary(BinaryOpCode::AtomicXor, _, _)
+            | OpCode::Binary(BinaryOpCode::AtomicExchange, _, _)
+            | OpCode::BuiltIn(BuiltInOpCode::UaddCarry, _)
+            | OpCode::BuiltIn(BuiltInOpCode::UsubBorrow, _)
+            | OpCode::BuiltIn(BuiltInOpCode::UmulExtended, _)
+            | OpCode::BuiltIn(BuiltInOpCode::ImulExtended, _)
+            | OpCode::BuiltIn(BuiltInOpCode::AtomicCompSwap, _)
+            | OpCode::BuiltIn(BuiltInOpCode::ImageLoad, _)
+            | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicAdd, _)
+            | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicMin, _)
+            | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicMax, _)
+            | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicAnd, _)
+            | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicOr, _)
+            | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicXor, _)
+            | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicExchange, _)
+            | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicCompSwap, _)
+            // Void instructions:
+            | OpCode::Store(..)
+            | OpCode::BuiltIn(BuiltInOpCode::ImageStore, _)
+            | OpCode::BuiltIn(BuiltInOpCode::PixelLocalStoreANGLE, _)
+            | OpCode::BuiltIn(BuiltInOpCode::MemoryBarrier, _)
+            | OpCode::BuiltIn(BuiltInOpCode::MemoryBarrierAtomicCounter, _)
+            | OpCode::BuiltIn(BuiltInOpCode::MemoryBarrierBuffer, _)
+            | OpCode::BuiltIn(BuiltInOpCode::MemoryBarrierImage, _)
+            | OpCode::BuiltIn(BuiltInOpCode::Barrier, _)
+            | OpCode::BuiltIn(BuiltInOpCode::MemoryBarrierShared, _)
+            | OpCode::BuiltIn(BuiltInOpCode::GroupMemoryBarrier, _)
+            | OpCode::BuiltIn(BuiltInOpCode::EmitVertex, _)
+            | OpCode::BuiltIn(BuiltInOpCode::EndPrimitive, _)
+            | OpCode::BuiltIn(BuiltInOpCode::BeginInvocationInterlockNV, _)
+            | OpCode::BuiltIn(BuiltInOpCode::EndInvocationInterlockNV, _)
+            | OpCode::BuiltIn(BuiltInOpCode::BeginFragmentShaderOrderingINTEL, _)
+            | OpCode::BuiltIn(BuiltInOpCode::BeginInvocationInterlockARB, _)
+            | OpCode::BuiltIn(BuiltInOpCode::EndInvocationInterlockARB, _)
+            | OpCode::BuiltIn(BuiltInOpCode::LoopForwardProgress, _)
+        )
+    }
 }
 
 #[derive(Copy, Clone)]

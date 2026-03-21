@@ -23,6 +23,8 @@
 
 // TODO(http://anglebug.com/349994211): to validate:
 //   - No identical types with different IDs.
+//   - Referenced IDs are not dead-code-eliminated: Checking against max_*_count can be paird with a
+//     look up and checking that !is_dead_code_eliminated
 //   - If there's a cached "has side effect", that it's correct.
 //   - Validate that ImageType fields are valid in combination with ImageDimension
 //   - No operations should have entirely constant arguments, that should be folded (and
@@ -265,10 +267,12 @@ impl<'a> Validator<'a> {
     fn validate_all_ids_are_present_in_ir_meta(&self) {
         // validate IRMeta.constants
         for (constant_id, constant) in self.ir.meta.all_constants().iter().enumerate() {
-            self.validate_all_ids_in_a_constant_are_present(
-                constant_id.try_into().unwrap(),
-                constant,
-            );
+            if !constant.is_dead_code_eliminated {
+                self.validate_all_ids_in_a_constant_are_present(
+                    constant_id.try_into().unwrap(),
+                    constant,
+                );
+            }
         }
         // validate IRMeta.variables
         for (variable_id, variable) in self.ir.meta.all_variables().iter().enumerate() {

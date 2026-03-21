@@ -366,99 +366,59 @@ fn preprocess_block_registers(state: &mut State, block: &Block) {
             let result_info =
                 state.register_info.entry(result_id.id).or_insert(RegisterInfo::new());
 
-            match opcode {
-                OpCode::Call(..)
-                | OpCode::Unary(UnaryOpCode::PrefixIncrement, _)
-                | OpCode::Unary(UnaryOpCode::PrefixDecrement, _)
-                | OpCode::Unary(UnaryOpCode::PostfixIncrement, _)
-                | OpCode::Unary(UnaryOpCode::PostfixDecrement, _)
-                | OpCode::Unary(UnaryOpCode::AtomicCounter, _)
-                | OpCode::Unary(UnaryOpCode::AtomicCounterIncrement, _)
-                | OpCode::Unary(UnaryOpCode::AtomicCounterDecrement, _)
-                | OpCode::Unary(UnaryOpCode::PixelLocalLoadANGLE, _)
-                | OpCode::Binary(BinaryOpCode::Modf, _, _)
-                | OpCode::Binary(BinaryOpCode::Frexp, _, _)
-                | OpCode::Binary(BinaryOpCode::AtomicAdd, _, _)
-                | OpCode::Binary(BinaryOpCode::AtomicMin, _, _)
-                | OpCode::Binary(BinaryOpCode::AtomicMax, _, _)
-                | OpCode::Binary(BinaryOpCode::AtomicAnd, _, _)
-                | OpCode::Binary(BinaryOpCode::AtomicOr, _, _)
-                | OpCode::Binary(BinaryOpCode::AtomicXor, _, _)
-                | OpCode::Binary(BinaryOpCode::AtomicExchange, _, _)
-                | OpCode::BuiltIn(BuiltInOpCode::UaddCarry, _)
-                | OpCode::BuiltIn(BuiltInOpCode::UsubBorrow, _)
-                | OpCode::BuiltIn(BuiltInOpCode::UmulExtended, _)
-                | OpCode::BuiltIn(BuiltInOpCode::ImulExtended, _)
-                | OpCode::BuiltIn(BuiltInOpCode::AtomicCompSwap, _)
-                | OpCode::BuiltIn(BuiltInOpCode::ImageLoad, _)
-                | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicAdd, _)
-                | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicMin, _)
-                | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicMax, _)
-                | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicAnd, _)
-                | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicOr, _)
-                | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicXor, _)
-                | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicExchange, _)
-                | OpCode::BuiltIn(BuiltInOpCode::ImageAtomicCompSwap, _) => {
-                    // TODO(http://anglebug.com/349994211): for now, assume every function call has
-                    // a side effect.  This can be optimized with a prepass going over functions
-                    // and checking if they have side effect.  AST assumes user functions have side
-                    // effects, and mostly uses isKnownNotToHaveSideEffects for built-ins, which
-                    // are separately checked here.  Some internal transformations mark a function
-                    // as no-side effect, but no real benefit comes from that IMO.  This is
-                    // probably fine as-is.
-                    //
-                    // TODO(http://anglebug.com/349994211): move the above logic (of which ops have
-                    // side effect) to a query in OpCode or IRMeta.  Later, when DCE is performed
-                    // the same information is needed.
-                    result_info.has_side_effect = true;
-                    result_info.is_complex = true;
-                }
-                OpCode::AccessVectorComponent(..)
-                | OpCode::AccessVectorComponentMulti(..)
-                | OpCode::AccessVectorComponentDynamic(..)
-                | OpCode::AccessMatrixColumn(..)
-                | OpCode::AccessStructField(..)
-                | OpCode::AccessArrayElement(..)
-                | OpCode::ExtractVectorComponentDynamic(..)
-                | OpCode::ExtractMatrixColumn(..)
-                | OpCode::ExtractStructField(..)
-                | OpCode::ExtractArrayElement(..)
-                | OpCode::Load(..) => {
-                    // Consider Access* instructions not complex and not having side effect, it's
-                    // impossible to cache the result in the AST.
-                    // Most Extract* instructions also don't need to be cached in a variable.
-                    // For load, we would ideally not want to cache the result in a variable only
-                    // to have to load from it on every use again.
-                }
-                OpCode::ExtractVectorComponent(vector_id, _)
-                | OpCode::ExtractVectorComponentMulti(vector_id, _) => {
-                    // Shading languages typically don't expect swizzle applied to swizzle, so
-                    // check to see if the value being swizzled was itself loaded from a swizzled
-                    // pointer, in which case mark the load operation as "complex" with "multiple
-                    // reads" so it gets cached in a temporary.
-                    let load_id = vector_id.id.get_register();
-                    if let OpCode::Load(pointer_id) = state.ir_meta.get_instruction(load_id).op
-                        && let Id::Register(pointer_id) = pointer_id.id
-                        && matches!(
-                            state.ir_meta.get_instruction(pointer_id).op,
-                            OpCode::AccessVectorComponentMulti(..)
-                        )
-                    {
-                        let load_register_info = state.register_info.get_mut(&load_id).unwrap();
-                        // The ExtractVectorComponent* instruction has already counted as
-                        // one read, so one more is enough.
-                        load_register_info.read_count += 1;
-                        debug_assert!(load_register_info.read_count > 1);
-                        load_register_info.is_complex = true;
+            if opcode.has_side_effect() {
+                result_info.has_side_effect = true;
+                result_info.is_complex = true;
+            } else {
+                match opcode {
+                    OpCode::AccessVectorComponent(..)
+                    | OpCode::AccessVectorComponentMulti(..)
+                    | OpCode::AccessVectorComponentDynamic(..)
+                    | OpCode::AccessMatrixColumn(..)
+                    | OpCode::AccessStructField(..)
+                    | OpCode::AccessArrayElement(..)
+                    | OpCode::ExtractVectorComponentDynamic(..)
+                    | OpCode::ExtractMatrixColumn(..)
+                    | OpCode::ExtractStructField(..)
+                    | OpCode::ExtractArrayElement(..)
+                    | OpCode::Load(..) => {
+                        // Consider Access* instructions not complex and not having side effect,
+                        // it's impossible to cache the result in the AST.
+                        // Most Extract* instructions also don't need to be cached in a variable.
+                        // For load, we would ideally not want to cache the result in a variable
+                        // only to have to load from it on every use again.
                     }
-                }
-                _ => {
-                    // For everything else, consider the result complex so the logic is not
-                    // duplicated.  This can cover everything from a+b to texture calls
-                    // etc.
-                    result_info.is_complex = true;
-                }
-            };
+                    OpCode::ExtractVectorComponent(vector_id, _)
+                    | OpCode::ExtractVectorComponentMulti(vector_id, _) => {
+                        // Shading languages typically don't expect swizzle applied to swizzle, so
+                        // check to see if the value being swizzled was itself loaded from a
+                        // swizzled pointer, in which case mark the load
+                        // operation as "complex" with "multiple
+                        // reads" so it gets cached in a temporary.
+                        let load_id = vector_id.id.get_register();
+                        if let OpCode::Load(pointer_id) = state.ir_meta.get_instruction(load_id).op
+                            && let Id::Register(pointer_id) = pointer_id.id
+                            && matches!(
+                                state.ir_meta.get_instruction(pointer_id).op,
+                                OpCode::AccessVectorComponentMulti(..)
+                            )
+                        {
+                            let load_register_info = state.register_info.get_mut(&load_id).unwrap();
+                            // The ExtractVectorComponent* instruction has already counted as
+                            // one read, so one more is enough.
+                            load_register_info.read_count += 1;
+                            debug_assert!(load_register_info.read_count > 1);
+                            load_register_info.is_complex = true;
+                        }
+                    }
+                    _ => {
+                        // For everything else, consider the result complex so the logic is not
+                        // duplicated.  This can cover everything from a+b to texture calls
+                        // etc.
+                        result_info.is_complex = true;
+                    }
+                };
+            }
 
             // When a register does not have a side effect, it refers to a temporary expression
             // that is yet to be used.  For example, take `a + b`.  To produce smaller more

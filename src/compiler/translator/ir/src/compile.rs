@@ -328,6 +328,10 @@ unsafe fn generate_ast(
         _ => panic!("Internal error: Invalid generator"),
     };
 
+    // Run dead-code elimination again before generating output, so that any stray instructions the
+    // transformations might have left around are removed.
+    transform::run!(dead_code_eliminate, &mut ir);
+
     // Passes required before AST can be generated:
     transform::run!(dealias, &mut ir);
     let uncached_registers_with_side_effect = transform::run!(astify, &mut ir);

@@ -95,6 +95,29 @@ pub fn calculate_function_decl_order(
     decl_order
 }
 
+// Check if a block has nothing but a `Merge(None)`.  It could also be a chain of `NextBlock`s
+// ending in `Merge(None)`.  If the blocks have any variables defined, they are ignored; the
+// variables are local a to block that doesn't use them.
+pub fn is_empty_block(block: &Block) -> bool {
+    let mut current_block = block;
+
+    loop {
+        if current_block.instructions.len() != 1 {
+            return false;
+        }
+
+        if let OpCode::Merge(None) = current_block.get_terminating_op() {
+            return true;
+        }
+
+        if let OpCode::NextBlock = current_block.get_terminating_op() {
+            current_block = current_block.merge_block.as_ref().unwrap();
+        } else {
+            return false;
+        }
+    }
+}
+
 struct DuplicateBlockContext<'a, 'b, 'c> {
     ir_meta: &'a mut IRMeta,
     variable_map: &'b mut HashMap<VariableId, Id>,
