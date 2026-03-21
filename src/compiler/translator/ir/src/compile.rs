@@ -422,7 +422,7 @@ fn common_pre_variable_collection_transforms(ir: &mut IR, options: &Options) {
 fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
     // Basic dead-code-elimination to avoid outputting variables, constants and types that are not
     // used by the shader.
-    transform::run!(prune_unused_variables, ir);
+    transform::run!(dead_code_eliminate, ir);
 
     // Run after unused variables are removed, initialize local and output variables if necessary.
     if options.initialize_uninitialized_variables {
