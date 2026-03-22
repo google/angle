@@ -158,12 +158,22 @@ angle::Result CLKernelVk::init()
             }
             case NonSemanticClspvReflectionArgumentPodPushConstant:
             case NonSemanticClspvReflectionArgumentPointerPushConstant:
-                // Get existing push constant range and see if we need to update
-                if (arg.pushConstOffset + arg.pushConstantSize > pcRange.offset + pcRange.size)
+            {
+                // Get existing push constant range and see if we need to update.
+                // Use uint64_t to prevent uint32_t wrap-around from producing a
+                // falsely small pcRange.size (integer overflow -> heap under-alloc).
+                const uint64_t argEnd =
+                    static_cast<uint64_t>(arg.pushConstOffset) + arg.pushConstantSize;
+                const uint64_t pcEnd =
+                    static_cast<uint64_t>(pcRange.offset) + pcRange.size;
+                if (argEnd > pcEnd)
                 {
-                    pcRange.size = arg.pushConstOffset + arg.pushConstantSize - pcRange.offset;
+                    ASSERT(argEnd - pcRange.offset <=
+                           std::numeric_limits<uint32_t>::max());
+                    pcRange.size = static_cast<uint32_t>(argEnd - pcRange.offset);
                 }
                 continue;
+            }
             case NonSemanticClspvReflectionArgumentSampledImage:
                 descType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                 break;
@@ -251,8 +261,10 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
         switch (arg.type)
         {
             case NonSemanticClspvReflectionArgumentPodPushConstant:
+                // Use uint64_t to prevent uint32_t wrap-around from defeating this
+                // bounds check (same overflow that under-allocates the vector).
                 ASSERT(mPodArgumentPushConstants.size() >=
-                       arg.pushConstantSize + arg.pushConstOffset);
+                       static_cast<uint64_t>(arg.pushConstantSize) + arg.pushConstOffset);
                 arg.handle     = &mPodArgumentPushConstants[arg.pushConstOffset];
                 arg.handleSize = std::min(argSize, static_cast<size_t>(arg.pushConstantSize));
                 if (argSize > 0 && argValue != nullptr)

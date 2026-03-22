@@ -185,6 +185,26 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                     kernelArg.op3     = reflectionData.spvIntLookup[spvInstr.words[7]];
                     kernelArg.op4     = reflectionData.spvIntLookup[spvInstr.words[8]];
 
+                    // Validate push constant offset+size against Vulkan's guaranteed minimum
+                    // maxPushConstantsSize (128 bytes). Reject malformed SPIR-V binaries whose
+                    // values would cause a uint32_t overflow in CLKernelVk::init/setArg.
+                    if (kernelArg.type == NonSemanticClspvReflectionArgumentPodPushConstant ||
+                        kernelArg.type == NonSemanticClspvReflectionArgumentPointerPushConstant)
+                    {
+                        constexpr uint32_t kMaxPushConstantBytes = 128u;
+                        const uint64_t endOffset =
+                            static_cast<uint64_t>(kernelArg.op3) + kernelArg.op4;
+                        if (kernelArg.op4 == 0 || kernelArg.op3 >= kMaxPushConstantBytes ||
+                            kernelArg.op4 > kMaxPushConstantBytes ||
+                            endOffset > kMaxPushConstantBytes)
+                        {
+                            ERR() << "CLProgramVk: rejecting SPIR-V binary: push constant "
+                                     "offset/size out of range (offset="
+                                  << kernelArg.op3 << " size=" << kernelArg.op4 << ")";
+                            return angle::Result::Stop;
+                        }
+                    }
+
                     if (reflectionData.kernelIDs.contains(spvInstr.words[5]))
                     {
                         CLKernelArguments &kernelArgs =
