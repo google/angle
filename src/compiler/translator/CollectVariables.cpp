@@ -130,8 +130,6 @@ class CollectVariablesTraverser : public TIntermTraverser
                               TSymbolTable *symbolTable,
                               GLenum shaderType,
                               const TExtensionBehavior &extensionBehavior,
-                              const ShBuiltInResources &resources,
-                              int tessControlShaderOutputVertices,
                               bool transformFloatUniformToFP16);
 
     bool visitGlobalQualifierDeclaration(Visit visit,
@@ -252,7 +250,6 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mTessLevelInnerAdded;
     bool mBoundingBoxAdded;
     bool mTessCoordAdded;
-    const int mTessControlShaderOutputVertices;
     bool mTransformFloatUniformToFP16;
 
     char mUserVariablePrefix;
@@ -260,7 +257,6 @@ class CollectVariablesTraverser : public TIntermTraverser
 
     GLenum mShaderType;
     const TExtensionBehavior &mExtensionBehavior;
-    const ShBuiltInResources &mResources;
 };
 
 CollectVariablesTraverser::CollectVariablesTraverser(
@@ -277,8 +273,6 @@ CollectVariablesTraverser::CollectVariablesTraverser(
     TSymbolTable *symbolTable,
     GLenum shaderType,
     const TExtensionBehavior &extensionBehavior,
-    const ShBuiltInResources &resources,
-    int tessControlShaderOutputVertices,
     const bool transformFloatUniformToFP16)
     : TIntermTraverser(true, false, false, symbolTable),
       mAttribs(attribs),
@@ -332,13 +326,11 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mTessLevelInnerAdded(false),
       mBoundingBoxAdded(false),
       mTessCoordAdded(false),
-      mTessControlShaderOutputVertices(tessControlShaderOutputVertices),
       mTransformFloatUniformToFP16(transformFloatUniformToFP16),
       mUserVariablePrefix(userVariablePrefix),
       mHashFunction(hashFunction),
       mShaderType(shaderType),
-      mExtensionBehavior(extensionBehavior),
-      mResources(resources)
+      mExtensionBehavior(extensionBehavior)
 {}
 
 std::string CollectVariablesTraverser::getMappedName(const TSymbol *symbol) const
@@ -825,25 +817,14 @@ void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
     {
         variableOut->arraySizes.assign(arraySizes.begin(), arraySizes.end());
 
+        // Tessellation shader inputs and outputs are arrayed and specifying the size is optional
+        // size.  However, the final size is assigned to them during parse in
+        // |TParseContext::sizeUnsizedArrayTypes|, so they cannot have an unspecified size.
         if (arraySizes[0] == 0)
         {
-            // Tessellation Control & Evaluation shader inputs:
-            // Declaring an array size is optional. If no size is specified, it will be taken from
-            // the implementation-dependent maximum patch size (gl_MaxPatchVertices).
-            if (type.getQualifier() == EvqTessControlIn ||
-                type.getQualifier() == EvqTessEvaluationIn)
-            {
-                variableOut->arraySizes[0] = mResources.MaxPatchVertices;
-            }
-
-            // Tessellation Control shader outputs:
-            // Declaring an array size is optional. If no size is specified, it will be taken from
-            // output patch size declared in the shader.
-            if (type.getQualifier() == EvqTessControlOut)
-            {
-                ASSERT(mTessControlShaderOutputVertices > 0);
-                variableOut->arraySizes[0] = mTessControlShaderOutputVertices;
-            }
+            ASSERT(type.getQualifier() != EvqTessControlIn &&
+                   type.getQualifier() != EvqTessEvaluationIn &&
+                   type.getQualifier() != EvqTessControlOut);
         }
     }
 }
@@ -1364,15 +1345,12 @@ void CollectVariables(TIntermBlock *root,
                       TSymbolTable *symbolTable,
                       GLenum shaderType,
                       const TExtensionBehavior &extensionBehavior,
-                      const ShBuiltInResources &resources,
-                      int tessControlShaderOutputVertices,
                       const bool transformFloatUniformToFP16)
 {
-    CollectVariablesTraverser collect(attributes, outputVariables, uniforms, inputVaryings,
-                                      outputVaryings, sharedVariables, uniformBlocks,
-                                      shaderStorageBlocks, userVariablePrefix, hashFunction,
-                                      symbolTable, shaderType, extensionBehavior, resources,
-                                      tessControlShaderOutputVertices, transformFloatUniformToFP16);
+    CollectVariablesTraverser collect(
+        attributes, outputVariables, uniforms, inputVaryings, outputVaryings, sharedVariables,
+        uniformBlocks, shaderStorageBlocks, userVariablePrefix, hashFunction, symbolTable,
+        shaderType, extensionBehavior, transformFloatUniformToFP16);
     root->traverse(&collect);
 
     // Attributes are simply vertex shader inputs (and compute shader attributes),
