@@ -132,6 +132,7 @@ class CLBufferVk : public CLMemoryVk
         FromHost
     };
     angle::Result syncHost(CLBufferVk::SyncHostDirection direction);
+    angle::Result syncHost(CLBufferVk::SyncHostDirection direction, size_t offset, size_t size);
     angle::Result syncHost(CLBufferVk::SyncHostDirection direction, cl::BufferRect hostRect);
 
     angle::Result setImage(CLImageVk *image);

@@ -224,20 +224,26 @@ vk::BufferHelper &CLBufferVk::getBuffer()
 
 // For UHP buffers, the buffer contents and hostptr have to be in sync at appropriate times. Ensure
 // that if zero copy is not supported.
-angle::Result CLBufferVk::syncHost(CLBufferVk::SyncHostDirection direction)
+angle::Result CLBufferVk::syncHost(CLBufferVk::SyncHostDirection direction,
+                                   size_t offset,
+                                   size_t size)
 {
+    ASSERT(offset <= getSize() && size <= getSize() - offset);
+
+    uint8_t *hostPtr = nullptr;
+    ANGLE_TRY(mapForUser(hostPtr, offset));
     switch (direction)
     {
         case CLBufferVk::SyncHostDirection::FromHost:
             if (getFlags().intersects(CL_MEM_USE_HOST_PTR) && !supportsZeroCopy())
             {
-                ANGLE_TRY(copyFrom(getHostPtr(), 0, getSize()));
+                ANGLE_TRY(copyFrom(hostPtr, offset, size));
             }
             break;
         case CLBufferVk::SyncHostDirection::ToHost:
             if (getFlags().intersects(CL_MEM_USE_HOST_PTR) && !supportsZeroCopy())
             {
-                ANGLE_TRY(copyTo(getHostPtr(), 0, getSize()));
+                ANGLE_TRY(copyTo(hostPtr, offset, size));
             }
             break;
         default:
@@ -245,6 +251,11 @@ angle::Result CLBufferVk::syncHost(CLBufferVk::SyncHostDirection direction)
             break;
     }
     return angle::Result::Continue;
+}
+
+angle::Result CLBufferVk::syncHost(CLBufferVk::SyncHostDirection direction)
+{
+    return syncHost(direction, 0, getSize());
 }
 
 // This is to sync only a rectangular region between hostptr and buffer contents. Intended to be
@@ -603,41 +614,40 @@ angle::Result CLImageVk::create(void *hostPtr)
                                                getVkImageUsageFlags(), 1, (uint32_t)getArraySize()),
                             CL_OUT_OF_RESOURCES);
 
+    ASSERT(mStagingBuffer == nullptr);
+    CLBufferVk *stagingBuffer = nullptr;
     if (getFlags().intersects(CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR))
     {
         // in case of image2d from buffer, hostptr flag could be inherited from parent flags
         if (!mIsImage2DFromBuffer)
         {
+            // For UHP and CHP, we copy the user data to a staging buffer and upload to an optimally
+            // tiled image. As such the host pitches are preserved in the staging buffer.
+            //
+            // @todo Explore the option of linear image with zero-copy
             ASSERT(hostPtr);
-
-            if (getDescriptor().rowPitch == 0 && getDescriptor().slicePitch == 0)
+            mStagingBuffer =
+                cl::BufferPtr::Create(const_cast<cl::Context &>(mMemory.getContext()),
+                                      cl::Memory::PropArray{}, getFlags(), getSize(), hostPtr);
+            if (!cl::Buffer::IsValid(mStagingBuffer.get()))
             {
-                ANGLE_CL_IMPL_TRY_ERROR(copyStagingFrom(hostPtr, 0, getSize()),
-                                        CL_OUT_OF_RESOURCES);
+                ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
             }
-            else
-            {
-                ANGLE_TRY(copyStagingToFromWithPitch(
-                    hostPtr, {mExtent.width, mExtent.height, mExtent.depth},
-                    getDescriptor().rowPitch, getDescriptor().slicePitch,
-                    StagingBufferCopyDirection::ToStagingBuffer));
-            }
+            stagingBuffer = &mStagingBuffer->getImpl<CLBufferVk>();
         }
+        else
+        {
+            // for image2d from buffer we are copying from buffer to image
+            stagingBuffer = getParent<CLBufferVk>();
+        }
+        ASSERT(stagingBuffer);
 
         // copy over the hostptr bits/parent buffer here to image in a one-off copy cmd
-        CLBufferVk *stagingBuffer = nullptr;
-        ANGLE_TRY(getOrCreateStagingBuffer(&stagingBuffer));
-        ASSERT(stagingBuffer);
         VkBufferImageCopy copyRegion = cl_vk::CalculateBufferImageCopyRegion(
-            mIsImage2DFromBuffer ? getParent<CLBufferVk>()->getOffset() : 0,
-            mIsImage2DFromBuffer ? static_cast<uint32_t>(getRowPitch()) : 0, 0, cl::kOffsetZero,
-            getImageExtent(), this);
+            stagingBuffer->getOffset(), static_cast<uint32_t>(getRowPitch()),
+            static_cast<uint32_t>(getSlicePitch()), cl::kOffsetZero, getImageExtent(), this);
         ANGLE_CL_IMPL_TRY_ERROR(
-            mImage.copyToBufferOneOff(mContext,
-                                      mIsImage2DFromBuffer
-                                          ? &static_cast<CLBufferVk *>(mParent)->getBuffer()
-                                          : &stagingBuffer->getBuffer(),
-                                      copyRegion),
+            mImage.copyToBufferOneOff(mContext, &stagingBuffer->getBuffer(), copyRegion),
             CL_OUT_OF_RESOURCES);
     }
 

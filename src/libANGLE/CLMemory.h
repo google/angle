@@ -47,6 +47,8 @@ class Memory : public _cl_mem, public Object
     size_t getOffset() const;
     size_t getSize() const;
 
+    bool isUseHostPtr() const;
+
     template <typename T = rx::CLMemoryImpl>
     T &getImpl() const;
 

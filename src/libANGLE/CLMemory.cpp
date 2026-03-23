@@ -146,6 +146,11 @@ angle::Result Memory::getInfo(MemInfo name,
     return angle::Result::Continue;
 }
 
+bool Memory::isUseHostPtr() const
+{
+    return mFlags.intersects(CL_MEM_USE_HOST_PTR);
+}
+
 Memory::~Memory()
 {
     mDestructorCallbacks.invoke(this);
