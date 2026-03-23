@@ -3987,6 +3987,23 @@ TEST_P(GLSLValidationTest, LoopBodyEndingInBranch6)
     validateSuccess(GL_FRAGMENT_SHADER, kFS);
 }
 
+// Test that using only a type and no variable in the loop init expression compiles
+TEST_P(GLSLValidationTest_ES3, LoopInitOnlyInt)
+{
+    constexpr char kFS[] = R"(#version 300 es
+void main(){for(int;;){}})";
+    validateSuccess(GL_FRAGMENT_SHADER, kFS);
+}
+
+// Test that using only a struct type (i.e. a symbol, and not a keyword) and no variable in the loop
+// init expression compiles
+TEST_P(GLSLValidationTest_ES3, LoopInitOnlyStructName)
+{
+    constexpr char kFS[] = R"(#version 300 es
+struct S { int a; }; void main(){for(S;;){}})";
+    validateSuccess(GL_FRAGMENT_SHADER, kFS);
+}
+
 // Fuzzer test involving struct samplers and comma operator
 TEST_P(GLSLValidationTest, StructSamplerVsComma)
 {

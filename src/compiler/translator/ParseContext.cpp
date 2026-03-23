@@ -4051,10 +4051,10 @@ void TParseContext::onLoopConditionBegin(TIntermNode *init, const TSourceLoc &li
                     symbolInit != nullptr && symbolInit->getOp() == EOpInitialize
                         ? symbolInit->getLeft()->getAsSymbolNode()
                         : singleDecl->getAsSymbolNode();
-                // The struct check makes sure sole struct declarations are skipped, like
-                // `struct S { ... };` which the translator declares with an "empty" variable.
-                if (symbol != nullptr && !(symbol->getType().isStructSpecifier() &&
-                                           symbol->variable().symbolType() == SymbolType::Empty))
+                // The check makes sure sole struct declarations are skipped, like `struct S { ...
+                // };` which the translator declares with an "empty" variable.  Same if init
+                // expression is just `S;`.
+                if (symbol != nullptr && symbol->variable().symbolType() != SymbolType::Empty)
                 {
                     mIRBuilder.rescopeAsForLoopVariable(mVariableToId.at(&symbol->variable()).id);
                 }
