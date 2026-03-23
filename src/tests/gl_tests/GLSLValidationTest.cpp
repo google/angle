@@ -2069,6 +2069,130 @@ TEST_P(GLSLValidationTest, BVecMultiplyAssign)
                   "vector of bool'");
 }
 
+// Test that gl_VertexID cannot be written to.
+TEST_P(GLSLValidationTest_ES3, VertexIDNoWrite)
+{
+    constexpr char kVS[] = R"(#version 300 es
+void main(){gl_VertexID=0;})";
+    validateError(GL_VERTEX_SHADER, kVS,
+                  "l-value required (can't modify gl_VertexID \"gl_VertexID\")");
+}
+
+// Test that gl_InstanceID cannot be written to.
+TEST_P(GLSLValidationTest_ES3, InstanceIDNoWrite)
+{
+    constexpr char kVS[] = R"(#version 300 es
+void main(){gl_InstanceID=0;})";
+    validateError(GL_VERTEX_SHADER, kVS,
+                  "l-value required (can't modify gl_InstanceID \"gl_InstanceID\")");
+}
+
+// Test that gl_BaseVertex cannot be written to.
+TEST_P(GLSLValidationTest_ES3, BaseVertexNoWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_base_vertex_base_instance_shader_builtin"));
+
+    constexpr char kVS[] = R"(#version 300 es
+#extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require
+void main(){gl_BaseVertex=0;})";
+    validateError(GL_VERTEX_SHADER, kVS,
+                  "l-value required (can't modify gl_BaseVertex \"gl_BaseVertex\")");
+}
+
+// Test that gl_BaseInstance cannot be written to.
+TEST_P(GLSLValidationTest_ES3, BaseInstanceNoWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_base_vertex_base_instance_shader_builtin"));
+
+    constexpr char kVS[] = R"(#version 300 es
+#extension GL_ANGLE_base_vertex_base_instance_shader_builtin : require
+void main(){gl_BaseInstance=0;})";
+    validateError(GL_VERTEX_SHADER, kVS,
+                  "l-value required (can't modify gl_BaseInstance \"gl_BaseInstance\")");
+}
+
+// Test that gl_DrawID cannot be written to.
+TEST_P(GLSLValidationTest_ES3, DrawIDNoWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_multi_draw"));
+
+    constexpr char kVS[] = R"(#version 300 es
+#extension GL_ANGLE_multi_draw : require
+void main(){gl_DrawID=0;})";
+    validateError(GL_VERTEX_SHADER, kVS, "l-value required (can't modify gl_DrawID \"gl_DrawID\")");
+}
+
+// Test that gl_DepthRange cannot be written to.
+TEST_P(GLSLValidationTest_ES3, DepthRangeNoWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_multi_draw"));
+
+    constexpr char kFS[] = R"(void main(){gl_DepthRange.near=0.;})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "l-value required (can't modify gl_DepthRange \"gl_DepthRange\")");
+}
+
+// Test that gl_SampleMaskIn cannot be written to.
+TEST_P(GLSLValidationTest_ES3, SampleMaskInNoWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_sample_variables"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_OES_sample_variables : require
+void main(){gl_SampleMaskIn[0]=0;})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "l-value required (can't modify gl_SampleMaskIn \"gl_SampleMaskIn\")");
+}
+
+// Test that gl_NumSamples cannot be written to.
+TEST_P(GLSLValidationTest_ES3, NumSamplesNoWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_sample_variables"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_OES_sample_variables : require
+void main(){gl_NumSamples=0;})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "l-value required (can't modify gl_NumSamples \"gl_NumSamples\")");
+}
+
+// Test that gl_PatchVerticesIn cannot be written to.
+TEST_P(GLSLValidationTest_ES31, PatchVerticesInNoWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+
+    constexpr char kTCS[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+void main(){gl_PatchVerticesIn=0;})";
+    validateError(GL_TESS_CONTROL_SHADER, kTCS,
+                  "l-value required (can't modify gl_PatchVerticesIn \"gl_PatchVerticesIn\")");
+}
+
+// Test that gl_TessCoord cannot be written to.
+TEST_P(GLSLValidationTest_ES31, TessCoordNoWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+
+    constexpr char kTES[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+void main(){gl_TessCoord=0;})";
+    validateError(GL_TESS_EVALUATION_SHADER, kTES,
+                  "l-value required (can't modify gl_TessCoord \"gl_TessCoord\")");
+}
+
+// Test that patch in variables cannot be written to.
+TEST_P(GLSLValidationTest_ES31, PatchInNoWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+
+    constexpr char kTES[] = R"(#version 310 es
+#extension GL_EXT_tessellation_shader : require
+patch in float f;
+void main(){f=0.;})";
+    validateError(GL_TESS_EVALUATION_SHADER, kTES,
+                  "l-value required (can't modify an input \"f\")");
+}
+
 // Test that infinite loop with while(true) is rejected
 TEST_P(WebGL2GLSLValidationTest, InfiniteLoopWhileTrue)
 {
@@ -6130,6 +6254,8 @@ void main() {
         validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
     }
 
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_base_vertex_base_instance_shader_builtin"));
+
     {
         // Check that it is not permitted with the extension
         constexpr char kVS[] = R"(#version 300 es
@@ -6194,6 +6320,8 @@ void main() {
 })";
         validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
     }
+
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_multi_draw"));
 
     {
         // Check that it is not permitted with the extension

@@ -957,6 +957,7 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         case EvqSampleIn:
         case EvqNoPerspectiveCentroidIn:
         case EvqNoPerspectiveSampleIn:
+        case EvqPatchIn:
             message = "can't modify an input";
             break;
         case EvqUniform:
@@ -964,6 +965,21 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
             break;
         case EvqVaryingIn:
             message = "can't modify a varying";
+            break;
+        case EvqInstanceID:
+            message = "can't modify gl_InstanceID";
+            break;
+        case EvqVertexID:
+            message = "can't modify gl_VertexID";
+            break;
+        case EvqBaseVertex:
+            message = "can't modify gl_BaseVertex";
+            break;
+        case EvqBaseInstance:
+            message = "can't modify gl_BaseInstance";
+            break;
+        case EvqDrawID:
+            message = "can't modify gl_DrawID";
             break;
         case EvqFragCoord:
             message = "can't modify gl_FragCoord";
@@ -998,6 +1014,9 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         case EvqViewIDOVR:
             message = "can't modify gl_ViewID_OVR";
             break;
+        case EvqDepthRange:
+            message = "can't modify gl_DepthRange";
+            break;
         case EvqComputeIn:
             message = "can't modify work group size variable";
             break;
@@ -1030,6 +1049,15 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
             break;
         case EvqSamplePosition:
             message = "can't modify gl_SamplePosition";
+            break;
+        case EvqNumSamples:
+            message = "can't modify gl_NumSamples";
+            break;
+        case EvqPatchVerticesIn:
+            message = "can't modify gl_PatchVerticesIn";
+            break;
+        case EvqTessCoord:
+            message = "can't modify gl_TessCoord";
             break;
         case EvqClipDistance:
             if (mShaderType == GL_FRAGMENT_SHADER)
