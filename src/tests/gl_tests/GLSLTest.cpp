@@ -22504,9 +22504,6 @@ void main()
 // it is no-op.
 TEST_P(GLSLTest_ES3, EmptyLastCaseInSwitch)
 {
-    // Incorrect translation before IR.
-    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
-
     constexpr char kFS[] = R"(#version 300 es
 uniform int ui;
 out mediump vec4 color;
@@ -22531,6 +22528,36 @@ void main(void)
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Regression test for codegen errors when the last case of a switch is dead-code-eliminated.
+TEST_P(GLSLTest_ES3, EmptyLastCaseInSwitch2)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform int a, b;
+out vec4 color;
+void main() {
+    float r = 0.25;
+    switch(a) {
+        case 0:
+            switch(b) {
+                default:
+                    r = 0.75;
+                case 0:
+                    switch(b) { }
+            }
+            break;
+        default:
+            r = 0.5;
+    }
+    color = vec4(r, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(63, 0, 0, 255), 1);
     ASSERT_GL_NO_ERROR();
 }
 
