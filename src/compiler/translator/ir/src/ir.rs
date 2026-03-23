@@ -6,6 +6,7 @@
 
 use super::instruction;
 use std::collections::{HashMap, HashSet};
+use std::hash::{Hash, Hasher};
 
 // Strong types for ids that refer to constants, registers, variables, types etc.  They are used to
 // look information up in different tables.  In all cases, 0 means no applicable ID.
@@ -1466,7 +1467,7 @@ impl Constant {
 }
 
 // Where a name came from.  This affects how it is output.
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub enum NameSource {
     // A name in the shader itself, which corresponds to an interface variable (input, output,
@@ -1483,7 +1484,7 @@ pub enum NameSource {
 }
 
 // A name associated with a variable, struct, struct field etc.
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub struct Name {
     // This is a slice into the shader source, a static name, or otherwise an empty string.  Either
@@ -2026,6 +2027,94 @@ pub enum Type {
     DeadCodeEliminated,
 }
 
+impl PartialEq for Type {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Type::Scalar(basic_type_1), Type::Scalar(basic_type_2)) => {
+                basic_type_1 == basic_type_2
+            }
+            (
+                Type::Image(basic_image_type_1, image_type_1),
+                Type::Image(basic_image_type_2, image_type_2),
+            ) => basic_image_type_1 == basic_image_type_2 && image_type_1 == image_type_2,
+            // https://registry.khronos.org/OpenGL/specs/es/3.2/GLSL_ES_Specification_3.20.html#structures
+            // Two structure types are the same if they have the same name
+            // However, the GLSL parser code will assign an empty string for the struct name if it
+            // is declared in the following way: struct
+            // {
+            //     int field;
+            // }s;
+            // This means if the GLSL shader code declares 2 struct types:
+            // struct
+            // {
+            //     int field;
+            // }s1;
+            //
+            // struct
+            // {
+            //     int field;
+            // }s2;
+            // In IR, both will ends up with the same Struct Name.
+            // In this case, we should treat them as different types even if the struct Name are
+            // equal.
+            (Type::Struct(name1, _, _), Type::Struct(name2, _, _)) => name1 == name2,
+            (
+                Type::Vector(scalar_type_id_1, vector_size_1),
+                Type::Vector(scalar_type_id_2, vector_size_2),
+            ) => scalar_type_id_1 == scalar_type_id_2 && vector_size_1 == vector_size_2,
+            (
+                Type::Matrix(vector_type_id_1, matrix_size_1),
+                Type::Matrix(vector_type_id_2, matrix_size_2),
+            ) => vector_type_id_1 == vector_type_id_2 && matrix_size_1 == matrix_size_2,
+            (
+                Type::Array(element_type_id_1, array_size_1),
+                Type::Array(element_type_id_2, array_size_2),
+            ) => element_type_id_1 == element_type_id_2 && array_size_1 == array_size_2,
+            (Type::UnsizedArray(element_type_id_1), Type::UnsizedArray(element_type_id_2)) => {
+                element_type_id_1 == element_type_id_2
+            }
+            (Type::Pointer(pointed_type_id_1), Type::Pointer(pointed_type_id_2)) => {
+                pointed_type_id_1 == pointed_type_id_2
+            }
+            (Type::DeadCodeEliminated, Type::DeadCodeEliminated) => true,
+            _ => false,
+        }
+    }
+}
+
+impl Eq for Type {}
+
+impl Hash for Type {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        core::mem::discriminant(self).hash(state);
+        match self {
+            Type::Scalar(basic_type) => basic_type.hash(state),
+            Type::Image(image_basic_type, image_type) => {
+                image_basic_type.hash(state);
+                image_type.hash(state);
+            }
+            // https://registry.khronos.org/OpenGL/specs/es/3.2/GLSL_ES_Specification_3.20.html#structures
+            // Two structure types are the same if they have the same name
+            Type::Struct(name, _, _) => name.hash(state),
+            Type::Vector(scalar_type_id, vector_size) => {
+                scalar_type_id.hash(state);
+                vector_size.hash(state);
+            }
+            Type::Matrix(vector_type_id, matrix_size) => {
+                vector_type_id.hash(state);
+                matrix_size.hash(state);
+            }
+            Type::Array(element_type_id, array_size) => {
+                element_type_id.hash(state);
+                array_size.hash(state);
+            }
+            Type::UnsizedArray(element_type_id) => element_type_id.hash(state),
+            Type::Pointer(pointed_type_id) => pointed_type_id.hash(state),
+            Type::DeadCodeEliminated => {}
+        }
+    }
+}
+
 impl Type {
     pub fn new_void() -> Type {
         Type::Scalar(BasicType::Void)
@@ -2101,6 +2190,18 @@ impl Type {
     pub fn is_struct(&self) -> bool {
         matches!(self, Type::Struct(..))
     }
+
+    pub fn is_struct_with_empty_name(&self) -> bool {
+        match self {
+            Type::Struct(struct_name, _, _) => struct_name.name.is_empty(),
+            _ => false,
+        }
+    }
+
+    pub fn is_struct_interface_block(&self) -> bool {
+        matches!(self, Type::Struct(_, _, StructSpecialization::InterfaceBlock))
+    }
+
     fn is_struct_containing_samplers_helper(&self, ir_meta: &IRMeta) -> bool {
         // The parser puts samplers at the end of the struct, so check the fields from the back for
         // any sampler or struct that contains samplers.  Samplers in struct are only valid in ESSL

@@ -20,9 +20,9 @@
 //     output: validate_merge_block_with_input()
 //   - For block that has a merge block with an input, the branch instruction must be If, and the
 //     block must contains block1: validate_merge_block_with_input()
+//   - No identical types with different IDs: validate_no_identical_types_with_different_ids()
 
 // TODO(http://anglebug.com/349994211): to validate:
-//   - No identical types with different IDs.
 //   - Referenced IDs are not dead-code-eliminated: Checking against max_*_count can be paird with a
 //     look up and checking that !is_dead_code_eliminated
 //   - If there's a cached "has side effect", that it's correct.
@@ -254,6 +254,7 @@ impl<'a> Validator<'a> {
         self.validate_all_ids_are_present();
         self.validate_all_variables_are_declared_in_scope();
         self.validate_all_registers_are_declared_in_scope();
+        self.validate_no_identical_types_with_different_ids();
         self.validate_no_dead_code();
         self.validate_all_branch_instructions_have_valid_target();
         self.validate_merge_block_with_input();
@@ -930,6 +931,66 @@ impl<'a> Validator<'a> {
         });
 
         registers_declared_map.remove_scope();
+    }
+
+    fn validate_no_identical_types_with_different_ids(&self) {
+        let mut seen_types: HashSet<&ir::Type> = HashSet::new();
+        for ir_type in self.ir.meta.all_types() {
+            // Some Type will be marked as dead code eliminated during transform, they won't be
+            // included in final IR, skip them.
+            if ir_type.is_dead_code_eliminated() {
+                continue;
+            }
+            // https://registry.khronos.org/OpenGL/specs/es/3.2/GLSL_ES_Specification_3.20.html#structures
+            // Two structure types are the same if they have the same name
+            // However, for struct specifier declared as follows:
+            // struct
+            // {
+            //     int field;
+            // }s;
+            // The GLSL parser code will use empty string for the struct type name.
+            // For the following struct declarations:
+            // struct
+            // {
+            //     int field;
+            // }s1;
+            // struct
+            // {
+            //     int field;
+            // }s2;
+            // In IR, we end up with two same ir::Type::Struct(name, fields, struct_specifier),
+            // where as we should treat them as different types.
+            // Skip the uniqueness check for struct with empty name for now.
+            if ir_type.is_struct_with_empty_name() {
+                continue;
+            }
+
+            // For interface block, right now for the following interface block declarations
+            // in Vertex
+            // {
+            //     ivec4 iv;
+            //     vec4  fv;
+            // } inVertex[];
+            // out Vertex
+            // {
+            //     ivec4 iv;
+            //     vec4  fv;
+            // } outVertex[];
+            // They end up with the same ir::Type::Struct(name, fields, struct_specifier), but they
+            // should be treated as different types.
+            // Similar problem arises where the gl_PerVertex is redeclared in geometry shader,
+            // IR ends with with two same ir::Type::Struct(name, fields, struct_specifier).
+            // Skip the uniqueness check for interface block struct for now.
+            if ir_type.is_struct_interface_block() {
+                continue;
+            }
+            if !seen_types.insert(ir_type) {
+                self.on_error(format_args!(
+                    "Identical type {:?} found with different IDs",
+                    ir_type
+                ));
+            }
+        }
     }
 
     fn validate_all_branch_instructions_have_valid_target(&self) {
