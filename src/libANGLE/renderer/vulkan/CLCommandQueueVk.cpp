@@ -499,12 +499,6 @@ angle::Result CLCommandQueueVk::enqueueCopyBufferRect(const cl::Buffer &srcBuffe
     ANGLE_TRY(srcBufferVk->map(mapPointer));
     cl::Defer deferUnmap([&srcBufferVk]() { srcBufferVk->unmap(); });
 
-    if (srcBuffer.getFlags().intersects(CL_MEM_USE_HOST_PTR) && !srcBufferVk->supportsZeroCopy())
-    {
-        // UHP needs special handling when zero-copy is not supported
-        ANGLE_TRY(srcBufferVk->copyTo(mapPointer, 0, srcBufferVk->getSize()));
-    }
-
     ANGLE_TRY(dstBufferVk->setRect(static_cast<const void *>(mapPointer), srcRect, dstRect));
 
     return postEnqueueOps(event);
