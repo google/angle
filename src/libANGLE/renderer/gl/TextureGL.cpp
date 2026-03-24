@@ -744,10 +744,14 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
         const gl::InternalFormat &initFormatInfo =
             gl::GetInternalFormatInfo(initTexImageFormat.format, initTexImageFormat.type);
         GLuint pixelBytes = initFormatInfo.pixelBytes;
+        // TODO(b/495363705): Validate if this CheckedNumeric is required, remove either this TODO
+        // or the CheckedNumeric based on the result.
+        angle::CheckedNumeric<size_t> checkedBufferSize = angle::base::CheckMul(
+            angle::base::CheckMul(sourceArea.width, sourceArea.height), pixelBytes);
+        ANGLE_CHECK_GL_MATH(contextGL, checkedBufferSize.IsValid());
         angle::MemoryBuffer *zero;
-        ANGLE_CHECK_GL_ALLOC(
-            contextGL,
-            context->getZeroFilledBuffer(sourceArea.width * sourceArea.height * pixelBytes, &zero));
+        ANGLE_CHECK_GL_ALLOC(contextGL,
+                             context->getZeroFilledBuffer(checkedBufferSize.ValueOrDie(), &zero));
 
         gl::PixelUnpackState unpack;
         unpack.alignment = 1;
