@@ -9548,10 +9548,9 @@ void ImageHelper::stageClear(const gl::ImageIndex &index,
     appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(aspectFlags, clearValue, index));
 }
 
-void ImageHelper::stageRobustResourceClear(const gl::ImageIndex &index)
+void ImageHelper::stageRobustResourceClear(const gl::ImageIndex &index,
+                                           const VkImageAspectFlags aspectFlags)
 {
-    const VkImageAspectFlags aspectFlags = getAspectFlags();
-
     ASSERT(mActualFormatID != angle::FormatID::NONE);
     VkClearValue clearValue = GetRobustResourceClearValue(getIntendedFormat(), getActualFormat());
 

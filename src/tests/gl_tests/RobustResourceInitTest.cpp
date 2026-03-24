@@ -696,6 +696,305 @@ TEST_P(RobustResourceInitTestES3, InvalidateThenDraw)
     EXPECT_GL_NO_ERROR();
 }
 
+// Calling draw, then invalidate then draw should work.
+TEST_P(RobustResourceInitTestES3, DrawThenInvalidateThenDraw)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw first, then invalidate it, and draw again.
+    ANGLE_GL_PROGRAM(blue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(blue, essl1_shaders::PositionAttrib(), 1.0f);
+
+    std::array<GLenum, 1> attachments = {GL_COLOR_ATTACHMENT0};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments.data());
+
+    ANGLE_GL_PROGRAM(red, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(red, essl1_shaders::PositionAttrib(), 1.0f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Calling invalidate should not lead to uninitialized memory being read.
+TEST_P(RobustResourceInitTestES3, InvalidateThenReadBack)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Invalidate first
+    std::array<GLenum, 1> attachments = {GL_COLOR_ATTACHMENT0};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments.data());
+
+    // Read back, ensure the content is still valid
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::transparentBlack);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Calling invalidate after draw should either read back the result of the draw call (invalidate
+// didn't happen) or transparent black (the init color).
+TEST_P(RobustResourceInitTestES3, DrawThenInvalidateThenReadBack)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Start a render pass, then invalidate
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 1.0f);
+
+    std::array<GLenum, 1> attachments = {GL_COLOR_ATTACHMENT0};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments.data());
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    // Read back, ensure the content is still valid
+    GLColor invalidated(100, 100, 100, 100);
+    glReadPixels(w / 2, h / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &invalidated);
+    EXPECT_TRUE(invalidated == GLColor::red || invalidated == GLColor::transparentBlack)
+        << invalidated;
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Calling invalidate after draw should either read back the result of the draw call (invalidate
+// didn't happen) or the init depth/stencil values.
+TEST_P(RobustResourceInitTestES3, DrawThenInvalidateThenReadBackDepthStencil)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+    // To validate, this test directly reads back the depth and stencil values.  This is only
+    // possible if GL_NV_read_depth_stencil is supported.  A separate test does the same thing,
+    // except verifies depth/stencil with a draw call.  The reason the readback test exists is to
+    // make sure depth/stencil is cleared to robust value (if invalidated) outside render pass use
+    // as well.  An implementation that only swaps LOAD_OP_DONT_CARE with LOAD_OP_CLEAR would pass
+    // the other test.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_read_depth_stencil"));
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLTexture ds;
+    glBindTexture(GL_TEXTURE_2D, ds);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, kWidth, kHeight, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8_OES, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, ds, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Start a render pass, then invalidate
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x1C, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilMask(0xFF);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.8f);
+
+    std::array<GLenum, 2> attachments = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, attachments.data());
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    uint32_t invalidated;
+    glReadPixels(w / 2, h / 2, 1, 1, GL_DEPTH_STENCIL_OES, GL_UNSIGNED_INT_24_8_OES, &invalidated);
+    uint32_t depth   = invalidated >> 8;
+    uint32_t stencil = invalidated & 0xFF;
+    // Either cleared to init value, or not invalidated
+    if (depth != 0xFFFFFF)
+    {
+        EXPECT_NEAR(depth, gl::unorm<24>(0.9f), 2);
+    }
+    if (stencil != 0)
+    {
+        EXPECT_EQ(stencil, 0x1Cu);
+    }
+    EXPECT_GL_NO_ERROR();
+}
+
+// Calling invalidate after draw should either read back the result of the draw call (invalidate
+// didn't happen) or the init depth/stencil values.
+TEST_P(RobustResourceInitTestES3, DrawThenInvalidateThenVerifyDepthStencil)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLTexture ds;
+    glBindTexture(GL_TEXTURE_2D, ds);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, kWidth, kHeight, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8_OES, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, ds, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Start a render pass, then invalidate
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x1C, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilMask(0xFF);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.8f);
+
+    std::array<GLenum, 2> attachments = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, attachments.data());
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    // Verify with a draw call.  This is done by first trying to draw with depth or stencil matching
+    // the robust clear value.  If that fails, we ensure the previous draw call's value is found
+    // in the attachment.
+    ANGLE_GL_PROGRAM(green, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(blue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    glDepthFunc(GL_LESS);
+    glDisable(GL_STENCIL_TEST);
+    drawQuad(green, essl1_shaders::PositionAttrib(), 0.99f);
+
+    GLColor depthVerify(100, 100, 100, 100);
+    glReadPixels(w / 2, h / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &depthVerify);
+    if (depthVerify != GLColor::green)
+    {
+        // Drawing slightly below original draw's depth should pass.  Slightly above should fail.
+        drawQuad(green, essl1_shaders::PositionAttrib(), 0.8f - 0.05f);
+        drawQuad(blue, essl1_shaders::PositionAttrib(), 0.8f + 0.05f);
+        EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::green);
+    }
+
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x00, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    drawQuad(blue, essl1_shaders::PositionAttrib(), 0);
+
+    GLColor stencilVerify(100, 100, 100, 100);
+    glReadPixels(w / 2, h / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &stencilVerify);
+    if (stencilVerify != GLColor::blue)
+    {
+        // Drawing with original draw's stencil value should pass.
+        glStencilFunc(GL_EQUAL, 0x1C, 0xFF);
+        drawQuad(blue, essl1_shaders::PositionAttrib(), 0.8f + 0.05f);
+        EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::blue);
+    }
+}
+
+// Calling invalidate on a subregion of the framebuffer should not lead to uninitialized memory
+// being read.
+TEST_P(RobustResourceInitTestES3, SubInvalidateThenReadBack)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    // Invalidate first
+    std::array<GLenum, 1> attachments = {GL_COLOR_ATTACHMENT0};
+    glInvalidateSubFramebuffer(GL_FRAMEBUFFER, 1, attachments.data(), w / 4, h / 8, w / 2, h / 4);
+
+    // Read back, ensure the content is still valid
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::transparentBlack);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Calling invalidate on a subregion of the framebuffer after draw should either read back the
+// result of the draw call (invalidate didn't happen) or transparent black (the init color).
+TEST_P(RobustResourceInitTestES3, DrawThenSubInvalidateThenReadBack)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    // Start a render pass, then invalidate
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(w / 4, h / 8, w / 2, h / 4);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 1.0f);
+
+    std::array<GLenum, 1> attachments = {GL_COLOR_ATTACHMENT0};
+    glInvalidateSubFramebuffer(GL_FRAMEBUFFER, 1, attachments.data(), w / 4, h / 8, w / 2, h / 4);
+
+    // Read back, ensure the content is still valid
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 4, h / 8, GLColor::transparentBlack);
+    EXPECT_PIXEL_RECT_EQ(w / 4 + w / 2, h / 8 + h / 4, w - w / 4 - w / 2, h - h / 8 - h / 4,
+                         GLColor::transparentBlack);
+
+    GLColor invalidated(100, 100, 100, 100);
+    glReadPixels(w / 2, h / 4, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &invalidated);
+    EXPECT_TRUE(invalidated == GLColor::red || invalidated == GLColor::transparentBlack)
+        << invalidated;
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that calling glTexImage2D multiple times with the same size and no data resets all texture
 // data
 TEST_P(RobustResourceInitTest, ReuploadingClearsTexture)

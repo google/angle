@@ -2595,7 +2595,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                                      const gl::Extents &glExtents,
                                                      const angle::Format &intendedFormat,
                                                      const angle::Format &imageFormat);
-    void stageRobustResourceClear(const gl::ImageIndex &index);
+    void stageRobustResourceClear(const gl::ImageIndex &index,
+                                  const VkImageAspectFlags aspectFlags);
 
     angle::Result stageResourceClearWithFormat(ContextVk *contextVk,
                                                const gl::ImageIndex &index,

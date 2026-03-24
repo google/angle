@@ -850,14 +850,15 @@ angle::Result OffscreenSurfaceVk::initializeContents(const gl::Context *context,
     {
         case GL_BACK:
             ASSERT(mColorAttachment.image.valid());
-            mColorAttachment.image.stageRobustResourceClear(imageIndex);
+            mColorAttachment.image.stageRobustResourceClear(imageIndex, VK_IMAGE_ASPECT_COLOR_BIT);
             ANGLE_TRY(mColorAttachment.image.flushAllStagedUpdates(contextVk));
             break;
 
         case GL_DEPTH:
         case GL_STENCIL:
             ASSERT(mDepthStencilAttachment.image.valid());
-            mDepthStencilAttachment.image.stageRobustResourceClear(imageIndex);
+            mDepthStencilAttachment.image.stageRobustResourceClear(
+                imageIndex, mDepthStencilAttachment.image.getAspectFlags());
             ANGLE_TRY(mDepthStencilAttachment.image.flushAllStagedUpdates(contextVk));
             break;
 
@@ -3606,14 +3607,15 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
             vk::ImageHelper *image =
                 hasAncillaryColor() ? &mAncillaryColorImage
                                     : mSwapchainImages[mCurrentSwapchainImageIndex].image.get();
-            image->stageRobustResourceClear(imageIndex);
+            image->stageRobustResourceClear(imageIndex, VK_IMAGE_ASPECT_COLOR_BIT);
             ANGLE_TRY(image->flushAllStagedUpdates(contextVk));
             break;
         }
         case GL_DEPTH:
         case GL_STENCIL:
             ASSERT(mDepthStencilImage.valid());
-            mDepthStencilImage.stageRobustResourceClear(gl::ImageIndex::Make2D(0));
+            mDepthStencilImage.stageRobustResourceClear(gl::ImageIndex::Make2D(0),
+                                                        mDepthStencilImage.getAspectFlags());
             ANGLE_TRY(mDepthStencilImage.flushAllStagedUpdates(contextVk));
             break;
         default:
