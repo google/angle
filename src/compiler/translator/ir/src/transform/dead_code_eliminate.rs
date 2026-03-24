@@ -345,6 +345,7 @@ fn transform_blocks_in_reverse_order(state: &mut State, block: &mut Block) -> Bl
     }
 
     let is_loop = matches!(block.get_terminating_op(), OpCode::Loop | OpCode::DoLoop);
+    let is_do_loop = matches!(block.get_terminating_op(), OpCode::DoLoop);
 
     // Then, every sub-block.
     let block1_stats = block
@@ -361,8 +362,22 @@ fn transform_blocks_in_reverse_order(state: &mut State, block: &mut Block) -> Bl
     //         // no continue, then:
     //         break;
     //     }
-    if is_loop && !block1_stats.has_continue {
-        block.block2.take();
+    //
+    // Similarly, before visiting the condition block of a do-loop, check to see if its body has any
+    // `continue` instructions.  If it doesn't, the condition block is dead code.  For example:
+    //
+    //     do
+    //     {
+    //         // no continue, then:
+    //         break;
+    //     } while (condition)
+    if !block1_stats.has_continue {
+        if is_loop {
+            block.block2.take();
+        }
+        if is_do_loop {
+            block.loop_condition.take();
+        }
     }
     let block2_stats = block
         .block2
