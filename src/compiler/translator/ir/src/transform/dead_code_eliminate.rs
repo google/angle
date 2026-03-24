@@ -316,19 +316,90 @@ fn record_reference(referenced: &mut Referenced, id: TypedId) {
     }
 }
 
-fn transform_blocks_in_reverse_order(state: &mut State, block: &mut Block) {
-    // First visit the merge block
-    if let Some(merge_block) = block.merge_block.as_mut() {
-        transform_blocks_in_reverse_order(state, merge_block);
+// When blocks are traversed, some statistics are returned, which are used for further pruning:
+//
+// * If a loop's body does not contain `continue`, the continue block can be eliminated.
+#[derive(Copy, Clone)]
+struct BlockStats {
+    // Whether this block has `continue` anywhere nested in it.  If a `continue` is under a nested
+    // loop, that doesn't count because it cannot lead to the execution of the outer loop's
+    // continue block.
+    has_continue: bool,
+}
+
+impl BlockStats {
+    fn new() -> BlockStats {
+        BlockStats { has_continue: false }
     }
 
-    // Then, every sub-block
-    block.for_each_sub_block_mut(state, &|state, sub_block| {
-        transform_blocks_in_reverse_order(state, sub_block);
-    });
+    fn accumulate_has_continue(&self, child: &BlockStats) -> BlockStats {
+        BlockStats { has_continue: self.has_continue || child.has_continue }
+    }
+}
+
+fn transform_blocks_in_reverse_order(state: &mut State, block: &mut Block) -> BlockStats {
+    let mut merge_block_stats = BlockStats::new();
+    // First visit the merge block
+    if let Some(merge_block) = block.merge_block.as_mut() {
+        merge_block_stats = transform_blocks_in_reverse_order(state, merge_block);
+    }
+
+    let is_loop = matches!(block.get_terminating_op(), OpCode::Loop | OpCode::DoLoop);
+
+    // Then, every sub-block.
+    let block1_stats = block
+        .block1
+        .as_mut()
+        .map(|sub_block| transform_blocks_in_reverse_order(state, sub_block))
+        .unwrap_or(BlockStats::new());
+    // Before visiting the continue block of a loop, check to see if its
+    // body has any `continue` instructions at all.  If it doesn't, the continue block is dead code
+    // and can be removed.  For example:
+    //
+    //     for (...; ++i)
+    //     {
+    //         // no continue, then:
+    //         break;
+    //     }
+    if is_loop && !block1_stats.has_continue {
+        block.block2.take();
+    }
+    let block2_stats = block
+        .block2
+        .as_mut()
+        .map(|sub_block| transform_blocks_in_reverse_order(state, sub_block))
+        .unwrap_or(BlockStats::new());
+    let loop_condition_stats = block
+        .loop_condition
+        .as_mut()
+        .map(|sub_block| transform_blocks_in_reverse_order(state, sub_block))
+        .unwrap_or(BlockStats::new());
+    let case_blocks_stats =
+        block.case_blocks.iter_mut().fold(BlockStats::new(), |acc, sub_block| {
+            let case_stats = transform_blocks_in_reverse_order(state, sub_block);
+            acc.accumulate_has_continue(&case_stats)
+        });
+
+    // The loop condition is not allowed to have a `continue` branch.
+    debug_assert!(!loop_condition_stats.has_continue);
 
     // Finally, visit this block.
     transform_block(state, block);
+
+    // Calculate stats for this block
+    let ends_in_continue = matches!(block.get_terminating_op(), OpCode::Continue);
+    BlockStats {
+        // The block may `continue` if it's not a loop, and has a nested `continue` in sub-blocks or
+        // merge block.  If it's a loop, nested sub-blocks may contain `continue`, but that doesn't
+        // affect the outer loop that needs to know if this block may `continue` to _its_ continue
+        // block.
+        has_continue: ends_in_continue
+            || merge_block_stats.has_continue
+            || (!is_loop
+                && (block1_stats.has_continue
+                    || block2_stats.has_continue
+                    || case_blocks_stats.has_continue)),
+    }
 }
 
 fn transform_block(state: &mut State, block: &mut Block) {
