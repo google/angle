@@ -2348,17 +2348,17 @@ void TextureVk::handleImmutableSamplerTransition(const vk::ImageHelper *previous
     bool nextImageRequiresImmutableSampler =
         nextImage && nextImage->valid() && nextImage->hasImmutableSampler();
 
-    // Has the external format changed?
-    bool externalFormatChanged = false;
+    // Have the YCbCr conversion parameters changed?
+    bool ycbcrConversionChanged = false;
     if (previousImageHadImmutableSampler && nextImageRequiresImmutableSampler)
     {
-        externalFormatChanged =
-            previousImage->getExternalFormat() != nextImage->getExternalFormat();
+        ycbcrConversionChanged =
+            previousImage->getYcbcrConversionDesc() != nextImage->getYcbcrConversionDesc();
     }
 
     // Handle transition of immutable sampler state
     if ((previousImageHadImmutableSampler != nextImageRequiresImmutableSampler) ||
-        externalFormatChanged)
+        ycbcrConversionChanged)
     {
         // The immutable sampler state is dirty.
         resetSampler();
