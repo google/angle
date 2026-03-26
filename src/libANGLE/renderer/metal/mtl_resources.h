@@ -414,21 +414,14 @@ class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>
     using Usage = gl::BufferUsage;
     static MTLStorageMode getStorageModeForUsage(ContextMtl *context, Usage usage);
 
-    static angle::Result MakeBuffer(ContextMtl *context,
-                                    size_t size,
-                                    const uint8_t *data,
-                                    BufferRef *bufferOut);
+    static angle::Result MakeBuffer(ContextMtl *context, size_t size, BufferRef *bufferOut);
 
     static angle::Result MakeBufferWithStorageMode(ContextMtl *context,
                                                    MTLStorageMode storageMode,
                                                    size_t size,
-                                                   const uint8_t *data,
                                                    BufferRef *bufferOut);
 
-    angle::Result reset(ContextMtl *context,
-                        MTLStorageMode storageMode,
-                        size_t size,
-                        const uint8_t *data);
+    angle::Result reset(ContextMtl *context, MTLStorageMode storageMode, size_t size);
 
     angle::Span<const uint8_t> mapReadOnly(ContextMtl *context, size_t offset = 0);
     angle::Span<const uint8_t> mapReadOnly(ContextMtl *context, size_t offset, size_t length);
@@ -464,7 +457,7 @@ class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>
     void setNumCommandBufferCommitsAtLastUse(size_t num) { mCommandBufferCommitsAtLastUse = num; }
 
   private:
-    Buffer(ContextMtl *context, MTLStorageMode storageMode, size_t size, const uint8_t *data);
+    Buffer(ContextMtl *context, MTLStorageMode storageMode, size_t size);
 
     bool mMapReadOnly = true;
     // For garbage collecting shadow buffers in BufferManager.

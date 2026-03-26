@@ -1093,35 +1093,28 @@ MTLStorageMode Buffer::getStorageModeForUsage(ContextMtl *contextMtl, Usage usag
 #endif
 }
 
-angle::Result Buffer::MakeBuffer(ContextMtl *context,
-                                 size_t size,
-                                 const uint8_t *data,
-                                 BufferRef *bufferOut)
+angle::Result Buffer::MakeBuffer(ContextMtl *context, size_t size, BufferRef *bufferOut)
 {
     auto storageMode = getStorageModeForUsage(context, Usage::DynamicDraw);
-    return MakeBufferWithStorageMode(context, storageMode, size, data, bufferOut);
+    return MakeBufferWithStorageMode(context, storageMode, size, bufferOut);
 }
 
 angle::Result Buffer::MakeBufferWithStorageMode(ContextMtl *context,
                                                 MTLStorageMode storageMode,
                                                 size_t size,
-                                                const uint8_t *data,
                                                 BufferRef *bufferOut)
 {
-    bufferOut->reset(new Buffer(context, storageMode, size, data));
+    bufferOut->reset(new Buffer(context, storageMode, size));
     ANGLE_CHECK_GL_ALLOC(context, *bufferOut && (*bufferOut)->get());
     return angle::Result::Continue;
 }
 
-Buffer::Buffer(ContextMtl *context, MTLStorageMode storageMode, size_t size, const uint8_t *data)
+Buffer::Buffer(ContextMtl *context, MTLStorageMode storageMode, size_t size)
 {
-    (void)reset(context, storageMode, size, data);
+    (void)reset(context, storageMode, size);
 }
 
-angle::Result Buffer::reset(ContextMtl *context,
-                            MTLStorageMode storageMode,
-                            size_t size,
-                            const uint8_t *data)
+angle::Result Buffer::reset(ContextMtl *context, MTLStorageMode storageMode, size_t size)
 {
     auto options = resourceOptionsForStorageMode(storageMode);
     set([&]() -> angle::ObjCPtr<id<MTLBuffer>> {
@@ -1129,10 +1122,6 @@ angle::Result Buffer::reset(ContextMtl *context,
         if (size > [metalDevice maxBufferLength])
         {
             return nullptr;
-        }
-        if (data)
-        {
-            return metalDevice.newBufferWithBytes(data, size, options);
         }
         return metalDevice.newBufferWithLength(size, options);
     }());

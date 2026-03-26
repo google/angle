@@ -89,7 +89,7 @@ angle::Result CopyTextureSliceLevelToTempBuffer(const gl::Context *context,
     mtl::BufferRef tempBuffer;
     ANGLE_TRY(mtl::Buffer::MakeBufferWithStorageMode(
         contextMtl, mtl::Buffer::getStorageModeForSharedBuffer(contextMtl),
-        sizeInBytes.ValueOrDie(), nullptr, &tempBuffer));
+        sizeInBytes.ValueOrDie(), &tempBuffer));
 
     gl::Rectangle region(0, 0, width, height);
     uint32_t bytesPerRow = angleFormat.pixelBytes * width;

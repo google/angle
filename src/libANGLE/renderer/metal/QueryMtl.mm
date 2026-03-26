@@ -42,7 +42,7 @@ angle::Result QueryMtl::begin(const gl::Context *context)
             {
                 // Allocate buffer
                 ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, mtl::kOcclusionQueryResultSize,
-                                                  nullptr, &mVisibilityResultBuffer));
+                                                  &mVisibilityResultBuffer));
 
                 ANGLE_MTL_OBJC_SCOPE
                 {

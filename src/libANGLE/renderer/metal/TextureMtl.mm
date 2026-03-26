@@ -297,7 +297,7 @@ angle::Result CopyDepthStencilTextureContentsToStagingBuffer(
     size_t stagingBuffer2DImageSize = stagingBufferRowPitch * regionSize.height;
     size_t stagingBufferSize        = stagingBuffer2DImageSize * regionSize.depth;
     mtl::BufferRef stagingBuffer;
-    ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, stagingBufferSize, nullptr, &stagingBuffer));
+    ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, stagingBufferSize, &stagingBuffer));
 
     uint8_t *pdst = stagingBuffer->map(contextMtl).data();
 
@@ -328,7 +328,7 @@ angle::Result CopyTextureContentsToStagingBuffer(ContextMtl *contextMtl,
     size_t stagingBuffer2DImageSize = stagingBufferRowPitch * regionSize.height;
     size_t stagingBufferSize        = stagingBuffer2DImageSize * regionSize.depth;
     mtl::BufferRef stagingBuffer;
-    ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, stagingBufferSize, nullptr, &stagingBuffer));
+    ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, stagingBufferSize, &stagingBuffer));
 
     uint8_t *pdst = stagingBuffer->map(contextMtl).data();
     CopyTextureData(regionSize, bytesPerRow, bytesPer2DImage, data, stagingBufferRowPitch,
@@ -357,7 +357,7 @@ angle::Result CopyCompressedTextureContentsToStagingBuffer(ContextMtl *contextMt
     size_t stagingBuffer2DImageSize = bytesPer2DImage;
     size_t stagingBufferSize        = stagingBuffer2DImageSize * regionSizeInBlocks.depth;
     mtl::BufferRef stagingBuffer;
-    ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, stagingBufferSize, nullptr, &stagingBuffer));
+    ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, stagingBufferSize, &stagingBuffer));
 
     uint8_t *pdst = stagingBuffer->map(contextMtl).data();
     CopyTextureData(regionSizeInBlocks, bytesPerBlockRow, bytesPer2DImage, data,
@@ -2340,8 +2340,7 @@ angle::Result TextureMtl::setPerSliceSubImage(const gl::Context *context,
                 ANGLE_CHECK_GL_MATH(contextMtl, offset <= std::numeric_limits<uint32_t>::max());
 
                 mtl::BufferRef stagingBuffer;
-                ANGLE_TRY(
-                    mtl::Buffer::MakeBuffer(contextMtl, pixelsDepthPitch, nullptr, &stagingBuffer));
+                ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, pixelsDepthPitch, &stagingBuffer));
 
                 mtl::BlockLinearizationParams params;
                 params.srcBuffer       = sourceBuffer;
@@ -2367,7 +2366,7 @@ angle::Result TextureMtl::setPerSliceSubImage(const gl::Context *context,
                 ANGLE_CHECK_GL_MATH(contextMtl, offset <= std::numeric_limits<uint32_t>::max());
                 size_t imageSize = pixelsRowPitch * mtlArea.size.height;
                 mtl::BufferRef stagingBuffer;
-                ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, imageSize, nullptr, &stagingBuffer));
+                ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, imageSize, &stagingBuffer));
 
                 ASSERT(pixelsAngleFormat.pixelBytes == 4 && offset % 4 == 0);
                 ANGLE_TRY(SaturateDepth(contextMtl, sourceBuffer, stagingBuffer,

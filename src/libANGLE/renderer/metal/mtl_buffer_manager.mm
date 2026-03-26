@@ -214,8 +214,7 @@ angle::Result BufferManager::getBuffer(ContextMtl *contextMtl,
     // Create a new one
     mtl::BufferRef newBufferRef;
 
-    ANGLE_TRY(mtl::Buffer::MakeBufferWithStorageMode(contextMtl, storageMode, size, nullptr,
-                                                     &newBufferRef));
+    ANGLE_TRY(mtl::Buffer::MakeBufferWithStorageMode(contextMtl, storageMode, size, &newBufferRef));
 
     mTotalMem += size;
 

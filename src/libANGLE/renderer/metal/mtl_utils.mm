@@ -391,7 +391,7 @@ static angle::Result InitializeCompressedTextureContents(const gl::Context *cont
     else
     {
         mtl::BufferRef zeroBuffer;
-        ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, bytesPerImage, nullptr, &zeroBuffer));
+        ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, bytesPerImage, &zeroBuffer));
         mtl::BlitCommandEncoder *blitEncoder = contextMtl->getBlitCommandEncoder();
         for (NSUInteger d = 0; d < static_cast<NSUInteger>(extents.depth); ++d)
         {

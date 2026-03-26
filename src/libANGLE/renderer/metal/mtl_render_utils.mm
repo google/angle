@@ -1565,7 +1565,7 @@ angle::Result DepthStencilBlitUtils::blitStencilViaCopyBuffer(
         bufferRequiredRowPitch * static_cast<uint32_t>(params.dstRect.height);
     if (!mStencilCopyBuffer || mStencilCopyBuffer->size() < bufferRequiredSize)
     {
-        ANGLE_TRY(Buffer::MakeBuffer(contextMtl, bufferRequiredSize, nullptr, &mStencilCopyBuffer));
+        ANGLE_TRY(Buffer::MakeBuffer(contextMtl, bufferRequiredSize, &mStencilCopyBuffer));
     }
 
     // Copy stencil data to buffer via compute shader. We cannot use blit command since blit command
