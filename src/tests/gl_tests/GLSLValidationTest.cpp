@@ -4734,6 +4734,23 @@ void main() {
                   "there is no acceptable conversion)");
 }
 
+// Shader that uses yuvCscStandardEXT in constructor fails to compile.
+TEST_P(GLSLValidationTest_ES3, YUVTargetCscStandardUintConstructor)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_YUV_target"));
+
+    constexpr char kFS[] =
+        R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision mediump float;
+const yuvCscStandardEXT conv = itu_601;
+const uint u = uint(conv);
+void main() {
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS, "'constructor' : cannot convert a yuvCscStandardEXT");
+}
+
 // Shader that specifies yuvCscStandardEXT type qualifiers fails to compile.
 TEST_P(GLSLValidationTest_ES3, YUVTargetCscStandardInput)
 {
