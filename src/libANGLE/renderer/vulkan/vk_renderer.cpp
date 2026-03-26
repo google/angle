@@ -5091,7 +5091,9 @@ gl::Version Renderer::getMaxSupportedESVersion() const
     // Limit to ES2.0 if there are any blockers for 3.0.
 
     // VK_EXT_provoking_vertex is required for flat shading.
-    if (!mFeatures.provokingVertex.enabled)
+    // On Apple/MoltenVK, this extension is not available but flat shading
+    // still works correctly, so don't gate ES version on it.
+    if (!mFeatures.provokingVertex.enabled && !IsApple())
     {
         maxVersion = LimitVersionTo(maxVersion, {2, 0});
     }
@@ -6055,7 +6057,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Advanced blend emulation depends on this functionality, lack of which prevents support for
     // ES 3.2; exposeNonConformantExtensionsAndVersions is used to force this.
     const bool supportsFramebufferFetchInSurface =
-        IsAndroid() || !isIntel ||
+        IsAndroid() || IsMac() || !isIntel ||
         (isIntel && IsLinux() && driverVersion >= angle::VersionTriple(22, 0, 0)) ||
         mFeatures.exposeNonConformantExtensionsAndVersions.enabled;
 
