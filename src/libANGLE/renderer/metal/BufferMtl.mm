@@ -129,7 +129,14 @@ angle::Result BufferMtl::setData(const gl::Context *context,
                                  gl::BufferUsage usage,
                                  BufferFeedback *feedback)
 {
-    return setDataImpl(context, target, data, intendedSize, usage, feedback);
+    ANGLE_TRY(setDataImpl(context, target, intendedSize, usage, feedback));
+    if (data == nullptr || intendedSize == 0)
+    {
+        return angle::Result::Continue;
+    }
+    ANGLE_UNSAFE_BUFFERS(
+        angle::Span<const uint8_t> dataSpan(static_cast<const uint8_t *>(data), intendedSize));
+    return setSubDataImpl(context, dataSpan, 0, feedback);
 }
 
 angle::Result BufferMtl::setSubData(const gl::Context *context,
@@ -139,7 +146,10 @@ angle::Result BufferMtl::setSubData(const gl::Context *context,
                                     size_t offset,
                                     BufferFeedback *feedback)
 {
-    return setSubDataImpl(context, data, size, offset, feedback);
+    ASSERT(data != nullptr);
+    ANGLE_UNSAFE_BUFFERS(
+        angle::Span<const uint8_t> dataSpan(static_cast<const uint8_t *>(data), size));
+    return setSubDataImpl(context, dataSpan, offset, feedback);
 }
 
 angle::Result BufferMtl::copySubData(const gl::Context *context,
@@ -174,7 +184,7 @@ angle::Result BufferMtl::copySubData(const gl::Context *context,
             return angle::Result::Continue;
         }
         return setSubDataImpl(context,
-                              srcMtl->getBufferDataReadOnly(contextMtl, sourceOffset).data(), size,
+                              srcMtl->getBufferDataReadOnly(contextMtl, sourceOffset).first(size),
                               destOffset, feedback);
     }
 
@@ -206,8 +216,8 @@ angle::Result BufferMtl::mapRange(const gl::Context *context,
 {
     if (access & GL_MAP_INVALIDATE_BUFFER_BIT)
     {
-        ANGLE_TRY(setDataImpl(context, gl::BufferBinding::InvalidEnum, nullptr, size(),
-                              mState.getUsage(), feedback));
+        ANGLE_TRY(setDataImpl(context, gl::BufferBinding::InvalidEnum, size(), mState.getUsage(),
+                              feedback));
     }
 
     if (mapPtr)
@@ -552,7 +562,6 @@ angle::Result BufferMtl::allocateNewMetalBuffer(ContextMtl *contextMtl,
 
 angle::Result BufferMtl::setDataImpl(const gl::Context *context,
                                      gl::BufferBinding target,
-                                     const void *data,
                                      size_t intendedSize,
                                      gl::BufferUsage usage,
                                      BufferFeedback *feedback)
@@ -570,8 +579,8 @@ angle::Result BufferMtl::setDataImpl(const gl::Context *context,
         markConversionBuffersDirty();
     }
 
-    mUsage              = usage;
-    mGLSize             = intendedSize;
+    mUsage  = usage;
+    mGLSize = intendedSize;
 
     // Re-create the buffer
     auto storageMode = mtl::Buffer::getStorageModeForUsage(contextMtl, usage);
@@ -592,12 +601,6 @@ angle::Result BufferMtl::setDataImpl(const gl::Context *context,
                             ? mBuffer->size()
                             : 0;
     ANGLE_CHECK_GL_ALLOC(contextMtl, mShadowCopy.resize(shadowSize));
-
-    if (data)
-    {
-        ANGLE_TRY(setSubDataImpl(context, data, intendedSize, 0, feedback));
-    }
-
     return angle::Result::Continue;
 }
 
@@ -634,15 +637,16 @@ bool BufferMtl::isSafeToReadFromBufferViaBlit(ContextMtl *contextMtl)
     return !isSameSerial;
 }
 
-angle::Result BufferMtl::updateExistingBufferViaBlitFromStagingBuffer(ContextMtl *contextMtl,
-                                                                      const uint8_t *srcPtr,
-                                                                      size_t sizeToCopy,
-                                                                      size_t offset)
+angle::Result BufferMtl::updateExistingBufferViaBlitFromStagingBuffer(
+    ContextMtl *contextMtl,
+    angle::Span<const uint8_t> data,
+    size_t offset)
 {
-    ASSERT(isOffsetAndSizeMetalBlitCompatible(offset, sizeToCopy));
+    ASSERT(isOffsetAndSizeMetalBlitCompatible(offset, data.size()));
 
     mtl::BufferManager &bufferManager = contextMtl->getBufferManager();
-    return bufferManager.queueBlitCopyDataToBuffer(contextMtl, srcPtr, sizeToCopy, offset, mBuffer);
+    return bufferManager.queueBlitCopyDataToBuffer(contextMtl, data.data(), data.size(), offset,
+                                                   mBuffer);
 }
 
 // * get a new or unused buffer
@@ -650,12 +654,10 @@ angle::Result BufferMtl::updateExistingBufferViaBlitFromStagingBuffer(ContextMtl
 // * copy any old data not overwriten by the new data to the new buffer
 // * start using the new buffer
 angle::Result BufferMtl::putDataInNewBufferAndStartUsingNewBuffer(ContextMtl *contextMtl,
-                                                                  const uint8_t *srcPtr,
-                                                                  size_t sizeToCopy,
+                                                                  angle::Span<const uint8_t> source,
                                                                   size_t offset,
                                                                   BufferFeedback *feedback)
 {
-    angle::Span<const uint8_t> source(srcPtr, sizeToCopy);
     ASSERT(isOffsetAndSizeMetalBlitCompatible(offset, source.size()));
 
     mtl::BufferRef oldBuffer = mBuffer;
@@ -693,20 +695,17 @@ angle::Result BufferMtl::putDataInNewBufferAndStartUsingNewBuffer(ContextMtl *co
 }
 
 angle::Result BufferMtl::copyDataToExistingBufferViaCPU(ContextMtl *contextMtl,
-                                                        const uint8_t *srcPtr,
-                                                        size_t sizeToCopy,
+                                                        angle::Span<const uint8_t> source,
                                                         size_t offset)
 {
-    angle::Span<const uint8_t> source(srcPtr, sizeToCopy);
     angle::Span<uint8_t> data = mBuffer->map(contextMtl, offset, source.size());
     std::copy(source.begin(), source.end(), data.begin());
-    mBuffer->unmapAndFlushSubset(contextMtl, offset, sizeToCopy);
+    mBuffer->unmapAndFlushSubset(contextMtl, offset, source.size());
     return angle::Result::Continue;
 }
 
 angle::Result BufferMtl::updateShadowCopyThenCopyShadowToNewBuffer(ContextMtl *contextMtl,
-                                                                   const uint8_t *srcPtr,
-                                                                   size_t sizeToCopy,
+                                                                   angle::Span<const uint8_t> data,
                                                                    size_t offset,
                                                                    BufferFeedback *feedback)
 {
@@ -715,23 +714,17 @@ angle::Result BufferMtl::updateShadowCopyThenCopyShadowToNewBuffer(ContextMtl *c
     ensureShadowCopySyncedFromGPU(contextMtl);
 
     // 2. Copy data from client to shadow copy.
-    std::copy(srcPtr, srcPtr + sizeToCopy, mShadowCopy.data() + offset);
+    std::copy(data.begin(), data.end(), mShadowCopy.data() + offset);
 
     // 3. Copy data from shadow copy to GPU.
     return commitShadowCopy(contextMtl, feedback);
 }
 
 angle::Result BufferMtl::setSubDataImpl(const gl::Context *context,
-                                        const void *data,
-                                        size_t size,
+                                        angle::Span<const uint8_t> data,
                                         size_t offset,
                                         BufferFeedback *feedback)
 {
-    if (!data)
-    {
-        return angle::Result::Continue;
-    }
-
     ASSERT(mBuffer);
 
     ContextMtl *contextMtl             = mtl::GetImpl(context);
@@ -739,44 +732,41 @@ angle::Result BufferMtl::setSubDataImpl(const gl::Context *context,
 
     ANGLE_CHECK(contextMtl, offset <= mGLSize, gl::err::kInternalError, GL_INVALID_OPERATION);
 
-    auto srcPtr     = static_cast<const uint8_t *>(data);
-    auto sizeToCopy = std::min<size_t>(size, mGLSize - offset);
+    auto dataToCopy = data.first(std::min<size_t>(data.size(), mGLSize - offset));
 
     markConversionBuffersDirty();
 
     if (features.preferCpuForBuffersubdata.enabled)
     {
-        return copyDataToExistingBufferViaCPU(contextMtl, srcPtr, sizeToCopy, offset);
+        return copyDataToExistingBufferViaCPU(contextMtl, dataToCopy, offset);
     }
 
     if (mShadowCopy.size() > 0)
     {
-        return updateShadowCopyThenCopyShadowToNewBuffer(contextMtl, srcPtr, sizeToCopy, offset,
-                                                         feedback);
+        return updateShadowCopyThenCopyShadowToNewBuffer(contextMtl, dataToCopy, offset, feedback);
     }
     else
     {
         bool alwaysUseStagedBufferUpdates = features.alwaysUseStagedBufferUpdates.enabled;
 
-        if (isOffsetAndSizeMetalBlitCompatible(offset, size) &&
+        if (isOffsetAndSizeMetalBlitCompatible(offset, dataToCopy.size()) &&
             (alwaysUseStagedBufferUpdates || mBuffer->isBeingUsedByGPU(contextMtl)))
         {
             if (alwaysUseStagedBufferUpdates || !isSafeToReadFromBufferViaBlit(contextMtl))
             {
                 // We can't use the buffer now so copy the data
                 // to a staging buffer and blit it in
-                return updateExistingBufferViaBlitFromStagingBuffer(contextMtl, srcPtr, sizeToCopy,
-                                                                    offset);
+                return updateExistingBufferViaBlitFromStagingBuffer(contextMtl, dataToCopy, offset);
             }
             else
             {
-                return putDataInNewBufferAndStartUsingNewBuffer(contextMtl, srcPtr, sizeToCopy,
-                                                                offset, feedback);
+                return putDataInNewBufferAndStartUsingNewBuffer(contextMtl, dataToCopy, offset,
+                                                                feedback);
             }
         }
         else
         {
-            return copyDataToExistingBufferViaCPU(contextMtl, srcPtr, sizeToCopy, offset);
+            return copyDataToExistingBufferViaCPU(contextMtl, dataToCopy, offset);
         }
     }
 }

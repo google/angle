@@ -202,13 +202,11 @@ class BufferMtl : public BufferImpl, public BufferHolderMtl
 
     angle::Result setDataImpl(const gl::Context *context,
                               gl::BufferBinding target,
-                              const void *data,
                               size_t size,
                               gl::BufferUsage usage,
                               BufferFeedback *feedback);
     angle::Result setSubDataImpl(const gl::Context *context,
-                                 const void *data,
-                                 size_t size,
+                                 angle::Span<const uint8_t> data,
                                  size_t offset,
                                  BufferFeedback *feedback);
 
@@ -219,21 +217,17 @@ class BufferMtl : public BufferImpl, public BufferHolderMtl
     void clearConversionBuffers();
 
     angle::Result putDataInNewBufferAndStartUsingNewBuffer(ContextMtl *contextMtl,
-                                                           const uint8_t *srcPtr,
-                                                           size_t sizeToCopy,
+                                                           angle::Span<const uint8_t> data,
                                                            size_t offset,
                                                            BufferFeedback *feedback);
     angle::Result updateExistingBufferViaBlitFromStagingBuffer(ContextMtl *contextMtl,
-                                                               const uint8_t *srcPtr,
-                                                               size_t sizeToCopy,
+                                                               angle::Span<const uint8_t> data,
                                                                size_t offset);
     angle::Result copyDataToExistingBufferViaCPU(ContextMtl *contextMtl,
-                                                 const uint8_t *srcPtr,
-                                                 size_t sizeToCopy,
+                                                 angle::Span<const uint8_t> data,
                                                  size_t offset);
     angle::Result updateShadowCopyThenCopyShadowToNewBuffer(ContextMtl *contextMtl,
-                                                            const uint8_t *srcPtr,
-                                                            size_t sizeToCopy,
+                                                            angle::Span<const uint8_t> data,
                                                             size_t offset,
                                                             BufferFeedback *feedback);
 
