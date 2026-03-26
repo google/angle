@@ -299,7 +299,7 @@ angle::Result CopyDepthStencilTextureContentsToStagingBuffer(
     mtl::BufferRef stagingBuffer;
     ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, stagingBufferSize, nullptr, &stagingBuffer));
 
-    uint8_t *pdst = stagingBuffer->map(contextMtl);
+    uint8_t *pdst = stagingBuffer->map(contextMtl).data();
 
     ConvertDepthStencilData(regionSize, textureAngleFormat, bytesPerRow, bytesPer2DImage, data,
                             stagingAngleFormat, pixelWriteFunctionOverride, stagingBufferRowPitch,
@@ -330,7 +330,7 @@ angle::Result CopyTextureContentsToStagingBuffer(ContextMtl *contextMtl,
     mtl::BufferRef stagingBuffer;
     ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, stagingBufferSize, nullptr, &stagingBuffer));
 
-    uint8_t *pdst = stagingBuffer->map(contextMtl);
+    uint8_t *pdst = stagingBuffer->map(contextMtl).data();
     CopyTextureData(regionSize, bytesPerRow, bytesPer2DImage, data, stagingBufferRowPitch,
                     stagingBuffer2DImageSize, pdst);
 
@@ -359,7 +359,7 @@ angle::Result CopyCompressedTextureContentsToStagingBuffer(ContextMtl *contextMt
     mtl::BufferRef stagingBuffer;
     ANGLE_TRY(mtl::Buffer::MakeBuffer(contextMtl, stagingBufferSize, nullptr, &stagingBuffer));
 
-    uint8_t *pdst = stagingBuffer->map(contextMtl);
+    uint8_t *pdst = stagingBuffer->map(contextMtl).data();
     CopyTextureData(regionSizeInBlocks, bytesPerBlockRow, bytesPer2DImage, data,
                     stagingBufferRowPitch, stagingBuffer2DImageSize, pdst);
 
@@ -2315,8 +2315,8 @@ angle::Result TextureMtl::setPerSliceSubImage(const gl::Context *context,
         {
             // NOTE(hqle): packed depth & stencil texture cannot copy from buffer directly, needs
             // to split its depth & stencil data and copy separately.
-            const uint8_t *clientData = unpackBufferMtl->getBufferDataReadOnly(contextMtl);
-            clientData += offset;
+            const uint8_t *clientData =
+                unpackBufferMtl->getBufferDataReadOnly(contextMtl, offset).data();
             ANGLE_TRY(UploadTextureContents(
                 context, imageFormat.actualAngleFormat(), mtlArea, mtl::kZeroNativeMipLevel, slice,
                 clientData, pixelsRowPitch, pixelsDepthPitch, false, imageDef.image));
@@ -2428,8 +2428,8 @@ angle::Result TextureMtl::convertAndSetPerSliceSubImage(const gl::Context *conte
             !contextMtl->getDisplay()->getUtils().isPixelsUnpackSupported(pixelsAngleFormat))
         {
             // Unsupported format, use CPU path.
-            const uint8_t *clientData = unpackBufferMtl->getBufferDataReadOnly(contextMtl);
-            clientData += offset;
+            const uint8_t *clientData =
+                unpackBufferMtl->getBufferDataReadOnly(contextMtl, offset).data();
             ANGLE_TRY(convertAndSetPerSliceSubImage(
                 context, slice, mtlArea, internalFormat, type, pixelsAngleFormat, pixelsRowPitch,
                 pixelsDepthPitch, nullptr, clientData, imageDef));

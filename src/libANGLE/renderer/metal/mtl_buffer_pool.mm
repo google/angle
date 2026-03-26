@@ -229,8 +229,7 @@ angle::Result BufferPool::allocate(ContextMtl *contextMtl,
     {
         // We don't need to synchronize with GPU access, since allocation should return a
         // non-overlapped region each time.
-        *ptrOut = mBuffer->mapWithOpt(contextMtl, /** readOnly */ false, /** noSync */ true) +
-                  mNextAllocationOffset;
+        *ptrOut = mBuffer->mapNoSync(contextMtl, mNextAllocationOffset).data();
     }
 
     if (offsetOut)

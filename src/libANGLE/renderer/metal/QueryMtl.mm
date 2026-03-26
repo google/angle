@@ -126,7 +126,8 @@ angle::Result QueryMtl::waitAndGetResult(const gl::Context *context, T *params)
                 contextMtl->flushCommandBuffer(mtl::NoWait);
             }
             // map() will wait for the pending GPU works to finish
-            const uint8_t *visibilityResultBytes = mVisibilityResultBuffer->mapReadOnly(contextMtl);
+            const uint8_t *visibilityResultBytes =
+                mVisibilityResultBuffer->mapReadOnly(contextMtl).data();
             uint64_t queryResult;
             memcpy(&queryResult, visibilityResultBytes, sizeof(queryResult));
             mVisibilityResultBuffer->unmap(contextMtl);

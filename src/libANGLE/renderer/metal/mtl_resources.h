@@ -18,6 +18,7 @@
 #include "common/FastVector.h"
 #include "common/MemoryBuffer.h"
 #include "common/angleutils.h"
+#include "common/span.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/metal/mtl_common.h"
@@ -429,9 +430,18 @@ class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>
                         size_t size,
                         const uint8_t *data);
 
-    const uint8_t *mapReadOnly(ContextMtl *context);
-    uint8_t *map(ContextMtl *context, size_t offset = 0);
-    uint8_t *mapWithOpt(ContextMtl *context, bool readonly, bool noSync);
+    angle::Span<const uint8_t> mapReadOnly(ContextMtl *context, size_t offset = 0);
+    angle::Span<const uint8_t> mapReadOnly(ContextMtl *context, size_t offset, size_t length);
+    angle::Span<uint8_t> map(ContextMtl *context, size_t offset = 0);
+    angle::Span<uint8_t> map(ContextMtl *context, size_t offset, size_t length);
+    angle::Span<uint8_t> mapNoSync(ContextMtl *context, size_t offset = 0);
+    angle::Span<uint8_t> mapNoSync(ContextMtl *context, size_t offset, size_t length);
+    angle::Span<uint8_t> mapWithOpt(ContextMtl *context, bool readonly, bool noSync, size_t offset);
+    angle::Span<uint8_t> mapWithOpt(ContextMtl *context,
+                                    bool readonly,
+                                    bool noSync,
+                                    size_t offset,
+                                    size_t length);
 
     void unmap(ContextMtl *context);
     // Same as unmap but do not do implicit flush()
@@ -482,6 +492,47 @@ class NativeTexLevelArray
   private:
     gl::TexLevelArray<TextureRef> mTexLevels;
 };
+
+inline angle::Span<const uint8_t> Buffer::mapReadOnly(ContextMtl *context, size_t offset)
+{
+    return mapWithOpt(context, true, false, offset);
+}
+
+inline angle::Span<const uint8_t> Buffer::mapReadOnly(ContextMtl *context,
+                                                      size_t offset,
+                                                      size_t length)
+{
+    return mapWithOpt(context, true, false, offset, length);
+}
+
+inline angle::Span<uint8_t> Buffer::map(ContextMtl *context, size_t offset)
+{
+    return mapWithOpt(context, false, false, offset);
+}
+
+inline angle::Span<uint8_t> Buffer::map(ContextMtl *context, size_t offset, size_t length)
+{
+    return mapWithOpt(context, false, false, offset, length);
+}
+
+inline angle::Span<uint8_t> Buffer::mapNoSync(ContextMtl *context, size_t offset)
+{
+    return mapWithOpt(context, false, true, offset);
+}
+
+inline angle::Span<uint8_t> Buffer::mapNoSync(ContextMtl *context, size_t offset, size_t length)
+{
+    return mapWithOpt(context, false, true, offset, length);
+}
+
+inline angle::Span<uint8_t> Buffer::mapWithOpt(ContextMtl *context,
+                                               bool readonly,
+                                               bool noSync,
+                                               size_t offset,
+                                               size_t length)
+{
+    return mapWithOpt(context, readonly, noSync, offset).first(length);
+}
 
 }  // namespace mtl
 }  // namespace rx

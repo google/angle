@@ -1636,7 +1636,7 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
             texture->width(renderTarget->getLevelIndex()) * readAngleFormat.pixelBytes;
 
         buffer->syncContent(contextMtl, contextMtl->getBlitCommandEncoder());
-        const uint8_t *bufferData = buffer->mapReadOnly(contextMtl);
+        const uint8_t *bufferData = buffer->mapReadOnly(contextMtl).data();
 
         angle::Result result = readPixelsCopyImpl(
             context, area, packPixelsParams, renderTarget,
