@@ -961,6 +961,23 @@ TEST_P(GLSLValidationTest, SamplerInConstructorArguments)
                   "'constructor' : cannot convert a variable with type sampler2D");
 }
 
+// Test that a struct with sampler can't be constructed
+TEST_P(GLSLValidationTest, ConstructorWithSampler)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+        struct S {
+            sampler2D inStruct;
+        };
+        uniform sampler2D s;
+        void main()
+        {
+            gl_FragColor = texture2D(S(s).inStruct, vec2(0));
+        })";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'constructor' : cannot convert a variable with type sampler2D");
+}
+
 // Test that void can't be used in constructor argument list
 TEST_P(GLSLValidationTest, VoidInConstructorArguments)
 {
