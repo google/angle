@@ -18625,6 +18625,108 @@ class TextureTestES31 : public ANGLETest<>
     }
 };
 
+// Test that clearing and drawing to textures attached to a framebuffer correctly
+// updates the textures across multiple frames
+TEST_P(TextureTestES31, MultiFrameFBOUpdate)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 a_position;
+void main() {
+    gl_Position = a_position;
+})";
+
+    constexpr char kFSLoc0[] = R"(#version 300 es
+precision highp float;
+layout(location = 0) out vec4 red;
+void main() {
+    red = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kFSLoc1[] = R"(#version 300 es
+precision highp float;
+layout(location = 1) out vec4 red;
+void main() {
+    red = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    // Need at least 2 color attachments for the test
+    GLint maxColorAttachments;
+    glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxColorAttachments);
+    ANGLE_SKIP_TEST_IF(maxColorAttachments < 2);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(redLoc0Program, kVS, kFSLoc0);
+    ANGLE_GL_PROGRAM(redLoc1Program, kVS, kFSLoc1);
+
+    GLTexture colorTex0;
+    glBindTexture(GL_TEXTURE_2D, colorTex0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLTexture colorTex1;
+    glBindTexture(GL_TEXTURE_2D, colorTex1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 128, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLTexture depthTex;
+    glBindTexture(GL_TEXTURE_2D, depthTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, 128, 128, 0, GL_DEPTH_COMPONENT,
+                 GL_UNSIGNED_SHORT, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, colorTex1, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // First frame is just setup
+    swapBuffers();
+
+    // Draw red quad to color attachment 0
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    GLenum drawBuffers2[] = {GL_COLOR_ATTACHMENT0, GL_NONE};
+    glDrawBuffers(2, drawBuffers2);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(64, 64, GLColor::red);
+
+    swapBuffers();
+
+    // Clear depth attachment
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glEnable(GL_DEPTH_TEST);
+    glClearDepthf(1.0f);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    // If depth was cleared, drawing with GL_LESS at 0.5 should pass
+    glDepthFunc(GL_LESS);
+    drawQuad(redLoc0Program, essl1_shaders::PositionAttrib(), 0.5f);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(64, 64, GLColor::red);
+
+    swapBuffers();
+
+    // Draw red to color attachment 1
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    GLenum drawBuffers4[] = {GL_NONE, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, drawBuffers4);
+    drawQuad(redLoc1Program, essl1_shaders::PositionAttrib(), 0.25f);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_EQ(64, 64, GLColor::red);
+
+    // Display offscreen FBO contents
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    glBlitFramebuffer(0, 0, 128, 128,  // Source rectangle (FBO)
+                      0, 0, 128, 128,  // Destination rectangle (Screen)
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    swapBuffers();
+}
+
 // Verify that image uniforms can link in separable programs
 TEST_P(TextureTestES31, LinkedImageUniforms)
 {

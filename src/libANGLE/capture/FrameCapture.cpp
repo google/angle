@@ -2101,14 +2101,7 @@ bool IsTextureUpdate(CallCapture &call)
 
 bool IsImageUpdate(CallCapture &call)
 {
-    switch (call.entryPoint)
-    {
-        case EntryPoint::GLDispatchCompute:
-        case EntryPoint::GLDispatchComputeIndirect:
-            return true;
-        default:
-            return false;
-    }
+    return IsDispatchEntryPoint(call.entryPoint);
 }
 
 bool IsVertexArrayUpdate(CallCapture &call)
@@ -2129,6 +2122,12 @@ bool IsVertexArrayUpdate(CallCapture &call)
         default:
             return false;
     }
+}
+
+bool IsFramebufferUpdate(CallCapture &call)
+{
+    return (IsDrawEntryPoint(call.entryPoint) || IsClearEntryPoint(call.entryPoint) ||
+            call.entryPoint == EntryPoint::GLBlitFramebuffer);
 }
 
 bool IsSharedObjectResource(ResourceIDType type)
@@ -6755,6 +6754,137 @@ void FrameCaptureShared::trackTextureUpdate(const gl::Context *context, const Ca
         .setModifiedResource(id);
 }
 
+// Identify and mark texture-based framebuffer attachments as modified
+void FrameCaptureShared::trackFramebufferAttachmentUpdate(const gl::Context *context,
+                                                          const CallCapture &call)
+{
+    const gl::State &state                 = context->getState();
+    const gl::Framebuffer *drawFramebuffer = state.getDrawFramebuffer();
+
+    // Only FBOs can have attachments that we need to track
+    if (drawFramebuffer->isDefault())
+    {
+        return;
+    }
+
+    bool colorModified          = false;
+    bool depthModified          = false;
+    bool stencilModified        = false;
+    const EntryPoint entryPoint = call.entryPoint;
+
+    if (IsDrawEntryPoint(entryPoint))
+    {
+        // Based on the current draw call, determine if any attachments are modified
+        colorModified = drawFramebuffer->getDrawBufferMask().any() &&
+                        !state.allActiveDrawBufferChannelsMasked();
+        depthModified   = drawFramebuffer->getDepthAttachment() && state.isDepthWriteEnabled();
+        stencilModified = drawFramebuffer->getStencilAttachment() &&
+                          state.isStencilWriteEnabled(drawFramebuffer->getStencilBitCount());
+    }
+    else
+    {
+        switch (entryPoint)
+        {
+            case EntryPoint::GLClear:
+            case EntryPoint::GLBlitFramebuffer:
+            {
+                // BlitFramebuffer mask is at index 8, Clear mask is at index 0
+                int maskIndex   = (entryPoint == EntryPoint::GLClear) ? 0 : 8;
+                GLbitfield mask = call.params.getParam("mask", ParamType::TGLbitfield, maskIndex)
+                                      .value.GLbitfieldVal;
+                colorModified   = (mask & GL_COLOR_BUFFER_BIT);
+                depthModified   = (mask & GL_DEPTH_BUFFER_BIT);
+                stencilModified = (mask & GL_STENCIL_BUFFER_BIT);
+                break;
+            }
+            case EntryPoint::GLClearBufferfi:
+                depthModified   = true;
+                stencilModified = true;
+                break;
+            case EntryPoint::GLClearBufferfv:
+            case EntryPoint::GLClearBufferiv:
+            case EntryPoint::GLClearBufferuiv:
+            {
+                GLenum buffer =
+                    call.params.getParam("buffer", ParamType::TGLenum, 0).value.GLenumVal;
+                colorModified   = (buffer == GL_COLOR);
+                depthModified   = (buffer == GL_DEPTH || buffer == GL_DEPTH_STENCIL);
+                stencilModified = (buffer == GL_STENCIL || buffer == GL_DEPTH_STENCIL);
+                break;
+            }
+            case EntryPoint::GLInvalidateFramebuffer:
+            case EntryPoint::GLDiscardFramebufferEXT:
+            {
+                GLsizei numAttachments =
+                    call.params.getParam("numAttachments", ParamType::TGLsizei, 1).value.GLsizeiVal;
+                const GLenum *attachments =
+                    call.params.getParam("attachments", ParamType::TGLenumConstPointer, 2)
+                        .value.GLenumConstPointerVal;
+                for (GLsizei i = 0; i < numAttachments; ++i)
+                {
+                    if (attachments[i] == GL_DEPTH_ATTACHMENT ||
+                        attachments[i] == GL_DEPTH_STENCIL_ATTACHMENT)
+                    {
+                        depthModified = true;
+                    }
+                    if (attachments[i] == GL_STENCIL_ATTACHMENT ||
+                        attachments[i] == GL_DEPTH_STENCIL_ATTACHMENT)
+                    {
+                        stencilModified = true;
+                    }
+                    if (attachments[i] == GL_COLOR || (attachments[i] >= GL_COLOR_ATTACHMENT0 &&
+                                                       attachments[i] <= GL_COLOR_ATTACHMENT31))
+                    {
+                        colorModified = true;
+                    }
+                }
+                break;
+            }
+            default:
+                return;
+        }
+    }
+
+    if (!colorModified && !depthModified && !stencilModified)
+    {
+        return;
+    }
+
+    auto &textureTracker =
+        mResourceTracker.getTrackedResource(context->id(), ResourceIDType::Texture);
+
+    // Helper for marking texture attachment as modified
+    auto markModified = [&](const gl::FramebufferAttachment *attachment) {
+        if (attachment && attachment->type() == GL_TEXTURE)
+        {
+            textureTracker.setModifiedResource(attachment->getTexture()->id().value);
+        }
+    };
+
+    // Mark the identified textures as modified
+    if (depthModified)
+    {
+        markModified(drawFramebuffer->getDepthAttachment());
+    }
+    if (stencilModified)
+    {
+        markModified(drawFramebuffer->getStencilAttachment());
+    }
+    if (colorModified)
+    {
+        gl::DrawBufferMask colorMask = drawFramebuffer->getDrawBufferMask();
+        // If it's a draw mark only the buffers the shader actually writes to
+        if (IsDrawEntryPoint(entryPoint))
+        {
+            colorMask &= state.getBlendStateExt().compareColorMask(0);
+        }
+        for (size_t i : colorMask)
+        {
+            markModified(drawFramebuffer->getColorAttachment(i));
+        }
+    }
+}
+
 // Identify and mark writeable shader image textures as modified
 void FrameCaptureShared::trackImageUpdate(const gl::Context *context, const CallCapture &call)
 {
@@ -7961,6 +8091,13 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
     {
         // If this call modified texture contents, track it for possible reset
         trackTextureUpdate(context, call);
+    }
+
+    if (IsFramebufferUpdate(call))
+    {
+        // If this call modified framebuffer contents, track its drawable attachments for possible
+        // update
+        trackFramebufferAttachmentUpdate(context, call);
     }
 
     if (IsImageUpdate(call))
