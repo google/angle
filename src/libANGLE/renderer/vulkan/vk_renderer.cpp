@@ -365,8 +365,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdEndQuery-None-07007",
     // https://anglebug.com/475549551
     "VUID-VkGraphicsPipelineCreateInfo-renderPass-09652",
-    // https://anglebug.com/495534890
-    "VUID-VkDeviceCreateInfo-enabledLayerCount-12384",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
@@ -4567,7 +4565,6 @@ angle::Result Renderer::setupDevice(vk::ErrorContext *context,
         mEnableValidationLayers =
             GetAvailableValidationLayers(deviceLayerProps, false, &mEnabledDeviceLayerNames);
     }
-
     if (wsiLayer != nullptr)
     {
         mEnabledDeviceLayerNames.push_back(wsiLayer);
@@ -4719,8 +4716,6 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context, uint32_t
     createInfo.flags                 = 0;
     createInfo.queueCreateInfoCount  = queueCreateInfoCount;
     createInfo.pQueueCreateInfos     = queueCreateInfo;
-    createInfo.enabledLayerCount     = static_cast<uint32_t>(mEnabledDeviceLayerNames.size());
-    createInfo.ppEnabledLayerNames   = mEnabledDeviceLayerNames.data();
     createInfo.enabledExtensionCount = static_cast<uint32_t>(mEnabledDeviceExtensions.size());
     createInfo.ppEnabledExtensionNames =
         mEnabledDeviceExtensions.empty() ? nullptr : mEnabledDeviceExtensions.data();
