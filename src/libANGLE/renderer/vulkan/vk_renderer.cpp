@@ -2506,23 +2506,23 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
                                                                  instanceLayerProps.data()));
     }
 
-    VulkanLayerVector enabledInstanceLayerNames;
+    mEnabledInstanceLayerNames.clear();
 
     if (enableApiDumpLayer)
     {
-        enabledInstanceLayerNames.push_back("VK_LAYER_LUNARG_api_dump");
+        mEnabledInstanceLayerNames.push_back("VK_LAYER_LUNARG_api_dump");
     }
 
     if (mEnableValidationLayers)
     {
         const bool layersRequested = useDebugLayers == UseDebugLayers::Yes;
         mEnableValidationLayers = GetAvailableValidationLayers(instanceLayerProps, layersRequested,
-                                                               &enabledInstanceLayerNames);
+                                                               &mEnabledInstanceLayerNames);
     }
 
     if (wsiLayer != nullptr)
     {
-        enabledInstanceLayerNames.push_back(wsiLayer);
+        mEnabledInstanceLayerNames.push_back(wsiLayer);
     }
 
     auto enumerateInstanceVersion = reinterpret_cast<PFN_vkEnumerateInstanceVersion>(
@@ -2555,7 +2555,7 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     const UseVulkanSwapchain useVulkanSwapchain = wsiExtension != nullptr || wsiLayer != nullptr
                                                       ? UseVulkanSwapchain::Yes
                                                       : UseVulkanSwapchain::No;
-    ANGLE_TRY(enableInstanceExtensions(context, enabledInstanceLayerNames, wsiExtension,
+    ANGLE_TRY(enableInstanceExtensions(context, mEnabledInstanceLayerNames, wsiExtension,
                                        useVulkanSwapchain, canLoadDebugUtils));
 
     const std::string appName = angle::GetExecutableName();
@@ -2578,8 +2578,8 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     instanceInfo.ppEnabledExtensionNames =
         mEnabledInstanceExtensions.empty() ? nullptr : mEnabledInstanceExtensions.data();
 
-    instanceInfo.enabledLayerCount   = static_cast<uint32_t>(enabledInstanceLayerNames.size());
-    instanceInfo.ppEnabledLayerNames = enabledInstanceLayerNames.data();
+    instanceInfo.enabledLayerCount   = static_cast<uint32_t>(mEnabledInstanceLayerNames.size());
+    instanceInfo.ppEnabledLayerNames = mEnabledInstanceLayerNames.data();
 
     // On macOS, there is no native Vulkan driver, so we need to enable the
     // portability enumeration extension to allow use of MoltenVK.
@@ -2736,8 +2736,7 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     // Determine the threshold for pending garbage sizes.
     calculatePendingGarbageSizeLimit();
 
-    ANGLE_TRY(
-        setupDevice(context, featureOverrides, wsiLayer, useVulkanSwapchain, nativeWindowSystem));
+    ANGLE_TRY(setupDevice(context, featureOverrides, useVulkanSwapchain, nativeWindowSystem));
 
     // If only one queue family, that's the only choice and the device is initialize with that.  If
     // there is more than one queue, we still create the device with the first queue family and hope
@@ -4375,7 +4374,7 @@ angle::Result Renderer::enableDeviceExtensions(vk::ErrorContext *context,
     deviceExtensionProps.resize(deviceExtensionCount);
 
     // Enumerate device extensions that are provided by explicit layers.
-    for (const char *layerName : mEnabledDeviceLayerNames)
+    for (const char *layerName : mEnabledInstanceLayerNames)
     {
         uint32_t previousExtensionCount    = static_cast<uint32_t>(deviceExtensionProps.size());
         uint32_t deviceLayerExtensionCount = 0;
@@ -4547,7 +4546,6 @@ void Renderer::initDeviceExtensionEntryPoints()
 
 angle::Result Renderer::setupDevice(vk::ErrorContext *context,
                                     const angle::FeatureOverrides &featureOverrides,
-                                    const char *wsiLayer,
                                     UseVulkanSwapchain useVulkanSwapchain,
                                     angle::NativeWindowSystem nativeWindowSystem)
 {
@@ -4558,17 +4556,6 @@ angle::Result Renderer::setupDevice(vk::ErrorContext *context,
     std::vector<VkLayerProperties> deviceLayerProps(deviceLayerCount);
     ANGLE_VK_TRY(context, vkEnumerateDeviceLayerProperties(mPhysicalDevice, &deviceLayerCount,
                                                            deviceLayerProps.data()));
-
-    mEnabledDeviceLayerNames.clear();
-    if (mEnableValidationLayers)
-    {
-        mEnableValidationLayers =
-            GetAvailableValidationLayers(deviceLayerProps, false, &mEnabledDeviceLayerNames);
-    }
-    if (wsiLayer != nullptr)
-    {
-        mEnabledDeviceLayerNames.push_back(wsiLayer);
-    }
 
     mEnabledFeatures       = {};
     mEnabledFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
