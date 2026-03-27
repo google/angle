@@ -2720,8 +2720,6 @@
 455800276 : MultiDrawEmulationTest.AllowsUserDefinedANGLEDrawID/* = SKIP
 
 // Translator IR failures
-// Constant fold is not yet done if only the index is constant
-349994211 IR : GLSLConstantFoldingTest.ArrayMixedArgumentsIndex/* = SKIP
 // Function argument evaluation order is not per spec.
 454016926 IR : GLSLTest.FunctionArgumentEvalOrder/* = SKIP
 454016926 IR : GLSLTest.FunctionArgumentEvalOrderOverloaded/* = SKIP

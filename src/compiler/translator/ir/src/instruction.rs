@@ -4466,6 +4466,20 @@ pub fn index(ir_meta: &mut IRMeta, indexed: TypedId, index: TypedId) -> Result {
     // Note: constant index on a vector should use vector_component() instead.
     debug_assert!(!(ir_meta.get_type(indexed.type_id).is_vector() && index.id.is_constant()));
 
+    // If selecting constant index of a constructed array, just return the element from the
+    // constructor. Note: the same could be done for constructed matrices if needed, but needs
+    // to handle a multitude of possible matrix constructors.  See
+    // `const_fold::construct_matrix_from_*`.
+    if let (Id::Register(indexed_register_id), Id::Constant(index_constant_id)) =
+        (indexed.id, index.id)
+    {
+        let indexed_instruction = ir_meta.get_instruction(indexed_register_id);
+        if let OpCode::ConstructArray(args) = &indexed_instruction.op {
+            let index = ir_meta.get_constant(index_constant_id).value.get_index();
+            return Result::NoOp(args[index as usize]);
+        }
+    }
+
     binary_op(
         ir_meta,
         indexed,
@@ -4511,6 +4525,14 @@ pub fn index(ir_meta: &mut IRMeta, indexed: TypedId, index: TypedId) -> Result {
 
 // Select a field of a struct, like `block.field`.
 pub fn struct_field(ir_meta: &mut IRMeta, struct_id: TypedId, field_index: u32) -> Result {
+    // If selecting field of a constructed type, just return the field from the constructor.
+    if let Id::Register(register_id) = struct_id.id {
+        let operand_instruction = ir_meta.get_instruction(register_id);
+        if let OpCode::ConstructStruct(args) = &operand_instruction.op {
+            return Result::NoOp(args[field_index as usize]);
+        }
+    }
+
     // Use the precision of the field itself on the result
     let mut struct_type_info = ir_meta.get_type(struct_id.type_id);
     if struct_type_info.is_pointer() {
