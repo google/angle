@@ -1322,6 +1322,7 @@ class YcbcrConversionDesc final
 
     size_t hash() const;
     bool operator==(const YcbcrConversionDesc &other) const;
+    bool operator!=(const YcbcrConversionDesc &other) const;
 
     bool valid() const { return mExternalOrVkFormat != 0; }
     void reset();

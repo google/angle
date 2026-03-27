@@ -5502,6 +5502,11 @@ bool YcbcrConversionDesc::operator==(const YcbcrConversionDesc &other) const
     return memcmp(this, &other, sizeof(YcbcrConversionDesc)) == 0;
 }
 
+bool YcbcrConversionDesc::operator!=(const YcbcrConversionDesc &other) const
+{
+    return !(*this == other);
+}
+
 void YcbcrConversionDesc::reset()
 {
     mExternalOrVkFormat    = 0;
