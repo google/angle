@@ -958,28 +958,9 @@ angle::ObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     return result;
 }
 
-angle::ObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
-                                                             const uint8_t *data,
-                                                             size_t length,
-                                                             angle::ObjCPtr<NSError> *errorOut)
-{
-    angle::ObjCPtr<id<MTLLibrary>> result;
-    ANGLE_MTL_OBJC_SCOPE
-    {
-        NSError *nsError = nil;
-        angle::ObjCPtr binaryData = angle::adoptObjCPtr(
-            dispatch_data_create(data, length, nullptr, DISPATCH_DATA_DESTRUCTOR_DEFAULT));
-        result    = angle::adoptObjCPtr([metalDevice newLibraryWithData:binaryData.get()
-                                                               error:&nsError]);
-        *errorOut = std::move(nsError);
-    }
-    return result;
-}
-
 angle::ObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromStaticBinary(
     id<MTLDevice> metalDevice,
-    const uint8_t *data,
-    size_t length,
+    angle::Span<const uint8_t> data,
     angle::ObjCPtr<NSError> *errorOut)
 {
     angle::ObjCPtr<id<MTLLibrary>> result;
@@ -987,9 +968,10 @@ angle::ObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromStaticBinary(
     {
         NSError *nsError = nil;
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
-        angle::ObjCPtr binaryData = angle::adoptObjCPtr(dispatch_data_create(data, length, queue,
-                                                                             ^{
-                                                                             }));
+        angle::ObjCPtr binaryData =
+            angle::adoptObjCPtr(dispatch_data_create(data.data(), data.size_bytes(), queue,
+                                                     ^{
+                                                     }));
         result    = angle::adoptObjCPtr([metalDevice newLibraryWithData:binaryData.get()
                                                                error:&nsError]);
         *errorOut = std::move(nsError);
