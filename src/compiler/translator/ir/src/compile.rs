@@ -202,6 +202,8 @@ mod ffi {
         // outputs in particular should be removed too.
         remove_inactive_interface_variables: bool,
         retain_inactive_fragment_outputs: bool,
+        // Whether vec and mat constructor args should be broken down into scalars.
+        scalarize_vec_and_mat_constructor_args: bool,
 
         // Whether the ANGLE_pixel_local_storage extension has been used and there are PLS uniforms
         // to rewrite.
@@ -622,6 +624,10 @@ fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
 
     if options.clamp_frag_depth {
         transform::run!(clamp_frag_depth, ir);
+    }
+
+    if options.scalarize_vec_and_mat_constructor_args {
+        transform::run!(scalarize_vec_and_mat_constructor_args, ir);
     }
 }
 

@@ -1129,13 +1129,13 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-    }
 
-    if (compileOptions.scalarizeVecAndMatConstructorArgs)
-    {
-        if (!ScalarizeVecAndMatConstructorArgs(this, root, &mSymbolTable))
+        if (compileOptions.scalarizeVecAndMatConstructorArgs)
         {
-            return false;
+            if (!ScalarizeVecAndMatConstructorArgs(this, root, &mSymbolTable))
+            {
+                return false;
+            }
         }
     }
 
