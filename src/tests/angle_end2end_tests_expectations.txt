@@ -1597,26 +1597,6 @@
 42266575 WIN GLES : RGBTextureBufferTestES31.*/* = SKIP
 42266575 LINUX NVIDIA OpenGL : RGBTextureBufferTestES31.*/* = SKIP
 
-// Virtualized contexts on multiple contexts not supported on Win (wgl)
-491346041 WIN OpenGL : EGLContextStateTest.MultipleThreads/* = SKIP
-491346041 WIN GLES : EGLContextStateTest.MultipleThreads/* = SKIP
-
-// Failing on Desktop GL Linux when contexts are devirtualized
-40096700 LINUX OPENGL : MultithreadingTestES3.SharedSrgbTextureMultipleContexts/* = SKIP
-40096700 LINUX OPENGL : MultithreadingTestES3.SimultaneousUploadAndDraw/* = SKIP
-40096700 LINUX OPENGL : MultithreadingTestES3.SimultaneousBufferBind/* = SKIP
-40096700 LINUX OPENGL : MultithreadingTestES3.SimultaneousBufferBindAndGen/* = SKIP
-40096700 LINUX OPENGL : MultithreadingTestES3.UniformBlockBinding/* = SKIP
-
-// Test does not yet support devirtualized contexts.
-40096700 LINUX OPENGL : EGLContextSharingTest.DeleteReaderOfSharedTexture/* = SKIP
-
-// Failing on Intel Linux
-40096700 LINUX OPENGL INTEL : MultithreadingTestES3.CreateNewContextAfterTextureUploadOnMainThread/* = SKIP
-40096700 LINUX OPENGL INTEL : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP
-40096700 LINUX OPENGL INTEL : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
-40096700 LINUX OPENGL INTEL : MultithreadingTestES3.RenderThenSampleInNewContextWithDifferentPriority/* = SKIP
-
 42266091 WIN INTEL : *EmulateCopyTexImage2DFromRenderbuffers* = SKIP
 
 42266092 WIN SWIFTSHADER : VulkanPerformanceCounterTest.EndXfbAfterRenderPassClosed/* = SKIP
