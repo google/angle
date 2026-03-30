@@ -2651,6 +2651,8 @@
 
 // WebGPU does not support BGRA
 42267264 WGPU : ClearTest.*BGRA* = SKIP
+// WebGPU error BufferOffset (5242862) is not a multiple of 4.
+496503799 WGPU : BufferDataTest.UnalignedVertexAttribPointer/* = SKIP
 
 // Fails on Mac & OpenGL & NVIDIA
 406807990 MAC NVIDIA OPENGL : TextureUploadFormatTest_ES3.AllWithPBO/* = SKIP

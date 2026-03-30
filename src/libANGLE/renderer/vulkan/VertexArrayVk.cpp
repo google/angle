@@ -855,17 +855,21 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
                 continue;
             }
 
+            // Use numVertices instead of maxNumVertices to calculate bytesToCopy to avoid buffer
+            // overrun.
             uint32_t srcOffset, dstOffset, numVertices;
             CalculateOffsetAndVertexCountForDirtyRange(srcBuffer, conversion, srcFormat, dstFormat,
                                                        dirtyRange, &srcOffset, &dstOffset,
                                                        &numVertices);
+            ASSERT(numVertices <= maxNumVertices);
 
             if (numVertices > 0)
             {
                 const uint8_t *srcBytes = src + srcOffset;
-                size_t bytesToCopy      = maxNumVertices * dstFormat.pixelBytes;
+
+                size_t bytesToCopy = numVertices * dstFormat.pixelBytes;
                 ANGLE_TRY(StreamVertexData(contextVk, conversion->getBuffer(), srcBytes,
-                                           bytesToCopy, dstOffset, maxNumVertices, srcStride,
+                                           bytesToCopy, dstOffset, numVertices, srcStride,
                                            vertexLoadFunction));
             }
         }
