@@ -150,6 +150,7 @@ void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::Compi
     opt->remove_inactive_interface_variables         = options.removeInactiveVariables;
     opt->retain_inactive_fragment_outputs            = options.retainInactiveFragmentOutputs;
     opt->scalarize_vec_and_mat_constructor_args      = options.scalarizeVecAndMatConstructorArgs;
+    opt->clamp_indirect_indices                      = options.clampIndirectArrayBounds;
 
     opt->rewrite_pixel_local_storage = compiler->hasPixelLocalStorageUniforms();
     opt->pls_options.implementation  = static_cast<ffi::PixelLocalStorageImpl>(options.pls.type);

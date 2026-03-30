@@ -1137,18 +1137,15 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-    }
 
-    if (compileOptions.clampIndirectArrayBounds)
-    {
-        if (!ClampIndirectIndices(this, root, &mSymbolTable))
+        if (compileOptions.clampIndirectArrayBounds)
         {
-            return false;
+            if (!ClampIndirectIndices(this, root, &mSymbolTable))
+            {
+                return false;
+            }
         }
-    }
 
-    if (!useIR)
-    {
         // Remove declarations of inactive shader interface variables so backends don't need to
         // account for them.  Note that currently, CollectVariables marks every field of an active
         // uniform that's of struct type as active, i.e. no extracted sampler is inactive, so this

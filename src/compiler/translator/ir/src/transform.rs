@@ -10,6 +10,7 @@ pub mod dealias;
 pub mod emulate_instanced_multiview;
 pub mod emulate_multi_draw;
 pub mod initialize_uninitialized_variables;
+pub mod localized_workarounds;
 pub mod monomorphize_unsupported_functions;
 pub mod propagate_precision;
 pub mod remove_unused_framebuffer_fetch;

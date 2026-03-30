@@ -204,6 +204,8 @@ mod ffi {
         retain_inactive_fragment_outputs: bool,
         // Whether vec and mat constructor args should be broken down into scalars.
         scalarize_vec_and_mat_constructor_args: bool,
+        // Clamp non-constant indices to the bounds of the entity being indexed for robustness.
+        clamp_indirect_indices: bool,
 
         // Whether the ANGLE_pixel_local_storage extension has been used and there are PLS uniforms
         // to rewrite.
@@ -628,6 +630,13 @@ fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
 
     if options.scalarize_vec_and_mat_constructor_args {
         transform::run!(scalarize_vec_and_mat_constructor_args, ir);
+    }
+
+    if options.clamp_indirect_indices {
+        let transform_options = transform::localized_workarounds::Options {
+            clamp_indirect_indices: options.clamp_indirect_indices,
+        };
+        transform::run!(localized_workarounds, ir, &transform_options);
     }
 }
 
