@@ -122,15 +122,15 @@ bool GetFormatModifierProperties(DisplayVk *displayVk,
     formatProperties.sType               = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2;
     formatProperties.pNext               = &formatModifierPropertiesList;
 
-    vkGetPhysicalDeviceFormatProperties2(renderer->getPhysicalDevice(), vkFormat,
-                                         &formatProperties);
+    VK_CALL(vkGetPhysicalDeviceFormatProperties2, renderer->getPhysicalDevice(), vkFormat,
+            &formatProperties);
 
     std::vector<VkDrmFormatModifierPropertiesEXT> formatModifierProperties(
         formatModifierPropertiesList.drmFormatModifierCount);
     formatModifierPropertiesList.pDrmFormatModifierProperties = formatModifierProperties.data();
 
-    vkGetPhysicalDeviceFormatProperties2(renderer->getPhysicalDevice(), vkFormat,
-                                         &formatProperties);
+    VK_CALL(vkGetPhysicalDeviceFormatProperties2, renderer->getPhysicalDevice(), vkFormat,
+            &formatProperties);
 
     // Find the requested DRM modifiers.
     uint32_t propertiesIndex = formatModifierPropertiesList.drmFormatModifierCount;
@@ -223,9 +223,8 @@ bool IsFormatSupported(vk::Renderer *renderer,
     drmFormatModifierInfo.sharingMode       = VK_SHARING_MODE_EXCLUSIVE;
     externalImageFormatInfo.pNext           = &drmFormatModifierInfo;
 
-    return vkGetPhysicalDeviceImageFormatProperties2(renderer->getPhysicalDevice(),
-                                                     &imageFormatInfo, imageFormatPropertiesOut) !=
-           VK_ERROR_FORMAT_NOT_SUPPORTED;
+    return VK_CALL(vkGetPhysicalDeviceImageFormatProperties2, renderer->getPhysicalDevice(),
+                   &imageFormatInfo, imageFormatPropertiesOut) != VK_ERROR_FORMAT_NOT_SUPPORTED;
 }
 
 VkChromaLocation GetChromaLocation(const egl::AttributeMap &attribs, EGLenum hint)

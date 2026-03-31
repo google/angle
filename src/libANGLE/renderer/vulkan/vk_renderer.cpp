@@ -1943,7 +1943,7 @@ VkResult RetrieveDeviceLostInfoFromDevice(VkDevice device,
     VkDeviceFaultCountsEXT faultCounts = {};
     faultCounts.sType                  = VK_STRUCTURE_TYPE_DEVICE_FAULT_COUNTS_EXT;
 
-    VkResult result = vkGetDeviceFaultInfoEXT(device, &faultCounts, nullptr);
+    VkResult result = VK_CALL(vkGetDeviceFaultInfoEXT, device, &faultCounts, nullptr);
     if (result != VK_SUCCESS)
     {
         return result;
@@ -1964,7 +1964,7 @@ VkResult RetrieveDeviceLostInfoFromDevice(VkDevice device,
     std::vector<uint32_t> vendorBinaryDataChunks(vendorBinaryDataChunkCount, 0);
     faultInfos.pVendorBinaryData = vendorBinaryDataChunks.data();
 
-    result = vkGetDeviceFaultInfoEXT(device, &faultCounts, &faultInfos);
+    result = VK_CALL(vkGetDeviceFaultInfoEXT, device, &faultCounts, &faultInfos);
     if (result != VK_SUCCESS)
     {
         return result;
@@ -2224,20 +2224,20 @@ void Renderer::onDestroy(vk::ErrorContext *context)
 
     if (mDevice)
     {
-        vkDestroyDevice(mDevice, nullptr);
+        VK_CALL(vkDestroyDevice, mDevice, nullptr);
         mDevice = VK_NULL_HANDLE;
     }
 
     if (mDebugUtilsMessenger)
     {
-        vkDestroyDebugUtilsMessengerEXT(mInstance, mDebugUtilsMessenger, nullptr);
+        VK_CALL(vkDestroyDebugUtilsMessengerEXT, mInstance, mDebugUtilsMessenger, nullptr);
     }
 
     logCacheStats();
 
     if (mInstance)
     {
-        vkDestroyInstance(mInstance, nullptr);
+        VK_CALL(vkDestroyInstance, mInstance, nullptr);
         mInstance = VK_NULL_HANDLE;
     }
 
@@ -2299,8 +2299,8 @@ angle::Result Renderer::enableInstanceExtensions(vk::ErrorContext *context,
     {
         ANGLE_SCOPED_DISABLE_LSAN();
         ANGLE_SCOPED_DISABLE_MSAN();
-        ANGLE_VK_TRY(context, vkEnumerateInstanceExtensionProperties(
-                                  nullptr, &instanceExtensionCount, nullptr));
+        ANGLE_VK_TRY(context, VK_CALL(vkEnumerateInstanceExtensionProperties, nullptr,
+                                      &instanceExtensionCount, nullptr));
     }
 
     std::vector<VkExtensionProperties> instanceExtensionProps(instanceExtensionCount);
@@ -2308,8 +2308,8 @@ angle::Result Renderer::enableInstanceExtensions(vk::ErrorContext *context,
     {
         ANGLE_SCOPED_DISABLE_LSAN();
         ANGLE_SCOPED_DISABLE_MSAN();
-        ANGLE_VK_TRY(context, vkEnumerateInstanceExtensionProperties(
-                                  nullptr, &instanceExtensionCount, instanceExtensionProps.data()));
+        ANGLE_VK_TRY(context, VK_CALL(vkEnumerateInstanceExtensionProperties, nullptr,
+                                      &instanceExtensionCount, instanceExtensionProps.data()));
         // In case fewer items were returned than requested, resize instanceExtensionProps to the
         // number of extensions returned (i.e. instanceExtensionCount).
         instanceExtensionProps.resize(instanceExtensionCount);
@@ -2323,16 +2323,16 @@ angle::Result Renderer::enableInstanceExtensions(vk::ErrorContext *context,
         {
             ANGLE_SCOPED_DISABLE_LSAN();
             ANGLE_SCOPED_DISABLE_MSAN();
-            ANGLE_VK_TRY(context, vkEnumerateInstanceExtensionProperties(
-                                      layerName, &instanceLayerExtensionCount, nullptr));
+            ANGLE_VK_TRY(context, VK_CALL(vkEnumerateInstanceExtensionProperties, layerName,
+                                          &instanceLayerExtensionCount, nullptr));
         }
         instanceExtensionProps.resize(previousExtensionCount + instanceLayerExtensionCount);
         {
             ANGLE_SCOPED_DISABLE_LSAN();
             ANGLE_SCOPED_DISABLE_MSAN();
-            ANGLE_VK_TRY(context, vkEnumerateInstanceExtensionProperties(
-                                      layerName, &instanceLayerExtensionCount,
-                                      instanceExtensionProps.data() + previousExtensionCount));
+            ANGLE_VK_TRY(context, VK_CALL(vkEnumerateInstanceExtensionProperties, layerName,
+                                          &instanceLayerExtensionCount,
+                                          instanceExtensionProps.data() + previousExtensionCount));
         }
         // In case fewer items were returned than requested, resize instanceExtensionProps to the
         // number of extensions returned (i.e. instanceLayerExtensionCount).
@@ -2469,6 +2469,13 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
                                    angle::NativeWindowSystem nativeWindowSystem,
                                    const angle::FeatureOverrides &featureOverrides)
 {
+    const std::string enableVulkanApiPerfCountersProp = angle::GetEnvironmentVarOrAndroidProperty(
+        "ANGLE_ENABLE_VULKAN_API_PERF_COUNTERS", "debug.angle.enable_vulkan_api_perf_counters");
+    if (enableVulkanApiPerfCountersProp == "1")
+    {
+        vk::ScopedVulkanApiPerfTimer::TryEnable();
+    }
+
     bool canLoadDebugUtils = true;
 #if defined(ANGLE_SHARED_LIBVULKAN)
     {
@@ -2481,9 +2488,9 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
                 angle::GetLibrarySymbol(mLibVulkanLibrary, "vkGetInstanceProcAddr"));
 
         // Set all vk* function ptrs
-        volkInitializeCustom(vulkanLoaderGetInstanceProcAddr);
+        VK_CALL(volkInitializeCustom, vulkanLoaderGetInstanceProcAddr);
 
-        uint32_t ver = volkGetInstanceVersion();
+        uint32_t ver = VK_CALL(volkGetInstanceVersion);
         if (!IsAndroid() && ver < VK_MAKE_API_VERSION(0, 1, 1, 91))
         {
             // http://crbug.com/1205999 - non-Android Vulkan Loader versions before 1.1.91 have a
@@ -2515,7 +2522,8 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     {
         ANGLE_SCOPED_DISABLE_LSAN();
         ANGLE_SCOPED_DISABLE_MSAN();
-        ANGLE_VK_TRY(context, vkEnumerateInstanceLayerProperties(&instanceLayerCount, nullptr));
+        ANGLE_VK_TRY(context,
+                     VK_CALL(vkEnumerateInstanceLayerProperties, &instanceLayerCount, nullptr));
     }
 
     std::vector<VkLayerProperties> instanceLayerProps(instanceLayerCount);
@@ -2523,8 +2531,8 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     {
         ANGLE_SCOPED_DISABLE_LSAN();
         ANGLE_SCOPED_DISABLE_MSAN();
-        ANGLE_VK_TRY(context, vkEnumerateInstanceLayerProperties(&instanceLayerCount,
-                                                                 instanceLayerProps.data()));
+        ANGLE_VK_TRY(context, VK_CALL(vkEnumerateInstanceLayerProperties, &instanceLayerCount,
+                                      instanceLayerProps.data()));
     }
 
     mEnabledInstanceLayerNames.clear();
@@ -2547,7 +2555,7 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     }
 
     auto enumerateInstanceVersion = reinterpret_cast<PFN_vkEnumerateInstanceVersion>(
-        vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceVersion"));
+        VK_CALL(vkGetInstanceProcAddr, nullptr, "vkEnumerateInstanceVersion"));
 
     uint32_t highestApiVersion = mInstanceVersion = VK_API_VERSION_1_0;
     if (enumerateInstanceVersion)
@@ -2555,7 +2563,10 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
         {
             ANGLE_SCOPED_DISABLE_LSAN();
             ANGLE_SCOPED_DISABLE_MSAN();
-            ANGLE_VK_TRY(context, enumerateInstanceVersion(&mInstanceVersion));
+            ANGLE_VK_TRY(context,
+                         VK_CALL_WITH_GROUP(
+                             GetPerfCounterGroup(VulkanApiFunction::vkEnumerateInstanceVersion),
+                             enumerateInstanceVersion(&mInstanceVersion)));
         }
 
         if (IsVulkan11(mInstanceVersion))
@@ -2643,10 +2654,10 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
 
     {
         ANGLE_SCOPED_DISABLE_MSAN();
-        ANGLE_VK_TRY(context, vkCreateInstance(&instanceInfo, nullptr, &mInstance));
+        ANGLE_VK_TRY(context, VK_CALL(vkCreateInstance, &instanceInfo, nullptr, &mInstance));
 #if defined(ANGLE_SHARED_LIBVULKAN)
         // Load volk if we are linking dynamically
-        volkLoadInstance(mInstance);
+        VK_CALL(volkLoadInstance, mInstance);
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 
         // For promoted extensions, initialize their entry points from the core version.
@@ -2678,22 +2689,25 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
         messengerInfo.pfnUserCallback = &DebugUtilsMessenger;
         messengerInfo.pUserData       = this;
 
-        ANGLE_VK_TRY(context, vkCreateDebugUtilsMessengerEXT(mInstance, &messengerInfo, nullptr,
-                                                             &mDebugUtilsMessenger));
+        ANGLE_VK_TRY(context, VK_CALL(vkCreateDebugUtilsMessengerEXT, mInstance, &messengerInfo,
+                                      nullptr, &mDebugUtilsMessenger));
     }
 
     uint32_t physicalDeviceCount = 0;
-    ANGLE_VK_TRY(context, vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount, nullptr));
+    ANGLE_VK_TRY(context,
+                 VK_CALL(vkEnumeratePhysicalDevices, mInstance, &physicalDeviceCount, nullptr));
     ANGLE_VK_CHECK(context, physicalDeviceCount > 0, VK_ERROR_INITIALIZATION_FAILED);
 
     std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
-    ANGLE_VK_TRY(context, vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount,
-                                                     physicalDevices.data()));
-    ChoosePhysicalDevice(vkGetPhysicalDeviceProperties2, physicalDevices, mEnabledICD,
-                         preferredVendorId, preferredDeviceId, preferredDeviceUuid,
-                         preferredDriverUuid, preferredDriverId, &mPhysicalDevice,
-                         &mPhysicalDeviceProperties2, &mPhysicalDeviceIDProperties,
-                         &mDriverProperties);
+    ANGLE_VK_TRY(context, VK_CALL(vkEnumeratePhysicalDevices, mInstance, &physicalDeviceCount,
+                                  physicalDevices.data()));
+    VK_CALL_WITH_GROUP(
+        GetPerfCounterGroup(VulkanApiFunction::vkGetPhysicalDeviceProperties2),
+        ChoosePhysicalDevice(vkGetPhysicalDeviceProperties2, physicalDevices, mEnabledICD,
+                             preferredVendorId, preferredDeviceId, preferredDeviceUuid,
+                             preferredDriverUuid, preferredDriverId, &mPhysicalDevice,
+                             &mPhysicalDeviceProperties2, &mPhysicalDeviceIDProperties,
+                             &mDriverProperties));
 
     // The device version that is assumed by ANGLE is the minimum of the actual device version and
     // the highest it's allowed to use.
@@ -2708,11 +2722,11 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     mGarbageCollectionFlushThreshold =
         static_cast<uint32_t>(mPhysicalDeviceProperties.limits.maxMemoryAllocationCount *
                               kPercentMaxMemoryAllocationCount);
-    vkGetPhysicalDeviceFeatures(mPhysicalDevice, &mPhysicalDeviceFeatures);
+    VK_CALL(vkGetPhysicalDeviceFeatures, mPhysicalDevice, &mPhysicalDeviceFeatures);
 
     // Ensure we can find a graphics queue family.
     uint32_t queueFamilyCount = 0;
-    vkGetPhysicalDeviceQueueFamilyProperties(mPhysicalDevice, &queueFamilyCount, nullptr);
+    VK_CALL(vkGetPhysicalDeviceQueueFamilyProperties, mPhysicalDevice, &queueFamilyCount, nullptr);
 
     ANGLE_VK_CHECK(context, queueFamilyCount > 0, VK_ERROR_INITIALIZATION_FAILED);
 
@@ -2737,8 +2751,8 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
         }
     }
 
-    vkGetPhysicalDeviceQueueFamilyProperties2(mPhysicalDevice, &queueFamilyCount,
-                                              mQueueFamilyProperties2.data());
+    VK_CALL(vkGetPhysicalDeviceQueueFamilyProperties2, mPhysicalDevice, &queueFamilyCount,
+            mQueueFamilyProperties2.data());
 
     uint32_t queueFamilyMatchCount = 0;
 
@@ -3777,8 +3791,11 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     appendDeviceExtensionFeaturesPromotedTo14(deviceExtensionNames, &deviceFeatures,
                                               &deviceProperties);
 
-    vkGetPhysicalDeviceFeatures2(mPhysicalDevice, &deviceFeatures);
-    vkGetPhysicalDeviceProperties2(mPhysicalDevice, &deviceProperties);
+    static_assert(GetPerfCounterGroup(VulkanApiFunction::vkGetPhysicalDeviceFeatures2) ==
+                  GetPerfCounterGroup(VulkanApiFunction::vkGetPhysicalDeviceProperties2));
+    VK_CALL_WITH_GROUP(GetPerfCounterGroup(VulkanApiFunction::vkGetPhysicalDeviceFeatures2),
+                       (vkGetPhysicalDeviceFeatures2(mPhysicalDevice, &deviceFeatures),
+                        vkGetPhysicalDeviceProperties2(mPhysicalDevice, &deviceProperties)));
 
     // Clean up pNext chains
     mLineRasterizationFeatures.pNext                  = nullptr;
@@ -4471,8 +4488,8 @@ angle::Result Renderer::enableDeviceExtensions(vk::ErrorContext *context,
     // Enumerate device extensions that are provided by the vulkan
     // implementation and implicit layers.
     uint32_t deviceExtensionCount = 0;
-    ANGLE_VK_TRY(context, vkEnumerateDeviceExtensionProperties(mPhysicalDevice, nullptr,
-                                                               &deviceExtensionCount, nullptr));
+    ANGLE_VK_TRY(context, VK_CALL(vkEnumerateDeviceExtensionProperties, mPhysicalDevice, nullptr,
+                                  &deviceExtensionCount, nullptr));
 
     // Work-around a race condition in the Android platform during Android start-up, that can cause
     // the second call to vkEnumerateDeviceExtensionProperties to have an additional extension.  In
@@ -4481,9 +4498,8 @@ angle::Result Renderer::enableDeviceExtensions(vk::ErrorContext *context,
     // were.  See: http://anglebug.com/42265209 and internal-to-Google bug: b/206733351.
     deviceExtensionCount++;
     std::vector<VkExtensionProperties> deviceExtensionProps(deviceExtensionCount);
-    ANGLE_VK_TRY(context,
-                 vkEnumerateDeviceExtensionProperties(
-                     mPhysicalDevice, nullptr, &deviceExtensionCount, deviceExtensionProps.data()));
+    ANGLE_VK_TRY(context, VK_CALL(vkEnumerateDeviceExtensionProperties, mPhysicalDevice, nullptr,
+                                  &deviceExtensionCount, deviceExtensionProps.data()));
     // In case fewer items were returned than requested, resize deviceExtensionProps to the number
     // of extensions returned (i.e. deviceExtensionCount).  See: b/208937840
     deviceExtensionProps.resize(deviceExtensionCount);
@@ -4493,12 +4509,12 @@ angle::Result Renderer::enableDeviceExtensions(vk::ErrorContext *context,
     {
         uint32_t previousExtensionCount    = static_cast<uint32_t>(deviceExtensionProps.size());
         uint32_t deviceLayerExtensionCount = 0;
-        ANGLE_VK_TRY(context, vkEnumerateDeviceExtensionProperties(
-                                  mPhysicalDevice, layerName, &deviceLayerExtensionCount, nullptr));
+        ANGLE_VK_TRY(context, VK_CALL(vkEnumerateDeviceExtensionProperties, mPhysicalDevice,
+                                      layerName, &deviceLayerExtensionCount, nullptr));
         deviceExtensionProps.resize(previousExtensionCount + deviceLayerExtensionCount);
-        ANGLE_VK_TRY(context, vkEnumerateDeviceExtensionProperties(
-                                  mPhysicalDevice, layerName, &deviceLayerExtensionCount,
-                                  deviceExtensionProps.data() + previousExtensionCount));
+        ANGLE_VK_TRY(context, VK_CALL(vkEnumerateDeviceExtensionProperties, mPhysicalDevice,
+                                      layerName, &deviceLayerExtensionCount,
+                                      deviceExtensionProps.data() + previousExtensionCount));
         // In case fewer items were returned than requested, resize deviceExtensionProps to the
         // number of extensions returned (i.e. deviceLayerExtensionCount).
         deviceExtensionProps.resize(previousExtensionCount + deviceLayerExtensionCount);
@@ -4663,12 +4679,12 @@ angle::Result Renderer::setupDevice(vk::ErrorContext *context,
                                     angle::NativeWindowSystem nativeWindowSystem)
 {
     uint32_t deviceLayerCount = 0;
-    ANGLE_VK_TRY(context,
-                 vkEnumerateDeviceLayerProperties(mPhysicalDevice, &deviceLayerCount, nullptr));
+    ANGLE_VK_TRY(context, VK_CALL(vkEnumerateDeviceLayerProperties, mPhysicalDevice,
+                                  &deviceLayerCount, nullptr));
 
     std::vector<VkLayerProperties> deviceLayerProps(deviceLayerCount);
-    ANGLE_VK_TRY(context, vkEnumerateDeviceLayerProperties(mPhysicalDevice, &deviceLayerCount,
-                                                           deviceLayerProps.data()));
+    ANGLE_VK_TRY(context, VK_CALL(vkEnumerateDeviceLayerProperties, mPhysicalDevice,
+                                  &deviceLayerCount, deviceLayerProps.data()));
 
     mEnabledFeatures       = {};
     mEnabledFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
@@ -4875,10 +4891,10 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context,
     // may also generate messages.
     initializeValidationMessageSuppressions();
 
-    ANGLE_VK_TRY(context, vkCreateDevice(mPhysicalDevice, &createInfo, nullptr, &mDevice));
+    ANGLE_VK_TRY(context, VK_CALL(vkCreateDevice, mPhysicalDevice, &createInfo, nullptr, &mDevice));
 #if defined(ANGLE_SHARED_LIBVULKAN)
     // Load volk if we are loading dynamically
-    volkLoadDevice(mDevice);
+    VK_CALL(volkLoadDevice, mDevice);
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 
     initDeviceExtensionEntryPoints();
@@ -4960,7 +4976,7 @@ void Renderer::calculatePendingGarbageSizeLimit()
 {
     // To find the threshold, we want the memory heap that has the largest size among other heaps.
     VkPhysicalDeviceMemoryProperties memoryProperties;
-    vkGetPhysicalDeviceMemoryProperties(mPhysicalDevice, &memoryProperties);
+    VK_CALL(vkGetPhysicalDeviceMemoryProperties, mPhysicalDevice, &memoryProperties);
     ASSERT(memoryProperties.memoryHeapCount > 0);
 
     VkDeviceSize maxHeapSize = memoryProperties.memoryHeaps[0].size;
@@ -5093,9 +5109,8 @@ angle::Result Renderer::checkQueueForSurfacePresent(vk::ErrorContext *context,
 
     // Check if the current device supports present on this surface.
     VkBool32 supportsPresent = VK_FALSE;
-    ANGLE_VK_TRY(context,
-                 vkGetPhysicalDeviceSurfaceSupportKHR(mPhysicalDevice, mCurrentQueueFamilyIndex,
-                                                      surface, &supportsPresent));
+    ANGLE_VK_TRY(context, VK_CALL(vkGetPhysicalDeviceSurfaceSupportKHR, mPhysicalDevice,
+                                  mCurrentQueueFamilyIndex, surface, &supportsPresent));
 
     *supportedOut = supportsPresent == VK_TRUE;
     return angle::Result::Continue;
@@ -5336,8 +5351,8 @@ void Renderer::queryAndCacheFragmentShadingRates()
 
     // Query number of supported shading rates first
     uint32_t shadingRatesCount = 0;
-    VkResult result =
-        vkGetPhysicalDeviceFragmentShadingRatesKHR(mPhysicalDevice, &shadingRatesCount, nullptr);
+    VkResult result = VK_CALL(vkGetPhysicalDeviceFragmentShadingRatesKHR, mPhysicalDevice,
+                              &shadingRatesCount, nullptr);
     ASSERT(result == VK_SUCCESS);
     ASSERT(shadingRatesCount > 0);
 
@@ -5346,8 +5361,8 @@ void Renderer::queryAndCacheFragmentShadingRates()
         {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_KHR, nullptr, 0, {0, 0}});
 
     // Query supported shading rates
-    result = vkGetPhysicalDeviceFragmentShadingRatesKHR(mPhysicalDevice, &shadingRatesCount,
-                                                        shadingRates.data());
+    result = VK_CALL(vkGetPhysicalDeviceFragmentShadingRatesKHR, mPhysicalDevice,
+                     &shadingRatesCount, shadingRates.data());
     ASSERT(result == VK_SUCCESS);
 
     // Cache supported fragment shading rates
@@ -5759,8 +5774,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         externalFenceInfo.sType      = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO;
         externalFenceInfo.handleType = VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
 
-        vkGetPhysicalDeviceExternalFenceProperties(mPhysicalDevice, &externalFenceInfo,
-                                                   &externalFenceProperties);
+        VK_CALL(vkGetPhysicalDeviceExternalFenceProperties, mPhysicalDevice, &externalFenceInfo,
+                &externalFenceProperties);
 
         VkExternalSemaphoreProperties externalSemaphoreProperties = {};
         externalSemaphoreProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES;
@@ -5769,8 +5784,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         externalSemaphoreInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO;
         externalSemaphoreInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
 
-        vkGetPhysicalDeviceExternalSemaphoreProperties(mPhysicalDevice, &externalSemaphoreInfo,
-                                                       &externalSemaphoreProperties);
+        VK_CALL(vkGetPhysicalDeviceExternalSemaphoreProperties, mPhysicalDevice,
+                &externalSemaphoreInfo, &externalSemaphoreProperties);
 
         // There's a spec gap in eglDupNativeFenceFDANDROID and Vulkan SYNC_FD
         // fence/semaphore export, where the former treats -1 as an error while
@@ -7575,7 +7590,8 @@ VkFormatFeatureFlags Renderer::getFormatFeatureBits(angle::FormatID formatID,
             }
 
             // Otherwise query the format features and cache it.
-            vkGetPhysicalDeviceFormatProperties(mPhysicalDevice, vkFormat, &deviceProperties);
+            VK_CALL(vkGetPhysicalDeviceFormatProperties, mPhysicalDevice, vkFormat,
+                    &deviceProperties);
             // Workaround for some Android devices that don't indicate filtering
             // support on D16_UNORM and they should.
             if (mFeatures.forceD16TexFilter.enabled && vkFormat == VK_FORMAT_D16_UNORM)
@@ -7710,12 +7726,12 @@ void Renderer::reloadVolkIfNeeded() const
 #if defined(ANGLE_SHARED_LIBVULKAN)
     if ((mInstance != VK_NULL_HANDLE) && (volkGetLoadedInstance() != mInstance))
     {
-        volkLoadInstance(mInstance);
+        VK_CALL(volkLoadInstance, mInstance);
     }
 
     if ((mDevice != VK_NULL_HANDLE) && (volkGetLoadedDevice() != mDevice))
     {
-        volkLoadDevice(mDevice);
+        VK_CALL(volkLoadDevice, mDevice);
     }
 
     initializeInstanceExtensionEntryPointsFromCore();
@@ -7990,8 +8006,8 @@ angle::Result Renderer::getFormatDescriptorCountForVkFormat(vk::ErrorContext *co
         imageFormatProperties2.pNext                 = &ycbcrImageFormatProperties;
         imageFormatProperties2.imageFormatProperties = imageFormatProperties;
 
-        ANGLE_VK_TRY(context, vkGetPhysicalDeviceImageFormatProperties2(
-                                  mPhysicalDevice, &imageFormatInfo, &imageFormatProperties2));
+        ANGLE_VK_TRY(context, VK_CALL(vkGetPhysicalDeviceImageFormatProperties2, mPhysicalDevice,
+                                      &imageFormatInfo, &imageFormatProperties2));
 
         mVkFormatDescriptorCountMap[format] =
             ycbcrImageFormatProperties.combinedImageSamplerDescriptorCount;

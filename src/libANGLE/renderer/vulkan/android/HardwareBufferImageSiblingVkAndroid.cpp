@@ -250,8 +250,8 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
     bufferProperties.pNext = &bufferFormatProperties;
 
     VkDevice device = renderer->getDevice();
-    VkResult result =
-        vkGetAndroidHardwareBufferPropertiesANDROID(device, hardwareBuffer, &bufferProperties);
+    VkResult result = VK_CALL(vkGetAndroidHardwareBufferPropertiesANDROID, device, hardwareBuffer,
+                              &bufferProperties);
     if (result != VK_SUCCESS)
     {
         return egl::Error(EGL_BAD_PARAMETER, "Failed to query AHardwareBuffer properties");
@@ -350,8 +350,8 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     }
 
     VkDevice device = renderer->getDevice();
-    ANGLE_VK_TRY(displayVk, vkGetAndroidHardwareBufferPropertiesANDROID(device, hardwareBuffer,
-                                                                        &bufferProperties));
+    ANGLE_VK_TRY(displayVk, VK_CALL(vkGetAndroidHardwareBufferPropertiesANDROID, device,
+                                    hardwareBuffer, &bufferProperties));
 
     bool externalFormatHasNecessaryFormatSupport;
     bool formatHasNecessaryFormatSupport;

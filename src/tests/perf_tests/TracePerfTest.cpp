@@ -1680,6 +1680,7 @@ void TracePerfTest::drawBenchmark()
     }
     atraceCounter("TraceFrameIndex", mCurrentFrame);
 
+    startVulkanApiTimer();
     const double beginReplayFrameTimeSec =
         gTrackFrameWallTime ? mTrialTimer.getElapsedWallClockTime() : 0.0;
     mTraceReplay->replayFrame(mCurrentFrame);
@@ -1687,6 +1688,7 @@ void TracePerfTest::drawBenchmark()
     {
         mFrameWallTimeSec += mTrialTimer.getElapsedWallClockTime() - beginReplayFrameTimeSec;
     }
+    stopVulkanApiTimer();
 
     if (!gAddSwapIntoGPUTime && mParams->trackGpuTime)
     {
@@ -1699,6 +1701,10 @@ void TracePerfTest::drawBenchmark()
     ASSERT(!gAddSwapIntoFrameWallTime || gTrackFrameWallTime);
     const double beginSwapTimeSec =
         gAddSwapIntoFrameWallTime ? mTrialTimer.getElapsedWallClockTime() : 0.0;
+    if (gAddSwapIntoFrameWallTime)
+    {
+        startVulkanApiTimer();
+    }
 
     if (mParams->surfaceType == SurfaceType::Offscreen)
     {
@@ -1821,6 +1827,7 @@ void TracePerfTest::drawBenchmark()
     {
         const double endSwapTimeSec = mTrialTimer.getElapsedWallClockTime();
         mFrameWallTimeSec += endSwapTimeSec - beginSwapTimeSec;
+        stopVulkanApiTimer();
     }
 
     if (gAddSwapIntoGPUTime && mParams->trackGpuTime)

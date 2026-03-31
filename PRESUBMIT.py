@@ -639,6 +639,64 @@ def _CheckRestrictedTraces(input_api, output_api):
     return []
 
 
+def _CheckUnwrappedVulkanCalls(input_api, output_api):
+    """Runs find_unwrapped_vk_calls.py to detect unwrapped calls."""
+
+    vulkan_dir = input_api.os_path.join('src', 'libANGLE', 'renderer', 'vulkan')
+    vulkan_dir_re = vulkan_dir.replace('\\', '/')
+
+    results = []
+
+    # Only run if Vulkan renderer files are affected
+    def vulkan_source_files(f):
+        return input_api.FilterSourceFile(f, files_to_check=[rf'^{vulkan_dir_re}/.*\.(h|cpp|mm)$'])
+
+    if not input_api.AffectedSourceFiles(vulkan_source_files):
+        return results
+
+    # First, run tests if the script or test files are changed
+    def find_unwrapped_vk_calls_files(f):
+        return input_api.FilterSourceFile(
+            f,
+            files_to_check=[
+                rf'^{vulkan_dir_re}/find_unwrapped_vk_calls_test/.*$',
+                rf'^{vulkan_dir_re}/find_unwrapped_vk_calls\.py$'
+            ])
+
+    if input_api.AffectedSourceFiles(find_unwrapped_vk_calls_files):
+        cmd_name = 'find_unwrapped_vk_calls TESTS'
+        cmd = [
+            input_api.python3_executable,
+            input_api.os_path.join(input_api.PresubmitLocalPath(), vulkan_dir,
+                                   'find_unwrapped_vk_calls_test', 'run_tests.py')
+        ]
+        test_cmd = input_api.Command(
+            name=cmd_name, cmd=cmd, kwargs={}, message=output_api.PresubmitError)
+        if input_api.verbose:
+            print('Running ' + cmd_name)
+        results.extend(input_api.RunTests([test_cmd]))
+
+    # Do not run the script if tests fail
+    for result in results:
+        if isinstance(result, output_api.PresubmitError):
+            return results
+
+    # Finally, run the main script
+    cmd_name = 'find_unwrapped_vk_calls'
+    cmd = [
+        input_api.python3_executable,
+        input_api.os_path.join(input_api.PresubmitLocalPath(), vulkan_dir,
+                               'find_unwrapped_vk_calls.py')
+    ]
+    test_cmd = input_api.Command(
+        name=cmd_name, cmd=cmd, kwargs={}, message=output_api.PresubmitError)
+    if input_api.verbose:
+        print('Running ' + cmd_name)
+    results.extend(input_api.RunTests([test_cmd]))
+
+    return results
+
+
 def CheckChangeOnUpload(input_api, output_api):
     results = []
     results.extend(input_api.canned_checks.CheckForCommitObjects(input_api, output_api))
@@ -658,6 +716,7 @@ def CheckChangeOnUpload(input_api, output_api):
     results.extend(_CheckCommitMessageFormatting(input_api, output_api))
     results.extend(_CheckGClientExists(input_api, output_api))
     results.extend(_CheckRestrictedTraces(input_api, output_api))
+    results.extend(_CheckUnwrappedVulkanCalls(input_api, output_api))
 
     return results
 

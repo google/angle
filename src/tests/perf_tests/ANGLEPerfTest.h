@@ -27,6 +27,7 @@
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 #include "util/Timer.h"
+#include "util/shader_utils.h"
 #include "util/util_gl.h"
 
 class Event;
@@ -46,6 +47,13 @@ namespace perfetto
 class TracingSession;
 }  // namespace perfetto
 #endif
+
+enum class VulkanApiWallTimeTracking
+{
+    None,
+    Summary,
+    Detailed,
+};
 
 class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 {
@@ -90,7 +98,13 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 
     int getNumStepsPerformed() const { return mTrialNumStepsPerformed; }
 
+    bool isVulkanApiWallTimeTrackingActive() const
+    {
+        return mVulkanApiWallTimeTracking != VulkanApiWallTimeTracking::None;
+    }
+
     void runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolicy runPolicy);
+    void resetVulkanApiCounters();
 
     // Overriden in trace perf tests.
     virtual void computeGPUTime() {}
@@ -105,6 +119,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     void processResults();
     void processClockResult(const char *metric, double resultSeconds);
     void processMemoryResult(const char *metric, uint64_t resultKB);
+    void processVulkanApiCounters();
 
     void skipTest(const std::string &reason)
     {
@@ -143,7 +158,23 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
         std::vector<GLuint64> samples;
     };
     std::map<GLuint, CounterInfo> mPerfCounterInfo;
+
+    struct VulkanApiCounterInfo
+    {
+        GLuint counterIndex;
+        std::string metricName;
+        uint64_t count;
+    };
+    template <typename T>
+    using VulkanApiCounterMap =
+        angle::PackedEnumMap<angle::VulkanApiPerfCounterType,
+                             angle::PackedEnumMap<angle::VulkanApiPerfCounterGroup, T>>;
+    VulkanApiCounterMap<VulkanApiCounterInfo> mVulkanApiCounterInfos;
+    VulkanApiWallTimeTracking mVulkanApiWallTimeTracking;
+
     GLuint mPerfMonitor;
+    bool mPerfMonitorReady;
+
     std::vector<uint64_t> mProcessMemoryUsageKBSamples;
 #if defined(ANGLE_USE_PERFETTO)
     std::unique_ptr<perfetto::TracingSession> mTracingSession;
@@ -175,6 +206,8 @@ struct RenderTestParams : public angle::PlatformParameters
     bool multisample               = false;
     EGLint samples                 = -1;
     bool isCL                      = false;
+
+    VulkanApiWallTimeTracking vulkanApiWallTimeTracking = VulkanApiWallTimeTracking::None;
 };
 
 class ANGLERenderTest : public ANGLEPerfTest
@@ -217,6 +250,9 @@ class ANGLERenderTest : public ANGLEPerfTest
     void disableTestHarnessSwap() { mSwapEnabled = false; }
     void updatePerfCounters();
 
+    void startVulkanApiTimer();
+    void stopVulkanApiTimer();
+
     bool mIsTimestampQueryAvailable;
     bool mEnableDebugCallback = true;
 
@@ -238,6 +274,12 @@ class ANGLERenderTest : public ANGLEPerfTest
     void skipTestIfFailsIntegerPrerequisite();
 
     void initPerfCounters();
+    void initVulkanApiCounters(const CounterNameToIndexMap &indexMap);
+
+    bool isVulkanApiWallTimeTrackingEnabled() const
+    {
+        return mTestParams.vulkanApiWallTimeTracking != VulkanApiWallTimeTracking::None;
+    }
 
     GLWindowBase *mGLWindow;
     OSWindow *mOSWindow;
@@ -268,6 +310,8 @@ class ANGLERenderTest : public ANGLEPerfTest
     GLuint mCurrentTimestampBeginQuery = 0;
     std::queue<TimestampSample> mTimestampQueries;
     EndQueryFlushPolicy mEndQueryFlushPolicy = EndQueryFlushPolicy::NoFlush;
+
+    VulkanApiCounterMap<uint64_t> mCurrentVulkanApiCounterBeginValues;
 
     // Handle to the entry point binding library.
     std::unique_ptr<angle::Library> mEntryPointsLib;

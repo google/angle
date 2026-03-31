@@ -1217,6 +1217,21 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
 
 #undef ANGLE_ADD_PERF_MONITOR_COUNTER_GROUP
 
+    if (vk::ScopedVulkanApiPerfTimer::IsEnabled())
+    {
+        for (angle::VulkanApiPerfCounterGroup group :
+             angle::AllEnums<angle::VulkanApiPerfCounterGroup>())
+        {
+            for (angle::VulkanApiPerfCounterType type :
+                 angle::AllEnums<angle::VulkanApiPerfCounterType>())
+            {
+                vulkanGroupInfo.counters.emplace_back(
+                    angle::GetVulkanApiPerfCounterName(group, type));
+                vulkanGroup.counters.emplace_back(0);
+            }
+        }
+    }
+
     mPerfMonitorCountersInfo.emplace_back(std::move(vulkanGroupInfo));
     mPerfMonitorCounters.emplace_back(std::move(vulkanGroup));
 
@@ -8819,6 +8834,11 @@ const angle::PerfMonitorCounterGroupsInfo &ContextVk::getPerfMonitorCountersInfo
 
 const angle::PerfMonitorCounterGroups &ContextVk::getPerfMonitorCounters()
 {
+    if (!mState.isPerfMonitorActive())
+    {
+        // Skip counter update if performance monitor is not active.
+        return mPerfMonitorCounters;
+    }
     syncObjectPerfCounters(mRenderer->getCommandQueuePerfCounters());
 
     ASSERT(mPerfMonitorCountersInfo.size() == 1);
@@ -8840,6 +8860,25 @@ const angle::PerfMonitorCounterGroups &ContextVk::getPerfMonitorCounters()
     ANGLE_VK_PERF_COUNTERS_X(ANGLE_UPDATE_PERF_MAP)
 
 #undef ANGLE_UPDATE_PERF_MAP
+
+    if (vk::ScopedVulkanApiPerfTimer::IsEnabled())
+    {
+        const vk::VulkanApiPerfCounters &apiPerfCounters =
+            vk::GetCurrentThreadVulkanApiPerfCounters();
+        for (angle::VulkanApiPerfCounterGroup group :
+             angle::AllEnums<angle::VulkanApiPerfCounterGroup>())
+        {
+            const vk::VulkanApiGroupPerfCounters &groupCounters = apiPerfCounters[group];
+            for (angle::VulkanApiPerfCounterType type :
+                 angle::AllEnums<angle::VulkanApiPerfCounterType>())
+            {
+                ASSERT(info.counters.size() > counterIndex);
+                ASSERT(info.counters[counterIndex].name ==
+                       angle::GetVulkanApiPerfCounterName(group, type));
+                counters[counterIndex++].value = groupCounters[type];
+            }
+        }
+    }
 
     return mPerfMonitorCounters;
 }

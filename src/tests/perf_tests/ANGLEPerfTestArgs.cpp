@@ -61,6 +61,7 @@ bool gTrackGPUTime                 = false;
 bool gAddSwapIntoGPUTime           = false;
 bool gTrackFrameWallTime           = false;
 bool gAddSwapIntoFrameWallTime     = false;
+int gTrackVulkanApiWallTime        = 0;
 bool gCapturedFrameCountOnly       = false;
 
 namespace
@@ -115,6 +116,8 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
            ParseFlag("--track-frame-wall-time", argc, argv, argIndex, &gTrackFrameWallTime) ||
            ParseFlag("--add-swap-into-frame-wall-time", argc, argv, argIndex,
                      &gAddSwapIntoFrameWallTime) ||
+           ParseIntArg("--track-vulkan-api-wall-time", argc, argv, argIndex,
+                       &gTrackVulkanApiWallTime) ||
            ParseFlag("--captured-framecount-only", argc, argv, argIndex, &gCapturedFrameCountOnly);
 }
 }  // namespace
@@ -185,7 +188,7 @@ void ANGLEProcessTraceTestArgs(int *argc, char **argv)
         }
     }
 
-    if (gAddSwapIntoFrameWallTime)
+    if (gAddSwapIntoFrameWallTime || gTrackVulkanApiWallTime > 0)
     {
         ASSERT(gTrackFrameWallTime);
     }

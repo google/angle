@@ -4492,7 +4492,8 @@ void QueryHelper::resetQueryPoolImpl(ContextVk *contextVk,
     Renderer *renderer = contextVk->getRenderer();
     if (renderer->getFeatures().supportsHostQueryReset.enabled)
     {
-        vkResetQueryPoolEXT(contextVk->getDevice(), queryPool.getHandle(), mQuery, mQueryCount);
+        VK_CALL(vkResetQueryPoolEXT, contextVk->getDevice(), queryPool.getHandle(), mQuery,
+                mQueryCount);
     }
     else
     {
@@ -5604,7 +5605,7 @@ VkDeviceAddress BufferHelper::getDeviceAddress(Context *context)
     info.pNext      = NULL;
     VkDevice device = context->getDevice();
 
-    return vkGetBufferDeviceAddressKHR(device, &info);
+    return VK_CALL(vkGetBufferDeviceAddressKHR, device, &info);
 }
 
 // Used for ImageHelper non-zero memory allocation when useVmaForImageSuballocation is disabled.
@@ -5628,7 +5629,7 @@ angle::Result InitMappableDeviceMemory(ErrorContext *context,
         mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
         mappedRange.memory              = deviceMemory->getHandle();
         mappedRange.size                = VK_WHOLE_SIZE;
-        ANGLE_VK_TRY(context, vkFlushMappedMemoryRanges(device, 1, &mappedRange));
+        ANGLE_VK_TRY(context, VK_CALL(vkFlushMappedMemoryRanges, device, 1, &mappedRange));
     }
 
     deviceMemory->unmap(device);
@@ -6182,8 +6183,9 @@ bool ImageHelper::FormatSupportsUsage(const Renderer *renderer,
     imageFormatProperties2.sType                    = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2;
     imageFormatProperties2.pNext                    = propertiesPNext;
 
-    VkResult result = vkGetPhysicalDeviceImageFormatProperties2(
-        renderer->getPhysicalDevice(), &imageFormatInfo, &imageFormatProperties2);
+    VkResult result =
+        VK_CALL(vkGetPhysicalDeviceImageFormatProperties2, renderer->getPhysicalDevice(),
+                &imageFormatInfo, &imageFormatProperties2);
 
     if (formatSupportCheck == FormatSupportCheck::RequireMultisampling)
     {
@@ -6708,8 +6710,8 @@ void ImageHelper::getImageSubresourceLayout(Renderer *renderer,
     imageSubresource.sType                       = VK_STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT;
     imageSubresource.imageSubresource.aspectMask = getAspectFlags();
 
-    vkGetImageSubresourceLayout2EXT(renderer->getDevice(), mImage.getHandle(), &imageSubresource,
-                                    subresourceLayout);
+    VK_CALL(vkGetImageSubresourceLayout2EXT, renderer->getDevice(), mImage.getHandle(),
+            &imageSubresource, subresourceLayout);
 }
 
 angle::Result ImageHelper::initLayerImageView(ContextVk *contextVk,
@@ -8971,7 +8973,8 @@ angle::Result ImageHelper::updateSubresourceOnHost(ContextVk *contextVk,
         transition.subresourceRange.baseArrayLayer = 0;
         transition.subresourceRange.layerCount     = mLayerCount;
 
-        ANGLE_VK_TRY(contextVk, vkTransitionImageLayoutEXT(renderer->getDevice(), 1, &transition));
+        ANGLE_VK_TRY(contextVk,
+                     VK_CALL(vkTransitionImageLayoutEXT, renderer->getDevice(), 1, &transition));
         mCurrentAccess = ImageAccess::HostCopy;
     }
     else if (mCurrentAccess == ImageAccess::HostCopy)
@@ -9034,7 +9037,7 @@ angle::Result ImageHelper::updateSubresourceOnHost(ContextVk *contextVk,
         copyInfo.regionCount                = 1;
         copyInfo.pRegions                   = &copyRegion;
 
-        VkResult result = vkCopyMemoryToImageEXT(contextVk->getDevice(), &copyInfo);
+        VkResult result = VK_CALL(vkCopyMemoryToImageEXT, contextVk->getDevice(), &copyInfo);
         if (result != VK_SUCCESS)
         {
             contextVk->handleError(result, __FILE__, ANGLE_FUNCTION, __LINE__);

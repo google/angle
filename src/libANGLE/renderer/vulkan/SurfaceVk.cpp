@@ -396,13 +396,13 @@ angle::Result GetPresentModes(DisplayVk *displayVk,
                               std::vector<vk::PresentMode> *outPresentModes)
 {
     uint32_t presentModeCount = 0;
-    ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface,
-                                                                      &presentModeCount, nullptr));
+    ANGLE_VK_TRY(displayVk, VK_CALL(vkGetPhysicalDeviceSurfacePresentModesKHR, physicalDevice,
+                                    surface, &presentModeCount, nullptr));
     ASSERT(presentModeCount > 0);
 
     std::vector<VkPresentModeKHR> vkPresentModes(presentModeCount);
-    ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfacePresentModesKHR(
-                                physicalDevice, surface, &presentModeCount, vkPresentModes.data()));
+    ANGLE_VK_TRY(displayVk, VK_CALL(vkGetPhysicalDeviceSurfacePresentModesKHR, physicalDevice,
+                                    surface, &presentModeCount, vkPresentModes.data()));
 
     outPresentModes->resize(presentModeCount);
     std::transform(begin(vkPresentModes), end(vkPresentModes), begin(*outPresentModes),
@@ -559,8 +559,8 @@ void AcquireNextImageUnlocked(VkDevice device,
     result->acquireSemaphore = data->acquireImageSemaphores.front().getHandle();
 
     // Try to acquire an image.
-    result->result = vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, result->acquireSemaphore,
-                                           VK_NULL_HANDLE, &result->imageIndex);
+    result->result = VK_CALL(vkAcquireNextImageKHR, device, swapchain, UINT64_MAX,
+                             result->acquireSemaphore, VK_NULL_HANDLE, &result->imageIndex);
 
     if (!IsImageAcquireFailed(result->result))
     {
@@ -975,7 +975,7 @@ void SwapchainCleanupData::destroy(VkDevice device,
 
     if (swapchain)
     {
-        vkDestroySwapchainKHR(device, swapchain, nullptr);
+        VK_CALL(vkDestroySwapchainKHR, device, swapchain, nullptr);
         swapchain = VK_NULL_HANDLE;
     }
 }
@@ -1123,7 +1123,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     ASSERT(mSwapchain == mLastSwapchain || mSwapchain == VK_NULL_HANDLE);
     if (mLastSwapchain != VK_NULL_HANDLE)
     {
-        vkDestroySwapchainKHR(device, mLastSwapchain, nullptr);
+        VK_CALL(vkDestroySwapchainKHR, device, mLastSwapchain, nullptr);
         mSwapchain     = VK_NULL_HANDLE;
         mLastSwapchain = VK_NULL_HANDLE;
     }
@@ -1169,7 +1169,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
             [surface = mSurface, instance](void *resultOut) {
                 ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::destroy:vkDestroySurfaceKHR");
                 ANGLE_UNUSED_VARIABLE(resultOut);
-                vkDestroySurfaceKHR(instance, surface, nullptr);
+                VK_CALL(vkDestroySurfaceKHR, instance, surface, nullptr);
             });
         mSurface = VK_NULL_HANDLE;
     }
@@ -1323,16 +1323,16 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
             vk::AddToPNextChain(&surfaceCaps2, &surfaceProtectedCaps);
         }
 
-        ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceCapabilities2KHR(
-                                    physicalDevice, &surfaceInfo2, &surfaceCaps2));
+        ANGLE_VK_TRY(displayVk, VK_CALL(vkGetPhysicalDeviceSurfaceCapabilities2KHR, physicalDevice,
+                                        &surfaceInfo2, &surfaceCaps2));
 
         surfaceCaps                 = surfaceCaps2.surfaceCapabilities;
         mSupportsProtectedSwapchain = surfaceProtectedCaps.supportsProtected;
     }
     else
     {
-        ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface,
-                                                                          &surfaceCaps));
+        ANGLE_VK_TRY(displayVk, VK_CALL(vkGetPhysicalDeviceSurfaceCapabilitiesKHR, physicalDevice,
+                                        mSurface, &surfaceCaps));
     }
 
     if (IsAndroid())
@@ -1526,7 +1526,7 @@ angle::Result WindowSurfaceVk::collectOldSwapchain(vk::ErrorContext *context,
     if (mPresentHistory.empty())
     {
         // Destroy the current (never-used) swapchain.
-        vkDestroySwapchainKHR(context->getDevice(), swapchain, nullptr);
+        VK_CALL(vkDestroySwapchainKHR, context->getDevice(), swapchain, nullptr);
         return angle::Result::Continue;
     }
 
@@ -1635,7 +1635,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(vk::ErrorContext *context)
             ANGLE_TRY(finish(context));
             DestroyPresentHistory(context->getRenderer(), &mPresentHistory, &mPresentFenceRecycler,
                                   &mPresentSemaphoreRecycler);
-            vkDestroySwapchainKHR(context->getDevice(), mLastSwapchain, nullptr);
+            VK_CALL(vkDestroySwapchainKHR, context->getDevice(), mLastSwapchain, nullptr);
             mLastSwapchain = VK_NULL_HANDLE;
         }
     }
@@ -1820,7 +1820,8 @@ angle::Result WindowSurfaceVk::createSwapchain(vk::ErrorContext *context)
     // TODO: Once EGL_SWAP_BEHAVIOR_PRESERVED_BIT is supported, the contents of the old swapchain
     // need to carry over to the new one.  http://anglebug.com/42261637
     VkSwapchainKHR newSwapchain = VK_NULL_HANDLE;
-    ANGLE_VK_TRY(context, vkCreateSwapchainKHR(device, &swapchainInfo, nullptr, &newSwapchain));
+    ANGLE_VK_TRY(context,
+                 VK_CALL(vkCreateSwapchainKHR, device, &swapchainInfo, nullptr, &newSwapchain));
     mLastSwapchain = newSwapchain;
 
     // If frame timestamp was enabled for the surface, [re]enable it when [re]creating the swapchain
@@ -1830,17 +1831,18 @@ angle::Result WindowSurfaceVk::createSwapchain(vk::ErrorContext *context)
         // The implementation of "vkGetPastPresentationTimingGOOGLE" on Android calls into the
         // appropriate ANativeWindow API that enables frame timestamps.
         uint32_t count = 0;
-        ANGLE_VK_TRY(context,
-                     vkGetPastPresentationTimingGOOGLE(device, newSwapchain, &count, nullptr));
+        ANGLE_VK_TRY(context, VK_CALL(vkGetPastPresentationTimingGOOGLE, device, newSwapchain,
+                                      &count, nullptr));
     }
 
     // Initialize the swapchain image views.
     uint32_t imageCount = 0;
-    ANGLE_VK_TRY(context, vkGetSwapchainImagesKHR(device, newSwapchain, &imageCount, nullptr));
+    ANGLE_VK_TRY(context,
+                 VK_CALL(vkGetSwapchainImagesKHR, device, newSwapchain, &imageCount, nullptr));
 
     std::vector<VkImage> swapchainImages(imageCount);
-    ANGLE_VK_TRY(context, vkGetSwapchainImagesKHR(device, newSwapchain, &imageCount,
-                                                  swapchainImages.data()));
+    ANGLE_VK_TRY(context, VK_CALL(vkGetSwapchainImagesKHR, device, newSwapchain, &imageCount,
+                                  swapchainImages.data()));
 
     // If multisampling is enabled, create a multisampled image which gets resolved just prior to
     // present.
@@ -2028,8 +2030,8 @@ angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(
             }
         }
 
-        ANGLE_VK_TRY(context, vkGetPhysicalDeviceSurfaceCapabilities2KHR(
-                                  physicalDevice, &surfaceInfo2, &surfaceCaps2));
+        ANGLE_VK_TRY(context, VK_CALL(vkGetPhysicalDeviceSurfaceCapabilities2KHR, physicalDevice,
+                                      &surfaceInfo2, &surfaceCaps2));
 
         if (compatibleModes.pPresentModes != nullptr)
         {
@@ -2083,8 +2085,8 @@ angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(
     }
     else
     {
-        ANGLE_VK_TRY(context, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface,
-                                                                        surfaceCapsOut));
+        ANGLE_VK_TRY(context, VK_CALL(vkGetPhysicalDeviceSurfaceCapabilitiesKHR, physicalDevice,
+                                      mSurface, surfaceCapsOut));
         if (compatiblePresentModesOut != nullptr)
         {
             // Without VK_EXT_surface_maintenance1, each present mode can be considered only
@@ -3468,8 +3470,8 @@ angle::Result WindowSurfaceVk::getUserExtentsImpl(vk::ErrorContext *context,
     {
         VkSurfaceCapabilitiesKHR surfaceCaps;
         ANGLE_VK_TRY(context,
-                     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
-                         context->getRenderer()->getPhysicalDevice(), mSurface, &surfaceCaps));
+                     VK_CALL(vkGetPhysicalDeviceSurfaceCapabilitiesKHR,
+                             context->getRenderer()->getPhysicalDevice(), mSurface, &surfaceCaps));
         *extentOut = surfaceCaps.currentExtent;
     }
 

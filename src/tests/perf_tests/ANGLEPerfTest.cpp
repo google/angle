@@ -25,7 +25,6 @@
 #include "libANGLE/trace.h"
 #include "test_utils/runner/TestSuite.h"
 #include "third_party/perf/perf_test.h"
-#include "util/shader_utils.h"
 #include "util/test_utils.h"
 
 #if defined(ANGLE_PLATFORM_ANDROID)
@@ -212,7 +211,6 @@ bool ATraceEnabled()
 #endif
 }  // anonymous namespace
 
-
 ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
                              const std::string &backend,
                              const std::string &story,
@@ -230,7 +228,9 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
       mTotalNumStepsPerformed(0),
       mIterationsPerStep(iterationsPerStep),
       mRunning(true),
-      mPerfMonitor(0)
+      mVulkanApiWallTimeTracking(VulkanApiWallTimeTracking::None),
+      mPerfMonitor(0),
+      mPerfMonitorReady(false)
 {
     if (mStory == "")
     {
@@ -358,6 +358,10 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
     mGPUTimeNs              = 0;
     mFrameWallTimeSec       = 0.0;
     mBusyWaitCpuTimeSec     = 0.0;
+    if (isVulkanApiWallTimeTrackingActive())
+    {
+        resetVulkanApiCounters();
+    }
     int stepAlignment       = getStepAlignment();
     mTrialTimer.start();
     startTest();
@@ -469,6 +473,18 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
     computeGPUTime();
 }
 
+void ANGLEPerfTest::resetVulkanApiCounters()
+{
+    ASSERT(isVulkanApiWallTimeTrackingActive());
+    for (VulkanApiPerfCounterType type : AllEnums<VulkanApiPerfCounterType>())
+    {
+        for (VulkanApiPerfCounterGroup group : AllEnums<VulkanApiPerfCounterGroup>())
+        {
+            mVulkanApiCounterInfos[type][group].count = 0;
+        }
+    }
+}
+
 void ANGLEPerfTest::SetUp()
 {
     if (gWarmup)
@@ -560,6 +576,10 @@ void ANGLEPerfTest::processResults()
     {
         ASSERT(gTrackFrameWallTime);
         processClockResult(".frame_wall_time", mFrameWallTimeSec);
+    }
+    if (isVulkanApiWallTimeTrackingActive())
+    {
+        processVulkanApiCounters();
     }
     processClockResult(".wall_time", mTrialTimer.getElapsedWallClockTime());
 
@@ -675,6 +695,57 @@ void ANGLEPerfTest::processMemoryResult(const char *metric, uint64_t resultKB)
     recordIntegerMetric(metric, static_cast<size_t>(resultKB * 1000), "sizeInBytes");
     addHistogramSample(metric, static_cast<double>(resultKB) * 1000.0,
                        "sizeInBytes_smallerIsBetter");
+}
+
+void ANGLEPerfTest::processVulkanApiCounters()
+{
+    ASSERT(isVulkanApiWallTimeTrackingActive());
+    for (VulkanApiPerfCounterType type : AllEnums<VulkanApiPerfCounterType>())
+    {
+        const PackedEnumMap<VulkanApiPerfCounterGroup, VulkanApiCounterInfo> &infoMap =
+            mVulkanApiCounterInfos[type];
+        switch (type)
+        {
+            case VulkanApiPerfCounterType::WallTimeNs:
+            {
+                double totalWallTimeSec = 0.0;
+                for (VulkanApiPerfCounterGroup group : AllEnums<VulkanApiPerfCounterGroup>())
+                {
+                    const double wallTimeSec = infoMap[group].count * 1e-9;
+                    if (mVulkanApiWallTimeTracking == VulkanApiWallTimeTracking::Detailed)
+                    {
+                        processClockResult(infoMap[group].metricName.c_str(), wallTimeSec);
+                    }
+                    totalWallTimeSec += wallTimeSec;
+                }
+                processClockResult(".vk_api_wall_time", totalWallTimeSec);
+                break;
+            }
+            case VulkanApiPerfCounterType::Samples:
+            {
+                double totalSamplesPerIteration = 0.0;
+                for (VulkanApiPerfCounterGroup group : AllEnums<VulkanApiPerfCounterGroup>())
+                {
+                    const double samplesPerIteration =
+                        static_cast<double>(infoMap[group].count) /
+                        (mTrialNumStepsPerformed * mIterationsPerStep);
+                    if (mVulkanApiWallTimeTracking == VulkanApiWallTimeTracking::Detailed)
+                    {
+                        const char *metricName = infoMap[group].metricName.c_str();
+                        recordDoubleMetric(metricName, samplesPerIteration, "count");
+                        addHistogramSample(metricName, samplesPerIteration, "count");
+                    }
+                    totalSamplesPerIteration += samplesPerIteration;
+                }
+                recordDoubleMetric(".vk_api_samples", totalSamplesPerIteration, "count");
+                addHistogramSample(".vk_api_samples", totalSamplesPerIteration, "count");
+                break;
+            }
+            case VulkanApiPerfCounterType::EnumCount:
+                UNREACHABLE();
+                break;
+        }
+    }
 }
 
 double ANGLEPerfTest::normalizedTime(size_t value) const
@@ -1086,8 +1157,9 @@ void ANGLERenderTest::TearDown()
 {
     ASSERT(mTimestampQueries.empty());
 
-    if (!mPerfCounterInfo.empty())
+    if (mPerfMonitorReady)
     {
+        mPerfMonitorReady = false;
         glDeletePerfMonitorsAMD(1, &mPerfMonitor);
         mPerfMonitor = 0;
     }
@@ -1114,7 +1186,7 @@ void ANGLERenderTest::TearDown()
 
 void ANGLERenderTest::initPerfCounters()
 {
-    if (!gPerfCounters)
+    if (!gPerfCounters && !isVulkanApiWallTimeTrackingEnabled())
     {
         return;
     }
@@ -1129,9 +1201,13 @@ void ANGLERenderTest::initPerfCounters()
 
     CounterNameToIndexMap indexMap = BuildCounterNameToIndexMap();
 
-    std::vector<std::string> counters =
-        angle::SplitString(gPerfCounters, ":", angle::WhitespaceHandling::TRIM_WHITESPACE,
-                           angle::SplitResult::SPLIT_WANT_NONEMPTY);
+    std::vector<std::string> counters;
+    if (gPerfCounters)
+    {
+        counters =
+            angle::SplitString(gPerfCounters, ":", angle::WhitespaceHandling::TRIM_WHITESPACE,
+                               angle::SplitResult::SPLIT_WANT_NONEMPTY);
+    }
     for (const std::string &counter : counters)
     {
         bool found = false;
@@ -1175,11 +1251,91 @@ void ANGLERenderTest::initPerfCounters()
         }
     }
 
-    if (!mPerfCounterInfo.empty())
+    if (isVulkanApiWallTimeTrackingEnabled())
+    {
+        initVulkanApiCounters(indexMap);
+    }
+
+    if (!mPerfCounterInfo.empty() || isVulkanApiWallTimeTrackingActive())
     {
         glGenPerfMonitorsAMD(1, &mPerfMonitor);
+        mPerfMonitorReady = true;
         // Note: technically, glSelectPerfMonitorCountersAMD should be used to select the counters,
         // but currently ANGLE always captures all counters.
+    }
+}
+
+void ANGLERenderTest::initVulkanApiCounters(const CounterNameToIndexMap &indexMap)
+{
+    ASSERT(isVulkanApiWallTimeTrackingEnabled());
+
+    // Activate the tracking, assuming all counters are present.
+    mVulkanApiWallTimeTracking = mTestParams.vulkanApiWallTimeTracking;
+
+    std::string wallTimeUnits = "ms";
+    perf_test::MetricInfo metricInfo;
+    if (mReporter->GetMetricInfo(".wall_time", &metricInfo))
+    {
+        wallTimeUnits = metricInfo.units;
+    }
+
+    for (VulkanApiPerfCounterType type : AllEnums<VulkanApiPerfCounterType>())
+    {
+        for (VulkanApiPerfCounterGroup group : AllEnums<VulkanApiPerfCounterGroup>())
+        {
+            std::string counterName = std::string(GetVulkanApiPerfCounterName(group, type));
+            const auto indexMapIter = indexMap.find(counterName);
+            if (indexMapIter == indexMap.end())
+            {
+                fprintf(stderr,
+                        "Cannot find '%s' perf counter. "
+                        "Disabling Vulkan API counter tracking...\n",
+                        counterName.c_str());
+                // Deactivate the tracking...
+                mVulkanApiWallTimeTracking = VulkanApiWallTimeTracking::None;
+                continue;
+            }
+
+            VulkanApiCounterInfo &counterInfo = mVulkanApiCounterInfos[type][group];
+            counterInfo.counterIndex          = indexMapIter->second;
+
+            if (mVulkanApiWallTimeTracking == VulkanApiWallTimeTracking::Detailed)
+            {
+                std::string metricName = std::string(GetVulkanApiPerfCounterGroupName(group));
+                ToLower(&metricName);
+                metricName = ".vk_" + metricName;
+
+                switch (type)
+                {
+                    case VulkanApiPerfCounterType::WallTimeNs:
+                        metricName += "_api_wall_time";
+                        mReporter->RegisterImportantMetric(metricName, wallTimeUnits);
+                        break;
+                    case VulkanApiPerfCounterType::Samples:
+                        metricName += "_api_samples";
+                        mReporter->RegisterFyiMetric(metricName, "count");
+                        break;
+                    case VulkanApiPerfCounterType::EnumCount:
+                        UNREACHABLE();
+                        break;
+                }
+
+                counterInfo.metricName = std::move(metricName);
+            }
+        }
+
+        switch (type)
+        {
+            case VulkanApiPerfCounterType::WallTimeNs:
+                mReporter->RegisterImportantMetric(".vk_api_wall_time", wallTimeUnits);
+                break;
+            case VulkanApiPerfCounterType::Samples:
+                mReporter->RegisterFyiMetric(".vk_api_samples", "count");
+                break;
+            case VulkanApiPerfCounterType::EnumCount:
+                UNREACHABLE();
+                break;
+        }
     }
 }
 
@@ -1197,9 +1353,55 @@ void ANGLERenderTest::updatePerfCounters()
     {
         uint32_t counter               = iter.first;
         std::vector<GLuint64> &samples = iter.second.samples;
+        ASSERT(perfData.size() > counter);
         ASSERT(perfData[counter].group == 0);
         ASSERT(perfData[counter].counter == counter);
         samples.push_back(perfData[counter].value);
+    }
+}
+
+void ANGLERenderTest::startVulkanApiTimer()
+{
+    if (isVulkanApiWallTimeTrackingActive())
+    {
+        std::vector<PerfMonitorTriplet> perfData = GetPerfMonitorTriplets();
+        ASSERT(!perfData.empty());
+
+        for (VulkanApiPerfCounterType type : AllEnums<VulkanApiPerfCounterType>())
+        {
+            for (VulkanApiPerfCounterGroup group : AllEnums<VulkanApiPerfCounterGroup>())
+            {
+                uint32_t counter = mVulkanApiCounterInfos[type][group].counterIndex;
+                ASSERT(perfData.size() > counter);
+                ASSERT(perfData[counter].group == 0);
+                ASSERT(perfData[counter].counter == counter);
+                mCurrentVulkanApiCounterBeginValues[type][group] = perfData[counter].value;
+            }
+        }
+    }
+}
+
+void ANGLERenderTest::stopVulkanApiTimer()
+{
+    if (isVulkanApiWallTimeTrackingActive())
+    {
+        std::vector<PerfMonitorTriplet> perfData = GetPerfMonitorTriplets();
+        ASSERT(!perfData.empty());
+
+        for (VulkanApiPerfCounterType type : AllEnums<VulkanApiPerfCounterType>())
+        {
+            for (VulkanApiPerfCounterGroup group : AllEnums<VulkanApiPerfCounterGroup>())
+            {
+                VulkanApiCounterInfo &counterInfo = mVulkanApiCounterInfos[type][group];
+                uint32_t counter                  = counterInfo.counterIndex;
+                ASSERT(perfData.size() > counter);
+                ASSERT(perfData[counter].group == 0);
+                ASSERT(perfData[counter].counter == counter);
+                uint64_t endValue = perfData[counter].value;
+                ASSERT(endValue >= mCurrentVulkanApiCounterBeginValues[type][group]);
+                counterInfo.count += (endValue - mCurrentVulkanApiCounterBeginValues[type][group]);
+            }
+        }
     }
 }
 
@@ -1327,7 +1529,7 @@ void ANGLERenderTest::computeGPUTime()
 
 void ANGLERenderTest::startTest()
 {
-    if (!mPerfCounterInfo.empty())
+    if (mPerfMonitorReady)
     {
         glBeginPerfMonitorAMD(mPerfMonitor);
     }
@@ -1341,7 +1543,7 @@ void ANGLERenderTest::finishTest()
         FinishAndCheckForContextLoss();
     }
 
-    if (!mPerfCounterInfo.empty())
+    if (mPerfMonitorReady)
     {
         glEndPerfMonitorAMD(mPerfMonitor);
     }
