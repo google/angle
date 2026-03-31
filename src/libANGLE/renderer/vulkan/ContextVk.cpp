@@ -2586,16 +2586,27 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
 {
     ASSERT(getFeatures().supportsVertexInputDynamicState.enabled);
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
+    const uint32_t maxAttrib                = executable->getMaxActiveAttribLocation();
+    const gl::AttributesMask &activeAttribLocations =
+        executable->getNonBuiltinAttribLocationsMask();
+    const gl::ComponentTypeMask programActiveAttribsTypeMask =
+        gl::GetActiveComponentTypeMask(activeAttribLocations);
+    const gl::ComponentTypeMask &programAttribsTypeMask = executable->getAttributesTypeMask();
+
     VertexArrayVk *vertexArrayVk            = getVertexArray();
-    const uint32_t maxAttrib = mState.getProgramExecutable()->getMaxActiveAttribLocation();
     const gl::AttribArray<VkBuffer> &bufferHandles = vertexArrayVk->getCurrentArrayBufferHandles();
     const gl::AttribArray<VkDeviceSize> &bufferOffsets =
         vertexArrayVk->getCurrentArrayBufferOffsets();
-    const gl::ComponentTypeMask vertexAttributesTypeMask =
-        vertexArrayVk->getCurrentVertexAttributesTypeMask();
-    const gl::ComponentTypeMask &programAttribsTypeMask = executable->getAttributesTypeMask();
+    const gl::ComponentTypeMask enabledAttribsMask =
+        gl::GetActiveComponentTypeMask(vertexArrayVk->getState().getEnabledAttributesMask());
+    // Vertex attribute will be sourced from enabled vertex array attribute, or default vertex
+    // attribute if vertex array attribute is disabled.
+    gl::ComponentTypeMask vertexAttributesTypeMask =
+        (vertexArrayVk->getState().getVertexAttributesTypeMask() & enabledAttribsMask) |
+        (mState.getCurrentValuesTypeMask() & ~enabledAttribsMask);
 
-    if (ANGLE_LIKELY(vertexAttributesTypeMask == programAttribsTypeMask))
+    if (ANGLE_LIKELY((vertexAttributesTypeMask & programActiveAttribsTypeMask) ==
+                     programAttribsTypeMask))
     {
         const gl::AttribArray<VkVertexInputBindingDescription2EXT> &bindingDescs =
             vertexArrayVk->getVertexInputBindingDescs();
@@ -2616,8 +2627,6 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
         memcpy(attributeDescs.data(), vertexArrayVk->getVertexInputAttribDescs().data(),
                maxAttrib * sizeof(VkVertexInputAttributeDescription2EXT));
 
-        const gl::AttributesMask &activeAttribLocations =
-            executable->getNonBuiltinAttribLocationsMask();
         for (size_t attribIndex : activeAttribLocations)
         {
             const gl::ComponentType attribType =
@@ -2711,8 +2720,11 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
         // (initializePipeline) for more details.
         const gl::AttributesMask &activeAttribLocations =
             executable->getNonBuiltinAttribLocationsMask();
+        const gl::ComponentTypeMask enabledAttribsMask =
+            gl::GetActiveComponentTypeMask(vertexArrayVk->getState().getEnabledAttributesMask());
         const gl::ComponentTypeMask vertexAttributesTypeMask =
-            vertexArrayVk->getCurrentVertexAttributesTypeMask();
+            (vertexArrayVk->getState().getVertexAttributesTypeMask() & enabledAttribsMask) |
+            (mState.getCurrentValuesTypeMask() & ~enabledAttribsMask);
         const gl::ComponentTypeMask &programAttribsTypeMask = executable->getAttributesTypeMask();
         gl::AttribArray<VkDeviceSize> strides               = {};
 

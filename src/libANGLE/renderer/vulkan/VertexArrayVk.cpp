@@ -1683,11 +1683,6 @@ ANGLE_INLINE void VertexArrayVk::setVertexInputAttribDescFormat(vk::Renderer *re
 {
     const vk::Format &format                   = renderer->getFormat(formatID);
     mVertexInputAttribDescs[attribIndex].format = format.getActualBufferVkFormat(renderer);
-
-    const angle::Format &intendedFormat = format.getIntendedFormat();
-    gl::ComponentType componentType     = GetVertexAttributeComponentType(
-        intendedFormat.isPureInt(), intendedFormat.vertexAttribType);
-    gl::SetComponentTypeMask(componentType, attribIndex, &mCurrentVertexAttributesTypeMask);
 }
 
 ANGLE_INLINE void VertexArrayVk::setVertexInputBindingDescDivisor(vk::Renderer *renderer,
