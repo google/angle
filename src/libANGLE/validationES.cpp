@@ -6725,6 +6725,14 @@ bool ValidateGetTexParameterBase(const Context *context,
             }
             break;
 
+        case GL_TEXTURE_LOD_BIAS_QCOM:
+            if (!context->getExtensions().textureLodBiasQCOM)
+            {
+                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
+                return false;
+            }
+            break;
+
         case GL_DEPTH_STENCIL_TEXTURE_MODE:
             if (context->getClientVersion() < ES_3_1 &&
                 !context->getExtensions().stencilTexturingANGLE)
@@ -7323,6 +7331,14 @@ bool ValidateTexParameterBase(const Context *context,
             }
             break;
 
+        case GL_TEXTURE_LOD_BIAS_QCOM:
+            if (!context->getExtensions().textureLodBiasQCOM)
+            {
+                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
+                return false;
+            }
+            break;
+
         case GL_GENERATE_MIPMAP:
         case GL_TEXTURE_CROP_RECT_OES:
             if (context->getClientVersion() >= ES_2_0)
@@ -7353,6 +7369,7 @@ bool ValidateTexParameterBase(const Context *context,
             case GL_TEXTURE_BORDER_COLOR:
             case GL_TEXTURE_MAX_ANISOTROPY_EXT:
             case GL_TEXTURE_SRGB_DECODE_EXT:
+            case GL_TEXTURE_LOD_BIAS_QCOM:
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidPname);
                 return false;
         }
@@ -7422,6 +7439,7 @@ bool ValidateTexParameterBase(const Context *context,
         }
         break;
 
+        case GL_TEXTURE_LOD_BIAS_QCOM:
         case GL_TEXTURE_MIN_LOD:
         case GL_TEXTURE_MAX_LOD:
             // any value is permissible
@@ -7824,6 +7842,9 @@ bool ValidateSamplerParameterBase(const Context *context,
                 return false;
             }
             break;
+        case SamplerParameter::LodBiasQCOM:
+            isPnameSupported = context->getExtensions().textureLodBiasQCOM;
+            break;
         default:
             ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kParameterNameUnknown);
             return false;
@@ -7896,6 +7917,9 @@ bool ValidateGetSamplerParameterBase(const Context *context,
             break;
         case SamplerParameter::SrgbDecode:
             isPnameSupported = context->getExtensions().textureSRGBDecodeEXT;
+            break;
+        case SamplerParameter::LodBiasQCOM:
+            isPnameSupported = context->getExtensions().textureLodBiasQCOM;
             break;
         default:
             ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kParameterNameUnknown);

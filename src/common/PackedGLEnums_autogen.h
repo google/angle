@@ -500,9 +500,10 @@ enum class SamplerParameter : uint8_t
     BorderColor   = 9,
     MaxAnisotropy = 10,
     SrgbDecode    = 11,
+    LodBiasQCOM   = 12,
 
-    InvalidEnum = 12,
-    EnumCount   = 12,
+    InvalidEnum = 13,
+    EnumCount   = 13,
 };
 
 template <>

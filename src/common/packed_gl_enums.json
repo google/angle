@@ -164,7 +164,8 @@
         "CompareFunc": "GL_TEXTURE_COMPARE_FUNC",
         "BorderColor": "GL_TEXTURE_BORDER_COLOR",
         "MaxAnisotropy": "GL_TEXTURE_MAX_ANISOTROPY_EXT",
-        "SrgbDecode": "GL_TEXTURE_SRGB_DECODE_EXT"
+        "SrgbDecode": "GL_TEXTURE_SRGB_DECODE_EXT",
+        "LodBiasQCOM": "GL_TEXTURE_LOD_BIAS_QCOM"
     },
     "ShaderParameter":
     {

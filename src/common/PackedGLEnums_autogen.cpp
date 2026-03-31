@@ -1907,6 +1907,8 @@ SamplerParameter FromGLenum<SamplerParameter>(GLenum from)
             return SamplerParameter::MaxAnisotropy;
         case GL_TEXTURE_SRGB_DECODE_EXT:
             return SamplerParameter::SrgbDecode;
+        case GL_TEXTURE_LOD_BIAS_QCOM:
+            return SamplerParameter::LodBiasQCOM;
         default:
             return SamplerParameter::InvalidEnum;
     }
@@ -1940,6 +1942,8 @@ GLenum ToGLenum(SamplerParameter from)
             return GL_TEXTURE_MAX_ANISOTROPY_EXT;
         case SamplerParameter::SrgbDecode:
             return GL_TEXTURE_SRGB_DECODE_EXT;
+        case SamplerParameter::LodBiasQCOM:
+            return GL_TEXTURE_LOD_BIAS_QCOM;
         default:
             UNREACHABLE();
             return 0;
@@ -1985,6 +1989,9 @@ std::ostream &operator<<(std::ostream &os, SamplerParameter value)
             break;
         case SamplerParameter::SrgbDecode:
             os << "GL_TEXTURE_SRGB_DECODE_EXT";
+            break;
+        case SamplerParameter::LodBiasQCOM:
+            os << "GL_TEXTURE_LOD_BIAS_QCOM";
             break;
         default:
             os << "GL_INVALID_ENUM";
