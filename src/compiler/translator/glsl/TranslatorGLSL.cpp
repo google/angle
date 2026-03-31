@@ -14,6 +14,7 @@
 #include "compiler/translator/glsl/VersionGLSL.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/PreTransformTextureCubeGradDerivatives.h"
+#include "compiler/translator/tree_ops/RemoveDynamicIndexing.h"
 #include "compiler/translator/tree_ops/RemoveInvariantDeclaration.h"
 #include "compiler/translator/tree_ops/RewriteTexelFetchOffset.h"
 #include "compiler/translator/tree_ops/glsl/apple/RewriteRowMajorMatrices.h"
@@ -118,6 +119,14 @@ bool TranslatorGLSL::translate(TIntermBlock *root,
     if (compileOptions.rewriteRowMajorMatrices && getShaderVersion() >= 300)
     {
         if (!RewriteRowMajorMatrices(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
+    }
+
+    if (compileOptions.removeDynamicIndexingOfSwizzledVector)
+    {
+        if (!sh::RemoveDynamicIndexingOfSwizzledVector(this, root, &getSymbolTable(), nullptr))
         {
             return false;
         }

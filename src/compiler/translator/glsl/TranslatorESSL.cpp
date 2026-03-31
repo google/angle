@@ -15,6 +15,7 @@
 #include "compiler/translator/tree_ops/DeclarePerVertexBlocks.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/RecordConstantPrecision.h"
+#include "compiler/translator/tree_ops/RemoveDynamicIndexing.h"
 #include "compiler/translator/tree_util/FindSymbolNode.h"
 #include "compiler/translator/tree_util/ReplaceClipCullDistanceVariable.h"
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
@@ -108,6 +109,14 @@ bool TranslatorESSL::translate(TIntermBlock *root,
         if (shaderVer >= 310 && !MonomorphizeUnsupportedFunctions(
                                     this, root, &getSymbolTable(),
                                     UnsupportedFunctionArgsBitSet{UnsupportedFunctionArgs::Image}))
+        {
+            return false;
+        }
+    }
+
+    if (compileOptions.removeDynamicIndexingOfSwizzledVector)
+    {
+        if (!sh::RemoveDynamicIndexingOfSwizzledVector(this, root, &getSymbolTable(), nullptr))
         {
             return false;
         }
