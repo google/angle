@@ -101,6 +101,7 @@ mod ffi {
         max_combined_draw_buffers_and_pixel_local_storage_planes: u32,
         min_point_size: f32,
         max_point_size: f32,
+        max_expression_complexity: u32,
     }
 
     #[derive(Copy, Clone)]
@@ -460,7 +461,10 @@ unsafe fn generate_ast(
 
     // Passes required before AST can be generated:
     transform::run!(dealias, &mut ir);
-    let uncached_registers_with_side_effect = transform::run!(astify, &mut ir);
+    let astify_options = transform::astify::Options {
+        max_expression_complexity: options.limits.max_expression_complexity,
+    };
+    let uncached_registers_with_side_effect = transform::run!(astify, &mut ir, &astify_options);
 
     let mut ast_gen = output::legacy::Generator::new(compiler, options);
     let mut generator = ast::Generator::new(*ir, uncached_registers_with_side_effect);

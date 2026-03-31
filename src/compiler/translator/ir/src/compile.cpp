@@ -117,7 +117,9 @@ void SetEnabledExtensions(const TExtensionBehavior &behavior, ffi::ExtensionsEna
     extensions->WEBGL_video_texture = IsExtensionEnabled(behavior, TExtension::WEBGL_video_texture);
 }
 
-void SetLimits(const ShBuiltInResources &resources, ffi::Limits *limits)
+void SetLimits(const ShBuiltInResources &resources,
+               const ShCompileOptions &options,
+               ffi::Limits *limits)
 {
     limits->max_draw_buffers             = resources.MaxDrawBuffers;
     limits->max_dual_source_draw_buffers = resources.MaxDualSourceDrawBuffers;
@@ -125,6 +127,8 @@ void SetLimits(const ShBuiltInResources &resources, ffi::Limits *limits)
         resources.MaxCombinedDrawBuffersAndPixelLocalStoragePlanes;
     limits->min_point_size = resources.MinPointSize;
     limits->max_point_size = resources.MaxPointSize;
+    limits->max_expression_complexity =
+        options.limitExpressionComplexity ? resources.MaxExpressionComplexity : 1'000'000;
 }
 
 void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::CompileOptions *opt)
@@ -239,7 +243,7 @@ Output GenerateAST(IR ir, TCompiler *compiler, const ShCompileOptions &options)
     ffi::CompileOptions opt;
     SetOptions(compiler, options, &opt);
     SetEnabledExtensions(compiler->getExtensionBehavior(), &opt.extensions);
-    SetLimits(compiler->getResources(), &opt.limits);
+    SetLimits(compiler->getResources(), options, &opt.limits);
 
     ffi::Output output = ffi::generate_ast(std::move(ir), compiler, GetGlobalPoolAllocator(), opt);
 

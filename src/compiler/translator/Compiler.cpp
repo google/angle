@@ -806,12 +806,15 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     const bool useIR = compileOptions.useIR;
 
-    // Disallow expressions deemed too complex.
-    // This needs to be checked before other functions that will traverse the AST
-    // to prevent potential stack overflow crashes.
-    if (compileOptions.limitExpressionComplexity && !limitExpressionComplexity(root))
+    if (!useIR)
     {
-        return false;
+        // Disallow expressions deemed too complex.
+        // This needs to be checked before other functions that will traverse the AST
+        // to prevent potential stack overflow crashes.
+        if (compileOptions.limitExpressionComplexity && !limitExpressionComplexity(root))
+        {
+            return false;
+        }
     }
 
     // Some AST validation cannot be done until an AST pass is done. With IR, those passes (if

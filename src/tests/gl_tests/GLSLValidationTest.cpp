@@ -17,7 +17,9 @@ namespace
 {
 // Limits set in sh::InitBuiltInResources().  These are implementation limits that the tests need to
 // be aware of.
-constexpr uint32_t kMaxFunctionParameters = 255;
+constexpr uint32_t kMaxExpressionComplexity = 256;
+constexpr uint32_t kMaxCallStackDepth       = 256;
+constexpr uint32_t kMaxFunctionParameters   = 255;
 
 class GLSLValidationTest : public CompilerTest
 {
@@ -5099,6 +5101,621 @@ void main()
     }
 
     reset();
+}
+
+// Validate that deeply nested |while| loops fail in WebGL.
+TEST_P(WebGL2GLSLValidationTest, DeeplyNestedWhileStatements)
+{
+    std::ostringstream fs;
+    fs << R"(#version 300 es
+void main() {
+)";
+    for (int i = 0; i < 1700; ++i)
+    {
+        fs << " while(true)";
+    }
+    fs << "; }";
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "statement is too deeply nested");
+}
+
+// Validate that deeply nested |for| loops fail in WebGL.
+TEST_P(WebGL2GLSLValidationTest, DeeplyNestedForStatements)
+{
+    std::ostringstream fs;
+    fs << R"(#version 300 es
+void main() {
+)";
+    for (int i = 0; i < 1700; ++i)
+    {
+        fs << " for(int i = 0; i < 10; i++)";
+    }
+    fs << "; }";
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "statement is too deeply nested");
+}
+
+// Validate that deeply nested |do-while| loops fail in WebGL.
+TEST_P(WebGL2GLSLValidationTest, DeeplyNestedDoWhileStatements)
+{
+    std::ostringstream fs;
+    fs << R"(#version 300 es
+void main() {
+)";
+    for (int i = 0; i < 1700; ++i)
+    {
+        fs << " do {";
+    }
+    for (int i = 0; i < 1700; ++i)
+    {
+        fs << "} while(true);";
+    }
+    fs << "}";
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "statement is too deeply nested");
+}
+
+// Validate that deeply nested |switch| blocks fail in WebGL.
+TEST_P(WebGL2GLSLValidationTest, DeeplyNestedSwitchStatements)
+{
+    std::ostringstream fs;
+    fs << R"(#version 300 es
+void main() {
+)";
+    for (int i = 0; i < 1700; ++i)
+    {
+        fs << " switch(1) { default: int i=0;";
+    }
+    for (int i = 0; i < 1700; ++i)
+    {
+        fs << "}";
+    }
+    fs << "}";
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "statement is too deeply nested");
+}
+
+// Validate that too many array dimensions fail in WebGL.
+TEST_P(WebGL2GLSLValidationTest, HugeUnsizedMultidimensionalArrayConstructor)
+{
+    std::ostringstream fs;
+    fs << R"(#version 310 es
+int E=int)";
+    for (int i = 0; i < 10000; ++i)
+    {
+        fs << "[]";
+    }
+    fs << "()";
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "array has too many dimensions");
+}
+
+// Validate that too many array dimensions fail in WebGL.
+TEST_P(WebGL2GLSLValidationTest, HugeMultidimensionalArrayConstructor)
+{
+    std::ostringstream fs;
+    fs << R"(#version 310 es
+int E=int)";
+    for (int i = 0; i < 10000; ++i)
+    {
+        fs << "[1]";
+    }
+
+    for (int i = 0; i < 10000; ++i)
+    {
+        fs << "(2)";
+    }
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "array has too many dimensions");
+}
+
+// Validate that too-complex unary expressions fail to compile in WebGL.
+TEST_P(WebGL2GLSLValidationTest, ManyChainedUnaryExpressions)
+{
+    std::ostringstream fs;
+    fs << R"(#version 300 es
+precision mediump float;
+void main() {
+  int iterations=0;)";
+    for (int i = 0; i < 6000; ++i)
+    {
+        fs << "~";
+    }
+    fs << R"(++iterations;
+})";
+
+    // The IR has no limitations with expression complexity.
+    if (getEGLWindow()->isFeatureEnabled(Feature::UseIr))
+    {
+        validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+    }
+    else
+    {
+        validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Expression too complex");
+    }
+}
+
+// Validate that too-complex assignment chains fail to compile in WebGL.
+TEST_P(WebGL2GLSLValidationTest, ManyChainedAssignments)
+{
+    std::ostringstream fs;
+    fs << R"(#version 300 es
+void main() {
+    int c = 0;
+)";
+    for (int i = 0; i < 3750; ++i)
+    {
+        fs << "c=\n";
+    }
+    fs << "c+1; }";
+
+    // The IR has no limitations with expression complexity.
+    if (getEGLWindow()->isFeatureEnabled(Feature::UseIr))
+    {
+        validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+    }
+    else
+    {
+        validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Expression too complex");
+    }
+}
+
+// Validate that too-complex binary expressions fail to compile in WebGL.
+TEST_P(WebGL2GLSLValidationTest, ManyChainedBinaryExpressions)
+{
+    constexpr char kPreamble[] = R"(precision mediump float;
+            uniform vec4 u_color;
+            void main()
+            {
+               gl_FragColor = u_color)";
+
+    {
+        std::ostringstream fs;
+        fs << kPreamble;
+        for (uint32_t i = 0; i < kMaxExpressionComplexity - 10; ++i)
+        {
+            fs << "+ vec4(" << i << ")";
+        }
+        fs << "; }";
+        validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+    }
+
+    {
+        std::ostringstream fs;
+        fs << kPreamble;
+        for (uint32_t i = 0; i < kMaxExpressionComplexity + 10; ++i)
+        {
+            fs << "+ vec4(" << i << ")";
+        }
+        fs << "; }";
+        // The IR has no limitations with expression complexity.
+        if (getEGLWindow()->isFeatureEnabled(Feature::UseIr))
+        {
+            validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+        }
+        else
+        {
+            validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Expression too complex");
+        }
+    }
+}
+
+// Validate that too-complex binary expressions fail to compile in WebGL, even inside an unused
+// function.
+TEST_P(WebGL2GLSLValidationTest, ManyChainedBinaryExpressionsInUnusedFunction)
+{
+    constexpr char kPreamble[] = R"(precision mediump float;
+            uniform vec4 u_color;
+            void main()
+            {
+               gl_FragColor = u_color;
+            }
+            vec4 someFunction() {
+              return u_color)";
+
+    {
+        std::ostringstream fs;
+        fs << kPreamble;
+        for (uint32_t i = 0; i < kMaxExpressionComplexity - 10; ++i)
+        {
+            fs << "+ vec4(" << i << ")";
+        }
+        fs << "; }";
+        validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+    }
+
+    {
+        std::ostringstream fs;
+        fs << kPreamble;
+        for (uint32_t i = 0; i < kMaxExpressionComplexity + 10; ++i)
+        {
+            fs << "+ vec4(" << i << ")";
+        }
+        fs << "; }";
+        // The IR has no limitations with expression complexity.
+        if (getEGLWindow()->isFeatureEnabled(Feature::UseIr))
+        {
+            validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+        }
+        else
+        {
+            validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Expression too complex");
+        }
+    }
+}
+
+// Validate that too-complex binary expressions fail to compile in WebGL, specifically nested inside
+// a switch statement.
+TEST_P(WebGL2GLSLValidationTest, ManyChainedBinaryExpressionsInSwitch)
+{
+    constexpr char kPreamble[]  = R"(#version 300 es
+            uniform int u;
+
+            void main()
+            {
+                int x;
+                switch (u)
+                {
+                    case 0:
+                        x = x)";
+    constexpr char kPostamble[] = R"(;
+                }  // switch (u)
+            })";
+    {
+        std::ostringstream fs;
+        fs << kPreamble;
+        for (uint32_t i = 0; i < kMaxExpressionComplexity + 1; ++i)
+        {
+            fs << " + x";
+        }
+        fs << kPostamble;
+        // The IR has no limitations with expression complexity.
+        if (getEGLWindow()->isFeatureEnabled(Feature::UseIr))
+        {
+            validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+        }
+        else
+        {
+            validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Expression too complex");
+        }
+    }
+
+    // Same test but way over the limit.
+    {
+        std::ostringstream fs;
+        fs << kPreamble;
+        for (uint32_t i = 0; i < 20 * kMaxExpressionComplexity; ++i)
+        {
+            fs << " + x";
+        }
+        fs << kPostamble;
+        // The IR has no limitations with expression complexity.
+        if (getEGLWindow()->isFeatureEnabled(Feature::UseIr))
+        {
+            validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+        }
+        else
+        {
+            validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Expression too complex");
+        }
+    }
+}
+
+// Validate that too-complex binary expressions fail to compile in WebGL, specifically inside a
+// global initializer.
+TEST_P(WebGL2GLSLValidationTest, NestingInsideGlobalInitializer)
+{
+    constexpr char kPreamble[]  = R"(uniform int u;
+            int x = u)";
+    constexpr char kPostamble[] = R"(;
+            void main()
+            {
+                gl_FragColor = vec4(0.0);
+            })";
+    {
+        std::ostringstream fs;
+        fs << kPreamble;
+        for (uint32_t i = 0; i < kMaxExpressionComplexity + 1; ++i)
+        {
+            fs << " + u";
+        }
+        fs << kPostamble;
+        validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Expression too complex");
+    }
+
+    // Same test but way over the limit.
+    {
+        std::ostringstream fs;
+        fs << kPreamble;
+        for (uint32_t i = 0; i < 20 * kMaxExpressionComplexity; ++i)
+        {
+            fs << " + u";
+        }
+        fs << kPostamble;
+        validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Expression too complex");
+    }
+}
+
+// Validate that too-deep call chains fail to compile in WebGL.
+TEST_P(WebGL2GLSLValidationTest, TooDeepCallStack)
+{
+    std::ostringstream preamble;
+    preamble << R"(precision mediump float;
+        uniform vec4 u_color;
+        vec4 function0()  {
+          return u_color;
+        }
+    )";
+    for (uint32_t i = 0; i < kMaxCallStackDepth - 10; ++i)
+    {
+        preamble << "vec4 function" << (i + 1) << "() {\n"
+                 << "  return function" << i << "();\n"
+                 << "}\n";
+    }
+
+    {
+        std::ostringstream fs;
+        fs << preamble.str();
+        fs << R"(void main() {
+    gl_FragColor = function)"
+           << (kMaxCallStackDepth - 10) << R"(();
+})";
+        validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+    }
+
+    // Same test, but the call chain is unused.
+    {
+        std::ostringstream fs;
+        fs << preamble.str();
+        fs << R"(void main() {
+    gl_FragColor = vec4(0,0,0,0);
+})";
+        validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+    }
+
+    // Add more to the call chain, so the depth goes over the limit
+    for (uint32_t i = kMaxCallStackDepth - 10; i < kMaxCallStackDepth + 10; ++i)
+    {
+        preamble << "vec4 function" << (i + 1) << "() {\n"
+                 << "  return function" << i << "();\n"
+                 << "}\n";
+    }
+
+    {
+        std::ostringstream fs;
+        fs << preamble.str();
+        fs << R"(void main() {
+    gl_FragColor = function)"
+           << (kMaxCallStackDepth + 10) << R"(();
+})";
+        validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Call stack too deep");
+    }
+
+    // Same test, but the call chain is unused.
+    {
+        std::ostringstream fs;
+        fs << preamble.str();
+        fs << R"(void main() {
+    gl_FragColor = vec4(0,0,0,0);
+})";
+        validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Call stack too deep");
+    }
+}
+
+// Validate that too many function arguments fail to compile in WebGL.
+TEST_P(WebGL2GLSLValidationTest, TooManyFunctionParameters)
+{
+    constexpr char kPreamble[]  = R"(precision mediump float;
+        float foo()";
+    constexpr char kPostamble[] = R"() { return f0; }
+void main() { gl_FragColor = vec4(0, 0, 0, 0); })";
+
+    {
+        std::ostringstream fs;
+        fs << kPreamble;
+        for (uint32_t i = 0; i < kMaxFunctionParameters - 10; ++i)
+        {
+            if (i != 0)
+            {
+                fs << ", ";
+            }
+            fs << "float f" << i;
+        }
+        fs << kPostamble;
+        validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+    }
+
+    {
+        std::ostringstream fs;
+        fs << kPreamble;
+        for (uint32_t i = 0; i < kMaxFunctionParameters + 10; ++i)
+        {
+            if (i != 0)
+            {
+                fs << ", ";
+            }
+            fs << "float f" << i;
+        }
+        fs << kPostamble;
+        validateError(GL_FRAGMENT_SHADER, fs.str().c_str(), "Function has too many parameters");
+    }
+}
+
+// Test that recursion fails compilation
+TEST_P(GLSLValidationTest, Recursion)
+{
+    {
+        constexpr char kFS[] =
+            R"(precision mediump float;
+        uniform vec4 u_color;
+        vec4 someFunc()  {
+            return someFunc();
+        }
+
+        void main() {
+            gl_FragColor = u_color * someFunc();
+        }
+    )";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "Recursive function call in the following call chain: someFunc");
+    }
+
+    {
+        constexpr char kFS[] =
+            R"(precision mediump float;
+        uniform vec4 u_color;
+
+        vec4 someFunc();
+
+        vec4 someFunc1()  {
+            return someFunc();
+        }
+
+        vec4 someFunc()  {
+            return someFunc1();
+        }
+
+        void main() {
+            gl_FragColor = u_color * someFunc();
+        }
+    )";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "Recursive function call in the following call chain: someFunc1 <- someFunc "
+                      "<- someFunc1");
+    }
+
+    {
+        constexpr char kFS[] =
+            R"(precision mediump float;
+        uniform vec4 u_color;
+        vec4 someFunc()  {
+            if (u_color.x > 0.5) {
+                return someFunc();
+            } else {
+                return vec4(1);
+            }
+        }
+
+        void main() {
+            gl_FragColor = someFunc();
+        }
+    )";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "Recursive function call in the following call chain: someFunc");
+    }
+
+    {
+        constexpr char kFS[] =
+            R"(precision mediump float;
+        uniform vec4 u_color;
+        vec4 someFunc()  {
+            if (u_color.x > 0.5) {
+                return vec4(1);
+            } else {
+                return someFunc();
+            }
+        }
+
+        void main() {
+            gl_FragColor = someFunc();
+        }
+    )";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "Recursive function call in the following call chain: someFunc");
+    }
+
+    {
+        constexpr char kFS[] =
+            R"(precision mediump float;
+        uniform vec4 u_color;
+        vec4 someFunc()  {
+            return (u_color.x > 0.5) ? vec4(1) : someFunc();
+        }
+
+        void main() {
+            gl_FragColor = someFunc();
+        }
+    )";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "Recursive function call in the following call chain: someFunc");
+    }
+
+    {
+        constexpr char kFS[] =
+            R"(precision mediump float;
+        uniform vec4 u_color;
+        vec4 someFunc()  {
+            return (u_color.x > 0.5) ? someFunc() : vec4(1);
+        }
+
+        void main() {
+            gl_FragColor = someFunc();
+        }
+    )";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "Recursive function call in the following call chain: someFunc");
+    }
+
+    {
+        constexpr char kFS[] =
+            R"(precision mediump float;
+        uniform vec4 u_color;
+        vec4 someFunc()  {
+            return someFunc();
+        }
+
+        void main() {
+            gl_FragColor = u_color;
+        }
+    )";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "Recursive function call in the following call chain: someFunc");
+    }
+
+    {
+        constexpr char kFS[] =
+            R"(precision mediump float;
+        uniform vec4 u_color;
+
+        vec4 function2() {
+            return u_color;
+        }
+
+        vec4 function1() {
+            vec4 a = function2();
+            vec4 b = function1();
+            return a + b;
+        }
+
+        void main() {
+            gl_FragColor = function1();
+        }
+    )";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "Recursive function call in the following call chain: function1");
+    }
+
+    {
+        constexpr char kFS[] =
+            R"(precision mediump float;
+        uniform vec4 u_color;
+
+        vec4 function1();
+
+        vec4 function3() {
+            return function1();
+        }
+
+        vec4 function2() {
+            return function3();
+        }
+
+        vec4 function1() {
+            return function2();
+        }
+
+        void main() {
+            gl_FragColor = function1();
+        }
+    )";
+        validateError(GL_FRAGMENT_SHADER, kFS,
+                      "Recursive function call in the following call chain: function3 <- function2 "
+                      "<- function1 <- function3");
+    }
 }
 
 class GLSLValidationClipDistanceTest_ES3 : public GLSLValidationTest_ES3
