@@ -393,4 +393,15 @@ void ShareGroupVk::logBufferPools() const
         }
     }
 }
+
+void ShareGroupVk::imageWillFallbackFromTileMemory(vk::ImageHelper *image)
+{
+    ASSERT(image->useTileMemory());
+    for (auto context : mState.getContexts())
+    {
+        ContextVk *contextVk = vk::GetImpl(context.second);
+        contextVk->finalizeImageLayout(image, {});
+        contextVk->removeImageWithTileMemory(image);
+    }
+}
 }  // namespace rx

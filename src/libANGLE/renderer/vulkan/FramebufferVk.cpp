@@ -1289,14 +1289,12 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         if (!readImage.canTransferFrom())
         {
             ASSERT(readImage.useTileMemory());
-            readImage.finalizeImageLayoutInShareContexts(renderer, contextVk, {});
             ANGLE_TRY(readImage.fallbackFromTileMemory(contextVk));
         }
 
         if (!drawImage.canTransferTo())
         {
             ASSERT(drawImage.useTileMemory());
-            drawImage.finalizeImageLayoutInShareContexts(renderer, contextVk, {});
             ANGLE_TRY(drawImage.fallbackFromTileMemory(contextVk));
         }
     }

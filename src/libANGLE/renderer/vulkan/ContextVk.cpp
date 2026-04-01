@@ -9034,7 +9034,6 @@ void ContextVk::removeImageWithTileMemory(const vk::ImageHelper *imageToRemove)
 
 bool ContextVk::isImageWithTileMemoryFinalized(const vk::ImageHelper *image) const
 {
-    ASSERT(image->useTileMemory());
     return std::find(mImagesWithTileMemory.begin(), mImagesWithTileMemory.end(), image) ==
            mImagesWithTileMemory.end();
 }
@@ -9042,32 +9041,30 @@ bool ContextVk::isImageWithTileMemoryFinalized(const vk::ImageHelper *image) con
 angle::Result ContextVk::finalizeImagesWithTileMemory()
 {
     ASSERT(!mImagesWithTileMemory.empty());
+    std::vector<vk::ImageHelper *> imagesToClearForSimulation;
 
     // Check all images with tile memory to see if they have valid content or not. tile memory are
     // transient, we must reallocate to keep data valid across command buffer boundary.
-    for (auto iter = mImagesWithTileMemory.begin(); iter != mImagesWithTileMemory.end();)
+    while (!mImagesWithTileMemory.empty())
     {
-        vk::ImageHelper *image = *iter;
+        vk::ImageHelper *image = mImagesWithTileMemory.back();
+        ASSERT(image->useTileMemory());
+        mImagesWithTileMemory.pop_back();
+
         // Other context may have submitted command buffer and causes it fallback already, so check
         // again.
-        if (image->isVkImageContentDefined() && image->useTileMemory())
+        if (image->isVkImageContentDefined())
         {
             ANGLE_TRY(image->fallbackFromTileMemory(this));
             ASSERT(!image->useTileMemory());
-            iter = mImagesWithTileMemory.erase(iter);
         }
-        else
+        else if (!getFeatures().supportsTileMemoryHeap.enabled)
         {
-            ++iter;
+            imagesToClearForSimulation.push_back(image);
         }
     }
 
-    if (getFeatures().supportsTileMemoryHeap.enabled)
-    {
-        // We dont explicitly unbind tileMemory here. They occur implicitly at endCommandBiuffer
-        // time
-    }
-    else
+    if (!imagesToClearForSimulation.empty())
     {
         ASSERT(getFeatures().simulateTileMemoryForTesting.enabled);
 
@@ -9077,7 +9074,7 @@ angle::Result ContextVk::finalizeImagesWithTileMemory()
         params.layer                           = 0;
         params.clearValue                      = {};
         params.clearArea                       = gl::Box(0, 0, 0, 0, 0, 1);
-        for (vk::ImageHelper *image : mImagesWithTileMemory)
+        for (vk::ImageHelper *image : imagesToClearForSimulation)
         {
             // Other context may have triggered fallback already, so check
             // again.
@@ -9100,10 +9097,13 @@ angle::Result ContextVk::finalizeImagesWithTileMemory()
                 image->invalidateEntireLevelStencilContent(this, gl::LevelIndex(0));
             }
         }
+
+        imagesToClearForSimulation.clear();
+        // clearTextureNoFlush will end up add it back to mImagesWithTileMemory.
+        mImagesWithTileMemory.clear();
     }
 
-    mImagesWithTileMemory.clear();
-
+    ASSERT(mImagesWithTileMemory.empty());
     return angle::Result::Continue;
 }
 

@@ -6122,26 +6122,29 @@ void ImageHelper::releaseImageFromShareContexts(Renderer *renderer,
                                                 ContextVk *contextVk,
                                                 UniqueSerial imageSiblingSerial)
 {
-    finalizeImageLayoutInShareContexts(renderer, contextVk, imageSiblingSerial);
+    finalizeImageLayoutInShareContexts(contextVk, imageSiblingSerial);
     contextVk->addToPendingImageGarbage(mUse, mAllocationSize);
     releaseImage(renderer);
 }
 
-void ImageHelper::finalizeImageLayoutInShareContexts(Renderer *renderer,
-                                                     ContextVk *contextVk,
+void ImageHelper::finalizeImageLayoutInShareContexts(ContextVk *contextVk,
                                                      UniqueSerial imageSiblingSerial)
 {
     if (contextVk && mImageSerial.valid())
     {
         for (auto context : contextVk->getShareGroup()->getContexts())
         {
-            vk::GetImpl(context.second)->finalizeImageLayout(this, imageSiblingSerial);
-        }
-        if (mUseTileMemory)
-        {
-            for (auto context : contextVk->getShareGroup()->getContexts())
+            ContextVk *sharedContextVk = vk::GetImpl(context.second);
+
+            sharedContextVk->finalizeImageLayout(this, imageSiblingSerial);
+
+            if (mUseTileMemory)
             {
-                vk::GetImpl(context.second)->removeImageWithTileMemory(this);
+                sharedContextVk->removeImageWithTileMemory(this);
+            }
+            else
+            {
+                ASSERT(sharedContextVk->isImageWithTileMemoryFinalized(this));
             }
         }
     }
@@ -6489,6 +6492,8 @@ angle::Result ImageHelper::fallbackFromTileMemory(ContextVk *contextVk)
     ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_LOW,
                           "The Vulkan driver has to copy from tile memory to regular memory. "
                           "Consider calling glInvalidateFramebuffer");
+
+    contextVk->getShareGroup()->imageWillFallbackFromTileMemory(this);
 
     // Move the necessary information from this ImageHelper to prevImage
     std::unique_ptr<ImageHelper> prevImage = std::make_unique<ImageHelper>();

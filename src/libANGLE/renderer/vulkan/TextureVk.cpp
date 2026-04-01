@@ -4380,7 +4380,7 @@ void TextureVk::releaseImage(ContextVk *contextVk)
         }
         else
         {
-            mImage->finalizeImageLayoutInShareContexts(renderer, contextVk, mImageSiblingSerial);
+            mImage->finalizeImageLayoutInShareContexts(contextVk, mImageSiblingSerial);
             mImageObserverBinding.bind(nullptr);
             mImage = nullptr;
         }

@@ -332,7 +332,7 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
     {
         if (mImage)
         {
-            mImage->finalizeImageLayoutInShareContexts(renderer, contextVk, mImageSiblingSerial);
+            mImage->finalizeImageLayoutInShareContexts(contextVk, mImageSiblingSerial);
         }
         mImage = nullptr;
         mImageObserverBinding.bind(nullptr);

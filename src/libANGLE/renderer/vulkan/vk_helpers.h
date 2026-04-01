@@ -2342,9 +2342,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void releaseImageFromShareContexts(Renderer *renderer,
                                        ContextVk *contextVk,
                                        UniqueSerial imageSiblingSerial);
-    void finalizeImageLayoutInShareContexts(Renderer *renderer,
-                                            ContextVk *contextVk,
-                                            UniqueSerial imageSiblingSerial);
+    void finalizeImageLayoutInShareContexts(ContextVk *contextVk, UniqueSerial imageSiblingSerial);
 
     void releaseStagedUpdates(Renderer *renderer);
 
