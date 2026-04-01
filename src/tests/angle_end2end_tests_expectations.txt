@@ -37,6 +37,8 @@
 532592076 : ImageTestES3RobustInit.RobustClearInTarget/* = SKIP
 532592076 : ImageTestES3RobustInit.NonZeroLevelAndSliceReadback/* = SKIP
 532592076 : ImageTestES3RobustInit.NonZeroLevelAndSliceReadbackRenderbuffer/* = SKIP
+// Array external samplers are not supported by Vulkan
+158215272 VULKAN : ImageTestES3.SourceYUVTextureTargetExternalRGBSampleArray/* = SKIP
 
 // Generate mipmap or draw on mismatched stale levels fails on some OpenGL/GLES drivers when robust init is enabled
 532617619 OPENGL : Texture2DTestES3RobustInit.MismatchedStaleLevel*/* = SKIP
@@ -369,6 +371,7 @@
 42265709 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixCopyBug/* = SKIP
 42265709 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixMultiplicationBug/* = SKIP
 537235696 NVIDIA OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
+540256225 NVIDIA VULKAN : ImageTestES3.SourceYUVTextureTargetExternalRGBSample/* = SKIP
 
 // Intel Vulkan
 
@@ -413,6 +416,7 @@
 536046166 INTEL VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitIntoMixedTexturesAfterFinish/* = SKIP
 536046166 INTEL VULKAN : FramebufferTest_ES31_MSAA.MultisampleResolveWithBlitIntoMixedTextures/* = SKIP
 536046166 WIN INTEL VULKAN : FramebufferTest_ES31_MSAA.MultisampleStencilSampling/*EmulatedPrerotation* = SKIP
+540256225 INTEL VULKAN : ImageTestES3.SourceYUVTextureTargetExternalRGBSample/* = SKIP
 
 // Robust init of OOB framebuffer reads is not zero'd
 500528706 VULKAN : CopyTexImageTestRobustResourceInit.OOBReadShouldBeZeroInit/* = SKIP
@@ -805,6 +809,7 @@
 40096826 PIXEL6 VULKAN : GLSLTest_ES31.ConsecutiveArraysOfArraysImage/* = SKIP
 40096826 PIXEL6 VULKAN : GeometryShaderTest.GeometryShaderImplementationDependentLimits/* = SKIP
 40096826 PIXEL6 VULKAN : ImageTestES3.RGBXAHBImport* = SKIP
+540256225 PIXEL6 VULKAN : ImageTestES3.SourceYUVTextureTargetExternalRGBSample/* = SKIP
 40096826 PIXEL6 VULKAN : IndexedBufferCopyTest.IndexRangeBug/* = SKIP
 40096826 PIXEL6 VULKAN : IndexedPointsTest* = SKIP
 40096826 PIXEL6 VULKAN : MultisampleTest.Point/* = SKIP
@@ -1516,6 +1521,7 @@
 
 // Fails on swangle builders
 42266918 SWIFTSHADER : WebGL2GLSLTest.TexelFetchLodOutOfBounds/* = SKIP
+540256225 SWIFTSHADER : ImageTestES3.SourceYUVTextureTargetExternalRGBSample/* = SKIP
 
 // HLSL compiler bug
 42261155 D3D11 : GLSLTest_ES3.ComplexCrossExpression/* = SKIP

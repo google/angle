@@ -1894,6 +1894,20 @@ bool TParseContext::checkIsValidTypeAndQualifierForArray(const TSourceLoc &index
               typeString.c_str());
         return false;
     }
+
+    // Support for arrays of samplerExternalOES and __samplerExternal2DY2Y are broken in some
+    // backends.
+    if (mCompileOptions.rejectWebglShadersWithUndefinedBehavior &&
+        (elementType.getBasicType() == EbtSamplerExternalOES ||
+         elementType.getBasicType() == EbtSamplerExternal2DY2YEXT))
+    {
+        TInfoSinkBase typeString;
+        typeString << TType(elementType);
+        error(indexLocation, "arrays of external samplers are currently unsupported",
+              typeString.c_str());
+        return false;
+    }
+
     return checkIsValidQualifierForArray(indexLocation, elementType);
 }
 
