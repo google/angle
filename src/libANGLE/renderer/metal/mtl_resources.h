@@ -219,11 +219,11 @@ class Texture final : public Resource,
 
     void getBytes(ContextMtl *context,
                   size_t bytesPerRow,
-                  size_t bytesPer2DInage,
+                  size_t bytesPer2DImage,
                   const MTLRegion &region,
                   const MipmapNativeLevel &mipmapLevel,
                   uint32_t slice,
-                  uint8_t *dataOut);
+                  angle::Span<uint8_t> dataOut);
 
     // Create 2d view of a cube face which full range of mip levels.
     TextureRef createCubeFaceView(uint32_t face);

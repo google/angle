@@ -665,11 +665,11 @@ void Texture::replaceRegion(ContextMtl *context,
 
 void Texture::getBytes(ContextMtl *context,
                        size_t bytesPerRow,
-                       size_t bytesPer2DInage,
+                       size_t bytesPer2DImage,
                        const MTLRegion &region,
                        const MipmapNativeLevel &mipmapLevel,
                        uint32_t slice,
-                       uint8_t *dataOut)
+                       angle::Span<uint8_t> dataOut)
 {
     ASSERT(isCPUAccessible());
 
@@ -685,9 +685,17 @@ void Texture::getBytes(ContextMtl *context,
 
     cmdQueue.ensureResourceReadyForCPU(this);
 
-    [get() getBytes:dataOut
+    if (region.size.depth > 1)
+    {
+        CHECK(dataOut.size() == bytesPer2DImage * region.size.depth);
+    }
+    else
+    {
+        CHECK(dataOut.size() == bytesPerRow * region.size.height);
+    }
+    [get() getBytes:dataOut.data()
           bytesPerRow:bytesPerRow
-        bytesPerImage:bytesPer2DInage
+        bytesPerImage:bytesPer2DImage
            fromRegion:region
           mipmapLevel:mipmapLevel.get()
                 slice:slice];

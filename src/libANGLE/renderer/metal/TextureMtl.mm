@@ -800,13 +800,13 @@ class TextureMtl::NativeTextureWrapper : angle::NonCopyable
 
     void getBytes(ContextMtl *context,
                   size_t bytesPerRow,
-                  size_t bytesPer2DInage,
+                  size_t bytesPer2DImage,
                   const MTLRegion &region,
                   GLuint glLevel,
                   uint32_t slice,
-                  uint8_t *dataOut)
+                  angle::Span<uint8_t> dataOut)
     {
-        mNativeTexture->getBytes(context, bytesPerRow, bytesPer2DInage, region,
+        mNativeTexture->getBytes(context, bytesPerRow, bytesPer2DImage, region,
                                  getNativeLevel(glLevel), slice, dataOut);
     }
 
@@ -1743,16 +1743,16 @@ angle::Result TextureMtl::generateMipmapCPU(const gl::Context *context)
         uint32_t prevLevelDepth    = mViewFromBaseToMaxLevel->depthAt0();
         size_t prevLevelRowPitch   = angleFormat.pixelBytes * prevLevelWidth;
         size_t prevLevelDepthPitch = prevLevelRowPitch * prevLevelHeight;
-        std::unique_ptr<uint8_t[]> prevLevelData(new (std::nothrow)
-                                                     uint8_t[prevLevelDepthPitch * prevLevelDepth]);
-        ANGLE_CHECK_GL_ALLOC(contextMtl, prevLevelData);
-        std::unique_ptr<uint8_t[]> dstLevelData;
+        angle::MemoryBuffer prevLevelData;
+        ANGLE_CHECK_GL_ALLOC(contextMtl,
+                             prevLevelData.resize(prevLevelDepthPitch * prevLevelDepth));
+        angle::MemoryBuffer dstLevelData;
 
         // Download base level data
         mViewFromBaseToMaxLevel->getBytes(
             contextMtl, prevLevelRowPitch, prevLevelDepthPitch,
             MTLRegionMake3D(0, 0, 0, prevLevelWidth, prevLevelHeight, prevLevelDepth), baseGLLevel,
-            slice, prevLevelData.get());
+            slice, prevLevelData.span());
 
         for (GLuint mip = 1; mip < mViewFromBaseToMaxLevel->mipmapLevels(); ++mip)
         {
@@ -1764,17 +1764,12 @@ angle::Result TextureMtl::generateMipmapCPU(const gl::Context *context)
             size_t dstRowPitch   = angleFormat.pixelBytes * dstWidth;
             size_t dstDepthPitch = dstRowPitch * dstHeight;
             size_t dstDataSize   = dstDepthPitch * dstDepth;
-            if (!dstLevelData)
-            {
-                // Allocate once and reuse the buffer
-                dstLevelData.reset(new (std::nothrow) uint8_t[dstDataSize]);
-                ANGLE_CHECK_GL_ALLOC(contextMtl, dstLevelData);
-            }
+            ANGLE_CHECK_GL_ALLOC(contextMtl, dstLevelData.resize(dstDataSize));
 
             // Generate mip level
             angleFormat.mipGenerationFunction(prevLevelWidth, prevLevelHeight, prevLevelDepth,
-                                              prevLevelData.get(), prevLevelRowPitch,
-                                              prevLevelDepthPitch, dstLevelData.get(), dstRowPitch,
+                                              prevLevelData.data(), prevLevelRowPitch,
+                                              prevLevelDepthPitch, dstLevelData.data(), dstRowPitch,
                                               dstDepthPitch);
 
             mtl::MipmapNativeLevel nativeLevel = mViewFromBaseToMaxLevel->getNativeLevel(glLevel);
@@ -1782,7 +1777,7 @@ angle::Result TextureMtl::generateMipmapCPU(const gl::Context *context)
             // Upload to texture
             ANGLE_TRY(UploadTextureContents(context, angleFormat,
                                             MTLRegionMake3D(0, 0, 0, dstWidth, dstHeight, dstDepth),
-                                            nativeLevel, slice, dstLevelData.get(), dstRowPitch,
+                                            nativeLevel, slice, dstLevelData.data(), dstRowPitch,
                                             dstDepthPitch, false, *mViewFromBaseToMaxLevel));
 
             prevLevelWidth      = dstWidth;
@@ -2948,7 +2943,7 @@ angle::Result TextureMtl::copySubTextureCPU(const gl::Context *context,
 
     // Read pixels from source to memory:
     sourceTexture->getBytes(contextMtl, srcRowPitch, 0, mtlSrcArea, sourceNativeLevel, 0,
-                            conversionSrc.data());
+                            conversionSrc.span());
 
     // Convert to destination format
     CopyImageCHROMIUM(conversionSrc.data(), srcRowPitch, sourceAngleFormat.pixelBytes, 0,

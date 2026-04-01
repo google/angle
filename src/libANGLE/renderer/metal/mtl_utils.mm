@@ -685,7 +685,7 @@ angle::Result ReadTexturePerSliceBytes(const gl::Context *context,
                                        const gl::Rectangle &fromRegion,
                                        const MipmapNativeLevel &mipLevel,
                                        uint32_t sliceOrDepth,
-                                       uint8_t *dataOut)
+                                       angle::Span<uint8_t> dataOut)
 {
     ASSERT(texture && texture->valid());
     ContextMtl *contextMtl = mtl::GetImpl(context);

@@ -16,6 +16,7 @@
 #include "angle_gl.h"
 #include "common/MemoryBuffer.h"
 #include "common/PackedEnums.h"
+#include "common/span.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/angletypes.h"
@@ -72,7 +73,7 @@ angle::Result ReadTexturePerSliceBytes(const gl::Context *context,
                                        const gl::Rectangle &fromRegion,
                                        const MipmapNativeLevel &mipLevel,
                                        uint32_t sliceOrDepth,
-                                       uint8_t *dataOut);
+                                       angle::Span<uint8_t> dataOut);
 
 angle::Result ReadTexturePerSliceBytesToBuffer(const gl::Context *context,
                                                const TextureRef &texture,
