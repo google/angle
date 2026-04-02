@@ -544,7 +544,7 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
     {
         rteModes.push_back("32");
     }
-    if (rendererVk->getFeatures().supportsShaderFloat16.enabled)
+    if (rendererVk->getFeatures().supportsClFp16.enabled)
     {
         options += " --fp16";
         if (rendererVk->getFeatures().supportsRoundingModeRteFp16.enabled)
@@ -552,7 +552,7 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
             rteModes.push_back("16");
         }
     }
-    if (rendererVk->getFeatures().supportsShaderFloat64.enabled)
+    if (rendererVk->getFeatures().supportsClFp64.enabled)
     {
         options += " --fp64";
         featureMacros.push_back("__opencl_c_fp64");

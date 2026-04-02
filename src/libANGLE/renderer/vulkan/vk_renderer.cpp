@@ -3693,7 +3693,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mHostImageCopyFeatures       = {};
     mHostImageCopyFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES;
 
-    mHostImageCopyProperties = {};
+    mHostImageCopyProperties       = {};
     mHostImageCopyProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES;
 
     m8BitStorageFeatures       = {};
@@ -7176,6 +7176,19 @@ void Renderer::initOpenCLFeatures(const vk::ExtensionNameList &deviceExtensionNa
     // serves as a allowlist around this support/feature http://anglebug.com/540157153
     const bool vendorsSupportingAlphaChannel = isSamsung;
     ANGLE_FEATURE_CONDITION(&mFeatures, enableAlphaChannelImages, vendorsSupportingAlphaChannel);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsClFp16,
+        mFeatures.supportsShaderFloat16.enabled && (mFeatures.supportsRoundingModeRteFp16.enabled ||
+                                                    mFeatures.supportsRoundingModeRtzFp16.enabled));
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, debugSupportsClFp64, false);
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsClFp64,
+                            mFeatures.debugSupportsClFp64.enabled &&
+                                mFeatures.supportsShaderFloat64.enabled &&
+                                mFeatures.supportsRoundingModeRteFp64.enabled &&
+                                mFeatures.supportsRoundingModeRtzFp64.enabled &&
+                                mFeatures.supportsDenormFtzFp64.enabled);
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
