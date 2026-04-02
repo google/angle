@@ -33,13 +33,13 @@
 // Instructions:
 //   - Access to struct fields are in bounds: validate_struct_field_in_bounds()
 //   - If conditions are boolean: validate_if_condition_is_bool()
+//   - No operations should have entirely constant arguments, that should be folded (and
+//     transformations shouldn't retintroduce it): validate_no_constant_foldable_instruction()
 
 // TODO(http://anglebug.com/349994211): to validate:
 //   - Referenced IDs are not dead-code-eliminated: Checking against max_*_count can be paird with a
 //     look up and checking that !is_dead_code_eliminated
 //   - If there's a cached "has side effect", that it's correct.
-//   - No operations should have entirely constant arguments, that should be folded (and
-//     transformations shouldn't retintroduce it)
 //   - Catch misuse of built-in names.
 //   - Precision is not applied to types that don't are not applicable.  It _is_ applied to types
 //     that are applicable (including uniforms and samplers for example).  Needs to work to make
@@ -47,6 +47,7 @@
 //   - Case values are always ConstantId (int/uint only too?)
 //   - Variables are Pointers
 //   - Pointers only valid in the left arg of load/store/access/call
+//   - First argument of OpCode::Access* is a pointer.
 //   - Loop blocks ends in the appropriate instructions.
 //   - Do blocks end in DoLoop (unless already terminated by something else, like Return)
 //   - Maximum one default case for Switch instructions.
@@ -1165,6 +1166,102 @@ impl<'a> Validator<'a> {
         }
     }
 
+    fn validate_no_constant_foldable_instruction(&self, opcode: &OpCode) {
+        match opcode {
+            OpCode::Binary(_, lhs, rhs) => {
+                self.validate_not_all_args_are_constant(opcode, &[*lhs, *rhs]);
+            }
+            OpCode::Unary(_, param) => {
+                self.validate_not_all_args_are_constant(opcode, &[*param]);
+            }
+            OpCode::BuiltIn(built_in_opcode, params) if built_in_opcode.may_const_fold() => {
+                self.validate_not_all_args_are_constant(opcode, params);
+            }
+
+            OpCode::ConstructVectorFromMultiple(params)
+            | OpCode::ConstructMatrixFromMultiple(params)
+            | OpCode::ConstructStruct(params)
+            | OpCode::ConstructArray(params) => {
+                self.validate_not_all_args_are_constant(opcode, params);
+            }
+
+            OpCode::ConstructScalarFromScalar(param)
+            | OpCode::ConstructVectorFromScalar(param)
+            | OpCode::ConstructMatrixFromScalar(param)
+            | OpCode::ConstructMatrixFromMatrix(param)
+            | OpCode::ExtractVectorComponent(param, _)
+            | OpCode::ExtractVectorComponentMulti(param, _)
+            | OpCode::ExtractStructField(param, _) => {
+                self.validate_not_all_args_are_constant(opcode, &[*param]);
+            }
+
+            OpCode::ExtractVectorComponentDynamic(indexed, index)
+            | OpCode::ExtractMatrixColumn(indexed, index)
+            | OpCode::ExtractArrayElement(indexed, index) => {
+                self.validate_not_all_args_are_constant(opcode, &[*indexed, *index]);
+            }
+
+            OpCode::Switch(switch_condition, case_values) => {
+                if case_values.is_empty() {
+                    self.on_error(format_args!(
+                        "operation {:?} could be constant folded. Switch operation has no case \
+                         values, Switch instruction should be removed",
+                        opcode
+                    ));
+                }
+
+                if let Id::Constant(switch_condition_constant_id) = switch_condition.id {
+                    for case_value_id in case_values.iter().flatten() {
+                        if switch_condition_constant_id != *case_value_id {
+                            self.on_error(format_args!(
+                                "operation {:?} could be constant folded. Case value does not \
+                                 match with switch condition constant, case should be removed",
+                                opcode
+                            ));
+                        }
+                    }
+                }
+            }
+            // Other instructions can't be constant folded.
+            OpCode::MergeInput
+            | OpCode::Discard
+            | OpCode::Return(_)
+            | OpCode::Break
+            | OpCode::Continue
+            | OpCode::Passthrough
+            | OpCode::NextBlock
+            | OpCode::Merge(_)
+            // OpCode::If and OpCode::LoopIf condition can be Constant(ConstantId), as long as the
+            // condition.type_id is TYPE_ID_BOOL. See function
+            // validate_if_condition_is_bool(), and test GLSLTestLoops.ForNoCondition.
+            | OpCode::If(_)
+            | OpCode::LoopIf(_)
+            | OpCode::Loop
+            | OpCode::DoLoop
+            | OpCode::AccessVectorComponent(_, _)
+            | OpCode::AccessVectorComponentMulti(_, _)
+            | OpCode::AccessVectorComponentDynamic(_, _)
+            | OpCode::AccessMatrixColumn(_, _)
+            | OpCode::AccessStructField(_, _)
+            | OpCode::AccessArrayElement(_, _)
+            | OpCode::Load(_)
+            | OpCode::Store(_, _)
+            | OpCode::Alias(_)
+            | OpCode::Call(_, _)
+            | OpCode::BuiltIn(_, _)
+            | OpCode::Texture(_, _, _) => {}
+        };
+    }
+
+    fn validate_not_all_args_are_constant(&self, opcode: &OpCode, instruction_args: &[TypedId]) {
+        if instruction_args.iter().all(|arg| matches!(arg.id, Id::Constant(_))) {
+            self.on_error(format_args!(
+                "operation {:?} contains only constant arguments, they should be constant folded",
+                opcode
+            ));
+        }
+    }
+
     fn validate_all_branch_instructions_have_valid_target(&self) {
         let mut block_meta_data_tracker = Vec::new();
         for entry in &self.ir.function_entries {
@@ -1534,6 +1631,7 @@ impl<'a> Validator<'a> {
                 let (opcode, _result) = instruction.get_op_and_result(&self.ir.meta);
                 self.validate_struct_field_in_bounds(opcode);
                 self.validate_if_condition_is_bool(opcode);
+                self.validate_no_constant_foldable_instruction(opcode);
             },
         );
     }
