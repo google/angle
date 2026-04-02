@@ -26,6 +26,7 @@
 #include "compiler/translator/tree_ops/GatherDefaultUniforms.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/RemoveAtomicCounterBuiltins.h"
+#include "compiler/translator/tree_ops/RemoveInvariantDeclaration.h"
 #include "compiler/translator/tree_ops/RewriteArrayOfArrayOfOpaqueUniforms.h"
 #include "compiler/translator/tree_ops/RewriteAtomicCounters.h"
 #include "compiler/translator/tree_ops/RewriteDfdy.h"
@@ -931,6 +932,11 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
                     yuvOutput = FindSymbolNode(root, ImmutableString(outputVar.name));
                     continue;
                 }
+            }
+
+            if (!RemoveInvariantDeclaration(this, root))
+            {
+                return false;
             }
 
             if (usesPointCoord)

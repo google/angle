@@ -41,7 +41,6 @@
 #include "compiler/translator/tree_ops/RemoveArrayLengthMethod.h"
 #include "compiler/translator/tree_ops/RemoveDynamicIndexing.h"
 #include "compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.h"
-#include "compiler/translator/tree_ops/RemoveInvariantDeclaration.h"
 #include "compiler/translator/tree_ops/RemoveUnreferencedVariables.h"
 #include "compiler/translator/tree_ops/RemoveUnusedFramebufferFetch.h"
 #include "compiler/translator/tree_ops/RewritePixelLocalStorage.h"
@@ -321,26 +320,6 @@ bool IsGLSL410OrOlder(ShShaderOutput output)
 {
     return (output == SH_GLSL_150_CORE_OUTPUT || output == SH_GLSL_330_CORE_OUTPUT ||
             output == SH_GLSL_400_CORE_OUTPUT || output == SH_GLSL_410_CORE_OUTPUT);
-}
-
-bool RemoveInvariant(sh::GLenum shaderType,
-                     int shaderVersion,
-                     ShShaderOutput outputType,
-                     const ShCompileOptions &compileOptions)
-{
-    if (shaderType == GL_FRAGMENT_SHADER &&
-        (IsGLSL420OrNewer(outputType) || IsOutputSPIRV(outputType)))
-    {
-        return true;
-    }
-
-    if (compileOptions.removeInvariantAndCentroidForESSL3 && shaderVersion >= 300 &&
-        shaderType == GL_VERTEX_SHADER)
-    {
-        return true;
-    }
-
-    return false;
 }
 
 size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
@@ -1170,20 +1149,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-    }
 
-    // Removing invariant declarations must be done after collecting variables.
-    // Otherwise, built-in invariant declarations don't apply.
-    if (RemoveInvariant(mShaderType, mShaderVersion, mOutputType, compileOptions))
-    {
-        if (!RemoveInvariantDeclaration(this, root))
-        {
-            return false;
-        }
-    }
-
-    if (!useIR)
-    {
         // gl_Position may have already been initialized among other output variables, in that case
         // we don't need to initialize it twice.
         if (!mGLPositionInitialized && compileOptions.initGLPosition)
