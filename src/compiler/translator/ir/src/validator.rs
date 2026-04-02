@@ -6,6 +6,8 @@
 // transformations, to ensure they generate valid IR.
 //
 // Validations implemented:
+//
+// IDs and scopes:
 //   - Every ID must be present in the respective map: validate_all_ids_are_present()
 //   - Every variable must be defined somewhere, either in global block or in a block:
 //     validate_all_variables_are_declared_in_scope()
@@ -13,6 +15,13 @@
 //     validate_all_variables_are_declared_in_scope()
 //   - Every accessed register must be declared in an accessible block:
 //     validate_all_registers_are_declared_in_scope()
+//   - No identical types with different IDs: validate_no_identical_types_with_different_ids()
+//
+// Types:
+//   - Validate that ImageType fields are valid in combination with ImageDimension:
+//     validate_image_types()
+//
+// Control flow:
 //   - Branches must have the appropriate targets set (merge, trueblock for if, etc); every block
 //     ends in branch: validate_all_branch_instructions_have_valid_target()
 //   - No branches inside a block (i.e. no dead code): validate_no_dead_code()
@@ -20,9 +29,9 @@
 //     output: validate_merge_block_with_input()
 //   - For block that has a merge block with an input, the branch instruction must be If, and the
 //     block must contains block1: validate_merge_block_with_input()
-//   - No identical types with different IDs: validate_no_identical_types_with_different_ids()
-//   - Validate that ImageType fields are valid in combination with ImageDimension:
-//     validate_image_types()
+//
+// Instructions:
+//   - Access to struct fields are in bounds: validate_struct_field_in_bounds()
 
 // TODO(http://anglebug.com/349994211): to validate:
 //   - Referenced IDs are not dead-code-eliminated: Checking against max_*_count can be paird with a
@@ -260,6 +269,7 @@ impl<'a> Validator<'a> {
         self.validate_no_dead_code();
         self.validate_all_branch_instructions_have_valid_target();
         self.validate_merge_block_with_input();
+        self.validate_all_instructions();
     }
 
     fn validate_all_ids_are_present(&self) {
@@ -1512,6 +1522,40 @@ impl<'a> Validator<'a> {
                     ));
                 }
             }
+        }
+    }
+
+    fn validate_all_instructions(&self) {
+        // All validation that can be done on an instruction in isolation is done in one pass.
+        traverser::visitor::for_each_instruction(
+            &mut (),
+            &self.ir.function_entries,
+            &|_, instruction| {
+                let (opcode, _result) = instruction.get_op_and_result(&self.ir.meta);
+                self.validate_struct_field_in_bounds(opcode);
+            },
+        );
+    }
+
+    fn validate_struct_field_in_bounds(&self, opcode: &OpCode) {
+        let (struct_type, field_index) = match *opcode {
+            OpCode::AccessStructField(struct_id, field_index) => (
+                Some(self.ir.meta.get_type(self.ir.meta.get_pointee_type(struct_id.type_id))),
+                field_index,
+            ),
+            OpCode::ExtractStructField(struct_id, field_index) => {
+                (Some(self.ir.meta.get_type(struct_id.type_id)), field_index)
+            }
+            _ => (None, 0),
+        };
+        if let Some(Type::Struct(_, fields, _)) = struct_type
+            && field_index as usize >= fields.len()
+        {
+            self.on_error(format_args!(
+                "OpCode::Access/ExtractStructField on struct {:?} is accessing a field index {} \
+                 that is out of bounds",
+                struct_type, field_index
+            ));
         }
     }
 }
