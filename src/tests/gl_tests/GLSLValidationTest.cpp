@@ -15,6 +15,10 @@ using namespace angle;
 
 namespace
 {
+// Limits set in sh::InitBuiltInResources().  These are implementation limits that the tests need to
+// be aware of.
+constexpr uint32_t kMaxFunctionParameters = 255;
+
 class GLSLValidationTest : public CompilerTest
 {
   protected:
@@ -3490,21 +3494,19 @@ void main()
 TEST_P(GLSLValidationTest_ES3, LargeNumberOfFloat4Parameters)
 {
     std::stringstream vs;
-    // Note: SPIR-V doesn't allow more than 255 parameters to a function.
-    const unsigned int paramCount = (IsVulkan() || IsMetal()) ? 255u : 1024u;
 
     vs << R"(#version 300 es
 precision highp float;
 in vec4 a_vec;
 vec4 lotsOfVec4Parameters()";
-    for (unsigned int i = 0; i < paramCount - 1; ++i)
+    for (unsigned int i = 0; i < kMaxFunctionParameters - 1; ++i)
     {
         vs << "vec4 a" << i << ", ";
     }
     vs << R"(vec4 aLast)
 {
     vec4 sum = vec4(0.0, 0.0, 0.0, 0.0);)";
-    for (unsigned int i = 0; i < paramCount - 1; ++i)
+    for (unsigned int i = 0; i < kMaxFunctionParameters - 1; ++i)
     {
         vs << "    sum += a" << i << ";\n";
     }
@@ -3514,7 +3516,7 @@ vec4 lotsOfVec4Parameters()";
 void main()
 {
     gl_Position = lotsOfVec4Parameters()";
-    for (unsigned int i = 0; i < paramCount - 1; ++i)
+    for (unsigned int i = 0; i < kMaxFunctionParameters - 1; ++i)
     {
         vs << "a_vec, ";
     }
