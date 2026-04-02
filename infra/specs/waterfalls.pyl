@@ -307,16 +307,6 @@
           'gtest_tests': 'swangle_non_deqp_slow_flaky_gtests',
         },
       },
-      'win10-x86-swiftshader': {
-        'os_type': 'win',
-        'mixins': [
-          'win10_gce_gpu_pool',
-          'timeout_15m',
-        ],
-        'test_suites': {
-          'gtest_tests': 'swangle_gtests',
-        },
-      },
     },
   },
   {
