@@ -942,9 +942,23 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
     const auto &formatInfo = gl::GetSizedInternalFormatInfo(image->getInternalFormat());
 
     GLuint imageBytes = 0;
-    ANGLE_CHECK_GL_MATH(contextD3D, formatInfo.computeRowPitch(formatInfo.type, image->getWidth(),
-                                                               1, 0, &imageBytes));
-    imageBytes *= image->getHeight() * image->getDepth();
+    if (formatInfo.compressed)
+    {
+        ANGLE_CHECK_GL_MATH(
+            contextD3D, formatInfo.computeCompressedImageSize(
+                            gl::Extents(image->getWidth(), image->getHeight(), image->getDepth()),
+                            &imageBytes));
+    }
+    else
+    {
+        ANGLE_CHECK_GL_MATH(contextD3D, formatInfo.computeRowPitch(
+                                            formatInfo.type, image->getWidth(), 1, 0, &imageBytes));
+
+        angle::CheckedNumeric<GLuint> checkedImageBytes(imageBytes);
+        checkedImageBytes *= image->getHeight();
+        checkedImageBytes *= image->getDepth();
+        ANGLE_CHECK_GL_MATH(contextD3D, checkedImageBytes.AssignIfValid(&imageBytes));
+    }
 
     gl::PixelUnpackState zeroDataUnpackState;
     zeroDataUnpackState.alignment = 1;
