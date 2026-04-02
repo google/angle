@@ -666,7 +666,6 @@ RenderPassAttachment::RenderPassAttachment()
 }
 
 void RenderPassAttachment::init(ImageHelper *image,
-                                UniqueSerial imageSiblingSerial,
                                 gl::LevelIndex levelIndex,
                                 uint32_t layerIndex,
                                 uint32_t layerCount,
@@ -675,13 +674,10 @@ void RenderPassAttachment::init(ImageHelper *image,
     ASSERT(mImage == nullptr);
 
     mImage              = image;
-    mImageSiblingSerial = imageSiblingSerial;
     mLevelIndex         = levelIndex;
     mLayerIndex         = layerIndex;
     mLayerCount         = layerCount;
     mAspect             = aspect;
-
-    mImage->setRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment);
 }
 
 void RenderPassAttachment::reset()
@@ -747,16 +743,6 @@ void RenderPassAttachment::finalizeLoadStore(ErrorContext *context,
                                              RenderPassStoreOp *storeOp,
                                              bool *isInvalidatedOut)
 {
-    if (mAspect != VK_IMAGE_ASPECT_COLOR_BIT)
-    {
-        const RenderPassUsage readOnlyAttachmentUsage =
-            mAspect == VK_IMAGE_ASPECT_STENCIL_BIT ? RenderPassUsage::StencilReadOnlyAttachment
-                                                   : RenderPassUsage::DepthReadOnlyAttachment;
-        // Ensure we don't write to a read-only attachment. (ReadOnly -> !Write)
-        ASSERT(!mImage->hasRenderPassUsageFlag(readOnlyAttachmentUsage) ||
-               !HasResourceWriteAccess(mAccess));
-    }
-
     // If the attachment is invalidated, skip the store op.  If we are not loading or clearing the
     // attachment and the attachment has not been used, auto-invalidate it.
     const bool notLoaded = *loadOp == RenderPassLoadOp::DontCare && !hasUnresolveAttachment;
@@ -1552,22 +1538,22 @@ void RenderPassCommandBufferHelper::colorImagesDraw(gl::LevelIndex level,
                                                     uint32_t layerCount,
                                                     ImageHelper *image,
                                                     ImageHelper *resolveImage,
-                                                    UniqueSerial imageSiblingSerial,
                                                     PackedAttachmentIndex packedAttachmentIndex)
 {
     ASSERT(packedAttachmentIndex < mColorAttachmentsCount);
 
     image->onRenderPassAttach(mQueueSerial);
 
-    mColorAttachments[packedAttachmentIndex].init(image, imageSiblingSerial, level, layerStart,
-                                                  layerCount, VK_IMAGE_ASPECT_COLOR_BIT);
+    mColorAttachments[packedAttachmentIndex].init(image, level, layerStart, layerCount,
+                                                  VK_IMAGE_ASPECT_COLOR_BIT);
+    image->getRenderPassUsage().flags(this).set(RenderPassUsage::RenderTargetAttachment);
 
     if (resolveImage)
     {
         resolveImage->onRenderPassAttach(mQueueSerial);
-        mColorResolveAttachments[packedAttachmentIndex].init(resolveImage, imageSiblingSerial,
-                                                             level, layerStart, layerCount,
-                                                             VK_IMAGE_ASPECT_COLOR_BIT);
+        mColorResolveAttachments[packedAttachmentIndex].init(resolveImage, level, layerStart,
+                                                             layerCount, VK_IMAGE_ASPECT_COLOR_BIT);
+        resolveImage->getRenderPassUsage().flags(this).set(RenderPassUsage::RenderTargetAttachment);
     }
 }
 
@@ -1575,8 +1561,7 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
                                                            uint32_t layerStart,
                                                            uint32_t layerCount,
                                                            ImageHelper *image,
-                                                           ImageHelper *resolveImage,
-                                                           UniqueSerial imageSiblingSerial)
+                                                           ImageHelper *resolveImage)
 {
     ASSERT(!usesImage(*image));
     ASSERT(!resolveImage || !usesImage(*resolveImage));
@@ -1586,10 +1571,9 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
     // only insert layout change barrier once.
     image->onRenderPassAttach(mQueueSerial);
 
-    mDepthAttachment.init(image, imageSiblingSerial, level, layerStart, layerCount,
-                          VK_IMAGE_ASPECT_DEPTH_BIT);
-    mStencilAttachment.init(image, imageSiblingSerial, level, layerStart, layerCount,
-                            VK_IMAGE_ASPECT_STENCIL_BIT);
+    mDepthAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_DEPTH_BIT);
+    mStencilAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT);
+    image->getRenderPassUsage().flags(this).set(RenderPassUsage::RenderTargetAttachment);
 
     if (resolveImage)
     {
@@ -1598,10 +1582,11 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
         // multisampled-render-to-texture renderbuffers.
         resolveImage->onRenderPassAttach(mQueueSerial);
 
-        mDepthResolveAttachment.init(resolveImage, imageSiblingSerial, level, layerStart,
-                                     layerCount, VK_IMAGE_ASPECT_DEPTH_BIT);
-        mStencilResolveAttachment.init(resolveImage, imageSiblingSerial, level, layerStart,
-                                       layerCount, VK_IMAGE_ASPECT_STENCIL_BIT);
+        mDepthResolveAttachment.init(resolveImage, level, layerStart, layerCount,
+                                     VK_IMAGE_ASPECT_DEPTH_BIT);
+        mStencilResolveAttachment.init(resolveImage, level, layerStart, layerCount,
+                                       VK_IMAGE_ASPECT_STENCIL_BIT);
+        resolveImage->getRenderPassUsage().flags(this).set(RenderPassUsage::RenderTargetAttachment);
     }
 }
 
@@ -1613,11 +1598,8 @@ void RenderPassCommandBufferHelper::fragmentShadingRateImageRead(ImageHelper *im
     image->onRenderPassAttach(mQueueSerial);
 
     // Initialize RenderPassAttachment for fragment shading rate attachment.
-    mFragmentShadingRateAtachment.init(image, {}, gl::LevelIndex(0), 0, 1,
-                                       VK_IMAGE_ASPECT_COLOR_BIT);
-
-    image->resetRenderPassUsageFlags();
-    image->setRenderPassUsageFlag(RenderPassUsage::FragmentShadingRateReadOnlyAttachment);
+    mFragmentShadingRateAtachment.init(image, gl::LevelIndex(0), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT);
+    image->getRenderPassUsage().flags(this).set(RenderPassUsage::RenderTargetAttachment);
 }
 
 void RenderPassCommandBufferHelper::onColorAccess(PackedAttachmentIndex packedAttachmentIndex,
@@ -1693,14 +1675,9 @@ void RenderPassCommandBufferHelper::updateStartedRenderPassWithDepthStencilMode(
     ImageHelper *depthStencilImage = mDepthAttachment.getImage();
     if (depthStencilImage)
     {
-        if (readOnlyMode)
-        {
-            depthStencilImage->setRenderPassUsageFlag(readOnlyAttachmentUsage);
-        }
-        else
-        {
-            depthStencilImage->clearRenderPassUsageFlag(readOnlyAttachmentUsage);
-        }
+        RenderPassUsageFlags &renderPassUsageFlags =
+            depthStencilImage->getRenderPassUsage().flags(this);
+        renderPassUsageFlags.set(readOnlyAttachmentUsage, readOnlyMode);
     }
     // The depth/stencil resolve image is never in read-only mode
 }
@@ -1716,9 +1693,12 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
 
     // Do layout change.
     ImageAccess imageAccess;
-    if (image->usedByCurrentRenderPassAsAttachmentAndSampler(RenderPassUsage::ColorTextureSampler))
+    const RenderPassUsageFlags renderPassUsageFlags = image->getRenderPassUsage().getFlags(this);
+    if (renderPassUsageFlags[RenderPassUsage::RenderTargetAttachment] &&
+        renderPassUsageFlags[RenderPassUsage::ColorTextureSampler])
     {
-        // texture code already picked layout and inserted barrier
+        // Used by current renderPass as both attachment and sampler. Texture code should already
+        // picked layout and inserted barrier
         imageAccess = image->getCurrentImageAccess();
         ASSERT(imageAccess == ImageAccess::ColorWriteFragmentShaderFeedback ||
                imageAccess == ImageAccess::ColorWriteAllShadersFeedback);
@@ -1799,7 +1779,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
     if (isResolveImage)
     {
         // Note: the color image will have its flags reset after load/store ops are determined.
-        image->resetRenderPassUsageFlags();
+        image->getRenderPassUsage().reset(this);
     }
 }
 
@@ -1853,17 +1833,17 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayout(Context *con
     // Do depth stencil layout change.
     ImageAccess imageAccess;
     bool barrierRequired;
+    const RenderPassUsageFlags renderPassUsageFlags =
+        depthStencilImage->getRenderPassUsage().getFlags(this);
 
     const bool isDepthAttachmentAndSampler =
-        depthStencilImage->usedByCurrentRenderPassAsAttachmentAndSampler(
-            RenderPassUsage::DepthTextureSampler);
+        renderPassUsageFlags[RenderPassUsage::RenderTargetAttachment] &&
+        renderPassUsageFlags[RenderPassUsage::DepthTextureSampler];
     const bool isStencilAttachmentAndSampler =
-        depthStencilImage->usedByCurrentRenderPassAsAttachmentAndSampler(
-            RenderPassUsage::StencilTextureSampler);
-    const bool isReadOnlyDepth =
-        depthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::DepthReadOnlyAttachment);
-    const bool isReadOnlyStencil =
-        depthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::StencilReadOnlyAttachment);
+        renderPassUsageFlags[RenderPassUsage::RenderTargetAttachment] &&
+        renderPassUsageFlags[RenderPassUsage::StencilTextureSampler];
+    const bool isReadOnlyDepth   = renderPassUsageFlags[RenderPassUsage::DepthReadOnlyAttachment];
+    const bool isReadOnlyStencil = renderPassUsageFlags[RenderPassUsage::StencilReadOnlyAttachment];
     BarrierType barrierType = BarrierType::Event;
 
     if (isDepthAttachmentAndSampler || isStencilAttachmentAndSampler)
@@ -1943,10 +1923,10 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(Conte
                                 BarrierType::Event);
 
     // The resolve image can never be read-only.
-    ASSERT(!depthStencilResolveImage->hasRenderPassUsageFlag(
-        RenderPassUsage::DepthReadOnlyAttachment));
-    ASSERT(!depthStencilResolveImage->hasRenderPassUsageFlag(
-        RenderPassUsage::StencilReadOnlyAttachment));
+    ASSERT(!depthStencilResolveImage->getRenderPassUsage().getFlags(
+        this)[RenderPassUsage::DepthReadOnlyAttachment]);
+    ASSERT(!depthStencilResolveImage->getRenderPassUsage().getFlags(
+        this)[RenderPassUsage::StencilReadOnlyAttachment]);
     ASSERT(mDepthStencilAttachmentIndex != kAttachmentIndexInvalid);
     const PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
 
@@ -1960,64 +1940,69 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(Conte
         mStencilResolveAttachment.restoreContent();
     }
 
-    depthStencilResolveImage->resetRenderPassUsageFlags();
+    depthStencilResolveImage->getRenderPassUsage().reset(this);
 }
 
 void RenderPassCommandBufferHelper::finalizeFragmentShadingRateImageLayout(Context *context)
 {
     ImageHelper *image      = mFragmentShadingRateAtachment.getImage();
     ImageAccess imageAccess = ImageAccess::FragmentShadingRateAttachmentReadOnly;
-    ASSERT(image && image->valid());
+    ASSERT(image != nullptr);
+    ASSERT(image->valid());
     if (image->isReadBarrierNecessary(context->getRenderer(), imageAccess))
     {
         updateImageLayoutAndBarrier(context, image, VK_IMAGE_ASPECT_COLOR_BIT, imageAccess,
                                     BarrierType::Event);
     }
-    image->resetRenderPassUsageFlags();
+    image->getRenderPassUsage().reset(this);
 }
 
-void RenderPassCommandBufferHelper::finalizeImageLayout(Context *context,
-                                                        const ImageHelper *image,
-                                                        UniqueSerial imageSiblingSerial)
+bool RenderPassCommandBufferHelper::finalizeImageLayout(Context *context, const ImageHelper *image)
 {
-    if (image->hasRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment))
+    const RenderPassUsageFlags renderPassUsageFlags = image->getRenderPassUsage().getFlags(this);
+    if (!renderPassUsageFlags[RenderPassUsage::RenderTargetAttachment])
     {
-        for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorAttachmentsCount;
-             ++index)
+        return false;
+    }
+
+    for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorAttachmentsCount;
+         ++index)
+    {
+        if (mColorAttachments[index].hasImage(image))
         {
-            if (mColorAttachments[index].hasImage(image, imageSiblingSerial))
-            {
-                finalizeColorImageLayoutAndLoadStore(context, index);
-                mColorAttachments[index].reset();
-            }
-            else if (mColorResolveAttachments[index].hasImage(image, imageSiblingSerial))
-            {
-                finalizeColorImageLayout(context, mColorResolveAttachments[index].getImage(), index,
-                                         true);
-                mColorResolveAttachments[index].reset();
-            }
+            finalizeColorImageLayoutAndLoadStore(context, index);
+            mColorAttachments[index].reset();
+        }
+        else if (mColorResolveAttachments[index].hasImage(image))
+        {
+            finalizeColorImageLayout(context, mColorResolveAttachments[index].getImage(), index,
+                                     true);
+            mColorResolveAttachments[index].reset();
         }
     }
 
-    if (mDepthAttachment.hasImage(image, imageSiblingSerial))
+    if (mDepthAttachment.hasImage(image))
     {
         finalizeDepthStencilImageLayoutAndLoadStore(context);
         mDepthAttachment.reset();
         mStencilAttachment.reset();
     }
 
-    if (mDepthResolveAttachment.hasImage(image, imageSiblingSerial))
+    if (mDepthResolveAttachment.hasImage(image))
     {
         finalizeDepthStencilResolveImageLayout(context);
         mDepthResolveAttachment.reset();
         mStencilResolveAttachment.reset();
     }
 
-    if (mFragmentShadingRateAtachment.hasImage(image, imageSiblingSerial))
+    if (mFragmentShadingRateAtachment.hasImage(image))
     {
         finalizeFragmentShadingRateImageLayout(context);
         mFragmentShadingRateAtachment.reset();
     }
+
+    ASSERT(!image->getRenderPassUsage().getFlags(this)[RenderPassUsage::RenderTargetAttachment]);
+    return true;
 }
 
 void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
@@ -2029,9 +2014,16 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *conte
     RenderPassStoreOp depthStoreOp   = static_cast<RenderPassStoreOp>(dsOps.storeOp);
     RenderPassLoadOp stencilLoadOp   = static_cast<RenderPassLoadOp>(dsOps.stencilLoadOp);
     RenderPassStoreOp stencilStoreOp = static_cast<RenderPassStoreOp>(dsOps.stencilStoreOp);
+    const RenderPassUsageFlags renderPassUsageFlags =
+        mDepthAttachment.getImage()->getRenderPassUsage().getFlags(this);
 
     // This has to be called after layout been finalized
     ASSERT(dsOps.initialLayout != static_cast<uint16_t>(ImageAccess::Undefined));
+    // Ensure we don't write to a read-only attachment. (ReadOnly -> !Write)
+    ASSERT(!renderPassUsageFlags[RenderPassUsage::DepthReadOnlyAttachment] ||
+           !mDepthAttachment.hasWriteAccess());
+    ASSERT(!renderPassUsageFlags[RenderPassUsage::StencilReadOnlyAttachment] ||
+           !mStencilAttachment.hasWriteAccess());
 
     uint32_t currentCmdCount         = getRenderPassWriteCommandCount();
     bool isDepthInvalidated          = false;
@@ -2091,16 +2083,14 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *conte
     // If the image is being written to, mark its contents defined.
     // This has to be done after storeOp has been finalized.
     ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
-    if (!mDepthAttachment.getImage()->hasRenderPassUsageFlag(
-            RenderPassUsage::DepthReadOnlyAttachment))
+    if (!renderPassUsageFlags[RenderPassUsage::DepthReadOnlyAttachment])
     {
         if (depthStoreOp == RenderPassStoreOp::Store)
         {
             mDepthAttachment.restoreContent();
         }
     }
-    if (!mStencilAttachment.getImage()->hasRenderPassUsageFlag(
-            RenderPassUsage::StencilReadOnlyAttachment))
+    if (!renderPassUsageFlags[RenderPassUsage::StencilReadOnlyAttachment])
     {
         if (stencilStoreOp == RenderPassStoreOp::Store)
         {
@@ -2122,7 +2112,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayoutAndLoadStore(
                              packedAttachmentIndex, false);
     finalizeColorImageLoadStore(context, packedAttachmentIndex);
 
-    mColorAttachments[packedAttachmentIndex].getImage()->resetRenderPassUsageFlags();
+    mColorAttachments[packedAttachmentIndex].getImage()->getRenderPassUsage().reset(this);
 }
 
 void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(Context *context)
@@ -2131,7 +2121,7 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(
     finalizeDepthStencilLoadStore(context);
 
     ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
-    mDepthAttachment.getImage()->resetRenderPassUsageFlags();
+    mDepthAttachment.getImage()->getRenderPassUsage().reset(this);
 }
 
 void RenderPassCommandBufferHelper::collectRefCountedEventsGarbage(
@@ -2454,8 +2444,7 @@ void RenderPassCommandBufferHelper::addColorResolveAttachment(size_t colorIndexG
                                                               VkImageView view,
                                                               gl::LevelIndex level,
                                                               uint32_t layerStart,
-                                                              uint32_t layerCount,
-                                                              UniqueSerial imageSiblingSerial)
+                                                              uint32_t layerCount)
 {
     mFramebuffer.addColorResolveAttachment(colorIndexGL, view);
     mRenderPassDesc.packColorResolveAttachment(colorIndexGL);
@@ -2465,18 +2454,17 @@ void RenderPassCommandBufferHelper::addColorResolveAttachment(size_t colorIndexG
     ASSERT(mColorResolveAttachments[packedAttachmentIndex].getImage() == nullptr);
 
     image->onRenderPassAttach(mQueueSerial);
-    mColorResolveAttachments[packedAttachmentIndex].init(
-        image, imageSiblingSerial, level, layerStart, layerCount, VK_IMAGE_ASPECT_COLOR_BIT);
+    mColorResolveAttachments[packedAttachmentIndex].init(image, level, layerStart, layerCount,
+                                                         VK_IMAGE_ASPECT_COLOR_BIT);
+    image->getRenderPassUsage().flags(this).set(RenderPassUsage::RenderTargetAttachment);
 }
 
-void RenderPassCommandBufferHelper::addDepthStencilResolveAttachment(
-    ImageHelper *image,
-    VkImageView view,
-    VkImageAspectFlags aspects,
-    gl::LevelIndex level,
-    uint32_t layerStart,
-    uint32_t layerCount,
-    UniqueSerial imageSiblingSerial)
+void RenderPassCommandBufferHelper::addDepthStencilResolveAttachment(ImageHelper *image,
+                                                                     VkImageView view,
+                                                                     VkImageAspectFlags aspects,
+                                                                     gl::LevelIndex level,
+                                                                     uint32_t layerStart,
+                                                                     uint32_t layerCount)
 {
     mFramebuffer.addDepthStencilResolveAttachment(view);
     if ((aspects & VK_IMAGE_ASPECT_DEPTH_BIT) != 0)
@@ -2489,10 +2477,10 @@ void RenderPassCommandBufferHelper::addDepthStencilResolveAttachment(
     }
 
     image->onRenderPassAttach(mQueueSerial);
-    mDepthResolveAttachment.init(image, imageSiblingSerial, level, layerStart, layerCount,
-                                 VK_IMAGE_ASPECT_DEPTH_BIT);
-    mStencilResolveAttachment.init(image, imageSiblingSerial, level, layerStart, layerCount,
+    mDepthResolveAttachment.init(image, level, layerStart, layerCount, VK_IMAGE_ASPECT_DEPTH_BIT);
+    mStencilResolveAttachment.init(image, level, layerStart, layerCount,
                                    VK_IMAGE_ASPECT_STENCIL_BIT);
+    image->getRenderPassUsage().flags(this).set(RenderPassUsage::RenderTargetAttachment);
 }
 
 void RenderPassCommandBufferHelper::resumeTransformFeedback()
@@ -5493,7 +5481,7 @@ void ImageHelper::resetCachedProperties()
               VK_FORMAT_UNDEFINED);
     mYcbcrConversionDesc.reset();
     mCurrentSingleClearValue.reset();
-    mRenderPassUsageFlags.reset();
+    mRenderPassUsageFlags.clear();
     mVkImageCreateInfo = {};
 
     setEntireContentUndefined();
@@ -6083,33 +6071,10 @@ void ImageHelper::releaseImage(Renderer *renderer)
     setEntireContentUndefined();
 }
 
-void ImageHelper::releaseImageFromShareContexts(Renderer *renderer,
-                                                ContextVk *contextVk,
-                                                UniqueSerial imageSiblingSerial)
+void ImageHelper::releaseImage(ContextVk *contextVk)
 {
-    finalizeImageLayoutInShareContexts(renderer, contextVk, imageSiblingSerial);
     contextVk->addToPendingImageGarbage(mUse, mAllocationSize);
-    releaseImage(renderer);
-}
-
-void ImageHelper::finalizeImageLayoutInShareContexts(Renderer *renderer,
-                                                     ContextVk *contextVk,
-                                                     UniqueSerial imageSiblingSerial)
-{
-    if (contextVk && mImageSerial.valid())
-    {
-        for (auto context : contextVk->getShareGroup()->getContexts())
-        {
-            vk::GetImpl(context.second)->finalizeImageLayout(this, imageSiblingSerial);
-        }
-        if (mUseTileMemory)
-        {
-            for (auto context : contextVk->getShareGroup()->getContexts())
-            {
-                vk::GetImpl(context.second)->removeImageWithTileMemory(this);
-            }
-        }
-    }
+    releaseImage(contextVk->getRenderer());
 }
 
 void ImageHelper::releaseStagedUpdates(Renderer *renderer)
@@ -7013,38 +6978,6 @@ gl::Extents ImageHelper::getRotatedLevelExtents2D(LevelIndex levelVk) const
 bool ImageHelper::isDepthOrStencil() const
 {
     return getActualFormat().hasDepthOrStencilBits();
-}
-
-void ImageHelper::setRenderPassUsageFlag(RenderPassUsage flag)
-{
-    mRenderPassUsageFlags.set(flag);
-}
-
-void ImageHelper::clearRenderPassUsageFlag(RenderPassUsage flag)
-{
-    mRenderPassUsageFlags.reset(flag);
-}
-
-void ImageHelper::resetRenderPassUsageFlags()
-{
-    mRenderPassUsageFlags.reset();
-}
-
-bool ImageHelper::hasRenderPassUsageFlag(RenderPassUsage flag) const
-{
-    return mRenderPassUsageFlags.test(flag);
-}
-
-bool ImageHelper::hasAnyRenderPassUsageFlags() const
-{
-    return mRenderPassUsageFlags.any();
-}
-
-bool ImageHelper::usedByCurrentRenderPassAsAttachmentAndSampler(
-    RenderPassUsage textureSamplerUsage) const
-{
-    return mRenderPassUsageFlags[RenderPassUsage::RenderTargetAttachment] &&
-           mRenderPassUsageFlags[textureSamplerUsage];
 }
 
 bool ImageHelper::isReadBarrierNecessary(Renderer *renderer, ImageAccess newAccess) const
@@ -9764,7 +9697,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(
     // Because we are cloning this object to another object, we must finalize the layout if it is
     // being used by current renderpass as attachment. Otherwise we are copying the incorrect layout
     // since it is determined at endRenderPass time.
-    contextVk->finalizeImageLayout(this, {});
+    contextVk->getShareGroup()->finalizeImageLayoutInAllSharedContexts(this);
 
     std::unique_ptr<RefCounted<ImageHelper>> prevImage =
         std::make_unique<RefCounted<ImageHelper>>();
