@@ -96,13 +96,13 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     // like non-preprocessor tokens.
     WritePragma(sink, compileOptions, getPragma());
 
-    if (!RecordConstantPrecision(this, root, &getSymbolTable()))
-    {
-        return false;
-    }
-
     if (!compileOptions.useIR)
     {
+        if (!RecordConstantPrecision(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
+
         // anglebug.com/42265954: The ESSL spec has a bug with images as function arguments. The
         // recommended workaround is to inline functions that accept image arguments.
         if (shaderVer >= 310 && !MonomorphizeUnsupportedFunctions(
