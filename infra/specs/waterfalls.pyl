@@ -487,6 +487,16 @@
           'isolated_scripts': 'isolated_scripts_group_common',
         },
       },
+      'angle-win-x86-sws-rel': {
+        'os_type': 'win',
+        'mixins': [
+          'win10_gce_gpu_pool',
+          'timeout_15m',
+        ],
+        'test_suites': {
+          'gtest_tests': 'swangle_gtests',
+        },
+      },
     },
   },
 ]
