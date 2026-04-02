@@ -32,7 +32,10 @@ pub mod msl {
     pub mod ensure_loop_forward_progress;
 }
 #[cfg(angle_enable_spirv)]
-pub mod spirv {}
+pub mod spirv {
+    pub mod pass1;
+    mod vertex_instance_id;
+}
 #[cfg(angle_enable_wgsl)]
 pub mod wgsl {}
 

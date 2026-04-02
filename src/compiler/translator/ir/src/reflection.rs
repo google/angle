@@ -120,6 +120,9 @@ fn collect_built_in_variable(
     let name = match built_in {
         BuiltIn::InstanceID => "gl_InstanceID",
         BuiltIn::VertexID => "gl_VertexID",
+        BuiltIn::InstanceIndex | BuiltIn::VertexIndex => {
+            panic!("InternalError: gl_VertexIndex / gl_InstanceIndex are not expected in the input")
+        }
         BuiltIn::Position => "gl_Position",
         BuiltIn::PointSize => "gl_PointSize",
         BuiltIn::BaseVertex => "gl_BaseVertex",
@@ -282,6 +285,10 @@ fn collect_built_in_variable(
         BuiltIn::BaseVertex => {}
         BuiltIn::BaseInstance => {}
         BuiltIn::ViewIDOVR => {}
+
+        BuiltIn::InstanceIndex | BuiltIn::VertexIndex => {
+            panic!("InternalError: gl_VertexIndex / gl_InstanceIndex are not expected in the input")
+        }
     }
 }
 
@@ -300,7 +307,7 @@ fn collect_user_variable(
     // these specific names, and the collected names are later switched to gl_*.  Once all code
     // generation is done in IR, the correct name can be collected right here.
     if variable.name.source == NameSource::Internal
-        && !variable.decorations.has(Decoration::EmulatedMultiDrawBuiltIn)
+        && !has_decoration!(variable.decorations, Decoration::EmulatedMultiDrawBuiltIn)
     {
         return;
     }
@@ -881,7 +888,7 @@ fn new_common_shader_variable(
             | Decoration::Depth(_)
             | Decoration::EmulatedViewIDOut
             | Decoration::EmulatedViewIDIn
-            | Decoration::EmulatedMultiDrawBuiltIn => (),
+            | Decoration::EmulatedMultiDrawBuiltIn(_) => (),
         }
     }
 

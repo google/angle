@@ -61,7 +61,11 @@ if (angle_enable_msl) {
   ]
 }
 if (angle_enable_vulkan) {
-  angle_translator_ir_sources += [ "src/output/spirv.rs" ]
+  angle_translator_ir_sources += [
+    "src/output/spirv.rs",
+    "src/transform/spirv/pass1.rs",
+    "src/transform/spirv/vertex_instance_id.rs",
+  ]
 }
 if (angle_enable_wgpu) {
   angle_translator_ir_sources += [ "src/output/wgsl.rs" ]

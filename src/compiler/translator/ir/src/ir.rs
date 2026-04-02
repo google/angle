@@ -1602,6 +1602,9 @@ pub enum BuiltIn {
     // The BuiltIn enum value X corresponds to gl_X in GLSL.
     InstanceID,
     VertexID,
+    // InstanceIndex and VertexIndex are used internally to implement InstanceID and VertexID.
+    InstanceIndex,
+    VertexIndex,
     Position,
     PointSize,
     BaseVertex,
@@ -1808,6 +1811,14 @@ pub enum TessellationOrdering {
 
 #[derive(Copy, Clone, PartialEq)]
 #[cfg_attr(debug_assertions, derive(Debug))]
+pub enum EmulatedMultiDraw {
+    DrawID,
+    BaseVertex,
+    BaseInstance,
+}
+
+#[derive(Copy, Clone, PartialEq)]
+#[cfg_attr(debug_assertions, derive(Debug))]
 pub enum Decoration {
     // Corresponding to GLSL qualifiers with the same name
     Invariant,
@@ -1865,7 +1876,7 @@ pub enum Decoration {
     EmulatedViewIDOut,
     EmulatedViewIDIn,
     // Used internally to emulate multidraw built-ins.
-    EmulatedMultiDrawBuiltIn,
+    EmulatedMultiDrawBuiltIn(EmulatedMultiDraw),
 }
 
 // A set of decorations that only affect variables.  They are placed in a vector that's expected to
@@ -1903,15 +1914,15 @@ impl Decorations {
 //
 // has_decoration: Similar to Decorations::has, but for enums with data.  For example:
 //
-//     has_decoration!(decoration, Decoration::Location) // returns a bool
+//     has_decoration!(decorations, Decoration::Location) // returns a bool
 //
 // get_decoration: Get a decoration matching a variant.  For example:
 //
-//     get_decoration!(decoration, Decoration::Location) // returns Some(Location(l)) or None
+//     get_decoration!(decorations, Decoration::Location) // returns Some(Location(l)) or None
 //
 // get_decoration_value: Get the value inside a decoration matching a variant.  For example:
 //
-//     get_decoration_value!(decoration, Decoration::Location) // returns Some(l) or None
+//     get_decoration_value!(decorations, Decoration::Location) // returns Some(l) or None
 macro_rules! has_decoration {
     ($decorations:expr, $variant:path) => {
         $decorations.decorations.iter().any(|decoration| matches!(decoration, $variant(..)))

@@ -628,11 +628,14 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
                                     SpecConst *specConst,
                                     DriverUniform *driverUniforms)
 {
-    if (getShaderType() == GL_VERTEX_SHADER)
+    if (!compileOptions.useIR)
     {
-        if (!ShaderBuiltinsWorkaround(this, root, &getSymbolTable(), compileOptions))
+        if (getShaderType() == GL_VERTEX_SHADER)
         {
-            return false;
+            if (!ShaderBuiltinsWorkaround(this, root, &getSymbolTable(), compileOptions))
+            {
+                return false;
+            }
         }
     }
 
