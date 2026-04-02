@@ -472,7 +472,7 @@ void FramebufferVk::destroy(const gl::Context *context)
 
     if (mFragmentShadingRateImage.valid())
     {
-        contextVk->finalizeImageLayout(&mFragmentShadingRateImage, {});
+        contextVk->finalizeImageLayout(&mFragmentShadingRateImage);
 
         vk::Renderer *renderer = contextVk->getRenderer();
         mFragmentShadingRateImageView.release(renderer, mFragmentShadingRateImage.getResourceUse());
@@ -3534,12 +3534,15 @@ void FramebufferVk::clearWithCommand(ContextVk *contextVk,
     // Go through deferred clears and add them to the list of attachments to clear.  If any
     // attachment is unused, skip the clear.  clearWithLoadOp will follow and move the remaining
     // clears up to loadOp.
+    //
+    // If attachment is already finalized, we can't use loadOp to do clear.
     vk::PackedAttachmentIndex colorIndexVk(0);
     for (size_t colorIndexGL : mState.getColorAttachmentsMask())
     {
         if (clears->getColorMask().test(colorIndexGL))
         {
             if (renderPassCommands->hasAnyColorAccess(colorIndexVk) ||
+                renderPassCommands->hasColorAttachmentFinalized(colorIndexVk) ||
                 renderPassCommands->getRenderPassDesc().hasColorUnresolveAttachment(colorIndexGL) ||
                 !optimizeWithLoadOp)
             {
@@ -3575,6 +3578,7 @@ void FramebufferVk::clearWithCommand(ContextVk *contextVk,
     dsClearValue.depthStencil.stencil = clears->getStencilValue();
     if (clears->testDepth() &&
         (renderPassCommands->hasAnyDepthAccess() ||
+         renderPassCommands->hasDepthAttachmentFinalized() ||
          renderPassCommands->getRenderPassDesc().hasDepthUnresolveAttachment() ||
          !optimizeWithLoadOp))
     {
@@ -3587,6 +3591,7 @@ void FramebufferVk::clearWithCommand(ContextVk *contextVk,
 
     if (clears->testStencil() &&
         (renderPassCommands->hasAnyStencilAccess() ||
+         renderPassCommands->hasStencilAttachmentFinalized() ||
          renderPassCommands->getRenderPassDesc().hasStencilUnresolveAttachment() ||
          !optimizeWithLoadOp))
     {

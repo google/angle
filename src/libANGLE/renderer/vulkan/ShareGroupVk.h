@@ -107,6 +107,7 @@ class ShareGroupVk : public ShareGroupImpl
     uint32_t getCurrentFrameCount() const { return mCurrentFrameCount; }
 
     void imageWillFallbackFromTileMemory(vk::ImageHelper *image);
+    void finalizeImageLayoutInAllSharedContexts(vk::ImageHelper *image);
 
   private:
     angle::Result updateContextsPriority(ContextVk *contextVk, egl::ContextPriority newPriority);
