@@ -5759,6 +5759,68 @@ void main(void)
 #    define EMULATED_VAO_CONFIGS
 #endif
 
+class VertexAttributeShiftInstancedArrayDataWithOffsetTest : public VertexAttributeTest
+{};
+
+// Regression test (crbug.com/497928952) for heap-buffer-overflow in streamAttributes() when
+// shiftInstancedArrayDataWithOffset workaround is enabled.
+TEST_P(VertexAttributeShiftInstancedArrayDataWithOffsetTest,
+       ShiftInstancedArrayDataWithOffsetSlowPath)
+{
+    // The workaround is specifically for Mac Intel, but we can enable it for this test.
+    // It is only triggered for drawArraysInstanced with first > 0.
+    // The slow path is triggered when sourceStride != destStride.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_instanced_arrays") &&
+                       getClientMajorVersion() < 3);
+
+    constexpr char kVS[] = R"(attribute vec4 position;
+attribute vec4 instance;
+varying vec4 color;
+void main() {
+    gl_Position = position + instance * 0.001;
+    color = vec4(1, 0, 0, 1);
+})";
+    constexpr char kFS[] = R"(varying lowp vec4 color;
+void main() {
+    gl_FragColor = color;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    GLint posLoc  = glGetAttribLocation(program, "position");
+    GLint instLoc = glGetAttribLocation(program, "instance");
+
+    auto quadVertices = GetQuadVertices();
+    GLBuffer posBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, posBuf);
+    glBufferData(GL_ARRAY_BUFFER, quadVertices.size() * sizeof(Vector3), quadVertices.data(),
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(posLoc);
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    const int instanceCount = 1024;
+    const int srcStride     = 20;  // 20 bytes stride for vec4 (16 bytes) forces slow path
+    std::vector<uint8_t> instData(instanceCount * srcStride, 0);
+    GLBuffer instBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, instBuf);
+    glBufferData(GL_ARRAY_BUFFER, instData.size(), instData.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(instLoc);
+    glVertexAttribPointer(instLoc, 4, GL_FLOAT, GL_FALSE, srcStride, nullptr);
+    glVertexAttribDivisorANGLE(instLoc, 1);
+
+    const int first = 100;
+    // This will trigger the workaround and the overflow if the fix is not present.
+    glDrawArraysInstancedANGLE(GL_TRIANGLES, first, 6, instanceCount);
+    EXPECT_GL_NO_ERROR();
+}
+
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
+    VertexAttributeShiftInstancedArrayDataWithOffsetTest,
+    ES2_OPENGL().enable(Feature::ShiftInstancedArrayDataWithOffset),
+    ES2_OPENGLES().enable(Feature::ShiftInstancedArrayDataWithOffset),
+    ES3_OPENGL().enable(Feature::ShiftInstancedArrayDataWithOffset),
+    ES3_OPENGLES().enable(Feature::ShiftInstancedArrayDataWithOffset));
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     VertexAttributeTest,
     ES2_VULKAN().enable(Feature::ForceFallbackFormat),
