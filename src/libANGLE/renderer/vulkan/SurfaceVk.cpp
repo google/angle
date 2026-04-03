@@ -1757,7 +1757,7 @@ angle::Result WindowSurfaceVk::createSwapchain(vk::ErrorContext *context)
     }
 #endif
 
-    if (renderer->getFeatures().supportsSwapchainMaintenance1.enabled)
+    if (renderer->getFeatures().swapchainDeferredMemoryAllocation.enabled)
     {
         swapchainInfo.flags |= VK_SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT;
     }

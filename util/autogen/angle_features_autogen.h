@@ -459,6 +459,7 @@ enum class Feature
     SupportsYUVSamplerConversion,
     SupportsYuvTarget,
     SwapbuffersOnFlushOrFinishWithSingleBuffer,
+    SwapchainDeferredMemoryAllocation,
     SyncAllVertexArraysToDefault,
     SyncDefaultVertexArraysToDefault,
     SyncMonolithicPipelinesToBlobCache,
