@@ -39,7 +39,7 @@
 //     look up and checking that !is_dead_code_eliminated
 //   - If there's a cached "has side effect", that it's correct.
 //   - No operations should have entirely constant arguments, that should be folded (and
-//     transformations shouldn't retintroduce it)
+//     transformations shouldn't reintroduce it)
 //   - Catch misuse of built-in names.
 //   - Precision is not applied to types that don't are not applicable.  It _is_ applied to types
 //     that are applicable (including uniforms and samplers for example).  Needs to work to make
@@ -408,7 +408,7 @@ impl<'a> Validator<'a> {
         for variable in &block.variables {
             if variable.id >= self.max_variable_count {
                 self.on_error(format_args!(
-                    "invalid variable id {} found in block variabls",
+                    "invalid variable id {} found in block variables",
                     variable.id
                 ));
             }
@@ -1556,6 +1556,13 @@ impl<'a> Validator<'a> {
                 "OpCode::Access/ExtractStructField on struct {:?} is accessing a field index {} \
                  that is out of bounds",
                 struct_type, field_index
+            ));
+        } else if let Some(non_struct_type) = struct_type
+            && !matches!(non_struct_type, Type::Struct(_, _, _))
+        {
+            self.on_error(format_args!(
+                "OpCode::Access/ExtractStructField expects a struct type, got {:?}",
+                non_struct_type
             ));
         }
     }
