@@ -303,6 +303,13 @@ bool TextureD3D::shouldUseSetData(const ImageD3D *image) const
         return false;
     }
 
+    // Emulated RGBX/BGRX formats must always use the slow path to ensure the alpha channel is set
+    // to 1.0.
+    if (gl::IsRGBXOrBGRXFormat(internalFormat.sizedInternalFormat))
+    {
+        return false;
+    }
+
     // TODO(jmadill): Handle compressed internal formats
     return (mTexStorage && !internalFormat.compressed);
 }

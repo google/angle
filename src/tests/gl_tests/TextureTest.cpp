@@ -12,7 +12,9 @@
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
+#include <cstdint>
 #include <limits>
+#include <vector>
 
 using namespace angle;
 
@@ -491,6 +493,9 @@ void main()
 
     void testCopyImage(const APIExtensionVersion usedExtension);
     void testCopyImageDepthStencil(const APIExtensionVersion usedExtension);
+
+    void InternalFormatNotEnabledHelper(GLenum internalFormat, GLenum uploadFormat);
+    void TextureUploadPBOHelper(GLenum internalFormat, GLenum uploadFormat);
 };
 
 class MultisampleTexture2DTestES31 : public Texture2DTest
@@ -7150,6 +7155,98 @@ void Texture2DTestES3::testCopyImageDepthStencil(const APIExtensionVersion usedE
     ASSERT_GL_NO_ERROR();
 }
 
+void Texture2DTestES3::InternalFormatNotEnabledHelper(GLenum internalFormat, GLenum uploadFormat)
+{
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 1, 1, 0, uploadFormat, GL_UNSIGNED_BYTE,
+                 nullptr);
+    GLenum error = glGetError();
+    EXPECT_NE(static_cast<GLenum>(GL_NONE), error) << "internalFormat: " << internalFormat;
+
+    glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, 1, 1);
+    error = glGetError();
+    EXPECT_NE(static_cast<GLenum>(GL_NONE), error) << "internalFormat: " << internalFormat;
+}
+
+void Texture2DTestES3::TextureUploadPBOHelper(GLenum internalFormat, GLenum uploadFormat)
+{
+    constexpr GLint kWidth  = 16;
+    constexpr GLint kHeight = 16;
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, kWidth, kHeight);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a PBO with size matching the upload format.
+    GLsizeiptr pixelBytes = 3;
+    GLsizeiptr pboSize    = kWidth * pixelBytes * kHeight;
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+
+    // Initialize the PBO with unique colors.
+    std::vector<uint8_t> pboData(pboSize);
+    for (GLsizeiptr i = 0; i < pboSize; i++)
+    {
+        pboData[i] = static_cast<uint8_t>(i % 255);
+    }
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, pboSize, pboData.data(), GL_STATIC_DRAW);
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, uploadFormat, GL_UNSIGNED_BYTE,
+                    nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Read back the texture to verify the data.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    std::vector<GLColor> readback(kWidth * kHeight);
+    glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, readback.data());
+    ASSERT_GL_NO_ERROR();
+
+    for (int y = 0; y < kHeight; y++)
+    {
+        for (int x = 0; x < kWidth; x++)
+        {
+            size_t pixelIndex = y * kWidth + x;
+            size_t pboIndex   = pixelIndex * pixelBytes;
+
+            switch (internalFormat)
+            {
+                case GL_RGBX8_ANGLE:
+                case GL_RGBX8_SRGB_ANGLEX:
+                    EXPECT_EQ(readback[pixelIndex].R, pboData[pboIndex + 0])
+                        << "at " << x << ", " << y;
+                    EXPECT_EQ(readback[pixelIndex].G, pboData[pboIndex + 1])
+                        << "at " << x << ", " << y;
+                    EXPECT_EQ(readback[pixelIndex].B, pboData[pboIndex + 2])
+                        << "at " << x << ", " << y;
+                    break;
+
+                case GL_BGRX8_ANGLEX:
+                case GL_BGRX8_SRGB_ANGLEX:
+                    // Upload is GL_BGR_EXT so pboData has [B, G, R]
+                    EXPECT_EQ(readback[pixelIndex].R, pboData[pboIndex + 2])
+                        << "at " << x << ", " << y;
+                    EXPECT_EQ(readback[pixelIndex].G, pboData[pboIndex + 1])
+                        << "at " << x << ", " << y;
+                    EXPECT_EQ(readback[pixelIndex].B, pboData[pboIndex + 0])
+                        << "at " << x << ", " << y;
+                    break;
+                default:
+                    UNREACHABLE();
+            }
+            // sRGB formats might have conversion errors, so we primarily check they didn't
+            // crash.
+            EXPECT_EQ(readback[pixelIndex].A, 255) << "at " << x << ", " << y;
+        }
+    }
+}
+
 // Test basic GL_EXT_copy_image copy with a depth/stencil texture
 TEST_P(Texture2DTestES3, CopyImageEXTDepthStencil)
 {
@@ -8788,6 +8885,46 @@ TEST_P(Texture2DTestES3, TextureRGBImplicitAlpha1)
     EXPECT_PIXEL_ALPHA_EQ(0, 0, 255);
 }
 
+// Test that GL_RGBX8_ANGLE results in GL_INVALID_ENUM if the extensions are not enabled.
+TEST_P(Texture2DTestES3, InternalFormatNotEnabled_RGBX8_ANGLE)
+{
+    // Note: This is the opposite of the usual test for extension. We only run the test
+    // if the extension is NOT available.
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
+    InternalFormatNotEnabledHelper(GL_RGBX8_ANGLE, GL_RGB);
+}
+
+// Test that GL_RGBX8_SRGB_ANGLEX results in GL_INVALID_ENUM if the extensions are not enabled.
+TEST_P(Texture2DTestES3, InternalFormatNotEnabled_RGBX8_SRGB_ANGLEX)
+{
+    // Note: This is the opposite of the usual test for extension. We only run the test
+    // if both extensions are NOT available. If neither is available, or if one both not
+    // both are available, then we need to test the format can't be used.
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format") &&
+                       IsGLExtensionEnabled("GL_EXT_sRGB"));
+    InternalFormatNotEnabledHelper(GL_RGBX8_SRGB_ANGLEX, GL_RGB);
+}
+
+// Test that GL_BGRX8_ANGLEX results in GL_INVALID_ENUM if the extensions are not enabled.
+TEST_P(Texture2DTestES3, InternalFormatNotEnabled_BGRX8_ANGLEX)
+{
+    // Note: This is the opposite of the usual test for extension. We only run the test
+    // if the extension is NOT available.
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888"));
+    InternalFormatNotEnabledHelper(GL_BGRX8_ANGLEX, GL_BGR_EXT);
+}
+
+// Test that GL_BGRX8_SRGB_ANGLEX results in GL_INVALID_ENUM if the extensions are not enabled.
+TEST_P(Texture2DTestES3, InternalFormatNotEnabled_BGRX8_SRGB_ANGLEX)
+{
+    // Note: This is the opposite of the usual test for extension. We only run the test
+    // if both extensions are NOT available. If neither is available, or if one both not
+    // both are available, then we need to test the format can't be used.
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888") &&
+                       IsGLExtensionEnabled("GL_EXT_sRGB"));
+    InternalFormatNotEnabledHelper(GL_BGRX8_SRGB_ANGLEX, GL_BGR_EXT);
+}
+
 // When sampling a texture without an alpha channel, "1" is returned as the alpha value.
 // ES 3.0.4 table 3.24
 TEST_P(Texture2DTestES3, TextureRGBXImplicitAlpha1)
@@ -8901,6 +9038,84 @@ TEST_P(Texture2DTestES3, TextureRGBXDownload)
         }
     }
     ASSERT_GL_NO_ERROR();
+}
+
+// Regression test for a bug where D3D11 backend incorrectly computes the source row pitch
+// for emulated RGBX/BGRX textures during TexSubImage2D uploads from a PBO.
+TEST_P(Texture2DTestES3, TextureUploadPBO_RGBX8_ANGLE)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
+    TextureUploadPBOHelper(GL_RGBX8_ANGLE, GL_RGB);
+}
+
+// Regression test for a bug where D3D11 backend incorrectly computes the source row pitch
+// for emulated RGBX/BGRX textures during TexSubImage2D uploads from a PBO.
+TEST_P(Texture2DTestES3, TextureUploadPBO_RGBX8_SRGB_ANGLEX)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_sRGB"));
+    TextureUploadPBOHelper(GL_RGBX8_SRGB_ANGLEX, GL_RGB);
+}
+
+// Test that GL_RGBX8_ANGLE can be read back into a PBO.
+TEST_P(Texture2DTestES3, TextureRGBXReadPBO)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
+
+    constexpr GLint kWidth  = 16;
+    constexpr GLint kHeight = 16;
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBX8_ANGLE, kWidth, kHeight);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Clear to a unique color.
+    GLColor clearColor(10, 20, 30, 40);
+    glClearColor(clearColor.R / 255.0f, clearColor.G / 255.0f, clearColor.B / 255.0f,
+                 clearColor.A / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // RGBX8 means alpha should be 255.
+    GLColor expectedColor(clearColor.R, clearColor.G, clearColor.B, 255);
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_PACK_BUFFER, kWidth * kHeight * 4, nullptr, GL_STREAM_READ);
+    ASSERT_GL_NO_ERROR();
+
+    // Read back as GL_RGBA.
+    glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    void *ptr = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kWidth * kHeight * 4, GL_MAP_READ_BIT);
+    ASSERT_NE(ptr, nullptr);
+    const GLColor *colors = reinterpret_cast<const GLColor *>(ptr);
+    for (int i = 0; i < kWidth * kHeight; i++)
+    {
+        EXPECT_EQ(colors[i], expectedColor) << "at index " << i;
+    }
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+
+    // Read back as GL_RGBX8_ANGLE.
+    glReadPixels(0, 0, kWidth, kHeight, GL_RGBX8_ANGLE, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    ptr = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kWidth * kHeight * 4, GL_MAP_READ_BIT);
+    ASSERT_NE(ptr, nullptr);
+    colors = reinterpret_cast<const GLColor *>(ptr);
+    for (int i = 0; i < kWidth * kHeight; i++)
+    {
+        EXPECT_EQ(colors[i], expectedColor) << "at index " << i;
+    }
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
 }
 
 // When sampling a texture without an alpha channel, "1" is returned as the alpha value.
