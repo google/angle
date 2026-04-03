@@ -35,7 +35,7 @@
 //   - If conditions are boolean: validate_if_condition_is_bool()
 
 // TODO(http://anglebug.com/349994211): to validate:
-//   - Referenced IDs are not dead-code-eliminated: Checking against max_*_count can be paird with a
+//   - Referenced IDs are not dead-code-eliminated: Checking against max_*_count can be paired with a
 //     look up and checking that !is_dead_code_eliminated
 //   - If there's a cached "has side effect", that it's correct.
 //   - No operations should have entirely constant arguments, that should be folded (and
@@ -408,7 +408,7 @@ impl<'a> Validator<'a> {
         for variable in &block.variables {
             if variable.id >= self.max_variable_count {
                 self.on_error(format_args!(
-                    "invalid variable id {} found in block variabls",
+                    "invalid variable id {} found in block variables",
                     variable.id
                 ));
             }
@@ -1286,7 +1286,7 @@ impl<'a> Validator<'a> {
                 if current_block.case_blocks.is_empty() {
                     self.on_error(format_args!(
                         "OpCode::Switch is missing a valid target. Current block should contain \
-                         at lease 1 case_block"
+                         at least 1 case_block"
                     ));
                 }
                 if current_block.merge_block.is_none() {
@@ -1452,7 +1452,7 @@ impl<'a> Validator<'a> {
     }
 
     fn validate_no_branch_in_the_middle_of_block_instructions(&self, block: &Block) {
-        for instruction in &block.instructions[0..block.instructions.len() - 1] {
+        for instruction in &block.instructions[0..block.instructions.len().saturating_sub(1)] {
             if instruction.is_branch() {
                 self.on_error(format_args!(
                     "branch instruction is only allowed in the last instruction in the block"
@@ -1566,7 +1566,7 @@ impl<'a> Validator<'a> {
                 if condition.type_id != TYPE_ID_BOOL =>
             {
                 self.on_error(format_args!(
-                    "invalid If/LoopIf instruction: {:?}, consition is not a boolean: {:?}",
+                    "invalid If/LoopIf instruction: {:?}, condition is not a boolean: {:?}",
                     opcode, condition.type_id
                 ));
             }
