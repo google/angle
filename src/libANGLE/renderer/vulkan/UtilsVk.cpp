@@ -4284,10 +4284,10 @@ angle::Result UtilsVk::transCodeEtcToBc(ContextVk *contextVk,
 
     ASSERT(dstImage->getType() != VK_IMAGE_TYPE_1D && dstImage->getType() != VK_IMAGE_TYPE_3D);
 
-    GLuint sliceTexels = (copyRegion->bufferRowLength / info.compressedBlockWidth) *
+    size_t sliceTexels = static_cast<size_t>(copyRegion->bufferRowLength / info.compressedBlockWidth) *
                          (copyRegion->bufferImageHeight / info.compressedBlockHeight);
-    GLuint sliceSize     = sliceTexels * intendedFormat.pixelBytes;
-    GLuint texBufferSize = sliceSize * copyRegion->imageSubresource.layerCount;
+    size_t sliceSize     = sliceTexels * intendedFormat.pixelBytes;
+    size_t texBufferSize = sliceSize * copyRegion->imageSubresource.layerCount;
 
     // Make sure the texture buffer size not out of limit.
     // Usually the limit is more than 128M.
