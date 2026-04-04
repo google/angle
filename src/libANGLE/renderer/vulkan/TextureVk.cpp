@@ -3173,14 +3173,14 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk, const vk:
             &dstData, dstFormat.id));
 
         // Source and destination data is tightly packed
-        GLuint srcDataRowPitch = sourceBox.width * srcFormat.pixelBytes;
-        GLuint dstDataRowPitch = sourceBox.width * dstFormat.pixelBytes;
+        size_t srcDataRowPitch = static_cast<size_t>(sourceBox.width) * srcFormat.pixelBytes;
+        size_t dstDataRowPitch = static_cast<size_t>(sourceBox.width) * dstFormat.pixelBytes;
 
-        GLuint srcDataDepthPitch = srcDataRowPitch * sourceBox.height;
-        GLuint dstDataDepthPitch = dstDataRowPitch * sourceBox.height;
+        size_t srcDataDepthPitch = srcDataRowPitch * sourceBox.height;
+        size_t dstDataDepthPitch = dstDataRowPitch * sourceBox.height;
 
-        GLuint srcDataLayerPitch = srcDataDepthPitch * sourceBox.depth;
-        GLuint dstDataLayerPitch = dstDataDepthPitch * sourceBox.depth;
+        size_t srcDataLayerPitch = srcDataDepthPitch * sourceBox.depth;
+        size_t dstDataLayerPitch = dstDataDepthPitch * sourceBox.depth;
 
         rx::PixelReadFunction pixelReadFunction   = srcFormat.pixelReadFunction;
         rx::PixelWriteFunction pixelWriteFunction = dstFormat.pixelWriteFunction;
