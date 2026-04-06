@@ -2677,6 +2677,7 @@ impl IRMeta {
             let should_keep = keep(id, &self.variables[id.id as usize]);
             if !should_keep {
                 self.variables[id.id as usize].is_dead_code_eliminated = true;
+                self.variables_pending_zero_initialization.remove(&id);
             }
             should_keep
         });
@@ -2991,9 +2992,12 @@ impl IRMeta {
     }
 
     pub fn dead_code_eliminate_variable(&mut self, id: VariableId) {
-        // The variable is expected to already be removed from the IR, and this is just marking it
-        // as eliminated.
+        // Mark the variable as eliminated.
+        // Also remove it from pending initialization list.
+        // If the variable is referenced in other parts of the IR, it is expected to already be
+        // removed.
         self.variables[id.id as usize].is_dead_code_eliminated = true;
+        self.variables_pending_zero_initialization.remove(&id);
     }
     pub fn dead_code_eliminate_constant(&mut self, id: ConstantId) {
         // Don't dead-code-eliminate predefined constants, they may be referenced by future

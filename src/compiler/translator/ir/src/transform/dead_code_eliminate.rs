@@ -101,9 +101,13 @@ pub fn run(ir: &mut IR) -> HashSet<VariableId> {
                 entry,
                 &|state, block| {
                     // Prune local variables to exclude unreferenced variables.
-                    block
-                        .variables
-                        .retain(|variable_id| state.referenced.variables[variable_id.id as usize]);
+                    block.variables.retain(|variable_id| {
+                        let should_keep = state.referenced.variables[variable_id.id as usize];
+                        if !should_keep {
+                            state.ir_meta.dead_code_eliminate_variable(*variable_id);
+                        }
+                        should_keep
+                    });
                     block
                 },
                 &|_, block| block,

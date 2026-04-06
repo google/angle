@@ -18676,6 +18676,25 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that unused local variable is dead code eliminated in IR
+TEST_P(GLSLTest_ES3, UnusedLocalVariableEliminatedInIR)
+{
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+vec3 a = vec3(0.0);
+out vec4 color;
+void main()
+{
+    vec3 unusedVariable;
+    cross(max(vec3(0.0), reflect(dot(a, vec3(0.0)), 0.0)), vec3(0.0));
+})";
+
+    ANGLE_GL_PROGRAM(testProgram, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(testProgram, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test robustness of out-of-bounds lod in texelFetch
 TEST_P(WebGL2GLSLTest, TexelFetchLodOutOfBounds)
 {
