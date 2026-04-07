@@ -3116,6 +3116,73 @@ void main() {})";
     }
 }
 
+// Negative test using builtins that can only be used when redefining gl_PerVertex
+TEST_P(GLSLValidationTest_ES31, RedefinePerVertexMembersSeparately)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+
+    constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+#extension GL_EXT_clip_cull_distance : require
+
+layout(lines_adjacency, invocations = 3) in;
+layout(points, max_vertices = 16) out;
+
+vec4 gl_Position;
+float gl_ClipDistance[4];
+float gl_CullDistance[4];
+
+void main()
+{
+    for (int n = 0; n < 16; ++n)
+    {
+        gl_Position = vec4(n, 0.0, 0.0, 1.0);
+        EmitVertex();
+    }
+
+    EndPrimitive();
+})";
+
+    validateError(GL_GEOMETRY_SHADER, kGS,
+                  "'gl_Position' : redeclaration of built-in is not allowed");
+}
+
+// Negative test using builtins that can only be used when redefining gl_PerVertex but have the
+// builtins in a differently named struct
+TEST_P(GLSLValidationTest_ES31, RedefinePerVertexMembersInOtherBlock)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+
+    constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+#extension GL_EXT_clip_cull_distance : require
+
+layout(lines_adjacency, invocations = 3) in;
+layout(points, max_vertices = 16) out;
+
+out Block {
+    vec4 gl_Position;
+    float gl_ClipDistance[4];
+    float gl_CullDistance[4];
+};
+
+void main()
+{
+    for (int n = 0; n < 16; ++n)
+    {
+        gl_Position = vec4(n, 0.0, 0.0, 1.0);
+        EmitVertex();
+    }
+
+    EndPrimitive();
+})";
+
+    validateError(GL_GEOMETRY_SHADER, kGS,
+                  "'gl_Position' : redefinition in an invalid interface block");
+}
+
 // Regression test case of unary + constant folding of a void struct member.
 TEST_P(GLSLValidationTest, UnaryPlusOnVoidStructMemory)
 {
@@ -4976,6 +5043,114 @@ void main (void)
                   "GL_EXT_shader_framebuffer_fetch_non_coherent extension is used");
 }
 
+// Redeclare gl_LastFragColorARM with unexpected basic type
+TEST_P(GLSLValidationTest, FramebufferFetchLastFragColorWrongType)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch"));
+
+    constexpr char kFS[] =
+        R"(#extension GL_ARM_shader_framebuffer_fetch : require
+highp int gl_LastFragColorARM;
+
+void main (void)
+{
+    gl_FragColor = vec4(gl_LastFragColorARM);
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'gl_LastFragColorARM' : redeclaration of built-in with a different type");
+}
+
+// Redeclare gl_LastFragColorARM with unexpected arrayness
+TEST_P(GLSLValidationTest, FramebufferFetchLastFragColorArrayed)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch"));
+
+    constexpr char kFS[] =
+        R"(#extension GL_ARM_shader_framebuffer_fetch : require
+highp vec4 gl_LastFragColorARM[4];
+
+void main (void)
+{
+    gl_FragColor = vec4(gl_LastFragColorARM[0]);
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'gl_LastFragColorARM' : redeclaration of built-in with a different type");
+}
+
+// Redeclare gl_LastFragDepthARM with unexpected basic type
+TEST_P(GLSLValidationTest, FramebufferFetchLastFragDepthWrongType)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch_depth_stencil"));
+
+    constexpr char kFS[] =
+        R"(#extension GL_ARM_shader_framebuffer_fetch_depth_stencil : require
+highp int gl_LastFragDepthARM;
+
+void main (void)
+{
+    gl_FragColor = vec4(gl_LastFragDepthARM);
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'gl_LastFragDepthARM' : redeclaration of built-in with a different type");
+}
+
+// Redeclare gl_LastFragDepthARM with unexpected arrayness
+TEST_P(GLSLValidationTest, FramebufferFetchLastFragDepthArrayed)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch_depth_stencil"));
+
+    constexpr char kFS[] =
+        R"(#extension GL_ARM_shader_framebuffer_fetch_depth_stencil : require
+highp float gl_LastFragDepthARM[4];
+
+void main (void)
+{
+    gl_FragColor = vec4(gl_LastFragDepthARM[0]);
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'gl_LastFragDepthARM' : redeclaration of built-in with a different type");
+}
+
+// Redeclare gl_LastFragStencilARM with unexpected basic type
+TEST_P(GLSLValidationTest, FramebufferFetchLastFragStencilWrongType)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch_depth_stencil"));
+
+    constexpr char kFS[] =
+        R"(#extension GL_ARM_shader_framebuffer_fetch_depth_stencil : require
+highp float gl_LastFragStencilARM;
+
+void main (void)
+{
+    gl_FragColor = vec4(gl_LastFragStencilARM);
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'gl_LastFragStencilARM' : redeclaration of built-in with a different type");
+}
+
+// Redeclare gl_LastFragStencilARM with unexpected arrayness
+TEST_P(GLSLValidationTest, FramebufferFetchLastFragStencilArrayed)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch_depth_stencil"));
+
+    constexpr char kFS[] =
+        R"(#extension GL_ARM_shader_framebuffer_fetch_depth_stencil : require
+highp int gl_LastFragStencilARM[4];
+
+void main (void)
+{
+    gl_FragColor = vec4(gl_LastFragStencilARM[0]);
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'gl_LastFragStencilARM' : redeclaration of built-in with a different type");
+}
+
 // Ensure that a negative index after a comma generates an error.
 TEST_P(GLSLValidationTest_ES3, NegativeIndexAfterComma)
 {
@@ -6352,7 +6527,7 @@ uniform int gl_BaseVertex;
 void main() {
    gl_Position = vec4(float(gl_BaseVertex), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_BaseVertex' : reserved built-in name");
     }
 
     {
@@ -6361,7 +6536,7 @@ uniform int gl_BaseInstance;
 void main() {
    gl_Position = vec4(float(gl_BaseInstance), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_BaseInstance' : reserved built-in name");
     }
 
     {
@@ -6370,7 +6545,7 @@ void main() {
    int gl_BaseVertex = 0;
    gl_Position = vec4(float(gl_BaseVertex), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_BaseVertex' : reserved built-in name");
     }
 
     {
@@ -6379,7 +6554,7 @@ void main() {
    int gl_BaseInstance = 0;
    gl_Position = vec4(float(gl_BaseInstance), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_BaseInstance' : reserved built-in name");
     }
 
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_base_vertex_base_instance_shader_builtin"));
@@ -6392,7 +6567,7 @@ uniform int gl_BaseVertex;
 void main() {
    gl_Position = vec4(float(gl_BaseVertex), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_BaseVertex' : reserved built-in name");
     }
 
     {
@@ -6402,7 +6577,7 @@ uniform int gl_BaseInstance;
 void main() {
    gl_Position = vec4(float(gl_BaseInstance), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_BaseInstance' : reserved built-in name");
     }
 
     {
@@ -6412,7 +6587,7 @@ void main() {
    int gl_BaseVertex = 0;
    gl_Position = vec4(float(gl_BaseVertex), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_BaseVertex' : reserved built-in name");
     }
 
     {
@@ -6422,7 +6597,7 @@ void main() {
    int gl_BaseInstance = 0;
    gl_Position = vec4(float(gl_BaseInstance), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_BaseInstance' : reserved built-in name");
     }
 }
 
@@ -6438,7 +6613,7 @@ TEST_P(GLSLValidationDrawIDTest, DisallowsUserDefinedGLDrawID)
 void main() {
    gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_DrawID' : reserved built-in name");
     }
 
     {
@@ -6446,7 +6621,7 @@ void main() {
    int gl_DrawID = 0;
    gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_DrawID' : reserved built-in name");
     }
 
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_multi_draw"));
@@ -6458,7 +6633,7 @@ uniform int gl_DrawID;
 void main() {
    gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_DrawID' : reserved built-in name");
     }
 
     {
@@ -6467,7 +6642,7 @@ void main() {
    int gl_DrawID = 0;
    gl_Position = vec4(float(gl_DrawID), 0.0, 0.0, 1.0);
 })";
-        validateError(GL_VERTEX_SHADER, kVS, "'gl_' : reserved built-in name");
+        validateError(GL_VERTEX_SHADER, kVS, "'gl_DrawID' : reserved built-in name");
     }
 }
 
@@ -6933,7 +7108,7 @@ void main (void)
     testCompileNeedsExtensionDirective(
         GL_FRAGMENT_SHADER, kFS100Coherent, nullptr, "GL_EXT_shader_framebuffer_fetch", hasCoherent,
         hasCoherent ? hasNonCoherent ? "extension is disabled" : "extension is not supported"
-                    : "'gl_' : reserved built-in name",
+                    : "'gl_LastFragData' : reserved built-in name",
         hasCoherent ? hasNonCoherent ? "extension is disabled" : "extension is not supported"
                     : "extension is not supported");
     testCompileNeedsExtensionDirectiveGenericKeyword(
