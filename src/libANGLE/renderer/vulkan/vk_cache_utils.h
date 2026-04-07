@@ -197,8 +197,6 @@ class alignas(4) RenderPassDesc final
 
     // Set format for an enabled GL color attachment.
     void packColorAttachment(size_t colorIndexGL, angle::FormatID formatID);
-    // Mark a GL color attachment index as disabled.
-    void packColorAttachmentGap(size_t colorIndexGL);
     // The caller must pack the depth/stencil attachment last, which is packed right after the color
     // attachments (including gaps), i.e. with an index starting from |colorAttachmentRange()|.
     void packDepthStencilAttachment(angle::FormatID angleFormatID);

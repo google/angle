@@ -665,39 +665,36 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     gl::DrawBuffersArray<VkClearColorValue> adjustedClearColorValues;
     const gl::DrawBufferMask colorAttachmentMask = mState.getColorAttachmentsMask();
     const auto &colorRenderTargets               = mRenderTargetCache.getColors();
-    for (size_t colorIndexGL = 0; colorIndexGL < colorAttachmentMask.size(); ++colorIndexGL)
+    for (size_t colorIndexGL : colorAttachmentMask)
     {
-        if (colorAttachmentMask[colorIndexGL])
+        adjustedClearColorValues[colorIndexGL] = clearColorValue;
+
+        RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
+        ASSERT(colorRenderTarget);
+
+        if (colorRenderTarget->isYuvResolve())
         {
-            adjustedClearColorValues[colorIndexGL] = clearColorValue;
-
-            RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
-            ASSERT(colorRenderTarget);
-
-            if (colorRenderTarget->isYuvResolve())
+            // OpenGLES spec says "clear color should be defined in yuv color space and so
+            // floating point r, g, and b value will be mapped to corresponding y, u and v
+            // value" https://registry.khronos.org/OpenGL/extensions/EXT/EXT_YUV_target.txt.
+            // But vulkan spec says "Values in the G, B, and R channels of the color
+            // attachment will be written to the Y, CB, and CR channels of the external
+            // format image, respectively." So we have to adjust the component mapping from
+            // GL order to vulkan order.
+            adjustedClearColorValues[colorIndexGL].float32[0] = clearColorValue.float32[2];
+            adjustedClearColorValues[colorIndexGL].float32[1] = clearColorValue.float32[0];
+            adjustedClearColorValues[colorIndexGL].float32[2] = clearColorValue.float32[1];
+        }
+        else if (contextVk->getFeatures().adjustClearColorPrecision.enabled)
+        {
+            const angle::FormatID colorRenderTargetFormat =
+                colorRenderTarget->getImageForRenderPass().getActualFormatID();
+            if (colorRenderTargetFormat == angle::FormatID::R5G5B5A1_UNORM)
             {
-                // OpenGLES spec says "clear color should be defined in yuv color space and so
-                // floating point r, g, and b value will be mapped to corresponding y, u and v
-                // value" https://registry.khronos.org/OpenGL/extensions/EXT/EXT_YUV_target.txt.
-                // But vulkan spec says "Values in the G, B, and R channels of the color
-                // attachment will be written to the Y, CB, and CR channels of the external
-                // format image, respectively." So we have to adjust the component mapping from
-                // GL order to vulkan order.
-                adjustedClearColorValues[colorIndexGL].float32[0] = clearColorValue.float32[2];
-                adjustedClearColorValues[colorIndexGL].float32[1] = clearColorValue.float32[0];
-                adjustedClearColorValues[colorIndexGL].float32[2] = clearColorValue.float32[1];
-            }
-            else if (contextVk->getFeatures().adjustClearColorPrecision.enabled)
-            {
-                const angle::FormatID colorRenderTargetFormat =
-                    colorRenderTarget->getImageForRenderPass().getActualFormatID();
-                if (colorRenderTargetFormat == angle::FormatID::R5G5B5A1_UNORM)
-                {
-                    // Temporary workaround for https://issuetracker.google.com/292282210 to avoid
-                    // dithering being automatically applied
-                    adjustedClearColorValues[colorIndexGL] = adjustFloatClearColorPrecision(
-                        clearColorValue, angle::Format::Get(colorRenderTargetFormat));
-                }
+                // Temporary workaround for https://issuetracker.google.com/292282210 to avoid
+                // dithering being automatically applied
+                adjustedClearColorValues[colorIndexGL] = adjustFloatClearColorPrecision(
+                    clearColorValue, angle::Format::Get(colorRenderTargetFormat));
             }
         }
     }
@@ -2865,43 +2862,35 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
     // Color attachments.
     const auto &colorRenderTargets               = mRenderTargetCache.getColors();
     const gl::DrawBufferMask colorAttachmentMask = mState.getColorAttachmentsMask();
-    for (size_t colorIndexGL = 0; colorIndexGL < colorAttachmentMask.size(); ++colorIndexGL)
+    for (size_t colorIndexGL : colorAttachmentMask)
     {
-        if (colorAttachmentMask[colorIndexGL])
+        RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
+        ASSERT(colorRenderTarget);
+
+        if (colorRenderTarget->isYuvResolve())
         {
-            RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
-            ASSERT(colorRenderTarget);
-
-            if (colorRenderTarget->isYuvResolve())
-            {
-                // If this is YUV resolve target, we use resolveImage's format since image maybe
-                // nullptr
-                auto const &resolveImage = colorRenderTarget->getResolveImageForRenderPass();
-                mRenderPassDesc.packColorAttachment(colorIndexGL, resolveImage.getActualFormatID());
-                mRenderPassDesc.packYUVResolveAttachment(colorIndexGL);
-            }
-            else
-            {
-                // Account for attachments with colorspace override
-                angle::FormatID actualFormat =
-                    colorRenderTarget->getImageForRenderPass().getActualFormatID();
-                if (mAttachmentWithColorSpaceOverrideMask[colorIndexGL])
-                {
-                    actualFormat =
-                        colorRenderTarget->getColorspaceOverrideFormatForWrite(actualFormat);
-                }
-
-                mRenderPassDesc.packColorAttachment(colorIndexGL, actualFormat);
-                // Add the resolve attachment, if any.
-                if (colorRenderTarget->hasResolveAttachment())
-                {
-                    mRenderPassDesc.packColorResolveAttachment(colorIndexGL);
-                }
-            }
+            // If this is YUV resolve target, we use resolveImage's format since image maybe
+            // nullptr
+            auto const &resolveImage = colorRenderTarget->getResolveImageForRenderPass();
+            mRenderPassDesc.packColorAttachment(colorIndexGL, resolveImage.getActualFormatID());
+            mRenderPassDesc.packYUVResolveAttachment(colorIndexGL);
         }
         else
         {
-            mRenderPassDesc.packColorAttachmentGap(colorIndexGL);
+            // Account for attachments with colorspace override
+            angle::FormatID actualFormat =
+                colorRenderTarget->getImageForRenderPass().getActualFormatID();
+            if (mAttachmentWithColorSpaceOverrideMask[colorIndexGL])
+            {
+                actualFormat = colorRenderTarget->getColorspaceOverrideFormatForWrite(actualFormat);
+            }
+
+            mRenderPassDesc.packColorAttachment(colorIndexGL, actualFormat);
+            // Add the resolve attachment, if any.
+            if (colorRenderTarget->hasResolveAttachment())
+            {
+                mRenderPassDesc.packColorResolveAttachment(colorIndexGL);
+            }
         }
     }
 
