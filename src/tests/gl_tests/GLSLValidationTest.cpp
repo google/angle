@@ -2291,6 +2291,36 @@ void main(){f=0.;})";
                   "l-value required (can't modify an input \"f\")");
 }
 
+// Test no mangling collision in structs
+TEST_P(GLSLValidationTest, ManglingCollisionInStruct)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+struct A00B { vec4 y; };
+struct A    { float x; vec4 y; };
+
+void foo(A00B p);
+void foo(A p) {}
+
+void main() {
+    A00B v = A00B(vec4(0));
+    foo(v);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "Function foo() called by main() is undefined");
+}
+
+// Test no mangling collision in function parameters
+TEST_P(GLSLValidationTest, ManglingCollisionInFunctionParams)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+void fooA00B(vec4 y);
+void foo(float x, vec4 y) {}
+
+void main() {
+    fooA00B(vec4(0));
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "Function fooA00B() called by main() is undefined");
+}
+
 // Test that infinite loop with while(true) is rejected
 TEST_P(WebGL2GLSLValidationTest, InfiniteLoopWhileTrue)
 {
