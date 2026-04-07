@@ -687,11 +687,11 @@ void Texture::getBytes(ContextMtl *context,
 
     if (region.size.depth > 1)
     {
-        CHECK(dataOut.size() == bytesPer2DImage * region.size.depth);
+        RELEASE_ASSERT(dataOut.size() == bytesPer2DImage * region.size.depth);
     }
     else
     {
-        CHECK(dataOut.size() == bytesPerRow * region.size.height);
+        RELEASE_ASSERT(dataOut.size() == bytesPerRow * region.size.height);
     }
     [get() getBytes:dataOut.data()
           bytesPerRow:bytesPerRow
