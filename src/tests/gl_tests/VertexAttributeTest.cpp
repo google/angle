@@ -5431,6 +5431,49 @@ TEST_P(VertexAttributeTestES3, emptyBuffer)
     swapBuffers();
 }
 
+// Test that setting a large offset on glVertexAttribPointer doesn't OOB when going
+// through StoreStaticAttrib. See http://crbug.com/489369089
+TEST_P(VertexAttributeTestES3, storeStaticAttribWithLargeOffset)
+{
+    constexpr char vs2[] =
+        R"(#version 300 es
+            layout(location = 0) in vec3 a;
+            void main() {
+                gl_Position = vec4(a, 1.0);
+                gl_PointSize = 1.0;
+            })";
+    constexpr char fs[] =
+        R"(#version 300 es
+            precision mediump float;
+            layout(location = 0) out vec4 FragColor;
+            void main() {
+                FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+            })";
+
+    GLuint program2 = CompileProgram(vs2, fs);
+    GLBuffer buf;
+    glBindBuffer(GL_ARRAY_BUFFER, buf);
+    std::array<uint8_t, 256> data;
+    glBufferData(GL_ARRAY_BUFFER, data.size(), data.data(), GL_STATIC_DRAW);
+
+    // From the original bug report:
+    // GL_BYTE normalized size=3 triggers VERTEX_CONVERT_CPU on D3D11 (R8G8B8_SNORM),
+    // routing through StoreStaticAttrib instead of StoreDirectAttrib.
+    // offset 0x80000000 passes through the compromised renderer without validation.
+    // In StoreStaticAttrib, static_cast<int>(0x80000000) wraps to -2147483648,
+    // causing sourceData to point backward past the buffer allocation.
+    glVertexAttribPointer(0, 3, GL_BYTE, GL_TRUE, 3, reinterpret_cast<void *>(0x80000000));
+    glEnableVertexAttribArray(0);
+
+    glUseProgram(program2);
+    glDrawArrays(GL_POINTS, 0, 1);
+
+    swapBuffers();
+
+    std::array<uint8_t, 4> px;
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, px.data());
+}
+
 // This is a test for use with ANGLE's Capture/Replay.
 // It emulates a situation we see in some apps, where attribs are passed in but may not be used.
 // In particular, that test asks for all active attributes and iterates through each one. Before any
