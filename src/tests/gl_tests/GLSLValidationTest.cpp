@@ -2735,6 +2735,23 @@ void main() {
                   "'rr' : Size of declared variable exceeds implementation-defined limit");
 }
 
+// Test that too large array in UBO, where cast to signed int would produce negative sizes, does not
+// crash.
+TEST_P(WebGL2GLSLValidationTest, LargeArrayUintMaxSizeInUBO)
+{
+    constexpr char kFS[] = R"(#version 300 es
+uniform Block
+{
+    int rr[~1U];
+};
+out int o;
+void main() {
+    o = rr[1];
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'Block' : Size of declared variable exceeds implementation-defined limit");
+}
+
 // Test that too large color outputs are rejected
 TEST_P(WebGL2GLSLValidationTest, LargeColorOutput)
 {
