@@ -1461,6 +1461,26 @@ bool ValidImageDataSize(const Context *context,
     return true;
 }
 
+bool ValidImageAllocationSize(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              GLsizei width,
+                              GLsizei height,
+                              GLsizei depth,
+                              GLsizei samples,
+                              GLenum sizedInternalFormat)
+{
+    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(sizedInternalFormat);
+    GLuint allocationSize            = 0;
+    if (!formatInfo.computeImageSize(Extents(width, height, depth), samples, &allocationSize) ||
+        allocationSize > context->getLimitations().maxTextureBytes)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureSizeLimitation);
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidQueryType(const Context *context, QueryType queryType)
 {
     switch (queryType)
@@ -1695,6 +1715,13 @@ bool ValidateRenderbufferStorageParametersBase(const Context *context,
     if (std::max(width, height) > context->getCaps().maxRenderbufferSize)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kResourceMaxRenderbufferSize);
+        return false;
+    }
+
+    if (!ValidImageAllocationSize(context, entryPoint, width, height, 1, samples,
+                                  formatInfo.sizedInternalFormat))
+    {
+        // error already generated.
         return false;
     }
 
@@ -3960,6 +3987,13 @@ bool ValidateCopyTexImageParametersBase(const Context *context,
             static_cast<int>(height) > maxLevelDimension)
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kResourceMaxTextureSize);
+            return false;
+        }
+
+        if (!ValidImageAllocationSize(context, entryPoint, width, height, 1, 0,
+                                      formatInfo.sizedInternalFormat))
+        {
+            // Error already generated
             return false;
         }
     }
@@ -8120,7 +8154,8 @@ bool ValidateTexStorageMultisample(const Context *context,
                                    GLsizei samples,
                                    GLint internalFormat,
                                    GLsizei width,
-                                   GLsizei height)
+                                   GLsizei height,
+                                   GLsizei depth)
 {
     const Caps &caps = context->getCaps();
     if (width > caps.max2DTextureSize || height > caps.max2DTextureSize)
@@ -8169,6 +8204,14 @@ bool ValidateTexStorageMultisample(const Context *context,
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kImmutableTextureBound);
         return false;
     }
+
+    if (!ValidImageAllocationSize(context, entryPoint, width, height, depth, samples,
+                                  internalFormat))
+    {
+        // Error already generated.
+        return false;
+    }
+
     return true;
 }
 
@@ -8193,7 +8236,7 @@ bool ValidateTexStorage2DMultisampleBase(const Context *context,
     }
 
     return ValidateTexStorageMultisample(context, entryPoint, target, samples, internalFormat,
-                                         width, height);
+                                         width, height, 1);
 }
 
 bool ValidateTexStorage3DMultisampleBase(const Context *context,
@@ -8224,7 +8267,7 @@ bool ValidateTexStorage3DMultisampleBase(const Context *context,
     }
 
     return ValidateTexStorageMultisample(context, entryPoint, target, samples, internalformat,
-                                         width, height);
+                                         width, height, depth);
 }
 
 bool ValidateGetTexLevelParameterBase(const Context *context,

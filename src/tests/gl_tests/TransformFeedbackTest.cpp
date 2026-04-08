@@ -2530,7 +2530,7 @@ TEST_P(TransformFeedbackTest, BufferOutOfMemory)
 
     // It's not spec guaranteed to return OOM here.
     GLenum err = glGetError();
-    EXPECT_TRUE(err == GL_NO_ERROR || err == GL_OUT_OF_MEMORY);
+    EXPECT_TRUE(err == GL_NO_ERROR || err == GL_OUT_OF_MEMORY || err == GL_INVALID_OPERATION);
 
     glBeginTransformFeedback(GL_POINTS);
     glDrawArrays(GL_POINTS, 0, 5);

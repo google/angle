@@ -208,6 +208,10 @@ struct InternalFormat
 
     [[nodiscard]] bool computeCompressedImageSize(const Extents &size, GLuint *resultOut) const;
 
+    [[nodiscard]] bool computeImageSize(const Extents &size,
+                                        GLsizei samples,
+                                        GLuint *resultOut) const;
+
     [[nodiscard]] std::pair<GLuint, GLuint> getCompressedImageMinBlocks() const;
 
     [[nodiscard]] bool computeSkipBytes(GLenum formatType,

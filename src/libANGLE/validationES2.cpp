@@ -1751,6 +1751,15 @@ bool ValidateES2TexImageParametersBase(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureIsImmutable);
             return false;
         }
+
+        const gl::InternalFormat &internalFormatInfo =
+            gl::GetInternalFormatInfo(internalformat, type);
+        if (!ValidImageAllocationSize(context, entryPoint, width, height, 1, 0,
+                                      internalFormatInfo.sizedInternalFormat))
+        {
+            // Error already generated
+            return false;
+        }
     }
 
     // From GL_CHROMIUM_color_buffer_float_rgb[a]:
@@ -1876,6 +1885,12 @@ bool ValidateES2TexStorageParametersBase(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
             return false;
         }
+    }
+
+    if (!ValidImageAllocationSize(context, entryPoint, width, height, 1, 0, internalformat))
+    {
+        // Error already generated.
+        return false;
     }
 
     switch (internalformat)
@@ -3657,7 +3672,7 @@ bool ValidateBufferData(const Context *context,
     }
 
     const Limitations &limitations = context->getLimitations();
-    if (size > limitations.bufferSizeLimit)
+    if (static_cast<size_t>(size) > limitations.maxBufferBytes)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBufferSizeLimitation);
         return false;

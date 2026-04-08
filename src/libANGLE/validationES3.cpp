@@ -717,6 +717,16 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             return false;
         }
     }
+    else
+    {
+        // Validate total image size on non-sub image calls
+        if (!ValidImageAllocationSize(context, entryPoint, width, height, depth, 0,
+                                      actualFormatInfo.sizedInternalFormat))
+        {
+            // Error already generated
+            return false;
+        }
+    }
 
     GLenum sizeCheckFormat = isSubImage ? format : internalformat;
     if (!ValidImageDataSize(context, entryPoint, texType, width, height, depth, sizeCheckFormat,
@@ -1535,6 +1545,12 @@ bool ValidateES3TexStorageParametersBase(const Context *context,
 
     if (!ValidateES3TexStorageParametersFormat(context, entryPoint, target, levels, internalformat,
                                                width, height, depth))
+    {
+        // Error already generated.
+        return false;
+    }
+
+    if (!ValidImageAllocationSize(context, entryPoint, width, height, depth, 0, internalformat))
     {
         // Error already generated.
         return false;
@@ -3226,7 +3242,7 @@ bool ValidateCopyBufferSubData(const Context *context,
     }
 
     const Limitations &limitations = context->getLimitations();
-    if (size > limitations.bufferSizeLimit)
+    if (static_cast<size_t>(size) > limitations.maxBufferBytes)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBufferSizeLimitation);
         return false;

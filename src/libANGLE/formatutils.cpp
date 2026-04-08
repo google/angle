@@ -1901,6 +1901,25 @@ bool InternalFormat::computeCompressedImageSize(const Extents &size, GLuint *res
     return CheckedMathResult(bytes, resultOut);
 }
 
+bool InternalFormat::computeImageSize(const Extents &size, GLsizei samples, GLuint *resultOut) const
+{
+    if (paletted || compressed)
+    {
+        ASSERT(samples == 0);
+        return computeCompressedImageSize(size, resultOut);
+    }
+    else
+    {
+        ASSERT(samples >= 0);
+        CheckedNumeric<GLuint> checkedImageSize(size.width);
+        checkedImageSize *= size.height;
+        checkedImageSize *= size.depth;
+        checkedImageSize *= pixelBytes;
+        checkedImageSize *= std::max(samples, 1);
+        return CheckedMathResult(checkedImageSize, resultOut);
+    }
+}
+
 std::pair<GLuint, GLuint> InternalFormat::getCompressedImageMinBlocks() const
 {
     GLuint minBlockWidth  = 0;

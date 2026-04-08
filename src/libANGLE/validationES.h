@@ -87,6 +87,13 @@ bool ValidImageDataSize(const Context *context,
                         GLenum type,
                         const void *pixels,
                         GLsizei imageSize);
+bool ValidImageAllocationSize(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              GLsizei width,
+                              GLsizei height,
+                              GLsizei depth,
+                              GLsizei samples,
+                              GLenum sizedInternalFormat);
 
 bool ValidQueryType(const Context *context, QueryType queryType);
 
@@ -707,7 +714,8 @@ bool ValidateTexStorageMultisample(const Context *context,
                                    GLsizei samples,
                                    GLint internalFormat,
                                    GLsizei width,
-                                   GLsizei height);
+                                   GLsizei height,
+                                   GLsizei depth);
 
 bool ValidateTexStorage2DMultisampleBase(const Context *context,
                                          angle::EntryPoint entryPoint,
