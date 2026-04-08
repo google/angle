@@ -37,6 +37,8 @@
 //   - If conditions are boolean: validate_if_condition_is_bool()
 //   - No operations should have entirely constant arguments, that should be folded (and
 //     transformations shouldn't retintroduce it): validate_no_constant_foldable_instruction()
+//   - Case values are always ConstantId, and the Constant data type is int or uint:
+//     validate_case_values_are_int_or_uint_constants()
 
 // TODO(http://anglebug.com/349994211): to validate:
 //   - If there's a cached "has side effect", that it's correct.
@@ -44,7 +46,6 @@
 //   - Precision is not applied to types that don't are not applicable.  It _is_ applied to types
 //     that are applicable (including uniforms and samplers for example).  Needs to work to make
 //     sure precision is always assigned.
-//   - Case values are always ConstantId (int/uint only too?)
 //   - Variables are Pointers
 //   - Pointers only valid in the left arg of load/store/access/call
 //   - Arguments of OpCode that must be pointer type is indeed a pointer
@@ -1657,6 +1658,7 @@ impl<'a> Validator<'a> {
                 let (opcode, _result) = instruction.get_op_and_result(&self.ir.meta);
                 self.validate_struct_field_in_bounds(opcode);
                 self.validate_if_condition_is_bool(opcode);
+                self.validate_case_values_are_int_or_uint_constants(opcode);
                 self.validate_no_constant_foldable_instruction(opcode);
             },
         );
@@ -1696,5 +1698,26 @@ impl<'a> Validator<'a> {
             }
             _ => (),
         };
+    }
+
+    fn validate_case_values_are_int_or_uint_constants(&self, opcode: &OpCode) {
+        if let OpCode::Switch(_, case_values) = opcode {
+            for case_value_id in case_values.iter().flatten() {
+                self.validate_constant_id_is_in_bound_and_alive(
+                    *case_value_id,
+                    format_args!("switch case values of instruction {:?}", opcode),
+                );
+                let case_value_constant = &self.ir.meta.all_constants()[case_value_id.id as usize];
+                if case_value_constant.type_id != TYPE_ID_INT
+                    && case_value_constant.type_id != TYPE_ID_UINT
+                {
+                    self.on_error(format_args!(
+                        "invalid Switch instruction: {:?}, case value is not an integer or \
+                         unsigned integer constant: {:?}",
+                        opcode, case_value_id
+                    ));
+                }
+            }
+        }
     }
 }
