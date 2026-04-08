@@ -2819,6 +2819,8 @@ bool ValidateTextureFoveationParametersQCOM(const Context *context,
                                             GLfloat gainY,
                                             GLfloat foveaArea);
 
+// GL_QCOM_texture_lod_bias
+
 // GL_QCOM_tiled_rendering
 bool ValidateEndTilingQCOM(const Context *context,
                            angle::EntryPoint entryPoint,

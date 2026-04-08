@@ -1888,6 +1888,8 @@ ANGLE_EXPORT void GL_APIENTRY GL_TextureFoveationParametersQCOM(GLuint texture,
                                                                 GLfloat gainY,
                                                                 GLfloat foveaArea);
 
+// GL_QCOM_texture_lod_bias
+
 // GL_QCOM_tiled_rendering
 ANGLE_EXPORT void GL_APIENTRY GL_EndTilingQCOM(GLbitfield preserveMask);
 ANGLE_EXPORT void GL_APIENTRY

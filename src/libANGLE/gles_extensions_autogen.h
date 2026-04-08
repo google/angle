@@ -593,6 +593,9 @@ struct Extensions
     // GL_OES_texture_half_float_linear
     bool textureHalfFloatLinearOES = false;
 
+    // GL_QCOM_texture_lod_bias
+    bool textureLodBiasQCOM = false;
+
     // GL_EXT_texture_mirror_clamp_to_edge
     bool textureMirrorClampToEdgeEXT = false;
 

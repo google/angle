@@ -5965,6 +5965,8 @@ void GL_APIENTRY glTextureFoveationParametersQCOM(GLuint texture,
                                              gainY, foveaArea);
 }
 
+// GL_QCOM_texture_lod_bias
+
 // GL_QCOM_tiled_rendering
 void GL_APIENTRY glEndTilingQCOM(GLbitfield preserveMask)
 {

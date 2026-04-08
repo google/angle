@@ -1286,6 +1286,8 @@ EXPORTS
     ; GL_QCOM_texture_foveated
     glTextureFoveationParametersQCOM
 
+    ; GL_QCOM_texture_lod_bias
+
     ; GL_QCOM_tiled_rendering
     glEndTilingQCOM
     glStartTilingQCOM

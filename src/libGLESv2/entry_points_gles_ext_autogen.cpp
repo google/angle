@@ -20196,6 +20196,8 @@ void GL_APIENTRY GL_TextureFoveationParametersQCOM(GLuint texture,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+// GL_QCOM_texture_lod_bias
+
 // GL_QCOM_tiled_rendering
 void GL_APIENTRY GL_EndTilingQCOM(GLbitfield preserveMask)
 {

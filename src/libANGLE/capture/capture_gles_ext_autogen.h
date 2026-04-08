@@ -2814,6 +2814,8 @@ angle::CallCapture CaptureTextureFoveationParametersQCOM(const State &glState,
                                                          GLfloat gainY,
                                                          GLfloat foveaArea);
 
+// GL_QCOM_texture_lod_bias
+
 // GL_QCOM_tiled_rendering
 angle::CallCapture CaptureEndTilingQCOM(const State &glState,
                                         bool isCallValid,
