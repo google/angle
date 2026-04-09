@@ -5186,6 +5186,7 @@ void BufferHelper::recordReadBarrier(Context *context,
         eventBarriers->addEventMemoryBarrier(context->getRenderer(), mCurrentWriteEvent.getEvent(),
                                              mCurrentWriteEvent.getAccessFlags(),
                                              readPipelineStageFlags, readAccessType);
+        eventCollector->emplace_back(mCurrentWriteEvent.getEvent());
     }
 
     // Barrier against prior access that not tracked by VkEvent using pipelineBarrier.
