@@ -959,7 +959,6 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                                        GLsizei imageSize,
                                        const void *pixels)
 {
-
     TextureType texType = TextureTargetToType(target);
     if (!ValidImageSizeParameters(context, entryPoint, texType, level, width, height, 1,
                                   isSubImage))
@@ -1488,7 +1487,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     }
                     if (context->getExtensions().requiredInternalformatOES &&
                         context->getExtensions().textureType2101010REVEXT &&
-                        GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGB)
+                        type == GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGB)
                     {
                         nonEqualFormatsAllowed = true;
                     }
@@ -1502,7 +1501,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     }
                     if (context->getExtensions().requiredInternalformatOES &&
                         context->getExtensions().textureType2101010REVEXT &&
-                        GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGB)
+                        type == GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGB)
                     {
                         nonEqualFormatsAllowed = true;
                     }
