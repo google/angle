@@ -2148,10 +2148,6 @@ Renderer::Renderer()
       mMemoryAllocationTracker(MemoryAllocationTracker(this)),
       mMaxMemoryAllocationSize(0),
       mMaxBufferMemorySizeLimit(0),
-      mNativeVectorWidthDouble(0),
-      mNativeVectorWidthHalf(0),
-      mPreferredVectorWidthDouble(0),
-      mPreferredVectorWidthHalf(0),
       mMinRPWriteCommandCountToEarlySubmit(UINT32_MAX)
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
@@ -7155,19 +7151,6 @@ void Renderer::initOpenCLFeatures(const vk::ExtensionNameList &deviceExtensionNa
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsAmdShaderCoreProperties,
         ExtensionFound(VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME, deviceExtensionNames));
-
-    // Set limits to expose to OpenCL.
-    // This information cannot yet be queried from the Vulkan device.
-    if (isSamsung && mFeatures.supportsShaderFloat64.enabled)
-    {
-        mNativeVectorWidthDouble    = 1;
-        mPreferredVectorWidthDouble = 1;
-    }
-    if (isSamsung && mFeatures.supportsShaderFloat16.enabled)
-    {
-        mNativeVectorWidthHalf    = 2;
-        mPreferredVectorWidthHalf = 8;
-    }
 
     // The OpenCL extension cl_khr_subgroups needs support for
     // Basic - for subgroup size and related ops and barrier ops

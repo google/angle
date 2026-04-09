@@ -59,7 +59,7 @@ static constexpr size_t kMaxSyncValExtraProperties = 9;
 struct SkippedSyncvalMessage
 {
     const char *messageId;
-    bool isDueToNonConformantCoherentColorFramebufferFetch  = false;
+    bool isDueToNonConformantCoherentColorFramebufferFetch               = false;
     std::array<const char *, kMaxSyncValExtraProperties> extraProperties = {};
 };
 
@@ -708,11 +708,6 @@ class Renderer : angle::NonCopyable
 
     bool supportsAstcHdr() const;
 
-    uint32_t getNativeVectorWidthDouble() const { return mNativeVectorWidthDouble; }
-    uint32_t getNativeVectorWidthHalf() const { return mNativeVectorWidthHalf; }
-    uint32_t getPreferredVectorWidthDouble() const { return mPreferredVectorWidthDouble; }
-    uint32_t getPreferredVectorWidthHalf() const { return mPreferredVectorWidthHalf; }
-
     angle::Result onFrameBoundary(const gl::Context *contextGL);
 
     uint32_t getMinRenderPassWriteCommandCountToEarlySubmit() const
@@ -1125,12 +1120,6 @@ class Renderer : angle::NonCopyable
 
     // Record submitted queue serials not belongs to any context.
     vk::ResourceUse mSubmittedResourceUse;
-
-    // Potentially vendor & feature-specific device info.
-    uint32_t mNativeVectorWidthDouble;
-    uint32_t mNativeVectorWidthHalf;
-    uint32_t mPreferredVectorWidthDouble;
-    uint32_t mPreferredVectorWidthHalf;
 
     // The number of minimum write commands in the command buffer to trigger one submission of
     // pending commands at draw call time
