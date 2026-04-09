@@ -22,6 +22,7 @@
 // Types:
 //   - Validate that ImageType fields are valid in combination with ImageDimension:
 //     validate_image_types()
+//   - Variables are Pointers: validate_all_alive_variables_are_pointers()
 //
 // Control flow:
 //   - Branches must have the appropriate targets set (merge, trueblock for if, etc); every block
@@ -46,7 +47,6 @@
 //   - Precision is not applied to types that don't are not applicable.  It _is_ applied to types
 //     that are applicable (including uniforms and samplers for example).  Needs to work to make
 //     sure precision is always assigned.
-//   - Variables are Pointers
 //   - Pointers only valid in the left arg of load/store/access/call
 //   - Arguments of OpCode that must be pointer type is indeed a pointer
 //   - Loop blocks ends in the appropriate instructions.
@@ -264,6 +264,7 @@ impl<'a> Validator<'a> {
     // ANGLE IR validation entry point
     fn validate(&self) {
         self.validate_all_ids_are_present();
+        self.validate_all_alive_variables_are_pointers();
         self.validate_all_variables_are_declared_in_scope();
         self.validate_all_registers_are_declared_in_scope();
         self.validate_no_identical_types_with_different_ids();
@@ -858,6 +859,19 @@ impl<'a> Validator<'a> {
         println!("Internal error: Invalid ANGLE IR! {}", validation_error_msg);
         debug::dump(self.ir);
         panic!();
+    }
+
+    fn validate_all_alive_variables_are_pointers(&self) {
+        for alive_variable in
+            self.ir.meta.all_variables().iter().filter(|variable| !variable.is_dead_code_eliminated)
+        {
+            if !self.ir.meta.get_type(alive_variable.type_id).is_pointer() {
+                self.on_error(format_args!(
+                    "invalid variable: variable {:?} is not a pointer",
+                    alive_variable
+                ));
+            }
+        }
     }
 
     fn validate_all_variables_are_declared_in_scope(&self) {
