@@ -23,6 +23,7 @@
 //   - Validate that ImageType fields are valid in combination with ImageDimension:
 //     validate_image_types()
 //   - Variables are Pointers: validate_all_alive_variables_are_pointers()
+//   - No pointer->pointer type: validate_no_pointer_to_pointer_type()
 //
 // Control flow:
 //   - Branches must have the appropriate targets set (merge, trueblock for if, etc); every block
@@ -52,7 +53,6 @@
 //   - Loop blocks ends in the appropriate instructions.
 //   - Do blocks end in DoLoop (unless already terminated by something else, like Return)
 //   - Maximum one default case for Switch instructions.
-//   - No pointer->pointer type.
 //   - Interface variables with NameSource::Internal are unique.
 //   - NameSource::Internal names don't start with the user and temporary name prefixes (_u, t and f
 //     respectively).
@@ -265,6 +265,7 @@ impl<'a> Validator<'a> {
     fn validate(&self) {
         self.validate_all_ids_are_present();
         self.validate_all_alive_variables_are_pointers();
+        self.validate_no_pointer_to_pointer_type();
         self.validate_all_variables_are_declared_in_scope();
         self.validate_all_registers_are_declared_in_scope();
         self.validate_no_identical_types_with_different_ids();
@@ -869,6 +870,19 @@ impl<'a> Validator<'a> {
                 self.on_error(format_args!(
                     "invalid variable: variable {:?} is not a pointer",
                     alive_variable
+                ));
+            }
+        }
+    }
+
+    fn validate_no_pointer_to_pointer_type(&self) {
+        for data_type in self.ir.meta.all_types().iter().filter(|t| !t.is_dead_code_eliminated()) {
+            if data_type.is_pointer()
+                && self.ir.meta.get_type(data_type.get_element_type_id().unwrap()).is_pointer()
+            {
+                self.on_error(format_args!(
+                    "invalid type: type {:?} is a pointer to a pointer",
+                    data_type
                 ));
             }
         }
