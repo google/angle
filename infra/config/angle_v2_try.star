@@ -109,9 +109,6 @@ angle_linux_functional_cq_tester(
         "ci/angle-android-arm64-google-pixel6-rel",
     ],
     gn_args = "ci/angle-android-arm64-builder-rel",
-    # TODO(anglebug.com/475260235): Actually add to CQ once the CI builders are
-    # shown to work.
-    tryjob = try_.job(includable_only = True),
 )
 
 angle_linux_functional_cq_tester(
