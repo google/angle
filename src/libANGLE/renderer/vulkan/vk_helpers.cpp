@@ -1634,8 +1634,7 @@ void RenderPassCommandBufferHelper::fragmentShadingRateImageRead(ImageHelper *im
 
     // Initialize RenderPassAttachment for fragment shading rate attachment.
     mFragmentShadingRateAtachment.init(image, gl::LevelIndex(0), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT);
-    image->getRenderPassUsage().flags(this).set(
-        RenderPassUsage::FragmentShadingRateReadOnlyAttachment);
+    image->getRenderPassUsage().flags(this).set(RenderPassUsage::RenderTargetAttachment);
 }
 
 void RenderPassCommandBufferHelper::onColorAccess(PackedAttachmentIndex packedAttachmentIndex,
@@ -1983,7 +1982,8 @@ void RenderPassCommandBufferHelper::finalizeFragmentShadingRateImageLayout(Conte
 {
     ImageHelper *image      = mFragmentShadingRateAtachment.getImage();
     ImageAccess imageAccess = ImageAccess::FragmentShadingRateAttachmentReadOnly;
-    ASSERT(image && image->valid());
+    ASSERT(image != nullptr);
+    ASSERT(image->valid());
     if (image->isReadBarrierNecessary(context->getRenderer(), imageAccess))
     {
         updateImageLayoutAndBarrier(context, image, VK_IMAGE_ASPECT_COLOR_BIT, imageAccess,
