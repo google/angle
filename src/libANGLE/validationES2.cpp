@@ -241,7 +241,10 @@ bool IsValidCopyTextureSourceTarget(const Context *context, TextureType type)
     }
 }
 
-bool IsValidCopyTextureSourceLevel(const Context *context, TextureType type, GLint level)
+bool IsValidCopyTextureSourceLevel(const Context *context,
+                                   const Texture *texture,
+                                   TextureType type,
+                                   GLint level)
 {
     if (!ValidMipLevel(context, type, level))
     {
@@ -249,6 +252,12 @@ bool IsValidCopyTextureSourceLevel(const Context *context, TextureType type, GLi
     }
 
     if (level > 0 && context->getClientVersion() < ES_3_0)
+    {
+        return false;
+    }
+
+    if (level < 0 || static_cast<GLuint>(level) < texture->getBaseLevel() ||
+        static_cast<GLuint>(level) > texture->getMaxLevel())
     {
         return false;
     }
@@ -3287,7 +3296,7 @@ bool ValidateCopyTextureCHROMIUM(const Context *context,
     ASSERT(sourceType != TextureType::CubeMap);
     TextureTarget sourceTarget = NonCubeTextureTypeToTarget(sourceType);
 
-    if (!IsValidCopyTextureSourceLevel(context, sourceType, sourceLevel))
+    if (!IsValidCopyTextureSourceLevel(context, source, sourceType, sourceLevel))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidSourceTextureLevel);
         return false;
@@ -3403,7 +3412,7 @@ bool ValidateCopySubTextureCHROMIUM(const Context *context,
     ASSERT(sourceType != TextureType::CubeMap);
     TextureTarget sourceTarget = NonCubeTextureTypeToTarget(sourceType);
 
-    if (!IsValidCopyTextureSourceLevel(context, sourceType, sourceLevel))
+    if (!IsValidCopyTextureSourceLevel(context, source, sourceType, sourceLevel))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMipLevel);
         return false;
