@@ -61,7 +61,7 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle_v2_android",
         ),
         chromium_config = builder_config.chromium_config(
             config = "angle_v2_clang",
@@ -256,7 +256,7 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle_v2_android",
         ),
         chromium_config = builder_config.chromium_config(
             config = "angle_v2_clang",
@@ -280,7 +280,7 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle_v2_android",
         ),
         chromium_config = builder_config.chromium_config(
             config = "angle_v2_clang",
@@ -306,7 +306,7 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle_v2_android",
         ),
         chromium_config = builder_config.chromium_config(
             config = "angle_v2_clang",
@@ -330,7 +330,7 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle_v2_android",
         ),
         chromium_config = builder_config.chromium_config(
             config = "angle_v2_clang",
@@ -354,7 +354,7 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle_v2_android",
         ),
         chromium_config = builder_config.chromium_config(
             config = "angle_v2_clang",
