@@ -8413,7 +8413,7 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
         }
         else if (!stencilOnly)
         {
-            outputRowPitch = storageFormat.pixelBytes * glExtents.width;
+            outputRowPitch = static_cast<size_t>(glExtents.width) * storageFormat.pixelBytes;
         }
         else
         {
@@ -8438,7 +8438,9 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
             formatInfo.stencilBits > 0)
         {
             // Note: Stencil is always one byte
-            stencilAllocationSize = glExtents.width * glExtents.height * glExtents.depth;
+            stencilAllocationSize = static_cast<size_t>(glExtents.width) *
+                                    static_cast<size_t>(glExtents.height) *
+                                    static_cast<size_t>(glExtents.depth);
             allocationSize += stencilAllocationSize;
         }
     }
@@ -11470,7 +11472,8 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
 
     uint8_t *readPixelBuffer   = nullptr;
     VkDeviceSize stagingOffset = 0;
-    size_t allocationSize      = readFormat->pixelBytes * area.width * area.height;
+    size_t allocationSize =
+        static_cast<size_t>(area.width) * static_cast<size_t>(area.height) * readFormat->pixelBytes;
 
     ANGLE_TRY(contextVk->initBufferForImageCopy(stagingBuffer, allocationSize,
                                                 MemoryCoherency::CachedPreferCoherent,
