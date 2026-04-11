@@ -1413,7 +1413,8 @@ bool ValidImageDataSize(const Context *context,
     const Extents size(width, height, depth);
     const auto &unpack = context->getState().getUnpackState();
 
-    bool targetIs3D = texType == TextureType::_3D || texType == TextureType::_2DArray;
+    bool targetIs3D = texType == TextureType::_3D || texType == TextureType::_2DArray ||
+                      texType == TextureType::CubeMapArray;
     GLuint endByte  = 0;
     if (!formatInfo.computePackUnpackEndByte(type, size, unpack, targetIs3D, &endByte))
     {

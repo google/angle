@@ -14644,6 +14644,28 @@ TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexStorageInvalidInputs)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Tests copying from a PBO into a cube map array exceeding its size.
+TEST_P(TextureCubeTestES32, ValidateCubeMapArrayCopyExceedsPBOSize)
+{
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, 4 * 1024 * 1024 + 16, nullptr, GL_STATIC_DRAW);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, tex);
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 1024, 1024, 6);
+
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, 1024, 1024, 6, GL_RGBA, GL_UNSIGNED_BYTE,
+                    reinterpret_cast<const void *>(1));
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+    glFlush();
+
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, 1024, 1024, 6, GL_RGBA, GL_UNSIGNED_BYTE,
+                    nullptr);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+    glFlush();
+}
+
 // Verify that using negative texture base level and max level generates GL_INVALID_VALUE.
 TEST_P(Texture2DTestES3, NegativeTextureBaseLevelAndMaxLevel)
 {
