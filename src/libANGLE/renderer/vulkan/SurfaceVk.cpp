@@ -283,9 +283,8 @@ angle::Result LockSurfaceImpl(DisplayVk *displayVk,
 {
     const gl::InternalFormat &internalFormat =
         gl::GetSizedInternalFormatInfo(image->getActualFormat().glInternalFormat);
-    GLuint rowStride = image->getActualFormat().pixelBytes * width;
-    VkDeviceSize bufferSize =
-        (static_cast<VkDeviceSize>(rowStride) * static_cast<VkDeviceSize>(height));
+    VkDeviceSize rowStride = static_cast<VkDeviceSize>(image->getActualFormat().pixelBytes) * width;
+    VkDeviceSize bufferSize = rowStride * static_cast<VkDeviceSize>(height);
 
     if (!lockBufferHelper.valid() || (lockBufferHelper.getSize() != bufferSize))
     {
