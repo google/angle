@@ -1191,6 +1191,8 @@
 499129768 PIXEL10 GLES : Texture2DNorm16TestES3.ReadbackWithPBO/* = SKIP
 500569110 PIXEL10 GLES : MSRTTES3Test.UnresolveWithAndWithoutStencil/* = SKIP
 501584689 PIXEL10 GLES : MSRTTSRGBES3Test.Basic/ES3_OpenGLES_RobustResourceInit = SKIP
+489247643 PIXEL10 GLES : ImageTest.BindExternalTextureAsImage_R16_UINT/* = SKIP
+489247643 PIXEL10 GLES : ImageTest.BindExternalTextureAsImage_R16G16_UINT/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP
@@ -1267,6 +1269,8 @@
 500930576 PIXEL10 VULKAN : ReadPixelsTest.LargeTexture/* = SKIP
 497637277 PIXEL10 VULKAN : VulkanExternalImageTest.TextureFormatCompatChromiumNoStorageFd/* = SKIP
 42265693 PIXEL10 VULKAN : FramebufferFetchES31.MultiSampledWithSampleID/* = SKIP
+489247643 PIXEL10 VULKAN : ImageTest.BindExternalTextureAsImage_R16_UINT/* = SKIP
+489247643 PIXEL10 VULKAN : ImageTest.BindExternalTextureAsImage_R16G16_UINT/* = SKIP
 
 // Some Metal tests fail on iOS Intel simulator
 40096874 IOS METAL : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
