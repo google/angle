@@ -42,6 +42,9 @@
 //   - Case values are always ConstantId, and the Constant data type is int or uint:
 //     validate_case_values_are_int_or_uint_constants()
 //   - No duplicated case values for Switch opcode: validate_switch_has_unique_case_values()
+//   - Block inputs have MergeInput opcode, nothing else has that opcode:
+//     validate_merge_block_input_prerequisites(),
+//     validate_no_merge_input_opcode_in_block_instruction()
 
 // TODO(http://anglebug.com/349994211): to validate:
 //   - If there's a cached "has side effect", that it's correct.
@@ -61,7 +64,6 @@
 //   - blocks, those should always be Temporary.
 //   - No identity swizzles.
 //   - Type matches?
-//   - Block inputs have MergeInput opcode, nothing else has that opcode.
 //   - Block inputs are not pointers.  AST-ifier does not handle that.
 //   - Whatever else is in the AST validation currently.
 //   - Validate built-ins that accept an out or inout parameter, that the corresponding parameter is
@@ -1317,6 +1319,15 @@ impl<'a> Validator<'a> {
         }
     }
 
+    fn validate_no_merge_input_opcode_in_block_instruction(&self, opcode: &OpCode) {
+        if matches!(opcode, OpCode::MergeInput) {
+            self.on_error(format_args!(
+                "Invalid Block Instruction {:?}, MergeInput is only allowed in Block input",
+                opcode
+            ));
+        }
+    }
+
     fn validate_all_branch_instructions_have_valid_target(&self) {
         let mut block_meta_data_tracker = Vec::new();
         for entry in &self.ir.function_entries {
@@ -1632,6 +1643,13 @@ impl<'a> Validator<'a> {
         block: &Block,
         block_kind: traverser::BlockKind,
     ) {
+        // If the current block has any inputs, the corresponding instruction must be MergeInput
+        // OpCode
+        block.input.inspect(|input| {
+            if !matches!(self.ir.meta.get_instruction(input.id).op, OpCode::MergeInput) {
+                self.on_error(format_args!("Block inputs must have MergeInput OpCode"));
+            }
+        });
         if block.merge_block.as_ref().and_then(|merge_block| merge_block.input).is_some() {
             // merge_block with input is only allowed when current block ends with OpCode::If, and
             // "if true" block exists
@@ -1689,6 +1707,7 @@ impl<'a> Validator<'a> {
                 self.validate_case_values_are_int_or_uint_constants(opcode);
                 self.validate_switch_has_unique_case_values(opcode);
                 self.validate_no_constant_foldable_instruction(opcode);
+                self.validate_no_merge_input_opcode_in_block_instruction(opcode);
             },
         );
     }
