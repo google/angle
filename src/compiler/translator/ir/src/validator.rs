@@ -41,6 +41,7 @@
 //     transformations shouldn't retintroduce it): validate_no_constant_foldable_instruction()
 //   - Case values are always ConstantId, and the Constant data type is int or uint:
 //     validate_case_values_are_int_or_uint_constants()
+//   - No duplicated case values for Switch opcode: validate_switch_has_unique_case_values()
 
 // TODO(http://anglebug.com/349994211): to validate:
 //   - If there's a cached "has side effect", that it's correct.
@@ -52,7 +53,6 @@
 //   - Arguments of OpCode that must be pointer type is indeed a pointer
 //   - Loop blocks ends in the appropriate instructions.
 //   - Do blocks end in DoLoop (unless already terminated by something else, like Return)
-//   - Maximum one default case for Switch instructions.
 //   - Interface variables with NameSource::Internal are unique.
 //   - NameSource::Internal names don't start with the user and temporary name prefixes (_u, t and f
 //     respectively).
@@ -1687,6 +1687,7 @@ impl<'a> Validator<'a> {
                 self.validate_struct_field_in_bounds(opcode);
                 self.validate_if_condition_is_bool(opcode);
                 self.validate_case_values_are_int_or_uint_constants(opcode);
+                self.validate_switch_has_unique_case_values(opcode);
                 self.validate_no_constant_foldable_instruction(opcode);
             },
         );
@@ -1746,6 +1747,17 @@ impl<'a> Validator<'a> {
                     ));
                 }
             }
+        }
+    }
+
+    fn validate_switch_has_unique_case_values(&self, opcode: &OpCode) {
+        if let OpCode::Switch(_, case_values) = opcode
+            && case_values.iter().collect::<HashSet<_>>().len() != case_values.len()
+        {
+            self.on_error(format_args!(
+                "invalid Switch instruction: {:?}, has duplicated case values",
+                opcode
+            ));
         }
     }
 }
