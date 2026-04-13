@@ -1525,6 +1525,27 @@ bool ValidateWebGLVertexAttribPointer(const Context *context,
     return true;
 }
 
+bool ValidateDrawArraysTransformFeedbackBufferSize(const Context *context,
+                                                   angle::EntryPoint entryPoint,
+                                                   const GLsizei *counts,
+                                                   const GLsizei *primcounts,
+                                                   GLsizei drawcount)
+{
+    if (ANGLE_UNLIKELY(context->getStateCache().isTransformFeedbackActiveUnpaused()) &&
+        ANGLE_UNLIKELY(!context->supportsGeometryOrTesselation()))
+    {
+        const State &state                      = context->getState();
+        TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
+        if (!curTransformFeedback->checkBufferSpaceForDraw(counts, primcounts, drawcount))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kTransformFeedbackBufferTooSmall);
+            return false;
+        }
+    }
+
+    return true;
+}
+
 Program *GetValidProgramNoResolve(const Context *context,
                                   angle::EntryPoint entryPoint,
                                   ShaderProgramID id)
@@ -4496,6 +4517,11 @@ bool ValidateDrawArraysInstancedANGLE(const Context *context,
         return false;
     }
 
+    if (!ValidateDrawArraysTransformFeedbackBufferSize(context, entryPoint, &count, &primcount, 1))
+    {
+        return false;
+    }
+
     return ValidateDrawInstancedANGLE(context, entryPoint);
 }
 
@@ -4507,6 +4533,11 @@ bool ValidateDrawArraysInstancedEXT(const Context *context,
                                     GLsizei primcount)
 {
     if (!ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, primcount, 0))
+    {
+        return false;
+    }
+
+    if (!ValidateDrawArraysTransformFeedbackBufferSize(context, entryPoint, &count, &primcount, 1))
     {
         return false;
     }

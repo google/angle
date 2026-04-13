@@ -5919,11 +5919,18 @@ bool ValidateMultiDrawArraysANGLE(const Context *context,
     }
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
-        if (!ValidateDrawArrays(context, entryPoint, mode, firsts[drawID], counts[drawID]))
+        if (!ValidateDrawArraysCommon(context, entryPoint, mode, firsts[drawID], counts[drawID], 1))
         {
             return false;
         }
     }
+
+    if (!ValidateDrawArraysTransformFeedbackBufferSize(context, entryPoint, counts, nullptr,
+                                                       drawcount))
+    {
+        return false;
+    }
+
     return true;
 }
 
