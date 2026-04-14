@@ -3375,6 +3375,12 @@ bool ValidateCopyTextureCHROMIUM(const Context *context,
         return false;
     }
 
+    if (source == dest && sourceLevel == destLevel)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidSourceTextureSameAsDestTexture);
+        return false;
+    }
+
     return true;
 }
 
@@ -3517,6 +3523,12 @@ bool ValidateCopySubTextureCHROMIUM(const Context *context,
         return false;
     }
 
+    if (source == dest && sourceLevel == destLevel)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidSourceTextureSameAsDestTexture);
+        return false;
+    }
+
     return true;
 }
 
@@ -3568,6 +3580,12 @@ bool ValidateCompressedCopyTextureCHROMIUM(const Context *context,
     if (dest->getImmutableFormat())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kDestinationImmutable);
+        return false;
+    }
+
+    if (source == dest)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidSourceTextureSameAsDestTexture);
         return false;
     }
 
