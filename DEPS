@@ -216,6 +216,7 @@ vars = {
   'checkout_angle_restricted_trace_chrono_trigger': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_clash_of_clans': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_clash_royale': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_club_vegas_casino_slots': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_cod_mobile': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_coin_master': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_color_block_combo_blast': 'checkout_angle_restricted_traces',
@@ -2002,6 +2003,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_clash_royale',
+  },
+  'src/tests/restricted_traces/club_vegas_casino_slots': {
+      'packages': [
+        {
+            'package': 'angle/traces/club_vegas_casino_slots',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_club_vegas_casino_slots',
   },
   'src/tests/restricted_traces/cod_mobile': {
       'packages': [
