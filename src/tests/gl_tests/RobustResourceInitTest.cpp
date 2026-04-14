@@ -726,6 +726,29 @@ TEST_P(RobustResourceInitTestES3, DrawThenInvalidateThenDraw)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that having rasterizer discard enabled still causes textures to be properly initialized
+TEST_P(RobustResourceInitTestES3, RasterizerDiscardDuringInit)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glEnable(GL_RASTERIZER_DISCARD);
+    ANGLE_GL_PROGRAM(blue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(blue, essl1_shaders::PositionAttrib(), 1.0f);
+
+    checkNonZeroPixels(&tex, 0, 0, 0, 0, GLColor::transparentBlack);
+}
+
 // Calling invalidate should not lead to uninitialized memory being read.
 TEST_P(RobustResourceInitTestES3, InvalidateThenReadBack)
 {
