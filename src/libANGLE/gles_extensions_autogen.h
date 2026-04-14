@@ -79,6 +79,7 @@ struct Extensions
     {
         return (textureCubeMapArrayEXT || textureCubeMapArrayOES);
     }
+    bool textureLodBiasAny() const { return (textureLodBiasQCOM || textureLodBiasEXT); }
 
     // GLES 2.0+ extensions
     // --------------------
@@ -853,6 +854,9 @@ struct Extensions
 
     // GL_OES_texture_cube_map
     bool textureCubeMapOES = false;
+
+    // GL_EXT_texture_lod_bias
+    bool textureLodBiasEXT = false;
 
     // GL_OES_texture_mirrored_repeat
     bool textureMirroredRepeatOES = false;

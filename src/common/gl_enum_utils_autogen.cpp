@@ -1046,6 +1046,10 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_TEXTURE_MAX_ANISOTROPY_EXT";
                 case 0x84FF:
                     return "GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT";
+                case 0x8500:
+                    return "GL_TEXTURE_FILTER_CONTROL_EXT";
+                case 0x8501:
+                    return "GL_TEXTURE_LOD_BIAS_EXT";
                 case 0x8507:
                     return "GL_INCR_WRAP";
                 case 0x8508:

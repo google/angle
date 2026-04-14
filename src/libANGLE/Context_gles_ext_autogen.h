@@ -14,6 +14,7 @@
                                                                                                    \
     /* GLES1 Extensions */                                                                         \
                                                                                                    \
+    /* GL_EXT_texture_lod_bias */                                                                  \
     /* GL_OES_blend_subtract */                                                                    \
     /* GL_OES_draw_texture */                                                                      \
     void drawTexf(GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLfloat height);                 \

@@ -301,6 +301,7 @@ gles_es_only_extensions = [
 
 # ES1 (Possibly the min set of extensions needed by Android)
 gles1_extensions = [
+    "GL_EXT_texture_lod_bias",
     "GL_OES_blend_subtract",
     "GL_OES_draw_texture",
     "GL_OES_framebuffer_object",

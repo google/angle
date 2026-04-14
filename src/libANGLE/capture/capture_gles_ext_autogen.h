@@ -1927,6 +1927,8 @@ angle::CallCapture CaptureTexBufferRangeEXT(const State &glState,
 
 // GL_EXT_texture_format_sRGB_override
 
+// GL_EXT_texture_lod_bias
+
 // GL_EXT_texture_mirror_clamp_to_edge
 
 // GL_EXT_texture_norm16
