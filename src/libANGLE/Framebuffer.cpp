@@ -1690,15 +1690,13 @@ bool Framebuffer::partialClearNeedsInit(const Context *context,
     {
         ASSERT(HasSupportedStencilBitCount(glState.getDrawFramebuffer()));
 
-        // The least significant |stencilBits| of stencil mask state specify a
-        // mask. Compare the masks for differences only in those bits, ignoring any
-        // difference in the high bits.
         const auto &depthStencil       = glState.getDepthStencilState();
-        const GLuint differentFwdMasks = depthStencil.stencilMask ^ depthStencil.stencilWritemask;
-        const GLuint differentBackMasks =
-            depthStencil.stencilBackMask ^ depthStencil.stencilBackWritemask;
-
-        if (((differentFwdMasks | differentBackMasks) & 0xFF) != 0)
+        // The least significant |stencilBits| of stencil mask state specify a
+        // mask. Check only those bits, ignoring any masked high bits.
+        // Only the stencil write mask can affect which stencil bits are cleared. Clears are always
+        // considered to be front-facing geometry so the stencil back write mask does not need to be
+        // considered.
+        if ((depthStencil.stencilWritemask & 0xFF) != 0xFF)
         {
             return true;
         }

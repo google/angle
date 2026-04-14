@@ -1992,6 +1992,8 @@ void RobustResourceInitTest::maskedStencilClear(ClearFunc clearFunc)
     // Disable stencil writes and trigger a clear. Use a tricky mask that does not overlap the
     // clear.
     glStencilMask(0xF0);
+    // Set GL stencil func, it should have no effect on the clear.
+    glStencilFunc(GL_EQUAL, 0xBB, 0xAA);
     clearFunc(0x0F);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 
