@@ -14,6 +14,7 @@ gclient_gn_args = [
   'checkout_angle_dawn_deps',
   'checkout_angle_internal',
   'checkout_angle_mesa',
+  'checkout_angle_partition_alloc',
   'checkout_angle_restricted_traces',
   'generate_location_tags',
 ]
@@ -43,6 +44,9 @@ vars = {
 
   # Check out Mesa and libdrm in ANGLE's third_party folder.
   'checkout_angle_mesa': False,
+
+  # Check out PartitionAlloc in ANGLE's third_party folder.
+  'checkout_angle_partition_alloc': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
   'chromium_revision': '4850635c95ef1c5d863ea9db3bf9c78d1878e0e3',
@@ -996,6 +1000,11 @@ deps = {
   'third_party/perfetto': {
     'url': Var('android_git') + '/platform/external/perfetto.git@5c17fc6e089cecec6bd75073875f57c99dcd2f02',
     'condition': 'not build_with_chromium and checkout_angle_perfetto',
+  },
+
+  'third_party/partition_alloc': {
+    'url': Var('chromium_git') + '/chromium/src/base/allocator/partition_allocator.git@b5258e200dc8fc3ea0a3c02730258fda7633a9e4',
+    'condition': 'not build_with_chromium and checkout_angle_partition_alloc',
   },
 
   'third_party/proguard': {
