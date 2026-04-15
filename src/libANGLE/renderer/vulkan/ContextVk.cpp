@@ -720,6 +720,54 @@ GLenum ConvertImageAccessToGLImageLayout(vk::Renderer *renderer, vk::ImageAccess
     UNREACHABLE();
     return GL_NONE;
 }
+
+class [[nodiscard]] SaveLoadStorePerfCounters
+{
+  public:
+    SaveLoadStorePerfCounters(ContextVk *contextVk)
+    {
+        mPerfCounters        = &contextVk->getPerfCounters();
+        renderPassCount      = mPerfCounters->renderPasses;
+        depthLoadOpClears    = mPerfCounters->depthLoadOpClears;
+        depthLoadOpLoads     = mPerfCounters->depthLoadOpLoads;
+        depthLoadOpNones     = mPerfCounters->depthLoadOpNones;
+        depthStoreOpStores   = mPerfCounters->depthStoreOpStores;
+        stencilLoadOpClears  = mPerfCounters->stencilLoadOpClears;
+        stencilLoadOpLoads   = mPerfCounters->stencilLoadOpLoads;
+        stencilLoadOpNones   = mPerfCounters->stencilLoadOpNones;
+        stencilStoreOpStores = mPerfCounters->stencilStoreOpStores;
+        depthStoreOpNones    = mPerfCounters->depthStoreOpNones;
+        stencilStoreOpNones  = mPerfCounters->stencilStoreOpNones;
+    }
+    ~SaveLoadStorePerfCounters()
+    {
+        mPerfCounters->renderPasses         = renderPassCount;
+        mPerfCounters->depthLoadOpClears    = depthLoadOpClears;
+        mPerfCounters->depthLoadOpLoads     = depthLoadOpLoads;
+        mPerfCounters->depthLoadOpNones     = depthLoadOpNones;
+        mPerfCounters->depthStoreOpStores   = depthStoreOpStores;
+        mPerfCounters->stencilLoadOpClears  = stencilLoadOpClears;
+        mPerfCounters->stencilLoadOpLoads   = stencilLoadOpLoads;
+        mPerfCounters->stencilLoadOpNones   = stencilLoadOpNones;
+        mPerfCounters->stencilStoreOpStores = stencilStoreOpStores;
+        mPerfCounters->depthStoreOpNones    = depthStoreOpNones;
+        mPerfCounters->stencilStoreOpNones  = stencilStoreOpNones;
+    }
+
+  private:
+    angle::VulkanPerfCounters *mPerfCounters;
+    uint64_t renderPassCount;
+    uint64_t depthLoadOpClears;
+    uint64_t depthLoadOpLoads;
+    uint64_t depthLoadOpNones;
+    uint64_t depthStoreOpStores;
+    uint64_t stencilLoadOpClears;
+    uint64_t stencilLoadOpLoads;
+    uint64_t stencilLoadOpNones;
+    uint64_t stencilStoreOpStores;
+    uint64_t depthStoreOpNones;
+    uint64_t stencilStoreOpNones;
+};
 }  // anonymous namespace
 
 void ContextVk::flushDescriptorSetUpdates()
@@ -1513,11 +1561,14 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         updateTopology(mode);
     }
 
-    // Submit pending commands if the number of write-commands in the current render pass reaches a
-    // threshold to avoid delaying the submission too much.
+    // Avoid potential tile memory fallback since we can't handle framebuffer change here. Luckily
+    // this will only possible in simulated mode since on qualcomm
+    // getMinRenderPassWriteCommandCountToEarlySubmit is set to UINT32_MAX. Submit pending commands
+    // if the number of write-commands in the current render pass reaches a threshold to avoid
+    // delaying the submission too much.
     if (ANGLE_UNLIKELY(mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount() >
                        mRenderer->getMinRenderPassWriteCommandCountToEarlySubmit()) &&
-        (mCommandsPendingSubmissionCount > 0))
+        mCommandsPendingSubmissionCount > 0 && mImageWithTileMemory == nullptr)
     {
         ANGLE_TRY(
             submitCommands(nullptr, nullptr, QueueSubmitReason::RenderPassCommandLimitReached));
@@ -9065,6 +9116,8 @@ angle::Result ContextVk::finalizeImageWithTileMemory()
     else if (!getFeatures().supportsTileMemoryHeap.enabled)
     {
         ASSERT(getFeatures().simulateTileMemoryForTesting.enabled);
+        // Don't count load/store ops used for this simulation feature.
+        SaveLoadStorePerfCounters saveLoadStorePerfCounters(this);
         // clear VkImage to simulate the transient nature of tile memory
         UtilsVk::ClearTextureParameters params = {};
         params.level                           = vk::LevelIndex(0);

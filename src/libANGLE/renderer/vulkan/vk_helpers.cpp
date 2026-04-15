@@ -5904,7 +5904,8 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
         (renderer->getFeatures().simulateTileMemoryForTesting.enabled ||
          renderer->getFeatures().supportsTileMemoryHeap.enabled) &&
         !HasEmulatedImageChannels(angle::Format::Get(mIntendedFormatID),
-                                  angle::Format::Get(mActualFormatID)))
+                                  angle::Format::Get(mActualFormatID)) &&
+        !renderer->getFeatures().allocateNonZeroMemory.enabled)
     {
         ASSERT(initialAccess == ImageAccess::Undefined);
         ASSERT(angle::Format::Get(actualFormatID).hasDepthOrStencilBits());
@@ -6182,6 +6183,8 @@ angle::Result ImageHelper::initializeNonZeroMemory(ErrorContext *context,
         // conversion for VK_IMAGE_ASPECT_COLOR_BIT image views
         return angle::Result::Continue;
     }
+
+    ASSERT(canTransferTo());
 
     // Since we are going to do a one off out of order submission, there shouldn't any pending
     // setEvent.
