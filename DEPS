@@ -162,6 +162,7 @@ vars = {
   'checkout_angle_restricted_trace_antutu_refinery': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_apex_girl': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_archero_2': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_arena_breakout': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_arena_of_valor': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_arknights': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_asphalt_8': 'checkout_angle_restricted_traces',
@@ -1463,6 +1464,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_archero_2',
+  },
+  'src/tests/restricted_traces/arena_breakout': {
+      'packages': [
+        {
+            'package': 'angle/traces/arena_breakout',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_arena_breakout',
   },
   'src/tests/restricted_traces/arena_of_valor': {
       'packages': [
