@@ -2832,6 +2832,10 @@ void CaptureTextureEnvironmentState(std::vector<CallCapture> *setupCalls,
                            gl::TextureEnvParameter::PointCoordReplace,
                            currentEnv.pointSpriteCoordReplace));
 
+    capIfNe(currentEnv.lodBias, defaultEnv.lodBias,
+            CaptureTexEnvf(*replayState, true, gl::TextureEnvTarget::TextureFilterControl,
+                           gl::TextureEnvParameter::LodBias, currentEnv.lodBias));
+
     // In case of non-default sampler units, the default unit must be set back here.
     capIfNe(currentUnit, defaultUnit, CaptureActiveTexture(*replayState, true, defaultUnit));
 }
