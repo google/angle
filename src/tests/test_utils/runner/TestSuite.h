@@ -195,6 +195,7 @@ class TestSuite
     void dumpTestExpectationsErrorMessages();
     int getSlowTestTimeout() const;
     void writeOutputFiles(bool interrupted);
+    void WriteTestListJSON(const std::string &path) const;
 
     static TestSuite *mInstance;
 
@@ -204,6 +205,7 @@ class TestSuite
     std::string mFilterFile;
     std::string mResultsDirectory;
     std::string mResultsFile;
+    std::string mGTestOutput;
     std::string mHistogramJsonFile;
     int mShardCount;
     int mShardIndex;
