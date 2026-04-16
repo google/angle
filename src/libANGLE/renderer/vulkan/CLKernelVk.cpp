@@ -357,8 +357,7 @@ angle::Result CLKernelVk::createInfo(CLKernelImpl::Info *info) const
         }
 
         // TODO: http://anglebug.com/42267005
-        ANGLE_TRY(
-            deviceVk->getInfoSizeT(cl::DeviceInfo::MaxWorkGroupSize, &workGroup.workGroupSize));
+        workGroup.workGroupSize = deviceVk->getCaps().maxWorkGroupSize;
 
         // TODO: http://anglebug.com/42267004
         workGroup.privateMemSize = 0;
