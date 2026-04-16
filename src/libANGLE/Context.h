@@ -1025,6 +1025,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     egl::Error setDefaultFramebuffer(egl::Surface *drawSurface, egl::Surface *readSurface);
     egl::Error unsetDefaultFramebuffer();
 
+    const char *makeStaticString(const std::string &str);
     void initRendererString();
     void initVendorString();
     void initVersionStrings();
@@ -1089,6 +1090,12 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     TransformFeedbackMap mTransformFeedbackMap;
     HandleAllocator mTransformFeedbackHandleAllocator;
 
+    // Some GL queries return a "static" string, which ANGLE interprets as a string that doesn't
+    // need to be deallocated by the application but which automatically gets freed on context
+    // destruction, following mesa.  In typical drivers, these strings are calculated once and never
+    // change and so could have been std::string, but ANGLE_request_extension makes it such that
+    // some strings do change and so the "static string cache" is used to store the backing for
+    // these pointers.
     const char *mVendorString;
     const char *mVersionString;
     const char *mShadingLanguageString;
@@ -1097,6 +1104,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     std::vector<const char *> mExtensionStrings;
     const char *mRequestableExtensionString;
     std::vector<const char *> mRequestableExtensionStrings;
+    std::set<std::string> mStaticStrings;
 
     // GLES1 renderer state
     std::unique_ptr<GLES1Renderer> mGLES1Renderer;
