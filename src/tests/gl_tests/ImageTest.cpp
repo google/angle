@@ -104,6 +104,7 @@ constexpr size_t kCubeFaceCount             = 6;
 constexpr int AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM  = 1;
 constexpr int AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM  = 2;
 constexpr int AHARDWAREBUFFER_FORMAT_R8G8B8_UNORM    = 3;
+constexpr int AHARDWAREBUFFER_FORMAT_R5G6B5_UNORM    = 4;
 constexpr int AHARDWAREBUFFER_FORMAT_R16_UINT        = 0x39;
 constexpr int AHARDWAREBUFFER_FORMAT_R16G16_UINT     = 0x3a;
 constexpr int AHARDWAREBUFFER_FORMAT_D24_UNORM       = 0x31;
@@ -1898,6 +1899,9 @@ class ImageTestES3 : public ImageTest
 class ImageTestES31 : public ImageTest
 {};
 
+class ImageTestRGB565ES3 : public ImageTestES3
+{};
+
 // Tests that the extension is exposed on the platforms we think it should be. Please modify this as
 // you change extension availability.
 TEST_P(ImageTest, ANGLEExtensionAvailability)
@@ -2951,6 +2955,147 @@ TEST_P(ImageTestES3, SourceAHBTarget2DDraw)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
     // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+}
+
+// Test that drawing to an AHB works with RGB565.
+TEST_P(ImageTestRGB565ES3, SourceAHBTarget2DDraw)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    // Create the Image without data so we don't need ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT.
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, AHARDWAREBUFFER_FORMAT_R5G6B5_UNORM,
+                                              kDefaultAHBUsage, kDefaultAttribs, {}, &source,
+                                              &image);
+
+    // Create a texture target to bind the egl image.
+    GLTexture target;
+    createEGLImageTargetTexture2D(image, target);
+
+    // Draw to the target.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, target, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify results for completeness.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Clean up.
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+}
+
+// Test that drawing to an AHB with RGB565 and updating it with packed 16-bit data works.
+TEST_P(ImageTestRGB565ES3, SourceAHBTarget2DDrawAndUploadPacked565Data)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    // Create the Image without data so we don't need ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT.
+    constexpr size_t kWidth  = 8;
+    constexpr size_t kHeight = 8;
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(kWidth, kHeight, 1,
+                                              AHARDWAREBUFFER_FORMAT_R5G6B5_UNORM, kDefaultAHBUsage,
+                                              kDefaultAttribs, {}, &source, &image);
+
+    // Create a texture target to bind the egl image.
+    GLTexture target;
+    createEGLImageTargetTexture2D(image, target);
+
+    // Draw to the target.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, target, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Now attach another texture to the same image and update it using packed RGB565 data.
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<uint16_t> cyanBlock(kWidth / 2 * kHeight / 2, 0x7FF);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth / 2, kHeight / 2, GL_RGB,
+                    GL_UNSIGNED_SHORT_5_6_5, cyanBlock.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Verify results for completeness.
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth / 2, kHeight / 2, GLColor::cyan);
+    EXPECT_PIXEL_RECT_EQ(0, kHeight / 2, kWidth / 2, kHeight / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(kWidth / 2, 0, kWidth / 2, kHeight, GLColor::red);
+
+    // Clean up.
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+}
+
+// Test that drawing to an AHB with RGB565 and updating it with byte data works.
+TEST_P(ImageTestRGB565ES3, SourceAHBTarget2DDrawAndUploadByteData)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    // Create the Image without data so we don't need ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT.
+    constexpr size_t kWidth  = 8;
+    constexpr size_t kHeight = 8;
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(kWidth, kHeight, 1,
+                                              AHARDWAREBUFFER_FORMAT_R5G6B5_UNORM, kDefaultAHBUsage,
+                                              kDefaultAttribs, {}, &source, &image);
+
+    // Create a texture target to bind the egl image.
+    GLTexture target;
+    createEGLImageTargetTexture2D(image, target);
+
+    // Draw to the target.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, target, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(drawBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Now attach another texture to the same image and update it using byte data.
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLColorRGB> yellowBlock(kWidth / 2 * kHeight / 2, GLColorRGB::yellow);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth / 2, kHeight / 2, GL_RGB, GL_UNSIGNED_BYTE,
+                    yellowBlock.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Verify results for completeness.
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth / 2, kHeight / 2, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(0, kHeight / 2, kWidth / 2, kHeight / 2, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(kWidth / 2, 0, kWidth / 2, kHeight, GLColor::blue);
+
+    // Clean up.
     eglDestroyImageKHR(window->getDisplay(), image);
     destroyAndroidHardwareBuffer(source);
 }
@@ -10720,4 +10865,9 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(ImageTestES3, ES3_VULKAN().enable(Feature::Alloca
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ImageTestES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(ImageTestES31,
                                 ES31_VULKAN().enable(Feature::AllocateNonZeroMemory));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ImageTestRGB565ES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(ImageTestRGB565ES3,
+                               ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
+                               ES3_VULKAN().enable(Feature::PreferBGR565ToRGB565));
 }  // namespace angle

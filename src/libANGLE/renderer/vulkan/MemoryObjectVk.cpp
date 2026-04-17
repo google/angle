@@ -183,8 +183,18 @@ angle::Result MemoryObjectVk::createImage(
     // The format of the image is dictated by |internalFormat|, we can't fall back to a renderable
     // format if any, because the image must match the external one.
     const vk::Format &vkFormat     = renderer->getFormat(internalFormat);
+    const angle::FormatID intendedFormatID = vkFormat.getIntendedFormatID();
     angle::FormatID actualFormatID =
         vkFormat.getActualImageFormatID(vk::ImageFormatSupport::SampleOnly);
+
+    // Although no error has been observed from using BGR565 when using an RGB565 memory object, it
+    // is switched similar to other external objects.
+    if (renderer->getFeatures().preferBGR565ToRGB565.enabled &&
+        intendedFormatID == angle::FormatID::R5G6B5_UNORM &&
+        actualFormatID == angle::FormatID::B5G6R5_UNORM)
+    {
+        actualFormatID = angle::FormatID::R5G6B5_UNORM;
+    }
 
     VkExternalMemoryImageCreateInfo externalMemoryImageCreateInfo = {};
     externalMemoryImageCreateInfo.sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
@@ -202,11 +212,11 @@ angle::Result MemoryObjectVk::createImage(
     // VkExternalMemoryImageCreateInfo.
     bool hasProtectedContent = mProtectedMemory;
     ANGLE_TRY(image->initExternal(
-        contextVk, type, vkExtents, vkFormat.getIntendedFormatID(), actualFormatID, 1, usageFlags,
-        createFlags, vk::ImageAccess::ExternalPreInitialized, &externalMemoryImageCreateInfo,
-        gl::LevelIndex(0), static_cast<uint32_t>(levels), layerCount,
-        contextVk->isRobustResourceInitEnabled(), hasProtectedContent, vk::TileMemory::Prohibited,
-        vk::YcbcrConversionDesc{}, nullptr, formatReinterpretability));
+        contextVk, type, vkExtents, intendedFormatID, actualFormatID, 1, usageFlags, createFlags,
+        vk::ImageAccess::ExternalPreInitialized, &externalMemoryImageCreateInfo, gl::LevelIndex(0),
+        static_cast<uint32_t>(levels), layerCount, contextVk->isRobustResourceInitEnabled(),
+        hasProtectedContent, vk::TileMemory::Prohibited, vk::YcbcrConversionDesc{}, nullptr,
+        formatReinterpretability));
 
     VkMemoryRequirements externalMemoryRequirements;
     image->getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);

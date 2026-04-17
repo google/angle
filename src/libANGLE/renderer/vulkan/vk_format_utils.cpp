@@ -218,6 +218,12 @@ size_t Format::getVertexInputAlignment() const
     return mVkBufferFormatIsPacked ? pixelBytes : (pixelBytes / bufferFormat.channelCount);
 }
 
+LoadFunctionMap Format::GetRGB565TextureLoadFunction(const Renderer *renderer)
+{
+    ASSERT(renderer->getFeatures().preferBGR565ToRGB565.enabled);
+    return GetLoadFunctionsMap(GL_RGB565, angle::FormatID::R5G6B5_UNORM);
+}
+
 bool HasEmulatedImageChannels(const angle::Format &intendedFormat,
                               const angle::Format &actualFormat)
 {
