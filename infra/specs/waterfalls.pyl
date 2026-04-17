@@ -131,24 +131,6 @@
           'gtest_tests': 'swangle_slow_flaky_gtests',
         },
       },
-      'mac-ir-amd': {
-        'os_type': 'mac',
-        'mixins': [
-          'mac_retina_amd_gpu_stable',
-        ],
-        'test_suites': {
-          'gtest_tests': 'mac_amd_and_intel_gtests',
-        },
-      },
-      'mac-ir-intel': {
-        'os_type': 'mac',
-        'mixins': [
-          'mac_mini_intel_gpu_stable',
-        ],
-        'test_suites': {
-          'gtest_tests': 'mac_amd_and_intel_gtests',
-        },
-      },
       'win10-x64-intel-perf': {
         'os_type': 'win',
         'mixins': [
