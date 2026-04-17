@@ -11,7 +11,6 @@
 #endif
 
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
-#include "libANGLE/CLBuffer.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
@@ -22,10 +21,6 @@
 #include "libANGLE/CLKernel.h"
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/cl_utils.h"
-
-#include "common/log_utils.h"
-#include "common/string_utils.h"
-#include "common/system_utils.h"
 
 #include "clspv/Compiler.h"
 

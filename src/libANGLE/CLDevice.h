@@ -9,12 +9,15 @@
 #ifndef LIBANGLE_CLDEVICE_H_
 #define LIBANGLE_CLDEVICE_H_
 
+#include <angle_cl.h>
+
+#include "libANGLE/CLBitField.h"
 #include "libANGLE/CLObject.h"
+#include "libANGLE/cl_types.h"
 #include "libANGLE/renderer/CLDeviceImpl.h"
 
-#include "common/SynchronizedValue.h"
-
-#include <functional>
+#include <cstddef>
+#include <string>
 
 namespace cl
 {

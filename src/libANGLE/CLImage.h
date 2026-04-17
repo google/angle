@@ -8,10 +8,15 @@
 #ifndef LIBANGLE_CLIMAGE_H_
 #define LIBANGLE_CLIMAGE_H_
 
-#include "common/PackedCLEnums_autogen.h"
+#include <angle_cl.h>
 
+#include "libANGLE/CLBitField.h"
 #include "libANGLE/CLMemory.h"
+#include "libANGLE/CLObject.h"
+#include "libANGLE/cl_types.h"
 #include "libANGLE/cl_utils.h"
+
+#include <cstddef>
 
 namespace cl
 {

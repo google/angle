@@ -8,18 +8,12 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_CLPROGRAMVK_H_
 #define LIBANGLE_RENDERER_VULKAN_CLPROGRAMVK_H_
 
-#include <cstdint>
+#include "libANGLE/renderer/vulkan/clspv_utils.h"
 
-#include "common/SimpleMutex.h"
-#include "common/hash_containers.h"
-
-#include "libANGLE/CLSampler.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLKernelVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
-#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
-#include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 #include "libANGLE/renderer/CLProgramImpl.h"
 

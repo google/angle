@@ -7,17 +7,21 @@
 //
 
 #include "common/unsafe_buffers.h"
+
+#include <angle_cl.h>
+
+#include "libANGLE/CLBitField.h"
+#include "libANGLE/CLContext.h"
+#include "libANGLE/CLObject.h"
+#include "libANGLE/CLPlatform.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/capture/FrameCapture.h"
-
-#include "libANGLE/CLPlatform.h"
-
-#include "entry_points_utils.h"
-#include "libANGLE/CLContext.h"
-#include "libANGLE/CLDevice.h"
+#include "libANGLE/cl_types.h"
 #include "libANGLE/cl_utils.h"
 
+#include <cstdlib>
 #include <cstring>
+#include <mutex>
 
 namespace cl
 {
@@ -144,7 +148,7 @@ angle::Result Platform::getInfo(PlatformInfo name,
         case PlatformInfo::ExtensionsWithVersion:
             copyValue = mInfo.extensionsWithVersion.data();
             copySize  = mInfo.extensionsWithVersion.size() *
-                       sizeof(decltype(mInfo.extensionsWithVersion)::value_type);
+                        sizeof(decltype(mInfo.extensionsWithVersion)::value_type);
             break;
         case PlatformInfo::HostTimerResolution:
             copyValue = &mInfo.hostTimerRes;
@@ -157,7 +161,7 @@ angle::Result Platform::getInfo(PlatformInfo name,
         case PlatformInfo::ExternalMemory:
             copyValue = mInfo.externalMemoryHandleSupportList.data();
             copySize  = mInfo.externalMemoryHandleSupportList.size() *
-                       sizeof(*mInfo.externalMemoryHandleSupportList.data());
+                        sizeof(*mInfo.externalMemoryHandleSupportList.data());
             break;
         default:
             ASSERT(false);

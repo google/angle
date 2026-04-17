@@ -11,22 +11,18 @@
 #endif
 
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
-#include "common/log_utils.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 
 #include "libANGLE/CLDevice.h"
-#include "libANGLE/renderer/driver_utils.h"
-
-#include <mutex>
-#include <string>
-#include <string_view>
-
-#include "CL/cl_half.h"
 
 #include "clspv/Compiler.h"
 
 #include "spirv-tools/libspirv.h"
 #include "spirv-tools/libspirv.hpp"
+
+#include <mutex>
+#include <string>
+#include <string_view>
 
 #if defined(ANGLE_ENABLE_ASSERTS)
 constexpr bool kAngleDebug = true;

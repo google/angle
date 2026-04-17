@@ -6,31 +6,26 @@
 // CLMemoryVk.cpp: Implements the class methods for CLMemoryVk.
 //
 
-#include "common/log_utils.h"
-#include "common/unsafe_buffers.h"
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
-#include <cstddef>
-#include <cstdint>
-#include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
+#include "libANGLE/CLBuffer.h"
+#include "libANGLE/CLContext.h"
+#include "libANGLE/CLImage.h"
+#include "libANGLE/CLMemory.h"
+#include "libANGLE/cl_types.h"
+#include "libANGLE/cl_utils.h"
+#include "libANGLE/renderer/CLMemoryImpl.h"
+#include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/vk_cl_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
 
-#include "libANGLE/renderer/CLMemoryImpl.h"
-#include "libANGLE/renderer/Format.h"
-#include "libANGLE/renderer/FormatID_autogen.h"
-
-#include "libANGLE/CLBuffer.h"
-#include "libANGLE/CLContext.h"
-#include "libANGLE/CLImage.h"
-#include "libANGLE/CLMemory.h"
-#include "libANGLE/Error.h"
-#include "libANGLE/cl_types.h"
-#include "libANGLE/cl_utils.h"
-
-#include "CL/cl_half.h"
+#include <cstddef>
+#include <limits>
 
 namespace rx
 {

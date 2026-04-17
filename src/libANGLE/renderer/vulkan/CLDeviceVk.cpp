@@ -7,7 +7,6 @@
 //
 
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
-#include "common/unsafe_buffers.h"
 #include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"

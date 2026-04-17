@@ -8,8 +8,8 @@
 #ifndef LIBANGLE_CLOBJECT_H_
 #define LIBANGLE_CLOBJECT_H_
 
-#include "libANGLE/cl_types.h"
-#include "libANGLE/renderer/cl_types.h"
+#include "CL/cl_platform.h"
+#include "common/log_utils.h"
 
 #include <atomic>
 

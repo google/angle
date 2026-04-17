@@ -9,14 +9,16 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_CLSPV_UTILS_H_
 #define LIBANGLE_RENDERER_VULKAN_CLSPV_UTILS_H_
 
-#include <string>
-#include <vector>
-
 #include <libANGLE/renderer/vulkan/CLDeviceVk.h>
 
 #include "clspv/Compiler.h"
 #include "clspv/Sampler.h"
 #include "spirv-tools/libspirv.h"
+
+#include <vulkan/vulkan_core.h>
+
+#include <string>
+#include <vector>
 
 namespace rx
 {

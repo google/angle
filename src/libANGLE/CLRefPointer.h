@@ -9,6 +9,7 @@
 #define LIBANGLE_CLREFPOINTER_H_
 
 #include <algorithm>
+#include <cstddef>
 
 namespace cl
 {

@@ -9,19 +9,11 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_CLCOMMANDQUEUEVK_H_
 #define LIBANGLE_RENDERER_VULKAN_CLCOMMANDQUEUEVK_H_
 
-#include <condition_variable>
-#include <vector>
-
-#include "common/PackedCLEnums_autogen.h"
-#include "common/SimpleMutex.h"
-#include "common/hash_containers.h"
-
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
-#include "libANGLE/renderer/vulkan/CLEventVk.h"
 #include "libANGLE/renderer/vulkan/CLKernelVk.h"
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
+#include "libANGLE/renderer/vulkan/CommandQueue.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
-#include "libANGLE/renderer/vulkan/clspv_utils.h"
 #include "libANGLE/renderer/vulkan/vk_command_buffer_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
@@ -33,6 +25,9 @@
 #include "libANGLE/CLKernel.h"
 #include "libANGLE/CLMemory.h"
 #include "libANGLE/cl_types.h"
+
+#include <condition_variable>
+#include <vector>
 
 namespace std
 {
