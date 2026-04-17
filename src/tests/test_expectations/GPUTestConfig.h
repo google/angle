@@ -18,7 +18,6 @@ struct GPUTestConfig
     enum API
     {
         kAPIUnknown = 0,
-        kAPID3D9,
         kAPID3D11,
         kAPIGLDesktop,
         kAPIGLES,
@@ -62,7 +61,6 @@ struct GPUTestConfig
         kConditionSamsung,
         kConditionRelease,
         kConditionDebug,
-        kConditionD3D9,
         kConditionD3D11,
         kConditionGLDesktop,
         kConditionGLES,

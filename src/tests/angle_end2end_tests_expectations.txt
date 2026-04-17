@@ -60,7 +60,6 @@
 // Accessing an enabled but invalid vertex attribute.
 359729255 OPENGL : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
 359729255 GLES : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
-359729255 D3D9 : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
 359729255 D3D11 : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
 359729255 METAL : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
 359729255 WGPU : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
@@ -148,8 +147,6 @@
 42266963 WIN NVIDIA OPENGL : PbufferTest.BindTexImageOverwriteNoCrashOnReleaseTexImage/* = SKIP
 42266963 WIN NVIDIA GLES : PbufferTest.UseAsFramebufferColorThenDeferredDestroy/* = SKIP
 42266963 WIN NVIDIA OPENGL : PbufferTest.UseAsFramebufferColorThenDeferredDestroy/* = SKIP
-234602034 WIN INTEL D3D9 : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
-234602034 WIN NVIDIA D3D9 : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 42266127 WIN INTEL OPENGL : StateChangeTestES3.LogicOp/* = SKIP
 402532204 WIN OPENGL : PbufferTest.ZeroSizedSurfaceFormatQuery/* = SKIP
 402532204 WIN GLES : PbufferTest.ZeroSizedSurfaceFormatQuery/* = SKIP
@@ -197,8 +194,6 @@
 352085732 WIN INTEL OPENGL : RobustResourceInitTestES31.Multisample2DTextureArray/* = SKIP
 352085732 WIN INTEL OPENGL : SRGBTextureTest.SRGBDecodeTextureParameter/* = SKIP
 352085732 WIN INTEL OPENGL : UniformBufferTest.DrawThenUpdateThenDraw/* = SKIP
-352085732 WIN INTEL D3D9 : TextureBorderClampTest.Redefinition/* = SKIP
-352085732 WIN INTEL D3D9 : TextureBorderClampTest.TextureBorderClampUnorm8/* = SKIP
 352085732 WIN INTEL D3D11 : SimpleStateChangeTest.DrawWithTextureTexSubImageThenDrawAgain/* = SKIP
 352085732 WIN INTEL D3D11 : SimpleStateChangeTest.UpdateTextureInUse/* = SKIP
 352085732 WIN INTEL VULKAN : MultiviewOcclusionQueryTest.OcclusionQueryOnlyLeftVisible/* = SKIP
@@ -557,17 +552,13 @@
 351275980 IOS METAL : GLSLTest_ES3.DynamicIndexingOfSwizzledLValuesShouldWork2/* = SKIP
 
 // D3D
-42264944 WIN D3D9 : GLSLValidationTest.HandleExcessiveLoopBug/* = SKIP
 42264653 WIN D3D11 : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 // D3D does not support compressed textures where the base mip level is not a multiple of 4
-40644741 WIN D3D9 : DXT1CompressedTextureTest.NonBlockSizesMipLevels/* = SKIP
 40644741 WIN D3D11 : DXT1CompressedTextureTest.NonBlockSizesMipLevels/* = SKIP
 42265582 WIN D3D11 : ClearTestRGB_ES3.*/* = SKIP
 42265582 WIN D3D11 : SimpleStateChangeTestES3.InvalidateRGBThenDraw/* = SKIP
 42265582 WIN D3D11 : SimpleStateChangeTestES3.DrawInvalidateRGBThenDraw/* = SKIP
 42265582 WIN D3D11 : SimpleStateChangeTestES3.DrawAndInvalidateRGBThenVerifyAlpha/* = SKIP
-42265587 WIN D3D9 : GLSLValidationTest.LoopBodyEndingInBranch*/* = SKIP
-42265622 WIN D3D9 : RobustResourceInitTest.OutOfBoundsArrayBuffers/* = SKIP
 42265686 WIN D3D11 : BufferDataTestES3.BufferDataWithNullFollowedByMap/* = SKIP
 42265767 WIN INTEL D3D11 : StateChangeTestES3.PolygonOffset/* = SKIP
 42265768 WIN D3D11 : StateChangeTestES3.StencilReferenceAndCompareMask/* = SKIP
@@ -576,13 +567,11 @@
 42265799 WIN D3D11 : StateChangeTestES3.PrimitiveRestart/* = SKIP
 40050019 WIN D3D11 : WebGL2GLSLTest.InitOutputParams/* = SKIP
 1456243 WIN D3D11 : WebGL2CompatibilityTest.DrawWithZeroSizedBuffer/* = SKIP
-42266836 WIN D3D9 : GLSLValidationTest.VectorScalarArithmeticWithSideEffectInLoop/* = SKIP
 42267092 WIN D3D11 : BlitFramebufferTest.FlippedBlits/* = SKIP
 520277980 WIN D3D11 : TextureCubeTestES3.CubeMapRedefinedWithBaseLevelChange/* = SKIP
 432303915 WIN D3D11 : GLSLTest.VerifyMaxFragmentUniformVectorsWithSamplers/* = SKIP
 432303915 WIN D3D11 : GLSLTest.VerifyMaxVertexUniformVectors/* = SKIP
 432303915 WIN D3D11 : GLSLTest.VerifyMaxVertexUniformVectorsWithSamplers/* = SKIP
-448658631 WIN D3D9 : GLSLTest.EmptyForLoopWithSideEffect/* = SKIP
 448658631 WIN D3D11 : GLSLTestLoops.ForContinueInConstSwitch/* = SKIP
 448658631 WIN D3D11 : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFold/* = SKIP
@@ -1553,7 +1542,6 @@
 371987004 MAC APPLE OPENGL : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
 371987004 MAC INTEL OPENGL : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
 371987004 MAC NVIDIA OPENGL : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
-371987004 WIN D3D9 : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
 
 // Indexed indirect draw offset bug
 42265912 D3D11 : DrawBaseInstanceTest.DrawElementsInstancedBaseInstance/ES3_D3D11_*__DynamicDraw* = SKIP
@@ -1575,7 +1563,6 @@
 42262458 PIXEL4ORXL GLES : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/* = SKIP
 42262500 WIN D3D11 : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
 42262500 WIN D3D11 : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/* = SKIP
-42265384 WIN D3D9 : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
 42265320 METAL INTEL : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
 42265320 METAL INTEL : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/* = SKIP
 
@@ -1738,10 +1725,6 @@
 358407353 LINUX INTEL OPENGL : ReadPixelsPBOTest.SmallRowLength/* = SKIP
 
 // D3D needs a workaround to follow OpenGL rules
-42266528 D3D9 : DepthWriteTest.Test/ES2_D3D9__Reduced_Clipped_VInside_FZeroToNear_* = SKIP
-42266528 D3D9 : DepthWriteTest.Test/ES2_D3D9__Reduced_Clipped_VInside_FFarToOne_* = SKIP
-42266528 D3D9 : DepthWriteTest.Test/ES2_D3D9__Reduced_Clipped_VInside_FNegative_* = SKIP
-42266528 D3D9 : DepthWriteTest.Test/ES2_D3D9__Reduced_Clipped_VInside_FOverOne_* = SKIP
 42266528 D3D11 : DepthWriteTest.Test/ES2_D3D11__Reduced_Clipped_VInside_FZeroToNear_* = SKIP
 42266528 D3D11 : DepthWriteTest.Test/ES2_D3D11__Reduced_Clipped_VInside_FFarToOne_* = SKIP
 42266528 D3D11 : DepthWriteTest.Test/ES2_D3D11__Reduced_Clipped_VInside_FNegative_* = SKIP
@@ -2791,15 +2774,12 @@
 516887576 PIXEL4ORXL GLES : LightsTest.FlatLitMesh/* = SKIP
 516887576 PIXEL4ORXL GLES : LightsTest.SmoothLitMesh/* = SKIP
 
-454067880 D3D9 : GLSLTest.ComplicatedMultielementSwizzle1/* = SKIP
 454067880 D3D11 : GLSLTest.ComplicatedMultielementSwizzle1/* = SKIP
 
-454067880 D3D9 : GLSLTest.ComplicatedMultielementSwizzle2/* = SKIP
 454067880 D3D11 : GLSLTest.ComplicatedMultielementSwizzle2/* = SKIP
 454067880 OPENGL : GLSLTest.ComplicatedMultielementSwizzle2/* = SKIP
 454067880 GLES : GLSLTest.ComplicatedMultielementSwizzle2/* = SKIP
 
-454016926 D3D9 : GLSLTest.TernaryModifiesVariableInSameStatement/* = SKIP
 454016926 D3D11 : GLSLTest.TernaryModifiesVariableInSameStatement/* = SKIP
 454016926 OPENGL : GLSLTest.TernaryModifiesVariableInSameStatement/* = SKIP
 454016926 GLES : GLSLTest.TernaryModifiesVariableInSameStatement/* = SKIP
@@ -2874,7 +2854,6 @@
 512157667 LINUX VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 512157667 WIN VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 512157667 WIN D3D11 : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
-512157667 WIN D3D9 : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 512157667 PIXEL10 VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 512157667 PIXEL10 GLES : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 512157667 GALAXYS24EXYNOS VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP

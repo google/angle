@@ -1955,7 +1955,7 @@ TEST_P(ImageTest, ANGLEExtensionAvailability)
     ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsAndroid());
     ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsOzone());
 
-    if (IsD3D11() || IsD3D9())
+    if (IsD3D11())
     {
         EXPECT_TRUE(hasOESExt());
         EXPECT_TRUE(hasExternalExt());

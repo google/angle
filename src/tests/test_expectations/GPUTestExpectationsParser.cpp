@@ -69,7 +69,6 @@ enum Token
     kConfigRelease,
     kConfigDebug,
     // ANGLE renderer
-    kConfigD3D9,
     kConfigD3D11,
     kConfigGLDesktop,
     kConfigGLES,
@@ -198,7 +197,6 @@ constexpr TokenInfo kTokenData[kNumberOfTokens] = {
     {"samsung", GPUTestConfig::kConditionSamsung},
     {"release", GPUTestConfig::kConditionRelease},
     {"debug", GPUTestConfig::kConditionDebug},
-    {"d3d9", GPUTestConfig::kConditionD3D9},
     {"d3d11", GPUTestConfig::kConditionD3D11},
     {"opengl", GPUTestConfig::kConditionGLDesktop},
     {"gles", GPUTestConfig::kConditionGLES},
@@ -539,7 +537,6 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig *config,
             case kConfigSamsung:
             case kConfigRelease:
             case kConfigDebug:
-            case kConfigD3D9:
             case kConfigD3D11:
             case kConfigGLDesktop:
             case kConfigGLES:

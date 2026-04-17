@@ -2336,34 +2336,17 @@ TEST_P(GLSLTest, MaxVaryingVec4_ThreeBuiltins)
     VaryingTestBase(0, 0, 0, 0, 0, 0, maxVaryings - 3, 0, true, true, true, true);
 }
 
-// This covers a problematic case in D3D9 - we are limited by the number of available semantics,
-// rather than total register use.
-TEST_P(GLSLTest, MaxVaryingsSpecialCases)
-{
-    ANGLE_SKIP_TEST_IF(!IsD3D9());
-
-    GLint maxVaryings = 0;
-    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
-
-    VaryingTestBase(maxVaryings, 0, 0, 0, 0, 0, 0, 0, true, false, false, false);
-    VaryingTestBase(maxVaryings - 1, 0, 0, 0, 0, 0, 0, 0, true, true, false, false);
-    VaryingTestBase(maxVaryings - 2, 0, 0, 0, 0, 0, 0, 0, true, true, false, true);
-
-    // Special case for gl_PointSize: we get it for free on D3D9.
-    VaryingTestBase(maxVaryings - 2, 0, 0, 0, 0, 0, 0, 0, true, true, true, true);
-}
-
-// This covers a problematic case in D3D9 - we are limited by the number of available semantics,
-// rather than total register use.
+// Test that max vec2 varyings + gl_FragCoord works
 TEST_P(GLSLTest, MaxMinusTwoVaryingVec2PlusOneSpecialVariable)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
     // Generate shader code that uses gl_FragCoord.
-    VaryingTestBase(0, 0, maxVaryings, 0, 0, 0, 0, 0, true, false, false, !IsD3D9());
+    VaryingTestBase(0, 0, maxVaryings, 0, 0, 0, 0, 0, true, false, false, true);
 }
 
+// Test that max vec3 varyings works
 TEST_P(GLSLTest, MaxVaryingVec3)
 {
     GLint maxVaryings = 0;
@@ -2372,6 +2355,7 @@ TEST_P(GLSLTest, MaxVaryingVec3)
     VaryingTestBase(0, 0, 0, 0, maxVaryings, 0, 0, 0, false, false, false, true);
 }
 
+// Test that max vec3 array varyings works
 TEST_P(GLSLTest, MaxVaryingVec3Array)
 {
     GLint maxVaryings = 0;
@@ -2380,25 +2364,25 @@ TEST_P(GLSLTest, MaxVaryingVec3Array)
     VaryingTestBase(0, 0, 0, 0, 0, maxVaryings / 2, 0, 0, false, false, false, true);
 }
 
-// Only fails on D3D9 because of packing limitations.
+// Test that max vec3 varyings + a single float works
 TEST_P(GLSLTest, MaxVaryingVec3AndOneFloat)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    VaryingTestBase(1, 0, 0, 0, maxVaryings, 0, 0, 0, false, false, false, !IsD3D9());
+    VaryingTestBase(1, 0, 0, 0, maxVaryings, 0, 0, 0, false, false, false, true);
 }
 
-// Only fails on D3D9 because of packing limitations.
+// Test that max vec3 varyings + a single float array works
 TEST_P(GLSLTest, MaxVaryingVec3ArrayAndOneFloatArray)
 {
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    VaryingTestBase(0, 1, 0, 0, 0, maxVaryings / 2, 0, 0, false, false, false, !IsD3D9());
+    VaryingTestBase(0, 1, 0, 0, 0, maxVaryings / 2, 0, 0, false, false, false, true);
 }
 
-// Only fails on D3D9 because of packing limitations.
+// Test that 2x max vec2 varyings works, as they can get packed into max vec4 varyings
 TEST_P(GLSLTest, TwiceMaxVaryingVec2)
 {
     // TODO(geofflang): Figure out why this fails on NVIDIA's GLES driver
@@ -2412,14 +2396,12 @@ TEST_P(GLSLTest, TwiceMaxVaryingVec2)
     GLint maxVaryings = 0;
     glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryings);
 
-    VaryingTestBase(0, 0, 2 * maxVaryings, 0, 0, 0, 0, 0, false, false, false, !IsD3D9());
+    VaryingTestBase(0, 0, 2 * maxVaryings, 0, 0, 0, 0, 0, false, false, false, true);
 }
 
-// Disabled because of a failure in D3D9
+// Test that max vec2 array varyings works
 TEST_P(GLSLTest, MaxVaryingVec2Arrays)
 {
-    ANGLE_SKIP_TEST_IF(IsD3D9());
-
     // TODO(geofflang): Figure out why this fails on NVIDIA's GLES driver
     ANGLE_SKIP_TEST_IF(IsOpenGLES());
 
@@ -2726,35 +2708,7 @@ void main()
     GLint compileResult;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
 
-    // If the test is configured to run on D3D9, then it is
-    // assumed that shader compilation will fail with an expected error message containing
-    // "Loop index cannot be compared with non-constant expression"
-    if (GetParam() == ES2_D3D9())
-    {
-        if (compileResult != 0)
-        {
-            FAIL() << "Shader compilation succeeded, expected failure";
-        }
-        else
-        {
-            GLint infoLogLength;
-            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-            std::string infoLog;
-            infoLog.resize(infoLogLength);
-            glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), nullptr, &infoLog[0]);
-
-            if (infoLog.find("Loop index cannot be compared with non-constant expression") ==
-                std::string::npos)
-            {
-                FAIL() << "Shader compilation failed with unexpected error message";
-            }
-        }
-    }
-    else
-    {
-        EXPECT_NE(0, compileResult);
-    }
+    EXPECT_NE(0, compileResult);
 
     if (shader != 0)
     {
@@ -11654,9 +11608,6 @@ foo
 // Test that clamp applied on non-literal indices is correct on es 100 shaders.
 TEST_P(GLSLTest, ValidIndexClampES100)
 {
-    // http://anglebug.com/42264558
-    ANGLE_SKIP_TEST_IF(IsD3D9());
-
     constexpr char kFS[] = R"(
 precision mediump float;
 uniform int u;
