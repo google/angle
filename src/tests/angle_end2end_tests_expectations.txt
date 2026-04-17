@@ -340,6 +340,9 @@
 // RobustBufferAccess is not actually robust (will hang).
 435228814 LINUX INTEL VULKAN : RobustBufferAccessBehaviorTest.DynamicBufferCrash/* = SKIP
 
+// Robust init of OOB framebuffer reads is not zero'd
+500528706 VULKAN : CopyTexImageTestRobustResourceInit.OOBReadShouldBeZeroInit/* = SKIP
+
 // Advanced blend tests fail on Intel (ES 3.2)
 340942999 WIN INTEL VULKAN : AdvancedBlendTestES32.* = SKIP
 340942999 LINUX INTEL VULKAN : AdvancedBlendTestES32.* = SKIP

@@ -427,9 +427,7 @@ angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
     {
         size_t bufferSize = destFormatInfo.pixelBytes * sourceArea.width * sourceArea.height;
         angle::MemoryBuffer *memoryBuffer = nullptr;
-        result = mRenderer->getScratchMemoryBuffer(context11, bufferSize, &memoryBuffer);
-
-        if (result == angle::Result::Continue)
+        if (context->getZeroFilledBuffer(bufferSize, &memoryBuffer))
         {
             GLuint memoryBufferRowPitch = destFormatInfo.pixelBytes * sourceArea.width;
 
@@ -441,6 +439,10 @@ angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
                                       sourceArea.height, 1, memoryBuffer->data(),
                                       memoryBufferRowPitch, 0, dataOffset, mappedImage.RowPitch,
                                       mappedImage.DepthPitch);
+        }
+        else
+        {
+            result = angle::Result::Stop;
         }
     }
     else
