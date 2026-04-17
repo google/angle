@@ -381,6 +381,32 @@ angle_linux_manual_builder(
     gn_args = "ci/angle-linux-x64-builder-rel",
 )
 
+# This is effectively a copy of angle-cq-mac-x64-rel, but manual-only and
+# with the angle_ir GN arg config set. Mirroring is done in this way instead
+# of having CI builders because we do not have a need for the CI builders and
+# this keeps the tests in sync between the IR and non-IR builders.
+angle_mac_manual_builder(
+    name = "angle-try-mac-x64-ir-rel",
+    description_html = ("Tests release ANGLE on Mac/x64 on multiple hardware configs using " +
+                        "ANGLE's new intermediate representation for shaders. Manual only."),
+    mirrors = [
+        "ci/angle-mac-x64-amd-5300m-rel",
+        "ci/angle-mac-x64-amd-555x-rel",
+        "ci/angle-mac-x64-builder-rel",
+        "ci/angle-mac-x64-intel-uhd630-rel",
+    ],
+    gn_args = gn_args.config(
+        configs = [
+            "angle_ir",
+            "capture",
+            "component",
+            "mac_clang",
+            "release_with_dchecks",
+            "x64",
+        ],
+    ),
+)
+
 angle_mac_manual_builder(
     name = "angle-try-mac-arm64-m2-rel",
     description_html = "Tests release ANGLE on Mac/arm64 on Apple M2 SoCs. Manual only.",
