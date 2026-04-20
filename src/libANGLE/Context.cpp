@@ -1664,6 +1664,11 @@ void Context::bindImageTexture(GLuint unit,
                                GLenum format)
 {
     Texture *tex = mState.mTextureManager->getTexture(texture);
+    // For robust init, make sure the texture is initialized before storage writes.
+    if (tex != nullptr)
+    {
+        ANGLE_CONTEXT_TRY(tex->ensureInitialized(this));
+    }
     mState.setImageUnit(this, unit, tex, level, layered, layer, access, format);
     mImageObserverBindings[unit].bind(tex);
 }

@@ -412,6 +412,8 @@
 448658630 MAC OPENGL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 475587478 MAC OPENGL : VertexAttributeTestES3.MaxAttribsWithBuiltInAttribs/* = SKIP
 494270619 MAC OPENGL : BaseInstanceOverflowTest.BaseInstanceOverflow/* = SKIP
+504886981 MAC OPENGL : RobustResourceInitTestES3.PartiallyInitializedTextureWithNonZeroBase/* = SKIP
+504886981 MAC OPENGL : RobustResourceInitTestES3.ReadbackWithMippedTexture/* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 42262159 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
