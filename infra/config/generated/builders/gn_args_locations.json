@@ -38,6 +38,7 @@
     "angle-try-win-x64-intel-uhd630-exp-rel": "try/angle-try-win-x64-intel-uhd630-exp-rel/gn-args.json",
     "angle-try-win-x64-intel-uhd630-rel": "try/angle-try-win-x64-intel-uhd630-rel/gn-args.json",
     "angle-try-win-x64-intel-uhd770-rel": "try/angle-try-win-x64-intel-uhd770-rel/gn-args.json",
+    "angle-try-win-x64-ir-rel": "try/angle-try-win-x64-ir-rel/gn-args.json",
     "angle-try-win-x64-nvidia-gtx1660-exp-rel": "try/angle-try-win-x64-nvidia-gtx1660-exp-rel/gn-args.json",
     "angle-try-win-x64-nvidia-gtx1660-rel": "try/angle-try-win-x64-nvidia-gtx1660-rel/gn-args.json",
     "angle-try-win-x86-sws-rel": "try/angle-try-win-x86-sws-rel/gn-args.json"
