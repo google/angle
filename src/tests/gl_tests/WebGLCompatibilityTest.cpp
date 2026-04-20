@@ -4277,6 +4277,45 @@ TEST_P(WebGLCompatibilityTest, FramebufferAttachmentConsistancy)
     EXPECT_GLENUM_EQ(GL_RENDERBUFFER, attachmentType);
 }
 
+// The WebGL javascript API has no map functionality but ANGLE still exposes the Map entrypoints
+// since they can be used for other internal operations. Verify you cannot draw with a mapped
+// buffer.
+TEST_P(WebGL2CompatibilityTest, MappedArrayBufferValidation)
+{
+    constexpr char kVS[] =
+        R"(attribute float a_pos;
+void main()
+{
+    gl_Position = vec4(a_pos, a_pos, a_pos, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, essl1_shaders::fs::Red());
+    GLint posLocation = glGetAttribLocation(program, "a_pos");
+    ASSERT_NE(-1, posLocation);
+    glUseProgram(program);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, 16, nullptr, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(posLocation);
+    glVertexAttribPointer(posLocation, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0,
+                          reinterpret_cast<const void *>(12));
+    glDrawArrays(GL_POINTS, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    glMapBufferRange(GL_ARRAY_BUFFER, 0, 16, GL_MAP_READ_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    glDrawArrays(GL_POINTS, 0, 4);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    EXPECT_GL_NO_ERROR();
+    glDrawArrays(GL_POINTS, 0, 4);
+    EXPECT_GL_NO_ERROR();
+}
+
 // This tests that rendering feedback loops works as expected with WebGL 2.
 // Based on WebGL test conformance2/rendering/rendering-sampling-feedback-loop.html
 TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDrawBuffers)
