@@ -2490,7 +2490,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/final_fantasy',
-            'version': 'version:6',
+            'version': 'version:7',
         },
       ],
       'dep_type': 'cipd',
