@@ -1706,7 +1706,7 @@ void TParseContext::checkDeclarationIsValidArraySize(const TSourceLoc &line,
     }
 }
 
-void TParseContext::checkVariableSize(const TSourceLoc &line,
+bool TParseContext::checkVariableSize(const TSourceLoc &line,
                                       const ImmutableString &identifier,
                                       const TType *type)
 {
@@ -1724,7 +1724,7 @@ void TParseContext::checkVariableSize(const TSourceLoc &line,
     if (!mCompileOptions.rejectWebglShadersWithLargeVariables || numErrors() > 0 ||
         (mShaderType != GL_VERTEX_SHADER && mShaderType != GL_FRAGMENT_SHADER))
     {
-        return;
+        return true;
     }
 
     // Note: the only allowed interface block in webgl shaders is UBOs in std140 mode, so the size
@@ -1737,7 +1737,7 @@ void TParseContext::checkVariableSize(const TSourceLoc &line,
     if (variableSize > kWebGLMaxVariableSizeInBytes)
     {
         error(line, "Size of declared variable exceeds implementation-defined limit", identifier);
-        return;
+        return false;
     }
 
     switch (type->getQualifier())
@@ -1783,13 +1783,14 @@ void TParseContext::checkVariableSize(const TSourceLoc &line,
                 error(line,
                       "Size of declared private variable exceeds implementation-defined limit",
                       identifier);
-                return;
+                return false;
             }
             mTotalPrivateVariablesSize += variableSize;
             break;
         default:
             break;
     }
+    return true;
 }
 
 void TParseContext::checkVaryingLocations(const TSourceLoc &line, const TVariable *variable)
@@ -2145,7 +2146,10 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         return false;
     }
 
-    checkVariableSize(line, identifier, type);
+    if (!checkVariableSize(line, identifier, type))
+    {
+        return false;
+    }
     checkVariableLocations(line, *variable);
 
     // Declare the variable in IR
