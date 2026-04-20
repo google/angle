@@ -865,6 +865,11 @@ void Framebuffer::onDestroy(const Context *context)
         mPixelLocalStorage->onFramebufferDestroyed(context);
     }
 
+    if (context && context->retainIdUntilObjectDestroyed())
+    {
+        context->onFramebufferDestroy(this);
+    }
+
     mImpl->destroy(context);
 }
 
@@ -2325,7 +2330,9 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const Context *context) const
 
     // In some error cases there may be no bound program or executable.
     if (!executable)
+    {
         return false;
+    }
 
     const ActiveTextureMask &activeTextures    = executable->getActiveSamplersMask();
     const ActiveTextureTypeArray &textureTypes = executable->getActiveSamplerTypes();
