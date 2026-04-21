@@ -119,9 +119,6 @@ angle_linux_functional_cq_tester(
         "ci/angle-linux-x64-builder-dbg",
     ],
     gn_args = "ci/angle-linux-x64-builder-dbg",
-    # TODO(anglebug.com/475260235): Add this to the CQ once the "all" target
-    # is confirmed to work properly.
-    cq_settings = try_.cq_settings(includable_only = True),
 )
 
 angle_linux_functional_cq_tester(
