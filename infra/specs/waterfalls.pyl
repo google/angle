@@ -225,6 +225,12 @@
         'test_suites': {
         },
       },
+      'angle-linux-x64-builder-dbg': {
+        'os_type': 'linux',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
       'angle-linux-x64-intel-uhd630-exp-rel': {
         'os_type': 'linux',
         'mixins': [

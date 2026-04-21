@@ -113,6 +113,18 @@ angle_linux_functional_cq_tester(
 )
 
 angle_linux_functional_cq_tester(
+    name = "angle-cq-linux-x64-dbg",
+    description_html = "Compiles all debug ANGLE targets for Linux/x64. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-linux-x64-builder-dbg",
+    ],
+    gn_args = "ci/angle-linux-x64-builder-dbg",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the "all" target
+    # is confirmed to work properly.
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
+angle_linux_functional_cq_tester(
     name = "angle-cq-linux-x64-rel",
     description_html = "Tests release ANGLE on Linux/x64 on multiple hardware configs. Blocks CL submission.",
     mirrors = [

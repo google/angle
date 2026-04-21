@@ -65,6 +65,13 @@ gn_args.config(
 )
 
 gn_args.config(
+    name = "debug",
+    args = {
+        "is_debug": True,
+    },
+)
+
+gn_args.config(
     name = "linux",
     args = {
         "target_os": "linux",
