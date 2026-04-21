@@ -688,6 +688,7 @@ inline constexpr const char *kProtectedTexturesExtensionRequired = "GL_EXT_prote
 inline constexpr const char *kTextureCompressionASTCDecodeModeExtensionRequired = "GL_EXT_texture_compression_astc_decode_mode not enabled.";
 inline constexpr const char *kTextureCompressionASTCDecodeModeRGB9E5ExtensionRequired = "GL_EXT_texture_compression_astc_decode_mode_rgb9e5 not enabled.";
 inline constexpr const char *kProgramNotValid = "Program is not a program object.";
+inline constexpr const char *kWebGLBufferTypeMismatch = "Invalid operation between WebGL buffer types.";
 // clang-format on
 
 }  // namespace err

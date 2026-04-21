@@ -6644,14 +6644,14 @@ void main()
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     // Bind transform feedback buffer to another binding point. Should cause a conflict.
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, transformFeedbackBuffer);
+    glBindBuffer(GL_UNIFORM_BUFFER, transformFeedbackBuffer);
     ASSERT_GL_NO_ERROR();
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glEndTransformFeedback();
     EXPECT_GL_ERROR(GL_INVALID_OPERATION) << "Simultaneous element buffer binding should fail";
 
     // Reset to valid state.
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
     glBeginTransformFeedback(GL_TRIANGLES);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glEndTransformFeedback();

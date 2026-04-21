@@ -1831,7 +1831,7 @@ void main()
     };
 
     GLBuffer indexBuffer;
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kIndexData), kIndexData, GL_DYNAMIC_DRAW);
 
     EXPECT_GL_NO_ERROR();
@@ -4227,6 +4227,90 @@ TEST_P(WebGLCompatibilityTest, DepthStencilAttachment)
     glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                                           GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &attachmentType);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
+// Test the WebGL buffer binding rules. Index buffers cannot be bound to GPU writeable bindings and
+// vice versa
+TEST_P(WebGLCompatibilityTest, BufferBindingTypeRules)
+{
+    {
+        GLBuffer buffer;
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+        EXPECT_GL_NO_ERROR();
+
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        if (getClientMajorVersion() > 2)
+        {
+            glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, buffer);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1, buffer);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            // CopyRead and CopyWrite are allowed
+            glBindBuffer(GL_COPY_READ_BUFFER, buffer);
+            EXPECT_GL_NO_ERROR();
+
+            glBindBuffer(GL_COPY_WRITE_BUFFER, buffer);
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+
+    {
+        GLBuffer buffer;
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        EXPECT_GL_NO_ERROR();
+
+        if (getClientMajorVersion() > 2)
+        {
+            // Other buffer types can be bound freely
+            glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+            EXPECT_GL_NO_ERROR();
+
+            glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1, buffer);
+            EXPECT_GL_NO_ERROR();
+        }
+
+        // ... except to element array buffer bindings
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+}
+
+// Cannot copy between buffers of different WebGL types
+TEST_P(WebGL2CompatibilityTest, CopyBufferSubDataBufferTypeRules)
+{
+    GLBuffer elementArrayBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementArrayBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 128, nullptr, GL_STATIC_DRAW);
+
+    GLBuffer arrayBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer);
+    glBufferData(GL_ARRAY_BUFFER, 128, nullptr, GL_STATIC_DRAW);
+
+    GLBuffer uniformBuffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, 128, nullptr, GL_STATIC_DRAW);
+
+    glCopyBufferSubData(GL_ELEMENT_ARRAY_BUFFER, GL_ARRAY_BUFFER, 0, 0, 128);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glCopyBufferSubData(GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER, 0, 0, 128);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glCopyBufferSubData(GL_ELEMENT_ARRAY_BUFFER, GL_UNIFORM_BUFFER, 0, 0, 128);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glCopyBufferSubData(GL_UNIFORM_BUFFER, GL_ELEMENT_ARRAY_BUFFER, 0, 0, 128);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glCopyBufferSubData(GL_UNIFORM_BUFFER, GL_ARRAY_BUFFER, 0, 0, 128);
+    EXPECT_GL_NO_ERROR();
 }
 
 // Verify framebuffer attachments return expected types when in an inconsistant state.
