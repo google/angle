@@ -5141,6 +5141,28 @@ TEST_P(Texture2DTest, MutableUploadThenDeleteThenMutableUpload)
     EXPECT_GL_NO_ERROR();
 }
 
+// Regression test for covering the LoadLA8ToRGBA4 function when loading LA8 data into RGBA4 luma
+// emulation texture.
+TEST_P(Texture2DTestES3, L4A4Upload)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_required_internalformat"));
+
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    constexpr GLubyte data[8] = {64, 128, 64, 128, 64, 128, 64, 128};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE4_ALPHA4_OES, 2, 2, 0, GL_LUMINANCE_ALPHA,
+                 GL_UNSIGNED_BYTE, data);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(64, 64, 64, 128), 8.0);
+}
+
 // Test to ensure that glTexStorage3D accepts ASTC sliced 3D. https://crbug.com/1060012
 TEST_P(Texture3DTestES3, ImmutableASTCSliced3D)
 {
