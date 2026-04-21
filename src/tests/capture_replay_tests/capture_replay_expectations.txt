@@ -248,6 +248,7 @@
 
 # VVL error
 42264614 LINUX : VulkanExternalImageTestES31.UninitializedOnGLImportAndStorageWrite/* = SKIP_FOR_CAPTURE
+42264614 LINUX : VulkanExternalImageTest.NonRenderableWithFlags/* = SKIP_FOR_CAPTURE
 
 # CoherentBufferTracker deadlocks and flaky crashes
 42266529 LINUX : BufferDataTestES3.* = SKIP_FOR_CAPTURE
