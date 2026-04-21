@@ -141,26 +141,6 @@
           'isolated_scripts': 'isolated_scripts_group_perf',
         },
       },
-      'win10-x64-ir-intel': {
-        'os_type': 'win',
-        'mixins': [
-          'win10_intel_uhd_630_stable',
-        ],
-        'test_suites': {
-          'gtest_tests': 'win10_intel_gtests',
-          'isolated_scripts': 'isolated_scripts_group_common',
-        },
-      },
-      'win10-x64-ir-nvidia': {
-        'os_type': 'win',
-        'mixins': [
-          'win10_nvidia_gtx_1660_stable',
-        ],
-        'test_suites': {
-          'gtest_tests': 'win10_nvidia_gtests',
-          'isolated_scripts': 'isolated_scripts_group_common',
-        },
-      },
       'win10-x64-nvidia-perf': {
         'os_type': 'win',
         'mixins': [
