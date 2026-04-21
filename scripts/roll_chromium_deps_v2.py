@@ -18,10 +18,6 @@ https://dawn.googlesource.com/dawn/+/refs/heads/main/scripts/roll_chromium_deps.
 but with repo-specific aspects adjusted for ANGLE.
 """
 
-# TODO(anglebug.com/485785261): Remove this and run the formatter to get the
-# script consistent with ANGLE styling.
-# yapf: disable
-
 import abc
 import argparse
 import base64
@@ -182,9 +178,7 @@ class ChangedCipd(ChangedDepsEntry):
     new_packages: list[CipdPackage]
 
     def setdep_args(self) -> list[str]:
-        revisions = [
-            f'{self.name}:{p.setdep_str()}' for p in self.new_packages
-        ]
+        revisions = [f'{self.name}:{p.setdep_str()}' for p in self.new_packages]
         return ['--revision'] + revisions
 
     def commit_message_lines(self) -> list[str]:
@@ -233,9 +227,7 @@ class ChangedGcs(ChangedDepsEntry):
     new_objects: list[GcsObject]
 
     def setdep_args(self) -> list[str]:
-        comma_separated_objects = [
-            o.as_comma_separated_str() for o in self.new_objects
-        ]
+        comma_separated_objects = [o.as_comma_separated_str() for o in self.new_objects]
         object_string = '?'.join(comma_separated_objects)
         return ['--revision', f'{self.name}@{object_string}']
 
@@ -337,10 +329,9 @@ def _amend_commit(commit_message: str) -> None:
                           f'\n'
                           f'{old_commit_message[bug_index:]}')
 
-    _ = subprocess.run(
-        ['git', 'commit', '-a', '--amend', '-m', new_commit_message],
-        capture_output=True,
-        check=True)
+    _ = subprocess.run(['git', 'commit', '-a', '--amend', '-m', new_commit_message],
+                       capture_output=True,
+                       check=True)
 
 
 def _commit(commit_message: str) -> None:
@@ -351,9 +342,7 @@ def _commit(commit_message: str) -> None:
     """
     # `gclient setdep` should have already staged changes and running
     # `git add -u` actually undoes the submodule changes, so commit as-is.
-    _ = subprocess.run(['git', 'commit', '-m', commit_message],
-                       capture_output=True,
-                       check=True)
+    _ = subprocess.run(['git', 'commit', '-m', commit_message], capture_output=True, check=True)
 
 
 def _get_remote_head_revision(remote_url: str) -> str:
@@ -379,8 +368,7 @@ def _get_remote_head_revision(remote_url: str) -> str:
     return head_revision
 
 
-def _get_roll_revision_range(target_revision: str | None,
-                             angle_deps: dict) -> ChangedRepo:
+def _get_roll_revision_range(target_revision: str | None, angle_deps: dict) -> ChangedRepo:
     """Determines the range being rolled.
 
     Args:
@@ -396,10 +384,11 @@ def _get_roll_revision_range(target_revision: str | None,
     if not new_revision:
         new_revision = _get_remote_head_revision(CHROMIUM_SRC_URL)
         logging.info('Using %s as the HEAD revision.', new_revision)
-    return ChangedRepo(name='chromium/src',
-                       url=CHROMIUM_SRC_URL,
-                       old_revision=old_revision,
-                       new_revision=new_revision)
+    return ChangedRepo(
+        name='chromium/src',
+        url=CHROMIUM_SRC_URL,
+        old_revision=old_revision,
+        new_revision=new_revision)
 
 
 def _read_gitiles_content(file_url: str) -> str:
@@ -425,13 +414,11 @@ def _read_remote_chromium_file(src_relative_path: str, revision: str) -> str:
             chromium/src.
         revision: The Chromium revision to read the file contents at.
     """
-    file_url = posixpath.join(CHROMIUM_SRC_URL, '+', revision,
-                              src_relative_path)
+    file_url = posixpath.join(CHROMIUM_SRC_URL, '+', revision, src_relative_path)
     return _read_gitiles_content(file_url)
 
 
-def _get_changed_deps_entries(angle_deps: dict,
-                              chromium_deps: dict) -> list[ChangedDepsEntry]:
+def _get_changed_deps_entries(angle_deps: dict, chromium_deps: dict) -> list[ChangedDepsEntry]:
     """Gets all entries that have changed between the two provided DEPS.
 
     Args:
@@ -446,14 +433,12 @@ def _get_changed_deps_entries(angle_deps: dict,
     changed_entries.extend(_get_changed_variables(angle_deps, chromium_deps))
     changed_entries.extend(_get_changed_cipd(angle_deps, chromium_deps))
     changed_entries.extend(_get_changed_gcs(angle_deps, chromium_deps))
-    changed_entries.extend(
-        _get_changed_non_exported_repos(angle_deps, chromium_deps))
+    changed_entries.extend(_get_changed_non_exported_repos(angle_deps, chromium_deps))
     changed_entries.extend(_get_changed_exported_repos(angle_deps))
     return changed_entries
 
 
-def _get_changed_variables(angle_deps: dict,
-                           chromium_deps: dict) -> list[ChangedVariable]:
+def _get_changed_variables(angle_deps: dict, chromium_deps: dict) -> list[ChangedVariable]:
     """Gets all GN variables that have changed between the two provided DEPS.
 
     Args:
@@ -469,12 +454,10 @@ def _get_changed_variables(angle_deps: dict,
         angle_value = angle_deps['vars'].get(angle_var)
         chromium_value = chromium_deps['vars'].get(chromium_var)
         if not angle_value:
-            raise RuntimeError(
-                f'Could not find ANGLE GN variable {angle_var}. Was it removed?')
+            raise RuntimeError(f'Could not find ANGLE GN variable {angle_var}. Was it removed?')
         if not chromium_value:
-            raise RuntimeError(
-                f'Could not find Chromium GN variable {chromium_var}. Was it '
-                f'removed?')
+            raise RuntimeError(f'Could not find Chromium GN variable {chromium_var}. Was it '
+                               f'removed?')
         changed_variables.append(
             ChangedVariable(
                 name=angle_var,
@@ -484,8 +467,7 @@ def _get_changed_variables(angle_deps: dict,
     return changed_variables
 
 
-def _get_changed_cipd(angle_deps: dict,
-                      chromium_deps: dict) -> list[ChangedCipd]:
+def _get_changed_cipd(angle_deps: dict, chromium_deps: dict) -> list[ChangedCipd]:
     """Gets all CIPD entries that have changed between the two provided DEPS.
 
     Args:
@@ -500,21 +482,16 @@ def _get_changed_cipd(angle_deps: dict,
     for angle_name in SYNCED_CIPD_DEPS:
         chromium_name = 'src/' + angle_name
         if angle_name not in angle_deps['deps']:
-            raise RuntimeError(
-                f'Unable to find ANGLE CIPD entry {angle_name}. Was it '
-                f'removed?')
+            raise RuntimeError(f'Unable to find ANGLE CIPD entry {angle_name}. Was it removed?')
         if chromium_name not in chromium_deps['deps']:
-            raise RuntimeError(
-                f'Unable to find Chromium CIPD entry {chromium_name}. Was it '
-                f'removed?')
+            raise RuntimeError(f'Unable to find Chromium CIPD entry {chromium_name}. Was it '
+                               f'removed?')
 
         angle_packages = [
-            CipdPackage.from_dict(p)
-            for p in angle_deps['deps'][angle_name]['packages']
+            CipdPackage.from_dict(p) for p in angle_deps['deps'][angle_name]['packages']
         ]
         chromium_packages = [
-            CipdPackage.from_dict(p)
-            for p in chromium_deps['deps'][chromium_name]['packages']
+            CipdPackage.from_dict(p) for p in chromium_deps['deps'][chromium_name]['packages']
         ]
         # Unlike GCS entries which provide all object content with a single
         # --revision, CIPD entries provide one package to update per
@@ -524,9 +501,8 @@ def _get_changed_cipd(angle_deps: dict,
         angle_package_names = set(p.package for p in angle_packages)
         chromium_package_names = set(p.package for p in chromium_packages)
         if not angle_package_names.issubset(chromium_package_names):
-            raise RuntimeError(
-                f'Packages for CIPD entry {angle_name} appear to have changed. '
-                f'Please manually sync the package list.')
+            raise RuntimeError(f'Packages for CIPD entry {angle_name} appear to have changed. '
+                               f'Please manually sync the package list.')
         if angle_packages != chromium_packages:
             changed_cipd.append(
                 ChangedCipd(
@@ -552,20 +528,14 @@ def _get_changed_gcs(angle_deps: dict, chromium_deps: dict) -> list[ChangedGcs]:
     for angle_name in SYNCED_GCS_DEPS:
         chromium_name = 'src/' + angle_name
         if angle_name not in angle_deps['deps']:
-            raise RuntimeError(
-                f'Unable to find ANGLE GCS entry {angle_name}. Was it removed?')
+            raise RuntimeError(f'Unable to find ANGLE GCS entry {angle_name}. Was it removed?')
         if chromium_name not in chromium_deps['deps']:
-            raise RuntimeError(
-                f'Unable to find Chromium GCS entry {chromium_name}. Was it '
-                f'removed?')
+            raise RuntimeError(f'Unable to find Chromium GCS entry {chromium_name}. Was it '
+                               f'removed?')
 
-        angle_objects = [
-            GcsObject.from_dict(o)
-            for o in angle_deps['deps'][angle_name]['objects']
-        ]
+        angle_objects = [GcsObject.from_dict(o) for o in angle_deps['deps'][angle_name]['objects']]
         chromium_objects = [
-            GcsObject.from_dict(o)
-            for o in chromium_deps['deps'][chromium_name]['objects']
+            GcsObject.from_dict(o) for o in chromium_deps['deps'][chromium_name]['objects']
         ]
         if angle_objects != chromium_objects:
             changed_gcs.append(
@@ -577,8 +547,7 @@ def _get_changed_gcs(angle_deps: dict, chromium_deps: dict) -> list[ChangedGcs]:
     return changed_gcs
 
 
-def _get_changed_non_exported_repos(angle_deps: dict,
-                                    chromium_deps: dict) -> list[ChangedRepo]:
+def _get_changed_non_exported_repos(angle_deps: dict, chromium_deps: dict) -> list[ChangedRepo]:
     """Gets all non-exported repos that have changed between the DEPS files.
 
     Args:
@@ -594,19 +563,15 @@ def _get_changed_non_exported_repos(angle_deps: dict,
         chromium_name = chromium_name or angle_name
         chromium_name = 'src/' + chromium_name
         if angle_name not in angle_deps['deps']:
-            raise RuntimeError(
-                f'Unable to find ANGLE repo {angle_name}. Was it removed?')
+            raise RuntimeError(f'Unable to find ANGLE repo {angle_name}. Was it removed?')
         if chromium_name not in chromium_deps['deps']:
-            raise RuntimeError(
-                f'Unable to find Chromium repo {chromium_name}. Was it '
-                f'removed?')
+            raise RuntimeError(f'Unable to find Chromium repo {chromium_name}. Was it '
+                               f'removed?')
 
         url, angle_revision = _get_url_and_revision(
-            _get_raw_url_for_dep_entry(angle_name, angle_deps),
-            angle_deps['vars'])
+            _get_raw_url_for_dep_entry(angle_name, angle_deps), angle_deps['vars'])
         _, chromium_revision = _get_url_and_revision(
-            _get_raw_url_for_dep_entry(chromium_name, chromium_deps),
-            chromium_deps['vars'])
+            _get_raw_url_for_dep_entry(chromium_name, chromium_deps), chromium_deps['vars'])
         if angle_revision != chromium_revision:
             changed_repos.append(
                 ChangedRepo(
@@ -633,11 +598,9 @@ def _get_changed_exported_repos(angle_deps: dict) -> list[ChangedRepo]:
     for angle_name, chromium_path in EXPORTED_CHROMIUM_REPOS.items():
         chromium_path = chromium_path or angle_name
         if angle_name not in angle_deps['deps']:
-            raise RuntimeError(
-                f'Unable to find ANGLE repo {angle_name}. Was it removed?')
+            raise RuntimeError(f'Unable to find ANGLE repo {angle_name}. Was it removed?')
         url, angle_revision = _get_url_and_revision(
-            _get_raw_url_for_dep_entry(angle_name, angle_deps),
-            angle_deps['vars'])
+            _get_raw_url_for_dep_entry(angle_name, angle_deps), angle_deps['vars'])
         head_revision = _get_remote_head_revision(url)
         if angle_revision != head_revision:
             changed_repos.append(
@@ -692,8 +655,7 @@ def _get_url_and_revision(deps_url: str, vars: dict) -> tuple[str, str]:
 
 
 def _generate_commit_message(changed_entries: list[ChangedDepsEntry],
-                             chromium_revision_range: ChangedRepo,
-                             autoroll: bool) -> str:
+                             chromium_revision_range: ChangedRepo, autoroll: bool) -> str:
     """Generates a commit message for a roll.
 
     Args:
@@ -706,8 +668,7 @@ def _generate_commit_message(changed_entries: list[ChangedDepsEntry],
         A string containing the commit message to use.
     """
     commit_message_lines = []
-    commit_message_lines.extend(
-        _generate_chromium_section(chromium_revision_range, autoroll))
+    commit_message_lines.extend(_generate_chromium_section(chromium_revision_range, autoroll))
     commit_message_lines.append('')
     commit_message_lines.extend(_generate_command_section())
     commit_message_lines.append('')
@@ -723,8 +684,7 @@ def _generate_commit_message(changed_entries: list[ChangedDepsEntry],
     return '\n'.join(commit_message_lines)
 
 
-def _generate_chromium_section(chromium_revision_range: ChangedRepo,
-                               autoroll: bool) -> list[str]:
+def _generate_chromium_section(chromium_revision_range: ChangedRepo, autoroll: bool) -> list[str]:
     """Generates the commit message section for Chromium.
 
     Args:
@@ -767,8 +727,7 @@ def _generate_command_section() -> list[str]:
 
 
 def _generate_section_for_entry_type(entry_type: Type[ChangedDepsEntry],
-                                     changed_entries: list[ChangedDepsEntry],
-                                     empty_message: str,
+                                     changed_entries: list[ChangedDepsEntry], empty_message: str,
                                      header: str) -> list[str]:
     """Generates the commit message section for a given ChangedDepsEntry type.
 
@@ -798,8 +757,7 @@ def _generate_section_for_entry_type(entry_type: Type[ChangedDepsEntry],
     return lines
 
 
-def _generate_variables_section(
-        changed_entries: list[ChangedDepsEntry]) -> list[str]:
+def _generate_variables_section(changed_entries: list[ChangedDepsEntry]) -> list[str]:
     """Generates the commit message section for changed variables.
 
     Args:
@@ -809,13 +767,11 @@ def _generate_variables_section(
         A list of strings containing lines to append to the commit message.
     """
     return _generate_section_for_entry_type(
-        ChangedVariable, changed_entries,
-        'No explicitly synced GN variables changed in this roll',
+        ChangedVariable, changed_entries, 'No explicitly synced GN variables changed in this roll',
         'Explicitly synced GN variables:')
 
 
-def _generate_cipd_section(
-        changed_entries: list[ChangedDepsEntry]) -> list[str]:
+def _generate_cipd_section(changed_entries: list[ChangedDepsEntry]) -> list[str]:
     """Generates the commit message section for changed CIPD entries.
 
     Args:
@@ -824,13 +780,12 @@ def _generate_cipd_section(
     Returns:
         A list of strings containing lines to append to the commit message.
     """
-    return _generate_section_for_entry_type(
-        ChangedCipd, changed_entries, 'No CIPD entries changed in this roll',
-        'CIPD entries:')
+    return _generate_section_for_entry_type(ChangedCipd, changed_entries,
+                                            'No CIPD entries changed in this roll',
+                                            'CIPD entries:')
 
 
-def _generate_gcs_section(
-        changed_entries: list[ChangedDepsEntry]) -> list[str]:
+def _generate_gcs_section(changed_entries: list[ChangedDepsEntry]) -> list[str]:
     """Generates the commit message section for changed GCS entries.
 
     Args:
@@ -839,13 +794,11 @@ def _generate_gcs_section(
     Returns:
         A list of strings containing lines to append to the commit message.
     """
-    return _generate_section_for_entry_type(
-        ChangedGcs, changed_entries, 'No GCS entries changed in this roll',
-        'GCS entries:')
+    return _generate_section_for_entry_type(ChangedGcs, changed_entries,
+                                            'No GCS entries changed in this roll', 'GCS entries:')
 
 
-def _generate_repo_section(
-        changed_entries: list[ChangedDepsEntry]) -> list[str]:
+def _generate_repo_section(changed_entries: list[ChangedDepsEntry]) -> list[str]:
     """Generates the commit message section for change repo entries.
 
     Args:
@@ -854,9 +807,9 @@ def _generate_repo_section(
     Returns:
         A list of strings containing lines to append to the commit message.
     """
-    return _generate_section_for_entry_type(
-        ChangedRepo, changed_entries, 'No repo entries changed in this roll',
-        'Repo entries:')
+    return _generate_section_for_entry_type(ChangedRepo, changed_entries,
+                                            'No repo entries changed in this roll',
+                                            'Repo entries:')
 
 
 def _generate_footers_section(autoroll: bool) -> list[str]:
@@ -907,21 +860,19 @@ def _sync_starlark_packages(chromium_revision: str) -> list[ChangedRepo]:
         A list of ChangedRepo specifying the old and new revisions for Starlark
         packages.
     """
-    chromium_package_contents = _read_remote_chromium_file(
-        'infra/config/PACKAGE.star', chromium_revision)
+    chromium_package_contents = _read_remote_chromium_file('infra/config/PACKAGE.star',
+                                                           chromium_revision)
     chromium_luci_package = '@chromium-luci'
-    new_chromium_luci_revision = _extract_starlark_package_revision(
-        chromium_luci_package, chromium_package_contents)
+    new_chromium_luci_revision = _extract_starlark_package_revision(chromium_luci_package,
+                                                                    chromium_package_contents)
 
     with open(PACKAGE_STAR, encoding='utf-8') as infile:
         angle_package_contents = infile.read()
     angle_package_contents, old_chromium_luci_revision = (
-        _exchange_starlark_package_revision(chromium_luci_package,
-                                            angle_package_contents,
+        _exchange_starlark_package_revision(chromium_luci_package, angle_package_contents,
                                             new_chromium_luci_revision))
     angle_package_contents, old_chromium_targets_revision = (
-        _exchange_starlark_package_revision('@chromium-targets',
-                                            angle_package_contents,
+        _exchange_starlark_package_revision('@chromium-targets', angle_package_contents,
                                             chromium_revision))
     with open(PACKAGE_STAR, 'w', encoding='utf-8') as outfile:
         outfile.write(angle_package_contents)
@@ -930,10 +881,11 @@ def _sync_starlark_packages(chromium_revision: str) -> list[ChangedRepo]:
     _run_lucicfg_and_stage_changes()
 
     changed_packages = [
-        ChangedRepo(name='chromium-luci (Starlark)',
-                    url=posixpath.join(CHROMIUM_GOB_URL, 'infra', 'chromium'),
-                    old_revision=old_chromium_luci_revision,
-                    new_revision=new_chromium_luci_revision),
+        ChangedRepo(
+            name='chromium-luci (Starlark)',
+            url=posixpath.join(CHROMIUM_GOB_URL, 'infra', 'chromium'),
+            old_revision=old_chromium_luci_revision,
+            new_revision=new_chromium_luci_revision),
         # The chromium-targets package is not reported since the revision is
         # identical to Chromium's revision, which is already reported.
     ]
@@ -946,8 +898,7 @@ def _sync_starlark_packages(chromium_revision: str) -> list[ChangedRepo]:
 def _run_lucicfg_and_stage_changes() -> None:
     """Runs lucicfg on ANGLE's Starlark files and stages any changes."""
     subprocess.check_call(
-        ['lucicfg', 'generate',
-         str(INFRA_PATH / 'main.star')],
+        ['lucicfg', 'generate', str(INFRA_PATH / 'main.star')],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL)
 
@@ -956,8 +907,7 @@ def _run_lucicfg_and_stage_changes() -> None:
                           stderr=subprocess.DEVNULL)
 
 
-def _exchange_starlark_package_revision(package_name: str,
-                                        package_star_contents: str,
+def _exchange_starlark_package_revision(package_name: str, package_star_contents: str,
                                         new_revision: str) -> tuple[str, str]:
     """Exchanges the revision for a Starlark package.
 
@@ -973,10 +923,9 @@ def _exchange_starlark_package_revision(package_name: str,
         replaced with |new_revision|. |old_revision| is the revision for
         |package_name| that was present before the exchange.
     """
-    old_revision = _extract_starlark_package_revision(package_name,
-                                                      package_star_contents)
-    package_star_contents = _replace_starlark_package_revision(
-        package_name, new_revision, package_star_contents)
+    old_revision = _extract_starlark_package_revision(package_name, package_star_contents)
+    package_star_contents = _replace_starlark_package_revision(package_name, new_revision,
+                                                               package_star_contents)
     return package_star_contents, old_revision
 
 
@@ -1008,8 +957,7 @@ def _get_starlark_package_regex_for(package_name: str) -> re.Pattern:
     return revision_pattern
 
 
-def _extract_starlark_package_revision(package_name: str,
-                                       package_star_contents: str) -> str:
+def _extract_starlark_package_revision(package_name: str, package_star_contents: str) -> str:
     """Extract a Starlark package revision from PACKAGE.star content.
 
     Args:
@@ -1023,9 +971,8 @@ def _extract_starlark_package_revision(package_name: str,
     revision_pattern = _get_starlark_package_regex_for(package_name)
     match = revision_pattern.search(package_star_contents)
     if not match:
-        raise RuntimeError(
-            f'Unable to extract {package_name} revision from PACKAGE.star '
-            f'contents')
+        raise RuntimeError(f'Unable to extract {package_name} revision from PACKAGE.star '
+                           f'contents')
     return match.group(2)
 
 
@@ -1046,28 +993,22 @@ def _replace_starlark_package_revision(package_name: str, new_revision: str,
     revision_pattern = _get_starlark_package_regex_for(package_name)
     # Replace the match with Group 1 (matched content before the revision) and
     # the new revision itself.
-    updated_contents = revision_pattern.sub(rf'\g<1>{new_revision}',
-                                            package_star_contents)
+    updated_contents = revision_pattern.sub(rf'\g<1>{new_revision}', package_star_contents)
     return updated_contents
 
 
 def _parse_args() -> argparse.Namespace:
     """Parses and returns command line arguments."""
     parser = argparse.ArgumentParser('Roll DEPS entries shared with Chromium.')
-    parser.add_argument('--verbose',
-                        '-v',
-                        action='store_true',
-                        help='Increase logging verbosity')
-    parser.add_argument('--autoroll',
-                        action='store_true',
-                        help='Run the script in autoroll mode')
-    parser.add_argument('--ignore-unclean-workdir',
-                        action='store_true',
-                        help=('Ignore uncommitted changes and being on a '
-                              'non-main branch'))
-    parser.add_argument('--revision',
-                        help=('A Chromium revision to roll to. If '
-                              'unspecified, HEAD is used.'))
+    parser.add_argument('--verbose', '-v', action='store_true', help='Increase logging verbosity')
+    parser.add_argument('--autoroll', action='store_true', help='Run the script in autoroll mode')
+    parser.add_argument(
+        '--ignore-unclean-workdir',
+        action='store_true',
+        help='Ignore uncommitted changes and being on a non-main branch')
+    parser.add_argument(
+        '--revision', help=('A Chromium revision to roll to. If unspecified, '
+                            'HEAD is used.'))
     return parser.parse_args()
 
 
@@ -1086,9 +1027,8 @@ def main() -> None:
 
     if not args.ignore_unclean_workdir:
         if not _is_tree_clean():
-            raise RuntimeError(
-                'Uncommitted or untracked files found. Please commit them or '
-                'pass --ignore-unclean-workdir')
+            raise RuntimeError('Uncommitted or untracked files found. Please commit them or '
+                               'pass --ignore-unclean-workdir')
         _ensure_updated_main_branch()
 
     with open(DEPS_FILE, encoding='utf-8') as infile:
@@ -1110,8 +1050,8 @@ def main() -> None:
 
     # Create the commit message before adding the entry for the Chromium
     # revision since Chromium information is explicitly added to the message.
-    commit_message = _generate_commit_message(entries_for_commit_message,
-                                              revision_range, args.autoroll)
+    commit_message = _generate_commit_message(entries_for_commit_message, revision_range,
+                                              args.autoroll)
     # We change the variable directly instead of using ChangedRepo since
     # 'gclient setdep --revision' does not work for repos if there is no entry
     # in .gitmodules.
