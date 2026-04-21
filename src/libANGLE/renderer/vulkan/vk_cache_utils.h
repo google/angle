@@ -1858,10 +1858,6 @@ class WriteDescriptorDescs
     void updateImages(const gl::ProgramExecutable &executable,
                       const ShaderInterfaceVariableInfoMap &variableInfoMap);
 
-    void updateInputAttachments(const gl::ProgramExecutable &executable,
-                                const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                                const FramebufferVk *framebufferVk);
-
     void updateExecutableActiveTextures(const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const gl::ProgramExecutable &executable);
 
@@ -1874,6 +1870,10 @@ class WriteDescriptorDescs
 
     void updateDynamicDescriptorsCount();
 
+    void initInputAttachments(const gl::ProgramExecutable &executable,
+                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
+                              uint32_t maxColorCount);
+
     size_t size() const { return mDescs.size(); }
     bool empty() const { return mDescs.size() == 0; }
 
@@ -1881,6 +1881,8 @@ class WriteDescriptorDescs
     {
         return mDescs[bindingIndex];
     }
+
+    WriteDescriptorDesc &operator[](uint32_t bindingIndex) { return mDescs[bindingIndex]; }
 
     size_t getTotalDescriptorCount() const { return mCurrentInfoIndex; }
     size_t getDynamicDescriptorSetCount() const { return mDynamicDescriptorSetCount; }
@@ -2121,11 +2123,13 @@ class DescriptorSetDescBuilder final
                                const gl::ActiveTextureArray<TextureVk *> &activeImages,
                                const std::vector<gl::ImageUnit> &imageUnits,
                                const WriteDescriptorDescs &writeDescriptorDescs);
+
     angle::Result updateInputAttachments(ContextVk *contextVk,
                                          const gl::ProgramExecutable &executable,
                                          const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                          const FramebufferVk *framebufferVk,
-                                         const WriteDescriptorDescs &writeDescriptorDescs);
+                                         WriteDescriptorDescs &writeDescriptorDescs,
+                                         gl::AttachmentsMask *currentMaskOut);
 
     // Specialized update for textures.
     void updatePreCacheActiveTextures(Context *context,
@@ -2135,9 +2139,14 @@ class DescriptorSetDescBuilder final
                                       const WriteDescriptorDescs &writeDescriptorDescs);
 
     const uint32_t *getDynamicOffsets() const { return mDynamicOffsets.data(); }
-    size_t getDynamicOffsetsSize() const { return mDynamicOffsets.size(); }
 
     const DescriptorDescHandles *getHandles() const { return mHandles.data(); }
+
+    void resetDescriptor(uint32_t infoIndex)
+    {
+        mDesc.getInfoDesc(infoIndex) = {};
+        mHandles[infoIndex]          = {};
+    }
 
   private:
     void updateInputAttachment(Context *context,

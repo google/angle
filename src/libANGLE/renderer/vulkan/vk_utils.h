@@ -1230,6 +1230,8 @@ void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT
 
 constexpr size_t kUnpackedDepthIndex   = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
 constexpr size_t kUnpackedStencilIndex = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1;
+constexpr gl::AttachmentsMask kDepthStencilAttachmentsMask({kUnpackedDepthIndex,
+                                                            kUnpackedStencilIndex});
 constexpr uint32_t kUnpackedColorBuffersMask =
     angle::BitMask<uint32_t>(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS);
 
