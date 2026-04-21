@@ -244,6 +244,33 @@ def angle_win_manual_builder(*, name, **kwargs):
 
 ## Functional testers
 
+# This is effectively a copy of angle-cq-android-arm64-rel, but manual-only and
+# with the angle_ir GN arg config set. Mirroring is done in this way instead
+# of having CI builders because we do not have a need for the CI builders and
+# this keeps the tests in sync between the IR and non-IR builders.
+angle_linux_manual_builder(
+    name = "angle-try-android-arm64-ir-rel",
+    description_html = ("Tests release ANGLE on Android/arm64 on multiple hardware configs using " +
+                        "ANGLE's new intermediate representation for shaders. Manual only."),
+    mirrors = [
+        "ci/angle-android-arm64-builder-rel",
+        "ci/angle-android-arm64-google-pixel4-rel",
+        "ci/angle-android-arm64-google-pixel6-rel",
+    ],
+    gn_args = gn_args.config(
+        configs = [
+            "android_clang",
+            "android_static_analysis",
+            "angle_ir",
+            "arm64",
+            "capture",
+            "component",
+            "opencl",
+            "release_with_dchecks",
+        ],
+    ),
+)
+
 angle_linux_manual_builder(
     name = "angle-try-android-arm64-google-pixel4-rel",
     description_html = "Tests release ANGLE on Android/arm64 on Pixel 4 devices. Manual only.",
