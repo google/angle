@@ -1812,7 +1812,8 @@ bool ValidateES2TexStorageParametersBase(const Context *context,
     }
 
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalformat);
-    if (formatInfo.format == GL_NONE || formatInfo.type == GL_NONE)
+    if (formatInfo.format == GL_NONE || formatInfo.type == GL_NONE ||
+        IsAngleInternalFormat(internalformat))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidFormat);
         return false;

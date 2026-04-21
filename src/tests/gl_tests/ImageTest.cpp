@@ -5782,6 +5782,38 @@ TEST_P(ImageTestES3, RGBXAHBImportPreservesData_Colorspace)
     destroyAndroidHardwareBuffer(ahb);
 }
 
+// Test that RGBX data are preserved when importing from AHB created with sRGB color space.  Using
+// immutable textures.
+TEST_P(ImageTestES3, RGBXAHBImportPreservesData_Colorspace_TexStorage)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
+
+    const GLubyte kRed50SRGB[]   = {188, 0, 0, 255};
+    const GLubyte kRed50Linear[] = {128, 0, 0, 255};
+
+    // Create the Image
+    AHardwareBuffer *ahb;
+    EGLImageKHR ahbImage;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM,
+                                              kDefaultAHBUsage, kColorspaceAttribs,
+                                              {{kRed50SRGB, 4}}, &ahb, &ahbImage);
+
+    GLTexture ahbTexture;
+    createEGLImageTargetTextureStorage(ahbImage, GL_TEXTURE_2D, ahbTexture, nullptr);
+
+    verifyResults2D(ahbTexture, kRed50Linear);
+    verifyResultAHB(ahb, {{kRed50SRGB, 4}});
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), ahbImage);
+    destroyAndroidHardwareBuffer(ahb);
+}
+
 // Tests that RGBX can be successfully loaded with 3-channel data and read back as 4-channel data.
 TEST_P(ImageTestES3, RGBXAHBUploadDownload)
 {

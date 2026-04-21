@@ -1688,6 +1688,84 @@ const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, GLenum type)
     return typeIter->second;
 }
 
+// Used by validation to determine if an internal format is internal to ANGLE and should not be
+// allowed for app use.
+bool IsAngleInternalFormat(GLenum internalFormat)
+{
+    switch (internalFormat)
+    {
+        case GL_A1RGB5_ANGLEX:
+        case GL_BGRX8_ANGLEX:
+        case GL_BGR565_ANGLEX:
+        case GL_BGRA4_ANGLEX:
+        case GL_BGR5_A1_ANGLEX:
+        case GL_INT_64_ANGLEX:
+        case GL_UINT_64_ANGLEX:
+        case GL_BGRA8_SRGB_ANGLEX:
+        case GL_BGR10_A2_ANGLEX:
+        case GL_BGRX8_SRGB_ANGLEX:
+        case GL_RGBX8_SRGB_ANGLEX:
+        case GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX:
+        case GL_RGBA8_TYPELESS_ANGLEX:
+        case GL_RGBA8_TYPELESS_SRGB_ANGLEX:
+        case GL_BGRA8_TYPELESS_ANGLEX:
+        case GL_BGRA8_TYPELESS_SRGB_ANGLEX:
+        case GL_R8_SSCALED_ANGLEX:
+        case GL_RG8_SSCALED_ANGLEX:
+        case GL_RGB8_SSCALED_ANGLEX:
+        case GL_RGBA8_SSCALED_ANGLEX:
+        case GL_R8_USCALED_ANGLEX:
+        case GL_RG8_USCALED_ANGLEX:
+        case GL_RGB8_USCALED_ANGLEX:
+        case GL_RGBA8_USCALED_ANGLEX:
+        case GL_R16_SSCALED_ANGLEX:
+        case GL_RG16_SSCALED_ANGLEX:
+        case GL_RGB16_SSCALED_ANGLEX:
+        case GL_RGBA16_SSCALED_ANGLEX:
+        case GL_R16_USCALED_ANGLEX:
+        case GL_RG16_USCALED_ANGLEX:
+        case GL_RGB16_USCALED_ANGLEX:
+        case GL_RGBA16_USCALED_ANGLEX:
+        case GL_R32_SSCALED_ANGLEX:
+        case GL_RG32_SSCALED_ANGLEX:
+        case GL_RGB32_SSCALED_ANGLEX:
+        case GL_RGBA32_SSCALED_ANGLEX:
+        case GL_R32_USCALED_ANGLEX:
+        case GL_RG32_USCALED_ANGLEX:
+        case GL_RGB32_USCALED_ANGLEX:
+        case GL_RGBA32_USCALED_ANGLEX:
+        case GL_R32_SNORM_ANGLEX:
+        case GL_RG32_SNORM_ANGLEX:
+        case GL_RGB32_SNORM_ANGLEX:
+        case GL_RGBA32_SNORM_ANGLEX:
+        case GL_R32_UNORM_ANGLEX:
+        case GL_RG32_UNORM_ANGLEX:
+        case GL_RGB32_UNORM_ANGLEX:
+        case GL_RGBA32_UNORM_ANGLEX:
+        case GL_R32_FIXED_ANGLEX:
+        case GL_RG32_FIXED_ANGLEX:
+        case GL_RGB32_FIXED_ANGLEX:
+        case GL_RGBA32_FIXED_ANGLEX:
+        case GL_RGB10_A2_SINT_ANGLEX:
+        case GL_RGB10_A2_SNORM_ANGLEX:
+        case GL_RGB10_A2_SSCALED_ANGLEX:
+        case GL_RGB10_A2_USCALED_ANGLEX:
+        case GL_A2_RGB10_UNORM_ANGLEX:
+        case GL_A2_RGB10_SNORM_ANGLEX:
+        case GL_A2_RGB10_USCALED_ANGLEX:
+        case GL_A2_RGB10_SSCALED_ANGLEX:
+        case GL_X2_RGB10_UINT_ANGLEX:
+        case GL_X2_RGB10_SINT_ANGLEX:
+        case GL_X2_RGB10_USCALED_ANGLEX:
+        case GL_X2_RGB10_SSCALED_ANGLEX:
+        case GL_X2_RGB10_UNORM_ANGLEX:
+        case GL_X2_RGB10_SNORM_ANGLEX:
+            return true;
+        default:
+            return false;
+    }
+}
+
 GLuint InternalFormat::computePixelBytes(GLenum formatType) const
 {
     const auto &typeInfo = GetTypeInfo(formatType);
