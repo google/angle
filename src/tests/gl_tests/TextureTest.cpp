@@ -12317,6 +12317,28 @@ TEST_P(Texture2DNorm16TestES3, TextureNorm16RGBA16RenderTest)
     testNorm16RenderAndReadPixels(GL_RGBA16_EXT, GL_RGBA, GL_UNSIGNED_SHORT);
 }
 
+// Test that readback with PBO correctly uses the offset, and doesn't dereference it as a pointer.
+TEST_P(Texture2DNorm16TestES3, ReadbackWithPBO)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R16_EXT, 1, 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_PACK_BUFFER, 16, nullptr, GL_STREAM_READ);
+
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_SHORT, reinterpret_cast<void *>(8));
+    EXPECT_GL_NO_ERROR();
+}
+
 class Texture2DRGTest : public Texture2DTest
 {
   protected:
@@ -19618,7 +19640,10 @@ ANGLE_INSTANTIATE_TEST_ES3(TextureMirrorClampToEdgeIntegerTestES3);
 ANGLE_INSTANTIATE_TEST_ES2(TextureLimitsTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DNorm16TestES3);
-ANGLE_INSTANTIATE_TEST_ES3(Texture2DNorm16TestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    Texture2DNorm16TestES3,
+    ES3_OPENGL().enable(Feature::ReadPixelsUsingImplementationColorReadFormatForNorm16),
+    ES3_OPENGLES().enable(Feature::ReadPixelsUsingImplementationColorReadFormatForNorm16));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(Texture2DRGTest,
                                        ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB(),
