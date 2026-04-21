@@ -11322,8 +11322,10 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
     Renderer *renderer = contextVk->getRenderer();
 
     bool isExternalFormat = getExternalFormat() != 0;
-    ASSERT(!isExternalFormat || (mActualFormatID >= angle::FormatID::EXTERNAL0 &&
-                                 mActualFormatID <= angle::FormatID::EXTERNAL7));
+
+    // Vulkan spec says that mYcbcrConversionDesc is always set for samplable external-format
+    // images
+    ASSERT(!isExternalFormat || mYcbcrConversionDesc.valid());
 
     // If the source image is multisampled, we need to resolve it into a temporary image before
     // performing a readback.

@@ -6372,6 +6372,11 @@ CallCapture ParseCallCapture(const Token &nameToken,
             ParseParameters<decltype(UpdateCurrentProgramPerContext)>(paramTokens, strings);
         return CallCapture("UpdateCurrentProgramPerContext", std::move(params));
     }
+    if (strcmp(nameToken, "UpdateEGLImageData") == 0)
+    {
+        ParamBuffer params = ParseParameters<decltype(UpdateEGLImageData)>(paramTokens, strings);
+        return CallCapture("UpdateEGLImageData", std::move(params));
+    }
     if (strcmp(nameToken, "UpdateFenceNVID") == 0)
     {
         ParamBuffer params = ParseParameters<decltype(UpdateFenceNVID)>(paramTokens, strings);
@@ -6745,6 +6750,11 @@ void ReplayCustomFunctionCall(const CallCapture &call, const TraceFunctionMap &c
     if (call.customFunctionName == "UpdateCurrentProgramPerContext")
     {
         DispatchCallCapture(UpdateCurrentProgramPerContext, captures);
+        return;
+    }
+    if (call.customFunctionName == "UpdateEGLImageData")
+    {
+        DispatchCallCapture(UpdateEGLImageData, captures);
         return;
     }
     if (call.customFunctionName == "UpdateFenceNVID")
