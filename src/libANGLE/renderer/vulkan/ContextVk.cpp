@@ -3792,7 +3792,24 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
 
     if (mImageWithTileMemory != nullptr)
     {
+        // submitCommands may get called from a draw call (for example, Texture::syncState). The
+        // Framebuffer::syncState will not get called for current draw call since
+        // State::syncDirtyObjects already took the dirty bits. Here we try to detect that current
+        // drawFBO is getting affected and invalidate cached object in FramebufferVk so that they
+        // could get recreated. We have to do this detection logic before fallback since fallback
+        // will clear mImageWithTileMemory pointer.
+        const vk::ImageHelper *drawFBOImageWithTileMemory =
+            mState.getDrawFramebuffer() != nullptr ? getDrawFramebuffer()->getImageWithTileMemory()
+                                                   : nullptr;
+        const bool drawFBOImageFallbackFromTileMemory =
+            drawFBOImageWithTileMemory && drawFBOImageWithTileMemory == mImageWithTileMemory;
+
         ANGLE_TRY(finalizeImageWithTileMemory());
+
+        if (drawFBOImageFallbackFromTileMemory)
+        {
+            getDrawFramebuffer()->onTileMemoryFallback(this);
+        }
     }
 
     ANGLE_TRY(mCommandState.insertSubmitDebugMarker(this, reason));

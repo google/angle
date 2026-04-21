@@ -9909,6 +9909,93 @@ TEST_P(VulkanPerformanceCounterTest_TileMemory, BlitGradientDepthBuffer)
     EXPECT_EQ(bottomRightTriangleIsBlue, true);
 }
 
+// Similar to OneDSBufferUsedInOneRenderPassThenInvalidate_D24S8, add sample from cubemap texture
+// which on some GPU, it may trigger finishImpl call.
+TEST_P(VulkanPerformanceCounterTest_TileMemory,
+       OneDSBufferUsedInOneRenderPassThenSampleFromCubemapTexture)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    ANGLE_SKIP_TEST_IF(!isFeatureEnabled(Feature::SimulateTileMemoryForTesting) &&
+                       !isFeatureEnabled(Feature::SupportsTileMemoryHeap));
+
+    setupPrograms();
+
+    const char kCubemapTextureFS[] = R"(precision highp float;
+            uniform samplerCube texCube;
+            varying vec2 v_texCoord;
+            void main()
+            {
+                vec3 cubecoord = vec3(1, v_texCoord);
+                gl_FragColor = textureCube(texCube, cubecoord);
+            })";
+
+    constexpr GLsizei kWidth  = 4;
+    constexpr GLsizei kHeight = 4;
+
+    uint64_t tileMemoryImageCountBefore = getPerfCounters().tileMemoryImages;
+    uint64_t renderPassCountBefore      = getPerfCounters().renderPasses;
+
+    // Create a cubemap texture. This will create a texture with mHasBeenBoundAsAttachment=false.
+    GLTexture cubeMapTexture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 7, GL_RGB5_A1, 64, 64);
+    std::array<uint16_t, 64 * 64> textureData;
+    textureData.fill(0xF801);
+    for (GLenum target = GL_TEXTURE_CUBE_MAP_POSITIVE_X; target <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         target++)
+    {
+        glTexSubImage2D(target, 0, 0, 0, 64, 64, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1,
+                        reinterpret_cast<const GLubyte *>(textureData.data()));
+    }
+    // This will make the cubemap texture's mHasBeenBoundAsAttachment=true.
+    GLFramebuffer fboWithCubemapTexture;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboWithCubemapTexture);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+                           cubeMapTexture, 0);
+
+    // Create FBO, it's depthStencil buffer should allocated with tile memory.
+    GLTexture colorTexture;
+    GLRenderbuffer depthStencil;
+    setupColorTextureAndDepthBuffer(colorTexture, depthStencil, GL_DEPTH24_STENCIL8, kWidth,
+                                    kHeight);
+    GLFramebuffer fbo;
+    setupFBO(colorTexture, depthStencil, depthStencil, fbo, kWidth, kHeight);
+
+    // Start renderPass
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(0.5f);
+    glClearStencil(0x55);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    drawQuadToVerifyDepthStencilValue(0.0f, 0x55);
+    EXPECT_GL_NO_ERROR();
+
+    // There should be only one render pass.
+    uint64_t renderPassCount = getPerfCounters().renderPasses - renderPassCountBefore;
+    EXPECT_EQ(1u, renderPassCount);
+    EXPECT_EQ(1u, getPerfCounters().tileMemoryImages - tileMemoryImageCountBefore);
+    EXPECT_EQ(0u, getPerfCounters().fallbackFromTileMemory);
+
+    // Sample from cubeMapTexture. This may trigger submitCommands on some GPUs that has to recreate
+    // VkImage for cubemap texture due to mHasBeenBoundAsAttachment==true and trigger a finishImpl
+    // call due to data copy back.
+    ANGLE_GL_PROGRAM(texProgram, essl1_shaders::vs::Texture2D(), kCubemapTextureFS);
+    glUseProgram(texProgram);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
+    glDisable(GL_STENCIL_TEST);
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(texProgram, essl1_shaders::PositionAttrib(), 0.6f);
+    drawQuadToVerifyDepthValue(drawGreen, drawRed, 0.6f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+}
+
 class VulkanPerformanceCounterTest_Dither : public VulkanPerformanceCounterTest
 {};
 
