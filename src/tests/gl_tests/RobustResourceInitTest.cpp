@@ -2214,6 +2214,10 @@ TEST_P(RobustResourceInitTest, MaskedStencilClear)
     };
 
     maskedStencilClear(clearFunc);
+
+    // Run the test twice. This is a regression test for state synchronization leaking into the
+    // clear operation.
+    maskedStencilClear(clearFunc);
 }
 
 // Test that clearing a masked stencil buffer doesn't mark it clean, with ClearBufferi.
