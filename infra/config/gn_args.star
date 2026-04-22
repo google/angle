@@ -73,6 +73,13 @@ gn_args.config(
 )
 
 gn_args.config(
+    name = "dcheck_off",
+    args = {
+        "dcheck_always_on": False,
+    },
+)
+
+gn_args.config(
     name = "debug",
     args = {
         "is_debug": True,

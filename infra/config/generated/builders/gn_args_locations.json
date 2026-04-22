@@ -9,6 +9,7 @@
     "angle-linux-x64-trace": "ci/angle-linux-x64-trace/gn-args.json",
     "angle-mac-arm64-builder-rel": "ci/angle-mac-arm64-builder-rel/gn-args.json",
     "angle-mac-x64-builder-rel": "ci/angle-mac-x64-builder-rel/gn-args.json",
+    "angle-win-x64-builder-perf": "ci/angle-win-x64-builder-perf/gn-args.json",
     "angle-win-x64-builder-rel": "ci/angle-win-x64-builder-rel/gn-args.json",
     "angle-win-x86-builder-rel": "ci/angle-win-x86-builder-rel/gn-args.json"
   },

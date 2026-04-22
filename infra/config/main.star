@@ -134,6 +134,14 @@ chromium_luci.configure_recipe_experiments(
     require_builder_wrappers = False,
 )
 
+chromium_luci.configure_builder_config(
+    mega_cq_excluded_builders = [
+        "angle-win-x64-builder-perf",
+        "angle-win-x64-intel-uhd630-perf",
+        "angle-win-x64-nvidia-gtx1660-perf",
+    ],
+)
+
 # Allow builders to write baselines and query ResultDB for new tests.
 luci.realm(
     name = "@project",
