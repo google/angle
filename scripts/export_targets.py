@@ -267,8 +267,6 @@ IGNORED_INCLUDES = {
     b'profiling/profiling.h',
     # Behind #ifdef HAVE_S390X_VX in third_party/zlib/crc32.c
     b'contrib/crc32vx/crc32_vx_hooks.h',
-    # Temporary workaround to roll in http://github.com/KhronosGroup/SPIRV-Tools/pull/6635
-    b'spirv/unified1/NonSemanticShaderDebugInfo.h'
 }
 
 IGNORED_INCLUDE_PREFIXES = {
