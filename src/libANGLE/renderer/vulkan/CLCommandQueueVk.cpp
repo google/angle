@@ -496,8 +496,7 @@ angle::Result CLCommandQueueVk::enqueueCopyBufferRect(const cl::Buffer &srcBuffe
     auto dstBufferVk = &dstBuffer.getImpl<CLBufferVk>();
 
     uint8_t *mapPointer = nullptr;
-    ANGLE_TRY(srcBufferVk->map(mapPointer));
-    cl::Defer deferUnmap([&srcBufferVk]() { srcBufferVk->unmap(); });
+    ANGLE_TRY(srcBufferVk->mapBufferHelper(mapPointer));
 
     ANGLE_TRY(dstBufferVk->setRect(static_cast<const void *>(mapPointer), srcRect, dstRect));
 
@@ -548,7 +547,7 @@ angle::Result CLCommandQueueVk::enqueueMapBuffer(const cl::Buffer &buffer,
 
     CLBufferVk *bufferVk = &buffer.getImpl<CLBufferVk>();
     uint8_t *mapPointer  = nullptr;
-    ANGLE_TRY(bufferVk->map(mapPointer, offset));
+    ANGLE_TRY(bufferVk->mapForUser(mapPointer, offset));
     mapPtr = mapPointer;
 
     if (buffer.getFlags().intersects(CL_MEM_USE_HOST_PTR) && !bufferVk->supportsZeroCopy())
@@ -1174,7 +1173,7 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
     }
 
     uint8_t *mapPointer = nullptr;
-    ANGLE_TRY(imageVk->map(mapPointer, bufferRect.getBufferOffset()));
+    ANGLE_TRY(imageVk->mapForUser(mapPointer, bufferRect.getBufferOffset()));
     mapPtr = mapPointer;
 
     if (image.getFlags().intersects(CL_MEM_USE_HOST_PTR))
@@ -2058,7 +2057,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
         cl::BufferPtr clMem = getOrCreatePrintfBuffer();
         CLBufferVk &vkMem   = clMem->getImpl<CLBufferVk>();
         uint8_t *mapPointer = nullptr;
-        ANGLE_TRY(vkMem.map(mapPointer, 0));
+        ANGLE_TRY(vkMem.mapBufferHelper(mapPointer));
         // The spec calls out *The first 4 bytes of the buffer should be zero-initialized.*
         ANGLE_UNSAFE_TODO(memset(mapPointer, 0, 4));
 
@@ -2599,7 +2598,7 @@ angle::Result CommandsStateMap::processQueueSerialUpTo(const QueueSerial queueSe
                 CLBufferVk &vkMem = pair.second.mPrintfBuffer->template getImpl<CLBufferVk>();
 
                 unsigned char *data = nullptr;
-                ANGLE_TRY(vkMem.map(data, 0));
+                ANGLE_TRY(vkMem.mapBufferHelper(data));
                 ANGLE_TRY(ClspvProcessPrintfBuffer(data, vkMem.getSize(), printfInfos));
                 vkMem.unmap();
             }

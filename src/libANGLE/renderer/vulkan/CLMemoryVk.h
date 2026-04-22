@@ -37,7 +37,12 @@ class CLMemoryVk : public CLMemoryImpl
                                   size_t size,
                                   CLMemoryImpl::Ptr *subBufferOut) override;
 
-    angle::Result map(uint8_t *&ptrOut, size_t offset = 0);
+    // CL Memory object can have a separate user host pointer that is separate from device mapped
+    // pointer. As such having two interfaces to get this
+    //  - mapForUser() - returns a mapped pointer as expected by the spec.
+    //  - mapBufferHelper() - always provides mapped VkMemory object
+    angle::Result mapForUser(uint8_t *&ptrOut, size_t offset = 0);
+    virtual angle::Result mapBufferHelper(uint8_t *&ptrOut) = 0;
     void unmap() { unmapBufferHelper(); }
 
     VkBufferUsageFlags getVkUsageFlags();
@@ -64,7 +69,6 @@ class CLMemoryVk : public CLMemoryImpl
   protected:
     CLMemoryVk(const cl::Memory &memory);
 
-    virtual angle::Result mapBufferHelper(uint8_t *&ptrOut)       = 0;
     virtual angle::Result mapParentBufferHelper(uint8_t *&ptrOut) = 0;
     virtual void unmapBufferHelper()                              = 0;
 
@@ -134,8 +138,9 @@ class CLBufferVk : public CLMemoryVk
     bool hasImage2DChild() const { return mImage2DFromThisBuffer != nullptr; }
     CLImageVk *getImage() { return mImage2DFromThisBuffer; }
 
-  private:
     angle::Result mapBufferHelper(uint8_t *&ptrOut) override;
+
+  private:
     angle::Result mapParentBufferHelper(uint8_t *&ptrOut) override;
     void unmapBufferHelper() override;
     angle::Result createWithProperties();
@@ -230,10 +235,10 @@ class CLImageVk : public CLMemoryVk
     vk::ImageView &getImageView() { return mImageView; }
     angle::Result getBufferView(const vk::BufferView **viewOut);
     angle::Result getOrCreateStagingBuffer(CLBufferVk **clBufferOut);
+    angle::Result mapBufferHelper(uint8_t *&ptrOut) override;
 
   private:
     angle::Result initImageViewImpl();
-    angle::Result mapBufferHelper(uint8_t *&ptrOut) override;
     angle::Result mapParentBufferHelper(uint8_t *&ptrOut) override;
     void unmapBufferHelper() override;
 

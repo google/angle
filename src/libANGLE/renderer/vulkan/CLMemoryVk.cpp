@@ -98,7 +98,9 @@ VkMemoryPropertyFlags CLMemoryVk::getVkMemPropertyFlags()
     return cl_vk::GetMemoryPropertyFlags(mMemory.getFlags());
 }
 
-angle::Result CLMemoryVk::map(uint8_t *&ptrOut, size_t offset)
+// This is used to report the mapped pointer to the user as required by OpenCL spec.
+// Any synchronization (device <-> host) required has to be handled by the caller.
+angle::Result CLMemoryVk::mapForUser(uint8_t *&ptrOut, size_t offset)
 {
     if (getFlags().intersects(CL_MEM_USE_HOST_PTR))
     {
