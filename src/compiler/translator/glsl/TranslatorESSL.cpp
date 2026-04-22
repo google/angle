@@ -12,6 +12,7 @@
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/glsl/BuiltInFunctionEmulatorGLSL.h"
 #include "compiler/translator/glsl/OutputESSL.h"
+#include "compiler/translator/tree_ops/AddDefaultReturnStatements.h"
 #include "compiler/translator/tree_ops/DeclarePerVertexBlocks.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/RecordConstantPrecision.h"
@@ -99,6 +100,11 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     if (!compileOptions.useIR)
     {
         if (!RecordConstantPrecision(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
+
+        if (!sh::AddDefaultReturnStatements(this, root))
         {
             return false;
         }
