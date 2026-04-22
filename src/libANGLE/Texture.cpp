@@ -1387,7 +1387,15 @@ GLint Texture::getLevelMemorySize(TextureTarget target, GLint level) const
 
 void Texture::signalDirtyStorage(InitState initState)
 {
-    mState.mInitState = initState;
+    // If initState is InitState::Initialized, some subresource is initialized.  Instead of
+    // checking all the subresources to update mState.mInitState appropriately, leave it be until
+    // ensureInitialized() syncs it if needed.
+    //
+    // If initState is InitState::MayNeedInit, then the texture definitely needs initialization.
+    if (initState == InitState::MayNeedInit)
+    {
+        mState.mInitState = InitState::MayNeedInit;
+    }
     invalidateCompletenessCache();
     mState.mCachedSamplerFormatValid = false;
     onStateChange(angle::SubjectMessage::SubjectChanged);
@@ -1656,6 +1664,9 @@ angle::Result Texture::copyRenderbufferSubData(Context *context,
                                                 dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight,
                                                 srcDepth));
 
+    // Incorrect: must set initialized only if the entire subresource is covered, and only for the
+    // corresponding ImageDesc.  Image must be initialized before copy if not writing to entire
+    // subresource.  http://anglebug.com/505317123
     signalDirtyStorage(InitState::Initialized);
 
     return angle::Result::Continue;
@@ -1679,6 +1690,9 @@ angle::Result Texture::copyTextureSubData(Context *context,
                                            dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight,
                                            srcDepth));
 
+    // Incorrect: must set initialized only if the entire subresource is covered, and only for the
+    // corresponding ImageDesc.  Image must be initialized before copy if not writing to entire
+    // subresource.  http://anglebug.com/505317123
     signalDirtyStorage(InitState::Initialized);
 
     return angle::Result::Continue;

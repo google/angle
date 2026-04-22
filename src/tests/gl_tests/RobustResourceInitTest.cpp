@@ -1251,6 +1251,134 @@ void main() {
     checkFramebufferNonZeroPixels(0, 0, 0, 0, GLColor::black);
 }
 
+// Tests that drawing with an uninitialized mipped texture works as expected if the last call
+// initializes the mip it creates.  Using glTexImage2D data to initialize the mip.
+TEST_P(RobustResourceInitTestES3, DrawWithMippedTextureLastLevelInitWithTexImage2D)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr uint32_t kMipCount = 4;
+    const std::vector<GLColor> kLastMipData(
+        (kWidth >> (kMipCount - 1)) * (kHeight >> (kMipCount - 1)), GLColor::red);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    for (uint32_t mip = 0; mip < kMipCount; ++mip)
+    {
+        glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA, kWidth >> mip, kHeight >> mip, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, mip + 1 == kMipCount ? kLastMipData.data() : nullptr);
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, kMipCount - 1);
+
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(program);
+    GLint lodLoc = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLoc);
+
+    for (uint32_t mip = 0; mip < kMipCount; ++mip)
+    {
+        glUniform1f(lodLoc, mip);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0,
+                              (mip + 1 == kMipCount ? kLastMipData[0] : GLColor::transparentBlack))
+            << mip;
+    }
+}
+
+// Tests that drawing with an uninitialized mipped texture works as expected if the last call
+// initializes the mip it creates.  Using glCopyTexImage2D to initialize the mip.
+TEST_P(RobustResourceInitTestES3, DrawWithMippedTextureLastLevelInitWithCopyTexImage2D)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    glClearColor(1, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    constexpr uint32_t kMipCount = 4;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    for (uint32_t mip = 0; mip < kMipCount - 1; ++mip)
+    {
+        glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA, kWidth >> mip, kHeight >> mip, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+    }
+    glCopyTexImage2D(GL_TEXTURE_2D, kMipCount - 1, GL_RGBA, 0, 0, kWidth >> (kMipCount - 1),
+                     kHeight >> (kMipCount - 1), 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, kMipCount - 1);
+
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(program);
+    GLint lodLoc = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLoc);
+
+    for (uint32_t mip = 0; mip < kMipCount; ++mip)
+    {
+        glUniform1f(lodLoc, mip);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0,
+                              (mip + 1 == kMipCount ? GLColor::red : GLColor::transparentBlack))
+            << mip;
+    }
+}
+
+// Tests that drawing with an uninitialized mipped texture works as expected if the last call
+// initializes the mip it creates.  Using glCopyTextureCHROMIUM to initialize the mip.
+TEST_P(RobustResourceInitTestES3, DrawWithMippedTextureLastLevelInitWithCopyTexture)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
+
+    constexpr uint32_t kMipCount = 4;
+    const std::vector<GLColor> kLastMipData(
+        (kWidth >> (kMipCount - 1)) * (kHeight >> (kMipCount - 1)), GLColor::red);
+
+    GLTexture copySrc;
+    glBindTexture(GL_TEXTURE_2D, copySrc);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth >> (kMipCount - 1), kHeight >> (kMipCount - 1),
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, kLastMipData.data());
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    for (uint32_t mip = 0; mip < kMipCount - 1; ++mip)
+    {
+        glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA, kWidth >> mip, kHeight >> mip, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, mip + 1 == kMipCount ? kLastMipData.data() : nullptr);
+    }
+    glCopyTextureCHROMIUM(copySrc, 0, GL_TEXTURE_2D, texture, kMipCount - 1, GL_RGBA,
+                          GL_UNSIGNED_BYTE, GL_FALSE, GL_FALSE, GL_FALSE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, kMipCount - 1);
+
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(program);
+    GLint lodLoc = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLoc);
+
+    for (uint32_t mip = 0; mip < kMipCount; ++mip)
+    {
+        glUniform1f(lodLoc, mip);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0,
+                              (mip + 1 == kMipCount ? kLastMipData[0] : GLColor::transparentBlack))
+            << mip;
+    }
+}
+
 // Test that readback of uninitialized mipped texture works as expected.
 TEST_P(RobustResourceInitTestES3, ReadbackWithMippedTexture)
 {
