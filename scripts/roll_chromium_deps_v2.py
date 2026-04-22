@@ -82,6 +82,8 @@ SYNCED_CIPD_DEPS = {
 
 # DEPS entries which have dep_type = gcs. In the Chromium DEPS file, these will
 # be prefixed with src/.
+# TODO(anglebug.com/485785261): Handle tools/clang as a GCS dependency like
+# Chromium does.
 SYNCED_GCS_DEPS = set()
 
 # Repos that are independently synced by Chromium and ANGLE. A map from ANGLE
@@ -92,7 +94,40 @@ SYNCED_REPOS = {}
 # Chromium directories that are exported as pseudo-repos in
 # chromium.googlesource.com under chromium/src/. Mapping of ANGLE path to
 # Chromium src-relative path. None means that the names are identical.
-EXPORTED_CHROMIUM_REPOS = {}
+EXPORTED_CHROMIUM_REPOS = {
+    'build': None,
+    'buildtools': None,
+    'testing': None,
+    'third_party/abseil-cpp': None,
+    'third_party/android_build_tools': None,
+    'third_party/android_deps': None,
+    'third_party/android_platform': None,
+    'third_party/android_sdk': None,
+    'third_party/ijar': None,
+    'third_party/jinja2': None,
+    # TODO(anglebug.com/40041909): Add third_party/jsoncpp/src once jsoncpp's
+    # BUILD.gn is copied into ANGLE and the source can be rolled without relying
+    # on recursedeps.
+    'third_party/markupsafe': None,
+    'third_party/protobuf': None,
+    'third_party/Python-Markdown': None,
+    'third_party/rust': None,
+    'third_party/six': None,
+    'third_party/zlib': None,
+    'tools/android': None,
+    # TODO(anglebug.com/485785261): Remove tools/clang when clang is handled as
+    # a GCS dependency like is done in Chromium.
+    'tools/clang': None,
+    'tools/mb': None,
+    'tools/md_browser': None,
+    'tools/memory': None,
+    'tools/perf': None,
+    'tools/protoc_wrapper': None,
+    'tools/python': None,
+    'tools/rust': None,
+    'tools/valgrind': None,
+    'tools/win': None,
+}
 
 
 @dataclasses.dataclass
