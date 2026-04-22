@@ -33,6 +33,7 @@ gn_args.config(
     name = "angle_ir",
     args = {
         "angle_ir": True,
+        "enable_rust_clippy": True,
     },
 )
 

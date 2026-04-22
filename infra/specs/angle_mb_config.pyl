@@ -94,14 +94,8 @@
     'asan': {
       'gn_args': 'is_asan=true',
     },
-    'capture': {
-      'gn_args': 'angle_with_capture_by_default=true',
-    },
     'debug': {
       'gn_args': 'is_debug=true',
-    },
-    'ir': {
-      'gn_args': 'angle_ir=true enable_rust_clippy = true',
     },
     'lsan': {
       'gn_args': 'is_lsan=true',
