@@ -4102,8 +4102,10 @@ class CommandResources : angle::NonCopyable
                          ImageHelper *image)
     {
         ASSERT(image->canTransferFrom() && image->canTransferTo());
+        // aspectFlags maybe a subset of image->getAspectFlags(). Image layout change must include
+        // all aspectFlags without separateDepthStencilLayouts feature enabled.
         onImageReadSubresources(readLevelStart, readLevelCount, readLayerStart, readLayerCount,
-                                aspectFlags, ImageAccess::TransferSrcDst, image);
+                                image->getAspectFlags(), ImageAccess::TransferSrcDst, image);
         onImageWrite(writeLevelStart, writeLevelCount, writeLayerStart, writeLayerCount,
                      aspectFlags, ImageAccess::TransferSrcDst, image);
     }

@@ -8553,7 +8553,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandResources &resources)
         vk::ImageHelper *image = writeImage.image.image;
         ASSERT(!isRenderPassStartedAndUsesImage(*image));
 
-        image->recordWriteBarrier(this, writeImage.image.aspectFlags, writeImage.image.imageAccess,
+        image->recordWriteBarrier(this, image->getAspectFlags(), writeImage.image.imageAccess,
                                   writeImage.levelStart, writeImage.levelCount,
                                   writeImage.layerStart, writeImage.layerCount,
                                   mOutsideRenderPassCommands);

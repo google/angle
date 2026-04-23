@@ -6484,9 +6484,24 @@ angle::Result ImageHelper::fallbackFromTileMemory(ContextVk *contextVk)
     // Copy data from the previous image.
     if (prevImage->isVkImageContentDefined())
     {
-        ANGLE_TRY(
-            utilsVk.copyImageFromTileMemory(contextVk, getAspectFlags(), this, prevImage.get()));
-        ASSERT(isVkImageContentDefined());
+        const angle::Format &actualFormat = prevImage->getActualFormat();
+        VkImageAspectFlags aspectFlags    = 0;
+        if (actualFormat.depthBits > 0 &&
+            IsAnySubresourceContentDefined(prevImage->mVkImageContentDefined))
+        {
+            aspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
+        }
+        if (actualFormat.stencilBits > 0 &&
+            IsAnySubresourceContentDefined(prevImage->mVkImageStencilContentDefined))
+        {
+            aspectFlags |= VK_IMAGE_ASPECT_STENCIL_BIT;
+        }
+        ASSERT(aspectFlags != 0);
+        ANGLE_TRY(utilsVk.copyImageFromTileMemory(contextVk, aspectFlags, this, prevImage.get()));
+        ASSERT(IsAnySubresourceContentDefined(mVkImageContentDefined) ==
+               IsAnySubresourceContentDefined(prevImage->mVkImageContentDefined));
+        ASSERT(IsAnySubresourceContentDefined(mVkImageStencilContentDefined) ==
+               IsAnySubresourceContentDefined(prevImage->mVkImageStencilContentDefined));
     }
 
     prevImage->releaseImage(renderer);
