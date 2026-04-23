@@ -4942,6 +4942,87 @@ TEST_P(Texture2DTestES3YUV, CopyTextureChromium)
 
     ASSERT_GL_NO_ERROR();
 }
+
+// Test that rendering to a YUV texture allocated with GL_ANGLE_yuv_internal_format fails.
+// Framebuffer completeness check should fail, and draws/readbacks should fail.
+TEST_P(Texture2DTestES3YUV, YuvInternalFormatNotColorRenderable)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_yuv_internal_format"));
+
+    // Create YUV texture
+    GLTexture yuvTexture;
+    glBindTexture(GL_TEXTURE_2D, yuvTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE, 4, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a Framebuffer Object and bind the YUV texture to color attachment 0
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, yuvTexture, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the framebuffer is incomplete
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    EXPECT_EQ(status, static_cast<GLenum>(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT));
+
+    // Verify that drawing to this framebuffer fails
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glUseProgram(program);
+
+    // Drawing should generate GL_INVALID_FRAMEBUFFER_OPERATION
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+
+    // Verify that glReadPixels from this framebuffer fails
+    GLubyte pixel[4];
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+    EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+}
+
+// Test that rendering to a YUV texture allocated with GL_ANGLE_yuv_internal_format late, after
+// attached to the framebuffer's color attachment, fails. Framebuffer completeness check should
+// fail, and draws/readbacks should fail.
+TEST_P(Texture2DTestES3YUV, YuvInternalFormatAllocatedLateNotColorRenderable)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_yuv_internal_format"));
+
+    // Create but do not allocate YUV texture
+    GLTexture yuvTexture;
+    glBindTexture(GL_TEXTURE_2D, yuvTexture);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a Framebuffer Object and bind the YUV texture to color attachment 0
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, yuvTexture, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the framebuffer is incomplete
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    EXPECT_EQ(status, static_cast<GLenum>(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT));
+
+    // Allocate storage for the YUV texture
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE, 4, 4);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the framebuffer is still incomplete
+    status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    EXPECT_EQ(status, static_cast<GLenum>(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT));
+
+    // Verify that drawing to this framebuffer fails
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glUseProgram(program);
+
+    // Drawing should generate GL_INVALID_FRAMEBUFFER_OPERATION
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+
+    // Verify that glReadPixels from this framebuffer fails
+    GLubyte pixel[4];
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+    EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+}
+
 // Tests CopySubImage for float formats
 TEST_P(Texture2DTest, CopySubImageFloat_R_R)
 {
