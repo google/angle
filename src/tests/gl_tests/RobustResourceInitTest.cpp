@@ -1633,8 +1633,8 @@ TEST_P(RobustResourceInitTestES3, MultisampledDepthInitializedCorrectly)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
-// Basic test that textures are initialized correctly.
-TEST_P(RobustResourceInitTest, Texture)
+// Basic test that textures are initialized correctly.  Verification is done via glReadPixels.
+TEST_P(RobustResourceInitTest, TextureViaReadBack)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
@@ -1651,6 +1651,58 @@ TEST_P(RobustResourceInitTest, Texture)
     glBindTexture(GL_TEXTURE_2D, texture);
     glGetTexParameteriv(GL_TEXTURE_2D, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
     EXPECT_GL_TRUE(initState);
+}
+
+// Basic test that textures are initialized correctly.  Verification is done by sampling, after
+// the texture is made dirty and glCheckFramebufferStatus on a framebuffer it is attached to.
+TEST_P(RobustResourceInitTest, TextureAfterCheckStatus)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    // Dirty the texture
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    // Check framebuffer status.  In the GL backend, this syncs the texture because it's dirty.
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Unbind the framebuffer and sample from the texture.
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(testProgram, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+}
+
+// Test that after a texture with data is sampled, recreating it with no data makes it cleared.
+// Uses an RGB texture which may be emulated on some backends.
+TEST_P(RobustResourceInitTest, SampleReinitSampleRGB)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    const std::vector<GLColorRGB> kInitData(kWidth * kHeight, GLColorRGB(255, 0, 0));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, kWidth, kHeight, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                 kInitData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    // Draw once, the texture has data and should sample with data.  The texture is also sync'ed at
+    // this step.
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(testProgram, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Recreate the texture with no data.  It should be cleared to black.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, kWidth, kHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    drawQuad(testProgram, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 }
 
 // Test that uploading texture data with an unpack state set correctly initializes the texture and

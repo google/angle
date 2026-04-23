@@ -2013,24 +2013,6 @@ angle::Result Texture::generateMipmap(Context *context)
         return angle::Result::Continue;
     }
 
-    // Clear the base image(s) immediately if needed
-    if (context->isRobustResourceInitEnabled())
-    {
-        ImageIndexIterator it =
-            ImageIndexIterator::MakeGeneric(mState.mType, baseLevel, baseLevel + 1,
-                                            ImageIndex::kEntireLevel, ImageIndex::kEntireLevel);
-        while (it.hasNext())
-        {
-            const ImageIndex index = it.next();
-            const ImageDesc &desc  = mState.getImageDesc(index.getTarget(), index.getLevelIndex());
-
-            if (desc.initState == InitState::MayNeedInit)
-            {
-                ANGLE_TRY(initializeContents(context, GL_NONE, index));
-            }
-        }
-    }
-
     ANGLE_TRY(syncState(context, Command::GenerateMipmap));
     ANGLE_TRY(mTexture->generateMipmap(context));
 
@@ -2488,9 +2470,9 @@ GLuint Texture::getNativeID() const
 angle::Result Texture::syncState(const Context *context, Command source)
 {
     ASSERT(hasAnyDirtyBit() || source == Command::GenerateMipmap);
+    ANGLE_TRY(ensureInitialized(context));
     ANGLE_TRY(mTexture->syncState(context, mDirtyBits, source));
     mDirtyBits.reset();
-    mState.mInitState = InitState::Initialized;
     return angle::Result::Continue;
 }
 
