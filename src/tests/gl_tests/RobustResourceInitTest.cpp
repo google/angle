@@ -2696,6 +2696,43 @@ TEST_P(RobustResourceInitTestES3, LargeCompressedImage2DArray)
     EXPECT_PIXEL_RECT_EQ(0, kSubHeight, kSubWidth, kHeight - kSubHeight, GLColor::black);
 }
 
+// Test that after rendering to a layer of 2D array texture, the other layers are still cleared on
+// readback.
+TEST_P(RobustResourceInitTestES3, RenderTo2DArray)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr uint32_t kWidth  = 53;
+    constexpr uint32_t kHeight = 77;
+    constexpr uint32_t kDepth  = 3;
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, kWidth, kHeight, kDepth);
+
+    // Render to layer 0
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glViewport(0, 0, kWidth, kHeight);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Read back the other layers, making sure they are cleared.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    for (uint32_t layer = 1; layer < kDepth; ++layer)
+    {
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, layer);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    }
+}
+
 // Test drawing to a framebuffer with not all draw buffers enabled
 TEST_P(RobustResourceInitTestES3, SparseDrawBuffers)
 {
