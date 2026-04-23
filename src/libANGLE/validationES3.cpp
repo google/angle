@@ -574,12 +574,6 @@ bool ValidateES3TexImageParametersBase(const Context *context,
     }
 
     // Validate texture formats
-    if (IsAngleInternalFormat(internalformat))
-    {
-        ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kInvalidInternalFormat, internalformat);
-        return false;
-    }
-
     GLenum actualInternalFormat =
         isSubImage ? texture->getFormat(target, level).info->internalFormat : internalformat;
     if (isSubImage && actualInternalFormat == GL_NONE)
@@ -1440,8 +1434,7 @@ bool ValidateES3TexStorageParametersFormat(const Context *context,
     }
 
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalformat);
-    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()) ||
-        IsAngleInternalFormat(internalformat))
+    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
         ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kInvalidInternalFormat, internalformat);
         return false;

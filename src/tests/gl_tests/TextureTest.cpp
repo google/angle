@@ -494,6 +494,7 @@ void main()
     void testCopyImage(const APIExtensionVersion usedExtension);
     void testCopyImageDepthStencil(const APIExtensionVersion usedExtension);
 
+    void InternalFormatNotEnabledHelper(GLenum internalFormat, GLenum uploadFormat);
     void TextureUploadPBOHelper(GLenum internalFormat, GLenum uploadFormat);
 };
 
@@ -7257,6 +7258,20 @@ void Texture2DTestES3::testCopyImageDepthStencil(const APIExtensionVersion usedE
     ASSERT_GL_NO_ERROR();
 }
 
+void Texture2DTestES3::InternalFormatNotEnabledHelper(GLenum internalFormat, GLenum uploadFormat)
+{
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 1, 1, 0, uploadFormat, GL_UNSIGNED_BYTE,
+                 nullptr);
+    GLenum error = glGetError();
+    EXPECT_NE(static_cast<GLenum>(GL_NONE), error) << "internalFormat: " << internalFormat;
+
+    glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, 1, 1);
+    error = glGetError();
+    EXPECT_NE(static_cast<GLenum>(GL_NONE), error) << "internalFormat: " << internalFormat;
+}
+
 void Texture2DTestES3::TextureUploadPBOHelper(GLenum internalFormat, GLenum uploadFormat)
 {
     constexpr GLint kWidth  = 16;
@@ -7306,6 +7321,7 @@ void Texture2DTestES3::TextureUploadPBOHelper(GLenum internalFormat, GLenum uplo
             switch (internalFormat)
             {
                 case GL_RGBX8_ANGLE:
+                case GL_RGBX8_SRGB_ANGLEX:
                     EXPECT_EQ(readback[pixelIndex].R, pboData[pboIndex + 0])
                         << "at " << x << ", " << y;
                     EXPECT_EQ(readback[pixelIndex].G, pboData[pboIndex + 1])
@@ -7314,6 +7330,16 @@ void Texture2DTestES3::TextureUploadPBOHelper(GLenum internalFormat, GLenum uplo
                         << "at " << x << ", " << y;
                     break;
 
+                case GL_BGRX8_ANGLEX:
+                case GL_BGRX8_SRGB_ANGLEX:
+                    // Upload is GL_BGR_EXT so pboData has [B, G, R]
+                    EXPECT_EQ(readback[pixelIndex].R, pboData[pboIndex + 2])
+                        << "at " << x << ", " << y;
+                    EXPECT_EQ(readback[pixelIndex].G, pboData[pboIndex + 1])
+                        << "at " << x << ", " << y;
+                    EXPECT_EQ(readback[pixelIndex].B, pboData[pboIndex + 0])
+                        << "at " << x << ", " << y;
+                    break;
                 default:
                     UNREACHABLE();
             }
@@ -8968,103 +8994,38 @@ TEST_P(Texture2DTestES3, InternalFormatNotEnabled_RGBX8_ANGLE)
     // Note: This is the opposite of the usual test for extension. We only run the test
     // if the extension is NOT available.
     ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
-
-    GLTexture texture;
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBX8_ANGLE, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    GLenum error = glGetError();
-    EXPECT_NE(static_cast<GLenum>(GL_NONE), error);
-
-    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBX8_ANGLE, 1, 1);
-    error = glGetError();
-    EXPECT_NE(static_cast<GLenum>(GL_NONE), error);
+    InternalFormatNotEnabledHelper(GL_RGBX8_ANGLE, GL_RGB);
 }
 
-// Test that GL_*_ANGLEX formats result in error.
-TEST_P(Texture2DTestES3, InternalFormatNotEnabled_ANGLEX)
+// Test that GL_RGBX8_SRGB_ANGLEX results in GL_INVALID_ENUM if the extensions are not enabled.
+TEST_P(Texture2DTestES3, InternalFormatNotEnabled_RGBX8_SRGB_ANGLEX)
 {
-    auto verify = [](GLenum internalFormat, GLenum format, GLenum type) {
-        GLTexture texture;
-        glBindTexture(GL_TEXTURE_2D, texture);
+    // Note: This is the opposite of the usual test for extension. We only run the test
+    // if both extensions are NOT available. If neither is available, or if one both not
+    // both are available, then we need to test the format can't be used.
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format") &&
+                       IsGLExtensionEnabled("GL_EXT_sRGB"));
+    InternalFormatNotEnabledHelper(GL_RGBX8_SRGB_ANGLEX, GL_RGB);
+}
 
-        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 1, 1, 0, format, type, nullptr);
-        EXPECT_GL_ERROR(GL_INVALID_ENUM) << internalFormat;
+// Test that GL_BGRX8_ANGLEX results in GL_INVALID_ENUM if the extensions are not enabled.
+TEST_P(Texture2DTestES3, InternalFormatNotEnabled_BGRX8_ANGLEX)
+{
+    // Note: This is the opposite of the usual test for extension. We only run the test
+    // if the extension is NOT available.
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888"));
+    InternalFormatNotEnabledHelper(GL_BGRX8_ANGLEX, GL_BGR_EXT);
+}
 
-        glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, 1, 1);
-        EXPECT_GL_ERROR(GL_INVALID_ENUM) << internalFormat;
-
-        GLRenderbuffer rbo;
-        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-        glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, 1, 1);
-        EXPECT_GL_ERROR(GL_INVALID_ENUM) << internalFormat;
-    };
-
-    verify(GL_A1RGB5_ANGLEX, GL_RGBA, GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT);
-    verify(GL_BGRX8_ANGLEX, GL_BGRA_EXT, GL_UNSIGNED_BYTE);
-    verify(GL_BGR565_ANGLEX, GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
-    verify(GL_BGRA4_ANGLEX, GL_BGRA_EXT, GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT);
-    verify(GL_BGR5_A1_ANGLEX, GL_BGRA_EXT, GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT);
-    verify(GL_INT_64_ANGLEX, GL_RED, GL_INT);
-    verify(GL_UINT_64_ANGLEX, GL_RED, GL_UNSIGNED_INT);
-    verify(GL_BGRA8_SRGB_ANGLEX, GL_BGRA_EXT, GL_UNSIGNED_BYTE);
-    verify(GL_BGR10_A2_ANGLEX, GL_BGRA_EXT, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_BGRX8_SRGB_ANGLEX, GL_BGRA_EXT, GL_UNSIGNED_BYTE);
-    verify(GL_RGBX8_SRGB_ANGLEX, GL_BGRA_EXT, GL_UNSIGNED_BYTE);
-    verify(GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX, GL_RGBA, GL_UNSIGNED_SHORT);
-    verify(GL_RGBA8_TYPELESS_ANGLEX, GL_RGBA, GL_UNSIGNED_BYTE);
-    verify(GL_RGBA8_TYPELESS_SRGB_ANGLEX, GL_RGBA, GL_UNSIGNED_BYTE);
-    verify(GL_BGRA8_TYPELESS_ANGLEX, GL_BGRA_EXT, GL_UNSIGNED_BYTE);
-    verify(GL_BGRA8_TYPELESS_SRGB_ANGLEX, GL_BGRA_EXT, GL_UNSIGNED_BYTE);
-    verify(GL_R8_SSCALED_ANGLEX, GL_RED, GL_BYTE);
-    verify(GL_RG8_SSCALED_ANGLEX, GL_RG, GL_BYTE);
-    verify(GL_RGB8_SSCALED_ANGLEX, GL_RGB, GL_BYTE);
-    verify(GL_RGBA8_SSCALED_ANGLEX, GL_RGBA, GL_BYTE);
-    verify(GL_R8_USCALED_ANGLEX, GL_RED, GL_UNSIGNED_BYTE);
-    verify(GL_RG8_USCALED_ANGLEX, GL_RG, GL_UNSIGNED_BYTE);
-    verify(GL_RGB8_USCALED_ANGLEX, GL_RGB, GL_UNSIGNED_BYTE);
-    verify(GL_RGBA8_USCALED_ANGLEX, GL_RGBA, GL_UNSIGNED_BYTE);
-    verify(GL_R16_SSCALED_ANGLEX, GL_RED, GL_SHORT);
-    verify(GL_RG16_SSCALED_ANGLEX, GL_RG, GL_SHORT);
-    verify(GL_RGB16_SSCALED_ANGLEX, GL_RGB, GL_SHORT);
-    verify(GL_RGBA16_SSCALED_ANGLEX, GL_RGBA, GL_SHORT);
-    verify(GL_R16_USCALED_ANGLEX, GL_RED, GL_UNSIGNED_SHORT);
-    verify(GL_RG16_USCALED_ANGLEX, GL_RG, GL_UNSIGNED_SHORT);
-    verify(GL_RGB16_USCALED_ANGLEX, GL_RGB, GL_UNSIGNED_SHORT);
-    verify(GL_RGBA16_USCALED_ANGLEX, GL_RGBA, GL_UNSIGNED_SHORT);
-    verify(GL_R32_SSCALED_ANGLEX, GL_RED, GL_INT);
-    verify(GL_RG32_SSCALED_ANGLEX, GL_RG, GL_INT);
-    verify(GL_RGB32_SSCALED_ANGLEX, GL_RGB, GL_INT);
-    verify(GL_RGBA32_SSCALED_ANGLEX, GL_RGBA, GL_INT);
-    verify(GL_R32_USCALED_ANGLEX, GL_RED, GL_UNSIGNED_INT);
-    verify(GL_RG32_USCALED_ANGLEX, GL_RG, GL_UNSIGNED_INT);
-    verify(GL_RGB32_USCALED_ANGLEX, GL_RGB, GL_UNSIGNED_INT);
-    verify(GL_RGBA32_USCALED_ANGLEX, GL_RGBA, GL_UNSIGNED_INT);
-    verify(GL_R32_SNORM_ANGLEX, GL_RED, GL_INT);
-    verify(GL_RG32_SNORM_ANGLEX, GL_RG, GL_INT);
-    verify(GL_RGB32_SNORM_ANGLEX, GL_RGB, GL_INT);
-    verify(GL_RGBA32_SNORM_ANGLEX, GL_RGBA, GL_INT);
-    verify(GL_R32_UNORM_ANGLEX, GL_RED, GL_UNSIGNED_INT);
-    verify(GL_RG32_UNORM_ANGLEX, GL_RG, GL_UNSIGNED_INT);
-    verify(GL_RGB32_UNORM_ANGLEX, GL_RGB, GL_UNSIGNED_INT);
-    verify(GL_RGBA32_UNORM_ANGLEX, GL_RGBA, GL_UNSIGNED_INT);
-    verify(GL_R32_FIXED_ANGLEX, GL_RED, GL_INT);
-    verify(GL_RG32_FIXED_ANGLEX, GL_RG, GL_INT);
-    verify(GL_RGB32_FIXED_ANGLEX, GL_RGB, GL_INT);
-    verify(GL_RGBA32_FIXED_ANGLEX, GL_RGBA, GL_INT);
-    verify(GL_RGB10_A2_SINT_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_RGB10_A2_SNORM_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_RGB10_A2_SSCALED_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_RGB10_A2_USCALED_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_A2_RGB10_UNORM_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_A2_RGB10_SNORM_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_A2_RGB10_USCALED_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_A2_RGB10_SSCALED_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_X2_RGB10_UINT_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_X2_RGB10_SINT_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_X2_RGB10_USCALED_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_X2_RGB10_SSCALED_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_X2_RGB10_UNORM_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
-    verify(GL_X2_RGB10_SNORM_ANGLEX, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV);
+// Test that GL_BGRX8_SRGB_ANGLEX results in GL_INVALID_ENUM if the extensions are not enabled.
+TEST_P(Texture2DTestES3, InternalFormatNotEnabled_BGRX8_SRGB_ANGLEX)
+{
+    // Note: This is the opposite of the usual test for extension. We only run the test
+    // if both extensions are NOT available. If neither is available, or if one both not
+    // both are available, then we need to test the format can't be used.
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888") &&
+                       IsGLExtensionEnabled("GL_EXT_sRGB"));
+    InternalFormatNotEnabledHelper(GL_BGRX8_SRGB_ANGLEX, GL_BGR_EXT);
 }
 
 // When sampling a texture without an alpha channel, "1" is returned as the alpha value.
@@ -9188,6 +9149,15 @@ TEST_P(Texture2DTestES3, TextureUploadPBO_RGBX8_ANGLE)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
     TextureUploadPBOHelper(GL_RGBX8_ANGLE, GL_RGB);
+}
+
+// Regression test for a bug where D3D11 backend incorrectly computes the source row pitch
+// for emulated RGBX/BGRX textures during TexSubImage2D uploads from a PBO.
+TEST_P(Texture2DTestES3, TextureUploadPBO_RGBX8_SRGB_ANGLEX)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_rgbx_internal_format"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_sRGB"));
+    TextureUploadPBOHelper(GL_RGBX8_SRGB_ANGLEX, GL_RGB);
 }
 
 // Test that GL_RGBX8_ANGLE can be read back into a PBO.

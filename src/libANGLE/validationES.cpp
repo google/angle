@@ -1706,7 +1706,7 @@ bool ValidateRenderbufferStorageParametersBase(const Context *context,
     // sized but it does state that the format must be in the ES2.0 spec table 4.5 which contains
     // only sized internal formats.
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(convertedInternalFormat);
-    if (formatInfo.internalFormat == GL_NONE || IsAngleInternalFormat(internalformat))
+    if (formatInfo.internalFormat == GL_NONE)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidRenderbufferInternalFormat);
         return false;
@@ -8176,7 +8176,7 @@ bool ValidateTexStorageMultisample(const Context *context,
     // The ES3.1 spec(section 8.8) states that an INVALID_ENUM error is generated if internalformat
     // is one of the unsized base internalformats listed in table 8.11.
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalFormat);
-    if (formatInfo.internalFormat == GL_NONE || IsAngleInternalFormat(internalFormat))
+    if (formatInfo.internalFormat == GL_NONE)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kUnsizedInternalFormatUnsupported);
         return false;

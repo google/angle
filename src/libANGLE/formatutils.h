@@ -331,7 +331,6 @@ struct Format
 
 const InternalFormat &GetSizedInternalFormatInfo(GLenum internalFormat);
 const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, GLenum type);
-bool IsAngleInternalFormat(GLenum internalFormat);
 
 // ES2 requires that format is equal to internal format at all glTex*Image2D entry points and the
 // implementation can decide the true, sized, internal format. The ES2FormatMap determines the
