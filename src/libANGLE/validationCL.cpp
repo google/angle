@@ -3386,8 +3386,23 @@ cl_int ValidateCreateImage(cl_context context,
         image_desc->image_type == CL_MEM_OBJECT_IMAGE1D_ARRAY ? 1u : image_desc->image_height;
     const size_t sliceSize = imageHeight * rowPitch;
 
-    // CL_INVALID_IMAGE_DESCRIPTOR if values specified in image_desc are not valid.
     const MemObjectType memObjectType = FromCLenum<MemObjectType>(image_desc->image_type);
+    // Per the spec, image_depth and image_array_size are "only used" for their respective
+    // image types; for other types the values are unspecified and may be uninitialized
+    // garbage. Initialize them through cl::ImageDescriptor which will set these values correctly.
+    const ImageDescriptor desc{
+        memObjectType,
+        image_desc->image_width,
+        image_desc->image_height,
+        image_desc->image_depth,
+        image_desc->image_array_size,
+        image_desc->image_row_pitch,
+        image_desc->image_slice_pitch,
+        image_desc->num_mip_levels,
+        image_desc->num_samples,
+    };
+
+    // CL_INVALID_IMAGE_DESCRIPTOR if values specified in image_desc are not valid.
     switch (memObjectType)
     {
         case MemObjectType::Image1D:
@@ -3538,16 +3553,7 @@ cl_int ValidateCreateImage(cl_context context,
     // with mem_object
     if (image_desc->mem_object != nullptr && Image::IsValid(image_desc->mem_object))
     {
-        const ImageDescriptor imageDesc = {FromCLenum<MemObjectType>(image_desc->image_type),
-                                           image_desc->image_width,
-                                           image_desc->image_height,
-                                           image_desc->image_depth,
-                                           image_desc->image_array_size,
-                                           image_desc->image_row_pitch,
-                                           image_desc->image_slice_pitch,
-                                           image_desc->num_mip_levels,
-                                           image_desc->num_samples};
-        if (imageDesc != Image::Cast(image_desc->mem_object)->getDescriptor())
+        if (desc != Image::Cast(image_desc->mem_object)->getDescriptor())
         {
             return CL_INVALID_IMAGE_DESCRIPTOR;
         }
@@ -3586,6 +3592,22 @@ cl_int ValidateCreateImage(cl_context context,
     {
         return CL_IMAGE_FORMAT_NOT_SUPPORTED;
     }
+
+    // CL_MEM_OBJECT_ALLOCATION_FAILURE
+    //  - if there is a failure to allocate memory for the image object
+    angle::CheckedNumeric<size_t> imageSize(sliceSize);
+    imageSize *= desc.depth;
+    imageSize *= desc.arraySize;
+
+    for (const DevicePtr &device : ctx.getDevices())
+    {
+        // a given image cannot exceed the max mem alloc limit
+        if (!imageSize.IsValid() || imageSize.ValueOrDie() > device->getInfo().maxMemAllocSize)
+        {
+            return CL_MEM_OBJECT_ALLOCATION_FAILURE;
+        }
+    }
+
     return CL_SUCCESS;
 }
 
