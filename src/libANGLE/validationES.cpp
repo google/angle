@@ -2375,18 +2375,14 @@ bool ValidateReadPixelsRobustANGLE(const Context *context,
                                    const GLsizei *rows,
                                    const void *pixels)
 {
-    if (!ValidateRobustEntryPoint(context, entryPoint, bufSize))
-    {
-        return false;
-    }
+    // The ANGLE-specific variant of this command explicitly ignores the bufSize
+    // value when a pixel pack buffer is bound for increased client robustness.
+    // Negative bufSize values are still invalid.
+    const bool hasPBO  = context->getState().getTargetBuffer(BufferBinding::PixelPack) != nullptr;
+    const GLsizei size = (bufSize >= 0 && hasPBO) ? std::numeric_limits<GLsizei>::max() : bufSize;
 
-    if (!ValidateReadPixelsBase(context, entryPoint, x, y, width, height, format, type, bufSize,
-                                pixels))
-    {
-        return false;
-    }
-
-    return true;
+    return ValidateReadPixelsBase(context, entryPoint, x, y, width, height, format, type, size,
+                                  pixels);
 }
 
 bool ValidateReadnPixelsEXT(const Context *context,
@@ -2400,12 +2396,6 @@ bool ValidateReadnPixelsEXT(const Context *context,
                             GLsizei bufSize,
                             const void *pixels)
 {
-    if (bufSize < 0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufSize);
-        return false;
-    }
-
     return ValidateReadPixelsBase(context, entryPoint, x, y, width, height, format, type, bufSize,
                                   pixels);
 }
@@ -6982,8 +6972,6 @@ bool ValidatePixelPack(const Context *context,
                        angle::EntryPoint entryPoint,
                        GLenum format,
                        GLenum type,
-                       GLint x,
-                       GLint y,
                        GLsizei width,
                        GLsizei height,
                        GLsizei bufSize,
@@ -7012,19 +7000,18 @@ bool ValidatePixelPack(const Context *context,
     const auto &pack = context->getState().getPackState();
 
     GLuint endByte = 0;
-    if (!formatInfo.computePackUnpackEndByte(type, size, pack, false, &endByte))
+    if (ANGLE_UNLIKELY(!formatInfo.computePackUnpackEndByte(type, size, pack, false, &endByte) ||
+                       endByte > static_cast<GLuint>(std::numeric_limits<GLsizei>::max())))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIntegerOverflow);
         return false;
     }
 
-    if (bufSize >= 0)
+    ASSERT(bufSize >= 0);
+    if (ANGLE_UNLIKELY(static_cast<GLuint>(bufSize) < endByte))
     {
-        if (static_cast<size_t>(bufSize) < endByte)
-        {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientBufferSize);
-            return false;
-        }
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientBufferSize);
+        return false;
     }
 
     if (pixelPackBuffer != nullptr)
@@ -7198,7 +7185,13 @@ bool ValidateReadPixelsBase(const Context *context,
         return false;
     }
 
-    if (!ValidatePixelPack(context, entryPoint, format, type, x, y, width, height, bufSize, pixels))
+    if (ANGLE_UNLIKELY(bufSize < 0))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufSize);
+        return false;
+    }
+
+    if (!ValidatePixelPack(context, entryPoint, format, type, width, height, bufSize, pixels))
     {
         return false;
     }

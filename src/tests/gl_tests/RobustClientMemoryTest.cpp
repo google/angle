@@ -207,6 +207,30 @@ TEST_P(RobustClientMemoryTest, ReadPixels)
 
     if (getClientMajorVersion() >= 3)
     {
+        {
+            // Test that non-negative bufSize is ignored when a PBO is bound
+            GLBuffer buffer;
+            glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+            glBufferData(GL_PIXEL_PACK_BUFFER, rgbaData.size(), nullptr, GL_STATIC_COPY);
+
+            // Zero bufSize must be accepted
+            glReadPixelsRobustANGLE(0, 0, dataDimension, dataDimension, GL_RGBA, GL_UNSIGNED_BYTE,
+                                    0, nullptr, nullptr, nullptr, reinterpret_cast<void *>(0));
+            EXPECT_GL_NO_ERROR();
+
+            // Small bufSize must be accepted
+            glReadPixelsRobustANGLE(0, 0, dataDimension, dataDimension, GL_RGBA, GL_UNSIGNED_BYTE,
+                                    16, nullptr, nullptr, nullptr, reinterpret_cast<void *>(0));
+            EXPECT_GL_NO_ERROR();
+
+            // Test that negative bufSize is still invalid when a PBO is bound
+            glReadPixelsRobustANGLE(0, 0, dataDimension, dataDimension, GL_RGBA, GL_UNSIGNED_BYTE,
+                                    -1, nullptr, nullptr, nullptr, reinterpret_cast<void *>(0));
+            EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+            glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+        }
+
         // Set a pack parameter that would cause the driver to write past the end of the buffer
         glPixelStorei(GL_PACK_ROW_LENGTH, dataDimension + 1);
         glReadPixelsRobustANGLE(0, 0, dataDimension, dataDimension, GL_RGBA, GL_UNSIGNED_BYTE,
