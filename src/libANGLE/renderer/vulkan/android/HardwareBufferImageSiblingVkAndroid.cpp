@@ -236,6 +236,15 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
         VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID;
     bufferFormatProperties.pNext = nullptr;
 
+    VkAndroidHardwareBufferFormatResolvePropertiesANDROID bufferFormatResolveProperties = {};
+    if (renderer->getFeatures().supportsExternalFormatResolve.enabled)
+    {
+        bufferFormatResolveProperties.sType =
+            VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_RESOLVE_PROPERTIES_ANDROID;
+        bufferFormatResolveProperties.pNext = nullptr;
+        vk::AddToPNextChain(&bufferFormatProperties, &bufferFormatResolveProperties);
+    }
+
     VkAndroidHardwareBufferPropertiesANDROID bufferProperties = {};
     bufferProperties.sType = VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID;
     bufferProperties.pNext = &bufferFormatProperties;
@@ -488,6 +497,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
                     bufferFormatProperties.formatFeatures);
 
             vkFormat = &renderer->getFormat(externalFormatID);
+            mFormat  = gl::Format(vkFormat->getIntendedGLFormat());
         }
         else
         {
