@@ -23142,6 +23142,113 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
     ASSERT_GL_NO_ERROR();
 }
+
+// Empty prunable nested switches should work
+TEST_P(GLSLTest_ES3, PruneEmptySwitch1)
+{
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec4 color;
+void main() {
+  switch (9) {
+    case 8:
+      switch (7) {
+        case 6:
+        default:
+          break;
+      }
+    default:
+      break;
+  }
+  color = vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Empty prunable nested switches should work
+TEST_P(GLSLTest_ES3, PruneEmptySwitch2)
+{
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec4 color;
+void main() {
+  switch (9) {
+    case 8:
+    {
+      switch (7) {
+        case 6:
+        default:
+          break;
+      }
+    }
+    default:
+      break;
+  }
+  color = vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Empty prunable nested switches should work
+TEST_P(GLSLTest_ES3, PruneEmptySwitch3)
+{
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec4 color;
+void main() {
+  switch (9) {
+    case 8:
+      switch (7) {
+        case 6:
+        default:
+          break;
+      }
+      {
+      }
+    default:
+      break;
+  }
+  color = vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Empty prunable nested switches should work
+TEST_P(GLSLTest_ES3, PruneEmptySwitch4)
+{
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec4 color;
+void main() {
+  switch (9) {
+    case 8:
+      switch (7) {
+        case 6:
+        default:
+          break;
+      }
+      {
+        break;
+      }
+    default:
+      break;
+  }
+  color = vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(

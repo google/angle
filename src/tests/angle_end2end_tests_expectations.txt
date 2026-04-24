@@ -415,6 +415,7 @@
 448658625 MAC OPENGL : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
 448658630 MAC OPENGL : GLSLTestLoops.ForContinueInConstSwitch/* = SKIP
 448658630 MAC OPENGL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
+507484001 MAC OPENGL : GLSLTest_ES3.PruneEmptySwitch2/* = SKIP
 475587478 MAC OPENGL : VertexAttributeTestES3.MaxAttribsWithBuiltInAttribs/* = SKIP
 494270619 MAC OPENGL : BaseInstanceOverflowTest.BaseInstanceOverflow/* = SKIP
 504886981 MAC OPENGL : RobustResourceInitTestES3.PartiallyInitializedTextureWithNonZeroBase/* = SKIP
