@@ -187,11 +187,23 @@ TEST_P(RobustClientMemoryTest, ReadPixels)
     EXPECT_EQ(dataDimension - 1, columns);
     EXPECT_EQ(dataDimension - 3, rows);
 
-    // Test with a data size that is too small
+    length  = 123;
+    columns = 456;
+    rows    = 789;
+    // Test with a data size that is too small, the output params must not be updated
     glReadPixelsRobustANGLE(0, 0, dataDimension, dataDimension, GL_RGBA, GL_UNSIGNED_BYTE,
-                            static_cast<GLsizei>(rgbaData.size()) - 1, &length, nullptr, nullptr,
+                            static_cast<GLsizei>(rgbaData.size()) - 1, &length, &columns, &rows,
                             rgbaData.data());
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    EXPECT_EQ(length, 123);
+    EXPECT_EQ(columns, 456);
+    EXPECT_EQ(rows, 789);
+
+    // Test that all output parameters may be null
+    glReadPixelsRobustANGLE(0, 0, dataDimension, dataDimension, GL_RGBA, GL_UNSIGNED_BYTE,
+                            static_cast<GLsizei>(rgbaData.size()), nullptr, nullptr, nullptr,
+                            rgbaData.data());
+    EXPECT_GL_NO_ERROR();
 
     if (getClientMajorVersion() >= 3)
     {
@@ -201,6 +213,61 @@ TEST_P(RobustClientMemoryTest, ReadPixels)
                                 static_cast<GLsizei>(rgbaData.size()), &length, nullptr, nullptr,
                                 rgbaData.data());
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+}
+
+// Test the output length parameter
+TEST_P(RobustClientMemoryTest, ReadPixelsLengthOutput)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_robust_client_memory"));
+
+    // Buffer twice as large as the window
+    std::vector<GLubyte> rgbaData(2 * kWindowSize * kWindowSize * 4);
+
+    // Test that output length is computed based on the input dimensions
+    {
+        // Input x, y, width, height, output length
+        const int testValues[7][5] = {
+            {0, 0, 0, 0, 0},               // Zero input area
+            {0, 0, 128, 0, 0},             // Zero input height
+            {0, 0, 0, 128, 0},             // Zero input width
+            {0, 0, 128, 128, 65536},       // Full size
+            {64, 0, 64, 128, 32768},       // Half width with positive offset
+            {0, -128, 128, 256, 131072},   // Full width, double height with negative offset
+            {128, 128, 128, 256, 131072},  // Origin OOB, zero intersection
+        };
+
+        for (auto &test : testValues)
+        {
+            GLsizei length = -1;
+            glReadPixelsRobustANGLE(test[0], test[1], test[2], test[3], GL_RGBA, GL_UNSIGNED_BYTE,
+                                    static_cast<GLsizei>(rgbaData.size()), &length, nullptr,
+                                    nullptr, rgbaData.data());
+            EXPECT_GL_NO_ERROR();
+            EXPECT_EQ(length, test[4]);
+        }
+    }
+
+    // Test that output length is zero when reading to PBO
+    if (getClientMajorVersion() >= 3)
+    {
+        GLsizei length = -1;
+        GLBuffer buffer;
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+        glBufferData(GL_PIXEL_PACK_BUFFER, rgbaData.size(), nullptr, GL_STATIC_COPY);
+        glReadPixelsRobustANGLE(0, 0, 128, 128, GL_RGBA, GL_UNSIGNED_BYTE,
+                                static_cast<GLsizei>(rgbaData.size()), &length, nullptr, nullptr,
+                                reinterpret_cast<void *>(0));
+        EXPECT_GL_NO_ERROR();
+        EXPECT_EQ(length, 0);
+
+        // Unbind and repeat
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+        glReadPixelsRobustANGLE(0, 0, 128, 128, GL_RGBA, GL_UNSIGNED_BYTE,
+                                static_cast<GLsizei>(rgbaData.size()), &length, nullptr, nullptr,
+                                rgbaData.data());
+        EXPECT_GL_NO_ERROR();
+        EXPECT_EQ(length, 128 * 128 * 4);
     }
 }
 

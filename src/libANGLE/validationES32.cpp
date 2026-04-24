@@ -619,7 +619,7 @@ bool ValidateReadnPixels(const Context *context,
     }
 
     return ValidateReadPixelsBase(context, entryPoint, x, y, width, height, format, type, bufSize,
-                                  nullptr, data);
+                                  data);
 }
 
 bool ValidateSamplerParameterIiv(const Context *context,

@@ -803,17 +803,6 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
 }
 }  // anonymous namespace
 
-void SetRobustLengthParam(const GLsizei *length, GLsizei value)
-{
-    if (length)
-    {
-        // Currently we modify robust length parameters in the validation layer. We should be only
-        // doing this in the Context instead.
-        // TODO(http://anglebug.com/42263032): Remove when possible.
-        *const_cast<GLsizei *>(length) = value;
-    }
-}
-
 bool ValidTextureTarget(const Context *context, TextureType type)
 {
     switch (type)
@@ -2391,20 +2380,11 @@ bool ValidateReadPixelsRobustANGLE(const Context *context,
         return false;
     }
 
-    GLsizei writeLength  = 0;
-
     if (!ValidateReadPixelsBase(context, entryPoint, x, y, width, height, format, type, bufSize,
-                                &writeLength, pixels))
+                                pixels))
     {
         return false;
     }
-
-    if (!ValidateRobustBufferSize(context, entryPoint, bufSize, writeLength))
-    {
-        return false;
-    }
-
-    SetRobustLengthParam(length, writeLength);
 
     return true;
 }
@@ -2427,7 +2407,7 @@ bool ValidateReadnPixelsEXT(const Context *context,
     }
 
     return ValidateReadPixelsBase(context, entryPoint, x, y, width, height, format, type, bufSize,
-                                  nullptr, pixels);
+                                  pixels);
 }
 
 bool ValidateGenQueriesEXT(const Context *context,
@@ -5408,20 +5388,6 @@ bool ValidateRobustEntryPoint(const Context *context, angle::EntryPoint entryPoi
     return true;
 }
 
-bool ValidateRobustBufferSize(const Context *context,
-                              angle::EntryPoint entryPoint,
-                              GLsizei bufSize,
-                              GLsizei numParams)
-{
-    if (bufSize < numParams)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientParamCount);
-        return false;
-    }
-
-    return true;
-}
-
 bool ValidateRobustParamCount(const Context *context,
                               angle::EntryPoint entryPoint,
                               GLsizei paramCount,
@@ -7021,7 +6987,6 @@ bool ValidatePixelPack(const Context *context,
                        GLsizei width,
                        GLsizei height,
                        GLsizei bufSize,
-                       GLsizei *length,
                        const void *pixels)
 {
     // Check for pixel pack buffer related API errors
@@ -7087,17 +7052,6 @@ bool ValidatePixelPack(const Context *context,
         }
     }
 
-    if (pixelPackBuffer == nullptr && length != nullptr)
-    {
-        if (endByte > static_cast<size_t>(std::numeric_limits<GLsizei>::max()))
-        {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIntegerOverflow);
-            return false;
-        }
-
-        *length = static_cast<GLsizei>(endByte);
-    }
-
     if (context->isWebGL())
     {
         // WebGL 2.0 disallows the scenario:
@@ -7126,14 +7080,8 @@ bool ValidateReadPixelsBase(const Context *context,
                             GLenum format,
                             GLenum type,
                             GLsizei bufSize,
-                            GLsizei *length,
                             const void *pixels)
 {
-    if (length != nullptr)
-    {
-        *length  = 0;
-    }
-
     if (width < 0 || height < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeSize);
@@ -7250,8 +7198,7 @@ bool ValidateReadPixelsBase(const Context *context,
         return false;
     }
 
-    if (!ValidatePixelPack(context, entryPoint, format, type, x, y, width, height, bufSize, length,
-                           pixels))
+    if (!ValidatePixelPack(context, entryPoint, format, type, x, y, width, height, bufSize, pixels))
     {
         return false;
     }

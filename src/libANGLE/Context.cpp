@@ -5218,6 +5218,26 @@ void Context::readPixelsRobust(GLint x,
 {
     ANGLE_CONTEXT_TRY(readPixelsImpl(x, y, width, height, format, type, pixels));
 
+    if (length != nullptr)
+    {
+        if (mState.getTargetBuffer(BufferBinding::PixelPack) == nullptr)
+        {
+            const InternalFormat &formatInfo = GetInternalFormatInfo(format, type);
+
+            GLuint endByte   = 0;
+            const bool valid = formatInfo.computePackUnpackEndByte(
+                type, Extents(width, height, 1), mState.getPackState(), false, &endByte);
+            ASSERT(valid);
+            ASSERT(endByte <= static_cast<GLuint>(std::numeric_limits<GLsizei>::max()));
+
+            *length = static_cast<GLsizei>(endByte);
+        }
+        else
+        {
+            *length = 0;
+        }
+    }
+
     GLsizei columnsValue = 0;
     GLsizei rowsValue    = 0;
     // If the call above exited early due to width or height being zero,

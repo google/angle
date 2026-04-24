@@ -431,8 +431,7 @@ bool ValidateGetTexImageANGLE(const Context *context,
 
     GLsizei width  = static_cast<GLsizei>(texture->getWidth(target, level));
     GLsizei height = static_cast<GLsizei>(texture->getHeight(target, level));
-    if (!ValidatePixelPack(context, entryPoint, format, type, 0, 0, width, height, -1, nullptr,
-                           pixels))
+    if (!ValidatePixelPack(context, entryPoint, format, type, 0, 0, width, height, -1, pixels))
     {
         return false;
     }
@@ -489,8 +488,7 @@ bool ValidateGetRenderbufferImageANGLE(const Context *context,
 
     GLsizei width  = renderbuffer->getWidth();
     GLsizei height = renderbuffer->getHeight();
-    if (!ValidatePixelPack(context, entryPoint, format, type, 0, 0, width, height, -1, nullptr,
-                           pixels))
+    if (!ValidatePixelPack(context, entryPoint, format, type, 0, 0, width, height, -1, pixels))
     {
         return false;
     }
@@ -896,7 +894,7 @@ bool ValidateReadnPixelsKHR(const Context *context,
     }
 
     return ValidateReadPixelsBase(context, entryPoint, x, y, width, height, format, type, bufSize,
-                                  nullptr, data);
+                                  data);
 }
 
 bool ValidateBlendEquationOES(const PrivateState &state,
