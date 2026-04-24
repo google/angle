@@ -427,8 +427,12 @@ angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
     {
         size_t bufferSize = destFormatInfo.pixelBytes * sourceArea.width * sourceArea.height;
         angle::MemoryBuffer *memoryBuffer = nullptr;
-        if (context->getZeroFilledBuffer(bufferSize, &memoryBuffer))
+        if (context->getScratchBuffer(bufferSize, &memoryBuffer))
         {
+            // Initialize the buffer to 0. readFromAttachment will not write to any out-of-bounds
+            // pixels from the source framebuffer.
+            memoryBuffer->fill(0);
+
             GLuint memoryBufferRowPitch = destFormatInfo.pixelBytes * sourceArea.width;
 
             result = mRenderer->readFromAttachment(
