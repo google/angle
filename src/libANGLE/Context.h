@@ -727,7 +727,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     [[nodiscard]] bool getScratchBuffer(size_t requestedSizeBytes,
                                         angle::MemoryBuffer **scratchBufferOut) const;
     [[nodiscard]] bool getZeroFilledBuffer(size_t requstedSizeBytes,
-                                           angle::MemoryBuffer **zeroBufferOut) const;
+                                           const angle::MemoryBuffer **zeroBufferOut) const;
     angle::ScratchBuffer *getScratchBuffer() const;
 
     angle::Result prepareForCopyImage();

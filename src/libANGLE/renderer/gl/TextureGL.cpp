@@ -749,7 +749,7 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
         angle::CheckedNumeric<size_t> checkedBufferSize = angle::base::CheckMul(
             angle::base::CheckMul(sourceArea.width, sourceArea.height), pixelBytes);
         ANGLE_CHECK_GL_MATH(contextGL, checkedBufferSize.IsValid());
-        angle::MemoryBuffer *zero;
+        const angle::MemoryBuffer *zero;
         ANGLE_CHECK_GL_ALLOC(contextGL,
                              context->getZeroFilledBuffer(checkedBufferSize.ValueOrDie(), &zero));
 
@@ -2523,7 +2523,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
         ANGLE_CHECK_GL_MATH(contextGL,
                             internalFormatInfo.computeCompressedImageSize(desc.size, &imageSize));
 
-        angle::MemoryBuffer *zero;
+        const angle::MemoryBuffer *zero;
         ANGLE_CHECK_GL_ALLOC(contextGL, context->getZeroFilledBuffer(imageSize, &zero));
 
         // WebGL spec requires that zero data is uploaded to compressed textures even if it might
@@ -2554,7 +2554,7 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
                                            nativeSubImageFormat.type, desc.size, unpackState,
                                            nativegl::UseTexImage3D(getType()), &imageSize));
 
-        angle::MemoryBuffer *zero;
+        const angle::MemoryBuffer *zero;
         ANGLE_CHECK_GL_ALLOC(contextGL, context->getZeroFilledBuffer(imageSize, &zero));
 
         if (nativegl::UseTexImage2D(getType()))

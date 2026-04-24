@@ -975,7 +975,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
     gl::PixelUnpackState zeroDataUnpackState;
     zeroDataUnpackState.alignment = 1;
 
-    angle::MemoryBuffer *zeroBuffer = nullptr;
+    const angle::MemoryBuffer *zeroBuffer = nullptr;
     ANGLE_CHECK_GL_ALLOC(contextD3D, context->getZeroFilledBuffer(imageBytes, &zeroBuffer));
 
     if (shouldUseSetData(image))

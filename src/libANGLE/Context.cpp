@@ -6777,7 +6777,7 @@ angle::ScratchBuffer *Context::getScratchBuffer() const
 }
 
 bool Context::getZeroFilledBuffer(size_t requstedSizeBytes,
-                                  angle::MemoryBuffer **zeroBufferOut) const
+                                  const angle::MemoryBuffer **zeroBufferOut) const
 {
     if (!mZeroFilledBuffer.valid())
     {
@@ -6785,7 +6785,15 @@ bool Context::getZeroFilledBuffer(size_t requstedSizeBytes,
     }
 
     ASSERT(mZeroFilledBuffer.valid());
-    return mZeroFilledBuffer.value().getInitialized(requstedSizeBytes, zeroBufferOut, 0);
+
+    angle::MemoryBuffer *memoryBuffer = nullptr;
+    if (!mZeroFilledBuffer.value().getInitialized(requstedSizeBytes, &memoryBuffer, 0))
+    {
+        return false;
+    }
+
+    *zeroBufferOut = memoryBuffer;
+    return true;
 }
 
 void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
