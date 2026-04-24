@@ -1038,6 +1038,14 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     gl::LabeledObject *getLabeledObject(GLenum identifier, GLuint name) const;
     gl::LabeledObject *getLabeledObjectFromPtr(const void *ptr) const;
 
+    angle::Result readPixelsImpl(GLint x,
+                                 GLint y,
+                                 GLsizei width,
+                                 GLsizei height,
+                                 GLenum format,
+                                 GLenum type,
+                                 void *pixels);
+
     void setUniform1iImpl(Program *program,
                           UniformLocation location,
                           GLsizei count,

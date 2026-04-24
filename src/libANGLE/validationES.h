@@ -205,8 +205,6 @@ bool ValidateReadPixelsBase(const Context *context,
                             GLenum type,
                             GLsizei bufSize,
                             GLsizei *length,
-                            GLsizei *columns,
-                            GLsizei *rows,
                             const void *pixels);
 bool ValidateBeginQueryBase(const Context *context,
                             angle::EntryPoint entryPoint,

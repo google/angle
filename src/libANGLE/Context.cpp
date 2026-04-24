@@ -5165,6 +5165,34 @@ void Context::clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLin
         framebufferObject->clearBufferfi(this, buffer, drawbuffer, clamp01(depth), stencil));
 }
 
+ANGLE_INLINE angle::Result Context::readPixelsImpl(GLint x,
+                                                   GLint y,
+                                                   GLsizei width,
+                                                   GLsizei height,
+                                                   GLenum format,
+                                                   GLenum type,
+                                                   void *pixels)
+{
+    // Zero dimensions are no-ops and negative dimensions must be blocked by validation.
+    // Exit early in both cases to avoid backend failures when validation is disabled.
+    if (ANGLE_UNLIKELY(width <= 0 || height <= 0))
+    {
+        return angle::Result::Continue;
+    }
+
+    ANGLE_TRY(syncStateForReadPixels());
+
+    Framebuffer *readFBO = mState.getReadFramebuffer();
+    ASSERT(readFBO);
+
+    Rectangle area(x, y, width, height);
+    PixelPackState packState = mState.getPackState();
+    Buffer *packBuffer       = mState.getTargetBuffer(gl::BufferBinding::PixelPack);
+    ANGLE_TRY(readFBO->readPixels(this, area, format, type, packState, packBuffer, pixels));
+
+    return angle::Result::Continue;
+}
+
 void Context::readPixels(GLint x,
                          GLint y,
                          GLsizei width,
@@ -5173,20 +5201,7 @@ void Context::readPixels(GLint x,
                          GLenum type,
                          void *pixels)
 {
-    if (width == 0 || height == 0)
-    {
-        return;
-    }
-
-    ANGLE_CONTEXT_TRY(syncStateForReadPixels());
-
-    Framebuffer *readFBO = mState.getReadFramebuffer();
-    ASSERT(readFBO);
-
-    Rectangle area(x, y, width, height);
-    PixelPackState packState = mState.getPackState();
-    Buffer *packBuffer       = mState.getTargetBuffer(gl::BufferBinding::PixelPack);
-    ANGLE_CONTEXT_TRY(readFBO->readPixels(this, area, format, type, packState, packBuffer, pixels));
+    ANGLE_CONTEXT_TRY(readPixelsImpl(x, y, width, height, format, type, pixels));
 }
 
 void Context::readPixelsRobust(GLint x,
@@ -5201,7 +5216,43 @@ void Context::readPixelsRobust(GLint x,
                                GLsizei *rows,
                                void *pixels)
 {
-    readPixels(x, y, width, height, format, type, pixels);
+    ANGLE_CONTEXT_TRY(readPixelsImpl(x, y, width, height, format, type, pixels));
+
+    GLsizei columnsValue = 0;
+    GLsizei rowsValue    = 0;
+    // If the call above exited early due to width or height being zero,
+    // the read buffer dimensions might remain unresolved at this point.
+    // There is no need to compute output dimensions in that case.
+    if (ANGLE_LIKELY(width > 0 && height > 0))
+    {
+        const Extents readBufferSize =
+            mState.getReadFramebuffer()->getState().getReadPixelsAttachment(format)->getSize();
+        ASSERT(readBufferSize.width >= 0 && readBufferSize.height >= 0);
+        ASSERT(angle::base::CheckAdd<GLint>(x, width).IsValid());
+        ASSERT(angle::base::CheckAdd<GLint>(y, height).IsValid());
+
+        // These expressions cannot overflow with the assertions above.
+        // Minuend is the clipped end; subtrahend is the clipped start.
+        columnsValue = std::min<GLsizei>(x + width, readBufferSize.width) - std::max(0, x);
+        rowsValue    = std::min<GLsizei>(y + height, readBufferSize.height) - std::max(0, y);
+
+        // If any computed dimension is not positive, the intersection is empty.
+        if (columnsValue <= 0 || rowsValue <= 0)
+        {
+            columnsValue = 0;
+            rowsValue    = 0;
+        }
+    }
+
+    if (columns != nullptr)
+    {
+        *columns = columnsValue;
+    }
+
+    if (rows != nullptr)
+    {
+        *rows = rowsValue;
+    }
 }
 
 void Context::copyTexImage2D(TextureTarget target,
