@@ -716,6 +716,15 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             return false;
         }
 
+        if (gl::IsYuvFormat(actualInternalFormat))
+        {
+            if ((xoffset % 2) != 0 || (yoffset % 2) != 0 || (width % 2) != 0 || (height % 2) != 0)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kYuvTexSubImage2DOddOffsetOrDimension);
+                return false;
+            }
+        }
+
         if (width > 0 && height > 0 && depth > 0 && pixels == nullptr &&
             context->getState().getTargetBuffer(BufferBinding::PixelUnpack) == nullptr)
         {

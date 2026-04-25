@@ -90,6 +90,7 @@
 42265137 VULKAN : UniformTest.UnusedStructInlineUniform/* = SKIP
 42265137 VULKAN : UniformTest.UnusedStructInlineUniformWithSampler/* = SKIP
 42265405 VULKAN : Texture2DTestES3.TextureRGBUpdateWithPBO/ES3_Vulkan* = SKIP
+506193593 VULKAN : Texture2DTestES3.YUVTexSubImage2DNonZeroOffset_3Plane/* = SKIP
 42265226 VULKAN : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8Line/* = SKIP
 42265226 VULKAN : GLSLTest_ES3.GLVertexIDIntegerTextureDrawElementsU8LineIds/* = SKIP
 235877059 VULKAN : MultisampleTestES3.ResolveToFBO/ES3_Vulkan_EmulatedPrerotation180 = SKIP

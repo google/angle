@@ -8507,15 +8507,25 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
         ASSERT(index.getLevelIndex() == 0);
         ASSERT(index.getLayerCount() == 1);
 
+        int hSub = 1, vSub = 1;
+        gl::GetSubSampleFactor(formatInfo.internalFormat, &hSub, &vSub);
+
         for (uint32_t plane = 0; plane < yuvInfo.planeCount; plane++)
         {
+            gl::Offset planeOffset = offset;
+            if (plane > 0)
+            {
+                planeOffset.x = offset.x / hSub;
+                planeOffset.y = offset.y / vSub;
+            }
+
             VkBufferImageCopy copy           = {};
             copy.bufferOffset                = stagingOffset + yuvInfo.planeOffset[plane];
             copy.bufferRowLength             = 0;
             copy.bufferImageHeight           = 0;
             copy.imageSubresource.mipLevel   = 0;
             copy.imageSubresource.layerCount = 1;
-            gl_vk::GetOffset(offset, &copy.imageOffset);
+            gl_vk::GetOffset(planeOffset, &copy.imageOffset);
             gl_vk::GetExtent(yuvInfo.planeExtent[plane], &copy.imageExtent);
             copy.imageSubresource.baseArrayLayer = 0;
             copy.imageSubresource.aspectMask     = kPlaneAspectFlags[plane];

@@ -397,6 +397,7 @@ class Texture2DTestES3 : public Texture2DTest
 {
   protected:
     Texture2DTestES3() : Texture2DTest() {}
+    void runYUVTexSubImage2DNonZeroOffsetTest(GLenum format);
 
     const char *getVertexShaderSource() override
     {
@@ -4914,6 +4915,138 @@ void main()
     EXPECT_PIXEL_NEAR(0, 0, expectedRgbColor[0], expectedRgbColor[1], expectedRgbColor[2],
                       expectedRgbColor[3], 1);
     ASSERT_GL_NO_ERROR();
+}
+
+void Texture2DTestES3::runYUVTexSubImage2DNonZeroOffsetTest(GLenum format)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_yuv_internal_format"));
+
+    constexpr size_t kWidth  = 4;
+    constexpr size_t kHeight = 4;
+
+    struct YUVColor
+    {
+        GLubyte y;
+        GLubyte cb;
+        GLubyte cr;
+    };
+
+    // Color A: Y=0, Cb=128, Cr=128 -> RGB=(0, 0, 0)
+    constexpr YUVColor kColorA = {0, 128, 128};
+    const GLColor kExpectedRgbA(0, 0, 0, 255);
+
+    // Color B: Y=255, Cb=128, Cr=128 -> RGB=(255, 255, 255)
+    constexpr YUVColor kColorB = {255, 128, 128};
+    const GLColor kExpectedRgbB(255, 255, 255, 255);
+
+    std::vector<GLubyte> initData(24);
+    std::fill(initData.begin(), initData.begin() + 16, kColorA.y);  // Y
+    if (format == GL_G8_B8R8_2PLANE_420_UNORM_ANGLE)
+    {
+        for (size_t i = 16; i < 24; i += 2)
+        {
+            initData[i]     = kColorA.cb;
+            initData[i + 1] = kColorA.cr;
+        }
+    }
+    else
+    {
+        std::fill(initData.begin() + 16, initData.begin() + 20, kColorA.cb);
+        std::fill(initData.begin() + 20, initData.end(), kColorA.cr);
+    }
+
+    GLTexture yuvTexture;
+    glBindTexture(GL_TEXTURE_2D, yuvTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, format, kWidth, kHeight);
+    ASSERT_GL_NO_ERROR();
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, format, GL_UNSIGNED_BYTE,
+                    initData.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Update quadrant (2,2) with Color B
+    std::vector<GLubyte> updateData(6);
+    std::fill(updateData.begin(), updateData.begin() + 4, kColorB.y);  // Y
+    updateData[4] = kColorB.cb;
+    updateData[5] = kColorB.cr;
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 2, 2, 2, 2, format, GL_UNSIGNED_BYTE, updateData.data());
+    ASSERT_GL_NO_ERROR();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw a quad with the target texture
+    glUseProgram(mProgram);
+    glBindTexture(GL_TEXTURE_2D, yuvTexture);
+    glUniform1i(mTexture2DUniformLocation, 0);
+
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    int w = getWindowWidth();
+    int h = getWindowHeight();
+
+    // Bottom-left (Color A)
+    EXPECT_PIXEL_COLOR_NEAR(w / 4, h / 4, kExpectedRgbA, 1);
+    // Top-right (Color B)
+    EXPECT_PIXEL_COLOR_NEAR(3 * w / 4, 3 * h / 4, kExpectedRgbB, 1);
+    // Bottom-right (Color A)
+    EXPECT_PIXEL_COLOR_NEAR(3 * w / 4, h / 4, kExpectedRgbA, 1);
+    // Top-left (Color A)
+    EXPECT_PIXEL_COLOR_NEAR(w / 4, 3 * h / 4, kExpectedRgbA, 1);
+}
+
+// Test sub-image uploads of data to ANGLE_yuv_internal_format 2-plane
+// textures with non-zero offsets.
+TEST_P(Texture2DTestES3, YUVTexSubImage2DNonZeroOffset_2Plane)
+{
+    runYUVTexSubImage2DNonZeroOffsetTest(GL_G8_B8R8_2PLANE_420_UNORM_ANGLE);
+}
+
+// Test sub-image uploads of data to ANGLE_yuv_internal_format 3-plane
+// textures with non-zero offsets.
+TEST_P(Texture2DTestES3, YUVTexSubImage2DNonZeroOffset_3Plane)
+{
+    runYUVTexSubImage2DNonZeroOffsetTest(GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE);
+}
+
+// Verify newly added errors when uploading odd offsets and sizes to
+// ANGLE_yuv_internal_format textures.
+TEST_P(Texture2DTestES3, YUVTexSubImage2DInvalidOffsetsAndDimensions)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_yuv_internal_format"));
+
+    constexpr size_t kWidth  = 4;
+    constexpr size_t kHeight = 4;
+
+    GLTexture yuvTexture;
+    glBindTexture(GL_TEXTURE_2D, yuvTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE, kWidth, kHeight);
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<GLubyte> updateData(24, 0);  // Size doesn't matter much for error generation
+
+    // Odd xoffset
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 1, 0, 2, 2, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,
+                    GL_UNSIGNED_BYTE, updateData.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Odd yoffset
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 1, 2, 2, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,
+                    GL_UNSIGNED_BYTE, updateData.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Odd width
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 2, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,
+                    GL_UNSIGNED_BYTE, updateData.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Odd height
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 1, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,
+                    GL_UNSIGNED_BYTE, updateData.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 // Test functionality of GL_ANGLE_yuv_internal_format glCopyTextureCHROMIUM
