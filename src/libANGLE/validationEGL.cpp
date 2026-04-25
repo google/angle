@@ -574,7 +574,6 @@ bool ValidatePlatformType(const ValidationContext *val,
         case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
             break;
 
-        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
         case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
             if (!clientExtensions.platformANGLED3D)
             {
@@ -1061,13 +1060,11 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
             {
                 case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_REFERENCE_ANGLE:
                 case EGL_PLATFORM_ANGLE_DEVICE_TYPE_D3D_WARP_ANGLE:
-                    if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE &&
-                        platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+                    if (platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
                     {
                         val->setError(EGL_BAD_ATTRIBUTE,
                                       "This device type requires a "
-                                      "platform type of EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE or "
-                                      "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE.");
+                                      "platform type of EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
                         return false;
                     }
                     break;
@@ -6870,13 +6867,6 @@ bool ValidateQueryDeviceAttribEXT(const ValidationContext *val,
             if (!device->getExtensions().deviceD3D11)
             {
                 val->setError(EGL_BAD_ATTRIBUTE, "EGL_ANGLE_device_d3d11 is not available");
-                return false;
-            }
-            break;
-        case EGL_D3D9_DEVICE_ANGLE:
-            if (!device->getExtensions().deviceD3D9)
-            {
-                val->setError(EGL_BAD_ATTRIBUTE, "EGL_ANGLE_device_d3d9 is not available");
                 return false;
             }
             break;

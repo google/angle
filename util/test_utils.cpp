@@ -70,7 +70,6 @@ const char *GetSingleArg(const char *flag,
 using DisplayTypeInfo = std::pair<const char *, EGLint>;
 
 const DisplayTypeInfo kDisplayTypes[] = {
-    {"d3d9", EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE},
     {"d3d11", EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE},
     {"gl", EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE},
     {"gles", EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE},

@@ -1300,12 +1300,7 @@ bool ProgramExecutable::linkMergedVaryings(const Caps &caps,
     // Map the varyings to the register file
     // In WebGL, we use a slightly different handling for packing variables.
     gl::PackMode packMode = PackMode::ANGLE_RELAXED;
-    if (limitations.noFlexibleVaryingPacking)
-    {
-        // D3D9 pack mode is strictly more strict than WebGL, so takes priority.
-        packMode = PackMode::ANGLE_NON_CONFORMANT_D3D9;
-    }
-    else if (webglCompatibility)
+    if (webglCompatibility)
     {
         packMode = PackMode::WEBGL_STRICT;
     }

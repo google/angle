@@ -52,7 +52,7 @@
 #    include "common/tls.h"
 #endif
 
-#if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+#if defined(ANGLE_ENABLE_D3D11)
 #    include "libANGLE/renderer/d3d/DisplayD3D.h"
 #endif
 
@@ -270,19 +270,6 @@ rx::DisplayImpl *CreateDisplayFromDevice(Device *eglDevice, const DisplayState &
     }
 #endif
 
-#if defined(ANGLE_ENABLE_D3D9)
-    if (eglDevice->getExtensions().deviceD3D9)
-    {
-        // Currently the only way to get EGLDeviceEXT representing a D3D9 device
-        // is to retrieve one from an already-existing EGLDisplay.
-        // When eglGetPlatformDisplayEXT is called with a D3D9 EGLDeviceEXT,
-        // the already-existing display should be returned.
-        // Therefore this codepath to create a new display from the device
-        // should never be hit.
-        UNREACHABLE();
-    }
-#endif
-
     ASSERT(impl != nullptr);
     return impl;
 }
@@ -340,8 +327,6 @@ EGLAttrib GetDisplayTypeFromEnvironment()
 #endif
 #if defined(ANGLE_ENABLE_D3D11)
     return EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE;
-#elif defined(ANGLE_ENABLE_D3D9)
-    return EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
 #elif defined(ANGLE_ENABLE_VULKAN) && defined(ANGLE_PLATFORM_ANDROID)
     return EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE;
 #elif defined(ANGLE_ENABLE_OPENGL)
@@ -427,9 +412,8 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
             UNREACHABLE();
             break;
 
-        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
         case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
-#if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+#if defined(ANGLE_ENABLE_D3D11)
             impl = new rx::DisplayD3D(state);
             break;
 #else
@@ -2206,7 +2190,7 @@ static ClientExtensions GenerateClientExtensions()
     extensions.platformBase     = true;
     extensions.platformANGLE    = true;
 
-#if defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
+#if defined(ANGLE_ENABLE_D3D11)
     extensions.platformANGLED3D = true;
     extensions.platformDevice   = true;
 #endif
@@ -2418,8 +2402,7 @@ bool Display::isValidNativeDisplay(EGLNativeDisplayType display)
     }
 
 #if defined(ANGLE_PLATFORM_WINDOWS) && !defined(ANGLE_ENABLE_WINDOWS_UWP)
-    if (display == EGL_SOFTWARE_DISPLAY_ANGLE || display == EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE ||
-        display == EGL_D3D11_ONLY_DISPLAY_ANGLE)
+    if (display == EGL_SOFTWARE_DISPLAY_ANGLE || display == EGL_D3D11_ONLY_DISPLAY_ANGLE)
     {
         return true;
     }

@@ -2230,8 +2230,6 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
     // to work around a slow fxc compile performance issue with dynamic uniform indexing.
     ANGLE_FEATURE_CONDITION(features, allowTranslateUniformBlockToStructuredBuffer,
                             IsWindows10OrLater());
-
-    ANGLE_FEATURE_CONDITION(features, supportsNonConstantLoopIndexing, true);
 }
 
 void InitializeFrontendFeatures(const DXGI_ADAPTER_DESC &adapterDesc,
