@@ -3869,7 +3869,11 @@ void Context::beginTransformFeedback(PrimitiveMode primitiveMode)
     ASSERT(!transformFeedback->isPaused());
 
     // TODO: http://anglebug.com/42265705: Handle PPOs
-    ANGLE_CONTEXT_TRY(transformFeedback->begin(this, primitiveMode, mState.getProgram()));
+    // Since programs should override PPOs, no PPO is passed to the transform feedback if a program
+    // is active.
+    Program *program                 = mState.getProgram();
+    ProgramPipeline *programPipeline = program == nullptr ? mState.getProgramPipeline() : nullptr;
+    ANGLE_CONTEXT_TRY(transformFeedback->begin(this, primitiveMode, program, programPipeline));
     onActiveTransformFeedbackChange();
 }
 

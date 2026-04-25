@@ -420,6 +420,8 @@
 494270619 MAC OPENGL : BaseInstanceOverflowTest.BaseInstanceOverflow/* = SKIP
 504886981 MAC OPENGL : RobustResourceInitTestES3.PartiallyInitializedTextureWithNonZeroBase/* = SKIP
 504886981 MAC OPENGL : RobustResourceInitTestES3.ReadbackWithMippedTexture/* = SKIP
+497533569 MAC INTEL OPENGL : TransformFeedbackTest.ProgramSwitchDuringPauseAndResume/* = SKIP
+497533569 MAC INTEL OPENGL : TransformFeedbackTest.ProgramSwitchDuringPauseAndResumeWithBufferChange/* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 42262159 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
@@ -2065,6 +2067,11 @@
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : ProgramPipelineTest31.VaryingLocationMismatch/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : ProgramPipelineXFBTest31.SeparableProgramWithXFBSeparateMode/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : ProgramPipelineXFBTest31.VaryingIOBlockSeparableProgramWithXFB/* = SKIP
+410630704 SAMSUNG GALAXYS24EXYNOS GLES : ProgramPipelineXFBTest31.ChangeShaderStageDuringPauseAndResume/* = SKIP
+410630704 SAMSUNG GALAXYS24EXYNOS GLES : ProgramPipelineXFBTest31.ChangeShaderStageDuringPauseAndResumeWithBufferChange/* = SKIP
+410630704 SAMSUNG GALAXYS24EXYNOS GLES : ProgramPipelineXFBTest31.PipelineSwitchDuringPauseAndResume/* = SKIP
+410630704 SAMSUNG GALAXYS24EXYNOS GLES : ProgramPipelineXFBTest31.BindProgramDuringPauseAndResume/* = SKIP
+410630704 SAMSUNG GALAXYS24EXYNOS GLES : ProgramPipelineXFBTest31.UseProgramAndPPOThenUnbindProgramAndResume/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : SRGBFramebufferTestES3.BlitFramebuffer/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : SRGBFramebufferTest.MultipleFramebuffers/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS GLES : SRGBFramebufferTest.NegativeLifetimeTracking/* = SKIP

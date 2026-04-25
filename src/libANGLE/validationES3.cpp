@@ -4156,6 +4156,44 @@ bool ValidateResumeTransformFeedback(const Context *context, angle::EntryPoint e
         return false;
     }
 
+    Program *currentProgram                 = context->getState().getLinkedProgram(context);
+    ProgramPipeline *currentProgramPipeline = context->getState().getProgramPipeline();
+
+    if (transformFeedback->hasProgram() &&
+        (currentProgram == nullptr || !transformFeedback->hasBoundProgram(currentProgram->id())))
+    {
+        ASSERT(!transformFeedback->hasProgramPipeline());
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTransformFeedbackProgramNotSameAtResume);
+        return false;
+    }
+
+    if (transformFeedback->hasProgramPipeline() && currentProgram != nullptr)
+    {
+        ASSERT(!transformFeedback->hasProgram());
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
+                               kTransformFeedbackProgramOverridingPipelineAtResume);
+        return false;
+    }
+
+    if (transformFeedback->hasProgramPipeline() &&
+        (currentProgramPipeline == nullptr ||
+         !transformFeedback->hasBoundProgramPipeline(currentProgramPipeline->id())))
+    {
+        ASSERT(!transformFeedback->hasProgram());
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTransformFeedbackPipelineNotSameAtResume);
+        return false;
+    }
+
+    if (transformFeedback->hasProgramPipeline() && currentProgramPipeline != nullptr &&
+        transformFeedback->hasBoundProgramPipeline(currentProgramPipeline->id()) &&
+        !transformFeedback->hasSamePPOPrograms(currentProgramPipeline))
+    {
+        ASSERT(!transformFeedback->hasProgram());
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
+                               kTransformFeedbackPipelineChangedStagesAtResume);
+        return false;
+    }
+
     return true;
 }
 
