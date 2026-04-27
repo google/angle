@@ -6245,6 +6245,42 @@ void main()
     destroyHardenedContext(hardenedContext);
 }
 
+// Similar to WebGL2GLSLTest.InitUninitializedLocals, but ensure the same validation is done in
+// non-webgl contexts with the EGL_CONTEXT_HARDENED_ANGLE flag.
+TEST_P(HardenedContextTest, InitUninitializedLocals)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 my_FragColor;
+int result = 0;
+void main()
+{
+    int u;
+    result += u;
+    int k = 0;
+    for (int i[2], j = i[0] + 1; k < 2; ++k)
+    {
+        result += j;
+    }
+    if (result == 2)
+    {
+        my_FragColor = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        my_FragColor = vec4(1, 0, 0, 1);
+    }
+})";
+
+    EGLContext hardenedContext = setupHardenedContext();
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    destroyHardenedContext(hardenedContext);
+}
+
 // Ensure that new type size validation code added for
 // http://crbug.com/40056230 does not crash.
 TEST_P(WebGL2CompatibilityTest, ValidatingTypeSizesShouldNotCrash)
