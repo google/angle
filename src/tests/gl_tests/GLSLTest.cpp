@@ -6459,35 +6459,32 @@ TEST_P(GLSLTest_ES3, NestedSamplingOperation)
     // Test skipped on Android because of bug with Nexus 5X.
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
-    constexpr char kVS[] =
-        "#version 300 es\n"
-        "out vec2 texCoord;\n"
-        "in vec2 position;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(position, 0, 1);\n"
-        "    texCoord = position * 0.5 + vec2(0.5);\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 300 es
+out vec2 texCoord;
+in vec2 position;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    texCoord = position * 0.5 + vec2(0.5);
+})";
 
-    constexpr char kSimpleFS[] =
-        "#version 300 es\n"
-        "in mediump vec2 texCoord;\n"
-        "out mediump vec4 fragColor;\n"
-        "void main()\n"
-        "{\n"
-        "    fragColor = vec4(texCoord, 0, 1);\n"
-        "}\n";
+    constexpr char kSimpleFS[] = R"(#version 300 es
+in mediump vec2 texCoord;
+out mediump vec4 fragColor;
+void main()
+{
+    fragColor = vec4(texCoord, 0, 1);
+})";
 
-    constexpr char kNestedFS[] =
-        "#version 300 es\n"
-        "uniform mediump sampler2D samplerA;\n"
-        "uniform mediump sampler2D samplerB;\n"
-        "in mediump vec2 texCoord;\n"
-        "out mediump vec4 fragColor;\n"
-        "void main ()\n"
-        "{\n"
-        "    fragColor = texture(samplerB, texture(samplerA, texCoord).xy);\n"
-        "}\n";
+    constexpr char kNestedFS[] = R"(#version 300 es
+uniform mediump sampler2D samplerA;
+uniform mediump sampler2D samplerB;
+in mediump vec2 texCoord;
+out mediump vec4 fragColor;
+void main ()
+{
+    fragColor = texture(samplerB, texture(samplerA, texCoord).xy);
+})";
 
     ANGLE_GL_PROGRAM(initProg, kVS, kSimpleFS);
     ANGLE_GL_PROGRAM(nestedProg, kVS, kNestedFS);
@@ -6611,29 +6608,28 @@ TEST_P(WebGL2GLSLTest, InitUninitializedLocals)
     // http://anglebug.com/40096454
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "int result = 0;\n"
-        "void main()\n"
-        "{\n"
-        "    int u;\n"
-        "    result += u;\n"
-        "    int k = 0;\n"
-        "    for (int i[2], j = i[0] + 1; k < 2; ++k)\n"
-        "    {\n"
-        "        result += j;\n"
-        "    }\n"
-        "    if (result == 2)\n"
-        "    {\n"
-        "        my_FragColor = vec4(0, 1, 0, 1);\n"
-        "    }\n"
-        "    else\n"
-        "    {\n"
-        "        my_FragColor = vec4(1, 0, 0, 1);\n"
-        "    }\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 my_FragColor;
+int result = 0;
+void main()
+{
+    int u;
+    result += u;
+    int k = 0;
+    for (int i[2], j = i[0] + 1; k < 2; ++k)
+    {
+        result += j;
+    }
+    if (result == 2)
+    {
+        my_FragColor = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        my_FragColor = vec4(1, 0, 0, 1);
+    }
+})";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
 
@@ -6653,29 +6649,28 @@ TEST_P(WebGL2GLSLTest, InitUninitializedStructContainingArrays)
     // http://anglebug.com/40096454
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
-    constexpr char kFS[] =
-        "precision mediump float;\n"
-        "struct T\n"
-        "{\n"
-        "    int a[2];\n"
-        "};\n"
-        "struct S\n"
-        "{\n"
-        "    T t[2];\n"
-        "};\n"
-        "void main()\n"
-        "{\n"
-        "    S s;\n"
-        "    S s2;\n"
-        "    if (s.t[1].a[1] == 0 && s2.t[1].a[1] == 0)\n"
-        "    {\n"
-        "        gl_FragColor = vec4(0, 1, 0, 1);\n"
-        "    }\n"
-        "    else\n"
-        "    {\n"
-        "        gl_FragColor = vec4(1, 0, 0, 1);\n"
-        "    }\n"
-        "}\n";
+    constexpr char kFS[] = R"(precision mediump float;
+struct T
+{
+    int a[2];
+};
+struct S
+{
+    T t[2];
+};
+void main()
+{
+    S s;
+    S s2;
+    if (s.t[1].a[1] == 0 && s2.t[1].a[1] == 0)
+    {
+        gl_FragColor = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        gl_FragColor = vec4(1, 0, 0, 1);
+    }
+})";
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
@@ -6686,47 +6681,47 @@ TEST_P(WebGL2GLSLTest, InitUninitializedStructContainingArrays)
 // not link.
 TEST_P(GLSLTest, StructureNameMatchingTest)
 {
-    const char *vsSource =
-        "// Structures must have the same name, sequence of type names, and\n"
-        "// type definitions, and field names to be considered the same type.\n"
-        "// GLSL 1.017 4.2.4\n"
-        "precision mediump float;\n"
-        "struct info {\n"
-        "  vec4 pos;\n"
-        "  vec4 color;\n"
-        "};\n"
-        "\n"
-        "uniform info uni;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = uni.pos;\n"
-        "}\n";
+    constexpr char kVS[] = R"(
+// Structures must have the same name, sequence of type names, and
+// type definitions, and field names to be considered the same type.
+// GLSL 1.017 4.2.4
+precision mediump float;
+struct info {
+  vec4 pos;
+  vec4 color;
+};
 
-    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+uniform info uni;
+void main()
+{
+    gl_Position = uni.pos;
+})";
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, kVS);
     ASSERT_NE(0u, vs);
     glDeleteShader(vs);
 
-    const char *fsSource =
-        "// Structures must have the same name, sequence of type names, and\n"
-        "// type definitions, and field names to be considered the same type.\n"
-        "// GLSL 1.017 4.2.4\n"
-        "precision mediump float;\n"
-        "struct info1 {\n"
-        "  vec4 pos;\n"
-        "  vec4 color;\n"
-        "};\n"
-        "\n"
-        "uniform info1 uni;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = uni.color;\n"
-        "}\n";
+    constexpr char kFS[] = R"(
+// Structures must have the same name, sequence of type names, and
+// type definitions, and field names to be considered the same type.
+// GLSL 1.017 4.2.4
+precision mediump float;
+struct info1 {
+  vec4 pos;
+  vec4 color;
+};
 
-    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+uniform info1 uni;
+void main()
+{
+    gl_FragColor = uni.color;
+})";
+
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFS);
     ASSERT_NE(0u, fs);
     glDeleteShader(fs);
 
-    GLuint program = CompileProgram(vsSource, fsSource);
+    GLuint program = CompileProgram(kVS, kFS);
     EXPECT_EQ(0u, program);
 }
 
@@ -6737,17 +6732,16 @@ TEST_P(WebGL2GLSLTest, UninitializedNamelessStructInForInitStatement)
     // http://anglebug.com/40096454
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "precision highp float;\n"
-        "out vec4 my_FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "    my_FragColor = vec4(1, 0, 0, 1);\n"
-        "    for (struct { float q; } b; b.q < 2.0; b.q++) {\n"
-        "        my_FragColor = vec4(0, 1, 0, 1);\n"
-        "    }\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = vec4(1, 0, 0, 1);
+    for (struct { float q; } b; b.q < 2.0; b.q++) {
+        my_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
@@ -6760,22 +6754,21 @@ TEST_P(WebGLGLSLTest, InitUninitializedGlobals)
     // http://anglebug.com/42261561
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
 
-    constexpr char kFS[] =
-        "precision mediump float;\n"
-        "int result;\n"
-        "int i[2], j = i[0] + 1;\n"
-        "void main()\n"
-        "{\n"
-        "    result += j;\n"
-        "    if (result == 1)\n"
-        "    {\n"
-        "        gl_FragColor = vec4(0, 1, 0, 1);\n"
-        "    }\n"
-        "    else\n"
-        "    {\n"
-        "        gl_FragColor = vec4(1, 0, 0, 1);\n"
-        "    }\n"
-        "}\n";
+    constexpr char kFS[] = R"(precision mediump float;
+int result;
+int i[2], j = i[0] + 1;
+void main()
+{
+    result += j;
+    if (result == 1)
+    {
+        gl_FragColor = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        gl_FragColor = vec4(1, 0, 0, 1);
+    }
+})";
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
@@ -6785,17 +6778,16 @@ TEST_P(WebGLGLSLTest, InitUninitializedGlobals)
 // Test that an uninitialized nameless struct in the global scope works.
 TEST_P(WebGLGLSLTest, UninitializedNamelessStructInGlobalScope)
 {
-    constexpr char kFS[] =
-        "precision mediump float;\n"
-        "struct { float q; } b;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(1, 0, 0, 1);\n"
-        "    if (b.q == 0.0)\n"
-        "    {\n"
-        "        gl_FragColor = vec4(0, 1, 0, 1);\n"
-        "    }\n"
-        "}\n";
+    constexpr char kFS[] = R"(precision mediump float;
+struct { float q; } b;
+void main()
+{
+    gl_FragColor = vec4(1, 0, 0, 1);
+    if (b.q == 0.0)
+    {
+        gl_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
