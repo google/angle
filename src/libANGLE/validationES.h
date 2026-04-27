@@ -1134,7 +1134,7 @@ ANGLE_INLINE bool ValidateDrawElementsCommon(const Context *context,
                 return false;
             }
 
-            if (!ValidateDrawAttribs(context, entryPoint, static_cast<GLint>(indexRange.end())))
+            if (!ValidateDrawAttribs(context, entryPoint, static_cast<GLint64>(indexRange.end())))
             {
                 return false;
             }
