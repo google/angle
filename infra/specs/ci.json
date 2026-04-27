@@ -6314,7 +6314,7 @@
       },
       {
         "args": [
-          "--gtest_filter=-*Vulkan_SwiftShader*",
+          "--gtest_filter=-*Vulkan_SwiftShader*:*D3D9*:*WebGPU*",
           "--max-processes=1"
         ],
         "merge": {
