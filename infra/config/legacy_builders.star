@@ -308,9 +308,6 @@ luci.builder(
 )
 
 # name, clang, debug, cpu, uwp, trace_tests
-angle_builder("android-arm-compile", cpu = "arm")
-angle_builder("android-arm-dbg-compile", cpu = "arm")
-angle_builder("android-arm64-dbg-compile", cpu = "arm64")
 angle_builder("linux-asan-test", cpu = "x64")
 angle_builder("linux-exp-asan-test", cpu = "x64")
 angle_builder("linux-exp-tsan-test", cpu = "x64")
