@@ -1,0 +1,14 @@
+{
+  "gn_args": {
+    "android_static_analysis": "on",
+    "angle_enable_cl": true,
+    "is_clang": true,
+    "is_component_build": true,
+    "is_debug": true,
+    "target_cpu": "arm",
+    "target_os": "android",
+    "use_reclient": false,
+    "use_remoteexec": true,
+    "use_siso": true
+  }
+}

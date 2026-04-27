@@ -38,6 +38,13 @@ gn_args.config(
 )
 
 gn_args.config(
+    name = "arm",
+    args = {
+        "target_cpu": "arm",
+    },
+)
+
+gn_args.config(
     name = "arm64",
     args = {
         "target_cpu": "arm64",

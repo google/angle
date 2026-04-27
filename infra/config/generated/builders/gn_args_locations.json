@@ -1,5 +1,8 @@
 {
   "ci": {
+    "angle-android-arm-builder-dbg": "ci/angle-android-arm-builder-dbg/gn-args.json",
+    "angle-android-arm-builder-rel": "ci/angle-android-arm-builder-rel/gn-args.json",
+    "angle-android-arm64-builder-dbg": "ci/angle-android-arm64-builder-dbg/gn-args.json",
     "angle-android-arm64-builder-rel": "ci/angle-android-arm64-builder-rel/gn-args.json",
     "angle-linux-x64-builder-dbg": "ci/angle-linux-x64-builder-dbg/gn-args.json",
     "angle-linux-x64-builder-rel": "ci/angle-linux-x64-builder-rel/gn-args.json",
@@ -10,6 +13,9 @@
     "angle-win-x86-builder-rel": "ci/angle-win-x86-builder-rel/gn-args.json"
   },
   "try": {
+    "angle-cq-android-arm-dbg": "try/angle-cq-android-arm-dbg/gn-args.json",
+    "angle-cq-android-arm-rel": "try/angle-cq-android-arm-rel/gn-args.json",
+    "angle-cq-android-arm64-dbg": "try/angle-cq-android-arm64-dbg/gn-args.json",
     "angle-cq-android-arm64-rel": "try/angle-cq-android-arm64-rel/gn-args.json",
     "angle-cq-linux-x64-dbg": "try/angle-cq-linux-x64-dbg/gn-args.json",
     "angle-cq-linux-x64-rel": "try/angle-cq-linux-x64-rel/gn-args.json",

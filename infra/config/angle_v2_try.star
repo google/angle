@@ -102,6 +102,42 @@ def angle_win_functional_cq_tester(**kwargs):
 ## Functional testers
 
 angle_linux_functional_cq_tester(
+    name = "angle-cq-android-arm-dbg",
+    description_html = "Compiles all debug ANGLE targets for Android/arm. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-android-arm-builder-dbg",
+    ],
+    gn_args = "ci/angle-android-arm-builder-dbg",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
+    # confirmed to work correctly.
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
+angle_linux_functional_cq_tester(
+    name = "angle-cq-android-arm-rel",
+    description_html = "Compiles all debug ANGLE targets for Android/arm. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-android-arm-builder-rel",
+    ],
+    gn_args = "ci/angle-android-arm-builder-rel",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
+    # confirmed to work correctly.
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
+angle_linux_functional_cq_tester(
+    name = "angle-cq-android-arm64-dbg",
+    description_html = "Compiles all debug ANGLE targets for Android/arm64. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-android-arm64-builder-dbg",
+    ],
+    gn_args = "ci/angle-android-arm64-builder-dbg",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
+    # confirmed to work correctly.
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
+angle_linux_functional_cq_tester(
     name = "angle-cq-android-arm64-rel",
     description_html = "Tests release ANGLE on Android/arm64 on multiple hardware configs. Blocks CL submission.",
     mirrors = [

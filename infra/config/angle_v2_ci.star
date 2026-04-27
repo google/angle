@@ -56,6 +56,103 @@ def angle_win_parent_builder(**kwargs):
     ci.builder(**kwargs)
 
 angle_linux_parent_builder(
+    name = "angle-android-arm-builder-dbg",
+    description_html = "Compiles debug ANGLE test binaries for Android/arm",
+    schedule = "triggered",
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2_android",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.DEBUG,
+            target_arch = builder_config.target_arch.ARM,
+            target_bits = 32,
+            target_platform = builder_config.target_platform.ANDROID,
+        ),
+    ),
+    gn_args = gn_args.config(
+        configs = [
+            "android_clang",
+            "android_static_analysis",
+            "arm",
+            "component",
+            "debug",
+            "opencl",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|android|arm",
+        short_name = "dbg",
+    ),
+)
+
+angle_linux_parent_builder(
+    name = "angle-android-arm-builder-rel",
+    description_html = "Compiles release ANGLE test binaries for Android/arm",
+    schedule = "triggered",
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2_android",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.ARM,
+            target_bits = 32,
+            target_platform = builder_config.target_platform.ANDROID,
+        ),
+    ),
+    gn_args = gn_args.config(
+        configs = [
+            "android_clang",
+            "android_static_analysis",
+            "arm",
+            "capture",
+            "component",
+            "opencl",
+            "release_with_dchecks",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|android|arm",
+        short_name = "rel",
+    ),
+)
+
+angle_linux_parent_builder(
+    name = "angle-android-arm64-builder-dbg",
+    description_html = "Compiles debug ANGLE test binaries for Android/arm64",
+    schedule = "triggered",
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2_android",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.DEBUG,
+            target_arch = builder_config.target_arch.ARM,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.ANDROID,
+        ),
+    ),
+    gn_args = gn_args.config(
+        configs = [
+            "android_clang",
+            "android_static_analysis",
+            "arm64",
+            "component",
+            "debug",
+            "opencl",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|android|arm64",
+        short_name = "dbg",
+    ),
+)
+
+angle_linux_parent_builder(
     name = "angle-android-arm64-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Android/arm64",
     schedule = "triggered",

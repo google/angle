@@ -163,6 +163,24 @@
       'swarming_containment_auto',
     ],
     'machines': {
+      'angle-android-arm-builder-dbg': {
+        'os_type': 'android',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
+      'angle-android-arm-builder-rel': {
+        'os_type': 'android',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
+      'angle-android-arm64-builder-dbg': {
+        'os_type': 'android',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
       'angle-android-arm64-google-pixel10-rel': {
         'os_type': 'android',
         'mixins': [
