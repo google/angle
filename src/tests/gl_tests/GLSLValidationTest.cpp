@@ -4539,6 +4539,19 @@ void main()
                   "'i' : Loop index cannot be statically assigned to within the body of the loop");
 }
 
+// Shader that writes to FragData at index >= gl_MaxDrawBuffers.
+TEST_P(GLSLValidationTest, FragDataIndexTooLarge)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+precision mediump float;
+void main() {
+    gl_FragData[gl_MaxDrawBuffers] = vec4(0.1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS, "array index out of range");
+}
+
 // Shader that writes to SecondaryFragColor and SecondaryFragData does not compile.
 TEST_P(GLSLValidationTest, BlendFuncExtendedSecondaryColorAndData)
 {
@@ -4582,11 +4595,47 @@ TEST_P(GLSLValidationTest, BlendFuncExtendedDataAndSecondaryColor)
 precision mediump float;
 void main() {
     gl_SecondaryFragColorEXT = vec4(1.0);
-    gl_FragData[gl_MaxDrawBuffers - 1] = vec4(0.1);
+    gl_FragData[gl_MaxDualSourceDrawBuffersEXT - 1] = vec4(0.1);
 })";
     validateError(GL_FRAGMENT_SHADER, kFS,
                   "cannot use both output variable sets (gl_FragData, gl_SecondaryFragDataEXT) and "
                   "(gl_FragColor, gl_SecondaryFragColorEXT)");
+}
+
+// Shader that writes to SecondaryFragData and FragData at an index >= than
+// gl_MaxDualSourceDrawBuffersEXT.
+TEST_P(GLSLValidationTest, BlendFuncExtendedDataArrayAndSecondaryData)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    gl_SecondaryFragDataEXT[0] = vec4(1.0);
+    gl_FragData[gl_MaxDualSourceDrawBuffersEXT] = vec4(0.1);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "array index for gl_FragData must be less than "
+                  "GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT when gl_SecondaryFragDataEXT is used");
+}
+
+// Shader that writes to FragData at an index >= than gl_MaxDualSourceDrawBuffersEXT is fine if
+// SecondaryFragData is not used.  Note that gl_MaxDualSourceDrawBuffersEXT is typically 1, while
+// the size of gl_FragData (gl_MaxDrawBuffers) is larger.
+TEST_P(GLSLValidationTest, BlendFuncExtendedDataArrayOnly)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    gl_FragData[gl_MaxDrawBuffers - 1] = vec4(0.1);
+})";
+    validateSuccess(GL_FRAGMENT_SHADER, kFS);
 }
 
 // Dynamic indexing of SecondaryFragData is not allowed in WebGL 2.0.

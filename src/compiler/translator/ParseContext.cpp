@@ -545,6 +545,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
           ShouldEnforceESSL100LoopAndIndexingLimitations(spec, mShaderVersion, options)),
       mFragmentOutputIndex1Used(false),
       mFragmentOutputFragDepthUsed(false),
+      mMaxFragDataArrayIndexUsed(0),
       mGeometryShaderInputPrimitiveType(EptUndefined),
       mGeometryShaderOutputPrimitiveType(EptUndefined),
       mGeometryShaderInvocations(0),
@@ -7097,18 +7098,16 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
 
         if (!baseExpression->getType().isUnsizedArray())
         {
-            if (baseExpression->isArray())
+            if (baseExpression->isArray() && baseExpression->getQualifier() == EvqFragData)
             {
-                if (baseExpression->getQualifier() == EvqFragData && index > 0)
+                mMaxFragDataArrayIndexUsed = std::max(mMaxFragDataArrayIndexUsed, index);
+                if (index > 0 && !isExtensionEnabled(TExtension::EXT_draw_buffers))
                 {
-                    if (!isExtensionEnabled(TExtension::EXT_draw_buffers))
-                    {
-                        outOfRangeError(outOfRangeIndexIsError, location,
-                                        "array index for gl_FragData must be zero when "
-                                        "GL_EXT_draw_buffers is disabled",
-                                        "[]");
-                        safeIndex = 0;
-                    }
+                    outOfRangeError(outOfRangeIndexIsError, location,
+                                    "array index for gl_FragData must be zero when "
+                                    "GL_EXT_draw_buffers is disabled",
+                                    "[]");
+                    safeIndex = 0;
                 }
             }
             // Only do generic out-of-range check if similar error hasn't already been reported.
@@ -10275,6 +10274,24 @@ void TParseContext::postParseValidateFragmentOutputLocations()
                   "fragment outputs",
                   variable.variable->name());
         }
+    }
+
+    // If gl_SecondaryFragDataEXT is used, then indices to gl_FragData must be smaller than
+    // gl_MaxDualSourceDrawBuffersEXT.  This cannot be validated until the end of the shader because
+    // it would be unknown if gl_SecondaryFragDataEXT is ever used.
+    //
+    // Note that gl_SecondaryFragColorEXT is not checked, because simultaneous use of gl_FragData
+    // and gl_SecondaryFragColorEXT is already forbidden.  Additionally, mFragmentOutputIndex1Used
+    // is not checked as it pertains to ESSL 300+.
+    const bool secondaryFragDataUsed =
+        symbolTable.gl_SecondaryFragDataEXT() != nullptr &&
+        symbolTable.isStaticallyUsed(*symbolTable.gl_SecondaryFragDataEXT());
+    if (secondaryFragDataUsed && mMaxFragDataArrayIndexUsed >= mResources.MaxDualSourceDrawBuffers)
+    {
+        mDiagnostics->globalError(
+            "array index for gl_FragData must be less than "
+            "GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT when "
+            "gl_SecondaryFragDataEXT is used");
     }
 }
 
