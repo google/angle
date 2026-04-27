@@ -1259,6 +1259,7 @@
 491488985 PIXEL10 VULKAN : GLSLTest_ES31.HelperInvocationsAfterDiscard/* = SKIP
 497884154 PIXEL10 VULKAN : ClearTextureEXTTest.DrawThenClearPartiallyThenDraw/* = SKIP
 500930576 PIXEL10 VULKAN : ReadPixelsTest.LargeTexture/* = SKIP
+497637277 PIXEL10 VULKAN : VulkanExternalImageTest.TextureFormatCompatChromiumNoStorageFd/* = SKIP
 
 // Some Metal tests fail on iOS Intel simulator
 40096874 IOS METAL : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
