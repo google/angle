@@ -8872,6 +8872,100 @@ TEST_P(FramebufferTest_ES31, InvalidateThenResolve)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that doing a partial resolve with a region that matches the render pass scissor works.
+TEST_P(FramebufferTest_ES31, PartialResolveMatchingScissor)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    constexpr int kWidth         = 36;
+    constexpr int kHeight        = 20;
+    constexpr int kScissorWidth  = 12;
+    constexpr int kScissorHeight = 10;
+    glViewport(0, 0, kWidth, kHeight);
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kScissorWidth, kScissorHeight);
+
+    GLFramebuffer FBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLTexture msaaColor;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msaaColor);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, kWidth, kHeight, false);
+
+    GLFramebuffer msaaFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, msaaFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
+                           msaaColor, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Use a scissor and draw into the MSAA image
+    glScissor(0, 0, kScissorWidth, kScissorHeight);
+    glEnable(GL_SCISSOR_TEST);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Resolve into the single-sampled image, the subregion that matches the scissor.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
+    glBlitFramebuffer(0, 0, kScissorWidth, kScissorHeight, 0, 0, kScissorWidth, kScissorHeight,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify resolve results
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, FBO);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kScissorWidth, kScissorHeight, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that resolving into a bigger framebuffer works.
+TEST_P(FramebufferTest_ES31, ResolveIntoBiggerFramebuffer)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    constexpr int kWidth  = 36;
+    constexpr int kHeight = 20;
+    glViewport(0, 0, kWidth, kHeight);
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth + 1, kHeight + 1);
+
+    GLFramebuffer FBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLTexture msaaColor;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msaaColor);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, kWidth, kHeight, false);
+
+    GLFramebuffer msaaFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, msaaFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
+                           msaaColor, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw into the MSAA image
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Resolve into the single-sampled image.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO);
+    glBlitFramebuffer(0, 0, kWidth, kHeight, 0, 0, kWidth, kHeight, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify resolve results
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, FBO);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test framebuffer completeness with a mix of multisampled textures and renderbuffers.
 TEST_P(FramebufferTest_ES31, MixesMultisampleTextureRenderbuffer)
 {
@@ -8954,15 +9048,19 @@ ANGLE_INSTANTIATE_TEST_ES2_AND(AddMockTextureNoRenderTargetTest,
                                ES2_D3D9().enable(Feature::AddMockTextureNoRenderTarget),
                                ES2_D3D11().enable(Feature::AddMockTextureNoRenderTarget));
 
-ANGLE_INSTANTIATE_TEST_ES2(FramebufferTest);
-ANGLE_INSTANTIATE_TEST_ES2(FramebufferExtensionsTest);
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND(FramebufferTest,
+                               ES2_VULKAN().disable(Feature::PreferDynamicRendering));
+ANGLE_INSTANTIATE_TEST_ES2_AND(FramebufferExtensionsTest,
+                               ES2_VULKAN().disable(Feature::PreferDynamicRendering));
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(FramebufferFormatsTest,
+                                       ES2_VULKAN().disable(Feature::PreferDynamicRendering));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTest_ES3,
                                ES3_VULKAN().enable(Feature::EmulatedPrerotation90),
                                ES3_VULKAN().enable(Feature::EmulatedPrerotation180),
-                               ES3_VULKAN().enable(Feature::EmulatedPrerotation270));
+                               ES3_VULKAN().enable(Feature::EmulatedPrerotation270),
+                               ES3_VULKAN().disable(Feature::PreferDynamicRendering));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES3_WebGPU);
 ANGLE_INSTANTIATE_TEST(FramebufferTest_ES3_WebGPU, ES3_WEBGPU());
@@ -8973,6 +9071,12 @@ ANGLE_INSTANTIATE_TEST(FramebufferTest_ES3Metal,
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(FramebufferTest_ES31,
-                                ES31_VULKAN().disable(Feature::SupportsImagelessFramebuffer));
-ANGLE_INSTANTIATE_TEST_ES3(FramebufferTestWithFormatFallback);
-ANGLE_INSTANTIATE_TEST_ES3(DefaultFramebufferTest);
+                                ES31_VULKAN().disable(Feature::SupportsImagelessFramebuffer),
+                                ES31_VULKAN().disable(Feature::PreferDynamicRendering),
+                                ES31_VULKAN()
+                                    .disable(Feature::PreferDynamicRendering)
+                                    .disable(Feature::SupportsImagelessFramebuffer));
+ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTestWithFormatFallback,
+                               ES3_VULKAN().disable(Feature::PreferDynamicRendering));
+ANGLE_INSTANTIATE_TEST_ES3_AND(DefaultFramebufferTest,
+                               ES3_VULKAN().disable(Feature::PreferDynamicRendering));
