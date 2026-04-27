@@ -27,6 +27,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::AllowCompressedFormats, "allowCompressedFormats"},
     {Feature::AllowES3OnFL100, "allowES3OnFL100"},
     {Feature::AllowETCFormats, "allowETCFormats"},
+    {Feature::AllowExtensionDisableAfterNonPpTokens, "allowExtensionDisableAfterNonPpTokens"},
     {Feature::AllowGenerateMipmapWithCompute, "allowGenerateMipmapWithCompute"},
     {Feature::AllowGenMultipleMipsPerPass, "allowGenMultipleMipsPerPass"},
     {Feature::AllowHostImageCopyAfterInitialUpload, "allowHostImageCopyAfterInitialUpload"},

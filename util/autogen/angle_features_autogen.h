@@ -27,6 +27,7 @@ enum class Feature
     AllowCompressedFormats,
     AllowES3OnFL100,
     AllowETCFormats,
+    AllowExtensionDisableAfterNonPpTokens,
     AllowGenerateMipmapWithCompute,
     AllowGenMultipleMipsPerPass,
     AllowHostImageCopyAfterInitialUpload,

@@ -6100,6 +6100,69 @@ TEST_P(GLSLValidationTest, Recursion)
     }
 }
 
+// Test that in WebGL1, extensions can be enabled late in the shader.
+TEST_P(WebGLGLSLValidationTest, LateEnableExtension)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_frag_depth"));
+    constexpr char kFS[] = R"(precision mediump float;
+void main()
+{
+#extension GL_EXT_frag_depth : enable
+    gl_FragDepthEXT = 1.0;
+})";
+    validateSuccess(GL_FRAGMENT_SHADER, kFS);
+}
+
+class WebGLGLSLValidationExtensionDisableTest : public WebGLGLSLValidationTest
+{};
+
+// Test that in WebGL1, even though an extension can be enabled late in the shader, it cannot be
+// disabled late.
+TEST_P(WebGLGLSLValidationExtensionDisableTest, LateDisableExtension)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_frag_depth"));
+    {
+        constexpr char kFS[] = R"(#extension GL_EXT_frag_depth : enable
+precision mediump float;
+void main()
+{
+    gl_FragDepthEXT = 1.0;
+#extension GL_EXT_frag_depth : disable
+})";
+        if (getEGLWindow()->isFeatureEnabled(Feature::AllowExtensionDisableAfterNonPpTokens))
+        {
+            validateSuccess(GL_FRAGMENT_SHADER, kFS);
+        }
+        else
+        {
+            validateError(GL_FRAGMENT_SHADER, kFS,
+                          "extension directive with disable behavior must occur before any "
+                          "non-preprocessor tokens");
+        }
+    }
+
+    {
+        constexpr char kFS[] = R"(#extension GL_EXT_frag_depth : enable
+precision mediump float;
+void main()
+{
+    gl_FragDepthEXT = 1.0;
+}
+#extension all : disable
+)";
+        if (getEGLWindow()->isFeatureEnabled(Feature::AllowExtensionDisableAfterNonPpTokens))
+        {
+            validateSuccess(GL_FRAGMENT_SHADER, kFS);
+        }
+        else
+        {
+            validateError(GL_FRAGMENT_SHADER, kFS,
+                          "extension directive with disable behavior must occur before any "
+                          "non-preprocessor tokens");
+        }
+    }
+}
+
 class GLSLValidationClipDistanceTest_ES3 : public GLSLValidationTest_ES3
 {
   protected:
@@ -8591,6 +8654,9 @@ ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLValidationTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLValidationTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLValidationTest);
+
+ANGLE_INSTANTIATE_TEST_ES2_AND(WebGLGLSLValidationExtensionDisableTest,
+                               ES2_OPENGL().enable(Feature::AllowExtensionDisableAfterNonPpTokens));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationClipDistanceTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLValidationClipDistanceTest_ES3,
