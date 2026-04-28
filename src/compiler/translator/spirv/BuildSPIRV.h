@@ -424,6 +424,16 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getCompositeConstant(spirv::IdRef typeId, const spirv::IdRefList &values);
     spirv::IdRef getNullConstant(spirv::IdRef typeId);
 
+    // Test whether |id| was emitted via getCompositeConstant (i.e. it's the
+    // result of an OpConstantComposite instruction in this module).  Lets
+    // OutputSPIRV's indexable-temp path detect when an rvalue being indexed
+    // is itself a compile-time constant; in that case the temp can be
+    // hoisted to module scope as Private with a constant Initializer
+    // instead of being emitted as a Function-storage local that needs a
+    // per-invocation OpStore.  See the comment at the call site in
+    // OutputSPIRV.cpp's accessChainLoad for why this matters.
+    bool isCompositeConstantId(spirv::IdRef id) const;
+
     // Helpers to start and end a function.
     void startNewFunction(spirv::IdRef functionId, const TFunction *func);
     void assembleSpirvFunctionBlocks();
