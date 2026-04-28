@@ -82,6 +82,13 @@
   },
   'angle_restricted_trace_gold_tests': {
     'modifications': {
+      'angle-linux-x64-sws-rel': {
+        # anglebug.com/505781390 long time to download traces
+        'swarming': {
+          'hard_timeout': 1800,
+          'io_timeout': 1800,
+        },
+      },
       'angle-win-x64-intel-uhd630-rel': {
         # anglebug.com/42263955 flaky 4x8 pixel artifacts on Win Intel
         'args': [
