@@ -843,6 +843,7 @@
 42267029 PIXEL6 VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.RenderToTextureDepthStencilRenderbufferShouldNotLoad/* = SKIP
 42267029 PIXEL6 VULKAN : VulkanPerformanceCounterTest.RenderToTextureDepthStencilTextureShouldNotLoad/* = SKIP
 42267029 PIXEL6 VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.RenderToTextureUninitializedAndUnusedDepthStencil/* = SKIP
+509210196 PIXEL6 VULKAN : FramebufferTest_ES31.AttachToMultipleCubeFacesThenMSRTT/* = SKIP
 // New failures after AP1A.240405.002 upgrade
 336847261 PIXEL6 VULKAN : StateChangeTestES3.LineWidth/* = SKIP
 
