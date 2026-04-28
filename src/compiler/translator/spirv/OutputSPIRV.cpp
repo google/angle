@@ -1039,22 +1039,36 @@ spirv::IdRef OutputSPIRVTraverser::accessChainLoad(NodeData *data,
                 // the data in shader constant memory where it's broadcast and aggressively
                 // cached across invocations.
                 //
+                // Multiple dynamic-indexed reads of the same const expression share a single
+                // backing Private variable via getOrDeclarePrivateConstantVar's memoisation
+                // (keyed on the constant id, which already implies the type), so a
+                // `const T[N]` referenced from N call sites produces one module-scope variable
+                // rather than N duplicates -- which keeps the IR tidy and helps SPIR-V->native
+                // compilers that may not aggressively dedupe constant-initialised globals on
+                // their own.
+                //
                 // Safety: getCompositeConstant returns IDs only for true OpConstantComposite
                 // values, whose components are themselves all required to be constants by the
                 // SPIR-V spec.  The composite is therefore observably read-only, so promoting
                 // its storage class to Private (and dropping the redundant OpStore) cannot
                 // change shader semantics.
                 const bool rvalueIsConstant = mBuilder.isCompositeConstantId(loadResult);
-                const spv::StorageClass tempStorageClass =
-                    rvalueIsConstant ? spv::StorageClassPrivate : spv::StorageClassFunction;
-                spirv::IdRef *initializerId = rvalueIsConstant ? &loadResult : nullptr;
 
-                const spirv::IdRef tempVar =
-                    mBuilder.declareVariable(accessChain.baseTypeId, tempStorageClass, decorations,
-                                             initializerId, "indexable", nullptr);
-
-                if (!rvalueIsConstant)
+                spirv::IdRef tempVar;
+                spv::StorageClass tempStorageClass;
+                if (rvalueIsConstant)
                 {
+                    tempVar = mBuilder.getOrDeclarePrivateConstantVar(
+                        accessChain.baseTypeId, loadResult, decorations, "indexable");
+                    tempStorageClass = spv::StorageClassPrivate;
+                }
+                else
+                {
+                    tempVar =
+                        mBuilder.declareVariable(accessChain.baseTypeId, spv::StorageClassFunction,
+                                                 decorations, nullptr, "indexable", nullptr);
+                    tempStorageClass = spv::StorageClassFunction;
+
                     // Write the rvalue into the temp variable.  (For the constant case, the
                     // OpVariable's Initializer operand carries the value -- no OpStore needed.)
                     spirv::WriteStore(mBuilder.getSpirvCurrentFunctionBlock(), tempVar, loadResult,

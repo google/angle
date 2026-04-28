@@ -434,6 +434,20 @@ class SPIRVBuilder : angle::NonCopyable
     // OutputSPIRV.cpp's accessChainLoad for why this matters.
     bool isCompositeConstantId(spirv::IdRef id) const;
 
+    // Get-or-declare a module-scope Private OpVariable whose Initializer is
+    // |constantId| and whose storage type is |typeId|.  Memoised by
+    // |constantId| (which already implies the type) so multiple dynamic-
+    // indexed reads of the same const T[N] expression share a single
+    // backing variable instead of each emitting their own.  Drivers tend
+    // to dedupe these in memory anyway, but the IR-level dedup keeps the
+    // disassembly tidy and makes it easier on less-aggressive
+    // SPIR-V->native compilers (mobile Vulkan, lower-spec backends) that
+    // may not coalesce.
+    spirv::IdRef getOrDeclarePrivateConstantVar(spirv::IdRef typeId,
+                                                spirv::IdRef constantId,
+                                                const SpirvDecorations &decorations,
+                                                const char *name);
+
     // Helpers to start and end a function.
     void startNewFunction(spirv::IdRef functionId, const TFunction *func);
     void assembleSpirvFunctionBlocks();
@@ -561,6 +575,11 @@ class SPIRVBuilder : angle::NonCopyable
     angle::HashMap<SpirvIdAndIdList, spirv::IdRef, SpirvIdAndIdListHash> mCompositeConstants;
     // Keyed by typeId, returns the null constant corresponding to that type.
     std::vector<spirv::IdRef> mNullConstants;
+
+    // Memoisation for getOrDeclarePrivateConstantVar: constantId -> Private
+    // OpVariable id.  Keyed on the constant alone since a SPIR-V constant id
+    // already implies its type.  See the method's comment for rationale.
+    angle::HashMap<uint32_t, spirv::IdRef> mPrivateConstantVars;
 
     // List of type pointers that are already defined.
     // TODO: if all users call getTypeData(), move to SpirvTypeData.  http://anglebug.com/40096715

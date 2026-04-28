@@ -1806,6 +1806,25 @@ bool SPIRVBuilder::isCompositeConstantId(spirv::IdRef id) const
     return false;
 }
 
+spirv::IdRef SPIRVBuilder::getOrDeclarePrivateConstantVar(spirv::IdRef typeId,
+                                                          spirv::IdRef constantId,
+                                                          const SpirvDecorations &decorations,
+                                                          const char *name)
+{
+    auto iter = mPrivateConstantVars.find(constantId);
+    if (iter != mPrivateConstantVars.end())
+    {
+        return iter->second;
+    }
+
+    spirv::IdRef initializer = constantId;
+    const spirv::IdRef varId =
+        declareVariable(typeId, spv::StorageClassPrivate, decorations, &initializer, name, nullptr);
+
+    mPrivateConstantVars.insert({constantId, varId});
+    return varId;
+}
+
 void SPIRVBuilder::startNewFunction(spirv::IdRef functionId, const TFunction *func)
 {
     ASSERT(mSpirvCurrentFunctionBlocks.empty());
