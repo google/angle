@@ -92,6 +92,7 @@ class Context : public ErrorContext
     void onForeignImageUse(ImageHelper *image);
     void finalizeForeignImage(ImageHelper *image);
     void finalizeAllForeignImages();
+    void forgetAllForeignImagesOnError() { mForeignImagesInUse.clear(); }
 
     bool hasForeignImagesToTransition() const
     {
