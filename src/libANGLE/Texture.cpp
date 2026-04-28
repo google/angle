@@ -2721,6 +2721,10 @@ void Texture::onBufferContentsChange()
 
 void Texture::onBindToMSRTTFramebuffer()
 {
+    if (!mState.mHasBeenBoundToMSRTTFramebuffer)
+    {
+        onStateChange(angle::SubjectMessage::SubjectChanged);
+    }
     mState.mHasBeenBoundToMSRTTFramebuffer = true;
 }
 
@@ -2775,6 +2779,7 @@ void Texture::onBindAsImageTexture()
     {
         mDirtyBits.set(DIRTY_BIT_BOUND_AS_IMAGE);
         mState.mHasBeenBoundAsImage = true;
+        onStateChange(angle::SubjectMessage::SubjectChanged);
     }
 }
 
