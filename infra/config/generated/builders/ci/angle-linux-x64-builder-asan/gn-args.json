@@ -1,0 +1,40 @@
+{
+  "gn_args": {
+    "angle_enable_cl": true,
+    "angle_restricted_traces": [
+      "antutu_refinery",
+      "asphalt_9_2024",
+      "aztec_ruins_high",
+      "balatro",
+      "basemark_gpu",
+      "batman_telltale",
+      "dead_cells",
+      "diablo_immortal",
+      "dota_underlords",
+      "genshin_impact",
+      "grand_mountain_adventure",
+      "honkai_star_rail",
+      "manhattan_31",
+      "minecraft_bedrock",
+      "ni_no_kuni",
+      "slingshot_test1",
+      "sonic_the_hedgehog",
+      "tessellation",
+      "tower_of_fantasy",
+      "warcraft_rumble"
+    ],
+    "dcheck_always_on": true,
+    "is_asan": true,
+    "is_clang": true,
+    "is_component_build": true,
+    "is_debug": false,
+    "is_lsan": true,
+    "is_ubsan": true,
+    "symbol_level": 1,
+    "target_cpu": "x64",
+    "target_os": "linux",
+    "use_reclient": false,
+    "use_remoteexec": true,
+    "use_siso": true
+  }
+}

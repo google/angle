@@ -285,6 +285,16 @@
           'isolated_scripts': 'isolated_scripts_group_common',
         },
       },
+      'angle-linux-x64-sws-asan': {
+        'os_type': 'linux',
+        'mixins': [
+          'gpu_linux_gce_stable',
+          'timeout_15m',
+        ],
+        'test_suites': {
+          'gtest_tests': 'swangle_slow_gtests',
+        },
+      },
       'angle-linux-x64-sws-rel': {
         'os_type': 'linux',
         'mixins': [
