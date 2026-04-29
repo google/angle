@@ -2234,8 +2234,11 @@
 // Related to relaxed precision
 512211312 PIXEL4ORXL GLES : GLSLPrecisionTest_ES3.ClampLowpVaryingAndSubtractLowerLimit/* = SKIP
 512211312 PIXEL4ORXL GLES : GLSLPrecisionTest_ES3.ClampLowpUniformAndSubtractLowerLimit/* = SKIP
-512211312 PIXEL10 GLES : GLSLPrecisionTest_ES3.ClampLowp*/* = SKIP
-512211312 PIXEL10 VULKAN : GLSLPrecisionTest_ES3.ClampLowp*/* = SKIP
+512211312 PIXEL6 : GLSLPrecisionTest_ES3.SubtractLowpVaryingByItsValue/* = SKIP
+512211312 PIXEL10 : GLSLPrecisionTest_ES3.ClampLowp*/* = SKIP
+512211312 PIXEL10 : GLSLPrecisionTest_ES3.SubtractLowpVaryingByItsValue/* = SKIP
+512211312 WIN INTEL VULKAN : GLSLPrecisionTest_ES3.SubtractLowpVaryingByItsValue/* = SKIP
+512211312 WIN INTEL VULKAN : GLSLPrecisionTest_ES3.SubtractLowpUniformByItsValue/* = SKIP
 
 // Workaround feature that is only supposed to be enabled on vulkan backend
 292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = SKIP
