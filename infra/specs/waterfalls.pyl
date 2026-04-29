@@ -41,18 +41,6 @@
           'isolated_scripts': 'isolated_scripts_group_perf',
         },
       },
-      'linux-exp-swiftshader-asan': {
-        'os_type': 'linux',
-        'mixins': [
-          'gpu-swarming-pool',
-          'no_gpu',
-          'linux-jammy',
-          'timeout_15m',
-          'x86-64',
-        ],
-        'test_suites': {
-        },
-      },
       'linux-exp-swiftshader-tsan': {
         'os_type': 'linux',
         'mixins': [
@@ -83,19 +71,6 @@
         ],
         'test_suites': {
           'isolated_scripts': 'isolated_scripts_group_perf',
-        },
-      },
-      'linux-swiftshader-asan': {
-        'os_type': 'linux',
-        'mixins': [
-          'gpu-swarming-pool',
-          'no_gpu',
-          'linux-jammy',
-          'timeout_15m',
-          'x86-64',
-        ],
-        'test_suites': {
-          'gtest_tests': 'swangle_slow_gtests',
         },
       },
       'linux-swiftshader-tsan': {
