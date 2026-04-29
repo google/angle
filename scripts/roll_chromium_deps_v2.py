@@ -1102,11 +1102,7 @@ def main() -> None:
     # We want these entries to be in the commit message, but we do not want them
     # to be present for _apply_changed_deps() since they are not actually DEPS
     # entries.
-    # TODO(anglebug.com/485785261): Re-add this call and remove the no-op
-    # `changed_packages` assignment once Starlark packages can be synced in
-    # ANGLE.
-    # changed_packages = _sync_starlark_packages(revision_range.new_revision)
-    changed_packages = []
+    changed_packages = _sync_starlark_packages(revision_range.new_revision)
     entries_for_commit_message = changed_entries + changed_packages
 
     # Create the commit message before adding the entry for the Chromium
