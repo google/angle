@@ -149,9 +149,6 @@ angle_linux_functional_cq_tester(
         "ci/angle-linux-x64-sws-asan",
     ],
     gn_args = "ci/angle-linux-x64-builder-asan",
-    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builders are
-    # confirmed to work.
-    cq_settings = try_.cq_settings(includable_only = True),
 )
 
 angle_linux_functional_cq_tester(
