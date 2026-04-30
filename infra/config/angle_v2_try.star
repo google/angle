@@ -181,7 +181,6 @@ angle_linux_functional_cq_tester(
         "ci/angle-linux-x64-sws-tsan",
     ],
     gn_args = "ci/angle-linux-x64-builder-tsan",
-    cq_settings = try_.cq_settings(includable_only = True),
 )
 
 angle_mac_functional_cq_tester(
