@@ -89,7 +89,41 @@ SYNCED_GCS_DEPS = set()
 # Repos that are independently synced by Chromium and ANGLE. A map from ANGLE
 # names to Chromium names. None means that the names are identical. In the
 # Chromium DEPS file, these will be prefixed with src/.
-SYNCED_REPOS = {}
+# The following DEPS entries would go in here except that they are synced
+# separately from Chromium:
+#   * third_party/SwiftShader
+#   * third_party/vulkan-deps
+#   * third_party/glslang/src
+#   * third_party/spirv-cross/src
+#   * third_party/spirv-headers/src
+#   * third_party/spirv-tools/src
+#   * third_party/vulkan-headers/src
+#   * third_party/vulkan-loader/src
+#   * third_party/vulkan-tools/src
+#   * third_party/vulkan-utility-libraries/src
+#   * third_party/vulkan-validation-layers/src
+#   * third_party/vulkan_memory_allocator
+#   * third_party/wayland
+SYNCED_REPOS = {
+    'third_party/catapult': None,
+    'third_party/clang-format/script': None,
+    'third_party/colorama/src': None,
+    'third_party/cpu_features/src': None,
+    # third_party/dawn is synced manually due to a circular dependency.
+    'third_party/depot_tools': None,
+    'third_party/flatbuffers/src': None,
+    'third_party/googletest/src': None,
+    'third_party/libdrm/src': None,
+    'third_party/libjpeg_turbo': None,
+    'third_party/libc++/src': None,
+    'third_party/libc++abi/src': None,
+    'third_party/llvm-libc/src': None,
+    'third_party/libunwind/src': None,
+    'third_party/nasm': None,
+    'third_party/perfetto': None,
+    'third_party/re2/src': None,
+    'third_party/requests/src': None,
+}
 
 # Chromium directories that are exported as pseudo-repos in
 # chromium.googlesource.com under chromium/src/. Mapping of ANGLE path to
