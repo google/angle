@@ -23,10 +23,8 @@
     'angle': {
       'android-pixel4-perf': 'angle_remoteexec_android_perf_bot',
       'android-pixel6-perf': 'angle_remoteexec_android_perf_bot',
-      'linux-exp-tsan-test': 'angle_tsan_bot',
       'linux-intel-uhd630-perf': 'angle_remoteexec_perf_bot',
       'linux-nvidia-gtx1660-perf': 'angle_remoteexec_perf_bot',
-      'linux-tsan-test': 'angle_tsan_bot',
       'linux-ubsan-test': 'angle_ubsan_bot',
       'mac-dbg-compile': 'angle_remoteexec_x64_debug_bot',
       'win-asan-test': 'angle_asan_bot',
@@ -59,7 +57,6 @@
     'angle_remoteexec_perf_bot': ['angle', 'remoteexec', 'perf'],
     'angle_remoteexec_x64_debug_bot': ['angle', 'remoteexec', 'x64', 'debug'],
     'angle_remoteexec_x86_debug_bot': ['angle', 'opencl', 'remoteexec', 'x86', 'debug'],
-    'angle_tsan_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'tsan', 'release'],
     'angle_ubsan_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'ubsan', 'release'],
     'angle_winuwp_non_clang_debug_bot': ['angle', 'winuwp', 'non_clang', 'debug'],
     'angle_winuwp_non_clang_release_bot': ['angle', 'winuwp', 'non_clang', 'release'],
@@ -100,9 +97,6 @@
     },
     'remoteexec': {
       'gn_args': 'use_remoteexec=true use_reclient=false use_siso=true',
-    },
-    'tsan': {
-      'gn_args': 'is_tsan=true',
     },
     'ubsan': {
       'gn_args': 'is_ubsan=true',

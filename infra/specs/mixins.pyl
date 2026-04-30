@@ -53,8 +53,6 @@
                                                         'pool': 'chromium.tests.gpu'}}},
   'limited_capacity_bot': { 'fail_if_unused': False,
                             'swarming': {'expiration': 21600}},
-  'linux-jammy': { 'fail_if_unused': False,
-                   'swarming': {'dimensions': {'os': 'Ubuntu-22.04'}}},
   'linux_amd_rx_5500_xt': { 'fail_if_unused': False,
                             'swarming': { 'dimensions': { 'display_attached': '1',
                                                           'display_server': 'x11',
@@ -121,8 +119,6 @@
                                                                'hidpi': '1',
                                                                'os': 'Mac-14.4.1',
                                                                'pool': 'chromium.tests.gpu'}}},
-  'no_gpu': { 'fail_if_unused': False,
-              'swarming': {'dimensions': {'gpu': 'none'}}},
   'no_tombstones': {'args': ['--do-not-store-tombstones']},
   'samsung_s24': { 'swarming': { 'dimensions': { 'device_os': 'AP3A.240905.015.A2',
                                                  'device_os_type': 'user',
@@ -163,6 +159,4 @@
                                     'swarming': { 'dimensions': { 'display_attached': '1',
                                                                   'gpu': '10de:2184-31.0.15.4601',
                                                                   'os': 'Windows-10-19045',
-                                                                  'pool': 'chromium.tests.gpu'}}},
-  'x86-64': { 'fail_if_unused': False,
-              'swarming': {'dimensions': {'cpu': 'x86-64'}}}}
+                                                                  'pool': 'chromium.tests.gpu'}}}}
