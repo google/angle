@@ -135,6 +135,8 @@ angle::Result TextureD3D::handleCopyImageSelfCopyRedefine(
     gl::Rectangle clippedArea;
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
     {
+        // We won't be copying, but redefine the destination texture in case sourceArea is larger
+        ANGLE_TRY(redefineDest(destExtents));
         return angle::Result::Continue;
     }
 
