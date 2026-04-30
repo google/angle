@@ -284,6 +284,38 @@ angle_linux_parent_builder(
     ),
 )
 
+angle_linux_parent_builder(
+    name = "angle-linux-x64-builder-tsan",
+    description_html = "Compiles release ANGLE test binaries for Linux/x64 with TSan enabled",
+    schedule = "triggered",
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.LINUX,
+        ),
+    ),
+    gn_args = gn_args.config(
+        configs = [
+            "component",
+            "linux_clang",
+            "opencl",
+            "release_with_dchecks",
+            "tsan",
+            "x64",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|linux|x64",
+        short_name = "tsn",
+    ),
+)
+
 angle_mac_parent_builder(
     name = "angle-mac-arm64-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Mac/arm64",
@@ -736,6 +768,30 @@ ci.thin_tester(
     ),
     console_view_entry = consoles.console_view_entry(
         category = "test|linux|x64|rel",
+        short_name = "sws",
+    ),
+)
+
+ci.thin_tester(
+    name = "angle-linux-x64-sws-tsan",
+    description_html = "Tests release ANGLE on Linux/x64 with SwiftShader with TSan enabled",
+    parent = "angle-linux-x64-builder-tsan",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.LINUX,
+        ),
+        run_tests_serially = True,
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|linux|x64|tsan",
         short_name = "sws",
     ),
 )

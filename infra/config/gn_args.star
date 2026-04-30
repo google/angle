@@ -224,6 +224,13 @@ gn_args.config(
 )
 
 gn_args.config(
+    name = "tsan",
+    args = {
+        "is_tsan": True,
+    },
+)
+
+gn_args.config(
     name = "ubsan",
     args = {
         "is_ubsan": True,

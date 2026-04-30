@@ -172,6 +172,18 @@ angle_linux_functional_cq_tester(
     gn_args = "ci/angle-linux-x64-builder-rel",
 )
 
+angle_linux_functional_cq_tester(
+    name = "angle-cq-linux-x64-tsan",
+    description_html = ("Tests release ANGLE on Linux/x64 on multiple hardware configs with TSan " +
+                        "enabled. Blocks CL submission."),
+    mirrors = [
+        "ci/angle-linux-x64-builder-tsan",
+        "ci/angle-linux-x64-sws-tsan",
+    ],
+    gn_args = "ci/angle-linux-x64-builder-tsan",
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
 angle_mac_functional_cq_tester(
     name = "angle-cq-mac-arm64-rel",
     description_html = "Tests release ANGLE on Mac/arm64 on multiple hardware configs. Blocks CL submission.",
