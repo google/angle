@@ -23241,6 +23241,116 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     ASSERT_GL_NO_ERROR();
 }
+
+class GLSLTest_ES3_Blend : public GLSLTest_ES3
+{};
+
+// Test alpha blend where both the framebuffer and shader miss the alpha channel.  The spec says
+// that:
+//
+// > If a color buffer has no A value, then A_d is taken to be 1.
+//
+// But it says nothing about what happens if the shader does not write to alpha and A_s.
+TEST_P(GLSLTest_ES3_Blend, AlphaBlendNoAlphaChannelInSrcAndDst)
+{
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, 1, 1);
+    constexpr uint8_t kInitialValue = 0x10;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_UNSIGNED_BYTE, &kInitialValue);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ANGLE_SKIP_TEST_IF(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE);
+
+    constexpr char kFS[] = R"(#version 300 es
+out mediump float color;
+void main() {
+    color = 0.2;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    // A_d is implicitly one.  But A_s is undefined.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    // The result cannot be known given A_s is undefined, however it must be at least 0x10 given the
+    // additive blend and that A_d must act as 1.
+    // For future reference, A_s has been observed to be 0, 1 and 0.2 with various drivers (0.2
+    // being the value of the component that is present).
+    GLColor value;
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &value);
+    EXPECT_GE(value.R, 0x10);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test alpha blend where the framebuffer misses the alpha channel, but the shader writes to alpha.
+TEST_P(GLSLTest_ES3_Blend, AlphaBlendNoAlphaChannelInDst)
+{
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, 1, 1);
+    constexpr uint8_t kInitialValue = 0x10;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_UNSIGNED_BYTE, &kInitialValue);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ANGLE_SKIP_TEST_IF(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE);
+
+    constexpr char kFS[] = R"(#version 300 es
+// Use an array for extra testing
+out mediump vec4 color[1];
+void main() {
+    color[0] = vec4(0.2, 0, 0, 0.5);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0x10 + 255 / 10, 0, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test blend where the framebuffer misses the alpha channel.  Uses (GL_DST_COLOR, GL_ZERO) blend
+// that hits an optimization path in the mesa/Radeon driver.
+TEST_P(GLSLTest_ES3_Blend, ColorBlendNoAlphaChannelInDst)
+{
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, 1, 1);
+    constexpr uint8_t kInitialValue = 0xC0;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_UNSIGNED_BYTE, &kInitialValue);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ANGLE_SKIP_TEST_IF(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE);
+
+    constexpr char kFS[] = R"(#version 300 es
+// Declare the output after main for extra testing
+void f();
+void main() {
+    f();
+}
+out mediump float color;
+void f() {
+    color = 0.2;
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_DST_COLOR, GL_ZERO);
+    glBlendEquation(GL_FUNC_ADD);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0xC0 / 5, 0, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
@@ -23312,3 +23422,8 @@ ANGLE_INSTANTIATE_TEST(GLSLTest_ES3_PackUnpackEmulation,
                        ES3_OPENGLES(),
                        ES3_METAL(),
                        ES3_VULKAN());
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES3_Blend);
+ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLTest_ES3_Blend,
+                               ES3_OPENGL().enable(Feature::ExpandFragmentOutputsToVec4),
+                               ES3_OPENGLES().enable(Feature::ExpandFragmentOutputsToVec4));

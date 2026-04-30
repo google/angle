@@ -170,6 +170,7 @@ enum class Feature
     EnableTranslatedShaderSubstitution,
     EnsureLoopForwardProgress,
     EnsureNonEmptyBufferIsBoundForDraw,
+    ExpandFragmentOutputsToVec4,
     ExpandIntegerPowExpressions,
     ExplicitFragmentLocations,
     ExplicitlyEnablePerSampleShading,
