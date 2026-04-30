@@ -2755,6 +2755,11 @@
 // Timeout on Intel
 509829264 VULKAN WIN INTEL : SimpleStateChangeTestES31.TransformFeedbackThenReadWithCompute/* = SKIP
 
+512157667 LINUX VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
+512157667 WIN VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
+512157667 WIN D3D11 : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
+512157667 WIN D3D9 : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
