@@ -361,6 +361,7 @@
 42264556 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8Index/* = SKIP
 42264556 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8IndexSmallUpdates/* = SKIP
 42264591 MAC NVIDIA METAL : BlitFramebufferTest.OOBWrite/* = SKIP
+509308437 MAC OPENGL : Texture2DTestES3.PackPixels3DAnd2DArrayTypeConfusion/* = SKIP
 42264655 MAC OPENGL : GLSLTestLoops.*ContinueInSwitch/* = SKIP
 42264671 MAC OPENGL : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
 42264755 MAC OPENGL : BufferDataTestES3.DrawWithNotCallingBufferData/* = SKIP

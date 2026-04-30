@@ -18028,6 +18028,59 @@ TEST_P(Texture2DTestES3, TexImageFormatMismatch)
     glDrawElementsInstanced(GL_TRIANGLES, 4, GL_UNSIGNED_SHORT, 0, 1);
 }
 
+// Tests that packing pixels into the same PBO from a 3D texture and then a 2D array texture
+// works.  Regression test for a bug in the D3D11 backend with the staging texture cache.
+TEST_P(Texture2DTestES3, PackPixels3DAnd2DArrayTypeConfusion)
+{
+    // PIXEL_PACK_BUFFER
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_PACK_BUFFER, 64 * 64 * 4, nullptr, GL_STREAM_READ);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // 1. Create a 3D texture and read from it
+    GLTexture tex3d;
+    glBindTexture(GL_TEXTURE_3D, tex3d);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 64, 64, 4);
+
+    // Fill to ensure FBO is complete
+    std::vector<GLubyte> emptyData(64 * 64 * 4 * 4, 0);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 64, 64, 4, GL_RGBA, GL_UNSIGNED_BYTE,
+                    emptyData.data());
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d, 0, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Prime the staging cache with a 3D texture
+    glReadPixels(0, 0, 64, 64, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // 2. Create a 2D array texture and read from it
+    GLTexture tex2a;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex2a);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 64, 64, 4);
+
+    // Fill layer 2 with specific data
+    std::vector<GLubyte> expectData(64 * 64 * 4, 128);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 2, 64, 64, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    expectData.data());
+
+    // Read back the same area into the same PBO again. D3D11 backend previously hit UB here.
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2a, 0, 2);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glReadPixels(0, 0, 64, 64, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify the data was read correctly
+    void *mapPointer = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 64 * 64 * 4, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mapPointer);
+    EXPECT_EQ(0, memcmp(mapPointer, expectData.data(), 64 * 64 * 4));
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+}
+
 // Checks that drawing incomplete zero texture buffer does not crash.
 TEST_P(TextureBufferTestES31, DrawIncompleteZeroTexture)
 {
