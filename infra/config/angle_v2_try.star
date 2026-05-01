@@ -200,9 +200,6 @@ angle_mac_functional_cq_tester(
         "ci/angle-mac-x64-builder-dbg",
     ],
     gn_args = "ci/angle-mac-x64-builder-dbg",
-    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
-    # confirmed to work.
-    cq_settings = try_.cq_settings(includable_only = True),
 )
 
 angle_mac_functional_cq_tester(
