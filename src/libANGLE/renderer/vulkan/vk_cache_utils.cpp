@@ -6580,7 +6580,7 @@ void DescriptorSetDescBuilder::updateOneStorageBuffer(
         commandBufferHelper->bufferRead(context, VK_ACCESS_SHADER_READ_BIT, block.activeShaders(),
                                         &bufferHelper);
     }
-    else if (bufferHelper.isLastAccessShaderWriteOnly() &&
+    else if (bufferHelper.canShaderWriteBarrierSkipped(block.activeShaders()) &&
              (memoryBarrierBits & kBufferMemoryBarrierBits) == 0)
     {
         // Buffer is already in shader write access, and this is not from memoryBarrier call,
