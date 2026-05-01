@@ -171,7 +171,13 @@ O           [0-7]
 "in"           { return IN_QUAL; }
 "out"          { return OUT_QUAL; }
 "inout"        { return INOUT_QUAL; }
-"shared"       { return ES3_1_keyword(context, SHARED); }
+"shared"       {
+    if (IsWebGLBasedSpec(context->getShaderSpec()))
+    {
+        return reserved_word(yyscanner);
+    }
+    return ES3_1_keyword(context, SHARED);
+}
 
 "float"        { return FLOAT_TYPE; }
 "int"          { return INT_TYPE; }
@@ -318,7 +324,7 @@ O           [0-7]
 
     /* Reserved keywords in GLSL ES 1.00 that are not reserved in GLSL ES 3.00 */
 "packed"  {
-    if (context->getShaderVersion() >= 300)
+    if (context->getShaderVersion() >= 300 && !IsWebGLBasedSpec(context->getShaderSpec()))
     {
         yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
         return check_type(yyscanner);
