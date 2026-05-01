@@ -6582,6 +6582,11 @@
       }
     ]
   },
+  "angle-mac-x64-builder-dbg": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  },
   "angle-mac-x64-intel-uhd630-exp-rel": {
     "gtest_tests": [
       {

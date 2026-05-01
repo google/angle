@@ -348,6 +348,36 @@ angle_mac_parent_builder(
 )
 
 angle_mac_parent_builder(
+    name = "angle-mac-x64-builder-dbg",
+    description_html = "Compiles debug ANGLE test binaries for Mac/x64",
+    schedule = "triggered",
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.DEBUG,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.MAC,
+        ),
+    ),
+    gn_args = gn_args.config(
+        configs = [
+            "component",
+            "debug",
+            "mac_clang",
+            "x64",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|mac|x64",
+        short_name = "dbg",
+    ),
+)
+
+angle_mac_parent_builder(
     name = "angle-mac-x64-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Mac/x64",
     schedule = "triggered",

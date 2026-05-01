@@ -307,6 +307,12 @@
           'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
+      'angle-mac-x64-builder-dbg': {
+        'os_type': 'mac',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
       'angle-mac-x64-intel-uhd630-exp-rel': {
         'os_type': 'mac',
         'mixins': [
