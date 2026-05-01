@@ -550,7 +550,7 @@ angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context
         {
             // Do not include skipBytes in the last image pixel start offset as it will be done by
             // the driver
-            GLint lastImageOffset          = (area.depth - 1) * imageBytes;
+            size_t lastImageOffset         = (area.depth - 1) * imageBytes;
             const GLubyte *lastImagePixels = pixels + lastImageOffset;
             ANGLE_GL_TRY(context, functions->texSubImage3D(
                                       ToGLenum(target), static_cast<GLint>(level), area.x, area.y,
@@ -561,7 +561,7 @@ angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context
         // Upload the last row of the last slice "manually"
         ANGLE_TRY(stateManager->setPixelUnpackState(context, directUnpack));
 
-        GLint lastRowOffset =
+        size_t lastRowOffset =
             skipBytes + (area.depth - 1) * imageBytes + (area.height - 1) * rowBytes;
         const GLubyte *lastRowPixels = pixels + lastRowOffset;
         ANGLE_GL_TRY(context,
@@ -584,7 +584,7 @@ angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context
         // Upload the last row "manually"
         ANGLE_TRY(stateManager->setPixelUnpackState(context, directUnpack));
 
-        GLint lastRowOffset          = skipBytes + (area.height - 1) * rowBytes;
+        size_t lastRowOffset         = skipBytes + (area.height - 1) * rowBytes;
         const GLubyte *lastRowPixels = pixels + lastRowOffset;
         ANGLE_GL_TRY(context, functions->texSubImage2D(ToGLenum(target), static_cast<GLint>(level),
                                                        area.x, area.y + area.height - 1, area.width,
