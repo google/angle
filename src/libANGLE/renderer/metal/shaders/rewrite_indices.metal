@@ -91,6 +91,7 @@ static inline void outputPrimitive(
             if(foundRestart)
             {
                 baseIndex = indexThatRestartedFirst + 1;
+                WRITE_IDX(onOutIndex, restartIndex);
                 return;
             }
 
@@ -104,9 +105,16 @@ static inline void outputPrimitive(
             if(foundRestart)
             {
                 baseIndex = indexThatRestartedFirst + 1;
+                WRITE_IDX(onOutIndex, restartIndex);
+                WRITE_IDX(onOutIndex, restartIndex);
                 return;
             }
-            if((onIndex - baseIndex) & 1) return; // skip this index...
+            if((onIndex - baseIndex) & 1)
+            {
+                WRITE_IDX(onOutIndex, restartIndex);
+                WRITE_IDX(onOutIndex, restartIndex);
+                return;
+            }
 
             if(fixIndexBufferKey & MtlFixIndexBufferKeyProvokingVertexLast)
             {
@@ -127,6 +135,8 @@ static inline void outputPrimitive(
             if(foundRestart)
             {
                 baseIndex = indexThatRestartedFirst + 1;
+                WRITE_IDX(onOutIndex, restartIndex);
+                WRITE_IDX(onOutIndex, restartIndex);
                 return;
             }
 
@@ -150,9 +160,18 @@ static inline void outputPrimitive(
             if(foundRestart)
             {
                 baseIndex = indexThatRestartedFirst + 1;
+                WRITE_IDX(onOutIndex, restartIndex);
+                WRITE_IDX(onOutIndex, restartIndex);
+                WRITE_IDX(onOutIndex, restartIndex);
                 return;
             }
-            if(((onIndex - baseIndex) % 3) != 0) return; // skip this index...
+            if(((onIndex - baseIndex) % 3) != 0)
+            {
+                WRITE_IDX(onOutIndex, restartIndex);
+                WRITE_IDX(onOutIndex, restartIndex);
+                WRITE_IDX(onOutIndex, restartIndex);
+                return;
+            }
 
             if(fixIndexBufferKey & MtlFixIndexBufferKeyProvokingVertexLast)
             {
@@ -177,6 +196,9 @@ static inline void outputPrimitive(
             if(foundRestart)
             {
                 baseIndex = indexThatRestartedFirst + 1;
+                WRITE_IDX(onOutIndex, restartIndex);
+                WRITE_IDX(onOutIndex, restartIndex);
+                WRITE_IDX(onOutIndex, restartIndex);
                 return;
             }
 
@@ -222,10 +244,10 @@ kernel void fixIndexBuffer(
                            constant uint &primCount [[ buffer(3) ]],
                            uint prim [[thread_position_in_grid]])
 {
-    constexpr uint restartIndex = 0xFFFFFFFF; // unused
+    const uint restartIndex = indexBufferIsUint16 ? 0xFFFF : 0xFFFFFFFF;
     uint baseIndex = 0;
-    uint onIndex = onIndex;
-    uint onOutIndex = onOutIndex;
+    uint onIndex = 0;
+    uint onOutIndex = 0;
     if(prim < primCount)
     {
         switch(fixIndexBufferMode)
@@ -423,8 +445,8 @@ kernel void genIndexBuffer(
                            uint prim [[thread_position_in_grid]])
 {
     uint baseIndex = 0;
-    uint onIndex = onIndex;
-    uint onOutIndex = onOutIndex;
+    uint onIndex = 0;
+    uint onOutIndex = 0;
     if(prim < primCount)
     {
         switch(fixIndexBufferMode)
