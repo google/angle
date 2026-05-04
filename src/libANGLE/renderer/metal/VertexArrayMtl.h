@@ -65,7 +65,8 @@ class VertexArrayMtl : public VertexArrayImpl
     std::vector<DrawCommandRange> getDrawIndices(const gl::Context *glContext,
                                                  gl::DrawElementsType originalIndexType,
                                                  gl::DrawElementsType indexType,
-                                                 gl::PrimitiveMode primitiveMode,
+                                                 gl::PrimitiveMode originalMode,
+                                                 gl::PrimitiveMode mode,
                                                  mtl::BufferRef idxBuffer,
                                                  uint32_t indexCount,
                                                  size_t offset);
