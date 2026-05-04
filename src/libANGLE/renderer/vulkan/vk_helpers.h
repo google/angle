@@ -2546,9 +2546,11 @@ class ImageHelper final : public Resource, public angle::Subject
     void stageSubresourceUpdateFromImage(RefCounted<ImageHelper> *image,
                                          const gl::ImageIndex &index,
                                          LevelIndex srcMipLevel,
+                                         uint32_t srcLayerIndex,
                                          const gl::Offset &destOffset,
                                          const gl::Extents &glExtents,
-                                         const VkImageType imageType);
+                                         const VkImageType srcImageType,
+                                         const VkImageType dstImageType);
 
     // Takes an image and stages a subresource update for each level of it, including its full
     // extent and all its layers, at the specified GL level.
@@ -2977,7 +2979,9 @@ class ImageHelper final : public Resource, public angle::Subject
         bool matchesLayerRange(uint32_t layerIndex, uint32_t layerCount) const;
         // Returns true if the update is to any layer within range of [layerIndex,
         // layerIndex+layerCount)
-        bool intersectsLayerRange(uint32_t layerIndex, uint32_t layerCount) const;
+        bool intersectsLayerRange(uint32_t layerIndex,
+                                  uint32_t layerCount,
+                                  uint32_t imageLayerCount) const;
         void getDestSubresource(uint32_t imageLayerCount,
                                 uint32_t *baseLayerOut,
                                 uint32_t *layerCountOut) const;
