@@ -1284,7 +1284,7 @@ class ClearValuesArray final
     {                                                                         \
       public:                                                                 \
         constexpr Type##Serial() : mSerial(kInvalid) {}                       \
-        constexpr explicit Type##Serial(uint32_t serial) : mSerial(serial) {} \
+        constexpr explicit Type##Serial(uint64_t serial) : mSerial(serial) {} \
                                                                               \
         constexpr bool operator==(const Type##Serial &other) const            \
         {                                                                     \
@@ -1296,7 +1296,7 @@ class ClearValuesArray final
             ASSERT(mSerial != kInvalid || other.mSerial != kInvalid);         \
             return mSerial != other.mSerial;                                  \
         }                                                                     \
-        constexpr uint32_t getValue() const                                   \
+        constexpr uint64_t getValue() const                                   \
         {                                                                     \
             return mSerial;                                                   \
         }                                                                     \
@@ -1306,8 +1306,8 @@ class ClearValuesArray final
         }                                                                     \
                                                                               \
       private:                                                                \
-        uint32_t mSerial;                                                     \
-        static constexpr uint32_t kInvalid = 0;                               \
+        uint64_t mSerial;                                                     \
+        static constexpr uint64_t kInvalid = 0;                               \
     };                                                                        \
     static constexpr Type##Serial kInvalid##Type##Serial = Type##Serial();
 
@@ -1324,10 +1324,10 @@ class ResourceSerialFactory final : angle::NonCopyable
     ANGLE_VK_SERIAL_OP(ANGLE_DECLARE_GEN_VK_SERIAL)
 
   private:
-    uint32_t issueSerial();
+    uint64_t issueSerial();
 
     // Kept atomic so it can be accessed from multiple Context threads at once.
-    std::atomic<uint32_t> mCurrentUniqueSerial;
+    std::atomic<uint64_t> mCurrentUniqueSerial;
 };
 
 #if defined(ANGLE_ENABLE_PERF_COUNTER_OUTPUT)
