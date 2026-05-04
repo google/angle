@@ -743,7 +743,8 @@ angle::Result VertexArrayMtl::getIndexBuffer(const gl::Context *context,
 std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *glContext,
                                                              gl::DrawElementsType originalIndexType,
                                                              gl::DrawElementsType indexType,
-                                                             gl::PrimitiveMode primitiveMode,
+                                                             gl::PrimitiveMode originalMode,
+                                                             gl::PrimitiveMode mode,
                                                              mtl::BufferRef clientBuffer,
                                                              uint32_t indexCount,
                                                              size_t offset)
@@ -753,14 +754,15 @@ std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *
     // The indexed draw needs to be split to separate draw commands in case primitive restart is
     // enabled and the drawn primitive supports primitive restart. Otherwise the whole indexed draw
     // can be sent as one draw command.
-    bool isSimpleType = primitiveMode == gl::PrimitiveMode::Points ||
-                        primitiveMode == gl::PrimitiveMode::Lines ||
-                        primitiveMode == gl::PrimitiveMode::Triangles;
-    if (!isSimpleType || !glContext->getState().isPrimitiveRestartEnabled())
+    bool isSimpleType = mode == gl::PrimitiveMode::Points || mode == gl::PrimitiveMode::Lines ||
+                        mode == gl::PrimitiveMode::Triangles;
+    bool indicesRewritten = (originalMode != mode);
+    if ((!isSimpleType && !indicesRewritten) || !glContext->getState().isPrimitiveRestartEnabled())
     {
         drawCommands.push_back({indexCount, offset});
         return drawCommands;
     }
+
     const std::vector<IndexRange> *restartIndices;
     std::vector<IndexRange> clientIndexRange;
     const gl::Buffer *glElementArrayBuffer = getElementArrayBuffer();
@@ -775,27 +777,95 @@ std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *
             BufferMtl::getRestartIndicesFromClientData(contextMtl, indexType, clientBuffer);
         restartIndices = &clientIndexRange;
     }
-    // Reminder, offset is in bytes, not elements.
-    // Slice draw commands based off of indices.
+
     uint32_t nIndicesPerPrimitive;
-    switch (primitiveMode)
+    // If the indices were rewritten to fix the provoking vertex convention, the index buffer
+    // might have been expanded (e.g. from TriangleStrip to Triangles). The restart indices
+    // we found earlier are based on the original unexpanded buffer. We must transform the slices
+    // we find to match the layout of the expanded rewritten buffer.
+    uint32_t factor       = 1;
+    uint32_t stripExclude = 0;
+
+    if (indicesRewritten)
     {
-        case gl::PrimitiveMode::Points:
-            nIndicesPerPrimitive = 1;
-            break;
-        case gl::PrimitiveMode::Lines:
-            nIndicesPerPrimitive = 2;
-            break;
-        case gl::PrimitiveMode::Triangles:
-            nIndicesPerPrimitive = 3;
-            break;
-        default:
-            UNREACHABLE();
-            return drawCommands;
+        switch (mode)
+        {
+            case gl::PrimitiveMode::Lines:
+                if (originalMode == gl::PrimitiveMode::LineStrip ||
+                    originalMode == gl::PrimitiveMode::LineLoop)
+                {
+                    nIndicesPerPrimitive = 1;
+                    // LineStrip/LineLoop to Lines expansion:
+                    // N indices produce max(N-1, 0) lines.
+                    // Rewritten buffer contains max(N-1, 0) * 2 indices.
+                    factor       = 2;
+                    stripExclude = 1;
+                }
+                else
+                {
+                    UNREACHABLE();
+                    return drawCommands;
+                }
+                break;
+            case gl::PrimitiveMode::Triangles:
+                if (originalMode == gl::PrimitiveMode::TriangleStrip ||
+                    originalMode == gl::PrimitiveMode::TriangleFan)
+                {
+                    nIndicesPerPrimitive = 1;
+                    // TriangleStrip/TriangleFan to Triangles expansion:
+                    // N indices produce max(N-2, 0) triangles.
+                    // Rewritten buffer contains max(N-2, 0) * 3 indices.
+                    factor       = 3;
+                    stripExclude = 2;
+                }
+                else
+                {
+                    UNREACHABLE();
+                    return drawCommands;
+                }
+                break;
+            default:
+                UNREACHABLE();
+                return drawCommands;
+        }
     }
+    else
+    {
+        ASSERT(originalMode == mode);
+        switch (mode)
+        {
+            case gl::PrimitiveMode::Points:
+                nIndicesPerPrimitive = 1;
+                break;
+            case gl::PrimitiveMode::Lines:
+                nIndicesPerPrimitive = 2;
+                break;
+            case gl::PrimitiveMode::Triangles:
+                nIndicesPerPrimitive = 3;
+                break;
+            default:
+                UNREACHABLE();
+                return drawCommands;
+        }
+    }
+
     const GLuint indexTypeBytes = gl::GetDrawElementsTypeSize(indexType);
     uint32_t indicesLeft        = indexCount;
     size_t currentIndexOffset   = offset / indexTypeBytes;
+    const size_t baseOffset     = currentIndexOffset;
+
+    auto addDrawCommand = [&](uint32_t count, size_t elementOffset) {
+        // Skip slices that don't contain enough indices to form a single primitive.
+        if (count > stripExclude)
+        {
+            // Scale the count to account for the expansion factor and stripped indices.
+            uint32_t transformedCount = (count - stripExclude) * factor;
+            // Scale the offset to account for the expansion factor.
+            size_t transformedOffset =
+                offset + (elementOffset - baseOffset) * (size_t)factor * indexTypeBytes;
+            drawCommands.push_back({transformedCount, transformedOffset});
+        }
+    };
 
     for (auto &range : *restartIndices)
     {
@@ -808,8 +878,7 @@ std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *
             size_t restartSize = (range.restartEnd - range.restartBegin) + 1;
             if (nIndicesInSlice >= nIndicesPerPrimitive)
             {
-                drawCommands.push_back(
-                    {(uint32_t)nIndicesInSlice, currentIndexOffset * indexTypeBytes});
+                addDrawCommand((uint32_t)nIndicesInSlice, currentIndexOffset);
             }
             // Account for dropped indices due to incomplete primitives.
             size_t indicesUsed = ((range.restartBegin + restartSize) - currentIndexOffset);
@@ -840,7 +909,10 @@ std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *
         }
     }
     if (indicesLeft >= nIndicesPerPrimitive)
-        drawCommands.push_back({indicesLeft, currentIndexOffset * indexTypeBytes});
+    {
+        addDrawCommand(indicesLeft, currentIndexOffset);
+    }
+
     return drawCommands;
 }
 
