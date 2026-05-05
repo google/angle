@@ -2721,6 +2721,8 @@
 500930576 OPENGL : ReadPixelsTest.LargeTexture/* = SKIP
 // Crashes inside AMD Metal driver when copying the texture -> buffer
 500930576 METAL AMD : ReadPixelsTest.LargeTexture/* = SKIP
+// Fails test on Metal
+499091328 MAC AMD METAL : Texture2DArrayTestES3.ReformatStagedBufferUpdatesLayerCountOOB/* = SKIP
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
