@@ -2766,6 +2766,9 @@
 // Untriaged failures on Pixel 4 / GLES
 349994211 IR PIXEL4ORXL GLES : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 
+// Crashes on OpenGL
+// Fails test on Metal
+499091328 MAC AMD METAL : Texture2DArrayTestES3.ReformatStagedBufferUpdatesLayerCountOOB/* = SKIP
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
