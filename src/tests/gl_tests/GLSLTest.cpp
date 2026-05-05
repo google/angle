@@ -3913,6 +3913,51 @@ void main()
     }
 }
 
+// Test that short circuiting works correctly even if the right hand side has no side effects but
+// is otherwise unsafe to execute (e.g. contains an out-of-bounds array access).
+// This is a regression test for a bug where the HLSL backend would not unfold short-circuit
+// expressions if the right hand side had no side effects.
+TEST_P(GLSLTest_ES3, ShortCircuitUnsafeExpressionNoSideEffects)
+{
+    // Fragment shader based on a reproduction case for a bug where short-circuit unfolding
+    // was gated by hasSideEffects().
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform int idx;
+uniform bool safe;
+out vec4 color;
+void main() {
+  float data[4] = float[4](0.25, 0.5, 0.75, 1.0);
+  // hasSideEffects() == false on the RHS -> should be unfolded because it's unsafe.
+  bool hit = safe && (data[idx] > 0.0);
+  // If short-circuiting works, 'hit' must be false when 'safe' is false,
+  // regardless of 'idx'.
+  color = vec4(hit ? 1.0 : 0.0, 0.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint idxLocation  = glGetUniformLocation(program, "idx");
+    GLint safeLocation = glGetUniformLocation(program, "safe");
+
+    // Baseline: safe=true, idx=0. hit should be true.
+    glUniform1i(safeLocation, 1);
+    glUniform1i(idxLocation, 0);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Test: safe=false, idx=100 (OOB). hit should be false.
+    // On some drivers/backends, if it's NOT short-circuited, this might crash or
+    // return an unexpected value (e.g. if OOB read returns something > 0.0).
+    glUniform1i(safeLocation, 0);
+    glUniform1i(idxLocation, 100);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that nesting ternary and short-circuitting operators work.
 TEST_P(GLSLTest, NestedTernaryAndShortCircuit)
 {
