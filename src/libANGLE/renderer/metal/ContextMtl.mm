@@ -1518,7 +1518,7 @@ FenceNVImpl *ContextMtl::createFenceNV()
 {
     return new FenceNVMtl();
 }
-SyncImpl *ContextMtl::createSync()
+SyncImpl *ContextMtl::createSync(const gl::Context *)
 {
     return new SyncMtl();
 }
