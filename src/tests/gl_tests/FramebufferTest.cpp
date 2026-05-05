@@ -9421,3 +9421,293 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTestWithFormatFallback,
                                ES3_VULKAN().disable(Feature::PreferDynamicRendering));
 ANGLE_INSTANTIATE_TEST_ES3_AND(DefaultFramebufferTest,
                                ES3_VULKAN().disable(Feature::PreferDynamicRendering));
+
+class FramebufferTest_ES3FBOWorkaround : public ANGLETest<>
+{
+  protected:
+    FramebufferTest_ES3FBOWorkaround()
+    {
+        setWindowWidth(128);
+        setWindowHeight(128);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+        setConfigStencilBits(8);
+    }
+
+    void testSetUp() override
+    {
+        mColorProgram =
+            CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        ASSERT_NE(0u, mColorProgram);
+        mColorUniformLocation = glGetUniformLocation(mColorProgram, essl1_shaders::ColorUniform());
+        ASSERT_NE(-1, mColorUniformLocation);
+    }
+
+    void testTearDown() override
+    {
+        if (mColorProgram != 0)
+        {
+            glDeleteProgram(mColorProgram);
+        }
+    }
+
+    void drawRedQuad()
+    {
+        glUseProgram(mColorProgram);
+        glUniform4f(mColorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+        drawQuad(mColorProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    }
+
+    void drawGreenQuad()
+    {
+        glUseProgram(mColorProgram);
+        glUniform4f(mColorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+        drawQuad(mColorProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    }
+
+    GLuint mColorProgram        = 0;
+    GLint mColorUniformLocation = -1;
+};
+
+// Sub-Test 1: Renderbuffer depth/stencil attachment Case
+TEST_P(FramebufferTest_ES3FBOWorkaround, RenderbufferWorkaround)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 128, 128);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 128, 128);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw a red quad to color buffer
+    drawRedQuad();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Trigger flush -> FBO recreation!
+    glFlush();
+    ASSERT_GL_NO_ERROR();
+
+    // Draw a green quad to color buffer
+    drawGreenQuad();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Sub-Test 2: Uninitialized Texture Case
+TEST_P(FramebufferTest_ES3FBOWorkaround, UninitializedTextureWorkaround)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLTexture depthTex;
+    glBindTexture(GL_TEXTURE_2D, depthTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT16, 128, 128);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
+
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 128, 128);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw red
+    drawRedQuad();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Trigger flush -> FBO recreation!
+    glFlush();
+    ASSERT_GL_NO_ERROR();
+
+    // Draw green
+    drawGreenQuad();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Sub-Test 3: Initialized Texture Case (Workaround does NOT trigger)
+TEST_P(FramebufferTest_ES3FBOWorkaround, InitializedTextureNoWorkaround)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLTexture depthTex;
+    glBindTexture(GL_TEXTURE_2D, depthTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT16, 128, 128);
+
+    // Initialize/clear the depth texture level using glTexSubImage2D
+    std::vector<GLushort> depthData(128 * 128, 0);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 128, 128, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT,
+                    depthData.data());
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
+
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 128, 128);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw red
+    drawRedQuad();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Trigger flush -> Workaround should NOT trigger, but we test that everything still works
+    glFlush();
+    ASSERT_GL_NO_ERROR();
+
+    // Draw green
+    drawGreenQuad();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Sub-Test 4: FBO combined with FenceSync
+TEST_P(FramebufferTest_ES3FBOWorkaround, FBOAndFenceSync)
+{
+    GLuint i;
+    GLuint num_buffers;
+    GLuint buffer1;
+    GLuint buffer2;
+    GLuint framebuffer;
+    GLuint textures[2];
+    GLuint renderbuffers[2];
+    GLuint framebuffers[2];
+    GLuint textures2[2];
+    GLuint *buffers;
+    void *pixels;
+    char *g_prepared_buffer;
+    char data[16];
+
+    g_prepared_buffer                   = (char *)calloc(1, 0x400);
+    *(int *)(g_prepared_buffer + 0x00)  = 0x40082000;
+    *(int *)(g_prepared_buffer + 0x04)  = 0x40282000;
+    *(int *)(g_prepared_buffer + 0x08)  = 0x40282000;
+    *(int *)(g_prepared_buffer + 0x0c)  = 0x40282000;
+    *(int *)(g_prepared_buffer + 0x28)  = 0x33800000;
+    *(int *)(g_prepared_buffer + 0x110) = 0x40282000;
+    *(int *)(g_prepared_buffer + 0x114) = 0x40282000;
+    *(int *)(g_prepared_buffer + 0x118) = 0x40282000;
+    *(int *)(g_prepared_buffer + 0x11c) = 0x40282000;
+
+    pixels      = calloc(1, 0x4000);
+    num_buffers = 10;
+    buffers     = (GLuint *)calloc(1, 4 * num_buffers);
+
+    glGenFramebuffers(2, framebuffers);
+    glGenRenderbuffers(2, renderbuffers);
+    glGenTextures(2, textures);
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 40, 40);
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 43, 43);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[0]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glDeleteFramebuffers(1, framebuffers);
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffers[0]);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 40, 40);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[1]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuffers[0]);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    glGenFramebuffers(1, framebuffers);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[0]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuffers[0]);
+    glClear(GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffers[1]);
+    glReadPixels(0, 0, 40, 40, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffers[1]);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glGenFramebuffers(1, &framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glDeleteFramebuffers(1, &framebuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 40, 40);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[1]);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuffers[0]);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glPixelStorei(GL_PACK_ROW_LENGTH, 43);
+    glGenBuffers(1, &buffer1);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer1);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, 0x400, g_prepared_buffer, GL_DYNAMIC_DRAW);
+    glGenTextures(2, textures2);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textures2[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 0x25, 1, 0, GL_RGBA, GL_FLOAT, 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, textures2[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 0x27, 1, 0, GL_RGBA, GL_FLOAT, 0);
+    glPixelStorei(GL_PACK_ROW_LENGTH, 0);
+    glPixelStorei(GL_PACK_ROW_LENGTH, 43);
+    glGenBuffers(num_buffers, buffers);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glGenBuffers(1, &buffer2);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer2);
+    glBufferData(GL_PIXEL_PACK_BUFFER, 0x4000, pixels, GL_STATIC_COPY);
+    glFinish();
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    for (i = 0; i < num_buffers; i++)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
+        glBufferData(GL_ARRAY_BUFFER, 16, &data, GL_DYNAMIC_DRAW);
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    for (i = 0; i < num_buffers; i++)
+    {
+        glDeleteBuffers(1, &buffers[i]);
+        glActiveTexture(GL_TEXTURE0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 0x25, 1, 0, GL_RGBA, GL_FLOAT, 0);
+        glActiveTexture(GL_TEXTURE1);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 0x27, 1, 0, GL_RGBA, GL_FLOAT, 0);
+    }
+    glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0); /* crash / recreateFbo workaround point! */
+    ASSERT_GL_NO_ERROR();
+
+    // Cleanup
+    glDeleteFramebuffers(1, framebuffers);
+    glDeleteFramebuffers(1, &framebuffers[1]);
+    glDeleteRenderbuffers(2, renderbuffers);
+    glDeleteTextures(2, textures);
+    glDeleteTextures(2, textures2);
+    glDeleteBuffers(1, &buffer1);
+    glDeleteBuffers(1, &buffer2);
+    free(g_prepared_buffer);
+    free(pixels);
+    free(buffers);
+}
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES3FBOWorkaround);
+ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTest_ES3FBOWorkaround,
+                               ES3_OPENGL().enable(Feature::RecreateFboUponFlush),
+                               ES3_OPENGLES().enable(Feature::RecreateFboUponFlush));
