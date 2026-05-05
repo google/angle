@@ -9205,6 +9205,50 @@ TEST_P(Texture2DArrayTestES3, RedefineInittableArray)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that OOB read doesn't occur as a result of reformatStagedBufferUpdates using
+// the depth instead of the layer count for 2D arrays. This would only occur on Vulkan drivers
+// where VK_FORMAT_R4G4B4A4_UNORM_PACK16 is sample-only (no COLOR_ATTACHMENT support). This forces
+// ANGLE  to pick R8G8B8A8_UNORM as the renderable fallback for GL_RGBA4, resulting in
+// reformatStagedBufferUpdates getting called. See crbug.com/499091328.
+//
+// Dimensions chosen so that the *single-layer* reformatted RGBA8 staging buffer
+// (W * H * 4 bytes) exceeds ANGLE's kMaxBufferSizeForSuballocation (8 MiB). That
+// forces a dedicated VkBuffer of exactly W*H*4 bytes; vkCmdCopyBufferToImage with
+// layerCount=D, which used to then read (D-1)*W*H*4 bytes past the end of that VkBuffer.
+TEST_P(Texture2DArrayTestES3, ReformatStagedBufferUpdatesLayerCountOOB)
+{
+    const int W = 1500;
+    const int H = 1500;
+    const int D = 4;
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA4, W, H, D, 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4,
+                 nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Stage a buffer update covering all D layers. stageSubresourceUpdateImpl()
+    // sets copy.imageExtent.depth = 1 and copy.imageSubresource.layerCount = D.
+    // The update is staged with formatID = R4G4B4A4_UNORM (sample-only format).
+    std::vector<uint16_t> pixels(W * H * D, 0xF0FF);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, W, H, D, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4,
+                    pixels.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Bind the texture as a framebuffer attachment. This sets hasBeenBoundAsAttachment(); the next
+    // syncState() will call ensureRenderable() -> reformatStagedBufferUpdates().
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, D - 1);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Force flush of the now-reformatted, and once undersized (before bug fix), staged update via
+    // vkCmdCopyBufferToImage. readPixels syncs the framebuffer, which ensures the attached texture
+    // is initialized -> flushStagedUpdates -> potential GPU OOB read.
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::magenta);
+}
+
 // Test shadow sampler and regular non-shadow sampler coexisting in the same shader.
 // This test is needed especially to confirm that sampler registers get assigned correctly on
 // the HLSL backend even when there's a mix of different HLSL sampler and texture types.
