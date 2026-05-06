@@ -137,6 +137,16 @@ inline bool MemoryRegion::axisOverlaps(size_t aOff, size_t aSize, size_t bOff, s
     return aOff < bOff + bSize && bOff < aOff + aSize;
 }
 
+// MappedRegionInfo captures the full state of a mapped region request from the user
+// - region, mapped pointer, and if its mapped for write
+template <typename T>
+struct MappedRegionInfo
+{
+    const T key;
+    const MemoryRegion region;
+    const bool isWrite;
+};
+
 // A tracker to manage read and write dependencies at region level. The read and write regions are
 // tracked on a map to let multiple uses.
 //  - In case of mapping, the regions are tracked per mapped pointer
@@ -175,19 +185,29 @@ class MemoryAccessTracker
         mWriters[key].push_back(region);
     }
 
-    // A key represents a single in-flight op and lives in either the reader or
-    // the writer map, not both - so erase from whichever holds it and stop.
-    void remove(const T key)
-    {
-        if (mWriters.erase(key) == 0)
-        {
-            mReaders.erase(key);
-        }
-    }
-
     bool hasKey(const T key) const
     {
         return mReaders.find(key) != mReaders.end() || mWriters.find(key) != mWriters.end();
+    }
+
+    // Pops one tracked region for the given key and reports whether it came
+    // from the write map. Note that this removes the region from the tracker, for query only needs
+    // use `hasKey`. The region is popped from the back to keep it O(1), the user for this currently
+    // is map/unmap operations and the spec doesn't require any specific ordering.
+    MappedRegionInfo<T> popRegion(const T key)
+    {
+        // Spec doesn't enforce any specific order, so we pull out from writer first as that's more
+        // restricting on future maps
+        MemoryRegion region;
+        if (popOne(key, mWriters, &region))
+        {
+            return MappedRegionInfo<T>{key, region, /*isWrite=*/true};
+        }
+        const bool popped = popOne(key, mReaders, &region);
+
+        // addRegion and popRegion must be one-for-one
+        ASSERT(popped);
+        return MappedRegionInfo<T>{key, region, /*isWrite=*/false};
     }
 
   private:
@@ -215,6 +235,23 @@ class MemoryAccessTracker
             auto &dstRegions = dst[entry.first];
             dstRegions.insert(dstRegions.end(), entry.second.begin(), entry.second.end());
         }
+    }
+
+    bool popOne(const T key, MemoryRegionMap &m, MemoryRegion *outRegion)
+    {
+        auto it = m.find(key);
+        if (it == m.end())
+        {
+            return false;
+        }
+        ASSERT(!it->second.empty());
+        *outRegion = std::move(it->second.back());
+        it->second.pop_back();
+        if (it->second.empty())
+        {
+            m.erase(it);
+        }
+        return true;
     }
 
     MemoryRegionMap mReaders;

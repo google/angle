@@ -541,10 +541,11 @@ angle::Result CommandQueue::enqueueUnmapMemObject(cl_mem memobj,
     ANGLE_TRY(CreateEvent(event, *this, CL_COMMAND_UNMAP_MEM_OBJECT));
     EventPtr eventPtr(event != nullptr ? &(*event)->cast<Event>() : nullptr);
 
-    ANGLE_CL_ENQUEUE_TRY(mImpl->enqueueUnmapMemObject(memory, mappedPtr, waitEvents, eventPtr),
-                         event);
+    // Pass in the cl::MappedRegionInfo to the backend
+    const cl::MappedRegionInfo<const void *> mappedInfo = memory.popMappedRegion(mappedPtr);
 
-    ANGLE_TRY(memory.removeMappedRegion(mappedPtr));
+    ANGLE_CL_ENQUEUE_TRY(mImpl->enqueueUnmapMemObject(memory, mappedInfo, waitEvents, eventPtr),
+                         event);
 
     return angle::Result::Continue;
 }

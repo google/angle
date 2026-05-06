@@ -201,14 +201,21 @@ angle::Result Memory::addMappedRegion(const MapFlags flags,
     return angle::Result::Continue;
 }
 
-angle::Result Memory::removeMappedRegion(const void *mappedPtr)
+// For sub-buffers, the parent stores regions in parent coords, so translate
+// back by mOffset on x before returning to the caller.
+cl::MappedRegionInfo<const void *> Memory::popMappedRegion(const void *mappedPtr)
 {
     if (hasParent())
     {
-        return mParent->removeMappedRegion(mappedPtr);
+        const cl::MappedRegionInfo<const void *> parentInfo = mParent->popMappedRegion(mappedPtr);
+        const cl::Offset parentOffset                       = parentInfo.region.getOffset();
+        return cl::MappedRegionInfo<const void *>{
+            parentInfo.key,
+            cl::MemoryRegion(cl::Offset(parentOffset.x - mOffset, parentOffset.y, parentOffset.z),
+                             parentInfo.region.getExtents()),
+            parentInfo.isWrite};
     }
-    mMappedRegionTracker->remove(mappedPtr);
-    return angle::Result::Continue;
+    return mMappedRegionTracker->popRegion(mappedPtr);
 }
 
 Memory::~Memory()

@@ -60,7 +60,9 @@ class Memory : public _cl_mem, public Object
     angle::Result addMappedRegion(const MapFlags flags,
                                   const void *mappedPtr,
                                   cl::MemoryRegion region);
-    angle::Result removeMappedRegion(const void *mappedPtr);
+    // Pop a mapped region from the tracker given a mappedPtr. This info will be passed down to the
+    // backend for unmap. addMappedRegion and popMappedRegion must be paired one-for-one.
+    cl::MappedRegionInfo<const void *> popMappedRegion(const void *mappedPtr);
 
     bool hasParent() const { return IsValid(mParent.get()); }
 
