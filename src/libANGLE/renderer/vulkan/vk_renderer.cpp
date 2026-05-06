@@ -6168,12 +6168,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // On Pixel devices, the issues have been fixed since r44, but on others since r44p1.
     //
-    // Regressions have been detected using r46 on older architectures though
+    // Regressions have been detected using r46 on older architectures, which are fixed in r51.
     // http://issuetracker.google.com/336411904
     const bool isARMExtendedDynamicStateBuggy =
         isARMProprietary &&
         (driverVersion < angle::VersionTriple(44, 1, 0) ||
-         (isMaliJobManagerBasedGPU && driverVersion >= angle::VersionTriple(46, 0, 0)));
+         (isMaliJobManagerBasedGPU && driverVersion >= angle::VersionTriple(46, 0, 0) &&
+          driverVersion < angle::VersionTriple(51, 0, 0)));
 
     // Vertex input binding stride is buggy for Windows/Intel drivers before 100.9684.
     const bool isVertexInputBindingStrideBuggy =
