@@ -1285,8 +1285,13 @@ angle::Result VertexArrayVk::syncNeedsConversionAttrib(ContextVk *contextVk,
     WarnOnVertexFormatConversion(contextVk, vertexFormat);
 
     const VertexConversionBuffer::CacheKey cacheKey{
-        srcFormat.id, srcStride, static_cast<size_t>(binding.getOffset()) + attrib.relativeOffset,
-        !bindingIsAligned, false};
+        this,
+        attribIndex,
+        srcFormat.id,
+        srcStride,
+        static_cast<size_t>(binding.getOffset()) + attrib.relativeOffset,
+        !bindingIsAligned,
+        false};
 
     VertexConversionBuffer *conversion = bufferVk->getVertexConversionBuffer(renderer, cacheKey);
 
