@@ -6504,6 +6504,65 @@ void main()
     }
 }
 
+// Shader redeclares gl_ClipDistance, but without a side
+TEST_P(GLSLValidationClipDistanceTest_ES3, RedeclareClipDistanceNoSize)
+{
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+    ANGLE_SKIP_TEST_IF(!hasExt && !hasAngle);
+
+    constexpr char kVS[] =
+        R"(in vec4 aPosition;
+out highp float gl_ClipDistance[];
+void main()
+{
+    gl_Position = aPosition;
+    gl_ClipDistance[0] = 1.0;
+})";
+    constexpr char kExpect[] =
+        "'gl_ClipDistance' : implicitly sized arrays only allowed for tessellation shaders or "
+        "geometry shader inputs";
+
+    if (hasAngle)
+    {
+        validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+    }
+
+    if (hasExt)
+    {
+        validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+    }
+}
+
+// Shader redeclares gl_CullDistance, but without a side
+TEST_P(GLSLValidationClipDistanceTest_ES3, RedeclareCullDistanceNoSize)
+{
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+    ANGLE_SKIP_TEST_IF(!hasExt && !hasAngle);
+
+    constexpr char kVS[] =
+        R"(in vec4 aPosition;
+out highp float gl_CullDistance[];
+void main()
+{
+    gl_Position = aPosition;
+})";
+    constexpr char kExpect[] =
+        "'gl_CullDistance' : implicitly sized arrays only allowed for tessellation shaders or "
+        "geometry shader inputs";
+
+    if (hasAngle)
+    {
+        validateErrorWithExt(GL_VERTEX_SHADER, "GL_ANGLE_clip_cull_distance", kVS, kExpect);
+    }
+
+    if (hasExt)
+    {
+        validateErrorWithExt(GL_VERTEX_SHADER, "GL_EXT_clip_cull_distance", kVS, kExpect);
+    }
+}
+
 // Shader redeclares gl_ClipDistance and gl_CullDistance
 // But, the sum of the sizes is greater than gl_MaxCombinedClipAndCullDistances
 TEST_P(GLSLValidationClipDistanceTest_ES3, TooManyCombined2)
