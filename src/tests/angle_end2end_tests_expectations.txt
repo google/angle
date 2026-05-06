@@ -868,6 +868,7 @@
 
 // Pixel 10 expectations.
 480069042 PIXEL10 GLES : AtomicCounterBufferTest31.DependentAtomicCounterBufferChange/* = SKIP
+510449869 PIXEL10 GLES : BasicCopyTextureTest.SelfCopyOOBWrite/* = SKIP
 480069042 PIXEL10 GLES : BlitFramebufferANGLETest.BlitWithDepthUserToDefault/* = SKIP
 480069042 PIXEL10 GLES : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
 480069042 PIXEL10 GLES : BlitFramebufferTest.BlitStencilToDefault/* = SKIP
