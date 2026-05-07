@@ -1424,12 +1424,6 @@ bool ValidImageDataSize(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIntegerOverflow);
             return false;
         }
-        if (pixelUnpackBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
-        {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
-                                   kPixelUnpackBufferBoundForTransformFeedback);
-            return false;
-        }
     }
     else
     {

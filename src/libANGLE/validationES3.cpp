@@ -754,6 +754,13 @@ bool ValidateES3TexImageParametersBase(const Context *context,
     Buffer *pixelUnpackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelUnpack);
     if (pixelUnpackBuffer != nullptr)
     {
+        if (pixelUnpackBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
+                                   kPixelUnpackBufferBoundForTransformFeedback);
+            return false;
+        }
+
         // ...data is not evenly divisible into the number of bytes needed to store in memory a
         // datum
         // indicated by type.
