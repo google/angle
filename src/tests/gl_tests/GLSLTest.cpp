@@ -22759,9 +22759,6 @@ void main()
 // Test variable declaration in switch case after dead code, but used in the next case.
 TEST_P(GLSLTest_ES3, VariableDeclaredInCaseDeadCode1)
 {
-    // The PruneNoOps AST pass does not retain the variable in dead code.
-    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
-
     constexpr char kFS[] = R"(#version 300 es
 precision mediump float;
 uniform int u0;
@@ -22787,9 +22784,6 @@ void main(){
 // The dead code is after divergence and reconvergence.
 TEST_P(GLSLTest_ES3, VariableDeclaredInCaseDeadCode2)
 {
-    // The PruneNoOps AST pass does not retain the variable in dead code.
-    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
-
     constexpr char kFS[] = R"(#version 300 es
 precision mediump float;
 uniform int u0;
@@ -22821,9 +22815,6 @@ void main(){
 // The dead code itself has divergence and reconvergence.
 TEST_P(GLSLTest_ES3, VariableDeclaredInCaseDeadCode3)
 {
-    // The PruneNoOps AST pass does not retain the variable in dead code.
-    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
-
     constexpr char kFS[] = R"(#version 300 es
 precision mediump float;
 uniform int u0;
@@ -22906,6 +22897,89 @@ void main(){
                 break;
                 vec4 d = vec4(0);
                 d.a = .0;
+            }
+        default:
+            break;
+    }
+    fragOut = vec4(1, 0, 0, 1);
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test variable declaration in switch case after dead code, but used in the next case.
+TEST_P(GLSLTest_ES3, VariableDeclaredInCaseDeadCode6)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform int u0;
+out vec4 fragOut;
+void main(){
+    vec4 d = vec4(1);
+    switch(u0){
+        case 0:
+            break;
+            vec4 d = vec4(0);
+        default:
+            d.a = .0;
+    }
+    fragOut = vec4(1, 0, 0, 1);
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test variable declaration in switch case after dead code, but used in the next case.
+TEST_P(GLSLTest_ES3, VariableDeclaredInCaseDeadCode7)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform int u0;
+out vec4 fragOut;
+void main(){
+    vec4 d = vec4(1);
+    switch(u0){
+        case 0:
+            break;
+            vec4 d = vec4(0), d1 = vec4(0);
+            vec4 d2 = vec4(0);
+        default:
+            d.a = .0;
+            d1.a = .0;
+            d2.a = .0;
+    }
+    fragOut = vec4(1, 0, 0, 1);
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test variable declaration in switch case after dead code, but used in the next case.
+TEST_P(GLSLTest_ES3, VariableDeclaredInCaseDeadCode8)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform int u0;
+out vec4 fragOut;
+void main(){
+    switch(u0){
+        case 0:
+            break;
+            switch(u0){
+                case 0:
+                    break;
+                    vec4 d = vec4(0);
+                default:
+                    d.a = .0;
             }
         default:
             break;
