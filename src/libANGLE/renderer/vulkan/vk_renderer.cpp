@@ -6759,10 +6759,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsShaderNonSemanticInfo,
         ExtensionFound(VK_KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME, deviceExtensionNames));
 
-    // Don't expose these 2 extensions on Samsung devices -
-    // 1. ANGLE_rgbx_internal_format
-    // 2. GL_APPLE_clip_distance
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsAngleRgbxInternalFormat, !isSamsung);
+    // Unconditionally enable GL_ANGLE_rgbx_internal_format extension
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsAngleRgbxInternalFormat, true);
+
+    // Don't expose GL_APPLE_clip_distance on Samsung devices
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsAppleClipDistance, !isSamsung);
 
     // Force enable sample usage for AHB images for Samsung
