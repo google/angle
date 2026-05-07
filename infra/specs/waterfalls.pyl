@@ -377,6 +377,12 @@
           'isolated_scripts': 'isolated_scripts_group_common',
         },
       },
+      'angle-win-x64-trace': {
+        'os_type': 'win',
+        'additional_compile_targets': [
+          'noop_target',
+        ],
+      },
       'angle-win-x86-sws-rel': {
         'os_type': 'win',
         'mixins': [

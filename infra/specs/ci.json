@@ -8716,6 +8716,11 @@
       }
     ]
   },
+  "angle-win-x64-trace": {
+    "additional_compile_targets": [
+      "noop_target"
+    ]
+  },
   "angle-win-x86-sws-rel": {
     "gtest_tests": [
       {

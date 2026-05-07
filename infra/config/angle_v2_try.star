@@ -262,6 +262,10 @@ def angle_linux_trace_tester(**kwargs):
     kwargs = apply_trace_tester_defaults(kwargs)
     angle_linux_functional_cq_tester(**kwargs)
 
+def angle_win_trace_tester(**kwargs):
+    kwargs = apply_trace_tester_defaults(kwargs)
+    angle_win_functional_cq_tester(**kwargs)
+
 ## Trace testers
 
 angle_linux_trace_tester(
@@ -274,6 +278,21 @@ angle_linux_trace_tester(
         "run_trace_tests": True,
     },
     gn_args = "ci/angle-linux-x64-trace",
+)
+
+angle_win_trace_tester(
+    name = "angle-cq-win-x64-trace",
+    description_html = "Runs ANGLE GLES trace tests on Windows/x64 with SwiftShader. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-win-x64-trace",
+    ],
+    properties = {
+        "run_trace_tests": True,
+    },
+    gn_args = "ci/angle-win-x64-trace",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
+    # confirmed to work.
+    cq_settings = try_.cq_settings(includable_only = True),
 )
 
 ################################################################################
