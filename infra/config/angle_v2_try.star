@@ -290,9 +290,6 @@ angle_win_trace_tester(
         "run_trace_tests": True,
     },
     gn_args = "ci/angle-win-x64-trace",
-    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
-    # confirmed to work.
-    cq_settings = try_.cq_settings(includable_only = True),
 )
 
 ################################################################################
