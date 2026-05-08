@@ -9581,130 +9581,121 @@ TEST_P(FramebufferTest_ES3FBOWorkaround, InitializedTextureNoWorkaround)
 // Sub-Test 4: FBO combined with FenceSync
 TEST_P(FramebufferTest_ES3FBOWorkaround, FBOAndFenceSync)
 {
-    GLuint i;
-    GLuint num_buffers;
-    GLuint buffer1;
-    GLuint buffer2;
-    GLuint framebuffer;
-    GLuint textures[2];
-    GLuint renderbuffers[2];
-    GLuint framebuffers[2];
-    GLuint textures2[2];
-    GLuint *buffers;
-    void *pixels;
-    char *g_prepared_buffer;
-    char data[16];
+    constexpr char kBufferCount = 10;
 
-    g_prepared_buffer                   = (char *)calloc(1, 0x400);
-    *(int *)(g_prepared_buffer + 0x00)  = 0x40082000;
-    *(int *)(g_prepared_buffer + 0x04)  = 0x40282000;
-    *(int *)(g_prepared_buffer + 0x08)  = 0x40282000;
-    *(int *)(g_prepared_buffer + 0x0c)  = 0x40282000;
-    *(int *)(g_prepared_buffer + 0x28)  = 0x33800000;
-    *(int *)(g_prepared_buffer + 0x110) = 0x40282000;
-    *(int *)(g_prepared_buffer + 0x114) = 0x40282000;
-    *(int *)(g_prepared_buffer + 0x118) = 0x40282000;
-    *(int *)(g_prepared_buffer + 0x11c) = 0x40282000;
+    // Allocate and clear two textures
+    GLTexture textures[2];
+    constexpr uint32_t kTextureSize[2] = {40, 43};
+    for (uint32_t i = 0; i < 2; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kTextureSize[i], kTextureSize[i]);
 
-    pixels      = calloc(1, 0x4000);
-    num_buffers = 10;
-    buffers     = (GLuint *)calloc(1, 4 * num_buffers);
+        GLFramebuffer clearFbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, clearFbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[i], 0);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
 
-    glGenFramebuffers(2, framebuffers);
-    glGenRenderbuffers(2, renderbuffers);
-    glGenTextures(2, textures);
-    glBindTexture(GL_TEXTURE_2D, textures[0]);
-    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 40, 40);
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
-    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 43, 43);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[0]);
+    // Allocate a depth/stencil renderbuffer, bind it to one FBO together with a texture.
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kTextureSize[0], kTextureSize[0]);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
-    glReadBuffer(GL_COLOR_ATTACHMENT0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    glDeleteFramebuffers(1, framebuffers);
-    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffers[0]);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 40, 40);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[1]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
-                              renderbuffers[0]);
-    glReadBuffer(GL_COLOR_ATTACHMENT0);
-    glGenFramebuffers(1, framebuffers);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[0]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
-                              renderbuffers[0]);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencil);
+
+    // Attach the renderbuffer to another framebuffer and clear it.
+    std::vector<uint8_t> pixels(0x4000, 0);
+    {
+        GLFramebuffer clearFbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, clearFbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                                  depthStencil);
+        glClear(GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // Detach from the framebuffer, and read back the texture's contents for later use.
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+        glReadPixels(0, 0, 40, 40, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+    }
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Clear the second texture again.
+    {
+        GLFramebuffer clearFbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, clearFbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    // Recreate the renderbuffer and clear it again
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kTextureSize[0], kTextureSize[0]);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencil);
     glClear(GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffers[1]);
-    glReadPixels(0, 0, 40, 40, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffers[1]);
-    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glGenFramebuffers(1, &framebuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1], 0);
-    glReadBuffer(GL_COLOR_ATTACHMENT0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    glDeleteFramebuffers(1, &framebuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 40, 40);
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffers[1]);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
-                              renderbuffers[0]);
-    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glPixelStorei(GL_PACK_ROW_LENGTH, 43);
-    glGenBuffers(1, &buffer1);
+
+    // Upload data to pixel unpack buffer
+    std::vector<uint32_t> evilData(400, 0);
+    evilData[0]  = 0x40082000;
+    evilData[1]  = 0x40282000;
+    evilData[2]  = 0x40282000;
+    evilData[3]  = 0x40282000;
+    evilData[10] = 0x33800000;
+    evilData[68] = 0x40282000;
+    evilData[69] = 0x40282000;
+    evilData[70] = 0x40282000;
+    evilData[71] = 0x40282000;
+
+    glPixelStorei(GL_PACK_ROW_LENGTH, kTextureSize[1]);
+    GLBuffer buffer1, buffer2;
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer1);
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, 0x400, g_prepared_buffer, GL_DYNAMIC_DRAW);
-    glGenTextures(2, textures2);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, 0x400, evilData.data(), GL_DYNAMIC_DRAW);
+
+    GLTexture textures2[2];
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textures2[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 0x25, 1, 0, GL_RGBA, GL_FLOAT, 0);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, textures2[1]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 0x27, 1, 0, GL_RGBA, GL_FLOAT, 0);
+    // Dirty GL_PACK_ROW_LENGTH state.
     glPixelStorei(GL_PACK_ROW_LENGTH, 0);
-    glPixelStorei(GL_PACK_ROW_LENGTH, 43);
-    glGenBuffers(num_buffers, buffers);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glGenBuffers(1, &buffer2);
+    glPixelStorei(GL_PACK_ROW_LENGTH, kTextureSize[1]);
+
+    GLBuffer buffers[kBufferCount];
     glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer2);
-    glBufferData(GL_PIXEL_PACK_BUFFER, 0x4000, pixels, GL_STATIC_COPY);
+    glBufferData(GL_PIXEL_PACK_BUFFER, 0x4000, pixels.data(), GL_STATIC_COPY);
     glFinish();
+    // Read into buffer2
     glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    for (i = 0; i < num_buffers; i++)
+    char kUninitializedData[16];
+    for (uint32_t i = 0; i < kBufferCount; i++)
     {
         glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
-        glBufferData(GL_ARRAY_BUFFER, 16, &data, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 16, kUninitializedData, GL_DYNAMIC_DRAW);
     }
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    for (i = 0; i < num_buffers; i++)
+    for (uint32_t i = 0; i < kBufferCount; i++)
     {
-        glDeleteBuffers(1, &buffers[i]);
+        buffers[i].reset();
+
         glActiveTexture(GL_TEXTURE0);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 0x25, 1, 0, GL_RGBA, GL_FLOAT, 0);
         glActiveTexture(GL_TEXTURE1);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 0x27, 1, 0, GL_RGBA, GL_FLOAT, 0);
     }
-    glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0); /* crash / recreateFbo workaround point! */
-    ASSERT_GL_NO_ERROR();
 
-    // Cleanup
-    glDeleteFramebuffers(1, framebuffers);
-    glDeleteFramebuffers(1, &framebuffers[1]);
-    glDeleteRenderbuffers(2, renderbuffers);
-    glDeleteTextures(2, textures);
-    glDeleteTextures(2, textures2);
-    glDeleteBuffers(1, &buffer1);
-    glDeleteBuffers(1, &buffer2);
-    free(g_prepared_buffer);
-    free(pixels);
-    free(buffers);
+    // Issue a fence sync.  This triggers the recreate-fbo workaround.
+    glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+    ASSERT_GL_NO_ERROR();
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES3FBOWorkaround);
