@@ -6473,6 +6473,14 @@ angle::Result ContextVk::onFramebufferChange(FramebufferVk *framebufferVk, gl::C
     }
 
     onDrawFramebufferRenderPassDescChange(framebufferVk, nullptr);
+
+    if (mGraphicsDriverUniforms.updateflipXY(
+            mCurrentRotationDrawFramebuffer, isViewportFlipEnabledForDrawFBO(),
+            framebufferVk->getSamples(), framebufferVk->getLayerCount() > 1))
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+    }
+
     return angle::Result::Continue;
 }
 
