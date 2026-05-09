@@ -196,7 +196,7 @@ TEST_F(TestSuiteTest, GTestOutputPreserved)
                                           "--gtest_output=json:" + gtestOutputPath};
 
     TestResults actual;
-    ASSERT_TRUE(runTestSuite(extraArgs, &actual, true));
+    ASSERT_TRUE(runTestSuite(extraArgs, &actual, false));
 
     // Verify GTest successfully wrote the file (file exists and is readable)
     std::string content;
