@@ -164,6 +164,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo dontInvalidateIncompleteFBOs = {
+        "dontInvalidateIncompleteFBOs",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo dontUseLoopsToInitializeVariables = {
         "dontUseLoopsToInitializeVariables",
         FeatureCategory::OpenGLWorkarounds,
