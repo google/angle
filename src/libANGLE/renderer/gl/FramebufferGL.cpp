@@ -499,18 +499,25 @@ angle::Result FramebufferGL::invalidate(const gl::Context *context,
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
 
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
+    const bool skipInvalidate =
+        features.dontInvalidateIncompleteFBOs.enabled && !checkStatus(context).isComplete();
+
     // Since this function is just a hint, only call a native function if it exists.
-    if (functions->invalidateFramebuffer)
+    if (!skipInvalidate)
     {
-        stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        functions->invalidateFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
-                                         finalAttachmentsPtr);
-    }
-    else if (functions->discardFramebufferEXT)
-    {
-        stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        functions->discardFramebufferEXT(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
-                                         finalAttachmentsPtr);
+        if (functions->invalidateFramebuffer)
+        {
+            stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+            functions->invalidateFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
+                                             finalAttachmentsPtr);
+        }
+        else if (functions->discardFramebufferEXT)
+        {
+            stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+            functions->discardFramebufferEXT(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
+                                             finalAttachmentsPtr);
+        }
     }
 
     return angle::Result::Continue;
@@ -533,9 +540,13 @@ angle::Result FramebufferGL::invalidateSub(const gl::Context *context,
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
 
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
+    const bool skipInvalidate =
+        features.dontInvalidateIncompleteFBOs.enabled && !checkStatus(context).isComplete();
+
     // Since this function is just a hint and not available until OpenGL 4.3, only call it if it is
     // available.
-    if (functions->invalidateSubFramebuffer)
+    if (!skipInvalidate && functions->invalidateSubFramebuffer)
     {
         stateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
         functions->invalidateSubFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),

@@ -120,6 +120,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DisallowMixedDepthStencilLoadOpNoneAndLoad, "disallowMixedDepthStencilLoadOpNoneAndLoad"},
     {Feature::DoesSRGBClearsOnLinearFramebufferAttachments, "doesSRGBClearsOnLinearFramebufferAttachments"},
     {Feature::DontInitializeUninitializedLocals, "dontInitializeUninitializedLocals"},
+    {Feature::DontInvalidateIncompleteFBOs, "dontInvalidateIncompleteFBOs"},
     {Feature::DontUseLoopsToInitializeVariables, "dontUseLoopsToInitializeVariables"},
     {Feature::DoubleDepthBiasConstantFactor, "doubleDepthBiasConstantFactor"},
     {Feature::DropDepthStencilClearOnInvalidate, "dropDepthStencilClearOnInvalidate"},
