@@ -122,6 +122,7 @@ enum class Feature
     DisallowMixedDepthStencilLoadOpNoneAndLoad,
     DoesSRGBClearsOnLinearFramebufferAttachments,
     DontInitializeUninitializedLocals,
+    DontInvalidateIncompleteFBOs,
     DontUseLoopsToInitializeVariables,
     DoubleDepthBiasConstantFactor,
     DropDepthStencilClearOnInvalidate,

@@ -608,6 +608,34 @@ TEST_P(FramebufferTest_ES3, InvalidateIncomplete)
     EXPECT_GL_NO_ERROR();
 }
 
+// Covers invalidating an incomplete framebuffer with a depth/stencil attachment.
+// This should be a no-op, but should not crash on buggy drivers.
+TEST_P(FramebufferTest_ES3, InvalidateIncompleteDepthStencil)
+{
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture);
+    // 2 levels, GL_RGBA8, 4x4, 1 layer
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 2, GL_RGBA8, 4, 4, 1);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+    // Try to attach level 2 (out of range) to GL_DEPTH_STENCIL_ATTACHMENT.
+    // This makes the framebuffer incomplete.
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, texture, 2, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify the framebuffer is incomplete.
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    std::vector<GLenum> attachments;
+    attachments.push_back(GL_DEPTH_STENCIL_ATTACHMENT);
+
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments.data());
+    EXPECT_GL_NO_ERROR();
+}
+
 // Covers sub-invalidating an incomplete framebuffer. This should be a no-op, but should not error.
 TEST_P(FramebufferTest_ES3, SubInvalidateIncomplete)
 {
