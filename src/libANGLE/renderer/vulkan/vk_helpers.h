@@ -3729,46 +3729,46 @@ class ImageViewHelper final : angle::NonCopyable
                 mWriteColorspace == vk::ImageViewColorspace::Linear);
     }
 
-    void updateStaticTexelFetch(const ImageHelper &image, bool staticTexelFetchAccess) const
+    void updateStaticTexelFetch(const angle::Format &imageFormat, bool staticTexelFetchAccess) const
     {
         if (mColorspaceState.hasStaticTexelFetchAccess != staticTexelFetchAccess)
         {
             mColorspaceState.hasStaticTexelFetchAccess = staticTexelFetchAccess;
-            updateColorspace(image);
+            updateColorspace(imageFormat);
         }
     }
-    void updateSrgbDecode(const ImageHelper &image, gl::SrgbDecode srgbDecode) const
+    void updateSrgbDecode(const angle::Format &imageFormat, gl::SrgbDecode srgbDecode) const
     {
         if (mColorspaceState.srgbDecode != srgbDecode)
         {
             mColorspaceState.srgbDecode = srgbDecode;
-            updateColorspace(image);
+            updateColorspace(imageFormat);
         }
     }
-    void updateSrgbOverride(const ImageHelper &image, gl::SrgbOverride srgbOverride) const
+    void updateSrgbOverride(const angle::Format &imageFormat, gl::SrgbOverride srgbOverride) const
     {
         if (mColorspaceState.srgbOverride != srgbOverride)
         {
             mColorspaceState.srgbOverride = srgbOverride;
-            updateColorspace(image);
+            updateColorspace(imageFormat);
         }
     }
-    void updateSrgbWriteControlMode(const ImageHelper &image,
+    void updateSrgbWriteControlMode(const angle::Format &imageFormat,
                                     gl::SrgbWriteControlMode srgbWriteControl) const
     {
         if (mColorspaceState.srgbWriteControl != srgbWriteControl)
         {
             mColorspaceState.srgbWriteControl = srgbWriteControl;
-            updateColorspace(image);
+            updateColorspace(imageFormat);
         }
     }
-    void updateEglImageColorspace(const ImageHelper &image,
+    void updateEglImageColorspace(const angle::Format &imageFormat,
                                   egl::ImageColorspace eglImageColorspace) const
     {
         if (mColorspaceState.eglImageColorspace != eglImageColorspace)
         {
             mColorspaceState.eglImageColorspace = eglImageColorspace;
-            updateColorspace(image);
+            updateColorspace(imageFormat);
         }
     }
 
@@ -3857,7 +3857,7 @@ class ImageViewHelper final : angle::NonCopyable
                                                  VkImageUsageFlags imageUsageFlags,
                                                  GLenum astcDecodePrecision);
 
-    void updateColorspace(const ImageHelper &image) const;
+    void updateColorspace(const angle::Format &imageFormat) const;
 
     angle::FormatID getColorspaceOverrideFormatImpl(ImageViewColorspace colorspace,
                                                     angle::FormatID format) const;
