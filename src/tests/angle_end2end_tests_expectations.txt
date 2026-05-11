@@ -1201,6 +1201,14 @@
 489247643 PIXEL10 GLES : ImageTest.BindExternalTextureAsImage_R16_UINT/* = SKIP
 489247643 PIXEL10 GLES : ImageTest.BindExternalTextureAsImage_R16G16_UINT/* = SKIP
 510376884 PIXEL10 GLES : ComputeShaderTest.DeleteTextureBoundToImageUnit/* = SKIP
+512394647 PIXEL10 GLES : EGLContextCompatibilityTest.PbufferDifferentConfig/OpenGLES_R16G16B16A16_R16G16B16 = SKIP
+512394647 PIXEL10 GLES : EGLContextCompatibilityTest.PbufferDifferentConfig/OpenGLES_R16G16B16D24_R16G16B16 = SKIP
+512394647 PIXEL10 GLES : EGLContextCompatibilityTest.PbufferDifferentConfig/OpenGLES_R8G8B8A8D24_R8G8B8A8 = SKIP
+512394647 PIXEL10 GLES : EGLContextCompatibilityTest.PbufferDifferentConfig/OpenGLES_R8G8B8A8D24_R8G8B8A8D24S8 = SKIP
+512394647 PIXEL10 GLES : FramebufferTest_ES31.ClearColorMorePrecisionThanFBOFormatShouldNotApplyDithering/* = SKIP
+512394647 PIXEL10 GLES : MipmapTestES3.GenerateMipmapLargeNPOTTexture/* = SKIP
+512394647 PIXEL10 GLES : RobustBufferAccessBehaviorTest.OutOfBoundsArrayBuffers/* = SKIP
+512394647 PIXEL10 GLES : WebGLCompatibilityTest.EXTBlendFuncExtendedMissingOutputsWithAllChannelsMaskedOut/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP
