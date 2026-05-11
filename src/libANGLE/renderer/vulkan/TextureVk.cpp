@@ -3832,12 +3832,6 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 
     ANGLE_TRY(respecifyImageStorageIfNecessary(contextVk, source));
 
-    // Initialize the image storage and flush the pixel buffer.
-    const bool isGenerateMipmap = source == gl::Command::GenerateMipmap;
-    ANGLE_TRY(ensureImageInitialized(contextVk, isGenerateMipmap
-                                                    ? ImageMipLevels::FullMipChainForGenerateMipmap
-                                                    : ImageMipLevels::EnabledLevels));
-
     // Mask out the IMPLEMENTATION dirty bit to avoid unnecessary syncs.
     // Keep it set when the border color is used and needs to be resynced.
     gl::Texture::DirtyBits localBits = dirtyBits;
@@ -3847,6 +3841,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     }
     localBits.reset(gl::Texture::DIRTY_BIT_BASE_LEVEL);
     localBits.reset(gl::Texture::DIRTY_BIT_MAX_LEVEL);
+
+    bool refreshAllImageViews = false;
 
     // For AHBs, the ImageViews are created with VkSamplerYcbcrConversionInfo's chromaFilter
     // matching min/magFilters as part of the eglEGLImageTargetTexture2DOES() call. However, the
@@ -3862,18 +3858,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         if (mImage->updateChromaFilter(renderer, chromaFilter))
         {
             resetSampler();
-            ANGLE_TRY(refreshImageViews(contextVk));
+            refreshAllImageViews = true;
         }
-    }
-
-    if (localBits.none() && mSampler)
-    {
-        return angle::Result::Continue;
-    }
-
-    if (mSampler)
-    {
-        resetSampler();
     }
 
     if (localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_RED) ||
@@ -3882,7 +3868,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA) ||
         localBits.test(gl::Texture::DIRTY_BIT_ASTC_DECODE_PRECISION))
     {
-        ANGLE_TRY(refreshImageViews(contextVk));
+        refreshAllImageViews = true;
     }
 
     if (localBits.test(gl::Texture::DIRTY_BIT_SRGB_OVERRIDE) ||
@@ -3900,8 +3886,29 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 
         if (!renderer->getFeatures().supportsImageFormatList.enabled)
         {
-            ANGLE_TRY(refreshImageViews(contextVk));
+            refreshAllImageViews = true;
         }
+    }
+
+    // Initialize the image storage and flush the pixel buffer.
+    const bool isGenerateMipmap = source == gl::Command::GenerateMipmap;
+    ANGLE_TRY(ensureImageInitialized(contextVk, isGenerateMipmap
+                                                    ? ImageMipLevels::FullMipChainForGenerateMipmap
+                                                    : ImageMipLevels::EnabledLevels));
+
+    if (refreshAllImageViews)
+    {
+        ANGLE_TRY(refreshImageViews(contextVk));
+    }
+
+    if (localBits.none() && mSampler)
+    {
+        return angle::Result::Continue;
+    }
+
+    if (mSampler)
+    {
+        resetSampler();
     }
 
     vk::SamplerDesc samplerDesc(contextVk, mState.getSamplerState(), mState.isStencilMode(),
