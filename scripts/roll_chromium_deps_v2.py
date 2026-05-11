@@ -24,6 +24,7 @@ import base64
 import dataclasses
 import datetime
 import functools
+import itertools
 import logging
 import pathlib
 import posixpath
@@ -274,7 +275,7 @@ class ChangedCipd(ChangedDepsEntry):
 
     def setdep_args(self) -> list[str]:
         revisions = [f'{self.name}:{p.setdep_str()}' for p in self.new_packages]
-        return ['--revision'] + revisions
+        return list(itertools.chain.from_iterable(('--revision', r) for r in revisions))
 
     def commit_message_lines(self) -> list[str]:
         return [
