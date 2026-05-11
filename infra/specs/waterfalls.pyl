@@ -41,26 +41,6 @@
           'isolated_scripts': 'isolated_scripts_group_perf',
         },
       },
-      'linux-intel-perf': {
-        'os_type': 'linux',
-        'mixins': [
-          'linux_intel_uhd_630_stable',
-          'timeout_120m',
-        ],
-        'test_suites': {
-          'isolated_scripts': 'isolated_scripts_group_perf',
-        },
-      },
-      'linux-nvidia-perf': {
-        'os_type': 'linux',
-        'mixins': [
-          'linux_nvidia_gtx_1660_stable',
-          'timeout_120m',
-        ],
-        'test_suites': {
-          'isolated_scripts': 'isolated_scripts_group_perf',
-        },
-      },
       'win10-x64-swiftshader': {
         'os_type': 'win',
         'mixins': [

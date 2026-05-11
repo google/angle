@@ -23,8 +23,6 @@
     'angle': {
       'android-pixel4-perf': 'angle_remoteexec_android_perf_bot',
       'android-pixel6-perf': 'angle_remoteexec_android_perf_bot',
-      'linux-intel-uhd630-perf': 'angle_remoteexec_perf_bot',
-      'linux-nvidia-gtx1660-perf': 'angle_remoteexec_perf_bot',
       'linux-ubsan-test': 'angle_ubsan_bot',
       'win-asan-test': 'angle_asan_bot',
       'win-dbg-compile': 'angle_remoteexec_debug_bot',
@@ -51,7 +49,6 @@
     'angle_non_clang_x86_release_bot': ['angle', 'non_clang', 'x86', 'release'],
     'angle_remoteexec_android_perf_bot': ['angle', 'remoteexec', 'android', 'arm64', 'perf'],
     'angle_remoteexec_debug_bot': ['angle', 'opencl', 'remoteexec', 'debug'],
-    'angle_remoteexec_perf_bot': ['angle', 'remoteexec', 'perf'],
     'angle_remoteexec_x86_debug_bot': ['angle', 'opencl', 'remoteexec', 'x86', 'debug'],
     'angle_ubsan_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'ubsan', 'release'],
     'angle_winuwp_non_clang_debug_bot': ['angle', 'winuwp', 'non_clang', 'debug'],
