@@ -6,6 +6,7 @@
     "angle-android-arm64-builder-rel": "ci/angle-android-arm64-builder-rel/gn-args.json",
     "angle-linux-x64-builder-asan": "ci/angle-linux-x64-builder-asan/gn-args.json",
     "angle-linux-x64-builder-dbg": "ci/angle-linux-x64-builder-dbg/gn-args.json",
+    "angle-linux-x64-builder-perf": "ci/angle-linux-x64-builder-perf/gn-args.json",
     "angle-linux-x64-builder-rel": "ci/angle-linux-x64-builder-rel/gn-args.json",
     "angle-linux-x64-builder-tsan": "ci/angle-linux-x64-builder-tsan/gn-args.json",
     "angle-linux-x64-trace": "ci/angle-linux-x64-trace/gn-args.json",

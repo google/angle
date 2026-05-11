@@ -135,7 +135,13 @@ chromium_luci.configure_recipe_experiments(
 )
 
 chromium_luci.configure_builder_config(
+    # The Mega CQ association is a misnomer. ANGLE does not have the Mega CQ
+    # enabled, but adding builders to this list is necessary to work around
+    # some Starlark generation checks if they do not have a trybot.
     mega_cq_excluded_builders = [
+        "angle-linux-x64-builder-perf",
+        "angle-linux-x64-intel-uhd630-perf",
+        "angle-linux-x64-nvidia-gtx1660-perf",
         "angle-win-x64-builder-perf",
         "angle-win-x64-intel-uhd630-perf",
         "angle-win-x64-nvidia-gtx1660-perf",

@@ -187,6 +187,16 @@
         'test_suites': {
         },
       },
+      'angle-linux-x64-intel-uhd630-perf': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_intel_uhd_630_stable',
+          'timeout_120m',
+        ],
+        'test_suites': {
+          'isolated_scripts': 'isolated_scripts_group_perf',
+        },
+      },
       'angle-linux-x64-intel-uhd630-rel': {
         'os_type': 'linux',
         'mixins': [
@@ -203,6 +213,16 @@
           'linux_nvidia_gtx_1660_experimental',
         ],
         'test_suites': {
+        },
+      },
+      'angle-linux-x64-nvidia-gtx1660-perf': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_nvidia_gtx_1660_stable',
+          'timeout_120m',
+        ],
+        'test_suites': {
+          'isolated_scripts': 'isolated_scripts_group_perf',
         },
       },
       'angle-linux-x64-nvidia-gtx1660-rel': {
