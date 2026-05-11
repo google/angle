@@ -1150,7 +1150,7 @@ deps = {
   },
 
   'third_party/vulkan_memory_allocator': {
-    'url': Var('chromium_git') + '/external/github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator@cb0597213b0fcb999caa9ed08c2f88dc45eb7d50',
+    'url': Var('chromium_git') + '/external/github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator@7e55b011e16182fc349149abbd3aaf3b1db46421',
     'condition': 'not build_with_chromium',
   },
 
