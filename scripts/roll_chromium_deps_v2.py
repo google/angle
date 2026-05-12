@@ -95,6 +95,7 @@ SYNCED_GCS_DEPS = set()
 #   * third_party/SwiftShader
 #   * third_party/vulkan-deps
 #   * third_party/glslang/src
+#   * third_party/perfetto
 #   * third_party/spirv-cross/src
 #   * third_party/spirv-headers/src
 #   * third_party/spirv-tools/src
@@ -121,7 +122,6 @@ SYNCED_REPOS = {
     'third_party/llvm-libc/src': None,
     'third_party/libunwind/src': None,
     'third_party/nasm': None,
-    'third_party/perfetto': None,
     'third_party/re2/src': None,
     'third_party/requests/src': None,
 }
