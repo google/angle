@@ -780,6 +780,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mFlipViewportForDrawFramebuffer(false),
       mFlipViewportForReadFramebuffer(false),
       mIsAnyHostVisibleBufferWritten(false),
+      mDefaultAttribsGeneration(mDefaultAttribsGenerationFactory.generate()),
       mCurrentQueueSerialIndex(kInvalidQueueSerialIndex),
       mInitialContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
       mCommandState(renderer,
@@ -2081,12 +2082,20 @@ angle::Result ContextVk::handleDirtyEventLogImpl(CommandBufferT *commandBuffer)
 angle::Result ContextVk::handleDirtyGraphicsDefaultAttribs(DirtyBits::Iterator *dirtyBitsIterator,
                                                            DirtyBits dirtyBitMask)
 {
-    ASSERT(mDirtyDefaultAttribsMask.any());
     VertexArrayVk *vertexArrayVk = getVertexArray();
 
-    gl::AttributesMask attribsMask = mDirtyDefaultAttribsMask;
-    attribsMask &= ~vertexArrayVk->getCurrentEnabledAttribsMask();
-    attribsMask &= mState.getProgramExecutable()->getAttributesMask();
+    gl::AttributesMask attribsMask;
+    if (vertexArrayVk->getDefaultAttribsGeneration() != mDefaultAttribsGeneration)
+    {
+        vertexArrayVk->setDefaultAttribsGeneration(mDefaultAttribsGeneration);
+        attribsMask = ~vertexArrayVk->getCurrentEnabledAttribsMask();
+    }
+    else
+    {
+        attribsMask = mDirtyDefaultAttribsMask;
+        attribsMask &= ~vertexArrayVk->getCurrentEnabledAttribsMask();
+        attribsMask &= mState.getProgramExecutable()->getAttributesMask();
+    }
 
     for (size_t attribIndex : attribsMask)
     {
@@ -5689,6 +5698,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING:
             {
+                if (vertexArrayVk->getDefaultAttribsGeneration() != mDefaultAttribsGeneration)
+                {
+                    mGraphicsDirtyBits.set(DIRTY_BIT_DEFAULT_ATTRIBS);
+                }
                 invalidateDefaultAttributes(context->getActiveDefaultAttribsMask());
                 ANGLE_TRY(onVertexArrayChange(vertexArrayVk->getCurrentEnabledAttribsMask()));
                 ANGLE_TRY(onIndexBufferChange(vertexArrayVk->getCurrentElementArrayBuffer()));
