@@ -46,6 +46,8 @@ ANGLE_INLINE bool operator<(const AttributeRange &a, const AttributeRange &b)
 class VertexArrayVk : public VertexArrayImpl
 {
   public:
+    using VertexArrayGeneration = UniqueSerial;
+
     VertexArrayVk(ContextVk *contextVk,
                   const gl::VertexArrayState &state,
                   const gl::VertexArrayBuffers &vertexArrayBuffers);
@@ -179,6 +181,12 @@ class VertexArrayVk : public VertexArrayImpl
 
     gl::AttributesMask getCurrentEnabledAttribsMask() const { return mCurrentEnabledAttribsMask; }
 
+    VertexArrayGeneration getDefaultAttribsGeneration() const { return mDefaultAttribsGeneration; }
+    void setDefaultAttribsGeneration(VertexArrayGeneration generation)
+    {
+        mDefaultAttribsGeneration = generation;
+    }
+
   private:
     gl::AttributesMask mergeClientAttribsRange(
         vk::Renderer *renderer,
@@ -274,6 +282,9 @@ class VertexArrayVk : public VertexArrayImpl
 
     // This maybe 0 or 1 depends on feature bit
     uint32_t mZeroDivisor;
+
+    // Tracks if default vertex attribute buffers have been invalidated.
+    VertexArrayGeneration mDefaultAttribsGeneration;
 };
 }  // namespace rx
 
