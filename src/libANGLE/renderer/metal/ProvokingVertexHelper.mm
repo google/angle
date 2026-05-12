@@ -210,16 +210,14 @@ angle::Result ProvokingVertexHelper::preconditionIndexBuffer(ContextMtl *context
     ANGLE_CHECK_GL_MATH(context, indexCountForPrimCount(indexBufferKey, primCount, &newIndexCount));
 
     size_t indexSize   = gl::GetDrawElementsTypeSize(elementsType);
-    size_t newOffset   = 0;
-    mtl::BufferRef newBuffer;
+    mtl::BufferSlice newBuffer;
 
     angle::CheckedNumeric<size_t> checkedBufferSize(newIndexCount);
     checkedBufferSize *= indexSize;
     checkedBufferSize += indexOffset;
 
     ANGLE_CHECK_GL_MATH(context, checkedBufferSize.IsValid());
-    ANGLE_TRY(mIndexBuffers.allocate(context, checkedBufferSize.ValueOrDie(), nullptr, &newBuffer,
-                                     &newOffset));
+    ANGLE_TRY(mIndexBuffers.allocate(context, checkedBufferSize.ValueOrDie(), nullptr, &newBuffer));
     auto threadsPerThreadgroup = MTLSizeMake(MIN(primCount, 64u), 1, 1);
 
     mtl::ComputeCommandEncoder *encoder =
@@ -227,9 +225,8 @@ angle::Result ProvokingVertexHelper::preconditionIndexBuffer(ContextMtl *context
     const bool isForGenerateIndices = false;
     ANGLE_TRY(
         prepareCommandEncoderForFunction(context, encoder, indexBufferKey, isForGenerateIndices));
-    encoder->setBuffer(indexBuffer, static_cast<uint32_t>(indexOffset), 0);
-    encoder->setBufferForWrite(
-        newBuffer, static_cast<uint32_t>(indexOffset) + static_cast<uint32_t>(newOffset), 1);
+    encoder->setBuffer(indexBuffer, indexOffset, 0);
+    encoder->setBufferForWrite(newBuffer.buffer(), indexOffset + newBuffer.offset(), 1);
     encoder->setData(static_cast<uint>(glCount), 2);
     encoder->setData(primCount, 3);
     encoder->dispatch(
@@ -238,9 +235,9 @@ angle::Result ProvokingVertexHelper::preconditionIndexBuffer(ContextMtl *context
                     1, 1),
         threadsPerThreadgroup);
     outIndexCount    = static_cast<uint32_t>(newIndexCount);
-    outIndexOffset   = newOffset;
+    outIndexOffset   = newBuffer.offset();
     outPrimitiveMode = getNewPrimitiveMode(indexBufferKey);
-    outNewBuffer     = newBuffer;
+    outNewBuffer     = newBuffer.buffer();
     return angle::Result::Continue;
 }
 
@@ -265,15 +262,13 @@ angle::Result ProvokingVertexHelper::generateIndexBuffer(ContextMtl *context,
     ANGLE_CHECK_GL_MATH(context, indexCountForPrimCount(indexBufferKey, primCount, &newIndexCount));
 
     size_t indexSize      = gl::GetDrawElementsTypeSize(elementsType);
-    size_t newIndexOffset = 0;
-    mtl::BufferRef newBuffer;
+    mtl::BufferSlice newBuffer;
 
     angle::CheckedNumeric<size_t> checkedBufferSize = newIndexCount;
     checkedBufferSize *= indexSize;
 
     ANGLE_CHECK_GL_MATH(context, checkedBufferSize.IsValid());
-    ANGLE_TRY(mIndexBuffers.allocate(context, checkedBufferSize.ValueOrDie(), nullptr, &newBuffer,
-                                     &newIndexOffset));
+    ANGLE_TRY(mIndexBuffers.allocate(context, checkedBufferSize.ValueOrDie(), nullptr, &newBuffer));
     auto threadsPerThreadgroup = MTLSizeMake(MIN(primCount, 64u), 1, 1);
 
     mtl::ComputeCommandEncoder *encoder =
@@ -281,7 +276,7 @@ angle::Result ProvokingVertexHelper::generateIndexBuffer(ContextMtl *context,
     const bool isForGenerateIndices = true;
     ANGLE_TRY(
         prepareCommandEncoderForFunction(context, encoder, indexBufferKey, isForGenerateIndices));
-    encoder->setBufferForWrite(newBuffer, static_cast<uint>(newIndexOffset), 1);
+    encoder->setBufferForWrite(newBuffer.buffer(), newBuffer.offset(), 1);
     encoder->setData(static_cast<uint>(glCount), 2);
     encoder->setData(primCount, 3);
     encoder->setData(static_cast<uint>(first), 4);
@@ -291,9 +286,9 @@ angle::Result ProvokingVertexHelper::generateIndexBuffer(ContextMtl *context,
                     1, 1),
         threadsPerThreadgroup);
     outIndexCount    = static_cast<uint32_t>(newIndexCount);
-    outIndexOffset   = newIndexOffset;
+    outIndexOffset   = newBuffer.offset();
     outPrimitiveMode = getNewPrimitiveMode(indexBufferKey);
-    outNewBuffer     = newBuffer;
+    outNewBuffer     = newBuffer.buffer();
     return angle::Result::Continue;
 }
 
