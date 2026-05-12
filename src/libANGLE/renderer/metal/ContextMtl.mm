@@ -804,7 +804,7 @@ angle::Result ContextMtl::drawElementsImpl(const gl::Context *context,
     // as drawIdxBuffer.
     const std::vector<DrawCommandRange> drawCommands =
         mVertexArray->getDrawIndices(context, type, convertedType, originalMode, mode, idxBuffer,
-                                     (uint32_t)count, convertedOffset);
+                                     (uint32_t)count, indices, convertedOffset);
 
     bool isNoOp = false;
     ANGLE_TRY(setupDraw(context, 0, count, instances, type, indices, false, &isNoOp));

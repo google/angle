@@ -69,7 +69,8 @@ class VertexArrayMtl : public VertexArrayImpl
                                                  gl::PrimitiveMode mode,
                                                  mtl::BufferRef idxBuffer,
                                                  uint32_t indexCount,
-                                                 size_t offset);
+                                                 const void *originalOffsetOrClientPtr,
+                                                 size_t offsetInBytes);
 
   private:
     void reset(ContextMtl *context);

@@ -747,7 +747,8 @@ std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *
                                                              gl::PrimitiveMode mode,
                                                              mtl::BufferRef clientBuffer,
                                                              uint32_t indexCount,
-                                                             size_t offset)
+                                                             const void *originalOffsetOrClientPtr,
+                                                             size_t offsetInBytes)
 {
     ContextMtl *contextMtl = mtl::GetImpl(glContext);
     std::vector<DrawCommandRange> drawCommands;
@@ -759,23 +760,31 @@ std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *
     bool indicesRewritten = (originalMode != mode);
     if ((!isSimpleType && !indicesRewritten) || !glContext->getState().isPrimitiveRestartEnabled())
     {
-        drawCommands.push_back({indexCount, offset});
+        drawCommands.push_back({indexCount, offsetInBytes});
         return drawCommands;
     }
 
     const std::vector<IndexRange> *restartIndices;
     std::vector<IndexRange> clientIndexRange;
     const gl::Buffer *glElementArrayBuffer = getElementArrayBuffer();
+    size_t startIndex;
     if (glElementArrayBuffer)
     {
         BufferMtl *idxBuffer = mtl::GetImpl(glElementArrayBuffer);
         restartIndices       = &idxBuffer->getRestartIndices(contextMtl, originalIndexType);
+        // restartIndices is relative to the original element buffer, hence we use the original
+        // offset to calculate startIndex.
+        size_t originalOffsetInBytes = reinterpret_cast<size_t>(originalOffsetOrClientPtr);
+        startIndex = originalOffsetInBytes / gl::GetDrawElementsTypeSize(originalIndexType);
     }
     else
     {
         clientIndexRange =
             BufferMtl::getRestartIndicesFromClientData(contextMtl, indexType, clientBuffer);
         restartIndices = &clientIndexRange;
+        // For client indices, restartIndices is relative to the clientBuffer, we use offsetInBytes
+        // to calculate startIndex.
+        startIndex = offsetInBytes / gl::GetDrawElementsTypeSize(indexType);
     }
 
     uint32_t nIndicesPerPrimitive;
@@ -851,8 +860,7 @@ std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *
 
     const GLuint indexTypeBytes = gl::GetDrawElementsTypeSize(indexType);
     uint32_t indicesLeft        = indexCount;
-    size_t currentIndexOffset   = offset / indexTypeBytes;
-    const size_t baseOffset     = currentIndexOffset;
+    size_t currentIndexOffset   = startIndex;
 
     auto addDrawCommand = [&](uint32_t count, size_t elementOffset) {
         // Skip slices that don't contain enough indices to form a single primitive.
@@ -862,7 +870,7 @@ std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *
             uint32_t transformedCount = (count - stripExclude) * factor;
             // Scale the offset to account for the expansion factor.
             size_t transformedOffset =
-                offset + (elementOffset - baseOffset) * (size_t)factor * indexTypeBytes;
+                offsetInBytes + (elementOffset - startIndex) * (size_t)factor * indexTypeBytes;
             drawCommands.push_back({transformedCount, transformedOffset});
         }
     };
