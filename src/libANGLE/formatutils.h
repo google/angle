@@ -214,11 +214,25 @@ struct InternalFormat
 
     [[nodiscard]] std::pair<GLuint, GLuint> getCompressedImageMinBlocks() const;
 
+    [[nodiscard]] bool computeRowDepthSkipBytes(GLenum formatType,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                const gl::PixelStoreStateBase &unpack,
+                                                bool is3D,
+                                                GLuint *rowPitchOut,
+                                                GLuint *depthPitchOut,
+                                                GLuint *skipBytesOut) const;
+    [[nodiscard]] bool computeRowSkipBytes(GLenum formatType,
+                                           GLsizei width,
+                                           const gl::PixelPackState &pack,
+                                           GLuint *rowPitchOut,
+                                           GLuint *skipBytesOut) const;
     [[nodiscard]] bool computeSkipBytes(GLenum formatType,
                                         GLuint rowPitch,
                                         GLuint depthPitch,
-                                        const PixelStoreStateBase &state,
-                                        bool is3D,
+                                        GLuint skipRows,
+                                        GLuint skipPixels,
+                                        GLuint skipImages,
                                         GLuint *resultOut) const;
 
     [[nodiscard]] bool computePackUnpackEndByte(GLenum formatType,

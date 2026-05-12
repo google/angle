@@ -721,14 +721,12 @@ angle::Result TextureWgpu::setSubImageImpl(const gl::Context *context,
     gl::Extents glExtents                 = gl::Extents(area.width, area.height, area.depth);
 
     GLuint inputRowPitch = 0;
-    ANGLE_CHECK_GL_MATH(contextWgpu, inputInternalFormatInfo.computeRowPitch(
-                                         type, glExtents.width, unpack.alignment, unpack.rowLength,
-                                         &inputRowPitch));
-
     GLuint inputDepthPitch = 0;
-    ANGLE_CHECK_GL_MATH(
-        contextWgpu, inputInternalFormatInfo.computeDepthPitch(glExtents.height, unpack.imageHeight,
-                                                               inputRowPitch, &inputDepthPitch));
+    GLuint inputSkipBytes  = 0;
+    ANGLE_CHECK_GL_MATH(contextWgpu,
+                        inputInternalFormatInfo.computeRowDepthSkipBytes(
+                            type, glExtents.width, glExtents.height, unpack, index.usesTex3D(),
+                            &inputRowPitch, &inputDepthPitch, &inputSkipBytes));
 
     const angle::Format &actualFormat = webgpuFormat.getActualImageFormat();
     uint32_t outputRowPitch           = roundUp(actualFormat.pixelBytes * glExtents.width,

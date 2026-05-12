@@ -2196,14 +2196,9 @@ angle::Result TextureMtl::setSubImageImpl(const gl::Context *context,
     GLuint sourceRowPitch   = 0;
     GLuint sourceDepthPitch = 0;
     GLuint sourceSkipBytes  = 0;
-    ANGLE_CHECK_GL_MATH(contextMtl, formatInfo.computeRowPitch(type, area.width, unpack.alignment,
-                                                               unpack.rowLength, &sourceRowPitch));
-    ANGLE_CHECK_GL_MATH(
-        contextMtl, formatInfo.computeDepthPitch(area.height, unpack.imageHeight, sourceRowPitch,
-                                                 &sourceDepthPitch));
-    ANGLE_CHECK_GL_MATH(contextMtl,
-                        formatInfo.computeSkipBytes(type, sourceRowPitch, sourceDepthPitch, unpack,
-                                                    index.usesTex3D(), &sourceSkipBytes));
+    ANGLE_CHECK_GL_MATH(contextMtl, formatInfo.computeRowDepthSkipBytes(
+                                        type, area.width, area.height, unpack, index.usesTex3D(),
+                                        &sourceRowPitch, &sourceDepthPitch, &sourceSkipBytes));
 
     // Get corresponding source data's ANGLE format
     angle::FormatID srcAngleFormatId;
