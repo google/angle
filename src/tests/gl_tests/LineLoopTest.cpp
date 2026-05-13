@@ -697,23 +697,13 @@ TEST_P(LineLoopTestES3, LineLoopDrawArraysInstancedBaseInstance)
         left, top, left, bottom, right, bottom, right, top,
     };
     constexpr GLfloat kColors[] = {
-        // 12 unused attributes, skipped by base instance
-        // NOTE: a multiple of 4 is used due to this bug in the Vulkan backend:
-        // http://anglebug.com/512514748.  Once fixed, this could be any number of unused
-        // attributes.
+        // 5 unused attributes, skipped by base instance
         // clang-format off
         0.1f, 0.2f,
         0.3f, 0.4f,
         0.5f, 0.6f,
         0.7f, 0.8f,
         0.9f, 0.95f,
-        0.85f, 0.75f,
-        0.65f, 0.55f,
-        0.45f, 0.35f,
-        0.25f, 0.15f,
-        0.05f, 0.15f,
-        0.25f, 0.35f,
-        0.45f, 0.55f,
         // Top
         1.0f, 0.0f,
         // Bottom
@@ -728,11 +718,11 @@ TEST_P(LineLoopTestES3, LineLoopDrawArraysInstancedBaseInstance)
         [hasEXT]() {
             if (hasEXT)
             {
-                glDrawArraysInstancedBaseInstanceEXT(GL_LINE_LOOP, 0, 4, 4, 12);
+                glDrawArraysInstancedBaseInstanceEXT(GL_LINE_LOOP, 0, 4, 4, 5);
             }
             else
             {
-                glDrawArraysInstancedBaseInstanceANGLE(GL_LINE_LOOP, 0, 4, 4, 12);
+                glDrawArraysInstancedBaseInstanceANGLE(GL_LINE_LOOP, 0, 4, 4, 5);
             }
         });
 }
@@ -765,10 +755,7 @@ TEST_P(LineLoopTestES3, LineLoopDrawElementsInstancedBaseVertexBaseInstance)
         // clang-format on
     };
     constexpr GLfloat kColors[] = {
-        // 12 unused attributes, skipped by base instance.
-        // NOTE: a multiple of 4 is used due to this bug in the Vulkan backend:
-        // http://anglebug.com/512514748.  Once fixed, this could be any number of unused
-        // attributes.
+        // 9 unused attributes, skipped by base instance.
         // clang-format off
         0.1f, 0.2f,
         0.3f, 0.4f,
@@ -779,9 +766,6 @@ TEST_P(LineLoopTestES3, LineLoopDrawElementsInstancedBaseVertexBaseInstance)
         0.65f, 0.55f,
         0.45f, 0.35f,
         0.25f, 0.15f,
-        0.05f, 0.15f,
-        0.25f, 0.35f,
-        0.45f, 0.55f,
         // Top
         1.0f, 0.0f,
         // Bottom
@@ -809,12 +793,12 @@ TEST_P(LineLoopTestES3, LineLoopDrawElementsInstancedBaseVertexBaseInstance)
             if (hasEXT)
             {
                 glDrawElementsInstancedBaseVertexBaseInstanceEXT(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
-                                                                 nullptr, 4, 5, 12);
+                                                                 nullptr, 4, 5, 9);
             }
             else
             {
                 glDrawElementsInstancedBaseVertexBaseInstanceANGLE(GL_LINE_LOOP, 4, GL_UNSIGNED_INT,
-                                                                   nullptr, 4, 5, 12);
+                                                                   nullptr, 4, 5, 9);
             }
         });
 }

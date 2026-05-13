@@ -1433,10 +1433,7 @@ TEST_P(DrawBaseVertexBaseInstanceTest_ES3, NonZeroDivisorBaseInstance)
         left, top, left, bottom, right, top, right, bottom,
     };
     constexpr GLfloat kColors[] = {
-        // 12 unused attributes, skipped by base instance
-        // NOTE: a multiple of 4 is used due to this bug in the Vulkan backend:
-        // http://anglebug.com/512514748.  Once fixed, this could be any number of unused
-        // attributes.
+        // 11 unused attributes, skipped by base instance
         // clang-format off
         0.1f, 0.2f,
         0.3f, 0.4f,
@@ -1449,7 +1446,6 @@ TEST_P(DrawBaseVertexBaseInstanceTest_ES3, NonZeroDivisorBaseInstance)
         0.25f, 0.15f,
         0.05f, 0.15f,
         0.25f, 0.35f,
-        0.45f, 0.55f,
         // Top
         1.0f, 0.0f,
         // Bottom
@@ -1464,11 +1460,11 @@ TEST_P(DrawBaseVertexBaseInstanceTest_ES3, NonZeroDivisorBaseInstance)
         [hasEXT]() {
             if (hasEXT)
             {
-                glDrawArraysInstancedBaseInstanceEXT(GL_TRIANGLE_STRIP, 0, 4, 4, 12);
+                glDrawArraysInstancedBaseInstanceEXT(GL_TRIANGLE_STRIP, 0, 4, 4, 11);
             }
             else
             {
-                glDrawArraysInstancedBaseInstanceANGLE(GL_TRIANGLE_STRIP, 0, 4, 4, 12);
+                glDrawArraysInstancedBaseInstanceANGLE(GL_TRIANGLE_STRIP, 0, 4, 4, 11);
             }
         });
 }
@@ -1501,10 +1497,7 @@ TEST_P(DrawBaseVertexBaseInstanceTest_ES3, NonZeroDivisorBaseVertexBaseInstance)
         // clang-format on
     };
     constexpr GLfloat kColors[] = {
-        // 12 unused attributes, skipped by base instance.
-        // NOTE: a multiple of 4 is used due to this bug in the Vulkan backend:
-        // http://anglebug.com/512514748.  Once fixed, this could be any number of unused
-        // attributes.
+        // 7 unused attributes, skipped by base instance.
         // clang-format off
         0.1f, 0.2f,
         0.3f, 0.4f,
@@ -1513,11 +1506,6 @@ TEST_P(DrawBaseVertexBaseInstanceTest_ES3, NonZeroDivisorBaseVertexBaseInstance)
         0.9f, 0.95f,
         0.85f, 0.75f,
         0.65f, 0.55f,
-        0.45f, 0.35f,
-        0.25f, 0.15f,
-        0.05f, 0.15f,
-        0.25f, 0.35f,
-        0.45f, 0.55f,
         // Top
         1.0f, 0.0f,
         // Bottom
@@ -1544,15 +1532,114 @@ TEST_P(DrawBaseVertexBaseInstanceTest_ES3, NonZeroDivisorBaseVertexBaseInstance)
         [hasEXT]() {
             if (hasEXT)
             {
-                glDrawElementsInstancedBaseVertexBaseInstanceEXT(
-                    GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, nullptr, 4, 5, 12);
+                glDrawElementsInstancedBaseVertexBaseInstanceEXT(GL_TRIANGLE_STRIP, 4,
+                                                                 GL_UNSIGNED_INT, nullptr, 4, 5, 7);
             }
             else
             {
                 glDrawElementsInstancedBaseVertexBaseInstanceANGLE(
-                    GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, nullptr, 4, 5, 12);
+                    GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, nullptr, 4, 5, 7);
             }
         });
+}
+
+// Test that gl_InstanceID does not include base instance.
+TEST_P(DrawBaseVertexBaseInstanceTest_ES3, InstanceIDDoesNotIncludeBaseInstance)
+{
+    const bool hasEXT   = IsGLExtensionEnabled("GL_EXT_base_instance");
+    const bool hasANGLE = IsGLExtensionEnabled("GL_ANGLE_base_vertex_base_instance");
+    ANGLE_SKIP_TEST_IF(!hasEXT && !hasANGLE);
+
+    // Draw 4 triangles to cover the left half of the screen, each triangle is the result of a
+    // different instance ID.  If instance ID is larger than expected (because it includes base
+    // instance), draw red to the right half of the screen.
+    constexpr char kVS[] = R"(#version 300 es
+precision mediump float;
+out vec2 color;
+void main()
+{
+    // Take the following points:
+    //
+    //    P0     P1
+    //     +------+------+
+    //     |    _-|      |
+    //     |  _-  |      |
+    //     |_-    |      |
+    //  P2 +------+ P3   |
+    //     |    _-|      |
+    //     |  _-  |      |
+    //     |_-    |      |
+    //     +------+------+
+    //    P4     P5
+    //
+    // Instances generate:
+    //
+    // * Instance 0: P0, P1, P2
+    // * Instance 1: P1, P2, P3
+    // * Instance 2: P2, P3, P4
+    // * Instance 3: P3, P4, P5
+    //
+    // So effectively the output position is P[gl_VertexID + gl_InstanceID].
+    //
+    // To make sure there are no seams, the first vertex is always offset by -(0, epsilon) and the
+    // third vertex is offset by (0, epsilon).
+    vec2 P[6] = vec2[6](
+        vec2(-1.0, -1.0),
+        vec2( 0.0, -1.0),
+        vec2(-1.0,  0.0),
+        vec2( 0.0,  0.0),
+        vec2(-1.0,  1.0),
+        vec2( 0.0,  1.0)
+    );
+
+    if (gl_InstanceID < 4)
+    {
+        gl_Position = vec4(P[gl_VertexID + gl_InstanceID], 0, 1);
+        if (gl_VertexID == 0)
+            gl_Position.y -= 0.01;
+        else if (gl_VertexID == 2)
+            gl_Position.y += 0.01;
+        color = vec2(0, 1);
+    }
+    else
+    {
+        switch (gl_VertexID) {
+            case 0: gl_Position = vec4(0, -2, 0, 1); break;
+            case 1: gl_Position = vec4(2, 0, 0, 1); break;
+            case 2: gl_Position = vec4(0, 2, 0, 1); break;
+        };
+        color = vec2(1, 0);
+    }
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+in vec2 color;
+out vec4 colorOut;
+void main()
+{
+    colorOut = vec4(color, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    if (hasEXT)
+    {
+        glDrawArraysInstancedBaseInstanceEXT(GL_TRIANGLE_STRIP, 0, 3, 4, 15);
+    }
+    else
+    {
+        glDrawArraysInstancedBaseInstanceANGLE(GL_TRIANGLE_STRIP, 0, 4, 4, 15);
+    }
+
+    // Left half should be all green, right half should be all black.
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w - (w / 2 + 1), h, GLColor::black);
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DrawBaseVertexBaseInstanceTest);

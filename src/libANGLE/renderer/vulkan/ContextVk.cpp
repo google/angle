@@ -1562,6 +1562,10 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     {
         updateTopology(mode);
     }
+    if (mGraphicsDriverUniforms.updateBaseInstance(baseInstance))
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+    }
 
     // Avoid potential tile memory fallback since we can't handle framebuffer change here. Luckily
     // this will only possible in simulated mode since on qualcomm

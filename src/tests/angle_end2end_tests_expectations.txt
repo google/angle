@@ -424,6 +424,7 @@
 504886981 MAC OPENGL : RobustResourceInitTestES3.ReadbackWithMippedTexture/* = SKIP
 497533569 MAC INTEL OPENGL : TransformFeedbackTest.ProgramSwitchDuringPauseAndResume/* = SKIP
 497533569 MAC INTEL OPENGL : TransformFeedbackTest.ProgramSwitchDuringPauseAndResumeWithBufferChange/* = SKIP
+513172707 MAC INTEL OPENGL : DrawBaseVertexBaseInstanceTest_ES3.InstanceIDDoesNotIncludeBaseInstance/* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 42262159 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
