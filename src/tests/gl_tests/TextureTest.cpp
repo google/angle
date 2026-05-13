@@ -5901,6 +5901,14 @@ TEST_P(Texture2DTest, TextureSizeCase3)
 // Test allocating a very large texture
 TEST_P(Texture2DTest, TextureMaxSize)
 {
+#if defined(ANGLE_USE_PARTITION_ALLOC)
+    // PartitionAlloc terminates the process on OOM by default, which is the
+    // current behavior in Chrome. Thus, we cannot expect GL_OUT_OF_MEMORY.
+    // TODO(b/503180635): Update ANGLE to allocate large buffers (like textures)
+    // using partition_alloc::AllocFlags::kReturnNull to support the
+    // GL_OUT_OF_MEMORY use case instead of crashing.
+    ANGLE_SKIP_TEST_IF(true);
+#endif
     testTextureSizeError();
 }
 

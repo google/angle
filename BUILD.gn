@@ -568,6 +568,9 @@ template("angle_common_lib") {
     ]
 
     deps = [ ":xxhash" ]
+    if (angle_use_partition_alloc) {
+      deps += [ "${angle_partition_alloc_dir}" ]
+    }
 
     public_deps = [
       ":angle_abseil",
