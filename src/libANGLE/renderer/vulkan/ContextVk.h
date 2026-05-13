@@ -1149,6 +1149,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                     gl::PrimitiveMode mode,
                                     GLint firstVertex,
                                     GLsizei vertexOrIndexCount,
+                                    GLsizei baseInstance,
+                                    GLsizei instanceCount,
                                     gl::DrawElementsType indexTypeOrInvalid,
                                     const void *indices,
                                     uint32_t *numIndicesOut);
