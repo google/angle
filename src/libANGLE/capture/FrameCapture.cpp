@@ -9319,6 +9319,7 @@ void FrameCaptureShared::writeJSON(const gl::Context *context)
     json.addBool("AreClientArraysEnabled", glState.areClientArraysEnabled());
     json.addBool("IsBindGeneratesResourcesEnabled", glState.isBindGeneratesResourceEnabled());
     json.addBool("IsWebGLCompatibilityEnabled", glState.isWebGL());
+    json.addBool("IsHardenedContextEnabled", context->isHardenedContext());
     json.addBool("IsRobustResourceInitEnabled", glState.isRobustResourceInitEnabled());
     json.addBool("AreExtensionsEnabled", context->getExtensionsEnabled());
     json.endGroup();

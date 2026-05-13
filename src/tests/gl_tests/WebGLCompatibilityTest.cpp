@@ -360,42 +360,7 @@ class WebGL2CompatibilityTest : public WebGLCompatibilityTest
 class HardenedContextTest : public ANGLETest<>
 {
   protected:
-    EGLContext setupHardenedContext()
-    {
-        EGLWindow *window                = getEGLWindow();
-        const EGLDisplay display         = window->getDisplay();
-        const EGLConfig config           = window->getConfig();
-        const EGLSurface surface         = window->getSurface();
-        const EGLint contextAttributes[] = {
-            EGL_CONTEXT_MAJOR_VERSION_KHR,
-            GetParam().majorVersion,
-            EGL_CONTEXT_MINOR_VERSION_KHR,
-            GetParam().minorVersion,
-            EGL_CONTEXT_HARDENED_ANGLE,
-            EGL_TRUE,
-            EGL_NONE,
-        };
-
-        mOriginalContext = eglGetCurrentContext();
-
-        EGLContext context = eglCreateContext(display, config, EGL_NO_CONTEXT, contextAttributes);
-        EXPECT_NE(context, EGL_NO_CONTEXT);
-        eglMakeCurrent(display, surface, surface, context);
-        return context;
-    }
-
-    void destroyHardenedContext(EGLContext context)
-    {
-        EGLWindow *window        = getEGLWindow();
-        const EGLDisplay display = window->getDisplay();
-        const EGLSurface surface = window->getSurface();
-
-        eglMakeCurrent(display, surface, surface, mOriginalContext);
-        eglDestroyContext(display, context);
-    }
-
-  private:
-    EGLContext mOriginalContext = EGL_NO_CONTEXT;
+    HardenedContextTest() { setHardenedContextEnabled(true); }
 };
 
 // Context creation would fail if EGL_ANGLE_create_context_webgl_compatibility was not available so
@@ -6240,12 +6205,8 @@ void main()
 }
 )";
 
-    EGLContext hardenedContext = setupHardenedContext();
-
     GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFSArrayBlockTooLarge);
     EXPECT_EQ(0u, program);
-
-    destroyHardenedContext(hardenedContext);
 }
 
 // Similar to WebGL2GLSLTest.InitUninitializedLocals, but ensure the same validation is done in
@@ -6275,13 +6236,9 @@ void main()
     }
 })";
 
-    EGLContext hardenedContext = setupHardenedContext();
-
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
-
-    destroyHardenedContext(hardenedContext);
 }
 
 // Ensure that new type size validation code added for
@@ -7333,8 +7290,6 @@ ANGLE_INSTANTIATE_TEST_ES3(WebGL2CompatibilityTest);
 // correctly generates an error in hardened contexts.
 TEST_P(HardenedContextTest, UniformBufferRangeExceedsSize)
 {
-    EGLContext hardenedContext = setupHardenedContext();
-
     constexpr char kFS[] =
         R"(#version 300 es
         precision highp float;
@@ -7381,8 +7336,6 @@ TEST_P(HardenedContextTest, UniformBufferRangeExceedsSize)
     // which violates hardened context bounds checking.
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
-    destroyHardenedContext(hardenedContext);
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(HardenedContextTest);

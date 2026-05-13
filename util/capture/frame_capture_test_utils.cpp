@@ -206,6 +206,7 @@ bool LoadTraceInfoFromJSON(const std::string &traceName,
         traceInfoOut->isBindGeneratesResourcesEnabled =
             meta["IsBindGeneratesResourcesEnabled"].GetBool();
         traceInfoOut->isWebGLCompatibilityEnabled = meta["IsWebGLCompatibilityEnabled"].GetBool();
+        traceInfoOut->isHardenedContextEnabled    = meta["IsHardenedContextEnabled"].GetBool();
         traceInfoOut->isRobustResourceInitEnabled = meta["IsRobustResourceInitEnabled"].GetBool();
 
         if (meta.HasMember("AreExtensionsEnabled"))
