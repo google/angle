@@ -13,9 +13,11 @@
     "angle-mac-arm64-builder-rel": "ci/angle-mac-arm64-builder-rel/gn-args.json",
     "angle-mac-x64-builder-dbg": "ci/angle-mac-x64-builder-dbg/gn-args.json",
     "angle-mac-x64-builder-rel": "ci/angle-mac-x64-builder-rel/gn-args.json",
+    "angle-win-x64-builder-dbg": "ci/angle-win-x64-builder-dbg/gn-args.json",
     "angle-win-x64-builder-perf": "ci/angle-win-x64-builder-perf/gn-args.json",
     "angle-win-x64-builder-rel": "ci/angle-win-x64-builder-rel/gn-args.json",
     "angle-win-x64-trace": "ci/angle-win-x64-trace/gn-args.json",
+    "angle-win-x86-builder-dbg": "ci/angle-win-x86-builder-dbg/gn-args.json",
     "angle-win-x86-builder-rel": "ci/angle-win-x86-builder-rel/gn-args.json"
   },
   "try": {
@@ -31,8 +33,10 @@
     "angle-cq-mac-arm64-rel": "try/angle-cq-mac-arm64-rel/gn-args.json",
     "angle-cq-mac-x64-dbg": "try/angle-cq-mac-x64-dbg/gn-args.json",
     "angle-cq-mac-x64-rel": "try/angle-cq-mac-x64-rel/gn-args.json",
+    "angle-cq-win-x64-dbg": "try/angle-cq-win-x64-dbg/gn-args.json",
     "angle-cq-win-x64-rel": "try/angle-cq-win-x64-rel/gn-args.json",
     "angle-cq-win-x64-trace": "try/angle-cq-win-x64-trace/gn-args.json",
+    "angle-cq-win-x86-dbg": "try/angle-cq-win-x86-dbg/gn-args.json",
     "angle-cq-win-x86-rel": "try/angle-cq-win-x86-rel/gn-args.json",
     "angle-try-android-arm64-google-pixel10-rel": "try/angle-try-android-arm64-google-pixel10-rel/gn-args.json",
     "angle-try-android-arm64-google-pixel4-rel": "try/angle-try-android-arm64-google-pixel4-rel/gn-args.json",

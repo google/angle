@@ -7207,6 +7207,11 @@
       }
     ]
   },
+  "angle-win-x64-builder-dbg": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  },
   "angle-win-x64-intel-uhd630-exp-rel": {},
   "angle-win-x64-intel-uhd630-perf": {
     "isolated_scripts": [
@@ -8903,6 +8908,11 @@
   "angle-win-x64-trace": {
     "additional_compile_targets": [
       "noop_target"
+    ]
+  },
+  "angle-win-x86-builder-dbg": {
+    "additional_compile_targets": [
+      "all"
     ]
   },
   "angle-win-x86-sws-rel": {

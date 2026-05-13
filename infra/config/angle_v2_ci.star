@@ -441,6 +441,37 @@ angle_mac_parent_builder(
 )
 
 angle_win_parent_builder(
+    name = "angle-win-x64-builder-dbg",
+    description_html = "Compiles debug ANGLE test binaries for Win/x64",
+    schedule = "triggered",
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.DEBUG,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.WIN,
+        ),
+    ),
+    gn_args = gn_args.config(
+        configs = [
+            "component",
+            "debug",
+            "opencl",
+            "win_clang",
+            "x64",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|win|x64",
+        short_name = "dbg",
+    ),
+)
+
+angle_win_parent_builder(
     name = "angle-win-x64-builder-perf",
     description_html = "Compiles release ANGLE perf test binaries for Win/x64",
     schedule = "triggered",
@@ -501,6 +532,37 @@ angle_win_parent_builder(
     console_view_entry = consoles.console_view_entry(
         category = "compile|win|x64",
         short_name = "rel",
+    ),
+)
+
+angle_win_parent_builder(
+    name = "angle-win-x86-builder-dbg",
+    description_html = "Compiles debug ANGLE test binaries for Win/x86",
+    schedule = "triggered",
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle_v2",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_v2_clang",
+            build_config = builder_config.build_config.DEBUG,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 32,
+            target_platform = builder_config.target_platform.WIN,
+        ),
+    ),
+    gn_args = gn_args.config(
+        configs = [
+            "component",
+            "debug",
+            "opencl",
+            "win_clang",
+            "x86",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|win|x86",
+        short_name = "dbg",
     ),
 )
 

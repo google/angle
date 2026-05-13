@@ -311,6 +311,12 @@
           'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
+      'angle-win-x64-builder-dbg': {
+        'os_type': 'win',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
       'angle-win-x64-intel-uhd630-exp-rel': {
         'os_type': 'win',
         'mixins': [
@@ -381,6 +387,12 @@
         'os_type': 'win',
         'additional_compile_targets': [
           'noop_target',
+        ],
+      },
+      'angle-win-x86-builder-dbg': {
+        'os_type': 'win',
+        'additional_compile_targets': [
+          'all',
         ],
       },
       'angle-win-x86-sws-rel': {
