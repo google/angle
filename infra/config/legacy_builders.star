@@ -309,12 +309,10 @@ luci.builder(
 
 # name, clang, debug, cpu, uwp, trace_tests
 angle_builder("win-asan-test", cpu = "x64")
-angle_builder("win-dbg-compile", cpu = "x64")
 angle_builder("win-msvc-compile", cpu = "x64")
 angle_builder("win-msvc-dbg-compile", cpu = "x64")
 angle_builder("win-msvc-x86-compile", cpu = "x86")
 angle_builder("win-msvc-x86-dbg-compile", cpu = "x86")
-angle_builder("win-x86-dbg-compile", cpu = "x86")
 angle_builder("winuwp-compile", cpu = "x64")
 angle_builder("winuwp-dbg-compile", cpu = "x64")
 

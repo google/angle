@@ -221,9 +221,6 @@ angle_win_functional_cq_tester(
         "ci/angle-win-x64-builder-dbg",
     ],
     gn_args = "ci/angle-win-x64-builder-dbg",
-    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
-    # confirmed to work.
-    cq_settings = try_.cq_settings(includable_only = True),
 )
 
 angle_win_functional_cq_tester(
@@ -244,9 +241,6 @@ angle_win_functional_cq_tester(
         "ci/angle-win-x86-builder-dbg",
     ],
     gn_args = "ci/angle-win-x86-builder-dbg",
-    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
-    # confirmed to work.
-    cq_settings = try_.cq_settings(includable_only = True),
 )
 
 angle_win_functional_cq_tester(
