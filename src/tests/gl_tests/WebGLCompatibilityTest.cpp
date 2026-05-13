@@ -2678,6 +2678,72 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Tests that a rendering feedback loop triggers a GL error for a hardened context.
+// Based on WebGL test conformance/renderbuffers/feedback-loop.html.
+TEST_P(HardenedContextTest, RenderingFeedbackLoop)
+{
+    constexpr char kVS[] =
+        R"(attribute vec4 a_position;
+varying vec2 v_texCoord;
+void main() {
+    gl_Position = a_position;
+    v_texCoord = (a_position.xy * 0.5) + 0.5;
+})";
+
+    constexpr char kFS[] =
+        R"(precision mediump float;
+varying vec2 v_texCoord;
+uniform sampler2D u_texture;
+void main() {
+    // Shader swizzles color channels so we can tell if the draw succeeded.
+    gl_FragColor = texture2D(u_texture, v_texCoord).gbra;
+})";
+
+    GLTexture texture;
+    FillTexture2D(texture, 1, 1, GLColor::red, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
+
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    GLint uniformLoc = glGetUniformLocation(program, "u_texture");
+    ASSERT_NE(-1, uniformLoc);
+
+    glUseProgram(program);
+    glUniform1i(uniformLoc, 0);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    // Drawing with a texture that is also bound to the current framebuffer should fail
+    glBindTexture(GL_TEXTURE_2D, texture);
+    drawQuad(program, "a_position", 0.5f, 1.0f, true);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Ensure that the texture contents did not change after the previous render
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    drawQuad(program, "a_position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Drawing when texture is bound to an inactive uniform should succeed
+    GLTexture texture2;
+    FillTexture2D(texture2, 1, 1, GLColor::green, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    drawQuad(program, "a_position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Multi-context uses of textures should not cause rendering feedback loops.
 TEST_P(WebGLCompatibilityTest, MultiContextNoRenderingFeedbackLoops)
 {
@@ -2958,6 +3024,70 @@ void main() {
 // Test tests that texture copying feedback loops are properly rejected in WebGL.
 // Based on the WebGL test conformance/textures/misc/texture-copying-feedback-loops.html
 TEST_P(WebGLCompatibilityTest, TextureCopyingFeedbackLoops)
+{
+    // TODO(anglebug.com/40096747): Failing on ARM-based Apple DTKs.
+    ANGLE_SKIP_TEST_IF(IsMac() && IsARM64() && IsDesktopOpenGL());
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    GLTexture texture2;
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+    // framebuffer should be FRAMEBUFFER_COMPLETE.
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    ASSERT_GL_NO_ERROR();
+
+    // testing copyTexImage2D
+
+    // copyTexImage2D to same texture but different level
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 0, 0, 2, 2, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // copyTexImage2D to same texture same level, invalid feedback loop
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 2, 2, 0);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // copyTexImage2D to different texture
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 2, 2, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // testing copyTexSubImage2D
+
+    // copyTexSubImage2D to same texture but different level
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 0, 0, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // copyTexSubImage2D to same texture same level, invalid feedback loop
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // copyTexSubImage2D to different texture
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test tests that texture copying feedback loops are properly rejected in a hardened context.
+// Based on the WebGL test conformance/textures/misc/texture-copying-feedback-loops.html
+TEST_P(HardenedContextTest, TextureCopyingFeedbackLoops)
 {
     // TODO(anglebug.com/40096747): Failing on ARM-based Apple DTKs.
     ANGLE_SKIP_TEST_IF(IsMac() && IsARM64() && IsDesktopOpenGL());
