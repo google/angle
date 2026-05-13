@@ -1114,6 +1114,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                             gl::PrimitiveMode mode,
                             GLint firstVertexOrInvalid,
                             GLsizei vertexOrIndexCount,
+                            GLsizei baseInstance,
                             GLsizei instanceCount,
                             gl::DrawElementsType indexTypeOrInvalid,
                             const void *indices,
@@ -1122,6 +1123,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result setupIndexedDraw(const gl::Context *context,
                                    gl::PrimitiveMode mode,
                                    GLsizei indexCount,
+                                   GLsizei baseInstance,
                                    GLsizei instanceCount,
                                    gl::DrawElementsType indexType,
                                    const void *indices);
