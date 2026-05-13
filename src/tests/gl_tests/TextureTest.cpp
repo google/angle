@@ -20889,6 +20889,39 @@ TEST_P(TextureSizeLimitTest, CompressedASTC)
     runCompressedTest(GL_COMPRESSED_RGBA_ASTC_5x5_KHR, 5, 5, 16);
 }
 
+// Test that textures allocated as a copy destination are validated for size
+TEST_P(TextureSizeLimitTest, CopyTextureCHROMIUM)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
+
+    constexpr GLenum kSourceFormat        = GL_RGBA;
+    constexpr GLenum kSourceType          = GL_UNSIGNED_BYTE;
+    constexpr GLenum kDestType            = GL_FLOAT;
+    constexpr GLuint kSourceBytesPerPixel = 4;
+    constexpr GLuint kOneMB               = 1 << 20;
+    constexpr GLuint pixels               = kOneMB / kSourceBytesPerPixel;
+    ASSERT_EQ(kOneMB % kSourceBytesPerPixel, 0u);
+
+    GLuint validWidth2D  = static_cast<GLuint>(std::floor(std::sqrt(pixels)));
+    GLuint validHeight2D = validWidth2D;
+    ASSERT_LE(validWidth2D * validHeight2D * kSourceBytesPerPixel, kOneMB);
+
+    // Source is a valid size.
+    GLTexture sourceTex;
+    glBindTexture(GL_TEXTURE_2D, sourceTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, kSourceFormat, validWidth2D, validHeight2D, 0, kSourceFormat,
+                 kSourceType, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    // Dest is an invalid size due to floating point format
+    GLTexture destTex;
+    glBindTexture(GL_TEXTURE_2D, destTex);
+    glCopyTextureCHROMIUM(sourceTex, 0, GL_TEXTURE_2D, destTex, 0, kSourceFormat, kDestType, false,
+                          false, false);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Test clearing texture that was previously used mid-render-pass, then sampling from it.
 TEST_P(Texture2DTestES3, ClearMidRenderPassThenSample)
 {
