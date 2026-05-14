@@ -828,7 +828,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mFlipViewportForDrawFramebuffer(false),
       mFlipViewportForReadFramebuffer(false),
       mIsAnyHostVisibleBufferWritten(false),
-      mDefaultAttribsGeneration(mDefaultAttribsGenerationFactory.generate()),
       mImageWithTileMemory(nullptr),
       mCurrentQueueSerialIndex(kInvalidQueueSerialIndex),
       mInitialContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
@@ -2140,25 +2139,11 @@ angle::Result ContextVk::handleDirtyGraphicsDefaultAttribs(DirtyBits::Iterator *
 {
     VertexArrayVk *vertexArrayVk = getVertexArray();
 
-    gl::AttributesMask attribsMask;
-    if (vertexArrayVk->getDefaultAttribsGeneration() != mDefaultAttribsGeneration)
-    {
-        vertexArrayVk->setDefaultAttribsGeneration(mDefaultAttribsGeneration);
-        attribsMask = ~vertexArrayVk->getCurrentEnabledAttribsMask();
-    }
-    else
-    {
-        attribsMask = mDirtyDefaultAttribsMask;
-        attribsMask &= ~vertexArrayVk->getCurrentEnabledAttribsMask();
-        attribsMask &= mState.getProgramExecutable()->getAttributesMask();
-    }
+    mDirtyDefaultAttribsMask &= ~vertexArrayVk->getCurrentEnabledAttribsMask();
+    mDirtyDefaultAttribsMask &= mState.getProgramExecutable()->getAttributesMask();
 
-    for (size_t attribIndex : attribsMask)
-    {
-        ANGLE_TRY(vertexArrayVk->updateDefaultAttrib(this, attribIndex));
-    }
-
-    ANGLE_TRY(onVertexArrayChange(attribsMask));
+    ANGLE_TRY(vertexArrayVk->updateDefaultAttribs(this, mDirtyDefaultAttribsMask));
+    ANGLE_TRY(onVertexArrayChange(mDirtyDefaultAttribsMask));
 
     mDirtyDefaultAttribsMask.reset();
     return angle::Result::Continue;
@@ -5769,10 +5754,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING:
             {
-                if (vertexArrayVk->getDefaultAttribsGeneration() != mDefaultAttribsGeneration)
-                {
-                    mGraphicsDirtyBits.set(DIRTY_BIT_DEFAULT_ATTRIBS);
-                }
+                gl::AttributesMask staleDefaultAttribsMask =
+                    vertexArrayVk->getCurrentDefaultAttribsMask() &
+                    ~programExecutable->getAttributesMask();
+                vertexArrayVk->syncDirtyDisabledAttribs(this, staleDefaultAttribsMask);
                 invalidateDefaultAttributes(context->getActiveDefaultAttribsMask());
                 ANGLE_TRY(onVertexArrayChange(vertexArrayVk->getCurrentEnabledAttribsMask()));
                 ANGLE_TRY(onIndexBufferChange(vertexArrayVk->getCurrentElementArrayBuffer()));
@@ -7780,12 +7765,6 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
         static_cast<double>(getRenderer()->getPhysicalDeviceProperties().limits.timestampPeriod));
 
     return angle::Result::Continue;
-}
-
-void ContextVk::invalidateDefaultAttribute(size_t attribIndex)
-{
-    mDirtyDefaultAttribsMask.set(attribIndex);
-    mGraphicsDirtyBits.set(DIRTY_BIT_DEFAULT_ATTRIBS);
 }
 
 void ContextVk::invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask)

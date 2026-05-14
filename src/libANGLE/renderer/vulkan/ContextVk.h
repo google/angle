@@ -91,8 +91,6 @@ static constexpr GLbitfield kImageMemoryBarrierBits =
 class ContextVk : public ContextImpl, public vk::Context, public MultisampleTextureInitializer
 {
   public:
-    using VertexArrayGeneration = UniqueSerial;
-
     ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Renderer *renderer);
     ~ContextVk() override;
 
@@ -429,7 +427,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     angle::Result onVertexArrayChange(const gl::AttributesMask dirtyAttribBits);
 
-    void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
     angle::Result onFramebufferChange(FramebufferVk *framebufferVk, gl::Command command);
     void onDrawFramebufferRenderPassDescChange(FramebufferVk *framebufferVk,
@@ -802,8 +799,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         if (newBufferOut)
         {
             mHasInFlightStreamedVertexBuffers.set(attribIndex);
-            mDefaultAttribsGeneration = mDefaultAttribsGenerationFactory.generate();
-            mGraphicsDirtyBits.set(DIRTY_BIT_DEFAULT_ATTRIBS);
         }
         return angle::Result::Continue;
     }
@@ -1576,10 +1571,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // "Current Value" aka default vertex attribute state.
     gl::AttributesMask mDirtyDefaultAttribsMask;
-
-    // Tracks if default vertex attribute buffers have been invalidated.
-    UniqueSerialFactory mDefaultAttribsGenerationFactory;
-    VertexArrayGeneration mDefaultAttribsGeneration;
 
     // DynamicBuffers for streaming vertex data from client memory pointer as well as for default
     // attributes. mHasInFlightStreamedVertexBuffers indicates if the dynamic buffer has any

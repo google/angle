@@ -948,6 +948,9 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
     vk::Renderer *renderer = contextVk->getRenderer();
     contextVk->getPerfCounters().vertexArraySyncStateCalls++;
 
+    gl::AttributesMask prevEnabledAttribsMask = mCurrentEnabledAttribsMask;
+    mCurrentEnabledAttribsMask                = mState.getEnabledAttributesMask();
+
     const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
     const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
 
@@ -1016,9 +1019,9 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
     for (size_t attribIndex : enabledNonStreamAttribDirtyBits)
     {
         // This will also update mNeedsConversionAttribMask
-        ANGLE_TRY(syncDirtyEnabledNonStreamingAttrib(contextVk, attribs[attribIndex],
-                                                     bindings[attribs[attribIndex].bindingIndex],
-                                                     attribIndex, (*attribBits)[attribIndex]));
+        syncDirtyEnabledNonStreamingAttrib(contextVk, attribs[attribIndex],
+                                           bindings[attribs[attribIndex].bindingIndex], attribIndex,
+                                           (*attribBits)[attribIndex]);
     }
 
     // Sync all enabled and streaming attributes that are dirty
@@ -1027,9 +1030,9 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
     for (size_t attribIndex : enabledStreamAttribDirtyBits)
     {
         // This will also update mNeedsConversionAttribMask
-        ANGLE_TRY(syncDirtyEnabledStreamingAttrib(contextVk, attribs[attribIndex],
-                                                  bindings[attribs[attribIndex].bindingIndex],
-                                                  attribIndex, (*attribBits)[attribIndex]));
+        syncDirtyEnabledStreamingAttrib(contextVk, attribs[attribIndex],
+                                        bindings[attribs[attribIndex].bindingIndex], attribIndex,
+                                        (*attribBits)[attribIndex]);
     }
 
     // Sync all enabled attributes that needs data conversion.
@@ -1063,13 +1066,22 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
 
     // Sync all disabled attributes that are dirty. We only need to handle attributes that was
     // changed from enabled to disabled.
-    const gl::AttributesMask previouslyEnabledAttribDirtyBits =
-        mCurrentEnabledAttribsMask & ~mState.getEnabledAttributesMask();
-    const gl::AttributesMask disabledAttribDirtyBits =
-        previouslyEnabledAttribDirtyBits & attribDirtyBits;
-    for (size_t attribIndex : disabledAttribDirtyBits)
+    const gl::AttributesMask prevEnabledNowDisabledAttribBits =
+        prevEnabledAttribsMask & ~mState.getEnabledAttributesMask();
+    ASSERT((prevEnabledNowDisabledAttribBits & attribDirtyBits) ==
+           prevEnabledNowDisabledAttribBits);
+    if (prevEnabledNowDisabledAttribBits.any())
     {
-        ANGLE_TRY(syncDirtyDisabledAttrib(contextVk, attribs[attribIndex], attribIndex));
+        // disabled attributes maybe active or inactive. We only need to set to empty buffer for
+        // inactive ones.
+        const gl::AttributesMask disabledInactiveAttribBits =
+            prevEnabledNowDisabledAttribBits & ~context->getActiveDefaultAttribsMask();
+        syncDirtyDisabledAttribs(contextVk, disabledInactiveAttribBits);
+
+        // default attributes handler will update active attributes.
+        const gl::AttributesMask defaultAttribBits =
+            prevEnabledNowDisabledAttribBits & context->getActiveDefaultAttribsMask();
+        contextVk->invalidateDefaultAttributes(defaultAttribBits);
     }
 
     if (ANGLE_UNLIKELY(mDivisorExceedMaxSupportedValueBindingMask.any()))
@@ -1109,7 +1121,7 @@ ANGLE_INLINE void VertexArrayVk::setDefaultPackedInput(ContextVk *contextVk,
     *formatOut = GetCurrentValueFormatID(defaultValue.Type);
 }
 
-ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledNonStreamingAttrib(
+ANGLE_INLINE void VertexArrayVk::syncDirtyEnabledNonStreamingAttrib(
     ContextVk *contextVk,
     const gl::VertexAttribute &attrib,
     const gl::VertexBinding &binding,
@@ -1145,7 +1157,7 @@ ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledNonStreamingAttrib(
         {
             // Early out if needs conversion. We will handle these attributes last.
             mNeedsConversionAttribsMask.set(attribIndex);
-            return angle::Result::Continue;
+            return;
         }
 
         vk::BufferHelper &bufferHelper         = bufferVk->getBuffer();
@@ -1191,11 +1203,10 @@ ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledNonStreamingAttrib(
     }
     setVertexInputBindingDescDivisor(renderer, attribIndex, binding.getDivisor());
 
-    mCurrentEnabledAttribsMask.set(attribIndex);
-    return angle::Result::Continue;
+    mCurrentDefaultAttribsMask.reset(attribIndex);
 }
 
-ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledStreamingAttrib(
+ANGLE_INLINE void VertexArrayVk::syncDirtyEnabledStreamingAttrib(
     ContextVk *contextVk,
     const gl::VertexAttribute &attrib,
     const gl::VertexBinding &binding,
@@ -1226,31 +1237,29 @@ ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyEnabledStreamingAttrib(
     }
     setVertexInputBindingDescDivisor(renderer, attribIndex, binding.getDivisor());
 
-    mCurrentEnabledAttribsMask.set(attribIndex);
-    return angle::Result::Continue;
+    mCurrentDefaultAttribsMask.reset(attribIndex);
 }
 
-ANGLE_INLINE angle::Result VertexArrayVk::syncDirtyDisabledAttrib(ContextVk *contextVk,
-                                                                  const gl::VertexAttribute &attrib,
-                                                                  size_t attribIndex)
+void VertexArrayVk::syncDirtyDisabledAttribs(ContextVk *contextVk,
+                                             const gl::AttributesMask &disabledAttributesMask)
 {
-    ASSERT(!attrib.enabled);
-    ASSERT(mCurrentEnabledAttribsMask.test(attribIndex));
-    contextVk->invalidateDefaultAttribute(attribIndex);
+    ASSERT((mState.getEnabledAttributesMask() & disabledAttributesMask).none());
+    vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
 
-    // These will be filled out by the ContextVk.
-    vk::BufferHelper &emptyBuffer                   = contextVk->getEmptyBuffer();
-    mCurrentArrayBuffers[attribIndex]               = &emptyBuffer;
-    mCurrentArrayBufferSerial[attribIndex]          = emptyBuffer.getBufferSerial();
-    mCurrentArrayBufferHandles[attribIndex]         = emptyBuffer.getBuffer().getHandle();
-    mCurrentArrayBufferOffsets[attribIndex]         = emptyBuffer.getOffset();
-    mCurrentArrayBufferSizes[attribIndex]           = emptyBuffer.getSize();
-    mVertexInputBindingDescs[attribIndex].stride    = 0;
-    setVertexInputBindingDescDivisor(contextVk->getRenderer(), attribIndex, 0);
-    mVertexInputAttribDescs[attribIndex].offset = 0;
+    for (size_t attribIndex : disabledAttributesMask)
+    {
+        // These will be filled out by the ContextVk.
+        mCurrentArrayBuffers[attribIndex]            = &emptyBuffer;
+        mCurrentArrayBufferSerial[attribIndex]       = emptyBuffer.getBufferSerial();
+        mCurrentArrayBufferHandles[attribIndex]      = emptyBuffer.getBuffer().getHandle();
+        mCurrentArrayBufferOffsets[attribIndex]      = emptyBuffer.getOffset();
+        mCurrentArrayBufferSizes[attribIndex]        = emptyBuffer.getSize();
+        mVertexInputBindingDescs[attribIndex].stride = 0;
+        setVertexInputBindingDescDivisor(contextVk->getRenderer(), attribIndex, 0);
+        mVertexInputAttribDescs[attribIndex].offset = 0;
+    }
 
-    mCurrentEnabledAttribsMask.reset(attribIndex);
-    return angle::Result::Continue;
+    mCurrentDefaultAttribsMask &= ~disabledAttributesMask;
 }
 
 angle::Result VertexArrayVk::syncNeedsConversionAttrib(ContextVk *contextVk,
@@ -1366,7 +1375,7 @@ angle::Result VertexArrayVk::syncNeedsConversionAttrib(ContextVk *contextVk,
     setVertexInputAttribDescFormat(renderer, attribIndex, attrib.format->id);
     setVertexInputBindingDescDivisor(renderer, attribIndex, binding.getDivisor());
 
-    mCurrentEnabledAttribsMask.set(attribIndex);
+    mCurrentDefaultAttribsMask.reset(attribIndex);
     return angle::Result::Continue;
 }
 
@@ -1653,41 +1662,48 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result VertexArrayVk::updateDefaultAttrib(ContextVk *contextVk, size_t attribIndex)
+angle::Result VertexArrayVk::updateDefaultAttribs(ContextVk *contextVk,
+                                                  const gl::AttributesMask &dirtyDefaultAttribsMask)
 {
-    ASSERT(!mState.getEnabledAttributesMask().test(attribIndex));
     vk::Renderer *renderer = contextVk->getRenderer();
-    vk::BufferHelper *bufferHelper;
-    ANGLE_TRY(
-        contextVk->allocateStreamedVertexBuffer(attribIndex, kDefaultValueSize, &bufferHelper));
+    // default attributes should never be enabled
+    ASSERT((dirtyDefaultAttribsMask & mState.getEnabledAttributesMask()).none());
 
-    const gl::VertexAttribCurrentValueData &defaultValue =
-        contextVk->getState().getVertexAttribCurrentValues()[attribIndex];
-    uint8_t *ptr = bufferHelper->getMappedMemory();
-    memcpy(ptr, &defaultValue.Values, kDefaultValueSize);
-    ANGLE_TRY(bufferHelper->flush(contextVk->getRenderer()));
-
-    VkDeviceSize bufferOffset;
-    if (contextVk->getFeatures().supportsBindVertexBuffers2.enabled)
+    for (size_t attribIndex : dirtyDefaultAttribsMask)
     {
-        mCurrentArrayBufferHandles[attribIndex] = bufferHelper->getBuffer().getHandle();
-        bufferOffset                            = bufferHelper->getOffset();
-    }
-    else
-    {
-        mCurrentArrayBufferHandles[attribIndex] =
-            bufferHelper->getBufferForVertexArray(contextVk, kDefaultValueSize, &bufferOffset)
-                .getHandle();
-    }
-    mCurrentArrayBufferOffsets[attribIndex]     = bufferOffset;
-    mCurrentArrayBufferSizes[attribIndex]       = kDefaultValueSize;
-    mCurrentArrayBuffers[attribIndex]           = bufferHelper;
-    mCurrentArrayBufferSerial[attribIndex]      = bufferHelper->getBufferSerial();
-    mVertexInputBindingDescs[attribIndex].stride = 0;
-    setVertexInputBindingDescDivisor(renderer, attribIndex, 0);
+        vk::BufferHelper *bufferHelper;
+        ANGLE_TRY(
+            contextVk->allocateStreamedVertexBuffer(attribIndex, kDefaultValueSize, &bufferHelper));
 
-    setDefaultPackedInput(contextVk, attribIndex, &mDefaultAttribFormatIDs[attribIndex]);
-    setVertexInputAttribDescFormat(renderer, attribIndex, mDefaultAttribFormatIDs[attribIndex]);
+        const gl::VertexAttribCurrentValueData &defaultValue =
+            contextVk->getState().getVertexAttribCurrentValues()[attribIndex];
+        uint8_t *ptr = bufferHelper->getMappedMemory();
+        memcpy(ptr, &defaultValue.Values, kDefaultValueSize);
+        ANGLE_TRY(bufferHelper->flush(contextVk->getRenderer()));
+
+        VkDeviceSize bufferOffset;
+        if (contextVk->getFeatures().supportsBindVertexBuffers2.enabled)
+        {
+            mCurrentArrayBufferHandles[attribIndex] = bufferHelper->getBuffer().getHandle();
+            bufferOffset                            = bufferHelper->getOffset();
+        }
+        else
+        {
+            mCurrentArrayBufferHandles[attribIndex] =
+                bufferHelper->getBufferForVertexArray(contextVk, kDefaultValueSize, &bufferOffset)
+                    .getHandle();
+        }
+        mCurrentArrayBufferOffsets[attribIndex]      = bufferOffset;
+        mCurrentArrayBufferSizes[attribIndex]        = kDefaultValueSize;
+        mCurrentArrayBuffers[attribIndex]            = bufferHelper;
+        mCurrentArrayBufferSerial[attribIndex]       = bufferHelper->getBufferSerial();
+        mVertexInputBindingDescs[attribIndex].stride = 0;
+        setVertexInputBindingDescDivisor(renderer, attribIndex, 0);
+
+        setDefaultPackedInput(contextVk, attribIndex, &mDefaultAttribFormatIDs[attribIndex]);
+        setVertexInputAttribDescFormat(renderer, attribIndex, mDefaultAttribFormatIDs[attribIndex]);
+    }
+    mCurrentDefaultAttribsMask |= dirtyDefaultAttribsMask;
 
     return angle::Result::Continue;
 }
