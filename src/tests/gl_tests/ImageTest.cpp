@@ -3160,8 +3160,16 @@ TEST_P(ImageTest, Source2DTarget2DTargetTextureRespecifySize)
     eglDestroyImageKHR(window->getDisplay(), image);
 }
 
-// Create target texture from EGL image and then trigger texture respecification.
-TEST_P(ImageTestES3, Source2DTarget2DTargetTextureRespecifyLevel)
+// Create target texture from EGL image and then change the max level.  This must not trigger
+// texture respecification:
+//
+// > If an application later respecifies any image array in the texture object (through mechanisms
+// > such as calls to TexImage2D and/or GenerateMipmapOES, or setting the SGIS_GENERATE_MIPMAP
+// > parameter to TRUE), implementations should allocate additional space for all specified (and
+// > respecified) image arrays, and copy any existing image data to the newly (re)specified texture
+// > object (as if TexImage was called for every level-of-detail in the texture object).  The
+// > respecified texture object will not be an EGLImage target.
+TEST_P(ImageTestES3, Source2DTarget2DTargetTextureRespecifyMaxLevel)
 {
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
@@ -3179,7 +3187,7 @@ TEST_P(ImageTestES3, Source2DTarget2DTargetTextureRespecifyLevel)
     // Expect that the target texture has the same color as the source texture
     verifyResults2D(target, kLinearColor);
 
-    // Respecify texture levels and verify results
+    // Change the texture's MAX level and verify results
     glBindTexture(GL_TEXTURE_2D, target);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
@@ -3187,6 +3195,23 @@ TEST_P(ImageTestES3, Source2DTarget2DTargetTextureRespecifyLevel)
 
     // Expect that the target texture has the reference color values
     verifyResults2D(target, kLinearColor);
+
+    // Render to the target, and verify that the source is changed as well (i.e. the target is still
+    // attached to source).
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, target, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, source, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);

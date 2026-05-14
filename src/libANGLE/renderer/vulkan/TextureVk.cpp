@@ -3011,6 +3011,7 @@ angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk,
     }
     else
     {
+        ASSERT(mOwnsImage);
         *updateResultOut = TextureUpdateResult::ImageRespecified;
         return respecifyImageStorage(contextVk);
     }
@@ -3018,7 +3019,7 @@ angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk,
     // Don't need to respecify the texture; but do need to update which vkImageView's are served up
     // by ImageViewHelper
 
-    // Update the current max level in ImageViewHelper
+    // Update the current base/max level range in ImageViewHelper
     ANGLE_TRY(initImageViews(contextVk, newMaxLevel - newBaseLevel + 1));
 
     mCurrentBaseLevel = newBaseLevel;
@@ -3678,9 +3679,13 @@ angle::Result TextureVk::respecifyImageStorageIfNecessary(ContextVk *contextVk, 
         oldFormatReinterpretability = mFormatReinterpretability;
     }
 
-    // Set base and max level before initializing the image
+    // Set base and max level before initializing the image.  This is not done for EGL images
+    // because BASE should always be 0 and MAX is ineffective (only 1 level is always viewed).
     TextureUpdateResult updateResult = TextureUpdateResult::ImageUnaffected;
-    ANGLE_TRY(maybeUpdateBaseMaxLevels(contextVk, &updateResult));
+    if (mEGLImageNativeType == gl::TextureType::InvalidEnum)
+    {
+        ANGLE_TRY(maybeUpdateBaseMaxLevels(contextVk, &updateResult));
+    }
 
     // Updating levels could have respecified the storage, recapture mImageCreateFlags
     if (updateResult == TextureUpdateResult::ImageRespecified)
