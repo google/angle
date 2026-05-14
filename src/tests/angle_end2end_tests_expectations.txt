@@ -1512,9 +1512,6 @@
 
 42264855 VULKAN : GetImageTest.InconsistentTexture2D/* = SKIP
 
-// Vulkan initializes the backend textures immediately on eglBindTexImage
-498372331 VULKAN : PbufferTestES3.BindRedefinesAllMips/* = SKIP
-
 40050011 D3D11 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
 40050011 SWIFTSHADER : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
 

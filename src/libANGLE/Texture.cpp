@@ -2097,6 +2097,8 @@ angle::Result Texture::bindTexImageFromSurface(Context *context, egl::Surface *s
     egl::RefCountObjectReleaser<egl::Image> releaseImage;
     ANGLE_TRY(orphanImages(context, &releaseImage));
 
+    ANGLE_TRY(mTexture->bindTexImage(context, surface));
+
     mBoundSurface = surface;
 
     // Set the image info to the size and format of the surface
@@ -2108,8 +2110,6 @@ angle::Result Texture::bindTexImageFromSurface(Context *context, egl::Surface *s
     mState.clearImageDescs();
     mState.setImageDesc(NonCubeTextureTypeToTarget(mState.mType), 0, desc);
     mState.mHasProtectedContent = surface->hasProtectedContent();
-
-    ANGLE_TRY(mTexture->bindTexImage(context, surface));
 
     signalDirtyStorage(InitState::Initialized);
     return angle::Result::Continue;

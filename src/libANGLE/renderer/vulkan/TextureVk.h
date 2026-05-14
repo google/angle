@@ -266,8 +266,9 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
         mY2YSampler.reset();
     }
 
-    // Normally, initialize the image with enabled mipmap level counts.
-    angle::Result ensureImageInitialized(ContextVk *contextVk, ImageMipLevels mipLevels);
+    // Initialize the image, also ensure that read views are created if not already.
+    angle::Result ensureImageAndReadViewsInitialized(ContextVk *contextVk,
+                                                     ImageMipLevels mipLevels);
 
     vk::ImageOrBufferViewSubresourceSerial getImageViewSubresourceSerial(
         const gl::SamplerState &samplerState,
@@ -537,6 +538,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                             angle::FormatID intendedImageFormatID,
                             angle::FormatID actualImageFormatID,
                             ImageMipLevels mipLevels);
+    // Initialize the image with enabled mipmap level counts if not already.
+    angle::Result ensureImageInitialized(ContextVk *contextVk, ImageMipLevels mipLevels);
     void releaseImage(ContextVk *contextVk);
     void releaseImageViews(ContextVk *contextVk);
     void releaseStagedUpdates(ContextVk *contextVk);
@@ -547,7 +550,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                         vk::ImageHelper *srcImage,
                                         vk::ImageHelper *dstImage);
     angle::Result reinitImageAsRenderable(ContextVk *contextVk, const vk::Format &format);
-    angle::Result initImageViews(ContextVk *contextVk, uint32_t levelCount);
+    angle::Result initReadImageViews(ContextVk *contextVk, uint32_t levelCount);
     void initSingleLayerRenderTargets(ContextVk *contextVk,
                                       GLuint layerCount,
                                       gl::LevelIndex levelIndex,

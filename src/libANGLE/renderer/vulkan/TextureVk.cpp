@@ -1172,7 +1172,7 @@ angle::Result TextureVk::ghostOnOverwrite(ContextVk *contextVk,
     // that |releaseimage| already includes a notification to observers that the image has changed.
     ASSERT(renderer->hasResourceUseFinished(mImage->getResourceUse()));
 
-    return angle::Result::Continue;
+    return initReadImageViews(contextVk, getMipLevelCount(ImageMipLevels::EnabledLevels));
 }
 
 angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
@@ -1482,7 +1482,8 @@ angle::Result TextureVk::copyTexture(const gl::Context *context,
     // needed.
     {
         ANGLE_TRY(sourceVk->syncAsAttachmentRenderTarget(context, 0));
-        ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+        ANGLE_TRY(
+            sourceVk->ensureImageAndReadViewsInitialized(contextVk, ImageMipLevels::EnabledLevels));
     }
 
     // Fall back to renderable format if copy cannot be done in transfer.  Must be done before
@@ -1516,7 +1517,8 @@ angle::Result TextureVk::copySubTexture(const gl::Context *context,
     {
         TextureVk *sourceVk = vk::GetImpl(source);
         ANGLE_TRY(sourceVk->syncAsAttachmentRenderTarget(context, 0));
-        ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+        ANGLE_TRY(
+            sourceVk->ensureImageAndReadViewsInitialized(contextVk, ImageMipLevels::EnabledLevels));
     }
 
     // Fall back to renderable format if copy cannot be done in transfer.  Must be done before
@@ -1578,7 +1580,8 @@ angle::Result TextureVk::copyTextureSubData(const gl::Context *context,
     TextureVk *sourceVk  = vk::GetImpl(srcTexture);
 
     // Make sure the source/destination targets are initialized and all staged updates are flushed.
-    ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+    ANGLE_TRY(
+        sourceVk->ensureImageAndReadViewsInitialized(contextVk, ImageMipLevels::EnabledLevels));
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
     const gl::OwnerLevel srcLevel = srcTexture->getState().toOwnerLevel(ownSrcLevel);
@@ -1612,7 +1615,8 @@ angle::Result TextureVk::copyCompressedTexture(const gl::Context *context,
 
     ANGLE_TRY(redefineLevel(context, destIndex, vkFormat, size));
 
-    ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+    ANGLE_TRY(
+        sourceVk->ensureImageAndReadViewsInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
     const gl::OwnerLevel sourceLevel = source->getState().toOwnerLevel(sourceLevelGL);
     const gl::OwnerLayer sourceLayer = source->getState().toOwnerLayer(gl::LayerIndex(0));
@@ -2273,7 +2277,7 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
         mRequiredFormatSupport = vk::ImageFormatSupport::Renderable;
     }
 
-    ANGLE_TRY(initImageViews(contextVk, getImageViewLevelCount()));
+    mCurrentBaseLevel = gl::LevelIndex(0);
 
     return angle::Result::Continue;
 }
@@ -2402,7 +2406,8 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
         mImageView.updateEglImageColorspace(mImage->getActualFormat(), imageColorspace);
     }
 
-    ANGLE_TRY(initImageViews(contextVk, getImageViewLevelCount()));
+    // EGL image targets are always single level and the front-end's level is always zero.
+    mCurrentBaseLevel = gl::LevelIndex(0);
 
     return angle::Result::Continue;
 }
@@ -2896,7 +2901,8 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
                mState.toOwnerLevel(gl::LevelIndex(mState.getEffectiveBaseLevel())));
 
     // Only staged update here is the robust resource init if any.
-    ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::FullMipChainForGenerateMipmap));
+    ANGLE_TRY(ensureImageAndReadViewsInitialized(contextVk,
+                                                 ImageMipLevels::FullMipChainForGenerateMipmap));
 
     vk::LevelIndex baseLevel =
         mImage->toVkLevel(mState.toOwnerLevel(gl::LevelIndex(mState.getEffectiveBaseLevel())));
@@ -2997,11 +3003,11 @@ angle::Result TextureVk::maybeUpdateBaseMaxLevels(ContextVk *contextVk,
     // Don't need to respecify the texture; but do need to update which vkImageView's are served up
     // by ImageViewHelper
 
-    // Update the current base/max level range in ImageViewHelper
-    ANGLE_TRY(initImageViews(contextVk, newMaxLevel - newBaseLevel + 1));
-
     mCurrentBaseLevel = newBaseLevel;
     mCurrentMaxLevel  = newMaxLevel;
+
+    // Update the current max level in ImageViewHelper
+    ANGLE_TRY(initReadImageViews(contextVk, newMaxLevel - newBaseLevel + 1));
 
     return angle::Result::Continue;
 }
@@ -3095,6 +3101,9 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk, const vk:
     {
         ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_LOW,
                               "Copying image data due to texture format fallback");
+
+        const uint32_t readViewLevelCount = getMipLevelCount(ImageMipLevels::EnabledLevels);
+        ANGLE_TRY(initReadImageViews(contextVk, readViewLevelCount));
 
         ASSERT(CanCopyWithDraw(renderer, mImage->getUsage(),
                                format.getActualImageFormatID(getRequiredFormatSupport()),
@@ -3276,8 +3285,10 @@ angle::Result TextureVk::bindTexImage(const gl::Context *context, egl::Surface *
     OffscreenSurfaceVk *offscreenSurface = GetImplAs<OffscreenSurfaceVk>(surface);
     setImageHelper(contextVk, offscreenSurface->getColorAttachmentImage(), false);
 
+    mCurrentBaseLevel = gl::LevelIndex(0);
+
     ASSERT(mImage->getLayerCount() == 1);
-    return initImageViews(contextVk, getImageViewLevelCount());
+    return angle::Result::Continue;
 }
 
 angle::Result TextureVk::releaseTexImage(const gl::Context *context)
@@ -3370,6 +3381,9 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
     ASSERT(requestedLevel >= gl::LevelIndex(0));
 
     ANGLE_TRY(syncAsAttachmentRenderTarget(context, samples));
+
+    const uint32_t readViewLevelCount = getMipLevelCount(ImageMipLevels::EnabledLevels);
+    ANGLE_TRY(initReadImageViews(contextVk, readViewLevelCount));
 
     const bool hasRenderToTextureEXT =
         contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
@@ -3493,6 +3507,13 @@ angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk, ImageMipLe
     }
 
     return flushImageStagedUpdates(contextVk);
+}
+
+angle::Result TextureVk::ensureImageAndReadViewsInitialized(ContextVk *contextVk,
+                                                            ImageMipLevels mipLevels)
+{
+    ANGLE_TRY(ensureImageInitialized(contextVk, mipLevels));
+    return initReadImageViews(contextVk, getMipLevelCount(mipLevels));
 }
 
 angle::Result TextureVk::flushImageStagedUpdates(ContextVk *contextVk)
@@ -3989,13 +4010,18 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 
     // Initialize the image storage and flush the pixel buffer.
     const bool isGenerateMipmap = source == gl::Command::GenerateMipmap;
-    ANGLE_TRY(ensureImageInitialized(contextVk, isGenerateMipmap
-                                                    ? ImageMipLevels::FullMipChainForGenerateMipmap
-                                                    : ImageMipLevels::EnabledLevels));
-
+    const ImageMipLevels mipLevels = isGenerateMipmap
+                                         ? ImageMipLevels::FullMipChainForGenerateMipmap
+                                         : ImageMipLevels::EnabledLevels;
+    ANGLE_TRY(ensureImageInitialized(contextVk, mipLevels));
+    // If needed, drop the read image views.  In either case, ensure read image views are created.
     if (refreshAllImageViews)
     {
         ANGLE_TRY(refreshImageViews(contextVk));
+    }
+    else
+    {
+        ANGLE_TRY(initReadImageViews(contextVk, getMipLevelCount(mipLevels)));
     }
 
     if (localBits.none() && mSampler)
@@ -4418,22 +4444,17 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     ANGLE_TRY(contextVk->initImageAllocation(mImage, mState.hasProtectedContent(), flags,
                                              vk::MemoryAllocationType::TextureImage));
 
-    const uint32_t viewLevelCount =
-        mState.getImmutableFormat() ? getMipLevelCount(ImageMipLevels::EnabledLevels) : levelCount;
-    ANGLE_TRY(initImageViews(contextVk, viewLevelCount));
-
     mCurrentBaseLevel = gl::LevelIndex(mState.getEffectiveBaseLevel());
     mCurrentMaxLevel  = gl::LevelIndex(mState.getEffectiveMaxLevel());
 
     return angle::Result::Continue;
 }
 
-angle::Result TextureVk::initImageViews(ContextVk *contextVk, uint32_t levelCount)
+angle::Result TextureVk::initReadImageViews(ContextVk *contextVk, uint32_t levelCount)
 {
     ASSERT(mImage != nullptr && mImage->valid());
 
-    const gl::OwnerLevel baseLevelGL =
-        mState.toOwnerLevel(gl::LevelIndex(mState.getEffectiveBaseLevel()));
+    const gl::OwnerLevel baseLevelGL = mState.toOwnerLevel(mCurrentBaseLevel);
     const vk::LevelIndex baseLevelVk = mImage->toVkLevel(baseLevelGL);
     const gl::OwnerLayer baseLayer   = mState.toOwnerLayer(gl::LayerIndex(0));
 
@@ -4913,7 +4934,7 @@ angle::Result TextureVk::refreshImageViews(ContextVk *contextVk)
         }
     }
 
-    ANGLE_TRY(initImageViews(contextVk, getMipLevelCount(ImageMipLevels::EnabledLevels)));
+    ANGLE_TRY(initReadImageViews(contextVk, getMipLevelCount(ImageMipLevels::EnabledLevels)));
 
     // Let any Framebuffers know we need to refresh the RenderTarget cache.
     onStateChange(angle::SubjectMessage::SubjectChanged);

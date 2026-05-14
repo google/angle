@@ -6825,7 +6825,8 @@ angle::Result ContextVk::releaseTextures(const gl::Context *context,
     {
         TextureVk *textureVk = vk::GetImpl(textureBarrier.texture);
 
-        ANGLE_TRY(textureVk->ensureImageInitialized(this, ImageMipLevels::EnabledLevels));
+        ANGLE_TRY(
+            textureVk->ensureImageAndReadViewsInitialized(this, ImageMipLevels::EnabledLevels));
 
         vk::ImageHelper &image = textureVk->getImage();
         ANGLE_TRY(onImageReleaseToExternal(image));
