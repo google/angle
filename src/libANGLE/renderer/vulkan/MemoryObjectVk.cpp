@@ -231,6 +231,7 @@ angle::Result MemoryObjectVk::createImage(
             importMemoryFdInfo.handleType = ToVulkanHandleType(mHandleType);
             importMemoryFdInfo.fd         = dup(mFd);
             importMemoryInfo              = &importMemoryFdInfo;
+            ANGLE_VK_CHECK(contextVk, importMemoryFdInfo.fd >= 0, VK_ERROR_OUT_OF_HOST_MEMORY);
             break;
         case gl::HandleType::ZirconVmo:
             ASSERT(mZirconHandle != ZX_HANDLE_INVALID);
@@ -246,16 +247,13 @@ angle::Result MemoryObjectVk::createImage(
             UNREACHABLE();
     }
 
-    // TODO(jmadill, spang): Memory sub-allocation. http://anglebug.com/40096464
     ASSERT(offset == 0);
     ASSERT(externalMemoryRequirements.size == mSize);
 
     VkMemoryPropertyFlags flags = hasProtectedContent ? VK_MEMORY_PROPERTY_PROTECTED_BIT : 0;
-    ANGLE_TRY(image->initExternalMemory(contextVk, renderer->getMemoryProperties(),
-                                        externalMemoryRequirements, 1, &importMemoryInfo,
-                                        contextVk->getDeviceQueueIndex(), flags));
-
-    return angle::Result::Continue;
+    return image->initExternalMemory(contextVk, renderer->getMemoryProperties(),
+                                     externalMemoryRequirements, 1, &importMemoryInfo,
+                                     contextVk->getDeviceQueueIndex(), flags);
 }
 
 }  // namespace rx
