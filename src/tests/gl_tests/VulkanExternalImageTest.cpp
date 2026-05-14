@@ -1804,6 +1804,8 @@ void main()
                                                    enableDebugLayers());
 }
 
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(VulkanExternalImageTest);
-ANGLE_INSTANTIATE_TEST_ES31(VulkanExternalImageTestES31);
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(VulkanExternalImageTest,
+                                       ES3_VULKAN().enable(Feature::ForceRenderableFallbackFormat));
+ANGLE_INSTANTIATE_TEST_ES31_AND(VulkanExternalImageTestES31,
+                                ES31_VULKAN().enable(Feature::ForceRenderableFallbackFormat));
 }  // namespace angle
