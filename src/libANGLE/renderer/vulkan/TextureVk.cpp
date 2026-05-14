@@ -4844,6 +4844,9 @@ angle::Result TextureVk::ensureRenderableWithFormat(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
+    // External memory should not get here.
+    ASSERT(!mImage->isBackedByExternalMemory());
+
     // If luminance/alpha formats ever fall back for rendering, it would only be because the
     // color attachment usage isn't specified by default.  The following wouldn't actually change
     // the format of the LUMA image because it's always emulated with a renderable format.  If

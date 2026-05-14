@@ -387,9 +387,13 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     bool isDepthOrStencilFormat      = imageFormat.hasDepthOrStencilBits();
     mFormat                          = gl::Format(vkFormat->getIntendedGLFormat());
 
+    // Some driver set colorAttachmentFormat but its not render-able. So check formatFeatures as
+    // well.
     bool externalRenderTargetSupported =
         isExternal && renderer->getFeatures().supportsExternalFormatResolve.enabled &&
-        bufferFormatResolveProperties.colorAttachmentFormat != VK_FORMAT_UNDEFINED;
+        bufferFormatResolveProperties.colorAttachmentFormat != VK_FORMAT_UNDEFINED &&
+        (bufferFormatProperties.formatFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT) != 0;
+
     // Can assume based on us getting here already. The supportsYUVSamplerConversion
     // check below should serve as a backup otherwise.
     bool externalTexturingSupported = isExternal;
