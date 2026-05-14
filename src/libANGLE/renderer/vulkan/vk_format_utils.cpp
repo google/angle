@@ -181,6 +181,11 @@ void Format::initImageFallback(Renderer *renderer, const ImageFormatInitInfo *in
     if (testFunction != HasNonFilterableTextureFormatSupport &&
         !(format.isSnorm() && format.channelCount == 3) && !format.isBlock)
     {
+        if (renderer->getFeatures().forceRenderableFallbackFormat.enabled)
+        {
+            skip = 1;
+        }
+
         // Rendering to RGB SNORM textures is not supported on Android.
         // Compressed textures also need to perform this check.
         testFunction = HasFullTextureFormatSupport;

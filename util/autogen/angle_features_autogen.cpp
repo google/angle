@@ -205,6 +205,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ForceNearestMipFiltering, "forceNearestMipFiltering"},
     {Feature::ForceNonCSBaseMipmapGeneration, "forceNonCSBaseMipmapGeneration"},
     {Feature::ForcePassthroughShaders, "forcePassthroughShaders"},
+    {Feature::ForceRenderableFallbackFormat, "forceRenderableFallbackFormat"},
     {Feature::ForceRobustResourceInit, "forceRobustResourceInit"},
     {Feature::ForceSampleUsageForAhbBackedImages, "forceSampleUsageForAhbBackedImages"},
     {Feature::ForceSizePointerForBoundVertexBuffers, "forceSizePointerForBoundVertexBuffers"},
