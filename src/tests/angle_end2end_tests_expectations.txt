@@ -646,7 +646,6 @@
 42264513 PIXEL4ORXL GLES : ImageTest.SourceCubeTarget2D_Colorspace/* = SKIP
 42264513 PIXEL4ORXL GLES : ImageTest.SourceCubeTargetExternal_Colorspace/* = SKIP
 42264513 PIXEL4ORXL GLES : ImageTest.SourceCubeTargetRenderbuffer_Colorspace/* = SKIP
-42264513 PIXEL4ORXL GLES : ImageTest.SourceNativeClientBufferTargetExternal_Colorspace/* = SKIP
 42264513 PIXEL4ORXL GLES : ImageTest.SourceNativeClientBufferTargetRenderbuffer_Colorspace/* = SKIP
 42264513 PIXEL4ORXL GLES : ImageTest.SourceRenderbufferTargetRenderbuffer_Colorspace/* = SKIP
 42264513 PIXEL4ORXL GLES : ImageTest.SourceRenderbufferTargetTexture_Colorspace/* = SKIP
@@ -1019,7 +1018,6 @@
 480069042 PIXEL10 GLES : ImageTest.SourceAHBTarget2DExternalCycleThroughRgbAndYuvSources/* = SKIP
 480069042 PIXEL10 GLES : ImageTest.SourceAHBTarget2DExternalCycleThroughRgbAndYuvTargets/* = SKIP
 480069042 PIXEL10 GLES : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
-480069042 PIXEL10 GLES : ImageTest.SourceNativeClientBufferTargetExternal/* = SKIP
 480069042 PIXEL10 GLES : ImageTest.SourceYUVAHBTargetExternalRGBSampleInitData/* = SKIP
 480069042 PIXEL10 GLES : ImageTest.ValidationImageBase/* = SKIP
 480069042 PIXEL10 GLES : ImageTestES3.ClearYUVAHB/* = SKIP
@@ -1232,8 +1230,6 @@
 480069042 PIXEL10 VULKAN : ImageTest.SourceAHBTarget2DExternalCycleThroughRgbAndYuvSources/* = SKIP
 480069042 PIXEL10 VULKAN : ImageTest.SourceAHBTarget2DExternalCycleThroughRgbAndYuvTargets/* = SKIP
 480069042 PIXEL10 VULKAN : ImageTest.SourceAHBTarget2DExternalCycleThroughYuvSourcesNoData/* = SKIP
-480069042 PIXEL10 VULKAN : ImageTest.SourceNativeClientBufferTargetExternal/* = SKIP
-480069042 PIXEL10 VULKAN : ImageTest.SourceNativeClientBufferTargetExternal_Colorspace/* = SKIP
 480069042 PIXEL10 VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleInitData/* = SKIP
 480069042 PIXEL10 VULKAN : ImageTestES3.ClearYUVAHB/* = SKIP
 480069042 PIXEL10 VULKAN : ImageTestES3.ClearYUVAHBWithDepth/* = SKIP

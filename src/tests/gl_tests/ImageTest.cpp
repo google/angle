@@ -69,38 +69,7 @@ constexpr EGLint kDefaultAttribs[]               = {
 constexpr EGLint kColorspaceAttribs[] = {
     EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_SRGB_KHR, EGL_NONE,
 };
-constexpr EGLint kNativeClientBufferAttribs_RGBA8_Texture[] = {
-    EGL_WIDTH,
-    1,
-    EGL_HEIGHT,
-    1,
-    EGL_RED_SIZE,
-    8,
-    EGL_GREEN_SIZE,
-    8,
-    EGL_BLUE_SIZE,
-    8,
-    EGL_ALPHA_SIZE,
-    8,
-    EGL_NATIVE_BUFFER_USAGE_ANDROID,
-    EGL_NATIVE_BUFFER_USAGE_TEXTURE_BIT_ANDROID,
-    EGL_NONE};
-constexpr EGLint kNativeClientBufferAttribs_RGBA8_Renderbuffer[] = {
-    EGL_WIDTH,
-    1,
-    EGL_HEIGHT,
-    1,
-    EGL_RED_SIZE,
-    8,
-    EGL_GREEN_SIZE,
-    8,
-    EGL_BLUE_SIZE,
-    8,
-    EGL_ALPHA_SIZE,
-    8,
-    EGL_NATIVE_BUFFER_USAGE_ANDROID,
-    EGL_NATIVE_BUFFER_USAGE_RENDERBUFFER_BIT_ANDROID,
-    EGL_NONE};
+
 // Color data in linear and sRGB colorspace
 // 2D texture data
 GLubyte kLinearColor[] = {132, 55, 219, 255};
@@ -1097,27 +1066,50 @@ void main()
     void createEGLImageANWBClientBufferSource(size_t width,
                                               size_t height,
                                               size_t depth,
-                                              const EGLint *attribsANWB,
+                                              EglImageUsage clientBufferUsage,
                                               const EGLint *attribsImage,
-                                              const std::vector<AHBPlaneData> &data,
                                               EGLImageKHR *outSourceImage)
     {
-        // Set Android Memory
+        EGLint attribsANWB[] = {EGL_WIDTH,
+                                1,
+                                EGL_HEIGHT,
+                                1,
+                                EGL_RED_SIZE,
+                                8,
+                                EGL_GREEN_SIZE,
+                                8,
+                                EGL_BLUE_SIZE,
+                                8,
+                                EGL_ALPHA_SIZE,
+                                8,
+                                EGL_NATIVE_BUFFER_USAGE_ANDROID,
+                                0,
+                                EGL_NONE};
 
+        if (clientBufferUsage == EglImageUsage::Sampling)
+        {
+            attribsANWB[13] |= EGL_NATIVE_BUFFER_USAGE_TEXTURE_BIT_ANDROID;
+        }
+        if (clientBufferUsage == EglImageUsage::Rendering)
+        {
+            attribsANWB[13] |= EGL_NATIVE_BUFFER_USAGE_RENDERBUFFER_BIT_ANDROID;
+        }
+
+        // Set Android Memory
         EGLClientBuffer eglClientBuffer = eglCreateNativeClientBufferANDROID(attribsANWB);
         EXPECT_NE(eglClientBuffer, nullptr);
-
+        bool dataCopied = false;
         // allocate AHB memory
 #if defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
         AHardwareBuffer *pAHardwareBuffer = angle::android::ANativeWindowBufferToAHardwareBuffer(
             angle::android::ClientBufferToANativeWindowBuffer(eglClientBuffer));
-        if (!data.empty())
+
+        // First try use CPU to write initial data. It may not possible to do so given the AHB is
+        // allocated without CPU access.
+        if (pAHardwareBuffer != nullptr)
         {
-            bool success = writeAHBData(pAHardwareBuffer, width, height, depth, false, data);
-            if (!success)
-            {
-                return;
-            }
+            std::vector<AHBPlaneData> data{{kSrgbColor, 4}};
+            dataCopied = writeAHBData(pAHardwareBuffer, width, height, depth, false, data);
         }
 #endif  // ANGLE_AHARDWARE_BUFFER_SUPPORT
 
@@ -1128,6 +1120,61 @@ void main()
             eglCreateImageKHR(window->getDisplay(), EGL_NO_CONTEXT, EGL_NATIVE_BUFFER_ANDROID,
                               eglClientBuffer, attribsImage);
         ASSERT_EGL_SUCCESS();
+
+        // If CPU write failed, use GPU write the initial data
+        if (!dataCopied)
+        {
+            // recreate image with render-able usage if needed, since this code path uses FBO
+            // rendering to initialize data.
+            if ((attribsANWB[13] & EGL_NATIVE_BUFFER_USAGE_RENDERBUFFER_BIT_ANDROID) == 0)
+            {
+                eglDestroyImageKHR(window->getDisplay(), image);
+
+                attribsANWB[13] |= EGL_NATIVE_BUFFER_USAGE_RENDERBUFFER_BIT_ANDROID;
+                eglClientBuffer = eglCreateNativeClientBufferANDROID(attribsANWB);
+                EXPECT_NE(eglClientBuffer, nullptr);
+
+                image = eglCreateImageKHR(window->getDisplay(), EGL_NO_CONTEXT,
+                                          EGL_NATIVE_BUFFER_ANDROID, eglClientBuffer, attribsImage);
+                ASSERT_EGL_SUCCESS();
+            }
+
+            GLTexture target;
+            createEGLImageTargetTexture2D(image, target);
+
+            // Draw to the target and verify results.
+            GLFramebuffer fbo;
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, target, 0);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+            const bool srgbColorspace =
+                attribListHasSrgbColorspace(attribsImage, kColorspaceAttributeIndex);
+            if (srgbColorspace)
+            {
+                glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+            }
+
+            ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(),
+                             essl1_shaders::fs::UniformColor());
+            glUseProgram(drawColor);
+            GLint colorUniformLocation =
+                glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+            ASSERT_NE(colorUniformLocation, -1);
+
+            glUniform4f(colorUniformLocation, kSrgbColor[0] / 255.0f, kSrgbColor[1] / 255.0f,
+                        kSrgbColor[2] / 255.0f, kSrgbColor[3] / 255.0f);
+            drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+            glFinish();
+            ASSERT_GL_NO_ERROR();
+            dataCopied = true;
+
+            // Restore state
+            if (srgbColorspace)
+            {
+                glEnable(GL_FRAMEBUFFER_SRGB_EXT);
+            }
+        }
 
         *outSourceImage = image;
     }
@@ -7063,9 +7110,8 @@ void ImageTest::SourceNativeClientBufferTargetExternal_helper(const EGLint *attr
 
     // Create an Image backed by a native client buffer allocated using
     // EGL_ANDROID_create_native_client_buffer API
-    EGLImageKHR image;
-    createEGLImageANWBClientBufferSource(1, 1, 1, kNativeClientBufferAttribs_RGBA8_Texture, attribs,
-                                         {{kSrgbColor, 4}}, &image);
+    EGLImageKHR image = EGL_NO_IMAGE_KHR;
+    createEGLImageANWBClientBufferSource(1, 1, 1, EglImageUsage::Sampling, attribs, &image);
 
     // Create the target
     GLTexture target;
@@ -7105,8 +7151,7 @@ void ImageTest::SourceNativeClientBufferTargetRenderbuffer_helper(const EGLint *
     // Create an Image backed by a native client buffer allocated using
     // EGL_ANDROID_create_native_client_buffer API
     EGLImageKHR image = EGL_NO_IMAGE_KHR;
-    createEGLImageANWBClientBufferSource(1, 1, 1, kNativeClientBufferAttribs_RGBA8_Renderbuffer,
-                                         attribs, {{kSrgbColor, 4}}, &image);
+    createEGLImageANWBClientBufferSource(1, 1, 1, EglImageUsage::Rendering, attribs, &image);
     // We are locking AHB to initialize AHB with data. The lock is allowed to fail, and may fail if
     // driver decided to allocate with framebuffer compression enabled.
     ANGLE_SKIP_TEST_IF(image == EGL_NO_IMAGE_KHR);
