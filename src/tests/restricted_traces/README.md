@@ -539,6 +539,41 @@ export TRACE_NAME=octopath_traveler
 src/tests/restricted_traces/retrace_restricted_traces.py upgrade $TRACE_GN_PATH retrace-wip -f $TRACE_NAME
 ```
 
+### Interleaved client attribute analysis
+Apps can use client attribute arrays without binding to the array buffer (e.g., via glVertexAttribPointer())
+to draw.
+The capture tool has been updated to detect interleaved client vertex attributes, i.e., vertex attributes that
+use the same client array data at different offsets for draw. In that case, the client array data is captured
+along with the offsets for each attribute. However, this will not be reflected on the traces captured before
+this feature was introduced. In those traces, each client attribute data is recorded as a separate attribute
+array (`gClientArrays[]`) and treated as an attribute separate from the rest, which can result in different
+behavior between the trace and the real app (such as instruction count).
+
+For example, take a draw using three interleaved client array pointers, each using a 4-byte float value.
+* In the real app, this would look like three glVertexAttribPointer() calls with the pointer
+set to `ptr`, `ptr + 4` and `ptr + 8`.
+* However, before this feature was introduced in the capture tool, these attributes would be recorded as
+`gClientArrays[0]`, `gClientArrays[1]`, and `gClientArrays[2]`.
+
+The script [`check_attribute_interleaving.py`](check_attribute_interleaving.py) has been added to close the gap
+further between the trace and the real app, which the retracing script will use during an upgrade to analyze the
+client array attribute pointers in the trace (`gClientArrays[]`) and their corresponding data.
+Its goal is to detect and restore the interleaved property of such attributes.
+
+If the attributes were found to have matching data with an offset, it will print a notification indicating the
+existence of such cases in the existing trace. However, it will **not** try to merge those attributes yet.
+**To apply the attribute merges to the trace code during the upgrade, the flag `-m` or `--merge-attributes`
+should be used for the retracing script:**
+```
+src/tests/restricted_traces/retrace_restricted_traces.py upgrade $TRACE_GN_PATH retrace-wip -m -f $TRACE_NAME
+```
+
+After this, the attributes determined to be part of the same client array are updated to use the same unified
+data with their respective offsets.
+
+Note that the script [`check_attribute_interleaving.py`](check_attribute_interleaving.py) can also be used as a
+standalone tool to analyze trace code for potential interleaved client attributes.
+
 ## Part 2: Verify it
 
 Before we check in an upgraded trace, we want to put it through enough paces to
