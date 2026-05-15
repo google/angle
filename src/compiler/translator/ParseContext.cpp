@@ -1142,6 +1142,12 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             error(line, reason.c_str(), "constructor");
             return false;
         }
+        else if (argTyped->getType().isStructureContainingSamplers())
+        {
+            std::string reason("cannot convert a variable with struct type containing samplers");
+            error(line, reason.c_str(), "constructor");
+            return false;
+        }
         else if (argTyped->getMemoryQualifier().writeonly)
         {
             error(line, "cannot convert a variable with writeonly", "constructor");
