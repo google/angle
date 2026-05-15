@@ -4140,16 +4140,15 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
     bool framebufferIsYUV = framebuffer->hasYUVAttachment();
     if (ANGLE_UNLIKELY(framebufferIsYUV))
     {
-        const BlendState &blendState = state.getBlendState();
-        if (!blendState.colorMaskRed || !blendState.colorMaskGreen || !blendState.colorMaskBlue ||
-            !blendState.colorMaskAlpha)
+        const BlendStateExt &blendStateExt = state.getBlendStateExt();
+        if (blendStateExt.getColorMaskIndexed(0) != BlendStateExt::kColorMaskRGBA)
         {
             // When rendering into a YUV framebuffer, the color mask must have r g b and alpha set
             // to true.
             return kInvalidColorMaskForYUV;
         }
 
-        if (blendState.blend)
+        if (blendStateExt.getEnabledMask().test(0))
         {
             // When rendering into a YUV framebuffer, blending must be disabled.
             return kInvalidBlendStateForYUV;

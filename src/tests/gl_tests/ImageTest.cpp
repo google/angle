@@ -5085,6 +5085,72 @@ TEST_P(ImageTestES3, RenderToYUVAHB)
     destroyAndroidHardwareBuffer(source);
 }
 
+// Test that indexed setters from GL_OES_draw_buffers_indexed work with YUV rendering.
+// Regression test for a bug in ValidateDrawStates that only checked the non-indexed blend state.
+TEST_P(ImageTestES3, RenderToYUVAHBIndexedBlendValidationBypass)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() || !hasYUVTargetExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+    // 3 planes of data, initialize to all zeroes
+    GLubyte dataY[4]  = {0, 0, 0, 0};
+    GLubyte dataCb[1] = {0};
+    GLubyte dataCr[1] = {0};
+
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(
+        2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBUsage, kDefaultAttribs,
+        {{dataY, 1}, {dataCb, 1}, {dataCr, 1}}, &source, &image);
+
+    GLTexture target;
+    createEGLImageTargetTextureExternal(image, target);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_EXTERNAL_OES, target,
+                           0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glUseProgram(mRenderYUVProgram);
+    glUniform4f(mRenderYUVUniformLocation, 0.5f, 0.5f, 0.5f, 1.0f);
+
+    // Test non-indexed blend enable
+    glEnable(GL_BLEND);
+    drawQuad(mRenderYUVProgram, "position", 0.0f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glDisable(GL_BLEND);
+
+    // Test non-indexed partial color mask
+    glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
+    drawQuad(mRenderYUVProgram, "position", 0.0f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    // Test indexed blend enable
+    glEnableiOES(GL_BLEND, 0);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(mRenderYUVProgram, "position", 0.0f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glDisableiOES(GL_BLEND, 0);
+
+    // Test indexed partial color mask
+    glColorMaskiOES(0, GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(mRenderYUVProgram, "position", 0.0f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glColorMaskiOES(0, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    glFinish();
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+}
+
 // Test rendering to a YUV AHB using EXT_yuv_target with a normal depth attachment
 TEST_P(ImageTestES3, RenderToYUVAHBWithDepth)
 {
