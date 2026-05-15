@@ -1034,6 +1034,7 @@
 480069042 PIXEL10 GLES : ImageTestES3.RGBXAHBUploadDataColorspace/* = SKIP
 480069042 PIXEL10 GLES : ImageTestES3.RenderToYUVAHB/* = SKIP
 480069042 PIXEL10 GLES : ImageTestES3.RenderToYUVAHBWithDepth/* = SKIP
+480069042 PIXEL10 GLES : ImageTestES3.RenderToYUVAHBThenReadPixels/* = SKIP
 480069042 PIXEL10 GLES : ImageTestES3.Source3DTargetExternalESSL3/* = SKIP
 480069042 PIXEL10 GLES : ImageTestES3.SourceAHBTargetTexture2DGenerateMipmap/* = SKIP
 480069042 PIXEL10 GLES : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3/* = SKIP
@@ -1242,6 +1243,7 @@
 480069042 PIXEL10 VULKAN : ImageTestES3.PartialRenderToYUVAHB/* = SKIP
 480069042 PIXEL10 VULKAN : ImageTestES3.RenderToYUVAHB/* = SKIP
 480069042 PIXEL10 VULKAN : ImageTestES3.RenderToYUVAHBWithDepth/* = SKIP
+480069042 PIXEL10 VULKAN : ImageTestES3.RenderToYUVAHBThenReadPixels/* = SKIP
 480069042 PIXEL10 VULKAN : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3/* = SKIP
 480069042 PIXEL10 VULKAN : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3_Colorspace/* = SKIP
 480069042 PIXEL10 VULKAN : ImageTestES3.SourceYUVAHBTargetExternalCopySrc/* = SKIP
