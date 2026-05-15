@@ -83,9 +83,9 @@ SYNCED_CIPD_DEPS = {
 
 # DEPS entries which have dep_type = gcs. In the Chromium DEPS file, these will
 # be prefixed with src/.
-# TODO(anglebug.com/485785261): Handle tools/clang as a GCS dependency like
-# Chromium does.
-SYNCED_GCS_DEPS = set()
+SYNCED_GCS_DEPS = {
+    'third_party/llvm-build/Release+Asserts',
+}
 
 # Repos that are independently synced by Chromium and ANGLE. A map from ANGLE
 # names to Chromium names. None means that the names are identical. In the
@@ -150,8 +150,6 @@ EXPORTED_CHROMIUM_REPOS = {
     'third_party/six': None,
     'third_party/zlib': None,
     'tools/android': None,
-    # TODO(anglebug.com/485785261): Remove tools/clang when clang is handled as
-    # a GCS dependency like is done in Chromium.
     'tools/clang': None,
     'tools/mb': None,
     'tools/md_browser': None,
