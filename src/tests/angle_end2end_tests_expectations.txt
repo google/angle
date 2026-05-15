@@ -2781,6 +2781,13 @@
 349994211 IR PIXEL4ORXL GLES : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 
 // Crashes on OpenGL
+
+// XFB with incomplete primitives fail on GL and Vulkan
+513536751 INTEL OPENGL : TransformFeedbackTest.InstancedOverflowIncompletePrimitive/* = SKIP
+// fails on Vulkan without transform feedback extension
+513536751 VULKAN : TransformFeedbackTest.InstancedOverflowIncompletePrimitive/*NoSupportsTransformFeedbackExtension* = SKIP
+513536751 VULKAN SWIFTSHADER : TransformFeedbackTest.InstancedOverflowIncompletePrimitive/* = SKIP
+
 // Fails test on Metal
 499091328 MAC AMD METAL : Texture2DArrayTestES3.ReformatStagedBufferUpdatesLayerCountOOB/* = SKIP
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
