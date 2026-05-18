@@ -28,7 +28,7 @@
                                                           'os': 'Ubuntu-22.04',
                                                           'pool': 'chromium.tests.gpu'}}},
   'gpu_pixel_10_stable': { 'fail_if_unused': False,
-                           'swarming': { 'dimensions': { 'device_os': 'BD3A.250721.001',
+                           'swarming': { 'dimensions': { 'device_os': 'CP1A.260405.005',
                                                          'device_os_type': 'userdebug',
                                                          'device_type': 'frankel',
                                                          'os': 'Android',
