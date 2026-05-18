@@ -7549,6 +7549,21 @@ angle::Result ContextVk::flushAndSubmitCommands(const vk::Semaphore *signalSemap
                                                 const vk::SharedExternalFence *externalFence,
                                                 QueueSubmitReason queueSubmitReason)
 {
+    const angle::Result result =
+        flushAndSubmitCommandsImpl(signalSemaphore, externalFence, queueSubmitReason);
+
+    if (result != angle::Result::Continue)
+    {
+        forgetAllForeignImagesOnError();
+    }
+
+    return result;
+}
+
+angle::Result ContextVk::flushAndSubmitCommandsImpl(const vk::Semaphore *signalSemaphore,
+                                                    const vk::SharedExternalFence *externalFence,
+                                                    QueueSubmitReason queueSubmitReason)
+{
     // Even if render pass does not have any command, we may still need to submit it in case it has
     // CLEAR loadOp.
     bool someCommandsNeedFlush =
