@@ -1151,6 +1151,7 @@ PFN_vkBindImageMemory2KHR vkBindImageMemory2KHR   = nullptr;
 
 // VK_KHR_maintenance5
 PFN_vkCmdBindIndexBuffer2KHR vkCmdBindIndexBuffer2KHR = nullptr;
+PFN_vkGetImageSubresourceLayout2KHR vkGetImageSubresourceLayout2KHR = nullptr;
 
 // VK_QCOM_tile_memory_heap
 PFN_vkCmdBindTileMemoryQCOM vkCmdBindTileMemoryQCOM = nullptr;
@@ -1393,6 +1394,7 @@ void InitFragmentShadingRateKHRDeviceFunction(VkDevice device)
 void InitMaintenance5Functions(VkDevice device)
 {
     GET_DEVICE_FUNC(vkCmdBindIndexBuffer2KHR);
+    GET_DEVICE_FUNC(vkGetImageSubresourceLayout2KHR);
 }
 
 // VK_QCOM_tile_memory_heap
@@ -1494,6 +1496,21 @@ void InitBindMemory2KHRFunctionsFromCore()
 }
 
 #undef ASSIGN_FROM_CORE
+
+#define ASSIGN_EXT_FROM_KHR(vkName)               \
+    do                                            \
+    {                                             \
+        /* The KHR entry point must be present */ \
+        ASSERT(vkName##KHR != nullptr);           \
+        vkName##EXT = vkName##KHR;                \
+    } while (0)
+
+void InitGetImageSubresourceLayoutEXTFunctionFromKHR()
+{
+    ASSIGN_EXT_FROM_KHR(vkGetImageSubresourceLayout2);
+}
+
+#undef ASSIGN_EXT_FROM_KHR
 
 GLenum CalculateGenerateMipmapFilter(ContextVk *contextVk, angle::FormatID formatID)
 {

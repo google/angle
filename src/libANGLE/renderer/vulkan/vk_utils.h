@@ -1522,6 +1522,9 @@ void InitSamplerYcbcrKHRFunctionsFromCore();
 void InitGetMemoryRequirements2KHRFunctionsFromCore();
 void InitBindMemory2KHRFunctionsFromCore();
 
+// Promoted to KHR
+void InitGetImageSubresourceLayoutEXTFunctionFromKHR();
+
 GLenum CalculateGenerateMipmapFilter(ContextVk *contextVk, angle::FormatID formatID);
 
 bool HasRequiredGlobalPriority(

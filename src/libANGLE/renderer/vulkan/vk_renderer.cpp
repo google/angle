@@ -7642,6 +7642,10 @@ void Renderer::initializeDeviceExtensionEntryPointsFromCore() const
     {
         InitSamplerYcbcrKHRFunctionsFromCore();
     }
+    if (mFeatures.supportsMaintenance5.enabled)
+    {
+        InitGetImageSubresourceLayoutEXTFunctionFromKHR();
+    }
 }
 
 angle::Result Renderer::submitCommands(vk::ErrorContext *context,
