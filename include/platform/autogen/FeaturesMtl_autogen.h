@@ -338,6 +338,12 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
+    FeatureInfo allocateNonZeroTextures = {
+        "allocateNonZeroTextures",
+        FeatureCategory::MetalFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;

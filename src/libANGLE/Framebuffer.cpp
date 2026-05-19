@@ -337,6 +337,22 @@ bool HasSupportedStencilBitCount(const Framebuffer *framebuffer)
     return !stencilAttachment || stencilAttachment->getStencilSize() == 8;
 }
 
+angle::Result CheckAttachmentEnclosed(const Context *context,
+                                      const FramebufferAttachment &attachment,
+                                      const Rectangle &area,
+                                      bool *enclosedOut)
+{
+    *enclosedOut = true;
+    if (attachment.isAttached())
+    {
+        ANGLE_TRY(attachment.ensureSizeResolved(context));
+
+        Extents size = attachment.getSize();
+        *enclosedOut = area.encloses(Rectangle(0, 0, size.width, size.height));
+    }
+    return angle::Result::Continue;
+}
+
 }  // anonymous namespace
 
 FramebufferStatus FramebufferStatus::Complete()
@@ -1606,6 +1622,15 @@ angle::Result Framebuffer::discard(const Context *context, size_t count, const G
     // can be no-ops, so we should probably do that to ensure consistency.
     // TODO(jmadill): WebGL behaviour, and robust resource init behaviour without WebGL.
 
+    if (context->getFrontendFeatures().setNeedInitOnInvalidation.enabled &&
+        context->isRobustResourceInitEnabled())
+    {
+        // We don't need to override the attachments list like in invalidate() because, unlike
+        // invalidate(), discard() allows a packed depth/stencil attachment's data to become
+        // undefined even if the attachments list only contains the depth or stencil aspect.
+        markAttachmentsUninitialized(context, count, attachments);
+    }
+
     return mImpl->discard(context, count, attachments);
 }
 
@@ -1616,6 +1641,15 @@ angle::Result Framebuffer::invalidate(const Context *context,
     // Back-ends might make the contents of the FBO undefined. In WebGL 2.0, invalidate operations
     // can be no-ops, so we should probably do that to ensure consistency.
     // TODO(jmadill): WebGL behaviour, and robust resource init behaviour without WebGL.
+
+    if (context->getFrontendFeatures().setNeedInitOnInvalidation.enabled &&
+        context->isRobustResourceInitEnabled())
+    {
+        auto overrideAttachments = overrideInvalidateAttachments(count, attachments);
+        markAttachmentsUninitialized(context, overrideAttachments.size(),
+                                     overrideAttachments.data());
+        return mImpl->invalidate(context, overrideAttachments.size(), overrideAttachments.data());
+    }
 
     return mImpl->invalidate(context, count, attachments);
 }
@@ -1655,7 +1689,7 @@ bool Framebuffer::partialClearNeedsInit(const Context *context,
     {
         ASSERT(HasSupportedStencilBitCount(glState.getDrawFramebuffer()));
 
-        const auto &depthStencil       = glState.getDepthStencilState();
+        const auto &depthStencil = glState.getDepthStencilState();
         // The least significant |stencilBits| of stencil mask state specify a
         // mask. Check only those bits, ignoring any masked high bits.
         // Only the stencil write mask can affect which stencil bits are cleared. Clears are always
@@ -1696,6 +1730,43 @@ angle::Result Framebuffer::invalidateSub(const Context *context,
     // Back-ends might make the contents of the FBO undefined. In WebGL 2.0, invalidate operations
     // can be no-ops, so we should probably do that to ensure consistency.
     // TODO(jmadill): Make a invalidate no-op in WebGL 2.0.
+
+    if (context->getFrontendFeatures().setNeedInitOnInvalidation.enabled &&
+        context->isRobustResourceInitEnabled())
+    {
+        DrawBufferMask colorMask;
+        bool invalidateDepth   = false;
+        bool invalidateStencil = false;
+
+        for (size_t i = 0; i < count; ++i)
+        {
+            GLenum attachment = attachments[i];
+            if (attachment >= GL_COLOR_ATTACHMENT0 &&
+                attachment < GL_COLOR_ATTACHMENT0 + IMPLEMENTATION_MAX_DRAW_BUFFERS)
+            {
+                colorMask.set(attachment - GL_COLOR_ATTACHMENT0);
+            }
+            if (attachment == GL_DEPTH_ATTACHMENT || attachment == GL_DEPTH_STENCIL_ATTACHMENT)
+            {
+                invalidateDepth = true;
+            }
+            if (attachment == GL_STENCIL_ATTACHMENT || attachment == GL_DEPTH_STENCIL_ATTACHMENT)
+            {
+                invalidateStencil = true;
+            }
+        }
+
+        bool allEnclosed = false;
+        ANGLE_TRY(checkAllAttachmentsEnclosedBy(context, area, colorMask, invalidateDepth,
+                                                invalidateStencil, &allEnclosed));
+        if (!allEnclosed)
+        {
+            // We treat sub-area invalidation as no-op in robust mode
+            return angle::Result::Continue;
+        }
+
+        return invalidate(context, count, attachments);
+    }
 
     return mImpl->invalidateSub(context, count, attachments, area);
 }
@@ -2689,6 +2760,147 @@ void Framebuffer::markAttachmentsInitialized(const DrawBufferMask &color, bool d
         mState.mStencilAttachment.setInitState(InitState::Initialized);
         mState.mResourceNeedsInit.reset(DIRTY_BIT_STENCIL_ATTACHMENT);
     }
+}
+
+void Framebuffer::markAttachmentsUninitialized(const Context *context,
+                                               size_t count,
+                                               const GLenum *attachments)
+{
+    for (size_t i = 0; i < count; ++i)
+    {
+        const FramebufferAttachment *attachment = mState.getAttachment(context, attachments[i]);
+        if (attachment)
+        {
+            attachment->setInitState(InitState::MayNeedInit);
+            attachment->getResource()->onStateChange(angle::SubjectMessage::SubjectChanged);
+        }
+    }
+}
+
+// Filters attachments to ensure packed depth/stencil are invalidated together.
+angle::FastVector<GLenum, IMPLEMENTATION_MAX_DRAW_BUFFERS + 2>
+Framebuffer::overrideInvalidateAttachments(size_t count, const GLenum *attachments) const
+{
+    angle::FastVector<GLenum, IMPLEMENTATION_MAX_DRAW_BUFFERS + 2> overrideAttachments;
+    bool invalidateDepth   = false;
+    bool invalidateStencil = false;
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        GLenum attachment = attachments[i];
+        if (attachment == GL_DEPTH_ATTACHMENT)
+        {
+            invalidateDepth = true;
+        }
+        else if (attachment == GL_STENCIL_ATTACHMENT)
+        {
+            invalidateStencil = true;
+        }
+        else if (attachment == GL_DEPTH_STENCIL_ATTACHMENT)
+        {
+            invalidateDepth   = true;
+            invalidateStencil = true;
+        }
+        else
+        {
+            overrideAttachments.push_back(attachment);
+        }
+    }
+
+    const FramebufferAttachment *depthAttachment   = mState.getDepthAttachment();
+    const FramebufferAttachment *stencilAttachment = mState.getStencilAttachment();
+
+    bool depthHasPackedFormat = false;
+    if (depthAttachment && depthAttachment->isAttached())
+    {
+        const InternalFormat &format = *depthAttachment->getFormat().info;
+        depthHasPackedFormat         = format.depthBits > 0 && format.stencilBits > 0;
+    }
+
+    bool stencilHasPackedFormat = false;
+    if (stencilAttachment && stencilAttachment->isAttached())
+    {
+        const InternalFormat &format = *stencilAttachment->getFormat().info;
+        stencilHasPackedFormat       = format.depthBits > 0 && format.stencilBits > 0;
+    }
+
+    bool depthAndStencilAttachmentAreTheSame = false;
+    if (depthAttachment && stencilAttachment)
+    {
+        depthAndStencilAttachmentAreTheSame =
+            depthAttachment->getResource() == stencilAttachment->getResource();
+    }
+
+    // We will only invalidate a packed depth & stencil attachment if it is attached as both depth
+    // and stencil to this FBO, and the request includes both GL_DEPTH_ATTACHMENT and
+    // GL_STENCIL_ATTACHMENT, and/or GL_DEPTH_STENCIL_ATTACHMENT. We don't want to accidentally
+    // invalidate the whole texture (including both depth and stencil data) if only one of the
+    // aspects is requested to be invalidated.
+    if ((depthHasPackedFormat || stencilHasPackedFormat) && depthAndStencilAttachmentAreTheSame)
+    {
+        if (invalidateDepth && invalidateStencil)
+        {
+            overrideAttachments.push_back(GL_DEPTH_ATTACHMENT);
+            overrideAttachments.push_back(GL_STENCIL_ATTACHMENT);
+        }
+    }
+
+    // For non-packed formats, we can invalidate them individually.
+    if (!depthHasPackedFormat && invalidateDepth)
+    {
+        overrideAttachments.push_back(GL_DEPTH_ATTACHMENT);
+    }
+    if (!stencilHasPackedFormat && invalidateStencil)
+    {
+        overrideAttachments.push_back(GL_STENCIL_ATTACHMENT);
+    }
+
+    return overrideAttachments;
+}
+
+// Checks if the given area encloses all requested attachments.
+angle::Result Framebuffer::checkAllAttachmentsEnclosedBy(const Context *context,
+                                                         const Rectangle &area,
+                                                         DrawBufferMask colorMask,
+                                                         bool depth,
+                                                         bool stencil,
+                                                         bool *allEnclosedOut) const
+{
+    *allEnclosedOut = false;
+
+    for (size_t colorIndex : colorMask)
+    {
+        bool enclosed = false;
+        ANGLE_TRY(CheckAttachmentEnclosed(context, mState.mColorAttachments[colorIndex], area,
+                                          &enclosed));
+        if (!enclosed)
+        {
+            return angle::Result::Continue;
+        }
+    }
+
+    if (depth)
+    {
+        bool enclosed = false;
+        ANGLE_TRY(CheckAttachmentEnclosed(context, mState.mDepthAttachment, area, &enclosed));
+        if (!enclosed)
+        {
+            return angle::Result::Continue;
+        }
+    }
+
+    if (stencil)
+    {
+        bool enclosed = false;
+        ANGLE_TRY(CheckAttachmentEnclosed(context, mState.mStencilAttachment, area, &enclosed));
+        if (!enclosed)
+        {
+            return angle::Result::Continue;
+        }
+    }
+
+    *allEnclosedOut = true;
+    return angle::Result::Continue;
 }
 
 Box Framebuffer::getDimensions() const

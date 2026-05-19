@@ -512,6 +512,8 @@ void DisplayMtl::initializeFrontendFeatures(angle::FrontendFeatures *features) c
     // The Metal backend's handling of compile and link is thread-safe
     ANGLE_FEATURE_CONDITION(features, compileJobIsThreadSafe, true);
     ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, true);
+
+    ANGLE_FEATURE_CONDITION(features, setNeedInitOnInvalidation, true);
 }
 
 void DisplayMtl::populateFeatureList(angle::FeatureList *features)
