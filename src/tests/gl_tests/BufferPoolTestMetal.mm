@@ -76,48 +76,43 @@ TEST_P(BufferPoolTest, AllocationOffsetNoTruncation)
     bufferPool.initialize(contextMtl, kLargeSize, kAlignment, 10);
 
     // Perform first allocation
-    uint8_t *ptr1 = nullptr;
+    angle::Span<uint8_t> mappedData1;
     mtl::BufferSlice slice1;
-    bool newBuffer1 = false;
 
-    ASSERT_EQ(bufferPool.allocate(contextMtl, kLargeSize, &ptr1, &slice1, &newBuffer1),
+    ASSERT_EQ(bufferPool.allocateAndMap(contextMtl, kLargeSize, &mappedData1, &slice1),
               angle::Result::Continue);
-    EXPECT_TRUE(newBuffer1);
     EXPECT_EQ(slice1.offset(), 0u);
-    EXPECT_NE(ptr1, nullptr);
+    EXPECT_FALSE(mappedData1.empty());
     EXPECT_NE(slice1.buffer(), nullptr);
 
     // Fill first allocation with a known pattern (0xAA)
     // We only fill the first 4KB to avoid spending too much time on this test
     constexpr size_t kPatternSize = 4096;
-    memset(ptr1, 0xAA, kPatternSize);
+    memset(mappedData1.data(), 0xAA, kPatternSize);
 
     // Commit the first allocation to ensure it's written to the buffer
     ASSERT_EQ(bufferPool.commit(contextMtl), angle::Result::Continue);
 
     // Perform second allocation
-    uint8_t *ptr2 = nullptr;
+    angle::Span<uint8_t> mappedData2;
     mtl::BufferSlice slice2;
-    bool newBuffer2 = false;
 
-    ASSERT_EQ(bufferPool.allocate(contextMtl, kSmallSize, &ptr2, &slice2, &newBuffer2),
+    ASSERT_EQ(bufferPool.allocateAndMap(contextMtl, kSmallSize, &mappedData2, &slice2),
               angle::Result::Continue);
 
     // With the fix (size_t), a new buffer should be allocated since the calculated offset
     // exceeds the buffer size. Otherwise (no fix), the offset would truncate and
     // potentially reuse the same buffer incorrectly, causing memory corruption.
-    EXPECT_TRUE(newBuffer2);
-
     // The offset should be 0 in the new buffer (not a truncated large value)
     EXPECT_EQ(slice2.offset(), 0u);
-    EXPECT_NE(ptr2, nullptr);
+    EXPECT_FALSE(mappedData2.empty());
     EXPECT_NE(slice2.buffer(), nullptr);
 
     // Buffers should be different
     EXPECT_NE(slice1.buffer().get(), slice2.buffer().get());
 
     // Fill second allocation with a different pattern (0xBB)
-    memset(ptr2, 0xBB, kSmallSize);
+    memset(mappedData2.data(), 0xBB, kSmallSize);
 
     // Commit the second allocation
     ASSERT_EQ(bufferPool.commit(contextMtl), angle::Result::Continue);

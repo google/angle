@@ -217,7 +217,7 @@ angle::Result ProvokingVertexHelper::preconditionIndexBuffer(ContextMtl *context
     checkedBufferSize += indexOffset;
 
     ANGLE_CHECK_GL_MATH(context, checkedBufferSize.IsValid());
-    ANGLE_TRY(mIndexBuffers.allocate(context, checkedBufferSize.ValueOrDie(), nullptr, &newBuffer));
+    ANGLE_TRY(mIndexBuffers.allocate(context, checkedBufferSize.ValueOrDie(), &newBuffer));
     auto threadsPerThreadgroup = MTLSizeMake(MIN(primCount, 64u), 1, 1);
 
     mtl::ComputeCommandEncoder *encoder =
@@ -268,7 +268,7 @@ angle::Result ProvokingVertexHelper::generateIndexBuffer(ContextMtl *context,
     checkedBufferSize *= indexSize;
 
     ANGLE_CHECK_GL_MATH(context, checkedBufferSize.IsValid());
-    ANGLE_TRY(mIndexBuffers.allocate(context, checkedBufferSize.ValueOrDie(), nullptr, &newBuffer));
+    ANGLE_TRY(mIndexBuffers.allocate(context, checkedBufferSize.ValueOrDie(), &newBuffer));
     auto threadsPerThreadgroup = MTLSizeMake(MIN(primCount, 64u), 1, 1);
 
     mtl::ComputeCommandEncoder *encoder =

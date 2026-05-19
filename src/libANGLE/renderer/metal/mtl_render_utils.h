@@ -128,19 +128,6 @@ struct TriFanOrLineLoopFromArrayParams
     uint32_t dstOffset;
 };
 
-struct IndexConversionParams
-{
-
-    gl::DrawElementsType srcType;
-    uint32_t indexCount;
-    const BufferRef &srcBuffer;
-    uint32_t srcOffset;
-    const BufferRef &dstBuffer;
-    // Must be multiples of kIndexBufferOffsetAlignment
-    uint32_t dstOffset;
-    bool primitiveRestartEnabled = false;
-};
-
 struct IndexGenerationParams
 {
     gl::DrawElementsType srcType;
@@ -379,7 +366,11 @@ class IndexGeneratorUtils final : angle::NonCopyable
 {
   public:
     angle::Result convertIndexBufferGPU(ContextMtl *contextMtl,
-                                        const IndexConversionParams &params);
+                                        gl::DrawElementsType srcType,
+                                        uint32_t indexCount,
+                                        const BufferSlice &srcBuffer,
+                                        const BufferSlice &dstBuffer,
+                                        bool primitiveRestartEnabled);
     angle::Result generateTriFanBufferFromArrays(ContextMtl *contextMtl,
                                                  const TriFanOrLineLoopFromArrayParams &params);
     // Generate triangle fan index buffer for glDrawElements().
@@ -703,7 +694,11 @@ class RenderUtils : angle::NonCopyable
 
     // See IndexGeneratorUtils
     angle::Result convertIndexBufferGPU(ContextMtl *contextMtl,
-                                        const IndexConversionParams &params);
+                                        gl::DrawElementsType srcType,
+                                        uint32_t indexCount,
+                                        const BufferSlice &srcBuffer,
+                                        const BufferSlice &dstBuffer,
+                                        bool primitiveRestartEnabled);
     angle::Result generateTriFanBufferFromArrays(ContextMtl *contextMtl,
                                                  const TriFanOrLineLoopFromArrayParams &params);
     angle::Result generateTriFanBufferFromElementsArray(ContextMtl *contextMtl,
