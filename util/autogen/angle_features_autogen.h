@@ -92,6 +92,7 @@ enum class Feature
     DisableBaseInstanceVertex,
     DisableBlendEquationAdvanced,
     DisableClearTexImageForRobustInit,
+    DisableClearTexture,
     DisableClipControl,
     DisableDepthStencilResolveThroughAttachment,
     DisableDrawBuffersIndexed,
