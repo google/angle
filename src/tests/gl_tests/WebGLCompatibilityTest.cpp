@@ -354,6 +354,9 @@ void main()
     GLint mUniformColorRenderingProgram_colorUniformLocation;
 };
 
+class WebGL1CompatibilityTest : public WebGLCompatibilityTest
+{};
+
 class WebGL2CompatibilityTest : public WebGLCompatibilityTest
 {};
 
@@ -403,14 +406,8 @@ TEST_P(WebGLCompatibilityTest, EnableExtensionValidation)
 }
 
 // Test enabling the GL_OES_element_index_uint extension
-TEST_P(WebGLCompatibilityTest, EnableExtensionUintIndices)
+TEST_P(WebGL1CompatibilityTest, EnableExtensionUintIndices)
 {
-    if (getClientMajorVersion() != 2)
-    {
-        // This test only works on ES2 where uint indices are not available by default
-        return;
-    }
-
     EXPECT_FALSE(IsGLExtensionEnabled("GL_OES_element_index_uint"));
 
     GLBuffer indexBuffer;
@@ -647,14 +644,12 @@ void main()
 }
 
 // Test enabling the GL_NV_pixel_buffer_object extension
-TEST_P(WebGLCompatibilityTest, EnablePixelBufferObjectExtensions)
+TEST_P(WebGL1CompatibilityTest, EnablePixelBufferObjectExtensions)
 {
+    // These extensions are core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_NV_pixel_buffer_object"));
     EXPECT_FALSE(IsGLExtensionEnabled("GL_OES_mapbuffer"));
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
-
-    // These extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     // http://anglebug.com/40644771
     ANGLE_SKIP_TEST_IF(IsMac() && IsIntelUHD630Mobile() && IsDesktopOpenGL());
@@ -732,13 +727,11 @@ TEST_P(WebGLCompatibilityTest, EnableTextureStorage)
 }
 
 // Test enabling the GL_OES_mapbuffer and GL_EXT_map_buffer_range extensions
-TEST_P(WebGLCompatibilityTest, EnableMapBufferExtensions)
+TEST_P(WebGL1CompatibilityTest, EnableMapBufferExtensions)
 {
+    // These extensions are core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_OES_mapbuffer"));
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
-
-    // These extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     GLBuffer buffer;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
@@ -778,12 +771,10 @@ TEST_P(WebGLCompatibilityTest, EnableMapBufferExtensions)
 }
 
 // Test enabling the GL_OES_fbo_render_mipmap extension
-TEST_P(WebGLCompatibilityTest, EnableRenderMipmapExtension)
+TEST_P(WebGL1CompatibilityTest, EnableRenderMipmapExtension)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_OES_fbo_render_mipmap"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -809,12 +800,10 @@ TEST_P(WebGLCompatibilityTest, EnableRenderMipmapExtension)
 }
 
 // Test enabling the GL_EXT_blend_minmax extension
-TEST_P(WebGLCompatibilityTest, EnableBlendMinMaxExtension)
+TEST_P(WebGL1CompatibilityTest, EnableBlendMinMaxExtension)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_blend_minmax"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     glBlendEquation(GL_MIN);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
@@ -834,13 +823,11 @@ TEST_P(WebGLCompatibilityTest, EnableBlendMinMaxExtension)
 }
 
 // Test enabling the query extensions
-TEST_P(WebGLCompatibilityTest, EnableQueryExtensions)
+TEST_P(WebGL1CompatibilityTest, EnableQueryExtensions)
 {
+    // These extensions are core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     GLQueryEXT badQuery;
 
@@ -884,12 +871,10 @@ TEST_P(WebGLCompatibilityTest, EnableQueryExtensions)
 }
 
 // Test enabling the GL_ANGLE_framebuffer_multisample extension
-TEST_P(WebGLCompatibilityTest, EnableFramebufferMultisampleExtension)
+TEST_P(WebGL1CompatibilityTest, EnableFramebufferMultisampleExtension)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_ANGLE_framebuffer_multisample"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     GLint maxSamples = 0;
     glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
@@ -914,12 +899,10 @@ TEST_P(WebGLCompatibilityTest, EnableFramebufferMultisampleExtension)
 }
 
 // Test enabling the GL_ANGLE_instanced_arrays extension
-TEST_P(WebGLCompatibilityTest, EnableInstancedArraysExtensionANGLE)
+TEST_P(WebGL1CompatibilityTest, EnableInstancedArraysExtensionANGLE)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_ANGLE_instanced_arrays"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     GLint divisor = 0;
     glGetVertexAttribiv(0, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &divisor);
@@ -940,12 +923,10 @@ TEST_P(WebGLCompatibilityTest, EnableInstancedArraysExtensionANGLE)
 }
 
 // Test enabling the GL_EXT_instanced_arrays extension
-TEST_P(WebGLCompatibilityTest, EnableInstancedArraysExtensionEXT)
+TEST_P(WebGL1CompatibilityTest, EnableInstancedArraysExtensionEXT)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_instanced_arrays"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     GLint divisor = 0;
     glGetVertexAttribiv(0, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &divisor);
@@ -989,12 +970,10 @@ TEST_P(WebGLCompatibilityTest, EnablePackReverseRowOrderExtension)
 }
 
 // Test enabling the GL_EXT_unpack_subimage extension
-TEST_P(WebGLCompatibilityTest, EnablePackUnpackSubImageExtension)
+TEST_P(WebGL1CompatibilityTest, EnablePackUnpackSubImageExtension)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_unpack_subimage"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     constexpr GLenum parameters[] = {
         GL_UNPACK_ROW_LENGTH_EXT,
@@ -1065,12 +1044,10 @@ TEST_P(WebGLCompatibilityTest, EnableTextureRectangle)
 }
 
 // Test enabling the GL_NV_pack_subimage extension
-TEST_P(WebGLCompatibilityTest, EnablePackPackSubImageExtension)
+TEST_P(WebGL1CompatibilityTest, EnablePackPackSubImageExtension)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_NV_pack_subimage"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     constexpr GLenum parameters[] = {
         GL_PACK_ROW_LENGTH,
@@ -1112,12 +1089,10 @@ TEST_P(WebGLCompatibilityTest, EnablePackPackSubImageExtension)
     }
 }
 
-TEST_P(WebGLCompatibilityTest, EnableRGB8RGBA8Extension)
+TEST_P(WebGL1CompatibilityTest, EnableRGB8RGBA8Extension)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_OES_rgb8_rgba8"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     GLRenderbuffer renderbuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
@@ -1195,8 +1170,7 @@ TEST_P(WebGLCompatibilityTest, ANGLE_rgbx_internal_format)
 // and that sampling from it works correctly with non-opaque alpha and larger size.
 TEST_P(WebGLCompatibilityTest, TexSubImage2DBGRASampledStorage)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888") &&
-                       !IsGLExtensionEnabled("GL_APPLE_texture_format_BGRA8888"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_texture_format_BGRA8888"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_texture_storage"));
 
     // Create a 2x2 texture with GL_BGRA8_EXT using glTexStorage2DEXT
@@ -1230,7 +1204,7 @@ TEST_P(WebGLCompatibilityTest, TexSubImage2DBGRASampledStorage)
     glDisable(GL_DEPTH_TEST);
     ASSERT_GL_NO_ERROR();
 
-    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
 
     // Verify the color is red with alpha 123.
@@ -1241,8 +1215,7 @@ TEST_P(WebGLCompatibilityTest, TexSubImage2DBGRASampledStorage)
 // using GL_BGRA_EXT, which is common in WebGL.
 TEST_P(WebGLCompatibilityTest, TexSubImage2DBGRASampledNonStorage)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888") &&
-                       !IsGLExtensionEnabled("GL_APPLE_texture_format_BGRA8888"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_texture_format_BGRA8888"));
 
     // Create a 2x2 texture with GL_BGRA_EXT using glTexImage2D
     GLTexture texture;
@@ -1268,7 +1241,7 @@ TEST_P(WebGLCompatibilityTest, TexSubImage2DBGRASampledNonStorage)
     glDisable(GL_DEPTH_TEST);
     ASSERT_GL_NO_ERROR();
 
-    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
 
     // Verify the color is red with alpha 123.
@@ -1276,12 +1249,10 @@ TEST_P(WebGLCompatibilityTest, TexSubImage2DBGRASampledNonStorage)
 }
 
 // Test enabling the GL_ANGLE_framebuffer_blit extension
-TEST_P(WebGLCompatibilityTest, EnableFramebufferBlitExtension)
+TEST_P(WebGL1CompatibilityTest, EnableFramebufferBlitExtension)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     GLFramebuffer fbo;
 
@@ -1307,12 +1278,10 @@ TEST_P(WebGLCompatibilityTest, EnableFramebufferBlitExtension)
 }
 
 // Test enabling the GL_OES_get_program_binary extension
-TEST_P(WebGLCompatibilityTest, EnableProgramBinaryExtension)
+TEST_P(WebGL1CompatibilityTest, EnableProgramBinaryExtension)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_OES_get_program_binary"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     GLint result           = 0;
     GLint numBinaryFormats = 0;
@@ -1373,12 +1342,10 @@ void main()
 }
 
 // Test enabling the GL_OES_vertex_array_object extension
-TEST_P(WebGLCompatibilityTest, EnableVertexArrayExtension)
+TEST_P(WebGL1CompatibilityTest, EnableVertexArrayExtension)
 {
+    // This extension is core in ES3/WebGL2.
     EXPECT_FALSE(IsGLExtensionEnabled("GL_OES_vertex_array_object"));
-
-    // This extensions become core in in ES3/WebGL2.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
 
     GLint result = 0;
     glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &result);
@@ -2145,9 +2112,8 @@ TEST_P(WebGLCompatibilityTest, BlendWithConstantColor)
 }
 
 // Test draw state validation and invalidation wrt indexed blendFunc.
-TEST_P(WebGLCompatibilityTest, IndexedBlendWithConstantColorInvalidation)
+TEST_P(WebGL2CompatibilityTest, IndexedBlendWithConstantColorInvalidation)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     ANGLE_SKIP_TEST_IF(!IsGLExtensionRequestable("GL_OES_draw_buffers_indexed"));
 
     glRequestExtensionANGLE("GL_OES_draw_buffers_indexed");
@@ -2216,9 +2182,8 @@ void main()
 }
 
 // Test getIndexedParameter wrt GL_OES_draw_buffers_indexed.
-TEST_P(WebGLCompatibilityTest, DrawBuffersIndexedGetIndexedParameter)
+TEST_P(WebGL2CompatibilityTest, DrawBuffersIndexedGetIndexedParameter)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     ANGLE_SKIP_TEST_IF(!IsGLExtensionRequestable("GL_OES_draw_buffers_indexed"));
 
     GLint value;
@@ -2832,14 +2797,8 @@ void main() {
 }
 
 // Test for the max draw buffers and color attachments.
-TEST_P(WebGLCompatibilityTest, MaxDrawBuffersAttachmentPoints)
+TEST_P(WebGL1CompatibilityTest, MaxDrawBuffersAttachmentPoints)
 {
-    // This test only applies to ES2.
-    if (getClientMajorVersion() != 2)
-    {
-        return;
-    }
-
     GLFramebuffer fbo[2];
     glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
 
@@ -2952,10 +2911,24 @@ void WebGLCompatibilityTest::drawBuffersEXTFeedbackLoop(GLuint program,
     EXPECT_GL_ERROR(expectedError);
 }
 
+TEST_P(WebGL1CompatibilityTest, MaxDrawBuffers)
+{
+    GLint maxDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    EXPECT_EQ(maxDrawBuffers, 0);
+    if (EnsureGLExtensionEnabled("GL_EXT_draw_buffers"))
+    {
+        glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+        EXPECT_GT(maxDrawBuffers, 1);
+    }
+}
+
 // This tests that rendering feedback loops works as expected with GL_EXT_draw_buffers.
 // Based on WebGL test conformance/extensions/webgl-draw-buffers-feedback-loop.html
-TEST_P(WebGLCompatibilityTest, RenderingFeedbackLoopWithDrawBuffersEXT)
+TEST_P(WebGL1CompatibilityTest, RenderingFeedbackLoopWithDrawBuffersEXT)
 {
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_draw_buffers"));
+
     constexpr char kVS[] =
         R"(attribute vec4 aPosition;
 varying vec2 texCoord;
@@ -2976,15 +2949,6 @@ void main() {
 
     GLsizei width  = 8;
     GLsizei height = 8;
-
-    // This shader cannot be run in ES3, because WebGL 2 does not expose the draw buffers
-    // extension and gl_FragData semantics are changed to enforce indexing by zero always.
-    // TODO(jmadill): This extension should be disabled in WebGL 2 contexts.
-    if (/*!IsGLExtensionEnabled("GL_EXT_draw_buffers")*/ getClientMajorVersion() != 2)
-    {
-        // No WEBGL_draw_buffers support -- this is legal.
-        return;
-    }
 
     GLint maxDrawBuffers = 0;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
@@ -4300,11 +4264,8 @@ TEST_P(WebGLCompatibilityTest, RGBA16FTextures)
 
 // Test that when GL_CHROMIUM_color_buffer_float_rgb[a] is enabled, sized GL_RGB[A]_32F formats are
 // accepted by glTexImage2D
-TEST_P(WebGLCompatibilityTest, SizedRGBA32FFormats)
+TEST_P(WebGL1CompatibilityTest, SizedRGBA32FFormats)
 {
-    // Test skipped because it is only valid for WebGL1 contexts.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() != 2);
-
     ANGLE_SKIP_TEST_IF(!IsGLExtensionRequestable("GL_OES_texture_float"));
 
     glRequestExtensionANGLE("GL_OES_texture_float");
@@ -4341,10 +4302,8 @@ TEST_P(WebGLCompatibilityTest, SizedRGBA32FFormats)
 }
 
 // Verify GL_DEPTH_STENCIL_ATTACHMENT is a valid attachment point.
-TEST_P(WebGLCompatibilityTest, DepthStencilAttachment)
+TEST_P(WebGL1CompatibilityTest, DepthStencilAttachment)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() > 2);
-
     // Test that attaching a bound texture succeeds.
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -4453,11 +4412,9 @@ TEST_P(WebGL2CompatibilityTest, CopyBufferSubDataBufferTypeRules)
     EXPECT_GL_NO_ERROR();
 }
 
-// Verify framebuffer attachments return expected types when in an inconsistant state.
-TEST_P(WebGLCompatibilityTest, FramebufferAttachmentConsistancy)
+// Verify framebuffer attachments return expected types when in an inconsistent state.
+TEST_P(WebGL1CompatibilityTest, FramebufferAttachmentConsistency)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() > 2);
-
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
@@ -5181,9 +5138,8 @@ void main() {
 
 // Test that it's not possible to query the non-zero color attachments without the drawbuffers
 // extension in WebGL1
-TEST_P(WebGLCompatibilityTest, FramebufferAttachmentQuery)
+TEST_P(WebGL1CompatibilityTest, FramebufferAttachmentQuery)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() > 2);
     ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_draw_buffers"));
 
     GLFramebuffer fbo;
@@ -5385,14 +5341,19 @@ void main()
     }
 }
 
+// GL_CHROMIUM_color_buffer_float_rgb[a] not conformant in 3.0.
+TEST_P(WebGL2CompatibilityTest, CHROMIUMColorBufferFloatRGBANotAvailable)
+{
+    EXPECT_FALSE(EnsureGLExtensionEnabled("GL_CHROMIUM_color_buffer_float_rgba"));
+    EXPECT_FALSE(EnsureGLExtensionEnabled("GL_CHROMIUM_color_buffer_float_rgb"));
+}
+
 // Test that it's possible to generate mipmaps on unsized floating point textures once the
 // extensions have been enabled
-TEST_P(WebGLCompatibilityTest, GenerateMipmapUnsizedFloatingPointTexture)
+TEST_P(WebGL1CompatibilityTest, GenerateMipmapUnsizedFloatingPointTexture)
 {
-    glRequestExtensionANGLE("GL_OES_texture_float");
-    glRequestExtensionANGLE("GL_CHROMIUM_color_buffer_float_rgba");
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_float"));
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_CHROMIUM_color_buffer_float_rgba"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_texture_float"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_color_buffer_float_rgba"));
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -5489,11 +5450,9 @@ void WebGLCompatibilityTest::validateTexImageExtensionFormat(GLenum format,
 }
 
 // Test enabling various non-compressed texture format extensions
-TEST_P(WebGLCompatibilityTest, EnableTextureFormatExtensions)
+TEST_P(WebGL1CompatibilityTest, EnableTextureFormatExtensions)
 {
     ANGLE_SKIP_TEST_IF(IsOzone());
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() != 2);
-
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -7561,6 +7520,8 @@ void main()
 }
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLCompatibilityTest);
+
+ANGLE_INSTANTIATE_TEST_ES2(WebGL1CompatibilityTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2CompatibilityTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2CompatibilityTest);
