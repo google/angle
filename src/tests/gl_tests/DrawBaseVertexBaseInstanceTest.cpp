@@ -835,6 +835,41 @@ TEST_P(DrawBaseVertexBaseInstanceTest, CanCompile)
     setupProgram(p3, false, true);
 }
 
+// Tests that negative baseVertex works properly.
+TEST_P(DrawBaseVertexBaseInstanceTest, NegativeBaseVertex)
+{
+    ANGLE_SKIP_TEST_IF(!requestExtensions());
+
+    GLProgram program;
+    setupProgram(program, false, false);
+
+    GLBuffer vertexBuffer;
+    GLBuffer indexBuffer;
+    setupIndexedBuffers(vertexBuffer, indexBuffer);
+    setupPositionVertexAttribPointer();
+
+    // Create a new index buffer with shifted indices: {4, 5, 6, 4, 6, 7}
+    // These indices point to the second quad (vertices 4, 5, 6, 7).
+    std::vector<GLushort> shiftedIndices = {4, 5, 6, 4, 6, 7};
+    GLBuffer shiftedIndexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shiftedIndexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * shiftedIndices.size(),
+                 shiftedIndices.data(), GL_STATIC_DRAW);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Draw using baseVertex = -4.
+    // This should shift the indices back to {0, 1, 2, 0, 2, 3}, drawing the first quad!
+    glDrawElementsInstancedBaseVertexBaseInstanceANGLE(
+        GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, reinterpret_cast<GLvoid *>(static_cast<uintptr_t>(0)),
+        1, -4, 0);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Check that the first quad was drawn as white.
+    EXPECT_PIXEL_NEAR(16, 16, 255, 255, 255, 255, 3);
+}
+
 // Tests if baseInstance works properly with instanced array with non-zero divisor
 TEST_P(DrawBaseVertexBaseInstanceTest, BaseInstanceDivisor)
 {
