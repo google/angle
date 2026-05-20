@@ -1146,14 +1146,16 @@ angle::Result TextureVk::ghostOnOverwrite(ContextVk *contextVk,
 {
     // If the texture's image is in use by the GPU but is overwritten completely, release the old
     // image and create a fresh one.  If the texture was used in a render pass, this avoids breaking
-    // the render pass.  Otherwise, it allows the new image to be initialized with
-    // VK_EXT_host_image_copy functionality.  In the very least, an unnecessary ?->Transfer barrier
-    // is avoided.
+    // the render pass.
 
     // Can't ghost the image if it's not owned by this texture.  For simplicity, also don't ghost
     // images if it's the target of an EGL image; this avoids the need to have to get the image
     // siblings to sync their ImageHelper pointers (http://anglebug.com/410584007).  This limitation
     // can likely be more easily lifted once http://anglebug.com/352005188 is implemented.
+    //
+    // Don't ghost the image for updates outside an active render pass.  If the image is being
+    // updated mid-frame on the main thread, the CPU could get blocked doing the copy on the host.
+    // This is conditional to a flag which can be set per app.
     //
     // If the allocateNonZeroMemory feature is enabled, the image's memory is going to be
     // initialized which puts the image back in GPU use so there's no point in ghosting the image
@@ -1168,6 +1170,13 @@ angle::Result TextureVk::ghostOnOverwrite(ContextVk *contextVk,
 
     // Only ghost the image if it's in use by the GPU.
     if (renderer->hasResourceUseFinished(mImage->getResourceUse()))
+    {
+        return angle::Result::Continue;
+    }
+
+    // Only ghost the image if it's in use by an active renderpass.
+    if (contextVk->getFeatures().avoidImageGhoseOutsideRenderPass.enabled &&
+        !contextVk->isRenderPassStartedAndUsesImage(*mImage))
     {
         return angle::Result::Continue;
     }

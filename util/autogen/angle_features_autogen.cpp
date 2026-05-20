@@ -56,6 +56,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::AsyncGarbageCleanup, "asyncGarbageCleanup"},
     {Feature::Avoid1BitAlphaTextureFormats, "avoid1BitAlphaTextureFormats"},
     {Feature::AvoidBindFragDataLocation, "avoidBindFragDataLocation"},
+    {Feature::AvoidImageGhoseOutsideRenderPass, "avoidImageGhoseOutsideRenderPass"},
     {Feature::AvoidInvisibleWindowSwapchainRecreate, "avoidInvisibleWindowSwapchainRecreate"},
     {Feature::AvoidOpSelectWithMismatchingRelaxedPrecision, "avoidOpSelectWithMismatchingRelaxedPrecision"},
     {Feature::AvoidStencilTextureSwizzle, "avoidStencilTextureSwizzle"},

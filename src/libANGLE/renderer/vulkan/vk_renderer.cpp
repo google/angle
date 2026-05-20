@@ -6856,6 +6856,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         isSamsung && driverVersion < angle::VersionTriple(25, 0, 0);
     ANGLE_FEATURE_CONDITION(&mFeatures, enableMergeClientAttribBuffer,
                             !isSamsungDriverWithVertexAttributePackingBug);
+
+    // Enable this feature to avoid image allocation overhead when repeatedly uploading the same
+    // texture that has already been uploaded, outside a render pass.
+    ANGLE_FEATURE_CONDITION(&mFeatures, avoidImageGhoseOutsideRenderPass, true);
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

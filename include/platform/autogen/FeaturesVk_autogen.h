@@ -1694,6 +1694,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo avoidImageGhoseOutsideRenderPass = {
+        "avoidImageGhoseOutsideRenderPass",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
