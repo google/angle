@@ -8576,6 +8576,361 @@ void main()
     }
 }
 
+class GLSLValidationExtensionDirectiveTestClipCull_ES31
+    : public GLSLValidationExtensionDirectiveTest_ES31
+{};
+
+// GL_EXT_clip_cull_distance or GL_ANGLE_clip_cull_distance needs to be enabled in GLSL to be able
+// to use gl_ClipDistance and gl_CullDistance in Geometry Shaders.
+TEST_P(GLSLValidationExtensionDirectiveTestClipCull_ES31, GeometryShader)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+
+    GLint maxClipDistances = 0;
+    GLint maxCullDistances = 0;
+    if (hasExt || hasAngle)
+    {
+        glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
+        EXPECT_GE(maxClipDistances, 8);
+
+        glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+        EXPECT_TRUE(maxCullDistances == 0 || maxCullDistances >= 8);
+        if (hasExt)
+        {
+            EXPECT_GE(maxCullDistances, 8);
+        }
+    }
+
+    constexpr char kGS[] = R"(#extension GL_EXT_geometry_shader : require
+layout (triangles) in;
+layout (triangle_strip, max_vertices = 3) out;
+in gl_PerVertex {
+    highp vec4 gl_Position;
+    highp float gl_ClipDistance[4];
+    highp float gl_CullDistance[4];
+} gl_in[];
+out gl_PerVertex {
+    highp vec4 gl_Position;
+    highp float gl_ClipDistance[4];
+    highp float gl_CullDistance[4];
+};
+void main()
+{
+    for (int i = 0; i < 3; ++i)
+    {
+        gl_Position = gl_in[i].gl_Position;
+        for (int j = 0; j < 4; ++j)
+        {
+            gl_ClipDistance[j] = gl_in[i].gl_ClipDistance[j];
+            gl_CullDistance[j] = gl_in[i].gl_CullDistance[j];
+        }
+        EmitVertex();
+    }
+    EndPrimitive();
+})";
+
+    {
+        const char *expectWithoutPragma =
+            hasExt ? "extension is disabled" : "extension is not supported";
+        const char *expectWithExtDisabled =
+            hasExt ? "extension is disabled" : "extension is not supported";
+
+        testCompileNeedsExtensionDirective(GL_GEOMETRY_SHADER, kGS, "#version 310 es",
+                                           "GL_EXT_clip_cull_distance", hasExt, expectWithoutPragma,
+                                           expectWithExtDisabled);
+    }
+
+    if (maxCullDistances > 0)
+    {
+        const char *expectWithoutPragma =
+            hasAngle ? "extension is disabled" : "extension is not supported";
+        const char *expectWithExtDisabled =
+            hasAngle ? "extension is disabled" : "extension is not supported";
+
+        testCompileNeedsExtensionDirective(GL_GEOMETRY_SHADER, kGS, "#version 310 es",
+                                           "GL_ANGLE_clip_cull_distance", hasAngle,
+                                           expectWithoutPragma, expectWithExtDisabled);
+    }
+}
+
+// GL_EXT/OES_geometry_point_size needs to be enabled in GLSL to be able
+// to use gl_PointSize in Geometry Shaders.
+TEST_P(GLSLValidationExtensionDirectiveTestClipCull_ES31, GeometryShaderPointSize)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    const bool hasPointSizeEXT = IsGLExtensionEnabled("GL_EXT_geometry_point_size");
+    const bool hasPointSizeOES = IsGLExtensionEnabled("GL_OES_geometry_point_size");
+
+    GLint maxClipDistances = 0;
+    GLint maxCullDistances = 0;
+
+    glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
+    EXPECT_GE(maxClipDistances, 8);
+
+    glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+    EXPECT_GE(maxCullDistances, 8);
+
+    constexpr char kGS[] = R"(#extension GL_EXT_geometry_shader : require
+#extension GL_EXT_clip_cull_distance : require
+layout (triangles) in;
+layout (triangle_strip, max_vertices = 3) out;
+in gl_PerVertex {
+    highp vec4 gl_Position;
+    highp float gl_PointSize;
+    highp float gl_ClipDistance[4];
+} gl_in[];
+out gl_PerVertex {
+    highp vec4 gl_Position;
+    highp float gl_PointSize;
+    highp float gl_ClipDistance[4];
+};
+void main()
+{
+    for (int i = 0; i < 3; ++i)
+    {
+        gl_Position = gl_in[i].gl_Position;
+        gl_PointSize = gl_in[i].gl_PointSize;
+        for (int j = 0; j < 4; ++j)
+        {
+            gl_ClipDistance[j] = gl_in[i].gl_ClipDistance[j];
+        }
+        EmitVertex();
+    }
+    EndPrimitive();
+})";
+
+    {
+        const char *expectWithoutPragma =
+            hasPointSizeEXT ? "extension is disabled" : "extension is not supported";
+        const char *expectWithExtDisabled =
+            hasPointSizeEXT ? "extension is disabled" : "extension is not supported";
+
+        testCompileNeedsExtensionDirective(GL_GEOMETRY_SHADER, kGS, "#version 310 es",
+                                           "GL_EXT_geometry_point_size", hasPointSizeEXT,
+                                           expectWithoutPragma, expectWithExtDisabled);
+    }
+
+    {
+        const char *expectWithoutPragma =
+            hasPointSizeOES ? "extension is disabled" : "extension is not supported";
+        const char *expectWithExtDisabled =
+            hasPointSizeOES ? "extension is disabled" : "extension is not supported";
+
+        testCompileNeedsExtensionDirective(GL_GEOMETRY_SHADER, kGS, "#version 310 es",
+                                           "GL_OES_geometry_point_size", hasPointSizeOES,
+                                           expectWithoutPragma, expectWithExtDisabled);
+    }
+}
+
+// GL_EXT_clip_cull_distance or GL_ANGLE_clip_cull_distance needs to be enabled in GLSL to be able
+// to use gl_ClipDistance and gl_CullDistance in Tessellation Shaders.
+TEST_P(GLSLValidationExtensionDirectiveTestClipCull_ES31, TessellationShader)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+    const bool hasExt   = IsGLExtensionEnabled("GL_EXT_clip_cull_distance");
+    const bool hasAngle = IsGLExtensionEnabled("GL_ANGLE_clip_cull_distance");
+
+    GLint maxClipDistances = 0;
+    GLint maxCullDistances = 0;
+    if (hasExt || hasAngle)
+    {
+        glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
+        EXPECT_GE(maxClipDistances, 8);
+
+        glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+        EXPECT_TRUE(maxCullDistances == 0 || maxCullDistances >= 8);
+        if (hasExt)
+        {
+            EXPECT_GE(maxCullDistances, 8);
+        }
+    }
+
+    constexpr char kTCS[] = R"(#extension GL_EXT_tessellation_shader : require
+layout (vertices = 3) out;
+in gl_PerVertex
+{
+    highp vec4 gl_Position;
+    highp float gl_ClipDistance[1];
+    highp float gl_CullDistance[1];
+} gl_in[];
+out gl_PerVertex
+{
+    highp vec4 gl_Position;
+    highp float gl_ClipDistance[1];
+    highp float gl_CullDistance[1];
+} gl_out[];
+void main()
+{
+    gl_out[gl_InvocationID].gl_ClipDistance[0] = gl_in[gl_InvocationID].gl_ClipDistance[0];
+    gl_out[gl_InvocationID].gl_CullDistance[0] = gl_in[gl_InvocationID].gl_CullDistance[0];
+    gl_out[gl_InvocationID].gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    if (gl_InvocationID == 0)
+    {
+        gl_TessLevelOuter[0] = 2.0;
+        gl_TessLevelOuter[1] = 2.0;
+        gl_TessLevelOuter[2] = 2.0;
+        gl_TessLevelInner[0] = 2.0;
+    }
+})";
+
+    constexpr char kTES[] = R"(#extension GL_EXT_tessellation_shader : require
+layout(triangles, equal_spacing, ccw) in;
+in gl_PerVertex
+{
+    highp vec4 gl_Position;
+    highp float gl_ClipDistance[1];
+    highp float gl_CullDistance[1];
+} gl_in[];
+out gl_PerVertex
+{
+    highp vec4 gl_Position;
+    highp float gl_ClipDistance[1];
+    highp float gl_CullDistance[1];
+};
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    gl_ClipDistance[0] = gl_in[0].gl_ClipDistance[0];
+    gl_CullDistance[0] = gl_in[0].gl_CullDistance[0];
+})";
+
+    {
+        const char *expectWithoutPragma =
+            hasExt ? "extension is disabled" : "extension is not supported";
+        const char *expectWithExtDisabled =
+            hasExt ? "extension is disabled" : "extension is not supported";
+
+        testCompileNeedsExtensionDirective(GL_TESS_CONTROL_SHADER, kTCS, "#version 310 es",
+                                           "GL_EXT_clip_cull_distance", hasExt, expectWithoutPragma,
+                                           expectWithExtDisabled);
+        testCompileNeedsExtensionDirective(GL_TESS_EVALUATION_SHADER, kTES, "#version 310 es",
+                                           "GL_EXT_clip_cull_distance", hasExt, expectWithoutPragma,
+                                           expectWithExtDisabled);
+    }
+
+    if (maxCullDistances > 0)
+    {
+        const char *expectWithoutPragma =
+            hasAngle ? "extension is disabled" : "extension is not supported";
+        const char *expectWithExtDisabled =
+            hasAngle ? "extension is disabled" : "extension is not supported";
+
+        testCompileNeedsExtensionDirective(GL_TESS_CONTROL_SHADER, kTCS, "#version 310 es",
+                                           "GL_ANGLE_clip_cull_distance", hasAngle,
+                                           expectWithoutPragma, expectWithExtDisabled);
+        testCompileNeedsExtensionDirective(GL_TESS_EVALUATION_SHADER, kTES, "#version 310 es",
+                                           "GL_ANGLE_clip_cull_distance", hasAngle,
+                                           expectWithoutPragma, expectWithExtDisabled);
+    }
+}
+
+// GL_EXT/OES_tessellation_point_size needs to be enabled in GLSL to be able
+// to use gl_PointSize in Tessellation Shaders.
+TEST_P(GLSLValidationExtensionDirectiveTestClipCull_ES31, TessellationShaderPointSize)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_cull_distance"));
+    const bool hasPointSizeEXT = IsGLExtensionEnabled("GL_EXT_tessellation_point_size");
+    const bool hasPointSizeOES = IsGLExtensionEnabled("GL_OES_tessellation_point_size");
+
+    GLint maxClipDistances = 0;
+    GLint maxCullDistances = 0;
+
+    glGetIntegerv(GL_MAX_CLIP_DISTANCES_EXT, &maxClipDistances);
+    EXPECT_GE(maxClipDistances, 8);
+
+    glGetIntegerv(GL_MAX_CULL_DISTANCES_EXT, &maxCullDistances);
+    EXPECT_GE(maxCullDistances, 8);
+
+    constexpr char kTCS[] = R"(#extension GL_EXT_tessellation_shader : require
+#extension GL_EXT_clip_cull_distance : require
+layout (vertices = 3) out;
+in gl_PerVertex
+{
+    highp vec4 gl_Position;
+    highp float gl_PointSize;
+    highp float gl_ClipDistance[1];
+    highp float gl_CullDistance[1];
+} gl_in[];
+out gl_PerVertex
+{
+    highp vec4 gl_Position;
+    highp float gl_PointSize;
+    highp float gl_ClipDistance[1];
+    highp float gl_CullDistance[1];
+} gl_out[];
+void main()
+{
+    gl_out[gl_InvocationID].gl_ClipDistance[0] = gl_in[gl_InvocationID].gl_ClipDistance[0];
+    gl_out[gl_InvocationID].gl_CullDistance[0] = gl_in[gl_InvocationID].gl_CullDistance[0];
+    gl_out[gl_InvocationID].gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    gl_out[gl_InvocationID].gl_PointSize = gl_in[gl_InvocationID].gl_PointSize;
+    if (gl_InvocationID == 0)
+    {
+        gl_TessLevelOuter[0] = 2.0;
+        gl_TessLevelOuter[1] = 2.0;
+        gl_TessLevelOuter[2] = 2.0;
+        gl_TessLevelInner[0] = 2.0;
+    }
+})";
+
+    constexpr char kTES[] = R"(#extension GL_EXT_tessellation_shader : require
+#extension GL_EXT_clip_cull_distance : require
+layout(triangles, equal_spacing, ccw) in;
+in gl_PerVertex
+{
+    highp vec4 gl_Position;
+    highp float gl_PointSize;
+    highp float gl_ClipDistance[1];
+    highp float gl_CullDistance[1];
+} gl_in[];
+out gl_PerVertex
+{
+    highp vec4 gl_Position;
+    highp float gl_PointSize;
+    highp float gl_ClipDistance[1];
+    highp float gl_CullDistance[1];
+};
+void main()
+{
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    gl_PointSize = gl_in[0].gl_PointSize;
+    gl_ClipDistance[0] = gl_in[0].gl_ClipDistance[0];
+    gl_CullDistance[0] = gl_in[0].gl_CullDistance[0];
+})";
+
+    {
+        const char *expectWithoutPragma =
+            hasPointSizeEXT ? "extension is disabled" : "extension is not supported";
+        const char *expectWithExtDisabled =
+            hasPointSizeEXT ? "extension is disabled" : "extension is not supported";
+
+        testCompileNeedsExtensionDirective(GL_TESS_CONTROL_SHADER, kTCS, "#version 310 es",
+                                           "GL_EXT_tessellation_point_size", hasPointSizeEXT,
+                                           expectWithoutPragma, expectWithExtDisabled);
+        testCompileNeedsExtensionDirective(GL_TESS_EVALUATION_SHADER, kTES, "#version 310 es",
+                                           "GL_EXT_tessellation_point_size", hasPointSizeEXT,
+                                           expectWithoutPragma, expectWithExtDisabled);
+    }
+
+    {
+        const char *expectWithoutPragma =
+            hasPointSizeOES ? "extension is disabled" : "extension is not supported";
+        const char *expectWithExtDisabled =
+            hasPointSizeOES ? "extension is disabled" : "extension is not supported";
+
+        testCompileNeedsExtensionDirective(GL_TESS_CONTROL_SHADER, kTCS, "#version 310 es",
+                                           "GL_OES_tessellation_point_size", hasPointSizeOES,
+                                           expectWithoutPragma, expectWithExtDisabled);
+        testCompileNeedsExtensionDirective(GL_TESS_EVALUATION_SHADER, kTES, "#version 310 es",
+                                           "GL_OES_tessellation_point_size", hasPointSizeOES,
+                                           expectWithoutPragma, expectWithExtDisabled);
+    }
+}
+
 class GLSLValidationMultiviewTest_ES3 : public GLSLValidationTest_ES3
 {
   protected:
@@ -9082,6 +9437,11 @@ ANGLE_INSTANTIATE_TEST_ES3(GLSLValidationExtensionDirectiveTest_ES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationExtensionDirectiveTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31(GLSLValidationExtensionDirectiveTest_ES31);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationExtensionDirectiveTestClipCull_ES31);
+ANGLE_INSTANTIATE_TEST(GLSLValidationExtensionDirectiveTestClipCull_ES31,
+                       ES31_VULKAN(),
+                       ES31_VULKAN_SWIFTSHADER());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationMultiviewTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3(GLSLValidationMultiviewTest_ES3);

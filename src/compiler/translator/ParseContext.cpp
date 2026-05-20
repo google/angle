@@ -7465,6 +7465,48 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             {
                 mIRBuilder.structField(i);
 
+                // Validate extension requirements for gl_PerVertex fields.
+                const TInterfaceBlock *interfaceBlock =
+                    baseExpression->getType().getInterfaceBlock();
+                if (interfaceBlock && interfaceBlock->name() == "gl_PerVertex")
+                {
+                    TQualifier fieldQualifier = fields[i]->type()->getQualifier();
+                    if (fieldQualifier == EvqClipDistance || fieldQualifier == EvqCullDistance)
+                    {
+                        // gl_ClipDistance and gl_CullDistance require EXT_clip_cull_distance or
+                        // ANGLE_clip_cull_distance extension.
+                        if (!checkCanUseOneOfExtensions(
+                                fieldLocation,
+                                std::array<TExtension, 2u>{{TExtension::EXT_clip_cull_distance,
+                                                            TExtension::ANGLE_clip_cull_distance}}))
+                        {
+                            return baseExpression;
+                        }
+                    }
+                    else if (mShaderType == GL_GEOMETRY_SHADER && fieldQualifier == EvqPointSize)
+                    {
+                        if (!checkCanUseOneOfExtensions(
+                                fieldLocation,
+                                std::array<TExtension, 2u>{{TExtension::EXT_geometry_point_size,
+                                                            TExtension::OES_geometry_point_size}}))
+                        {
+                            return baseExpression;
+                        }
+                    }
+                    else if ((mShaderType == GL_TESS_CONTROL_SHADER ||
+                              mShaderType == GL_TESS_EVALUATION_SHADER) &&
+                             fieldQualifier == EvqPointSize)
+                    {
+                        if (!checkCanUseOneOfExtensions(
+                                fieldLocation, std::array<TExtension, 2u>{
+                                                   {TExtension::EXT_tessellation_point_size,
+                                                    TExtension::OES_tessellation_point_size}}))
+                        {
+                            return baseExpression;
+                        }
+                    }
+                }
+
                 TIntermTyped *index = CreateIndexNode(i);
                 index->setLine(fieldLocation);
                 TIntermBinary *node =
