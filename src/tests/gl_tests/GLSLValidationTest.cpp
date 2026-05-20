@@ -257,6 +257,71 @@ TEST_P(GLSLValidationTest, CompareStructsContainingSamplers)
                   "'==' : undefined operation for structs containing samplers");
 }
 
+// https://crbug.com/499176133
+TEST_P(GLSLValidationTest, LongIdentifierAtLimit_1024)
+{
+    std::string longName = "_u";
+    longName.append(1024 - 2, 'a');
+    std::string shader = R"(
+void main() {
+  precision mediump float;
+  float )" + longName + R"( = 1.0;
+})";
+
+    std::string result =
+        std::string("'") + longName +
+        std::string("' : identifiers beginning with `_u` must be < 1022 characters");
+
+    validateError(GL_FRAGMENT_SHADER, shader.c_str(), result.c_str());
+}
+// https://crbug.com/499176133
+TEST_P(GLSLValidationTest, LongIdentifierAtLimit_1023)
+{
+    std::string longName = "_u";
+    longName.append(1023 - 2, 'a');
+    std::string shader = R"(
+void main() {
+  precision mediump float;
+  float )" + longName + R"( = 1.0;
+})";
+
+    std::string result =
+        std::string("'") + longName +
+        std::string("' : identifiers beginning with `_u` must be < 1022 characters");
+
+    validateError(GL_FRAGMENT_SHADER, shader.c_str(), result.c_str());
+}
+// https://crbug.com/499176133
+TEST_P(GLSLValidationTest, LongIdentifierAtLimit_1022)
+{
+    std::string longName = "_u";
+    longName.append(1022 - 2, 'a');
+    std::string shader = R"(
+void main() {
+  precision mediump float;
+  float )" + longName + R"( = 1.0;
+})";
+
+    std::string result =
+        std::string("'") + longName +
+        std::string("' : identifiers beginning with `_u` must be < 1022 characters");
+
+    validateError(GL_FRAGMENT_SHADER, shader.c_str(), result.c_str());
+}
+// https://crbug.com/499176133
+TEST_P(GLSLValidationTest, LongIdentifierAtLimit_1021)
+{
+    std::string longName = "_u";
+    longName.append(1021 - 2, 'a');
+    std::string shader = R"(
+void main() {
+  precision mediump float;
+  float )" + longName + R"( = 1.0;
+})";
+
+    validateSuccess(GL_FRAGMENT_SHADER, shader.c_str());
+}
+
 // Samplers are not allowed as l-values (ESSL 3.00 section 4.1.7), our interpretation is that this
 // extends to structs containing samplers. ESSL 1.00 spec is clearer about this.
 TEST_P(GLSLValidationTest_ES3, AssignStructsContainingSamplers)
