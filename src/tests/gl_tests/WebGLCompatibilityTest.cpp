@@ -6249,6 +6249,49 @@ TEST_P(WebGL2CompatibilityTest, TransformFeedbackBufferModification)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Modifying a buffer that is part of an active transform feedback object (even when that transform
+// feedback is paused and not current) is invalid.
+TEST_P(WebGL2CompatibilityTest, TransformFeedbackBufferModificationWhileNotCurrent)
+{
+    constexpr char kVS[] = R"(attribute float a; varying float b; void main() { b = a; })";
+    constexpr char kFS[] = R"(void main(){})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    static const char *varyings[] = {"b"};
+    glTransformFeedbackVaryings(program, 1, varyings, GL_SEPARATE_ATTRIBS);
+    glLinkProgram(program);
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind the transform feedback varyings to non-overlapping regions of the same buffer.
+    GLTransformFeedback tf1;
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, tf1);
+
+    GLBuffer buffer;
+    glBindBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, buffer, 0, 4);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 8, nullptr, GL_STATIC_DRAW);
+    glBeginTransformFeedback(GL_POINTS);
+    ASSERT_GL_NO_ERROR();
+
+    glPauseTransformFeedback();
+
+    GLTransformFeedback tf2;
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, tf2);
+    ASSERT_GL_NO_ERROR();
+
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    ASSERT_GL_NO_ERROR();
+
+    glBufferData(GL_ARRAY_BUFFER, 8, nullptr, GL_STATIC_DRAW);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    constexpr uint8_t data[8] = {0};
+    glBufferSubData(GL_ARRAY_BUFFER, 0, 8, data);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glMapBufferRange(GL_ARRAY_BUFFER, 0, 8, GL_MAP_READ_BIT);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Check the return type of a given parameter upon getting the active uniforms.
 TEST_P(WebGL2CompatibilityTest, UniformVariablesReturnTypes)
 {
