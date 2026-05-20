@@ -550,13 +550,15 @@ class Framebuffer final : public angle::ObserverInterface,
     // * scissor test partially overlaps the framebuffer
     // * any attachment is an arrayed texture, but the framebuffer attachment doesn't completely
     // cover it
-    bool partialClearNeedsInit(const Context *context,
-                               DrawBufferMask color,
-                               bool depth,
-                               bool stencil);
-    bool partialBufferClearNeedsInit(const Context *context,
-                                     GLenum bufferType,
-                                     DrawBufferMask drawBuffers);
+    angle::Result partialClearNeedsInit(const Context *context,
+                                        DrawBufferMask color,
+                                        bool depth,
+                                        bool stencil,
+                                        bool *needsInitOut);
+    angle::Result partialBufferClearNeedsInit(const Context *context,
+                                              GLenum bufferType,
+                                              DrawBufferMask drawBuffers,
+                                              bool *needsInitOut);
 
     FramebufferAttachment *getAttachmentFromSubjectIndex(angle::SubjectIndex index);
 

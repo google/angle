@@ -1654,35 +1654,46 @@ angle::Result Framebuffer::invalidate(const Context *context,
     return mImpl->invalidate(context, count, attachments);
 }
 
-bool Framebuffer::partialClearNeedsInit(const Context *context,
-                                        DrawBufferMask color,
-                                        bool depth,
-                                        bool stencil)
+angle::Result Framebuffer::partialClearNeedsInit(const Context *context,
+                                                 DrawBufferMask color,
+                                                 bool depth,
+                                                 bool stencil,
+                                                 bool *needsInitOut)
 {
     const auto &glState = context->getState();
 
     if (!glState.isRobustResourceInitEnabled())
     {
-        return false;
+        *needsInitOut = false;
+        return angle::Result::Continue;
     }
 
     if (depth && context->getFrontendFeatures().forceDepthAttachmentInitOnClear.enabled)
     {
-        return true;
+        *needsInitOut = true;
+        return angle::Result::Continue;
     }
 
     // Scissors can affect clearing.
-    // TODO(jmadill): Check for complete scissor overlap.
     if (glState.isScissorTestEnabled())
     {
-        return true;
+        const Rectangle &scissor = glState.getScissor();
+        bool allEnclosed         = false;
+        ANGLE_TRY(
+            checkAllAttachmentsEnclosedBy(context, scissor, color, depth, stencil, &allEnclosed));
+        if (!allEnclosed)
+        {
+            *needsInitOut = true;
+            return angle::Result::Continue;
+        }
     }
 
     // If colors masked, we must clear before we clear. Do a simple check.
     // TODO(jmadill): Filter out unused color channels from the test.
     if (color.any() && glState.anyActiveDrawBufferChannelMasked())
     {
-        return true;
+        *needsInitOut = true;
+        return angle::Result::Continue;
     }
 
     if (stencil)
@@ -1697,7 +1708,8 @@ bool Framebuffer::partialClearNeedsInit(const Context *context,
         // considered.
         if ((depthStencil.stencilWritemask & 0xFF) != 0xFF)
         {
-            return true;
+            *needsInitOut = true;
+            return angle::Result::Continue;
         }
     }
 
@@ -1705,21 +1717,25 @@ bool Framebuffer::partialClearNeedsInit(const Context *context,
     // some layers but marks the entire mip as initialized.
     if (depth && mState.mDepthAttachment.hasLayer())
     {
-        return true;
+        *needsInitOut = true;
+        return angle::Result::Continue;
     }
     if (stencil && mState.mStencilAttachment.hasLayer())
     {
-        return true;
+        *needsInitOut = true;
+        return angle::Result::Continue;
     }
     for (size_t colorIndex : color)
     {
         if (mState.mColorAttachments[colorIndex].hasLayer())
         {
-            return true;
+            *needsInitOut = true;
+            return angle::Result::Continue;
         }
     }
 
-    return false;
+    *needsInitOut = false;
+    return angle::Result::Continue;
 }
 
 angle::Result Framebuffer::invalidateSub(const Context *context,
@@ -2558,7 +2574,10 @@ angle::Result Framebuffer::ensureClearAttachmentsInitialized(const Context *cont
     // but are explicitly masked out here for clarity.
     const DrawBufferMask colorAttachmentsNeedingInit(mState.mResourceNeedsInit.bits() &
                                                      DrawBufferMask().set().bits());
-    if (partialClearNeedsInit(context, colorAttachmentsNeedingInit, depth, stencil))
+    bool needsInit = false;
+    ANGLE_TRY(
+        partialClearNeedsInit(context, colorAttachmentsNeedingInit, depth, stencil, &needsInit));
+    if (needsInit)
     {
         ANGLE_TRY(ensureDrawAttachmentsInitialized(context));
     }
@@ -2633,8 +2652,9 @@ angle::Result Framebuffer::ensureClearBufferAttachmentsInitialized(const Context
             break;
     }
 
-    if (partialBufferClearNeedsInit(context, buffer, clearColorAttachments) &&
-        (clearColorAttachments.any() || clearDepth || clearStencil))
+    bool needsInit = false;
+    ANGLE_TRY(partialBufferClearNeedsInit(context, buffer, clearColorAttachments, &needsInit));
+    if (needsInit && (clearColorAttachments.any() || clearDepth || clearStencil))
     {
         ANGLE_TRY(mImpl->ensureAttachmentsInitialized(context, clearColorAttachments, clearDepth,
                                                       clearStencil));
@@ -2964,28 +2984,31 @@ GLuint Framebuffer::getSupportedFoveationFeatures() const
     return mState.mFoveationState.getSupportedFoveationFeatures();
 }
 
-bool Framebuffer::partialBufferClearNeedsInit(const Context *context,
-                                              GLenum bufferType,
-                                              DrawBufferMask drawBuffers)
+angle::Result Framebuffer::partialBufferClearNeedsInit(const Context *context,
+                                                       GLenum bufferType,
+                                                       DrawBufferMask drawBuffers,
+                                                       bool *needsInitOut)
 {
+    *needsInitOut = false;
+
     if (!context->isRobustResourceInitEnabled() || mState.mResourceNeedsInit.none())
     {
-        return false;
+        return angle::Result::Continue;
     }
 
     switch (bufferType)
     {
         case GL_COLOR:
-            return partialClearNeedsInit(context, drawBuffers, false, false);
+            return partialClearNeedsInit(context, drawBuffers, false, false, needsInitOut);
         case GL_DEPTH:
-            return partialClearNeedsInit(context, {}, true, false);
+            return partialClearNeedsInit(context, {}, true, false, needsInitOut);
         case GL_STENCIL:
-            return partialClearNeedsInit(context, {}, false, true);
+            return partialClearNeedsInit(context, {}, false, true, needsInitOut);
         case GL_DEPTH_STENCIL:
-            return partialClearNeedsInit(context, {}, true, true);
+            return partialClearNeedsInit(context, {}, true, true, needsInitOut);
         default:
             UNREACHABLE();
-            return false;
+            return angle::Result::Stop;
     }
 }
 
