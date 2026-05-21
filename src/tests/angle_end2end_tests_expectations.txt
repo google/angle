@@ -3392,6 +3392,10 @@
 575564312 OPENGL : WebGL2CompatibilityTest.UniqueFramebufferAttachmentsMultiview/* = SKIP
 575564312 OPENGL : HardenedContextTest.UniqueFramebufferAttachmentsMultiview/* = SKIP
 
+// Driver expects matching clipcull sizes
+42264006 LINUX INTEL OPENGL : GLSLValidationClipDistanceTest_ES31.GeometryPerVertexInOutClipDistanceDifferentSizeLink/* = SKIP
+42264006 PIXEL4ORXL GLES : GLSLValidationClipDistanceTest_ES31.GeometryPerVertexInOutClipDistanceDifferentSizeLink/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

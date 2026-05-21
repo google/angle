@@ -338,6 +338,29 @@ void MarkClipCullIndex(const TSourceLoc &line, TIntermTyped *indexExpr, ClipCull
     }
 }
 
+// Returns true if node selects a member of gl_in, e.g. gl_in[i].gl_ClipDistance. The members of
+// gl_in are sized independently of the shader's own gl_ClipDistance and gl_CullDistance.
+bool IsPerVertexInMember(TIntermTyped *node)
+{
+    TIntermBinary *fieldSelection = node->getAsBinaryNode();
+    if (fieldSelection == nullptr || fieldSelection->getOp() != EOpIndexDirectInterfaceBlock)
+    {
+        return false;
+    }
+
+    // Indexing gl_in makes the qualifier temporary, so look at the indexed block itself.
+    TIntermTyped *block = fieldSelection->getLeft();
+    while (TIntermBinary *index = block->getAsBinaryNode())
+    {
+        if (index->getOp() != EOpIndexDirect && index->getOp() != EOpIndexIndirect)
+        {
+            break;
+        }
+        block = index->getLeft();
+    }
+    return block->getQualifier() == EvqPerVertexIn;
+}
+
 void ValidateFragColorAndFragData(GLenum shaderType,
                                   int shaderVersion,
                                   const TSymbolTable &symbolTable,
@@ -3542,14 +3565,14 @@ void TParseContext::checkClipCullDistanceWholeArrayUse(const TSourceLoc &locatio
     switch (node->getQualifier())
     {
         case EvqClipDistance:
-            if (mClipDistanceInfo.size == 0)
+            if ((IsPerVertexInMember(node) ? mInputClipDistanceInfo : mClipDistanceInfo).size == 0)
             {
                 error(location, message, "gl_ClipDistance");
                 return;
             }
             break;
         case EvqCullDistance:
-            if (mCullDistanceInfo.size == 0)
+            if ((IsPerVertexInMember(node) ? mInputCullDistanceInfo : mCullDistanceInfo).size == 0)
             {
                 error(location, message, "gl_CullDistance");
                 return;
@@ -6892,7 +6915,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
     const bool isGLPerVertex = blockName == "gl_PerVertex";
     // gl_PerVertex is allowed to be redefined and therefore not reserved
-    if (!isGLPerVertex)
+    if (!isGLPerVertex || mShaderType == GL_COMPUTE_SHADER || mShaderType == GL_FRAGMENT_SHADER)
     {
         checkIsNotReserved(nameLine, blockName);
     }
@@ -6939,7 +6962,9 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
             if (!isExtensionEnabled(TExtension::OES_shader_io_blocks) &&
                 !isExtensionEnabled(TExtension::EXT_shader_io_blocks) &&
                 !isExtensionEnabled(TExtension::OES_geometry_shader) &&
-                !isExtensionEnabled(TExtension::EXT_geometry_shader) && mShaderVersion < 320)
+                !isExtensionEnabled(TExtension::EXT_geometry_shader) &&
+                !isExtensionEnabled(TExtension::OES_tessellation_shader) &&
+                !isExtensionEnabled(TExtension::EXT_tessellation_shader) && mShaderVersion < 320)
             {
                 error(typeQualifier.line,
                       "invalid qualifier: shader IO blocks need shader io block extension",
@@ -7154,11 +7179,19 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
             case EvqNoPerspectiveSample:
             case EvqGeometryIn:
             case EvqGeometryOut:
+            case EvqTessControlIn:
+            case EvqTessControlOut:
+            case EvqTessEvaluationIn:
+            case EvqTessEvaluationOut:
                 if (!IsShaderIoBlock(typeQualifier.qualifier) &&
                     typeQualifier.qualifier != EvqPatchIn &&
                     typeQualifier.qualifier != EvqPatchOut &&
                     typeQualifier.qualifier != EvqGeometryIn &&
-                    typeQualifier.qualifier != EvqGeometryOut)
+                    typeQualifier.qualifier != EvqGeometryOut &&
+                    typeQualifier.qualifier != EvqTessControlIn &&
+                    typeQualifier.qualifier != EvqTessControlOut &&
+                    typeQualifier.qualifier != EvqTessEvaluationIn &&
+                    typeQualifier.qualifier != EvqTessEvaluationOut)
                 {
                     error(field->line(), "invalid qualifier on interface block member",
                           getQualifierString(qualifier));
@@ -7242,6 +7275,17 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         // For per-vertex members, apply the appropriate built-in qualifiers to the members.
         if (isGLPerVertex)
         {
+            // The gl_ClipDistance and gl_CullDistance members of gl_in are sized independently of
+            // the shader's output gl_ClipDistance and gl_CullDistance.
+            const bool isPerVertexIn = IsVaryingIn(typeQualifier.qualifier);
+            if (field->name() != "gl_Position" && field->name() != "gl_PointSize" &&
+                field->name() != "gl_ClipDistance" && field->name() != "gl_CullDistance")
+            {
+                error(field->line(),
+                      "invalid member of gl_PerVertex, only gl_Position, gl_PointSize, "
+                      "gl_ClipDistance and gl_CullDistance may be redeclared",
+                      field->name());
+            }
             if (field->name() == "gl_Position")
             {
                 fieldType->setQualifier(EvqPosition);
@@ -7253,10 +7297,32 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
             if (field->name() == "gl_ClipDistance")
             {
                 fieldType->setQualifier(EvqClipDistance);
+                if (static_cast<int>(field->type()->getOutermostArraySize()) >
+                    mResources.MaxClipDistances)
+                {
+                    error(field->line(),
+                          "array index out of range, redeclaration of gl_ClipDistance with size > "
+                          "gl_MaxClipDistances",
+                          field->name());
+                }
+                MarkClipCullRedeclaredSize(
+                    field->line(), field->type()->getOutermostArraySize(),
+                    isPerVertexIn ? &mInputClipDistanceInfo : &mClipDistanceInfo);
             }
             if (field->name() == "gl_CullDistance")
             {
                 fieldType->setQualifier(EvqCullDistance);
+                if (static_cast<int>(field->type()->getOutermostArraySize()) >
+                    mResources.MaxCullDistances)
+                {
+                    error(field->line(),
+                          "array index out of range, redeclaration of gl_CullDistance with size > "
+                          "gl_MaxCullDistances",
+                          field->name());
+                }
+                MarkClipCullRedeclaredSize(
+                    field->line(), field->type()->getOutermostArraySize(),
+                    isPerVertexIn ? &mInputCullDistanceInfo : &mCullDistanceInfo);
             }
         }
     }
@@ -7369,8 +7435,6 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
             // set parent pointer of the field variable
             fieldType->setInterfaceBlockField(interfaceBlock, memberIndex);
 
-            fieldType->setQualifier(typeQualifier.qualifier);
-
             SymbolType symbolType = SymbolType::UserDefined;
             if (field->name() == "gl_Position" || field->name() == "gl_PointSize" ||
                 field->name() == "gl_ClipDistance" || field->name() == "gl_CullDistance")
@@ -7384,6 +7448,10 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
                           field->name());
                 }
                 symbolType = SymbolType::BuiltIn;
+            }
+            else
+            {
+                fieldType->setQualifier(typeQualifier.qualifier);
             }
             TVariable *fieldVariable =
                 new TVariable(&symbolTable, field->name(), fieldType, symbolType);
@@ -7521,10 +7589,16 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
             }
             break;
         case EvqClipDistance:
-            MarkClipCullIndex(location, indexExpression, &mClipDistanceInfo);
+            MarkClipCullIndex(location, indexExpression,
+                              IsPerVertexInMember(effectivelyIndexedExpression)
+                                  ? &mInputClipDistanceInfo
+                                  : &mClipDistanceInfo);
             break;
         case EvqCullDistance:
-            MarkClipCullIndex(location, indexExpression, &mCullDistanceInfo);
+            MarkClipCullIndex(location, indexExpression,
+                              IsPerVertexInMember(effectivelyIndexedExpression)
+                                  ? &mInputCullDistanceInfo
+                                  : &mCullDistanceInfo);
             break;
         default:
             break;
@@ -10469,10 +10543,14 @@ TIntermTyped *TParseContext::addMethod(TFunctionLookup *fnCall, const TSourceLoc
         switch (thisNode->getQualifier())
         {
             case EvqClipDistance:
-                MarkClipCullArrayLengthMethodCall(loc, &mClipDistanceInfo);
+                MarkClipCullArrayLengthMethodCall(loc, IsPerVertexInMember(thisNode)
+                                                           ? &mInputClipDistanceInfo
+                                                           : &mClipDistanceInfo);
                 break;
             case EvqCullDistance:
-                MarkClipCullArrayLengthMethodCall(loc, &mCullDistanceInfo);
+                MarkClipCullArrayLengthMethodCall(loc, IsPerVertexInMember(thisNode)
+                                                           ? &mInputCullDistanceInfo
+                                                           : &mCullDistanceInfo);
                 break;
             default:
                 break;
@@ -11259,6 +11337,25 @@ bool TParseContext::postParseChecks()
                << combinedClipAndCullDistances << " > "
                << mResources.MaxCombinedClipAndCullDistances << ")";
         error(mClipDistanceInfo.firstEncounter, strstr.str().c_str(), "gl_ClipDistance");
+    }
+
+    // The gl_in members of tessellation and geometry shaders are sized independently of the
+    // shader's outputs, so they are checked against the combined limit separately.
+    const unsigned int usedInputClipDistances = getInputClipDistanceArraySize();
+    const unsigned int usedInputCullDistances = getInputCullDistanceArraySize();
+    const unsigned int combinedInputClipAndCullDistances =
+        usedInputClipDistances > 0 && usedInputCullDistances > 0
+            ? usedInputClipDistances + usedInputCullDistances
+            : 0;
+    if (static_cast<int>(combinedInputClipAndCullDistances) >
+        mResources.MaxCombinedClipAndCullDistances)
+    {
+        std::stringstream strstr = sh::InitializeStream<std::stringstream>();
+        strstr << "The sum of 'gl_ClipDistance' and 'gl_CullDistance' size is greater than "
+                  "gl_MaxCombinedClipAndCullDistances ("
+               << combinedInputClipAndCullDistances << " > "
+               << mResources.MaxCombinedClipAndCullDistances << ")";
+        error(mInputClipDistanceInfo.firstEncounter, strstr.str().c_str(), "gl_ClipDistance");
     }
 
     if (mClipDistanceInfo.hasArrayLengthMethodCall && usedClipDistances == 0)
