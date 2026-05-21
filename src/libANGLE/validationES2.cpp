@@ -1276,13 +1276,6 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     case GL_UNSIGNED_SHORT:
                     case GL_UNSIGNED_INT:
                         break;
-                    case GL_FLOAT:
-                        if (!context->getExtensions().depthBufferFloat2NV)
-                        {
-                            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kMismatchedTypeAndFormat);
-                            return false;
-                        }
-                        break;
                     default:
                         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kMismatchedTypeAndFormat);
                         return false;

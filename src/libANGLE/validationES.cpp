@@ -177,14 +177,6 @@ bool ValidReadPixelsUnsignedNormalizedDepthType(const Context *context,
     }
 }
 
-bool ValidReadPixelsFloatDepthType(const Context *context,
-                                   const gl::InternalFormat *info,
-                                   GLenum type)
-{
-    return context->getExtensions().readDepthNV && (type == GL_FLOAT) &&
-           context->getExtensions().depthBufferFloat2NV;
-}
-
 bool ValidReadPixelsFormatType(const Context *context,
                                const gl::InternalFormat *info,
                                GLenum format,
@@ -235,7 +227,7 @@ bool ValidReadPixelsFormatType(const Context *context,
                 case GL_RGBA:
                     return (type == GL_FLOAT);
                 case GL_DEPTH_COMPONENT:
-                    return ValidReadPixelsFloatDepthType(context, info, type);
+                    return context->getExtensions().readDepthNV && (type == GL_FLOAT);
                 case GL_DEPTH_STENCIL_OES:
                     return context->getExtensions().readDepthStencilNV &&
                            type == GL_FLOAT_32_UNSIGNED_INT_24_8_REV && info->stencilBits > 0;
