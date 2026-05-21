@@ -1040,6 +1040,8 @@
 480069042 PIXEL10 GLES : ImageTestES3.SourceYUVAHBTargetExternalYUVFetchSamplerExternalOES/* = SKIP
 480069042 PIXEL10 GLES : ImageTestES3.SourceYUVAHBTargetExternalYUVFetchVSSamplerExternalOES/* = SKIP
 480069042 PIXEL10 GLES : ImageTestES3.SourceYUVAHBTargetExternalYUVSampleLinearFiltering/* = SKIP
+480069042 PIXEL10 GLES : ImageTestRGB565ES3.SourceAHBTarget2DDrawAndUploadByteData/* = SKIP
+480069042 PIXEL10 GLES : ImageTestRGB565ES3.SourceAHBTarget2DDrawAndUploadPacked565Data/* = SKIP
 480069042 PIXEL10 GLES : IncompleteTextureTestES3.IntegerType/* = SKIP
 480069042 PIXEL10 GLES : IncompleteTextureTestES3.UnsignedIntegerType/* = SKIP
 480069042 PIXEL10 GLES : MSRTTES31Test.RenderbufferDrawCopyThenBlendAllAttachmentsMixed/* = SKIP
@@ -1191,7 +1193,7 @@
 480069042 PIXEL10 GLES : UniformBlockWithOneLargeArrayMemberTest.MemberTypeIsVec2/* = SKIP
 480069042 PIXEL10 GLES : UniformBlockWithOneLargeArrayMemberTest.MemberTypeIsVec3/* = SKIP
 480069042 PIXEL10 GLES : UniformBufferTest.Std140UniformBlockWithPerMemberColumnMajorQualifier/* = SKIP
-480069042 PIXEL10 GLES : WebGLCompatibilityTest.GenerateMipmapUnsizedFloatingPointTexture/* = SKIP
+480069042 PIXEL10 GLES : WebGL1CompatibilityTest.GenerateMipmapUnsizedFloatingPointTexture/* = SKIP
 480069042 PIXEL10 GLES : CopyTexImageLumaWorkaroundTestES3.DifferentCubeFacesLuminanceAlpha/ES3_OpenGLES_ForceLumaWorkaroundForSameTextureCopyTexImage2D = SKIP
 480069042 PIXEL10 GLES : GLSLTest_ES31.IOBlockInvariantAll/* = SKIP
 498083624 PIXEL10 GLES : CopyTextureTestES3.SRGBWithPackParameters/* = SKIP
@@ -2763,7 +2765,9 @@
 512157667 WIN VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 512157667 WIN D3D11 : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 512157667 WIN D3D9 : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
-512157667 ANDROID VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
+512157667 PIXEL10 VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
+512157667 PIXEL10 GLES : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
+512157667 GALAXYS24EXYNOS VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 
 // Likely a SwiftShader bug.
 514397873 SWIFTSHADER : DrawBaseVertexBaseInstanceTest_ES3.BaseInstanceDivisorIndexing/* = SKIP
