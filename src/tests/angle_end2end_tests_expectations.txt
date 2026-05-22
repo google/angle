@@ -2851,6 +2851,9 @@
 // Wayland vs X11 mixup when creating displays
 520829539 LINUX : EGLX11VisualHintTest.InvalidVisualID/* = SKIP
 
+// Unimplemented parts.
+515493666 D3D11 : Restart/DrawElementsVariantsTest.Draw/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

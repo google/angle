@@ -646,228 +646,290 @@ angle::Result VertexArrayMtl::syncDirtyAttrib(const gl::Context *glContext,
     return angle::Result::Continue;
 }
 
-angle::Result VertexArrayMtl::getIndexBuffer(const gl::Context *context,
-                                             gl::DrawElementsType type,
-                                             size_t count,
-                                             const void *indices,
-                                             mtl::BufferSlice *outIdxBuffer,
-                                             gl::DrawElementsType *indexTypeOut)
+template <size_t indexRewind>
+static void AppendDrawCommandsTemplate(std::vector<DrawCommandRange> &drawCommands,
+                                       size_t count,
+                                       size_t firstIndex,
+                                       size_t indexSize)
 {
-    const gl::Buffer *glElementArrayBuffer = getElementArrayBuffer();
-
-    size_t convertedOffset = reinterpret_cast<size_t>(indices);
-    if (!glElementArrayBuffer)
+    // Break the draw into hunks of 100'663'290 to avoid overflowing index count uint32_t.
+    // Preserves primitive boundaries as the limit is divisible by all the possible per primitive
+    // counts.
+    constexpr size_t perCommandIndexCount = 0xffffff * 2 * 3;
+    while (count > 0)
     {
-        ANGLE_TRY(streamIndexBufferFromClient(context, type, count, indices, outIdxBuffer));
+        size_t offset       = firstIndex * indexSize;
+        size_t commandCount = std::min(count, perCommandIndexCount);
+        drawCommands.emplace_back(static_cast<uint32_t>(commandCount), offset);
+        count -= commandCount;
+        firstIndex += commandCount - indexRewind;  // Underflow ok, loop will terminate.
     }
-    else
+}
+
+static void AppendDrawCommands(std::vector<DrawCommandRange> &drawCommands,
+                               gl::PrimitiveMode mode,
+                               size_t count,
+                               size_t firstIndex,
+                               gl::PrimitiveMode drawMode,
+                               gl::DrawElementsType type)
+{
+    size_t elementSize = gl::GetDrawElementsTypeSize(type);
+    uint32_t perPrimitiveIndexCount;
+    switch (drawMode)
     {
-        bool needConversion = type == gl::DrawElementsType::UnsignedByte;
-        if (needConversion)
+        case gl::PrimitiveMode::Points:
+            perPrimitiveIndexCount = 1;
+            break;
+        case gl::PrimitiveMode::Lines:
+        case gl::PrimitiveMode::LineStrip:
+            perPrimitiveIndexCount = 2;
+            break;
+        case gl::PrimitiveMode::Triangles:
+        case gl::PrimitiveMode::TriangleStrip:
+            perPrimitiveIndexCount = 3;
+            break;
+        default:
+            UNREACHABLE();
+            return;
+    }
+    if (count < perPrimitiveIndexCount)
+    {
+        return;
+    }
+    if (mode != drawMode)
+    {
+        firstIndex *= perPrimitiveIndexCount;
+        count = (count - perPrimitiveIndexCount + 1) * perPrimitiveIndexCount;
+    }
+    switch (drawMode)
+    {
+        case gl::PrimitiveMode::Points:
+            AppendDrawCommandsTemplate<0>(drawCommands, count, firstIndex, elementSize);
+            break;
+        case gl::PrimitiveMode::Lines:
+            AppendDrawCommandsTemplate<0>(drawCommands, count, firstIndex, elementSize);
+            break;
+        case gl::PrimitiveMode::LineStrip:
+            AppendDrawCommandsTemplate<1>(drawCommands, count, firstIndex, elementSize);
+            break;
+        case gl::PrimitiveMode::Triangles:
+            AppendDrawCommandsTemplate<0>(drawCommands, count, firstIndex, elementSize);
+            break;
+        case gl::PrimitiveMode::TriangleStrip:
+            AppendDrawCommandsTemplate<2>(drawCommands, count, firstIndex, elementSize);
+            break;
+        default:
+            UNREACHABLE();
+            return;
+    }
+}
+
+// Computes draw command ranges from draw index ranges for primitive restart.
+// The draw index ranges are in source buffer element space. The output draw commands
+// are in draw buffer space, accounting for any expansion from mode conversion
+// (e.g., TriangleStrip to Triangles via provoking vertex).
+//
+// drawIndexRanges: pre-computed ranges of consecutive non-restart indices in the source buffer
+// firstIndex: first element index in the source buffer to draw from
+// count: number of source elements in the draw window
+// mode: source primitive mode, may be strip.
+// drawMode: output primitive mode. Always a simple type: Points, Lines, Triangles.
+// indexBufferType: type of the output buffer elements.
+void AppendSimpleDrawCommandRanges(std::vector<DrawCommandRange> &drawCommands,
+                                   gl::PrimitiveMode mode,
+                                   uint32_t count,
+                                   size_t firstIndex,
+                                   const std::vector<DrawIndexRange> &drawIndexRanges,
+                                   gl::PrimitiveMode drawMode,
+                                   gl::DrawElementsType indexBufferType)
+{
+    uint32_t perPrimitiveIndexCount;
+    switch (drawMode)
+    {
+        case gl::PrimitiveMode::Points:
+            perPrimitiveIndexCount = 1;
+            break;
+        case gl::PrimitiveMode::Lines:
+            perPrimitiveIndexCount = 2;
+            break;
+        case gl::PrimitiveMode::Triangles:
+            perPrimitiveIndexCount = 3;
+            break;
+        default:
+            UNREACHABLE();
+            return;
+    }
+    if (count < perPrimitiveIndexCount)
+    {
+        return;
+    }
+    const size_t drawIndexSize = gl::GetDrawElementsTypeSize(indexBufferType);
+    const size_t lastIndex     = firstIndex + count - 1;
+
+    for (const auto &range : drawIndexRanges)
+    {
+        if (range.end < firstIndex)
         {
-            ANGLE_TRY(convertIndexBuffer(context, type, convertedOffset, outIdxBuffer));
+            continue;
+        }
+        if (range.begin > lastIndex)
+        {
+            break;
+        }
+        DrawIndexRange clippedRange{std::max(range.begin, firstIndex),
+                                    std::min(range.end, lastIndex)};
+        size_t indexCount = clippedRange.end - clippedRange.begin + 1;
+
+        if (indexCount < perPrimitiveIndexCount)
+        {
+            continue;
+        }
+
+        size_t drawIndexCount;
+        size_t drawBeginIndex;
+        if (mode == drawMode)
+        {
+            drawIndexCount = indexCount - (indexCount % perPrimitiveIndexCount);
+            drawBeginIndex = clippedRange.begin;
         }
         else
         {
-            // No conversion needed:
-            BufferMtl *bufferMtl     = mtl::GetImpl(glElementArrayBuffer);
-            mtl::BufferRef bufferRef = bufferMtl->getCurrentBuffer();
-            *outIdxBuffer            = mtl::BufferSlice(bufferRef).subslice(convertedOffset);
+            // Expanded modes: `N` source indices produce `(N - perPrimitiveIndexCount + 1)`
+            // primitives that produce `perPrimitiveIndexCount` indices.
+            drawIndexCount = (indexCount - perPrimitiveIndexCount + 1) * perPrimitiveIndexCount;
+            drawBeginIndex = clippedRange.begin * perPrimitiveIndexCount;
         }
+        AppendDrawCommandsTemplate<0>(drawCommands, drawIndexCount, drawBeginIndex, drawIndexSize);
     }
-
-    *indexTypeOut = type;
-    if (type == gl::DrawElementsType::UnsignedByte)
-    {
-        // This buffer is already converted to ushort indices above
-        *indexTypeOut = gl::DrawElementsType::UnsignedShort;
-    }
-
-    return angle::Result::Continue;
 }
 
-std::vector<DrawCommandRange> VertexArrayMtl::getDrawIndices(const gl::Context *glContext,
-                                                             gl::DrawElementsType originalIndexType,
-                                                             gl::DrawElementsType indexType,
-                                                             gl::PrimitiveMode originalMode,
-                                                             gl::PrimitiveMode mode,
-                                                             mtl::BufferRef clientBuffer,
-                                                             uint32_t indexCount,
-                                                             const void *originalOffsetOrClientPtr,
-                                                             size_t offsetInBytes)
+angle::Result VertexArrayMtl::resolveDrawElementsDraw(
+    const gl::Context *glContext,
+    gl::PrimitiveMode mode,
+    gl::DrawElementsType type,
+    GLsizei count,
+    const void *indices,
+    bool rewriteProvokingVertex,
+    bool isPrimitiveRestartEnabled,
+    gl::PrimitiveMode *outNewMode,
+    std::vector<DrawCommandRange> *outDrawCommands,
+    mtl::BufferSlice *outIndexBuffer,
+    gl::DrawElementsType *outIndexBufferType)
 {
     ContextMtl *contextMtl = mtl::GetImpl(glContext);
-    std::vector<DrawCommandRange> drawCommands;
-    // The indexed draw needs to be split to separate draw commands in case primitive restart is
-    // enabled and the drawn primitive supports primitive restart. Otherwise the whole indexed draw
-    // can be sent as one draw command.
-    bool isSimpleType = mode == gl::PrimitiveMode::Points || mode == gl::PrimitiveMode::Lines ||
-                        mode == gl::PrimitiveMode::Triangles;
-    bool indicesRewritten = (originalMode != mode);
-    if ((!isSimpleType && !indicesRewritten) || !glContext->getState().isPrimitiveRestartEnabled())
+
+    // Resulting draw is either `uint16_t` or `uint32_t`.
+    gl::DrawElementsType indexBufferType =
+        type == gl::DrawElementsType::UnsignedByte ? gl::DrawElementsType::UnsignedShort : type;
+
+    // Resulting draw is made with `newMode`.
+    gl::PrimitiveMode newMode = mode;
+    if (rewriteProvokingVertex)
     {
-        drawCommands.push_back({indexCount, offsetInBytes});
-        return drawCommands;
+        // Provoking vertex will convert strips to their simple equivalents.
+        switch (mode)
+        {
+            case gl::PrimitiveMode::Triangles:
+            case gl::PrimitiveMode::TriangleStrip:
+                newMode = gl::PrimitiveMode::Triangles;
+                break;
+            case gl::PrimitiveMode::Lines:
+            case gl::PrimitiveMode::LineStrip:
+                newMode = gl::PrimitiveMode::Lines;
+                break;
+            default:
+                UNREACHABLE();
+                return angle::Result::Stop;
+        }
     }
 
-    const std::vector<IndexRange> *restartIndices;
-    std::vector<IndexRange> clientIndexRange;
+    size_t firstIndex;
+    mtl::BufferSlice indexBuffer;
+
+    // Step 1: Get the index buffer of supported type and resolve the first index to
+    // process.
     const gl::Buffer *glElementArrayBuffer = getElementArrayBuffer();
-    size_t startIndex;
-    if (glElementArrayBuffer)
+    if (glElementArrayBuffer == nullptr)
     {
-        BufferMtl *idxBuffer = mtl::GetImpl(glElementArrayBuffer);
-        restartIndices       = &idxBuffer->getRestartIndices(contextMtl, originalIndexType);
-        // restartIndices is relative to the original element buffer, hence we use the original
-        // offset to calculate startIndex.
-        size_t originalOffsetInBytes = reinterpret_cast<size_t>(originalOffsetOrClientPtr);
-        startIndex = originalOffsetInBytes / gl::GetDrawElementsTypeSize(originalIndexType);
+        firstIndex = 0;
+        ANGLE_TRY(streamIndexBufferFromClient(glContext, type, count, indices, &indexBuffer));
     }
     else
     {
-        clientIndexRange =
-            BufferMtl::getRestartIndicesFromClientData(contextMtl, indexType, clientBuffer);
-        restartIndices = &clientIndexRange;
-        // For client indices, restartIndices is relative to the clientBuffer, we use offsetInBytes
-        // to calculate startIndex.
-        startIndex = offsetInBytes / gl::GetDrawElementsTypeSize(indexType);
+        firstIndex = static_cast<size_t>(reinterpret_cast<uintptr_t>(indices)) /
+                     gl::GetDrawElementsTypeSize(type);
+        if (type != indexBufferType)
+        {
+            ANGLE_TRY(convertIndexBuffer(glContext, type, 0, &indexBuffer));
+        }
+        else
+        {
+            BufferMtl *bufferMtl = mtl::GetImpl(glElementArrayBuffer);
+            indexBuffer          = mtl::BufferSlice(bufferMtl->getCurrentBuffer());
+        }
     }
 
-    uint32_t nIndicesPerPrimitive;
-    // If the indices were rewritten to fix the provoking vertex convention, the index buffer
-    // might have been expanded (e.g. from TriangleStrip to Triangles). The restart indices
-    // we found earlier are based on the original unexpanded buffer. We must transform the slices
-    // we find to match the layout of the expanded rewritten buffer.
-    uint32_t factor       = 1;
-    uint32_t stripExclude = 0;
+    // Step 2: GL draw range is firstIndex, count. In case Metal primitive topology for
+    // `newMode` does not support primitive restart, compute the list of draw ranges
+    // containing the primitives.
+    const std::vector<DrawIndexRange> *indexRanges;
+    std::vector<DrawIndexRange> indexRangesStorage;
 
-    if (indicesRewritten)
+    bool isSimpleType = newMode == gl::PrimitiveMode::Points ||
+                        newMode == gl::PrimitiveMode::Lines ||
+                        newMode == gl::PrimitiveMode::Triangles;
+
+    if (isPrimitiveRestartEnabled && isSimpleType)
     {
-        switch (mode)
+        if (glElementArrayBuffer != nullptr)
         {
-            case gl::PrimitiveMode::Lines:
-                if (originalMode == gl::PrimitiveMode::LineStrip ||
-                    originalMode == gl::PrimitiveMode::LineLoop)
-                {
-                    nIndicesPerPrimitive = 1;
-                    // LineStrip/LineLoop to Lines expansion:
-                    // N indices produce max(N-1, 0) lines.
-                    // Rewritten buffer contains max(N-1, 0) * 2 indices.
-                    factor       = 2;
-                    stripExclude = 1;
-                }
-                else
-                {
-                    UNREACHABLE();
-                    return drawCommands;
-                }
-                break;
-            case gl::PrimitiveMode::Triangles:
-                if (originalMode == gl::PrimitiveMode::TriangleStrip ||
-                    originalMode == gl::PrimitiveMode::TriangleFan)
-                {
-                    nIndicesPerPrimitive = 1;
-                    // TriangleStrip/TriangleFan to Triangles expansion:
-                    // N indices produce max(N-2, 0) triangles.
-                    // Rewritten buffer contains max(N-2, 0) * 3 indices.
-                    factor       = 3;
-                    stripExclude = 2;
-                }
-                else
-                {
-                    UNREACHABLE();
-                    return drawCommands;
-                }
-                break;
-            default:
-                UNREACHABLE();
-                return drawCommands;
+            BufferMtl *idxBuffer = mtl::GetImpl(glElementArrayBuffer);
+            indexRanges          = &idxBuffer->getDrawIndexRanges(contextMtl, type);
+        }
+        else
+        {
+            indexRangesStorage = BufferMtl::GetDrawIndexRangesFromClientData(type, count, indices);
+            indexRanges        = &indexRangesStorage;
         }
     }
     else
     {
-        ASSERT(originalMode == mode);
-        switch (mode)
-        {
-            case gl::PrimitiveMode::Points:
-                nIndicesPerPrimitive = 1;
-                break;
-            case gl::PrimitiveMode::Lines:
-                nIndicesPerPrimitive = 2;
-                break;
-            case gl::PrimitiveMode::Triangles:
-                nIndicesPerPrimitive = 3;
-                break;
-            default:
-                UNREACHABLE();
-                return drawCommands;
-        }
+        // No primitive restart splitting. Inject a single full range.
+        indexRangesStorage.emplace_back(firstIndex, firstIndex + count - 1);
+        indexRanges = &indexRangesStorage;
     }
 
-    const GLuint indexTypeBytes = gl::GetDrawElementsTypeSize(indexType);
-    uint32_t indicesLeft        = indexCount;
-    size_t currentIndexOffset   = startIndex;
-
-    auto addDrawCommand = [&](uint32_t count, size_t elementOffset) {
-        // Skip slices that don't contain enough indices to form a single primitive.
-        if (count > stripExclude)
-        {
-            // Scale the count to account for the expansion factor and stripped indices.
-            uint32_t transformedCount = (count - stripExclude) * factor;
-            // Scale the offset to account for the expansion factor.
-            size_t transformedOffset =
-                offsetInBytes + (elementOffset - startIndex) * (size_t)factor * indexTypeBytes;
-            drawCommands.push_back({transformedCount, transformedOffset});
-        }
-    };
-
-    for (auto &range : *restartIndices)
+    // Step 3: Conditionally rewrite the index buffer for provoking vertex.
+    // preconditionIndexBuffer dispatches per-range, so with primitive restart it only
+    // processes the non-restart runs (not the full buffer).
+    if (rewriteProvokingVertex)
     {
-        if (range.restartBegin > currentIndexOffset)
-        {
-            int64_t nIndicesInSlice =
-                MIN(((int64_t)range.restartBegin - currentIndexOffset) -
-                        ((int64_t)range.restartBegin - currentIndexOffset) % nIndicesPerPrimitive,
-                    indicesLeft);
-            size_t restartSize = (range.restartEnd - range.restartBegin) + 1;
-            if (nIndicesInSlice >= nIndicesPerPrimitive)
-            {
-                addDrawCommand((uint32_t)nIndicesInSlice, currentIndexOffset);
-            }
-            // Account for dropped indices due to incomplete primitives.
-            size_t indicesUsed = ((range.restartBegin + restartSize) - currentIndexOffset);
-            if (indicesLeft <= indicesUsed)
-            {
-                indicesLeft = 0;
-            }
-            else
-            {
-                indicesLeft -= indicesUsed;
-            }
-            currentIndexOffset = (size_t)(range.restartBegin + restartSize);
-        }
-        // If the initial offset into the index buffer is within a restart zone, move to the end of
-        // the restart zone.
-        else if (range.restartEnd >= currentIndexOffset)
-        {
-            size_t restartSize = (range.restartEnd - currentIndexOffset) + 1;
-            if (indicesLeft <= restartSize)
-            {
-                indicesLeft = 0;
-            }
-            else
-            {
-                indicesLeft -= restartSize;
-            }
-            currentIndexOffset = (size_t)(currentIndexOffset + restartSize);
-        }
-    }
-    if (indicesLeft >= nIndicesPerPrimitive)
-    {
-        addDrawCommand(indicesLeft, currentIndexOffset);
+        ANGLE_TRY(contextMtl->getProvokingVertexHelper().preconditionIndexBuffer(
+            contextMtl, count, mode, firstIndex, isPrimitiveRestartEnabled, *indexRanges,
+            std::move(indexBuffer), indexBufferType, &indexBuffer));
     }
 
-    return drawCommands;
+    // Step 4: Compute draw command ranges (handles primitive restart splitting and large draw
+    // chunking).  Reuses the same index ranges computed in Step 2.
+    std::vector<DrawCommandRange> drawCommands;
+
+    if (isPrimitiveRestartEnabled && isSimpleType)
+    {
+        AppendSimpleDrawCommandRanges(drawCommands, mode, static_cast<uint32_t>(count), firstIndex,
+                                      *indexRanges, newMode, indexBufferType);
+    }
+    else
+    {
+        AppendDrawCommands(drawCommands, mode, static_cast<uint32_t>(count), firstIndex, newMode,
+                           indexBufferType);
+    }
+
+    *outNewMode         = newMode;
+    *outDrawCommands    = std::move(drawCommands);
+    *outIndexBuffer     = std::move(indexBuffer);
+    *outIndexBufferType = indexBufferType;
+
+    return angle::Result::Continue;
 }
 
 angle::Result VertexArrayMtl::convertIndexBuffer(const gl::Context *glContext,
