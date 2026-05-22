@@ -2818,6 +2818,9 @@
 529867799 VULKAN : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
 529867799 INTEL OPENGL : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
 
+// Unimplemented parts.
+515493666 D3D11 : Restart/DrawElementsVariantsTest.Draw/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
