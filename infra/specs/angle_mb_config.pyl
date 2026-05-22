@@ -21,8 +21,6 @@
   # this dict to look up which config to use for a given bot.
   'builder_groups': {
     'angle': {
-      'android-pixel4-perf': 'angle_remoteexec_android_perf_bot',
-      'android-pixel6-perf': 'angle_remoteexec_android_perf_bot',
       'linux-ubsan-test': 'angle_ubsan_bot',
       'win-asan-test': 'angle_asan_bot',
       'win-msvc-compile': 'angle_non_clang_release_bot',
@@ -45,7 +43,6 @@
     'angle_non_clang_release_bot': ['angle', 'non_clang', 'release'],
     'angle_non_clang_x86_debug_bot': ['angle', 'non_clang', 'x86', 'debug'],
     'angle_non_clang_x86_release_bot': ['angle', 'non_clang', 'x86', 'release'],
-    'angle_remoteexec_android_perf_bot': ['angle', 'remoteexec', 'android', 'arm64', 'perf'],
     'angle_ubsan_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'ubsan', 'release'],
     'angle_winuwp_non_clang_debug_bot': ['angle', 'winuwp', 'non_clang', 'debug'],
     'angle_winuwp_non_clang_release_bot': ['angle', 'winuwp', 'non_clang', 'release'],
@@ -54,14 +51,8 @@
   # This is a dict mapping a given 'mixin' name to a dict of settings that
   # mb should use. See //tools/mb/docs/user_guide.md for more information.
   'mixins': {
-    'android': {
-      'gn_args': 'target_os="android" android_static_analysis = "on"',
-    },
     'angle': {
       'gn_args': 'is_component_build=true',
-    },
-    'arm64': {
-      'gn_args': 'target_cpu="arm64"',
     },
     'asan': {
       'gn_args': 'is_asan=true',
@@ -77,9 +68,6 @@
     },
     'openclcts': {
       'gn_args': 'angle_enable_cl_testing=true',
-    },
-    'perf': {
-      'gn_args': 'is_debug=false dcheck_always_on=false symbol_level=1',
     },
     'release': {
       'gn_args': 'is_debug=false dcheck_always_on=true symbol_level=1',

@@ -19,28 +19,6 @@
       'swarming_containment_auto',
     ],
     'machines': {
-      'android-arm64-pixel4-perf': {
-        'os_type': 'android',
-        'mixins': [
-          'gpu_pixel_4_stable',
-          'temp_band_below_30C',
-          'timeout_120m',
-        ],
-        'test_suites': {
-          'isolated_scripts': 'isolated_scripts_group_perf_notrace',
-        },
-      },
-      'android-arm64-pixel6-perf': {
-        'os_type': 'android',
-        'mixins': [
-          'gpu_pixel_6_stable',
-          'temp_band_below_30C',
-          'timeout_120m',
-        ],
-        'test_suites': {
-          'isolated_scripts': 'isolated_scripts_group_perf',
-        },
-      },
       'win10-x64-swiftshader': {
         'os_type': 'win',
         'mixins': [
