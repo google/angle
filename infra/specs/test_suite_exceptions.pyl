@@ -78,6 +78,19 @@
           '--custom-throttling-temp=38',
         ],
       },
+      'angle-android-arm64-google-pixel4-perf': {
+        'args': [
+          # Remove vulkan tests
+          '-f',
+          '*-*vulkan*:*Vulkan*',
+        ],
+      },
+      'angle-android-arm64-google-pixel6-perf': {
+        'args': [
+          # Custom temp throttling for perf tests on pixel6 b/345514719
+          '--custom-throttling-temp=38',
+        ],
+      },
     },
   },
   'angle_restricted_trace_gold_tests': {
@@ -113,11 +126,23 @@
           '--custom-throttling-temp=38',
         ],
       },
+      'angle-android-arm64-google-pixel6-perf': {
+        'args': [
+          # Custom temp throttling for perf tests on pixel6 b/345514719
+          '--custom-throttling-temp=38',
+        ],
+      },
     },
   },
   'angle_trace_perf_vulkan_tests': {
     'modifications': {
       'android-arm64-pixel6-perf': {
+        'args': [
+          # Custom temp throttling for perf tests on pixel6 b/345514719
+          '--custom-throttling-temp=38',
+        ],
+      },
+      'angle-android-arm64-google-pixel6-perf': {
         'args': [
           # Custom temp throttling for perf tests on pixel6 b/345514719
           '--custom-throttling-temp=38',

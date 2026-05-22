@@ -3,6 +3,7 @@
     "angle-android-arm-builder-dbg": "ci/angle-android-arm-builder-dbg/gn-args.json",
     "angle-android-arm-builder-rel": "ci/angle-android-arm-builder-rel/gn-args.json",
     "angle-android-arm64-builder-dbg": "ci/angle-android-arm64-builder-dbg/gn-args.json",
+    "angle-android-arm64-builder-perf": "ci/angle-android-arm64-builder-perf/gn-args.json",
     "angle-android-arm64-builder-rel": "ci/angle-android-arm64-builder-rel/gn-args.json",
     "angle-linux-x64-builder-asan": "ci/angle-linux-x64-builder-asan/gn-args.json",
     "angle-linux-x64-builder-dbg": "ci/angle-linux-x64-builder-dbg/gn-args.json",
