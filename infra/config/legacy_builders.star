@@ -316,9 +316,6 @@ angle_builder("win-msvc-x86-dbg-compile", cpu = "x86")
 angle_builder("winuwp-compile", cpu = "x64")
 angle_builder("winuwp-dbg-compile", cpu = "x64")
 
-angle_builder("android-pixel4-perf", cpu = "arm64")
-angle_builder("android-pixel6-perf", cpu = "arm64")
-
 # CQ
 
 luci.cq(
