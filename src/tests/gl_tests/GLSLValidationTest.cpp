@@ -4063,6 +4063,34 @@ void main()
     validateSuccess(GL_FRAGMENT_SHADER, kFS);
 }
 
+// Test that (a, struct_with_sampler).field fails to compile without IR.
+TEST_P(GLSLValidationTest_ES3, SamplerInStructRHSOfCommaWithSideEffectWithSelectField)
+{
+    // The GLSLTest_ES3.SamplerInStructRHSOfCommaWithSideEffectWithSelectField test functionally
+    // tests this same shader and ensures it translates correctly with the IR.
+    // The AST path cannot handle this, and so fails compilation.
+    ANGLE_SKIP_TEST_IF(getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform struct {
+    sampler2D n;
+    vec2 c;
+} s[4];
+out vec4 color;
+void main()
+{
+    int i = 0;
+    vec4 zero = vec4(texture((s[i += 1], s[0]).n, vec2(0)).xyz, 0);
+    vec4 zero2 = vec4(texture(((s[i += 2], i += 4), s[0]).n, vec2(0)).xyz, 0);
+
+    color = vec4(i == 7, 0, 0, 1) - zero - zero2;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'Internal Error' : accessing fields of the result of a comma expression that is "
+                  "a structure with samplers is not currently supported");
+}
+
 // Test a fuzzer-discovered bug with the VectorizeVectorScalarArithmetic transformation.
 TEST_P(GLSLValidationTest, VectorScalarArithmeticWithSideEffectInLoop)
 {

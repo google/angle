@@ -6996,6 +6996,34 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that samplers in structs can be used on the right-hand side of a comma, where the expression
+// has side effect, and that the struct field can be selected on the comma expression.
+TEST_P(GLSLTest_ES3, SamplerInStructRHSOfCommaWithSideEffectWithSelectField)
+{
+    // Only correctly handled by the IR.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform struct {
+    sampler2D n;
+    vec2 c;
+} s[4];
+out vec4 color;
+void main()
+{
+    int i = 0;
+    vec4 zero = vec4(texture((s[i += 1], s[0]).n, vec2(0)).xyz, 0);
+    vec4 zero2 = vec4(texture(((s[i += 2], i += 4), s[0]).n, vec2(0)).xyz, 0);
+
+    color = vec4(i == 7, 0, 0, 1) - zero - zero2;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Test that samplers in structs can be extracted if the first reference to the struct does not
 // select an attribute.
 TEST_P(GLSLTest, SamplerInStructNoMemberIndexing)
