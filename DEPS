@@ -54,7 +54,7 @@ vars = {
   'checkout_angle_partition_alloc': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '2976e22e8416cf3a341294855047bb6280ced6b2',
+  'chromium_revision': 'c14e16093c01b01b6044c6ac1c3341818f9ac8fa',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -132,7 +132,7 @@ vars = {
   'reclient_version': 're_client_version:0.185.0.db415f21-gomaip',
 
   # siso CIPD package version.
-  'siso_version': 'git_revision:37e594382ae2ef7d69461019dc47e15e7b6a127f',
+  'siso_version': 'git_revision:c74a9b09521abc61117b58538cdc0336cb37b182',
 
   # 'magic' text to tell depot_tools that git submodules should be accepted but
   # but parity with DEPS file is expected.
@@ -554,7 +554,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@da261277e13ff3695a4dadcbc4381235a0f8de87',
+    'url': Var('chromium_git') + '/chromium/src/build.git@e7d8c725e6bb8784aa139fb7a738ef84c3a2a1d2',
     'condition': 'not build_with_chromium',
   },
 
@@ -613,7 +613,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@7b5bbea77e4c421edb401fd070e1b175a7f26b9e',
+    'url': '{chromium_git}/chromium/src/testing@da747ac94d6a3d4fb33ed5dd96857860510840e9',
     'condition': 'not build_with_chromium',
   },
 
@@ -694,7 +694,7 @@ deps = {
   },
 
   'third_party/android_deps': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/android_deps@f056325b8075afd4b21c8299f6717edf60e6045f',
+    'url': Var('chromium_git') + '/chromium/src/third_party/android_deps@1f6d329ba8b787c090fff046b2c6891770ce543f',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -795,7 +795,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@03d4d2ec684257bb66afd11f877105829d94a3d4',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@ed3a6fdd519a74da32fb73e1d2ce9c405812cf1a',
     'condition': 'not build_with_chromium',
   },
 
@@ -855,7 +855,7 @@ deps = {
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': Var('chromium_git') + '/chromium/deps/libjpeg_turbo.git@d1f5f2393e0d51f840207342ae86e55a86443288',
+    'url': Var('chromium_git') + '/chromium/deps/libjpeg_turbo.git@372ffd857bbd204469ddec5a369252c6c94ad949',
     'condition': 'not build_with_chromium',
   },
 
@@ -1064,7 +1064,7 @@ deps = {
   },
 
   'third_party/llvm-libc/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@0f11f7562cef4ed958553dbc1be059a166b41c7c',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@0de8f726d9ce14c1ec08fef3672d2c65e738ca90',
     'condition': 'not build_with_chromium',
   },
 
@@ -1137,7 +1137,7 @@ deps = {
   },
 
   'third_party/protobuf': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/protobuf@d654d0be3e15901d90d3f22cf4adcbdde5318eb2',
+    'url': Var('chromium_git') + '/chromium/src/third_party/protobuf@96835044c7edeb1cfa2b2dbfd3057c51588952b3',
     'condition': 'not build_with_chromium',
   },
 
@@ -1150,7 +1150,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'SuiEH4jnnb_yGw0R2dmB08xg1Lat3mTHjs-DWkNq0i8C',
+              'version': 'XDp2iOgLg9Ecr2z1NJpiafzNbcPPXGthR7MS0mV59zkC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -1186,7 +1186,7 @@ deps = {
   },
 
   'third_party/rust': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/rust@da2d775cf37f100b9408649096406a9805b24207',
+    'url': Var('chromium_git') + '/chromium/src/third_party/rust@3418a0a593e197553a4ceb1b9b644c6149c62c89',
     'condition': 'not build_with_chromium',
   },
 
@@ -1302,7 +1302,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@b32f7b8c1c7c801bf1034f9539a589ac3929aff8',
+    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@7c732b779bfeb5cf0255c42a8375fac0d9ae0bc4',
     # Needed on Mac in order to get the hashes for dsymutil.
     # Needed on other platforms since //build/config/config/BUILD.gn depends on
     # //tools/clang/scripts/update.py.
@@ -1344,7 +1344,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@fda85e41a5176b83d0e1fb165b2a160644e75f52',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@2ed1c731df90092e53ecfd12bbb7c18e03e64cd7',
     'condition': 'not build_with_chromium',
   },
 
