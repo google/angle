@@ -8813,8 +8813,10 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
             // Samplers as l-values are disallowed also in ESSL 3.00, see section 4.1.7,
             // we interpret the spec so that this extends to structs containing samplers,
             // similarly to ESSL 1.00 spec.
-            if ((mShaderVersion < 300 || op == EOpAssign || op == EOpInitialize) &&
-                left->getType().isStructureContainingSamplers())
+            //
+            // ESSL 3.00 doesn't disallow comparison between structs with samplers, but glslang, the
+            // reference implementation does, as do many drivers.
+            if (left->getType().isStructureContainingSamplers())
             {
                 error(loc, "undefined operation for structs containing samplers",
                       GetOperatorString(op));
