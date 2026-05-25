@@ -4557,6 +4557,36 @@ void main() {
     drawBuffersFeedbackLoop(program, {{GL_COLOR_ATTACHMENT0, GL_NONE}}, GL_INVALID_OPERATION);
 }
 
+// WebGL requires that all framebuffer attachments are unique
+TEST_P(WebGL2CompatibilityTest, UniqueFramebufferAttachments)
+{
+    GLTexture tex0;
+    FillTexture2D(tex0, 8, 8, GLColor::red, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, tex0, 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_UNSUPPORTED, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+}
+
+// Hardened contexts also require that all framebuffer color attachments are unique
+TEST_P(HardenedContextTest, UniqueFramebufferAttachments)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+
+    GLTexture tex0;
+    FillTexture2D(tex0, 8, 8, GLColor::red, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, tex0, 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_UNSUPPORTED, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+}
+
 // This tests that texture base level for immutable textures is clamped to the valid range, unlike
 // for non-immutable textures, for purposes of validation. Related to WebGL test
 // conformance2/textures/misc/immutable-tex-render-feedback.html

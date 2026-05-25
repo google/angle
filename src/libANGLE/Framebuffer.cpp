@@ -1604,7 +1604,7 @@ FramebufferStatus Framebuffer::checkStatusWithGLFrontEnd(const Context *context)
     // The WebGL conformance tests implicitly define that all framebuffer
     // attachments must be unique. For example, the same level of a texture can
     // not be attached to two different color attachments.
-    if (state.getExtensions().webglCompatibilityANGLE)
+    if (context->isWebGL() || context->isHardenedContext())
     {
         if (!mState.colorAttachmentsAreUniqueImages())
         {
