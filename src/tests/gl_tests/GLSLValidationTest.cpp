@@ -326,6 +326,25 @@ TEST_P(GLSLValidationTest, CompareStructsContainingSamplers)
                   "'==' : undefined operation for structs containing samplers");
 }
 
+// The ESSL 3.00 spec says that equality is supported for all types, but glslang does not accept
+// equality between structs with samplers.  glslang is the reference compiler, so ANGLE follows
+// suit with the same validation.
+TEST_P(GLSLValidationTest, CompareStructsContainingSamplersESSL300)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+struct S { sampler2D s; };
+uniform S a;
+uniform S b;
+out vec4 c;
+void main() {
+  c = vec4(a == b ? 1.0 : 0.0);
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'==' : undefined operation for structs containing samplers");
+}
+
 // https://crbug.com/499176133
 TEST_P(GLSLValidationTest, LongIdentifierAtLimit_1024)
 {
