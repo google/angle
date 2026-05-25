@@ -9566,6 +9566,18 @@ TEST_P(Texture2DTestES3, InternalFormatNotEnabled_ANGLEX)
         glBindRenderbuffer(GL_RENDERBUFFER, rbo);
         glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, 1, 1);
         EXPECT_GL_ERROR(GL_INVALID_ENUM) << internalFormat;
+
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 0, 0, 1, 1, 0);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM) << internalFormat;
+
+        GLTexture src;
+        glBindTexture(GL_TEXTURE_2D, src);
+        // Known ok format for src texture.
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_NO_ERROR() << internalFormat;
+        glCopyTextureCHROMIUM(src, 0, GL_TEXTURE_2D, texture, 0, internalFormat, type, GL_FALSE,
+                              GL_FALSE, GL_FALSE);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION) << internalFormat;
     };
 
     verify(GL_A1RGB5_ANGLEX, GL_RGBA, GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT);
