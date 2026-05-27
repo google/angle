@@ -1175,7 +1175,7 @@ angle::Result TextureVk::ghostOnOverwrite(ContextVk *contextVk,
     }
 
     // Only ghost the image if it's in use by an active renderpass.
-    if (contextVk->getFeatures().avoidImageGhoseOutsideRenderPass.enabled &&
+    if (contextVk->getFeatures().avoidImageGhostOutsideRenderPass.enabled &&
         !contextVk->isRenderPassStartedAndUsesImage(*mImage))
     {
         return angle::Result::Continue;

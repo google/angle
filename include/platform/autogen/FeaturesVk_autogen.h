@@ -1694,8 +1694,8 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo avoidImageGhoseOutsideRenderPass = {
-        "avoidImageGhoseOutsideRenderPass",
+    FeatureInfo avoidImageGhostOutsideRenderPass = {
+        "avoidImageGhostOutsideRenderPass",
         FeatureCategory::VulkanFeatures,
         &members,
     };

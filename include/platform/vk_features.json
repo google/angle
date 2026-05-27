@@ -2233,7 +2233,7 @@
             "issue": "http://anglebug.com/490910899"
         },
         {
-            "name": "avoid_image_ghose_outside_render_pass",
+            "name": "avoid_image_ghost_outside_render_pass",
             "category": "Features",
             "description": [
                 "Avoid ghosting the image if it is not used in an active render pass."
