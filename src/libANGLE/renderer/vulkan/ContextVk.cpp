@@ -2813,6 +2813,21 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
                 0, maxAttrib, bufferHandles.data(), bufferOffsets.data(), strides.data());
         }
     }
+    else if (getFeatures().supportsBindVertexBuffers2.enabled)
+    {
+        if (mUseSizePointerForBindingVertexBuffers)
+        {
+            const gl::AttribArray<VkDeviceSize> &bufferSizes =
+                vertexArrayVk->getCurrentArrayBufferSizes();
+            mRenderPassCommandBuffer->bindVertexBuffers2NoStride(
+                0, maxAttrib, bufferHandles.data(), bufferOffsets.data(), bufferSizes.data());
+        }
+        else
+        {
+            mRenderPassCommandBuffer->bindVertexBuffers2NoSizeNoStride(
+                0, maxAttrib, bufferHandles.data(), bufferOffsets.data());
+        }
+    }
     else
     {
         mRenderPassCommandBuffer->bindVertexBuffers(0, maxAttrib, bufferHandles.data(),
