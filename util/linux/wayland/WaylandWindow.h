@@ -63,17 +63,21 @@ class ANGLE_UTIL_EXPORT WaylandWindow : public OSWindow
     struct zxdg_decoration_manager_v1 *mDecorationManager   = nullptr;
     struct zxdg_toplevel_decoration_v1 *mToplevelDecoration = nullptr;
 
-    // wl_shm is bound from the compositor's registry on init. The placeholder
-    // buffer is created lazily on the first setVisible(true) call and reused
-    // for the lifetime of the window; samples that render via wl_egl_window
-    // (e.g. hello_triangle) replace it on the next eglSwapBuffers.
-    struct wl_shm *mShm          = nullptr;
-    struct wl_buffer *mShmBuffer = nullptr;
-    int32_t mShmBufferWidth      = 0;
-    int32_t mShmBufferHeight     = 0;
-    bool mVisible                = false;
+    // wl_shm placeholder maps the window before EGL claims the surface.
+    // Retired in getNativeWindow() because direct wl_surface_attach once
+    // EGL owns the surface is illegal per wayland-egl -- Mesa is lenient,
+    // Nvidia's EGLStream backend crashes. WindowTest is the only non-EGL
+    // OSWindow caller and never invokes getNativeWindow, so it keeps the
+    // full placeholder lifecycle.
+    struct wl_shm *mShm                  = nullptr;
+    mutable struct wl_buffer *mShmBuffer = nullptr;
+    mutable int32_t mShmBufferWidth      = 0;
+    mutable int32_t mShmBufferHeight     = 0;
+    mutable bool mEglHandoffComplete     = false;
+    bool mVisible                        = false;
 
     bool ensureShmBuffer();
+    void releaseShmPlaceholder() const;
 
     // Input -- bound on demand from wl_seat capabilities. May be null if the
     // compositor's seat doesn't advertise the corresponding capability (e.g.

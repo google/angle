@@ -262,13 +262,8 @@ void WaylandWindow::destroy()
         mRepeatKey     = 0;
     }
 
-    if (mShmBuffer)
-    {
-        wl_buffer_destroy(mShmBuffer);
-        mShmBuffer       = nullptr;
-        mShmBufferWidth  = 0;
-        mShmBufferHeight = 0;
-    }
+    releaseShmPlaceholder();
+    mEglHandoffComplete = false;
 
     if (mShm)
     {
@@ -340,6 +335,15 @@ void WaylandWindow::setNativeDisplay(EGLNativeDisplayType display)
 
 EGLNativeWindowType WaylandWindow::getNativeWindow() const
 {
+    // First call hands the wl_surface to EGL (the caller passes this to
+    // eglCreateWindowSurface or an equivalent path used by dEQP and the
+    // perf tests). Retire the shm placeholder so subsequent setVisible/
+    // resize stop touching the surface behind EGL's back.
+    if (!mEglHandoffComplete)
+    {
+        mEglHandoffComplete = true;
+        releaseShmPlaceholder();
+    }
     return reinterpret_cast<EGLNativeWindowType>(mWindow);
 }
 
@@ -436,9 +440,9 @@ bool WaylandWindow::resize(int width, int height)
         pushEvent(std::move(event));
     }
 
-    // If we are currently mapped via the placeholder shm buffer, reallocate
-    // it at the new size so the on-screen content matches. EGL-rendering
-    // surfaces will replace it on the next eglSwapBuffers.
+    // Reallocate the placeholder for the new size, only while we still own
+    // the surface. After handoff mShmBuffer is null and this block is
+    // skipped; EGL handles resize via wl_egl_window_resize above.
     if (sizeChanged && mVisible && mShmBuffer && mSurface && mShm)
     {
         wl_buffer_destroy(mShmBuffer);
@@ -518,6 +522,17 @@ bool WaylandWindow::ensureShmBuffer()
     return true;
 }
 
+void WaylandWindow::releaseShmPlaceholder() const
+{
+    if (mShmBuffer)
+    {
+        wl_buffer_destroy(mShmBuffer);
+        mShmBuffer       = nullptr;
+        mShmBufferWidth  = 0;
+        mShmBufferHeight = 0;
+    }
+}
+
 void WaylandWindow::setVisible(bool isVisible)
 {
     // Idempotent: skip the protocol round-trip if state already matches.
@@ -531,11 +546,19 @@ void WaylandWindow::setVisible(bool isVisible)
         return;
     }
 
+    // After EGL handoff the swap chain owns the wl_surface; only the
+    // visibility flag can change here. The compositor keeps showing
+    // EGL's most recent frame until eglSwapBuffers replaces it.
+    if (mEglHandoffComplete)
+    {
+        mVisible = isVisible;
+        return;
+    }
+
     if (isVisible)
     {
-        // Map by attaching a buffer + committing. Compositors ignore
-        // xdg_toplevel until they see a buffered surface. EGL-rendering
-        // surfaces will replace this placeholder on the next eglSwapBuffers.
+        // Compositors ignore xdg_toplevel until they see a buffered
+        // surface, so map by attaching the placeholder + committing.
         if (!ensureShmBuffer())
         {
             return;
