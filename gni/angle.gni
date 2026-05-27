@@ -201,6 +201,11 @@ declare_args() {
 }
 
 declare_args() {
+  # True if ANGLE is linked statically in Chromium.
+  if (!defined(angle_use_static_angle)) {
+    angle_use_static_angle = false
+  }
+
   # By default, ANGLE is using a thread pool for parallel compilation.
   # Activating the delegate worker results in posting the tasks using the
   # embedder API. In Chromium code base, it results in sending tasks to the
