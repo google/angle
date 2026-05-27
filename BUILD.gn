@@ -368,6 +368,11 @@ config("extra_warnings") {
       "/we4800",  # forcing value to bool.
       "/we4838",  # narrowing conversion.
     ]
+
+    # Explicitly disable some warnings
+    cflags += [
+      "/wd4715",  # not all control paths return a value.
+    ]
   }
   if (is_clang) {
     cflags += [
