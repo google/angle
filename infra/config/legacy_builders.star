@@ -286,27 +286,6 @@ def angle_builder(name, cpu):
                 location_filters = location_filters,
             )
 
-luci.builder(
-    name = "presubmit",
-    bucket = "try",
-    executable = "recipe:run_presubmit",
-    experiments = build_experiments,
-    service_account = "angle-try-builder@chops-service-accounts.iam.gserviceaccount.com",
-    build_numbers = True,
-    dimensions = {
-        "os": os.LINUX.dimension,
-    },
-    properties = {
-        "repo_name": "angle",
-        "runhooks": True,
-    },
-    resultdb_settings = resultdb.settings(enable = True),
-    test_presentation = resultdb.test_presentation(
-        column_keys = ["v.gpu"],
-        grouping_keys = ["status", "v.test_suite"],
-    ),
-)
-
 # name, clang, debug, cpu, uwp, trace_tests
 angle_builder("win-asan-test", cpu = "x64")
 angle_builder("win-msvc-compile", cpu = "x64")
@@ -341,10 +320,6 @@ luci.cq_group(
         ),
     ],
     verifiers = [
-        luci.cq_tryjob_verifier(
-            builder = "angle:try/presubmit",
-            disable_reuse = True,
-        ),
         luci.cq_tryjob_verifier(
             builder = "chromium:try/android-angle-chromium-try",
         ),

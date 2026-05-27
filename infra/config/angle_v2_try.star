@@ -99,6 +99,10 @@ def angle_win_functional_cq_tester(**kwargs):
     kwargs = apply_win_cq_builder_defaults(kwargs)
     try_.builder(**kwargs)
 
+def angle_linux_presubmit_builder(**kwargs):
+    kwargs = apply_linux_cq_builder_defaults(kwargs)
+    try_.presubmit_builder(**kwargs)
+
 ## Functional testers
 
 angle_linux_functional_cq_tester(
@@ -251,6 +255,25 @@ angle_win_functional_cq_tester(
         "ci/angle-win-x86-sws-rel",
     ],
     gn_args = "ci/angle-win-x86-builder-rel",
+)
+
+# Presubmit-only testers
+
+angle_linux_presubmit_builder(
+    name = "presubmit",
+    description_html = "Runs basic presubmit checks on Linux machines",
+    executable = "recipe:run_presubmit",
+    cq_settings = try_.cq_settings(
+        on_default_cq = True,
+    ),
+    properties = {
+        "repo_name": "angle",
+        "runhooks": True,
+    },
+    test_presentation = resultdb.test_presentation(
+        column_keys = ["v.gpu"],
+        grouping_keys = ["status", "v.test_suite"],
+    ),
 )
 
 ################################################################################

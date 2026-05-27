@@ -336,11 +336,6 @@ consoles.list_view(
     title = "ANGLE Try Builders",
 )
 
-luci.list_view_entry(
-    list_view = "try",
-    builder = "try/presubmit",
-)
-
 # Run other non-builder setup.
 exec("//gn_args.star")
 exec("//recipes.star")
