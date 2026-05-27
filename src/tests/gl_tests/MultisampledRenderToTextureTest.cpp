@@ -4498,6 +4498,65 @@ TEST_P(MSRTTES3Test, RenderToTextureMidRenderPassDepthClear)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that MSRTT rendering to cubemap faces work.
+TEST_P(MSRTTES3Test, CubeMap)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_OES_sample_variables : enable
+precision mediump float;
+out vec4 color;
+void main()
+{
+    switch (gl_SampleID % 4)
+    {
+    case 0:
+        color = vec4(1.0, 0.9, 0.8, 0.7);
+        break;
+    case 1:
+        color = vec4(0.0, 0.1, 0.2, 0.3);
+        break;
+    case 2:
+        color = vec4(0.5, 0.25, 0.75, 1.0);
+        break;
+    case 3:
+        color = vec4(0.4, 0.6, 0.2, 0.8);
+        break;
+    }
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+
+    constexpr GLsizei kSize = 6;
+
+    // Create multisampled framebuffer to draw into, with both color and depth attachments.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, color);
+    for (GLenum face = 0; face < 6; face++)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    for (GLenum face = 0; face < 6; face++)
+    {
+        glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                             GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, color, 0, 4);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+
+        // The result should be the average of the four colors written by the shader.
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(121, 118, 124, 178), 1);
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
 class MSRTTSRGBES3Test : public MSRTTES3Test
 {};
 

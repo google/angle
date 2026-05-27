@@ -2378,7 +2378,6 @@ class ImageHelper final : public Resource, public angle::Subject
     // rendering.  If LAZILY_ALLOCATED memory is available, it will prefer that.
     angle::Result initImplicitMultisampledRenderToTexture(ErrorContext *context,
                                                           bool hasProtectedContent,
-                                                          gl::TextureType textureType,
                                                           GLint samples,
                                                           const ImageHelper &resolveImage,
                                                           const VkExtent3D &multisampleImageExtents,

@@ -6876,7 +6876,6 @@ angle::Result ImageHelper::initStaging(ErrorContext *context,
 angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
     ErrorContext *context,
     bool hasProtectedContent,
-    gl::TextureType textureType,
     GLint samples,
     const ImageHelper &resolveImage,
     const VkExtent3D &multisampleImageExtents,
@@ -6922,6 +6921,12 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
     // Multisampled images have only 1 level
     constexpr uint32_t kLevelCount = 1;
 
+    // The resolve image is either 2D or a cubemap.  For the implicit MSAA image, use a 2D array
+    // image instead of a cubemap since multisampling together with
+    // VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT is not allowed in Vulkan.
+    ASSERT(resolveImage.getLayerCount() == 1 || resolveImage.getLayerCount() == gl::kCubeFaceCount);
+    const gl::TextureType textureType =
+        resolveImage.getLayerCount() == 1 ? gl::TextureType::_2D : gl::TextureType::_2DArray;
     ANGLE_TRY(initExternal(context, textureType, multisampleImageExtents,
                            resolveImage.getIntendedFormatID(), resolveImage.getActualFormatID(),
                            samples, kMultisampledUsageFlags, kMultisampledCreateFlags,

@@ -3390,8 +3390,7 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
 
             // Create the implicit multisampled image.
             ANGLE_TRY(multisampledImage.initImplicitMultisampledRenderToTexture(
-                contextVk, mState.hasProtectedContent(), mState.getType(), samples, *mImage,
-                extents, useRobustInit));
+                contextVk, mState.hasProtectedContent(), samples, *mImage, extents, useRobustInit));
         }
     }
 
