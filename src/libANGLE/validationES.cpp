@@ -1317,10 +1317,10 @@ bool ValidCompressedSubImageSize(const Context *context,
     }
 
     // Negative dimensions already checked in ValidImageSizeParameters called by
-    // ValidateES2TexImageParametersBase or ValidateES3TexImageParametersBase.
+    // ValidateES2TexImageParameters or ValidateES3TexImageParametersBase.
     ASSERT(width >= 0 && height >= 0 && depth >= 0);
 
-    // Negative and overflowed offsets already checked in ValidateES2TexImageParametersBase or
+    // Negative and overflowed offsets already checked in ValidateES2TexImageParameters or
     // ValidateES3TexImageParametersBase.
     ASSERT(xoffset >= 0 && yoffset >= 0 && zoffset >= 0);
     ASSERT(std::numeric_limits<GLsizei>::max() - xoffset >= width &&
