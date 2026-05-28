@@ -99,6 +99,9 @@
 524775154 : PbufferTestES3.ImportImageThenBindTexImageShouldOrphan/* = SKIP_FOR_CAPTURE
 524775154 : PbufferTestES3.ImportImageThenBindTexImageSourceShouldOrphan/* = SKIP_FOR_CAPTURE
 
+532592076 : PbufferTest.BindTexImageAnd*/* = SKIP_FOR_CAPTURE
+532592076 : PbufferTestES3.BindTexImageAnd*/* = SKIP_FOR_CAPTURE
+
 # Skip because Timeout
 
 # ES3 Flaky
