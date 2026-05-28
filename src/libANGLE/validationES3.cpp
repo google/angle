@@ -465,7 +465,6 @@ bool ValidateES3TexImageParametersBase(const Context *context,
     switch (texType)
     {
         case TextureType::_2D:
-        case TextureType::External:
         case TextureType::VideoImage:
             if (width > (caps.max2DTextureSize >> level) ||
                 height > (caps.max2DTextureSize >> level))
