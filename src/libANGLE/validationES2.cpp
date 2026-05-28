@@ -1078,10 +1078,24 @@ bool ValidateES2TexImageParameters(const Context *context,
         }
         else
         {
-            if (!ValidCompressedImageSize(context, actualInternalFormat, level, width, height, 1))
+            if (internalFormatInfo.compressed)
             {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
-                return false;
+                if (!ValidCompressedImageSize(context, actualInternalFormat, level, width, height,
+                                              1))
+                {
+                    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
+                    return false;
+                }
+            }
+            else
+            {
+                ASSERT(internalFormatInfo.paletted);
+                // TODO(http://anglebug.com/42266155): multi-level paletted images
+                if (level != 0)
+                {
+                    UNIMPLEMENTED();
+                    return false;
+                }
             }
         }
     }
