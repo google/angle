@@ -497,7 +497,13 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
                     bufferFormatProperties.formatFeatures);
 
             vkFormat = &renderer->getFormat(externalFormatID);
-            mFormat  = gl::Format(vkFormat->getIntendedGLFormat());
+            // mFormat based on pixelFormat may not actually render-able. But if we are here, the
+            // image is render-able with colorAttachmentFormat. So use colorAttachmentFormat to
+            // deduce mFormat, which is used by front end to decide if FBO is complete etc.
+            angle::FormatID colorAttachmentFormatID =
+                vk::GetFormatIDFromVkFormat(bufferFormatResolveProperties.colorAttachmentFormat);
+            const vk::Format &colorAttachmentFormat = renderer->getFormat(colorAttachmentFormatID);
+            mFormat = gl::Format(colorAttachmentFormat.getIntendedGLFormat());
         }
         else
         {
