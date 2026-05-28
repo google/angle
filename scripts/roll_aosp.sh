@@ -161,6 +161,13 @@ is_in_android_repo() {
     return 1
 }
 
+# throw an error if ANGLE_UPSTREAM_HASH is not set (b/348044346)
+if [[ -z "${ANGLE_UPSTREAM_HASH}" ]]; then
+    echo "ANGLE_UPSTREAM_HASH environment variable is not set. Please run command 'export ANGLE_UPSTREAM_HASH=\"{git_hash}\"' before running roll_aosp.sh.
+{git_hash} should be the git hash of the most recent ANGLE commit in upstream that current repo has already rolled in."
+    exit 1
+fi
+
 CLEAN_GIT_SUBMODULES=false
 if is_in_android_repo; then
     CLEAN_GIT_SUBMODULES=true
