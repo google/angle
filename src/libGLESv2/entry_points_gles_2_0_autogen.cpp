@@ -4069,7 +4069,8 @@ void GL_APIENTRY GL_PixelStorei(GLenum pname, GLint param)
 
     if (ANGLE_LIKELY(context != nullptr))
     {
-        bool isCallValid = context->skipValidation();
+        PackUnpackParameter pnamePacked = PackParam<PackUnpackParameter>(pname);
+        bool isCallValid                = context->skipValidation();
         if (!isCallValid)
         {
             if (ANGLE_LIKELY(true))
@@ -4077,9 +4078,9 @@ void GL_APIENTRY GL_PixelStorei(GLenum pname, GLint param)
 #if defined(ANGLE_ENABLE_ASSERTS)
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidatePixelStorei(context->getPrivateState(),
-                                                  context->getMutableErrorSetForValidation(),
-                                                  angle::EntryPoint::GLPixelStorei, pname, param);
+                isCallValid = ValidatePixelStorei(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLPixelStorei, pnamePacked, param);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
@@ -4088,9 +4089,9 @@ void GL_APIENTRY GL_PixelStorei(GLenum pname, GLint param)
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivatePixelStorei(context->getMutablePrivateState(),
-                                      context->getMutablePrivateStateCache(), pname, param);
+                                      context->getMutablePrivateStateCache(), pnamePacked, param);
         }
-        ANGLE_CAPTURE_GL(PixelStorei, isCallValid, context, pname, param);
+        ANGLE_CAPTURE_GL(PixelStorei, isCallValid, context, pnamePacked, param);
     }
     else
     {

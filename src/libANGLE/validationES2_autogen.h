@@ -438,7 +438,7 @@ bool ValidateLinkProgram(const Context *context,
 bool ValidatePixelStorei(const PrivateState &state,
                          ErrorSet *errors,
                          angle::EntryPoint entryPoint,
-                         GLenum pname,
+                         PackUnpackParameter pnamePacked,
                          GLint param);
 bool ValidatePolygonOffset(const PrivateState &state,
                            ErrorSet *errors,

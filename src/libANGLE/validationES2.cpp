@@ -4822,85 +4822,60 @@ bool ValidateIsTexture(const Context *context, angle::EntryPoint entryPoint, Tex
 bool ValidatePixelStorei(const PrivateState &state,
                          ErrorSet *errors,
                          angle::EntryPoint entryPoint,
-                         GLenum pname,
+                         PackUnpackParameter pnamePacked,
                          GLint param)
 {
-    if (state.getClientVersion() < ES_3_0)
+    const Version &clientVersion = state.getClientVersion();
+    const Extensions &extensions = state.getExtensions();
+
+    bool isPnameSupported = false;
+    switch (pnamePacked)
     {
-        switch (pname)
-        {
-            case GL_UNPACK_IMAGE_HEIGHT:
-            case GL_UNPACK_SKIP_IMAGES:
-                errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPname);
+        case PackUnpackParameter::UnpackAlignment:
+        case PackUnpackParameter::PackAlignment:
+            if (ANGLE_UNLIKELY(param != 1 && param != 2 && param != 4 && param != 8))
+            {
+                errors->validationError(entryPoint, GL_INVALID_VALUE, kInvalidPackUnpackAlignment);
                 return false;
-
-            case GL_UNPACK_ROW_LENGTH:
-            case GL_UNPACK_SKIP_ROWS:
-            case GL_UNPACK_SKIP_PIXELS:
-                if (!state.getExtensions().unpackSubimageEXT)
-                {
-                    errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPname);
-                    return false;
-                }
-                break;
-
-            case GL_PACK_ROW_LENGTH:
-            case GL_PACK_SKIP_ROWS:
-            case GL_PACK_SKIP_PIXELS:
-                if (!state.getExtensions().packSubimageNV)
-                {
-                    errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPname);
-                    return false;
-                }
-                break;
-        }
+            }
+            return true;
+        case PackUnpackParameter::UnpackRowLength:
+        case PackUnpackParameter::UnpackSkipRows:
+        case PackUnpackParameter::UnpackSkipPixels:
+            isPnameSupported = clientVersion >= ES_3_0 || extensions.unpackSubimageEXT;
+            break;
+        case PackUnpackParameter::PackRowLength:
+        case PackUnpackParameter::PackSkipRows:
+        case PackUnpackParameter::PackSkipPixels:
+            isPnameSupported = clientVersion >= ES_3_0 || extensions.packSubimageNV;
+            break;
+        case PackUnpackParameter::UnpackSkipImages:
+        case PackUnpackParameter::UnpackImageHeight:
+            isPnameSupported = clientVersion >= ES_3_0;
+            break;
+        case PackUnpackParameter::PackReverseRowOrder:
+            if (extensions.packReverseRowOrderANGLE)
+            {
+                // Any value is valid for this parameter.
+                return true;
+            }
+            break;
+        default:
+            errors->validationError(entryPoint, GL_INVALID_ENUM, kParameterNameUnknown);
+            return false;
     }
 
-    if (param < 0)
+    if (ANGLE_UNLIKELY(!isPnameSupported))
     {
-        errors->validationError(entryPoint, GL_INVALID_VALUE, kNegativeParam);
+        errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kParameterNameUnsupported,
+                                 ToGLenum(pnamePacked));
         return false;
     }
 
-    switch (pname)
+    if (ANGLE_UNLIKELY(param < 0))
     {
-        case GL_UNPACK_ALIGNMENT:
-            if (param != 1 && param != 2 && param != 4 && param != 8)
-            {
-                errors->validationError(entryPoint, GL_INVALID_VALUE, kInvalidUnpackAlignment);
-                return false;
-            }
-            break;
-
-        case GL_PACK_ALIGNMENT:
-            if (param != 1 && param != 2 && param != 4 && param != 8)
-            {
-                errors->validationError(entryPoint, GL_INVALID_VALUE, kInvalidUnpackAlignment);
-                return false;
-            }
-            break;
-
-        case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
-            if (!state.getExtensions().packReverseRowOrderANGLE)
-            {
-                errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
-                return false;
-            }
-            break;
-
-        case GL_UNPACK_ROW_LENGTH:
-        case GL_UNPACK_IMAGE_HEIGHT:
-        case GL_UNPACK_SKIP_IMAGES:
-        case GL_UNPACK_SKIP_ROWS:
-        case GL_UNPACK_SKIP_PIXELS:
-        case GL_PACK_ROW_LENGTH:
-        case GL_PACK_SKIP_ROWS:
-        case GL_PACK_SKIP_PIXELS:
-            break;
-
-        default:
-            errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, pname);
-            return false;
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kNegativeParam);
+        return false;
     }
 
     return true;

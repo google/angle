@@ -951,9 +951,10 @@ TEST_P(WebGLCompatibilityTest, EnablePackReverseRowOrderExtension)
 {
     EXPECT_FALSE(IsGLExtensionEnabled("GL_ANGLE_pack_reverse_row_order"));
 
-    GLint result = 0;
+    GLint result = 2;
     glGetIntegerv(GL_PACK_REVERSE_ROW_ORDER_ANGLE, &result);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    EXPECT_EQ(result, 2);
 
     glPixelStorei(GL_PACK_REVERSE_ROW_ORDER_ANGLE, GL_TRUE);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
@@ -964,8 +965,25 @@ TEST_P(WebGLCompatibilityTest, EnablePackReverseRowOrderExtension)
         EXPECT_GL_NO_ERROR();
 
         glGetIntegerv(GL_PACK_REVERSE_ROW_ORDER_ANGLE, &result);
+        EXPECT_EQ(result, 0);
+
         glPixelStorei(GL_PACK_REVERSE_ROW_ORDER_ANGLE, GL_TRUE);
         EXPECT_GL_NO_ERROR();
+
+        glGetIntegerv(GL_PACK_REVERSE_ROW_ORDER_ANGLE, &result);
+        EXPECT_EQ(result, 1);
+
+        glPixelStorei(GL_PACK_REVERSE_ROW_ORDER_ANGLE, 0);
+        EXPECT_GL_NO_ERROR();
+
+        glGetIntegerv(GL_PACK_REVERSE_ROW_ORDER_ANGLE, &result);
+        EXPECT_EQ(result, 0);
+
+        glPixelStorei(GL_PACK_REVERSE_ROW_ORDER_ANGLE, -1);
+        EXPECT_GL_NO_ERROR();
+
+        glGetIntegerv(GL_PACK_REVERSE_ROW_ORDER_ANGLE, &result);
+        EXPECT_EQ(result, 1);
     }
 }
 
