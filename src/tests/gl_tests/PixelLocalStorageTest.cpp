@@ -8270,13 +8270,6 @@ TEST_P(PixelLocalStorageValidationTest, ModifyTextureDuringPLS)
             GL_TEXTURE_2D_ARRAY, 0, 0, 0, 1, W, H, 1, GL_RGBA, GL_UNSIGNED_BYTE, imageData.data()));
     }
 
-    if (EnsureGLExtensionEnabled("GL_ANGLE_texture_external_update"))
-    {
-        CHECK_TEXTURE_2D_MODIFICATION(glInvalidateTextureANGLE(GL_TEXTURE_2D));
-
-        CHECK_TEXTURE_2D_ARRAY_MODIFICATION(glInvalidateTextureANGLE(GL_TEXTURE_2D_ARRAY));
-    }
-
     GLfloat zerof[4] = {};
     GLint zeroi[4]   = {};
     GLuint zeroui[4] = {};

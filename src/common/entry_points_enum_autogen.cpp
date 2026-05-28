@@ -1404,8 +1404,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glInvalidateFramebuffer";
         case EntryPoint::GLInvalidateSubFramebuffer:
             return "glInvalidateSubFramebuffer";
-        case EntryPoint::GLInvalidateTextureANGLE:
-            return "glInvalidateTextureANGLE";
         case EntryPoint::GLIsBuffer:
             return "glIsBuffer";
         case EntryPoint::GLIsEnabled:
@@ -1922,8 +1920,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glTexGenxvOES";
         case EntryPoint::GLTexImage2D:
             return "glTexImage2D";
-        case EntryPoint::GLTexImage2DExternalANGLE:
-            return "glTexImage2DExternalANGLE";
         case EntryPoint::GLTexImage2DRobustANGLE:
             return "glTexImage2DRobustANGLE";
         case EntryPoint::GLTexImage3D:
