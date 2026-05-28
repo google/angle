@@ -5756,13 +5756,6 @@ TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionETC1)
         IsGLExtensionEnabled("GL_EXT_compressed_ETC1_RGB8_sub_texture"));
 }
 
-// Test enabling GL_ANGLE_lossy_etc_decode
-TEST_P(WebGLCompatibilityTest, EnableCompressedTextureExtensionLossyDecode)
-{
-    validateCompressedTexImageExtensionFormat(GL_ETC1_RGB8_LOSSY_DECODE_ANGLE, 4, 4, 8,
-                                              "GL_ANGLE_lossy_etc_decode", true);
-}
-
 // Reject attempts to allocate too-large arrays in shaders.
 // This is an implementation-defined limit - crbug.com/1220237 .
 TEST_P(WebGLCompatibilityTest, ValidateArraySizes)

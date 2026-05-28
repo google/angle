@@ -1628,8 +1628,6 @@ void GL_APIENTRY GL_LogicOpANGLE(GLenum opcode)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
-// GL_ANGLE_lossy_etc_decode
-
 // GL_ANGLE_memory_object_flags
 void GL_APIENTRY GL_TexStorageMemFlags2DANGLE(GLenum target,
                                               GLsizei levels,

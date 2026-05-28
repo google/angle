@@ -1607,7 +1607,6 @@ void GenerateCaps(ID3D11Device *device,
     extensions->EGLStreamConsumerExternalNV         = true;
     extensions->unpackSubimageEXT                   = true;
     extensions->packSubimageNV                      = true;
-    extensions->lossyEtcDecodeANGLE                 = true;
     extensions->copyTextureCHROMIUM                 = true;
     extensions->copyCompressedTextureCHROMIUM       = true;
     extensions->textureStorageMultisample2dArrayOES = true;

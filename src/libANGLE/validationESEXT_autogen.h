@@ -255,8 +255,6 @@ bool ValidateLogicOpANGLE(const PrivateState &state,
                           angle::EntryPoint entryPoint,
                           LogicalOperation opcodePacked);
 
-// GL_ANGLE_lossy_etc_decode
-
 // GL_ANGLE_memory_object_flags
 bool ValidateTexStorageMemFlags2DANGLE(const Context *context,
                                        angle::EntryPoint entryPoint,
