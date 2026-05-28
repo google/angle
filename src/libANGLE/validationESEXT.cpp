@@ -805,23 +805,6 @@ bool ValidateDrawRangeElementsBaseVertexOES(const Context *context,
     return true;
 }
 
-// GL_KHR_blend_equation_advanced
-bool ValidateBlendBarrierKHR(const Context *context, angle::EntryPoint entryPoint)
-{
-    return true;
-}
-
-bool ValidateGetGraphicsResetStatusKHR(const Context *context, angle::EntryPoint entryPoint)
-{
-    if (context->getClientVersion() < ES_2_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES2Required);
-        return false;
-    }
-
-    return true;
-}
-
 bool ValidateGetnUniformfvKHR(const Context *context,
                               angle::EntryPoint entryPoint,
                               ShaderProgramID programPacked,
@@ -1208,13 +1191,6 @@ bool ValidateGetUnsignedBytei_vEXT(const Context *context,
     return false;
 }
 
-bool ValidateIsMemoryObjectEXT(const Context *context,
-                               angle::EntryPoint entryPoint,
-                               MemoryObjectID memoryObject)
-{
-    return true;
-}
-
 bool ValidateMemoryObjectParameterivEXT(const Context *context,
                                         angle::EntryPoint entryPoint,
                                         MemoryObjectID memoryObject,
@@ -1342,13 +1318,6 @@ bool ValidateGetSemaphoreParameterui64vEXT(const Context *context,
 {
     UNIMPLEMENTED();
     return false;
-}
-
-bool ValidateIsSemaphoreEXT(const Context *context,
-                            angle::EntryPoint entryPoint,
-                            SemaphoreID semaphore)
-{
-    return true;
 }
 
 bool ValidateSemaphoreParameterui64vEXT(const Context *context,
@@ -2501,12 +2470,6 @@ bool ValidateEndPixelLocalStorageANGLE(const Context *context,
     return true;
 }
 
-bool ValidateEndPixelLocalStorageImplicitANGLE(const Context *context, angle::EntryPoint entryPoint)
-{
-    // The entry point for implicitly ending PLS deliberately does not generate GL errors.
-    return true;
-}
-
 bool ValidatePixelLocalStorageBarrierANGLE(const Context *context, angle::EntryPoint entryPoint)
 {
     return ValidatePLSCommon(context, entryPoint, PLSExpectedStatus::Active,
@@ -2623,11 +2586,6 @@ bool ValidateGetFramebufferPixelLocalStorageParameteruivRobustANGLE(const Contex
 {
     return ValidateGetFramebufferPixelLocalStorageParameterRobustBase(
         context, entryPoint, plane, pnamePacked, paramCount, params);
-}
-
-bool ValidateFramebufferFetchBarrierEXT(const Context *context, angle::EntryPoint entryPoint)
-{
-    return true;
 }
 
 bool ValidatePatchParameteriEXT(const PrivateState &state,
@@ -3068,49 +3026,6 @@ bool ValidatePolygonModeNV(const PrivateState &state,
     return true;
 }
 
-// GL_EXT_polygon_offset_clamp
-bool ValidatePolygonOffsetClampEXT(const PrivateState &state,
-                                   ErrorSet *errors,
-                                   angle::EntryPoint entryPoint,
-                                   GLfloat factor,
-                                   GLfloat units,
-                                   GLfloat clamp)
-{
-    return true;
-}
-
-// GL_EXT_primitive_bounding_box
-bool ValidatePrimitiveBoundingBoxEXT(const PrivateState &state,
-                                     ErrorSet *errors,
-                                     angle::EntryPoint entryPoint,
-                                     GLfloat minX,
-                                     GLfloat minY,
-                                     GLfloat minZ,
-                                     GLfloat minW,
-                                     GLfloat maxX,
-                                     GLfloat maxY,
-                                     GLfloat maxZ,
-                                     GLfloat maxW)
-{
-    return true;
-}
-
-// GL_OES_primitive_bounding_box
-bool ValidatePrimitiveBoundingBoxOES(const PrivateState &state,
-                                     ErrorSet *errors,
-                                     angle::EntryPoint entryPoint,
-                                     GLfloat minX,
-                                     GLfloat minY,
-                                     GLfloat minZ,
-                                     GLfloat minW,
-                                     GLfloat maxX,
-                                     GLfloat maxY,
-                                     GLfloat maxZ,
-                                     GLfloat maxW)
-{
-    return true;
-}
-
 // GL_OES_texture_storage_multisample_2d_array
 bool ValidateTexStorage3DMultisampleOES(const Context *context,
                                         angle::EntryPoint entryPoint,
@@ -3185,13 +3100,6 @@ bool ValidateGetProgramPipelineivEXT(const Context *context,
                                      const GLint *params)
 {
     return ValidateGetProgramPipelineivBase(context, entryPoint, pipelinePacked, pname, params);
-}
-
-bool ValidateIsProgramPipelineEXT(const Context *context,
-                                  angle::EntryPoint entryPoint,
-                                  ProgramPipelineID pipelinePacked)
-{
-    return ValidateIsProgramPipelineBase(context, entryPoint, pipelinePacked);
 }
 
 bool ValidateProgramParameteriEXT(const Context *context,

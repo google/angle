@@ -2318,11 +2318,6 @@ bool ValidateDeleteQueriesEXT(const Context *context,
     return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, ids);
 }
 
-bool ValidateIsQueryEXT(const Context *context, angle::EntryPoint entryPoint, QueryID id)
-{
-    return true;
-}
-
 bool ValidateBeginQueryBase(const Context *context,
                             angle::EntryPoint entryPoint,
                             QueryType target,
@@ -4719,14 +4714,6 @@ bool ValidateDiscardFramebufferBase(const Context *context,
         }
     }
 
-    return true;
-}
-
-bool ValidateInsertEventMarkerEXT(const Context *context,
-                                  angle::EntryPoint entryPoint,
-                                  GLsizei length,
-                                  const char *marker)
-{
     return true;
 }
 
