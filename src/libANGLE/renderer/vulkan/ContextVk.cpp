@@ -3813,11 +3813,18 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
         // Framebuffer::syncState will not get called for current draw call since
         // State::syncDirtyObjects already took the dirty bits. Here we try to detect that current
         // drawFBO is getting affected and invalidate cached object in FramebufferVk so that they
-        // could get recreated. We have to do this detection logic before fallback since fallback
-        // will clear mImageWithTileMemory pointer.
+        // could get recreated. Note that in this case, the FBO dirty bits must already been
+        // processed, otherwise we won't have this bug since next draw call should trigger dirty bit
+        // processing and everything will be in sync. Without check
+        // drawFramebuffer->hasAnyDirtyBit() you may run the risk of accessing an already deleted
+        // RenderTargetVk object due to FramebufferVk's mRenderTargetCache has a stale reference. We
+        // have to do this detection logic before fallback since fallback will clear
+        // mImageWithTileMemory pointer.
+        const gl::Framebuffer *drawFramebuffer = mState.getDrawFramebuffer();
         const vk::ImageHelper *drawFBOImageWithTileMemory =
-            mState.getDrawFramebuffer() != nullptr ? getDrawFramebuffer()->getImageWithTileMemory()
-                                                   : nullptr;
+            (drawFramebuffer != nullptr && !drawFramebuffer->hasAnyDirtyBit())
+                ? getDrawFramebuffer()->getImageWithTileMemory()
+                : nullptr;
         const bool drawFBOImageFallbackFromTileMemory =
             drawFBOImageWithTileMemory && drawFBOImageWithTileMemory == mImageWithTileMemory;
 
@@ -8057,9 +8064,13 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass(RenderPassClosureReason r
     // here. Next addImageWithTileMemory will just overwrite the pointer with new pointer.
     if (mImageWithTileMemory && mImageWithTileMemory->isVkImageContentDefined())
     {
-        FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
+        // Only consult the FramebufferVk render-target cache if the draw framebuffer is in
+        // sync.  If it has pending dirty bits, the cached RenderTargetVk* may dangle.
+        const gl::Framebuffer *drawFramebuffer = mState.getDrawFramebuffer();
         const vk::ImageHelper *nextImageWithTileMemory =
-            drawFramebufferVk->getImageWithTileMemory();
+            (drawFramebuffer != nullptr && !drawFramebuffer->hasAnyDirtyBit())
+                ? getDrawFramebuffer()->getImageWithTileMemory()
+                : nullptr;
         if (nextImageWithTileMemory && nextImageWithTileMemory != mImageWithTileMemory)
         {
             ASSERT(nextImageWithTileMemory->useTileMemory());
