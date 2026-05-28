@@ -1121,8 +1121,20 @@ bool ValidateES2TexImageParametersBase(const Context *context,
             case GL_UNSIGNED_SHORT:
             case GL_UNSIGNED_INT:
             case GL_UNSIGNED_INT_24_8_OES:
+                break;
             case GL_HALF_FLOAT_OES:
+                if (!context->getExtensions().textureHalfFloatOES)
+                {
+                    ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, type);
+                    return false;
+                }
+                break;
             case GL_FLOAT:
+                if (!context->getExtensions().textureFloatOES)
+                {
+                    ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, type);
+                    return false;
+                }
                 break;
             case GL_UNSIGNED_INT_2_10_10_10_REV_EXT:
                 if (!context->getExtensions().textureType2101010REVEXT)
@@ -1585,23 +1597,6 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     ANGLE_VALIDATION_ERRORF(GL_INVALID_VALUE, kInvalidInternalFormat,
                                             internalformat);
                     return false;
-            }
-        }
-
-        if (type == GL_FLOAT)
-        {
-            if (!context->getExtensions().textureFloatOES)
-            {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, type);
-                return false;
-            }
-        }
-        else if (type == GL_HALF_FLOAT_OES)
-        {
-            if (!context->getExtensions().textureHalfFloatOES)
-            {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, type);
-                return false;
             }
         }
     }
