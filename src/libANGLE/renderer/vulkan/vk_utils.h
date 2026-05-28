@@ -581,7 +581,10 @@ class StagingBuffer final : angle::NonCopyable
     void collectGarbage(Renderer *renderer, const QueueSerial &queueSerial);
     void destroy(Renderer *renderer);
 
-    angle::Result init(ErrorContext *context, VkDeviceSize size, StagingUsage usage);
+    angle::Result init(ErrorContext *context,
+                       VkDeviceSize size,
+                       StagingUsage usage,
+                       const int initValue);
 
     Buffer &getBuffer() { return mBuffer; }
     const Buffer &getBuffer() const { return mBuffer; }
@@ -1724,7 +1727,7 @@ enum class QueueSubmitReason
     CopySurfaceImageToBuffer,
     ForeignImageRelease,
     ImageUseThenReleaseToExternal,
-    InitNonZeroMemory,
+    InitializeMemory,
     TextureReformatToRenderable,
     CopyTextureOnCPU,
     GenerateMipmapOnCPU,

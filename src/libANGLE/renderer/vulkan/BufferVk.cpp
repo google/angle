@@ -485,19 +485,7 @@ angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
 
         return angle::Result::Continue;
     }
-
-    const void *dataForImpl = data;
-    if (zeroFillRequired == gl::ZeroFillRequired::Yes)
-    {
-        const angle::MemoryBuffer *scratchBuffer = nullptr;
-        ANGLE_VK_CHECK(contextVk,
-                       context->getZeroFilledBuffer(static_cast<size_t>(size), &scratchBuffer),
-                       VK_ERROR_OUT_OF_HOST_MEMORY);
-        dataForImpl = scratchBuffer->data();
-    }
-
-    return setDataWithMemoryType(context, target, dataForImpl, size, memoryPropertyFlags, usage,
-                                 feedback);
+    return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags, usage, feedback);
 }
 
 angle::Result BufferVk::setData(const gl::Context *context,

@@ -312,6 +312,9 @@ class RobustResourceInitTestES3 : public RobustResourceInitTest
 class RobustResourceInitTestES31 : public RobustResourceInitTest
 {};
 
+class RobustResourceInitWithPaddingTest : public RobustResourceInitTest
+{};
+
 // Robust resource initialization is not based on hardware support or native extensions, check that
 // it only works on the implemented renderers
 TEST_P(RobustResourceInitTest, ExpectedRendererSupport)
@@ -417,6 +420,98 @@ TEST_P(RobustResourceInitTest, BufferData)
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
     EXPECT_GL_TRUE(initState);
+}
+
+// Tests that the padding is also cleared out for a new uninitialized buffer in Vulkan.
+TEST_P(RobustResourceInitWithPaddingTest, BufferDataWithinPaddingRange)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr size_t kWidth  = 4;
+    constexpr size_t kHeight = 4;
+
+    GLTexture readTex;
+    glBindTexture(GL_TEXTURE_2D, readTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, readTex, 0);
+
+    // The array buffers are initialized to fill the whole FBO with a single color.
+    std::vector<float> colorInitData(128 * 1024 / sizeof(float), 1.0f);
+    std::vector<float> posData = {
+        0.0f,  0.0f,  -1.0f, -1.0f, -1.0f, -0.5f, -1.0f, 0.0f,  -1.0f, 0.5f,  -1.0f, 1.0f,
+        -0.5f, 1.0f,  0.0f,  1.0f,  0.5f,  1.0f,  1.0f,  1.0f,  1.0f,  0.5f,  1.0f,  0.0f,
+        1.0f,  -0.5f, 1.0f,  -1.0f, 0.5f,  -1.0f, 0.0f,  -1.0f, -0.5f, -1.0f, -1.0f, -1.0f,
+    };
+
+    GLBuffer bufferColorData1;
+    glBindBuffer(GL_ARRAY_BUFFER, bufferColorData1);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * colorInitData.size(), colorInitData.data(),
+                 GL_STATIC_DRAW);
+
+    GLBuffer bufferPos;
+    glBindBuffer(GL_ARRAY_BUFFER, bufferPos);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * posData.size(), posData.data(), GL_STATIC_DRAW);
+
+    constexpr char kVS[] = R"(
+        attribute vec2 position;
+        attribute float dataIn;
+        varying vec4 colorOut;
+        void main() {
+            gl_Position = vec4(position, 0.0, 1.0);
+            // Return blue if input data is 0.0, and yellow otherwise.
+            colorOut = dataIn == 0.0 ? vec4(0.0, 0.0, 1.0, 1.0)
+                                     : vec4(1.0, 1.0, 0.0, 1.0);
+        })";
+    constexpr char kFS[] = R"(
+        varying mediump vec4 colorOut;
+        void main() {
+            gl_FragColor = colorOut;
+        })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLint dataInLoc = glGetAttribLocation(program, "dataIn");
+    ASSERT_NE(-1, dataInLoc);
+    GLint posLoc = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, posLoc);
+
+    glBindBuffer(GL_ARRAY_BUFFER, bufferColorData1);
+    glVertexAttribPointer(dataInLoc, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(dataInLoc);
+
+    glBindBuffer(GL_ARRAY_BUFFER, bufferPos);
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 18);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::yellow);
+    bufferColorData1.reset();
+    glFinish();
+
+    // At this point, the VMA suballocation for the color data buffer should be deleted, although
+    // the underlying buffer block remains. A much smaller buffer is now allocated for the color
+    // data. However, it is not initialized with data. Therefore, with robust resource init, it is
+    // expected for the whole buffer and its padding to be initialized to 0. Therefore, even if the
+    // draw cuts into the padding space in the backend, it should still have 0 in it.
+    GLBuffer bufferColorData2;
+    glBindBuffer(GL_ARRAY_BUFFER, bufferColorData2);
+    glBufferData(GL_ARRAY_BUFFER, 4, nullptr, GL_STATIC_DRAW);
+    glVertexAttribPointer(dataInLoc, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(dataInLoc);
+    glBindBuffer(GL_ARRAY_BUFFER, bufferPos);
+    glVertexAttribPointer(posLoc, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 18);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::blue);
 }
 
 // Regression test for passing a zero size init buffer with the extension.
@@ -3428,4 +3523,11 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RobustResourceInitTestES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(RobustResourceInitTestES31,
                                 ES31_VULKAN().enable(Feature::AllocateNonZeroMemory));
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RobustResourceInitWithPaddingTest);
+ANGLE_INSTANTIATE_TEST(RobustResourceInitWithPaddingTest,
+                       ES3_VULKAN().enable(Feature::PadBuffersToMaxVertexAttribStride),
+                       ES3_VULKAN_SWIFTSHADER().enable(Feature::PadBuffersToMaxVertexAttribStride),
+                       ES3_VULKAN()
+                           .enable(Feature::PadBuffersToMaxVertexAttribStride)
+                           .enable(Feature::AllocateNonZeroMemory));
 }  // namespace angle

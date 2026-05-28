@@ -46,10 +46,6 @@ namespace rx
 {
 namespace
 {
-// Pick an arbitrary value to initialize non-zero memory for sanitization.  Note that 0x3F3F3F3F
-// as float is about 0.75.
-constexpr int kNonZeroInitValue = 0x3F;
-
 VkImageUsageFlags GetStagingBufferUsageFlags(vk::StagingUsage usage)
 {
     switch (usage)
@@ -520,7 +516,10 @@ void StagingBuffer::destroy(Renderer *renderer)
     mSize = 0;
 }
 
-angle::Result StagingBuffer::init(ErrorContext *context, VkDeviceSize size, StagingUsage usage)
+angle::Result StagingBuffer::init(ErrorContext *context,
+                                  VkDeviceSize size,
+                                  StagingUsage usage,
+                                  const int initValue)
 {
     VkBufferCreateInfo createInfo    = {};
     createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -545,15 +544,7 @@ angle::Result StagingBuffer::init(ErrorContext *context, VkDeviceSize size, Stag
                                         &memoryTypeIndex, &mBuffer, &mAllocation));
     mSize = static_cast<size_t>(size);
 
-    // Wipe memory to an invalid value when the 'allocateNonZeroMemory' feature is enabled. The
-    // invalid values ensures our testing doesn't assume zero-initialized memory.
-    if (renderer->getFeatures().allocateNonZeroMemory.enabled)
-    {
-        ANGLE_TRY(InitMappableAllocation(context, allocator, &mAllocation, size, kNonZeroInitValue,
-                                         requiredFlags));
-    }
-
-    return angle::Result::Continue;
+    return InitMappableAllocation(context, allocator, &mAllocation, size, initValue, requiredFlags);
 }
 
 void StagingBuffer::release(ContextVk *contextVk)

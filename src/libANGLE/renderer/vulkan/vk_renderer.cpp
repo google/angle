@@ -140,8 +140,7 @@ constexpr angle::PackedEnumMap<QueueSubmitReason, const char *> kQueueSubmitReas
     {QueueSubmitReason::ForceSubmitStagedTexture,
      "Queue submission imminent due to staged texture updates"},
     {QueueSubmitReason::DrawOverlay, "Queue submission imminent due to drawing overlay"},
-    {QueueSubmitReason::InitNonZeroMemory,
-     "Queue submission imminent due to initializing non-zero memory"},
+    {QueueSubmitReason::InitializeMemory, "Queue submission imminent due to initializing memory"},
 }};
 }  // namespace
 
