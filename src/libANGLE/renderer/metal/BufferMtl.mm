@@ -128,15 +128,25 @@ angle::Result BufferMtl::setData(const gl::Context *context,
                                  const void *data,
                                  size_t intendedSize,
                                  gl::BufferUsage usage,
-                                 BufferFeedback *feedback)
+                                 BufferFeedback *feedback,
+                                 gl::ZeroFillRequired zeroFillRequired)
 {
+    const void *dataForImpl = data;
+    if (zeroFillRequired == gl::ZeroFillRequired::Yes)
+    {
+        const angle::MemoryBuffer *scratchBuffer = nullptr;
+        ANGLE_CHECK_GL_ALLOC(mtl::GetImpl(context),
+                             context->getZeroFilledBuffer(intendedSize, &scratchBuffer));
+        dataForImpl = scratchBuffer->data();
+    }
+
     ANGLE_TRY(setDataImpl(context, target, intendedSize, usage, feedback));
-    if (data == nullptr || intendedSize == 0)
+    if (dataForImpl == nullptr || intendedSize == 0)
     {
         return angle::Result::Continue;
     }
-    ANGLE_UNSAFE_BUFFERS(
-        angle::Span<const uint8_t> dataSpan(static_cast<const uint8_t *>(data), intendedSize));
+    ANGLE_UNSAFE_BUFFERS(angle::Span<const uint8_t> dataSpan(
+        static_cast<const uint8_t *>(dataForImpl), intendedSize));
     return setSubDataImpl(context, dataSpan, 0, feedback);
 }
 

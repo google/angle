@@ -1631,6 +1631,14 @@ enum class BufferStorage : bool
     Immutable,
 };
 
+enum class ZeroFillRequired : bool
+{
+    // The buffer should remain unchanged after initialization if there is no specified data.
+    No,
+    // The buffer should be zero-filled after initialization if there is no specified data.
+    Yes,
+};
+
 }  // namespace gl
 
 #endif  // LIBANGLE_ANGLETYPES_H_

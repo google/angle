@@ -450,7 +450,8 @@ angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
                                               gl::BufferUsage usage,
                                               GLbitfield flags,
                                               gl::BufferStorage bufferStorage,
-                                              BufferFeedback *feedback)
+                                              BufferFeedback *feedback,
+                                              gl::ZeroFillRequired zeroFillRequired)
 {
     ContextVk *contextVk                      = vk::GetImpl(context);
     VkMemoryPropertyFlags memoryPropertyFlags = 0;
@@ -484,7 +485,19 @@ angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
 
         return angle::Result::Continue;
     }
-    return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags, usage, feedback);
+
+    const void *dataForImpl = data;
+    if (zeroFillRequired == gl::ZeroFillRequired::Yes)
+    {
+        const angle::MemoryBuffer *scratchBuffer = nullptr;
+        ANGLE_VK_CHECK(contextVk,
+                       context->getZeroFilledBuffer(static_cast<size_t>(size), &scratchBuffer),
+                       VK_ERROR_OUT_OF_HOST_MEMORY);
+        dataForImpl = scratchBuffer->data();
+    }
+
+    return setDataWithMemoryType(context, target, dataForImpl, size, memoryPropertyFlags, usage,
+                                 feedback);
 }
 
 angle::Result BufferVk::setData(const gl::Context *context,
@@ -492,13 +505,13 @@ angle::Result BufferVk::setData(const gl::Context *context,
                                 const void *data,
                                 size_t size,
                                 gl::BufferUsage usage,
-                                BufferFeedback *feedback)
+                                BufferFeedback *feedback,
+                                gl::ZeroFillRequired zeroFillRequired)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
-    // Assume host visible/coherent memory available.
-    VkMemoryPropertyFlags memoryPropertyFlags =
-        GetPreferredMemoryType(contextVk->getRenderer(), target, usage);
-    return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags, usage, feedback);
+    // setDataWithUsageFlags() is always called for the Vulkan backend, and the setData() callback
+    // is not used.
+    UNREACHABLE();
+    return angle::Result::Continue;
 }
 
 angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
