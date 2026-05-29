@@ -1511,6 +1511,8 @@ angle::Result TextureGL::generateMipmap(const gl::Context *context)
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
+    stateManager->bindTexture(getType(), mTextureID);
+
     bool recreateMipmapLevelsBeforeGenerate =
         features.recreateMipmapLevelsBeforeGenerate.enabled && !mState.getImmutableFormat();
     if (recreateMipmapLevelsBeforeGenerate)
@@ -1526,7 +1528,6 @@ angle::Result TextureGL::generateMipmap(const gl::Context *context)
 
     const LevelInfoGL &baseLevelInfo = getBaseLevelInfo();
 
-    stateManager->bindTexture(getType(), mTextureID);
     if (getType() == gl::TextureType::_2D &&
         ((baseLevelInternalFormat.colorEncoding == GL_SRGB &&
           features.decodeEncodeSRGBForGenerateMipmap.enabled) ||

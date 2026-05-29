@@ -2389,6 +2389,7 @@
 42266907 WGPU : LineLoopStateChangeTest.DrawElementsThenDrawArrays/* = SKIP
 42266907 WGPU : LineLoopStateChangeTest.DrawArraysThenDrawElements/* = SKIP
 42266907 WGPU : LineLoopStateChangeTest.DrawElementsThenDrawElements/* = SKIP
+42266907 WGPU : MipmapTestES3.MismatchingLevelFormats2/* = SKIP
 42266907 WGPU : PbufferTest.* = SKIP
 42266907 WGPU : PointSpritesTest.* = SKIP
 42266907 WGPU : RobustResourceInitTest.* = SKIP
