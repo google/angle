@@ -7161,6 +7161,7 @@ void main()
 
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 191, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Test that nested structs with samplers work when the nested struct is not the last element and
@@ -7197,6 +7198,7 @@ void main()
 
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 0, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Tests two nameless struct uniforms.

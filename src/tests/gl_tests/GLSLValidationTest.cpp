@@ -4110,6 +4110,85 @@ void main()
                   "a structure with samplers is not currently supported");
 }
 
+// Test that struct with samplers can be passed to functions where the function modifies a
+// non-sampler field.
+TEST_P(GLSLValidationTest_ES3, StructWithSamplersNonSamplerFieldModifiedInFunction)
+{
+    const char kFS[] = R"(#version 300 es
+precision mediump float;
+
+struct OnlySampler
+{
+    sampler2D s;
+};
+
+struct Inner
+{
+    sampler2D s;
+    float a;
+    OnlySampler o;
+};
+
+uniform struct Outer
+{
+    Inner i;
+    float b[3];
+    OnlySampler o;
+} u[2];
+
+out vec4 color;
+
+vec4 sampleFromOnlySampler(OnlySampler o)
+{
+    return texture(o.s, vec2(0));
+}
+
+float getAndModifyInner(Inner i)
+{
+    i.a += 0.2;
+    i.a += sampleFromOnlySampler(i.o).x;
+    return i.a;
+}
+
+vec3 getAndModifyOuter(Outer o)
+{
+    o.b[0] += 0.3;
+    o.b[0] += getAndModifyInner(o.i);
+    o.b[0] += sampleFromOnlySampler(o.o).y;
+    o.b[1] += 0.4;
+    o.b[2] += 0.5;
+    return vec3(o.b[0], o.b[1], o.b[2]);
+}
+
+void main()
+{
+    int a = 0;
+    color = vec4(getAndModifyInner(u[a++].i), getAndModifyOuter(u[1]));
+    if (a != 1)
+        color = vec4(1, 0, 0, 1);
+})";
+
+    // Note: The above is actually valid GLSL, but is unsupported.  Once implemented correctly, the
+    // test should move to GLSLTest.cpp with the following verification:
+    //
+    //     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    //     glUseProgram(program);
+    //
+    //     glUniform1f(glGetUniformLocation(program, "u[0].i.a"), 0.05f);
+    //     glUniform1f(glGetUniformLocation(program, "u[1].i.a"), 0.15f);
+    //     glUniform1f(glGetUniformLocation(program, "u[1].b[0]"), 0.05f);
+    //     glUniform1f(glGetUniformLocation(program, "u[1].b[1]"), 0.25f);
+    //     glUniform1f(glGetUniformLocation(program, "u[1].b[2]"), 0.35f);
+    //
+    //     drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    //     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(64, 128, 166, 217), 1);
+    //     ASSERT_GL_NO_ERROR();
+    //
+    validateError(
+        GL_FRAGMENT_SHADER, kFS,
+        "l-value required (modifying structures containing samplers is not currently supported");
+}
+
 // Test a fuzzer-discovered bug with the VectorizeVectorScalarArithmetic transformation.
 TEST_P(GLSLValidationTest, VectorScalarArithmeticWithSideEffectInLoop)
 {

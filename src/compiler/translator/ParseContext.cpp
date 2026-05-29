@@ -1108,6 +1108,25 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
             }
     }
 
+    // Disallow modification of structs that have samplers, even if the field being modified is not
+    // a sampler for example in code like this:
+    //
+    //     void f(StructWithSampler s) {
+    //         s.non_sampler = 1.0;
+    //     }
+    //
+    // The above is valid GLSL code, but is not currently supported due to limitations of the
+    // MonomorphizeUnsupportedFunctions pass.  On mesa/GL drivers, where
+    // MonomorphizeUnsupportedFunctions is not used, code like the above crashes the compiler.
+    if (message.empty())
+    {
+        TIntermTyped *lvalueBase = FindLValueBase(node);
+        if (lvalueBase->getType().isStructureContainingSamplers())
+        {
+            message = "modifying structures containing samplers is not currently supported";
+        }
+    }
+
     ASSERT(binaryNode == nullptr && swizzleNode == nullptr);
     TIntermSymbol *symNode = node->getAsSymbolNode();
     if (message.empty() && symNode != nullptr)
