@@ -3917,16 +3917,6 @@ void ContextVk::clearAllGarbage()
     mCurrentGarbage.clear();
 }
 
-void ContextVk::handleDeviceLost()
-{
-    vk::SecondaryCommandBufferCollector collector;
-    (void)mOutsideRenderPassCommands->reset(this, &collector);
-    (void)mRenderPassCommands->reset(this, &collector);
-    collector.releaseCommandBuffers();
-
-    mRenderer->notifyDeviceLost();
-}
-
 angle::Result ContextVk::drawArrays(const gl::Context *context,
                                     gl::PrimitiveMode mode,
                                     GLint first,
@@ -7019,6 +7009,23 @@ void ContextVk::handleError(VkResult errorCode,
 
     getRenderer()->getMemoryAllocationTracker()->logMemoryStatsOnError();
 
+    // Command buffers maybe left in limbo state, we need to reset them.
+    vk::SecondaryCommandBufferCollector collector;
+    if (!mOutsideRenderPassCommands->empty())
+    {
+        mLastFlushedQueueSerial = mOutsideRenderPassCommands->getQueueSerial();
+        mOutsideRenderPassCommands->abandon(this, &collector);
+    }
+    if (mRenderPassCommands->started())
+    {
+        mLastFlushedQueueSerial = mRenderPassCommands->getQueueSerial();
+        mRenderPassCommands->abandon(this, &collector);
+    }
+    collector.releaseCommandBuffers();
+
+    mOutsideRenderPassSerialFactory.reset();
+    generateOutsideRenderPassCommandsQueueSerial();
+
     if (errorCode == VK_ERROR_DEVICE_LOST)
     {
         VkResult deviceLostInfoErrorCode = getRenderer()->retrieveDeviceLostDetails();
@@ -7031,7 +7038,7 @@ void ContextVk::handleError(VkResult errorCode,
         }
 
         WARN() << errorStream.str();
-        handleDeviceLost();
+        mRenderer->notifyDeviceLost();
     }
 
     mErrors->handleError(glErrorCode, errorStream.str().c_str(), file, function, line);
