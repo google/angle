@@ -379,6 +379,14 @@ EGLAttrib GetPlatformTypeFromEnvironment()
 {
 #if defined(ANGLE_USE_OZONE)
     return 0;
+#elif defined(ANGLE_USE_X11) && defined(ANGLE_USE_WAYLAND)
+    // EGL 1.4 eglGetDisplay() carries no platform attribute, so consult
+    // WAYLAND_DISPLAY to break the tie between the two backends.
+    if (!angle::GetEnvironmentVar("WAYLAND_DISPLAY").empty())
+    {
+        return EGL_PLATFORM_WAYLAND_EXT;
+    }
+    return EGL_PLATFORM_X11_EXT;
 #elif defined(ANGLE_USE_X11)
     return EGL_PLATFORM_X11_EXT;
 #elif defined(ANGLE_USE_WAYLAND)
