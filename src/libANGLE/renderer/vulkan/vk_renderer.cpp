@@ -5032,7 +5032,10 @@ std::string Renderer::getVersionString(bool includeFullVersion) const
         // The major version for the new QCOM drivers seems to be 512, which results in a major
         // version of 0 and a non-zero variant field when using the VK_API_VERSION_x macros.
         // Therefore, the version string is updated to show the correct major version.
-        else if (mPhysicalDeviceProperties.vendorID == VENDOR_ID_QUALCOMM)
+        else if (mPhysicalDeviceProperties.vendorID == VENDOR_ID_QUALCOMM &&
+                 !IsQualcommOpenSource(mPhysicalDeviceProperties.vendorID,
+                                       mDriverProperties.driverID,
+                                       mPhysicalDeviceProperties.deviceName))
         {
             strstr << (512 | VK_API_VERSION_MAJOR(driverVersion)) << ".";
             strstr << VK_API_VERSION_MINOR(driverVersion) << ".";
