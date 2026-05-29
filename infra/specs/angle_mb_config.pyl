@@ -23,12 +23,6 @@
     'angle': {
       'linux-ubsan-test': 'angle_ubsan_bot',
       'win-asan-test': 'angle_asan_bot',
-      'win-msvc-compile': 'angle_non_clang_release_bot',
-      'win-msvc-dbg-compile': 'angle_non_clang_debug_bot',
-      'win-msvc-x86-compile': 'angle_non_clang_x86_release_bot',
-      'win-msvc-x86-dbg-compile': 'angle_non_clang_x86_debug_bot',
-      'winuwp-compile': 'angle_winuwp_non_clang_release_bot',
-      'winuwp-dbg-compile': 'angle_winuwp_non_clang_debug_bot',
     },
   },
 
@@ -39,13 +33,7 @@
   # bots all using the 'release_bot' config).
   'configs': {
     'angle_asan_bot': ['angle', 'opencl', 'remoteexec', 'asan', 'release'],
-    'angle_non_clang_debug_bot': ['angle', 'non_clang', 'debug'],
-    'angle_non_clang_release_bot': ['angle', 'non_clang', 'release'],
-    'angle_non_clang_x86_debug_bot': ['angle', 'non_clang', 'x86', 'debug'],
-    'angle_non_clang_x86_release_bot': ['angle', 'non_clang', 'x86', 'release'],
     'angle_ubsan_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'ubsan', 'release'],
-    'angle_winuwp_non_clang_debug_bot': ['angle', 'winuwp', 'non_clang', 'debug'],
-    'angle_winuwp_non_clang_release_bot': ['angle', 'winuwp', 'non_clang', 'release'],
   },
 
   # This is a dict mapping a given 'mixin' name to a dict of settings that
@@ -56,12 +44,6 @@
     },
     'asan': {
       'gn_args': 'is_asan=true',
-    },
-    'debug': {
-      'gn_args': 'is_debug=true',
-    },
-    'non_clang': {
-      'gn_args': 'is_clang=false treat_warnings_as_errors=false use_custom_libcxx=false',
     },
     'opencl': {
       'gn_args': 'angle_enable_cl=true',
@@ -77,12 +59,6 @@
     },
     'ubsan': {
       'gn_args': 'is_ubsan=true',
-    },
-    'winuwp': {
-      'gn_args': 'target_os="winuwp"',
-    },
-    'x86': {
-      'gn_args': 'target_cpu="x86"',
     },
   },
 }
