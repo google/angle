@@ -1,0 +1,16 @@
+{
+  "gn_args": {
+    "dcheck_always_on": true,
+    "is_clang": false,
+    "is_component_build": true,
+    "is_debug": false,
+    "symbol_level": 1,
+    "target_cpu": "x64",
+    "target_os": "win",
+    "treat_warnings_as_errors": false,
+    "use_custom_libcxx": false,
+    "use_reclient": false,
+    "use_remoteexec": true,
+    "use_siso": true
+  }
+}

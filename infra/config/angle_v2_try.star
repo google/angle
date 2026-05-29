@@ -83,6 +83,19 @@ def apply_win_cq_builder_defaults(kwargs):
     kwargs = builder_defaults.apply_win_clang_builder_defaults(kwargs)
     return kwargs
 
+def apply_win_msvc_cq_builder_defaults(kwargs):
+    """Applies default builder settings for an MSVC Windows CQ builder.
+
+    Args:
+        kwargs: The args being used for the builder as a dict.
+
+    Returns:
+        |kwargs| with default values set for a Windows CQ builder.
+    """
+    kwargs = apply_cq_builder_defaults(kwargs)
+    kwargs = builder_defaults.apply_win_msvc_builder_defaults(kwargs)
+    return kwargs
+
 def angle_linux_functional_cq_tester(**kwargs):
     kwargs = apply_linux_cq_builder_defaults(kwargs)
     try_.builder(**kwargs)
@@ -93,6 +106,10 @@ def angle_mac_functional_cq_tester(**kwargs):
 
 def angle_win_functional_cq_tester(**kwargs):
     kwargs = apply_win_cq_builder_defaults(kwargs)
+    try_.builder(**kwargs)
+
+def angle_win_msvc_functional_cq_tester(**kwargs):
+    kwargs = apply_win_msvc_cq_builder_defaults(kwargs)
     try_.builder(**kwargs)
 
 def angle_linux_presubmit_builder(**kwargs):
@@ -223,6 +240,30 @@ angle_win_functional_cq_tester(
     gn_args = "ci/angle-win-x64-builder-dbg",
 )
 
+angle_win_msvc_functional_cq_tester(
+    name = "angle-cq-win-x64-msvc-dbg",
+    description_html = "Compiles debug ANGLE targets for Win/x64 using MSVC. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-win-x64-builder-msvc-dbg",
+    ],
+    gn_args = "ci/angle-win-x64-builder-msvc-dbg",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
+    # confirmed to work.
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
+angle_win_msvc_functional_cq_tester(
+    name = "angle-cq-win-x64-msvc-rel",
+    description_html = "Compiles release ANGLE targets for Win/x64 using MSVC. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-win-x64-builder-msvc-rel",
+    ],
+    gn_args = "ci/angle-win-x64-builder-msvc-rel",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
+    # confirmed to work.
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
 angle_win_functional_cq_tester(
     name = "angle-cq-win-x64-rel",
     description_html = "Tests release ANGLE on Win/x64 on multiple hardware configs. Blocks CL submission.",
@@ -234,6 +275,30 @@ angle_win_functional_cq_tester(
     gn_args = "ci/angle-win-x64-builder-rel",
 )
 
+angle_win_msvc_functional_cq_tester(
+    name = "angle-cq-win-x64-uwp-dbg",
+    description_html = "Compiles debug ANGLE targets for Windows UWP/x64 using MSVC. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-win-x64-builder-uwp-dbg",
+    ],
+    gn_args = "ci/angle-win-x64-builder-uwp-dbg",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
+    # confirmed to work.
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
+angle_win_msvc_functional_cq_tester(
+    name = "angle-cq-win-x64-uwp-rel",
+    description_html = "Compiles release ANGLE targets for Windows UWP/x64 using MSVC. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-win-x64-builder-uwp-rel",
+    ],
+    gn_args = "ci/angle-win-x64-builder-uwp-rel",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
+    # confirmed to work.
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
 angle_win_functional_cq_tester(
     name = "angle-cq-win-x86-dbg",
     description_html = "Compiles all debug ANGLE targets for Win/x86. Blocks CL submission.",
@@ -241,6 +306,30 @@ angle_win_functional_cq_tester(
         "ci/angle-win-x86-builder-dbg",
     ],
     gn_args = "ci/angle-win-x86-builder-dbg",
+)
+
+angle_win_msvc_functional_cq_tester(
+    name = "angle-cq-win-x86-msvc-dbg",
+    description_html = "Compiles debug ANGLE targets for Win/x86 using MSVC. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-win-x86-builder-msvc-dbg",
+    ],
+    gn_args = "ci/angle-win-x64-builder-msvc-dbg",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
+    # confirmed to work.
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
+angle_win_msvc_functional_cq_tester(
+    name = "angle-cq-win-x86-msvc-rel",
+    description_html = "Compiles release ANGLE targets for Win/x86 using MSVC. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-win-x86-builder-msvc-rel",
+    ],
+    gn_args = "ci/angle-win-x86-builder-msvc-rel",
+    # TODO(anglebug.com/475260235): Add this to the CQ once the CI builder is
+    # confirmed to work.
+    cq_settings = try_.cq_settings(includable_only = True),
 )
 
 angle_win_functional_cq_tester(

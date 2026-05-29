@@ -5376,6 +5376,26 @@
       "all"
     ]
   },
+  "angle-win-x64-builder-msvc-dbg": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  },
+  "angle-win-x64-builder-msvc-rel": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  },
+  "angle-win-x64-builder-uwp-dbg": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  },
+  "angle-win-x64-builder-uwp-rel": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  },
   "angle-win-x64-intel-uhd630-exp-rel": {},
   "angle-win-x64-intel-uhd630-perf": {
     "isolated_scripts": [
@@ -7075,6 +7095,16 @@
     ]
   },
   "angle-win-x86-builder-dbg": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  },
+  "angle-win-x86-builder-msvc-dbg": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  },
+  "angle-win-x86-builder-msvc-rel": {
     "additional_compile_targets": [
       "all"
     ]

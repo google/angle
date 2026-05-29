@@ -262,6 +262,30 @@
           'all',
         ],
       },
+      'angle-win-x64-builder-msvc-dbg': {
+        'os_type': 'win',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
+      'angle-win-x64-builder-msvc-rel': {
+        'os_type': 'win',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
+      'angle-win-x64-builder-uwp-dbg': {
+        'os_type': 'win',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
+      'angle-win-x64-builder-uwp-rel': {
+        'os_type': 'win',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
       'angle-win-x64-intel-uhd630-exp-rel': {
         'os_type': 'win',
         'mixins': [
@@ -335,6 +359,18 @@
         ],
       },
       'angle-win-x86-builder-dbg': {
+        'os_type': 'win',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
+      'angle-win-x86-builder-msvc-dbg': {
+        'os_type': 'win',
+        'additional_compile_targets': [
+          'all',
+        ],
+      },
+      'angle-win-x86-builder-msvc-rel': {
         'os_type': 'win',
         'additional_compile_targets': [
           'all',

@@ -140,6 +140,15 @@ gn_args.config(
 )
 
 gn_args.config(
+    name = "msvc",
+    args = {
+        "is_clang": False,
+        "treat_warnings_as_errors": False,
+        "use_custom_libcxx": False,
+    },
+)
+
+gn_args.config(
     name = "opencl",
     args = {
         "angle_enable_cl": True,
@@ -238,6 +247,13 @@ gn_args.config(
 )
 
 gn_args.config(
+    name = "uwp",
+    args = {
+        "target_os": "winuwp",
+    },
+)
+
+gn_args.config(
     name = "win",
     args = {
         "target_os": "win",
@@ -250,6 +266,24 @@ gn_args.config(
         "clang",
         "siso",
         "win",
+    ],
+)
+
+gn_args.config(
+    name = "win_msvc",
+    configs = [
+        "msvc",
+        "siso",
+        "win",
+    ],
+)
+
+gn_args.config(
+    name = "win_uwp",
+    configs = [
+        "msvc",
+        "siso",
+        "uwp",
     ],
 )
 
