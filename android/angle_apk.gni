@@ -16,7 +16,8 @@ angle_libraries = [
 
 enable_compressed_symbols =
     symbol_level != 0 &&
-    (angle_standalone || (build_with_chromium && !use_mold))
+    (angle_standalone || (build_with_chromium && !use_mold)) &&
+    !angle_use_static_angle
 
 if (enable_java_templates) {
   template("angle_apk") {

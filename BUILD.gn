@@ -1475,11 +1475,17 @@ template("angle_libGLESv2") {
   }
 }
 
-angle_libGLESv2("libGLESv2") {
-  if (angle_with_capture_by_default) {
-    deps = [ ":libANGLE_with_capture" ]
-  } else {
-    deps = [ ":libANGLE" ]
+if (angle_use_static_angle) {
+  group("libGLESv2") {
+    public_deps = [ ":libGLESv2_static" ]
+  }
+} else {
+  angle_libGLESv2("libGLESv2") {
+    if (angle_with_capture_by_default) {
+      deps = [ ":libANGLE_with_capture" ]
+    } else {
+      deps = [ ":libANGLE" ]
+    }
   }
 }
 
@@ -1524,26 +1530,31 @@ angle_static_library("libGLESv2_static") {
   public_deps = [ ":libGLESv2_thin_static" ]
 }
 
-angle_shared_library("libGLESv1_CM") {
-  sources = libglesv1_cm_sources
-  output_name = "libGLESv1_CM${angle_libs_suffix}"
+if (angle_use_static_angle) {
+  group("libGLESv1_CM") {
+  }
+} else {
+  angle_shared_library("libGLESv1_CM") {
+    sources = libglesv1_cm_sources
+    output_name = "libGLESv1_CM${angle_libs_suffix}"
 
-  configs += [
-    ":angle_gl_visibility_config",
-    ":debug_annotations_config",
-    ":gl_prototypes",
-  ]
+    configs += [
+      ":angle_gl_visibility_config",
+      ":debug_annotations_config",
+      ":gl_prototypes",
+    ]
 
-  defines = []
+    defines = []
 
-  deps = [
-    ":includes",
-    ":libGLESv2",
-  ]
+    deps = [
+      ":includes",
+      ":libGLESv2",
+    ]
 
-  if (is_win) {
-    sources += [ "src/libGLESv1_CM/libGLESv1_CM.def" ]
-    deps += [ ":angle_version" ]
+    if (is_win) {
+      sources += [ "src/libGLESv1_CM/libGLESv1_CM.def" ]
+      deps += [ ":angle_version" ]
+    }
   }
 }
 
@@ -1614,13 +1625,19 @@ template("libEGL_shared_template") {
   }
 }
 
-libEGL_shared_template("libEGL") {
-  defines = [ "ANGLE_DISPATCH_LIBRARY=\"${_angle_glesv2_library_name}\"" ]
-  output_name = "libEGL"
-  gles_library = "libGLESv2"
-  sources = []
-  if (is_win) {
-    sources += [ "src/libEGL/libEGL_autogen.def" ]
+if (angle_use_static_angle) {
+  group("libEGL") {
+    public_deps = [ ":libEGL_static" ]
+  }
+} else {
+  libEGL_shared_template("libEGL") {
+    defines = [ "ANGLE_DISPATCH_LIBRARY=\"${_angle_glesv2_library_name}\"" ]
+    output_name = "libEGL"
+    gles_library = "libGLESv2"
+    sources = []
+    if (is_win) {
+      sources += [ "src/libEGL/libEGL_autogen.def" ]
+    }
   }
 }
 
