@@ -5,9 +5,9 @@
 """Try ANGLE builders using the angle_v2 recipe."""
 
 load("@chromium-luci//builder_config.star", "builder_config")
-load("@chromium-luci//builders.star", "os")
 load("@chromium-luci//gn_args.star", "gn_args")
 load("@chromium-luci//try.star", "try_")
+load("//angle_v2_shared.star", "builder_defaults")
 load("//constants.star", "default_experiments", "siso")
 
 try_.defaults.set(
@@ -54,9 +54,7 @@ def apply_linux_cq_builder_defaults(kwargs):
         |kwargs| with default values set for a Linux CQ builder.
     """
     kwargs = apply_cq_builder_defaults(kwargs)
-    kwargs.setdefault("cores", 8)
-    kwargs.setdefault("os", os.LINUX_DEFAULT)
-    kwargs.setdefault("ssd", None)
+    kwargs = builder_defaults.apply_linux_builder_defaults(kwargs)
     return kwargs
 
 def apply_mac_cq_builder_defaults(kwargs):
@@ -69,8 +67,7 @@ def apply_mac_cq_builder_defaults(kwargs):
         |kwargs| with default values set for a Mac CQ builder.
     """
     kwargs = apply_cq_builder_defaults(kwargs)
-    kwargs.setdefault("cpu", "arm64")
-    kwargs.setdefault("os", os.MAC_DEFAULT)
+    kwargs = builder_defaults.apply_mac_builder_defaults(kwargs)
     return kwargs
 
 def apply_win_cq_builder_defaults(kwargs):
@@ -83,8 +80,7 @@ def apply_win_cq_builder_defaults(kwargs):
         |kwargs| with default values set for a Windows CQ builder.
     """
     kwargs = apply_cq_builder_defaults(kwargs)
-    kwargs.setdefault("os", os.WINDOWS_DEFAULT)
-    kwargs.setdefault("ssd", None)
+    kwargs = builder_defaults.apply_win_clang_builder_defaults(kwargs)
     return kwargs
 
 def angle_linux_functional_cq_tester(**kwargs):
@@ -340,30 +336,26 @@ angle_win_trace_tester(
 ## Templates
 
 def angle_linux_manual_builder(*, name, **kwargs):
+    kwargs = builder_defaults.apply_linux_builder_defaults(kwargs)
     return try_.builder(
         name = name,
         max_concurrent_builds = 1,
-        cores = 8,
-        os = os.LINUX_DEFAULT,
-        ssd = None,
         **kwargs
     )
 
 def angle_mac_manual_builder(*, name, **kwargs):
+    kwargs = builder_defaults.apply_mac_builder_defaults(kwargs)
     return try_.builder(
         name = name,
         max_concurrent_builds = 1,
-        cpu = "arm64",
-        os = os.MAC_DEFAULT,
         **kwargs
     )
 
 def angle_win_manual_builder(*, name, **kwargs):
+    kwargs = builder_defaults.apply_win_clang_builder_defaults(kwargs)
     return try_.builder(
         name = name,
         max_concurrent_builds = 1,
-        os = os.WINDOWS_DEFAULT,
-        ssd = None,
         **kwargs
     )
 
