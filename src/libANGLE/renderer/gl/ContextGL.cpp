@@ -195,7 +195,7 @@ FenceNVImpl *ContextGL::createFenceNV()
 
 SyncImpl *ContextGL::createSync(const gl::Context *context)
 {
-    SyncImpl *sync = new SyncGL(getFunctions());
+    SyncImpl *sync = new SyncGL(mRenderer);
     if (context)
     {
         static_cast<void>(applyRecreateFboWorkaroundIfNeeded(context));
