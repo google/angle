@@ -672,6 +672,25 @@ bool IsAnySamplesQuery(gl::QueryType type)
     return type == gl::QueryType::AnySamples || type == gl::QueryType::AnySamplesConservative;
 }
 
+GLsizei GetRoundedDataCountForEmulatedXfb(const ContextVk *contextVk,
+                                          gl::PrimitiveMode mode,
+                                          GLsizei vertexOrIndexCount)
+{
+    ASSERT(contextVk->getFeatures().emulateTransformFeedback.enabled &&
+           contextVk->getState().isTransformFeedbackActiveUnpaused());
+    // For lines and triangles, the count should be rounded down to align with the number of
+    // vertices in the lines or triangles without leftover data.
+    if (mode == gl::PrimitiveMode::Triangles)
+    {
+        return vertexOrIndexCount - vertexOrIndexCount % 3;
+    }
+    if (mode == gl::PrimitiveMode::Lines)
+    {
+        return vertexOrIndexCount - vertexOrIndexCount % 2;
+    }
+    return vertexOrIndexCount;
+}
+
 bool QueueSerialsHaveDifferentIndexOrSmaller(const QueueSerial &queueSerial1,
                                              const QueueSerial &queueSerial2)
 {
@@ -1624,8 +1643,9 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         ASSERT(firstVertexOrInvalid != -1);
         TransformFeedbackVk *transformFeedbackVk =
             vk::GetImpl(mState.getCurrentTransformFeedback());
-        std::array<int32_t, 4> &bufferOffsets = mGraphicsDriverUniforms.updateTransformFeedbackData(
-            static_cast<int32_t>(vertexOrIndexCount));
+        GLsizei roundedCount = GetRoundedDataCountForEmulatedXfb(this, mode, vertexOrIndexCount);
+        std::array<int32_t, 4> &bufferOffsets =
+            mGraphicsDriverUniforms.updateTransformFeedbackData(static_cast<int32_t>(roundedCount));
 
         transformFeedbackVk->getBufferOffsets(this, firstVertexOrInvalid, bufferOffsets.data(),
                                               bufferOffsets.size());
