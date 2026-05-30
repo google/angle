@@ -18,6 +18,7 @@
 // a fallback to AST maintained at the same time.
 
 #include "compiler/translator/ParseContext.h"
+#include "compiler/translator/Compiler.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -597,12 +598,100 @@ ir::IR TParseContext::getIR()
     return ir::Builder::destroy(std::move(mIRBuilder));
 }
 
-void TParseContext::onShaderVersionDeclared(int version)
+void TParseContext::onShaderVersionDeclared(const TSourceLoc &loc, int version)
 {
     mShaderVersion = version;
+    checkShaderVersion(loc);
     // Update cached decisions that depend on the shader version
     mValidateESSL100Limitations = ShouldEnforceESSL100LoopAndIndexingLimitations(
         mShaderSpec, mShaderVersion, mCompileOptions);
+}
+
+void TParseContext::fatal(const TSourceLoc &loc, const char *reason)
+{
+    error(loc, reason, "");
+    mPreprocessor.forceEOF();
+}
+
+bool TParseContext::checkShaderVersion(const TSourceLoc &loc)
+{
+    if (GetMaxShaderVersionForSpec(mShaderSpec) < mShaderVersion)
+    {
+        std::stringstream reasonStream = sh::InitializeStream<std::stringstream>();
+        reasonStream << "unsupported shader version ";
+        reasonStream << mShaderVersion;
+        fatal(loc, reasonStream.str().c_str());
+        return false;
+    }
+
+    switch (mShaderType)
+    {
+        case GL_COMPUTE_SHADER:
+            if (mShaderVersion < 310)
+            {
+                fatal(loc, "Compute shader is not supported in this shader version.");
+                return false;
+            }
+            break;
+
+        case GL_GEOMETRY_SHADER_EXT:
+            if (mShaderVersion < 310)
+            {
+                fatal(loc, "Geometry shader is not supported in this shader version.");
+                return false;
+            }
+            break;
+
+        case GL_TESS_CONTROL_SHADER_EXT:
+        case GL_TESS_EVALUATION_SHADER_EXT:
+            if (mShaderVersion < 310)
+            {
+                fatal(loc, "Tessellation shaders are not supported in this shader version.");
+                return false;
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    return true;
+}
+
+bool TParseContext::checkCanUseShaderType(const TSourceLoc &loc)
+{
+    switch (mShaderType)
+    {
+        case GL_GEOMETRY_SHADER_EXT:
+            if (mShaderVersion == 310)
+            {
+                if (!checkCanUseOneOfExtensions(
+                        loc, std::array<TExtension, 2u>{{TExtension::EXT_geometry_shader,
+                                                         TExtension::OES_geometry_shader}}))
+                {
+                    return false;
+                }
+            }
+            break;
+
+        case GL_TESS_CONTROL_SHADER_EXT:
+        case GL_TESS_EVALUATION_SHADER_EXT:
+            if (mShaderVersion == 310)
+            {
+                if (!checkCanUseOneOfExtensions(
+                        loc, std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                         TExtension::OES_tessellation_shader}}))
+                {
+                    return false;
+                }
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    return true;
 }
 
 bool TParseContext::anyMultiviewExtensionAvailable()
@@ -10485,6 +10574,11 @@ bool TParseContext::postParseChecks()
     {
         mEarlyFragmentTestsSpecified = true;
         // No need to set it for the IR, the PLS rewrite transformation will do that.
+    }
+
+    if (!checkCanUseShaderType(kNoSourceLoc))
+    {
+        return false;
     }
 
     checkCallGraph();
