@@ -2294,6 +2294,8 @@
 // WebGPU failures
 // All tests are flaky on Linux Intel due to X errors.
 454630429 WGPU LINUX INTEL : * = SKIP
+// Flakily causes test timeout issues on Linux/NVIDIA
+517972806 WGPU LINUX NVIDIA : * = SKIP
 // BasicUniformUsage tests fail too frequently with WGPU
 376553328 LINUX INTEL WGPU : BasicUniformUsageTest.* = SKIP
 // Can't use a uniform struct outside of uniform address space.
