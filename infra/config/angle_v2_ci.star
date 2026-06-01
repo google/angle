@@ -1065,7 +1065,7 @@ ci.thin_tester(
             target_bits = 64,
             target_platform = builder_config.target_platform.MAC,
         ),
-        no_history = True,
+        shallow = True,
         run_tests_serially = True,
     ),
     console_view_entry = consoles.console_view_entry(
