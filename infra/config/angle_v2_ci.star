@@ -10,7 +10,6 @@ load("@chromium-luci//ci.star", "ci")
 load("@chromium-luci//consoles.star", "consoles")
 load("@chromium-luci//gardener_rotations.star", "gardener_rotations")
 load("@chromium-luci//gn_args.star", "gn_args")
-load("@chromium-luci//targets.star", "targets")
 load("//constants.star", "default_experiments", "siso")
 
 ci.defaults.set(
@@ -34,13 +33,6 @@ ci.defaults.set(
         column_keys = ["v.gpu"],
         grouping_keys = ["status", "v.test_suite"],
     ),
-)
-
-targets.builder_defaults.set(
-    mixins = [
-        "chromium-tester-service-account",
-        "swarming_containment_auto",
-    ],
 )
 
 ################################################################################
@@ -830,16 +822,6 @@ ci.thin_tester(
         ),
         run_tests_serially = True,
     ),
-    targets = targets.bundle(
-        targets = [],
-        mixins = [
-            "linux_amd_rx_5500_xt",
-        ],
-    ),
-    targets_settings = targets.settings(
-        browser_config = targets.browser_config.RELEASE,
-        os_type = targets.os_type.LINUX,
-    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|linux|x64|rel",
         short_name = "5500",
@@ -863,16 +845,6 @@ ci.thin_tester(
             target_platform = builder_config.target_platform.LINUX,
         ),
         run_tests_serially = True,
-    ),
-    targets = targets.bundle(
-        targets = [],
-        mixins = [
-            "linux_intel_uhd_630_experimental",
-        ],
-    ),
-    targets_settings = targets.settings(
-        browser_config = targets.browser_config.RELEASE,
-        os_type = targets.os_type.LINUX,
     ),
     # Uncomment this entry when this experimental tester is actually in use.
     # console_view_entry = consoles.console_view_entry(
@@ -924,30 +896,6 @@ ci.thin_tester(
         ),
         run_tests_serially = True,
     ),
-    targets = targets.bundle(
-        targets = [
-            "linux_real_hardware_common_gtests",
-            "common_isolated_scripts",
-        ],
-        mixins = [
-            "linux_intel_uhd_630_stable",
-        ],
-        per_test_modifications = {
-            "angle_end2end_tests": targets.per_test_modification(
-                replacements = targets.replacements(
-                    args = {
-                        # anglebug.com/408276172 suspecting WebGPU backend flakiness caused by
-                        # multiprocess
-                        "--max-processes": "1",
-                    },
-                ),
-            ),
-        },
-    ),
-    targets_settings = targets.settings(
-        browser_config = targets.browser_config.RELEASE,
-        os_type = targets.os_type.LINUX,
-    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|linux|x64|rel",
         short_name = "630",
@@ -971,16 +919,6 @@ ci.thin_tester(
             target_platform = builder_config.target_platform.LINUX,
         ),
         run_tests_serially = True,
-    ),
-    targets = targets.bundle(
-        targets = [],
-        mixins = [
-            "linux_nvidia_gtx_1660_experimental",
-        ],
-    ),
-    targets_settings = targets.settings(
-        browser_config = targets.browser_config.RELEASE,
-        os_type = targets.os_type.LINUX,
     ),
     # Uncomment this entry when this experimental tester is actually in use.
     # console_view_entry = consoles.console_view_entry(
@@ -1032,25 +970,6 @@ ci.thin_tester(
         ),
         run_tests_serially = True,
     ),
-    targets = targets.bundle(
-        targets = [
-            "linux_real_hardware_common_gtests",
-            "linux_nvidia_only_gtests",
-            "common_isolated_scripts",
-        ],
-        mixins = [
-            "linux_nvidia_gtx_1660_stable",
-        ],
-        per_test_modifications = {
-            "angle_deqp_egl_vulkan_tests": targets.remove(
-                reason = "Occasionally hangs the machine http://anglebug.com/368553850",
-            ),
-        },
-    ),
-    targets_settings = targets.settings(
-        browser_config = targets.browser_config.RELEASE,
-        os_type = targets.os_type.LINUX,
-    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|linux|x64|rel",
         short_name = "1660",
@@ -1099,29 +1018,6 @@ ci.thin_tester(
             target_platform = builder_config.target_platform.LINUX,
         ),
         run_tests_serially = True,
-    ),
-    targets = targets.bundle(
-        targets = [
-            "swangle_gtests",
-            "swangle_restricted_trace_gold_tests",
-        ],
-        mixins = [
-            "gpu_linux_gce_stable",
-            "timeout_15m",
-        ],
-        per_test_modifications = {
-            "swangle_restricted_trace_gold_tests": targets.mixin(
-                # anglebug.com/505781390 long time to download traces
-                swarming = targets.swarming(
-                    hard_timeout_sec = 1800,
-                    io_timeout_sec = 1800,
-                ),
-            ),
-        },
-    ),
-    targets_settings = targets.settings(
-        browser_config = targets.browser_config.RELEASE,
-        os_type = targets.os_type.LINUX,
     ),
     console_view_entry = consoles.console_view_entry(
         category = "test|linux|x64|rel",
