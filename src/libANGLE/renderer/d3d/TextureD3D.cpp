@@ -820,6 +820,15 @@ angle::Result TextureD3D::syncState(const gl::Context *context,
 angle::Result TextureD3D::releaseTexStorage(const gl::Context *context,
                                             const gl::TexLevelMask &copyStorageToImagesMask)
 {
+    gl::CubeFaceArray<gl::TexLevelMask> copyMasks;
+    copyMasks.fill(copyStorageToImagesMask);
+    return releaseTexStorage(context, copyMasks);
+}
+
+angle::Result TextureD3D::releaseTexStorage(
+    const gl::Context *context,
+    const gl::CubeFaceArray<gl::TexLevelMask> &copyStorageToImagesMask)
+{
     if (!mTexStorage)
     {
         return angle::Result::Continue;
@@ -837,11 +846,22 @@ angle::Result TextureD3D::releaseTexStorage(const gl::Context *context,
             ImageD3D *image            = getImage(index);
             const int storageWidth     = std::max(1, getLevelZeroWidth() >> index.getLevelIndex());
             const int storageHeight    = std::max(1, getLevelZeroHeight() >> index.getLevelIndex());
+
+            bool copyImage = false;
+            if (mState.getType() == gl::TextureType::CubeMap)
+            {
+                copyImage =
+                    copyStorageToImagesMask[index.cubeMapFaceIndex()][index.getLevelIndex()];
+            }
+            else
+            {
+                copyImage = copyStorageToImagesMask[0][index.getLevelIndex()];
+            }
+
             if (image && isImageComplete(index) && image->getWidth() == storageWidth &&
                 image->getHeight() == storageHeight &&
                 image->getInternalFormat() == storageFormat &&
-                index.getLevelIndex() < static_cast<int>(storageLevels) &&
-                copyStorageToImagesMask[index.getLevelIndex()])
+                index.getLevelIndex() < static_cast<int>(storageLevels) && copyImage)
             {
                 ANGLE_TRY(image->copyFromTexStorage(context, index, mTexStorage));
             }
@@ -2531,11 +2551,11 @@ angle::Result TextureD3D_Cube::redefineImage(const gl::Context *context,
         {
             markAllImagesDirty();
 
-            gl::TexLevelMask copyImageMask;
-            copyImageMask.set();
-            copyImageMask.set(level, false);
+            gl::CubeFaceArray<gl::TexLevelMask> copyImageMasks;
+            copyImageMasks.fill(gl::TexLevelMask().set());
+            copyImageMasks[faceIndex].set(level, false);
 
-            ANGLE_TRY(releaseTexStorage(context, copyImageMask));
+            ANGLE_TRY(releaseTexStorage(context, copyImageMasks));
         }
     }
 
