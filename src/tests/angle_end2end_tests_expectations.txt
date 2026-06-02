@@ -2599,6 +2599,7 @@
 362486580 LINUX NVIDIA OPENGL : EXTBlendFuncExtendedDrawTestES3.FragmentOutputLocationsInShader/* = SKIP
 362486580 LINUX NVIDIA OPENGL : EXTBlendFuncExtendedDrawTestES3.MaxDualSourceDrawBuffers/* = SKIP
 362486580 LINUX NVIDIA OPENGL : InstancingTestES31.UpdateAttribBindingByVertexAttribDivisor/* = SKIP
+519266528 LINUX NVIDIA OPENGL : LineLoopIndirectTest.IndirectAndElementDrawsShareIndexBuffer/* = SKIP
 362486580 LINUX NVIDIA OPENGL : LineLoopIndirectTest.TwoIndirectDrawsShareIndexBuffer/* = SKIP
 362486580 LINUX NVIDIA OPENGL : LineLoopIndirectTest.UByteIndexIndirectBuffer/* = SKIP
 362486580 LINUX NVIDIA OPENGL : LineLoopIndirectTest.UShortIndexIndirectBuffer/* = SKIP
@@ -2607,7 +2608,11 @@
 362486580 LINUX NVIDIA OPENGL : MultiDrawIndirectTest.MultiDrawArraysIndirect/* = SKIP
 362486580 LINUX NVIDIA OPENGL : MultiDrawIndirectTest.MultiDrawElementsIndirect/* = SKIP
 362486580 LINUX NVIDIA OPENGL : SampleMultisampleInterpolationTest31.SampleShadingThenSimpleDraw/* = SKIP
+519266528 LINUX NVIDIA OPENGL : UniformBufferTest31.ConsecutiveBindingsForBlockArray/* = SKIP
 362486580 LINUX NVIDIA OPENGL : UniformBufferTest31.UniformBufferBindings/* = SKIP
+519266528 LINUX NVIDIA OPENGL : VertexAttributeTestES31.ChangeAttribFormatAfterVertexAttribPointer/* = SKIP
+519266528 LINUX NVIDIA OPENGL : VertexAttributeTestES31.DrawArraysWithLargeStride/* = SKIP
+519266528 LINUX NVIDIA OPENGL : VertexAttributeTestES31.UseComputeShaderToUpdateVertexBuffer/* = SKIP
 
 362486580 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.Clear/*__GL_RGB5_A1_GL_RGBA_GL_UNSIGNED_INT_2_10_10_10_REV_* = SKIP
 362486580 LINUX NVIDIA VULKAN : EGLSurfaceTest.ResizeBeforeMakeCurrent*/* = SKIP
