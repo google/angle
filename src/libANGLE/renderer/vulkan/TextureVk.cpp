@@ -4389,11 +4389,20 @@ void TextureVk::releaseImage(ContextVk *contextVk)
 {
     ShareGroupVk *shareGroupVk = contextVk->getShareGroup();
 
+    if (mImage)
+    {
+        // finalizeImageLayoutInAllSharedContexts() may re-entrantly call
+        // ContextVk::flushAndSubmitCommands() -> submitCommands(), which can dereference
+        // FramebufferVk::mRenderTargetCache.mDepthStencilRenderTarget pointing into this
+        // texture's mSingleLayerRenderTargets vectors. Finalize before releaseImageViews()
+        // frees those vectors.
+        shareGroupVk->finalizeImageLayoutInAllSharedContexts(mImage);
+    }
+
     releaseImageViews(contextVk);
 
     if (mImage)
     {
-        shareGroupVk->finalizeImageLayoutInAllSharedContexts(mImage);
         if (mOwnsImage)
         {
             mImage->releaseImage(contextVk);
