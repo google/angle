@@ -1059,6 +1059,8 @@ void DisplayMtl::initializeExtensions() const
 
     mNativeExtensions.packReverseRowOrderANGLE = true;
 
+    mNativeExtensions.framebufferFlipYMESA = true;
+
     if (mFeatures.hasEvents.enabled)
     {
         // MTLSharedEvent is only available since Metal 2.1

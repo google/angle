@@ -138,12 +138,23 @@ FramebufferMtl::FramebufferMtl(const gl::FramebufferState &state, ContextMtl *co
     : FramebufferImpl(state),
       mColorRenderTargets(context->getNativeCaps().maxColorAttachments, nullptr),
       mBackbuffer(nullptr),
-      mFlipY(flipY)
+      mBackbufferFlipY(flipY)
 {
     reset();
 }
 
 FramebufferMtl::~FramebufferMtl() {}
+
+void FramebufferMtl::setBackbuffer(WindowSurfaceMtl *backbuffer, bool flipY)
+{
+    mBackbuffer      = backbuffer;
+    mBackbufferFlipY = flipY;
+}
+
+bool FramebufferMtl::getFlipY() const
+{
+    return mBackbufferFlipY != mState.getFlipY();
+}
 
 void FramebufferMtl::reset()
 {
@@ -356,7 +367,7 @@ angle::Result FramebufferMtl::readPixels(const gl::Context *context,
         params.offset = reinterpret_cast<ptrdiff_t>(pixels) + outputSkipBytes;
     }
 
-    if (mFlipY)
+    if (getFlipY())
     {
         params.reverseRowOrder = !params.reverseRowOrder;
     }
@@ -518,7 +529,7 @@ angle::Result FramebufferMtl::blit(const gl::Context *context,
     gl::Rectangle srcClippedDestArea = RoundRectToPixelsAndAdjustCorrespondingRectToMatch(
         clippedDstRect, destAreaIn, clippedSrcRect, sourceAreaIn, &adjustedSrcRect);
 
-    if (srcFrameBuffer->flipY())
+    if (srcFrameBuffer->getFlipY())
     {
         adjustedSrcRect.y =
             srcFramebufferDimensions.height - adjustedSrcRect.y - adjustedSrcRect.height;
@@ -545,7 +556,7 @@ angle::Result FramebufferMtl::blit(const gl::Context *context,
         gl::Extents(dstFramebufferDimensions.width, dstFramebufferDimensions.height, 1);
     baseParams.dstRect        = srcClippedDestArea;
     baseParams.dstScissorRect = scissoredDestArea;
-    baseParams.dstFlipY       = this->flipY();
+    baseParams.dstFlipY       = this->getFlipY();
 
     baseParams.srcNormalizedCoords =
         mtl::NormalizedCoords(adjustedSrcRect.x, adjustedSrcRect.y, adjustedSrcRect.width,
@@ -730,6 +741,9 @@ angle::Result FramebufferMtl::syncState(const gl::Context *context,
                 mRenderPassDesc.stencilAttachment.loadAction = MTLLoadActionLoad;
                 break;
             case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
+                mustNotifyContext = true;
+                break;
+            case gl::Framebuffer::DIRTY_BIT_FLIP_Y:
                 mustNotifyContext = true;
                 break;
             case gl::Framebuffer::DIRTY_BIT_READ_BUFFER:
@@ -1376,7 +1390,7 @@ angle::Result FramebufferMtl::clearImpl(const gl::Context *context,
     clearOpts.colorFormat    = mRenderPassFirstColorAttachmentFormat;
     clearOpts.dstTextureSize = mState.getExtents();
     clearOpts.clearArea      = ClipRectToScissor(contextMtl->getState(), renderArea, false);
-    clearOpts.flipY          = mFlipY;
+    clearOpts.flipY          = getFlipY();
 
     // Discard clear altogether if scissor has 0 width or height.
     if (clearOpts.clearArea.width == 0 || clearOpts.clearArea.height == 0)
@@ -1529,7 +1543,7 @@ gl::Rectangle FramebufferMtl::getCorrectFlippedReadArea(const gl::Context *conte
     }
     ASSERT(readRT);
     gl::Rectangle flippedArea = glArea;
-    if (mFlipY)
+    if (getFlipY())
     {
         flippedArea.y = readRT->getTexture()->height(readRT->getLevelIndex()) - flippedArea.y -
                         flippedArea.height;
