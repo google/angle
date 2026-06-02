@@ -1314,6 +1314,8 @@ impl<'options> Generator<'options> {
     fn id_to_append(name: &Name, id: u32) -> u32 {
         if name.source == NameSource::Temporary && !name.name.is_empty() {
             id
+        } else if let Some(suffix) = name.suffix {
+            suffix
         } else {
             SYMBOL_NAME_NO_ID
         }

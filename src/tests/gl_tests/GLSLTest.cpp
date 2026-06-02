@@ -2153,9 +2153,6 @@ void main() {
 // Draw an array of points with the first vertex offset at 5 using gl_VertexID
 TEST_P(GLSLTest_ES3, GLVertexIDOffsetFiveDrawArray)
 {
-    // Bug in Nexus drivers, offset does not work. (anglebug.com/42261941)
-    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
-
     constexpr int kStartIndex  = 5;
     constexpr int kArrayLength = 5;
     constexpr char kVS[]       = R"(#version 300 es
@@ -6711,7 +6708,6 @@ void main() {
 // Test that names do not collide when translating arrays of arrays of samplers.
 TEST_P(GLSLTest_ES31, ArraysOfArraysNameCollisionSampler)
 {
-    ANGLE_SKIP_TEST_IF(IsVulkan());  // anglebug.com/42262269 - rewriter can create name collisions
     GLint numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextures);
     ANGLE_SKIP_TEST_IF(numTextures < 2 * 2 + 3 * 3 + 4 * 4);
@@ -6781,11 +6777,6 @@ void main() {
 // compiler DLL.
 TEST_P(GLSLTest_ES3, NestedSamplingOperation)
 {
-    // This seems to be bugged on some version of Android. Might not affect the newest versions.
-    // TODO(jmadill): Lift suppression when Chromium bots are upgraded.
-    // Test skipped on Android because of bug with Nexus 5X.
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
-
     constexpr char kVS[] = R"(#version 300 es
 out vec2 texCoord;
 in vec2 position;
@@ -8846,12 +8837,95 @@ TEST_P(GLSLTest_ES3, VaryingMatrices)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 127, 191, 255), 1);
 }
 
+// Test passing a sampler in a struct to a function
+TEST_P(GLSLTest, SamplerInStructAsFunctionArg)
+{
+    const char kFragmentShader[] = R"(precision mediump float;
+struct S { sampler2D samplerMember; };
+uniform S uStruct;
+uniform vec2 uTexCoord;
+vec4 foo(float r, sampler2D s, float b)
+{
+    return texture2D(s, uTexCoord) + vec4(r, 0, b, 0);
+}
+void main()
+{
+    gl_FragColor = foo(1.0, uStruct.samplerMember, 0.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+
+    // Initialize the texture with green.
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    GLubyte texData[] = {0u, 255u, 0u, 255u};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw
+    glUseProgram(program);
+    GLint samplerMemberLoc = glGetUniformLocation(program, "uStruct.samplerMember");
+    ASSERT_NE(-1, samplerMemberLoc);
+    glUniform1i(samplerMemberLoc, 0);
+    GLint texCoordLoc = glGetUniformLocation(program, "uTexCoord");
+    ASSERT_NE(-1, texCoordLoc);
+    glUniform2f(texCoordLoc, 0.5f, 0.5f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::yellow);
+}
+
+// Test passing a sampler in a struct to a void function
+TEST_P(GLSLTest, SamplerInStructAsVoidFunctionArg)
+{
+    const char kFragmentShader[] = R"(precision mediump float;
+struct S { sampler2D samplerMember; };
+uniform S uStruct;
+uniform vec2 uTexCoord;
+void foo(float r, sampler2D s, float b)
+{
+    gl_FragColor = texture2D(s, uTexCoord) + vec4(r, 0, b, 0);
+}
+void main()
+{
+    foo(1.0, uStruct.samplerMember, 0.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+
+    // Initialize the texture with green.
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    GLubyte texData[] = {0u, 255u, 0u, 255u};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw
+    glUseProgram(program);
+    GLint samplerMemberLoc = glGetUniformLocation(program, "uStruct.samplerMember");
+    ASSERT_NE(-1, samplerMemberLoc);
+    glUniform1i(samplerMemberLoc, 0);
+    GLint texCoordLoc = glGetUniformLocation(program, "uTexCoord");
+    ASSERT_NE(-1, texCoordLoc);
+    glUniform2f(texCoordLoc, 0.5f, 0.5f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::yellow);
+}
+
 // This test covers passing a struct containing a sampler as a function argument.
 TEST_P(GLSLTest, StructsWithSamplersAsFunctionArg)
 {
-    // Shader failed to compile on Nexus devices. http://anglebug.com/42260860
-    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsAdreno() && IsOpenGLES());
-
     const char kFragmentShader[] = R"(precision mediump float;
 struct S { sampler2D samplerMember; };
 uniform S uStruct;
@@ -8943,9 +9017,6 @@ void main()
 // has non-return branch statements.
 TEST_P(GLSLTest_ES3, StructsWithSamplersAsFunctionArgWithBranch)
 {
-    // Shader failed to compile on Nexus devices. http://anglebug.com/42260860
-    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsAdreno() && IsOpenGLES());
-
     const char kFragmentShader[] = R"(precision mediump float;
 struct S { sampler2D samplerMember; };
 uniform S uStruct;
@@ -8999,26 +9070,22 @@ void main()
 // This test covers passing an array of structs containing samplers as a function argument.
 TEST_P(GLSLTest, ArrayOfStructsWithSamplersAsFunctionArg)
 {
-    // Shader failed to compile on Nexus devices. http://anglebug.com/42260860
-    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsAdreno() && IsOpenGLES());
+    constexpr char kFS[] = R"(precision mediump float;
+struct S
+{
+    sampler2D samplerMember;
+};
+uniform S uStructs[2];
+uniform vec2 uTexCoord;
 
-    constexpr char kFS[] =
-        "precision mediump float;\n"
-        "struct S\n"
-        "{\n"
-        "    sampler2D samplerMember; \n"
-        "};\n"
-        "uniform S uStructs[2];\n"
-        "uniform vec2 uTexCoord;\n"
-        "\n"
-        "vec4 foo(S[2] structs)\n"
-        "{\n"
-        "    return texture2D(structs[0].samplerMember, uTexCoord);\n"
-        "}\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = foo(uStructs);\n"
-        "}\n";
+vec4 foo(S[2] structs)
+{
+    return texture2D(structs[0].samplerMember, uTexCoord);
+}
+void main()
+{
+    gl_FragColor = foo(uStructs);
+})";
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
 
@@ -9050,26 +9117,22 @@ TEST_P(GLSLTest, ArrayOfStructsWithSamplersAsFunctionArg)
 // This test covers passing a struct containing an array of samplers as a function argument.
 TEST_P(GLSLTest, StructWithSamplerArrayAsFunctionArg)
 {
-    // Shader failed to compile on Nexus devices. http://anglebug.com/42260860
-    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsAdreno() && IsOpenGLES());
+    constexpr char kFS[] = R"(precision mediump float;
+struct S
+{
+    sampler2D samplerMembers[2];
+};
+uniform S uStruct;
+uniform vec2 uTexCoord;
 
-    constexpr char kFS[] =
-        "precision mediump float;\n"
-        "struct S\n"
-        "{\n"
-        "    sampler2D samplerMembers[2];\n"
-        "};\n"
-        "uniform S uStruct;\n"
-        "uniform vec2 uTexCoord;\n"
-        "\n"
-        "vec4 foo(S str)\n"
-        "{\n"
-        "    return texture2D(str.samplerMembers[0], uTexCoord);\n"
-        "}\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = foo(uStruct);\n"
-        "}\n";
+vec4 foo(S str)
+{
+    return texture2D(str.samplerMembers[0], uTexCoord);
+}
+void main()
+{
+    gl_FragColor = foo(uStruct);
+})";
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
 
@@ -9101,9 +9164,6 @@ TEST_P(GLSLTest, StructWithSamplerArrayAsFunctionArg)
 // This test covers passing nested structs containing a sampler as a function argument.
 TEST_P(GLSLTest, NestedStructsWithSamplersAsFunctionArg)
 {
-    // Shader failed to compile on Nexus devices. http://anglebug.com/42260860
-    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsAdreno() && IsOpenGLES());
-
     const char kFragmentShader[] = R"(precision mediump float;
 struct S { sampler2D samplerMember; };
 struct T { S nest; };
@@ -9152,9 +9212,6 @@ void main()
 // This test covers passing a compound structs containing a sampler as a function argument.
 TEST_P(GLSLTest, CompoundStructsWithSamplersAsFunctionArg)
 {
-    // Shader failed to compile on Nexus devices. http://anglebug.com/42260860
-    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsAdreno() && IsOpenGLES());
-
     const char kFragmentShader[] = R"(precision mediump float;
 struct S { sampler2D samplerMember; bool b; };
 uniform S uStruct;
@@ -9204,9 +9261,6 @@ void main()
 // This test covers passing nested compound structs containing a sampler as a function argument.
 TEST_P(GLSLTest, NestedCompoundStructsWithSamplersAsFunctionArg)
 {
-    // Shader failed to compile on Nexus devices. http://anglebug.com/42260860
-    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsAdreno() && IsOpenGLES());
-
     const char kFragmentShader[] = R"(precision mediump float;
 struct S { sampler2D samplerMember; bool b; };
 struct T { S nest; bool b; };
@@ -9269,9 +9323,6 @@ void main()
 // Same as the prior test but with reordered struct members.
 TEST_P(GLSLTest, MoreNestedCompoundStructsWithSamplersAsFunctionArg)
 {
-    // Shader failed to compile on Nexus devices. http://anglebug.com/42260860
-    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsAdreno() && IsOpenGLES());
-
     const char kFragmentShader[] = R"(precision mediump float;
 struct S { bool b; sampler2D samplerMember; };
 struct T { bool b; S nest; };
@@ -9334,24 +9385,23 @@ void main()
 // in global variable initialization.
 TEST_P(WebGLGLSLTest, GlobalVariableDeclaredAfterMain)
 {
-    constexpr char kFS[] =
-        "precision mediump float;\n"
-        "int getFoo();\n"
-        "uniform int u_zero;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(1, 0, 0, 1);\n"
-        "    if (getFoo() == 0)\n"
-        "    {\n"
-        "        gl_FragColor = vec4(0, 1, 0, 1);\n"
-        "    }\n"
-        "}\n"
-        "int foo;\n"
-        "int getFoo()\n"
-        "{\n"
-        "    foo = u_zero;\n"
-        "    return foo;\n"
-        "}\n";
+    constexpr char kFS[] = R"(precision mediump float;
+int getFoo();
+uniform int u_zero;
+void main()
+{
+    gl_FragColor = vec4(1, 0, 0, 1);
+    if (getFoo() == 0)
+    {
+        gl_FragColor = vec4(0, 1, 0, 1);
+    }
+}
+int foo;
+int getFoo()
+{
+    foo = u_zero;
+    return foo;
+})";
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);

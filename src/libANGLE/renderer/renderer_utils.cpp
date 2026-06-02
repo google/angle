@@ -1613,7 +1613,7 @@ std::string GetExtractedStructSamplerName(
     }
 
     std::ostringstream name;
-    name << sh::kExtractedSamplerNamePrefix << index;
+    name << sh::kExtractedSamplerNamePrefix << '_' << index;
     return name.str();
 }
 

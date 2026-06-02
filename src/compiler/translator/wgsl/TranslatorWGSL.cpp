@@ -2771,6 +2771,15 @@ bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root,
         {
             return false;
         }
+
+        if (aggregateTypesUsedForUniforms > 0)
+        {
+            // Requires MonomorphizeUnsupportedFunctions() to have been run already.
+            if (!RewriteStructSamplers(this, root, &getSymbolTable()))
+            {
+                return false;
+            }
+        }
     }
     else
     {
@@ -2802,15 +2811,6 @@ bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root,
 
         // Replace root's sequence with |replacement|.
         root->replaceAllChildren(std::move(replacement));
-    }
-
-    if (aggregateTypesUsedForUniforms > 0)
-    {
-        // Requires MonomorphizeUnsupportedFunctions() to have been run already.
-        if (!RewriteStructSamplers(this, root, &getSymbolTable()))
-        {
-            return false;
-        }
     }
 
     // Replace array of array of opaque uniforms with a flattened array.  This is run after

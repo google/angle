@@ -553,7 +553,7 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
         newType->makeArrays(parentArraySizes);
 
         std::ostringstream newNameBuilder;
-        newNameBuilder << kExtractedSamplerNamePrefix << mExtractedSamplers.size();
+        newNameBuilder << kExtractedSamplerNamePrefix << "_" << mExtractedSamplers.size();
         const std::string newName = newNameBuilder.str();
 
         ImmutableStringBuilder nameBuilder(newName.size() + 1);

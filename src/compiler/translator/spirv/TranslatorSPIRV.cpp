@@ -695,13 +695,13 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
         {
             return false;
         }
-    }
 
-    if (aggregateTypesUsedForUniforms > 0)
-    {
-        if (!RewriteStructSamplers(this, root, &getSymbolTable()))
+        if (aggregateTypesUsedForUniforms > 0)
         {
-            return false;
+            if (!RewriteStructSamplers(this, root, &getSymbolTable()))
+            {
+                return false;
+            }
         }
     }
 

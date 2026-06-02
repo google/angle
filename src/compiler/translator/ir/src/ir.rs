@@ -76,7 +76,7 @@ pub const TYPE_ID_MAT3X4: TypeId = TypeId { id: 24 };
 pub const TYPE_ID_MAT4X2: TypeId = TypeId { id: 25 };
 pub const TYPE_ID_MAT4X3: TypeId = TypeId { id: 26 };
 pub const TYPE_ID_MAT4: TypeId = TypeId { id: 27 };
-const MAX_PREDEFINED_TYPE_ID: u32 = TYPE_ID_MAT4.id;
+pub const MAX_PREDEFINED_TYPE_ID: u32 = TYPE_ID_MAT4.id;
 
 // Fixed enums for bool constants to avoid tracking whether they are defined or not, plus other
 // constants for convenience.
@@ -1514,6 +1514,10 @@ pub struct Name {
     // should never really access this, and having Unicode in the mix will either cause trouble or
     // add binary size for no good reason.
     pub name: &'static str,
+    // A suffix used for generated shader interface names, for example extracted samplers.  Having
+    // this be separate allows `name` to continue to be a `&'static` string instead of one that's
+    // built.
+    pub suffix: Option<u32>,
     // Whether the name has any significance other than being debug info.  For example, it may be a
     // name that needs to be output exactly in text because the backend/driver looks for it.
     pub source: NameSource,
@@ -1524,17 +1528,20 @@ impl Name {
     // example, it's a temporary helper variable etc).  Duplicate names are allowed, and will be
     // made distinguishable if generating text.  Temp names are optional, and might as well be "".
     pub fn new_temp(name: &'static str) -> Name {
-        Name { name, source: NameSource::Temporary }
+        Name { name, suffix: None, source: NameSource::Temporary }
     }
     // A name that must be preserved in some predictable form in the output.  This is useful for
     // backends that reference this name directly, such as with OpenGL.
     pub fn new_interface(name: &'static str) -> Name {
-        Name { name, source: NameSource::ShaderInterface }
+        Name { name, suffix: None, source: NameSource::ShaderInterface }
     }
     // A name that must be preserved exactly in the output, for example `main`, or ANGLE internal
     // interface variables.
     pub fn new_exact(name: &'static str) -> Name {
-        Name { name, source: NameSource::Internal }
+        Name { name, suffix: None, source: NameSource::Internal }
+    }
+    pub fn new_exact_with_suffix(name: &'static str, suffix: u32) -> Name {
+        Name { name, suffix: Some(suffix), source: NameSource::Internal }
     }
 }
 

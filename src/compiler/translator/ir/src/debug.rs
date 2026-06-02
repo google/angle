@@ -265,7 +265,13 @@ fn name_str(name: &Name, temp_prefix: &'static str, user_prefix: &'static str, i
             _ => "",
         },
         name.name,
-        if name.source == NameSource::Temporary { format!("_{id}") } else { "".to_string() }
+        if name.source == NameSource::Temporary {
+            format!("_{id}")
+        } else if let Some(suffix) = name.suffix {
+            format!("_{}", suffix)
+        } else {
+            "".to_string()
+        }
     )
 }
 

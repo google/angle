@@ -351,7 +351,13 @@ impl Generator {
                 _ => "",
             },
             name.name,
-            if name.source == NameSource::Temporary { format!("_{id}") } else { "".to_string() }
+            if name.source == NameSource::Temporary {
+                format!("_{id}")
+            } else if let Some(suffix) = name.suffix {
+                format!("_{}", suffix)
+            } else {
+                "".to_string()
+            }
         )
     }
 

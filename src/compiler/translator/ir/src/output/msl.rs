@@ -22,4 +22,6 @@ pub fn generate(ir: &mut IR, options: &compile::Options) {
         };
         transform::run!(monomorphize_unsupported_functions, ir, &transform_options);
     }
+
+    transform::run!(rewrite_struct_samplers, ir);
 }
