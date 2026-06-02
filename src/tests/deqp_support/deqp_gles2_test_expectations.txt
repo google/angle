@@ -467,6 +467,8 @@
 356399840 WGPU : dEQP-GLES2.functional.shaders.functions.qualifiers.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.indexing.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.linkage.* = FAIL
+// This variation times out
+356399840 WGPU : dEQP-GLES2.functional.shaders.loops.for_constant_iterations.mixed_break_continue_* = SKIP
 356399840 WGPU : dEQP-GLES2.functional.shaders.loops.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.matrix.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.misc.compound_assignment.* = FAIL
@@ -503,5 +505,3 @@
 356399840 WGPU : dEQP-GLES2.functional.uniform_api.value.*.render.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.uniform_api.random.* = FAIL
 392542001 WGPU : dEQP-GLES2.functional.vertex_arrays.multiple_attributes* = FAIL
-// Timeouts
-356399840 WGPU : dEQP-GLES2.functional.shaders.loops.for_constant_iterations.mixed_break_continue_* = SKIP
