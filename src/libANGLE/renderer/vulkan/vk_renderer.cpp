@@ -2183,8 +2183,8 @@ void Renderer::onDestroy(vk::ErrorContext *context)
     cleanupGarbage(nullptr);
     ASSERT(!hasSharedGarbage());
     ASSERT(mOrphanedBufferBlockList.empty());
-    ASSERT(mOrphanedSamplers.empty());
-    ASSERT(mOrphanedSamplerYcbcrConversions.empty());
+    mSamplerCache.destroy(this);
+    mYuvConversionCache.destroy(this);
 
     mRefCountedEventRecycler.destroy(mDevice);
 
@@ -7466,57 +7466,10 @@ void Renderer::cleanupGarbage(bool *anyGarbageCleanedOut)
     // Clean up RefCountedEvent that are done resetting
     anyCleaned = mRefCountedEventRecycler.cleanupResettingEvents(this) > 0 || anyCleaned;
 
-    // Clean up samplers that couldn't be destroyed when the share group was.
-    anyCleaned = cleanupOrphanedSamplers() || anyCleaned;
-
     if (anyGarbageCleanedOut != nullptr)
     {
         *anyGarbageCleanedOut = anyCleaned;
     }
-}
-
-bool Renderer::cleanupOrphanedSamplers()
-{
-    std::unique_lock<angle::SimpleMutex> lock(mOrphanedSamplerMutex);
-
-    if (mOrphanedSamplers.empty() && mOrphanedSamplerYcbcrConversions.empty())
-    {
-        return false;
-    }
-
-    // Destroy any sampler that is no longer referenced.
-    const size_t samplerCountBefore = mOrphanedSamplers.size();
-    // Using remove_if to avoid unnecessary reference counter updates.
-    mOrphanedSamplers.erase(
-        std::remove_if(mOrphanedSamplers.begin(), mOrphanedSamplers.end(),
-                       [](SharedSamplerPtr &sampler) { return sampler.unique(); }),
-        mOrphanedSamplers.end());
-    const size_t destroyedSamplerCount = samplerCountBefore - mOrphanedSamplers.size();
-
-    bool anyCleaned = destroyedSamplerCount > 0;
-
-    if (anyCleaned)
-    {
-        onDeallocateHandle(vk::HandleType::Sampler, static_cast<uint32_t>(destroyedSamplerCount));
-    }
-
-    // If all samplers are gone, destroy all the ycbcr conversion objects too.  We don't track which
-    // samplers use which ycbcr conversion objects, so they are destroyed conservatively.
-    if (mOrphanedSamplers.empty() && !mOrphanedSamplerYcbcrConversions.empty())
-    {
-        anyCleaned = true;
-        for (VkSamplerYcbcrConversion handle : mOrphanedSamplerYcbcrConversions)
-        {
-            vk::SamplerYcbcrConversion conversion;
-            conversion.setHandle(handle);
-            conversion.destroy(mDevice);
-        }
-        onDeallocateHandle(vk::HandleType::SamplerYcbcrConversion,
-                           static_cast<uint32_t>(mOrphanedSamplerYcbcrConversions.size()));
-        mOrphanedSamplerYcbcrConversions.clear();
-    }
-
-    return anyCleaned;
 }
 
 void Renderer::cleanupPendingSubmissionGarbage()
@@ -7967,18 +7920,6 @@ void Renderer::releaseQueueSerialIndex(SerialIndex index)
 angle::Result Renderer::cleanupSomeGarbage(ErrorContext *context, bool *anyGarbageCleanedOut)
 {
     return mCommandQueue.cleanupSomeGarbage(context, 0, anyGarbageCleanedOut);
-}
-
-void Renderer::addSamplerToOrphanList(SharedSamplerPtr sampler)
-{
-    std::unique_lock<angle::SimpleMutex> lock(mOrphanedSamplerMutex);
-    mOrphanedSamplers.push_back(sampler);
-}
-
-void Renderer::addSamplerYcbcrConversionToOrphanList(VkSamplerYcbcrConversion conversion)
-{
-    std::unique_lock<angle::SimpleMutex> lock(mOrphanedSamplerMutex);
-    mOrphanedSamplerYcbcrConversions.push_back(conversion);
 }
 
 void Renderer::logFeatures() const
