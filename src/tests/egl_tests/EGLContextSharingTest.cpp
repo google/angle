@@ -412,6 +412,205 @@ TEST_P(EGLContextSharingTest, DisplayShareGroupReleaseShareGroupThatOwnsStagedUp
     eglDestroyContext(display, context2);
 }
 
+// Regression test for sampler lifetime bug when EGL_ANGLE_display_texture_share_group is used.
+TEST_P(EGLContextSharingTest, DisplayShareGroupSamplerInFlightWhenOwningShareGroupDestroyed)
+{
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    ANGLE_SKIP_TEST_IF(
+        !IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_display_texture_share_group"));
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    EGLConfig config   = getEGLWindow()->getConfig();
+    EGLSurface surface = getEGLWindow()->getSurface();
+
+    const EGLint inShareGroupContextAttribs[] = {
+        EGL_CONTEXT_CLIENT_VERSION, 2, EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_TRUE, EGL_NONE};
+
+    // Two contexts in the *display* texture share group but each in its own share group
+    EGLContext contextA = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+    EGLContext contextB = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+    ASSERT_NE(contextA, EGL_NO_CONTEXT);
+    ASSERT_NE(contextB, EGL_NO_CONTEXT);
+
+    // A larger render target widens the GPU window for the heavy draw in B.
+    constexpr int kHeavyDim       = 256;
+    const EGLint pbufferAttribs[] = {EGL_WIDTH, kHeavyDim, EGL_HEIGHT, kHeavyDim, EGL_NONE};
+    EGLSurface pbufferB           = eglCreatePbufferSurface(display, config, pbufferAttribs);
+    ASSERT_NE(pbufferB, EGL_NO_SURFACE);
+
+    // Context A: create the shared texture and draw with it once.
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, contextA));
+    GLTexture sharedTex;
+    glBindTexture(GL_TEXTURE_2D, sharedTex);
+    constexpr GLsizei kTexSize = 4;
+    std::vector<GLColor> texData(kTexSize * kTexSize, GLColor::green);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kTexSize, kTexSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    {
+        ANGLE_GL_PROGRAM(progA, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+        drawQuad(progA, essl1_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        glFlush();
+    }
+
+    // Context B: bind the same display-shared texture and submit a long running draw.
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, pbufferB, pbufferB, contextB));
+    glViewport(0, 0, kHeavyDim, kHeavyDim);
+    glBindTexture(GL_TEXTURE_2D, sharedTex);
+
+    constexpr char kHeavyFS[] = R"(precision highp float;
+varying vec2 v_texCoord;
+uniform sampler2D u_tex2D;
+void main()
+{
+    vec4 acc = vec4(0.0);
+    // Busy work to make sure the GPU is using the texture when context A is destroyed.
+    for (int i = 0; i < 4000; ++i)
+    {
+        acc += texture2D(u_tex2D, v_texCoord + vec2(float(i) * 0.000001, 0.0));
+    }
+    gl_FragColor = acc * 0.00025;
+})";
+    ANGLE_GL_PROGRAM(progHeavy, essl1_shaders::vs::Texture2D(), kHeavyFS);
+    glUseProgram(progHeavy);
+    glUniform1i(glGetUniformLocation(progHeavy, "u_tex2D"), 0);
+    // Several expensive draw calls so the GPU is using the texture when context A is destroyed
+    for (int i = 0; i < 16; ++i)
+    {
+        drawQuad(progHeavy, essl1_shaders::PositionAttrib(), 0.5f);
+    }
+    EXPECT_GL_NO_ERROR();
+    glFlush();  // batch_B submitted, GPU now executing with S_A in its descriptor set.
+
+    // Still in B: dirty a sampler-state bit and draw again.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    {
+        ANGLE_GL_PROGRAM(progB2, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+        drawQuad(progB2, essl1_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        glFlush();
+    }
+
+    // Destroy context A. The texture's sampler currently in use by context B should not be freed.
+    SafeDestroyContext(display, contextA);
+
+    // Finish, to make sure the work is done.
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, pbufferB, pbufferB, contextB));
+    glFinish();
+    sharedTex.reset();
+    EXPECT_GL_NO_ERROR();
+
+    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglDestroySurface(display, pbufferB);
+    SafeDestroyContext(display, contextB);
+    getEGLWindow()->makeCurrent();
+}
+
+// Variant of DisplayShareGroupSamplerInFlightWhenOwningShareGroupDestroyed, except the texture's
+// sampler state is not modified
+TEST_P(EGLContextSharingTest, DisplayShareGroupOrphanedSamplerReapedWhileInFlight)
+{
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    ANGLE_SKIP_TEST_IF(
+        !IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_display_texture_share_group"));
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    EGLConfig config   = getEGLWindow()->getConfig();
+    EGLSurface surface = getEGLWindow()->getSurface();
+
+    const EGLint inShareGroupContextAttribs[] = {
+        EGL_CONTEXT_CLIENT_VERSION, 2, EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_TRUE, EGL_NONE};
+
+    EGLContext contextA = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+    EGLContext contextB = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+    EGLContext contextC = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+    ASSERT_NE(contextA, EGL_NO_CONTEXT);
+    ASSERT_NE(contextB, EGL_NO_CONTEXT);
+    ASSERT_NE(contextC, EGL_NO_CONTEXT);
+
+    constexpr int kHeavyDim       = 256;
+    const EGLint pbufferAttribs[] = {EGL_WIDTH, kHeavyDim, EGL_HEIGHT, kHeavyDim, EGL_NONE};
+    EGLSurface pbufferB           = eglCreatePbufferSurface(display, config, pbufferAttribs);
+    ASSERT_NE(pbufferB, EGL_NO_SURFACE);
+
+    // A: Create texture and draw: this creates an internal sampler for the texture
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, contextA));
+    GLTexture sharedTex;
+    glBindTexture(GL_TEXTURE_2D, sharedTex);
+    std::vector<GLColor> texData(16, GLColor::cyan);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    {
+        ANGLE_GL_PROGRAM(p, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+        drawQuad(p, essl1_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        glFlush();
+    }
+
+    // B: Draw with texture, using an expensive shader so the GPU is busy when context C is
+    // destroyed
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, pbufferB, pbufferB, contextB));
+    glViewport(0, 0, kHeavyDim, kHeavyDim);
+    glBindTexture(GL_TEXTURE_2D, sharedTex);
+    constexpr char kHeavyFS[] = R"(precision highp float;
+varying vec2 v_texCoord;
+uniform sampler2D u_tex2D;
+void main()
+{
+    vec4 acc = vec4(0.0);
+    for (int i = 0; i < 4000; ++i)
+    {
+        acc += texture2D(u_tex2D, v_texCoord + vec2(float(i) * 0.000001, 0.0));
+    }
+    gl_FragColor = acc * 0.00025;
+})";
+    ANGLE_GL_PROGRAM(progHeavy, essl1_shaders::vs::Texture2D(), kHeavyFS);
+    glUseProgram(progHeavy);
+    glUniform1i(glGetUniformLocation(progHeavy, "u_tex2D"), 0);
+    for (int i = 0; i < 16; ++i)
+    {
+        drawQuad(progHeavy, essl1_shaders::PositionAttrib(), 0.5f);
+    }
+    EXPECT_GL_NO_ERROR();
+    glFlush();
+
+    // Destroy A first; context B still references the texture's internal sampler.
+    SafeDestroyContext(display, contextA);
+
+    // B: dirty sampler state and draw so the texture's internal sampler is recreated.
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, pbufferB, pbufferB, contextB));
+    glBindTexture(GL_TEXTURE_2D, sharedTex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    {
+        ANGLE_GL_PROGRAM(p2, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+        drawQuad(p2, essl1_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        glFlush();
+    }
+
+    // Destroy unrelated context C.  The original texture's internal sampler, still in use by the
+    // GPU, should not be freed.
+    SafeDestroyContext(display, contextC);
+
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, pbufferB, pbufferB, contextB));
+    glFinish();
+    sharedTex.reset();
+    EXPECT_GL_NO_ERROR();
+
+    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglDestroySurface(display, pbufferB);
+    SafeDestroyContext(display, contextB);
+    getEGLWindow()->makeCurrent();
+}
+
 // Tests that after creating a texture using EGL_ANGLE_display_texture_share_group,
 // and use it for sampling, and then deleting the Context (which destroys shareGroup) works. If
 // anything cached in ShareGroup, it should be handled nicely if texture can outlive ShareGroup (for
