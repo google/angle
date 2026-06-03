@@ -253,6 +253,22 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     {
         return mShareGroupVk->getMetaDescriptorPools();
     }
+    SamplerCache &getSamplerCache()
+    {
+        if (hasDisplayTextureShareGroup())
+        {
+            return mRenderer->getSamplerCache();
+        }
+        return mShareGroupVk->getSamplerCache();
+    }
+    SamplerYcbcrConversionCache &getYuvConversionCache()
+    {
+        if (hasDisplayTextureShareGroup())
+        {
+            return mRenderer->getYuvConversionCache();
+        }
+        return mShareGroupVk->getYuvConversionCache();
+    }
 
     // Device loss
     gl::GraphicsResetStatus getResetStatus() override;
