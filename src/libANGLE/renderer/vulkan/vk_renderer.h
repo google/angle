@@ -576,8 +576,8 @@ class Renderer : angle::NonCopyable
     }
 
     void addBufferBlockToOrphanList(vk::BufferBlock *block) { mOrphanedBufferBlockList.add(block); }
-    void addSamplerToOrphanList(SharedSamplerPtr sampler);
-    void addSamplerYcbcrConversionToOrphanList(VkSamplerYcbcrConversion conversion);
+    SamplerCache &getSamplerCache() { return mSamplerCache; }
+    SamplerYcbcrConversionCache &getYuvConversionCache() { return mYuvConversionCache; }
 
     VkDeviceSize getSuballocationDestroyedSize() const
     {
@@ -796,8 +796,6 @@ class Renderer : angle::NonCopyable
     // should be flushed.
     void calculatePendingGarbageSizeLimit();
 
-    bool cleanupOrphanedSamplers();
-
     template <typename CommandBufferHelperT, typename RecyclerT>
     angle::Result getCommandBufferImpl(vk::ErrorContext *context,
                                        vk::SecondaryCommandPool *commandPool,
@@ -950,10 +948,8 @@ class Renderer : angle::NonCopyable
     // Holds RefCountedEvent that are free and ready to reuse
     vk::RefCountedEventRecycler mRefCountedEventRecycler;
 
-    // Holds orphaned VkSampler and VkSamplerYcbcrConversion objects when ShareGroup gets destroyed
-    angle::SimpleMutex mOrphanedSamplerMutex;
-    std::vector<SharedSamplerPtr> mOrphanedSamplers;
-    std::vector<VkSamplerYcbcrConversion> mOrphanedSamplerYcbcrConversions;
+    SamplerCache mSamplerCache;
+    SamplerYcbcrConversionCache mYuvConversionCache;
 
     VkDeviceSize mPendingGarbageSizeLimit;
 
