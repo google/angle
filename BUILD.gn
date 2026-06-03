@@ -133,6 +133,7 @@ if (angle_build_all) {
     if (angle_build_mesa) {
       deps += [ "$angle_root/third_party/mesa" ]
     }
+    data_deps = [ "$angle_root/infra/test_trigger_cas:test_trigger_cas_all" ]
   }
 }
 
