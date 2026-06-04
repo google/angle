@@ -1251,10 +1251,10 @@ void ContextVk::onDestroy(const gl::Context *context)
     mIncompleteTextures.onDestroy(context);
 
     // Flush and complete current outstanding work before destruction.
-    (void)finishImpl(QueueSubmitReason::ContextDestruction);
+    const angle::Result finishResult = finishImpl(QueueSubmitReason::ContextDestruction);
 
     // The finish call could also generate device loss.
-    if (mRenderer->isDeviceLost())
+    if (mRenderer->isDeviceLost() || finishResult != angle::Result::Continue)
     {
         mRenderer->handleDeviceLost();
     }
