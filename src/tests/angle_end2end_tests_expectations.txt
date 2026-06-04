@@ -881,9 +881,6 @@
 465140993 PIXEL6 VULKAN : GLSLTest_ES3_PackUnpackEmulation.PackSnorm2x16/* = SKIP
 491488984 PIXEL6 VULKAN : GLSLTest_ES31.HelperInvocationsAfterDiscard/* = SKIP
 
-// Blocked on preferBGR565ToRGB565 availability
-519580088 PIXEL6 VULKAN : VulkanImageTest.ImportRGB565/ES3_Vulkan_ForceFallbackFormat = SKIP
-
 // Pixel 10 expectations.
 480069042 PIXEL10 GLES : AtomicCounterBufferTest31.DependentAtomicCounterBufferChange/* = SKIP
 510449869 PIXEL10 GLES : BasicCopyTextureTest.SelfCopyOOBWrite/* = SKIP
