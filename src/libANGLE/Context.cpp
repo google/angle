@@ -7119,11 +7119,8 @@ GLenum Context::checkFramebufferStatus(GLenum target)
 
 void Context::compileShader(ShaderProgramID shader)
 {
-    Shader *shaderObject = GetValidShader(this, angle::EntryPoint::GLCompileShader, shader);
-    if (!shaderObject)
-    {
-        return;
-    }
+    Shader *shaderObject = getShaderNoResolveCompile(shader);
+    ASSERT(shaderObject != nullptr);
     shaderObject->compile(this, angle::JobResultExpectancy::Future);
 }
 

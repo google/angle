@@ -4163,6 +4163,13 @@ bool ValidateCompileShader(const Context *context,
                            angle::EntryPoint entryPoint,
                            ShaderProgramID shader)
 {
+    Shader *shaderObject = GetValidShader(context, entryPoint, shader);
+    if (shaderObject == nullptr)
+    {
+        // Error already generated.
+        return false;
+    }
+
     return true;
 }
 
