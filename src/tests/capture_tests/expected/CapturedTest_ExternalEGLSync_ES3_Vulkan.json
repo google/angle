@@ -33,10 +33,10 @@
         "Version": 1
     },
     "TraceFiles": [
-        "CapturedTest_ExternalAHB_ES3_Vulkan.cpp",
-        "CapturedTest_ExternalAHB_ES3_Vulkan.h",
-        "CapturedTest_ExternalAHB_ES3_Vulkan_0001.cpp",
-        "CapturedTest_ExternalAHB_ES3_Vulkan_shared.cpp"
+        "CapturedTest_ExternalEGLSync_ES3_Vulkan.cpp",
+        "CapturedTest_ExternalEGLSync_ES3_Vulkan.h",
+        "CapturedTest_ExternalEGLSync_ES3_Vulkan_0001.cpp",
+        "CapturedTest_ExternalEGLSync_ES3_Vulkan_shared.cpp"
     ],
-    "WindowSurfaceContextID": 8
+    "WindowSurfaceContextID": 5
 }
