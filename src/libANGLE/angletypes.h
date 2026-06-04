@@ -266,6 +266,9 @@ struct Box
     size_t volume() const;
     void extend(const Box &other);
 
+    Offset getOffset() const { return Offset(x, y, z); }
+    Extents getExtents() const { return Extents(width, height, depth); }
+
     int x;
     int y;
     int z;

@@ -8776,8 +8776,86 @@ TEST_P(Texture2DArrayTestES3, ClearThenTexSubImageWithOverlappingLayersThenDrawA
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that if overwriting a texture that is in use fails due to large UNPACK_IMAGE_HEIGHT, that
+// the texture content is unaffected.
+TEST_P(Texture2DTestES3, ImageOverwriteWithLargeUnpackImageHeight)
+{
+    constexpr uint32_t kWidth  = 105;
+    constexpr uint32_t kHeight = 213;
+
+    const std::vector<GLColor> kGreen(kWidth * kHeight, GLColor::green);
+    const std::vector<GLColor> kRed(kWidth * kHeight, GLColor::red);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kGreen.data());
+
+    // Sample from the texture so it's in use
+    ANGLE_GL_PROGRAM(drawTexture, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(drawTexture, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Upload to it with an unrealistically large UNPACK_IMAGE_HEIGHT.
+    glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, 0x10000000);
+    ASSERT_GL_NO_ERROR();
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kRed.data());
+    // If upload succeeds, the texture should be red.  If not, its previous green color should not
+    // be lost.
+    const bool uploadSucceeded = glGetError() == GL_NO_ERROR;
+    const GLColor expect       = uploadSucceeded ? GLColor::yellow : GLColor::green;
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    drawQuad(drawTexture, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, expect);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that if overwriting a texture that is in use fails due to large UNPACK_IMAGE_HEIGHT, that
+// the texture content is unaffected.
+TEST_P(Texture3DTestES3, ImageOverwriteWithLargeUnpackImageHeight)
+{
+    constexpr uint32_t kWidth  = 105;
+    constexpr uint32_t kHeight = 213;
+    constexpr uint32_t kDepth  = 17;
+
+    const std::vector<GLColor> kGreen(kWidth * kHeight * kDepth, GLColor::green);
+    const std::vector<GLColor> kRed(kWidth * kHeight * kDepth, GLColor::red);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGBA8, kWidth, kHeight, kDepth);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, kWidth, kHeight, kDepth, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kGreen.data());
+
+    // Sample from the texture so it's in use
+    drawQuad(mProgram, "position", 0.5f);
+
+    // Upload to it with an unrealistically large UNPACK_IMAGE_HEIGHT.  Completely overwrite it,
+    // which triggers an optimization in the Vulkan backend where the backing image is replaced
+    // instead of breaking the render pass.
+    glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, 0x10000000);
+    ASSERT_GL_NO_ERROR();
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, kWidth, kHeight, kDepth, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kRed.data());
+
+    // If upload succeeds, the texture should be red.  If not, its previous green color should not
+    // be lost.
+    const bool uploadSucceeded = glGetError() == GL_NO_ERROR;
+    const GLColor expect       = uploadSucceeded ? GLColor::yellow : GLColor::green;
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, expect);
+    ASSERT_GL_NO_ERROR();
+}
 // Test that compressed textures ignore the pixel unpack state.
-// (https://crbug.org/1267496)
+// (https://crbug.com/40057837)
 TEST_P(Texture3DTestES3, PixelUnpackStateTexImage)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_s3tc") &&
@@ -8793,7 +8871,7 @@ TEST_P(Texture3DTestES3, PixelUnpackStateTexImage)
 }
 
 // Test that compressed textures ignore the pixel unpack state.
-// (https://crbug.org/1267496)
+// (https://crbug.com/40057837)
 TEST_P(Texture3DTestES3, PixelUnpackStateTexSubImage)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_s3tc") &&
@@ -10150,7 +10228,7 @@ TEST_P(Texture2DTestES3RobustInit, TextureCOMPRESSEDSRGB8A1ETC2)
 }
 
 // Test that compressed textures ignore the pixel unpack state.
-// (https://crbug.org/1267496)
+// (https://crbug.com/40057837)
 TEST_P(Texture2DTestES3, PixelUnpackStateTexImage)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_s3tc") &&
@@ -10165,7 +10243,7 @@ TEST_P(Texture2DTestES3, PixelUnpackStateTexImage)
 }
 
 // Test that compressed textures ignore the pixel unpack state.
-// (https://crbug.org/1267496)
+// (https://crbug.com/40057837)
 TEST_P(Texture2DTestES3, PixelUnpackStateTexSubImage)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_s3tc") &&

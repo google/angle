@@ -2611,32 +2611,18 @@ class ImageHelper final : public Resource, public angle::Subject
                                     ImageFormatSupport formatSupport,
                                     const uint8_t *data);
 
-    angle::Result stageSubresourceUpdateImpl(ContextVk *contextVk,
-                                             const gl::ImageIndex &index,
-                                             const gl::Extents &glExtents,
-                                             const gl::Offset &offset,
-                                             const gl::InternalFormat &formatInfo,
-                                             const gl::PixelUnpackState &unpack,
-                                             GLenum type,
-                                             const uint8_t *pixels,
-                                             const Format &vkFormat,
-                                             ImageFormatSupport formatSupport,
-                                             const GLuint inputRowPitch,
-                                             const GLuint inputDepthPitch,
-                                             const GLuint inputSkipBytes,
-                                             ApplyImageUpdate applyUpdate,
-                                             bool *updateAppliedImmediatelyOut);
-
     angle::Result stageSubresourceUpdate(ContextVk *contextVk,
                                          const gl::ImageIndex &index,
                                          const gl::Extents &glExtents,
                                          const gl::Offset &offset,
                                          const gl::InternalFormat &formatInfo,
-                                         const gl::PixelUnpackState &unpack,
                                          GLenum type,
                                          const uint8_t *pixels,
                                          const Format &vkFormat,
                                          ImageFormatSupport formatSupport,
+                                         const GLuint inputRowPitch,
+                                         const GLuint inputDepthPitch,
+                                         const GLuint inputSkipBytes,
                                          ApplyImageUpdate applyUpdate,
                                          bool *updateAppliedImmediatelyOut);
 

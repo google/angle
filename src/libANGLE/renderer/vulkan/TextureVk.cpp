@@ -977,10 +977,10 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
     ASSERT(clearArea.width != 0 && clearArea.height != 0 && clearArea.depth != 0);
 
     gl::TextureType textureType = mState.getType();
-    bool useLayerAsDepth        = textureType == gl::TextureType::CubeMap ||
-                           textureType == gl::TextureType::CubeMapArray ||
-                           textureType == gl::TextureType::_2DArray ||
-                           textureType == gl::TextureType::_2DMultisampleArray;
+    const bool useLayerAsDepth  = textureType == gl::TextureType::CubeMap ||
+                                  textureType == gl::TextureType::CubeMapArray ||
+                                  textureType == gl::TextureType::_2DArray ||
+                                  textureType == gl::TextureType::_2DMultisampleArray;
 
     // If the texture is renderable (including multisampled), the partial clear can be applied to
     // the image simply by opening/closing a render pass with LOAD_OP_CLEAR. Otherwise, a buffer can
@@ -1026,7 +1026,7 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         bool updateAppliedImmediately = false;
         usesBufferForClear            = true;
 
-        auto pixelSize = static_cast<size_t>(inputFormatInfo.pixelBytes);
+        const size_t pixelSize = static_cast<size_t>(inputFormatInfo.pixelBytes);
         std::vector<uint8_t> pixelValue(pixelSize, 0);
         if (data != nullptr)
         {
@@ -1034,7 +1034,7 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         }
 
         // For a cubemap, each face will be updated separately.
-        bool isCubeMap = textureType == gl::TextureType::CubeMap;
+        const bool isCubeMap = textureType == gl::TextureType::CubeMap;
         size_t clearBufferSize =
             isCubeMap ? clearArea.width * clearArea.height * pixelSize
                       : clearArea.width * clearArea.height * clearArea.depth * pixelSize;
@@ -1052,11 +1052,28 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         }
         gl::PixelUnpackState pixelUnpackState = {};
         pixelUnpackState.alignment            = 1;
+        gl::Offset offset                     = clearArea.getOffset();
+        gl::Extents extents                   = clearArea.getExtents();
+        const bool is3D = textureType == gl::TextureType::_3D ||
+                          textureType == gl::TextureType::_2DArray ||
+                          textureType == gl::TextureType::_2DMultisampleArray ||
+                          textureType == gl::TextureType::CubeMapArray;
+
+        GLuint inputRowPitch   = 0;
+        GLuint inputDepthPitch = 0;
+        GLuint inputSkipBytes  = 0;
+
+        ANGLE_TRY(mImage->calculateBufferInfo(contextVk, extents, inputFormatInfo, pixelUnpackState,
+                                              type, is3D, &inputRowPitch, &inputDepthPitch,
+                                              &inputSkipBytes));
 
         if (isCubeMap)
         {
             size_t cubeFaceStart = clearArea.z;
             auto cubeFaceEnd     = static_cast<size_t>(clearArea.z + clearArea.depth);
+
+            offset.z      = 0;
+            extents.depth = 1;
 
             for (size_t cubeFace = cubeFaceStart; cubeFace < cubeFaceEnd; cubeFace++)
             {
@@ -1064,11 +1081,10 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
                     gl::CubeFaceIndexToTextureTarget(cubeFace), level, 0);
 
                 ANGLE_TRY(mImage->stageSubresourceUpdate(
-                    contextVk, getNativeImageIndex(index),
-                    gl::Extents(clearArea.width, clearArea.height, 1),
-                    gl::Offset(clearArea.x, clearArea.y, 0), inputFormatInfo, pixelUnpackState,
-                    type, clearBuffer.data(), outputVkFormat, getRequiredFormatSupport(),
-                    vk::ApplyImageUpdate::Defer, &updateAppliedImmediately));
+                    contextVk, getNativeImageIndex(index), extents, offset, inputFormatInfo, type,
+                    clearBuffer.data(), outputVkFormat, getRequiredFormatSupport(), inputRowPitch,
+                    inputDepthPitch, inputSkipBytes, vk::ApplyImageUpdate::Defer,
+                    &updateAppliedImmediately));
                 ASSERT(!updateAppliedImmediately);
             }
         }
@@ -1080,11 +1096,9 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
                 gl::ImageIndex::MakeFromTarget(textureTarget, level, layerCount);
 
             ANGLE_TRY(mImage->stageSubresourceUpdate(
-                contextVk, getNativeImageIndex(index),
-                gl::Extents(clearArea.width, clearArea.height, clearArea.depth),
-                gl::Offset(clearArea.x, clearArea.y, clearArea.z), inputFormatInfo,
-                pixelUnpackState, type, clearBuffer.data(), outputVkFormat,
-                getRequiredFormatSupport(), vk::ApplyImageUpdate::Defer,
+                contextVk, getNativeImageIndex(index), extents, offset, inputFormatInfo, type,
+                clearBuffer.data(), outputVkFormat, getRequiredFormatSupport(), inputRowPitch,
+                inputDepthPitch, inputSkipBytes, vk::ApplyImageUpdate::Defer,
                 &updateAppliedImmediately));
             ASSERT(!updateAppliedImmediately);
         }
@@ -1234,6 +1248,16 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
+    GLuint inputRowPitch   = 0;
+    GLuint inputDepthPitch = 0;
+    GLuint inputSkipBytes  = 0;
+
+    ANGLE_TRY(mImage->calculateBufferInfo(contextVk, area.getExtents(), formatInfo, unpack, type,
+                                          index.usesTex3D(), &inputRowPitch, &inputDepthPitch,
+                                          &inputSkipBytes));
+
+    // Note: Image ghosting is done after calculateBufferInfo, so it's not done in case that
+    // function returns an error due to integer overflow.
     ANGLE_TRY(ghostOnOverwrite(contextVk, index, area));
 
     bool mustStage =
@@ -1270,13 +1294,6 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
         vk::BufferHelper &bufferHelper = unpackBufferVk->getBuffer();
         VkDeviceSize bufferOffset      = bufferHelper.getOffset();
         uintptr_t offset               = reinterpret_cast<uintptr_t>(pixels);
-        GLuint inputRowPitch           = 0;
-        GLuint inputDepthPitch         = 0;
-        GLuint inputSkipBytes          = 0;
-
-        ANGLE_TRY(mImage->calculateBufferInfo(
-            contextVk, gl::Extents(area.width, area.height, area.depth), formatInfo, unpack, type,
-            index.usesTex3D(), &inputRowPitch, &inputDepthPitch, &inputSkipBytes));
 
         size_t offsetBytes = static_cast<size_t>(bufferOffset + offset + inputSkipBytes);
 
@@ -1323,12 +1340,10 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
             const uint8_t *source =
                 static_cast<const uint8_t *>(mapPtr) + reinterpret_cast<ptrdiff_t>(pixels);
 
-            ANGLE_TRY(mImage->stageSubresourceUpdateImpl(
-                contextVk, getNativeImageIndex(index),
-                gl::Extents(area.width, area.height, area.depth),
-                gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, source, vkFormat,
-                getRequiredFormatSupport(), inputRowPitch, inputDepthPitch, inputSkipBytes,
-                applyUpdate, &updateAppliedImmediately));
+            ANGLE_TRY(mImage->stageSubresourceUpdate(
+                contextVk, getNativeImageIndex(index), area.getExtents(), area.getOffset(),
+                formatInfo, type, source, vkFormat, getRequiredFormatSupport(), inputRowPitch,
+                inputDepthPitch, inputSkipBytes, applyUpdate, &updateAppliedImmediately));
 
             ANGLE_TRY(unpackBufferVk->unmapReadAccessOnly(contextVk));
         }
@@ -1336,9 +1351,9 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
     else if (pixels)
     {
         ANGLE_TRY(mImage->stageSubresourceUpdate(
-            contextVk, getNativeImageIndex(index), gl::Extents(area.width, area.height, area.depth),
-            gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels, vkFormat,
-            getRequiredFormatSupport(), applyUpdate, &updateAppliedImmediately));
+            contextVk, getNativeImageIndex(index), area.getExtents(), area.getOffset(), formatInfo,
+            type, pixels, vkFormat, getRequiredFormatSupport(), inputRowPitch, inputDepthPitch,
+            inputSkipBytes, applyUpdate, &updateAppliedImmediately));
     }
 
     if (updateAppliedImmediately)
@@ -1812,7 +1827,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
         offsetImageIndex.hasLayer() ? offsetImageIndex.getLayerIndex() : dstOffset.z;
     uint32_t stagingLayerCount = sourceBox.depth;
     gl::Offset stagingOffset   = dstOffset;
-    gl::Extents stagingExtents(sourceBox.width, sourceBox.height, sourceBox.depth);
+    gl::Extents stagingExtents = sourceBox.getExtents();
     bool is3D = gl_vk::GetImageType(mState.getType()) == VK_IMAGE_TYPE_3D;
 
     if (is3D)
@@ -1885,8 +1900,8 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
     uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : dstOffset.z;
     uint32_t layerCount = sourceBox.depth;
 
-    gl::Offset srcOffset = {sourceBox.x, sourceBox.y, sourceBox.z};
-    gl::Extents extents  = {sourceBox.width, sourceBox.height, sourceBox.depth};
+    gl::Offset srcOffset = sourceBox.getOffset();
+    gl::Extents extents  = sourceBox.getExtents();
 
     // Change source layout if necessary
     vk::CommandResources resources;
@@ -2078,7 +2093,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
     uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : dstOffset.z;
     uint32_t layerCount = sourceBox.depth;
 
-    gl::Extents extents = {sourceBox.width, sourceBox.height, sourceBox.depth};
+    gl::Extents extents = sourceBox.getExtents();
 
     bool isSrc3D  = srcImage->getExtents().depth > 1;
     bool isDest3D = gl_vk::GetImageType(mState.getType()) == VK_IMAGE_TYPE_3D;
