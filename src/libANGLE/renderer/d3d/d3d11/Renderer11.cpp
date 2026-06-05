@@ -4095,18 +4095,9 @@ angle::Result Renderer11::getVertexSpaceRequired(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    size_t elementCount        = 0;
     const unsigned int divisor = binding.getDivisor();
-    if (instances == 0 || divisor == 0)
-    {
-        elementCount = count;
-    }
-    else
-    {
-        // Round up to divisor, if possible
-        elementCount = static_cast<size_t>(UnsignedCeilDivide64(
-            static_cast<uint64_t>(instances) + baseInstance, static_cast<uint64_t>(divisor)));
-    }
+    size_t elementCount =
+        gl::ComputeVertexBindingElementCount(divisor, count, instances, baseInstance);
 
     ASSERT(elementCount > 0);
 

@@ -394,7 +394,7 @@ void VertexArrayGL::computeStreamingAttributeSizes(
         size_t typeSize        = ComputeVertexAttributeTypeSize(attrib);
         GLuint adjustedDivisor = GetAdjustedDivisor(mAppliedNumViews, binding.getDivisor());
         size_t streamedVertexCount = ComputeVertexBindingElementCount(
-            adjustedDivisor, indexRange.vertexCount(), instanceCount);
+            adjustedDivisor, indexRange.vertexCount(), std::max(instanceCount, 1), 0);
         if (applyExtraOffsetWorkaroundForInstancedAttributes && adjustedDivisor > 0)
         {
             streamedVertexCount =
@@ -476,7 +476,7 @@ angle::Result VertexArrayGL::streamAttributes(
             // streamedVertexCount is only going to be modified by
             // shiftInstancedArrayDataWithOffset workaround, otherwise it's const
             size_t streamedVertexCount = ComputeVertexBindingElementCount(
-                adjustedDivisor, indexRange.vertexCount(), instanceCount);
+                adjustedDivisor, indexRange.vertexCount(), std::max(instanceCount, 1), 0);
             const size_t originalStreamedVertexCount = streamedVertexCount;
 
             const size_t sourceStride = ComputeVertexAttributeStride(attrib, binding);
