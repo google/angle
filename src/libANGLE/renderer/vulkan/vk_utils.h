@@ -1706,6 +1706,7 @@ enum class RenderPassClosureReason
     InvalidEnum,
     EnumCount = InvalidEnum,
 };
+std::ostream &operator<<(std::ostream &os, const RenderPassClosureReason reason);
 
 enum class QueueSubmitReason
 {
@@ -1768,6 +1769,7 @@ enum class QueueSubmitReason
     InvalidEnum,
     EnumCount = InvalidEnum,
 };
+std::ostream &operator<<(std::ostream &os, const QueueSubmitReason reason);
 
 // The scope of synchronization for a sync object.  Synchronization is done between the signal
 // entity (src) and the entities waiting on the signal (dst)

@@ -144,6 +144,12 @@ constexpr angle::PackedEnumMap<QueueSubmitReason, const char *> kQueueSubmitReas
 }};
 }  // namespace
 
+std::ostream &operator<<(std::ostream &os, const QueueSubmitReason reason)
+{
+    os << kQueueSubmitReason[reason];
+    return os;
+}
+
 namespace vk
 {
 namespace
@@ -6829,9 +6835,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             IsAndroid());
 
     // There are use cases where synchronization is not performed properly when texture is modified
-    // between different contexts. To avoid rendering artifacts, force submit staged updates for
-    // Samsung.
-    ANGLE_FEATURE_CONDITION(&mFeatures, forceSubmitImmutableTextureUpdates, isSamsung);
+    // between different contexts. To avoid rendering artifacts, force submit staged updates.
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceSubmitImmutableTextureUpdates, true);
 
     // Don't expose these 2 extensions on Samsung devices -
     // 1. GL_ANGLE_shader_pixel_local_storage

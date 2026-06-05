@@ -789,6 +789,12 @@ class [[nodiscard]] SaveLoadStorePerfCounters
 };
 }  // anonymous namespace
 
+std::ostream &operator<<(std::ostream &os, const RenderPassClosureReason reason)
+{
+    os << kRenderPassClosureReason[reason];
+    return os;
+}
+
 void ContextVk::flushDescriptorSetUpdates()
 {
     mPerfCounters.writeDescriptorSets +=
@@ -3824,7 +3830,8 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
     // If there are foreign images to transition, issue the barrier now.
     if (!mImagesToTransitionToForeign.empty())
     {
-        mCommandState.flushImagesTransitionToForeign(std::move(mImagesToTransitionToForeign));
+        ANGLE_TRY(mCommandState.flushImagesTransitionToForeign(
+            this, std::move(mImagesToTransitionToForeign)));
     }
 
     if (mImageWithTileMemory != nullptr)
@@ -8316,6 +8323,12 @@ angle::Result ContextVk::flushAndSubmitOutsideRenderPassCommands(QueueSubmitReas
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushAndSubmitOutsideRenderPassCommands");
     ANGLE_TRY(flushOutsideRenderPassCommands());
     ASSERT(mLastFlushedQueueSerial.valid());
+    if (mLastFlushedQueueSerial == mLastSubmittedQueueSerial)
+    {
+        // flushOutsideRenderPassCommands may end up with submitCommands if it runs out of reserved
+        // queueSerial for OutsideRenderPass.
+        return angle::Result::Continue;
+    }
     ASSERT(QueueSerialsHaveDifferentIndexOrSmaller(mLastSubmittedQueueSerial,
                                                    mLastFlushedQueueSerial));
     return submitCommands(nullptr, nullptr, reason);

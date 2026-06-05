@@ -1121,11 +1121,12 @@ angle::Result TextureVk::ensureImageInitializedIfUpdatesNeedStageOrFlush(
 
         // To handle use cases where shared resources are not properly synchronized between multiple
         // contexts, forceSubmitImmutableTextureUpdates submits the staged updates to force
-        // synchronization. This is limited to cases where the resource is an immutable texture and
-        // there are multiple active shared contexts.
-        if (canFlushStagedUpdates && contextVk->getShareGroup()->getContexts().size() > 1 &&
-            mState.getImmutableFormat() &&
-            contextVk->getFeatures().forceSubmitImmutableTextureUpdates.enabled)
+        // synchronization. This is limited to cases where the resource is an immutable texture or
+        // textures created out of EGLImage and there are multiple active shared contexts.
+        if (contextVk->getShareGroup()->getContexts().size() > 1 &&
+            ((mState.getImmutableFormat() && canFlushStagedUpdates &&
+              contextVk->getFeatures().forceSubmitImmutableTextureUpdates.enabled) ||
+             mustFlush))
         {
             ANGLE_TRY(contextVk->submitStagedTextureUpdates());
         }
