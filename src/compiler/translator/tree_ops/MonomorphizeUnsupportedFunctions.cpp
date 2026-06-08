@@ -78,7 +78,7 @@ const TVariable *GetBaseUniform(TIntermTyped *node, bool *isSamplerInStructOut)
             *isSamplerInStructOut = true;
         }
 
-        node = op == EOpComma ? asBinary->getRight() : asBinary->getLeft();
+        node = asBinary->getLeft();
     }
 
     // Only interested in uniform opaque types.  If a function call within another function uses
@@ -102,13 +102,6 @@ TIntermTyped *ExtractSideEffects(TSymbolTable *symbolTable,
                                  TIntermTyped *node,
                                  TIntermSequence *replacementIndices)
 {
-    // If this is a comma expression, throw away the left hand side.  THIS IS INCORRECT, but it's
-    // overly complicated to try and support it.  The IR already handles this correctly.
-    while (node->getAsBinaryNode() != nullptr && node->getAsBinaryNode()->getOp() == EOpComma)
-    {
-        node = node->getAsBinaryNode()->getRight();
-    }
-
     TIntermTyped *withoutSideEffects = node->deepCopy();
 
     for (TIntermBinary *asBinary = withoutSideEffects->getAsBinaryNode(); asBinary;
