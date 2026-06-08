@@ -2803,6 +2803,7 @@
 
 // Timeout on Intel
 509829264 VULKAN WIN INTEL : SimpleStateChangeTestES31.TransformFeedbackThenReadWithCompute/* = SKIP
+521364068 VULKAN WIN INTEL : VulkanPerformanceCounterTest.EndXfbAfterRenderPassClosed/* = SKIP
 
 512157667 LINUX VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 512157667 WIN VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
