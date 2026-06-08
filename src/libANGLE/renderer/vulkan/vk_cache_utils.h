@@ -2773,6 +2773,8 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                   vk::Pipeline &&pipeline,
                   vk::PipelineHelper **pipelineHelperOut);
 
+    void remove(const vk::GraphicsPipelineDesc &desc) { mPayload.erase(desc); }
+
     // Get a pipeline from the cache, if it exists
     ANGLE_INLINE bool getPipeline(const vk::GraphicsPipelineDesc &desc,
                                   const vk::GraphicsPipelineDesc **descPtrOut,
