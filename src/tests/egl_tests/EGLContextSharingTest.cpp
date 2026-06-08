@@ -906,8 +906,12 @@ TEST_P(EGLContextSharingTest, UnmakeFromCurrentOnThreadExit)
 // Test that an inactive but alive thread doesn't prevent memory cleanup.
 TEST_P(EGLContextSharingTestNoFixture, InactiveThreadDoesntPreventCleanup)
 {
-    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
-                             EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, GetParam().getDeviceType(),
+    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+                             GetParam().getRenderer(),
+                             EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE,
+                             static_cast<EGLAttrib>(mOsWindow->getNativeDisplayPlatformType()),
+                             EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
+                             GetParam().getDeviceType(),
                              EGL_NONE};
 
     // Synchronization tools to ensure the two threads are interleaved as designed by this test.
@@ -1011,7 +1015,9 @@ TEST_P(EGLContextSharingTestNoFixture, EglTerminateMultiThreaded)
     //        B: eglTerminate() <<--- this release context A
     // Thread A: eglMakeCurrent(context B)
 
-    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
+                             EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE,
+                             static_cast<EGLAttrib>(GetPbufferOnlyDefaultPlatformType()), EGL_NONE};
     mDisplay              = eglGetPlatformDisplay(GetEglPlatform(),
                                                   reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
     EXPECT_TRUE(mDisplay != EGL_NO_DISPLAY);
@@ -1129,7 +1135,10 @@ TEST_P(EGLContextSharingTestNoFixture, EglTerminateMultiThreaded)
 // errors.
 TEST_P(EGLContextSharingTestNoFixture, EglDestoryContextManyTimesSameContext)
 {
-    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
+                             EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE,
+                             static_cast<EGLAttrib>(mOsWindow->getNativeDisplayPlatformType()),
+                             EGL_NONE};
     mDisplay              = eglGetPlatformDisplay(GetEglPlatform(),
                                                   reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
     EXPECT_TRUE(mDisplay != EGL_NO_DISPLAY);
@@ -1265,7 +1274,10 @@ TEST_P(EGLContextSharingTestNoFixture, EglTerminateMultipleTimes)
     //   eglDestroySurface(srf1)
     //   eglTerminate(shared-display)
 
-    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
+                             EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE,
+                             static_cast<EGLAttrib>(mOsWindow->getNativeDisplayPlatformType()),
+                             EGL_NONE};
     mDisplay              = eglGetPlatformDisplay(GetEglPlatform(),
                                                   reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
     EXPECT_TRUE(mDisplay != EGL_NO_DISPLAY);
@@ -1308,7 +1320,10 @@ TEST_P(EGLContextSharingTestNoFixture, EglTerminateMultipleTimes)
 // Test that we can eglSwapBuffers in one thread while another thread renders to a texture.
 TEST_P(EGLContextSharingTestNoFixture, SwapBuffersShared)
 {
-    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
+                             EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE,
+                             static_cast<EGLAttrib>(mOsWindow->getNativeDisplayPlatformType()),
+                             EGL_NONE};
     mDisplay              = eglGetPlatformDisplay(GetEglPlatform(),
                                                   reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
     EXPECT_TRUE(mDisplay != EGL_NO_DISPLAY);
@@ -1578,7 +1593,10 @@ TEST_P(EGLContextSharingTestNoSyncTextureUploads, NoSync)
 // created.
 TEST_P(EGLContextSharingTestNoFixture, ImmediateContextDestroyAfterCreation)
 {
-    EGLAttrib dispattrs[3] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+    EGLAttrib dispattrs[]  = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
+                              EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE,
+                              static_cast<EGLAttrib>(mOsWindow->getNativeDisplayPlatformType()),
+                              EGL_NONE};
     mDisplay               = eglGetPlatformDisplay(GetEglPlatform(),
                                                    reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
     EXPECT_TRUE(mDisplay != EGL_NO_DISPLAY);
@@ -1604,7 +1622,9 @@ class EGLPriorityContextSharingTestNoFixture : public EGLContextSharingTest
     void testSetUp() override
     {
         mMajorVersion          = GetParam().majorVersion;
-        EGLAttrib dispattrs[3] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
+        EGLAttrib dispattrs[]  = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
+                                  EGL_PLATFORM_ANGLE_NATIVE_PLATFORM_TYPE_ANGLE,
+                                  static_cast<EGLAttrib>(GetPbufferOnlyDefaultPlatformType()),
                                   EGL_NONE};
         mDisplay               = eglGetPlatformDisplay(GetEglPlatform(),
                                                        reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
