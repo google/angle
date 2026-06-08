@@ -5475,11 +5475,12 @@ TEST_P(TransformFeedbackTest, InstancedOverflowIncompletePrimitive)
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND(TransformFeedbackTest,
-                               ES3_VULKAN().disable(Feature::SupportsTransformFeedbackExtension),
-                               ES3_VULKAN()
-                                   .disable(Feature::SupportsTransformFeedbackExtension)
-                                   .disable(Feature::SupportsSPIRV14));
+ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND_ES32_AND(
+    TransformFeedbackTest,
+    ES3_VULKAN().disable(Feature::SupportsTransformFeedbackExtension),
+    ES3_VULKAN()
+        .disable(Feature::SupportsTransformFeedbackExtension)
+        .disable(Feature::SupportsSPIRV14));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackLifetimeTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(TransformFeedbackLifetimeTest,

@@ -1411,12 +1411,21 @@ bool ValidateDrawArraysTransformFeedbackBufferSize(const Context *context,
                                                    const GLsizei *primcounts,
                                                    GLsizei drawcount)
 {
-    if (ANGLE_UNLIKELY(context->getStateCache().isTransformFeedbackActiveUnpaused()) &&
-        ANGLE_UNLIKELY(!context->supportsGeometryOrTesselation()))
+    if (ANGLE_UNLIKELY(context->getStateCache().isTransformFeedbackActiveUnpaused()))
     {
-        const State &state                      = context->getState();
+        const State &state                  = context->getState();
+        const ProgramExecutable *executable = state.getProgramExecutable();
+        // When a Geometry or Tessellation Shader is active in the pipeline, the
+        // number of vertices emitted is determined dynamically by the GPU
+        // during shader execution. The CPU cannot predict how many vertices
+        // will be produced nor the corresponding amount of space required, so
+        // the buffer space check must be skipped.
+        bool hasGSorTS =
+            executable && (executable->hasLinkedShaderStage(ShaderType::Geometry) ||
+                           executable->hasLinkedShaderStage(ShaderType::TessEvaluation));
         TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();
-        if (!curTransformFeedback->checkBufferSpaceForDraw(context, counts, primcounts, drawcount))
+        if (!hasGSorTS &&
+            !curTransformFeedback->checkBufferSpaceForDraw(context, counts, primcounts, drawcount))
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kTransformFeedbackBufferTooSmall);
             return false;
