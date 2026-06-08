@@ -484,11 +484,10 @@ void FramebufferVk::destroy(const gl::Context *context)
 
 void FramebufferVk::insertCache(ContextVk *contextVk,
                                 const vk::FramebufferDesc &desc,
-                                vk::FramebufferHelper &&newFramebuffer)
+                                vk::Framebuffer &&newFramebuffer)
 {
-    // Add it into per share group cache
-    contextVk->getShareGroup()->getFramebufferCache().insert(contextVk, desc,
-                                                             std::move(newFramebuffer));
+    // Add it into per context cache
+    contextVk->getFramebufferCache().insert(contextVk, desc, std::move(newFramebuffer));
 
     // Create a refcounted cache key object and have each attachment keep a refcount to it so that
     // it can be destroyed promptly if those attachments change.
@@ -3115,7 +3114,7 @@ angle::Result FramebufferVk::createNewFramebuffer(ContextVk *contextVk,
         contextVk->getFeatures().supportsImagelessFramebuffer.enabled;
 
     // Try to retrieve a framebuffer from the cache.
-    if (!useImagelessFramebuffer && contextVk->getShareGroup()->getFramebufferCache().get(
+    if (!useImagelessFramebuffer && contextVk->getFramebufferCache().get(
                                         contextVk, mCurrentFramebufferDesc, mCurrentFramebuffer))
     {
         ASSERT(mCurrentFramebuffer.valid());
@@ -3129,7 +3128,7 @@ angle::Result FramebufferVk::createNewFramebuffer(ContextVk *contextVk,
     // Create a new framebuffer.
     uint32_t currentAttachmentCount =
         static_cast<uint32_t>(mCachedAttachmentsInfo.packedRenderTargetsInfo.size());
-    vk::FramebufferHelper newFramebuffer;
+    vk::Framebuffer newFramebuffer;
 
     VkFramebufferCreateInfo framebufferInfo = {};
     framebufferInfo.sType                   = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -3157,17 +3156,17 @@ angle::Result FramebufferVk::createNewFramebuffer(ContextVk *contextVk,
         // The cache key (|FramebufferDesc|) can't distinguish between two framebuffers with 0
         // attachments but with different sizes.  For simplicity, 0-attachment framebuffers are not
         // cached.
-        ANGLE_TRY(newFramebuffer.init(contextVk, framebufferInfo));
+        ANGLE_VK_TRY(contextVk, newFramebuffer.init(contextVk->getDevice(), framebufferInfo));
         if (packedAttachments.empty())
         {
-            mCurrentFramebuffer         = std::move(newFramebuffer.getFramebuffer());
+            mCurrentFramebuffer         = std::move(newFramebuffer);
             mIsCurrentFramebufferCached = false;
         }
         else
         {
             insertCache(contextVk, mCurrentFramebufferDesc, std::move(newFramebuffer));
 
-            const bool result = contextVk->getShareGroup()->getFramebufferCache().get(
+            const bool result = contextVk->getFramebufferCache().get(
                 contextVk, mCurrentFramebufferDesc, mCurrentFramebuffer);
             ASSERT(result);
             mIsCurrentFramebufferCached = true;
@@ -3240,8 +3239,8 @@ angle::Result FramebufferVk::createNewFramebuffer(ContextVk *contextVk,
     framebufferInfo.flags |= VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT;
     vk::AddToPNextChain(&framebufferInfo, &attachmentsCreateInfo);
 
-    ANGLE_TRY(newFramebuffer.init(contextVk, framebufferInfo));
-    mCurrentFramebuffer = std::move(newFramebuffer.getFramebuffer());
+    ANGLE_VK_TRY(contextVk, newFramebuffer.init(contextVk->getDevice(), framebufferInfo));
+    mCurrentFramebuffer = std::move(newFramebuffer);
 
     return angle::Result::Continue;
 }

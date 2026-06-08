@@ -1291,6 +1291,7 @@ void ContextVk::onDestroy(const gl::Context *context)
     mUtils.destroy(this);
 
     mRenderPassCache.destroy(this);
+    mFramebufferCache.destroy(mRenderer);
     mShaderLibrary.destroy(device);
 
     // Must release all Vulkan secondary command buffers before destroying the pools.
@@ -3686,7 +3687,7 @@ void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQ
         commandQueuePerfCounters.commandQueueWaitSemaphoresTotal;
 
     // Return current drawFramebuffer's cache stats
-    mPerfCounters.framebufferCacheSize = mShareGroupVk->getFramebufferCache().getSize();
+    mPerfCounters.framebufferCacheSize = mFramebufferCache.getSize();
 
     mPerfCounters.pendingSubmissionGarbageObjects =
         static_cast<uint64_t>(mRenderer->getPendingSubmissionGarbageSize());

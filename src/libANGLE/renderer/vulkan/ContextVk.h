@@ -241,6 +241,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // ShareGroup
     ShareGroupVk *getShareGroup() { return mShareGroupVk; }
+    FramebufferCache &getFramebufferCache() { return mFramebufferCache; }
     PipelineLayoutCache &getPipelineLayoutCache()
     {
         return mShareGroupVk->getPipelineLayoutCache();
@@ -1615,6 +1616,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     vk::GarbageObjects mCurrentGarbage;
 
     RenderPassCache mRenderPassCache;
+    FramebufferCache mFramebufferCache;
     // Used with dynamic rendering as it doesn't use render passes.
     vk::RenderPass mNullRenderPass;
 

@@ -5245,40 +5245,6 @@ void PipelineHelper::retainInRenderPass(RenderPassCommandBufferHelper *renderPas
     }
 }
 
-// FramebufferHelper implementation.
-FramebufferHelper::FramebufferHelper() = default;
-
-FramebufferHelper::~FramebufferHelper() = default;
-
-FramebufferHelper::FramebufferHelper(FramebufferHelper &&other) : Resource(std::move(other))
-{
-    mFramebuffer = std::move(other.mFramebuffer);
-}
-
-FramebufferHelper &FramebufferHelper::operator=(FramebufferHelper &&other)
-{
-    Resource::operator=(std::move(other));
-    std::swap(mFramebuffer, other.mFramebuffer);
-    return *this;
-}
-
-angle::Result FramebufferHelper::init(ErrorContext *context,
-                                      const VkFramebufferCreateInfo &createInfo)
-{
-    ANGLE_VK_TRY(context, mFramebuffer.init(context->getDevice(), createInfo));
-    return angle::Result::Continue;
-}
-
-void FramebufferHelper::destroy(Renderer *renderer)
-{
-    mFramebuffer.destroy(renderer->getDevice());
-}
-
-void FramebufferHelper::release(ContextVk *contextVk)
-{
-    contextVk->addGarbage(&mFramebuffer);
-}
-
 // DescriptorSetDesc implementation.
 size_t DescriptorSetDesc::hash() const
 {
@@ -5428,7 +5394,7 @@ void FramebufferDesc::destroyCachedObject(Renderer *renderer)
 void FramebufferDesc::releaseCachedObject(ContextVk *contextVk)
 {
     ASSERT(valid());
-    contextVk->getShareGroup()->getFramebufferCache().erase(contextVk, *this);
+    contextVk->getFramebufferCache().erase(contextVk, *this);
     SetBitField(mIsValid, 0);
 }
 
@@ -5436,7 +5402,7 @@ bool FramebufferDesc::hasValidCachedObject(ContextVk *contextVk) const
 {
     ASSERT(valid());
     Framebuffer framebuffer;
-    return contextVk->getShareGroup()->getFramebufferCache().get(contextVk, *this, framebuffer);
+    return contextVk->getFramebufferCache().get(contextVk, *this, framebuffer);
 }
 
 // YcbcrConversionDesc implementation
@@ -7376,11 +7342,12 @@ void UpdateDescriptorSetsBuilder::updateWriteDescriptorSet(
 // FramebufferCache implementation.
 void FramebufferCache::destroy(vk::Renderer *renderer)
 {
+    VkDevice device = renderer->getDevice();
     renderer->accumulateCacheStats(VulkanCacheType::Framebuffer, mCacheStats);
     for (auto &entry : mPayload)
     {
-        vk::FramebufferHelper &tmpFB = entry.second;
-        tmpFB.destroy(renderer);
+        vk::Framebuffer &tmpFB = entry.second;
+        tmpFB.destroy(device);
     }
     mPayload.clear();
 }
@@ -7394,7 +7361,7 @@ bool FramebufferCache::get(ContextVk *contextVk,
     auto iter = mPayload.find(desc);
     if (iter != mPayload.end())
     {
-        framebuffer.setHandle(iter->second.getFramebuffer().getHandle());
+        framebuffer.setHandle(iter->second.getHandle());
         mCacheStats.hit();
         return true;
     }
@@ -7405,11 +7372,11 @@ bool FramebufferCache::get(ContextVk *contextVk,
 
 void FramebufferCache::insert(ContextVk *contextVk,
                               const vk::FramebufferDesc &desc,
-                              vk::FramebufferHelper &&framebufferHelper)
+                              vk::Framebuffer &&framebuffer)
 {
     ASSERT(!contextVk->getFeatures().supportsImagelessFramebuffer.enabled);
 
-    mPayload.emplace(desc, std::move(framebufferHelper));
+    mPayload.emplace(desc, std::move(framebuffer));
 }
 
 void FramebufferCache::erase(ContextVk *contextVk, const vk::FramebufferDesc &desc)
@@ -7419,8 +7386,8 @@ void FramebufferCache::erase(ContextVk *contextVk, const vk::FramebufferDesc &de
     auto iter = mPayload.find(desc);
     if (iter != mPayload.end())
     {
-        vk::FramebufferHelper &tmpFB = iter->second;
-        tmpFB.release(contextVk);
+        vk::Framebuffer &tmpFB = iter->second;
+        contextVk->addGarbage(&tmpFB);
         mPayload.erase(desc);
     }
 }
