@@ -1169,6 +1169,43 @@ TEST_P(RobustResourceInitTestES3, CopyTexSubImage3DTextureWronglyInitialized)
     EXPECT_EQ(data, pixels);
 }
 
+// Test that glCopyTexSubImage3D from a 2D texture to a 3D texture works correctly when formats
+// match
+TEST_P(RobustResourceInitTestES3, CopyTexSubImage3DTarget3DSource2DMatches)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr GLint kTextureLayer     = 0;
+    constexpr GLint kTextureWidth     = 2;
+    constexpr GLint kTextureHeight    = 2;
+    constexpr GLint kTextureDepth     = 2;
+    constexpr size_t kTextureDataSize = kTextureWidth * kTextureHeight * 4;
+
+    GLTexture texture2D;
+    glBindTexture(GL_TEXTURE_2D, texture2D);
+    constexpr std::array<uint8_t, kTextureDataSize> data = {{0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+                                                             0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C,
+                                                             0x0D, 0x0E, 0x0F, 0x10}};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kTextureWidth, kTextureHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, data.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2D, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLTexture texture3D;
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGBA8, kTextureWidth, kTextureHeight, kTextureDepth);
+    glCopyTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, kTextureLayer, 0, 0, kTextureWidth, kTextureHeight);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D, 0, kTextureLayer);
+    std::array<uint8_t, kTextureDataSize> pixels;
+    glReadPixels(0, 0, kTextureWidth, kTextureHeight, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(data, pixels);
+}
+
 // Test that binding an EGL surface to a texture does not cause it to be cleared.
 TEST_P(RobustResourceInitTestES3, BindTexImage)
 {
