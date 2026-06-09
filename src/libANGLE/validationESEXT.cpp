@@ -1908,58 +1908,6 @@ bool ValidatePLSTextureType(const Context *context,
     }
 }
 
-bool ValidatePLSActiveBlendFunc(const Context *context,
-                                angle::EntryPoint entryPoint,
-                                gl::BlendFactorType blendFunc)
-{
-    // INVALID_OPERATION is generated if BLEND_DST_ALPHA, BLEND_DST_RGB, BLEND_SRC_ALPHA, or
-    // BLEND_SRC_RGB, for any draw buffer, is a blend function requiring the secondary color input,
-    // as specified in EXT_blend_func_extended.
-    ASSERT(context->getState().getExtensions().blendFuncExtendedEXT);
-    switch (blendFunc)
-    {
-        case gl::BlendFactorType::Src1Color:
-        case gl::BlendFactorType::OneMinusSrc1Color:
-        case gl::BlendFactorType::Src1Alpha:
-        case gl::BlendFactorType::OneMinusSrc1Alpha:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSSecondaryBlendEnabled);
-            return false;
-        default:
-            return true;
-    }
-}
-bool ValidatePLSActiveBlendEquation(const Context *context,
-                                    angle::EntryPoint entryPoint,
-                                    gl::BlendEquationType blendEquation)
-{
-    // INVALID_OPERATION is generated if BLEND_EQUATION_RGB and/or BLEND_EQUATION_ALPHA is an
-    // advanced blend equation defined in KHR_blend_equation_advanced.
-    ASSERT(context->getState().getExtensions().blendEquationAdvancedKHR ||
-           context->getClientVersion() >= ES_3_2);
-    switch (blendEquation)
-    {
-        case gl::BlendEquationType::Multiply:
-        case gl::BlendEquationType::Screen:
-        case gl::BlendEquationType::Overlay:
-        case gl::BlendEquationType::Darken:
-        case gl::BlendEquationType::Lighten:
-        case gl::BlendEquationType::Colordodge:
-        case gl::BlendEquationType::Colorburn:
-        case gl::BlendEquationType::Hardlight:
-        case gl::BlendEquationType::Softlight:
-        case gl::BlendEquationType::Difference:
-        case gl::BlendEquationType::Exclusion:
-        case gl::BlendEquationType::HslHue:
-        case gl::BlendEquationType::HslSaturation:
-        case gl::BlendEquationType::HslColor:
-        case gl::BlendEquationType::HslLuminosity:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSAdvancedBlendEnabled);
-            return false;
-        default:
-            return true;
-    }
-}
-
 bool ValidatePLSLoadOperation(const Context *context, angle::EntryPoint entryPoint, GLenum loadop)
 {
     // INVALID_ENUM is generated if <loadops>[0..<n>-1] is not one of the Load Operations enumerated
@@ -2043,32 +1991,18 @@ bool ValidateBeginAndRestorePixelLocalStorageGlobalState(const Context *context,
     // INVALID_OPERATION is generated if BLEND_DST_ALPHA, BLEND_DST_RGB, BLEND_SRC_ALPHA, or
     // BLEND_SRC_RGB, for any draw buffer, is a blend function requiring the secondary color input,
     // as specified in EXT_blend_func_extended.
-    if (state.getExtensions().blendFuncExtendedEXT)
+    if (ANGLE_UNLIKELY(state.getBlendStateExt().getUsesExtendedBlendFactorMask().any()))
     {
-        for (GLsizei i = 0; i < state.getCaps().maxDrawBuffers; ++i)
-        {
-            const BlendStateExt &blend = state.getBlendStateExt();
-            if (!ValidatePLSActiveBlendFunc(context, entryPoint, blend.getDstAlphaIndexed(i)) ||
-                !ValidatePLSActiveBlendFunc(context, entryPoint, blend.getDstColorIndexed(i)) ||
-                !ValidatePLSActiveBlendFunc(context, entryPoint, blend.getSrcAlphaIndexed(i)) ||
-                !ValidatePLSActiveBlendFunc(context, entryPoint, blend.getSrcColorIndexed(i)))
-            {
-                return false;
-            }
-        }
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSSecondaryBlendEnabled);
+        return false;
     }
 
     // INVALID_OPERATION is generated if BLEND_EQUATION_RGB and/or BLEND_EQUATION_ALPHA is an
     // advanced blend equation defined in KHR_blend_equation_advanced.
-    if (state.getExtensions().blendEquationAdvancedKHR || context->getClientVersion() >= ES_3_2)
+    if (ANGLE_UNLIKELY(state.getBlendStateExt().getUsesAdvancedBlendEquationMask()[0]))
     {
-        if (!ValidatePLSActiveBlendEquation(context, entryPoint,
-                                            state.getBlendStateExt().getEquationColorIndexed(0)) ||
-            !ValidatePLSActiveBlendEquation(context, entryPoint,
-                                            state.getBlendStateExt().getEquationAlphaIndexed(0)))
-        {
-            return false;
-        }
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSAdvancedBlendEnabled);
+        return false;
     }
 
     // INVALID_FRAMEBUFFER_OPERATION is generated if the draw framebuffer has an image attached to
