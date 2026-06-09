@@ -17,7 +17,7 @@ namespace err
 // clang-format off
 inline constexpr const char *k3DDepthStencil = "Format cannot be GL_DEPTH_COMPONENT or GL_DEPTH_STENCIL if target is GL_TEXTURE_3D.";
 inline constexpr const char *kANGLECopyTextureMissingRequiredExtension = "Copy*TextureCHROMIUM from EXTERNAL_OES to integer format requires OES_EGL_image_external_essl3.";
-inline constexpr const char *kAdvancedBlendEquationWithMRT = "Advanced blend equation can only be used when only one draw buffer is not NONE.";
+inline constexpr const char *kAdvancedBlendEquationWithMRT = "Advanced blend equations are used with a draw buffer other than draw buffer zero or with multiple draw buffers.";
 inline constexpr const char *kAtomicCounterResourceName = "Active atomic counter resources are not assigned name strings.";
 inline constexpr const char *kAttributeListNotNull = "Attribute list must be NULL or GL_NONE.";
 inline constexpr const char *kAttributeNameNull = "Attribute name is null.";
