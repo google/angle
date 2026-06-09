@@ -251,7 +251,8 @@ bool Image11::redefine(gl::TextureType type,
         const d3d11::Format &formatInfo =
             d3d11::Format::Get(internalformat, mRenderer->getRenderer11DeviceCaps());
         mDXGIFormat = formatInfo.texFormat;
-        mRenderable = (formatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN);
+        mRenderable = (formatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN ||
+                       formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN);
 
         releaseStagingTexture();
         mDirty = (formatInfo.dataInitializerFunction != nullptr);
