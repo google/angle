@@ -2380,7 +2380,8 @@ FramebufferAttachment *Framebuffer::getAttachmentFromSubjectIndex(angle::Subject
     }
 }
 
-bool Framebuffer::formsRenderingFeedbackLoopWith(const Context *context) const
+bool Framebuffer::formsRenderingFeedbackLoopWith(const Context *context,
+                                                 AllowedFeedbackLoop allowedFeedbackLoop) const
 {
     const State &glState                = context->getState();
     const ProgramExecutable *executable = glState.getLinkedProgramExecutable(context);
@@ -2415,12 +2416,22 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const Context *context) const
 
             if (AttachmentOverlapsWithTexture(mState.mDepthAttachment, texture, sampler))
             {
-                return true;
+                if (allowedFeedbackLoop != AllowedFeedbackLoop::ReadOnlyDepthStencil ||
+                    (glState.isDepthWriteEnabled() && !texture->getState().isStencilMode()))
+                {
+                    return true;
+                }
             }
 
             if (AttachmentOverlapsWithTexture(mState.mStencilAttachment, texture, sampler))
             {
-                return true;
+                if (allowedFeedbackLoop != AllowedFeedbackLoop::ReadOnlyDepthStencil ||
+                    (glState.isStencilWriteEnabled(
+                         glState.getDrawFramebuffer()->getStencilBitCount()) &&
+                     texture->getState().isStencilMode()))
+                {
+                    return true;
+                }
             }
 
             if (pls != nullptr)

@@ -4354,7 +4354,10 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
         if (ANGLE_UNLIKELY(context->isWebGL() || context->isHardenedContext()))
         {
             // UB: Detect rendering feedback loops for WebGL or hardened context.
-            if (framebuffer->formsRenderingFeedbackLoopWith(context))
+            if (framebuffer->formsRenderingFeedbackLoopWith(
+                    context, context->isWebGL()
+                                 ? Framebuffer::AllowedFeedbackLoop::NoneAllowed
+                                 : Framebuffer::AllowedFeedbackLoop::ReadOnlyDepthStencil))
             {
                 return kFeedbackLoop;
             }
