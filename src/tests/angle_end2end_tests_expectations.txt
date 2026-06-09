@@ -103,6 +103,14 @@
 
 500721361 VULKAN SWIFTSHADER : VertexAttributeTestES3.storeStaticAttribWithLargeOffset/* = SKIP
 
+// Causes a write-after-write hazard on Linux/Vk
+524405499 VULKAN : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyStencil8/* = SKIP
+524405499 VULKAN : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyANGLE/* = SKIP
+
+// Asserts on Win/D3D11
+524406308 WIN D3D11 : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyStencil8/* = SKIP
+524406308 WIN D3D11 : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyANGLE/* = SKIP
+
 // Windows
 42262429 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
 40096654 WIN VULKAN : BufferDataOverflowTest.VertexBufferIntegerOverflow/* = SKIP
