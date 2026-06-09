@@ -2526,6 +2526,8 @@ void InitializeFrontendFeatures(const DXGI_ADAPTER_DESC &adapterDesc,
     // The D3D backend's handling of compile and link is thread-safe
     ANGLE_FEATURE_CONDITION(features, compileJobIsThreadSafe, true);
     ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, true);
+
+    ANGLE_FEATURE_CONDITION(features, setNeedInitOnInvalidation, true);
 }
 
 void InitConstantBufferDesc(D3D11_BUFFER_DESC *constantBufferDescription, size_t byteWidth)
