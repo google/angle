@@ -2731,6 +2731,11 @@
 // Pixel4's GLES driver fails new test: TransformFeedbackTest.CaptureThenUseAsUBO.
 419403192 PIXEL4ORXL GLES : TransformFeedbackTest.CaptureThenUseAsUBO/* = SKIP
 
+// Pixel4 GLES driver fails to compile the GLES1 uber shader when robustness is enabled
+516887576 PIXEL4ORXL GLES : LightsTest.DiffuseGradient/* = SKIP
+516887576 PIXEL4ORXL GLES : LightsTest.FlatLitMesh/* = SKIP
+516887576 PIXEL4ORXL GLES : LightsTest.SmoothLitMesh/* = SKIP
+
 454067880 D3D9 : GLSLTest.ComplicatedMultielementSwizzle1/* = SKIP
 454067880 D3D11 : GLSLTest.ComplicatedMultielementSwizzle1/* = SKIP
 
