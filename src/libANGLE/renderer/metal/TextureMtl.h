@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/metal/mtl_command_buffer.h"
 #include "libANGLE/renderer/metal/mtl_context_device.h"
 #include "libANGLE/renderer/metal/mtl_resources.h"
+#include "libANGLE/renderer/renderer_utils.h"
 namespace rx
 {
 
@@ -165,7 +166,13 @@ class TextureMtl : public TextureImpl
     // of images through glTexImage*/glCopyTex* calls. During draw calls, the caller must make sure
     // the actual texture is created by calling this method to transfer the stored images data
     // to the actual texture.
-    angle::Result ensureNativeStorageCreated(const gl::Context *context, bool keepImages);
+    // With |mipLevels| == ImageMipLevels::EnabledLevels, only the mip levels that have actually
+    // been specified are allocated, deferring allocation of the rest of the mip chain. With
+    // ImageMipLevels::FullMipChainForGenerateMipmap (used by glGenerateMipmap), the full mip chain
+    // from base to max level is allocated.
+    angle::Result ensureNativeStorageCreated(const gl::Context *context,
+                                             bool keepImages,
+                                             ImageMipLevels mipLevels);
 
     angle::Result bindToShader(const gl::Context *context,
                                mtl::RenderCommandEncoder *cmdEncoder,
@@ -191,6 +198,12 @@ class TextureMtl : public TextureImpl
                                       const gl::Extents &size,
                                       const mtl::Format &format);
     angle::Result onBaseMaxLevelsChanged(const gl::Context *context);
+    // Number of native mip levels the storage should be allocated with, starting at the effective
+    // base level. With ImageMipLevels::EnabledLevels this is limited to the contiguous levels that
+    // have actually been specified (so a texture with only level 0 defined does not allocate a full
+    // mip pyramid). With ImageMipLevels::FullMipChainForGenerateMipmap the full chain from base to
+    // max level is returned (for glGenerateMipmap).
+    GLuint getStorageMipLevelCount(ImageMipLevels mipLevels) const;
     angle::Result ensureSamplerStateCreated(const gl::Context *context);
     // Ensure image at given index is created:
     angle::Result ensureImageCreated(const gl::Context *context, const gl::ImageIndex &index);

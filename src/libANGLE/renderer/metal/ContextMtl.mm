@@ -2694,7 +2694,8 @@ angle::Result ContextMtl::handleDirtyActiveTextures(const gl::Context *context)
         TextureMtl *textureMtl = mtl::GetImpl(texture);
 
         // Make sure texture's image definitions will be transferred to GPU.
-        ANGLE_TRY(textureMtl->ensureNativeStorageCreated(context, true));
+        ANGLE_TRY(textureMtl->ensureNativeStorageCreated(context, /*keepImages=*/true,
+                                                         ImageMipLevels::EnabledLevels));
 
         // The binding of this texture will be done by ProgramMtl.
         return angle::Result::Continue;

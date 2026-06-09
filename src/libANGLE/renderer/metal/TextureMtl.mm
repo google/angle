@@ -909,11 +909,32 @@ void TextureMtl::deallocateNativeStorage(bool keepImages, bool keepSamplerStateA
     }
 }
 
-angle::Result TextureMtl::ensureNativeStorageCreated(const gl::Context *context, bool keepImages)
+GLuint TextureMtl::getStorageMipLevelCount(ImageMipLevels mipLevels) const
+{
+    switch (mipLevels)
+    {
+        // Only the contiguous levels from base to max that have actually been specified, i.e.
+        // enabled. This avoids reserving memory for an entire mip pyramid when an application
+        // uploads only level 0 and never calls glGenerateMipmap.
+        case ImageMipLevels::EnabledLevels:
+            return mState.getEnabledLevelCount();
+        // The full chain from base to max level, regardless of which levels have been specified
+        // (used by glGenerateMipmap).
+        case ImageMipLevels::FullMipChainForGenerateMipmap:
+            return mState.getMipmapMaxLevel() + 1 - mState.getEffectiveBaseLevel();
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+angle::Result TextureMtl::ensureNativeStorageCreated(const gl::Context *context,
+                                                     bool keepImages,
+                                                     ImageMipLevels mipLevels)
 {
     auto clearImagesAssociatedWithStorage = [&]() {
         ASSERT(mNativeTextureStorage);
-        GLuint mips      = mState.getMipmapMaxLevel() - mState.getEffectiveBaseLevel() + 1;
+        GLuint mips      = mNativeTextureStorage->mipmapLevels();
         int numCubeFaces = static_cast<int>(mNativeTextureStorage->cubeFaces());
         for (int face = 0; face < numCubeFaces; ++face)
         {
@@ -926,14 +947,30 @@ angle::Result TextureMtl::ensureNativeStorageCreated(const gl::Context *context,
         }
     };
 
+    // Number of mip levels to allocate. By default only the levels that have actually been
+    // specified are allocated; the rest of the mip chain is deferred until glGenerateMipmap (or a
+    // subsequent upload of higher levels) requires it.
+    GLuint mips = getStorageMipLevelCount(mipLevels);
+
     if (mNativeTextureStorage)
     {
-        // Storage exists, deallocate images associated with the storage.
-        if (!keepImages)
+        // If more mip levels are needed than are currently allocated (e.g. additional levels have
+        // been specified since the storage was created, or glGenerateMipmap now requires the full
+        // chain), recreate the storage with the larger level count while preserving the
+        // already-populated image data.
+        if (!isImmutableOrPBuffer() && mNativeTextureStorage->mipmapLevels() < mips)
         {
-            clearImagesAssociatedWithStorage();
+            deallocateNativeStorage(/*keepImages=*/true, /*keepSamplerStateAndFormat=*/true);
         }
-        return angle::Result::Continue;
+        else
+        {
+            // Storage already has enough levels. Deallocate images associated with the storage.
+            if (!keepImages)
+            {
+                clearImagesAssociatedWithStorage();
+            }
+            return angle::Result::Continue;
+        }
     }
 
     // This should not be called from immutable texture.
@@ -944,7 +981,6 @@ angle::Result TextureMtl::ensureNativeStorageCreated(const gl::Context *context,
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
     // Create actual texture object:
-    GLuint mips        = mState.getMipmapMaxLevel() - mState.getEffectiveBaseLevel() + 1;
     gl::ImageDesc desc = mState.getBaseLevelDesc();
     ANGLE_CHECK(contextMtl, desc.format.valid(), gl::err::kInternalError, GL_INVALID_OPERATION);
     angle::FormatID angleFormatId =
@@ -1164,16 +1200,19 @@ angle::Result TextureMtl::onBaseMaxLevelsChanged(const gl::Context *context)
         return angle::Result::Continue;
     }
 
-    // Account for clamping in createViewFromBaseToMaxLevel() to avoid redundant storage
-    // re-creation when max < base (e.g., base=7 with max toggling 1->2->3 should not re-create).
-    GLuint effectiveMaxForStorage =
-        std::max(mState.getMipmapMaxLevel(), mState.getEffectiveBaseLevel());
+    // The native storage only needs to span the specified (enabled) levels. Compute the top GL
+    // level it should currently cover; if the existing storage already covers at least that range
+    // (and the base level matches), there is no need to recreate it. Using '<=' also preserves a
+    // larger chain previously allocated by glGenerateMipmap and avoids redundant re-creation when
+    // the max level is merely lowered.
+    GLuint desiredTopGLLevel =
+        mState.getEffectiveBaseLevel() + getStorageMipLevelCount(ImageMipLevels::EnabledLevels) - 1;
 
     if (mState.getEffectiveBaseLevel() == mNativeTextureStorage->getBaseGLLevel() &&
-        effectiveMaxForStorage == mNativeTextureStorage->getMaxSupportedGLLevel())
+        desiredTopGLLevel <= mNativeTextureStorage->getMaxSupportedGLLevel())
     {
         ASSERT(mState.getBaseLevelDesc().size == mNativeTextureStorage->sizeAt0());
-        // If effective level range remains the same, don't recreate the texture storage.
+        // The existing storage already spans the required levels, so don't recreate it.
         // This might feel unnecessary at first since the front-end might prevent redundant base/max
         // level change already. However, there are cases that cause native storage to be created
         // before base/max level dirty bit is passed to Metal backend and lead to unwanted problems.
@@ -1189,6 +1228,17 @@ angle::Result TextureMtl::onBaseMaxLevelsChanged(const gl::Context *context)
         //    sync from the frontend point of view.
         // 5. Note: if the new range is different, it is expected that native render target
         //    references will be updated during draw framebuffer sync.
+        //
+        // The storage may cover more levels than are currently enabled (e.g. when
+        // GL_TEXTURE_MAX_LEVEL is lowered, or a larger chain was previously allocated by
+        // glGenerateMipmap). Recreate the base-max view so it spans only the current [base, max]
+        // range; otherwise shaders could sample mip levels beyond GL_TEXTURE_MAX_LEVEL.
+        ANGLE_TRY(createViewFromBaseToMaxLevel());
+        // Invalidate base-max per level views so that they can be recreated in generateMipmap().
+        for (mtl::TextureRef &view : mLevelViewsWithinBaseMax)
+        {
+            view.reset();
+        }
         return angle::Result::Continue;
     }
 
@@ -1681,7 +1731,10 @@ angle::Result TextureMtl::setImageExternal(const gl::Context *context,
 
 angle::Result TextureMtl::generateMipmap(const gl::Context *context)
 {
-    ANGLE_TRY(ensureNativeStorageCreated(context, false));
+    // glGenerateMipmap needs the full mip chain allocated, expanding the storage if it was
+    // previously allocated with only the specified levels.
+    ANGLE_TRY(ensureNativeStorageCreated(context, /*keepImages=*/false,
+                                         ImageMipLevels::FullMipChainForGenerateMipmap));
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
     if (!mViewFromBaseToMaxLevel)
@@ -1856,7 +1909,8 @@ angle::Result TextureMtl::getAttachmentRenderTarget(const gl::Context *context,
 {
     const gl::ImageIndex imageIndex = ownImageIndex.getUntranslated();
 
-    ANGLE_TRY(ensureNativeStorageCreated(context, true));
+    ANGLE_TRY(
+        ensureNativeStorageCreated(context, /*keepImages=*/true, ImageMipLevels::EnabledLevels));
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
     ANGLE_CHECK(contextMtl, mNativeTextureStorage, gl::err::kInternalError, GL_INVALID_OPERATION);
@@ -1917,7 +1971,8 @@ angle::Result TextureMtl::syncState(const gl::Context *context,
         }
     }
 
-    ANGLE_TRY(ensureNativeStorageCreated(context, true));
+    ANGLE_TRY(
+        ensureNativeStorageCreated(context, /*keepImages=*/true, ImageMipLevels::EnabledLevels));
     ANGLE_TRY(ensureSamplerStateCreated(context));
 
     return angle::Result::Continue;
