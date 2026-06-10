@@ -54,7 +54,7 @@ vars = {
   'checkout_angle_partition_alloc': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'bc7f0ab2de53438678fc869cd107aaa97631c4ef',
+  'chromium_revision': '1c39621c84eb7065a62681192aacd9d3483a9b09',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -559,12 +559,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@0b53130f7fb3e216b42e9ea813e963c57829c641',
+    'url': Var('chromium_git') + '/chromium/src/build.git@94537f3233d3d03b08cdd399fde078833403ad98',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': Var('chromium_git') + '/chromium/src/buildtools.git@bd4031139263b3066863df54d42bb5b6c88dade0',
+    'url': Var('chromium_git') + '/chromium/src/buildtools.git@f0ccfb5933f7daa9545159afbb35bdf8951efcc4',
     'condition': 'not build_with_chromium',
   },
 
@@ -618,12 +618,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@b0a16ed1855424dccd2afddef18571982dd21178',
+    'url': '{chromium_git}/chromium/src/testing@e3d9c410991fe64d366bd30ae224f7904ca871ad',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/abseil-cpp@d08063d672d7693c1844d682848bcfec237f833e',
+    'url': Var('chromium_git') + '/chromium/src/third_party/abseil-cpp@26b7a9b4417b3b0603967ffb02be6fd353e5324c',
     'condition': 'not build_with_chromium',
   },
 
@@ -800,7 +800,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@533321c34e1c3ba816bc5e820004fffe5b7fe4ad',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@2eed415f7526676d124ba74da6807a26d2227f4c',
     'condition': 'not build_with_chromium',
   },
 
@@ -1074,7 +1074,7 @@ deps = {
   },
 
   'third_party/llvm-libc/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@8e97c4abc93ddfe7e63505fcd27bbfb4dafff6f3',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@e3241c478290c1dcfb0a54a13d5fb893ab386287',
     'condition': 'not build_with_chromium',
   },
 
@@ -1160,7 +1160,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'MvVaxgHmMqeF-Y8ZKzWEVL_4eksFLaF1za6-O2HaKvUC',
+              'version': 'pwugtMg3x--5QRtIl5ADSgjEW0_AF2w4knAFrdSJjvEC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -1196,7 +1196,7 @@ deps = {
   },
 
   'third_party/rust': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/rust@5d7abfc3e0b457f1f0603474b8460c7e09a033fe',
+    'url': Var('chromium_git') + '/chromium/src/third_party/rust@77574863b2fd0ae2246d4bbd9edeec046a31d524',
     'condition': 'not build_with_chromium',
   },
 
@@ -1314,12 +1314,12 @@ deps = {
   },
 
   'tools/android': {
-    'url': Var('chromium_git') + '/chromium/src/tools/android@0125088c2bb4062a9ac65bc289da3e4dc1933ecd',
+    'url': Var('chromium_git') + '/chromium/src/tools/android@1fd5834b54fed6e00729821910c68d19612136dc',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
   'tools/clang': {
-    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@a3e0959295cf4531287ac7aba116cefb656b1009',
+    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@7e9cfaa439b9706fc105e97d75f63735a9b9cc55',
     # Needed on Mac in order to get the hashes for dsymutil.
     # Needed on other platforms since //build/config/config/BUILD.gn depends on
     # //tools/clang/scripts/update.py.
@@ -1361,7 +1361,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@72a71ce62e395add31fdaac1b0fa1dc57b0bde3c',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@7603376e2b142790ad000a900afdfe1bddf3a7ad',
     'condition': 'not build_with_chromium',
   },
 
