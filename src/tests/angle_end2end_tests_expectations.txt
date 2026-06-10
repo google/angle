@@ -2481,8 +2481,6 @@
 42264369 ANDROID GLES : GLSLTest_ES31.ShortCircuitOutOfBoundsAccess/* = SKIP
 
 // WebGPU failures
-// Flakily causes test timeout issues on Linux/NVIDIA
-517972806 WGPU LINUX NVIDIA : * = SKIP
 // Device lock up on Mac/AMD
 538326435 WGPU MAC AMD : * = SKIP
 // BasicUniformUsage tests fail too frequently with WGPU
