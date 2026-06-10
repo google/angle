@@ -919,6 +919,14 @@
             "issue": "http://crbug.com/493747593"
         },
         {
+            "name": "reattach_fbo_depth_stencil_on_reallocation",
+            "category": "Workarounds",
+            "description": [
+                "Reattach FBO depth and stencil attachments when they are reallocated."
+            ],
+            "issue": "http://crbug.com/520656244"
+        },
+        {
             "name": "disable_clear_texture",
             "category": "Workarounds",
             "description": [

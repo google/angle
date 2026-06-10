@@ -2725,9 +2725,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // exposed.
     ANGLE_FEATURE_CONDITION(features, bgraTexImageFormatsBroken, !isMesa && isQualcomm);
 
-    // Recreate FBO upon flush/finish/fencesync under certain conditions to work around Qualcomm
-    // driver bugs.
-    ANGLE_FEATURE_CONDITION(features, recreateFboUponFlush,
+    // https://crbug.com/493747593
+    ANGLE_FEATURE_CONDITION(features, recreateFboUponFlush, false);
+
+    // https://crbug.com/520656244
+    ANGLE_FEATURE_CONDITION(features, reattachFboDepthStencilOnReallocation,
                             !isMesa && isQualcomm && qualcommVersion < 878);
 
     // http://crbug.com/507508103
