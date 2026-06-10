@@ -2236,6 +2236,16 @@ void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
             return;
         }
 
+        if (message == angle::SubjectMessage::ObjectReallocated)
+        {
+            if (index == DIRTY_BIT_DEPTH_ATTACHMENT || index == DIRTY_BIT_STENCIL_ATTACHMENT)
+            {
+                mDirtyBits.set(index);
+                onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
+            }
+            return;
+        }
+
         // This can be triggered by the GL back-end TextureGL class.
         ASSERT(message == angle::SubjectMessage::DirtyBitsFlagged ||
                message == angle::SubjectMessage::TextureIDDeleted);

@@ -288,6 +288,7 @@ enum class Feature
     QueryCounterBitsGeneratesErrors,
     ReadPixelsUsingImplementationColorReadFormatForNorm16,
     ReapplyUBOBindingsAfterUsingBinaryProgram,
+    ReattachFboDepthStencilOnReallocation,
     RecreateFboUponFlush,
     RecreateMipmapLevelsBeforeGenerate,
     RecycleVkEvent,

@@ -426,6 +426,11 @@ angle::Result Renderbuffer::getRenderbufferImage(const Context *context,
 
 void Renderbuffer::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
+    if (message == angle::SubjectMessage::ObjectReallocated)
+    {
+        onStateChange(angle::SubjectMessage::ObjectReallocated);
+        return;
+    }
     ASSERT(message == angle::SubjectMessage::SubjectChanged);
     onStateChange(angle::SubjectMessage::ContentsChanged);
 }
