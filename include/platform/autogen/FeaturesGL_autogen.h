@@ -704,6 +704,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo reattachFboDepthStencilOnReallocation = {
+        "reattachFboDepthStencilOnReallocation",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo disableClearTexture = {
         "disableClearTexture",
         FeatureCategory::OpenGLWorkarounds,

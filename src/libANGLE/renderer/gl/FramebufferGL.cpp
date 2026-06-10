@@ -90,6 +90,14 @@ void BindFramebufferAttachment(const FunctionsGL *functions,
             const Texture *texture     = attachment->getTexture();
             const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
 
+            if (features.reattachFboDepthStencilOnReallocation.enabled &&
+                (attachmentPoint == GL_DEPTH_ATTACHMENT ||
+                 attachmentPoint == GL_STENCIL_ATTACHMENT))
+            {
+                functions->framebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint, GL_TEXTURE_2D, 0,
+                                                0);
+            }
+
             if (texture->getType() == TextureType::_2D ||
                 texture->getType() == TextureType::_2DMultisample ||
                 texture->getType() == TextureType::Rectangle ||
@@ -170,6 +178,14 @@ void BindFramebufferAttachment(const FunctionsGL *functions,
         {
             const Renderbuffer *renderbuffer     = attachment->getRenderbuffer();
             const RenderbufferGL *renderbufferGL = GetImplAs<RenderbufferGL>(renderbuffer);
+
+            if (features.reattachFboDepthStencilOnReallocation.enabled &&
+                (attachmentPoint == GL_DEPTH_ATTACHMENT ||
+                 attachmentPoint == GL_STENCIL_ATTACHMENT))
+            {
+                functions->framebufferRenderbuffer(GL_FRAMEBUFFER, attachmentPoint, GL_RENDERBUFFER,
+                                                   0);
+            }
 
             if (features.alwaysUnbindFramebufferTexture2D.enabled)
             {

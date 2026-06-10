@@ -9730,3 +9730,240 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES3FBOWorkaround);
 ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTest_ES3FBOWorkaround,
                                ES3_OPENGL().enable(Feature::RecreateFboUponFlush),
                                ES3_OPENGLES().enable(Feature::RecreateFboUponFlush));
+
+class FramebufferTest_ES3FBOReattachmentWorkaround : public ANGLETest<>
+{
+  protected:
+    FramebufferTest_ES3FBOReattachmentWorkaround()
+    {
+        setWindowWidth(128);
+        setWindowHeight(128);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+        setConfigStencilBits(8);
+    }
+
+    void testSetUp() override
+    {
+        mColorProgram =
+            CompileProgram(essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        ASSERT_NE(0u, mColorProgram);
+        mColorUniformLocation = glGetUniformLocation(mColorProgram, essl1_shaders::ColorUniform());
+        ASSERT_NE(-1, mColorUniformLocation);
+    }
+
+    void testTearDown() override
+    {
+        if (mColorProgram != 0)
+        {
+            glDeleteProgram(mColorProgram);
+        }
+    }
+
+    void drawRedQuad()
+    {
+        glUseProgram(mColorProgram);
+        glUniform4f(mColorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+        drawQuad(mColorProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    }
+
+    void runReallocationTest(bool useTexture, bool bindFboDuringReallocation)
+    {
+        GLTexture colorTex;
+        glBindTexture(GL_TEXTURE_2D, colorTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        GLTexture depthTex;
+        GLRenderbuffer depthRb;
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+
+        if (useTexture)
+        {
+            glBindTexture(GL_TEXTURE_2D, depthTex);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 16, 16, 0, GL_DEPTH_COMPONENT,
+                         GL_UNSIGNED_INT, nullptr);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
+        }
+        else
+        {
+            glBindRenderbuffer(GL_RENDERBUFFER, depthRb);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 16, 16);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                      depthRb);
+        }
+
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Clear color to green, depth to 1.0.
+        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        glClearDepthf(1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Draw Red quad at depth 0.5. Should pass (0.5 < 1.0).
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        drawRedQuad();
+
+        // Verify color is Red.
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+        // Unbind FBO if requested.
+        if (!bindFboDuringReallocation)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
+        // Redefine depth attachment.
+        if (useTexture)
+        {
+            glBindTexture(GL_TEXTURE_2D, depthTex);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 16, 16, 0, GL_DEPTH_COMPONENT,
+                         GL_UNSIGNED_INT, nullptr);
+        }
+        else
+        {
+            glBindRenderbuffer(GL_RENDERBUFFER, depthRb);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 16, 16);
+        }
+
+        // Bind FBO back if it was unbound.
+        if (!bindFboDuringReallocation)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        }
+
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Clear color to green again, depth to 1.0.
+        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        glClearDepthf(1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Draw Red quad again at depth 0.5.
+        drawRedQuad();
+
+        // Verify color is Red.
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+        glDisable(GL_DEPTH_TEST);
+    }
+
+    void runTexImage2DToTexStorage2DTest(bool bindFboDuringReallocation)
+    {
+        GLTexture colorTex;
+        glBindTexture(GL_TEXTURE_2D, colorTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        GLTexture depthTex;
+        glBindTexture(GL_TEXTURE_2D, depthTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 16, 16, 0, GL_DEPTH_COMPONENT,
+                     GL_UNSIGNED_INT, nullptr);
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTex, 0);
+
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Clear and draw.
+        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        glClearDepthf(1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        drawRedQuad();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+        // Unbind FBO if requested.
+        if (!bindFboDuringReallocation)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
+        // Reallocate depth texture using glTexStorage2D.
+        glBindTexture(GL_TEXTURE_2D, depthTex);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT24, 16, 16);
+
+        // Bind FBO back if it was unbound.
+        if (!bindFboDuringReallocation)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        }
+
+        GLenum error = glGetError();
+        if (error == GL_INVALID_OPERATION)
+        {
+            return;
+        }
+        ASSERT_GLENUM_EQ(GL_NO_ERROR, error);
+
+        // Clear and draw again.
+        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        glClearDepthf(1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        drawRedQuad();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+        glDisable(GL_DEPTH_TEST);
+    }
+
+    GLuint mColorProgram        = 0;
+    GLint mColorUniformLocation = -1;
+};
+
+// Test that redefining a depth texture attached to an FBO works correctly when FBO is bound.
+TEST_P(FramebufferTest_ES3FBOReattachmentWorkaround, TextureReallocationBound)
+{
+    runReallocationTest(true, true);
+}
+
+// Test that redefining a depth texture attached to an FBO works correctly when FBO is NOT bound.
+TEST_P(FramebufferTest_ES3FBOReattachmentWorkaround, TextureReallocationUnbound)
+{
+    runReallocationTest(true, false);
+}
+
+// Test that redefining a depth renderbuffer attached to an FBO works correctly when FBO is bound.
+TEST_P(FramebufferTest_ES3FBOReattachmentWorkaround, RenderbufferReallocationBound)
+{
+    runReallocationTest(false, true);
+}
+
+// Test that redefining a depth renderbuffer attached to an FBO works correctly when FBO is NOT
+// bound.
+TEST_P(FramebufferTest_ES3FBOReattachmentWorkaround, RenderbufferReallocationUnbound)
+{
+    runReallocationTest(false, false);
+}
+
+// Test that redefining a depth texture allocated via glTexImage2D via glTexStorage2D works when FBO
+// is bound.
+TEST_P(FramebufferTest_ES3FBOReattachmentWorkaround, TexImage2DToTexStorage2DBound)
+{
+    runTexImage2DToTexStorage2DTest(true);
+}
+
+// Test that redefining a depth texture allocated via glTexImage2D via glTexStorage2D works when FBO
+// is NOT bound.
+TEST_P(FramebufferTest_ES3FBOReattachmentWorkaround, TexImage2DToTexStorage2DUnbound)
+{
+    runTexImage2DToTexStorage2DTest(false);
+}
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES3FBOReattachmentWorkaround);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    FramebufferTest_ES3FBOReattachmentWorkaround,
+    ES3_OPENGL().enable(Feature::ReattachFboDepthStencilOnReallocation),
+    ES3_OPENGL().disable(Feature::ReattachFboDepthStencilOnReallocation),
+    ES3_OPENGLES().enable(Feature::ReattachFboDepthStencilOnReallocation),
+    ES3_OPENGLES().disable(Feature::ReattachFboDepthStencilOnReallocation));
