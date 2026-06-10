@@ -192,10 +192,12 @@ declare_args() {
   angle_is_msvc = is_win && !is_clang
 
   # Default to using "_angle" suffix on Android
-  if (is_android) {
-    angle_libs_suffix = "_angle"
-  } else {
-    angle_libs_suffix = ""
+  if (!defined(angle_libs_suffix)) {
+    if (is_android) {
+      angle_libs_suffix = "_angle"
+    } else {
+      angle_libs_suffix = ""
+    }
   }
 
   # Currently Windows on Arm doesn't support OpenGL or Vulkan.
