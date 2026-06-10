@@ -156,7 +156,7 @@ vars = {
 
    # Make Dawn skip its standalone dependencies
   'dawn_standalone': False,
-  'dawn_revision': '773cdb6f7f60524f022072e3516707400755daa5',
+  'dawn_revision': 'c3d35d65fb2f087c425ba20050c5ff03d32f1114',
 
   # All of the restricted traces (large).
   'checkout_angle_restricted_traces': 'checkout_angle_internal',
