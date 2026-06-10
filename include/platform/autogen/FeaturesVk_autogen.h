@@ -1712,6 +1712,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo preferPrecomputedVertexTransform = {
+        "preferPrecomputedVertexTransform",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

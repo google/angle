@@ -294,6 +294,7 @@ enum class Feature
     PreferLinearFilterForYUV,
     PreferMonolithicPipelinesOverLibraries,
     PreferMSRTSSFlagByDefault,
+    PreferPrecomputedVertexTransform,
     PreferSkippingInvalidateForEmulatedFormats,
     PreferSubmitAtFBOBoundary,
     PreferSubmitOnAnySamplesPassedQueryEnd,

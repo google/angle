@@ -2251,6 +2251,15 @@
             "description": [
                 "Enables alpha channel image format."
             ]
+        },
+        {
+            "name": "prefer_precomputed_vertex_transform",
+            "category": "Features",
+            "description": [
+                "Precompute the vertex pre-rotation swap and Y-flip into a driver uniform (a ",
+                "2x2 matrix) so the injected vertex-shader transform reduces to two dot products ",
+                "instead of a per-vertex ternary/unpack/multiply. Reduces per-vertex instructions."
+            ]
         }
     ]
 }

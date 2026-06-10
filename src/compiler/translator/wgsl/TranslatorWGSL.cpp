@@ -2729,7 +2729,7 @@ bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root,
 
     // TODO(anglebug.com/42267100): just use the struct mode to avoid a rewrite of the interface
     // block by ReduceInterfaceBlocks into a struct.
-    DriverUniform driverUniforms(DriverUniformMode::InterfaceBlock);
+    DriverUniform driverUniforms(DriverUniformMode::InterfaceBlock, SH_WGSL_OUTPUT);
     ASSERT(getShaderType() != GL_COMPUTE_SHADER);
     driverUniforms.addGraphicsDriverUniformsToShader(root, &getSymbolTable());
 

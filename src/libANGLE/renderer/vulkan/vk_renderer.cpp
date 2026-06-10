@@ -7039,6 +7039,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Enable this feature to avoid image allocation overhead when repeatedly uploading the same
     // texture that has already been uploaded, outside a render pass.
     ANGLE_FEATURE_CONDITION(&mFeatures, avoidImageGhostOutsideRenderPass, !isARM);
+
+    // Precompute the vertex pre-rotation swap + flip into a driver uniform to reduce additional
+    // instructions executed per vertex
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferPrecomputedVertexTransform, isQualcommProprietary);
 }
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

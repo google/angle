@@ -294,6 +294,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::PreferLinearFilterForYUV, "preferLinearFilterForYUV"},
     {Feature::PreferMonolithicPipelinesOverLibraries, "preferMonolithicPipelinesOverLibraries"},
     {Feature::PreferMSRTSSFlagByDefault, "preferMSRTSSFlagByDefault"},
+    {Feature::PreferPrecomputedVertexTransform, "preferPrecomputedVertexTransform"},
     {Feature::PreferSkippingInvalidateForEmulatedFormats, "preferSkippingInvalidateForEmulatedFormats"},
     {Feature::PreferSubmitAtFBOBoundary, "preferSubmitAtFBOBoundary"},
     {Feature::PreferSubmitOnAnySamplesPassedQueryEnd, "preferSubmitOnAnySamplesPassedQueryEnd"},
