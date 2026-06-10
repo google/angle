@@ -3798,6 +3798,170 @@ TEST_P(FramebufferTest_ES31, ClearTextureEXT2DMSStencil)
     EXPECT_PIXEL_RECT_EQ(0, 0, 16, 16, GLColor::blue);
 }
 
+class FramebufferTest_ES31_MSAA : public FramebufferTest_ES31
+{
+  protected:
+    FramebufferTest_ES31_MSAA()
+    {
+        setSamples(4);
+        setMultisampleEnabled(true);
+    }
+};
+
+// Test sampling from a multisampled stencil texture.
+// This is based on KHR-GLES31.core.texture_stencil8.multisample
+TEST_P(FramebufferTest_ES31_MSAA, MultisampleStencilSampling)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_stencil8"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"));
+
+    constexpr GLsizei kWidth   = 2;
+    constexpr GLsizei kHeight  = 2;
+    constexpr GLsizei kLayers  = 2;
+    constexpr GLsizei kSamples = 4;
+
+    // 1. Create and populate 2D MS stencil texture
+    GLTexture msaaStencilTex;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msaaStencilTex);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, kSamples, GL_STENCIL_INDEX8, kWidth,
+                              kHeight, GL_TRUE);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE,
+                           msaaStencilTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glEnable(GL_SAMPLE_MASK);
+    glViewport(0, 0, kWidth, kHeight);
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+    ANGLE_GL_PROGRAM(drawStencilProg, essl31_shaders::vs::Passthrough(), essl31_shaders::fs::Red());
+
+    const GLubyte stencilRefs[4] = {64, 128, 192, 255};
+    for (int s = 0; s < kSamples; ++s)
+    {
+        glSampleMaski(0, 1 << s);
+        glStencilFunc(GL_ALWAYS, stencilRefs[s], 0xFF);
+        drawQuad(drawStencilProg, essl31_shaders::PositionAttrib(), 0.0f);
+    }
+
+    // 2. Create and populate 2D MS Array stencil texture
+    GLTexture msaaStencilArrayTex;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, msaaStencilArrayTex);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, kSamples, GL_STENCIL_INDEX8,
+                                 kWidth, kHeight, kLayers, GL_TRUE);
+
+    // Populate Layer 0
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, msaaStencilArrayTex, 0, 0);
+    const GLubyte stencilRefs0[4] = {10, 20, 30, 40};
+    for (int s = 0; s < kSamples; ++s)
+    {
+        glSampleMaski(0, 1 << s);
+        glStencilFunc(GL_ALWAYS, stencilRefs0[s], 0xFF);
+        drawQuad(drawStencilProg, essl31_shaders::PositionAttrib(), 0.0f);
+    }
+
+    // Populate Layer 1
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, msaaStencilArrayTex, 0, 1);
+    const GLubyte stencilRefs1[4] = {50, 100, 150, 200};
+    for (int s = 0; s < kSamples; ++s)
+    {
+        glSampleMaski(0, 1 << s);
+        glStencilFunc(GL_ALWAYS, stencilRefs1[s], 0xFF);
+        drawQuad(drawStencilProg, essl31_shaders::PositionAttrib(), 0.0f);
+    }
+
+    glDisable(GL_SAMPLE_MASK);
+    glDisable(GL_STENCIL_TEST);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    // 3. Set up sampling shader
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    const char kFS[] = R"(#version 310 es
+#extension GL_OES_texture_storage_multisample_2d_array : require
+precision highp float;
+uniform lowp usampler2DMS stencilTex;
+uniform lowp usampler2DMSArray stencilTexArray;
+uniform int useArray;
+out vec4 fragColor;
+void main()
+{
+    if (useArray == 0)
+    {
+        uint s0 = texelFetch(stencilTex, ivec2(0), 0).r;
+        uint s1 = texelFetch(stencilTex, ivec2(0), 1).r;
+        uint s2 = texelFetch(stencilTex, ivec2(0), 2).r;
+        uint s3 = texelFetch(stencilTex, ivec2(0), 3).r;
+        // Make sure incomplete texture is black
+        uint s3_l0 = texelFetch(stencilTexArray, ivec3(0, 0, 0), 3).r;
+        uint s0_l1 = texelFetch(stencilTexArray, ivec3(0, 0, 1), 0).r;
+        if (s0 == 64u && s1 == 128u && s2 == 192u && s3 == 255u && s3_l0 == 0u && s0_l1 == 0u)
+        {
+            fragColor = vec4(0.0, 1.0, 0.0, 1.0); // Green
+        }
+        else
+        {
+            fragColor = vec4(1.0, 0.0, 0.0, 1.0); // Red
+        }
+    }
+    else
+    {
+        uint s0_l0 = texelFetch(stencilTexArray, ivec3(0, 0, 0), 0).r;
+        uint s1_l0 = texelFetch(stencilTexArray, ivec3(0, 0, 0), 1).r;
+        uint s2_l0 = texelFetch(stencilTexArray, ivec3(0, 0, 0), 2).r;
+        uint s3_l0 = texelFetch(stencilTexArray, ivec3(0, 0, 0), 3).r;
+        uint s0_l1 = texelFetch(stencilTexArray, ivec3(0, 0, 1), 0).r;
+        uint s1_l1 = texelFetch(stencilTexArray, ivec3(0, 0, 1), 1).r;
+        uint s2_l1 = texelFetch(stencilTexArray, ivec3(0, 0, 1), 2).r;
+        uint s3_l1 = texelFetch(stencilTexArray, ivec3(0, 0, 1), 3).r;
+        if (s0_l0 == 10u && s1_l0 == 20u && s2_l0 == 30u && s3_l0 == 40u &&
+            s0_l1 == 50u && s1_l1 == 100u && s2_l1 == 150u && s3_l1 == 200u)
+        {
+            fragColor = vec4(0.0, 1.0, 0.0, 1.0); // Green
+        }
+        else
+        {
+            fragColor = vec4(1.0, 0.0, 0.0, 1.0); // Red
+        }
+    }
+})";
+
+    ANGLE_GL_PROGRAM(sampleProg, essl31_shaders::vs::Passthrough(), kFS);
+    glUseProgram(sampleProg);
+    GLint useArrayLoc = glGetUniformLocation(sampleProg, "useArray");
+    glUniform1i(glGetUniformLocation(sampleProg, "stencilTex"), 0);
+    glUniform1i(glGetUniformLocation(sampleProg, "stencilTexArray"), 1);
+
+    glViewport(0, 0, 1, 1);
+
+    // Draw 1: Test 2D MS stencil sampling (unit 0 bound, unit 1 unbound).
+    // This triggers incomplete texture generation for GL_TEXTURE_2D_MULTISAMPLE_ARRAY (unit 1).
+    glUniform1i(useArrayLoc, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msaaStencilTex);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0);
+    drawQuad(sampleProg, essl31_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Draw 2: Test 2D MS Array stencil sampling (unit 0 unbound, unit 1 bound).
+    // This triggers incomplete texture generation for GL_TEXTURE_2D_MULTISAMPLE (unit 0).
+    glUniform1i(useArrayLoc, 1);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, msaaStencilArrayTex);
+    drawQuad(sampleProg, essl31_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test resolving a multisampled texture with blit to a different format
 TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitDifferentFormats)
 {
@@ -9686,3 +9850,5 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     ES3_OPENGL().disable(Feature::ReattachFboDepthStencilOnReallocation),
     ES3_OPENGLES().enable(Feature::ReattachFboDepthStencilOnReallocation),
     ES3_OPENGLES().disable(Feature::ReattachFboDepthStencilOnReallocation));
+
+ANGLE_INSTANTIATE_TEST_ES31(FramebufferTest_ES31_MSAA);
