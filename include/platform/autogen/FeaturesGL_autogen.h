@@ -698,6 +698,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo reattachFboDepthStencilOnReallocation = {
+        "reattachFboDepthStencilOnReallocation",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

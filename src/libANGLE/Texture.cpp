@@ -2640,6 +2640,9 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
 {
     switch (message)
     {
+        case angle::SubjectMessage::ObjectReallocated:
+            onStateChange(angle::SubjectMessage::ObjectReallocated);
+            break;
         case angle::SubjectMessage::DirtyBitsFlagged:
             signalDirtyState(DIRTY_BIT_IMPLEMENTATION);
 

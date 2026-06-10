@@ -88,6 +88,9 @@ enum class SubjectMessage
     // Indicates that all pending updates are complete in the subject.
     InitializationComplete,
 
+    // Indicates the underlying object storage has been reallocated.
+    ObjectReallocated,
+
     // Indicates a change in foveated rendering state in the subject.
     FoveatedRenderingStateChanged,
 };
