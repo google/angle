@@ -24215,6 +24215,7 @@ TEST_P(GLSLTest, EmulateGLFragColorBroadcastInvariantFragColor)
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Make sure gl_FragColor can be marked invariant in presence of GL_EXT_draw_buffers, even if
@@ -24232,6 +24233,112 @@ TEST_P(GLSLTest, EmulateGLFragColorBroadcastInvariantFragColorUnused)
 
     // Verify compilation only, as output is not written to.
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+}
+
+// Test that indirect indices to gl_FragData get clamped to the right bounds when
+// gl_SecondaryFragDataEXT is used.
+//
+// The same test for ES3 is not needed, because unlike gl_FragData in ESSL 100, it's not allowed to
+// index a fragment output variable with a non-constant index in ESSL 300+.
+TEST_P(WebGLGLSLTest, FragDataIndexClampWithSecondaryFragData)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    // gl_SecondaryFragDataEXT follows, which means only one output is valid.  Make sure all the
+    // following writes in the loop end up writing to gl_FragData[0].
+    gl_FragData[0] = vec4(1, 0, 0, 1);
+    for (int i = 0; i < 8; i++) {
+        gl_FragData[i] += vec4(-0.1, 0.05, 0.0, 0.0);
+    }
+
+    gl_SecondaryFragDataEXT[0] = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 102, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Same test as FragDataIndexClampWithSecondaryFragData, but gl_SecondaryFragDataEXT is not written
+// to.
+TEST_P(WebGLGLSLTest, FragDataIndexClampWithSecondaryFragDataRead)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    gl_FragData[0] = vec4(1, 0, 0, 1);
+    for (int i = 0; i < 8; i++) {
+        gl_FragData[i] += vec4(-0.1, 0.05, 0.0, 0.0);
+    }
+
+    gl_FragData[0] += gl_SecondaryFragDataEXT[0];
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 102, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Same test as FragDataIndexClampWithSecondaryFragData, but gl_SecondaryFragDataEXT is only used in
+// dead code.
+TEST_P(WebGLGLSLTest, FragDataIndexClampWithSecondaryFragDataDeadCode)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    gl_FragData[0] = vec4(1, 0, 0, 1);
+    for (int i = 0; i < 8; i++) {
+        gl_FragData[i] += vec4(-0.1, 0.05, 0.0, 0.0);
+    }
+
+    if (false)
+    {
+        gl_SecondaryFragDataEXT[0] = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 102, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Same test as FragDataIndexClampWithSecondaryFragData, but gl_SecondaryFragDataEXT is not actually
+// used (only the extension is enabled.
+TEST_P(WebGLGLSLTest, FragDataIndexClampWithSecondaryFragDataUnused)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void main() {
+    gl_FragData[0] = vec4(1, 0, 0, 1);
+    for (int i = 0; i < 8; i++) {
+        gl_FragData[i] += vec4(-0.1, 0.05, 0.0, 0.0);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(229, 13, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
 }
 }  // anonymous namespace
 

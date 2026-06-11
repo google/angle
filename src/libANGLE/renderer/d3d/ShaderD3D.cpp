@@ -286,6 +286,12 @@ std::shared_ptr<ShaderTranslateTask> ShaderD3D::compile(const gl::Context *conte
     }
 #endif
 
+    const bool isHardened = context->isWebGL() || context->isHardenedContext();
+    if (isHardened)
+    {
+        options->clampIndirectArrayBounds = true;
+    }
+
     if (features.expandIntegerPowExpressions.enabled)
     {
         options->expandSelectHLSLIntegerPowExpressions = true;

@@ -2500,6 +2500,7 @@ pub struct IRMeta {
     variables_pending_zero_initialization: HashSet<VariableId>,
     // Shader reflection info
     reflection_info: reflection::Info,
+    uses_secondary_frag_data: bool,
 }
 
 impl IRMeta {
@@ -2645,6 +2646,7 @@ impl IRMeta {
             per_vertex_out_is_redeclared: false,
             variables_pending_zero_initialization: HashSet::new(),
             reflection_info: reflection::Info::new(),
+            uses_secondary_frag_data: false,
         }
     }
 
@@ -3404,6 +3406,16 @@ impl IRMeta {
         let type_info = self.get_type(type_id);
         debug_assert!(type_info.is_pointer());
         type_info.get_element_type_id().unwrap()
+    }
+
+    // For some transformations, it matters if some built-in is statically used, even if it's
+    // dead-code eliminated.  Calculate that before DCE.
+    pub fn cache_built_in_static_use_before_dce(&mut self) {
+        self.uses_secondary_frag_data =
+            self.get_built_in_variable(BuiltIn::SecondaryFragDataEXT).is_some();
+    }
+    pub fn uses_secondary_frag_data(&self) -> bool {
+        self.uses_secondary_frag_data
     }
 
     pub fn take_reflection_info(&mut self) -> reflection::Info {
