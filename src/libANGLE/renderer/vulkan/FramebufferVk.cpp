@@ -2935,7 +2935,7 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
     {
         // Update descriptions regarding multisampled-render-to-texture use.
         bool isRenderToTexture = false;
-        for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+        for (size_t colorIndexGL : mState.getColorAttachmentsMask())
         {
             const gl::FramebufferAttachment *color = mState.getColorAttachment(colorIndexGL);
             ASSERT(color);
@@ -4100,7 +4100,7 @@ GLint FramebufferVk::getSamplesImpl() const
 {
     const gl::FramebufferAttachment *lastAttachment = nullptr;
 
-    for (size_t colorIndexGL : mState.getEnabledDrawBuffers() & mState.getColorAttachmentsMask())
+    for (size_t colorIndexGL : mState.getColorAttachmentsMask())
     {
         const gl::FramebufferAttachment *color = mState.getColorAttachment(colorIndexGL);
         ASSERT(color);
