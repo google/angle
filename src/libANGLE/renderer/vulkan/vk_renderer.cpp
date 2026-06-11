@@ -4444,9 +4444,6 @@ angle::Result Renderer::enableDeviceExtensions(vk::ErrorContext *context,
         initOpenCLFeatures(deviceExtensionNames, featureOverrides);
     }
 
-    // App based feature overrides.
-    appBasedFeatureOverrides(deviceExtensionNames);
-
     // Enable extensions that could be used
     enableDeviceExtensionsNotPromoted(deviceExtensionNames);
     enableDeviceExtensionsPromotedTo11(deviceExtensionNames);
@@ -5378,6 +5375,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             UseVulkanSwapchain useVulkanSwapchain,
                             angle::NativeWindowSystem nativeWindowSystem)
 {
+    // App based feature overrides.
+    appBasedFeatureOverrides(deviceExtensionNames);
+
     ApplyFeatureOverrides(&mFeatures, featureOverrides);
 
     if (featureOverrides.allDisabled)
@@ -7019,6 +7019,10 @@ void Renderer::initOpenCLFeatures(const vk::ExtensionNameList &deviceExtensionNa
                 kRequiredSubgroupBits);
 }
 
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// All features set in this function must use the applyOverride method
+// so that the value set is sticky
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}
 
 angle::Result Renderer::initPipelineCache(vk::ErrorContext *context,
