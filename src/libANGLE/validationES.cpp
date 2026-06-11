@@ -560,37 +560,6 @@ bool IsBlitSameResource(const FramebufferAttachment *read, const FramebufferAtta
     return false;
 }
 
-const char *ValidateProgramDrawAdvancedBlendState(const Context *context,
-                                                  const ProgramExecutable &executable)
-{
-    const State &state                                 = context->getState();
-    const BlendEquationBitSet &supportedBlendEquations = executable.getAdvancedBlendEquations();
-    const DrawBufferMask &enabledDrawBufferMask        = state.getBlendStateExt().getEnabledMask();
-
-    // Zero (default) means everything is BlendEquationType::Add, so check can be skipped
-    if (ANGLE_UNLIKELY(state.getBlendStateExt().getEquationColorBits() != 0))
-    {
-        for (size_t blendEnabledBufferIndex : enabledDrawBufferMask)
-        {
-            const gl::BlendEquationType enabledBlendEquation =
-                state.getBlendStateExt().getEquationColorIndexed(blendEnabledBufferIndex);
-
-            if (enabledBlendEquation < gl::BlendEquationType::Multiply ||
-                enabledBlendEquation > gl::BlendEquationType::HslLuminosity)
-            {
-                continue;
-            }
-
-            if (!supportedBlendEquations.test(enabledBlendEquation))
-            {
-                return gl::err::kBlendEquationNotEnabled;
-            }
-        }
-    }
-
-    return nullptr;
-}
-
 ANGLE_INLINE GLenum ShPixelLocalStorageFormatToGLenum(ShPixelLocalStorageFormat format)
 {
     switch (format)
@@ -748,15 +717,21 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
         }
     }
 
-    // Enabled blend equation validation
-    const char *errorString = nullptr;
-
-    if (extensions.blendEquationAdvancedKHR || context->getClientVersion() >= ES_3_2)
+    // Validate that executable is compatible with the advanced blending equation.
+    if (ANGLE_UNLIKELY(state.getBlendStateExt().getUsesAdvancedBlendEquationMask()[0] &&
+                       state.getBlendStateExt().getEnabledMask()[0]))
     {
-        errorString = ValidateProgramDrawAdvancedBlendState(context, executable);
+        const BlendEquationType equation = state.getBlendStateExt().getEquationColorIndexed(0);
+        ASSERT(equation >= BlendEquationType::Multiply &&
+               equation <= BlendEquationType::HslLuminosity);
+
+        if (!executable.getAdvancedBlendEquations().test(equation))
+        {
+            return kAdvancedBlendEquationNotEnabled;
+        }
     }
 
-    return errorString;
+    return nullptr;
 }
 }  // anonymous namespace
 

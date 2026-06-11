@@ -17,6 +17,7 @@ namespace err
 // clang-format off
 inline constexpr const char *k3DDepthStencil = "Format cannot be GL_DEPTH_COMPONENT or GL_DEPTH_STENCIL if target is GL_TEXTURE_3D.";
 inline constexpr const char *kANGLECopyTextureMissingRequiredExtension = "Copy*TextureCHROMIUM from EXTERNAL_OES to integer format requires OES_EGL_image_external_essl3.";
+inline constexpr const char *kAdvancedBlendEquationNotEnabled = "Active fragment shader does not include the layout qualifier matching the advanced blend equation.";
 inline constexpr const char *kAdvancedBlendEquationWithMRT = "Advanced blend equations are used with a draw buffer other than draw buffer zero or with multiple draw buffers.";
 inline constexpr const char *kAtomicCounterResourceName = "Active atomic counter resources are not assigned name strings.";
 inline constexpr const char *kAttributeListNotNull = "Attribute list must be NULL or GL_NONE.";
@@ -27,7 +28,6 @@ inline constexpr const char *kAttributeZeroRequiresDivisorLimitation = "The curr
 inline constexpr const char *kBaseLevelNegative = "Negative base level.";
 inline constexpr const char *kBaseLevelNonZero = "Non-zero base level.";
 inline constexpr const char *kBaseLevelOutOfRange = "Texture base level out of range.";
-inline constexpr const char *kBlendEquationNotEnabled = "Active fragment shader does not include the layout qualifier matching the blend equation.";
 inline constexpr const char *kBlitDepthOrStencilFormatMismatch = "Depth/stencil buffer format combination not allowed for blit.";
 inline constexpr const char *kBlitDimensionsOutOfRange = "BlitFramebuffer dimensions out of 32-bit integer range.";
 inline constexpr const char *kBlitExtensionDepthStencilWholeBufferBlit = "Only whole-buffer depth and stencil blits are supported by this extension.";
