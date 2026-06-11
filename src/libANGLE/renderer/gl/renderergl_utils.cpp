@@ -2829,6 +2829,7 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     ANGLE_FEATURE_CONDITION(features, clipCullDistanceBrokenWithPassthroughShaders, isQualcomm);
     ANGLE_FEATURE_CONDITION(features, noperspectiveInterpolationBrokenWithPassthroughShaders,
                             isQualcomm);
+    ANGLE_FEATURE_CONDITION(features, setNeedInitOnInvalidation, true);
 }
 
 void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::FeaturesGL *features)
@@ -3097,6 +3098,55 @@ ClearMultiviewGL *GetMultiviewClearer(const gl::Context *context)
 const angle::FeaturesGL &GetFeaturesGL(const gl::Context *context)
 {
     return GetImplAs<ContextGL>(context)->getFeaturesGL();
+}
+
+angle::FixedVector<uint8_t, 16> GetDepthOnePixel(GLenum type)
+{
+    angle::FixedVector<uint8_t, 16> result;
+    switch (type)
+    {
+        case GL_UNSIGNED_SHORT:
+        {
+            uint16_t val = 0xFFFF;
+            result.resize(2);
+            memcpy(result.data(), &val, 2);
+            break;
+        }
+        case GL_UNSIGNED_INT:
+        {
+            uint32_t val = 0xFFFFFFFF;
+            result.resize(4);
+            memcpy(result.data(), &val, 4);
+            break;
+        }
+        case GL_FLOAT:
+        {
+            float val = 1.0f;
+            result.resize(4);
+            memcpy(result.data(), &val, 4);
+            break;
+        }
+        case GL_UNSIGNED_INT_24_8:
+        {
+            uint32_t val = 0xFFFFFF00;
+            result.resize(4);
+            memcpy(result.data(), &val, 4);
+            break;
+        }
+        case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
+        {
+            float d    = 1.0f;
+            uint32_t s = 0;
+            result.resize(8);
+            memcpy(result.data(), &d, 4);
+            memcpy(result.data() + 4, &s, 4);
+            break;
+        }
+        default:
+            UNREACHABLE();
+            break;
+    }
+    return result;
 }
 
 void ClearErrors(const FunctionsGL *functions,

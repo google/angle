@@ -215,6 +215,9 @@ class TextureGL : public TextureImpl
     angle::Result initializeContents(const gl::Context *context,
                                      GLenum binding,
                                      const gl::ImageIndex &imageIndex) override;
+    angle::Result initializeContentsImpl(const gl::Context *context,
+                                         GLenum binding,
+                                         const gl::ImageIndex &imageIndex);
 
     GLint getRequiredExternalTextureImageUnits(const gl::Context *context) override;
 
