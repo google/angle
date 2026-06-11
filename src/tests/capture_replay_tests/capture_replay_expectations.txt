@@ -271,5 +271,8 @@
 454830637 : WebGL2GLSLValidation*Test* = SKIP_FOR_CAPTURE
 454830637 : GLSLOutput*Test* = SKIP_FOR_CAPTURE
 
+# Missing support for glGetTransformFeedbackVarying
+522887762 : TransformFeedbackTest.QueryVaryingZeroBufferSize/* = SKIP_FOR_CAPTURE
+
 # Crashes on win and linux trace bots
 372059358 : MultisampleTestES3.CopyTexImage2DFromMsaaDefaultFbo/* = SKIP_FOR_CAPTURE
