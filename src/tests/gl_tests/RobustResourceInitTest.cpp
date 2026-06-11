@@ -3545,9 +3545,70 @@ TEST_P(RobustResourceInitTestES3, BlitDepthStencilAfterClearBuffer)
     EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::green);
 }
 
+// Tests that binding an FBO to GL_READ_FRAMEBUFFER correctly triggers robust resource
+// initialization on read-back (glReadPixels), even if it wasn't previously bound as
+// GL_DRAW_FRAMEBUFFER.
+TEST_P(RobustResourceInitTest, BindReadFramebufferBypass)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // Setup an uninitialized texture, then bind it.
+    GLTexture tex;
+    setupTexture(&tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Attach to a custom FBO
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_READ_FRAMEBUFFER));
+
+    // Bind default framebuffer to GL_READ_FRAMEBUFFER to clear any dirty bits
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+    // Read pixels from the default framebuffer to ensure no dirty bits remain in the context
+    std::vector<GLColor> defaultData(kWidth * kHeight);
+    glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, defaultData.data());
+
+    // Bind our FBO back to GL_READ_FRAMEBUFFER
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+
+    // Read pixels. If robust resource init is bypassed, this will return the "bad data".
+    // If robust resource init is working, it will return transparent black (0).
+    checkFramebufferNonZeroPixels(0, 0, 0, 0, GLColor::transparentBlack);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Tests that attaching a texture to a bound GL_READ_FRAMEBUFFER correctly triggers robust resource
+// initialization on read-back, even if it wasn't previously bound as GL_DRAW_FRAMEBUFFER.
+TEST_P(RobustResourceInitTest, AttachToBoundReadFramebufferBypass)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // Setup an uninitialized texture, then bind it.
+    GLTexture tex;
+    setupTexture(&tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Create a custom FBO and bind to GL_READ_FRAMEBUFFER
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+
+    // Attach texture to the bound GL_READ_FRAMEBUFFER
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_READ_FRAMEBUFFER));
+
+    // Read pixels. If robust resource init is bypassed, this will return the "bad data".
+    // If robust resource init is working, it will return transparent black (0).
+    checkFramebufferNonZeroPixels(0, 0, 0, 0, GLColor::transparentBlack);
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     RobustResourceInitTest,
     ES3_METAL().enable(Feature::EmulateDontCareLoadWithRandomClear),
+    ES3_METAL().enable(Feature::AllocateNonZeroTextures),
+    ES2_METAL().enable(Feature::AllocateNonZeroTextures),
     ES2_VULKAN().enable(Feature::AllocateNonZeroMemory));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RobustResourceInitTestES3);
