@@ -230,8 +230,12 @@ impl TypedId {
         }
     }
 
-    pub const fn from_bool_variable_id(id: VariableId) -> TypedId {
-        Self::new(Id::new_variable(id), TYPE_ID_BOOL, Precision::NotApplicable)
+    pub fn from_bool_variable_id(ir_meta: &mut IRMeta, id: VariableId) -> TypedId {
+        Self::new(
+            Id::new_variable(id),
+            ir_meta.get_pointer_type_id(TYPE_ID_BOOL),
+            Precision::NotApplicable,
+        )
     }
 
     pub fn from_variable_id(ir_meta: &IRMeta, id: VariableId) -> TypedId {
@@ -479,7 +483,7 @@ pub enum BuiltInOpCode {
     TexelFetchOffset,
     Rgb2Yuv,
     Yuv2Rgb,
-    AtomicCompSwap,
+    AtomicCompSwap, // The first parameter is a pointer
     ImageStore,
     ImageLoad,
     ImageAtomicAdd,
