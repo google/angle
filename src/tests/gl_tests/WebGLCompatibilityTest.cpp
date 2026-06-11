@@ -7617,6 +7617,210 @@ TEST_P(WebGL2CompatibilityTest, PrimitiveRestartIndexAfterToggleIsError)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Tests that WebGL-specific unpack state validation is implemented.
+TEST_P(WebGL2CompatibilityTest, UnpackStateValidation)
+{
+    // Either of these must be supported on WebGL 2.0
+    const bool hasBC1  = EnsureGLExtensionEnabled("GL_EXT_texture_compression_dxt1");
+    const bool hasETC2 = EnsureGLExtensionEnabled("GL_ANGLE_compressed_texture_etc");
+    ASSERT(hasBC1 || hasETC2);
+    const GLenum compressedFormat =
+        hasBC1 ? GL_COMPRESSED_RGB_S3TC_DXT1_EXT : GL_COMPRESSED_RGB8_ETC2;
+
+    auto test = [=](GLenum target, GLint skipPixels, GLint rowLength, GLint skipRows,
+                    GLint imageHeight, GLenum error) {
+        ASSERT(target == GL_TEXTURE_2D || target == GL_TEXTURE_2D_ARRAY);
+        ASSERT(skipPixels >= 0 && rowLength >= 0 && skipRows >= 0 && imageHeight >= 0);
+        ASSERT(error == GL_NO_ERROR || error == GL_INVALID_OPERATION);
+
+        constexpr size_t kPixelCount = 8 * 8 * 2;
+
+        GLBuffer buf;
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buf);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, kPixelCount * 4, nullptr, GL_STATIC_READ);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+        ASSERT_GL_NO_ERROR();
+
+        GLTexture tex;
+        std::vector<GLColor> data(kPixelCount);
+
+        for (size_t i = 0; i < 4; ++i)
+        {
+            const bool usePixelUnpackBuffer = i & 1;
+            const bool isCompressed         = i & 2;
+
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, usePixelUnpackBuffer ? buf.get() : 0);
+            ASSERT_GL_NO_ERROR();
+
+            glBindTexture(target, tex);
+            ASSERT_GL_NO_ERROR();
+
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, rowLength);
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, skipRows);
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, skipPixels);
+            glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, imageHeight);
+            if (isCompressed)
+            {
+                if (target == GL_TEXTURE_2D)
+                {
+                    glCompressedTexImage2D(target, 0, compressedFormat, 4, 4, 0, 8,
+                                           usePixelUnpackBuffer ? nullptr : data.data());
+                }
+                else
+                {
+                    glCompressedTexImage3D(target, 0, compressedFormat, 4, 4, 2, 0, 16,
+                                           usePixelUnpackBuffer ? nullptr : data.data());
+                }
+                EXPECT_GL_NO_ERROR();  // Pixel unpack state must be ignored for compressed formats
+            }
+            else
+            {
+                if (target == GL_TEXTURE_2D)
+                {
+                    glTexImage2D(target, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+                }
+                else
+                {
+                    glTexImage3D(target, 0, GL_RGBA8, 4, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                                 nullptr);
+                }
+                // When using client memory and passing no data, validation must always succeed
+                EXPECT_GL_ERROR(usePixelUnpackBuffer ? error : GL_NO_ERROR);
+
+                if (!usePixelUnpackBuffer)
+                {
+                    if (target == GL_TEXTURE_2D)
+                    {
+                        glTexImage2D(target, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                                     data.data());
+                    }
+                    else
+                    {
+                        glTexImage3D(target, 0, GL_RGBA8, 4, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                                     data.data());
+                    }
+                    EXPECT_GL_ERROR(error);
+                }
+            }
+
+            // Reset the unpack state so that the texture is created successfully
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+            glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, 0);
+            if (!isCompressed)
+            {
+                if (target == GL_TEXTURE_2D)
+                {
+                    glTexImage2D(target, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                                 usePixelUnpackBuffer ? nullptr : data.data());
+                }
+                else
+                {
+                    glTexImage3D(target, 0, GL_RGBA8, 4, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                                 usePixelUnpackBuffer ? nullptr : data.data());
+                }
+                EXPECT_GL_NO_ERROR();
+            }
+
+            // Try subimage update with the provided unpack state
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, rowLength);
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, skipRows);
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, skipPixels);
+            glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, imageHeight);
+            if (isCompressed)
+            {
+                if (target == GL_TEXTURE_2D)
+                {
+                    glCompressedTexSubImage2D(target, 0, 0, 0, 4, 4, compressedFormat, 8,
+                                              usePixelUnpackBuffer ? nullptr : data.data());
+                }
+                else
+                {
+                    glCompressedTexSubImage3D(target, 0, 0, 0, 0, 4, 4, 2, compressedFormat, 16,
+                                              usePixelUnpackBuffer ? nullptr : data.data());
+                }
+                EXPECT_GL_NO_ERROR();  // Pixel unpack state must be ignored for compressed formats
+            }
+            else
+            {
+                if (target == GL_TEXTURE_2D)
+                {
+                    glTexSubImage2D(target, 0, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE,
+                                    usePixelUnpackBuffer ? nullptr : data.data());
+                }
+                else
+                {
+                    glTexSubImage3D(target, 0, 0, 0, 0, 4, 4, 2, GL_RGBA, GL_UNSIGNED_BYTE,
+                                    usePixelUnpackBuffer ? nullptr : data.data());
+                }
+                EXPECT_GL_ERROR(error);
+            }
+        }
+    };
+
+    // For all targets: if GL_UNPACK_ROW_LENGTH is set, the sum of GL_UNPACK_SKIP_PIXELS and
+    // width must be less than or equal to GL_UNPACK_ROW_LENGTH. If GL_UNPACK_ROW_LENGTH is
+    // not set, GL_UNPACK_SKIP_PIXELS must be zero.
+
+    // For 3D targets only: if GL_UNPACK_IMAGE_HEIGHT is set, the sum of GL_UNPACK_SKIP_ROWS and
+    // height must be less than or equal to GL_UNPACK_IMAGE_HEIGHT. If GL_UNPACK_IMAGE_HEIGHT is
+    // not set, GL_UNPACK_SKIP_ROWS must be zero.
+
+    // Test params: (target, skipPixels, rowLength, skipRows, imageHeight, error)
+
+    // 2D texture, default
+    test(GL_TEXTURE_2D, 0, 0, 0, 0, GL_NO_ERROR);
+
+    // 2D texture, validated pixel skip and row length
+    test(GL_TEXTURE_2D, 0, 4, 0, 0, GL_NO_ERROR);           // 0 + 4 <= 4
+    test(GL_TEXTURE_2D, 0, 5, 0, 0, GL_NO_ERROR);           // 0 + 4 <= 5
+    test(GL_TEXTURE_2D, 1, 5, 0, 0, GL_NO_ERROR);           // 1 + 4 <= 5
+    test(GL_TEXTURE_2D, 1, 6, 0, 0, GL_NO_ERROR);           // 1 + 4 <= 6
+    test(GL_TEXTURE_2D, 0, 3, 0, 0, GL_INVALID_OPERATION);  // 0 + 4 > 3
+    test(GL_TEXTURE_2D, 1, 0, 0, 0, GL_INVALID_OPERATION);  // 1 + 4 > 4
+    test(GL_TEXTURE_2D, 1, 4, 0, 0, GL_INVALID_OPERATION);  // 1 + 4 > 4
+
+    // 2D texture, ignored row skip and image height
+    test(GL_TEXTURE_2D, 0, 0, 0, 4, GL_NO_ERROR);
+    test(GL_TEXTURE_2D, 0, 0, 0, 5, GL_NO_ERROR);
+    test(GL_TEXTURE_2D, 0, 0, 1, 5, GL_NO_ERROR);
+    test(GL_TEXTURE_2D, 0, 0, 1, 6, GL_NO_ERROR);
+    test(GL_TEXTURE_2D, 0, 0, 0, 3, GL_NO_ERROR);
+    test(GL_TEXTURE_2D, 0, 0, 1, 0, GL_NO_ERROR);
+    test(GL_TEXTURE_2D, 0, 0, 1, 4, GL_NO_ERROR);
+
+    // 2D array texture, default
+    test(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, GL_NO_ERROR);
+
+    // 2D array texture, validated pixel skip and row length
+    test(GL_TEXTURE_2D_ARRAY, 0, 4, 0, 0, GL_NO_ERROR);           // 0 + 4 <= 4
+    test(GL_TEXTURE_2D_ARRAY, 0, 5, 0, 0, GL_NO_ERROR);           // 0 + 4 <= 5
+    test(GL_TEXTURE_2D_ARRAY, 1, 5, 0, 0, GL_NO_ERROR);           // 1 + 4 <= 5
+    test(GL_TEXTURE_2D_ARRAY, 1, 6, 0, 0, GL_NO_ERROR);           // 1 + 4 <= 6
+    test(GL_TEXTURE_2D_ARRAY, 0, 3, 0, 0, GL_INVALID_OPERATION);  // 0 + 4 > 3
+    test(GL_TEXTURE_2D_ARRAY, 1, 0, 0, 0, GL_INVALID_OPERATION);  // 1 + 4 > 4
+    test(GL_TEXTURE_2D_ARRAY, 1, 4, 0, 0, GL_INVALID_OPERATION);  // 1 + 4 > 4
+
+    // 2D array texture, validated row skip and image height
+    test(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 4, GL_NO_ERROR);           // 0 + 4 <= 4
+    test(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 5, GL_NO_ERROR);           // 0 + 4 <= 5
+    test(GL_TEXTURE_2D_ARRAY, 0, 0, 1, 5, GL_NO_ERROR);           // 1 + 4 <= 5
+    test(GL_TEXTURE_2D_ARRAY, 0, 0, 1, 6, GL_NO_ERROR);           // 1 + 4 <= 6
+    test(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 3, GL_INVALID_OPERATION);  // 0 + 4 > 3
+    test(GL_TEXTURE_2D_ARRAY, 0, 0, 1, 0, GL_INVALID_OPERATION);  // 1 + 4 > 4
+    test(GL_TEXTURE_2D_ARRAY, 0, 0, 1, 4, GL_INVALID_OPERATION);  // 1 + 4 > 4
+
+    // 2D array texture, validated all params
+    test(GL_TEXTURE_2D_ARRAY, 0, 4, 0, 4, GL_NO_ERROR);           // 0 + 4 <= 4
+    test(GL_TEXTURE_2D_ARRAY, 0, 5, 0, 5, GL_NO_ERROR);           // 0 + 4 <= 5
+    test(GL_TEXTURE_2D_ARRAY, 1, 5, 1, 5, GL_NO_ERROR);           // 1 + 4 <= 5
+    test(GL_TEXTURE_2D_ARRAY, 1, 6, 1, 6, GL_NO_ERROR);           // 1 + 4 <= 6
+    test(GL_TEXTURE_2D_ARRAY, 0, 3, 0, 3, GL_INVALID_OPERATION);  // 0 + 4 > 3
+    test(GL_TEXTURE_2D_ARRAY, 1, 0, 1, 0, GL_INVALID_OPERATION);  // 1 + 4 > 4
+    test(GL_TEXTURE_2D_ARRAY, 1, 4, 1, 4, GL_INVALID_OPERATION);  // 1 + 4 > 4
+}
+
 // Test that drawing GL_POINTS without setting gl_PointSize in the vertex shader
 // renders points with a default size of 1.0 pixel.
 TEST_P(WebGLCompatibilityTest, PointSizeDefaultWhenNotSet)

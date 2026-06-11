@@ -803,7 +803,7 @@ bool ValidateES3TexImageParametersBase(const Context *context,
         }
     }
 
-    if (context->getExtensions().webglCompatibilityANGLE)
+    if (!isCompressed && (context->isWebGL() || context->isHardenedContext()))
     {
         // Define:
         //   DataStoreWidth  = (GL_UNPACK_ROW_LENGTH ? GL_UNPACK_ROW_LENGTH : width)
