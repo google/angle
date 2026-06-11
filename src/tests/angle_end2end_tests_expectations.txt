@@ -101,7 +101,7 @@
 42266900 VULKAN : EGLSurfacelessContextTest.*/*ForceDelayedDeviceCreationForTesting* = SKIP
 510376884 VULKAN : ComputeShaderTest.DeleteTextureBoundToImageUnit/* = SKIP
 
-500721361 VULKAN SWIFTSHADER : VertexAttributeTestES3.storeStaticAttribWithLargeOffset/* = SKIP
+500721361 VULKAN SWIFTSHADER : VertexAttributeTestES3.StoreStaticAttribWithLargeOffset/* = SKIP
 
 // Causes a write-after-write hazard on Linux/Vk
 524405499 VULKAN : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyStencil8/* = SKIP
@@ -394,7 +394,7 @@
 42265138 MAC AMD OPENGL : TransformFeedbackTest.TransformFeedbackQueryPausedDrawThenResume/* = SKIP
 42265138 MAC AMD OPENGL : TransformFeedbackTest.TransformFeedbackPausedDrawThenResume/* = SKIP
 40050013 MAC AMD OPENGL : Texture3DTestES3.PixelUnpackStateTex* = SKIP
-1296467 MAC OPENGL : VertexAttributeTestES3.emptyBuffer/* = SKIP
+1296467 MAC OPENGL : VertexAttributeTestES3.EmptyBuffer/* = SKIP
 42265677 MAC INTEL OPENGL : CopyTextureTest.CopyToMipmap/* = SKIP
 42265680 MAC NVIDIA OPENGL : CopyTextureTest.CubeMap*/* = SKIP
 42265680 MAC NVIDIA OPENGL : CopyTextureTest.CopyToMipmap/* = SKIP
@@ -508,6 +508,7 @@
 515709506 MAC METAL : DrawBaseVertexBaseInstanceTest_ES3.BaseInstanceSmallDivisorClientMemory/* = SKIP
 518849408 MAC OPENGL : GLSLTest.EmulateGLFragColorBroadcastInvariantFragColor/* = SKIP
 518849408 MAC OPENGL : GLSLTest.EmulateGLFragColorBroadcastInvariantFragColorUnused/* = SKIP
+524008572 MAC METAL : VertexAttributeTestES3.LargeAttribPointerOffsetNoCrash/* = SKIP
 
 // The workaround is not intended to be enabled in this configuration so
 // skip it as the failure is likely a driver bug.
@@ -768,7 +769,7 @@
 42264692 PIXEL4ORXL GLES : DepthStencilTestES3.FramebufferClearThenStencilAttachedThenStencilTestState/* = SKIP
 42264692 PIXEL4ORXL GLES : DepthStencilTestES3.FramebufferClearThenStencilTestStateThenStencilAttached/* = SKIP
 42264692 PIXEL4ORXL GLES : DepthStencilTestES3.StencilTestStateThenFramebufferClearThenStencilAttached/* = SKIP
-1296467 PIXEL4ORXL GLES : VertexAttributeTestES3.emptyBuffer/* = SKIP
+1296467 PIXEL4ORXL GLES : VertexAttributeTestES3.EmptyBuffer/* = SKIP
 
 42265757 PIXEL4ORXL GLES : TextureBufferTestES31.TextureBufferThenBufferData/* = SKIP
 

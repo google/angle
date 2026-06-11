@@ -135,7 +135,7 @@ size_t ComputeVertexAttributeStride(const VertexAttribute &attrib, const VertexB
 }
 
 // Warning: you should ensure binding really matches attrib.bindingIndex before using this function.
-GLintptr ComputeVertexAttributeOffset(const VertexAttribute &attrib, const VertexBinding &binding)
+uintptr_t ComputeVertexAttributeOffset(const VertexAttribute &attrib, const VertexBinding &binding)
 {
     return attrib.relativeOffset + binding.getOffset();
 }

@@ -59,7 +59,7 @@ ANGLE_INLINE bool ClientBindingAligned(const gl::VertexAttribute &attrib,
                                        GLuint stride,
                                        size_t alignment)
 {
-    return reinterpret_cast<intptr_t>(attrib.pointer) % alignment == 0 && stride % alignment == 0;
+    return reinterpret_cast<uintptr_t>(attrib.pointer) % alignment == 0 && stride % alignment == 0;
 }
 
 bool ShouldCombineAttributes(vk::Renderer *renderer,
@@ -511,7 +511,7 @@ angle::Result VertexArrayVk::convertIndexBufferGPU(ContextVk *contextVk,
                                                    BufferVk *bufferVk,
                                                    const void *indices)
 {
-    intptr_t offsetIntoSrcData = reinterpret_cast<intptr_t>(indices);
+    uintptr_t offsetIntoSrcData = reinterpret_cast<uintptr_t>(indices);
     size_t srcDataSize         = static_cast<size_t>(bufferVk->getSize()) - offsetIntoSrcData;
 
     // Allocate buffer for results
@@ -1136,8 +1136,10 @@ ANGLE_INLINE void VertexArrayVk::syncDirtyEnabledNonStreamingAttrib(
     mVertexInputAttribDescs[attribIndex].offset     = attrib.relativeOffset;
     gl::Buffer *bufferGL                            = getVertexArrayBuffer(attrib.bindingIndex);
     const angle::Format &srcFormat                  = vertexFormat.getIntendedFormat();
-    unsigned srcFormatSize                          = srcFormat.pixelBytes;
-    bool hasAtLeastOneVertex = (bufferGL->getSize() - binding.getOffset()) >= srcFormatSize;
+    const unsigned srcFormatSize                    = srcFormat.pixelBytes;
+    const uint64_t bufferGLSize                     = bufferGL->getSize();
+    bool hasAtLeastOneVertex =
+        binding.getOffset() < bufferGLSize && (bufferGLSize - binding.getOffset()) >= srcFormatSize;
     // If buffer size is 0, hasAtLeastOneVertex must be false
     ASSERT(bufferGL->getSize() > 0 || !hasAtLeastOneVertex);
 
@@ -1177,7 +1179,7 @@ ANGLE_INLINE void VertexArrayVk::syncDirtyEnabledNonStreamingAttrib(
 
         // Vulkan requires the offset is within the buffer. We use robust access
         // behaviour to reset the offset if it starts outside the buffer.
-        ASSERT(binding.getOffset() < static_cast<GLint64>(bufferSize));
+        ASSERT(binding.getOffset() < bufferSize);
         mCurrentArrayBufferOffsets[attribIndex]      = bufferOffset + binding.getOffset();
         mCurrentArrayBufferSizes[attribIndex]        = bufferSize - binding.getOffset();
         mVertexInputBindingDescs[attribIndex].stride = binding.getStride();
@@ -1544,7 +1546,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
                                            stride, nullptr));
             }
             vertexDataBuffer = attribBufferHelper[mergedAttribIdx];
-            startOffset      = (uintptr_t)attrib.pointer - range.startAddr;
+            startOffset      = reinterpret_cast<uintptr_t>(attrib.pointer) - range.startAddr;
         }
         else
         {
@@ -1621,7 +1623,7 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
             else
             {
                 // When using an element array buffer, 'indices' is an offset to the first element.
-                intptr_t offset                = reinterpret_cast<intptr_t>(indices);
+                uintptr_t offset               = reinterpret_cast<uintptr_t>(indices);
                 BufferVk *elementArrayBufferVk = vk::GetImpl(elementArrayBuffer);
                 ANGLE_TRY(mLineLoopHelper.getIndexBufferForElementArrayBuffer(
                     contextVk, elementArrayBufferVk, indexTypeOrInvalid, vertexOrIndexCount, offset,

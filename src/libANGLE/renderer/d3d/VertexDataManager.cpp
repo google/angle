@@ -122,10 +122,10 @@ bool DirectStoragePossible(const gl::Context *context,
         alignment = std::min<size_t>(elementSize, 4);
     }
 
-    GLintptr offset = ComputeVertexAttributeOffset(attrib, binding);
+    uintptr_t offset = ComputeVertexAttributeOffset(attrib, binding);
     // Final alignment check - unaligned data must be converted.
-    return (static_cast<size_t>(ComputeVertexAttributeStride(attrib, binding)) % alignment == 0) &&
-           (static_cast<size_t>(offset) % alignment == 0);
+    return (ComputeVertexAttributeStride(attrib, binding) % alignment == 0) &&
+           (offset % alignment == 0);
 }
 }  // anonymous namespace
 
@@ -370,13 +370,13 @@ angle::Result VertexDataManager::StoreStaticAttrib(const gl::Context *context,
     // Compute source data pointer
     const uint8_t *sourceData = nullptr;
 
-    angle::CheckedNumeric<GLintptr> offset = ComputeVertexAttributeOffset(attrib, binding);
+    angle::CheckedNumeric<uintptr_t> offset = ComputeVertexAttributeOffset(attrib, binding);
 
     ANGLE_TRY(bufferD3D->getData(context, &sourceData));
 
     if (sourceData)
     {
-        sourceData += GLintptr{offset.ValueOrDie()};
+        sourceData += uintptr_t{offset.ValueOrDie()};
     }
 
     translated->storage = nullptr;
@@ -561,7 +561,7 @@ angle::Result VertexDataManager::storeDynamicAttrib(const gl::Context *context,
     if (buffer)
     {
         ANGLE_TRY(storage->getData(context, &sourceData));
-        sourceData += static_cast<size_t>(ComputeVertexAttributeOffset(attrib, binding));
+        sourceData += ComputeVertexAttributeOffset(attrib, binding);
     }
     else
     {

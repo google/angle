@@ -2962,7 +2962,8 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
             }
             else if (attrib.bindingIndex == attribIndex &&
                      VertexBindingMatchesAttribStride(attrib, binding) &&
-                     (!buffer || binding.getOffset() == reinterpret_cast<GLintptr>(attrib.pointer)))
+                     (!buffer ||
+                      binding.getOffset() == reinterpret_cast<uintptr_t>(attrib.pointer)))
             {
                 // Check if we can use strictly ES2 semantics, and track indexes that do.
                 vertexPointerBindings.set(attribIndex);
@@ -3058,9 +3059,10 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
 
         if (buffer)
         {
-            Capture(setupCalls, CaptureBindVertexBuffer(
-                                    *replayState, true, static_cast<GLuint>(bindingIndex),
-                                    buffer->id(), binding.getOffset(), binding.getStride()));
+            Capture(setupCalls,
+                    CaptureBindVertexBuffer(
+                        *replayState, true, static_cast<GLuint>(bindingIndex), buffer->id(),
+                        static_cast<GLintptr>(binding.getOffset()), binding.getStride()));
         }
 
         if (binding.getDivisor() != 0)
