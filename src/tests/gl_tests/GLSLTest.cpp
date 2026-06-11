@@ -11728,6 +11728,120 @@ TEST_P(GLSLTest, FragData)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Tests passing gl_FragData to function.
+TEST_P(GLSLTest, FragDataPassedToFunction)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+precision mediump float;
+vec4 f(vec4 fragData[gl_MaxDrawBuffers])
+{
+    vec4 original = fragData[1];
+    fragData[1] = vec4(0, 1, 0, 0);
+    return original + fragData[1];
+}
+void main()
+{
+    gl_FragData[1] = vec4(1, 0, 0, 1);
+    gl_FragData[0] = f(gl_FragData);
+})";
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
+// Tests passing gl_FragData to function without EXT_draw_buffers.
+TEST_P(GLSLTest, FragDataPassedToFunctionNoDrawBuffers)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+vec4 f(vec4 fragData[gl_MaxDrawBuffers])
+{
+    return fragData[0] + vec4(0, 1, 0, 0);
+}
+void main()
+{
+    gl_FragData[0] = vec4(1, 0, 0, 1);
+    gl_FragData[0] = f(gl_FragData);
+})";
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
+// Tests passing gl_FragData to function as out parameter.
+TEST_P(GLSLTest_ES3, FragDataPassedToFunctionOut)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+precision mediump float;
+void f(out vec4 fragData[gl_MaxDrawBuffers])
+{
+    fragData[0] = vec4(1, 0, 0, 1);
+    fragData[1] = vec4(0, 1, 0, 1);
+    fragData[2] = vec4(0, 0, 1, 1);
+    fragData[3] = vec4(1, 1, 0, 1);
+}
+void main()
+{
+    f(gl_FragData);
+})";
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLTexture textures[4];
+    for (size_t texIndex = 0; texIndex < ArraySize(textures); texIndex++)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[texIndex]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + texIndex, GL_TEXTURE_2D,
+                               textures[texIndex], 0);
+    }
+
+    GLint maxDrawBuffers;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ASSERT_GE(maxDrawBuffers, 4);
+
+    constexpr GLenum kAllBufs[4] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                    GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+    glDrawBuffers(ArraySize(kAllBufs), kAllBufs);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    glReadBuffer(GL_COLOR_ATTACHMENT2);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    glReadBuffer(GL_COLOR_ATTACHMENT3);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Tests passing gl_FragData to function as out parameter without EXT_draw_buffers.
+TEST_P(GLSLTest, FragDataPassedToFunctionOutNoDrawBuffers)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+void f(out vec4 fragData[gl_MaxDrawBuffers])
+{
+    fragData[0] = vec4(1, 0, 0, 1);
+}
+void main()
+{
+    f(gl_FragData);
+})";
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Tests using gl_FragData[0] instead of gl_FragColor with GL_SAMPLE_ALPHA_TO_COVERAGE
 // Regression test for https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/5520
 TEST_P(GLSLTest, FragData_AlphaToCoverage)
@@ -21840,13 +21954,10 @@ void main() {oColor=vec4(data.red,_data.green,1,1);})";
 // Test that underscores in array names work with out arrays.
 TEST_P(GLSLTest_ES3, UnderscoresWorkWithOutArrays)
 {
-    GLuint fbo;
-    glGenFramebuffers(1, &fbo);
+    GLFramebuffer fbo;
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 
-    GLuint textures[4];
-    glGenTextures(4, textures);
-
+    GLTexture textures[4];
     for (size_t texIndex = 0; texIndex < ArraySize(textures); texIndex++)
     {
         glBindTexture(GL_TEXTURE_2D, textures[texIndex]);
@@ -21858,8 +21969,7 @@ TEST_P(GLSLTest_ES3, UnderscoresWorkWithOutArrays)
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
     ASSERT_GE(maxDrawBuffers, 4);
 
-    GLuint readFramebuffer;
-    glGenFramebuffers(1, &readFramebuffer);
+    GLFramebuffer readFramebuffer;
     glBindFramebuffer(GL_READ_FRAMEBUFFER, readFramebuffer);
 
     constexpr char kFS[] = R"(#version 300 es
@@ -21874,8 +21984,8 @@ void main()
 }
 )";
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
-    GLenum allBufs[4] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
-                         GL_COLOR_ATTACHMENT3};
+    constexpr GLenum kAllBufs[4] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                    GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
     constexpr GLuint kMaxBuffers = 4;
     // Enable all draw buffers.
     for (GLuint texIndex = 0; texIndex < kMaxBuffers; texIndex++)
@@ -21886,7 +21996,7 @@ void main()
         glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + texIndex, GL_TEXTURE_2D,
                                textures[texIndex], 0);
     }
-    glDrawBuffers(kMaxBuffers, allBufs);
+    glDrawBuffers(kMaxBuffers, kAllBufs);
 
     // Draw with simple program.
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
@@ -24333,6 +24443,67 @@ void main() {
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(229, 13, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that indirect indices to gl_FragData get clamped to the right bounds when
+// gl_SecondaryFragDataEXT is used.
+TEST_P(WebGLGLSLTest, FragDataIndexClampWithSecondaryFragDataFunctionArg)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+vec4 f(vec4 fragData[gl_MaxDrawBuffers])
+{
+    vec4 original = fragData[0];
+    fragData[0] = vec4(0, 1, 0, 0);
+    return original + fragData[0];
+}
+void main() {
+    gl_FragData[0] = vec4(1, 0, 0, 1);
+    gl_FragData[0] = f(gl_FragData);
+    for (int i = 0; i < 8; i++) {
+        gl_FragData[i] += vec4(-0.1, -0.05, 0.0, 0.0);
+    }
+
+    gl_SecondaryFragDataEXT[0] = vec4(1.0, 0.0, 0.0, 1.0);
+
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 153, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that indirect indices to gl_FragData get clamped to the right bounds when
+// gl_SecondaryFragDataEXT is used.
+TEST_P(WebGL2GLSLTest, FragDataIndexClampWithSecondaryFragDataFunctionArgOut)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void f(out vec4 fragData[gl_MaxDrawBuffers])
+{
+    fragData[0] = vec4(1, 1, 0, 1);
+    for (int i = 0; i < 8; i++) {
+        fragData[i] += vec4(-0.1, -0.05, 0.0, 0.0);
+    }
+}
+void main()
+{
+    f(gl_FragData);
+    gl_SecondaryFragDataEXT[0] = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 153, 0, 255), 1);
     ASSERT_GL_NO_ERROR();
 }
 }  // anonymous namespace

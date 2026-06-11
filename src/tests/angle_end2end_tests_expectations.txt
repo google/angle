@@ -51,6 +51,12 @@
 // Advanced blend ops currently fail on Windows/Intel.
 376899587 WIN INTEL VULKAN : AdvancedBlendTest.*/* = SKIP
 
+// Incorrect handling of gl_FragData vs gl_SecondaryFragDataEXT
+523165431 : WebGLGLSLTest.FragDataIndexClampWithSecondaryFragDataFunctionArg/* = SKIP
+523165431 : WebGL2GLSLTest.FragDataIndexClampWithSecondaryFragDataFunctionArgOut/* = SKIP
+523165431 GLES : GLSLTest.FragDataPassedToFunctionNoDrawBuffers/* = SKIP
+523165431 GLES : GLSLTest.FragDataPassedToFunctionOutNoDrawBuffers/* = SKIP
+
 // Fails AST validation
 342866374 : GLSLTest_ES31.PerVertexRedefinition/*_ForceInitShaderVariables* = SKIP
 
@@ -574,6 +580,8 @@
 448658631 WIN D3D11 : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFold/* = SKIP
 448658631 WIN D3D11 : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
+523165431 WIN D3D11 : GLSLTest.FragDataPassedToFunctionNoDrawBuffers/* = SKIP
+523165431 WIN D3D11 : GLSLTest.FragDataPassedToFunctionOutNoDrawBuffers/* = SKIP
 494938700 WIN D3D11 : CopyTexImageTest.CopyTexImageFromTexture3D/* = SKIP
 494938700 WIN D3D11 : CopyTexImageTest.CopyTexSubImageFromTexture3D/* = SKIP
 512896813 WIN D3D11 : LineLoopTestES3.LineLoopDrawArraysInstancedBaseInstance/* = SKIP
@@ -2468,6 +2476,8 @@
 42267100 WGPU : GLSLTest.MatEquality/* = SKIP
 42267100 WGPU : GLSLTest.StructEquality/* = SKIP
 42267100 WGPU : GLSLTest.NestedStructEquality/* = SKIP
+42267100 WGPU : GLSLTest.FragDataPassedToFunctionNoDrawBuffers/* = SKIP
+42267100 WGPU : GLSLTest.FragDataPassedToFunctionOutNoDrawBuffers/* = SKIP
 42267100 WGPU : GLSLValidationTest.VectorScalarArithmeticWithSideEffectInLoop/* = SKIP
 42267100 WGPU : GLSLTestNoValidation.DepthRangeUniforms/* = SKIP
 42266907 WGPU : IncompleteTextureTest.IncompleteTexture2D/* = SKIP
