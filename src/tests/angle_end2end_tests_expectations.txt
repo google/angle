@@ -887,7 +887,6 @@
 
 // Pixel 10 expectations.
 480069042 PIXEL10 GLES : AtomicCounterBufferTest31.DependentAtomicCounterBufferChange/* = SKIP
-510449869 PIXEL10 GLES : BasicCopyTextureTest.SelfCopyOOBWrite/* = SKIP
 480069042 PIXEL10 GLES : BlitFramebufferANGLETest.BlitWithDepthUserToDefault/* = SKIP
 480069042 PIXEL10 GLES : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
 480069042 PIXEL10 GLES : BlitFramebufferTest.BlitStencilToDefault/* = SKIP
@@ -967,6 +966,8 @@
 480069042 PIXEL10 GLES : ComputeShaderTest.UniformDirty/* = SKIP
 480069042 PIXEL10 GLES : ComputeShaderTest.UseAsUBOThenUpdateThenDispatchComputeIndirect/* = SKIP
 480069042 PIXEL10 GLES : CopyTextureTest.IncompleteCubeMap/* = SKIP
+510449869 PIXEL10 GLES : CopyTextureTest.SelfCopyOOBWrite/* = SKIP
+516837126 PIXEL10 GLES : CopyTextureTestES3.ChangeBaseLevel/* = SKIP
 480069042 PIXEL10 GLES : CopyTextureVariationsTest.CopySubTexture/ES2_OpenGLES__BGRAToSRGBA* = SKIP
 480069042 PIXEL10 GLES : CopyTextureVariationsTest.CopySubTexture/ES2_OpenGLES__RGBAToSRGBA* = SKIP
 480069042 PIXEL10 GLES : CopyTextureVariationsTest.CopySubTexture/ES2_OpenGLES__RGBToSRGBA* = SKIP
@@ -984,6 +985,7 @@
 480069042 PIXEL10 GLES : EGLSurfaceTest.PreserveThenBlend/* = SKIP
 480069042 PIXEL10 GLES : EGLSurfaceTest.ResizeAfterSwap/* = SKIP
 480069042 PIXEL10 GLES : EGLSurfaceTest.ResizeBeforeDraw/* = SKIP
+522844888 PIXEL10 GLES : EGLSurfaceTest.ResizeInvisibleWindow/* = SKIP
 480069042 PIXEL10 GLES : FramebufferFetchES31.ProgramPipeline_Coherent/* = SKIP
 480069042 PIXEL10 GLES : FramebufferTest_ES31.ClearTextureEXT2DMSBlocks/* = SKIP
 480069042 PIXEL10 GLES : FramebufferTest_ES31.ClearTextureEXT2DMSDS/* = SKIP
