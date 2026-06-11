@@ -1930,6 +1930,105 @@ TEST_P(RobustResourceInitTestES3, MultisampledDepthInitializedCorrectly)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Tests that uninitialized depth and depth-stencil textures created across all supported
+// formats are robustly initialized to 1.0 depth (and 0 stencil), verified by sampling depth
+// directly in a shader and testing stencil via FBO attachment.
+TEST_P(RobustResourceInitTestES3, DepthStencilTextureInitCombinations)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    struct TestFormat
+    {
+        GLenum internalFormat;
+        GLenum format;
+        GLenum type;
+    };
+    constexpr TestFormat kFormats[] = {
+        {GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT},
+        {GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT},
+        {GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT},
+        {GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8},
+        {GL_DEPTH32F_STENCIL8, GL_DEPTH_STENCIL, GL_FLOAT_32_UNSIGNED_INT_24_8_REV},
+    };
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 aPosition;
+void main()
+{
+    gl_Position = aPosition;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler2D uDepthTex;
+out vec4 outColor;
+void main()
+{
+    float depth = texture(uDepthTex, vec2(0.5, 0.5)).r;
+    if (abs(depth - 1.0) < 0.001)
+    {
+        outColor = vec4(0.0, 1.0, 0.0, 1.0); // green
+    }
+    else
+    {
+        outColor = vec4(1.0, 0.0, 0.0, 1.0); // red
+    }
+})";
+
+    ANGLE_GL_PROGRAM(depthSampleProg, kVS, kFS);
+    glUseProgram(depthSampleProg);
+    GLint texLoc = glGetUniformLocation(depthSampleProg, "uDepthTex");
+    ASSERT_NE(texLoc, -1);
+    glUniform1i(texLoc, 0);
+
+    ANGLE_GL_PROGRAM(blueProg, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    for (const TestFormat &fmt : kFormats)
+    {
+        GLTexture color;
+        glBindTexture(GL_TEXTURE_2D, color);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        GLTexture ds;
+        glBindTexture(GL_TEXTURE_2D, ds);
+        glTexImage2D(GL_TEXTURE_2D, 0, fmt.internalFormat, kWidth, kHeight, 0, fmt.format, fmt.type,
+                     nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // 1. Verify depth == 1.0 via shader sampling
+        glDisable(GL_DEPTH_TEST);
+        drawQuad(depthSampleProg, "aPosition", 0.0f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+        // 2. If depth-stencil, verify stencil == 0 via FBO stencil attachment test
+        if (fmt.format == GL_DEPTH_STENCIL)
+        {
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, ds,
+                                   0);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            glEnable(GL_STENCIL_TEST);
+            glStencilFunc(GL_EQUAL, 0, 0xFF);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+            drawQuad(blueProg, essl1_shaders::PositionAttrib(), 0.0f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+            glDisable(GL_STENCIL_TEST);
+        }
+    }
+}
+
 // Basic test that textures are initialized correctly.  Verification is done via glReadPixels.
 TEST_P(RobustResourceInitTest, TextureViaReadBack)
 {

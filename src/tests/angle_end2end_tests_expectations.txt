@@ -290,8 +290,6 @@
 42266866 NVIDIA OPENGL : GLSLTest_ES3.LargeInterfaceBlockNestedArray/* = SKIP
 42266866 NVIDIA GLES : GLSLTest_ES3.LargeInterfaceBlockArray/* = SKIP
 42266866 NVIDIA GLES : GLSLTest_ES3.LargeInterfaceBlockNestedArray/* = SKIP
-496616811 NVIDIA OPENGL : RobustResourceInitTestES3.DrawThenInvalidateThenVerifyDepthStencil/* = SKIP
-496616811 NVIDIA GLES : RobustResourceInitTestES3.DrawThenInvalidateThenVerifyDepthStencil/* = SKIP
 // Nvidia sees same matrix type with different layouts as different types
 42262474 NVIDIA OPENGL : GLSLTest_ES31.TernaryOnStructsInDifferentBlockStorages/* = SKIP
 42262474 NVIDIA OPENGL : GLSLTest_ES31.TernaryOnMatricesInDifferentBlockStorages/* = SKIP
