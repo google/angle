@@ -286,6 +286,48 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
             counters.stencilAttachmentResolves + incrementalStencilAttachmentResolves;
     }
 
+    void adjustExpectedCountersForDynamicRenderingMSRTTEmulationUnresolve(
+        uint64_t incrementalUnresolveRenderPasses,
+        uint64_t incrementalUnresolveColorAttachments,
+        uint64_t incrementalUnresolveDepthStencilAttachment,
+        bool unresolveDepth,
+        bool unresolveStencil,
+        angle::VulkanPerfCounters *expected)
+    {
+        if (isFeatureEnabled(Feature::PreferDynamicRendering) &&
+            !isFeatureEnabled(Feature::SupportsMultisampledRenderToSingleSampled))
+        {
+            expected->renderPasses += incrementalUnresolveRenderPasses;
+            expected->colorStoreOpStores += incrementalUnresolveColorAttachments;
+
+            if (unresolveDepth)
+            {
+                expected->depthStoreOpStores += incrementalUnresolveDepthStencilAttachment;
+            }
+            else if (isFeatureEnabled(Feature::SupportsRenderPassLoadStoreOpNone))
+            {
+                expected->depthStoreOpNones += incrementalUnresolveDepthStencilAttachment;
+                expected->depthLoadOpNones += incrementalUnresolveDepthStencilAttachment;
+            }
+
+            if (unresolveStencil)
+            {
+                expected->stencilStoreOpStores += incrementalUnresolveDepthStencilAttachment;
+                if (!isFeatureEnabled(Feature::SupportsShaderStencilExport))
+                {
+                    // Without VK_EXT_shader_stencil_export, the unresolve render pass clears
+                    // stencil to 0.
+                    expected->stencilLoadOpClears += incrementalUnresolveDepthStencilAttachment;
+                }
+            }
+            else if (isFeatureEnabled(Feature::SupportsRenderPassLoadStoreOpNone))
+            {
+                expected->stencilStoreOpNones += incrementalUnresolveDepthStencilAttachment;
+                expected->stencilLoadOpNones += incrementalUnresolveDepthStencilAttachment;
+            }
+        }
+    }
+
     void maskedFramebufferFetchDraw(const GLColor &clearColor, GLBuffer &buffer);
     void maskedFramebufferFetchDrawVerify(const GLColor &expectedColor, GLBuffer &buffer);
 
@@ -5053,6 +5095,8 @@ TEST_P(VulkanPerformanceCounterTest_DepthStencilLoadStoreOps,
 
     // Additionally, expect 4 resolves and 3 unresolves.
     setExpectedCountersForUnresolveResolveTest(getPerfCounters(), 3, 3, 3, 4, 4, 4, &expected);
+    adjustExpectedCountersForDynamicRenderingMSRTTEmulationUnresolve(3, 3, 3, true, true,
+                                                                     &expected);
 
     constexpr GLsizei kSize = 6;
 
@@ -5442,6 +5486,8 @@ TEST_P(VulkanPerformanceCounterTest_DepthStencilLoadStoreOps,
     // stencil(Clears+0, Loads+1, LoadNones+0, Stores+1, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 0, 1, 0, 1, 0, &expected);
     setExpectedCountersForStencilOps(getPerfCounters(), 0, 1, 0, 1, 0, &expected);
+    adjustExpectedCountersForDynamicRenderingMSRTTEmulationUnresolve(1, 0, 1, true, true,
+                                                                     &expected);
 
     glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
     drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
@@ -5460,6 +5506,8 @@ TEST_P(VulkanPerformanceCounterTest_DepthStencilLoadStoreOps,
     // stencil(Clears+0, Loads+1, LoadNones+0, Stores+1, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 1, 0, 0, 1, 0, &expected);
     setExpectedCountersForStencilOps(getPerfCounters(), 0, 1, 0, 1, 0, &expected);
+    adjustExpectedCountersForDynamicRenderingMSRTTEmulationUnresolve(1, 0, 1, false, true,
+                                                                     &expected);
 
     glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
     drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.25f);
@@ -5478,6 +5526,8 @@ TEST_P(VulkanPerformanceCounterTest_DepthStencilLoadStoreOps,
     // stencil(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0)
     setExpectedCountersForDepthOps(getPerfCounters(), 1, 0, 1, 0, 1, 0, &expected);
     setExpectedCountersForStencilOps(getPerfCounters(), 1, 0, 0, 1, 0, &expected);
+    adjustExpectedCountersForDynamicRenderingMSRTTEmulationUnresolve(1, 0, 1, true, false,
+                                                                     &expected);
 
     glUniform4f(colorUniformLocation, 1.0f, 1.0f, 0.0f, 1.0f);
     drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);

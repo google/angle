@@ -3772,6 +3772,11 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     const bool previousUnresolveDepth   = mRenderPassDesc.hasDepthUnresolveAttachment();
     const bool previousUnresolveStencil = mRenderPassDesc.hasStencilUnresolveAttachment();
 
+    const bool hasDynamicRenderingAndEmulatingMSRTT =
+        contextVk->getFeatures().preferDynamicRendering.enabled &&
+        (contextVk->getFeatures().enableMultisampledRenderToTexture.enabled &&
+         !contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled);
+
     // Make sure render pass and framebuffer are in agreement w.r.t unresolve attachments.
     ASSERT(mCurrentFramebufferDesc.getUnresolveAttachmentMask() ==
            MakeUnresolveAttachmentMask(mRenderPassDesc));
@@ -3831,6 +3836,12 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                 {
                     ASSERT(!mRenderPassDesc.getColorUnresolveAttachmentMask().test(colorIndexGL));
                     ANGLE_TRY(UnresolveYuvImage(contextVk, colorRenderTarget, renderArea));
+                }
+                // Unresolve for emulated MSRTT when dynamic rendering is enabled is done using a
+                // separate renderpass
+                else if (hasDynamicRenderingAndEmulatingMSRTT)
+                {
+                    mRenderPassDesc.packColorUnresolveAttachment(colorIndexGL);
                 }
                 else
                 {
@@ -3932,18 +3943,20 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
         // Similar to color attachments, if there's a resolve attachment and the multisampled image
         // is transient, depth/stencil data need to be unresolved in an initial subpass.
+        // Except when MSRTT is emulated and dynamic rendering is preferred, in which case
+        // the unresolve will be handled in a dedicated renderpass.
         if (depthStencilRenderTarget->hasResolveAttachment() &&
             depthStencilRenderTarget->isImageTransient())
         {
             const bool unresolveDepth   = depthLoadOp == vk::RenderPassLoadOp::Load;
             const bool unresolveStencil = stencilLoadOp == vk::RenderPassLoadOp::Load;
 
-            if (unresolveDepth)
+            if (unresolveDepth && !hasDynamicRenderingAndEmulatingMSRTT)
             {
                 depthLoadOp = vk::RenderPassLoadOp::DontCare;
             }
 
-            if (unresolveStencil)
+            if (unresolveStencil && !hasDynamicRenderingAndEmulatingMSRTT)
             {
                 stencilLoadOp = vk::RenderPassLoadOp::DontCare;
 
@@ -3980,6 +3993,39 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         renderPassAttachmentOps.setOps(depthStencilAttachmentIndex, depthLoadOp, depthStoreOp);
         renderPassAttachmentOps.setStencilOps(depthStencilAttachmentIndex, stencilLoadOp,
                                               stencilStoreOp);
+    }
+
+    // If performing an unresolve for emulating MSRTT with dynamic rendering then the unresolve is
+    // done immediately using a separate renderpass. Once the unresolve is completed then unset all
+    // the unresolve bits.
+    if (hasDynamicRenderingAndEmulatingMSRTT)
+    {
+        if (mRenderPassDesc.getColorUnresolveAttachmentMask().any() ||
+            mRenderPassDesc.hasDepthUnresolveAttachment() ||
+            mRenderPassDesc.hasStencilUnresolveAttachment())
+        {
+            // Unresolve attachments using a separate renderpass.
+            UtilsVk::UnresolveParameters params;
+            params.unresolveColorMask  = mRenderPassDesc.getColorUnresolveAttachmentMask();
+            params.unresolveDepth      = mRenderPassDesc.hasDepthUnresolveAttachment();
+            params.unresolveStencil    = mRenderPassDesc.hasStencilUnresolveAttachment();
+            params.useDynamicRendering = true;
+            ANGLE_TRY(contextVk->getUtils().unresolve(contextVk, this, params));
+
+            // Update unresolve counters
+            angle::VulkanPerfCounters &perfCounters = contextVk->getPerfCounters();
+            perfCounters.colorAttachmentUnresolves +=
+                mRenderPassDesc.getColorUnresolveAttachmentMask().count();
+            perfCounters.depthAttachmentUnresolves +=
+                mRenderPassDesc.hasDepthUnresolveAttachment() ? 1 : 0;
+            perfCounters.stencilAttachmentUnresolves +=
+                mRenderPassDesc.hasStencilUnresolveAttachment() ? 1 : 0;
+
+            // Reset unresolve masks.
+            mRenderPassDesc.resetColorUnresolveAttachments();
+            mRenderPassDesc.removeDepthUnresolveAttachment();
+            mRenderPassDesc.removeStencilUnresolveAttachment();
+        }
     }
 
     // If render pass description is changed, the previous render pass desc is no longer compatible.
@@ -4041,6 +4087,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         params.unresolveColorMask = unresolveColorMask;
         params.unresolveDepth     = unresolveDepth;
         params.unresolveStencil   = unresolveStencil;
+        params.useDynamicRendering = false;
 
         ANGLE_TRY(contextVk->getUtils().unresolve(contextVk, this, params));
 

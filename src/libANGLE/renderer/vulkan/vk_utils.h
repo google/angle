@@ -1692,6 +1692,7 @@ enum class RenderPassClosureReason
     TemporaryForClearTexture,
     TemporaryForImageClear,
     TemporaryForImageCopy,
+    TemporaryForMSRTTUnresolve,
     TemporaryForOverlayDraw,
 
     // LegacyDithering requires updating the render pass

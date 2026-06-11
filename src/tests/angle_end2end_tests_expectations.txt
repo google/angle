@@ -663,6 +663,7 @@
 458082809 PIXEL4ORXL GLES : GLSLValidationExtensionDirectiveTest_ES3.Sampler2DShadow/* = SKIP
 458082810 PIXEL4ORXL GLES : GLSLValidationExtensionDirectiveTest_ES31.TextureCubeMapArray/* = SKIP
 519218481 PIXEL4ORXL GLES : MSRTTES3Test.CubeMap/* = SKIP
+519218481 PIXEL4ORXL GLES : MSRTTES3Test.CubeMapMultipleAttachments/* = SKIP
 522247737 PIXEL4ORXL GLES : MSRTTES3Test.DrawDisabled/* = SKIP
 522247737 PIXEL4ORXL GLES : MSRTTES3Test.DrawThenDrawDisabled/* = SKIP
 516824665 PIXEL4ORXL GLES : Texture2DTestES3.InvalidFormatTypeCombosShouldFail/* = SKIP
@@ -1178,6 +1179,7 @@
 512394647 PIXEL10 GLES : RobustBufferAccessBehaviorTest.OutOfBoundsArrayBuffers/* = SKIP
 512394647 PIXEL10 GLES : WebGLCompatibilityTest.EXTBlendFuncExtendedMissingOutputsWithAllChannelsMaskedOut/* = SKIP
 519218481 PIXEL10 GLES : MSRTTES3Test.CubeMap/* = SKIP
+519218481 PIXEL10 GLES : MSRTTES3Test.CubeMapMultipleAttachments/* = SKIP
 522247737 PIXEL10 GLES : MSRTTES3Test.DrawDisabled/* = SKIP
 522247737 PIXEL10 GLES : MSRTTES3Test.DrawDisabledThenDraw/* = SKIP
 522247737 PIXEL10 GLES : MSRTTES3Test.DrawThenDrawDisabled/* = SKIP
@@ -1901,6 +1903,7 @@
 410630704 SAMSUNG GALAXYS24EXYNOS VULKAN : ImageTestES3.SourceAHBTarget2DGenerateMipmapColorspaceBlend/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS VULKAN : ImageTestES3.SourceAHBTarget2DGenerateMipmap_Colorspace/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS VULKAN : ImageTestES3.SourceYUVAHBTargetExternalCopySrc/* = SKIP
+410630704 SAMSUNG GALAXYS24EXYNOS VULKAN : MSRTTES3Test.CubeMapMultipleAttachments/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS VULKAN : MultisampleTestES3.CopyTexImage2DFromMsaaDefaultFbo/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS VULKAN : RobustBufferAccessBehaviorTest.BufferDataWithIncreasedSize/* = SKIP
 410630704 SAMSUNG GALAXYS24EXYNOS VULKAN : RobustBufferAccessBehaviorTest.BufferDataWithIncreasedSizeAndUseWithVAOs/* = SKIP

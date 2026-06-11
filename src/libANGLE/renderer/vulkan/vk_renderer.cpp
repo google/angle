@@ -6750,9 +6750,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // VkEvent instead of GPU overhead associated with vkCmdResetEvent.
     ANGLE_FEATURE_CONDITION(&mFeatures, recycleVkEvent, isSwiftShader);
 
-    // Disable for Samsung, details here -> http://anglebug.com/386749841#comment21
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDynamicRendering,
-                            mDynamicRenderingFeatures.dynamicRendering == VK_TRUE && !isSamsung);
+                            mDynamicRenderingFeatures.dynamicRendering == VK_TRUE);
 
     // Don't enable VK_KHR_maintenance5 without VK_KHR_dynamic_rendering
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMaintenance5,
@@ -6761,13 +6760,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // Disabled on Nvidia driver due to a bug with attachment location mapping, resulting in
     // incorrect rendering in the presence of gaps in locations.  http://anglebug.com/372883691.
-    //
-    // Disable for Samsung, details here -> http://anglebug.com/386749841#comment21
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsDynamicRenderingLocalRead,
         mFeatures.supportsDynamicRendering.enabled &&
-            mDynamicRenderingLocalReadFeatures.dynamicRenderingLocalRead == VK_TRUE &&
-            !(isNvidia || isSamsung));
+            mDynamicRenderingLocalReadFeatures.dynamicRenderingLocalRead == VK_TRUE && !isNvidia);
 
     // Using dynamic rendering when VK_KHR_dynamic_rendering_local_read is available, because that's
     // needed for framebuffer fetch, MSRTT and advanced blend emulation.
@@ -6776,8 +6772,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // dynamic rendering.  If only version 1 is exposed, it's not sacrificied for dynamic rendering
     // and render pass objects are continued to be used.
     //
-    // Emulation of GL_EXT_multisampled_render_to_texture is not possible with dynamic rendering.
-    // That support is also not sacrificed for dynamic rendering.
+    // Using dynamic rendering when emulating GL_EXT_multisampled_render_to_texture is
+    // supported. Except for SwiftShader, which crashes when binding non-attachment textures as
+    // input attachments.
     //
     // Use of dynamic rendering is disabled on older ARM proprietary drivers due to driver bugs
     // (http://issuetracker.google.com/356051947).
@@ -6790,14 +6787,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     const bool hasLegacyDitheringV1 =
         mFeatures.supportsLegacyDithering.enabled &&
         (mLegacyDitheringVersion < 2 || !mFeatures.supportsMaintenance5.enabled);
-    const bool emulatesMultisampledRenderToTexture =
-        mFeatures.enableMultisampledRenderToTexture.enabled &&
-        !mFeatures.supportsMultisampledRenderToSingleSampled.enabled;
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferDynamicRendering,
         mFeatures.supportsDynamicRendering.enabled &&
             mFeatures.supportsDynamicRenderingLocalRead.enabled && !hasLegacyDitheringV1 &&
-            !emulatesMultisampledRenderToTexture &&
+            !isSwiftShader &&
             !(isARMProprietary && driverVersion < angle::VersionTriple(52, 0, 0)) &&
             !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 801, 0)) &&
             !isPowerVR);

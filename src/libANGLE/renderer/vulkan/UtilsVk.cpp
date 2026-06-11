@@ -1263,6 +1263,158 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     // Let ContextVk know that it should refresh all dynamic state.
     contextVk->invalidateAllDynamicState();
 }
+
+angle::Result setupUnresolveRenderPass(ContextVk *contextVk,
+                                       const FramebufferVk *framebuffer,
+                                       const UtilsVk::UnresolveParameters &params,
+                                       gl::DrawBuffersArray<vk::ImageHelper *> colorSrc)
+{
+    ASSERT(!contextVk->hasActiveRenderPass());
+    ASSERT(contextVk->getFeatures().preferDynamicRendering.enabled);
+
+    vk::RenderPassDesc renderPassDesc;
+    renderPassDesc.setSamples(framebuffer->getSamples());
+    renderPassDesc.setDynamicMSRTTUnresolve(true);
+
+    // In the unresolve operation the resolve images are the source and the multisampled images
+    // are the destination.
+    gl::DrawBuffersArray<vk::ImageHelper *> colorDst         = {};
+    gl::DrawBuffersArray<const vk::ImageView *> colorDstView = {};
+    gl::DrawBuffersArray<uint32_t> colorDstLayer             = {};
+
+    vk::ImageHelper *depthStencilSrc         = nullptr;
+    vk::ImageHelper *depthStencilDst         = nullptr;
+    const vk::ImageView *depthStencilDstView = nullptr;
+    uint32_t depthStencilDstLayer            = 0;
+
+    // Get pointers to source/destination images and views.
+    vk::PackedAttachmentIndex colorIndexVk(0);
+    for (size_t colorIndexGL : params.unresolveColorMask)
+    {
+        RenderTargetVk *colorRenderTarget = framebuffer->getColorDrawRenderTarget(colorIndexGL);
+
+        colorDst[colorIndexVk.get()] = &colorRenderTarget->getImageForRenderPass();
+        ANGLE_TRY(colorRenderTarget->getImageViewWithColorspace(
+            contextVk, gl::SrgbWriteControlMode::Default, &colorDstView[colorIndexVk.get()]));
+        colorDstLayer[colorIndexVk.get()] = colorRenderTarget->getLayerIndex();
+
+        renderPassDesc.packColorAttachment(colorIndexVk.get(),
+                                           colorDst[colorIndexVk.get()]->getActualFormatID());
+        ++colorIndexVk;
+    }
+
+    if (params.unresolveDepth || params.unresolveStencil)
+    {
+        RenderTargetVk *depthStencilRenderTarget = framebuffer->getDepthStencilRenderTarget();
+
+        depthStencilSrc = &depthStencilRenderTarget->getResolveImageForRenderPass();
+        depthStencilDst = &depthStencilRenderTarget->getImageForRenderPass();
+        ANGLE_TRY(depthStencilRenderTarget->getImageViewWithColorspace(
+            contextVk, gl::SrgbWriteControlMode::Default, &depthStencilDstView));
+        depthStencilDstLayer = depthStencilRenderTarget->getLayerIndex();
+
+        renderPassDesc.packDepthStencilAttachment(depthStencilDst->getActualFormatID());
+    }
+
+    // Create framebuffer and start renderpass
+    vk::RenderPassCommandBuffer *commandBuffer;
+    vk::Framebuffer unresolveFramebufferHandle;
+    vk::RenderPassFramebuffer unresolveRenderPassFramebuffer;
+    vk::FramebufferAttachmentsVector<VkImageView> unpackedAttachments;
+    vk::PackedClearValuesArray clearValues;
+
+    gl::Rectangle completeRenderArea   = framebuffer->getRotatedCompleteRenderArea(contextVk);
+    const uint32_t framebufferWidth    = completeRenderArea.x + completeRenderArea.width;
+    const uint32_t framebufferHeight   = completeRenderArea.y + completeRenderArea.height;
+    const uint32_t framebufferLayers   = 1;
+    vk::ImagelessFramebuffer imageless = vk::ImagelessFramebuffer::Yes;
+
+    vk::AttachmentOpsArray renderPassAttachmentOps;
+    vk::PackedAttachmentIndex attachmentIndexVk(0);
+    for (uint32_t attachmentIndex = 0; attachmentIndex < colorIndexVk.get(); ++attachmentIndex)
+    {
+        unpackedAttachments.push_back(colorDstView[attachmentIndex]->getHandle());
+        renderPassAttachmentOps.setLayouts(attachmentIndexVk, vk::ImageAccess::ColorWrite,
+                                           vk::ImageAccess::ColorWrite);
+        renderPassAttachmentOps.setOps(attachmentIndexVk, vk::RenderPassLoadOp::DontCare,
+                                       vk::RenderPassStoreOp::Store);
+        ++attachmentIndexVk;
+    }
+    if (params.unresolveDepth || params.unresolveStencil)
+    {
+        // Stencil needs to be cleared to 0 if VK_EXT_shader_stencil_export is not supported.
+        const bool needsStencilClearForUnresolve =
+            params.unresolveStencil &&
+            !contextVk->getFeatures().supportsShaderStencilExport.enabled;
+
+        vk::RenderPassLoadOp stencilLoadOp = vk::RenderPassLoadOp::DontCare;
+        if (needsStencilClearForUnresolve)
+        {
+            stencilLoadOp = vk::RenderPassLoadOp::Clear;
+
+            VkClearValue dsClearValue         = {};
+            dsClearValue.depthStencil.stencil = 0;
+            clearValues.storeDepthStencil(attachmentIndexVk, dsClearValue);
+        }
+
+        unpackedAttachments.push_back(depthStencilDstView->getHandle());
+        renderPassAttachmentOps.setLayouts(attachmentIndexVk,
+                                           vk::ImageAccess::DepthWriteStencilWrite,
+                                           vk::ImageAccess::DepthWriteStencilWrite);
+        renderPassAttachmentOps.setOps(
+            attachmentIndexVk, vk::RenderPassLoadOp::DontCare,
+            params.unresolveDepth ? vk::RenderPassStoreOp::Store : vk::RenderPassStoreOp::DontCare);
+        renderPassAttachmentOps.setStencilOps(attachmentIndexVk, stencilLoadOp,
+                                              params.unresolveStencil
+                                                  ? vk::RenderPassStoreOp::Store
+                                                  : vk::RenderPassStoreOp::DontCare);
+        ++attachmentIndexVk;
+    }
+
+    unresolveRenderPassFramebuffer.setFramebuffer(contextVk, std::move(unresolveFramebufferHandle),
+                                                  std::move(unpackedAttachments), framebufferWidth,
+                                                  framebufferHeight, framebufferLayers, imageless,
+                                                  vk::RenderPassSource::InternalUtils);
+
+    const vk::PackedAttachmentIndex depthStencilAttachmentIndex =
+        (params.unresolveDepth || params.unresolveStencil) ? colorIndexVk
+                                                           : vk::kAttachmentIndexInvalid;
+    ANGLE_TRY(
+        contextVk->beginNewRenderPass(std::move(unresolveRenderPassFramebuffer), completeRenderArea,
+                                      renderPassDesc, renderPassAttachmentOps, colorIndexVk,
+                                      depthStencilAttachmentIndex, clearValues, &commandBuffer));
+
+    // Update source and destination image layouts.
+    const uint32_t colorAttachmentCount = colorIndexVk.get();
+    gl::DrawBufferMask colorAttachmentMask(gl::DrawBufferMask::Mask(colorAttachmentCount));
+    UpdateColorAccess(contextVk, colorAttachmentMask, colorAttachmentMask);
+    UpdateDepthStencilAccess(contextVk, params.unresolveDepth, params.unresolveStencil);
+
+    for (uint32_t attachmentIndex = 0; attachmentIndex < colorAttachmentCount; ++attachmentIndex)
+    {
+        ASSERT(colorDst[attachmentIndex]->getLevelCount() == 1);
+        contextVk->onColorDraw(gl::LevelIndex(0), colorDstLayer[attachmentIndex], 1,
+                               colorDst[attachmentIndex], nullptr,
+                               vk::PackedAttachmentIndex(attachmentIndex));
+
+        contextVk->onImageRenderPassRead(VK_IMAGE_ASPECT_COLOR_BIT,
+                                         vk::ImageAccess::FragmentShaderReadOnly,
+                                         colorSrc[attachmentIndex]);
+    }
+    if (params.unresolveDepth || params.unresolveStencil)
+    {
+        ASSERT(depthStencilDst->getLevelCount() == 1);
+        contextVk->onDepthStencilDraw(gl::LevelIndex(0), depthStencilDstLayer, 1, depthStencilDst,
+                                      nullptr);
+
+        // Image layout change must include all aspectFlags if the separateDepthStencilLayouts
+        // feature is not enabled.
+        contextVk->onImageRenderPassRead(depthStencilSrc->getAspectFlags(),
+                                         vk::ImageAccess::FragmentShaderReadOnly, depthStencilSrc);
+    }
+
+    return angle::Result::Continue;
+}
 }  // namespace
 
 UtilsVk::ConvertVertexShaderParams::ConvertVertexShaderParams() = default;
@@ -4727,6 +4879,8 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
                                  const FramebufferVk *framebuffer,
                                  const UnresolveParameters &params)
 {
+    ASSERT(!contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled);
+
     vk::Renderer *renderer = contextVk->getRenderer();
 
     // Get attachment count and pointers to resolve images and views.
@@ -4774,12 +4928,18 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         }
     }
 
+    // Setup and start a renderpass if unresolve is using dynamic rendering.
+    if (params.useDynamicRendering)
+    {
+        ANGLE_TRY(setupUnresolveRenderPass(contextVk, framebuffer, params, colorSrc));
+    }
+
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete,
                               contextVk->pipelineRobustness(),
                               contextVk->pipelineProtectedAccess());
     pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
-    pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
+    pipelineDesc.setRenderPassDesc(contextVk->getStartedRenderPassCommands().getRenderPassDesc());
 
     vk::RenderPassCommandBuffer *commandBuffer =
         &contextVk->getStartedRenderPassCommands().getCommandBuffer();
@@ -4832,6 +4992,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
             SetStencilStateForWrite(renderer, &pipelineDesc);
         }
 
+        // Setup descriptor set
         VkDescriptorSet descriptorSet;
         ANGLE_TRY(allocateDescriptorSet(contextVk, &contextVk->getStartedRenderPassCommands(),
                                         function, &descriptorSet));
@@ -4979,6 +5140,13 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
             commandBuffer->draw(3, 0);
         }
         contextVk->invalidateGraphicsDriverUniforms();
+    }
+
+    if (params.useDynamicRendering)
+    {
+        // Close the render pass for this temporary framebuffer.
+        return contextVk->flushCommandsAndEndRenderPass(
+            RenderPassClosureReason::TemporaryForMSRTTUnresolve);
     }
 
     return angle::Result::Continue;
