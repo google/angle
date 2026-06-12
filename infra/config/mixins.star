@@ -120,6 +120,13 @@ targets.mixin(
 )
 
 targets.mixin(
+    name = "use_angle_d3d11",
+    args = [
+        "--use-angle=d3d11",
+    ],
+)
+
+targets.mixin(
     name = "use_angle_gl",
     args = [
         "--use-angle=gl",

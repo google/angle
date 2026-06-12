@@ -107,3 +107,47 @@ targets.bundle(
         "swangle_white_box_tests",
     ],
 )
+
+targets.bundle(
+    name = "win_common_gtests",
+    targets = [
+        "angle_deqp_gles2_d3d11_tests",
+        "angle_end2end_tests",
+        "angle_gles1_conformance_tests",
+        "angle_unittests",
+        "angle_white_box_tests",
+    ],
+)
+
+targets.bundle(
+    name = "win_nvidia_only_gtests",
+    targets = [
+        "angle_deqp_egl_d3d11_tests",
+        "angle_deqp_egl_gl_tests",
+        "angle_deqp_egl_vulkan_tests",
+        "angle_deqp_gles2_gl_tests",
+        "angle_deqp_gles2_vulkan_tests",
+        "angle_deqp_gles2_webgpu_tests",
+        "angle_deqp_gles31_gl_tests",
+        "angle_deqp_gles31_multisample_vulkan_tests",
+        "angle_deqp_gles31_vulkan_tests",
+        "angle_deqp_gles31_vulkan_rotate180_tests",
+        "angle_deqp_gles31_vulkan_rotate270_tests",
+        "angle_deqp_gles31_vulkan_rotate90_tests",
+        "angle_deqp_gles3_d3d11_tests",
+        "angle_deqp_gles3_gl_tests",
+        "angle_deqp_gles3_multisample_vulkan_tests",
+        "angle_deqp_gles3_vulkan_tests",
+        "angle_deqp_gles3_vulkan_rotate180_tests",
+        "angle_deqp_gles3_vulkan_rotate270_tests",
+        "angle_deqp_gles3_vulkan_rotate90_tests",
+        "angle_deqp_khr_gles2_vulkan_tests",
+        "angle_deqp_khr_gles31_vulkan_tests",
+        "angle_deqp_khr_gles32_vulkan_gtests",
+        "angle_deqp_khr_gles3_vulkan_tests",
+        "angle_deqp_khr_glesext_vulkan_tests",
+        "angle_deqp_khr_noctx_gles2_vulkan_tests",
+        "angle_deqp_khr_noctx_gles32_vulkan_tests",
+        "angle_deqp_khr_single_gles32_vulkan_tests",
+    ],
+)

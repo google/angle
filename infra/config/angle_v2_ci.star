@@ -1533,6 +1533,16 @@ ci.thin_tester(
         no_history = True,
         run_tests_serially = True,
     ),
+    targets = targets.bundle(
+        targets = [],
+        mixins = [
+            "win10_intel_uhd_630_experimental",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
+    ),
     # Uncomment this entry when this experimental tester is actually in use.
     # console_view_entry = consoles.console_view_entry(
     #     category = "test|win|x64|rel|exp",
@@ -1584,6 +1594,61 @@ ci.thin_tester(
         no_history = True,
         run_tests_serially = True,
     ),
+    targets = targets.bundle(
+        targets = [
+            "common_isolated_scripts",
+            "win_common_gtests",
+        ],
+        mixins = [
+            "win10_intel_uhd_630_stable",
+        ],
+        per_test_modifications = {
+            "angle_end2end_tests": targets.per_test_modification(
+                mixins = targets.mixin(
+                    args = [
+                        # anglebug.com/40644897 suspecting device lost caused by
+                        # multiprocess.
+                        "--max-processes=1",
+                    ],
+                    swarming = targets.swarming(
+                        shards = 10,
+                    ),
+                ),
+                replacements = targets.replacements(
+                    args = {
+                        # crbug.com/506180945 low capacity in this pool.
+                        "--gtest_filter": "-*Vulkan_SwiftShader*:*D3D9*:*WebGPU*",
+                    },
+                ),
+            ),
+            "angle_restricted_trace_gold_tests": targets.mixin(
+                args = [
+                    # anglebug.com/42263955 flaky 4x8 pixel artifacts on Win
+                    # Intel.
+                    "--flaky-retries=1",
+                ],
+                swarming = targets.swarming(
+                    shards = 5,
+                ),
+            ),
+            "angle_trace_perf_vulkan_smoke_tests": targets.mixin(
+                swarming = targets.swarming(
+                    shards = 3,
+                ),
+            ),
+            "angle_white_box_tests": targets.mixin(
+                args = [
+                    # anglebug.com/40644897 suspecting device lost caused by
+                    # multiprocess.
+                    "--max-processes=1",
+                ],
+            ),
+        },
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
+    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|win|x64|rel",
         short_name = "630",
@@ -1609,6 +1674,48 @@ ci.thin_tester(
         no_history = True,
         run_tests_serially = True,
     ),
+    targets = targets.bundle(
+        targets = [
+            "common_isolated_scripts",
+            "win_common_gtests",
+        ],
+        mixins = [
+            "win10_intel_uhd_770_stable",
+        ],
+        per_test_modifications = {
+            "angle_deqp_gles2_d3d11_tests": targets.mixin(
+                args = [
+                    # anglebug.com/352528974 suspecting OOM caused by
+                    # multiprocess.
+                    "--max-processes=2",
+                ],
+            ),
+            "angle_end2end_tests": targets.mixin(
+                args = [
+                    # anglebug.com/352528974 suspecting OOM caused by
+                    # multiprocess.
+                    "--max-processes=2",
+                ],
+                swarming = targets.swarming(
+                    shards = 5,
+                ),
+            ),
+            "angle_restricted_trace_gold_tests": targets.mixin(
+                swarming = targets.swarming(
+                    shards = 4,
+                ),
+            ),
+            "angle_trace_perf_vulkan_smoke_tests": targets.mixin(
+                swarming = targets.swarming(
+                    shards = 4,
+                ),
+            ),
+        },
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
+    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|win|x64|rel",
         short_name = "770",
@@ -1633,6 +1740,16 @@ ci.thin_tester(
         ),
         no_history = True,
         run_tests_serially = True,
+    ),
+    targets = targets.bundle(
+        targets = [],
+        mixins = [
+            "win10_nvidia_gtx_1660_experimental",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
     ),
     # Uncomment this entry when this experimental tester is actually in use.
     # console_view_entry = consoles.console_view_entry(
@@ -1684,6 +1801,20 @@ ci.thin_tester(
         ),
         no_history = True,
         run_tests_serially = True,
+    ),
+    targets = targets.bundle(
+        targets = [
+            "common_isolated_scripts",
+            "win_common_gtests",
+            "win_nvidia_only_gtests",
+        ],
+        mixins = [
+            "win10_nvidia_gtx_1660_stable",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
     ),
     console_view_entry = consoles.console_view_entry(
         category = "test|win|x64|rel",
