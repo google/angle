@@ -30,17 +30,6 @@
           'isolated_scripts': 'swangle_restricted_trace_gold_isolated_scripts',
         },
       },
-      'win10-x64-swiftshader-asan': {
-        'os_type': 'win',
-        'mixins': [
-          'win10_gce_gpu_pool',
-          'timeout_15m',
-        ],
-        'test_suites': {
-          # Clang-Win/ASAN has issues with dEQP's exceptions. http://crbug.com/1268912
-          'gtest_tests': 'swangle_non_deqp_slow_flaky_gtests',
-        },
-      },
     },
   },
   {

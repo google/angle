@@ -16,49 +16,10 @@
       '../config/generated/builders/gn_args_locations.json',
   ],
 
-  # This is a map of builder group names -> builder names -> config names
-  # (where each config name is a key in the 'configs' dict, below). MB uses
-  # this dict to look up which config to use for a given bot.
-  'builder_groups': {
-    'angle': {
-      'linux-ubsan-test': 'angle_ubsan_bot',
-      'win-asan-test': 'angle_asan_bot',
-    },
-  },
-
-  # This is the list of configs that you can pass to mb; each config
-  # represents a particular combination of gn args that
-  # we must support. A given config *may* be platform-specific but
-  # is not necessarily so (i.e., we might have mac, win, and linux
-  # bots all using the 'release_bot' config).
-  'configs': {
-    'angle_asan_bot': ['angle', 'opencl', 'remoteexec', 'asan', 'release'],
-    'angle_ubsan_bot': ['angle', 'opencl', 'openclcts', 'remoteexec', 'ubsan', 'release'],
-  },
-
-  # This is a dict mapping a given 'mixin' name to a dict of settings that
-  # mb should use. See //tools/mb/docs/user_guide.md for more information.
-  'mixins': {
-    'angle': {
-      'gn_args': 'is_component_build=true',
-    },
-    'asan': {
-      'gn_args': 'is_asan=true',
-    },
-    'opencl': {
-      'gn_args': 'angle_enable_cl=true',
-    },
-    'openclcts': {
-      'gn_args': 'angle_enable_cl_testing=true',
-    },
-    'release': {
-      'gn_args': 'is_debug=false dcheck_always_on=true symbol_level=1',
-    },
-    'remoteexec': {
-      'gn_args': 'use_remoteexec=true use_reclient=false use_siso=true',
-    },
-    'ubsan': {
-      'gn_args': 'is_ubsan=true',
-    },
-  },
+  # builder_groups, configs, and mixins are not expected to be used since Dawn
+  # specifies its GN args via Starlark now. However, mb.py assumes that these
+  # keys exist, so have empty dicts for each.
+  'builder_groups': {},
+  'configs': {},
+  'mixins': {},
 }
