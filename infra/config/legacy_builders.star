@@ -286,9 +286,6 @@ def angle_builder(name, cpu):
                 location_filters = location_filters,
             )
 
-# name, clang, debug, cpu, uwp, trace_tests
-angle_builder("win-asan-test", cpu = "x64")
-
 # CQ
 
 luci.cq(
