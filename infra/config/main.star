@@ -318,6 +318,52 @@ luci.gitiles_poller(
     schedule = "with 10s interval",
 )
 
+# CQ
+
+luci.cq(
+    status_host = "chromium-cq-status.appspot.com",
+    submit_max_burst = 4,
+    submit_burst_delay = 480 * time.second,
+)
+
+luci.cq_group(
+    name = "main",
+    watch = cq.refset(
+        "https://chromium.googlesource.com/angle/angle",
+        refs = [r"refs/heads/main"],
+    ),
+    acls = [
+        acl.entry(
+            acl.CQ_COMMITTER,
+            groups = "project-angle-submit-access",
+        ),
+        acl.entry(
+            acl.CQ_DRY_RUNNER,
+            groups = "project-angle-tryjob-access",
+        ),
+    ],
+    verifiers = [
+        luci.cq_tryjob_verifier(
+            builder = "chromium:try/android-angle-chromium-try",
+        ),
+        luci.cq_tryjob_verifier(
+            builder = "chromium:try/fuchsia-angle-try",
+        ),
+        luci.cq_tryjob_verifier(
+            builder = "chromium:try/linux-angle-chromium-try",
+        ),
+        luci.cq_tryjob_verifier(
+            builder = "chromium:try/mac-angle-chromium-try",
+        ),
+        luci.cq_tryjob_verifier(
+            builder = "chromium:try/win-angle-chromium-x64-try",
+        ),
+        luci.cq_tryjob_verifier(
+            builder = "chromium:try/win-angle-chromium-x86-try",
+        ),
+    ],
+)
+
 # Views
 
 consoles.console_view(
@@ -348,4 +394,3 @@ exec("//tests.star")
 # Handle any other builders defined in other files.
 exec("//angle_v2_ci.star")
 exec("//angle_v2_try.star")
-exec("//legacy_builders.star")
