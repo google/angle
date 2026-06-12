@@ -117,7 +117,6 @@
 42266821 WIN INTEL OPENGL : TextureCubeTestES3.IncompatibleLayerABThenCompatibleLayerABSingleLevel/* = SKIP
 42265322 WIN NVIDIA OPENGL : GLSLTest.VectorAndMatrixScalarizationDoesNotAffectRendering/* = SKIP
 42265322 WIN NVIDIA GLES : GLSLTest.VectorAndMatrixScalarizationDoesNotAffectRendering/* = SKIP
-42263316 WIN NVIDIA GLES : CopyTextureTest.CopyOutsideMipmap/* = SKIP
 42265771 WIN INTEL D3D11 : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
 42265885 WIN NVIDIA VULKAN : DebugTestES3.MessageControl1/* = SKIP
 42266165 WIN INTEL VULKAN : FramebufferTest_ES31.ChangeFBOSizeAndAttachmentsCount/* = SKIP
@@ -158,7 +157,6 @@
 447556589 WIN INTEL OPENGL : GeometryShaderTest.ImplicitSizedArrayMatchesExplicitSizedArray2/* = SKIP
 451644991 WIN INTEL OPENGL : WebGL2GLSLTest.NotInfiniteLoop/* = SKIP
 436598955 WIN D3D11 : DepthStencilFormatsTest.DepthTextureRender/ES3*D3D11 = SKIP
-498904293 WIN NVIDIA GLES : DXTSRGBCompressedTextureTest.Decompression8x8RGBADXT1/* = SKIP
 
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2111)
 40644896 WIN INTEL OPENGL : D3DImageFormatConversionTest.WriteColorFunctionR8G8B8A8/* = SKIP
@@ -1679,9 +1677,6 @@
 42265943 WIN INTEL OPENGL : CompressedTextureETC2RGB8Test.Test/* = SKIP
 42265943 WIN INTEL OPENGL : CompressedTextureETC2RGBA8SRGBTest.Test/* = SKIP
 42265943 WIN INTEL OPENGL : CompressedTextureETC2RGBA8Test.Test/* = SKIP
-
-// NVIDIA GLES specific failures with DXT texture uploads
-498904293 WIN NVIDIA GLES : DXT1CompressedTextureTestWebGL2.InitializeTextureContents/* = SKIP
 
 // Takes several minutes to complete with ASAN / TSAN
 42263997 ASAN VULKAN SWIFTSHADER : ClipCullDistanceTest.SizeCheckCombined/* = SKIP

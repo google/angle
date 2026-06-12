@@ -2584,9 +2584,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, sanitizeAMDGPURendererString, IsLinux() && hasAMD);
 
     // http://crbug.com/1187513
-    // Imagination drivers are buggy with context switching. It needs to unbind fbo before context
+    // http://anglebug.com/519646871
+    // Several drivers are buggy with context switching. It needs to unbind fbo before context
     // switching to workadround the driver issues.
-    ANGLE_FEATURE_CONDITION(features, unbindFBOBeforeSwitchingContext, IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, unbindFBOBeforeSwitchingContext,
+                            IsPowerVR(vendor) || (IsWindows() && isNvidia));
 
     // http://crbug.com/1181068 and http://crbug.com/783979
     ANGLE_FEATURE_CONDITION(features, flushOnFramebufferChange,
