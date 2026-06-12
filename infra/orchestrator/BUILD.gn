@@ -4,43 +4,43 @@
 
 # The targets in this file are used to allow child testers to function without
 # the need for a full checkout. If a child tester opts in, the parent builder
-# will package all data for the `test_trigger_cas_all` target into a CAS isolate
+# will package all data for the `orchestrator_all` target into a CAS isolate
 # for the child tester to download and extract.
 
-group("test_trigger_cas_all") {
-  write_runtime_deps = "$root_out_dir/test_trigger_cas_all.runtime_deps"
+group("orchestrator_all") {
+  write_runtime_deps = "$root_out_dir/orchestrator_all.runtime_deps"
 
   data_deps = [
-    ":test_trigger_cas_infra",
-    ":test_trigger_cas_mb",
-    ":test_trigger_cas_merge_scripts",
+    ":orchestrator_infra",
+    ":orchestrator_mb",
+    ":orchestrator_merge_scripts",
   ]
 }
 
-group("test_trigger_cas_infra") {
+group("orchestrator_infra") {
   data = [
     "//infra/config/generated/",
     "//infra/specs/",
   ]
 }
 
-group("test_trigger_cas_mb") {
+group("orchestrator_mb") {
   data = [
     "//build/gn_helpers.py",
     "//tools/mb/",
   ]
-  data_deps = [ ":test_trigger_cas_python" ]
+  data_deps = [ ":orchestrator_python" ]
 }
 
-group("test_trigger_cas_merge_scripts") {
+group("orchestrator_merge_scripts") {
   data = [
     "//scripts/",
     "//src/tests/py_utils/",
     "//testing/merge_scripts/",
   ]
-  data_deps = [ ":test_trigger_cas_python" ]
+  data_deps = [ ":orchestrator_python" ]
 }
 
-group("test_trigger_cas_python") {
+group("orchestrator_python") {
   data = [ "//.vpython3" ]
 }
