@@ -352,6 +352,17 @@
           'isolated_scripts': 'isolated_scripts_group_common',
         },
       },
+      'angle-win-x64-sws-asan': {
+        'os_type': 'win',
+        'mixins': [
+          'win10_gce_gpu_pool',
+          'timeout_15m',
+        ],
+        'test_suites': {
+          # Clang-Win/ASAN has issues with dEQP's exceptions. http://crbug.com/1268912
+          'gtest_tests': 'swangle_non_deqp_slow_flaky_gtests',
+        },
+      },
       'angle-win-x64-trace': {
         'os_type': 'win',
         'additional_compile_targets': [
