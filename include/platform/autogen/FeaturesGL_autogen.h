@@ -698,12 +698,6 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
-    FeatureInfo recreateFboUponFlush = {
-        "recreateFboUponFlush",
-        FeatureCategory::OpenGLWorkarounds,
-        &members,
-    };
-
     FeatureInfo reattachFboDepthStencilOnReallocation = {
         "reattachFboDepthStencilOnReallocation",
         FeatureCategory::OpenGLWorkarounds,

@@ -8121,7 +8121,7 @@ void Context::uniformBlockBinding(ShaderProgramID program,
 GLsync Context::fenceSync(GLenum condition, GLbitfield flags)
 {
     SyncID syncHandle;
-    if (!mState.mSyncManager->createSync(mImplementation.get(), this, &syncHandle))
+    if (!mState.mSyncManager->createSync(mImplementation.get(), &syncHandle))
     {
         handleExhaustionError(angle::EntryPoint::GLFenceSync);
         return nullptr;

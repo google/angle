@@ -6349,7 +6349,7 @@ FenceNVImpl *ContextVk::createFenceNV()
     return new FenceNVVk();
 }
 
-SyncImpl *ContextVk::createSync(const gl::Context *)
+SyncImpl *ContextVk::createSync()
 {
     return new SyncVk();
 }

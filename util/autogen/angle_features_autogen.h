@@ -293,7 +293,6 @@ enum class Feature
     ReadPixelsUsingImplementationColorReadFormatForNorm16,
     ReapplyUBOBindingsAfterUsingBinaryProgram,
     ReattachFboDepthStencilOnReallocation,
-    RecreateFboUponFlush,
     RecreateMipmapLevelsBeforeGenerate,
     RecycleVkEvent,
     RegenerateStructNames,

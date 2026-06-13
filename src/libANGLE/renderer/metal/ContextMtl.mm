@@ -1533,7 +1533,7 @@ FenceNVImpl *ContextMtl::createFenceNV()
 {
     return new FenceNVMtl();
 }
-SyncImpl *ContextMtl::createSync(const gl::Context *)
+SyncImpl *ContextMtl::createSync()
 {
     return new SyncMtl();
 }

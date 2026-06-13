@@ -2725,9 +2725,6 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // exposed.
     ANGLE_FEATURE_CONDITION(features, bgraTexImageFormatsBroken, !isMesa && isQualcomm);
 
-    // https://crbug.com/493747593
-    ANGLE_FEATURE_CONDITION(features, recreateFboUponFlush, false);
-
     // https://crbug.com/520656244
     ANGLE_FEATURE_CONDITION(features, reattachFboDepthStencilOnReallocation,
                             !isMesa && isQualcomm && qualcommVersion < 878);
