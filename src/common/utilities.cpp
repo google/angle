@@ -16,6 +16,7 @@
 #include "common/platform.h"
 #include "common/string_utils.h"
 
+#include <limits>
 #include <set>
 
 #if defined(ANGLE_ENABLE_WINDOWS_UWP)
@@ -976,9 +977,15 @@ bool SamplerNameContainsNonZeroArrayElement(const std::string &name)
 
 unsigned int ArraySizeProduct(const std::vector<unsigned int> &arraySizes)
 {
+    // Saturate on overflow; a wrapped (small) product defeats downstream size/limit checks.
     unsigned int arraySizeProduct = 1u;
     for (unsigned int arraySize : arraySizes)
     {
+        if (arraySize != 0u &&
+            arraySizeProduct > std::numeric_limits<unsigned int>::max() / arraySize)
+        {
+            return std::numeric_limits<unsigned int>::max();
+        }
         arraySizeProduct *= arraySize;
     }
     return arraySizeProduct;
@@ -986,10 +993,17 @@ unsigned int ArraySizeProduct(const std::vector<unsigned int> &arraySizes)
 
 unsigned int InnerArraySizeProduct(const std::vector<unsigned int> &arraySizes)
 {
+    // Saturate on overflow; a wrapped (small) product defeats downstream size/limit checks.
     unsigned int arraySizeProduct = 1u;
     for (size_t index = 0; index + 1 < arraySizes.size(); ++index)
     {
-        arraySizeProduct *= arraySizes[index];
+        const unsigned int arraySize = arraySizes[index];
+        if (arraySize != 0u &&
+            arraySizeProduct > std::numeric_limits<unsigned int>::max() / arraySize)
+        {
+            return std::numeric_limits<unsigned int>::max();
+        }
+        arraySizeProduct *= arraySize;
     }
     return arraySizeProduct;
 }
