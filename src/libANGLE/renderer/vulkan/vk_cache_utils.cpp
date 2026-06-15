@@ -1680,11 +1680,11 @@ DestT Int4Array_Get(const uint8_t *arrayBytes, uint32_t arrayIndex)
 }
 
 // When converting a byte number to a transition bit index we can shift instead of divide.
-constexpr size_t kTransitionByteShift = Log2(kGraphicsPipelineDirtyBitBytes);
+constexpr size_t kTransitionByteShift = gl::log2(kGraphicsPipelineDirtyBitBytes);
 
 // When converting a number of bits offset to a transition bit index we can also shift.
 constexpr size_t kBitsPerByte        = 8;
-constexpr size_t kTransitionBitShift = kTransitionByteShift + Log2(kBitsPerByte);
+constexpr size_t kTransitionBitShift = kTransitionByteShift + gl::log2(kBitsPerByte);
 
 // Helper macro to map from a PipelineDesc struct and field to a dirty bit index.
 // Uses the 'offsetof' macro to compute the offset 'Member' within the PipelineDesc.

@@ -41,7 +41,7 @@ constexpr uint32_t PackTypeInfo(GLuint bytes, bool specialized)
 {
     // static_assert within constexpr requires c++17
     // static_assert(isPow2(bytes));
-    return bytes | (rx::Log2(bytes) << 8) | (specialized << 16);
+    return bytes | (log2(bytes) << 8) | (specialized << 16);
 }
 
 }  // anonymous namespace
