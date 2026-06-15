@@ -5821,57 +5821,78 @@ void WebGLCompatibilityTest::testCompressedTexLevelDimension(GLenum format,
                                                              GLenum expectedError,
                                                              const char *explanation)
 {
+    const bool isBPTC = format == GL_COMPRESSED_RGBA_BPTC_UNORM_EXT ||
+                        format == GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT ||
+                        format == GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT ||
+                        format == GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT;
+
     std::vector<uint8_t> tempVector(expectedByteLength, 0);
 
     EXPECT_GL_NO_ERROR();
 
-    GLTexture sourceTexture;
-    glBindTexture(GL_TEXTURE_2D, sourceTexture);
-    glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height, 0, expectedByteLength,
-                           tempVector.data());
-    if (expectedError == 0)
     {
-        EXPECT_GL_NO_ERROR() << explanation;
+        GLTexture sourceTexture;
+        glBindTexture(GL_TEXTURE_2D, sourceTexture);
+        glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height, 0, expectedByteLength,
+                               tempVector.data());
+        EXPECT_GL_ERROR(expectedError) << explanation << " (glCompressedTexImage2D)";
     }
-    else
+
+    if (getClientMajorVersion() >= 3)
     {
-        EXPECT_GL_ERROR(expectedError) << explanation;
+        GLTexture sourceTexture;
+        glBindTexture(GL_TEXTURE_2D_ARRAY, sourceTexture);
+        glCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, level, format, width, height, 3, 0,
+                               expectedByteLength * 3, nullptr);
+        EXPECT_GL_ERROR(expectedError) << explanation << "(glCompressedTexImage3D array)";
+    }
+
+    if (isBPTC && getClientMajorVersion() >= 3)
+    {
+        GLTexture sourceTexture;
+        glBindTexture(GL_TEXTURE_3D, sourceTexture);
+        glCompressedTexImage3D(GL_TEXTURE_3D, level, format, width, height, 3, 0,
+                               expectedByteLength * 3, nullptr);
+        EXPECT_GL_ERROR(expectedError) << explanation << "(glCompressedTexImage3D volume)";
     }
 
     if (level == 0 && width > 0)
     {
-        GLTexture sourceTextureStorage;
-        glBindTexture(GL_TEXTURE_2D, sourceTextureStorage);
-
-        if (getClientMajorVersion() >= 3)
         {
-            glTexStorage2D(GL_TEXTURE_2D, 1, format, width, height);
-            if (expectedError == 0)
+            GLTexture sourceTextureStorage;
+            glBindTexture(GL_TEXTURE_2D, sourceTextureStorage);
+
+            if (getClientMajorVersion() >= 3)
             {
-                EXPECT_GL_NO_ERROR() << explanation << " (texStorage2D)";
+                glTexStorage2D(GL_TEXTURE_2D, 1, format, width, height);
+                EXPECT_GL_ERROR(expectedError) << explanation << " (texStorage2D)";
             }
             else
             {
-                EXPECT_GL_ERROR(expectedError) << explanation << " (texStorage2D)";
-            }
-        }
-        else
-        {
-            if (IsGLExtensionRequestable("GL_EXT_texture_storage"))
-            {
-                glRequestExtensionANGLE("GL_EXT_texture_storage");
-                ASSERT_TRUE(IsGLExtensionEnabled("GL_EXT_texture_storage"));
-
-                glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, width, height);
-                if (expectedError == 0)
+                if (EnsureGLExtensionEnabled("GL_EXT_texture_storage"))
                 {
-                    EXPECT_GL_NO_ERROR() << explanation << " (texStorage2DEXT)";
-                }
-                else
-                {
+                    glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, width, height);
                     EXPECT_GL_ERROR(expectedError) << explanation << " (texStorage2DEXT)";
                 }
             }
+        }
+
+        if (getClientMajorVersion() >= 3)
+        {
+            GLTexture sourceTextureStorage;
+            glBindTexture(GL_TEXTURE_2D_ARRAY, sourceTextureStorage);
+
+            glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, format, width, height, 3);
+            EXPECT_GL_ERROR(expectedError) << explanation << " (texStorage3D, array)";
+        }
+
+        if (isBPTC && getClientMajorVersion() >= 3)
+        {
+            GLTexture sourceTextureStorage;
+            glBindTexture(GL_TEXTURE_3D, sourceTextureStorage);
+
+            glTexStorage3D(GL_TEXTURE_3D, 1, format, width, height, 3);
+            EXPECT_GL_ERROR(expectedError) << explanation << " (texStorage3D, volume)";
         }
     }
 }

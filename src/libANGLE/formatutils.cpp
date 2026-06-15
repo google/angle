@@ -1966,7 +1966,7 @@ bool InternalFormat::computeCompressedImageDepthPitch(GLsizei height,
                                                       GLuint *resultOut) const
 {
     ASSERT(compressed);
-    ASSERT(rowPitch > 0 && rowPitch % pixelBytes == 0);
+    ASSERT(rowPitch % pixelBytes == 0);
 
     CheckedNumeric<GLuint> checkedHeight(height);
     CheckedNumeric<GLuint> checkedRowPitch(rowPitch);
