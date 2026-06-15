@@ -675,6 +675,12 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             else
             {
                 ASSERT(actualFormatInfo.paletted);
+                if (texType != TextureType::_2D)
+                {
+                    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidTextureTarget);
+                    return false;
+                }
+
                 // TODO(http://anglebug.com/42266155): multi-level paletted images
                 if (level != 0)
                 {
@@ -1990,6 +1996,11 @@ bool ValidateCompressedTexImage3D(const Context *context,
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalformat);
     if (!formatInfo.compressed)
     {
+        if (formatInfo.paletted)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidTextureTarget);
+            return false;
+        }
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidCompressedFormat);
         return false;
     }
