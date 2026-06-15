@@ -2079,6 +2079,11 @@ bool InternalFormat::computeSkipBytes(GLenum formatType,
                                       GLuint skipImages,
                                       GLuint *resultOut) const
 {
+    if (compressed || paletted)
+    {
+        *resultOut = 0;
+        return true;
+    }
     auto skipBytes = CheckedNumeric<GLuint>{skipImages} * depthPitch +
                      CheckedNumeric<GLuint>{skipRows} * rowPitch +
                      CheckedNumeric<GLuint>{skipPixels} * computePixelBytes(formatType);

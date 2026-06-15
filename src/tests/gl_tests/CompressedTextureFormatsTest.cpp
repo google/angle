@@ -430,6 +430,35 @@ class CompressedTextureFormatsTest : public ANGLETest<CompressedTextureTestParam
                                        desc.blockY * 2, 0, desc.size * 4, nullptr);
                 EXPECT_GL_NO_ERROR();
 
+                // Pixel unpack state must not affect compressed textures
+                if (getClientMajorVersion() >= 3 ||
+                    (EnsureGLExtensionEnabled("GL_EXT_unpack_subimage") &&
+                     EnsureGLExtensionEnabled("GL_NV_pixel_buffer_object")))
+                {
+                    GLBuffer buf;
+                    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buf);
+                    glBufferData(GL_PIXEL_UNPACK_BUFFER, desc.size * 4, nullptr, GL_STREAM_DRAW);
+                    ASSERT_GL_NO_ERROR();
+
+                    glCompressedTexImage2D(GL_TEXTURE_2D, 0, desc.format, desc.blockX * numX,
+                                           desc.blockY * 2, 0, desc.size * 4, nullptr);
+                    EXPECT_GL_NO_ERROR();
+
+                    for (GLenum param :
+                         {GL_UNPACK_ROW_LENGTH, GL_UNPACK_SKIP_ROWS, GL_UNPACK_SKIP_PIXELS})
+                    {
+                        glPixelStorei(param, 0x7FFFFFFF);
+                        ASSERT_GL_NO_ERROR();
+                        glCompressedTexImage2D(GL_TEXTURE_2D, 0, desc.format, desc.blockX * numX,
+                                               desc.blockY * 2, 0, desc.size * 4, nullptr);
+                        EXPECT_GL_NO_ERROR();
+                        glPixelStorei(param, 0);
+                    }
+
+                    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+                    ASSERT_GL_NO_ERROR();
+                }
+
                 checkSubImage2D(desc, numX);
             }
             else
@@ -516,6 +545,36 @@ class CompressedTextureFormatsTest : public ANGLETest<CompressedTextureTestParam
                 if (supportsTarget)
                 {
                     EXPECT_GL_NO_ERROR();
+
+                    // Pixel unpack state must not affect compressed textures
+                    {
+                        GLBuffer buf;
+                        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buf);
+                        glBufferData(GL_PIXEL_UNPACK_BUFFER, desc.size * 8, nullptr,
+                                     GL_STREAM_DRAW);
+                        ASSERT_GL_NO_ERROR();
+
+                        glCompressedTexImage3D(target, 0, desc.format, desc.blockX * 2,
+                                               desc.blockY * 2, desc.blockZ * 2, 0, desc.size * 8,
+                                               nullptr);
+                        EXPECT_GL_NO_ERROR();
+
+                        for (GLenum param :
+                             {GL_UNPACK_ROW_LENGTH, GL_UNPACK_SKIP_ROWS, GL_UNPACK_SKIP_PIXELS,
+                              GL_UNPACK_SKIP_IMAGES, GL_UNPACK_IMAGE_HEIGHT})
+                        {
+                            glPixelStorei(param, 0x7FFFFFFF);
+                            ASSERT_GL_NO_ERROR();
+                            glCompressedTexImage3D(target, 0, desc.format, desc.blockX * 2,
+                                                   desc.blockY * 2, desc.blockZ * 2, 0,
+                                                   desc.size * 8, nullptr);
+                            EXPECT_GL_NO_ERROR();
+                            glPixelStorei(param, 0);
+                        }
+
+                        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+                        ASSERT_GL_NO_ERROR();
+                    }
 
                     checkSubImage3D(target, desc);
                 }
