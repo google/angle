@@ -64,12 +64,6 @@ class CompressedTextureFormatsTest : public ANGLETest<CompressedTextureTestParam
         setExtensionsEnabled(false);
     }
 
-    void testSetUp() override
-    {
-        // Apple platforms require PVRTC1 textures to be squares.
-        mSquarePvrtc1 = IsAppleGPU();
-    }
-
     void checkSubImage2D(FormatDesc desc, int numX)
     {
         GLubyte data[64] = {};
@@ -409,7 +403,7 @@ class CompressedTextureFormatsTest : public ANGLETest<CompressedTextureTestParam
                 int numX = 2;
                 if (desc.isPVRTC1())
                 {
-                    if (mSquarePvrtc1 && desc.blockX == 8)
+                    if (desc.blockX == 8)
                     {
                         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
                         numX = 1;
@@ -476,7 +470,7 @@ class CompressedTextureFormatsTest : public ANGLETest<CompressedTextureTestParam
             if (compressedFormatEnabled)
             {
                 int numX = 2;
-                if (desc.isPVRTC1() && mSquarePvrtc1 && desc.blockX == 8)
+                if (desc.isPVRTC1() && desc.blockX == 8)
                 {
                     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
                     numX = 1;
@@ -501,7 +495,7 @@ class CompressedTextureFormatsTest : public ANGLETest<CompressedTextureTestParam
             if (compressedFormatEnabled)
             {
                 int numX = 2;
-                if (desc.isPVRTC1() && mSquarePvrtc1 && desc.blockX == 8)
+                if (desc.isPVRTC1() && desc.blockX == 8)
                 {
                     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
                     numX = 1;
@@ -704,7 +698,7 @@ class CompressedTextureFormatsTest : public ANGLETest<CompressedTextureTestParam
         if (getClientMajorVersion() >= 3)
         {
             check3D(GL_TEXTURE_2D_ARRAY, compressedFormatEnabled, mSupports2DArray);
-            check3D(GL_TEXTURE_3D, compressedFormatEnabled, mSupports3D && !mDisableTexture3D);
+            check3D(GL_TEXTURE_3D, compressedFormatEnabled, mSupports3D);
         }
 
         for (const std::string &extName : mExtNames)
@@ -724,7 +718,7 @@ class CompressedTextureFormatsTest : public ANGLETest<CompressedTextureTestParam
         if (getClientMajorVersion() >= 3)
         {
             check3D(GL_TEXTURE_2D_ARRAY, true, mSupports2DArray);
-            check3D(GL_TEXTURE_3D, true, mSupports3D && !mDisableTexture3D);
+            check3D(GL_TEXTURE_3D, true, mSupports3D);
         }
     }
 
@@ -764,14 +758,12 @@ class CompressedTextureFormatsTest : public ANGLETest<CompressedTextureTestParam
         }
 
         check3D(GL_TEXTURE_2D_ARRAY, true, mSupports2DArray);
-        check3D(GL_TEXTURE_3D, true, mSupports3D && !mDisableTexture3D);
+        check3D(GL_TEXTURE_3D, true, mSupports3D);
 
         testSampler3D(GL_TEXTURE_3D);
     }
 
   private:
-    bool mSquarePvrtc1     = false;
-    bool mDisableTexture3D = false;
     const std::vector<std::string> mExtNames;
     const bool mSupportsUpdates;
     const bool mSupportsPartialUpdates;

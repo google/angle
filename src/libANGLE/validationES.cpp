@@ -1166,8 +1166,8 @@ bool ValidCompressedImageSize(const Context *context,
             return false;
         }
 
-        // Some platforms support only square PVRTC1 textures.
-        if (width != height && context->getLimitations().squarePvrtc1)
+        // Supported platforms (Apple silicon) accept only square PVRTC1 textures.
+        if (width != height)
         {
             return false;
         }

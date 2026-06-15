@@ -2193,12 +2193,6 @@ void GenerateCaps(const FunctionsGL *functions,
          functions->isAtLeastGLES(gl::Version(3, 2)) ||
          functions->hasGLESExtension("GL_KHR_blend_equation_advanced_coherent"));
 
-    // PVRTC1 textures must be squares on Apple platforms.
-    if (IsApple())
-    {
-        limitations->squarePvrtc1 = true;
-    }
-
     // Check if the driver clamps constant blend color
     if (IsQualcomm(GetVendorID(functions)))
     {
