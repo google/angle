@@ -1142,7 +1142,7 @@ angle::Result BlitGL::clearFramebuffer(const gl::Context *context,
     if ((clearMask & GL_COLOR_BUFFER_BIT) &&
         (uninitializedColorAttachments != source->getState().getColorAttachmentsMask() ||
          uninitializedColorAttachments != source->getState().getEnabledDrawBuffers() ||
-         hasIntegerColorAttachments || source->hasEmulatedAlphaChannelTextureAttachment()))
+         hasIntegerColorAttachments))
     {
         for (size_t colorAttachmentIdx : uninitializedColorAttachments)
         {
@@ -1153,15 +1153,13 @@ angle::Result BlitGL::clearFramebuffer(const gl::Context *context,
                 continue;
             }
 
-            const bool emulatedAlpha = IsEmulatedAlphaChannelTextureAttachment(attachment);
-
             switch (attachment->getComponentType())
             {
                 case GL_UNSIGNED_NORMALIZED:
                 case GL_SIGNED_NORMALIZED:
                 case GL_FLOAT:
                 {
-                    const GLfloat clearValue[] = {0.0f, 0.0f, 0.0f, emulatedAlpha ? 1.0f : 0.0f};
+                    constexpr GLfloat clearValue[] = {0, 0, 0, 0};
                     ANGLE_GL_TRY(context,
                                  mFunctions->clearBufferfv(
                                      GL_COLOR, static_cast<GLint>(colorAttachmentIdx), clearValue));
@@ -1170,7 +1168,7 @@ angle::Result BlitGL::clearFramebuffer(const gl::Context *context,
 
                 case GL_INT:
                 {
-                    const GLint clearValue[] = {0, 0, 0, emulatedAlpha ? 1 : 0};
+                    constexpr GLint clearValue[] = {0, 0, 0, 0};
                     ANGLE_GL_TRY(context,
                                  mFunctions->clearBufferiv(
                                      GL_COLOR, static_cast<GLint>(colorAttachmentIdx), clearValue));
@@ -1179,7 +1177,7 @@ angle::Result BlitGL::clearFramebuffer(const gl::Context *context,
 
                 case GL_UNSIGNED_INT:
                 {
-                    const GLuint clearValue[] = {0, 0, 0, emulatedAlpha ? 1u : 0u};
+                    constexpr GLuint clearValue[] = {0, 0, 0, 0};
                     ANGLE_GL_TRY(context,
                                  mFunctions->clearBufferuiv(
                                      GL_COLOR, static_cast<GLint>(colorAttachmentIdx), clearValue));
