@@ -11,6 +11,27 @@ builders or other bundles.
 load("@chromium-luci//targets.star", "targets")
 
 targets.bundle(
+    name = "angle_deqp_khr_gles32_vulkan_gtests",
+    targets = [
+        "angle_deqp_khr_gles32_vulkan_tests_seed1_width64_height64",
+        "angle_deqp_khr_gles32_vulkan_tests_seed2_width113_height47",
+        "angle_deqp_khr_gles32_vulkan_tests_seed3_width-1_height64",
+        "angle_deqp_khr_gles32_vulkan_tests_seed3_width64_height-1",
+    ],
+)
+
+targets.bundle(
+    name = "common_isolated_scripts",
+    targets = [
+        "angle_capture_tests",
+        "angle_smoke_perftests",
+        "angle_restricted_trace_gold_tests",
+        "angle_trace_perf_native_smoke_tests",
+        "angle_trace_perf_vulkan_smoke_tests",
+    ],
+)
+
+targets.bundle(
     name = "linux_real_hardware_common_gtests",
     targets = [
         "angle_deqp_gles2_gl_tests",
@@ -64,23 +85,52 @@ targets.bundle(
 )
 
 targets.bundle(
-    name = "angle_deqp_khr_gles32_vulkan_gtests",
+    name = "mac_x64_angle_deqp_gles2_with_retry_gtests",
     targets = [
-        "angle_deqp_khr_gles32_vulkan_tests_seed1_width64_height64",
-        "angle_deqp_khr_gles32_vulkan_tests_seed2_width113_height47",
-        "angle_deqp_khr_gles32_vulkan_tests_seed3_width-1_height64",
-        "angle_deqp_khr_gles32_vulkan_tests_seed3_width64_height-1",
+        "angle_deqp_gles2_gl_tests",
+        "angle_deqp_gles2_metal_tests",
+        "angle_deqp_gles2_webgpu_tests",
+    ],
+    mixins = [
+        "gtest_enable_flaky_retries",
     ],
 )
 
 targets.bundle(
-    name = "common_isolated_scripts",
+    name = "mac_x64_angle_deqp_gles3_with_retry_gtests",
     targets = [
-        "angle_capture_tests",
-        "angle_smoke_perftests",
-        "angle_restricted_trace_gold_tests",
-        "angle_trace_perf_native_smoke_tests",
-        "angle_trace_perf_vulkan_smoke_tests",
+        "angle_deqp_gles3_gl_tests",
+        "angle_deqp_gles3_metal_tests",
+    ],
+    mixins = [
+        "gtest_enable_flaky_retries",
+    ],
+)
+
+targets.bundle(
+    name = "mac_x64_angle_end2end_tests_with_retry_gtests",
+    targets = [
+        "angle_end2end_tests",
+    ],
+    mixins = [
+        "gtest_enable_flaky_retries",
+        targets.mixin(
+            swarming = targets.swarming(
+                shards = 2,
+            ),
+        ),
+    ],
+)
+
+targets.bundle(
+    name = "mac_x64_gtests",
+    targets = [
+        "angle_deqp_egl_gl_tests",
+        "angle_deqp_egl_metal_tests",
+        "mac_x64_angle_deqp_gles2_with_retry_gtests",
+        "mac_x64_angle_deqp_gles3_with_retry_gtests",
+        "mac_x64_angle_end2end_tests_with_retry_gtests",
+        "angle_unittests",
     ],
 )
 

@@ -154,6 +154,16 @@ targets.tests.gtest_test(
 )
 
 targets.tests.gtest_test(
+    name = "angle_deqp_egl_metal_tests",
+    mixins = [
+        "deqp_merge_script",
+        "use_angle_metal",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_egl_tests",
+)
+
+targets.tests.gtest_test(
     name = "angle_deqp_egl_vulkan_tests",
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
@@ -189,6 +199,16 @@ targets.tests.gtest_test(
         "deqp_merge_script",
         "no_xvfb",
         "use_angle_gl",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_gles2_tests",
+)
+
+targets.tests.gtest_test(
+    name = "angle_deqp_gles2_metal_tests",
+    mixins = [
+        "deqp_merge_script",
+        "use_angle_metal",
         "use_isolated_scripts_api",
     ],
     binary = "angle_deqp_gles2_tests",
@@ -330,6 +350,21 @@ targets.tests.gtest_test(
         "deqp_merge_script",
         "no_xvfb",
         "use_angle_gl",
+        "use_isolated_scripts_api",
+        targets.mixin(
+            swarming = targets.swarming(
+                shards = 2,
+            ),
+        ),
+    ],
+    binary = "angle_deqp_gles3_tests",
+)
+
+targets.tests.gtest_test(
+    name = "angle_deqp_gles3_metal_tests",
+    mixins = [
+        "deqp_merge_script",
+        "use_angle_metal",
         "use_isolated_scripts_api",
         targets.mixin(
             swarming = targets.swarming(
