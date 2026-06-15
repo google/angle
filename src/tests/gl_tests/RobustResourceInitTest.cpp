@@ -386,19 +386,19 @@ TEST_P(RobustResourceInitTest, BufferData)
     glBufferData(GL_ARRAY_BUFFER, getWindowWidth() * getWindowHeight() * sizeof(GLfloat), nullptr,
                  GL_STATIC_DRAW);
 
-    constexpr char kVS[] =
-        "attribute vec2 position;\n"
-        "attribute float testValue;\n"
-        "varying vec4 colorOut;\n"
-        "void main() {\n"
-        "    gl_Position = vec4(position, 0, 1);\n"
-        "    colorOut = testValue == 0.0 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
-        "}";
-    constexpr char kFS[] =
-        "varying mediump vec4 colorOut;\n"
-        "void main() {\n"
-        "    gl_FragColor = colorOut;\n"
-        "}";
+    constexpr char kVS[] = R"(
+        attribute vec2 position;
+        attribute float testValue;
+        varying vec4 colorOut;
+        void main() {
+            gl_Position = vec4(position, 0, 1);
+            colorOut = testValue == 0.0 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+        })";
+    constexpr char kFS[] = R"(
+        varying mediump vec4 colorOut;
+        void main() {
+            gl_FragColor = colorOut;
+        })";
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 
@@ -414,11 +414,127 @@ TEST_P(RobustResourceInitTest, BufferData)
 
     ASSERT_GL_NO_ERROR();
 
-    std::vector<GLColor> expected(getWindowWidth() * getWindowHeight(), GLColor::green);
-    std::vector<GLColor> actual(getWindowWidth() * getWindowHeight());
-    glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
-                 actual.data());
-    EXPECT_EQ(expected, actual);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+
+    GLint initState = 0;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
+    EXPECT_GL_TRUE(initState);
+}
+
+// Tests that an existing buffer updated to be a smaller size after use is cleared in the new range.
+TEST_P(RobustResourceInitTest, BufferDataRedefinedAfterFinish)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // The buffer is initially defined with twice the output size, and it is filled with non-zero
+    // data and used for draw.
+    const size_t outputSize = getWindowWidth() * getWindowHeight();
+    GLBuffer buffer;
+    std::vector<GLfloat> bufferInitData(2 * outputSize, 1.0);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, bufferInitData.size() * sizeof(GLfloat), bufferInitData.data(),
+                 GL_STATIC_DRAW);
+
+    constexpr char kVS[] = R"(
+        attribute vec2 position;
+        attribute float testValue;
+        varying vec4 colorOut;
+        void main() {
+            gl_Position = vec4(position, 0, 1);
+            colorOut = testValue == 0.0 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+        })";
+    constexpr char kFS[] = R"(
+        varying mediump vec4 colorOut;
+        void main() {
+            gl_FragColor = colorOut;
+        })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    GLint testValueLoc = glGetAttribLocation(program, "testValue");
+    ASSERT_NE(-1, testValueLoc);
+
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glVertexAttribPointer(testValueLoc, 1, GL_FLOAT, GL_FALSE, 4, nullptr);
+    glEnableVertexAttribArray(testValueLoc);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    drawQuad(program, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+
+    // At this point, the original buffer should no longer be in use due to the ops being finished.
+    // Now if the buffer size is redefined to a smaller size (same as output size) without any data
+    // specified, the new range should be cleared to zero and no longer hold the initial data.
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, outputSize * sizeof(GLfloat), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    drawQuad(program, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+
+    GLint initState = 0;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
+    EXPECT_GL_TRUE(initState);
+}
+
+// Tests that an existing buffer updated to be a smaller size while it is in use is staged for clear
+// in the new range.
+TEST_P(RobustResourceInitTest, BufferDataRedefinedBeforeFinish)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // The buffer is initially defined with twice the output size, and it is filled with non-zero
+    // data and used for draw.
+    const size_t outputSize = getWindowWidth() * getWindowHeight();
+    GLBuffer buffer;
+    std::vector<GLfloat> bufferInitData(2 * outputSize, 1.0);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, bufferInitData.size() * sizeof(GLfloat), bufferInitData.data(),
+                 GL_STATIC_DRAW);
+
+    constexpr char kVS[] = R"(
+        attribute vec2 position;
+        attribute float testValue;
+        varying vec4 colorOut;
+        void main() {
+            gl_Position = vec4(position, 0, 1);
+            colorOut = testValue == 0.0 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+        })";
+    constexpr char kFS[] = R"(
+        varying mediump vec4 colorOut;
+        void main() {
+            gl_FragColor = colorOut;
+        })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    GLint testValueLoc = glGetAttribLocation(program, "testValue");
+    ASSERT_NE(-1, testValueLoc);
+
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glVertexAttribPointer(testValueLoc, 1, GL_FLOAT, GL_FALSE, 4, nullptr);
+    glEnableVertexAttribArray(testValueLoc);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    drawQuad(program, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // At this point, the original buffer has been used for draw, but the pixels have not been read
+    // back yet. Now if the buffer size is redefined to a smaller size (same as output size) without
+    // any data specified, the new range should be staged for clear to zero. However, if the pixels
+    // are read back before a draw with the cleared buffer data, they should still reflect the old
+    // data used for the last draw.
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, outputSize * sizeof(GLfloat), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+
+    drawQuad(program, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
 
     GLint initState = 0;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
