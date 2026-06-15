@@ -131,13 +131,7 @@
 448658624 WIN INTEL VULKAN : GLSLTest_ES31.ConstantPrecisionPropagation/* = SKIP
 452159379 WIN INTEL VULKAN : ProgramBinaryTest.ReturnedBinaryTwiceShouldMatch/* = SKIP
 519062400 WIN INTEL OPENGL : CopyTextureTestES3.ChangeBaseLevel/* = SKIP
-521956634 WIN INTEL OPENGL : CopyTextureTestES3.PBOSynchronization/* = SKIP
-521956634 WIN INTEL OPENGL : UniformBufferTest.BufferBlockBindingChange/* = SKIP
-521956634 WIN INTEL OPENGL : UniformBufferTest.BlockContainingArrayOfStructsContainingArrays/* = SKIP
-521956634 WIN INTEL OPENGL : UniformBufferTest.Std140UniformBlockWithRowMajorQualifierOnStruct/* = SKIP
-521956634 WIN INTEL OPENGL : UniformBufferTest31.UniformBufferBindingRangeChangeWithACB/* = SKIP
-521956634 WIN INTEL OPENGL : UniformTestES31.PackUniformFP16Test/* = SKIP
-521956634 WIN INTEL OPENGL : VertexAttributeTestES31.MixedComputeAndRenderPipelines/* = SKIP
+523371282 WIN INTEL OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
 
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingAttributeType/* = SKIP
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingProgramType/* = SKIP
