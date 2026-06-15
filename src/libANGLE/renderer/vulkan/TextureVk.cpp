@@ -2647,7 +2647,7 @@ angle::Result TextureVk::redefineLevel(const gl::Context *context,
         {
             // A multi-layer texture is being redefined, remove all updates to this level; the
             // number of layers may have changed.
-            mImage->removeStagedUpdates(contextVk, levelIndexGL, levelIndexGL);
+            mImage->redefineLevels(contextVk, levelIndexGL, levelIndexGL);
         }
         else
         {
@@ -2655,8 +2655,8 @@ angle::Result TextureVk::redefineLevel(const gl::Context *context,
             // done through glTexImage2D, one per cube face (i.e. layer) and so should not remove
             // updates to the other layers.
             ASSERT(index.getLayerCount() == 1);
-            mImage->removeSingleSubresourceStagedUpdates(contextVk, levelIndexGL, layerIndex,
-                                                         index.getLayerCount());
+            mImage->redefineSingleSubresource(contextVk, levelIndexGL, layerIndex,
+                                              index.getLayerCount());
         }
 
         if (mImage->valid())
