@@ -2986,12 +2986,8 @@ TEST_P(WebGL2GLSLValidationTest, LargeConstantVariableWithInitializer)
                   "Size of declared private variable exceeds implementation-defined limit");
 }
 
-// Test using a large constant that is declared inline, without using variable space that would
-// exceed the implementation-defined limit.  Because of the variable limit, the shader would have to
-// either inline an extremely large constant, which would practically take forever to construct and
-// parse, or use near-limit private variables.  In the latter case, the constant array constructor
-// does not cause any 32-bit overflows, so the shader succeeds compilation just fine.  If the large
-// constant is indexed, it can get constant folded, but at that point the constant is small.
+// Test using a large constant that is declared inline. Construction of such a large object, even if
+// it may be constant folded is not allowed.
 TEST_P(WebGL2GLSLValidationTest, InlineLargeConstant)
 {
     const int N1 = 256;
@@ -3040,7 +3036,82 @@ TEST_P(WebGL2GLSLValidationTest, InlineLargeConstant)
        << "const S2 sB = S2(b);\n"
        << "void main(){ " << s2.str() << "[0].b[0].a[0]; }\n";
 
-    validateSuccess(GL_FRAGMENT_SHADER, fs.str().c_str());
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(),
+                  "'' : Size of declared variable exceeds implementation-defined limit");
+}
+
+// Validate that too-large structures cannot be instantiated as temporaries.
+TEST_P(WebGL2GLSLValidationTest, LargeStructConstructorOnly)
+{
+    const int N1 = 1024;
+    const int N2 = 1024;
+    const int N3 = 64;
+
+    std::ostringstream fs;
+    fs << "#version 300 es\n";
+    fs << "precision highp float;\n";
+    fs << "struct S1 { mat4 m[" << N1 << "]; };\n";
+    fs << "struct S2 {\n";
+    for (int i = 0; i < N2; i++)
+    {
+        fs << "    S1 m" << i << ";\n";
+    }
+    fs << "};\n";
+    fs << "struct S3 {\n";
+    for (int i = 0; i < N3; i++)
+    {
+        fs << "    S2 m" << i << ";\n";
+    }
+    fs << "};\n";
+    fs << "out vec4 color;\n";
+    fs << "void main() {\n";
+    fs << "    S1 s1;\n";
+    fs << "    color = S3(";
+    for (int i = 0; i < N3; i++)
+    {
+        fs << "S2(";
+        for (int j = 0; j < N2; j++)
+        {
+            fs << "s1";
+            if (j != N2 - 1)
+            {
+                fs << ",";
+            }
+        }
+        fs << ")";
+        if (i != N3 - 1)
+        {
+            fs << ",";
+        }
+    }
+    fs << ").m0.m0.m[0][0];\n";
+    fs << "}\n";
+
+    validateError(GL_FRAGMENT_SHADER, fs.str().c_str(),
+                  "'' : Size of declared private variable exceeds implementation-defined limit");
+}
+
+// Validate that too-large structures cannot be used as function return types
+TEST_P(WebGL2GLSLValidationTest, LargeVariableFunctionReturnType)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+
+struct largestruct {
+    mat4 m[1000000000u];
+};
+
+largestruct func() {
+    largestruct s;
+    return s;
+}
+
+void main() {
+    func();
+})";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'s' : Size of declared variable exceeds implementation-defined limit");
 }
 
 // Test that too large color outputs are rejected
