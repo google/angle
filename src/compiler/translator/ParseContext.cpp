@@ -1855,14 +1855,17 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
     // The size check does not take std430 into account as it is intended for WebGL shaders.  For
     // the same reason, other shader stages than vertex/fragment are ignored as defer-sized
     // variables e.g. in geometry shaders are not handled.
-    //
-    // Additionally, if the shader has already failed compilation, do not validate the type sizes.
-    // For example, if previously an error is generated due to too-deep struct nesting the
-    // calculation here could overflow the stack if performed.
-    if (!mCompileOptions.rejectWebglShadersWithLargeVariables || numErrors() > 0 ||
+    if (!mCompileOptions.rejectWebglShadersWithLargeVariables ||
         (mShaderType != GL_VERTEX_SHADER && mShaderType != GL_FRAGMENT_SHADER))
     {
         return true;
+    }
+
+    // Check the cache of validated types first.
+    auto preValidatedIter = mValidatedVariableTypeSizes.find(*type);
+    if (preValidatedIter != mValidatedVariableTypeSizes.end())
+    {
+        return preValidatedIter->second;
     }
 
     // Note: the only allowed interface block in webgl shaders is UBOs in std140 mode, so the size
@@ -1875,6 +1878,7 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
     if (variableSize > kWebGLMaxVariableSizeInBytes)
     {
         error(line, "Size of declared variable exceeds implementation-defined limit", identifier);
+        mValidatedVariableTypeSizes[*type] = false;
         return false;
     }
 
@@ -1921,6 +1925,7 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
                 error(line,
                       "Size of declared private variable exceeds implementation-defined limit",
                       identifier);
+                mValidatedVariableTypeSizes[*type] = false;
                 return false;
             }
             mTotalPrivateVariablesSize += variableSize;
@@ -1928,6 +1933,8 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
         default:
             break;
     }
+
+    mValidatedVariableTypeSizes[*type] = true;
     return true;
 }
 
@@ -6415,7 +6422,9 @@ bool TParseContext::checkUnsizedArrayConstructorArgumentDimensionality(
 //
 TIntermTyped *TParseContext::addConstructor(TFunctionLookup *fnCall, const TSourceLoc &line)
 {
-    TType type                 = fnCall->constructorType();
+    TType type = fnCall->constructorType();
+    checkVariableSize(line, ImmutableString(""), &type);
+
     TIntermSequence &arguments = fnCall->arguments();
     if (type.isUnsizedArray())
     {
