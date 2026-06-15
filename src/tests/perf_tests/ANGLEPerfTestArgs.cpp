@@ -59,6 +59,7 @@ const char *gRequestedExtensions   = nullptr;
 bool gIncludeInactiveResources     = false;
 bool gTrackGPUTime                 = false;
 bool gAddSwapIntoGPUTime           = false;
+bool gTrackFrameWallTime           = false;
 bool gAddSwapIntoFrameWallTime     = false;
 bool gCapturedFrameCountOnly       = false;
 
@@ -111,6 +112,7 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
                      &gIncludeInactiveResources) ||
            ParseFlag("--track-gpu-time", argc, argv, argIndex, &gTrackGPUTime) ||
            ParseFlag("--add-swap-into-gpu-time", argc, argv, argIndex, &gAddSwapIntoGPUTime) ||
+           ParseFlag("--track-frame-wall-time", argc, argv, argIndex, &gTrackFrameWallTime) ||
            ParseFlag("--add-swap-into-frame-wall-time", argc, argv, argIndex,
                      &gAddSwapIntoFrameWallTime) ||
            ParseFlag("--captured-framecount-only", argc, argv, argIndex, &gCapturedFrameCountOnly);
@@ -181,6 +183,11 @@ void ANGLEProcessTraceTestArgs(int *argc, char **argv)
         {
             argIndex++;
         }
+    }
+
+    if (gAddSwapIntoFrameWallTime)
+    {
+        ASSERT(gTrackFrameWallTime);
     }
 
     if (gScreenshotDir)

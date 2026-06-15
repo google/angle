@@ -47,6 +47,7 @@ extern const char *gRequestedExtensions;
 extern bool gIncludeInactiveResources;
 extern bool gTrackGPUTime;
 extern bool gAddSwapIntoGPUTime;
+extern bool gTrackFrameWallTime;
 extern bool gAddSwapIntoFrameWallTime;
 extern bool gCapturedFrameCountOnly;
 

@@ -1676,9 +1676,13 @@ void TracePerfTest::drawBenchmark()
     }
     atraceCounter("TraceFrameIndex", mCurrentFrame);
 
-    const double beginReplayFrameTimeSec = mTrialTimer.getElapsedWallClockTime();
+    const double beginReplayFrameTimeSec =
+        gTrackFrameWallTime ? mTrialTimer.getElapsedWallClockTime() : 0.0;
     mTraceReplay->replayFrame(mCurrentFrame);
-    mFrameWallTimeSec += mTrialTimer.getElapsedWallClockTime() - beginReplayFrameTimeSec;
+    if (gTrackFrameWallTime)
+    {
+        mFrameWallTimeSec += mTrialTimer.getElapsedWallClockTime() - beginReplayFrameTimeSec;
+    }
 
     if (!gAddSwapIntoGPUTime && mParams->trackGpuTime)
     {
@@ -1688,6 +1692,7 @@ void TracePerfTest::drawBenchmark()
     updatePerfCounters();
 
     // Need to exclude potentially expensive calls above from the Frame Time.
+    ASSERT(!gAddSwapIntoFrameWallTime || gTrackFrameWallTime);
     const double beginSwapTimeSec =
         gAddSwapIntoFrameWallTime ? mTrialTimer.getElapsedWallClockTime() : 0.0;
 

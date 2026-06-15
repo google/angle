@@ -618,6 +618,7 @@ void ANGLEPerfTest::processResults()
     processClockResult(".cpu_time", mTrialTimer.getElapsedCpuTime() - mBusyWaitCpuTimeSec);
     if (mFrameWallTimeSec > 0.0)
     {
+        ASSERT(gTrackFrameWallTime);
         processClockResult(".frame_wall_time", mFrameWallTimeSec);
     }
     processClockResult(".wall_time", mTrialTimer.getElapsedWallClockTime());

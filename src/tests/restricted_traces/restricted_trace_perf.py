@@ -286,8 +286,14 @@ def run_trace(trace, args, screenshot_device_dir):
         flags.append('--track-gpu-time')
     if args.add_swap_into_gpu_time:
         flags.append('--add-swap-into-gpu-time')
+    if args.frame_wall_time:
+        flags.append('--track-frame-wall-time')
     if args.add_swap_into_frame_wall_time:
-        flags.append('--add-swap-into-frame-wall-time')
+        if args.frame_wall_time:
+            flags.append('--add-swap-into-frame-wall-time')
+        else:
+            print("WARNING: '--add-swap-into-frame-wall-time' requires `--frame-wall-time`. "
+                  "Ignoring...\n")
 
     # Build a command that can be run directly over ADB, for example:
     r'''
@@ -1002,8 +1008,10 @@ def run_traces(args):
         output_columns.append('wall_time')
         if args.gpu_time:
             output_columns.append('gpu_time')
+        if args.frame_wall_time:
+            output_columns.append('frame_wall_time')
 
-        output_columns.extend(['frame_wall_time', 'cpu_time'])
+        output_columns.append('cpu_time')
 
         if args.power:
             output_columns.extend(['gpu_power', 'cpu_power', 'infra_power'])
@@ -1238,7 +1246,7 @@ def run_traces(args):
 
                 gpu_time = get_gpu_time() if args.gpu_time else '0'
 
-                frame_wall_time = get_frame_wall_time()
+                frame_wall_time = get_frame_wall_time() if args.frame_wall_time else '0'
 
                 cpu_time = get_cpu_time()
 
@@ -1983,6 +1991,11 @@ def main():
     parser.add_argument(
         '--add-swap-into-gpu-time',
         help='Adds swap/offscreen blit into the gpu_time tracking',
+        action='store_true',
+        default=False)
+    parser.add_argument(
+        '--frame-wall-time',
+        help='Enables frame_wall_time tracking',
         action='store_true',
         default=False)
     parser.add_argument(
