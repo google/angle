@@ -519,7 +519,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::WarmUpPipelineCacheAtLink, "warmUpPipelineCacheAtLink"},
     {Feature::WrapSwitchInIfTrue, "wrapSwitchInIfTrue"},
     {Feature::WriteHelperSampleMask, "writeHelperSampleMask"},
-    {Feature::ZeroMaxLodWorkaround, "zeroMaxLodWorkaround"},
 }};
 }  // anonymous namespace
 

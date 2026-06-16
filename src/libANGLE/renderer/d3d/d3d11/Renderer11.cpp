@@ -3407,22 +3407,18 @@ TextureStorage *Renderer11::createTextureStorage2D(GLenum internalformat,
                                                    GLsizei width,
                                                    GLsizei height,
                                                    int levels,
-                                                   const std::string &label,
-                                                   bool hintLevelZeroOnly)
+                                                   const std::string &label)
 {
-    return new TextureStorage11_2D(this, internalformat, bindFlags, width, height, levels, label,
-                                   hintLevelZeroOnly);
+    return new TextureStorage11_2D(this, internalformat, bindFlags, width, height, levels, label);
 }
 
 TextureStorage *Renderer11::createTextureStorageCube(GLenum internalformat,
                                                      BindFlags bindFlags,
                                                      int size,
                                                      int levels,
-                                                     bool hintLevelZeroOnly,
                                                      const std::string &label)
 {
-    return new TextureStorage11_Cube(this, internalformat, bindFlags, size, levels,
-                                     hintLevelZeroOnly, label);
+    return new TextureStorage11_Cube(this, internalformat, bindFlags, size, levels, label);
 }
 
 TextureStorage *Renderer11::createTextureStorage3D(GLenum internalformat,

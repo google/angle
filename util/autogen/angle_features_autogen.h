@@ -519,7 +519,6 @@ enum class Feature
     WarmUpPipelineCacheAtLink,
     WrapSwitchInIfTrue,
     WriteHelperSampleMask,
-    ZeroMaxLodWorkaround,
 
     InvalidEnum,
     EnumCount = InvalidEnum,
