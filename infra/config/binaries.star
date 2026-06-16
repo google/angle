@@ -28,6 +28,11 @@ targets.binaries.windowed_test_launcher(
 )
 
 targets.binaries.windowed_test_launcher(
+    name = "angle_deqp_gles3_565_no_depth_no_stencil_tests",
+    label = "//src/tests:angle_deqp_gles3_565_no_depth_no_stencil_tests",
+)
+
+targets.binaries.windowed_test_launcher(
     name = "angle_deqp_gles3_tests",
     label = "//src/tests:angle_deqp_gles3_tests",
 )
@@ -50,6 +55,11 @@ targets.binaries.windowed_test_launcher(
 targets.binaries.windowed_test_launcher(
     name = "angle_deqp_gles3_rotate90_tests",
     label = "//src/tests:angle_deqp_gles3_rotate90_tests",
+)
+
+targets.binaries.windowed_test_launcher(
+    name = "angle_deqp_gles31_565_no_depth_no_stencil_tests",
+    label = "//src/tests:angle_deqp_gles31_565_no_depth_no_stencil_tests",
 )
 
 targets.binaries.windowed_test_launcher(

@@ -11,12 +11,104 @@ builders or other bundles.
 load("@chromium-luci//targets.star", "targets")
 
 targets.bundle(
+    name = "android_common_gtests",
+    targets = [
+        "angle_deqp_egl_vulkan_tests",
+        "angle_deqp_gles2_vulkan_tests",
+        "angle_deqp_gles31_multisample_vulkan_tests",
+        "angle_deqp_gles31_vulkan_tests",
+        "angle_deqp_gles31_565_no_depth_no_stencil_vulkan_tests",
+        "angle_deqp_gles3_multisample_vulkan_tests",
+        "angle_deqp_gles3_vulkan_tests",
+        "angle_deqp_gles3_565_no_depth_no_stencil_vulkan_tests",
+        "angle_deqp_khr_gles2_vulkan_tests",
+        "angle_deqp_khr_gles31_vulkan_tests",
+        "angle_deqp_khr_gles32_vulkan_gtests",
+        "angle_deqp_khr_gles3_vulkan_tests",
+        "angle_deqp_khr_glesext_vulkan_tests",
+        "angle_deqp_khr_noctx_gles2_vulkan_tests",
+        "angle_deqp_khr_noctx_gles32_vulkan_tests",
+        "angle_deqp_khr_single_gles32_vulkan_tests",
+        "angle_unittests",
+    ],
+)
+
+targets.bundle(
+    name = "android_gl_and_gles_gtests",
+    targets = [
+        "angle_deqp_egl_gles_tests",
+        "angle_deqp_gles2_gles_tests",
+        "angle_deqp_gles3_gles_tests",
+    ],
+)
+
+targets.bundle(
     name = "angle_deqp_khr_gles32_vulkan_gtests",
     targets = [
         "angle_deqp_khr_gles32_vulkan_tests_seed1_width64_height64",
         "angle_deqp_khr_gles32_vulkan_tests_seed2_width113_height47",
         "angle_deqp_khr_gles32_vulkan_tests_seed3_width-1_height64",
         "angle_deqp_khr_gles32_vulkan_tests_seed3_width64_height-1",
+    ],
+)
+
+targets.bundle(
+    name = "android_no_vulkan_gtests",
+    targets = [
+        "angle_end2end_no_vulkan_tests",
+        "angle_unittests",
+    ],
+)
+
+targets.bundle(
+    name = "android_p4_isolated_scripts",
+    targets = [
+        "angle_capture_tests",
+        "angle_smoke_perftests",
+    ],
+)
+
+targets.bundle(
+    name = "android_p6_isolated_scripts",
+    targets = [
+        "angle_capture_tests",
+        "angle_restricted_trace_gold_tests",
+    ],
+)
+
+targets.bundle(
+    name = "android_p10_gtests",
+    targets = [
+        "angle_end2end_tests",
+        "angle_gles1_conformance_tests",
+    ],
+    per_test_modifications = {
+        "angle_gles1_conformance_tests": "gtest_filter_only_vulkan",
+    },
+)
+
+targets.bundle(
+    name = "android_p10_isolated_scripts",
+    targets = [
+        "angle_capture_tests",
+        "angle_smoke_perftests",
+        "angle_restricted_trace_gold_tests",
+        "angle_trace_perf_native_smoke_tests",
+        "angle_trace_perf_vulkan_smoke_tests",
+    ],
+)
+
+targets.bundle(
+    name = "android_s24_isolated_scripts",
+    targets = [
+        "angle_restricted_trace_gold_tests",
+    ],
+)
+
+targets.bundle(
+    name = "android_vulkan_specific_gtests",
+    targets = [
+        "angle_end2end_vulkan_only_tests",
     ],
 )
 

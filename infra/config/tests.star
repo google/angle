@@ -154,6 +154,18 @@ targets.tests.gtest_test(
 )
 
 targets.tests.gtest_test(
+    name = "angle_deqp_egl_gles_tests",
+    mixins = [
+        "android_deqp_increased_verbosity_and_shard_timeout",
+        "deqp_merge_script",
+        "no_xvfb",
+        "use_angle_gles",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_egl_tests",
+)
+
+targets.tests.gtest_test(
     name = "angle_deqp_egl_metal_tests",
     mixins = [
         "deqp_merge_script",
@@ -205,6 +217,23 @@ targets.tests.gtest_test(
 )
 
 targets.tests.gtest_test(
+    name = "angle_deqp_gles2_gles_tests",
+    mixins = [
+        "android_deqp_increased_verbosity_and_shard_timeout",
+        "deqp_merge_script",
+        "no_xvfb",
+        "use_angle_gles",
+        "use_isolated_scripts_api",
+        targets.mixin(
+            android_swarming = targets.swarming(
+                shards = 4,
+            ),
+        ),
+    ],
+    binary = "angle_deqp_gles2_tests",
+)
+
+targets.tests.gtest_test(
     name = "angle_deqp_gles2_metal_tests",
     mixins = [
         "deqp_merge_script",
@@ -246,6 +275,18 @@ targets.tests.gtest_test(
         ),
     ],
     binary = "angle_deqp_gles2_tests",
+)
+
+targets.tests.gtest_test(
+    name = "angle_deqp_gles31_565_no_depth_no_stencil_vulkan_tests",
+    mixins = [
+        "android_deqp_increased_verbosity_and_shard_timeout",
+        "deqp_merge_script",
+        "no_xvfb",
+        "use_angle_vulkan",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_gles31_565_no_depth_no_stencil_tests",
 )
 
 targets.tests.gtest_test(
@@ -330,6 +371,17 @@ targets.tests.gtest_test(
 )
 
 targets.tests.gtest_test(
+    name = "angle_deqp_gles3_565_no_depth_no_stencil_vulkan_tests",
+    mixins = [
+        "android_deqp_increased_verbosity_and_shard_timeout",
+        "deqp_merge_script",
+        "use_angle_vulkan",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_gles3_565_no_depth_no_stencil_tests",
+)
+
+targets.tests.gtest_test(
     name = "angle_deqp_gles3_d3d11_tests",
     mixins = [
         "deqp_merge_script",
@@ -354,6 +406,23 @@ targets.tests.gtest_test(
         targets.mixin(
             swarming = targets.swarming(
                 shards = 2,
+            ),
+        ),
+    ],
+    binary = "angle_deqp_gles3_tests",
+)
+
+targets.tests.gtest_test(
+    name = "angle_deqp_gles3_gles_tests",
+    mixins = [
+        "android_deqp_increased_verbosity_and_shard_timeout",
+        "deqp_merge_script",
+        "no_xvfb",
+        "use_angle_gles",
+        "use_isolated_scripts_api",
+        targets.mixin(
+            android_swarming = targets.swarming(
+                shards = 12,
             ),
         ),
     ],
@@ -610,6 +679,25 @@ targets.tests.gtest_test(
 )
 
 targets.tests.gtest_test(
+    name = "angle_end2end_no_vulkan_tests",
+    mixins = [
+        "angle_end2end_tests_common_args",
+        "gtest_filter_no_vulkan",
+        "no_xvfb",
+        "use_isolated_scripts_api",
+        targets.mixin(
+            android_swarming = targets.swarming(
+                shards = 8,
+            ),
+            swarming = targets.swarming(
+                shards = 2,
+            ),
+        ),
+    ],
+    binary = "angle_end2end_tests",
+)
+
+targets.tests.gtest_test(
     name = "angle_end2end_tests",
     mixins = [
         "angle_end2end_tests_common_args",
@@ -622,6 +710,35 @@ targets.tests.gtest_test(
             ),
             swarming = targets.swarming(
                 shards = 3,
+            ),
+        ),
+    ],
+    binary = "angle_end2end_tests",
+)
+
+targets.tests.gtest_test(
+    name = "angle_end2end_vulkan_only_tests",
+    mixins = [
+        "gtest_filter_only_real_vulkan",
+        "use_isolated_scripts_api",
+        targets.mixin(
+            # Effectively the same as the angle_end2end_tests_common_args mixin
+            # but with a different --shard-timeout.
+            android_args = [
+                "--shard-timeout=300",
+                "-v",
+                "--render-test-output-dir=${ISOLATED_OUTDIR}",
+            ],
+            linux_args = [
+                "--max-processes=4",
+            ],
+        ),
+        targets.mixin(
+            android_swarming = targets.swarming(
+                shards = 8,
+            ),
+            swarming = targets.swarming(
+                shards = 2,
             ),
         ),
     ],

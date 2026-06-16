@@ -82,9 +82,30 @@ targets.mixin(
 )
 
 targets.mixin(
+    name = "gtest_filter_no_vulkan",
+    args = [
+        "--gtest_filter=-*Vulkan*",
+    ],
+)
+
+targets.mixin(
     name = "gtest_filter_no_vulkan_swiftshader",
     args = [
         "--gtest_filter=-*Vulkan_SwiftShader*",
+    ],
+)
+
+targets.mixin(
+    name = "gtest_filter_only_real_vulkan",
+    args = [
+        "--gtest_filter=*Vulkan*:-*Vulkan_SwiftShader*",
+    ],
+)
+
+targets.mixin(
+    name = "gtest_filter_only_vulkan",
+    args = [
+        "--gtest_filter=*Vulkan*",
     ],
 )
 
@@ -128,6 +149,19 @@ targets.mixin(
 )
 
 targets.mixin(
+    name = "samsung_s24_stable",
+    swarming = targets.swarming(
+        dimensions = {
+            "device_os": "AP3A.240905.015.A2",
+            "device_os_type": "user",
+            "device_type": "s5e9945",
+            "os": "Android",
+            "pool": "chromium.tests.gpu",
+        },
+    ),
+)
+
+targets.mixin(
     name = "use_angle_d3d11",
     args = [
         "--use-angle=d3d11",
@@ -138,6 +172,13 @@ targets.mixin(
     name = "use_angle_gl",
     args = [
         "--use-angle=gl",
+    ],
+)
+
+targets.mixin(
+    name = "use_angle_gles",
+    args = [
+        "--use-angle=gles",
     ],
 )
 

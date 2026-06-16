@@ -896,6 +896,20 @@ ci.thin_tester(
         ),
         run_tests_serially = True,
     ),
+    targets = targets.bundle(
+        targets = [
+            "android_gl_and_gles_gtests",
+            "android_no_vulkan_gtests",
+            "android_p4_isolated_scripts",
+        ],
+        mixins = [
+            "gpu_pixel_4_stable",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.ANDROID,
+    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|android|arm64|rel",
         short_name = "p4",
@@ -919,6 +933,21 @@ ci.thin_tester(
             target_platform = builder_config.target_platform.ANDROID,
         ),
         run_tests_serially = True,
+    ),
+    targets = targets.bundle(
+        targets = [
+            "android_common_gtests",
+            "android_vulkan_specific_gtests",
+            "android_p6_isolated_scripts",
+        ],
+        mixins = [
+            "gpu_pixel_6_experimental",
+            "limited_capacity_bot",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.ANDROID,
     ),
     # Uncomment this entry when this experimental tester is actually in use.
     console_view_entry = consoles.console_view_entry(
@@ -970,6 +999,20 @@ ci.thin_tester(
         ),
         run_tests_serially = True,
     ),
+    targets = targets.bundle(
+        targets = [
+            "android_common_gtests",
+            "android_vulkan_specific_gtests",
+            "android_p6_isolated_scripts",
+        ],
+        mixins = [
+            "gpu_pixel_6_stable",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.ANDROID,
+    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|android|arm64|rel",
         short_name = "p6",
@@ -994,6 +1037,21 @@ ci.thin_tester(
         ),
         run_tests_serially = True,
     ),
+    targets = targets.bundle(
+        targets = [
+            "android_common_gtests",
+            "android_gl_and_gles_gtests",
+            "android_p10_gtests",
+            "android_p10_isolated_scripts",
+        ],
+        mixins = [
+            "gpu_pixel_10_stable",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.ANDROID,
+    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|android|arm64|rel",
         short_name = "p10",
@@ -1017,6 +1075,22 @@ ci.thin_tester(
             target_platform = builder_config.target_platform.ANDROID,
         ),
         run_tests_serially = True,
+    ),
+    targets = targets.bundle(
+        targets = [
+            "android_common_gtests",
+            "android_vulkan_specific_gtests",
+            "android_s24_isolated_scripts",
+        ],
+        mixins = [
+            # crbug.com/419062315
+            "no_tombstones",
+            "samsung_s24_stable",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.ANDROID,
     ),
     console_view_entry = consoles.console_view_entry(
         category = "test|android|arm64|rel",
