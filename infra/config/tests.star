@@ -445,6 +445,16 @@ targets.tests.gtest_test(
 )
 
 targets.tests.gtest_test(
+    name = "angle_deqp_gles3_multisample_metal_tests",
+    mixins = [
+        "deqp_merge_script",
+        "use_angle_metal",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_gles3_multisample_tests",
+)
+
+targets.tests.gtest_test(
     name = "angle_deqp_gles3_multisample_vulkan_tests",
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
@@ -522,6 +532,29 @@ targets.tests.gtest_test(
         ),
     ],
     binary = "angle_deqp_gles3_tests",
+)
+
+targets.tests.gtest_test(
+    name = "angle_deqp_khr_gles2_gl_tests",
+    mixins = [
+        "deqp_khr_default_height_width_seed",
+        "deqp_merge_script",
+        "no_xvfb",
+        "use_angle_gl",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_khr_gles2_tests",
+)
+
+targets.tests.gtest_test(
+    name = "angle_deqp_khr_gles2_metal_tests",
+    mixins = [
+        "deqp_khr_default_height_width_seed",
+        "deqp_merge_script",
+        "use_angle_metal",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_khr_gles2_tests",
 )
 
 targets.tests.gtest_test(
@@ -617,6 +650,29 @@ targets.tests.gtest_test(
 )
 
 targets.tests.gtest_test(
+    name = "angle_deqp_khr_gles3_gl_tests",
+    mixins = [
+        "deqp_khr_default_height_width_seed",
+        "deqp_merge_script",
+        "no_xvfb",
+        "use_angle_gl",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_khr_gles3_tests",
+)
+
+targets.tests.gtest_test(
+    name = "angle_deqp_khr_gles3_metal_tests",
+    mixins = [
+        "deqp_khr_default_height_width_seed",
+        "deqp_merge_script",
+        "use_angle_metal",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_khr_gles3_tests",
+)
+
+targets.tests.gtest_test(
     name = "angle_deqp_khr_gles3_vulkan_tests",
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
@@ -640,6 +696,27 @@ targets.tests.gtest_test(
         "use_isolated_scripts_api",
     ],
     binary = "angle_deqp_khr_glesext_tests",
+)
+
+targets.tests.gtest_test(
+    name = "angle_deqp_khr_noctx_gles2_gl_tests",
+    mixins = [
+        "deqp_merge_script",
+        "no_xvfb",
+        "use_angle_gl",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_khr_noctx_gles2_tests",
+)
+
+targets.tests.gtest_test(
+    name = "angle_deqp_khr_noctx_gles2_metal_tests",
+    mixins = [
+        "deqp_merge_script",
+        "use_angle_metal",
+        "use_isolated_scripts_api",
+    ],
+    binary = "angle_deqp_khr_noctx_gles2_tests",
 )
 
 targets.tests.gtest_test(

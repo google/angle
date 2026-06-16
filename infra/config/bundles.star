@@ -177,6 +177,45 @@ targets.bundle(
 )
 
 targets.bundle(
+    name = "mac_angle_end2end_tests_with_retry_gtests",
+    targets = [
+        "angle_end2end_tests",
+    ],
+    mixins = [
+        "gtest_enable_flaky_retries",
+        targets.mixin(
+            swarming = targets.swarming(
+                shards = 2,
+            ),
+        ),
+    ],
+)
+
+targets.bundle(
+    name = "mac_arm64_gtests",
+    targets = [
+        "angle_deqp_egl_gl_tests",
+        "angle_deqp_egl_metal_tests",
+        "angle_deqp_gles2_gl_tests",
+        "angle_deqp_gles2_metal_tests",
+        "angle_deqp_gles2_webgpu_tests",
+        "angle_deqp_khr_gles2_gl_tests",
+        "angle_deqp_khr_gles2_metal_tests",
+        "angle_deqp_khr_noctx_gles2_gl_tests",
+        "angle_deqp_khr_noctx_gles2_metal_tests",
+        "angle_deqp_gles3_gl_tests",
+        "angle_deqp_gles3_metal_tests",
+        "angle_deqp_gles3_multisample_metal_tests",
+        "angle_deqp_khr_gles3_gl_tests",
+        "angle_deqp_khr_gles3_metal_tests",
+        "angle_gles1_conformance_tests",
+        "angle_unittests",
+        "angle_white_box_tests",
+        "mac_angle_end2end_tests_with_retry_gtests",
+    ],
+)
+
+targets.bundle(
     name = "mac_x64_angle_deqp_gles2_with_retry_gtests",
     targets = [
         "angle_deqp_gles2_gl_tests",
@@ -200,28 +239,13 @@ targets.bundle(
 )
 
 targets.bundle(
-    name = "mac_x64_angle_end2end_tests_with_retry_gtests",
-    targets = [
-        "angle_end2end_tests",
-    ],
-    mixins = [
-        "gtest_enable_flaky_retries",
-        targets.mixin(
-            swarming = targets.swarming(
-                shards = 2,
-            ),
-        ),
-    ],
-)
-
-targets.bundle(
     name = "mac_x64_gtests",
     targets = [
         "angle_deqp_egl_gl_tests",
         "angle_deqp_egl_metal_tests",
+        "mac_angle_end2end_tests_with_retry_gtests",
         "mac_x64_angle_deqp_gles2_with_retry_gtests",
         "mac_x64_angle_deqp_gles3_with_retry_gtests",
-        "mac_x64_angle_end2end_tests_with_retry_gtests",
         "angle_unittests",
     ],
 )

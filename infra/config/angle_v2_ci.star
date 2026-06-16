@@ -1458,6 +1458,18 @@ ci.thin_tester(
         use_test_trigger_cas = True,
         run_tests_serially = True,
     ),
+    targets = targets.bundle(
+        targets = [
+            "mac_arm64_gtests",
+        ],
+        mixins = [
+            "mac_arm64_apple_m2_retina_gpu_stable",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.MAC,
+    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|mac|arm64|rel",
         short_name = "m2",
