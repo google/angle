@@ -2862,6 +2862,13 @@
 // Likely a SwiftShader bug.
 514397873 SWIFTSHADER : DrawBaseVertexBaseInstanceTest_ES3.BaseInstanceDivisorIndexing/* = SKIP
 
+526706312 PIXEL4ORXL GLES : MSRTTES3Test.FramebufferFetchBasic/* = SKIP
+526706312 PIXEL4ORXL GLES : MSRTTES3Test.FramebufferFetchOnTile/* = SKIP
+526706312 PIXEL6 VULKAN : MSRTTES3Test.FramebufferFetchSampleID/* = SKIP
+526706312 PIXEL10 VULKAN : MSRTTES3Test.FramebufferFetchBasic/* = SKIP
+526706312 PIXEL10 VULKAN : MSRTTES3Test.FramebufferFetchSampleID/* = SKIP
+526706312 SWIFTSHADER : MSRTTES3Test.FramebufferFetchSampleID/* = SKIP
+
 // Timeout on Intel/Vulkan
 517981272 WIN INTEL VULKAN : EGLMultiContextTest.RepeatedEglInitAndTerminate/* = SKIP
 

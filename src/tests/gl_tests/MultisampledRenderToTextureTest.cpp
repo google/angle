@@ -4962,6 +4962,173 @@ TEST_P(MSRTTES3Test, DrawDisabledThenDraw)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that framebuffer fetch works with GL_EXT_multisampled_render_to_texture.
+TEST_P(MSRTTES3Test, FramebufferFetchBasic)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    // Set up FBO with multisampled render to texture color attachment
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         texture, 0, 4);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Clear color to red
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Program with framebuffer fetch.
+    // It reads the current color and adds green to it.
+    // Red (1,0,0,1) + Green (0,1,0,0) = Yellow (1,1,0,1).
+    const char kFS[] = R"(#version 300 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 color;
+void main()
+{
+    color.g += 1.0;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    // Draw quad to trigger framebuffer fetch
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify result (should be yellow)
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
+// Test that framebuffer fetch works with GL_EXT_multisampled_render_to_texture.
+// This variant exercises multisample data being on tile instead of memory when
+// framebuffer fetch happens.
+TEST_P(MSRTTES3Test, FramebufferFetchOnTile)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    // Set up FBO with multisampled render to texture color attachment
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         texture, 0, 4);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Clear with red
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw blue
+    ANGLE_GL_PROGRAM(blueProgram, essl3_shaders::vs::Simple(), essl3_shaders::fs::Blue());
+    drawQuad(blueProgram, essl3_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Now draw again with a fetch of the blue, add green to get cyan
+    // Blue (0,0,1,1) + Green (0,1,0,0) = Cyan (0,1,1,1).
+    const char kFS[] = R"(#version 300 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 color;
+void main()
+{
+    color.g += 1.0;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
+// Test that framebuffer fetch works with GL_EXT_multisampled_render_to_texture.
+// This variant draws different colors based on gl_SampleID, then performs second
+// draw that non-linearly transforms what it reads using square. If the driver
+// breaks the render pass and resolves before the second draw call, the result will
+// be different than if it truly reads the MSAA data from the previous draw.
+TEST_P(MSRTTES3Test, FramebufferFetchSampleID)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_sample_variables"));
+
+    // Set up FBO with multisampled render to texture color attachment
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    // Explicitly request 4 samples to make sample distribution predictable.
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         texture, 0, 4);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Clear with white
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw 1: Output depends on gl_SampleID.
+    // Sample 0, 2: 0.0 red
+    // Sample 1, 3: 1.0 red
+    // Resolved color should be 0.5 red.
+    const char kFS1[] = R"(#version 300 es
+#extension GL_OES_sample_variables : require
+out highp vec4 color;
+void main()
+{
+    if (gl_SampleID % 2 == 0)
+        color = vec4(0.0, 0.0, 0.0, 1.0);
+    else
+        color = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program1, essl3_shaders::vs::Simple(), kFS1);
+    drawQuad(program1, essl3_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw 2: Reads the color and applies a non-linear transform (square).
+    // If truly multisampled:
+    // Sample 0: 0.0^2 = 0.0
+    // Sample 1: 1.0^2 = 1.0
+    // Resolved color = 0.5.
+    // If resolved before Draw 2:
+    // Sample 0, 1 read 0.5 -> 0.5^2 = 0.25.
+    // Resolved color = 0.25.
+    const char kFS2[] = R"(#version 300 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 color;
+void main()
+{
+    highp vec4 tempColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    // Move the color to green channel to avoid getting stale results
+    tempColor.g = color.r * color.r;
+    color = tempColor;
+})";
+
+    ANGLE_GL_PROGRAM(program2, essl3_shaders::vs::Simple(), kFS2);
+    drawQuad(program2, essl3_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify result (should be 0.5, i.e., ~127 or 128)
+    // If it was resolved early, it would be 0.25 (i.e. ~64).
+    // We expect it NOT to be resolved early, so value should be near 127.
+    // We use a small error margin.
+    // Note Draw 2 moved the color to green channel
+    EXPECT_PIXEL_NEAR(0, 0, 0, 127, 0, 255, 10);
+}
+
 ANGLE_INSTANTIATE_TEST_COMBINE_1(
     MSRTTTest,
     PrintToStringParamName,
