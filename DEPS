@@ -54,7 +54,7 @@ vars = {
   'checkout_angle_partition_alloc': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '51b871738ffa06c277aec6f938e9fe561556a46f',
+  'chromium_revision': 'b3652d124748a01e16c0ef84e5f183c41b75cd4c',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -137,7 +137,7 @@ vars = {
   'reclient_version': 're_client_version:0.185.0.db415f21-gomaip',
 
   # siso CIPD package version.
-  'siso_version': 'git_revision:b9b1622cfea9c78657487d0b69989ff701eb57a5',
+  'siso_version': 'git_revision:0b5eb879ba9260eb6fd7dfe8f9437ef3396185c4',
 
   # 'magic' text to tell depot_tools that git submodules should be accepted but
   # but parity with DEPS file is expected.
@@ -559,7 +559,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@a10d6c78c45d0418710098a3c61c70ee2dde673b',
+    'url': Var('chromium_git') + '/chromium/src/build.git@44ba1f86183dc23767357ca69406e877020b66ff',
     'condition': 'not build_with_chromium',
   },
 
@@ -618,7 +618,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@99016a5b7458a8c19de561d3eac36cc3c7a4bb31',
+    'url': '{chromium_git}/chromium/src/testing@1b7c5746f0f4149fb9b2a81585c3119905d3475f',
     'condition': 'not build_with_chromium',
   },
 
@@ -800,7 +800,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@c00dbd9c933597ed6cc396ade097214608798470',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@fb8d33261b0b19b673f43f4a6c2fd6484c163641',
     'condition': 'not build_with_chromium',
   },
 
@@ -1361,7 +1361,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@73d541c98678a6936148bfa8808c19c36b384fd4',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@974177a09b16f35adde6be7e261831469d794e88',
     'condition': 'not build_with_chromium',
   },
 
