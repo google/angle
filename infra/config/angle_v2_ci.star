@@ -1492,6 +1492,7 @@ ci.thin_tester(
             target_bits = 64,
             target_platform = builder_config.target_platform.MAC,
         ),
+        use_test_trigger_cas = True,
         run_tests_serially = True,
     ),
     targets = targets.bundle(
@@ -1528,6 +1529,7 @@ ci.thin_tester(
             target_bits = 64,
             target_platform = builder_config.target_platform.MAC,
         ),
+        use_test_trigger_cas = True,
         run_tests_serially = True,
     ),
     targets = targets.bundle(
@@ -1564,6 +1566,7 @@ ci.thin_tester(
             target_bits = 64,
             target_platform = builder_config.target_platform.MAC,
         ),
+        use_test_trigger_cas = True,
         run_tests_serially = True,
     ),
     targets = targets.bundle(
@@ -1600,6 +1603,7 @@ ci.thin_tester(
             target_bits = 64,
             target_platform = builder_config.target_platform.MAC,
         ),
+        use_test_trigger_cas = True,
         run_tests_serially = True,
     ),
     targets = targets.bundle(
@@ -1638,6 +1642,7 @@ ci.thin_tester(
             target_bits = 64,
             target_platform = builder_config.target_platform.MAC,
         ),
+        use_test_trigger_cas = True,
         run_tests_serially = True,
     ),
     targets = targets.bundle(
