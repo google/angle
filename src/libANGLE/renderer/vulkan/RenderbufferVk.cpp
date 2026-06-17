@@ -209,8 +209,12 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
         mImageViews.updateEglImageColorspace(mImage->getActualFormat(), imageColorspace);
     }
 
-    mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, imageVk->getImageLevel(),
-                       imageVk->getImageLayer(), 1, RenderTargetTransience::Default);
+    const uint32_t sourceLevel = image->getSourceImageIndex().getLevelIndex();
+    const uint32_t layerOffset =
+        image->getSourceImageIndex().hasLayer() ? image->getSourceImageIndex().getLayerIndex() : 0;
+
+    mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, gl::LevelIndex(sourceLevel),
+                       layerOffset, 1, RenderTargetTransience::Default);
 
     return angle::Result::Continue;
 }

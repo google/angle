@@ -23,6 +23,7 @@
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/Observer.h"
+#include "libANGLE/RefCountObject.h"
 #include "libANGLE/Stream.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
@@ -201,6 +202,8 @@ class TextureState final : private angle::NonCopyable
 
     GLenum getSurfaceCompressionFixedRate() const { return mCompressionFixedRate; }
 
+    const ImageIndex &getEGLImageSourceIndex() const { return mEGLImageSourceIndex; }
+
   private:
     // Texture needs access to the ImageDesc functions.
     friend class Texture;
@@ -300,6 +303,11 @@ class TextureState final : private angle::NonCopyable
     // GL_EXT_texture_compression_astc_decode_mode
     // GL_EXT_texture_compression_astc_decode_mode_rgb9e5
     GLenum mAstcDecodePrecision;
+
+    // Only valid if this texture is an "EGLImage target" and the associated EGL Image was
+    // originally sourced from an OpenGL texture. Such EGL Images can be a slice of the underlying
+    // resource. The layer and level offsets are used to track the location of the slice.
+    ImageIndex mEGLImageSourceIndex;
 };
 
 bool operator==(const TextureState &a, const TextureState &b);
@@ -809,6 +817,8 @@ class Texture final : public RefCountObject<TextureID>,
                                         TextureType type,
                                         GLuint levels,
                                         egl::Image *imageTarget);
+    angle::Result orphanImages(const gl::Context *context,
+                               egl::RefCountObjectReleaser<egl::Image> *outReleaseImage);
 
     void signalDirtyState(size_t dirtyBit);
 

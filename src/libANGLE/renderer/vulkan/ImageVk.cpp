@@ -173,19 +173,4 @@ bool ImageVk::isFixedRatedCompression(const gl::Context *context)
            VK_IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT;
 }
 
-gl::TextureType ImageVk::getImageTextureType() const
-{
-    return mState.imageIndex.getType();
-}
-
-gl::LevelIndex ImageVk::getImageLevel() const
-{
-    return gl::LevelIndex(mState.imageIndex.getLevelIndex());
-}
-
-uint32_t ImageVk::getImageLayer() const
-{
-    return mState.imageIndex.hasLayer() ? mState.imageIndex.getLayerIndex() : 0;
-}
-
 }  // namespace rx
