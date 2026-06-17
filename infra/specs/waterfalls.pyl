@@ -40,24 +40,6 @@
       'swarming_containment_auto',
     ],
     'machines': {
-      'angle-android-arm-builder-dbg': {
-        'os_type': 'android',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
-      'angle-android-arm-builder-rel': {
-        'os_type': 'android',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
-      'angle-android-arm64-builder-dbg': {
-        'os_type': 'android',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
       'angle-android-arm64-google-pixel4-perf': {
         'os_type': 'android',
         'mixins': [
@@ -79,12 +61,6 @@
         'test_suites': {
           'isolated_scripts': 'isolated_scripts_group_perf',
         },
-      },
-      'angle-linux-x64-builder-dbg': {
-        'os_type': 'linux',
-        'additional_compile_targets': [
-          'all',
-        ],
       },
       'angle-linux-x64-intel-uhd630-perf': {
         'os_type': 'linux',
@@ -132,42 +108,6 @@
           'noop_target',
         ],
       },
-      'angle-mac-x64-builder-dbg': {
-        'os_type': 'mac',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
-      'angle-win-x64-builder-dbg': {
-        'os_type': 'win',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
-      'angle-win-x64-builder-msvc-dbg': {
-        'os_type': 'win',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
-      'angle-win-x64-builder-msvc-rel': {
-        'os_type': 'win',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
-      'angle-win-x64-builder-uwp-dbg': {
-        'os_type': 'win',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
-      'angle-win-x64-builder-uwp-rel': {
-        'os_type': 'win',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
       'angle-win-x64-intel-uhd630-perf': {
         'os_type': 'win',
         'mixins': [
@@ -203,24 +143,6 @@
         'os_type': 'win',
         'additional_compile_targets': [
           'noop_target',
-        ],
-      },
-      'angle-win-x86-builder-dbg': {
-        'os_type': 'win',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
-      'angle-win-x86-builder-msvc-dbg': {
-        'os_type': 'win',
-        'additional_compile_targets': [
-          'all',
-        ],
-      },
-      'angle-win-x86-builder-msvc-rel': {
-        'os_type': 'win',
-        'additional_compile_targets': [
-          'all',
         ],
       },
       'angle-win-x86-sws-rel': {
