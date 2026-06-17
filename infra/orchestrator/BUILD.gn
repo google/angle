@@ -37,6 +37,8 @@ group("orchestrator_merge_scripts") {
     "//scripts/",
     "//src/tests/py_utils/",
     "//testing/merge_scripts/",
+
+    "//src/commit_id.py",
   ]
   data_deps = [ ":orchestrator_python" ]
 }
