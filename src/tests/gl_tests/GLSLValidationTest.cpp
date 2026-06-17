@@ -335,8 +335,8 @@ TEST_P(GLSLValidationTest, CompareStructsContainingSamplers)
 }
 
 // The ESSL 3.00 spec says that equality is supported for all types, but glslang does not accept
-// equality between structs with samplers.  glslang is the reference compiler, so ANGLE follows
-// suit with the same validation.
+// equality between structs with samplers.  The GL workgroup clarified that the intention was to not
+// allow comparison between structs with samplers.
 TEST_P(GLSLValidationTest_ES3, CompareStructsContainingSamplersESSL300)
 {
     constexpr char kFS[] = R"(#version 300 es
