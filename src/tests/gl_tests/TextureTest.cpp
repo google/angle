@@ -5522,8 +5522,7 @@ TEST_P(Texture2DTest, CopySubImageFloat_RGBA_RGBA)
 
 // Port of
 // https://www.khronos.org/registry/webgl/conformance-suites/1.0.3/conformance/textures/texture-npot.html
-// Run against GL_ALPHA/UNSIGNED_BYTE format, to ensure that D3D11 Feature Level 9_3 correctly
-// handles GL_ALPHA
+// Run against GL_ALPHA/UNSIGNED_BYTE format, to ensure that GL_ALPHA is handled correctly.
 TEST_P(Texture2DTest, TextureNPOT_GL_ALPHA_UBYTE)
 {
     const int npotTexSize = 5;

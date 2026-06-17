@@ -68,7 +68,6 @@ class DXGISupportHelper : angle::NonCopyable
             }
             else
             {
-                // TODO(jmadill): find out why we fail this call sometimes in FL9_3
                 // ERR() << "Error checking format support for format 0x" << std::hex << dxgiFormat;
             }
         }
@@ -284,12 +283,8 @@ bool GetFramebufferBlitSupport(D3D_FEATURE_LEVEL featureLevel)
 bool GetDerivativeInstructionSupport(D3D_FEATURE_LEVEL featureLevel)
 {
     // http://msdn.microsoft.com/en-us/library/windows/desktop/bb509588.aspx states that
-    // shader model
-    // ps_2_x is required for the ddx (and other derivative functions).
-
-    // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476876.aspx states that
-    // feature level
-    // 9.3 supports shader model ps_2_x.
+    // shader model ps_2_x is required for the ddx (and other derivative functions). This is
+    // supported by all feature levels ANGLE targets (FL10_0 and above).
 
     switch (featureLevel)
     {
@@ -1833,9 +1828,8 @@ ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device)
     // Note that this function returns an ANGLED3D11DeviceType rather than a D3D_DRIVER_TYPE value,
     // since it is difficult to tell Software and Reference devices apart
 
-    IDXGIDevice *dxgiDevice     = nullptr;
-    IDXGIAdapter *dxgiAdapter   = nullptr;
-    IDXGIAdapter2 *dxgiAdapter2 = nullptr;
+    IDXGIDevice *dxgiDevice   = nullptr;
+    IDXGIAdapter *dxgiAdapter = nullptr;
 
     ANGLED3D11DeviceType retDeviceType = ANGLE_D3D11_DEVICE_TYPE_UNKNOWN;
 
@@ -1845,24 +1839,9 @@ ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device)
         hr = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter);
         if (SUCCEEDED(hr))
         {
-            std::wstring adapterString;
-            HRESULT adapter2hr =
-                dxgiAdapter->QueryInterface(__uuidof(dxgiAdapter2), (void **)&dxgiAdapter2);
-            if (SUCCEEDED(adapter2hr))
-            {
-                // On D3D_FEATURE_LEVEL_9_*, IDXGIAdapter::GetDesc returns "Software Adapter"
-                // for the description string. Try to use IDXGIAdapter2::GetDesc2 to get the
-                // actual hardware values if possible.
-                DXGI_ADAPTER_DESC2 adapterDesc2;
-                dxgiAdapter2->GetDesc2(&adapterDesc2);
-                adapterString = std::wstring(adapterDesc2.Description);
-            }
-            else
-            {
-                DXGI_ADAPTER_DESC adapterDesc;
-                dxgiAdapter->GetDesc(&adapterDesc);
-                adapterString = std::wstring(adapterDesc.Description);
-            }
+            DXGI_ADAPTER_DESC adapterDesc;
+            dxgiAdapter->GetDesc(&adapterDesc);
+            std::wstring adapterString = std::wstring(adapterDesc.Description);
 
             // Both Reference and Software adapters will be 'Software Adapter'
             const bool isSoftwareDevice =
@@ -1889,7 +1868,6 @@ ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device)
 
     SafeRelease(dxgiDevice);
     SafeRelease(dxgiAdapter);
-    SafeRelease(dxgiAdapter2);
 
     return retDeviceType;
 }

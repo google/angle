@@ -672,9 +672,7 @@ TEST_P(MipmapTestES3, GenerateMipmapLongNPOTTexture)
 // This test generates (and uses) mipmaps on a texture using init data. D3D11 will use a
 // non-renderable TextureStorage for this. The test then disables mips, renders to level zero of the
 // texture, and reenables mips before using the texture again. To do this, D3D11 has to convert the
-// TextureStorage into a renderable one. This test ensures that the conversion works correctly. In
-// particular, on D3D11 Feature Level 9_3 it ensures that both the zero LOD workaround texture AND
-// the 'normal' texture are copied during conversion.
+// TextureStorage into a renderable one. This test ensures that the conversion works correctly.
 TEST_P(MipmapTest, GenerateMipmapFromInitDataThenRender)
 {
     // http://anglebug.com/42264262
@@ -804,9 +802,6 @@ TEST_P(MipmapTest, GenerateMipmapAfterModifyingBaseLevel)
 }
 
 // This test ensures that mips are correctly generated from a rendered image.
-// In particular, on D3D11 Feature Level 9_3, the clear call will be performed on the zero-level
-// texture, rather than the mipped one. The test ensures that the zero-level texture is correctly
-// copied into the mipped texture before the mipmaps are generated.
 TEST_P(MipmapTest, GenerateMipmapFromRenderedImage)
 {
     // http://anglebug.com/42264262
@@ -1016,9 +1011,8 @@ TEST_P(MipmapTest, MipMapGenerationD3D9Bug)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, mip1Color, 1.0);
 }
 
-// This test ensures that the level-zero workaround for TextureCubes (on D3D11 Feature Level 9_3)
-// works as expected. It tests enabling/disabling mipmaps, generating mipmaps, and rendering to
-// level zero.
+// This test ensures that TextureCubes work as expected when enabling/disabling mipmaps,
+// generating mipmaps, and rendering to level zero.
 TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
 {
     // http://anglebug.com/42261821

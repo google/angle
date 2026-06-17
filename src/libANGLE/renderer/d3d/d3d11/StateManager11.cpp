@@ -3033,7 +3033,6 @@ angle::Result StateManager11::applyDriverUniforms(const gl::Context *context)
     }
 
     // needed for the point sprite geometry shader
-    // GSSetConstantBuffers triggers device removal on 9_3, so we should only call it for ES3.
     if (mRenderer->isES3Capable())
     {
         d3d11::Buffer &driverConstantBufferPS =

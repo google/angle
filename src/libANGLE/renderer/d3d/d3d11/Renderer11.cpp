@@ -2313,10 +2313,8 @@ std::string Renderer11::getRendererDescription() const
     if (mD3d12Module)
         rendererString << "on12";
 
-    rendererString << " vs_" << getMajorShaderModel() << "_" << getMinorShaderModel()
-                   << getShaderModelSuffix();
-    rendererString << " ps_" << getMajorShaderModel() << "_" << getMinorShaderModel()
-                   << getShaderModelSuffix();
+    rendererString << " vs_" << getMajorShaderModel() << "_" << getMinorShaderModel();
+    rendererString << " ps_" << getMajorShaderModel() << "_" << getMinorShaderModel();
 
     return rendererString.str();
 }
@@ -2474,25 +2472,6 @@ int Renderer11::getMinorShaderModel() const
         default:
             UNREACHABLE();
             return 0;
-    }
-}
-
-std::string Renderer11::getShaderModelSuffix() const
-{
-    switch (mRenderer11DeviceCaps.featureLevel)
-    {
-        case D3D_FEATURE_LEVEL_12_1:
-        case D3D_FEATURE_LEVEL_12_0:
-        case D3D_FEATURE_LEVEL_11_1:
-        case D3D_FEATURE_LEVEL_11_0:
-            return "";
-        case D3D_FEATURE_LEVEL_10_1:
-            return "";
-        case D3D_FEATURE_LEVEL_10_0:
-            return "";
-        default:
-            UNREACHABLE();
-            return "";
     }
 }
 
@@ -3103,8 +3082,7 @@ angle::Result Renderer11::compileToExecutable(d3d::Context *context,
             ANGLE_HR_UNREACHABLE(context);
     }
 
-    profileStream << "_" << getMajorShaderModel() << "_" << getMinorShaderModel()
-                  << getShaderModelSuffix();
+    profileStream << "_" << getMajorShaderModel() << "_" << getMinorShaderModel();
     std::string profile = profileStream.str();
 
     UINT flags = D3DCOMPILE_OPTIMIZATION_LEVEL2;

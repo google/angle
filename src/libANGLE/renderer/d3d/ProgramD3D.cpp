@@ -186,7 +186,6 @@ ProgramD3DMetadata::ProgramD3DMetadata(
     const gl::ShaderMap<SharedCompiledShaderStateD3D> &attachedShaders,
     int shaderVersion)
     : mRendererMajorShaderModel(renderer->getMajorShaderModel()),
-      mShaderModelSuffix(renderer->getShaderModelSuffix()),
       mUsesViewScale(renderer->presentPathFastEnabled()),
       mCanSelectViewInVertexShader(renderer->canSelectViewInVertexShader()),
       mFragmentShader(fragmentShader),
@@ -282,10 +281,7 @@ bool ProgramD3DMetadata::addsPointCoordToVertexShader() const
 
 bool ProgramD3DMetadata::usesTransformFeedbackGLPosition() const
 {
-    // gl_Position only needs to be outputted from the vertex shader if transform feedback is
-    // active. This isn't supported on D3D11 Feature Level 9_3, so we don't output gl_Position from
-    // the vertex shader in this case. This saves us 1 output vector.
-    return !(mRendererMajorShaderModel >= 4 && mShaderModelSuffix != "");
+    return true;
 }
 
 bool ProgramD3DMetadata::usesSystemValuePointSize() const

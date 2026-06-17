@@ -139,27 +139,6 @@ class EGLDeviceCreationTest : public ANGLETest<>
         ASSERT_EGL_SUCCESS();
     }
 
-    // This triggers a D3D device lost on current Windows systems
-    // This behavior could potentially change in the future
-    void trigger9_3DeviceLost()
-    {
-        ID3D11Buffer *gsBuffer       = nullptr;
-        D3D11_BUFFER_DESC bufferDesc = {0};
-        bufferDesc.ByteWidth         = 64;
-        bufferDesc.Usage             = D3D11_USAGE_DEFAULT;
-        bufferDesc.BindFlags         = D3D11_BIND_CONSTANT_BUFFER;
-
-        HRESULT result = mDevice->CreateBuffer(&bufferDesc, nullptr, &gsBuffer);
-        ASSERT_TRUE(SUCCEEDED(result));
-
-        mDeviceContext->GSSetConstantBuffers(0, 1, &gsBuffer);
-        SafeRelease(gsBuffer);
-        gsBuffer = nullptr;
-
-        result = mDevice->GetDeviceRemovedReason();
-        ASSERT_TRUE(FAILED(result));
-    }
-
     HMODULE mD3D11Module;
     PFN_D3D11_CREATE_DEVICE mD3D11CreateDevice;
 

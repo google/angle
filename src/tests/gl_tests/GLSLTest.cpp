@@ -1952,8 +1952,6 @@ TEST_P(GLSLTest, TwoElseIfRewriting)
 
 TEST_P(GLSLTest, FrontFacingAndVarying)
 {
-    EGLPlatformParameters platform = GetParam().eglParameters;
-
     constexpr char kVS[] = R"(attribute vec4 a_position;
 varying float v_varying;
 void main()
@@ -1981,17 +1979,7 @@ void main()
 
     GLuint program = CompileProgram(kVS, kFS);
 
-    // Compilation should fail on D3D11 feature level 9_3, since gl_FrontFacing isn't supported.
-    if (platform.renderer == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
-    {
-        if (platform.majorVersion == 9 && platform.minorVersion == 3)
-        {
-            EXPECT_EQ(0u, program);
-            return;
-        }
-    }
-
-    // Otherwise, compilation should succeed
+    // Compilation should succeed
     EXPECT_NE(0u, program);
 }
 
@@ -2738,7 +2726,7 @@ void main()
     GLint compileResult;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
 
-    // If the test is configured to run limited to Feature Level 9_3, then it is
+    // If the test is configured to run on D3D9, then it is
     // assumed that shader compilation will fail with an expected error message containing
     // "Loop index cannot be compared with non-constant expression"
     if (GetParam() == ES2_D3D9())
