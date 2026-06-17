@@ -152,6 +152,7 @@ angle_linux_functional_cq_tester(
         "ci/angle-android-arm64-builder-rel",
         "ci/angle-android-arm64-google-pixel4-rel",
         "ci/angle-android-arm64-google-pixel6-rel",
+        "ci/angle-android-arm64-google-pixel10-rel",
     ],
     gn_args = "ci/angle-android-arm64-builder-rel",
 )
