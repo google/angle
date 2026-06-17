@@ -221,17 +221,12 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
 
 angle::Result RenderbufferVk::copyRenderbufferSubData(const gl::Context *context,
                                                       const gl::Renderbuffer *srcBuffer,
-                                                      GLint srcLevel,
                                                       GLint srcX,
                                                       GLint srcY,
-                                                      GLint srcZ,
-                                                      GLint dstLevel,
                                                       GLint dstX,
                                                       GLint dstY,
-                                                      GLint dstZ,
                                                       GLsizei srcWidth,
-                                                      GLsizei srcHeight,
-                                                      GLsizei srcDepth)
+                                                      GLsizei srcHeight)
 {
     RenderbufferVk *sourceVk = vk::GetImpl(srcBuffer);
 
@@ -239,9 +234,8 @@ angle::Result RenderbufferVk::copyRenderbufferSubData(const gl::Context *context
     ANGLE_TRY(sourceVk->ensureImageInitialized(context));
     ANGLE_TRY(ensureImageInitialized(context));
 
-    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), srcLevel, srcX, srcY,
-                                             srcZ, mImage, dstLevel, dstX, dstY, dstZ, srcWidth,
-                                             srcHeight, srcDepth);
+    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), 0, srcX, srcY, 0,
+                                             mImage, 0, dstX, dstY, 0, srcWidth, srcHeight, 1);
 }
 
 angle::Result RenderbufferVk::copyTextureSubData(const gl::Context *context,
@@ -250,13 +244,10 @@ angle::Result RenderbufferVk::copyTextureSubData(const gl::Context *context,
                                                  GLint srcX,
                                                  GLint srcY,
                                                  GLint srcZ,
-                                                 GLint dstLevel,
                                                  GLint dstX,
                                                  GLint dstY,
-                                                 GLint dstZ,
                                                  GLsizei srcWidth,
-                                                 GLsizei srcHeight,
-                                                 GLsizei srcDepth)
+                                                 GLsizei srcHeight)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     TextureVk *sourceVk  = vk::GetImpl(srcTexture);
@@ -266,8 +257,8 @@ angle::Result RenderbufferVk::copyTextureSubData(const gl::Context *context,
     ANGLE_TRY(ensureImageInitialized(context));
 
     return vk::ImageHelper::CopyImageSubData(context, &sourceVk->getImage(), srcLevel, srcX, srcY,
-                                             srcZ, mImage, dstLevel, dstX, dstY, dstZ, srcWidth,
-                                             srcHeight, srcDepth);
+                                             srcZ, mImage, 0, dstX, dstY, 0, srcWidth, srcHeight,
+                                             1);
 }
 
 angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *context,
