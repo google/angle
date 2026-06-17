@@ -34,9 +34,15 @@ group("orchestrator_mb") {
 
 group("orchestrator_merge_scripts") {
   data = [
+    "//build/android/",
+    "//build/util/lib/common/",
     "//scripts/",
     "//src/tests/py_utils/",
     "//testing/merge_scripts/",
+    "//third_party/catapult/",
+    "//third_party/depot_tools/",
+    "//third_party/logdog/",
+    "//tools/perf/",
 
     "//src/commit_id.py",
   ]
