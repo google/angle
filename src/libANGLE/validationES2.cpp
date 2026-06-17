@@ -5475,17 +5475,6 @@ bool ValidateEnable(const PrivateState &state,
         return false;
     }
 
-    if (state.getLimitations().noSampleAlphaToCoverageSupport && cap == GL_SAMPLE_ALPHA_TO_COVERAGE)
-    {
-        errors->validationError(entryPoint, GL_INVALID_OPERATION,
-                                kNoSampleAlphaToCoveragesLimitation);
-
-        // We also output an error message to the debugger window if tracing is active, so that
-        // developers can see the error message.
-        ERR() << kNoSampleAlphaToCoveragesLimitation;
-        return false;
-    }
-
     if (state.getPixelLocalStorageActivePlanes() != 0)
     {
         if (IsCapBannedWithActivePLS(cap))

@@ -658,19 +658,6 @@ angle::Result ProgramD3D::linkJobImpl(d3d::Context *context,
         }
     }
 
-    if (mRenderer->getNativeLimitations().noFrontFacingSupport)
-    {
-        const SharedCompiledShaderStateD3D &fragmentShader =
-            executableD3D->mAttachedShaders[gl::ShaderType::Fragment];
-        if (fragmentShader && fragmentShader->usesFrontFacing)
-        {
-            mState.getExecutable().getInfoLog()
-                << "The current renderer doesn't support gl_FrontFacing";
-            // Fail compilation
-            ANGLE_CHECK_HR(context, false, "gl_FrontFacing not supported", E_NOTIMPL);
-        }
-    }
-
     const gl::VaryingPacking &varyingPacking =
         resources.varyingPacking.getOutputPacking(gl::ShaderType::Vertex);
 

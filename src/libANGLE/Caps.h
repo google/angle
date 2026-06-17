@@ -108,12 +108,6 @@ struct Limitations
 
     Limitations &operator=(const Limitations &other);
 
-    // Renderer doesn't support gl_FrontFacing in fragment shaders
-    bool noFrontFacingSupport = false;
-
-    // Renderer doesn't support GL_SAMPLE_ALPHA_TO_COVERAGE
-    bool noSampleAlphaToCoverageSupport = false;
-
     // In glVertexAttribDivisorANGLE, attribute zero must have a zero divisor
     bool attributeZeroRequiresZeroDivisorInEXT = false;
 

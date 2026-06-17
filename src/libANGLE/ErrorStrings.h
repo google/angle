@@ -503,7 +503,6 @@ inline constexpr const char *kNonPositiveDrawTextureDimension = "Both width and 
 inline constexpr const char *kNonPositiveSize = "Size must be greater than 0.";
 inline constexpr const char *kNoProgramBinaryFormats = "No program binary formats supported.";
 inline constexpr const char *kNoReadFramebuffer = "No active read framebuffer.";
-inline constexpr const char *kNoSampleAlphaToCoveragesLimitation = "Current renderer doesn't support alpha-to-coverage.";
 inline constexpr const char *kNotTextureComplete = "The texture is not complete.";
 inline constexpr const char *kNoTransformArray = "No transform array given.";
 inline constexpr const char *kNoTransformFeedbackOutputVariables = "The active program has specified no output variables to record.";

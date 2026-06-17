@@ -105,7 +105,7 @@ class EGLDeviceCreationTest : public ANGLETest<>
                                D3D11_SDK_VERSION, &mDevice, &mFeatureLevel, &mDeviceContext);
 
         ASSERT_TRUE(SUCCEEDED(hr));
-        ASSERT_GE(mFeatureLevel, D3D_FEATURE_LEVEL_9_3);
+        ASSERT_GE(mFeatureLevel, D3D_FEATURE_LEVEL_10_0);
     }
 
     void CreateWindowSurface()
