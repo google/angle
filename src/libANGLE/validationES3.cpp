@@ -842,6 +842,7 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             }
             if (target == TextureTarget::_3D || target == TextureTarget::_2DArray)
             {
+                // Note that CubeMapArray is not supported as a texture target in WebGL.
                 GLint dataStoreHeight = unpack.imageHeight ? unpack.imageHeight : height;
                 if (unpack.skipRows + height > dataStoreHeight)
                 {
