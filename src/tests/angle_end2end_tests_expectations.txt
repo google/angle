@@ -166,6 +166,7 @@
 517618343 WIN INTEL VULKAN : TransformFeedbackTestES31.CaptureArray/* = SKIP
 40096690 WIN INTEL VULKAN : TransformFeedbackTest.RecordAndDraw/* = SKIP
 40096690 WIN INTEL VULKAN : TransformFeedbackWithDepthBufferTest.RecordAndDrawWithDepthWriteEnabled/* = SKIP
+534082926 WIN INTEL VULKAN : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
 
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2111)
 40644896 WIN INTEL OPENGL : D3DImageFormatConversionTest.WriteColorFunctionR8G8B8A8/* = SKIP
@@ -1205,6 +1206,8 @@
 525786155 PIXEL10 GLES : PbufferTestES3.BindRedefinesAllMips/* = SKIP
 526518127 PIXEL10 GLES : ImageTestES3.MipLevelsNonZeroBaseLevel/* = SKIP
 526518127 PIXEL10 GLES : ImageTestES3.NonZeroLevel*/* = SKIP
+533059467 PIXEL10 GLES : TextureTestES31.ComputeShaderLoadPartiallyBoundImageUnits/* = SKIP
+533059467 PIXEL10 GLES : TextureTestES31.FragmentShaderLoadUnboundImageUnits/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP
