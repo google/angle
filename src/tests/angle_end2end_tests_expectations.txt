@@ -998,6 +998,7 @@
 480069042 PIXEL10 GLES : FramebufferTest_ES31.DepthStencilResolveThenDrawWithoutResolve/* = SKIP
 480069042 PIXEL10 GLES : FramebufferTest_ES31.MixesMultisampleTextureRenderbuffer/* = SKIP
 480069042 PIXEL10 GLES : FramebufferTest_ES31.MultisampleDepthStencilResolveMultipleTimesWithDrawInBetween/* = SKIP
+379700129 PIXEL10 GLES : FramebufferTest_ES31_MSAA.MultisampleStencilSampling/* = SKIP
 480069042 PIXEL10 GLES : GLSLConstantFoldingTest_ES31.NamedArrayOfArrayIndex/* = SKIP
 480069042 PIXEL10 GLES : GLSLTest.NestedStructsWithSamplersAsFunctionArg/* = SKIP
 480069042 PIXEL10 GLES : GLSLTest.SwizzledChainedAssign/* = SKIP
