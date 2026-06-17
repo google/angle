@@ -1,0 +1,7 @@
+{
+  "angle-android-arm-builder-rel": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "angle-win-x64-builder-msvc-rel": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  }
+}

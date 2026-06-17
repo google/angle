@@ -1,0 +1,7 @@
+{
+  "angle-win-x86-builder-msvc-dbg": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  }
+}

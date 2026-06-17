@@ -79,6 +79,11 @@ angle_linux_parent_builder(
             target_platform = builder_config.target_platform.ANDROID,
         ),
     ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
+    ),
     gn_args = gn_args.config(
         configs = [
             "android_clang",
@@ -110,6 +115,11 @@ angle_linux_parent_builder(
             target_bits = 32,
             target_platform = builder_config.target_platform.ANDROID,
         ),
+    ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
     ),
     gn_args = gn_args.config(
         configs = [
@@ -143,6 +153,11 @@ angle_linux_parent_builder(
             target_bits = 64,
             target_platform = builder_config.target_platform.ANDROID,
         ),
+    ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
     ),
     gn_args = gn_args.config(
         configs = [
@@ -277,6 +292,11 @@ angle_linux_parent_builder(
             target_bits = 64,
             target_platform = builder_config.target_platform.LINUX,
         ),
+    ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
     ),
     gn_args = gn_args.config(
         configs = [
@@ -436,6 +456,11 @@ angle_mac_parent_builder(
             target_platform = builder_config.target_platform.MAC,
         ),
     ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
+    ),
     gn_args = gn_args.config(
         configs = [
             "component",
@@ -529,6 +554,11 @@ angle_win_parent_builder(
             target_platform = builder_config.target_platform.WIN,
         ),
     ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
+    ),
     gn_args = gn_args.config(
         configs = [
             "component",
@@ -560,6 +590,11 @@ angle_win_msvc_parent_builder(
             target_platform = builder_config.target_platform.WIN,
         ),
     ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
+    ),
     gn_args = gn_args.config(
         configs = [
             "component",
@@ -589,6 +624,11 @@ angle_win_msvc_parent_builder(
             target_bits = 64,
             target_platform = builder_config.target_platform.WIN,
         ),
+    ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
     ),
     gn_args = gn_args.config(
         configs = [
@@ -684,6 +724,11 @@ angle_win_msvc_parent_builder(
             target_platform = builder_config.target_platform.WIN,
         ),
     ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
+    ),
     gn_args = gn_args.config(
         configs = [
             "component",
@@ -714,6 +759,11 @@ angle_win_msvc_parent_builder(
             target_platform = builder_config.target_platform.WIN,
         ),
     ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
+    ),
     gn_args = gn_args.config(
         configs = [
             "component",
@@ -743,6 +793,11 @@ angle_win_parent_builder(
             target_bits = 32,
             target_platform = builder_config.target_platform.WIN,
         ),
+    ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
     ),
     gn_args = gn_args.config(
         configs = [
@@ -775,6 +830,11 @@ angle_win_msvc_parent_builder(
             target_platform = builder_config.target_platform.WIN,
         ),
     ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
+    ),
     gn_args = gn_args.config(
         configs = [
             "component",
@@ -804,6 +864,11 @@ angle_win_msvc_parent_builder(
             target_bits = 32,
             target_platform = builder_config.target_platform.WIN,
         ),
+    ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "all",
+        ],
     ),
     gn_args = gn_args.config(
         configs = [

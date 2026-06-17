@@ -386,6 +386,7 @@ consoles.list_view(
 exec("@chromium-targets//mixins.star")
 exec("//binaries.star")
 exec("//bundles.star")
+exec("//compile_targets.star")
 exec("//gn_args.star")
 exec("//mixins.star")
 exec("//recipes.star")

@@ -1,0 +1,7 @@
+{
+  "angle-win-x64-builder-uwp-rel": {
+    "additional_compile_targets": [
+      "all"
+    ]
+  }
+}
