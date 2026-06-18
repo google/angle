@@ -43,19 +43,6 @@ ADDITIONAL_MIXINS = {
             '--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}',
         ],
     },
-    'timeout_120m': {
-        'swarming': {
-            'hard_timeout': 7200,
-            'io_timeout': 300
-        }
-    },
-    'temp_band_below_30C': {
-        'swarming': {
-            'dimensions': {
-                'temp_band': '<30'
-            }
-        }
-    },
 }
 
 MIXIN_FILE_NAME = os.path.join(THIS_DIR, 'mixins.pyl')

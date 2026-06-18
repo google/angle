@@ -10,42 +10,4 @@
 #
 # For more info see Chromium's test_suite_exceptions.pyl in testing/buildbot.
 
-{
-  'angle_perftests': {
-    'modifications': {
-      'angle-android-arm64-google-pixel4-perf': {
-        'args': [
-          # Remove vulkan tests
-          '-f',
-          '*-*vulkan*:*Vulkan*',
-        ],
-      },
-      'angle-android-arm64-google-pixel6-perf': {
-        'args': [
-          # Custom temp throttling for perf tests on pixel6 b/345514719
-          '--custom-throttling-temp=38',
-        ],
-      },
-    },
-  },
-  'angle_trace_perf_native_tests': {
-    'modifications': {
-      'angle-android-arm64-google-pixel6-perf': {
-        'args': [
-          # Custom temp throttling for perf tests on pixel6 b/345514719
-          '--custom-throttling-temp=38',
-        ],
-      },
-    },
-  },
-  'angle_trace_perf_vulkan_tests': {
-    'modifications': {
-      'angle-android-arm64-google-pixel6-perf': {
-        'args': [
-          # Custom temp throttling for perf tests on pixel6 b/345514719
-          '--custom-throttling-temp=38',
-        ],
-      },
-    },
-  },
-}
+{}

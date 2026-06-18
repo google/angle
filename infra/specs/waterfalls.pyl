@@ -40,28 +40,6 @@
       'swarming_containment_auto',
     ],
     'machines': {
-      'angle-android-arm64-google-pixel4-perf': {
-        'os_type': 'android',
-        'mixins': [
-          'gpu_pixel_4_stable',
-          'temp_band_below_30C',
-          'timeout_120m',
-        ],
-        'test_suites': {
-          'isolated_scripts': 'isolated_scripts_group_perf_notrace',
-        },
-      },
-      'angle-android-arm64-google-pixel6-perf': {
-        'os_type': 'android',
-        'mixins': [
-          'gpu_pixel_6_stable',
-          'temp_band_below_30C',
-          'timeout_120m',
-        ],
-        'test_suites': {
-          'isolated_scripts': 'isolated_scripts_group_perf',
-        },
-      },
       'angle-linux-x64-sws-asan': {
         'os_type': 'linux',
         'mixins': [

@@ -12,84 +12,6 @@
 
 {
   'basic_suites': {
-
-    # Actually uploads results to the perf dashboard
-    'angle_perf_isolated_scripts': {
-      'angle_perftests': {
-        'android_args': {
-          '--trial-time=10',
-        },
-        'args': [
-          '--log=debug',
-          '--samples-per-test=3',
-          '--trials-per-sample=3',
-          '--show-test-stdout',
-        ],
-        'merge': {
-          'script': '//scripts/process_angle_perf_results.py',
-        },
-        'android_swarming': {
-          'shards': 30,
-        },
-        'swarming': {
-          'shards': 10,
-        },
-      },
-    },
-
-    'angle_trace_perf_native_isolated_scripts': {
-      'angle_trace_perf_native_tests': {
-        'android_args': {
-          '--trial-time=10',
-        },
-        'args': [
-          '--log=debug',
-          '--show-test-stdout',
-          '--samples-per-test=3',
-          '--trials-per-sample=3',
-          '--use-gl=native',
-          '--trace-tests',
-        ],
-        'merge': {
-          'script': '//scripts/process_angle_perf_results.py',
-        },
-        'android_swarming': {
-          'shards': 30,
-        },
-        'swarming': {
-          'shards': 10,
-        },
-        'test': 'angle_trace_perf_tests',
-      },
-    },
-
-    'angle_trace_perf_vulkan_isolated_scripts': {
-      'angle_trace_perf_vulkan_tests': {
-        'android_args': {
-          '--trial-time=10',
-        },
-        'args': [
-          '--log=debug',
-          '--show-test-stdout',
-          '--samples-per-test=3',
-          '--trials-per-sample=3',
-          '--use-angle=vulkan',
-          '--trace-tests',
-        ],
-        'merge': {
-          'script': '//scripts/process_angle_perf_results.py',
-        },
-        'android_swarming': {
-          'shards': 30,
-        },
-        'swarming': {
-          'shards': 10,
-        },
-        'test': 'angle_trace_perf_tests',
-      },
-    },
-
-
     'swangle_deqp_egl_slow_tests': {
       'angle_deqp_egl_tests': {
         'args': [
@@ -363,16 +285,6 @@
   },
 
   'compound_suites': {
-    'isolated_scripts_group_perf': [
-      'angle_perf_isolated_scripts',
-      'angle_trace_perf_native_isolated_scripts',
-      'angle_trace_perf_vulkan_isolated_scripts',
-    ],
-
-    'isolated_scripts_group_perf_notrace': [
-      'angle_perf_isolated_scripts',
-    ],
-
     'swangle_gtests': [
       'swangle_deqp_egl_tests',
       'swangle_deqp_gles2_tests',
