@@ -267,17 +267,10 @@ targets.bundle(
 )
 
 targets.bundle(
-    name = "swangle_common_gtests",
+    name = "swangle_basic_gtests",
     targets = [
         "swangle_deqp_egl_tests",
         "swangle_deqp_gles2_tests",
-        "swangle_deqp_gles31_rotate180_tests",
-        "swangle_deqp_gles31_rotate270_tests",
-        "swangle_deqp_gles31_rotate90_tests",
-        "swangle_deqp_gles31_tests",
-        "swangle_deqp_gles3_rotate180_tests",
-        "swangle_deqp_gles3_rotate270_tests",
-        "swangle_deqp_gles3_rotate90_tests",
         "swangle_deqp_gles3_tests",
         "swangle_deqp_khr_gles2_tests",
         "swangle_deqp_khr_gles31_tests",
@@ -285,6 +278,20 @@ targets.bundle(
         "swangle_deqp_khr_noctx_gles2_tests",
         "swangle_end2end_tests",
         "swangle_white_box_tests",
+    ],
+)
+
+targets.bundle(
+    name = "swangle_common_gtests",
+    targets = [
+        "swangle_basic_gtests",
+        "swangle_deqp_gles31_rotate180_tests",
+        "swangle_deqp_gles31_rotate270_tests",
+        "swangle_deqp_gles31_rotate90_tests",
+        "swangle_deqp_gles31_tests",
+        "swangle_deqp_gles3_rotate180_tests",
+        "swangle_deqp_gles3_rotate270_tests",
+        "swangle_deqp_gles3_rotate90_tests",
     ],
 )
 
@@ -311,6 +318,35 @@ targets.bundle(
         "swangle_deqp_gles31_tests": targets.mixin(
             swarming = targets.swarming(
                 shards = 14,
+            ),
+        ),
+        "swangle_deqp_gles3_tests": targets.mixin(
+            swarming = targets.swarming(
+                shards = 11,
+            ),
+        ),
+        "swangle_end2end_tests": targets.mixin(
+            swarming = targets.swarming(
+                shards = 6,
+            ),
+        ),
+    },
+)
+
+targets.bundle(
+    name = "swangle_linux_tsan_gtests",
+    targets = [
+        "swangle_basic_gtests",
+    ],
+    per_test_modifications = {
+        "swangle_deqp_egl_tests": targets.mixin(
+            args = [
+                "--batch-timeout=600",
+            ],
+        ),
+        "swangle_deqp_gles2_tests": targets.mixin(
+            swarming = targets.swarming(
+                shards = 4,
             ),
         ),
         "swangle_deqp_gles3_tests": targets.mixin(
