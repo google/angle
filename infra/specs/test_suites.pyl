@@ -12,15 +12,6 @@
 
 {
   'basic_suites': {
-    'swangle_deqp_egl_slow_tests': {
-      'angle_deqp_egl_tests': {
-        'args': [
-          '--use-angle=swiftshader',
-          '--batch-timeout=600',
-        ],
-        'use_isolated_scripts_api': True,
-      },
-    },
 
     'swangle_deqp_egl_tests': {
       'angle_deqp_egl_tests': {
@@ -28,18 +19,6 @@
           '--use-angle=swiftshader',
         ],
         'use_isolated_scripts_api': True,
-      },
-    },
-
-    'swangle_deqp_gles2_slow_tests': {
-      'angle_deqp_gles2_tests': {
-        'args': [
-          '--use-angle=swiftshader',
-        ],
-        'use_isolated_scripts_api': True,
-        'swarming': {
-          'shards': 4,
-        },
       },
     },
 
@@ -136,18 +115,6 @@
       },
     },
 
-    'swangle_deqp_gles3_slow_tests': {
-      'angle_deqp_gles3_tests': {
-        'args': [
-          '--use-angle=swiftshader',
-        ],
-        'swarming': {
-          'shards': 11,
-        },
-        'use_isolated_scripts_api': True,
-      },
-    },
-
     'swangle_deqp_gles3_tests': {
       'angle_deqp_gles3_tests': {
         'args': [
@@ -202,18 +169,6 @@
           '--use-angle=swiftshader',
         ],
         'use_isolated_scripts_api': True,
-      },
-    },
-
-    'swangle_end2end_slow_tests': {
-      'angle_end2end_tests': {
-        'args': [
-          '--gtest_filter=*Vulkan_SwiftShader*',
-        ],
-        'use_isolated_scripts_api': True,
-        'swarming': {
-          'shards': 6,
-        },
       },
     },
 
@@ -296,18 +251,6 @@
 
     'swangle_non_deqp_slow_flaky_gtests': [
       'swangle_end2end_very_slow_flaky_tests',
-      'swangle_white_box_tests',
-    ],
-
-    'swangle_slow_flaky_gtests': [
-      'swangle_deqp_egl_slow_tests',
-      'swangle_deqp_gles2_slow_tests',
-      'swangle_deqp_gles3_slow_tests',
-      'swangle_deqp_khr_gles2_tests',
-      'swangle_deqp_khr_gles31_tests',
-      'swangle_deqp_khr_gles3_tests',
-      'swangle_deqp_khr_noctx_gles2_tests',
-      'swangle_end2end_slow_tests',
       'swangle_white_box_tests',
     ],
   },

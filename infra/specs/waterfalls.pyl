@@ -40,16 +40,6 @@
       'swarming_containment_auto',
     ],
     'machines': {
-      'angle-linux-x64-sws-tsan': {
-        'os_type': 'linux',
-        'mixins': [
-          'gpu_linux_gce_stable',
-          'timeout_15m',
-        ],
-        'test_suites': {
-          'gtest_tests': 'swangle_slow_flaky_gtests',
-        },
-      },
       'angle-linux-x64-trace': {
         'os_type': 'linux',
         'additional_compile_targets': [
