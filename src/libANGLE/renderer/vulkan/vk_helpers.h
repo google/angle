@@ -3345,7 +3345,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                         const PruneReason reason);
     void pruneSupersededUpdatesForLevelImpl(ContextVk *contextVk,
                                             const gl::LevelIndex level,
-                                            const gl::Box &upcomingUpdateBoundingBox);
+                                            const gl::Box &upcomingUpdateBoundingBox,
+                                            const PruneReason reason);
 
     // Whether there are any updates in [start, end).
     bool hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelIndex levelEnd) const;
