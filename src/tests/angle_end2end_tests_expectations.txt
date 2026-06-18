@@ -2876,6 +2876,11 @@
 514397873 D3D11 : BaseInstanceOverflowTest.BaseInstanceOverflow2/* = SKIP
 514397873 VULKAN : BaseInstanceOverflowTest.BaseInstanceOverflow2/* = SKIP
 
+// Flaky timeouts on Win/ASan/SwiftShader when running with ES3_1_Vulkan_SwiftShader.
+525333063 WIN SWIFTSHADER VULKAN : MemoryBarrierImageBufferOnlyTest.ShaderImageAccessBitCopyThenWrite/* = SKIP
+525333063 WIN SWIFTSHADER VULKAN : MemoryBarrierImageOnlyTest.ShaderImageAccessBitFBOCopyThenWrite/* = SKIP
+525333063 WIN SWIFTSHADER VULKAN : MemoryBarrierImageOnlyTest.ShaderImageAccessBitReadPixelsThenWrite/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
