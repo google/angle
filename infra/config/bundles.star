@@ -267,16 +267,14 @@ targets.bundle(
 )
 
 targets.bundle(
-    name = "swangle_gtests",
+    name = "swangle_common_gtests",
     targets = [
         "swangle_deqp_egl_tests",
         "swangle_deqp_gles2_tests",
-        "swangle_deqp_gles31_multisample_tests",
         "swangle_deqp_gles31_rotate180_tests",
         "swangle_deqp_gles31_rotate270_tests",
         "swangle_deqp_gles31_rotate90_tests",
         "swangle_deqp_gles31_tests",
-        "swangle_deqp_gles3_multisample_tests",
         "swangle_deqp_gles3_rotate180_tests",
         "swangle_deqp_gles3_rotate270_tests",
         "swangle_deqp_gles3_rotate90_tests",
@@ -288,6 +286,44 @@ targets.bundle(
         "swangle_end2end_tests",
         "swangle_white_box_tests",
     ],
+)
+
+targets.bundle(
+    name = "swangle_gtests",
+    targets = [
+        "swangle_common_gtests",
+        "swangle_deqp_gles31_multisample_tests",
+        "swangle_deqp_gles3_multisample_tests",
+    ],
+)
+
+targets.bundle(
+    name = "swangle_linux_asan_gtests",
+    targets = [
+        "swangle_common_gtests",
+    ],
+    per_test_modifications = {
+        "swangle_deqp_gles2_tests": targets.mixin(
+            swarming = targets.swarming(
+                shards = 4,
+            ),
+        ),
+        "swangle_deqp_gles31_tests": targets.mixin(
+            swarming = targets.swarming(
+                shards = 14,
+            ),
+        ),
+        "swangle_deqp_gles3_tests": targets.mixin(
+            swarming = targets.swarming(
+                shards = 11,
+            ),
+        ),
+        "swangle_end2end_tests": targets.mixin(
+            swarming = targets.swarming(
+                shards = 6,
+            ),
+        ),
+    },
 )
 
 targets.bundle(
