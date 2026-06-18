@@ -968,11 +968,6 @@ ANGLE_INLINE bool ValidateDrawInstancedCounts(const Context *context,
                                               GLsizei primcount,
                                               GLuint baseinstance)
 {
-    if (!context->getLimitations().instanceIdMayOverflow)
-    {
-        return true;
-    }
-
     angle::CheckedNumeric<GLuint> checkedSum = baseinstance;
     checkedSum += primcount - 1;
 

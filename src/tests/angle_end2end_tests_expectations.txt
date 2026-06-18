@@ -140,6 +140,7 @@
 452159379 WIN INTEL VULKAN : ProgramBinaryTest.ReturnedBinaryTwiceShouldMatch/* = SKIP
 519062400 WIN INTEL OPENGL : CopyTextureTestES3.ChangeBaseLevel/* = SKIP
 523371282 WIN INTEL OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
+526503288 WIN INTEL OPENGL : BaseInstanceOverflowTest.BaseInstanceOverflow2/ES3_OpenGL_AlwaysEnableEmulatedMultidrawExtensions = SKIP
 
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingAttributeType/* = SKIP
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingProgramType/* = SKIP
@@ -1264,6 +1265,7 @@
 523128541 PIXEL10 GLES : UniformBlockWithOneLargeArrayMemberTest.TwoUniformBlocksInDiffProgram/* = SKIP
 523128541 PIXEL10 GLES : UniformBlockWithOneLargeArrayMemberTest.TwoUniformBlocksInSameProgram/* = SKIP
 523128541 PIXEL10 GLES : UniformBufferTest.SameBufferDifferentMetalSize/* = SKIP
+526503288 PIXEL10 GLES : BaseInstanceOverflowTest.BaseInstanceOverflow2/ES3_OpenGLES_AlwaysEnableEmulatedMultidrawExtensions = SKIP
 525786155 PIXEL10 GLES : PbufferTestES3.ImportImageThenBindTexImageShouldOrphan/* = SKIP
 525786155 PIXEL10 GLES : PbufferTestES3.ImportImageThenBindTexImageSourceShouldOrphan/* = SKIP
 
@@ -2881,16 +2883,6 @@
 
 // Unimplemented parts.
 515493666 D3D11 : Restart/DrawElementsVariantsTest.Draw/* = SKIP
-
-514397873 GLES : BaseInstanceOverflowTest.BaseInstanceOverflow2/* = SKIP
-514397873 OPENGL : BaseInstanceOverflowTest.BaseInstanceOverflow2/* = SKIP
-514397873 D3D11 : BaseInstanceOverflowTest.BaseInstanceOverflow2/* = SKIP
-514397873 VULKAN : BaseInstanceOverflowTest.BaseInstanceOverflow2/* = SKIP
-
-// Flaky timeouts on Win/ASan/SwiftShader when running with ES3_1_Vulkan_SwiftShader.
-525333063 WIN SWIFTSHADER VULKAN : MemoryBarrierImageBufferOnlyTest.ShaderImageAccessBitCopyThenWrite/* = SKIP
-525333063 WIN SWIFTSHADER VULKAN : MemoryBarrierImageOnlyTest.ShaderImageAccessBitFBOCopyThenWrite/* = SKIP
-525333063 WIN SWIFTSHADER VULKAN : MemoryBarrierImageOnlyTest.ShaderImageAccessBitReadPixelsThenWrite/* = SKIP
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
