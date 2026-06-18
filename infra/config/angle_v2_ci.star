@@ -2221,6 +2221,19 @@ ci.thin_tester(
         ),
         run_tests_serially = True,
     ),
+    targets = targets.bundle(
+        targets = [
+            "swangle_gtests",
+        ],
+        mixins = [
+            "win10_gce_gpu_pool",
+            "timeout_15m",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
+    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|win|x86|rel",
         short_name = "sws",
