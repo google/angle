@@ -842,11 +842,24 @@ targets.tests.gtest_test(
 )
 
 targets.tests.isolated_script_test(
+    name = "angle_perftests",
+    mixins = [
+        "isolated_script_log_debug",
+        "perf_merge_script",
+        "perf_tests_common_args",
+        "perf_tests_sharding",
+    ],
+    binary = "angle_perftests",
+)
+
+targets.tests.isolated_script_test(
     name = "angle_trace_perf_native_smoke_tests",
     mixins = [
+        "enable_trace_tests",
         "isolated_script_log_debug",
         "perf_merge_script_smoke_test_mode",
         "perf_tests_smoke_test_mode",
+        "use_gl_native",
         targets.mixin(
             android_swarming = targets.swarming(
                 shards = 6,
@@ -856,9 +869,18 @@ targets.tests.isolated_script_test(
             ),
         ),
     ],
-    args = [
-        "--use-gl=native",
-        "--trace-tests",
+    binary = "angle_trace_perf_tests",
+)
+
+targets.tests.isolated_script_test(
+    name = "angle_trace_perf_native_tests",
+    mixins = [
+        "enable_trace_tests",
+        "isolated_script_log_debug",
+        "perf_merge_script",
+        "perf_tests_common_args",
+        "perf_tests_sharding",
+        "use_gl_native",
     ],
     binary = "angle_trace_perf_tests",
 )
@@ -866,6 +888,7 @@ targets.tests.isolated_script_test(
 targets.tests.isolated_script_test(
     name = "angle_trace_perf_vulkan_smoke_tests",
     mixins = [
+        "enable_trace_tests",
         "isolated_script_log_debug",
         "perf_merge_script_smoke_test_mode",
         "perf_tests_smoke_test_mode",
@@ -879,8 +902,18 @@ targets.tests.isolated_script_test(
             ),
         ),
     ],
-    args = [
-        "--trace-tests",
+    binary = "angle_trace_perf_tests",
+)
+
+targets.tests.isolated_script_test(
+    name = "angle_trace_perf_vulkan_tests",
+    mixins = [
+        "enable_trace_tests",
+        "isolated_script_log_debug",
+        "perf_merge_script",
+        "perf_tests_common_args",
+        "perf_tests_sharding",
+        "use_angle_vulkan",
     ],
     binary = "angle_trace_perf_tests",
 )

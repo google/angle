@@ -203,11 +203,11 @@
       },
       {
         "args": [
-          "--use-gl=native",
           "--trace-tests",
           "--log=debug",
           "--smoke-test-mode",
-          "--show-test-stdout"
+          "--show-test-stdout",
+          "--use-gl=native"
         ],
         "merge": {
           "args": [
@@ -463,11 +463,11 @@
       },
       {
         "args": [
-          "--use-gl=native",
           "--trace-tests",
           "--log=debug",
           "--smoke-test-mode",
-          "--show-test-stdout"
+          "--show-test-stdout",
+          "--use-gl=native"
         ],
         "merge": {
           "args": [
@@ -1448,11 +1448,11 @@
       },
       {
         "args": [
-          "--use-gl=native",
           "--trace-tests",
           "--log=debug",
           "--smoke-test-mode",
-          "--show-test-stdout"
+          "--show-test-stdout",
+          "--use-gl=native"
         ],
         "merge": {
           "args": [

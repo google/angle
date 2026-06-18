@@ -74,6 +74,13 @@ targets.mixin(
 )
 
 targets.mixin(
+    name = "enable_trace_tests",
+    args = [
+        "--trace-tests",
+    ],
+)
+
+targets.mixin(
     name = "gtest_enable_flaky_retries",
     args = [
         # Meant for working around flaky crashes. http://anglebug.com/42265067
@@ -131,12 +138,41 @@ targets.mixin(
 )
 
 targets.mixin(
+    name = "perf_merge_script",
+    merge = targets.merge(
+        script = "//scripts/process_angle_perf_results.py",
+    ),
+)
+
+targets.mixin(
     name = "perf_merge_script_smoke_test_mode",
     merge = targets.merge(
         script = "//scripts/process_angle_perf_results.py",
         args = [
             "--smoke-test-mode",
         ],
+    ),
+)
+
+targets.mixin(
+    name = "perf_tests_common_args",
+    android_args = [
+        "--trial-time=10",
+    ],
+    args = [
+        "--samples-per-test=3",
+        "--trials-per-sample=3",
+        "--show-test-stdout",
+    ],
+)
+
+targets.mixin(
+    name = "perf_tests_sharding",
+    android_swarming = targets.swarming(
+        shards = 30,
+    ),
+    swarming = targets.swarming(
+        shards = 10,
     ),
 )
 
@@ -158,6 +194,14 @@ targets.mixin(
             "os": "Android",
             "pool": "chromium.tests.gpu",
         },
+    ),
+)
+
+targets.mixin(
+    name = "timeout_120m",
+    swarming = targets.swarming(
+        hard_timeout_sec = 7200,
+        io_timeout_sec = 300,
     ),
 )
 
@@ -207,6 +251,13 @@ targets.mixin(
     name = "use_angle_webgpu",
     args = [
         "--use-angle=webgpu",
+    ],
+)
+
+targets.mixin(
+    name = "use_gl_native",
+    args = [
+        "--use-gl=native",
     ],
 )
 

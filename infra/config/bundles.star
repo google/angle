@@ -251,6 +251,15 @@ targets.bundle(
 )
 
 targets.bundle(
+    name = "perf_isolated_scripts",
+    targets = [
+        "angle_perftests",
+        "angle_trace_perf_native_tests",
+        "angle_trace_perf_vulkan_tests",
+    ],
+)
+
+targets.bundle(
     name = "swangle_gtests",
     targets = [
         "swangle_deqp_egl_tests",
