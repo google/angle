@@ -6,10 +6,7 @@
 
 // validationEGL.cpp: Validation functions for generic EGL entry point parameters
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
+#include "common/unsafe_buffers.h"
 #include "libANGLE/validationEGL_autogen.h"
 
 #include "common/utilities.h"
@@ -2500,7 +2497,7 @@ void ValidationContext::setError(EGLint error, const char *message...) const
 
     va_list args;
     va_start(args, message);
-    vsnprintf(buffer, kBufferSize, message, args);
+    ANGLE_UNSAFE_TODO(vsnprintf(buffer, kBufferSize, message, args));
 
     eglThread->setError(error, entryPoint, labeledObject, buffer);
 }
@@ -4996,7 +4993,7 @@ bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *v
     EGLAttrib plane[3];
     for (int i = 0; i < 3; i++)
     {
-        plane[i] = -1;
+        ANGLE_UNSAFE_TODO(plane[i]) = -1;
     }
 
     attribs.initializeWithoutValidation();
@@ -5038,7 +5035,7 @@ bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *v
                         val->setError(EGL_BAD_ACCESS, "Invalid texture unit");
                         return false;
                     }
-                    plane[attribute - EGL_YUV_PLANE0_TEXTURE_UNIT_NV] = value;
+                    ANGLE_UNSAFE_TODO(plane[attribute - EGL_YUV_PLANE0_TEXTURE_UNIT_NV]) = value;
                 }
                 else
                 {
@@ -5057,7 +5054,7 @@ bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *v
         }
         for (int i = 0; i < 3; i++)
         {
-            if (plane[i] != -1)
+            if (ANGLE_UNSAFE_TODO(plane[i]) != -1)
             {
                 val->setError(EGL_BAD_MATCH, "Planes cannot be specified");
                 return false;
@@ -5085,7 +5082,7 @@ bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *v
         }
         for (EGLAttrib i = planeCount; i < 3; i++)
         {
-            if (plane[i] != -1)
+            if (ANGLE_UNSAFE_TODO(plane[i]) != -1)
             {
                 val->setError(EGL_BAD_MATCH, "Invalid plane specified");
                 return false;
@@ -5096,15 +5093,16 @@ bool ValidateStreamConsumerGLTextureExternalAttribsNV(const ValidationContext *v
         std::set<gl::Texture *> textureSet;
         for (EGLAttrib i = 0; i < planeCount; i++)
         {
-            if (plane[i] == -1)
+            if (ANGLE_UNSAFE_TODO(plane[i]) == -1)
             {
                 val->setError(EGL_BAD_MATCH, "Not all planes specified");
                 return false;
             }
-            if (plane[i] != EGL_NONE)
+            if (ANGLE_UNSAFE_TODO(plane[i]) != EGL_NONE)
             {
                 gl::Texture *texture = context->getState().getSamplerTexture(
-                    static_cast<unsigned int>(plane[i]), gl::TextureType::External);
+                    static_cast<unsigned int>(ANGLE_UNSAFE_TODO(plane[i])),
+                    gl::TextureType::External);
                 if (texture == nullptr || texture->id().value == 0)
                 {
                     val->setError(
@@ -6426,7 +6424,7 @@ bool ValidateGetCompositorTimingANDROID(const ValidationContext *val,
 
     for (EGLint i = 0; i < numTimestamps; i++)
     {
-        CompositorTiming name = FromEGLenum<CompositorTiming>(names[i]);
+        CompositorTiming name = FromEGLenum<CompositorTiming>(ANGLE_UNSAFE_TODO(names[i]));
 
         if (!ValidCompositorTimingName(name))
         {
@@ -6542,7 +6540,7 @@ bool ValidateGetFrameTimestampsANDROID(const ValidationContext *val,
 
     for (EGLint i = 0; i < numTimestamps; i++)
     {
-        Timestamp timestamp = FromEGLenum<Timestamp>(timestamps[i]);
+        Timestamp timestamp = FromEGLenum<Timestamp>(ANGLE_UNSAFE_TODO(timestamps[i]));
 
         if (!ValidTimestampType(timestamp))
         {

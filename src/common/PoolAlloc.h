@@ -10,10 +10,6 @@
 #ifndef COMMON_POOLALLOC_H_
 #define COMMON_POOLALLOC_H_
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #if !defined(NDEBUG)
 #    define ANGLE_POOL_ALLOC_GUARD_BLOCKS  // define to enable guard block checking
 #endif
@@ -36,6 +32,7 @@
 //
 
 #include <stdint.h>
+#include "common/unsafe_buffers.h"
 
 #include "common/angleutils.h"
 #include "common/log_utils.h"
@@ -94,7 +91,8 @@ class PoolAllocator : angle::NonCopyable
             //
             // Safe to allocate from mCurrentPageOffset.
             //
-            uint8_t *memory = reinterpret_cast<uint8_t *>(mInUseList) + mCurrentPageOffset;
+            uint8_t *memory =
+                ANGLE_UNSAFE_TODO(reinterpret_cast<uint8_t *>(mInUseList) + mCurrentPageOffset);
             mCurrentPageOffset += numBytes;
             return memory;
         }

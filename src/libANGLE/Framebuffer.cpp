@@ -7,11 +7,8 @@
 // Framebuffer.cpp: Implements the gl::Framebuffer class. Implements GL framebuffer
 // objects and related functionality. [OpenGL ES 2.0.24] section 4.4 page 105.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/Framebuffer.h"
+#include "common/unsafe_buffers.h"
 
 #include "common/Optional.h"
 #include "common/bitset_utils.h"
@@ -1151,7 +1148,7 @@ void Framebuffer::setDrawBuffers(size_t count, const GLenum *buffers)
     auto &drawStates = mState.mDrawBufferStates;
 
     ASSERT(count <= drawStates.size());
-    std::copy(buffers, buffers + count, drawStates.begin());
+    std::copy(buffers, ANGLE_UNSAFE_TODO(buffers + count), drawStates.begin());
     std::fill(drawStates.begin() + count, drawStates.end(), GL_NONE);
     mDirtyBits.set(DIRTY_BIT_DRAW_BUFFERS);
 
@@ -1762,7 +1759,7 @@ angle::Result Framebuffer::invalidateSub(const Context *context,
 
         for (size_t i = 0; i < count; ++i)
         {
-            GLenum attachment = attachments[i];
+            GLenum attachment = ANGLE_UNSAFE_TODO(attachments[i]);
             if (attachment >= GL_COLOR_ATTACHMENT0 &&
                 attachment < GL_COLOR_ATTACHMENT0 + IMPLEMENTATION_MAX_DRAW_BUFFERS)
             {
@@ -2815,7 +2812,8 @@ void Framebuffer::markAttachmentsUninitialized(const Context *context,
 {
     for (size_t i = 0; i < count; ++i)
     {
-        const FramebufferAttachment *attachment = mState.getAttachment(context, attachments[i]);
+        const FramebufferAttachment *attachment =
+            mState.getAttachment(context, ANGLE_UNSAFE_TODO(attachments[i]));
         if (attachment)
         {
             attachment->setInitState(InitState::MayNeedInit);
@@ -2834,7 +2832,7 @@ Framebuffer::overrideInvalidateAttachments(size_t count, const GLenum *attachmen
 
     for (size_t i = 0; i < count; ++i)
     {
-        GLenum attachment = attachments[i];
+        GLenum attachment = ANGLE_UNSAFE_TODO(attachments[i]);
         if (attachment == GL_DEPTH_ATTACHMENT)
         {
             invalidateDepth = true;

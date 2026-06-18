@@ -4,13 +4,10 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 // FramebufferGL.cpp: Implements the class methods for FramebufferGL.
 
 #include "libANGLE/renderer/gl/FramebufferGL.h"
+#include "common/unsafe_buffers.h"
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
@@ -337,7 +334,7 @@ class [[nodiscard]] ScopedEXTTextureNorm16ReadbackWorkaround
             ANGLE_CHECK_GL_MATH(contextGL, checkedAllocatedBytes.IsValid());
             const GLuint allocatedBytes = checkedAllocatedBytes.ValueOrDie();
             tmpPixels                   = new GLubyte[allocatedBytes];
-            memset(tmpPixels, 0, allocatedBytes);
+            ANGLE_UNSAFE_TODO(memset(tmpPixels, 0, allocatedBytes));
         }
 
         return angle::Result::Continue;
@@ -398,8 +395,8 @@ angle::Result RearrangeEXTTextureNorm16Pixels(const gl::Context *context,
     GLubyte *srcRowStart = tmpPixels;
     GLubyte *dstRowStart = clientPixels;
 
-    srcRowStart += skipBytes;
-    dstRowStart += originalReadFormatSkipBytes;
+    ANGLE_UNSAFE_TODO(srcRowStart += skipBytes);
+    ANGLE_UNSAFE_TODO(dstRowStart += originalReadFormatSkipBytes);
 
     for (GLint y = 0; y < area.height; ++y)
     {
@@ -410,18 +407,18 @@ angle::Result RearrangeEXTTextureNorm16Pixels(const gl::Context *context,
             GLushort *srcPixel = reinterpret_cast<GLushort *>(src);
             GLushort *dstPixel = reinterpret_cast<GLushort *>(dst);
             dstPixel[0]        = srcPixel[0];
-            dstPixel[1]        = format == GL_RG ? srcPixel[1] : 0;
+            ANGLE_UNSAFE_TODO(dstPixel[1] = format == GL_RG ? srcPixel[1] : 0);
             // Set other channel of RGBA to 0 (GB when format == GL_RED, B when format == GL_RG)
-            dstPixel[2] = 0;
+            ANGLE_UNSAFE_TODO(dstPixel[2]) = 0;
             // Set alpha channel to 1
-            dstPixel[3] = 0xFFFF;
+            ANGLE_UNSAFE_TODO(dstPixel[3]) = 0xFFFF;
 
-            src += pixelBytes;
-            dst += originalReadFormatPixelBytes;
+            ANGLE_UNSAFE_TODO(src += pixelBytes);
+            ANGLE_UNSAFE_TODO(dst += originalReadFormatPixelBytes);
         }
 
-        srcRowStart += rowBytes;
-        dstRowStart += originalReadFormatRowBytes;
+        ANGLE_UNSAFE_TODO(srcRowStart += rowBytes);
+        ANGLE_UNSAFE_TODO(dstRowStart += originalReadFormatRowBytes);
     }
 
     return angle::Result::Continue;
@@ -438,9 +435,9 @@ bool IsValidUnsignedShortReadPixelsFormat(GLenum readFormat, const gl::Context *
 // - transparent/opaque white
 bool IsNonTrivialClearColor(const GLfloat *color)
 {
-    return !(((color[0] == 0.0f && color[1] == 0.0f && color[2] == 0.0f) ||
-              (color[0] == 1.0f && color[1] == 1.0f && color[2] == 1.0f)) &&
-             (color[3] == 0.0f || color[3] == 1.0f));
+    return !ANGLE_UNSAFE_TODO(((color[0] == 0.0f && color[1] == 0.0f && color[2] == 0.0f) ||
+                               (color[0] == 1.0f && color[1] == 1.0f && color[2] == 1.0f)) &&
+                              (color[3] == 0.0f || color[3] == 1.0f));
 }
 
 // Returns true for all colors except
@@ -448,9 +445,9 @@ bool IsNonTrivialClearColor(const GLfloat *color)
 // - (1, 1, 1, 0 or 1)
 bool IsNonTrivialClearColor(const GLuint *color)
 {
-    return !(((color[0] == 0 && color[1] == 0 && color[2] == 0) ||
-              (color[0] == 1 && color[1] == 1 && color[2] == 1)) &&
-             (color[3] == 0 || color[3] == 1));
+    return !ANGLE_UNSAFE_TODO(((color[0] == 0 && color[1] == 0 && color[2] == 0) ||
+                               (color[0] == 1 && color[1] == 1 && color[2] == 1)) &&
+                              (color[3] == 0 || color[3] == 1));
 }
 
 }  // namespace
@@ -811,7 +808,7 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
         ANGLE_CHECK_GL_MATH(contextGL,
                             glFormat.computeRowPitch(readType, area.width, packState.alignment,
                                                      packState.rowLength, &rowBytes));
-        outPtr += leftClip * glFormat.pixelBytes + topClip * rowBytes;
+        ANGLE_UNSAFE_TODO(outPtr += leftClip * glFormat.pixelBytes + topClip * rowBytes);
     }
 
     if (packState.rowLength == 0 && clippedArea.width != area.width)
@@ -1603,7 +1600,7 @@ bool FramebufferGL::modifyInvalidateAttachmentsForEmulatedDefaultFBO(
     modifiedAttachments->resize(count);
     for (size_t i = 0; i < count; i++)
     {
-        switch (attachments[i])
+        switch (ANGLE_UNSAFE_TODO(attachments[i]))
         {
             case GL_COLOR:
                 (*modifiedAttachments)[i] = GL_COLOR_ATTACHMENT0;
@@ -1660,12 +1657,12 @@ angle::Result FramebufferGL::readPixelsRowByRow(const gl::Context *context,
     ANGLE_TRY(stateManager->setPixelPackState(context, directPack));
 
     GLubyte *readbackPixels = workaround.Pixels();
-    readbackPixels += skipBytes;
+    ANGLE_UNSAFE_TODO(readbackPixels += skipBytes);
     for (GLint y = area.y; y < area.y + area.height; ++y)
     {
         ANGLE_GL_TRY(context,
                      functions->readPixels(area.x, y, area.width, 1, format, type, readbackPixels));
-        readbackPixels += rowBytes;
+        ANGLE_UNSAFE_TODO(readbackPixels += rowBytes);
     }
 
     if (workaround.IsEnabled())
@@ -1723,7 +1720,7 @@ angle::Result FramebufferGL::readPixelsAllAtOnce(const gl::Context *context,
         ANGLE_TRY(stateManager->setPixelPackState(context, directPack));
 
         GLubyte *readbackPixels = workaround.Pixels();
-        readbackPixels += skipBytes + (area.height - 1) * rowBytes;
+        ANGLE_UNSAFE_TODO(readbackPixels += skipBytes + (area.height - 1) * rowBytes);
         ANGLE_GL_TRY(context, functions->readPixels(area.x, area.y + area.height - 1, area.width, 1,
                                                     format, type, readbackPixels));
     }

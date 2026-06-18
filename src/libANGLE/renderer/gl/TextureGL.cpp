@@ -6,11 +6,8 @@
 
 // TextureGL.cpp: Implements the class methods for TextureGL.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/gl/TextureGL.h"
+#include "common/unsafe_buffers.h"
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
@@ -489,7 +486,7 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
     nativegl::TexSubImageFormat texSubImageFormat =
         nativegl::GetTexSubImageFormat(functions, features, format, type);
 
-    const uint8_t *pixelsWithSkip = pixels + skipBytes;
+    const uint8_t *pixelsWithSkip = ANGLE_UNSAFE_TODO(pixels + skipBytes);
     if (useTexImage3D)
     {
         for (GLint image = 0; image < area.depth; ++image)
@@ -499,7 +496,7 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
             {
                 GLint height             = std::min(rowsPerChunk, area.height - row);
                 GLint byteOffset         = imageByteOffset + row * rowBytes;
-                const GLubyte *rowPixels = pixelsWithSkip + byteOffset;
+                const GLubyte *rowPixels = ANGLE_UNSAFE_TODO(pixelsWithSkip + byteOffset);
                 ANGLE_GL_TRY(context,
                              functions->texSubImage3D(
                                  ToGLenum(target), static_cast<GLint>(level), area.x, row + area.y,
@@ -515,7 +512,7 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
         {
             GLint height             = std::min(rowsPerChunk, area.height - row);
             GLint byteOffset         = row * rowBytes;
-            const GLubyte *rowPixels = pixelsWithSkip + byteOffset;
+            const GLubyte *rowPixels = ANGLE_UNSAFE_TODO(pixelsWithSkip + byteOffset);
             ANGLE_GL_TRY(context, functions->texSubImage2D(
                                       ToGLenum(target), static_cast<GLint>(level), area.x,
                                       row + area.y, area.width, height, texSubImageFormat.format,
@@ -572,7 +569,7 @@ angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context
             // Do not include skipBytes in the last image pixel start offset as it will be done by
             // the driver
             size_t lastImageOffset         = (area.depth - 1) * imageBytes;
-            const GLubyte *lastImagePixels = pixels + lastImageOffset;
+            const GLubyte *lastImagePixels = ANGLE_UNSAFE_TODO(pixels + lastImageOffset);
             ANGLE_GL_TRY(context, functions->texSubImage3D(
                                       ToGLenum(target), static_cast<GLint>(level), area.x, area.y,
                                       area.z + area.depth - 1, area.width, area.height - 1, 1,
@@ -584,7 +581,7 @@ angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context
 
         size_t lastRowOffset =
             skipBytes + (area.depth - 1) * imageBytes + (area.height - 1) * rowBytes;
-        const GLubyte *lastRowPixels = pixels + lastRowOffset;
+        const GLubyte *lastRowPixels = ANGLE_UNSAFE_TODO(pixels + lastRowOffset);
         ANGLE_GL_TRY(context,
                      functions->texSubImage3D(ToGLenum(target), static_cast<GLint>(level), area.x,
                                               area.y + area.height - 1, area.z + area.depth - 1,
@@ -606,7 +603,7 @@ angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context
         ANGLE_TRY(stateManager->setPixelUnpackState(context, directUnpack));
 
         size_t lastRowOffset         = skipBytes + (area.height - 1) * rowBytes;
-        const GLubyte *lastRowPixels = pixels + lastRowOffset;
+        const GLubyte *lastRowPixels = ANGLE_UNSAFE_TODO(pixels + lastRowOffset);
         ANGLE_GL_TRY(context, functions->texSubImage2D(ToGLenum(target), static_cast<GLint>(level),
                                                        area.x, area.y + area.height - 1, area.width,
                                                        1, format, type, lastRowPixels));
@@ -2131,7 +2128,7 @@ angle::Result TextureGL::setMagFilter(const gl::Context *context, GLenum filter)
 angle::Result TextureGL::setSwizzle(const gl::Context *context, GLint swizzle[4])
 {
     gl::SwizzleState resultingSwizzle =
-        gl::SwizzleState(swizzle[0], swizzle[1], swizzle[2], swizzle[3]);
+        ANGLE_UNSAFE_TODO(gl::SwizzleState(swizzle[0], swizzle[1], swizzle[2], swizzle[3]));
 
     if (resultingSwizzle != mAppliedSwizzle)
     {
@@ -2152,12 +2149,15 @@ angle::Result TextureGL::setSwizzle(const gl::Context *context, GLint swizzle[4]
         {
             ANGLE_GL_TRY(context, functions->texParameteri(ToGLenum(getType()),
                                                            GL_TEXTURE_SWIZZLE_R, swizzle[0]));
-            ANGLE_GL_TRY(context, functions->texParameteri(ToGLenum(getType()),
-                                                           GL_TEXTURE_SWIZZLE_G, swizzle[1]));
-            ANGLE_GL_TRY(context, functions->texParameteri(ToGLenum(getType()),
-                                                           GL_TEXTURE_SWIZZLE_B, swizzle[2]));
-            ANGLE_GL_TRY(context, functions->texParameteri(ToGLenum(getType()),
-                                                           GL_TEXTURE_SWIZZLE_A, swizzle[3]));
+            ANGLE_UNSAFE_TODO(ANGLE_GL_TRY(
+                context,
+                functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_SWIZZLE_G, swizzle[1])));
+            ANGLE_UNSAFE_TODO(ANGLE_GL_TRY(
+                context,
+                functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_SWIZZLE_B, swizzle[2])));
+            ANGLE_UNSAFE_TODO(ANGLE_GL_TRY(
+                context,
+                functions->texParameteri(ToGLenum(getType()), GL_TEXTURE_SWIZZLE_A, swizzle[3])));
         }
         else
         {
@@ -2624,7 +2624,7 @@ angle::Result TextureGL::initializeContentsImpl(const gl::Context *context,
         }
         else
         {
-            uploadSpan = {zero->data(), imageSize};
+            uploadSpan = ANGLE_UNSAFE_TODO({zero->data(), imageSize});
         }
 
         if (nativegl::UseTexImage2D(getType()))

@@ -7,11 +7,8 @@
 // formatutils9.cpp: Queries for GL image formats and their translations to D3D9
 // formats.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
+#include "common/unsafe_buffers.h"
 
 #include "image_util/copyimage.h"
 #include "image_util/generatemip.h"
@@ -676,14 +673,17 @@ const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, angle::FormatI
             {
                 for (unsigned int k = 0; k < 4; k++)
                 {
-                    if (translations[i][j][k].capsFlag == 0 ||
-                        (supportedDeclTypes & translations[i][j][k].capsFlag) != 0)
+                    if (ANGLE_UNSAFE_TODO(translations[i][j][k]).capsFlag == 0 ||
+                        (supportedDeclTypes & ANGLE_UNSAFE_TODO(translations[i][j][k]).capsFlag) !=
+                            0)
                     {
-                        formatConverters[i][j][k] = translations[i][j][k].preferredConversion;
+                        ANGLE_UNSAFE_TODO(formatConverters[i][j][k]) =
+                            ANGLE_UNSAFE_TODO(translations[i][j][k]).preferredConversion;
                     }
                     else
                     {
-                        formatConverters[i][j][k] = translations[i][j][k].fallbackConversion;
+                        ANGLE_UNSAFE_TODO(formatConverters[i][j][k]) =
+                            ANGLE_UNSAFE_TODO(translations[i][j][k]).fallbackConversion;
                     }
                 }
             }
@@ -695,8 +695,8 @@ const VertexFormat &GetVertexFormatInfo(DWORD supportedDeclTypes, angle::FormatI
 
     // Pure integer attributes only supported in ES3.0
     ASSERT(!vertexFormat.pureInteger);
-    return formatConverters[ComputeTypeIndex(vertexFormat.type)][vertexFormat.normalized]
-                           [vertexFormat.components - 1];
+    return ANGLE_UNSAFE_TODO(formatConverters[ComputeTypeIndex(
+        vertexFormat.type)][vertexFormat.normalized][vertexFormat.components - 1]);
 }
 }  // namespace d3d9
 }  // namespace rx

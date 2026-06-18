@@ -7,11 +7,8 @@
 // renderergl_utils.cpp: Conversion functions and other utility routines
 // specific to the OpenGL renderer.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "common/unsafe_buffers.h"
 
 #include <array>
 #include <limits>
@@ -70,8 +67,9 @@ bool IsMesa(const FunctionsGL *functions, std::array<int, 3> *version)
     }
 
     int *data = version->data();
-    data[0] = data[1] = data[2] = 0;
-    std::sscanf(nativeVersionString.c_str() + pos, "Mesa %d.%d.%d", data, data + 1, data + 2);
+    ANGLE_UNSAFE_TODO(data[0] = data[1] = data[2] = 0);
+    ANGLE_UNSAFE_TODO(
+        std::sscanf(nativeVersionString.c_str() + pos, "Mesa %d.%d.%d", data, data + 1, data + 2));
 
     return true;
 }
@@ -82,8 +80,8 @@ int getAdrenoNumber(const FunctionsGL *functions)
     if (number == -1)
     {
         const char *nativeGLRenderer = GetString(functions, GL_RENDERER);
-        if (std::sscanf(nativeGLRenderer, "Adreno (TM) %d", &number) < 1 &&
-            std::sscanf(nativeGLRenderer, "FD%d", &number) < 1)
+        if (ANGLE_UNSAFE_TODO(std::sscanf(nativeGLRenderer, "Adreno (TM) %d", &number)) < 1 &&
+            ANGLE_UNSAFE_TODO(std::sscanf(nativeGLRenderer, "FD%d", &number)) < 1)
         {
             number = 0;
         }
@@ -99,7 +97,7 @@ int GetQualcommVersion(const FunctionsGL *functions)
         const std::string nativeVersionString(GetString(functions, GL_VERSION));
         const size_t pos = nativeVersionString.find("V@");
         if (pos == std::string::npos ||
-            std::sscanf(nativeVersionString.c_str() + pos, "V@%d", &version) < 1)
+            ANGLE_UNSAFE_TODO(std::sscanf(nativeVersionString.c_str() + pos, "V@%d", &version)) < 1)
         {
             version = 0;
         }
@@ -113,7 +111,7 @@ int getMaliTNumber(const FunctionsGL *functions)
     if (number == -1)
     {
         const char *nativeGLRenderer = GetString(functions, GL_RENDERER);
-        if (std::sscanf(nativeGLRenderer, "Mali-T%d", &number) < 1)
+        if (ANGLE_UNSAFE_TODO(std::sscanf(nativeGLRenderer, "Mali-T%d", &number)) < 1)
         {
             number = 0;
         }
@@ -127,7 +125,7 @@ int getMaliGNumber(const FunctionsGL *functions)
     if (number == -1)
     {
         const char *nativeGLRenderer = GetString(functions, GL_RENDERER);
-        if (std::sscanf(nativeGLRenderer, "Mali-G%d", &number) < 1)
+        if (ANGLE_UNSAFE_TODO(std::sscanf(nativeGLRenderer, "Mali-G%d", &number)) < 1)
         {
             number = 0;
         }
@@ -673,7 +671,7 @@ static GLint QueryGLIntRange(const FunctionsGL *functions, GLenum name, size_t i
 {
     GLint result[2] = {};
     functions->getIntegerv(name, result);
-    return result[index];
+    return ANGLE_UNSAFE_TODO(result[index]);
 }
 
 static GLint64 QuerySingleGLInt64(const FunctionsGL *functions, GLenum name)
@@ -706,7 +704,7 @@ static GLfloat QueryGLFloatRange(const FunctionsGL *functions, GLenum name, size
 {
     GLfloat result[2] = {};
     functions->getFloatv(name, result);
-    return result[index];
+    return ANGLE_UNSAFE_TODO(result[index]);
 }
 
 static gl::TypePrecision QueryTypePrecision(const FunctionsGL *functions,
@@ -3093,28 +3091,28 @@ angle::FixedVector<uint8_t, 16> GetDepthOnePixel(GLenum type)
         {
             uint16_t val = 0xFFFF;
             result.resize(2);
-            memcpy(result.data(), &val, 2);
+            ANGLE_UNSAFE_TODO(memcpy(result.data(), &val, 2));
             break;
         }
         case GL_UNSIGNED_INT:
         {
             uint32_t val = 0xFFFFFFFF;
             result.resize(4);
-            memcpy(result.data(), &val, 4);
+            ANGLE_UNSAFE_TODO(memcpy(result.data(), &val, 4));
             break;
         }
         case GL_FLOAT:
         {
             float val = 1.0f;
             result.resize(4);
-            memcpy(result.data(), &val, 4);
+            ANGLE_UNSAFE_TODO(memcpy(result.data(), &val, 4));
             break;
         }
         case GL_UNSIGNED_INT_24_8:
         {
             uint32_t val = 0xFFFFFF00;
             result.resize(4);
-            memcpy(result.data(), &val, 4);
+            ANGLE_UNSAFE_TODO(memcpy(result.data(), &val, 4));
             break;
         }
         case GL_FLOAT_32_UNSIGNED_INT_24_8_REV:
@@ -3122,8 +3120,8 @@ angle::FixedVector<uint8_t, 16> GetDepthOnePixel(GLenum type)
             float d    = 1.0f;
             uint32_t s = 0;
             result.resize(8);
-            memcpy(result.data(), &d, 4);
-            memcpy(result.data() + 4, &s, 4);
+            ANGLE_UNSAFE_TODO(memcpy(result.data(), &d, 4));
+            ANGLE_UNSAFE_TODO(memcpy(result.data() + 4, &s, 4));
             break;
         }
         default:
@@ -3139,7 +3137,7 @@ void FillDepthOneMemory(GLenum type, angle::Span<uint8_t> span)
     CHECK(span.size() % pixelData.size() == 0);
     for (size_t offset = 0; offset < span.size(); offset += pixelData.size())
     {
-        memcpy(span.data() + offset, pixelData.data(), pixelData.size());
+        ANGLE_UNSAFE_TODO(memcpy(span.data() + offset, pixelData.data(), pixelData.size()));
     }
 }
 
@@ -3255,7 +3253,8 @@ uint8_t *MapBufferRangeWithFallback(const FunctionsGL *functions,
             return nullptr;
         }
 
-        return static_cast<uint8_t *>(functions->mapBuffer(target, accessEnum)) + offset;
+        return ANGLE_UNSAFE_TODO(static_cast<uint8_t *>(functions->mapBuffer(target, accessEnum)) +
+                                 offset);
     }
     else
     {

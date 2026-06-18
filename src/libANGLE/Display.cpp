@@ -8,11 +8,8 @@
 // display on which graphics are drawn. Implements EGLDisplay.
 // [EGL 1.4] section 2.1.2 page 3.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/Display.h"
+#include "common/unsafe_buffers.h"
 
 #include <algorithm>
 #include <iterator>
@@ -163,7 +160,7 @@ size_t EGLStringArrayHash(const char **ary)
     size_t hash = 0;
     if (ary != nullptr)
     {
-        for (; *ary != nullptr; ary++)
+        for (; *ary != nullptr; ANGLE_UNSAFE_TODO(ary++))
         {
             hash ^= std::hash<std::string>{}(std::string(*ary));
         }
@@ -707,7 +704,7 @@ const std::vector<std::string> EGLStringArrayToStringVector(const char **ary)
     std::vector<std::string> vec;
     if (ary != nullptr)
     {
-        for (; *ary != nullptr; ary++)
+        for (; *ary != nullptr; ANGLE_UNSAFE_TODO(ary++))
         {
             vec.push_back(std::string(*ary));
         }
@@ -2565,8 +2562,8 @@ Error Display::programCacheQuery(EGLint index,
     if (key)
     {
         ASSERT(*keysize == static_cast<EGLint>(angle::kProgramCacheControlKeySize));
-        memset(key, 0, angle::kProgramCacheControlKeySize);
-        memcpy(key, programHash->data(), BlobCache::kKeyLength);
+        ANGLE_UNSAFE_TODO(memset(key, 0, angle::kProgramCacheControlKeySize));
+        ANGLE_UNSAFE_TODO(memcpy(key, programHash->data(), BlobCache::kKeyLength));
     }
 
     if (binary)
@@ -2579,7 +2576,7 @@ Error Display::programCacheQuery(EGLint index,
             return egl::Error(EGL_BAD_ACCESS, "Program binary too large or changed during access.");
         }
 
-        memcpy(binary, programBinary.data(), programBinary.size());
+        ANGLE_UNSAFE_TODO(memcpy(binary, programBinary.data(), programBinary.size()));
     }
 
     *binarysize = static_cast<EGLint>(programBinary.size());
@@ -2596,7 +2593,7 @@ Error Display::programCachePopulate(const void *key,
     ASSERT(keysize == static_cast<EGLint>(angle::kProgramCacheControlKeySize));
 
     BlobCache::Key programHash;
-    memcpy(programHash.data(), key, BlobCache::kKeyLength);
+    ANGLE_UNSAFE_TODO(memcpy(programHash.data(), key, BlobCache::kKeyLength));
 
     if (!mMemoryProgramCache.putBinary(programHash, reinterpret_cast<const uint8_t *>(binary),
                                        static_cast<size_t>(binarysize)))

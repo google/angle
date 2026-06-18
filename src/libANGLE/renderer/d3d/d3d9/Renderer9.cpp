@@ -6,11 +6,8 @@
 
 // Renderer9.cpp: Implements a back-end specific class for the D3D9 renderer.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
+#include "common/unsafe_buffers.h"
 
 #include <EGL/eglext.h>
 #include <sstream>
@@ -93,7 +90,8 @@ static void DrawPoints(IDirect3DDevice9 *device, GLsizei count, const void *indi
     for (int i = 0; i < count; i++)
     {
         unsigned int indexValue =
-            static_cast<unsigned int>(static_cast<const T *>(indices)[i]) - minIndex;
+            static_cast<unsigned int>(ANGLE_UNSAFE_TODO(static_cast<const T *>(indices)[i])) -
+            minIndex;
         device->DrawPrimitive(D3DPT_POINTLIST, indexValue, 1);
     }
 }
@@ -505,7 +503,7 @@ egl::ConfigSet Renderer9::generateConfigs()
     egl::ConfigSet configs;
     for (size_t formatIndex = 0; formatIndex < ArraySize(colorBufferFormats); formatIndex++)
     {
-        GLenum colorBufferInternalFormat = colorBufferFormats[formatIndex];
+        GLenum colorBufferInternalFormat = ANGLE_UNSAFE_TODO(colorBufferFormats[formatIndex]);
         const gl::TextureCaps &colorBufferFormatCaps =
             rendererTextureCaps.get(colorBufferInternalFormat);
         if (colorBufferFormatCaps.renderbuffer)
@@ -515,7 +513,7 @@ egl::ConfigSet Renderer9::generateConfigs()
                  depthStencilIndex < ArraySize(depthStencilBufferFormats); depthStencilIndex++)
             {
                 GLenum depthStencilBufferInternalFormat =
-                    depthStencilBufferFormats[depthStencilIndex];
+                    ANGLE_UNSAFE_TODO(depthStencilBufferFormats[depthStencilIndex]);
                 const gl::TextureCaps &depthStencilBufferFormatCaps =
                     rendererTextureCaps.get(depthStencilBufferInternalFormat);
                 if (depthStencilBufferFormatCaps.renderbuffer ||
@@ -1011,7 +1009,7 @@ angle::Result Renderer9::setSamplerState(const gl::Context *context,
     DWORD baseLevel = texture->getBaseLevel() + storage->getTopLevel();
 
     if (appliedSampler.forceSet || appliedSampler.baseLevel != baseLevel ||
-        memcmp(&samplerState, &appliedSampler, sizeof(gl::SamplerState)) != 0)
+        ANGLE_UNSAFE_TODO(memcmp(&samplerState, &appliedSampler, sizeof(gl::SamplerState))) != 0)
     {
         int d3dSamplerOffset = (type == gl::ShaderType::Fragment) ? 0 : D3DVERTEXTEXTURESAMPLER0;
         int d3dSampler       = index + d3dSamplerOffset;
@@ -1552,7 +1550,7 @@ angle::Result Renderer9::drawLineLoop(const gl::Context *context,
         intptr_t offset           = reinterpret_cast<intptr_t>(indices);
         const uint8_t *bufferData = nullptr;
         ANGLE_TRY(storage->getData(context, &bufferData));
-        indices = bufferData + offset;
+        indices = ANGLE_UNSAFE_TODO(bufferData + offset);
     }
 
     unsigned int startIndex = 0;
@@ -1594,30 +1592,30 @@ angle::Result Renderer9::drawLineLoop(const gl::Context *context,
             case gl::DrawElementsType::InvalidEnum:  // Non-indexed draw
                 for (int i = 0; i < count; i++)
                 {
-                    data[i] = i;
+                    ANGLE_UNSAFE_TODO(data[i]) = i;
                 }
-                data[count] = 0;
+                ANGLE_UNSAFE_TODO(data[count]) = 0;
                 break;
             case gl::DrawElementsType::UnsignedByte:
                 for (int i = 0; i < count; i++)
                 {
-                    data[i] = static_cast<const GLubyte *>(indices)[i];
+                    ANGLE_UNSAFE_TODO(data[i] = static_cast<const GLubyte *>(indices)[i]);
                 }
-                data[count] = static_cast<const GLubyte *>(indices)[0];
+                ANGLE_UNSAFE_TODO(data[count]) = static_cast<const GLubyte *>(indices)[0];
                 break;
             case gl::DrawElementsType::UnsignedShort:
                 for (int i = 0; i < count; i++)
                 {
-                    data[i] = static_cast<const GLushort *>(indices)[i];
+                    ANGLE_UNSAFE_TODO(data[i] = static_cast<const GLushort *>(indices)[i]);
                 }
-                data[count] = static_cast<const GLushort *>(indices)[0];
+                ANGLE_UNSAFE_TODO(data[count]) = static_cast<const GLushort *>(indices)[0];
                 break;
             case gl::DrawElementsType::UnsignedInt:
                 for (int i = 0; i < count; i++)
                 {
-                    data[i] = static_cast<const GLuint *>(indices)[i];
+                    ANGLE_UNSAFE_TODO(data[i] = static_cast<const GLuint *>(indices)[i]);
                 }
-                data[count] = static_cast<const GLuint *>(indices)[0];
+                ANGLE_UNSAFE_TODO(data[count]) = static_cast<const GLuint *>(indices)[0];
                 break;
             default:
                 UNREACHABLE();
@@ -1661,30 +1659,32 @@ angle::Result Renderer9::drawLineLoop(const gl::Context *context,
             case gl::DrawElementsType::InvalidEnum:  // Non-indexed draw
                 for (int i = 0; i < count; i++)
                 {
-                    data[i] = static_cast<unsigned short>(i);
+                    ANGLE_UNSAFE_TODO(data[i]) = static_cast<unsigned short>(i);
                 }
-                data[count] = 0;
+                ANGLE_UNSAFE_TODO(data[count]) = 0;
                 break;
             case gl::DrawElementsType::UnsignedByte:
                 for (int i = 0; i < count; i++)
                 {
-                    data[i] = static_cast<const GLubyte *>(indices)[i];
+                    ANGLE_UNSAFE_TODO(data[i] = static_cast<const GLubyte *>(indices)[i]);
                 }
-                data[count] = static_cast<const GLubyte *>(indices)[0];
+                ANGLE_UNSAFE_TODO(data[count]) = static_cast<const GLubyte *>(indices)[0];
                 break;
             case gl::DrawElementsType::UnsignedShort:
                 for (int i = 0; i < count; i++)
                 {
-                    data[i] = static_cast<const GLushort *>(indices)[i];
+                    ANGLE_UNSAFE_TODO(data[i] = static_cast<const GLushort *>(indices)[i]);
                 }
-                data[count] = static_cast<const GLushort *>(indices)[0];
+                ANGLE_UNSAFE_TODO(data[count]) = static_cast<const GLushort *>(indices)[0];
                 break;
             case gl::DrawElementsType::UnsignedInt:
                 for (int i = 0; i < count; i++)
                 {
-                    data[i] = static_cast<unsigned short>(static_cast<const GLuint *>(indices)[i]);
+                    ANGLE_UNSAFE_TODO(data[i] = static_cast<unsigned short>(
+                                          static_cast<const GLuint *>(indices)[i]));
                 }
-                data[count] = static_cast<unsigned short>(static_cast<const GLuint *>(indices)[0]);
+                ANGLE_UNSAFE_TODO(data[count]) =
+                    static_cast<unsigned short>(static_cast<const GLuint *>(indices)[0]);
                 break;
             default:
                 UNREACHABLE();
@@ -1723,7 +1723,7 @@ angle::Result Renderer9::drawIndexedPoints(const gl::Context *context,
 
         const uint8_t *bufferData = nullptr;
         ANGLE_TRY(storage->getData(context, &bufferData));
-        indices = bufferData + offset;
+        indices = ANGLE_UNSAFE_TODO(bufferData + offset);
     }
 
     switch (type)
@@ -1764,7 +1764,7 @@ angle::Result Renderer9::getCountingIB(const gl::Context *context,
             unsigned short *data = static_cast<unsigned short *>(mappedMemory);
             for (size_t i = 0; i < count; i++)
             {
-                data[i] = static_cast<unsigned short>(i);
+                ANGLE_UNSAFE_TODO(data[i]) = static_cast<unsigned short>(i);
             }
 
             ANGLE_TRY(mCountingIB->unmapBuffer(context));
@@ -1787,7 +1787,7 @@ angle::Result Renderer9::getCountingIB(const gl::Context *context,
             unsigned int *data = static_cast<unsigned int *>(mappedMemory);
             for (unsigned int i = 0; i < count; i++)
             {
-                data[i] = i;
+                ANGLE_UNSAFE_TODO(data[i]) = i;
             }
 
             ANGLE_TRY(mCountingIB->unmapBuffer(context));
@@ -1946,10 +1946,12 @@ void Renderer9::applyUniformniv(const D3DUniform *targetUniform, const GLint *v)
 
     for (unsigned int i = 0; i < targetUniform->registerCount; i++)
     {
-        vector[i][0] = (GLfloat)v[4 * i + 0];
-        vector[i][1] = (GLfloat)v[4 * i + 1];
-        vector[i][2] = (GLfloat)v[4 * i + 2];
-        vector[i][3] = (GLfloat)v[4 * i + 3];
+        ANGLE_UNSAFE_TODO({
+            vector[i][0] = (GLfloat)v[4 * i + 0];
+            vector[i][1] = (GLfloat)v[4 * i + 1];
+            vector[i][2] = (GLfloat)v[4 * i + 2];
+            vector[i][3] = (GLfloat)v[4 * i + 3];
+        })
     }
 
     applyUniformnfv(targetUniform, (GLfloat *)vector);
@@ -1962,10 +1964,12 @@ void Renderer9::applyUniformnbv(const D3DUniform *targetUniform, const GLint *v)
 
     for (unsigned int i = 0; i < targetUniform->registerCount; i++)
     {
-        vector[i][0] = (v[4 * i + 0] == GL_FALSE) ? 0.0f : 1.0f;
-        vector[i][1] = (v[4 * i + 1] == GL_FALSE) ? 0.0f : 1.0f;
-        vector[i][2] = (v[4 * i + 2] == GL_FALSE) ? 0.0f : 1.0f;
-        vector[i][3] = (v[4 * i + 3] == GL_FALSE) ? 0.0f : 1.0f;
+        ANGLE_UNSAFE_TODO({
+            vector[i][0] = (v[4 * i + 0] == GL_FALSE) ? 0.0f : 1.0f;
+            vector[i][1] = (v[4 * i + 1] == GL_FALSE) ? 0.0f : 1.0f;
+            vector[i][2] = (v[4 * i + 2] == GL_FALSE) ? 0.0f : 1.0f;
+            vector[i][3] = (v[4 * i + 3] == GL_FALSE) ? 0.0f : 1.0f;
+        })
     }
 
     applyUniformnfv(targetUniform, (GLfloat *)vector);

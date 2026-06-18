@@ -6,10 +6,6 @@
 
 // StateManagerGL.h: Defines a class for caching applied OpenGL state
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
 
@@ -21,6 +17,7 @@
 #include "common/bitset_utils.h"
 #include "common/mathutil.h"
 #include "common/matrix_utils.h"
+#include "common/unsafe_buffers.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Query.h"
@@ -3024,7 +3021,7 @@ void StateManagerGL::get(GLenum name, std::array<bool, 4> *values)
     get(name, v);
     for (size_t i = 0; i < 4; i++)
     {
-        (*values)[i] = (v[i] == GL_TRUE);
+        (*values)[i] = (ANGLE_UNSAFE_TODO(v[i]) == GL_TRUE);
     }
 }
 

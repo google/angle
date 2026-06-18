@@ -6,11 +6,8 @@
 
 // StateManager9.cpp: Defines a class for caching D3D9 state
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/d3d/d3d9/StateManager9.h"
+#include "common/unsafe_buffers.h"
 
 #include "common/bitset_utils.h"
 #include "common/utilities.h"
@@ -502,13 +499,13 @@ void StateManager9::setViewportState(const gl::Rectangle &viewport,
     pc.depthRange[1] = actualZFar;
     pc.depthRange[2] = actualZFar - actualZNear;
 
-    if (memcmp(&vc, &mVertexConstants, sizeof(dx_VertexConstants9)) != 0)
+    if (ANGLE_UNSAFE_TODO(memcmp(&vc, &mVertexConstants, sizeof(dx_VertexConstants9))) != 0)
     {
         mVertexConstants = vc;
         mDxUniformsDirty = true;
     }
 
-    if (memcmp(&pc, &mPixelConstants, sizeof(dx_PixelConstants9)) != 0)
+    if (ANGLE_UNSAFE_TODO(memcmp(&pc, &mPixelConstants, sizeof(dx_PixelConstants9))) != 0)
     {
         mPixelConstants  = pc;
         mDxUniformsDirty = true;

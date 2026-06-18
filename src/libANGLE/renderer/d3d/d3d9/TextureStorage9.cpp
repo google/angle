@@ -8,11 +8,8 @@
 // classes TextureStorage9_2D and TextureStorage9_Cube, which act as the interface to the
 // D3D9 texture.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/d3d/d3d9/TextureStorage9.h"
+#include "common/unsafe_buffers.h"
 
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
@@ -414,7 +411,7 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer9 *renderer,
     mTexture = nullptr;
     for (size_t i = 0; i < gl::kCubeFaceCount; ++i)
     {
-        mRenderTarget[i] = nullptr;
+        ANGLE_UNSAFE_TODO(mRenderTarget[i]) = nullptr;
     }
 
     mInternalFormat = internalformat;
@@ -435,7 +432,7 @@ TextureStorage9_Cube::~TextureStorage9_Cube()
 
     for (size_t i = 0; i < gl::kCubeFaceCount; ++i)
     {
-        SafeDelete(mRenderTarget[i]);
+        SafeDelete(ANGLE_UNSAFE_TODO(mRenderTarget[i]));
     }
 }
 
@@ -476,7 +473,7 @@ angle::Result TextureStorage9_Cube::findRenderTarget(const gl::Context *context,
            gl::IsCubeMapFaceTarget(index.getTarget()));
     const size_t renderTargetIndex = index.cubeMapFaceIndex();
 
-    *outRT = mRenderTarget[renderTargetIndex];
+    *outRT = ANGLE_UNSAFE_TODO(mRenderTarget[renderTargetIndex]);
     return angle::Result::Continue;
 }
 
@@ -491,7 +488,7 @@ angle::Result TextureStorage9_Cube::getRenderTarget(const gl::Context *context,
            gl::IsCubeMapFaceTarget(index.getTarget()));
     const size_t renderTargetIndex = index.cubeMapFaceIndex();
 
-    if (mRenderTarget[renderTargetIndex] == nullptr && isRenderTarget())
+    if (ANGLE_UNSAFE_TODO(mRenderTarget[renderTargetIndex]) == nullptr && isRenderTarget())
     {
         IDirect3DBaseTexture9 *baseTexture = nullptr;
         ANGLE_TRY(getBaseTexture(context, &baseTexture));
@@ -501,12 +498,12 @@ angle::Result TextureStorage9_Cube::getRenderTarget(const gl::Context *context,
                                   false, &surface));
 
         baseTexture->AddRef();
-        mRenderTarget[renderTargetIndex] = new TextureRenderTarget9(
+        ANGLE_UNSAFE_TODO(mRenderTarget[renderTargetIndex]) = new TextureRenderTarget9(
             baseTexture, mTopLevel + index.getLevelIndex(), surface, mInternalFormat,
             static_cast<GLsizei>(mTextureWidth), static_cast<GLsizei>(mTextureHeight), 1, 0);
     }
 
-    *outRT = mRenderTarget[renderTargetIndex];
+    *outRT = ANGLE_UNSAFE_TODO(mRenderTarget[renderTargetIndex]);
     return angle::Result::Continue;
 }
 

@@ -6,11 +6,8 @@
 
 // VertexBuffer9.cpp: Defines the D3D9 VertexBuffer implementation.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/d3d/d3d9/VertexBuffer9.h"
+#include "common/unsafe_buffers.h"
 
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Context.h"
@@ -92,7 +89,7 @@ angle::Result VertexBuffer9::storeVertexAttributes(const gl::Context *context,
 
     if (instances == 0 || binding.getDivisor() == 0)
     {
-        input += inputStride * start;
+        ANGLE_UNSAFE_TODO(input += inputStride * start);
     }
 
     angle::FormatID vertexFormatID = gl::GetVertexFormatID(attrib, currentValueType);
@@ -103,7 +100,7 @@ angle::Result VertexBuffer9::storeVertexAttributes(const gl::Context *context,
     if (!needsConversion && inputStride == elementSize)
     {
         size_t copySize = count * inputStride;
-        memcpy(mapPtr, input, copySize);
+        ANGLE_UNSAFE_TODO(memcpy(mapPtr, input, copySize));
     }
     else
     {

@@ -12,11 +12,8 @@
 #ifndef LIBANGLE_VARYINGPACKING_H_
 #define LIBANGLE_VARYINGPACKING_H_
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include <GLSLANG/ShaderVars.h>
+#include "common/unsafe_buffers.h"
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
@@ -248,8 +245,8 @@ class VaryingPacking final : angle::NonCopyable
     {
         Register() { data[0] = data[1] = data[2] = data[3] = false; }
 
-        bool &operator[](unsigned int index) { return data[index]; }
-        bool operator[](unsigned int index) const { return data[index]; }
+        bool &operator[](unsigned int index) { return ANGLE_UNSAFE_TODO(data[index]); }
+        bool operator[](unsigned int index) const { return ANGLE_UNSAFE_TODO(data[index]); }
 
         bool data[4];
     };

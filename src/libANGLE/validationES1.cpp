@@ -6,10 +6,7 @@
 
 // validationES1.cpp: Validation functions for OpenGL ES 1.0 entry point parameters
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
+#include "common/unsafe_buffers.h"
 #include "libANGLE/validationES1_autogen.h"
 
 #include "common/debug.h"
@@ -651,7 +648,7 @@ bool ValidatePointParameterCommon(const PrivateState &state,
         case PointParameter::PointDistanceAttenuation:
             for (unsigned int i = 0; i < GetPointParameterCount(pname); i++)
             {
-                if (params[i] < 0.0f)
+                if (ANGLE_UNSAFE_TODO(params[i]) < 0.0f)
                 {
                     errors->validationError(entryPoint, GL_INVALID_VALUE,
                                             kInvalidPointParameterValue);
@@ -816,7 +813,7 @@ bool ValidateFogxv(const PrivateState &state,
     {
         for (unsigned int i = 0; i < paramCount; i++)
         {
-            paramsf[i] = ConvertFixedToFloat(params[i]);
+            ANGLE_UNSAFE_TODO(paramsf[i] = ConvertFixedToFloat(params[i]));
         }
     }
 
@@ -1043,7 +1040,7 @@ bool ValidateLightxv(const PrivateState &state,
     GLfloat paramsf[4];
     for (unsigned int i = 0; i < GetLightParameterCount(pname); i++)
     {
-        paramsf[i] = ConvertFixedToFloat(params[i]);
+        ANGLE_UNSAFE_TODO(paramsf[i] = ConvertFixedToFloat(params[i]));
     }
 
     return ValidateLightCommon(state, errors, entryPoint, light, pname, paramsf);
@@ -1113,7 +1110,7 @@ bool ValidateMaterialxv(const PrivateState &state,
 
     for (unsigned int i = 0; i < GetMaterialParameterCount(pname); i++)
     {
-        paramsf[i] = ConvertFixedToFloat(params[i]);
+        ANGLE_UNSAFE_TODO(paramsf[i] = ConvertFixedToFloat(params[i]));
     }
 
     return ValidateMaterialSetting(state, errors, entryPoint, face, pname, paramsf);
@@ -1260,7 +1257,7 @@ bool ValidatePointParameterxv(const PrivateState &state,
     GLfloat paramsf[4] = {};
     for (unsigned int i = 0; i < GetPointParameterCount(pname); i++)
     {
-        paramsf[i] = ConvertFixedToFloat(params[i]);
+        ANGLE_UNSAFE_TODO(paramsf[i] = ConvertFixedToFloat(params[i]));
     }
     return ValidatePointParameterCommon(state, errors, entryPoint, pname, paramsf);
 }
@@ -1371,7 +1368,7 @@ bool ValidateTexEnviv(const PrivateState &state,
     GLfloat paramsf[4];
     for (unsigned int i = 0; i < GetTextureEnvParameterCount(pname); i++)
     {
-        paramsf[i] = static_cast<GLfloat>(params[i]);
+        ANGLE_UNSAFE_TODO(paramsf[i] = static_cast<GLfloat>(params[i]));
     }
     return ValidateTexEnvCommon(state, errors, entryPoint, target, pname, paramsf);
 }
@@ -1466,7 +1463,8 @@ bool ValidateDrawTexfvOES(const Context *context,
                           angle::EntryPoint entryPoint,
                           const GLfloat *coords)
 {
-    return ValidateDrawTexCommon(context, entryPoint, coords[3], coords[4]);
+    return ValidateDrawTexCommon(context, entryPoint, ANGLE_UNSAFE_TODO(coords[3]),
+                                 ANGLE_UNSAFE_TODO(coords[4]));
 }
 
 bool ValidateDrawTexiOES(const Context *context,
@@ -1483,8 +1481,9 @@ bool ValidateDrawTexiOES(const Context *context,
 
 bool ValidateDrawTexivOES(const Context *context, angle::EntryPoint entryPoint, const GLint *coords)
 {
-    return ValidateDrawTexCommon(context, entryPoint, static_cast<GLfloat>(coords[3]),
-                                 static_cast<GLfloat>(coords[4]));
+    return ValidateDrawTexCommon(context, entryPoint,
+                                 static_cast<GLfloat>(ANGLE_UNSAFE_TODO(coords[3])),
+                                 static_cast<GLfloat>(ANGLE_UNSAFE_TODO(coords[4])));
 }
 
 bool ValidateDrawTexsOES(const Context *context,
@@ -1503,8 +1502,9 @@ bool ValidateDrawTexsvOES(const Context *context,
                           angle::EntryPoint entryPoint,
                           const GLshort *coords)
 {
-    return ValidateDrawTexCommon(context, entryPoint, static_cast<GLfloat>(coords[3]),
-                                 static_cast<GLfloat>(coords[4]));
+    return ValidateDrawTexCommon(context, entryPoint,
+                                 static_cast<GLfloat>(ANGLE_UNSAFE_TODO(coords[3])),
+                                 static_cast<GLfloat>(ANGLE_UNSAFE_TODO(coords[4])));
 }
 
 bool ValidateDrawTexxOES(const Context *context,
@@ -1523,8 +1523,9 @@ bool ValidateDrawTexxvOES(const Context *context,
                           angle::EntryPoint entryPoint,
                           const GLfixed *coords)
 {
-    return ValidateDrawTexCommon(context, entryPoint, ConvertFixedToFloat(coords[3]),
-                                 ConvertFixedToFloat(coords[4]));
+    return ValidateDrawTexCommon(context, entryPoint,
+                                 ConvertFixedToFloat(ANGLE_UNSAFE_TODO(coords[3])),
+                                 ConvertFixedToFloat(ANGLE_UNSAFE_TODO(coords[4])));
 }
 
 bool ValidateCurrentPaletteMatrixOES(const Context *context,

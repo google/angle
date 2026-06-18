@@ -8,16 +8,13 @@
 //    C struct versions of Metal sampler, depth stencil, render pass, render pipeline descriptors.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/metal/mtl_state_cache.h"
 
 #include <sstream>
 
 #include "common/debug.h"
 #include "common/span.h"
+#include "common/unsafe_buffers.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/mtl_resources.h"
 #include "libANGLE/renderer/metal/mtl_utils.h"
@@ -93,16 +90,18 @@ inline angle::ObjCPtr<MTLVertexDescriptor> ToObjC(const VertexDesc &desc)
 
     for (uint8_t i = 0; i < desc.numAttribs; ++i)
     {
-        [objCDesc.get().attributes setObject:ToObjC(desc.attributes[i]) atIndexedSubscript:i];
+        [objCDesc.get().attributes setObject:ToObjC(ANGLE_UNSAFE_TODO(desc.attributes[i]))
+                          atIndexedSubscript:i];
     }
 
     for (uint8_t i = 0; i < desc.numBufferLayouts; ++i)
     {
         // Ignore if stepFunction is kVertexStepFunctionInvalid.
         // If we don't set this slot, it will apparently be disabled by metal runtime.
-        if (desc.layouts[i].getStepFunction() != kVertexStepFunctionInvalid)
+        if (ANGLE_UNSAFE_TODO(desc.layouts[i].getStepFunction()) != kVertexStepFunctionInvalid)
         {
-            [objCDesc.get().layouts setObject:ToObjC(desc.layouts[i]) atIndexedSubscript:i];
+            [objCDesc.get().layouts setObject:ToObjC(ANGLE_UNSAFE_TODO(desc.layouts[i]))
+                           atIndexedSubscript:i];
         }
     }
 

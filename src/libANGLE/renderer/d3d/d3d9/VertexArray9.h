@@ -9,10 +9,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_VERTEXARRAY9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_VERTEXARRAY9_H_
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
+#include "common/unsafe_buffers.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/VertexArrayImpl.h"
 #include "libANGLE/renderer/d3d/d3d9/Context9.h"
@@ -53,8 +50,8 @@ inline angle::Result VertexArray9::syncState(const gl::Context *context,
     mCurrentStateSerial = renderer->generateSerial();
 
     // Clear the dirty bits in the back-end here.
-    memset(attribBits, 0, sizeof(gl::VertexArray::DirtyAttribBitsArray));
-    memset(bindingBits, 0, sizeof(gl::VertexArray::DirtyBindingBitsArray));
+    ANGLE_UNSAFE_TODO(memset(attribBits, 0, sizeof(gl::VertexArray::DirtyAttribBitsArray)));
+    ANGLE_UNSAFE_TODO(memset(bindingBits, 0, sizeof(gl::VertexArray::DirtyBindingBitsArray)));
 
     return angle::Result::Continue;
 }

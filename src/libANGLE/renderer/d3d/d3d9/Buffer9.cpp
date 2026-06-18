@@ -6,11 +6,8 @@
 
 // Buffer9.cpp: Defines the Buffer9 class.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/d3d/d3d9/Buffer9.h"
+#include "common/unsafe_buffers.h"
 
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
@@ -63,7 +60,7 @@ angle::Result Buffer9::setData(const gl::Context *context,
     mSize = size;
     if (dataForImpl && size > 0)
     {
-        memcpy(mMemory.data(), dataForImpl, size);
+        ANGLE_UNSAFE_TODO(memcpy(mMemory.data(), dataForImpl, size));
     }
 
     updateD3DBufferUsage(context, usage, feedback);
@@ -101,7 +98,7 @@ angle::Result Buffer9::setSubData(const gl::Context *context,
     mSize = std::max(mSize, offset + size);
     if (data && size > 0)
     {
-        memcpy(mMemory.data() + offset, data, size);
+        ANGLE_UNSAFE_TODO(memcpy(mMemory.data() + offset, data, size));
     }
 
     invalidateStaticData(context, feedback);
@@ -120,7 +117,8 @@ angle::Result Buffer9::copySubData(const gl::Context *context,
     Buffer9 *sourceBuffer = GetAs<Buffer9>(source);
     ASSERT(sourceBuffer);
 
-    memcpy(mMemory.data() + destOffset, sourceBuffer->mMemory.data() + sourceOffset, size);
+    ANGLE_UNSAFE_TODO(
+        memcpy(mMemory.data() + destOffset, sourceBuffer->mMemory.data() + sourceOffset, size));
 
     invalidateStaticData(context, feedback);
 

@@ -7,12 +7,9 @@
 //    Implements the class methods for TextureVk.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 #include <vulkan/vulkan.h>
+#include "common/unsafe_buffers.h"
 
 #include "common/debug.h"
 #include "image_util/generatemip.inc"
@@ -986,7 +983,7 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         std::vector<uint8_t> pixelValue(pixelSize, 0);
         if (data != nullptr)
         {
-            memcpy(pixelValue.data(), data, pixelSize);
+            ANGLE_UNSAFE_TODO(memcpy(pixelValue.data(), data, pixelSize));
         }
 
         // For a cubemap, each face will be updated separately.
@@ -1003,7 +1000,7 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         {
             for (GLuint i = 0; i < clearBufferSize; i += pixelSize)
             {
-                memcpy(&clearBuffer[i], pixelValue.data(), pixelSize);
+                ANGLE_UNSAFE_TODO(memcpy(&clearBuffer[i], pixelValue.data(), pixelSize));
             }
         }
         gl::PixelUnpackState pixelUnpackState = {};
@@ -1295,8 +1292,8 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
 
             ANGLE_TRY(unpackBufferVk->mapForReadAccessOnly(contextVk, &mapPtr));
 
-            const uint8_t *source =
-                static_cast<const uint8_t *>(mapPtr) + reinterpret_cast<ptrdiff_t>(pixels);
+            const uint8_t *source = ANGLE_UNSAFE_TODO(static_cast<const uint8_t *>(mapPtr) +
+                                                      reinterpret_cast<ptrdiff_t>(pixels));
 
             ANGLE_TRY(mImage->stageSubresourceUpdate(
                 contextVk, getNativeImageIndex(index), area.getExtents(), area.getOffset(),
@@ -2906,11 +2903,11 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
     {
         size_t bufferOffset = layer * baseLevelAllocationSize;
 
-        ANGLE_TRY(generateMipmapLevelsWithCPU(contextVk, angleFormat, layer, baseLevelGL + 1,
-                                              gl::LevelIndex(mState.getMipmapMaxLevel()),
-                                              baseLevelExtents.width, baseLevelExtents.height,
-                                              baseLevelExtents.depth, sourceRowPitch,
-                                              sourceDepthPitch, imageData + bufferOffset));
+        ANGLE_UNSAFE_TODO(ANGLE_TRY(generateMipmapLevelsWithCPU(
+            contextVk, angleFormat, layer, baseLevelGL + 1,
+            gl::LevelIndex(mState.getMipmapMaxLevel()), baseLevelExtents.width,
+            baseLevelExtents.height, baseLevelExtents.depth, sourceRowPitch, sourceDepthPitch,
+            imageData + bufferOffset)));
     }
 
     ASSERT(!TextureHasAnyRedefinedLevels(mRedefinedLevels));
@@ -3209,12 +3206,12 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk, const vk:
             const gl::InternalFormat &dstFormatInfo = *mState.getImageDesc(index).format.info;
             for (uint32_t layer = 0; layer < copyLayerCount; layer++)
             {
-                CopyImageCHROMIUM(
+                ANGLE_UNSAFE_TODO(CopyImageCHROMIUM(
                     srcData + layer * srcDataLayerPitch, srcDataRowPitch, srcFormat.pixelBytes,
                     srcDataDepthPitch, pixelReadFunction, dstData + layer * dstDataLayerPitch,
                     dstDataRowPitch, dstFormat.pixelBytes, dstDataDepthPitch, pixelWriteFunction,
                     dstFormatInfo.format, dstFormatInfo.componentType, sourceBox.width,
-                    sourceBox.height, sourceBox.depth, false, false, false);
+                    sourceBox.height, sourceBox.depth, false, false, false));
             }
         }
     }

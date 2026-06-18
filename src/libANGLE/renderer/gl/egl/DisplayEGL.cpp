@@ -6,11 +6,8 @@
 
 // DisplayEGL.cpp: Common across EGL parts of platform specific egl::Display implementations
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_libc_calls
-#endif
-
 #include "libANGLE/renderer/gl/egl/DisplayEGL.h"
+#include "common/unsafe_buffers.h"
 
 #include "common/debug.h"
 #include "common/system_utils.h"
@@ -1106,7 +1103,7 @@ egl::Error DisplayEGL::queryDmaBufFormats(EGLint maxFormats, EGLint *formats, EG
     {
         // Do not copy data beyond the limits of the vector
         maxFormats = std::min(maxFormats, formatsSize);
-        std::memcpy(formats, mDrmFormats.data(), maxFormats * sizeof(EGLint));
+        ANGLE_UNSAFE_TODO(std::memcpy(formats, mDrmFormats.data(), maxFormats * sizeof(EGLint)));
     }
 
     return egl::NoError();

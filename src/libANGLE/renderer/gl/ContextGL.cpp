@@ -7,11 +7,8 @@
 //   OpenGL-specific functionality associated with a GL Context.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/gl/ContextGL.h"
+#include "common/unsafe_buffers.h"
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
@@ -440,7 +437,7 @@ gl::AttributesMask ContextGL::updateAttributesForBaseInstance(GLuint baseInstanc
                 attribToUpdateMask.set(attribIndex);
                 const char *p             = static_cast<const char *>(attrib.pointer);
                 const size_t sourceStride = gl::ComputeVertexAttributeStride(attrib, binding);
-                const void *newPointer    = p + sourceStride * baseInstance;
+                const void *newPointer    = ANGLE_UNSAFE_TODO(p + sourceStride * baseInstance);
                 const BufferGL *buffer    = GetImplAs<BufferGL>(
                     mState.getVertexArray()->getVertexArrayBuffer(attrib.bindingIndex));
                 // We often stream data from scratch buffers when client side data is being used
@@ -1117,7 +1114,7 @@ angle::Result ContextGL::getDepthInitPBO(const gl::Context *context,
                                       GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT));
         if (mapPointer)
         {
-            FillDepthOneMemory(type, {mapPointer, requestedSize});
+            ANGLE_UNSAFE_TODO(FillDepthOneMemory(type, {mapPointer, requestedSize}));
             functions->unmapBuffer(GL_PIXEL_UNPACK_BUFFER);
         }
         pbo.size = requestedSize;

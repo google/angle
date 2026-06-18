@@ -4,10 +4,6 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 // utilities.cpp: Conversion functions and other utility routines.
 
 #include "common/utilities.h"
@@ -15,6 +11,7 @@
 #include "common/mathutil.h"
 #include "common/platform.h"
 #include "common/string_utils.h"
+#include "common/unsafe_buffers.h"
 
 #include <set>
 
@@ -42,7 +39,7 @@ gl::IndexRange ComputeTypedIndexRange(const IndexType *indices,
     {
         for (size_t i = 0; i < count; i++)
         {
-            IndexType index = indices[i];
+            IndexType index = ANGLE_UNSAFE_TODO(indices[i]);
             if (index == primitiveRestartIndex)
             {
                 continue;
@@ -56,7 +53,7 @@ gl::IndexRange ComputeTypedIndexRange(const IndexType *indices,
     {
         for (size_t i = 0; i < count; i++)
         {
-            IndexType index = indices[i];
+            IndexType index = ANGLE_UNSAFE_TODO(indices[i]);
             minIndex        = std::min(minIndex, index);
             maxIndex        = std::max(maxIndex, index);
         }
@@ -1026,8 +1023,8 @@ unsigned int ParseArrayIndex(const std::string &name, size_t *nameLengthWithoutA
         if (indexIsValidDecimalNumber)
         {
             errno = 0;  // reset global error flag.
-            unsigned long subscript =
-                strtoul(name.c_str() + open + 1, /*endptr*/ nullptr, /*radix*/ 10);
+            unsigned long subscript = ANGLE_UNSAFE_TODO(
+                strtoul(name.c_str() + open + 1, /*endptr*/ nullptr, /*radix*/ 10));
 
             // Check if resulting integer is out-of-range or conversion error.
             if (angle::base::IsValueInRangeForNumericType<uint32_t>(subscript) &&
@@ -1489,7 +1486,7 @@ void writeFile(const char *path, std::string_view content)
         return;
     }
 
-    fwrite(content.data(), sizeof(char), content.size(), file);
+    ANGLE_UNSAFE_TODO(fwrite(content.data(), sizeof(char), content.size(), file));
     fclose(file);
 #else
     UNREACHABLE();

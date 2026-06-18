@@ -6,11 +6,8 @@
 
 // BlitGL.cpp: Implements the BlitGL class, a helper for blitting textures
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include "libANGLE/renderer/gl/BlitGL.h"
+#include "common/unsafe_buffers.h"
 
 #include "common/FixedVector.h"
 #include "common/utilities.h"
@@ -278,7 +275,7 @@ BlitGL::BlitGL(const FunctionsGL *functions,
 {
     for (size_t i = 0; i < ArraySize(mScratchTextures); i++)
     {
-        mScratchTextures[i] = 0;
+        ANGLE_UNSAFE_TODO(mScratchTextures[i]) = 0;
     }
 
     ASSERT(mFunctions);
@@ -295,10 +292,10 @@ BlitGL::~BlitGL()
 
     for (size_t i = 0; i < ArraySize(mScratchTextures); i++)
     {
-        if (mScratchTextures[i] != 0)
+        if (ANGLE_UNSAFE_TODO(mScratchTextures[i]) != 0)
         {
-            mStateManager->deleteTexture(mScratchTextures[i]);
-            mScratchTextures[i] = 0;
+            mStateManager->deleteTexture(ANGLE_UNSAFE_TODO(mScratchTextures[i]));
+            ANGLE_UNSAFE_TODO(mScratchTextures[i]) = 0;
         }
     }
 
@@ -845,7 +842,7 @@ angle::Result BlitGL::copySubTextureCPUReadback(const gl::Context *context,
                          context->getScratchBuffer(sourceBufferSize + destBufferSize, &buffer));
 
     uint8_t *sourceMemory = buffer->data();
-    uint8_t *destMemory   = buffer->data() + sourceBufferSize;
+    uint8_t *destMemory   = ANGLE_UNSAFE_TODO(buffer->data() + sourceBufferSize);
 
     GLenum readPixelsFormat        = GL_NONE;
     PixelReadFunction readFunction = nullptr;
@@ -1421,7 +1418,7 @@ angle::Result BlitGL::initializeResources(const gl::Context *context)
 
     for (size_t i = 0; i < ArraySize(mScratchTextures); i++)
     {
-        ANGLE_GL_TRY(context, mFunctions->genTextures(1, &mScratchTextures[i]));
+        ANGLE_UNSAFE_TODO(ANGLE_GL_TRY(context, mFunctions->genTextures(1, &mScratchTextures[i])));
     }
 
     ANGLE_GL_TRY(context, mFunctions->genFramebuffers(1, &mScratchFBO));

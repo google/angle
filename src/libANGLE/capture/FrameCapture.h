@@ -10,11 +10,8 @@
 #ifndef LIBANGLE_FRAME_CAPTURE_H_
 #define LIBANGLE_FRAME_CAPTURE_H_
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include <fstream>
+#include "common/unsafe_buffers.h"
 #include "sys/stat.h"
 
 #include "common/PackedEnums.h"
@@ -824,7 +821,7 @@ class FrameCaptureShared final : angle::NonCopyable
         for (size_t i = 0; i < numObjs; ++i)
         {
             mResourceTrackerCL.mCLParamIDToIndexVector[paramCaptureKey->uniqueID].push_back(
-                (this->*getCLObjIndexFunc)(&objs[i]));
+                (this->*getCLObjIndexFunc)(&ANGLE_UNSAFE_TODO(objs[i])));
         }
     }
 

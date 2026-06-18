@@ -4,10 +4,6 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_libc_calls
-#endif
-
 //
 // Implement the top-level of interface to the compiler,
 // as defined in ShaderLang.h
@@ -183,7 +179,7 @@ bool Finalize()
 void InitBuiltInResources(ShBuiltInResources *resources)
 {
     // Make comparable.
-    memset(resources, 0, sizeof(*resources));
+    ANGLE_UNSAFE_TODO(memset(resources, 0, sizeof(*resources)));
 
     // Constants.
     resources->MaxVertexAttribs                    = 8;
@@ -961,30 +957,30 @@ const char *InterpolationTypeToString(InterpolationType type)
 
 ShCompileOptions::ShCompileOptions()
 {
-    memset(this, 0, sizeof(*this));
+    ANGLE_UNSAFE_TODO(memset(this, 0, sizeof(*this)));
 }
 
 ShCompileOptions::ShCompileOptions(const ShCompileOptions &other)
 {
-    memcpy(this, &other, sizeof(*this));
+    ANGLE_UNSAFE_TODO(memcpy(this, &other, sizeof(*this)));
 }
 ShCompileOptions &ShCompileOptions::operator=(const ShCompileOptions &other)
 {
-    memcpy(this, &other, sizeof(*this));
+    ANGLE_UNSAFE_TODO(memcpy(this, &other, sizeof(*this)));
     return *this;
 }
 
 ShBuiltInResources::ShBuiltInResources()
 {
-    memset(this, 0, sizeof(*this));
+    ANGLE_UNSAFE_TODO(memset(this, 0, sizeof(*this)));
 }
 
 ShBuiltInResources::ShBuiltInResources(const ShBuiltInResources &other)
 {
-    memcpy(this, &other, sizeof(*this));
+    ANGLE_UNSAFE_TODO(memcpy(this, &other, sizeof(*this)));
 }
 ShBuiltInResources &ShBuiltInResources::operator=(const ShBuiltInResources &other)
 {
-    memcpy(this, &other, sizeof(*this));
+    ANGLE_UNSAFE_TODO(memcpy(this, &other, sizeof(*this)));
     return *this;
 }

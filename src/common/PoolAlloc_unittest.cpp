@@ -7,11 +7,8 @@
 //   Tests of the PoolAlloc class
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include <gtest/gtest.h>
+#include "common/unsafe_buffers.h"
 
 #include "common/PoolAlloc.h"
 
@@ -49,7 +46,7 @@ TEST(PoolAllocatorTest, Interface)
         EXPECT_NE(nullptr, allocation);
         // Write data into full allocation. In debug case if we
         //  overwrite any other allocation we get error.
-        memset(allocation, 0xb8, numBytes);
+        ANGLE_UNSAFE_TODO(memset(allocation, 0xb8, numBytes));
     }
 }
 

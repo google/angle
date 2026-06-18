@@ -10,13 +10,10 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_VERTEXCONVERSION_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_VERTEXCONVERSION_H_
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include <cstddef>
 #include <cstdint>
 #include <limits>
+#include "common/unsafe_buffers.h"
 
 namespace rx
 {
@@ -165,14 +162,15 @@ struct VertexDataConverter
 
         for (std::size_t i = 0; i < n; i++)
         {
-            const InputType *ein = reinterpret_cast<const InputType *>(input + i * stride);
+            const InputType *ein =
+                reinterpret_cast<const InputType *>(ANGLE_UNSAFE_TODO(input + i * stride));
 
             copyComponent(out, ein, 0, static_cast<OutputType>(DefaultValueRule::zero()));
             copyComponent(out, ein, 1, static_cast<OutputType>(DefaultValueRule::zero()));
             copyComponent(out, ein, 2, static_cast<OutputType>(DefaultValueRule::zero()));
             copyComponent(out, ein, 3, static_cast<OutputType>(DefaultValueRule::one()));
 
-            out += WidenRule::finalWidth;
+            ANGLE_UNSAFE_TODO(out += WidenRule::finalWidth);
         }
     }
 
@@ -186,11 +184,12 @@ struct VertexDataConverter
         {
             if (WidenRule::initialWidth > elementindex)
             {
-                out[elementindex] = Converter::convert(in[elementindex]);
+                ANGLE_UNSAFE_TODO(out[elementindex]) =
+                    Converter::convert(ANGLE_UNSAFE_TODO(in[elementindex]));
             }
             else
             {
-                out[elementindex] = defaultvalue;
+                ANGLE_UNSAFE_TODO(out[elementindex]) = defaultvalue;
             }
         }
     }
