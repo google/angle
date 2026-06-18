@@ -1809,6 +1809,19 @@ ci.thin_tester(
         ),
         run_tests_serially = True,
     ),
+    targets = targets.bundle(
+        targets = [
+            "perf_isolated_scripts",
+        ],
+        mixins = [
+            "timeout_120m",
+            "win10_intel_uhd_630_stable",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
+    ),
     console_view_entry = consoles.console_view_entry(
         category = "perf|win|x64",
         short_name = "630",
@@ -2016,6 +2029,19 @@ ci.thin_tester(
             target_platform = builder_config.target_platform.WIN,
         ),
         run_tests_serially = True,
+    ),
+    targets = targets.bundle(
+        targets = [
+            "perf_isolated_scripts",
+        ],
+        mixins = [
+            "timeout_120m",
+            "win10_nvidia_gtx_1660_stable",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
     ),
     console_view_entry = consoles.console_view_entry(
         category = "perf|win|x64",
