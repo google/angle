@@ -2062,7 +2062,6 @@ angle::Result Texture::bindTexImageFromSurface(Context *context, egl::Surface *s
     ImageDesc desc(surface->getSize(), surface->getBindTexImageFormat(), InitState::Initialized);
     mState.setImageDesc(NonCubeTextureTypeToTarget(mState.mType), 0, desc);
     mState.mHasProtectedContent = surface->hasProtectedContent();
-    mState.mEGLImageSourceIndex = ImageIndex{};
 
     ANGLE_TRY(mTexture->bindTexImage(context, surface));
 
@@ -2158,7 +2157,7 @@ angle::Result Texture::orphanImages(const gl::Context *context,
                                     egl::RefCountObjectReleaser<egl::Image> *outReleaseImage)
 {
     ANGLE_TRY(ImageSibling::orphanImages(context, outReleaseImage));
-    mState.mEGLImageSourceIndex = ImageIndex{};
+    mState.mEGLImageSourceAttributes = egl::ImageSourceAttributes{};
     return angle::Result::Continue;
 }
 
@@ -2175,7 +2174,7 @@ angle::Result Texture::setEGLImageTargetImpl(Context *context,
     egl::RefCountObjectReleaser<egl::Image> releaseImage;
     ANGLE_TRY(orphanImages(context, &releaseImage));
 
-    setTargetImage(context, imageTarget);
+    setTargetImage(context, imageTarget, &mState.mEGLImageSourceAttributes);
 
     auto initState = imageTarget->sourceInitState();
 
@@ -2183,7 +2182,6 @@ angle::Result Texture::setEGLImageTargetImpl(Context *context,
     mState.setImageDescChain(0, levels - 1, imageTarget->getExtents(), imageTarget->getFormat(),
                              initState);
     mState.mHasProtectedContent = imageTarget->hasProtectedContent();
-    mState.mEGLImageSourceIndex = imageTarget->getSourceImageIndex();
 
     ANGLE_TRY(mTexture->setEGLImageTarget(context, type, imageTarget));
 
@@ -2387,7 +2385,6 @@ angle::Result Texture::setBufferRange(gl::Context *context,
     ANGLE_TRY(mTexture->setBuffer(context, internalFormat));
 
     mState.clearImageDescs();
-    mState.mEGLImageSourceIndex = ImageIndex{};
     if (buffer == nullptr)
     {
         mBufferObserver.reset();

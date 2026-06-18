@@ -183,6 +183,14 @@ angle::Result Renderbuffer::setStorageMultisample(const Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result Renderbuffer::orphanImages(const gl::Context *context,
+                                         egl::RefCountObjectReleaser<egl::Image> *outReleaseImage)
+{
+    ANGLE_TRY(ImageSibling::orphanImages(context, outReleaseImage));
+    mState.mEGLImageSourceAttributes = egl::ImageSourceAttributes{};
+    return angle::Result::Continue;
+}
+
 angle::Result Renderbuffer::setStorageEGLImageTarget(const Context *context, egl::Image *image)
 {
     egl::RefCountObjectReleaser<egl::Image> releaseImage;
@@ -190,7 +198,7 @@ angle::Result Renderbuffer::setStorageEGLImageTarget(const Context *context, egl
 
     ANGLE_TRY(mImplementation->setStorageEGLImageTarget(context, image));
 
-    setTargetImage(context, image);
+    setTargetImage(context, image, &mState.mEGLImageSourceAttributes);
 
     mState.update(static_cast<GLsizei>(image->getWidth()), static_cast<GLsizei>(image->getHeight()),
                   Format(image->getFormat()), 0, MultisamplingMode::Regular,

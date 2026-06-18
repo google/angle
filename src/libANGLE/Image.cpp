@@ -68,11 +68,19 @@ ImageSibling::~ImageSibling()
     ASSERT(mTargetOf.get() == nullptr);
 }
 
-void ImageSibling::setTargetImage(const gl::Context *context, egl::Image *imageTarget)
+void ImageSibling::setTargetImage(const gl::Context *context,
+                                  egl::Image *imageTarget,
+                                  ImageSourceAttributes *attributesOut)
 {
     ASSERT(imageTarget != nullptr);
     mTargetOf.set(DisplayFromContext(context), imageTarget);
     imageTarget->addTargetSibling(this);
+
+    attributesOut->type    = imageTarget->getSourceImageIndex().getType();
+    attributesOut->level   = imageTarget->getSourceImageIndex().getLevelIndex();
+    attributesOut->zoffset = imageTarget->getSourceImageIndex().hasLayer()
+                                 ? imageTarget->getSourceImageIndex().getLayerIndex()
+                                 : 0;
 }
 
 angle::Result ImageSibling::orphanImages(const gl::Context *context,

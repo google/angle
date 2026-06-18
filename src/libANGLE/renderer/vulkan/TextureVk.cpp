@@ -2408,7 +2408,7 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
     // avoid unnecessarily dirty the state and allocating new ImageViews etc.
     //
     // TODO(http://crbug.com/498372331): Replace mPreviousEGLImageIndex with
-    // mState.getEGLImageSourceIndex().
+    // comparison against mState.getEGLImageSourceAttribs().
     if (mImage == imageVk->getImage() && mPreviousEGLImageIndex == image->getSourceImageIndex())
     {
         return angle::Result::Continue;
@@ -2462,11 +2462,9 @@ angle::Result TextureVk::setBuffer(const gl::Context *context, GLenum internalFo
 
 gl::ImageIndex TextureVk::getNativeImageIndex(const gl::ImageIndex &inputImageIndex) const
 {
-    const gl::TextureType sourceType = mState.getEGLImageSourceIndex().getType();
-    const uint32_t sourceLevel       = mState.getEGLImageSourceIndex().getLevelIndex();
-    const uint32_t layerOffset       = mState.getEGLImageSourceIndex().hasLayer()
-                                           ? mState.getEGLImageSourceIndex().getLayerIndex()
-                                           : 0;
+    const gl::TextureType sourceType = mState.getEGLImageSourceAttributes().type;
+    const uint32_t sourceLevel       = mState.getEGLImageSourceAttributes().level;
+    const uint32_t layerOffset       = mState.getEGLImageSourceAttributes().zoffset;
 
     if (sourceType == gl::TextureType::InvalidEnum)
     {
@@ -2483,7 +2481,7 @@ gl::ImageIndex TextureVk::getNativeImageIndex(const gl::ImageIndex &inputImageIn
 
 gl::LevelIndex TextureVk::getNativeImageLevel(gl::LevelIndex frontendLevel) const
 {
-    const uint32_t sourceLevel = mState.getEGLImageSourceIndex().getLevelIndex();
+    const uint32_t sourceLevel = mState.getEGLImageSourceAttributes().level;
 
     ASSERT(frontendLevel.get() == 0 || sourceLevel == 0);
     return frontendLevel + sourceLevel;
@@ -2491,9 +2489,7 @@ gl::LevelIndex TextureVk::getNativeImageLevel(gl::LevelIndex frontendLevel) cons
 
 uint32_t TextureVk::getNativeImageLayer(uint32_t frontendLayer) const
 {
-    const uint32_t layerOffset = mState.getEGLImageSourceIndex().hasLayer()
-                                     ? mState.getEGLImageSourceIndex().getLayerIndex()
-                                     : 0;
+    const uint32_t layerOffset = mState.getEGLImageSourceAttributes().zoffset;
 
     ASSERT(frontendLayer == 0 || layerOffset == 0);
     return frontendLayer + layerOffset;
@@ -3720,7 +3716,7 @@ angle::Result TextureVk::respecifyImageStorageIfNecessary(ContextVk *contextVk, 
     // Set base and max level before initializing the image.  This is not done for EGL images
     // because BASE should always be 0 and MAX is ineffective (only 1 level is always viewed).
     TextureUpdateResult updateResult = TextureUpdateResult::ImageUnaffected;
-    if (mState.getEGLImageSourceIndex().getType() == gl::TextureType::InvalidEnum)
+    if (mState.getEGLImageSourceAttributes().type == gl::TextureType::InvalidEnum)
     {
         ANGLE_TRY(maybeUpdateBaseMaxLevels(contextVk, &updateResult));
     }
@@ -4798,7 +4794,7 @@ uint32_t TextureVk::getImageViewLayerCount() const
 {
     // We use a special layer count here to handle EGLImages. They might only be
     // looking at one layer of a cube or 2D array texture.
-    return mState.getEGLImageSourceIndex().getType() == gl::TextureType::InvalidEnum
+    return mState.getEGLImageSourceAttributes().type == gl::TextureType::InvalidEnum
                ? mImage->getLayerCount()
                : 1;
 }
@@ -4807,7 +4803,7 @@ uint32_t TextureVk::getImageViewLevelCount() const
 {
     // We use a special level count here to handle EGLImages. They might only be
     // looking at one level of the texture's mipmap chain.
-    return mState.getEGLImageSourceIndex().getType() == gl::TextureType::InvalidEnum
+    return mState.getEGLImageSourceAttributes().type == gl::TextureType::InvalidEnum
                ? mImage->getLevelCount()
                : 1;
 }
