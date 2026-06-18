@@ -25,7 +25,7 @@
 			"name": "@chromium-targets",
 			"source": {
 				"repo": "https://chromium.googlesource.com/chromium/src/+/refs/heads/main",
-				"revision": "71f564d3738abcf2d76eb8ee2cbafd6efd4f1837",
+				"revision": "d13cd7076e05000615eb96fb74a67b9fbe2548be",
 				"path": "infra/config/targets"
 			},
 			"deps": [
