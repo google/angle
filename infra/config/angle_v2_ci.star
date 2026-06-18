@@ -937,6 +937,29 @@ ci.thin_tester(
         ),
         run_tests_serially = True,
     ),
+    targets = targets.bundle(
+        targets = [
+            "perf_no_trace_isolated_scripts",
+        ],
+        mixins = [
+            "gpu_pixel_4_stable",
+            "temp_band_below_30C",
+            "timeout_120m",
+        ],
+        per_test_modifications = {
+            "angle_perftests": targets.mixin(
+                args = [
+                    # Remove Vulkan tests.
+                    "-f",
+                    "*-*vulkan*:*Vulkan*",
+                ],
+            ),
+        },
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.ANDROID,
+    ),
     console_view_entry = consoles.console_view_entry(
         category = "perf|android|arm64",
         short_name = "p4",
@@ -1039,6 +1062,43 @@ ci.thin_tester(
             target_platform = builder_config.target_platform.ANDROID,
         ),
         run_tests_serially = True,
+    ),
+    targets = targets.bundle(
+        targets = [
+            "perf_isolated_scripts",
+        ],
+        mixins = [
+            "gpu_pixel_6_stable",
+            "temp_band_below_30C",
+            "timeout_120m",
+        ],
+        per_test_modifications = {
+            "angle_perftests": targets.mixin(
+                args = [
+                    # Custom temp throttling for perf tests on pixel6
+                    # b/345514719.
+                    "--custom-throttling-temp=38",
+                ],
+            ),
+            "angle_trace_perf_native_tests": targets.mixin(
+                args = [
+                    # Custom temp throttling for perf tests on pixel6
+                    # b/345514719.
+                    "--custom-throttling-temp=38",
+                ],
+            ),
+            "angle_trace_perf_vulkan_tests": targets.mixin(
+                args = [
+                    # Custom temp throttling for perf tests on pixel6
+                    # b/345514719.
+                    "--custom-throttling-temp=38",
+                ],
+            ),
+        },
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.ANDROID,
     ),
     console_view_entry = consoles.console_view_entry(
         category = "perf|android|arm64",

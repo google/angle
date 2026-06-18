@@ -1,0 +1,39 @@
+{
+  "angle-android-arm64-google-pixel4-perf": {
+    "isolated_scripts": [
+      {
+        "args": [
+          "--log=debug",
+          "--samples-per-test=3",
+          "--trials-per-sample=3",
+          "--show-test-stdout",
+          "--trial-time=10",
+          "-f",
+          "*-*vulkan*:*Vulkan*"
+        ],
+        "merge": {
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "module_name": "//src/tests:angle_perftests/",
+        "name": "angle_perftests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "RP1A.201105.002",
+            "device_os_type": "userdebug",
+            "device_type": "flame",
+            "os": "Android",
+            "pool": "chromium.tests.gpu",
+            "temp_band": "<30"
+          },
+          "hard_timeout": 7200,
+          "io_timeout": 300,
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 30
+        },
+        "test": "angle_perftests",
+        "test_id_prefix": "ninja://src/tests:angle_perftests/"
+      }
+    ]
+  }
+}

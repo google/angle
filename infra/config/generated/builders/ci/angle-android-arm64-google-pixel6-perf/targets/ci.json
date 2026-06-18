@@ -1,0 +1,106 @@
+{
+  "angle-android-arm64-google-pixel6-perf": {
+    "isolated_scripts": [
+      {
+        "args": [
+          "--log=debug",
+          "--samples-per-test=3",
+          "--trials-per-sample=3",
+          "--show-test-stdout",
+          "--trial-time=10",
+          "--custom-throttling-temp=38"
+        ],
+        "merge": {
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "module_name": "//src/tests:angle_perftests/",
+        "name": "angle_perftests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "TP1A.220624.021",
+            "device_os_type": "userdebug",
+            "device_type": "oriole",
+            "os": "Android",
+            "pool": "chromium.tests.gpu",
+            "temp_band": "<30"
+          },
+          "hard_timeout": 7200,
+          "io_timeout": 300,
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 30
+        },
+        "test": "angle_perftests",
+        "test_id_prefix": "ninja://src/tests:angle_perftests/"
+      },
+      {
+        "args": [
+          "--trace-tests",
+          "--log=debug",
+          "--samples-per-test=3",
+          "--trials-per-sample=3",
+          "--show-test-stdout",
+          "--trial-time=10",
+          "--use-gl=native",
+          "--custom-throttling-temp=38"
+        ],
+        "merge": {
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "module_name": "//src/tests:angle_trace_perf_tests/",
+        "name": "angle_trace_perf_native_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "TP1A.220624.021",
+            "device_os_type": "userdebug",
+            "device_type": "oriole",
+            "os": "Android",
+            "pool": "chromium.tests.gpu",
+            "temp_band": "<30"
+          },
+          "hard_timeout": 7200,
+          "io_timeout": 300,
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 30
+        },
+        "test": "angle_trace_perf_tests",
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
+      },
+      {
+        "args": [
+          "--trace-tests",
+          "--log=debug",
+          "--samples-per-test=3",
+          "--trials-per-sample=3",
+          "--show-test-stdout",
+          "--trial-time=10",
+          "--use-angle=vulkan",
+          "--custom-throttling-temp=38"
+        ],
+        "merge": {
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "module_name": "//src/tests:angle_trace_perf_tests/",
+        "name": "angle_trace_perf_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "TP1A.220624.021",
+            "device_os_type": "userdebug",
+            "device_type": "oriole",
+            "os": "Android",
+            "pool": "chromium.tests.gpu",
+            "temp_band": "<30"
+          },
+          "hard_timeout": 7200,
+          "io_timeout": 300,
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 30
+        },
+        "test": "angle_trace_perf_tests",
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
+      }
+    ]
+  }
+}

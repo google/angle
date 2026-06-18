@@ -198,6 +198,15 @@ targets.mixin(
 )
 
 targets.mixin(
+    name = "temp_band_below_30C",
+    swarming = targets.swarming(
+        dimensions = {
+            "temp_band": "<30",
+        },
+    ),
+)
+
+targets.mixin(
     name = "timeout_120m",
     swarming = targets.swarming(
         hard_timeout_sec = 7200,
