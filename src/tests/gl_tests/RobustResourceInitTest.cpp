@@ -5,10 +5,7 @@
 //
 // RobustResourceInitTest: Tests for GL_ANGLE_robust_resource_initialization.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
+#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 
 #include "test_utils/gl_raii.h"
@@ -3224,8 +3221,10 @@ TEST_P(RobustResourceInitTestES3, CompressedSubImage)
         0xe0, 0x07, 0x00, 0xf8, 0x11, 0x10, 0x15, 0x00,
     };
 
-    std::vector<uint8_t> data(img_8x8_rgb_dxt1, img_8x8_rgb_dxt1 + ArraySize(img_8x8_rgb_dxt1));
-    std::vector<uint8_t> subData(img_4x4_rgb_dxt1, img_4x4_rgb_dxt1 + ArraySize(img_4x4_rgb_dxt1));
+    std::vector<uint8_t> data(img_8x8_rgb_dxt1,
+                              ANGLE_UNSAFE_TODO(img_8x8_rgb_dxt1 + ArraySize(img_8x8_rgb_dxt1)));
+    std::vector<uint8_t> subData(img_4x4_rgb_dxt1,
+                                 ANGLE_UNSAFE_TODO(img_4x4_rgb_dxt1 + ArraySize(img_4x4_rgb_dxt1)));
 
     GLTexture colorbuffer;
     glBindTexture(GL_TEXTURE_2D, colorbuffer);
@@ -3361,7 +3360,7 @@ TEST_P(RobustResourceInitTestES3, LargeCompressedImage2DArray)
     static_assert(kSubImageByteSize % 8 == 0);
     for (size_t i = 0; i < kSubImageByteSize; i += 8)
     {
-        memcpy(&subData[i], kRed_4x4_rgb_dxt1, sizeof(kRed_4x4_rgb_dxt1));
+        ANGLE_UNSAFE_TODO(memcpy(&subData[i], kRed_4x4_rgb_dxt1, sizeof(kRed_4x4_rgb_dxt1)));
     }
     glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kSubWidth, kSubHeight, kSubDepth,
                               GL_COMPRESSED_RGB_S3TC_DXT1_EXT, kSubImageByteSize, subData.data());
@@ -3480,7 +3479,7 @@ void main()
     for (size_t i = 0; i < textures.size(); i++)
     {
         glReadBuffer(GL_COLOR_ATTACHMENT0 + i);
-        EXPECT_PIXEL_COLOR_EQ(0, 0, expectedColors[i]) << " at attachment " << i;
+        ANGLE_UNSAFE_TODO(EXPECT_PIXEL_COLOR_EQ(0, 0, expectedColors[i])) << " at attachment " << i;
     }
 }
 

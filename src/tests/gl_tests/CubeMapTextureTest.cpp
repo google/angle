@@ -4,10 +4,7 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
+#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/gl_raii.h"
@@ -73,7 +70,7 @@ TEST_P(CubeMapTextureTest, UploadToFacesConsecutively)
     for (int face = 5; face >= 0; face--)
     {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA, 1, 1, 0, GL_RGBA,
-                     GL_UNSIGNED_BYTE, faceColors[face].data());
+                     GL_UNSIGNED_BYTE, ANGLE_UNSAFE_TODO(faceColors[face]).data());
         EXPECT_GL_NO_ERROR();
     }
     EXPECT_GL_NO_ERROR();
@@ -89,7 +86,7 @@ TEST_P(CubeMapTextureTest, UploadToFacesConsecutively)
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, tex, 0);
         EXPECT_GL_NO_ERROR();
 
-        EXPECT_PIXEL_COLOR_EQ(0, 0, faceColors[face]);
+        ANGLE_UNSAFE_TODO(EXPECT_PIXEL_COLOR_EQ(0, 0, faceColors[face]));
         EXPECT_GL_NO_ERROR();
     }
 
@@ -137,14 +134,15 @@ TEST_P(CubeMapTextureTest, RenderToFacesConsecutively)
 
         glUseProgram(mProgram);
 
-        const GLfloat *faceColor = faceColors + (face * 4);
-        glUniform4f(mColorLocation, faceColor[0], faceColor[1], faceColor[2], faceColor[3]);
+        const GLfloat *faceColor = ANGLE_UNSAFE_TODO(faceColors + (face * 4));
+        ANGLE_UNSAFE_TODO(
+            glUniform4f(mColorLocation, faceColor[0], faceColor[1], faceColor[2], faceColor[3]));
 
         drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
         EXPECT_GL_NO_ERROR();
 
-        EXPECT_PIXEL_EQ(0, 0, faceColor[0] * 255, faceColor[1] * 255, faceColor[2] * 255,
-                        faceColor[3] * 255);
+        ANGLE_UNSAFE_TODO(EXPECT_PIXEL_EQ(0, 0, faceColor[0] * 255, faceColor[1] * 255,
+                                          faceColor[2] * 255, faceColor[3] * 255));
         EXPECT_GL_NO_ERROR();
     }
 
@@ -154,9 +152,9 @@ TEST_P(CubeMapTextureTest, RenderToFacesConsecutively)
                                GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, tex, 0);
         EXPECT_GL_NO_ERROR();
 
-        const GLfloat *faceColor = faceColors + (face * 4);
-        EXPECT_PIXEL_EQ(0, 0, faceColor[0] * 255, faceColor[1] * 255, faceColor[2] * 255,
-                        faceColor[3] * 255);
+        const GLfloat *faceColor = ANGLE_UNSAFE_TODO(faceColors + (face * 4));
+        ANGLE_UNSAFE_TODO(EXPECT_PIXEL_EQ(0, 0, faceColor[0] * 255, faceColor[1] * 255,
+                                          faceColor[2] * 255, faceColor[3] * 255));
         EXPECT_GL_NO_ERROR();
     }
 
@@ -210,7 +208,7 @@ void CubeMapTextureTest::runSampleCoordinateTransformTest(const char *shader, co
                         size_t r = row + srow * kTextureSize / kCubeFaceSectionCountSqrt;
                         size_t c = col + scol * kTextureSize / kCubeFaceSectionCountSqrt;
                         size_t s = srow * kCubeFaceSectionCountSqrt + scol;
-                        faceData[r * kTextureSize + c] = faceColors[face][s];
+                        faceData[r * kTextureSize + c] = ANGLE_UNSAFE_TODO(faceColors[face][s]);
                     }
                 }
             }
@@ -270,7 +268,8 @@ void CubeMapTextureTest::runSampleCoordinateTransformTest(const char *shader, co
 
         for (size_t section = 0; section < kCubeFaceSectionCount; ++section)
         {
-            const GLColor sectionColor = faceColors[face][faceSampledSections[face][section]];
+            const GLColor sectionColor =
+                ANGLE_UNSAFE_TODO(faceColors[face][faceSampledSections[face][section]]);
 
             EXPECT_PIXEL_COLOR_EQ(face, section, sectionColor)
                 << "face " << face << ", section " << section;

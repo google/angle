@@ -7,11 +7,8 @@
 // angle_test_instantiate.cpp: Adds support for filtering parameterized
 // tests by platform, so we skip unsupported configs.
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_libc_calls
-#endif
-
 #include "test_utils/angle_test_instantiate.h"
+#include "common/unsafe_buffers.h"
 
 #include <algorithm>
 #include <array>
@@ -824,7 +821,7 @@ std::vector<std::string> GetAvailableTestPlatformNames()
 void SetSelectedConfig(const char *selectedConfig)
 {
     gSelectedConfig.fill(0);
-    strncpy(gSelectedConfig.data(), selectedConfig, kMaxConfigNameLen - 1);
+    ANGLE_UNSAFE_TODO(strncpy(gSelectedConfig.data(), selectedConfig, kMaxConfigNameLen - 1));
 }
 
 GLESDriverType GetDriverTypeFromString(const char *driverName, GLESDriverType defaultDriverType)
@@ -834,22 +831,23 @@ GLESDriverType GetDriverTypeFromString(const char *driverName, GLESDriverType de
         return defaultDriverType;
     }
 
-    if (strcmp(driverName, "angle") == 0)
+    if (ANGLE_UNSAFE_TODO(strcmp(driverName, "angle")) == 0)
     {
         return GLESDriverType::AngleEGL;
     }
 
-    if (strcmp(driverName, "angle-vulkan-secondaries") == 0)
+    if (ANGLE_UNSAFE_TODO(strcmp(driverName, "angle-vulkan-secondaries")) == 0)
     {
         return GLESDriverType::AngleVulkanSecondariesEGL;
     }
 
-    if (strcmp(driverName, "zink") == 0)
+    if (ANGLE_UNSAFE_TODO(strcmp(driverName, "zink")) == 0)
     {
         return GLESDriverType::ZinkEGL;
     }
 
-    if (strcmp(driverName, "native") == 0 || strcmp(driverName, "system") == 0)
+    if (ANGLE_UNSAFE_TODO(strcmp(driverName, "native")) == 0 ||
+        ANGLE_UNSAFE_TODO(strcmp(driverName, "system")) == 0)
     {
         if (IsWindows())
         {
@@ -861,7 +859,7 @@ GLESDriverType GetDriverTypeFromString(const char *driverName, GLESDriverType de
         }
     }
 
-    printf("Unknown driver type: %s\n", driverName);
+    ANGLE_UNSAFE_TODO(printf("Unknown driver type: %s\n", driverName));
     exit(EXIT_FAILURE);
 }
 }  // namespace angle

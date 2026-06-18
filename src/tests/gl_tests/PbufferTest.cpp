@@ -4,10 +4,7 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
+#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
@@ -1301,8 +1298,9 @@ TEST_P(PbufferTest, NegativeValidationBadAttributes)
 
     for (size_t i = 0; i < 2; i++)
     {
-        pbufferSurface = eglCreatePbufferSurface(window->getDisplay(), window->getConfig(),
-                                                 &invalidPBufferAttributeList[i][0]);
+        pbufferSurface =
+            eglCreatePbufferSurface(window->getDisplay(), window->getConfig(),
+                                    &ANGLE_UNSAFE_TODO(invalidPBufferAttributeList[i][0]));
         ASSERT_EQ(pbufferSurface, EGL_NO_SURFACE);
         ASSERT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
     }

@@ -4,10 +4,6 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #ifndef ANGLE_ENABLE_D3D9
 #    define ANGLE_ENABLE_D3D9
 #endif
@@ -17,6 +13,7 @@
 #endif
 
 #include <d3d11.h>
+#include "common/unsafe_buffers.h"
 
 #include "test_utils/ANGLETest.h"
 #include "util/EGLWindow.h"
@@ -63,9 +60,9 @@ class EGLDeviceCreationTest : public ANGLETest<>
 
         const char *extensionString =
             static_cast<const char *>(eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS));
-        if (strstr(extensionString, "EGL_ANGLE_device_creation"))
+        if (ANGLE_UNSAFE_TODO(strstr(extensionString, "EGL_ANGLE_device_creation")))
         {
-            if (strstr(extensionString, "EGL_ANGLE_device_creation_d3d11"))
+            if (ANGLE_UNSAFE_TODO(strstr(extensionString, "EGL_ANGLE_device_creation_d3d11")))
             {
                 mDeviceCreationD3D11ExtAvailable = true;
             }

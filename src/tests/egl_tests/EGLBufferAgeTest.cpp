@@ -7,11 +7,8 @@
 //   EGL extension EGL_EXT_buffer_age
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include <gtest/gtest.h>
+#include "common/unsafe_buffers.h"
 
 #include "test_utils/ANGLETest.h"
 #include "util/EGLWindow.h"
@@ -365,14 +362,14 @@ TEST_P(EGLBufferAgeTest, VerifyContents)
         if (age > 0)
         {
             // Check that color/content is what we expect
-            expectedColor = kColorSet[i - age];
+            expectedColor = ANGLE_UNSAFE_TODO(kColorSet[i - age]);
             EXPECT_PIXEL_COLOR_EQ(1, 1, expectedColor);
         }
 
-        float red   = kColorSet[i].R / 255.0;
-        float green = kColorSet[i].G / 255.0;
-        float blue  = kColorSet[i].B / 255.0;
-        float alpha = kColorSet[i].A / 255.0;
+        float red   = ANGLE_UNSAFE_TODO(kColorSet[i]).R / 255.0;
+        float green = ANGLE_UNSAFE_TODO(kColorSet[i]).G / 255.0;
+        float blue  = ANGLE_UNSAFE_TODO(kColorSet[i]).B / 255.0;
+        float alpha = ANGLE_UNSAFE_TODO(kColorSet[i]).A / 255.0;
 
         glClearColor(red, green, blue, alpha);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -487,7 +484,7 @@ TEST_P(EGLBufferAgeTest, VerifyContentsAfterSwapBehaviorSwitch)
             // the previous loops.
             if (age <= i)
             {
-                expectedColor = kColorSet[i - age];
+                expectedColor = ANGLE_UNSAFE_TODO(kColorSet[i - age]);
             }
             else if (age <= i + 6)
             {
@@ -501,9 +498,9 @@ TEST_P(EGLBufferAgeTest, VerifyContentsAfterSwapBehaviorSwitch)
             EXPECT_PIXEL_COLOR_EQ(1, 1, expectedColor);
         }
 
-        glUniform4fv(colorLocation, 1, kColorSet[i].toNormalizedVector().data());
+        glUniform4fv(colorLocation, 1, ANGLE_UNSAFE_TODO(kColorSet[i]).toNormalizedVector().data());
         drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
-        EXPECT_PIXEL_COLOR_EQ(0, 0, kColorSet[i]);
+        ANGLE_UNSAFE_TODO(EXPECT_PIXEL_COLOR_EQ(0, 0, kColorSet[i]));
         eglSwapBuffers(mDisplay, surface);
     }
 

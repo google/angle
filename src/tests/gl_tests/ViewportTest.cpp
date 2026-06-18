@@ -4,10 +4,7 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
+#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -375,7 +372,8 @@ TEST_P(ViewportTest, Overflow)
     for (const int *viewportSize : kTestViewportSizes)
     {
         // Set the viewport.
-        glViewport(viewportSize[0], viewportSize[1], viewportSize[2], viewportSize[3]);
+        ANGLE_UNSAFE_TODO(
+            glViewport(viewportSize[0], viewportSize[1], viewportSize[2], viewportSize[3]));
 
         glClear(GL_COLOR_BUFFER_BIT);
         glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(vertices.size()));
