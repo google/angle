@@ -2270,6 +2270,11 @@ angle_linux_parent_builder(
             target_platform = builder_config.target_platform.LINUX,
         ),
     ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "noop_target",
+        ],
+    ),
     # These GN args are not actually used since the trace tests do compilation
     # as part of running, but the recipe may try to "compile" as a side effect
     # of reusing the Chromium recipe code, so have some valid args.
@@ -2303,6 +2308,11 @@ angle_win_parent_builder(
             target_bits = 64,
             target_platform = builder_config.target_platform.WIN,
         ),
+    ),
+    targets = targets.bundle(
+        additional_compile_targets = [
+            "noop_target",
+        ],
     ),
     # These GN args are not actually used since the trace tests do compilation
     # as part of running, but the recipe may try to "compile" as a side effect

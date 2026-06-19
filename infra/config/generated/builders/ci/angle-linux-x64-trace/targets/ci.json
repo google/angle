@@ -1,0 +1,7 @@
+{
+  "angle-linux-x64-trace": {
+    "additional_compile_targets": [
+      "noop_target"
+    ]
+  }
+}

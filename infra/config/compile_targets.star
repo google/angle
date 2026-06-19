@@ -14,3 +14,8 @@ targets.compile_target(
     name = "all",
     label = "//:all",
 )
+
+targets.compile_target(
+    name = "noop_target",
+    label = "//:noop_target",
+)
