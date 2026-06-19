@@ -181,20 +181,6 @@
       },
     },
 
-    'swangle_end2end_very_slow_flaky_tests': {
-      'angle_end2end_tests': {
-        'args': [
-          '--gtest_filter=*Vulkan_SwiftShader*',
-          # Flaky retries enabled on ASAN/TSAN. http://anglebug.com/42266243
-          '--flaky-retries=2',
-        ],
-        'use_isolated_scripts_api': True,
-        'swarming': {
-          'shards': 16,
-        },
-      },
-    },
-
     'swangle_restricted_trace_gold_isolated_scripts': {
       'angle_restricted_trace_gold_tests': {
         'args': [
@@ -246,11 +232,6 @@
       'swangle_deqp_khr_gles3_tests',
       'swangle_deqp_khr_noctx_gles2_tests',
       'swangle_end2end_tests',
-      'swangle_white_box_tests',
-    ],
-
-    'swangle_non_deqp_slow_flaky_gtests': [
-      'swangle_end2end_very_slow_flaky_tests',
       'swangle_white_box_tests',
     ],
   },
