@@ -63,16 +63,6 @@
           'noop_target',
         ],
       },
-      'angle-win-x86-sws-rel': {
-        'os_type': 'win',
-        'mixins': [
-          'win10_gce_gpu_pool',
-          'timeout_15m',
-        ],
-        'test_suites': {
-          'gtest_tests': 'swangle_gtests',
-        },
-      },
     },
   },
 ]
