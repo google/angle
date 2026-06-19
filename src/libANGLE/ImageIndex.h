@@ -204,8 +204,23 @@ class OwnLevel : public OwnIndex<LevelIndex>
   public:
     explicit OwnLevel(uint32_t level) : OwnIndex(gl::LevelIndex(level)) {}
 };
-using OwnLayer      = OwnIndex<uint32_t>;
-using OwnImageIndex = OwnIndex<ImageIndex>;
+using OwnLayer = OwnIndex<uint32_t>;
+class OwnImageIndex : public OwnIndex<ImageIndex>
+{
+  public:
+    explicit OwnImageIndex(const ImageIndex &index) : OwnIndex(index) {}
+
+    // Convenience helpers that forward to ImageIndex and possibly wrap the results.
+    TextureType getType() const { return mIndex.getType(); }
+    OwnLevel getLevelIndex() const { return OwnLevel(mIndex.getLevelIndex()); }
+    bool hasLayer() const { return mIndex.hasLayer(); }
+    OwnLayer getLayerIndex() const
+    {
+        return OwnLayer(mIndex.hasLayer() ? mIndex.getLayerIndex() : 0);
+    }
+    OwnLayer cubeMapFaceIndex() const { return OwnLayer(mIndex.cubeMapFaceIndex()); }
+    uint32_t getLayerCount() const { return mIndex.getLayerCount(); }
+};
 
 using SourceLevel      = SourceIndex<LevelIndex>;
 using SourceLayer      = SourceIndex<uint32_t>;

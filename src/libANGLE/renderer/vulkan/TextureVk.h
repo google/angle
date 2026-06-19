@@ -388,8 +388,11 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     void setImageHelper(ContextVk *contextVk,
                         vk::ImageHelper *imageHelper,
                         bool selfOwned);
+    void getRenderTargetLayerCountAndIndex(const gl::OwnImageIndex &index,
+                                           gl::OwnLayer *layerIndex,
+                                           GLuint *layerCount,
+                                           GLuint *imageLayerCount);
     angle::Result syncAsAttachmentRenderTarget(const gl::Context *context,
-                                               const gl::ImageIndex &imageIndex,
                                                GLsizei samples);
 
     vk::ImageViewHelper &getImageViews() { return mImageView; }
@@ -556,11 +559,11 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     angle::Result initImageViews(ContextVk *contextVk, uint32_t levelCount);
     void initSingleLayerRenderTargets(ContextVk *contextVk,
                                       GLuint layerCount,
-                                      gl::LevelIndex levelIndexGL,
+                                      gl::OwnLevel levelIndex,
                                       gl::RenderToTextureImageIndex renderToTextureIndex);
     RenderTargetVk *getMultiLayerRenderTarget(ContextVk *contextVk,
-                                              gl::LevelIndex level,
-                                              GLuint layerIndex,
+                                              gl::OwnLevel ownLevel,
+                                              gl::OwnLayer ownLayer,
                                               GLuint layerCount);
     angle::Result getLevelLayerImageView(ContextVk *contextVk,
                                          gl::LevelIndex levelGL,

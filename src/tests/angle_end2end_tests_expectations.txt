@@ -591,8 +591,11 @@
 494938700 WIN D3D11 : CopyTexImageTest.CopyTexSubImageFromTexture3D/* = SKIP
 512896813 WIN D3D11 : LineLoopTestES3.LineLoopDrawArraysInstancedBaseInstance/* = SKIP
 512896813 WIN D3D11 : LineLoopTestES3.LineLoopDrawElementsInstancedBaseVertexBaseInstance/* = SKIP
-514615434 D3D11 : DrawBaseVertexBaseInstanceTest.NegativeBaseVertex/* = SKIP
-515698970 D3D11 : DrawBaseVertexBaseInstanceTest_ES3.BaseInstanceSmallDivisorClientMemory/* = SKIP
+514615434 WIN D3D11 : DrawBaseVertexBaseInstanceTest.NegativeBaseVertex/* = SKIP
+515698970 WIN D3D11 : DrawBaseVertexBaseInstanceTest_ES3.BaseInstanceSmallDivisorClientMemory/* = SKIP
+513847611 WIN D3D11 : ImageTestES3.MipLevelsNonZeroBaseLevel/* = SKIP
+526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceDrawAndReadback/* = SKIP
+526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceDrawAndReadbackRenderbuffer/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -736,6 +739,8 @@
 519218481 PIXEL4ORXL GLES : MSRTTES3Test.CubeMap/* = SKIP
 522247737 PIXEL4ORXL GLES : MSRTTES3Test.DrawDisabled/* = SKIP
 522247737 PIXEL4ORXL GLES : MSRTTES3Test.DrawThenDrawDisabled/* = SKIP
+526518127 PIXEL4ORXL GLES : ImageTestES3.MipLevelsNonZeroBaseLevel/* = SKIP
+526518127 PIXEL4ORXL GLES : ImageTestES3.NonZeroLevel*/* = SKIP
 
 42267082 PIXEL4ORXL GLES : BlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42267082 PIXEL4ORXL GLES : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
@@ -1269,6 +1274,8 @@
 525786155 PIXEL10 GLES : PbufferTestES3.ImportImageThenBindTexImageShouldOrphan/* = SKIP
 525786155 PIXEL10 GLES : PbufferTestES3.ImportImageThenBindTexImageSourceShouldOrphan/* = SKIP
 525786155 PIXEL10 GLES : PbufferTestES3.BindRedefinesAllMips/* = SKIP
+526518127 PIXEL10 GLES : ImageTestES3.MipLevelsNonZeroBaseLevel/* = SKIP
+526518127 PIXEL10 GLES : ImageTestES3.NonZeroLevel*/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP

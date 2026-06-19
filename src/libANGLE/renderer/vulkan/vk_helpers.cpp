@@ -12609,16 +12609,16 @@ angle::Result ImageViewHelper::initLinearAndSrgbReadViewsImpl(ContextVk *context
         if (!mLinearCopyImageView.valid())
         {
             ANGLE_TRY(image.initReinterpretedLayerImageView(
-                contextVk, fetchType, aspectFlags, formatSwizzle, &mLinearCopyImageView,
-                LevelIndex(0), image.getLevelCount(), baseLayer, layerCount, imageUsageFlags,
-                linearFormat, astcDecodePrecision));
+                contextVk, fetchType, aspectFlags, formatSwizzle, &mLinearCopyImageView, baseLevel,
+                levelCount, baseLayer, layerCount, imageUsageFlags, linearFormat,
+                astcDecodePrecision));
         }
         if (srgbFormat != angle::FormatID::NONE && !mSRGBCopyImageView.valid())
         {
             ANGLE_TRY(image.initReinterpretedLayerImageView(
-                contextVk, fetchType, aspectFlags, formatSwizzle, &mSRGBCopyImageView,
-                LevelIndex(0), image.getLevelCount(), baseLayer, layerCount, imageUsageFlags,
-                srgbFormat, astcDecodePrecision));
+                contextVk, fetchType, aspectFlags, formatSwizzle, &mSRGBCopyImageView, baseLevel,
+                levelCount, baseLayer, layerCount, imageUsageFlags, srgbFormat,
+                astcDecodePrecision));
         }
     }
 

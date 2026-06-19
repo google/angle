@@ -232,56 +232,6 @@ bool CanGenerateMipmapWithCompute(vk::Renderer *renderer,
     return hasStorageSupport && !isSRGB && !isInt && is2D && !isMultisampled && isColorFormat;
 }
 
-void GetRenderTargetLayerCountAndIndex(vk::ImageHelper *image,
-                                       const gl::ImageIndex &index,
-                                       GLuint *layerIndex,
-                                       GLuint *layerCount,
-                                       GLuint *imageLayerCount)
-{
-    *layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
-    *layerCount = index.getLayerCount();
-
-    switch (index.getType())
-    {
-        case gl::TextureType::_2D:
-        case gl::TextureType::_2DMultisample:
-        case gl::TextureType::External:
-            ASSERT(*layerIndex == 0 &&
-                   (*layerCount == 1 ||
-                    *layerCount == static_cast<GLuint>(gl::ImageIndex::kEntireLevel)));
-            *imageLayerCount = 1;
-            break;
-
-        case gl::TextureType::CubeMap:
-            ASSERT(!index.hasLayer() ||
-                   *layerIndex == static_cast<GLuint>(index.cubeMapFaceIndex()));
-            *imageLayerCount = gl::kCubeFaceCount;
-            break;
-
-        case gl::TextureType::_3D:
-        {
-            gl::LevelIndex levelGL(index.getLevelIndex());
-            *imageLayerCount = image->getLevelExtents(image->toVkLevel(levelGL)).depth;
-            break;
-        }
-
-        case gl::TextureType::_2DArray:
-        case gl::TextureType::_2DMultisampleArray:
-        case gl::TextureType::CubeMapArray:
-            *imageLayerCount = image->getLayerCount();
-            break;
-
-        default:
-            UNREACHABLE();
-    }
-
-    if (*layerCount == static_cast<GLuint>(gl::ImageIndex::kEntireLevel))
-    {
-        ASSERT(*layerIndex == 0);
-        *layerCount = *imageLayerCount;
-    }
-}
-
 void Set3DBaseArrayLayerAndLayerCount(VkImageSubresourceLayers *Subresource)
 {
     // If the srcImage/dstImage parameters are of VkImageType VK_IMAGE_TYPE_3D, the baseArrayLayer
@@ -1549,8 +1499,7 @@ angle::Result TextureVk::copyTexture(const gl::Context *context,
     // The source image must be framebuffer-attachment-complete, so sync it as if a render target is
     // needed.
     {
-        ANGLE_TRY(sourceVk->syncAsAttachmentRenderTarget(
-            context, gl::ImageIndex::MakeFromType(source->getType(), sourceLevelGL), 0));
+        ANGLE_TRY(sourceVk->syncAsAttachmentRenderTarget(context, 0));
         ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
     }
 
@@ -1589,8 +1538,7 @@ angle::Result TextureVk::copySubTexture(const gl::Context *context,
 
     {
         TextureVk *sourceVk = vk::GetImpl(source);
-        ANGLE_TRY(sourceVk->syncAsAttachmentRenderTarget(
-            context, gl::ImageIndex::MakeFromType(source->getType(), srcLevelGL), 0));
+        ANGLE_TRY(sourceVk->syncAsAttachmentRenderTarget(context, 0));
         ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
     }
 
@@ -3346,7 +3294,6 @@ angle::Result TextureVk::releaseTexImage(const gl::Context *context)
 }
 
 angle::Result TextureVk::syncAsAttachmentRenderTarget(const gl::Context *context,
-                                                      const gl::ImageIndex &imageIndex,
                                                       GLsizei samples)
 {
     ContextVk *contextVk = vk::GetImpl(context);
@@ -3367,19 +3314,66 @@ angle::Result TextureVk::syncAsAttachmentRenderTarget(const gl::Context *context
     return angle::Result::Continue;
 }
 
+void TextureVk::getRenderTargetLayerCountAndIndex(const gl::OwnImageIndex &index,
+                                                  gl::OwnLayer *layerIndex,
+                                                  GLuint *layerCount,
+                                                  GLuint *imageLayerCount)
+{
+    *layerIndex = index.getLayerIndex();
+    *layerCount = index.getLayerCount();
+
+    switch (index.getType())
+    {
+        case gl::TextureType::_2D:
+        case gl::TextureType::_2DMultisample:
+        case gl::TextureType::External:
+            ASSERT(layerIndex->getUntranslated() == 0 &&
+                   (*layerCount == 1 ||
+                    *layerCount == static_cast<GLuint>(gl::ImageIndex::kEntireLevel)));
+            *imageLayerCount = 1;
+            break;
+
+        case gl::TextureType::CubeMap:
+            ASSERT(!index.hasLayer() ||
+                   layerIndex->getUntranslated() == index.cubeMapFaceIndex().getUntranslated());
+            *imageLayerCount = gl::kCubeFaceCount;
+            break;
+
+        case gl::TextureType::_3D:
+        {
+            gl::LevelIndex levelGL = mState.toSourceLevel(index.getLevelIndex()).get();
+            *imageLayerCount       = mImage->getLevelExtents(mImage->toVkLevel(levelGL)).depth;
+            break;
+        }
+
+        case gl::TextureType::_2DArray:
+        case gl::TextureType::_2DMultisampleArray:
+        case gl::TextureType::CubeMapArray:
+            *imageLayerCount = mImage->getLayerCount();
+            break;
+
+        default:
+            UNREACHABLE();
+    }
+
+    if (*layerCount == static_cast<GLuint>(gl::ImageIndex::kEntireLevel))
+    {
+        ASSERT(layerIndex->getUntranslated() == 0);
+        *layerCount = *imageLayerCount;
+    }
+}
+
 angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                                                    GLenum binding,
-                                                   const gl::OwnImageIndex &ownImageIndex,
+                                                   const gl::OwnImageIndex &imageIndex,
                                                    GLsizei samples,
                                                    FramebufferAttachmentRenderTarget **rtOut)
 {
-    const gl::ImageIndex imageIndex = ownImageIndex.getUntranslated();
-
     ContextVk *contextVk = vk::GetImpl(context);
-    GLint requestedLevel = imageIndex.getLevelIndex();
-    ASSERT(requestedLevel >= 0);
+    const gl::OwnLevel requestedLevel = imageIndex.getLevelIndex();
+    ASSERT(requestedLevel.getUntranslated().get() >= 0);
 
-    ANGLE_TRY(syncAsAttachmentRenderTarget(context, imageIndex, samples));
+    ANGLE_TRY(syncAsAttachmentRenderTarget(context, samples));
 
     const bool hasRenderToTextureEXT =
         contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
@@ -3404,22 +3398,25 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
 
         ASSERT(mState.getBaseLevelDesc().samples <= 1);
 
+        const uint32_t multisampledImageLevelIndex = requestedLevel.getUntranslated().get();
+
         vk::ImageHelper &multisampledImage =
-            mMultisampledImages->at(renderToTextureIndex)[requestedLevel];
+            mMultisampledImages->at(renderToTextureIndex)[multisampledImageLevelIndex];
         if (!multisampledImage.valid())
         {
             // Ensure the view serial is valid.
             vk::Renderer *renderer = contextVk->getRenderer();
-            mMultisampledImageViews->at(renderToTextureIndex)[requestedLevel].init(renderer);
+            mMultisampledImageViews->at(renderToTextureIndex)[multisampledImageLevelIndex].init(
+                renderer);
 
             // The MSAA image always comes from the single sampled one, so disable robust init.
             bool useRobustInit = false;
 
             // Calculate extents for multisample image
             VkExtent3D extents = {};
-            gl_vk::GetExtent(
-                mImage->getLevelExtents(mImage->toVkLevel(gl::LevelIndex(requestedLevel))),
-                &extents);
+            gl_vk::GetExtent(mImage->getLevelExtents(
+                                 mImage->toVkLevel(mState.toSourceLevel(requestedLevel).get())),
+                             &extents);
 
             // Create the implicit multisampled image.
             ANGLE_TRY(multisampledImage.initImplicitMultisampledRenderToTexture(
@@ -3446,29 +3443,30 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
         mRgbDrawImageViewsForYuvResolve->init(renderer);
     }
 
-    GLuint layerIndex = 0, layerCount = 0, imageLayerCount = 0;
-    GetRenderTargetLayerCountAndIndex(mImage, imageIndex, &layerIndex, &layerCount,
-                                      &imageLayerCount);
+    gl::OwnLayer layerIndex(0);
+    GLuint layerCount = 0, imageLayerCount = 0;
+    getRenderTargetLayerCountAndIndex(imageIndex, &layerIndex, &layerCount, &imageLayerCount);
 
     if (layerCount == 1)
     {
-        initSingleLayerRenderTargets(contextVk, imageLayerCount, gl::LevelIndex(requestedLevel),
+        initSingleLayerRenderTargets(contextVk, imageLayerCount, requestedLevel,
                                      renderToTextureIndex);
+
+        const uint32_t renderTargetLevelIndex = requestedLevel.getUntranslated().get();
+        const uint32_t renderTargetLayerIndex = layerIndex.getUntranslated();
 
         std::vector<RenderTargetVector> &levelRenderTargets =
             mSingleLayerRenderTargets[renderToTextureIndex];
-        ASSERT(requestedLevel < static_cast<int32_t>(levelRenderTargets.size()));
+        ASSERT(renderTargetLevelIndex < levelRenderTargets.size());
+        RenderTargetVector &layerRenderTargets = levelRenderTargets[renderTargetLevelIndex];
+        ASSERT(renderTargetLayerIndex < layerRenderTargets.size());
 
-        RenderTargetVector &layerRenderTargets = levelRenderTargets[requestedLevel];
-        ASSERT(imageIndex.getLayerIndex() < static_cast<int32_t>(layerRenderTargets.size()));
-
-        *rtOut = &layerRenderTargets[layerIndex];
+        *rtOut = &layerRenderTargets[renderTargetLayerIndex];
     }
     else
     {
         ASSERT(layerCount > 0);
-        *rtOut = getMultiLayerRenderTarget(contextVk, gl::LevelIndex(imageIndex.getLevelIndex()),
-                                           layerIndex, layerCount);
+        *rtOut = getMultiLayerRenderTarget(contextVk, requestedLevel, layerIndex, layerCount);
     }
 
     return angle::Result::Continue;
@@ -3515,19 +3513,19 @@ angle::Result TextureVk::flushImageStagedUpdates(ContextVk *contextVk)
 
 void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
                                              GLuint layerCount,
-                                             gl::LevelIndex levelIndex,
+                                             gl::OwnLevel levelIndex,
                                              gl::RenderToTextureImageIndex renderToTextureIndex)
 {
-    GLint requestedLevel = levelIndex.get();
+    const uint32_t renderTargetLevelIndex = levelIndex.getUntranslated().get();
     std::vector<RenderTargetVector> &allLevelsRenderTargets =
         mSingleLayerRenderTargets[renderToTextureIndex];
 
-    if (allLevelsRenderTargets.size() <= static_cast<uint32_t>(requestedLevel))
+    if (allLevelsRenderTargets.size() <= static_cast<uint32_t>(renderTargetLevelIndex))
     {
-        allLevelsRenderTargets.resize(requestedLevel + 1);
+        allLevelsRenderTargets.resize(renderTargetLevelIndex + 1);
     }
 
-    RenderTargetVector &renderTargets = allLevelsRenderTargets[requestedLevel];
+    RenderTargetVector &renderTargets = allLevelsRenderTargets[renderTargetLevelIndex];
 
     // Lazy init. Check if already initialized.
     if (!renderTargets.empty())
@@ -3552,13 +3550,16 @@ void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
     // resolve into the texture's image automatically.
     if (isMultisampledRenderToTexture)
     {
-        ASSERT(mMultisampledImages->at(renderToTextureIndex)[requestedLevel].valid());
+        const uint32_t multisampledImageLevelIndex = levelIndex.getUntranslated().get();
+
+        ASSERT(mMultisampledImages->at(renderToTextureIndex)[multisampledImageLevelIndex].valid());
         ASSERT(!mImage->isYuvExternalFormat());
 
         resolveImage      = drawImage;
         resolveImageViews = drawImageViews;
-        drawImage         = &mMultisampledImages->at(renderToTextureIndex)[requestedLevel];
-        drawImageViews    = &mMultisampledImageViews->at(renderToTextureIndex)[requestedLevel];
+        drawImage = &mMultisampledImages->at(renderToTextureIndex)[multisampledImageLevelIndex];
+        drawImageViews =
+            &mMultisampledImageViews->at(renderToTextureIndex)[multisampledImageLevelIndex];
 
         // If the texture is depth/stencil, GL_EXT_multisampled_render_to_texture2 explicitly
         // indicates that there is no need for the image to be resolved.  In that case, mark the
@@ -3596,19 +3597,23 @@ void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
         renderTargets[layerIndex].init(drawImage, drawImageViews, resolveImage, resolveImageViews,
-                                       getNativeImageLevel(levelIndex),
-                                       getNativeImageLayer(layerIndex), 1, transience);
+                                       mState.toSourceLevel(levelIndex).get(),
+                                       mState.toSourceLayer(gl::OwnLayer(layerIndex)).get(), 1,
+                                       transience);
     }
 }
 
 RenderTargetVk *TextureVk::getMultiLayerRenderTarget(ContextVk *contextVk,
-                                                     gl::LevelIndex level,
-                                                     GLuint layerIndex,
+                                                     gl::OwnLevel ownLevel,
+                                                     gl::OwnLayer ownLayer,
                                                      GLuint layerCount)
 {
+    const gl::SourceLevel level = mState.toSourceLevel(ownLevel);
+    const gl::SourceLayer layer = mState.toSourceLayer(ownLayer);
+
     vk::ImageViewHelper *imageViews = &getImageViews();
     vk::ImageSubresourceRange range = imageViews->getSubresourceDrawRange(
-        level, layerIndex, vk::GetLayerMode(*mImage, layerCount));
+        level.get(), layer.get(), vk::GetLayerMode(*mImage, layerCount));
 
     auto iter = mMultiLayerRenderTargets.find(range);
     if (iter != mMultiLayerRenderTargets.end())
@@ -3624,8 +3629,8 @@ RenderTargetVk *TextureVk::getMultiLayerRenderTarget(ContextVk *contextVk,
         rt = std::make_unique<RenderTargetVk>();
     }
 
-    rt->init(mImage, imageViews, nullptr, nullptr, getNativeImageLevel(level),
-             getNativeImageLayer(layerIndex), layerCount, RenderTargetTransience::Default);
+    rt->init(mImage, imageViews, nullptr, nullptr, level.get(), layer.get(), layerCount,
+             RenderTargetTransience::Default);
 
     return rt.get();
 }
