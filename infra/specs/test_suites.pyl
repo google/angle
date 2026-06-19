@@ -247,7 +247,7 @@
         ],
         'use_isolated_scripts_api': True,
         'swarming': {
-          'shards': 14,
+          'shards': 16,
         },
       },
     },
