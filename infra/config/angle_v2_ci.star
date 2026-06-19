@@ -2204,6 +2204,19 @@ ci.thin_tester(
             target_platform = builder_config.target_platform.WIN,
         ),
     ),
+    targets = targets.bundle(
+        targets = [
+            "swangle_win_asan_gtests",
+        ],
+        mixins = [
+            "win10_gce_gpu_pool",
+            "timeout_15m",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
+    ),
     console_view_entry = consoles.console_view_entry(
         category = "test|win|x64|asan",
         short_name = "sws",

@@ -363,6 +363,27 @@ targets.bundle(
 )
 
 targets.bundle(
+    name = "swangle_win_asan_gtests",
+    targets = [
+        # dEQP tests are omitted due to Win/Clang/ASan issues with dEQP
+        # exceptions. crbug.com/1268912.
+        "swangle_end2end_tests",
+        "swangle_white_box_tests",
+    ],
+    per_test_modifications = {
+        "swangle_end2end_tests": targets.mixin(
+            args = [
+                # Flaky retries enabled on ASAN. http://anglebug.com/42266243
+                "--flaky-retries=2",
+            ],
+            swarming = targets.swarming(
+                shards = 16,
+            ),
+        ),
+    },
+)
+
+targets.bundle(
     name = "win_common_gtests",
     targets = [
         "angle_deqp_gles2_d3d11_tests",
