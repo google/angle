@@ -8095,12 +8095,12 @@ void ImageHelper::Copy(Renderer *renderer,
 // static
 angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
                                             ImageHelper *srcImage,
-                                            GLint srcLevel,
+                                            gl::LevelIndex srcLevelGL,
                                             GLint srcX,
                                             GLint srcY,
                                             GLint srcZ,
                                             ImageHelper *dstImage,
-                                            GLint dstLevel,
+                                            gl::LevelIndex dstLevelGL,
                                             GLint dstX,
                                             GLint dstY,
                                             GLint dstZ,
@@ -8110,9 +8110,6 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
 {
     ContextVk *contextVk = GetImpl(context);
     Renderer *renderer   = contextVk->getRenderer();
-
-    const gl::LevelIndex srcLevelGL = gl::LevelIndex(srcLevel);
-    const gl::LevelIndex dstLevelGL = gl::LevelIndex(dstLevel);
 
     if (CanCopyWithTransferForCopyImage(renderer, srcImage, dstImage))
     {

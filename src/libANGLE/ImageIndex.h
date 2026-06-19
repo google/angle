@@ -11,8 +11,14 @@
 
 #include "common/PackedEnums.h"
 #include "common/mathutil.h"
+#include "libANGLE/angletypes.h"
 
 #include "angle_gl.h"
+
+namespace egl
+{
+struct ImageSourceAttributes;
+}
 
 namespace gl
 {
@@ -127,6 +133,83 @@ class ImageIndexIterator
 };
 
 TextureTarget TextureTypeToTarget(TextureType type, GLint layerIndex);
+
+// A |Texture| can have a number of levels and layers.  An EGL image may be created out of the
+// texture, viewing a specific level and layer specified by EGL_GL_TEXTURE_LEVEL_KHR and
+// EGL_GL_TEXTURE_ZOFFSET_KHR.  The EGL image can then be imported into another texture whose own
+// state does not include these offsets (e.g. the texture is accessed at level 0).  It may similarly
+// be imported into a renderbuffer that doesn't even have a level and layer state.  It's easy to
+// confuse which gl::ImageIndex translates to the (backend's) backing image's level/layer.
+//
+// For example, consider the source texture as defined as having 4 levels, with base level 2.  The
+// EGL image is created with EGL_GL_TEXTURE_LEVEL_KHR = 3, and imported into the target texture
+// Then:
+//
+// * The backing image (such as VkImage) can be created with 2 levels, corresponding to the source
+//   texture's levels 2 and 3.
+// * The target texture's base level (always 0) maps to the backing image's level 1, which is 3 (the
+//   EGL image level) minus 2 (base level).
+//
+// To avoid all confusions, some types specific to image siblings are created:
+//
+// * OwnLevel, OwnLayer and OwnImageIndex: these contain levels and layers from the
+//   point of view of the current texture, be it the source or target texture.  They correspond to
+//   the front-end's state, and are passed to the backend.
+// * SourceLevel, SourceLayer and SourceImageIndex: these contain levels and layers corresponding to
+//   the source texture.  For the source texture itself, these are equal to the Own* variants.  For
+//   the target texture, they are offset by mEGLImageSourceAttributes.  This property holds for the
+//   source texture too, since these offsets are zero.
+//
+// Before the backend accesses the backing image, it must use the |toSource*()| helpers in
+// TextureState/RenderbufferState to convert |Own*| types to |Source*| types, where the EGL image
+// level and layer offsets are applied, and finally |get()| the translated level/layer/image index
+// to interface with the backing image.  The backend |TextureBackend| object should strive to
+// internally pass around either Own* or Source* types, never gl::LevelIndex, uint32_t
+// layer or gl::ImageIndex directly to ensure translation is always done and done only once.
+// Ideally, the backend would _never_ use the gl::LevelIndex, uint32_t layer and gl::ImageIndex
+// directly and would always use either the |Own*| or |Source*| type so there cannot be mistakes.
+//
+// For backends that don't need this translation, such as the GL backend where the translation is
+// done by the driver, use |getUntranslated()| to get the untranslated front-end values for the
+// current texture out of |Own*| types.
+template <typename T>
+class OwnIndex
+{
+  public:
+    explicit OwnIndex(T index) : mIndex(index) {}
+
+    T getUntranslated() const { return mIndex; }
+
+  protected:
+    T mIndex;
+};
+
+template <typename T>
+class SourceIndex
+{
+  public:
+    T get() const { return mIndex; }
+
+  protected:
+    friend struct egl::ImageSourceAttributes;
+    SourceIndex(T index) : mIndex(index) {}
+    T mIndex;
+};
+
+// Note: The front-end generally uses uint32_t for levels instead of LevelIndex.  The templated type
+// uses LevelIndex so it's different from OwnLayer, but a uint32_t-taking constructor is added for
+// convenience.
+class OwnLevel : public OwnIndex<LevelIndex>
+{
+  public:
+    explicit OwnLevel(uint32_t level) : OwnIndex(gl::LevelIndex(level)) {}
+};
+using OwnLayer      = OwnIndex<uint32_t>;
+using OwnImageIndex = OwnIndex<ImageIndex>;
+
+using SourceLevel      = SourceIndex<LevelIndex>;
+using SourceLayer      = SourceIndex<uint32_t>;
+using SourceImageIndex = SourceIndex<ImageIndex>;
 
 }  // namespace gl
 

@@ -45,6 +45,10 @@ struct ImageSourceAttributes
     uint32_t level = 0;
     // Corresponding to |EGL_GL_TEXTURE_ZOFFSET| value in attributes of |eglCreateImage|
     uint32_t zoffset = 0;
+
+    gl::SourceImageIndex toSourceIndex(const gl::OwnImageIndex &ownIndex) const;
+    gl::SourceLevel toSourceLevel(gl::OwnLevel ownLevel) const;
+    gl::SourceLayer toSourceLayer(gl::OwnLayer ownLayer) const;
 };
 
 // Only currently Renderbuffers and Textures can be bound with images. This makes the relationship

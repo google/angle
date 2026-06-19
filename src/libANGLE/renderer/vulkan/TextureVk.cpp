@@ -587,7 +587,7 @@ void TextureVk::onDestroy(const gl::Context *context)
 }
 
 angle::Result TextureVk::setImage(const gl::Context *context,
-                                  const gl::ImageIndex &index,
+                                  const gl::OwnImageIndex &ownIndex,
                                   GLenum internalFormat,
                                   const gl::Extents &size,
                                   GLenum format,
@@ -596,13 +596,15 @@ angle::Result TextureVk::setImage(const gl::Context *context,
                                   gl::Buffer *unpackBuffer,
                                   const uint8_t *pixels)
 {
+    const gl::ImageIndex index = ownIndex.getUntranslated();
+
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
 
     return setImageImpl(context, index, formatInfo, size, type, unpack, unpackBuffer, pixels);
 }
 
 angle::Result TextureVk::setSubImage(const gl::Context *context,
-                                     const gl::ImageIndex &index,
+                                     const gl::OwnImageIndex &ownIndex,
                                      const gl::Box &area,
                                      GLenum format,
                                      GLenum type,
@@ -610,6 +612,8 @@ angle::Result TextureVk::setSubImage(const gl::Context *context,
                                      gl::Buffer *unpackBuffer,
                                      const uint8_t *pixels)
 {
+    const gl::ImageIndex index = ownIndex.getUntranslated();
+
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format, type);
     ContextVk *contextVk                 = vk::GetImpl(context);
     const gl::ImageDesc &levelDesc       = mState.getImageDesc(index);
@@ -636,13 +640,15 @@ bool TextureVk::isCompressedFormatEmulated(const gl::Context *context,
 }
 
 angle::Result TextureVk::setCompressedImage(const gl::Context *context,
-                                            const gl::ImageIndex &index,
+                                            const gl::OwnImageIndex &ownIndex,
                                             GLenum internalFormat,
                                             const gl::Extents &size,
                                             const gl::PixelUnpackState &unpack,
                                             size_t imageSize,
                                             const uint8_t *pixels)
 {
+    const gl::ImageIndex index = ownIndex.getUntranslated();
+
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
 
     const gl::State &glState = context->getState();
@@ -661,13 +667,14 @@ angle::Result TextureVk::setCompressedImage(const gl::Context *context,
 }
 
 angle::Result TextureVk::setCompressedSubImage(const gl::Context *context,
-                                               const gl::ImageIndex &index,
+                                               const gl::OwnImageIndex &ownIndex,
                                                const gl::Box &area,
                                                GLenum format,
                                                const gl::PixelUnpackState &unpack,
                                                size_t imageSize,
                                                const uint8_t *pixels)
 {
+    const gl::ImageIndex index = ownIndex.getUntranslated();
 
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format, GL_UNSIGNED_BYTE);
     ContextVk *contextVk                 = vk::GetImpl(context);
@@ -911,11 +918,13 @@ bool TextureVk::updateMustBeStaged(gl::LevelIndex textureLevelIndexGL,
 }
 
 angle::Result TextureVk::clearImage(const gl::Context *context,
-                                    GLint level,
+                                    gl::OwnLevel ownLevel,
                                     GLenum format,
                                     GLenum type,
                                     const uint8_t *data)
 {
+    const GLint level = ownLevel.getUntranslated().get();
+
     // All defined cubemap faces are expected to have equal width and height.
     bool isCubeMap = mState.getType() == gl::TextureType::CubeMap;
     gl::TextureTarget textureTarget =
@@ -935,12 +944,14 @@ angle::Result TextureVk::clearImage(const gl::Context *context,
 }
 
 angle::Result TextureVk::clearSubImage(const gl::Context *context,
-                                       GLint level,
+                                       gl::OwnLevel ownLevel,
                                        const gl::Box &area,
                                        GLenum format,
                                        GLenum type,
                                        const uint8_t *data)
 {
+    const GLint level = ownLevel.getUntranslated().get();
+
     bool isCubeMap = mState.getType() == gl::TextureType::CubeMap;
     gl::TextureTarget textureTarget =
         isCubeMap ? gl::kCubeMapTextureTargetMin : gl::TextureTypeToTarget(mState.getType(), 0);
@@ -1366,11 +1377,13 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
 }
 
 angle::Result TextureVk::copyImage(const gl::Context *context,
-                                   const gl::ImageIndex &index,
+                                   const gl::OwnImageIndex &ownIndex,
                                    const gl::Rectangle &sourceArea,
                                    GLenum internalFormat,
                                    gl::Framebuffer *source)
 {
+    const gl::ImageIndex index = ownIndex.getUntranslated();
+
     ContextVk *contextVk   = vk::GetImpl(context);
     vk::Renderer *renderer = contextVk->getRenderer();
 
@@ -1493,11 +1506,13 @@ angle::Result TextureVk::copyImage(const gl::Context *context,
 }
 
 angle::Result TextureVk::copySubImage(const gl::Context *context,
-                                      const gl::ImageIndex &index,
+                                      const gl::OwnImageIndex &ownIndex,
                                       const gl::Offset &destOffset,
                                       const gl::Rectangle &sourceArea,
                                       gl::Framebuffer *source)
 {
+    const gl::ImageIndex index = ownIndex.getUntranslated();
+
     const gl::InternalFormat &currentFormat = *mState.getImageDesc(index).format.info;
 
     // Fall back to renderable format if copy cannot be done in transfer.  Must be done before
@@ -1509,15 +1524,18 @@ angle::Result TextureVk::copySubImage(const gl::Context *context,
 }
 
 angle::Result TextureVk::copyTexture(const gl::Context *context,
-                                     const gl::ImageIndex &index,
+                                     const gl::OwnImageIndex &ownIndex,
                                      GLenum internalFormat,
                                      GLenum type,
-                                     GLint sourceLevelGL,
+                                     gl::OwnLevel ownSourceLevelGL,
                                      bool unpackFlipY,
                                      bool unpackPremultiplyAlpha,
                                      bool unpackUnmultiplyAlpha,
                                      const gl::Texture *source)
 {
+    const gl::ImageIndex index   = ownIndex.getUntranslated();
+    const uint32_t sourceLevelGL = ownSourceLevelGL.getUntranslated().get();
+
     ContextVk *contextVk   = vk::GetImpl(context);
     vk::Renderer *renderer = contextVk->getRenderer();
 
@@ -1550,15 +1568,18 @@ angle::Result TextureVk::copyTexture(const gl::Context *context,
 }
 
 angle::Result TextureVk::copySubTexture(const gl::Context *context,
-                                        const gl::ImageIndex &index,
+                                        const gl::OwnImageIndex &ownIndex,
                                         const gl::Offset &dstOffset,
-                                        GLint srcLevelGL,
+                                        gl::OwnLevel ownSrcLevelGL,
                                         const gl::Box &sourceBox,
                                         bool unpackFlipY,
                                         bool unpackPremultiplyAlpha,
                                         bool unpackUnmultiplyAlpha,
                                         const gl::Texture *source)
 {
+    const gl::ImageIndex index = ownIndex.getUntranslated();
+    const uint32_t srcLevelGL  = ownSrcLevelGL.getUntranslated().get();
+
     ContextVk *contextVk = vk::GetImpl(context);
 
     gl::TextureTarget target = index.getTarget();
@@ -1588,10 +1609,10 @@ angle::Result TextureVk::copyRenderbufferSubData(const gl::Context *context,
                                                  const gl::Renderbuffer *srcBuffer,
                                                  GLint srcX,
                                                  GLint srcY,
-                                                 GLint dstLevel,
+                                                 gl::OwnLevel ownDstLevel,
                                                  GLint dstX,
                                                  GLint dstY,
-                                                 GLint dstZ,
+                                                 gl::OwnLayer ownDstZ,
                                                  GLsizei srcWidth,
                                                  GLsizei srcHeight)
 {
@@ -1602,21 +1623,24 @@ angle::Result TextureVk::copyRenderbufferSubData(const gl::Context *context,
     ANGLE_TRY(sourceVk->ensureImageInitialized(context));
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
-    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), 0, srcX, srcY, 0,
-                                             mImage, dstLevel, dstX, dstY, dstZ, srcWidth,
-                                             srcHeight, 1);
+    // TODO(http://anglebug.com/525079760): Get the translated level/layer 0 for renderbuffer to
+    // account for EGL image targets.
+    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), gl::LevelIndex(0), srcX,
+                                             srcY, 0, mImage, ownDstLevel.getUntranslated(), dstX,
+                                             dstY, ownDstZ.getUntranslated(), srcWidth, srcHeight,
+                                             1);
 }
 
 angle::Result TextureVk::copyTextureSubData(const gl::Context *context,
                                             const gl::Texture *srcTexture,
-                                            GLint srcLevel,
+                                            gl::OwnLevel ownSrcLevel,
                                             GLint srcX,
                                             GLint srcY,
-                                            GLint srcZ,
-                                            GLint dstLevel,
+                                            gl::OwnLayer ownSrcZ,
+                                            gl::OwnLevel ownDstLevel,
                                             GLint dstX,
                                             GLint dstY,
-                                            GLint dstZ,
+                                            gl::OwnLayer ownDstZ,
                                             GLsizei srcWidth,
                                             GLsizei srcHeight,
                                             GLsizei srcDepth)
@@ -1628,9 +1652,10 @@ angle::Result TextureVk::copyTextureSubData(const gl::Context *context,
     ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
-    return vk::ImageHelper::CopyImageSubData(context, &sourceVk->getImage(), srcLevel, srcX, srcY,
-                                             srcZ, mImage, dstLevel, dstX, dstY, dstZ, srcWidth,
-                                             srcHeight, srcDepth);
+    return vk::ImageHelper::CopyImageSubData(
+        context, &sourceVk->getImage(), ownSrcLevel.getUntranslated(), srcX, srcY,
+        ownSrcZ.getUntranslated(), mImage, ownDstLevel.getUntranslated(), dstX, dstY,
+        ownDstZ.getUntranslated(), srcWidth, srcHeight, srcDepth);
 }
 
 angle::Result TextureVk::copyCompressedTexture(const gl::Context *context,
@@ -3344,10 +3369,12 @@ angle::Result TextureVk::syncAsAttachmentRenderTarget(const gl::Context *context
 
 angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                                                    GLenum binding,
-                                                   const gl::ImageIndex &imageIndex,
+                                                   const gl::OwnImageIndex &ownImageIndex,
                                                    GLsizei samples,
                                                    FramebufferAttachmentRenderTarget **rtOut)
 {
+    const gl::ImageIndex imageIndex = ownImageIndex.getUntranslated();
+
     ContextVk *contextVk = vk::GetImpl(context);
     GLint requestedLevel = imageIndex.getLevelIndex();
     ASSERT(requestedLevel >= 0);
@@ -3966,8 +3993,10 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 
 angle::Result TextureVk::initializeContents(const gl::Context *context,
                                             GLenum binding,
-                                            const gl::ImageIndex &imageIndex)
+                                            const gl::OwnImageIndex &ownImageIndex)
 {
+    const gl::ImageIndex imageIndex = ownImageIndex.getUntranslated();
+
     ContextVk *contextVk      = vk::GetImpl(context);
     const gl::ImageDesc &desc = mState.getImageDesc(imageIndex);
     const vk::Format &format =
@@ -4659,11 +4688,13 @@ angle::Result TextureVk::getTexImage(const gl::Context *context,
                                      const gl::PixelPackState &packState,
                                      gl::Buffer *packBuffer,
                                      gl::TextureTarget target,
-                                     GLint level,
+                                     gl::OwnLevel ownLevel,
                                      GLenum format,
                                      GLenum type,
                                      void *pixels)
 {
+    const GLint level = ownLevel.getUntranslated().get();
+
     if (packBuffer && this->isCompressedFormatEmulated(context, target, level))
     {
         // TODO (anglebug.com/42265933): Can't populate from a buffer using emulated format
@@ -4711,9 +4742,11 @@ angle::Result TextureVk::getCompressedTexImage(const gl::Context *context,
                                                const gl::PixelPackState &packState,
                                                gl::Buffer *packBuffer,
                                                gl::TextureTarget target,
-                                               GLint level,
+                                               gl::OwnLevel ownLevel,
                                                void *pixels)
 {
+    const GLint level = ownLevel.getUntranslated().get();
+
     ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 

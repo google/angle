@@ -207,6 +207,19 @@ class TextureState final : private angle::NonCopyable
         return mEGLImageSourceAttributes;
     }
 
+    SourceImageIndex toSourceIndex(const OwnImageIndex &index) const
+    {
+        return mEGLImageSourceAttributes.toSourceIndex(index);
+    }
+    SourceLevel toSourceLevel(OwnLevel level) const
+    {
+        return mEGLImageSourceAttributes.toSourceLevel(level);
+    }
+    SourceLayer toSourceLayer(OwnLayer layer) const
+    {
+        return mEGLImageSourceAttributes.toSourceLayer(layer);
+    }
+
   private:
     // Texture needs access to the ImageDesc functions.
     friend class Texture;
