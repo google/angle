@@ -40,12 +40,6 @@
       'swarming_containment_auto',
     ],
     'machines': {
-      'angle-linux-x64-trace': {
-        'os_type': 'linux',
-        'additional_compile_targets': [
-          'noop_target',
-        ],
-      },
       'angle-win-x64-sws-asan': {
         'os_type': 'win',
         'mixins': [
@@ -56,12 +50,6 @@
           # Clang-Win/ASAN has issues with dEQP's exceptions. http://crbug.com/1268912
           'gtest_tests': 'swangle_non_deqp_slow_flaky_gtests',
         },
-      },
-      'angle-win-x64-trace': {
-        'os_type': 'win',
-        'additional_compile_targets': [
-          'noop_target',
-        ],
       },
     },
   },
