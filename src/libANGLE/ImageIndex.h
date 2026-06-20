@@ -202,7 +202,7 @@ class SourceIndex
 class OwnLevel : public OwnIndex<LevelIndex>
 {
   public:
-    explicit OwnLevel(uint32_t level) : OwnIndex(gl::LevelIndex(level)) {}
+    explicit OwnLevel(uint32_t level) : OwnIndex(LevelIndex(level)) {}
 };
 using OwnLayer = OwnIndex<uint32_t>;
 class OwnImageIndex : public OwnIndex<ImageIndex>
@@ -222,9 +222,55 @@ class OwnImageIndex : public OwnIndex<ImageIndex>
     uint32_t getLayerCount() const { return mIndex.getLayerCount(); }
 };
 
-using SourceLevel      = SourceIndex<LevelIndex>;
-using SourceLayer      = SourceIndex<uint32_t>;
-using SourceImageIndex = SourceIndex<ImageIndex>;
+class SourceImageIndex;
+class SourceLevel : public SourceIndex<LevelIndex>
+{
+  public:
+    // Helper while code is being transitioned to using SourceLevel consistently.  Remove once done.
+    // TODO(http://anglebug.com/525079760)
+    static SourceLevel VerifiedSourceLevel(LevelIndex level) { return SourceLevel(level); }
+
+  protected:
+    friend struct egl::ImageSourceAttributes;
+    friend class SourceImageIndex;
+    SourceLevel(LevelIndex level) : SourceIndex(level) {}
+};
+class SourceLayer : public SourceIndex<uint32_t>
+{
+  public:
+    // Convenience helpers
+    SourceLayer operator+(uint32_t offset) const { return SourceLayer(mIndex + offset); }
+
+  protected:
+    friend struct egl::ImageSourceAttributes;
+    friend class SourceImageIndex;
+    SourceLayer(uint32_t layer) : SourceIndex(layer) {}
+};
+class SourceImageIndex : public SourceIndex<ImageIndex>
+{
+  public:
+    // Helper while code is being transitioned to using SourceLevel consistently.  Remove once done.
+    // TODO(http://anglebug.com/525079760)
+    static SourceImageIndex VerifiedSourceIndex(ImageIndex index)
+    {
+        return SourceImageIndex(index);
+    }
+
+    // Convenience helpers that forward to ImageIndex and possibly wrap the results.
+    TextureType getType() const { return mIndex.getType(); }
+    SourceLevel getLevelIndex() const { return SourceLevel(LevelIndex(mIndex.getLevelIndex())); }
+    bool hasLayer() const { return mIndex.hasLayer(); }
+    SourceLayer getLayerIndex() const
+    {
+        return SourceLayer(mIndex.hasLayer() ? mIndex.getLayerIndex() : 0);
+    }
+    SourceLayer cubeMapFaceIndex() const { return SourceLayer(mIndex.cubeMapFaceIndex()); }
+    uint32_t getLayerCount() const { return mIndex.getLayerCount(); }
+
+  protected:
+    friend struct egl::ImageSourceAttributes;
+    SourceImageIndex(const ImageIndex &index) : SourceIndex(index) {}
+};
 
 }  // namespace gl
 

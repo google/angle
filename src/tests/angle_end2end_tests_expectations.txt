@@ -596,6 +596,11 @@
 513847611 WIN D3D11 : ImageTestES3.MipLevelsNonZeroBaseLevel/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceDrawAndReadback/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceDrawAndReadbackRenderbuffer/* = SKIP
+526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceCopyTexImageSrc/* = SKIP
+526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceCopyTexImageSrcRenderbuffer/* = SKIP
+526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceCopyTexImageSrcDst/* = SKIP
+526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceCopyTexSubImageDst/* = SKIP
+526451592 WIN D3D11 : ImageTestES3.NonZeroLevelCopyTexImageSrcDst/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP

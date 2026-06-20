@@ -420,7 +420,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // something like glCopyTexSubImage2D() (which simultaneously is reading from said framebuffer,
     // i.e. mip 0 of the texture).
     angle::Result redefineLevel(const gl::Context *context,
-                                const gl::ImageIndex &index,
+                                const gl::OwnImageIndex &ownIndex,
                                 const vk::Format &format,
                                 const gl::Extents &size);
 
@@ -502,7 +502,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                               uint8_t *sourceData);
 
     angle::Result copySubImageImpl(const gl::Context *context,
-                                   const gl::ImageIndex &index,
+                                   const gl::SourceImageIndex &index,
                                    const gl::Offset &destOffset,
                                    const gl::Rectangle &sourceArea,
                                    const gl::InternalFormat &internalFormat,
@@ -520,7 +520,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                      TextureVk *source);
 
     angle::Result copySubImageImplWithTransfer(ContextVk *contextVk,
-                                               const gl::ImageIndex &index,
+                                               const gl::SourceImageIndex &index,
                                                const gl::Offset &dstOffset,
                                                const vk::Format &dstFormat,
                                                gl::LevelIndex sourceLevelGL,
@@ -529,7 +529,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                                vk::ImageHelper *srcImage);
 
     angle::Result copySubImageImplWithDraw(ContextVk *contextVk,
-                                           const gl::ImageIndex &index,
+                                           const gl::SourceImageIndex &index,
                                            const gl::Offset &dstOffset,
                                            const vk::Format &dstFormat,
                                            gl::LevelIndex sourceLevelGL,
@@ -566,8 +566,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                               gl::OwnLayer ownLayer,
                                               GLuint layerCount);
     angle::Result getLevelLayerImageView(ContextVk *contextVk,
-                                         gl::LevelIndex levelGL,
-                                         size_t layer,
+                                         gl::SourceLevel level,
+                                         gl::SourceLayer layer,
                                          const vk::ImageView **imageViewOut);
 
     // Flush image's staged updates for all levels and layers.
@@ -599,13 +599,11 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                               const vk::Format &bufferVkFormat,
                               GLenum type) const;
 
-    bool updateMustBeStaged(gl::LevelIndex textureLevelIndexGL, angle::FormatID dstFormatID) const;
-    bool updateMustBeFlushed(gl::LevelIndex textureLevelIndexGL, angle::FormatID dstFormatID) const;
-    bool shouldUpdateBeFlushed(gl::LevelIndex textureLevelIndexGL,
-                               angle::FormatID dstFormatID) const
+    bool updateMustBeStaged(gl::SourceLevel level, angle::FormatID dstFormatID) const;
+    bool updateMustBeFlushed(gl::SourceLevel level, angle::FormatID dstFormatID) const;
+    bool shouldUpdateBeFlushed(gl::SourceLevel level, angle::FormatID dstFormatID) const
     {
-        return updateMustBeFlushed(textureLevelIndexGL, dstFormatID) ||
-               !updateMustBeStaged(textureLevelIndexGL, dstFormatID);
+        return updateMustBeFlushed(level, dstFormatID) || !updateMustBeStaged(level, dstFormatID);
     }
 
     // We monitor the staging buffer and set dirty bits if the staging buffer changes. Note that we
