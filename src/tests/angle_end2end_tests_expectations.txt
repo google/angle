@@ -641,6 +641,7 @@
 
 // Pixel 4 expectations.
 42264513 PIXEL4ORXL GLES : BlitFramebufferTest.BlitSRGBToRGBOversizedDestArea/* = SKIP
+42261117 PIXEL4ORXL GLES : RobustResourceInitTestES3.MaskedDepthClearBufferfi/* = SKIP
 42265770 PIXEL4ORXL GLES : BlitFramebufferTest.Blit3D/* = SKIP
 42265770 PIXEL4ORXL GLES : BlitFramebufferTest.Blit2DArray/* = SKIP
 42265770 PIXEL4ORXL GLES : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP

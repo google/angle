@@ -1696,6 +1696,12 @@ angle::Result Framebuffer::partialClearNeedsInit(const Context *context,
         return angle::Result::Continue;
     }
 
+    if (depth && glState.getDepthStencilState().isDepthMaskedOut())
+    {
+        *needsInitOut = true;
+        return angle::Result::Continue;
+    }
+
     if (stencil)
     {
         ASSERT(HasSupportedStencilBitCount(glState.getDrawFramebuffer()));
