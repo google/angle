@@ -3,7 +3,6 @@
     "android_static_analysis": "on",
     "dcheck_always_on": false,
     "is_clang": true,
-    "is_component_build": true,
     "is_debug": false,
     "symbol_level": 1,
     "target_cpu": "arm64",

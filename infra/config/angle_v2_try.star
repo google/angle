@@ -463,7 +463,6 @@ angle_linux_manual_builder(
             "angle_ir",
             "arm64",
             "capture",
-            "component",
             "opencl",
             "release_with_dchecks",
         ],

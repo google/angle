@@ -7,7 +7,6 @@
     "dcheck_always_on": true,
     "enable_rust_clippy": true,
     "is_clang": true,
-    "is_component_build": true,
     "is_debug": false,
     "symbol_level": 1,
     "target_cpu": "arm64",
