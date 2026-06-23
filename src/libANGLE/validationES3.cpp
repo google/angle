@@ -2663,61 +2663,6 @@ bool ValidateTexSubImage3DRobustANGLE(const Context *context,
     return ValidateRobustTexImage(context, entryPoint, pixels, imageSize, bufSize);
 }
 
-bool ValidateCompressedTexSubImage3D(const Context *context,
-                                     angle::EntryPoint entryPoint,
-                                     TextureTarget target,
-                                     GLint level,
-                                     GLint xoffset,
-                                     GLint yoffset,
-                                     GLint zoffset,
-                                     GLsizei width,
-                                     GLsizei height,
-                                     GLsizei depth,
-                                     GLenum format,
-                                     GLsizei imageSize,
-                                     const void *data)
-{
-    if (!ValidateES3TexImage3DParameters(context, entryPoint, target, level, GL_NONE, true, true,
-                                         xoffset, yoffset, zoffset, width, height, depth, 0, format,
-                                         GL_NONE, data, nullptr))
-    {
-        return false;
-    }
-
-    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(format);
-
-    if (!formatInfo.compressed)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidCompressedFormat);
-        return false;
-    }
-
-    GLuint blockSize = 0;
-    if (!formatInfo.computeCompressedImageSize(Extents(width, height, depth), &blockSize))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIntegerOverflow);
-        return false;
-    }
-
-    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSize)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidCompressedImageSize);
-        return false;
-    }
-
-    if (data == nullptr)
-    {
-        if (context->getState().getTargetBuffer(BufferBinding::PixelUnpack) == nullptr)
-        {
-            // If data is null, we need an unpack buffer to read from
-            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPixelDataNull);
-            return false;
-        }
-    }
-
-    return true;
-}
-
 bool ValidateGenQueries(const Context *context,
                         angle::EntryPoint entryPoint,
                         GLsizei n,

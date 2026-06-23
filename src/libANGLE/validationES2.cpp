@@ -2043,6 +2043,270 @@ bool ValidateCompressedTexImage(const Context *context,
     return true;
 }
 
+bool ValidateCompressedTexSubImage(const Context *context,
+                                   angle::EntryPoint entryPoint,
+                                   TextureTarget targetPacked,
+                                   GLint level,
+                                   GLint xoffset,
+                                   GLint yoffset,
+                                   GLint zoffset,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLsizei depth,
+                                   GLenum format,
+                                   GLsizei imageSize,
+                                   const void *data,
+                                   TexImageDimension texImageDimension)
+{
+    const Version &clientVersion = context->getClientVersion();
+    const Extensions &extensions = context->getExtensions();
+    const Caps &caps             = context->getCaps();
+
+    GLsizei maxDimension = 0;
+
+    // Target is valid for the command and in the current context.
+    {
+        bool validForCommand = false;
+        bool validForContext = false;
+        switch (targetPacked)
+        {
+            case TextureTarget::_2D:
+                validForCommand = (texImageDimension == TexImageDimension::_2D);
+                validForContext = true;
+                maxDimension    = caps.max2DTextureSize;
+                break;
+            case TextureTarget::CubeMapPositiveX:
+            case TextureTarget::CubeMapNegativeX:
+            case TextureTarget::CubeMapPositiveY:
+            case TextureTarget::CubeMapNegativeY:
+            case TextureTarget::CubeMapPositiveZ:
+            case TextureTarget::CubeMapNegativeZ:
+                validForCommand = (texImageDimension == TexImageDimension::_2D);
+                validForContext = (clientVersion >= ES_2_0 || extensions.textureCubeMapOES);
+                maxDimension    = caps.maxCubeMapTextureSize;
+                break;
+            case TextureTarget::_2DArray:
+                validForCommand = (texImageDimension == TexImageDimension::_3D);
+                validForContext = (clientVersion >= ES_3_0);
+                maxDimension    = caps.max2DTextureSize;
+                break;
+            case TextureTarget::_3D:
+                validForCommand = (texImageDimension == TexImageDimension::_3D);
+                validForContext = (clientVersion >= ES_3_0 || extensions.texture3DOES);
+                maxDimension    = caps.max3DTextureSize;
+                break;
+            case TextureTarget::CubeMapArray:
+                validForCommand = (texImageDimension == TexImageDimension::_3D);
+                validForContext = (clientVersion >= ES_3_2 || extensions.textureCubeMapArrayAny());
+                maxDimension    = caps.maxCubeMapTextureSize;
+                break;
+            default:
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kTargetUnknown);
+                return false;
+        }
+
+        if (ANGLE_UNLIKELY(!validForCommand || !validForContext))
+        {
+            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kTextureTargetInvalid, ToGLenum(targetPacked));
+            return false;
+        }
+
+        ASSERT(maxDimension > 0);
+    }
+
+    // Level is not negative and not greater than the maximum possible level for the target.
+    if (ANGLE_UNLIKELY(level > log2(maxDimension) || level < 0))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMipLevelForTarget);
+        return false;
+    }
+
+    const Texture *texture = context->getTextureByTarget(targetPacked);
+    ASSERT(texture != nullptr);
+
+    const InternalFormat &imageFormatInfo = *texture->getFormat(targetPacked, level).info;
+    const GLenum imageFormat              = imageFormatInfo.internalFormat;
+
+    // Image exists for the target and level.
+    if (ANGLE_UNLIKELY(imageFormat == GL_NONE))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidTextureLevel);
+        return false;
+    }
+
+    // Image uses a compressed format.
+    if (ANGLE_UNLIKELY(!imageFormatInfo.compressed))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kCompressedMismatch);
+        return false;
+    }
+    ASSERT(!imageFormatInfo.paletted);  // The check above must reject paletted images.
+
+    // If the image format is ETC1, subregion updates must be enabled explicitly.
+    if (IsETC1Format(imageFormat))
+    {
+        if (ANGLE_UNLIKELY(!extensions.compressedETC1RGB8SubTextureEXT))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kSubregionUpdateETC1);
+            return false;
+        }
+    }
+
+    const size_t imageWidth  = texture->getWidth(targetPacked, level);
+    const size_t imageHeight = texture->getHeight(targetPacked, level);
+    const size_t imageDepth  = texture->getDepth(targetPacked, level);
+
+    // Subregion offsets and dimensions are not negative and fit the image.
+    {
+        if (ANGLE_UNLIKELY(xoffset < 0 || yoffset < 0 || zoffset < 0))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kSubregionOffsetsNegative);
+            return false;
+        }
+
+        if (ANGLE_UNLIKELY(width < 0 || height < 0 || depth < 0))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kSubregionDimensionsNegative);
+            return false;
+        }
+
+        if (ANGLE_UNLIKELY(static_cast<size_t>(xoffset) > imageWidth ||
+                           static_cast<size_t>(yoffset) > imageHeight ||
+                           static_cast<size_t>(zoffset) > imageDepth))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kSubregionOffsetsOutOfBounds);
+            return false;
+        }
+
+        // Cannot overflow due to the checks above.
+        if (ANGLE_UNLIKELY(
+                (imageWidth - static_cast<size_t>(xoffset) < static_cast<size_t>(width)) ||
+                (imageHeight - static_cast<size_t>(yoffset) < static_cast<size_t>(height)) ||
+                (imageDepth - static_cast<size_t>(zoffset) < static_cast<size_t>(depth))))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kSubregionDimensionsOutOfBounds);
+            return false;
+        }
+    }
+
+    // Subregion is compatible with the internal format.
+    {
+        // Ensure that the internal format's block dimensions are set.
+        ASSERT(imageFormatInfo.compressedBlockWidth > 0 &&
+               imageFormatInfo.compressedBlockHeight > 0 &&
+               imageFormatInfo.compressedBlockDepth > 0);
+
+        // Check if the whole image is being replaced. For 2D texture blocks, zoffset and depth
+        // do not affect whether the replaced region fills the entire image.
+        const bool fullImageReplacement =
+            (xoffset == 0 && static_cast<size_t>(width) == imageWidth) &&
+            (yoffset == 0 && static_cast<size_t>(height) == imageHeight) &&
+            ((zoffset == 0 && static_cast<size_t>(depth) == imageDepth) ||
+             imageFormatInfo.compressedBlockDepth == 1);
+
+        // If the subregion is not equal to the whole image, format-specific validation is needed.
+        if (!fullImageReplacement)
+        {
+            // PVRTC1 images do not support partial updates.
+            if (ANGLE_UNLIKELY(IsPVRTC1Format(imageFormat)))
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kSubregionUpdatePVRTC1);
+                return false;
+            }
+
+            // Offsets are multiples of the block dimensions.
+            const bool offsetsAligned = xoffset % imageFormatInfo.compressedBlockWidth == 0 &&
+                                        yoffset % imageFormatInfo.compressedBlockHeight == 0 &&
+                                        zoffset % imageFormatInfo.compressedBlockDepth == 0;
+            if (ANGLE_UNLIKELY(!offsetsAligned))
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kSubregionOffsetsBlockSize);
+                return false;
+            }
+
+            // Subregion dimensions are either multiples of the block dimensions
+            // or exactly reach the image bounds.
+            const bool validWidth  = static_cast<size_t>(xoffset + width) == imageWidth ||
+                                     width % imageFormatInfo.compressedBlockWidth == 0;
+            const bool validHeight = static_cast<size_t>(yoffset + height) == imageHeight ||
+                                     height % imageFormatInfo.compressedBlockHeight == 0;
+            const bool validDepth  = static_cast<size_t>(zoffset + depth) == imageDepth ||
+                                     depth % imageFormatInfo.compressedBlockDepth == 0;
+            if (ANGLE_UNLIKELY(!validWidth || !validHeight || !validDepth))
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kSubregionDimensionsBlockSize);
+                return false;
+            }
+        }
+    }
+
+    // Specified format exactly matches the image internal format.
+    if (format != imageFormat)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kSubregionFormat);
+        return false;
+    }
+
+    // Make sure computeCompressedImageSize sets expectedImageSize.
+    GLuint expectedImageSize = std::numeric_limits<GLuint>::max();
+    {
+        // Integer overflow during imageSize computation is not explicitly defined
+        // in specs but the values cannot be equal in case of an overflow.
+        const bool isSizeValid = imageFormatInfo.computeCompressedImageSize(
+            Extents(width, height, depth), &expectedImageSize);
+        if (ANGLE_UNLIKELY(!isSizeValid ||
+                           (imageSize < 0 || static_cast<GLuint>(imageSize) != expectedImageSize)))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kCompressedTextureImageSizeMismatch);
+            return false;
+        }
+    }
+
+    Buffer *pixelUnpackBuffer = context->getState().getTargetBuffer(BufferBinding::PixelUnpack);
+    if (pixelUnpackBuffer != nullptr)
+    {
+        // ...the buffer object's data store is currently mapped but not persistently.
+        if (ANGLE_UNLIKELY(pixelUnpackBuffer->isMapped() &&
+                           !pixelUnpackBuffer->isPersistentlyMapped()))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBufferMapped);
+            return false;
+        }
+
+        if (context->isWebGL() || context->isHardenedContext())
+        {
+            if (ANGLE_UNLIKELY(pixelUnpackBuffer->hasTFBBindingConflict()))
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
+                                       kPixelUnpackBufferBoundForTransformFeedback);
+                return false;
+            }
+        }
+
+        CheckedNumeric<size_t> checkedEndByte(expectedImageSize);
+        CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(data));
+        checkedEndByte += checkedOffset;
+
+        const size_t bufferSize = static_cast<size_t>(pixelUnpackBuffer->getSize());
+        if (ANGLE_UNLIKELY(!checkedEndByte.IsValid() || (checkedEndByte.ValueOrDie() > bufferSize)))
+        {
+            // Overflow past the end of the buffer
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kParamOverflow);
+            return false;
+        }
+    }
+    else
+    {
+        if (ANGLE_UNLIKELY(width > 0 && height > 0 && depth > 0 && data == nullptr))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPixelDataNull);
+            return false;
+        }
+    }
+
+    return true;
+}
+
 }  // anonymous namespace
 
 bool ValidateES2TexStorageParametersBase(const Context *context,
@@ -3289,7 +3553,7 @@ bool ValidateCompressedTexImage3DOES(const Context *context,
 
 bool ValidateCompressedTexSubImage2D(const Context *context,
                                      angle::EntryPoint entryPoint,
-                                     TextureTarget target,
+                                     TextureTarget targetPacked,
                                      GLint level,
                                      GLint xoffset,
                                      GLint yoffset,
@@ -3299,40 +3563,28 @@ bool ValidateCompressedTexSubImage2D(const Context *context,
                                      GLsizei imageSize,
                                      const void *data)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        if (!ValidateES2TexImageParameters(context, entryPoint, target, level, GL_NONE, true, true,
-                                           xoffset, yoffset, width, height, 0, format, GL_NONE,
-                                           data, nullptr))
-        {
-            return false;
-        }
-    }
-    else
-    {
-        if (!ValidateES3TexImage2DParameters(context, entryPoint, target, level, GL_NONE, true,
-                                             true, xoffset, yoffset, 0, width, height, 1, 0, format,
-                                             GL_NONE, data, nullptr))
-        {
-            return false;
-        }
-    }
+    return ValidateCompressedTexSubImage(context, entryPoint, targetPacked, level, xoffset, yoffset,
+                                         0, width, height, 1, format, imageSize, data,
+                                         TexImageDimension::_2D);
+}
 
-    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(format);
-    GLuint blockSize                 = 0;
-    if (!formatInfo.computeCompressedImageSize(Extents(width, height, 1), &blockSize))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIntegerOverflow);
-        return false;
-    }
-
-    if (imageSize < 0 || static_cast<GLuint>(imageSize) != blockSize)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidCompressedImageSize);
-        return false;
-    }
-
-    return true;
+bool ValidateCompressedTexSubImage3D(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     TextureTarget targetPacked,
+                                     GLint level,
+                                     GLint xoffset,
+                                     GLint yoffset,
+                                     GLint zoffset,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLsizei depth,
+                                     GLenum format,
+                                     GLsizei imageSize,
+                                     const void *data)
+{
+    return ValidateCompressedTexSubImage(context, entryPoint, targetPacked, level, xoffset, yoffset,
+                                         zoffset, width, height, depth, format, imageSize, data,
+                                         TexImageDimension::_3D);
 }
 
 bool ValidateCompressedTexSubImage3DOES(const Context *context,
