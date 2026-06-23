@@ -51,12 +51,6 @@ void RecordVersionErrorES20(const Context *context, angle::EntryPoint entryPoint
 namespace
 {
 
-enum class TexImageDimension
-{
-    _2D,
-    _3D,
-};
-
 bool IsPartialBlit(const Context *context,
                    const FramebufferAttachment *readBuffer,
                    const FramebufferAttachment *writeBuffer,
@@ -2205,207 +2199,6 @@ bool ValidateCompressedTexSubImage(const Context *context,
 }
 
 }  // anonymous namespace
-
-bool ValidateES2TexStorageParametersBase(const Context *context,
-                                         angle::EntryPoint entryPoint,
-                                         TextureType target,
-                                         GLsizei levels,
-                                         GLenum internalformat,
-                                         GLsizei width,
-                                         GLsizei height)
-{
-    if (target != TextureType::_2D && target != TextureType::CubeMap &&
-        target != TextureType::Rectangle)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTextureTarget);
-        return false;
-    }
-
-    if (width < 1 || height < 1 || levels < 1)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kTextureSizeTooSmall);
-        return false;
-    }
-
-    if (target == TextureType::CubeMap && width != height)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kCubemapFacesEqualDimensions);
-        return false;
-    }
-
-    if (levels != 1 && levels != log2(std::max(width, height)) + 1)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidMipLevels);
-        return false;
-    }
-
-    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalformat);
-    if (formatInfo.format == GL_NONE || formatInfo.type == GL_NONE ||
-        IsAngleInternalFormat(internalformat))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidFormat);
-        return false;
-    }
-
-    const Caps &caps = context->getCaps();
-
-    switch (target)
-    {
-        case TextureType::_2D:
-            if (width > caps.max2DTextureSize || height > caps.max2DTextureSize)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kResourceMaxTextureSize);
-                return false;
-            }
-            break;
-        case TextureType::Rectangle:
-            if (levels != 1)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMipLevel);
-                return false;
-            }
-
-            if (width > caps.maxRectangleTextureSize || height > caps.maxRectangleTextureSize)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kResourceMaxTextureSize);
-                return false;
-            }
-            if (formatInfo.compressed)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kRectangleTextureCompressed);
-                return false;
-            }
-            break;
-        case TextureType::CubeMap:
-            if (width > caps.maxCubeMapTextureSize || height > caps.maxCubeMapTextureSize)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kResourceMaxTextureSize);
-                return false;
-            }
-            break;
-        case TextureType::InvalidEnum:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumInvalid);
-            return false;
-        default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, ToGLenum(target));
-            return false;
-    }
-
-    if (levels != 1 && !context->getExtensions().textureNpotOES)
-    {
-        if (!isPow2(width) || !isPow2(height))
-        {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kDimensionsMustBePow2);
-            return false;
-        }
-    }
-
-    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidFormat);
-        return false;
-    }
-
-    if (formatInfo.paletted)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidInternalFormat);
-        return false;
-    }
-
-    // Even with OES_texture_npot, some compressed formats may impose extra restrictions.
-    if (formatInfo.compressed)
-    {
-        if (!ValidCompressedImageSize(context, formatInfo.internalFormat, 0, width, height, 1))
-        {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
-            return false;
-        }
-    }
-
-    if (!ValidImageAllocationSize(context, entryPoint, width, height, 1, 0, internalformat))
-    {
-        // Error already generated.
-        return false;
-    }
-
-    switch (internalformat)
-    {
-        case GL_DEPTH_COMPONENT16:
-        case GL_DEPTH_COMPONENT32_OES:
-            switch (target)
-            {
-                case TextureType::_2D:
-                    break;
-                case TextureType::CubeMap:
-                    if (!context->getExtensions().depthTextureCubeMapOES)
-                    {
-                        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidTextureTarget);
-                        return false;
-                    }
-                    break;
-                default:
-                    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidTextureTarget);
-                    return false;
-            }
-
-            // ANGLE_depth_texture only supports 1-level textures
-            if (!context->getExtensions().depthTextureOES)
-            {
-                if (levels != 1)
-                {
-                    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidMipLevels);
-                    return false;
-                }
-            }
-            break;
-        case GL_DEPTH24_STENCIL8_OES:
-            switch (target)
-            {
-                case TextureType::_2D:
-                    break;
-                case TextureType::CubeMap:
-                    if (!context->getExtensions().depthTextureCubeMapOES)
-                    {
-                        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidTextureTarget);
-                        return false;
-                    }
-                    break;
-                default:
-                    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidTextureTarget);
-                    return false;
-            }
-
-            if (!context->getExtensions().packedDepthStencilOES &&
-                !context->getExtensions().depthTextureCubeMapOES)
-            {
-                // ANGLE_depth_texture only supports 1-level textures
-                if (levels != 1)
-                {
-                    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidMipLevels);
-                    return false;
-                }
-            }
-            break;
-
-        default:
-            break;
-    }
-
-    Texture *texture = context->getTextureByType(target);
-    if (!texture || texture->id().value == 0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kMissingTexture);
-        return false;
-    }
-
-    if (texture->getImmutableFormat())
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureIsImmutable);
-        return false;
-    }
-
-    return true;
-}
 
 bool ValidateDiscardFramebufferEXT(const Context *context,
                                    angle::EntryPoint entryPoint,
@@ -6065,6 +5858,31 @@ bool ValidateTestFenceNV(const Context *context, angle::EntryPoint entryPoint, F
     return true;
 }
 
+bool ValidateTexStorage2D(const Context *context,
+                          angle::EntryPoint entryPoint,
+                          TextureType targetPacked,
+                          GLsizei levels,
+                          GLenum internalformat,
+                          GLsizei width,
+                          GLsizei height)
+{
+    return ValidateTexStorage(context, entryPoint, targetPacked, levels, internalformat, width,
+                              height, 1, TexImageDimension::_2D);
+}
+
+bool ValidateTexStorage3D(const Context *context,
+                          angle::EntryPoint entryPoint,
+                          TextureType targetPacked,
+                          GLsizei levels,
+                          GLenum internalformat,
+                          GLsizei width,
+                          GLsizei height,
+                          GLsizei depth)
+{
+    return ValidateTexStorage(context, entryPoint, targetPacked, levels, internalformat, width,
+                              height, depth, TexImageDimension::_3D);
+}
+
 bool ValidateTexStorage2DEXT(const Context *context,
                              angle::EntryPoint entryPoint,
                              TextureType type,
@@ -6073,14 +5891,20 @@ bool ValidateTexStorage2DEXT(const Context *context,
                              GLsizei width,
                              GLsizei height)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        return ValidateES2TexStorageParametersBase(context, entryPoint, type, levels,
-                                                   internalformat, width, height);
-    }
+    return ValidateTexStorage2D(context, entryPoint, type, levels, internalformat, width, height);
+}
 
-    return ValidateES3TexStorage2DParameters(context, entryPoint, type, levels, internalformat,
-                                             width, height, 1);
+bool ValidateTexStorage3DEXT(const Context *context,
+                             angle::EntryPoint entryPoint,
+                             TextureType type,
+                             GLsizei levels,
+                             GLenum internalformat,
+                             GLsizei width,
+                             GLsizei height,
+                             GLsizei depth)
+{
+    return ValidateTexStorage3D(context, entryPoint, type, levels, internalformat, width, height,
+                                depth);
 }
 
 bool ValidateVertexAttribDivisorANGLE(const PrivateState &privateState,
@@ -6142,25 +5966,6 @@ bool ValidateTexImage3DOES(const Context *context,
 {
     return ValidateTexImage3D(context, entryPoint, target, level, internalformat, width, height,
                               depth, border, format, type, pixels);
-}
-
-bool ValidateTexStorage3DEXT(const Context *context,
-                             angle::EntryPoint entryPoint,
-                             TextureType target,
-                             GLsizei levels,
-                             GLenum internalformat,
-                             GLsizei width,
-                             GLsizei height,
-                             GLsizei depth)
-{
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
-    return ValidateES3TexStorage3DParameters(context, entryPoint, target, levels, internalformat,
-                                             width, height, depth);
 }
 
 bool ValidateMultiDrawArraysANGLE(const Context *context,
