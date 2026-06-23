@@ -7219,6 +7219,13 @@ bool ImageHelper::isReadSubresourceBarrierNecessary(ImageAccess newAccess,
         return true;
     }
 
+    // Updates are tracked by layer, which are always [0, 1) for 3D images.
+    if (mImageType == VK_IMAGE_TYPE_3D)
+    {
+        layerStart = 0;
+        layerCount = 1;
+    }
+
     ImageLayerWriteMask layerMask = GetImageLayerWriteMask(layerStart, layerCount);
     for (uint32_t levelOffset = 0; levelOffset < levelCount; levelOffset++)
     {
@@ -7247,6 +7254,13 @@ bool ImageHelper::isWriteBarrierNecessary(ImageAccess newAccess,
     if (layerCount >= kMaxParallelLayerWrites)
     {
         return true;
+    }
+
+    // Updates are tracked by layer, which are always [0, 1) for 3D images.
+    if (mImageType == VK_IMAGE_TYPE_3D)
+    {
+        layerStart = 0;
+        layerCount = 1;
     }
 
     // If we are writing to the same parts of the image (level/layer), we need a barrier. Otherwise,
@@ -7545,6 +7559,13 @@ void ImageHelper::setSubresourcesWrittenSinceBarrier(gl::LevelIndex levelStart,
                                                      uint32_t layerStart,
                                                      uint32_t layerCount)
 {
+    // Updates are tracked by layer, which are always [0, 1) for 3D images.
+    if (mImageType == VK_IMAGE_TYPE_3D)
+    {
+        layerStart = 0;
+        layerCount = 1;
+    }
+
     for (uint32_t levelOffset = 0; levelOffset < levelCount; levelOffset++)
     {
         uint32_t level = levelStart.get() + levelOffset;
