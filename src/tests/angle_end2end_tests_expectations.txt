@@ -588,6 +588,8 @@
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceCopyTexImageSrcDst/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceCopyTexSubImageDst/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelCopyTexImageSrcDst/* = SKIP
+526451592 WIN D3D11 : ImageTestES3.NonZeroLevelAndFaceTexSubImageDst*/* = SKIP
+526451592 WIN D3D11 : ImageTestES3.NonZeroLevelTexSubImageDstWithUnpackSlow/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP

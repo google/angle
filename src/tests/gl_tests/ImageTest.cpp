@@ -12102,6 +12102,264 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyTexImageSrcDst)
         });
 }
 
+// Export non-zero level, use as destination of glTexSubImage2D
+TEST_P(ImageTestES3, NonZeroLevelTexSubImageDst)
+{
+    nonZeroLevelTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Upload to the texture
+            std::vector<GLColor> color(size * size, GLColor::green);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE,
+                            color.data());
+            ASSERT_GL_NO_ERROR();
+
+            verifyResults2D(target, GLColor::green.data());
+        },
+        [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
+            // Verify the upload is visible in source too
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults2D(source, GLColor::green.data());
+        });
+}
+
+// Export non-zero level and slice, use as destination of glTexSubImage2D
+TEST_P(ImageTestES3, NonZeroLevelAndSliceTexSubImageDst)
+{
+    nonZeroLevelAndSliceTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Upload to the texture
+            std::vector<GLColor> color(size * size, GLColor::green);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE,
+                            color.data());
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(target, GLColor::green.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
+               uint32_t size, uint32_t depth) {
+            // Verify the upload is visible in source too
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults3D(source, GLColor::green.data(), slice, depth);
+        });
+}
+
+// Export non-zero level and face, use as destination of glTexSubImage2D
+TEST_P(ImageTestES3, NonZeroLevelAndFaceTexSubImageDst)
+{
+    nonZeroLevelAndFaceTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Upload to the texture
+            std::vector<GLColor> color(size * size, GLColor::green);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE,
+                            color.data());
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(target, GLColor::green.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
+               uint32_t size) {
+            // Verify the upload is visible in source too
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResultsCube(source, GLColor::green.data(), face);
+        });
+}
+
+// Export non-zero level, use as destination of glTexSubImage2D with unpack buffer
+TEST_P(ImageTestES3, NonZeroLevelTexSubImageDstWithUnpack)
+{
+    nonZeroLevelTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Upload to the texture with an unpack buffer
+            GLBuffer pbo;
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+            std::vector<GLColor> color(size * size, GLColor::green);
+            glBufferData(GL_PIXEL_UNPACK_BUFFER,
+                         static_cast<uint32_t>(color.size() * sizeof(color[0])), color.data(),
+                         GL_STATIC_DRAW);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            ASSERT_GL_NO_ERROR();
+
+            verifyResults2D(target, GLColor::green.data());
+        },
+        [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
+            // Verify the upload is visible in source too
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults2D(source, GLColor::green.data());
+        });
+}
+
+// Export non-zero level and slice, use as destination of glTexSubImage2D with unpack buffer
+TEST_P(ImageTestES3, NonZeroLevelAndSliceTexSubImageDstWithUnpack)
+{
+    nonZeroLevelAndSliceTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Upload to the texture with an unpack buffer
+            GLBuffer pbo;
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+            std::vector<GLColor> color(size * size, GLColor::green);
+            glBufferData(GL_PIXEL_UNPACK_BUFFER,
+                         static_cast<uint32_t>(color.size() * sizeof(color[0])), color.data(),
+                         GL_STATIC_DRAW);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(target, GLColor::green.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
+               uint32_t size, uint32_t depth) {
+            // Verify the upload is visible in source too
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults3D(source, GLColor::green.data(), slice, depth);
+        });
+}
+
+// Export non-zero level and face, use as destination of glTexSubImage2D with unpack buffer
+TEST_P(ImageTestES3, NonZeroLevelAndFaceTexSubImageDstWithUnpack)
+{
+    nonZeroLevelAndFaceTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Upload to the texture with an unpack buffer
+            GLBuffer pbo;
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+            std::vector<GLColor> color(size * size, GLColor::green);
+            glBufferData(GL_PIXEL_UNPACK_BUFFER,
+                         static_cast<uint32_t>(color.size() * sizeof(color[0])), color.data(),
+                         GL_STATIC_DRAW);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(target, GLColor::green.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
+               uint32_t size) {
+            // Verify the upload is visible in source too
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResultsCube(source, GLColor::green.data(), face);
+        });
+}
+
+// Export non-zero level, use as destination of glTexSubImage2D with unpack buffer
+// Unpack buffer uses unaligned row length to trigger a non-direct-copy path.
+TEST_P(ImageTestES3, NonZeroLevelTexSubImageDstWithUnpackSlow)
+{
+    nonZeroLevelTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Upload to the texture with an unpack buffer
+            GLBuffer pbo;
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, 1);
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+            std::vector<GLColor> color(size * size, GLColor::green);
+            glBufferData(GL_PIXEL_UNPACK_BUFFER,
+                         static_cast<uint32_t>(color.size() * sizeof(color[0])), color.data(),
+                         GL_STATIC_DRAW);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            ASSERT_GL_NO_ERROR();
+
+            verifyResults2D(target, GLColor::green.data());
+        },
+        [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
+            // Verify the upload is visible in source too
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults2D(source, GLColor::green.data());
+        });
+}
+
+// Export non-zero level and slice, use as destination of glTexSubImage2D with unpack buffer
+// Unpack buffer uses unaligned row length to trigger a non-direct-copy path.
+TEST_P(ImageTestES3, NonZeroLevelAndSliceTexSubImageDstWithUnpackSlow)
+{
+    nonZeroLevelAndSliceTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Upload to the texture with an unpack buffer
+            GLBuffer pbo;
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, 1);
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+            std::vector<GLColor> color(size * size, GLColor::green);
+            glBufferData(GL_PIXEL_UNPACK_BUFFER,
+                         static_cast<uint32_t>(color.size() * sizeof(color[0])), color.data(),
+                         GL_STATIC_DRAW);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(target, GLColor::green.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
+               uint32_t size, uint32_t depth) {
+            // Verify the upload is visible in source too
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults3D(source, GLColor::green.data(), slice, depth);
+        });
+}
+
+// Export non-zero level and face, use as destination of glTexSubImage2D with unpack buffer
+// Unpack buffer uses unaligned row length to trigger a non-direct-copy path.
+TEST_P(ImageTestES3, NonZeroLevelAndFaceTexSubImageDstWithUnpackSlow)
+{
+    nonZeroLevelAndFaceTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Upload to the texture with an unpack buffer
+            GLBuffer pbo;
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, 1);
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+            std::vector<GLColor> color(size * size, GLColor::green);
+            glBufferData(GL_PIXEL_UNPACK_BUFFER,
+                         static_cast<uint32_t>(color.size() * sizeof(color[0])), color.data(),
+                         GL_STATIC_DRAW);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(target, GLColor::green.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
+               uint32_t size) {
+            // Verify the upload is visible in source too
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResultsCube(source, GLColor::green.data(), face);
+        });
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(ImageTest,
                                        ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
 

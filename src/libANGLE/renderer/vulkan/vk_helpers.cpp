@@ -8752,20 +8752,21 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
 
     gl::LevelIndex updateLevelGL(index.getLevelIndex());
     copy.imageSubresource.mipLevel   = updateLevelGL.get();
+    copy.imageSubresource.baseArrayLayer = index.hasLayer() ? index.getLayerIndex() : offset.z;
     copy.imageSubresource.layerCount = index.getLayerCount();
 
     gl_vk::GetOffset(offset, &copy.imageOffset);
     gl_vk::GetExtent(glExtents, &copy.imageExtent);
 
-    if (gl::IsArrayTextureType(index.getType()))
+    if (index.getType() == gl::TextureType::_3D)
     {
-        copy.imageSubresource.baseArrayLayer = offset.z;
-        copy.imageOffset.z                   = 0;
-        copy.imageExtent.depth               = 1;
+        copy.imageSubresource.baseArrayLayer = 0;
+        copy.imageSubresource.layerCount     = 1;
     }
     else
     {
-        copy.imageSubresource.baseArrayLayer = index.hasLayer() ? index.getLayerIndex() : 0;
+        copy.imageOffset.z     = 0;
+        copy.imageExtent.depth = 1;
     }
 
     if (stencilAllocationSize > 0)
