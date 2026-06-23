@@ -950,7 +950,10 @@ bool EGLWindow::makeCurrent(EGLSurface draw, EGLSurface read, EGLContext context
 
 bool EGLWindow::makeCurrent(EGLContext context)
 {
-    return makeCurrent(mSurface, mSurface, context);
+    // EGL_NO_CONTEXT needs to be paired with EGL_NO_SURFACE or we get EGL_BAD_MATCH
+    // validation errors
+    EGLSurface surface = (context == EGL_NO_CONTEXT) ? EGL_NO_SURFACE : mSurface;
+    return makeCurrent(surface, surface, context);
 }
 
 bool EGLWindow::setSwapInterval(EGLint swapInterval)
