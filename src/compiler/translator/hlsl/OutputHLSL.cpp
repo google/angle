@@ -615,10 +615,12 @@ void OutputHLSL::header(TInfoSinkBase &out,
     }
 
     // Suppress some common warnings:
+    // 3081 : comma expression used where a vector constructor may have been intended
     // 3556 : Integer divides might be much slower, try using uints if possible.
+    // 3557 : loop only executes for 1 iteration(s), forcing loop to unroll
     // 3571 : The pow(f, e) intrinsic function won't work for negative f, use abs(f) or
     //        conditionally handle negative values if you expect them.
-    out << "#pragma warning( disable: 3556 3571 )\n";
+    out << "#pragma warning( disable: 3081 3556 3557 3571 )\n";
 
     out << mStructureHLSL->structsHeader();
 
