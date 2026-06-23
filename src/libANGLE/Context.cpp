@@ -2698,7 +2698,7 @@ void Context::getInteger64i_vRobust(GLenum target,
     const bool paramFound = getIndexedQueryParameterInfo(target, &nativeType, &numParams);
     ASSERT(paramFound);
 
-    if (nativeType == GL_INT_64_ANGLEX)
+    if (nativeType == GL_INT64)
     {
         mState.getInteger64i_v(target, index, data);
     }
@@ -8192,7 +8192,7 @@ void Context::getInteger64vRobust(GLenum pname, GLsizei paramCount, GLsizei *len
         return;  // Avoid crashing with invalid apps running with no validation.
     }
 
-    if (nativeType == GL_INT_64_ANGLEX)
+    if (nativeType == GL_INT64)
     {
         getInteger64vImpl(pname, data);
     }

@@ -1686,8 +1686,6 @@ bool IsAngleInternalFormat(GLenum internalFormat)
         case GL_BGR565_ANGLEX:
         case GL_BGRA4_ANGLEX:
         case GL_BGR5_A1_ANGLEX:
-        case GL_INT_64_ANGLEX:
-        case GL_UINT_64_ANGLEX:
         case GL_BGRA8_SRGB_ANGLEX:
         case GL_BGR10_A2_ANGLEX:
         case GL_BGRX8_SRGB_ANGLEX:
