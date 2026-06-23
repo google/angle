@@ -2702,9 +2702,29 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
 
     ANGLE_VK_CHECK(context, queueFamilyCount > 0, VK_ERROR_INITIALIZATION_FAILED);
 
-    mQueueFamilyProperties.resize(queueFamilyCount);
-    vkGetPhysicalDeviceQueueFamilyProperties(mPhysicalDevice, &queueFamilyCount,
-                                             mQueueFamilyProperties.data());
+    mQueueFamilyProperties2.resize(queueFamilyCount);
+    for (uint32_t i = 0; i < queueFamilyCount; i++)
+    {
+        mQueueFamilyProperties2[i]       = {};
+        mQueueFamilyProperties2[i].sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2;
+    }
+
+    // Query all supported global priorities if supported.
+    std::vector<VkQueueFamilyGlobalPriorityProperties> globalPriorityProperties;
+    if (mFeatures.supportsGlobalPriorityQuery.enabled)
+    {
+        globalPriorityProperties.resize(queueFamilyCount);
+        for (uint32_t i = 0; i < queueFamilyCount; i++)
+        {
+            globalPriorityProperties[i] = {};
+            globalPriorityProperties[i].sType =
+                VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_EXT;
+            vk::AddToPNextChain(&mQueueFamilyProperties2[i], &globalPriorityProperties[i]);
+        }
+    }
+
+    vkGetPhysicalDeviceQueueFamilyProperties2(mPhysicalDevice, &queueFamilyCount,
+                                              mQueueFamilyProperties2.data());
 
     uint32_t queueFamilyMatchCount = 0;
 
@@ -2714,14 +2734,14 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     {
         queueFamilyBits = VK_QUEUE_COMPUTE_BIT;
         firstQueueFamily =
-            QueueFamily::FindIndex(mQueueFamilyProperties, queueFamilyBits, VK_QUEUE_PROTECTED_BIT,
+            QueueFamily::FindIndex(mQueueFamilyProperties2, queueFamilyBits, VK_QUEUE_PROTECTED_BIT,
                                    VK_QUEUE_GRAPHICS_BIT, &queueFamilyMatchCount);
     }
     if (queueFamilyMatchCount == 0)
     {
         queueFamilyBits = VK_QUEUE_COMPUTE_BIT | VK_QUEUE_GRAPHICS_BIT;
         firstQueueFamily =
-            QueueFamily::FindIndex(mQueueFamilyProperties, queueFamilyBits, VK_QUEUE_PROTECTED_BIT,
+            QueueFamily::FindIndex(mQueueFamilyProperties2, queueFamilyBits, VK_QUEUE_PROTECTED_BIT,
                                    0, &queueFamilyMatchCount);
     }
 
@@ -2729,14 +2749,24 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
                    queueFamilyMatchCount > 0 && firstQueueFamily != QueueFamily::kInvalidIndex,
                    VK_ERROR_INITIALIZATION_FAILED);
 
+    VkQueueGlobalPriority globalPriority = VK_QUEUE_GLOBAL_PRIORITY_MEDIUM;
+    if (mFeatures.supportsGlobalPriorityQuery.enabled &&
+        HasRequiredGlobalPriority(globalPriorityProperties[firstQueueFamily],
+                                  VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT))
+    {
+        // Realtime global priority is supported, so we can use it in
+        // queueGlobalPriorityCreateInfo
+        globalPriority = VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT;
+    }
+
     // Store the physical device memory properties so we can find the right memory pools.
     mMemoryProperties.init(mPhysicalDevice);
     ANGLE_VK_CHECK(context, mMemoryProperties.getMemoryTypeCount() > 0,
                    VK_ERROR_INITIALIZATION_FAILED);
 
     // The counters for the memory allocation tracker should be initialized.
-    // Each memory allocation could be made in one of the available memory heaps. We initialize the
-    // per-heap memory allocation trackers for MemoryAllocationType objects here, after
+    // Each memory allocation could be made in one of the available memory heaps. We initialize
+    // the per-heap memory allocation trackers for MemoryAllocationType objects here, after
     // mMemoryProperties has been set up.
     mMemoryAllocationTracker.initMemoryTrackers();
 
@@ -2745,12 +2775,13 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
 
     ANGLE_TRY(setupDevice(context, featureOverrides, useVulkanSwapchain, nativeWindowSystem));
 
-    // If only one queue family, that's the only choice and the device is initialize with that.  If
-    // there is more than one queue, we still create the device with the first queue family and hope
-    // for the best.  We cannot wait for a window surface to know which supports present because of
-    // EGL_KHR_surfaceless_context or simply pbuffers.  So far, only MoltenVk seems to expose
-    // multiple queue families, and using the first queue family is fine with it.
-    ANGLE_TRY(createDeviceAndQueue(context, firstQueueFamily));
+    // If only one queue family, that's the only choice and the device is initialize with that.
+    // If there is more than one queue, we still create the device with the first queue family
+    // and hope for the best.  We cannot wait for a window surface to know which supports
+    // present because of EGL_KHR_surfaceless_context or simply pbuffers.  So far, only MoltenVk
+    // seems to expose multiple queue families, and using the first queue family is fine with
+    // it.
+    ANGLE_TRY(createDeviceAndQueue(context, firstQueueFamily, globalPriority));
 
     // Initialize the format table.
     mFormatTable.initialize(this, &mNativeTextureCaps);
@@ -4657,12 +4688,15 @@ angle::Result Renderer::setupDevice(vk::ErrorContext *context,
     return angle::Result::Continue;
 }
 
-angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context, uint32_t queueFamilyIndex)
+angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context,
+                                             uint32_t queueFamilyIndex,
+                                             VkQueueGlobalPriority globalPriority)
 {
     mCurrentQueueFamilyIndex = queueFamilyIndex;
 
     vk::QueueFamily queueFamily;
-    queueFamily.initialize(mQueueFamilyProperties[queueFamilyIndex], queueFamilyIndex);
+    queueFamily.initialize(mQueueFamilyProperties2[queueFamilyIndex].queueFamilyProperties,
+                           queueFamilyIndex);
     ANGLE_VK_CHECK(context, queueFamily.getDeviceQueueCount() > 0, VK_ERROR_INITIALIZATION_FAILED);
 
     // We enable protected context only if both supportsProtectedMemory and device also supports
@@ -4687,34 +4721,8 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context, uint32_t
         VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO;
     if (mFeatures.supportsGlobalPriorityQuery.enabled)
     {
-        // Query all supported global priorities.
-        uint32_t queueFamilyPropertiesCount = static_cast<uint32_t>(mQueueFamilyProperties.size());
-        std::vector<VkQueueFamilyProperties2> queueFamilyProperties2(queueFamilyPropertiesCount);
-        std::vector<VkQueueFamilyGlobalPriorityPropertiesEXT> globalPriorityProperties(
-            queueFamilyPropertiesCount);
-
-        for (uint32_t i = 0; i < queueFamilyPropertiesCount; i++)
-        {
-            globalPriorityProperties[i] = {};
-            globalPriorityProperties[i].sType =
-                VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_EXT;
-
-            queueFamilyProperties2[i]       = {};
-            queueFamilyProperties2[i].sType = VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2;
-            vk::AddToPNextChain(&queueFamilyProperties2[i], &globalPriorityProperties[i]);
-        }
-
-        vkGetPhysicalDeviceQueueFamilyProperties2(mPhysicalDevice, &queueFamilyPropertiesCount,
-                                                  queueFamilyProperties2.data());
-
-        if (HasRequiredGlobalPriority(globalPriorityProperties,
-                                      VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT))
-        {
-            // Realtime global priority is supported, so we can use it in
-            // queueGlobalPriorityCreateInfo
-            queueGlobalPriorityCreateInfo.globalPriority = VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT;
-            vk::AddToPNextChain(&queueCreateInfo, &queueGlobalPriorityCreateInfo);
-        }
+        queueGlobalPriorityCreateInfo.globalPriority = globalPriority;
+        vk::AddToPNextChain(&queueCreateInfo, &queueGlobalPriorityCreateInfo);
     }
 
     // Setup device initialization struct
