@@ -31,9 +31,8 @@ lucicfg.config(
         "luci/luci-scheduler.cfg",
         "luci/project.cfg",
         "luci/realms.cfg",
-        # TODO(crbug.com/475260235): Remove project.pyl once all builders are
-        # defined src-side.
-        "project.pyl",
+        # No current need for other generated files such as mixins.pyl.
+        "testing/gn_isolate_map.pyl",
     ],
     fail_on_warnings = True,
 )
@@ -126,6 +125,10 @@ chromium_luci.configure_builders(
 
 chromium_luci.configure_per_builder_outputs(
     root_dir = "builders",
+)
+
+chromium_luci.configure_targets(
+    generate_pyl_files = chromium_luci.pyl_generation_configuration(),
 )
 
 chromium_luci.configure_recipe_experiments(

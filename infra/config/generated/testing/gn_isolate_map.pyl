@@ -1,0 +1,226 @@
+# THIS IS A GENERATED FILE DO NOT EDIT!!!
+# Instead:
+# 1. Modify //infra/config/targets/binaries.star and/or //infra/config/targets/tests.star (for tests defined using targets.tests.junit_test)
+# 2. Run //infra/config/main.star
+
+{
+  "angle_capture_tests": {
+    "label": "//src/tests:angle_capture_tests",
+    "type": "script",
+    "module_scheme": "None",
+    "script": "//src/tests/capture_tests/capture_tests.py",
+  },
+  "angle_deqp_egl_tests": {
+    "label": "//src/tests:angle_deqp_egl_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles2_tests": {
+    "label": "//src/tests:angle_deqp_gles2_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles31_565_no_depth_no_stencil_tests": {
+    "label": "//src/tests:angle_deqp_gles31_565_no_depth_no_stencil_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles31_multisample_tests": {
+    "label": "//src/tests:angle_deqp_gles31_multisample_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles31_rotate180_tests": {
+    "label": "//src/tests:angle_deqp_gles31_rotate180_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles31_rotate270_tests": {
+    "label": "//src/tests:angle_deqp_gles31_rotate270_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles31_rotate90_tests": {
+    "label": "//src/tests:angle_deqp_gles31_rotate90_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles31_tests": {
+    "label": "//src/tests:angle_deqp_gles31_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles3_565_no_depth_no_stencil_tests": {
+    "label": "//src/tests:angle_deqp_gles3_565_no_depth_no_stencil_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles3_multisample_tests": {
+    "label": "//src/tests:angle_deqp_gles3_multisample_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles3_rotate180_tests": {
+    "label": "//src/tests:angle_deqp_gles3_rotate180_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles3_rotate270_tests": {
+    "label": "//src/tests:angle_deqp_gles3_rotate270_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles3_rotate90_tests": {
+    "label": "//src/tests:angle_deqp_gles3_rotate90_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_gles3_tests": {
+    "label": "//src/tests:angle_deqp_gles3_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_khr_gles2_tests": {
+    "label": "//src/tests:angle_deqp_khr_gles2_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_khr_gles31_tests": {
+    "label": "//src/tests:angle_deqp_khr_gles31_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_khr_gles32_tests": {
+    "label": "//src/tests:angle_deqp_khr_gles32_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_khr_gles3_tests": {
+    "label": "//src/tests:angle_deqp_khr_gles3_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_khr_glesext_tests": {
+    "label": "//src/tests:angle_deqp_khr_glesext_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_khr_noctx_gles2_tests": {
+    "label": "//src/tests:angle_deqp_khr_noctx_gles2_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_khr_noctx_gles32_tests": {
+    "label": "//src/tests:angle_deqp_khr_noctx_gles32_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_deqp_khr_single_gles32_tests": {
+    "label": "//src/tests:angle_deqp_khr_single_gles32_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_end2end_tests": {
+    "label": "//src/tests:angle_end2end_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_gles1_conformance_tests": {
+    "label": "//src/tests:angle_gles1_conformance_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_api": {
+    "label": "//src/tests:angle_oclcts_api",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_basic": {
+    "label": "//src/tests:angle_oclcts_basic",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_bruteforce": {
+    "label": "//src/tests:angle_oclcts_bruteforce",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_buffers": {
+    "label": "//src/tests:angle_oclcts_buffers",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_cl_copy_images": {
+    "label": "//src/tests:angle_oclcts_cl_copy_images",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_cl_fill_images": {
+    "label": "//src/tests:angle_oclcts_cl_fill_images",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_cl_get_info": {
+    "label": "//src/tests:angle_oclcts_cl_get_info",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_compiler": {
+    "label": "//src/tests:angle_oclcts_compiler",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_events": {
+    "label": "//src/tests:angle_oclcts_events",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_multiples": {
+    "label": "//src/tests:angle_oclcts_multiples",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_non_uniform_work_group": {
+    "label": "//src/tests:angle_oclcts_non_uniform_work_group",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_oclcts_profiling": {
+    "label": "//src/tests:angle_oclcts_profiling",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_perftests": {
+    "label": "//src/tests:angle_perftests",
+    "type": "script",
+    "module_scheme": "None",
+    "script": "//src/tests/run_perf_tests.py",
+  },
+  "angle_restricted_trace_gold_tests": {
+    "label": "//src/tests/restricted_traces:angle_restricted_trace_gold_tests",
+    "type": "script",
+    "module_scheme": "None",
+    "script": "//src/tests/restricted_traces/restricted_trace_gold_tests.py",
+  },
+  "angle_trace_perf_tests": {
+    "label": "//src/tests:angle_trace_perf_tests",
+    "type": "script",
+    "module_scheme": "None",
+    "script": "//src/tests/run_perf_tests.py",
+  },
+  "angle_unittests": {
+    "label": "//src/tests:angle_unittests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "angle_white_box_tests": {
+    "label": "//src/tests:angle_white_box_tests",
+    "type": "windowed_test_launcher",
+    "module_scheme": "None",
+  },
+  "noop_target": {
+    "label": "//:noop_target",
+    "type": "additional_compile_target",
+    "module_scheme": "None",
+  },
+}
