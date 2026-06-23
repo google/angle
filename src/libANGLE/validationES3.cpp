@@ -359,7 +359,6 @@ bool ValidateES3TexImageParametersBase(const Context *context,
                                        TextureTarget target,
                                        GLint level,
                                        GLenum internalformat,
-                                       bool isCompressed,
                                        bool isSubImage,
                                        GLint xoffset,
                                        GLint yoffset,
@@ -563,108 +562,6 @@ bool ValidateES3TexImageParametersBase(const Context *context,
     const InternalFormat &actualFormatInfo = isSubImage
                                                  ? *texture->getFormat(target, level).info
                                                  : GetInternalFormatInfo(internalformat, type);
-    if (isCompressed)
-    {
-        // compressedTexSubImage does not generate GL_INVALID_ENUM when format is unknown or invalid
-        if (!isSubImage)
-        {
-            if (!actualFormatInfo.compressed && !actualFormatInfo.paletted)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kCompressedMismatch);
-                return false;
-            }
-
-            if (!actualFormatInfo.textureSupport(context->getClientVersion(),
-                                                 context->getExtensions()))
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidFormat);
-                return false;
-            }
-        }
-
-        if (texType == TextureType::_2DArray || texType == TextureType::CubeMapArray)
-        {
-            GLenum compressedDataFormat = isSubImage ? format : internalformat;
-            if (!ValidCompressedFormatForTexture2DArray(compressedDataFormat,
-                                                        context->getExtensions()))
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInternalFormatRequiresTexture2D);
-                return false;
-            }
-        }
-        else if (texType == TextureType::_3D)
-        {
-            GLenum compressedDataFormat = isSubImage ? format : internalformat;
-            if (!ValidCompressedFormatForTexture3D(compressedDataFormat, context->getExtensions()))
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInternalFormatNotSupportedTexture3D);
-                return false;
-            }
-        }
-
-        if (isSubImage)
-        {
-            if (!ValidCompressedSubImageSize(
-                    context, actualFormatInfo.internalFormat, xoffset, yoffset, zoffset, width,
-                    height, depth, texture->getWidth(target, level),
-                    texture->getHeight(target, level), texture->getDepth(target, level)))
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
-                return false;
-            }
-
-            if (format != actualInternalFormat)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kMismatchedFormat);
-                return false;
-            }
-
-            // GL_EXT_compressed_ETC1_RGB8_sub_texture allows this format
-            if (IsETC1Format(actualInternalFormat) &&
-                !context->getExtensions().compressedETC1RGB8SubTextureEXT)
-            {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_OPERATION, kInvalidInternalFormat,
-                                        internalformat);
-                return false;
-            }
-        }
-        else
-        {
-            if (actualFormatInfo.compressed)
-            {
-                if (!ValidCompressedImageSize(context, actualInternalFormat, level, width, height,
-                                              depth))
-                {
-                    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
-                    return false;
-                }
-            }
-            else
-            {
-                ASSERT(actualFormatInfo.paletted);
-                if (texType != TextureType::_2D)
-                {
-                    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidTextureTarget);
-                    return false;
-                }
-
-                // TODO(http://anglebug.com/42266155): multi-level paletted images
-                if (level != 0)
-                {
-                    UNIMPLEMENTED();
-                    return false;
-                }
-            }
-        }
-
-        // Disallow 3D-only compressed formats from being set on 2D textures
-        if (actualFormatInfo.compressedBlockDepth > 1 && texType != TextureType::_3D)
-        {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidTextureTarget);
-            return false;
-        }
-    }
-    else
     {
         // Compressed formats are not valid internal formats for glTexImage*D
         if (!isSubImage)
@@ -687,7 +584,7 @@ bool ValidateES3TexImageParametersBase(const Context *context,
     // Validate sub image parameters
     if (isSubImage)
     {
-        if (isCompressed != actualFormatInfo.compressed)
+        if (actualFormatInfo.compressed)
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kCompressedMismatch);
             return false;
@@ -756,7 +653,6 @@ bool ValidateES3TexImageParametersBase(const Context *context,
         // ...data is not evenly divisible into the number of bytes needed to store in memory a
         // datum
         // indicated by type.
-        if (!isCompressed)
         {
             size_t offset            = reinterpret_cast<size_t>(pixels);
             size_t dataBytesPerPixel = static_cast<size_t>(GetTypeInfo(type).bytes);
@@ -776,7 +672,7 @@ bool ValidateES3TexImageParametersBase(const Context *context,
         }
     }
 
-    if (!isCompressed && (context->isWebGL() || context->isHardenedContext()))
+    if (context->isWebGL() || context->isHardenedContext())
     {
         // Define:
         //   DataStoreWidth  = (GL_UNPACK_ROW_LENGTH ? GL_UNPACK_ROW_LENGTH : width)
@@ -828,7 +724,6 @@ bool ValidateES3TexImage2DParameters(const Context *context,
                                      TextureTarget target,
                                      GLint level,
                                      GLenum internalformat,
-                                     bool isCompressed,
                                      bool isSubImage,
                                      GLint xoffset,
                                      GLint yoffset,
@@ -848,15 +743,9 @@ bool ValidateES3TexImage2DParameters(const Context *context,
         return false;
     }
 
-    if (ANGLE_UNLIKELY(isCompressed && target == TextureTarget::Rectangle))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kRectangleTextureCompressed);
-        return false;
-    }
-
-    return ValidateES3TexImageParametersBase(
-        context, entryPoint, target, level, internalformat, isCompressed, isSubImage, xoffset,
-        yoffset, zoffset, width, height, depth, border, format, type, pixels, outImageSize);
+    return ValidateES3TexImageParametersBase(context, entryPoint, target, level, internalformat,
+                                             isSubImage, xoffset, yoffset, zoffset, width, height,
+                                             depth, border, format, type, pixels, outImageSize);
 }
 
 bool ValidateES3TexImage3DParameters(const Context *context,
@@ -864,7 +753,6 @@ bool ValidateES3TexImage3DParameters(const Context *context,
                                      TextureTarget target,
                                      GLint level,
                                      GLenum internalformat,
-                                     bool isCompressed,
                                      bool isSubImage,
                                      GLint xoffset,
                                      GLint yoffset,
@@ -884,9 +772,9 @@ bool ValidateES3TexImage3DParameters(const Context *context,
         return false;
     }
 
-    return ValidateES3TexImageParametersBase(
-        context, entryPoint, target, level, internalformat, isCompressed, isSubImage, xoffset,
-        yoffset, zoffset, width, height, depth, border, format, type, pixels, outImageSize);
+    return ValidateES3TexImageParametersBase(context, entryPoint, target, level, internalformat,
+                                             isSubImage, xoffset, yoffset, zoffset, width, height,
+                                             depth, border, format, type, pixels, outImageSize);
 }
 
 struct EffectiveInternalFormatInfo
@@ -2589,8 +2477,8 @@ bool ValidateTexImage3D(const Context *context,
                         const void *pixels)
 {
     return ValidateES3TexImage3DParameters(context, entryPoint, target, level, internalformat,
-                                           false, false, 0, 0, 0, width, height, depth, border,
-                                           format, type, pixels, nullptr);
+                                           false, 0, 0, 0, width, height, depth, border, format,
+                                           type, pixels, nullptr);
 }
 
 bool ValidateTexImage3DRobustANGLE(const Context *context,
@@ -2609,7 +2497,7 @@ bool ValidateTexImage3DRobustANGLE(const Context *context,
 {
     GLuint imageSize = std::numeric_limits<GLuint>::max();
     if (!ValidateES3TexImage3DParameters(context, entryPoint, target, level, internalformat, false,
-                                         false, 0, 0, 0, width, height, depth, border, format, type,
+                                         0, 0, 0, width, height, depth, border, format, type,
                                          pixels, &imageSize))
     {
         return false;
@@ -2632,7 +2520,7 @@ bool ValidateTexSubImage3D(const Context *context,
                            GLenum type,
                            const void *pixels)
 {
-    return ValidateES3TexImage3DParameters(context, entryPoint, target, level, GL_NONE, false, true,
+    return ValidateES3TexImage3DParameters(context, entryPoint, target, level, GL_NONE, true,
                                            xoffset, yoffset, zoffset, width, height, depth, 0,
                                            format, type, pixels, nullptr);
 }
@@ -2653,9 +2541,9 @@ bool ValidateTexSubImage3DRobustANGLE(const Context *context,
                                       const void *pixels)
 {
     GLuint imageSize = std::numeric_limits<GLuint>::max();
-    if (!ValidateES3TexImage3DParameters(context, entryPoint, target, level, GL_NONE, false, true,
-                                         xoffset, yoffset, zoffset, width, height, depth, 0, format,
-                                         type, pixels, &imageSize))
+    if (!ValidateES3TexImage3DParameters(context, entryPoint, target, level, GL_NONE, true, xoffset,
+                                         yoffset, zoffset, width, height, depth, 0, format, type,
+                                         pixels, &imageSize))
     {
         return false;
     }

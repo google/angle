@@ -423,11 +423,6 @@ GLenum InternalFormat::getReadPixelsType(const Version &version) const
     }
 }
 
-bool InternalFormat::supportSubImage() const
-{
-    return !CompressedFormatRequiresWholeImage(internalFormat);
-}
-
 bool InternalFormat::isRequiredRenderbufferFormat(const Version &version) const
 {
     // GLES 3.0.5 section 4.4.2.2:
@@ -2135,13 +2130,6 @@ GLenum GetUnsizedFormat(GLenum internalFormat)
     }
 
     return internalFormat;
-}
-
-bool CompressedFormatRequiresWholeImage(GLenum internalFormat)
-{
-    // List of compressed texture format that require that the sub-image size is equal to texture's
-    // respective mip level's size
-    return IsPVRTC1Format(internalFormat);
 }
 
 void MaybeOverrideLuminance(GLenum &format, GLenum &type, GLenum actualFormat, GLenum actualType)
