@@ -4089,15 +4089,15 @@ bool ValidateTexStorageAttribs(const GLint *attrib_list)
 
 bool ValidateTexStorageAttribs2DEXT(const Context *context,
                                     angle::EntryPoint entryPoint,
-                                    GLenum target,
+                                    TextureType targetPacked,
                                     GLsizei levels,
                                     GLenum internalformat,
                                     GLsizei width,
                                     GLsizei height,
                                     const GLint *attrib_list)
 {
-    if (!ValidateTexStorage2D(context, entryPoint, FromGLenum<TextureType>(target), levels,
-                              internalformat, width, height))
+    if (!ValidateTexStorage2D(context, entryPoint, targetPacked, levels, internalformat, width,
+                              height))
     {
         // Error already generated.
         return false;
@@ -4114,7 +4114,7 @@ bool ValidateTexStorageAttribs2DEXT(const Context *context,
 
 bool ValidateTexStorageAttribs3DEXT(const Context *context,
                                     angle::EntryPoint entryPoint,
-                                    GLenum target,
+                                    TextureType targetPacked,
                                     GLsizei levels,
                                     GLenum internalformat,
                                     GLsizei width,
@@ -4122,8 +4122,8 @@ bool ValidateTexStorageAttribs3DEXT(const Context *context,
                                     GLsizei depth,
                                     const GLint *attrib_list)
 {
-    if (!ValidateTexStorage3D(context, entryPoint, FromGLenum<TextureType>(target), levels,
-                              internalformat, width, height, depth))
+    if (!ValidateTexStorage3D(context, entryPoint, targetPacked, levels, internalformat, width,
+                              height, depth))
     {
         // Error already generated.
         return false;

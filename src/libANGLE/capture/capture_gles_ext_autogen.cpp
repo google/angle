@@ -7922,7 +7922,7 @@ CallCapture CaptureTexStorage3DEXT(const State &glState,
 
 CallCapture CaptureTexStorageAttribs2DEXT(const State &glState,
                                           bool isCallValid,
-                                          GLenum target,
+                                          TextureType targetPacked,
                                           GLsizei levels,
                                           GLenum internalformat,
                                           GLsizei width,
@@ -7931,7 +7931,7 @@ CallCapture CaptureTexStorageAttribs2DEXT(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("target", GLESEnum::TextureTarget, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
     paramBuffer.addValueParam("levels", ParamType::TGLsizei, levels);
     paramBuffer.addEnumParam("internalformat", GLESEnum::SizedInternalFormat, ParamType::TGLenum,
                              internalformat);
@@ -7942,8 +7942,8 @@ CallCapture CaptureTexStorageAttribs2DEXT(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintConstPointer, attrib_list, &attrib_listParam.value);
-        CaptureTexStorageAttribs2DEXT_attrib_list(glState, target, levels, internalformat, width,
-                                                  height, attrib_list, &attrib_listParam);
+        CaptureTexStorageAttribs2DEXT_attrib_list(glState, targetPacked, levels, internalformat,
+                                                  width, height, attrib_list, &attrib_listParam);
     }
     else
     {
@@ -7957,7 +7957,7 @@ CallCapture CaptureTexStorageAttribs2DEXT(const State &glState,
 
 CallCapture CaptureTexStorageAttribs3DEXT(const State &glState,
                                           bool isCallValid,
-                                          GLenum target,
+                                          TextureType targetPacked,
                                           GLsizei levels,
                                           GLenum internalformat,
                                           GLsizei width,
@@ -7967,7 +7967,7 @@ CallCapture CaptureTexStorageAttribs3DEXT(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("target", GLESEnum::TextureTarget, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
     paramBuffer.addValueParam("levels", ParamType::TGLsizei, levels);
     paramBuffer.addEnumParam("internalformat", GLESEnum::SizedInternalFormat, ParamType::TGLenum,
                              internalformat);
@@ -7979,8 +7979,9 @@ CallCapture CaptureTexStorageAttribs3DEXT(const State &glState,
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintConstPointer, attrib_list, &attrib_listParam.value);
-        CaptureTexStorageAttribs3DEXT_attrib_list(glState, target, levels, internalformat, width,
-                                                  height, depth, attrib_list, &attrib_listParam);
+        CaptureTexStorageAttribs3DEXT_attrib_list(glState, targetPacked, levels, internalformat,
+                                                  width, height, depth, attrib_list,
+                                                  &attrib_listParam);
     }
     else
     {

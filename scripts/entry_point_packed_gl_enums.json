@@ -1687,6 +1687,12 @@
     "glTexStorage3DMultisample": {
         "target": "TextureType"
     },
+    "glTexStorageAttribs2D": {
+        "target": "TextureType"
+    },
+    "glTexStorageAttribs3D": {
+        "target": "TextureType"
+    },
     "glTexStorageMem2D": {
         "memory": "MemoryObjectID",
         "target": "TextureType"

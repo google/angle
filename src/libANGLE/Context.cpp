@@ -10144,7 +10144,7 @@ void Context::blobCacheCallbacks(GLSETBLOBPROCANGLE set,
     mState.getBlobCacheCallbacks() = {set, get, userParam};
 }
 
-void Context::texStorageAttribs2D(GLenum target,
+void Context::texStorageAttribs2D(TextureType targetPacked,
                                   GLsizei levels,
                                   GLenum internalFormat,
                                   GLsizei width,
@@ -10152,13 +10152,12 @@ void Context::texStorageAttribs2D(GLenum target,
                                   const GLint *attribList)
 {
     Extents size(width, height, 1);
-    TextureType textype = FromGLenum<TextureType>(target);
-    Texture *texture    = getTextureByType(textype);
+    Texture *texture = getTextureByType(targetPacked);
     ANGLE_CONTEXT_TRY(
-        texture->setStorageAttribs(this, textype, levels, internalFormat, size, attribList));
+        texture->setStorageAttribs(this, targetPacked, levels, internalFormat, size, attribList));
 }
 
-void Context::texStorageAttribs3D(GLenum target,
+void Context::texStorageAttribs3D(TextureType targetPacked,
                                   GLsizei levels,
                                   GLenum internalFormat,
                                   GLsizei width,
@@ -10167,10 +10166,9 @@ void Context::texStorageAttribs3D(GLenum target,
                                   const GLint *attribList)
 {
     Extents size(width, height, depth);
-    TextureType textype = FromGLenum<TextureType>(target);
-    Texture *texture    = getTextureByType(textype);
+    Texture *texture = getTextureByType(targetPacked);
     ANGLE_CONTEXT_TRY(
-        texture->setStorageAttribs(this, textype, levels, internalFormat, size, attribList));
+        texture->setStorageAttribs(this, targetPacked, levels, internalFormat, size, attribList));
 }
 
 size_t Context::getMemoryUsage() const
