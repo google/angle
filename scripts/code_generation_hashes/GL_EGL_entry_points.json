@@ -6,11 +6,11 @@
   "scripts/entry_point_packed_gl_enums.json":
     "98232396b4f8d4d0bd0ffea09770ccdb",
   "scripts/generate_entry_points.py":
-    "a37a7b626ed119fa4748274021c49838",
+    "fe5c9f76d9cec50479dde83d65cd7a0d",
   "scripts/gl_angle_ext.xml":
     "b05697989dfe0eb4d714d537b80e8295",
   "scripts/registry_xml.py":
-    "3007a408634016fccfd5e760b389ef26",
+    "706c3cfb4be61184c5be065523548878",
   "src/common/entry_points_enum_autogen.cpp":
     "40a59d775f45b44ef5772aaca290d182",
   "src/common/entry_points_enum_autogen.h":
@@ -30,7 +30,7 @@
   "src/libANGLE/Context_gles_3_2_autogen.h":
     "2c9c311770948eff8e705e8f571b706a",
   "src/libANGLE/Context_gles_ext_autogen.h":
-    "39fdb39054301e6a06ef668e524847ad",
+    "c1e3110f76c6db6a20e6d2784cbde4e3",
   "src/libANGLE/capture/capture_cl_autogen.cpp":
     "a391fcabc30b0e1811f89e18cee4683f",
   "src/libANGLE/capture/capture_cl_autogen.h":
@@ -133,6 +133,10 @@
     "8c224d18c623de40618651287fdf4cff",
   "src/libGLESv2/entry_points_gles_ext_autogen.h":
     "7db866a3ee28a7274efdcbb2484ae6aa",
+  "src/libGLESv2/entry_points_gles_ext_explicit_context_autogen.cpp":
+    "1bfdd2aabe72eaded0f3d003ca41aa6b",
+  "src/libGLESv2/entry_points_gles_ext_explicit_context_autogen.h":
+    "8ca5deecca13cf0ca7b22f0bb9ec6fe1",
   "src/libGLESv2/libGLESv2_autogen.cpp":
     "6366efb3f21f1a49c98d9d8f32c5a6ee",
   "src/libGLESv2/libGLESv2_autogen.def":

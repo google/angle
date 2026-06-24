@@ -259,6 +259,14 @@ declare_args() {
 }
 
 declare_args() {
+  # Enable the ANGLE_explicit_context extension. This duplicates all GL entry
+  # points which increases binary size.
+  # Currently enabled only when the WebGPU backend is enabled because only the
+  # WebGPU backend currently supports this extension.
+  angle_enable_explicit_context = angle_enable_wgpu
+}
+
+declare_args() {
   # PartitionAlloc is Chrome's memory allocator.
   #
   # Enabling it allows ANGLE to use the same allocator as Chrome, which can

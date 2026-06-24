@@ -708,6 +708,9 @@ struct Extensions
     // GL_ANGLE_copy_texture_3d
     bool copyTexture3dANGLE = false;
 
+    // GL_ANGLE_explicit_context
+    bool explicitContextANGLE = false;
+
     // GL_CHROMIUM_framebuffer_mixed_samples
     bool framebufferMixedSamplesCHROMIUM = false;
 

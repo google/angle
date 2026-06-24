@@ -416,6 +416,7 @@
                           GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLint z,  \
                           GLint width, GLint height, GLint depth, GLboolean unpackFlipY,           \
                           GLboolean unpackPremultiplyAlpha, GLboolean unpackUnmultiplyAlpha);      \
+    /* GL_ANGLE_explicit_context */                                                                \
     /* GL_ANGLE_framebuffer_multisample */                                                         \
     /* GL_ANGLE_get_image */                                                                       \
     void getTexImage(TextureTarget targetPacked, GLint level, GLenum format, GLenum type,          \

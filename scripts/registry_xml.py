@@ -254,6 +254,7 @@ gles_requestable_extensions = [
 
 angle_es_only_extensions = [
     "GL_ANGLE_client_arrays",
+    "GL_ANGLE_explicit_context",
     "GL_ANGLE_get_serialized_context_string",
     "GL_ANGLE_program_binary",
     "GL_ANGLE_program_binary_readiness_query",
@@ -456,10 +457,6 @@ strip_suffixes = [
     "AMD", "ANDROID", "ANGLE", "CHROMIUM", "EXT", "KHR", "MESA", "NV", "OES", "OVR", "QCOM"
 ]
 check_sorted('strip_suffixes', strip_suffixes)
-
-# The EGL_ANGLE_explicit_context extension is generated differently from other extensions.
-# Toggle generation here.
-support_EGL_ANGLE_explicit_context = True
 
 # Group names that appear in command/param, but not present in groups/group
 unsupported_enum_group_names = {

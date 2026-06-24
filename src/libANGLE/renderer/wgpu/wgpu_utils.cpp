@@ -269,6 +269,9 @@ void GenerateCaps(const WGPULimits &limitsWgpu,
     glExtensions->framebufferBlitANGLE = true;
     glExtensions->framebufferBlitNV    = true;
 
+    // Explicit context entry points are supported.
+    glExtensions->explicitContextANGLE = true;
+
     // OpenGL ES caps
     glCaps->maxElementIndex       = std::numeric_limits<GLuint>::max() - 1;
     glCaps->max3DTextureSize      = rx::LimitToInt(limitsWgpu.maxTextureDimension3D);

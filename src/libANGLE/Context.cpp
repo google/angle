@@ -4195,6 +4195,11 @@ Extensions Context::generateSupportedExtensions() const
         }
     }
 
+// Disable the explicit context extension if the entry points are not compiled.
+#if !defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)
+    supportedExtensions.explicitContextANGLE = false;
+#endif
+
     return supportedExtensions;
 }
 

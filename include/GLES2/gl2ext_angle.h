@@ -715,5 +715,10 @@ GL_APICALL void GL_APIENTRY glGetPointervANGLE (GLenum pname, void **params);
 #endif
 #endif /* GL_ANGLE_blob_cache */
 
+#ifndef GL_ANGLE_explicit_context
+#define GL_ANGLE_explicit_context
+typedef void *GLeglDisplayANGLE;
+typedef void *GLeglContextANGLE;
+#endif /* GL_ANGLE_explicit_context */
 
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_
