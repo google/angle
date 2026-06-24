@@ -9025,6 +9025,9 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
 
 void FrameCaptureShared::onEndFrame(gl::Context *context)
 {
+    // Grab the frame-capture mutex to avoid GL/EGL capture races
+    std::lock_guard<angle::SimpleMutex> lock(mFrameCaptureMutex);
+
     if (!enabled() || mFrameIndex > mCaptureEndFrame)
     {
         setCaptureInactive();
