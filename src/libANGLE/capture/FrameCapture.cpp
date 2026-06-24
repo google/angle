@@ -7417,6 +7417,18 @@ void FrameCaptureShared::maybeSetSyncPoint(CallCapture &inCall)
         case EntryPoint::GLDeleteShader:
         case EntryPoint::GLDeleteProgram:
         case EntryPoint::GLLinkProgram:
+        case EntryPoint::GLWaitSync:
+        case EntryPoint::GLClientWaitSync:
+        case EntryPoint::GLDeleteSync:
+        case EntryPoint::EGLCreateSync:
+        case EntryPoint::EGLCreateSyncKHR:
+        case EntryPoint::EGLWaitSync:
+        case EntryPoint::EGLWaitSyncKHR:
+        case EntryPoint::EGLClientWaitSync:
+        case EntryPoint::EGLClientWaitSyncKHR:
+        case EntryPoint::EGLDestroySync:
+        case EntryPoint::EGLDestroySyncKHR:
+        case EntryPoint::GLEGLImageTargetTexture2DOES:
         {
             inCall.isSyncPoint = true;
             break;
