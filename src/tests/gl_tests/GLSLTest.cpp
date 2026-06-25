@@ -4207,6 +4207,40 @@ void main(){
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that monomorphizing a function with switch with value-case and
+// default-case does not crash.
+TEST_P(GLSLTest, MonomorphizeSwitchCaseAndDefaultNoCrash)
+{
+    // Switch requires ES3.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 o;
+struct S { sampler2D source; };
+vec4 f(S s)
+{
+    switch(0) {
+      case 0: return texture(s.source, vec2(0,0));
+      default: break;
+    }
+    return vec4(1,0,0,1);
+}
+uniform S green;
+void main() {
+    o = f(green);
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    // Create a green texture to sample from.
+    glActiveTexture(GL_TEXTURE0);
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that using a varying matrix is supported.
 TEST_P(GLSLTest, VaryingMatrix)
 {
