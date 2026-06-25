@@ -3230,6 +3230,28 @@ void main() {
     ASSERT_TRUE(program1.valid());
 }
 
+// Test linking and using a program where a uniform is referenced only as a side-effect-free
+// argument of an array constructor that is used as a statement.  The other constructor argument
+// has a side effect that the program output depends on.
+TEST_P(GLSLTest_ES3, UniformReferencedOnlyInArrayConstructorStatement)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform int u_zero;
+out vec4 my_FragColor;
+void main()
+{
+    int i = 0;
+    int[2](u_zero, i++);
+    my_FragColor = (i == 1) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that == and != for structs and array types work.
 TEST_P(GLSLTest_ES31, StructAndArrayEqualOperator)
 {
