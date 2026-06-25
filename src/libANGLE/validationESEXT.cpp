@@ -2899,13 +2899,27 @@ bool ValidatePolygonModeANGLE(const PrivateState &state,
                               GLenum face,
                               PolygonMode modePacked)
 {
-    if (face != GL_FRONT_AND_BACK)
+    if (ANGLE_UNLIKELY(face != GL_FRONT_AND_BACK))
     {
-        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidCullMode);
+        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPolygonFace);
         return false;
     }
 
-    if (modePacked == PolygonMode::Point || modePacked == PolygonMode::InvalidEnum)
+    bool isModeSupported = false;
+    switch (modePacked)
+    {
+        case PolygonMode::Point:
+            isModeSupported = state.getExtensions().polygonModeNV;
+            break;
+        case PolygonMode::Line:
+        case PolygonMode::Fill:
+            isModeSupported = true;
+            break;
+        default:
+            break;
+    }
+
+    if (ANGLE_UNLIKELY(!isModeSupported))
     {
         errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPolygonMode);
         return false;
@@ -2921,19 +2935,7 @@ bool ValidatePolygonModeNV(const PrivateState &state,
                            GLenum face,
                            PolygonMode modePacked)
 {
-    if (face != GL_FRONT_AND_BACK)
-    {
-        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidCullMode);
-        return false;
-    }
-
-    if (modePacked == PolygonMode::InvalidEnum)
-    {
-        errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidPolygonMode);
-        return false;
-    }
-
-    return true;
+    return ValidatePolygonModeANGLE(state, errors, entryPoint, face, modePacked);
 }
 
 // GL_OES_texture_storage_multisample_2d_array

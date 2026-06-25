@@ -362,6 +362,7 @@ inline constexpr const char *kInvalidPointerQuery = "Invalid pointer query.";
 inline constexpr const char *kInvalidPointParameter = "Invalid point parameter.";
 inline constexpr const char *kInvalidPointParameterValue = "Invalid point parameter value (must be non-negative).";
 inline constexpr const char *kInvalidPointSizeValue = "Invalid point size (must be positive).";
+inline constexpr const char *kInvalidPolygonFace = "The <face> is not FRONT_AND_BACK.";
 inline constexpr const char *kInvalidPolygonMode = "Invalid polygon mode.";
 inline constexpr const char *kInvalidPrecision = "Invalid or unsupported precision type.";
 inline constexpr const char *kInvalidPrimitiveMode = "Invalid primitive mode.";
