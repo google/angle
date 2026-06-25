@@ -881,6 +881,38 @@ TEST_P(CopyTextureTest, RedefineDestinationTexture)
     EXPECT_GL_NO_ERROR();
 }
 
+// Regression test for the WebGPU backend too eagerly destroying the wgpu::Texture when levels are
+// redefined.
+TEST_P(CopyTextureTest, RedefineLevelsOfTextureBeforeFlushOfCopy)
+{
+    ANGLE_SKIP_TEST_IF(!checkExtensions());
+
+    // Do a glCopyTextureCHROMIUM of a texture, this will both allocated a wgpu::Texture for the
+    // lvels and record a command using that wgpu::Texture.
+    GLTexture src;
+    glBindTexture(GL_TEXTURE_2D, src);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);
+    EXPECT_GL_NO_ERROR();
+
+    GLTexture dst;
+    glBindTexture(GL_TEXTURE_2D, dst);
+    glCopyTextureCHROMIUM(src, 0, GL_TEXTURE_2D, dst, 0, GL_RGBA, GL_UNSIGNED_BYTE, false, false,
+                          false);
+    EXPECT_GL_NO_ERROR();
+
+    // Redefine the texture levels (1x1 instead of 2x2) that previously caused the previous levels
+    // to have wgpu::Texture::Destroy called.
+    glBindTexture(GL_TEXTURE_2D, src);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+
+    // Before the fix the implicit flush caused a WebGPU validation error of a destroyed
+    // wgpu::Texture being used inside a submit.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dst, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Test that invalid dimensions in CopySubTexture are validated
 TEST_P(CopyTextureTest, CopySubTextureDimension)
 {
