@@ -2064,6 +2064,10 @@ angle::Result Texture::bindTexImageFromSurface(Context *context, egl::Surface *s
     // Set the image info to the size and format of the surface
     ASSERT(mState.mType == TextureType::_2D || mState.mType == TextureType::Rectangle);
     ImageDesc desc(surface->getSize(), surface->getBindTexImageFormat(), InitState::Initialized);
+
+    // Release all existing mips: "Note that any existing images associated with the different
+    // mipmap levels of the texture object are freed "
+    mState.clearImageDescs();
     mState.setImageDesc(NonCubeTextureTypeToTarget(mState.mType), 0, desc);
     mState.mHasProtectedContent = surface->hasProtectedContent();
 

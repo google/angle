@@ -1268,6 +1268,7 @@
 526503288 PIXEL10 GLES : BaseInstanceOverflowTest.BaseInstanceOverflow2/ES3_OpenGLES_AlwaysEnableEmulatedMultidrawExtensions = SKIP
 525786155 PIXEL10 GLES : PbufferTestES3.ImportImageThenBindTexImageShouldOrphan/* = SKIP
 525786155 PIXEL10 GLES : PbufferTestES3.ImportImageThenBindTexImageSourceShouldOrphan/* = SKIP
+525786155 PIXEL10 GLES : PbufferTestES3.BindRedefinesAllMips/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP
@@ -1501,6 +1502,9 @@
 365066518 PIXEL6 VULKAN : ShadowSamplerFunctionTextureCubeTest.Test/*__TextureGrad_NonMipmapped = SKIP
 
 42264855 VULKAN : GetImageTest.InconsistentTexture2D/* = SKIP
+
+// Vulkan initializes the backend textures immediately on eglBindTexImage
+498372331 VULKAN : PbufferTestES3.BindRedefinesAllMips/* = SKIP
 
 40050011 D3D11 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
 40050011 SWIFTSHADER : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
