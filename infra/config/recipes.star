@@ -80,15 +80,11 @@ build_recipe = _recipe_for_package(
 )
 
 build_recipe(
-    name = "recipe:angle",
+    name = "recipe:angle/angle",
 )
 
 build_recipe(
-    name = "recipe:angle_v2/angle_v2",
-)
-
-build_recipe(
-    name = "recipe:angle_v2/angle_v2_trybot",
+    name = "recipe:angle/angle_trybot",
 )
 
 build_recipe(

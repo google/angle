@@ -2,16 +2,16 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-"""Try ANGLE builders using the angle_v2 recipe."""
+"""Try ANGLE builders using the angle recipe."""
 
 load("@chromium-luci//builder_config.star", "builder_config")
 load("@chromium-luci//gn_args.star", "gn_args")
 load("@chromium-luci//try.star", "try_")
-load("//angle_v2_shared.star", "builder_defaults")
+load("//angle_shared.star", "builder_defaults")
 load("//constants.star", "default_experiments", "siso")
 
 try_.defaults.set(
-    executable = "recipe:angle_v2/angle_v2_trybot",
+    executable = "recipe:angle/angle_trybot",
     builder_group = "try",
     bucket = "try",
     pool = "luci.chromium.gpu.try",

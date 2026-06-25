@@ -396,5 +396,5 @@ exec("//recipes.star")
 exec("//tests.star")
 
 # Handle any other builders defined in other files.
-exec("//angle_v2_ci.star")
-exec("//angle_v2_try.star")
+exec("//angle_ci.star")
+exec("//angle_try.star")

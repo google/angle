@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-"""CI ANGLE builders using the angle_v2 recipe."""
+"""CI ANGLE builders using the angle recipe."""
 
 load("@chromium-luci//builder_config.star", "builder_config")
 load("@chromium-luci//ci.star", "ci")
@@ -10,11 +10,11 @@ load("@chromium-luci//consoles.star", "consoles")
 load("@chromium-luci//gardener_rotations.star", "gardener_rotations")
 load("@chromium-luci//gn_args.star", "gn_args")
 load("@chromium-luci//targets.star", "targets")
-load("//angle_v2_shared.star", "builder_defaults")
+load("//angle_shared.star", "builder_defaults")
 load("//constants.star", "default_experiments", "siso")
 
 ci.defaults.set(
-    executable = "recipe:angle_v2/angle_v2",
+    executable = "recipe:angle/angle",
     builder_group = "ci",
     bucket = "ci",
     pool = "luci.chromium.gpu.ci",
@@ -69,10 +69,10 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.DEBUG,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 32,
@@ -105,10 +105,10 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 32,
@@ -142,10 +142,10 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.DEBUG,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -178,10 +178,10 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -210,10 +210,10 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -243,10 +243,10 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -278,10 +278,10 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.DEBUG,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -314,10 +314,10 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -346,10 +346,10 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -378,10 +378,10 @@ angle_linux_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -410,10 +410,10 @@ angle_mac_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -441,10 +441,10 @@ angle_mac_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.DEBUG,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -476,10 +476,10 @@ angle_mac_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -507,10 +507,10 @@ angle_win_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -539,10 +539,10 @@ angle_win_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.DEBUG,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -575,10 +575,10 @@ angle_win_msvc_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.DEBUG,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -610,10 +610,10 @@ angle_win_msvc_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -645,10 +645,10 @@ angle_win_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -677,10 +677,10 @@ angle_win_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -709,10 +709,10 @@ angle_win_msvc_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.DEBUG,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -744,10 +744,10 @@ angle_win_msvc_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -779,10 +779,10 @@ angle_win_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.DEBUG,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 32,
@@ -815,10 +815,10 @@ angle_win_msvc_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.DEBUG,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 32,
@@ -850,10 +850,10 @@ angle_win_msvc_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 32,
@@ -885,10 +885,10 @@ angle_win_parent_builder(
     schedule = "triggered",
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 32,
@@ -921,10 +921,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -969,10 +969,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -1008,10 +1008,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -1050,10 +1050,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -1112,10 +1112,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -1151,10 +1151,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -1191,10 +1191,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_android",
+            config = "angle_android",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -1232,10 +1232,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1267,10 +1267,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1304,10 +1304,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1342,10 +1342,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1391,10 +1391,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1428,10 +1428,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1466,10 +1466,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1511,10 +1511,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1549,10 +1549,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1597,10 +1597,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1635,10 +1635,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_nointernal",
+            config = "angle_nointernal",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.ARM,
             target_bits = 64,
@@ -1672,10 +1672,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1709,10 +1709,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1746,10 +1746,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1783,10 +1783,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1822,10 +1822,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1859,10 +1859,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_nointernal",
+            config = "angle_nointernal",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1896,10 +1896,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -1934,10 +1934,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_nointernal",
+            config = "angle_nointernal",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -2014,10 +2014,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_nointernal",
+            config = "angle_nointernal",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -2081,10 +2081,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_nointernal",
+            config = "angle_nointernal",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -2118,10 +2118,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -2156,10 +2156,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_nointernal",
+            config = "angle_nointernal",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -2195,10 +2195,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_nointernal",
+            config = "angle_nointernal",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -2233,10 +2233,10 @@ ci.thin_tester(
     builder_spec = builder_config.builder_spec(
         execution_mode = builder_config.execution_mode.TEST,
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2",
+            config = "angle",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 32,
@@ -2277,10 +2277,10 @@ angle_linux_parent_builder(
     },
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_nointernal",
+            config = "angle_nointernal",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
@@ -2316,10 +2316,10 @@ angle_win_parent_builder(
     },
     builder_spec = builder_config.builder_spec(
         gclient_config = builder_config.gclient_config(
-            config = "angle_v2_nointernal",
+            config = "angle_nointernal",
         ),
         chromium_config = builder_config.chromium_config(
-            config = "angle_v2_clang",
+            config = "angle_clang",
             build_config = builder_config.build_config.RELEASE,
             target_arch = builder_config.target_arch.INTEL,
             target_bits = 64,
