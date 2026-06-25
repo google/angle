@@ -798,16 +798,14 @@ TEST_P(EGLBufferAgeTest, ValidateDamageRegion)
 
     EGLint age                               = 0;
     EGLint rect[4]                           = {0, 0, 1, 1};
-    std::vector<std::vector<GLfloat>> colors = {{1.0f, 1.0f, 1.0f, 1.0f},
-                                                {1.0f, 0.0f, 0.0f, 1.0f},
-                                                {0.0f, 1.0f, 0.0f, 1.0f},
-                                                {0.0f, 0.0f, 1.0f, 1.0f}};
+    std::vector<GLColor> colors = {GLColor::white,  GLColor::red,  GLColor::green,  GLColor::blue,
+                                   GLColor::yellow, GLColor::cyan, GLColor::magenta};
 
     glDisable(GL_SCISSOR_TEST);
     for (auto color : colors)
     {
-
-        glClearColor(color[0], color[1], color[2], color[3]);
+        const angle::Vector4 clearColor = color.toNormalizedVector();
+        glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
         glClear(GL_COLOR_BUFFER_BIT);
         EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, surface));
         EXPECT_EGL_SUCCESS();
@@ -818,22 +816,22 @@ TEST_P(EGLBufferAgeTest, ValidateDamageRegion)
     EXPECT_EGL_SUCCESS();
     EXPECT_GE(age, 0);
 
-    eglSetDamageRegionKHR(mDisplay, surface, rect, 1);
-    EXPECT_EGL_SUCCESS();
+    if (age > 0)
+    {
+        eglSetDamageRegionKHR(mDisplay, surface, rect, 1);
+        EXPECT_EGL_SUCCESS();
 
-    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
-    glEnable(GL_SCISSOR_TEST);
-    glScissor(0, 0, 1, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glDisable(GL_SCISSOR_TEST);
-    ASSERT_GL_NO_ERROR();
+        glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(0, 0, 1, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDisable(GL_SCISSOR_TEST);
+        ASSERT_GL_NO_ERROR();
 
-    std::vector<GLfloat> expectColorf = colors[colors.size() - age];
-    GLColor expectColor(expectColorf[0] * 255, expectColorf[1] * 255, expectColorf[2] * 255,
-                        expectColorf[3] * 255);
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
-    EXPECT_PIXEL_COLOR_EQ(1, 1, expectColor);
+        const GLColor &expectColor = colors[colors.size() - age];
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+        EXPECT_PIXEL_COLOR_EQ(1, 1, expectColor);
+    }
 
     eglDestroySurface(mDisplay, surface);
     surface = EGL_NO_SURFACE;

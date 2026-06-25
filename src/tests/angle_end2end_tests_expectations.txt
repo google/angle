@@ -1272,7 +1272,6 @@
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP
-480069042 PIXEL10 VULKAN : EGLBufferAgeTest.ValidateDamageRegion/* = SKIP
 480069042 PIXEL10 VULKAN : EGLProtectedContentTest.ProtectedContextWithProtectedTextureFromAndroidNativeBuffer/* = SKIP
 480069042 PIXEL10 VULKAN : EGLSurfaceTest.SurfaceFixedRateCompression/* = SKIP
 480069042 PIXEL10 VULKAN : ExternalBufferTestES31.BufferSubData/* = SKIP
