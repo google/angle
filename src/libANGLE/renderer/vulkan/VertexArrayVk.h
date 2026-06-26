@@ -55,6 +55,8 @@ class VertexArrayVk : public VertexArrayImpl
                                         const void *indices,
                                         gl::AttributesMask *strideDirtyAttribMaskOut);
 
+    void resetInactiveStreamedAttribs(const gl::Context *context);
+
     angle::Result handleLineLoop(ContextVk *contextVk,
                                  GLint firstVertex,
                                  GLsizei vertexOrIndexCount,
