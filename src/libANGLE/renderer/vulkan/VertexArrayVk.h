@@ -73,6 +73,8 @@ class VertexArrayVk : public VertexArrayImpl
                                         gl::DrawElementsType indexTypeOrInvalid,
                                         const void *indices);
 
+    void resetInactiveStreamedAttribs(const gl::Context *context);
+
     angle::Result handleLineLoop(ContextVk *contextVk,
                                  GLint firstVertex,
                                  GLsizei vertexOrIndexCount,
