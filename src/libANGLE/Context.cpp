@@ -4670,6 +4670,13 @@ void Context::updateCaps()
     caps->compressedTextureFormats.clear();
     textureCaps->clear();
 
+    // Workaround for dEQP bug
+    // https://gitlab.khronos.org/Tracker/vk-gl-cts/-/issues/6138
+    // . Put paletted formats at the end of the compressed texture
+    // format list. If these tests are fixed, remove this vector and
+    // simplify the code below.
+    std::vector<GLenum> palettedFormats;
+
     for (GLenum sizedInternalFormat : GetAllSizedInternalFormats())
     {
         TextureCaps formatCaps = mImplementation->getNativeTextureCaps().get(sizedInternalFormat);
@@ -4748,13 +4755,23 @@ void Context::updateCaps()
             }
         }
 
-        if (formatCaps.texturable && (formatInfo.compressed || formatInfo.paletted))
+        if (formatCaps.texturable)
         {
-            caps->compressedTextureFormats.push_back(sizedInternalFormat);
+            if (formatInfo.compressed)
+            {
+                caps->compressedTextureFormats.push_back(sizedInternalFormat);
+            }
+            else if (formatInfo.paletted)
+            {
+                palettedFormats.push_back(sizedInternalFormat);
+            }
         }
 
         textureCaps->insert(sizedInternalFormat, formatCaps);
     }
+
+    caps->compressedTextureFormats.insert(caps->compressedTextureFormats.end(),
+                                          palettedFormats.begin(), palettedFormats.end());
 
     // If program binary is disabled, blank out the memory cache pointer.
     if (!mSupportedExtensions.getProgramBinaryOES)
