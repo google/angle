@@ -3142,67 +3142,80 @@ angle::Result TextureVk::reinitImageAsRenderable(ContextVk *contextVk, const vk:
                                         SurfaceRotation::Identity);
     }
 
+    const bool isCubeMap = mState.getType() == gl::TextureType::CubeMap;
+
     for (vk::LevelIndex levelVk(0); levelVk < vk::LevelIndex(levelCount); ++levelVk)
     {
         gl::LevelIndex levelGL = mImage->toGLLevel(levelVk);
-        if (IsTextureLevelRedefined(mRedefinedLevels, mState.getType(), levelGL))
+
+        // For cube maps, faces are tracked individually and only the non-redefined faces of this
+        // level should be preserved.  For all other texture types, redefinition is tracked
+        // per-level so the whole level is either reformatted or skipped.
+        const uint32_t copyBatchCount = isCubeMap ? gl::kCubeFaceCount : 1;
+        for (uint32_t copyBatch = 0; copyBatch < copyBatchCount; ++copyBatch)
         {
-            continue;
-        }
+            const uint32_t copyBaseLayer  = isCubeMap ? copyBatch : 0;
+            const uint32_t copyLayerCount = isCubeMap ? 1 : layerCount;
 
-        ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_HIGH,
-                              "GPU stall due to texture format fallback");
+            if (mRedefinedLevels[copyBaseLayer].test(levelGL.get()))
+            {
+                continue;
+            }
 
-        gl::Box sourceBox(gl::kOffsetZero, mImage->getLevelExtents(levelVk));
-        // copy and stage entire layer
-        const gl::ImageIndex index =
-            gl::ImageIndex::MakeFromType(mState.getType(), levelGL.get(), 0, layerCount);
+            ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_HIGH,
+                                  "GPU stall due to texture format fallback");
 
-        // Read back the requested region of the source texture
-        vk::RendererScoped<vk::BufferHelper> bufferHelper(renderer);
-        vk::BufferHelper *srcBuffer = &bufferHelper.get();
-        uint8_t *srcData            = nullptr;
-        ANGLE_TRY(mImage->copyImageDataToBuffer(contextVk, levelGL, layerCount, 0, sourceBox,
-                                                srcBuffer, &srcData));
+            gl::Box sourceBox(gl::kOffsetZero, mImage->getLevelExtents(levelVk));
+            // copy and stage entire layer
+            const gl::ImageIndex index = gl::ImageIndex::MakeFromType(
+                mState.getType(), levelGL.get(), copyBaseLayer, copyLayerCount);
 
-        // Explicitly finish. If new use cases arise where we don't want to block we can change
-        // this.
-        ANGLE_TRY(contextVk->finishImpl(QueueSubmitReason::TextureReformatToRenderable));
-        // invalidate must be called after wait for finish.
-        ANGLE_TRY(srcBuffer->invalidate(renderer));
+            // Read back the requested region of the source texture
+            vk::RendererScoped<vk::BufferHelper> bufferHelper(renderer);
+            vk::BufferHelper *srcBuffer = &bufferHelper.get();
+            uint8_t *srcData            = nullptr;
+            ANGLE_TRY(mImage->copyImageDataToBuffer(contextVk, levelGL, copyLayerCount,
+                                                    copyBaseLayer, sourceBox, srcBuffer, &srcData));
 
-        size_t dstBufferSize =
-            static_cast<size_t>(sourceBox.width) * static_cast<size_t>(sourceBox.height) *
-            static_cast<size_t>(sourceBox.depth) * dstFormat.pixelBytes * layerCount;
+            // Explicitly finish. If new use cases arise where we don't want to block we can change
+            // this.
+            ANGLE_TRY(contextVk->finishImpl(QueueSubmitReason::TextureReformatToRenderable));
+            // invalidate must be called after wait for finish.
+            ANGLE_TRY(srcBuffer->invalidate(renderer));
 
-        // Allocate memory in the destination texture for the copy/conversion.
-        uint8_t *dstData = nullptr;
-        ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
-            contextVk, dstBufferSize, index, mImage->getLevelExtents(levelVk), gl::kOffsetZero,
-            &dstData, dstFormat.id));
+            size_t dstBufferSize =
+                static_cast<size_t>(sourceBox.width) * static_cast<size_t>(sourceBox.height) *
+                static_cast<size_t>(sourceBox.depth) * dstFormat.pixelBytes * copyLayerCount;
 
-        // Source and destination data is tightly packed
-        GLuint srcDataRowPitch = sourceBox.width * srcFormat.pixelBytes;
-        GLuint dstDataRowPitch = sourceBox.width * dstFormat.pixelBytes;
+            // Allocate memory in the destination texture for the copy/conversion.
+            uint8_t *dstData = nullptr;
+            ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
+                contextVk, dstBufferSize, index, mImage->getLevelExtents(levelVk), gl::kOffsetZero,
+                &dstData, dstFormat.id));
 
-        GLuint srcDataDepthPitch = srcDataRowPitch * sourceBox.height;
-        GLuint dstDataDepthPitch = dstDataRowPitch * sourceBox.height;
+            // Source and destination data is tightly packed
+            GLuint srcDataRowPitch = sourceBox.width * srcFormat.pixelBytes;
+            GLuint dstDataRowPitch = sourceBox.width * dstFormat.pixelBytes;
 
-        GLuint srcDataLayerPitch = srcDataDepthPitch * sourceBox.depth;
-        GLuint dstDataLayerPitch = dstDataDepthPitch * sourceBox.depth;
+            GLuint srcDataDepthPitch = srcDataRowPitch * sourceBox.height;
+            GLuint dstDataDepthPitch = dstDataRowPitch * sourceBox.height;
 
-        rx::PixelReadFunction pixelReadFunction   = srcFormat.pixelReadFunction;
-        rx::PixelWriteFunction pixelWriteFunction = dstFormat.pixelWriteFunction;
+            GLuint srcDataLayerPitch = srcDataDepthPitch * sourceBox.depth;
+            GLuint dstDataLayerPitch = dstDataDepthPitch * sourceBox.depth;
 
-        const gl::InternalFormat &dstFormatInfo = *mState.getImageDesc(index).format.info;
-        for (uint32_t layer = 0; layer < layerCount; layer++)
-        {
-            CopyImageCHROMIUM(srcData + layer * srcDataLayerPitch, srcDataRowPitch,
-                              srcFormat.pixelBytes, srcDataDepthPitch, pixelReadFunction,
-                              dstData + layer * dstDataLayerPitch, dstDataRowPitch,
-                              dstFormat.pixelBytes, dstDataDepthPitch, pixelWriteFunction,
-                              dstFormatInfo.format, dstFormatInfo.componentType, sourceBox.width,
-                              sourceBox.height, sourceBox.depth, false, false, false);
+            rx::PixelReadFunction pixelReadFunction   = srcFormat.pixelReadFunction;
+            rx::PixelWriteFunction pixelWriteFunction = dstFormat.pixelWriteFunction;
+
+            const gl::InternalFormat &dstFormatInfo = *mState.getImageDesc(index).format.info;
+            for (uint32_t layer = 0; layer < copyLayerCount; layer++)
+            {
+                CopyImageCHROMIUM(
+                    srcData + layer * srcDataLayerPitch, srcDataRowPitch, srcFormat.pixelBytes,
+                    srcDataDepthPitch, pixelReadFunction, dstData + layer * dstDataLayerPitch,
+                    dstDataRowPitch, dstFormat.pixelBytes, dstDataDepthPitch, pixelWriteFunction,
+                    dstFormatInfo.format, dstFormatInfo.componentType, sourceBox.width,
+                    sourceBox.height, sourceBox.depth, false, false, false);
+            }
         }
     }
 
