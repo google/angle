@@ -233,6 +233,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::HasStencilAutoResolve, "hasStencilAutoResolve"},
     {Feature::HasTextureSwizzle, "hasTextureSwizzle"},
     {Feature::InitFragmentOutputVariables, "initFragmentOutputVariables"},
+    {Feature::InitializeColorAttachmentWithWhite, "initializeColorAttachmentWithWhite"},
     {Feature::InitializeCurrentVertexAttributes, "initializeCurrentVertexAttributes"},
     {Feature::InjectAsmStatementIntoLoopBodies, "injectAsmStatementIntoLoopBodies"},
     {Feature::IsVertexSyncDeferred, "isVertexSyncDeferred"},

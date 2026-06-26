@@ -3624,6 +3624,30 @@ void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
         }
     }
 
+    if (contextVk->getFeatures().initializeColorAttachmentWithWhite.enabled)
+    {
+        // Certain apps is rendering content without covering entire texture, which result in
+        // showing garbage for user. We stage a clear here as application bug workaround.
+        bool shouldClearDueToAppWorkAround =
+            layerCount == 1 && drawImage->getLevelCount() == 1 &&
+            transience == RenderTargetTransience::Default && drawImage->getSamples() == 1 &&
+            mState.getType() != gl::TextureType::CubeMap &&
+            (drawImage->getAspectFlags() & VK_IMAGE_ASPECT_COLOR_BIT) != 0 &&
+            !drawImage->isVkImageContentDefined() &&
+            !drawImage->hasStagedUpdatesInAllocatedLevels() && !drawImage->getResourceUse().valid();
+
+        if (shouldClearDueToAppWorkAround)
+        {
+            VkClearValue clearValue     = {};
+            clearValue.color.float32[0] = 1.0f;
+            clearValue.color.float32[1] = 1.0f;
+            clearValue.color.float32[2] = 1.0f;
+            clearValue.color.float32[3] = 1.0f;
+            drawImage->stageClear(gl::ImageIndex::Make2D(levelIndex.getUntranslated().get()),
+                                  VK_IMAGE_ASPECT_COLOR_BIT, clearValue);
+        }
+    }
+
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
         renderTargets[layerIndex].init(drawImage, drawImageViews, resolveImage, resolveImageViews,

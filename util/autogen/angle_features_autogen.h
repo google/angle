@@ -233,6 +233,7 @@ enum class Feature
     HasStencilAutoResolve,
     HasTextureSwizzle,
     InitFragmentOutputVariables,
+    InitializeColorAttachmentWithWhite,
     InitializeCurrentVertexAttributes,
     InjectAsmStatementIntoLoopBodies,
     IsVertexSyncDeferred,
