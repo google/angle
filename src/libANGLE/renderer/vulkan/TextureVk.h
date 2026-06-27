@@ -372,9 +372,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                              GLint *rates) override;
 
   private:
-    // Transform an image index from the frontend into one that can be used on the backing
+    // Transform an image level/layer from the frontend into one that can be used on the backing
     // ImageHelper, taking into account mipmap or cube face offsets
-    gl::ImageIndex getNativeImageIndex(const gl::ImageIndex &inputImageIndex) const;
     gl::LevelIndex getNativeImageLevel(gl::LevelIndex frontendLevel) const;
     uint32_t getNativeImageLayer(uint32_t frontendLayer) const;
 
@@ -450,7 +449,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     // Used to clear a texture to a given value in part or whole.
     angle::Result clearSubImageImpl(const gl::Context *context,
-                                    GLint level,
+                                    gl::OwnLevel level,
                                     const gl::Box &clearArea,
                                     vk::ClearTextureMode clearMode,
                                     GLenum format,

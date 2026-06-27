@@ -854,18 +854,16 @@ bool TextureVk::updateMustBeStaged(gl::SourceLevel level, angle::FormatID dstIma
 }
 
 angle::Result TextureVk::clearImage(const gl::Context *context,
-                                    gl::OwnLevel ownLevel,
+                                    gl::OwnLevel level,
                                     GLenum format,
                                     GLenum type,
                                     const uint8_t *data)
 {
-    const GLint level = ownLevel.getUntranslated().get();
-
     // All defined cubemap faces are expected to have equal width and height.
     bool isCubeMap = mState.getType() == gl::TextureType::CubeMap;
     gl::TextureTarget textureTarget =
         isCubeMap ? gl::kCubeMapTextureTargetMin : gl::TextureTypeToTarget(mState.getType(), 0);
-    gl::Extents extents = mState.getImageDesc(textureTarget, level).size;
+    gl::Extents extents = mState.getImageDesc(textureTarget, level.getUntranslated().get()).size;
 
     gl::Box area = gl::Box(gl::kOffsetZero, extents);
     if (isCubeMap)
@@ -880,18 +878,16 @@ angle::Result TextureVk::clearImage(const gl::Context *context,
 }
 
 angle::Result TextureVk::clearSubImage(const gl::Context *context,
-                                       gl::OwnLevel ownLevel,
+                                       gl::OwnLevel level,
                                        const gl::Box &area,
                                        GLenum format,
                                        GLenum type,
                                        const uint8_t *data)
 {
-    const GLint level = ownLevel.getUntranslated().get();
-
     bool isCubeMap = mState.getType() == gl::TextureType::CubeMap;
     gl::TextureTarget textureTarget =
         isCubeMap ? gl::kCubeMapTextureTargetMin : gl::TextureTypeToTarget(mState.getType(), 0);
-    gl::Extents extents   = mState.getImageDesc(textureTarget, level).size;
+    gl::Extents extents   = mState.getImageDesc(textureTarget, level.getUntranslated().get()).size;
     int depthForFullClear = isCubeMap ? 6 : extents.depth;
 
     vk::ClearTextureMode clearMode = vk::ClearTextureMode::PartialClear;
@@ -905,9 +901,9 @@ angle::Result TextureVk::clearSubImage(const gl::Context *context,
 }
 
 angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
-                                           GLint level,
-                                           const gl::Box &clearArea,
-                                           vk::ClearTextureMode clearMode,
+                                           gl::OwnLevel level,
+                                           const gl::Box &ownClearArea,
+                                           vk::ClearTextureMode ownClearMode,
                                            GLenum format,
                                            GLenum type,
                                            const uint8_t *data)
@@ -918,13 +914,21 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
     // From the spec: For texture types that do not have certain dimensions, this command treats
     // those dimensions as having a size of 1.  For example, to clear a portion of a two-dimensional
     // texture, the application would use <zoffset> equal to zero and <depth> equal to one.
-    ASSERT(clearArea.width != 0 && clearArea.height != 0 && clearArea.depth != 0);
+    ASSERT(ownClearArea.width != 0 && ownClearArea.height != 0 && ownClearArea.depth != 0);
 
-    gl::TextureType textureType = mState.getType();
-    const bool useLayerAsDepth  = textureType == gl::TextureType::CubeMap ||
-                                  textureType == gl::TextureType::CubeMapArray ||
-                                  textureType == gl::TextureType::_2DArray ||
-                                  textureType == gl::TextureType::_2DMultisampleArray;
+    const gl::SourceImageIndex index =
+        mState.toSourceIndex(gl::OwnImageIndex(gl::ImageIndex::MakeFromType(
+            mState.getType(), level.getUntranslated().get(), ownClearArea.z, ownClearArea.depth)));
+    const bool is3D = index.getType() == gl::TextureType::_3D;
+    // If this is an EGL image viewing a 3D image, the clear is not really FullClear from the point
+    // of view of the VkImage, even if it is from the point of view of the image sibling.
+    const vk::ClearTextureMode clearMode =
+        mState.getType() != index.getType() ? vk::ClearTextureMode::PartialClear : ownClearMode;
+
+    const gl::SourceLayer baseLayer = index.getLayerIndex();
+    const uint32_t layerCount       = index.getLayerCount();
+    const gl::Box clearArea(ownClearArea.x, ownClearArea.y, is3D ? baseLayer.get() : 0,
+                            ownClearArea.width, ownClearArea.height, is3D ? layerCount : 1);
 
     // If the texture is renderable (including multisampled), the partial clear can be applied to
     // the image simply by opening/closing a render pass with LOAD_OP_CLEAR. Otherwise, a buffer can
@@ -958,11 +962,9 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         (mImageUsageFlags & clearUpdateRequiredUsage) == clearUpdateRequiredUsage;
     if (formatFeaturesAllowClearUpdate && imageUsageAllowsClearUpdate)
     {
-        uint32_t baseLayer  = useLayerAsDepth ? clearArea.z : 0;
-        uint32_t layerCount = useLayerAsDepth ? clearArea.depth : 1;
-        ANGLE_TRY(mImage->stagePartialClear(contextVk, clearArea, clearMode, mState.getType(),
-                                            level, baseLayer, layerCount, type, inputFormatInfo,
-                                            inputVkFormat, getRequiredFormatSupport(), data));
+        ANGLE_TRY(mImage->stagePartialClear(contextVk, clearArea, clearMode, index.get(), type,
+                                            inputFormatInfo, inputVkFormat,
+                                            getRequiredFormatSupport(), data));
     }
     else
     {
@@ -978,10 +980,11 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         }
 
         // For a cubemap, each face will be updated separately.
+        const gl::TextureType textureType = index.getType();
         const bool isCubeMap = textureType == gl::TextureType::CubeMap;
-        size_t clearBufferSize =
+        const size_t clearBufferSize =
             isCubeMap ? clearArea.width * clearArea.height * pixelSize
-                      : clearArea.width * clearArea.height * clearArea.depth * pixelSize;
+                      : clearArea.width * clearArea.height * layerCount * pixelSize;
 
         std::vector<uint8_t> clearBuffer(clearBufferSize, 0);
         ASSERT(clearBufferSize % pixelSize == 0);
@@ -996,36 +999,36 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         }
         gl::PixelUnpackState pixelUnpackState = {};
         pixelUnpackState.alignment            = 1;
-        gl::Offset offset                     = clearArea.getOffset();
-        gl::Extents extents                   = clearArea.getExtents();
-        const bool is3D = textureType == gl::TextureType::_3D ||
-                          textureType == gl::TextureType::_2DArray ||
-                          textureType == gl::TextureType::_2DMultisampleArray ||
-                          textureType == gl::TextureType::CubeMapArray;
+        gl::Offset offset(clearArea.x, clearArea.y, baseLayer.get());
+        gl::Extents extents(clearArea.width, clearArea.height, layerCount);
+        const bool hasDepth = textureType == gl::TextureType::_3D ||
+                              textureType == gl::TextureType::_2DArray ||
+                              textureType == gl::TextureType::_2DMultisampleArray ||
+                              textureType == gl::TextureType::CubeMapArray;
 
         GLuint inputRowPitch   = 0;
         GLuint inputDepthPitch = 0;
         GLuint inputSkipBytes  = 0;
 
         ANGLE_TRY(mImage->calculateBufferInfo(contextVk, extents, inputFormatInfo, pixelUnpackState,
-                                              type, is3D, &inputRowPitch, &inputDepthPitch,
+                                              type, hasDepth, &inputRowPitch, &inputDepthPitch,
                                               &inputSkipBytes));
 
         if (isCubeMap)
         {
-            size_t cubeFaceStart = clearArea.z;
-            auto cubeFaceEnd     = static_cast<size_t>(clearArea.z + clearArea.depth);
+            uint32_t cubeFaceStart = baseLayer.get();
+            uint32_t cubeFaceEnd   = cubeFaceStart + layerCount;
 
             offset.z      = 0;
             extents.depth = 1;
 
-            for (size_t cubeFace = cubeFaceStart; cubeFace < cubeFaceEnd; cubeFace++)
+            for (uint32_t cubeFace = cubeFaceStart; cubeFace < cubeFaceEnd; ++cubeFace)
             {
-                const gl::ImageIndex index = gl::ImageIndex::MakeFromTarget(
-                    gl::CubeFaceIndexToTextureTarget(cubeFace), level, 0);
+                const gl::ImageIndex faceIndex = gl::ImageIndex::MakeCubeMapFace(
+                    gl::CubeFaceIndexToTextureTarget(cubeFace), index.getLevelIndex().get().get());
 
                 ANGLE_TRY(mImage->stageSubresourceUpdate(
-                    contextVk, getNativeImageIndex(index), extents, offset, inputFormatInfo, type,
+                    contextVk, faceIndex, extents, offset, inputFormatInfo, type,
                     clearBuffer.data(), outputVkFormat, getRequiredFormatSupport(), inputRowPitch,
                     inputDepthPitch, inputSkipBytes, vk::ApplyImageUpdate::Defer,
                     &updateAppliedImmediately));
@@ -1034,25 +1037,18 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         }
         else
         {
-            gl::TextureTarget textureTarget = gl::TextureTypeToTarget(textureType, 0);
-            uint32_t layerCount             = useLayerAsDepth ? clearArea.depth : 0;
-            const gl::ImageIndex index =
-                gl::ImageIndex::MakeFromTarget(textureTarget, level, layerCount);
-
             ANGLE_TRY(mImage->stageSubresourceUpdate(
-                contextVk, getNativeImageIndex(index), extents, offset, inputFormatInfo, type,
-                clearBuffer.data(), outputVkFormat, getRequiredFormatSupport(), inputRowPitch,
-                inputDepthPitch, inputSkipBytes, vk::ApplyImageUpdate::Defer,
-                &updateAppliedImmediately));
+                contextVk, index.get(), extents, offset, inputFormatInfo, type, clearBuffer.data(),
+                outputVkFormat, getRequiredFormatSupport(), inputRowPitch, inputDepthPitch,
+                inputSkipBytes, vk::ApplyImageUpdate::Defer, &updateAppliedImmediately));
             ASSERT(!updateAppliedImmediately);
         }
     }
 
     // Flush the staged updates if needed.
-    ANGLE_TRY(ensureImageInitializedIfUpdatesNeedStageOrFlush(
-        contextVk, gl::SourceLevel::VerifiedSourceLevel(gl::LevelIndex(level)), outputVkFormat,
-        vk::ApplyImageUpdate::Defer, usesBufferForClear));
-    return angle::Result::Continue;
+    return ensureImageInitializedIfUpdatesNeedStageOrFlush(
+        contextVk, mState.toSourceLevel(level), outputVkFormat, vk::ApplyImageUpdate::Defer,
+        usesBufferForClear);
 }
 
 angle::Result TextureVk::ensureImageInitializedIfUpdatesNeedStageOrFlush(
@@ -2436,25 +2432,6 @@ angle::Result TextureVk::setBuffer(const gl::Context *context, GLenum internalFo
 
     // There's nothing else to do here.
     return angle::Result::Continue;
-}
-
-gl::ImageIndex TextureVk::getNativeImageIndex(const gl::ImageIndex &inputImageIndex) const
-{
-    const gl::TextureType sourceType = mState.getEGLImageSourceAttributes().type;
-    const uint32_t sourceLevel       = mState.getEGLImageSourceAttributes().level;
-    const uint32_t layerOffset       = mState.getEGLImageSourceAttributes().zoffset;
-
-    if (sourceType == gl::TextureType::InvalidEnum)
-    {
-        return inputImageIndex;
-    }
-
-    // inputImageIndex can point to a specific layer, but only for non-2D textures.
-    // sourceType can be a valid type, but only for 2D textures.
-    // As such, both of these cannot be true at the same time.
-    ASSERT(!inputImageIndex.hasLayer() && inputImageIndex.getLevelIndex() == 0);
-
-    return gl::ImageIndex::MakeFromType(sourceType, sourceLevel, layerOffset);
 }
 
 gl::LevelIndex TextureVk::getNativeImageLevel(gl::LevelIndex frontendLevel) const
