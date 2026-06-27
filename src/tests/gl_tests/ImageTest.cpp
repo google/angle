@@ -13579,6 +13579,380 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceBlitDst)
         });
 }
 
+// Export non-zero level, use as source of glCopyImageSubDataEXT
+TEST_P(ImageTestES3, NonZeroLevelCopyImageSubDataSrc)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Copy into a texture
+            GLTexture copy;
+            glBindTexture(GL_TEXTURE_2D, copy);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(target, GL_TEXTURE_2D, 0, 0, 0, 0, copy, GL_TEXTURE_2D, 0, 0, 0,
+                                  0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(copy, initColor.data());
+        },
+        [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
+            // Verify the source texture is unaffected.
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults2D(source, initColor.data());
+        });
+}
+
+// Export non-zero level, use as source of glCopyImageSubDataEXT, renderbuffer
+TEST_P(ImageTestES3, NonZeroLevelCopyImageSubDataSrcRenderbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelRBTest(
+        [this](const GLRenderbuffer &target, GLColor initColor, uint32_t size) {
+            // Copy into a texture
+            GLTexture copy;
+            glBindTexture(GL_TEXTURE_2D, copy);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(target, GL_RENDERBUFFER, 0, 0, 0, 0, copy, GL_TEXTURE_2D, 0, 0, 0,
+                                  0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(copy, initColor.data());
+        },
+        [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
+            // Verify the source texture is unaffected.
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults2D(source, initColor.data());
+        });
+}
+
+// Export non-zero level and slice, use as source of glCopyImageSubDataEXT
+TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyImageSubDataSrc)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelAndSliceTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Copy into a texture
+            GLTexture copy;
+            glBindTexture(GL_TEXTURE_2D, copy);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(target, GL_TEXTURE_2D, 0, 0, 0, 0, copy, GL_TEXTURE_2D, 0, 0, 0,
+                                  0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(copy, initColor.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
+               uint32_t size, uint32_t depth) {
+            // Verify the source texture is unaffected.
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults3D(source, initColor.data(), slice, depth);
+        });
+}
+
+// Export non-zero level and slice, use as source of glCopyImageSubDataEXT, renderbuffer
+TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyImageSubDataSrcRenderbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelAndSliceRBTest(
+        [this](const GLRenderbuffer &target, GLColor initColor, uint32_t size) {
+            // Copy into a texture
+            GLTexture copy;
+            glBindTexture(GL_TEXTURE_2D, copy);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(target, GL_RENDERBUFFER, 0, 0, 0, 0, copy, GL_TEXTURE_2D, 0, 0, 0,
+                                  0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(copy, initColor.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
+               uint32_t size, uint32_t depth) {
+            // Verify the source texture is unaffected.
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults3D(source, initColor.data(), slice, depth);
+        });
+}
+
+// Export non-zero level and face, use as source of glCopyImageSubDataEXT
+TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyImageSubDataSrc)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelAndFaceTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Copy into a texture
+            GLTexture copy;
+            glBindTexture(GL_TEXTURE_2D, copy);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(target, GL_TEXTURE_2D, 0, 0, 0, 0, copy, GL_TEXTURE_2D, 0, 0, 0,
+                                  0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(copy, initColor.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
+               uint32_t size) {
+            // Verify the source texture is unaffected.
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResultsCube(source, initColor.data(), face);
+        });
+}
+
+// Export non-zero level and face, use as source of glCopyImageSubDataEXT, renderbuffer
+TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyImageSubDataSrcRenderbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelAndFaceRBTest(
+        [this](const GLRenderbuffer &target, GLColor initColor, uint32_t size) {
+            // Copy into a texture
+            GLTexture copy;
+            glBindTexture(GL_TEXTURE_2D, copy);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(target, GL_RENDERBUFFER, 0, 0, 0, 0, copy, GL_TEXTURE_2D, 0, 0, 0,
+                                  0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(copy, initColor.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
+               uint32_t size) {
+            // Verify the source texture is unaffected.
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResultsCube(source, initColor.data(), face);
+        });
+}
+
+// Export non-zero level, use as destination of glCopyImageSubDataEXT
+TEST_P(ImageTestES3, NonZeroLevelCopyImageSubDataDst)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Create the copy source and copy it into the target
+            const std::vector<GLColor> kSrcData(size * size, GLColor::blue);
+            GLTexture copySrc;
+            glBindTexture(GL_TEXTURE_2D, copySrc);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         kSrcData.data());
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(copySrc, GL_TEXTURE_2D, 0, 0, 0, 0, target, GL_TEXTURE_2D, 0, 0,
+                                  0, 0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(target, GLColor::blue.data());
+        },
+        [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
+            // Verify the copy is visible in source too
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults2D(source, GLColor::blue.data());
+        });
+}
+
+// Export non-zero level, use as destination of glCopyImageSubDataEXT, renderbuffer
+TEST_P(ImageTestES3, NonZeroLevelCopyImageSubDataDstRenderbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelRBTest(
+        [](const GLRenderbuffer &target, GLColor initColor, uint32_t size) {
+            // Create the copy source and copy it into the target
+            const std::vector<GLColor> kSrcData(size * size, GLColor::blue);
+            GLTexture copySrc;
+            glBindTexture(GL_TEXTURE_2D, copySrc);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         kSrcData.data());
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(copySrc, GL_TEXTURE_2D, 0, 0, 0, 0, target, GL_RENDERBUFFER, 0, 0,
+                                  0, 0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            GLFramebuffer fbo;
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                      target);
+            EXPECT_PIXEL_RECT_EQ(0, 0, size, size, GLColor::blue);
+        },
+        [this](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {
+            // Verify the copy is visible in source too
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults2D(source, GLColor::blue.data());
+        });
+}
+
+// Export non-zero level and slice, use as destination of glCopyImageSubDataEXT
+TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyImageSubDataDst)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelAndSliceTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Create the copy source and copy it into the target
+            const std::vector<GLColor> kSrcData(size * size, GLColor::blue);
+            GLTexture copySrc;
+            glBindTexture(GL_TEXTURE_2D, copySrc);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         kSrcData.data());
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(copySrc, GL_TEXTURE_2D, 0, 0, 0, 0, target, GL_TEXTURE_2D, 0, 0,
+                                  0, 0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(target, GLColor::blue.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
+               uint32_t size, uint32_t depth) {
+            // Verify the copy is visible in source too
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults3D(source, GLColor::blue.data(), slice, depth);
+        });
+}
+
+// Export non-zero level and slice, use as destination of glCopyImageSubDataEXT, renderbuffer
+TEST_P(ImageTestES3, NonZeroLevelAndSliceCopyImageSubDataDstRenderbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelAndSliceRBTest(
+        [](const GLRenderbuffer &target, GLColor initColor, uint32_t size) {
+            // Create the copy source and copy it into the target
+            const std::vector<GLColor> kSrcData(size * size, GLColor::blue);
+            GLTexture copySrc;
+            glBindTexture(GL_TEXTURE_2D, copySrc);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         kSrcData.data());
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(copySrc, GL_TEXTURE_2D, 0, 0, 0, 0, target, GL_RENDERBUFFER, 0, 0,
+                                  0, 0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            GLFramebuffer fbo;
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                      target);
+            EXPECT_PIXEL_RECT_EQ(0, 0, size, size, GLColor::blue);
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
+               uint32_t size, uint32_t depth) {
+            // Verify the copy is visible in source too
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResults3D(source, GLColor::blue.data(), slice, depth);
+        });
+}
+
+// Export non-zero level and face, use as destination of glCopyImageSubDataEXT
+TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyImageSubDataDst)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelAndFaceTest(
+        [this](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Create the copy source and copy it into the target
+            const std::vector<GLColor> kSrcData(size * size, GLColor::blue);
+            GLTexture copySrc;
+            glBindTexture(GL_TEXTURE_2D, copySrc);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         kSrcData.data());
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(copySrc, GL_TEXTURE_2D, 0, 0, 0, 0, target, GL_TEXTURE_2D, 0, 0,
+                                  0, 0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            verifyResults2D(target, GLColor::blue.data());
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
+               uint32_t size) {
+            // Verify the copy is visible in source too
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResultsCube(source, GLColor::blue.data(), face);
+        });
+}
+
+// Export non-zero level and face, use as destination of glCopyImageSubDataEXT, renderbuffer
+TEST_P(ImageTestES3, NonZeroLevelAndFaceCopyImageSubDataDstRenderbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_copy_image"));
+
+    nonZeroLevelAndFaceRBTest(
+        [](const GLRenderbuffer &target, GLColor initColor, uint32_t size) {
+            // Create the copy source and copy it into the target
+            const std::vector<GLColor> kSrcData(size * size, GLColor::blue);
+            GLTexture copySrc;
+            glBindTexture(GL_TEXTURE_2D, copySrc);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         kSrcData.data());
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCopyImageSubDataEXT(copySrc, GL_TEXTURE_2D, 0, 0, 0, 0, target, GL_RENDERBUFFER, 0, 0,
+                                  0, 0, size, size, 1);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify the copy
+            GLFramebuffer fbo;
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                      target);
+            EXPECT_PIXEL_RECT_EQ(0, 0, size, size, GLColor::blue);
+        },
+        [this](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
+               uint32_t size) {
+            // Verify the copy is visible in source too
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, level);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, level);
+            verifyResultsCube(source, GLColor::blue.data(), face);
+        });
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(ImageTest,
                                        ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
 

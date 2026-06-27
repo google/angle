@@ -234,9 +234,15 @@ angle::Result RenderbufferVk::copyRenderbufferSubData(const gl::Context *context
     ANGLE_TRY(sourceVk->ensureImageInitialized(context));
     ANGLE_TRY(ensureImageInitialized(context));
 
-    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), gl::LevelIndex(0), srcX,
-                                             srcY, 0, mImage, gl::LevelIndex(0), dstX, dstY, 0,
-                                             srcWidth, srcHeight, 1);
+    const gl::SourceLevel srcLevel = srcBuffer->getState().toSourceLevel(gl::OwnLevel(0));
+    const gl::SourceLayer srcZ     = srcBuffer->getState().toSourceLayer(gl::OwnLayer(0));
+
+    const gl::SourceLevel dstLevel = mState.toSourceLevel(gl::OwnLevel(0));
+    const gl::SourceLayer dstZ     = mState.toSourceLayer(gl::OwnLayer(0));
+
+    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), srcLevel.get(), srcX,
+                                             srcY, srcZ.get(), mImage, dstLevel.get(), dstX, dstY,
+                                             dstZ.get(), srcWidth, srcHeight, 1);
 }
 
 angle::Result RenderbufferVk::copyTextureSubData(const gl::Context *context,
@@ -257,12 +263,15 @@ angle::Result RenderbufferVk::copyTextureSubData(const gl::Context *context,
     ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
     ANGLE_TRY(ensureImageInitialized(context));
 
-    // TODO(http://anglebug.com/525079760): Get the translated level/layer 0 for renderbuffer to
-    // account for EGL image targets.
-    return vk::ImageHelper::CopyImageSubData(context, &sourceVk->getImage(),
-                                             ownSrcLevel.getUntranslated(), srcX, srcY,
-                                             ownSrcZ.getUntranslated(), mImage, gl::LevelIndex(0),
-                                             dstX, dstY, 0, srcWidth, srcHeight, 1);
+    const gl::SourceLevel srcLevel = srcTexture->getState().toSourceLevel(ownSrcLevel);
+    const gl::SourceLayer srcZ     = srcTexture->getState().toSourceLayer(ownSrcZ);
+
+    const gl::SourceLevel dstLevel = mState.toSourceLevel(gl::OwnLevel(0));
+    const gl::SourceLayer dstZ     = mState.toSourceLayer(gl::OwnLayer(0));
+
+    return vk::ImageHelper::CopyImageSubData(context, &sourceVk->getImage(), srcLevel.get(), srcX,
+                                             srcY, srcZ.get(), mImage, dstLevel.get(), dstX, dstY,
+                                             dstZ.get(), srcWidth, srcHeight, 1);
 }
 
 angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *context,
@@ -384,9 +393,8 @@ angle::Result RenderbufferVk::getRenderbufferImage(const gl::Context *context,
 
 angle::Result RenderbufferVk::ensureImageInitialized(const gl::Context *context)
 {
-    ANGLE_TRY(setStorageImpl(context, mState.getSamples(), mState.getFormat().info->internalFormat,
-                             mState.getWidth(), mState.getHeight(), mState.getMultisamplingMode()));
-
+    // The image must have been already created
+    ASSERT(mImage != nullptr && mImage->valid());
     return mImage->flushAllStagedUpdates(vk::GetImpl(context));
 }
 

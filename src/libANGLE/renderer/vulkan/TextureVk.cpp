@@ -1558,12 +1558,15 @@ angle::Result TextureVk::copyRenderbufferSubData(const gl::Context *context,
     ANGLE_TRY(sourceVk->ensureImageInitialized(context));
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
-    // TODO(http://anglebug.com/525079760): Get the translated level/layer 0 for renderbuffer to
-    // account for EGL image targets.
-    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), gl::LevelIndex(0), srcX,
-                                             srcY, 0, mImage, ownDstLevel.getUntranslated(), dstX,
-                                             dstY, ownDstZ.getUntranslated(), srcWidth, srcHeight,
-                                             1);
+    const gl::SourceLevel srcLevel = srcBuffer->getState().toSourceLevel(gl::OwnLevel(0));
+    const gl::SourceLayer srcZ     = srcBuffer->getState().toSourceLayer(gl::OwnLayer(0));
+
+    const gl::SourceLevel dstLevel = mState.toSourceLevel(ownDstLevel);
+    const gl::SourceLayer dstZ     = mState.toSourceLayer(ownDstZ);
+
+    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), srcLevel.get(), srcX,
+                                             srcY, srcZ.get(), mImage, dstLevel.get(), dstX, dstY,
+                                             dstZ.get(), srcWidth, srcHeight, 1);
 }
 
 angle::Result TextureVk::copyTextureSubData(const gl::Context *context,
@@ -1587,10 +1590,15 @@ angle::Result TextureVk::copyTextureSubData(const gl::Context *context,
     ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
-    return vk::ImageHelper::CopyImageSubData(
-        context, &sourceVk->getImage(), ownSrcLevel.getUntranslated(), srcX, srcY,
-        ownSrcZ.getUntranslated(), mImage, ownDstLevel.getUntranslated(), dstX, dstY,
-        ownDstZ.getUntranslated(), srcWidth, srcHeight, srcDepth);
+    const gl::SourceLevel srcLevel = srcTexture->getState().toSourceLevel(ownSrcLevel);
+    const gl::SourceLayer srcZ     = srcTexture->getState().toSourceLayer(ownSrcZ);
+
+    const gl::SourceLevel dstLevel = mState.toSourceLevel(ownDstLevel);
+    const gl::SourceLayer dstZ     = mState.toSourceLayer(ownDstZ);
+
+    return vk::ImageHelper::CopyImageSubData(context, &sourceVk->getImage(), srcLevel.get(), srcX,
+                                             srcY, srcZ.get(), mImage, dstLevel.get(), dstX, dstY,
+                                             dstZ.get(), srcWidth, srcHeight, srcDepth);
 }
 
 angle::Result TextureVk::copyCompressedTexture(const gl::Context *context,
