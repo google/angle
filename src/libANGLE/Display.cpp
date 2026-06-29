@@ -186,6 +186,7 @@ struct ANGLEPlatformDisplay
                          EGLAttrib deviceIdLow,
                          EGLAttrib displayKey,
                          EGLAttrib nativePlatformType,
+                         EGLAttrib x11VisualID,
                          EGLAttrib enabledFeatureOverrides,
                          EGLAttrib disabledFeatureOverrides,
                          EGLAttrib disableAllNonOverriddenFeatures)
@@ -196,6 +197,7 @@ struct ANGLEPlatformDisplay
           deviceIdLow(deviceIdLow),
           displayKey(displayKey),
           nativePlatformType(nativePlatformType),
+          x11VisualID(x11VisualID),
           disableAllNonOverriddenFeatures(static_cast<bool>(disableAllNonOverriddenFeatures))
     {
         enabledFeatureOverridesHash =
@@ -207,8 +209,9 @@ struct ANGLEPlatformDisplay
     auto tie() const
     {
         return std::tie(nativeDisplayType, powerPreference, platformANGLEType, deviceIdHigh,
-                        deviceIdLow, displayKey, nativePlatformType, enabledFeatureOverridesHash,
-                        disabledFeatureOverridesHash, disableAllNonOverriddenFeatures);
+                        deviceIdLow, displayKey, nativePlatformType, x11VisualID,
+                        enabledFeatureOverridesHash, disabledFeatureOverridesHash,
+                        disableAllNonOverriddenFeatures);
     }
 
     EGLNativeDisplayType nativeDisplayType{EGL_DEFAULT_DISPLAY};
@@ -218,6 +221,7 @@ struct ANGLEPlatformDisplay
     EGLAttrib deviceIdLow{0};
     EGLAttrib displayKey{0};
     EGLAttrib nativePlatformType{0};
+    EGLAttrib x11VisualID{0};
     size_t enabledFeatureOverridesHash;
     size_t disabledFeatureOverridesHash;
     bool disableAllNonOverriddenFeatures;
@@ -835,9 +839,10 @@ Display *Display::GetDisplayFromNativeDisplay(EGLenum platform,
     const EGLAttrib disableAllNonOverriddenFeatures =
         updatedAttribMap.get(EGL_FEATURE_ALL_DISABLED_ANGLE, 0);
     const EGLAttrib nativePlatformType = GetPlatformTypeFromAttribs(platform, updatedAttribMap);
+    const EGLAttrib x11VisualID        = updatedAttribMap.get(EGL_X11_VISUAL_ID_ANGLE, 0);
     const ANGLEPlatformDisplay combinedDisplayKey(
         nativeDisplay, powerPreference, platformANGLEType, deviceIdHigh, deviceIdLow, displayKey,
-        nativePlatformType, enabledFeatureOverrides, disabledFeatureOverrides,
+        nativePlatformType, x11VisualID, enabledFeatureOverrides, disabledFeatureOverrides,
         disableAllNonOverriddenFeatures);
 
     {
@@ -1012,6 +1017,7 @@ Display::~Display()
                 mAttributeMap.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0),
                 mAttributeMap.get(EGL_PLATFORM_ANGLE_DISPLAY_KEY_ANGLE, 0),
                 GetPlatformTypeFromAttribs(mPlatform, mAttributeMap),
+                mAttributeMap.get(EGL_X11_VISUAL_ID_ANGLE, 0),
                 mAttributeMap.get(EGL_FEATURE_OVERRIDES_ENABLED_ANGLE, 0),
                 mAttributeMap.get(EGL_FEATURE_OVERRIDES_DISABLED_ANGLE, 0),
                 mAttributeMap.get(EGL_FEATURE_ALL_DISABLED_ANGLE, 0)));
