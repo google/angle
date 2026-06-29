@@ -654,9 +654,6 @@ TEST_P(TransformFeedbackTest, BufferRebinding)
 // afterward.
 TEST_P(TransformFeedbackTest, RecordAndDraw)
 {
-    // TODO(anglebug.com/40096690) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     // Fails on Mac GL drivers. http://anglebug.com/42263565
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsMac());
 
@@ -5287,6 +5284,65 @@ TEST_P(TransformFeedbackTest, StaleBufferBindingInactiveXfb)
     // Regular draw while TF inactive, but still using a program that was compiled with transform
     // feedback.  It shouldn't crash.
     glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that deleting a buffer bound to a transform feedback slot, and then drawing with a different
+// program that has transform feedback varyings (causing a default-uniform descriptor-set cache
+// miss) while transform feedback is inactive, doesn't cause a use-after-free.
+TEST_P(TransformFeedbackTest, StaleBufferBindingInactiveXfbWithUniforms)
+{
+    std::vector<std::string> tfVaryings = {"gl_Position"};
+    constexpr char kVS1[]               = R"(#version 300 es
+in vec4 a_position;
+uniform vec4 uOff;
+void main() {
+    gl_Position = a_position + uOff;
+})";
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program1, kVS1, essl3_shaders::fs::Red(), tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+    ASSERT_NE(0u, program1);
+    glUseProgram(program1);
+
+    GLBuffer buf0;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, buf0);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 1024, nullptr, GL_DYNAMIC_COPY);
+
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, buf0);
+
+    GLint uOffLocation = glGetUniformLocation(program1, "uOff");
+    ASSERT_NE(-1, uOffLocation);
+    glUniform4f(uOffLocation, 0.0f, 0.0f, 0.0f, 0.0f);
+
+    glBeginTransformFeedback(GL_TRIANGLES);
+    drawQuad(program1, "a_position", 0.5f);
+    glEndTransformFeedback();
+
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
+    buf0.reset();
+
+    // Create a new program with TF varyings and a uniform to force a descriptor set cache miss.
+    constexpr char kVS2[] = R"(#version 300 es
+in vec4 a_position;
+uniform vec4 uOff2;
+void main() {
+    gl_Position = a_position + uOff2;
+})";
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program2, kVS2, essl3_shaders::fs::Green(), tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+    ASSERT_NE(0u, program2);
+    glUseProgram(program2);
+
+    GLint uOff2Location = glGetUniformLocation(program2, "uOff2");
+    ASSERT_NE(-1, uOff2Location);
+    glUniform4f(uOff2Location, 0.0f, 0.0f, 0.0f, 0.0f);
+
+    // Regular draw while TF inactive, but still using a program that was compiled with transform
+    // feedback to trigger a default-uniform descriptor-set cache miss.
+    drawQuad(program2, "a_position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
     ASSERT_GL_NO_ERROR();
 }
 

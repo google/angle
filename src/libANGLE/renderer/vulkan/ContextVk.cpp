@@ -3084,7 +3084,7 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
 
-    if (!executable->hasTransformFeedbackOutput() || !mState.isTransformFeedbackActive())
+    if (!executable->hasTransformFeedbackOutput() || !mState.isTransformFeedbackActiveUnpaused())
     {
         return angle::Result::Continue;
     }
@@ -3130,11 +3130,6 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
     mRenderPassCommandBuffer->bindTransformFeedbackBuffers(
         0, static_cast<uint32_t>(bufferCount), bufferHandles.data(), bufferOffsets.data(),
         bufferSizes.data());
-
-    if (!mState.isTransformFeedbackActiveUnpaused())
-    {
-        return angle::Result::Continue;
-    }
 
     // We should have same number of counter buffers as xfb buffers have
     const gl::TransformFeedbackBuffersArray<VkBuffer> &counterBufferHandles =
