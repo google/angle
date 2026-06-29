@@ -666,6 +666,7 @@
 42267082 PIXEL4ORXL GLES : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedDrawTestES3.ES3GettersArray/* = SKIP
 42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedDrawTestES3.ESSL3BindSimpleVarAsArrayNoBind/* = SKIP
+42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedDrawTestES3.BindFragDataLocationBracketReject/* = SKIP
 42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedDrawTestES3.MultipleDrawBuffersAPI/* = SKIP
 42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedTestES3.FragmentOutputLocationsPartiallyAutomatic/* = SKIP
 

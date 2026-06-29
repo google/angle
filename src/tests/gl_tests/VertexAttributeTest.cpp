@@ -1323,6 +1323,27 @@ TEST_P(VertexAttributeTest, SimpleBindAttribLocation)
     EXPECT_PIXEL_NEAR(0, 0, 128, 0, 0, 255, 1);
 }
 
+// Test that glBindAttribLocation rejects names with '[' unless ending with '[0]'.
+TEST_P(VertexAttributeTest, BindAttribLocationBracketReject)
+{
+    GLuint program = compileMultiAttribProgram(1);
+    glBindAttribLocation(program, 2, "position");
+    // Bind invalid name with [1] suffix (should be ignored)
+    glBindAttribLocation(program, 5, "a0[1]");
+    // name with [0] suffix should be considered valid and bound
+    glBindAttribLocation(program, 3, "a0[0]");
+    // Bind invalid name with multidimensional index (should be ignored)
+    glBindAttribLocation(program, 4, "a0[1][0]");
+    glLinkProgram(program);
+
+    EXPECT_EQ(2, glGetAttribLocation(program, "position"));
+    EXPECT_EQ(3, glGetAttribLocation(program, "a0"));
+
+    // These were not bound.
+    EXPECT_EQ(-1, glGetAttribLocation(program, "a0[1]"));
+    EXPECT_EQ(-1, glGetAttribLocation(program, "a0[1][0]"));
+}
+
 class VertexAttributeOORTest : public VertexAttributeTest
 {
   public:
