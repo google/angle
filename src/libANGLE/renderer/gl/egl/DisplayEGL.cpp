@@ -789,8 +789,9 @@ egl::Error DisplayEGL::makeCurrent(egl::Display *display,
         }
         else if (context)
         {
-            // Switch surface but not context.
-            ASSERT(currentContext.context == newContext);
+            // For external contexts, the underlying native EGLContext might have been destroyed
+            // and recreated by the OS without ANGLE being told to unbind.
+            currentContext.context = newContext;
             ASSERT(newSurface == EGL_NO_SURFACE);
             ASSERT(newContext != EGL_NO_CONTEXT);
             // We only support using external surface with external context.
