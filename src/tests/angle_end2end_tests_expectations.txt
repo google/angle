@@ -2377,8 +2377,10 @@
 42266974 WGPU : Texture2DTest.*Superseding* = SKIP
 42266974 WGPU : Texture2DTest.*Copy* = SKIP
 42266974 WGPU : Texture2DTest.*Mutable* = SKIP
-// Can't generate mipmaps at the moment
-389145696 WGPU : MipmapTestES3.*Generate* = SKIP
+529276211 WGPU : MipmapTestES3.GenerateMipmapPreservesOutOfRangeMips/* = SKIP
+389145696 WGPU : MipmapTestES3.GenerateMipmapCubeBaseLevel/* = SKIP
+389145696 WGPU : MipmapTestES3.Generate3DMipmapRespecification/* = SKIP
+389145696 WGPU : MipmapTestES3.GenerateMipmapWithRedefineLevelAndTexture/* = SKIP
 389145696 WGPU : MipmapTestES3.*TextureArray* = SKIP
 389145696 WGPU : MipmapTestES3.*Texture3D* = SKIP
 // Can't handle the resize of the texture

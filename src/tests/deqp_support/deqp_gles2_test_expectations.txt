@@ -481,6 +481,7 @@
 // Unfortunately Intel and AMD GPUs on Mac fail texture filtering tests.
 389145696 WGPU MAC INTEL : dEQP-GLES2.functional.texture.filtering.2d.* = FAIL
 389145696 WGPU MAC AMD : dEQP-GLES2.functional.texture.filtering.2d.* = FAIL
+389145696 WGPU MAC AMD : dEQP-GLES2.functional.texture.mipmap.2d.* = SKIP
 // 2D filtering tests pass but cube textures do not work yet.
 389145696 WGPU : dEQP-GLES2.functional.texture.filtering.cube.* = SKIP
 // Except luminance format doesn't work
@@ -488,8 +489,10 @@
 389145696 WGPU : dEQP-GLES2.functional.texture.wrap.*_l8* = FAIL
 // Cube textures not yet supported
 389145696 WGPU : dEQP-GLES2.functional.texture.mipmap.cube.* = SKIP
-// Mipmap generation not supported
-389145696 WGPU : dEQP-GLES2.functional.texture.mipmap.2d.* = SKIP
+// Mipmap generation not supported for luma textures
+389145696 WGPU : dEQP-GLES2.functional.texture.mipmap.2d.generate.a8* = SKIP
+389145696 WGPU : dEQP-GLES2.functional.texture.mipmap.2d.generate.l8* = SKIP
+389145696 WGPU : dEQP-GLES2.functional.texture.mipmap.2d.generate.la88* = SKIP
 389145696 WGPU : dEQP-GLES2.functional.texture.format.* = SKIP
 389145696 WGPU : dEQP-GLES2.functional.texture.size.* = SKIP
 389145696 WGPU : dEQP-GLES2.functional.texture.specification.* = SKIP
