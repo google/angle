@@ -3149,6 +3149,16 @@ angle::FixedVector<uint8_t, 16> GetDepthOnePixel(GLenum type)
     return result;
 }
 
+void FillDepthOneMemory(GLenum type, angle::Span<uint8_t> span)
+{
+    angle::FixedVector<uint8_t, 16> pixelData = GetDepthOnePixel(type);
+    CHECK(span.size() % pixelData.size() == 0);
+    for (size_t offset = 0; offset < span.size(); offset += pixelData.size())
+    {
+        memcpy(span.data() + offset, pixelData.data(), pixelData.size());
+    }
+}
+
 void ClearErrors(const FunctionsGL *functions,
                  const char *file,
                  const char *function,
