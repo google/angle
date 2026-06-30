@@ -5903,6 +5903,12 @@ bool ValidateTexStorage3DEXT(const Context *context,
                              GLsizei height,
                              GLsizei depth)
 {
+    if (context->getClientVersion() < ES_3_0 && !context->getExtensions().texture3DOES)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
+    }
+
     return ValidateTexStorage3D(context, entryPoint, type, levels, internalformat, width, height,
                                 depth);
 }

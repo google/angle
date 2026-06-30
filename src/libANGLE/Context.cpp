@@ -3908,6 +3908,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.texture3DOES             = false;
         supportedExtensions.clipDistanceAPPLE        = false;
         supportedExtensions.disjointTimerQueryEXT    = false;
+        supportedExtensions.robustnessKHR            = false;
     }
 
     if (getClientVersion() < ES_3_0)
