@@ -220,9 +220,8 @@ bool ValidateColorMaskForSharedExponentColorBuffer(const Context *context,
     const FramebufferAttachment *attachment = state.getDrawFramebuffer()->getDrawBuffer(drawbuffer);
     if (attachment && attachment->getFormat().info->internalFormat == GL_RGB9_E5)
     {
-        bool r, g, b, a;
-        state.getBlendStateExt().getColorMaskIndexed(drawbuffer, &r, &g, &b, &a);
-        if (r != g || g != b)
+        const uint8_t mask = state.getBlendStateExt().getColorMaskIndexed(drawbuffer);
+        if (ANGLE_UNLIKELY(((mask + 1) & 0xE) != 0))  // Valid masks are 0 (none) and 15 (all).
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
                                    kUnsupportedColorMaskForSharedExponentColorBuffer);

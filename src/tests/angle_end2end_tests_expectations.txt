@@ -891,9 +891,6 @@
 465140993 PIXEL6 VULKAN : GLSLTest_ES3_PackUnpackEmulation.PackSnorm2x16/* = SKIP
 491488984 PIXEL6 VULKAN : GLSLTest_ES31.HelperInvocationsAfterDiscard/* = SKIP
 
-529454067 PIXEL6 VULKAN : FramebufferTest_ES3.RenderSharedExponentWithMask/* = SKIP
-529454067 GALAXYS24EXYNOS VULKAN : FramebufferTest_ES3.RenderSharedExponentWithMask/* = SKIP
-
 // Pixel 10 expectations.
 480069042 PIXEL10 GLES : AtomicCounterBufferTest31.DependentAtomicCounterBufferChange/* = SKIP
 480069042 PIXEL10 GLES : BlitFramebufferANGLETest.BlitWithDepthUserToDefault/* = SKIP
