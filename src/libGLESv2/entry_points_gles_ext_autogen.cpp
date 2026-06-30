@@ -15534,8 +15534,8 @@ void GL_APIENTRY GL_BlitFramebufferNV(GLint srcX0,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->blitFramebufferNV(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask,
-                                       filter);
+            context->blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask,
+                                     filter);
         }
         ANGLE_CAPTURE_GL(BlitFramebufferNV, isCallValid, context, srcX0, srcY0, srcX1, srcY1, dstX0,
                          dstY0, dstX1, dstY1, mask, filter);
@@ -15585,8 +15585,8 @@ void GL_APIENTRY GL_PolygonModeNV(GLenum face, GLenum mode)
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            ContextPrivatePolygonModeNV(context->getMutablePrivateState(),
-                                        context->getMutablePrivateStateCache(), face, modePacked);
+            ContextPrivatePolygonMode(context->getMutablePrivateState(),
+                                      context->getMutablePrivateStateCache(), face, modePacked);
         }
         ANGLE_CAPTURE_GL(PolygonModeNV, isCallValid, context, face, modePacked);
     }

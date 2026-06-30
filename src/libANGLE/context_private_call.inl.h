@@ -444,14 +444,6 @@ inline void ContextPrivatePolygonMode(PrivateState *privateState,
     privateState->setPolygonMode(mode);
 }
 
-inline void ContextPrivatePolygonModeNV(PrivateState *privateState,
-                                        PrivateStateCache *privateStateCache,
-                                        GLenum face,
-                                        PolygonMode mode)
-{
-    ContextPrivatePolygonMode(privateState, privateStateCache, face, mode);
-}
-
 inline void ContextPrivateProvokingVertex(PrivateState *privateState,
                                           PrivateStateCache *privateStateCache,
                                           ProvokingVertexConvention provokeMode)

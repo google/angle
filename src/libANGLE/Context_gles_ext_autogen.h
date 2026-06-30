@@ -290,8 +290,6 @@
     void setFenceNV(FenceNVID fencePacked, GLenum condition);                                      \
     GLboolean testFenceNV(FenceNVID fencePacked);                                                  \
     /* GL_NV_framebuffer_blit */                                                                   \
-    void blitFramebufferNV(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0,        \
-                           GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter); \
     /* GL_NV_pack_subimage */                                                                      \
     /* GL_NV_pixel_buffer_object */                                                                \
     /* GL_NV_polygon_mode */                                                                       \

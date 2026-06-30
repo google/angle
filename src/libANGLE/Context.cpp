@@ -4988,20 +4988,6 @@ void Context::blitFramebuffer(GLint srcX0,
     ANGLE_CONTEXT_TRY(drawFramebuffer->blit(this, srcArea, dstArea, mask, filter));
 }
 
-void Context::blitFramebufferNV(GLint srcX0,
-                                GLint srcY0,
-                                GLint srcX1,
-                                GLint srcY1,
-                                GLint dstX0,
-                                GLint dstY0,
-                                GLint dstX1,
-                                GLint dstY1,
-                                GLbitfield mask,
-                                GLenum filter)
-{
-    blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
-}
-
 void Context::clear(GLbitfield mask)
 {
     if (mState.isRasterizerDiscardEnabled())
