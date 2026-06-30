@@ -70,6 +70,7 @@ const angle::FeaturesGL &GetFeaturesGL(const gl::Context *context);
 // Returns a 16-byte fixed vector containing the binary representation of 1.0 depth
 // (and 0 stencil) formatted for the specified OpenGL component type.
 angle::FixedVector<uint8_t, 16> GetDepthOnePixel(GLenum type);
+void FillDepthOneMemory(GLenum type, angle::Span<uint8_t> span);
 
 // Clear all errors on the stored context, emits console warnings
 void ClearErrors(const gl::Context *context,

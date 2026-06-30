@@ -11,6 +11,7 @@
 #endif
 
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
 
 #include <string.h>
 #include <algorithm>
@@ -2233,6 +2234,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 bindFramebuffer(
                     mHasSeparateFramebufferBindings ? GL_READ_FRAMEBUFFER : GL_FRAMEBUFFER,
                     framebufferGL->getFramebufferID());
+                GetImplAs<ContextGL>(context)->tickGC();
                 break;
             }
             case gl::state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
@@ -2247,6 +2249,8 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 bindFramebuffer(
                     mHasSeparateFramebufferBindings ? GL_DRAW_FRAMEBUFFER : GL_FRAMEBUFFER,
                     framebufferGL->getFramebufferID());
+
+                GetImplAs<ContextGL>(context)->tickGC();
 
                 if (mFeatures.resetSampleCoverageOnFBOChange.enabled && mSampleCoverageEverChanged)
                 {

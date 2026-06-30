@@ -1933,6 +1933,7 @@ TEST_P(RobustResourceInitTestES3, MultisampledDepthInitializedCorrectly)
 // Tests that uninitialized depth and depth-stencil textures created across all supported
 // formats are robustly initialized to 1.0 depth (and 0 stencil), verified by sampling depth
 // directly in a shader and testing stencil via FBO attachment.
+// We test with decreasing sizes to verify PBO reuses work correctly in the GL backend.
 TEST_P(RobustResourceInitTestES3, DepthStencilTextureInitCombinations)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
@@ -1983,48 +1984,54 @@ void main()
 
     ANGLE_GL_PROGRAM(blueProg, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
 
+    constexpr int kSizes[] = {256, 128};
+
     for (const TestFormat &fmt : kFormats)
     {
-        GLTexture color;
-        glBindTexture(GL_TEXTURE_2D, color);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                     nullptr);
-
-        GLFramebuffer fbo;
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
-        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
-
-        GLTexture ds;
-        glBindTexture(GL_TEXTURE_2D, ds);
-        glTexImage2D(GL_TEXTURE_2D, 0, fmt.internalFormat, kWidth, kHeight, 0, fmt.format, fmt.type,
-                     nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        // 1. Verify depth == 1.0 via shader sampling
-        glDisable(GL_DEPTH_TEST);
-        drawQuad(depthSampleProg, "aPosition", 0.0f);
-        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
-
-        // 2. If depth-stencil, verify stencil == 0 via FBO stencil attachment test
-        if (fmt.format == GL_DEPTH_STENCIL)
+        for (int size : kSizes)
         {
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, ds,
-                                   0);
+            GLTexture color;
+            glBindTexture(GL_TEXTURE_2D, color);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         nullptr);
+
+            GLFramebuffer fbo;
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
             ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
-            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT);
+            GLTexture ds;
+            glBindTexture(GL_TEXTURE_2D, ds);
+            glTexImage2D(GL_TEXTURE_2D, 0, fmt.internalFormat, size, size, 0, fmt.format, fmt.type,
+                         nullptr);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-            glEnable(GL_STENCIL_TEST);
-            glStencilFunc(GL_EQUAL, 0, 0xFF);
-            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+            // 1. Verify depth == 1.0 via shader sampling
+            glDisable(GL_DEPTH_TEST);
+            glViewport(0, 0, size, size);
+            drawQuad(depthSampleProg, "aPosition", 0.0f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
-            drawQuad(blueProg, essl1_shaders::PositionAttrib(), 0.0f);
-            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
-            glDisable(GL_STENCIL_TEST);
+            // 2. If depth-stencil, verify stencil == 0 via FBO stencil attachment test
+            if (fmt.format == GL_DEPTH_STENCIL)
+            {
+                glBindTexture(GL_TEXTURE_2D, 0);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                                       ds, 0);
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+                glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT);
+
+                glEnable(GL_STENCIL_TEST);
+                glStencilFunc(GL_EQUAL, 0, 0xFF);
+                glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+                drawQuad(blueProg, essl1_shaders::PositionAttrib(), 0.0f);
+                EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+                glDisable(GL_STENCIL_TEST);
+            }
         }
     }
 }

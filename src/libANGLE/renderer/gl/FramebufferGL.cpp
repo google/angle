@@ -535,6 +535,8 @@ angle::Result FramebufferGL::invalidate(const gl::Context *context,
                                              finalAttachmentsPtr);
         }
     }
+    ContextGL *contextGL = GetImplAs<ContextGL>(context);
+    contextGL->tickGC();
 
     return angle::Result::Continue;
 }
@@ -1489,6 +1491,12 @@ angle::Result FramebufferGL::syncState(const gl::Context *context,
     {
         stateManager->updateMultiviewBaseViewLayerIndexUniform(
             context->getState().getProgramExecutable(), getState());
+    }
+
+    if (dirtyBits.any())
+    {
+        ContextGL *contextGL = GetImplAs<ContextGL>(context);
+        contextGL->tickGC();
     }
 
     return angle::Result::Continue;
