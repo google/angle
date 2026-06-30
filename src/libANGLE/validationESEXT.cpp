@@ -863,16 +863,7 @@ bool ValidateBlendEquationOES(const PrivateState &state,
                               angle::EntryPoint entryPoint,
                               GLenum mode)
 {
-    switch (mode)
-    {
-        case GL_FUNC_ADD_OES:
-        case GL_FUNC_SUBTRACT_OES:
-        case GL_FUNC_REVERSE_SUBTRACT_OES:
-            return true;
-        default:
-            errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidBlendEquation);
-            return false;
-    }
+    return ValidateBlendEquation(state, errors, entryPoint, mode);
 }
 
 bool ValidateBlendEquationSeparateiEXT(const PrivateState &state,
