@@ -88,10 +88,7 @@ bool FindFlatInterpolationVarying(const gl::ShaderMap<gl::SharedCompiledShaderSt
 class HLSLBlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFactory
 {
   public:
-    sh::BlockLayoutEncoder *makeEncoder() override
-    {
-        return new sh::HLSLBlockEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
-    }
+    sh::BlockLayoutEncoder *makeEncoder() override { return new sh::HLSLBlockEncoder(false); }
 };
 
 // GetExecutableTask class

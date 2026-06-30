@@ -55,14 +55,11 @@ constexpr size_t kWebGLMaxTotalPrivateVariableSizeInBytes = static_cast<size_t>(
 // The 1024 character identifier limit, `-2` for the `_u`
 constexpr size_t kMaxAvailableIdentifierLength = 1022;
 
-bool ShouldEnforceESSL100LoopAndIndexingLimitations(ShShaderSpec spec,
-                                                    int shaderVersion,
-                                                    const ShCompileOptions &compileOptions)
+bool ShouldEnforceESSL100LoopAndIndexingLimitations(ShShaderSpec spec, int shaderVersion)
 {
-    // If compiling an ESSL 1.00 shader for WebGL, or if its been requested through the API,
-    // validate loop and indexing as well (to verify that the shader only uses minimal functionality
-    // of ESSL 1.00 as in Appendix A of the spec).
-    return (IsWebGLBasedSpec(spec) && shaderVersion == 100) || compileOptions.validateLoopIndexing;
+    // If compiling an ESSL 1.00 shader for WebGL, validate loop and indexing as well (to verify
+    // that the shader only uses minimal functionality of ESSL 1.00 as in Appendix A of the spec).
+    return IsWebGLBasedSpec(spec) && shaderVersion == 100;
 }
 
 struct IsSamplerFunc
@@ -546,7 +543,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMainFunction(nullptr),
       mIsReturnVisitedInMain(false),
       mValidateESSL100Limitations(
-          ShouldEnforceESSL100LoopAndIndexingLimitations(spec, mShaderVersion, options)),
+          ShouldEnforceESSL100LoopAndIndexingLimitations(spec, mShaderVersion)),
       mFragmentOutputIndex1Used(false),
       mFragmentOutputFragDepthUsed(false),
       mMaxFragDataArrayIndexUsed(0),
@@ -597,8 +594,8 @@ void TParseContext::onShaderVersionDeclared(const TSourceLoc &loc, int version)
     mShaderVersion = version;
     checkShaderVersion(loc);
     // Update cached decisions that depend on the shader version
-    mValidateESSL100Limitations = ShouldEnforceESSL100LoopAndIndexingLimitations(
-        mShaderSpec, mShaderVersion, mCompileOptions);
+    mValidateESSL100Limitations =
+        ShouldEnforceESSL100LoopAndIndexingLimitations(mShaderSpec, mShaderVersion);
 }
 
 void TParseContext::fatal(const TSourceLoc &loc, const char *reason)

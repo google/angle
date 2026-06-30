@@ -413,13 +413,11 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
 
 TCompiler::~TCompiler() {}
 
-bool TCompiler::shouldRunLoopAndIndexingValidation(const ShCompileOptions &compileOptions) const
+bool TCompiler::shouldRunLoopAndIndexingValidation() const
 {
-    // If compiling an ESSL 1.00 shader for WebGL, or if its been requested through the API,
-    // validate loop and indexing as well (to verify that the shader only uses minimal functionality
-    // of ESSL 1.00 as in Appendix A of the spec).
-    return (IsWebGLBasedSpec(mShaderSpec) && mShaderVersion == 100) ||
-           compileOptions.validateLoopIndexing;
+    // If compiling an ESSL 1.00 shader for WebGL, validate loop and indexing as well (to verify
+    // that the shader only uses minimal functionality of ESSL 1.00 as in Appendix A of the spec).
+    return IsWebGLBasedSpec(mShaderSpec) && mShaderVersion == 100;
 }
 
 bool TCompiler::Init(const ShBuiltInResources &resources)
@@ -1116,7 +1114,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         // init statements can declare arrays or nameless structs and have multiple
         // declarations.
 
-        if (!shouldRunLoopAndIndexingValidation(compileOptions))
+        if (!shouldRunLoopAndIndexingValidation())
         {
             if (!SimplifyLoopConditions(this, root,
                                         IntermNodePatternMatcher::kArrayDeclaration |

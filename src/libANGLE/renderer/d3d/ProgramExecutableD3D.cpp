@@ -1817,8 +1817,7 @@ void ProgramExecutableD3D::defineUniformBase(gl::ShaderType shaderType,
     }
 
     unsigned int startRegister = shaderD3D->getUniformRegister(uniform.name);
-    ShShaderOutput outputType  = shaderD3D->compilerOutputType;
-    sh::HLSLBlockEncoder encoder(sh::HLSLBlockEncoder::GetStrategyFor(outputType), true);
+    sh::HLSLBlockEncoder encoder(true);
     encoder.skipRegisters(startRegister);
 
     UniformEncodingVisitorD3D visitor(shaderType, HLSLRegisterType::None, &encoder, uniformMap);

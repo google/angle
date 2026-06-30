@@ -26,7 +26,6 @@ mod ffi {
         Glsl430Core,
         Glsl440Core,
         Glsl450Core,
-        Hlsl3,
         Hlsl41,
         Spirv,
         Msl,
@@ -426,7 +425,7 @@ unsafe fn generate_ast(
             #[cfg(not(angle_enable_glsl))]
             panic!("Internal error: GLSL generator is not built");
         }
-        OutputLanguage::Hlsl3 | OutputLanguage::Hlsl41 => {
+        OutputLanguage::Hlsl41 => {
             #[cfg(angle_enable_hlsl)]
             output::hlsl::generate(&mut ir, options);
             #[cfg(not(angle_enable_hlsl))]
