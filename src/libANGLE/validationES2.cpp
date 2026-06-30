@@ -5948,13 +5948,7 @@ bool ValidateVertexAttribDivisorEXT(const PrivateState &privateState,
                                     GLuint index,
                                     GLuint divisor)
 {
-    if (index >= static_cast<GLuint>(privateState.getCaps().maxVertexAttributes))
-    {
-        errors->validationError(entryPoint, GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
-        return false;
-    }
-
-    return true;
+    return ValidateVertexAttribDivisor(privateState, errors, entryPoint, index, divisor);
 }
 
 bool ValidateTexImage3DOES(const Context *context,

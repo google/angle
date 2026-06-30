@@ -19,6 +19,7 @@
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationES.h"
+#include "libANGLE/validationES2.h"
 
 namespace gl
 {
@@ -1622,13 +1623,7 @@ bool ValidateCheckFramebufferStatusOES(const Context *context,
                                        angle::EntryPoint entryPoint,
                                        GLenum target)
 {
-    if (!ValidFramebufferTarget(context, target))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidFramebufferTarget);
-        return false;
-    }
-
-    return true;
+    return ValidateCheckFramebufferStatus(context, entryPoint, target);
 }
 
 bool ValidateFramebufferRenderbufferOES(const Context *context,
