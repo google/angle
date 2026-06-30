@@ -613,8 +613,8 @@ void GL_APIENTRY GL_DrawArraysInstancedBaseInstanceANGLE(GLenum mode,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->drawArraysInstancedBaseInstanceANGLE(modePacked, first, count, instanceCount,
-                                                          baseInstance);
+            context->drawArraysInstancedBaseInstance(modePacked, first, count, instanceCount,
+                                                     baseInstance);
         }
         ANGLE_CAPTURE_GL(DrawArraysInstancedBaseInstanceANGLE, isCallValid, context, modePacked,
                          first, count, instanceCount, baseInstance);
@@ -674,7 +674,7 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->drawElementsInstancedBaseVertexBaseInstanceANGLE(
+            context->drawElementsInstancedBaseVertexBaseInstance(
                 modePacked, count, typePacked, indices, instanceCount, baseVertex, baseInstance);
         }
         ANGLE_CAPTURE_GL(DrawElementsInstancedBaseVertexBaseInstanceANGLE, isCallValid, context,

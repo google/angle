@@ -131,8 +131,6 @@ ALIASING_EXCEPTIONS = [
     'renderbufferStorageMultisampleEXT',
     # Other entry points where the extension behavior is not identical to core
     # behavior.
-    'drawArraysInstancedBaseInstanceANGLE',
-    'drawElementsInstancedBaseVertexBaseInstanceANGLE',
     'logicOpANGLE',
     'shadingRateEXT',
     'shadingRateQCOM',
