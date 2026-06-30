@@ -594,7 +594,8 @@ We need two loops to verify Reset, so you'll need to inspect how many frames
 are in the trace. In this case, `octopath_traveler` has 500 frames, so we need
 1000 screenshots. We use -1 as the screenshot frame so we get all images:
 ```
-out/Debug/angle_trace_tests --gtest_filter=TraceTest.${TRACE_NAME} --use-angle=swiftshader --max-steps-performed 1000 --screenshot-dir retrace-wip/${TRACE_NAME}_before --screenshot-frame -1
+export FRAME_COUNT=1000
+out/Debug/angle_trace_tests --gtest_filter=TraceTest.${TRACE_NAME} --use-angle=swiftshader --max-steps-performed ${FRAME_COUNT} --screenshot-dir retrace-wip/${TRACE_NAME}_before --screenshot-frame -1
 ```
 
 Then move the new trace in and run it again:
@@ -602,13 +603,13 @@ Then move the new trace in and run it again:
 mv src/tests/restricted_traces/${TRACE_NAME} retrace-wip/${TRACE_NAME}_orig
 cp -r retrace-wip/${TRACE_NAME} src/tests/restricted_traces
 autoninja -C out/Debug angle_trace_tests
-out/Debug/angle_trace_tests --gtest_filter=TraceTest.${TRACE_NAME} --use-angle=swiftshader --max-steps-performed 1000 --screenshot-dir retrace-wip/${TRACE_NAME}_after --screenshot-frame -1
+out/Debug/angle_trace_tests --gtest_filter=TraceTest.${TRACE_NAME} --use-angle=swiftshader --max-steps-performed ${FRAME_COUNT} --screenshot-dir retrace-wip/${TRACE_NAME}_after --screenshot-frame -1
 ```
 
 After that, we have a script that will compare the before and after screenshots,
 saving the results:
 ```
-src/tests/restricted_traces/compare_trace_screenshots.py versus_upgrade --before retrace-wip/${TRACE_NAME}_before --after retrace-wip/${TRACE_NAME}_after --outdir retrace-wip/${TRACE_NAME}_compare
+vpython3 src/tests/restricted_traces/compare_trace_screenshots.py versus_upgrade --before retrace-wip/${TRACE_NAME}_before --after retrace-wip/${TRACE_NAME}_after --outdir retrace-wip/${TRACE_NAME}_compare
 ```
 
 If you have any diffs, they will pop out like this, and you need to investigate:
@@ -630,37 +631,38 @@ First, restore the original trace, then build and install the most optimized bui
 rm -r src/tests/restricted_traces/${TRACE_NAME}
 cp -r retrace-wip/${TRACE_NAME}_orig src/tests/restricted_traces/${TRACE_NAME}
 autoninja -C out/AndroidPerformance angle_trace_tests
-out/AndroidPerformance/angle_trace_tests --gtest_filter=TraceTest.${TRACE_NAME} --run-to-key-frame --no-warmup
 ```
 
 Then run the `restricted_trace_perf.py` script to gather frame times and memory:
 ```
-out/AndroidPerformance/restricted_trace_perf --fixedtime 10 --sleep 10 --power --output-tag ${TRACE_NAME}.before --loop-count 5 --renderer vulkan --filter ${TRACE_NAME}
+pushd src/tests/restricted_traces
+vpython3 restricted_trace_perf.py --fixedtime 10 --sleep 10 --memory --cpu-inst user_and_kernel --output-tag ${TRACE_NAME}.before --loop-count 5 --build-dir ../../../out/AndroidPerformance --renderer vulkan --filter ${TRACE_NAME}
+popd
 ```
 
 You should get output like this:
 ```
-trace                                    wall_time       gpu_time        cpu_time        gpu_power  cpu_power  gpu_mem_sustained    gpu_mem_peak    proc_mem_median      proc_mem_peak
+trace                                    wall_time       gpu_time        frame_wall_time cpu_time        gpu_power  cpu_power  infra_power gpu_mem_sustained    gpu_mem_peak    proc_mem_median      proc_mem_peak   process_cpuinst      gfxlib_cpuinst       angle_cpuinst        vulkan_cpuinst       gles_cpuinst         libc_cpuinst
 
 Starting run 1 with vulkan at 2023-08-17 16:26:29
 
-vulkan_octopath_traveler                 2.9650          0               3.8901000000    5183       5659       186837550            206241792       586976000            591528000
+vulkan_octopath_traveler                 2.8125          0               2.0213284872    2.6833208333    0.000      0.000      0.000      157458432            157458432       581324000            581536000       9814450.073333334    1907805.1666666667   30495.19861111111    0.0                  1877309.9680555556   9814093.243888889
 
 Starting run 2 with vulkan at 2023-08-17 16:26:54
 
-vulkan_octopath_traveler                 3.0038          0               3.9452525714    5295       5128       186467084            205910016       584568000            589196000
+vulkan_octopath_traveler                 2.7942          0               2.0026349672    2.6582661111    0.000      0.000      0.000      157167616            157167616       580976000            581120000       9940974.378611112    1930372.9425         29421.109166666665   0.0                  1900951.8333333333   9940970.091666667
 
 Starting run 3 with vulkan at 2023-08-17 16:27:18
 
-vulkan_octopath_traveler                 3.0061          0               3.9361028571    5203       5182       187197952            205262848       586596000            590324000
+vulkan_octopath_traveler                 2.8087          0               2.0104668258    2.6753233333    0.000      0.000      0.000      155391744            155398144       578784000            578844000       9849789.568611111    1897764.1875         27965.308333333334   0.0                  1869798.8791666667   9849162.080555556
 
 Starting run 4 with vulkan at 2023-08-17 16:27:42
 
-vulkan_octopath_traveler                 2.9901          0               3.9330551429    5461       5165       194881803            197480448       585268000            588384000
+vulkan_octopath_traveler                 2.8126          0               2.0338224075    2.6839755556    0.000      0.000      0.000      148413982            157356032       580764000            580808000       9858647.521944445    1891151.5491666666   27062.17777777778    0.0                  1864089.371388889    9857876.606944444
 
 Starting run 5 with vulkan at 2023-08-17 16:28:05
 
-vulkan_octopath_traveler                 3.0749          0               3.9652568571    5197       5096       193443742            203177984       583636000            586380000
+vulkan_octopath_traveler                 2.8193          0               2.0375366431    2.6894483333    0.000      0.000      0.000      148760576            148770816       572796000            572820000       9813130.877222221    1892703.2255555557   25800.17             0.0                  1866903.0555555555   9812411.621388888
 ```
 
 Bring in the upgraded trace, build and install the trace again:
@@ -668,12 +670,11 @@ Bring in the upgraded trace, build and install the trace again:
 rm -rf src/tests/restricted_traces/${TRACE_NAME}
 cp -r retrace-wip/${TRACE_NAME} src/tests/restricted_traces/${TRACE_NAME}
 autoninja -C out/AndroidPerformance angle_trace_tests
-out/AndroidPerformance/angle_trace_tests --gtest_filter=TraceTest.${TRACE_NAME} --run-to-key-frame --no-warmup
 ```
 
 And collect performance data:
 ```
-out/AndroidPerformance/restricted_trace_perf --fixedtime 10 --sleep 10 --power --output-tag ${TRACE_NAME}.after --loop-count 5 --renderer vulkan --filter ${TRACE_NAME}
+vpython3 restricted_trace_perf.py --fixedtime 10 --sleep 10 --memory --cpu-inst user_and_kernel --output-tag ${TRACE_NAME}.after --loop-count 5 --build-dir ../../../out/AndroidPerformance --renderer vulkan --filter ${TRACE_NAME}
 ```
 
 Verify using a spreadsheet that the values are relatively the same.
@@ -700,11 +701,14 @@ number beginning with 'x'. For example:
 Then run:
 
 ```
-src/tests/restricted_traces/sync_restricted_traces_to_cipd.py --filter ${TRACE_NAME}
-scripts/run_code_generation.py
+vpython3 src/tests/restricted_traces/sync_restricted_traces_to_cipd.py --filter ${TRACE_NAME}
+vpython3 scripts/run_code_generation.py
 ```
 
 After these commands complete succesfully, create and upload a CL as normal.
+```
+git cl upload
+```
 
 Before running tests, you need to grant the bots access to your experimental
 CIPD files (substituting your account name):
@@ -726,7 +730,7 @@ Readers:
 Run CQ +1 Dry-Run. If you find a test regression, see the section below on
 diagnosing tracer errors. Otherwise proceed with the steps below.
 
-## Part 5: Upload the verified traces to CIPD under the stable prefix
+## Part 4: Upload the verified traces to CIPD under the stable prefix
 
 Now that you've validated the traces on the CQ, update
 [`restricted_traces.json`](restricted_traces.json) to remove the 'x' prefix
@@ -734,8 +738,8 @@ and incrementing the version of the traces (skipping versions if you prefer)
 and then run:
 
 ```
-src/tests/restricted_traces/sync_restricted_traces_to_cipd.py --filter ${TRACE_NAME}
-scripts/run_code_generation.py
+vpython3 src/tests/restricted_traces/sync_restricted_traces_to_cipd.py --filter ${TRACE_NAME}
+vpython3 scripts/run_code_generation.py
 ```
 
 Then create and upload a CL as normal. Congratulations, you've finished the
