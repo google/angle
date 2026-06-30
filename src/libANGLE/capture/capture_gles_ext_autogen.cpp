@@ -8580,14 +8580,13 @@ CallCapture CaptureReadnPixelsKHR(const State &glState,
 CallCapture CaptureFramebufferParameteriMESA(const State &glState,
                                              bool isCallValid,
                                              GLenum target,
-                                             GLenum pname,
+                                             FramebufferParameter pnamePacked,
                                              GLint param)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addEnumParam("target", GLESEnum::FramebufferTarget, ParamType::TGLenum, target);
-    paramBuffer.addEnumParam("pname", GLESEnum::FramebufferParameterName, ParamType::TGLenum,
-                             pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TFramebufferParameter, pnamePacked);
     paramBuffer.addValueParam("param", ParamType::TGLint, param);
 
     return CallCapture(angle::EntryPoint::GLFramebufferParameteriMESA, std::move(paramBuffer));
@@ -8596,20 +8595,20 @@ CallCapture CaptureFramebufferParameteriMESA(const State &glState,
 CallCapture CaptureGetFramebufferParameterivMESA(const State &glState,
                                                  bool isCallValid,
                                                  GLenum target,
-                                                 GLenum pname,
+                                                 FramebufferParameter pnamePacked,
                                                  GLint *params)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addEnumParam("target", GLESEnum::FramebufferTarget, ParamType::TGLenum, target);
-    paramBuffer.addEnumParam("pname", GLESEnum::FramebufferAttachmentParameterName,
-                             ParamType::TGLenum, pname);
+    paramBuffer.addValueParam("pnamePacked", ParamType::TFramebufferParameter, pnamePacked);
 
     ParamCapture paramsParam("params", ParamType::TGLintPointer);
     if (isCallValid)
     {
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
-        CaptureGetFramebufferParameterivMESA_params(glState, target, pname, params, &paramsParam);
+        CaptureGetFramebufferParameterivMESA_params(glState, target, pnamePacked, params,
+                                                    &paramsParam);
     }
     else
     {

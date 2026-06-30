@@ -222,6 +222,24 @@ FogMode FromGLenum<FogMode>(GLenum from);
 GLenum ToGLenum(FogMode from);
 std::ostream &operator<<(std::ostream &os, FogMode value);
 
+enum class FramebufferParameter : uint8_t
+{
+    DefaultWidth                = 0,
+    DefaultHeight               = 1,
+    DefaultLayers               = 2,
+    DefaultSamples              = 3,
+    DefaultFixedSampleLocations = 4,
+    FlipY                       = 5,
+
+    InvalidEnum = 6,
+    EnumCount   = 6,
+};
+
+template <>
+FramebufferParameter FromGLenum<FramebufferParameter>(GLenum from);
+GLenum ToGLenum(FramebufferParameter from);
+std::ostream &operator<<(std::ostream &os, FramebufferParameter value);
+
 enum class GraphicsResetStatus : uint8_t
 {
     NoError              = 0,

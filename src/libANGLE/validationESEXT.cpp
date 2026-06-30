@@ -3614,29 +3614,19 @@ bool ValidateReleaseTexturesANGLE(const Context *context,
 bool ValidateFramebufferParameteriMESA(const Context *context,
                                        angle::EntryPoint entryPoint,
                                        GLenum target,
-                                       GLenum pname,
+                                       FramebufferParameter pnamePacked,
                                        GLint param)
 {
-    if (pname != GL_FRAMEBUFFER_FLIP_Y_MESA)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidPname);
-        return false;
-    }
-    return ValidateFramebufferParameteriBase(context, entryPoint, target, pname, param);
+    return ValidateFramebufferParameteriBase(context, entryPoint, target, pnamePacked, param);
 }
 
 bool ValidateGetFramebufferParameterivMESA(const Context *context,
                                            angle::EntryPoint entryPoint,
                                            GLenum target,
-                                           GLenum pname,
+                                           FramebufferParameter pnamePacked,
                                            const GLint *params)
 {
-    if (pname != GL_FRAMEBUFFER_FLIP_Y_MESA)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidPname);
-        return false;
-    }
-    return ValidateGetFramebufferParameterivBase(context, entryPoint, target, pname, params);
+    return ValidateGetFramebufferParameterivBase(context, entryPoint, target, pnamePacked, params);
 }
 
 // GL_AMD_performance_monitor

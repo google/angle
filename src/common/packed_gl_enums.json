@@ -82,6 +82,15 @@
         "Exp2": "GL_EXP2",
         "Linear": "GL_LINEAR"
     },
+    "FramebufferParameter":
+    {
+        "DefaultWidth": "GL_FRAMEBUFFER_DEFAULT_WIDTH",
+        "DefaultHeight": "GL_FRAMEBUFFER_DEFAULT_HEIGHT",
+        "DefaultLayers": "GL_FRAMEBUFFER_DEFAULT_LAYERS",
+        "DefaultSamples": "GL_FRAMEBUFFER_DEFAULT_SAMPLES",
+        "DefaultFixedSampleLocations": "GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS",
+        "FlipY": "GL_FRAMEBUFFER_FLIP_Y_MESA"
+    },
     "GraphicsResetStatus":
     {
         "NoError": "GL_NO_ERROR",

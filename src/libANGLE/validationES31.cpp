@@ -1080,19 +1080,19 @@ bool ValidateGetMultisamplefvRobustANGLE(const Context *context,
 bool ValidateFramebufferParameteri(const Context *context,
                                    angle::EntryPoint entryPoint,
                                    GLenum target,
-                                   GLenum pname,
+                                   FramebufferParameter pnamePacked,
                                    GLint param)
 {
-    return ValidateFramebufferParameteriBase(context, entryPoint, target, pname, param);
+    return ValidateFramebufferParameteriBase(context, entryPoint, target, pnamePacked, param);
 }
 
 bool ValidateGetFramebufferParameteriv(const Context *context,
                                        angle::EntryPoint entryPoint,
                                        GLenum target,
-                                       GLenum pname,
+                                       FramebufferParameter pnamePacked,
                                        const GLint *params)
 {
-    return ValidateGetFramebufferParameterivBase(context, entryPoint, target, pname, params);
+    return ValidateGetFramebufferParameterivBase(context, entryPoint, target, pnamePacked, params);
 }
 
 bool ValidateGetProgramResourceIndex(const Context *context,
