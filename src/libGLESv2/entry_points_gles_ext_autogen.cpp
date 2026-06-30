@@ -15110,7 +15110,7 @@ void GL_APIENTRY GL_FramebufferParameteriMESA(GLenum target, GLenum pname, GLint
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->framebufferParameteriMESA(target, pname, param);
+            context->framebufferParameteri(target, pname, param);
         }
         ANGLE_CAPTURE_GL(FramebufferParameteriMESA, isCallValid, context, target, pname, param);
     }
@@ -15158,7 +15158,7 @@ void GL_APIENTRY GL_GetFramebufferParameterivMESA(GLenum target, GLenum pname, G
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->getFramebufferParameterivMESA(target, pname, params);
+            context->getFramebufferParameteriv(target, pname, params);
         }
         ANGLE_CAPTURE_GL(GetFramebufferParameterivMESA, isCallValid, context, target, pname,
                          params);
