@@ -16,6 +16,7 @@
 #include "common/debug.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/MemoryObject.h"
 #include "libANGLE/State.h"
 #include "libANGLE/Surface.h"
@@ -25,6 +26,7 @@
 #include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
+#include "libANGLE/renderer/gl/DisplayGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/ImageGL.h"
@@ -141,13 +143,7 @@ angle::Result GetDepthOneFilledBuffer(const gl::Context *context,
     angle::MemoryBuffer *scratchBuffer = nullptr;
     ANGLE_CHECK_GL_ALLOC(contextGL, context->getScratchBuffer(imageSize, &scratchBuffer));
 
-    angle::FixedVector<uint8_t, 16> pixelData = GetDepthOnePixel(type);
-    CHECK(imageSize % pixelData.size() == 0);
-    angle::Span<uint8_t> dest = scratchBuffer->first(imageSize);
-    for (size_t offset = 0; offset < dest.size(); offset += pixelData.size())
-    {
-        memcpy(&dest[offset], pixelData.data(), pixelData.size());
-    }
+    FillDepthOneMemory(type, scratchBuffer->first(imageSize));
     *bufferOut = scratchBuffer;
     return angle::Result::Continue;
 }
@@ -2600,29 +2596,52 @@ angle::Result TextureGL::initializeContentsImpl(const gl::Context *context,
                                            nativeSubImageFormat.type, desc.size, unpackState,
                                            nativegl::UseTexImage3D(getType()), &imageSize));
 
-        const angle::MemoryBuffer *zero;
+        const angle::MemoryBuffer *zero = nullptr;
+        GLuint pboId                    = 0;
+        bool usePBO                     = false;
         if (internalFormatInfo.depthBits > 0)
         {
-            // On some devices we cannot use glClear to initialize a texture since it is buggy.
-            // However using memory buffer and filling it has performance hits.
-            // TODO(crbug.com/529628936): use PBO and caching to initialize textures.
-            ANGLE_TRY(
-                GetDepthOneFilledBuffer(context, imageSize, nativeSubImageFormat.type, &zero));
+            DisplayGL *displayGL = GetImplAs<DisplayGL>(context->getDisplay());
+            if ((nativegl::UseTexImage2D(getType()) &&
+                 features.uploadTextureDataInChunks.enabled) ||
+                displayGL->getMaxSupportedESVersion() < gl::Version(3, 0))
+            {
+                // Fall back to client memory buffer if PBO cannot be used.
+                ANGLE_TRY(
+                    GetDepthOneFilledBuffer(context, imageSize, nativeSubImageFormat.type, &zero));
+            }
+            else
+            {
+                ANGLE_TRY(contextGL->getDepthInitPBO(context, imageSize, nativeSubImageFormat.type,
+                                                     &pboId));
+                usePBO = true;
+            }
         }
         else
         {
             ANGLE_CHECK_GL_ALLOC(contextGL, context->getZeroFilledBuffer(imageSize, &zero));
         }
 
+        angle::Span<const uint8_t> uploadSpan;
+        if (usePBO)
+        {
+            stateManager->bindBuffer(gl::BufferBinding::PixelUnpack, pboId);
+        }
+        else
+        {
+            uploadSpan = {zero->data(), imageSize};
+        }
+
         if (nativegl::UseTexImage2D(getType()))
         {
             if (features.uploadTextureDataInChunks.enabled)
             {
+                ASSERT(!usePBO);
                 gl::Box area(0, 0, 0, desc.size.width, desc.size.height, 1);
                 ANGLE_TRY(setSubImageRowByRowWorkaround(
                     context, imageIndex.getTarget(), imageIndex.getLevelIndex(), area,
                     nativeSubImageFormat.format, nativeSubImageFormat.type, unpackState, nullptr,
-                    kUploadTextureDataInChunksUploadSize, zero->data()));
+                    kUploadTextureDataInChunksUploadSize, uploadSpan.data()));
             }
             else
             {
@@ -2630,17 +2649,17 @@ angle::Result TextureGL::initializeContentsImpl(const gl::Context *context,
                              functions->texSubImage2D(
                                  ToGLenum(imageIndex.getTarget()), imageIndex.getLevelIndex(), 0, 0,
                                  desc.size.width, desc.size.height, nativeSubImageFormat.format,
-                                 nativeSubImageFormat.type, zero->data()));
+                                 nativeSubImageFormat.type, uploadSpan.data()));
             }
         }
         else
         {
             ASSERT(nativegl::UseTexImage3D(getType()));
-            ANGLE_GL_TRY(context,
-                         functions->texSubImage3D(
-                             ToGLenum(imageIndex.getTarget()), imageIndex.getLevelIndex(), 0, 0, 0,
-                             desc.size.width, desc.size.height, desc.size.depth,
-                             nativeSubImageFormat.format, nativeSubImageFormat.type, zero->data()));
+            ANGLE_GL_TRY(context, functions->texSubImage3D(
+                                      ToGLenum(imageIndex.getTarget()), imageIndex.getLevelIndex(),
+                                      0, 0, 0, desc.size.width, desc.size.height, desc.size.depth,
+                                      nativeSubImageFormat.format, nativeSubImageFormat.type,
+                                      uploadSpan.data()));
         }
     }
 
