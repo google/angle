@@ -26,7 +26,6 @@ from difflib import unified_diff
 from gen_restricted_traces import read_json as read_json, write_json as write_json
 from pathlib import Path
 
-import glob
 from contextlib import contextmanager
 from check_attribute_interleaving import analyze_trace_for_interleaved_attributes, apply_change_list_to_trace_files
 
@@ -276,7 +275,8 @@ def preprocessed_trace_for_upgrade(args, trace):
     interleaved_attribute_detected = output_stats['FullyMergedGroupCount'] != 0 or output_stats[
         'PartiallyMergedGroupCount'] != 0
     code_changes_exist = len(change_list) > 0
-    assert interleaved_attribute_detected and not trace_attributes_already_merged
+    if interleaved_attribute_detected and trace_attributes_already_merged:
+        print('Trace code found to include both merged and unmerged interleaved attributes.')
 
     should_merge_attributes = args.merge_attributes and interleaved_attribute_detected and code_changes_exist
 
@@ -312,15 +312,10 @@ def preprocessed_trace_for_upgrade(args, trace):
             ensure_rmdir(backup_dir)
 
             # Clean up object files to avoid running a stale trace later.
-            obj_files = glob.glob(
-                os.path.join(args.gn_path, '**/*{}*'.format(trace)), recursive=True)
-            for obj in obj_files:
-                if '.ninja' in obj:
-                    continue
-                if os.path.isdir(obj):
-                    shutil.rmtree(obj)
-                elif os.path.exists(obj):
-                    os.remove(obj)
+            shutil.rmtree(
+                os.path.join(
+                    args.gn_path,
+                    'obj/src/tests/restricted_traces/angle_restricted_traces_{}'.format(trace)))
 
 
 def upgrade_traces(args, traces):
