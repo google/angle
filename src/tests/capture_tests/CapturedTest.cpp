@@ -12,8 +12,6 @@
 #include "util/shader_utils.h"
 #include "util/test_utils.h"
 
-#include <thread>
-
 // Check AHB test support availability
 #if defined(ANGLE_PLATFORM_ANDROID) && __ANDROID_API__ >= 26
 #    define CAPTURE_TESTS_AHB_SUPPORT
@@ -751,16 +749,15 @@ void main()
     drawQuad(program, "a_position", 0.5f);
     swapBuffers();
 
-    // Frame 2, capture starts. Create the EGL fence sync on the other context on its own thread.
-    // The join() makes the ordering consistent for the expected files
-    EGLSyncKHR externalSync = EGL_NO_SYNC_KHR;
-    std::thread syncSource([&]() {
-        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, auxSurface, auxSurface, auxContext));
-        externalSync = eglCreateSyncKHR(dpy, EGL_SYNC_FENCE_KHR, nullptr);
-        glFlush();
-        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
-    });
-    syncSource.join();
+    // Frame 2, capture starts. Create EGL fence sync on the other (non-shared) context.
+    // The sync is created after main context's MEC and on a different share group, so
+    // the main capture never sees its creation
+    EGLSurface mainSurface = window->getSurface();
+    EGLContext mainContext = window->getContext();
+    EXPECT_EGL_TRUE(eglMakeCurrent(dpy, auxSurface, auxSurface, auxContext));
+    EGLSyncKHR externalSync = eglCreateSyncKHR(dpy, EGL_SYNC_FENCE_KHR, nullptr);
+    glFlush();
+    EXPECT_EGL_TRUE(eglMakeCurrent(dpy, mainSurface, mainSurface, mainContext));
     ASSERT_NE(externalSync, EGL_NO_SYNC_KHR);
 
     // Main context tries to wait on the external sync. These calls are valid but specify a sync

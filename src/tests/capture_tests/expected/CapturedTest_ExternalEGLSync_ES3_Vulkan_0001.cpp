@@ -19,7 +19,7 @@ void SetupReplayContext5(void)
 void ReplayFrame1(void)
 {
     eglGetError();
-    eglMakeCurrent(gEGLDisplay, gSurfaceMap2[0], gSurfaceMap2[0], gContextMap2[0]);
+    eglMakeCurrent(gEGLDisplay, gSurfaceMap2[1], gSurfaceMap2[1], gContextMap2[5]);
     // Dropping eglWaitSyncKHR on possibly external EGL sync ID 1;
     glGetIntegerv(GL_CURRENT_PROGRAM, (GLint *)gReadBuffer);
     glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint *)gReadBuffer);
