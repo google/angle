@@ -298,14 +298,14 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
       mIsEarlyFragmentTestsSpecified(isEarlyFragmentTestsSpecified),
       mNeedStructMapping(false)
 {
-    mUsesFragColor        = false;
-    mUsesFragData         = false;
-    mUsesDepthRange       = false;
-    mUsesFragCoord        = false;
-    mUsesPointCoord       = false;
-    mUsesFrontFacing      = false;
-    mUsesPointSize        = false;
-    mUsesInstanceID       = false;
+    mUsesFragColor   = false;
+    mUsesFragData    = false;
+    mUsesDepthRange  = false;
+    mUsesFragCoord   = false;
+    mUsesPointCoord  = false;
+    mUsesFrontFacing = false;
+    mUsesPointSize   = false;
+    mUsesInstanceID  = false;
     mHasMultiviewExtensionEnabled =
         IsExtensionEnabled(mExtensionBehavior, TExtension::OVR_multiview) ||
         IsExtensionEnabled(mExtensionBehavior, TExtension::OVR_multiview2);
@@ -528,7 +528,9 @@ TString OutputHLSL::generateStructMapping(const std::vector<MappedStruct> &std14
                     mappedStruct.blockDeclarator->variable().name();
                 unsigned int instanceStringArrayIndex = GL_INVALID_INDEX;
                 if (isInstanceArray)
+                {
                     instanceStringArrayIndex = instanceArrayIndex;
+                }
                 TString instanceString = mResourcesHLSL->InterfaceBlockInstanceString(
                     instanceName, instanceStringArrayIndex);
                 originalName += instanceString;
@@ -955,26 +957,21 @@ void OutputHLSL::header(TInfoSinkBase &out,
                 out << "    float3 dx_DepthRange : packoffset(c0);\n";
             }
 
-            // dx_ViewAdjust and dx_ViewCoords are only used by some shaders. However, we declare
-            // them for all shaders. The bytecode is the same whether we declare them or not, since
-            // D3DCompiler removes them if they're unused.
-            out << "    float4 dx_ViewAdjust : packoffset(c1);\n";
-            out << "    float2 dx_ViewCoords : packoffset(c2);\n";
-            out << "    float2 dx_ViewScale  : packoffset(c3);\n";
+            out << "    float2 dx_ViewScale  : packoffset(c1);\n";
 
-            out << "    float clipControlOrigin : packoffset(c3.z);\n";
-            out << "    float clipControlZeroToOne : packoffset(c3.w);\n";
+            out << "    float clipControlOrigin : packoffset(c1.z);\n";
+            out << "    float clipControlZeroToOne : packoffset(c1.w);\n";
 
-            mResourcesHLSL->samplerMetadataUniforms(out, 5);
+            mResourcesHLSL->samplerMetadataUniforms(out, 3);
 
             if (mUsesVertexID)
             {
-                out << "    uint dx_VertexID : packoffset(c4.x);\n";
+                out << "    uint dx_VertexID : packoffset(c2.x);\n";
             }
 
             if (mClipDistanceSize)
             {
-                out << "    uint clipDistancesEnabled : packoffset(c4.y);\n";
+                out << "    uint clipDistancesEnabled : packoffset(c2.y);\n";
             }
 
             out << "};\n"
@@ -1846,9 +1843,13 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
             break;
         case EOpIsnan:
             if (node->getUseEmulatedFunction())
+            {
                 writeEmulatedFunctionTriplet(out, visit, node->getFunction());
+            }
             else
+            {
                 outputTriplet(out, visit, "isnan(", "", ")");
+            }
             mRequiresIEEEStrictCompiling = true;
             break;
         case EOpIsinf:
