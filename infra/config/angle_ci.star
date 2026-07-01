@@ -1629,6 +1629,44 @@ ci.thin_tester(
 )
 
 ci.thin_tester(
+    name = "angle-mac-arm64-apple-m2-exp-rel",
+    description_html = "Tests release ANGLE on Mac/arm64 on experimental configs of Apple M2 SoCs",
+    parent = "angle-mac-arm64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_nointernal",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.ARM,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.MAC,
+        ),
+        use_test_trigger_cas = True,
+        run_tests_serially = True,
+    ),
+    targets = targets.bundle(
+        targets = [
+        ],
+        mixins = [
+            "mac_arm64_apple_m2_retina_gpu_experimental",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.MAC,
+    ),
+    # Uncomment this entry when this experimental tester is actually in use.
+    console_view_entry = consoles.console_view_entry(
+        category = "test|mac|arm64|rel|exp",
+        short_name = "m2",
+    ),
+    list_view = "exp",
+)
+
+ci.thin_tester(
     name = "angle-mac-arm64-apple-m2-rel",
     description_html = "Tests release ANGLE on Mac/arm64 on Apple M2 SoCs",
     parent = "angle-mac-arm64-builder-rel",

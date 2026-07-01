@@ -1,4 +1,5 @@
 {
+  "angle-mac-arm64-apple-m2-exp-rel": {},
   "angle-mac-arm64-apple-m2-rel": {
     "gtest_tests": [
       {

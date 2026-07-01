@@ -633,6 +633,16 @@ angle_mac_manual_builder(
 )
 
 angle_mac_manual_builder(
+    name = "angle-try-mac-arm64-m2-exp-rel",
+    description_html = "Tests release ANGLE on Mac/arm64 on experimental configs of Apple M2 SoCs. Manual only.",
+    mirrors = [
+        "ci/angle-mac-arm64-apple-m2-exp-rel",
+        "ci/angle-mac-arm64-builder-rel",
+    ],
+    gn_args = "ci/angle-mac-arm64-builder-rel",
+)
+
+angle_mac_manual_builder(
     name = "angle-try-mac-arm64-m2-rel",
     description_html = "Tests release ANGLE on Mac/arm64 on Apple M2 SoCs. Manual only.",
     mirrors = [
