@@ -54,7 +54,7 @@ vars = {
   'checkout_angle_partition_alloc': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'dbee1fed4ad0c8ad31c00aa87d8b7363e9e73027',
+  'chromium_revision': '2dee4b7c2c4c4c88a0ec20bfa46cd1d72f5b6900',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -618,7 +618,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@be12a58c318a9cb293378e80c81faec7512acdc3',
+    'url': '{chromium_git}/chromium/src/testing@faa18a8d3952d6bcb6e93a1cfea69bb765b34ce7',
     'condition': 'not build_with_chromium',
   },
 
@@ -1319,7 +1319,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@66934666a7c7151a24f4ed95e7e94ef8664de057',
+    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@6274fc670e22b848c562a185edb3ec2fbe5697b5',
     # Needed on Mac in order to get the hashes for dsymutil.
     # Needed on other platforms since //build/config/config/BUILD.gn depends on
     # //tools/clang/scripts/update.py.
@@ -1361,7 +1361,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@677acf1495ddc011ae46148e9d8db09ade9c9f45',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@163621af48f7e4468c08cfc889e9fc76f6906650',
     'condition': 'not build_with_chromium',
   },
 
