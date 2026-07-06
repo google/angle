@@ -5919,27 +5919,7 @@ bool ValidateVertexAttribDivisorANGLE(const PrivateState &privateState,
                                       GLuint index,
                                       GLuint divisor)
 {
-    if (index >= static_cast<GLuint>(privateState.getCaps().maxVertexAttributes))
-    {
-        errors->validationError(entryPoint, GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
-        return false;
-    }
-
-    if (privateState.getLimitations().attributeZeroRequiresZeroDivisorInEXT)
-    {
-        if (index == 0 && divisor != 0)
-        {
-            errors->validationError(entryPoint, GL_INVALID_OPERATION,
-                                    kAttributeZeroRequiresDivisorLimitation);
-
-            // We also output an error message to the debugger window if tracing is active, so
-            // that developers can see the error message.
-            ERR() << kAttributeZeroRequiresDivisorLimitation;
-            return false;
-        }
-    }
-
-    return true;
+    return ValidateVertexAttribDivisor(privateState, errors, entryPoint, index, divisor);
 }
 
 bool ValidateVertexAttribDivisorEXT(const PrivateState &privateState,

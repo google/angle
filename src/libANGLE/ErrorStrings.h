@@ -24,7 +24,6 @@ inline constexpr const char *kAttributeListNotNull = "Attribute list must be NUL
 inline constexpr const char *kAttributeNameNull = "Attribute name is null.";
 inline constexpr const char *kAttributeNotMatch = "Attribute is incompatible with egl image.";
 inline constexpr const char *kAttributeNotValid = "Attribute is not valid.";
-inline constexpr const char *kAttributeZeroRequiresDivisorLimitation = "The current context doesn't support setting a non-zero divisor on the attribute with index zero. Please reorder the attributes in your vertex shader so that attribute zero can have a zero divisor.";
 inline constexpr const char *kBaseLevelNegative = "Negative base level.";
 inline constexpr const char *kBaseLevelNonZero = "Non-zero base level.";
 inline constexpr const char *kBaseLevelOutOfRange = "Texture base level out of range.";
