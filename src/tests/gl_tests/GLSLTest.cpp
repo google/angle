@@ -24506,6 +24506,36 @@ void main()
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51, 153, 0, 255), 1);
     ASSERT_GL_NO_ERROR();
 }
+
+// Regression test for a bug in the HLSL generator where the global variable names could collide
+// with local variable names.  In particular, the local variables were suffixed with the symbol id,
+// starting from 3000 (kFirstUserDefinedSymbolId) but the global variables weren't.
+TEST_P(GLSLTest_ES3, HLSLGlobalNameCollisionWithLocalVar)
+{
+    // At the time this regression test was written, the ID of the local variable was 3003.  Try a
+    // few IDs starting at kFirstUserDefinedSymbolId so the test is not sensitive to small
+    // variations in the ID.
+    for (uint32_t id = 3000; id < 3010; ++id)
+    {
+        std::ostringstream fs;
+        fs << R"(precision highp float;
+float _a)" << id
+           << R"( = 0.5;
+void main()
+{
+  float a = 0.2;
+  a = _a)" << id
+           << R"(;
+  gl_FragColor = vec4(a);
+})";
+        std::cout << fs.str() << "\n";
+
+        ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), fs.str().c_str());
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 127, 127, 127), 1);
+        ASSERT_GL_NO_ERROR();
+    }
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
