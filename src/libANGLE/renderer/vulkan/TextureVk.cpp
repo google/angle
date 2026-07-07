@@ -4319,8 +4319,12 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
                              VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)) != 0 &&
         mOwnsImage && samples == 1 && shouldIncludeMSRTSSBit)
     {
+        // Vulkan requires that queries with VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT return
+        // VK_SAMPLE_COUNT_1_BIT.  So remove that flag from the query, since the MSRTSS image is
+        // in fact single-sampled, and multisampled rendering is done via driver magic.
         VkImageCreateFlags createFlagsMultisampled =
-            mImageCreateFlags | VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT;
+            (mImageCreateFlags | VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT) &
+            ~VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
         bool isActualFormatSRGB             = angle::Format::Get(actualImageFormatID).isSRGB;
         const VkFormat additionalViewFormat = rx::vk::GetVkFormatFromFormatID(
             renderer, isActualFormatSRGB ? ConvertToLinear(actualImageFormatID)
