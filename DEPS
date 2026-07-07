@@ -1237,7 +1237,7 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@8e7420f63043cd5fc53c3194649e2bb21a3133a7',
+    'url': Var('chromium_git') + '/vulkan-deps@08c031d6c089b83f175f5cc0c80c113b8fc02b3c',
     'condition': 'not build_with_chromium',
   },
 
@@ -1247,7 +1247,7 @@ deps = {
   },
 
   'third_party/lunarg-vulkantools/src': {
-    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@be9744eb74f522c6829c5e8d842cc29dce8259bd',
+    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@941f1923abff55ed870c5dfd09986905123d9d9a',
     'condition': 'not build_with_chromium',
   },
 
@@ -1262,7 +1262,7 @@ deps = {
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@a14486e06742ee09bc7db68d3afa94ffe2d3f20c',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@48bd3e9d0c91be4aac0aa5f44dba7e8b97dbc154',
     'condition': 'not build_with_chromium',
   },
 
@@ -1272,7 +1272,7 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@5f72e1b8eb0e414b9a0d8d9d33ae02c8573003ac',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@2f8d700c4afde71ada228702f090fd4574d81609',
     'condition': 'not build_with_chromium',
   },
 
@@ -1287,7 +1287,7 @@ deps = {
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@ebdeb8dc5b99b72e7ce566a19b3d7a5724276f96',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@0bc5b17fa2350a8aed812c557955cb57626e8cad',
     'condition': 'not build_with_chromium',
   },
 
