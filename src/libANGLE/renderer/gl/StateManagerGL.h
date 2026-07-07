@@ -201,6 +201,37 @@ struct ContextStateGL
     gl::ActiveTextureArray<GLuint> samplers                                        = {};
 
     std::vector<ImageUnitBindingGL> images;
+
+    GLuint transformFeedback = 0;
+
+    GLint unpackAlignment   = 4;
+    GLint unpackRowLength   = 0;
+    GLint unpackSkipRows    = 0;
+    GLint unpackSkipPixels  = 0;
+    GLint unpackImageHeight = 0;
+    GLint unpackSkipImages  = 0;
+
+    GLint packAlignment  = 4;
+    GLint packRowLength  = 0;
+    GLint packSkipRows   = 0;
+    GLint packSkipPixels = 0;
+
+    std::array<GLuint, angle::FramebufferBinding::FramebufferBindingSingletonMax> framebuffers = {
+        0};
+    GLuint renderbuffer = 0;
+
+    bool scissorTestEnabled = false;
+    gl::Rectangle scissor   = gl::Rectangle(0, 0, 0, 0);
+    gl::Rectangle viewport  = gl::Rectangle(0, 0, 0, 0);
+    float near              = 0.0f;
+    float far               = 1.0f;
+
+    gl::ClipOrigin clipOrigin       = gl::ClipOrigin::LowerLeft;
+    gl::ClipDepthMode clipDepthMode = gl::ClipDepthMode::NegativeOneToOne;
+
+    gl::ColorF blendColor = gl::ColorF(0, 0, 0, 0);
+    gl::BlendStateExt blendState;
+    bool blendAdvancedCoherent = true;
 };
 
 class StateManagerGL final : angle::NonCopyable
@@ -362,7 +393,7 @@ class StateManagerGL final : angle::NonCopyable
     GLuint getVertexArrayID() const { return mState.vao; }
     GLuint getFramebufferID(angle::FramebufferBinding binding) const
     {
-        return mFramebuffers[binding];
+        return mState.framebuffers[binding];
     }
     GLuint getBufferID(gl::BufferBinding binding) const { return mState.buffers[binding]; }
 
@@ -471,7 +502,6 @@ class StateManagerGL final : angle::NonCopyable
     // current element array buffer.
     VertexArrayStateGL *mVAOState = nullptr;
 
-    GLuint mTransformFeedback;
     TransformFeedbackGL *mCurrentTransformFeedback;
 
     // Queries that are currently running on the driver
@@ -483,36 +513,9 @@ class StateManagerGL final : angle::NonCopyable
 
     gl::ContextID mPrevDrawContext;
 
-    GLint mUnpackAlignment;
-    GLint mUnpackRowLength;
-    GLint mUnpackSkipRows;
-    GLint mUnpackSkipPixels;
-    GLint mUnpackImageHeight;
-    GLint mUnpackSkipImages;
-
-    GLint mPackAlignment;
-    GLint mPackRowLength;
-    GLint mPackSkipRows;
-    GLint mPackSkipPixels;
-
-    // TODO(jmadill): Convert to std::array when available
-    std::vector<GLenum> mFramebuffers;
-    GLuint mRenderbuffer;
     GLuint mPlaceholderFbo;
     GLuint mPlaceholderRbo;
 
-    bool mScissorTestEnabled;
-    gl::Rectangle mScissor;
-    gl::Rectangle mViewport;
-    float mNear;
-    float mFar;
-
-    gl::ClipOrigin mClipOrigin;
-    gl::ClipDepthMode mClipDepthMode;
-
-    gl::ColorF mBlendColor;
-    gl::BlendStateExt mBlendStateExt;
-    bool mBlendAdvancedCoherent;
     const bool mIndependentBlendStates;
 
     bool mSampleAlphaToCoverageEnabled;

@@ -72,7 +72,9 @@ VertexArrayStateGL::VertexArrayStateGL(size_t maxAttribs, size_t maxBindings)
 }
 
 ContextStateGL::ContextStateGL(const gl::Caps &caps, const gl::Extensions &extensions)
-    : vertexAttribCurrentValues(caps.maxVertexAttributes), images(caps.maxImageUnits)
+    : vertexAttribCurrentValues(caps.maxVertexAttributes),
+      images(caps.maxImageUnits),
+      blendState(caps.maxDrawBuffers)
 {
     indexedBuffers[gl::BufferBinding::Uniform].resize(caps.maxUniformBufferBindings);
     indexedBuffers[gl::BufferBinding::AtomicCounter].resize(caps.maxAtomicCounterBufferBindings);
@@ -89,34 +91,11 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mSupportsVertexArrayObjects(nativegl::SupportsVertexArrayObjects(functions)),
       mDefaultVAOState(rendererCaps.maxVertexAttributes, rendererCaps.maxVertexAttribBindings),
       mVAOState(&mDefaultVAOState),
-      mTransformFeedback(0),
       mCurrentTransformFeedback(nullptr),
       mQueries(),
       mPrevDrawContext({0}),
-      mUnpackAlignment(4),
-      mUnpackRowLength(0),
-      mUnpackSkipRows(0),
-      mUnpackSkipPixels(0),
-      mUnpackImageHeight(0),
-      mUnpackSkipImages(0),
-      mPackAlignment(4),
-      mPackRowLength(0),
-      mPackSkipRows(0),
-      mPackSkipPixels(0),
-      mFramebuffers(angle::FramebufferBindingSingletonMax, 0),
-      mRenderbuffer(0),
       mPlaceholderFbo(0),
       mPlaceholderRbo(0),
-      mScissorTestEnabled(false),
-      mScissor(0, 0, 0, 0),
-      mViewport(0, 0, 0, 0),
-      mNear(0.0f),
-      mFar(1.0f),
-      mClipOrigin(gl::ClipOrigin::LowerLeft),
-      mClipDepthMode(gl::ClipDepthMode::NegativeOneToOne),
-      mBlendColor(0, 0, 0, 0),
-      mBlendStateExt(rendererCaps.maxDrawBuffers),
-      mBlendAdvancedCoherent(true),
       mIndependentBlendStates(extensions.drawBuffersIndexedAny()),
       mSampleAlphaToCoverageEnabled(false),
       mSampleCoverageEnabled(false),
@@ -364,9 +343,9 @@ void StateManagerGL::deleteFramebuffer(GLuint fbo)
     {
         if (mHasSeparateFramebufferBindings)
         {
-            for (size_t binding = 0; binding < mFramebuffers.size(); ++binding)
+            for (size_t binding = 0; binding < mState.framebuffers.size(); ++binding)
             {
-                if (mFramebuffers[binding] == fbo)
+                if (mState.framebuffers[binding] == fbo)
                 {
                     GLenum enumValue = angle::FramebufferBindingToEnum(
                         static_cast<angle::FramebufferBinding>(binding));
@@ -376,9 +355,9 @@ void StateManagerGL::deleteFramebuffer(GLuint fbo)
         }
         else
         {
-            ASSERT(mFramebuffers[angle::FramebufferBindingRead] ==
-                   mFramebuffers[angle::FramebufferBindingDraw]);
-            if (mFramebuffers[angle::FramebufferBindingRead] == fbo)
+            ASSERT(mState.framebuffers[angle::FramebufferBindingRead] ==
+                   mState.framebuffers[angle::FramebufferBindingDraw]);
+            if (mState.framebuffers[angle::FramebufferBindingRead] == fbo)
             {
                 bindFramebuffer(GL_FRAMEBUFFER, 0);
             }
@@ -391,7 +370,7 @@ void StateManagerGL::deleteRenderbuffer(GLuint rbo)
 {
     if (rbo != 0)
     {
-        if (mRenderbuffer == rbo)
+        if (mState.renderbuffer == rbo)
         {
             bindRenderbuffer(GL_RENDERBUFFER, 0);
         }
@@ -404,7 +383,7 @@ void StateManagerGL::deleteTransformFeedback(GLuint transformFeedback)
 {
     if (transformFeedback != 0)
     {
-        if (mTransformFeedback == transformFeedback)
+        if (mState.transformFeedback == transformFeedback)
         {
             bindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
         }
@@ -564,50 +543,50 @@ void StateManagerGL::bindImageTexture(size_t unit,
 angle::Result StateManagerGL::setPixelUnpackState(const gl::Context *context,
                                                   const gl::PixelUnpackState &unpack)
 {
-    if (mUnpackAlignment != unpack.alignment)
+    if (mState.unpackAlignment != unpack.alignment)
     {
-        mUnpackAlignment = unpack.alignment;
-        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_ALIGNMENT, mUnpackAlignment));
+        mState.unpackAlignment = unpack.alignment;
+        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_ALIGNMENT, unpack.alignment));
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 
-    if (mUnpackRowLength != unpack.rowLength)
+    if (mState.unpackRowLength != unpack.rowLength)
     {
-        mUnpackRowLength = unpack.rowLength;
-        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_ROW_LENGTH, mUnpackRowLength));
+        mState.unpackRowLength = unpack.rowLength;
+        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_ROW_LENGTH, unpack.rowLength));
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 
-    if (mUnpackSkipRows != unpack.skipRows)
+    if (mState.unpackSkipRows != unpack.skipRows)
     {
-        mUnpackSkipRows = unpack.skipRows;
-        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_SKIP_ROWS, mUnpackSkipRows));
+        mState.unpackSkipRows = unpack.skipRows;
+        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_SKIP_ROWS, unpack.skipRows));
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 
-    if (mUnpackSkipPixels != unpack.skipPixels)
+    if (mState.unpackSkipPixels != unpack.skipPixels)
     {
-        mUnpackSkipPixels = unpack.skipPixels;
-        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_SKIP_PIXELS, mUnpackSkipPixels));
+        mState.unpackSkipPixels = unpack.skipPixels;
+        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_SKIP_PIXELS, unpack.skipPixels));
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 
-    if (mUnpackImageHeight != unpack.imageHeight)
+    if (mState.unpackImageHeight != unpack.imageHeight)
     {
-        mUnpackImageHeight = unpack.imageHeight;
-        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_IMAGE_HEIGHT, mUnpackImageHeight));
+        mState.unpackImageHeight = unpack.imageHeight;
+        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_IMAGE_HEIGHT, unpack.imageHeight));
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 
-    if (mUnpackSkipImages != unpack.skipImages)
+    if (mState.unpackSkipImages != unpack.skipImages)
     {
-        mUnpackSkipImages = unpack.skipImages;
-        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_SKIP_IMAGES, mUnpackSkipImages));
+        mState.unpackSkipImages = unpack.skipImages;
+        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_SKIP_IMAGES, unpack.skipImages));
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
@@ -631,34 +610,34 @@ angle::Result StateManagerGL::setPixelUnpackBuffer(const gl::Context *context,
 angle::Result StateManagerGL::setPixelPackState(const gl::Context *context,
                                                 const gl::PixelPackState &pack)
 {
-    if (mPackAlignment != pack.alignment)
+    if (mState.packAlignment != pack.alignment)
     {
-        mPackAlignment = pack.alignment;
-        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_ALIGNMENT, mPackAlignment));
+        mState.packAlignment = pack.alignment;
+        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_ALIGNMENT, pack.alignment));
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
 
-    if (mPackRowLength != pack.rowLength)
+    if (mState.packRowLength != pack.rowLength)
     {
-        mPackRowLength = pack.rowLength;
-        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_ROW_LENGTH, mPackRowLength));
+        mState.packRowLength = pack.rowLength;
+        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_ROW_LENGTH, pack.rowLength));
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
 
-    if (mPackSkipRows != pack.skipRows)
+    if (mState.packSkipRows != pack.skipRows)
     {
-        mPackSkipRows = pack.skipRows;
-        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_SKIP_ROWS, mPackSkipRows));
+        mState.packSkipRows = pack.skipRows;
+        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_SKIP_ROWS, pack.skipRows));
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
 
-    if (mPackSkipPixels != pack.skipPixels)
+    if (mState.packSkipPixels != pack.skipPixels)
     {
-        mPackSkipPixels = pack.skipPixels;
-        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_SKIP_PIXELS, mPackSkipPixels));
+        mState.packSkipPixels = pack.skipPixels;
+        ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_SKIP_PIXELS, pack.skipPixels));
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
@@ -685,11 +664,11 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
     switch (type)
     {
         case GL_FRAMEBUFFER:
-            if (mFramebuffers[angle::FramebufferBindingRead] != framebuffer ||
-                mFramebuffers[angle::FramebufferBindingDraw] != framebuffer)
+            if (mState.framebuffers[angle::FramebufferBindingRead] != framebuffer ||
+                mState.framebuffers[angle::FramebufferBindingDraw] != framebuffer)
             {
-                mFramebuffers[angle::FramebufferBindingRead] = framebuffer;
-                mFramebuffers[angle::FramebufferBindingDraw] = framebuffer;
+                mState.framebuffers[angle::FramebufferBindingRead] = framebuffer;
+                mState.framebuffers[angle::FramebufferBindingDraw] = framebuffer;
                 mFunctions->bindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
@@ -701,9 +680,9 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
 
         case GL_READ_FRAMEBUFFER:
             ASSERT(mHasSeparateFramebufferBindings);
-            if (mFramebuffers[angle::FramebufferBindingRead] != framebuffer)
+            if (mState.framebuffers[angle::FramebufferBindingRead] != framebuffer)
             {
-                mFramebuffers[angle::FramebufferBindingRead] = framebuffer;
+                mState.framebuffers[angle::FramebufferBindingRead] = framebuffer;
                 mFunctions->bindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
@@ -714,9 +693,9 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
 
         case GL_DRAW_FRAMEBUFFER:
             ASSERT(mHasSeparateFramebufferBindings);
-            if (mFramebuffers[angle::FramebufferBindingDraw] != framebuffer)
+            if (mState.framebuffers[angle::FramebufferBindingDraw] != framebuffer)
             {
-                mFramebuffers[angle::FramebufferBindingDraw] = framebuffer;
+                mState.framebuffers[angle::FramebufferBindingDraw] = framebuffer;
                 mFunctions->bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
@@ -739,17 +718,17 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
 void StateManagerGL::bindRenderbuffer(GLenum type, GLuint renderbuffer)
 {
     ASSERT(type == GL_RENDERBUFFER);
-    if (mRenderbuffer != renderbuffer)
+    if (mState.renderbuffer != renderbuffer)
     {
-        mRenderbuffer = renderbuffer;
-        mFunctions->bindRenderbuffer(type, mRenderbuffer);
+        mState.renderbuffer = renderbuffer;
+        mFunctions->bindRenderbuffer(type, renderbuffer);
     }
 }
 
 void StateManagerGL::bindTransformFeedback(GLenum type, GLuint transformFeedback)
 {
     ASSERT(type == GL_TRANSFORM_FEEDBACK);
-    if (mTransformFeedback != transformFeedback)
+    if (mState.transformFeedback != transformFeedback)
     {
         // Pause the current transform feedback if one is active.
         // To handle virtualized contexts, StateManagerGL needs to be able to bind a new transform
@@ -761,8 +740,8 @@ void StateManagerGL::bindTransformFeedback(GLenum type, GLuint transformFeedback
             mCurrentTransformFeedback = nullptr;
         }
 
-        mTransformFeedback = transformFeedback;
-        mFunctions->bindTransformFeedback(type, mTransformFeedback);
+        mState.transformFeedback = transformFeedback;
+        mFunctions->bindTransformFeedback(type, transformFeedback);
         onTransformFeedbackStateChange();
     }
 }
@@ -778,9 +757,9 @@ void StateManagerGL::beginQuery(gl::QueryType type, QueryGL *queryObject, GLuint
     ASSERT(mQueries[type] == nullptr);
     ASSERT(queryId != 0);
 
-    GLuint oldFramebufferBindingDraw = mFramebuffers[angle::FramebufferBindingDraw];
+    GLuint oldFramebufferBindingDraw = mState.framebuffers[angle::FramebufferBindingDraw];
     if (mFeatures.bindCompleteFramebufferForTimerQueries.enabled &&
-        (mFramebuffers[angle::FramebufferBindingDraw] == 0 ||
+        (mState.framebuffers[angle::FramebufferBindingDraw] == 0 ||
          mFunctions->checkFramebufferStatus(GL_DRAW_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) &&
         (type == gl::QueryType::TimeElapsed || type == gl::QueryType::Timestamp))
     {
@@ -792,7 +771,7 @@ void StateManagerGL::beginQuery(gl::QueryType type, QueryGL *queryObject, GLuint
 
         if (!mPlaceholderRbo)
         {
-            GLuint oldRenderBufferBinding = mRenderbuffer;
+            GLuint oldRenderBufferBinding = mState.renderbuffer;
             mFunctions->genRenderbuffers(1, &mPlaceholderRbo);
             bindRenderbuffer(GL_RENDERBUFFER, mPlaceholderRbo);
             mFunctions->renderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 2, 2);
@@ -1154,10 +1133,10 @@ void StateManagerGL::setAttributeCurrentData(size_t index,
 
 void StateManagerGL::setScissorTestEnabled(bool enabled)
 {
-    if (mScissorTestEnabled != enabled)
+    if (mState.scissorTestEnabled != enabled)
     {
-        mScissorTestEnabled = enabled;
-        if (mScissorTestEnabled)
+        mState.scissorTestEnabled = enabled;
+        if (enabled)
         {
             mFunctions->enable(GL_SCISSOR_TEST);
         }
@@ -1172,10 +1151,10 @@ void StateManagerGL::setScissorTestEnabled(bool enabled)
 
 void StateManagerGL::setScissor(const gl::Rectangle &scissor)
 {
-    if (scissor != mScissor)
+    if (scissor != mState.scissor)
     {
-        mScissor = scissor;
-        mFunctions->scissor(mScissor.x, mScissor.y, mScissor.width, mScissor.height);
+        mState.scissor = scissor;
+        mFunctions->scissor(scissor.x, scissor.y, scissor.width, scissor.height);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_SCISSOR);
     }
@@ -1183,10 +1162,10 @@ void StateManagerGL::setScissor(const gl::Rectangle &scissor)
 
 void StateManagerGL::setViewport(const gl::Rectangle &viewport)
 {
-    if (viewport != mViewport)
+    if (viewport != mState.viewport)
     {
-        mViewport = viewport;
-        mFunctions->viewport(mViewport.x, mViewport.y, mViewport.width, mViewport.height);
+        mState.viewport = viewport;
+        mFunctions->viewport(viewport.x, viewport.y, viewport.width, viewport.height);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_VIEWPORT);
     }
@@ -1194,19 +1173,19 @@ void StateManagerGL::setViewport(const gl::Rectangle &viewport)
 
 void StateManagerGL::setDepthRange(float near, float far)
 {
-    mNear = near;
-    mFar  = far;
+    mState.near = near;
+    mState.far  = far;
 
     // The glDepthRangef function isn't available until OpenGL 4.1.  Prefer it when it is
     // available because OpenGL ES only works in floats.
     if (mFunctions->depthRangef)
     {
-        mFunctions->depthRangef(mNear, mFar);
+        mFunctions->depthRangef(near, far);
     }
     else
     {
         ASSERT(mFunctions->depthRange);
-        mFunctions->depthRange(mNear, mFar);
+        mFunctions->depthRange(near, far);
     }
 
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_DEPTH_RANGE);
@@ -1214,24 +1193,24 @@ void StateManagerGL::setDepthRange(float near, float far)
 
 void StateManagerGL::setClipControl(gl::ClipOrigin origin, gl::ClipDepthMode depth)
 {
-    if (mClipOrigin == origin && mClipDepthMode == depth)
+    if (mState.clipOrigin == origin && mState.clipDepthMode == depth)
     {
         return;
     }
 
-    mClipOrigin    = origin;
-    mClipDepthMode = depth;
+    mState.clipOrigin    = origin;
+    mState.clipDepthMode = depth;
 
     ASSERT(mFunctions->clipControl);
-    mFunctions->clipControl(ToGLenum(mClipOrigin), ToGLenum(mClipDepthMode));
+    mFunctions->clipControl(ToGLenum(origin), ToGLenum(depth));
 
     if (mFeatures.resyncDepthRangeOnClipControl.enabled)
     {
         // Change and restore depth range to trigger internal transformation
         // state resync. This is needed to apply clip control on some drivers.
-        const float near = mNear;
-        setDepthRange(near == 0.0f ? 1.0f : 0.0f, mFar);
-        setDepthRange(near, mFar);
+        const float near = mState.near;
+        setDepthRange(near == 0.0f ? 1.0f : 0.0f, mState.far);
+        setDepthRange(near, mState.far);
     }
 
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
@@ -1256,8 +1235,8 @@ void StateManagerGL::setClipControlWithEmulatedClipOrigin(const gl::ProgramExecu
 void StateManagerGL::setBlendEnabled(bool enabled)
 {
     const gl::DrawBufferMask mask =
-        enabled ? mBlendStateExt.getAllEnabledMask() : gl::DrawBufferMask::Zero();
-    if (mBlendStateExt.getEnabledMask() == mask)
+        enabled ? mState.blendState.getAllEnabledMask() : gl::DrawBufferMask::Zero();
+    if (mState.blendState.getEnabledMask() == mask)
     {
         return;
     }
@@ -1271,19 +1250,19 @@ void StateManagerGL::setBlendEnabled(bool enabled)
         mFunctions->disable(GL_BLEND);
     }
 
-    mBlendStateExt.setEnabled(enabled);
+    mState.blendState.setEnabled(enabled);
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_ENABLED);
 }
 
 void StateManagerGL::setBlendEnabledIndexed(const gl::DrawBufferMask enabledMask)
 {
-    if (mBlendStateExt.getEnabledMask() == enabledMask)
+    if (mState.blendState.getEnabledMask() == enabledMask)
     {
         return;
     }
 
     // Get DrawBufferMask of buffers with different blend enable state
-    gl::DrawBufferMask diffMask = mBlendStateExt.getEnabledMask() ^ enabledMask;
+    gl::DrawBufferMask diffMask = mState.blendState.getEnabledMask() ^ enabledMask;
     const size_t diffCount      = diffMask.count();
 
     // Check if enabling or disabling blending for all buffers reduces the number of subsequent
@@ -1295,7 +1274,7 @@ void StateManagerGL::setBlendEnabledIndexed(const gl::DrawBufferMask enabledMask
         const size_t enabledCount = enabledMask.count();
 
         // The mask and the number of indexed blend disable commands in case a mass enable is used.
-        const gl::DrawBufferMask disabledMask = enabledMask ^ mBlendStateExt.getAllEnabledMask();
+        const gl::DrawBufferMask disabledMask = enabledMask ^ mState.blendState.getAllEnabledMask();
         const size_t disabledCount            = disabledMask.count();
 
         if (enabledCount < diffCount && enabledCount <= disabledCount)
@@ -1322,17 +1301,16 @@ void StateManagerGL::setBlendEnabledIndexed(const gl::DrawBufferMask enabledMask
         }
     }
 
-    mBlendStateExt.setEnabledMask(enabledMask);
+    mState.blendState.setEnabledMask(enabledMask);
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_ENABLED);
 }
 
 void StateManagerGL::setBlendColor(const gl::ColorF &blendColor)
 {
-    if (mBlendColor != blendColor)
+    if (mState.blendColor != blendColor)
     {
-        mBlendColor = blendColor;
-        mFunctions->blendColor(mBlendColor.red, mBlendColor.green, mBlendColor.blue,
-                               mBlendColor.alpha);
+        mState.blendColor = blendColor;
+        mFunctions->blendColor(blendColor.red, blendColor.green, blendColor.blue, blendColor.alpha);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_COLOR);
     }
@@ -1340,11 +1318,11 @@ void StateManagerGL::setBlendColor(const gl::ColorF &blendColor)
 
 void StateManagerGL::setBlendAdvancedCoherent(bool enabled)
 {
-    if (mBlendAdvancedCoherent != enabled)
+    if (mState.blendAdvancedCoherent != enabled)
     {
-        mBlendAdvancedCoherent = enabled;
+        mState.blendAdvancedCoherent = enabled;
 
-        if (mBlendAdvancedCoherent)
+        if (enabled)
         {
             mFunctions->enable(GL_BLEND_ADVANCED_COHERENT_KHR);
         }
@@ -1358,27 +1336,26 @@ void StateManagerGL::setBlendAdvancedCoherent(bool enabled)
     }
 }
 
-void StateManagerGL::setBlendFuncs(const gl::BlendStateExt &blendStateExt)
+void StateManagerGL::setBlendFuncs(const gl::BlendStateExt &blendState)
 {
-    if (mBlendStateExt.getSrcColorBits() == blendStateExt.getSrcColorBits() &&
-        mBlendStateExt.getDstColorBits() == blendStateExt.getDstColorBits() &&
-        mBlendStateExt.getSrcAlphaBits() == blendStateExt.getSrcAlphaBits() &&
-        mBlendStateExt.getDstAlphaBits() == blendStateExt.getDstAlphaBits())
+    if (mState.blendState.getSrcColorBits() == blendState.getSrcColorBits() &&
+        mState.blendState.getDstColorBits() == blendState.getDstColorBits() &&
+        mState.blendState.getSrcAlphaBits() == blendState.getSrcAlphaBits() &&
+        mState.blendState.getDstAlphaBits() == blendState.getDstAlphaBits())
     {
         return;
     }
 
     if (!mIndependentBlendStates)
     {
-        mFunctions->blendFuncSeparate(ToGLenum(blendStateExt.getSrcColorIndexed(0)),
-                                      ToGLenum(blendStateExt.getDstColorIndexed(0)),
-                                      ToGLenum(blendStateExt.getSrcAlphaIndexed(0)),
-                                      ToGLenum(blendStateExt.getDstAlphaIndexed(0)));
+        mFunctions->blendFuncSeparate(
+            ToGLenum(blendState.getSrcColorIndexed(0)), ToGLenum(blendState.getDstColorIndexed(0)),
+            ToGLenum(blendState.getSrcAlphaIndexed(0)), ToGLenum(blendState.getDstAlphaIndexed(0)));
     }
     else
     {
         // Get DrawBufferMask of buffers with different blend factors
-        gl::DrawBufferMask diffMask = mBlendStateExt.compareFactors(blendStateExt);
+        gl::DrawBufferMask diffMask = mState.blendState.compareFactors(blendState);
         size_t diffCount            = diffMask.count();
 
         // Check if setting all buffers to the same value reduces the number of subsequent indexed
@@ -1391,18 +1368,18 @@ void StateManagerGL::setBlendFuncs(const gl::BlendStateExt &blendStateExt)
             gl::BlendStateExt::FactorStorage::Type commonDstColor = 0;
             gl::BlendStateExt::FactorStorage::Type commonSrcAlpha = 0;
             gl::BlendStateExt::FactorStorage::Type commonDstAlpha = 0;
-            for (size_t i = 0; i < mBlendStateExt.getDrawBufferCount() - 1; i++)
+            for (size_t i = 0; i < mState.blendState.getDrawBufferCount() - 1; i++)
             {
                 const gl::BlendStateExt::FactorStorage::Type tempCommonSrcColor =
-                    blendStateExt.expandSrcColorIndexed(i);
+                    blendState.expandSrcColorIndexed(i);
                 const gl::BlendStateExt::FactorStorage::Type tempCommonDstColor =
-                    blendStateExt.expandDstColorIndexed(i);
+                    blendState.expandDstColorIndexed(i);
                 const gl::BlendStateExt::FactorStorage::Type tempCommonSrcAlpha =
-                    blendStateExt.expandSrcAlphaIndexed(i);
+                    blendState.expandSrcAlphaIndexed(i);
                 const gl::BlendStateExt::FactorStorage::Type tempCommonDstAlpha =
-                    blendStateExt.expandDstAlphaIndexed(i);
+                    blendState.expandDstAlphaIndexed(i);
 
-                const gl::DrawBufferMask tempDiffMask = blendStateExt.compareFactors(
+                const gl::DrawBufferMask tempDiffMask = blendState.compareFactors(
                     tempCommonSrcColor, tempCommonDstColor, tempCommonSrcAlpha, tempCommonDstAlpha);
 
                 const size_t tempDiffCount = tempDiffMask.count();
@@ -1435,36 +1412,36 @@ void StateManagerGL::setBlendFuncs(const gl::BlendStateExt &blendStateExt)
         {
             mFunctions->blendFuncSeparatei(
                 static_cast<GLuint>(drawBufferIndex),
-                ToGLenum(blendStateExt.getSrcColorIndexed(drawBufferIndex)),
-                ToGLenum(blendStateExt.getDstColorIndexed(drawBufferIndex)),
-                ToGLenum(blendStateExt.getSrcAlphaIndexed(drawBufferIndex)),
-                ToGLenum(blendStateExt.getDstAlphaIndexed(drawBufferIndex)));
+                ToGLenum(blendState.getSrcColorIndexed(drawBufferIndex)),
+                ToGLenum(blendState.getDstColorIndexed(drawBufferIndex)),
+                ToGLenum(blendState.getSrcAlphaIndexed(drawBufferIndex)),
+                ToGLenum(blendState.getDstAlphaIndexed(drawBufferIndex)));
         }
     }
-    mBlendStateExt.setSrcColorBits(blendStateExt.getSrcColorBits());
-    mBlendStateExt.setDstColorBits(blendStateExt.getDstColorBits());
-    mBlendStateExt.setSrcAlphaBits(blendStateExt.getSrcAlphaBits());
-    mBlendStateExt.setDstAlphaBits(blendStateExt.getDstAlphaBits());
+    mState.blendState.setSrcColorBits(blendState.getSrcColorBits());
+    mState.blendState.setDstColorBits(blendState.getDstColorBits());
+    mState.blendState.setSrcAlphaBits(blendState.getSrcAlphaBits());
+    mState.blendState.setDstAlphaBits(blendState.getDstAlphaBits());
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_FUNCS);
 }
 
-void StateManagerGL::setBlendEquations(const gl::BlendStateExt &blendStateExt)
+void StateManagerGL::setBlendEquations(const gl::BlendStateExt &blendState)
 {
-    if (mBlendStateExt.getEquationColorBits() == blendStateExt.getEquationColorBits() &&
-        mBlendStateExt.getEquationAlphaBits() == blendStateExt.getEquationAlphaBits())
+    if (mState.blendState.getEquationColorBits() == blendState.getEquationColorBits() &&
+        mState.blendState.getEquationAlphaBits() == blendState.getEquationAlphaBits())
     {
         return;
     }
 
     if (!mIndependentBlendStates)
     {
-        mFunctions->blendEquationSeparate(ToGLenum(blendStateExt.getEquationColorIndexed(0)),
-                                          ToGLenum(blendStateExt.getEquationAlphaIndexed(0)));
+        mFunctions->blendEquationSeparate(ToGLenum(blendState.getEquationColorIndexed(0)),
+                                          ToGLenum(blendState.getEquationAlphaIndexed(0)));
     }
     else
     {
         // Get DrawBufferMask of buffers with different blend equations
-        gl::DrawBufferMask diffMask = mBlendStateExt.compareEquations(blendStateExt);
+        gl::DrawBufferMask diffMask = mState.blendState.compareEquations(blendState);
         size_t diffCount            = diffMask.count();
 
         // Check if setting all buffers to the same value reduces the number of subsequent indexed
@@ -1475,15 +1452,15 @@ void StateManagerGL::setBlendEquations(const gl::BlendStateExt &blendStateExt)
             bool found                                                   = false;
             gl::BlendStateExt::EquationStorage::Type commonEquationColor = 0;
             gl::BlendStateExt::EquationStorage::Type commonEquationAlpha = 0;
-            for (size_t i = 0; i < mBlendStateExt.getDrawBufferCount() - 1; i++)
+            for (size_t i = 0; i < mState.blendState.getDrawBufferCount() - 1; i++)
             {
                 const gl::BlendStateExt::EquationStorage::Type tempCommonEquationColor =
-                    blendStateExt.expandEquationColorIndexed(i);
+                    blendState.expandEquationColorIndexed(i);
                 const gl::BlendStateExt::EquationStorage::Type tempCommonEquationAlpha =
-                    blendStateExt.expandEquationAlphaIndexed(i);
+                    blendState.expandEquationAlphaIndexed(i);
 
-                const gl::DrawBufferMask tempDiffMask = blendStateExt.compareEquations(
-                    tempCommonEquationColor, tempCommonEquationAlpha);
+                const gl::DrawBufferMask tempDiffMask =
+                    blendState.compareEquations(tempCommonEquationColor, tempCommonEquationAlpha);
 
                 const size_t tempDiffCount = tempDiffMask.count();
                 if (tempDiffCount < diffCount)
@@ -1521,9 +1498,9 @@ void StateManagerGL::setBlendEquations(const gl::BlendStateExt &blendStateExt)
         for (size_t drawBufferIndex : diffMask)
         {
             gl::BlendEquationType equationColor =
-                blendStateExt.getEquationColorIndexed(drawBufferIndex);
+                blendState.getEquationColorIndexed(drawBufferIndex);
             gl::BlendEquationType equationAlpha =
-                blendStateExt.getEquationAlphaIndexed(drawBufferIndex);
+                blendState.getEquationAlphaIndexed(drawBufferIndex);
             if (equationColor == equationAlpha)
             {
                 mFunctions->blendEquationi(static_cast<GLuint>(drawBufferIndex),
@@ -1537,19 +1514,19 @@ void StateManagerGL::setBlendEquations(const gl::BlendStateExt &blendStateExt)
             }
         }
     }
-    mBlendStateExt.setEquationColorBits(blendStateExt.getEquationColorBits());
-    mBlendStateExt.setEquationAlphaBits(blendStateExt.getEquationAlphaBits());
+    mState.blendState.setEquationColorBits(blendState.getEquationColorBits());
+    mState.blendState.setEquationAlphaBits(blendState.getEquationAlphaBits());
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_COLOR_MASK);
 }
 
 void StateManagerGL::setColorMask(bool red, bool green, bool blue, bool alpha)
 {
     const gl::BlendStateExt::ColorMaskStorage::Type mask =
-        mBlendStateExt.expandColorMaskValue(red, green, blue, alpha);
-    if (mBlendStateExt.getColorMaskBits() != mask)
+        mState.blendState.expandColorMaskValue(red, green, blue, alpha);
+    if (mState.blendState.getColorMaskBits() != mask)
     {
         mFunctions->colorMask(red, green, blue, alpha);
-        mBlendStateExt.setColorMaskBits(mask);
+        mState.blendState.setColorMaskBits(mask);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_COLOR_MASK);
     }
 }
@@ -2564,7 +2541,7 @@ void StateManagerGL::setFramebufferSRGBEnabledForFramebuffer(const gl::Context *
     }
 }
 
-void StateManagerGL::setColorMaskForFramebuffer(const gl::BlendStateExt &blendStateExt,
+void StateManagerGL::setColorMaskForFramebuffer(const gl::BlendStateExt &blendState,
                                                 const bool disableAlpha)
 {
     bool r, g, b, a;
@@ -2574,19 +2551,19 @@ void StateManagerGL::setColorMaskForFramebuffer(const gl::BlendStateExt &blendSt
     // later.
     if (!mIndependentBlendStates || disableAlpha)
     {
-        blendStateExt.getColorMaskIndexed(0, &r, &g, &b, &a);
+        blendState.getColorMaskIndexed(0, &r, &g, &b, &a);
         setColorMask(r, g, b, disableAlpha ? false : a);
         return;
     }
 
     // Check if the current mask already matches the new state
-    if (mBlendStateExt.getColorMaskBits() == blendStateExt.getColorMaskBits())
+    if (mState.blendState.getColorMaskBits() == blendState.getColorMaskBits())
     {
         return;
     }
 
     // Get DrawBufferMask of buffers with different color masks
-    gl::DrawBufferMask diffMask = mBlendStateExt.compareColorMask(blendStateExt.getColorMaskBits());
+    gl::DrawBufferMask diffMask = mState.blendState.compareColorMask(blendState.getColorMaskBits());
     size_t diffCount            = diffMask.count();
 
     // Check if setting all buffers to the same value reduces the number of subsequent indexed
@@ -2599,12 +2576,12 @@ void StateManagerGL::setColorMaskForFramebuffer(const gl::BlendStateExt &blendSt
     {
         bool found                                                = false;
         gl::BlendStateExt::ColorMaskStorage::Type commonColorMask = 0;
-        for (size_t i = 0; i < mBlendStateExt.getDrawBufferCount() - 1; i++)
+        for (size_t i = 0; i < mState.blendState.getDrawBufferCount() - 1; i++)
         {
             const gl::BlendStateExt::ColorMaskStorage::Type tempCommonColorMask =
-                blendStateExt.expandColorMaskIndexed(i);
+                blendState.expandColorMaskIndexed(i);
             const gl::DrawBufferMask tempDiffMask =
-                blendStateExt.compareColorMask(tempCommonColorMask);
+                blendState.compareColorMask(tempCommonColorMask);
             const size_t tempDiffCount = tempDiffMask.count();
             if (tempDiffCount < diffCount)
             {
@@ -2627,11 +2604,11 @@ void StateManagerGL::setColorMaskForFramebuffer(const gl::BlendStateExt &blendSt
 
     for (size_t drawBufferIndex : diffMask)
     {
-        blendStateExt.getColorMaskIndexed(drawBufferIndex, &r, &g, &b, &a);
+        blendState.getColorMaskIndexed(drawBufferIndex, &r, &g, &b, &a);
         mFunctions->colorMaski(static_cast<GLuint>(drawBufferIndex), r, g, b, a);
     }
 
-    mBlendStateExt.setColorMaskBits(blendStateExt.getColorMaskBits());
+    mState.blendState.setColorMaskBits(blendState.getColorMaskBits());
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_COLOR_MASK);
 }
 
@@ -3064,9 +3041,9 @@ void StateManagerGL::syncFromNativeContext(const gl::Extensions &extensions,
     double startTime = platform->currentTime(platform);
 
     get(GL_VIEWPORT, &state->viewport);
-    if (mViewport != state->viewport)
+    if (mState.viewport != state->viewport)
     {
-        mViewport = state->viewport;
+        mState.viewport = state->viewport;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_VIEWPORT);
     }
 
@@ -3074,27 +3051,27 @@ void StateManagerGL::syncFromNativeContext(const gl::Extensions &extensions,
     {
         get(GL_CLIP_ORIGIN, &state->clipOrigin);
         get(GL_CLIP_DEPTH_MODE, &state->clipDepthMode);
-        if (mClipOrigin != gl::FromGLenum<gl::ClipOrigin>(state->clipOrigin) ||
-            mClipDepthMode != gl::FromGLenum<gl::ClipDepthMode>(state->clipDepthMode))
+        if (mState.clipOrigin != gl::FromGLenum<gl::ClipOrigin>(state->clipOrigin) ||
+            mState.clipDepthMode != gl::FromGLenum<gl::ClipDepthMode>(state->clipDepthMode))
         {
-            mClipOrigin    = gl::FromGLenum<gl::ClipOrigin>(state->clipOrigin);
-            mClipDepthMode = gl::FromGLenum<gl::ClipDepthMode>(state->clipDepthMode);
+            mState.clipOrigin    = gl::FromGLenum<gl::ClipOrigin>(state->clipOrigin);
+            mState.clipDepthMode = gl::FromGLenum<gl::ClipDepthMode>(state->clipDepthMode);
             mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
             mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL);
         }
     }
 
     get(GL_SCISSOR_TEST, &state->scissorTest);
-    if (mScissorTestEnabled != static_cast<bool>(state->scissorTest))
+    if (mState.scissorTestEnabled != static_cast<bool>(state->scissorTest))
     {
-        mScissorTestEnabled = state->scissorTest;
+        mState.scissorTestEnabled = state->scissorTest;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_SCISSOR_TEST_ENABLED);
     }
 
     get(GL_SCISSOR_BOX, &state->scissorBox);
-    if (mScissor != state->scissorBox)
+    if (mState.scissor != state->scissorBox)
     {
-        mScissor = state->scissorBox;
+        mState.scissor = state->scissorBox;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_SCISSOR);
     }
 
@@ -3120,11 +3097,11 @@ void StateManagerGL::syncFromNativeContext(const gl::Extensions &extensions,
     }
 
     get(GL_COLOR_WRITEMASK, &state->colorMask);
-    auto colorMask = mBlendStateExt.expandColorMaskValue(state->colorMask[0], state->colorMask[1],
-                                                         state->colorMask[2], state->colorMask[3]);
-    if (mBlendStateExt.getColorMaskBits() != colorMask)
+    auto colorMask = mState.blendState.expandColorMaskValue(
+        state->colorMask[0], state->colorMask[1], state->colorMask[2], state->colorMask[3]);
+    if (mState.blendState.getColorMaskBits() != colorMask)
     {
-        mBlendStateExt.setColorMaskBits(colorMask);
+        mState.blendState.setColorMaskBits(colorMask);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_COLOR_MASK);
     }
 
@@ -3164,10 +3141,10 @@ void StateManagerGL::syncFromNativeContext(const gl::Extensions &extensions,
     }
 
     get(GL_DEPTH_RANGE, state->depthRage);
-    if (mNear != state->depthRage[0] || mFar != state->depthRage[1])
+    if (mState.near != state->depthRage[0] || mState.far != state->depthRage[1])
     {
-        mNear = state->depthRage[0];
-        mFar  = state->depthRage[1];
+        mState.near = state->depthRage[0];
+        mState.far  = state->depthRage[1];
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_DEPTH_RANGE);
     }
 
@@ -3395,10 +3372,10 @@ void StateManagerGL::syncBlendFromNativeContext(const gl::Extensions &extensions
                                                 ExternalContextState *state)
 {
     get(GL_BLEND, &state->blendEnabled);
-    if (mBlendStateExt.getEnabledMask() !=
-        (state->blendEnabled ? mBlendStateExt.getAllEnabledMask() : gl::DrawBufferMask::Zero()))
+    if (mState.blendState.getEnabledMask() !=
+        (state->blendEnabled ? mState.blendState.getAllEnabledMask() : gl::DrawBufferMask::Zero()))
     {
-        mBlendStateExt.setEnabled(state->blendEnabled);
+        mState.blendState.setEnabled(state->blendEnabled);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_ENABLED);
     }
 
@@ -3406,39 +3383,42 @@ void StateManagerGL::syncBlendFromNativeContext(const gl::Extensions &extensions
     get(GL_BLEND_DST_RGB, &state->blendDestRgb);
     get(GL_BLEND_SRC_ALPHA, &state->blendSrcAlpha);
     get(GL_BLEND_DST_ALPHA, &state->blendDestAlpha);
-    if (mBlendStateExt.getSrcColorBits() != mBlendStateExt.expandFactorValue(state->blendSrcRgb) ||
-        mBlendStateExt.getDstColorBits() != mBlendStateExt.expandFactorValue(state->blendDestRgb) ||
-        mBlendStateExt.getSrcAlphaBits() !=
-            mBlendStateExt.expandFactorValue(state->blendSrcAlpha) ||
-        mBlendStateExt.getDstAlphaBits() != mBlendStateExt.expandFactorValue(state->blendDestAlpha))
+    if (mState.blendState.getSrcColorBits() !=
+            mState.blendState.expandFactorValue(state->blendSrcRgb) ||
+        mState.blendState.getDstColorBits() !=
+            mState.blendState.expandFactorValue(state->blendDestRgb) ||
+        mState.blendState.getSrcAlphaBits() !=
+            mState.blendState.expandFactorValue(state->blendSrcAlpha) ||
+        mState.blendState.getDstAlphaBits() !=
+            mState.blendState.expandFactorValue(state->blendDestAlpha))
     {
-        mBlendStateExt.setFactors(state->blendSrcRgb, state->blendDestRgb, state->blendSrcAlpha,
-                                  state->blendDestAlpha);
+        mState.blendState.setFactors(state->blendSrcRgb, state->blendDestRgb, state->blendSrcAlpha,
+                                     state->blendDestAlpha);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_FUNCS);
     }
 
     get(GL_BLEND_COLOR, &state->blendColor);
-    if (mBlendColor != state->blendColor)
+    if (mState.blendColor != state->blendColor)
     {
-        mBlendColor = state->blendColor;
+        mState.blendColor = state->blendColor;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_COLOR);
     }
 
     get(GL_BLEND_EQUATION_RGB, &state->blendEquationRgb);
     get(GL_BLEND_EQUATION_ALPHA, &state->blendEquationAlpha);
-    if (mBlendStateExt.getEquationColorBits() !=
-            mBlendStateExt.expandEquationValue(state->blendEquationRgb) ||
-        mBlendStateExt.getEquationAlphaBits() !=
-            mBlendStateExt.expandEquationValue(state->blendEquationAlpha))
+    if (mState.blendState.getEquationColorBits() !=
+            mState.blendState.expandEquationValue(state->blendEquationRgb) ||
+        mState.blendState.getEquationAlphaBits() !=
+            mState.blendState.expandEquationValue(state->blendEquationAlpha))
     {
-        mBlendStateExt.setEquations(state->blendEquationRgb, state->blendEquationAlpha);
+        mState.blendState.setEquations(state->blendEquationRgb, state->blendEquationAlpha);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_EQUATIONS);
     }
 
     if (extensions.blendEquationAdvancedCoherentKHR)
     {
         get(GL_BLEND_ADVANCED_COHERENT_KHR, &state->enableBlendEquationAdvancedCoherent);
-        if (mBlendAdvancedCoherent != state->enableBlendEquationAdvancedCoherent)
+        if (mState.blendAdvancedCoherent != state->enableBlendEquationAdvancedCoherent)
         {
             setBlendAdvancedCoherent(state->enableBlendEquationAdvancedCoherent);
             mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
@@ -3454,14 +3434,14 @@ void StateManagerGL::restoreBlendNativeContext(const gl::Extensions &extensions,
 
     mFunctions->blendFuncSeparate(state->blendSrcRgb, state->blendDestRgb, state->blendSrcAlpha,
                                   state->blendDestAlpha);
-    mBlendStateExt.setFactors(state->blendSrcRgb, state->blendDestRgb, state->blendSrcAlpha,
-                              state->blendDestAlpha);
+    mState.blendState.setFactors(state->blendSrcRgb, state->blendDestRgb, state->blendSrcAlpha,
+                                 state->blendDestAlpha);
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_FUNCS);
 
     setBlendColor(state->blendColor);
 
     mFunctions->blendEquationSeparate(state->blendEquationRgb, state->blendEquationAlpha);
-    mBlendStateExt.setEquations(state->blendEquationRgb, state->blendEquationAlpha);
+    mState.blendState.setEquations(state->blendEquationRgb, state->blendEquationAlpha);
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_EQUATIONS);
 
     if (extensions.blendEquationAdvancedCoherentKHR)
@@ -3477,17 +3457,17 @@ void StateManagerGL::syncFramebufferFromNativeContext(const gl::Extensions &exte
 {
     // TODO: wrap fbo into an EGLSurface
     get(GL_FRAMEBUFFER_BINDING, &state->framebufferBinding);
-    if (mFramebuffers[angle::FramebufferBindingDraw] !=
+    if (mState.framebuffers[angle::FramebufferBindingDraw] !=
         static_cast<GLenum>(state->framebufferBinding))
     {
-        mFramebuffers[angle::FramebufferBindingDraw] =
+        mState.framebuffers[angle::FramebufferBindingDraw] =
             static_cast<GLenum>(state->framebufferBinding);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
     }
-    if (mFramebuffers[angle::FramebufferBindingRead] !=
+    if (mState.framebuffers[angle::FramebufferBindingRead] !=
         static_cast<GLenum>(state->framebufferBinding))
     {
-        mFramebuffers[angle::FramebufferBindingRead] =
+        mState.framebuffers[angle::FramebufferBindingRead] =
             static_cast<GLenum>(state->framebufferBinding);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
     }
@@ -3503,16 +3483,16 @@ void StateManagerGL::syncPixelPackUnpackFromNativeContext(const gl::Extensions &
                                                           ExternalContextState *state)
 {
     get(GL_PACK_ALIGNMENT, &state->packAlignment);
-    if (mPackAlignment != state->packAlignment)
+    if (mState.packAlignment != state->packAlignment)
     {
-        mPackAlignment = state->packAlignment;
+        mState.packAlignment = state->packAlignment;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
 
     get(GL_UNPACK_ALIGNMENT, &state->unpackAlignment);
-    if (mUnpackAlignment != state->unpackAlignment)
+    if (mState.unpackAlignment != state->unpackAlignment)
     {
-        mUnpackAlignment = state->unpackAlignment;
+        mState.unpackAlignment = state->unpackAlignment;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 }
@@ -3520,17 +3500,17 @@ void StateManagerGL::syncPixelPackUnpackFromNativeContext(const gl::Extensions &
 void StateManagerGL::restorePixelPackUnpackNativeContext(const gl::Extensions &extensions,
                                                          const ExternalContextState *state)
 {
-    if (mPackAlignment != state->packAlignment)
+    if (mState.packAlignment != state->packAlignment)
     {
         mFunctions->pixelStorei(GL_PACK_ALIGNMENT, state->packAlignment);
-        mPackAlignment = state->packAlignment;
+        mState.packAlignment = state->packAlignment;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
 
-    if (mUnpackAlignment != state->unpackAlignment)
+    if (mState.unpackAlignment != state->unpackAlignment)
     {
         mFunctions->pixelStorei(GL_UNPACK_ALIGNMENT, state->unpackAlignment);
-        mUnpackAlignment = state->unpackAlignment;
+        mState.unpackAlignment = state->unpackAlignment;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 }
