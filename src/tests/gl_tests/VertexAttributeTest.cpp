@@ -2366,6 +2366,89 @@ void main() {
     }
 }
 
+// Test that drawing with interleaved client-side vertex arrays whose attributes have different
+// alignment requirements doesn't assert/crash in the Vulkan backend's client-attrib-merging
+// optimization.
+TEST_P(VertexAttributeTestES3, DrawWithInterleavedClientArraysDifferentAlignment)
+{
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+in highp vec3 a_position;
+in highp vec2 a_shortColor;
+in highp vec2 a_floatColor;
+out highp vec2 v_shortColor;
+out highp vec2 v_floatColor;
+
+void main() {
+    gl_Position  = vec4(a_position, 1.0);
+    v_shortColor = a_shortColor;
+    v_floatColor = a_floatColor;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+in highp vec2 v_shortColor;
+in highp vec2 v_floatColor;
+out vec4 fragColor;
+
+void main() {
+    if (abs(v_shortColor.x - 1.0) < 0.01 && abs(v_shortColor.y - 0.5) < 0.01 &&
+        abs(v_floatColor.x - 0.25) < 0.01 && abs(v_floatColor.y - 0.75) < 0.01) {
+        fragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    } else {
+        fragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glBindAttribLocation(program, 0, "a_position");
+    glBindAttribLocation(program, 1, "a_shortColor");
+    glBindAttribLocation(program, 2, "a_floatColor");
+    glLinkProgram(program);
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+
+    // Interleaved per-vertex layout (16 byte stride shared by both attributes):
+    //   [0-1]   padding
+    //   [2-5]   a_shortColor: 2 x GLushort, start offset 2 (2-byte aligned)
+    //   [6-7]   padding
+    //   [8-15]  a_floatColor: 2 x GLfloat, start offset 8 (4-byte aligned)
+    constexpr size_t kStride      = 16;
+    constexpr size_t kVertexCount = 4;
+    constexpr size_t kDataSize    = kStride * kVertexCount;
+
+    std::array<GLubyte, kDataSize + 4> rawData = {};
+    const size_t vertexDataOffset =
+        rx::roundUp(reinterpret_cast<uintptr_t>(rawData.data()), uintptr_t(4)) -
+        reinterpret_cast<uintptr_t>(rawData.data());
+
+    for (size_t v = 0; v < kVertexCount; v++)
+    {
+        GLubyte *vertex = &rawData[vertexDataOffset + v * kStride];
+
+        const GLushort shortValues[2] = {0xFFFFu, 0x7FFFu};
+        memcpy(vertex + 2, shortValues, sizeof(shortValues));
+
+        const GLfloat floatValues[2] = {0.25f, 0.75f};
+        memcpy(vertex + 8, floatValues, sizeof(floatValues));
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glVertexAttribPointer(1, 2, GL_UNSIGNED_SHORT, GL_TRUE, kStride,
+                          &rawData[vertexDataOffset + 2]);
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, kStride, &rawData[vertexDataOffset + 8]);
+    glEnableVertexAttribArray(2);
+
+    drawIndexedQuad(program, "a_position", 0.5f, 1.0f);
+
+    // Verify green was drawn.
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests that rendering is fine if GL_ANGLE_relaxed_vertex_attribute_type is enabled
 // and mismatched integer signedness between the program's attribute type and the
 // attribute type specified by VertexAttribIPointer are used.
