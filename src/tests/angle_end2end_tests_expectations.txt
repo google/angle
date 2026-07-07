@@ -1273,6 +1273,10 @@
 523128541 PIXEL10 GLES : UniformBlockWithOneLargeArrayMemberTest.TwoUniformBlocksInSameProgram/* = SKIP
 523128541 PIXEL10 GLES : UniformBufferTest.SameBufferDifferentMetalSize/* = SKIP
 526503288 PIXEL10 GLES : BaseInstanceOverflowTest.BaseInstanceOverflow2/ES3_OpenGLES_AlwaysEnableEmulatedMultidrawExtensions = SKIP
+516824665 PIXEL10 GLES : Texture2DTest.InvalidFormatTypeCombosShouldFail/* = SKIP
+516824665 PIXEL10 GLES : Texture2DTest.FormatRGB10A2REVToRGB565/* = SKIP
+516824665 PIXEL10 GLES : Texture2DTest.FormatRGB10A2REVToRGB5A1/* = SKIP
+516824665 PIXEL10 GLES : Texture2DTest.FormatRGB10A2REVToRGB8/* = SKIP
 516824665 PIXEL10 GLES : Texture2DTestES3.InvalidFormatTypeCombosShouldFail/* = SKIP
 516824665 PIXEL10 GLES : Texture2DTestES3.FormatRGB10A2REVToRGB5A1/* = SKIP
 525786155 PIXEL10 GLES : PbufferTestES3.ImportImageThenBindTexImageShouldOrphan/* = SKIP
