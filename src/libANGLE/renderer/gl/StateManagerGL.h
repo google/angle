@@ -232,6 +232,70 @@ struct ContextStateGL
     gl::ColorF blendColor = gl::ColorF(0, 0, 0, 0);
     gl::BlendStateExt blendState;
     bool blendAdvancedCoherent = true;
+
+    bool sampleAlphaToCoverageEnabled = false;
+    bool sampleCoverageEnabled        = false;
+    float sampleCoverageValue         = 1.0f;
+    bool sampleCoverageInvert         = false;
+    bool sampleMaskEnabled            = false;
+    gl::SampleMaskArray<GLbitfield> sampleMaskValues;
+
+    bool depthTestEnabled                     = false;
+    GLenum depthFunc                          = GL_LESS;
+    bool depthMask                            = true;
+    bool stencilTestEnabled                   = false;
+    GLenum stencilFrontFunc                   = GL_ALWAYS;
+    GLint stencilFrontRef                     = 0;
+    GLuint stencilFrontValueMask              = static_cast<GLuint>(-1);
+    GLenum stencilFrontStencilFailOp          = GL_KEEP;
+    GLenum stencilFrontStencilPassDepthFailOp = GL_KEEP;
+    GLenum stencilFrontStencilPassDepthPassOp = GL_KEEP;
+    GLuint stencilFrontWritemask              = static_cast<GLuint>(-1);
+    GLenum stencilBackFunc                    = GL_ALWAYS;
+    GLint stencilBackRef                      = 0;
+    GLuint stencilBackValueMask               = static_cast<GLuint>(-1);
+    GLenum stencilBackStencilFailOp           = GL_KEEP;
+    GLenum stencilBackStencilPassDepthFailOp  = GL_KEEP;
+    GLenum stencilBackStencilPassDepthPassOp  = GL_KEEP;
+    GLuint stencilBackWritemask               = static_cast<GLuint>(-1);
+
+    bool cullFaceEnabled           = false;
+    gl::CullFaceMode cullFace      = gl::CullFaceMode::Back;
+    GLenum frontFace               = GL_CCW;
+    gl::PolygonMode polygonMode    = gl::PolygonMode::Fill;
+    bool polygonOffsetPointEnabled = false;
+    bool polygonOffsetLineEnabled  = false;
+    bool polygonOffsetFillEnabled  = false;
+    GLfloat polygonOffsetFactor    = 0.0f;
+    GLfloat polygonOffsetUnits     = 0.0f;
+    GLfloat polygonOffsetClamp     = 0.0f;
+    bool depthClampEnabled         = false;
+    bool rasterizerDiscardEnabled  = false;
+    float lineWidth                = 1.0f;
+
+    bool primitiveRestartEnabled = false;
+    GLuint primitiveRestartIndex = 0;
+
+    gl::ColorF clearColor = gl::ColorF(0.0f, 0.0f, 0.0f, 0.0f);
+    float clearDepth      = 1.0f;
+    GLint clearStencil    = 0;
+
+    bool framebufferSRGBEnabled = false;
+
+    bool ditherEnabled                 = true;
+    bool textureCubemapSeamlessEnabled = false;
+
+    bool multisamplingEnabled    = true;
+    bool sampleAlphaToOneEnabled = false;
+
+    GLenum coverageModulation = GL_NONE;
+
+    GLenum provokingVertex = GL_LAST_VERTEX_CONVENTION;
+
+    gl::ClipDistanceEnableBits enabledClipDistances;
+
+    bool logicOpEnabled          = false;
+    gl::LogicalOperation logicOp = gl::LogicalOperation::Copy;
 };
 
 class StateManagerGL final : angle::NonCopyable
@@ -518,75 +582,14 @@ class StateManagerGL final : angle::NonCopyable
 
     const bool mIndependentBlendStates;
 
-    bool mSampleAlphaToCoverageEnabled;
-    bool mSampleCoverageEnabled;
-    float mSampleCoverageValue;
-    bool mSampleCoverageInvert;
-    bool mSampleMaskEnabled;
-    gl::SampleMaskArray<GLbitfield> mSampleMaskValues;
     bool mSampleCoverageEverChanged;
 
-    bool mDepthTestEnabled;
-    GLenum mDepthFunc;
-    bool mDepthMask;
-    bool mStencilTestEnabled;
-    GLenum mStencilFrontFunc;
-    GLint mStencilFrontRef;
-    GLuint mStencilFrontValueMask;
-    GLenum mStencilFrontStencilFailOp;
-    GLenum mStencilFrontStencilPassDepthFailOp;
-    GLenum mStencilFrontStencilPassDepthPassOp;
-    GLuint mStencilFrontWritemask;
-    GLenum mStencilBackFunc;
-    GLint mStencilBackRef;
-    GLuint mStencilBackValueMask;
-    GLenum mStencilBackStencilFailOp;
-    GLenum mStencilBackStencilPassDepthFailOp;
-    GLenum mStencilBackStencilPassDepthPassOp;
-    GLuint mStencilBackWritemask;
-
-    bool mCullFaceEnabled;
-    gl::CullFaceMode mCullFace;
-    GLenum mFrontFace;
-    gl::PolygonMode mPolygonMode;
-    bool mPolygonOffsetPointEnabled;
-    bool mPolygonOffsetLineEnabled;
-    bool mPolygonOffsetFillEnabled;
-    GLfloat mPolygonOffsetFactor;
-    GLfloat mPolygonOffsetUnits;
-    GLfloat mPolygonOffsetClamp;
-    bool mDepthClampEnabled;
-    bool mRasterizerDiscardEnabled;
-    float mLineWidth;
-
-    bool mPrimitiveRestartEnabled;
-    GLuint mPrimitiveRestartIndex;
-
-    gl::ColorF mClearColor;
-    float mClearDepth;
-    GLint mClearStencil;
-
-    bool mFramebufferSRGBAvailable;
-    bool mFramebufferSRGBEnabled;
+    const bool mFramebufferSRGBAvailable;
     const bool mHasSeparateFramebufferBindings;
-
-    bool mDitherEnabled;
-    bool mTextureCubemapSeamlessEnabled;
-
-    bool mMultisamplingEnabled;
-    bool mSampleAlphaToOneEnabled;
-
-    GLenum mCoverageModulation;
 
     const bool mIsMultiviewEnabled;
 
-    GLenum mProvokingVertex;
-
-    gl::ClipDistanceEnableBits mEnabledClipDistances;
     const size_t mMaxClipDistances;
-
-    bool mLogicOpEnabled;
-    gl::LogicalOperation mLogicOp;
 
     gl::state::DirtyBits mLocalDirtyBits;
     gl::state::ExtendedDirtyBits mLocalExtendedDirtyBits;
