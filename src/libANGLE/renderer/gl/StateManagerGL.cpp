@@ -71,7 +71,13 @@ VertexArrayStateGL::VertexArrayStateGL(size_t maxAttribs, size_t maxBindings)
     }
 }
 
-StateManagerGL::IndexedBufferBinding::IndexedBufferBinding() : offset(0), size(0), buffer(0) {}
+ContextStateGL::ContextStateGL(const gl::Caps &caps, const gl::Extensions &extensions)
+    : vertexAttribCurrentValues(caps.maxVertexAttributes), images(caps.maxImageUnits)
+{
+    indexedBuffers[gl::BufferBinding::Uniform].resize(caps.maxUniformBufferBindings);
+    indexedBuffers[gl::BufferBinding::AtomicCounter].resize(caps.maxAtomicCounterBufferBindings);
+    indexedBuffers[gl::BufferBinding::ShaderStorage].resize(caps.maxShaderStorageBufferBindings);
+}
 
 StateManagerGL::StateManagerGL(const FunctionsGL *functions,
                                const gl::Caps &rendererCaps,
@@ -79,18 +85,10 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
                                const angle::FeaturesGL &features)
     : mFunctions(functions),
       mFeatures(features),
-      mProgram(0),
+      mState(rendererCaps, extensions),
       mSupportsVertexArrayObjects(nativegl::SupportsVertexArrayObjects(functions)),
-      mVAO(0),
-      mVertexAttribCurrentValues(rendererCaps.maxVertexAttributes),
       mDefaultVAOState(rendererCaps.maxVertexAttributes, rendererCaps.maxVertexAttribBindings),
       mVAOState(&mDefaultVAOState),
-      mBuffers(),
-      mIndexedBuffers(),
-      mTextureUnitIndex(0),
-      mTextures{},
-      mSamplers{},
-      mImages(rendererCaps.maxImageUnits, ImageUnitBinding()),
       mTransformFeedback(0),
       mCurrentTransformFeedback(nullptr),
       mQueries(),
@@ -181,11 +179,6 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
     ASSERT(mFunctions);
     ASSERT(rendererCaps.maxViews >= 1u);
 
-    mIndexedBuffers[gl::BufferBinding::Uniform].resize(rendererCaps.maxUniformBufferBindings);
-    mIndexedBuffers[gl::BufferBinding::AtomicCounter].resize(
-        rendererCaps.maxAtomicCounterBufferBindings);
-    mIndexedBuffers[gl::BufferBinding::ShaderStorage].resize(
-        rendererCaps.maxShaderStorageBufferBindings);
 
     mSampleMaskValues.fill(~GLbitfield(0));
 
@@ -223,7 +216,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
         ASSERT(nativegl::SupportsVertexArrayObjects(mFunctions));
         mFunctions->genVertexArrays(1, &mDefaultVAO);
         mFunctions->bindVertexArray(mDefaultVAO);
-        mVAO = mDefaultVAO;
+        mState.vao = mDefaultVAO;
     }
 
     // By default, desktop GL clamps values read from normalized
@@ -255,7 +248,7 @@ void StateManagerGL::deleteProgram(GLuint program)
 {
     if (program != 0)
     {
-        if (mProgram == program)
+        if (mState.program == program)
         {
             useProgram(0);
         }
@@ -268,7 +261,7 @@ void StateManagerGL::deleteVertexArray(GLuint vao)
 {
     if (vao != 0)
     {
-        if (mVAO == vao)
+        if (mState.vao == vao)
         {
             bindVertexArray(0, &mDefaultVAOState);
         }
@@ -282,7 +275,7 @@ void StateManagerGL::deleteTexture(GLuint texture)
     {
         for (gl::TextureType type : angle::AllEnums<gl::TextureType>())
         {
-            const auto &textureVector = mTextures[type];
+            const auto &textureVector = mState.textures[type];
             for (size_t textureUnitIndex = 0; textureUnitIndex < textureVector.size();
                  textureUnitIndex++)
             {
@@ -294,9 +287,9 @@ void StateManagerGL::deleteTexture(GLuint texture)
             }
         }
 
-        for (size_t imageUnitIndex = 0; imageUnitIndex < mImages.size(); imageUnitIndex++)
+        for (size_t imageUnitIndex = 0; imageUnitIndex < mState.images.size(); imageUnitIndex++)
         {
-            if (mImages[imageUnitIndex].texture == texture)
+            if (mState.images[imageUnitIndex].texture == texture)
             {
                 bindImageTexture(imageUnitIndex, 0, 0, false, 0, GL_READ_ONLY, GL_R32UI);
             }
@@ -310,9 +303,9 @@ void StateManagerGL::deleteSampler(GLuint sampler)
 {
     if (sampler != 0)
     {
-        for (size_t unit = 0; unit < mSamplers.size(); unit++)
+        for (size_t unit = 0; unit < mState.samplers.size(); unit++)
         {
-            if (mSamplers[unit] == sampler)
+            if (mState.samplers[unit] == sampler)
             {
                 bindSampler(unit, 0);
             }
@@ -331,12 +324,12 @@ void StateManagerGL::deleteBuffer(GLuint buffer)
 
     for (auto target : angle::AllEnums<gl::BufferBinding>())
     {
-        if (mBuffers[target] == buffer)
+        if (mState.buffers[target] == buffer)
         {
             bindBuffer(target, 0);
         }
 
-        auto &indexedTarget = mIndexedBuffers[target];
+        auto &indexedTarget = mState.indexedBuffers[target];
         for (size_t bindIndex = 0; bindIndex < indexedTarget.size(); ++bindIndex)
         {
             if (indexedTarget[bindIndex].buffer == buffer)
@@ -428,7 +421,7 @@ void StateManagerGL::deleteTransformFeedback(GLuint transformFeedback)
 
 void StateManagerGL::useProgram(GLuint program)
 {
-    if (mProgram != program)
+    if (mState.program != program)
     {
         forceUseProgram(program);
     }
@@ -436,14 +429,14 @@ void StateManagerGL::useProgram(GLuint program)
 
 void StateManagerGL::forceUseProgram(GLuint program)
 {
-    mProgram = program;
-    mFunctions->useProgram(mProgram);
+    mState.program = program;
+    mFunctions->useProgram(program);
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_PROGRAM_BINDING);
 }
 
 void StateManagerGL::bindVertexArray(GLuint vao, VertexArrayStateGL *vaoState)
 {
-    if (mVAO != vao)
+    if (mState.vao != vao)
     {
         ASSERT(!mFeatures.syncAllVertexArraysToDefault.enabled);
         forceBindVertexArray(vao, vaoState);
@@ -452,9 +445,9 @@ void StateManagerGL::bindVertexArray(GLuint vao, VertexArrayStateGL *vaoState)
 
 void StateManagerGL::forceBindVertexArray(GLuint vao, VertexArrayStateGL *vaoState)
 {
-    mVAO                                      = vao;
+    mState.vao                                      = vao;
     mVAOState                                 = vaoState;
-    mBuffers[gl::BufferBinding::ElementArray] = vaoState ? vaoState->elementArrayBuffer : 0;
+    mState.buffers[gl::BufferBinding::ElementArray] = vaoState ? vaoState->elementArrayBuffer : 0;
 
     mFunctions->bindVertexArray(vao);
 
@@ -467,9 +460,9 @@ void StateManagerGL::bindBuffer(gl::BufferBinding target, GLuint buffer)
     // glBindTransformFeedback is called. To avoid these behavior differences we shouldn't try to
     // use it.
     ASSERT(target != gl::BufferBinding::TransformFeedback);
-    if (mBuffers[target] != buffer)
+    if (mState.buffers[target] != buffer)
     {
-        mBuffers[target] = buffer;
+        mState.buffers[target] = buffer;
         mFunctions->bindBuffer(gl::ToGLenum(target), buffer);
         setBufferBindingDirty(target);
     }
@@ -480,15 +473,15 @@ void StateManagerGL::bindBufferBase(gl::BufferBinding target, size_t index, GLui
     // Transform feedback buffer bindings are tracked in TransformFeedbackGL
     ASSERT(target != gl::BufferBinding::TransformFeedback);
 
-    ASSERT(index < mIndexedBuffers[target].size());
-    auto &binding = mIndexedBuffers[target][index];
+    ASSERT(index < mState.indexedBuffers[target].size());
+    auto &binding = mState.indexedBuffers[target][index];
     if (binding.buffer != buffer || binding.offset != static_cast<size_t>(-1) ||
         binding.size != static_cast<size_t>(-1))
     {
         binding.buffer   = buffer;
         binding.offset   = static_cast<size_t>(-1);
         binding.size     = static_cast<size_t>(-1);
-        mBuffers[target] = buffer;
+        mState.buffers[target] = buffer;
         mFunctions->bindBufferBase(gl::ToGLenum(target), static_cast<GLuint>(index), buffer);
         setBufferBindingDirty(target);
     }
@@ -503,13 +496,13 @@ void StateManagerGL::bindBufferRange(gl::BufferBinding target,
     // Transform feedback buffer bindings are tracked in TransformFeedbackGL
     ASSERT(target != gl::BufferBinding::TransformFeedback);
 
-    auto &binding = mIndexedBuffers[target][index];
+    auto &binding = mState.indexedBuffers[target][index];
     if (binding.buffer != buffer || binding.offset != offset || binding.size != size)
     {
         binding.buffer   = buffer;
         binding.offset   = offset;
         binding.size     = size;
-        mBuffers[target] = buffer;
+        mState.buffers[target] = buffer;
         mFunctions->bindBufferRange(gl::ToGLenum(target), static_cast<GLuint>(index), buffer,
                                     offset, size);
     }
@@ -517,19 +510,19 @@ void StateManagerGL::bindBufferRange(gl::BufferBinding target,
 
 void StateManagerGL::activeTexture(size_t unit)
 {
-    if (mTextureUnitIndex != unit)
+    if (mState.textureUnitIndex != unit)
     {
-        mTextureUnitIndex = unit;
-        mFunctions->activeTexture(GL_TEXTURE0 + static_cast<GLenum>(mTextureUnitIndex));
+        mState.textureUnitIndex = unit;
+        mFunctions->activeTexture(GL_TEXTURE0 + static_cast<GLenum>(unit));
     }
 }
 
 void StateManagerGL::bindTexture(gl::TextureType type, GLuint texture)
 {
     gl::TextureType nativeType = nativegl::GetNativeTextureType(type);
-    if (mTextures[nativeType][mTextureUnitIndex] != texture)
+    if (mState.textures[nativeType][mState.textureUnitIndex] != texture)
     {
-        mTextures[nativeType][mTextureUnitIndex] = texture;
+        mState.textures[nativeType][mState.textureUnitIndex] = texture;
         mFunctions->bindTexture(nativegl::GetTextureBindingTarget(type), texture);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
     }
@@ -537,9 +530,9 @@ void StateManagerGL::bindTexture(gl::TextureType type, GLuint texture)
 
 void StateManagerGL::bindSampler(size_t unit, GLuint sampler)
 {
-    if (mSamplers[unit] != sampler)
+    if (mState.samplers[unit] != sampler)
     {
-        mSamplers[unit] = sampler;
+        mState.samplers[unit] = sampler;
         mFunctions->bindSampler(static_cast<GLuint>(unit), sampler);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_SAMPLER_BINDINGS);
     }
@@ -553,7 +546,7 @@ void StateManagerGL::bindImageTexture(size_t unit,
                                       GLenum access,
                                       GLenum format)
 {
-    auto &binding = mImages[unit];
+    auto &binding = mState.images[unit];
     if (binding.texture != texture || binding.level != level || binding.layered != layered ||
         binding.layer != layer || binding.access != access || binding.format != format)
     {
@@ -1135,23 +1128,20 @@ void StateManagerGL::updateProgramImageBindings(const gl::Context *context)
 void StateManagerGL::setAttributeCurrentData(size_t index,
                                              const gl::VertexAttribCurrentValueData &data)
 {
-    if (mVertexAttribCurrentValues[index] != data)
+    if (mState.vertexAttribCurrentValues[index] != data)
     {
-        mVertexAttribCurrentValues[index] = data;
-        switch (mVertexAttribCurrentValues[index].Type)
+        mState.vertexAttribCurrentValues[index] = data;
+        switch (data.Type)
         {
             case gl::VertexAttribType::Float:
-                mFunctions->vertexAttrib4fv(static_cast<GLuint>(index),
-                                            mVertexAttribCurrentValues[index].Values.FloatValues);
+                mFunctions->vertexAttrib4fv(static_cast<GLuint>(index), data.Values.FloatValues);
                 break;
             case gl::VertexAttribType::Int:
-                mFunctions->vertexAttribI4iv(static_cast<GLuint>(index),
-                                             mVertexAttribCurrentValues[index].Values.IntValues);
+                mFunctions->vertexAttribI4iv(static_cast<GLuint>(index), data.Values.IntValues);
                 break;
             case gl::VertexAttribType::UnsignedInt:
-                mFunctions->vertexAttribI4uiv(
-                    static_cast<GLuint>(index),
-                    mVertexAttribCurrentValues[index].Values.UnsignedIntValues);
+                mFunctions->vertexAttribI4uiv(static_cast<GLuint>(index),
+                                              data.Values.UnsignedIntValues);
                 break;
             default:
                 UNREACHABLE();
@@ -2916,7 +2906,8 @@ VertexArrayStateGL *StateManagerGL::getDefaultVAOState()
 void StateManagerGL::validateState() const
 {
     // Current program
-    ValidateStateHelper(mFunctions, mProgram, GL_CURRENT_PROGRAM, "mProgram", "GL_CURRENT_PROGRAM");
+    ValidateStateHelper(mFunctions, mState.program, GL_CURRENT_PROGRAM, "mProgram",
+                        "GL_CURRENT_PROGRAM");
 
     // Buffers
     for (gl::BufferBinding bindingType : angle::AllEnums<gl::BufferBinding>())
@@ -2940,12 +2931,13 @@ void StateManagerGL::validateState() const
 
         GLenum bindingTypeGL  = nativegl::GetBufferBindingQuery(bindingType);
         std::string localName = "mBuffers[" + ToString(bindingType) + "]";
-        ValidateStateHelper(mFunctions, mBuffers[bindingType], bindingTypeGL, localName.c_str(),
+        ValidateStateHelper(mFunctions, mState.buffers[bindingType], bindingTypeGL,
+                            localName.c_str(),
                             nativegl::GetBufferBindingString(bindingType).c_str());
     }
 
     // Vertex array object
-    ValidateStateHelper(mFunctions, mVAO, GL_VERTEX_ARRAY_BINDING, "mVAO",
+    ValidateStateHelper(mFunctions, mState.vao, GL_VERTEX_ARRAY_BINDING, "mVAO",
                         "GL_VERTEX_ARRAY_BINDING");
 }
 
@@ -3137,9 +3129,9 @@ void StateManagerGL::syncFromNativeContext(const gl::Extensions &extensions,
     }
 
     get(GL_CURRENT_PROGRAM, &state->currentProgram);
-    if (mProgram != static_cast<GLuint>(state->currentProgram))
+    if (mState.program != static_cast<GLuint>(state->currentProgram))
     {
-        mProgram = state->currentProgram;
+        mState.program = state->currentProgram;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_PROGRAM_BINDING);
     }
 
@@ -3657,10 +3649,10 @@ void StateManagerGL::syncBufferBindingsFromNativeContext(const gl::Extensions &e
                                                          ExternalContextState *state)
 {
     get(GL_ARRAY_BUFFER_BINDING, &state->vertexArrayBufferBinding);
-    mBuffers[gl::BufferBinding::Array] = state->vertexArrayBufferBinding;
+    mState.buffers[gl::BufferBinding::Array] = state->vertexArrayBufferBinding;
 
     get(GL_ELEMENT_ARRAY_BUFFER_BINDING, &state->elementArrayBufferBinding);
-    mBuffers[gl::BufferBinding::ElementArray] = state->elementArrayBufferBinding;
+    mState.buffers[gl::BufferBinding::ElementArray] = state->elementArrayBufferBinding;
 
     if (mVAOState && mVAOState->elementArrayBuffer != state->elementArrayBufferBinding)
     {
@@ -3688,15 +3680,15 @@ void StateManagerGL::syncTextureUnitsFromNativeContext(const gl::Extensions &ext
         get(GL_TEXTURE_BINDING_2D, &bindings.texture2d);
         get(GL_TEXTURE_BINDING_CUBE_MAP, &bindings.textureCubeMap);
         get(GL_TEXTURE_BINDING_EXTERNAL_OES, &bindings.textureExternalOES);
-        if (mTextures[gl::TextureType::_2D][i] != static_cast<GLuint>(bindings.texture2d) ||
-            mTextures[gl::TextureType::CubeMap][i] !=
+        if (mState.textures[gl::TextureType::_2D][i] != static_cast<GLuint>(bindings.texture2d) ||
+            mState.textures[gl::TextureType::CubeMap][i] !=
                 static_cast<GLuint>(bindings.textureCubeMap) ||
-            mTextures[gl::TextureType::External][i] !=
+            mState.textures[gl::TextureType::External][i] !=
                 static_cast<GLuint>(bindings.textureExternalOES))
         {
-            mTextures[gl::TextureType::_2D][i]      = bindings.texture2d;
-            mTextures[gl::TextureType::CubeMap][i]  = bindings.textureCubeMap;
-            mTextures[gl::TextureType::External][i] = bindings.textureExternalOES;
+            mState.textures[gl::TextureType::_2D][i]      = bindings.texture2d;
+            mState.textures[gl::TextureType::CubeMap][i]  = bindings.textureCubeMap;
+            mState.textures[gl::TextureType::External][i] = bindings.textureExternalOES;
             mLocalDirtyBits.set(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
         }
     }
@@ -3724,7 +3716,7 @@ void StateManagerGL::syncVertexArraysFromNativeContext(const gl::Extensions &ext
     {
         get(GL_VERTEX_ARRAY_BINDING, &state->vertexArrayBinding);
 
-        if (state->vertexArrayBinding != 0 || mVAO != 0)
+        if (state->vertexArrayBinding != 0 || mState.vao != 0)
         {
             // Force-bind VAO 0 if it's either not already bound or StateManagerGL thinks it's not
             // bound.
@@ -3780,7 +3772,7 @@ void StateManagerGL::syncVertexArraysFromNativeContext(const gl::Extensions &ext
         localBinding.divisor          = 0;
         localBinding.offset           = 0;
 
-        gl::VertexAttribCurrentValueData &localCurrentData = mVertexAttribCurrentValues[i];
+        gl::VertexAttribCurrentValueData &localCurrentData = mState.vertexAttribCurrentValues[i];
         if (localCurrentData != externalAttrib.currentData)
         {
             localCurrentData = externalAttrib.currentData;

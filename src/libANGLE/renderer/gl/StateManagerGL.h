@@ -167,6 +167,42 @@ struct VertexArrayStateGL
     angle::FixedVector<VertexBindingGL, gl::MAX_VERTEX_ATTRIBS> bindings;
 };
 
+struct IndexedBufferBindingGL
+{
+    size_t offset = 0;
+    size_t size   = 0;
+    GLuint buffer = 0;
+};
+
+struct ImageUnitBindingGL
+{
+    GLuint texture    = 0;
+    GLint level       = 0;
+    GLboolean layered = false;
+    GLint layer       = 0;
+    GLenum access     = GL_READ_ONLY;
+    GLenum format     = GL_R32UI;
+};
+
+struct ContextStateGL
+{
+    ContextStateGL(const gl::Caps &caps, const gl::Extensions &extensions);
+
+    GLuint program = 0;
+
+    GLuint vao = 0;
+    std::vector<gl::VertexAttribCurrentValueData> vertexAttribCurrentValues;
+
+    angle::PackedEnumMap<gl::BufferBinding, GLuint> buffers = {};
+    angle::PackedEnumMap<gl::BufferBinding, std::vector<IndexedBufferBindingGL>> indexedBuffers;
+
+    size_t textureUnitIndex                                                        = 0;
+    angle::PackedEnumMap<gl::TextureType, gl::ActiveTextureArray<GLuint>> textures = {};
+    gl::ActiveTextureArray<GLuint> samplers                                        = {};
+
+    std::vector<ImageUnitBindingGL> images;
+};
+
 class StateManagerGL final : angle::NonCopyable
 {
   public:
@@ -322,13 +358,13 @@ class StateManagerGL final : angle::NonCopyable
         GetImplAs<ProgramExecutableGL>(executable)->updateEmulatedClipOrigin(origin);
     }
 
-    GLuint getProgramID() const { return mProgram; }
-    GLuint getVertexArrayID() const { return mVAO; }
+    GLuint getProgramID() const { return mState.program; }
+    GLuint getVertexArrayID() const { return mState.vao; }
     GLuint getFramebufferID(angle::FramebufferBinding binding) const
     {
         return mFramebuffers[binding];
     }
-    GLuint getBufferID(gl::BufferBinding binding) const { return mBuffers[binding]; }
+    GLuint getBufferID(gl::BufferBinding binding) const { return mState.buffers[binding]; }
 
     bool getHasSeparateFramebufferBindings() const { return mHasSeparateFramebufferBindings; }
 
@@ -420,11 +456,9 @@ class StateManagerGL final : angle::NonCopyable
     const FunctionsGL *mFunctions;
     const angle::FeaturesGL &mFeatures;
 
-    GLuint mProgram;
+    ContextStateGL mState;
 
     const bool mSupportsVertexArrayObjects;
-    GLuint mVAO;
-    std::vector<gl::VertexAttribCurrentValueData> mVertexAttribCurrentValues;
 
     GLuint mDefaultVAO = 0;
     // The current state of the default VAO is owned by StateManagerGL. It may be shared between
@@ -436,37 +470,6 @@ class StateManagerGL final : angle::NonCopyable
     // The state of the currently bound vertex array object so StateManagerGL can know about the
     // current element array buffer.
     VertexArrayStateGL *mVAOState = nullptr;
-
-    angle::PackedEnumMap<gl::BufferBinding, GLuint> mBuffers;
-
-    struct IndexedBufferBinding
-    {
-        IndexedBufferBinding();
-
-        size_t offset;
-        size_t size;
-        GLuint buffer;
-    };
-    angle::PackedEnumMap<gl::BufferBinding, std::vector<IndexedBufferBinding>> mIndexedBuffers;
-
-    size_t mTextureUnitIndex;
-    angle::PackedEnumMap<gl::TextureType, gl::ActiveTextureArray<GLuint>> mTextures;
-    gl::ActiveTextureArray<GLuint> mSamplers;
-
-    struct ImageUnitBinding
-    {
-        ImageUnitBinding()
-            : texture(0), level(0), layered(false), layer(0), access(GL_READ_ONLY), format(GL_R32UI)
-        {}
-
-        GLuint texture;
-        GLint level;
-        GLboolean layered;
-        GLint layer;
-        GLenum access;
-        GLenum format;
-    };
-    std::vector<ImageUnitBinding> mImages;
 
     GLuint mTransformFeedback;
     TransformFeedbackGL *mCurrentTransformFeedback;
