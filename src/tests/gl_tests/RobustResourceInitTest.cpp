@@ -2082,6 +2082,32 @@ TEST_P(RobustResourceInitTest, TextureAfterCheckStatus)
 }
 
 // Test that after a texture with data is sampled, recreating it with no data makes it cleared.
+TEST_P(RobustResourceInitTest, SampleReinitSample)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    const std::vector<GLColor> kInitData(kWidth * kHeight, GLColor::red);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kInitData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    // Draw once, the texture has data and should sample with data.  The texture is also sync'ed at
+    // this step.
+    ANGLE_GL_PROGRAM(testProgram, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(testProgram, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Recreate the texture with no data.  It should be cleared to black.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    drawQuad(testProgram, essl1_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+}
+
+// Test that after a texture with data is sampled, recreating it with no data makes it cleared.
 // Uses an RGB texture which may be emulated on some backends.
 TEST_P(RobustResourceInitTest, SampleReinitSampleRGB)
 {
