@@ -2434,6 +2434,7 @@
 42267100 WGPU : GLSLTest.NamelessScopedStructs/* = SKIP
 42267100 WGPU : GLSLTest.ScopedStructsOrderBug/* = SKIP
 42267100 WGPU : GLSLTest.ScopedStructsOrderBug2/* = SKIP
+42267100 WGPU : GLSLTest.ScopedStructsOrderBug3/* = SKIP
 42267100 WGPU : GLSLTest.StructConstantFoldingBug2/* = SKIP
 42267100 WGPU : GLSLTest.ScopedStructsBug/* = SKIP
 42267100 WGPU : GLSLValidationTest.MissingReturnFloat/* = SKIP

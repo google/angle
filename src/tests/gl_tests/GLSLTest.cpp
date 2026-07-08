@@ -1281,6 +1281,50 @@ void main()
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
 }
 
+// Test that defining a global struct with an "id" suffix does not collide with a local one without
+// such a suffix.
+TEST_P(GLSLTest, ScopedStructsOrderBug3)
+{
+    // Try IDs between 25 to 35 for IR ids, and 3000 to 3020 for AST ids.
+    // For IR, the first 27 or so type ids are reserved, so user ids start at that value.
+    // For AST, user ids start at 3000.
+    for (uint32_t id = 25; id <= 3020; ++id)
+    {
+        std::ostringstream fs;
+        fs << R"(precision mediump float;
+
+struct T_)" << id
+           << R"(
+{
+    float f;
+};
+
+void main()
+{
+    T_)" << id
+           << R"( a;
+
+    struct T
+    {
+        float q;
+    };
+
+    T b;
+
+    gl_FragColor = vec4(1, 0, 0, 1);
+    gl_FragColor.a += a.f;
+    gl_FragColor.a += b.q;
+})";
+
+        ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), fs.str().c_str());
+
+        if (id == 35)
+        {
+            id = 2999;
+        }
+    }
+}
+
 // Test that inactive uniforms of struct type don't cause any errors.
 TEST_P(GLSLTest, InactiveStructUniform)
 {
