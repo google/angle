@@ -786,6 +786,52 @@ TEST_P(ReadPixelsPBOTest, SmallRowLength)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that readPixels with a large PACK_ROW_LENGTH into a PBO does not overflow int32 stride
+// calculation. Ported from crbug.com/528175330 / crbug.com/529867799.
+TEST_P(ReadPixelsPBOTest, PackLargeRowLength)
+{
+    reset(16, 8, 8);
+
+    const GLColor kExpectedColor(65, 128, 192, 255);
+    constexpr GLint kLargeRowLength          = 0x7fffffc;
+    constexpr GLsizeiptr kByteOffsetToVerify = 0x1ffffff0;
+    constexpr GLsizeiptr kBufferSize         = kByteOffsetToVerify + 256;
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+    glBufferData(GL_PIXEL_PACK_BUFFER, kBufferSize, nullptr, GL_STREAM_READ);
+    ANGLE_SKIP_TEST_IF(glGetError() == GL_OUT_OF_MEMORY);
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(kExpectedColor.R / 255.0f, kExpectedColor.G / 255.0f, kExpectedColor.B / 255.0f,
+                 kExpectedColor.A / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glPixelStorei(GL_PACK_ROW_LENGTH, kLargeRowLength);
+    glPixelStorei(GL_PACK_ALIGNMENT, 4);
+    glReadPixels(0, 0, 1, 2, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    void *mappedPtr = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedPtr);
+
+    const GLColor *colorPtr = static_cast<const GLColor *>(mappedPtr);
+    GLColor actualColorRow0;
+    GLColor actualColorRow1;
+
+    // Check row 0 pixel (at byte offset 0)
+    actualColorRow0 = colorPtr[0];
+
+    // Check row 1 pixel (at byte offset kByteOffsetToVerify)
+    constexpr size_t kRow1OffsetInPixels = kByteOffsetToVerify / sizeof(GLColor);
+    // SAFETY: test-only code.
+    ANGLE_UNSAFE_BUFFERS(actualColorRow1 = colorPtr[kRow1OffsetInPixels]);
+
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+
+    EXPECT_EQ(kExpectedColor, actualColorRow0);
+    EXPECT_EQ(kExpectedColor, actualColorRow1);
+}
+
 class ReadPixelsPBODrawTest : public ReadPixelsPBOTest
 {
   protected:

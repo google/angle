@@ -261,6 +261,7 @@ enum class Feature
     MutableMipmapTextureUpload,
     NoperspectiveInterpolationBrokenWithPassthroughShaders,
     OverrideSurfaceFormatRGB8ToRGBA8,
+    PackLargeRowLengthSeparatelyPackBuffer,
     PackLastRowSeparatelyForPaddingInclusion,
     PackOverlappingRowsSeparatelyPackBuffer,
     PadBuffersToMaxVertexAttribStride,
