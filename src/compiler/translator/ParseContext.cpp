@@ -1850,10 +1850,11 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
     // shader should ever hit it.
     //
     // The size check does not take std430 into account as it is intended for WebGL shaders.  For
-    // the same reason, other shader stages than vertex/fragment are ignored as defer-sized
+    // the same reason, other shader stages than vertex/fragment/compute are ignored as defer-sized
     // variables e.g. in geometry shaders are not handled.
     if (!mCompileOptions.rejectWebglShadersWithLargeVariables ||
-        (mShaderType != GL_VERTEX_SHADER && mShaderType != GL_FRAGMENT_SHADER))
+        (mShaderType != GL_VERTEX_SHADER && mShaderType != GL_FRAGMENT_SHADER &&
+         mShaderType != GL_COMPUTE_SHADER))
     {
         return true;
     }
