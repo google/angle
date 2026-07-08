@@ -11527,7 +11527,8 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
 
     ImageHelper *src = this;
 
-    ASSERT(!hasStagedUpdatesForSubresource(levelGL, layer, 1));
+    const bool is3D = mImageType == VK_IMAGE_TYPE_3D;
+    ASSERT(!hasStagedUpdatesForSubresource(levelGL, is3D ? 0 : layer, 1));
 
     if (isMultisampled)
     {
@@ -11571,9 +11572,9 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
     VkExtent3D srcExtent = {static_cast<uint32_t>(area.width), static_cast<uint32_t>(area.height),
                             1};
 
-    if (mExtents.depth > 1)
+    if (is3D)
     {
-        // Depth > 1 means this is a 3D texture and we need special handling
+        // For 3D texture we need special handling
         srcOffset.z                   = layer;
         srcSubresource.baseArrayLayer = 0;
     }

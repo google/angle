@@ -4041,12 +4041,10 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 
 angle::Result TextureVk::initializeContents(const gl::Context *context,
                                             GLenum binding,
-                                            const gl::OwnImageIndex &ownImageIndex)
+                                            const gl::OwnImageIndex &imageIndex)
 {
-    const gl::ImageIndex imageIndex = ownImageIndex.getUntranslated();
-
     ContextVk *contextVk      = vk::GetImpl(context);
-    const gl::ImageDesc &desc = mState.getImageDesc(imageIndex);
+    const gl::ImageDesc &desc = mState.getImageDesc(imageIndex.getUntranslated());
     const vk::Format &format =
         contextVk->getRenderer()->getFormat(desc.format.info->sizedInternalFormat);
 
@@ -4054,7 +4052,7 @@ angle::Result TextureVk::initializeContents(const gl::Context *context,
     // Note that we cannot ensure the image is initialized because we might be calling subImage
     // on a non-complete cube map.
     return mImage->stageRobustResourceClearWithFormat(
-        contextVk, imageIndex, desc.size, format.getIntendedFormat(),
+        contextVk, mState.toSourceIndex(imageIndex).get(), desc.size, format.getIntendedFormat(),
         format.getActualImageFormat(getRequiredFormatSupport()));
 }
 

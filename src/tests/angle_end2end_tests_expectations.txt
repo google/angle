@@ -23,6 +23,10 @@
 410584007 VULKAN : ImageTestES31.UseSourceTextureAsStorageImage/* = SKIP
 // Fails in Android with EGL_BAD_ALLOC
 374797737 : EGLSurfaceTest.CreateMultiWindowsSurfaceNoDestroy/* = SKIP
+// Incorrect tracking of robust init through EGL images
+532592076 : ImageTestES3RobustInit.RobustClearInTarget/* = SKIP
+532592076 : ImageTestES3RobustInit.NonZeroLevelAndSliceReadback/* = SKIP
+532592076 : ImageTestES3RobustInit.NonZeroLevelAndSliceReadbackRenderbuffer/* = SKIP
 
 381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
 
@@ -1211,6 +1215,7 @@
 525786155 PIXEL10 GLES : PbufferTestES3.BindRedefinesAllMips/* = SKIP
 526518127 PIXEL10 GLES : ImageTestES3.MipLevelsNonZeroBaseLevel/* = SKIP
 526518127 PIXEL10 GLES : ImageTestES3.NonZeroLevel*/* = SKIP
+526518127 PIXEL10 GLES : ImageTestES3RobustInit.NonZeroLevel*/* = SKIP
 533059467 PIXEL10 GLES : TextureTestES31.ComputeShaderLoadPartiallyBoundImageUnits/* = SKIP
 533059467 PIXEL10 GLES : TextureTestES31.FragmentShaderLoadUnboundImageUnits/* = SKIP
 

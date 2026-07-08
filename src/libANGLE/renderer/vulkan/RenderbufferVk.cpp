@@ -287,12 +287,11 @@ angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *conte
 
 angle::Result RenderbufferVk::initializeContents(const gl::Context *context,
                                                  GLenum binding,
-                                                 const gl::OwnImageIndex &ownImageIndex)
+                                                 const gl::OwnImageIndex &imageIndex)
 {
-    const gl::ImageIndex imageIndex = ownImageIndex.getUntranslated();
-
     // Note: stageSubresourceRobustClear only uses the intended format to count channels.
-    mImage->stageRobustResourceClear(imageIndex, mImage->getAspectFlags());
+    mImage->stageRobustResourceClear(mState.toSourceIndex(imageIndex).get(),
+                                     mImage->getAspectFlags());
     return mImage->flushAllStagedUpdates(vk::GetImpl(context));
 }
 
