@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 414
+#define ANGLE_SH_VERSION 415
 
 enum ShShaderSpec
 {
@@ -236,8 +236,7 @@ struct ShCompileOptions
     // Linux/Mac driver bugs.
     uint64_t scalarizeVecAndMatConstructorArgs : 1;
 
-    // This flag overwrites a struct name with a unique prefix.  It is intended as a workaround for
-    // drivers that do not handle struct scopes correctly, including all Mac drivers and Linux AMD.
+    // This flag is a no-op and will be removed once chromium code no longer references it.
     uint64_t regenerateStructNames : 1;
 
     // This flag works around a bug in the HLSL compiler optimizer that folds certain constant pow

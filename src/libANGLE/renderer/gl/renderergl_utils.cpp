@@ -2513,9 +2513,6 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, removeDynamicIndexingOfSwizzledVector,
                             IsApple() || IsAndroid() || IsWindows());
 
-    // Ported from gpu_driver_bug_list.json (#89)
-    ANGLE_FEATURE_CONDITION(features, regenerateStructNames, IsApple());
-
     // Ported from gpu_driver_bug_list.json (#184)
     ANGLE_FEATURE_CONDITION(features, preAddTexelFetchOffsets, IsApple() && isIntel);
 

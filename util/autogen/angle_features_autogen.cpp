@@ -297,7 +297,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ReattachFboDepthStencilOnReallocation, "reattachFboDepthStencilOnReallocation"},
     {Feature::RecreateMipmapLevelsBeforeGenerate, "recreateMipmapLevelsBeforeGenerate"},
     {Feature::RecycleVkEvent, "recycleVkEvent"},
-    {Feature::RegenerateStructNames, "regenerateStructNames"},
     {Feature::RemoveDynamicIndexingOfSwizzledVector, "removeDynamicIndexingOfSwizzledVector"},
     {Feature::RemoveInvariantAndCentroidForESSL3, "removeInvariantAndCentroidForESSL3"},
     {Feature::RequireGpuFamily2, "requireGpuFamily2"},

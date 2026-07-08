@@ -387,15 +387,6 @@
             "issue": "http://crbug.com/642605"
         },
         {
-            "name": "regenerate_struct_names",
-            "category": "Workarounds",
-            "description": [
-                "All Mac drivers do not handle struct scopes correctly. This workaround overwrites a struct",
-                "name with a unique prefix."
-            ],
-            "issue": "http://crbug.com/403957"
-        },
-        {
             "name": "read_pixels_using_implementation_color_read_format_for_norm16",
             "category": "Workarounds",
             "description": [

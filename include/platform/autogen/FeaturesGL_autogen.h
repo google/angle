@@ -308,12 +308,6 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
-    FeatureInfo regenerateStructNames = {
-        "regenerateStructNames",
-        FeatureCategory::OpenGLWorkarounds,
-        &members,
-    };
-
     FeatureInfo readPixelsUsingImplementationColorReadFormatForNorm16 = {
         "readPixelsUsingImplementationColorReadFormatForNorm16",
         FeatureCategory::OpenGLWorkarounds,

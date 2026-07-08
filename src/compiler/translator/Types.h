@@ -435,7 +435,12 @@ struct TTypeSpecifierNonArray
     TSourceLoc line;
 
     // true if the type was defined by a struct specifier rather than a reference to a type name.
+    // Some structs may be hoisted out to be declared separately during parse and would have
+    // |isStructSpecifier == false|.  However, validation may still need to know if there was a
+    // struct defined in an invalid location, so |isStructSpecifierForValidation| would be true even
+    // if the type itself is no longer expected to declare the struct.
     bool isStructSpecifier;
+    bool isStructSpecifierForValidation;
 
     void initialize(TBasicType aType, const TSourceLoc &aLine)
     {
@@ -446,18 +451,22 @@ struct TTypeSpecifierNonArray
         userDef           = nullptr;
         line              = aLine;
         isStructSpecifier = false;
+        isStructSpecifierForValidation = false;
     }
 
     void initializeStruct(const TStructure *aUserDef,
                           bool aIsStructSpecifier,
+                          bool aIsStructSpecifierForValidation,
                           const TSourceLoc &aLine)
     {
+        ASSERT(!aIsStructSpecifier || aIsStructSpecifierForValidation);
         type              = EbtStruct;
         primarySize       = 1;
         secondarySize     = 1;
         userDef           = aUserDef;
         line              = aLine;
         isStructSpecifier = aIsStructSpecifier;
+        isStructSpecifierForValidation = aIsStructSpecifierForValidation;
     }
 
     void setAggregate(uint8_t size) { primarySize = size; }
@@ -500,6 +509,10 @@ struct TPublicType
     const TSourceLoc &getLine() const { return typeSpecifierNonArray.line; }
 
     bool isStructSpecifier() const { return typeSpecifierNonArray.isStructSpecifier; }
+    bool isStructSpecifierForValidation() const
+    {
+        return typeSpecifierNonArray.isStructSpecifierForValidation;
+    }
 
     bool isStructureContainingArrays() const;
     bool isStructureContainingType(TBasicType t) const;

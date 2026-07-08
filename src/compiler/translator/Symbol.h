@@ -183,6 +183,10 @@ class TStructure : public TSymbol, public TFieldListCollection
     void setAtGlobalScope(bool atGlobalScope) { mAtGlobalScope = atGlobalScope; }
     bool atGlobalScope() const { return mAtGlobalScope; }
 
+    // This function is temporary while transition to IR is happening.  It allows the AST to promote
+    // structs to the global scope at the end of parse.  Do not use.
+    void setName(const ImmutableString &name);
+
   private:
     friend class TSymbolTable;
     // For creating built-in structs.
@@ -206,12 +210,6 @@ class TStructure : public TSymbol, public TFieldListCollection
         : TSymbol(id, name, SymbolType::BuiltIn, extensions, SymbolClass::Struct),
           TFieldListCollection(fields)
     {}
-
-    // TODO(zmo): Find a way to get rid of the const_cast in function
-    // setName().  At the moment keep this function private so only
-    // friend class RegenerateStructNames may call it.
-    friend class RegenerateStructNamesTraverser;
-    void setName(const ImmutableString &name);
 
     bool mAtGlobalScope;
 };

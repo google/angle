@@ -297,7 +297,6 @@ enum class Feature
     ReattachFboDepthStencilOnReallocation,
     RecreateMipmapLevelsBeforeGenerate,
     RecycleVkEvent,
-    RegenerateStructNames,
     RemoveDynamicIndexingOfSwizzledVector,
     RemoveInvariantAndCentroidForESSL3,
     RequireGpuFamily2,

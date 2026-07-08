@@ -4316,7 +4316,8 @@ yyreduce:
             // Temporary check until VK and Metal backends support type name like
             // gl_DepthRangeParameters.
             context->checkIsNotReserved((yylsp[0]), ImmutableString((yyvsp[0].lex).string));
-            (yyval.interm.typeSpecifierNonArray).initializeStruct(structure, false, (yylsp[0]));
+            (yyval.interm.typeSpecifierNonArray)
+                .initializeStruct(structure, false, false, (yylsp[0]));
         }
         break;
 

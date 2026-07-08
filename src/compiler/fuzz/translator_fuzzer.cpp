@@ -100,10 +100,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
     if (!IsOutputGLSL(shaderOutput) && !IsOutputESSL(shaderOutput))
     {
-        hasUnsupportedOptions =
-            hasUnsupportedOptions || options.emulateAtan2FloatFunction || options.clampFragDepth ||
-            options.regenerateStructNames || options.rewriteRepeatedAssignToSwizzled ||
-            options.useUnusedStandardSharedBlocks || options.selectViewInNvGLSLVertexShader;
+        hasUnsupportedOptions = hasUnsupportedOptions || options.emulateAtan2FloatFunction ||
+                                options.clampFragDepth || options.rewriteRepeatedAssignToSwizzled ||
+                                options.useUnusedStandardSharedBlocks ||
+                                options.selectViewInNvGLSLVertexShader;
 
         hasUnsupportedOptions = hasUnsupportedOptions || hasMacGLSLOptions;
     }

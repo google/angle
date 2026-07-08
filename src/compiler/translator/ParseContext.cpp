@@ -24,6 +24,7 @@
 #include "common/utilities.h"
 #include "compiler/preprocessor/SourceLocation.h"
 #include "compiler/translator/Declarator.h"
+#include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/glslang.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
@@ -458,6 +459,44 @@ unsigned int GetMaxUniformBlocksForShaderType(sh::GLenum shaderType,
             UNREACHABLE();
             return 0;
     }
+}
+
+enum class StructureOriginalScope
+{
+    Global,
+    FunctionLocal,
+};
+
+TIntermDeclaration *RenameAndDeclareStruct(TSymbolTable *symbolTable,
+                                           TStructure *structure,
+                                           StructureOriginalScope scope)
+{
+    ASSERT(!structure->name().empty());
+
+    // We need +2 space for _0 if global, or +11 for "_uniqueId" if function-local.  Using +11
+    // always for simplicity.  +1 for the NUL terminator.
+    //
+    // If appending ID and the name is too long, cut off the end of the name.  The ID makes it
+    // unique.
+    constexpr uint32_t kAppendExtraChars = 1 + 11;  // underscore + 32-bit number
+    const ImmutableString name(
+        structure->name().data(),
+        std::min<size_t>(structure->name().length(), kESSLMaxIdentifierLength - kAppendExtraChars));
+
+    ImmutableStringBuilder builder(structure->name().length() + kAppendExtraChars);
+    builder << name << "_"
+            << (scope == StructureOriginalScope::Global ? 0 : structure->uniqueId().get());
+    structure->setName(builder);
+
+    TType *namedType = new TType(structure, true);
+    namedType->setQualifier(EvqGlobal);
+
+    TVariable *structVariable =
+        new TVariable(symbolTable, kEmptyImmutableString, namedType, SymbolType::Empty);
+    TIntermSymbol *structDeclarator       = new TIntermSymbol(structVariable);
+    TIntermDeclaration *structDeclaration = new TIntermDeclaration;
+    structDeclaration->appendDeclarator(structDeclarator);
+    return structDeclaration;
 }
 }  // namespace
 
@@ -6323,7 +6362,7 @@ TFunctionLookup *TParseContext::addConstructorFunc(const TPublicType &publicType
         error(publicType.getLine(), "array constructor supported in GLSL ES 3.00 and above only",
               "[]");
     }
-    if (publicType.isStructSpecifier())
+    if (publicType.isStructSpecifierForValidation())
     {
         error(publicType.getLine(), "constructor can't be a structure definition",
               getBasicString(publicType.getBasicType()));
@@ -6362,7 +6401,7 @@ TParameter TParseContext::parseParameterDeclarator(const TPublicType &type,
             error(nameLoc, "illegal use of type 'void'", name);
         }
     }
-    if (type.isStructSpecifier())
+    if (type.isStructSpecifierForValidation())
     {
         // ESSL 3.00.6 section 12.10.
         error(nameLoc, "Function parameter type cannot be a structure definition", name);
@@ -8430,7 +8469,8 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
                                                    TFieldList *fieldList)
 {
     SymbolType structSymbolType = SymbolType::UserDefined;
-    if (structName.empty())
+    const bool isNamelessStruct = structName.empty();
+    if (isNamelessStruct)
     {
         structSymbolType = SymbolType::Empty;
     }
@@ -8539,9 +8579,23 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
             angle::Span<const TField *const>(reorderedFields->data(), reorderedFields->size())),
         {}, false, false, symbolTable.atGlobalLevel());
 
+    // Nameless structs are declared inline with their variables.  But named structs are always
+    // separately declared at the end of parse.
     TTypeSpecifierNonArray typeSpecifierNonArray;
-    typeSpecifierNonArray.initializeStruct(structure, true, structLine);
+    typeSpecifierNonArray.initializeStruct(structure, isNamelessStruct, true, structLine);
     exitStructDeclaration();
+
+    if (!isNamelessStruct)
+    {
+        if (symbolTable.atGlobalLevel())
+        {
+            mGlobalNamedStructs.push_back(structure);
+        }
+        else
+        {
+            mFunctionLocalNamedStructs.push_back(structure);
+        }
+    }
 
     return typeSpecifierNonArray;
 }
@@ -10243,6 +10297,39 @@ void TParseContext::endStatementWithValue(TIntermNode *statement)
     }
 }
 
+void TParseContext::prependPendingStructDeclarations()
+{
+    TIntermSequence allStructDecls;
+
+    // Do the following for all structs:
+    //
+    // * First, modify the name of the struct.  This breaks the symbol table, as names cannot be
+    //   looked up anymore, but that's ok because this is the end of parse and no transformation
+    //   looks up user symbol names anymore.  The struct names are used during link to match
+    //   uniforms, and so for global structs, the name is suffixed by |_0| to be identical between
+    //   shader stages.  For function-local structs it's suffixed by |_uniqueId|
+    // * Then, create a global declarator for the struct and append it to the list of declarations.
+    //
+    // The whole list is prepended to the shader at the end.  Global structs are declared first, as
+    // they may be used by function-local structs.  Within global or function-local structs, they
+    // are declared in the order they are encountered in the shader for the same reason.
+
+    for (TStructure *structure : mGlobalNamedStructs)
+    {
+        allStructDecls.push_back(
+            RenameAndDeclareStruct(&symbolTable, structure, StructureOriginalScope::Global));
+    }
+
+    for (TStructure *structure : mFunctionLocalNamedStructs)
+    {
+        allStructDecls.push_back(
+            RenameAndDeclareStruct(&symbolTable, structure, StructureOriginalScope::FunctionLocal));
+    }
+
+    mTreeRoot->getSequence()->insert(mTreeRoot->getSequence()->begin(), allStructDecls.begin(),
+                                     allStructDecls.end());
+}
+
 void TParseContext::checkCallGraph()
 {
     // Verify that the call graph does not contain a loop.
@@ -10536,6 +10623,12 @@ bool TParseContext::postParseChecks()
     // If parse failed, we shouldn't reach here.
     ASSERT(!mCompileOptions.useIR || mTreeRoot != nullptr);
 #endif
+
+    // Struct declarations are delayed to the end of parse, add them to the AST now
+    if (mTreeRoot != nullptr)
+    {
+        prependPendingStructDeclarations();
+    }
 
     // If gl_Position is expected to be zero-initialized, make sure it's declared to the IR; it
     // should still be done if gl_Position is statically not used by the shader.

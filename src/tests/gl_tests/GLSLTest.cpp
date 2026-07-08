@@ -24580,6 +24580,54 @@ void main()
         ASSERT_GL_NO_ERROR();
     }
 }
+
+class GLSLTestPassthrough : public GLSLTest
+{};
+
+// Test that uniforms of nameless struct type work with the shader passthrough feature
+TEST_P(GLSLTestPassthrough, StructUniformNameless)
+{
+    constexpr char kFS[] = R"(
+uniform struct
+{
+    mediump vec4 c;
+} s;
+void main()
+{
+    gl_FragColor = s.c;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    glUniform4f(glGetUniformLocation(program, "s.c"), 1, 0, 0, 1);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that uniforms of named struct type work with the shader passthrough feature
+TEST_P(GLSLTestPassthrough, StructUniformNamed)
+{
+    constexpr char kFS[] = R"(
+uniform struct S
+{
+    mediump vec4 c;
+} s;
+void main()
+{
+    gl_FragColor = s.c;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    glUniform4f(glGetUniformLocation(program, "s.c"), 1, 0, 0, 1);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
@@ -24672,3 +24720,6 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES3_Blend);
 ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLTest_ES3_Blend,
                                ES3_OPENGL().enable(Feature::ExpandFragmentOutputsToVec4),
                                ES3_OPENGLES().enable(Feature::ExpandFragmentOutputsToVec4));
+
+ANGLE_INSTANTIATE_TEST_ES2_AND(GLSLTestPassthrough,
+                               ES2_OPENGLES().enable(Feature::ForcePassthroughShaders));

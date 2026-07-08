@@ -44,7 +44,6 @@
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
 #include "compiler/translator/tree_ops/SimplifyLoopConditions.h"
 #include "compiler/translator/tree_ops/SplitSequenceOperator.h"
-#include "compiler/translator/tree_ops/glsl/RegenerateStructNames.h"
 #include "compiler/translator/tree_ops/glsl/RewriteRepeatedAssignToSwizzled.h"
 #include "compiler/translator/tree_ops/glsl/UseInterfaceBlockFields.h"
 #include "compiler/translator/tree_ops/glsl/apple/AddAndTrueToLoopCondition.h"
@@ -903,14 +902,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (compileOptions.unfoldShortCircuit)
     {
         if (!UnfoldShortCircuitAST(this, root))
-        {
-            return false;
-        }
-    }
-
-    if (compileOptions.regenerateStructNames)
-    {
-        if (!RegenerateStructNames(this, root, &mSymbolTable))
         {
             return false;
         }
