@@ -58,6 +58,33 @@ static void ValidateStateHelper(const FunctionsGL *functions,
     }
 }
 
+inline void SetGLBoolState(const FunctionsGL *functions, GLenum name, bool value)
+{
+    if (value)
+    {
+        functions->enable(name);
+    }
+    else
+    {
+        functions->disable(name);
+    }
+}
+
+inline void SetGLIndexedBoolState(const FunctionsGL *functions,
+                                  GLenum name,
+                                  GLuint index,
+                                  bool value)
+{
+    if (value)
+    {
+        functions->enablei(name, index);
+    }
+    else
+    {
+        functions->disablei(name, index);
+    }
+}
+
 }  // anonymous namespace
 
 VertexArrayStateGL::VertexArrayStateGL(size_t maxAttribs, size_t maxBindings)
@@ -1085,14 +1112,7 @@ void StateManagerGL::setScissorTestEnabled(bool enabled)
     if (mState.scissorTestEnabled != enabled)
     {
         mState.scissorTestEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_SCISSOR_TEST);
-        }
-        else
-        {
-            mFunctions->disable(GL_SCISSOR_TEST);
-        }
+        SetGLBoolState(mFunctions, GL_SCISSOR_TEST, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_SCISSOR_TEST_ENABLED);
     }
@@ -1190,14 +1210,7 @@ void StateManagerGL::setBlendEnabled(bool enabled)
         return;
     }
 
-    if (enabled)
-    {
-        mFunctions->enable(GL_BLEND);
-    }
-    else
-    {
-        mFunctions->disable(GL_BLEND);
-    }
+    SetGLBoolState(mFunctions, GL_BLEND, enabled);
 
     mState.blendState.setEnabled(enabled);
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_ENABLED);
@@ -1240,14 +1253,8 @@ void StateManagerGL::setBlendEnabledIndexed(const gl::DrawBufferMask enabledMask
 
     for (size_t drawBufferIndex : diffMask)
     {
-        if (enabledMask.test(drawBufferIndex))
-        {
-            mFunctions->enablei(GL_BLEND, static_cast<GLuint>(drawBufferIndex));
-        }
-        else
-        {
-            mFunctions->disablei(GL_BLEND, static_cast<GLuint>(drawBufferIndex));
-        }
+        SetGLIndexedBoolState(mFunctions, GL_BLEND, static_cast<GLuint>(drawBufferIndex),
+                              enabledMask.test(drawBufferIndex));
     }
 
     mState.blendState.setEnabledMask(enabledMask);
@@ -1271,14 +1278,7 @@ void StateManagerGL::setBlendAdvancedCoherent(bool enabled)
     {
         mState.blendAdvancedCoherent = enabled;
 
-        if (enabled)
-        {
-            mFunctions->enable(GL_BLEND_ADVANCED_COHERENT_KHR);
-        }
-        else
-        {
-            mFunctions->disable(GL_BLEND_ADVANCED_COHERENT_KHR);
-        }
+        SetGLBoolState(mFunctions, GL_BLEND_ADVANCED_COHERENT_KHR, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
         mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_BLEND_ADVANCED_COHERENT);
@@ -1485,14 +1485,7 @@ void StateManagerGL::setSampleAlphaToCoverageEnabled(bool enabled)
     if (mState.sampleAlphaToCoverageEnabled != enabled)
     {
         mState.sampleAlphaToCoverageEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-        }
-        else
-        {
-            mFunctions->disable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-        }
+        SetGLBoolState(mFunctions, GL_SAMPLE_ALPHA_TO_COVERAGE, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED);
     }
@@ -1503,14 +1496,7 @@ void StateManagerGL::setSampleCoverageEnabled(bool enabled)
     if (mState.sampleCoverageEnabled != enabled)
     {
         mState.sampleCoverageEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_SAMPLE_COVERAGE);
-        }
-        else
-        {
-            mFunctions->disable(GL_SAMPLE_COVERAGE);
-        }
+        SetGLBoolState(mFunctions, GL_SAMPLE_COVERAGE, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED);
     }
@@ -1538,14 +1524,7 @@ void StateManagerGL::setSampleMaskEnabled(bool enabled)
     if (mState.sampleMaskEnabled != enabled)
     {
         mState.sampleMaskEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_SAMPLE_MASK);
-        }
-        else
-        {
-            mFunctions->disable(GL_SAMPLE_MASK);
-        }
+        SetGLBoolState(mFunctions, GL_SAMPLE_MASK, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_SAMPLE_MASK_ENABLED);
     }
@@ -1569,14 +1548,7 @@ void StateManagerGL::setSampleMaski(GLuint maskNumber, GLbitfield mask)
 void StateManagerGL::setDepthTestEnabled(bool enabled)
 {
     mState.depthTestEnabled = enabled;
-    if (enabled)
-    {
-        mFunctions->enable(GL_DEPTH_TEST);
-    }
-    else
-    {
-        mFunctions->disable(GL_DEPTH_TEST);
-    }
+    SetGLBoolState(mFunctions, GL_DEPTH_TEST, enabled);
 
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED);
 }
@@ -1600,14 +1572,7 @@ void StateManagerGL::setDepthMask(bool mask)
 void StateManagerGL::setStencilTestEnabled(bool enabled)
 {
     mState.stencilTestEnabled = enabled;
-    if (enabled)
-    {
-        mFunctions->enable(GL_STENCIL_TEST);
-    }
-    else
-    {
-        mFunctions->disable(GL_STENCIL_TEST);
-    }
+    SetGLBoolState(mFunctions, GL_STENCIL_TEST, enabled);
 
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_TEST_ENABLED);
 }
@@ -1673,14 +1638,7 @@ void StateManagerGL::setCullFaceEnabled(bool enabled)
     if (mState.cullFaceEnabled != enabled)
     {
         mState.cullFaceEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_CULL_FACE);
-        }
-        else
-        {
-            mFunctions->disable(GL_CULL_FACE);
-        }
+        SetGLBoolState(mFunctions, GL_CULL_FACE, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_CULL_FACE_ENABLED);
     }
@@ -1733,14 +1691,7 @@ void StateManagerGL::setPolygonOffsetPointEnabled(bool enabled)
     if (mState.polygonOffsetPointEnabled != enabled)
     {
         mState.polygonOffsetPointEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_POLYGON_OFFSET_POINT_NV);
-        }
-        else
-        {
-            mFunctions->disable(GL_POLYGON_OFFSET_POINT_NV);
-        }
+        SetGLBoolState(mFunctions, GL_POLYGON_OFFSET_POINT_NV, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
         mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED);
@@ -1752,14 +1703,7 @@ void StateManagerGL::setPolygonOffsetLineEnabled(bool enabled)
     if (mState.polygonOffsetLineEnabled != enabled)
     {
         mState.polygonOffsetLineEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_POLYGON_OFFSET_LINE_NV);
-        }
-        else
-        {
-            mFunctions->disable(GL_POLYGON_OFFSET_LINE_NV);
-        }
+        SetGLBoolState(mFunctions, GL_POLYGON_OFFSET_LINE_NV, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
         mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED);
@@ -1771,14 +1715,7 @@ void StateManagerGL::setPolygonOffsetFillEnabled(bool enabled)
     if (mState.polygonOffsetFillEnabled != enabled)
     {
         mState.polygonOffsetFillEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_POLYGON_OFFSET_FILL);
-        }
-        else
-        {
-            mFunctions->disable(GL_POLYGON_OFFSET_FILL);
-        }
+        SetGLBoolState(mFunctions, GL_POLYGON_OFFSET_FILL, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED);
     }
@@ -1812,14 +1749,7 @@ void StateManagerGL::setDepthClampEnabled(bool enabled)
     if (mState.depthClampEnabled != enabled)
     {
         mState.depthClampEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_DEPTH_CLAMP_EXT);
-        }
-        else
-        {
-            mFunctions->disable(GL_DEPTH_CLAMP_EXT);
-        }
+        SetGLBoolState(mFunctions, GL_DEPTH_CLAMP_EXT, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
         mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED);
@@ -1831,14 +1761,7 @@ void StateManagerGL::setRasterizerDiscardEnabled(bool enabled)
     if (mState.rasterizerDiscardEnabled != enabled)
     {
         mState.rasterizerDiscardEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_RASTERIZER_DISCARD);
-        }
-        else
-        {
-            mFunctions->disable(GL_RASTERIZER_DISCARD);
-        }
+        SetGLBoolState(mFunctions, GL_RASTERIZER_DISCARD, enabled);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
     }
@@ -1862,15 +1785,7 @@ angle::Result StateManagerGL::setPrimitiveRestartEnabled(const gl::Context *cont
         GLenum cap = mFeatures.emulatePrimitiveRestartFixedIndex.enabled
                          ? GL_PRIMITIVE_RESTART
                          : GL_PRIMITIVE_RESTART_FIXED_INDEX;
-
-        if (enabled)
-        {
-            ANGLE_GL_TRY(context, mFunctions->enable(cap));
-        }
-        else
-        {
-            ANGLE_GL_TRY(context, mFunctions->disable(cap));
-        }
+        SetGLBoolState(mFunctions, cap, enabled);
         mState.primitiveRestartEnabled = enabled;
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
@@ -2451,14 +2366,7 @@ void StateManagerGL::setFramebufferSRGBEnabled(const gl::Context *context, bool 
     if (mState.framebufferSRGBEnabled != enabled)
     {
         mState.framebufferSRGBEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_FRAMEBUFFER_SRGB);
-        }
-        else
-        {
-            mFunctions->disable(GL_FRAMEBUFFER_SRGB);
-        }
+        SetGLBoolState(mFunctions, GL_FRAMEBUFFER_SRGB, enabled);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE);
     }
 }
@@ -2558,14 +2466,8 @@ void StateManagerGL::setDitherEnabled(bool enabled)
     if (mState.ditherEnabled != enabled)
     {
         mState.ditherEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_DITHER);
-        }
-        else
-        {
-            mFunctions->disable(GL_DITHER);
-        }
+        SetGLBoolState(mFunctions, GL_DITHER, enabled);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_DITHER_ENABLED);
     }
 }
 
@@ -2574,14 +2476,7 @@ void StateManagerGL::setMultisamplingStateEnabled(bool enabled)
     if (mState.multisamplingEnabled != enabled)
     {
         mState.multisamplingEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_MULTISAMPLE_EXT);
-        }
-        else
-        {
-            mFunctions->disable(GL_MULTISAMPLE_EXT);
-        }
+        SetGLBoolState(mFunctions, GL_MULTISAMPLE, enabled);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_MULTISAMPLING);
     }
 }
@@ -2591,14 +2486,7 @@ void StateManagerGL::setSampleAlphaToOneStateEnabled(bool enabled)
     if (mState.sampleAlphaToOneEnabled != enabled)
     {
         mState.sampleAlphaToOneEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_SAMPLE_ALPHA_TO_ONE);
-        }
-        else
-        {
-            mFunctions->disable(GL_SAMPLE_ALPHA_TO_ONE);
-        }
+        SetGLBoolState(mFunctions, GL_SAMPLE_ALPHA_TO_ONE, enabled);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
     }
 }
@@ -2636,14 +2524,8 @@ void StateManagerGL::setClipDistancesEnable(const gl::ClipDistanceEnableBits &en
     gl::ClipDistanceEnableBits diff = enables ^ mState.enabledClipDistances;
     for (size_t i : diff)
     {
-        if (enables.test(i))
-        {
-            mFunctions->enable(GL_CLIP_DISTANCE0_EXT + static_cast<uint32_t>(i));
-        }
-        else
-        {
-            mFunctions->disable(GL_CLIP_DISTANCE0_EXT + static_cast<uint32_t>(i));
-        }
+        SetGLBoolState(mFunctions, GL_CLIP_DISTANCE0_EXT + static_cast<uint32_t>(i),
+                       enables.test(i));
     }
 
     mState.enabledClipDistances = enables;
@@ -2659,14 +2541,7 @@ void StateManagerGL::setLogicOpEnabled(bool enabled)
     }
     mState.logicOpEnabled = enabled;
 
-    if (enabled)
-    {
-        mFunctions->enable(GL_COLOR_LOGIC_OP);
-    }
-    else
-    {
-        mFunctions->disable(GL_COLOR_LOGIC_OP);
-    }
+    SetGLBoolState(mFunctions, GL_COLOR_LOGIC_OP, enabled);
 
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
     mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED);
@@ -2696,14 +2571,7 @@ void StateManagerGL::setTextureCubemapSeamlessEnabled(bool enabled)
     if (mState.textureCubemapSeamlessEnabled != enabled)
     {
         mState.textureCubemapSeamlessEnabled = enabled;
-        if (enabled)
-        {
-            mFunctions->enable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-        }
-        else
-        {
-            mFunctions->disable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-        }
+        SetGLBoolState(mFunctions, GL_TEXTURE_CUBE_MAP_SEAMLESS, enabled);
     }
 }
 
