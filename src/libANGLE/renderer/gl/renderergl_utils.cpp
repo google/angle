@@ -2403,6 +2403,13 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     ANGLE_FEATURE_CONDITION(features, unpackOverlappingRowsSeparatelyUnpackBuffer, isNvidia);
     ANGLE_FEATURE_CONDITION(features, packOverlappingRowsSeparatelyPackBuffer, isNvidia);
+    // Mali GLES computes readPixels row_stride as (int32_t)(row_length*bpp)*8;
+    // wraps negative when the byte pitch >= 0x10000000 -> OOB write into the
+    // PBO's cmem mapping. Route through readPixelsRowByRow so Mali only ever
+    // sees PACK_ROW_LENGTH=0. Also apply to Imagination GPUs which crash on
+    // the new test. crbug.com/529867799
+    ANGLE_FEATURE_CONDITION(features, packLargeRowLengthSeparatelyPackBuffer,
+                            isMali || IsPowerVR(vendor));
 
     std::array<int, 2> powerVRVersion = {0, 0};
     bool isPowerVRDriver =
