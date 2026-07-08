@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 
+#include <array>
 #include <string>
 #include <vector>
 
@@ -187,6 +188,11 @@ std::vector<ContextCreationTry> GenerateContextCreationToTry(EGLint requestedTyp
 std::string GetRendererString(const FunctionsGL *functions);
 std::string GetVendorString(const FunctionsGL *functions);
 std::string GetVersionString(const FunctionsGL *functions);
+
+bool GetPowerVRDriverVersion(const std::string &vendorString,
+                             const std::string &rendererString,
+                             const std::string &versionString,
+                             std::array<int, 2> *versionOut);
 
 }  // namespace rx
 
