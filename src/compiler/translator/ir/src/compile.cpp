@@ -137,6 +137,7 @@ void SetOptions(TCompiler *compiler, const ShCompileOptions &options, ffi::Compi
     opt->is_es1         = compiler->getShaderVersion() == 100;
 
     opt->user_variable_name_prefix = compiler->getResources().UserVariableNamePrefix;
+    opt->user_block_name_prefix    = compiler->getResources().UserBlockNamePrefix;
 
     opt->initialize_uninitialized_variables = options.initializeUninitializedLocals ||
                                               options.initOutputVariables || options.initGLPosition;

@@ -106,6 +106,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
         // Disable user variable prefixing if using the null output type. The untranslated source
         // shader is used so make sure the mapped names match the input names.
         mResources.UserVariableNamePrefix = '\0';
+        mResources.UserBlockNamePrefix    = '\0';
     }
 
     // EXT_multisampled_render_to_texture and EXT_multisampled_render_to_texture2

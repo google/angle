@@ -1436,8 +1436,8 @@ void TCompiler::collectVariables(TIntermBlock *root)
     ASSERT(!mVariablesCollected);
     CollectVariables(root, &mAttributes, &mOutputVariables, &mUniforms, &mInputVaryings,
                      &mOutputVaryings, &mSharedVariables, &mUniformBlocks, &mShaderStorageBlocks,
-                     mResources.UserVariableNamePrefix, mResources.HashFunction, &mSymbolTable,
-                     mShaderType, mExtensionBehavior,
+                     mResources.UserVariableNamePrefix, mResources.UserBlockNamePrefix,
+                     mResources.HashFunction, &mSymbolTable, mShaderType, mExtensionBehavior,
                      mCompileOptions.transformFloatUniformTo16Bits);
     collectInterfaceBlocks();
     mVariablesCollected = true;

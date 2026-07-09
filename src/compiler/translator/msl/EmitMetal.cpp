@@ -138,6 +138,7 @@ class GenMetalTraverser : public TIntermTraverser
 
     void emitNameOf(const TField &object);
     void emitNameOf(const TSymbol &object);
+    void emitBlockNameOf(const TSymbol &object);
     void emitNameOf(const VarDecl &object);
 
     void emitBareTypeName(const TType &type, const EmitTypeConfig &etConfig);
@@ -929,6 +930,12 @@ void GenMetalTraverser::emitNameOf(const TSymbol &object)
     }
 }
 
+void GenMetalTraverser::emitBlockNameOf(const TSymbol &object)
+{
+    ASSERT(mRenamedSymbols.find(&object) == mRenamedSymbols.end());
+    EmitName(mOut, Name(object), mCompiler.getUserBlockNamePrefix());
+}
+
 void GenMetalTraverser::emitNameOf(const VarDecl &object)
 {
     if (object.isField())
@@ -971,14 +978,21 @@ void GenMetalTraverser::emitBareTypeName(const TType &type, const EmitTypeConfig
         case TBasicType::EbtStruct:
         {
             const TStructure &structure = *type.getStruct();
-            emitNameOf(structure);
+            if (structure.isImplementingInterfaceBlock())
+            {
+                emitBlockNameOf(structure);
+            }
+            else
+            {
+                emitNameOf(structure);
+            }
         }
         break;
 
         case TBasicType::EbtInterfaceBlock:
         {
             const TInterfaceBlock &interfaceBlock = *type.getInterfaceBlock();
-            emitNameOf(interfaceBlock);
+            emitBlockNameOf(interfaceBlock);
         }
         break;
 

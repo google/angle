@@ -63,11 +63,14 @@ void WriteWgslBareTypeName(StringStreamType &output,
             break;
 
         case TBasicType::EbtStruct:
-            WriteNameOf(output, *type.getStruct(), resources.UserVariableNamePrefix);
+            WriteNameOf(output, *type.getStruct(),
+                        type.getStruct()->isImplementingInterfaceBlock()
+                            ? resources.UserBlockNamePrefix
+                            : resources.UserVariableNamePrefix);
             break;
 
         case TBasicType::EbtInterfaceBlock:
-            WriteNameOf(output, *type.getInterfaceBlock(), resources.UserVariableNamePrefix);
+            WriteNameOf(output, *type.getInterfaceBlock(), resources.UserBlockNamePrefix);
             break;
 
         default:

@@ -32,7 +32,8 @@ namespace sh
 
 namespace
 {
-const char kUserDefinedNamePrefix = 'u';
+const char kUserVariableNamePrefix = 'u';
+const char kUserBlockNamePrefix    = 'b';
 
 bool isInitialized = false;
 
@@ -269,7 +270,8 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     // Disable name hashing by default.
     resources->HashFunction = nullptr;
 
-    resources->UserVariableNamePrefix = kUserDefinedNamePrefix;
+    resources->UserVariableNamePrefix = kUserVariableNamePrefix;
+    resources->UserBlockNamePrefix    = kUserBlockNamePrefix;
 
     resources->MaxExpressionComplexity = 256;
     resources->MaxStatementDepth       = 256;

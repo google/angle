@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 416
+#define ANGLE_SH_VERSION 417
 
 enum ShShaderSpec
 {
@@ -615,6 +615,11 @@ struct ShBuiltInResources
     //
     // Defaults to 'u' for user-defined.
     char UserVariableNamePrefix;
+    // To avoid collision with structs of the same name, block names are prefixed instead with '_'
+    // and UserBlockNamePrefix.
+    //
+    // Default to 'b' for block.
+    char UserBlockNamePrefix;
 
     // The maximum complexity an expression can be when limitExpressionComplexity is turned on.
     int MaxExpressionComplexity;

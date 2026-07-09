@@ -93,6 +93,7 @@ TOutputGLSLBase::TOutputGLSLBase(TCompiler *compiler,
       mSkippedDeclaringAnonymousStruct(false),
       mHashFunction(compiler->getHashFunction()),
       mUserVariablePrefix(compiler->getUserVariableNamePrefix()),
+      mUserBlockPrefix(compiler->getUserBlockNamePrefix()),
       mNameMap(compiler->getNameMap()),
       mShaderType(compiler->getShaderType()),
       mShaderVersion(compiler->getShaderVersion()),
@@ -1192,6 +1193,11 @@ ImmutableString TOutputGLSLBase::hashName(const TSymbol *symbol)
     return HashName(symbol, mUserVariablePrefix, mHashFunction, &mNameMap);
 }
 
+ImmutableString TOutputGLSLBase::hashBlockName(const TSymbol *symbol)
+{
+    return HashName(symbol, mUserBlockPrefix, mHashFunction, &mNameMap);
+}
+
 ImmutableString TOutputGLSLBase::hashFieldName(const TField *field)
 {
     ASSERT(field->symbolType() != SymbolType::Empty);
@@ -1344,7 +1350,7 @@ void TOutputGLSLBase::declareInterfaceBlock(const TType &type)
     const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
     TInfoSinkBase &out                    = objSink();
 
-    out << hashName(interfaceBlock) << "{\n";
+    out << hashBlockName(interfaceBlock) << "{\n";
     const TFieldList &fields = interfaceBlock->fields();
     for (const TField *field : fields)
     {
