@@ -25,6 +25,7 @@ const char kWrappedPrefix[] = "ANGLE_wrapped_";
 
 template <typename StringStreamType>
 void WriteWgslBareTypeName(StringStreamType &output,
+                           const ShBuiltInResources &resources,
                            const TType &type,
                            const EmitTypeConfig &config)
 {
@@ -62,11 +63,11 @@ void WriteWgslBareTypeName(StringStreamType &output,
             break;
 
         case TBasicType::EbtStruct:
-            WriteNameOf(output, *type.getStruct());
+            WriteNameOf(output, *type.getStruct(), resources.UserVariableNamePrefix);
             break;
 
         case TBasicType::EbtInterfaceBlock:
-            WriteNameOf(output, *type.getInterfaceBlock());
+            WriteNameOf(output, *type.getInterfaceBlock(), resources.UserVariableNamePrefix);
             break;
 
         default:
@@ -115,7 +116,10 @@ void WriteWgslBareTypeName(StringStreamType &output,
 }
 
 template <typename StringStreamType>
-void WriteNameOf(StringStreamType &output, SymbolType symbolType, const ImmutableString &name)
+void WriteNameOf(StringStreamType &output,
+                 SymbolType symbolType,
+                 const ImmutableString &name,
+                 char userSymbolPrefix)
 {
     switch (symbolType)
     {
@@ -123,7 +127,7 @@ void WriteNameOf(StringStreamType &output, SymbolType symbolType, const Immutabl
             output << name;
             break;
         case SymbolType::UserDefined:
-            output << '_' << kUserDefinedNamePrefix << name;
+            output << '_' << userSymbolPrefix << name;
             break;
         case SymbolType::AngleInternal:
             output << name;
@@ -135,7 +139,10 @@ void WriteNameOf(StringStreamType &output, SymbolType symbolType, const Immutabl
 }
 
 template <typename StringStreamType>
-void WriteWgslType(StringStreamType &output, const TType &type, const EmitTypeConfig &config)
+void WriteWgslType(StringStreamType &output,
+                   const ShBuiltInResources &resources,
+                   const TType &type,
+                   const EmitTypeConfig &config)
 {
     if (type.isArray())
     {
@@ -161,14 +168,14 @@ void WriteWgslType(StringStreamType &output, const TType &type, const EmitTypeCo
         }
         else
         {
-            WriteWgslType(output, innerType, config);
+            WriteWgslType(output, resources, innerType, config);
         }
         output << ", " << type.getOutermostArraySize() << ">";
     }
     else if (type.isVector())
     {
         output << "vec" << static_cast<uint32_t>(type.getNominalSize()) << "<";
-        WriteWgslBareTypeName(output, type, config);
+        WriteWgslBareTypeName(output, resources, type, config);
         output << ">";
     }
     else if (type.isMatrix())
@@ -184,34 +191,40 @@ void WriteWgslType(StringStreamType &output, const TType &type, const EmitTypeCo
         {
             output << "mat" << static_cast<uint32_t>(type.getCols()) << "x"
                    << static_cast<uint32_t>(type.getRows()) << "<";
-            WriteWgslBareTypeName(output, type, config);
+            WriteWgslBareTypeName(output, resources, type, config);
             output << ">";
         }
     }
     else
     {
         // This type has no dimensions and is equivalent to its bare type.
-        WriteWgslBareTypeName(output, type, config);
+        WriteWgslBareTypeName(output, resources, type, config);
     }
 }
 
 template void WriteWgslBareTypeName<TInfoSinkBase>(TInfoSinkBase &output,
+                                                   const ShBuiltInResources &resources,
                                                    const TType &type,
                                                    const EmitTypeConfig &config);
 template void WriteNameOf<TInfoSinkBase>(TInfoSinkBase &output,
                                          SymbolType symbolType,
-                                         const ImmutableString &name);
+                                         const ImmutableString &name,
+                                         char userSymbolPrefix);
 template void WriteWgslType<TInfoSinkBase>(TInfoSinkBase &output,
+                                           const ShBuiltInResources &resources,
                                            const TType &type,
                                            const EmitTypeConfig &config);
 
 template void WriteWgslBareTypeName<TStringStream>(TStringStream &output,
+                                                   const ShBuiltInResources &resources,
                                                    const TType &type,
                                                    const EmitTypeConfig &config);
 template void WriteNameOf<TStringStream>(TStringStream &output,
                                          SymbolType symbolType,
-                                         const ImmutableString &name);
+                                         const ImmutableString &name,
+                                         char userSymbolPrefix);
 template void WriteWgslType<TStringStream>(TStringStream &output,
+                                           const ShBuiltInResources &resources,
                                            const TType &type,
                                            const EmitTypeConfig &config);
 

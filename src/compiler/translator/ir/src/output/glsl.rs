@@ -341,7 +341,7 @@ impl Generator {
             "{}{}{}",
             match name.source {
                 // Make sure unnamed interface blocks remain unnamed.
-                NameSource::ShaderInterface if !name.name.is_empty() => USER_SYMBOL_PREFIX,
+                NameSource::ShaderInterface if !name.name.is_empty() => "_u",
                 NameSource::Temporary => temp_prefix,
                 _ => "",
             },

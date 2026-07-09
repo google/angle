@@ -167,6 +167,9 @@ mod ffi {
         // _output_ version should be used by the generator.
         is_es1: bool,
 
+        // One char to add after '_' to prefix user-defined symbols.
+        user_variable_name_prefix: u8,
+
         // Whether uninitialized local and global variables should be zero-initialized.
         initialize_uninitialized_variables: bool,
         // Whether loops can be used when zero-initializing variables.
@@ -574,6 +577,7 @@ fn collect_reflection_info(ir: &mut IR, options: &Options) {
         let reflection_options = reflection::Options {
             is_es1: options.shader_version == 100,
             transform_float_uniform_to_fp16: options.transform_float_uniform_to_fp16,
+            user_variable_name_prefix: options.user_variable_name_prefix as char,
         };
         ir.collect_reflection_info(&reflection_options, &active_interface_variables);
     }

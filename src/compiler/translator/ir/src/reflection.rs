@@ -18,6 +18,7 @@ pub struct Options {
     // Some built-ins have a different name in ES100.
     pub is_es1: bool,
     pub transform_float_uniform_to_fp16: bool,
+    pub user_variable_name_prefix: char,
 }
 
 // All reflection info bundled together
@@ -339,7 +340,7 @@ fn collect_user_variable(
     }
 }
 
-fn mapped_name(name: &Name) -> String {
+fn mapped_name(options: &Options, name: &Name) -> String {
     // GLSL ES 3.00.6 section 3.9: the maximum length of an identifier is 1024 characters.
     const MAX_ESSL_IDENTIFIER_LENGTH: usize = 1024;
 
@@ -352,13 +353,13 @@ fn mapped_name(name: &Name) -> String {
             if !name.name.is_empty()
                 && name.name.len() + USER_SYMBOL_PREFIX.len() <= MAX_ESSL_IDENTIFIER_LENGTH =>
         {
-            USER_SYMBOL_PREFIX
+            format!("{}{}", USER_SYMBOL_PREFIX, options.user_variable_name_prefix)
         }
         NameSource::Temporary => panic!(
             "Internal error: Should not collect reflection info for shader-private variables and \
              types"
         ),
-        _ => "",
+        _ => "".to_string(),
     };
     format!("{}{}", prefix, name.name)
 }
@@ -732,7 +733,7 @@ fn new_common_shader_variable(
         gl_type,
         gl_precision,
         name: name.name.to_string(),
-        mapped_name: mapped_name(name),
+        mapped_name: mapped_name(options, name),
         struct_or_block_name: "".to_string(),
         mapped_struct_or_block_name: "".to_string(),
         fields: vec![],
@@ -771,7 +772,7 @@ fn new_common_shader_variable(
         var.struct_or_block_name = struct_name.name.to_string();
         // Mapped name is only used for interface blocks
         if *specialization == StructSpecialization::InterfaceBlock {
-            var.mapped_struct_or_block_name = mapped_name(struct_name);
+            var.mapped_struct_or_block_name = mapped_name(options, struct_name);
         }
         let field_inherit = inherit.accumulate_is_patch(decorations.has(Decoration::Patch));
         var.fields =
@@ -982,7 +983,7 @@ fn new_interface_block(
 
     let mut var = InterfaceBlock {
         name: block_name.name.to_string(),
-        mapped_name: mapped_name(block_name),
+        mapped_name: mapped_name(options, block_name),
         instance_name: variable.name.name.to_string(),
         fields: vec![],
         static_use: variable.is_static_use,

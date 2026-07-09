@@ -901,19 +901,19 @@ void GenMetalTraverser::emitLoopBody(TIntermBlock *bodyNode)
     }
 }
 
-static void EmitName(Sink &out, const Name &name)
+static void EmitName(Sink &out, const Name &name, char userSymbolPrefix)
 {
 #if defined(ANGLE_ENABLE_ASSERTS)
     DebugSink::EscapedSink escapedOut(out.escape());
 #else
     TInfoSinkBase &escapedOut = out;
 #endif
-    name.emit(escapedOut);
+    name.emit(escapedOut, userSymbolPrefix);
 }
 
 void GenMetalTraverser::emitNameOf(const TField &object)
 {
-    EmitName(mOut, Name(object));
+    EmitName(mOut, Name(object), mCompiler.getUserVariableNamePrefix());
 }
 
 void GenMetalTraverser::emitNameOf(const TSymbol &object)
@@ -921,11 +921,11 @@ void GenMetalTraverser::emitNameOf(const TSymbol &object)
     auto it = mRenamedSymbols.find(&object);
     if (it == mRenamedSymbols.end())
     {
-        EmitName(mOut, Name(object));
+        EmitName(mOut, Name(object), mCompiler.getUserVariableNamePrefix());
     }
     else
     {
-        EmitName(mOut, it->second);
+        EmitName(mOut, it->second, mCompiler.getUserVariableNamePrefix());
     }
 }
 
@@ -988,7 +988,8 @@ void GenMetalTraverser::emitBareTypeName(const TType &type, const EmitTypeConfig
             {
                 if (etConfig.evdConfig && etConfig.evdConfig->isMainParameter)
                 {
-                    EmitName(mOut, GetTextureTypeName(basicType));
+                    EmitName(mOut, GetTextureTypeName(basicType),
+                             mCompiler.getUserVariableNamePrefix());
                 }
                 else
                 {
@@ -2344,7 +2345,7 @@ bool GenMetalTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                     const TFunction &func = *aggregateNode->getFunction();
                     auto it               = mFuncToName.find(func.name());
                     ASSERT(it != mFuncToName.end());
-                    EmitName(mOut, it->second);
+                    EmitName(mOut, it->second, mCompiler.getUserVariableNamePrefix());
                     emitArgList("(", ")");
                     return false;
                 }
