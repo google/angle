@@ -1592,10 +1592,6 @@ void GenerateCaps(const FunctionsGL *functions,
             QuerySingleGLInt(functions, GL_FRAGMENT_INTERPOLATION_OFFSET_BITS_OES);
     }
 
-    // Support video texture extension on non Android backends.
-    // TODO(crbug.com/776222): support Android and Apple devices.
-    extensions->videoTextureWEBGL = !IsAndroid() && !IsApple();
-
     if (features.multiviewViaViewportArray.enabled)
     {
         extensions->multiviewOVR  = true;
