@@ -158,6 +158,7 @@ enum class Feature
     EnableAdditionalBlendFactorsForDithering,
     EnableAsyncPipelineCacheCompression,
     EnableCaptureLimits,
+    EnableCreateContextBackwardsCompatible,
     EnableExtraSubmitFence,
     EnableInMemoryMtlLibraryCache,
     EnableMergeClientAttribBuffer,
