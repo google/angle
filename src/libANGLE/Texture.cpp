@@ -1461,6 +1461,8 @@ angle::Result Texture::setSubImage(Context *context,
 
     onStateChange(angle::SubjectMessage::ContentsChanged);
 
+    setInitState(GL_NONE, index, InitState::Initialized);
+
     return angle::Result::Continue;
 }
 
@@ -1513,6 +1515,8 @@ angle::Result Texture::setCompressedSubImage(const Context *context,
                                               unpackState, imageSize, pixels));
 
     onStateChange(angle::SubjectMessage::ContentsChanged);
+
+    setInitState(GL_NONE, index, InitState::Initialized);
 
     return angle::Result::Continue;
 }
@@ -1634,6 +1638,8 @@ angle::Result Texture::copySubImage(Context *context,
 
     onStateChange(angle::SubjectMessage::ContentsChanged);
 
+    setInitState(GL_NONE, index, InitState::Initialized);
+
     return angle::Result::Continue;
 }
 
@@ -1753,6 +1759,8 @@ angle::Result Texture::copySubTexture(const Context *context,
                                        unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source));
 
     onStateChange(angle::SubjectMessage::ContentsChanged);
+
+    setInitState(GL_NONE, index, InitState::Initialized);
 
     return angle::Result::Continue;
 }
@@ -2036,6 +2044,12 @@ angle::Result Texture::clearSubImage(Context *context,
     ANGLE_TRY(handleMipmapGenerationHint(context, level));
 
     onStateChange(angle::SubjectMessage::ContentsChanged);
+
+    ImageIndexIterator setImagesIterator = allImagesIterator;
+    while (setImagesIterator.hasNext())
+    {
+        setInitState(GL_NONE, setImagesIterator.next(), InitState::Initialized);
+    }
 
     return angle::Result::Continue;
 }
@@ -2668,9 +2682,8 @@ angle::Result Texture::ensureSubImageInitialized(const Context *context,
         // NOTE: do not optimize this to only initialize the passed area of the texture, or the
         // initialization logic in copySubImage will be incorrect.
         ANGLE_TRY(initializeContents(context, GL_NONE, imageIndex));
+        setInitState(GL_NONE, imageIndex, InitState::Initialized);
     }
-    // Note: binding is ignored for textures.
-    setInitState(GL_NONE, imageIndex, InitState::Initialized);
     return angle::Result::Continue;
 }
 
