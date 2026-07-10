@@ -317,6 +317,8 @@
 464010023 NVIDIA GLES : BlitFramebufferANGLETest.* = SKIP
 // Demote-to-helper for discard incorrect derivatives
 491363839 NVIDIA VULKAN : GLSLTest_ES31.HelperInvocationsAfterDiscard/* = SKIP
+// Test cannot run when ASTC is emulated
+525079760 NVIDIA VULKAN : ImageTestES3.NonZeroLevel*GetCompressedTexImage/* = SKIP
 
 // Nvidia Vulkan
 42265709 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixCopyBug/* = SKIP
@@ -765,6 +767,7 @@
 42265632 PIXEL6 VULKAN : ImageTestES3.SourceAHBMipTarget2DMip/* = SKIP
 42265632 PIXEL6 VULKAN : ImageTestES3.SourceAHBMipTarget2DMipGenerateMipmap/* = SKIP
 532190475 PIXEL6 VULKAN : ImageTestES3.NonZeroLevelAndFaceCopyCompressedTextureSrc/* = SKIP
+532190475 PIXEL6 VULKAN : ImageTestES3.NonZeroLevelAndFaceGetCompressedTexImage/* = SKIP
 40096838 PIXEL6 VULKAN : PixelLocalStorageTest.EarlyFragmentTests/ES3_1_Vulkan_EmulatePixelLocalStorage* = SKIP
 448658624 PIXEL6 VULKAN : GLSLTest_ES31.ConstantPrecisionPropagation/* = SKIP
 448658624 PIXEL6 VULKAN : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP

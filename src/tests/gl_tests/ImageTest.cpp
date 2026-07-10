@@ -14452,6 +14452,142 @@ TEST_P(ImageTestES3, NonZeroLevelAndFaceClearTexSubImageDstNonRenderable)
         });
 }
 
+// Export non-zero level, readback via glGetTexImage
+TEST_P(ImageTestES3, NonZeroLevelGetTexImage)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_get_image"));
+
+    nonZeroLevelTest(
+        [](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Verify the target
+            std::vector<GLColor> buffer(size * size);
+            glGetTexImageANGLE(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer.data());
+
+            const std::vector<GLColor> expect(size * size, initColor);
+            EXPECT_EQ(buffer, expect);
+        },
+        [](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {});
+}
+
+// Export non-zero level and slice, readback via glGetTexImage
+TEST_P(ImageTestES3, NonZeroLevelAndSliceGetTexImage)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_get_image"));
+
+    nonZeroLevelAndSliceTest(
+        [](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Verify the target
+            std::vector<GLColor> buffer(size * size);
+            glGetTexImageANGLE(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer.data());
+
+            const std::vector<GLColor> expect(size * size, initColor);
+            EXPECT_EQ(buffer, expect);
+        },
+        [](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
+           uint32_t size, uint32_t depth) {});
+}
+
+// Export non-zero level and face, readback via glGetTexImage
+TEST_P(ImageTestES3, NonZeroLevelAndFaceGetTexImage)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_get_image"));
+
+    nonZeroLevelAndFaceTest(
+        [](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Verify the target
+            std::vector<GLColor> buffer(size * size);
+            glGetTexImageANGLE(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer.data());
+
+            const std::vector<GLColor> expect(size * size, initColor);
+            EXPECT_EQ(buffer, expect);
+        },
+        [](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
+           uint32_t size) {});
+}
+
+// Export non-zero level, readback via glGetCompressedTexImage
+TEST_P(ImageTestES3, NonZeroLevelGetCompressedTexImage)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_get_image"));
+
+    nonZeroLevelCompressedTest(
+        [](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Verify the target
+            std::vector<uint8_t> buffer(size * size);
+            glGetCompressedTexImageANGLE(GL_TEXTURE_2D, 0, buffer.data());
+
+            const std::array<uint8_t, 16> kExpectBlock = {
+                0xFC,        0xFD,        0xFF,        0xFF,        0xFF,        0xFF,
+                0xFF,        0xFF,        initColor.R, initColor.R, initColor.G, initColor.G,
+                initColor.B, initColor.B, initColor.A, initColor.A};
+
+            std::vector<uint8_t> expect(size * size);
+            for (size_t block = 0; block < expect.size(); block += kExpectBlock.size())
+            {
+                std::copy(kExpectBlock.begin(), kExpectBlock.end(), expect.begin() + block);
+            }
+
+            EXPECT_EQ(buffer, expect);
+        },
+        [](const GLTexture &source, uint32_t level, GLColor initColor, uint32_t size) {});
+}
+
+// Export non-zero level and slice, readback via glGetCompressedTexImage
+TEST_P(ImageTestES3, NonZeroLevelAndSliceGetCompressedTexImage)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_get_image"));
+
+    nonZeroLevelAndSliceCompressedTest(
+        [](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Verify the target
+            std::vector<uint8_t> buffer(size * size);
+            glGetCompressedTexImageANGLE(GL_TEXTURE_2D, 0, buffer.data());
+
+            const std::array<uint8_t, 16> kExpectBlock = {
+                0xFC,        0xFD,        0xFF,        0xFF,        0xFF,        0xFF,
+                0xFF,        0xFF,        initColor.R, initColor.R, initColor.G, initColor.G,
+                initColor.B, initColor.B, initColor.A, initColor.A};
+
+            std::vector<uint8_t> expect(size * size);
+            for (size_t block = 0; block < expect.size(); block += kExpectBlock.size())
+            {
+                std::copy(kExpectBlock.begin(), kExpectBlock.end(), expect.begin() + block);
+            }
+
+            EXPECT_EQ(buffer, expect);
+        },
+        [](const GLTexture &source, uint32_t level, uint32_t slice, GLColor initColor,
+           uint32_t size, uint32_t depth) {});
+}
+
+// Export non-zero level and face, readback via glGetCompressedTexImage
+TEST_P(ImageTestES3, NonZeroLevelAndFaceGetCompressedTexImage)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_get_image"));
+
+    nonZeroLevelAndFaceCompressedTest(
+        [](const GLTexture &target, GLColor initColor, uint32_t size) {
+            // Verify the target
+            std::vector<uint8_t> buffer(size * size);
+            glGetCompressedTexImageANGLE(GL_TEXTURE_2D, 0, buffer.data());
+
+            const std::array<uint8_t, 16> kExpectBlock = {
+                0xFC,        0xFD,        0xFF,        0xFF,        0xFF,        0xFF,
+                0xFF,        0xFF,        initColor.R, initColor.R, initColor.G, initColor.G,
+                initColor.B, initColor.B, initColor.A, initColor.A};
+
+            std::vector<uint8_t> expect(size * size);
+            for (size_t block = 0; block < expect.size(); block += kExpectBlock.size())
+            {
+                std::copy(kExpectBlock.begin(), kExpectBlock.end(), expect.begin() + block);
+            }
+
+            EXPECT_EQ(buffer, expect);
+        },
+        [](const GLTexture &source, uint32_t level, uint32_t face, GLColor initColor,
+           uint32_t size) {});
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(ImageTest,
                                        ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
 
