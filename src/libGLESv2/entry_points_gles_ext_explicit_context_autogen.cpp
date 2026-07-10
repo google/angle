@@ -27932,6 +27932,51 @@ void GL_APIENTRY GL_GetTranslatedShaderSourceANGLEContextANGLE(GLeglDisplayANGLE
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+void GL_APIENTRY GL_TrimMemoryANGLEContextANGLE(GLeglDisplayANGLE dpy,
+                                                GLeglContextANGLE ctx,
+                                                GLenum trimLevel)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidContext(dpy, ctx);
+    EVENT(context, GLTrimMemoryANGLE, "context = %d, trimLevel = %s", CID(context),
+          GLenumToString(GLESEnum::MemoryTrimLevel, trimLevel));
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        MemoryTrimLevel trimLevelPacked = PackParam<MemoryTrimLevel>(trimLevel);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().trimMemoryANGLE))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateTrimMemoryANGLE(context, angle::EntryPoint::GLTrimMemoryANGLE,
+                                                      trimLevelPacked);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLTrimMemoryANGLE);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->trimMemory(trimLevelPacked);
+        }
+        ANGLE_CAPTURE_GL(TrimMemoryANGLE, isCallValid, context, trimLevelPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLTrimMemoryANGLE);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 void GL_APIENTRY GL_AcquireTexturesANGLEContextANGLE(GLeglDisplayANGLE dpy,
                                                      GLeglContextANGLE ctx,
                                                      GLuint numTextures,

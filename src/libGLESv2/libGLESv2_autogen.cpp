@@ -3738,6 +3738,12 @@ void GL_APIENTRY glGetTranslatedShaderSourceANGLE(GLuint shader,
     return GL_GetTranslatedShaderSourceANGLE(shader, bufSize, length, source);
 }
 
+// GL_ANGLE_trim_memory
+void GL_APIENTRY glTrimMemoryANGLE(GLenum trimLevel)
+{
+    return GL_TrimMemoryANGLE(trimLevel);
+}
+
 // GL_ANGLE_vulkan_image
 void GL_APIENTRY glAcquireTexturesANGLE(GLuint numTextures,
                                         const GLuint *textures,

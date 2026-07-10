@@ -159,6 +159,12 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_CW";
                 case 0x901:
                     return "GL_CCW";
+                case 0x960:
+                    return "GL_MEMORY_TRIM_LOW_ANGLE";
+                case 0x961:
+                    return "GL_MEMORY_TRIM_MEDIUM_ANGLE";
+                case 0x962:
+                    return "GL_MEMORY_TRIM_HIGH_ANGLE";
                 case 0xB00:
                     return "GL_CURRENT_COLOR";
                 case 0xB02:
@@ -6218,6 +6224,21 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
             }
         }
 
+        case GLESEnum::MemoryTrimLevel:
+        {
+            switch (value)
+            {
+                case 0x960:
+                    return "GL_MEMORY_TRIM_LOW_ANGLE";
+                case 0x961:
+                    return "GL_MEMORY_TRIM_MEDIUM_ANGLE";
+                case 0x962:
+                    return "GL_MEMORY_TRIM_HIGH_ANGLE";
+                default:
+                    return UnknownEnumToString(value);
+            }
+        }
+
         case GLESEnum::NormalPointerType:
         {
             switch (value)
@@ -8665,7 +8686,7 @@ struct StringEnumEntry
     unsigned int enumValue;
 };
 
-constexpr std::array<StringEnumEntry, 6204> g_stringEnumTable = {{
+constexpr std::array<StringEnumEntry, 6207> g_stringEnumTable = {{
     {"GL_1PASS_EXT", 0x80A1},
     {"GL_1PASS_SGIS", 0x80A1},
     {"GL_2D", 0x0600},
@@ -11822,6 +11843,9 @@ constexpr std::array<StringEnumEntry, 6204> g_stringEnumTable = {{
     {"GL_MEMORY_ATTACHABLE_NV", 0x95A8},
     {"GL_MEMORY_ATTACHABLE_SIZE_NV", 0x95A7},
     {"GL_MEMORY_SIZE_ANGLE", 0x93AD},
+    {"GL_MEMORY_TRIM_HIGH_ANGLE", 0x0962},
+    {"GL_MEMORY_TRIM_LOW_ANGLE", 0x0960},
+    {"GL_MEMORY_TRIM_MEDIUM_ANGLE", 0x0961},
     {"GL_MESH_OUTPUT_PER_PRIMITIVE_GRANULARITY_EXT", 0x9543},
     {"GL_MESH_OUTPUT_PER_PRIMITIVE_GRANULARITY_NV", 0x9543},
     {"GL_MESH_OUTPUT_PER_VERTEX_GRANULARITY_EXT", 0x92DF},

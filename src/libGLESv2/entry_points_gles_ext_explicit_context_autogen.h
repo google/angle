@@ -3084,6 +3084,9 @@ ANGLE_EXPORT void GL_APIENTRY GL_GetTranslatedShaderSourceANGLEContextANGLE(GLeg
                                                                             GLsizei bufSize,
                                                                             GLsizei *length,
                                                                             GLchar *source);
+ANGLE_EXPORT void GL_APIENTRY GL_TrimMemoryANGLEContextANGLE(GLeglDisplayANGLE dpy,
+                                                             GLeglContextANGLE ctx,
+                                                             GLenum trimLevel);
 ANGLE_EXPORT void GL_APIENTRY GL_AcquireTexturesANGLEContextANGLE(GLeglDisplayANGLE dpy,
                                                                   GLeglContextANGLE ctx,
                                                                   GLuint numTextures,

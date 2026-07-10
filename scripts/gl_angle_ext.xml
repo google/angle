@@ -68,6 +68,11 @@
             <enum name="GL_NAND_ANGLE"/>
             <enum name="GL_SET_ANGLE"/>
         </group>
+        <group name="MemoryTrimLevel">
+            <enum name="GL_MEMORY_TRIM_LOW_ANGLE"/>
+            <enum name="GL_MEMORY_TRIM_MEDIUM_ANGLE"/>
+            <enum name="GL_MEMORY_TRIM_HIGH_ANGLE"/>
+        </group>
     </groups>
 
     <!-- SECTION: GL command definitions. -->
@@ -879,6 +884,10 @@
             <param len="1">void **<name>params</name></param>
             <alias name="glGetPointerv"/>
         </command>
+        <command>
+            <proto>void <name>glTrimMemoryANGLE</name></proto>
+            <param group="MemoryTrimLevel"><ptype>GLenum</ptype> <name>trimLevel</name></param>
+        </command>
     </commands>
 
     <!-- SECTION: ANGLE extension interface definitions -->
@@ -1262,6 +1271,14 @@
                 <command name="glGetPointervANGLE"/>
             </require>
         </extension>
+        <extension name="GL_ANGLE_trim_memory" supported="gles2">
+            <require>
+                <command name="glTrimMemoryANGLE"/>
+                <enum name="GL_MEMORY_TRIM_LOW_ANGLE"/>
+                <enum name="GL_MEMORY_TRIM_MEDIUM_ANGLE"/>
+                <enum name="GL_MEMORY_TRIM_HIGH_ANGLE"/>
+            </require>
+        </extension>
     </extensions>
 
     <!-- SECTION: GL enumerant (token) definitions. -->
@@ -1457,5 +1474,11 @@
         <enum value="0x96BF" name="GL_BLOB_CACHE_GET_FUNCTION_ANGLE"/>
         <enum value="0x96EF" name="GL_BLOB_CACHE_SET_FUNCTION_ANGLE"/>
         <enum value="0x972D" name="GL_BLOB_CACHE_USER_PARAM_ANGLE"/>
+    </enums>
+
+    <enums namespace="GL" vendor="ANGLE">
+        <enum value="0x0960" name="GL_MEMORY_TRIM_LOW_ANGLE" group="MemoryTrimLevel"/>
+        <enum value="0x0961" name="GL_MEMORY_TRIM_MEDIUM_ANGLE" group="MemoryTrimLevel"/>
+        <enum value="0x0962" name="GL_MEMORY_TRIM_HIGH_ANGLE" group="MemoryTrimLevel"/>
     </enums>
 </registry>

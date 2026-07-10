@@ -777,6 +777,9 @@ struct Extensions
     // GL_ANGLE_texture_rectangle
     bool textureRectangleANGLE = false;
 
+    // GL_ANGLE_trim_memory
+    bool trimMemoryANGLE = false;
+
     // GL_ANGLE_vulkan_image
     bool vulkanImageANGLE = false;
 

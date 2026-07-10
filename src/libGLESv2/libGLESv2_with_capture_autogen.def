@@ -648,6 +648,9 @@ EXPORTS
     ; GL_ANGLE_translated_shader_source
     glGetTranslatedShaderSourceANGLE
 
+    ; GL_ANGLE_trim_memory
+    glTrimMemoryANGLE
+
     ; GL_ANGLE_vulkan_image
     glAcquireTexturesANGLE
     glReleaseTexturesANGLE

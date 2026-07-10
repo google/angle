@@ -599,6 +599,8 @@
     /* GL_ANGLE_texture_compression_dxt5 */                                                        \
     /* GL_ANGLE_texture_multisample */                                                             \
     /* GL_ANGLE_texture_rectangle */                                                               \
+    /* GL_ANGLE_trim_memory */                                                                     \
+    void trimMemory(MemoryTrimLevel trimLevelPacked);                                              \
     /* GL_ANGLE_vulkan_image */                                                                    \
     void acquireTextures(GLuint numTextures, const TextureID *texturesPacked,                      \
                          const GLenum *layouts);                                                   \

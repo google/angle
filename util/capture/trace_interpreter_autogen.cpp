@@ -5727,6 +5727,12 @@ CallCapture ParseCallCapture(const Token &nameToken,
             ParseParameters<std::remove_pointer<PFNGLTRANSLATEXPROC>::type>(paramTokens, strings);
         return CallCapture(EntryPoint::GLTranslatex, std::move(params));
     }
+    if (strcmp(nameToken, "glTrimMemoryANGLE") == 0)
+    {
+        ParamBuffer params = ParseParameters<std::remove_pointer<PFNGLTRIMMEMORYANGLEPROC>::type>(
+            paramTokens, strings);
+        return CallCapture(EntryPoint::GLTrimMemoryANGLE, std::move(params));
+    }
     if (strcmp(nameToken, "glUniform1f") == 0)
     {
         ParamBuffer params =

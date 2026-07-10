@@ -9073,6 +9073,11 @@ void Context::getSemaphoreParameterui64v(SemaphoreID semaphore, GLenum pname, GL
     UNIMPLEMENTED();
 }
 
+void Context::trimMemory(MemoryTrimLevel trimLevel)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::acquireTextures(GLuint numTextures,
                               const TextureID *textureIds,
                               const GLenum *layouts)

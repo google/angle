@@ -706,4 +706,15 @@ typedef void *GLeglDisplayANGLE;
 typedef void *GLeglContextANGLE;
 #endif /* GL_ANGLE_explicit_context */
 
+#ifndef GL_ANGLE_trim_memory
+#define GL_ANGLE_trim_memory 1
+#define GL_MEMORY_TRIM_LOW_ANGLE         0x0960
+#define GL_MEMORY_TRIM_MEDIUM_ANGLE      0x0961
+#define GL_MEMORY_TRIM_HIGH_ANGLE        0x0962
+typedef void(GL_APIENTRYP PFNGLTRIMMEMORYANGLEPROC)(GLenum trimLevel);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glTrimMemoryANGLE(GLenum trimLevel);
+#endif
+#endif /* GL_ANGLE_trim_memory */
+
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_

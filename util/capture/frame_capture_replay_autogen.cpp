@@ -3593,6 +3593,9 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
             glTranslatex(captures[0].value.GLfixedVal, captures[1].value.GLfixedVal,
                          captures[2].value.GLfixedVal);
             break;
+        case angle::EntryPoint::GLTrimMemoryANGLE:
+            glTrimMemoryANGLE(captures[0].value.GLenumVal);
+            break;
         case angle::EntryPoint::GLUniform1f:
             glUniform1f(gUniformLocations[gCurrentProgramPerContext[gCurrentContext]]
                                          [captures[0].value.GLintVal],

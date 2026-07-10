@@ -130,6 +130,12 @@
         "Projection": "GL_PROJECTION",
         "Texture": "GL_TEXTURE"
     },
+    "MemoryTrimLevel":
+    {
+        "Low": "GL_MEMORY_TRIM_LOW_ANGLE",
+        "Medium": "GL_MEMORY_TRIM_MEDIUM_ANGLE",
+        "High": "GL_MEMORY_TRIM_HIGH_ANGLE"
+    },
     "PlaneParameter":
     {
         "InternalFormat": "GL_PIXEL_LOCAL_INTERNAL_FORMAT_ANGLE",

@@ -3982,6 +3982,17 @@ CallCapture CaptureGetTranslatedShaderSourceANGLE(const State &glState,
     return CallCapture(angle::EntryPoint::GLGetTranslatedShaderSourceANGLE, std::move(paramBuffer));
 }
 
+CallCapture CaptureTrimMemoryANGLE(const State &glState,
+                                   bool isCallValid,
+                                   MemoryTrimLevel trimLevelPacked)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("trimLevelPacked", ParamType::TMemoryTrimLevel, trimLevelPacked);
+
+    return CallCapture(angle::EntryPoint::GLTrimMemoryANGLE, std::move(paramBuffer));
+}
+
 CallCapture CaptureAcquireTexturesANGLE(const State &glState,
                                         bool isCallValid,
                                         GLuint numTextures,

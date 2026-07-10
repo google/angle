@@ -393,6 +393,21 @@ MatrixType FromGLenum<MatrixType>(GLenum from);
 GLenum ToGLenum(MatrixType from);
 std::ostream &operator<<(std::ostream &os, MatrixType value);
 
+enum class MemoryTrimLevel : uint8_t
+{
+    Low    = 0,
+    Medium = 1,
+    High   = 2,
+
+    InvalidEnum = 3,
+    EnumCount   = 3,
+};
+
+template <>
+MemoryTrimLevel FromGLenum<MemoryTrimLevel>(GLenum from);
+GLenum ToGLenum(MemoryTrimLevel from);
+std::ostream &operator<<(std::ostream &os, MemoryTrimLevel value);
+
 enum class PlaneParameter : uint8_t
 {
     InternalFormat        = 0,

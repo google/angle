@@ -6029,6 +6029,50 @@ void GL_APIENTRY GL_GetTranslatedShaderSourceANGLE(GLuint shader,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+// GL_ANGLE_trim_memory
+void GL_APIENTRY GL_TrimMemoryANGLE(GLenum trimLevel)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLTrimMemoryANGLE, "context = %d, trimLevel = %s", CID(context),
+          GLenumToString(GLESEnum::MemoryTrimLevel, trimLevel));
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        MemoryTrimLevel trimLevelPacked = PackParam<MemoryTrimLevel>(trimLevel);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().trimMemoryANGLE))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateTrimMemoryANGLE(context, angle::EntryPoint::GLTrimMemoryANGLE,
+                                                      trimLevelPacked);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLTrimMemoryANGLE);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->trimMemory(trimLevelPacked);
+        }
+        ANGLE_CAPTURE_GL(TrimMemoryANGLE, isCallValid, context, trimLevelPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLTrimMemoryANGLE);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // GL_ANGLE_vulkan_image
 void GL_APIENTRY GL_AcquireTexturesANGLE(GLuint numTextures,
                                          const GLuint *textures,

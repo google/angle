@@ -2008,6 +2008,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glTranslatef";
         case EntryPoint::GLTranslatex:
             return "glTranslatex";
+        case EntryPoint::GLTrimMemoryANGLE:
+            return "glTrimMemoryANGLE";
         case EntryPoint::GLUniform1f:
             return "glUniform1f";
         case EntryPoint::GLUniform1fv:

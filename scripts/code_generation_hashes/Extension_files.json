@@ -1,6 +1,6 @@
 {
   "doc/ExtensionSupport.md":
-    "fc24f433c996c72cfdd0224def0feef5",
+    "31f1596d026898cfa5ea1bd95cf5faca",
   "scripts/egl_angle_ext.xml":
     "3ce0751714fdbb6e959b3d1f8bb79a49",
   "scripts/extension_data/intel_630_linux.json":
@@ -20,15 +20,15 @@
   "scripts/extension_data/swiftshader_win10_gles1.json":
     "bea8e2106d62e1ea0e8938f150865a37",
   "scripts/gl_angle_ext.xml":
-    "7c8a9d563c1229cb360245781460e360",
+    "8f56490b636971c54bd2e62f408215b9",
   "scripts/registry_xml.py":
-    "5d2c2e9b94fc4973a7f2ff4cc432338e",
+    "754e6c15ab936ea4cb07053326a7b936",
   "src/libANGLE/gen_extensions.py":
     "b633607f7ec8333cd64234e5e10af145",
   "src/libANGLE/gles_extensions_autogen.cpp":
-    "ebd87fab603f1a15dbbc34056e416e33",
+    "1015ce0d3f565cf4e9326bae277d3fb7",
   "src/libANGLE/gles_extensions_autogen.h":
-    "a870769bc8d5df0c2773b05fcda5275e",
+    "858622cc23b4c3baa8a15f1706d7e828",
   "third_party/EGL-Registry/src/api/egl.xml":
     "2056d54ea07156f1988ca1366bdee21a",
   "third_party/OpenCL-Docs/src/xml/cl.xml":

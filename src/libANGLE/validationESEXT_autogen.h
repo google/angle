@@ -839,6 +839,11 @@ bool ValidateGetTranslatedShaderSourceANGLE(const Context *context,
                                             const GLsizei *length,
                                             const GLchar *source);
 
+// GL_ANGLE_trim_memory
+bool ValidateTrimMemoryANGLE(const Context *context,
+                             angle::EntryPoint entryPoint,
+                             MemoryTrimLevel trimLevelPacked);
+
 // GL_ANGLE_vulkan_image
 bool ValidateAcquireTexturesANGLE(const Context *context,
                                   angle::EntryPoint entryPoint,

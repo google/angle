@@ -1805,6 +1805,9 @@
     "glTransformFeedbackVaryings": {
         "program": "ShaderProgramID"
     },
+    "glTrimMemory": {
+        "trimLevel": "MemoryTrimLevel"
+    },
     "glUniform1f": {
         "location": "UniformLocation"
     },

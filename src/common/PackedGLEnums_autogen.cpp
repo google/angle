@@ -1546,6 +1546,58 @@ std::ostream &operator<<(std::ostream &os, MatrixType value)
 }
 
 template <>
+MemoryTrimLevel FromGLenum<MemoryTrimLevel>(GLenum from)
+{
+    switch (from)
+    {
+        case GL_MEMORY_TRIM_LOW_ANGLE:
+            return MemoryTrimLevel::Low;
+        case GL_MEMORY_TRIM_MEDIUM_ANGLE:
+            return MemoryTrimLevel::Medium;
+        case GL_MEMORY_TRIM_HIGH_ANGLE:
+            return MemoryTrimLevel::High;
+        default:
+            return MemoryTrimLevel::InvalidEnum;
+    }
+}
+
+GLenum ToGLenum(MemoryTrimLevel from)
+{
+    switch (from)
+    {
+        case MemoryTrimLevel::Low:
+            return GL_MEMORY_TRIM_LOW_ANGLE;
+        case MemoryTrimLevel::Medium:
+            return GL_MEMORY_TRIM_MEDIUM_ANGLE;
+        case MemoryTrimLevel::High:
+            return GL_MEMORY_TRIM_HIGH_ANGLE;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+std::ostream &operator<<(std::ostream &os, MemoryTrimLevel value)
+{
+    switch (value)
+    {
+        case MemoryTrimLevel::Low:
+            os << "GL_MEMORY_TRIM_LOW_ANGLE";
+            break;
+        case MemoryTrimLevel::Medium:
+            os << "GL_MEMORY_TRIM_MEDIUM_ANGLE";
+            break;
+        case MemoryTrimLevel::High:
+            os << "GL_MEMORY_TRIM_HIGH_ANGLE";
+            break;
+        default:
+            os << "GL_INVALID_ENUM";
+            break;
+    }
+    return os;
+}
+
+template <>
 PlaneParameter FromGLenum<PlaneParameter>(GLenum from)
 {
     switch (from)

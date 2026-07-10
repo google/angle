@@ -3195,6 +3195,10 @@ const ProcEntry g_procTable[] = {
 #if defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)
     {"glTranslatexContextANGLE", P(GL_TranslatexContextANGLE)},
 #endif // defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)
+    {"glTrimMemoryANGLE", P(GL_TrimMemoryANGLE)},
+#if defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)
+    {"glTrimMemoryANGLEContextANGLE", P(GL_TrimMemoryANGLEContextANGLE)},
+#endif // defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)
     {"glUniform1f", P(GL_Uniform1f)},
 #if defined(ANGLE_ENABLE_EXPLICIT_CONTEXT)
     {"glUniform1fContextANGLE", P(GL_Uniform1fContextANGLE)},
