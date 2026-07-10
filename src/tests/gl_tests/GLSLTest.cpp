@@ -24499,6 +24499,58 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that long symbols work
+TEST_P(GLSLTest_ES3, LongIdentifiers)
+{
+    constexpr GLfloat kUBOValue = 0.4f;
+    GLBuffer ubo;
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kUBOValue), &kUBOValue, GL_STATIC_COPY);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
+
+    // If symbols are at least 1022 characters, they don't get prefixed.  If they are below 1022,
+    // they do.  Either way, this test makes sure these symbols work.  This is particularly needed
+    // given these symbols may get suffixed with `_id`.
+    for (uint32_t len = 1020; len <= 1024; len += 2)
+    {
+        const std::string longUBO(len, 'b');
+        const std::string longUniform(len, 'u');
+        const std::string longGlobalStruct(len, 'S');
+        const std::string longLocalStruct(len, 'L');
+        const std::string longVariable(len, 'v');
+
+        std::string shader = R"(#version 300 es
+precision mediump float;
+uniform )" + longUBO + R"({
+    float u;
+};
+struct )" + longGlobalStruct +
+                             R"({
+    float f;
+} g;
+uniform float )" + longUniform +
+                             R"(;
+out vec4 color;
+
+void main() {
+    struct )" + longLocalStruct +
+                             R"({
+        float f2;
+    } l;
+    float )" + longVariable + R"( = 0.1 + u;
+    g.f = )" + longUniform + R"(;
+    l.f2 = g.f + 0.25;
+    color = vec4()" + longVariable +
+                             R"(, g.f, l.f2, 1.0);
+})";
+
+        ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), shader.c_str());
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 0, 63, 255), 1);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Regression test for a bug in the HLSL generator where the global variable names could collide
 // with local variable names.  In particular, the local variables were suffixed with the symbol id,
 // starting from 3000 (kFirstUserDefinedSymbolId) but the global variables weren't.
