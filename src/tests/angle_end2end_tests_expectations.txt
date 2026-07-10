@@ -9,6 +9,9 @@
 42265633 TSAN : InstancingTestES3.LargeDivisor/* = SKIP
 42266467 TSAN : MultithreadingTest.CreateMultiSharedContextAndDraw/* = SKIP
 
+// Skip backward compatible context tests on Windows to reduce resource usage
+522318550 WIN VULKAN : */*_NoEnableCreateContextBackwardsCompatible* = SKIP
+
 // Generic
 // Crashes in setUniformValuesFromBindingQualifiers() because mUniformRealLocationMap is not
 // initialized when the program is loaded from cache.
@@ -1328,6 +1331,7 @@
 480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoUseDepthWriteEnableDynamicState = SKIP
 480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoUsePrimitiveRestartEnableDynamicState = SKIP
 480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoUseVertexInputBindingStrideDynamicState = SKIP
+480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoEnableCreateContextBackwardsCompatible = SKIP
 480069042 PIXEL10 VULKAN : StateChangeTestES3.StencilWriteMaskVsDiscard/ES3_Vulkan_NoUseDepthWriteEnableDynamicState = SKIP
 480069042 PIXEL10 VULKAN : TextureFixedRateCompressionTest.RenderToTexture/* = SKIP
 480069042 PIXEL10 VULKAN : TextureTestES31.LinkedImageUniforms/* = SKIP

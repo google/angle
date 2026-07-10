@@ -1312,7 +1312,6 @@ TEST_P(GLSLValidationTest, StructConstructorWithStructDefinition)
 // WebGL 2.0 spec section 'GLSL ES 1.00 Fragment Shader Output'
 TEST_P(WebGL2GLSLValidationTest, IndexFragDataWithNonConstant)
 {
-
     constexpr char kFS[] = R"(precision mediump float;
          void main() {
              for (int i = 0; i < 2; ++i) {
@@ -1325,11 +1324,10 @@ TEST_P(WebGL2GLSLValidationTest, IndexFragDataWithNonConstant)
 }
 
 // Global variable initializers need to be constant expressions (ESSL 1.00 section 4.3)
-// Initializing with an uniform should generate a warning
+// Initializing with a uniform should generate a warning
 // (we don't generate an error on ESSL 1.00 because of WebGL compatibility)
 TEST_P(WebGL2GLSLValidationTest, AssignUniformToGlobalESSL1)
 {
-
     constexpr char kFS[] = R"(precision mediump float;
          uniform float a;
          float b = a * 2.0;

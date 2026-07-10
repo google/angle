@@ -1731,6 +1731,13 @@ int ANGLETestBase::getClientMinorVersion() const
     return getGLWindow()->getClientMinorVersion();
 }
 
+bool ANGLETestBase::isAtLeastClientVersion(int major, int minor) const
+{
+    return getGLWindow()->getClientMajorVersion() > major ||
+           (getGLWindow()->getClientMajorVersion() == major &&
+            getGLWindow()->getClientMinorVersion() >= minor);
+}
+
 EGLWindow *ANGLETestBase::getEGLWindow() const
 {
     return mFixture->eglWindow;

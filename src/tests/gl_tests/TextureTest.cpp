@@ -7675,8 +7675,23 @@ TEST_P(Texture2DBaseMaxTestES3, Fuzz545ImmutableTexRenderFeedback)
 
                         for (GLint dstMip = 0; dstMip < (MIPS + 1); dstMip++)
                         {
+                            // For glFramebufferTexture2D() validation in ES 3.1, it would fail for
+                            // an immutable texture if level exceeds GL_TEXTURE_IMMUTABLE_LEVELS.
+                            if (tex == immutTex && isAtLeastClientVersion(3, 1))
+                            {
+                                GLint texImmutableLevels;
+                                glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_IMMUTABLE_LEVELS,
+                                                    &texImmutableLevels);
+                                ASSERT_GL_NO_ERROR();
+                                if (dstMip >= texImmutableLevels)
+                                {
+                                    continue;
+                                }
+                            }
+
                             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                                    GL_TEXTURE_2D, tex, dstMip);
+                            EXPECT_GL_NO_ERROR();
 
                             // ES3.0 p213-214
                             bool fbComplete = true;

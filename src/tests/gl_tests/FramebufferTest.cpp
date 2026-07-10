@@ -7932,9 +7932,14 @@ class FramebufferExtensionsTest : public FramebufferTest
     {
         GLFramebuffer fbo;
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        checkTexture(GL_RGBA, GL_UNSIGNED_BYTE, 0);
-        checkRenderbuffer(GL_RGB565, 0);
 
+        // GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE is core in ES3. In this case,
+        // glGetFramebufferAttachmentParameteriv() (in checkParameter()) will not return with
+        // GL_INVALID_ENUM, even if extensions are disabled.
+        GLenum expectedComponentBeforeExtEnable =
+            isAtLeastClientVersion(3, 0) ? GL_UNSIGNED_NORMALIZED_EXT : static_cast<GLenum>(0);
+        checkTexture(GL_RGBA, GL_UNSIGNED_BYTE, expectedComponentBeforeExtEnable);
+        checkRenderbuffer(GL_RGB565, expectedComponentBeforeExtEnable);
         ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled(extensionName));
 
         checkTexture(GL_RGBA, GL_UNSIGNED_BYTE, GL_UNSIGNED_NORMALIZED_EXT);
