@@ -1237,17 +1237,17 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@4bcc3df3290a4b32c33f51e5e28a41bef5179f87',
+    'url': Var('chromium_git') + '/vulkan-deps@ef0d2fd0009572aa7906f663352656e60632a98c',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/glslang/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@b3f9b743171c64bf9febbea2d6d5495ec5333534',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@c8253623e6e67943babcdeaa26f6457511f419ff',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/lunarg-vulkantools/src': {
-    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@43f8aaefec50194307f2e1626aa48ee0ea19c536',
+    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@7755d8636b14d7fb5f29d5a67b2180771ebe4382',
     'condition': 'not build_with_chromium',
   },
 
@@ -1262,7 +1262,7 @@ deps = {
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@48bd3e9d0c91be4aac0aa5f44dba7e8b97dbc154',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@502666433f77439bece5b4c5c7e67bff90af2350',
     'condition': 'not build_with_chromium',
   },
 
@@ -1272,7 +1272,7 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@80ac6e1e592fcd4e587fbec590c66175bd8ddbc1',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@7ab4d368d8499f3366728a6991eec910d9c34ae4',
     'condition': 'not build_with_chromium',
   },
 
@@ -1287,7 +1287,7 @@ deps = {
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@a64a2af72e55bc49389a49e4c13abe15ff35fc52',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@9ca51669b47567f2f9b5cc056a5e4db29bdd47c1',
     'condition': 'not build_with_chromium',
   },
 
