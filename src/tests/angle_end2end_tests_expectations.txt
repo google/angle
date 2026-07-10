@@ -1253,6 +1253,8 @@
 522247737 PIXEL10 GLES : MSRTTES3Test.DrawDisabled/* = SKIP
 522247737 PIXEL10 GLES : MSRTTES3Test.DrawDisabledThenDraw/* = SKIP
 522247737 PIXEL10 GLES : MSRTTES3Test.DrawThenDrawDisabled/* = SKIP
+533314333 PIXEL10 GLES : MSRTTES3Test.RenderToTextureDepthOnly/* = SKIP
+533314333 PIXEL10 GLES : MSRTTES3Test.RenderToTextureStencilOnly/* = SKIP
 523128541 PIXEL10 GLES : BufferDataTestES3.CopyBufferSubDataSelfDependency/* = SKIP
 523128541 PIXEL10 GLES : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 523128541 PIXEL10 GLES : GLSLTest_ES3.LargeConstGlobalArraysOfStructs/* = SKIP

@@ -801,6 +801,22 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithMSRTTEmulation[] 
          "command = vkCmdClearDepthStencilImage",
          "prior_command = vkCmdNextSubpass",
      }},
+    // When one aspect of depth/stencil is LOAD and the other is DONT_CARE and the image is
+    // previously initialized, the transfer->depth_stencil barrier's dst access does not include
+    // DEPTH_STENCIL_WRITE correctly.  See
+    // MSRTTES3Test.RenderToTextureDepthOnly/ES3_1_Vulkan_SwiftShader_EnableMultisampledRenderToTexture_RobustResourceInit
+    // for example.
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     false,
+     {
+         "message_type = RenderPassLoadOpError",
+         "access = "
+         "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
+         "BIT)",
+         "prior_access = VK_PIPELINE_STAGE_2_CLEAR_BIT(VK_ACCESS_2_TRANSFER_WRITE_BIT)",
+         "command = vkCmdBeginRenderPass",
+         "prior_command = vkCmdClearDepthStencilImage",
+     }},
 };
 
 enum class DebugMessageReport
