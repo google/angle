@@ -994,3 +994,8 @@
 349994211 IR D3D11 NVIDIA : dEQP-GLES3.functional.shaders.switch.default_label_static_* = SKIP
 349994211 IR D3D11 NVIDIA : dEQP-GLES3.functional.shaders.switch.default_not_last_static_* = SKIP
 349994211 IR D3D11 NVIDIA : dEQP-GLES3.functional.shaders.switch.if_in_switch_static_* = SKIP
+
+// Vulkan driver crash on Samsung S22 and S24 devices.
+8021882 GALAXYS22 VULKAN : dEQP-GLES3.functional.transform_feedback.*.lines.* = SKIP
+8021882 GALAXYS24EXYNOS VULKAN : dEQP-GLES3.functional.transform_feedback.*.lines.* = SKIP
+
