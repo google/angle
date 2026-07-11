@@ -4594,9 +4594,6 @@ TEST_P(VertexAttributeTest, AliasingVectorAttribLocations)
     // http://anglebug.com/42263740
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
 
-    // http://anglebug.com/42262130
-    ANGLE_SKIP_TEST_IF(IsMac() && IsOpenGL());
-
     // http://anglebug.com/42262131
     ANGLE_SKIP_TEST_IF(IsD3D());
 
@@ -4756,9 +4753,6 @@ TEST_P(VertexAttributeTest, AliasingMatrixAttribLocations)
 {
     // http://anglebug.com/42263740
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
-
-    // http://anglebug.com/42262130
-    ANGLE_SKIP_TEST_IF(IsMac() && IsOpenGL());
 
     // http://anglebug.com/42262131
     ANGLE_SKIP_TEST_IF(IsD3D());
@@ -4993,9 +4987,6 @@ TEST_P(VertexAttributeTest, AliasingVectorAttribLocationsDifferingPrecisions)
 {
     // http://anglebug.com/42263740
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
-
-    // http://anglebug.com/42262130
-    ANGLE_SKIP_TEST_IF(IsMac() && IsOpenGL());
 
     // http://anglebug.com/42262131
     ANGLE_SKIP_TEST_IF(IsD3D());
@@ -5646,9 +5637,6 @@ TEST_P(VertexAttributeTest, AliasingAttribNaming)
     // http://anglebug.com/42263740
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
 
-    // http://anglebug.com/42262130
-    ANGLE_SKIP_TEST_IF(IsMac() && IsOpenGL());
-
     // http://anglebug.com/42262131
     ANGLE_SKIP_TEST_IF(IsD3D());
 
@@ -5786,9 +5774,6 @@ TEST_P(VertexAttributeTestES3, AttribNaming)
 {
     // http://anglebug.com/42263740
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
-
-    // http://anglebug.com/42262130
-    ANGLE_SKIP_TEST_IF(IsMac() && IsOpenGL());
 
     // http://anglebug.com/42262131
     ANGLE_SKIP_TEST_IF(IsD3D());

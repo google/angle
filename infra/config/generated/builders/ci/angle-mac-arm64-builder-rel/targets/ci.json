@@ -3,33 +3,6 @@
     "gtest_tests": [
       {
         "args": [
-          "--max-processes=1",
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_egl_tests/",
-        "name": "angle_deqp_egl_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_egl_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_egl_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
           "--use-angle=metal"
         ],
         "merge": {
@@ -52,32 +25,6 @@
         },
         "test": "angle_deqp_egl_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_egl_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_gles2_tests/",
-        "name": "angle_deqp_gles2_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_gles2_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_gles2_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -130,33 +77,6 @@
         },
         "test": "angle_deqp_gles2_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_gles2_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_gles3_tests/",
-        "name": "angle_deqp_gles3_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 2
-        },
-        "test": "angle_deqp_gles3_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_gles3_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -217,35 +137,6 @@
           "--surface-height=64",
           "--surface-width=64",
           "--deqp-base-seed=1",
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_khr_gles2_tests/",
-        "name": "angle_deqp_khr_gles2_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_gles2_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles2_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--surface-height=64",
-          "--surface-width=64",
-          "--deqp-base-seed=1",
           "--use-angle=metal"
         ],
         "merge": {
@@ -275,35 +166,6 @@
           "--surface-height=64",
           "--surface-width=64",
           "--deqp-base-seed=1",
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_khr_gles3_tests/",
-        "name": "angle_deqp_khr_gles3_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_gles3_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles3_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--surface-height=64",
-          "--surface-width=64",
-          "--deqp-base-seed=1",
           "--use-angle=metal"
         ],
         "merge": {
@@ -326,32 +188,6 @@
         },
         "test": "angle_deqp_khr_gles3_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles3_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_khr_noctx_gles2_tests/",
-        "name": "angle_deqp_khr_noctx_gles2_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_noctx_gles2_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles2_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -406,33 +242,6 @@
         },
         "test": "angle_end2end_tests",
         "test_id_prefix": "ninja://src/tests:angle_end2end_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--test-timeout=300",
-          "--batch-size=10"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "module_name": "//src/tests:angle_gles1_conformance_tests/",
-        "name": "angle_gles1_conformance_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_gles1_conformance_tests",
-        "test_id_prefix": "ninja://src/tests:angle_gles1_conformance_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -487,33 +296,6 @@
     "gtest_tests": [
       {
         "args": [
-          "--max-processes=1",
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_egl_tests/",
-        "name": "angle_deqp_egl_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-14.4.1|Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_egl_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_egl_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
           "--use-angle=metal"
         ],
         "merge": {
@@ -536,32 +318,6 @@
         },
         "test": "angle_deqp_egl_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_egl_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_gles2_tests/",
-        "name": "angle_deqp_gles2_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-14.4.1|Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_gles2_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_gles2_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -614,33 +370,6 @@
         },
         "test": "angle_deqp_gles2_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_gles2_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_gles3_tests/",
-        "name": "angle_deqp_gles3_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-14.4.1|Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 2
-        },
-        "test": "angle_deqp_gles3_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_gles3_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -701,35 +430,6 @@
           "--surface-height=64",
           "--surface-width=64",
           "--deqp-base-seed=1",
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_khr_gles2_tests/",
-        "name": "angle_deqp_khr_gles2_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-14.4.1|Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_gles2_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles2_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--surface-height=64",
-          "--surface-width=64",
-          "--deqp-base-seed=1",
           "--use-angle=metal"
         ],
         "merge": {
@@ -759,35 +459,6 @@
           "--surface-height=64",
           "--surface-width=64",
           "--deqp-base-seed=1",
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_khr_gles3_tests/",
-        "name": "angle_deqp_khr_gles3_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-14.4.1|Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_gles3_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles3_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--surface-height=64",
-          "--surface-width=64",
-          "--deqp-base-seed=1",
           "--use-angle=metal"
         ],
         "merge": {
@@ -810,32 +481,6 @@
         },
         "test": "angle_deqp_khr_gles3_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles3_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=gl"
-        ],
-        "merge": {
-          "script": "//scripts/angle_deqp_test_merge.py"
-        },
-        "module_name": "//src/tests:angle_deqp_khr_noctx_gles2_tests/",
-        "name": "angle_deqp_khr_noctx_gles2_gl_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-14.4.1|Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_noctx_gles2_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles2_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -890,33 +535,6 @@
         },
         "test": "angle_end2end_tests",
         "test_id_prefix": "ninja://src/tests:angle_end2end_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--test-timeout=300",
-          "--batch-size=10"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "module_name": "//src/tests:angle_gles1_conformance_tests/",
-        "name": "angle_gles1_conformance_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "arm64",
-            "display_attached": "1",
-            "gpu": "apple:m2",
-            "hidpi": "1",
-            "mac_model": "Mac14,7",
-            "os": "Mac-14.4.1|Mac-26.5.1",
-            "pool": "chromium.tests.gpu"
-          },
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_gles1_conformance_tests",
-        "test_id_prefix": "ninja://src/tests:angle_gles1_conformance_tests/",
         "use_isolated_scripts_api": true
       },
       {

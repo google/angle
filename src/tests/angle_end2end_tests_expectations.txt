@@ -191,6 +191,7 @@
 42266866 WIN INTEL OPENGL : GLSLTest_ES3.LargeInterfaceBlockNestedArray/* = SKIP
 463961767 WIN INTEL OPENGL : EGLSurfacelessContextTest.Switcheroo/* = SKIP
 494350632 WIN INTEL OPENGL : MipmapTestES3.MismatchingLevelFormats/* = SKIP
+355607623 WIN INTEL OPENGL : WebGL2GLSLTest.BasicInfiniteLoop/* = SKIP
 // Some Intel Vulkan drivers report incorrect VkPhysicalDeviceLimits::maxSamplerLodBias on Windows.
 498165510 WIN INTEL VULKAN : QCOMTextureLodBiasTest.BiasClamping/* = SKIP
 
@@ -374,92 +375,11 @@
 
 // Mac
 
-42264556 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8Index/* = SKIP
-42264556 MAC AMD OPENGL : IndexBufferOffsetTestES3.UseAsUBOThenUpdateThenUInt8IndexSmallUpdates/* = SKIP
 42264591 MAC NVIDIA METAL : BlitFramebufferTest.OOBWrite/* = SKIP
-509308437 MAC OPENGL : Texture2DTestES3.PackPixels3DAnd2DArrayTypeConfusion/* = SKIP
-42264655 MAC OPENGL : GLSLTestLoops.*ContinueInSwitch/* = SKIP
-42264671 MAC OPENGL : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = SKIP
-42264755 MAC OPENGL : BufferDataTestES3.DrawWithNotCallingBufferData/* = SKIP
-42265067 MAC NVIDIA OPENGL : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB/* = SKIP
 // RGB5_A1 is not color-renderable on NVIDIA Mac, see https://crbug.com/676209.
-676209 MAC NVIDIA OPENGL : BlendPackedTest.RGB5_A1/* = SKIP
-676209 MAC NVIDIA OPENGL : SixteenBppTextureDitheringTestES3.RGBA5551/* = SKIP
-772651 MAC NVIDIA OPENGL : GLSLTest.VectorScalarDivideAndAddInLoop/* = SKIP
-772651 MAC NVIDIA OPENGL : GLSLTest.VectorScalarMultiplyAndAddInLoop/* = SKIP
 42264835 MAC NVIDIA METAL : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42264835 MAC NVIDIA METAL : BlobCacheTest.FragmentOutputLocationKey/* = SKIP
 40644820 MAC AMD METAL : GLSLTest_ES3.ValidIndexClampES300/* = SKIP
-42265067 MAC INTEL OPENGL : WebGLCompatibilityTest.L32FTextures/* = SKIP
-42265067 MAC INTEL OPENGL : WebGLCompatibilityTest.R32FTextures/* = SKIP
-42265067 MAC INTEL OPENGL : WebGLCompatibilityTest.RG32FTextures/* = SKIP
-42265067 MAC INTEL OPENGL : WebGLCompatibilityTest.RGB32FTextures/* = SKIP
-42265100 MAC OPENGL : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
-42265138 MAC AMD OPENGL : TransformFeedbackTest.TransformFeedbackQueryPausedDrawThenResume/* = SKIP
-42265138 MAC AMD OPENGL : TransformFeedbackTest.TransformFeedbackPausedDrawThenResume/* = SKIP
-40050013 MAC AMD OPENGL : Texture3DTestES3.PixelUnpackStateTex* = SKIP
-1296467 MAC OPENGL : VertexAttributeTestES3.EmptyBuffer/* = SKIP
-42265677 MAC INTEL OPENGL : CopyTextureTest.CopyToMipmap/* = SKIP
-42265680 MAC NVIDIA OPENGL : CopyTextureTest.CubeMap*/* = SKIP
-42265680 MAC NVIDIA OPENGL : CopyTextureTest.CopyToMipmap/* = SKIP
-42265680 MAC NVIDIA OPENGL : BlitFramebufferTest.NonZeroBaseDestinationStencil/* = SKIP
-42265680 MAC NVIDIA OPENGL : BlendIntegerTest.MRTUnsigned/* = SKIP
-42265680 MAC NVIDIA OPENGL : BlendIntegerTest.MRTSigned/* = SKIP
-42265680 MAC NVIDIA OPENGL : DrawBuffersTest.BlendWithGaps/* = SKIP
-42265767 MAC INTEL OPENGL : StateChangeTestES3.PolygonOffset/* = SKIP
-42265788 MAC NVIDIA OPENGL : DepthStencilFormatsTestES3.DrawWithLargeViewport/* = SKIP
-40644751 MAC NVIDIA OPENGL : BlitFramebufferTest.NonZeroBaseSource/* = SKIP
-40644751 MAC NVIDIA OPENGL : BlitFramebufferTest.NonZeroBaseSourceStencil/* = SKIP
-42263716 MAC NVIDIA OPENGL : CopyTextureTestES3.InvalidateCopyThenBlend/* = SKIP
-42263716 MAC NVIDIA OPENGL : CopyTextureTestES3.InvalidateBlitThenBlend3Layers/* = SKIP
-42265999 MAC NVIDIA OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
-41481166 MAC INTEL OPENGL : WebGL2CompatibilityTest.DrawWithInstancedAndNonInstancedAttributes/* = SKIP
-42266887 MAC NVIDIA OPENGL : UniformBufferTest.BufferBlockBindingChange/* = SKIP
-42266917 MAC NVIDIA OPENGL : StateChangeTestES3.UniformBlockBinding/* = SKIP
-42266941 MAC INTEL OPENGL : CopyTexImagePreRotationTest.NonZeroNonSquare/* = SKIP
-42267093 MAC AMD OPENGL : BlitFramebufferTest.FlippedBlits/* = SKIP
-346561003 MAC NVIDIA OPENGL : WebGL2UniformBufferTest.LargeArrayOfStructs/* = SKIP
-355607623 MAC INTEL OPENGL : WebGL2GLSLTest.BasicInfiniteLoop/* = SKIP
-355607623 WIN INTEL OPENGL : WebGL2GLSLTest.BasicInfiniteLoop/* = SKIP
-42263073 MAC AMD OPENGL : ClipDistanceAPPLETest.EachClipDistance/* = SKIP
-42263073 MAC AMD OPENGL : ClipCullDistanceTest.EachClipDistance/ES3_OpenGL__ANGLE = SKIP
-373506513 MAC OPENGL : BlitFramebufferTest.BlitMultisampledFramebufferToMRT/* = SKIP
-406566447 MAC AMD OPENGL : Texture3DTestES3.PixelUnpackParamsChangeTexImage/* = SKIP
-410601694 MAC NVIDIA OPENGL : Texture2DTestES3.SampleThenAddLevel0ThenSampleAgain/* = SKIP
-410601694 MAC AMD OPENGL : Texture2DTestES3.SampleThenAddLevel0ThenSampleAgain/* = SKIP
-409821658 MAC NVIDIA OPENGL : SRGBTextureTestES3.SRGBSkipEncodeAndDecodeInGenerateMipmap/ES3_OpenGL* = SKIP
-435683799 MAC OPENGL : CopyTexImageTest.MixedCubeMapFormats/* = SKIP
-448658625 MAC OPENGL : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
-448658630 MAC OPENGL : GLSLTestLoops.ForContinueInConstSwitch/* = SKIP
-448658630 MAC OPENGL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
-507484001 MAC OPENGL : GLSLTest_ES3.PruneEmptySwitch2/* = SKIP
-475587478 MAC OPENGL : VertexAttributeTestES3.MaxAttribsWithBuiltInAttribs/* = SKIP
-494270619 MAC OPENGL : BaseInstanceOverflowTest.BaseInstanceOverflow/* = SKIP
-504886981 MAC OPENGL : RobustResourceInitTestES3.PartiallyInitializedTextureWithNonZeroBase/* = SKIP
-504886981 MAC OPENGL : RobustResourceInitTestES3.ReadbackWithMippedTexture/* = SKIP
-497533569 MAC INTEL OPENGL : TransformFeedbackTest.ProgramSwitchDuringPauseAndResume/* = SKIP
-497533569 MAC INTEL OPENGL : TransformFeedbackTest.ProgramSwitchDuringPauseAndResumeWithBufferChange/* = SKIP
-513172707 MAC INTEL OPENGL : DrawBaseVertexBaseInstanceTest_ES3.InstanceIDDoesNotIncludeBaseInstance/* = SKIP
-519471062 MAC OPENGL : GLSLTest_ES3.SamplerInStructRHSOfCommaWithSideEffect/* = SKIP
-
-// BlitFramebufferTest.ScissoredMultisampleStencil failures
-42262159 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
-42262159 MAC AMD OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
-42265665 MAC NVIDIA OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
-273808966 MAC AMD OPENGL : BlitFramebufferTest.scissorDrawBlitAndDrawAgain/* = SKIP
-
-42266214 MAC APPLE OPENGL : ReadPixelsTextureNorm16PBOTest.R16_SNORM_RGBA/* = SKIP
-42266214 MAC APPLE OPENGL : ReadPixelsTextureNorm16PBOTest.RG16_SNORM_RGBA/* = SKIP
-42266214 MAC APPLE OPENGL : ReadPixelsTextureTest.LayerAttachment3DPBO/* = SKIP
-42266214 MAC APPLE OPENGL : ReadPixelsTextureTest.MipLayerAttachment3DPBO/* = SKIP
-42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetch/* = SKIP
-42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchArray/* = SKIP
-42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBSkipEncodeAndDecodeInGenerateMipmap/* = SKIP
-42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
-42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchInHelper/* = SKIP
-42266214 MAC APPLE OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStruct/* = SKIP
-42266214 MAC APPLE OPENGL : Texture2DTestES3.SampleThenAddLevel0ThenSampleAgain/* = SKIP
-42266214 MAC APPLE OPENGL : TextureUploadFormatTest_ES3.AllWithPBO/* = SKIP
 
 // Mac Metal
 
@@ -507,11 +427,8 @@
 464927523 METAL : GLSLTest_ES3_PackUnpackEmulation.PackUnorm2x16/* = SKIP
 42266214 MAC APPLE METAL : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
 494392011 MAC METAL : MipmapTestES3.MismatchingLevelFormats/* = SKIP
-494341324 MAC OPENGL : MipmapTestES3.MismatchingLevelFormats/* = SKIP
 496604559 MAC METAL : RobustResourceInitTestES3.DrawThenInvalidateThenVerifyDepthStencil/* = SKIP
 515709506 MAC METAL : DrawBaseVertexBaseInstanceTest_ES3.BaseInstanceSmallDivisorClientMemory/* = SKIP
-518849408 MAC OPENGL : GLSLTest.EmulateGLFragColorBroadcastInvariantFragColor/* = SKIP
-518849408 MAC OPENGL : GLSLTest.EmulateGLFragColorBroadcastInvariantFragColorUnused/* = SKIP
 524008572 MAC METAL : VertexAttributeTestES3.LargeAttribPointerOffsetNoCrash/* = SKIP
 
 // The workaround is not intended to be enabled in this configuration so
@@ -1491,15 +1408,6 @@
 365066518 D3D11 : ShadowSamplerFunctionTextureCubeTest.Test/*__TextureBias_Mipmapped = SKIP
 365066518 D3D11 : ShadowSamplerFunctionTextureCubeTest.Test/*__TextureGrad_Mipmapped = SKIP
 
-// Intel macOS OpenGL drivers incorrectly apply explicit derivatives to shadow samplers
-365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DTest.Test/*__TextureGrad_* = SKIP
-365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DTest.Test/*__TextureGradOffset_* = SKIP
-365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjGrad_* = SKIP
-365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjGradOffset_* = SKIP
-365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGrad_* = SKIP
-365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGradOffset_* = SKIP
-365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTextureCubeTest.Test/*__TextureGrad_* = SKIP
-
 // Some drivers incorrectly apply LOD and bias options when an offset is used
 365066518 PIXEL4ORXL GLES : ShadowSamplerFunctionTexture2DTest.Test/*__TextureLodOffset_Mipmapped = SKIP
 365066518 PIXEL4ORXL GLES : ShadowSamplerFunctionTexture2DTest.Test/*__TextureOffsetBias_Mipmapped = SKIP
@@ -1545,17 +1453,6 @@
 // Metal internal compiler error
 42265076 MAC AMD METAL : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
 
-// GLES1 failures introduced during ubershader optimization
-42265148 MAC INTEL OPENGL : BootAnimationTest.DefaultBootAnimation/* = SKIP
-42265148 MAC INTEL OPENGL : DrawTextureTest.Basic/* = SKIP
-42265148 MAC INTEL OPENGL : DrawTextureTest.VertexAttributesNoCrash/* = SKIP
-42265148 MAC INTEL OPENGL : DrawTextureTest.ColorArrayNotUsed/* = SKIP
-42265148 MAC INTEL OPENGL : DrawTextureTest.CorrectNdcForOddViewportDimensions/* = SKIP
-
-371987004 MAC APPLE OPENGL : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
-371987004 MAC INTEL OPENGL : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
-371987004 MAC NVIDIA OPENGL : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
-
 // Indexed indirect draw offset bug
 42265912 D3D11 : DrawBaseInstanceTest.DrawElementsInstancedBaseInstance/ES3_D3D11_*__DynamicDraw* = SKIP
 
@@ -1587,10 +1484,6 @@
 42261560 ANDROID GLES : RobustBufferAccessBehaviorTest.NoBufferData/* = SKIP
 42261560 ANDROID GLES : RobustBufferAccessBehaviorTest.EmptyBuffer/* = SKIP
 42261776 AMD OPENGL : RobustBufferAccessBehaviorTest.EmptyBuffer/* = SKIP
-
-// Missing ETC2 support on macOS OpenGL
-42262497 MAC OPENGL : Texture2DTestES3RobustInit.TextureCOMPRESSEDRGB8A1ETC2/* = SKIP
-42262497 MAC OPENGL : Texture2DTestES3RobustInit.TextureCOMPRESSEDSRGB8A1ETC2/* = SKIP
 
 // Missing Vulkan image initialization
 42265418 VULKAN : Texture2DTestES3RobustInit.TextureCOMPRESSEDRGB8A1ETC2/* = SKIP
@@ -1630,13 +1523,8 @@
 42266366 WIN SWIFTSHADER : InstancingTestES3.LargeDivisor/* = SKIP
 42266366 LINUX ASAN SWIFTSHADER : InstancingTestES3.LargeDivisor/* = SKIP
 
-// Timeout with SwiftShader and MAC OpenGL due to large workloads
+// Timeout with SwiftShader due to large workloads
 42265860 SWIFTSHADER : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
-42265860 MAC OPENGL : Texture2DTest.ManySupersedingTextureUpdates/* = SKIP
-
-42266861 MAC OPENGL : GLSLTest_ES3.LotsOfFieldsInStruct/* = SKIP
-42266861 MAC OPENGL : GLSLTest_ES3.LargeInterfaceBlockArray/* = SKIP
-42266861 MAC OPENGL : GLSLTest_ES3.LargeInterfaceBlockNestedArray/* = SKIP
 
 // GL, GLES run into issues with cleanup
 42265964 WIN OpenGL : EGLMultiContextTest.ReuseUnterminatedDisplay/* = SKIP
@@ -1734,7 +1622,6 @@
 352584420 GLES : ReadPixelsTextureNorm16PBOTest.R16_RGBA/* = SKIP
 352584420 GLES : ReadPixelsTextureNorm16PBOTest.RG16_RGBA/* = SKIP
 
-354109768 MAC AMD OPENGL : ReadPixelsPBOTest.SmallRowLength/* = SKIP
 358407353 LINUX INTEL OPENGL : ReadPixelsPBOTest.SmallRowLength/* = SKIP
 
 // D3D needs a workaround to follow OpenGL rules
@@ -1763,9 +1650,6 @@
 
 // gl_PointCoord origin is flipped for non-default framebuffers
 40096885 WIN INTEL OPENGL : ClipControlTest.OriginPointCoord/* = SKIP
-
-// Sample coverage is ignored when replacing a single-sample attachment with a multi-sample one
-42266560 MAC INTEL OPENGL : StateChangeTestES3.SampleCoverageFramebufferAttachmentSwitch/* = SKIP
 
 // gl_NumSamples value is not synced with FBO state updates until the program is re-linked
 40096888 WIN INTEL OPENGL : SampleVariablesTest.NumSamples/* = SKIP
@@ -2731,7 +2615,6 @@
 40644776 WIN INTEL VULKAN     : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3* = SKIP
 40644776 WIN NVIDIA VULKAN    : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3* = SKIP
 40644776 WIN INTEL OPENGL     : SRGBTextureTestES3.SRGBDecodeTexelFetch* = SKIP
-40644776 MAC NVIDIA OPENGL    : SRGBTextureTestES3.SRGBDecodeTexelFetch* = SKIP
 40644776 ANDROID PIXEL6       : ImageTest.SourceRenderbufferTargetTexture* = SKIP
 40644776 ANDROID PIXEL6       : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3* = SKIP
 40644776 ANDROID PIXEL6       : ImageTestES3.SourceAHBTarget2DGenerateMipmap* = SKIP
@@ -2750,9 +2633,6 @@
 // WebGPU error BufferOffset (5242862) is not a multiple of 4.
 496503799 WGPU : BufferDataTest.UnalignedVertexAttribPointer/* = SKIP
 
-// Fails on Mac & OpenGL & NVIDIA
-406807990 MAC NVIDIA OPENGL : TextureUploadFormatTest_ES3.AllWithPBO/* = SKIP
-
 405286904 SWIFTSHADER : TextureBufferTestES31.UseAsXFBThenAsTextureBuffer/* = SKIP
 
 // EGLSurfaceTest.Resize* failures
@@ -2769,8 +2649,6 @@
 42264022 IOS : EGLSurfaceTest.ResizeAndBlitFramebufferANGLE/* = SKIP
 373659619 MAC METAL : EGLSurfaceTest.ResizeAfterSwap/* = SKIP
 373659619 MAC METAL : EGLSurfaceTest.ResizeAndBlitFramebufferANGLE/* = SKIP
-373659619 MAC OPENGL : EGLSurfaceTest.ResizeBeforeDrawPostSizeQuery/* = SKIP
-373659619 MAC OPENGL : EGLSurfaceTest.ResizeAfterDraw/* = SKIP
 373659619 MAC : EGLSurfaceTest.ResizeBeforeDraw/* = SKIP
 373659619 MAC : EGLSurfaceTest.ResizeLargeWindow/* = SKIP
 373659619 MAC : EGLSurfaceTest.ResizeBeforeMakeCurrent/* = SKIP
