@@ -53,7 +53,7 @@ SYNCED_VARIABLES = {
     # TODO(crbug.com/528413044): Sync third_party/android_toolchain/ndk
     # directly once `gclient setdeps` works properly with the specified
     # version.
-    'android_ndk_version',
+    'android_ndk_version': None,
 }
 
 # DEPS entries which have dep_type = cipd. In the Chromium DEPS file, these
@@ -551,6 +551,7 @@ def _get_changed_variables(angle_deps: dict, chromium_deps: dict) -> list[Change
     """
     changed_variables = []
     for angle_var, chromium_var in SYNCED_VARIABLES.items():
+        chromium_var = chromium_var or angle_var
         angle_value = angle_deps['vars'].get(angle_var)
         chromium_value = chromium_deps['vars'].get(chromium_var)
         if not angle_value:
