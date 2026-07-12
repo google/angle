@@ -24,8 +24,12 @@
 //     validate_image_types()
 //   - Variables are Pointers: validate_all_alive_variables_are_pointers()
 //   - No pointer->pointer type: validate_no_pointer_to_pointer_type()
-//   - Validate pointer types for instruction operands and results
+//   - Arguments of OpCode that must be pointer type is indeed a pointer:
+//     validate_pointer_types_for_operands()
+//   - Validate pointer types for instruction operands and results:
 //     validate_pointer_types_for_operands(), validate_pointer_types_for_result()
+//   - Block inputs are not pointers (not supported by the `astify` pass):
+//     validate_merge_block_input_prerequisites()
 //
 // Control flow:
 //   - Branches must have the appropriate targets set (merge, trueblock for if, etc); every block
@@ -54,7 +58,6 @@
 //   - Precision is not applied to types that don't are not applicable.  It _is_ applied to types
 //     that are applicable (including uniforms and samplers for example).  Needs to work to make
 //     sure precision is always assigned.
-//   - Arguments of OpCode that must be pointer type is indeed a pointer
 //   - Loop blocks ends in the appropriate instructions.
 //   - Do blocks end in DoLoop (unless already terminated by something else, like Return)
 //   - Interface variables with NameSource::Internal are unique.
@@ -65,7 +68,6 @@
 //   - blocks, those should always be Temporary.
 //   - No identity swizzles.
 //   - Type matches?
-//   - Block inputs are not pointers.  AST-ifier does not handle that.
 //   - Whatever else is in the AST validation currently.
 //   - Validate built-ins that accept an out or inout parameter, that the corresponding parameter is
 //     passed a Pointer at the call site.  For that matter, do the same for user function calls too.
@@ -1635,11 +1637,19 @@ impl<'a> Validator<'a> {
         block: &Block,
         block_kind: traverser::BlockKind,
     ) {
-        // If the current block has any inputs, the corresponding instruction must be MergeInput
-        // OpCode
         block.input.inspect(|input| {
+            // If the current block has any inputs, the corresponding instruction must be MergeInput
+            // OpCode
             if !matches!(self.ir.meta.get_instruction(input.id).op, OpCode::MergeInput) {
                 self.on_error(format_args!("Block inputs must have MergeInput OpCode"));
+            }
+            // Block input must not be pointer, astify uses this input register as the result of
+            // generated Load instruction
+            if self.ir.meta.get_type(input.type_id).is_pointer() {
+                self.on_error(format_args!(
+                    "invalid {:?} block, input {:?} must not be a pointer",
+                    block_kind, input
+                ));
             }
         });
         if block.merge_block.as_ref().and_then(|merge_block| merge_block.input).is_some() {
