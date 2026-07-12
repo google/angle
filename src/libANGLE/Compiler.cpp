@@ -112,9 +112,6 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.EXT_multisampled_render_to_texture  = extensions.multisampledRenderToTextureEXT;
     mResources.EXT_multisampled_render_to_texture2 = extensions.multisampledRenderToTexture2EXT;
 
-    // WEBGL_video_texture
-    mResources.WEBGL_video_texture = extensions.videoTextureWEBGL;
-
     // OES_texture_cube_map_array
     mResources.OES_texture_cube_map_array = extensions.textureCubeMapArrayOES;
     mResources.EXT_texture_cube_map_array = extensions.textureCubeMapArrayEXT;

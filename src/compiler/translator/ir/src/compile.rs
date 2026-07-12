@@ -90,7 +90,6 @@ mod ffi {
         OES_texture_storage_multisample_2d_array: bool,
         OVR_multiview: bool,
         OVR_multiview2: bool,
-        WEBGL_video_texture: bool,
     }
 
     // Limits corresponding to ShBuiltInResources

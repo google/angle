@@ -884,16 +884,6 @@ void Context::initializeDefaultResources()
         mZeroTextures[TextureType::External].set(this, zeroTextureExternal);
     }
 
-    // This may change native TEXTURE_2D, TEXTURE_EXTERNAL_OES and TEXTURE_RECTANGLE,
-    // binding states. Ensure state manager is aware of this when binding
-    // this texture type.
-    if (mSupportedExtensions.videoTextureWEBGL)
-    {
-        Texture *zeroTextureVideoImage =
-            new Texture(mImplementation.get(), {0}, TextureType::VideoImage);
-        mZeroTextures[TextureType::VideoImage].set(this, zeroTextureVideoImage);
-    }
-
     mState.initializeZeroTextures(this, mZeroTextures);
 
     ANGLE_CONTEXT_TRY(mImplementation->initialize(mDisplay->getImageLoadContext()));
@@ -10862,7 +10852,6 @@ void StateCache::updateValidBindTextureTypes(Context *context)
         {TextureType::Rectangle, exts.textureRectangleANGLE},
         {TextureType::CubeMap, true},
         {TextureType::CubeMapArray, isGLES32 || exts.textureCubeMapArrayAny()},
-        {TextureType::VideoImage, exts.videoTextureWEBGL},
         {TextureType::Buffer, isGLES32 || exts.textureBufferAny()},
     }};
 }

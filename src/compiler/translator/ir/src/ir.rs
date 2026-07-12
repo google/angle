@@ -1986,8 +1986,6 @@ pub enum ImageDimension {
     External,
     // For GL_EXT_YUV_target
     ExternalY2Y,
-    // For WebGL_video_texture
-    Video,
     // For ANGLE_shader_pixel_local_storage
     PixelLocal,
     // For subpass inputs

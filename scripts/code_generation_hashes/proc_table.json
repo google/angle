@@ -6,7 +6,7 @@
   "scripts/gl_angle_ext.xml":
     "b05697989dfe0eb4d714d537b80e8295",
   "scripts/registry_xml.py":
-    "706c3cfb4be61184c5be065523548878",
+    "d559cac62f6ab5dcfdf703cc6fb6f3f1",
   "src/libGLESv2/egl_stubs_getprocaddress_autogen.cpp":
     "eab902d33ab4b5dd434f3fbde973358e",
   "src/libGLESv2/proc_table_cl_autogen.cpp":

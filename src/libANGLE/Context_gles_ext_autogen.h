@@ -382,7 +382,6 @@
     /* GL_QCOM_tiled_rendering */                                                                  \
     void endTiling(GLbitfield preserveMask);                                                       \
     void startTiling(GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield preserveMask);    \
-    /* GL_WEBGL_video_texture */                                                                   \
                                                                                                    \
     /* ANGLE Extensions */                                                                         \
                                                                                                    \

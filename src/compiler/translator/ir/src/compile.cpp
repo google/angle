@@ -114,7 +114,6 @@ void SetEnabledExtensions(const TExtensionBehavior &behavior, ffi::ExtensionsEna
         IsExtensionEnabled(behavior, TExtension::OES_texture_storage_multisample_2d_array);
     extensions->OVR_multiview       = IsExtensionEnabled(behavior, TExtension::OVR_multiview);
     extensions->OVR_multiview2      = IsExtensionEnabled(behavior, TExtension::OVR_multiview2);
-    extensions->WEBGL_video_texture = IsExtensionEnabled(behavior, TExtension::WEBGL_video_texture);
 }
 
 void SetLimits(const ShBuiltInResources &resources,

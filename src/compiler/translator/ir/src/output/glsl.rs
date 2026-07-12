@@ -128,7 +128,6 @@ impl Generator {
             ImageDimension::Buffer => "Buffer",
             ImageDimension::External => "ExternalOES",
             ImageDimension::ExternalY2Y => "External2DY2YEXT",
-            ImageDimension::Video => "VideoWEBGL",
             ImageDimension::PixelLocal => {
                 base_name = "pixelLocalANGLE";
                 ""

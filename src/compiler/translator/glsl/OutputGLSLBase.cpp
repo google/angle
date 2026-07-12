@@ -1184,13 +1184,6 @@ void TOutputGLSLBase::visitPreprocessorDirective(TIntermPreprocessorDirective *n
 
 ImmutableString TOutputGLSLBase::getTypeName(const TType &type)
 {
-    if (type.getBasicType() == EbtSamplerVideoWEBGL)
-    {
-        // TODO(http://anglebug.com/42262534): translate SamplerVideoWEBGL into different token
-        // when necessary (e.g. on Android devices)
-        return ImmutableString("sampler2D");
-    }
-
     return GetTypeName(type, mUserVariablePrefix, mHashFunction, &mNameMap);
 }
 

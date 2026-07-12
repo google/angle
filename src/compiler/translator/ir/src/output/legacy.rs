@@ -1388,7 +1388,6 @@ impl<'options> Generator<'options> {
             },
             ImageDimension::External => ffi::ASTBasicType::SamplerExternalOES,
             ImageDimension::ExternalY2Y => ffi::ASTBasicType::SamplerExternal2DY2YEXT,
-            ImageDimension::Video => ffi::ASTBasicType::SamplerVideoWEBGL,
             ImageDimension::PixelLocal => match image_basic_type {
                 ImageBasicType::Float => ffi::ASTBasicType::PixelLocalANGLE,
                 ImageBasicType::Int => ffi::ASTBasicType::IPixelLocalANGLE,

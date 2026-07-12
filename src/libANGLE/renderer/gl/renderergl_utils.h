@@ -144,8 +144,6 @@ GLenum GetTextureBindingTarget(gl::TextureType textureType);
 GLenum GetTextureBindingTarget(gl::TextureTarget textureTarget);
 GLenum GetBufferBindingQuery(gl::BufferBinding bufferBinding);
 std::string GetBufferBindingString(gl::BufferBinding bufferBinding);
-gl::TextureType GetNativeTextureType(gl::TextureType type);
-gl::TextureTarget GetNativeTextureTarget(gl::TextureTarget target);
 }  // namespace nativegl
 
 bool CanMapBufferForRead(const FunctionsGL *functions);

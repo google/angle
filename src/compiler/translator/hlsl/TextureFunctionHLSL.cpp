@@ -319,7 +319,6 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
             case EbtSampler2DShadow:
             case EbtSampler2DArrayShadow:
             case EbtSamplerExternalOES:
-            case EbtSamplerVideoWEBGL:
                 out << ", float2 ddx, float2 ddy";
                 break;
             case EbtSampler3D:
@@ -390,7 +389,6 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
             case EbtSampler2DShadow:
             case EbtSampler2DArrayShadow:
             case EbtSamplerExternalOES:
-            case EbtSamplerVideoWEBGL:
                 out << ", int2 offset";
                 break;
             default:
@@ -1206,7 +1204,6 @@ const char *TextureFunctionHLSL::TextureFunction::getReturnType() const
             case EbtSampler2DMS:
             case EbtISampler2DMS:
             case EbtUSampler2DMS:
-            case EbtSamplerVideoWEBGL:
                 return "int2";
             case EbtSampler3D:
             case EbtISampler3D:
@@ -1238,7 +1235,6 @@ const char *TextureFunctionHLSL::TextureFunction::getReturnType() const
             case EbtSamplerCube:
             case EbtSampler2DArray:
             case EbtSamplerExternalOES:
-            case EbtSamplerVideoWEBGL:
             case EbtSamplerBuffer:
                 return "float4";
             case EbtISampler2D:
@@ -1379,10 +1375,6 @@ ImmutableString TextureFunctionHLSL::useTextureFunction(const ImmutableString &n
     {
         textureFunction.method = TextureFunction::GATHER;
         textureFunction.offset = true;
-    }
-    else if (name == "textureVideoWEBGL")
-    {
-        textureFunction.method = TextureFunction::IMPLICIT;
     }
     else
         UNREACHABLE();

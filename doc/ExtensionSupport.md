@@ -215,7 +215,6 @@ using data from registry_xml.py and gl.xml.
 | [GL_OES_vertex_array_object](https://khronos.org/registry/OpenGL/extensions/OES/OES_vertex_array_object.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_vertex_half_float](https://khronos.org/registry/OpenGL/extensions/OES/OES_vertex_half_float.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_vertex_type_10_10_10_2](https://khronos.org/registry/OpenGL/extensions/OES/OES_vertex_type_10_10_10_2.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_WEBGL_video_texture](https://khronos.org/registry/OpenGL/extensions/WEBGL/WEBGL_video_texture.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_YUV_target](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_YUV_target.txt) |  |  |  |  |  |  |  |
 
 ## ANGLE unofficial extension support

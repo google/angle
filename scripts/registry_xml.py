@@ -249,7 +249,6 @@ gles_requestable_extensions = [
     "GL_QCOM_texture_foveated",
     "GL_QCOM_texture_lod_bias",
     "GL_QCOM_tiled_rendering",
-    "GL_WEBGL_video_texture",
 ]
 
 angle_es_only_extensions = [

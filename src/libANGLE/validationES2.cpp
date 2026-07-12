@@ -236,8 +236,6 @@ bool IsValidCopyTextureSourceTarget(const Context *context, TextureType type)
             return context->getExtensions().textureRectangleANGLE;
         case TextureType::External:
             return context->getExtensions().EGLImageExternalOES;
-        case TextureType::VideoImage:
-            return context->getExtensions().videoTextureWEBGL;
         default:
             return false;
     }
@@ -948,7 +946,6 @@ bool ValidateES2TexImageParameters(const Context *context,
     switch (texType)
     {
         case TextureType::_2D:
-        case TextureType::VideoImage:
             if (width > (caps.max2DTextureSize >> level) ||
                 height > (caps.max2DTextureSize >> level))
             {
@@ -6211,11 +6208,6 @@ void RecordBindTextureTypeError(const Context *context,
             ASSERT(!context->getExtensions().EGLImageExternalOES &&
                    !context->getExtensions().EGLStreamConsumerExternalNV);
             ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kExternalTextureNotSupported);
-            break;
-
-        case TextureType::VideoImage:
-            ASSERT(!context->getExtensions().videoTextureWEBGL);
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kExtensionNotEnabled);
             break;
 
         case TextureType::Buffer:

@@ -225,7 +225,6 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_vertex_array_object"] = enableableExtension(&Extensions::vertexArrayObjectOES);
         map["GL_OES_vertex_half_float"] = enableableExtension(&Extensions::vertexHalfFloatOES);
         map["GL_OES_vertex_type_10_10_10_2"] = enableableExtension(&Extensions::vertexType1010102OES);
-        map["GL_WEBGL_video_texture"] = enableableExtension(&Extensions::videoTextureWEBGL);
         map["GL_EXT_YUV_target"] = enableableExtension(&Extensions::YUVTargetEXT);
 
         // ANGLE unofficial extension strings

@@ -3532,7 +3532,6 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
         case EOpTexture3D:
         case EOpShadow2DEXT:
         case EOpTexture2DRect:
-        case EOpTextureVideoWEBGL:
         case EOpTexture:
 
         case EOpTexture2DBias:

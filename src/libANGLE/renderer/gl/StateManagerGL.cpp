@@ -474,10 +474,9 @@ void StateManagerGL::activeTexture(size_t unit)
 
 void StateManagerGL::bindTexture(gl::TextureType type, GLuint texture)
 {
-    gl::TextureType nativeType = nativegl::GetNativeTextureType(type);
-    if (mState.textures[nativeType][mState.textureUnitIndex] != texture)
+    if (mState.textures[type][mState.textureUnitIndex] != texture)
     {
-        mState.textures[nativeType][mState.textureUnitIndex] = texture;
+        mState.textures[type][mState.textureUnitIndex] = texture;
         mFunctions->bindTexture(nativegl::GetTextureBindingTarget(type), texture);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
     }

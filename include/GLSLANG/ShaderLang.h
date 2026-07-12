@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 413
+#define ANGLE_SH_VERSION 414
 
 enum ShShaderSpec
 {
@@ -349,8 +349,7 @@ struct ShCompileOptions
     // Workaround for a driver bug with nested switches.
     uint64_t wrapSwitchInIfTrue : 1;
 
-    // This flag controls how to translate WEBGL_video_texture sampling function.
-    uint64_t takeVideoTextureAsExternalOES : 1;
+    uint64_t unused4 : 1;
 
     // This flag works around a inconsistent behavior in Mac AMD driver where gl_VertexID doesn't
     // include base vertex value. It replaces gl_VertexID with (gl_VertexID + angle_BaseVertex) when
@@ -549,7 +548,6 @@ struct ShBuiltInResources
     int ANGLE_multi_draw;
     // TODO(http://anglebug.com/40096583) remove after chromium side removal to pass compilation
     int ANGLE_base_vertex_base_instance;
-    int WEBGL_video_texture;
     int APPLE_clip_distance;
     int OES_texture_cube_map_array;
     int EXT_texture_cube_map_array;

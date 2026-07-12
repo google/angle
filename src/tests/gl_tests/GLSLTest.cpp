@@ -20947,7 +20947,6 @@ TEST_P(GLSLTest, ESSL1ExtensionMacros)
         "GL_OES_EGL_image_external",
         "GL_OES_standard_derivatives",
         "GL_OES_texture_3D",
-        "GL_WEBGL_video_texture",
     });
     fs += UnexpectedExtensionMacros({
         "GL_ANDROID_extension_pack_es31a",
@@ -21016,7 +21015,6 @@ TEST_P(GLSLTest_ES3, ESSL3ExtensionMacros)
         "GL_OES_texture_storage_multisample_2d_array",
         "GL_OVR_multiview",
         "GL_OVR_multiview2",
-        "GL_WEBGL_video_texture",
     });
     fs += UnexpectedExtensionMacros({
         "GL_ANDROID_extension_pack_es31a",
@@ -21090,7 +21088,6 @@ TEST_P(GLSLTest_ES31, ESSL31ExtensionMacros)
         "GL_OES_texture_storage_multisample_2d_array",
         "GL_OVR_multiview",
         "GL_OVR_multiview2",
-        "GL_WEBGL_video_texture",
     });
     fs += UnexpectedExtensionMacros({
         "GL_EXT_draw_buffers",

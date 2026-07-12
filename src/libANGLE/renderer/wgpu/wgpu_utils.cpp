@@ -820,7 +820,6 @@ WGPUTextureDimension GetWgpuTextureDimension(gl::TextureType glTextureType)
         case gl::TextureType::Buffer:
             return WGPUTextureDimension_2D;
         case gl::TextureType::_3D:
-        case gl::TextureType::VideoImage:
             return WGPUTextureDimension_3D;
         default:
             UNREACHABLE();

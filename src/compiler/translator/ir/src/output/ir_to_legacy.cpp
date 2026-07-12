@@ -1486,10 +1486,6 @@ TIntermTyped *built_in_texture(TCompiler *compiler,
             case EbtSampler2DShadow:
                 builtIn = isProj ? "shadow2DProjEXT" : "shadow2DEXT";
                 break;
-            case EbtSamplerVideoWEBGL:
-                ASSERT(!isProj);
-                builtIn = "textureVideoWEBGL";
-                break;
             default:
                 ASSERT(false);
         }

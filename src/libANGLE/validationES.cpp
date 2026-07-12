@@ -761,9 +761,6 @@ bool ValidTextureTarget(const Context *context, TextureType type)
             return context->getClientVersion() >= ES_3_2 ||
                    context->getExtensions().textureCubeMapArrayAny();
 
-        case TextureType::VideoImage:
-            return context->getExtensions().videoTextureWEBGL;
-
         case TextureType::Buffer:
             return context->getClientVersion() >= ES_3_2 ||
                    context->getExtensions().textureBufferAny();
@@ -839,8 +836,6 @@ bool ValidTexture2DDestinationTarget(const Context *context, TextureTarget targe
             return true;
         case TextureTarget::Rectangle:
             return context->getExtensions().textureRectangleANGLE;
-        case TextureTarget::VideoImage:
-            return context->getExtensions().videoTextureWEBGL;
         default:
             return false;
     }
@@ -1099,7 +1094,6 @@ bool ValidMipLevel(const Context *context, TextureType type, GLint level)
 
         case TextureType::External:
         case TextureType::Rectangle:
-        case TextureType::VideoImage:
         case TextureType::Buffer:
         case TextureType::_2DMultisample:
         case TextureType::_2DMultisampleArray:
@@ -7127,12 +7121,6 @@ bool ValidateTexParameterBase(const Context *context,
                 !(pname == GL_TEXTURE_WRAP_R && context->getExtensions().texture3DOES))
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kES3Required);
-                return false;
-            }
-            if (targetPacked == TextureType::VideoImage &&
-                !context->getExtensions().videoTextureWEBGL)
-            {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
                 return false;
             }
             break;

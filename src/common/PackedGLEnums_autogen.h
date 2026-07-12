@@ -771,11 +771,10 @@ enum class TextureTarget : uint8_t
     CubeMapPositiveZ    = 11,
     CubeMapNegativeZ    = 12,
     CubeMapArray        = 13,
-    VideoImage          = 14,
-    Buffer              = 15,
+    Buffer              = 14,
 
-    InvalidEnum = 16,
-    EnumCount   = 16,
+    InvalidEnum = 15,
+    EnumCount   = 15,
 };
 
 template <>
@@ -794,11 +793,10 @@ enum class TextureType : uint8_t
     Rectangle           = 6,
     CubeMap             = 7,
     CubeMapArray        = 8,
-    VideoImage          = 9,
-    Buffer              = 10,
+    Buffer              = 9,
 
-    InvalidEnum = 11,
-    EnumCount   = 11,
+    InvalidEnum = 10,
+    EnumCount   = 10,
 };
 
 template <>

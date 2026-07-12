@@ -593,7 +593,6 @@ fn to_gl_type(
                         },
                         ImageDimension::External => (gl::SAMPLER_EXTERNAL_OES, gl::FLOAT),
                         ImageDimension::ExternalY2Y => (gl::SAMPLER_EXTERNAL_2D_Y2Y_EXT, gl::FLOAT),
-                        ImageDimension::Video => (gl::SAMPLER_VIDEO_IMAGE_WEBGL, gl::FLOAT),
                         ImageDimension::PixelLocal => panic!(
                             "Internal error: Pixel local storage should be transformed already"
                         ),

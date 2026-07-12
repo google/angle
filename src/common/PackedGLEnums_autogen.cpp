@@ -3105,8 +3105,6 @@ TextureTarget FromGLenum<TextureTarget>(GLenum from)
             return TextureTarget::CubeMapNegativeZ;
         case GL_TEXTURE_CUBE_MAP_ARRAY:
             return TextureTarget::CubeMapArray;
-        case GL_TEXTURE_VIDEO_IMAGE_WEBGL:
-            return TextureTarget::VideoImage;
         case GL_TEXTURE_BUFFER:
             return TextureTarget::Buffer;
         default:
@@ -3146,8 +3144,6 @@ GLenum ToGLenum(TextureTarget from)
             return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
         case TextureTarget::CubeMapArray:
             return GL_TEXTURE_CUBE_MAP_ARRAY;
-        case TextureTarget::VideoImage:
-            return GL_TEXTURE_VIDEO_IMAGE_WEBGL;
         case TextureTarget::Buffer:
             return GL_TEXTURE_BUFFER;
         default:
@@ -3202,9 +3198,6 @@ std::ostream &operator<<(std::ostream &os, TextureTarget value)
         case TextureTarget::CubeMapArray:
             os << "GL_TEXTURE_CUBE_MAP_ARRAY";
             break;
-        case TextureTarget::VideoImage:
-            os << "GL_TEXTURE_VIDEO_IMAGE_WEBGL";
-            break;
         case TextureTarget::Buffer:
             os << "GL_TEXTURE_BUFFER";
             break;
@@ -3238,8 +3231,6 @@ TextureType FromGLenum<TextureType>(GLenum from)
             return TextureType::CubeMap;
         case GL_TEXTURE_CUBE_MAP_ARRAY:
             return TextureType::CubeMapArray;
-        case GL_TEXTURE_VIDEO_IMAGE_WEBGL:
-            return TextureType::VideoImage;
         case GL_TEXTURE_BUFFER:
             return TextureType::Buffer;
         default:
@@ -3269,8 +3260,6 @@ GLenum ToGLenum(TextureType from)
             return GL_TEXTURE_CUBE_MAP;
         case TextureType::CubeMapArray:
             return GL_TEXTURE_CUBE_MAP_ARRAY;
-        case TextureType::VideoImage:
-            return GL_TEXTURE_VIDEO_IMAGE_WEBGL;
         case TextureType::Buffer:
             return GL_TEXTURE_BUFFER;
         default:
@@ -3309,9 +3298,6 @@ std::ostream &operator<<(std::ostream &os, TextureType value)
             break;
         case TextureType::CubeMapArray:
             os << "GL_TEXTURE_CUBE_MAP_ARRAY";
-            break;
-        case TextureType::VideoImage:
-            os << "GL_TEXTURE_VIDEO_IMAGE_WEBGL";
             break;
         case TextureType::Buffer:
             os << "GL_TEXTURE_BUFFER";

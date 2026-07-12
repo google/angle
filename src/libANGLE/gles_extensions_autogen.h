@@ -660,9 +660,6 @@ struct Extensions
     // GL_OES_vertex_type_10_10_10_2
     bool vertexType1010102OES = false;
 
-    // GL_WEBGL_video_texture
-    bool videoTextureWEBGL = false;
-
     // GL_EXT_YUV_target
     bool YUVTargetEXT = false;
 
