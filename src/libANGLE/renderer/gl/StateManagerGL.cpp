@@ -1366,10 +1366,9 @@ void StateManagerGL::setBlendFuncs(const gl::BlendStateExt &blendState)
                 ToGLenum(blendState.getDstAlphaIndexed(drawBufferIndex)));
         }
     }
-    mState.blendState.setSrcColorBits(blendState.getSrcColorBits());
-    mState.blendState.setDstColorBits(blendState.getDstColorBits());
-    mState.blendState.setSrcAlphaBits(blendState.getSrcAlphaBits());
-    mState.blendState.setDstAlphaBits(blendState.getDstAlphaBits());
+    mState.blendState.setFactorBits(blendState.getSrcColorBits(), blendState.getDstColorBits(),
+                                    blendState.getSrcAlphaBits(), blendState.getDstAlphaBits(),
+                                    blendState.getUsesExtendedBlendFactorMask());
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_FUNCS);
 }
 
@@ -1462,7 +1461,8 @@ void StateManagerGL::setBlendEquations(const gl::BlendStateExt &blendState)
             }
         }
     }
-    mState.blendState.setEquationColorBits(blendState.getEquationColorBits());
+    mState.blendState.setEquationColorBits(blendState.getEquationColorBits(),
+                                           blendState.getUsesAdvancedBlendEquationMask());
     mState.blendState.setEquationAlphaBits(blendState.getEquationAlphaBits());
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_COLOR_MASK);
 }
