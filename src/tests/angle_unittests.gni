@@ -95,6 +95,7 @@ angle_unittests_compiler_tests_sources = [
   "compiler_tests/FloatLex_test.cpp",
   "compiler_tests/GeometryShader_test.cpp",
   "compiler_tests/GlFragDataNotModified_test.cpp",
+  "compiler_tests/HashNames_test.cpp",
   "compiler_tests/ImmutableString_test.cpp",
   "compiler_tests/IntermNode_test.cpp",
   "compiler_tests/NV_draw_buffers_test.cpp",
