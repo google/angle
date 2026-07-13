@@ -516,7 +516,7 @@ const std::map<std::string, std::string> *GetNameHashingMap(const ShHandle handl
 {
     TCompiler *compiler = GetCompilerFromHandle(handle);
     ASSERT(compiler);
-    return &(compiler->getNameMap());
+    return &(compiler->getNameMap().getInternalMap());
 }
 
 const std::vector<ShaderVariable> *GetUniforms(const ShHandle handle)
