@@ -1877,23 +1877,28 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
     }
 
     // Check the cache of validated types first.
+    size_t variableSize   = 0;
     auto preValidatedIter = mValidatedVariableTypeSizes.find(*type);
     if (preValidatedIter != mValidatedVariableTypeSizes.end())
     {
-        return preValidatedIter->second;
+        variableSize = preValidatedIter->second;
+    }
+    else
+    {
+        // Note: the only allowed interface block in webgl shaders is UBOs in std140 mode, so the
+        // size is unconditionally calculated with std140 rules if the variable is an interface
+        // block. Uniform variables are treated the same way as UBOs, as they are often packed the
+        // same way later on.
+        variableSize = CalculateVariableSize(
+                           type, type->isInterfaceBlock() || type->getQualifier() == EvqUniform)
+                           .ValueOrDefault(std::numeric_limits<size_t>::max());
+
+        mValidatedVariableTypeSizes[*type] = variableSize;
     }
 
-    // Note: the only allowed interface block in webgl shaders is UBOs in std140 mode, so the size
-    // is unconditionally calculated with std140 rules if the variable is an interface block.
-    // Uniform variables are treated the same way as UBOs, as they are often packed the same way
-    // later on.
-    const size_t variableSize =
-        CalculateVariableSize(type, type->isInterfaceBlock() || type->getQualifier() == EvqUniform)
-            .ValueOrDefault(std::numeric_limits<size_t>::max());
     if (variableSize > kWebGLMaxVariableSizeInBytes)
     {
         error(line, "Size of declared variable exceeds implementation-defined limit", identifier);
-        mValidatedVariableTypeSizes[*type] = false;
         return false;
     }
 
@@ -1940,7 +1945,6 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
                 error(line,
                       "Size of declared private variable exceeds implementation-defined limit",
                       identifier);
-                mValidatedVariableTypeSizes[*type] = false;
                 return false;
             }
             mTotalPrivateVariablesSize += variableSize;
@@ -1949,7 +1953,6 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
             break;
     }
 
-    mValidatedVariableTypeSizes[*type] = true;
     return true;
 }
 

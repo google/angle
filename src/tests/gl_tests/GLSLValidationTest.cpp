@@ -2900,6 +2900,55 @@ void main() {
                   "'a' : Size of declared private variable exceeds implementation-defined limit");
 }
 
+// Test that too large local variables are rejected after the same type passes validation as a
+// uniform
+TEST_P(WebGL2GLSLValidationTest, LargeArrayAfterUsedAsUniform)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+struct S
+{
+    float a[65536];
+};
+uniform S u;
+out vec4 color;
+void main() {
+    S l = u;
+    color = vec4(l.a[0], 0.0, 0.0, 1.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'l' : Size of declared private variable exceeds implementation-defined limit");
+}
+
+// Test that repeated declarations are counted towards the total private variable limit
+TEST_P(WebGL2GLSLValidationTest, RepeatedDeclarationsOfSameTimeTooLarge)
+{
+    std::ostringstream fs;
+    fs << R"(#version 300 es
+precision highp float;
+// Declare a struct that's within the 65536-byte limit
+struct S
+{
+    float a[16384];
+};
+out vec4 color;
+void main() {
+    float f;
+)";
+    // Repeatedly declare a variable of this type, so that the total limit is reached, which is 256
+    // times the per-variable limit.
+    for (uint32_t i = 0; i < 257; ++i)
+    {
+        fs << "S s" << i << "; f += s" << i << ".a[0];\n";
+    }
+    fs << R"(
+    color = vec4(f, 0.0, 0.0, 1.0);
+})";
+    validateError(
+        GL_FRAGMENT_SHADER, fs.str().c_str(),
+        "'' : Total size of declared private variables exceeds implementation-defined limit");
+}
+
 // Test that too large array, where cast to signed int would produce negative sizes, does not crash.
 TEST_P(WebGL2GLSLValidationTest, LargeArrayUintMaxSize)
 {

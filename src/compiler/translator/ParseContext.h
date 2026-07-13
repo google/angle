@@ -916,7 +916,7 @@ class TParseContext : angle::NonCopyable
     // should not exceed a sensible threshold.
     angle::base::CheckedNumeric<size_t> mTotalPrivateVariablesSize;
     // Tracks if a type has been validated as safe in checkVariableSize.
-    TMap<TType, bool> mValidatedVariableTypeSizes;
+    TMap<TType, size_t> mValidatedVariableTypeSizes;
 
     // Track state related to control flow, used for various validation:
     //
