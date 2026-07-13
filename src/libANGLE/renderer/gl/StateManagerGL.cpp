@@ -428,12 +428,11 @@ void StateManagerGL::bindBufferBase(gl::BufferBinding target, size_t index, GLui
 
     ASSERT(index < mState.indexedBuffers[target].size());
     auto &binding = mState.indexedBuffers[target][index];
-    if (binding.buffer != buffer || binding.offset != static_cast<size_t>(-1) ||
-        binding.size != static_cast<size_t>(-1))
+    if (binding.buffer != buffer || binding.offset != 0 || binding.size != 0)
     {
         binding.buffer   = buffer;
-        binding.offset   = static_cast<size_t>(-1);
-        binding.size     = static_cast<size_t>(-1);
+        binding.offset         = 0;
+        binding.size           = 0;
         mState.buffers[target] = buffer;
         mFunctions->bindBufferBase(gl::ToGLenum(target), static_cast<GLuint>(index), buffer);
         setBufferBindingDirty(target);
@@ -443,8 +442,8 @@ void StateManagerGL::bindBufferBase(gl::BufferBinding target, size_t index, GLui
 void StateManagerGL::bindBufferRange(gl::BufferBinding target,
                                      size_t index,
                                      GLuint buffer,
-                                     size_t offset,
-                                     size_t size)
+                                     GLintptr offset,
+                                     GLsizeiptr size)
 {
     // Transform feedback buffer bindings are tracked in TransformFeedbackGL
     ASSERT(target != gl::BufferBinding::TransformFeedback);

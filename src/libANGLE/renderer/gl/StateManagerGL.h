@@ -169,9 +169,9 @@ struct VertexArrayStateGL
 
 struct IndexedBufferBindingGL
 {
-    size_t offset = 0;
-    size_t size   = 0;
-    GLuint buffer = 0;
+    GLintptr offset = 0;
+    GLsizeiptr size = 0;
+    GLuint buffer   = 0;
 };
 
 struct ImageUnitBindingGL
@@ -325,8 +325,8 @@ class StateManagerGL final : angle::NonCopyable
     void bindBufferRange(gl::BufferBinding target,
                          size_t index,
                          GLuint buffer,
-                         size_t offset,
-                         size_t size);
+                         GLintptr offset,
+                         GLsizeiptr size);
     void activeTexture(size_t unit);
     void bindTexture(gl::TextureType type, GLuint texture);
     void bindSampler(size_t unit, GLuint sampler);
