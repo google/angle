@@ -128,9 +128,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mIndependentBlendStates(extensions.drawBuffersIndexedAny()),
       mSampleCoverageEverChanged(false),
       mFramebufferSRGBAvailable(extensions.sRGBWriteControlEXT),
-      // Note: GL 3.2 is required for desktop GL
-      mHasSeparateFramebufferBindings(functions->standard == STANDARD_GL_DESKTOP ||
-                                      mFunctions->isAtLeastGLES(gl::Version(3, 0))),
+      mHasSeparateFramebufferBindings(nativegl::SupportsSeparateFramebufferBindings(functions)),
       mIsMultiviewEnabled(extensions.multiviewOVR),
       mMaxClipDistances(rendererCaps.maxClipDistances)
 {
@@ -2584,7 +2582,7 @@ void StateManagerGL::setLogicOp(gl::LogicalOperation opcode)
 
 void StateManagerGL::setTextureCubemapSeamlessEnabled(bool enabled)
 {
-    if (mFunctions->standard != STANDARD_GL_DESKTOP)
+    if (!nativegl::SupportsSettingCubemapSeamless(mFunctions))
     {
         return;
     }
