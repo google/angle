@@ -273,8 +273,9 @@ struct ContextStateGL
     bool rasterizerDiscardEnabled  = false;
     float lineWidth                = 1.0f;
 
-    bool primitiveRestartEnabled = false;
-    GLuint primitiveRestartIndex = 0;
+    bool primitiveRestartFixedIndexEnabled = false;
+    bool primitiveRestartEnabled           = false;
+    GLuint primitiveRestartIndex           = 0;
 
     gl::ColorF clearColor = gl::ColorF(0.0f, 0.0f, 0.0f, 0.0f);
     float clearDepth      = 1.0f;
@@ -389,6 +390,7 @@ class StateManagerGL final : angle::NonCopyable
     void setRasterizerDiscardEnabled(bool enabled);
     void setLineWidth(float width);
 
+    angle::Result setPrimitiveRestartFixedIndexEnabled(const gl::Context *context, bool enabled);
     angle::Result setPrimitiveRestartEnabled(const gl::Context *context, bool enabled);
     angle::Result setPrimitiveRestartIndex(const gl::Context *context, GLuint index);
 
