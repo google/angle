@@ -1575,36 +1575,40 @@ void StateManagerGL::setStencilTestEnabled(bool enabled)
 
 void StateManagerGL::setStencilFrontWritemask(GLuint mask)
 {
-    mState.stencilFrontWritemask = mask;
-    mFunctions->stencilMaskSeparate(GL_FRONT, mask);
+    GLuint clippedMask           = mask & 0xFF;
+    mState.stencilFrontWritemask = clippedMask;
+    mFunctions->stencilMaskSeparate(GL_FRONT, clippedMask);
 
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
 }
 
 void StateManagerGL::setStencilBackWritemask(GLuint mask)
 {
-    mState.stencilBackWritemask = mask;
-    mFunctions->stencilMaskSeparate(GL_BACK, mask);
+    GLuint clippedMask          = mask & 0xFF;
+    mState.stencilBackWritemask = clippedMask;
+    mFunctions->stencilMaskSeparate(GL_BACK, clippedMask);
 
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
 }
 
 void StateManagerGL::setStencilFrontFuncs(GLenum func, GLint ref, GLuint mask)
 {
+    GLuint clippedMask           = mask & 0xFF;
     mState.stencilFrontFunc      = func;
     mState.stencilFrontRef       = ref;
-    mState.stencilFrontValueMask = mask;
-    mFunctions->stencilFuncSeparate(GL_FRONT, func, ref, mask);
+    mState.stencilFrontValueMask = clippedMask;
+    mFunctions->stencilFuncSeparate(GL_FRONT, func, ref, clippedMask);
 
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT);
 }
 
 void StateManagerGL::setStencilBackFuncs(GLenum func, GLint ref, GLuint mask)
 {
+    GLuint clippedMask          = mask & 0xFF;
     mState.stencilBackFunc      = func;
     mState.stencilBackRef       = ref;
-    mState.stencilBackValueMask = mask;
-    mFunctions->stencilFuncSeparate(GL_BACK, func, ref, mask);
+    mState.stencilBackValueMask = clippedMask;
+    mFunctions->stencilFuncSeparate(GL_BACK, func, ref, clippedMask);
 
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK);
 }
@@ -1851,10 +1855,15 @@ void StateManagerGL::setClearColor(const gl::ColorF &clearColor)
 
 void StateManagerGL::setClearStencil(GLint clearStencil)
 {
-    if (mState.clearStencil != clearStencil)
+    // Mask the clear stencil value to 1 byte before setting it.
+    // The Desktop GL spec says the driver will mask when calling glClearStencil while the GLES spec
+    // says it will only be masked when doing the clear. By masking it here, the value we track will
+    // always be the same as what the driver tracks.
+    GLint maskedClearValue = clearStencil & 0xFF;
+    if (mState.clearStencil != maskedClearValue)
     {
-        mState.clearStencil = clearStencil;
-        mFunctions->clearStencil(clearStencil);
+        mState.clearStencil = maskedClearValue;
+        mFunctions->clearStencil(maskedClearValue);
 
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_CLEAR_STENCIL);
     }
