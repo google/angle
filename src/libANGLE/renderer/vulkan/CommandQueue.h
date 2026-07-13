@@ -513,6 +513,8 @@ class CommandQueue : angle::NonCopyable
     // Protect multi-thread access to mFinishedCommandBatches.pop/front.
     angle::SimpleMutex mCmdReleaseMutex;
 
+    FenceRecycler mFenceRecycler;
+
     CommandBatchQueue mInFlightCommands;
     // Temporary storage for finished command batches that should be reset.
     CommandBatchQueue mFinishedCommandBatches;
@@ -531,8 +533,6 @@ class CommandQueue : angle::NonCopyable
 
     // QueueMap
     DeviceQueueMap mQueueMap;
-
-    FenceRecycler mFenceRecycler;
 
     angle::VulkanPerfCounters mPerfCounters;
 };
