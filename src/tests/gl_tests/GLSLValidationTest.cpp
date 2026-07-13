@@ -2979,6 +2979,26 @@ void main() {
                   "'Block' : Size of declared variable exceeds implementation-defined limit");
 }
 
+// Test that too large array in UBO fails after another UBO within limit is declared.
+TEST_P(WebGL2GLSLValidationTest, LargeArrayUBOAfterSmallUBO)
+{
+    constexpr char kFS[] = R"(#version 300 es
+uniform Small
+{
+    int i;
+};
+uniform Block
+{
+    int rr[~1U];
+};
+out int o;
+void main() {
+    o = rr[1] + i;
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'Block' : Size of declared variable exceeds implementation-defined limit");
+}
+
 // Regression test for a 32-bit overflow bug when setting initializer for a large constant.
 TEST_P(WebGL2GLSLValidationTest, LargeConstantVariableWithInitializer)
 {

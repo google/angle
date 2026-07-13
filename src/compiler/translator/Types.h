@@ -308,7 +308,13 @@ class TType
                 return mArraySizes[i] < right.mArraySizes[i];
         }
         if (mStructure != right.mStructure)
+        {
             return mStructure < right.mStructure;
+        }
+        if (mInterfaceBlock != right.mInterfaceBlock)
+        {
+            return mInterfaceBlock < right.mInterfaceBlock;
+        }
 
         return false;
     }
