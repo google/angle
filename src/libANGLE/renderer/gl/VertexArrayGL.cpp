@@ -1029,10 +1029,8 @@ angle::Result VertexArrayGL::applyActiveAttribLocationsMask(const gl::Context *c
     return angle::Result::Continue;
 }
 
-angle::Result VertexArrayGL::validateState(const gl::Context *context) const
+void VertexArrayGL::validateState(const FunctionsGL *functions) const
 {
-    const FunctionsGL *functions = GetFunctionsGL(context);
-
     VertexArrayStateGL queriedState(mNativeState->attributes.size(), mNativeState->bindings.size());
     QueryVertexArrayStateGL(functions, &queriedState);
 
@@ -1044,8 +1042,6 @@ angle::Result VertexArrayGL::validateState(const gl::Context *context) const
         msg << "Queried state:" << std::endl << queriedState << std::endl;
         FATAL() << msg.str();
     }
-
-    return angle::Result::Continue;
 }
 
 }  // namespace rx

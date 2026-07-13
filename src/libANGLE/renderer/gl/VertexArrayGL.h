@@ -60,7 +60,7 @@ class VertexArrayGL : public VertexArrayImpl
     angle::Result applyActiveAttribLocationsMask(const gl::Context *context,
                                                  const gl::AttributesMask &activeMask);
 
-    angle::Result validateState(const gl::Context *context) const;
+    void validateState(const FunctionsGL *functions) const;
 
     angle::Result recoverForcedStreamingAttributesForDrawArraysInstanced(
         const gl::Context *context) const;

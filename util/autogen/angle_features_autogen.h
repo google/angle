@@ -525,6 +525,7 @@ enum class Feature
     UseVkEventForImageBarrier,
     UseVmaForImageSuballocation,
     ValidateMaxPerStageUniformBlocksAtCompileTime,
+    ValidateState,
     VaryingsRequireMatchingPrecisionInSpirv,
     VerifyPipelineCacheInBlobCache,
     VertexIDDoesNotIncludeBaseVertex,

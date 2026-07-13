@@ -758,6 +758,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo validateState = {
+        "validateState",
+        FeatureCategory::OpenGLFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

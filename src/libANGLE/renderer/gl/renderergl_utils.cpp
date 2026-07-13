@@ -2793,6 +2793,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // Mac Intel drivers are unable to allocate buffers larger than ~1gb
     ANGLE_FEATURE_CONDITION(features, limitMaxBufferSizeTo1gb, isApple && isIntel);
+
+    // Default to state validation disabled. It is extremely costly and should only be enabled
+    // explicitly when debugging.
+    ANGLE_FEATURE_CONDITION(features, validateState, false);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
