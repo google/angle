@@ -734,6 +734,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo avoidComplexExpressionsInStructConstructor = {
+        "avoidComplexExpressionsInStructConstructor",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

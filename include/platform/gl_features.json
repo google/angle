@@ -959,6 +959,14 @@
                 "Limit the number of declared varying components at compile time to work around a PowerVR driver bug."
             ],
             "issue": "http://crbug.com/529991907"
+        },
+        {
+            "name": "avoid_complex_expressions_in_struct_constructor",
+            "category": "Workarounds",
+            "description": [
+                "Remove complex expressions from struct constructors."
+            ],
+            "issue": "http://crbug.com/529509587"
         }
     ]
 }

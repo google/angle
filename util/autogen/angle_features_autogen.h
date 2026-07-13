@@ -56,6 +56,7 @@ enum class Feature
     AsyncGarbageCleanup,
     Avoid1BitAlphaTextureFormats,
     AvoidBindFragDataLocation,
+    AvoidComplexExpressionsInStructConstructor,
     AvoidImageGhostOutsideRenderPass,
     AvoidInvisibleWindowSwapchainRecreate,
     AvoidOpSelectWithMismatchingRelaxedPrecision,

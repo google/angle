@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 418
+#define ANGLE_SH_VERSION 419
 
 enum ShShaderSpec
 {
@@ -398,11 +398,10 @@ struct ShCompileOptions
     // Always write explicit location layout qualifiers for fragment outputs.
     uint64_t explicitFragmentLocations : 1;
 
-    // placeholder bit for removed emulateDithering option.
     uint64_t unused : 1;
 
-    // placeholder bit for removed roundOutputAfterDithering option.
-    uint64_t unused2 : 1;
+    // Avoid complex expressions in struct constructors to work around driver bugs.
+    uint64_t avoidComplexExpressionsInStructConstructor : 1;
 
     // Whether |#extension ... : disable| is allowed after non-preprocessor tokens in WebGL.
     // WebGL1 deviates from GLSL by allowing |#extension| directives after non-preprocessor tokens.

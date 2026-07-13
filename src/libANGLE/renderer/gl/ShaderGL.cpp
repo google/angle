@@ -251,6 +251,11 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
         options->scalarizeVecAndMatConstructorArgs = true;
     }
 
+    if (features.avoidComplexExpressionsInStructConstructor.enabled)
+    {
+        options->avoidComplexExpressionsInStructConstructor = true;
+    }
+
     if (features.explicitFragmentLocations.enabled)
     {
         options->explicitFragmentLocations = true;

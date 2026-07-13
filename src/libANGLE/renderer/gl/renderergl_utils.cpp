@@ -2840,6 +2840,13 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // crbug.com/529991907
     ANGLE_FEATURE_CONDITION(features, limitOutputVaryingsTo256AtCompileTime, IsPowerVR(vendor));
 
+    // crbug.com/529509587 -- IMG GLSL frontend OOB-writes during semantic analysis of a struct
+    // constructor whose array-typed member receives a constant array-constructor argument with a
+    // precision mismatch.  The workaround avoids all complex expressions, not just constant arrays
+    // just in case.
+    ANGLE_FEATURE_CONDITION(features, avoidComplexExpressionsInStructConstructor,
+                            IsPowerVR(vendor));
+
     // Mac Intel drivers are unable to allocate buffers larger than ~1gb
     ANGLE_FEATURE_CONDITION(features, limitMaxBufferSizeTo1gb, isApple && isIntel);
 }

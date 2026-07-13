@@ -17083,14 +17083,98 @@ struct S
     T t;
 };
 
+const float five = 5.;
+const mat3x4 m = mat3x4(
+                         vec4(T(4.).f, five, 6, 7),
+                         vec4(8, 9, 10, 11),
+                         vec4(12, 13, 14, 15)
+                  );
 S s = S(
         vec4(0, 1, 2, 3),
         mat3x4[2](
+                  m,
                   mat3x4(
-                         vec4(4, 5, 6, 7),
+                         vec4(16, 17, 18, 19),
+                         vec4(20, 21, 22, 23),
+                         vec4(24, 25, 26, 27)
+                  )
+        ),
+        T(28.0)
+       );
+
+void main()
+{
+    vec4 result = vec4(0, 1, 0, 1);
+
+    if (s.v != vec4(0, 1, 2, 3))
+        result = vec4(1, 0, 0, 0);
+
+    for (int index = 0; index < 2; ++index)
+    {
+        for (int column = 0; column < 3; ++column)
+        {
+            int expect = index * 12 + column * 4 + 4;
+            if (s.m[index][column] != vec4(expect, expect + 1, expect + 2, expect + 3))
+                result = vec4(float(index + 1) / 2.0, 0, float(column + 1) / 3.0, 1);
+        }
+    }
+
+    if (s.t.f != 28.0)
+        result = vec4(0, 0, 1, 0);
+
+    color = result;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that initializing global variables with complex constants work when the constant is
+// qualified with a `const`.
+TEST_P(GLSLTest_ES3, InitGlobalComplexConstConstant)
+{
+    // The SPIR-V generator does not handle |s.m| correctly in the shader below where |s| is const,
+    // expecting it to be constant folded but it isn't because it's an array type.
+    //
+    // The GLES output seems to generate an incorrect number of arguments to the constructor, but
+    // somehow only the Qualcomm and Imagination drivers complain about it.
+    //
+    // On Metal, the test fails with GL_INVALID_OPERATION for some reason.
+    //
+    // There are no failures with the IR.
+    ANGLE_SKIP_TEST_IF((IsVulkan() || IsOpenGLES() || IsMetal()) &&
+                       !getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+
+struct T
+{
+    float f;
+};
+
+struct S
+{
+    vec4 v;
+    mat3x4 m[2];
+    T t;
+};
+
+const float five = 5.;
+const mat3x4 m = mat3x4(
+                         vec4(T(4.).f, five, 6, 7),
                          vec4(8, 9, 10, 11),
                          vec4(12, 13, 14, 15)
-                  ),
+                  );
+const S s = S(
+        vec4(0, 1, 2, 3),
+        mat3x4[2](
+                  m,
                   mat3x4(
                          vec4(16, 17, 18, 19),
                          vec4(20, 21, 22, 23),
@@ -24799,13 +24883,169 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that struct constructor arguments with array constants and mixed precision work.
+TEST_P(GLSLTest_ES3, StructConstructorComplexExpressionWithArrayConstant)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+precision lowp int;
+struct S {
+    float f;
+    mediump uint i[3];
+};
+
+out vec4 color;
+void main()
+{
+    // Note: default precision of int is lowp, but the struct has mediump
+    S s = S(gl_FragCoord.x, uint[3](10u, 20u, 30u));
+    color = vec4(s.i[0] == 10u, s.i[1] == 20u, s.i[2] == 30u, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Test that struct constructor arguments are not evaluated if they are in a short-circuited
+// expression.
+TEST_P(GLSLTest_ES3, StructConstructorComplexExpressionShortCircuit)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+uniform bool ufalse;
+struct S {
+    int i;
+};
+void main()
+{
+    int a = 10;
+    int b = 20;
+    // |ufalse| is false by default, so a should be unmodified.
+    if (ufalse && S(++a).i == 11)
+    {
+        b = 30;
+    }
+
+    color = vec4(a == 10, b == 20, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
+// Test struct constructor with complex expression with mixed function and struct declarations.
+TEST_P(GLSLTest_ES3, StructConstructorComplexExpressionMixedDecls)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+struct A {
+    int i;
+};
+int f() {
+    int a = 10;
+    return A(++a).i;
+}
+struct B {
+    float f;
+};
+void main()
+{
+    int a = f();
+    float f = B(float(a)).f;
+    color = vec4(a == 11, f == 11.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
+// Test struct constructor with complex expression with local struct declarations.
+TEST_P(GLSLTest_ES3, StructConstructorComplexExpressionLocalDecl)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+struct B {
+    float f;
+};
+void main()
+{
+    struct A {
+        int i;
+    };
+    int a = 10;
+    int b = A(a++).i;
+    color = vec4(a == 11, b == 10, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
+// Test struct constructor with complex expression with struct declaration in function return value.
+TEST_P(GLSLTest_ES3, StructConstructorComplexExpressionDeclInReturn)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+struct A {
+    int i;
+} f() {
+    int a = 10;
+    return A(++a);
+}
+void main()
+{
+    A a = f();
+    color = vec4(a.i == 11, 0.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// Test nested struct constructor s with complex expression work.
+TEST_P(GLSLTest_ES3, StructConstructorComplexExpressionNested)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+struct B {
+    int i;
+};
+struct A {
+    int i;
+    B b;
+};
+void main()
+{
+    int a = 10;
+    int b = 20;
+    // Directly nest B's constructor under A
+    int c = A(a++, B(++b)).i;
+    color = vec4(a == 11, b == 21, c == 10, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
     GLSLTest,
     ES3_OPENGL().enable(Feature::ForceInitShaderVariables),
     ES3_OPENGL().enable(Feature::ScalarizeVecAndMatConstructorArgs),
+    ES3_OPENGL().enable(Feature::AvoidComplexExpressionsInStructConstructor),
     ES3_OPENGLES().enable(Feature::ScalarizeVecAndMatConstructorArgs),
+    ES3_OPENGLES().enable(Feature::AvoidComplexExpressionsInStructConstructor),
     ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision),
     ES3_VULKAN().enable(Feature::ForceInitShaderVariables),
     ES3_VULKAN().disable(Feature::SupportsSPIRV14),
@@ -24821,7 +25061,9 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     GLSLTest_ES3,
     ES3_OPENGL().enable(Feature::ForceInitShaderVariables),
     ES3_OPENGL().enable(Feature::ScalarizeVecAndMatConstructorArgs),
+    ES3_OPENGL().enable(Feature::AvoidComplexExpressionsInStructConstructor),
     ES3_OPENGLES().enable(Feature::ScalarizeVecAndMatConstructorArgs),
+    ES3_OPENGLES().enable(Feature::AvoidComplexExpressionsInStructConstructor),
     ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision),
     ES3_VULKAN().enable(Feature::ForceInitShaderVariables),
     ES3_VULKAN().disable(Feature::SupportsSPIRV14),
