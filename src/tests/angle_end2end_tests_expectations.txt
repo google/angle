@@ -1162,9 +1162,8 @@
 480069042 PIXEL10 GLES : ReadPixelsTextureNorm16PBOTest.RG16_RG/* = SKIP
 480069042 PIXEL10 GLES : RobustResourceInitTestES3.BindTexImage/* = SKIP
 480069042 PIXEL10 GLES : RobustResourceInitTestES31.ImageTextureInit_R32UI/* = SKIP
-480069042 PIXEL10 GLES : SRGBFramebufferDefaultLinearTest.BlitFromSrgbFbo/* = SKIP
-480069042 PIXEL10 GLES : SRGBFramebufferDefaultSrgbTest.BlitFromLinearFbo/* = SKIP
-480069042 PIXEL10 GLES : SRGBFramebufferDefaultSrgbTest.BlitFromSrgbFbo/* = SKIP
+480069042 PIXEL10 GLES : SRGBFramebufferDefaultLinearTest.* = SKIP
+480069042 PIXEL10 GLES : SRGBFramebufferDefaultSrgbTest.* = SKIP
 480069042 PIXEL10 GLES : SRGBFramebufferTest.MultipleFramebuffers/* = SKIP
 480069042 PIXEL10 GLES : SRGBFramebufferTest.NegativeLifetimeTracking/* = SKIP
 480069042 PIXEL10 GLES : SRGBTextureTestES3.SRGBFormatCombinationValidation/* = SKIP

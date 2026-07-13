@@ -1223,9 +1223,7 @@ void GenerateCaps(const FunctionsGL *functions,
     // GL_ARB_gpu_shader5)
 
     // Check if sampler objects are supported
-    if (!functions->isAtLeastGL(gl::Version(3, 3)) &&
-        !functions->hasGLExtension("GL_ARB_sampler_objects") &&
-        !functions->isAtLeastGLES(gl::Version(3, 0)))
+    if (!nativegl::SupportsSamplerObjects(functions))
     {
         // Can't support ES3 without sampler objects
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
@@ -2879,6 +2877,12 @@ bool SupportsPixelBufferObjects(const FunctionsGL *functions)
            functions->hasGLExtension("GL_EXT_pixel_buffer_object") ||
            functions->hasGLESExtension("GL_NV_pixel_buffer_object");
 }
+bool SupportsSamplerObjects(const FunctionsGL *functions)
+{
+    return functions->isAtLeastGLES(gl::Version(3, 0)) ||
+           functions->isAtLeastGL(gl::Version(3, 3)) ||
+           functions->hasGLExtension("ARB_sampler_objects");
+}
 
 bool CanUseDefaultVertexArrayObject(const FunctionsGL *functions)
 {
@@ -3020,6 +3024,10 @@ bool SupportsPackSubImage(const FunctionsGL *functions)
     return functions->standard == STANDARD_GL_DESKTOP ||
            functions->isAtLeastGLES(gl::Version(3, 0)) ||
            functions->hasGLESExtension("GL_NV_pack_subimage");
+}
+bool Supports3DUnpackParameters(const FunctionsGL *functions)
+{
+    return functions->isAtLeastGLES(gl::Version(3, 0)) || functions->isAtLeastGL(gl::Version(1, 2));
 }
 
 bool SupportsClipControl(const FunctionsGL *functions)
@@ -3176,6 +3184,36 @@ bool UseTexImage3D(gl::TextureType textureType)
            textureType == gl::TextureType::CubeMapArray;
 }
 
+bool SupportsTextureType(const FunctionsGL *functions, gl::TextureType type)
+{
+    switch (type)
+    {
+        case gl::TextureType::_2D:
+            return true;
+        case gl::TextureType::_2DArray:
+            return Supports2DArrayTextures(functions);
+        case gl::TextureType::_2DMultisample:
+            return Supports2DMultisampleTextures(functions);
+        case gl::TextureType::_2DMultisampleArray:
+            return Supports2DMultisampleArrayTextures(functions);
+        case gl::TextureType::_3D:
+            return nativegl::Supports3DTextures(functions);
+        case gl::TextureType::External:
+            return nativegl::SupportsExternalTextures(functions);
+        case gl::TextureType::Rectangle:
+            return nativegl::SupportsRectangleTextures(functions);
+        case gl::TextureType::CubeMap:
+            return true;
+        case gl::TextureType::CubeMapArray:
+            return nativegl::SupportsCubeMapArrayTextures(functions);
+        case gl::TextureType::Buffer:
+            return nativegl::SupportsTextureBufferObjects(functions);
+        default:
+            UNREACHABLE();
+            return false;
+    }
+}
+
 GLenum GetTextureBindingQuery(gl::TextureType textureType)
 {
     switch (textureType)
@@ -3216,7 +3254,103 @@ GLenum GetTextureBindingTarget(gl::TextureTarget textureTarget)
     return ToGLenum(textureTarget);
 }
 
-GLenum GetBufferBindingQuery(gl::BufferBinding bufferBinding)
+bool SupportsBufferBinding(const FunctionsGL *functions, gl::BufferBinding type)
+{
+    switch (type)
+    {
+        case gl::BufferBinding::Array:
+            return true;
+        case gl::BufferBinding::AtomicCounter:
+            return SupportsCompute(functions);
+        case gl::BufferBinding::CopyRead:
+            return SupportsCopyReadWriteBufferObjects(functions);
+        case gl::BufferBinding::CopyWrite:
+            return SupportsCopyReadWriteBufferObjects(functions);
+        case gl::BufferBinding::DispatchIndirect:
+            return SupportsCompute(functions);
+        case gl::BufferBinding::DrawIndirect:
+            return SupportsDrawIndirect(functions);
+        case gl::BufferBinding::ElementArray:
+            return true;
+        case gl::BufferBinding::PixelPack:
+            return SupportsPixelBufferObjects(functions);
+        case gl::BufferBinding::PixelUnpack:
+            return SupportsPixelBufferObjects(functions);
+        case gl::BufferBinding::ShaderStorage:
+            return SupportsCompute(functions);
+        case gl::BufferBinding::TransformFeedback:
+            return SupportsTransformFeedback(functions);
+        case gl::BufferBinding::Uniform:
+            return SupportsUniformBufferObjects(functions);
+        case gl::BufferBinding::Texture:
+            return SupportsTextureBufferObjects(functions);
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+BufferBindingQuery GetBufferBindingQuery(gl::BufferBinding bufferBinding)
+{
+    BufferBindingQuery query;
+    switch (bufferBinding)
+    {
+        case gl::BufferBinding::Array:
+            query.bindingQuery = GL_ARRAY_BUFFER_BINDING;
+            break;
+        case gl::BufferBinding::AtomicCounter:
+            query.bindingQuery = GL_ATOMIC_COUNTER_BUFFER_BINDING;
+            query.startQuery   = GL_ATOMIC_COUNTER_BUFFER_START;
+            query.sizeQuery    = GL_ATOMIC_COUNTER_BUFFER_SIZE;
+            break;
+        case gl::BufferBinding::CopyRead:
+            query.bindingQuery = GL_COPY_READ_BUFFER_BINDING;
+            break;
+        case gl::BufferBinding::CopyWrite:
+            query.bindingQuery = GL_COPY_WRITE_BUFFER_BINDING;
+            break;
+        case gl::BufferBinding::DispatchIndirect:
+            query.bindingQuery = GL_DISPATCH_INDIRECT_BUFFER_BINDING;
+            break;
+        case gl::BufferBinding::DrawIndirect:
+            query.bindingQuery = GL_DRAW_INDIRECT_BUFFER_BINDING;
+            break;
+        case gl::BufferBinding::ElementArray:
+            query.bindingQuery = GL_ELEMENT_ARRAY_BUFFER_BINDING;
+            break;
+        case gl::BufferBinding::PixelPack:
+            query.bindingQuery = GL_PIXEL_PACK_BUFFER_BINDING;
+            break;
+        case gl::BufferBinding::PixelUnpack:
+            query.bindingQuery = GL_PIXEL_UNPACK_BUFFER_BINDING;
+            break;
+        case gl::BufferBinding::ShaderStorage:
+            query.bindingQuery = GL_SHADER_STORAGE_BUFFER_BINDING;
+            query.startQuery   = GL_SHADER_STORAGE_BUFFER_START;
+            query.sizeQuery    = GL_SHADER_STORAGE_BUFFER_SIZE;
+            break;
+        case gl::BufferBinding::TransformFeedback:
+            query.bindingQuery = GL_TRANSFORM_FEEDBACK_BUFFER_BINDING;
+            query.startQuery   = GL_TRANSFORM_FEEDBACK_BUFFER_START;
+            query.sizeQuery    = GL_TRANSFORM_FEEDBACK_BUFFER_SIZE;
+            break;
+        case gl::BufferBinding::Uniform:
+            query.bindingQuery = GL_UNIFORM_BUFFER_BINDING;
+            query.startQuery   = GL_UNIFORM_BUFFER_START;
+            query.sizeQuery    = GL_UNIFORM_BUFFER_SIZE;
+            break;
+        case gl::BufferBinding::Texture:
+            query.bindingQuery = GL_TEXTURE_BUFFER_BINDING;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    return query;
+}
+
+GLenum GetBufferBindingStartQuery(gl::BufferBinding bufferBinding)
 {
     switch (bufferBinding)
     {

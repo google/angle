@@ -24,6 +24,7 @@
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/histogram_macros.h"
+#include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
@@ -40,23 +41,6 @@ namespace rx
 
 namespace
 {
-
-static void ValidateStateHelper(const FunctionsGL *functions,
-                                const GLuint localValue,
-                                const GLenum pname,
-                                const char *localName,
-                                const char *driverName)
-{
-    GLint queryValue;
-    functions->getIntegerv(pname, &queryValue);
-    if (localValue != static_cast<GLuint>(queryValue))
-    {
-        WARN() << localName << " (" << localValue << ") != " << driverName << " (" << queryValue
-               << ")";
-        // Re-add ASSERT: http://anglebug.com/42262547
-        // ASSERT(false);
-    }
-}
 
 inline void SetGLBoolState(const FunctionsGL *functions, GLenum name, bool value)
 {
@@ -85,6 +69,698 @@ inline void SetGLIndexedBoolState(const FunctionsGL *functions,
     }
 }
 
+#if defined(ANGLE_ENABLE_ASSERTS)
+#    define ANGLE_GL_CHECK_GET_HELPER(functions, getter, name, value)                            \
+        do                                                                                       \
+        {                                                                                        \
+            ANGLE_GL_CLEAR_ERRORS(functions);                                                    \
+            functions->getter(name, value);                                                      \
+            GLenum error = functions->getError();                                                \
+            (error == GL_NO_ERROR) ? static_cast<void>(0)                                        \
+                                   : FATAL()                                                     \
+                                         << "Querying " << gl::FmtHex(name) << " using "         \
+                                         << #getter << " generated error " << gl::FmtHex(error); \
+        } while (0)
+
+#    define ANGLE_GL_CHECK_GET_INDEXED_HELPER(functions, getter, name, index, value)            \
+        do                                                                                      \
+        {                                                                                       \
+            ANGLE_GL_CLEAR_ERRORS(functions);                                                   \
+            functions->getter(name, index, value);                                              \
+            GLenum error = functions->getError();                                               \
+            (error == GL_NO_ERROR) ? static_cast<void>(0)                                       \
+                                   : FATAL() << "Querying " << gl::FmtHex(name) << " at index " \
+                                             << index << " using " << #getter                   \
+                                             << " generated error " << gl::FmtHex(error);       \
+        } while (0)
+
+#    define ANGLE_GL_CHECK_GET_ENABLED_HELPER(functions, getter, name, value)                    \
+        do                                                                                       \
+        {                                                                                        \
+            ANGLE_GL_CLEAR_ERRORS(functions);                                                    \
+            *value       = functions->getter(name);                                              \
+            GLenum error = functions->getError();                                                \
+            (error == GL_NO_ERROR) ? static_cast<void>(0)                                        \
+                                   : FATAL()                                                     \
+                                         << "Querying " << gl::FmtHex(name) << " using "         \
+                                         << #getter << " generated error " << gl::FmtHex(error); \
+        } while (0)
+
+#    define ANGLE_GL_CHECK_GET_INDEXED_ENABLED_HELPER(functions, getter, name, index, value)    \
+        do                                                                                      \
+        {                                                                                       \
+            ANGLE_GL_CLEAR_ERRORS(functions);                                                   \
+            *value       = functions->getter(name, index);                                      \
+            GLenum error = functions->getError();                                               \
+            (error == GL_NO_ERROR) ? static_cast<void>(0)                                       \
+                                   : FATAL() << "Querying " << gl::FmtHex(name) << " at index " \
+                                             << index << " using " << #getter                   \
+                                             << " generated error " << gl::FmtHex(error);       \
+        } while (0)
+
+#else
+#    define ANGLE_GL_CHECK_GET_HELPER(functions, getter, name, value) functions->getter(name, value)
+#    define ANGLE_GL_CHECK_GET_INDEXED_HELPER(functions, getter, name, index, value) \
+        functions->getter(name, index, value)
+#    define ANGLE_GL_CHECK_GET_ENABLED_HELPER(functions, getter, name, value) \
+        *value = functions->getter(name)
+#    define ANGLE_GL_CHECK_GET_INDEXED_ENABLED_HELPER(functions, getter, name, index, value) \
+        *value = functions->getter(name, index)
+#endif
+
+// Non-indexed GLboolean -> glGetBooleanv
+void GetHelper(const FunctionsGL *functions, GLenum name, GLboolean *value)
+{
+    ANGLE_GL_CHECK_GET_HELPER(functions, getBooleanv, name, value);
+}
+
+// Indexed GLboolean -> glGetBooleani_v
+void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, GLboolean *value)
+{
+    ANGLE_GL_CHECK_GET_INDEXED_HELPER(functions, getBooleani_v, name, index, value);
+}
+
+// Non-indexed GLboolean -> glIsEnabled
+void GetEnabledHelper(const FunctionsGL *functions, GLenum name, GLboolean *value)
+{
+    ANGLE_GL_CHECK_GET_ENABLED_HELPER(functions, isEnabled, name, value);
+}
+
+// Indexed GLboolean -> glIsEnabledi
+void GetEnabledHelper(const FunctionsGL *functions, GLenum name, GLuint index, GLboolean *value)
+{
+    ANGLE_GL_CHECK_GET_INDEXED_ENABLED_HELPER(functions, isEnabledi, name, index, value);
+}
+
+// Non-indexed bool -> Non-index GLboolean
+void GetHelper(const FunctionsGL *functions, GLenum name, bool *value)
+{
+    GLboolean v = gl::ConvertToGLBoolean(*value);
+    GetHelper(functions, name, &v);
+    *value = gl::ConvertToBool(v);
+}
+
+// Non-indexed bool -> Non-indexed GLboolean (for enabled checks)
+void GetEnabledHelper(const FunctionsGL *functions, GLenum name, bool *value)
+{
+    GLboolean v = gl::ConvertToGLBoolean(*value);
+    GetEnabledHelper(functions, name, &v);
+    *value = gl::ConvertToBool(v);
+}
+
+// Indexed bool -> Indexed GLboolean (for enabled checks)
+void GetEnabledHelper(const FunctionsGL *functions, GLenum name, GLuint index, bool *value)
+{
+    GLboolean v = gl::ConvertToGLBoolean(*value);
+    GetEnabledHelper(functions, name, index, &v);
+    *value = gl::ConvertToBool(v);
+}
+
+// Non-indexed std::array<bool, N> -> Non-indexed GLboolean
+template <size_t N>
+void GetHelper(const FunctionsGL *functions, GLenum name, std::array<bool, N> *values)
+{
+    std::array<GLboolean, N> v;
+    for (size_t i = 0; i < N; i++)
+    {
+        v[i] = gl::ConvertToGLBoolean(values->at(i));
+    }
+    GetHelper(functions, name, v.data());
+    for (size_t i = 0; i < N; i++)
+    {
+        (*values)[i] = gl::ConvertToBool(v[i]);
+    }
+}
+
+// Indexed std::array<bool, N> -> Indexed GLboolean
+template <size_t N>
+void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, std::array<bool, N> *values)
+{
+    std::array<GLboolean, N> v;
+    for (size_t i = 0; i < N; i++)
+    {
+        v[i] = gl::ConvertToGLBoolean(values->at(i));
+    }
+    GetHelper(functions, name, index, v.data());
+    for (size_t i = 0; i < N; i++)
+    {
+        (*values)[i] = gl::ConvertToBool(v[i]);
+    }
+}
+
+// Non-indexed GLint -> glGetIntegerv
+void GetHelper(const FunctionsGL *functions, GLenum name, GLint *value)
+{
+    ANGLE_GL_CHECK_GET_HELPER(functions, getIntegerv, name, value);
+}
+
+// Indexed GLint -> glGetIntegeri_v
+void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, GLint *value)
+{
+    ANGLE_GL_CHECK_GET_INDEXED_HELPER(functions, getIntegeri_v, name, index, value);
+}
+
+// Non-indexed GLenum -> Non-indexed GLint
+void GetHelper(const FunctionsGL *functions, GLenum name, GLenum *value)
+{
+    GLint v = *value;
+    GetHelper(functions, name, &v);
+    *value = static_cast<GLenum>(v);
+}
+
+// Indexed GLenum -> Indexed GLint
+void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, GLenum *value)
+{
+    GLint v = *value;
+    GetHelper(functions, name, index, &v);
+    *value = static_cast<GLenum>(v);
+}
+
+// Non-indexed gl::Rectangle -> Non-indexed GLint
+void GetHelper(const FunctionsGL *functions, GLenum name, gl::Rectangle *rect)
+{
+    std::array<GLint, 4> v = {rect->x, rect->y, rect->width, rect->height};
+    GetHelper(functions, name, v.data());
+    *rect = gl::Rectangle(v[0], v[1], v[2], v[3]);
+}
+
+// Non-indexed GLfloat -> glGetFloatv
+void GetHelper(const FunctionsGL *functions, GLenum name, GLfloat *value)
+{
+    ANGLE_GL_CHECK_GET_HELPER(functions, getFloatv, name, value);
+}
+
+// Non-indexed gl::ColorF -> Non-indexed GLfloat
+void GetHelper(const FunctionsGL *functions, GLenum name, gl::ColorF *color)
+{
+    std::array<GLfloat, 4> v = {color->red, color->green, color->blue, color->alpha};
+    GetHelper(functions, name, v.data());
+    *color = gl::ColorF(v[0], v[1], v[2], v[3]);
+}
+
+// Non-indexed packed enum -> Non-indexed GLint
+template <typename InternalEnumType, InternalEnumType MaxSize = InternalEnumType::EnumCount>
+void GetHelper(const FunctionsGL *functions, GLenum name, InternalEnumType *internalEnum)
+{
+    GLint v = gl::ToGLenum(*internalEnum);
+    GetHelper(functions, name, &v);
+    *internalEnum = gl::FromGLenum<InternalEnumType>(v);
+}
+
+// Indexed packed enum -> Indexed GLint
+template <typename InternalEnumType, InternalEnumType MaxSize = InternalEnumType::EnumCount>
+void GetHelper(const FunctionsGL *functions,
+               GLenum name,
+               GLuint index,
+               InternalEnumType *internalEnum)
+{
+    GLint v = gl::ToGLenum(*internalEnum);
+    GetHelper(functions, name, index, &v);
+    *internalEnum = gl::FromGLenum<InternalEnumType>(v);
+}
+
+// Non-indexed std::array<packed enum> -> Non-indexed GLint
+template <typename InternalEnumType,
+          size_t N,
+          InternalEnumType MaxSize = InternalEnumType::EnumCount>
+void GetHelper(const FunctionsGL *functions,
+               GLenum name,
+               std::array<InternalEnumType, N> *internalEnum)
+{
+    std::array<GLint, N> v;
+    for (size_t i = 0; i < N; i++)
+    {
+        v[i] = gl::ToGLenum(internalEnum->at(i));
+    }
+    GetHelper(functions, name, v.data());
+    for (size_t i = 0; i < N; i++)
+    {
+        internalEnum->at(i) = gl::FromGLenum<InternalEnumType>(v[i]);
+    }
+}
+
+// Indexed GLint64 -> glGetInteger64i_v
+void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, GLint64 *value)
+{
+    ANGLE_GL_CHECK_GET_INDEXED_HELPER(functions, getInteger64i_v, name, index, value);
+}
+
+// Indexed GLintptr -> Indexed GLint64. Enabled only if GLintptr is not the same as GLint64.
+template <typename T = void>
+void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, GLintptr *value)
+    requires(!std::is_same_v<GLintptr, GLint64>)
+{
+    GLint64 v = *value;
+    GetHelper(functions, name, index, &v);
+    *value = static_cast<GLintptr>(v);
+}
+
+void QueryContextStateGL(const FunctionsGL *functions, ContextStateGL *state)
+{
+    GetHelper(functions, GL_CURRENT_PROGRAM, &state->program);
+
+    if (nativegl::SupportsVertexArrayObjects(functions))
+    {
+        GetHelper(functions, GL_VERTEX_ARRAY_BINDING, &state->vao);
+    }
+
+    GLint maxVertexAttribs = 0;
+    GetHelper(functions, GL_MAX_VERTEX_ATTRIBS, &maxVertexAttribs);
+    maxVertexAttribs = std::min(maxVertexAttribs, static_cast<GLint>(gl::MAX_VERTEX_ATTRIBS));
+
+    for (GLint i = 0; i < maxVertexAttribs; i++)
+    {
+        // It is only valid to query the vertex attrib data using the same type used to set the data
+        // but there is no query for the data type. Do our best and query using the type that
+        // already exists in state.
+        switch (state->vertexAttribCurrentValues[i].Type)
+        {
+            case gl::VertexAttribType::Float:
+                functions->getVertexAttribfv(
+                    i, GL_CURRENT_VERTEX_ATTRIB,
+                    state->vertexAttribCurrentValues[i].Values.FloatValues);
+                break;
+            case gl::VertexAttribType::Int:
+                functions->getVertexAttribIiv(i, GL_CURRENT_VERTEX_ATTRIB,
+                                              state->vertexAttribCurrentValues[i].Values.IntValues);
+                break;
+            case gl::VertexAttribType::UnsignedInt:
+                functions->getVertexAttribIuiv(
+                    i, GL_CURRENT_VERTEX_ATTRIB,
+                    state->vertexAttribCurrentValues[i].Values.UnsignedIntValues);
+                break;
+            default:
+                UNREACHABLE();
+        }
+    }
+
+    for (gl::BufferBinding bufferBinding : angle::AllEnums<gl::BufferBinding>())
+    {
+        if (!nativegl::SupportsBufferBinding(functions, bufferBinding))
+        {
+            continue;
+        }
+
+        // Transform feedback buffer bindings are tracked in TransformFeedbackGL
+        if (bufferBinding == gl::BufferBinding::TransformFeedback)
+        {
+            continue;
+        }
+
+        nativegl::BufferBindingQuery queryEnums = nativegl::GetBufferBindingQuery(bufferBinding);
+        GetHelper(functions, queryEnums.bindingQuery, &state->buffers[bufferBinding]);
+
+        for (GLuint i = 0; i < state->indexedBuffers[bufferBinding].size(); i++)
+        {
+            IndexedBufferBindingGL &binding = state->indexedBuffers[bufferBinding][i];
+
+            GetHelper(functions, queryEnums.bindingQuery, i, &binding.buffer);
+
+            ASSERT(queryEnums.startQuery.has_value());
+            GetHelper(functions, queryEnums.startQuery.value(), i, &binding.offset);
+
+            ASSERT(queryEnums.sizeQuery.has_value());
+            GetHelper(functions, queryEnums.sizeQuery.value(), i, &binding.size);
+        }
+    }
+
+    GLuint activeTexture = 0;
+    GetHelper(functions, GL_ACTIVE_TEXTURE, &activeTexture);
+    state->textureUnitIndex = activeTexture - GL_TEXTURE0;
+
+    GLint maxCombinedTextureImageUnits = 0;
+    GetHelper(functions, GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxCombinedTextureImageUnits);
+    maxCombinedTextureImageUnits = std::min(
+        maxCombinedTextureImageUnits, static_cast<GLint>(gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES));
+
+    for (GLint i = 0; i < maxCombinedTextureImageUnits; i++)
+    {
+        functions->activeTexture(GL_TEXTURE0 + i);
+        for (gl::TextureType textureType : angle::AllEnums<gl::TextureType>())
+        {
+            if (!nativegl::SupportsTextureType(functions, textureType))
+            {
+                continue;
+            }
+
+            GetHelper(functions, nativegl::GetTextureBindingQuery(textureType),
+                      &state->textures[textureType][i]);
+        }
+
+        if (nativegl::SupportsSamplerObjects(functions))
+        {
+            GetHelper(functions, GL_SAMPLER_BINDING, &state->samplers[i]);
+        }
+    }
+    // Reset the active texture
+    functions->activeTexture(activeTexture);
+
+    for (GLuint i = 0; i < state->images.size(); i++)
+    {
+        ImageUnitBindingGL &image = state->images[i];
+        GetHelper(functions, GL_IMAGE_BINDING_NAME, i, &image.texture);
+        GetHelper(functions, GL_IMAGE_BINDING_LEVEL, i, &image.level);
+        GetHelper(functions, GL_IMAGE_BINDING_LAYERED, i, &image.layered);
+        GetHelper(functions, GL_IMAGE_BINDING_LAYER, i, &image.layer);
+        GetHelper(functions, GL_IMAGE_BINDING_ACCESS, i, &image.access);
+        GetHelper(functions, GL_IMAGE_BINDING_FORMAT, i, &image.format);
+    }
+
+    if (nativegl::SupportsTransformFeedback(functions))
+    {
+        GetHelper(functions, GL_TRANSFORM_FEEDBACK_BINDING, &state->transformFeedback);
+    }
+
+    GetHelper(functions, GL_UNPACK_ALIGNMENT, &state->unpackAlignment);
+
+    if (nativegl::SupportsUnpackSubImage(functions))
+    {
+        GetHelper(functions, GL_UNPACK_ROW_LENGTH, &state->unpackRowLength);
+        GetHelper(functions, GL_UNPACK_SKIP_ROWS, &state->unpackSkipRows);
+        GetHelper(functions, GL_UNPACK_SKIP_PIXELS, &state->unpackSkipPixels);
+    }
+
+    if (nativegl::Supports3DUnpackParameters(functions))
+    {
+        GetHelper(functions, GL_UNPACK_IMAGE_HEIGHT, &state->unpackImageHeight);
+        GetHelper(functions, GL_UNPACK_SKIP_IMAGES, &state->unpackSkipImages);
+    }
+
+    GetHelper(functions, GL_PACK_ALIGNMENT, &state->packAlignment);
+
+    if (nativegl::SupportsPackSubImage(functions))
+    {
+        GetHelper(functions, GL_PACK_ROW_LENGTH, &state->packRowLength);
+        GetHelper(functions, GL_PACK_SKIP_ROWS, &state->packSkipRows);
+        GetHelper(functions, GL_PACK_SKIP_PIXELS, &state->packSkipPixels);
+    }
+
+    if (nativegl::SupportsSeparateFramebufferBindings(functions))
+    {
+        GetHelper(functions, GL_READ_FRAMEBUFFER_BINDING,
+                  &state->framebuffers[angle::FramebufferBindingRead]);
+        GetHelper(functions, GL_DRAW_FRAMEBUFFER_BINDING,
+                  &state->framebuffers[angle::FramebufferBindingDraw]);
+    }
+    else
+    {
+        GetHelper(functions, GL_FRAMEBUFFER_BINDING,
+                  &state->framebuffers[angle::FramebufferBindingDraw]);
+        state->framebuffers[angle::FramebufferBindingRead] =
+            state->framebuffers[angle::FramebufferBindingDraw];
+    }
+
+    GetHelper(functions, GL_RENDERBUFFER_BINDING, &state->renderbuffer);
+
+    GetEnabledHelper(functions, GL_SCISSOR_TEST, &state->scissorTestEnabled);
+    GetHelper(functions, GL_SCISSOR_BOX, &state->scissor);
+    GetHelper(functions, GL_VIEWPORT, &state->viewport);
+    {
+        float depthRange[2] = {state->near, state->far};
+        GetHelper(functions, GL_DEPTH_RANGE, depthRange);
+        state->near = depthRange[0];
+        state->far  = depthRange[1];
+    }
+
+    if (nativegl::SupportsClipControl(functions))
+    {
+        GetHelper(functions, GL_CLIP_ORIGIN, &state->clipOrigin);
+        GetHelper(functions, GL_CLIP_DEPTH_MODE, &state->clipDepthMode);
+    }
+
+    GetHelper(functions, GL_BLEND_COLOR, &state->blendColor);
+    if (nativegl::SupportsDrawBuffersIndexed(functions))
+    {
+        GLint maxDrawBuffers = 0;
+        GetHelper(functions, GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+        maxDrawBuffers =
+            std::min(maxDrawBuffers, static_cast<GLint>(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS));
+
+        for (GLuint i = 0; i < static_cast<GLuint>(maxDrawBuffers); i++)
+        {
+            bool enabled = state->blendState.getEnabledMask().test(i);
+            GetEnabledHelper(functions, GL_BLEND, i, &enabled);
+            state->blendState.setEnabledIndexed(i, enabled);
+
+            std::array<bool, 4> colorMask;
+            state->blendState.getColorMaskIndexed(i, &colorMask[0], &colorMask[1], &colorMask[2],
+                                                  &colorMask[3]);
+            GetHelper(functions, GL_COLOR_WRITEMASK, i, &colorMask);
+            state->blendState.setColorMaskIndexed(i, colorMask[0], colorMask[1], colorMask[2],
+                                                  colorMask[3]);
+
+            gl::BlendFactorType blendSrcRgb = state->blendState.getSrcColorIndexed(i);
+            GetHelper(functions, GL_BLEND_SRC_RGB, i, &blendSrcRgb);
+            gl::BlendFactorType blendDestRgb = state->blendState.getDstColorIndexed(i);
+            GetHelper(functions, GL_BLEND_DST_RGB, i, &blendDestRgb);
+            gl::BlendFactorType blendSrcAlpha = state->blendState.getSrcAlphaIndexed(i);
+            GetHelper(functions, GL_BLEND_SRC_ALPHA, i, &blendSrcAlpha);
+            gl::BlendFactorType blendDestAlpha = state->blendState.getDstAlphaIndexed(i);
+            GetHelper(functions, GL_BLEND_DST_ALPHA, i, &blendDestAlpha);
+            state->blendState.setFactorsIndexed(i, blendSrcRgb, blendDestRgb, blendSrcAlpha,
+                                                blendDestAlpha);
+
+            gl::BlendEquationType blendEquationRgb = state->blendState.getEquationColorIndexed(i);
+            GetHelper(functions, GL_BLEND_EQUATION_RGB, i, &blendEquationRgb);
+            gl::BlendEquationType blendEquationAlpha = state->blendState.getEquationAlphaIndexed(i);
+            GetHelper(functions, GL_BLEND_EQUATION_ALPHA, i, &blendEquationAlpha);
+            state->blendState.setEquationsIndexed(i, blendEquationRgb, blendEquationAlpha);
+        }
+    }
+    else
+    {
+        bool enabled = state->blendState.getEnabledMask().test(0);
+        GetEnabledHelper(functions, GL_BLEND, &enabled);
+        state->blendState.setEnabled(enabled);
+
+        std::array<bool, 4> colorMask;
+        state->blendState.getColorMaskIndexed(0, &colorMask[0], &colorMask[1], &colorMask[2],
+                                              &colorMask[3]);
+        GetHelper(functions, GL_COLOR_WRITEMASK, &colorMask);
+        state->blendState.setColorMask(colorMask[0], colorMask[1], colorMask[2], colorMask[3]);
+
+        gl::BlendFactorType blendSrcRgb = state->blendState.getSrcColorIndexed(0);
+        GetHelper(functions, GL_BLEND_SRC_RGB, &blendSrcRgb);
+        gl::BlendFactorType blendDestRgb = state->blendState.getDstColorIndexed(0);
+        GetHelper(functions, GL_BLEND_DST_RGB, &blendDestRgb);
+        gl::BlendFactorType blendSrcAlpha = state->blendState.getSrcAlphaIndexed(0);
+        GetHelper(functions, GL_BLEND_SRC_ALPHA, &blendSrcAlpha);
+        gl::BlendFactorType blendDestAlpha = state->blendState.getDstAlphaIndexed(0);
+        GetHelper(functions, GL_BLEND_DST_ALPHA, &blendDestAlpha);
+        state->blendState.setFactors(blendSrcRgb, blendDestRgb, blendSrcAlpha, blendDestAlpha);
+
+        gl::BlendEquationType blendEquationRgb = state->blendState.getEquationColorIndexed(0);
+        GetHelper(functions, GL_BLEND_EQUATION_RGB, &blendEquationRgb);
+        gl::BlendEquationType blendEquationAlpha = state->blendState.getEquationAlphaIndexed(0);
+        GetHelper(functions, GL_BLEND_EQUATION_ALPHA, &blendEquationAlpha);
+        state->blendState.setEquations(blendEquationRgb, blendEquationAlpha);
+    }
+    if (nativegl::SupportsBlendEquationAdvancedCoherent(functions))
+    {
+        GetEnabledHelper(functions, GL_BLEND_ADVANCED_COHERENT_KHR, &state->blendAdvancedCoherent);
+    }
+
+    GetEnabledHelper(functions, GL_SAMPLE_ALPHA_TO_COVERAGE, &state->sampleAlphaToCoverageEnabled);
+    GetEnabledHelper(functions, GL_SAMPLE_COVERAGE, &state->sampleCoverageEnabled);
+    GetHelper(functions, GL_SAMPLE_COVERAGE_VALUE, &state->sampleCoverageValue);
+    GetHelper(functions, GL_SAMPLE_COVERAGE_INVERT, &state->sampleCoverageInvert);
+    if (nativegl::SupportsSampleMask(functions))
+    {
+        GLint maxSampleMaskWords = 0;
+        GetHelper(functions, GL_MAX_SAMPLE_MASK_WORDS, &maxSampleMaskWords);
+        maxSampleMaskWords = std::min(maxSampleMaskWords,
+                                      static_cast<GLint>(gl::IMPLEMENTATION_MAX_SAMPLE_MASK_WORDS));
+
+        GetEnabledHelper(functions, GL_SAMPLE_MASK, &state->sampleMaskEnabled);
+        for (GLuint i = 0; i < static_cast<GLuint>(maxSampleMaskWords); i++)
+        {
+            GetHelper(functions, GL_SAMPLE_MASK_VALUE, i, &state->sampleMaskValues[i]);
+        }
+    }
+
+    GetEnabledHelper(functions, GL_DEPTH_TEST, &state->depthTestEnabled);
+    GetHelper(functions, GL_DEPTH_FUNC, &state->depthFunc);
+    GetHelper(functions, GL_DEPTH_WRITEMASK, &state->depthMask);
+
+    GetEnabledHelper(functions, GL_STENCIL_TEST, &state->stencilTestEnabled);
+
+    GetHelper(functions, GL_STENCIL_FUNC, &state->stencilFrontFunc);
+    GetHelper(functions, GL_STENCIL_REF, &state->stencilFrontRef);
+    GetHelper(functions, GL_STENCIL_VALUE_MASK, &state->stencilFrontValueMask);
+    GetHelper(functions, GL_STENCIL_FAIL, &state->stencilFrontStencilFailOp);
+    GetHelper(functions, GL_STENCIL_PASS_DEPTH_FAIL, &state->stencilFrontStencilPassDepthFailOp);
+    GetHelper(functions, GL_STENCIL_PASS_DEPTH_PASS, &state->stencilFrontStencilPassDepthPassOp);
+    GetHelper(functions, GL_STENCIL_WRITEMASK, &state->stencilFrontWritemask);
+
+    GetHelper(functions, GL_STENCIL_BACK_FUNC, &state->stencilBackFunc);
+    GetHelper(functions, GL_STENCIL_BACK_REF, &state->stencilBackRef);
+    GetHelper(functions, GL_STENCIL_BACK_VALUE_MASK, &state->stencilBackValueMask);
+    GetHelper(functions, GL_STENCIL_BACK_FAIL, &state->stencilBackStencilFailOp);
+    GetHelper(functions, GL_STENCIL_BACK_PASS_DEPTH_FAIL,
+              &state->stencilBackStencilPassDepthFailOp);
+    GetHelper(functions, GL_STENCIL_BACK_PASS_DEPTH_PASS,
+              &state->stencilBackStencilPassDepthPassOp);
+    GetHelper(functions, GL_STENCIL_BACK_WRITEMASK, &state->stencilBackWritemask);
+
+    GetEnabledHelper(functions, GL_CULL_FACE, &state->cullFaceEnabled);
+    GetHelper(functions, GL_CULL_FACE_MODE, &state->cullFace);
+    GetHelper(functions, GL_FRONT_FACE, &state->frontFace);
+    if (nativegl::SupportsPolygonMode(functions))
+    {
+        // Some drivers return two values for polygon mode.
+        std::array<gl::PolygonMode, 2> polygonMode = {state->polygonMode, state->polygonMode};
+        GetHelper(functions, GL_POLYGON_MODE, &polygonMode);
+        // Check that either the two values are equal or the second one is unwritten.
+        ASSERT(polygonMode[0] == polygonMode[1] || polygonMode[1] == state->polygonMode);
+        state->polygonMode = polygonMode[0];
+
+        if (nativegl::SupportsPolygonModeNV(functions))
+        {
+            GetEnabledHelper(functions, GL_POLYGON_OFFSET_POINT, &state->polygonOffsetPointEnabled);
+        }
+        GetEnabledHelper(functions, GL_POLYGON_OFFSET_LINE, &state->polygonOffsetLineEnabled);
+    }
+    GetEnabledHelper(functions, GL_POLYGON_OFFSET_FILL, &state->polygonOffsetFillEnabled);
+    GetHelper(functions, GL_POLYGON_OFFSET_FACTOR, &state->polygonOffsetFactor);
+    GetHelper(functions, GL_POLYGON_OFFSET_UNITS, &state->polygonOffsetUnits);
+    if (nativegl::SupportsPolygonOffsetClamp(functions))
+    {
+        GetHelper(functions, GL_POLYGON_OFFSET_CLAMP_EXT, &state->polygonOffsetClamp);
+    }
+    if (nativegl::SupportsDepthClamp(functions))
+    {
+        GetEnabledHelper(functions, GL_DEPTH_CLAMP_EXT, &state->depthClampEnabled);
+    }
+    if (nativegl::SupportsRasterizerDiscard(functions))
+    {
+        GetEnabledHelper(functions, GL_RASTERIZER_DISCARD, &state->rasterizerDiscardEnabled);
+    }
+    GetHelper(functions, GL_LINE_WIDTH, &state->lineWidth);
+
+    if (nativegl::SupportsPrimitiveRestartFixedIndex(functions))
+    {
+        GetEnabledHelper(functions, GL_PRIMITIVE_RESTART_FIXED_INDEX,
+                         &state->primitiveRestartFixedIndexEnabled);
+    }
+    if (nativegl::SupportsPrimitiveRestart(functions))
+    {
+        GetEnabledHelper(functions, GL_PRIMITIVE_RESTART, &state->primitiveRestartEnabled);
+        GetHelper(functions, GL_PRIMITIVE_RESTART_INDEX, &state->primitiveRestartIndex);
+    }
+
+    GetHelper(functions, GL_COLOR_CLEAR_VALUE, &state->clearColor);
+    GetHelper(functions, GL_DEPTH_CLEAR_VALUE, &state->clearDepth);
+    GetHelper(functions, GL_STENCIL_CLEAR_VALUE, &state->clearStencil);
+
+    if (nativegl::SupportsSRGBWriteControl(functions))
+    {
+        GetEnabledHelper(functions, GL_FRAMEBUFFER_SRGB, &state->framebufferSRGBEnabled);
+    }
+
+    GetHelper(functions, GL_DITHER, &state->ditherEnabled);
+    if (nativegl::SupportsSettingCubemapSeamless(functions))
+    {
+        GetEnabledHelper(functions, GL_TEXTURE_CUBE_MAP_SEAMLESS,
+                         &state->textureCubemapSeamlessEnabled);
+    }
+
+    if (nativegl::SupportsMultisampleComatibility(functions))
+    {
+        GetEnabledHelper(functions, GL_MULTISAMPLE, &state->multisamplingEnabled);
+        GetHelper(functions, GL_SAMPLE_ALPHA_TO_ONE, &state->sampleAlphaToOneEnabled);
+    }
+
+    if (nativegl::SupportsProvokingVertex(functions))
+    {
+        GetHelper(functions, GL_PROVOKING_VERTEX, &state->provokingVertex);
+    }
+
+    if (nativegl::SupportsClipCullDistance(functions))
+    {
+        GLint maxClipDistances = 0;
+        GetHelper(functions, GL_MAX_CLIP_DISTANCES, &maxClipDistances);
+        maxClipDistances =
+            std::min(maxClipDistances, static_cast<GLint>(gl::IMPLEMENTATION_MAX_CLIP_DISTANCES));
+
+        for (GLuint i = 0; i < static_cast<GLuint>(maxClipDistances); i++)
+        {
+            bool enabled = state->enabledClipDistances.test(i);
+            GetEnabledHelper(functions, GL_CLIP_DISTANCE0 + i, &enabled);
+            state->enabledClipDistances[i] = enabled;
+        }
+    }
+
+    if (nativegl::SupportsLogicOp(functions))
+    {
+        GetEnabledHelper(functions, GL_COLOR_LOGIC_OP, &state->logicOpEnabled);
+        GetHelper(functions, GL_LOGIC_OP_MODE, &state->logicOp);
+    }
+}
+
+bool VertexAttribCurrentValuesEqual(const gl::VertexAttribCurrentValueData &a,
+                                    const gl::VertexAttribCurrentValueData &b)
+{
+    // When comparing vertex attribute current values, only compare the data, not the type.
+    return ANGLE_UNSAFE_BUFFERS(
+               memcmp(&a.Values, &b.Values, sizeof(gl::VertexAttribCurrentValueData::Values))) == 0;
+}
+
+// Compute the mask of attributes that have different current values
+gl::AttributesMask ComputeVertexAttribCurrentValueDiffMask(
+    const gl::AttribArray<gl::VertexAttribCurrentValueData> &a,
+    const gl::AttribArray<gl::VertexAttribCurrentValueData> &b)
+{
+    gl::AttributesMask diffMask;
+    for (size_t i = 0; i < a.size(); i++)
+    {
+        diffMask.set(i, !VertexAttribCurrentValuesEqual(a[i], b[i]));
+    }
+    return diffMask;
+}
+
+auto TieIndexedBufferBindingGL(const IndexedBufferBindingGL &binding)
+{
+    return std::tie(binding.offset, binding.size, binding.buffer);
+}
+
+auto TieImageUnitBindingGL(const ImageUnitBindingGL &binding)
+{
+    return std::tie(binding.texture, binding.level, binding.layered, binding.layer, binding.access,
+                    binding.format);
+}
+
+auto TieContextStateGL(const ContextStateGL &state)
+{
+    // state.vertexAttribCurrentValues is omitted and handled specially in the comparison operator
+    return std::tie(
+        state.program, state.vao, /*state.vertexAttribCurrentValues,*/ state.buffers,
+        state.indexedBuffers, state.textureUnitIndex, state.textures, state.samplers, state.images,
+        state.transformFeedback, state.unpackAlignment, state.unpackRowLength, state.unpackSkipRows,
+        state.unpackSkipPixels, state.unpackImageHeight, state.unpackSkipImages,
+        state.packAlignment, state.packRowLength, state.packSkipRows, state.packSkipPixels,
+        state.framebuffers, state.renderbuffer, state.scissorTestEnabled, state.scissor,
+        state.viewport, state.near, state.far, state.clipOrigin, state.clipDepthMode,
+        state.blendColor, state.blendState, state.blendAdvancedCoherent,
+        state.sampleAlphaToCoverageEnabled, state.sampleCoverageEnabled, state.sampleCoverageValue,
+        state.sampleCoverageInvert, state.sampleMaskEnabled, state.sampleMaskValues,
+        state.depthTestEnabled, state.depthFunc, state.depthMask, state.stencilTestEnabled,
+        state.stencilFrontFunc, state.stencilFrontRef, state.stencilFrontValueMask,
+        state.stencilFrontStencilFailOp, state.stencilFrontStencilPassDepthFailOp,
+        state.stencilFrontStencilPassDepthPassOp, state.stencilFrontWritemask,
+        state.stencilBackFunc, state.stencilBackRef, state.stencilBackValueMask,
+        state.stencilBackStencilFailOp, state.stencilBackStencilPassDepthFailOp,
+        state.stencilBackStencilPassDepthPassOp, state.stencilBackWritemask, state.cullFaceEnabled,
+        state.cullFace, state.frontFace, state.polygonMode, state.polygonOffsetPointEnabled,
+        state.polygonOffsetLineEnabled, state.polygonOffsetFillEnabled, state.polygonOffsetFactor,
+        state.polygonOffsetUnits, state.polygonOffsetClamp, state.depthClampEnabled,
+        state.rasterizerDiscardEnabled, state.lineWidth, state.primitiveRestartFixedIndexEnabled,
+        state.primitiveRestartEnabled, state.primitiveRestartIndex, state.clearColor,
+        state.clearDepth, state.clearStencil, state.framebufferSRGBEnabled, state.ditherEnabled,
+        state.textureCubemapSeamlessEnabled, state.multisamplingEnabled,
+        state.sampleAlphaToOneEnabled, state.provokingVertex, state.enabledClipDistances,
+        state.logicOpEnabled, state.logicOp);
+}
+
 }  // anonymous namespace
 
 VertexArrayStateGL::VertexArrayStateGL(size_t maxAttribs, size_t maxBindings)
@@ -98,10 +774,32 @@ VertexArrayStateGL::VertexArrayStateGL(size_t maxAttribs, size_t maxBindings)
     }
 }
 
-ContextStateGL::ContextStateGL(const gl::Caps &caps, const gl::Extensions &extensions)
-    : vertexAttribCurrentValues(caps.maxVertexAttributes),
-      images(caps.maxImageUnits),
-      blendState(caps.maxDrawBuffers)
+bool operator==(const IndexedBufferBindingGL &a, const IndexedBufferBindingGL &b)
+{
+    return TieIndexedBufferBindingGL(a) == TieIndexedBufferBindingGL(b);
+}
+
+ImageUnitBindingGL::ImageUnitBindingGL(GLenum defaultFormat) : format(defaultFormat) {}
+
+bool operator==(const ImageUnitBindingGL &a, const ImageUnitBindingGL &b)
+{
+    return TieImageUnitBindingGL(a) == TieImageUnitBindingGL(b);
+}
+
+ContextStateGLCaps::ContextStateGLCaps(const FunctionsGL *functions, const gl::Caps &caps)
+    : defaultFramebufferSrgbState(functions->standard == STANDARD_GL_ES),
+      defaultImageBindingFormat(functions->standard == STANDARD_GL_ES ? GL_R32UI : GL_R8),
+      maxImageUnits(caps.maxImageUnits),
+      maxDrawBuffers(caps.maxDrawBuffers),
+      maxUniformBufferBindings(caps.maxUniformBufferBindings),
+      maxAtomicCounterBufferBindings(caps.maxAtomicCounterBufferBindings),
+      maxShaderStorageBufferBindings(caps.maxShaderStorageBufferBindings)
+{}
+
+ContextStateGL::ContextStateGL(const ContextStateGLCaps &caps)
+    : images(caps.maxImageUnits, ImageUnitBindingGL(caps.defaultImageBindingFormat)),
+      blendState(caps.maxDrawBuffers),
+      framebufferSRGBEnabled(caps.defaultFramebufferSrgbState)
 {
     indexedBuffers[gl::BufferBinding::Uniform].resize(caps.maxUniformBufferBindings);
     indexedBuffers[gl::BufferBinding::AtomicCounter].resize(caps.maxAtomicCounterBufferBindings);
@@ -110,13 +808,35 @@ ContextStateGL::ContextStateGL(const gl::Caps &caps, const gl::Extensions &exten
     sampleMaskValues.fill(~GLbitfield(0));
 }
 
+bool operator==(const ContextStateGL &a, const ContextStateGL &b)
+{
+    if (TieContextStateGL(a) != TieContextStateGL(b))
+    {
+        return false;
+    }
+
+    if (ComputeVertexAttribCurrentValueDiffMask(a.vertexAttribCurrentValues,
+                                                b.vertexAttribCurrentValues)
+            .any())
+    {
+        return false;
+    }
+
+    return true;
+}
+bool operator!=(const ContextStateGL &a, const ContextStateGL &b)
+{
+    return !(a == b);
+}
+
 StateManagerGL::StateManagerGL(const FunctionsGL *functions,
                                const gl::Caps &rendererCaps,
                                const gl::Extensions &extensions,
                                const angle::FeaturesGL &features)
     : mFunctions(functions),
       mFeatures(features),
-      mState(rendererCaps, extensions),
+      mCaps(functions, rendererCaps),
+      mState(mCaps),
       mSupportsVertexArrayObjects(nativegl::SupportsVertexArrayObjects(functions)),
       mDefaultVAOState(rendererCaps.maxVertexAttributes, rendererCaps.maxVertexAttribBindings),
       mVAOState(&mDefaultVAOState),
@@ -180,6 +900,18 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
     {
         mFunctions->clampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
     }
+
+    // The initial viewport and scissor state is based on the surface that this context was first
+    // made current with. Query it back.
+    GetHelper(mFunctions, GL_SCISSOR_BOX, &mState.scissor);
+    GetHelper(mFunctions, GL_VIEWPORT, &mState.viewport);
+
+    // Drivers have differing opinions on what the initial stencil mask should be (between
+    // 0xFFFFFFFF or 0xFF) so query it to be sure.
+    GetHelper(functions, GL_STENCIL_VALUE_MASK, &mState.stencilFrontValueMask);
+    GetHelper(functions, GL_STENCIL_WRITEMASK, &mState.stencilFrontWritemask);
+    GetHelper(functions, GL_STENCIL_BACK_VALUE_MASK, &mState.stencilBackValueMask);
+    GetHelper(functions, GL_STENCIL_BACK_WRITEMASK, &mState.stencilBackWritemask);
 }
 
 StateManagerGL::~StateManagerGL()
@@ -2745,40 +3477,9 @@ VertexArrayStateGL *StateManagerGL::getDefaultVAOState()
 
 void StateManagerGL::validateState() const
 {
-    // Current program
-    ValidateStateHelper(mFunctions, mState.program, GL_CURRENT_PROGRAM, "mProgram",
-                        "GL_CURRENT_PROGRAM");
-
-    // Buffers
-    for (gl::BufferBinding bindingType : angle::AllEnums<gl::BufferBinding>())
-    {
-        // These binding types need compute support to be queried
-        if (bindingType == gl::BufferBinding::AtomicCounter ||
-            bindingType == gl::BufferBinding::DispatchIndirect ||
-            bindingType == gl::BufferBinding::ShaderStorage)
-        {
-            if (!nativegl::SupportsCompute(mFunctions))
-            {
-                continue;
-            }
-        }
-
-        // Transform feedback buffer bindings are tracked in TransformFeedbackGL
-        if (bindingType == gl::BufferBinding::TransformFeedback)
-        {
-            continue;
-        }
-
-        GLenum bindingTypeGL  = nativegl::GetBufferBindingQuery(bindingType);
-        std::string localName = "mBuffers[" + ToString(bindingType) + "]";
-        ValidateStateHelper(mFunctions, mState.buffers[bindingType], bindingTypeGL,
-                            localName.c_str(),
-                            nativegl::GetBufferBindingString(bindingType).c_str());
-    }
-
-    // Vertex array object
-    ValidateStateHelper(mFunctions, mState.vao, GL_VERTEX_ARRAY_BINDING, "mVAO",
-                        "GL_VERTEX_ARRAY_BINDING");
+    ContextStateGL queriedState(mCaps);
+    QueryContextStateGL(mFunctions, &queriedState);
+    ASSERT(mState == queriedState);
 }
 
 void StateManagerGL::setBufferBindingDirty(gl::BufferBinding binding)

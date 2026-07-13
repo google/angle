@@ -810,7 +810,11 @@ class BlendStateExt final
     EquationStorage::Type expandEquationColorIndexed(const size_t index) const;
     EquationStorage::Type expandEquationAlphaIndexed(const size_t index) const;
     void setEquations(const GLenum modeColor, const GLenum modeAlpha);
+    void setEquations(const BlendEquationType modeColor, const BlendEquationType modeAlpha);
     void setEquationsIndexed(const size_t index, const GLenum modeColor, const GLenum modeAlpha);
+    void setEquationsIndexed(const size_t index,
+                             const BlendEquationType modeColor,
+                             const BlendEquationType modeAlpha);
     void setEquationsIndexed(const size_t index,
                              const size_t otherIndex,
                              const BlendStateExt &other);
@@ -843,11 +847,15 @@ class BlendStateExt final
                     const GLenum dstColor,
                     const GLenum srcAlpha,
                     const GLenum dstAlpha);
+    void setFactors(const BlendFactorType srcColorFactor,
+                    const BlendFactorType dstColorFactor,
+                    const BlendFactorType srcAlphaFactor,
+                    const BlendFactorType dstAlphaFactor);
     void setFactorsIndexed(const size_t index,
-                           const gl::BlendFactorType srcColorFactor,
-                           const gl::BlendFactorType dstColorFactor,
-                           const gl::BlendFactorType srcAlphaFactor,
-                           const gl::BlendFactorType dstAlphaFactor);
+                           const BlendFactorType srcColorFactor,
+                           const BlendFactorType dstColorFactor,
+                           const BlendFactorType srcAlphaFactor,
+                           const BlendFactorType dstAlphaFactor);
     void setFactorsIndexed(const size_t index,
                            const GLenum srcColor,
                            const GLenum dstColor,
@@ -939,6 +947,9 @@ class BlendStateExt final
     }
 
     constexpr void setEnabledMask(const DrawBufferMask enabledMask) { mEnabledMask = enabledMask; }
+
+    bool operator==(const BlendStateExt &other) const;
+    bool operator!=(const BlendStateExt &other) const;
 
     ///////// Data Members /////////
   private:

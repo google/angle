@@ -571,13 +571,18 @@ void BlendStateExt::setEquations(const GLenum modeColor, const GLenum modeAlpha)
 {
     const gl::BlendEquationType colorEquation = FromGLenum<BlendEquationType>(modeColor);
     const gl::BlendEquationType alphaEquation = FromGLenum<BlendEquationType>(modeAlpha);
+    setEquations(colorEquation, alphaEquation);
+}
 
-    mEquationColor = expandEquationValue(colorEquation);
-    mEquationAlpha = expandEquationValue(alphaEquation);
+void BlendStateExt::setEquations(const BlendEquationType modeColor,
+                                 const BlendEquationType modeAlpha)
+{
+    mEquationColor = expandEquationValue(modeColor);
+    mEquationAlpha = expandEquationValue(modeAlpha);
 
     // Note that advanced blend equations cannot be independently set for color and alpha, so only
     // the color equation can be checked.
-    if (IsAdvancedBlendEquation(colorEquation))
+    if (IsAdvancedBlendEquation(modeColor))
     {
         mUsesAdvancedBlendEquationMask = mAllEnabledMask;
     }
@@ -591,15 +596,21 @@ void BlendStateExt::setEquationsIndexed(const size_t index,
                                         const GLenum modeColor,
                                         const GLenum modeAlpha)
 {
-    ASSERT(index < mDrawBufferCount);
-
     const gl::BlendEquationType colorEquation = FromGLenum<BlendEquationType>(modeColor);
     const gl::BlendEquationType alphaEquation = FromGLenum<BlendEquationType>(modeAlpha);
+    setEquationsIndexed(index, colorEquation, alphaEquation);
+}
 
-    EquationStorage::SetValueIndexed(index, colorEquation, &mEquationColor);
-    EquationStorage::SetValueIndexed(index, alphaEquation, &mEquationAlpha);
+void BlendStateExt::setEquationsIndexed(const size_t index,
+                                        const BlendEquationType modeColor,
+                                        const BlendEquationType modeAlpha)
+{
+    ASSERT(index < mDrawBufferCount);
 
-    mUsesAdvancedBlendEquationMask.set(index, IsAdvancedBlendEquation(colorEquation));
+    EquationStorage::SetValueIndexed(index, modeColor, &mEquationColor);
+    EquationStorage::SetValueIndexed(index, modeAlpha, &mEquationAlpha);
+
+    mUsesAdvancedBlendEquationMask.set(index, IsAdvancedBlendEquation(modeColor));
 }
 
 void BlendStateExt::setEquationsIndexed(const size_t index,
@@ -671,11 +682,18 @@ void BlendStateExt::setFactors(const GLenum srcColor,
                                const GLenum srcAlpha,
                                const GLenum dstAlpha)
 {
-    const gl::BlendFactorType srcColorFactor = FromGLenum<BlendFactorType>(srcColor);
-    const gl::BlendFactorType dstColorFactor = FromGLenum<BlendFactorType>(dstColor);
-    const gl::BlendFactorType srcAlphaFactor = FromGLenum<BlendFactorType>(srcAlpha);
-    const gl::BlendFactorType dstAlphaFactor = FromGLenum<BlendFactorType>(dstAlpha);
+    const BlendFactorType srcColorFactor = FromGLenum<BlendFactorType>(srcColor);
+    const BlendFactorType dstColorFactor = FromGLenum<BlendFactorType>(dstColor);
+    const BlendFactorType srcAlphaFactor = FromGLenum<BlendFactorType>(srcAlpha);
+    const BlendFactorType dstAlphaFactor = FromGLenum<BlendFactorType>(dstAlpha);
+    setFactors(srcColorFactor, dstColorFactor, srcAlphaFactor, dstAlphaFactor);
+}
 
+void BlendStateExt::setFactors(const BlendFactorType srcColorFactor,
+                               const BlendFactorType dstColorFactor,
+                               const BlendFactorType srcAlphaFactor,
+                               const BlendFactorType dstAlphaFactor)
+{
     mSrcColor = expandFactorValue(srcColorFactor);
     mDstColor = expandFactorValue(dstColorFactor);
     mSrcAlpha = expandFactorValue(srcAlphaFactor);
@@ -693,10 +711,10 @@ void BlendStateExt::setFactors(const GLenum srcColor,
 }
 
 void BlendStateExt::setFactorsIndexed(const size_t index,
-                                      const gl::BlendFactorType srcColorFactor,
-                                      const gl::BlendFactorType dstColorFactor,
-                                      const gl::BlendFactorType srcAlphaFactor,
-                                      const gl::BlendFactorType dstAlphaFactor)
+                                      const BlendFactorType srcColorFactor,
+                                      const BlendFactorType dstColorFactor,
+                                      const BlendFactorType srcAlphaFactor,
+                                      const BlendFactorType dstAlphaFactor)
 {
     ASSERT(index < mDrawBufferCount);
 
@@ -761,6 +779,26 @@ DrawBufferMask BlendStateExt::compareFactors(const FactorStorage::Type srcColor,
            FactorStorage::GetDiffMask(mDstColor, dstColor) |
            FactorStorage::GetDiffMask(mSrcAlpha, srcAlpha) |
            FactorStorage::GetDiffMask(mDstAlpha, dstAlpha);
+}
+
+bool BlendStateExt::operator==(const BlendStateExt &other) const
+{
+    // draw buffer counts being equal implies that the all enable masks are equal.
+    ASSERT((mDrawBufferCount == other.mDrawBufferCount) ==
+           (mAllColorMask == other.mAllColorMask && mAllEnabledMask == other.mAllEnabledMask));
+
+    auto tieBlendState = [](const BlendStateExt &b) {
+        return std::tie(b.mParameterMask, b.mSrcColor, b.mDstColor, b.mSrcAlpha, b.mDstAlpha,
+                        b.mEquationColor, b.mEquationAlpha, b.mColorMask, b.mEnabledMask,
+                        b.mUsesAdvancedBlendEquationMask, b.mUsesExtendedBlendFactorMask,
+                        b.mDrawBufferCount);
+    };
+    return tieBlendState(*this) == tieBlendState(other);
+}
+
+bool BlendStateExt::operator!=(const BlendStateExt &other) const
+{
+    return !(*this == other);
 }
 
 static void MinMax(int a, int b, int *minimum, int *maximum)
