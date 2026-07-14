@@ -15203,6 +15203,90 @@ TEST_P(Texture2DTestES3, SingleTextureMultipleSamplers)
     EXPECT_PIXEL_NEAR(0, 0, 128, 0, 0, 255, 2);
 }
 
+// Test that disabling mipmapping and creating a texture that is complete but not mip complete
+// works.
+TEST_P(Texture2DTestES3, MipmapIncompleteMipmappingDisabled)
+{
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    // Disable mipmapping
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Create two levels for the texture that are not compatible.
+    constexpr uint32_t kLevel0Size = 75;
+    constexpr uint32_t kLevel1Size = 123;
+    const std::vector<GLColor> kLevel0Data(kLevel0Size * kLevel0Size, GLColor::red);
+    const std::vector<GLColor> kLevel1Data(kLevel1Size * kLevel1Size, GLColor::green);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kLevel0Size, kLevel0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kLevel1Size, kLevel1Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel1Data.data());
+
+    // Set levels to [0, 1], while mipmapping is still disabled.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    // Sampling from the texture should work, sampling only from level 0.
+    ANGLE_GL_PROGRAM(drawTexture, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(drawTexture, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLevel0Data[0]);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that disabling mipmapping and recreating a texture that is complete but not mip complete
+// works.
+TEST_P(Texture2DTestES3, MipmapIncompleteAfterRecreateMipmappingDisabled)
+{
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    // Disable mipmapping
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Create two levels for the texture.
+    constexpr uint32_t kLevel0Size = 75;
+    constexpr uint32_t kLevel1Size = kLevel0Size >> 1;
+    const std::vector<GLColor> kLevel0Data(kLevel0Size * kLevel0Size, GLColor::red);
+    const std::vector<GLColor> kLevel1Data(kLevel1Size * kLevel1Size, GLColor::green);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kLevel0Size, kLevel0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kLevel1Size, kLevel1Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel1Data.data());
+
+    // Set levels to [0, 1], while mipmapping is still disabled.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    // Sample from the texture so it's synced.
+    ANGLE_GL_PROGRAM(drawTexture, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(drawTexture, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLevel0Data[0]);
+    ASSERT_GL_NO_ERROR();
+
+    // Change Base Level, then redefine level 0; it's changing a level that is out of
+    // range of [Base, Max] levels.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+
+    // Resize level 1 to be incompatible.
+    constexpr uint32_t kLevel1Resize = 123;
+    const std::vector<GLColor> kLevel1Data2(kLevel1Resize * kLevel1Resize, GLColor::blue);
+
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kLevel1Resize, kLevel1Resize, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kLevel1Data2.data());
+
+    // Draw again, sampling should still be done from level 0 only.
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(drawTexture, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLevel0Data[0]);
+    ASSERT_GL_NO_ERROR();
+}
+
 // The test is added to cover http://anglebug.com/42260889. Cubemap completeness checks used to
 // start always at level 0 instead of the base level resulting in an incomplete texture if the faces
 // at level 0 are not created. The test creates a cubemap texture, specifies the images only for mip
@@ -15930,6 +16014,88 @@ void main()
     }
 
     ASSERT_GL_NO_ERROR();
+}
+
+// Test that redefining a cubemap with a compatible size in level 1 but incompatible in other levels
+// works.
+// Regression test for a bug where only the first face was checked for compatibility.
+TEST_P(TextureCubeTestES3, RedefinedCubemapLevelsOnlyFaceZeroCompatible)
+{
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
+
+    // Disabling mipmapping
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    constexpr uint32_t kSize = 45;
+    const std::vector<GLColor> kLevel0Data(kSize * kSize, GLColor::red);
+    const std::vector<GLColor> kLevel1Data(kSize * kSize / 4, GLColor::green);
+
+    // Create two levels for the texture.
+    for (GLenum face = 0; face < 6; face++)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, kLevel0Data.data());
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 1, GL_RGBA8, kSize >> 1, kSize >> 1, 0,
+                     GL_RGBA, GL_UNSIGNED_BYTE, kLevel1Data.data());
+    }
+
+    // Set levels to [0, 1], while mipmapping is still disabled.
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 1);
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 1);
+    glUniform1i(mTextureCubeUniformLocation, 0);
+
+    // Sample from the texture so it's synced.
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLevel0Data[0]);
+    ASSERT_GL_NO_ERROR();
+
+    // Redefine only the first face of level 1, to an incompatible size
+    constexpr uint32_t kSize2 = 33;
+    const std::vector<GLColor> kLevel0Data2(kSize2 * kSize2, GLColor::yellow);
+    const std::vector<GLColor> kLevel1Data2(kSize * kSize / 4, GLColor::blue);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 1, GL_RGBA8, kSize2 >> 1, kSize2 >> 1, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kLevel1Data2.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Make base level dirty.
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+
+    // Redefine level 0 in a way that's compatible with the first face of level 1.
+    for (GLenum face = 0; face < 6; face++)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA8, kSize2, kSize2, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, kLevel0Data2.data());
+    }
+    ASSERT_GL_NO_ERROR();
+
+    // Draw again, sampling should still be done from level 0 only.
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLevel0Data2[0]);
+    ASSERT_GL_NO_ERROR();
+
+    // Restore level 1's first face to its original size, verify the rest of the faces retain the
+    // originally uploaded data.
+    static_assert(kSize > kSize2,
+                  "kLevel1Data2 is sized based on kSize, and is used for both kSize and kSize2 "
+                  "texture levels");
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 1, GL_RGBA8, kSize >> 1, kSize >> 1, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, kLevel1Data2.data());
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 1);
+
+    for (uint32_t i = 0; i < 6; ++i)
+    {
+        glUniform1i(mTextureCubeFaceUniformLocation, i);
+        glClear(GL_COLOR_BUFFER_BIT);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, i == 0 ? kLevel1Data2[0] : kLevel1Data[0]);
+        ASSERT_GL_NO_ERROR();
+    }
 }
 
 // Test that glCopyImageSubData works with GL_TEXTURE_CUBE_MAP_ARRAY layers unique to array cubes
