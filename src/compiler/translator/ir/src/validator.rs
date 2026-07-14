@@ -39,6 +39,10 @@
 //     output: validate_merge_block_with_input()
 //   - For block that has a merge block with an input, the branch instruction must be If, and the
 //     block must contains block1: validate_merge_block_with_input()
+//   - Validate that if there's a merge variable in an if block, both true and false blocks exist
+//     and they both end in a Merge with an ID.  (Technically, we should be able to also support one
+//     block being merge and the other discard/return/break/continue, but no such code can be
+//     generated right now): validate_merge_block_with_input()
 //
 // Instructions:
 //   - Access to struct fields are in bounds: validate_struct_field_in_bounds()
@@ -59,7 +63,6 @@
 //     that are applicable (including uniforms and samplers for example).  Needs to work to make
 //     sure precision is always assigned.
 //   - Loop blocks ends in the appropriate instructions.
-//   - Do blocks end in DoLoop (unless already terminated by something else, like Return)
 //   - Interface variables with NameSource::Internal are unique.
 //   - NameSource::Internal names don't start with the user and temporary name prefixes (_u, t and f
 //     respectively).
@@ -75,10 +78,6 @@
 //     is_proj is false for cubemaps.
 //   - Check that function parameter variables don't have an initializer.
 //   - Check that returned values from functions match the type of the function's return value.
-//   - Validate that if there's a merge variable in an if block, both true and false blocks exist
-//     and they both end in a Merge with an ID.  (Technically, we should be able to also support one
-//     block being merge and the other discard/return/break/continue, but no such code can be
-//     generated right now).
 //   - Images with the Rect dimension can only have a Float base type and be 2D samplers (not
 //     storage image, array, msaa, etc).
 //   - Between the Smooth, Flat, NoPerspective, Centroid and Sample decorations, they are all
@@ -1654,7 +1653,7 @@ impl<'a> Validator<'a> {
         });
         if block.merge_block.as_ref().and_then(|merge_block| merge_block.input).is_some() {
             // merge_block with input is only allowed when current block ends with OpCode::If, and
-            // "if true" block exists
+            // both the "true" and "false" blocks exist
             if !matches!(block.get_terminating_op(), OpCode::If(_)) {
                 self.on_error(format_args!(
                     "current {:?} block contains a merge block with input, but current block does \
@@ -1662,10 +1661,10 @@ impl<'a> Validator<'a> {
                     block_kind
                 ));
             }
-            if block.block1.is_none() {
+            if block.block1.is_none() || block.block2.is_none() {
                 self.on_error(format_args!(
-                    "current {:?} block contains a merge block with input, at minimum current \
-                     block must contains block1 to sets the merge block input value",
+                    "current {:?} block contains a merge block with input, current block must \
+                     contain both block1 and block2 to set the merge block input value",
                     block_kind
                 ));
             }
@@ -1681,18 +1680,15 @@ impl<'a> Validator<'a> {
                 ));
             }
 
-            // Branch instruction in block2 (if block2 exists) that jumps to the merge block should
-            // have an output
-            if let Some(block2) = block.block2.as_ref() {
-                let block2_last_op = block2.get_merge_chain_terminating_op();
-                if !matches!(block2_last_op, OpCode::Merge(Some(_))) {
-                    self.on_error(format_args!(
-                        "current {:?} block contains a merge block with input, but the branch \
-                         instruction in block2 that jumps to the merge block does not have an \
-                         output",
-                        block_kind
-                    ));
-                }
+            // Branch instruction in block2 that jumps to the merge block should have an output
+            let block2 = block.block2.as_ref().expect("block2 can't be none");
+            let block2_last_op = block2.get_merge_chain_terminating_op();
+            if !matches!(block2_last_op, OpCode::Merge(Some(_))) {
+                self.on_error(format_args!(
+                    "current {:?} block contains a merge block with input, but the branch \
+                     instruction in block2 that jumps to the merge block does not have an output",
+                    block_kind
+                ));
             }
         }
     }
