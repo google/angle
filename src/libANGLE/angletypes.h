@@ -206,6 +206,14 @@ bool operator==(const RectangleImpl<T> &a, const RectangleImpl<T> &b);
 template <typename T>
 bool operator!=(const RectangleImpl<T> &a, const RectangleImpl<T> &b);
 
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const RectangleImpl<T> &rect)
+{
+    os << "x = " << rect.x << ", y = " << rect.y << ", width = " << rect.width
+       << ", height = " << rect.height;
+    return os;
+}
+
 using Rectangle = RectangleImpl<int>;
 
 // Calculate the intersection of two rectangles.  Returns false if the intersection is empty.

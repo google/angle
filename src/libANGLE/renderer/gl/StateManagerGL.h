@@ -174,6 +174,7 @@ struct IndexedBufferBindingGL
     GLuint buffer   = 0;
 };
 bool operator==(const IndexedBufferBindingGL &a, const IndexedBufferBindingGL &b);
+std::ostream &operator<<(std::ostream &os, const IndexedBufferBindingGL &binding);
 
 struct ImageUnitBindingGL
 {
@@ -187,6 +188,7 @@ struct ImageUnitBindingGL
     GLenum format     = GL_R32UI;
 };
 bool operator==(const ImageUnitBindingGL &a, const ImageUnitBindingGL &b);
+std::ostream &operator<<(std::ostream &os, const ImageUnitBindingGL &binding);
 
 // Caps needed to initialize a new ContextStateGL
 struct ContextStateGLCaps
@@ -317,6 +319,7 @@ struct ContextStateGL
 };
 bool operator==(const ContextStateGL &a, const ContextStateGL &b);
 bool operator!=(const ContextStateGL &a, const ContextStateGL &b);
+std::ostream &operator<<(std::ostream &os, const ContextStateGL &state);
 
 class StateManagerGL final : angle::NonCopyable
 {

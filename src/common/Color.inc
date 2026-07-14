@@ -41,6 +41,12 @@ bool operator!=(const Color<T> &a, const Color<T> &b)
     return !(a == b);
 }
 
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Color<T> &color)
+{
+    os << "r = " << color.red << ", g = " << color.green << ", b = " << color.blue << ", a = " << color.alpha;
+    return os;
+}
 
 ColorGeneric::ColorGeneric() : colorF(), type(Type::Float) {}
 

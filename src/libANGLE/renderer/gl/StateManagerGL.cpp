@@ -788,6 +788,89 @@ auto TieContextStateGL(const ContextStateGL &state)
         state.enabledClipDistances, state.logicOpEnabled, state.logicOp);
 }
 
+void Indent(std::ostream &os, size_t count)
+{
+    for (size_t indent = 0; indent < count; indent++)
+    {
+        os << " ";
+    }
+}
+
+template <typename T>
+void PrintCompressedArray(std::ostream &os,
+                          const T &values,
+                          size_t indentation,
+                          bool wrapValueInParens)
+{
+    for (size_t i = 0; i < values.size(); i++)
+    {
+        size_t start = i;
+        while (i + 1 < values.size() && values[i + 1] == values[i])
+        {
+            i++;
+        }
+
+        Indent(os, indentation);
+        os << "[" << start;
+        if (i > start)
+        {
+            os << ".." << i;
+        }
+        os << "] = ";
+        if (wrapValueInParens)
+        {
+            os << "(";
+        }
+        os << values[i];
+        if (wrapValueInParens)
+        {
+            os << ")";
+        }
+        os << std::endl;
+    }
+}
+
+std::string PrintIndexedBlendState(const gl::BlendStateExt &blendState, size_t index)
+{
+    std::ostringstream os;
+    os << "enabled = " << blendState.getEnabledMask().test(index) << ", ";
+    bool r, g, b, a;
+    blendState.getColorMaskIndexed(index, &r, &g, &b, &a);
+    os << "mask = " << (r ? "R" : "_") << (g ? "G" : "_") << (b ? "B" : "_") << (a ? "A" : "_")
+       << ",";
+    os << "colorMode = " << blendState.getEquationColorIndexed(index) << ", ";
+    os << "alphaMode = " << blendState.getEquationAlphaIndexed(index) << ", ";
+    os << "srcColor = " << blendState.getSrcColorIndexed(index) << ", ";
+    os << "dstColor = " << blendState.getDstColorIndexed(index) << ", ";
+    os << "srcAlpha = " << blendState.getSrcAlphaIndexed(index) << ", ";
+    os << "dstAlpha = " << blendState.getDstAlphaIndexed(index);
+    return os.str();
+}
+
+void PrintCompressedBlendState(std::ostream &os,
+                               const gl::BlendStateExt &blendState,
+                               size_t indentation)
+{
+    for (size_t i = 0; i < blendState.getDrawBufferCount(); i++)
+    {
+        std::string printed = PrintIndexedBlendState(blendState, i);
+
+        size_t start = i;
+        while (i + 1 < blendState.getDrawBufferCount() &&
+               PrintIndexedBlendState(blendState, i + 1) == printed)
+        {
+            i++;
+        }
+
+        Indent(os, indentation);
+        os << "[" << start;
+        if (i > start)
+        {
+            os << ".." << i;
+        }
+        os << "] = (" << printed << ")" << std::endl;
+    }
+}
 }  // anonymous namespace
 
 VertexArrayStateGL::VertexArrayStateGL(size_t maxAttribs, size_t maxBindings)
@@ -806,11 +889,27 @@ bool operator==(const IndexedBufferBindingGL &a, const IndexedBufferBindingGL &b
     return TieIndexedBufferBindingGL(a) == TieIndexedBufferBindingGL(b);
 }
 
+std::ostream &operator<<(std::ostream &os, const IndexedBufferBindingGL &binding)
+{
+    os << "offset = " << binding.offset << ", size = " << binding.size
+       << ", buffer = " << binding.buffer;
+    return os;
+}
+
 ImageUnitBindingGL::ImageUnitBindingGL(GLenum defaultFormat) : format(defaultFormat) {}
 
 bool operator==(const ImageUnitBindingGL &a, const ImageUnitBindingGL &b)
 {
     return TieImageUnitBindingGL(a) == TieImageUnitBindingGL(b);
+}
+
+std::ostream &operator<<(std::ostream &os, const ImageUnitBindingGL &binding)
+{
+    os << "texture = " << binding.texture << ", level = " << binding.level
+       << ", layered = " << gl::ConvertToBool(binding.layered) << ", layer = " << binding.layer
+       << ", access = " << gl::FmtHex(binding.access)
+       << ", format = " << gl::FmtHex(binding.format);
+    return os;
 }
 
 ContextStateGLCaps::ContextStateGLCaps(const FunctionsGL *functions, const gl::Caps &caps)
@@ -861,9 +960,134 @@ bool operator==(const ContextStateGL &a, const ContextStateGL &b)
 
     return true;
 }
+
 bool operator!=(const ContextStateGL &a, const ContextStateGL &b)
 {
     return !(a == b);
+}
+
+std::ostream &operator<<(std::ostream &os, const ContextStateGL &state)
+{
+    os << "program = " << state.program << std::endl;
+    os << "vao = " << state.vao << std::endl;
+    os << "vertexAttribCurrentValues =" << std::endl;
+    PrintCompressedArray(os, state.vertexAttribCurrentValues, 4, true);
+    os << "buffers =" << std::endl;
+    for (gl::BufferBinding bufferBinding : angle::AllEnums<gl::BufferBinding>())
+    {
+        os << "    [" << bufferBinding << "] = " << state.buffers[bufferBinding] << std::endl;
+    }
+    os << "indexedBuffers =" << std::endl;
+    for (gl::BufferBinding bufferBinding : angle::AllEnums<gl::BufferBinding>())
+    {
+        const std::vector<IndexedBufferBindingGL> &buffers = state.indexedBuffers[bufferBinding];
+        if (buffers.empty())
+        {
+            continue;
+        }
+        os << "    [" << bufferBinding << "] =" << std::endl;
+        PrintCompressedArray(os, buffers, 8, true);
+    }
+    os << "textureUnitIndex = " << state.textureUnitIndex << std::endl;
+    os << "textures =" << std::endl;
+    for (gl::TextureType textureType : angle::AllEnums<gl::TextureType>())
+    {
+        os << "    [" << textureType << "] =" << std::endl;
+        PrintCompressedArray(os, state.textures[textureType], 8, false);
+    }
+    os << "samplers =" << std::endl;
+    PrintCompressedArray(os, state.samplers, 4, false);
+    os << "images =" << std::endl;
+    PrintCompressedArray(os, state.images, 4, true);
+    os << "transformFeedback = " << state.transformFeedback << std::endl;
+    os << "unpackAlignment = " << state.unpackAlignment << std::endl;
+    os << "unpackRowLength = " << state.unpackRowLength << std::endl;
+    os << "unpackSkipRows = " << state.unpackSkipRows << std::endl;
+    os << "unpackSkipPixels = " << state.unpackSkipPixels << std::endl;
+    os << "unpackImageHeight = " << state.unpackImageHeight << std::endl;
+    os << "unpackSkipImages = " << state.unpackSkipImages << std::endl;
+    os << "packAlignment = " << state.packAlignment << std::endl;
+    os << "packRowLength = " << state.packRowLength << std::endl;
+    os << "packSkipRows = " << state.packSkipRows << std::endl;
+    os << "packSkipPixels = " << state.packSkipPixels << std::endl;
+    os << "framebuffers =" << std::endl;
+    os << "    [GL_READ_FRAMEBUFFER] = " << state.framebuffers[angle::FramebufferBindingRead]
+       << std::endl;
+    os << "    [GL_DRAW_FRAMEBUFFER] = " << state.framebuffers[angle::FramebufferBindingDraw]
+       << std::endl;
+    os << "renderbuffer = " << state.renderbuffer << std::endl;
+    os << "scissorTestEnabled = " << state.scissorTestEnabled << std::endl;
+    os << "scissor = (" << state.scissor << ")" << std::endl;
+    os << "viewport = (" << state.viewport << ")" << std::endl;
+    os << "near = " << state.near << std::endl;
+    os << "far = " << state.far << std::endl;
+    os << "clipOrigin = " << state.clipOrigin << std::endl;
+    os << "clipDepthMode = " << state.clipDepthMode << std::endl;
+    os << "blendColor = (" << state.blendColor << ")" << std::endl;
+    os << "blendState =" << std::endl;
+    PrintCompressedBlendState(os, state.blendState, 4);
+    os << "blendAdvancedCoherent = " << state.blendAdvancedCoherent << std::endl;
+    os << "sampleAlphaToCoverageEnabled = " << state.sampleAlphaToCoverageEnabled << std::endl;
+    os << "sampleCoverageEnabled = " << state.sampleCoverageEnabled << std::endl;
+    os << "sampleCoverageValue = " << state.sampleCoverageValue << std::endl;
+    os << "sampleCoverageInvert = " << state.sampleCoverageInvert << std::endl;
+    os << "sampleMaskEnabled = " << state.sampleMaskEnabled << std::endl;
+    os << "sampleMaskValues =" << std::endl;
+    PrintCompressedArray(os, state.sampleMaskValues, 4, false);
+    os << "depthTestEnabled = " << state.depthTestEnabled << std::endl;
+    os << "depthFunc = " << gl::FmtHex(state.depthFunc) << std::endl;
+    os << "depthMask = " << state.depthMask << std::endl;
+    os << "stencilTestEnabled = " << state.stencilTestEnabled << std::endl;
+    os << "stencilFrontFunc = " << gl::FmtHex(state.stencilFrontFunc) << std::endl;
+    os << "stencilFrontRef = " << state.stencilFrontRef << std::endl;
+    os << "stencilFrontValueMask = " << gl::FmtHex(state.stencilFrontValueMask) << std::endl;
+    os << "stencilFrontStencilFailOp = " << gl::FmtHex(state.stencilFrontStencilFailOp)
+       << std::endl;
+    os << "stencilFrontStencilPassDepthFailOp = "
+       << gl::FmtHex(state.stencilFrontStencilPassDepthFailOp) << std::endl;
+    os << "stencilFrontStencilPassDepthPassOp = "
+       << gl::FmtHex(state.stencilFrontStencilPassDepthPassOp) << std::endl;
+    os << "stencilFrontWritemask = " << gl::FmtHex(state.stencilFrontWritemask) << std::endl;
+    os << "stencilBackFunc = " << gl::FmtHex(state.stencilBackFunc) << std::endl;
+    os << "stencilBackRef = " << state.stencilBackRef << std::endl;
+    os << "stencilBackValueMask = " << gl::FmtHex(state.stencilBackValueMask) << std::endl;
+    os << "stencilBackStencilFailOp = " << gl::FmtHex(state.stencilBackStencilFailOp) << std::endl;
+    os << "stencilBackStencilPassDepthFailOp = "
+       << gl::FmtHex(state.stencilBackStencilPassDepthFailOp) << std::endl;
+    os << "stencilBackStencilPassDepthPassOp = "
+       << gl::FmtHex(state.stencilBackStencilPassDepthPassOp) << std::endl;
+    os << "stencilBackWritemask = " << gl::FmtHex(state.stencilBackWritemask) << std::endl;
+    os << "cullFaceEnabled = " << state.cullFaceEnabled << std::endl;
+    os << "cullFace = " << state.cullFace << std::endl;
+    os << "frontFace = " << gl::FmtHex(state.frontFace) << std::endl;
+    os << "polygonMode = " << state.polygonMode << std::endl;
+    os << "polygonOffsetPointEnabled = " << state.polygonOffsetPointEnabled << std::endl;
+    os << "polygonOffsetLineEnabled = " << state.polygonOffsetLineEnabled << std::endl;
+    os << "polygonOffsetFillEnabled = " << state.polygonOffsetFillEnabled << std::endl;
+    os << "polygonOffsetFactor = " << state.polygonOffsetFactor << std::endl;
+    os << "polygonOffsetUnits = " << state.polygonOffsetUnits << std::endl;
+    os << "polygonOffsetClamp = " << state.polygonOffsetClamp << std::endl;
+    os << "depthClampEnabled = " << state.depthClampEnabled << std::endl;
+    os << "rasterizerDiscardEnabled = " << state.rasterizerDiscardEnabled << std::endl;
+    os << "lineWidth = " << state.lineWidth << std::endl;
+    os << "primitiveRestartFixedIndexEnabled = " << state.primitiveRestartFixedIndexEnabled
+       << std::endl;
+    os << "primitiveRestartEnabled = " << state.primitiveRestartEnabled << std::endl;
+    os << "primitiveRestartIndex = " << state.primitiveRestartIndex << std::endl;
+    os << "clearColor = " << state.clearColor << std::endl;
+    os << "clearDepth = " << state.clearDepth << std::endl;
+    os << "clearStencil = " << state.clearStencil << std::endl;
+    os << "framebufferSRGBEnabled = " << state.framebufferSRGBEnabled << std::endl;
+    os << "ditherEnabled = " << state.ditherEnabled << std::endl;
+    os << "textureCubemapSeamlessEnabled = " << state.textureCubemapSeamlessEnabled << std::endl;
+    os << "multisamplingEnabled = " << state.multisamplingEnabled << std::endl;
+    os << "sampleAlphaToOneEnabled = " << state.sampleAlphaToOneEnabled << std::endl;
+    os << "provokingVertex = " << gl::FmtHex(state.provokingVertex) << std::endl;
+    os << "enabledClipDistances =" << std::endl;
+    PrintCompressedArray(os, state.enabledClipDistances, 4, false);
+    os << "logicOpEnabled = " << state.logicOpEnabled << std::endl;
+    os << "logicOp = " << state.logicOp << std::endl;
+    return os;
 }
 
 StateManagerGL::StateManagerGL(const FunctionsGL *functions,
@@ -3497,7 +3721,14 @@ void StateManagerGL::validateState()
 
     ContextStateGL queriedState(mCaps);
     QueryContextStateGL(mFunctions, mPlaceholderFbo, &queriedState);
-    ASSERT(mState == queriedState);
+    if (mState != queriedState)
+    {
+        std::ostringstream msg;
+        msg << "Queried state does not match tracked state!" << std::endl;
+        msg << "Tracked state:" << std::endl << mState << std::endl << std::endl;
+        msg << "Queried state:" << std::endl << queriedState << std::endl;
+        FATAL() << msg.str();
+    }
 }
 
 void StateManagerGL::setBufferBindingDirty(gl::BufferBinding binding)
