@@ -1665,8 +1665,8 @@ angle::Result FramebufferGL::readPixelsRowByRow(const gl::Context *context,
     ANGLE_UNSAFE_TODO(readbackPixels += skipBytes);
     for (GLint y = area.y; y < area.y + area.height; ++y)
     {
-        ANGLE_GL_TRY(context,
-                     functions->readPixels(area.x, y, area.width, 1, format, type, readbackPixels));
+        ANGLE_GL_TRY_ALWAYS_CHECK(
+            context, functions->readPixels(area.x, y, area.width, 1, format, type, readbackPixels));
         ANGLE_UNSAFE_TODO(readbackPixels += rowBytes);
     }
 
@@ -1714,8 +1714,9 @@ angle::Result FramebufferGL::readPixelsAllAtOnce(const gl::Context *context,
     if (height > 0)
     {
         ANGLE_TRY(stateManager->setPixelPackState(context, pack));
-        ANGLE_GL_TRY(context, functions->readPixels(area.x, area.y, area.width, height, format,
-                                                    type, workaround.Pixels()));
+        ANGLE_GL_TRY_ALWAYS_CHECK(
+            context, functions->readPixels(area.x, area.y, area.width, height, format, type,
+                                           workaround.Pixels()));
     }
 
     if (readLastRowSeparately)
@@ -1726,8 +1727,9 @@ angle::Result FramebufferGL::readPixelsAllAtOnce(const gl::Context *context,
 
         GLubyte *readbackPixels = workaround.Pixels();
         ANGLE_UNSAFE_TODO(readbackPixels += skipBytes + (area.height - 1) * rowBytes);
-        ANGLE_GL_TRY(context, functions->readPixels(area.x, area.y + area.height - 1, area.width, 1,
-                                                    format, type, readbackPixels));
+        ANGLE_GL_TRY_ALWAYS_CHECK(
+            context, functions->readPixels(area.x, area.y + area.height - 1, area.width, 1, format,
+                                           type, readbackPixels));
     }
 
     if (workaround.IsEnabled())
