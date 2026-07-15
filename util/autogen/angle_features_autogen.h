@@ -80,6 +80,7 @@ enum class Feature
     ClipSrcRegionForBlitFramebuffer,
     ClSerializedExecution,
     CompileJobIsThreadSafe,
+    CompressProgramBinaryBlob,
     ConvertLowpAndMediumpFloatUniformsTo16Bits,
     CopyIOSurfaceToNonIOSurfaceForReadOptimization,
     CopyTextureToBufferForReadOptimization,

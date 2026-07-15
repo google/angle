@@ -7244,6 +7244,10 @@ void Renderer::initializeFrontendFeatures(angle::FrontendFeatures *features) con
     // Always run the link's warm up job in a thread.  It's an optimization only, and does not block
     // the link resolution.
     ANGLE_FEATURE_CONDITION(features, alwaysRunLinkSubJobsThreaded, true);
+
+    // Enable the program binary blob compression for glGetProgramBinary and glGetProgramiv.  It
+    // will be decompressed when loading the program binary by glProgramBinary.
+    ANGLE_FEATURE_CONDITION(features, compressProgramBinaryBlob, isSamsung);
 }
 
 angle::Result Renderer::getLockedPipelineCacheDataIfNew(vk::ErrorContext *context,
