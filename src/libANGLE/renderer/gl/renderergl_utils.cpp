@@ -2834,6 +2834,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, validateMaxPerStageUniformBlocksAtCompileTime,
                             IsPowerVR(vendor));
 
+    // Some drivers have compilation issues when shaders declare too many output varyings.
+    // crbug.com/529991907
+    ANGLE_FEATURE_CONDITION(features, limitOutputVaryingsAtCompileTimeForWebgl, IsPowerVR(vendor));
+
     // Mac Intel drivers are unable to allocate buffers larger than ~1gb
     ANGLE_FEATURE_CONDITION(features, limitMaxBufferSizeTo1gb, isApple && isIntel);
 }

@@ -9469,6 +9469,43 @@ void main() { big[0][0] = 1.0; col = vec4(big[0][0]); })";
     validateError(GL_FRAGMENT_SHADER, kFS, "version");
 }
 
+class WebGL2GLSLValidationTestLimitOutputVaryings : public WebGL2GLSLValidationTest
+{};
+
+// Regression test for crbug.com/529991907.
+// Verify that compiling a shader with up to the maximum number of output varying components
+// succeeds, and exceeding it by one vector is rejected at compile time.
+TEST_P(WebGL2GLSLValidationTestLimitOutputVaryings, TooManyDeclaredVertexOutputComponents)
+{
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::LimitOutputVaryingsAtCompileTimeForWebgl));
+
+    GLint maxVertexOutputComponents = 0;
+    glGetIntegerv(GL_MAX_VERTEX_OUTPUT_COMPONENTS, &maxVertexOutputComponents);
+    ASSERT_GT(maxVertexOutputComponents, 0);
+
+    GLint maxVectors = maxVertexOutputComponents / 4;
+
+    std::stringstream vsValid;
+    vsValid << "#version 300 es\n";
+    for (int i = 0; i < maxVectors; ++i)
+    {
+        vsValid << "out highp vec4 v" << i << ";\n";
+    }
+    vsValid << "void main() { gl_Position = vec4(0.0); }\n";
+    validateSuccess(GL_VERTEX_SHADER, vsValid.str().c_str());
+
+    std::stringstream vsInvalid;
+    vsInvalid << "#version 300 es\n";
+    for (int i = 0; i < maxVectors + 1; ++i)
+    {
+        vsInvalid << "out highp vec4 v" << i << ";\n";
+    }
+    vsInvalid << "void main() { gl_Position = vec4(0.0); }\n";
+    validateError(GL_VERTEX_SHADER, vsInvalid.str().c_str(),
+                  "Too many declared shader output varying components for this device");
+}
+
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -9490,6 +9527,11 @@ ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLValidationTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLValidationTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLValidationTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLValidationTestLimitOutputVaryings);
+ANGLE_INSTANTIATE_TEST(WebGL2GLSLValidationTestLimitOutputVaryings,
+                       ES3_OPENGL().enable(Feature::LimitOutputVaryingsAtCompileTimeForWebgl),
+                       ES3_OPENGLES().enable(Feature::LimitOutputVaryingsAtCompileTimeForWebgl));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND(WebGLGLSLValidationExtensionDisableTest,
                                ES2_OPENGL().enable(Feature::AllowExtensionDisableAfterNonPpTokens));

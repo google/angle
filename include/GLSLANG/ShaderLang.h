@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 417
+#define ANGLE_SH_VERSION 418
 
 enum ShShaderSpec
 {
@@ -179,8 +179,8 @@ struct ShCompileOptions
     // If requested, validates the AST after every transformation.  Useful for debugging.
     uint64_t validateAST : 1;
 
-    // placeholder bit for removed validateLoopIndexing option.
-    uint64_t unused3 : 1;
+    // Limit the number of output varyings allowed in vertex shaders to work around driver bugs.
+    uint64_t limitOutputVaryingsAtCompileTime : 1;
 
     // Emits #line directives in HLSL.
     uint64_t lineDirectives : 1;

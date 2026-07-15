@@ -942,6 +942,14 @@
                 "Split full-image level 0 PBO uploads via TexSubImage2D into two calls to work around driver bugs."
             ],
             "issue": "http://crbug.com/496807874"
+        },
+        {
+            "name": "limit_output_varyings_at_compile_time_for_webgl",
+            "category": "Workarounds",
+            "description": [
+                "Limit the number of declared varying components at compile time to work around a PowerVR driver bug."
+            ],
+            "issue": "http://crbug.com/529991907"
         }
     ]
 }

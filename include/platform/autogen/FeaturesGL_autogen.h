@@ -722,6 +722,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo limitOutputVaryingsAtCompileTimeForWebgl = {
+        "limitOutputVaryingsAtCompileTimeForWebgl",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
