@@ -6705,6 +6705,22 @@ void main()
     EXPECT_EQ(0u, program);
 }
 
+// Similar to HardendContextTestES31.ValidateTypeSizes, but validates that an 8x8x8 int array does
+// not trigger the validation error.
+TEST_P(HardenedContextTestES31, PassingArraySize)
+{
+    constexpr char kCS[] = R"(#version 310 es
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+void main() {
+  int a[8][8][8];
+}
+)";
+
+    GLuint program = CompileComputeProgram(kCS, true);
+    EXPECT_NE(0u, program);
+}
+
 // Similar to WebGL2GLSLTest.InitUninitializedLocals, but ensure the same validation is done in
 // non-webgl contexts with the EGL_CONTEXT_HARDENED_ANGLE flag.
 TEST_P(HardenedContextTest, InitUninitializedLocals)
