@@ -171,6 +171,7 @@
 40096690 WIN INTEL VULKAN : TransformFeedbackTest.RecordAndDraw/* = SKIP
 40096690 WIN INTEL VULKAN : TransformFeedbackWithDepthBufferTest.RecordAndDrawWithDepthWriteEnabled/* = SKIP
 534082926 WIN INTEL VULKAN : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
+534082926 WIN INTEL VULKAN : TransformFeedbackTest.BufferRebinding/* = SKIP
 
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2111)
 40644896 WIN INTEL OPENGL : D3DImageFormatConversionTest.WriteColorFunctionR8G8B8A8/* = SKIP
