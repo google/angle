@@ -395,7 +395,7 @@ angle::base::CheckedNumeric<size_t> CalculateVariableSize(const TType *type, boo
     if (type->isArray())
     {
         TType elementType = *type;
-        elementType.toArrayElementType();
+        elementType.toArrayBaseType();
         angle::base::CheckedNumeric<size_t> elementSize =
             CalculateVariableSize(&elementType, isStd140);
 
