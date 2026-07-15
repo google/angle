@@ -309,6 +309,15 @@
             "issue": "https://crbug.com/705865"
         },
         {
+            "name": "reset_base_level_for_ASTC_sub_image",
+            "category": "Workarounds",
+            "description": [
+                "Reset texture base level before calling glCompressedTexSubImage2D for ASTC textures to ",
+                "work around PowerVR driver bug."
+            ],
+            "issue": "https://crbug.com/528131939"
+        },
+        {
             "name": "limit_max_3d_array_texture_size_to_1024",
             "category": "Workarounds",
             "description": [
