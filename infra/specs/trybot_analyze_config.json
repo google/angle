@@ -3,7 +3,8 @@
         "exclusions": [
             ".vpython3",
             "DEPS",
-            "infra/specs/.*"
+            "infra/config/generated/builders/.*",
+            "infra/config/generated/testing/.*"
         ]
     }
 }
