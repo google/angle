@@ -671,6 +671,13 @@ angle::Result TextureGL::setCompressedSubImage(const gl::Context *context,
 
     stateManager->bindTexture(getType(), mTextureID);
     ANGLE_TRY(stateManager->setPixelUnpackState(context, unpack));
+
+    const bool isASTC = gl::IsASTC2DFormat(format) || gl::IsASTC3DFormat(format);
+    if (features.resetBaseLevelForASTCSubImage.enabled && isASTC)
+    {
+        ANGLE_TRY(setBaseLevel(context, 0));
+    }
+
     if (nativegl::UseTexImage2D(getType()))
     {
         ASSERT(area.z == 0 && area.depth == 1);
