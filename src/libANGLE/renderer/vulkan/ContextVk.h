@@ -762,7 +762,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Used by QueryVk to share query helpers between transform feedback queries.
     QueryVk *getActiveRenderPassQuery(gl::QueryType queryType) const;
 
-    void syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQueuePerfCounters);
+    void syncObjectPerfCounters(const vk::CommandQueuePerfCounters &commandQueuePerfCounters);
 
     // For testing only.
     void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);

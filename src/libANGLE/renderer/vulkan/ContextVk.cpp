@@ -3654,7 +3654,7 @@ angle::Result ContextVk::handleDirtyDescriptorSetsImpl(CommandBufferHelperT *com
                                             &commandBufferHelper->getCommandBuffer(), pipelineType);
 }
 
-void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQueuePerfCounters)
+void ContextVk::syncObjectPerfCounters(const vk::CommandQueuePerfCounters &commandQueuePerfCounters)
 {
     if (!mState.isPerfMonitorActive())
     {
@@ -3715,11 +3715,10 @@ void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQ
     }
 
     // Update perf counters from the renderer as well
-    mPerfCounters.commandQueueSubmitCallsTotal =
-        commandQueuePerfCounters.commandQueueSubmitCallsTotal;
-    mPerfCounters.vkQueueSubmitCallsTotal    = commandQueuePerfCounters.vkQueueSubmitCallsTotal;
+    mPerfCounters.commandQueueSubmitCallsTotal = commandQueuePerfCounters.queueSubmitCallsTotal;
+    mPerfCounters.vkQueueSubmitCallsTotal      = commandQueuePerfCounters.vkQueueSubmitCallsTotal;
     mPerfCounters.commandQueueWaitSemaphoresTotal =
-        commandQueuePerfCounters.commandQueueWaitSemaphoresTotal;
+        commandQueuePerfCounters.queueWaitSemaphoresTotal;
 
     // Return current drawFramebuffer's cache stats
     mPerfCounters.framebufferCacheSize = mFramebufferCache.getSize();

@@ -407,7 +407,7 @@ class Renderer : angle::NonCopyable
 
     ANGLE_INLINE bool isCommandQueueBusy() { return mCommandQueue.isBusy(this); }
 
-    angle::VulkanPerfCounters getCommandQueuePerfCounters()
+    vk::CommandQueuePerfCounters getCommandQueuePerfCounters()
     {
         return mCommandQueue.getPerfCounters();
     }
