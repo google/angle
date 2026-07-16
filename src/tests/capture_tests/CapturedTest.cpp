@@ -931,6 +931,60 @@ void main()
 }
 #endif  // defined(CAPTURE_TESTS_AHB_SUPPORT)
 
+// Regression test for MEC surface-reference leak causing AR camera-feed trace failures.
+// Camera AR apps keep a side context in the render context's share group. When capture starts,
+// MEC loops through all side contexts making each current on the window surface to serialize
+// it. If we don't then release these afterwards there remains a dangling reference and the app
+// can no longer make it current on any thread, causing EGL_BAD_ACCESS/"Surface can only be
+// current on one thread" errors and invalid 'glBindFramebuffer(0xFFFFFFFF)' calls in the trace.
+// This test's trace output is intentionally excluded from the output comparison
+TEST_P(CapturedTest, MECSurfaceRelease)
+{
+    EGLWindow *window      = getEGLWindow();
+    EGLDisplay dpy         = window->getDisplay();
+    EGLConfig config       = window->getConfig();
+    EGLSurface surface     = window->getSurface();
+    EGLContext mainContext = window->getContext();
+
+    // Create a side context in the main context's share group representing the AR app's camera
+    // context
+    EGLContext sideContext = window->createContext(mainContext, nullptr);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(sideContext, EGL_NO_CONTEXT);
+
+    EGLint pbufferAttribs[] = {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE};
+    EGLSurface sidePbuffer  = eglCreatePbufferSurface(dpy, config, pbufferAttribs);
+    ASSERT_EGL_SUCCESS();
+
+    ASSERT_EGL_TRUE(eglMakeCurrent(dpy, sidePbuffer, sidePbuffer, sideContext));
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, mainContext));
+
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    // Swap and start capture while the side context is live in our share group. MEC will make
+    // it current for capturing its state
+    swapBuffers();
+
+    // Detach and reacquire the window surface. If MEC left a side context reference to the window
+    // surface it will fail with EGL_BAD_ACCESS
+    ASSERT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    EGLBoolean reacquired = eglMakeCurrent(dpy, surface, surface, mainContext);
+    EXPECT_EGL_TRUE(reacquired);
+
+    if (reacquired)
+    {
+        // Reach capture end
+        for (int i = 0; i < 10; i++)
+        {
+            swapBuffers();
+        }
+    }
+
+    eglDestroySurface(dpy, sidePbuffer);
+    eglDestroyContext(dpy, sideContext);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(CapturedTest);
 // Capture is only supported on the Vulkan backend
 ANGLE_INSTANTIATE_TEST(CapturedTest, ES3_VULKAN());
