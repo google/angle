@@ -424,14 +424,16 @@ void GetObjectLabelBase(const std::string &objectLabel,
     }
 }
 
-GLsizei GetMarkerLength(GLsizei length, const char *marker)
+GLsizei GetMarkerLength(GLsizei length, const char *marker, GLsizei maxLength)
 {
     if (length == 0)
     {
-        return static_cast<GLsizei>(
+        length = static_cast<GLsizei>(
             std::min<size_t>(strlen(marker), std::numeric_limits<GLsizei>::max()));
     }
-    return length;
+    // https://crbug.com/524435922: Cap debug marker length to prevent driver or validation layer
+    // issues with large labels.
+    return std::min(length, maxLength);
 }
 
 enum SubjectIndexes : angle::SubjectIndex
@@ -3222,7 +3224,9 @@ void Context::insertEventMarker(GLsizei length, const char *marker)
     }
 
     // If <length> is 0 then <marker> is assumed to be null-terminated.
-    ANGLE_CONTEXT_TRY(mImplementation->insertEventMarker(GetMarkerLength(length, marker), marker));
+    ANGLE_CONTEXT_TRY(mImplementation->insertEventMarker(
+        GetMarkerLength(length, marker, static_cast<GLsizei>(getCaps().maxDebugMessageLength)),
+        marker));
 }
 
 void Context::pushGroupMarker(GLsizei length, const char *marker)
@@ -3241,8 +3245,9 @@ void Context::pushGroupMarker(GLsizei length, const char *marker)
     else
     {
         // If <length> is 0 then <marker> is assumed to be null-terminated.
-        ANGLE_CONTEXT_TRY(
-            mImplementation->pushGroupMarker(GetMarkerLength(length, marker), marker));
+        ANGLE_CONTEXT_TRY(mImplementation->pushGroupMarker(
+            GetMarkerLength(length, marker, static_cast<GLsizei>(getCaps().maxDebugMessageLength)),
+            marker));
     }
     mState.incrementGroupMarkers();
 }
