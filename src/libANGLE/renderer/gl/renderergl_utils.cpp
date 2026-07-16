@@ -2444,6 +2444,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             IsApple() && isIntel && GetMacOSVersion() >= OSVersion(10, 12, 4));
 
     ANGLE_FEATURE_CONDITION(features, resetBaseLevelForASTCSubImage, IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, recreateImmutableTextureOnBaseLevelIncrease,
+                            IsPowerVR(vendor));
 
     ANGLE_FEATURE_CONDITION(features, adjustSrcDstRegionForBlitFramebuffer,
                             IsLinux() || (IsAndroid() && isNvidia) || (IsWindows() && isNvidia) ||

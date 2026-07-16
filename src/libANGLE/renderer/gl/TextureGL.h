@@ -233,6 +233,10 @@ class TextureGL : public TextureImpl
 
   private:
     angle::Result recreateTexture(const gl::Context *context);
+    angle::Result copyTextureLevels(const gl::Context *context,
+                                    GLuint srcTexture,
+                                    GLuint dstTexture);
+    angle::Result recreateNativeStoragePreservingLevels(const gl::Context *context);
 
     angle::Result setImageHelper(const gl::Context *context,
                                  gl::TextureTarget target,

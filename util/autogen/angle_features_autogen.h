@@ -295,6 +295,7 @@ enum class Feature
     ReapplyUBOBindingsAfterUsingBinaryProgram,
     ReattachFboDepthStencilOnReallocation,
     RecreateFboUponFlush,
+    RecreateImmutableTextureOnBaseLevelIncrease,
     RecreateMipmapLevelsBeforeGenerate,
     RecycleVkEvent,
     RegenerateStructNames,
