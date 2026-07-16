@@ -271,7 +271,7 @@ void AppendToPNextChain(VulkanStruct1 *chainStart, VulkanStruct2 *ptr)
 class QueueSerialIndexAllocator final
 {
   public:
-    QueueSerialIndexAllocator() : mLargestIndexEverAllocated(kInvalidQueueSerialIndex)
+    QueueSerialIndexAllocator() : mLargestIndexEverAllocated(0)
     {
         // Start with every index is free
         mFreeIndexBitSetArray.set();
@@ -289,7 +289,8 @@ class QueueSerialIndexAllocator final
         SerialIndex index = static_cast<SerialIndex>(mFreeIndexBitSetArray.first());
         ASSERT(index < kMaxQueueSerialIndexCount);
         mFreeIndexBitSetArray.reset(index);
-        mLargestIndexEverAllocated = (~mFreeIndexBitSetArray).last();
+        // Increase mLargestIndexEverAllocated to include the newly allocated index.
+        mLargestIndexEverAllocated = std::max<size_t>(mLargestIndexEverAllocated, index);
         return index;
     }
 

@@ -239,7 +239,6 @@
 42266906 : Texture2DTestES3Foveation.FoveatedFBDraw/* = SKIP_FOR_CAPTURE
 42266906 : Texture2DTestES3Foveation.FoveatedTextureDraw/* = SKIP_FOR_CAPTURE
 
-42266965 : EGLSyncTest.GlobalFenceSync/* = FAIL
 42264309 : Texture2DTestES3.TexStorage2DMultipleYuvSamplersSwitchSamplerUniformValues/* = SKIP_FOR_CAPTURE
 42264309 : Texture2DTestES3.TexStorage2DMultipleYuvSamplersSwitchBoundTextures/* = SKIP_FOR_CAPTURE
 
@@ -254,7 +253,7 @@
 42264614 LINUX : VulkanExternalImageTest.UninitializedOnGLImport* = SKIP_FOR_CAPTURE
 
 # error: duplicate case value '1'
-42264614 : EGLSyncTest.GlobalFenceSync/* = COMPILE_FAIL
+42264614 : EGLSyncTest.GlobalFenceSync*/* = COMPILE_FAIL
 433331119 : ValidationStateChangeTest.RebindBufferShouldPickupBufferChange/* = COMPILE_FAIL
 433331119 : ValidationStateChangeTestES31.RebindVertexBufferShouldPickupBufferChange/* = COMPILE_FAIL
 
