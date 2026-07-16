@@ -1046,9 +1046,9 @@ void ContextGL::setMaxShaderCompilerThreads(GLuint count)
     mRenderer->setMaxShaderCompilerThreads(count);
 }
 
-void ContextGL::validateState() const
+void ContextGL::validateState()
 {
-    const StateManagerGL *stateManager = mRenderer->getStateManager();
+    StateManagerGL *stateManager = mRenderer->getStateManager();
     stateManager->validateState();
 }
 

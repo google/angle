@@ -489,7 +489,7 @@ class StateManagerGL final : angle::NonCopyable
     VertexArrayStateGL *getDefaultVAOState();
     void setDefaultVAOStateDirty();
 
-    void validateState() const;
+    void validateState();
 
     void syncFromNativeContext(const gl::Extensions &extensions, ExternalContextState *state);
     void restoreNativeContext(const gl::Extensions &extensions, const ExternalContextState *state);
@@ -570,6 +570,8 @@ class StateManagerGL final : angle::NonCopyable
     void restoreVertexArraysNativeContext(const gl::Extensions &extensions,
                                           const ExternalContextState *state);
 
+    void ensurePlaceholderFramebuffer();
+
     const FunctionsGL *mFunctions;
     const angle::FeaturesGL &mFeatures;
 
@@ -600,8 +602,9 @@ class StateManagerGL final : angle::NonCopyable
 
     gl::ContextID mPrevDrawContext;
 
-    GLuint mPlaceholderFbo;
-    GLuint mPlaceholderRbo;
+    GLuint mPlaceholderFbo                         = 0;
+    GLuint mPlaceholderFboColorRenderbuffer        = 0;
+    GLuint mPlaceholderFboDepthStencilRenderbuffer = 0;
 
     const bool mIndependentBlendStates;
 
