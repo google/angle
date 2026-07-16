@@ -455,6 +455,7 @@ angle_linux_manual_builder(
         "ci/angle-android-arm64-builder-rel",
         "ci/angle-android-arm64-google-pixel4-rel",
         "ci/angle-android-arm64-google-pixel6-rel",
+        "ci/angle-android-arm64-google-pixel10-rel",
     ],
     gn_args = gn_args.config(
         configs = [

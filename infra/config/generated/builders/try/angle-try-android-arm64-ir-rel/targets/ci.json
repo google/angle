@@ -1,4 +1,841 @@
 {
+  "angle-android-arm64-google-pixel10-rel": {
+    "gtest_tests": [
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=gles"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_egl_tests/",
+        "name": "angle_deqp_egl_gles_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_egl_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_egl_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_egl_tests/",
+        "name": "angle_deqp_egl_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 4
+        },
+        "test": "angle_deqp_egl_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_egl_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=gles"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_gles2_tests/",
+        "name": "angle_deqp_gles2_gles_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 4
+        },
+        "test": "angle_deqp_gles2_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles2_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_gles2_tests/",
+        "name": "angle_deqp_gles2_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 4
+        },
+        "test": "angle_deqp_gles2_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles2_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_gles31_565_no_depth_no_stencil_tests/",
+        "name": "angle_deqp_gles31_565_no_depth_no_stencil_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_gles31_565_no_depth_no_stencil_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles31_565_no_depth_no_stencil_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_gles31_multisample_tests/",
+        "name": "angle_deqp_gles31_multisample_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_gles31_multisample_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles31_multisample_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_gles31_tests/",
+        "name": "angle_deqp_gles31_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 20
+        },
+        "test": "angle_deqp_gles31_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles31_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_gles3_565_no_depth_no_stencil_tests/",
+        "name": "angle_deqp_gles3_565_no_depth_no_stencil_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_gles3_565_no_depth_no_stencil_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles3_565_no_depth_no_stencil_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=gles"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_gles3_tests/",
+        "name": "angle_deqp_gles3_gles_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 12
+        },
+        "test": "angle_deqp_gles3_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles3_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_gles3_multisample_tests/",
+        "name": "angle_deqp_gles3_multisample_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_gles3_multisample_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles3_multisample_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_gles3_tests/",
+        "name": "angle_deqp_gles3_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 12
+        },
+        "test": "angle_deqp_gles3_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_gles3_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--surface-height=64",
+          "--surface-width=64",
+          "--deqp-base-seed=1",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_gles2_tests/",
+        "name": "angle_deqp_khr_gles2_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_gles2_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles2_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--surface-height=64",
+          "--surface-width=64",
+          "--deqp-base-seed=1",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_gles31_tests/",
+        "name": "angle_deqp_khr_gles31_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_gles31_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles31_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--surface-height=64",
+          "--surface-width=64",
+          "--deqp-base-seed=1",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_gles32_tests/",
+        "name": "angle_deqp_khr_gles32_vulkan_tests_seed1_width64_height64",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_gles32_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles32_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--deqp-base-seed=2",
+          "--surface-width=113",
+          "--surface-height=47",
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_gles32_tests/",
+        "name": "angle_deqp_khr_gles32_vulkan_tests_seed2_width113_height47",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_gles32_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles32_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--deqp-base-seed=3",
+          "--surface-width=-1",
+          "--surface-height=64",
+          "--deqp-gl-config-name=rgba8888d24s8",
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_gles32_tests/",
+        "name": "angle_deqp_khr_gles32_vulkan_tests_seed3_width-1_height64",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_gles32_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles32_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--deqp-base-seed=3",
+          "--surface-width=64",
+          "--surface-height=-1",
+          "--deqp-gl-config-name=rgba8888d24s8",
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_gles32_tests/",
+        "name": "angle_deqp_khr_gles32_vulkan_tests_seed3_width64_height-1",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_gles32_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles32_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--surface-height=64",
+          "--surface-width=64",
+          "--deqp-base-seed=1",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_gles3_tests/",
+        "name": "angle_deqp_khr_gles3_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_gles3_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles3_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--surface-height=64",
+          "--surface-width=64",
+          "--deqp-base-seed=1",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_glesext_tests/",
+        "name": "angle_deqp_khr_glesext_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_glesext_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_glesext_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_noctx_gles2_tests/",
+        "name": "angle_deqp_khr_noctx_gles2_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_noctx_gles2_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles2_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_noctx_gles32_tests/",
+        "name": "angle_deqp_khr_noctx_gles32_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_noctx_gles32_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles32_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v",
+          "--shard-timeout=500",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "module_name": "//src/tests:angle_deqp_khr_single_gles32_tests/",
+        "name": "angle_deqp_khr_single_gles32_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_single_gles32_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_single_gles32_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--shard-timeout=180",
+          "-v",
+          "--render-test-output-dir=${ISOLATED_OUTDIR}",
+          "--gtest_filter=-*Vulkan_SwiftShader*"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "module_name": "//src/tests:angle_end2end_tests/",
+        "name": "angle_end2end_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 8
+        },
+        "test": "angle_end2end_tests",
+        "test_id_prefix": "ninja://src/tests:angle_end2end_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--test-timeout=300",
+          "--batch-size=10",
+          "--shard-timeout=600",
+          "-v",
+          "--gtest_filter=*Vulkan*"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "module_name": "//src/tests:angle_gles1_conformance_tests/",
+        "name": "angle_gles1_conformance_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_gles1_conformance_tests",
+        "test_id_prefix": "ninja://src/tests:angle_gles1_conformance_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "-v"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "module_name": "//src/tests:angle_unittests/",
+        "name": "angle_unittests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_unittests",
+        "test_id_prefix": "ninja://src/tests:angle_unittests/",
+        "use_isolated_scripts_api": true
+      }
+    ],
+    "isolated_scripts": [
+      {
+        "args": [
+          "--log=debug"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "module_name": "//src/tests:angle_capture_tests/",
+        "name": "angle_capture_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_capture_tests",
+        "test_id_prefix": "ninja://src/tests:angle_capture_tests/"
+      },
+      {
+        "args": [
+          "--test-machine-name",
+          "${buildername}",
+          "--git-revision=${got_angle_revision}",
+          "-v"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "module_name": "//src/tests/restricted_traces:angle_restricted_trace_gold_tests/",
+        "name": "angle_restricted_trace_gold_tests",
+        "precommit_args": [
+          "--gerrit-issue=${patch_issue}",
+          "--gerrit-patchset=${patch_set}",
+          "--buildbucket-id=${buildbucket_build_id}",
+          "--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}"
+        ],
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 6
+        },
+        "test": "angle_restricted_trace_gold_tests",
+        "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
+      },
+      {
+        "args": [
+          "--log=debug",
+          "--smoke-test-mode",
+          "--show-test-stdout"
+        ],
+        "merge": {
+          "args": [
+            "--smoke-test-mode"
+          ],
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "module_name": "//src/tests:angle_perftests/",
+        "name": "angle_smoke_perftests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 6
+        },
+        "test": "angle_perftests",
+        "test_id_prefix": "ninja://src/tests:angle_perftests/"
+      },
+      {
+        "args": [
+          "--trace-tests",
+          "--log=debug",
+          "--smoke-test-mode",
+          "--show-test-stdout",
+          "--use-gl=native"
+        ],
+        "merge": {
+          "args": [
+            "--smoke-test-mode"
+          ],
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "module_name": "//src/tests:angle_trace_perf_tests/",
+        "name": "angle_trace_perf_native_smoke_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 6
+        },
+        "test": "angle_trace_perf_tests",
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
+      },
+      {
+        "args": [
+          "--trace-tests",
+          "--log=debug",
+          "--smoke-test-mode",
+          "--show-test-stdout",
+          "--use-angle=vulkan"
+        ],
+        "merge": {
+          "args": [
+            "--smoke-test-mode"
+          ],
+          "script": "//scripts/process_angle_perf_results.py"
+        },
+        "module_name": "//src/tests:angle_trace_perf_tests/",
+        "name": "angle_trace_perf_vulkan_smoke_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "device_os": "CP1A.260405.005",
+            "device_os_type": "userdebug",
+            "device_type": "frankel",
+            "os": "Android",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+          "shards": 6
+        },
+        "test": "angle_trace_perf_tests",
+        "test_id_prefix": "ninja://src/tests:angle_trace_perf_tests/"
+      }
+    ]
+  },
   "angle-android-arm64-google-pixel4-rel": {
     "gtest_tests": [
       {
