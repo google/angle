@@ -620,6 +620,8 @@ void main() {
         "for (int i = 0; i < 10; i++) { for (int j = 0; j < 10; i--, j++) { } }",
         "for (int i = 0; i < 10; f()) { }",
         "for (int i = 0; i < 10; a == 0 ? i++ : i = 0) { }",
+        "for (ivec2 i = ivec2(0); i != ivec2(10, 20); i++) { }",
+        "for (ivec2 i = ivec2(0); i != ivec2(10, 10); i += ivec2(1, 2)) { }",
     };
 
     for (const char *test : kTests)
