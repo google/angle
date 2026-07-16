@@ -318,6 +318,15 @@
             "issue": "https://crbug.com/528131939"
         },
         {
+            "name": "recreate_immutable_texture_on_base_level_increase",
+            "category": "Workarounds",
+            "description": [
+                "Recreate native storage for immutable textures when TEXTURE_BASE_LEVEL is increased to ",
+                "work around PowerVR sparse page map OOB driver bug."
+            ],
+            "issue": "https://crbug.com/528131119"
+        },
+        {
             "name": "limit_max_3d_array_texture_size_to_1024",
             "category": "Workarounds",
             "description": [
