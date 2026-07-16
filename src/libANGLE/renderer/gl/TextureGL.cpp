@@ -11,6 +11,7 @@
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
+#include "common/mathutil.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
@@ -1832,6 +1833,24 @@ angle::Result TextureGL::syncState(const gl::Context *context,
         return angle::Result::Continue;
     }
 
+    if (dirtyBits[gl::Texture::DIRTY_BIT_BASE_LEVEL] &&
+        GetFeaturesGL(context).recreateImmutableTextureOnBaseLevelIncrease.enabled &&
+        mState.getImmutableFormat() && getType() == gl::TextureType::_2D)
+    {
+        const GLuint newBase = mState.getEffectiveBaseLevel();
+        if (mAppliedBaseLevel != newBase)
+        {
+            const gl::Extents &levelZeroSize = mState.getLevelZeroDesc().size;
+            const bool isNPOT =
+                !gl::isPow2(levelZeroSize.width) || !gl::isPow2(levelZeroSize.height);
+            const FunctionsGL *functions = GetFunctionsGL(context);
+            if (functions->copyImageSubData && isNPOT)
+            {
+                ANGLE_TRY(recreateNativeStoragePreservingLevels(context));
+            }
+        }
+    }
+
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
 
@@ -2286,6 +2305,59 @@ angle::Result TextureGL::recreateTexture(const gl::Context *context)
 
     mLocalDirtyBits = mAllModifiedDirtyBits;
 
+    onStateChange(angle::SubjectMessage::SubjectChanged);
+
+    return angle::Result::Continue;
+}
+
+angle::Result TextureGL::copyTextureLevels(const gl::Context *context,
+                                           GLuint srcTexture,
+                                           GLuint dstTexture)
+{
+    const FunctionsGL *functions = GetFunctionsGL(context);
+    ASSERT(functions->copyImageSubData);
+
+    const GLuint immutableLevels = mState.getImmutableLevels();
+    for (GLuint level = 0; level < immutableLevels; ++level)
+    {
+        const gl::Extents levelSize = mState.getImageDesc(gl::TextureTarget::_2D, level).size;
+        ASSERT(!levelSize.empty());
+        ANGLE_GL_TRY(context, functions->copyImageSubData(
+                                  srcTexture, GL_TEXTURE_2D, static_cast<GLint>(level), 0, 0, 0,
+                                  dstTexture, GL_TEXTURE_2D, static_cast<GLint>(level), 0, 0, 0,
+                                  levelSize.width, levelSize.height, 1));
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result TextureGL::recreateNativeStoragePreservingLevels(const gl::Context *context)
+{
+    ASSERT(getType() == gl::TextureType::_2D);
+    ASSERT(mState.getImmutableFormat());
+    ASSERT(!gl::isPow2(mState.getLevelZeroDesc().size.width) ||
+           !gl::isPow2(mState.getLevelZeroDesc().size.height));
+
+    const FunctionsGL *functions = GetFunctionsGL(context);
+    StateManagerGL *stateManager = GetStateManagerGL(context);
+
+    GLuint oldTextureID = mTextureID;
+
+    functions->genTextures(1, &mTextureID);
+    stateManager->bindTexture(getType(), mTextureID);
+
+    mAppliedSwizzle   = gl::SwizzleState();
+    mAppliedSampler   = gl::SamplerState::CreateDefaultForTarget(getType());
+    mAppliedBaseLevel = 0;
+    mAppliedMaxLevel  = gl::kInitialMaxLevel;
+
+    const gl::ImageDesc &levelZeroDesc = mState.getLevelZeroDesc();
+    ANGLE_TRY(setStorage(context, getType(), mState.getImmutableLevels(),
+                         levelZeroDesc.format.info->sizedInternalFormat, levelZeroDesc.size));
+    ANGLE_TRY(copyTextureLevels(context, oldTextureID, mTextureID));
+
+    stateManager->deleteTexture(oldTextureID);
+
+    mLocalDirtyBits = mAllModifiedDirtyBits;
     onStateChange(angle::SubjectMessage::SubjectChanged);
 
     return angle::Result::Continue;
