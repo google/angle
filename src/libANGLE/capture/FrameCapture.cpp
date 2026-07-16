@@ -5175,6 +5175,11 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         ASSERT(apiState.getReadFramebuffer());
         gl::FramebufferID stateReadFramebuffer = apiState.getReadFramebuffer()->id();
         gl::FramebufferID stateDrawFramebuffer = apiState.getDrawFramebuffer()->id();
+
+        // For reset, always restore framebuffer bindings since they may change
+        std::vector<CallCapture> *resetBindFramebufferCalls =
+            &resetHelper.getResetCalls()[angle::EntryPoint::GLBindFramebuffer];
+
         if (stateDrawFramebuffer == stateReadFramebuffer)
         {
             if (currentDrawFramebuffer != stateDrawFramebuffer ||
@@ -5184,6 +5189,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                                                  GL_FRAMEBUFFER, stateDrawFramebuffer);
                 currentDrawFramebuffer = currentReadFramebuffer = stateDrawFramebuffer;
             }
+            CaptureBindFramebufferForContext(context, resetBindFramebufferCalls, framebufferFuncs,
+                                             replayState, GL_FRAMEBUFFER, stateDrawFramebuffer);
         }
         else
         {
@@ -5193,6 +5200,9 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                                                  GL_DRAW_FRAMEBUFFER, stateDrawFramebuffer);
                 currentDrawFramebuffer = stateDrawFramebuffer;
             }
+            CaptureBindFramebufferForContext(context, resetBindFramebufferCalls, framebufferFuncs,
+                                             replayState, GL_DRAW_FRAMEBUFFER,
+                                             stateDrawFramebuffer);
 
             if (currentReadFramebuffer != stateReadFramebuffer)
             {
@@ -5200,6 +5210,9 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                                                  GL_READ_FRAMEBUFFER, stateReadFramebuffer);
                 currentReadFramebuffer = stateReadFramebuffer;
             }
+            CaptureBindFramebufferForContext(context, resetBindFramebufferCalls, framebufferFuncs,
+                                             replayState, GL_READ_FRAMEBUFFER,
+                                             stateReadFramebuffer);
         }
     }
 
@@ -7587,6 +7600,11 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
         case EntryPoint::GLBindFramebuffer:
         case EntryPoint::GLBindFramebufferOES:
             maybeGenResourceOnBind<gl::FramebufferID>(context, call);
+            if (isCaptureActive())
+            {
+                context->getFrameCapture()->getStateResetHelper().setEntryPointDirty(
+                    EntryPoint::GLBindFramebuffer);
+            }
             break;
 
         case EntryPoint::GLGenRenderbuffers:
@@ -9281,6 +9299,14 @@ void StateResetHelper::setDefaultResetCalls(const gl::Context *context,
         {
             Capture(&mResetCalls[angle::EntryPoint::GLBlendColor],
                     CaptureBlendColor(context->getState(), true, 0, 0, 0, 0));
+            break;
+        }
+        case angle::EntryPoint::GLBindFramebuffer:
+        {
+            FramebufferCaptureFuncs framebufferFuncs(context->isGLES1());
+            Capture(
+                &mResetCalls[angle::EntryPoint::GLBindFramebuffer],
+                framebufferFuncs.bindFramebuffer(context->getState(), true, GL_FRAMEBUFFER, {0}));
             break;
         }
         default:

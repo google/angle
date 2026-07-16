@@ -680,6 +680,18 @@ void main()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                  kWhiteData.data());
 
+    // Bind non-default framebuffer during capture restore default to test framebuffer binding
+    // tracking in the tracer
+    GLTexture fboColor;
+    glBindTexture(GL_TEXTURE_2D, fboColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fboColor, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+
     // Empty frames to reach capture end.
     for (int i = 0; i < 10; i++)
     {
