@@ -1356,10 +1356,19 @@ angle::Result FramebufferGL::ensureAttachmentsInitialized(
     bool depth,
     bool stencil)
 {
-    if (colorAttachments != getState().getEnabledDrawBuffers())
+    const gl::FramebufferState &state                  = getState();
+    const gl::FramebufferAttachment *depthAttachment   = state.getDepthAttachment();
+    const gl::FramebufferAttachment *stencilAttachment = state.getStencilAttachment();
+
+    const bool isPartialDepthStencilInit =
+        depthAttachment && stencilAttachment &&
+        depthAttachment->getResource() == stencilAttachment->getResource() && depth != stencil;
+
+    if (colorAttachments != state.getEnabledDrawBuffers() || isPartialDepthStencilInit)
     {
         // Fall back to the default implementation when there are gaps in the enabled draw buffers
-        // to avoid modifying the draw buffer state.
+        // to avoid modifying the draw buffer state, or when we are performing a partial clear of a
+        // packed depth-stencil attachment.
         return FramebufferImpl::ensureAttachmentsInitialized(context, colorAttachments, depth,
                                                              stencil);
     }
