@@ -613,7 +613,6 @@ class TParseContext : angle::NonCopyable
                          const TType *type,
                          GeomTessArray sized,
                          TVariable **variable);
-    void addAndCheckOutputVaryings(const TVariable &variable, const TSourceLoc &line);
 
     void checkNestingLevel(const TSourceLoc &line);
     bool checkCase(const TSourceLoc &line, int64_t caseValue, const char *caseOrDefault);
@@ -895,9 +894,6 @@ class TParseContext : angle::NonCopyable
     unsigned int mMaxUniformBlocks;
     // Current count of declared uniform blocks.
     unsigned int mNumUniformBlocks;
-
-    // Current count of declared output varying components.
-    unsigned int mNumOutputVaryingComponents;
 
     // Keeps track of whether any of the built-ins that can be redeclared (see
     // IsRedeclarableBuiltIn()) has been marked as invariant/precise before the possible

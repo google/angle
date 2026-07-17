@@ -498,31 +498,6 @@ TIntermDeclaration *RenameAndDeclareStruct(TSymbolTable *symbolTable,
     structDeclaration->appendDeclarator(structDeclarator);
     return structDeclaration;
 }
-
-unsigned int GetTypeComponentCount(const TType &type)
-{
-    unsigned int components = 0;
-    if (type.getBasicType() == EbtInterfaceBlock)
-    {
-        for (const TField *field : type.getInterfaceBlock()->fields())
-        {
-            components += GetTypeComponentCount(*field->type());
-        }
-    }
-    else if (type.getStruct())
-    {
-        for (const TField *field : type.getStruct()->fields())
-        {
-            components += GetTypeComponentCount(*field->type());
-        }
-    }
-    else
-    {
-        components = static_cast<unsigned int>(type.getNominalSize()) * type.getSecondarySize();
-    }
-    components *= type.getArraySizeProduct();
-    return components;
-}
 }  // namespace
 
 // This tracks each binding point's current default offset for inheritance of subsequent
@@ -602,7 +577,6 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mNumViews(-1),
       mMaxUniformBlocks(GetMaxUniformBlocksForShaderType(mShaderType, options, resources)),
       mNumUniformBlocks(0),
-      mNumOutputVaryingComponents(0),
       mDeclaringFunction(false),
       mDeclaringMain(false),
       mMainFunction(nullptr),
@@ -2369,7 +2343,6 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         error(line, "redefinition", identifier);
         return false;
     }
-    addAndCheckOutputVaryings(**variable, line);
 
     if (!checkIsNonVoid(line, identifier, type->getBasicType()))
     {
@@ -7062,7 +7035,6 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
                 error(field->line(), "redefinition of an interface block member name",
                       field->name());
             }
-            addAndCheckOutputVaryings(*fieldVariable, field->line());
 
             // Don't declare variables for fields of nameless interface blocks in the IR, just
             // remember to implicitly index the instance variable when referenced.
@@ -7092,7 +7064,6 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         {
             error(instanceLine, "redefinition of an interface block instance name", instanceName);
         }
-        addAndCheckOutputVaryings(*instanceVariable, instanceLine);
     }
 
     TIntermSymbol *blockSymbol = new TIntermSymbol(instanceVariable);
@@ -10795,43 +10766,6 @@ bool TParseContext::postParseChecks()
     checkCallGraph();
 
     return numErrors() == 0;
-}
-
-void TParseContext::addAndCheckOutputVaryings(const TVariable &variable, const TSourceLoc &line)
-{
-    if (mShaderType != GL_VERTEX_SHADER)
-    {
-        return;
-    }
-
-    if (!mCompileOptions.limitOutputVaryingsAtCompileTime)
-    {
-        return;
-    }
-
-    if (variable.symbolType() == SymbolType::BuiltIn)
-    {
-        return;
-    }
-
-    if (!IsVaryingOut(variable.getType().getQualifier()))
-    {
-        return;
-    }
-
-    angle::CheckedNumeric<unsigned int> checkedNum = mNumOutputVaryingComponents;
-    checkedNum += GetTypeComponentCount(variable.getType());
-    mNumOutputVaryingComponents =
-        checkedNum.ValueOrDefault(std::numeric_limits<unsigned int>::max());
-
-    unsigned int cap =
-        static_cast<unsigned int>(std::max(0, mResources.MaxVertexOutputVectors)) * 4u;
-
-    if (mNumOutputVaryingComponents > cap)
-    {
-        error(line, "Too many declared shader output varying components for this device",
-              variable.name());
-    }
 }
 
 //

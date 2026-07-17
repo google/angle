@@ -271,11 +271,6 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
         options->expandFragmentOutputsToVec4 = true;
     }
 
-    if (features.limitOutputVaryingsAtCompileTimeForWebgl.enabled && context->isWebGL())
-    {
-        options->limitOutputVaryingsAtCompileTime = true;
-    }
-
     return std::shared_ptr<ShaderTranslateTask>(
         new ShaderTranslateTaskGL(functions, mShaderID, contextGL->hasNativeParallelCompile()));
 }
