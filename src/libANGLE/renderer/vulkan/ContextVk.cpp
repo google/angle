@@ -2490,14 +2490,18 @@ angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirt
     // Check to see if we can reactivate the current renderPass, if all arguments that we use to
     // start the render pass is the same. We don't need to check clear values since mid render pass
     // clear are handled differently.
+    // If a clear was staged in the framebuffer attachment by using another framebuffer (or
+    // glClearTexImage), the render pass is restarted so the clear is applied.  If needed, this can
+    // be optimized in the future by restoring the render pass and applying the clear as a mid
+    // render pass clear instead.
     bool reactivateStartedRenderPass =
         hasStartedRenderPassWithQueueSerial(drawFramebufferVk->getLastRenderPassQueueSerial()) &&
-        mAllowRenderPassToReactivate && renderArea == mRenderPassCommands->getRenderArea();
+        mAllowRenderPassToReactivate && renderArea == mRenderPassCommands->getRenderArea() &&
+        !drawFramebufferVk->hasDeferredClears();
     if (reactivateStartedRenderPass)
     {
         INFO() << "Reactivate already started render pass on draw.";
         mRenderPassCommandBuffer = &mRenderPassCommands->getCommandBuffer();
-        ASSERT(!drawFramebufferVk->hasDeferredClears());
         ASSERT(hasActiveRenderPass());
 
         vk::RenderPassDesc framebufferRenderPassDesc = drawFramebufferVk->getRenderPassDesc();

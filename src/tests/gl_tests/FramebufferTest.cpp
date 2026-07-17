@@ -1544,6 +1544,68 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Tests to make sure deferred clears are properly being propagated
+TEST_P(FramebufferTest_ES3, ClearViaSecondaryFramebuffer)
+{
+    GLFramebuffer primaryFramebuffer;
+    GLTexture mainColorTexture;
+    GLTexture mainDepthTexture;
+
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    GLFramebuffer secondaryFramebuffer;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, primaryFramebuffer);
+
+    // setup primary framebuffer
+    glBindTexture(GL_TEXTURE_2D, mainColorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth() / 2, getWindowHeight() / 2, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mainColorTexture,
+                           0);
+
+    glBindTexture(GL_TEXTURE_2D, mainDepthTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, getWindowWidth() / 2,
+                 getWindowHeight() / 2, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mainDepthTexture, 0);
+
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearDepthf(0.9F);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+
+    // draw green quad with 0.5 depth into primary framebuffer
+    glUseProgram(greenProgram);
+    drawQuad(greenProgram, std::string(essl1_shaders::PositionAttrib()), 0.0F);
+    ASSERT_GL_NO_ERROR();
+
+    // clear the main depth texture using a secondary framebuffer
+    // setup secondary framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, secondaryFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mainDepthTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    // render blue quad with 0.1 depth into primary framebuffer with lequal depth testing which
+    // should work since we just cleared the main depth texture
+    glBindFramebuffer(GL_FRAMEBUFFER, primaryFramebuffer);
+
+    glUseProgram(blueProgram);
+    drawQuad(blueProgram, std::string(essl1_shaders::PositionAttrib()), 0.1F);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
 // Test that resizing the color attachment is handled correctly.
 TEST_P(FramebufferTest_ES3, ResizeColorAttachmentSmallToLarge)
 {
