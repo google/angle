@@ -368,6 +368,7 @@
 40644895 WIN INTEL VULKAN : RobustBufferAccessBehaviorTest.InterleavedAttributes/* = SKIP
 40644895 WIN INTEL VULKAN : Texture2DTestES3.NonZeroBaseEmulatedClear/* = SKIP
 342557702 WIN INTEL VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoSupportsExtendedDynamicState2 = SKIP
+535696693 WIN INTEL VULKAN : TransformFeedbackTestES31.ModeMismatchButSameClass/* = SKIP
 433836330 WIN INTEL VULKAN : TransformFeedbackTestES31.ModeMismatchClassMismatch/* = SKIP
 523717796 WIN INTEL VULKAN : TransformFeedbackTest.RecordAndDrawWithScissorTest/* = SKIP
 // vk_icdNegotiateLoaderICDInterfaceVersion crashes (possibly Mesa bug?)
