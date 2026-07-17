@@ -19,7 +19,6 @@
 #include "libANGLE/Debug.h"
 #include "libANGLE/GLES1State.h"
 #include "libANGLE/HandleAllocator.h"
-#include "libANGLE/Overlay.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/ProgramExecutable.h"
 #include "libANGLE/ProgramPipeline.h"
@@ -849,7 +848,6 @@ class State : angle::NonCopyable
           TextureManager *shareTextures,
           SemaphoreManager *shareSemaphores,
           egl::ContextMutex *contextMutex,
-          const OverlayType *overlay,
           const Version &clientVersion,
           bool debug,
           bool bindGeneratesResourceCHROMIUM,
@@ -1288,8 +1286,6 @@ class State : angle::NonCopyable
         mDirtyBits.set(state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
     }
 
-    const OverlayType *getOverlay() const { return mOverlay; }
-
     // Not for general use.
     const BufferManager &getBufferManagerForCapture() const { return *mBufferManager; }
     const BoundBufferMap &getBoundBuffersForCapture() const { return mBoundBuffers; }
@@ -1722,9 +1718,6 @@ class State : angle::NonCopyable
 
     // GL_KHR_parallel_shader_compile
     GLuint mMaxShaderCompilerThreads;
-
-    // The Overlay object, used by the backend to render the overlay.
-    const OverlayType *mOverlay;
 
     state::DirtyBits mDirtyBits;
     state::ExtendedDirtyBits mExtendedDirtyBits;

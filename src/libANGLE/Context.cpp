@@ -694,7 +694,6 @@ Context::Context(egl::Display *display,
              shareTextures,
              shareSemaphores,
              AllocateOrUseContextMutex(sharedContextMutex),
-             &mOverlay,
              GetClientVersion(display, attribs),
              GetDebug(display->getFrontendFeatures(), attribs),
              GetBindGeneratesResource(attribs),
@@ -738,7 +737,6 @@ Context::Context(egl::Display *display,
       mProgramPipelineObserverBinding(this, kProgramPipelineSubjectIndex),
       mFrameCapture(new angle::FrameCapture),
       mRefCount(0),
-      mOverlay(mImplementation.get()),
       mIsDestroyed(false),
       mDestroyedManagers(false)
 {
@@ -930,8 +928,6 @@ void Context::initializeDefaultResources()
     mCopyImageDirtyBits |= kCopyImageDirtyBitsBase;
     mCopyImageDirtyObjects |= kCopyImageDirtyObjectsBase;
     mTilingDirtyObjects |= kTilingDirtyObjectsBase;
-
-    mOverlay.init();
 }
 
 egl::Error Context::onDestroy(const egl::Display *display)
@@ -1021,8 +1017,6 @@ egl::Error Context::onDestroy(const egl::Display *display)
 
     // Backend requires implementation to be destroyed first to close down all the objects
     mState.mShareGroup->release(display);
-
-    mOverlay.destroy(this);
 
     return egl::NoError();
 }

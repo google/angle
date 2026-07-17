@@ -139,7 +139,6 @@ constexpr angle::PackedEnumMap<QueueSubmitReason, const char *> kQueueSubmitReas
      "Queue submission imminent due to exceeding buffer-to-image update size limit"},
     {QueueSubmitReason::ForceSubmitStagedTexture,
      "Queue submission imminent due to staged texture updates"},
-    {QueueSubmitReason::DrawOverlay, "Queue submission imminent due to drawing overlay"},
     {QueueSubmitReason::InitializeMemory, "Queue submission imminent due to initializing memory"},
 }};
 }  // namespace
@@ -1082,8 +1081,6 @@ DebugUtilsMessenger(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 
     bool isError    = (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) != 0;
     std::string msg = log.str();
-
-    renderer->onNewValidationMessage(msg);
 
     if (isError)
     {
@@ -2136,7 +2133,6 @@ Renderer::Renderer()
       mPipelineCacheVkUpdateTimeout(kPipelineCacheVkUpdatePeriod),
       mPipelineCacheSizeAtLastSync(0),
       mPipelineCacheInitialized(false),
-      mValidationMessageCount(0),
       mIsColorFramebufferFetchCoherent(false),
       mIsColorFramebufferFetchUsed(false),
       mCleanUpThread(this, &mCommandQueue),
@@ -7571,20 +7567,6 @@ void Renderer::cleanupPendingSubmissionGarbage()
     // Check if pending garbage is still pending. If not, move them to the garbage list.
     mSharedGarbageList.cleanupUnsubmittedGarbage(this);
     mSuballocationGarbageList.cleanupUnsubmittedGarbage(this);
-}
-
-void Renderer::onNewValidationMessage(const std::string &message)
-{
-    mLastValidationMessage = message;
-    ++mValidationMessageCount;
-}
-
-std::string Renderer::getAndClearLastValidationMessage(uint32_t *countSinceLastClear)
-{
-    *countSinceLastClear    = mValidationMessageCount;
-    mValidationMessageCount = 0;
-
-    return std::move(mLastValidationMessage);
 }
 
 uint64_t Renderer::getMaxFenceWaitTimeNs() const

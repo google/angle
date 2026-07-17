@@ -1529,7 +1529,6 @@ void RenderPassFramebuffer::PackViews(FramebufferAttachmentsVector<VkImageView> 
 // RenderPassCommandBufferHelper implementation.
 RenderPassCommandBufferHelper::RenderPassCommandBufferHelper()
     : mCurrentSubpassCommandBufferIndex(0),
-      mCounter(0),
       mClearValues{},
       mRenderPassStarted(false),
       mTransformFeedbackCounterBuffers{},
@@ -2307,7 +2306,6 @@ angle::Result RenderPassCommandBufferHelper::beginRenderPass(
     *commandBufferOut            = &getCommandBuffer();
 
     mRenderPassStarted = true;
-    mCounter++;
 
     for (PackedAttachmentIndex index(0); index < colorAttachmentCount; ++index)
     {
@@ -2972,8 +2970,6 @@ DynamicBuffer::~DynamicBuffer()
 
 angle::Result DynamicBuffer::allocateNewBuffer(ErrorContext *context)
 {
-    context->getPerfCounters().dynamicBufferAllocations++;
-
     // Allocate the buffer
     ASSERT(!mBuffer);
     mBuffer = std::make_unique<BufferHelper>();

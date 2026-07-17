@@ -19,7 +19,6 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Query.h"
 #include "libANGLE/TransformFeedback.h"
-#include "libANGLE/renderer/OverlayImpl.h"
 #include "libANGLE/renderer/metal/BufferMtl.h"
 #include "libANGLE/renderer/metal/CompilerMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
@@ -1538,12 +1537,6 @@ SemaphoreImpl *ContextMtl::createSemaphore()
 {
     UNIMPLEMENTED();
     return nullptr;
-}
-
-OverlayImpl *ContextMtl::createOverlay(const gl::OverlayState &state)
-{
-    // Not implemented.
-    return new OverlayImpl(state);
 }
 
 angle::Result ContextMtl::dispatchCompute(const gl::Context *context,

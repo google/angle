@@ -452,7 +452,6 @@ class CommandQueue : angle::NonCopyable
     CommandPoolAccess &getCommandPoolAccess() { return mCommandPoolAccess; }
 
     const angle::VulkanPerfCounters getPerfCounters() const;
-    void resetPerFramePerfCounters();
 
     // Release finished commands and clean up garbage immediately, or request async clean up if
     // enabled.

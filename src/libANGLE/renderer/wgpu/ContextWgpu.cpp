@@ -16,7 +16,6 @@
 #include "compiler/translator/wgsl/OutputUniformBlocks.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/renderer/OverlayImpl.h"
 #include "libANGLE/renderer/wgpu/BufferWgpu.h"
 #include "libANGLE/renderer/wgpu/CompilerWgpu.h"
 #include "libANGLE/renderer/wgpu/DisplayWgpu.h"
@@ -1139,11 +1138,6 @@ SemaphoreImpl *ContextWgpu::createSemaphore()
 {
     UNREACHABLE();
     return nullptr;
-}
-
-OverlayImpl *ContextWgpu::createOverlay(const gl::OverlayState &state)
-{
-    return new OverlayImpl(state);
 }
 
 angle::Result ContextWgpu::dispatchCompute(const gl::Context *context,

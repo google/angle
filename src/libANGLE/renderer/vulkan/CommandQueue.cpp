@@ -849,7 +849,6 @@ angle::Result CommandQueue::submitCommands(ErrorContext *context,
     VkDevice device    = renderer->getDevice();
 
     ++mPerfCounters.commandQueueSubmitCallsTotal;
-    ++mPerfCounters.commandQueueSubmitCallsPerFrame;
 
     DeviceScoped<CommandBatch> scopedBatch(device);
     CommandBatch &batch = scopedBatch.get();
@@ -901,7 +900,6 @@ angle::Result CommandQueue::submitCommands(ErrorContext *context,
         }
 
         ++mPerfCounters.vkQueueSubmitCallsTotal;
-        ++mPerfCounters.vkQueueSubmitCallsPerFrame;
     }
 
     return queueSubmitLocked(context, commandsState.getPriority(), submitInfo, scopedBatch,
@@ -952,7 +950,6 @@ angle::Result CommandQueue::queueSubmitOneOff(ErrorContext *context,
     }
 
     ++mPerfCounters.vkQueueSubmitCallsTotal;
-    ++mPerfCounters.vkQueueSubmitCallsPerFrame;
 
     return queueSubmitLocked(context, contextPriority, submitInfo, scopedBatch, submitQueueSerial);
 }
@@ -1050,13 +1047,6 @@ const angle::VulkanPerfCounters CommandQueue::getPerfCounters() const
 {
     std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
     return mPerfCounters;
-}
-
-void CommandQueue::resetPerFramePerfCounters()
-{
-    std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
-    mPerfCounters.commandQueueSubmitCallsPerFrame = 0;
-    mPerfCounters.vkQueueSubmitCallsPerFrame      = 0;
 }
 
 angle::Result CommandQueue::releaseFinishedCommandsAndCleanupGarbage(ErrorContext *context)

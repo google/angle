@@ -39,7 +39,6 @@
     PROC(Context)                \
     PROC(Framebuffer)            \
     PROC(MemoryObject)           \
-    PROC(Overlay)                \
     PROC(Program)                \
     PROC(ProgramExecutable)      \
     PROC(ProgramPipeline)        \
@@ -62,7 +61,6 @@ class ShareGroup;
 
 namespace gl
 {
-class MockOverlay;
 class ProgramExecutable;
 struct RasterizerState;
 struct SwizzleState;
@@ -437,12 +435,6 @@ struct ImplTypeHelper<gl::OBJ>         \
 ANGLE_GL_OBJECTS_X(ANGLE_IMPL_TYPE_HELPER_GL)
 
 template <>
-struct ImplTypeHelper<gl::MockOverlay>
-{
-    using ImplType = OverlayVk;
-};
-
-template <>
 struct ImplTypeHelper<egl::Display>
 {
     using ImplType = DisplayVk;
@@ -473,12 +465,6 @@ template <typename T>
 GetImplType<T> *SafeGetImpl(const T *glObject)
 {
     return SafeGetImplAs<GetImplType<T>>(glObject);
-}
-
-template <>
-inline OverlayVk *GetImpl(const gl::MockOverlay *glObject)
-{
-    return nullptr;
 }
 
 // Reference to a deleted object. The object is due to be destroyed at some point in the future.
@@ -1693,7 +1679,6 @@ enum class RenderPassClosureReason
     TemporaryForImageClear,
     TemporaryForImageCopy,
     TemporaryForMSRTTUnresolve,
-    TemporaryForOverlayDraw,
 
     // LegacyDithering requires updating the render pass
     LegacyDithering,
@@ -1761,7 +1746,6 @@ enum class QueueSubmitReason
 
     // Others
     DeferredFlush,
-    DrawOverlay,
     TileMemoryFallback,
 
     InvalidEnum,

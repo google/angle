@@ -8980,9 +8980,9 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
 
     const gl::State &contextState = mainContext->getState();
     gl::State mainContextReplayState(
-        nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, contextState.getClientVersion(),
-        false, true, true, true, false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG,
-        contextState.hasRobustAccess(), contextState.hasProtectedContent(), false, false);
+        nullptr, nullptr, nullptr, nullptr, nullptr, contextState.getClientVersion(), false, true,
+        true, true, false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG, contextState.hasRobustAccess(),
+        contextState.hasProtectedContent(), false, false);
     mainContextReplayState.initializeForCapture(mainContext);
 
     CaptureShareGroupMidExecutionSetup(mainContext, &mShareGroupSetupCalls, &mResourceTracker,
@@ -9024,7 +9024,7 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
         else
         {
             const gl::State &shareContextState = shareContext.second->getState();
-            gl::State auxContextReplayState(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+            gl::State auxContextReplayState(nullptr, nullptr, nullptr, nullptr, nullptr,
                                             shareContextState.getClientVersion(), false, true, true,
                                             true, false, EGL_CONTEXT_PRIORITY_MEDIUM_IMG,
                                             shareContextState.hasRobustAccess(),

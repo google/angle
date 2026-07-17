@@ -19,7 +19,6 @@
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/DriverUniforms.h"
-#include "libANGLE/renderer/vulkan/OverlayVk.h"
 #include "libANGLE/renderer/vulkan/PersistentCommandPool.h"
 #include "libANGLE/renderer/vulkan/ShareGroupVk.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
@@ -395,9 +394,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Semaphore creation.
     SemaphoreImpl *createSemaphore() override;
 
-    // Overlay creation.
-    OverlayImpl *createOverlay(const gl::OverlayState &state) override;
-
     angle::Result dispatchCompute(const gl::Context *context,
                                   GLuint numGroupsX,
                                   GLuint numGroupsY,
@@ -533,7 +529,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result getTimestamp(uint64_t *timestampOut);
 
     const gl::Debug &getDebug() const { return mState.getDebug(); }
-    const gl::OverlayType *getOverlay() const { return mState.getOverlay(); }
 
     angle::Result onBufferReleaseToExternal(const vk::BufferHelper &buffer);
     angle::Result onImageReleaseToExternal(const vk::ImageHelper &image);
@@ -768,8 +763,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     QueryVk *getActiveRenderPassQuery(gl::QueryType queryType) const;
 
     void syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQueuePerfCounters);
-    void updateOverlayOnPresent();
-    void addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *commandBuffer);
 
     // For testing only.
     void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);
