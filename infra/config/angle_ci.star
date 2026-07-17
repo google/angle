@@ -1649,7 +1649,6 @@ ci.thin_tester(
     ),
     targets = targets.bundle(
         targets = [
-            "mac_arm64_gtests",
         ],
         mixins = [
             "mac_arm64_apple_m2_retina_gpu_experimental",
@@ -1660,10 +1659,10 @@ ci.thin_tester(
         os_type = targets.os_type.MAC,
     ),
     # Uncomment this entry when this experimental tester is actually in use.
-    console_view_entry = consoles.console_view_entry(
-        category = "test|mac|arm64|rel|exp",
-        short_name = "m2",
-    ),
+    # console_view_entry = consoles.console_view_entry(
+    #     category = "test|mac|arm64|rel|exp",
+    #     short_name = "m2",
+    # ),
     list_view = "exp",
 )
 
