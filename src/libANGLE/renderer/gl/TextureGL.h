@@ -221,10 +221,15 @@ class TextureGL : public TextureImpl
 
   private:
     angle::Result recreateTexture(const gl::Context *context);
-    angle::Result copyTextureLevels(const gl::Context *context,
-                                    GLuint srcTexture,
-                                    GLuint dstTexture);
+    // One of sourceTexture or destTexture must be mTextureID.
+    angle::Result copyLevelsBetweenTextures(const gl::Context *context,
+                                            GLuint sourceTexture,
+                                            size_t sourceLevel,
+                                            GLuint destTexture,
+                                            size_t destLevel,
+                                            size_t levelCount);
     angle::Result recreateNativeStoragePreservingLevels(const gl::Context *context);
+    angle::Result useTempForNonZeroBaseLevelGenmipmap(const gl::Context *context);
 
     angle::Result setImageHelper(const gl::Context *context,
                                  gl::TextureTarget target,

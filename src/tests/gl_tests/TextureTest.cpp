@@ -22989,6 +22989,141 @@ TEST_P(Texture2DTestES3, ClearMidRenderPassThenSample)
     ASSERT_GL_NO_ERROR();
 }
 
+class Texture2DTestES3_NonZeroBaseLevelGenMipmaps : public Texture2DTestES3
+{};
+
+// Test that performing an upload after draw, and glGenerateMipmap
+// with non-zero base level, does not crash.
+TEST_P(Texture2DTestES3_NonZeroBaseLevelGenMipmaps, UploadAfterDrawShouldNotCrash)
+{
+    for (int k = 0; k < 4; ++k)
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexStorage2D(GL_TEXTURE_2D, 12, GL_RGBA8, 3, 2048);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        drawQuad(mProgram, "position", 0.5f);
+        glFinish();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 10);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glFinish();
+        EXPECT_GL_NO_ERROR();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+        std::vector<uint8_t> data(1 * 1024 * 4, 0x41);
+        glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 1, 1024, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
+// Test that generating mipmaps with non-zero base level preserves texture contents across all mip
+// levels.
+TEST_P(Texture2DTestES3_NonZeroBaseLevelGenMipmaps, VerifyMipmapContents)
+{
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    // Allocate 6 levels (levels 0 to 5) for a 32x32 immutable RGBA8 texture.
+    glTexStorage2D(GL_TEXTURE_2D, 6, GL_RGBA8, 32, 32);
+
+    // Set base level to 1 and max level to 4.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Upload different data (e.g. solid blue) to level 0 (32x32).
+    std::vector<GLColor> level0Data(32 * 32, GLColor::blue);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 32, 32, GL_RGBA, GL_UNSIGNED_BYTE, level0Data.data());
+
+    // Upload distinct data (solid cyan) to level 5 (1x1) to verify it is untouched.
+    std::vector<GLColor> level5Data(1 * 1, GLColor::cyan);
+    glTexSubImage2D(GL_TEXTURE_2D, 5, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, level5Data.data());
+
+    // Upload a square 2x2 checkerboard pattern to level 1 (16x16).
+    // Top-left: Red, Top-right: Green, Bottom-left: Yellow, Bottom-right: Magenta.
+    std::vector<GLColor> level1Data(16 * 16);
+    for (int y = 0; y < 16; ++y)
+    {
+        for (int x = 0; x < 16; ++x)
+        {
+            if (x < 8 && y < 8)
+            {
+                level1Data[y * 16 + x] = GLColor::red;
+            }
+            else if (x >= 8 && y < 8)
+            {
+                level1Data[y * 16 + x] = GLColor::green;
+            }
+            else if (x < 8 && y >= 8)
+            {
+                level1Data[y * 16 + x] = GLColor::yellow;
+            }
+            else
+            {
+                level1Data[y * 16 + x] = GLColor::magenta;
+            }
+        }
+    }
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, level1Data.data());
+
+    // Generate mipmaps with base level = 1 and max level = 4.
+    glGenerateMipmap(GL_TEXTURE_2D);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the four colors are preserved correctly in each quadrant up to max level (level
+    // 4).
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    for (int level = 1; level <= 4; ++level)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, level);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        int dim  = 32 >> level;  // level 1: 16, level 2: 8, level 3: 4, level 4: 2
+        int half = dim / 2;
+
+        // Top-left quadrant (Red)
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(half - 1, half - 1, GLColor::red);
+
+        // Top-right quadrant (Green)
+        EXPECT_PIXEL_COLOR_EQ(half, 0, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(dim - 1, half - 1, GLColor::green);
+
+        // Bottom-left quadrant (Yellow)
+        EXPECT_PIXEL_COLOR_EQ(0, half, GLColor::yellow);
+        EXPECT_PIXEL_COLOR_EQ(half - 1, dim - 1, GLColor::yellow);
+
+        // Bottom-right quadrant (Magenta)
+        EXPECT_PIXEL_COLOR_EQ(half, half, GLColor::magenta);
+        EXPECT_PIXEL_COLOR_EQ(dim - 1, dim - 1, GLColor::magenta);
+    }
+
+    // At the end of the test, verify that level 0's contents and level 5's contents were preserved.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(15, 15, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(31, 31, GLColor::blue);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 5);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3_NonZeroBaseLevelGenMipmaps);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    Texture2DTestES3_NonZeroBaseLevelGenMipmaps,
+    ES3_OPENGL().enable(Feature::UseTempForNonZeroBaseLevelGenMipmapUsingCopyImageSubData),
+    ES3_OPENGLES().enable(Feature::UseTempForNonZeroBaseLevelGenMipmapUsingCopyImageSubData));
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureSizeLimitTest);
 ANGLE_INSTANTIATE_TEST(TextureSizeLimitTest,
                        ES2_D3D11().enable(Feature::LimitMaxTextureBytesTo1MB),

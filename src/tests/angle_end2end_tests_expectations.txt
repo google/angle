@@ -21,6 +21,7 @@
 42266349 VULKAN : MultithreadingTestES3.UnsynchronizedTextureReads2/* = SKIP
 377614665 VULKAN : GLSLValidationTest.StructSamplerVsComma/* = SKIP
 410584007 VULKAN : ImageTestES31.UseSourceTextureAsStorageImage/* = SKIP
+535696694 VULKAN : Texture2DTestES3_NonZeroBaseLevelGenMipmaps.UploadAfterDrawShouldNotCrash/* = SKIP
 514710696 : PbufferTest.BindTexImageAndGenerateMipmap/* = SKIP
 // Fails anywhere RGBA4 is emulated with RGBA8
 534823410 VULKAN : FramebufferTestWithFormatFallback.R4G4B4A4_CubeTexImageRedefinedFaceZero/ES3_Vulkan_SwiftShader_ForceRenderableFallbackFormat = SKIP
@@ -346,6 +347,9 @@
 536046166 NVIDIA VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitIntoMixedTexturesAfterFinish/* = SKIP
 536046166 NVIDIA VULKAN : FramebufferTest_ES31_MSAA.MultisampleResolveWithBlitIntoMixedTextures/* = SKIP
 536046166 NVIDIA VULKAN : FramebufferTest_ES31_MSAA.MultisampleStencilSampling/*EmulatedPrerotation* = SKIP
+// NVIDIA's glCopyImageSubData may be broken
+534923522 NVIDIA OPENGL : Texture2DTestES3_NonZeroBaseLevelGenMipmaps.VerifyMipmapContents/* = SKIP
+534923522 NVIDIA GLES : Texture2DTestES3_NonZeroBaseLevelGenMipmaps.VerifyMipmapContents/* = SKIP
 42265709 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixCopyBug/* = SKIP
 42265709 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixMultiplicationBug/* = SKIP
 537235696 NVIDIA OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
