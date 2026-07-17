@@ -246,6 +246,7 @@ enum class Feature
     LimitMaxMSAASamplesTo4,
     LimitMaxStorageBufferSize,
     LimitMaxTextureBytesTo1MB,
+    LimitOutputVaryingsTo256AtCompileTime,
     LimitSampleCountTo2,
     LimitWebglMaxTextureSizeTo4096,
     LimitWebglMaxTextureSizeTo8192,

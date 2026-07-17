@@ -9469,6 +9469,39 @@ void main() { big[0][0] = 1.0; col = vec4(big[0][0]); })";
     validateError(GL_FRAGMENT_SHADER, kFS, "version");
 }
 
+class GLSLValidationTest_ES3_LimitOutputVaryings : public GLSLValidationTest_ES3
+{};
+
+// Regression test for crbug.com/529991907.
+// Verify that compiling a shader with up to 1024 output varying components
+// succeeds, and exceeding 1024 components is rejected at compile time.
+TEST_P(GLSLValidationTest_ES3_LimitOutputVaryings, TooManyDeclaredVertexOutputComponents)
+{
+    ANGLE_SKIP_TEST_IF(
+        !getEGLWindow()->isFeatureEnabled(Feature::LimitOutputVaryingsTo256AtCompileTime));
+
+    constexpr int kMaxVectors = 1024 / 4;
+
+    std::stringstream vsValid;
+    vsValid << "#version 300 es\n";
+    for (int i = 0; i < kMaxVectors; ++i)
+    {
+        vsValid << "out highp vec4 v" << i << ";\n";
+    }
+    vsValid << "void main() { gl_Position = vec4(0.0); }\n";
+    validateSuccess(GL_VERTEX_SHADER, vsValid.str().c_str());
+
+    std::stringstream vsInvalid;
+    vsInvalid << "#version 300 es\n";
+    for (int i = 0; i < kMaxVectors + 1; ++i)
+    {
+        vsInvalid << "out highp vec4 v" << i << ";\n";
+    }
+    vsInvalid << "void main() { gl_Position = vec4(0.0); }\n";
+    validateError(GL_VERTEX_SHADER, vsInvalid.str().c_str(),
+                  "Too many declared shader output varying components for this device");
+}
+
 }  // namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLValidationTest);
@@ -9490,6 +9523,11 @@ ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLValidationTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLValidationTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLValidationTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationTest_ES3_LimitOutputVaryings);
+ANGLE_INSTANTIATE_TEST(GLSLValidationTest_ES3_LimitOutputVaryings,
+                       ES3_OPENGL().enable(Feature::LimitOutputVaryingsTo256AtCompileTime),
+                       ES3_OPENGLES().enable(Feature::LimitOutputVaryingsTo256AtCompileTime));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND(WebGLGLSLValidationExtensionDisableTest,
                                ES2_OPENGL().enable(Feature::AllowExtensionDisableAfterNonPpTokens));

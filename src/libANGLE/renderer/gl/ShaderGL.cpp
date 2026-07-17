@@ -271,6 +271,11 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
         options->expandFragmentOutputsToVec4 = true;
     }
 
+    if (features.limitOutputVaryingsTo256AtCompileTime.enabled)
+    {
+        options->limitOutputVaryingsTo256 = true;
+    }
+
     return std::shared_ptr<ShaderTranslateTask>(
         new ShaderTranslateTaskGL(functions, mShaderID, contextGL->hasNativeParallelCompile()));
 }
