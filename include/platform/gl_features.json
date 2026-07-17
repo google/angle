@@ -327,6 +327,15 @@
             "issue": "https://crbug.com/528131119"
         },
         {
+            "name": "use_temp_for_non_zero_base_level_GenMipmap_using_CopyImageSubData",
+            "category": "Workarounds",
+            "description": [
+                "Allocate a temporary texture when generating mipmaps on an immutable texture with a ",
+                "non-zero base level to avoid driver bugs."
+            ],
+            "issue": "https://crbug.com/534923522"
+        },
+        {
             "name": "limit_max_3d_array_texture_size_to_1024",
             "category": "Workarounds",
             "description": [
