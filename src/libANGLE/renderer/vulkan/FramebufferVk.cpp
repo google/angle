@@ -2202,7 +2202,6 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     resolveRegion.dstSubresource.layerCount     = 1;
     resolveRegion.dstOffset.x                   = params.blitArea.x;
     resolveRegion.dstOffset.y                   = params.blitArea.y;
-    resolveRegion.dstOffset.z                   = 0;
     resolveRegion.extent.width                  = params.blitArea.width;
     resolveRegion.extent.height                 = params.blitArea.height;
     resolveRegion.extent.depth                  = 1;
@@ -2213,9 +2212,15 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
         vk::ImageHelper &dstImage        = drawRenderTarget->getImageForWrite();
 
+        // Note: In GL, the src image cannot be 3D because there is no way to create a multisampled
+        // 3D texture.
+        const bool isDst3D = dstImage.getType() == VK_IMAGE_TYPE_3D;
+
         vk::LevelIndex levelVk = dstImage.toVkLevel(drawRenderTarget->getLevelIndex());
         resolveRegion.dstSubresource.mipLevel       = levelVk.get();
-        resolveRegion.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
+        resolveRegion.dstSubresource.baseArrayLayer =
+            isDst3D ? 0 : drawRenderTarget->getLayerIndex();
+        resolveRegion.dstOffset.z = isDst3D ? drawRenderTarget->getLayerIndex() : 0;
 
         srcImage->resolve(renderer, &dstImage, resolveRegion, commandBuffer);
 

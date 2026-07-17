@@ -337,8 +337,10 @@
 491363839 NVIDIA VULKAN : GLSLTest_ES31.HelperInvocationsAfterDiscard/* = SKIP
 // Test cannot run when ASTC is emulated
 525079760 NVIDIA VULKAN : ImageTestES3.NonZeroLevel*GetCompressedTexImage/* = SKIP
-
-// Nvidia Vulkan
+536046166 NVIDIA VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitIntoMixedTextures/* = SKIP
+536046166 NVIDIA VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitIntoMixedTexturesAfterFinish/* = SKIP
+536046166 NVIDIA VULKAN : FramebufferTest_ES31_MSAA.MultisampleResolveWithBlitIntoMixedTextures/* = SKIP
+536046166 NVIDIA VULKAN : FramebufferTest_ES31_MSAA.MultisampleStencilSampling/*EmulatedPrerotation* = SKIP
 42265709 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixCopyBug/* = SKIP
 42265709 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixMultiplicationBug/* = SKIP
 
@@ -381,6 +383,10 @@
 40096893 LINUX INTEL VULKAN : TextureBufferTestES31.TexBufferFormatMismatch/* = SKIP
 // RobustBufferAccess is not actually robust (will hang).
 435228814 LINUX INTEL VULKAN : RobustBufferAccessBehaviorTest.DynamicBufferCrash/* = SKIP
+536046166 INTEL VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitIntoMixedTextures/* = SKIP
+536046166 INTEL VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitIntoMixedTexturesAfterFinish/* = SKIP
+536046166 INTEL VULKAN : FramebufferTest_ES31_MSAA.MultisampleResolveWithBlitIntoMixedTextures/* = SKIP
+536046166 WIN INTEL VULKAN : FramebufferTest_ES31_MSAA.MultisampleStencilSampling/*EmulatedPrerotation* = SKIP
 
 // Robust init of OOB framebuffer reads is not zero'd
 500528706 VULKAN : CopyTexImageTestRobustResourceInit.OOBReadShouldBeZeroInit/* = SKIP
@@ -673,6 +679,11 @@
 384314370 PIXEL4ORXL GLES : FramebufferFetchES31.WriteOnlyInOutVariableEarlyReturn/* = SKIP
 384314370 PIXEL4ORXL GLES : FramebufferFetchES31.WriteOnlyInOutVariablePartial/* = SKIP
 384314370 PIXEL4ORXL GLES : FramebufferFetchES31.WriteOnlyInOutVariableInOutArgument/* = SKIP
+536042538 PIXEL4ORXL GLES : FramebufferTest_ES31.MultisampleResolveWithBlitInto3DTexture/* = SKIP
+536042538 PIXEL4ORXL GLES : FramebufferTest_ES31.MultisampleResolveWithBlitIntoMixedTextures/* = SKIP
+536042538 PIXEL4ORXL GLES : FramebufferTest_ES31.MultisampleResolveWithBlitIntoMixedTexturesAfterFinish/* = SKIP
+536042538 PIXEL4ORXL GLES : FramebufferTest_ES31_MSAA.MultisampleResolveWithBlitInto3DTexture/* = SKIP
+536042538 PIXEL4ORXL GLES : FramebufferTest_ES31_MSAA.MultisampleResolveWithBlitIntoMixedTextures/* = SKIP
 42264513 PIXEL4ORXL GLES : GLSLTest.NestedInoutVars2/* = SKIP
 42264513 PIXEL4ORXL GLES : GLSLTest.NestedInoutVars3/* = SKIP
 42264513 PIXEL4ORXL GLES : SimpleUniformTestES3.TernarySelectAnArrayThenIndex/* = SKIP
@@ -756,6 +767,7 @@
 40096826 PIXEL6 VULKAN : FramebufferMultiviewLayeredClearTest.ScissoredClearBufferfi/* = SKIP
 40096826 PIXEL6 VULKAN : FramebufferTest_ES31.MultipleTextureMultisampleResolveWithBlitMultipleResolves* = SKIP
 40096826 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitThenDrawAttachment1/* = SKIP
+536046166 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitInto3DTexture/* = SKIP
 40096826 PIXEL6 VULKAN : GLSLTest.PointCoordConsistency/* = SKIP
 40096826 PIXEL6 VULKAN : GLSLTest_ES31.ArraysOfArraysImage/* = SKIP
 40096826 PIXEL6 VULKAN : GLSLTest_ES31.BoolInInterfaceBlocks/* = SKIP
@@ -954,6 +966,7 @@
 480069042 PIXEL10 GLES : FramebufferTest_ES31.DepthStencilResolveThenDrawWithoutResolve/* = SKIP
 480069042 PIXEL10 GLES : FramebufferTest_ES31.MixesMultisampleTextureRenderbuffer/* = SKIP
 480069042 PIXEL10 GLES : FramebufferTest_ES31.MultisampleDepthStencilResolveMultipleTimesWithDrawInBetween/* = SKIP
+536042538 PIXEL10 GLES : FramebufferTest_ES31.MultisampleResolveWithBlitInto3DTexture/* = SKIP
 379700129 PIXEL10 GLES : FramebufferTest_ES31_MSAA.MultisampleStencilSampling/* = SKIP
 480069042 PIXEL10 GLES : GLSLConstantFoldingTest_ES31.NamedArrayOfArrayIndex/* = SKIP
 480069042 PIXEL10 GLES : GLSLTest.NestedStructsWithSamplersAsFunctionArg/* = SKIP
@@ -1255,6 +1268,7 @@
 480069042 PIXEL10 VULKAN : ExternalBufferTestES31.SubDataDoesNotCauseOrphaning/* = SKIP
 480069042 PIXEL10 VULKAN : ExternalBufferTestES31.getBufferParameter/* = SKIP
 480069042 PIXEL10 VULKAN : FramebufferTest_ES31.DepthStencilResolveThenDrawWithoutResolve/* = SKIP
+536046166 PIXEL10 VULKAN : FramebufferTest_ES31.MultisampleResolveWithBlitInto3DTexture/* = SKIP
 480069042 PIXEL10 VULKAN : GLSLTest_ES31.ArrayOfArrayOfSamplerDynamicIndexEXT/* = SKIP
 480069042 PIXEL10 VULKAN : GLSLTest_ES31.ArrayOfArrayOfSamplerDynamicIndexOES/* = SKIP
 480069042 PIXEL10 VULKAN : GLSLTest_ES31.ArrayOfArrayOfSamplerInStructDynamicIndex/* = SKIP
