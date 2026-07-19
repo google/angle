@@ -4069,7 +4069,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/puzzle_and_dragons',
-            'version': 'version:2',
+            'version': 'version:3',
         },
       ],
       'dep_type': 'cipd',
