@@ -6987,6 +6987,7 @@ void ContextVk::handleError(VkResult errorCode,
     {
         mLastFlushedQueueSerial = mRenderPassCommands->getQueueSerial();
         mRenderPassCommands->abandon(this, &collector);
+        mRenderPassCommandBuffer = nullptr;
     }
     collector.releaseCommandBuffers();
 
