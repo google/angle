@@ -1406,17 +1406,8 @@
 375244081 IOS METAL : GLSLTest_ES3.MaxVaryingWithFeedbackAndGLline/* = SKIP
 496604559 IOS METAL : RobustResourceInitTestES3.DrawThenInvalidateThenVerifyDepthStencil/* = SKIP
 507904704 IOS METAL : CompressedTextureASTCTest.Test/* = SKIP
-507904704 IOS METAL : CompressedTextureEACR11STest.Test/* = SKIP
-507904704 IOS METAL : CompressedTextureEACR11UTest.Test/* = SKIP
-507904704 IOS METAL : CompressedTextureEACRG11STest.Test/* = SKIP
-507904704 IOS METAL : CompressedTextureEACRG11UTest.Test/* = SKIP
 507904704 IOS METAL : CompressedTextureETC1SubTest.Test/* = SKIP
-507904704 IOS METAL : CompressedTextureETC2RGB8A1SRGBTest.Test/* = SKIP
-507904704 IOS METAL : CompressedTextureETC2RGB8A1Test.Test/* = SKIP
-507904704 IOS METAL : CompressedTextureETC2RGB8SRGBTest.Test/* = SKIP
-507904704 IOS METAL : CompressedTextureETC2RGB8Test.Test/* = SKIP
-507904704 IOS METAL : CompressedTextureETC2RGBA8SRGBTest.Test/* = SKIP
-507904704 IOS METAL : CompressedTextureETC2RGBA8Test.Test/* = SKIP
+507904704 IOS METAL : CompressedTextureETC2Test.Test/* = SKIP
 507904704 IOS METAL : ETC1CompressedTextureTest.ETC1CompressedImageNPOT/* = SKIP
 507904704 IOS METAL : ETC1CompressedTextureTest.ETC1CompressedSubImage/* = SKIP
 507904704 IOS METAL : ETC1CompressedTextureTest.ETC1ShrinkThenGrowMaxLevels/* = SKIP
@@ -1605,16 +1596,7 @@
 42265943 PIXEL4ORXL GLES : CompressedTextureASTCSliced3DTest.Test/* = SKIP
 42265943 PIXEL4ORXL GLES : CompressedTextureASTC3DTest.Test/* = SKIP
 42265943 PIXEL4ORXL GLES : CompressedTextureETC1SubTest.Test/* = SKIP
-42265943 PIXEL4ORXL GLES : CompressedTextureEACR11STest.Test/* = SKIP
-42265943 PIXEL4ORXL GLES : CompressedTextureEACR11UTest.Test/* = SKIP
-42265943 PIXEL4ORXL GLES : CompressedTextureEACRG11STest.Test/* = SKIP
-42265943 PIXEL4ORXL GLES : CompressedTextureEACRG11UTest.Test/* = SKIP
-42265943 PIXEL4ORXL GLES : CompressedTextureETC2RGB8A1SRGBTest.Test/* = SKIP
-42265943 PIXEL4ORXL GLES : CompressedTextureETC2RGB8A1Test.Test/* = SKIP
-42265943 PIXEL4ORXL GLES : CompressedTextureETC2RGB8SRGBTest.Test/* = SKIP
-42265943 PIXEL4ORXL GLES : CompressedTextureETC2RGB8Test.Test/* = SKIP
-42265943 PIXEL4ORXL GLES : CompressedTextureETC2RGBA8SRGBTest.Test/* = SKIP
-42265943 PIXEL4ORXL GLES : CompressedTextureETC2RGBA8Test.Test/* = SKIP
+42265943 PIXEL4ORXL GLES : CompressedTextureETC2Test.Test/* = SKIP
 
 // Intel drivers erroneously reject certain sub-image uploads
 42265943 WIN INTEL OPENGL : CompressedTextureDXT1Test.Test/* = SKIP
@@ -1624,16 +1606,7 @@
 42265943 WIN INTEL OPENGL : CompressedTextureRGTCTest.Test/* = SKIP
 42265943 WIN INTEL OPENGL : CompressedTextureBPTCTest.Test/* = SKIP
 42265943 WIN INTEL OPENGL : CompressedTextureETC1SubTest.Test/* = SKIP
-42265943 WIN INTEL OPENGL : CompressedTextureEACR11STest.Test/* = SKIP
-42265943 WIN INTEL OPENGL : CompressedTextureEACR11UTest.Test/* = SKIP
-42265943 WIN INTEL OPENGL : CompressedTextureEACRG11STest.Test/* = SKIP
-42265943 WIN INTEL OPENGL : CompressedTextureEACRG11UTest.Test/* = SKIP
-42265943 WIN INTEL OPENGL : CompressedTextureETC2RGB8A1SRGBTest.Test/* = SKIP
-42265943 WIN INTEL OPENGL : CompressedTextureETC2RGB8A1Test.Test/* = SKIP
-42265943 WIN INTEL OPENGL : CompressedTextureETC2RGB8SRGBTest.Test/* = SKIP
-42265943 WIN INTEL OPENGL : CompressedTextureETC2RGB8Test.Test/* = SKIP
-42265943 WIN INTEL OPENGL : CompressedTextureETC2RGBA8SRGBTest.Test/* = SKIP
-42265943 WIN INTEL OPENGL : CompressedTextureETC2RGBA8Test.Test/* = SKIP
+42265943 WIN INTEL OPENGL : CompressedTextureETC2Test.Test/* = SKIP
 
 // Takes several minutes to complete with ASAN / TSAN
 42263997 ASAN VULKAN SWIFTSHADER : ClipCullDistanceTest.SizeCheckCombined/* = SKIP

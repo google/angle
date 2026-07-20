@@ -18292,7 +18292,7 @@ void PBOCompressedTextureTest::runCompressedSubImage()
     {
         ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage"));
         ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_pixel_buffer_object"));
-        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_compressed_ETC2_RGB8_texture"));
+        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_compressed_texture_etc"));
     }
 
     const GLuint width  = 4u;
