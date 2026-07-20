@@ -465,6 +465,7 @@
 524008572 MAC METAL : VertexAttributeTestES3.LargeAttribPointerOffsetNoCrash/* = SKIP
 534815900 MAC METAL : TextureCubeTestES3.RedefinedCubemapLevelsOnlyFaceZeroCompatible/* = SKIP
 536936861 MAC METAL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
+537814733 MAC METAL : WebGLGLSLTest.FragDataIndexClampWithoutDrawBuffers/* = SKIP
 
 // The workaround is not intended to be enabled in this configuration so
 // skip it as the failure is likely a driver bug.
@@ -1264,6 +1265,7 @@
 535213600 PIXEL10 GLES : PbufferTestES3.BindTexImageAndCopyTexSubTextureInvertedDst/* = SKIP
 535213600 PIXEL10 GLES : PbufferTestES3.BindTexImageAndCopyTextureInvertedSrc/* = SKIP
 535213600 PIXEL10 GLES : PbufferTestES3.BindTexImageAndCopyTextureSrc/* = SKIP
+537235694 PIXEL10 GLES : WebGLGLSLTest.FragDataIndexClampWithoutDrawBuffers/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP
@@ -2395,6 +2397,7 @@
 42267100 WGPU : GLSLTest.FragCoordConsistency/* = SKIP
 42267100 WGPU : GLSLTest.FragData/* = SKIP
 42267100 WGPU : GLSLTest.FragData_AlphaToCoverage/* = SKIP
+42267100 WGPU : WebGLGLSLTest.FragDataIndexClampWithoutDrawBuffers/* = SKIP
 42267100 WGPU : GLSLTest.SeparateStructDeclaratorStructInStruct/* = SKIP
 42267100 WGPU : GLSLTest.ConstructorinSequenceOperator/* = SKIP
 42267100 WGPU : GLSLTest.VectorAndMatrixScalarizationDoesNotAffectRendering/* = SKIP

@@ -1047,7 +1047,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     if (compileOptions.clampIndirectArrayBounds)
     {
-        if (!ClampIndirectIndices(this, root, &mSymbolTable))
+        if (!ClampIndirectIndices(this, root, &mSymbolTable, mExtensionBehavior))
         {
             return false;
         }
