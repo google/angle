@@ -35,6 +35,6 @@ pkg.depend(
         repo = "chromium/src",
         ref = "refs/heads/main",
         path = "infra/config/targets",
-        revision = "af8e2e2f8e5201a643035650baf13629cd3ea432",
+        revision = "9e326a06852ca19c2b2b29adb2d908d163800bf8",
     ),
 )
