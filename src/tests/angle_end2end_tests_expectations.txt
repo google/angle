@@ -551,6 +551,8 @@
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
+520464738 ANDROID GLES : GLSLTest_ES3.UniformBlockWithSupportedFieldsStructuredBuffer/* = SKIP
+520464738 ANDROID GLES : GLSLTest_ES3.UniformBlockWithUnsupportedFieldStructuredBufferFallback/* = SKIP
 42264646 ANDROID GLES : GLSLTestLoops.ForNoCondition/* = SKIP
 42264756 ANDROID GLES : BufferDataTestES3.DrawWithNotCallingBufferData/* = SKIP
 42265529 ANDROID : EGLReadinessCheckTest.IsRunningOnANGLE/* = SKIP
@@ -2279,6 +2281,7 @@
 376553328 LINUX INTEL WGPU : BasicUniformUsageTest.* = SKIP
 // Can't use a uniform struct outside of uniform address space.
 376553328 WGPU : SimpleUniformTestES3.UseUniformStructOutsideOfUniformAddressSpace/* = SKIP
+520464738 WGPU : GLSLTest.ParameterWithNoName/* = SKIP
 42267012 WGPU : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB* = SKIP
 42267012 WGPU : ClearTestES3.TextureArrayRGB8/* = SKIP
 42267012 WGPU : ClearTestES3.ClearAndReadPixels3DTexture/* = SKIP
