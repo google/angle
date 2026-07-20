@@ -4489,17 +4489,6 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk, uint32_t levelCoun
 void TextureVk::releaseImage(ContextVk *contextVk)
 {
     ShareGroupVk *shareGroupVk = contextVk->getShareGroup();
-
-    if (mImage)
-    {
-        // finalizeImageLayoutInAllSharedContexts() may re-entrantly call
-        // ContextVk::flushAndSubmitCommands() -> submitCommands(), which can dereference
-        // FramebufferVk::mRenderTargetCache.mDepthStencilRenderTarget pointing into this
-        // texture's mSingleLayerRenderTargets vectors. Finalize before releaseImageViews()
-        // frees those vectors.
-        shareGroupVk->finalizeImageLayoutInAllSharedContexts(mImage);
-    }
-
     releaseImageViews(contextVk);
 
     if (mImage)
@@ -4544,6 +4533,16 @@ void TextureVk::releaseImage(ContextVk *contextVk)
 
 void TextureVk::releaseImageViews(ContextVk *contextVk)
 {
+    if (mImage)
+    {
+        // finalizeImageLayoutInAllSharedContexts() may re-entrantly call
+        // ContextVk::flushAndSubmitCommands() -> submitCommands(), which can dereference
+        // FramebufferVk::mRenderTargetCache.mDepthStencilRenderTarget pointing into this
+        // texture's mSingleLayerRenderTargets vectors. Finalize before releaseImageViews()
+        // frees those vectors.
+        contextVk->getShareGroup()->finalizeImageLayoutInAllSharedContexts(mImage);
+    }
+
     vk::Renderer *renderer = contextVk->getRenderer();
 
     mDescriptorSetCacheManager.releaseKeys(renderer);
