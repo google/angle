@@ -1883,10 +1883,12 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->textureSRGBDecodeEXT = functions->hasGLExtension("GL_EXT_texture_sRGB_decode") ||
                                        functions->hasGLESExtension("GL_EXT_texture_sRGB_decode");
 
-    // ANGLE treats ETC1 as ETC2 for ES 3.0 and higher because it becomes a core format, and they
-    // are backwards compatible.
+    // ETC1 is a strict subset of ETC2 and the GL backend does not emulate ETC2 formats.
+    // This extension is exposed only if its functionality can be supported by the native driver.
     extensions->compressedETC1RGB8SubTextureEXT =
-        extensions->compressedETC2RGB8TextureOES || functions->isAtLeastGLES(gl::Version(3, 0)) ||
+        functions->isAtLeastGL(gl::Version(4, 3)) ||
+        functions->hasGLExtension("GL_ARB_ES3_compatibility") ||
+        functions->isAtLeastGLES(gl::Version(3, 0)) ||
         functions->hasGLESExtension("GL_EXT_compressed_ETC1_RGB8_sub_texture");
 
 #if ANGLE_ENABLE_CGL

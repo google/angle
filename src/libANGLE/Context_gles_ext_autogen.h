@@ -302,17 +302,7 @@
     /* GL_OES_EGL_image_external */                                                                \
     /* GL_OES_EGL_image_external_essl3 */                                                          \
     /* GL_OES_EGL_sync */                                                                          \
-    /* GL_OES_compressed_EAC_R11_signed_texture */                                                 \
-    /* GL_OES_compressed_EAC_R11_unsigned_texture */                                               \
-    /* GL_OES_compressed_EAC_RG11_signed_texture */                                                \
-    /* GL_OES_compressed_EAC_RG11_unsigned_texture */                                              \
     /* GL_OES_compressed_ETC1_RGB8_texture */                                                      \
-    /* GL_OES_compressed_ETC2_RGB8_texture */                                                      \
-    /* GL_OES_compressed_ETC2_RGBA8_texture */                                                     \
-    /* GL_OES_compressed_ETC2_punchthroughA_RGBA8_texture */                                       \
-    /* GL_OES_compressed_ETC2_punchthroughA_sRGB8_alpha_texture */                                 \
-    /* GL_OES_compressed_ETC2_sRGB8_alpha8_texture */                                              \
-    /* GL_OES_compressed_ETC2_sRGB8_texture */                                                     \
     /* GL_OES_compressed_paletted_texture */                                                       \
     /* GL_OES_copy_image */                                                                        \
     /* GL_OES_depth24 */                                                                           \

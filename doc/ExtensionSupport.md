@@ -35,18 +35,8 @@ using data from registry_xml.py and gl.xml.
 | [GL_APPLE_clip_distance](https://khronos.org/registry/OpenGL/extensions/APPLE/APPLE_clip_distance.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |  |
 | [GL_EXT_color_buffer_float](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_color_buffer_float.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_color_buffer_half_float](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_color_buffer_half_float.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_OES_compressed_EAC_R11_signed_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_EAC_R11_signed_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_OES_compressed_EAC_R11_unsigned_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_EAC_R11_unsigned_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_OES_compressed_EAC_RG11_signed_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_EAC_RG11_signed_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_OES_compressed_EAC_RG11_unsigned_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_EAC_RG11_unsigned_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_compressed_ETC1_RGB8_sub_texture](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_compressed_ETC1_RGB8_sub_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_compressed_ETC1_RGB8_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_ETC1_RGB8_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_OES_compressed_ETC2_punchthroughA_RGBA8_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_ETC2_punchthroughA_RGBA8_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_OES_compressed_ETC2_punchthroughA_sRGB8_alpha_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_ETC2_punchthroughA_sRGB8_alpha_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_OES_compressed_ETC2_RGB8_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_ETC2_RGB8_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_OES_compressed_ETC2_RGBA8_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_ETC2_RGBA8_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_OES_compressed_ETC2_sRGB8_alpha8_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_ETC2_sRGB8_alpha8_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_OES_compressed_ETC2_sRGB8_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_ETC2_sRGB8_texture.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_compressed_paletted_texture](https://khronos.org/registry/OpenGL/extensions/OES/OES_compressed_paletted_texture.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_conservative_depth](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_conservative_depth.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_copy_image](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_copy_image.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |

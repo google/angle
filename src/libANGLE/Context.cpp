@@ -4214,18 +4214,8 @@ void Context::initCaps()
     {
         INFO() << "Limiting compressed format support.\n";
 
-        mSupportedExtensions.compressedEACR11SignedTextureOES                = false;
-        mSupportedExtensions.compressedEACR11UnsignedTextureOES              = false;
-        mSupportedExtensions.compressedEACRG11SignedTextureOES               = false;
-        mSupportedExtensions.compressedEACRG11UnsignedTextureOES             = false;
         mSupportedExtensions.compressedETC1RGB8SubTextureEXT                 = false;
         mSupportedExtensions.compressedETC1RGB8TextureOES                    = false;
-        mSupportedExtensions.compressedETC2PunchthroughARGBA8TextureOES      = false;
-        mSupportedExtensions.compressedETC2PunchthroughASRGB8AlphaTextureOES = false;
-        mSupportedExtensions.compressedETC2RGB8TextureOES                    = false;
-        mSupportedExtensions.compressedETC2RGBA8TextureOES                   = false;
-        mSupportedExtensions.compressedETC2SRGB8Alpha8TextureOES             = false;
-        mSupportedExtensions.compressedETC2SRGB8TextureOES                   = false;
         mSupportedExtensions.compressedTextureEtcANGLE                       = false;
         mSupportedExtensions.textureCompressionPvrtcIMG                      = false;
         mSupportedExtensions.pvrtcSRGBEXT                                    = false;
