@@ -281,6 +281,11 @@ bool IsSamplerOrStructWithOnlySamplers(const TType *type)
     return IsSampler(type->getBasicType()) || type->isStructureContainingOnlySamplers();
 }
 
+bool IsClipCullEncountered(const ClipCullDistanceInfo &info)
+{
+    return info.maxIndex >= 0 || info.hasNonConstIndex || info.hasArrayLengthMethodCall;
+}
+
 void MarkClipCullFirstEncounter(const TSourceLoc &line, ClipCullDistanceInfo *info)
 {
     if (info->firstEncounter.first_line < 0)
@@ -2346,12 +2351,29 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
             }
         }
 
+        // Record the redeclared size of gl_Clip/CullDistance.  Do not allow redeclaration after
+        // these built-ins are already referenced to avoid having to fix the AST after the fact.
+        // With IR, this could be more easily supported if needed.
         switch (expectedType.getQualifier())
         {
             case EvqClipDistance:
+                if (IsClipCullEncountered(mClipDistanceInfo))
+                {
+                    error(line,
+                          "redeclaration of gl_ClipDistance after it is referenced is not allowed",
+                          identifier);
+                    return false;
+                }
                 MarkClipCullRedeclaredSize(line, type->getOutermostArraySize(), &mClipDistanceInfo);
                 break;
             case EvqCullDistance:
+                if (IsClipCullEncountered(mCullDistanceInfo))
+                {
+                    error(line,
+                          "redeclaration of gl_CullDistance after it is referenced is not allowed",
+                          identifier);
+                    return false;
+                }
                 MarkClipCullRedeclaredSize(line, type->getOutermostArraySize(), &mCullDistanceInfo);
                 break;
             default:
