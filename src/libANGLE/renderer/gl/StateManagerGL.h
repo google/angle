@@ -185,6 +185,8 @@ class StateManagerGL final : angle::NonCopyable
     void deleteRenderbuffer(GLuint rbo);
     void deleteTransformFeedback(GLuint transformFeedback);
 
+    void onSyncedFlushOrFinish();
+
     void useProgram(GLuint program);
     void forceUseProgram(GLuint program);
     void bindVertexArray(GLuint vao, VertexArrayStateGL *vaoState);
@@ -206,6 +208,7 @@ class StateManagerGL final : angle::NonCopyable
                           GLenum access,
                           GLenum format);
     void bindFramebuffer(GLenum type, GLuint framebuffer);
+    void forcefullyFlush();
     void bindRenderbuffer(GLenum type, GLuint renderbuffer);
     void bindTransformFeedback(GLenum type, GLuint transformFeedback);
     void onTransformFeedbackStateChange();
@@ -519,6 +522,7 @@ class StateManagerGL final : angle::NonCopyable
     bool mSampleMaskEnabled;
     gl::SampleMaskArray<GLbitfield> mSampleMaskValues;
     bool mSampleCoverageEverChanged;
+    bool mHasUnflushedQueries;
 
     bool mDepthTestEnabled;
     GLenum mDepthFunc;

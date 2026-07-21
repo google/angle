@@ -969,6 +969,15 @@
                 "Reattach texture layer to framebuffer after calling TexImage3D to increase layer count on PowerVR Android."
             ],
             "issue": "http://crbug.com/499602793"
+        },
+        {
+            "name": "flush_queries_before_deleting_or_unbinding_fbo",
+            "category": "Workarounds",
+            "description": [
+                "Flush pending GPU jobs/queries before unbinding or deleting a user framebuffer ",
+                "object on ARM Mali Valhall/Avalon GPUs to avoid driver crash."
+            ],
+            "issue": "http://crbug.com/534468209"
         }
     ]
 }
