@@ -5037,6 +5037,33 @@ void main() {
                   "GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT when gl_SecondaryFragDataEXT is used");
 }
 
+// Shader that writes to SecondaryFragData and passes FragData to a function.
+TEST_P(GLSLValidationTest, BlendFuncExtendedPassFragDataToFunction)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    GLint maxDrawBuffers = 0, maxDualSourceDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT, &maxDualSourceDrawBuffers);
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ANGLE_SKIP_TEST_IF(maxDualSourceDrawBuffers == maxDrawBuffers);
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void f(out vec4 fragData[gl_MaxDrawBuffers])
+{
+    fragData[0] = vec4(0.1);
+}
+void main() {
+    f(gl_FragData);
+    gl_SecondaryFragDataEXT[0] = vec4(1.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "array index for gl_FragData must be less than "
+                  "GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT when gl_SecondaryFragDataEXT is used");
+}
+
 // Shader that writes to FragData at an index >= than gl_MaxDualSourceDrawBuffersEXT is fine if
 // SecondaryFragData is not used.  Note that gl_MaxDualSourceDrawBuffersEXT is typically 1, while
 // the size of gl_FragData (gl_MaxDrawBuffers) is larger.
