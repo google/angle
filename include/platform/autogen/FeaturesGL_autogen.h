@@ -86,12 +86,6 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
-    FeatureInfo packLargeRowLengthSeparatelyPackBuffer = {
-        "packLargeRowLengthSeparatelyPackBuffer",
-        FeatureCategory::OpenGLWorkarounds,
-        &members,
-    };
-
     FeatureInfo initializeCurrentVertexAttributes = {
         "initializeCurrentVertexAttributes",
         FeatureCategory::OpenGLWorkarounds,
