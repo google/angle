@@ -792,19 +792,9 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
         stateManager->getHasSeparateFramebufferBindings() ? GL_READ_FRAMEBUFFER : GL_FRAMEBUFFER;
     stateManager->bindFramebuffer(framebufferTarget, mFramebufferID);
 
-    const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(readFormat, readType);
-    GLuint rowBytes                    = 0;
-    ANGLE_CHECK_GL_MATH(contextGL,
-                        glFormat.computeRowPitch(readType, area.width, packState.alignment,
-                                                 packState.rowLength, &rowBytes));
-
     bool useOverlappingRowsWorkaround = features.packOverlappingRowsSeparatelyPackBuffer.enabled &&
                                         packBuffer && packState.rowLength != 0 &&
                                         packState.rowLength < clippedArea.width;
-
-    bool useLargeRowLengthWorkaround =
-        features.packLargeRowLengthSeparatelyPackBuffer.enabled && packBuffer &&
-        rowBytes >= 0x10000000u;  // Mali int32 stride-in-bits wrap threshold
 
     GLubyte *outPtr = static_cast<GLubyte *>(pixels);
     int leftClip    = clippedArea.x - area.x;
@@ -818,7 +808,7 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
         ANGLE_CHECK_GL_MATH(contextGL,
                             glFormat.computeRowPitch(readType, area.width, packState.alignment,
                                                      packState.rowLength, &rowBytes));
-        ANGLE_UNSAFE_TODO(outPtr += leftClip * glFormat.pixelBytes + topClip * rowBytes);
+        outPtr += leftClip * glFormat.pixelBytes + topClip * rowBytes;
     }
 
     if (packState.rowLength == 0 && clippedArea.width != area.width)
@@ -835,8 +825,7 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
     bool usePackSkipWorkaround = features.emulatePackSkipRowsAndPackSkipPixels.enabled &&
                                  (packState.skipRows != 0 || packState.skipPixels != 0);
 
-    if (cannotSetDesiredRowLength || useOverlappingRowsWorkaround || useLargeRowLengthWorkaround ||
-        usePackSkipWorkaround)
+    if (cannotSetDesiredRowLength || useOverlappingRowsWorkaround || usePackSkipWorkaround)
     {
         return readPixelsRowByRow(context, clippedArea, format, readFormat, readType, packState,
                                   outPtr);

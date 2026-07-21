@@ -261,7 +261,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::MutableMipmapTextureUpload, "mutableMipmapTextureUpload"},
     {Feature::NoperspectiveInterpolationBrokenWithPassthroughShaders, "noperspectiveInterpolationBrokenWithPassthroughShaders"},
     {Feature::OverrideSurfaceFormatRGB8ToRGBA8, "overrideSurfaceFormatRGB8ToRGBA8"},
-    {Feature::PackLargeRowLengthSeparatelyPackBuffer, "packLargeRowLengthSeparatelyPackBuffer"},
     {Feature::PackLastRowSeparatelyForPaddingInclusion, "packLastRowSeparatelyForPaddingInclusion"},
     {Feature::PackOverlappingRowsSeparatelyPackBuffer, "packOverlappingRowsSeparatelyPackBuffer"},
     {Feature::PadBuffersToMaxVertexAttribStride, "padBuffersToMaxVertexAttribStride"},

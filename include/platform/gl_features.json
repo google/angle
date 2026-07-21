@@ -86,15 +86,6 @@
             ]
         },
         {
-            "name": "pack_large_row_length_separately_pack_buffer",
-            "category": "Workarounds",
-            "description": [
-                "When packing to a pixel pack buffer with a row pitch >= 256MiB, pack row by row.",
-                "Mali GLES computes stride in bits as int32; row_length*bpp*8 wraps at 0x10000000."
-            ],
-            "issue": "http://crbug.com/529867799"
-        },
-        {
             "name": "initialize_current_vertex_attributes",
             "category": "Workarounds",
             "description": [
