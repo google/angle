@@ -502,6 +502,38 @@ angle_mac_parent_builder(
 )
 
 angle_win_parent_builder(
+    name = "angle-win-arm64-builder-rel",
+    description_html = "Compiles release ANGLE test binaries for Win/ARM64",
+    schedule = "triggered",
+    builder_spec = builder_config.builder_spec(
+        gclient_config = builder_config.gclient_config(
+            config = "angle",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.ARM,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.WIN,
+        ),
+    ),
+    gn_args = gn_args.config(
+        configs = [
+            "arm64",
+            "capture",
+            "component",
+            "opencl",
+            "release_with_dchecks",
+            "win_clang",
+        ],
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "compile|win|arm64",
+        short_name = "rel",
+    ),
+)
+
+angle_win_parent_builder(
     name = "angle-win-x64-builder-asan",
     description_html = "Compiles release ANGLE test binaries for Win/x64 with ASan enabled",
     schedule = "triggered",
@@ -1887,6 +1919,45 @@ ci.thin_tester(
     console_view_entry = consoles.console_view_entry(
         category = "test|mac|x64|rel",
         short_name = "630",
+    ),
+)
+
+ci.thin_tester(
+    name = "angle-win-arm64-qualcomm-snapdragon-x-elite-rel",
+    description_html = "Tests release ANGLE on Win/ARM64 on Snapdragon X Elite SoCs w/ Adreno X1-85 GPUs",
+    parent = "angle-win-arm64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_nointernal",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.ARM,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.WIN,
+        ),
+        use_test_trigger_cas = True,
+        run_tests_serially = True,
+    ),
+    targets = targets.bundle(
+        targets = [
+            # TODO(crbug.com/535541754): Actually enable tests.
+            # "common_isolated_scripts",
+            # "win_common_gtests",
+        ],
+        mixins = [
+            "win11_qualcomm_snapdragon_x_elite_stable",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|win|arm64|rel",
+        short_name = "sxe",
     ),
 )
 

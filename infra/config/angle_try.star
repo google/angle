@@ -233,6 +233,19 @@ angle_mac_functional_cq_tester(
 )
 
 angle_win_functional_cq_tester(
+    name = "angle-cq-win-arm64-rel",
+    description_html = "Tests release ANGLE on Win/ARM64 on multiple hardware configs. Blocks CL submission.",
+    mirrors = [
+        "ci/angle-win-arm64-builder-rel",
+        "ci/angle-win-arm64-qualcomm-snapdragon-x-elite-rel",
+    ],
+    gn_args = "ci/angle-win-arm64-builder-rel",
+    # TODO(crbug.com/535541754): Add to CQ once the CI tester is enabled and
+    # happy.
+    cq_settings = try_.cq_settings(includable_only = True),
+)
+
+angle_win_functional_cq_tester(
     name = "angle-cq-win-x64-asan",
     description_html = "Tests release ANGLE on Win/x64 with ASan on multiple hardware configs. Blocks CL submission.",
     mirrors = [
@@ -701,6 +714,16 @@ angle_mac_manual_builder(
         "ci/angle-mac-x64-intel-uhd630-rel",
     ],
     gn_args = "ci/angle-mac-x64-builder-rel",
+)
+
+angle_win_manual_builder(
+    name = "angle-try-win-arm64-qualcomm-snapdragon-x-elite-rel",
+    description_html = "Tests release ANGLE on Win/ARM64 on Snapdragon X Elite SoCs w/ Adreno X1-85 GPUs. Manual only.",
+    mirrors = [
+        "ci/angle-win-arm64-builder-rel",
+        "ci/angle-win-arm64-qualcomm-snapdragon-x-elite-rel",
+    ],
+    gn_args = "ci/angle-win-arm64-builder-rel",
 )
 
 # This is effectively a copy of angle-cq-win-x64-rel, but manual-only and
