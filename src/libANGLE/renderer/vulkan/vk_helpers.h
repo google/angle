@@ -296,6 +296,7 @@ class DescriptorPoolHelper final : angle::NonCopyable
     bool recycleFromGarbage(Renderer *renderer, DescriptorSetPointer *descriptorSetOut);
     void destroyGarbage();
     void cleanupPendingGarbage();
+    void forceFinishPendingGarbage();
 
     bool hasValidDescriptorSet() const { return mValidDescriptorSets != 0; }
     bool canDestroy() const { return mValidDescriptorSets == 0 && mPendingGarbageList.empty(); }
