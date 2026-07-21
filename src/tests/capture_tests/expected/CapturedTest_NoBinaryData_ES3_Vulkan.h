@@ -7,13 +7,13 @@
 
 // Private Functions
 
-void SetupReplayContext10(void);
+void SetupReplayContext8(void);
 void ReplayFrame1(void);
 void ReplayFrame2(void);
 void ReplayFrame3(void);
 void ReplayFrame4(void);
 void ResetReplayContextShared(void);
-void ResetReplayContext10(void);
+void ResetReplayContext8(void);
 void ReplayFrame5(void);
 void SetupReplayContextShared(void);
 void SetupReplayContextSharedInactive(void);
@@ -21,5 +21,3 @@ void InitReplay(void);
 
 // Global variables
 
-extern const char *const glShaderSource_string_0[];
-extern const char *const glShaderSource_string_1[];

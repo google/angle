@@ -26,17 +26,17 @@
         "IsWebGLCompatibilityEnabled": false
     },
     "BinaryMetadata": {
-        "BlockCount": 1,
+        "BlockCount": 0,
         "BlockSize": "268435456",
         "IndexOffset": "0",
         "ResidentSize": "2147483648",
         "Version": 1
     },
     "TraceFiles": [
-        "CapturedTest_ExternalAHB_ES3_Vulkan.cpp",
-        "CapturedTest_ExternalAHB_ES3_Vulkan.h",
-        "CapturedTest_ExternalAHB_ES3_Vulkan_0001.cpp",
-        "CapturedTest_ExternalAHB_ES3_Vulkan_shared.cpp"
+        "CapturedTest_NoBinaryData_ES3_Vulkan.cpp",
+        "CapturedTest_NoBinaryData_ES3_Vulkan.h",
+        "CapturedTest_NoBinaryData_ES3_Vulkan_0001.cpp",
+        "CapturedTest_NoBinaryData_ES3_Vulkan_shared.cpp"
     ],
-    "WindowSurfaceContextID": 10
+    "WindowSurfaceContextID": 8
 }

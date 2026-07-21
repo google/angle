@@ -792,6 +792,31 @@ void main()
     eglDestroyContext(dpy, auxContext);
 }
 
+// Regression test for capturing traces with zero-sized binary data (empty angledata file)
+TEST_P(CapturedTest, NoBinaryData)
+{
+    // Swap before the first captured frame so setup gets its own frame.
+    swapBuffers();
+
+    glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glViewport(0, 0, 16, 16);
+    swapBuffers();
+
+    glClearColor(0.4f, 0.5f, 0.6f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, 8, 8);
+    glDisable(GL_SCISSOR_TEST);
+
+    // Empty frames to reach capture end.
+    for (int i = 0; i < 10; i++)
+    {
+        swapBuffers();
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
 #if defined(CAPTURE_TESTS_AHB_SUPPORT)
 // Test capture and replay of external AHBs on Android platforms. On other platforms
 // not supporting AHBs, the test will be skipped and the outtput will not be
