@@ -3083,16 +3083,15 @@ void main()
 // Test that array of structs containing array of samplers work as expected.
 TEST_P(GLSLTest, ArrayOfStructContainingArrayOfSamplers)
 {
-    constexpr char kFS[] =
-        "precision mediump float;\n"
-        "struct Data { mediump sampler2D data[2]; };\n"
-        "uniform Data test[2];\n"
-        "void main() {\n"
-        "    gl_FragColor = vec4(texture2D(test[1].data[1], vec2(0.0, 0.0)).r,\n"
-        "                        texture2D(test[1].data[0], vec2(0.0, 0.0)).r,\n"
-        "                        texture2D(test[0].data[1], vec2(0.0, 0.0)).r,\n"
-        "                        texture2D(test[0].data[0], vec2(0.0, 0.0)).r);\n"
-        "}\n";
+    constexpr char kFS[] = R"(precision mediump float;
+struct Data { mediump sampler2D data[2]; };
+uniform Data test[2];
+void main() {
+    gl_FragColor = vec4(texture2D(test[1].data[1], vec2(0.0, 0.0)).r,
+                        texture2D(test[1].data[0], vec2(0.0, 0.0)).r,
+                        texture2D(test[0].data[1], vec2(0.0, 0.0)).r,
+                        texture2D(test[0].data[0], vec2(0.0, 0.0)).r);
+})";
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -12062,8 +12061,62 @@ void main() {
 })";
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
-
     drawQuad(program, "a_position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that samplers in structs don't create name collisions if extracted.
+TEST_P(GLSLTest, SamplersInStructNoNameCollision)
+{
+    constexpr char kVS[] = R"(attribute vec4 a_position;
+void main() {
+  gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(precision highp float;
+struct S
+{
+    sampler2D s;
+};
+uniform struct A
+{
+    vec4 v;
+    S a;
+    sampler2D a_s;
+} a;
+void main() {
+  gl_FragColor = a.v;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program, "a_position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that samplers in structs don't create name collisions if extracted.
+TEST_P(GLSLTest, SamplersInStructNoNameCollision2)
+{
+    constexpr char kVS[] = R"(attribute vec4 a_position;
+void main() {
+  gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+struct A { sampler2D b_t; };
+struct B { sampler2D t; };
+uniform A a[4];
+uniform B a_b[2];
+void main()
+{
+    gl_FragColor = texture2D(a[3].b_t, vec2(0.0)) + texture2D(a_b[1].t, vec2(0.0));
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program, "a_position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Helper functions for MixedRowAndColumnMajorMatrices* tests

@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 419
+#define ANGLE_SH_VERSION 420
 
 enum ShShaderSpec
 {
@@ -1003,6 +1003,10 @@ enum class MetadataFlags
     InvalidEnum,
     EnumCount = InvalidEnum,
 };
+
+// If samplers are extracted from structs, their names will be <prefix><N>, where <N> is a
+// zero-based index assigned in DFS-order of declaration.
+extern const char kExtractedSamplerNamePrefix[];
 
 namespace vk
 {
