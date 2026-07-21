@@ -5119,7 +5119,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/words_crush',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
