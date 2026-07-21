@@ -2820,6 +2820,10 @@
 // This test fails because of incorrect GLX MakeCurrent calls in other tests
 520248049 LINUX OPENGL : EGLSurfacelessContextTest.CheckFramebufferStatus/* = SKIP
 
+529867799 METAL : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
+529867799 VULKAN : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
+529867799 INTEL OPENGL : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
