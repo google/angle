@@ -967,6 +967,15 @@
                 "Remove complex expressions from struct constructors."
             ],
             "issue": "http://crbug.com/529509587"
+        },
+        {
+            "name": "flush_queries_before_deleting_or_unbinding_fbo",
+            "category": "Workarounds",
+            "description": [
+                "Flush pending GPU jobs/queries before unbinding or deleting a user framebuffer ",
+                "object on ARM Mali Valhall/Avalon GPUs to avoid driver crash."
+            ],
+            "issue": "http://crbug.com/534468209"
         }
     ]
 }

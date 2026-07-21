@@ -740,6 +740,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo flushQueriesBeforeDeletingOrUnbindingFbo = {
+        "flushQueriesBeforeDeletingOrUnbindingFbo",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

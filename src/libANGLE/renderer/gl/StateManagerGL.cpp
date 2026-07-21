@@ -127,6 +127,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mPlaceholderRbo(0),
       mIndependentBlendStates(extensions.drawBuffersIndexedAny()),
       mSampleCoverageEverChanged(false),
+      mHasUnflushedQueries(false),
       mFramebufferSRGBAvailable(extensions.sRGBWriteControlEXT),
       mHasSeparateFramebufferBindings(nativegl::SupportsSeparateFramebufferBindings(functions)),
       mIsMultiviewEnabled(extensions.multiviewOVR),
@@ -315,6 +316,7 @@ void StateManagerGL::deleteFramebuffer(GLuint fbo)
 {
     if (fbo != 0)
     {
+        bool wasBound = false;
         if (mHasSeparateFramebufferBindings)
         {
             for (size_t binding = 0; binding < mState.framebuffers.size(); ++binding)
@@ -324,6 +326,7 @@ void StateManagerGL::deleteFramebuffer(GLuint fbo)
                     GLenum enumValue = angle::FramebufferBindingToEnum(
                         static_cast<angle::FramebufferBinding>(binding));
                     bindFramebuffer(enumValue, 0);
+                    wasBound = true;
                 }
             }
         }
@@ -334,7 +337,13 @@ void StateManagerGL::deleteFramebuffer(GLuint fbo)
             if (mState.framebuffers[angle::FramebufferBindingRead] == fbo)
             {
                 bindFramebuffer(GL_FRAMEBUFFER, 0);
+                wasBound = true;
             }
+        }
+        if (!wasBound && mHasUnflushedQueries &&
+            mFeatures.flushQueriesBeforeDeletingOrUnbindingFbo.enabled)
+        {
+            forcefullyFlush();
         }
         mFunctions->deleteFramebuffers(1, &fbo);
     }
@@ -681,10 +690,42 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
             break;
     }
 
-    if (framebufferChanged && mFeatures.flushOnFramebufferChange.enabled)
+    if (framebufferChanged)
     {
-        mFunctions->flush();
+        if (mFeatures.flushOnFramebufferChange.enabled)
+        {
+            mFunctions->flush();
+        }
+        if (mHasUnflushedQueries && mFeatures.flushQueriesBeforeDeletingOrUnbindingFbo.enabled)
+        {
+            forcefullyFlush();
+        }
     }
+}
+
+void StateManagerGL::onSyncedFlushOrFinish()
+{
+    mHasUnflushedQueries = false;
+}
+
+void StateManagerGL::forcefullyFlush()
+{
+    if (mFunctions->fenceSync != nullptr && mFunctions->clientWaitSync != nullptr &&
+        mFunctions->deleteSync != nullptr)
+    {
+        GLsync sync = mFunctions->fenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+        if (sync != nullptr)
+        {
+            mFunctions->clientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, 0);
+            mFunctions->deleteSync(sync);
+            onSyncedFlushOrFinish();
+            return;
+        }
+    }
+
+    // Sync creation not supported or failed; fall back to finish()
+    mFunctions->finish();
+    onSyncedFlushOrFinish();
 }
 
 void StateManagerGL::bindRenderbuffer(GLenum type, GLuint renderbuffer)
@@ -758,6 +799,7 @@ void StateManagerGL::beginQuery(gl::QueryType type, QueryGL *queryObject, GLuint
 
     mQueries[type] = queryObject;
     mFunctions->beginQuery(ToGLenum(type), queryId);
+    mHasUnflushedQueries = true;
 
     if (oldFramebufferBindingDraw != mPlaceholderFbo)
     {
@@ -771,6 +813,7 @@ void StateManagerGL::endQuery(gl::QueryType type, QueryGL *queryObject, GLuint q
     ASSERT(mQueries[type] == queryObject);
     mQueries[type] = nullptr;
     mFunctions->endQuery(ToGLenum(type));
+    mHasUnflushedQueries = true;
 }
 
 void StateManagerGL::updateDrawIndirectBufferBinding(const gl::Context *context)

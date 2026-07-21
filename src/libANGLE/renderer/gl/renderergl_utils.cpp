@@ -2679,6 +2679,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // https://crbug.com/1356053
     ANGLE_FEATURE_CONDITION(features, bindCompleteFramebufferForTimerQueries, isMali);
 
+    // http://crbug.com/534468209
+    ANGLE_FEATURE_CONDITION(features, flushQueriesBeforeDeletingOrUnbindingFbo, isMali);
+
     // https://crbug.com/40264674
     ANGLE_FEATURE_CONDITION(features, disableClipControl, IsMaliG72OrG76OrG51(functions));
 
