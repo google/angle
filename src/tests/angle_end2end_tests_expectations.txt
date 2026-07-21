@@ -264,6 +264,14 @@
 374790899 WIN INTEL OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
 462344532 WIN INTEL OPENGL : GLSLTest_ES3.SingleStructArrayConstructor/* = SKIP
 
+// NVIDIA GTX 1660 Experimental
+539554093 WIN NVIDIA VULKAN : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP
+539554093 WIN NVIDIA VULKAN : GLSLTest_ES3.LiteralNegativeInfinityOutput/* = SKIP
+539554093 WIN NVIDIA GLES : UniformBufferTest31.MaxUniformBufferBindingsExceeded/* = SKIP
+539554093 WIN NVIDIA GLES : UniformBufferTest31.UniformBufferBindingRangeChangeAfterSubData/* = SKIP
+523371282 WIN NVIDIA GLES : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
+523371282 WIN NVIDIA OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
+
 // Linux
 42264596 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
 // Crashes when compiling the shader

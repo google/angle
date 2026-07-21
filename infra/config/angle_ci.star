@@ -2203,20 +2203,35 @@ ci.thin_tester(
         run_tests_serially = True,
     ),
     targets = targets.bundle(
-        targets = [],
+        targets = [
+            "common_isolated_scripts",
+            "win_common_gtests",
+            "win_nvidia_only_gtests",
+        ],
         mixins = [
             "win10_nvidia_gtx_1660_experimental",
         ],
+        per_test_modifications = {
+            "angle_end2end_tests": targets.per_test_modification(
+                mixins = targets.mixin(
+                    args = [
+                        # anglebug.com/539554093 suspecting test timeout caused
+                        # by conflicting tests.
+                        "--max-processes=2",
+                    ],
+                ),
+            ),
+        },
     ),
     targets_settings = targets.settings(
         browser_config = targets.browser_config.RELEASE,
         os_type = targets.os_type.WINDOWS,
     ),
     # Uncomment this entry when this experimental tester is actually in use.
-    # console_view_entry = consoles.console_view_entry(
-    #     category = "test|win|x64|rel|exp",
-    #     short_name = "1660",
-    # ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|win|x64|rel|exp",
+        short_name = "1660",
+    ),
     list_view = "exp",
 )
 
