@@ -1455,6 +1455,7 @@ void StateManagerGL::bindBufferRange(gl::BufferBinding target,
         mState.buffers[target] = buffer;
         mFunctions->bindBufferRange(gl::ToGLenum(target), static_cast<GLuint>(index), buffer,
                                     offset, size);
+        setBufferBindingDirty(target);
     }
 }
 
@@ -1507,6 +1508,7 @@ void StateManagerGL::bindImageTexture(size_t unit,
         binding.format  = format;
         mFunctions->bindImageTexture(angle::base::checked_cast<GLuint>(unit), texture, level,
                                      layered, layer, access, format);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_IMAGE_BINDINGS);
     }
 }
 
