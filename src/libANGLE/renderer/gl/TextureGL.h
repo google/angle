@@ -206,9 +206,6 @@ class TextureGL : public TextureImpl
     angle::Result initializeContents(const gl::Context *context,
                                      GLenum binding,
                                      const gl::OwnImageIndex &ownImageIndex) override;
-    angle::Result initializeContentsImpl(const gl::Context *context,
-                                         GLenum binding,
-                                         const gl::ImageIndex &imageIndex);
 
     GLint getRequiredExternalTextureImageUnits(const gl::Context *context) override;
 
@@ -285,6 +282,10 @@ class TextureGL : public TextureImpl
                       const LevelInfoGL &levelInfo);
     const LevelInfoGL &getLevelInfo(gl::TextureTarget target, size_t level) const;
     const LevelInfoGL &getBaseLevelInfo() const;
+
+    angle::Result initializeContentsImpl(const gl::Context *context,
+                                         GLenum binding,
+                                         const gl::ImageIndex &imageIndex);
 
     angle::Result handleCopyImageSelfCopyRedefine(const gl::Context *context,
                                                   GLenum internalFormat,
