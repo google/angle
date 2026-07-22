@@ -55,6 +55,7 @@
 //   - Block inputs have MergeInput opcode, nothing else has that opcode:
 //     validate_merge_block_input_prerequisites(),
 //     validate_no_merge_input_opcode_in_block_instruction()
+//   - No identity swizzles: validate_no_identity_swizzles()
 //
 // Functions:
 //   - Check that function parameter variables don't have an initializer:
@@ -75,7 +76,6 @@
 //   - Interface variables with NameSource::ShaderInterface are unique.
 //   - NameSource::ShaderInterface and NameSource::Internal are never found inside body
 //   - blocks, those should always be Temporary.
-//   - No identity swizzles.
 //   - Type matches?
 //   - Whatever else is in the AST validation currently.
 //   - Validate built-ins that accept an out or inout parameter, that the corresponding parameter is
@@ -1774,6 +1774,7 @@ impl<'a> Validator<'a> {
                 self.validate_no_merge_input_opcode_in_block_instruction(opcode);
                 self.validate_pointer_types_for_operands(opcode);
                 self.validate_pointer_types_for_result(opcode, result);
+                self.validate_no_identity_swizzles(opcode);
             },
         );
     }
@@ -2123,5 +2124,35 @@ impl<'a> Validator<'a> {
             }
             _ => (),
         }
+    }
+
+    fn validate_no_identity_swizzles(&self, opcode: &OpCode) {
+        let (vec_type, components) = match *opcode {
+            OpCode::ExtractVectorComponentMulti(vector, ref components) => {
+                (self.ir.meta.get_type(vector.type_id), components)
+            }
+            OpCode::AccessVectorComponentMulti(vector_ptr, ref components) => {
+                // Access* takes a pointer to vector
+                let pointee_type_id = self.ir.meta.get_pointee_type(vector_ptr.type_id);
+                (self.ir.meta.get_type(pointee_type_id), components)
+            }
+            _ => {
+                return;
+            }
+        };
+        let vec_size = vec_type.get_vector_size().unwrap() as usize;
+        if components.len() != vec_size {
+            return;
+        }
+        for (index, &component) in components.iter().enumerate() {
+            if component != index as u32 {
+                return;
+            }
+        }
+        // Every component is selected in original order
+        self.on_error(format_args!(
+            "invalid instruction: {:?}, identity swizzles found, components selected: {:?}",
+            opcode, components
+        ));
     }
 }
