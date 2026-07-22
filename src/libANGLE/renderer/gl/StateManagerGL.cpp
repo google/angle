@@ -743,6 +743,260 @@ gl::AttributesMask ComputeVertexAttribCurrentValueDiffMask(
     return diffMask;
 }
 
+std::optional<gl::state::DirtyBitType> GetBufferBindingDirtyBit(gl::BufferBinding binding)
+{
+    switch (binding)
+    {
+        case gl::BufferBinding::Array:
+            // Array buffer bindings are set before vertex attrib calls.
+            return std::nullopt;
+        case gl::BufferBinding::AtomicCounter:
+            return gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING;
+        case gl::BufferBinding::CopyRead:
+            // CopyRead does not affect any operations.
+            return std::nullopt;
+        case gl::BufferBinding::CopyWrite:
+            // CopyWrite does not affect any operations.
+            return std::nullopt;
+        case gl::BufferBinding::DispatchIndirect:
+            return gl::state::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING;
+        case gl::BufferBinding::DrawIndirect:
+            return gl::state::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING;
+        case gl::BufferBinding::ElementArray:
+            // Managed by the VAO
+            return std::nullopt;
+        case gl::BufferBinding::PixelPack:
+            return gl::state::DIRTY_BIT_PACK_BUFFER_BINDING;
+        case gl::BufferBinding::PixelUnpack:
+            return gl::state::DIRTY_BIT_UNPACK_BUFFER_BINDING;
+        case gl::BufferBinding::ShaderStorage:
+            return gl::state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING;
+        case gl::BufferBinding::Texture:
+            // Not implemented in the GL backend
+            return std::nullopt;
+        case gl::BufferBinding::TransformFeedback:
+            // Transform feedback buffer bindings are tracked in TransformFeedbackGL
+            return std::nullopt;
+        case gl::BufferBinding::Uniform:
+            return gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS;
+        default:
+            UNREACHABLE();
+            return std::nullopt;
+    }
+}
+
+template <typename T>
+void SetDirtyBitIfStateDifferent(const T &a,
+                                 const T &b,
+                                 gl::state::DirtyBits *bits,
+                                 gl::state::DirtyBitType bit)
+{
+    if (a != b)
+    {
+        bits->set(bit);
+    }
+}
+
+template <typename T>
+void SetDirtyBitExtIfStateDifferent(const T &a,
+                                    const T &b,
+                                    gl::state::DirtyBits *bits,
+                                    gl::state::ExtendedDirtyBits *exBits,
+                                    gl::state::ExtendedDirtyBitType exBit)
+{
+    if (a != b)
+    {
+        bits->set(gl::state::DIRTY_BIT_EXTENDED);
+        exBits->set(exBit);
+    }
+}
+
+// Compute the set of dirty bits needed to transition between two ContextStateGL objects.
+[[maybe_unused]] void ComputeDirtyBitsBetweenStates(const ContextStateGL &a,
+                                                    const ContextStateGL &b,
+                                                    gl::state::DirtyBits *bits,
+                                                    gl::state::ExtendedDirtyBits *exBits,
+                                                    gl::AttributesMask *dirtyCurrentValues)
+{
+    SetDirtyBitIfStateDifferent(a.program, b.program, bits, gl::state::DIRTY_BIT_PROGRAM_BINDING);
+    SetDirtyBitIfStateDifferent(a.vao, b.vao, bits, gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
+    {
+        gl::AttributesMask currentValueDiff = ComputeVertexAttribCurrentValueDiffMask(
+            a.vertexAttribCurrentValues, b.vertexAttribCurrentValues);
+        if (currentValueDiff.any())
+        {
+            *dirtyCurrentValues |= currentValueDiff;
+            bits->set(gl::state::DIRTY_BIT_CURRENT_VALUES);
+        }
+    }
+    for (gl::BufferBinding bufferBinding : angle::AllEnums<gl::BufferBinding>())
+    {
+        std::optional<gl::state::DirtyBitType> bit = GetBufferBindingDirtyBit(bufferBinding);
+        if (!bit.has_value())
+        {
+            continue;
+        }
+
+        SetDirtyBitIfStateDifferent(a.buffers[bufferBinding], b.buffers[bufferBinding], bits,
+                                    bit.value());
+        SetDirtyBitIfStateDifferent(a.indexedBuffers[bufferBinding],
+                                    b.indexedBuffers[bufferBinding], bits, bit.value());
+    }
+    // No dirty bit for ContextStateGL::activeTexture
+    SetDirtyBitIfStateDifferent(a.textures, b.textures, bits,
+                                gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
+    SetDirtyBitIfStateDifferent(a.samplers, b.samplers, bits,
+                                gl::state::DIRTY_BIT_SAMPLER_BINDINGS);
+    SetDirtyBitIfStateDifferent(a.images, b.images, bits, gl::state::DIRTY_BIT_IMAGE_BINDINGS);
+    SetDirtyBitIfStateDifferent(a.transformFeedback, b.transformFeedback, bits,
+                                gl::state::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING);
+    SetDirtyBitIfStateDifferent(a.unpackState, b.unpackState, bits,
+                                gl::state::DIRTY_BIT_UNPACK_STATE);
+    SetDirtyBitIfStateDifferent(a.packState, b.packState, bits, gl::state::DIRTY_BIT_PACK_STATE);
+    SetDirtyBitIfStateDifferent(a.framebuffers[angle::FramebufferBindingRead],
+                                b.framebuffers[angle::FramebufferBindingRead], bits,
+                                gl::state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+    SetDirtyBitIfStateDifferent(a.framebuffers[angle::FramebufferBindingDraw],
+                                b.framebuffers[angle::FramebufferBindingDraw], bits,
+                                gl::state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+    SetDirtyBitIfStateDifferent(a.renderbuffer, b.renderbuffer, bits,
+                                gl::state::DIRTY_BIT_RENDERBUFFER_BINDING);
+    SetDirtyBitIfStateDifferent(a.scissorTestEnabled, b.scissorTestEnabled, bits,
+                                gl::state::DIRTY_BIT_SCISSOR_TEST_ENABLED);
+    SetDirtyBitIfStateDifferent(a.scissor, b.scissor, bits, gl::state::DIRTY_BIT_SCISSOR);
+    SetDirtyBitIfStateDifferent(a.viewport, b.viewport, bits, gl::state::DIRTY_BIT_VIEWPORT);
+    SetDirtyBitIfStateDifferent(a.near, b.near, bits, gl::state::DIRTY_BIT_DEPTH_RANGE);
+    SetDirtyBitIfStateDifferent(a.far, b.far, bits, gl::state::DIRTY_BIT_DEPTH_RANGE);
+    SetDirtyBitIfStateDifferent(a.clipOrigin, b.clipOrigin, bits,
+                                gl::state::DIRTY_BIT_CLIP_CONTROL);
+    SetDirtyBitIfStateDifferent(a.clipDepthMode, b.clipDepthMode, bits,
+                                gl::state::DIRTY_BIT_CLIP_CONTROL);
+    SetDirtyBitIfStateDifferent(a.blendColor, b.blendColor, bits, gl::state::DIRTY_BIT_BLEND_COLOR);
+    SetDirtyBitIfStateDifferent(a.blendState.getAllEnabledMask(), b.blendState.getAllEnabledMask(),
+                                bits, gl::state::DIRTY_BIT_COLOR_MASK);
+    SetDirtyBitIfStateDifferent(a.blendState.getColorMaskBits(), b.blendState.getColorMaskBits(),
+                                bits, gl::state::DIRTY_BIT_BLEND_ENABLED);
+    SetDirtyBitIfStateDifferent(a.blendState.getSrcColorBits(), b.blendState.getSrcColorBits(),
+                                bits, gl::state::DIRTY_BIT_BLEND_FUNCS);
+    SetDirtyBitIfStateDifferent(a.blendState.getDstColorBits(), b.blendState.getDstColorBits(),
+                                bits, gl::state::DIRTY_BIT_BLEND_FUNCS);
+    SetDirtyBitIfStateDifferent(a.blendState.getSrcAlphaBits(), b.blendState.getSrcAlphaBits(),
+                                bits, gl::state::DIRTY_BIT_BLEND_FUNCS);
+    SetDirtyBitIfStateDifferent(a.blendState.getDstAlphaBits(), b.blendState.getDstAlphaBits(),
+                                bits, gl::state::DIRTY_BIT_BLEND_FUNCS);
+    SetDirtyBitIfStateDifferent(a.blendState.getEquationColorBits(),
+                                b.blendState.getEquationColorBits(), bits,
+                                gl::state::DIRTY_BIT_BLEND_EQUATIONS);
+    SetDirtyBitIfStateDifferent(a.blendState.getEquationAlphaBits(),
+                                b.blendState.getEquationAlphaBits(), bits,
+                                gl::state::DIRTY_BIT_BLEND_EQUATIONS);
+    SetDirtyBitExtIfStateDifferent(a.blendAdvancedCoherent, b.blendAdvancedCoherent, bits, exBits,
+                                   gl::state::EXTENDED_DIRTY_BIT_BLEND_ADVANCED_COHERENT);
+    SetDirtyBitIfStateDifferent(a.sampleAlphaToCoverageEnabled, b.sampleAlphaToCoverageEnabled,
+                                bits, gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED);
+    SetDirtyBitIfStateDifferent(a.sampleCoverageEnabled, b.sampleCoverageEnabled, bits,
+                                gl::state::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED);
+    SetDirtyBitIfStateDifferent(a.sampleCoverageValue, b.sampleCoverageValue, bits,
+                                gl::state::DIRTY_BIT_SAMPLE_COVERAGE);
+    SetDirtyBitIfStateDifferent(a.sampleCoverageInvert, b.sampleCoverageInvert, bits,
+                                gl::state::DIRTY_BIT_SAMPLE_COVERAGE);
+    SetDirtyBitIfStateDifferent(a.sampleMaskEnabled, b.sampleMaskEnabled, bits,
+                                gl::state::DIRTY_BIT_SAMPLE_MASK_ENABLED);
+    SetDirtyBitIfStateDifferent(a.sampleMaskValues, b.sampleMaskValues, bits,
+                                gl::state::DIRTY_BIT_SAMPLE_MASK);
+    SetDirtyBitIfStateDifferent(a.depthTestEnabled, b.depthTestEnabled, bits,
+                                gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED);
+    SetDirtyBitIfStateDifferent(a.depthFunc, b.depthFunc, bits, gl::state::DIRTY_BIT_DEPTH_FUNC);
+    SetDirtyBitIfStateDifferent(a.depthMask, b.depthMask, bits, gl::state::DIRTY_BIT_DEPTH_MASK);
+    SetDirtyBitIfStateDifferent(a.stencilTestEnabled, b.stencilTestEnabled, bits,
+                                gl::state::DIRTY_BIT_STENCIL_TEST_ENABLED);
+    SetDirtyBitIfStateDifferent(a.stencilFrontFunc, b.stencilFrontFunc, bits,
+                                gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT);
+    SetDirtyBitIfStateDifferent(a.stencilFrontRef, b.stencilFrontRef, bits,
+                                gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT);
+    SetDirtyBitIfStateDifferent(a.stencilFrontValueMask, b.stencilFrontValueMask, bits,
+                                gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT);
+    SetDirtyBitIfStateDifferent(a.stencilFrontStencilFailOp, b.stencilFrontStencilFailOp, bits,
+                                gl::state::DIRTY_BIT_STENCIL_OPS_FRONT);
+    SetDirtyBitIfStateDifferent(a.stencilFrontStencilPassDepthFailOp,
+                                b.stencilFrontStencilPassDepthFailOp, bits,
+                                gl::state::DIRTY_BIT_STENCIL_OPS_FRONT);
+    SetDirtyBitIfStateDifferent(a.stencilFrontStencilPassDepthPassOp,
+                                b.stencilFrontStencilPassDepthPassOp, bits,
+                                gl::state::DIRTY_BIT_STENCIL_OPS_FRONT);
+    SetDirtyBitIfStateDifferent(a.stencilFrontWritemask, b.stencilFrontWritemask, bits,
+                                gl::state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
+    SetDirtyBitIfStateDifferent(a.stencilBackFunc, b.stencilBackFunc, bits,
+                                gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK);
+    SetDirtyBitIfStateDifferent(a.stencilBackRef, b.stencilBackRef, bits,
+                                gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK);
+    SetDirtyBitIfStateDifferent(a.stencilBackValueMask, b.stencilBackValueMask, bits,
+                                gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK);
+    SetDirtyBitIfStateDifferent(a.stencilBackStencilFailOp, b.stencilBackStencilFailOp, bits,
+                                gl::state::DIRTY_BIT_STENCIL_OPS_BACK);
+    SetDirtyBitIfStateDifferent(a.stencilBackStencilPassDepthFailOp,
+                                b.stencilBackStencilPassDepthFailOp, bits,
+                                gl::state::DIRTY_BIT_STENCIL_OPS_BACK);
+    SetDirtyBitIfStateDifferent(a.stencilBackStencilPassDepthPassOp,
+                                b.stencilBackStencilPassDepthPassOp, bits,
+                                gl::state::DIRTY_BIT_STENCIL_OPS_BACK);
+    SetDirtyBitIfStateDifferent(a.stencilBackWritemask, b.stencilBackWritemask, bits,
+                                gl::state::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
+    SetDirtyBitIfStateDifferent(a.cullFaceEnabled, b.cullFaceEnabled, bits,
+                                gl::state::DIRTY_BIT_CULL_FACE_ENABLED);
+    SetDirtyBitIfStateDifferent(a.cullFace, b.cullFace, bits, gl::state::DIRTY_BIT_CULL_FACE);
+    SetDirtyBitIfStateDifferent(a.frontFace, b.frontFace, bits, gl::state::DIRTY_BIT_FRONT_FACE);
+    SetDirtyBitExtIfStateDifferent(a.polygonMode, b.polygonMode, bits, exBits,
+                                   gl::state::EXTENDED_DIRTY_BIT_POLYGON_MODE);
+    SetDirtyBitExtIfStateDifferent(a.polygonOffsetPointEnabled, b.polygonOffsetPointEnabled, bits,
+                                   exBits,
+                                   gl::state::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED);
+    SetDirtyBitExtIfStateDifferent(a.polygonOffsetLineEnabled, b.polygonOffsetLineEnabled, bits,
+                                   exBits,
+                                   gl::state::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED);
+    SetDirtyBitIfStateDifferent(a.polygonOffsetFillEnabled, b.polygonOffsetFillEnabled, bits,
+                                gl::state::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED);
+    SetDirtyBitIfStateDifferent(a.polygonOffsetFactor, b.polygonOffsetFactor, bits,
+                                gl::state::DIRTY_BIT_POLYGON_OFFSET);
+    SetDirtyBitIfStateDifferent(a.polygonOffsetUnits, b.polygonOffsetUnits, bits,
+                                gl::state::DIRTY_BIT_POLYGON_OFFSET);
+    SetDirtyBitIfStateDifferent(a.polygonOffsetClamp, b.polygonOffsetClamp, bits,
+                                gl::state::DIRTY_BIT_POLYGON_OFFSET);
+    SetDirtyBitExtIfStateDifferent(a.depthClampEnabled, b.depthClampEnabled, bits, exBits,
+                                   gl::state::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED);
+    SetDirtyBitIfStateDifferent(a.rasterizerDiscardEnabled, b.rasterizerDiscardEnabled, bits,
+                                gl::state::DIRTY_BIT_RASTERIZER_DISCARD_ENABLED);
+    SetDirtyBitIfStateDifferent(a.lineWidth, b.lineWidth, bits, gl::state::DIRTY_BIT_LINE_WIDTH);
+    SetDirtyBitIfStateDifferent(a.primitiveRestartFixedIndexEnabled,
+                                b.primitiveRestartFixedIndexEnabled, bits,
+                                gl::state::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
+    SetDirtyBitIfStateDifferent(a.primitiveRestartEnabled, b.primitiveRestartEnabled, bits,
+                                gl::state::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
+    SetDirtyBitIfStateDifferent(a.primitiveRestartIndex, b.primitiveRestartIndex, bits,
+                                gl::state::DIRTY_BIT_PRIMITIVE_RESTART_ENABLED);
+    SetDirtyBitIfStateDifferent(a.clearColor, b.clearColor, bits, gl::state::DIRTY_BIT_CLEAR_COLOR);
+    SetDirtyBitIfStateDifferent(a.clearDepth, b.clearDepth, bits, gl::state::DIRTY_BIT_CLEAR_DEPTH);
+    SetDirtyBitIfStateDifferent(a.clearStencil, b.clearStencil, bits,
+                                gl::state::DIRTY_BIT_CLEAR_STENCIL);
+    SetDirtyBitIfStateDifferent(a.framebufferSRGBEnabled, b.framebufferSRGBEnabled, bits,
+                                gl::state::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE);
+    SetDirtyBitIfStateDifferent(a.ditherEnabled, b.ditherEnabled, bits,
+                                gl::state::DIRTY_BIT_DITHER_ENABLED);
+    // No dirty bit for ContextStateGL::textureCubemapSeamlessEnabled
+    SetDirtyBitIfStateDifferent(a.multisamplingEnabled, b.multisamplingEnabled, bits,
+                                gl::state::DIRTY_BIT_MULTISAMPLING);
+    SetDirtyBitIfStateDifferent(a.sampleAlphaToOneEnabled, b.sampleAlphaToOneEnabled, bits,
+                                gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
+    SetDirtyBitIfStateDifferent(a.provokingVertex, b.provokingVertex, bits,
+                                gl::state::DIRTY_BIT_PROVOKING_VERTEX);
+    SetDirtyBitExtIfStateDifferent(a.enabledClipDistances, b.enabledClipDistances, bits, exBits,
+                                   gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES);
+    SetDirtyBitExtIfStateDifferent(a.logicOpEnabled, b.logicOpEnabled, bits, exBits,
+                                   gl::state::EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED);
+    SetDirtyBitExtIfStateDifferent(a.logicOp, b.logicOp, bits, exBits,
+                                   gl::state::EXTENDED_DIRTY_BIT_LOGIC_OP);
+}
+
 auto TieIndexedBufferBindingGL(const IndexedBufferBindingGL &binding)
 {
     return std::tie(binding.offset, binding.size, binding.buffer);
@@ -3710,51 +3964,10 @@ void StateManagerGL::validateState()
 
 void StateManagerGL::setBufferBindingDirty(gl::BufferBinding binding)
 {
-    switch (binding)
+    std::optional<gl::state::DirtyBitType> bit = GetBufferBindingDirtyBit(binding);
+    if (bit.has_value())
     {
-        case gl::BufferBinding::Array:
-            // Nothing to do. Array buffer bindings are set before vertex attrib calls.
-            break;
-        case gl::BufferBinding::AtomicCounter:
-            mLocalDirtyBits.set(gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
-            break;
-        case gl::BufferBinding::CopyRead:
-            // Nothing to do. CopyRead does not affect any operations.
-            break;
-        case gl::BufferBinding::CopyWrite:
-            // Nothing to do. CopyWrite does not affect any operations.
-            break;
-        case gl::BufferBinding::DispatchIndirect:
-            mLocalDirtyBits.set(gl::state::DIRTY_BIT_DISPATCH_INDIRECT_BUFFER_BINDING);
-            break;
-        case gl::BufferBinding::DrawIndirect:
-            mLocalDirtyBits.set(gl::state::DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING);
-            break;
-        case gl::BufferBinding::ElementArray:
-            // Managed by the VAO
-            break;
-        case gl::BufferBinding::PixelPack:
-            mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_BUFFER_BINDING);
-            break;
-        case gl::BufferBinding::PixelUnpack:
-            mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_BUFFER_BINDING);
-            break;
-        case gl::BufferBinding::ShaderStorage:
-            mLocalDirtyBits.set(gl::state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
-            break;
-        case gl::BufferBinding::Texture:
-            // Not implemented in the GL backend
-            UNREACHABLE();
-            break;
-        case gl::BufferBinding::TransformFeedback:
-            // Transform feedback buffer bindings are tracked in TransformFeedbackGL
-            UNREACHABLE();
-            break;
-        case gl::BufferBinding::Uniform:
-            mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
-            break;
-        default:
-            UNREACHABLE();
+        mLocalDirtyBits.set(bit.value());
     }
 }
 
