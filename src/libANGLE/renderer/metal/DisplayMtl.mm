@@ -798,6 +798,15 @@ void DisplayMtl::ensureCapsInitialized() const
         mMaxColorTargetBits = mNativeCaps.maxColorAttachments * 32;
     }
 
+    if (!mFeatures.limitMaxVisibilityQueryOffset.enabled && supportsAppleGPUFamily(7))
+    {
+        mMaxVisibilityQueryOffset = 262136;
+    }
+    else
+    {
+        mMaxVisibilityQueryOffset = 65528;
+    }
+
     // MSAA
     mNativeCaps.maxSamples             = mFormatTable.getMaxSamples();
     mNativeCaps.maxSampleMaskWords     = 1;
@@ -1204,6 +1213,11 @@ void DisplayMtl::initializeFeatures()
     }
 
     ANGLE_FEATURE_CONDITION((&mFeatures), allowGenMultipleMipsPerPass, true);
+
+    // TODO(anglebug.com/537661068): using visibility query offset > 65528 causes bugs in the Apple
+    // Silicon driver.
+    ANGLE_FEATURE_CONDITION((&mFeatures), limitMaxVisibilityQueryOffset, true);
+
     ANGLE_FEATURE_CONDITION((&mFeatures), forceBufferGPUStorage, false);
     ANGLE_FEATURE_CONDITION((&mFeatures), hasExplicitMemBarrier, (isOSX || isCatalyst) && !isARM);
     ANGLE_FEATURE_CONDITION((&mFeatures), hasDepthAutoResolve, supportsEitherGPUFamily(3, 2));

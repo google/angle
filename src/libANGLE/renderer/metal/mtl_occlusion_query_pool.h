@@ -39,6 +39,7 @@ class OcclusionQueryPool
     // the render pass or the query that already has an allocated offset.
     // Note: a query might have more than one allocated offset. They will be combined in the final
     // step.
+    bool canAllocateQueryOffset(ContextMtl *contextMtl) const;
     angle::Result allocateQueryOffset(ContextMtl *contextMtl, QueryMtl *query, bool clearOldValue);
     // Deallocate all offsets used for a query.
     void deallocateQueryOffset(ContextMtl *contextMtl, QueryMtl *query);

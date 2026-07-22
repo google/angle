@@ -344,6 +344,12 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
+    FeatureInfo limitMaxVisibilityQueryOffset = {
+        "limitMaxVisibilityQueryOffset",
+        FeatureCategory::MetalFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;

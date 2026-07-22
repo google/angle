@@ -2221,6 +2221,11 @@ angle::Result ContextMtl::onOcclusionQueryBegin(const gl::Context *context, Quer
     ASSERT(mOcclusionQuery == nullptr);
     mOcclusionQuery = query;
 
+    if (mRenderEncoder.valid() && !mOcclusionQueryPool.canAllocateQueryOffset(this))
+    {
+        endEncoding(true);
+    }
+
     if (mRenderEncoder.valid())
     {
         // if render pass has started, start the query in the encoder
@@ -2268,16 +2273,6 @@ void ContextMtl::disableActiveOcclusionQueryInRenderPass()
     ASSERT(mRenderEncoder.valid());
     mRenderEncoder.setVisibilityResultMode(MTLVisibilityResultModeDisabled,
                                            mOcclusionQuery->getAllocatedVisibilityOffsets().back());
-}
-
-angle::Result ContextMtl::restartActiveOcclusionQueryInRenderPass()
-{
-    if (!mOcclusionQuery || mOcclusionQuery->getAllocatedVisibilityOffsets().empty())
-    {
-        return angle::Result::Continue;
-    }
-
-    return startOcclusionQueryInRenderPass(mOcclusionQuery, false);
 }
 
 angle::Result ContextMtl::startOcclusionQueryInRenderPass(QueryMtl *query, bool clearOldValue)
@@ -2504,10 +2499,18 @@ angle::Result ContextMtl::setupDrawImpl(const gl::Context *context,
         ANGLE_TRY(handleDirtyRenderPass(context));
     }
 
-    if (mOcclusionQuery && mOcclusionQueryPool.getNumRenderPassAllocatedQueries() == 0)
+    if (mOcclusionQuery &&
+        mRenderEncoder.getVisibilityResultMode() == MTLVisibilityResultModeDisabled)
     {
-        // The occlusion query is still active, and a new render pass has started.
-        // We need to continue the querying process in the new render encoder.
+        // The occlusion query is still active, and a new render pass has started or we have paused
+        // the querying process. We need to continue the querying process.
+        if (!mOcclusionQueryPool.canAllocateQueryOffset(this))
+        {
+            // The render pass visibility query offset limit has been reached. End the current
+            // encoding; the caller will retry with a new render encoder.
+            endEncoding(true);
+            return angle::Result::Continue;
+        }
         ANGLE_TRY(startOcclusionQueryInRenderPass(mOcclusionQuery, false));
     }
 

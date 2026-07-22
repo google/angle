@@ -2850,6 +2850,9 @@
 529867799 VULKAN : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
 529867799 INTEL OPENGL : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
 
+// Using many queries will fail on Pixel 4 GLES
+537692502 PIXEL4ORXL GLES : OcclusionQueriesTest.ExcessiveNumberOfQueries/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
