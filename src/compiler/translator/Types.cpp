@@ -554,10 +554,20 @@ int TType::getLocationCount() const
 
 unsigned int TType::getArraySizeProduct() const
 {
+    // Saturate on overflow instead of silently wrapping.  A wrapped (small) product would
+    // defeat downstream size/limit checks that treat this value as the element count of the
+    // type (e.g. CalculateVariableSize() feeding TParseContext::checkVariableSize(), and the
+    // packing limit in VariablePacker), leading to under-sized allocations / out-of-bounds
+    // access for attacker-controlled array dimensions such as float x[65536][65536].
+    // Mirrors the saturating behavior already used by getObjectSize()/getLocationCount().
     unsigned int product = 1u;
 
     for (unsigned int arraySize : mArraySizes)
     {
+        if (arraySize != 0u && product > std::numeric_limits<unsigned int>::max() / arraySize)
+        {
+            return std::numeric_limits<unsigned int>::max();
+        }
         product *= arraySize;
     }
     return product;
