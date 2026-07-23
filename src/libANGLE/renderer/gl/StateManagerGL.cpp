@@ -1721,6 +1721,15 @@ void StateManagerGL::bindTexture(gl::TextureType type, GLuint texture)
     }
 }
 
+void StateManagerGL::bindTexture(gl::TextureType type, size_t unit, GLuint texture)
+{
+    if (mState.textures[type][unit] != texture)
+    {
+        activeTexture(unit);
+        bindTexture(type, texture);
+    }
+}
+
 void StateManagerGL::bindSampler(size_t unit, GLuint sampler)
 {
     if (mState.samplers[unit] != sampler)
@@ -2771,6 +2780,14 @@ void StateManagerGL::setSampleMaskEnabled(bool enabled)
     }
 }
 
+void StateManagerGL::setSampleMask(const gl::SampleMaskArray<GLbitfield> &maskValues)
+{
+    for (GLuint maskNumber = 0; maskNumber < maskValues.size(); maskNumber++)
+    {
+        setSampleMaski(maskNumber, maskValues[maskNumber]);
+    }
+}
+
 void StateManagerGL::setSampleMaski(GLuint maskNumber, GLbitfield mask)
 {
     ASSERT(maskNumber < mState.sampleMaskValues.size());
@@ -3073,9 +3090,10 @@ angle::Result StateManagerGL::setPrimitiveRestartFixedIndexEnabled(const gl::Con
 
 angle::Result StateManagerGL::setPrimitiveRestartEnabled(const gl::Context *context, bool enabled)
 {
-    ASSERT(mFeatures.emulatePrimitiveRestartFixedIndex.enabled);
     if (mState.primitiveRestartEnabled != enabled)
     {
+        ASSERT(mFeatures.emulatePrimitiveRestartFixedIndex.enabled);
+
         SetGLBoolState(mFunctions, GL_PRIMITIVE_RESTART, enabled);
         mState.primitiveRestartEnabled = enabled;
 
@@ -3905,6 +3923,146 @@ void StateManagerGL::updateMultiviewBaseViewLayerIndexUniformImpl(
     {
         executableGL->enableLayeredRenderingPath(drawFramebufferState.getBaseViewIndex());
     }
+}
+
+angle::Result StateManagerGL::setState(const gl::Context *context, const ContextStateGL &state)
+{
+    useProgram(state.program);
+    bindVertexArray(state.vao, nullptr);
+    for (size_t attribIndex = 0; attribIndex < state.vertexAttribCurrentValues.size();
+         attribIndex++)
+    {
+        setAttributeCurrentData(attribIndex, state.vertexAttribCurrentValues[attribIndex]);
+    }
+    for (gl::BufferBinding bufferBinding : angle::AllEnums<gl::BufferBinding>())
+    {
+        if (bufferBinding == gl::BufferBinding::TransformFeedback)
+        {
+            continue;
+        }
+
+        // Apply the indexed bindings first since they change the generic binding.
+        const std::vector<IndexedBufferBindingGL> &indexedBindings =
+            state.indexedBuffers[bufferBinding];
+        for (size_t i = 0; i < indexedBindings.size(); i++)
+        {
+            const IndexedBufferBindingGL &binding = indexedBindings[i];
+            if (binding.size == 0)
+            {
+                ASSERT(binding.offset == 0);
+                bindBufferBase(bufferBinding, i, binding.buffer);
+            }
+            else
+            {
+                bindBufferRange(bufferBinding, i, binding.buffer, binding.offset, binding.size);
+            }
+        }
+
+        bindBuffer(bufferBinding, state.buffers[bufferBinding]);
+    }
+    for (size_t textureUnit = 0; textureUnit < gl::IMPLEMENTATION_MAX_ACTIVE_TEXTURES;
+         textureUnit++)
+    {
+        for (gl::TextureType textureType : angle::AllEnums<gl::TextureType>())
+        {
+            bindTexture(textureType, textureUnit, state.textures[textureType][textureUnit]);
+        }
+
+        bindSampler(textureUnit, state.samplers[textureUnit]);
+    }
+    // Apply the target texture type after syncing all textures
+    activeTexture(state.textureUnitIndex);
+    for (size_t imageUnit = 0; imageUnit < state.images.size(); imageUnit++)
+    {
+        const ImageUnitBindingGL &binding = state.images[imageUnit];
+        bindImageTexture(imageUnit, binding.texture, binding.level, binding.layered, binding.layer,
+                         binding.access, binding.format);
+    }
+    bindTransformFeedback(GL_TRANSFORM_FEEDBACK, state.transformFeedback);
+
+    ANGLE_TRY(setPixelUnpackState(context, state.unpackState));
+    ANGLE_TRY(setPixelPackState(context, state.packState));
+    if (!mHasSeparateFramebufferBindings || state.framebuffers[angle::FramebufferBindingDraw] ==
+                                                state.framebuffers[angle::FramebufferBindingRead])
+    {
+        bindFramebuffer(GL_FRAMEBUFFER, state.framebuffers[angle::FramebufferBindingDraw]);
+    }
+    else
+    {
+        bindFramebuffer(GL_DRAW_FRAMEBUFFER, state.framebuffers[angle::FramebufferBindingDraw]);
+        bindFramebuffer(GL_READ_FRAMEBUFFER, state.framebuffers[angle::FramebufferBindingRead]);
+    }
+    bindRenderbuffer(GL_RENDERBUFFER, state.renderbuffer);
+    setScissorTestEnabled(state.scissorTestEnabled);
+    setScissor(state.scissor);
+    setViewport(state.viewport);
+    setDepthRange(state.near, state.far);
+    setClipControl(state.clipOrigin, state.clipDepthMode);
+    setBlendColor(state.blendColor);
+    setBlendEnabledIndexed(state.blendState.getEnabledMask());
+    setColorMaskForFramebuffer(state.blendState, false);
+    setBlendFuncs(state.blendState);
+    setBlendEquations(state.blendState);
+    setBlendAdvancedCoherent(state.blendAdvancedCoherent);
+    setSampleAlphaToCoverageEnabled(state.sampleAlphaToCoverageEnabled);
+    setSampleCoverageEnabled(state.sampleCoverageEnabled);
+    setSampleCoverage(state.sampleCoverageValue, state.sampleCoverageInvert);
+    setSampleMaskEnabled(state.sampleMaskEnabled);
+    setSampleMask(state.sampleMaskValues);
+    setDepthTestEnabled(state.depthTestEnabled);
+    setDepthFunc(state.depthFunc);
+    setDepthMask(state.depthMask);
+    setStencilTestEnabled(state.stencilTestEnabled);
+    setStencilFrontFuncs(state.stencilFrontFunc, state.stencilFrontRef,
+                         state.stencilFrontValueMask);
+    setStencilFrontOps(state.stencilFrontStencilFailOp, state.stencilFrontStencilPassDepthFailOp,
+                       state.stencilFrontStencilPassDepthPassOp);
+    setStencilFrontWritemask(state.stencilFrontWritemask);
+    setStencilBackFuncs(state.stencilBackFunc, state.stencilBackRef, state.stencilBackValueMask);
+    setStencilBackOps(state.stencilBackStencilFailOp, state.stencilBackStencilPassDepthFailOp,
+                      state.stencilBackStencilPassDepthPassOp);
+    setStencilBackWritemask(state.stencilBackWritemask);
+    setCullFaceEnabled(state.cullFaceEnabled);
+    setCullFace(state.cullFace);
+    setFrontFace(state.frontFace);
+    setPolygonMode(state.polygonMode);
+    setPolygonOffsetPointEnabled(state.polygonOffsetPointEnabled);
+    setPolygonOffsetLineEnabled(state.polygonOffsetLineEnabled);
+    setPolygonOffsetFillEnabled(state.polygonOffsetFillEnabled);
+    setPolygonOffset(state.polygonOffsetFactor, state.polygonOffsetUnits, state.polygonOffsetClamp);
+    setDepthClampEnabled(state.depthClampEnabled);
+    setRasterizerDiscardEnabled(state.rasterizerDiscardEnabled);
+    setLineWidth(state.lineWidth);
+    ANGLE_TRY(
+        setPrimitiveRestartFixedIndexEnabled(context, state.primitiveRestartFixedIndexEnabled));
+    ANGLE_TRY(setPrimitiveRestartEnabled(context, state.primitiveRestartEnabled));
+    ANGLE_TRY(setPrimitiveRestartIndex(context, state.primitiveRestartIndex));
+    setClearColor(state.clearColor);
+    setClearDepth(state.clearDepth);
+    setClearStencil(state.clearStencil);
+    setFramebufferSRGBEnabled(context, state.framebufferSRGBEnabled);
+    setDitherEnabled(state.ditherEnabled);
+    setTextureCubemapSeamlessEnabled(state.textureCubemapSeamlessEnabled);
+    setMultisamplingStateEnabled(state.multisamplingEnabled);
+    setSampleAlphaToOneStateEnabled(state.sampleAlphaToOneEnabled);
+    setProvokingVertex(state.provokingVertex);
+    setClipDistancesEnable(state.enabledClipDistances);
+    setLogicOpEnabled(state.logicOpEnabled);
+    setLogicOp(state.logicOp);
+
+#if defined(ANGLE_ENABLE_ASSERTS)
+    if (mState != state)
+    {
+        std::ostringstream msg;
+        msg << "StateManagerGL::mState does not match new state after setState is called."
+            << std::endl;
+        msg << "StateManagerGL::mState:" << std::endl << mState << std::endl << std::endl;
+        msg << "new state:" << std::endl << state << std::endl;
+        FATAL() << msg.str();
+    }
+#endif
+
+    return angle::Result::Continue;
 }
 
 void StateManagerGL::updateEmulatedClipDistanceState(const gl::ProgramExecutable *executable,

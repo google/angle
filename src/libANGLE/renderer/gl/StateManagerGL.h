@@ -344,6 +344,7 @@ class StateManagerGL final : angle::NonCopyable
                          GLsizeiptr size);
     void activeTexture(size_t unit);
     void bindTexture(gl::TextureType type, GLuint texture);
+    void bindTexture(gl::TextureType type, size_t unit, GLuint texture);
     void bindSampler(size_t unit, GLuint sampler);
     void bindImageTexture(size_t unit,
                           GLuint texture,
@@ -381,6 +382,7 @@ class StateManagerGL final : angle::NonCopyable
     void setSampleCoverage(float value, bool invert);
     void forceSetSampleCoverage(float value, bool invert);
     void setSampleMaskEnabled(bool enabled);
+    void setSampleMask(const gl::SampleMaskArray<GLbitfield> &maskValues);
     void setSampleMaski(GLuint maskNumber, GLbitfield mask);
 
     void setDepthTestEnabled(bool enabled);
@@ -529,6 +531,8 @@ class StateManagerGL final : angle::NonCopyable
     void updateMultiviewBaseViewLayerIndexUniformImpl(
         const gl::ProgramExecutable *executable,
         const gl::FramebufferState &drawFramebufferState) const;
+
+    angle::Result setState(const gl::Context *context, const ContextStateGL &state);
 
     void syncBlendFromNativeContext(const gl::Extensions &extensions, ExternalContextState *state);
     void restoreBlendNativeContext(const gl::Extensions &extensions,
