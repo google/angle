@@ -542,15 +542,26 @@ struct PixelStoreStateBase
     GLint skipPixels  = 0;
     GLint imageHeight = 0;
     GLint skipImages  = 0;
+
+    bool operator==(const PixelStoreStateBase &other) const = default;
+    bool operator!=(const PixelStoreStateBase &other) const = default;
 };
 
 struct PixelUnpackState : PixelStoreStateBase
-{};
+{
+    bool operator==(const PixelUnpackState &other) const = default;
+    bool operator!=(const PixelUnpackState &other) const = default;
+};
+std::ostream &operator<<(std::ostream &os, const PixelUnpackState &unpackState);
 
 struct PixelPackState : PixelStoreStateBase
 {
     bool reverseRowOrder = false;
+
+    bool operator==(const PixelPackState &other) const = default;
+    bool operator!=(const PixelPackState &other) const = default;
 };
+std::ostream &operator<<(std::ostream &os, const PixelPackState &packState);
 
 struct SupportedSampleSet
 {

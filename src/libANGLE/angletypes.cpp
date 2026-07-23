@@ -363,6 +363,30 @@ ImageUnit::~ImageUnit() = default;
 
 namespace
 {
+std::ostream &operator<<(std::ostream &os, const PixelStoreStateBase &state)
+{
+    os << "alignment = " << state.alignment << ", rowLength = " << state.rowLength
+       << ", skipRows = " << state.skipRows << ", skipPixels = " << state.skipPixels
+       << ", imageHeight = " << state.imageHeight << ", skipImages = " << state.skipImages;
+    return os;
+}
+}  // namespace
+
+std::ostream &operator<<(std::ostream &os, const PixelUnpackState &unpackState)
+{
+    os << static_cast<const PixelStoreStateBase &>(unpackState);
+    return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const PixelPackState &packState)
+{
+    os << static_cast<const PixelStoreStateBase &>(packState)
+       << ", reverseRowOrder = " << packState.reverseRowOrder;
+    return os;
+}
+
+namespace
+{
 // Conversion functions between indices in the SupportedSampleSet bitfield and actual sample count.
 // The first bit stores the '0' sample count, bits 1 though N store each power-of-two sample count.
 size_t SampleCountToBitfieldIndex(GLuint sampleCount)

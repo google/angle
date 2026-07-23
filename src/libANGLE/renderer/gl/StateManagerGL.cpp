@@ -451,28 +451,28 @@ void QueryContextStateGL(const FunctionsGL *functions,
         GetHelper(functions, GL_TRANSFORM_FEEDBACK_BINDING, &state->transformFeedback);
     }
 
-    GetHelper(functions, GL_UNPACK_ALIGNMENT, &state->unpackAlignment);
+    GetHelper(functions, GL_UNPACK_ALIGNMENT, &state->unpackState.alignment);
 
     if (nativegl::SupportsUnpackSubImage(functions))
     {
-        GetHelper(functions, GL_UNPACK_ROW_LENGTH, &state->unpackRowLength);
-        GetHelper(functions, GL_UNPACK_SKIP_ROWS, &state->unpackSkipRows);
-        GetHelper(functions, GL_UNPACK_SKIP_PIXELS, &state->unpackSkipPixels);
+        GetHelper(functions, GL_UNPACK_ROW_LENGTH, &state->unpackState.rowLength);
+        GetHelper(functions, GL_UNPACK_SKIP_ROWS, &state->unpackState.skipRows);
+        GetHelper(functions, GL_UNPACK_SKIP_PIXELS, &state->unpackState.skipPixels);
     }
 
     if (nativegl::Supports3DUnpackParameters(functions))
     {
-        GetHelper(functions, GL_UNPACK_IMAGE_HEIGHT, &state->unpackImageHeight);
-        GetHelper(functions, GL_UNPACK_SKIP_IMAGES, &state->unpackSkipImages);
+        GetHelper(functions, GL_UNPACK_IMAGE_HEIGHT, &state->unpackState.imageHeight);
+        GetHelper(functions, GL_UNPACK_SKIP_IMAGES, &state->unpackState.skipImages);
     }
 
-    GetHelper(functions, GL_PACK_ALIGNMENT, &state->packAlignment);
+    GetHelper(functions, GL_PACK_ALIGNMENT, &state->packState.alignment);
 
     if (nativegl::SupportsPackSubImage(functions))
     {
-        GetHelper(functions, GL_PACK_ROW_LENGTH, &state->packRowLength);
-        GetHelper(functions, GL_PACK_SKIP_ROWS, &state->packSkipRows);
-        GetHelper(functions, GL_PACK_SKIP_PIXELS, &state->packSkipPixels);
+        GetHelper(functions, GL_PACK_ROW_LENGTH, &state->packState.rowLength);
+        GetHelper(functions, GL_PACK_SKIP_ROWS, &state->packState.skipRows);
+        GetHelper(functions, GL_PACK_SKIP_PIXELS, &state->packState.skipPixels);
     }
 
     if (nativegl::SupportsSeparateFramebufferBindings(functions))
@@ -762,21 +762,18 @@ auto TieContextStateGL(const ContextStateGL &state)
     return std::tie(
         state.program, state.vao, /*state.vertexAttribCurrentValues,*/ state.buffers,
         state.indexedBuffers, state.textureUnitIndex, state.textures, state.samplers, state.images,
-        state.transformFeedback, state.unpackAlignment, state.unpackRowLength, state.unpackSkipRows,
-        state.unpackSkipPixels, state.unpackImageHeight, state.unpackSkipImages,
-        state.packAlignment, state.packRowLength, state.packSkipRows, state.packSkipPixels,
-        state.framebuffers, state.renderbuffer, state.scissorTestEnabled, state.scissor,
-        state.viewport, state.near, state.far, state.clipOrigin, state.clipDepthMode,
-        state.blendColor, state.blendState, state.blendAdvancedCoherent,
-        state.sampleAlphaToCoverageEnabled, state.sampleCoverageEnabled, state.sampleCoverageValue,
-        state.sampleCoverageInvert, state.sampleMaskEnabled, state.sampleMaskValues,
-        state.depthTestEnabled, state.depthFunc, state.depthMask, state.stencilTestEnabled,
-        state.stencilFrontFunc, state.stencilFrontRef, /*state.stencilFrontValueMask,*/
-        state.stencilFrontStencilFailOp, state.stencilFrontStencilPassDepthFailOp,
-        state.stencilFrontStencilPassDepthPassOp,    /*state.stencilFrontWritemask,*/
-        state.stencilBackFunc, state.stencilBackRef, /*state.stencilBackValueMask,*/
-        state.stencilBackStencilFailOp, state.stencilBackStencilPassDepthFailOp,
-        state.stencilBackStencilPassDepthPassOp,
+        state.transformFeedback, state.unpackState, state.packState, state.framebuffers,
+        state.renderbuffer, state.scissorTestEnabled, state.scissor, state.viewport, state.near,
+        state.far, state.clipOrigin, state.clipDepthMode, state.blendColor, state.blendState,
+        state.blendAdvancedCoherent, state.sampleAlphaToCoverageEnabled,
+        state.sampleCoverageEnabled, state.sampleCoverageValue, state.sampleCoverageInvert,
+        state.sampleMaskEnabled, state.sampleMaskValues, state.depthTestEnabled, state.depthFunc,
+        state.depthMask, state.stencilTestEnabled, state.stencilFrontFunc, state.stencilFrontRef,
+        /*state.stencilFrontValueMask,*/ state.stencilFrontStencilFailOp,
+        state.stencilFrontStencilPassDepthFailOp, state.stencilFrontStencilPassDepthPassOp,
+        /*state.stencilFrontWritemask,*/ state.stencilBackFunc, state.stencilBackRef,
+        /*state.stencilBackValueMask,*/ state.stencilBackStencilFailOp,
+        state.stencilBackStencilPassDepthFailOp, state.stencilBackStencilPassDepthPassOp,
         /*state.stencilBackWritemask,*/ state.cullFaceEnabled, state.cullFace, state.frontFace,
         state.polygonMode, state.polygonOffsetPointEnabled, state.polygonOffsetLineEnabled,
         state.polygonOffsetFillEnabled, state.polygonOffsetFactor, state.polygonOffsetUnits,
@@ -1000,16 +997,8 @@ std::ostream &operator<<(std::ostream &os, const ContextStateGL &state)
     os << "images =" << std::endl;
     PrintCompressedArray(os, state.images, 4, true);
     os << "transformFeedback = " << state.transformFeedback << std::endl;
-    os << "unpackAlignment = " << state.unpackAlignment << std::endl;
-    os << "unpackRowLength = " << state.unpackRowLength << std::endl;
-    os << "unpackSkipRows = " << state.unpackSkipRows << std::endl;
-    os << "unpackSkipPixels = " << state.unpackSkipPixels << std::endl;
-    os << "unpackImageHeight = " << state.unpackImageHeight << std::endl;
-    os << "unpackSkipImages = " << state.unpackSkipImages << std::endl;
-    os << "packAlignment = " << state.packAlignment << std::endl;
-    os << "packRowLength = " << state.packRowLength << std::endl;
-    os << "packSkipRows = " << state.packSkipRows << std::endl;
-    os << "packSkipPixels = " << state.packSkipPixels << std::endl;
+    os << "unpackState = (" << state.unpackState << ")" << std::endl;
+    os << "packState = (" << state.packState << ")" << std::endl;
     os << "framebuffers =" << std::endl;
     os << "    [GL_READ_FRAMEBUFFER] = " << state.framebuffers[angle::FramebufferBindingRead]
        << std::endl;
@@ -1515,53 +1504,43 @@ void StateManagerGL::bindImageTexture(size_t unit,
 angle::Result StateManagerGL::setPixelUnpackState(const gl::Context *context,
                                                   const gl::PixelUnpackState &unpack)
 {
-    if (mState.unpackAlignment != unpack.alignment)
+    if (mState.unpackState == unpack)
     {
-        mState.unpackAlignment = unpack.alignment;
+        return angle::Result::Continue;
+    }
+
+    if (mState.unpackState.alignment != unpack.alignment)
+    {
         ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_ALIGNMENT, unpack.alignment));
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 
-    if (mState.unpackRowLength != unpack.rowLength)
+    if (mState.unpackState.rowLength != unpack.rowLength)
     {
-        mState.unpackRowLength = unpack.rowLength;
         ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_ROW_LENGTH, unpack.rowLength));
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 
-    if (mState.unpackSkipRows != unpack.skipRows)
+    if (mState.unpackState.skipRows != unpack.skipRows)
     {
-        mState.unpackSkipRows = unpack.skipRows;
         ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_SKIP_ROWS, unpack.skipRows));
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 
-    if (mState.unpackSkipPixels != unpack.skipPixels)
+    if (mState.unpackState.skipPixels != unpack.skipPixels)
     {
-        mState.unpackSkipPixels = unpack.skipPixels;
         ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_SKIP_PIXELS, unpack.skipPixels));
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 
-    if (mState.unpackImageHeight != unpack.imageHeight)
+    if (mState.unpackState.imageHeight != unpack.imageHeight)
     {
-        mState.unpackImageHeight = unpack.imageHeight;
         ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_IMAGE_HEIGHT, unpack.imageHeight));
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 
-    if (mState.unpackSkipImages != unpack.skipImages)
+    if (mState.unpackState.skipImages != unpack.skipImages)
     {
-        mState.unpackSkipImages = unpack.skipImages;
         ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_UNPACK_SKIP_IMAGES, unpack.skipImages));
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
+
+    mState.unpackState = unpack;
+    mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
 
     return angle::Result::Continue;
 }
@@ -1582,37 +1561,33 @@ angle::Result StateManagerGL::setPixelUnpackBuffer(const gl::Context *context,
 angle::Result StateManagerGL::setPixelPackState(const gl::Context *context,
                                                 const gl::PixelPackState &pack)
 {
-    if (mState.packAlignment != pack.alignment)
+    if (mState.packState == pack)
     {
-        mState.packAlignment = pack.alignment;
+        return angle::Result::Continue;
+    }
+
+    if (mState.packState.alignment != pack.alignment)
+    {
         ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_ALIGNMENT, pack.alignment));
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
 
-    if (mState.packRowLength != pack.rowLength)
+    if (mState.packState.rowLength != pack.rowLength)
     {
-        mState.packRowLength = pack.rowLength;
         ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_ROW_LENGTH, pack.rowLength));
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
 
-    if (mState.packSkipRows != pack.skipRows)
+    if (mState.packState.skipRows != pack.skipRows)
     {
-        mState.packSkipRows = pack.skipRows;
         ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_SKIP_ROWS, pack.skipRows));
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
 
-    if (mState.packSkipPixels != pack.skipPixels)
+    if (mState.packState.skipPixels != pack.skipPixels)
     {
-        mState.packSkipPixels = pack.skipPixels;
         ANGLE_GL_TRY(context, mFunctions->pixelStorei(GL_PACK_SKIP_PIXELS, pack.skipPixels));
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
+
+    mState.packState = pack;
+    mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
 
     return angle::Result::Continue;
 }
@@ -4294,16 +4269,16 @@ void StateManagerGL::syncPixelPackUnpackFromNativeContext(const gl::Extensions &
                                                           ExternalContextState *state)
 {
     get(GL_PACK_ALIGNMENT, &state->packAlignment);
-    if (mState.packAlignment != state->packAlignment)
+    if (mState.packState.alignment != state->packAlignment)
     {
-        mState.packAlignment = state->packAlignment;
+        mState.packState.alignment = state->packAlignment;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
 
     get(GL_UNPACK_ALIGNMENT, &state->unpackAlignment);
-    if (mState.unpackAlignment != state->unpackAlignment)
+    if (mState.unpackState.alignment != state->unpackAlignment)
     {
-        mState.unpackAlignment = state->unpackAlignment;
+        mState.unpackState.alignment = state->unpackAlignment;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 }
@@ -4311,17 +4286,17 @@ void StateManagerGL::syncPixelPackUnpackFromNativeContext(const gl::Extensions &
 void StateManagerGL::restorePixelPackUnpackNativeContext(const gl::Extensions &extensions,
                                                          const ExternalContextState *state)
 {
-    if (mState.packAlignment != state->packAlignment)
+    if (mState.packState.alignment != state->packAlignment)
     {
         mFunctions->pixelStorei(GL_PACK_ALIGNMENT, state->packAlignment);
-        mState.packAlignment = state->packAlignment;
+        mState.packState.alignment = state->packAlignment;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_PACK_STATE);
     }
 
-    if (mState.unpackAlignment != state->unpackAlignment)
+    if (mState.unpackState.alignment != state->unpackAlignment)
     {
         mFunctions->pixelStorei(GL_UNPACK_ALIGNMENT, state->unpackAlignment);
-        mState.unpackAlignment = state->unpackAlignment;
+        mState.unpackState.alignment = state->unpackAlignment;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_UNPACK_STATE);
     }
 }

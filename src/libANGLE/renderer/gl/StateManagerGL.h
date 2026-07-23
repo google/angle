@@ -225,17 +225,8 @@ struct ContextStateGL
 
     GLuint transformFeedback = 0;
 
-    GLint unpackAlignment   = 4;
-    GLint unpackRowLength   = 0;
-    GLint unpackSkipRows    = 0;
-    GLint unpackSkipPixels  = 0;
-    GLint unpackImageHeight = 0;
-    GLint unpackSkipImages  = 0;
-
-    GLint packAlignment  = 4;
-    GLint packRowLength  = 0;
-    GLint packSkipRows   = 0;
-    GLint packSkipPixels = 0;
+    gl::PixelUnpackState unpackState;
+    gl::PixelPackState packState;
 
     std::array<GLuint, angle::FramebufferBinding::FramebufferBindingSingletonMax> framebuffers = {
         0};
