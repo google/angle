@@ -2783,99 +2783,132 @@ void StateManagerGL::setSampleMaski(GLuint maskNumber, GLbitfield mask)
     }
 }
 
-// Depth and stencil redundant state changes are guarded in the
-// frontend so for related cases here just set the dirty bit
-// and update backend states.
 void StateManagerGL::setDepthTestEnabled(bool enabled)
 {
-    mState.depthTestEnabled = enabled;
-    SetGLBoolState(mFunctions, GL_DEPTH_TEST, enabled);
+    if (mState.depthTestEnabled != enabled)
+    {
+        mState.depthTestEnabled = enabled;
+        SetGLBoolState(mFunctions, GL_DEPTH_TEST, enabled);
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED);
+    }
 }
 
 void StateManagerGL::setDepthFunc(GLenum depthFunc)
 {
-    mState.depthFunc = depthFunc;
-    mFunctions->depthFunc(depthFunc);
+    if (mState.depthFunc != depthFunc)
+    {
+        mState.depthFunc = depthFunc;
+        mFunctions->depthFunc(depthFunc);
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_DEPTH_FUNC);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_DEPTH_FUNC);
+    }
 }
 
 void StateManagerGL::setDepthMask(bool mask)
 {
-    mState.depthMask = mask;
-    mFunctions->depthMask(mask);
+    if (mState.depthMask != mask)
+    {
+        mState.depthMask = mask;
+        mFunctions->depthMask(mask);
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_DEPTH_MASK);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_DEPTH_MASK);
+    }
 }
 
 void StateManagerGL::setStencilTestEnabled(bool enabled)
 {
-    mState.stencilTestEnabled = enabled;
-    SetGLBoolState(mFunctions, GL_STENCIL_TEST, enabled);
+    if (mState.stencilTestEnabled != enabled)
+    {
+        mState.stencilTestEnabled = enabled;
+        SetGLBoolState(mFunctions, GL_STENCIL_TEST, enabled);
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_TEST_ENABLED);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_TEST_ENABLED);
+    }
 }
 
 void StateManagerGL::setStencilFrontWritemask(GLuint mask)
 {
     GLuint clippedMask           = mask & 0xFF;
-    mState.stencilFrontWritemask = clippedMask;
-    mFunctions->stencilMaskSeparate(GL_FRONT, clippedMask);
+    if (mState.stencilFrontWritemask != clippedMask)
+    {
+        mState.stencilFrontWritemask = clippedMask;
+        mFunctions->stencilMaskSeparate(GL_FRONT, clippedMask);
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_WRITEMASK_FRONT);
+    }
 }
 
 void StateManagerGL::setStencilBackWritemask(GLuint mask)
 {
     GLuint clippedMask          = mask & 0xFF;
-    mState.stencilBackWritemask = clippedMask;
-    mFunctions->stencilMaskSeparate(GL_BACK, clippedMask);
+    if (mState.stencilBackWritemask != clippedMask)
+    {
+        mState.stencilBackWritemask = clippedMask;
+        mFunctions->stencilMaskSeparate(GL_BACK, clippedMask);
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_WRITEMASK_BACK);
+    }
 }
 
 void StateManagerGL::setStencilFrontFuncs(GLenum func, GLint ref, GLuint mask)
 {
     GLuint clippedMask           = mask & 0xFF;
-    mState.stencilFrontFunc      = func;
-    mState.stencilFrontRef       = ref;
-    mState.stencilFrontValueMask = clippedMask;
-    mFunctions->stencilFuncSeparate(GL_FRONT, func, ref, clippedMask);
+    if (mState.stencilFrontFunc != func || mState.stencilFrontRef != ref ||
+        mState.stencilFrontValueMask != clippedMask)
+    {
+        mState.stencilFrontFunc      = func;
+        mState.stencilFrontRef       = ref;
+        mState.stencilFrontValueMask = clippedMask;
+        mFunctions->stencilFuncSeparate(GL_FRONT, func, ref, clippedMask);
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT);
+    }
 }
 
 void StateManagerGL::setStencilBackFuncs(GLenum func, GLint ref, GLuint mask)
 {
     GLuint clippedMask          = mask & 0xFF;
-    mState.stencilBackFunc      = func;
-    mState.stencilBackRef       = ref;
-    mState.stencilBackValueMask = clippedMask;
-    mFunctions->stencilFuncSeparate(GL_BACK, func, ref, clippedMask);
+    if (mState.stencilBackFunc != func || mState.stencilBackRef != ref ||
+        mState.stencilBackValueMask != clippedMask)
+    {
+        mState.stencilBackFunc      = func;
+        mState.stencilBackRef       = ref;
+        mState.stencilBackValueMask = clippedMask;
+        mFunctions->stencilFuncSeparate(GL_BACK, func, ref, clippedMask);
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK);
+    }
 }
 
 void StateManagerGL::setStencilFrontOps(GLenum sfail, GLenum dpfail, GLenum dppass)
 {
-    mState.stencilFrontStencilFailOp          = sfail;
-    mState.stencilFrontStencilPassDepthFailOp = dpfail;
-    mState.stencilFrontStencilPassDepthPassOp = dppass;
-    mFunctions->stencilOpSeparate(GL_FRONT, sfail, dpfail, dppass);
+    if (mState.stencilFrontStencilFailOp != sfail ||
+        mState.stencilFrontStencilPassDepthFailOp != dpfail ||
+        mState.stencilFrontStencilPassDepthPassOp != dppass)
+    {
+        mState.stencilFrontStencilFailOp          = sfail;
+        mState.stencilFrontStencilPassDepthFailOp = dpfail;
+        mState.stencilFrontStencilPassDepthPassOp = dppass;
+        mFunctions->stencilOpSeparate(GL_FRONT, sfail, dpfail, dppass);
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_OPS_FRONT);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_OPS_FRONT);
+    }
 }
 
 void StateManagerGL::setStencilBackOps(GLenum sfail, GLenum dpfail, GLenum dppass)
 {
-    mState.stencilBackStencilFailOp          = sfail;
-    mState.stencilBackStencilPassDepthFailOp = dpfail;
-    mState.stencilBackStencilPassDepthPassOp = dppass;
-    mFunctions->stencilOpSeparate(GL_BACK, sfail, dpfail, dppass);
+    if (mState.stencilBackStencilFailOp != sfail ||
+        mState.stencilBackStencilPassDepthFailOp != dpfail ||
+        mState.stencilBackStencilPassDepthPassOp != dppass)
+    {
+        mState.stencilBackStencilFailOp          = sfail;
+        mState.stencilBackStencilPassDepthFailOp = dpfail;
+        mState.stencilBackStencilPassDepthPassOp = dppass;
+        mFunctions->stencilOpSeparate(GL_BACK, sfail, dpfail, dppass);
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_OPS_BACK);
+        mLocalDirtyBits.set(gl::state::DIRTY_BIT_STENCIL_OPS_BACK);
+    }
 }
 
 void StateManagerGL::setCullFaceEnabled(bool enabled)
