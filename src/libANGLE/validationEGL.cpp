@@ -3043,12 +3043,12 @@ bool ValidateCreateContext(const ValidationContext *val,
                     }
                     if ((attributes.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE, EGL_FALSE) ==
                          EGL_TRUE) &&
-                        (clientMinorVersion > 1))
+                        (clientMinorVersion > 0))
                     {
                         val->setError(EGL_BAD_MATCH,
                                       "Requested GLES version (%" PRIxPTR ".%" PRIxPTR
                                       ") is greater than "
-                                      "max supported 3.1 for WebGL.",
+                                      "max supported 3.0 for WebGL.",
                                       clientMajorVersion, clientMinorVersion);
                         return false;
                     }

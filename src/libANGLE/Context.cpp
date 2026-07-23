@@ -285,28 +285,28 @@ Version GetClientVersion(egl::Display *display, const egl::AttributeMap &attribs
 {
     const Version requestedVersion(static_cast<uint8_t>(GetClientMajorVersion(attribs)),
                                    static_cast<uint8_t>(GetClientMinorVersion(attribs)));
-    if (GetBackwardCompatibleContext(attribs))
-    {
-        if (requestedVersion < ES_2_0)
-        {
-            // If the user requests an ES1 context, we cannot return an ES 2+ context.
-            return Version(1, 1);
-        }
-        else
-        {
-            // Always up the version to at least the max conformant version this display supports.
-            // Only return a higher client version if requested.
-            const Version conformantVersion = std::max(
-                display->getImplementation()->getMaxConformantESVersion(), requestedVersion);
-            // Limit the WebGL context to at most version 3.1
-            const bool isWebGL = GetWebGLContext(attribs);
-            return isWebGL ? std::min(conformantVersion, Version(3, 1)) : conformantVersion;
-        }
-    }
-    else
+
+    // We should return the requested version if the context is configured to disable backward
+    // compatibility, or if it is a WebGL context (WebGL1 -> ES2.0, WebGL2 -> ES3.0)
+    const bool isBackwardCompatible = GetBackwardCompatibleContext(attribs);
+    const bool isWebGL              = GetWebGLContext(attribs);
+    if (!isBackwardCompatible || isWebGL)
     {
         return requestedVersion;
     }
+
+    // If the user requests an ES1 context, we cannot return an ES2+ context.
+    if (requestedVersion < ES_2_0)
+    {
+        return ES_1_1;
+    }
+
+    // Always up the version to at least the max conformant version this display supports.
+    // Only return a higher client version if requested.
+    const Version conformantVersion =
+        std::max(display->getImplementation()->getMaxConformantESVersion(), requestedVersion);
+
+    return conformantVersion;
 }
 
 GLenum GetResetStrategy(const egl::AttributeMap &attribs)
