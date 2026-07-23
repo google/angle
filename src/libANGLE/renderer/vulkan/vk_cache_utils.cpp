@@ -498,10 +498,12 @@ void DeriveRenderingInfo(Renderer *renderer,
             // When MultisampledRenderToTexture is used, we can drop the resolve operation if the
             // corresponding attachment is invalidated.
             const bool resolveDepth =
-                angleFormat.depthBits != 0 && desc.hasDepthResolveAttachment() &&
+                angleFormat.depthBits != 0 &&
+                (desc.hasDepthResolveAttachment() || desc.isRenderToTexture()) &&
                 !(desc.isRenderToTexture() && ops[attachmentCount].isInvalidated);
             const bool resolveStencil =
-                angleFormat.stencilBits != 0 && desc.hasStencilResolveAttachment() &&
+                angleFormat.stencilBits != 0 &&
+                (desc.hasStencilResolveAttachment() || desc.isRenderToTexture()) &&
                 !(desc.isRenderToTexture() && ops[attachmentCount].isStencilInvalidated);
 
             const ImageAccess imageAccess =
@@ -509,10 +511,24 @@ void DeriveRenderingInfo(Renderer *renderer,
             const VkImageLayout layout = renderer->getVkImageLayout(imageAccess);
             const VkImageLayout resolveImageLayout =
                 renderer->getVkImageLayout(ImageAccess::DepthWriteStencilWrite);
+            // Per VUID-VkRenderingAttachmentInfo-None-12256, resolve mode must be set for both
+            // aspects if using VK_EXT_multisampled_render_to_single_sampled.
+            // Additionally, without
+            // VkPhysicalDeviceDepthStencilResolveProperties::independentResolveNone, both resolve
+            // modes must be equal.
+            const bool resolveModesMustMatch =
+                isRenderToTextureThroughExtension ||
+                !renderer->getFeatures().supportsDepthStencilIndependentResolveNone.enabled;
+            const bool hasDepthAndResolvesStencil =
+                angleFormat.depthBits != 0 && resolveStencil && resolveModesMustMatch;
+            const bool hasStencilAndResolvesDepth =
+                angleFormat.stencilBits != 0 && resolveDepth && resolveModesMustMatch;
             const VkResolveModeFlagBits depthResolveMode =
-                resolveDepth ? VK_RESOLVE_MODE_SAMPLE_ZERO_BIT : VK_RESOLVE_MODE_NONE;
+                resolveDepth || hasDepthAndResolvesStencil ? VK_RESOLVE_MODE_SAMPLE_ZERO_BIT
+                                                           : VK_RESOLVE_MODE_NONE;
             const VkResolveModeFlagBits stencilResolveMode =
-                resolveStencil ? VK_RESOLVE_MODE_SAMPLE_ZERO_BIT : VK_RESOLVE_MODE_NONE;
+                resolveStencil || hasStencilAndResolvesDepth ? VK_RESOLVE_MODE_SAMPLE_ZERO_BIT
+                                                             : VK_RESOLVE_MODE_NONE;
             const RenderPassLoadOp loadOp =
                 static_cast<RenderPassLoadOp>(ops[attachmentCount].loadOp);
             const RenderPassStoreOp storeOp =
@@ -528,7 +544,7 @@ void DeriveRenderingInfo(Renderer *renderer,
                                  stencilResolveMode, &infoOut->stencilAttachmentInfo);
 
             infoOut->depthAttachmentInfo.imageView = attachmentViews[attachmentCount.get()];
-            if (resolveDepth)
+            if (resolveDepth && desc.hasDepthResolveAttachment())
             {
                 infoOut->depthAttachmentInfo.resolveImageView =
                     attachmentViews[RenderPassFramebuffer::kDepthStencilResolveAttachment];
@@ -536,7 +552,7 @@ void DeriveRenderingInfo(Renderer *renderer,
             infoOut->depthAttachmentInfo.clearValue = clearValues[attachmentCount];
 
             infoOut->stencilAttachmentInfo.imageView = attachmentViews[attachmentCount.get()];
-            if (resolveStencil)
+            if (resolveStencil && desc.hasStencilResolveAttachment())
             {
                 infoOut->stencilAttachmentInfo.resolveImageView =
                     attachmentViews[RenderPassFramebuffer::kDepthStencilResolveAttachment];
