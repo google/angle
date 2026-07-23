@@ -6666,7 +6666,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // query back to back, this should only introduce one extra flush per frame.
     // https://issuetracker.google.com/250706693
     ANGLE_FEATURE_CONDITION(&mFeatures, preferSubmitOnAnySamplesPassedQueryEnd,
-                            isTileBasedRenderer);
+                            isTileBasedRenderer && !isQualcommProprietary);
 
     // ARM proprietary driver appears having a bug that if we did not wait for submission to
     // complete, but call vkGetQueryPoolResults(VK_QUERY_RESULT_WAIT_BIT), it may result
