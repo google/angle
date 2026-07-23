@@ -1253,6 +1253,7 @@ class State : angle::NonCopyable
     void onUniformBufferStateChange(size_t uniformBufferIndex, angle::SubjectMessage message);
     void onAtomicCounterBufferStateChange(size_t atomicCounterBufferIndex);
     void onShaderStorageBufferStateChange(size_t shaderStorageBufferIndex);
+    void onCurrentExecutableRelink();
 
     bool isCurrentTransformFeedback(const TransformFeedback *tf) const
     {

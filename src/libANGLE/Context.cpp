@@ -9492,6 +9492,7 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
                 {
                     Program *program = mState.getProgram();
                     ASSERT(program->isLinked());
+                    mState.onCurrentExecutableRelink();
                     ANGLE_CONTEXT_TRY(mState.installProgramExecutable(this));
                     mStateCache.onProgramExecutableChange(this);
                     break;
@@ -9515,6 +9516,7 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
                     mStateCache.onProgramExecutableChange(this);
                     break;
                 case angle::SubjectMessage::ProgramRelinked:
+                    mState.onCurrentExecutableRelink();
                     ANGLE_CONTEXT_TRY(mState.installProgramPipelineExecutable(this));
                     mStateCache.onProgramExecutableChange(this);
                     break;

@@ -4248,6 +4248,16 @@ void State::onShaderStorageBufferStateChange(size_t shaderStorageBufferIndex)
     mDirtyBits.set(state::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING);
 }
 
+void State::onCurrentExecutableRelink()
+{
+    // Called when a program or PPO is already current but its executable is recreated.  The state
+    // of the previous executable is cleaned up before the new executable is installed.
+    if (mExecutable)
+    {
+        unsetActiveTextures(mExecutable->getActiveSamplersMask());
+    }
+}
+
 void State::initializeForCapture(const Context *context)
 {
     mPrivateState.initializeForCapture(context);
