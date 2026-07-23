@@ -69,6 +69,18 @@ inline void SetGLIndexedBoolState(const FunctionsGL *functions,
     }
 }
 
+inline void SetVertexAttribArrayEnabled(const FunctionsGL *functions, GLuint index, bool value)
+{
+    if (value)
+    {
+        functions->enableVertexAttribArray(index);
+    }
+    else
+    {
+        functions->disableVertexAttribArray(index);
+    }
+}
+
 #if defined(ANGLE_ENABLE_ASSERTS)
 #    define ANGLE_GL_CHECK_GET_HELPER(functions, getter, name, value)                            \
         do                                                                                       \
@@ -118,6 +130,17 @@ inline void SetGLIndexedBoolState(const FunctionsGL *functions,
                                              << " generated error " << gl::FmtHex(error);       \
         } while (0)
 
+#    define ANGLE_GL_CHECK_GET_VERTEX_HELPER(functions, getter, index, name, value)                \
+        do                                                                                         \
+        {                                                                                          \
+            ANGLE_GL_CLEAR_ERRORS(functions);                                                      \
+            functions->getter(index, name, value);                                                 \
+            GLenum error = functions->getError();                                                  \
+            (error == GL_NO_ERROR) ? static_cast<void>(0)                                          \
+                                   : FATAL() << "Querying " << gl::FmtHex(name)                    \
+                                             << " for attribute " << index << " using " << #getter \
+                                             << " generated error " << gl::FmtHex(error);          \
+        } while (0)
 #else
 #    define ANGLE_GL_CHECK_GET_HELPER(functions, getter, name, value) functions->getter(name, value)
 #    define ANGLE_GL_CHECK_GET_INDEXED_HELPER(functions, getter, name, index, value) \
@@ -126,6 +149,8 @@ inline void SetGLIndexedBoolState(const FunctionsGL *functions,
         *value = functions->getter(name)
 #    define ANGLE_GL_CHECK_GET_INDEXED_ENABLED_HELPER(functions, getter, name, index, value) \
         *value = functions->getter(name, index)
+#    define ANGLE_GL_CHECK_GET_VERTEX_HELPER(functions, getter, index, name, value) \
+        functions->getter(index, name, value)
 #endif
 
 // Non-indexed GLboolean -> glGetBooleanv
@@ -315,6 +340,46 @@ void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, GLintptr
     *value = static_cast<GLintptr>(v);
 }
 
+// GLint -> glGetVertexAttribiv
+void GetVertexHelper(const FunctionsGL *functions, GLuint index, GLenum name, GLint *value)
+{
+    ANGLE_GL_CHECK_GET_VERTEX_HELPER(functions, getVertexAttribiv, index, name, value);
+}
+
+// GLenum -> GLint
+void GetVertexHelper(const FunctionsGL *functions, GLuint index, GLenum name, GLenum *value)
+{
+    GLint v = static_cast<GLint>(*value);
+    GetVertexHelper(functions, index, name, &v);
+    *value = static_cast<GLint>(v);
+}
+
+// bool -> GLint
+void GetVertexHelper(const FunctionsGL *functions, GLuint index, GLenum name, bool *value)
+{
+    GLint v = gl::ConvertToGLBoolean(*value);
+    GetVertexHelper(functions, index, name, &v);
+    *value = gl::ConvertToBool(v);
+}
+
+// packed enum -> GLint
+template <typename InternalEnumType, InternalEnumType MaxSize = InternalEnumType::EnumCount>
+void GetVertexHelper(const FunctionsGL *functions,
+                     GLuint index,
+                     GLenum name,
+                     InternalEnumType *internalEnum)
+{
+    GLint v = gl::ToGLenum(*internalEnum);
+    GetVertexHelper(functions, index, name, &v);
+    *internalEnum = gl::FromGLenum<InternalEnumType>(v);
+}
+
+// const void* -> glGetVertexAttribPointerv
+void GetVertexHelper(const FunctionsGL *functions, GLuint index, GLenum name, void **value)
+{
+    ANGLE_GL_CHECK_GET_VERTEX_HELPER(functions, getVertexAttribPointerv, index, name, value);
+}
+
 struct ScopedBindDrawFramebuffer
 {
     ScopedBindDrawFramebuffer(const FunctionsGL *functions, GLuint prevFbo, GLuint fbo)
@@ -333,6 +398,30 @@ struct ScopedBindDrawFramebuffer
     GLenum prevFbo               = 0;
 };
 
+struct ScopedBindVAO
+{
+    ScopedBindVAO(const FunctionsGL *functions, GLuint prevVAO, GLuint newVAO)
+        : functions(functions), prevVAO(prevVAO), newVAO(newVAO)
+    {
+        if (newVAO != prevVAO)
+        {
+            functions->bindVertexArray(newVAO);
+        }
+    }
+
+    ~ScopedBindVAO()
+    {
+        if (newVAO != prevVAO)
+        {
+            functions->bindVertexArray(prevVAO);
+        }
+    }
+
+    const FunctionsGL *functions = nullptr;
+    GLuint prevVAO               = 0;
+    GLuint newVAO                = 0;
+};
+
 void QueryContextStateGL(const FunctionsGL *functions,
                          GLuint framebufferWithStencilBits,
                          ContextStateGL *state)
@@ -342,6 +431,12 @@ void QueryContextStateGL(const FunctionsGL *functions,
     if (nativegl::SupportsVertexArrayObjects(functions))
     {
         GetHelper(functions, GL_VERTEX_ARRAY_BINDING, &state->vao);
+    }
+
+    {
+        // Query the default VAO state, temporarily bind VAO 0
+        ScopedBindVAO scopedVAO(functions, state->vao, 0);
+        QueryVertexArrayStateGL(functions, &state->defaultVAOState);
     }
 
     GLint maxVertexAttribs = 0;
@@ -820,6 +915,8 @@ void SetDirtyBitExtIfStateDifferent(const T &a,
 {
     SetDirtyBitIfStateDifferent(a.program, b.program, bits, gl::state::DIRTY_BIT_PROGRAM_BINDING);
     SetDirtyBitIfStateDifferent(a.vao, b.vao, bits, gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
+    SetDirtyBitIfStateDifferent(a.defaultVAOState, b.defaultVAOState, bits,
+                                gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
     {
         gl::AttributesMask currentValueDiff = ComputeVertexAttribCurrentValueDiffMask(
             a.vertexAttribCurrentValues, b.vertexAttribCurrentValues);
@@ -1014,8 +1111,9 @@ auto TieContextStateGL(const ContextStateGL &state)
     // state.Stencil(Front|Back)(WriteMask|ValueMask) is omitted and handled specifically in the
     // comparison operator because it must be masked
     return std::tie(
-        state.program, state.vao, /*state.vertexAttribCurrentValues,*/ state.buffers,
-        state.indexedBuffers, state.textureUnitIndex, state.textures, state.samplers, state.images,
+        state.program, state.vao, state.defaultVAOState,
+        /*state.vertexAttribCurrentValues,*/ state.buffers, state.indexedBuffers,
+        state.textureUnitIndex, state.textures, state.samplers, state.images,
         state.transformFeedback, state.unpackState, state.packState, state.framebuffers,
         state.renderbuffer, state.scissorTestEnabled, state.scissor, state.viewport, state.near,
         state.far, state.clipOrigin, state.clipDepthMode, state.blendColor, state.blendState,
@@ -1122,7 +1220,38 @@ void PrintCompressedBlendState(std::ostream &os,
         os << "] = (" << printed << ")" << std::endl;
     }
 }
+
+void PrintCompressedVertexArrayState(std::ostream &os,
+                                     const VertexArrayStateGL &state,
+                                     size_t indentation)
+{
+    Indent(os, indentation);
+    os << "elementArrayBuffer = " << state.elementArrayBuffer << std::endl;
+    Indent(os, indentation);
+    os << "attributes =" << std::endl;
+    PrintCompressedArray(os, state.attributes, indentation + 4, true);
+    Indent(os, indentation);
+    os << "bindings =" << std::endl;
+    PrintCompressedArray(os, state.bindings, indentation + 4, true);
+}
 }  // anonymous namespace
+
+std::ostream &operator<<(std::ostream &os, const VertexAttributeGL &attribute)
+{
+    os << "enabled = " << attribute.enabled << ", size = " << attribute.format->channelCount
+       << ", type = " << attribute.format->vertexAttribType
+       << ", normalized = " << attribute.format->isNorm() << ", pointer = " << attribute.pointer
+       << ", relativeOffset = " << attribute.relativeOffset
+       << ", bindingIndex = " << attribute.bindingIndex;
+    return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const VertexBindingGL &binding)
+{
+    os << "stride = " << binding.stride << ", divisor = " << binding.divisor
+       << ", offset = " << binding.offset << ", buffer = " << binding.buffer;
+    return os;
+}
 
 VertexArrayStateGL::VertexArrayStateGL(size_t maxAttribs, size_t maxBindings)
     : attributes(std::min<size_t>(maxAttribs, gl::MAX_VERTEX_ATTRIBS)),
@@ -1132,6 +1261,89 @@ VertexArrayStateGL::VertexArrayStateGL(size_t maxAttribs, size_t maxBindings)
     for (GLuint i = 0; i < attributes.size(); i++)
     {
         attributes[i].bindingIndex = i;
+    }
+}
+
+std::ostream &operator<<(std::ostream &os, const VertexArrayStateGL &state)
+{
+    PrintCompressedVertexArrayState(os, state, 0);
+    return os;
+}
+
+void QueryVertexArrayStateGL(const FunctionsGL *functions, VertexArrayStateGL *state)
+{
+    GetHelper(functions, GL_ELEMENT_ARRAY_BUFFER_BINDING, &state->elementArrayBuffer);
+    GLint maxVertexAttribs = 0;
+    GetHelper(functions, GL_MAX_VERTEX_ATTRIBS, &maxVertexAttribs);
+    maxVertexAttribs = std::min(maxVertexAttribs, static_cast<GLint>(gl::MAX_VERTEX_ATTRIBS));
+
+    for (GLint i = 0; i < maxVertexAttribs; i++)
+    {
+        VertexAttributeGL &attrib = state->attributes[i];
+
+        GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_ENABLED, &attrib.enabled);
+
+        GLuint size = attrib.format->channelCount;
+        GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_SIZE, &size);
+
+        gl::VertexAttribType type = attrib.format->vertexAttribType;
+        GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_TYPE, &type);
+
+        bool normalized = attrib.format->isNorm();
+        GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_NORMALIZED, &normalized);
+
+        bool integer = attrib.format->isPureInt();
+        GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_INTEGER, &integer);
+
+        attrib.format = &angle::Format::Get(gl::GetVertexFormatID(type, normalized, size, integer));
+
+        GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_POINTER,
+                        const_cast<void **>(&attrib.pointer));
+
+        if (nativegl::SupportsVertexAttributeBindings(functions))
+        {
+            GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_RELATIVE_OFFSET, &attrib.relativeOffset);
+            GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_BINDING, &attrib.bindingIndex);
+        }
+        else
+        {
+            ASSERT(attrib.bindingIndex == static_cast<GLuint>(i));
+        }
+    }
+
+    GLint maxVertexAttribBindings = maxVertexAttribs;
+    if (nativegl::SupportsVertexAttributeBindings(functions))
+    {
+        GetHelper(functions, GL_MAX_VERTEX_ATTRIB_BINDINGS, &maxVertexAttribBindings);
+        maxVertexAttribBindings =
+            std::min(maxVertexAttribBindings, static_cast<GLint>(gl::MAX_VERTEX_ATTRIB_BINDINGS));
+    }
+
+    for (GLint i = 0; i < maxVertexAttribBindings; i++)
+    {
+        VertexBindingGL &binding = state->bindings[i];
+
+        if (nativegl::SupportsVertexAttributeBindings(functions))
+        {
+            GetHelper(functions, GL_VERTEX_BINDING_STRIDE, i, &binding.stride);
+            GetHelper(functions, GL_VERTEX_BINDING_DIVISOR, i, &binding.divisor);
+            GetHelper(functions, GL_VERTEX_BINDING_OFFSET, i, &binding.offset);
+            GetHelper(functions, GL_VERTEX_BINDING_BUFFER, i, &binding.buffer);
+        }
+        else
+        {
+            GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_STRIDE, &binding.stride);
+            GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &binding.divisor);
+            GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &binding.buffer);
+        }
+
+        // Driver return inconsistent results when querying the binding offset when client data
+        // is used. The spec says glVertexAttribPointer on the default VAO with no buffer bound
+        // should set an offset of 0.
+        if (binding.buffer == 0)
+        {
+            binding.offset = 0;
+        }
     }
 }
 
@@ -1166,6 +1378,8 @@ std::ostream &operator<<(std::ostream &os, const ImageUnitBindingGL &binding)
 ContextStateGLCaps::ContextStateGLCaps(const FunctionsGL *functions, const gl::Caps &caps)
     : defaultFramebufferSrgbState(functions->standard == STANDARD_GL_ES),
       defaultImageBindingFormat(functions->standard == STANDARD_GL_ES ? GL_R32UI : GL_R8),
+      maxVertexAttributes(caps.maxVertexAttributes),
+      maxVertexAttribBindings(caps.maxVertexAttribBindings),
       maxImageUnits(caps.maxImageUnits),
       maxDrawBuffers(caps.maxDrawBuffers),
       maxUniformBufferBindings(caps.maxUniformBufferBindings),
@@ -1174,7 +1388,8 @@ ContextStateGLCaps::ContextStateGLCaps(const FunctionsGL *functions, const gl::C
 {}
 
 ContextStateGL::ContextStateGL(const ContextStateGLCaps &caps)
-    : images(caps.maxImageUnits, ImageUnitBindingGL(caps.defaultImageBindingFormat)),
+    : defaultVAOState(caps.maxVertexAttributes, caps.maxVertexAttribBindings),
+      images(caps.maxImageUnits, ImageUnitBindingGL(caps.defaultImageBindingFormat)),
       blendState(caps.maxDrawBuffers),
       framebufferSRGBEnabled(caps.defaultFramebufferSrgbState)
 {
@@ -1221,6 +1436,8 @@ std::ostream &operator<<(std::ostream &os, const ContextStateGL &state)
 {
     os << "program = " << state.program << std::endl;
     os << "vao = " << state.vao << std::endl;
+    os << "defaultVAOState =" << std::endl;
+    PrintCompressedVertexArrayState(os, state.defaultVAOState, 4);
     os << "vertexAttribCurrentValues =" << std::endl;
     PrintCompressedArray(os, state.vertexAttribCurrentValues, 4, true);
     os << "buffers =" << std::endl;
@@ -1342,8 +1559,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mCaps(functions, rendererCaps),
       mState(mCaps),
       mSupportsVertexArrayObjects(nativegl::SupportsVertexArrayObjects(functions)),
-      mDefaultVAOState(rendererCaps.maxVertexAttributes, rendererCaps.maxVertexAttribBindings),
-      mVAOState(&mDefaultVAOState),
+      mVAOState(&mState.defaultVAOState),
       mCurrentTransformFeedback(nullptr),
       mQueries(),
       mPrevDrawContext({0}),
@@ -1449,7 +1665,7 @@ void StateManagerGL::deleteVertexArray(GLuint vao)
     {
         if (mState.vao == vao)
         {
-            bindVertexArray(0, &mDefaultVAOState);
+            bindVertexArray(0, &mState.defaultVAOState);
         }
         mFunctions->deleteVertexArrays(1, &vao);
     }
@@ -3924,10 +4140,112 @@ void StateManagerGL::updateMultiviewBaseViewLayerIndexUniformImpl(
         executableGL->enableLayeredRenderingPath(drawFramebufferState.getBaseViewIndex());
     }
 }
+void StateManagerGL::setDefaultVAOState(const VertexArrayStateGL &state)
+{
+    if (mState.defaultVAOState == state)
+    {
+        return;
+    }
+
+    bindVertexArray(0, &mState.defaultVAOState);
+
+    const bool supportsBindings = nativegl::SupportsVertexAttributeBindings(mFunctions);
+
+    bindBuffer(gl::BufferBinding::ElementArray, state.elementArrayBuffer);
+    for (GLint i = 0; i < mCaps.maxVertexAttributes; i++)
+    {
+        VertexAttributeGL &curAttrib       = mState.defaultVAOState.attributes[i];
+        const VertexAttributeGL &newAttrib = state.attributes[i];
+        if (curAttrib.enabled != newAttrib.enabled)
+        {
+            SetVertexAttribArrayEnabled(mFunctions, i, newAttrib.enabled);
+            curAttrib.enabled = newAttrib.enabled;
+        }
+
+        // If vertex bindings are supported and the binding index has been changed, set all state
+        // with the binding functions. Otherwise use the old glVertexAttribPointer setting
+        // functions.
+        if (supportsBindings && newAttrib.bindingIndex != curAttrib.bindingIndex)
+        {
+            mFunctions->vertexAttribBinding(i, newAttrib.bindingIndex);
+            curAttrib.bindingIndex = newAttrib.bindingIndex;
+
+            if (curAttrib.format != newAttrib.format ||
+                curAttrib.relativeOffset != newAttrib.relativeOffset)
+            {
+                mFunctions->vertexAttribFormat(i, newAttrib.format->channelCount,
+                                               gl::ToGLenum(newAttrib.format->vertexAttribType),
+                                               newAttrib.format->isNorm(),
+                                               newAttrib.relativeOffset);
+                curAttrib.format         = newAttrib.format;
+                curAttrib.relativeOffset = newAttrib.relativeOffset;
+            }
+        }
+        else
+        {
+            VertexBindingGL &curBinding = mState.defaultVAOState.bindings[curAttrib.bindingIndex];
+            const VertexBindingGL &newBinding = state.bindings[newAttrib.bindingIndex];
+
+            ASSERT(newAttrib.bindingIndex != curAttrib.bindingIndex);
+
+            if (curAttrib.format != newAttrib.format || curAttrib.pointer != newAttrib.pointer ||
+                curBinding.buffer != newBinding.buffer || curBinding.stride != newBinding.stride)
+            {
+                bindBuffer(gl::BufferBinding::Array, newBinding.buffer);
+                mFunctions->vertexAttribPointer(i, newAttrib.format->channelCount,
+                                                gl::ToGLenum(newAttrib.format->vertexAttribType),
+                                                newAttrib.format->isNorm(), newBinding.stride,
+                                                newAttrib.pointer);
+                curAttrib.format         = newAttrib.format;
+                curAttrib.pointer        = newAttrib.pointer;
+                curAttrib.relativeOffset = 0;
+                curBinding.buffer        = newBinding.buffer;
+                curBinding.offset =
+                    newBinding.buffer ? reinterpret_cast<GLintptr>(newAttrib.pointer) : 0;
+                curBinding.stride = newBinding.stride;
+            }
+
+            if (curBinding.divisor != newBinding.divisor)
+            {
+                mFunctions->vertexAttribDivisor(i, newBinding.divisor);
+                curBinding.divisor = newBinding.divisor;
+            }
+        }
+    }
+
+    for (GLint i = 0; i < mCaps.maxVertexAttribBindings; i++)
+    {
+        VertexBindingGL &curBinding       = mState.defaultVAOState.bindings[i];
+        const VertexBindingGL &newBinding = state.bindings[i];
+
+        if (curBinding.buffer != newBinding.buffer || curBinding.offset != newBinding.offset ||
+            curBinding.stride != newBinding.stride)
+        {
+            ASSERT(supportsBindings);
+            mFunctions->bindVertexBuffer(i, newBinding.buffer, newBinding.offset,
+                                         newBinding.stride);
+            curBinding.buffer = newBinding.buffer;
+            curBinding.stride = newBinding.stride;
+            curBinding.offset = newBinding.offset;
+        }
+
+        if (curBinding.divisor != newBinding.divisor)
+        {
+            ASSERT(supportsBindings);
+            mFunctions->vertexBindingDivisor(i, newBinding.divisor);
+            curBinding.divisor = newBinding.divisor;
+        }
+    }
+
+    ASSERT(mState.defaultVAOState == state);
+    mLocalDirtyBits.set(gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
+}
 
 angle::Result StateManagerGL::setState(const gl::Context *context, const ContextStateGL &state)
 {
     useProgram(state.program);
+    setDefaultVAOState(
+        state.defaultVAOState);  // Set default VAO state before binding the target vao
     bindVertexArray(state.vao, nullptr);
     for (size_t attribIndex = 0; attribIndex < state.vertexAttribCurrentValues.size();
          attribIndex++)
@@ -4134,7 +4452,7 @@ GLuint StateManagerGL::getDefaultVAO() const
 
 VertexArrayStateGL *StateManagerGL::getDefaultVAOState()
 {
-    return &mDefaultVAOState;
+    return &mState.defaultVAOState;
 }
 
 void StateManagerGL::validateState()
@@ -4896,12 +5214,12 @@ void StateManagerGL::syncVertexArraysFromNativeContext(const gl::Extensions &ext
         {
             // Force-bind VAO 0 if it's either not already bound or StateManagerGL thinks it's not
             // bound.
-            forceBindVertexArray(0, &mDefaultVAOState);
+            forceBindVertexArray(0, &mState.defaultVAOState);
         }
     }
 
     // Save the state of the default VAO
-    state->defaultVertexArrayAttributes.resize(mDefaultVAOState.attributes.size());
+    state->defaultVertexArrayAttributes.resize(mState.defaultVAOState.attributes.size());
     for (GLint i = 0; i < static_cast<GLint>(state->defaultVertexArrayAttributes.size()); i++)
     {
         ExternalContextVertexAttribute &externalAttrib = state->defaultVertexArrayAttributes[i];
@@ -4935,14 +5253,14 @@ void StateManagerGL::syncVertexArraysFromNativeContext(const gl::Extensions &ext
         externalAttrib.currentData.setFloatValues(currentData);
 
         // Update our local state to reflect the external context state
-        VertexAttributeGL &localAttribute = mDefaultVAOState.attributes[i];
+        VertexAttributeGL &localAttribute = mState.defaultVAOState.attributes[i];
         localAttribute.enabled            = externalAttrib.enabled;
         localAttribute.format             = externalAttrib.format;
         localAttribute.pointer            = externalAttrib.pointer;
         localAttribute.relativeOffset     = 0;
         localAttribute.bindingIndex       = i;
 
-        VertexBindingGL &localBinding = mDefaultVAOState.bindings[i];
+        VertexBindingGL &localBinding = mState.defaultVAOState.bindings[i];
         localBinding.stride           = externalAttrib.stride;
         localBinding.buffer           = externalAttrib.buffer;
         localBinding.divisor          = 0;
@@ -4967,15 +5285,15 @@ void StateManagerGL::restoreVertexArraysNativeContext(const gl::Extensions &exte
     if (mSupportsVertexArrayObjects)
     {
         // Restore the default VAO state first.
-        bindVertexArray(0, &mDefaultVAOState);
+        bindVertexArray(0, &mState.defaultVAOState);
     }
 
     for (GLint i = 0; i < static_cast<GLint>(state->defaultVertexArrayAttributes.size()); i++)
     {
         const ExternalContextVertexAttribute &externalAttrib =
             state->defaultVertexArrayAttributes[i];
-        VertexAttributeGL &localAttribute = mDefaultVAOState.attributes[i];
-        VertexBindingGL &localBinding     = mDefaultVAOState.bindings[i];
+        VertexAttributeGL &localAttribute = mState.defaultVAOState.attributes[i];
+        VertexBindingGL &localBinding     = mState.defaultVAOState.bindings[i];
 
         if (externalAttrib.format != localAttribute.format ||
             externalAttrib.stride != localBinding.stride ||
@@ -5005,15 +5323,7 @@ void StateManagerGL::restoreVertexArraysNativeContext(const gl::Extensions &exte
 
         if (externalAttrib.enabled != localAttribute.enabled)
         {
-            if (externalAttrib.enabled)
-            {
-                mFunctions->enableVertexAttribArray(i);
-            }
-            else
-            {
-                mFunctions->disableVertexAttribArray(i);
-            }
-
+            SetVertexAttribArrayEnabled(mFunctions, i, externalAttrib.enabled);
             localAttribute.enabled = externalAttrib.enabled;
         }
 

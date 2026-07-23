@@ -42,7 +42,7 @@ bool SameVertexAttribFormat(const VertexAttributeGL &a, const VertexAttribute &b
 
 bool SameVertexBuffer(const VertexBindingGL &a, const VertexBinding &b, const gl::Buffer *buffer)
 {
-    return a.stride == b.getStride() && a.offset == b.getOffset() &&
+    return a.stride == b.getStride() && a.offset == static_cast<GLintptr>(b.getOffset()) &&
            a.buffer == GetNativeBufferID(buffer);
 }
 
@@ -64,49 +64,6 @@ bool IsVertexAttribPointerSupported(size_t attribIndex, const VertexAttribute &a
 GLuint GetAdjustedDivisor(GLuint numViews, GLuint divisor)
 {
     return numViews * divisor;
-}
-
-static angle::Result ValidateStateHelperGetIntegerv(const gl::Context *context,
-                                                    const GLuint localValue,
-                                                    const GLenum pname,
-                                                    const char *localName,
-                                                    const char *driverName)
-{
-    const FunctionsGL *functions = GetFunctionsGL(context);
-
-    GLint queryValue;
-    ANGLE_GL_TRY(context, functions->getIntegerv(pname, &queryValue));
-    if (localValue != static_cast<GLuint>(queryValue))
-    {
-        WARN() << localName << " (" << localValue << ") != " << driverName << " (" << queryValue
-               << ")";
-        // Re-add ASSERT: http://anglebug.com/42262547
-        // ASSERT(false);
-    }
-
-    return angle::Result::Continue;
-}
-
-static angle::Result ValidateStateHelperGetVertexAttribiv(const gl::Context *context,
-                                                          const GLint index,
-                                                          const GLuint localValue,
-                                                          const GLenum pname,
-                                                          const char *localName,
-                                                          const char *driverName)
-{
-    const FunctionsGL *functions = GetFunctionsGL(context);
-
-    GLint queryValue;
-    ANGLE_GL_TRY(context, functions->getVertexAttribiv(index, pname, &queryValue));
-    if (localValue != static_cast<GLuint>(queryValue))
-    {
-        WARN() << localName << "[" << index << "] (" << localValue << ") != " << driverName << "["
-               << index << "] (" << queryValue << ")";
-        // Re-add ASSERT: http://anglebug.com/42262547
-        // ASSERT(false);
-    }
-
-    return angle::Result::Continue;
 }
 }  // anonymous namespace
 
@@ -1096,79 +1053,18 @@ angle::Result VertexArrayGL::validateState(const gl::Context *context) const
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
 
-    // Ensure this vao is currently bound
-    ANGLE_TRY(ValidateStateHelperGetIntegerv(context, mVertexArrayID, GL_VERTEX_ARRAY_BINDING,
-                                             "mVertexArrayID", "GL_VERTEX_ARRAY_BINDING"));
+    VertexArrayStateGL queriedState(mNativeState->attributes.size(), mNativeState->bindings.size());
+    QueryVertexArrayStateGL(functions, &queriedState);
 
-    // Element array buffer
-    ANGLE_TRY(ValidateStateHelperGetIntegerv(
-        context, mNativeState->elementArrayBuffer, GL_ELEMENT_ARRAY_BUFFER_BINDING,
-        "mNativeState->elementArrayBuffer", "GL_ELEMENT_ARRAY_BUFFER_BINDING"));
-
-    // ValidateStateHelperGetIntegerv but with > comparison instead of !=
-    GLint queryValue;
-    ANGLE_GL_TRY(context, functions->getIntegerv(GL_MAX_VERTEX_ATTRIBS, &queryValue));
-    if (mNativeState->attributes.size() > static_cast<GLuint>(queryValue))
+    if (*mNativeState != queriedState)
     {
-        WARN() << "mNativeState->attributes.size() (" << mNativeState->attributes.size()
-               << ") > GL_MAX_VERTEX_ATTRIBS (" << queryValue << ")";
-        // Re-add ASSERT: http://anglebug.com/42262547
-        // ASSERT(false);
+        std::ostringstream msg;
+        msg << "Queried state does not match tracked state!" << std::endl;
+        msg << "Tracked state:" << std::endl << *mNativeState << std::endl << std::endl;
+        msg << "Queried state:" << std::endl << queriedState << std::endl;
+        FATAL() << msg.str();
     }
 
-    // Check each applied attribute/binding
-    for (GLuint index = 0; index < mNativeState->attributes.size(); index++)
-    {
-        VertexAttributeGL &attribute = mNativeState->attributes[index];
-        ASSERT(attribute.bindingIndex < mNativeState->bindings.size());
-        VertexBindingGL &binding = mNativeState->bindings[attribute.bindingIndex];
-
-        ANGLE_TRY(ValidateStateHelperGetVertexAttribiv(
-            context, index, attribute.enabled, GL_VERTEX_ATTRIB_ARRAY_ENABLED,
-            "mNativeState->attributes.enabled", "GL_VERTEX_ATTRIB_ARRAY_ENABLED"));
-
-        if (attribute.enabled)
-        {
-            // Applied attributes
-            ASSERT(attribute.format);
-            ANGLE_TRY(ValidateStateHelperGetVertexAttribiv(
-                context, index, ToGLenum(attribute.format->vertexAttribType),
-                GL_VERTEX_ATTRIB_ARRAY_TYPE, "mNativeState->attributes.format->vertexAttribType",
-                "GL_VERTEX_ATTRIB_ARRAY_TYPE"));
-            ANGLE_TRY(ValidateStateHelperGetVertexAttribiv(
-                context, index, attribute.format->channelCount, GL_VERTEX_ATTRIB_ARRAY_SIZE,
-                "attribute.format->channelCount", "GL_VERTEX_ATTRIB_ARRAY_SIZE"));
-            ANGLE_TRY(ValidateStateHelperGetVertexAttribiv(
-                context, index, attribute.format->isNorm(), GL_VERTEX_ATTRIB_ARRAY_NORMALIZED,
-                "attribute.format->isNorm()", "GL_VERTEX_ATTRIB_ARRAY_NORMALIZED"));
-            ANGLE_TRY(ValidateStateHelperGetVertexAttribiv(
-                context, index, attribute.format->isPureInt(), GL_VERTEX_ATTRIB_ARRAY_INTEGER,
-                "attribute.format->isPureInt()", "GL_VERTEX_ATTRIB_ARRAY_INTEGER"));
-            if (supportVertexAttribBinding(context))
-            {
-                ANGLE_TRY(ValidateStateHelperGetVertexAttribiv(
-                    context, index, attribute.relativeOffset, GL_VERTEX_ATTRIB_RELATIVE_OFFSET,
-                    "attribute.relativeOffset", "GL_VERTEX_ATTRIB_RELATIVE_OFFSET"));
-                ANGLE_TRY(ValidateStateHelperGetVertexAttribiv(
-                    context, index, attribute.bindingIndex, GL_VERTEX_ATTRIB_BINDING,
-                    "attribute.bindingIndex", "GL_VERTEX_ATTRIB_BINDING"));
-            }
-
-            // Applied bindings
-            ANGLE_TRY(ValidateStateHelperGetVertexAttribiv(
-                context, index, binding.buffer, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING,
-                "binding.buffer", "GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING"));
-            if (binding.buffer != 0)
-            {
-                ANGLE_TRY(ValidateStateHelperGetVertexAttribiv(
-                    context, index, binding.stride, GL_VERTEX_ATTRIB_ARRAY_STRIDE, "binding.stride",
-                    "GL_VERTEX_ATTRIB_ARRAY_STRIDE"));
-                ANGLE_TRY(ValidateStateHelperGetVertexAttribiv(
-                    context, index, binding.divisor, GL_VERTEX_ATTRIB_ARRAY_DIVISOR,
-                    "binding.divisor", "GL_VERTEX_ATTRIB_ARRAY_DIVISOR"));
-            }
-        }
-    }
     return angle::Result::Continue;
 }
 

@@ -1300,8 +1300,7 @@ void GenerateCaps(const FunctionsGL *functions,
         LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
     }
 
-    if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
-        functions->hasGLExtension("GL_ARB_vertex_attrib_binding"))
+    if (nativegl::SupportsVertexAttributeBindings(functions))
     {
         caps->maxVertexAttribRelativeOffset =
             QuerySingleGLInt(functions, GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET);
@@ -2862,6 +2861,12 @@ bool SupportsVertexArrayObjects(const FunctionsGL *functions)
            functions->hasGLESExtension("GL_OES_vertex_array_object") ||
            functions->isAtLeastGL(gl::Version(3, 0)) ||
            functions->hasGLExtension("GL_ARB_vertex_array_object");
+}
+bool SupportsVertexAttributeBindings(const FunctionsGL *functions)
+{
+    return functions->isAtLeastGL(gl::Version(4, 3)) ||
+           functions->isAtLeastGLES(gl::Version(3, 1)) ||
+           functions->hasGLExtension("GL_ARB_vertex_attrib_binding");
 }
 
 bool SupportsTextureBufferObjects(const FunctionsGL *functions)

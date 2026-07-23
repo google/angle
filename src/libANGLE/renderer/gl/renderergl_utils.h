@@ -129,6 +129,7 @@ void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::Featur
 namespace nativegl
 {
 bool SupportsVertexArrayObjects(const FunctionsGL *functions);
+bool SupportsVertexAttributeBindings(const FunctionsGL *functions);
 bool SupportsTextureBufferObjects(const FunctionsGL *functions);
 bool SupportsPixelBufferObjects(const FunctionsGL *functions);
 bool SupportsSamplerObjects(const FunctionsGL *functions);
