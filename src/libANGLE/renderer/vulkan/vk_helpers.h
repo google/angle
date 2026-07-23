@@ -2338,8 +2338,7 @@ class ImageHelper final : public Resource, public angle::Subject
     VkResult initMemory(ErrorContext *context,
                         VkMemoryPropertyFlags flags,
                         VkMemoryPropertyFlags excludedFlags,
-                        const VkMemoryRequirements *memoryRequirements,
-                        const bool allocateDedicatedMemory,
+                        VkMemoryRequirements *memoryRequirements,
                         MemoryAllocationType allocationType,
                         VkMemoryPropertyFlags *flagsOut,
                         VkDeviceSize *sizeOut);

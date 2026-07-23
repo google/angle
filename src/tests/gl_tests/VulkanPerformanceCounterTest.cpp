@@ -11031,6 +11031,78 @@ TEST_P(VulkanPerformanceCounterTest_TileMemory, DeleteColorRenderbufferOfUnsynce
     EXPECT_EQ(1u, getPerfCounters().fallbackFromTileMemory);
 }
 
+// Test tile memory allocation failure is handled properly
+TEST_P(VulkanPerformanceCounterTest_TileMemory, DSBufferAllocateFailureThenBlit)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+    ANGLE_SKIP_TEST_IF(!isFeatureEnabled(Feature::SimulateTileMemoryForTesting) &&
+                       !isFeatureEnabled(Feature::SupportsTileMemoryHeap));
+
+    setupPrograms();
+
+    GLfloat zValue = 0.0f;
+
+    // draw to default fbo to initialize depth buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(zValue * 0.5f + 0.5f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    drawQuadToVerifyDepthValue(drawGreen, drawRed, zValue);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+    EXPECT_EQ(1u, getPerfCounters().fallbackFromTileMemory);
+
+    uint64_t tileMemoryImageCountBefore = getPerfCounters().tileMemoryImages;
+
+    // Set up depthStencil with 4097x4097, the simulation code path will fail to allocate for
+    // testing purpose (allocation size > 64M).
+    constexpr GLsizei kWidth  = 4097;
+    constexpr GLsizei kHeight = 4097;
+
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kWidth, kHeight);
+
+    GLFramebuffer fbo;
+    setupFBO(colorTexture, depthStencil, depthStencil, fbo, kWidth, kHeight);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(0.0f);
+    glClearStencil(0x55);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+
+    // blit depth from surface to to fbo
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    ASSERT(getWindowWidth() < kWidth);
+    ASSERT(getWindowHeight() < kHeight);
+    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(),
+                      getWindowHeight(), GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+    if (isFeatureEnabled(Feature::SupportsTileMemoryHeap))
+    {
+        // depthStencil may or may not be using tile memory.
+        EXPECT_TRUE(getPerfCounters().tileMemoryImages - tileMemoryImageCountBefore <= 1);
+    }
+    else
+    {
+        // simulation code path should fail to allocate tile memory and automatically fall back to
+        // regular memory
+        ASSERT(isFeatureEnabled(Feature::SimulateTileMemoryForTesting));
+        EXPECT_EQ(0u, getPerfCounters().tileMemoryImages - tileMemoryImageCountBefore);
+    }
+
+    // Verify depth buffer has correct value
+    drawQuadToVerifyDepthValue(drawGreen, drawRed, zValue);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+}
+
 class VulkanPerformanceCounterTest_ClipDistance : public VulkanPerformanceCounterTest
 {};
 
