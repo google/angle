@@ -528,6 +528,27 @@ unsigned int GetTypeComponentCount(const TType &type)
     components *= type.getArraySizeProduct();
     return components;
 }
+
+bool IsWholeArrayFragDataUsed(TIntermTyped *node)
+{
+    if (node->getQualifier() == EvqFragData)
+    {
+        return true;
+    }
+
+    TIntermBinary *asBinary = node->getAsBinaryNode();
+    if (asBinary != nullptr && asBinary->getOp() == EOpComma)
+    {
+        return IsWholeArrayFragDataUsed(asBinary->getRight());
+    }
+
+    // Either this is not ESSL 100 (where gl_FragData may be used), or gl_FragData is not used as a
+    // whole array.
+    //
+    // Note: ESSL 100 does not allow arrays in ternary operator, so there is no need to check for
+    // TIntermTernary here for a whole-array use of gl_FragData.
+    return false;
+}
 }  // namespace
 
 // This tracks each binding point's current default offset for inheritance of subsequent
@@ -3300,10 +3321,10 @@ void TParseContext::functionCallRValueLValueErrorCheck(const TFunction *fnCandid
 }
 
 void TParseContext::checkClipCullDistanceWholeArrayUse(const TSourceLoc &location,
-                                                       TQualifier qualifier,
+                                                       TIntermTyped *node,
                                                        const char *message)
 {
-    switch (qualifier)
+    switch (node->getQualifier())
     {
         case EvqClipDistance:
             if (mClipDistanceInfo.size == 0)
@@ -3320,6 +3341,22 @@ void TParseContext::checkClipCullDistanceWholeArrayUse(const TSourceLoc &locatio
             }
             break;
         default:
+        {
+            TIntermBinary *asBinary = node->getAsBinaryNode();
+            if (asBinary != nullptr && asBinary->getOp() == EOpComma)
+            {
+                checkClipCullDistanceWholeArrayUse(location, asBinary->getRight(), message);
+                return;
+            }
+            TIntermTernary *asTernary = node->getAsTernaryNode();
+            if (asTernary != nullptr)
+            {
+                checkClipCullDistanceWholeArrayUse(location, asTernary->getTrueExpression(),
+                                                   message);
+                checkClipCullDistanceWholeArrayUse(location, asTernary->getFalseExpression(),
+                                                   message);
+            }
+        }
             break;
     }
 }
@@ -3333,7 +3370,7 @@ void TParseContext::functionCallClipCullDistanceCheck(const TFunction *fnCandida
     for (size_t i = 0; i < fnCandidate->getParamCount(); ++i)
     {
         TIntermTyped *argument = (*fnCall->getSequence())[i]->getAsTyped();
-        checkClipCullDistanceWholeArrayUse(argument->getLine(), argument->getQualifier(),
+        checkClipCullDistanceWholeArrayUse(argument->getLine(), argument,
                                            "Cannot pass to function unless it is explicitly sized");
     }
 }
@@ -3344,7 +3381,7 @@ void TParseContext::functionCallFragDataCheck(const TFunction *fnCandidate,
     for (size_t i = 0; i < fnCandidate->getParamCount(); ++i)
     {
         TIntermTyped *argument = (*fnCall->getSequence())[i]->getAsTyped();
-        if (argument->getType().getQualifier() == EvqFragData)
+        if (IsWholeArrayFragDataUsed(argument))
         {
             // The whole array is passed to the function.  For validation purposes, assume all
             // indices are accessed in the function.
@@ -9098,10 +9135,9 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
         // Per EXT_clip_cull_distance, only indexing with constants can implicitly size the
         // built-ins, using them in whole-array assignment shouldn't try to size them.
         checkClipCullDistanceWholeArrayUse(
-            loc, left->getType().getQualifier(),
-            "Cannot use as left-hand side of assignment unless it is explicitly sized");
+            loc, left, "Cannot use as left-hand side of assignment unless it is explicitly sized");
         checkClipCullDistanceWholeArrayUse(
-            loc, right->getType().getQualifier(),
+            loc, right,
             "Cannot use as right-hand side of assignment unless it is explicitly sized");
     }
 

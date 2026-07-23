@@ -5064,6 +5064,34 @@ void main() {
                   "GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT when gl_SecondaryFragDataEXT is used");
 }
 
+// Shader that writes to SecondaryFragData and passes FragData to a function.
+TEST_P(GLSLValidationTest, BlendFuncExtendedPassFragDataToFunctionInCommaExpr)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_blend_func_extended"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    GLint maxDrawBuffers = 0, maxDualSourceDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT, &maxDualSourceDrawBuffers);
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ANGLE_SKIP_TEST_IF(maxDualSourceDrawBuffers == maxDrawBuffers);
+
+    constexpr char kFS[] = R"(#extension GL_EXT_draw_buffers : require
+#extension GL_EXT_blend_func_extended : require
+precision mediump float;
+void f(vec4 fragData[gl_MaxDrawBuffers])
+{
+    fragData[0] = vec4(0.1);
+}
+void main() {
+    vec4 data[gl_MaxDrawBuffers];
+    f((data, gl_FragData));
+    gl_SecondaryFragDataEXT[0] = vec4(1.0);
+})";
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "array index for gl_FragData must be less than "
+                  "GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT when gl_SecondaryFragDataEXT is used");
+}
+
 // Shader that writes to FragData at an index >= than gl_MaxDualSourceDrawBuffersEXT is fine if
 // SecondaryFragData is not used.  Note that gl_MaxDualSourceDrawBuffersEXT is typically 1, while
 // the size of gl_FragData (gl_MaxDrawBuffers) is larger.
@@ -7373,7 +7401,7 @@ void main()
 {
     gl_Position = aPosition;
     gl_ClipDistance[0] = 1.0;
-    f(gl_ClipDistance);
+    f((gl_Position.x, gl_ClipDistance));
 }
 )";
     constexpr char kExpect[] =
@@ -7400,11 +7428,13 @@ TEST_P(GLSLValidationClipDistanceTest_ES3, UnsizedCullDistancePassedToFunction)
     constexpr char kVS[] =
         R"(in vec4 aPosition;
 void f(float d[8]) {}
+uniform int zero;
 void main()
 {
     gl_Position = aPosition;
     gl_CullDistance[0] = 1.0;
-    f(gl_CullDistance);
+    float unused[8];
+    f(zero == 0 ? gl_CullDistance : unused);
 }
 )";
     constexpr char kExpect[] =
@@ -7502,12 +7532,13 @@ TEST_P(GLSLValidationClipDistanceTest_ES3, UnsizedClipDistanceAssignedFrom)
 
     constexpr char kVS[] =
         R"(in vec4 aPosition;
+uniform int zero;
 void main()
 {
     gl_Position = aPosition;
     gl_ClipDistance[0] = 1.0;
     float d[8];
-    d = gl_ClipDistance;
+    d = zero == 1 ? d : gl_ClipDistance;
 }
 )";
     constexpr char kExpect[] =
@@ -7606,7 +7637,7 @@ void main()
 {
     gl_Position = aPosition;
     gl_CullDistance[0] = 1.0;
-    float d[8] = gl_CullDistance;
+    float d[8] = (gl_Position.z, gl_Position.w, gl_CullDistance);
 }
 )";
     constexpr char kExpect[] =

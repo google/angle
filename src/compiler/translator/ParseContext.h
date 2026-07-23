@@ -217,7 +217,7 @@ class TParseContext : angle::NonCopyable
                                           const TLayoutQualifier &layoutQualifier);
     void functionCallRValueLValueErrorCheck(const TFunction *fnCandidate, TIntermAggregate *fnCall);
     void checkClipCullDistanceWholeArrayUse(const TSourceLoc &location,
-                                            TQualifier qualifier,
+                                            TIntermTyped *node,
                                             const char *message);
     void functionCallClipCullDistanceCheck(const TFunction *fnCandidate, TIntermAggregate *fnCall);
     void functionCallFragDataCheck(const TFunction *fnCandidate, TIntermAggregate *fnCall);
