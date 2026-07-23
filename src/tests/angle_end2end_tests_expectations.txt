@@ -38,6 +38,10 @@
 532592076 : ImageTestES3RobustInit.NonZeroLevelAndSliceReadback/* = SKIP
 532592076 : ImageTestES3RobustInit.NonZeroLevelAndSliceReadbackRenderbuffer/* = SKIP
 
+// Generate mipmap or draw on mismatched stale levels fails on some OpenGL/GLES drivers when robust init is enabled
+532617619 OPENGL : Texture2DTestES3RobustInit.MismatchedStaleLevel*/* = SKIP
+532617619 GLES : Texture2DTestES3RobustInit.MismatchedStaleLevel*/* = SKIP
+
 381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
 
 // Vulkan color attachment incorrectly configured when GL_RASTERIZER_DISCARD is enabled and no glClear is issued.

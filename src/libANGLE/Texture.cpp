@@ -2595,10 +2595,11 @@ angle::Result Texture::ensureInitialized(const Context *context)
     }
 
     bool anyDirty = false;
+    bool allInitialized = (mState.getEffectiveBaseLevel() == 0);
 
-    ImageIndexIterator it =
-        ImageIndexIterator::MakeGeneric(mState.mType, 0, IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1,
-                                        ImageIndex::kEntireLevel, ImageIndex::kEntireLevel);
+    ImageIndexIterator it = ImageIndexIterator::MakeGeneric(
+        mState.mType, static_cast<GLint>(mState.getEffectiveBaseLevel()),
+        IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1, ImageIndex::kEntireLevel, ImageIndex::kEntireLevel);
     while (it.hasNext())
     {
         const ImageIndex index = it.next();
@@ -2606,17 +2607,27 @@ angle::Result Texture::ensureInitialized(const Context *context)
             mState.mImageDescs[GetImageDescIndex(index.getTarget(), index.getLevelIndex())];
         if (desc.initState == InitState::MayNeedInit && !desc.size.empty())
         {
-            ASSERT(mState.mInitState == InitState::MayNeedInit);
-            ANGLE_TRY(initializeContents(context, GL_NONE, index));
-            desc.initState = InitState::Initialized;
-            anyDirty       = true;
+            if (mState.computeLevelCompleteness(index.getTarget(), index.getLevelIndex()))
+            {
+                ASSERT(mState.mInitState == InitState::MayNeedInit);
+                ANGLE_TRY(initializeContents(context, GL_NONE, index));
+                desc.initState = InitState::Initialized;
+                anyDirty       = true;
+            }
+            else
+            {
+                allInitialized = false;
+            }
         }
     }
     if (anyDirty)
     {
         signalDirtyStorage(InitState::Initialized);
     }
-    mState.mInitState = InitState::Initialized;
+    if (allInitialized)
+    {
+        mState.mInitState = InitState::Initialized;
+    }
 
     return angle::Result::Continue;
 }
