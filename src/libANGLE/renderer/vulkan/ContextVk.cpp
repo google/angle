@@ -1372,7 +1372,8 @@ angle::Result ContextVk::getOrCreateNullStorageImageView(GLenum shaderFormat,
         vk::LevelIndex(0), 1, 0, 1, VK_IMAGE_USAGE_STORAGE_BIT, GL_NONE));
 
     const VkClearValue zeroClear = {};
-    entry->image.stageClear(gl::ImageIndex::Make2D(0), VK_IMAGE_ASPECT_COLOR_BIT, zeroClear);
+    entry->image.stageClear(gl::SourceImageIndex::Make2D(gl::SourceLevel::Zero()),
+                            VK_IMAGE_ASPECT_COLOR_BIT, zeroClear);
     ANGLE_TRY(entry->image.flushAllStagedUpdates(this));
 
     entry->image.recordWriteBarrier(this, VK_IMAGE_ASPECT_COLOR_BIT,
@@ -8489,7 +8490,8 @@ angle::Result ContextVk::initializeMultisampleTextureToBlack(const gl::Context *
 {
     const gl::TextureType type = glTexture->getType();
     ASSERT(type == gl::TextureType::_2DMultisample || type == gl::TextureType::_2DMultisampleArray);
-    const gl::ImageIndex imageIndex = gl::ImageIndex::MakeFromType(type, 0);
+    const gl::SourceImageIndex imageIndex =
+        gl::SourceImageIndex::MakeFromType(type, gl::SourceLevel::Zero());
 
     TextureVk *textureVk = vk::GetImpl(glTexture);
     return textureVk->initializeContentsWithBlack(context, GL_NONE, imageIndex);
