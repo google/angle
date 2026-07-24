@@ -1615,7 +1615,7 @@
 42266092 WIN SWIFTSHADER : VulkanPerformanceCounterTest.EndXfbAfterRenderPassClosed/* = SKIP
 466331749 SWIFTSHADER : GLSLTest_ES31.ShortCircuitOutOfBoundsAccess/* = SKIP
 // Flakily reads NaN/-1 instead of zero from the images.
-524800809 WIN SWIFTSHADER : TextureTestES31.FragmentShaderLoadUnboundImageUnits/* = SKIP
+524800809 SWIFTSHADER : TextureTestES31.FragmentShaderLoadUnboundImageUnits/* = SKIP
 
 // Flat shading bug with lighting
 42264726 VULKAN : LightsTest.FlatLitMesh/* = SKIP
