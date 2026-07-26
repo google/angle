@@ -48,6 +48,7 @@ extern bool gIncludeInactiveResources;
 extern bool gTrackGPUTime;
 extern bool gAddSwapIntoGPUTime;
 extern bool gAddSwapIntoFrameWallTime;
+extern bool gCapturedFrameCountOnly;
 
 // Constant for when trace's frame count should be used
 constexpr int kAllFrames = -1;

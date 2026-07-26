@@ -60,6 +60,7 @@ bool gIncludeInactiveResources     = false;
 bool gTrackGPUTime                 = false;
 bool gAddSwapIntoGPUTime           = false;
 bool gAddSwapIntoFrameWallTime     = false;
+bool gCapturedFrameCountOnly       = false;
 
 namespace
 {
@@ -111,7 +112,8 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
            ParseFlag("--track-gpu-time", argc, argv, argIndex, &gTrackGPUTime) ||
            ParseFlag("--add-swap-into-gpu-time", argc, argv, argIndex, &gAddSwapIntoGPUTime) ||
            ParseFlag("--add-swap-into-frame-wall-time", argc, argv, argIndex,
-                     &gAddSwapIntoFrameWallTime);
+                     &gAddSwapIntoFrameWallTime) ||
+           ParseFlag("--captured-framecount-only", argc, argv, argIndex, &gCapturedFrameCountOnly);
 }
 }  // namespace
 }  // namespace angle

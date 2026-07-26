@@ -1359,6 +1359,12 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         mStepsToRun = frameCount();
     }
 
+    if (gCapturedFrameCountOnly)
+    {
+        // Run exactly the number of frames that were captured
+        mStepsToRun = frameCount();
+    }
+
     if (gRunToKeyFrame)
     {
         if (mParams->traceInfo.keyFrames.empty())
