@@ -21788,9 +21788,7 @@ void main()
     load_float4 = imageLoad(img_float4, coord);
     load_int4   = imageLoad(img_int4, coord);
     load_float1 = imageLoad(img_float1, coord);
-    imageStore(img_float1, coord, vec4(1.0));
     load_int1   = imageLoad(img_int1, coord);
-    imageStore(img_int1, coord, ivec4(1));
     gl_Position = position;
 })";
 
@@ -21911,9 +21909,7 @@ void main()
     load_float4 = imageLoad(img_float4, coord);
     load_int4   = imageLoad(img_int4, coord);
     load_float1 = imageLoad(img_float1, coord);
-    imageStore(img_float1, coord, vec4(1.0));
     load_int1   = imageLoad(img_int1, coord);
-    imageStore(img_int1, coord, ivec4(1));
     fragColor = vec4(1.0);
 })";
 
@@ -22018,9 +22014,7 @@ void main()
     load_float4 = imageLoad(img_float4, coord);
     load_int4   = imageLoad(img_int4, coord);
     load_float1 = imageLoad(img_float1, coord);
-    imageStore(img_float1, coord, vec4(1.0));
     load_int1   = imageLoad(img_int1, coord);
-    imageStore(img_int1, coord, ivec4(1));
 })";
 
     ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
@@ -22107,7 +22101,6 @@ void main()
     load_float1 = imageLoad(img_float1, coord);
     imageStore(img_float1, coord, vec4(2.0));
     load_int1   = imageLoad(img_int1, coord);
-    imageStore(img_int1, coord, ivec4(1));
 })";
 
     ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
