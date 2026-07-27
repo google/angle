@@ -678,9 +678,6 @@ struct Extensions
     // GL_ANGLE_explicit_context
     bool explicitContextANGLE = false;
 
-    // GL_CHROMIUM_framebuffer_mixed_samples
-    bool framebufferMixedSamplesCHROMIUM = false;
-
     // GL_ANGLE_framebuffer_multisample
     bool framebufferMultisampleANGLE = false;
 

@@ -360,7 +360,6 @@ enum class EntryPoint
     GLCopyTexSubImage3DOES,
     GLCopyTexture3DANGLE,
     GLCopyTextureCHROMIUM,
-    GLCoverageModulationCHROMIUM,
     GLCreateMemoryObjectsEXT,
     GLCreateProgram,
     GLCreateShader,

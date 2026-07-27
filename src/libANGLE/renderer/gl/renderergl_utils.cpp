@@ -1715,9 +1715,6 @@ void GenerateCaps(const FunctionsGL *functions,
 
     extensions->multisampleCompatibilityEXT = nativegl::SupportsMultisampleComatibility(functions);
 
-    extensions->framebufferMixedSamplesCHROMIUM =
-        nativegl::SupportsFramebufferMixedSamples(functions);
-
     extensions->robustnessEXT = functions->isAtLeastGL(gl::Version(4, 5)) ||
                                 functions->hasGLExtension("GL_KHR_robustness") ||
                                 functions->hasGLExtension("GL_ARB_robustness") ||
@@ -3088,12 +3085,6 @@ bool SupportsMultisampleComatibility(const FunctionsGL *functions)
     // and not the specific GLES version.
     return functions->isAtLeastGL(gl::Version(1, 3)) ||
            functions->hasGLESExtension("GL_EXT_multisample_compatibility");
-}
-
-bool SupportsFramebufferMixedSamples(const FunctionsGL *functions)
-{
-    return functions->hasGLExtension("GL_NV_framebuffer_mixed_samples") ||
-           functions->hasGLESExtension("GL_NV_framebuffer_mixed_samples");
 }
 
 bool SupportsShaderIOBlocks(const FunctionsGL *functions)

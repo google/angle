@@ -289,8 +289,6 @@ struct ContextStateGL
     bool multisamplingEnabled    = true;
     bool sampleAlphaToOneEnabled = false;
 
-    GLenum coverageModulation = GL_NONE;
-
     GLenum provokingVertex = GL_LAST_VERTEX_CONVENTION;
 
     gl::ClipDistanceEnableBits enabledClipDistances;
@@ -418,8 +416,6 @@ class StateManagerGL final : angle::NonCopyable
 
     void setMultisamplingStateEnabled(bool enabled);
     void setSampleAlphaToOneStateEnabled(bool enabled);
-
-    void setCoverageModulation(GLenum components);
 
     void setProvokingVertex(GLenum mode);
 

@@ -622,7 +622,6 @@
                         GLint xoffset, GLint yoffset, GLint x, GLint y, GLint width, GLint height, \
                         GLboolean unpackFlipY, GLboolean unpackPremultiplyAlpha,                   \
                         GLboolean unpackUnmultiplyAlpha);                                          \
-    /* GL_CHROMIUM_framebuffer_mixed_samples */                                                    \
     /* GL_CHROMIUM_lose_context */                                                                 \
     void loseContext(GraphicsResetStatus currentPacked, GraphicsResetStatus otherPacked);
 

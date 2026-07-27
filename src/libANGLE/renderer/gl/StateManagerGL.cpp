@@ -1221,8 +1221,7 @@ void StateManagerGL::setClipControl(gl::ClipOrigin origin, gl::ClipDepthMode dep
         setDepthRange(near, mState.far);
     }
 
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
-    mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL);
+    mLocalDirtyBits.set(gl::state::DIRTY_BIT_CLIP_CONTROL);
 }
 
 void StateManagerGL::setClipControlWithEmulatedClipOrigin(const gl::ProgramExecutable *executable,
@@ -2295,9 +2294,6 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
                 setSampleAlphaToOneStateEnabled(state.isSampleAlphaToOneEnabled());
                 break;
-            case gl::state::DIRTY_BIT_COVERAGE_MODULATION:
-                setCoverageModulation(state.getCoverageModulation());
-                break;
             case gl::state::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE:
                 setFramebufferSRGBEnabledForFramebuffer(
                     context, state.getFramebufferSRGB(),
@@ -2332,6 +2328,16 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_PROVOKING_VERTEX:
                 setProvokingVertex(ToGLenum(state.getProvokingVertex()));
                 break;
+            case gl::state::DIRTY_BIT_CLIP_CONTROL:
+                if (mFeatures.emulateClipOrigin.enabled)
+                {
+                    setClipControlWithEmulatedClipOrigin(
+                        state.getProgramExecutable(), state.getRasterizerState().frontFace,
+                        state.getClipOrigin(), state.getClipDepthMode());
+                    break;
+                }
+                setClipControl(state.getClipOrigin(), state.getClipDepthMode());
+                break;
             case gl::state::DIRTY_BIT_EXTENDED:
             {
                 const gl::state::ExtendedDirtyBits glAndLocalExtendedDirtyBits =
@@ -2340,17 +2346,6 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 {
                     switch (extendedDirtyBit)
                     {
-                        case gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
-                            if (mFeatures.emulateClipOrigin.enabled)
-                            {
-                                setClipControlWithEmulatedClipOrigin(
-                                    state.getProgramExecutable(),
-                                    state.getRasterizerState().frontFace, state.getClipOrigin(),
-                                    state.getClipDepthMode());
-                                break;
-                            }
-                            setClipControl(state.getClipOrigin(), state.getClipDepthMode());
-                            break;
                         case gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
                         {
                             const gl::ProgramExecutable *executable = state.getProgramExecutable();
@@ -2558,17 +2553,6 @@ void StateManagerGL::setSampleAlphaToOneStateEnabled(bool enabled)
         mState.sampleAlphaToOneEnabled = enabled;
         SetGLBoolState(mFunctions, GL_SAMPLE_ALPHA_TO_ONE, enabled);
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
-    }
-}
-
-void StateManagerGL::setCoverageModulation(GLenum components)
-{
-    if (mState.coverageModulation != components)
-    {
-        mState.coverageModulation = components;
-        mFunctions->coverageModulationNV(components);
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_COVERAGE_MODULATION);
     }
 }
 
@@ -2935,8 +2919,7 @@ void StateManagerGL::syncFromNativeContext(const gl::Extensions &extensions,
         {
             mState.clipOrigin    = gl::FromGLenum<gl::ClipOrigin>(state->clipOrigin);
             mState.clipDepthMode = gl::FromGLenum<gl::ClipDepthMode>(state->clipDepthMode);
-            mLocalDirtyBits.set(gl::state::DIRTY_BIT_EXTENDED);
-            mLocalExtendedDirtyBits.set(gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL);
+            mLocalDirtyBits.set(gl::state::DIRTY_BIT_CLIP_CONTROL);
         }
     }
 
@@ -3240,9 +3223,6 @@ void StateManagerGL::restoreNativeContext(const gl::Extensions &extensions,
     restoreVertexArraysNativeContext(extensions, state);
     restoreBufferBindingsNativeContext(extensions, state);
     restoreTextureUnitsNativeContext(extensions, state);
-
-    // if (mFunctions->coverageModulationNV) ?
-    setCoverageModulation(GL_NONE);
 
     ASSERT(mFunctions->getError() == GL_NO_ERROR);
 }

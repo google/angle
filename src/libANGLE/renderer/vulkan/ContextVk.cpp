@@ -5876,8 +5876,6 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_SAMPLE_SHADING:
                 updateSampleShadingWithRasterizationSamples(drawFramebufferVk->getSamples());
                 break;
-            case gl::state::DIRTY_BIT_COVERAGE_MODULATION:
-                break;
             case gl::state::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE:
                 break;
             case gl::state::DIRTY_BIT_CURRENT_VALUES:
@@ -5886,6 +5884,29 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             }
             case gl::state::DIRTY_BIT_PROVOKING_VERTEX:
+                break;
+            case gl::state::DIRTY_BIT_CLIP_CONTROL:
+                updateViewport(vk::GetImpl(glState.getDrawFramebuffer()), glState.getViewport(),
+                               glState.getNearPlane(), glState.getFarPlane());
+                // Since we are flipping the y coordinate, update front face state
+                updateFrontFace();
+                updateScissor(glState);
+
+                // If VK_EXT_depth_clip_control is not enabled, there's nothing needed
+                // for depth correction for EXT_clip_control.
+                // glState will be used to toggle control path of depth correction code
+                // in SPIR-V transform options.
+                if (getFeatures().supportsDepthClipControl.enabled)
+                {
+                    mGraphicsPipelineDesc->updateDepthClipControl(
+                        &mGraphicsPipelineTransition, !glState.isClipDepthModeZeroToOne());
+                }
+                else
+                {
+                    const uint32_t transformDepth = !mState.isClipDepthModeZeroToOne();
+                    mGraphicsDriverUniforms.updateTransformDepth(transformDepth);
+                    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+                }
                 break;
             case gl::state::DIRTY_BIT_EXTENDED:
             {
@@ -5896,31 +5917,6 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     const size_t extendedDirtyBit = *extendedIter;
                     switch (extendedDirtyBit)
                     {
-                        case gl::state::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
-                            updateViewport(vk::GetImpl(glState.getDrawFramebuffer()),
-                                           glState.getViewport(), glState.getNearPlane(),
-                                           glState.getFarPlane());
-                            // Since we are flipping the y coordinate, update front face state
-                            updateFrontFace();
-                            updateScissor(glState);
-
-                            // If VK_EXT_depth_clip_control is not enabled, there's nothing needed
-                            // for depth correction for EXT_clip_control.
-                            // glState will be used to toggle control path of depth correction code
-                            // in SPIR-V transform options.
-                            if (getFeatures().supportsDepthClipControl.enabled)
-                            {
-                                mGraphicsPipelineDesc->updateDepthClipControl(
-                                    &mGraphicsPipelineTransition,
-                                    !glState.isClipDepthModeZeroToOne());
-                            }
-                            else
-                            {
-                                const uint32_t transformDepth = !mState.isClipDepthModeZeroToOne();
-                                mGraphicsDriverUniforms.updateTransformDepth(transformDepth);
-                                mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
-                            }
-                            break;
                         case gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
                             mGraphicsDriverUniforms.updateEnabledClipDistances(
                                 mState.getEnabledClipDistances().bits());
