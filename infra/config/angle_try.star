@@ -154,7 +154,11 @@ angle_linux_functional_cq_tester(
         "ci/angle-android-arm64-google-pixel6-rel",
         "ci/angle-android-arm64-google-pixel10-rel",
     ],
-    gn_args = "ci/angle-android-arm64-builder-rel",
+    gn_args = gn_args.config(
+        configs = [
+            "android_cq_arm64_builder_rel",
+        ],
+    ),
 )
 
 angle_linux_functional_cq_tester(
@@ -187,7 +191,11 @@ angle_linux_functional_cq_tester(
         "ci/angle-linux-x64-nvidia-gtx1660-rel",
         "ci/angle-linux-x64-sws-rel",
     ],
-    gn_args = "ci/angle-linux-x64-builder-rel",
+    gn_args = gn_args.config(
+        configs = [
+            "linux_cq_x64_builder_rel",
+        ],
+    ),
 )
 
 angle_linux_functional_cq_tester(
@@ -208,7 +216,11 @@ angle_mac_functional_cq_tester(
         "ci/angle-mac-arm64-apple-m2-rel",
         "ci/angle-mac-arm64-builder-rel",
     ],
-    gn_args = "ci/angle-mac-arm64-builder-rel",
+    gn_args = gn_args.config(
+        configs = [
+            "mac_cq_arm64_builder_rel",
+        ],
+    ),
 )
 
 angle_mac_functional_cq_tester(
@@ -229,7 +241,11 @@ angle_mac_functional_cq_tester(
         "ci/angle-mac-x64-builder-rel",
         "ci/angle-mac-x64-intel-uhd630-rel",
     ],
-    gn_args = "ci/angle-mac-x64-builder-rel",
+    gn_args = gn_args.config(
+        configs = [
+            "mac_cq_x64_builder_rel",
+        ],
+    ),
 )
 
 angle_win_functional_cq_tester(
@@ -290,7 +306,11 @@ angle_win_functional_cq_tester(
         "ci/angle-win-x64-intel-uhd630-rel",
         "ci/angle-win-x64-nvidia-gtx1660-rel",
     ],
-    gn_args = "ci/angle-win-x64-builder-rel",
+    gn_args = gn_args.config(
+        configs = [
+            "win_cq_x64_builder_rel",
+        ],
+    ),
 )
 
 angle_win_msvc_functional_cq_tester(

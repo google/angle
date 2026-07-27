@@ -392,6 +392,13 @@ adb pull /sdcard/Android/data/$PACKAGE_NAME/angle_capture/. $LABEL/
 The list of traces is tracked in [restricted_traces.json](restricted_traces.json). Manually add your
 new trace to this list. Use version "1" for the trace version.
 
+New traces added to this list run on CQ (unconditional checkout) by default and require no extra
+tags (e.g., `"my_new_trace 1"`).
+
+We enforce a limit of 10 extra (non-representative) traces on CQ to keep CQ build/test times low. If
+the limit is exceeded when adding a new trace, you must add the `ci` tag to older traces to make
+them conditional (e.g., change `"old_trace 1"` to `"old_trace 1 ci"`).
+
 On Linux, you can also use a tool called `jq` to update the list. This ensures we get them in
 alphabetical order with no duplicates. It can also be done by hand if you are unable to install it,
 for some reason.

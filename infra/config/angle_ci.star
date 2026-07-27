@@ -222,12 +222,7 @@ angle_linux_parent_builder(
     ),
     gn_args = gn_args.config(
         configs = [
-            "android_clang",
-            "android_static_analysis",
-            "arm64",
-            "capture",
-            "opencl",
-            "release_with_dchecks",
+            "android_arm64_builder_rel",
         ],
     ),
     console_view_entry = consoles.console_view_entry(
@@ -358,12 +353,7 @@ angle_linux_parent_builder(
     ),
     gn_args = gn_args.config(
         configs = [
-            "capture",
-            "component",
-            "linux_clang",
-            "opencl",
-            "release_with_dchecks",
-            "x64",
+            "linux_x64_builder_rel",
         ],
     ),
     console_view_entry = consoles.console_view_entry(
@@ -422,11 +412,7 @@ angle_mac_parent_builder(
     ),
     gn_args = gn_args.config(
         configs = [
-            "arm64",
-            "capture",
-            "component",
-            "mac_clang",
-            "release_with_dchecks",
+            "mac_arm64_builder_rel",
         ],
     ),
     console_view_entry = consoles.console_view_entry(
@@ -488,11 +474,7 @@ angle_mac_parent_builder(
     ),
     gn_args = gn_args.config(
         configs = [
-            "capture",
-            "component",
-            "mac_clang",
-            "release_with_dchecks",
-            "x64",
+            "mac_x64_builder_rel",
         ],
     ),
     console_view_entry = consoles.console_view_entry(
@@ -721,12 +703,7 @@ angle_win_parent_builder(
     ),
     gn_args = gn_args.config(
         configs = [
-            "capture",
-            "component",
-            "opencl",
-            "release_with_dchecks",
-            "win_clang",
-            "x64",
+            "win_x64_builder_rel",
         ],
     ),
     console_view_entry = consoles.console_view_entry(

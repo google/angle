@@ -563,6 +563,82 @@ def _CheckGClientExists(input_api, output_api, search_limit=None):
             '\n\nhttps://chromium.googlesource.com/angle/angle/+/refs/heads/main/doc/DevSetup.md')
     ]
 
+
+def _CheckRestrictedTraces(input_api, output_api):
+    import json
+    json_path = 'src/tests/restricted_traces/restricted_traces.json'
+    trace_file = None
+    for f in input_api.AffectedFiles():
+        if f.LocalPath() == json_path:
+            trace_file = f
+            break
+
+    # If the traces JSON file was not modified in this CL, skip the check.
+    if not trace_file:
+        return []
+
+    abs_path = input_api.os_path.join(input_api.PresubmitLocalPath(), json_path)
+    try:
+        with open(abs_path, 'r') as f:
+            json_data = json.load(f)
+    except Exception as e:
+        return [output_api.PresubmitError(f'Failed to parse {json_path}: {e}')]
+
+    if 'traces' not in json_data:
+        return [output_api.PresubmitError(f'{json_path} is missing the "traces" key.')]
+
+    old_traces = []
+    old_contents = trace_file.OldContents()
+    if old_contents:
+        try:
+            old_data = json.loads('\n'.join(old_contents))
+            old_traces = [t.split(' ')[0] for t in old_data.get('traces', [])]
+        except Exception as e:
+            return [output_api.PresubmitError(f'Failed to parse old version of {json_path}: {e}')]
+
+    raw_trace_parts = [trace.split(' ') for trace in json_data['traces']]
+    cq_extra_traces = [
+        p[0] for p in raw_trace_parts if 'ci' not in p[2:] and 'representative' not in p[2:]
+    ]
+
+    TAG_ORDER = ['ci', 'representative', 'smoke']
+
+    def get_sort_key(tag):
+        if tag in TAG_ORDER:
+            return (0, TAG_ORDER.index(tag))
+        else:
+            return (1, tag)
+
+    for p in raw_trace_parts:
+        name = p[0]
+        tags = p[2:]
+
+        if name not in old_traces and tags:
+            return [
+                output_api.PresubmitError(
+                    f'New trace "{name}" has tags: {tags}. '
+                    f'New traces must not have any tags initially so they are tested on CQ.')
+            ]
+
+        sorted_tags = sorted(tags, key=get_sort_key)
+        if tags != sorted_tags:
+            return [
+                output_api.PresubmitError(
+                    f'Trace "{name}" has unsorted tags: {tags}. '
+                    f'Expected order: {sorted_tags} (broadest first: ci, representative, smoke).')
+            ]
+
+    LIMIT_N = 10
+    if len(cq_extra_traces) > LIMIT_N:
+        return [
+            output_api.PresubmitError(
+                f'Too many CQ extra traces ({len(cq_extra_traces)}). Limit is {LIMIT_N}.\n'
+                'Please move some traces to conditional checkout by adding the "ci" tag.')
+        ]
+
+    return []
+
+
 def CheckChangeOnUpload(input_api, output_api):
     results = []
     results.extend(input_api.canned_checks.CheckForCommitObjects(input_api, output_api))
@@ -581,6 +657,7 @@ def CheckChangeOnUpload(input_api, output_api):
             input_api, output_api, result_factory=output_api.PresubmitError))
     results.extend(_CheckCommitMessageFormatting(input_api, output_api))
     results.extend(_CheckGClientExists(input_api, output_api))
+    results.extend(_CheckRestrictedTraces(input_api, output_api))
 
     return results
 

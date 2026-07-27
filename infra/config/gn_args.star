@@ -5,6 +5,7 @@
 """ANGLE GN arg definitions."""
 
 load("@chromium-luci//gn_args.star", "gn_args")
+load("//representative_traces.star", "REPRESENTATIVE_TRACES", "SMOKE_TRACES")
 
 gn_args.config(
     name = "android",
@@ -187,48 +188,14 @@ gn_args.config(
 gn_args.config(
     name = "smoke_traces",
     args = {
-        "angle_restricted_traces": [
-            # antutu_refinery:benchmark
-            "antutu_refinery",
-            # asphalt_9_2024:custom
-            "asphalt_9_2024",
-            # aztec_ruins_high:benchmark
-            "aztec_ruins_high",
-            # balatro:custom
-            "balatro",
-            # basemark_gpu:benchmark
-            "basemark_gpu",
-            # batman_telltale:custom
-            "batman_telltale",
-            # dead_cells:custom
-            "dead_cells",
-            # diablo_immortal:custom
-            "diablo_immortal",
-            # dota_underlords:custom
-            "dota_underlords",
-            # genshin_impact:unity
-            "genshin_impact",
-            # grand_mountain_adventure:custom
-            "grand_mountain_adventure",
-            # honkai_star_rail:unity
-            "honkai_star_rail",
-            # manhattan_31:benchmark
-            "manhattan_31",
-            # minecraft_bedrock:custom
-            "minecraft_bedrock",
-            # ni_no_kuni:unreal
-            "ni_no_kuni",
-            # slingshot_test1:benchmark
-            "slingshot_test1",
-            # sonic_the_hedgehog:gles1
-            "sonic_the_hedgehog",
-            # tessellation:benchmark
-            "tessellation",
-            # tower_of_fantasy:unreal
-            "tower_of_fantasy",
-            # warcraft_rumble:unity
-            "warcraft_rumble",
-        ],
+        "angle_restricted_traces": SMOKE_TRACES,
+    },
+)
+
+gn_args.config(
+    name = "representative_traces",
+    args = {
+        "angle_restricted_traces": REPRESENTATIVE_TRACES,
     },
 )
 
@@ -299,4 +266,102 @@ gn_args.config(
     args = {
         "target_cpu": "x86",
     },
+)
+
+gn_args.config(
+    name = "android_arm64_builder_rel",
+    configs = [
+        "android_clang",
+        "android_static_analysis",
+        "arm64",
+        "capture",
+        "opencl",
+        "release_with_dchecks",
+    ],
+)
+
+gn_args.config(
+    name = "android_cq_arm64_builder_rel",
+    configs = [
+        "android_arm64_builder_rel",
+        "representative_traces",
+    ],
+)
+
+gn_args.config(
+    name = "linux_x64_builder_rel",
+    configs = [
+        "capture",
+        "component",
+        "linux_clang",
+        "opencl",
+        "release_with_dchecks",
+        "x64",
+    ],
+)
+
+gn_args.config(
+    name = "linux_cq_x64_builder_rel",
+    configs = [
+        "linux_x64_builder_rel",
+        "representative_traces",
+    ],
+)
+
+gn_args.config(
+    name = "win_x64_builder_rel",
+    configs = [
+        "capture",
+        "component",
+        "opencl",
+        "release_with_dchecks",
+        "win_clang",
+        "x64",
+    ],
+)
+
+gn_args.config(
+    name = "win_cq_x64_builder_rel",
+    configs = [
+        "win_x64_builder_rel",
+        "representative_traces",
+    ],
+)
+
+gn_args.config(
+    name = "mac_arm64_builder_rel",
+    configs = [
+        "arm64",
+        "capture",
+        "component",
+        "mac_clang",
+        "release_with_dchecks",
+    ],
+)
+
+gn_args.config(
+    name = "mac_cq_arm64_builder_rel",
+    configs = [
+        "mac_arm64_builder_rel",
+        "representative_traces",
+    ],
+)
+
+gn_args.config(
+    name = "mac_x64_builder_rel",
+    configs = [
+        "capture",
+        "component",
+        "mac_clang",
+        "release_with_dchecks",
+        "x64",
+    ],
+)
+
+gn_args.config(
+    name = "mac_cq_x64_builder_rel",
+    configs = [
+        "mac_x64_builder_rel",
+        "representative_traces",
+    ],
 )
