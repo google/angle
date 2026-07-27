@@ -124,7 +124,7 @@ angle::Result IOSurfaceSurfaceVkMac::initializeImpl(DisplayVk *displayVk)
                                           mState.hasProtectedContent()));
 
     mColorRenderTarget.init(&mColorAttachment.image, &mColorAttachment.imageViews, nullptr, nullptr,
-                            gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
+                            gl::SourceLevel::Zero(), 0, 1, RenderTargetTransience::Default);
 
     return angle::Result::Continue;
 }
@@ -233,7 +233,7 @@ egl::Error IOSurfaceSurfaceVkMac::releaseTexImage(const gl::Context *context, EG
                             contextVk->isViewportFlipEnabledForDrawFBO(), nullptr, 0);
 
     result = mColorAttachment.image.readPixels(contextVk, bounds, params, VK_IMAGE_ASPECT_COLOR_BIT,
-                                               gl::LevelIndex(0), 0,
+                                               gl::SourceLevel::Zero(), 0,
                                                IOSurfaceGetBaseAddressOfPlane(mIOSurface, mPlane));
 
     IOSurfaceUnlock(mIOSurface, 0, nullptr);

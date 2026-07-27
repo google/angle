@@ -844,32 +844,37 @@ angle::Result TextureWgpu::redefineLevel(const gl::Context *context,
     {
         // If there are any staged changes for this index, we can remove them since we're going
         // to override them with this call.
-        gl::LevelIndex levelIndexGL(index.getLevelIndex());
-        const uint32_t layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
+        const gl::SourceImageIndex ownerIndex = mState.toSourceIndex(gl::OwnImageIndex(index));
+        const gl::SourceLevel levelIndexGL    = ownerIndex.getLevelIndex();
+        const gl::SourceLayer layerIndex      = ownerIndex.getLayerIndex();
 
         if (index.hasLayer())
         {
-            mImage->removeSingleSubresourceStagedUpdates(levelIndexGL, layerIndex,
-                                                         index.getLayerCount());
+            mImage->removeSingleSubresourceStagedUpdates(gl::LevelIndex(levelIndexGL.get()),
+                                                         layerIndex.get(), index.getLayerCount());
         }
         else
         {
-            mImage->removeStagedUpdates(levelIndexGL);
+            mImage->removeStagedUpdates(gl::LevelIndex(levelIndexGL.get()));
         }
 
         if (mImage->isInitialized())
         {
             TextureLevelAllocation levelAllocation =
-                mImage->isTextureLevelInAllocatedImage(levelIndexGL)
+                mImage->isTextureLevelInAllocatedImage(gl::LevelIndex(levelIndexGL.get()))
                     ? TextureLevelAllocation::WithinAllocatedImage
                     : TextureLevelAllocation::OutsideAllocatedImage;
             TextureLevelDefinition levelDefinition =
                 IsTextureLevelDefinitionCompatibleWithImage(mImage, size, webgpuFormat)
                     ? TextureLevelDefinition::Compatible
                     : TextureLevelDefinition::Incompatible;
+            // Note: ImageHelper::mFirstAllocatedLevel should eventually track gl::SourceLevel
+            // directly instead of gl::LevelIndex.
+            const gl::SourceLevel firstAllocatedLevel =
+                gl::SourceLevel::Zero() + mImage->getFirstAllocatedLevel().get();
             if (TextureRedefineLevel(levelAllocation, levelDefinition, mState.getImmutableFormat(),
-                                     mImage->getLevelCount(), layerIndex, index,
-                                     mImage->getFirstAllocatedLevel(), &mRedefinedLevels))
+                                     mImage->getLevelCount(), layerIndex.get(), ownerIndex,
+                                     firstAllocatedLevel, &mRedefinedLevels))
             {
                 resetImageAndReleaseViews();
             }
@@ -962,16 +967,17 @@ angle::Result TextureWgpu::respecifyImageStorageIfNecessary(ContextWgpu *context
 
 void TextureWgpu::prepareForGenerateMipmap(ContextWgpu *contextWgpu)
 {
-    gl::LevelIndex baseLevel(mState.getEffectiveBaseLevel());
-    gl::LevelIndex maxLevel(mState.getMipmapMaxLevel());
+    const gl::SourceLevel baseLevel =
+        mState.toSourceLevel(gl::OwnLevel(mState.getEffectiveBaseLevel()));
+    const gl::SourceLevel maxLevel = mState.toSourceLevel(gl::OwnLevel(mState.getMipmapMaxLevel()));
 
     // Remove staged updates to the range that's being respecified (which is all the mips except
     // baseLevel).
-    gl::LevelIndex firstGeneratedLevel = baseLevel + 1;
-    for (gl::LevelIndex levelToRemove = firstGeneratedLevel;
-         levelToRemove < gl::LevelIndex(mState.getMipmapMaxLevel()); ++levelToRemove)
+    gl::SourceLevel firstGeneratedLevel = baseLevel + 1;
+    for (gl::SourceLevel levelToRemove = firstGeneratedLevel; levelToRemove < maxLevel;
+         ++levelToRemove)
     {
-        mImage->removeStagedUpdates(levelToRemove);
+        mImage->removeStagedUpdates(gl::LevelIndex(levelToRemove.get()));
     }
 
     TextureRedefineGenerateMipmapLevels(baseLevel, maxLevel, firstGeneratedLevel,

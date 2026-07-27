@@ -580,7 +580,7 @@ GLint LimitToIntAnd(const LargerInt physicalDeviceValue, const uint64_t cap)
 bool TextureHasAnyRedefinedLevels(const gl::CubeFaceArray<gl::TexLevelMask> &redefinedLevels);
 bool IsTextureLevelRedefined(const gl::CubeFaceArray<gl::TexLevelMask> &redefinedLevels,
                              gl::TextureType textureType,
-                             gl::LevelIndex level);
+                             gl::SourceLevel level);
 
 enum class TextureLevelDefinition
 {
@@ -603,13 +603,13 @@ bool TextureRedefineLevel(const TextureLevelAllocation levelAllocation,
                           bool immutableFormat,
                           uint32_t levelCount,
                           const uint32_t layerIndex,
-                          const gl::ImageIndex &index,
-                          gl::LevelIndex imageFirstAllocatedLevel,
+                          const gl::SourceImageIndex &index,
+                          gl::SourceLevel imageFirstAllocatedLevel,
                           gl::CubeFaceArray<gl::TexLevelMask> *redefinedLevels);
 
-void TextureRedefineGenerateMipmapLevels(gl::LevelIndex baseLevel,
-                                         gl::LevelIndex maxLevel,
-                                         gl::LevelIndex firstGeneratedLevel,
+void TextureRedefineGenerateMipmapLevels(gl::SourceLevel baseLevel,
+                                         gl::SourceLevel maxLevel,
+                                         gl::SourceLevel firstGeneratedLevel,
                                          gl::CubeFaceArray<gl::TexLevelMask> *redefinedLevels);
 
 enum class ImageMipLevels

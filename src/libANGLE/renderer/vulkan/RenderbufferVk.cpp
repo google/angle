@@ -129,11 +129,12 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         isDepthStencilFormat ? vk::TileMemory::Preferred : vk::TileMemory::Prohibited;
 
     VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};
-    ANGLE_TRY(mImage->initExternal(
-        contextVk, gl::TextureType::_2D, extents, format.getIntendedFormatID(), textureFormatID,
-        imageSamples, usage, createFlags, vk::ImageAccess::Undefined, nullptr, gl::LevelIndex(0), 1,
-        1, robustInit, false, tileMemoryPreference, vk::YcbcrConversionDesc{}, nullptr,
-        vk::ImageFormatReinterpretability::ColorspaceOverrides));
+    ANGLE_TRY(mImage->initExternal(contextVk, gl::TextureType::_2D, extents,
+                                   format.getIntendedFormatID(), textureFormatID, imageSamples,
+                                   usage, createFlags, vk::ImageAccess::Undefined, nullptr,
+                                   gl::SourceLevel::Zero(), 1, 1, robustInit, false,
+                                   tileMemoryPreference, vk::YcbcrConversionDesc{}, nullptr,
+                                   vk::ImageFormatReinterpretability::ColorspaceOverrides));
 
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(contextVk->initImageAllocation(mImage, false, flags,
@@ -150,11 +151,12 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
             contextVk, false, samples, *mImage, mImage->getExtents(), robustInit));
 
         mRenderTarget.init(&mMultisampledImage, &mMultisampledImageViews, mImage, &mImageViews,
-                           gl::LevelIndex(0), 0, 1, RenderTargetTransience::MultisampledTransient);
+                           gl::SourceLevel::Zero(), 0, 1,
+                           RenderTargetTransience::MultisampledTransient);
     }
     else
     {
-        mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, gl::LevelIndex(0), 0, 1,
+        mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, gl::SourceLevel::Zero(), 0, 1,
                            RenderTargetTransience::Default);
     }
 
@@ -209,12 +211,9 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
         mImageViews.updateEglImageColorspace(mImage->getActualFormat(), imageColorspace);
     }
 
-    const uint32_t sourceLevel = image->getSourceImageIndex().getLevelIndex();
-    const uint32_t layerOffset =
-        image->getSourceImageIndex().hasLayer() ? image->getSourceImageIndex().getLayerIndex() : 0;
-
-    mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, gl::LevelIndex(sourceLevel),
-                       layerOffset, 1, RenderTargetTransience::Default);
+    const gl::SourceImageIndex &sourceIndex = image->getSourceImageIndex();
+    mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, sourceIndex.getLevelIndex(),
+                       sourceIndex.getLayerIndex().get(), 1, RenderTargetTransience::Default);
 
     return angle::Result::Continue;
 }
@@ -240,9 +239,9 @@ angle::Result RenderbufferVk::copyRenderbufferSubData(const gl::Context *context
     const gl::SourceLevel dstLevel = mState.toSourceLevel(gl::OwnLevel(0));
     const gl::SourceLayer dstZ     = mState.toSourceLayer(gl::OwnLayer(0));
 
-    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), srcLevel.get(), srcX,
-                                             srcY, srcZ.get(), mImage, dstLevel.get(), dstX, dstY,
-                                             dstZ.get(), srcWidth, srcHeight, 1);
+    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), srcLevel, srcX, srcY,
+                                             srcZ.get(), mImage, dstLevel, dstX, dstY, dstZ.get(),
+                                             srcWidth, srcHeight, 1);
 }
 
 angle::Result RenderbufferVk::copyTextureSubData(const gl::Context *context,
@@ -269,9 +268,9 @@ angle::Result RenderbufferVk::copyTextureSubData(const gl::Context *context,
     const gl::SourceLevel dstLevel = mState.toSourceLevel(gl::OwnLevel(0));
     const gl::SourceLayer dstZ     = mState.toSourceLayer(gl::OwnLayer(0));
 
-    return vk::ImageHelper::CopyImageSubData(context, &sourceVk->getImage(), srcLevel.get(), srcX,
-                                             srcY, srcZ.get(), mImage, dstLevel.get(), dstX, dstY,
-                                             dstZ.get(), srcWidth, srcHeight, 1);
+    return vk::ImageHelper::CopyImageSubData(context, &sourceVk->getImage(), srcLevel, srcX, srcY,
+                                             srcZ.get(), mImage, dstLevel, dstX, dstY, dstZ.get(),
+                                             srcWidth, srcHeight, 1);
 }
 
 angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *context,
@@ -385,8 +384,8 @@ angle::Result RenderbufferVk::getRenderbufferImage(const gl::Context *context,
     gl::MaybeOverrideLuminance(format, type, getColorReadFormat(context),
                                getColorReadType(context));
 
-    return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, gl::LevelIndex(0), 0, 0,
-                                         format, type, pixels);
+    return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, gl::SourceLevel::Zero(),
+                                         0, 0, format, type, pixels);
 }
 
 angle::Result RenderbufferVk::ensureImageInitialized(const gl::Context *context)

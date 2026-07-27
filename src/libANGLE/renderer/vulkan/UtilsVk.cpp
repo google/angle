@@ -1389,7 +1389,7 @@ angle::Result setupUnresolveRenderPass(ContextVk *contextVk,
     for (uint32_t attachmentIndex = 0; attachmentIndex < colorAttachmentCount; ++attachmentIndex)
     {
         ASSERT(colorDst[attachmentIndex]->getLevelCount() == 1);
-        contextVk->onColorDraw(gl::LevelIndex(0), colorDstLayer[attachmentIndex], 1,
+        contextVk->onColorDraw(gl::SourceLevel::Zero(), colorDstLayer[attachmentIndex], 1,
                                colorDst[attachmentIndex], nullptr,
                                vk::PackedAttachmentIndex(attachmentIndex));
 
@@ -1400,8 +1400,8 @@ angle::Result setupUnresolveRenderPass(ContextVk *contextVk,
     if (params.unresolveDepth || params.unresolveStencil)
     {
         ASSERT(depthStencilDst->getLevelCount() == 1);
-        contextVk->onDepthStencilDraw(gl::LevelIndex(0), depthStencilDstLayer, 1, depthStencilDst,
-                                      nullptr);
+        contextVk->onDepthStencilDraw(gl::SourceLevel::Zero(), depthStencilDstLayer, 1,
+                                      depthStencilDst, nullptr);
 
         // Image layout change must include all aspectFlags if the separateDepthStencilLayouts
         // feature is not enabled.
@@ -3301,7 +3301,7 @@ angle::Result UtilsVk::depthStencilBlitResolve(
     vk::RenderPassCommandBufferHelper *renderPassCommands,
     vk::ImageHelper *dstImage,
     const vk::ImageView &dstImageView,
-    gl::LevelIndex dstImageLevel,
+    gl::SourceLevel dstImageLevel,
     uint32_t dstImageLayer,
     vk::ImageHelper *srcImage,
     const vk::ImageView *srcDepthView,
@@ -3483,7 +3483,7 @@ angle::Result UtilsVk::depthStencilBlitResolve(
 
 angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
                                                         vk::ImageHelper *dstImage,
-                                                        gl::LevelIndex dstLevelIndex,
+                                                        gl::SourceLevel dstLevelIndex,
                                                         uint32_t dstLayerIndex,
                                                         vk::ImageHelper *srcImage,
                                                         const vk::ImageView *srcStencilView,
@@ -3738,8 +3738,8 @@ angle::Result UtilsVk::copyImageFromTileMemory(ContextVk *contextVk,
             vk::ImageHelper::kDefaultImageViewUsageFlags, formatID, GL_NONE));
 
         ANGLE_TRY(depthStencilBlitResolve(
-            contextVk, nullptr, dstImage, dstDepthStencilImageView.get(), gl::LevelIndex(0), 0,
-            srcImage, blitDepthBuffer ? &srcDepthView.get() : nullptr,
+            contextVk, nullptr, dstImage, dstDepthStencilImageView.get(), gl::SourceLevel::Zero(),
+            0, srcImage, blitDepthBuffer ? &srcDepthView.get() : nullptr,
             (blitStencilBuffer && hasShaderStencilExport) ? &srcStencilView.get() : nullptr,
             params));
 
@@ -3750,7 +3750,7 @@ angle::Result UtilsVk::copyImageFromTileMemory(ContextVk *contextVk,
     // If shader stencil export is not present, blit stencil through a different path.
     if (blitStencilBuffer && !hasShaderStencilExport)
     {
-        ANGLE_TRY(stencilBlitResolveNoShaderExport(contextVk, dstImage, gl::LevelIndex(0), 0,
+        ANGLE_TRY(stencilBlitResolveNoShaderExport(contextVk, dstImage, gl::SourceLevel::Zero(), 0,
                                                    srcImage, &srcStencilView.get(), params));
     }
 
@@ -4475,8 +4475,7 @@ angle::Result UtilsVk::transCodeEtcToBc(ContextVk *contextVk,
         contextVk, *srcBuffer, copyRegion->bufferOffset,
         renderer->getFormat(GetCompactibleUINTFormat(intendedFormat)), &srcBufferView, nullptr));
 
-    vk::LevelIndex dstLevel =
-        gl::LevelIndexWrapper<uint32_t>(copyRegion->imageSubresource.mipLevel);
+    const vk::LevelIndex dstLevel(copyRegion->imageSubresource.mipLevel);
 
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
@@ -4658,7 +4657,7 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     uint32_t layerCount        = image->getLayerCount();
     uint32_t levelCount        = image->getLevelCount();
     GLint sampleCount          = image->getSamples();
-    gl::LevelIndex baseLevelGL = image->getFirstAllocatedLevel();
+    gl::SourceLevel baseLevelGL = image->getFirstAllocatedLevel();
     vk::LevelIndex baseLevelVK = image->toVkLevel(baseLevelGL);
     vk::LevelIndex maxLevelVK  = baseLevelVK + (levelCount - 1);
 

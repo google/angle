@@ -213,10 +213,10 @@ angle::Result MemoryObjectVk::createImage(
     bool hasProtectedContent = mProtectedMemory;
     ANGLE_TRY(image->initExternal(
         contextVk, type, vkExtents, intendedFormatID, actualFormatID, 1, usageFlags, createFlags,
-        vk::ImageAccess::ExternalPreInitialized, &externalMemoryImageCreateInfo, gl::LevelIndex(0),
-        static_cast<uint32_t>(levels), layerCount, contextVk->isRobustResourceInitEnabled(),
-        hasProtectedContent, vk::TileMemory::Prohibited, vk::YcbcrConversionDesc{}, nullptr,
-        formatReinterpretability));
+        vk::ImageAccess::ExternalPreInitialized, &externalMemoryImageCreateInfo,
+        gl::SourceLevel::Zero(), static_cast<uint32_t>(levels), layerCount,
+        contextVk->isRobustResourceInitEnabled(), hasProtectedContent, vk::TileMemory::Prohibited,
+        vk::YcbcrConversionDesc{}, nullptr, formatReinterpretability));
 
     VkMemoryRequirements externalMemoryRequirements;
     image->getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);

@@ -45,7 +45,7 @@ void RenderTargetVk::init(vk::ImageHelper *image,
                           vk::ImageViewHelper *imageViews,
                           vk::ImageHelper *resolveImage,
                           vk::ImageViewHelper *resolveImageViews,
-                          gl::LevelIndex levelIndexGL,
+                          gl::SourceLevel levelIndexGL,
                           uint32_t layerIndex,
                           uint32_t layerCount,
                           RenderTargetTransience transience)
@@ -74,7 +74,7 @@ void RenderTargetVk::reset()
     mImageViews         = nullptr;
     mResolveImage       = nullptr;
     mResolveImageViews  = nullptr;
-    mLevelIndexGL       = gl::LevelIndex(0);
+    mLevelIndexGL       = gl::SourceLevel::Zero();
     mLayerIndex         = 0;
     mLayerCount         = 0;
 }
@@ -348,10 +348,10 @@ gl::Extents RenderTargetVk::getRotatedExtents() const
     return mImage->getRotatedLevelExtents2D(levelVk);
 }
 
-gl::LevelIndex RenderTargetVk::getLevelIndexForImage(const vk::ImageHelper &image) const
+gl::SourceLevel RenderTargetVk::getLevelIndexForImage(const vk::ImageHelper &image) const
 {
     return (getOwnerOfData()->getImageSerial() == image.getImageSerial()) ? mLevelIndexGL
-                                                                          : gl::LevelIndex(0);
+                                                                          : gl::SourceLevel::Zero();
 }
 
 void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image,
@@ -360,7 +360,7 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image,
                                           vk::ImageViewHelper *resolveImageViews)
 {
     ASSERT(image && image->valid() && imageViews);
-    ASSERT(mLevelIndexGL == gl::LevelIndex(0));
+    ASSERT(mLevelIndexGL == gl::SourceLevel::Zero());
     ASSERT(mLayerIndex == 0);
     mImage             = image;
     mImageViews        = imageViews;
@@ -462,13 +462,12 @@ gl::SourceImageIndex RenderTargetVk::getImageIndexForClear(uint32_t layerCount) 
         //
         // We also don't need to distinguish 2D array and cube.
         return gl::SourceImageIndex::Make2DArrayRange(
-            gl::SourceLevel::VerifiedSourceLevel(mLevelIndexGL),
-            gl::SourceLayer::VerifiedSourceLayer(mLayerIndex), layerCount);
+            mLevelIndexGL, gl::SourceLayer::VerifiedSourceLayer(mLayerIndex), layerCount);
     }
 
     ASSERT(mLayerIndex == 0);
     ASSERT(mLayerCount == 1);
     ASSERT(layerCount == 1);
-    return gl::SourceImageIndex::Make2D(gl::SourceLevel::VerifiedSourceLevel(mLevelIndexGL));
+    return gl::SourceImageIndex::Make2D(mLevelIndexGL);
 }
 }  // namespace rx

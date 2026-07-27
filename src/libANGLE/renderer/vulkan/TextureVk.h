@@ -374,7 +374,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
   private:
     // Transform an image level/layer from the frontend into one that can be used on the backing
     // ImageHelper, taking into account mipmap or cube face offsets
-    gl::LevelIndex getNativeImageLevel(gl::LevelIndex frontendLevel) const;
     uint32_t getNativeImageLayer(uint32_t frontendLayer) const;
 
     // Get the layer count for views.
@@ -551,7 +550,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     uint32_t getMipLevelCount(ImageMipLevels mipLevels) const;
     uint32_t getMaxLevelCount() const;
     angle::Result copyAndStageImageData(ContextVk *contextVk,
-                                        gl::LevelIndex previousFirstAllocateLevel,
+                                        gl::SourceLevel previousFirstAllocateLevel,
                                         vk::ImageHelper *srcImage,
                                         vk::ImageHelper *dstImage);
     angle::Result reinitImageAsRenderable(ContextVk *contextVk, const vk::Format &format);
@@ -659,7 +658,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // TODO(http://crbug.com/498372331): Once the backend lazily creates views, the front-end can
     // set the state after the backend setEGLImageTarget call, at which point this tracking becomes
     // unnecessary.
-    gl::ImageIndex mPreviousEGLImageIndex;
+    gl::SourceImageIndex mPreviousEGLImageIndex;
 
     // If multisampled rendering to texture, an intermediate multisampled image is created for use
     // as renderpass color attachment. A map of an array of images and image views are used where -
@@ -744,7 +743,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // the image becomes mip-complete again, no reinitialization of the image is done.  This array
     // is additionally used to ensure the image is recreated in the next syncState, if not already.
     //
-    // Note: the elements of this array are bitmasks indexed by gl::LevelIndex, not vk::LevelIndex
+    // Note: the elements of this array are bitmasks indexed by gl::SourceLevel, not vk::LevelIndex
     gl::CubeFaceArray<gl::TexLevelMask> mRedefinedLevels;
 
     angle::ObserverBinding mImageObserverBinding;

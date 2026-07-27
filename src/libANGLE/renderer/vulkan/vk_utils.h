@@ -1564,7 +1564,7 @@ void GetExtentsAndLayerCount(gl::TextureType textureType,
                              VkExtent3D *extentsOut,
                              uint32_t *layerCountOut);
 
-vk::LevelIndex GetLevelIndex(gl::LevelIndex levelGL, gl::LevelIndex baseLevel);
+vk::LevelIndex GetLevelIndex(gl::SourceLevel levelGL, gl::SourceLevel baseLevel);
 
 VkImageTiling GetTilingMode(gl::TilingMode tilingMode);
 
@@ -1598,7 +1598,7 @@ GLuint GetMaxSampleCount(VkSampleCountFlags sampleCounts);
 // Return a supported sample count that's at least as large as the requested one.
 GLuint GetSampleCount(VkSampleCountFlags supportedCounts, GLuint requestedCount);
 
-gl::LevelIndex GetLevelIndex(vk::LevelIndex levelVk, gl::LevelIndex baseLevel);
+gl::SourceLevel GetLevelIndex(vk::LevelIndex levelVk, gl::SourceLevel baseLevel);
 
 GLenum ConvertVkFixedRateToGLFixedRate(const VkImageCompressionFixedRateFlagsEXT vkCompressionRate);
 GLint ConvertCompressionFlagsToGLFixedRates(

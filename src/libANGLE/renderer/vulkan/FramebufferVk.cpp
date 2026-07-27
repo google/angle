@@ -430,6 +430,7 @@ angle::Result UnresolveYuvImage(ContextVk *contextVk,
     ANGLE_TRY(colorRenderTarget->getImageView(contextVk, &dstView));
 
     UtilsVk::CopyImageParameters params  = {};
+    params.dstMip                        = gl::SourceLevel::Zero();
     params.srcOffset[0]                  = renderArea.x;
     params.srcOffset[1]                  = renderArea.y;
     params.srcExtents[0]                 = renderArea.width;
@@ -1470,7 +1471,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         noClip = blitArea == destColorArea && stretch[0] == 1.0f && stretch[1] == 1.0f;
 
         // Multisampled images are not allowed to have mips.
-        ASSERT(!isColorResolve || readRenderTarget->getLevelIndex() == gl::LevelIndex(0));
+        ASSERT(!isColorResolve || readRenderTarget->getLevelIndex() == gl::SourceLevel::Zero());
 
         // If there was no clipping and the format capabilities allow us, use Vulkan's builtin blit.
         // The reason clipping is prohibited in this path is that due to rounding errors, it would
@@ -1626,7 +1627,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         // glBlitFramebuffer requires that depth/stencil blits have matching formats.
         ASSERT(AreSrcAndDstFormatsIdentical(readRenderTarget, drawRenderTarget));
         // Multisampled images are not allowed to have mips.
-        ASSERT(!isDepthStencilResolve || readRenderTarget->getLevelIndex() == gl::LevelIndex(0));
+        ASSERT(!isDepthStencilResolve ||
+               readRenderTarget->getLevelIndex() == gl::SourceLevel::Zero());
 
         vk::ImageHelper *srcImage = &readRenderTarget->getImageForCopy();
         vk::ImageHelper *dstImage = &drawRenderTarget->getImageForWrite();
@@ -1642,7 +1644,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         const vk::ImageView *dstDepthStencilView = nullptr;
         ANGLE_TRY(drawRenderTarget->getImageView(contextVk, &dstDepthStencilView));
 
-        gl::LevelIndex dstLevelIndex = drawRenderTarget->getLevelIndex();
+        gl::SourceLevel dstLevelIndex = drawRenderTarget->getLevelIndex();
         uint32_t dstLayerIndex       = drawRenderTarget->getLayerIndex();
 
         // Get depth- and stencil-only views for reading.
@@ -1872,8 +1874,9 @@ angle::Result FramebufferVk::ensureFragmentShadingRateImageAndViewInitialized(
         ANGLE_TRY(mFragmentShadingRateImage.init(
             contextVk, gl::TextureType::_2D,
             VkExtent3D{fragmentShadingRateAttachmentWidth, fragmentShadingRateAttachmentHeight, 1},
-            renderer->getFormat(angle::FormatID::R8_UINT), 1, imageUsageFlags, gl::LevelIndex(0), 1,
-            1, false, contextVk->getProtectionType() == vk::ProtectionType::Protected,
+            renderer->getFormat(angle::FormatID::R8_UINT), 1, imageUsageFlags,
+            gl::SourceLevel::Zero(), 1, 1, false,
+            contextVk->getProtectionType() == vk::ProtectionType::Protected,
             vk::TileMemory::Prohibited));
 
         ANGLE_TRY(contextVk->initImageAllocation(&mFragmentShadingRateImage, false,
@@ -1993,7 +1996,7 @@ angle::Result FramebufferVk::generateFragmentShadingRateWithCPU(
     // copy data from staging buffer to image
     vk::CommandResources resources;
     resources.onBufferTransferRead(buffer);
-    resources.onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
+    resources.onImageTransferWrite(gl::SourceLevel::Zero(), 1, 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
                                    &mFragmentShadingRateImage);
     vk::OutsideRenderPassCommandBuffer *dataUpload;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &dataUpload));
@@ -2104,7 +2107,7 @@ angle::Result FramebufferVk::updateFoveationState(ContextVk *contextVk,
                                                       foveatedAttachmentSize));
         ASSERT(mFragmentShadingRateImage.valid());
 
-        serial = mFragmentShadingRateImageView.getSubresourceSerial(gl::LevelIndex(0), 1, 0,
+        serial = mFragmentShadingRateImageView.getSubresourceSerial(gl::SourceLevel::Zero(), 1, 0,
                                                                     vk::LayerMode::All);
     }
 
@@ -3222,7 +3225,7 @@ angle::Result FramebufferVk::createNewFramebuffer(ContextVk *contextVk,
                                      ? &info.renderTarget->getResolveImageForRenderPass()
                                      : &info.renderTarget->getImageForRenderPass();
 
-        const gl::LevelIndex level = info.renderTarget->getLevelIndexForImage(*image);
+        const gl::SourceLevel level = info.renderTarget->getLevelIndexForImage(*image);
         const uint32_t layerCount  = info.renderTarget->getLayerCount();
         const gl::Extents extents  = image->getLevelExtents2D(image->toVkLevel(level));
 
@@ -4147,7 +4150,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
                                             void *pixels)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "FramebufferVk::readPixelsImpl");
-    gl::LevelIndex levelGL = renderTarget->getLevelIndex();
+    gl::SourceLevel levelGL = renderTarget->getLevelIndex();
     uint32_t layer         = renderTarget->getLayerIndex();
     return renderTarget->getImageForCopy().readPixels(contextVk, area, packPixelsParams,
                                                       copyAspectFlags, levelGL, layer, pixels);

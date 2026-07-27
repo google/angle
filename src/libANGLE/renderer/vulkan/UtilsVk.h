@@ -168,7 +168,7 @@ class UtilsVk : angle::NonCopyable
         int srcLayer;
         int srcSampleCount;
         int srcHeight;
-        gl::LevelIndex dstMip;
+        gl::SourceLevel dstMip;
         int dstLayer;
         bool srcPremultiplyAlpha;
         bool srcUnmultiplyAlpha;
@@ -183,9 +183,9 @@ class UtilsVk : angle::NonCopyable
     struct CopyImageBitsParameters
     {
         int srcOffset[3];
-        gl::LevelIndex srcLevel;
+        gl::SourceLevel srcLevel;
         int dstOffset[3];
-        gl::LevelIndex dstLevel;
+        gl::SourceLevel dstLevel;
         uint32_t copyExtents[3];
     };
 
@@ -288,7 +288,7 @@ class UtilsVk : angle::NonCopyable
                                           vk::RenderPassCommandBufferHelper *renderPassCommands,
                                           vk::ImageHelper *dstImage,
                                           const vk::ImageView &dstImageView,
-                                          gl::LevelIndex dstImageLevel,
+                                          gl::SourceLevel dstImageLevel,
                                           uint32_t dstImageLayer,
                                           vk::ImageHelper *srcImage,
                                           const vk::ImageView *srcDepthView,
@@ -297,7 +297,7 @@ class UtilsVk : angle::NonCopyable
 
     angle::Result stencilBlitResolveNoShaderExport(ContextVk *contextVk,
                                                    vk::ImageHelper *dstImage,
-                                                   gl::LevelIndex dstLevelIndex,
+                                                   gl::SourceLevel dstLevelIndex,
                                                    uint32_t dstLayerIndex,
                                                    vk::ImageHelper *srcImage,
                                                    const vk::ImageView *srcStencilView,

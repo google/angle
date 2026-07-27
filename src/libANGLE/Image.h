@@ -168,7 +168,7 @@ struct ImageState : private angle::NonCopyable
 
     EGLLabelKHR label;
     EGLenum target;
-    gl::ImageIndex imageIndex;
+    gl::SourceImageIndex imageIndex;
     ImageSibling *source;
 
     gl::Format format;
@@ -234,7 +234,7 @@ class Image final : public ThreadSafeRefCountObject, public LabeledObject
 
     ContextMutex *getContextMutex() const { return mContextMutex; }
 
-    const gl::ImageIndex &getSourceImageIndex() const { return mState.imageIndex; }
+    const gl::SourceImageIndex &getSourceImageIndex() const { return mState.imageIndex; }
 
   private:
     friend class ImageSibling;

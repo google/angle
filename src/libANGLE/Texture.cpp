@@ -2690,7 +2690,7 @@ bool Texture::isEGLImageSource(const ImageIndex &index) const
 {
     for (const egl::Image *sourceImage : getSiblingSourcesOf())
     {
-        if (sourceImage->getSourceImageIndex() == index)
+        if (sourceImage->getSourceImageIndex().get() == index)
         {
             return true;
         }

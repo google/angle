@@ -468,7 +468,7 @@ ImageLayerWriteMask GetImageLayerWriteMask(uint32_t layerStart, uint32_t layerCo
     return layerMask;
 }
 
-ImageSubresourceRange MakeImageSubresourceReadRange(gl::LevelIndex level,
+ImageSubresourceRange MakeImageSubresourceReadRange(gl::SourceLevel level,
                                                     uint32_t levelCount,
                                                     uint32_t layer,
                                                     LayerMode layerMode,
@@ -487,7 +487,7 @@ ImageSubresourceRange MakeImageSubresourceReadRange(gl::LevelIndex level,
     return range;
 }
 
-ImageSubresourceRange MakeImageSubresourceDrawRange(gl::LevelIndex level,
+ImageSubresourceRange MakeImageSubresourceDrawRange(gl::SourceLevel level,
                                                     uint32_t layer,
                                                     LayerMode layerMode,
                                                     ImageViewColorspace readColorspace,
@@ -732,7 +732,7 @@ RenderPassAttachment::RenderPassAttachment()
 }
 
 void RenderPassAttachment::init(ImageHelper *image,
-                                gl::LevelIndex levelIndex,
+                                gl::SourceLevel levelIndex,
                                 uint32_t layerIndex,
                                 uint32_t layerCount,
                                 VkImageAspectFlagBits aspect)
@@ -1176,7 +1176,7 @@ void CommandBufferHelperCommon::imageReadImpl(Context *context,
 }
 
 void CommandBufferHelperCommon::imageWriteImpl(Context *context,
-                                               gl::LevelIndex level,
+                                               gl::SourceLevel level,
                                                uint32_t layerStart,
                                                uint32_t layerCount,
                                                VkImageAspectFlags aspectFlags,
@@ -1335,7 +1335,7 @@ void OutsideRenderPassCommandBufferHelper::imageRead(Context *context,
 }
 
 void OutsideRenderPassCommandBufferHelper::imageWrite(Context *context,
-                                                      gl::LevelIndex level,
+                                                      gl::SourceLevel level,
                                                       uint32_t layerStart,
                                                       uint32_t layerCount,
                                                       VkImageAspectFlags aspectFlags,
@@ -1635,7 +1635,7 @@ void RenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
 }
 
 void RenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
-                                               gl::LevelIndex level,
+                                               gl::SourceLevel level,
                                                uint32_t layerStart,
                                                uint32_t layerCount,
                                                VkImageAspectFlags aspectFlags,
@@ -1647,7 +1647,7 @@ void RenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
     retainImageWithEvent(contextVk, image);
 }
 
-void RenderPassCommandBufferHelper::colorImagesDraw(gl::LevelIndex level,
+void RenderPassCommandBufferHelper::colorImagesDraw(gl::SourceLevel level,
                                                     uint32_t layerStart,
                                                     uint32_t layerCount,
                                                     ImageHelper *image,
@@ -1671,7 +1671,7 @@ void RenderPassCommandBufferHelper::colorImagesDraw(gl::LevelIndex level,
     }
 }
 
-void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
+void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::SourceLevel level,
                                                            uint32_t layerStart,
                                                            uint32_t layerCount,
                                                            ImageHelper *image,
@@ -1712,7 +1712,8 @@ void RenderPassCommandBufferHelper::fragmentShadingRateImageRead(ImageHelper *im
     image->onRenderPassAttach(mQueueSerial);
 
     // Initialize RenderPassAttachment for fragment shading rate attachment.
-    mFragmentShadingRateAtachment.init(image, gl::LevelIndex(0), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT);
+    mFragmentShadingRateAtachment.init(image, gl::SourceLevel::Zero(), 0, 1,
+                                       VK_IMAGE_ASPECT_COLOR_BIT);
     image->getRenderPassUsage().flags(this).set(RenderPassUsage::RenderTargetAttachment);
 }
 
@@ -2606,7 +2607,7 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
 void RenderPassCommandBufferHelper::addColorResolveAttachment(size_t colorIndexGL,
                                                               ImageHelper *image,
                                                               VkImageView view,
-                                                              gl::LevelIndex level,
+                                                              gl::SourceLevel level,
                                                               uint32_t layerStart,
                                                               uint32_t layerCount)
 {
@@ -2626,7 +2627,7 @@ void RenderPassCommandBufferHelper::addColorResolveAttachment(size_t colorIndexG
 void RenderPassCommandBufferHelper::addDepthStencilResolveAttachment(ImageHelper *image,
                                                                      VkImageView view,
                                                                      VkImageAspectFlags aspects,
-                                                                     gl::LevelIndex level,
+                                                                     gl::SourceLevel level,
                                                                      uint32_t layerStart,
                                                                      uint32_t layerCount)
 {
@@ -5667,7 +5668,7 @@ void ImageHelper::resetCachedProperties()
     mIsForeignImage              = false;
     mLastNonShaderReadOnlyAccess = ImageAccess::Undefined;
     mCurrentShaderReadStageMask  = 0;
-    mFirstAllocatedLevel         = gl::LevelIndex(0);
+    mFirstAllocatedLevel         = gl::SourceLevel::Zero();
     mLayerCount                  = 0;
     mLevelCount                  = 0;
     mTotalStagedBufferUpdateSize = 0;
@@ -5838,7 +5839,7 @@ angle::Result ImageHelper::init(ErrorContext *context,
                                 const Format &format,
                                 GLint samples,
                                 VkImageUsageFlags usage,
-                                gl::LevelIndex firstLevel,
+                                gl::SourceLevel firstLevel,
                                 uint32_t mipLevels,
                                 uint32_t layerCount,
                                 bool isRobustResourceInitEnabled,
@@ -5893,7 +5894,7 @@ angle::Result ImageHelper::initAncillarySwapchain(ErrorContext *context,
                                                   angle::FormatID actualFormatID,
                                                   GLint samples,
                                                   VkImageUsageFlags usage,
-                                                  gl::LevelIndex firstLevel,
+                                                  gl::SourceLevel firstLevel,
                                                   uint32_t mipLevels,
                                                   uint32_t layerCount,
                                                   bool isRobustResourceInitEnabled,
@@ -5922,7 +5923,7 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
                                         VkImageCreateFlags additionalCreateFlags,
                                         ImageAccess initialAccess,
                                         const void *externalImageCreateInfo,
-                                        gl::LevelIndex firstLevel,
+                                        gl::SourceLevel firstLevel,
                                         uint32_t mipLevels,
                                         uint32_t layerCount,
                                         bool isRobustResourceInitEnabled,
@@ -7252,7 +7253,7 @@ bool ImageHelper::isReadBarrierNecessary(Renderer *renderer, ImageAccess newAcce
 }
 
 bool ImageHelper::isReadSubresourceBarrierNecessary(ImageAccess newAccess,
-                                                    gl::LevelIndex levelStart,
+                                                    gl::SourceLevel levelStart,
                                                     uint32_t levelCount,
                                                     uint32_t layerStart,
                                                     uint32_t layerCount) const
@@ -7286,7 +7287,7 @@ bool ImageHelper::isReadSubresourceBarrierNecessary(ImageAccess newAccess,
 }
 
 bool ImageHelper::isWriteBarrierNecessary(ImageAccess newAccess,
-                                          gl::LevelIndex levelStart,
+                                          gl::SourceLevel levelStart,
                                           uint32_t levelCount,
                                           uint32_t layerStart,
                                           uint32_t layerCount) const
@@ -7424,12 +7425,12 @@ VkImageMemoryBarrier ImageHelper::releaseToForeign(Renderer *renderer)
     return barrier;
 }
 
-LevelIndex ImageHelper::toVkLevel(gl::LevelIndex levelIndexGL) const
+LevelIndex ImageHelper::toVkLevel(gl::SourceLevel levelIndexGL) const
 {
     return gl_vk::GetLevelIndex(levelIndexGL, mFirstAllocatedLevel);
 }
 
-gl::LevelIndex ImageHelper::toGLLevel(LevelIndex levelIndexVk) const
+gl::SourceLevel ImageHelper::toGLLevel(LevelIndex levelIndexVk) const
 {
     return vk_gl::GetLevelIndex(levelIndexVk, mFirstAllocatedLevel);
 }
@@ -7600,7 +7601,7 @@ void ImageHelper::recordBarrierOneOffImpl(Renderer *renderer,
                 acquireNextImageSemaphoreOut);
 }
 
-void ImageHelper::setSubresourcesWrittenSinceBarrier(gl::LevelIndex levelStart,
+void ImageHelper::setSubresourcesWrittenSinceBarrier(gl::SourceLevel levelStart,
                                                      uint32_t levelCount,
                                                      uint32_t layerStart,
                                                      uint32_t layerCount)
@@ -7638,7 +7639,7 @@ void ImageHelper::resetSubresourcesWrittenSinceBarrier()
 void ImageHelper::recordWriteBarrier(Context *context,
                                      VkImageAspectFlags aspectMask,
                                      ImageAccess newAccess,
-                                     gl::LevelIndex levelStart,
+                                     gl::SourceLevel levelStart,
                                      uint32_t levelCount,
                                      uint32_t layerStart,
                                      uint32_t layerCount,
@@ -7664,7 +7665,7 @@ void ImageHelper::recordWriteBarrier(Context *context,
 void ImageHelper::recordReadSubresourceBarrier(Context *context,
                                                VkImageAspectFlags aspectMask,
                                                ImageAccess newAccess,
-                                               gl::LevelIndex levelStart,
+                                               gl::SourceLevel levelStart,
                                                uint32_t levelCount,
                                                uint32_t layerStart,
                                                uint32_t layerCount,
@@ -8163,12 +8164,12 @@ void ImageHelper::Copy(Renderer *renderer,
 // static
 angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
                                             ImageHelper *srcImage,
-                                            gl::LevelIndex srcLevelGL,
+                                            gl::SourceLevel srcLevelGL,
                                             GLint srcX,
                                             GLint srcY,
                                             GLint srcZ,
                                             ImageHelper *dstImage,
-                                            gl::LevelIndex dstLevelGL,
+                                            gl::SourceLevel dstLevelGL,
                                             GLint dstX,
                                             GLint dstY,
                                             GLint dstZ,
@@ -8275,7 +8276,7 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
     Renderer *renderer = contextVk->getRenderer();
 
     CommandResources resources;
-    gl::LevelIndex baseLevelGL = toGLLevel(baseLevel);
+    gl::SourceLevel baseLevelGL = toGLLevel(baseLevel);
     resources.onImageTransferWrite(baseLevelGL + 1, maxLevel.get(), 0, mLayerCount,
                                    VK_IMAGE_ASPECT_COLOR_BIT, this);
 
@@ -8448,7 +8449,7 @@ void ImageHelper::resolve(Renderer *renderer,
 }
 
 void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
-                                                       gl::LevelIndex levelIndexGL,
+                                                       gl::SourceLevel levelIndexGL,
                                                        uint32_t layerIndex,
                                                        uint32_t layerCount)
 {
@@ -8482,7 +8483,7 @@ void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
     }
 }
 
-void ImageHelper::removeSingleStagedClearAfterInvalidate(gl::LevelIndex levelIndexGL,
+void ImageHelper::removeSingleStagedClearAfterInvalidate(gl::SourceLevel levelIndexGL,
                                                          uint32_t layerIndex,
                                                          uint32_t layerCount)
 {
@@ -8511,13 +8512,13 @@ void ImageHelper::removeSingleStagedClearAfterInvalidate(gl::LevelIndex levelInd
 }
 
 void ImageHelper::removeStagedUpdates(ErrorContext *context,
-                                      gl::LevelIndex levelGLStart,
-                                      gl::LevelIndex levelGLEnd)
+                                      gl::SourceLevel levelGLStart,
+                                      gl::SourceLevel levelGLEnd)
 {
     assertSubresourceUpdateRefCountsConsistent();
 
     // Remove all updates to levels [start, end].
-    for (gl::LevelIndex level = levelGLStart; level <= levelGLEnd; ++level)
+    for (gl::SourceLevel level = levelGLStart; level <= levelGLEnd; ++level)
     {
         SubresourceUpdates *levelUpdates = getLevelUpdates(level);
         if (levelUpdates == nullptr)
@@ -8542,13 +8543,13 @@ void ImageHelper::removeStagedUpdates(ErrorContext *context,
 }
 
 void ImageHelper::redefineLevels(ErrorContext *context,
-                                 gl::LevelIndex levelGLStart,
-                                 gl::LevelIndex levelGLEnd)
+                                 gl::SourceLevel levelGLStart,
+                                 gl::SourceLevel levelGLEnd)
 {
     removeStagedUpdates(context, levelGLStart, levelGLEnd);
     if (valid())
     {
-        for (gl::LevelIndex level = levelGLStart; level <= levelGLEnd; ++level)
+        for (gl::SourceLevel level = levelGLStart; level <= levelGLEnd; ++level)
         {
             if (level >= getFirstAllocatedLevel() && level <= getLastAllocatedLevel())
             {
@@ -8563,7 +8564,7 @@ void ImageHelper::redefineLevels(ErrorContext *context,
 }
 
 void ImageHelper::redefineSingleSubresource(ContextVk *contextVk,
-                                            gl::LevelIndex levelIndexGL,
+                                            gl::SourceLevel levelIndexGL,
                                             uint32_t layerIndex,
                                             uint32_t layerCount)
 {
@@ -8653,7 +8654,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
             IsETCFormat(vkFormat.getIntendedFormatID()) && IsBCFormat(storageFormatID))
         {
             useComputeTransCoding =
-                shouldUseComputeForTransCoding(toVkLevel(index.getLevelIndex().get()));
+                shouldUseComputeForTransCoding(toVkLevel(index.getLevelIndex()));
             if (!useComputeTransCoding)
             {
                 loadFunctionInfo = GetEtcToBcTransCodingFunc(vkFormat.getIntendedFormatID());
@@ -8776,7 +8777,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
             VK_IMAGE_ASPECT_PLANE_0_BIT, VK_IMAGE_ASPECT_PLANE_1_BIT, VK_IMAGE_ASPECT_PLANE_2_BIT};
 
         // We only support mip level 0 and layerCount of 1 for YUV formats.
-        ASSERT(index.getLevelIndex().get().get() == 0);
+        ASSERT(index.getLevelIndex().get() == 0);
         ASSERT(index.getLayerCount() == 1);
 
         int hSub = 1, vSub = 1;
@@ -8802,7 +8803,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
             copy.imageSubresource.baseArrayLayer = 0;
             copy.imageSubresource.aspectMask     = ANGLE_UNSAFE_TODO(kPlaneAspectFlags[plane]);
             appendSubresourceUpdate(
-                gl::LevelIndex(0),
+                gl::SourceLevel::Zero(),
                 SubresourceUpdate(stagingBuffer.get(), currentBuffer, copy, storageFormatID));
         }
 
@@ -8817,7 +8818,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     copy.bufferRowLength   = bufferRowLength;
     copy.bufferImageHeight = bufferImageHeight;
 
-    gl::LevelIndex updateLevelGL(index.getLevelIndex().get());
+    gl::SourceLevel updateLevelGL    = index.getLevelIndex();
     copy.imageSubresource.mipLevel   = updateLevelGL.get();
     copy.imageSubresource.baseArrayLayer =
         index.hasLayer() ? index.getLayerIndex().get() : offset.z;
@@ -8934,8 +8935,8 @@ angle::Result ImageHelper::updateSubresourceOnHost(ContextVk *contextVk,
     // If there are staged updates that will be completely overwritten, try to drop them.  In
     // particular, this commonly happens where a clear is automatically staged for robustness or
     // other reasons, which would now be superseded by the data upload.
-    const gl::LevelIndex updateLevelGL(index.getLevelIndex().get());
-    const uint32_t layerIndex     = index.hasLayer() ? index.getLayerIndex().get() : 0;
+    const gl::SourceLevel updateLevelGL = index.getLevelIndex();
+    const uint32_t layerIndex           = index.hasLayer() ? index.getLayerIndex().get() : 0;
     const uint32_t layerCount = index.getLayerCount();
     const bool isArray            = gl::IsArrayTextureType(index.getType());
     const uint32_t baseArrayLayer = isArray ? offset.z : layerIndex;
@@ -9192,7 +9193,7 @@ void ImageHelper::onRenderPassAttach(const QueueSerial &queueSerial)
     mPipelineStageAccessHeuristic.onAccess(PipelineStageGroup::FragmentOnly);
 }
 
-void ImageHelper::onWrite(gl::LevelIndex levelStart,
+void ImageHelper::onWrite(gl::SourceLevel levelStart,
                           uint32_t levelCount,
                           uint32_t layerStart,
                           uint32_t layerCount,
@@ -9206,7 +9207,7 @@ void ImageHelper::onWrite(gl::LevelIndex levelStart,
     setSubresourcesWrittenSinceBarrier(levelStart, levelCount, layerStart, layerCount);
 }
 
-bool ImageHelper::hasSubresourceDefinedContent(gl::LevelIndex level,
+bool ImageHelper::hasSubresourceDefinedContent(gl::SourceLevel level,
                                                uint32_t layerIndex,
                                                uint32_t layerCount) const
 {
@@ -9221,7 +9222,7 @@ bool ImageHelper::hasSubresourceDefinedContent(gl::LevelIndex level,
         .any();
 }
 
-bool ImageHelper::hasSubresourceDefinedStencilContent(gl::LevelIndex level,
+bool ImageHelper::hasSubresourceDefinedStencilContent(gl::SourceLevel level,
                                                       uint32_t layerIndex,
                                                       uint32_t layerCount) const
 {
@@ -9237,7 +9238,7 @@ bool ImageHelper::hasSubresourceDefinedStencilContent(gl::LevelIndex level,
         .any();
 }
 
-void ImageHelper::invalidateEntireLevelContent(vk::ErrorContext *context, gl::LevelIndex level)
+void ImageHelper::invalidateEntireLevelContent(vk::ErrorContext *context, gl::SourceLevel level)
 {
     invalidateSubresourceContentImpl(
         context, level, 0, mLayerCount,
@@ -9246,7 +9247,7 @@ void ImageHelper::invalidateEntireLevelContent(vk::ErrorContext *context, gl::Le
 }
 
 void ImageHelper::invalidateSubresourceContent(ContextVk *contextVk,
-                                               gl::LevelIndex level,
+                                               gl::SourceLevel level,
                                                uint32_t layerIndex,
                                                uint32_t layerCount,
                                                bool *preferToKeepContentsDefinedOut)
@@ -9266,7 +9267,7 @@ void ImageHelper::invalidateSubresourceContent(ContextVk *contextVk,
 }
 
 void ImageHelper::invalidateEntireLevelStencilContent(vk::ErrorContext *context,
-                                                      gl::LevelIndex level)
+                                                      gl::SourceLevel level)
 {
     if (getIntendedFormat().stencilBits > 0)
     {
@@ -9276,7 +9277,7 @@ void ImageHelper::invalidateEntireLevelStencilContent(vk::ErrorContext *context,
 }
 
 void ImageHelper::invalidateSubresourceStencilContent(ContextVk *contextVk,
-                                                      gl::LevelIndex level,
+                                                      gl::SourceLevel level,
                                                       uint32_t layerIndex,
                                                       uint32_t layerCount,
                                                       bool *preferToKeepContentsDefinedOut)
@@ -9294,7 +9295,7 @@ void ImageHelper::invalidateSubresourceStencilContent(ContextVk *contextVk,
 }
 
 void ImageHelper::invalidateSubresourceContentImpl(vk::ErrorContext *context,
-                                                   gl::LevelIndex level,
+                                                   gl::SourceLevel level,
                                                    uint32_t layerIndex,
                                                    uint32_t layerCount,
                                                    VkImageAspectFlagBits aspect,
@@ -9383,7 +9384,7 @@ void ImageHelper::invalidateSubresourceContentImpl(vk::ErrorContext *context,
     }
 }
 
-void ImageHelper::restoreSubresourceContent(gl::LevelIndex level,
+void ImageHelper::restoreSubresourceContent(gl::SourceLevel level,
                                             uint32_t layerIndex,
                                             uint32_t layerCount)
 {
@@ -9392,14 +9393,14 @@ void ImageHelper::restoreSubresourceContent(gl::LevelIndex level,
         static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT));
 }
 
-void ImageHelper::restoreSubresourceStencilContent(gl::LevelIndex level,
+void ImageHelper::restoreSubresourceStencilContent(gl::SourceLevel level,
                                                    uint32_t layerIndex,
                                                    uint32_t layerCount)
 {
     restoreSubresourceContentImpl(level, layerIndex, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT);
 }
 
-void ImageHelper::restoreSubresourceContentImpl(gl::LevelIndex level,
+void ImageHelper::restoreSubresourceContentImpl(gl::SourceLevel level,
                                                 uint32_t layerIndex,
                                                 uint32_t layerCount,
                                                 VkImageAspectFlagBits aspect)
@@ -9521,7 +9522,7 @@ angle::Result ImageHelper::stagePartialClear(ContextVk *contextVk,
         aspectFlags |= formatInfo.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0;
     }
 
-    const gl::LevelIndex levelIndexGL = gl::LevelIndex(index.getLevelIndex().get());
+    const gl::SourceLevel levelIndexGL = index.getLevelIndex();
     const bool is3D                   = index.getType() == gl::TextureType::_3D;
     ASSERT(!is3D || index.getLayerIndex().get() == static_cast<uint32_t>(clearArea.z));
     ASSERT(!is3D || index.getLayerCount() == static_cast<uint32_t>(clearArea.depth));
@@ -9561,7 +9562,7 @@ angle::Result ImageHelper::stageSubresourceUpdateAndGetData(ContextVk *contextVk
                                                 MemoryCoherency::CachedNonCoherent, formatID,
                                                 &stagingOffset, dstData));
 
-    gl::LevelIndex updateLevelGL(imageIndex.getLevelIndex().get());
+    const gl::SourceLevel updateLevelGL = imageIndex.getLevelIndex();
 
     VkBufferImageCopy copy               = {};
     copy.bufferOffset                    = stagingOffset;
@@ -9673,7 +9674,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
                                                 stagingPointer));
     }
 
-    gl::LevelIndex updateLevelGL(index.getLevelIndex().get());
+    const gl::SourceLevel updateLevelGL = index.getLevelIndex();
 
     // If the image is not an array type, the base layer index and layer count should be 0 and 1
     // respectively.
@@ -9714,7 +9715,7 @@ void ImageHelper::stageSubresourceUpdateFromImage(RefCounted<ImageHelper> *image
                                                   const VkImageType srcImageType,
                                                   const VkImageType dstImageType)
 {
-    gl::LevelIndex updateLevelGL(index.getLevelIndex().get());
+    const gl::SourceLevel updateLevelGL = index.getLevelIndex();
     VkImageAspectFlags imageAspectFlags = vk::GetFormatAspectFlags(image->get().getActualFormat());
 
     VkImageCopy copyToImage               = {};
@@ -9757,14 +9758,13 @@ void ImageHelper::stageSubresourceUpdateFromImage(RefCounted<ImageHelper> *image
 }
 
 void ImageHelper::stageSubresourceUpdatesFromAllImageLevels(RefCounted<ImageHelper> *image,
-                                                            gl::LevelIndex baseLevel)
+                                                            gl::SourceLevel baseLevel)
 {
     for (LevelIndex levelVk(0); levelVk < LevelIndex(image->get().getLevelCount()); ++levelVk)
     {
-        const gl::LevelIndex levelGL = vk_gl::GetLevelIndex(levelVk, baseLevel);
+        const gl::SourceLevel levelGL    = vk_gl::GetLevelIndex(levelVk, baseLevel);
         const gl::SourceImageIndex index = gl::SourceImageIndex::Make2DArrayRange(
-            gl::SourceLevel::VerifiedSourceLevel(levelGL), gl::SourceLayer::Zero(),
-            image->get().getLayerCount());
+            levelGL, gl::SourceLayer::Zero(), image->get().getLayerCount());
 
         stageSubresourceUpdateFromImage(image, index, levelVk, 0, gl::kOffsetZero,
                                         image->get().getLevelExtents(levelVk),
@@ -9776,7 +9776,7 @@ void ImageHelper::stageClear(const gl::SourceImageIndex &index,
                              VkImageAspectFlags aspectFlags,
                              const VkClearValue &clearValue)
 {
-    gl::LevelIndex updateLevelGL(index.getLevelIndex().get());
+    const gl::SourceLevel updateLevelGL = index.getLevelIndex();
     appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(aspectFlags, clearValue, index));
 }
 
@@ -9786,7 +9786,7 @@ void ImageHelper::stageRobustResourceClear(const gl::SourceImageIndex &index,
     ASSERT(mActualFormatID != angle::FormatID::NONE);
     VkClearValue clearValue = GetRobustResourceClearValue(getIntendedFormat(), getActualFormat());
 
-    gl::LevelIndex updateLevelGL(index.getLevelIndex().get());
+    const gl::SourceLevel updateLevelGL = index.getLevelIndex();
     appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(aspectFlags, clearValue, index));
 }
 
@@ -9801,18 +9801,18 @@ angle::Result ImageHelper::stageResourceClearWithFormat(ContextVk *contextVk,
     // is only possible if the format has an emulated channel.
     if (intendedFormat.id != imageFormat.id)
     {
-        removeSingleStagedClearAfterInvalidate(gl::LevelIndex(index.getLevelIndex().get()),
-                                               index.getLayerIndex().get(), index.getLayerCount());
+        removeSingleStagedClearAfterInvalidate(index.getLevelIndex(), index.getLayerIndex().get(),
+                                               index.getLayerCount());
     }
 
     // Otherwise robust clears must only be staged if we do not have any prior data for this
     // subresource.
-    ASSERT(!hasStagedUpdatesForSubresource(gl::LevelIndex(index.getLevelIndex().get()),
-                                           index.getLayerIndex().get(), index.getLayerCount()));
+    ASSERT(!hasStagedUpdatesForSubresource(index.getLevelIndex(), index.getLayerIndex().get(),
+                                           index.getLayerCount()));
 
     const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(imageFormat);
 
-    gl::LevelIndex updateLevelGL(index.getLevelIndex().get());
+    const gl::SourceLevel updateLevelGL = index.getLevelIndex();
 
     if (imageFormat.isBlock)
     {
@@ -9937,10 +9937,9 @@ void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled, b
 
     for (LevelIndex level(0); level < LevelIndex(mLevelCount); ++level)
     {
-        gl::LevelIndex updateLevelGL = toGLLevel(level);
-        gl::SourceImageIndex index   = gl::SourceImageIndex::Make2DArrayRange(
-            gl::SourceLevel::VerifiedSourceLevel(updateLevelGL), gl::SourceLayer::Zero(),
-            mLayerCount);
+        gl::SourceLevel updateLevelGL = toGLLevel(level);
+        gl::SourceImageIndex index    = gl::SourceImageIndex::Make2DArrayRange(
+            updateLevelGL, gl::SourceLayer::Zero(), mLayerCount);
 
         if (clearOnlyEmulatedChannels)
         {
@@ -10096,7 +10095,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(
     // Stage updates from the previous image.
     for (LevelIndex levelVk(0); levelVk < LevelIndex(levelCount); ++levelVk)
     {
-        gl::LevelIndex levelGL = toGLLevel(levelVk);
+        gl::SourceLevel levelGL = toGLLevel(levelVk);
         if (textureType == gl::TextureType::CubeMap)
         {
             for (uint32_t face = 0; face < gl::kCubeFaceCount; ++face)
@@ -10104,8 +10103,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(
                 if (!skipLevels[face][levelGL.get()])
                 {
                     const gl::SourceImageIndex index = gl::SourceImageIndex::Make2DArrayRange(
-                        gl::SourceLevel::VerifiedSourceLevel(levelGL),
-                        gl::SourceLayer::VerifiedSourceLayer(face), 1);
+                        levelGL, gl::SourceLayer::VerifiedSourceLayer(face), 1);
 
                     stageSubresourceUpdateFromImage(prevImage.get(), index, levelVk, face,
                                                     gl::kOffsetZero, getLevelExtents(levelVk),
@@ -10116,8 +10114,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(
         else if (!skipLevelsAllFaces.test(levelGL.get()))
         {
             const gl::SourceImageIndex index = gl::SourceImageIndex::Make2DArrayRange(
-                gl::SourceLevel::VerifiedSourceLevel(levelGL), gl::SourceLayer::Zero(),
-                mLayerCount);
+                levelGL, gl::SourceLayer::Zero(), mLayerCount);
 
             stageSubresourceUpdateFromImage(prevImage.get(), index, levelVk, 0, gl::kOffsetZero,
                                             getLevelExtents(levelVk), mImageType, mImageType);
@@ -10129,7 +10126,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(
 }
 
 angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contextVk,
-                                                               gl::LevelIndex levelGL,
+                                                               gl::SourceLevel levelGL,
                                                                uint32_t layer,
                                                                uint32_t layerCount,
                                                                ClearValuesArray *deferredClears,
@@ -10188,12 +10185,12 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
 }
 
 angle::Result ImageHelper::flushStagedClearEmulatedChannelsUpdates(ContextVk *contextVk,
-                                                                   gl::LevelIndex levelGLStart,
-                                                                   gl::LevelIndex levelGLLimit,
+                                                                   gl::SourceLevel levelGLStart,
+                                                                   gl::SourceLevel levelGLLimit,
                                                                    bool *otherUpdatesToFlushOut)
 {
     *otherUpdatesToFlushOut = false;
-    for (gl::LevelIndex updateMipLevelGL = levelGLStart; updateMipLevelGL < levelGLLimit;
+    for (gl::SourceLevel updateMipLevelGL = levelGLStart; updateMipLevelGL < levelGLLimit;
          ++updateMipLevelGL)
     {
         // It is expected that the checked mip levels in this loop do not surpass the size of
@@ -10247,8 +10244,8 @@ angle::Result ImageHelper::flushStagedClearEmulatedChannelsUpdates(ContextVk *co
 }
 
 angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
-                                                  gl::LevelIndex levelGLStart,
-                                                  gl::LevelIndex levelGLEnd,
+                                                  gl::SourceLevel levelGLStart,
+                                                  gl::SourceLevel levelGLEnd,
                                                   uint32_t layerStart,
                                                   uint32_t layerEnd,
                                                   const gl::TexLevelMask &skipLevels)
@@ -10286,7 +10283,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(transferAccess, &commandBuffer));
 
     // Flush the staged updates in each mip level.
-    for (gl::LevelIndex updateMipLevelGL = levelGLStart; updateMipLevelGL < levelGLEnd;
+    for (gl::SourceLevel updateMipLevelGL = levelGLStart; updateMipLevelGL < levelGLEnd;
          ++updateMipLevelGL)
     {
         // If updates to this level are specifically asked to be skipped, skip
@@ -10347,7 +10344,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
             // when compressed format emulated by uncompressed format.
             // make assumption that there is no data source come from image.
             ASSERT(!transCoding || (transCoding && update.updateSource == UpdateSource::Buffer));
-            // The updates were holding gl::LevelIndex values so that they would not need
+            // The updates were holding gl::SourceLevel values so that they would not need
             // modification when the base level of the texture changes.  Now that the update is
             // about to take effect, we need to change miplevel to LevelIndex.
             switch (update.updateSource)
@@ -10583,8 +10580,8 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
 }
 
 angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
-                                              gl::LevelIndex levelGLStart,
-                                              gl::LevelIndex levelGLEnd,
+                                              gl::SourceLevel levelGLStart,
+                                              gl::SourceLevel levelGLEnd,
                                               uint32_t layerStart,
                                               uint32_t layerEnd,
                                               const gl::CubeFaceArray<gl::TexLevelMask> &skipLevels)
@@ -10603,7 +10600,8 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     // the clear.
     if (mCurrentSingleClearValue.valid())
     {
-        gl::LevelIndex clearLevel(mCurrentSingleClearValue.value().levelIndex);
+        const gl::SourceLevel clearLevel =
+            gl::SourceLevel::Zero() + mCurrentSingleClearValue.value().levelIndex;
         if (clearLevel >= levelGLStart && clearLevel < levelGLEnd)
         {
             SubresourceUpdates *levelUpdates = getLevelUpdates(clearLevel);
@@ -10668,7 +10666,7 @@ angle::Result ImageHelper::flushAllStagedUpdates(ContextVk *contextVk)
                               0, mLayerCount, {});
 }
 
-bool ImageHelper::hasStagedUpdatesForSubresource(gl::LevelIndex levelGL,
+bool ImageHelper::hasStagedUpdatesForSubresource(gl::SourceLevel levelGL,
                                                  uint32_t layer,
                                                  uint32_t layerCount) const
 {
@@ -10699,7 +10697,7 @@ bool ImageHelper::hasStagedUpdatesForSubresource(gl::LevelIndex levelGL,
     return false;
 }
 
-bool ImageHelper::removeStagedClearUpdatesAndReturnColor(gl::LevelIndex levelGL,
+bool ImageHelper::removeStagedClearUpdatesAndReturnColor(gl::SourceLevel levelGL,
                                                          const VkClearColorValue **color)
 {
     SubresourceUpdates *levelUpdates = getLevelUpdates(levelGL);
@@ -10750,9 +10748,9 @@ void ImageHelper::adjustLayerRange(const SubresourceUpdates &levelUpdates,
     }
 }
 
-gl::LevelIndex ImageHelper::getLastAllocatedLevel() const
+gl::SourceLevel ImageHelper::getLastAllocatedLevel() const
 {
-    return mFirstAllocatedLevel + mLevelCount - 1;
+    return mFirstAllocatedLevel + (mLevelCount - 1);
 }
 
 bool ImageHelper::hasStagedUpdatesInAllocatedLevels() const
@@ -10760,9 +10758,10 @@ bool ImageHelper::hasStagedUpdatesInAllocatedLevels() const
     return hasStagedUpdatesInLevels(mFirstAllocatedLevel, getLastAllocatedLevel() + 1);
 }
 
-bool ImageHelper::hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelIndex levelEnd) const
+bool ImageHelper::hasStagedUpdatesInLevels(gl::SourceLevel levelStart,
+                                           gl::SourceLevel levelEnd) const
 {
-    for (gl::LevelIndex level = levelStart; level < levelEnd; ++level)
+    for (gl::SourceLevel level = levelStart; level < levelEnd; ++level)
     {
         const SubresourceUpdates *levelUpdates = getLevelUpdates(level);
         if (levelUpdates == nullptr)
@@ -10779,11 +10778,11 @@ bool ImageHelper::hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelI
     return false;
 }
 
-bool ImageHelper::hasStagedImageUpdatesWithMismatchedFormat(gl::LevelIndex levelStart,
-                                                            gl::LevelIndex levelEnd,
+bool ImageHelper::hasStagedImageUpdatesWithMismatchedFormat(gl::SourceLevel levelStart,
+                                                            gl::SourceLevel levelEnd,
                                                             angle::FormatID formatID) const
 {
-    for (gl::LevelIndex level = levelStart; level < levelEnd; ++level)
+    for (gl::SourceLevel level = levelStart; level < levelEnd; ++level)
     {
         const SubresourceUpdates *levelUpdates = getLevelUpdates(level);
         if (levelUpdates == nullptr)
@@ -10805,7 +10804,7 @@ bool ImageHelper::hasStagedImageUpdatesWithMismatchedFormat(gl::LevelIndex level
 
 bool ImageHelper::hasBufferSourcedStagedUpdatesInAllLevels() const
 {
-    for (gl::LevelIndex level = mFirstAllocatedLevel; level <= getLastAllocatedLevel(); ++level)
+    for (gl::SourceLevel level = mFirstAllocatedLevel; level <= getLastAllocatedLevel(); ++level)
     {
         const SubresourceUpdates *levelUpdates = getLevelUpdates(level);
         if (levelUpdates == nullptr || levelUpdates->empty())
@@ -10898,7 +10897,7 @@ void ImageHelper::assertSubresourceUpdateRefCountsConsistentImpl() const
 }
 
 void ImageHelper::pruneSupersededUpdatesForLevel(ContextVk *contextVk,
-                                                 const gl::LevelIndex level,
+                                                 const gl::SourceLevel level,
                                                  const PruneReason reason)
 {
     constexpr VkDeviceSize kSubresourceUpdateSizeBeforePruning = 16 * 1024 * 1024;  // 16 MB
@@ -10918,7 +10917,7 @@ void ImageHelper::pruneSupersededUpdatesForLevel(ContextVk *contextVk,
 }
 
 void ImageHelper::pruneSupersededUpdatesForLevelImpl(ContextVk *contextVk,
-                                                     const gl::LevelIndex level,
+                                                     const gl::SourceLevel level,
                                                      const gl::Box &upcomingUpdateBoundingBox,
                                                      const PruneReason reason)
 {
@@ -11042,7 +11041,7 @@ void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, const gl::TexLev
 
     for (LevelIndex levelVk(0); levelVk < LevelIndex(mLevelCount); ++levelVk)
     {
-        gl::LevelIndex levelGL                       = toGLLevel(levelVk);
+        gl::SourceLevel levelGL                      = toGLLevel(levelVk);
         SubresourceUpdates *levelUpdates             = getLevelUpdates(levelGL);
         if (levelUpdates == nullptr || levelUpdates->size() == 0 || skipLevels.test(levelGL.get()))
         {
@@ -11055,7 +11054,7 @@ void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, const gl::TexLev
 }
 
 angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
-                                                 gl::LevelIndex sourceLevelGL,
+                                                 gl::SourceLevel sourceLevelGL,
                                                  uint32_t layerCount,
                                                  uint32_t baseLayer,
                                                  const gl::Box &sourceArea,
@@ -11121,7 +11120,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
 }
 
 angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
-                                                    gl::LevelIndex sourceLevelGL,
+                                                    gl::SourceLevel sourceLevelGL,
                                                     uint32_t layerCount,
                                                     uint32_t baseLayer,
                                                     const gl::Box &sourceArea,
@@ -11172,7 +11171,7 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
 }
 
 angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
-                                                    gl::LevelIndex sourceLevelGL,
+                                                    gl::SourceLevel sourceLevelGL,
                                                     uint32_t layerCount,
                                                     uint32_t baseLayer,
                                                     const gl::Box &sourceArea,
@@ -11247,7 +11246,7 @@ angle::Result ImageHelper::GetReadPixelsParams(ContextVk *contextVk,
 angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
                                                  const gl::PixelPackState &packState,
                                                  gl::Buffer *packBuffer,
-                                                 gl::LevelIndex levelGL,
+                                                 gl::SourceLevel levelGL,
                                                  uint32_t layer,
                                                  uint32_t layerCount,
                                                  GLenum format,
@@ -11314,7 +11313,7 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
 angle::Result ImageHelper::readPixelsForCompressedGetImage(ContextVk *contextVk,
                                                            const gl::PixelPackState &packState,
                                                            gl::Buffer *packBuffer,
-                                                           gl::LevelIndex levelGL,
+                                                           gl::SourceLevel levelGL,
                                                            uint32_t layer,
                                                            uint32_t layerCount,
                                                            void *pixels)
@@ -11461,7 +11460,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
                                       const gl::Rectangle &area,
                                       const PackPixelsParams &packPixelsParams,
                                       VkImageAspectFlagBits copyAspectFlags,
-                                      gl::LevelIndex levelGL,
+                                      gl::SourceLevel levelGL,
                                       uint32_t layer,
                                       void *pixels)
 {
@@ -11570,7 +11569,7 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
                                           const gl::Rectangle &area,
                                           const PackPixelsParams &packPixelsParams,
                                           VkImageAspectFlagBits copyAspectFlags,
-                                          gl::LevelIndex levelGL,
+                                          gl::SourceLevel levelGL,
                                           uint32_t layer,
                                           void *pixels)
 {
@@ -11669,6 +11668,7 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
             vk::LevelIndex(0), 1, 0, mLayerCount));
 
         UtilsVk::CopyImageParameters params = {};
+        params.dstMip                       = gl::SourceLevel::Zero();
         params.srcOffset[0]                 = srcOffset.x;
         params.srcOffset[1]                 = srcOffset.y;
         params.srcExtents[0]                = srcExtent.width;
@@ -11697,7 +11697,7 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
     {
         CommandResources resources;
         resources.onImageTransferRead(layoutChangeAspectFlags, this);
-        resources.onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1, layoutChangeAspectFlags,
+        resources.onImageTransferWrite(gl::SourceLevel::Zero(), 1, 0, 1, layoutChangeAspectFlags,
                                        &resolvedImage.get());
 
         OutsideRenderPassCommandBuffer *commandBuffer;
@@ -11838,7 +11838,7 @@ angle::Result ImageHelper::packReadPixelBuffer(ContextVk *contextVk,
                                                const angle::Format &readFormat,
                                                const angle::Format &aspectFormat,
                                                const uint8_t *readPixelBuffer,
-                                               gl::LevelIndex levelGL,
+                                               gl::SourceLevel levelGL,
                                                void *pixels)
 {
     const vk::Format &vkFormat = contextVk->getRenderer()->getFormat(readFormat.id);
@@ -11896,7 +11896,7 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate() : updateSource(UpdateSource:
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(const VkImageAspectFlags aspectFlags,
                                                   const VkClearValue &clearValue,
-                                                  const gl::LevelIndex levelIndex,
+                                                  const gl::SourceLevel levelIndex,
                                                   const uint32_t layerIndex,
                                                   const uint32_t layerCount,
                                                   const gl::Box &clearArea)
@@ -11948,14 +11948,14 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags
     : SubresourceUpdate(
           aspectFlags,
           clearValue,
-          gl::LevelIndex(imageIndex.getLevelIndex().get()),
+          imageIndex.getLevelIndex(),
           imageIndex.hasLayer() ? imageIndex.getLayerIndex().get() : 0,
           imageIndex.hasLayer() ? imageIndex.getLayerCount() : VK_REMAINING_ARRAY_LAYERS)
 {}
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags,
                                                   const VkClearValue &clearValue,
-                                                  gl::LevelIndex level,
+                                                  gl::SourceLevel level,
                                                   uint32_t layerIndex,
                                                   uint32_t layerCount)
     : updateSource(UpdateSource::Clear)
@@ -11977,7 +11977,7 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(VkColorComponentFlags colorMas
     refCounted.image       = nullptr;
     data.clear.aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT;
     data.clear.value.color = clearValue;
-    data.clear.levelIndex  = imageIndex.getLevelIndex().get().get();
+    data.clear.levelIndex  = imageIndex.getLevelIndex().get();
     data.clear.layerIndex  = imageIndex.hasLayer() ? imageIndex.getLayerIndex().get() : 0;
     data.clear.layerCount =
         imageIndex.hasLayer() ? imageIndex.getLayerCount() : VK_REMAINING_ARRAY_LAYERS;
@@ -12173,34 +12173,35 @@ VkImageAspectFlags ImageHelper::SubresourceUpdate::getDestAspectFlags() const
     }
 }
 
-size_t ImageHelper::getLevelUpdateCount(gl::LevelIndex level) const
+size_t ImageHelper::getLevelUpdateCount(gl::SourceLevel level) const
 {
     return static_cast<size_t>(level.get()) < mSubresourceUpdates.size()
                ? mSubresourceUpdates[level.get()].size()
                : 0;
 }
 
-void ImageHelper::clipLevelToUpdateListUpperLimit(gl::LevelIndex *level) const
+void ImageHelper::clipLevelToUpdateListUpperLimit(gl::SourceLevel *level) const
 {
-    gl::LevelIndex levelLimit(static_cast<int>(mSubresourceUpdates.size()));
+    const gl::SourceLevel levelLimit =
+        gl::SourceLevel::Zero() + static_cast<uint32_t>(mSubresourceUpdates.size());
     *level = std::min(*level, levelLimit);
 }
 
-ImageHelper::SubresourceUpdates *ImageHelper::getLevelUpdates(gl::LevelIndex level)
+ImageHelper::SubresourceUpdates *ImageHelper::getLevelUpdates(gl::SourceLevel level)
 {
     return static_cast<size_t>(level.get()) < mSubresourceUpdates.size()
                ? &mSubresourceUpdates[level.get()]
                : nullptr;
 }
 
-const ImageHelper::SubresourceUpdates *ImageHelper::getLevelUpdates(gl::LevelIndex level) const
+const ImageHelper::SubresourceUpdates *ImageHelper::getLevelUpdates(gl::SourceLevel level) const
 {
     return static_cast<size_t>(level.get()) < mSubresourceUpdates.size()
                ? &mSubresourceUpdates[level.get()]
                : nullptr;
 }
 
-void ImageHelper::appendSubresourceUpdate(gl::LevelIndex level, SubresourceUpdate &&update)
+void ImageHelper::appendSubresourceUpdate(gl::SourceLevel level, SubresourceUpdate &&update)
 {
     if (mSubresourceUpdates.size() <= static_cast<size_t>(level.get()))
     {
@@ -12214,7 +12215,7 @@ void ImageHelper::appendSubresourceUpdate(gl::LevelIndex level, SubresourceUpdat
     onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 
-void ImageHelper::prependSubresourceUpdate(gl::LevelIndex level, SubresourceUpdate &&update)
+void ImageHelper::prependSubresourceUpdate(gl::SourceLevel level, SubresourceUpdate &&update)
 {
     if (mSubresourceUpdates.size() <= static_cast<size_t>(level.get()))
     {
@@ -13072,7 +13073,7 @@ void ImageViewHelper::updateColorspace(const angle::Format &imageFormat) const
     ASSERT(mWriteColorspace != ImageViewColorspace::Invalid);
 }
 
-ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerial(gl::LevelIndex levelGL,
+ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerial(gl::SourceLevel levelGL,
                                                                          uint32_t levelCount,
                                                                          uint32_t layer,
                                                                          LayerMode layerMode) const
@@ -13082,7 +13083,7 @@ ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerial(gl::Lev
 }
 
 ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerialForColorspace(
-    gl::LevelIndex levelGL,
+    gl::SourceLevel levelGL,
     uint32_t levelCount,
     uint32_t layer,
     LayerMode layerMode,
@@ -13097,7 +13098,7 @@ ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerialForColor
     return serial;
 }
 
-ImageSubresourceRange ImageViewHelper::getSubresourceDrawRange(gl::LevelIndex level,
+ImageSubresourceRange ImageViewHelper::getSubresourceDrawRange(gl::SourceLevel level,
                                                                uint32_t layer,
                                                                LayerMode layerMode) const
 {
@@ -13371,7 +13372,7 @@ void CommandResources::onImageRead(VkImageAspectFlags aspectFlags,
     mReadImages.emplace_back(image, aspectFlags, imageAccess);
 }
 
-void CommandResources::onImageWrite(gl::LevelIndex levelStart,
+void CommandResources::onImageWrite(gl::SourceLevel levelStart,
                                     uint32_t levelCount,
                                     uint32_t layerStart,
                                     uint32_t layerCount,
@@ -13385,7 +13386,7 @@ void CommandResources::onImageWrite(gl::LevelIndex levelStart,
                               levelCount, layerStart, layerCount);
 }
 
-void CommandResources::onImageReadSubresources(gl::LevelIndex levelStart,
+void CommandResources::onImageReadSubresources(gl::SourceLevel levelStart,
                                                uint32_t levelCount,
                                                uint32_t layerStart,
                                                uint32_t layerCount,

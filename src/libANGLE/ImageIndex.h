@@ -187,6 +187,8 @@ template <typename T>
 class SourceIndex
 {
   public:
+    constexpr SourceIndex() : mIndex{} {}
+
     constexpr T get() const { return mIndex; }
 
   protected:
@@ -228,8 +230,15 @@ class SourceImageIndex;
 class SourceLevel : public SourceIndex<LevelIndex>
 {
   public:
+    constexpr SourceLevel() { mIndex = gl::LevelIndex(-1); }
+
     // Convenience helpers
     constexpr SourceLevel operator+(uint32_t offset) const { return SourceLevel(mIndex + offset); }
+    constexpr uint32_t operator-(SourceLevel other) const
+    {
+        ASSERT(mIndex >= other.mIndex);
+        return mIndex - other.mIndex;
+    }
     SourceLevel &operator++()
     {
         ++mIndex;
@@ -237,15 +246,16 @@ class SourceLevel : public SourceIndex<LevelIndex>
     }
     constexpr bool operator<(const SourceLevel &other) const { return mIndex < other.mIndex; }
     constexpr bool operator<=(const SourceLevel &other) const { return mIndex <= other.mIndex; }
+    constexpr bool operator>(const SourceLevel &other) const { return mIndex > other.mIndex; }
+    constexpr bool operator>=(const SourceLevel &other) const { return mIndex >= other.mIndex; }
+    constexpr bool operator==(const SourceLevel &other) const { return mIndex == other.mIndex; }
+    constexpr bool operator!=(const SourceLevel &other) const { return mIndex != other.mIndex; }
+
+    // Helper while code is being transitioned to separate SourceLevel from LevelIndex.  Remove once
+    // done.  TODO(http://anglebug.com/525079760)
+    constexpr uint32_t get() const { return mIndex.get(); }
 
     static constexpr SourceLevel Zero() { return SourceLevel(LevelIndex(0)); }
-
-    // Helper while code is being transitioned to using SourceLevel consistently.  Remove once done.
-    // TODO(http://anglebug.com/525079760)
-    static constexpr SourceLevel VerifiedSourceLevel(LevelIndex level)
-    {
-        return SourceLevel(level);
-    }
 
   protected:
     friend struct egl::ImageSourceAttributes;
@@ -255,6 +265,8 @@ class SourceLevel : public SourceIndex<LevelIndex>
 class SourceLayer : public SourceIndex<uint32_t>
 {
   public:
+    constexpr SourceLayer() { mIndex = 0xFFFFFFFF; }
+
     // Convenience helpers
     constexpr SourceLayer operator+(uint32_t offset) const { return SourceLayer(mIndex + offset); }
 
@@ -272,10 +284,13 @@ class SourceLayer : public SourceIndex<uint32_t>
 class SourceImageIndex : public SourceIndex<ImageIndex>
 {
   public:
+    SourceImageIndex() = default;
+
     // Convenience helpers that forward to ImageIndex and possibly wrap the results.
     TextureType getType() const { return mIndex.getType(); }
     SourceLevel getLevelIndex() const { return SourceLevel(LevelIndex(mIndex.getLevelIndex())); }
     bool hasLayer() const { return mIndex.hasLayer(); }
+    bool has3DLayer() const { return mIndex.has3DLayer(); }
     SourceLayer getLayerIndex() const
     {
         return SourceLayer(mIndex.hasLayer() ? mIndex.getLayerIndex() : 0);
@@ -283,21 +298,30 @@ class SourceImageIndex : public SourceIndex<ImageIndex>
     SourceLayer cubeMapFaceIndex() const { return SourceLayer(mIndex.cubeMapFaceIndex()); }
     uint32_t getLayerCount() const { return mIndex.getLayerCount(); }
     bool usesTex3D() const { return mIndex.usesTex3D(); }
+    bool isLayered() const { return mIndex.isLayered(); }
     TextureTarget getTarget() const { return mIndex.getTarget(); }
     TextureTarget getTargetOrFirstCubeFace() const { return mIndex.getTargetOrFirstCubeFace(); }
 
+    static SourceImageIndex MakeInvalid() { return SourceImageIndex(ImageIndex{}); }
     static SourceImageIndex Make2D(SourceLevel level)
     {
-        return SourceImageIndex(ImageIndex::Make2D(level.get().get()));
+        return SourceImageIndex(ImageIndex::Make2D(level.get()));
     }
     static SourceImageIndex MakeCubeMapFace(TextureTarget target, SourceLevel level)
     {
-        return SourceImageIndex(ImageIndex::MakeCubeMapFace(target, level.get().get()));
+        return SourceImageIndex(ImageIndex::MakeCubeMapFace(target, level.get()));
     }
     static SourceImageIndex Make2DArrayRange(SourceLevel level, SourceLayer layer, GLint layerCount)
     {
-        return SourceImageIndex(
-            ImageIndex::Make2DArrayRange(level.get().get(), layer.get(), layerCount));
+        return SourceImageIndex(ImageIndex::Make2DArrayRange(level.get(), layer.get(), layerCount));
+    }
+    static SourceImageIndex Make3D(SourceLevel level, SourceLayer layer = kEntireLayer)
+    {
+        return SourceImageIndex(ImageIndex::Make3D(level.get(), layer.get()));
+    }
+    static SourceImageIndex MakeFromTarget(TextureTarget target, SourceLevel level, GLint depth = 0)
+    {
+        return SourceImageIndex(ImageIndex::MakeFromTarget(target, level.get(), depth));
     }
     static SourceImageIndex MakeFromType(TextureType type,
                                          SourceLevel level,
@@ -305,8 +329,12 @@ class SourceImageIndex : public SourceIndex<ImageIndex>
                                          GLint layerCount  = 1)
     {
         return SourceImageIndex(
-            ImageIndex::MakeFromType(type, level.get().get(), layer.get(), layerCount));
+            ImageIndex::MakeFromType(type, level.get(), layer.get(), layerCount));
     }
+
+    bool operator<(const SourceImageIndex &b) const { return mIndex < b.mIndex; }
+    bool operator==(const SourceImageIndex &b) const { return mIndex == b.mIndex; }
+    bool operator!=(const SourceImageIndex &b) const { return mIndex != b.mIndex; }
 
     static constexpr SourceLayer kEntireLayer = SourceLayer::Zero() + ImageIndex::kEntireLevel;
 

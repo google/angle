@@ -469,11 +469,11 @@ vk::ImageAccess GetImageReadAccess(vk::RenderPassCommandBufferHelper *renderPass
 vk::ImageAccess GetImageWriteAccessAndSubresource(const gl::ImageUnit &imageUnit,
                                                   vk::ImageHelper &image,
                                                   gl::ShaderBitSet shaderStages,
-                                                  gl::LevelIndex *levelOut,
+                                                  gl::SourceLevel *levelOut,
                                                   uint32_t *layerStartOut,
                                                   uint32_t *layerCountOut)
 {
-    *levelOut = gl::LevelIndex(static_cast<uint32_t>(imageUnit.level));
+    *levelOut = imageUnit.texture->getState().toSourceLevel(gl::OwnLevel(imageUnit.level));
 
     *layerStartOut = 0;
     *layerCountOut = image.getLayerCount();
@@ -1363,7 +1363,8 @@ angle::Result ContextVk::getOrCreateNullStorageImageView(GLenum shaderFormat,
 
     ANGLE_TRY(entry->image.init(this, gl::TextureType::_2D, extent, imageFormat, 1,
                                 VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
-                                gl::LevelIndex(0), 1, 1, false, false, vk::TileMemory::Prohibited));
+                                gl::SourceLevel::Zero(), 1, 1, false, false,
+                                vk::TileMemory::Prohibited));
     ANGLE_TRY(entry->image.initMemoryAndNonZeroFillIfNeeded(
         this, mState.hasProtectedContent(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
         vk::MemoryAllocationType::TextureImage));
@@ -1377,8 +1378,8 @@ angle::Result ContextVk::getOrCreateNullStorageImageView(GLenum shaderFormat,
     ANGLE_TRY(entry->image.flushAllStagedUpdates(this));
 
     entry->image.recordWriteBarrier(this, VK_IMAGE_ASPECT_COLOR_BIT,
-                                    vk::ImageAccess::AllGraphicsShadersWrite, gl::LevelIndex(0), 1,
-                                    0, 1, mOutsideRenderPassCommands);
+                                    vk::ImageAccess::AllGraphicsShadersWrite,
+                                    gl::SourceLevel::Zero(), 1, 0, 1, mOutsideRenderPassCommands);
     entry->serial = mRenderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
 
     *imageViewOut = entry->view.getHandle();
@@ -4412,8 +4413,8 @@ angle::Result ContextVk::optimizeRenderPassForPresent(
                                                              0, &resolveImageView));
 
         mRenderPassCommands->addColorResolveAttachment(0, colorImage, resolveImageView->getHandle(),
-                                                       gl::LevelIndex(0), 0, 1);
-        onImageRenderPassWrite(gl::LevelIndex(0), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
+                                                       gl::SourceLevel::Zero(), 0, 1);
+        onImageRenderPassWrite(gl::SourceLevel::Zero(), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
                                vk::ImageAccess::ColorWrite, colorImage);
 
         if (ancillaryBehavior == SurfaceAncillaryColorBehavior::InvalidateOnPresent)
@@ -7493,7 +7494,7 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
         }
         alreadyProcessed.insert(image);
 
-        gl::LevelIndex level;
+        gl::SourceLevel level;
         uint32_t layerStart               = 0;
         uint32_t layerCount               = 0;
         const vk::ImageAccess imageAccess = GetImageWriteAccessAndSubresource(
@@ -9188,8 +9189,8 @@ angle::Result ContextVk::finalizeImageWithTileMemory()
 
         // clearTextureNoFlush may have set content valid again, remove the bits to keep
         // content as invalid.
-        mImageWithTileMemory->invalidateEntireLevelContent(this, gl::LevelIndex(0));
-        mImageWithTileMemory->invalidateEntireLevelStencilContent(this, gl::LevelIndex(0));
+        mImageWithTileMemory->invalidateEntireLevelContent(this, gl::SourceLevel::Zero());
+        mImageWithTileMemory->invalidateEntireLevelStencilContent(this, gl::SourceLevel::Zero());
     }
 
     mImageWithTileMemory = nullptr;

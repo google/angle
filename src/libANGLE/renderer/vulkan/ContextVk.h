@@ -541,7 +541,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mRenderPassCommands->imageRead(this, aspectFlags, imageAccess, image);
     }
 
-    void onImageRenderPassWrite(gl::LevelIndex level,
+    void onImageRenderPassWrite(gl::SourceLevel level,
                                 uint32_t layerStart,
                                 uint32_t layerCount,
                                 VkImageAspectFlags aspectFlags,
@@ -553,7 +553,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                         imageAccess, image);
     }
 
-    void onColorDraw(gl::LevelIndex level,
+    void onColorDraw(gl::SourceLevel level,
                      uint32_t layerStart,
                      uint32_t layerCount,
                      vk::ImageHelper *image,
@@ -564,7 +564,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mRenderPassCommands->colorImagesDraw(level, layerStart, layerCount, image, resolveImage,
                                              packedAttachmentIndex);
     }
-    void onColorResolve(gl::LevelIndex level,
+    void onColorResolve(gl::SourceLevel level,
                         uint32_t layerStart,
                         uint32_t layerCount,
                         vk::ImageHelper *image,
@@ -575,7 +575,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mRenderPassCommands->addColorResolveAttachment(colorIndexGL, image, view, level, layerStart,
                                                        layerCount);
     }
-    void onDepthStencilDraw(gl::LevelIndex level,
+    void onDepthStencilDraw(gl::SourceLevel level,
                             uint32_t layerStart,
                             uint32_t layerCount,
                             vk::ImageHelper *image,
@@ -594,7 +594,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
             addImageWithTileMemory(resolveImage);
         }
     }
-    void onDepthStencilResolve(gl::LevelIndex level,
+    void onDepthStencilResolve(gl::SourceLevel level,
                                uint32_t layerStart,
                                uint32_t layerCount,
                                VkImageAspectFlags aspects,
