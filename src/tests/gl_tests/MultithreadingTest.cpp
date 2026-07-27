@@ -4640,6 +4640,78 @@ TEST_P(MultithreadingTest, EGLImageRaceCreateAndDestroy)
         eglMakeCurrent(dpy, window->getSurface(), window->getSurface(), window->getContext()));
 }
 
+// Test that creating a shared context while the parent context is active and
+// binding buffers does not cause a data race on mSharedContext.
+TEST_P(MultithreadingTest, SharedContextDataRace)
+{
+    ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
+
+    EGLWindow *window = getEGLWindow();
+    EGLDisplay dpy    = window->getDisplay();
+    EGLConfig config  = window->getConfig();
+
+    EGLSurface surface1 = EGL_NO_SURFACE;
+    EGLContext ctx1     = EGL_NO_CONTEXT;
+
+    EGLint pbufferAttributes[] = {
+        EGL_WIDTH, 256, EGL_HEIGHT, 256, EGL_NONE, EGL_NONE,
+    };
+    surface1 = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
+    EXPECT_EGL_SUCCESS();
+
+    ctx1 = createMultithreadedContext(window, EGL_NO_CONTEXT);
+    EXPECT_NE(EGL_NO_CONTEXT, ctx1);
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface1, surface1, ctx1));
+    EXPECT_EGL_SUCCESS();
+
+    std::atomic<bool> exitThread(false);
+
+    {
+        GLBuffer buffer;
+        // WUnbind ctx1 from the main thread so the worker thread can make it current.
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+        EXPECT_EGL_SUCCESS();
+
+        // Thread 1: Concurrently bind/unbind buffer to trigger isSharedContext()
+        std::thread thread1([&]() {
+            EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface1, surface1, ctx1));
+
+            while (!exitThread.load(std::memory_order_relaxed))
+            {
+                glBindBuffer(GL_ARRAY_BUFFER, buffer);
+                glBindBuffer(GL_ARRAY_BUFFER, 0);
+            }
+
+            EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+        });
+
+        // Thread 2 (Main thread): Trigger setShared() by creating a shared context
+        for (int i = 0; i < 100; ++i)
+        {
+            EGLContext ctx2 = createMultithreadedContext(window, ctx1);
+            if (ctx2 != EGL_NO_CONTEXT)
+            {
+                eglDestroyContext(dpy, ctx2);
+            }
+        }
+
+        exitThread.store(true);
+        thread1.join();
+
+        // Make ctx1 current again on main thread so GLBuffer destructor can run safely
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface1, surface1, ctx1));
+    }
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    eglDestroyContext(dpy, ctx1);
+    eglDestroySurface(dpy, surface1);
+
+    // Restore the window's context and surface
+    EXPECT_EGL_TRUE(
+        eglMakeCurrent(dpy, window->getSurface(), window->getSurface(), window->getContext()));
+}
+
 ANGLE_INSTANTIATE_TEST(
     MultithreadingTest,
     ES2_METAL(),
