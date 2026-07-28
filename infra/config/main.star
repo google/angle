@@ -359,6 +359,9 @@ luci.cq_group(
             builder = "chromium:try/mac-angle-chromium-try",
         ),
         luci.cq_tryjob_verifier(
+            builder = "chromium:try/win-angle-chromium-arm64-try",
+        ),
+        luci.cq_tryjob_verifier(
             builder = "chromium:try/win-angle-chromium-x64-try",
         ),
         luci.cq_tryjob_verifier(
