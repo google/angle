@@ -1235,6 +1235,9 @@ const struct wl_pointer_listener WaylandWindow::pointer_listener = {
     // but the listener struct requires every field.
     .axis_value120           = nullptr,
     .axis_relative_direction = nullptr,
+#ifdef WL_POINTER_WARP_SINCE_VERSION
+    .warp = nullptr,
+#endif
 };
 
 bool IsWaylandWindowAvailable()
