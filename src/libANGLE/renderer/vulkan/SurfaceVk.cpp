@@ -838,7 +838,7 @@ angle::Result OffscreenSurfaceVk::initializeContents(const gl::Context *context,
                                                      GLenum binding,
                                                      const gl::OwnImageIndex &ownImageIndex)
 {
-    const gl::SourceImageIndex imageIndex = mState.toSourceIndex(ownImageIndex);
+    const gl::ImageIndex imageIndex = ownImageIndex.getUntranslated();
 
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -2543,8 +2543,7 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
             {
                 // Apply clear color directly to the single sampled image if the EGL surface is
                 // double buffered and when EGL_SWAP_BEHAVIOR is EGL_BUFFER_DESTROYED
-                gl::SourceImageIndex imageIndex =
-                    gl::SourceImageIndex::Make2D(gl::SourceLevel::Zero());
+                gl::ImageIndex imageIndex = gl::ImageIndex::Make2D(gl::LevelIndex(0).get());
                 image.image->stageClear(imageIndex, VK_IMAGE_ASPECT_COLOR_BIT,
                                         deferredClearValues[0]);
                 ANGLE_TRY(image.image->flushStagedUpdates(contextVk, gl::LevelIndex(0),
@@ -3576,7 +3575,7 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
                                                   GLenum binding,
                                                   const gl::OwnImageIndex &ownImageIndex)
 {
-    const gl::SourceImageIndex imageIndex = mState.toSourceIndex(ownImageIndex);
+    const gl::ImageIndex imageIndex = ownImageIndex.getUntranslated();
 
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -3606,9 +3605,8 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
         case GL_DEPTH:
         case GL_STENCIL:
             ASSERT(mDepthStencilImage.valid());
-            mDepthStencilImage.stageRobustResourceClear(
-                gl::SourceImageIndex::Make2D(gl::SourceLevel::Zero()),
-                mDepthStencilImage.getAspectFlags());
+            mDepthStencilImage.stageRobustResourceClear(gl::ImageIndex::Make2D(0),
+                                                        mDepthStencilImage.getAspectFlags());
             ANGLE_TRY(mDepthStencilImage.flushAllStagedUpdates(contextVk));
             break;
         default:

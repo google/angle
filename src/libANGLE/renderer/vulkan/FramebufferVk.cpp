@@ -2333,7 +2333,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
             }
             else if (isRobustResourceInitEnabled)
             {
-                gl::SourceImageIndex imageIndex = colorRenderTarget->getImageIndexForClear(
+                gl::ImageIndex imageIndex = colorRenderTarget->getImageIndexForClear(
                     mCurrentFramebufferDesc.getLayerCount());
                 colorRenderTarget->getImageForWrite().stageRobustResourceClear(
                     imageIndex, VK_IMAGE_ASPECT_COLOR_BIT);
@@ -2377,9 +2377,8 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
                 }
                 if (dsAspectFlags)
                 {
-                    gl::SourceImageIndex imageIndex =
-                        depthStencilRenderTarget->getImageIndexForClear(
-                            mCurrentFramebufferDesc.getLayerCount());
+                    gl::ImageIndex imageIndex = depthStencilRenderTarget->getImageIndexForClear(
+                        mCurrentFramebufferDesc.getLayerCount());
                     depthStencilRenderTarget->getImageForWrite().stageRobustResourceClear(
                         imageIndex, dsAspectFlags);
                 }
@@ -3519,7 +3518,7 @@ void FramebufferVk::restageDeferredClearsImpl(ContextVk *contextVk)
     for (size_t colorIndexGL : mDeferredClears.getColorMask())
     {
         RenderTargetVk *renderTarget = getColorDrawRenderTarget(colorIndexGL);
-        gl::SourceImageIndex imageIndex =
+        gl::ImageIndex imageIndex =
             renderTarget->getImageIndexForClear(mCurrentFramebufferDesc.getLayerCount());
         renderTarget->getImageForWrite().stageClear(imageIndex, VK_IMAGE_ASPECT_COLOR_BIT,
                                                     mDeferredClears[colorIndexGL]);
@@ -3531,7 +3530,7 @@ void FramebufferVk::restageDeferredClearsImpl(ContextVk *contextVk)
         RenderTargetVk *renderTarget = getDepthStencilRenderTarget();
         ASSERT(renderTarget);
 
-        gl::SourceImageIndex imageIndex =
+        gl::ImageIndex imageIndex =
             renderTarget->getImageIndexForClear(mCurrentFramebufferDesc.getLayerCount());
         renderTarget->getImageForWrite().stageClear(imageIndex, dsAspectFlags, dsClearValue);
     }

@@ -452,7 +452,7 @@ void RenderTargetVk::invalidateEntireStencilContent(ContextVk *contextVk,
                                                preferToKeepContentsDefinedOut);
 }
 
-gl::SourceImageIndex RenderTargetVk::getImageIndexForClear(uint32_t layerCount) const
+gl::ImageIndex RenderTargetVk::getImageIndexForClear(uint32_t layerCount) const
 {
     // Determine the GL type from the Vk Image properties.
     if (mImage->getType() == VK_IMAGE_TYPE_3D || mImage->getLayerCount() > 1)
@@ -461,14 +461,12 @@ gl::SourceImageIndex RenderTargetVk::getImageIndexForClear(uint32_t layerCount) 
         // threated as layers for this purpose.
         //
         // We also don't need to distinguish 2D array and cube.
-        return gl::SourceImageIndex::Make2DArrayRange(
-            gl::SourceLevel::VerifiedSourceLevel(mLevelIndexGL),
-            gl::SourceLayer::VerifiedSourceLayer(mLayerIndex), layerCount);
+        return gl::ImageIndex::Make2DArrayRange(mLevelIndexGL.get(), mLayerIndex, layerCount);
     }
 
     ASSERT(mLayerIndex == 0);
     ASSERT(mLayerCount == 1);
     ASSERT(layerCount == 1);
-    return gl::SourceImageIndex::Make2D(gl::SourceLevel::VerifiedSourceLevel(mLevelIndexGL));
+    return gl::ImageIndex::Make2D(mLevelIndexGL.get());
 }
 }  // namespace rx
