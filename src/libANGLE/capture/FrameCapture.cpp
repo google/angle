@@ -3286,6 +3286,16 @@ void CaptureCustomFenceSync(CallCapture &call, std::vector<CallCapture> &callsOu
     callsOut.emplace_back(std::move(call));
 }
 
+void CaptureCustomClientWaitSync(CallCapture &call, std::vector<CallCapture> &callsOut)
+{
+    ParamBuffer &&params = std::move(call.params);
+    GLenum returnValue   = params.getReturnValue().value.GLenumVal;
+    params.addValueParam("capturedReturnValue", ParamType::TGLenum, returnValue);
+    call.customFunctionName = "ClientWaitSync";
+    call.params             = std::move(params);
+    callsOut.emplace_back(std::move(call));
+}
+
 const egl::Image *GetImageFromParam(const gl::Context *context, const ParamCapture &param)
 {
     const egl::ImageID eglImageID = egl::PackParam<egl::ImageID>(param.value.EGLImageVal);
@@ -7270,7 +7280,6 @@ void FrameCaptureShared::maybeOverrideEntryPoint(const gl::Context *context,
             break;
         }
         case EntryPoint::GLWaitSync:
-        case EntryPoint::GLClientWaitSync:
         case EntryPoint::GLDeleteSync:
         {
             gl::SyncID syncID =
@@ -7279,6 +7288,17 @@ void FrameCaptureShared::maybeOverrideEntryPoint(const gl::Context *context,
                                      inCall, outCalls))
             {
                 outCalls.emplace_back(std::move(inCall));
+            }
+            break;
+        }
+        case EntryPoint::GLClientWaitSync:
+        {
+            gl::SyncID syncID =
+                inCall.params.getParam("syncPacked", ParamType::TSyncID, 0).value.SyncIDVal;
+            if (!FilterImportedSyncs(isCaptureActive(), syncID.value, isGLSyncEmitted(syncID), "GL",
+                                     inCall, outCalls))
+            {
+                CaptureCustomClientWaitSync(inCall, outCalls);
             }
             break;
         }

@@ -2173,6 +2173,7 @@ group("angle_tests") {
     deps += [ ":angle_trace_perf_tests" ]
     deps += [ "capture_tests:angle_capture_tests_multi_frame_trace" ]
     deps += [ "capture_tests:angle_capture_tests_active_textures_trace" ]
+    deps += [ "capture_tests:angle_capture_tests_client_wait_sync_trace" ]
     if (angle_enable_cl) {
       deps += [ "capture_tests:angle_capture_tests_multi_frame_cl_trace" ]
     }
