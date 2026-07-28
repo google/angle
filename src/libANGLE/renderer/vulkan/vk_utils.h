@@ -1346,6 +1346,9 @@ struct RenderPassPerfCounters
 
 // A Vulkan image level index.
 using LevelIndex = gl::LevelIndexWrapper<uint32_t>;
+// For uniformity with vk::LevelIndex, even though there's no translation between gl::SourceLayer
+// and vk::LayerIndex.
+using LayerIndex = gl::SourceLayer;
 
 // Ensure viewport is within Vulkan requirements
 void ClampViewport(VkViewport *viewport);

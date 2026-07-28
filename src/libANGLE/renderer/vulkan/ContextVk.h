@@ -542,7 +542,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     }
 
     void onImageRenderPassWrite(gl::SourceLevel level,
-                                uint32_t layerStart,
+                                gl::SourceLayer layerStart,
                                 uint32_t layerCount,
                                 VkImageAspectFlags aspectFlags,
                                 vk::ImageAccess imageAccess,
@@ -554,7 +554,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     }
 
     void onColorDraw(gl::SourceLevel level,
-                     uint32_t layerStart,
+                     gl::SourceLayer layerStart,
                      uint32_t layerCount,
                      vk::ImageHelper *image,
                      vk::ImageHelper *resolveImage,
@@ -565,7 +565,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                              packedAttachmentIndex);
     }
     void onColorResolve(gl::SourceLevel level,
-                        uint32_t layerStart,
+                        gl::SourceLayer layerStart,
                         uint32_t layerCount,
                         vk::ImageHelper *image,
                         VkImageView view,
@@ -576,7 +576,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                        layerCount);
     }
     void onDepthStencilDraw(gl::SourceLevel level,
-                            uint32_t layerStart,
+                            gl::SourceLayer layerStart,
                             uint32_t layerCount,
                             vk::ImageHelper *image,
                             vk::ImageHelper *resolveImage)
@@ -595,7 +595,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         }
     }
     void onDepthStencilResolve(gl::SourceLevel level,
-                               uint32_t layerStart,
+                               gl::SourceLayer layerStart,
                                uint32_t layerCount,
                                VkImageAspectFlags aspects,
                                vk::ImageHelper *image,

@@ -372,10 +372,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                              GLint *rates) override;
 
   private:
-    // Transform an image level/layer from the frontend into one that can be used on the backing
-    // ImageHelper, taking into account mipmap or cube face offsets
-    uint32_t getNativeImageLayer(uint32_t frontendLayer) const;
-
     // Get the layer count for views.
     uint32_t getImageViewLayerCount() const;
     // Get the level count for views.

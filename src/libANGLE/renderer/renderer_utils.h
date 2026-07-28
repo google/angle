@@ -602,7 +602,6 @@ bool TextureRedefineLevel(const TextureLevelAllocation levelAllocation,
                           const TextureLevelDefinition levelDefinition,
                           bool immutableFormat,
                           uint32_t levelCount,
-                          const uint32_t layerIndex,
                           const gl::SourceImageIndex &index,
                           gl::SourceLevel imageFirstAllocatedLevel,
                           gl::CubeFaceArray<gl::TexLevelMask> *redefinedLevels);

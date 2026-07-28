@@ -269,12 +269,22 @@ class SourceLayer : public SourceIndex<uint32_t>
 
     // Convenience helpers
     constexpr SourceLayer operator+(uint32_t offset) const { return SourceLayer(mIndex + offset); }
+    SourceLayer &operator++()
+    {
+        ++mIndex;
+        return *this;
+    }
+
+    constexpr bool operator<(const SourceLayer &other) const { return mIndex < other.mIndex; }
+    constexpr bool operator<=(const SourceLayer &other) const { return mIndex <= other.mIndex; }
+    constexpr bool operator>(const SourceLayer &other) const { return mIndex > other.mIndex; }
+    constexpr bool operator>=(const SourceLayer &other) const { return mIndex >= other.mIndex; }
+    constexpr bool operator==(const SourceLayer &other) const { return mIndex == other.mIndex; }
+    constexpr bool operator!=(const SourceLayer &other) const { return mIndex != other.mIndex; }
+    // Helper for loops up to "layer count"
+    constexpr bool operator<(uint32_t limit) const { return mIndex < limit; }
 
     static constexpr SourceLayer Zero() { return SourceLayer(0); }
-
-    // Helper while code is being transitioned to using SourceLayer consistently.  Remove once done.
-    // TODO(http://anglebug.com/525079760)
-    static constexpr SourceLayer VerifiedSourceLayer(uint32_t layer) { return SourceLayer(layer); }
 
   protected:
     friend struct egl::ImageSourceAttributes;

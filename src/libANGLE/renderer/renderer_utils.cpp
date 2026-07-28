@@ -2454,7 +2454,6 @@ bool TextureRedefineLevel(const TextureLevelAllocation levelAllocation,
                           const TextureLevelDefinition levelDefinition,
                           bool immutableFormat,
                           uint32_t levelCount,
-                          const uint32_t layerIndex,
                           const gl::SourceImageIndex &index,
                           gl::SourceLevel imageFirstAllocatedLevel,
                           gl::CubeFaceArray<gl::TexLevelMask> *redefinedLevels)
@@ -2494,7 +2493,7 @@ bool TextureRedefineLevel(const TextureLevelAllocation levelAllocation,
         // Immutable texture should never have levels redefined.
         ASSERT(isCompatibleRedefinition || !immutableFormat);
 
-        const uint32_t redefinedFace = isCubeMap ? layerIndex : 0;
+        const uint32_t redefinedFace = isCubeMap ? index.getLayerIndex().get() : 0;
         (*redefinedLevels)[redefinedFace].set(levelIndexGL.get(), !isCompatibleRedefinition);
     }
 

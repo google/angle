@@ -46,7 +46,7 @@ void RenderTargetVk::init(vk::ImageHelper *image,
                           vk::ImageHelper *resolveImage,
                           vk::ImageViewHelper *resolveImageViews,
                           gl::SourceLevel levelIndexGL,
-                          uint32_t layerIndex,
+                          gl::SourceLayer layerIndex,
                           uint32_t layerCount,
                           RenderTargetTransience transience)
 {
@@ -75,7 +75,7 @@ void RenderTargetVk::reset()
     mResolveImage       = nullptr;
     mResolveImageViews  = nullptr;
     mLevelIndexGL       = gl::SourceLevel::Zero();
-    mLayerIndex         = 0;
+    mLayerIndex         = gl::SourceLayer::Zero();
     mLayerCount         = 0;
 }
 
@@ -83,7 +83,7 @@ vk::ImageOrBufferViewSubresourceSerial RenderTargetVk::getSubresourceSerialImpl(
     vk::ImageViewHelper *imageViews) const
 {
     ASSERT(imageViews);
-    ASSERT(mLayerIndex < std::numeric_limits<uint16_t>::max());
+    ASSERT(mLayerIndex.get() < std::numeric_limits<uint16_t>::max());
     ASSERT(mLevelIndexGL.get() < std::numeric_limits<uint16_t>::max());
 
     vk::LayerMode layerMode = vk::GetLayerMode(*mImage, mLayerCount);
@@ -361,7 +361,7 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image,
 {
     ASSERT(image && image->valid() && imageViews);
     ASSERT(mLevelIndexGL == gl::SourceLevel::Zero());
-    ASSERT(mLayerIndex == 0);
+    ASSERT(mLayerIndex == gl::SourceLayer::Zero());
     mImage             = image;
     mImageViews        = imageViews;
     mResolveImage      = resolveImage;
@@ -392,10 +392,10 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,
     // It's impossible to defer clears to slices of a 3D images, as the clear applies to all the
     // slices, while deferred clears only clear a single slice (where the framebuffer is attached).
     // Additionally, the layer index for 3D textures is always zero according to Vulkan.
-    uint32_t layerIndex = mLayerIndex;
+    gl::SourceLayer layerIndex = mLayerIndex;
     if (mImage->getType() == VK_IMAGE_TYPE_3D)
     {
-        layerIndex         = 0;
+        layerIndex         = gl::SourceLayer::Zero();
         deferredClears     = nullptr;
         deferredClearIndex = 0;
     }
@@ -461,11 +461,10 @@ gl::SourceImageIndex RenderTargetVk::getImageIndexForClear(uint32_t layerCount) 
         // threated as layers for this purpose.
         //
         // We also don't need to distinguish 2D array and cube.
-        return gl::SourceImageIndex::Make2DArrayRange(
-            mLevelIndexGL, gl::SourceLayer::VerifiedSourceLayer(mLayerIndex), layerCount);
+        return gl::SourceImageIndex::Make2DArrayRange(mLevelIndexGL, mLayerIndex, layerCount);
     }
 
-    ASSERT(mLayerIndex == 0);
+    ASSERT(mLayerIndex == gl::SourceLayer::Zero());
     ASSERT(mLayerCount == 1);
     ASSERT(layerCount == 1);
     return gl::SourceImageIndex::Make2D(mLevelIndexGL);

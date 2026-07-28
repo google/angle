@@ -59,7 +59,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
               vk::ImageHelper *resolveImage,
               vk::ImageViewHelper *resolveImageViews,
               gl::SourceLevel levelIndexGL,
-              uint32_t layerIndex,
+              gl::SourceLayer layerIndex,
               uint32_t layerCount,
               RenderTargetTransience transience);
 
@@ -119,7 +119,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     gl::Extents getRotatedExtents() const;
     gl::SourceLevel getLevelIndex() const { return mLevelIndexGL; }
     gl::SourceLevel getLevelIndexForImage(const vk::ImageHelper &image) const;
-    uint32_t getLayerIndex() const { return mLayerIndex; }
+    gl::SourceLayer getLayerIndex() const { return mLayerIndex; }
     uint32_t getLayerCount() const { return mLayerCount; }
     bool is3DImage() const { return getOwnerOfData()->getType() == VK_IMAGE_TYPE_3D; }
 
@@ -255,7 +255,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     // functions that read or write to the render target always use layer 0, so this works out for
     // users of |getLayerIndex()|.
     gl::SourceLevel mLevelIndexGL;
-    uint32_t mLayerIndex;
+    gl::SourceLayer mLayerIndex;
     uint32_t mLayerCount;
 
     // If resolve attachment exists, |mTransience| could be *Transient if the multisampled results

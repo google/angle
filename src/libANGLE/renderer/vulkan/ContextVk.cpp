@@ -470,16 +470,16 @@ vk::ImageAccess GetImageWriteAccessAndSubresource(const gl::ImageUnit &imageUnit
                                                   vk::ImageHelper &image,
                                                   gl::ShaderBitSet shaderStages,
                                                   gl::SourceLevel *levelOut,
-                                                  uint32_t *layerStartOut,
+                                                  gl::SourceLayer *layerStartOut,
                                                   uint32_t *layerCountOut)
 {
     *levelOut = imageUnit.texture->getState().toSourceLevel(gl::OwnLevel(imageUnit.level));
 
-    *layerStartOut = 0;
+    *layerStartOut = gl::SourceLayer::Zero();
     *layerCountOut = image.getLayerCount();
     if (imageUnit.layered)
     {
-        *layerStartOut = imageUnit.layered;
+        *layerStartOut = *layerStartOut + imageUnit.layered;
         *layerCountOut = 1;
     }
 
@@ -1370,16 +1370,16 @@ angle::Result ContextVk::getOrCreateNullStorageImageView(GLenum shaderFormat,
         vk::MemoryAllocationType::TextureImage));
     ANGLE_TRY(entry->image.initLayerImageViewWithUsage(
         this, gl::TextureType::_2D, VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(), &entry->view,
-        vk::LevelIndex(0), 1, 0, 1, VK_IMAGE_USAGE_STORAGE_BIT, GL_NONE));
+        vk::LevelIndex(0), 1, vk::LayerIndex::Zero(), 1, VK_IMAGE_USAGE_STORAGE_BIT, GL_NONE));
 
     const VkClearValue zeroClear = {};
     entry->image.stageClear(gl::SourceImageIndex::Make2D(gl::SourceLevel::Zero()),
                             VK_IMAGE_ASPECT_COLOR_BIT, zeroClear);
     ANGLE_TRY(entry->image.flushAllStagedUpdates(this));
 
-    entry->image.recordWriteBarrier(this, VK_IMAGE_ASPECT_COLOR_BIT,
-                                    vk::ImageAccess::AllGraphicsShadersWrite,
-                                    gl::SourceLevel::Zero(), 1, 0, 1, mOutsideRenderPassCommands);
+    entry->image.recordWriteBarrier(
+        this, VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageAccess::AllGraphicsShadersWrite,
+        gl::SourceLevel::Zero(), 1, gl::SourceLayer::Zero(), 1, mOutsideRenderPassCommands);
     entry->serial = mRenderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
 
     *imageViewOut = entry->view.getHandle();
@@ -4409,13 +4409,14 @@ angle::Result ContextVk::optimizeRenderPassForPresent(
 
         // Add the resolve attachment to the render pass
         const vk::ImageView *resolveImageView = nullptr;
-        ANGLE_TRY(colorImageView->getLevelLayerDrawImageView(this, *colorImage, vk::LevelIndex(0),
-                                                             0, &resolveImageView));
+        ANGLE_TRY(colorImageView->getLevelLayerDrawImageView(
+            this, *colorImage, vk::LevelIndex(0), vk::LayerIndex::Zero(), &resolveImageView));
 
         mRenderPassCommands->addColorResolveAttachment(0, colorImage, resolveImageView->getHandle(),
-                                                       gl::SourceLevel::Zero(), 0, 1);
-        onImageRenderPassWrite(gl::SourceLevel::Zero(), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
-                               vk::ImageAccess::ColorWrite, colorImage);
+                                                       gl::SourceLevel::Zero(),
+                                                       gl::SourceLayer::Zero(), 1);
+        onImageRenderPassWrite(gl::SourceLevel::Zero(), gl::SourceLayer::Zero(), 1,
+                               VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageAccess::ColorWrite, colorImage);
 
         if (ancillaryBehavior == SurfaceAncillaryColorBehavior::InvalidateOnPresent)
         {
@@ -7495,7 +7496,7 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
         alreadyProcessed.insert(image);
 
         gl::SourceLevel level;
-        uint32_t layerStart               = 0;
+        gl::SourceLayer layerStart;
         uint32_t layerCount               = 0;
         const vk::ImageAccess imageAccess = GetImageWriteAccessAndSubresource(
             imageUnit, *image, shaderStages, &level, &layerStart, &layerCount);
@@ -9173,7 +9174,7 @@ angle::Result ContextVk::finalizeImageWithTileMemory()
         // clear VkImage to simulate the transient nature of tile memory
         UtilsVk::ClearTextureParameters params = {};
         params.level                           = vk::LevelIndex(0);
-        params.layer                           = 0;
+        params.layer                           = vk::LayerIndex::Zero();
         params.clearValue                      = {};
         params.clearArea                       = gl::Box(0, 0, 0, 0, 0, 1);
         params.aspectFlags                     = mImageWithTileMemory->getAspectFlags();

@@ -424,13 +424,15 @@ angle::Result UnresolveYuvImage(ContextVk *contextVk,
     vk::DeviceScoped<vk::ImageView> srcViewY2Y(contextVk->getDevice());
     ANGLE_TRY(src->initLayerImageViewWithYuvModeOverride(
         contextVk, gl::TextureType::_2D, VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
-        &srcViewY2Y.get(), vk::LevelIndex(0), 1, 0, 1, gl::YuvSamplingMode::Y2Y,
-        VK_IMAGE_USAGE_SAMPLED_BIT, GL_NONE));
+        &srcViewY2Y.get(), vk::LevelIndex(0), 1, vk::LayerIndex::Zero(), 1,
+        gl::YuvSamplingMode::Y2Y, VK_IMAGE_USAGE_SAMPLED_BIT, GL_NONE));
     const vk::ImageView *dstView = nullptr;
     ANGLE_TRY(colorRenderTarget->getImageView(contextVk, &dstView));
 
     UtilsVk::CopyImageParameters params  = {};
+    params.srcLayer                      = vk::LayerIndex::Zero();
     params.dstMip                        = gl::SourceLevel::Zero();
+    params.dstLayer                      = gl::SourceLayer::Zero();
     params.srcOffset[0]                  = renderArea.x;
     params.srcOffset[1]                  = renderArea.y;
     params.srcExtents[0]                 = renderArea.width;
@@ -1219,13 +1221,13 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     VkImageBlit blit               = {};
     blit.srcSubresource.aspectMask = blitAspectMask;
     blit.srcSubresource.mipLevel   = srcImage->toVkLevel(readRenderTarget->getLevelIndex()).get();
-    blit.srcSubresource.baseArrayLayer = readRenderTarget->getLayerIndex();
+    blit.srcSubresource.baseArrayLayer = readRenderTarget->getLayerIndex().get();
     blit.srcSubresource.layerCount     = 1;
     blit.srcOffsets[0]                 = {sourceArea.x0(), sourceArea.y0(), 0};
     blit.srcOffsets[1]                 = {sourceArea.x1(), sourceArea.y1(), 1};
     blit.dstSubresource.aspectMask     = blitAspectMask;
     blit.dstSubresource.mipLevel = dstImage->toVkLevel(drawRenderTarget->getLevelIndex()).get();
-    blit.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
+    blit.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex().get();
     blit.dstSubresource.layerCount     = 1;
     blit.dstOffsets[0]                 = {destArea.x0(), destArea.y0(), 0};
     blit.dstOffsets[1]                 = {destArea.x1(), destArea.y1(), 1};
@@ -1645,7 +1647,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         ANGLE_TRY(drawRenderTarget->getImageView(contextVk, &dstDepthStencilView));
 
         gl::SourceLevel dstLevelIndex = drawRenderTarget->getLevelIndex();
-        uint32_t dstLayerIndex       = drawRenderTarget->getLayerIndex();
+        gl::SourceLayer dstLayerIndex = drawRenderTarget->getLayerIndex();
 
         // Get depth- and stencil-only views for reading.
         const vk::ImageView *srcDepthView = nullptr;
@@ -1996,8 +1998,8 @@ angle::Result FramebufferVk::generateFragmentShadingRateWithCPU(
     // copy data from staging buffer to image
     vk::CommandResources resources;
     resources.onBufferTransferRead(buffer);
-    resources.onImageTransferWrite(gl::SourceLevel::Zero(), 1, 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
-                                   &mFragmentShadingRateImage);
+    resources.onImageTransferWrite(gl::SourceLevel::Zero(), 1, gl::SourceLayer::Zero(), 1,
+                                   VK_IMAGE_ASPECT_COLOR_BIT, &mFragmentShadingRateImage);
     vk::OutsideRenderPassCommandBuffer *dataUpload;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &dataUpload));
     VkBufferImageCopy copy           = {};
@@ -2107,8 +2109,8 @@ angle::Result FramebufferVk::updateFoveationState(ContextVk *contextVk,
                                                       foveatedAttachmentSize));
         ASSERT(mFragmentShadingRateImage.valid());
 
-        serial = mFragmentShadingRateImageView.getSubresourceSerial(gl::SourceLevel::Zero(), 1, 0,
-                                                                    vk::LayerMode::All);
+        serial = mFragmentShadingRateImageView.getSubresourceSerial(
+            gl::SourceLevel::Zero(), 1, gl::SourceLayer::Zero(), vk::LayerMode::All);
     }
 
     // Update state after the possible failure point.
@@ -2196,7 +2198,7 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     VkImageResolve resolveRegion                = {};
     resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     resolveRegion.srcSubresource.mipLevel       = 0;
-    resolveRegion.srcSubresource.baseArrayLayer = params.srcLayer;
+    resolveRegion.srcSubresource.baseArrayLayer = params.srcLayer.get();
     resolveRegion.srcSubresource.layerCount     = 1;
     resolveRegion.srcOffset.x                   = params.blitArea.x;
     resolveRegion.srcOffset.y                   = params.blitArea.y;
@@ -2222,8 +2224,8 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
         vk::LevelIndex levelVk = dstImage.toVkLevel(drawRenderTarget->getLevelIndex());
         resolveRegion.dstSubresource.mipLevel       = levelVk.get();
         resolveRegion.dstSubresource.baseArrayLayer =
-            isDst3D ? 0 : drawRenderTarget->getLayerIndex();
-        resolveRegion.dstOffset.z = isDst3D ? drawRenderTarget->getLayerIndex() : 0;
+            isDst3D ? 0 : drawRenderTarget->getLayerIndex().get();
+        resolveRegion.dstOffset.z = isDst3D ? drawRenderTarget->getLayerIndex().get() : 0;
 
         srcImage->resolve(renderer, &dstImage, resolveRegion, commandBuffer);
 
@@ -4151,7 +4153,7 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "FramebufferVk::readPixelsImpl");
     gl::SourceLevel levelGL = renderTarget->getLevelIndex();
-    uint32_t layer         = renderTarget->getLayerIndex();
+    gl::SourceLayer layer   = renderTarget->getLayerIndex();
     return renderTarget->getImageForCopy().readPixels(contextVk, area, packPixelsParams,
                                                       copyAspectFlags, levelGL, layer, pixels);
 }
@@ -4254,7 +4256,7 @@ angle::Result FramebufferVk::flushDepthStencilDeferredClear(ContextVk *contextVk
     range.aspectMask              = aspect;
     range.baseMipLevel            = image.toVkLevel(renderTarget->getLevelIndex()).get();
     range.levelCount              = 1;
-    range.baseArrayLayer          = renderTarget->getLayerIndex();
+    range.baseArrayLayer          = renderTarget->getLayerIndex().get();
     range.layerCount              = renderTarget->getLayerCount();
 
     VkClearDepthStencilValue clearValue = {};

@@ -873,8 +873,8 @@ angle::Result TextureWgpu::redefineLevel(const gl::Context *context,
             const gl::SourceLevel firstAllocatedLevel =
                 gl::SourceLevel::Zero() + mImage->getFirstAllocatedLevel().get();
             if (TextureRedefineLevel(levelAllocation, levelDefinition, mState.getImmutableFormat(),
-                                     mImage->getLevelCount(), layerIndex.get(), ownerIndex,
-                                     firstAllocatedLevel, &mRedefinedLevels))
+                                     mImage->getLevelCount(), ownerIndex, firstAllocatedLevel,
+                                     &mRedefinedLevels))
             {
                 resetImageAndReleaseViews();
             }
