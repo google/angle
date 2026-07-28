@@ -9792,9 +9792,20 @@ angle::Result ImageHelper::stageResourceClearWithFormat(ContextVk *contextVk,
                                                         const angle::Format &imageFormat,
                                                         const VkClearValue &clearValue)
 {
-    // Robust clears must only be staged if we do not have any prior data for this subresource.
+    // It's possible that a ClearAfterInvalidate is already staged on this image, drop that.  This
+    // is only possible if the format has an emulated channel.
+    if (intendedFormat.id != imageFormat.id)
+    {
+        removeSingleStagedClearAfterInvalidate(gl::LevelIndex(index.getLevelIndex()),
+                                               index.hasLayer() ? index.getLayerIndex() : 0,
+                                               index.getLayerCount());
+    }
+
+    // Otherwise robust clears must only be staged if we do not have any prior data for this
+    // subresource.
     ASSERT(!hasStagedUpdatesForSubresource(gl::LevelIndex(index.getLevelIndex()),
-                                           index.getLayerIndex(), index.getLayerCount()));
+                                           index.hasLayer() ? index.getLayerIndex() : 0,
+                                           index.getLayerCount()));
 
     const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(imageFormat);
 
