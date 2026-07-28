@@ -122,6 +122,7 @@ enum class [[nodiscard]] Result
     Continue,
     Stop,
 };
+std::ostream &operator<<(std::ostream &os, Result result);
 
 class [[nodiscard]] ResultAccumulator
 {
