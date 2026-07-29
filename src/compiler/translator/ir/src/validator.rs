@@ -31,6 +31,11 @@
 //   - Block inputs are not pointers (not supported by the `astify` pass):
 //     validate_merge_block_input_prerequisites()
 //
+// Decorations:
+//   - Between the Smooth, Flat, NoPerspective, Centroid and Sample decorations, they are all
+//     mutually exclusive, except NoPerspective can be combined with Centroid or Sample. See
+//     ffi::Interpolation in reflection.rs for reference: validate_mutually_exclusive_decorations()
+//
 // Control flow:
 //   - Branches must have the appropriate targets set (merge, trueblock for if, etc); every block
 //     ends in branch: validate_all_branch_instructions_have_valid_target()
@@ -84,9 +89,6 @@
 //     is_proj is false for cubemaps.
 //   - Images with the Rect dimension can only have a Float base type and be 2D samplers (not
 //     storage image, array, msaa, etc).
-//   - Between the Smooth, Flat, NoPerspective, Centroid and Sample decorations, they are all
-//     mutually exclusive, except NoPerspective can be combined with Centroid or Sample.  See
-//     ffi::Interpolation in reflection.rs for reference.
 //   - ReadOnly and WriteOnly decorations are mutually exclusive.
 
 use crate::ir::*;
@@ -277,6 +279,7 @@ impl<'a> Validator<'a> {
     fn validate(&self) {
         self.validate_all_ids_are_present();
         self.validate_all_alive_variables_are_pointers();
+        self.validate_mutually_exclusive_decorations();
         self.validate_no_pointer_to_pointer_type();
         self.validate_all_variables_are_declared_in_scope();
         self.validate_all_registers_are_declared_in_scope();
@@ -887,6 +890,39 @@ impl<'a> Validator<'a> {
                 self.on_error(format_args!(
                     "invalid variable: variable {:?} is not a pointer",
                     alive_variable
+                ));
+            }
+        }
+    }
+
+    fn validate_mutually_exclusive_decorations(&self) {
+        for variable in
+            self.ir.meta.all_variables().iter().filter(|variable| !variable.is_dead_code_eliminated)
+        {
+            let has_smooth = variable.decorations.has(Decoration::Smooth);
+            let has_flat = variable.decorations.has(Decoration::Flat);
+            let has_noperspective = variable.decorations.has(Decoration::NoPerspective);
+
+            let has_centroid = variable.decorations.has(Decoration::Centroid);
+            let has_sample = variable.decorations.has(Decoration::Sample);
+
+            if has_smooth && (has_flat || has_noperspective || has_centroid || has_sample) {
+                self.on_error(format_args!(
+                    "invalid variable: {:?}, Smooth decoration is mutually exclusive with other \
+                     interpolation decorations",
+                    variable
+                ));
+            } else if has_flat && (has_noperspective || has_centroid || has_sample) {
+                self.on_error(format_args!(
+                    "invalid variable: {:?}, Flat decoration is mutually exclusive with other \
+                     interpolation decorations",
+                    variable
+                ));
+            } else if has_centroid && has_sample {
+                self.on_error(format_args!(
+                    "invalid variable: {:?}, Centroid and Sample decorations are mutually \
+                     exclusive",
+                    variable
                 ));
             }
         }
