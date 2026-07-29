@@ -639,6 +639,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void deleteMemoryObject(MemoryObjectID memoryObject);
     void deleteSemaphore(SemaphoreID semaphore);
 
+    // Only used for capturing frame data in ANGLE_capture_enabled builds.
+    bool canProtectCoherentMemoryDirectly();
+
     void bindReadFramebuffer(FramebufferID framebufferHandle);
     void bindDrawFramebuffer(FramebufferID framebufferHandle);
 
