@@ -5573,16 +5573,16 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // VK_EXT_pipeline_protected_access.
     // http://anglebug.com/42266183
     //
-    // http://b/381285096. On Intel platforms, we want to prevent protected queues being used as
-    // we cannot handle the teardown scenario if PXP termination occurs. However, enable this for
-    // Android, since the issue is rare and the fallout is isolated to the specific app (rather than
-    // crashing the whole system like in ChromeOS).
+    // http://b/381285096. On Intel platforms, we want to prevent protected
+    // queues being used as we cannot handle the teardown scenario if PXP termination occurs.
+    // http://b/512497379. We cannot handle teardown in Android on Intel either so it is left
+    // disabled there to avoid app compat issues until TODO: http://b/540469298
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsProtectedMemory,
         mProtectedMemoryFeatures.protectedMemory == VK_TRUE &&
             (!isARMProprietary ||
              mPipelineProtectedAccessFeatures.pipelineProtectedAccess == VK_TRUE) &&
-            (!isIntel || IsAndroid()));
+            !isIntel);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostQueryReset,
                             mHostQueryResetFeatures.hostQueryReset == VK_TRUE);
