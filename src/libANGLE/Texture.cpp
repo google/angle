@@ -182,6 +182,13 @@ GLuint TextureState::getEffectiveMaxLevel() const
         clampedMaxLevel        = std::min(clampedMaxLevel, mImmutableLevels - 1);
         return clampedMaxLevel;
     }
+    if (mEGLImageSourceAttributes.type != gl::TextureType::InvalidEnum)
+    {
+        // If an EGL image sibling, BASE level must be zero.  EGL image siblings always view a
+        // single level, so MAX level is effectively zero as well.
+        ASSERT(mBaseLevel == 0);
+        return 0;
+    }
     return std::max(mMaxLevel, mBaseLevel);
 }
 
