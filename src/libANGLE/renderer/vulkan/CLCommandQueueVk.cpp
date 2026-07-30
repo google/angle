@@ -603,7 +603,7 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
     }
     else
     {
-        resources.onImageTransferWrite(gl::SourceLevel::Zero(), 1, gl::SourceLayer::Zero(),
+        resources.onImageTransferWrite(gl::OwnerLevel(0), 1, gl::OwnerLayer(0),
                                        static_cast<uint32_t>(imageVk.getArraySize()), aspectFlags,
                                        &imageVk.getImage());
         resources.onBufferTransferRead(&buffer.getBuffer());
@@ -986,8 +986,8 @@ angle::Result CLCommandQueueVk::enqueueCopyImage(const cl::Image &srcImage,
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
     VkImageAspectFlags dstAspectFlags = srcImageVk->getImage().getAspectFlags();
     VkImageAspectFlags srcAspectFlags = dstImageVk->getImage().getAspectFlags();
-    resources.onImageTransferWrite(gl::SourceLevel::Zero(), 1, gl::SourceLayer::Zero(), 1,
-                                   dstAspectFlags, &dstImageVk->getImage());
+    resources.onImageTransferWrite(gl::OwnerLevel(0), 1, gl::OwnerLayer(0), 1, dstAspectFlags,
+                                   &dstImageVk->getImage());
     resources.onImageTransferRead(srcAspectFlags, &srcImageVk->getImage());
     ANGLE_TRY(getCommandBuffer(resources, &commandBuffer));
 
@@ -1581,8 +1581,8 @@ angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem, MemoryH
     if (cl::IsImageType(clMem->getType()))
     {
         CLImageVk &vkMem = clMem->getImpl<CLImageVk>();
-        mComputePassCommands->imageWrite(mContext, gl::SourceLevel::Zero(), gl::SourceLayer::Zero(),
-                                         1, vkMem.getImage().getAspectFlags(),
+        mComputePassCommands->imageWrite(mContext, gl::OwnerLevel(0), gl::OwnerLayer(0), 1,
+                                         vkMem.getImage().getAspectFlags(),
                                          vk::ImageAccess::ComputeShaderWrite, &vkMem.getImage());
     }
     if (needsBarrier)

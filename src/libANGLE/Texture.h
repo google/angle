@@ -207,21 +207,21 @@ class TextureState final : private angle::NonCopyable
         return mEGLImageSourceAttributes;
     }
 
-    SourceImageIndex toSourceIndex(const OwnImageIndex &index) const
+    OwnerImageIndex toOwnerIndex(const ImageIndex &index) const
     {
-        return mEGLImageSourceAttributes.toSourceIndex(index);
+        return mEGLImageSourceAttributes.toOwnerIndex(index);
     }
-    SourceLevel toSourceLevel(OwnLevel level) const
+    OwnerLevel toOwnerLevel(LevelIndex level) const
     {
-        return mEGLImageSourceAttributes.toSourceLevel(level);
+        return mEGLImageSourceAttributes.toOwnerLevel(level);
     }
-    SourceLayer toSourceLayer(OwnLayer layer) const
+    OwnerLayer toOwnerLayer(LayerIndex layer) const
     {
-        return mEGLImageSourceAttributes.toSourceLayer(layer);
+        return mEGLImageSourceAttributes.toOwnerLayer(layer);
     }
-    SourceLayer toSourceDepth(const Offset &offset) const
+    OwnerLayer toOwnerDepth(const Offset &offset) const
     {
-        return mEGLImageSourceAttributes.toSourceDepth(offset);
+        return mEGLImageSourceAttributes.toOwnerDepth(offset);
     }
 
   private:
@@ -734,7 +734,7 @@ class Texture final : public RefCountObject<TextureID>,
         return false;
     }
 
-    bool isEGLImageSource(const ImageIndex &index) const;
+    bool isEGLImageSource(const OwnerImageIndex &index) const;
 
     bool isDepthOrStencil() const
     {

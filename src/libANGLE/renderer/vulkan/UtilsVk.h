@@ -168,8 +168,8 @@ class UtilsVk : angle::NonCopyable
         vk::LayerIndex srcLayer;
         int srcSampleCount;
         int srcHeight;
-        gl::SourceLevel dstMip;
-        gl::SourceLayer dstLayer;
+        gl::OwnerLevel dstMip;
+        gl::OwnerLayer dstLayer;
         bool srcPremultiplyAlpha;
         bool srcUnmultiplyAlpha;
         bool srcFlipY;
@@ -183,9 +183,9 @@ class UtilsVk : angle::NonCopyable
     struct CopyImageBitsParameters
     {
         int srcOffset[3];
-        gl::SourceLevel srcLevel;
+        gl::OwnerLevel srcLevel;
         int dstOffset[3];
-        gl::SourceLevel dstLevel;
+        gl::OwnerLevel dstLevel;
         uint32_t copyExtents[3];
     };
 
@@ -288,8 +288,8 @@ class UtilsVk : angle::NonCopyable
                                           vk::RenderPassCommandBufferHelper *renderPassCommands,
                                           vk::ImageHelper *dstImage,
                                           const vk::ImageView &dstImageView,
-                                          gl::SourceLevel dstImageLevel,
-                                          gl::SourceLayer dstImageLayer,
+                                          gl::OwnerLevel dstImageLevel,
+                                          gl::OwnerLayer dstImageLayer,
                                           vk::ImageHelper *srcImage,
                                           const vk::ImageView *srcDepthView,
                                           const vk::ImageView *srcStencilView,
@@ -297,8 +297,8 @@ class UtilsVk : angle::NonCopyable
 
     angle::Result stencilBlitResolveNoShaderExport(ContextVk *contextVk,
                                                    vk::ImageHelper *dstImage,
-                                                   gl::SourceLevel dstLevelIndex,
-                                                   gl::SourceLayer dstLayerIndex,
+                                                   gl::OwnerLevel dstLevelIndex,
+                                                   gl::OwnerLayer dstLayerIndex,
                                                    vk::ImageHelper *srcImage,
                                                    const vk::ImageView *srcStencilView,
                                                    const BlitResolveParameters &params);

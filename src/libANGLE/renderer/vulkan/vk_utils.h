@@ -1346,9 +1346,9 @@ struct RenderPassPerfCounters
 
 // A Vulkan image level index.
 using LevelIndex = gl::LevelIndexWrapper<uint32_t>;
-// For uniformity with vk::LevelIndex, even though there's no translation between gl::SourceLayer
+// For uniformity with vk::LevelIndex, even though there's no translation between gl::OwnerLayer
 // and vk::LayerIndex.
-using LayerIndex = gl::SourceLayer;
+using LayerIndex = gl::OwnerLayer;
 
 // Ensure viewport is within Vulkan requirements
 void ClampViewport(VkViewport *viewport);
@@ -1567,7 +1567,7 @@ void GetExtentsAndLayerCount(gl::TextureType textureType,
                              VkExtent3D *extentsOut,
                              uint32_t *layerCountOut);
 
-vk::LevelIndex GetLevelIndex(gl::SourceLevel levelGL, gl::SourceLevel baseLevel);
+vk::LevelIndex GetLevelIndex(gl::OwnerLevel levelGL, gl::OwnerLevel baseLevel);
 
 VkImageTiling GetTilingMode(gl::TilingMode tilingMode);
 
@@ -1601,7 +1601,7 @@ GLuint GetMaxSampleCount(VkSampleCountFlags sampleCounts);
 // Return a supported sample count that's at least as large as the requested one.
 GLuint GetSampleCount(VkSampleCountFlags supportedCounts, GLuint requestedCount);
 
-gl::SourceLevel GetLevelIndex(vk::LevelIndex levelVk, gl::SourceLevel baseLevel);
+gl::OwnerLevel GetLevelIndex(vk::LevelIndex levelVk, gl::OwnerLevel baseLevel);
 
 GLenum ConvertVkFixedRateToGLFixedRate(const VkImageCompressionFixedRateFlagsEXT vkCompressionRate);
 GLint ConvertCompressionFlagsToGLFixedRates(

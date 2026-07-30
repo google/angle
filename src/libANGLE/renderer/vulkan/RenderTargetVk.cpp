@@ -45,8 +45,8 @@ void RenderTargetVk::init(vk::ImageHelper *image,
                           vk::ImageViewHelper *imageViews,
                           vk::ImageHelper *resolveImage,
                           vk::ImageViewHelper *resolveImageViews,
-                          gl::SourceLevel levelIndexGL,
-                          gl::SourceLayer layerIndex,
+                          gl::OwnerLevel levelIndexGL,
+                          gl::OwnerLayer layerIndex,
                           uint32_t layerCount,
                           RenderTargetTransience transience)
 {
@@ -74,8 +74,8 @@ void RenderTargetVk::reset()
     mImageViews         = nullptr;
     mResolveImage       = nullptr;
     mResolveImageViews  = nullptr;
-    mLevelIndexGL       = gl::SourceLevel::Zero();
-    mLayerIndex         = gl::SourceLayer::Zero();
+    mLevelIndexGL       = gl::OwnerLevel(0);
+    mLayerIndex         = gl::OwnerLayer(0);
     mLayerCount         = 0;
 }
 
@@ -348,10 +348,10 @@ gl::Extents RenderTargetVk::getRotatedExtents() const
     return mImage->getRotatedLevelExtents2D(levelVk);
 }
 
-gl::SourceLevel RenderTargetVk::getLevelIndexForImage(const vk::ImageHelper &image) const
+gl::OwnerLevel RenderTargetVk::getLevelIndexForImage(const vk::ImageHelper &image) const
 {
     return (getOwnerOfData()->getImageSerial() == image.getImageSerial()) ? mLevelIndexGL
-                                                                          : gl::SourceLevel::Zero();
+                                                                          : gl::OwnerLevel(0);
 }
 
 void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image,
@@ -360,8 +360,8 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image,
                                           vk::ImageViewHelper *resolveImageViews)
 {
     ASSERT(image && image->valid() && imageViews);
-    ASSERT(mLevelIndexGL == gl::SourceLevel::Zero());
-    ASSERT(mLayerIndex == gl::SourceLayer::Zero());
+    ASSERT(mLevelIndexGL == gl::OwnerLevel(0));
+    ASSERT(mLayerIndex == gl::OwnerLayer(0));
     mImage             = image;
     mImageViews        = imageViews;
     mResolveImage      = resolveImage;
@@ -392,10 +392,10 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,
     // It's impossible to defer clears to slices of a 3D images, as the clear applies to all the
     // slices, while deferred clears only clear a single slice (where the framebuffer is attached).
     // Additionally, the layer index for 3D textures is always zero according to Vulkan.
-    gl::SourceLayer layerIndex = mLayerIndex;
+    gl::OwnerLayer layerIndex = mLayerIndex;
     if (mImage->getType() == VK_IMAGE_TYPE_3D)
     {
-        layerIndex         = gl::SourceLayer::Zero();
+        layerIndex         = gl::OwnerLayer(0);
         deferredClears     = nullptr;
         deferredClearIndex = 0;
     }
@@ -452,7 +452,7 @@ void RenderTargetVk::invalidateEntireStencilContent(ContextVk *contextVk,
                                                preferToKeepContentsDefinedOut);
 }
 
-gl::SourceImageIndex RenderTargetVk::getImageIndexForClear(uint32_t layerCount) const
+gl::OwnerImageIndex RenderTargetVk::getImageIndexForClear(uint32_t layerCount) const
 {
     // Determine the GL type from the Vk Image properties.
     if (mImage->getType() == VK_IMAGE_TYPE_3D || mImage->getLayerCount() > 1)
@@ -461,12 +461,12 @@ gl::SourceImageIndex RenderTargetVk::getImageIndexForClear(uint32_t layerCount) 
         // threated as layers for this purpose.
         //
         // We also don't need to distinguish 2D array and cube.
-        return gl::SourceImageIndex::Make2DArrayRange(mLevelIndexGL, mLayerIndex, layerCount);
+        return gl::OwnerImageIndex::Make2DArrayRange(mLevelIndexGL, mLayerIndex, layerCount);
     }
 
-    ASSERT(mLayerIndex == gl::SourceLayer::Zero());
+    ASSERT(mLayerIndex == gl::OwnerLayer(0));
     ASSERT(mLayerCount == 1);
     ASSERT(layerCount == 1);
-    return gl::SourceImageIndex::Make2D(mLevelIndexGL);
+    return gl::OwnerImageIndex::Make2D(mLevelIndexGL);
 }
 }  // namespace rx

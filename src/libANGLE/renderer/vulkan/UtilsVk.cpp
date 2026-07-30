@@ -1276,12 +1276,12 @@ angle::Result setupUnresolveRenderPass(ContextVk *contextVk,
     // are the destination.
     gl::DrawBuffersArray<vk::ImageHelper *> colorDst         = {};
     gl::DrawBuffersArray<const vk::ImageView *> colorDstView = {};
-    gl::DrawBuffersArray<gl::SourceLayer> colorDstLayer      = {};
+    gl::DrawBuffersArray<gl::OwnerLayer> colorDstLayer       = {};
 
     vk::ImageHelper *depthStencilSrc         = nullptr;
     vk::ImageHelper *depthStencilDst         = nullptr;
     const vk::ImageView *depthStencilDstView = nullptr;
-    gl::SourceLayer depthStencilDstLayer     = gl::SourceLayer::Zero();
+    gl::OwnerLayer depthStencilDstLayer      = gl::OwnerLayer(0);
 
     // Get pointers to source/destination images and views.
     vk::PackedAttachmentIndex colorIndexVk(0);
@@ -1389,7 +1389,7 @@ angle::Result setupUnresolveRenderPass(ContextVk *contextVk,
     for (uint32_t attachmentIndex = 0; attachmentIndex < colorAttachmentCount; ++attachmentIndex)
     {
         ASSERT(colorDst[attachmentIndex]->getLevelCount() == 1);
-        contextVk->onColorDraw(gl::SourceLevel::Zero(), colorDstLayer[attachmentIndex], 1,
+        contextVk->onColorDraw(gl::OwnerLevel(0), colorDstLayer[attachmentIndex], 1,
                                colorDst[attachmentIndex], nullptr,
                                vk::PackedAttachmentIndex(attachmentIndex));
 
@@ -1400,8 +1400,8 @@ angle::Result setupUnresolveRenderPass(ContextVk *contextVk,
     if (params.unresolveDepth || params.unresolveStencil)
     {
         ASSERT(depthStencilDst->getLevelCount() == 1);
-        contextVk->onDepthStencilDraw(gl::SourceLevel::Zero(), depthStencilDstLayer, 1,
-                                      depthStencilDst, nullptr);
+        contextVk->onDepthStencilDraw(gl::OwnerLevel(0), depthStencilDstLayer, 1, depthStencilDst,
+                                      nullptr);
 
         // Image layout change must include all aspectFlags if the separateDepthStencilLayouts
         // feature is not enabled.
@@ -3301,8 +3301,8 @@ angle::Result UtilsVk::depthStencilBlitResolve(
     vk::RenderPassCommandBufferHelper *renderPassCommands,
     vk::ImageHelper *dstImage,
     const vk::ImageView &dstImageView,
-    gl::SourceLevel dstImageLevel,
-    gl::SourceLayer dstImageLayer,
+    gl::OwnerLevel dstImageLevel,
+    gl::OwnerLayer dstImageLayer,
     vk::ImageHelper *srcImage,
     const vk::ImageView *srcDepthView,
     const vk::ImageView *srcStencilView,
@@ -3483,8 +3483,8 @@ angle::Result UtilsVk::depthStencilBlitResolve(
 
 angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
                                                         vk::ImageHelper *dstImage,
-                                                        gl::SourceLevel dstLevelIndex,
-                                                        gl::SourceLayer dstLayerIndex,
+                                                        gl::OwnerLevel dstLevelIndex,
+                                                        gl::OwnerLayer dstLayerIndex,
                                                         vk::ImageHelper *srcImage,
                                                         const vk::ImageView *srcStencilView,
                                                         const BlitResolveParameters &params)
@@ -3717,7 +3717,7 @@ angle::Result UtilsVk::copyImageFromTileMemory(ContextVk *contextVk,
     {
         ANGLE_TRY(srcImage->initReinterpretedLayerImageView(
             contextVk, gl::TextureType::_2D, VK_IMAGE_ASPECT_DEPTH_BIT, gl::SwizzleState(),
-            &srcDepthView.get(), vk::LevelIndex(0), 1, vk::LayerIndex::Zero(), 1,
+            &srcDepthView.get(), vk::LevelIndex(0), 1, vk::LayerIndex(0), 1,
             vk::ImageHelper::kDefaultImageViewUsageFlags, formatID, GL_NONE));
     }
 
@@ -3725,7 +3725,7 @@ angle::Result UtilsVk::copyImageFromTileMemory(ContextVk *contextVk,
     {
         ANGLE_TRY(srcImage->initReinterpretedLayerImageView(
             contextVk, gl::TextureType::_2D, VK_IMAGE_ASPECT_STENCIL_BIT, gl::SwizzleState(),
-            &srcStencilView.get(), vk::LevelIndex(0), 1, vk::LayerIndex::Zero(), 1,
+            &srcStencilView.get(), vk::LevelIndex(0), 1, vk::LayerIndex(0), 1,
             vk::ImageHelper::kDefaultImageViewUsageFlags, formatID, GL_NONE));
     }
 
@@ -3734,12 +3734,12 @@ angle::Result UtilsVk::copyImageFromTileMemory(ContextVk *contextVk,
         vk::DeviceScoped<vk::ImageView> dstDepthStencilImageView(contextVk->getDevice());
         ANGLE_TRY(dstImage->initReinterpretedLayerImageView(
             contextVk, gl::TextureType::_2D, aspectFlags, gl::SwizzleState(),
-            &dstDepthStencilImageView.get(), vk::LevelIndex(0), 1, vk::LayerIndex::Zero(), 1,
+            &dstDepthStencilImageView.get(), vk::LevelIndex(0), 1, vk::LayerIndex(0), 1,
             vk::ImageHelper::kDefaultImageViewUsageFlags, formatID, GL_NONE));
 
         ANGLE_TRY(depthStencilBlitResolve(
-            contextVk, nullptr, dstImage, dstDepthStencilImageView.get(), gl::SourceLevel::Zero(),
-            gl::SourceLayer::Zero(), srcImage, blitDepthBuffer ? &srcDepthView.get() : nullptr,
+            contextVk, nullptr, dstImage, dstDepthStencilImageView.get(), gl::OwnerLevel(0),
+            gl::OwnerLayer(0), srcImage, blitDepthBuffer ? &srcDepthView.get() : nullptr,
             (blitStencilBuffer && hasShaderStencilExport) ? &srcStencilView.get() : nullptr,
             params));
 
@@ -3750,8 +3750,8 @@ angle::Result UtilsVk::copyImageFromTileMemory(ContextVk *contextVk,
     // If shader stencil export is not present, blit stencil through a different path.
     if (blitStencilBuffer && !hasShaderStencilExport)
     {
-        ANGLE_TRY(stencilBlitResolveNoShaderExport(contextVk, dstImage, gl::SourceLevel::Zero(),
-                                                   gl::SourceLayer::Zero(), srcImage,
+        ANGLE_TRY(stencilBlitResolveNoShaderExport(contextVk, dstImage, gl::OwnerLevel(0),
+                                                   gl::OwnerLayer(0), srcImage,
                                                    &srcStencilView.get(), params));
     }
 
@@ -4081,7 +4081,7 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
     vk::CommandResources resources;
     resources.onImageTransferRead(src->getAspectFlags(), src);
     resources.onImageTransferWrite(
-        params.dstLevel, 1, gl::SourceLayer::Zero() + (isDst3D ? 0 : params.dstOffset[2]),
+        params.dstLevel, 1, gl::OwnerLayer(isDst3D ? 0 : params.dstOffset[2]),
         isDst3D ? 1 : params.copyExtents[2], VK_IMAGE_ASPECT_COLOR_BIT, dst);
 
     // srcBuffer is the destination of copyImageToBuffer() below.
@@ -4290,7 +4290,7 @@ angle::Result UtilsVk::copyImageToBuffer(ContextVk *contextVk,
     vk::DeviceScoped<vk::ImageView> srcView(contextVk->getDevice());
     ANGLE_TRY(src->initReinterpretedLayerImageView(
         contextVk, textureType, src->getAspectFlags(), swizzle, &srcView.get(), params.srcMip, 1,
-        textureType == gl::TextureType::_2D ? params.srcLayer : vk::LayerIndex::Zero(), 1,
+        textureType == gl::TextureType::_2D ? params.srcLayer : vk::LayerIndex(0), 1,
         VK_IMAGE_USAGE_SAMPLED_BIT, linearFormat, GL_NONE));
 
     vk::CommandResources resources;
@@ -4520,8 +4520,8 @@ angle::Result UtilsVk::transCodeEtcToBc(ContextVk *contextVk,
     writeDescriptorSet[1].pImageInfo      = &imageInfo;
     writeDescriptorSet[1].descriptorCount = 1;
     // Due to limitation VUID-VkImageViewCreateInfo-image-07072, we have to copy layer by layer.
-    for (vk::LayerIndex layer = vk::LayerIndex::Zero();
-         layer < copyRegion->imageSubresource.layerCount; ++layer)
+    for (vk::LayerIndex layer = vk::LayerIndex(0); layer < copyRegion->imageSubresource.layerCount;
+         ++layer)
     {
         vk::DeviceScoped<vk::ImageView> scopedImageView(contextVk->getDevice());
         ANGLE_TRY(dstImage->initReinterpretedLayerImageView(
@@ -4660,13 +4660,13 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     uint32_t layerCount        = image->getLayerCount();
     uint32_t levelCount        = image->getLevelCount();
     GLint sampleCount          = image->getSamples();
-    gl::SourceLevel baseLevelGL = image->getFirstAllocatedLevel();
+    gl::OwnerLevel baseLevelGL = image->getFirstAllocatedLevel();
     vk::LevelIndex baseLevelVK = image->toVkLevel(baseLevelGL);
     vk::LevelIndex maxLevelVK  = baseLevelVK + (levelCount - 1);
 
     // Transition entire image to color attachment layout
     vk::CommandResources resources;
-    resources.onImageDrawMipmapGenerationWrite(baseLevelGL, levelCount, gl::SourceLayer::Zero(),
+    resources.onImageDrawMipmapGenerationWrite(baseLevelGL, levelCount, gl::OwnerLayer(0),
                                                layerCount, VK_IMAGE_ASPECT_COLOR_BIT, image);
     vk::OutsideRenderPassCommandBuffer *outsideCommandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &outsideCommandBuffer));
@@ -4779,7 +4779,7 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
         shaderParams.invSrcExtent[1] = 1.0f / renderArea.height;
 
         // mipLevel N --> mipLevel N+1 must be done for each layer
-        for (vk::LayerIndex currentLayer = vk::LayerIndex::Zero(); currentLayer < layerCount;
+        for (vk::LayerIndex currentLayer = vk::LayerIndex(0); currentLayer < layerCount;
              ++currentLayer)
         {
             // Create image views for currentLayer's srcLevelVk and dstLevelVk
@@ -5152,7 +5152,7 @@ angle::Result UtilsVk::generateFragmentShadingRate(
     // Fragment shading rate image will always have 1 layer.
     resources.onImageComputeShaderWrite(
         shadingRateAttachmentImageHelper->getFirstAllocatedLevel(),
-        shadingRateAttachmentImageHelper->getLevelCount(), gl::SourceLayer::Zero(),
+        shadingRateAttachmentImageHelper->getLevelCount(), gl::OwnerLayer(0),
         shadingRateAttachmentImageHelper->getLayerCount(),
         shadingRateAttachmentImageHelper->getAspectFlags(), shadingRateAttachmentImageHelper);
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(resources, &commandBufferHelper));

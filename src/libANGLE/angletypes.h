@@ -1292,6 +1292,8 @@ class LevelIndexWrapper
 
 // A GL texture level index.
 using LevelIndex = LevelIndexWrapper<GLint>;
+// A GL texture layer index.
+using LayerIndex = LevelIndexWrapper<uint32_t>;
 
 enum class MultisamplingMode
 {

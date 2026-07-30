@@ -4040,8 +4040,8 @@ bool ValidateCreateImage(const ValidationContext *val,
                 return false;
             }
 
-            if (texture->isEGLImageSource(gl::ImageIndex::MakeFromTarget(
-                    gl::TextureTarget::_2D, static_cast<GLint>(level), 1)))
+            if (texture->isEGLImageSource(gl::OwnerImageIndex::MakeFromTarget(
+                    gl::TextureTarget::_2D, gl::OwnerLevel(static_cast<GLint>(level)), 1)))
             {
                 val->setError(EGL_BAD_ACCESS,
                               "The texture has been bound to an existing EGL image.");
@@ -4129,8 +4129,8 @@ bool ValidateCreateImage(const ValidationContext *val,
 
             gl::TextureTarget glTexTarget =
                 gl::CubeFaceIndexToTextureTarget(CubeMapTextureTargetToLayerIndex(target));
-            if (texture->isEGLImageSource(
-                    gl::ImageIndex::MakeCubeMapFace(glTexTarget, static_cast<GLint>(level))))
+            if (texture->isEGLImageSource(gl::OwnerImageIndex::MakeCubeMapFace(
+                    glTexTarget, gl::OwnerLevel(static_cast<GLint>(level)))))
             {
                 val->setError(EGL_BAD_ACCESS,
                               "The texture has been bound to an existing EGL image.");
@@ -4207,7 +4207,8 @@ bool ValidateCreateImage(const ValidationContext *val,
                 return false;
             }
             if (texture->isEGLImageSource(
-                    gl::ImageIndex::Make3D(static_cast<GLint>(level), static_cast<GLint>(zOffset))))
+                    gl::OwnerImageIndex::Make3D(gl::OwnerLevel(static_cast<GLint>(level)),
+                                                gl::OwnerLayer(static_cast<GLint>(zOffset)))))
             {
                 val->setError(EGL_BAD_ACCESS,
                               "The texture has been bound to an existing EGL image.");

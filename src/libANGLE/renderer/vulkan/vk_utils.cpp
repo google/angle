@@ -1974,7 +1974,7 @@ void GetExtentsAndLayerCount(gl::TextureType textureType,
     }
 }
 
-vk::LevelIndex GetLevelIndex(gl::SourceLevel levelGL, gl::SourceLevel baseLevel)
+vk::LevelIndex GetLevelIndex(gl::OwnerLevel levelGL, gl::OwnerLevel baseLevel)
 {
     ASSERT(baseLevel <= levelGL);
     return vk::LevelIndex(levelGL.get() - baseLevel.get());
@@ -2089,7 +2089,7 @@ GLuint GetSampleCount(VkSampleCountFlags supportedCounts, GLuint requestedCount)
     return 0;
 }
 
-gl::SourceLevel GetLevelIndex(vk::LevelIndex levelVk, gl::SourceLevel baseLevel)
+gl::OwnerLevel GetLevelIndex(vk::LevelIndex levelVk, gl::OwnerLevel baseLevel)
 {
     return baseLevel + levelVk.get();
 }

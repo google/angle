@@ -194,7 +194,7 @@ void TextureGL::onDestroy(const gl::Context *context)
 }
 
 angle::Result TextureGL::setImage(const gl::Context *context,
-                                  const gl::OwnImageIndex &ownIndex,
+                                  const gl::ImageIndex &index,
                                   GLenum internalFormat,
                                   const gl::Extents &size,
                                   GLenum format,
@@ -203,8 +203,6 @@ angle::Result TextureGL::setImage(const gl::Context *context,
                                   gl::Buffer *unpackBuffer,
                                   const uint8_t *pixels)
 {
-    const gl::ImageIndex index = ownIndex.getUntranslated();
-
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
     gl::TextureTarget target = index.getTarget();
@@ -363,7 +361,7 @@ angle::Result TextureGL::reserveTexImageToBeFilled(const gl::Context *context,
 }
 
 angle::Result TextureGL::setSubImage(const gl::Context *context,
-                                     const gl::OwnImageIndex &ownIndex,
+                                     const gl::ImageIndex &index,
                                      const gl::Box &area,
                                      GLenum format,
                                      GLenum type,
@@ -371,8 +369,6 @@ angle::Result TextureGL::setSubImage(const gl::Context *context,
                                      gl::Buffer *unpackBuffer,
                                      const uint8_t *pixels)
 {
-    const gl::ImageIndex index = ownIndex.getUntranslated();
-
     ASSERT(TextureTargetToType(index.getTarget()) == getType());
 
     ContextGL *contextGL              = GetImplAs<ContextGL>(context);
@@ -676,15 +672,13 @@ angle::Result TextureGL::setSubImagePaddingWorkaround(const gl::Context *context
 }
 
 angle::Result TextureGL::setCompressedImage(const gl::Context *context,
-                                            const gl::OwnImageIndex &ownIndex,
+                                            const gl::ImageIndex &index,
                                             GLenum internalFormat,
                                             const gl::Extents &size,
                                             const gl::PixelUnpackState &unpack,
                                             size_t imageSize,
                                             const uint8_t *pixels)
 {
-    const gl::ImageIndex index = ownIndex.getUntranslated();
-
     ContextGL *contextGL              = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
@@ -731,15 +725,13 @@ angle::Result TextureGL::setCompressedImage(const gl::Context *context,
 }
 
 angle::Result TextureGL::setCompressedSubImage(const gl::Context *context,
-                                               const gl::OwnImageIndex &ownIndex,
+                                               const gl::ImageIndex &index,
                                                const gl::Box &area,
                                                GLenum format,
                                                const gl::PixelUnpackState &unpack,
                                                size_t imageSize,
                                                const uint8_t *pixels)
 {
-    const gl::ImageIndex index = ownIndex.getUntranslated();
-
     ContextGL *contextGL              = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
@@ -854,13 +846,11 @@ angle::Result TextureGL::handleCopyImageSelfCopyRedefine(const gl::Context *cont
 }
 
 angle::Result TextureGL::copyImage(const gl::Context *context,
-                                   const gl::OwnImageIndex &ownIndex,
+                                   const gl::ImageIndex &index,
                                    const gl::Rectangle &sourceArea,
                                    GLenum internalFormat,
                                    gl::Framebuffer *source)
 {
-    const gl::ImageIndex index = ownIndex.getUntranslated();
-
     ContextGL *contextGL              = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
@@ -1058,13 +1048,11 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
 }
 
 angle::Result TextureGL::copySubImage(const gl::Context *context,
-                                      const gl::OwnImageIndex &ownIndex,
+                                      const gl::ImageIndex &index,
                                       const gl::Offset &destOffset,
                                       const gl::Rectangle &sourceArea,
                                       gl::Framebuffer *source)
 {
-    const gl::ImageIndex index = ownIndex.getUntranslated();
-
     ContextGL *contextGL              = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
@@ -1142,23 +1130,20 @@ angle::Result TextureGL::copySubImage(const gl::Context *context,
 }
 
 angle::Result TextureGL::copyTexture(const gl::Context *context,
-                                     const gl::OwnImageIndex &ownIndex,
+                                     const gl::ImageIndex &index,
                                      GLenum internalFormat,
                                      GLenum type,
-                                     gl::OwnLevel ownSourceLevel,
+                                     gl::LevelIndex sourceLevel,
                                      bool unpackFlipY,
                                      bool unpackPremultiplyAlpha,
                                      bool unpackUnmultiplyAlpha,
                                      const gl::Texture *source)
 {
-    const gl::ImageIndex index = ownIndex.getUntranslated();
-    const uint32_t sourceLevel = ownSourceLevel.getUntranslated().get();
-
     gl::TextureTarget target  = index.getTarget();
     size_t level              = static_cast<size_t>(index.getLevelIndex());
     const TextureGL *sourceGL = GetImplAs<TextureGL>(source);
-    const gl::ImageDesc &sourceImageDesc =
-        sourceGL->mState.getImageDesc(NonCubeTextureTypeToTarget(source->getType()), sourceLevel);
+    const gl::ImageDesc &sourceImageDesc = sourceGL->mState.getImageDesc(
+        NonCubeTextureTypeToTarget(source->getType()), sourceLevel.get());
     gl::Rectangle sourceArea(0, 0, sourceImageDesc.size.width, sourceImageDesc.size.height);
 
     ANGLE_TRY(reserveTexImageToBeFilled(context, target, level, internalFormat,
@@ -1166,30 +1151,27 @@ angle::Result TextureGL::copyTexture(const gl::Context *context,
                                         type));
 
     const gl::InternalFormat &destFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
-    return copySubTextureHelper(context, target, level, gl::Offset(0, 0, 0), sourceLevel,
+    return copySubTextureHelper(context, target, level, gl::Offset(0, 0, 0), sourceLevel.get(),
                                 sourceArea, destFormatInfo, unpackFlipY, unpackPremultiplyAlpha,
                                 unpackUnmultiplyAlpha, source);
 }
 
 angle::Result TextureGL::copySubTexture(const gl::Context *context,
-                                        const gl::OwnImageIndex &ownIndex,
+                                        const gl::ImageIndex &index,
                                         const gl::Offset &destOffset,
-                                        gl::OwnLevel ownSourceLevel,
+                                        gl::LevelIndex sourceLevel,
                                         const gl::Box &sourceBox,
                                         bool unpackFlipY,
                                         bool unpackPremultiplyAlpha,
                                         bool unpackUnmultiplyAlpha,
                                         const gl::Texture *source)
 {
-    const gl::ImageIndex index = ownIndex.getUntranslated();
-    const uint32_t sourceLevel = ownSourceLevel.getUntranslated().get();
-
     gl::TextureTarget target                 = index.getTarget();
     size_t level                             = static_cast<size_t>(index.getLevelIndex());
     const gl::InternalFormat &destFormatInfo = *mState.getImageDesc(target, level).format.info;
-    return copySubTextureHelper(context, target, level, destOffset, sourceLevel, sourceBox.toRect(),
-                                destFormatInfo, unpackFlipY, unpackPremultiplyAlpha,
-                                unpackUnmultiplyAlpha, source);
+    return copySubTextureHelper(context, target, level, destOffset, sourceLevel.get(),
+                                sourceBox.toRect(), destFormatInfo, unpackFlipY,
+                                unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source);
 }
 
 angle::Result TextureGL::copySubTextureHelper(const gl::Context *context,
@@ -1747,13 +1729,11 @@ angle::Result TextureGL::allocateMipmapLevelsForGeneration(const gl::Context *co
 }
 
 angle::Result TextureGL::clearImage(const gl::Context *context,
-                                    gl::OwnLevel ownLevel,
+                                    gl::LevelIndex level,
                                     GLenum format,
                                     GLenum type,
                                     const uint8_t *data)
 {
-    const uint32_t level = ownLevel.getUntranslated().get();
-
     ContextGL *contextGL              = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions      = GetFunctionsGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
@@ -1764,22 +1744,21 @@ angle::Result TextureGL::clearImage(const gl::Context *context,
     // Some drivers may use color mask state when clearing textures.
     contextGL->getStateManager()->setColorMask(true, true, true, true);
 
-    ANGLE_GL_TRY(context, functions->clearTexImage(mTextureID, level, texSubImageFormat.format,
-                                                   texSubImageFormat.type, data));
+    ANGLE_GL_TRY(context,
+                 functions->clearTexImage(mTextureID, level.get(), texSubImageFormat.format,
+                                          texSubImageFormat.type, data));
 
     contextGL->markWorkSubmitted();
     return angle::Result::Continue;
 }
 
 angle::Result TextureGL::clearSubImage(const gl::Context *context,
-                                       gl::OwnLevel ownLevel,
+                                       gl::LevelIndex level,
                                        const gl::Box &area,
                                        GLenum format,
                                        GLenum type,
                                        const uint8_t *data)
 {
-    const uint32_t level = ownLevel.getUntranslated().get();
-
     ContextGL *contextGL              = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions      = GetFunctionsGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
@@ -1789,9 +1768,10 @@ angle::Result TextureGL::clearSubImage(const gl::Context *context,
 
     nativegl::TexSubImageFormat texSubImageFormat =
         nativegl::GetTexSubImageFormat(functions, features, format, type);
-    ANGLE_GL_TRY(context, functions->clearTexSubImage(
-                              mTextureID, level, area.x, area.y, area.z, area.width, area.height,
-                              area.depth, texSubImageFormat.format, texSubImageFormat.type, data));
+    ANGLE_GL_TRY(context, functions->clearTexSubImage(mTextureID, level.get(), area.x, area.y,
+                                                      area.z, area.width, area.height, area.depth,
+                                                      texSubImageFormat.format,
+                                                      texSubImageFormat.type, data));
 
     contextGL->markWorkSubmitted();
     return angle::Result::Continue;
@@ -2885,10 +2865,8 @@ angle::Result TextureGL::initializeContentsImpl(const gl::Context *context,
 
 angle::Result TextureGL::initializeContents(const gl::Context *context,
                                             GLenum binding,
-                                            const gl::OwnImageIndex &ownImageIndex)
+                                            const gl::ImageIndex &imageIndex)
 {
-    const gl::ImageIndex imageIndex = ownImageIndex.getUntranslated();
-
     ANGLE_TRY(initializeContentsImpl(context, binding, imageIndex));
 
     if (hasEmulatedAlphaChannel(imageIndex))

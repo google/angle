@@ -2435,7 +2435,7 @@ bool TextureHasAnyRedefinedLevels(const gl::CubeFaceArray<gl::TexLevelMask> &red
 
 bool IsTextureLevelRedefined(const gl::CubeFaceArray<gl::TexLevelMask> &redefinedLevels,
                              gl::TextureType textureType,
-                             gl::SourceLevel level)
+                             gl::OwnerLevel level)
 {
     gl::TexLevelMask redefined = redefinedLevels[0];
 
@@ -2454,8 +2454,8 @@ bool TextureRedefineLevel(const TextureLevelAllocation levelAllocation,
                           const TextureLevelDefinition levelDefinition,
                           bool immutableFormat,
                           uint32_t levelCount,
-                          const gl::SourceImageIndex &index,
-                          gl::SourceLevel imageFirstAllocatedLevel,
+                          const gl::OwnerImageIndex &index,
+                          gl::OwnerLevel imageFirstAllocatedLevel,
                           gl::CubeFaceArray<gl::TexLevelMask> *redefinedLevels)
 {
     // If the level that's being redefined is outside the level range of the allocated
@@ -2479,7 +2479,7 @@ bool TextureRedefineLevel(const TextureLevelAllocation levelAllocation,
     //   image.
     // - Otherwise keep the image intact (another mip may be the source of a copy), and
     //   make sure any updates to this level are staged.
-    gl::SourceLevel levelIndexGL = index.getLevelIndex();
+    gl::OwnerLevel levelIndexGL = index.getLevelIndex();
     const bool isCompatibleRedefinition =
         levelAllocation == TextureLevelAllocation::WithinAllocatedImage &&
         levelDefinition == TextureLevelDefinition::Compatible;
@@ -2521,9 +2521,9 @@ bool TextureRedefineLevel(const TextureLevelAllocation levelAllocation,
     return shouldReleaseImage;
 }
 
-void TextureRedefineGenerateMipmapLevels(gl::SourceLevel baseLevel,
-                                         gl::SourceLevel maxLevel,
-                                         gl::SourceLevel firstGeneratedLevel,
+void TextureRedefineGenerateMipmapLevels(gl::OwnerLevel baseLevel,
+                                         gl::OwnerLevel maxLevel,
+                                         gl::OwnerLevel firstGeneratedLevel,
                                          gl::CubeFaceArray<gl::TexLevelMask> *redefinedLevels)
 {
     static_assert(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS < 32,

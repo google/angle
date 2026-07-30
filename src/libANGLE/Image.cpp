@@ -23,11 +23,11 @@ namespace egl
 
 namespace
 {
-gl::SourceImageIndex GetImageIndex(EGLenum eglTarget, const egl::AttributeMap &attribs)
+gl::OwnerImageIndex GetImageIndex(EGLenum eglTarget, const egl::AttributeMap &attribs)
 {
     if (!IsTextureTarget(eglTarget))
     {
-        return gl::SourceImageIndex::MakeInvalid();
+        return gl::OwnerImageIndex::MakeInvalid();
     }
 
     gl::TextureTarget target = egl_gl::EGLImageTargetToTextureTarget(eglTarget);
@@ -36,17 +36,16 @@ gl::SourceImageIndex GetImageIndex(EGLenum eglTarget, const egl::AttributeMap &a
 
     if (target == gl::TextureTarget::_3D)
     {
-        return gl::SourceImageIndex::Make3D(gl::SourceLevel::Zero() + mip,
-                                            gl::SourceLayer::Zero() + layer);
+        return gl::OwnerImageIndex::Make3D(gl::OwnerLevel(mip), gl::OwnerLayer(layer));
     }
     else if (gl::IsCubeMapFaceTarget(target))
     {
-        return gl::SourceImageIndex::MakeCubeMapFace(target, gl::SourceLevel::Zero() + mip);
+        return gl::OwnerImageIndex::MakeCubeMapFace(target, gl::OwnerLevel(mip));
     }
     else
     {
         ASSERT(layer == 0);
-        return gl::SourceImageIndex::MakeFromTarget(target, gl::SourceLevel::Zero() + mip, 1);
+        return gl::OwnerImageIndex::MakeFromTarget(target, gl::OwnerLevel(mip), 1);
     }
 }
 
@@ -58,44 +57,43 @@ const Display *DisplayFromContext(const gl::Context *context)
 angle::SubjectIndex kExternalImageImplSubjectIndex = 0;
 }  // anonymous namespace
 
-gl::SourceImageIndex ImageSourceAttributes::toSourceIndex(const gl::OwnImageIndex &ownIndex) const
+gl::OwnerImageIndex ImageSourceAttributes::toOwnerIndex(const gl::ImageIndex &ownIndex) const
 {
     // If this is not an EGL image target, the offsets are 0 and image index is unchanged.
     if (type == gl::TextureType::InvalidEnum)
     {
         ASSERT(level == 0 && zoffset == 0);
-        return gl::SourceImageIndex(ownIndex.getUntranslated());
+        return gl::OwnerImageIndex(ownIndex);
     }
 
     // If this is an EGL image target, it must be a renderbuffer or 2D texture, in which case it's
     // level and layer are both 0.
-    ASSERT((!ownIndex.getUntranslated().hasLayer() ||
-            ownIndex.getUntranslated().getLayerIndex() == 0) &&
-           ownIndex.getUntranslated().getLevelIndex() == 0);
-    return gl::SourceImageIndex(gl::ImageIndex::MakeFromType(type, level, zoffset));
+    ASSERT((!ownIndex.hasLayer() || ownIndex.getLayerIndex() == 0) &&
+           ownIndex.getLevelIndex() == 0);
+    return gl::OwnerImageIndex(gl::ImageIndex::MakeFromType(type, level, zoffset));
 }
 
-gl::SourceLevel ImageSourceAttributes::toSourceLevel(gl::OwnLevel ownLevel) const
+gl::OwnerLevel ImageSourceAttributes::toOwnerLevel(gl::LevelIndex ownLevel) const
 {
     // Either this is not an EGL image target, in which case the offset is 0, or it is and the
     // texture level is 0 (because EGL image target textures can only have one level).
-    ASSERT(ownLevel.getUntranslated().get() == 0 || level == 0);
-    return gl::SourceLevel(ownLevel.getUntranslated() + level);
+    ASSERT(ownLevel.get() == 0 || level == 0);
+    return gl::OwnerLevel(ownLevel.get() + level);
 }
 
-gl::SourceLayer ImageSourceAttributes::toSourceLayer(gl::OwnLayer ownLayer) const
+gl::OwnerLayer ImageSourceAttributes::toOwnerLayer(gl::LayerIndex ownLayer) const
 {
     // Either this is not an EGL image target, in which case the offset is 0, or it is and the
     // texture layer is 0 (because EGL image target textures can only have one layer).
-    ASSERT(ownLayer.getUntranslated() == 0 || zoffset == 0);
-    return gl::SourceLayer(ownLayer.getUntranslated() + zoffset);
+    ASSERT(ownLayer.get() == 0 || zoffset == 0);
+    return gl::OwnerLayer(ownLayer.get() + zoffset);
 }
 
-gl::SourceLayer ImageSourceAttributes::toSourceDepth(const gl::Offset &offset) const
+gl::OwnerLayer ImageSourceAttributes::toOwnerDepth(const gl::Offset &offset) const
 {
     // zoffset only applies to 3D textures
-    return type == gl::TextureType::_3D ? toSourceLayer(gl::OwnLayer(offset.z))
-                                        : gl::SourceLayer(offset.z);
+    return type == gl::TextureType::_3D ? toOwnerLayer(gl::LayerIndex(offset.z))
+                                        : gl::OwnerLayer(offset.z);
 }
 
 ImageSibling::ImageSibling() : FramebufferAttachmentObject(), mSourcesOf(), mTargetOf() {}
