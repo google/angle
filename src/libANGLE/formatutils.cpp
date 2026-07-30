@@ -995,38 +995,27 @@ void AddPalettedFormat(InternalFormatInfoMap *map,
 
 void AddYUVFormat(InternalFormatInfoMap *map,
                   GLenum internalFormat,
-                  bool sized,
                   GLuint cr,
                   GLuint y,
                   GLuint cb,
-                  GLuint alpha,
-                  GLuint shared,
                   GLenum format,
                   GLenum type,
-                  GLenum componentType,
-                  bool srgb,
                   InternalFormat::SupportCheckFunction textureSupport)
 {
-    ASSERT(sized);
-
     InternalFormat formatInfo;
     formatInfo.internalFormat      = internalFormat;
-    formatInfo.sized               = sized;
+    formatInfo.sized               = true;
     formatInfo.sizedInternalFormat = internalFormat;
     formatInfo.redBits             = cr;
     formatInfo.greenBits           = y;
     formatInfo.blueBits            = cb;
-    formatInfo.alphaBits           = alpha;
-    formatInfo.sharedBits          = shared;
-    formatInfo.pixelBytes          = (cr + y + cb + alpha + shared) / 8;
-    formatInfo.componentCount =
-        ((cr > 0) ? 1 : 0) + ((y > 0) ? 1 : 0) + ((cb > 0) ? 1 : 0) + ((alpha > 0) ? 1 : 0);
-    formatInfo.format                   = format;
-    formatInfo.type                     = type;
-    formatInfo.componentType            = componentType;
-    formatInfo.colorEncoding            = (srgb ? GL_SRGB : GL_LINEAR);
-    formatInfo.textureSupport           = textureSupport;
-    formatInfo.filterSupport            = textureSupport;
+    formatInfo.pixelBytes          = (cr + y + cb) / 8;
+    formatInfo.componentCount      = ((cr > 0) ? 1 : 0) + ((y > 0) ? 1 : 0) + ((cb > 0) ? 1 : 0);
+    formatInfo.format              = format;
+    formatInfo.type                = type;
+    formatInfo.componentType       = GL_UNSIGNED_NORMALIZED;
+    formatInfo.textureSupport      = textureSupport;
+    formatInfo.filterSupport       = textureSupport;
 
     // YUV formats are always filterable if texturable and never renderable.
 
@@ -1425,9 +1414,9 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddDepthStencilFormat(&map, GL_STENCIL_INDEX,   false,  0, 8,  0, GL_STENCIL_INDEX,   GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, NeverSupported,                                           NeverSupported,                                                                       NeverSupported);
 
     // Non-standard YUV formats
-    //                 | Internal format                             | sized | Cr | Y | Cb | A | S | Format                              | Type            | Comp                  | SRGB | Texture supported
-    AddYUVFormat(&map,  GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,            true,   8,   8,  8,   0,  0,  GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,    GL_UNSIGNED_BYTE, GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::yuvInternalFormatANGLE>);
-    AddYUVFormat(&map,  GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE,           true,   8,   8,  8,   0,  0,  GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE,   GL_UNSIGNED_BYTE, GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::yuvInternalFormatANGLE>);
+    //                | Internal format                   | Cr | Y | Cb | Format                            | Type            | Texture supported
+    AddYUVFormat(&map, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,   8,   8,  8,  GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,  GL_UNSIGNED_BYTE, RequireExt<&Extensions::yuvInternalFormatANGLE>);
+    AddYUVFormat(&map, GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE,  8,   8,  8,  GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE, GL_UNSIGNED_BYTE, RequireExt<&Extensions::yuvInternalFormatANGLE>);
 
     // clang-format on
 
