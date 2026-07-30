@@ -4780,11 +4780,13 @@ void Context::updateCaps()
         formatCaps.blendable = formatCaps.blendable &&
                                formatInfo.blendSupport(getClientVersion(), mState.getExtensions());
 
+        const bool isIntColorFormat = formatInfo.isInt() && formatInfo.stencilBits == 0;
+
         // OpenGL ES does not support multisampling with non-rendererable formats
         // OpenGL ES 3.0 or prior does not support multisampling with integer formats
         if (!formatCaps.renderbuffer ||
             (getClientVersion() < ES_3_1 && !mState.getExtensions().textureMultisampleANGLE &&
-             formatInfo.isInt()))
+             isIntColorFormat))
         {
             formatCaps.sampleCounts.clear();
         }
@@ -4797,7 +4799,7 @@ void Context::updateCaps()
             // GLES 3.0.5 section 4.4.2.2: "Implementations must support creation of renderbuffers
             // in these required formats with up to the value of MAX_SAMPLES multisamples, with the
             // exception of signed and unsigned integer formats."
-            if (!formatInfo.isInt() && formatInfo.isRequiredRenderbufferFormat(getClientVersion()))
+            if (!isIntColorFormat && formatInfo.isRequiredRenderbufferFormat(getClientVersion()))
             {
                 ASSERT(getClientVersion() < ES_3_0 || formatMaxSamples >= 4);
                 caps->maxSamples =
@@ -4812,7 +4814,7 @@ void Context::updateCaps()
                 // the exception that the signed and unsigned integer formats are required only to
                 // support creation of renderbuffers with up to the value of MAX_INTEGER_SAMPLES
                 // multisamples, which must be at least one."
-                if (formatInfo.isInt())
+                if (isIntColorFormat)
                 {
                     caps->maxIntegerSamples =
                         std::min(static_cast<GLuint>(caps->maxIntegerSamples), formatMaxSamples);

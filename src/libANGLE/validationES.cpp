@@ -180,6 +180,10 @@ bool ValidReadPixelsFormatType(const Context *context,
             return (format == GL_RGBA_INTEGER && type == GL_INT);
 
         case GL_UNSIGNED_INT:
+            if (format == GL_STENCIL_INDEX)
+            {
+                return context->getExtensions().readStencilNV && (type == GL_UNSIGNED_BYTE);
+            }
             return (format == GL_RGBA_INTEGER && type == GL_UNSIGNED_INT);
 
         case GL_FLOAT:

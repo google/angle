@@ -1289,13 +1289,6 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddCompressedFormat(&map, GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT,     8,  4,  1,  64,  4, true, RequireExtAndExt<&Extensions::textureCompressionPvrtcIMG, &Extensions::pvrtcSRGBEXT>);
     AddCompressedFormat(&map, GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT,     4,  4,  1,  64,  4, true, RequireExtAndExt<&Extensions::textureCompressionPvrtcIMG, &Extensions::pvrtcSRGBEXT>);
 
-    // For STENCIL_INDEX8 we chose a normalized component type for the following reasons:
-    // - Multisampled buffer are disallowed for non-normalized integer component types and we want to support it for STENCIL_INDEX8
-    // - All other stencil formats (all depth-stencil) are either float or normalized
-    // - It affects only validation of internalformat in RenderbufferStorageMultisample.
-    //                         | Internal format  |sized|D |S |X | Format          | Type            | Component type        | Texture supported                                    | Texture attachment                                   | Renderbuffer
-    AddDepthStencilFormat(&map, GL_STENCIL_INDEX8, true, 0, 8, 0, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, GL_UNSIGNED_NORMALIZED, RequireESOrExt<3, 2, &Extensions::textureStencil8OES>, RequireESOrExt<3, 2, &Extensions::textureStencil8OES>, RequireES<1, 0>);
-
     // From GL_EXT_texture_norm16
     //                 | Internal format    |sized| R | G | B | A |S | Format | Type             | Component type        | SRGB | Texture supported                        | Filterable     | Texture attachment                                                          | Renderbuffer                                                                | Blend
     AddRGBAFormat(&map, GL_R16_EXT,          true, 16,  0,  0,  0, 0, GL_RED,  GL_UNSIGNED_SHORT, GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::textureNorm16EXT>, AlwaysSupported, RequireExt<&Extensions::textureNorm16EXT>,                                    RequireExt<&Extensions::textureNorm16EXT>,                                    RequireExt<&Extensions::textureNorm16EXT>);
@@ -1411,7 +1404,12 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddDepthStencilFormat(&map, GL_DEPTH_COMPONENT, false, 24, 8,  0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT_24_8,              GL_UNSIGNED_NORMALIZED, RequireESOrExt<3, 0, &Extensions::packedDepthStencilOES>, RequireExtAndExt<&Extensions::packedDepthStencilOES, &Extensions::depthTextureANGLE>, RequireExtAndExt<&Extensions::packedDepthStencilOES, &Extensions::depthTextureANGLE>);
     AddDepthStencilFormat(&map, GL_DEPTH_STENCIL,   false, 24, 8,  0, GL_DEPTH_STENCIL,   GL_UNSIGNED_INT_24_8,              GL_UNSIGNED_NORMALIZED, RequireESOrExt<3, 0, &Extensions::packedDepthStencilOES>, RequireExtAndExt<&Extensions::packedDepthStencilOES, &Extensions::depthTextureANGLE>, RequireExtAndExt<&Extensions::packedDepthStencilOES, &Extensions::depthTextureANGLE>);
     AddDepthStencilFormat(&map, GL_DEPTH_STENCIL,   false, 32, 8, 24, GL_DEPTH_STENCIL,   GL_FLOAT_32_UNSIGNED_INT_24_8_REV, GL_FLOAT,               RequireESOrExt<3, 0, &Extensions::packedDepthStencilOES>, RequireExt<&Extensions::packedDepthStencilOES>,                                       RequireExt<&Extensions::packedDepthStencilOES>);
-    AddDepthStencilFormat(&map, GL_STENCIL_INDEX,   false,  0, 8,  0, GL_STENCIL_INDEX,   GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, NeverSupported,                                           NeverSupported,                                                                       NeverSupported);
+
+    // Stencil-only format
+    // TODO(anglebug.com/541183328): The unsized stencil format does not exist and is only used for SubImage validation.
+    //                         | Internal format  | sized | D | S | X | Format          | Type            | Component type | Texture supported                                    | Texture attachment                                   | Renderbuffer
+    AddDepthStencilFormat(&map, GL_STENCIL_INDEX8, true,    0,  8,  0, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, GL_UNSIGNED_INT, RequireESOrExt<3, 2, &Extensions::textureStencil8OES>, RequireESOrExt<3, 2, &Extensions::textureStencil8OES>, RequireESOrExt<2, 0, &Extensions::stencil8OES>);
+    AddDepthStencilFormat(&map, GL_STENCIL_INDEX,  false,   0,  8,  0, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, GL_UNSIGNED_INT, NeverSupported,                                        NeverSupported,                                        NeverSupported);
 
     // Non-standard YUV formats
     //                | Internal format                   | Cr | Y | Cb | Format                            | Type            | Texture supported
