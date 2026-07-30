@@ -1378,10 +1378,14 @@ std::ostream &operator<<(std::ostream &os, const ImageUnitBindingGL &binding)
 ContextStateGLCaps::ContextStateGLCaps(const FunctionsGL *functions, const gl::Caps &caps)
     : defaultFramebufferSrgbState(functions->standard == STANDARD_GL_ES),
       defaultImageBindingFormat(functions->standard == STANDARD_GL_ES ? GL_R32UI : GL_R8),
-      maxVertexAttributes(caps.maxVertexAttributes),
-      maxVertexAttribBindings(caps.maxVertexAttribBindings),
-      maxImageUnits(caps.maxImageUnits),
-      maxDrawBuffers(caps.maxDrawBuffers),
+      maxVertexAttributes(
+          std::min(caps.maxVertexAttributes, static_cast<GLint>(gl::MAX_VERTEX_ATTRIBS))),
+      maxVertexAttribBindings(std::min(caps.maxVertexAttribBindings,
+                                       static_cast<GLint>(gl::MAX_VERTEX_ATTRIB_BINDINGS))),
+      maxImageUnits(
+          std::min(caps.maxImageUnits, static_cast<GLint>(gl::IMPLEMENTATION_MAX_IMAGE_UNITS))),
+      maxDrawBuffers(
+          std::min(caps.maxDrawBuffers, static_cast<GLint>(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS))),
       maxUniformBufferBindings(caps.maxUniformBufferBindings),
       maxAtomicCounterBufferBindings(caps.maxAtomicCounterBufferBindings),
       maxShaderStorageBufferBindings(caps.maxShaderStorageBufferBindings)
