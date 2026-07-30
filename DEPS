@@ -1816,7 +1816,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/beach_buggy_racing',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -1966,7 +1966,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/brawlhalla',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -2536,7 +2536,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/durak_online',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -2956,7 +2956,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/higgs_domino_island',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -3606,7 +3606,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/mini_world',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -3666,7 +3666,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/monster_strike',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3856,7 +3856,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/one_piece_treasure_cruise',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3956,7 +3956,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/piano_kids',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -4256,7 +4256,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/riptide_gp2',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -4646,7 +4646,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/stardew_valley',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
