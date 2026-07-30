@@ -445,6 +445,53 @@ void main()
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
+// Test that nested interpolateAtOffset calls (the offset argument is itself an interpolateAtOffset)
+// compile and draw correctly.
+TEST_P(SampleMultisampleInterpolationTest, CompileNestedInterpolateAtOffset)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_shader_multisample_interpolation"));
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 a_position;
+out vec2 interpolant;
+
+void main()
+{
+    gl_Position = a_position;
+    // Keep the interpolant constant across the primitive: interpolateAtOffset samples at an
+    // implementation-defined location, so a constant keeps the drawn result the same everywhere.
+    // 0.25 also keeps the nested call's result within [-0.4375, 0.4375], the offset range that is
+    // safe on all drivers (some do not include the pixel edges).
+    interpolant = vec2(0.0, 0.25);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_OES_shader_multisample_interpolation : require
+
+precision highp float;
+
+in vec2 interpolant;
+
+out vec4 color;
+
+void main()
+{
+    // The offset (second) argument of the outer interpolateAtOffset is itself an
+    // interpolateAtOffset call.
+    color = vec4(interpolateAtOffset(interpolant, interpolateAtOffset(interpolant, vec2(0.25))),
+                 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    // Draw and verify: with a constant interpolant of (0.0, 0.25), both interpolateAtOffset calls
+    // return it, so the fragment output is vec4(0.0, 0.25, 0.0, 1.0). 0.25 becomes 63 or 64 after
+    // unorm8 conversion, so allow an off-by-one.
+    drawQuad(program, "a_position", 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 64, 0, 255), 1);
+}
+
 class SampleMultisampleInterpolationTest31 : public SampleMultisampleInterpolationTest
 {};
 

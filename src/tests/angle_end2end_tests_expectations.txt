@@ -1911,6 +1911,8 @@
 // Invalid gl_SampleMaskIn value when sample qualifier is present
 40096890 LINUX INTEL OPENGL : SampleMultisampleInterpolationTest.SampleMaskInPerSample/* = SKIP
 40096890 LINUX INTEL OPENGL : SampleMultisampleInterpolationTest.SampleMaskInPerSampleNoPerspective/* = SKIP
+556542945 PIXEL6 VULKAN : SampleMultisampleInterpolationTest.CompileNestedInterpolateAtOffset/* = SKIP
+556542945 PIXEL10 GLES : SampleMultisampleInterpolationTest.CompileNestedInterpolateAtOffset/* = SKIP
 
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 42266265 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP
