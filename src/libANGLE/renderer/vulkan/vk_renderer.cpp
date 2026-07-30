@@ -5531,6 +5531,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             angle::ParseSamsungVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
     }
 
+    INFO() << "driverVersion: " << driverVersion.major << "." << driverVersion.minor << "."
+           << driverVersion.subMinor << "." << driverVersion.patch;
+
     // Classify devices based on general architecture:
     //
     // - IMR (Immediate-Mode Rendering) devices generally progress through draw calls once and use
