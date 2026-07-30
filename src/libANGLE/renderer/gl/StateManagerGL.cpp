@@ -1753,6 +1753,7 @@ void StateManagerGL::deleteBuffer(GLuint buffer)
             if (binding.buffer == buffer)
             {
                 binding.buffer = 0;
+                binding.offset = 0;
             }
         }
     }

@@ -670,6 +670,7 @@ angle::Result VertexArrayGL::updateAttribPointer(const gl::Context *context, siz
         // it starts to use a buffer later, there is no chance that the caching will skip it.
 
         mArrayBuffers[attribIndex].set(context, nullptr);
+        mNativeState->bindings[attribIndex].offset = 0;
         mNativeState->bindings[attribIndex].buffer = 0;
         return angle::Result::Continue;
     }
