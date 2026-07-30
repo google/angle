@@ -1793,7 +1793,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/billiards_city',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -2473,7 +2473,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/dragon_mania_legends',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -2673,7 +2673,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/fishdom',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -2933,7 +2933,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/hill_climb_racing',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -3003,7 +3003,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/huuuge_casino',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3093,7 +3093,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/jackpot_world',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3293,7 +3293,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/lineage_m',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -3333,7 +3333,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/lotsa_slots',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3913,7 +3913,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/piano_fire',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -5053,7 +5053,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/war_planet_online',
-            'version': 'version:1',
+            'version': 'version:3',
         },
       ],
       'dep_type': 'cipd',

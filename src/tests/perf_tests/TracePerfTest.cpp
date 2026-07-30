@@ -1172,11 +1172,6 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_EXT_shader_framebuffer_fetch");
     }
 
-    if (traceNameIs("war_planet_online"))
-    {
-        addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
-    }
-
     if (traceNameIs("lords_mobile"))
     {
         // http://anglebug.com/42265475 - glTexStorage2DEXT is not exposed on Pixel 4 native
