@@ -305,12 +305,12 @@ BlitGL::~BlitGL()
         mScratchFBO = 0;
     }
 
-    if (mOwnsVAOState)
+    if (mOwnsVAO)
     {
         mStateManager->deleteVertexArray(mVAO);
-        SafeDelete(mVAOState);
-        mVAO = 0;
     }
+    mVAO      = 0;
+    mVAOState = nullptr;
 }
 
 angle::Result BlitGL::copyImageToLUMAWorkaroundTexture(const gl::Context *context,
@@ -1353,21 +1353,19 @@ angle::Result BlitGL::initializeResources(const gl::Context *context)
     ANGLE_GL_TRY_ALWAYS_CHECK(context, mFunctions->bufferData(GL_ARRAY_BUFFER, sizeof(float) * 6,
                                                               vertexData, GL_STATIC_DRAW));
 
-    VertexArrayStateGL *defaultVAOState = mStateManager->getDefaultVAOState();
     if (!mFeatures.syncAllVertexArraysToDefault.enabled)
     {
         ANGLE_GL_TRY(context, mFunctions->genVertexArrays(1, &mVAO));
-        mVAOState     = new VertexArrayStateGL(defaultVAOState->attributes.size(),
-                                               defaultVAOState->bindings.size());
-        mOwnsVAOState = true;
+        mOwnsVAO  = true;
+        mVAOState = mStateManager->getOrCreateVAOState(mVAO);
         ANGLE_TRY(setVAOState(context));
         ANGLE_TRY(initializeVAOState(context));
     }
     else
     {
         mVAO          = mStateManager->getDefaultVAO();
-        mVAOState     = defaultVAOState;
-        mOwnsVAOState = false;
+        mOwnsVAO      = false;
+        mVAOState     = mStateManager->getOrCreateVAOState(mVAO);
     }
 
     constexpr GLenum potentialSRGBMipmapGenerationFormats[] = {
@@ -1449,7 +1447,7 @@ angle::Result BlitGL::setScratchTextureParameter(const gl::Context *context,
 
 angle::Result BlitGL::setVAOState(const gl::Context *context)
 {
-    mStateManager->bindVertexArray(mVAO, mVAOState);
+    mStateManager->bindVertexArray(mVAO);
     if (mFeatures.syncAllVertexArraysToDefault.enabled)
     {
         ANGLE_TRY(initializeVAOState(context));

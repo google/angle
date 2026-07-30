@@ -348,7 +348,7 @@ class StateManagerGL final : angle::NonCopyable
 
     void useProgram(GLuint program);
     void forceUseProgram(GLuint program);
-    void bindVertexArray(GLuint vao, VertexArrayStateGL *vaoState);
+    void bindVertexArray(GLuint vao);
     void bindBuffer(gl::BufferBinding target, GLuint buffer);
     void bindBufferBase(gl::BufferBinding target, size_t index, GLuint buffer);
     void bindBufferRange(gl::BufferBinding target,
@@ -496,8 +496,11 @@ class StateManagerGL final : angle::NonCopyable
     bool getHasSeparateFramebufferBindings() const { return mHasSeparateFramebufferBindings; }
 
     GLuint getDefaultVAO() const;
-    VertexArrayStateGL *getDefaultVAOState();
     void setDefaultVAOStateDirty();
+
+    VertexArrayStateGL *getVAOState(GLuint vao);
+    VertexArrayStateGL *getOrCreateVAOState(GLuint vao);
+    VertexArrayStateGL *getCurrentVAOState();
 
     void validateState();
 
@@ -505,7 +508,7 @@ class StateManagerGL final : angle::NonCopyable
     void restoreNativeContext(const gl::Extensions &extensions, const ExternalContextState *state);
 
   private:
-    void forceBindVertexArray(GLuint vao, VertexArrayStateGL *vaoState);
+    void forceBindVertexArray(GLuint vao);
 
     void setTextureCubemapSeamlessEnabled(bool enabled);
 
@@ -594,14 +597,15 @@ class StateManagerGL final : angle::NonCopyable
     const bool mSupportsVertexArrayObjects;
 
     GLuint mDefaultVAO = 0;
-    // The current state of the default VAO is owned by StateManagerGL in mState. It may be shared
+
+    // The state of all tracked VAOs. It is owned by StateManagerGL because it affects the global
+    // element array buffer binding when a new VAO is bound.
+    //
+    // The current state of the default VAO is in mState. It may be shared
     // between multiple VertexArrayGL objects if the native driver does not support vertex array
     // objects. When this object is shared, StateManagerGL forces VertexArrayGL to resynchronize
     // itself every time a new vertex array is bound.
-
-    // The state of the currently bound vertex array object so StateManagerGL can know about the
-    // current element array buffer.
-    VertexArrayStateGL *mVAOState = nullptr;
+    std::map<GLuint, VertexArrayStateGL> mVAOStates;
 
     TransformFeedbackGL *mCurrentTransformFeedback;
 

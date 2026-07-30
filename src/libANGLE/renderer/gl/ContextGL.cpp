@@ -185,6 +185,10 @@ VertexArrayImpl *ContextGL::createVertexArray(const gl::VertexArrayState &data,
 {
     const FunctionsGL *functions      = getFunctions();
     const angle::FeaturesGL &features = getFeaturesGL();
+    StateManagerGL *stateManager      = getStateManager();
+
+    GLuint vaoID           = 0;
+    bool vertexArrayOwnsID = false;
 
     // Use the shared default vertex array when forced to for workarounds
     // (syncAllVertexArraysToDefault) or for the frontend default vertex array so that client data
@@ -195,17 +199,17 @@ VertexArrayImpl *ContextGL::createVertexArray(const gl::VertexArrayState &data,
         (features.syncDefaultVertexArraysToDefault.enabled && data.isDefault() &&
          mState.areClientArraysEnabled()))
     {
-        StateManagerGL *stateManager = getStateManager();
-
-        return new VertexArrayGL(data, stateManager->getDefaultVAO(), vertexArrayBuffers,
-                                 stateManager->getDefaultVAOState());
+        vaoID             = stateManager->getDefaultVAO();
+        vertexArrayOwnsID = false;
     }
     else
     {
-        GLuint vao = 0;
-        functions->genVertexArrays(1, &vao);
-        return new VertexArrayGL(data, vao, vertexArrayBuffers);
+        functions->genVertexArrays(1, &vaoID);
+        vertexArrayOwnsID = true;
     }
+
+    VertexArrayStateGL *vaoState = stateManager->getOrCreateVAOState(vaoID);
+    return new VertexArrayGL(data, vaoID, vertexArrayOwnsID, vertexArrayBuffers, vaoState);
 }
 
 QueryImpl *ContextGL::createQuery(gl::QueryType type)

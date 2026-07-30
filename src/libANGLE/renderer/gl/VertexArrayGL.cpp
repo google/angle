@@ -67,25 +67,15 @@ GLuint GetAdjustedDivisor(GLuint numViews, GLuint divisor)
 }
 }  // anonymous namespace
 
-VertexArrayGL::VertexArrayGL(const VertexArrayState &state,
-                             GLuint id,
-                             const VertexArrayBuffers &vertexArrayBuffers)
-    : VertexArrayImpl(state, vertexArrayBuffers),
-      mVertexArrayID(id),
-      mOwnsNativeState(true),
-      mNativeState(new VertexArrayStateGL(state.getMaxAttribs(), state.getMaxBindings()))
-{
-    mForcedStreamingAttributesFirstOffsets.fill(0);
-}
-
 VertexArrayGL::VertexArrayGL(const gl::VertexArrayState &state,
                              GLuint id,
+                             bool ownsId,
                              const gl::VertexArrayBuffers &vertexArrayBuffers,
-                             VertexArrayStateGL *sharedState)
+                             VertexArrayStateGL *nativeState)
     : VertexArrayImpl(state, vertexArrayBuffers),
       mVertexArrayID(id),
-      mOwnsNativeState(false),
-      mNativeState(sharedState)
+      mOwnsID(ownsId),
+      mNativeState(nativeState)
 {
     ASSERT(mNativeState);
     mForcedStreamingAttributesFirstOffsets.fill(0);
@@ -97,11 +87,12 @@ void VertexArrayGL::destroy(const gl::Context *context)
 {
     StateManagerGL *stateManager = GetStateManagerGL(context);
 
-    if (mOwnsNativeState)
+    if (mOwnsID)
     {
         stateManager->deleteVertexArray(mVertexArrayID);
     }
     mVertexArrayID   = 0;
+    mNativeState     = nullptr;
     mAppliedNumViews = 1;
 
     mElementArrayBuffer.set(context, nullptr);
@@ -117,12 +108,6 @@ void VertexArrayGL::destroy(const gl::Context *context)
     stateManager->deleteBuffer(mStreamingArrayBuffer);
     mStreamingArrayBufferSize = 0;
     mStreamingArrayBuffer     = 0;
-
-    if (mOwnsNativeState)
-    {
-        delete mNativeState;
-    }
-    mNativeState = nullptr;
 }
 
 angle::Result VertexArrayGL::syncClientSideData(const gl::Context *context,
@@ -289,7 +274,7 @@ angle::Result VertexArrayGL::syncIndexData(const gl::Context *context,
             mStreamingElementArrayBufferSize = 0;
         }
 
-        stateManager->bindVertexArray(mVertexArrayID, mNativeState);
+        stateManager->bindVertexArray(mVertexArrayID);
 
         stateManager->bindBuffer(gl::BufferBinding::ElementArray, mStreamingElementArrayBuffer);
         mElementArrayBuffer.set(context, nullptr);
@@ -403,7 +388,7 @@ angle::Result VertexArrayGL::streamAttributes(
         mStreamingArrayBufferSize = requiredBufferSize;
     }
 
-    stateManager->bindVertexArray(mVertexArrayID, mNativeState);
+    stateManager->bindVertexArray(mVertexArrayID);
 
     // Unmapping a buffer can return GL_FALSE to indicate that the system has corrupted the data
     // somehow (such as by a screen change), retry writing the data a few times and return
@@ -574,7 +559,7 @@ angle::Result VertexArrayGL::recoverForcedStreamingAttributesForDrawArraysInstan
 
     StateManagerGL *stateManager = GetStateManagerGL(context);
 
-    stateManager->bindVertexArray(mVertexArrayID, mNativeState);
+    stateManager->bindVertexArray(mVertexArrayID);
 
     const auto &attribs  = mState.getVertexAttributes();
     const auto &bindings = mState.getVertexBindings();
@@ -613,11 +598,6 @@ angle::Result VertexArrayGL::recoverForcedStreamingAttributesForDrawArraysInstan
 GLuint VertexArrayGL::getVertexArrayID() const
 {
     return mVertexArrayID;
-}
-
-rx::VertexArrayStateGL *VertexArrayGL::getNativeState() const
-{
-    return mNativeState;
 }
 
 angle::Result VertexArrayGL::updateAttribEnabled(const gl::Context *context, size_t attribIndex)
@@ -987,7 +967,7 @@ angle::Result VertexArrayGL::syncState(const gl::Context *context,
                                        gl::VertexArray::DirtyBindingBitsArray *bindingBits)
 {
     StateManagerGL *stateManager = GetStateManagerGL(context);
-    stateManager->bindVertexArray(mVertexArrayID, mNativeState);
+    stateManager->bindVertexArray(mVertexArrayID);
 
     for (auto iter = dirtyBits.begin(), endIter = dirtyBits.end(); iter != endIter; ++iter)
     {
@@ -1019,7 +999,7 @@ angle::Result VertexArrayGL::applyNumViewsToDivisor(const gl::Context *context, 
     if (numViews != mAppliedNumViews)
     {
         StateManagerGL *stateManager = GetStateManagerGL(context);
-        stateManager->bindVertexArray(mVertexArrayID, mNativeState);
+        stateManager->bindVertexArray(mVertexArrayID);
         mAppliedNumViews = numViews;
         for (size_t index = 0u; index < mNativeState->bindings.size(); ++index)
         {

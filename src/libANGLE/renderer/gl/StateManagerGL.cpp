@@ -1559,7 +1559,6 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mCaps(functions, rendererCaps),
       mState(mCaps),
       mSupportsVertexArrayObjects(nativegl::SupportsVertexArrayObjects(functions)),
-      mVAOState(&mState.defaultVAOState),
       mCurrentTransformFeedback(nullptr),
       mQueries(),
       mPrevDrawContext({0}),
@@ -1665,9 +1664,10 @@ void StateManagerGL::deleteVertexArray(GLuint vao)
     {
         if (mState.vao == vao)
         {
-            bindVertexArray(0, &mState.defaultVAOState);
+            bindVertexArray(0);
         }
         mFunctions->deleteVertexArrays(1, &vao);
+        mVAOStates.erase(vao);
     }
 }
 
@@ -1741,14 +1741,15 @@ void StateManagerGL::deleteBuffer(GLuint buffer)
         }
     }
 
-    if (mVAOState)
+    VertexArrayStateGL *vaoState = getCurrentVAOState();
+    if (vaoState)
     {
-        if (mVAOState->elementArrayBuffer == buffer)
+        if (vaoState->elementArrayBuffer == buffer)
         {
-            mVAOState->elementArrayBuffer = 0;
+            vaoState->elementArrayBuffer = 0;
         }
 
-        for (VertexBindingGL &binding : mVAOState->bindings)
+        for (VertexBindingGL &binding : vaoState->bindings)
         {
             if (binding.buffer == buffer)
             {
@@ -1845,19 +1846,20 @@ void StateManagerGL::forceUseProgram(GLuint program)
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_PROGRAM_BINDING);
 }
 
-void StateManagerGL::bindVertexArray(GLuint vao, VertexArrayStateGL *vaoState)
+void StateManagerGL::bindVertexArray(GLuint vao)
 {
     if (mState.vao != vao)
     {
         ASSERT(!mFeatures.syncAllVertexArraysToDefault.enabled);
-        forceBindVertexArray(vao, vaoState);
+        forceBindVertexArray(vao);
     }
 }
 
-void StateManagerGL::forceBindVertexArray(GLuint vao, VertexArrayStateGL *vaoState)
+void StateManagerGL::forceBindVertexArray(GLuint vao)
 {
+    VertexArrayStateGL *vaoState = getVAOState(vao);
+
     mState.vao                                      = vao;
-    mVAOState                                 = vaoState;
     mState.buffers[gl::BufferBinding::ElementArray] = vaoState ? vaoState->elementArrayBuffer : 0;
 
     mFunctions->bindVertexArray(vao);
@@ -3637,7 +3639,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING:
             {
                 VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(state.getVertexArray());
-                bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getNativeState());
+                bindVertexArray(vaoGL->getVertexArrayID());
 
                 ANGLE_TRY(propagateProgramToVAO(context, state.getProgramExecutable(),
                                                 GetImplAs<VertexArrayGL>(state.getVertexArray())));
@@ -4148,7 +4150,7 @@ void StateManagerGL::setDefaultVAOState(const VertexArrayStateGL &state)
         return;
     }
 
-    bindVertexArray(0, &mState.defaultVAOState);
+    bindVertexArray(0);
 
     const bool supportsBindings = nativegl::SupportsVertexAttributeBindings(mFunctions);
 
@@ -4247,7 +4249,7 @@ angle::Result StateManagerGL::setState(const gl::Context *context, const Context
     useProgram(state.program);
     setDefaultVAOState(
         state.defaultVAOState);  // Set default VAO state before binding the target vao
-    bindVertexArray(state.vao, nullptr);
+    bindVertexArray(state.vao);
     for (size_t attribIndex = 0; attribIndex < state.vertexAttribCurrentValues.size();
          attribIndex++)
     {
@@ -4451,9 +4453,40 @@ GLuint StateManagerGL::getDefaultVAO() const
     return mDefaultVAO;
 }
 
-VertexArrayStateGL *StateManagerGL::getDefaultVAOState()
+void StateManagerGL::setDefaultVAOStateDirty()
 {
-    return &mState.defaultVAOState;
+    mLocalDirtyBits.set(gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
+}
+
+VertexArrayStateGL *StateManagerGL::getVAOState(GLuint vao)
+{
+    // Special case: The default VAO state is stored in ContextStateGL
+    if (vao == mDefaultVAO)
+    {
+        return &mState.defaultVAOState;
+    }
+
+    auto iter = mVAOStates.find(vao);
+    return (iter != mVAOStates.end()) ? &iter->second : nullptr;
+}
+
+VertexArrayStateGL *StateManagerGL::getOrCreateVAOState(GLuint vao)
+{
+    VertexArrayStateGL *vaoState = getVAOState(vao);
+    if (vaoState != nullptr)
+    {
+        return vaoState;
+    }
+
+    auto insertResult = mVAOStates.insert(std::pair{
+        vao, VertexArrayStateGL(mCaps.maxVertexAttributes, mCaps.maxVertexAttribBindings)});
+    ASSERT(insertResult.second);
+    return &insertResult.first->second;
+}
+
+VertexArrayStateGL *StateManagerGL::getCurrentVAOState()
+{
+    return getVAOState(mState.vao);
 }
 
 void StateManagerGL::validateState()
@@ -5149,9 +5182,10 @@ void StateManagerGL::syncBufferBindingsFromNativeContext(const gl::Extensions &e
     get(GL_ELEMENT_ARRAY_BUFFER_BINDING, &state->elementArrayBufferBinding);
     mState.buffers[gl::BufferBinding::ElementArray] = state->elementArrayBufferBinding;
 
-    if (mVAOState && mVAOState->elementArrayBuffer != state->elementArrayBufferBinding)
+    VertexArrayStateGL *vaoState = getCurrentVAOState();
+    if (vaoState && vaoState->elementArrayBuffer != state->elementArrayBufferBinding)
     {
-        mVAOState->elementArrayBuffer = state->elementArrayBufferBinding;
+        vaoState->elementArrayBuffer = state->elementArrayBufferBinding;
         mLocalDirtyBits.set(gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
     }
 }
@@ -5215,7 +5249,7 @@ void StateManagerGL::syncVertexArraysFromNativeContext(const gl::Extensions &ext
         {
             // Force-bind VAO 0 if it's either not already bound or StateManagerGL thinks it's not
             // bound.
-            forceBindVertexArray(0, &mState.defaultVAOState);
+            forceBindVertexArray(0);
         }
     }
 
@@ -5286,7 +5320,7 @@ void StateManagerGL::restoreVertexArraysNativeContext(const gl::Extensions &exte
     if (mSupportsVertexArrayObjects)
     {
         // Restore the default VAO state first.
-        bindVertexArray(0, &mState.defaultVAOState);
+        bindVertexArray(0);
     }
 
     for (GLint i = 0; i < static_cast<GLint>(state->defaultVertexArrayAttributes.size()); i++)
@@ -5334,7 +5368,7 @@ void StateManagerGL::restoreVertexArraysNativeContext(const gl::Extensions &exte
     if (mSupportsVertexArrayObjects)
     {
         // Restore the VAO binding
-        bindVertexArray(state->vertexArrayBinding, nullptr);
+        bindVertexArray(state->vertexArrayBinding);
     }
 
     // Mark VAO state dirty and force it to be re-synced on the next draw
@@ -5371,11 +5405,6 @@ void StateManagerGL::ensurePlaceholderFramebuffer()
     mFunctions->bindFramebuffer(framebufferBinding,
                                 mState.framebuffers[angle::FramebufferBindingDraw]);
     mFunctions->bindRenderbuffer(GL_RENDERBUFFER, mState.renderbuffer);
-}
-
-void StateManagerGL::setDefaultVAOStateDirty()
-{
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
 }
 
 }  // namespace rx
