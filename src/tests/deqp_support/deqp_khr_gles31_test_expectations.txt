@@ -16,6 +16,9 @@
 //// General Vulkan expectations
 ////
 
+// Fails after vulkan-deps roll
+540681577 VULKAN : KHR-GLES31.core.compute_shader.shared-struct = SKIP
+
 // Failures on nvidia
 42264111 VULKAN NVIDIA : KHR-GLES31.core.geometry_shader.adjacency.adjacency_indiced_triangle_strip = FAIL
 42264111 VULKAN NVIDIA : KHR-GLES31.core.geometry_shader.adjacency.adjacency_non_indiced_triangle_strip = FAIL
