@@ -1495,14 +1495,17 @@ GLenum GetConfigColorBufferFormat(const egl::Config *config)
 
 GLenum GetConfigDepthStencilBufferFormat(const egl::Config *config)
 {
-    GLenum componentType = GL_UNSIGNED_NORMALIZED;
-
     for (GLenum sizedInternalFormat : GetAllSizedInternalFormats())
     {
+        // Make sure this legacy format is not selected if the config has 32-bit depth.
+        if (sizedInternalFormat == GL_DEPTH_COMPONENT32_OES)
+        {
+            continue;
+        }
+
         const gl::InternalFormat &internalFormat = GetSizedInternalFormatInfo(sizedInternalFormat);
 
-        if (internalFormat.componentType == componentType &&
-            static_cast<EGLint>(internalFormat.depthBits) == config->depthSize &&
+        if (static_cast<EGLint>(internalFormat.depthBits) == config->depthSize &&
             static_cast<EGLint>(internalFormat.stencilBits) == config->stencilSize)
         {
             return sizedInternalFormat;
