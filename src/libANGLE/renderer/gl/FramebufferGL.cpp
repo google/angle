@@ -466,11 +466,17 @@ bool IsNonTrivialClearColor(const GLuint *color)
 
 }  // namespace
 
-FramebufferGL::FramebufferGL(const gl::FramebufferState &data, GLuint id, bool emulatedAlpha)
+FramebufferGL::FramebufferGL(const gl::FramebufferState &data,
+                             GLuint id,
+                             bool emulatedAlpha,
+                             const FunctionsGL *functions,
+                             StateManagerGL *stateManager)
     : FramebufferImpl(data),
       mFramebufferID(id),
       mHasEmulatedAlphaAttachment(emulatedAlpha),
-      mAppliedEnabledDrawBuffers(1)
+      mAppliedEnabledDrawBuffers(1),
+      mFunctions(functions),
+      mStateManager(stateManager)
 {
     ASSERT((isDefault() && id == 0) || !isDefault());
 }
@@ -1366,6 +1372,15 @@ angle::Result FramebufferGL::ensureAttachmentsInitialized(
 
     BlitGL *blitter = GetBlitGL(context);
     return blitter->clearFramebuffer(context, colorAttachments, depth, stencil, this);
+}
+
+angle::Result FramebufferGL::onAttachmentLayerCountChange(gl::FramebufferAttachment *attachment)
+{
+    ASSERT(!isDefault() && attachment && attachment->isAttached() &&
+           attachment->type() == GL_TEXTURE && mFunctions->framebufferTextureLayer);
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    mFunctions->framebufferTextureLayer(GL_FRAMEBUFFER, attachment->getBinding(), 0, 0, 0);
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::syncState(const gl::Context *context,

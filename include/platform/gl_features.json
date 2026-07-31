@@ -952,6 +952,14 @@
                 "Disable the EXT_clear_texture extension due to driver bugs."
             ],
             "issue": "http://crbug.com/475877320"
+        },
+        {
+            "name": "reattach_texture_to_fbo_after_layer_increase",
+            "category": "Workarounds",
+            "description": [
+                "Reattach texture layer to framebuffer after calling TexImage3D to increase layer count on PowerVR Android."
+            ],
+            "issue": "http://crbug.com/499602793"
         }
     ]
 }
