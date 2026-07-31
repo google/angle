@@ -2731,6 +2731,9 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
         case angle::SubjectMessage::ObjectReallocated:
             onStateChange(angle::SubjectMessage::ObjectReallocated);
             break;
+        case angle::SubjectMessage::TextureLayerCountIncreased:
+            onStateChange(angle::SubjectMessage::TextureLayerCountIncreased);
+            break;
         case angle::SubjectMessage::DirtyBitsFlagged:
             signalDirtyState(DIRTY_BIT_IMPLEMENTATION);
 
