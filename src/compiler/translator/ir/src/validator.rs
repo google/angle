@@ -89,7 +89,8 @@
 //     is_proj is false for cubemaps.
 //   - Images with the Rect dimension can only have a Float base type and be 2D samplers (not
 //     storage image, array, msaa, etc).
-//   - ReadOnly and WriteOnly decorations are mutually exclusive.
+//   - ColumnMajor and RowMajor decorations are mutually exclusive.
+//   - ColumnMajor and RowMajor decorations should only apply to matrix types
 
 use crate::ir::*;
 use crate::*;
