@@ -143,7 +143,7 @@ FramebufferImpl *ContextGL::createFramebuffer(const gl::FramebufferState &data)
         funcs->genFramebuffers(1, &fbo);
     }
 
-    return new FramebufferGL(data, fbo, false);
+    return new FramebufferGL(data, fbo, false, funcs, getStateManager());
 }
 
 TextureImpl *ContextGL::createTexture(const gl::TextureState &state)
