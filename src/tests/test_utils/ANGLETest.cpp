@@ -867,10 +867,27 @@ void ANGLETestBase::ANGLETestSetUp()
     if (mFixture->eglWindow->getClientMajorVersion() != mCurrentParams->majorVersion ||
         mFixture->eglWindow->getClientMinorVersion() != mCurrentParams->minorVersion)
     {
-        WARN() << "Requested Context version does not match the version created. Requested: "
-               << mCurrentParams->majorVersion << "." << mCurrentParams->minorVersion
-               << ", Actual: " << mFixture->eglWindow->getClientMajorVersion() << "."
-               << mFixture->eglWindow->getClientMinorVersion();
+        std::stringstream versionComparison;
+        versionComparison << "(Requested: " << mCurrentParams->majorVersion << "."
+                          << mCurrentParams->minorVersion
+                          << ", Actual: " << mFixture->eglWindow->getClientMajorVersion() << "."
+                          << mFixture->eglWindow->getClientMinorVersion() << ")";
+
+        if (mCurrentParams->isDisableRequested(Feature::EnableCreateContextBackwardsCompatible))
+        {
+            INFO() << "Extension EGL_ANGLE_create_context_backwards_compatible is disabled. "
+                   << versionComparison.str();
+        }
+        else if (!IsEGLClientExtensionEnabled("EGL_ANGLE_create_context_backwards_compatible"))
+        {
+            INFO() << "Extension EGL_ANGLE_create_context_backwards_compatible is not supported. "
+                   << versionComparison.str();
+        }
+        else
+        {
+            WARN() << "Requested context version does not match the version created. "
+                   << versionComparison.str();
+        }
     }
 
     if (needSwap)
