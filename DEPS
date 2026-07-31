@@ -2471,7 +2471,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/dr_driving',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -3581,7 +3581,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/minetest',
-            'version': 'version:2',
+            'version': 'version:3',
         },
       ],
       'dep_type': 'cipd',
@@ -3971,7 +3971,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/plague_inc',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -4581,7 +4581,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/sonic_the_hedgehog',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -5301,7 +5301,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/zombie_smasher',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',

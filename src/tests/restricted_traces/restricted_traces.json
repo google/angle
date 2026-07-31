@@ -112,7 +112,7 @@
     "dont_starve 1 ci",
     "dota_underlords 5 ci representative smoke",
     "downwell 2 ci",
-    "dr_driving 5 ci",
+    "dr_driving 6 ci",
     "dr_parking_4 2 ci",
     "dragon_ball_legends 5 ci",
     "dragon_ball_z_dokkan_battle 2 ci",
@@ -223,7 +223,7 @@
     "minecraft 8 ci",
     "minecraft_bedrock 1 ci representative smoke",
     "minecraft_vibrant_visuals 1 ci",
-    "minetest 2 ci",
+    "minetest 3 ci",
     "mini_block_craft 2 ci",
     "mini_games_calm_and_relax 1 ci",
     "mini_world 6 ci",
@@ -262,7 +262,7 @@
     "passmark_unity 1 ci",
     "piano_fire 2 ci",
     "piano_kids 2 ci",
-    "plague_inc 1 ci",
+    "plague_inc 2 ci",
     "plants_vs_zombies_2 5 ci",
     "plants_vs_zombies_heroes 1 ci",
     "pokemon_go 6 ci",
@@ -323,7 +323,7 @@
     "soccer_superstar 1 ci",
     "solar_smash 3 ci representative",
     "sonic_forces 1 ci",
-    "sonic_the_hedgehog 5 ci representative smoke",
+    "sonic_the_hedgehog 6 ci representative smoke",
     "special_forces_group_2 1 ci",
     "spider_fighter_3 1 ci",
     "standoff_2 5 ci",
@@ -395,6 +395,6 @@
     "yalla_ludo 1 ci",
     "zenonia_4 1 ci",
     "zillow 5 ci",
-    "zombie_smasher 1 ci"
+    "zombie_smasher 2 ci"
   ]
 }
