@@ -467,11 +467,17 @@ bool IsEmulatedAlphaChannelTextureAttachment(const gl::FramebufferAttachment *at
     return textureGL->hasEmulatedAlphaChannel(attachment->getTextureImageIndex());
 }
 
-FramebufferGL::FramebufferGL(const gl::FramebufferState &data, GLuint id, bool emulatedAlpha)
+FramebufferGL::FramebufferGL(const gl::FramebufferState &data,
+                             GLuint id,
+                             bool emulatedAlpha,
+                             const FunctionsGL *functions,
+                             StateManagerGL *stateManager)
     : FramebufferImpl(data),
       mFramebufferID(id),
       mHasEmulatedAlphaAttachment(emulatedAlpha),
-      mAppliedEnabledDrawBuffers(1)
+      mAppliedEnabledDrawBuffers(1),
+      mFunctions(functions),
+      mStateManager(stateManager)
 {
     ASSERT((isDefault() && id == 0) || !isDefault());
 }
@@ -1452,6 +1458,15 @@ angle::Result FramebufferGL::recreateFbo(const gl::Context *context)
 
     // Leave other bits like DIRTY_BIT_FOVEATION alone.
     return syncState(context, GL_FRAMEBUFFER, dirtyBits, gl::Command::Other);
+}
+
+angle::Result FramebufferGL::onAttachmentLayerCountChange(gl::FramebufferAttachment *attachment)
+{
+    ASSERT(!isDefault() && attachment && attachment->isAttached() &&
+           attachment->type() == GL_TEXTURE && mFunctions->framebufferTextureLayer);
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
+    mFunctions->framebufferTextureLayer(GL_FRAMEBUFFER, attachment->getBinding(), 0, 0, 0);
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferGL::syncState(const gl::Context *context,
