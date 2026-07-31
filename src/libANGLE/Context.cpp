@@ -1756,7 +1756,7 @@ void Context::bindImageTexture(GLuint unit,
     // For robust init, make sure the texture is initialized before storage writes.
     if (tex != nullptr)
     {
-        ANGLE_CONTEXT_TRY(tex->ensureInitialized(this));
+        ANGLE_CONTEXT_TRY(tex->ensureInitialized(this, EnsureInitializedLevels::AllEnabledLevels));
     }
     mState.setImageUnit(this, unit, tex, level, layered, layer, access, format);
     mImageObserverBindings[unit].bind(tex);

@@ -43,6 +43,8 @@
 // Generate mipmap or draw on mismatched stale levels fails on some OpenGL/GLES drivers when robust init is enabled
 532617619 OPENGL : Texture2DTestES3RobustInit.MismatchedStaleLevel*/* = SKIP
 532617619 GLES : Texture2DTestES3RobustInit.MismatchedStaleLevel*/* = SKIP
+532617619 OPENGL : MipmapRobustInitTestES3.GenerateMipmapRobustInitOptimization*/* = SKIP
+532617619 GLES : MipmapRobustInitTestES3.GenerateMipmapRobustInitOptimization*/* = SKIP
 
 381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
 

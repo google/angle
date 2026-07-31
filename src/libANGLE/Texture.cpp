@@ -1745,7 +1745,7 @@ angle::Result Texture::copyTexture(Context *context,
 
     // Initialize source texture.
     // Note: we don't have a way to notify which portions of the image changed currently.
-    ANGLE_TRY(source->ensureInitialized(context));
+    ANGLE_TRY(source->ensureInitialized(context, EnsureInitializedLevels::AllEnabledLevels));
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level, ImageIndex::kEntireLevel);
 
@@ -1779,7 +1779,7 @@ angle::Result Texture::copySubTexture(const Context *context,
     ASSERT(TextureTargetToType(target) == mState.mType);
 
     // Ensure source is initialized.
-    ANGLE_TRY(source->ensureInitialized(context));
+    ANGLE_TRY(source->ensureInitialized(context, EnsureInitializedLevels::AllEnabledLevels));
 
     Box destBox(destOffset.x, destOffset.y, destOffset.z, sourceBox.width, sourceBox.height,
                 sourceBox.depth);
@@ -2493,7 +2493,11 @@ angle::Result Texture::syncState(const Context *context, Command source)
 {
     ASSERT(hasAnyDirtyBit() || source == Command::GenerateMipmap ||
            (context->isRobustResourceInitEnabled() && mState.mInitState == InitState::MayNeedInit));
-    ANGLE_TRY(ensureInitialized(context));
+    // During glGenerateMipmap, robust initialization of levels i > baseLevel can be skipped
+    // because they will be completely overwritten by the generated mipmaps.
+    ANGLE_TRY(ensureInitialized(context, source == Command::GenerateMipmap
+                                             ? EnsureInitializedLevels::BaseOnly
+                                             : EnsureInitializedLevels::AllEnabledLevels));
     ANGLE_TRY(mTexture->syncState(context, mDirtyBits, source));
     mDirtyBits.reset();
     return angle::Result::Continue;
@@ -2585,7 +2589,7 @@ void Texture::invalidateCompletenessCache() const
     mCompletenessCache.context = {0};
 }
 
-angle::Result Texture::ensureInitialized(const Context *context)
+angle::Result Texture::ensureInitialized(const Context *context, EnsureInitializedLevels levels)
 {
     if (!context->isRobustResourceInitEnabled() || mState.mInitState == InitState::Initialized)
     {
@@ -2601,6 +2605,11 @@ angle::Result Texture::ensureInitialized(const Context *context)
     while (it.hasNext())
     {
         const ImageIndex index = it.next();
+        if (levels == EnsureInitializedLevels::BaseOnly &&
+            index.getLevelIndex() != static_cast<GLint>(mState.getEffectiveBaseLevel()))
+        {
+            break;
+        }
         ImageDesc &desc =
             mState.mImageDescs[GetImageDescIndex(index.getTarget(), index.getLevelIndex())];
         if (desc.initState == InitState::MayNeedInit && !desc.size.empty())
