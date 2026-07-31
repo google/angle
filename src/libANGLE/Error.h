@@ -123,6 +123,27 @@ enum class [[nodiscard]] Result
     Stop,
 };
 
+class [[nodiscard]] ResultAccumulator
+{
+  public:
+    ResultAccumulator() : mResult(Result::Continue) {}
+    ResultAccumulator(Result result) : mResult(result) {}
+
+    ResultAccumulator &operator=(Result result)
+    {
+        if (result != Result::Continue)
+        {
+            mResult = result;
+        }
+        return *this;
+    }
+
+    operator Result() const { return mResult; }
+
+  private:
+    Result mResult;
+};
+
 // TODO(jmadill): Remove this when refactor is complete. http://anglebug.com/42261727
 egl::Error ResultToEGL(Result result);
 }  // namespace angle

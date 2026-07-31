@@ -129,7 +129,7 @@ angle::Result ImageSibling::orphanImages(const gl::Context *context,
 {
     ASSERT(outReleaseImage != nullptr);
 
-    angle::Result result = angle::Result::Continue;
+    angle::ResultAccumulator result = angle::Result::Continue;
 
     if (mTargetOf.get() != nullptr)
     {
@@ -143,11 +143,7 @@ angle::Result ImageSibling::orphanImages(const gl::Context *context,
     {
         for (Image *sourceImage : mSourcesOf)
         {
-            angle::Result orphanResult = sourceImage->orphanSibling(context, this);
-            if (orphanResult != angle::Result::Continue)
-            {
-                result = orphanResult;
-            }
+            result = sourceImage->orphanSibling(context, this);
         }
         mSourcesOf.clear();
     }
