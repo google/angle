@@ -389,9 +389,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     angle::Result syncAsAttachmentRenderTarget(const gl::Context *context,
                                                GLsizei samples);
 
-    vk::ImageViewHelper &getImageViews() { return mImageView; }
-    const vk::ImageViewHelper &getImageViews() const { return mImageView; }
-
     angle::Result ensureRenderableWithFormat(ContextVk *contextVk,
                                              const vk::Format &format,
                                              TextureUpdateResult *updateResultOut);

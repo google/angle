@@ -2550,7 +2550,7 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
 
     vk::Renderer *renderer = contextVk->getRenderer();
 
-    getImageViews().init(renderer);
+    mImageView.init(renderer);
 }
 
 angle::Result TextureVk::redefineLevel(const gl::Context *context,
@@ -2798,8 +2798,8 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
             const vk::ImageView *srcView                         = nullptr;
             UtilsVk::GenerateMipmapDestLevelViews destLevelViews = {};
 
-            ANGLE_TRY(getImageViews().getLevelLayerDrawImageView(contextVk, *mImage, srcLevelVk,
-                                                                 layer, &srcView));
+            ANGLE_TRY(mImageView.getLevelLayerDrawImageView(contextVk, *mImage, srcLevelVk, layer,
+                                                            &srcView));
 
             vk::LevelIndex dstLevelCount = maxGenerateLevels;
             for (vk::LevelIndex levelVk(0); levelVk < maxGenerateLevels; ++levelVk)
@@ -2813,7 +2813,7 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
                     break;
                 }
 
-                ANGLE_TRY(getImageViews().getLevelLayerDrawImageView(
+                ANGLE_TRY(mImageView.getLevelLayerDrawImageView(
                     contextVk, *mImage, dstLevelVk, layer, &destLevelViews[levelVk.get()]));
             }
 
@@ -2904,15 +2904,15 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
         mImage->toVkLevel(mState.toOwnerLevel(gl::LevelIndex(mState.getMipmapMaxLevel())));
     ASSERT(maxLevel != vk::LevelIndex(0));
 
-    const bool colorspaceOverrideForRead  = getImageViews().hasColorspaceOverrideForRead(*mImage);
-    const bool colorspaceOverrideForWrite = getImageViews().hasColorspaceOverrideForWrite(*mImage);
+    const bool colorspaceOverrideForRead  = mImageView.hasColorspaceOverrideForRead(*mImage);
+    const bool colorspaceOverrideForWrite = mImageView.hasColorspaceOverrideForWrite(*mImage);
 
     if (colorspaceOverrideForRead || colorspaceOverrideForWrite)
     {
         angle::FormatID actualFormatID =
             colorspaceOverrideForRead
-                ? getImageViews().getColorspaceOverrideFormatForRead(mImage->getActualFormatID())
-                : getImageViews().getColorspaceOverrideFormatForWrite(mImage->getActualFormatID());
+                ? mImageView.getColorspaceOverrideFormatForRead(mImage->getActualFormatID())
+                : mImageView.getColorspaceOverrideFormatForWrite(mImage->getActualFormatID());
 
         return contextVk->getUtils().generateMipmapWithDraw(
             contextVk, mImage, actualFormatID,
@@ -3543,7 +3543,7 @@ void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
         renderToTextureIndex != gl::RenderToTextureImageIndex::Default;
 
     vk::ImageHelper *drawImage             = mImage;
-    vk::ImageViewHelper *drawImageViews    = &getImageViews();
+    vk::ImageViewHelper *drawImageViews    = &mImageView;
     vk::ImageHelper *resolveImage          = nullptr;
     vk::ImageViewHelper *resolveImageViews = nullptr;
 
@@ -3638,9 +3638,8 @@ RenderTargetVk *TextureVk::getMultiLayerRenderTarget(ContextVk *contextVk,
     const gl::OwnerLevel level = mState.toOwnerLevel(ownLevel);
     const gl::OwnerLayer layer = mState.toOwnerLayer(ownLayer);
 
-    vk::ImageViewHelper *imageViews = &getImageViews();
     vk::ImageSubresourceRange range =
-        imageViews->getSubresourceDrawRange(level, layer, vk::GetLayerMode(*mImage, layerCount));
+        mImageView.getSubresourceDrawRange(level, layer, vk::GetLayerMode(*mImage, layerCount));
 
     auto iter = mMultiLayerRenderTargets.find(range);
     if (iter != mMultiLayerRenderTargets.end())
@@ -3656,7 +3655,7 @@ RenderTargetVk *TextureVk::getMultiLayerRenderTarget(ContextVk *contextVk,
         rt = std::make_unique<RenderTargetVk>();
     }
 
-    rt->init(mImage, imageViews, nullptr, nullptr, level, layer, layerCount,
+    rt->init(mImage, &mImageView, nullptr, nullptr, level, layer, layerCount,
              RenderTargetTransience::Default);
 
     return rt.get();
@@ -4079,43 +4078,39 @@ const vk::ImageView &TextureVk::getReadImageView(GLenum srgbDecode,
 {
     ASSERT(mImage != nullptr && mImage->valid());
 
-    const vk::ImageViewHelper &imageViews = getImageViews();
-
-    if (mState.isStencilMode() && imageViews.hasStencilReadImageView())
+    if (mState.isStencilMode() && mImageView.hasStencilReadImageView())
     {
-        return imageViews.getStencilReadImageView();
+        return mImageView.getStencilReadImageView();
     }
 
     if (samplerExternal2DY2YEXT)
     {
-        ASSERT(imageViews.getSamplerExternal2DY2YEXTImageView().valid());
-        return imageViews.getSamplerExternal2DY2YEXTImageView();
+        ASSERT(mImageView.getSamplerExternal2DY2YEXTImageView().valid());
+        return mImageView.getSamplerExternal2DY2YEXTImageView();
     }
 
     const gl::SrgbDecode decode =
         (srgbDecode == GL_DECODE_EXT) ? gl::SrgbDecode::Default : gl::SrgbDecode::Skip;
     const angle::Format &imageFormat = mImage->getActualFormat();
-    imageViews.updateSrgbDecode(imageFormat, decode);
-    imageViews.updateStaticTexelFetch(imageFormat, texelFetchStaticUse);
+    mImageView.updateSrgbDecode(imageFormat, decode);
+    mImageView.updateStaticTexelFetch(imageFormat, texelFetchStaticUse);
 
-    ASSERT(imageViews.getReadImageView().valid());
-    return imageViews.getReadImageView();
+    ASSERT(mImageView.getReadImageView().valid());
+    return mImageView.getReadImageView();
 }
 
 const vk::ImageView &TextureVk::getCopyImageView() const
 {
     ASSERT(mImage->valid());
 
-    const vk::ImageViewHelper &imageViews = getImageViews();
-
     const angle::Format &angleFormat = mImage->getActualFormat();
     ASSERT(angleFormat.isSRGB ==
            (ConvertToLinear(mImage->getActualFormatID()) != angle::FormatID::NONE));
     if (angleFormat.isSRGB)
     {
-        return imageViews.getSRGBCopyImageView();
+        return mImageView.getSRGBCopyImageView();
     }
-    return imageViews.getLinearCopyImageView();
+    return mImageView.getLinearCopyImageView();
 }
 
 angle::Result TextureVk::getLevelLayerImageView(ContextVk *contextVk,
@@ -4127,8 +4122,7 @@ angle::Result TextureVk::getLevelLayerImageView(ContextVk *contextVk,
 
     const vk::LevelIndex levelVk = mImage->toVkLevel(level);
 
-    return getImageViews().getLevelLayerDrawImageView(contextVk, *mImage, levelVk, layer,
-                                                      imageViewOut);
+    return mImageView.getLevelLayerDrawImageView(contextVk, *mImage, levelVk, layer, imageViewOut);
 }
 
 angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
@@ -4152,7 +4146,7 @@ angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
     {
         const gl::OwnerLayer nativeLayer = mState.toOwnerLayer(gl::LayerIndex(binding.layer));
 
-        return getImageViews().getLevelLayerStorageImageView(
+        return mImageView.getLevelLayerStorageImageView(
             contextVk, *mImage, nativeLevelVk, nativeLayer,
             VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT,
             format->getActualImageFormatID(getRequiredFormatSupport()), imageViewOut);
@@ -4160,7 +4154,7 @@ angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
 
     const gl::OwnerLayer nativeLayer = mState.toOwnerLayer(gl::LayerIndex(0));
 
-    return getImageViews().getLevelStorageImageView(
+    return mImageView.getLevelStorageImageView(
         contextVk, mState.getType(), *mImage, nativeLevelVk, nativeLayer,
         VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT,
         format->getActualImageFormatID(getRequiredFormatSupport()), imageViewOut);
@@ -4465,7 +4459,7 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk, uint32_t levelCoun
     const VkImageUsageFlags kDisallowedSwizzledUsage =
         VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT |
         VK_IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR;
-    ANGLE_TRY(getImageViews().initReadViews(
+    ANGLE_TRY(mImageView.initReadViews(
         contextVk, mState.getType(), *mImage, formatSwizzle, readSwizzle, baseLevelVk, levelCount,
         baseLayer, getImageViewLayerCount(), createExtraSRGBViews,
         getImage().getUsage() & ~kDisallowedSwizzledUsage, astcDecodePrecision));
@@ -4848,8 +4842,8 @@ vk::ImageOrBufferViewSubresourceSerial TextureVk::getImageViewSubresourceSerialI
     // getMipmapMaxLevel will clamp to the max level if it is smaller than the number of mips.
     uint32_t levelCount = maxLevel - baseLevel + 1;
 
-    return getImageViews().getSubresourceSerialForColorspace(
-        baseLevel, levelCount, gl::OwnerLayer(0), vk::LayerMode::All, colorspace);
+    return mImageView.getSubresourceSerialForColorspace(baseLevel, levelCount, gl::OwnerLayer(0),
+                                                        vk::LayerMode::All, colorspace);
 }
 
 vk::ImageOrBufferViewSubresourceSerial TextureVk::getBufferViewSerial() const
@@ -4867,7 +4861,7 @@ vk::ImageOrBufferViewSubresourceSerial TextureVk::getStorageImageViewSerial(
     const gl::OwnerLevel baseLevel =
         mState.toOwnerLevel(gl::LevelIndex(static_cast<uint32_t>(binding.level)));
 
-    return getImageViews().getSubresourceSerial(baseLevel, 1, nativeLayer, layerMode);
+    return mImageView.getSubresourceSerial(baseLevel, 1, nativeLayer, layerMode);
 }
 
 uint32_t TextureVk::getImageViewLayerCount() const
@@ -4890,17 +4884,16 @@ uint32_t TextureVk::getImageViewLevelCount() const
 
 angle::Result TextureVk::refreshImageViews(ContextVk *contextVk)
 {
-    vk::ImageViewHelper &imageView = getImageViews();
     if (mImage == nullptr)
     {
-        ASSERT(imageView.isImageViewGarbageEmpty());
+        ASSERT(mImageView.isImageViewGarbageEmpty());
     }
     else
     {
         vk::Renderer *renderer = contextVk->getRenderer();
-        imageView.release(renderer, mImage->getResourceUse());
+        mImageView.release(renderer, mImage->getResourceUse());
 
-        // Since view has changed, some descriptorSet cache maybe obsolete. SO proactively release
+        // Since view has changed, some descriptorSet cache maybe obsolete. So proactively release
         // cache.
         mDescriptorSetCacheManager.releaseKeys(renderer);
 
