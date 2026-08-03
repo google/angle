@@ -185,6 +185,13 @@ fn propagate_precision_in_instructions(
                     &mut new_ids_to_update,
                 );
             }
+            BlockInstruction::Void(OpCode::Call(function_id, params)) => {
+                instruction::precision::propagate_by_matching_precision(
+                    &mut params.iter_mut(),
+                    &state.function_arg_precisions[function_id],
+                    &mut new_ids_to_update,
+                );
+            }
             _ => {}
         };
 

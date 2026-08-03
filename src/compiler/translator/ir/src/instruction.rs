@@ -3762,6 +3762,17 @@ pub mod precision {
             propagate_to_id(id, precision, to_propagate);
         });
     }
+
+    pub fn propagate_by_matching_precision(
+        ids: &mut std::slice::IterMut<'_, TypedId>,
+        to_match: &[Precision],
+        to_propagate: &mut Vec<(RegisterId, Precision)>,
+    ) {
+        ids.zip(to_match.iter()).for_each(|(id, &expect)| {
+            propagate_to_id(id, expect, to_propagate);
+        });
+    }
+
     pub fn propagate(
         instruction: &mut Instruction,
         function_arg_precisions: &std::collections::HashMap<FunctionId, Vec<Precision>>,
@@ -3769,15 +3780,6 @@ pub mod precision {
         to_propagate: &mut Vec<(RegisterId, Precision)>,
     ) {
         let precision = instruction.result.precision;
-
-        let propagate_by_matching_precision =
-            |ids: &mut std::slice::IterMut<'_, TypedId>,
-             to_match: &[Precision],
-             to_propagate: &mut Vec<(RegisterId, Precision)>| {
-                ids.zip(to_match.iter()).for_each(|(id, &expect)| {
-                    propagate_to_id(id, expect, to_propagate);
-                });
-            };
 
         match instruction.op {
             OpCode::ExtractVectorComponentDynamic(ref mut indexed, ref mut index)
