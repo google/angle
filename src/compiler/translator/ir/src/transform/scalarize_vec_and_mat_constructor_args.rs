@@ -254,7 +254,10 @@ fn construct_matrix_from_matrix(
                     .collect(),
                 Type::Matrix(_, column_count) => (0..column_count)
                     .map(|column| {
-                        let column = ir_meta.get_constant_uint_typed(column, Precision::Unassigned);
+                        // column should have a precision assigned after propagate_precision pass.
+                        // since the number of columns of matrix is small, Precision::Low is
+                        // sufficient.
+                        let column = ir_meta.get_constant_uint_typed(column, Precision::Low);
                         traverser::add_typed_instruction(
                             transforms,
                             instruction::make!(index, ir_meta, id, column),

@@ -416,27 +416,29 @@ fn transform_load_by_image(
         && (plane_info.format == ImageInternalFormat::RGBA8I
             || plane_info.format == ImageInternalFormat::RGBA8UI)
     {
-        let (shift, const24) = if plane_info.format == ImageInternalFormat::RGBA8I {
-            (
-                ir_meta.get_constant_ivec4_typed(24, 16, 8, 0, Precision::Unassigned),
-                ir_meta.get_constant_int_typed(24, Precision::Unassigned),
-            )
-        } else {
-            (
-                ir_meta.get_constant_uvec4_typed(24, 16, 8, 0, Precision::Unassigned),
-                ir_meta.get_constant_uint_typed(24, Precision::Unassigned),
-            )
-        };
-
         let loaded = traverser::add_typed_instruction(&mut transforms, loaded);
         let rrrr = traverser::add_typed_instruction(
             &mut transforms,
             instruction::vector_component_multi(ir_meta, loaded, vec![0, 0, 0, 0]),
         );
+        // For BinaryOpCode::BitShiftLeft and BinaryOpCode::BitShiftRight,
+        // result precision should propagate to both operands. See ir::instruction::propagate().
+        // Since the result precision is the same as the first operand precision, we can apply the
+        // first operand precision to shift and const24.
+        let shift = if plane_info.format == ImageInternalFormat::RGBA8I {
+            ir_meta.get_constant_ivec4_typed(24, 16, 8, 0, rrrr.precision)
+        } else {
+            ir_meta.get_constant_uvec4_typed(24, 16, 8, 0, rrrr.precision)
+        };
         let partial = traverser::add_typed_instruction(
             &mut transforms,
             instruction::bit_shift_left(ir_meta, rrrr, shift),
         );
+        let const24 = if plane_info.format == ImageInternalFormat::RGBA8I {
+            ir_meta.get_constant_int_typed(24, partial.precision)
+        } else {
+            ir_meta.get_constant_uint_typed(24, partial.precision)
+        };
         traverser::add_typed_instruction(
             &mut transforms,
             instruction::make_with_result_id!(bit_shift_right, ir_meta, result, partial, const24),
@@ -485,6 +487,11 @@ fn transform_load_by_framebuffer_fetch(
         );
         match plane_info.format {
             ImageInternalFormat::R32F => {
+                // For OpCode::ConstructVectorFromMultiple, the result precision should propagate to
+                // operands. See ir::instruction::propagate().
+                // Since the result precision is the highest precision of all operands, we just need
+                // to make sure all constant operands have an assigned precision
+                // less than or equal to loaded.precision.
                 traverser::add_typed_instruction(
                     &mut transforms,
                     instruction::make_with_result_id!(
@@ -610,8 +617,13 @@ fn transform_store_by_image(
 
     let mut clamped = match plane_info.format {
         ImageInternalFormat::RGBA8I => {
-            let int8_min = ir_meta.get_constant_int_typed(-128, Precision::Unassigned);
-            let int8_max = ir_meta.get_constant_int_typed(127, Precision::Unassigned);
+            // For OpCode::Clamp, result precision should propagate to operands,
+            // See ir::instruction::propagate().
+            // Since result precision is the highest precision of all operands,
+            // we only need to ensure int8_min and int8_max have an assigned precision
+            // less than or equal to value.precision. Use value.precision for simplicity.
+            let int8_min = ir_meta.get_constant_int_typed(-128, value.precision);
+            let int8_max = ir_meta.get_constant_int_typed(127, value.precision);
             traverser::add_typed_instruction(
                 &mut transforms,
                 instruction::built_in(
@@ -622,7 +634,12 @@ fn transform_store_by_image(
             )
         }
         ImageInternalFormat::RGBA8UI => {
-            let uint8_max = ir_meta.get_constant_uint_typed(255, Precision::Unassigned);
+            // For BinaryOpCode::Min, result precision should propagate to both operands.
+            // See ir::instruction::propagate().
+            // Since result precision is the higher precision of the two operands,
+            // we only need to ensure uint8_max has an assigned precision
+            // less than or equal to value.precision. Use value.precision for simplicity.
+            let uint8_max = ir_meta.get_constant_uint_typed(255, value.precision);
             traverser::add_typed_instruction(
                 &mut transforms,
                 instruction::built_in_binary(ir_meta, BinaryOpCode::Min, value, uint8_max),
@@ -666,22 +683,33 @@ fn transform_store_by_image(
         } else if plane_info.format == ImageInternalFormat::RGBA8I
             || plane_info.format == ImageInternalFormat::RGBA8UI
         {
+            // const8, const16, const24, const255 will be used as the second operand in
+            // BinaryOpCode::BitShiftLeft and BinaryOpCode::BitWiseAnd instructions below.
+            // Both BinaryOpCode propagates result precision to both operands in propagate_precision
+            // pass.
+            // For BinaryOpCode::BitShiftLeft, the result precision is the same as the first
+            // operand's precision.
+            // For BinaryOpCode::BitWiseAnd, the result precision is the higher precision of the two
+            // operands.
+            // We only need to ensure const8, const16, const24, const255 all have an
+            // assigned precision that is less than or equal to the other operand's precision.
+            // In the case of 8, 16, 24, 0xFF, Precision::Low is sufficient.
             let (vec_format, const8, const16, const24, const255) =
                 if plane_info.format == ImageInternalFormat::RGBA8I {
                     (
                         TYPE_ID_IVEC4,
-                        ir_meta.get_constant_int_typed(8, Precision::Unassigned),
-                        ir_meta.get_constant_int_typed(16, Precision::Unassigned),
-                        ir_meta.get_constant_int_typed(24, Precision::Unassigned),
-                        ir_meta.get_constant_int_typed(0xFF, Precision::Unassigned),
+                        ir_meta.get_constant_int_typed(8, Precision::Low),
+                        ir_meta.get_constant_int_typed(16, Precision::Low),
+                        ir_meta.get_constant_int_typed(24, Precision::Low),
+                        ir_meta.get_constant_int_typed(0xFF, Precision::Low),
                     )
                 } else {
                     (
                         TYPE_ID_UVEC4,
-                        ir_meta.get_constant_uint_typed(8, Precision::Unassigned),
-                        ir_meta.get_constant_uint_typed(16, Precision::Unassigned),
-                        ir_meta.get_constant_uint_typed(24, Precision::Unassigned),
-                        ir_meta.get_constant_uint_typed(0xFF, Precision::Unassigned),
+                        ir_meta.get_constant_uint_typed(8, Precision::Low),
+                        ir_meta.get_constant_uint_typed(16, Precision::Low),
+                        ir_meta.get_constant_uint_typed(24, Precision::Low),
+                        ir_meta.get_constant_uint_typed(0xFF, Precision::Low),
                     )
                 };
 
