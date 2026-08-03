@@ -10,8 +10,10 @@ use crate::*;
 pub fn run(ir: &mut IR, min_point_size: f32, max_point_size: f32) {
     if let Some(point_size_var_id) = ir.meta.get_built_in_variable(BuiltIn::PointSize) {
         let point_size = TypedId::from_variable_id(&ir.meta, point_size_var_id);
-        let min_size_constant = ir.meta.get_constant_float_typed(min_point_size);
-        let max_size_constant = ir.meta.get_constant_float_typed(max_point_size);
+        let min_size_constant =
+            ir.meta.get_constant_float_typed(min_point_size, Precision::Unassigned);
+        let max_size_constant =
+            ir.meta.get_constant_float_typed(max_point_size, Precision::Unassigned);
 
         // Generate:
         //

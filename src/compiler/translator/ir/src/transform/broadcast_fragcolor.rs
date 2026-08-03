@@ -94,7 +94,7 @@ fn broadcast(
         let replacement = TypedId::from_variable_id(&ir.meta, original_id);
         let color = postamble.add_typed_instruction(instruction::load(&mut ir.meta, replacement));
         for index in 0..array_size {
-            let index = ir.meta.get_constant_uint_typed(index);
+            let index = ir.meta.get_constant_uint_typed(index, Precision::Unassigned);
             let indexed = postamble.add_typed_instruction(instruction::index(
                 &mut ir.meta,
                 arrayed_built_in,

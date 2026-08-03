@@ -343,6 +343,7 @@ fn declare_fragcoord_global(state: &mut State, preamble: &mut Block) -> Option<T
             state.ir_meta,
             TYPE_ID_IVEC2,
             vec![built_in_fragcoord_xy],
+            None,
         ));
 
         preamble.add_void_instruction(OpCode::Store(fragcoord, built_in_fragcoord_xy));
@@ -416,9 +417,15 @@ fn transform_load_by_image(
             || plane_info.format == ImageInternalFormat::RGBA8UI)
     {
         let (shift, const24) = if plane_info.format == ImageInternalFormat::RGBA8I {
-            (ir_meta.get_constant_ivec4_typed(24, 16, 8, 0), ir_meta.get_constant_int_typed(24))
+            (
+                ir_meta.get_constant_ivec4_typed(24, 16, 8, 0, Precision::Unassigned),
+                ir_meta.get_constant_int_typed(24, Precision::Unassigned),
+            )
         } else {
-            (ir_meta.get_constant_uvec4_typed(24, 16, 8, 0), ir_meta.get_constant_uint_typed(24))
+            (
+                ir_meta.get_constant_uvec4_typed(24, 16, 8, 0, Precision::Unassigned),
+                ir_meta.get_constant_uint_typed(24, Precision::Unassigned),
+            )
         };
 
         let loaded = traverser::add_typed_instruction(&mut transforms, loaded);
@@ -490,7 +497,8 @@ fn transform_load_by_framebuffer_fetch(
                             TYPED_CONSTANT_ID_FLOAT_ZERO,
                             TYPED_CONSTANT_ID_FLOAT_ZERO,
                             TYPED_CONSTANT_ID_FLOAT_ONE
-                        ]
+                        ],
+                        None
                     ),
                 );
             }
@@ -507,7 +515,8 @@ fn transform_load_by_framebuffer_fetch(
                             TYPED_CONSTANT_ID_INT_ZERO,
                             TYPED_CONSTANT_ID_INT_ZERO,
                             TYPED_CONSTANT_ID_INT_ONE
-                        ]
+                        ],
+                        None
                     ),
                 );
             }
@@ -524,7 +533,8 @@ fn transform_load_by_framebuffer_fetch(
                             TYPED_CONSTANT_ID_UINT_ZERO,
                             TYPED_CONSTANT_ID_UINT_ZERO,
                             TYPED_CONSTANT_ID_UINT_ONE
-                        ]
+                        ],
+                        None
                     ),
                 );
             }
@@ -600,8 +610,8 @@ fn transform_store_by_image(
 
     let mut clamped = match plane_info.format {
         ImageInternalFormat::RGBA8I => {
-            let int8_min = ir_meta.get_constant_int_typed(-128);
-            let int8_max = ir_meta.get_constant_int_typed(127);
+            let int8_min = ir_meta.get_constant_int_typed(-128, Precision::Unassigned);
+            let int8_max = ir_meta.get_constant_int_typed(127, Precision::Unassigned);
             traverser::add_typed_instruction(
                 &mut transforms,
                 instruction::built_in(
@@ -612,7 +622,7 @@ fn transform_store_by_image(
             )
         }
         ImageInternalFormat::RGBA8UI => {
-            let uint8_max = ir_meta.get_constant_uint_typed(255);
+            let uint8_max = ir_meta.get_constant_uint_typed(255, Precision::Unassigned);
             traverser::add_typed_instruction(
                 &mut transforms,
                 instruction::built_in_binary(ir_meta, BinaryOpCode::Min, value, uint8_max),
@@ -651,7 +661,7 @@ fn transform_store_by_image(
             );
             clamped = traverser::add_typed_instruction(
                 &mut transforms,
-                instruction::construct(ir_meta, TYPE_ID_UVEC4, vec![packed]),
+                instruction::construct(ir_meta, TYPE_ID_UVEC4, vec![packed], None),
             );
         } else if plane_info.format == ImageInternalFormat::RGBA8I
             || plane_info.format == ImageInternalFormat::RGBA8UI
@@ -660,18 +670,18 @@ fn transform_store_by_image(
                 if plane_info.format == ImageInternalFormat::RGBA8I {
                     (
                         TYPE_ID_IVEC4,
-                        ir_meta.get_constant_int_typed(8),
-                        ir_meta.get_constant_int_typed(16),
-                        ir_meta.get_constant_int_typed(24),
-                        ir_meta.get_constant_int_typed(0xFF),
+                        ir_meta.get_constant_int_typed(8, Precision::Unassigned),
+                        ir_meta.get_constant_int_typed(16, Precision::Unassigned),
+                        ir_meta.get_constant_int_typed(24, Precision::Unassigned),
+                        ir_meta.get_constant_int_typed(0xFF, Precision::Unassigned),
                     )
                 } else {
                     (
                         TYPE_ID_UVEC4,
-                        ir_meta.get_constant_uint_typed(8),
-                        ir_meta.get_constant_uint_typed(16),
-                        ir_meta.get_constant_uint_typed(24),
-                        ir_meta.get_constant_uint_typed(0xFF),
+                        ir_meta.get_constant_uint_typed(8, Precision::Unassigned),
+                        ir_meta.get_constant_uint_typed(16, Precision::Unassigned),
+                        ir_meta.get_constant_uint_typed(24, Precision::Unassigned),
+                        ir_meta.get_constant_uint_typed(0xFF, Precision::Unassigned),
                     )
                 };
 
@@ -749,7 +759,7 @@ fn transform_store_by_image(
             );
             clamped = traverser::add_typed_instruction(
                 &mut transforms,
-                instruction::construct(ir_meta, vec_format, vec![rgba]),
+                instruction::construct(ir_meta, vec_format, vec![rgba], None),
             );
         }
     }

@@ -100,10 +100,10 @@ fn clamp_indirect_index(
         }
         _ => panic!("Internal error: Invalid type to index"),
     };
-    let max = ir_meta.get_constant_float_typed((max - 1) as f32);
+    let max = ir_meta.get_constant_float_typed((max - 1) as f32, Precision::Unassigned);
     let index_as_float = traverser::add_typed_instruction(
         &mut transforms,
-        instruction::make!(construct, ir_meta, TYPE_ID_FLOAT, vec![index]),
+        instruction::make!(construct, ir_meta, TYPE_ID_FLOAT, vec![index], None),
     );
     let clamped = traverser::add_typed_instruction(
         &mut transforms,
@@ -116,7 +116,7 @@ fn clamp_indirect_index(
     );
     let clamped = traverser::add_typed_instruction(
         &mut transforms,
-        instruction::make!(construct, ir_meta, index.type_id, vec![clamped]),
+        instruction::make!(construct, ir_meta, index.type_id, vec![clamped], None),
     );
 
     // Replace the original instruction with one using the new index.

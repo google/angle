@@ -142,7 +142,8 @@ fn initialize_with_zeros<'block>(
             if use_loop {
                 // Note: `uint` would be a better loop index type, but ESSL 100 doesn't support
                 // that.
-                let count_constant = ir_meta.get_constant_int_typed(count as i32);
+                let count_constant =
+                    ir_meta.get_constant_int_typed(count as i32, Precision::Unassigned);
 
                 // Loop variable, int index = 0:
                 let (loop_index_var_id, loop_index_id) = ir_meta.declare_private_variable(
@@ -212,7 +213,8 @@ fn initialize_with_zeros<'block>(
                 // Note that it is important to have the array init in the right order to
                 // workaround a driver bug per http://crbug.com/40514481.
                 for index in 0..count {
-                    let index_constant = ir_meta.get_constant_int_typed(index as i32);
+                    let index_constant =
+                        ir_meta.get_constant_int_typed(index as i32, Precision::Unassigned);
                     // selected_element = AccessArrayElement id index
                     let selected_element = block.add_typed_instruction(instruction::index(
                         ir_meta,
@@ -226,7 +228,8 @@ fn initialize_with_zeros<'block>(
         }
         _ => {
             // For scalars, vectors and matrices, use a zero constant which is not very big.
-            let null_value = ir_meta.get_constant_null_typed(type_id);
+            let null_value = ir_meta
+                .get_constant_null_typed(type_id, util::unassigned_precision(ir_meta, type_id));
             block.add_void_instruction(OpCode::Store(id, null_value));
         }
     }
