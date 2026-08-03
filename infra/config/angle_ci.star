@@ -1922,13 +1922,30 @@ ci.thin_tester(
     ),
     targets = targets.bundle(
         targets = [
-            # TODO(crbug.com/535541754): Actually enable tests.
-            # "common_isolated_scripts",
-            # "win_common_gtests",
+            "common_isolated_scripts",
+            "win_common_gtests",
         ],
         mixins = [
             "win11_qualcomm_snapdragon_x_elite_stable",
         ],
+        per_test_modifications = {
+            "angle_end2end_tests": targets.per_test_modification(
+                # TODO(crbug.com/547996261): Remove this if/when these tests
+                # stop running into issues when run in parallel on this
+                # hardware.
+                mixins = targets.mixin(
+                    args = [
+                        "--max-processes=1",
+                    ],
+                    swarming = targets.swarming(
+                        shards = 12,
+                    ),
+                ),
+            ),
+            "angle_trace_perf_native_smoke_tests": targets.remove(
+                reason = "Native GL has issues on this config anglebug.com/546189136",
+            ),
+        },
     ),
     targets_settings = targets.settings(
         browser_config = targets.browser_config.RELEASE,

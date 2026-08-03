@@ -88,7 +88,14 @@ class VertexArrayBenchmark : public ANGLERenderTest,
     std::vector<GLuint> mVertexArrays;
 };
 
-VertexArrayBenchmark::VertexArrayBenchmark() : ANGLERenderTest("VertexArrayPerf", GetParam()) {}
+VertexArrayBenchmark::VertexArrayBenchmark() : ANGLERenderTest("VertexArrayPerf", GetParam())
+{
+    const auto &params = GetParam();
+    if (IsWindows() && IsQualcomm() && params.driver == GLESDriverType::SystemWGL)
+    {
+        skipTest("anglebug.com/546189136 Fails on Windows ARM64 Qualcomm");
+    }
+}
 
 void VertexArrayBenchmark::initializeBenchmark()
 {

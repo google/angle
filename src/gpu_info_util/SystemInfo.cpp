@@ -165,7 +165,7 @@ bool IsNVIDIA(VendorID vendorId)
 
 bool IsQualcomm(VendorID vendorId)
 {
-    return vendorId == kVendorID_Qualcomm;
+    return vendorId == kVendorID_Qualcomm || vendorId == kVendorID_Qualcomm_DXGI;
 }
 
 bool IsSamsung(VendorID vendorId)

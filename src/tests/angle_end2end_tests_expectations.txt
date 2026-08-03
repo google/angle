@@ -2916,6 +2916,63 @@
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByDraw/* = SKIP
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByReadPixels/* = SKIP
 
+// Various crashes when using Vulkan on Win/ARM64.
+545676921 WIN QUALCOMM VULKAN : GLSLTest_ES31.MixedRowAndColumnMajorMatrices/* = SKIP
+545676921 WIN QUALCOMM VULKAN : MSRTTES3Test.CubeMap/* = SKIP
+545676921 WIN QUALCOMM VULKAN : MSRTTES3Test.CubeMapMultipleAttachments/* = SKIP
+545676921 WIN QUALCOMM VULKAN : ShaderStorageBufferTest31.VectorDataInMatrixInSSBOWithRowMajorQualifier/* = SKIP
+545676921 WIN QUALCOMM VULKAN : ShaderStorageBufferTest31.VectorSwizzleInRowMajorMatrixTest/* = SKIP
+545676921 WIN QUALCOMM VULKAN : Texture3DCopy.UnsignedByteFormats/* = SKIP
+545676921 WIN QUALCOMM VULKAN : Texture3DCopy.UnsizedFormats/* = SKIP
+
+// Various failures when running on Win/ARM64.
+546181669 WIN QUALCOMM VULKAN : MSRTTES3Test.DrawThenDrawDisabled/* = SKIP
+546207251 WIN QUALCOMM VULKAN : MSRTTES3Test.FramebufferFetchSampleID/* = SKIP
+546207252 WIN QUALCOMM VULKAN : EXTBlendFuncExtendedDrawTest.FragColor/* = SKIP
+546207252 WIN QUALCOMM VULKAN : EXTBlendFuncExtendedDrawTest.FragColorBroadcast/* = SKIP
+546207252 WIN QUALCOMM VULKAN : EXTBlendFuncExtendedDrawTest.FragData/* = SKIP
+546207252 WIN QUALCOMM VULKAN : EXTBlendFuncExtendedDrawTestES3.FragmentArrayOutputLocationsAPI/* = SKIP
+546207252 WIN QUALCOMM VULKAN : EXTBlendFuncExtendedDrawTestES3.FragmentArrayOutputLocationsInShader/* = SKIP
+546207252 WIN QUALCOMM VULKAN : EXTBlendFuncExtendedDrawTestES3.FragmentOutputLocationsAPI/* = SKIP
+546207252 WIN QUALCOMM VULKAN : EXTBlendFuncExtendedDrawTestES3.FragmentOutputLocationsAPIAndAutomatic/* = SKIP
+546207252 WIN QUALCOMM VULKAN : EXTBlendFuncExtendedDrawTestES3.FragmentOutputLocationsInShader/* = SKIP
+546207252 WIN QUALCOMM VULKAN : EXTBlendFuncExtendedDrawTestES31.UseProgramPipeline/* = SKIP
+546207252 WIN QUALCOMM VULKAN : EXTBlendFuncExtendedDrawTestES31.UseTwoProgramStages/* = SKIP
+546639174 WIN QUALCOMM VULKAN : StateChangeTestES3.RasterizerDiscard/* = SKIP
+546639174 WIN QUALCOMM VULKAN : StateChangeTestES3.RedefineTransformFeedbackBuffer/* = SKIP
+546639174 WIN QUALCOMM VULKAN : StateChangeTestES3.StencilReferenceAndCompareMask/* = SKIP
+546639175 WIN QUALCOMM VULKAN : GLSLTest_ES3.NestedSwitchWithVariableDeclarationInside/* = SKIP
+546639175 WIN QUALCOMM VULKAN : GLSLTest_ES3.PointCoordBeforeFragCoord/* = SKIP
+546639175 WIN QUALCOMM VULKAN : GLSLTest_ES3.SwitchWithVariableDeclarationInside/* = SKIP
+546639176 WIN QUALCOMM VULKAN : GLSLTest_ES31.MixedRowAndColumnMajorMatrices_WriteArrayOfArray/* = SKIP
+546639176 WIN QUALCOMM VULKAN : GLSLTest_ES31.TernaryOnStructsInDifferentBlockStorages/* = SKIP
+546639176 WIN QUALCOMM VULKAN : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
+546639176 WIN QUALCOMM VULKAN : GLSLTest_ES31_InitShaderVariables.InitIOBlockWithComplexTypes/* = SKIP
+546631270 WIN QUALCOMM VULKAN : VulkanPerformanceCounterTest.RenderToTextureDepthStencilTextureShouldNotLoad/* = SKIP
+546631270 WIN QUALCOMM VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.MultisampleDepthStencilResolveSeparately/* = SKIP
+546631270 WIN QUALCOMM VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.RenderToTextureDepthStencilRenderbufferShouldNotLoad/* = SKIP
+546631270 WIN QUALCOMM VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.RenderToTextureInvalidate/* = SKIP
+546631270 WIN QUALCOMM VULKAN : VulkanPerformanceCounterTest_TileMemory.ManyDSBufferUsedInOneSubmit/* = SKIP
+546640301 WIN QUALCOMM VULKAN : ShadowSamplerFunctionTexture2DTest.Test/* = SKIP
+546640301 WIN QUALCOMM VULKAN : ShadowSamplerFunctionTextureCubeArrayTest.Test/* = SKIP
+546631279 WIN QUALCOMM VULKAN : EGLSurfaceTest.GrowWindowThenScissoredClear/* = SKIP
+546631279 WIN QUALCOMM VULKAN : EGLSurfaceTest.ShrinkWindowThenScissoredClear/* = SKIP
+546631279 WIN QUALCOMM VULKAN : EGLSurfaceTest3.ShrinkWindowThenScissoredClearBuffer/* = SKIP
+546639181 WIN QUALCOMM VULKAN : AdvancedBlendTest.NonZeroDrawBufferDisallowed/* = SKIP
+546631280 WIN QUALCOMM VULKAN : ImageTestES3.SourceYUVTextureTargetExternalRGBSample/* = SKIP
+546640307 WIN QUALCOMM VULKAN : ProgramPipelineTest31.SampleTextureAThenTextureB/* = SKIP
+546640308 WIN QUALCOMM VULKAN : SimpleUniformTestES3.TernarySelectAnArrayThenIndex/* = SKIP
+546631281 WIN QUALCOMM VULKAN : Texture2DTestES3.ASTCDecodeModeSwitch/* = SKIP
+
+546631272 WIN QUALCOMM D3D11 : RobustResourceInitTestES3.DepthClearWithStencilInit/* = SKIP
+546631272 WIN QUALCOMM D3D11 : RobustResourceInitTestES3.DepthStencilTextureInitCombinations/* = SKIP
+546631272 WIN QUALCOMM D3D11 : RobustResourceInitTestES3.DrawThenInvalidateThenVerifyDepthStencil/* = SKIP
+546631272 WIN QUALCOMM D3D11 : RobustResourceInitTestES3.StencilClearWithDepthInit/* = SKIP
+546639182 WIN QUALCOMM D3D11 : SimpleStateChangeTestES3.InvalidateThenGenerateMipmapsThenBlend/* = SKIP
+546640309 WIN QUALCOMM D3D11 : TransformFeedbackTest.BlitWhileRecordingDoesNotContribute/* = SKIP
+546640309 WIN QUALCOMM D3D11 : TransformFeedbackTest.CopyWhileRecordingDoesNotContribute/* = SKIP
+546640309 WIN QUALCOMM D3D11 : TransformFeedbackTest.TransformFeedbackQueryPausedDrawThenResume/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

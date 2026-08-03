@@ -159,6 +159,11 @@ DrawCallPerfBenchmark::DrawCallPerfBenchmark() : ANGLERenderTest("DrawCallPerf",
     {
         skipTest("https://issuetracker.google.com/issues/298407224 Fails on Pixel 6 GLES");
     }
+
+    if (IsWindows() && IsQualcomm() && params.driver == GLESDriverType::SystemWGL)
+    {
+        skipTest("anglebug.com/546189136 Fails on Windows ARM64 Qualcomm");
+    }
 }
 
 void DrawCallPerfBenchmark::initializeBenchmark()
