@@ -325,6 +325,14 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     std::vector<const Config *> getConfigs(const AttributeMap &attribs) const;
     std::vector<const Config *> chooseConfig(const AttributeMap &attribs) const;
 
+    // eglCreatePlatformWindowSurface and its EXT variant take the native window as a void * whose
+    // interpretation is platform specific: the EGL/X11 platform extension specifies a pointer to
+    // an X11 Window, while EGLNativeWindowType for X11 is the Window (XID) itself.  For the other
+    // window systems the void * is already the EGLNativeWindowType value.
+    // https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_platform_x11.txt
+    EGLNativeWindowType getNativeWindowForCreatePlatformWindowSurface(
+        const void *nativeWindow) const;
+
     Error createWindowSurface(const Config *configuration,
                               EGLNativeWindowType window,
                               const AttributeMap &attribs,

@@ -231,8 +231,10 @@ EGLSurface CreatePlatformWindowSurface(Thread *thread,
                                        void *win,
                                        const AttributeMap &attributes)
 {
-    Surface *surface                 = nullptr;
-    EGLNativeWindowType nativeWindow = reinterpret_cast<EGLNativeWindowType>(win);
+    Surface *surface = nullptr;
+
+    EGLNativeWindowType nativeWindow = display->getNativeWindowForCreatePlatformWindowSurface(win);
+
     ANGLE_EGL_TRY_RETURN(
         thread, display->createWindowSurface(configuration, nativeWindow, attributes, &surface),
         "eglCreatePlatformWindowSurface", display, EGL_NO_SURFACE);

@@ -2614,6 +2614,20 @@ bool Display::isValidNativeWindow(EGLNativeWindowType window) const
     return mImplementation->isValidNativeWindow(window);
 }
 
+EGLNativeWindowType Display::getNativeWindowForCreatePlatformWindowSurface(
+    const void *nativeWindow) const
+{
+    // In X11, eglCreatePlatformWindowSurface and its EXT variant are passed a pointer to an X11
+    // Window, while EGLNativeWindowType for X11 is the Window (XID) itself.
+    // https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_platform_x11.txt
+    const void *actualNativeWindow =
+        mImplementation->getWindowSystem() == angle::NativeWindowSystem::X11
+            ? *reinterpret_cast<const void *const *>(nativeWindow)
+            : nativeWindow;
+
+    return reinterpret_cast<EGLNativeWindowType>(const_cast<void *>(actualNativeWindow));
+}
+
 Error Display::validateClientBuffer(const Config *configuration,
                                     EGLenum buftype,
                                     EGLClientBuffer clientBuffer,

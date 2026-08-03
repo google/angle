@@ -5739,12 +5739,7 @@ bool ValidateCreatePlatformWindowSurfaceEXT(const ValidationContext *val,
         return false;
     }
 
-    const void *actualNativeWindow =
-        display->getImplementation()->getWindowSystem() == angle::NativeWindowSystem::X11
-            ? *reinterpret_cast<const void *const *>(nativeWindow)
-            : nativeWindow;
-
-    return ValidateCreatePlatformWindowSurface(val, display, configuration, actualNativeWindow,
+    return ValidateCreatePlatformWindowSurface(val, display, configuration, nativeWindow,
                                                attributes);
 }
 
@@ -7127,7 +7122,8 @@ bool ValidateCreatePlatformWindowSurface(const ValidationContext *val,
                                          const AttributeMap &attrib_listPacked)
 {
     EGLNativeWindowType nativeWindow =
-        reinterpret_cast<EGLNativeWindowType>(const_cast<void *>(native_window));
+        dpyPacked->getNativeWindowForCreatePlatformWindowSurface(native_window);
+
     return ValidateCreateWindowSurface(val, dpyPacked, configPacked, nativeWindow,
                                        attrib_listPacked);
 }
