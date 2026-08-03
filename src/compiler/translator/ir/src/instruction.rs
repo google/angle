@@ -3423,7 +3423,7 @@ pub mod precision {
     }
 
     // Take a set of precisions and return the highest per `higher_precision`.
-    fn highest_precision(precisions: &mut impl Iterator<Item = Precision>) -> Precision {
+    pub fn highest_precision(precisions: &mut impl Iterator<Item = Precision>) -> Precision {
         precisions.reduce(higher_precision).unwrap()
     }
 

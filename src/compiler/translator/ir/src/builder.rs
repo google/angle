@@ -3634,6 +3634,8 @@ fn builder_finish(mut builder: Box<BuilderWrapper>) -> Box<IR> {
     // Propagate precision to constant
     let mut ir = builder.builder.take_ir();
     transform::run!(propagate_precision, &mut ir);
+    #[cfg(debug_assertions)]
+    validator::validate_glsl_precision_rules(&ir, "propagate_precision");
 
     Box::new(ir)
 }
