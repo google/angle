@@ -236,6 +236,11 @@ def find_merged_indices_and_offsets(gzdata, ucap_info):
             # We should make a merge index list and an offset list, so we know what the range of the merged memory space would be.
             start_offset_1, size_1 = attr_data_1['start_offset'], attr_data_1['size']
             start_offset_2, size_2 = attr_data_2['start_offset'], attr_data_2['size']
+
+            # If either range size is 0, there is nothing to merge.
+            if size_1 == 0 or size_2 == 0:
+                continue
+
             data_range_1 = gzdata[start_offset_1:start_offset_1 + size_1]
             data_range_2 = gzdata[start_offset_2:start_offset_2 + size_2]
             offset = find_offset(data_range_1, data_range_2)
