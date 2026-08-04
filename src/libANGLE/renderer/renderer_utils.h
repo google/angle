@@ -643,6 +643,12 @@ inline size_t PackSampleCount(int32_t sampleCount)
     return gl::ScanForward(static_cast<uint32_t>(sampleCount));
 }
 
+inline GLuint GetMultiviewAdjustedDivisor(int numViews, GLuint divisor)
+{
+    uint64_t adjusted = static_cast<uint64_t>(numViews) * static_cast<uint64_t>(divisor);
+    return static_cast<GLuint>(std::min<uint64_t>(adjusted, std::numeric_limits<GLuint>::max()));
+}
+
 }  // namespace rx
 
 // MultiDraw macro patterns
