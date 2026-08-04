@@ -2273,6 +2273,20 @@ impl Type {
         self.is_struct() && self.is_struct_containing_samplers_helper(ir_meta)
     }
 
+    pub fn is_matrix_packing_applicable(&self, ir_meta: &IRMeta) -> bool {
+        // Matrix can be nested within structs or arrays.
+        match self {
+            &Type::Array(element_type_id, _) | &Type::UnsizedArray(element_type_id) => {
+                ir_meta.get_type(element_type_id).is_matrix_packing_applicable(ir_meta)
+            }
+            &Type::Struct(_, ref fields, StructSpecialization::Struct) => fields
+                .iter()
+                .any(|field| ir_meta.get_type(field.type_id).is_matrix_packing_applicable(ir_meta)),
+            &Type::Matrix(..) => true,
+            _ => false,
+        }
+    }
+
     pub fn is_pointer(&self) -> bool {
         matches!(self, Type::Pointer(_))
     }
