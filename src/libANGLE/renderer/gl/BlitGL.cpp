@@ -1076,7 +1076,36 @@ angle::Result BlitGL::clearRenderbuffer(const gl::Context *context,
                      mFunctions->framebufferRenderbuffer(
                          GL_FRAMEBUFFER, bindTarget, GL_RENDERBUFFER, source->getRenderbufferID()));
     }
-    ANGLE_GL_TRY(context, mFunctions->clear(clearMask));
+    const gl::InternalFormat &internalFormatInfo =
+        gl::GetSizedInternalFormatInfo(sizedInternalFormat);
+    if ((clearMask & GL_COLOR_BUFFER_BIT) != 0 && internalFormatInfo.isInt())
+    {
+        ASSERT(clearMask == GL_COLOR_BUFFER_BIT);
+        switch (internalFormatInfo.componentType)
+        {
+            case GL_INT:
+            {
+                constexpr GLint clearValue[] = {0, 0, 0, 0};
+                ANGLE_GL_TRY(context, mFunctions->clearBufferiv(GL_COLOR, 0, clearValue));
+            }
+            break;
+
+            case GL_UNSIGNED_INT:
+            {
+                constexpr GLuint clearValue[] = {0, 0, 0, 0};
+                ANGLE_GL_TRY(context, mFunctions->clearBufferuiv(GL_COLOR, 0, clearValue));
+            }
+            break;
+
+            default:
+                UNREACHABLE();
+                break;
+        }
+    }
+    else
+    {
+        ANGLE_GL_TRY(context, mFunctions->clear(clearMask));
+    }
 
     // Unbind
     for (GLenum bindTarget : bindTargets)
