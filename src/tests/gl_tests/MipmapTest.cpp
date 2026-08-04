@@ -2827,8 +2827,60 @@ TEST_P(MipmapRobustInitTestES3, GenerateMipmapRobustInitOptimizationWithSampling
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
 }
 
+// Test that when glGenerateMipmap is run with BaseOnly (due to max level clamp),
+// the texture is properly initialized.
+TEST_P(MipmapRobustInitTestES3, GenerateMipmapBaseOnlyLeak)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_robust_resource_initialization"));
+
+    ANGLE_GL_PROGRAM(verify, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(verify);
+    const GLint lodLoc = glGetUniformLocation(verify, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLoc);
+    glUniform1i(glGetUniformLocation(verify, essl3_shaders::Texture2DUniform()), 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    GLTexture dest;
+    glBindTexture(GL_TEXTURE_2D, dest);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dest, 0);
+    glViewport(0, 0, 8, 8);
+
+    // Define the victim texture, every level with a null pointer so they MayNeedInit.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    for (GLint level = 0; level < 4; ++level)
+    {
+        glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA8, 256 >> level, 256 >> level, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Clamp the chain glGenerateMipmap will regenerate to {0, 1}.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    // This triggers syncState -> ensureInitialized(BaseOnly).
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Bring the out-of-chain levels back.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 3);
+
+    // Sample level 2 (which should have been robust cleared).
+    glUniform1f(lodLoc, 2.0f);
+    drawQuad(verify, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MipmapRobustInitTestES3);
-ANGLE_INSTANTIATE_TEST_ES3(MipmapRobustInitTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(MipmapRobustInitTestES3,
+                               ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
+                               ES3_VULKAN_SWIFTSHADER().enable(Feature::AllocateNonZeroMemory));
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.

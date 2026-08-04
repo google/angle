@@ -2597,7 +2597,8 @@ angle::Result Texture::ensureInitialized(const Context *context, EnsureInitializ
     }
 
     bool anyDirty = false;
-    bool allInitialized = (mState.getEffectiveBaseLevel() == 0);
+    bool allInitialized = (levels == EnsureInitializedLevels::AllEnabledLevels &&
+                           mState.getEffectiveBaseLevel() == 0);
 
     ImageIndexIterator it = ImageIndexIterator::MakeGeneric(
         mState.mType, static_cast<GLint>(mState.getEffectiveBaseLevel()),
