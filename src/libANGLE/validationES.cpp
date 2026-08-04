@@ -7576,6 +7576,12 @@ bool ValidateSamplerParameterBase(const Context *context,
         return false;
     }
 
+    if (ANGLE_UNLIKELY(params == nullptr))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kParamsNULL);
+        return false;
+    }
+
     bool isPnameSupported = true;
     switch (pnamePacked)
     {
