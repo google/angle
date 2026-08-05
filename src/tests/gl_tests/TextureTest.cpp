@@ -12367,6 +12367,33 @@ TEST_P(TextureAnisotropyTest, AnisotropyFunctional)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::red);
 }
 
+// Tests that setting invalid anisotropy values (like NaN) generates GL_INVALID_VALUE error.
+TEST_P(TextureAnisotropyTest, AnisotropyValidation)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_filter_anisotropic"));
+
+    uploadTexture();
+
+    // Check that < 1.0f generates GL_INVALID_VALUE
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Check that NaN generates GL_INVALID_VALUE
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
+                    std::numeric_limits<float>::quiet_NaN());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Check that > MAX generates GL_INVALID_VALUE
+    GLfloat maxValue = 0.0f;
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxValue);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxValue + 1.0f);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Check that valid value does not generate error
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxValue);
+    EXPECT_GL_NO_ERROR();
+}
+
 // GL_OES_texture_border_clamp
 class TextureBorderClampTest : public Texture2DTest
 {
