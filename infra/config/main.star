@@ -60,7 +60,10 @@ luci.project(
             roles = [
                 acl.SCHEDULER_OWNER,
             ],
-            groups = "project-angle-admins",
+            groups = [
+                "project-angle-admins",
+                "project-angle-schedulers",
+            ],
         ),
         acl.entry(
             roles = [
