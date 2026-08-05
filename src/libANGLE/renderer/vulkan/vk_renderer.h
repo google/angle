@@ -748,6 +748,10 @@ class Renderer : angle::NonCopyable
         const vk::ExtensionNameList &deviceExtensionNames,
         VkPhysicalDeviceFeatures2KHR *deviceFeatures,
         VkPhysicalDeviceProperties2 *deviceProperties);
+    void appendDeviceExtensionFeaturesPromotedTo14(
+        const vk::ExtensionNameList &deviceExtensionNames,
+        VkPhysicalDeviceFeatures2KHR *deviceFeatures,
+        VkPhysicalDeviceProperties2 *deviceProperties);
 
     angle::Result enableInstanceExtensions(vk::ErrorContext *context,
                                            const VulkanLayerVector &enabledInstanceLayerNames,
@@ -763,6 +767,7 @@ class Renderer : angle::NonCopyable
     void enableDeviceExtensionsPromotedTo11(const vk::ExtensionNameList &deviceExtensionNames);
     void enableDeviceExtensionsPromotedTo12(const vk::ExtensionNameList &deviceExtensionNames);
     void enableDeviceExtensionsPromotedTo13(const vk::ExtensionNameList &deviceExtensionNames);
+    void enableDeviceExtensionsPromotedTo14(const vk::ExtensionNameList &deviceExtensionNames);
 
     void initDeviceExtensionEntryPoints();
     // Initialize extension entry points from core ones if needed
@@ -903,8 +908,8 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceLegacyDitheringFeaturesEXT mDitheringFeatures;
     VkPhysicalDeviceDrmPropertiesEXT mDrmProperties;
     VkPhysicalDeviceTimelineSemaphoreFeaturesKHR mTimelineSemaphoreFeatures;
-    VkPhysicalDeviceHostImageCopyFeaturesEXT mHostImageCopyFeatures;
-    VkPhysicalDeviceHostImageCopyPropertiesEXT mHostImageCopyProperties;
+    VkPhysicalDeviceHostImageCopyFeatures mHostImageCopyFeatures;
+    VkPhysicalDeviceHostImageCopyProperties mHostImageCopyProperties;
     VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT mTextureCompressionASTCHDRFeatures;
     std::vector<VkImageLayout> mHostImageCopySrcLayoutsStorage;
     std::vector<VkImageLayout> mHostImageCopyDstLayoutsStorage;
