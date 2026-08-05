@@ -932,6 +932,9 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         mResources.MaxDrawBuffers > 1 &&
         IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_draw_buffers))
     {
+        // In WebGL2, gl_FragData has only one element.  But in WebGL2, EXT_draw_buffers is not a
+        // supported extension.
+        ASSERT(mShaderSpec != SH_WEBGL2_SPEC);
         if (!EmulateGLFragColorBroadcast(this, root, mResources.MaxDrawBuffers,
                                          mResources.MaxDualSourceDrawBuffers, &mSymbolTable,
                                          mShaderVersion))
