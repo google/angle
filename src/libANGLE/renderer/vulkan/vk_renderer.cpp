@@ -2725,14 +2725,14 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
 
     // Query all supported global priorities if supported.
     std::vector<VkQueueFamilyGlobalPriorityProperties> globalPriorityProperties;
-    if (mFeatures.supportsGlobalPriorityQuery.enabled)
+    if (mFeatures.supportsGlobalPriority.enabled)
     {
         globalPriorityProperties.resize(queueFamilyCount);
         for (uint32_t i = 0; i < queueFamilyCount; i++)
         {
             globalPriorityProperties[i] = {};
             globalPriorityProperties[i].sType =
-                VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES_EXT;
+                VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES;
             vk::AddToPNextChain(&mQueueFamilyProperties2[i], &globalPriorityProperties[i]);
         }
     }
@@ -2764,13 +2764,13 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
                    VK_ERROR_INITIALIZATION_FAILED);
 
     VkQueueGlobalPriority globalPriority = VK_QUEUE_GLOBAL_PRIORITY_MEDIUM;
-    if (mFeatures.supportsGlobalPriorityQuery.enabled &&
+    if (mFeatures.supportsGlobalPriority.enabled &&
         HasRequiredGlobalPriority(globalPriorityProperties[firstQueueFamily],
-                                  VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT))
+                                  VK_QUEUE_GLOBAL_PRIORITY_REALTIME))
     {
         // Realtime global priority is supported, so we can use it in
         // queueGlobalPriorityCreateInfo
-        globalPriority = VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT;
+        globalPriority = VK_QUEUE_GLOBAL_PRIORITY_REALTIME;
     }
 
     // Store the physical device memory properties so we can find the right memory pools.
@@ -3025,7 +3025,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                     deviceFaultVendorBinary (feature)
 // - VK_EXT_astc_decode_mode                           decodeModeSharedExponent (feature)
 // - VK_KHR_unified_image_layouts                      unifiedImageLayouts (feature)
-// - VK_EXT_global_priority_query                      globalPriorityQuery (feature)
+// - VK_KHR_global_priority                            globalPriorityQuery (feature)
 // - VK_EXT_external_memory_host                       minImportedHostPointerAlignment (property)
 // - VK_QCOM_tile_memory_heap                          tileMemoryHeapFeatures (feature)
 //                                                     tileMemoryHeapProperties (property)
@@ -3229,7 +3229,7 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     {
         vk::AddToPNextChain(deviceFeatures, &mPhysicalDeviceAstcDecodeFeatures);
     }
-    if (ExtensionFound(VK_EXT_GLOBAL_PRIORITY_QUERY_EXTENSION_NAME, deviceExtensionNames))
+    if (ExtensionFound(VK_KHR_GLOBAL_PRIORITY_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mPhysicalDeviceGlobalPriorityQueryFeatures);
     }
@@ -3698,7 +3698,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
 
     mPhysicalDeviceGlobalPriorityQueryFeatures = {};
     mPhysicalDeviceGlobalPriorityQueryFeatures.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_EXT;
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES;
 
     mExternalMemoryHostProperties = {};
     mExternalMemoryHostProperties.sType =
@@ -4205,11 +4205,6 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
     if (mFeatures.supportsGlobalPriority.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME);
-    }
-
-    if (mFeatures.supportsGlobalPriorityQuery.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_EXT_GLOBAL_PRIORITY_QUERY_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mPhysicalDeviceGlobalPriorityQueryFeatures);
     }
 
@@ -4722,8 +4717,8 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context,
     uint32_t queueCount = std::min(queueFamily.getDeviceQueueCount(),
                                    static_cast<uint32_t>(egl::ContextPriority::EnumCount));
 
-    // We use VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT only if queueCount >=3
-    if (globalPriority == VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT && queueCount < 3)
+    // We use VK_QUEUE_GLOBAL_PRIORITY_REALTIME only if queueCount >=3
+    if (globalPriority == VK_QUEUE_GLOBAL_PRIORITY_REALTIME && queueCount < 3)
     {
         globalPriority = VK_QUEUE_GLOBAL_PRIORITY_MEDIUM;
     }
@@ -4733,10 +4728,10 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context,
     VkDeviceQueueGlobalPriorityCreateInfo queueGlobalPriorityCreateInfo[3] = {};
 
     // If global priority is supported, we split queueCreateInfo into three groups so that the
-    // middle group uses VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT.
-    if (globalPriority == VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT)
+    // middle group uses VK_QUEUE_GLOBAL_PRIORITY_REALTIME.
+    if (globalPriority == VK_QUEUE_GLOBAL_PRIORITY_REALTIME)
     {
-        ASSERT(mFeatures.supportsGlobalPriorityQuery.enabled);
+        ASSERT(mFeatures.supportsGlobalPriority.enabled);
         ASSERT(queueCount >= 3);
 
         // queueCreateInfo[0] is for Medium and High
@@ -4761,7 +4756,7 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context,
         queueCreateInfo[1].pQueuePriorities = &vk::QueueFamily::kQueuePriorities[2];
         queueGlobalPriorityCreateInfo[1].sType =
             VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO;
-        queueGlobalPriorityCreateInfo[1].globalPriority = VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT;
+        queueGlobalPriorityCreateInfo[1].globalPriority = VK_QUEUE_GLOBAL_PRIORITY_REALTIME;
         vk::AddToPNextChain(&queueCreateInfo[1], &queueGlobalPriorityCreateInfo[1]);
         queueCreateInfoCount++;
 
@@ -6907,17 +6902,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsUnifiedImageLayouts,
                             mUnifiedImageLayoutsFeatures.unifiedImageLayouts == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsGlobalPriority,
-        ExtensionFound(VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME, deviceExtensionNames));
-
     // REALTIME priority is not permitted on most operating systems.  This feature is limited to
     // Android for now.
     ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsGlobalPriorityQuery,
-        mFeatures.supportsGlobalPriority.enabled &&
-            mPhysicalDeviceGlobalPriorityQueryFeatures.globalPriorityQuery == VK_TRUE &&
-            IsAndroid());
+        &mFeatures, supportsGlobalPriority,
+        mPhysicalDeviceGlobalPriorityQueryFeatures.globalPriorityQuery == VK_TRUE && IsAndroid());
 
     // There are use cases where synchronization is not performed properly when texture is modified
     // between different contexts. To avoid rendering artifacts, force submit staged updates.

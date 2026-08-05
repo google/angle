@@ -1526,7 +1526,7 @@ GLenum CalculateGenerateMipmapFilter(ContextVk *contextVk, angle::FormatID forma
 }
 
 bool HasRequiredGlobalPriority(const VkQueueFamilyGlobalPriorityProperties &globalPriorityProperty,
-                               VkQueueGlobalPriorityEXT requiredGlobalPriority)
+                               VkQueueGlobalPriority requiredGlobalPriority)
 {
     for (uint32_t i = 0; i < globalPriorityProperty.priorityCount; i++)
     {

@@ -399,7 +399,6 @@ enum class Feature
     SupportsGeometryStreamsCapability,
     SupportsGetMemoryRequirements2,
     SupportsGlobalPriority,
-    SupportsGlobalPriorityQuery,
     SupportsGraphicsPipelineLibrary,
     SupportShaderPixelLocalStorageAngle,
     SupportsHostImageCopy,

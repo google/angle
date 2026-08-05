@@ -1592,12 +1592,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo supportsGlobalPriorityQuery = {
-        "supportsGlobalPriorityQuery",
-        FeatureCategory::VulkanFeatures,
-        &members,
-    };
-
     FeatureInfo supportsBufferDeviceAddress = {
         "supportsBufferDeviceAddress",
         FeatureCategory::VulkanFeatures,
