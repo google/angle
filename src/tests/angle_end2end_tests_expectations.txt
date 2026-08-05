@@ -26,11 +26,6 @@
 410584007 VULKAN : ImageTestES31.UseSourceTextureAsStorageImage/* = SKIP
 535696694 VULKAN : Texture2DTestES3_NonZeroBaseLevelGenMipmaps.UploadAfterDrawShouldNotCrash/* = SKIP
 514710696 : PbufferTest.BindTexImageAndGenerateMipmap/* = SKIP
-// Fails anywhere RGBA4 is emulated with RGBA8
-534823410 VULKAN : FramebufferTestWithFormatFallback.R4G4B4A4_CubeTexImageRedefinedFaceZero/ES3_Vulkan_SwiftShader_ForceRenderableFallbackFormat = SKIP
-534823410 VULKAN : FramebufferTestWithFormatFallback.R4G4B4A4_CubeTexImageRedefinedFaceOne/ES3_Vulkan_SwiftShader_ForceRenderableFallbackFormat = SKIP
-534823410 VULKAN NVIDIA : FramebufferTestWithFormatFallback.R4G4B4A4_CubeTexImageRedefinedFace*/* = SKIP
-534823410 VULKAN LINUX INTEL : FramebufferTestWithFormatFallback.R4G4B4A4_CubeTexImageRedefinedFace*/* = SKIP
 // Fails in Android with EGL_BAD_ALLOC
 374797737 : EGLSurfaceTest.CreateMultiWindowsSurfaceNoDestroy/* = SKIP
 // Incorrect tracking of robust init through EGL images
@@ -227,6 +222,9 @@
 537235696 WIN INTEL OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
 // Some Intel Vulkan drivers report incorrect VkPhysicalDeviceLimits::maxSamplerLodBias on Windows.
 498165510 WIN INTEL VULKAN : QCOMTextureLodBiasTest.BiasClamping/* = SKIP
+
+// Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2127)
+543664599 WIN INTEL OPENGL : FramebufferTestWithFormatFallback.R4G4B4A4_NonZeroBaseLevelStagedImageReformat/* = SKIP
 
 // Failures on Intel Alder Lake S UHD Graphics 770 (8086:4680-31.0.101.5333)
 352085732 WIN INTEL OPENGL : GeometryShaderTest.LayeredFramebufferClear2DArrayColor/* = SKIP

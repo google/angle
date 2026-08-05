@@ -2826,7 +2826,7 @@ TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_CubeTexImageRedefinedFaceZero
     const GLColor kColors[6]         = {GLColor::red,  GLColor::green,  GLColor::blue,
                                         GLColor::cyan, GLColor::yellow, GLColor::magenta};
 
-    // Create a two-level cube map and upload distinct colors to every face.
+    // Create a three-level cube map and upload distinct colors to every face.
     GLTexture cube;
     glBindTexture(GL_TEXTURE_CUBE_MAP, cube);
     for (GLenum face = 0; face < 6; ++face)
@@ -2838,10 +2838,12 @@ TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_CubeTexImageRedefinedFaceZero
                      pixels.data());
         glTexImage2D(target, 1, kInternalFormat, kTexWidth / 2, kTexHeight / 2, 0, GL_RGBA, kType,
                      pixels.data());
+        glTexImage2D(target, 2, kInternalFormat, kTexWidth / 4, kTexHeight / 4, 0, GL_RGBA, kType,
+                     pixels.data());
     }
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 2);
     ASSERT_GL_NO_ERROR();
 
     // Sample from the cube map so the backing image is allocated and committed.
@@ -2862,6 +2864,14 @@ TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_CubeTexImageRedefinedFaceZero
         std::vector<GLushort> pixels(kTexWidth * kTexHeight, u16Color);
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 1, kInternalFormat, kTexWidth, kTexHeight, 0,
                      GL_RGBA, kType, pixels.data());
+    }
+
+    // Exercise fallback with both buffer- and image-sourced updates.
+    {
+        const GLushort u16Color = convertGLColorToUShort(kInternalFormat, GLColor::white);
+        std::vector<GLushort> pixels((kTexWidth / 4) * (kTexHeight / 4), u16Color);
+        glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 2, 0, 0, kTexWidth / 4, kTexHeight / 4,
+                        GL_RGBA, kType, pixels.data());
     }
 
     // Attach a face of level 0 to a framebuffer and read it back.  This is the point at which the
@@ -2889,6 +2899,17 @@ TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_CubeTexImageRedefinedFaceZero
         const GLColor expected =
             target == GL_TEXTURE_CUBE_MAP_POSITIVE_X ? GLColor::white : kColors[face];
         EXPECT_PIXEL_COLOR_EQ(kTexWidth / 4, kTexHeight / 4, expected) << "face " << face;
+    }
+
+    // Verify updates outside the temporarily enabled mip range are preserved.
+    for (GLenum face = 0; face < 6; ++face)
+    {
+        const GLenum target = GL_TEXTURE_CUBE_MAP_POSITIVE_X + face;
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, cube, 2);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        const GLColor expected =
+            target == GL_TEXTURE_CUBE_MAP_POSITIVE_Y ? GLColor::white : kColors[face];
+        EXPECT_PIXEL_COLOR_EQ(kTexWidth / 8, kTexHeight / 8, expected) << "face " << face;
     }
 
     // Verify level 0 is also intact.
@@ -3040,6 +3061,123 @@ TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_OutOfRangeStagedUpdateReforma
     glUniform1f(lodLocation, 1);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests that base-level respecification preserves staged image mips.
+TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_BaseRespecifyPreservesStagedMips)
+{
+    constexpr GLenum kInternalFormat = GL_RGBA4;
+    constexpr GLenum kType           = GL_UNSIGNED_SHORT_4_4_4_4;
+    constexpr GLsizei kSize          = 8;
+    const GLColor kColors[]          = {GLColor::red, GLColor::green, GLColor::blue};
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    for (GLint level = 0; level < 3; ++level)
+    {
+        const GLsizei levelSize = kSize >> level;
+        const GLushort color    = convertGLColorToUShort(kInternalFormat, kColors[level]);
+        const std::vector<GLushort> pixels(levelSize * levelSize, color);
+        glTexImage2D(GL_TEXTURE_2D, level, kInternalFormat, levelSize, levelSize, 0, GL_RGBA, kType,
+                     pixels.data());
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 2);
+
+    // Allocate the sample-only image.
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(program);
+    const GLint textureLocation = glGetUniformLocation(program, essl3_shaders::Texture2DUniform());
+    const GLint lodLocation     = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, textureLocation);
+    ASSERT_NE(-1, lodLocation);
+    glUniform1i(textureLocation, 0);
+    glUniform1f(lodLocation, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Shrink level 0, then trigger fallback while levels 1 and 2 are staged.
+    const GLushort white = convertGLColorToUShort(kInternalFormat, GLColor::white);
+    const std::vector<GLushort> whitePixels((kSize / 2) * (kSize / 2), white);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, kInternalFormat, kSize / 2, kSize / 2, 0, GL_RGBA, kType,
+                 whitePixels.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+
+    // Restore level 0 and verify the staged mips.
+    const GLushort red = convertGLColorToUShort(kInternalFormat, GLColor::red);
+    const std::vector<GLushort> redPixels(kSize * kSize, red);
+    glTexImage2D(GL_TEXTURE_2D, 0, kInternalFormat, kSize, kSize, 0, GL_RGBA, kType,
+                 redPixels.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    for (GLint level = 1; level < 3; ++level)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, level);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kColors[level]) << "level " << level;
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests image-update readback with a non-zero texture base level.
+TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_NonZeroBaseLevelStagedImageReformat)
+{
+    constexpr GLenum kInternalFormat = GL_RGBA4;
+    constexpr GLenum kType           = GL_UNSIGNED_SHORT_4_4_4_4;
+    constexpr GLsizei kSize          = 8;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    const GLushort red = convertGLColorToUShort(kInternalFormat, GLColor::red);
+    const std::vector<GLushort> redPixels(kSize * kSize, red);
+    glTexImage2D(GL_TEXTURE_2D, 1, kInternalFormat, kSize, kSize, 0, GL_RGBA, kType,
+                 redPixels.data());
+    const GLushort green = convertGLColorToUShort(kInternalFormat, GLColor::green);
+    const std::vector<GLushort> greenPixels((kSize / 2) * (kSize / 2), green);
+    glTexImage2D(GL_TEXTURE_2D, 2, kInternalFormat, kSize / 2, kSize / 2, 0, GL_RGBA, kType,
+                 greenPixels.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Vulkan mip 0 corresponds to GL level 1.
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(program);
+    const GLint textureLocation = glGetUniformLocation(program, essl3_shaders::Texture2DUniform());
+    const GLint lodLocation     = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, textureLocation);
+    ASSERT_NE(-1, lodLocation);
+    glUniform1i(textureLocation, 0);
+    glUniform1f(lodLocation, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Redefine level 2 and trigger fallback through level 1.
+    const GLushort white = convertGLColorToUShort(kInternalFormat, GLColor::white);
+    const std::vector<GLushort> whitePixels(kSize * kSize, white);
+    glTexImage2D(GL_TEXTURE_2D, 2, kInternalFormat, kSize, kSize, 0, GL_RGBA, kType,
+                 whitePixels.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 1);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 2);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
     ASSERT_GL_NO_ERROR();
 }
 

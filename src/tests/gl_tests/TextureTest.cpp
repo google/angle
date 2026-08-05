@@ -10305,7 +10305,7 @@ TEST_P(Texture2DArrayTestES3, ReformatStagedBufferUpdatesLayerCountOOB_2DArray)
     ASSERT_GL_NO_ERROR();
 
     // Bind the texture as a framebuffer attachment. This sets hasBeenBoundAsAttachment(); the next
-    // syncState() will call ensureRenderable() -> reformatStagedBufferUpdates().
+    // syncState() will call ensureRenderable() -> reformatStagedUpdates().
     GLFramebuffer fb;
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, D - 1);
@@ -10342,7 +10342,7 @@ TEST_P(Texture2DArrayTestES3, ReformatStagedBufferUpdatesLayerCountOOB_3D)
     ASSERT_GL_NO_ERROR();
 
     // Bind the texture as a framebuffer attachment. This sets hasBeenBoundAsAttachment(); the next
-    // syncState() will call ensureRenderable() -> reformatStagedBufferUpdates().
+    // syncState() will call ensureRenderable() -> reformatStagedUpdates().
     GLFramebuffer fb;
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, D - 1);
