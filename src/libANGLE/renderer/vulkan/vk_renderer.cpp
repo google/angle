@@ -2974,20 +2974,24 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 // The following features and properties are not promoted to any core Vulkan versions (up to Vulkan
 // 1.3):
 //
-// - VK_EXT_line_rasterization:                        bresenhamLines (feature)
+// - VK_KHR_line_rasterization or
+//   VK_EXT_line_rasterization:                        bresenhamLines (feature)
 // - VK_EXT_provoking_vertex:                          provokingVertexLast (feature)
-// - VK_EXT_vertex_attribute_divisor:                  vertexAttributeInstanceRateDivisor (feature),
+// - VK_KHR_vertex_attribute_divisor or
+//   VK_EXT_vertex_attribute_divisor:                  vertexAttributeInstanceRateDivisor (feature),
 //                                                     maxVertexAttribDivisor (property)
 // - VK_EXT_transform_feedback:                        transformFeedback (feature),
 //                                                     geometryStreams (feature)
-// - VK_EXT_index_type_uint8:                          indexTypeUint8 (feature)
+// - VK_KHR_index_type_uint8 or
+//   VK_EXT_index_type_uint8:                          indexTypeUint8 (feature)
 // - VK_EXT_device_memory_report:                      deviceMemoryReport (feature)
 // - VK_EXT_multisampled_render_to_single_sampled:     multisampledRenderToSingleSampled (feature)
 // - VK_EXT_image_2d_view_of_3d:                       image2DViewOf3D (feature)
 //                                                     sampler2DViewOf3D (feature)
 // - VK_EXT_custom_border_color:                       customBorderColors (feature)
 //                                                     customBorderColorWithoutFormat (feature)
-// - VK_EXT_depth_clamp_zero_one:                      depthClampZeroOne (feature)
+// - VK_KHR_depth_clamp_zero_one or
+//   VK_EXT_depth_clamp_zero_one:                      depthClampZeroOne (feature)
 // - VK_EXT_depth_clip_control:                        depthClipControl (feature)
 // - VK_EXT_primitives_generated_query:                primitivesGeneratedQuery (feature),
 //                                                     primitivesGeneratedQueryWithRasterizerDiscard
@@ -3038,7 +3042,8 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     VkPhysicalDeviceFeatures2KHR *deviceFeatures,
     VkPhysicalDeviceProperties2 *deviceProperties)
 {
-    if (ExtensionFound(VK_EXT_LINE_RASTERIZATION_EXTENSION_NAME, deviceExtensionNames))
+    if (ExtensionFound(VK_KHR_LINE_RASTERIZATION_EXTENSION_NAME, deviceExtensionNames) ||
+        ExtensionFound(VK_EXT_LINE_RASTERIZATION_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mLineRasterizationFeatures);
     }
@@ -3048,7 +3053,8 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
         vk::AddToPNextChain(deviceFeatures, &mProvokingVertexFeatures);
     }
 
-    if (ExtensionFound(VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME, deviceExtensionNames))
+    if (ExtensionFound(VK_KHR_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME, deviceExtensionNames) ||
+        ExtensionFound(VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mVertexAttributeDivisorFeatures);
         vk::AddToPNextChain(deviceProperties, &mVertexAttributeDivisorProperties);
@@ -3059,7 +3065,8 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
         vk::AddToPNextChain(deviceFeatures, &mTransformFeedbackFeatures);
     }
 
-    if (ExtensionFound(VK_EXT_INDEX_TYPE_UINT8_EXTENSION_NAME, deviceExtensionNames))
+    if (ExtensionFound(VK_KHR_INDEX_TYPE_UINT8_EXTENSION_NAME, deviceExtensionNames) ||
+        ExtensionFound(VK_EXT_INDEX_TYPE_UINT8_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mIndexTypeUint8Features);
     }
@@ -3085,7 +3092,8 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
         vk::AddToPNextChain(deviceFeatures, &mCustomBorderColorFeatures);
     }
 
-    if (ExtensionFound(VK_EXT_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME, deviceExtensionNames))
+    if (ExtensionFound(VK_KHR_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME, deviceExtensionNames) ||
+        ExtensionFound(VK_EXT_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mDepthClampZeroOneFeatures);
     }
@@ -3462,7 +3470,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     // Default initialize all extension features to false.
     mLineRasterizationFeatures = {};
     mLineRasterizationFeatures.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT;
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES;
 
     mProvokingVertexFeatures = {};
     mProvokingVertexFeatures.sType =
@@ -3470,18 +3478,24 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
 
     mVertexAttributeDivisorFeatures = {};
     mVertexAttributeDivisorFeatures.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT;
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES;
 
+    // Note: VkPhysicalDeviceVertexAttributeDivisorProperties is different from the EXT version.
+    // It should be ok to set the EXT struct type on it though in the absence of KHR/Vulkan1.4 since
+    // the EXT struct can be laid over the KHR one, and the unfilled properties are automatically
+    // zeroed here.
     mVertexAttributeDivisorProperties = {};
     mVertexAttributeDivisorProperties.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT;
+        ExtensionFound(VK_KHR_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME, deviceExtensionNames)
+            ? VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES
+            : VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT;
 
     mTransformFeedbackFeatures = {};
     mTransformFeedbackFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT;
 
     mIndexTypeUint8Features       = {};
-    mIndexTypeUint8Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT;
+    mIndexTypeUint8Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES;
 
     mSubgroupProperties       = {};
     mSubgroupProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
@@ -3541,7 +3555,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
 
     mDepthClampZeroOneFeatures = {};
     mDepthClampZeroOneFeatures.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT;
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_KHR;
 
     mDepthClipControlFeatures = {};
     mDepthClipControlFeatures.sType =
@@ -3847,6 +3861,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
 // - VK_KHR_external_fence_fd
 // - VK_FUCHSIA_external_semaphore
 // - VK_EXT_shader_stencil_export
+// - VK_KHR_load_store_op_none
 // - VK_EXT_load_store_op_none
 // - VK_QCOM_render_pass_store_ops
 // - VK_GOOGLE_display_timing
@@ -3867,7 +3882,10 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
 
     if (mFeatures.supportsDepthClampZeroOne.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_EXT_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME);
+        const bool hasKHR =
+            ExtensionFound(VK_KHR_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME, deviceExtensionNames);
+        mEnabledDeviceExtensions.push_back(hasKHR ? VK_KHR_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME
+                                                  : VK_EXT_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mDepthClampZeroOneFeatures);
     }
 
@@ -3924,7 +3942,10 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
 
     if (mFeatures.supportsRenderPassLoadStoreOpNone.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME);
+        const bool hasKHR =
+            ExtensionFound(VK_KHR_LOAD_STORE_OP_NONE_EXTENSION_NAME, deviceExtensionNames);
+        mEnabledDeviceExtensions.push_back(hasKHR ? VK_KHR_LOAD_STORE_OP_NONE_EXTENSION_NAME
+                                                  : VK_EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME);
     }
     else if (mFeatures.supportsRenderPassStoreOpNone.enabled)
     {
@@ -3938,7 +3959,10 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
 
     if (mFeatures.bresenhamLineRasterization.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_EXT_LINE_RASTERIZATION_EXTENSION_NAME);
+        const bool hasKHR =
+            ExtensionFound(VK_KHR_LINE_RASTERIZATION_EXTENSION_NAME, deviceExtensionNames);
+        mEnabledDeviceExtensions.push_back(hasKHR ? VK_KHR_LINE_RASTERIZATION_EXTENSION_NAME
+                                                  : VK_EXT_LINE_RASTERIZATION_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mLineRasterizationFeatures);
     }
 
@@ -3950,7 +3974,11 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
 
     if (mVertexAttributeDivisorFeatures.vertexAttributeInstanceRateDivisor)
     {
-        mEnabledDeviceExtensions.push_back(VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME);
+        const bool hasKHR =
+            ExtensionFound(VK_KHR_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME, deviceExtensionNames);
+
+        mEnabledDeviceExtensions.push_back(hasKHR ? VK_KHR_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME
+                                                  : VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mVertexAttributeDivisorFeatures);
 
         // We only store 8 bit divisor in GraphicsPipelineDesc so capping value & we emulate if
@@ -3974,7 +4002,10 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
 
     if (mFeatures.supportsIndexTypeUint8.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_EXT_INDEX_TYPE_UINT8_EXTENSION_NAME);
+        const bool hasKHR =
+            ExtensionFound(VK_KHR_INDEX_TYPE_UINT8_EXTENSION_NAME, deviceExtensionNames);
+        mEnabledDeviceExtensions.push_back(hasKHR ? VK_KHR_INDEX_TYPE_UINT8_EXTENSION_NAME
+                                                  : VK_EXT_INDEX_TYPE_UINT8_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mIndexTypeUint8Features);
     }
 
@@ -4098,11 +4129,10 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
 
     if (mFeatures.supportsSwapchainMaintenance1.enabled)
     {
-        const bool hasSwapchainMaintenance1KHR =
+        const bool hasKHR =
             ExtensionFound(VK_KHR_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME, deviceExtensionNames);
-        mEnabledDeviceExtensions.push_back(hasSwapchainMaintenance1KHR
-                                               ? VK_KHR_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME
-                                               : VK_EXT_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME);
+        mEnabledDeviceExtensions.push_back(hasKHR ? VK_KHR_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME
+                                                  : VK_EXT_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mSwapchainMaintenance1Features);
     }
 
@@ -5739,15 +5769,16 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsRenderPassLoadStoreOpNone,
-        ExtensionFound(VK_EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME, deviceExtensionNames));
-
-    ANGLE_FEATURE_CONDITION(&mFeatures, disallowMixedDepthStencilLoadOpNoneAndLoad,
-                            isARMProprietary && driverVersion < angle::VersionTriple(38, 1, 0));
+        ExtensionFound(VK_KHR_LOAD_STORE_OP_NONE_EXTENSION_NAME, deviceExtensionNames) ||
+            ExtensionFound(VK_EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsRenderPassStoreOpNone,
         !mFeatures.supportsRenderPassLoadStoreOpNone.enabled &&
             ExtensionFound(VK_QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME, deviceExtensionNames));
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, disallowMixedDepthStencilLoadOpNoneAndLoad,
+                            isARMProprietary && driverVersion < angle::VersionTriple(38, 1, 0));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthClipControl,
                             mDepthClipControlFeatures.depthClipControl == VK_TRUE);
