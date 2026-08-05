@@ -110,7 +110,7 @@ function generate_Android_bp_file() {
         gn desc ${GN_OUTPUT_DIRECTORY} --format=json "*" > ${GN_OUTPUT_DIRECTORY}/desc.$abi.json
     done
 
-    python3 scripts/generate_android_bp.py \
+    vpython3 scripts/generate_android_bp.py \
         --gn_json_arm=${GN_OUTPUT_DIRECTORY}/desc.arm.json \
         --gn_json_arm64=${GN_OUTPUT_DIRECTORY}/desc.arm64.json \
         --gn_json_x86=${GN_OUTPUT_DIRECTORY}/desc.x86.json \
@@ -129,7 +129,7 @@ function generate_angle_commit_file() {
     # variable is set to {rolling_to} git hash, and that can be used by below
     # script commit_id.py as the ANGLE_COMMIT_HASH written to the angle_commit.h.
     # See b/348044346.
-    python3 src/commit_id.py \
+    vpython3 src/commit_id.py \
         gen \
         angle_commit.h
 }
@@ -333,7 +333,7 @@ find third_party -wholename "*/_gclient_*" -delete
 rm -rf "third_party/zlib"
 
 # Sync all of ANGLE's deps so that 'gn gen' works
-python3 scripts/bootstrap.py
+vpython3 scripts/bootstrap.py
 gclient sync --reset --force --delete_unversioned_trees
 
 # Delete outdir to ensure a clean gn run.
