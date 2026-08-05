@@ -68,10 +68,10 @@ ANGLE_INLINE ScopedContextMutexLock TryLockCurrentContext(Thread *thread)
 }
 
 // Tries to lock "ContextMutex" of the Context with "contextID" if it is valid.
-ANGLE_INLINE ScopedContextMutexLock TryLockContext(Display *display, gl::ContextID contextID)
+ANGLE_INLINE ScopedContextMutexLock TryLockContext(const Display *display, gl::ContextID contextID)
 {
     ASSERT(kIsContextMutexEnabled);
-    gl::Context *context = GetContextIfValid(display, contextID);
+    const gl::Context *context = GetContextIfValid(display, contextID);
     return context != nullptr ? ScopedContextMutexLock(context->getContextMutex())
                               : ScopedContextMutexLock();
 }
