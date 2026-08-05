@@ -2659,16 +2659,49 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     const gl::FoveationState *newFoveationState = nullptr;
     gl::Extents foveatedAttachmentSize;
 
+    // Binding and contents dirty bits require the same attachment update.  Coalesce the contents
+    // bits into the corresponding binding bits so each attachment is updated only once.
+    constexpr size_t kBufferContentsDirtyBitOffset =
+        gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 -
+        gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0;
+    static_assert(gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT ==
+                      gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX,
+                  "Framebuffer depth dirty bit must immediately follow color dirty bits");
+    static_assert(gl::Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT ==
+                      gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT + 1,
+                  "Framebuffer stencil dirty bit must immediately follow depth dirty bit");
+    static_assert(gl::Framebuffer::DIRTY_BIT_DEPTH_BUFFER_CONTENTS -
+                          gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT ==
+                      kBufferContentsDirtyBitOffset,
+                  "Framebuffer depth dirty bits must have the same offset as color dirty bits");
+    static_assert(gl::Framebuffer::DIRTY_BIT_STENCIL_BUFFER_CONTENTS -
+                          gl::Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT ==
+                      kBufferContentsDirtyBitOffset,
+                  "Framebuffer stencil dirty bits must have the same offset as color dirty bits");
+
+    constexpr gl::Framebuffer::DirtyBits kBufferContentsDirtyBits =
+        gl::Framebuffer::DirtyBits::Mask(gl::Framebuffer::DIRTY_BIT_STENCIL_BUFFER_CONTENTS + 1) &
+        ~gl::Framebuffer::DirtyBits::Mask(gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0);
+    // Take all bits other than content dirty bits and then fold content dirty bits into binding
+    // bits.
+    gl::Framebuffer::DirtyBits coalescedDirtyBits = dirtyBits & ~kBufferContentsDirtyBits;
+    coalescedDirtyBits |= (dirtyBits & kBufferContentsDirtyBits) >> kBufferContentsDirtyBitOffset;
+
+    // Vulkan uses one render target for the depth and stencil attachments.  Use the depth bit as
+    // their canonical dirty bit so combined depth/stencil attachments are also updated only once.
+    if (coalescedDirtyBits.test(gl::Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT))
+    {
+        coalescedDirtyBits.set(gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT, true);
+    }
+    coalescedDirtyBits.reset(gl::Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT);
+
     // For any updated attachments we'll update their Serials below
     ASSERT(dirtyBits.any());
-    for (size_t dirtyBit : dirtyBits)
+    for (size_t dirtyBit : coalescedDirtyBits)
     {
         switch (dirtyBit)
         {
             case gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT:
-            case gl::Framebuffer::DIRTY_BIT_DEPTH_BUFFER_CONTENTS:
-            case gl::Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT:
-            case gl::Framebuffer::DIRTY_BIT_STENCIL_BUFFER_CONTENTS:
                 ANGLE_TRY(updateDepthStencilAttachment(context));
                 shouldUpdateLayerCount      = true;
                 dirtyDepthStencilAttachment = true;
@@ -2703,19 +2736,9 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
             default:
             {
                 static_assert(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 == 0, "FB dirty bits");
-                uint32_t colorIndexGL;
-                if (dirtyBit < gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX)
-                {
-                    colorIndexGL = static_cast<uint32_t>(
-                        dirtyBit - gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0);
-                }
-                else
-                {
-                    ASSERT(dirtyBit >= gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 &&
-                           dirtyBit < gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_MAX);
-                    colorIndexGL = static_cast<uint32_t>(
-                        dirtyBit - gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0);
-                }
+                ASSERT(dirtyBit < gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX);
+                uint32_t colorIndexGL =
+                    static_cast<uint32_t>(dirtyBit - gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0);
 
                 ANGLE_TRY(updateColorAttachment(context, colorIndexGL));
 
