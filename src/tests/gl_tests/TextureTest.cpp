@@ -22074,6 +22074,7 @@ in vec4 position;
 void main()
 {
     gl_Position = position;
+    gl_PointSize = 1.0;
 })";
 
     // Fragment shader loads from 4 unbound image units and writes results into an SSBO.
