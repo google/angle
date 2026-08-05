@@ -17,7 +17,14 @@ Add the following to ANGLE's .gclient file:
       "checkout_angle_restricted_traces": True
     },
 ```
-
+The above will get you a selection of ~50 traces that are considered representative of the entire set, covering major engines, benchmarks, and some
+custom engines.  If you want the entire collection of 300+ traces, add an addition arg like below, but be ready to wait a while and dedicate 30+ GB of storage:
+```
+    "custom_vars": {
+      "checkout_angle_restricted_traces": True,
+      "checkout_extra_traces": True
+    },
+```
 Note: alternatively, you can checkout only a few specific traces using the following format (`angle_restricted_traces` in gn args below should be a matching list or a subset):
 ```
     "custom_vars": {
