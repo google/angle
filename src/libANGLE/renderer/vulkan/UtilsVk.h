@@ -42,22 +42,6 @@ class UtilsVk : angle::NonCopyable
 
     void destroy(ContextVk *contextVk);
 
-    struct ConvertIndexParameters
-    {
-        uint32_t srcOffset = 0;
-        uint32_t dstOffset = 0;
-        uint32_t maxIndex  = 0;
-    };
-
-    struct ConvertIndexIndirectParameters
-    {
-        uint32_t srcIndirectBufOffset = 0;
-        uint32_t srcIndexBufOffset    = 0;
-        uint32_t dstIndexBufOffset    = 0;
-        uint32_t maxIndex             = 0;
-        uint32_t dstIndirectBufOffset = 0;
-    };
-
     struct ConvertLineLoopIndexIndirectParameters
     {
         uint32_t indirectBufferOffset    = 0;
@@ -231,17 +215,6 @@ class UtilsVk : angle::NonCopyable
     static constexpr uint32_t kGenerateMipmapMaxLevels = 6;
     static uint32_t GetGenerateMipmapMaxLevels(ContextVk *contextVk);
 
-    angle::Result convertIndexBuffer(ContextVk *contextVk,
-                                     vk::BufferHelper *dst,
-                                     vk::BufferHelper *src,
-                                     const ConvertIndexParameters &params);
-    angle::Result convertIndexIndirectBuffer(ContextVk *contextVk,
-                                             vk::BufferHelper *srcIndirectBuf,
-                                             vk::BufferHelper *srcIndexBuf,
-                                             vk::BufferHelper *dstIndirectBuf,
-                                             vk::BufferHelper *dstIndexBuf,
-                                             const ConvertIndexIndirectParameters &params);
-
     angle::Result convertLineLoopIndexIndirectBuffer(
         ContextVk *contextVk,
         vk::BufferHelper *srcIndirectBuffer,
@@ -368,23 +341,6 @@ class UtilsVk : angle::NonCopyable
 
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
-
-    struct ConvertIndexShaderParams
-    {
-        uint32_t srcOffset     = 0;
-        uint32_t dstOffsetDiv4 = 0;
-        uint32_t maxIndex      = 0;
-        uint32_t _padding      = 0;
-    };
-
-    struct ConvertIndexIndirectShaderParams
-    {
-        uint32_t srcIndirectOffsetDiv4 = 0;
-        uint32_t srcOffset             = 0;
-        uint32_t dstOffsetDiv4         = 0;
-        uint32_t maxIndex              = 0;
-        uint32_t dstIndirectOffsetDiv4 = 0;
-    };
 
     struct ConvertIndexIndirectLineLoopShaderParams
     {
@@ -555,11 +511,9 @@ class UtilsVk : angle::NonCopyable
 
         // Functions implemented in compute
         ComputeStartIndex,  // Special value to separate draw and dispatch functions.
-        ConvertIndexBuffer = ComputeStartIndex,
-        ConvertVertexBuffer,
+        ConvertVertexBuffer = ComputeStartIndex,
         ClearTexture,
         BlitResolveStencilNoExport,
-        ConvertIndexIndirectBuffer,
         ConvertIndexIndirectLineLoopBuffer,
         ConvertIndirectLineLoopBuffer,
         GenerateMipmap,
@@ -628,8 +582,6 @@ class UtilsVk : angle::NonCopyable
 
     // Initializers corresponding to functions, calling into ensureResourcesInitialized with the
     // appropriate parameters.
-    angle::Result ensureConvertIndexResourcesInitialized(ContextVk *contextVk);
-    angle::Result ensureConvertIndexIndirectResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureConvertIndexIndirectLineLoopResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureConvertIndirectLineLoopResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureConvertVertexResourcesInitialized(ContextVk *contextVk);
@@ -715,8 +667,6 @@ class UtilsVk : angle::NonCopyable
     std::unordered_map<vk::SamplerDesc, vk::DynamicDescriptorPool>
         mImageCopyWithSamplerDescriptorPools;
 
-    ComputeShaderProgramAndPipelines
-        mConvertIndex[vk::InternalShader::ConvertIndex_comp::kArrayLen];
     ComputeShaderProgramAndPipelines mConvertIndexIndirectLineLoop
         [vk::InternalShader::ConvertIndexIndirectLineLoop_comp::kArrayLen];
     ComputeShaderProgramAndPipelines

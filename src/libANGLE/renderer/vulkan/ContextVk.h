@@ -744,7 +744,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     VkIndexType getVkIndexType(gl::DrawElementsType glIndexType) const;
     size_t getVkIndexTypeSize(gl::DrawElementsType glIndexType) const;
-    bool shouldConvertUint8VkIndexType(gl::DrawElementsType glIndexType) const;
 
     bool isRobustResourceInitEnabled() const;
     bool hasRobustAccess() const { return mState.hasRobustAccess(); }
