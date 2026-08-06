@@ -4121,6 +4121,29 @@ Extensions Context::generateSupportedExtensions() const
         // non-conformant in ES 3.0 and superseded by EXT_color_buffer_float.
         supportedExtensions.colorBufferFloatRgbCHROMIUM  = false;
         supportedExtensions.colorBufferFloatRgbaCHROMIUM = false;
+
+        // In WebGL2, WebGL1 extensions whose functionality is present in core are not exposed.
+        // This information can be found by comparing
+        // WebGLRenderingContext::RegisterContextExtensions() and
+        // WebGL2RenderingContext::RegisterContextExtensions() in Blink code.
+        if (mWebGLContext)
+        {
+            supportedExtensions.instancedArraysANGLE         = false;
+            supportedExtensions.blendMinmaxEXT               = false;
+            supportedExtensions.fragDepthEXT                 = false;
+            supportedExtensions.shaderTextureLodEXT          = false;
+            supportedExtensions.sRGBEXT                      = false;
+            supportedExtensions.elementIndexUintOES          = false;
+            supportedExtensions.fboRenderMipmapOES           = false;
+            supportedExtensions.standardDerivativesOES       = false;
+            supportedExtensions.textureFloatOES              = false;
+            supportedExtensions.textureHalfFloatLinearOES    = false;
+            supportedExtensions.vertexArrayObjectOES         = false;
+            supportedExtensions.colorBufferFloatRgbCHROMIUM  = false;
+            supportedExtensions.colorBufferFloatRgbaCHROMIUM = false;
+            supportedExtensions.depthTextureANGLE            = false;
+            supportedExtensions.drawBuffersEXT               = false;
+        }
     }
 
     if (getClientVersion() >= ES_3_0)

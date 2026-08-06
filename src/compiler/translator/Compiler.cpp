@@ -1216,6 +1216,13 @@ bool TCompiler::compile(angle::Span<const char *const> shaderStrings,
         return true;
     }
 
+    // Certain extensions are not allowed in WebGL2.
+    if (mShaderSpec == SH_WEBGL2_SPEC)
+    {
+        ASSERT(!mResources.EXT_frag_depth && !mResources.EXT_shader_texture_lod &&
+               !mResources.EXT_draw_buffers && !mResources.NV_draw_buffers);
+    }
+
     // Reset the extension behavior for each compilation unit.  Support for some extensions depends
     // on compile flags.  This is done before resetting the flags that don't apply to some shader
     // stages because extensions are either exposed to all or none of the stages.
