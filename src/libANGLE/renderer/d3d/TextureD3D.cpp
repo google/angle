@@ -281,8 +281,13 @@ angle::Result TextureD3D::setStorageExternalMemory(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-bool TextureD3D::shouldUseSetData(const ImageD3D *image) const
+bool TextureD3D::shouldUseSetData(const gl::ImageIndex &index, const ImageD3D *image) const
 {
+    if (!isImageComplete(index))
+    {
+        return false;
+    }
+
     if (!mRenderer->getFeatures().setDataFasterThanImageUpload.enabled)
     {
         return false;
@@ -338,7 +343,7 @@ angle::Result TextureD3D::setImageImpl(const gl::Context *context,
 
     if (pixelData != nullptr)
     {
-        if (shouldUseSetData(image))
+        if (shouldUseSetData(index, image))
         {
             ANGLE_TRY(
                 mTexStorage->setData(context, index, image, nullptr, type, unpack, pixelData));
@@ -376,7 +381,7 @@ angle::Result TextureD3D::subImage(const gl::Context *context,
         ImageD3D *image = getImage(index);
         ASSERT(image);
 
-        if (shouldUseSetData(image) && !mTexStorage->isMultiplanar(context))
+        if (shouldUseSetData(index, image) && !mTexStorage->isMultiplanar(context))
         {
             return mTexStorage->setData(context, index, image, &area, type, unpack, pixelData);
         }
@@ -725,7 +730,7 @@ angle::Result TextureD3D::commitRegion(const gl::Context *context,
                                        const gl::ImageIndex &index,
                                        const gl::Box &region)
 {
-    if (mTexStorage)
+    if (mTexStorage && isImageComplete(index))
     {
         ASSERT(isValidIndex(index));
         ImageD3D *image = getImage(index);
@@ -882,8 +887,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
                                              GLenum binding,
                                              const gl::ImageIndex &imageIndex)
 {
-    ContextD3D *contextD3D = GetImplAs<ContextD3D>(context);
-    gl::ImageIndex index   = imageIndex;
+    gl::ImageIndex index = imageIndex;
 
     // Special case for D3D11 3D textures. We can't create render targets for individual layers of a
     // 3D texture, so force the clear to the entire mip. There shouldn't ever be a case where we
@@ -951,55 +955,18 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
 
     ASSERT(image != nullptr);
 
-    // Slow path: non-renderable texture or the texture levels aren't set up.
-    const auto &formatInfo = gl::GetSizedInternalFormatInfo(image->getInternalFormat());
+    // Slow path: non-renderable texture, incomplete level, or texture storage doesn't exist.
+    ANGLE_TRY(image->initializeContents(context));
 
-    GLuint imageBytes = 0;
-    if (formatInfo.compressed)
-    {
-        ANGLE_CHECK_GL_MATH(
-            contextD3D, formatInfo.computeCompressedImageSize(
-                            gl::Extents(image->getWidth(), image->getHeight(), image->getDepth()),
-                            &imageBytes));
-    }
-    else
-    {
-        ANGLE_CHECK_GL_MATH(contextD3D, formatInfo.computeRowPitch(
-                                            formatInfo.type, image->getWidth(), 1, 0, &imageBytes));
-
-        angle::CheckedNumeric<GLuint> checkedImageBytes(imageBytes);
-        checkedImageBytes *= image->getHeight();
-        checkedImageBytes *= image->getDepth();
-        ANGLE_CHECK_GL_MATH(contextD3D, checkedImageBytes.AssignIfValid(&imageBytes));
-    }
-
-    gl::PixelUnpackState zeroDataUnpackState;
-    zeroDataUnpackState.alignment = 1;
-
-    const angle::MemoryBuffer *zeroBuffer = nullptr;
-    ANGLE_CHECK_GL_ALLOC(contextD3D, context->getZeroFilledBuffer(imageBytes, &zeroBuffer));
-
-    if (shouldUseSetData(image))
-    {
-        ANGLE_TRY(mTexStorage->setData(context, index, image, nullptr, formatInfo.type,
-                                       zeroDataUnpackState, zeroBuffer->data()));
-    }
-    else
+    if (mTexStorage && isImageComplete(index))
     {
         gl::Box fullImageArea(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
-        ANGLE_TRY(image->loadData(context, fullImageArea, zeroDataUnpackState, formatInfo.type,
-                                  zeroBuffer->data(), false));
-
-        // Force an update to the tex storage so we avoid problems with subImage and dirty regions.
-        if (mTexStorage)
-        {
-            ANGLE_TRY(commitRegion(context, index, fullImageArea));
-            image->markClean();
-        }
-        else
-        {
-            mDirtyImages = true;
-        }
+        ANGLE_TRY(commitRegion(context, index, fullImageArea));
+        image->markClean();
+    }
+    else
+    {
+        mDirtyImages = true;
     }
     return angle::Result::Continue;
 }

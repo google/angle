@@ -22640,6 +22640,103 @@ TEST_P(Texture2DTestES3RobustInit, MismatchedStaleLevelCompressedDraw)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 }
 
+// Test that robust initialization of a mismatched stale texture level during texSubImage2D
+// succeeds and does not cause a crash/OOB read.
+TEST_P(Texture2DTestES3RobustInit, MismatchedStaleLevelTexSubImage)
+{
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    // Mip level 1 is 128 x 1 RGBA8 with null pixels.
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 128, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Set up framebuffer to copy from (for copyTexImage2D).
+    // We need a 512 x 128 source.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 512, 128);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+    EXPECT_GL_NO_ERROR();
+
+    // Define level 0 using copyTexImage2D.
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, 512, 128, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Partially update level 1 with texSubImage2D.
+    // This triggers ensureSubImageInitialized on level 1, which should not crash.
+    const GLColor updateData = GLColor::blue;
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &updateData);
+    EXPECT_GL_NO_ERROR();
+
+    // Redefine level 0 to 256 x 2. This makes level 1 (128 x 1) mip-compatible with level 0.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Bind level 1 to the framebuffer and read pixels.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Level 1 was only partially initialized. Verify the uploaded data. Additionally, verify
+    // the rest of the level is robust-initialized transparentBlack.
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::transparentBlack);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
+// Test that robust initialization of a mismatched stale texture level during texSubImage2D
+// succeeds, does not cause a crash/OOB read, and preserves full level sub-image updates.
+TEST_P(Texture2DTestES3RobustInit, MismatchedStaleLevelTexSubImageFull)
+{
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    // Mip level 1 is 128 x 1 RGBA8 with null pixels.
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 128, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Set up framebuffer to copy from (for copyTexImage2D).
+    // We need a 512 x 128 source.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 512, 128);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+    EXPECT_GL_NO_ERROR();
+
+    // Define level 0 using copyTexImage2D.
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, 512, 128, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Fully update level 1 with texSubImage2D.
+    std::vector<GLColor> updateData(128, GLColor::blue);
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 128, 1, GL_RGBA, GL_UNSIGNED_BYTE, updateData.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Redefine level 0 to 256 x 2. This makes level 1 (128 x 1) mip-compatible with level 0.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Bind level 1 to the framebuffer and read pixels.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Check that level 1 has the updated blue pixel since it was a full update.
+    EXPECT_PIXEL_RECT_EQ(0, 0, 128, 1, GLColor::blue);
+}
+
 class TextureSizeLimitTest : public ANGLETest<>
 {
   protected:
