@@ -40,8 +40,17 @@ try_.defaults.set(
 ## Templates
 
 def apply_cq_builder_defaults(kwargs):
+    """Applies default builder settings for CQ builders.
+
+    Args:
+        kwargs: The args being used for the builder as a dict.
+
+    Returns:
+        |kwargs| with default values set for CQ builders.
+    """
     kwargs.setdefault("max_concurrent_builds", 4)
     kwargs.setdefault("cq_settings", try_.cq_settings(on_default_cq = True))
+    kwargs.setdefault("properties", {})["no_extra_traces"] = True
     return kwargs
 
 def apply_linux_cq_builder_defaults(kwargs):
