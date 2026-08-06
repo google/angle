@@ -9770,6 +9770,13 @@ egl::Error Context::unsetDefaultFramebuffer()
 
 void Context::onPreSwap()
 {
+    // Ignore non-window (side-context / aux-pbuffer) swaps for frame boundaries
+    const egl::Surface *drawSurface = getCurrentDrawSurface();
+    if (drawSurface && drawSurface->getType() != EGL_WINDOW_BIT)
+    {
+        return;
+    }
+
     // Dump frame capture if enabled.
     getShareGroup()->getFrameCaptureShared()->onEndFrame(this);
 }
