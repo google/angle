@@ -629,9 +629,9 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
     options.objectCode       = true;
     options.emulateGLDrawID  = true;
 
-    // Add default options to WebGL shaders to prevent unexpected behavior during
-    // compilation.
-    if (context->isWebGL() || context->isHardenedContext())
+    // Add default options to WebGL shaders to prevent unexpected behavior during compilation.
+    // Similarly protect hardened contexts.
+    if (context->isHardenedContext())
     {
         options.initGLPosition             = true;
         options.limitCallStackDepth        = true;
