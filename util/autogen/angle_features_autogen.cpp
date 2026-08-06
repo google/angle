@@ -259,6 +259,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::LogMemoryReportCallbacks, "logMemoryReportCallbacks"},
     {Feature::LogMemoryReportStats, "logMemoryReportStats"},
     {Feature::LoseContextOnOutOfMemory, "loseContextOnOutOfMemory"},
+    {Feature::LoseHardenedContextOnBackendError, "loseHardenedContextOnBackendError"},
     {Feature::MapUnspecifiedColorSpaceToPassThrough, "mapUnspecifiedColorSpaceToPassThrough"},
     {Feature::MergeProgramPipelineCachesToGlobalCache, "mergeProgramPipelineCachesToGlobalCache"},
     {Feature::MrtPerfWorkaround, "mrtPerfWorkaround"},

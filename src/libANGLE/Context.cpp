@@ -3325,6 +3325,11 @@ void Context::handleError(GLenum errorCode,
                           unsigned int line)
 {
     mErrors.handleError(errorCode, message, file, function, line);
+
+    if (isHardenedContext() && getFrontendFeatures().loseHardenedContextOnBackendError.enabled)
+    {
+        markContextLost(GraphicsResetStatus::UnknownContextReset);
+    }
 }
 
 // Get one of the recorded errors and clear its flag, if any.

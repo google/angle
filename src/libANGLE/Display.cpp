@@ -2429,6 +2429,7 @@ void Display::initializeFrontendFeatures()
 {
     // Enable on all Impls
     ANGLE_FEATURE_CONDITION(&mFrontendFeatures, loseContextOnOutOfMemory, true);
+    ANGLE_FEATURE_CONDITION(&mFrontendFeatures, loseHardenedContextOnBackendError, true);
     ANGLE_FEATURE_CONDITION(&mFrontendFeatures, allowCompressedFormats, true);
 
     // If this feature is enabled, the context can be created with a certain requested version

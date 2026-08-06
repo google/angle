@@ -259,6 +259,7 @@ enum class Feature
     LogMemoryReportCallbacks,
     LogMemoryReportStats,
     LoseContextOnOutOfMemory,
+    LoseHardenedContextOnBackendError,
     MapUnspecifiedColorSpaceToPassThrough,
     MergeProgramPipelineCachesToGlobalCache,
     MrtPerfWorkaround,
