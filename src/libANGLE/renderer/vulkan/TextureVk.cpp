@@ -1044,6 +1044,16 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         }
     }
 
+    // If the texture getting cleared is a render attachment of the current render pass we must
+    // flush the current render pass. Ideally one would perform checks upstream and convert
+    // the texture clear into a regular glClear, due to it being more optimized, although this
+    // may not be trivial when considering potential corner cases.
+    if (contextVk->isRenderPassStartedAndUsesImage(*mImage))
+    {
+        ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass(
+            RenderPassClosureReason::ImageUseThenOutOfRPWrite));
+    }
+
     // Flush the staged updates if needed.
     return ensureImageInitializedIfUpdatesNeedStageOrFlush(
         contextVk, mState.toOwnerLevel(level), outputVkFormat, vk::ApplyImageUpdate::Defer,
