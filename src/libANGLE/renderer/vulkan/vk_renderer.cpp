@@ -4428,7 +4428,7 @@ void Renderer::enableDeviceExtensionsPromotedTo14(const vk::ExtensionNameList &d
 
     if (mFeatures.supportsGlobalPriority.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME);
+        mEnabledDeviceExtensions.push_back(VK_KHR_GLOBAL_PRIORITY_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mPhysicalDeviceGlobalPriorityQueryFeatures);
     }
 
