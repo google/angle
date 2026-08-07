@@ -1319,6 +1319,8 @@ void QueryVertexArrayStateGL(const FunctionsGL *functions, VertexArrayStateGL *s
             std::min(maxVertexAttribBindings, static_cast<GLint>(gl::MAX_VERTEX_ATTRIB_BINDINGS));
     }
 
+    const bool supportsInstancing = nativegl::SupportsInstancing(functions);
+
     for (GLint i = 0; i < maxVertexAttribBindings; i++)
     {
         VertexBindingGL &binding = state->bindings[i];
@@ -1326,6 +1328,7 @@ void QueryVertexArrayStateGL(const FunctionsGL *functions, VertexArrayStateGL *s
         if (nativegl::SupportsVertexAttributeBindings(functions))
         {
             GetHelper(functions, GL_VERTEX_BINDING_STRIDE, i, &binding.stride);
+            ASSERT(supportsInstancing);
             GetHelper(functions, GL_VERTEX_BINDING_DIVISOR, i, &binding.divisor);
             GetHelper(functions, GL_VERTEX_BINDING_OFFSET, i, &binding.offset);
             GetHelper(functions, GL_VERTEX_BINDING_BUFFER, i, &binding.buffer);
@@ -1333,7 +1336,10 @@ void QueryVertexArrayStateGL(const FunctionsGL *functions, VertexArrayStateGL *s
         else
         {
             GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_STRIDE, &binding.stride);
-            GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &binding.divisor);
+            if (supportsInstancing)
+            {
+                GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &binding.divisor);
+            }
             GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &binding.buffer);
         }
 
@@ -4165,6 +4171,7 @@ void StateManagerGL::setDefaultVAOState(const VertexArrayStateGL &state)
     bindVertexArray(0);
 
     const bool supportsBindings = nativegl::SupportsVertexAttributeBindings(mFunctions);
+    const bool supportsInstancing = nativegl::SupportsInstancing(mFunctions);
 
     bindBuffer(gl::BufferBinding::ElementArray, state.elementArrayBuffer);
     for (GLint i = 0; i < mCaps.maxVertexAttributes; i++)
@@ -4220,7 +4227,7 @@ void StateManagerGL::setDefaultVAOState(const VertexArrayStateGL &state)
                 curBinding.stride = newBinding.stride;
             }
 
-            if (curBinding.divisor != newBinding.divisor)
+            if (supportsInstancing && curBinding.divisor != newBinding.divisor)
             {
                 mFunctions->vertexAttribDivisor(i, newBinding.divisor);
                 curBinding.divisor = newBinding.divisor;
@@ -4247,6 +4254,7 @@ void StateManagerGL::setDefaultVAOState(const VertexArrayStateGL &state)
         if (curBinding.divisor != newBinding.divisor)
         {
             ASSERT(supportsBindings);
+            ASSERT(supportsInstancing);
             mFunctions->vertexBindingDivisor(i, newBinding.divisor);
             curBinding.divisor = newBinding.divisor;
         }

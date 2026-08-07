@@ -171,6 +171,7 @@ bool SupportsShaderIOBlocks(const FunctionsGL *functions);
 bool SupportsClipCullDistance(const FunctionsGL *functions);
 bool SupportsSampleMask(const FunctionsGL *functions);
 bool SupportsRasterizerDiscard(const FunctionsGL *functions);
+bool SupportsInstancing(const FunctionsGL *functions);
 bool SupportsNativeRendering(const FunctionsGL *functions,
                              gl::TextureType type,
                              GLenum internalFormat);

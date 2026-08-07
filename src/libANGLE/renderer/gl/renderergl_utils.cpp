@@ -1659,12 +1659,7 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->textureShadowLodEXT = functions->hasExtension("GL_EXT_texture_shadow_lod");
 
     extensions->multiDrawIndirectEXT = true;
-    extensions->instancedArraysANGLE = functions->isAtLeastGL(gl::Version(3, 1)) ||
-                                       (functions->hasGLExtension("GL_ARB_instanced_arrays") &&
-                                        (functions->hasGLExtension("GL_ARB_draw_instanced") ||
-                                         functions->hasGLExtension("GL_EXT_draw_instanced"))) ||
-                                       functions->isAtLeastGLES(gl::Version(3, 0)) ||
-                                       functions->hasGLESExtension("GL_EXT_instanced_arrays");
+    extensions->instancedArraysANGLE = nativegl::SupportsInstancing(functions);
     extensions->instancedArraysEXT = extensions->instancedArraysANGLE;
     extensions->unpackSubimageEXT  = nativegl::SupportsUnpackSubImage(functions);
     // Some drivers do not support this extension in ESSL 3.00, so ESSL 3.10 is required on ES.
@@ -3137,6 +3132,16 @@ bool SupportsSampleMask(const FunctionsGL *functions)
 bool SupportsRasterizerDiscard(const FunctionsGL *functions)
 {
     return functions->isAtLeastGLES(gl::Version(3, 0)) || functions->isAtLeastGL(gl::Version(3, 0));
+}
+
+bool SupportsInstancing(const FunctionsGL *functions)
+{
+    return functions->isAtLeastGL(gl::Version(3, 1)) ||
+           (functions->hasGLExtension("GL_ARB_instanced_arrays") &&
+            (functions->hasGLExtension("GL_ARB_draw_instanced") ||
+             functions->hasGLExtension("GL_EXT_draw_instanced"))) ||
+           functions->isAtLeastGLES(gl::Version(3, 0)) ||
+           functions->hasGLESExtension("GL_EXT_instanced_arrays");
 }
 
 bool SupportsNativeRendering(const FunctionsGL *functions,
