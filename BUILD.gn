@@ -412,6 +412,12 @@ config("extra_warnings") {
   }
 }
 
+config("opencl_no_pragma_messages") {
+  if (is_clang) {
+    cflags = [ "-Wno-#pragma-messages" ]
+  }
+}
+
 # This config adds build-ids to the associated library. -Wl is a special option
 # that indicates that clang should pass the associated option --build-id to the
 # linker. This will cause a build-id section to be added to the associated
@@ -1103,6 +1109,7 @@ angle_source_set("libANGLE_no_vulkan") {
   sources = libangle_sources
   if (angle_enable_cl) {
     sources += libangle_cl_sources
+    configs += [ ":opencl_no_pragma_messages" ]
   }
   defines = []
 
