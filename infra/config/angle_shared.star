@@ -27,7 +27,7 @@ def _apply_win_msvc_builder_defaults(kwargs):
     kwargs.setdefault("cores", 8)
     kwargs.setdefault("os", os.WINDOWS_DEFAULT)
     kwargs.setdefault("ssd", None)
-    kwargs.setdefault("machine_type", "n2-standard-8")
+    kwargs.setdefault("machine_type", "n2-standard-8|e4-standard-8")
     return kwargs
 
 builder_defaults = struct(
