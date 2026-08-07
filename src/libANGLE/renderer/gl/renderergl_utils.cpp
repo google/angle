@@ -1668,10 +1668,7 @@ void GenerateCaps(const FunctionsGL *functions,
         (functions->isAtLeastGLES(gl::Version(3, 1)) &&
          functions->hasGLESExtension("GL_NV_shader_noperspective_interpolation"));
     extensions->packSubimageNV       = nativegl::SupportsPackSubImage(functions);
-    extensions->vertexArrayObjectOES = functions->isAtLeastGL(gl::Version(3, 0)) ||
-                                       functions->hasGLExtension("GL_ARB_vertex_array_object") ||
-                                       functions->isAtLeastGLES(gl::Version(3, 0)) ||
-                                       functions->hasGLESExtension("GL_OES_vertex_array_object");
+    extensions->vertexArrayObjectOES = nativegl::SupportsVertexArrayObjects(functions);
     extensions->debugMarkerEXT = functions->isAtLeastGL(gl::Version(4, 3)) ||
                                  functions->hasGLExtension("GL_KHR_debug") ||
                                  functions->hasGLExtension("GL_EXT_debug_marker") ||
