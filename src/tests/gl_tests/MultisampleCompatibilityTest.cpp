@@ -7,6 +7,8 @@
 //   Tests for the EXT_multisample_compatibility extension.
 //
 
+#include <array>
+
 #include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
@@ -181,7 +183,7 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAndResolve)
     // values. These might be due to different MSAA sample counts causing
     // different samples to hit.  Other option is driver bugs. Just test that
     // disabling multisample causes a difference.
-    std::unique_ptr<uint8_t[]> results[3];
+    std::array<std::unique_ptr<uint8_t[]>, 3> results;
     const GLint kResultSize = kWidth * kHeight * 4;
     for (int pass = 0; pass < 3; pass++)
     {
@@ -238,7 +240,7 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAlphaOneAndResolve)
     // even approximate sample values is not that easy.  Thus, just test
     // representative positions which have fractional pixels, inspecting that
     // normal rendering is different to SAMPLE_ALPHA_TO_ONE rendering.
-    std::unique_ptr<uint8_t[]> results[3];
+    std::array<std::unique_ptr<uint8_t[]>, 3> results;
     const GLint kResultSize = kWidth * kHeight * 4;
 
     for (int pass = 0; pass < 3; ++pass)

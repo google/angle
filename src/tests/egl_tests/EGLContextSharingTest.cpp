@@ -9,6 +9,8 @@
 #include <gtest/gtest.h>
 #include "common/unsafe_buffers.h"
 
+#include <array>
+
 #include "common/tls.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/MultiThreadSteps.h"
@@ -80,7 +82,7 @@ class EGLContextSharingTest : public ANGLETest<>
         return result;
     }
 
-    EGLContext mContexts[2] = {EGL_NO_CONTEXT, EGL_NO_CONTEXT};
+    std::array<EGLContext, 2> mContexts = {EGL_NO_CONTEXT, EGL_NO_CONTEXT};
     GLuint mTexture;
 };
 
@@ -799,19 +801,18 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
     EGLConfig config  = window->getConfig();
 
     constexpr size_t kThreadCount    = 2;
-    EGLSurface surface[kThreadCount] = {EGL_NO_SURFACE, EGL_NO_SURFACE};
-    EGLContext ctx[kThreadCount]     = {EGL_NO_CONTEXT, EGL_NO_CONTEXT};
+    std::array<EGLSurface, kThreadCount> surface = {EGL_NO_SURFACE, EGL_NO_SURFACE};
+    std::array<EGLContext, kThreadCount> ctx     = {EGL_NO_CONTEXT, EGL_NO_CONTEXT};
 
     EGLint pbufferAttributes[] = {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE};
 
     for (size_t t = 0; t < kThreadCount; ++t)
     {
-        ANGLE_UNSAFE_TODO(surface[t]) = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
+        surface[t] = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
         EXPECT_EGL_SUCCESS();
 
-        ANGLE_UNSAFE_TODO(ctx[t]) =
-            window->createContext(t == 0 ? EGL_NO_CONTEXT : ctx[0], nullptr);
-        ANGLE_UNSAFE_TODO(EXPECT_NE(EGL_NO_CONTEXT, ctx[t]));
+        ctx[t] = window->createContext(t == 0 ? EGL_NO_CONTEXT : ctx[0], nullptr);
+        EXPECT_NE(EGL_NO_CONTEXT, ctx[t]);
     }
 
     // Initialize test resources.  They are done outside the threads to reduce the sources of
@@ -830,26 +831,25 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
     // Resources for each context.
-    GLRenderbuffer renderbuffer[kThreadCount];
-    GLFramebuffer fbo[kThreadCount];
-    GLProgram program[kThreadCount];
+    std::array<GLRenderbuffer, kThreadCount> renderbuffer;
+    std::array<GLFramebuffer, kThreadCount> fbo;
+    std::array<GLProgram, kThreadCount> program;
 
     for (size_t t = 0; t < kThreadCount; ++t)
     {
-        ANGLE_UNSAFE_TODO(ASSERT_EGL_TRUE(eglMakeCurrent(dpy, surface[t], surface[t], ctx[t])));
+        ASSERT_EGL_TRUE(eglMakeCurrent(dpy, surface[t], surface[t], ctx[t]));
 
-        glBindRenderbuffer(GL_RENDERBUFFER, ANGLE_UNSAFE_TODO(renderbuffer[t]));
+        glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer[t]);
         constexpr int kRenderbufferSize = 4;
         glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kRenderbufferSize, kRenderbufferSize);
 
-        glBindFramebuffer(GL_FRAMEBUFFER, ANGLE_UNSAFE_TODO(fbo[t]));
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo[t]);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
-                                  ANGLE_UNSAFE_TODO(renderbuffer[t]));
+                                  renderbuffer[t]);
 
         glBindTexture(GL_TEXTURE_2D, sharedTex);
-        ANGLE_UNSAFE_TODO(program[t])
-            .makeRaster(essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
-        ANGLE_UNSAFE_TODO(ASSERT_TRUE(program[t].valid()));
+        program[t].makeRaster(essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+        ASSERT_TRUE(program[t].valid());
     }
 
     EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
@@ -965,8 +965,8 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
     // Clean up
     for (size_t t = 0; t < kThreadCount; ++t)
     {
-        eglDestroySurface(dpy, ANGLE_UNSAFE_TODO(surface[t]));
-        eglDestroyContext(dpy, ANGLE_UNSAFE_TODO(ctx[t]));
+        eglDestroySurface(dpy, surface[t]);
+        eglDestroyContext(dpy, ctx[t]);
     }
 }
 
@@ -1673,23 +1673,23 @@ TEST_P(EGLContextSharingTestNoSyncTextureUploads, NoSync)
     const EGLint pbufferAttributes[]          = {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE};
 
     constexpr size_t kThreadCount    = 2;
-    EGLSurface surface[kThreadCount] = {EGL_NO_SURFACE, EGL_NO_SURFACE};
+    std::array<EGLSurface, kThreadCount> surface = {EGL_NO_SURFACE, EGL_NO_SURFACE};
 
     for (size_t t = 0; t < kThreadCount; ++t)
     {
-        ANGLE_UNSAFE_TODO(mContexts[t]) = eglCreateContext(
-            display, config, t == 0 ? EGL_NO_CONTEXT : mContexts[0], inShareGroupContextAttribs);
+        mContexts[t] = eglCreateContext(display, config, t == 0 ? EGL_NO_CONTEXT : mContexts[0],
+                                        inShareGroupContextAttribs);
         ASSERT_EGL_SUCCESS();
-        ANGLE_UNSAFE_TODO(ASSERT_NE(EGL_NO_CONTEXT, mContexts[t]));
+        ASSERT_NE(EGL_NO_CONTEXT, mContexts[t]);
 
-        ANGLE_UNSAFE_TODO(surface[t]) = eglCreatePbufferSurface(display, config, pbufferAttributes);
+        surface[t] = eglCreatePbufferSurface(display, config, pbufferAttributes);
         EXPECT_EGL_SUCCESS();
-        ANGLE_UNSAFE_TODO(ASSERT_NE(EGL_NO_SURFACE, surface[t]));
+        ASSERT_NE(EGL_NO_SURFACE, surface[t]);
     }
 
     GLTexture textureFromCtx0;
     constexpr size_t kTextureCount = 10;
-    GLTexture textures[kTextureCount];
+    std::array<GLTexture, kTextureCount> textures;
 
     // Synchronization tools to ensure the two threads are interleaved as designed by this test.
     std::mutex mutex;
@@ -1732,11 +1732,11 @@ TEST_P(EGLContextSharingTestNoSyncTextureUploads, NoSync)
         // We create redundant textures here to ensure that we trigger that threshold.
         for (size_t i = 0; i < kTextureCount; i++)
         {
-            glBindTexture(GL_TEXTURE_2D, ANGLE_UNSAFE_TODO(textures[i]));
+            glBindTexture(GL_TEXTURE_2D, textures[i]);
             glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-            ANGLE_UNSAFE_TODO(ASSERT_GL_TRUE(glIsTexture(textures[i])));
+            ASSERT_GL_TRUE(glIsTexture(textures[i]));
 
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
                             &GLColor::blue);
@@ -1806,7 +1806,7 @@ TEST_P(EGLContextSharingTestNoSyncTextureUploads, NoSync)
 
     for (size_t t = 0; t < kThreadCount; ++t)
     {
-        ANGLE_UNSAFE_TODO(ASSERT_EGL_TRUE(eglDestroySurface(display, surface[t])));
+        ASSERT_EGL_TRUE(eglDestroySurface(display, surface[t]));
         ASSERT_EGL_SUCCESS();
     }
 }
@@ -1876,11 +1876,11 @@ TEST_P(EGLPriorityContextSharingTestNoFixture, MultiContextsCreateDestroy)
     // Initialize contexts
     constexpr size_t kContextCount = 2;
 
-    EGLSurface surface[kContextCount] = {EGL_NO_SURFACE, EGL_NO_SURFACE};
-    EGLContext ctx[kContextCount]     = {EGL_NO_CONTEXT, EGL_NO_CONTEXT};
+    std::array<EGLSurface, kContextCount> surface = {EGL_NO_SURFACE, EGL_NO_SURFACE};
+    std::array<EGLContext, kContextCount> ctx     = {EGL_NO_CONTEXT, EGL_NO_CONTEXT};
 
-    EGLint priorities[kContextCount] = {EGL_CONTEXT_PRIORITY_LOW_IMG,
-                                        EGL_CONTEXT_PRIORITY_HIGH_IMG};
+    std::array<EGLint, kContextCount> priorities = {EGL_CONTEXT_PRIORITY_LOW_IMG,
+                                                    EGL_CONTEXT_PRIORITY_HIGH_IMG};
 
     EGLint pbufferAttributes[] = {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE};
 
@@ -1888,26 +1888,24 @@ TEST_P(EGLPriorityContextSharingTestNoFixture, MultiContextsCreateDestroy)
 
     for (size_t t = 0; t < kContextCount; ++t)
     {
-        ANGLE_UNSAFE_TODO(surface[t]) =
-            eglCreatePbufferSurface(mDisplay, config, pbufferAttributes);
+        surface[t] = eglCreatePbufferSurface(mDisplay, config, pbufferAttributes);
         EXPECT_EGL_SUCCESS();
 
-        attributes[1] = ANGLE_UNSAFE_TODO(priorities[t]);
+        attributes[1] = priorities[t];
 
-        ANGLE_UNSAFE_TODO(ctx[t]) =
-            eglCreateContext(mDisplay, config, t == 0 ? EGL_NO_CONTEXT : ctx[0], attributes);
-        ANGLE_UNSAFE_TODO(EXPECT_NE(EGL_NO_CONTEXT, ctx[t]));
+        ctx[t] = eglCreateContext(mDisplay, config, t == 0 ? EGL_NO_CONTEXT : ctx[0], attributes);
+        EXPECT_NE(EGL_NO_CONTEXT, ctx[t]);
         EXPECT_EGL_SUCCESS();
 
-        ANGLE_UNSAFE_TODO(eglMakeCurrent(mDisplay, surface[t], surface[t], ctx[t]));
+        eglMakeCurrent(mDisplay, surface[t], surface[t], ctx[t]);
         EXPECT_EGL_SUCCESS();
     }
 
     eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     for (size_t t = 0; t < kContextCount; ++t)
     {
-        eglDestroySurface(mDisplay, ANGLE_UNSAFE_TODO(surface[t]));
-        eglDestroyContext(mDisplay, ANGLE_UNSAFE_TODO(ctx[t]));
+        eglDestroySurface(mDisplay, surface[t]);
+        eglDestroyContext(mDisplay, ctx[t]);
         EXPECT_EGL_SUCCESS();
     }
 

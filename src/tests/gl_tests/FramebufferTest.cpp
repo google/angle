@@ -11,6 +11,8 @@
 #    pragma allow_unsafe_buffers
 #endif
 
+#include <array>
+
 #include "common/mathutil.h"
 #include "platform/autogen/FeaturesD3D_autogen.h"
 #include "test_utils/ANGLETest.h"
@@ -2118,7 +2120,7 @@ void main()
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
     ASSERT_GE(maxDrawBuffers, kDrawBufferCount);
 
-    GLTexture textures[kDrawBufferCount];
+    std::array<GLTexture, kDrawBufferCount> textures;
 
     for (GLint texIndex = 0; texIndex < kDrawBufferCount; ++texIndex)
     {
@@ -3063,8 +3065,8 @@ TEST_P(FramebufferTestWithFormatFallback, RGBA4444_BlitCopyTexImage)
 void FramebufferTestWithFormatFallback::cubeTexImageFollowedByFBORead(GLenum internalFormat,
                                                                       GLenum type)
 {
-    const GLColor kColors[6] = {GLColor::red,  GLColor::green,  GLColor::blue,
-                                GLColor::cyan, GLColor::yellow, GLColor::magenta};
+    const std::array<GLColor, 6> kColors = {GLColor::red,  GLColor::green,  GLColor::blue,
+                                            GLColor::cyan, GLColor::yellow, GLColor::magenta};
     GLTexture cubeTex2D;
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex2D);
     for (GLenum target = GL_TEXTURE_CUBE_MAP_POSITIVE_X; target <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
@@ -3108,8 +3110,8 @@ TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_CubeTexImageRedefinedFaceZero
 {
     constexpr GLenum kInternalFormat = GL_RGBA4;
     constexpr GLenum kType           = GL_UNSIGNED_SHORT_4_4_4_4;
-    const GLColor kColors[6]         = {GLColor::red,  GLColor::green,  GLColor::blue,
-                                        GLColor::cyan, GLColor::yellow, GLColor::magenta};
+    const std::array<GLColor, 6> kColors = {GLColor::red,  GLColor::green,  GLColor::blue,
+                                            GLColor::cyan, GLColor::yellow, GLColor::magenta};
 
     // Create a three-level cube map and upload distinct colors to every face.
     GLTexture cube;
@@ -3214,8 +3216,8 @@ TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_CubeTexImageRedefinedFaceOne)
 {
     constexpr GLenum kInternalFormat = GL_RGBA4;
     constexpr GLenum kType           = GL_UNSIGNED_SHORT_4_4_4_4;
-    const GLColor kColors[6]         = {GLColor::red,  GLColor::green,  GLColor::blue,
-                                        GLColor::cyan, GLColor::yellow, GLColor::magenta};
+    const std::array<GLColor, 6> kColors = {GLColor::red,  GLColor::green,  GLColor::blue,
+                                            GLColor::cyan, GLColor::yellow, GLColor::magenta};
 
     // Create a two-level cube map and upload distinct colors to every face.
     GLTexture cube;
@@ -4771,7 +4773,7 @@ TEST_P(FramebufferTest_ES31_MSAA, MultisampleStencilSampling)
 
     ANGLE_GL_PROGRAM(drawStencilProg, essl31_shaders::vs::Passthrough(), essl31_shaders::fs::Red());
 
-    const GLubyte stencilRefs[4] = {64, 128, 192, 255};
+    const std::array<GLubyte, 4> stencilRefs = {64, 128, 192, 255};
     for (int s = 0; s < kSamples; ++s)
     {
         glSampleMaski(0, 1 << s);
@@ -4787,7 +4789,7 @@ TEST_P(FramebufferTest_ES31_MSAA, MultisampleStencilSampling)
 
     // Populate Layer 0
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, msaaStencilArrayTex, 0, 0);
-    const GLubyte stencilRefs0[4] = {10, 20, 30, 40};
+    const std::array<GLubyte, 4> stencilRefs0 = {10, 20, 30, 40};
     for (int s = 0; s < kSamples; ++s)
     {
         glSampleMaski(0, 1 << s);
@@ -4797,7 +4799,7 @@ TEST_P(FramebufferTest_ES31_MSAA, MultisampleStencilSampling)
 
     // Populate Layer 1
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, msaaStencilArrayTex, 0, 1);
-    const GLubyte stencilRefs1[4] = {50, 100, 150, 200};
+    const std::array<GLubyte, 4> stencilRefs1 = {50, 100, 150, 200};
     for (int s = 0; s < kSamples; ++s)
     {
         glSampleMaski(0, 1 << s);
@@ -7229,14 +7231,17 @@ TEST_P(FramebufferTest_ES3, AttachmentsWithUnequalDimensions)
     glBindRenderbuffer(GL_RENDERBUFFER, stencil);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSizeSmall, kSizeLarge);
 
-    struct
+    struct Attachment2
     {
         GLenum attachment;
         GLuint renderbuffer;
-    } attachment2[4] = {{GL_COLOR_ATTACHMENT1, 0},
-                        {GL_COLOR_ATTACHMENT1, color},
-                        {GL_DEPTH_ATTACHMENT, depth},
-                        {GL_STENCIL_ATTACHMENT, stencil}};
+    };
+    std::array<Attachment2, 4> attachment2 = {{
+        {GL_COLOR_ATTACHMENT1, 0},
+        {GL_COLOR_ATTACHMENT1, color},
+        {GL_DEPTH_ATTACHMENT, depth},
+        {GL_STENCIL_ATTACHMENT, stencil},
+    }};
     for (int i = 0; i < 4; i++)
     {
         GLFramebuffer fbo;

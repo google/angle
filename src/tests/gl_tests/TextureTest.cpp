@@ -302,14 +302,14 @@ void main()
         };
         // clang-format on
 
-        GLenum imageFormats[] = {
+        static constexpr std::array<GLenum, 4> imageFormats = {
             GL_R32F,
             GL_RG32F,
             GL_RGB32F,
             GL_RGBA32F,
         };
 
-        GLenum sourceUnsizedFormats[] = {
+        static constexpr std::array<GLenum, 4> sourceUnsizedFormats = {
             GL_RED,
             GL_RG,
             GL_RGB,
@@ -644,7 +644,7 @@ class Texture2DBaseMaxTestES3 : public ANGLETest<>
         glBindTexture(GL_TEXTURE_2D, mTexture);
 
         std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
-        fillMipData(mipData.data(), kMip0Size, kMipColors);
+        fillMipData(mipData.data(), kMip0Size, kMipColors.data());
 
         if (immutable)
         {
@@ -682,7 +682,7 @@ class Texture2DBaseMaxTestES3 : public ANGLETest<>
     GLint mTextureLocation;
     GLint mLodLocation;
 
-    const GLColor kMipColors[kMipCount] = {
+    const std::array<GLColor, kMipCount> kMipColors = {
         GLColor::red,
         GLColor::green,
         GLColor::blue,
@@ -3945,14 +3945,14 @@ TEST_P(Texture2DTestES3, TexImageWithStencilData)
         GLTexture depthStencilTexture;
         glBindTexture(GL_TEXTURE_2D, depthStencilTexture);
 
-        GLubyte pixels[kSize * kSize * 8] = {};
+        std::array<GLubyte, kSize * kSize * 8> pixels = {};
         for (size_t pixelId = 0; pixelId < kSize * kSize; ++pixelId)
         {
             pixels[pixelId * typeLength + typeOffset] = 0xD5;
         }
         glTexImage2D(GL_TEXTURE_2D, 0, format, kSize, kSize, 0,
                      format == GL_STENCIL_INDEX8 ? GL_STENCIL_INDEX : GL_DEPTH_STENCIL, type,
-                     pixels);
+                     pixels.data());
         ASSERT_GL_NO_ERROR();
 
         GLFramebuffer fbo;
@@ -5492,7 +5492,7 @@ TEST_P(Texture2DTestES3, TexStorage2DLargeYuvTextureCount)
     constexpr uint32_t kTextureCount = 16;
 
     // Create YUV texture
-    GLTexture yuvTexture[kTextureCount];
+    std::array<GLTexture, kTextureCount> yuvTexture;
     for (uint32_t i = 0; i < kTextureCount; i++)
     {
         // Create 2 plane YCbCr 420 texture
@@ -6865,7 +6865,7 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
-    fillMipData(mipData.data(), kMip0Size, kMipColors);
+    fillMipData(mipData.data(), kMip0Size, kMipColors.data());
 
     for (size_t mip = 1; mip < kMipCount; ++mip)
     {
@@ -6970,23 +6970,23 @@ TEST_P(Texture2DBaseMaxTestES3, SubImageAfterRedefine)
     }
 
     // Redefine every level, followed by a glTexSubImage2D
-    const GLColor kNewMipColors[kMipCount] = {
+    const std::array<GLColor, kMipCount> kNewMipColors = {
         GLColor::yellow,
         GLColor::cyan,
         GLColor(127, 0, 0, 255),
         GLColor(0, 127, 0, 255),
     };
     std::array<GLColor, getTotalMipDataSize(kMip0Size * 2)> newMipData;
-    fillMipData(newMipData.data(), kMip0Size * 2, kNewMipColors);
+    fillMipData(newMipData.data(), kMip0Size * 2, kNewMipColors.data());
 
-    const GLColor kSubImageMipColors[kMipCount] = {
+    const std::array<GLColor, kMipCount> kSubImageMipColors = {
         GLColor(0, 0, 127, 255),
         GLColor(127, 127, 0, 255),
         GLColor(0, 127, 127, 255),
         GLColor(127, 0, 127, 255),
     };
     std::array<GLColor, getTotalMipDataSize(kMip0Size)> subImageMipData;
-    fillMipData(subImageMipData.data(), kMip0Size, kSubImageMipColors);
+    fillMipData(subImageMipData.data(), kMip0Size, kSubImageMipColors.data());
 
     for (size_t mip = 0; mip < kMipCount; ++mip)
     {
@@ -7070,7 +7070,7 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
         EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
     }
 
-    const GLColor32F kNewMipColors[kMipCount] = {
+    static constexpr std::array<GLColor32F, kMipCount> kNewMipColors = {
         GLColor32F(1.0, 1.0, 0.0, 1.0f),
         GLColor32F(1.0, 0.0, 1.0, 1.0f),
         GLColor32F(0.0, 1.0, 1.0, 1.0f),
@@ -7078,7 +7078,7 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
     };
 
     std::array<GLColor32F, getTotalMipDataSize(kMip0Size)> newMipData;
-    fillMipData(newMipData.data(), kMip0Size, kNewMipColors);
+    fillMipData(newMipData.data(), kMip0Size, kNewMipColors.data());
 
     // Redefine every level with the new format.
     for (size_t mip = 0; mip < kMipCount; ++mip)
@@ -7371,7 +7371,8 @@ TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefiningBaseAndChangingMax)
 TEST_P(Texture2DBaseMaxTestES3, StageInvalidLevels)
 {
     constexpr uint32_t kMaxLevel           = 2;
-    const GLColor kMipColor[kMaxLevel + 1] = {GLColor::red, GLColor::green, GLColor::blue};
+    const std::array<GLColor, kMaxLevel + 1> kMipColor = {GLColor::red, GLColor::green,
+                                                          GLColor::blue};
 
     initTest(false);
 
@@ -7419,7 +7420,7 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineMutableToImmutable)
     ANGLE_SKIP_TEST_IF(IsD3D());
 
     constexpr uint32_t kBaseLevel          = 1;
-    const GLColor kNewMipColors[kMipCount] = {
+    const std::array<GLColor, kMipCount> kNewMipColors = {
         GLColor::yellow,
         GLColor::cyan,
         GLColor::white,
@@ -7440,7 +7441,7 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineMutableToImmutable)
 
     glTexStorage2D(GL_TEXTURE_2D, kMipCount, GL_RGBA8, kMip0Size, kMip0Size);
     std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
-    fillMipData(mipData.data(), kMip0Size, kNewMipColors);
+    fillMipData(mipData.data(), kMip0Size, kNewMipColors.data());
     for (size_t mip = 0; mip < kMipCount; ++mip)
     {
         glTexSubImage2D(GL_TEXTURE_2D, mip, 0, 0, kMip0Size >> mip, kMip0Size >> mip, GL_RGBA,
@@ -10430,7 +10431,12 @@ TEST_P(Texture2DTestES3, TextureBaseLevelGreaterThanMax2Levels)
 // Test base level is greater than max level for 3-level textures.
 TEST_P(Texture2DTestES3, TextureBaseLevelGreaterThanMaxLevel3Levels)
 {
-    GLColor expectedColor[] = {GLColor::red, GLColor::green, GLColor::blue, GLColor::black};
+    std::array<GLColor, 4> expectedColor = {
+        GLColor::red,
+        GLColor::green,
+        GLColor::blue,
+        GLColor::black,
+    };
     std::vector<GLColor> texDataRed(4u * 4u, GLColor::red);
     std::vector<GLColor> texDataGreen(2u * 2u, GLColor::green);
 
@@ -14256,7 +14262,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
         Texture2DTestES3::testSetUp();
 
         glActiveTexture(GL_TEXTURE0);
-        glGenTextures(3, mTextures);
+        glGenTextures(3, mTextures.data());
         glGenFramebuffers(1, &mFBO);
         glGenRenderbuffers(1, &mRenderbuffer);
 
@@ -14274,7 +14280,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 
     void testTearDown() override
     {
-        glDeleteTextures(3, mTextures);
+        glDeleteTextures(3, mTextures.data());
         glDeleteFramebuffers(1, &mFBO);
         glDeleteRenderbuffers(1, &mRenderbuffer);
 
@@ -14523,7 +14529,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    GLuint mTextures[3];
+    std::array<GLuint, 3> mTextures;
     GLuint mFBO;
     GLuint mRenderbuffer;
 };
@@ -14876,8 +14882,9 @@ class Texture2DFloatTest : public Texture2DTest
         }
         ASSERT(numComponents > 0);
 
-        constexpr GLfloat pixelIntensitiesFloat[] = {0.0f, 1.0f, 0.0f, 1.0f};
-        constexpr GLhalf pixelIntensitiesHalf[]   = {0x0000, 0x3C00, 0x0000, 0x3C00};
+        static constexpr std::array<GLfloat, 4> pixelIntensitiesFloat = {0.0f, 1.0f, 0.0f, 1.0f};
+        static constexpr std::array<GLhalf, 4> pixelIntensitiesHalf   = {0x0000, 0x3C00, 0x0000,
+                                                                         0x3C00};
 
         GLfloat imageDataFloat[16];
         GLhalf imageDataHalf[16];
@@ -16628,7 +16635,7 @@ void TextureCubeTestES3::incompatibleCubeFacesThenSingleFaceCompatibleUploadAndI
                  type, redefine0.data());
 
     // Verify that the previously staged updates are not lost.
-    const std::vector<GLColor> *redefines[] = {
+    std::array<const std::vector<GLColor> *, 6> redefines = {
         &redefine0, &redefine1, &redefine2, &redefine3, &redefine4, &redefine5,
     };
     for (uint32_t i = 0; i < 6; ++i)
@@ -18494,8 +18501,8 @@ void main()
     ANGLE_GL_PROGRAM(sampleInVS, kVSSampleVS, kVSSampleFS);
     ANGLE_GL_PROGRAM(sampleInFS, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
 
-    GLFramebuffer fbo[2];
-    GLTexture color[2];
+    std::array<GLFramebuffer, 2> fbo;
+    std::array<GLTexture, 2> color;
     for (uint32_t i = 0; i < 2; ++i)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, fbo[i]);
@@ -18525,7 +18532,7 @@ void main()
     glClear(GL_COLOR_BUFFER_BIT);
 
     uint32_t curFboIndex     = 0;
-    uint32_t fboDrawCount[2] = {};
+    std::array<uint32_t, 2> fboDrawCount = {};
 
     for (const UploadThenUseStageParam &use : uses)
     {
@@ -18963,7 +18970,7 @@ TEST_P(TextureCubeIntegerEdgeTestES3, IntegerCubeTextureCorner)
     int width  = getWindowWidth();
     int height = getWindowHeight();
     ASSERT_EQ(width, height);
-    GLColor color[4] = {GLColor::white, GLColor::green, GLColor::blue, GLColor::red};
+    std::array<GLColor, 4> color = {GLColor::white, GLColor::green, GLColor::blue, GLColor::red};
     for (GLint level = 0; level < 4; level++)
     {
         for (GLenum faceIndex = 0; faceIndex < 6; faceIndex++)
@@ -20889,7 +20896,7 @@ TEST_P(CopyImageTestES31, ArraySelfCopyImageSubDataWithReadAfterWrite)
     std::vector<GLColor> pixelsGreen(kWidth * kHeight, GLColor::green);
     std::vector<GLColor> pixelsBlue(kWidth * kHeight, GLColor::blue);
 
-    const GLColor *colors[3] = {
+    std::array<const GLColor *, 3> colors = {
         pixelsRed.data(),
         pixelsGreen.data(),
         pixelsBlue.data(),
@@ -20985,7 +20992,7 @@ TEST_P(CopyImageTestES31, ArraySelfCopyImageSubDataWithWriteAfterRead)
     std::vector<GLColor> pixelsGreen(kWidth * kHeight, GLColor::green);
     std::vector<GLColor> pixelsBlue(kWidth * kHeight, GLColor::blue);
 
-    const GLColor *colors[3] = {
+    std::array<const GLColor *, 3> colors = {
         pixelsRed.data(),
         pixelsGreen.data(),
         pixelsBlue.data(),
@@ -21075,7 +21082,7 @@ TEST_P(CopyImageTestES31, Texture3DSelfCopyImageSubData)
     std::vector<GLColor> pixelsGreen(kWidth * kHeight, GLColor::green);
     std::vector<GLColor> pixelsBlue(kWidth * kHeight, GLColor::blue);
 
-    const GLColor *colors[3] = {
+    std::array<const GLColor *, 3> colors = {
         pixelsRed.data(),
         pixelsGreen.data(),
         pixelsBlue.data(),

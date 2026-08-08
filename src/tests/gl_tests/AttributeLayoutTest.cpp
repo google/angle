@@ -10,6 +10,7 @@
 //   - various combinations of data types
 //
 
+#include <array>
 #include <vector>
 #include "common/unsafe_buffers.h"
 
@@ -687,13 +688,13 @@ class AttributeDataTypeMismatchTest : public ANGLETest<>
 
         glDisable(GL_DEPTH_TEST);
 
-        constexpr const char *kVS[VsInputDataType::COUNT] = {
+        constexpr std::array<const char *, VsInputDataType::COUNT> kVS = {
             VS_SHADER(vec4),
             VS_SHADER(ivec4),
             VS_SHADER(uvec4),
         };
 
-        constexpr const char *kFS[VsInputDataType::COUNT] = {
+        constexpr std::array<const char *, VsInputDataType::COUNT> kFS = {
             PS_SHADER(vec4),
             PS_SHADER(ivec4),
             PS_SHADER(uvec4),
@@ -871,9 +872,9 @@ class AttributeDataTypeMismatchTest : public ANGLETest<>
 
     static const GLushort mIndices[kIndexCount];
 
-    GLuint mProgram[VsInputDataType::COUNT];
-    GLuint mFbo[VsInputDataType::COUNT];
-    GLuint mRbo[VsInputDataType::COUNT];
+    std::array<GLuint, VsInputDataType::COUNT> mProgram;
+    std::array<GLuint, VsInputDataType::COUNT> mFbo;
+    std::array<GLuint, VsInputDataType::COUNT> mRbo;
     GLuint mIndexBuffer;
 
     std::vector<TestCase> mTestCases;

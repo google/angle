@@ -78,8 +78,8 @@ class SecureHashAlgorithm
 
     union
     {
-        uint32_t W[80];
-        uint8_t M[64];
+        std::array<uint32_t, 80> W;
+        std::array<uint8_t, 64> M;
     };
 
     uint32_t cursor;

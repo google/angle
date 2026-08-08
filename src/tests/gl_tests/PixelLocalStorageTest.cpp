@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 //
 
+#include <array>
 #include <sstream>
 #include <string>
 #include "common/unsafe_buffers.h"
@@ -1622,9 +1623,9 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
     mProgram.drawBoxes(boxesB_7, UseBarriers::Never);
     glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
 
-    float pixels[H * W * 4];
+    std::array<float, H * W * 4> pixels;
     attachTexture2DToScratchFBO(tex);
-    glReadPixels(0, 0, W, H, GL_RGBA, GL_FLOAT, pixels);
+    glReadPixels(0, 0, W, H, GL_RGBA, GL_FLOAT, pixels.data());
     for (int r = 0; r < NUM_PIXELS * 4; r += 4)
     {
         // When two fragments, A and B, touch a pixel, there are 6 possible orderings of operations:
@@ -1638,16 +1639,15 @@ TEST_P(PixelLocalStorageTest, ForgetBarrier)
         //
         // Which (assumimg the read and/or write operations themselves are atomic), is equivalent to
         // 1 of 4 potential effects:
-        bool isAcceptableValue =
-            ANGLE_UNSAFE_TODO(pixels[r]) == 211 ||  // A, then B  (  7 + (100 + 1 * 2) * 2 == 211)
-            ANGLE_UNSAFE_TODO(pixels[r]) == 118 ||  // B, then A  (100 + (  7 + 1 * 2) * 2 == 118)
-            ANGLE_UNSAFE_TODO(pixels[r]) == 102 ||  // A only     (100 +             1 * 2 == 102)
-            ANGLE_UNSAFE_TODO(pixels[r]) == 9;
+        bool isAcceptableValue = pixels[r] == 211 ||  // A, then B  (  7 + (100 + 1 * 2) * 2 == 211)
+                                 pixels[r] == 118 ||  // B, then A  (100 + (  7 + 1 * 2) * 2 == 118)
+                                 pixels[r] == 102 ||  // A only     (100 +             1 * 2 == 102)
+                                 pixels[r] == 9;
         if (!isAcceptableValue)
         {
             printf(__FILE__ "(%i): UNACCEPTABLE value at pixel location [%i, %i]\n", __LINE__,
                    (r / 4) % W, (r / 4) / W);
-            printf("              Got: %f\n", ANGLE_UNSAFE_TODO(pixels[r]));
+            printf("              Got: %f\n", pixels[r]);
             printf("  Expected one of: { 211, 118, 102, 9 }\n");
         }
         ASSERT_TRUE(isAcceptableValue);
@@ -2716,8 +2716,8 @@ void PixelLocalStorageTest::doStateRestorationTest()
     }
     glDrawBuffers(MAX_DRAW_BUFFERS, drawBuffers.data());
 
-    GLenum imageAccesses[] = {GL_READ_ONLY, GL_WRITE_ONLY, GL_READ_WRITE};
-    GLenum imageFormats[]  = {GL_RGBA8, GL_R32UI, GL_R32I, GL_R32F};
+    std::array<GLenum, 3> imageAccesses = {GL_READ_ONLY, GL_WRITE_ONLY, GL_READ_WRITE};
+    std::array<GLenum, 4> imageFormats  = {GL_RGBA8, GL_R32UI, GL_R32I, GL_R32F};
     std::vector<GLTexture> images;
     if (isContextVersionAtLeast(3, 1))
     {
@@ -2728,8 +2728,7 @@ void PixelLocalStorageTest::doStateRestorationTest()
             glTexStorage3D(GL_TEXTURE_2D_ARRAY, 3, GL_RGBA8, 8, 8, 5);
             GLboolean layered = i % 2;
             glBindImageTexture(i, images.back(), i % 3, layered, layered == GL_FALSE ? i % 5 : 0,
-                               ANGLE_UNSAFE_TODO(imageAccesses[i % 3]),
-                               ANGLE_UNSAFE_TODO(imageFormats[i % 4]));
+                               imageAccesses[i % 3], imageFormats[i % 4]);
         }
 
         glFramebufferParameteri(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 17);
@@ -2772,8 +2771,8 @@ void PixelLocalStorageTest::doStateRestorationTest()
             EXPECT_EQ(level, i % 3);
             EXPECT_EQ(layered, i % 2);
             EXPECT_EQ(layer, layered == GL_FALSE ? i % 5 : 0);
-            ANGLE_UNSAFE_TODO(EXPECT_EQ(static_cast<GLuint>(access), imageAccesses[i % 3]));
-            ANGLE_UNSAFE_TODO(EXPECT_EQ(static_cast<GLuint>(format), imageFormats[i % 4]));
+            EXPECT_EQ(static_cast<GLuint>(access), imageAccesses[i % 3]);
+            EXPECT_EQ(static_cast<GLuint>(format), imageFormats[i % 4]);
         }
 
         GLint defaultWidth, defaultHeight;
@@ -3792,13 +3791,12 @@ TEST_P(PixelLocalStorageTest, ClearWithActivePLS)
         }
 
         // Only enable draw buffers that are in colorAttachmentMask.
-        GLenum drawBuffers[2];
+        std::array<GLenum, 2> drawBuffers;
         for (int i = 0; i < 2; ++i)
         {
-            ANGLE_UNSAFE_TODO(drawBuffers[i]) =
-                (colorAttachmentMask & (1 << i)) ? GL_COLOR_ATTACHMENT0 + i : GL_NONE;
+            drawBuffers[i] = (colorAttachmentMask & (1 << i)) ? GL_COLOR_ATTACHMENT0 + i : GL_NONE;
         }
-        glDrawBuffers(2, drawBuffers);
+        glDrawBuffers(2, drawBuffers.data());
 
         if (drawBuffers[0] == GL_NONE && numColorAttachments >= 1)
         {
@@ -8513,13 +8511,12 @@ TEST_P(PixelLocalStorageValidationTest, ClearDuringPLSDoesntAffectDrawBuffers)
         }
 
         // Only enable draw buffers that are in colorAttachmentMask.
-        GLenum drawBuffers[2];
+        std::array<GLenum, 2> drawBuffers;
         for (int i = 0; i < 2; ++i)
         {
-            ANGLE_UNSAFE_TODO(drawBuffers[i]) =
-                (colorAttachmentMask & (1 << i)) ? GL_COLOR_ATTACHMENT0 + i : GL_NONE;
+            drawBuffers[i] = (colorAttachmentMask & (1 << i)) ? GL_COLOR_ATTACHMENT0 + i : GL_NONE;
         }
-        glDrawBuffers(2, drawBuffers);
+        glDrawBuffers(2, drawBuffers.data());
 
         if (colorAttachmentMask != 0 && colorAttachmentMask != 3)
         {

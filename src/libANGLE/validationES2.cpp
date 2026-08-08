@@ -12,6 +12,7 @@
 
 #include "libANGLE/validationES2_autogen.h"
 
+#include <array>
 #include <cstdint>
 
 #include "common/BinaryStream.h"
@@ -2977,8 +2978,9 @@ bool ValidateBlitFramebufferANGLE(const Context *context,
         }
     }
 
-    GLenum masks[]       = {GL_DEPTH_BUFFER_BIT, GL_STENCIL_BUFFER_BIT};
-    GLenum attachments[] = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
+    static constexpr std::array<GLenum, 2> masks = {GL_DEPTH_BUFFER_BIT, GL_STENCIL_BUFFER_BIT};
+    static constexpr std::array<GLenum, 2> attachments = {GL_DEPTH_ATTACHMENT,
+                                                          GL_STENCIL_ATTACHMENT};
     for (size_t i = 0; i < 2; i++)
     {
         if (mask & masks[i])

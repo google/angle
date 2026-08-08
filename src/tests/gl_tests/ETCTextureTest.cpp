@@ -7,6 +7,8 @@
 //   Tests for ETC lossy decode formats.
 //
 
+#include <array>
+
 #include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
@@ -163,14 +165,14 @@ class ETCToBCTextureTest : public ANGLETest<>
     // min alpha value = 0x14
     // Result BC4 data are 0xb00914b6, 0xdb3ffb91
     static constexpr uint32_t kEtcRGBAData[4] = {0xd556975c, 0x088ff048, 0x9e6c6c6c, 0x3f11f1ff};
-    static constexpr uint32_t kExpectedRGBAColor[16] = {
+    static constexpr std::array<uint32_t, 16> kExpectedRGBAColor = {
         0x14373737, 0x14373737, 0xb6000000, 0xb6000000, 0x88a5a6a5, 0x88373737,
         0x70000000, 0x70000000, 0x88a5a6a5, 0x2b6e6f6e, 0x2b000000, 0x2b000000,
         0x88a5a6a5, 0x426e6f6e, 0x42000000, 0x42000000,
     };
     // Result BC4 data as {0xf6f1836f, 0xc41c5e7c}
     static constexpr uint32_t kEacR11Signed[2]            = {0xb068efff, 0x00b989e7};
-    static constexpr uint32_t kExpectedR11SignedColor[16] = {
+    static constexpr std::array<uint32_t, 16> kExpectedR11SignedColor = {
         0xff000003, 0xff000046, 0xff0000ac, 0xff0000ac, 0xff000025, 0xff000003,
         0xff000025, 0xff0000ac, 0xff000046, 0xff0000ac, 0xff000003, 0xff000046,
         0xff000003, 0xff0000ef, 0xff000003, 0xff000046,
@@ -178,7 +180,7 @@ class ETCToBCTextureTest : public ANGLETest<>
 
     // Result BC1 data as {0xa65a7b55, 0xcc3c4f43}
     static constexpr uint32_t kRgb8a1[2]          = {0x95938c6a, 0x0030e384};
-    static constexpr uint32_t kExpectedRgb8a1[16] = {
+    static constexpr std::array<uint32_t, 16> kExpectedRgb8a1 = {
         0x00000000, 0xffab697b, 0xffab697b, 0xffd6cba5, 0x00000000, 0x00000000,
         0xffab697b, 0xffd6cba5, 0xffab697b, 0x00000000, 0x00000000, 0xffab697b,
         0xffab697b, 0x00000000, 0xffab697b, 0x00000000,
@@ -529,7 +531,7 @@ TEST_P(ETCToBCTextureTest, ETC2RG11ToBC5)
     {
         for (int j = 0; j < 4; ++j)
         {
-            uint32_t color = (ANGLE_UNSAFE_TODO(kExpectedRGBAColor[i * 4 + j]) & 0xff000000) >> 24;
+            uint32_t color = (kExpectedRGBAColor[i * 4 + j] & 0xff000000) >> 24;
             color |= color << 8;
             color |= 0xff000000;
             EXPECT_PIXEL_COLOR_NEAR(j, i, GLColor(color), kAbsError);
