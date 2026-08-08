@@ -4208,7 +4208,7 @@ void StateManagerGL::setDefaultVAOState(const VertexArrayStateGL &state)
             VertexBindingGL &curBinding = mState.defaultVAOState.bindings[curAttrib.bindingIndex];
             const VertexBindingGL &newBinding = state.bindings[newAttrib.bindingIndex];
 
-            ASSERT(newAttrib.bindingIndex != curAttrib.bindingIndex);
+            ASSERT(newAttrib.bindingIndex == curAttrib.bindingIndex);
 
             if (curAttrib.format != newAttrib.format || curAttrib.pointer != newAttrib.pointer ||
                 curBinding.buffer != newBinding.buffer || curBinding.stride != newBinding.stride)
