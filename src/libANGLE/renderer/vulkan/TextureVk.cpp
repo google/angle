@@ -1802,7 +1802,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
     }
 
     const gl::OwnerImageIndex stagingIndex = gl::OwnerImageIndex::Make2DArrayRange(
-        index.getLevelIndex(), is3D ? stagingBaseLayer : gl::OwnerLayer(0), stagingLayerCount);
+        index.getLevelIndex(), is3D ? gl::OwnerLayer(0) : stagingBaseLayer, stagingLayerCount);
 
     uint8_t *destData = nullptr;
     ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(contextVk, destinationAllocationSize,
