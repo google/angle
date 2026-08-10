@@ -1222,6 +1222,7 @@ ci.thin_tester(
             # crbug.com/419062315
             "no_tombstones",
             "samsung_s24_stable",
+            "limited_capacity_bot",
         ],
     ),
     targets_settings = targets.settings(
@@ -1232,6 +1233,7 @@ ci.thin_tester(
         category = "test|android|arm64|rel",
         short_name = "s24",
     ),
+    execution_timeout = 6 * time.hour,
 )
 
 ci.thin_tester(

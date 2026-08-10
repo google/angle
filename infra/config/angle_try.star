@@ -560,6 +560,7 @@ angle_linux_manual_builder(
         "ci/angle-android-arm64-samsung-s24-rel",
     ],
     gn_args = "ci/angle-android-arm64-builder-rel",
+    execution_timeout = 6 * time.hour,
 )
 
 # This is effectively a copy of angle-cq-linux-x64-rel, but manual-only and

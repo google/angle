@@ -2348,6 +2348,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 4
         },
@@ -2376,6 +2377,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 4
         },
@@ -2404,6 +2406,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_gles31_565_no_depth_no_stencil_tests",
@@ -2431,6 +2434,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_gles31_multisample_tests",
@@ -2458,6 +2462,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 20
         },
@@ -2486,6 +2491,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_gles3_565_no_depth_no_stencil_tests",
@@ -2513,6 +2519,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_gles3_multisample_tests",
@@ -2540,6 +2547,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 12
         },
@@ -2571,6 +2579,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles2_tests",
@@ -2601,6 +2610,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles31_tests",
@@ -2631,6 +2641,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles32_tests",
@@ -2661,6 +2672,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles32_tests",
@@ -2692,6 +2704,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles32_tests",
@@ -2723,6 +2736,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles32_tests",
@@ -2753,6 +2767,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_gles3_tests",
@@ -2783,6 +2798,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_glesext_tests",
@@ -2810,6 +2826,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_noctx_gles2_tests",
@@ -2837,6 +2854,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_noctx_gles32_tests",
@@ -2864,6 +2882,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_deqp_khr_single_gles32_tests",
@@ -2892,6 +2911,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 8
         },
@@ -2918,6 +2938,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
         },
         "test": "angle_unittests",
@@ -2954,6 +2975,7 @@
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
+          "expiration": 21600,
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
           "shards": 6
         },
