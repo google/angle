@@ -24,13 +24,12 @@ namespace egl
 {
 EGLint ClientWaitSyncKHR(Thread *thread,
                          Display *display,
-                         SyncID syncID,
+                         Sync *syncObject,
                          EGLint flags,
                          EGLTimeKHR timeout)
 {
     gl::Context *currentContext = thread->getContext();
     EGLint syncStatus           = EGL_FALSE;
-    Sync *syncObject            = display->getSync(syncID);
     ANGLE_EGL_TRY_RETURN(
         thread, syncObject->clientWait(display, currentContext, flags, timeout, &syncStatus),
         "eglClientWaitSyncKHR", syncObject, EGL_FALSE);
@@ -38,12 +37,13 @@ EGLint ClientWaitSyncKHR(Thread *thread,
     // When performing CPU wait through UnlockedTailCall we need to handle any error conditions
     if (egl::Display::GetCurrentThreadUnlockedTailCall()->any())
     {
-        auto handleErrorStatus = [thread, syncObject](void *result) {
+        ScopedSyncRef syncRef(display, syncObject);
+        auto handleErrorStatus = [thread, syncRef](void *result) {
             EGLint *eglResult = static_cast<EGLint *>(result);
             ASSERT(eglResult);
             if (*eglResult == EGL_FALSE)
             {
-                thread->setError(egl::Error(EGL_BAD_ALLOC), "eglClientWaitSyncKHR", syncObject);
+                thread->setError(egl::Error(EGL_BAD_ALLOC), "eglClientWaitSyncKHR", syncRef.get());
             }
             else
             {
@@ -175,22 +175,19 @@ EGLBoolean DestroyStreamKHR(Thread *thread, Display *display, Stream *streamObje
     return EGL_TRUE;
 }
 
-EGLBoolean DestroySyncKHR(Thread *thread, Display *display, SyncID syncID)
+EGLBoolean DestroySyncKHR(Thread *thread, Display *display, Sync *syncObject)
 {
-    Sync *sync = display->getSync(syncID);
-    display->destroySync(sync);
+    display->destroySync(syncObject);
 
     thread->setSuccess();
     return EGL_TRUE;
 }
 
-EGLint DupNativeFenceFDANDROID(Thread *thread, Display *display, SyncID syncID)
+EGLint DupNativeFenceFDANDROID(Thread *thread, Display *display, Sync *syncObject)
 {
-    EGLint result    = EGL_NO_NATIVE_FENCE_FD_ANDROID;
-    Sync *syncObject = display->getSync(syncID);
+    EGLint result = EGL_NO_NATIVE_FENCE_FD_ANDROID;
     ANGLE_EGL_TRY_RETURN(thread, syncObject->dupNativeFenceFD(display, &result),
-                         "eglDupNativeFenceFDANDROID", GetSyncIfValid(display, syncID),
-                         EGL_NO_NATIVE_FENCE_FD_ANDROID);
+                         "eglDupNativeFenceFDANDROID", syncObject, EGL_NO_NATIVE_FENCE_FD_ANDROID);
 
     thread->setSuccess();
     return result;
@@ -232,12 +229,12 @@ EGLDisplay GetPlatformDisplayEXT(Thread *thread,
 
 EGLBoolean GetSyncAttribKHR(Thread *thread,
                             Display *display,
-                            SyncID syncObject,
+                            Sync *syncObject,
                             EGLint attribute,
                             EGLint *value)
 {
     ANGLE_EGL_TRY_RETURN(thread, GetSyncAttrib(display, syncObject, attribute, value),
-                         "eglGetSyncAttrib", GetSyncIfValid(display, syncObject), EGL_FALSE);
+                         "eglGetSyncAttribKHR", syncObject, EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;
@@ -505,12 +502,11 @@ void SetBlobCacheFuncsANDROID(Thread *thread,
     display->setBlobCacheFuncs(set, get);
 }
 
-EGLBoolean SignalSyncKHR(Thread *thread, Display *display, SyncID syncID, EGLenum mode)
+EGLBoolean SignalSyncKHR(Thread *thread, Display *display, Sync *syncObject, EGLenum mode)
 {
     gl::Context *currentContext = thread->getContext();
-    Sync *syncObject            = display->getSync(syncID);
     ANGLE_EGL_TRY_RETURN(thread, syncObject->signal(display, currentContext, mode),
-                         "eglSignalSyncKHR", GetSyncIfValid(display, syncID), EGL_FALSE);
+                         "eglSignalSyncKHR", syncObject, EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;
@@ -621,12 +617,11 @@ EGLBoolean PrepareSwapBuffersANGLE(Thread *thread, Display *display, SurfaceID s
     return EGL_TRUE;
 }
 
-EGLint WaitSyncKHR(Thread *thread, Display *display, SyncID syncID, EGLint flags)
+EGLint WaitSyncKHR(Thread *thread, Display *display, Sync *syncObject, EGLint flags)
 {
     gl::Context *currentContext = thread->getContext();
-    Sync *syncObject            = display->getSync(syncID);
     ANGLE_EGL_TRY_RETURN(thread, syncObject->serverWait(display, currentContext, flags),
-                         "eglWaitSync", GetSyncIfValid(display, syncID), EGL_FALSE);
+                         "eglWaitSync", syncObject, EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;
@@ -900,12 +895,11 @@ EGLBoolean QueryDmaBufModifiersEXT(Thread *thread,
     return EGL_TRUE;
 }
 
-void *CopyMetalSharedEventANGLE(Thread *thread, Display *display, SyncID syncID)
+void *CopyMetalSharedEventANGLE(Thread *thread, Display *display, Sync *syncObject)
 {
-    void *result     = nullptr;
-    Sync *syncObject = display->getSync(syncID);
+    void *result = nullptr;
     ANGLE_EGL_TRY_RETURN(thread, syncObject->copyMetalSharedEventANGLE(display, &result),
-                         "eglCopyMetalSharedEventANGLE", GetSyncIfValid(display, syncID), nullptr);
+                         "eglCopyMetalSharedEventANGLE", syncObject, nullptr);
 
     thread->setSuccess();
     return result;
