@@ -37,7 +37,7 @@ def get_executable_name():
 
 def paths_from_auto_script(script, param):
     script_dir = get_child_script_dirname(script)
-    exe = 'vpython3'
+    exe = get_executable_name()
     try:
         res = subprocess.check_output([exe, os.path.basename(script), param],
                                       cwd=script_dir).decode().strip()
