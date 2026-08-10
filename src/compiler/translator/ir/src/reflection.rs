@@ -1005,6 +1005,7 @@ fn new_interface_block(
         binding: get_decoration_value!(variable.decorations, Decoration::Binding)
             .map(|binding| binding as i32)
             .unwrap_or(-1),
+        is_row_major: variable.decorations.has(Decoration::MatrixPacking(MatrixPacking::RowMajor)),
         readonly: true,
         id: 0,
     };

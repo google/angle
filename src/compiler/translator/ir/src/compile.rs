@@ -337,6 +337,9 @@ mod ffi {
         block_layout: BlockLayout,
         binding: i32,
 
+        // UBOs and SSBOs, used for linking only:
+        is_row_major: bool,
+
         // SSBOs:
         readonly: bool,
 

@@ -1067,6 +1067,8 @@ void CollectVariablesTraverser::recordInterfaceBlock(const char *instanceName,
     if (interfaceBlock->blockType == BlockType::kBlockUniform ||
         interfaceBlock->blockType == BlockType::kBlockBuffer)
     {
+        interfaceBlock->isRowMajorLayout =
+            interfaceBlockType.getLayoutQualifier().matrixPacking == EmpRowMajor;
         interfaceBlock->binding          = blockType->blockBinding();
         interfaceBlock->layout           = GetBlockLayoutType(blockType->blockStorage());
     }
@@ -1103,7 +1105,7 @@ void CollectVariablesTraverser::recordInterfaceBlock(const char *instanceName,
         setFieldProperties(fieldType, field->name(), staticUse, false, false, false,
                            field->symbolType(), &fieldVariable);
         fieldVariable.isRowMajorLayout =
-            (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
+            fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor;
         interfaceBlock->fields.push_back(fieldVariable);
 
         // The SSBO is not readonly if any field is not readonly.

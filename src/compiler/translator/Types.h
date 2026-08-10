@@ -349,6 +349,10 @@ class TType
 
     bool isStructSpecifier() const { return mIsStructSpecifier; }
 
+    // Whether matrix packing is applicable to this type.  Other types should not have a matrix
+    // packing.
+    bool isMatrixPackingApplicable() const { return isMatrix() || isStructureContainingMatrices(); }
+
     // Return true if variables of this type should be replaced with an inline constant value if
     // such is available. False will be returned in cases where output doesn't support
     // TIntermConstantUnion nodes of the type, or if the type contains a lot of fields and creating

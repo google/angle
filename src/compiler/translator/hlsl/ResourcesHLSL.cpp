@@ -42,11 +42,11 @@ static TString InterfaceBlockFieldTypeString(const TField &field,
 {
     const TType &fieldType                   = *field.type();
     const TLayoutMatrixPacking matrixPacking = fieldType.getLayoutQualifier().matrixPacking;
-    ASSERT(matrixPacking != EmpUnspecified);
     const TStructure *structure = fieldType.getStruct();
 
     if (fieldType.isMatrix())
     {
+        ASSERT(matrixPacking != EmpUnspecified);
         // Use HLSL row-major packing for GLSL column-major matrices
         const TString &matrixPackString =
             (matrixPacking == EmpRowMajor ? "column_major" : "row_major");
@@ -54,6 +54,7 @@ static TString InterfaceBlockFieldTypeString(const TField &field,
     }
     else if (structure)
     {
+        ASSERT(matrixPacking != EmpUnspecified || !fieldType.isStructureContainingMatrices());
         // If uniform block's layout is std140 and translating it to StructuredBuffer,
         // should pack structure in the end, in order to fit API buffer.
         bool forcePackingEnd = usedStructuredbuffer && (blockStorage == EbsStd140);

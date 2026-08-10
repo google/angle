@@ -227,6 +227,7 @@ std::vector<InterfaceBlock> ConvertInterfaceBlocks(const rust::Vec<ffi::Interfac
         converted.instanceName = static_cast<std::string>(block.instance_name);
         converted.arraySize    = block.array_size;
         converted.layout       = static_cast<BlockLayoutType>(block.block_layout);
+        converted.isRowMajorLayout = block.is_row_major;
         converted.binding      = block.binding;
         converted.staticUse    = block.static_use;
         converted.active       = block.active;

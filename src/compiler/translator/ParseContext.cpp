@@ -6996,15 +6996,20 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
                   getBlockStorageString(fieldLayoutQualifier.blockStorage));
         }
 
+        const bool isMatrixPackingApplicable = fieldType->isMatrixPackingApplicable();
         if (fieldLayoutQualifier.matrixPacking == EmpUnspecified)
         {
-            fieldLayoutQualifier.matrixPacking = blockLayoutQualifier.matrixPacking;
+            if (isMatrixPackingApplicable)
+            {
+                fieldLayoutQualifier.matrixPacking = blockLayoutQualifier.matrixPacking;
+            }
         }
-        else if (!fieldType->isMatrix() && fieldType->getBasicType() != EbtStruct)
+        else if (!isMatrixPackingApplicable)
         {
             warning(field->line(),
                     "extraneous layout qualifier: only has an effect on matrix types",
                     getMatrixPackingString(fieldLayoutQualifier.matrixPacking));
+            fieldLayoutQualifier.matrixPacking = EmpUnspecified;
         }
 
         fieldType->setLayoutQualifier(fieldLayoutQualifier);

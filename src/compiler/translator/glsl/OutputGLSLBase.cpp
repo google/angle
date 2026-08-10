@@ -311,7 +311,7 @@ void TOutputGLSLBase::writeLayoutQualifier(TIntermSymbol *variable)
 void TOutputGLSLBase::writeFieldLayoutQualifier(const TField *field)
 {
     TLayoutQualifier layoutQualifier = field->type()->getLayoutQualifier();
-    if (!field->type()->isMatrix() && !field->type()->isStructureContainingMatrices() &&
+    if (!field->type()->isMatrixPackingApplicable() &&
         layoutQualifier.imageInternalFormat == EiifUnspecified)
     {
         return;
@@ -321,7 +321,7 @@ void TOutputGLSLBase::writeFieldLayoutQualifier(const TField *field)
 
     out << "layout(";
     CommaSeparatedListItemPrefixGenerator listItemPrefix;
-    if (field->type()->isMatrix() || field->type()->isStructureContainingMatrices())
+    if (field->type()->isMatrixPackingApplicable())
     {
         switch (layoutQualifier.matrixPacking)
         {
