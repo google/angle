@@ -82,52 +82,50 @@ inline void SetVertexAttribArrayEnabled(const FunctionsGL *functions, GLuint ind
 }
 
 #if defined(ANGLE_ENABLE_ASSERTS)
-#    define ANGLE_GL_CHECK_GET_HELPER(functions, getter, name, value)                            \
-        do                                                                                       \
-        {                                                                                        \
-            ANGLE_GL_CLEAR_ERRORS(functions);                                                    \
-            functions->getter(name, value);                                                      \
-            GLenum error = functions->getError();                                                \
-            (error == GL_NO_ERROR) ? static_cast<void>(0)                                        \
-                                   : FATAL()                                                     \
-                                         << "Querying " << gl::FmtHex(name) << " using "         \
-                                         << #getter << " generated error " << gl::FmtHex(error); \
+#    define ANGLE_GL_CHECK_GET_HELPER(functions, getter, name, value)                              \
+        do                                                                                         \
+        {                                                                                          \
+            ANGLE_GL_CLEAR_ERRORS(functions);                                                      \
+            functions->getter(name, value);                                                        \
+            GLenum error = functions->getError();                                                  \
+            (error == GL_NO_ERROR) ? static_cast<void>(0)                                          \
+                                   : ERR() << "Querying " << gl::FmtHex(name) << " using "         \
+                                           << #getter << " generated error " << gl::FmtHex(error); \
         } while (0)
 
-#    define ANGLE_GL_CHECK_GET_INDEXED_HELPER(functions, getter, name, index, value)            \
-        do                                                                                      \
-        {                                                                                       \
-            ANGLE_GL_CLEAR_ERRORS(functions);                                                   \
-            functions->getter(name, index, value);                                              \
-            GLenum error = functions->getError();                                               \
-            (error == GL_NO_ERROR) ? static_cast<void>(0)                                       \
-                                   : FATAL() << "Querying " << gl::FmtHex(name) << " at index " \
-                                             << index << " using " << #getter                   \
-                                             << " generated error " << gl::FmtHex(error);       \
+#    define ANGLE_GL_CHECK_GET_INDEXED_HELPER(functions, getter, name, index, value)               \
+        do                                                                                         \
+        {                                                                                          \
+            ANGLE_GL_CLEAR_ERRORS(functions);                                                      \
+            functions->getter(name, index, value);                                                 \
+            GLenum error = functions->getError();                                                  \
+            (error == GL_NO_ERROR) ? static_cast<void>(0)                                          \
+                                   : ERR() << "Querying " << gl::FmtHex(name) << " at index "      \
+                                           << index << " using " << #getter << " generated error " \
+                                           << gl::FmtHex(error);                                   \
         } while (0)
 
-#    define ANGLE_GL_CHECK_GET_ENABLED_HELPER(functions, getter, name, value)                    \
-        do                                                                                       \
-        {                                                                                        \
-            ANGLE_GL_CLEAR_ERRORS(functions);                                                    \
-            *value       = functions->getter(name);                                              \
-            GLenum error = functions->getError();                                                \
-            (error == GL_NO_ERROR) ? static_cast<void>(0)                                        \
-                                   : FATAL()                                                     \
-                                         << "Querying " << gl::FmtHex(name) << " using "         \
-                                         << #getter << " generated error " << gl::FmtHex(error); \
+#    define ANGLE_GL_CHECK_GET_ENABLED_HELPER(functions, getter, name, value)                      \
+        do                                                                                         \
+        {                                                                                          \
+            ANGLE_GL_CLEAR_ERRORS(functions);                                                      \
+            *value       = functions->getter(name);                                                \
+            GLenum error = functions->getError();                                                  \
+            (error == GL_NO_ERROR) ? static_cast<void>(0)                                          \
+                                   : ERR() << "Querying " << gl::FmtHex(name) << " using "         \
+                                           << #getter << " generated error " << gl::FmtHex(error); \
         } while (0)
 
-#    define ANGLE_GL_CHECK_GET_INDEXED_ENABLED_HELPER(functions, getter, name, index, value)    \
-        do                                                                                      \
-        {                                                                                       \
-            ANGLE_GL_CLEAR_ERRORS(functions);                                                   \
-            *value       = functions->getter(name, index);                                      \
-            GLenum error = functions->getError();                                               \
-            (error == GL_NO_ERROR) ? static_cast<void>(0)                                       \
-                                   : FATAL() << "Querying " << gl::FmtHex(name) << " at index " \
-                                             << index << " using " << #getter                   \
-                                             << " generated error " << gl::FmtHex(error);       \
+#    define ANGLE_GL_CHECK_GET_INDEXED_ENABLED_HELPER(functions, getter, name, index, value)       \
+        do                                                                                         \
+        {                                                                                          \
+            ANGLE_GL_CLEAR_ERRORS(functions);                                                      \
+            *value       = functions->getter(name, index);                                         \
+            GLenum error = functions->getError();                                                  \
+            (error == GL_NO_ERROR) ? static_cast<void>(0)                                          \
+                                   : ERR() << "Querying " << gl::FmtHex(name) << " at index "      \
+                                           << index << " using " << #getter << " generated error " \
+                                           << gl::FmtHex(error);                                   \
         } while (0)
 
 #    define ANGLE_GL_CHECK_GET_VERTEX_HELPER(functions, getter, index, name, value)                \
@@ -137,9 +135,9 @@ inline void SetVertexAttribArrayEnabled(const FunctionsGL *functions, GLuint ind
             functions->getter(index, name, value);                                                 \
             GLenum error = functions->getError();                                                  \
             (error == GL_NO_ERROR) ? static_cast<void>(0)                                          \
-                                   : FATAL() << "Querying " << gl::FmtHex(name)                    \
-                                             << " for attribute " << index << " using " << #getter \
-                                             << " generated error " << gl::FmtHex(error);          \
+                                   : ERR() << "Querying " << gl::FmtHex(name) << " for attribute " \
+                                           << index << " using " << #getter << " generated error " \
+                                           << gl::FmtHex(error);                                   \
         } while (0)
 #else
 #    define ANGLE_GL_CHECK_GET_HELPER(functions, getter, name, value) functions->getter(name, value)
