@@ -933,7 +933,7 @@ static void EmitName(Sink &out, const Name &name, char userSymbolPrefix)
 
 void GenMetalTraverser::emitNameOf(const TField &object)
 {
-    EmitName(mOut, Name(object), mCompiler.getUserVariableNamePrefix());
+    EmitName(mOut, Name(object), kUserVariableNamePrefix);
 }
 
 void GenMetalTraverser::emitNameOf(const TSymbol &object)
@@ -941,18 +941,18 @@ void GenMetalTraverser::emitNameOf(const TSymbol &object)
     auto it = mRenamedSymbols.find(&object);
     if (it == mRenamedSymbols.end())
     {
-        EmitName(mOut, Name(object), mCompiler.getUserVariableNamePrefix());
+        EmitName(mOut, Name(object), kUserVariableNamePrefix);
     }
     else
     {
-        EmitName(mOut, it->second, mCompiler.getUserVariableNamePrefix());
+        EmitName(mOut, it->second, kUserVariableNamePrefix);
     }
 }
 
 void GenMetalTraverser::emitBlockNameOf(const TSymbol &object)
 {
     ASSERT(mRenamedSymbols.find(&object) == mRenamedSymbols.end());
-    EmitName(mOut, Name(object), mCompiler.getUserBlockNamePrefix());
+    EmitName(mOut, Name(object), kUserBlockNamePrefix);
 }
 
 void GenMetalTraverser::emitNameOf(const VarDecl &object)
@@ -1021,8 +1021,7 @@ void GenMetalTraverser::emitBareTypeName(const TType &type, const EmitTypeConfig
             {
                 if (etConfig.evdConfig && etConfig.evdConfig->isMainParameter)
                 {
-                    EmitName(mOut, GetTextureTypeName(basicType),
-                             mCompiler.getUserVariableNamePrefix());
+                    EmitName(mOut, GetTextureTypeName(basicType), kUserVariableNamePrefix);
                 }
                 else
                 {
@@ -2405,7 +2404,7 @@ bool GenMetalTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                     const TFunction &func = *aggregateNode->getFunction();
                     auto it               = mFuncToName.find(func.name());
                     ASSERT(it != mFuncToName.end());
-                    EmitName(mOut, it->second, mCompiler.getUserVariableNamePrefix());
+                    EmitName(mOut, it->second, kUserVariableNamePrefix);
                     emitArgList("(", ")");
                     return false;
                 }

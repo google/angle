@@ -1448,8 +1448,7 @@ bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const ImmutableSt
     // Validate that identifier names won't conflict with the name hashing done later.
     // See https://crbug.com/499176133
     if (identifier.length() >= kMaxAvailableIdentifierLength && identifier[0] == '_' &&
-        (identifier[1] == mResources.UserVariableNamePrefix ||
-         identifier[1] == mResources.UserBlockNamePrefix))
+        (identifier[1] == kUserVariableNamePrefix || identifier[1] == kUserBlockNamePrefix))
     {
         std::string err = "identifiers beginning with `_` must be < " +
                           std::to_string(kMaxAvailableIdentifierLength) + " characters";

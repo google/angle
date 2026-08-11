@@ -527,15 +527,6 @@ TIntermBlock *TCompiler::compileTreeImpl(angle::Span<const char *const> shaderSt
 #endif
     ASSERT(root != nullptr);
 
-    if (compileOptions.skipAllValidationAndTransforms)
-    {
-        if (!compileOptions.useIR)
-        {
-            collectVariables(root);
-        }
-        return root;
-    }
-
     const bool hasAnyClipCullDistance =
         parseContext.isExtensionEnabled(TExtension::ANGLE_clip_cull_distance) ||
         parseContext.isExtensionEnabled(TExtension::EXT_clip_cull_distance) ||
@@ -1240,7 +1231,7 @@ bool TCompiler::compile(angle::Span<const char *const> shaderStrings,
             OutputTree(root, mInfoSink.info);
         }
 
-        if (compileOptions.objectCode && !compileOptions.skipAllValidationAndTransforms)
+        if (compileOptions.objectCode)
         {
             PerformanceDiagnostics perfDiagnostics(&mDiagnostics);
             if (!translate(root, compileOptions, &perfDiagnostics))
@@ -1455,7 +1446,6 @@ void TCompiler::collectVariables(TIntermBlock *root)
     ASSERT(!mVariablesCollected);
     CollectVariables(root, &mAttributes, &mOutputVariables, &mUniforms, &mInputVaryings,
                      &mOutputVaryings, &mSharedVariables, &mUniformBlocks, &mShaderStorageBlocks,
-                     mResources.UserVariableNamePrefix, mResources.UserBlockNamePrefix,
                      mResources.HashFunction, &mNameMap, &mSymbolTable, mShaderType,
                      mExtensionBehavior, mCompileOptions.transformFloatUniformTo16Bits);
     collectInterfaceBlocks();
