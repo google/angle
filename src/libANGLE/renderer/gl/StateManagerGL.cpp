@@ -1886,6 +1886,15 @@ void StateManagerGL::bindBuffer(gl::BufferBinding target, GLuint buffer)
         mState.buffers[target] = buffer;
         mFunctions->bindBuffer(gl::ToGLenum(target), buffer);
         setBufferBindingDirty(target);
+
+        if (target == gl::BufferBinding::ElementArray)
+        {
+            VertexArrayStateGL *vaoState = getCurrentVAOState();
+            if (vaoState)
+            {
+                vaoState->elementArrayBuffer = buffer;
+            }
+        }
     }
 }
 
@@ -4258,7 +4267,19 @@ void StateManagerGL::setDefaultVAOState(const VertexArrayStateGL &state)
         }
     }
 
-    ASSERT(mState.defaultVAOState == state);
+#if defined(ANGLE_EANBLE_ASSERTS)
+    if (mState.defaultVAOState != state)
+    {
+        std::ostringstream msg;
+        msg << "VAO state note equal after applying!" << std::endl;
+        msg << "mState.defaultVAOState:" << std::endl
+            << mState.defaultVAOState << std::endl
+            << std::endl;
+        msg << "state:" << std::endl << state << std::endl;
+        FATAL() << msg.str();
+    }
+#endif
+
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
 }
 
