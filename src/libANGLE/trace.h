@@ -15,9 +15,9 @@
 #    define PERFETTO_ENABLE_LEGACY_TRACE_EVENTS 1
 
 #    include "common/base/anglebase/trace_event/trace_categories.h"
-#    include "perfetto/tracing/string_helpers.h"
-#    include "perfetto/tracing/track_event.h"
-#    include "perfetto/tracing/track_event_legacy.h"
+#    include "perfetto/tracing/string_helpers.h"      // nogncheck
+#    include "perfetto/tracing/track_event.h"         // nogncheck
+#    include "perfetto/tracing/track_event_legacy.h"  // nogncheck
 
 #    define ANGLE_TRACE_EVENT_BEGIN(category, ...) TRACE_EVENT_BEGIN(category, ##__VA_ARGS__)
 #    define ANGLE_TRACE_EVENT_END(category, ...) TRACE_EVENT_END(category, ##__VA_ARGS__)

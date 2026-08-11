@@ -1255,10 +1255,6 @@ if (angle_use_wayland) {
   }
 }
 
-if (!defined(angle_perfetto_cpp_dir)) {
-  angle_perfetto_cpp_dir = "//third_party/perfetto"
-}
-
 if (angle_enable_perfetto) {
   config("angle_perfetto_config") {
     defines = [ "ANGLE_USE_PERFETTO" ]
