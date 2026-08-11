@@ -1333,11 +1333,14 @@ void QueryVertexArrayStateGL(const FunctionsGL *functions, VertexArrayStateGL *s
         }
         else
         {
+            const VertexAttributeGL &attrib = state->attributes[i];
+
             GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_STRIDE, &binding.stride);
             if (supportsInstancing)
             {
                 GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_DIVISOR, &binding.divisor);
             }
+            binding.offset = reinterpret_cast<GLintptr>(attrib.pointer);
             GetVertexHelper(functions, i, GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING, &binding.buffer);
         }
 
@@ -4234,8 +4237,9 @@ void StateManagerGL::setDefaultVAOState(const VertexArrayStateGL &state)
                 curBinding.stride = newBinding.stride;
             }
 
-            if (supportsInstancing && curBinding.divisor != newBinding.divisor)
+            if (curBinding.divisor != newBinding.divisor)
             {
+                ASSERT(supportsInstancing);
                 mFunctions->vertexAttribDivisor(i, newBinding.divisor);
                 curBinding.divisor = newBinding.divisor;
             }
