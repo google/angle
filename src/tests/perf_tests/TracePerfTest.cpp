@@ -1126,11 +1126,6 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_OES_EGL_image_external");
     }
 
-    if (traceNameIs("pubg_mobile_battle_royale"))
-    {
-        addExtensionPrerequisite("GL_EXT_texture_buffer");
-    }
-
     if (traceNameIs("scrabble_go"))
     {
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
