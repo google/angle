@@ -1241,12 +1241,12 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@34c46f7241a14547d463b4de10a52663476d3f5c',
+    'url': Var('chromium_git') + '/vulkan-deps@ed1e17f393a0014c443d76cb6c95a9e31049efe0',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/glslang/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@90afccfbd49dff0349d86a41762e9de24e1df811',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@24ae85ba2abc9fe14097ceaebe6be5825a7acfba',
     'condition': 'not build_with_chromium',
   },
 
@@ -1261,12 +1261,12 @@ deps = {
   },
 
   'third_party/spirv-headers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@942fe4b988359a0750b79f0ae7ed735994d3147d',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@f0bf307f7c49d26484db596185cece53c37701fc',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@ab07f9412ae631af816909b6b8440896da5d6f11',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@29174bd16335bb1404466ee59dad4fc7bf51efb3',
     'condition': 'not build_with_chromium',
   },
 
@@ -1276,7 +1276,7 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@fc8465f0a5b605e070e5ca9fe3064249926deb2d',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@aa7c0f02d6074374341c2d3f8174848e6869d516',
     'condition': 'not build_with_chromium',
   },
 
@@ -1291,7 +1291,7 @@ deps = {
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@0f215d1cbf651ee75138501f4aafa846ff9a05df',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@4835489690e6736149a432c604853aab7b71dbd3',
     'condition': 'not build_with_chromium',
   },
 
