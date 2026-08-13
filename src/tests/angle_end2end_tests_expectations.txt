@@ -2870,6 +2870,11 @@
 // This test seems to fail if it's not ran in isolation
 546919934 VULKAN : FramebufferTest_ES3.ClearTextureActiveRenderAttachmentColorOtherLevel/ES3_Vulkan* = SKIP
 
+// Intel linux driver appears has bug that running this test causing other tests to fail.
+42266581 LINUX INTEL : EGLDisplayTest.InitializeDrawSwapTerminateLoop/* = SKIP
+42266581 LINUX INTEL OPENGL : EGLDisplayTest.TerminateMultipleTimesInDifferentThreads/* = SKIP
+42266581 LINUX INTEL OPENGL : EGLNoConfigContextTest.RenderCheck/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

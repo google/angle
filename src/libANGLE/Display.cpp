@@ -1447,6 +1447,10 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
 #if ANGLE_USE_DISPLAY_PREPARE_FOR_CALL
 Error Display::prepareForCall()
 {
+    if (!mInitialized)
+    {
+        return NoError();
+    }
     return mImplementation->prepareForCall();
 }
 #endif
