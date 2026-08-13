@@ -8624,6 +8624,12 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
         {
             checkIsNotReserved(typeSpecifier.getLine(), declarator->name());
         }
+        // Nested struct declarations are invalid and an error would be already generated in that
+        // case.  Mark the type as not a struct specifier to avoid an ASSERT in TField.
+        if (type->isStructSpecifier())
+        {
+            type = new TType(type->getStruct(), false);
+        }
         TField *field = new TField(type, declarator->name(), declarator->line(), symbolType);
         checkIsBelowStructNestingLimit(typeSpecifier.getLine(), *field);
         fieldList->push_back(field);

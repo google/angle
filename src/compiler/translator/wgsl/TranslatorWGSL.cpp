@@ -180,7 +180,6 @@ class OutputWGSLTraverser : public TIntermTraverser
         EmitTypeConfig typeConfig;
         bool isParameter                                     = false;
         std::optional<WgslPointerAddressSpace> emitAsPointer = std::nullopt;
-        bool disableStructSpecifier                          = false;
         bool isDeclaration                                   = false;
         bool isGlobalScope                                   = false;
     };
@@ -2268,7 +2267,6 @@ void OutputWGSLTraverser::emitStructDeclaration(const TType &type)
         EmitVariableDeclarationConfig evdConfig;
         evdConfig.typeConfig.addressSpace =
             isInUniformAddressSpace ? WgslAddressSpace::Uniform : WgslAddressSpace::NonUniform;
-        evdConfig.disableStructSpecifier = true;
         emitVariableDeclaration({field->symbolType(), field->name(), *fieldType}, evdConfig);
         mSink << ",\n";
     }
@@ -2289,8 +2287,7 @@ void OutputWGSLTraverser::emitVariableDeclaration(const VarDecl &decl,
         return;
     }
 
-    if (basicType == TBasicType::EbtStruct && decl.type.isStructSpecifier() &&
-        !evdConfig.disableStructSpecifier)
+    if (basicType == TBasicType::EbtStruct && decl.type.isStructSpecifier())
     {
         // TODO(anglebug.com/42267100): in WGSL structs probably can't be declared in
         // function parameters or in uniform declarations or in variable declarations, or

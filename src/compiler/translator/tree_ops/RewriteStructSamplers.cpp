@@ -417,7 +417,7 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
                     const TStructure *modifiedStruct = mStructureMap[fieldStruct].modified;
                     ASSERT(modifiedStruct);
 
-                    newType = new TType(modifiedStruct, true);
+                    newType = new TType(modifiedStruct, false);
                     if (fieldType.isArray())
                     {
                         newType->makeArrays(fieldType.getArraySizes());

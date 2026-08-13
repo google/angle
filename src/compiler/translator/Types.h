@@ -28,65 +28,6 @@ class TSymbol;
 class TVariable;
 class TIntermSymbol;
 
-class TField : angle::NonCopyable
-{
-  public:
-    POOL_ALLOCATOR_NEW_DELETE
-    TField(TType *type, const ImmutableString &name, const TSourceLoc &line, SymbolType symbolType)
-        : mType(type), mName(name), mLine(line), mSymbolType(symbolType)
-    {
-        ASSERT(mSymbolType != SymbolType::Empty);
-    }
-
-    // TODO(alokp): We should only return const type.
-    // Fix it by tweaking grammar.
-    TType *type() { return mType; }
-    const TType *type() const { return mType; }
-    const ImmutableString &name() const { return mName; }
-    const TSourceLoc &line() const { return mLine; }
-    SymbolType symbolType() const { return mSymbolType; }
-
-  private:
-    TType *mType;
-    const ImmutableString mName;
-    const TSourceLoc mLine;
-    const SymbolType mSymbolType;
-};
-
-typedef TVector<TField *> TFieldList;
-
-class TFieldListCollection : angle::NonCopyable
-{
-  public:
-    const TFieldList &fields() const { return *mFields; }
-
-    bool containsArrays() const;
-    bool containsMatrices() const;
-    bool containsType(TBasicType t) const;
-    bool containsSamplers() const;
-    bool containsOnlySamplers() const;
-
-    size_t objectSize() const;
-    // How many locations the field list consumes as a uniform.
-    int getLocationCount() const;
-    int deepestNesting() const;
-    const TString &mangledFieldList() const;
-
-  protected:
-    TFieldListCollection(const TFieldList *fields);
-
-    const TFieldList *mFields;
-
-  private:
-    size_t calculateObjectSize() const;
-    int calculateDeepestNesting() const;
-    TString buildMangledFieldList() const;
-
-    mutable size_t mObjectSize;
-    mutable int mDeepestNesting;
-    mutable TString mMangledFieldList;
-};
-
 //
 // Base class for things that have a type.
 //
@@ -419,6 +360,66 @@ class TType
     mutable const char *mMangledName;
 
     ir::TypeId mTypeId = ir::kInvalidTypeId;
+};
+
+class TField : angle::NonCopyable
+{
+  public:
+    POOL_ALLOCATOR_NEW_DELETE
+    TField(TType *type, const ImmutableString &name, const TSourceLoc &line, SymbolType symbolType)
+        : mType(type), mName(name), mLine(line), mSymbolType(symbolType)
+    {
+        ASSERT(mSymbolType != SymbolType::Empty);
+        ASSERT(!type->isStructSpecifier());
+    }
+
+    // TODO(alokp): We should only return const type.
+    // Fix it by tweaking grammar.
+    TType *type() { return mType; }
+    const TType *type() const { return mType; }
+    const ImmutableString &name() const { return mName; }
+    const TSourceLoc &line() const { return mLine; }
+    SymbolType symbolType() const { return mSymbolType; }
+
+  private:
+    TType *mType;
+    const ImmutableString mName;
+    const TSourceLoc mLine;
+    const SymbolType mSymbolType;
+};
+
+typedef TVector<TField *> TFieldList;
+
+class TFieldListCollection : angle::NonCopyable
+{
+  public:
+    const TFieldList &fields() const { return *mFields; }
+
+    bool containsArrays() const;
+    bool containsMatrices() const;
+    bool containsType(TBasicType t) const;
+    bool containsSamplers() const;
+    bool containsOnlySamplers() const;
+
+    size_t objectSize() const;
+    // How many locations the field list consumes as a uniform.
+    int getLocationCount() const;
+    int deepestNesting() const;
+    const TString &mangledFieldList() const;
+
+  protected:
+    TFieldListCollection(const TFieldList *fields);
+
+    const TFieldList *mFields;
+
+  private:
+    size_t calculateObjectSize() const;
+    int calculateDeepestNesting() const;
+    TString buildMangledFieldList() const;
+
+    mutable size_t mObjectSize;
+    mutable int mDeepestNesting;
+    mutable TString mMangledFieldList;
 };
 
 // TTypeSpecifierNonArray stores all of the necessary fields for type_specifier_nonarray from the
