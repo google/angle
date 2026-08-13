@@ -1834,6 +1834,8 @@ Error Display::makeCurrent(Thread *thread,
     {
         ScopedContextMutexLock lock(context != nullptr ? &context->getContextMutex() : nullptr);
 
+        thread->setCurrent(context);
+
         ANGLE_TRY(mImplementation->makeCurrent(this, drawSurface, readSurface, context));
 
         if (context != nullptr)
@@ -1844,8 +1846,6 @@ Error Display::makeCurrent(Thread *thread,
                 context->addRef();
             }
         }
-
-        thread->setCurrent(context);
     }
 
     // Tick all the scratch buffers to make sure they get cleaned up eventually if they stop being
