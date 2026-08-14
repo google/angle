@@ -2958,7 +2958,7 @@ void StateManagerGL::setBlendEquations(const gl::BlendStateExt &blendState)
     mState.blendState.setEquationColorBits(blendState.getEquationColorBits(),
                                            blendState.getUsesAdvancedBlendEquationMask());
     mState.blendState.setEquationAlphaBits(blendState.getEquationAlphaBits());
-    mLocalDirtyBits.set(gl::state::DIRTY_BIT_COLOR_MASK);
+    mLocalDirtyBits.set(gl::state::DIRTY_BIT_BLEND_EQUATIONS);
 }
 
 void StateManagerGL::setColorMask(bool red, bool green, bool blue, bool alpha)
