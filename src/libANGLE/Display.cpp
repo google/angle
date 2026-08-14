@@ -47,6 +47,10 @@
 #include "libANGLE/renderer/ImageImpl.h"
 #include "libANGLE/trace.h"
 
+#if defined(ANGLE_USE_PERFETTO)
+#    include <perfetto/tracing/tracing.h>
+#endif
+
 #if defined(ANGLE_USE_X11) || defined(ANGLE_USE_WAYLAND)
 #    include "common/linux/window_system.h"
 #endif
@@ -98,6 +102,48 @@ namespace egl
 
 namespace
 {
+#if defined(ANGLE_USE_PERFETTO)
+#    if defined(ANGLE_PLATFORM_ANDROID) && PERFETTO_BUILDFLAG(PERFETTO_IPC)
+bool isPerfettoTraceEnabledOnAndroid()
+{
+    std::string debugAngleEnablePerfetto;
+    if (angle::android::GetSystemProperty("debug.angle.perfetto_trace.enabled",
+                                          &debugAngleEnablePerfetto) &&
+        debugAngleEnablePerfetto == "1")
+    {
+        return true;
+    }
+    return false;
+}
+#    endif  // defined(ANGLE_PLATFORM_ANDROID) && PERFETTO_BUILDFLAG(PERFETTO_IPC)
+
+void MaybeInitializePerfetto()
+{
+    // TrackEvent::Register() can only be done after Perfetto itself has been
+    // initialized (typically by the embedder).
+    // Android process doesn't initialize Perfetto by default, so we will
+    // initialize it with perfetto::kSystemBackend when:
+    // 1) debug.angle.perfetto_trace.enabled is set to 1.
+    // 2) PERFETTO_IPC is defined.
+    static std::once_flag sInitOnce;
+    std::call_once(sInitOnce, []() {
+#    if defined(ANGLE_PLATFORM_ANDROID) && PERFETTO_BUILDFLAG(PERFETTO_IPC)
+        if (!perfetto::Tracing::IsInitialized() && isPerfettoTraceEnabledOnAndroid())
+        {
+            perfetto::TracingInitArgs args;
+            args.backends = perfetto::kSystemBackend;
+            perfetto::Tracing::Initialize(args);
+        }
+#    endif  // defined(ANGLE_PLATFORM_ANDROID) && PERFETTO_BUILDFLAG(PERFETTO_IPC)
+        // If Perfetto is already initialized, register ANGLE's categories now.
+        if (perfetto::Tracing::IsInitialized())
+        {
+            angle_tracing::TrackEvent::Register();
+        }
+    });
+}
+#endif  // defined(ANGLE_USE_PERFETTO)
+
 struct TLSData
 {
     angle::UnlockedTailCall unlockedTailCall;
@@ -1106,6 +1152,11 @@ void Display::setupDisplayPlatform(rx::DisplayImpl *impl)
 Error Display::initialize()
 {
     mTerminatedByApi = false;
+
+#if defined(ANGLE_USE_PERFETTO)
+    // ANGLE's track event categories must be registered with Perfetto.
+    MaybeInitializePerfetto();
+#endif
 
     ASSERT(mImplementation != nullptr);
     mImplementation->setBlobCache(&mBlobCache);
