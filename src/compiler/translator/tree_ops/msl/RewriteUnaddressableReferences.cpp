@@ -136,11 +136,6 @@ bool ReturnsReference(TOperator op)
         case TOperator::EOpBitwiseXorAssign:
         case TOperator::EOpBitwiseOrAssign:
 
-        case TOperator::EOpPostIncrement:
-        case TOperator::EOpPostDecrement:
-        case TOperator::EOpPreIncrement:
-        case TOperator::EOpPreDecrement:
-
         case TOperator::EOpIndexDirect:
         case TOperator::EOpIndexIndirect:
         case TOperator::EOpIndexDirectStruct:
@@ -149,6 +144,24 @@ bool ReturnsReference(TOperator op)
             return true;
 
         default:
+            return false;
+    }
+}
+
+// Matches the unary operators that write to their operand.
+bool IsLValueUnaryOp(TOperator op)
+{
+    switch (op)
+    {
+        case TOperator::EOpPostIncrement:
+        case TOperator::EOpPostDecrement:
+        case TOperator::EOpPreIncrement:
+        case TOperator::EOpPreDecrement:
+            return true;
+
+        default:
+            // Note: this is not UNREACHABLE() for the unhandled operators because built-in function
+            // calls can be unary ops as well.
             return false;
     }
 }
@@ -354,6 +367,23 @@ class Rewriter2 : public TIntermRebuild
         return {mSymbolEnv.callFunctionOverload(Name("elem_ref"), binaryNode.getType(),
                                                 *new TIntermSequence{&newLeft, &newRight}),
                 VisitBits::Neither};
+    }
+
+    PreResult visitUnaryPre(TIntermUnary &node) override
+    {
+        // The signed integer ++ and -- operators are emulated with functions that take the operand
+        // by reference, so the operand needs to be addressable. This can be removed if a pass is
+        // added that replaces the operators with function calls in the AST.
+        mRequiresAddressingStack.push_back(IsLValueUnaryOp(node.getOp()) &&
+                                           node.getType().isSignedInt());
+        return {node, VisitBits::Both};
+    }
+
+    PostResult visitUnaryPost(TIntermUnary &node) override
+    {
+        ASSERT(!mRequiresAddressingStack.empty());
+        mRequiresAddressingStack.pop_back();
+        return {node};
     }
 };
 

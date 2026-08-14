@@ -2881,6 +2881,8 @@
 42266581 LINUX INTEL OPENGL : EGLDisplayTest.TerminateMultipleTimesInDifferentThreads/* = SKIP
 42266581 LINUX INTEL OPENGL : EGLNoConfigContextTest.RenderCheck/* = SKIP
 
+500127519 MAC METAL INTEL : GLSLUBTest.AbsIntOverflow/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
