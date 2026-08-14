@@ -5,7 +5,6 @@
     "is_debug": true,
     "target_cpu": "x86",
     "target_os": "win",
-    "treat_warnings_as_errors": false,
     "use_custom_libcxx": false,
     "use_reclient": false,
     "use_remoteexec": true,

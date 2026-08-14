@@ -144,7 +144,6 @@ gn_args.config(
     name = "msvc",
     args = {
         "is_clang": False,
-        "treat_warnings_as_errors": False,
         "use_custom_libcxx": False,
     },
 )
