@@ -41,15 +41,15 @@ Sync::Sync(rx::EGLImplFactory *factory, EGLenum type)
     }
 }
 
-void Sync::onDestroy(const Display *display)
+void Sync::onDestroy(const ThreadSafeDisplay *display)
 {
     ASSERT(mFence);
-    mFence->onDestroy(display);
+    mFence->onDestroy(static_cast<const Display *>(display));
 }
 
 Sync::~Sync() {}
 
-Error Sync::initialize(const Display *display,
+Error Sync::initialize(const ThreadSafeDisplay *display,
                        const gl::Context *context,
                        const SyncID &id,
                        const AttributeMap &attribs)
@@ -77,7 +77,7 @@ Error Sync::initialize(const Display *display,
         mCondition = attribs.getAsInt(EGL_SYNC_CONDITION, EGL_SYNC_PRIOR_COMMANDS_COMPLETE_KHR);
     }
 
-    return mFence->initialize(display, context, mType, mAttributeMap);
+    return mFence->initialize(static_cast<const Display *>(display), context, mType, mAttributeMap);
 }
 
 void Sync::setLabel(EGLLabelKHR label)
@@ -90,38 +90,39 @@ EGLLabelKHR Sync::getLabel() const
     return mLabel;
 }
 
-Error Sync::clientWait(const Display *display,
+Error Sync::clientWait(const ThreadSafeDisplay *display,
                        const gl::Context *context,
                        EGLint flags,
                        EGLTime timeout,
                        EGLint *outResult)
 {
-    return mFence->clientWait(display, context, flags, timeout, outResult);
+    return mFence->clientWait(static_cast<const Display *>(display), context, flags, timeout,
+                              outResult);
 }
 
-Error Sync::serverWait(const Display *display, const gl::Context *context, EGLint flags)
+Error Sync::serverWait(const ThreadSafeDisplay *display, const gl::Context *context, EGLint flags)
 {
-    return mFence->serverWait(display, context, flags);
+    return mFence->serverWait(static_cast<const Display *>(display), context, flags);
 }
 
-Error Sync::signal(const Display *display, const gl::Context *context, EGLint mode)
+Error Sync::signal(const ThreadSafeDisplay *display, const gl::Context *context, EGLint mode)
 {
-    return mFence->signal(display, context, mode);
+    return mFence->signal(static_cast<const Display *>(display), context, mode);
 }
 
-Error Sync::getStatus(const Display *display, EGLint *outStatus) const
+Error Sync::getStatus(const ThreadSafeDisplay *display, EGLint *outStatus) const
 {
-    return mFence->getStatus(display, outStatus);
+    return mFence->getStatus(static_cast<const Display *>(display), outStatus);
 }
 
-Error Sync::copyMetalSharedEventANGLE(const Display *display, void **result) const
+Error Sync::copyMetalSharedEventANGLE(const ThreadSafeDisplay *display, void **result) const
 {
-    return mFence->copyMetalSharedEventANGLE(display, result);
+    return mFence->copyMetalSharedEventANGLE(static_cast<const Display *>(display), result);
 }
 
-Error Sync::dupNativeFenceFD(const Display *display, EGLint *result) const
+Error Sync::dupNativeFenceFD(const ThreadSafeDisplay *display, EGLint *result) const
 {
-    return mFence->dupNativeFenceFD(display, result);
+    return mFence->dupNativeFenceFD(static_cast<const Display *>(display), result);
 }
 
 }  // namespace egl

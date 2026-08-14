@@ -923,7 +923,7 @@ SyncSet::~SyncSet()
     clearPools();
 }
 
-Error SyncSet::createSync(Display *display,
+Error SyncSet::createSync(const Display *display,
                           const gl::Context *currentContext,
                           EGLenum type,
                           const AttributeMap &attribs,
@@ -965,7 +965,7 @@ Error SyncSet::createSync(Display *display,
     return NoError();
 }
 
-ScopedSyncRef SyncSet::getSync(Display *display, SyncID syncID) const
+ScopedSyncRef SyncSet::getSync(ThreadSafeDisplay *display, SyncID syncID) const
 {
     std::lock_guard<angle::SimpleMutex> lock(mMutex);
     auto iter = mSyncMap.find(syncID.value);
@@ -976,7 +976,7 @@ ScopedSyncRef SyncSet::getSync(Display *display, SyncID syncID) const
     return ScopedSyncRef();
 }
 
-void SyncSet::destroySync(Display *display, SyncID syncID)
+void SyncSet::destroySync(const ThreadSafeDisplay *display, SyncID syncID)
 {
     std::lock_guard<angle::SimpleMutex> lock(mMutex);
     auto iter = mSyncMap.find(syncID.value);
@@ -995,7 +995,7 @@ void SyncSet::destroySync(Display *display, SyncID syncID)
     }
 }
 
-void SyncSet::releaseSync(Display *display, Sync *sync)
+void SyncSet::releaseSync(const ThreadSafeDisplay *display, Sync *sync)
 {
     if (sync == nullptr)
     {
@@ -1008,7 +1008,7 @@ void SyncSet::releaseSync(Display *display, Sync *sync)
     }
 }
 
-void SyncSet::releaseSyncImpl(Display *display, Sync *sync)
+void SyncSet::releaseSyncImpl(const ThreadSafeDisplay *display, Sync *sync)
 {
     sync->onDestroy(display);
     SyncPool &pool = mSyncPools[sync->getType()];
@@ -1065,16 +1065,56 @@ DisplayState::~DisplayState() {}
 
 void DisplayState::notifyDeviceLost() const
 {
-    if (deviceLost)
+    // Notify all contexts and surfaces that the device has been lost. This needs to be protected by
+    // contextMap lock so that it is set atomically. This is the only place it gets set to true.
+    contextMap.notifyDeviceLost(&deviceLost);
+}
+
+// ThreadSafeDisplay implementation:
+bool ThreadSafeDisplay::isInitialized() const
+{
+    return mInitialized.load(std::memory_order_acquire) && !isTerminating();
+}
+
+bool ThreadSafeDisplay::isTerminating() const
+{
+    return (mRefCount.load(std::memory_order_acquire) & kTerminatingBit) != 0;
+}
+
+bool ThreadSafeDisplay::isDeviceLost() const
+{
+    // Deliberately checks the member rather than isInitialized(), which also folds in
+    // isTerminating(): another thread can set the terminating bit at any point while this
+    // thread holds a display reference.  mInitialized itself is stable for ref holders, since
+    // terminate() only clears it after waitUntilUnreferenced().
+    ASSERT(mInitialized.load(std::memory_order_relaxed));
+    return mState.deviceLost.load(std::memory_order_relaxed);
+}
+
+ScopedSyncRef ThreadSafeDisplay::getSync(egl::SyncID syncID) const
+{
+    // Looking up a sync does not modify the display, but the returned ScopedSyncRef releases the
+    // sync through ThreadSafeDisplay::releaseSync(), which does.
+    return mSyncSet.getSync(const_cast<ThreadSafeDisplay *>(this), syncID);
+}
+
+bool ThreadSafeDisplay::isValidSync(SyncID syncID) const
+{
+    return getSync(syncID).get() != nullptr;
+}
+
+void ThreadSafeDisplay::releaseSync(Sync *sync)
+{
+    mSyncSet.releaseSync(this, sync);
+}
+
+void ThreadSafeDisplay::destroySync(Sync *sync)
+{
+    if (sync == nullptr)
     {
         return;
     }
-
-    contextMap.forEach([](gl::Context *context) {
-        context->markContextLost(gl::GraphicsResetStatus::UnknownContextReset);
-    });
-
-    deviceLost = true;
+    mSyncSet.destroySync(this, sync->id());
 }
 
 // Note that ANGLE support on Ozone platform is limited. Our preferred support Matrix for
@@ -1200,7 +1240,7 @@ Display *Display::GetDisplayFromDevice(Device *device, const AttributeMap &attri
 }
 
 Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice)
-    : mState(displayId),
+    : ThreadSafeDisplay(displayId),
       mImplementation(nullptr),
       mGPUSwitchedBinding(this, kGPUSwitchedSubjectIndex),
       mAttributeMap(),
@@ -1210,9 +1250,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mInvalidImageMap(),
       mInvalidStreamSet(),
       mInvalidSurfaceMap(),
-      mInitialized(false),
       mCaps(),
-      mDisplayExtensions(),
       mDisplayExtensionString(),
       mVendorString(),
       mVersionString(),
@@ -1229,8 +1267,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mGlobalSemaphoreShareGroupUsers(0),
       mImageHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES),
       mSurfaceHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES, 64),
-      mTerminatedByApi(false),
-      mRefCount(0)
+      mTerminatedByApi(false)
 {}
 
 Display::~Display()
@@ -2082,7 +2119,7 @@ Error Display::makeCurrent(Thread *thread,
     return NoError();
 }
 
-Error Display::restoreLostDevice()
+Error Display::restoreLostDevice() const
 {
     // If reset notifications have been requested, application must delete all contexts first
     const bool noResetNotificationRequested = mState.contextMap.forEach(
@@ -2245,11 +2282,6 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
     return NoError();
 }
 
-void Display::releaseSync(Sync *sync)
-{
-    mSyncSet.releaseSync(this, sync);
-}
-
 void Display::destroyImage(Image *image)
 {
     return destroyImageImpl(image, &mImageMap);
@@ -2263,21 +2295,6 @@ void Display::destroyStream(Stream *stream)
 Error Display::destroySurface(Surface *surface)
 {
     return destroySurfaceImpl(surface, &mState.surfaceMap);
-}
-
-void Display::destroySync(Sync *sync)
-{
-    if (sync == nullptr)
-    {
-        return;
-    }
-    mSyncSet.destroySync(this, sync->id());
-}
-
-bool Display::isDeviceLost() const
-{
-    ASSERT(isInitialized());
-    return mState.deviceLost;
 }
 
 bool Display::testDeviceLost()
@@ -2346,16 +2363,6 @@ const Caps &Display::getCaps() const
     return mCaps;
 }
 
-bool Display::isInitialized() const
-{
-    return mInitialized.load(std::memory_order_acquire) && !isTerminating();
-}
-
-bool Display::isTerminating() const
-{
-    return (mRefCount.load(std::memory_order_acquire) & kTerminatingBit) != 0;
-}
-
 bool Display::isValidConfig(const Config *config) const
 {
     return mConfigSet.contains(config);
@@ -2379,11 +2386,6 @@ bool Display::isValidImage(ImageID imageID) const
 bool Display::isValidStream(const Stream *stream) const
 {
     return mStreamSet.find(const_cast<Stream *>(stream)) != mStreamSet.end();
-}
-
-bool Display::isValidSync(SyncID syncID) const
-{
-    return getSync(syncID).get() != nullptr;
 }
 
 bool Display::hasExistingWindowSurface(EGLNativeWindowType window)
@@ -2658,11 +2660,6 @@ void Display::initializeFrontendFeatures()
 #endif
 
     mImplementation->initializeFrontendFeatures(&mFrontendFeatures);
-}
-
-const DisplayExtensions &Display::getExtensions() const
-{
-    return mDisplayExtensions;
 }
 
 const std::string &Display::getExtensionString() const
@@ -2990,11 +2987,6 @@ const egl::Image *Display::getImage(egl::ImageID imageID) const
     return iter != mImageMap.end() ? iter->second : nullptr;
 }
 
-ScopedSyncRef Display::getSync(egl::SyncID syncID) const
-{
-    return mSyncSet.getSync(const_cast<Display *>(this), syncID);
-}
-
 gl::Context *Display::getContext(gl::ContextID contextID)
 {
     return mState.contextMap.find(contextID);
@@ -3009,11 +3001,6 @@ egl::Image *Display::getImage(egl::ImageID imageID)
 {
     auto iter = mImageMap.find(imageID.value);
     return iter != mImageMap.end() ? iter->second : nullptr;
-}
-
-ScopedSyncRef Display::getSync(egl::SyncID syncID)
-{
-    return mSyncSet.getSync(this, syncID);
 }
 
 // static

@@ -1255,9 +1255,9 @@ EGLint EGLAPIENTRY EGL_ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLint returnValue;
     {
-        egl::Display *dpyPacked            = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRef dpyPackedRef = GetDisplayIfValid(dpyPacked);
-        const egl::Display *validDisplay   = dpyPackedRef.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(ClientWaitSync,
                   "dpy = 0x%016" PRIxPTR ", sync = 0x%016" PRIxPTR ", flags = %d, timeout = %llu",
@@ -1278,7 +1278,7 @@ EGLint EGLAPIENTRY EGL_ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags
             {
             }
 
-            returnValue = ClientWaitSync(thread, dpyPacked, syncPackedObject, flags, timeout);
+            returnValue = ClientWaitSync(thread, validDisplay, syncPackedObject, flags, timeout);
         }
 
         ANGLE_CAPTURE_EGL(ClientWaitSync, true, thread, dpyPacked, syncPacked, flags, timeout,
@@ -1434,9 +1434,9 @@ EGLSync EGLAPIENTRY EGL_CreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLSync returnValue;
     {
-        egl::Display *dpyPacked            = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRef dpyPackedRef = GetDisplayIfValid(dpyPacked);
-        const egl::Display *validDisplay   = dpyPackedRef.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(CreateSync,
                   "dpy = 0x%016" PRIxPTR ", type = 0x%X, attrib_list = 0x%016" PRIxPTR "",
@@ -1456,7 +1456,7 @@ EGLSync EGLAPIENTRY EGL_CreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib
                 attrib_listPacked.initializeWithoutValidation();
             }
 
-            returnValue = CreateSync(thread, dpyPacked, type, attrib_listPacked);
+            returnValue = CreateSync(thread, validDisplay, type, attrib_listPacked);
         }
 
         ANGLE_CAPTURE_EGL(CreateSync, true, thread, dpyPacked, type, attrib_listPacked,
@@ -1509,9 +1509,9 @@ EGLBoolean EGLAPIENTRY EGL_DestroySync(EGLDisplay dpy, EGLSync sync)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked            = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRef dpyPackedRef = GetDisplayIfValid(dpyPacked);
-        const egl::Display *validDisplay   = dpyPackedRef.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(DestroySync, "dpy = 0x%016" PRIxPTR ", sync = 0x%016" PRIxPTR "", (uintptr_t)dpy,
                   (uintptr_t)sync);
@@ -1531,7 +1531,7 @@ EGLBoolean EGLAPIENTRY EGL_DestroySync(EGLDisplay dpy, EGLSync sync)
             {
             }
 
-            returnValue = DestroySync(thread, dpyPacked, syncPackedObject);
+            returnValue = DestroySync(thread, validDisplay, syncPackedObject);
         }
 
         ANGLE_CAPTURE_EGL(DestroySync, true, thread, dpyPacked, syncPacked, returnValue);
@@ -1589,9 +1589,9 @@ EGLBoolean EGLAPIENTRY EGL_GetSyncAttrib(EGLDisplay dpy,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked            = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRef dpyPackedRef = GetDisplayIfValid(dpyPacked);
-        const egl::Display *validDisplay   = dpyPackedRef.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(GetSyncAttrib,
                   "dpy = 0x%016" PRIxPTR ", sync = 0x%016" PRIxPTR
@@ -1613,7 +1613,7 @@ EGLBoolean EGLAPIENTRY EGL_GetSyncAttrib(EGLDisplay dpy,
             {
             }
 
-            returnValue = GetSyncAttrib(thread, dpyPacked, syncPackedObject, attribute, value);
+            returnValue = GetSyncAttrib(thread, validDisplay, syncPackedObject, attribute, value);
         }
 
         ANGLE_CAPTURE_EGL(GetSyncAttrib, true, thread, dpyPacked, syncPacked, attribute, value,
@@ -1630,9 +1630,9 @@ EGLBoolean EGLAPIENTRY EGL_WaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked            = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRef dpyPackedRef = GetDisplayIfValid(dpyPacked);
-        const egl::Display *validDisplay   = dpyPackedRef.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(WaitSync, "dpy = 0x%016" PRIxPTR ", sync = 0x%016" PRIxPTR ", flags = %d",
                   (uintptr_t)dpy, (uintptr_t)sync, flags);
@@ -1652,7 +1652,7 @@ EGLBoolean EGLAPIENTRY EGL_WaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
             {
             }
 
-            returnValue = WaitSync(thread, dpyPacked, syncPackedObject, flags);
+            returnValue = WaitSync(thread, validDisplay, syncPackedObject, flags);
         }
 
         ANGLE_CAPTURE_EGL(WaitSync, true, thread, dpyPacked, syncPacked, flags, returnValue);
