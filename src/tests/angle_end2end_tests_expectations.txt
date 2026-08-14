@@ -373,6 +373,10 @@
 537235696 NVIDIA OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
 540256225 NVIDIA VULKAN : ImageTestES3.SourceYUVTextureTargetExternalRGBSample/* = SKIP
 
+// Although this test passes on its own, it may cause other tests to fail.
+546627188 NVIDIA OPENGL : AdvancedBlendTest.NonZeroDrawBufferDisallowed/* = SKIP
+546627188 NVIDIA GLES : AdvancedBlendTest.NonZeroDrawBufferDisallowed/* = SKIP
+
 // Intel Vulkan
 
 // On Intel/Vulkan/Linux, The following image is produced, failing the test on the corner of the
