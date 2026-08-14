@@ -725,17 +725,14 @@ void QueryContextStateGL(const FunctionsGL *functions,
     GetHelper(functions, GL_FRONT_FACE, &state->frontFace);
     if (nativegl::SupportsPolygonMode(functions))
     {
-        // Some drivers return two values for polygon mode.
+        // GL Core and ES contexts return one value. GL Compatibility contexts return two values.
         std::array<gl::PolygonMode, 2> polygonMode = {state->polygonMode, state->polygonMode};
         GetHelper(functions, GL_POLYGON_MODE, &polygonMode);
         // Check that either the two values are equal or the second one is unwritten.
         ASSERT(polygonMode[0] == polygonMode[1] || polygonMode[1] == state->polygonMode);
         state->polygonMode = polygonMode[0];
 
-        if (nativegl::SupportsPolygonModeNV(functions))
-        {
-            GetEnabledHelper(functions, GL_POLYGON_OFFSET_POINT, &state->polygonOffsetPointEnabled);
-        }
+        GetEnabledHelper(functions, GL_POLYGON_OFFSET_POINT, &state->polygonOffsetPointEnabled);
         GetEnabledHelper(functions, GL_POLYGON_OFFSET_LINE, &state->polygonOffsetLineEnabled);
     }
     GetEnabledHelper(functions, GL_POLYGON_OFFSET_FILL, &state->polygonOffsetFillEnabled);
