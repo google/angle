@@ -9112,6 +9112,60 @@ TEST_P(Texture2DArrayTestES3, TextureArrayRedefineThenUse)
     EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::green);
 }
 
+// Test that redefining an out-of-range mip level after texture storage is released does not cause a
+// use-after-free.
+TEST_P(Texture2DArrayTestES3, RedefineOffChainMipLevelAfterStorageRelease)
+{
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Level 0 = 64x64x1 (complete storage would have 7 mip levels: 0..6)
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 64, 64, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    // Specify off-chain level 10 (independent of level 0 mip chain)
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 10, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Write data to level 10 before storage exists to create a staging texture
+    std::vector<GLColor> px(4 * 4, GLColor::red);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 10, 0, 0, 0, 4, 4, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    px.data());
+
+    // Sample the texture to force complete storage allocation (with 7 levels)
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    glFinish();
+
+    // Write to level 10 again (should not associate with 7-level storage or result in dangling
+    // pointers)
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 10, 0, 0, 0, 4, 4, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    px.data());
+
+    // Free the storage by redefining level 0 with new dimensions
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 128, 128, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    // Redefining level 10 should not cause UAF / crash
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 10, GL_RGBA8, 8, 8, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    // Also verify writing subimage to level 10 works without error
+    std::vector<GLColor> px8(8 * 8, GLColor::blue);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 10, 0, 0, 0, 8, 8, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    px8.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Verify drawing with level 10 samples the correct color
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 10);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 10);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
 // Verify that redefining a 2D array level's layer count to 1 and then respecifying the image
 // doesn't cause an out-of-bounds write during the self-copy.
 TEST_P(Texture2DArrayTestES3, RedefineLayerCountTo1AndRespecify)

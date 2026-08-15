@@ -283,7 +283,7 @@ angle::Result TextureD3D::setStorageExternalMemory(const gl::Context *context,
 
 bool TextureD3D::shouldUseSetData(const gl::ImageIndex &index, const ImageD3D *image) const
 {
-    if (!isImageComplete(index))
+    if (!isValidIndex(index) || !isImageComplete(index))
     {
         return false;
     }
@@ -730,9 +730,8 @@ angle::Result TextureD3D::commitRegion(const gl::Context *context,
                                        const gl::ImageIndex &index,
                                        const gl::Box &region)
 {
-    if (mTexStorage && isImageComplete(index))
+    if (isValidIndex(index) && isImageComplete(index))
     {
-        ASSERT(isValidIndex(index));
         ImageD3D *image = getImage(index);
         ANGLE_TRY(image->copyToStorage(context, mTexStorage, index, region));
         image->markClean();
@@ -958,7 +957,7 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
     // Slow path: non-renderable texture, incomplete level, or texture storage doesn't exist.
     ANGLE_TRY(image->initializeContents(context));
 
-    if (mTexStorage && isImageComplete(index))
+    if (isValidIndex(index) && isImageComplete(index))
     {
         gl::Box fullImageArea(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
         ANGLE_TRY(commitRegion(context, index, fullImageArea));
