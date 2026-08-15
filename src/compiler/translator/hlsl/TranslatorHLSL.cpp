@@ -280,8 +280,7 @@ bool TranslatorHLSL::translate(TIntermBlock *root,
             return false;
         }
 
-        int removedUniformsCount;
-        if (!RewriteStructSamplers(this, root, &getSymbolTable(), &removedUniformsCount))
+        if (!RewriteStructSamplers(this, root, &getSymbolTable()))
         {
             return false;
         }

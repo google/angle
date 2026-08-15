@@ -280,12 +280,9 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
 {
   public:
     explicit RewriteStructSamplersTraverser(TCompiler *compiler, TSymbolTable *symbolTable)
-        : TIntermTraverser(true, false, false, symbolTable),
-          mCompiler(compiler),
-          mRemovedUniformsCount(0)
+        : TIntermTraverser(true, false, false, symbolTable), mCompiler(compiler)
     {}
 
-    int removedUniformsCount() const { return mRemovedUniformsCount; }
 
     // Each struct sampler declaration is stripped of its samplers. New uniforms are added for each
     // stripped struct sampler.
@@ -516,10 +513,6 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
             ASSERT(mStructureUniformMap.find(&variable) == mStructureUniformMap.end());
             mStructureUniformMap[&variable] = newVariable;
         }
-        else
-        {
-            mRemovedUniformsCount++;
-        }
 
         exitArray(type);
     }
@@ -618,7 +611,6 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
     }
 
     TCompiler *mCompiler;
-    int mRemovedUniformsCount;
 
     // Map structures with samplers to ones that have their samplers removed.
     StructureMap mStructureMap;
@@ -639,14 +631,10 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
 };
 }  // anonymous namespace
 
-bool RewriteStructSamplers(TCompiler *compiler,
-                           TIntermBlock *root,
-                           TSymbolTable *symbolTable,
-                           int *removedUniformsCountOut)
+bool RewriteStructSamplers(TCompiler *compiler, TIntermBlock *root, TSymbolTable *symbolTable)
 {
     RewriteStructSamplersTraverser traverser(compiler, symbolTable);
     root->traverse(&traverser);
-    *removedUniformsCountOut = traverser.removedUniformsCount();
     return traverser.updateTree(compiler, root);
 }
 }  // namespace sh

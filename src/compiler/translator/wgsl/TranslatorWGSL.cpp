@@ -2819,10 +2819,8 @@ bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root,
             return false;
         }
 
-        int removedUniformsCount;
-
         // Requires MonomorphizeUnsupportedFunctions() to have been run already.
-        if (!RewriteStructSamplers(this, root, &getSymbolTable(), &removedUniformsCount))
+        if (!RewriteStructSamplers(this, root, &getSymbolTable()))
         {
             return false;
         }
