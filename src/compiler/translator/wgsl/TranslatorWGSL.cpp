@@ -31,7 +31,6 @@
 #include "compiler/translator/tree_ops/RewriteArrayOfArrayOfOpaqueUniforms.h"
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
-#include "compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.h"
 #include "compiler/translator/tree_ops/wgsl/EmulateMutableFunctionParams.h"
 #include "compiler/translator/tree_ops/wgsl/PullExpressionsIntoFunctions.h"
 #include "compiler/translator/tree_ops/wgsl/RewriteMixedTypeMathExprs.h"
@@ -2807,11 +2806,6 @@ bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root,
 
     if (aggregateTypesUsedForUniforms > 0)
     {
-        if (!SeparateStructFromUniformDeclarations(this, root, &getSymbolTable()))
-        {
-            return false;
-        }
-
         // Requires MonomorphizeUnsupportedFunctions() to have been run already.
         if (!RewriteStructSamplers(this, root, &getSymbolTable()))
         {
