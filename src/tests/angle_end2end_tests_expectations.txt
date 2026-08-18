@@ -41,6 +41,12 @@
 532617619 OPENGL : MipmapRobustInitTestES3.GenerateMipmapRobustInitOptimization*/* = SKIP
 532617619 GLES : MipmapRobustInitTestES3.GenerateMipmapRobustInitOptimization*/* = SKIP
 
+// Redefining base level on native OpenGL/GLES drivers drops existing higher mip levels.
+480069042 OPENGL : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
+480069042 OPENGL : CopyTextureTest.Texture2DDestLevelPastStorageMips/* = SKIP
+480069042 GLES : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
+480069042 GLES : CopyTextureTest.Texture2DDestLevelPastStorageMips/* = SKIP
+
 381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
 
 // Vulkan color attachment incorrectly configured when GL_RASTERIZER_DISCARD is enabled and no glClear is issued.
@@ -2595,6 +2601,8 @@
 438268609 WGPU : CopyTextureTest.InternalFormat/* = SKIP
 // WGPU does not currently resize textures
 438268609 WGPU : CopyTextureTest.CopyOutsideMipmap/* = SKIP
+438268609 WGPU : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
+438268609 WGPU : CopyTextureTest.Texture2DDestLevelPastStorageMips/* = SKIP
 // Unimplemented format conversions for texture copies
 438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__AToRGB* = SKIP
 438268609 WGPU : CopyTextureVariationsTest.Copy*Texture/ES2_WebGPU__LToRGB* = SKIP
