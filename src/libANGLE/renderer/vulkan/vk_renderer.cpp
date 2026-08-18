@@ -2361,13 +2361,17 @@ angle::Result Renderer::enableInstanceExtensions(vk::ErrorContext *context,
                                            instanceExtensionNames) &&
                                 useVulkanSwapchain == UseVulkanSwapchain::Yes);
 
+    const bool isSamsungDeviceWithSurfacelessQueryBug = IsXclipse() && GetAndroidSDKVersion() < 36;
+
     // TODO: Validation layer has a bug when vkGetPhysicalDeviceSurfaceFormats2KHR is called
     // on Mock ICD with surface handle set as VK_NULL_HANDLE. http://anglebug.com/42266098
-    // b/267953710: VK_GOOGLE_surfaceless_query isn't working on some Samsung Xclipse builds
+    // b/267953710: VK_GOOGLE_surfaceless_query isn't working on some Samsung Xclipse builds with
+    // Android API level below 36.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsSurfacelessQueryExtension,
         ExtensionFound(VK_GOOGLE_SURFACELESS_QUERY_EXTENSION_NAME, instanceExtensionNames) &&
-            useVulkanSwapchain == UseVulkanSwapchain::Yes && !isMockICDEnabled() && !IsXclipse());
+            useVulkanSwapchain == UseVulkanSwapchain::Yes && !isMockICDEnabled() &&
+            !isSamsungDeviceWithSurfacelessQueryBug);
 
     // VK_KHR_external_fence_capabilities and VK_KHR_extenral_semaphore_capabilities are promoted to
     // core in Vulkan 1.1
