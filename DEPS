@@ -140,6 +140,9 @@ vars = {
   # siso CIPD package version.
   'siso_version': 'git_revision:bc45e8f67ae0f37d337190ad64aa8bb440c791eb',
 
+  # CPython 3 CIPD package version for Siso hermetic toolchain.
+  'cpython3_version': 'version:3@3.11.9.chromium.38',
+
   # 'magic' text to tell depot_tools that git submodules should be accepted but
   # but parity with DEPS file is expected.
   'SUBMODULE_MIGRATION': 'True',
@@ -634,6 +637,30 @@ deps = {
   'third_party/android_build_tools': {
     'url': Var('chromium_git') + '/chromium/src/third_party/android_build_tools@92ec157f81da73642e4a921d67a8993d65f0f9a7',
     'condition': 'checkout_android and not build_with_chromium',
+  },
+
+  # Always download Linux x64 package regardless of host OS for RBE workers.
+  'third_party/cpython3/linux-amd64': {
+      'packages': [
+        {
+          'package': 'infra/3pp/tools/cpython3/linux-amd64',
+          'version': Var('cpython3_version'),
+        },
+      ],
+      'condition': 'non_git_source and not build_with_chromium',
+      'dep_type': 'cipd',
+  },
+
+  # Host platform package.
+  'third_party/cpython3/host': {
+      'packages': [
+        {
+          'package': 'infra/3pp/tools/cpython3/${{platform}}',
+          'version': Var('cpython3_version'),
+        },
+      ],
+      'condition': 'non_git_source and not build_with_chromium',
+      'dep_type': 'cipd',
   },
 
   'third_party/android_build_tools/aapt2/cipd': {
