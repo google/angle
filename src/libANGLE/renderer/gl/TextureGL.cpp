@@ -1300,6 +1300,20 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
         onStateChange(angle::SubjectMessage::ObjectReallocated);
     }
 
+    if (features.reattachTextureToFboAfterLayerIncrease.enabled &&
+        getType() == gl::TextureType::_2DArray)
+    {
+        for (size_t level = 0; level < levels; level++)
+        {
+            const gl::ImageDesc &desc = mState.getImageDesc(gl::TextureTarget::_2DArray, level);
+            if (size.depth > desc.size.depth)
+            {
+                onStateChange(angle::SubjectMessage::TextureLayerCountIncreased);
+                break;
+            }
+        }
+    }
+
     const gl::InternalFormat &originalInternalFormatInfo =
         gl::GetSizedInternalFormatInfo(internalFormat);
     nativegl::TexStorageFormat texStorageFormat =
