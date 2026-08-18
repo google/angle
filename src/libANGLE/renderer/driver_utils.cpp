@@ -13,6 +13,7 @@
 
 #include "common/android_util.h"
 #include "common/platform.h"
+#include "common/string_utils.h"
 #include "common/system_utils.h"
 #include "gpu_info_util/SystemInfo.h"
 
@@ -297,6 +298,38 @@ int GetAndroidSDKVersion()
 
     return std::atoi(androidSdkLevel.c_str());
 }
+
+bool IsSamsungXclipse()
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    std::string socManufacturer;
+    if (!angle::android::GetSystemProperty("ro.soc.manufacturer", &socManufacturer))
+    {
+        return false;
+    }
+
+    angle::ToLower(&socManufacturer);
+    if (socManufacturer != "samsung")
+    {
+        return false;
+    }
+
+    std::string hardwareEgl;
+    if (!angle::android::GetSystemProperty("ro.hardware.egl", &hardwareEgl))
+    {
+        return true;
+    }
+
+    angle::ToLower(&hardwareEgl);
+    if (hardwareEgl == "samsung")
+    {
+        return true;
+    }
+#endif
+
+    return false;
+}
+
 #if !defined(ANGLE_PLATFORM_MACOS)
 OSVersion GetMacOSVersion()
 {

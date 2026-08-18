@@ -226,5 +226,7 @@ OSVersion GetLinuxOSVersion();
 
 int GetAndroidSDKVersion();
 
+bool IsSamsungXclipse();
+
 }  // namespace rx
 #endif  // LIBANGLE_RENDERER_DRIVER_UTILS_H_
