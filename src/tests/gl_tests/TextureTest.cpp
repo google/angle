@@ -9363,54 +9363,70 @@ TEST_P(Texture2DArrayTestES3_ReattachTextureToFbo, IncreaseLayersWithFramebuffer
     // layer count without releasing storage.
     ANGLE_SKIP_TEST_IF(IsMetal());
 
-    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    for (bool useTexStorage : {false, true})
+    {
+        glDeleteTextures(1, &m2DArrayTexture);
+        glGenTextures(1, &m2DArrayTexture);
 
-    std::vector<GLColor> pixelsRed(4 * 4 * 1, GLColor::red);
-    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 pixelsRed.data());
-    ASSERT_GL_NO_ERROR();
+        glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    GLFramebuffer fbo;
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 0);
-    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::red);
+        std::vector<GLColor> pixelsRed(4 * 4 * 1, GLColor::red);
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     pixelsRed.data());
+        ASSERT_GL_NO_ERROR();
 
-    // Increase layer count to 2.
-    std::vector<GLColor> pixelsGreen(4 * 4 * 2, GLColor::green);
-    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 4, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 pixelsGreen.data());
-    ASSERT_GL_NO_ERROR();
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 0);
 
-    // Verify layer 0 points to the new memory (green).
-    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::green);
+        EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::red);
 
-    // Verify layer 1 is also green.
-    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 1);
-    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::green);
+        // Increase layer count to 2.
+        std::vector<GLColor> pixelsGreen(4 * 4 * 2, GLColor::green);
+        if (useTexStorage)
+        {
+            glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 4, 4, 2);
+            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, 4, 4, 2, GL_RGBA, GL_UNSIGNED_BYTE,
+                            pixelsGreen.data());
+        }
+        else
+        {
+            glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 4, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         pixelsGreen.data());
+        }
+        ASSERT_GL_NO_ERROR();
 
-    // Clear layer 1 to blue and verify.
-    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::blue);
+        // Verify layer 0 points to the new memory (green).
+        EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::green);
 
-    // Now sample from layer 0 and layer 1 using a shader to ensure texture memory matches FBO
-    // memory.
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
-    glUseProgram(mProgram);
-    glUniform1i(mTextureArrayLocation, 0);
+        // Verify layer 1 is also green.
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 1);
+        EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::green);
 
-    // Verify layer 0 is green.
-    glUniform1i(mTextureArraySliceUniformLocation, 0);
-    drawQuad(mProgram, "position", 0.5f);
-    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+        // Clear layer 1 to blue and verify.
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::blue);
 
-    // Verify layer 1 is blue.
-    glUniform1i(mTextureArraySliceUniformLocation, 1);
-    drawQuad(mProgram, "position", 0.5f);
-    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+        // Now sample from layer 0 and layer 1 using a shader to ensure texture memory matches FBO
+        // memory.
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
+        glUseProgram(mProgram);
+        glUniform1i(mTextureArrayLocation, 0);
+
+        // Verify layer 0 is green.
+        glUniform1i(mTextureArraySliceUniformLocation, 0);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+
+        // Verify layer 1 is blue.
+        glUniform1i(mTextureArraySliceUniformLocation, 1);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+    }
 }
 
 // Test increasing layer count of a 2D array texture when one of its layers is attached to a
@@ -9423,62 +9439,78 @@ TEST_P(Texture2DArrayTestES3_ReattachTextureToFbo,
     // layer count without releasing storage.
     ANGLE_SKIP_TEST_IF(IsMetal());
 
-    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    for (bool useTexStorage : {false, true})
+    {
+        glDeleteTextures(1, &m2DArrayTexture);
+        glGenTextures(1, &m2DArrayTexture);
 
-    std::vector<GLColor> pixelsRed(4 * 4 * 1, GLColor::red);
-    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 pixelsRed.data());
-    ASSERT_GL_NO_ERROR();
+        glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    GLFramebuffer fbo;
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 0);
-    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::red);
+        std::vector<GLColor> pixelsRed(4 * 4 * 1, GLColor::red);
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     pixelsRed.data());
+        ASSERT_GL_NO_ERROR();
 
-    // Set up and switch to a secondary context sharing resources with the current context.
-    EGLWindow *window          = getEGLWindow();
-    EGLDisplay display         = window->getDisplay();
-    EGLConfig config           = window->getConfig();
-    EGLSurface surface         = window->getSurface();
-    EGLint contextAttributes[] = {
-        EGL_CONTEXT_MAJOR_VERSION_KHR,
-        GetParam().majorVersion,
-        EGL_CONTEXT_MINOR_VERSION_KHR,
-        GetParam().minorVersion,
-        EGL_NONE,
-    };
-    EGLContext context1 = eglGetCurrentContext();
-    EGLContext context2 = eglCreateContext(display, config, context1, contextAttributes);
-    ASSERT_NE(context2, EGL_NO_CONTEXT);
-    eglMakeCurrent(display, surface, surface, context2);
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 0);
 
-    // In the secondary context, bind the texture and increase layer count to 2.
-    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
-    std::vector<GLColor> pixelsGreen(4 * 4 * 2, GLColor::green);
-    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 4, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 pixelsGreen.data());
-    ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::red);
 
-    // Switch back to the primary context.
-    eglMakeCurrent(display, surface, surface, context1);
+        // Set up and switch to a secondary context sharing resources with the current context.
+        EGLWindow *window          = getEGLWindow();
+        EGLDisplay display         = window->getDisplay();
+        EGLConfig config           = window->getConfig();
+        EGLSurface surface         = window->getSurface();
+        EGLint contextAttributes[] = {
+            EGL_CONTEXT_MAJOR_VERSION_KHR,
+            GetParam().majorVersion,
+            EGL_CONTEXT_MINOR_VERSION_KHR,
+            GetParam().minorVersion,
+            EGL_NONE,
+        };
+        EGLContext context1 = eglGetCurrentContext();
+        EGLContext context2 = eglCreateContext(display, config, context1, contextAttributes);
+        ASSERT_NE(context2, EGL_NO_CONTEXT);
+        eglMakeCurrent(display, surface, surface, context2);
 
-    // Verify layer 0 points to the new memory (green).
-    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::green);
+        // In the secondary context, bind the texture and increase layer count to 2.
+        glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+        std::vector<GLColor> pixelsGreen(4 * 4 * 2, GLColor::green);
+        if (useTexStorage)
+        {
+            glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 4, 4, 2);
+            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, 4, 4, 2, GL_RGBA, GL_UNSIGNED_BYTE,
+                            pixelsGreen.data());
+        }
+        else
+        {
+            glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 4, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         pixelsGreen.data());
+        }
+        ASSERT_GL_NO_ERROR();
 
-    // Attach layer 1 to the FBO in context1 and verify. Explicitly calling
-    // glFramebufferTextureLayer attaches to the newly allocated texture storage.
-    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 1);
-    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::green);
+        // Switch back to the primary context.
+        eglMakeCurrent(display, surface, surface, context1);
 
-    // Clear layer 1 to blue and verify.
-    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::blue);
+        // Verify layer 0 points to the new memory (green).
+        EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::green);
 
-    // Clean up secondary context.
-    eglDestroyContext(display, context2);
+        // Attach layer 1 to the FBO in context1 and verify. Explicitly calling
+        // glFramebufferTextureLayer attaches to the newly allocated texture storage.
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 1);
+        EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::green);
+
+        // Clear layer 1 to blue and verify.
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::blue);
+
+        // Clean up secondary context.
+        eglDestroyContext(display, context2);
+    }
 }
 
 // Create a 3D texture, use it, then redefine one level without changing dimensions.
