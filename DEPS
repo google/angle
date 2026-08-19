@@ -1778,7 +1778,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/balatro',
-            'version': 'version:2',
+            'version': 'version:3',
         },
       ],
       'dep_type': 'cipd',
@@ -2188,7 +2188,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/chrono_trigger',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3028,7 +3028,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/hunter_assassin',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3068,7 +3068,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/idle_heroes',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -3338,7 +3338,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/loop_hero',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3408,7 +3408,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/magic_rush_heroes',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3548,7 +3548,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/minecraft',
-            'version': 'version:7',
+            'version': 'version:8',
         },
       ],
       'dep_type': 'cipd',
@@ -4688,7 +4688,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/streets_of_rage_4',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
