@@ -294,7 +294,7 @@ include_blocklist = [
     '//third_party/perfetto/include/',
     '//out/Android/gen/third_party/perfetto/',
     '//out/Android/gen/third_party/perfetto/build_config/',
-    '//third_party/protobuf/src/'
+    '//third_party/protobuf/*',
 ]
 
 targets_using_jni = [
@@ -415,11 +415,23 @@ def gn_libs_to_blueprint_shared_libraries(target_info):
     return result
 
 
+def is_include_dir_blocklisted(include_dir):
+    norm_dir = include_dir.rstrip('/') + '/'
+    for entry in include_blocklist:
+        if entry.endswith('*'):
+            prefix = entry[:-1].rstrip('/') + '/'
+            if norm_dir.startswith(prefix):
+                return True
+        elif norm_dir == entry.rstrip('/') + '/':
+            return True
+    return False
+
+
 def gn_include_dirs_to_blueprint_include_dirs(target_info):
     result = []
     if 'include_dirs' in target_info:
         for include_dir in target_info['include_dirs']:
-            if len(include_dir) > 0 and include_dir not in include_blocklist:
+            if len(include_dir) > 0 and not is_include_dir_blocklisted(include_dir):
                 result.append(gn_path_to_blueprint_path(include_dir))
     return result
 
