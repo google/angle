@@ -2141,7 +2141,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/cash_frenzy_casino_slots',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -2821,7 +2821,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/geometry_dash',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3791,7 +3791,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/new_legend_of_the_condor_heroes',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -4481,7 +4481,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/slay_the_spire',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -4671,7 +4671,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/street_fighter_duel',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -4931,7 +4931,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/tmnt_shredders_revenge',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
