@@ -1065,12 +1065,15 @@ class BufferHelper : public ReadWriteResource
     {
         mXFBOrComputeWriteHeuristicBits <<= 1;
 
+        const bool hasVertexInputRead =
+            (mCurrentReadStages & VK_PIPELINE_STAGE_VERTEX_INPUT_BIT) != 0 ||
+            mCurrentReadEvents.getBitMask().test(EventStage::VertexInput);
+
         if (writeStage == PipelineStage::TransformFeedback)
         {
             mXFBOrComputeWriteHeuristicBits |= 1;
         }
-        else if ((writeStage == PipelineStage::ComputeShader) &&
-                 (mCurrentReadStages & VK_PIPELINE_STAGE_VERTEX_INPUT_BIT) != 0 &&
+        else if ((writeStage == PipelineStage::ComputeShader) && hasVertexInputRead &&
                  context->getFeatures().isVertexSyncDeferred.enabled)
         {
             // When a buffer is written in compute after read in vertex stage, using vkEvent
