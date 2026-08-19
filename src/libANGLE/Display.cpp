@@ -946,7 +946,7 @@ SyncSet::~SyncSet()
     clearPools();
 }
 
-Error SyncSet::createSync(const Display *display,
+Error SyncSet::createSync(const ThreadSafeDisplay *display,
                           const gl::Context *currentContext,
                           EGLenum type,
                           const AttributeMap &attribs,
@@ -1158,6 +1158,33 @@ void ThreadSafeDisplay::destroySync(Sync *sync)
     mSyncSet.destroySync(this, sync->id());
 }
 
+Error ThreadSafeDisplay::createSync(const gl::Context *currentContext,
+                                    EGLenum type,
+                                    const AttributeMap &attribs,
+                                    Sync **outSync)
+{
+    ASSERT(isInitialized());
+
+    if (mThreadSafeImpl->testDeviceLost())
+    {
+        ANGLE_TRY(restoreLostDevice());
+    }
+
+    return mSyncSet.createSync(this, currentContext, type, attribs, outSync);
+}
+
+Error ThreadSafeDisplay::restoreLostDevice() const
+{
+    // If reset notifications have been requested, application must delete all contexts first
+    const bool noResetNotificationRequested = mState.contextMap.forEach(
+        [](gl::Context *context) { return !context->isResetNotificationEnabled(); });
+    if (!noResetNotificationRequested)
+    {
+        return egl::Error(EGL_CONTEXT_LOST);
+    }
+    return mThreadSafeImpl->restoreLostDevice(this);
+}
+
 // Note that ANGLE support on Ozone platform is limited. Our preferred support Matrix for
 // EGL_ANGLE_platform_angle on Linux and Ozone/Linux/Fuchsia platforms should be the following:
 //
@@ -1363,6 +1390,8 @@ void Display::setupDisplayPlatform(rx::DisplayImpl *impl)
 
     SafeDelete(mImplementation);
     mImplementation = impl;
+
+    mThreadSafeImpl = impl->getThreadSafeDisplayImpl();
 
     // TODO(anglebug.com/42265835): Remove PlatformMethods.
     const angle::PlatformMethods *platformMethods =
@@ -1766,7 +1795,7 @@ Error Display::createWindowSurface(const Config *configuration,
                                    const AttributeMap &attribs,
                                    Surface **outSurface)
 {
-    if (mImplementation->testDeviceLost())
+    if (mThreadSafeImpl->testDeviceLost())
     {
         ANGLE_TRY(restoreLostDevice());
     }
@@ -1801,7 +1830,7 @@ Error Display::createPbufferSurface(const Config *configuration,
 {
     ASSERT(isInitialized());
 
-    if (mImplementation->testDeviceLost())
+    if (mThreadSafeImpl->testDeviceLost())
     {
         ANGLE_TRY(restoreLostDevice());
     }
@@ -1832,7 +1861,7 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration,
 {
     ASSERT(isInitialized());
 
-    if (mImplementation->testDeviceLost())
+    if (mThreadSafeImpl->testDeviceLost())
     {
         ANGLE_TRY(restoreLostDevice());
     }
@@ -1863,7 +1892,7 @@ Error Display::createPixmapSurface(const Config *configuration,
 {
     ASSERT(isInitialized());
 
-    if (mImplementation->testDeviceLost())
+    if (mThreadSafeImpl->testDeviceLost())
     {
         ANGLE_TRY(restoreLostDevice());
     }
@@ -1895,7 +1924,7 @@ Error Display::createImage(const gl::Context *context,
 {
     ASSERT(isInitialized());
 
-    if (mImplementation->testDeviceLost())
+    if (mThreadSafeImpl->testDeviceLost())
     {
         ANGLE_TRY(restoreLostDevice());
     }
@@ -1967,7 +1996,7 @@ Error Display::createContext(const Config *configuration,
     ASSERT(!mTerminatedByApi);
     ASSERT(isInitialized());
 
-    if (mImplementation->testDeviceLost())
+    if (mThreadSafeImpl->testDeviceLost())
     {
         ANGLE_TRY(restoreLostDevice());
     }
@@ -2072,21 +2101,6 @@ Error Display::createContext(const Config *configuration,
     return NoError();
 }
 
-Error Display::createSync(const gl::Context *currentContext,
-                          EGLenum type,
-                          const AttributeMap &attribs,
-                          Sync **outSync)
-{
-    ASSERT(isInitialized());
-
-    if (mImplementation->testDeviceLost())
-    {
-        ANGLE_TRY(restoreLostDevice());
-    }
-
-    return mSyncSet.createSync(this, currentContext, type, attribs, outSync);
-}
-
 Error Display::makeCurrent(Thread *thread,
                            gl::Context *previousContext,
                            egl::Surface *drawSurface,
@@ -2161,18 +2175,6 @@ Error Display::makeCurrent(Thread *thread,
     }
 
     return NoError();
-}
-
-Error Display::restoreLostDevice() const
-{
-    // If reset notifications have been requested, application must delete all contexts first
-    const bool noResetNotificationRequested = mState.contextMap.forEach(
-        [](gl::Context *context) { return !context->isResetNotificationEnabled(); });
-    if (!noResetNotificationRequested)
-    {
-        return egl::Error(EGL_CONTEXT_LOST);
-    }
-    return mImplementation->restoreLostDevice(this);
 }
 
 Error Display::destroySurfaceImpl(Surface *surface, SurfaceMap *surfaces)
@@ -2345,7 +2347,7 @@ bool Display::testDeviceLost()
 {
     ASSERT(isInitialized());
 
-    if (!mState.deviceLost && mImplementation->testDeviceLost())
+    if (!mState.deviceLost && mThreadSafeImpl->testDeviceLost())
     {
         notifyDeviceLost();
     }

@@ -175,12 +175,12 @@ void DisplayMtl::terminate()
     mIsAMDBronze         = false;
 }
 
-bool DisplayMtl::testDeviceLost()
+bool ThreadSafeDisplayMtl::testDeviceLost()
 {
     return false;
 }
 
-egl::Error DisplayMtl::restoreLostDevice(const egl::Display *display)
+egl::Error ThreadSafeDisplayMtl::restoreLostDevice(const egl::ThreadSafeDisplay *display)
 {
     return egl::NoError();
 }
@@ -444,7 +444,7 @@ gl::Version DisplayMtl::getMaxConformantESVersion() const
     return std::min(getMaxSupportedESVersion(), gl::Version(3, 0));
 }
 
-EGLSyncImpl *DisplayMtl::createSync()
+EGLSyncImpl *ThreadSafeDisplayMtl::createSync()
 {
     return new EGLSyncMtl();
 }

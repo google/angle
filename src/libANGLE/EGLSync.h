@@ -20,6 +20,7 @@
 namespace rx
 {
 class EGLSyncImpl;
+class ThreadSafeDisplayImpl;
 }  // namespace rx
 
 namespace gl
@@ -32,7 +33,7 @@ namespace egl
 class Sync final : public LabeledObject
 {
   public:
-    Sync(rx::EGLImplFactory *factory, EGLenum type);
+    Sync(rx::ThreadSafeDisplayImpl *factory, EGLenum type);
     ~Sync() override;
 
     void setLabel(EGLLabelKHR label) override;

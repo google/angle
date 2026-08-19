@@ -153,7 +153,7 @@ void InstallDebugAnnotator(egl::Display *display, vk::Renderer *renderer)
 
 DisplayVk::DisplayVk(const egl::DisplayState &state)
     : DisplayImpl(state),
-      vk::ErrorContext(new vk::Renderer()),
+      ThreadSafeDisplayVk(new vk::Renderer()),
       mScratchBuffer(1000u),
       mSupportedColorspaceFormatsMap{}
 {}
@@ -213,12 +213,12 @@ egl::Error DisplayVk::makeCurrent(egl::Display *display,
     return egl::NoError();
 }
 
-bool DisplayVk::testDeviceLost()
+bool ThreadSafeDisplayVk::testDeviceLost()
 {
     return mRenderer->isDeviceLost();
 }
 
-egl::Error DisplayVk::restoreLostDevice(const egl::Display *display)
+egl::Error ThreadSafeDisplayVk::restoreLostDevice(const egl::ThreadSafeDisplay *display)
 {
     // A vulkan device cannot be restored, the entire renderer would have to be re-created along
     // with any other EGL objects that reference it.
@@ -428,7 +428,7 @@ StreamProducerImpl *DisplayVk::createStreamProducerD3DTexture(
     return static_cast<StreamProducerImpl *>(0);
 }
 
-EGLSyncImpl *DisplayVk::createSync()
+EGLSyncImpl *ThreadSafeDisplayVk::createSync()
 {
     return new EGLSyncVk();
 }
@@ -632,10 +632,10 @@ const char *DisplayVk::getWSILayer() const
     return nullptr;
 }
 
-void DisplayVk::handleError(VkResult result,
-                            const char *file,
-                            const char *function,
-                            unsigned int line)
+void ThreadSafeDisplayVk::handleError(VkResult result,
+                                      const char *file,
+                                      const char *function,
+                                      unsigned int line)
 {
     ASSERT(result != VK_SUCCESS);
 

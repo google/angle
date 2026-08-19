@@ -953,7 +953,11 @@ class Renderer : angle::NonCopyable
     VkDevice mDevice;
     VkDeviceSize mMaxCopyBytesUsingCPUWhenPreservingBufferData;
 
-    bool mDeviceLost;
+    // Written by the thread that detects the loss and read by any thread calling
+    // ThreadSafeDisplayImpl::testDeviceLost(), which runs without the display lock.  Relaxed
+    // ordering is sufficient: the flag only ever goes false -> true for the lifetime of the
+    // Renderer, so a stale read is always a stale false and the loss is observed on a later call.
+    std::atomic<bool> mDeviceLost;
 
     vk::SharedGarbageList<vk::SharedGarbage> mSharedGarbageList;
     // Suballocations have its own dedicated garbage list for performance optimization since they
