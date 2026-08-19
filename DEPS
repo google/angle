@@ -1498,7 +1498,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/2_3_4_player_mini_games',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -1768,7 +1768,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/badland',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -3588,7 +3588,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/mini_block_craft',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3768,7 +3768,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/nba2k20_800',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -3868,7 +3868,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/one_punch_man',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -4218,7 +4218,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/real_racing3',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -4968,7 +4968,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/total_battle',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
