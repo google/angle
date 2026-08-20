@@ -2778,6 +2778,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // Disable EXT_clear_texture entirely on IMG as a speculative fix for driver crashes.
     ANGLE_FEATURE_CONDITION(features, disableClearTexture, IsPowerVR(vendor));
 
+    // Forces a flush before generating a mipmap, which avoids a bad state in the IMG driver if
+    // the texture's base level is still bound to an active FBO.
+    ANGLE_FEATURE_CONDITION(features, flushBeforeGenerateMipmap, IsPowerVR(vendor));
+
     // IMG GL drivers crash while compiling shaders with more than the limit of uniform blocks.
     ANGLE_FEATURE_CONDITION(features, validateMaxPerStageUniformBlocksAtCompileTime,
                             IsPowerVR(vendor));

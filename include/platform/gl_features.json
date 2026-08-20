@@ -954,6 +954,14 @@
             "issue": "http://crbug.com/475877320"
         },
         {
+            "name": "flush_before_generate_mipmap",
+            "category": "Workarounds",
+            "description": [
+                "Force a flush before calling generateMipmap to work around driver bugs."
+            ],
+            "issue": "http://crbug.com/549350408"
+        },
+        {
             "name": "split_level_0_pbo_full_sub_image_2D",
             "category": "Workarounds",
             "description": [
