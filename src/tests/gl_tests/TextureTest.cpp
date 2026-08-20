@@ -1403,7 +1403,11 @@ class Texture3DTestES3 : public Texture3DTestES2
                "out vec4 fragColor;\n"
                "void main()\n"
                "{\n"
-               "    fragColor = texture(tex3D, vec3(texcoord, 0.0));\n"
+               "    fragColor = (texture(tex3D, vec3(texcoord, 0.0)) +\n"
+               "                 texture(tex3D, vec3(texcoord, 0.25)) +\n"
+               "                 texture(tex3D, vec3(texcoord, 0.5)) +\n"
+               "                 texture(tex3D, vec3(texcoord, 0.75)) +\n"
+               "                 texture(tex3D, vec3(texcoord, 1.0))) / 5.0;\n"
                "}\n";
     }
 };
@@ -9544,6 +9548,274 @@ TEST_P(Texture3DTestES3, RedefineLevelData)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture3D, 1, 0);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+class Texture3DIncreaseDepthTestES3 : public Texture3DTestES3
+{
+  protected:
+    GLuint setUp7Level3DTexture(bool drawBeforeIncrease);
+    void increaseLevelDepth(int levelToIncrease, GLColor newColor);
+    void verifyByReadPixels(GLuint texture3D, int levelToIncrease, GLColor newColor);
+    void verifyByDraw(GLuint texture3D, int levelToIncrease, GLColor newColor);
+    void cleanUp(GLuint texture3D);
+    void runTest(bool drawBeforeIncrease, bool doVerifyByDraw, int levelToIncrease);
+};
+
+GLuint Texture3DIncreaseDepthTestES3::setUp7Level3DTexture(bool drawBeforeIncrease)
+{
+    EXPECT_NE(0u, mProgram);
+    EXPECT_NE(-1, mTexture3DUniformLocation);
+
+    GLuint texture3D = 0;
+    glGenTextures(1, &texture3D);
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Create a 7-level 3D texture (64x64x64 down to 1x1x2).
+    std::vector<GLubyte> data0(64 * 64 * 64, 255);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R8, 64, 64, 64, 0, GL_RED, GL_UNSIGNED_BYTE, data0.data());
+
+    std::vector<GLubyte> data1(32 * 32 * 32 * 2, 0);
+    for (size_t i = 1; i < data1.size(); i += 2)
+    {
+        data1[i] = 255;
+    }
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RG8, 32, 32, 32, 0, GL_RG, GL_UNSIGNED_BYTE, data1.data());
+
+    std::vector<GLubyte> data2(16 * 16 * 16 * 3, 0);
+    for (size_t i = 2; i < data2.size(); i += 3)
+    {
+        data2[i] = 255;
+    }
+    glTexImage3D(GL_TEXTURE_3D, 2, GL_RGB8, 16, 16, 16, 0, GL_RGB, GL_UNSIGNED_BYTE, data2.data());
+
+    std::vector<GLColor> data3(8 * 8 * 8, GLColor::yellow);
+    glTexImage3D(GL_TEXTURE_3D, 3, GL_RGBA8, 8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, data3.data());
+
+    std::vector<GLColor> data4(4 * 4 * 4, GLColor::cyan);
+    glTexImage3D(GL_TEXTURE_3D, 4, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, data4.data());
+
+    std::vector<GLushort> data5(2 * 2 * 1, 0xFFFF);
+    glTexImage3D(GL_TEXTURE_3D, 5, GL_RGB565, 2, 2, 1, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+                 data5.data());
+
+    std::vector<GLColor> data6(1 * 1 * 2, GLColor::magenta);
+    glTexImage3D(GL_TEXTURE_3D, 6, GL_RGBA8, 1, 1, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data6.data());
+
+    EXPECT_GL_NO_ERROR();
+
+    // Set BASE_LEVEL to 3, MAX_LEVEL to 4.
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 3);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 4);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+
+    if (drawBeforeIncrease)
+    {
+        // Draw to backbuffer, sampling level 3 from texture
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::yellow);
+    }
+
+    return texture3D;
+}
+
+void Texture3DIncreaseDepthTestES3::increaseLevelDepth(int levelToIncrease, GLColor newColor)
+{
+    // Increase depth of specified level and upload new data.
+    if (levelToIncrease == 6)
+    {
+        std::vector<GLColor> newLevel6Data(1 * 1 * 4, newColor);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 6);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 6);
+        glTexImage3D(GL_TEXTURE_3D, 6, GL_RGBA8, 1, 1, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     newLevel6Data.data());
+    }
+    else if (levelToIncrease == 3)
+    {
+        std::vector<GLColor> newLevel3Data(8 * 8 * 16, newColor);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 3);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 3);
+        glTexImage3D(GL_TEXTURE_3D, 3, GL_RGBA8, 8, 8, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     newLevel3Data.data());
+    }
+    else if (levelToIncrease == 4)
+    {
+        std::vector<GLColor> newLevel4Data(4 * 4 * 8, newColor);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 4);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 4);
+        glTexImage3D(GL_TEXTURE_3D, 4, GL_RGBA8, 4, 4, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     newLevel4Data.data());
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
+void Texture3DIncreaseDepthTestES3::verifyByReadPixels(GLuint texture3D,
+                                                       int levelToIncrease,
+                                                       GLColor newColor)
+{
+    struct LevelExpectation
+    {
+        GLint level;
+        GLint width;
+        GLint height;
+        GLint depth;
+        GLColor expectedColor;
+    };
+
+    LevelExpectation expectedLevels[] = {
+        {3, 8, 8, (levelToIncrease == 3) ? 16 : 8,
+         (levelToIncrease == 3) ? newColor : GLColor::yellow},
+        {4, 4, 4, (levelToIncrease == 4) ? 8 : 4,
+         (levelToIncrease == 4) ? newColor : GLColor::cyan},
+        {6, 1, 1, (levelToIncrease == 6) ? 4 : 2,
+         (levelToIncrease == 6) ? newColor : GLColor::magenta},
+    };
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+
+    for (const auto &expected : expectedLevels)
+    {
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, expected.level);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, expected.level);
+
+        for (GLint slice = 0; slice < expected.depth; ++slice)
+        {
+            // Read back the texture through framebuffer
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D,
+                                      expected.level, slice);
+            EXPECT_GL_NO_ERROR();
+            ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+            EXPECT_PIXEL_RECT_EQ(0, 0, expected.width, expected.height, expected.expectedColor);
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+void Texture3DIncreaseDepthTestES3::verifyByDraw(GLuint texture3D,
+                                                 int levelToIncrease,
+                                                 GLColor newColor)
+{
+    struct LevelExpectation
+    {
+        GLint level;
+        GLColor expectedColor;
+    };
+
+    LevelExpectation expectedLevels[] = {
+        {3, (levelToIncrease == 3) ? newColor : GLColor::yellow},
+        {4, (levelToIncrease == 4) ? newColor : GLColor::cyan},
+        {6, (levelToIncrease == 6) ? newColor : GLColor::magenta},
+    };
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           mFramebufferColorTexture, 0);
+
+    for (const auto &expected : expectedLevels)
+    {
+        // Draw to backbuffer, sampling level from texture
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, expected.level);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, expected.level);
+
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), expected.expectedColor);
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+void Texture3DIncreaseDepthTestES3::cleanUp(GLuint texture3D)
+{
+    // Clean up mFramebuffer attachment so it is not left with texture3D attached to
+    // GL_COLOR_ATTACHMENT0. Restore mFramebufferColorTexture.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           mFramebufferColorTexture, 0);
+
+    glDeleteTextures(1, &texture3D);
+}
+
+void Texture3DIncreaseDepthTestES3::runTest(bool drawBeforeIncrease,
+                                            bool doVerifyByDraw,
+                                            int levelToIncrease)
+{
+    GLuint texture3D = setUp7Level3DTexture(drawBeforeIncrease);
+    GLColor newColor(255, 128, 0, 255);
+    increaseLevelDepth(levelToIncrease, newColor);
+
+    if (doVerifyByDraw)
+    {
+        verifyByDraw(texture3D, levelToIncrease, newColor);
+    }
+    else
+    {
+        verifyByReadPixels(texture3D, levelToIncrease, newColor);
+    }
+
+    cleanUp(texture3D);
+}
+
+// Test increasing depth of level 6 (outside base/max range) after drawing (updates flushed).
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByDraw)
+{
+    runTest(/*drawBeforeIncrease=*/true, /*doVerifyByDraw=*/true, 6);
+}
+
+// Test increasing depth of level 6 (outside base/max range) after drawing (updates flushed).
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByReadPixels)
+{
+    runTest(/*drawBeforeIncrease=*/true, /*doVerifyByDraw=*/false, 6);
+}
+
+// Test increasing depth of level 6 (outside base/max range) without drawing (updates staged).
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseOutsideRangeStagedVerifyByDraw)
+{
+    runTest(/*drawBeforeIncrease=*/false, /*doVerifyByDraw=*/true, 6);
+}
+
+// Test increasing depth of level 6 (outside base/max range) without drawing (updates staged).
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseOutsideRangeStagedVerifyByReadPixels)
+{
+    runTest(/*drawBeforeIncrease=*/false, /*doVerifyByDraw=*/false, 6);
+}
+
+// Test increasing depth of level 3 (inside base/max range) after drawing (updates flushed).
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseInsideRangeDrawnVerifyByDraw)
+{
+    runTest(/*drawBeforeIncrease=*/true, /*doVerifyByDraw=*/true, 3);
+}
+
+// Test increasing depth of level 3 (inside base/max range) after drawing (updates flushed).
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseInsideRangeDrawnVerifyByReadPixels)
+{
+    runTest(/*drawBeforeIncrease=*/true, /*doVerifyByDraw=*/false, 3);
+}
+
+// Test increasing depth of level 3 (inside base/max range) without drawing (updates staged).
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseInsideRangeStagedVerifyByDraw)
+{
+    runTest(/*drawBeforeIncrease=*/false, /*doVerifyByDraw=*/true, 3);
+}
+
+// Test increasing depth of level 3 (inside base/max range) without drawing (updates staged).
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseInsideRangeStagedVerifyByReadPixels)
+{
+    runTest(/*drawBeforeIncrease=*/false, /*doVerifyByDraw=*/false, 3);
 }
 
 // Test that texture completeness is updated if texture max level changes.
@@ -23581,6 +23853,12 @@ ANGLE_INSTANTIATE_TEST_ES2(Texture3DTestES2);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture3DTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(Texture3DTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture3DIncreaseDepthTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    Texture3DIncreaseDepthTestES3,
+    ES3_OPENGL().enable(Feature::RecreateTextureOnTexImage3dDepthIncrease),
+    ES3_OPENGLES().enable(Feature::RecreateTextureOnTexImage3dDepthIncrease));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DIntegerAlpha1TestES3);
 ANGLE_INSTANTIATE_TEST_ES3(Texture2DIntegerAlpha1TestES3);

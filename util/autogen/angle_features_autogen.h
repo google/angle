@@ -305,6 +305,7 @@ enum class Feature
     ReattachTextureToFboAfterLayerIncrease,
     RecreateImmutableTextureOnBaseLevelIncrease,
     RecreateMipmapLevelsBeforeGenerate,
+    RecreateTextureOnTexImage3dDepthIncrease,
     RecycleVkEvent,
     RemoveDynamicIndexingOfSwizzledVector,
     RemoveInvariantAndCentroidForESSL3,
