@@ -1230,11 +1230,7 @@ void CaptureEGLCallToFrameCapture(CaptureFuncT captureFunc,
         egl::Display *display = GetEGLDisplayArg(captureParams...);
         if (display)
         {
-            for (const auto &contextIter : display->getState().contextMap)
-            {
-                context = contextIter.second;
-                break;
-            }
+            context = display->getState().contextMap.first();
         }
         if (!context)
         {

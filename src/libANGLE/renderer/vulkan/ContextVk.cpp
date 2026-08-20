@@ -1510,10 +1510,9 @@ angle::Result ContextVk::initialize(const angle::ImageLoadContext &imageLoadCont
     if (isEligibleForMutableTextureFlush())
     {
         ASSERT(mShareGroupVk->getContexts().size() == 1);
-        for (auto context : mShareGroupVk->getContexts())
-        {
-            ANGLE_TRY(vk::GetImpl(context.second)->flushOutsideRenderPassCommands());
-        }
+        ANGLE_TRY(mShareGroupVk->getContexts().forEach([](gl::Context *context) {
+            return vk::GetImpl(context)->flushOutsideRenderPassCommands();
+        }));
     }
 
     return angle::Result::Continue;

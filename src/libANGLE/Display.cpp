@@ -874,13 +874,9 @@ void DisplayState::notifyDeviceLost() const
         return;
     }
 
-    {
-        std::lock_guard<angle::SimpleMutex> lock(contextMapMutex);
-        for (auto context = contextMap.begin(); context != contextMap.end(); context++)
-        {
-            context->second->markContextLost(gl::GraphicsResetStatus::UnknownContextReset);
-        }
-    }
+    contextMap.forEach([](gl::Context *context) {
+        context->markContextLost(gl::GraphicsResetStatus::UnknownContextReset);
+    });
 
     deviceLost = true;
 }
@@ -1110,11 +1106,7 @@ void Display::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
 {
     ASSERT(index == kGPUSwitchedSubjectIndex);
     ASSERT(message == angle::SubjectMessage::SubjectChanged);
-    std::lock_guard<angle::SimpleMutex> lock(mState.contextMapMutex);
-    for (auto context : mState.contextMap)
-    {
-        context.second->onGPUSwitch();
-    }
+    mState.contextMap.forEach([](gl::Context *context) { context->onGPUSwitch(); });
 }
 
 void Display::setupDisplayPlatform(rx::DisplayImpl *impl)
@@ -1275,15 +1267,15 @@ Error Display::destroyInvalidEglObjects()
     // EGL_Terminate, EGL_ReleaseThread, ThreadCleanupCallBACK.
     // Those functions are protected by egl global lock,
     // so there is no race condition on mInvalidContextMap.
-    while (!mInvalidContextMap.empty())
+    for (gl::Context *context : mInvalidContextMap.extractAll())
     {
-        gl::Context *context = mInvalidContextMap.begin()->second;
+        ASSERT(!context->isReferenced());
         // eglReleaseThread() may call to this method when there are still Contexts, that may
         // potentially acces shared state of the "context".
         // Need AddRefLock because there may be ContextMutex destruction.
         ScopedContextMutexAddRefLock lock(context->getContextMutex());
         context->setIsDestroyed();
-        ANGLE_TRY(releaseContextImpl(eraseContextImpl(context, &mInvalidContextMap)));
+        ANGLE_TRY(releaseContextImpl(std::unique_ptr<gl::Context>(context)));
     }
 
     while (!mInvalidImageMap.empty())
@@ -1348,50 +1340,12 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
                            std::make_move_iterator(mSyncMap.end()));
     mSyncMap.clear();
 
+    mState.contextMap.pruneUnreferenced(&mInvalidContextMap);
+
+    if (!mState.contextMap.empty())
     {
-        // Lock mState.contextMapMutex to protect mState.contextMap.
-        // mInvalidContextMap does not need protection. It just happens to fall within this scope.
-        std::lock_guard<angle::SimpleMutex> lock(mState.contextMapMutex);
-        // Cache total number of contexts before invalidation. This is used as a check to verify
-        // that no context is "lost" while being moved between the various sets.
-        size_t contextSetSizeBeforeInvalidation =
-            mState.contextMap.size() + mInvalidContextMap.size();
-
-        // If app called eglTerminate and no active threads remain,
-        // force release any context that is still current.
-        ContextMap contextsStillCurrent = {};
-        for (auto context : mState.contextMap)
-        {
-            if (context.second->isReferenced())
-            {
-                contextsStillCurrent.emplace(context);
-                continue;
-            }
-
-            // Add context that is not current to mInvalidContextSet for cleanup.
-            mInvalidContextMap.emplace(context);
-        }
-
-        // There are many methods that require contexts that are still current to be present in
-        // display's contextSet like during context release or to notify of state changes in a
-        // subject. So as to not interrupt this flow, do not remove contexts that are still
-        // current on some thread from display's contextSet even though eglTerminate marks such
-        // contexts as invalid.
-        //
-        // "mState.contextSet" will now contain only those contexts that are still current on
-        // some thread.
-        mState.contextMap = std::move(contextsStillCurrent);
-
-        // Assert that the total number of contexts is the same before and after context
-        // invalidation.
-        ASSERT(contextSetSizeBeforeInvalidation ==
-               mState.contextMap.size() + mInvalidContextMap.size());
-
-        if (!mState.contextMap.empty())
-        {
-            // There was atleast 1 context that was current on some thread, early return.
-            return NoError();
-        }
+        // There was at least 1 context that was current on some thread, early return.
+        return NoError();
     }
 
     // The global texture and semaphore managers should be deleted with the last context that uses
@@ -1802,10 +1756,7 @@ Error Display::createContext(const Config *configuration,
     }
 
     ASSERT(context != nullptr);
-    {
-        std::lock_guard<angle::SimpleMutex> lock(mState.contextMapMutex);
-        mState.contextMap.insert(std::pair(context->id().value, context));
-    }
+    mState.contextMap.insert(context->id(), context);
 
     ASSERT(outContext != nullptr);
     *outContext = context;
@@ -1931,20 +1882,13 @@ Error Display::makeCurrent(Thread *thread,
 
 Error Display::restoreLostDevice()
 {
+    // If reset notifications have been requested, application must delete all contexts first
+    const bool noResetNotificationRequested = mState.contextMap.forEach(
+        [](gl::Context *context) { return !context->isResetNotificationEnabled(); });
+    if (!noResetNotificationRequested)
     {
-        std::lock_guard<angle::SimpleMutex> lock(mState.contextMapMutex);
-        for (ContextMap::iterator ctx = mState.contextMap.begin(); ctx != mState.contextMap.end();
-             ctx++)
-        {
-            if (ctx->second->isResetNotificationEnabled())
-            {
-                // If reset notifications have been requested, application must delete all contexts
-                // first
-                return egl::Error(EGL_CONTEXT_LOST);
-            }
-        }
+        return egl::Error(EGL_CONTEXT_LOST);
     }
-
     return mImplementation->restoreLostDevice(this);
 }
 
@@ -2004,24 +1948,16 @@ void Display::destroyStreamImpl(Stream *stream, StreamSet *streams)
 Error Display::releaseContext(gl::Context *context, Thread *thread)
 {
     // Use scoped_ptr to make sure the context is always freed.
-    std::unique_ptr<gl::Context> uniqueContextPtr;
-    {
-        std::lock_guard<angle::SimpleMutex> lock(mState.contextMapMutex);
-        uniqueContextPtr = eraseContextImpl(context, &mState.contextMap);
-    }
+    std::unique_ptr<gl::Context> uniqueContextPtr = eraseContextImpl(context, &mState.contextMap);
     return releaseContextImpl(std::move(uniqueContextPtr));
 }
 
 std::unique_ptr<gl::Context> Display::eraseContextImpl(gl::Context *context, ContextMap *contexts)
 {
     ASSERT(!context->isReferenced());
-
-    // Use scoped_ptr to make sure the context is always freed.
-    std::unique_ptr<gl::Context> unique_context(context);
-    ASSERT(contexts->find(context->id().value) != contexts->end());
-    contexts->erase(context->id().value);
-
-    return unique_context;
+    bool contextFound = contexts->erase(context->id());
+    ASSERT(contextFound);
+    return std::unique_ptr<gl::Context>(context);
 }
 
 Error Display::releaseContextImpl(std::unique_ptr<gl::Context> &&context)
@@ -2840,9 +2776,7 @@ angle::ImageLoadContext Display::getImageLoadContext() const
 
 const gl::Context *Display::getContext(gl::ContextID contextID) const
 {
-    std::lock_guard<angle::SimpleMutex> lock(mState.contextMapMutex);
-    auto iter = mState.contextMap.find(contextID.value);
-    return iter != mState.contextMap.end() ? iter->second : nullptr;
+    return mState.contextMap.find(contextID);
 }
 
 const egl::Surface *Display::getSurface(egl::SurfaceID surfaceID) const
@@ -2865,9 +2799,7 @@ const egl::Sync *Display::getSync(egl::SyncID syncID) const
 
 gl::Context *Display::getContext(gl::ContextID contextID)
 {
-    std::lock_guard<angle::SimpleMutex> lock(mState.contextMapMutex);
-    auto iter = mState.contextMap.find(contextID.value);
-    return iter != mState.contextMap.end() ? iter->second : nullptr;
+    return mState.contextMap.find(contextID);
 }
 
 egl::Surface *Display::getSurface(egl::SurfaceID surfaceID)

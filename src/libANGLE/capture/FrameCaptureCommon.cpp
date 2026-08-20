@@ -735,12 +735,11 @@ void FrameCaptureShared::resetMidExecutionCapture(gl::Context *context)
     }
 
     egl::ShareGroup *shareGroup = context->getShareGroup();
-    for (auto shareContext : shareGroup->getContexts())
-    {
-        FrameCapture *frameCapture = shareContext.second->getFrameCapture();
+    shareGroup->getContexts().forEach([](gl::Context *shareContext) {
+        FrameCapture *frameCapture = shareContext->getFrameCapture();
         frameCapture->reset();
         frameCapture->getStateResetHelper().reset();
-    }
+    });
 
     mActiveFrameIndices.clear();
     mWroteIndexFile = false;

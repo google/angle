@@ -300,6 +300,7 @@ libangle_headers = [
   "src/libANGLE/MemoryObject.h",
   "src/libANGLE/MemoryProgramCache.h",
   "src/libANGLE/MemoryShaderCache.h",
+  "src/libANGLE/ObjectMap.h",
   "src/libANGLE/Observer.h",
   "src/libANGLE/PixelLocalStorage.h",
   "src/libANGLE/Program.h",
