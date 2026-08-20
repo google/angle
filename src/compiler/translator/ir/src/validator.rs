@@ -20,6 +20,11 @@
 //     validate_constant_id_is_in_bound_and_alive(), validate_variable_id_is_in_bound_and_alive()
 //   - Catch misuse of GLSL built-in variables: validate_misuse_of_builtin_names()
 //
+// Names:
+//   - Interface variables with NameSource::ShaderInterface are unique;
+//   - Interface variables with NameSource::Internal are unique:
+//     validate_interface_variables_have_unique_names()
+//
 // Types:
 //   - Validate that ImageType fields are valid in combination with ImageDimension:
 //     validate_image_types()
@@ -81,10 +86,8 @@
 // TODO(http://anglebug.com/349994211): to validate:
 //   - If there's a cached "has side effect", that it's correct.
 //   - Loop blocks ends in the appropriate instructions.
-//   - Interface variables with NameSource::Internal are unique.
 //   - NameSource::Internal names don't start with the user and temporary name prefixes (_u, t and f
 //     respectively).
-//   - Interface variables with NameSource::ShaderInterface are unique.
 //   - NameSource::ShaderInterface and NameSource::Internal are never found inside body
 //   - blocks, those should always be Temporary.
 //   - Type matches?
@@ -299,6 +302,7 @@ impl<'a> Validator<'a> {
         self.validate_all_ids_are_present();
         self.validate_all_alive_variables_are_pointers();
         self.validate_misuse_of_builtin_names();
+        self.validate_interface_variables_have_unique_names();
         self.validate_decorations();
         self.validate_no_pointer_to_pointer_type();
         self.validate_all_variables_are_declared_in_scope();
@@ -948,6 +952,33 @@ impl<'a> Validator<'a> {
                     self.on_error(format_args!(
                         "invalid built-in variable: {:?}, built-in variable must not have \
                          self-defined variable name and must have Internal name source",
+                        variable
+                    ));
+                }
+            }
+        }
+    }
+
+    fn validate_interface_variables_have_unique_names(&self) {
+        let mut seen_interface_names: HashSet<Name> = HashSet::new();
+        for variable in self.ir.meta.all_variables().iter().filter(|variable| {
+            !variable.is_dead_code_eliminated
+                && variable.is_interface_variable()
+                && !variable.name.name.is_empty()
+        }) {
+            match variable.name.source {
+                NameSource::ShaderInterface | NameSource::Internal => {
+                    if !seen_interface_names.insert(variable.name) {
+                        self.on_error(format_args!(
+                            "invalid variable: {:?}: duplicate interface variable name found: {:?}",
+                            variable, variable.name
+                        ));
+                    }
+                }
+                NameSource::Temporary => {
+                    self.on_error(format_args!(
+                        "invalid variable: {:?}: interface variable should not have a temporary \
+                         name",
                         variable
                     ));
                 }

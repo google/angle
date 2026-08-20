@@ -1619,10 +1619,10 @@ impl Variable {
     pub fn is_built_in(&self) -> bool {
         self.built_in.is_some()
     }
+
     pub fn is_interface_variable(&self) -> bool {
-        let is_interface_variable = self.is_built_in() || !self.decorations.decorations.is_empty();
-        debug_assert!(!is_interface_variable || self.scope == VariableScope::Global);
-        is_interface_variable
+        self.scope == VariableScope::Global
+            && (self.is_built_in() || !self.decorations.decorations.is_empty())
     }
 }
 
