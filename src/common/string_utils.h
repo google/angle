@@ -34,13 +34,19 @@ enum SplitResult
 };
 
 std::vector<std::string> SplitString(const std::string &input,
-                                     const std::string &delimiters,
+                                     const std::string_view &delimiters,
                                      WhitespaceHandling whitespace,
                                      SplitResult resultType);
+
+std::vector<std::string_view> SplitStringView(const std::string_view &input,
+                                              const std::string_view &delimiters,
+                                              WhitespaceHandling whitespace,
+                                              SplitResult resultType);
 
 void SplitStringAlongWhitespace(const std::string &input, std::vector<std::string> *tokensOut);
 
 std::string TrimString(const std::string &input, const std::string &trimChars);
+std::string_view TrimStringView(const std::string_view &input, const std::string &trimChars);
 
 // Return the substring starting at offset and up to the first occurance of the |delimeter|.
 std::string GetPrefix(const std::string &input, size_t offset, const char *delimiter);

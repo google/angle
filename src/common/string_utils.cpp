@@ -41,11 +41,26 @@ namespace angle
 const char kWhitespaceASCII[] = " \f\n\r\t\v";
 
 std::vector<std::string> SplitString(const std::string &input,
-                                     const std::string &delimiters,
+                                     const std::string_view &delimiters,
                                      WhitespaceHandling whitespace,
                                      SplitResult resultType)
 {
-    std::vector<std::string> result;
+    std::vector<std::string_view> views =
+        SplitStringView(input, delimiters, whitespace, resultType);
+    std::vector<std::string> result(views.size());
+    for (size_t i = 0; i < views.size(); i++)
+    {
+        result[i] = std::string(views[i]);
+    }
+    return result;
+}
+
+std::vector<std::string_view> SplitStringView(const std::string_view &input,
+                                              const std::string_view &delimiters,
+                                              WhitespaceHandling whitespace,
+                                              SplitResult resultType)
+{
+    std::vector<std::string_view> result;
     if (input.empty())
     {
         return result;
@@ -56,7 +71,7 @@ std::vector<std::string> SplitString(const std::string &input,
     {
         auto end = input.find_first_of(delimiters, start);
 
-        std::string piece;
+        std::string_view piece;
         if (end == std::string::npos)
         {
             piece = input.substr(start);
@@ -70,7 +85,7 @@ std::vector<std::string> SplitString(const std::string &input,
 
         if (whitespace == TRIM_WHITESPACE)
         {
-            piece = TrimString(piece, kWhitespaceASCII);
+            piece = TrimStringView(piece, kWhitespaceASCII);
         }
 
         if (resultType == SPLIT_WANT_ALL || !piece.empty())
@@ -103,6 +118,11 @@ void SplitStringAlongWhitespace(const std::string &input, std::vector<std::strin
 }
 
 std::string TrimString(const std::string &input, const std::string &trimChars)
+{
+    return std::string(TrimStringView(input, trimChars));
+}
+
+std::string_view TrimStringView(const std::string_view &input, const std::string &trimChars)
 {
     auto begin = input.find_first_not_of(trimChars);
     if (begin == std::string::npos)
