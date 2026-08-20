@@ -11,6 +11,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <fstream>
+#include <string>
 
 #include "common/angleutils.h"
 #include "common/debug.h"
@@ -365,19 +367,25 @@ GPUTestExpectationsParser::GPUTestExpectationsParser()
 
 GPUTestExpectationsParser::~GPUTestExpectationsParser() = default;
 
+template <typename InputStream>
 bool GPUTestExpectationsParser::loadTestExpectationsImpl(const GPUTestConfig *config,
-                                                         const std::string &data)
+                                                         InputStream &dataStream)
 {
     mEntries.clear();
     mErrorMessages.clear();
 
-    std::vector<std::string> lines = SplitString(data, "\n", TRIM_WHITESPACE, SPLIT_WANT_ALL);
     bool rt                        = true;
-    for (size_t i = 0; i < lines.size(); ++i)
+
+    size_t lineNumber = 1;
+    std::string line;
+    while (std::getline(dataStream, line))
     {
-        if (!parseLine(config, lines[i], i + 1))
+        if (!parseLine(config, line, lineNumber++))
+        {
             rt = false;
+        }
     }
+
     if (detectConflictsBetweenEntries())
     {
         mEntries.clear();
@@ -390,12 +398,14 @@ bool GPUTestExpectationsParser::loadTestExpectationsImpl(const GPUTestConfig *co
 bool GPUTestExpectationsParser::loadTestExpectations(const GPUTestConfig &config,
                                                      const std::string &data)
 {
-    return loadTestExpectationsImpl(&config, data);
+    std::istringstream iss(data);
+    return loadTestExpectationsImpl(&config, iss);
 }
 
 bool GPUTestExpectationsParser::loadAllTestExpectations(const std::string &data)
 {
-    return loadTestExpectationsImpl(nullptr, data);
+    std::istringstream iss(data);
+    return loadTestExpectationsImpl(nullptr, iss);
 }
 
 bool GPUTestExpectationsParser::loadTestExpectationsFromFileImpl(const GPUTestConfig *config,
@@ -404,13 +414,14 @@ bool GPUTestExpectationsParser::loadTestExpectationsFromFileImpl(const GPUTestCo
     mEntries.clear();
     mErrorMessages.clear();
 
-    std::string data;
-    if (!ReadFileToString(path, &data))
+    std::ifstream fileStream(path);
+    if (!fileStream)
     {
         mErrorMessages.push_back(kErrorMessage[kErrorFileIO]);
         return false;
     }
-    return loadTestExpectationsImpl(config, data);
+
+    return loadTestExpectationsImpl(config, fileStream);
 }
 
 bool GPUTestExpectationsParser::loadTestExpectationsFromFile(const GPUTestConfig &config,
