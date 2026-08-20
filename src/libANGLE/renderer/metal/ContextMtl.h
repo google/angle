@@ -31,6 +31,7 @@ namespace rx
 {
 class DisplayMtl;
 class FramebufferMtl;
+class QueryMtl;
 class VertexArrayMtl;
 class ProgramMtl;
 class ProgramExecutableMtl;
@@ -300,13 +301,12 @@ class ContextMtl : public ContextImpl, public mtl::Context
                                        bool renderPassChanged);
     void onBackbufferResized(const gl::Context *context, WindowSurfaceMtl *backbuffer);
 
-    // Invoke by QueryMtl
-    angle::Result onOcclusionQueryBegin(const gl::Context *context, QueryMtl *query);
-    void onOcclusionQueryEnd(const gl::Context *context, QueryMtl *query);
-    void onOcclusionQueryDestroy(const gl::Context *context, QueryMtl *query);
+    angle::Result onOcclusionQueryBegin(QueryMtl &query);
+    void onOcclusionQueryEnd();
+    void onOcclusionQueryDestroy(QueryMtl &query);
 
     // Useful for temporarily pause then restart occlusion query during clear/blit with draw.
-    bool hasActiveOcclusionQuery() const { return mOcclusionQuery; }
+    bool hasActiveOcclusionQuery() const { return mOcclusionQueryIsEnabledInRenderPass; }
     // Disable the occlusion query in the current render pass.
     // The render pass must already started.
     void disableActiveOcclusionQueryInRenderPass();
@@ -526,11 +526,13 @@ class ContextMtl : public ContextImpl, public mtl::Context
     angle::Result handleDirtyDepthStencilState(const gl::Context *context);
     angle::Result handleDirtyDepthBias(const gl::Context *context);
     angle::Result handleDirtyRenderPass(const gl::Context *context);
+    // Re-enable the occlusion query in the current render pass.
+    // The render pass must already started.
+    // NOTE: the old query's result will be retained and combined with the new result.
+    angle::Result enableOcclusionQueryInRenderPass();
     angle::Result checkIfPipelineChanged(const gl::Context *context,
                                          bool xfbPass,
                                          bool *pipelineDescChanged);
-
-    angle::Result startOcclusionQueryInRenderPass(QueryMtl *query, bool clearOldValue);
 
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -598,7 +600,6 @@ class ContextMtl : public ContextImpl, public mtl::Context
     FramebufferMtl *mDrawFramebuffer  = nullptr;
     VertexArrayMtl *mVertexArray      = nullptr;
     ProgramExecutableMtl *mExecutable = nullptr;
-    QueryMtl *mOcclusionQuery         = nullptr;
 
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
 
@@ -650,6 +651,9 @@ class ContextMtl : public ContextImpl, public mtl::Context
     mtl::ContextDevice mContextDevice;
 
     bool mContextLost = false;
+
+    mtl::BufferRef mOcclusionQueryResultBuffer;
+    bool mOcclusionQueryIsEnabledInRenderPass{false};
 };
 
 }  // namespace rx

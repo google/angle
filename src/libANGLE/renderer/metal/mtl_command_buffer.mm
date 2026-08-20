@@ -1541,8 +1541,7 @@ void RenderCommandEncoder::endEncodingImpl(bool considerDiscardSimulation)
                                 objCRenderPassDesc.stencilAttachment))
         hasAttachment = true;
 
-    // Set visibility result buffer
-    if (mOcclusionQueryPool.getNumRenderPassAllocatedQueries())
+    if (mOcclusionQueryPool.hasPendingVisibilityResults())
     {
         objCRenderPassDesc.visibilityResultBuffer =
             mOcclusionQueryPool.getRenderPassVisibilityPoolBuffer()->get();
