@@ -119,8 +119,14 @@ std::vector<std::string> GetCachedStringsFromEnvironmentVarOrAndroidProperty(
     const char *propertyName,
     const char *separator);
 
-// glob can have * as wildcard
-bool NamesMatchWithWildcard(const char *glob, const char *name);
+// Returns true if `potential_glob` contains characters that require matching using
+// `NamesMatchWithWildcard`
+bool IsGlobPattern(const std::string_view &potential_glob);
+
+// Returns true if and only if the `glob` pattern matches the string `name`. Each
+// pattern consists of regular characters, single-character wildcards (?), and
+// multi-character wildcards (*).
+bool NamesMatchWithWildcard(const std::string_view &glob, const std::string_view &name);
 
 std::vector<uint8_t> HexStringToUintVector(const std::string_view &hexStr);
 }  // namespace angle

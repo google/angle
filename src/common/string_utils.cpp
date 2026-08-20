@@ -337,44 +337,77 @@ std::vector<std::string> GetCachedStringsFromEnvironmentVarOrAndroidProperty(
     return SplitString(environment, separator, TRIM_WHITESPACE, SPLIT_WANT_NONEMPTY);
 }
 
-// glob can have * as wildcard
-bool NamesMatchWithWildcard(const char *glob, const char *name)
+bool IsGlobPattern(const std::string_view &pattern)
 {
-    // Find the first * in glob.
-    const char *firstWildcard = ANGLE_UNSAFE_TODO(strchr(glob, '*'));
+    return std::any_of(pattern.begin(), pattern.end(),
+                       [](const char c) { return c == '?' || c == '*'; });
+}
 
-    // If there are no wildcards, match the strings precisely.
-    if (firstWildcard == nullptr)
-    {
-        return ANGLE_UNSAFE_TODO(strcmp(glob, name)) == 0;
-    }
+bool NamesMatchWithWildcard(const std::string_view &glob, const std::string_view &name)
+{
+    // This function implements a linear-time string globbing algorithm based on
+    // https://research.swtch.com/glob.
+    // It is mostly taken from the implementation in gtest.cc.
 
-    // Otherwise, match up to the wildcard first.
-    size_t preWildcardLen = firstWildcard - glob;
-    if (ANGLE_UNSAFE_TODO(strncmp(glob, name, preWildcardLen)) != 0)
+    using StringIter = std::string_view::iterator;
+
+    StringIter nameIter        = name.begin();
+    const StringIter nameBegin = name.begin();
+    const StringIter nameEnd   = name.end();
+
+    StringIter globIter      = glob.begin();
+    const StringIter globEnd = glob.end();
+
+    StringIter globNext = globIter;
+    StringIter nameNext = nameIter;
+
+    while (globIter < globEnd || nameIter < nameEnd)
     {
+        if (globIter < globEnd)
+        {
+            switch (*globIter)
+            {
+                default:  // Match an ordinary character.
+                    if (nameIter < nameEnd && *nameIter == *globIter)
+                    {
+                        ++globIter;
+                        ++nameIter;
+                        continue;
+                    }
+                    break;
+
+                case '?':  // Match any single character.
+                    if (nameIter < nameEnd)
+                    {
+                        ++globIter;
+                        ++nameIter;
+                        continue;
+                    }
+                    break;
+
+                case '*':
+                    // Match zero or more characters. Start by skipping over the wildcard
+                    // and matching zero characters from name. If that fails, restart and
+                    // match one more character than the last attempt.
+                    globNext = globIter;
+                    nameNext = nameIter + 1;
+                    ++globIter;
+                    continue;
+            }
+        }
+
+        // Failed to match a character. Restart if possible.
+        if (nameBegin < nameNext && nameNext <= nameEnd)
+        {
+            globIter = globNext;
+            nameIter = nameNext;
+            continue;
+        }
+
         return false;
     }
 
-    const char *postWildcardRef = ANGLE_UNSAFE_TODO(glob + preWildcardLen + 1);
-
-    // As a small optimization, if the wildcard is the last character in glob, accept the match
-    // already.
-    if (postWildcardRef[0] == '\0')
-    {
-        return true;
-    }
-
-    // Try to match the wildcard with a number of characters.
-    for (size_t matchSize = 0; ANGLE_UNSAFE_TODO(name[matchSize]) != '\0'; ++matchSize)
-    {
-        if (NamesMatchWithWildcard(postWildcardRef, ANGLE_UNSAFE_TODO(name + matchSize)))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return true;
 }
 
 std::vector<uint8_t> HexStringToUintVector(const std::string_view &hexStr)
