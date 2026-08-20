@@ -1288,9 +1288,9 @@ Error Display::destroyInvalidEglObjects()
         destroyStreamImpl(*mInvalidStreamSet.begin(), &mInvalidStreamSet);
     }
 
-    while (!mInvalidSurfaceMap.empty())
+    for (Surface *surface : mInvalidSurfaceMap.extractAll())
     {
-        ANGLE_TRY(destroySurfaceImpl(mInvalidSurfaceMap.begin()->second, &mInvalidSurfaceMap));
+        ANGLE_TRY(destroySurfaceImpl(surface, nullptr));
     }
 
     while (!mInvalidSyncMap.empty())
@@ -1333,8 +1333,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     mInvalidStreamSet.insert(mStreamSet.begin(), mStreamSet.end());
     mStreamSet.clear();
 
-    mInvalidSurfaceMap.insert(mState.surfaceMap.begin(), mState.surfaceMap.end());
-    mState.surfaceMap.clear();
+    mState.surfaceMap.moveTo(&mInvalidSurfaceMap);
 
     mInvalidSyncMap.insert(std::make_move_iterator(mSyncMap.begin()),
                            std::make_move_iterator(mSyncMap.end()));
@@ -1475,7 +1474,7 @@ Error Display::createWindowSurface(const Config *configuration,
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
-    mState.surfaceMap.insert(std::pair((*outSurface)->id().value, *outSurface));
+    mState.surfaceMap.insert((*outSurface)->id(), *outSurface);
 
     WindowSurfaceMap *windowSurfaces = GetWindowSurfaces();
     ASSERT(windowSurfaces && windowSurfaces->find(window) == windowSurfaces->end());
@@ -1510,7 +1509,7 @@ Error Display::createPbufferSurface(const Config *configuration,
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
-    mState.surfaceMap.insert(std::pair((*outSurface)->id().value, *outSurface));
+    mState.surfaceMap.insert((*outSurface)->id(), *outSurface);
 
     return NoError();
 }
@@ -1542,7 +1541,7 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration,
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
-    mState.surfaceMap.insert(std::pair((*outSurface)->id().value, *outSurface));
+    mState.surfaceMap.insert((*outSurface)->id(), *outSurface);
 
     return NoError();
 }
@@ -1573,7 +1572,7 @@ Error Display::createPixmapSurface(const Config *configuration,
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
-    mState.surfaceMap.insert(std::pair((*outSurface)->id().value, *outSurface));
+    mState.surfaceMap.insert((*outSurface)->id(), *outSurface);
 
     return NoError();
 }
@@ -1914,10 +1913,12 @@ Error Display::destroySurfaceImpl(Surface *surface, SurfaceMap *surfaces)
         ASSERT(surfaceRemoved);
     }
 
-    auto iter = surfaces->find(surface->id().value);
-    ASSERT(iter != surfaces->end());
+    if (surfaces)
+    {
+        bool surfaceFound = surfaces->erase(surface->id());
+        ASSERT(surfaceFound);
+    }
     mSurfaceHandleAllocator.release(surface->id().value);
-    surfaces->erase(iter);
     ANGLE_TRY(surface->onDestroy(this));
     return NoError();
 }
@@ -2781,8 +2782,7 @@ const gl::Context *Display::getContext(gl::ContextID contextID) const
 
 const egl::Surface *Display::getSurface(egl::SurfaceID surfaceID) const
 {
-    auto iter = mState.surfaceMap.find(surfaceID.value);
-    return iter != mState.surfaceMap.end() ? iter->second : nullptr;
+    return mState.surfaceMap.find(surfaceID);
 }
 
 const egl::Image *Display::getImage(egl::ImageID imageID) const
@@ -2804,8 +2804,7 @@ gl::Context *Display::getContext(gl::ContextID contextID)
 
 egl::Surface *Display::getSurface(egl::SurfaceID surfaceID)
 {
-    auto iter = mState.surfaceMap.find(surfaceID.value);
-    return iter != mState.surfaceMap.end() ? iter->second : nullptr;
+    return mState.surfaceMap.find(surfaceID);
 }
 
 egl::Image *Display::getImage(egl::ImageID imageID)

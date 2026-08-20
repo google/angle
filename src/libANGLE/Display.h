@@ -27,8 +27,10 @@
 #include "libANGLE/LoggingAnnotator.h"
 #include "libANGLE/MemoryProgramCache.h"
 #include "libANGLE/MemoryShaderCache.h"
+#include "libANGLE/ObjectMap.h"
 #include "libANGLE/Observer.h"
 #include "libANGLE/ShareGroup.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/Version.h"
 #include "platform/Feature.h"
 #include "platform/autogen/FrontendFeatures_autogen.h"
@@ -70,7 +72,7 @@ class Surface;
 class Sync;
 class Thread;
 
-using SurfaceMap = angle::HashMap<GLuint, Surface *>;
+using SurfaceMap = priv::ObjectMap<Surface, angle::SimpleMutex>;
 using ThreadSet  = angle::HashSet<Thread *>;
 
 struct DisplayState final : private angle::NonCopyable
