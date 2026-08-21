@@ -265,27 +265,17 @@ def run_trace(trace, args, screenshot_device_dir, extra_args):
         flags.append('--' + mode)
     if args.maxsteps != '':
         flags += ['--max-steps-performed', args.maxsteps]
-    if args.run_to_key_frame:
-        flags.append('--run-to-key-frame')
     if args.fixedtime != '':
         flags += ['--fixed-test-time-with-warmup', args.fixedtime]
     if args.minimizegpuwork:
         flags.append('--minimize-gpu-work')
-    if args.skip_blit_in_offscreen:
-        flags.append('--skip-blit-in-offscreen')
     if screenshot_device_dir != None:
         flags += ['--screenshot-dir', screenshot_device_dir]
     if args.screenshot_frame != '':
         flags += ['--screenshot-frame', args.screenshot_frame]
-    if args.fps_limit != '':
-        flags += ['--fps-limit', args.fps_limit]
-    if args.fps_limit_uses_busy_wait:
-        flags.append('--fps-limit-uses-busy-wait')
     if args.gpu_time:
         # Keep internal argument name the same for compatibility with the C++ executable
         flags.append('--track-gpu-time')
-    if args.add_swap_into_gpu_time:
-        flags.append('--add-swap-into-gpu-time')
     if args.frame_wall_time:
         flags.append('--track-frame-wall-time')
     if args.add_swap_into_frame_wall_time:
@@ -1980,17 +1970,10 @@ def main():
         action='store_true',
         default=False)
     parser.add_argument('--maxsteps', help='Run for fixed set of frames', default='')
-    parser.add_argument(
-        '--run-to-key-frame', help='Run to key-frame', action='store_true', default=False)
     parser.add_argument('--fixedtime', help='Run for fixed set of time', default='')
     parser.add_argument(
         '--minimizegpuwork',
         help='Whether to run with minimized GPU work',
-        action='store_true',
-        default=False)
-    parser.add_argument(
-        '--skip-blit-in-offscreen',
-        help='skip blit operation in offscreen mode',
         action='store_true',
         default=False)
     parser.add_argument('--output-tag', help='Tag for output files.')
@@ -2034,8 +2017,6 @@ def main():
         '--screenshot-frame',
         help='Specify a specific frame to screenshot. Uses --screenshot-dir if provied.',
         default='')
-    parser.add_argument(
-        '--fps-limit', help='Limit replay framerate to specified value', default='')
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
@@ -2049,17 +2030,7 @@ def main():
         action='store_true',
         default=False)
     parser.add_argument(
-        '--fps-limit-uses-busy-wait',
-        help='Use busy wait instead of sleep to limit the framerate.',
-        action='store_true',
-        default=False)
-    parser.add_argument(
         '--gpu-time', help='Enables GPU time tracking', action='store_true', default=False)
-    parser.add_argument(
-        '--add-swap-into-gpu-time',
-        help='Adds swap/offscreen blit into the gpu_time tracking',
-        action='store_true',
-        default=False)
     parser.add_argument(
         '--frame-wall-time',
         help='Enables frame_wall_time tracking',
