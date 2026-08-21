@@ -244,7 +244,7 @@ def run_from_dir(dir):
         os.chdir(cwd)
 
 
-def run_trace(trace, args, screenshot_device_dir):
+def run_trace(trace, args, screenshot_device_dir, extra_args):
     mode = get_mode(args)
 
     # Kick off a subprocess that collects peak gpu memory periodically
@@ -299,6 +299,9 @@ def run_trace(trace, args, screenshot_device_dir):
             flags.append('--track-vulkan-api-wall-time 1')
         else:
             print("WARNING: '--vulkan-api-wall-time' requires `--frame-wall-time`. Ignoring...\n")
+
+    # Pass through any unrecognized args directly to the test executable
+    flags += extra_args
 
     # Build a command that can be run directly over ADB, for example:
     r'''
@@ -941,7 +944,8 @@ def get_raw_data_name(args):
     else:
         return ''
 
-def run_traces(args):
+
+def run_traces(args, extra_args):
     # Load trace names
     test_json = os.path.join(args.build_dir, 'gen/trace_list.json')
     with open(os.path.join(DEFAULT_TEST_DIR, test_json)) as f:
@@ -1217,7 +1221,7 @@ def run_traces(args):
                         screenshot_device_dir = temp_dir
 
                     logging.debug('Running %s' % test)
-                    test_time = run_trace(test, args, screenshot_device_dir)
+                    test_time = run_trace(test, args, screenshot_device_dir, extra_args)
 
                     if screenshot_device_dir:
                         pull_screenshot(args, screenshot_device_dir, renderer)
@@ -2078,7 +2082,7 @@ def main():
         help='Generates summary from raw_data CSV. Takes exactly two arguments - raw_data filename followed by summary filename.'
     )
 
-    args = parser.parse_args()
+    args, extra_args = parser.parse_known_args()
 
     angle_test_util.SetupLogging(args.log.upper())
 
@@ -2107,7 +2111,7 @@ def main():
         try:
             if args.custom_throttling_temp:
                 set_vendor_thermal_control(disabled=1)
-            run_traces(args)
+            run_traces(args, extra_args)
             if args.output_tag:
                 generate_summary(get_raw_data_name(args), get_summary_name(args))
         finally:
