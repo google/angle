@@ -271,6 +271,9 @@ IGNORED_INCLUDES = {
     b'profiling/profiling.h',
     # Behind #ifdef HAVE_S390X_VX in third_party/zlib/crc32.c
     b'contrib/crc32vx/crc32_vx_hooks.h',
+    # Behind #if defined(ANGLE_ENABLE_EXPLICIT_CONTEXT) in
+    # src/libGLESv2/egl_stubs_getprocaddress_autogen.cpp
+    b'libGLESv2/entry_points_gles_ext_explicit_context_autogen.h',
 }
 
 IGNORED_INCLUDE_PREFIXES = {
