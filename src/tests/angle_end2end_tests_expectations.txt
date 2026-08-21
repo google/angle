@@ -2865,7 +2865,8 @@
 512157667 PIXEL10 VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 512157667 PIXEL10 GLES : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
 512157667 GALAXYS24EXYNOS VULKAN : WebGLCompatibilityTest.PointSizeDefaultWhenNotSet/* = SKIP
-549269458 INTEL OPENGL : EGLSurfacelessContextTest.CheckFramebufferStatus/* = SKIP
+549269458 WIN INTEL OPENGL : EGLSurfacelessContextTest.CheckFramebufferStatus/* = SKIP
+543082398 WIN INTEL OPENGL : FramebufferTest_ES3.ClearTextureActiveRenderAttachmentColorOtherLevel/* = SKIP
 
 // Likely a SwiftShader bug.
 514397873 SWIFTSHADER : DrawBaseVertexBaseInstanceTest_ES3.BaseInstanceDivisorIndexing/* = SKIP
