@@ -2402,6 +2402,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, resetBaseLevelForASTCSubImage, IsPowerVR(vendor));
     ANGLE_FEATURE_CONDITION(features, recreateImmutableTextureOnBaseLevelIncrease,
                             IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, resetTexStorage2DBaseLevel, IsPowerVR(vendor));
     ANGLE_FEATURE_CONDITION(features, recreateTextureOnTexImage3dDepthIncrease,
                             isQualcomm && IsAndroid());
 

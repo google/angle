@@ -315,6 +315,7 @@ enum class Feature
     ResetBaseLevelForASTCSubImage,
     ResetSampleCoverageOnFBOChange,
     ResetTexImage2DBaseLevel,
+    ResetTexStorage2DBaseLevel,
     ResyncDepthRangeOnClipControl,
     RetainSPIRVDebugInfo,
     RewriteRepeatedAssignToSwizzled,

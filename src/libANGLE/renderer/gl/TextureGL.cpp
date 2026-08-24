@@ -1332,10 +1332,23 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
         ASSERT(size.depth == 1);
         if (functions->texStorage2D)
         {
+            const bool resetBaseLevel =
+                features.resetTexStorage2DBaseLevel.enabled && mAppliedBaseLevel > 0;
+            const GLuint originalBaseLevel = mAppliedBaseLevel;
+            if (resetBaseLevel)
+            {
+                ANGLE_TRY(setBaseLevel(context, 0));
+            }
+
             ANGLE_GL_TRY_ALWAYS_CHECK(
                 context,
                 functions->texStorage2D(ToGLenum(type), static_cast<GLsizei>(levels),
                                         texStorageFormat.internalFormat, size.width, size.height));
+
+            if (resetBaseLevel)
+            {
+                ANGLE_TRY(setBaseLevel(context, originalBaseLevel));
+            }
         }
         else
         {
@@ -1436,10 +1449,23 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
                                         features.emulateImmutableCompressedTexture3D.enabled;
         if (functions->texStorage3D && !bypassTexStorage3D)
         {
+            const bool resetBaseLevel =
+                features.resetTexStorage2DBaseLevel.enabled && mAppliedBaseLevel > 0;
+            const GLuint originalBaseLevel = mAppliedBaseLevel;
+            if (resetBaseLevel)
+            {
+                ANGLE_TRY(setBaseLevel(context, 0));
+            }
+
             ANGLE_GL_TRY_ALWAYS_CHECK(
                 context, functions->texStorage3D(ToGLenum(type), static_cast<GLsizei>(levels),
                                                  texStorageFormat.internalFormat, size.width,
                                                  size.height, size.depth));
+
+            if (resetBaseLevel)
+            {
+                ANGLE_TRY(setBaseLevel(context, originalBaseLevel));
+            }
         }
         else
         {

@@ -327,6 +327,15 @@
             "issue": "https://crbug.com/528131119"
         },
         {
+            "name": "reset_TexStorage2D_base_level",
+            "category": "Workarounds",
+            "description": [
+                "Reset texture base level before calling glTexStorage2D to ",
+                "work around PowerVR driver bug."
+            ],
+            "issue": "https://crbug.com/551573368"
+        },
+        {
             "name": "use_temp_for_non_zero_base_level_GenMipmap_using_CopyImageSubData",
             "category": "Workarounds",
             "description": [

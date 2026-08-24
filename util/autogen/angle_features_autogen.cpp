@@ -315,6 +315,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ResetBaseLevelForASTCSubImage, "resetBaseLevelForASTCSubImage"},
     {Feature::ResetSampleCoverageOnFBOChange, "resetSampleCoverageOnFBOChange"},
     {Feature::ResetTexImage2DBaseLevel, "resetTexImage2DBaseLevel"},
+    {Feature::ResetTexStorage2DBaseLevel, "resetTexStorage2DBaseLevel"},
     {Feature::ResyncDepthRangeOnClipControl, "resyncDepthRangeOnClipControl"},
     {Feature::RetainSPIRVDebugInfo, "retainSPIRVDebugInfo"},
     {Feature::RewriteRepeatedAssignToSwizzled, "rewriteRepeatedAssignToSwizzled"},

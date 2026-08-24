@@ -23755,6 +23755,54 @@ TEST_P(Texture2DTestES3_NonZeroBaseLevelGenMipmaps, VerifyMipmapContents)
     EXPECT_GL_NO_ERROR();
 }
 
+class Texture2DTestES3_ResetTexStorage2DBaseLevel : public Texture2DBaseMaxTestES3
+{};
+
+// Test TexStorage2D on a texture that already has non-zero TEXTURE_BASE_LEVEL set.
+TEST_P(Texture2DTestES3_ResetTexStorage2DBaseLevel, TexStorage2DWithNonZeroBaseLevel)
+{
+    // http://anglebug.com/551573368
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    constexpr uint32_t kBaseLevel          = 1;
+    const GLColor kNewMipColors[kMipCount] = {
+        GLColor::yellow,
+        GLColor::cyan,
+        GLColor::white,
+        GLColor(127u, 127u, 127u, 255u),
+    };
+
+    initTest(false);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, kBaseLevel);
+
+    glTexStorage2D(GL_TEXTURE_2D, kMipCount, GL_RGBA8, kMip0Size, kMip0Size);
+    std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
+    fillMipData(mipData.data(), kMip0Size, kNewMipColors);
+    for (size_t mip = 0; mip < kMipCount; ++mip)
+    {
+        glTexSubImage2D(GL_TEXTURE_2D, static_cast<GLint>(mip), 0, 0, kMip0Size >> mip,
+                        kMip0Size >> mip, GL_RGBA, GL_UNSIGNED_BYTE,
+                        mipData.data() + getMipDataOffset(kMip0Size, mip));
+    }
+
+    // Test that all enabled mips have the expected data
+    for (uint32_t lod = kBaseLevel; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod - kBaseLevel);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColors[lod]);
+    }
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    for (uint32_t lod = 0; lod < kBaseLevel; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColors[lod]);
+    }
+}
+
 // Test that robust init via nullptr-upload to texture after invalidating an image with emulated
 // alpha works.
 TEST_P(Texture2DTestES3RobustInit, InvalidateEmulatedAlphaThenInitViaEmptyUpload)
@@ -23998,6 +24046,13 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     Texture2DTestES3_NonZeroBaseLevelGenMipmaps,
     ES3_OPENGL().enable(Feature::UseTempForNonZeroBaseLevelGenMipmapUsingCopyImageSubData),
     ES3_OPENGLES().enable(Feature::UseTempForNonZeroBaseLevelGenMipmapUsingCopyImageSubData));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3_ResetTexStorage2DBaseLevel);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3_ResetTexStorage2DBaseLevel,
+                               ES3_OPENGL().enable(Feature::ResetTexStorage2DBaseLevel),
+                               ES3_OPENGL().disable(Feature::ResetTexStorage2DBaseLevel),
+                               ES3_OPENGLES().enable(Feature::ResetTexStorage2DBaseLevel),
+                               ES3_OPENGLES().disable(Feature::ResetTexStorage2DBaseLevel));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureSizeLimitTest);
 ANGLE_INSTANTIATE_TEST(TextureSizeLimitTest,
