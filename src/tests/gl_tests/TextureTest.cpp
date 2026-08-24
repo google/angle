@@ -24122,6 +24122,57 @@ TEST_P(Texture2DTestES3RobustInit, MismatchedStaleLevelCompressedDraw)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 }
 
+// Test that a partial glCompressedTexSubImage2D preserves the robust-initialized
+// contents of the blocks it does not cover.
+TEST_P(Texture2DTestES3RobustInit, CompressedTexSubImagePreservesUninitializedBlocks)
+{
+    // RGTC1 rather than EAC R11 on purpose. EAC is not stored natively everywhere, and where it is
+    // emulated by an uncompressed format the level gets zero-initialized by a render-target clear
+    // instead of through the image, which survives the staging map and makes this test pass
+    // whatever the map flags are. RGTC1 has no render-target support anywhere, so the zero comes
+    // from the image and the staging map performed by the sub-image is what has to preserve it.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_rgtc"));
+
+    setUpProgram();
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    // RGTC1 blocks are 4x4 and 8 bytes each, so an 8x8 level is 2x2 blocks, 32 bytes.
+    // Passing null leaves the level for robust initialization to zero.
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RED_RGTC1_EXT, 8, 8, 0, 32, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    // Update only the top-right block, leaving the other three untouched. The offsets are
+    // block aligned, as ES 3.0 requires for a compressed sub-image. All bits set selects the
+    // index-7 entry, which is 1.0 for RGTC1, so the written block reads as full red.
+    constexpr GLubyte kBlock[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 4, 4, 4, 4, GL_COMPRESSED_RED_RGTC1_EXT,
+                              static_cast<GLsizei>(sizeof(kBlock)), kBlock);
+    EXPECT_GL_NO_ERROR();
+
+    // Clear to a colour that is not the expected result, so a missing draw fails.
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // The texture is 8x8 with 4x4 blocks, so each quadrant of the window samples exactly one
+    // block. RGTC1 is a red-channel format, so a robust-initialized block samples as opaque black
+    // and the block the sub-image wrote samples as opaque red.
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+    EXPECT_PIXEL_COLOR_EQ(w / 4, h / 4, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(3 * w / 4, h / 4, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(w / 4, 3 * h / 4, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(3 * w / 4, 3 * h / 4, GLColor::red);
+}
+
 // Test that robust initialization of a mismatched stale texture level during texSubImage2D
 // succeeds and does not cause a crash/OOB read.
 TEST_P(Texture2DTestES3RobustInit, MismatchedStaleLevelTexSubImage)
