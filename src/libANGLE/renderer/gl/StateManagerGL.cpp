@@ -151,18 +151,6 @@ inline void SetVertexAttribArrayEnabled(const FunctionsGL *functions, GLuint ind
         functions->getter(index, name, value)
 #endif
 
-// Non-indexed GLboolean -> glGetBooleanv
-void GetHelper(const FunctionsGL *functions, GLenum name, GLboolean *value)
-{
-    ANGLE_GL_CHECK_GET_HELPER(functions, getBooleanv, name, value);
-}
-
-// Indexed GLboolean -> glGetBooleani_v
-void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, GLboolean *value)
-{
-    ANGLE_GL_CHECK_GET_INDEXED_HELPER(functions, getBooleani_v, name, index, value);
-}
-
 // Non-indexed GLboolean -> glIsEnabled
 void GetEnabledHelper(const FunctionsGL *functions, GLenum name, GLboolean *value)
 {
@@ -174,15 +162,6 @@ void GetEnabledHelper(const FunctionsGL *functions, GLenum name, GLuint index, G
 {
     ANGLE_GL_CHECK_GET_INDEXED_ENABLED_HELPER(functions, isEnabledi, name, index, value);
 }
-
-// Non-indexed bool -> Non-index GLboolean
-void GetHelper(const FunctionsGL *functions, GLenum name, bool *value)
-{
-    GLboolean v = gl::ConvertToGLBoolean(*value);
-    GetHelper(functions, name, &v);
-    *value = gl::ConvertToBool(v);
-}
-
 // Non-indexed bool -> Non-indexed GLboolean (for enabled checks)
 void GetEnabledHelper(const FunctionsGL *functions, GLenum name, bool *value)
 {
@@ -197,38 +176,6 @@ void GetEnabledHelper(const FunctionsGL *functions, GLenum name, GLuint index, b
     GLboolean v = gl::ConvertToGLBoolean(*value);
     GetEnabledHelper(functions, name, index, &v);
     *value = gl::ConvertToBool(v);
-}
-
-// Non-indexed std::array<bool, N> -> Non-indexed GLboolean
-template <size_t N>
-void GetHelper(const FunctionsGL *functions, GLenum name, std::array<bool, N> *values)
-{
-    std::array<GLboolean, N> v;
-    for (size_t i = 0; i < N; i++)
-    {
-        v[i] = gl::ConvertToGLBoolean(values->at(i));
-    }
-    GetHelper(functions, name, v.data());
-    for (size_t i = 0; i < N; i++)
-    {
-        (*values)[i] = gl::ConvertToBool(v[i]);
-    }
-}
-
-// Indexed std::array<bool, N> -> Indexed GLboolean
-template <size_t N>
-void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, std::array<bool, N> *values)
-{
-    std::array<GLboolean, N> v;
-    for (size_t i = 0; i < N; i++)
-    {
-        v[i] = gl::ConvertToGLBoolean(values->at(i));
-    }
-    GetHelper(functions, name, index, v.data());
-    for (size_t i = 0; i < N; i++)
-    {
-        (*values)[i] = gl::ConvertToBool(v[i]);
-    }
 }
 
 // Non-indexed GLint -> glGetIntegerv
@@ -257,6 +204,54 @@ void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, GLenum *
     GLint v = *value;
     GetHelper(functions, name, index, &v);
     *value = static_cast<GLenum>(v);
+}
+
+// Non-indexed bool -> Non-indexed GLint
+void GetHelper(const FunctionsGL *functions, GLenum name, bool *value)
+{
+    GLint v = gl::ConvertToGLBoolean(*value);
+    GetHelper(functions, name, &v);
+    *value = gl::ConvertToBool(v);
+}
+
+// Indexed GLboolean -> Indexed GLint
+void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, GLboolean *value)
+{
+    GLint v = gl::ConvertToGLBoolean(*value);
+    GetHelper(functions, name, index, &v);
+    *value = gl::ConvertToBool(v);
+}
+
+// Non-indexed std::array<bool, N> -> Non-indexed GLboolean
+template <size_t N>
+void GetHelper(const FunctionsGL *functions, GLenum name, std::array<bool, N> *values)
+{
+    std::array<GLint, N> v;
+    for (size_t i = 0; i < N; i++)
+    {
+        v[i] = gl::ConvertToGLBoolean(values->at(i));
+    }
+    GetHelper(functions, name, v.data());
+    for (size_t i = 0; i < N; i++)
+    {
+        (*values)[i] = gl::ConvertToBool(v[i]);
+    }
+}
+
+// Indexed std::array<bool, N> -> Indexed GLboolean
+template <size_t N>
+void GetHelper(const FunctionsGL *functions, GLenum name, GLuint index, std::array<bool, N> *values)
+{
+    std::array<GLint, N> v;
+    for (size_t i = 0; i < N; i++)
+    {
+        v[i] = gl::ConvertToGLBoolean(values->at(i));
+    }
+    GetHelper(functions, name, index, v.data());
+    for (size_t i = 0; i < N; i++)
+    {
+        (*values)[i] = gl::ConvertToBool(v[i]);
+    }
 }
 
 // Non-indexed gl::Rectangle -> Non-indexed GLint
