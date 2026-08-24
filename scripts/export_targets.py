@@ -195,6 +195,7 @@ IGNORED_INCLUDES = {
     b'compiler/translator/null/TranslatorNULL.h',
     b'compiler/translator/spirv/TranslatorSPIRV.h',
     b'compiler/translator/wgsl/TranslatorWGSL.h',
+    b'common/linux/window_system.h',
     b'contrib/optimizations/slide_hash_neon.h',
     b'dirent_on_windows.h',
     b'dlopen_fuchsia.h',
