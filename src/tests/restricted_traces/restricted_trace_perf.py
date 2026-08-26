@@ -1237,7 +1237,6 @@ def run_traces(args, extra_args):
 
                         gfxlib_cpuinst = cpu_inst_results["gles_lib"]
                         gfxlib_cpuinst += cpu_inst_results["angle_lib"]
-                        gfxlib_cpuinst += cpu_inst_results["vulkan_lib"]
                         gfxlib_cpuinst = safe_divide(gfxlib_cpuinst, frame_count)
 
                         angle_cpuinst = cpu_inst_results["angle_lib"]
