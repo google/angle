@@ -23,6 +23,7 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN scripts/run_code_generation.py
 // preprocessor.l:
 //   Lexer for the OpenGL shading language preprocessor.
 
+#include <stdint.h>
 }
 
 %{
