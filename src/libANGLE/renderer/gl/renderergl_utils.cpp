@@ -2421,7 +2421,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, resetTexImage2DBaseLevel,
                             IsApple() && isIntel && GetMacOSVersion() >= OSVersion(10, 12, 4));
 
-    ANGLE_FEATURE_CONDITION(features, resetBaseLevelForASTCSubImage, IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, resetBaseLevelForASTCImage, IsPowerVR(vendor));
     ANGLE_FEATURE_CONDITION(features, recreateImmutableTextureOnBaseLevelIncrease,
                             IsPowerVR(vendor));
 

@@ -312,7 +312,7 @@ enum class Feature
     RemoveInvariantAndCentroidForESSL3,
     RequireGpuFamily2,
     RescopeGlobalVariables,
-    ResetBaseLevelForASTCSubImage,
+    ResetBaseLevelForASTCImage,
     ResetSampleCoverageOnFBOChange,
     ResetTexImage2DBaseLevel,
     ResyncDepthRangeOnClipControl,
