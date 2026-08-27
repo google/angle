@@ -210,6 +210,27 @@ TEST_P(EGLDisplayTest, GetPlatformDisplayEXT)
     ASSERT_EGL_SUCCESS();
 }
 
+// Tests eglQueryString(EGL_EXTENSIONS) with EGL_BAD_DISPLAY should not crash
+TEST_P(EGLDisplayTest, QueryEGLExtensionWithBadDisplay)
+{
+    eglQueryString(EGL_CAST(EGLDisplay, (void *)0xdeadbeef), EGL_EXTENSIONS);
+    EXPECT_EQ(eglGetError(), EGL_BAD_DISPLAY);
+}
+
+// Tests eglQueryString(EGL_EXTENSIONS) with EGL_NO_DISPLAY should succeed without error
+TEST_P(EGLDisplayTest, QueryEGLExtensionWithNoDisplay)
+{
+    eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+    ASSERT_EGL_SUCCESS();
+}
+
+// Tests eglQueryString with EGL_NO_DISPLAY should fail EGL_BAD_DISPLAY error
+TEST_P(EGLDisplayTest, QueryEGLVendorWithBadDisplay)
+{
+    eglQueryString(EGL_NO_DISPLAY, EGL_VENDOR);
+    EXPECT_EQ(eglGetError(), EGL_BAD_DISPLAY);
+}
+
 // Tests that eglGetPlatformDisplayEXT can use EGL_PLATFORM_ANDROID_KHR to get a display.
 TEST_P(EGLDisplayTestES3, GetPlatformDisplayAndroidValidation)
 {

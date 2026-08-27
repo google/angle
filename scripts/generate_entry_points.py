@@ -2263,7 +2263,10 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         internal_val_params = ["validDisplay" if p == dpy_param else p for p in internal_params]
     elif api == apis.EGL and dpy_param and labeled_object == f"GetDisplayIfValid({dpy_param})" and dpy_param in internal_params:
         labeled_object = "validDisplay"
-        internal_val_params = ["validDisplay" if p == dpy_param else p for p in internal_params]
+        internal_val_params = [
+            "validDisplay" if (p == dpy_param and name != "QueryString") else p
+            for p in internal_params
+        ]
         indent = "        " if is_lockless_egl_entry_point(cmd_name) else "            "
         val_prefix = f"const egl::Display *validDisplay = GetDisplayIfValid({dpy_param});\n{indent}    "
     else:

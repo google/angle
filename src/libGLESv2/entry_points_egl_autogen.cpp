@@ -719,7 +719,7 @@ const char *EGLAPIENTRY EGL_QueryString(EGLDisplay dpy, EGLint name)
             if (IsEGLValidationEnabled())
             {
                 const egl::Display *validDisplay = GetDisplayIfValid(dpyPacked);
-                ANGLE_EGL_VALIDATE(thread, QueryString, validDisplay, const char *, validDisplay,
+                ANGLE_EGL_VALIDATE(thread, QueryString, validDisplay, const char *, dpyPacked,
                                    name);
             }
             else
