@@ -208,6 +208,120 @@ TEST_P(EGLContextSharingTest, BindTextureAfterShareContextFree)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that destroying a context with an undeleted sampler does not cause use-after-free.
+// https://crbug.com/550347790
+TEST_P(EGLContextSharingTest, DestroyContextWithUndeletedSampler)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    EGLConfig config   = getEGLWindow()->getConfig();
+    EGLSurface surface = getEGLWindow()->getSurface();
+
+    const bool hasVirt = IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_context_virtualization");
+
+    const EGLint virtAttribs1[] = {EGL_CONTEXT_CLIENT_VERSION, 3,
+                                   EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, 1, EGL_NONE};
+    const EGLint virtAttribs2[] = {EGL_CONTEXT_CLIENT_VERSION, 3,
+                                   EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, 2, EGL_NONE};
+    const EGLint plainAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE};
+
+    const EGLint *a1 = hasVirt ? virtAttribs1 : plainAttribs;
+    const EGLint *a2 = hasVirt ? virtAttribs2 : plainAttribs;
+
+    mContexts[0] = eglCreateContext(display, config, EGL_NO_CONTEXT, a1);
+    ASSERT_NE(EGL_NO_CONTEXT, mContexts[0]);
+    mContexts[1] = eglCreateContext(display, config, mContexts[0], a2);
+    ASSERT_NE(EGL_NO_CONTEXT, mContexts[1]);
+
+    // Context 0: compile a program (which may hold a ref to the renderer) and create a sampler.
+    // Intentionally do NOT delete the sampler to simulate garbage collection / leaked objects.
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, mContexts[0]));
+    ASSERT_EGL_SUCCESS();
+
+    constexpr char kVS[] = R"(#version 300 es
+void main() {
+    gl_Position = vec4(0.0);
+})";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main() {
+    color = vec4(1.0);
+})";
+    GLuint program       = CompileProgram(kVS, kFS);
+    ASSERT_NE(0u, program);
+
+    GLSampler leakedSampler;
+    glSamplerParameteri(leakedSampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glBindSampler(0, leakedSampler);
+    ASSERT_GL_NO_ERROR();
+
+    // Context 1: create and delete a sampler cleanly.
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, mContexts[1]));
+    ASSERT_EGL_SUCCESS();
+    GLSampler sampler2;
+    sampler2.reset();
+    ASSERT_GL_NO_ERROR();
+
+    // Destroy context 0 without deleting leakedSampler.
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, mContexts[0]));
+    glBindSampler(0, 0);
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    ASSERT_EGL_TRUE(SafeDestroyContext(display, mContexts[0]));
+
+    // Clean up context 1.
+    ASSERT_EGL_TRUE(SafeDestroyContext(display, mContexts[1]));
+}
+
+// Tests that destroying a single context with a program and an undeleted sampler does not cause
+// use-after-free.
+// https://crbug.com/550347790
+TEST_P(EGLContextSharingTest, DestroySingleContextWithUndeletedSampler)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    EGLConfig config   = getEGLWindow()->getConfig();
+    EGLSurface surface = getEGLWindow()->getSurface();
+
+    const bool hasVirt = IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_context_virtualization");
+
+    const EGLint virtAttribs[]  = {EGL_CONTEXT_CLIENT_VERSION, 3,
+                                   EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, 1, EGL_NONE};
+    const EGLint plainAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE};
+
+    const EGLint *attribs = hasVirt ? virtAttribs : plainAttribs;
+
+    mContexts[0] = eglCreateContext(display, config, EGL_NO_CONTEXT, attribs);
+    ASSERT_NE(EGL_NO_CONTEXT, mContexts[0]);
+
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, mContexts[0]));
+    ASSERT_EGL_SUCCESS();
+
+    constexpr char kVS[] = R"(#version 300 es
+void main() {
+    gl_Position = vec4(0.0);
+})";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main() {
+    color = vec4(1.0);
+})";
+    GLuint program       = CompileProgram(kVS, kFS);
+    ASSERT_NE(0u, program);
+
+    GLSampler leakedSampler;
+    glSamplerParameteri(leakedSampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glBindSampler(0, leakedSampler);
+    ASSERT_GL_NO_ERROR();
+
+    glBindSampler(0, 0);
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    ASSERT_EGL_TRUE(SafeDestroyContext(display, mContexts[0]));
+}
+
 // Tests the creation of contexts using EGL_ANGLE_display_texture_share_group
 TEST_P(EGLContextSharingTest, DisplayShareGroupContextCreation)
 {

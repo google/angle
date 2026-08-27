@@ -248,7 +248,12 @@ TransformFeedbackImpl *ContextGL::createTransformFeedback(const gl::TransformFee
 
 SamplerImpl *ContextGL::createSampler(const gl::SamplerState &state)
 {
-    return new SamplerGL(state, getFunctions(), getStateManager());
+    const FunctionsGL *functions = getFunctions();
+
+    GLuint sampler = 0;
+    functions->genSamplers(1, &sampler);
+
+    return new SamplerGL(state, sampler);
 }
 
 ProgramPipelineImpl *ContextGL::createProgramPipeline(const gl::ProgramPipelineState &data)
