@@ -758,6 +758,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo uploadOversizedMipLevelsViaUnpackBuffer = {
+        "uploadOversizedMipLevelsViaUnpackBuffer",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo validateState = {
         "validateState",
         FeatureCategory::OpenGLFeatures,

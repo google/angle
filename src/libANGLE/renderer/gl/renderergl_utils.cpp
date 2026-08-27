@@ -2344,6 +2344,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, splitLevel0PboFullSubImage2D,
                             isPowerVRDriver && powerVRVersion < (std::array<int, 2>{26, 2}));
 
+    // TODO(crbug.com/548127218): conditionalize this workaround on PowerVR
+    // driver version.
+    ANGLE_FEATURE_CONDITION(features, uploadOversizedMipLevelsViaUnpackBuffer, isPowerVRDriver);
+
     ANGLE_FEATURE_CONDITION(features, initializeCurrentVertexAttributes, isNvidia);
 
     ANGLE_FEATURE_CONDITION(features, unpackLastRowSeparatelyForPaddingInclusion,
