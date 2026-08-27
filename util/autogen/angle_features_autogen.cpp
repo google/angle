@@ -497,6 +497,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UnpackOverlappingRowsSeparatelyUnpackBuffer, "unpackOverlappingRowsSeparatelyUnpackBuffer"},
     {Feature::UnsizedSRGBReadPixelsDoesntTransform, "unsizedSRGBReadPixelsDoesntTransform"},
     {Feature::UploadDataToIosurfacesWithStagingBuffers, "uploadDataToIosurfacesWithStagingBuffers"},
+    {Feature::UploadOversizedMipLevelsViaUnpackBuffer, "uploadOversizedMipLevelsViaUnpackBuffer"},
     {Feature::UploadTextureDataInChunks, "uploadTextureDataInChunks"},
     {Feature::UseCullModeDynamicState, "useCullModeDynamicState"},
     {Feature::UseDepthBiasEnableDynamicState, "useDepthBiasEnableDynamicState"},
