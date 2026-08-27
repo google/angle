@@ -309,13 +309,13 @@
             "issue": "https://crbug.com/705865"
         },
         {
-            "name": "reset_base_level_for_ASTC_sub_image",
+            "name": "reset_base_level_for_ASTC_image",
             "category": "Workarounds",
             "description": [
-                "Reset texture base level before calling glCompressedTexSubImage2D for ASTC textures to ",
+                "Reset texture base level before calling glCompressedTexImage2D or glCompressedTexSubImage2D for ASTC textures to ",
                 "work around PowerVR driver bug."
             ],
-            "issue": "https://crbug.com/528131939"
+            "issue": "https://crbug.com/551708184"
         },
         {
             "name": "recreate_immutable_texture_on_base_level_increase",

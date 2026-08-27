@@ -254,8 +254,8 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
-    FeatureInfo resetBaseLevelForASTCSubImage = {
-        "resetBaseLevelForASTCSubImage",
+    FeatureInfo resetBaseLevelForASTCImage = {
+        "resetBaseLevelForASTCImage",
         FeatureCategory::OpenGLWorkarounds,
         &members,
     };
