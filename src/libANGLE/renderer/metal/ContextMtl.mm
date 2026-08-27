@@ -2219,25 +2219,24 @@ void ContextMtl::onBackbufferResized(const gl::Context *context, WindowSurfaceMt
 angle::Result ContextMtl::onOcclusionQueryBegin(const gl::Context *context, QueryMtl *query)
 {
     ASSERT(mOcclusionQuery == nullptr);
-    mOcclusionQuery = query;
 
     if (mRenderEncoder.valid() && !mOcclusionQueryPool.canAllocateQueryOffset(this))
     {
         endEncoding(true);
     }
-
     if (mRenderEncoder.valid())
     {
-        // if render pass has started, start the query in the encoder
-        return startOcclusionQueryInRenderPass(query, true);
+        ANGLE_TRY(startOcclusionQueryInRenderPass(query, true));
     }
     else
     {
         query->resetVisibilityResult(this);
     }
 
+    mOcclusionQuery = query;
     return angle::Result::Continue;
 }
+
 void ContextMtl::onOcclusionQueryEnd(const gl::Context *context, QueryMtl *query)
 {
     ASSERT(mOcclusionQuery == query);
