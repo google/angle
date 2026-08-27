@@ -8469,6 +8469,95 @@ TEST_P(GLSLTest_ES3, NoPerspectiveSample)
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
+// Test that an input array can be referenced without an index after one of its elements has been
+// used with an interpolation function.
+TEST_P(GLSLTest_ES3, InterpolantArrayReferencedWithoutIndex)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_shader_multisample_interpolation"));
+
+    constexpr char kVS[] =
+        R"(#version 300 es
+        #extension GL_OES_shader_multisample_interpolation : require
+
+        in vec4 a_position;
+
+        out mediump vec3 smoothArray[2];
+        centroid out mediump vec3 centroidArray[2];
+        sample out mediump vec3 sampleArray[2];
+
+        void main()
+        {
+            gl_Position = a_position;
+
+            // Keep the values constant so that every read returns the same result.
+            smoothArray[0] = vec3(10.0);
+            smoothArray[1] = vec3(11.0);
+            centroidArray[0] = vec3(20.0);
+            centroidArray[1] = vec3(21.0);
+            sampleArray[0] = vec3(30.0);
+            sampleArray[1] = vec3(31.0);
+        })";
+
+    constexpr char kFS[] =
+        R"(#version 300 es
+        #extension GL_OES_shader_multisample_interpolation : require
+
+        precision mediump float;
+
+        in vec3 smoothArray[2];
+        centroid in vec3 centroidArray[2];
+        sample in vec3 sampleArray[2];
+
+        out vec4 color;
+
+        bool check(vec3 values[2], float base)
+        {
+            return all(lessThan(abs(values[0] - vec3(base)), vec3(0.01))) &&
+                   all(lessThan(abs(values[1] - vec3(base + 1.0)), vec3(0.01)));
+        }
+
+        void main()
+        {
+            // Marks each input as an interpolant, which is what made the uses below fail.
+            vec3 unused = interpolateAtCentroid(smoothArray[0]) +
+                          interpolateAtCentroid(centroidArray[0]) +
+                          interpolateAtCentroid(sampleArray[0]);
+
+            // Assign the whole array.
+            vec3 assignedSmooth[2];
+            vec3 assignedCentroid[2];
+            vec3 assignedSample[2];
+            assignedSmooth = smoothArray;
+            assignedCentroid = centroidArray;
+            assignedSample = sampleArray;
+
+            // Initialize from the whole array.
+            vec3 initializedSmooth[2] = smoothArray;
+            vec3 initializedCentroid[2] = centroidArray;
+            vec3 initializedSample[2] = sampleArray;
+
+            // Pass the whole array to a function.
+            bool ok = check(smoothArray, 10.0) &&
+                      check(centroidArray, 20.0) &&
+                      check(sampleArray, 30.0) &&
+                      check(assignedSmooth, 10.0) &&
+                      check(assignedCentroid, 20.0) &&
+                      check(assignedSample, 30.0) &&
+                      check(initializedSmooth, 10.0) &&
+                      check(initializedCentroid, 20.0) &&
+                      check(initializedSample, 30.0) &&
+                      unused.x > 0.0;
+
+            color = ok ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+        })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that a shader with sample in / sample out can be used successfully when the varying
 // precision is different between VS and FS.
 TEST_P(GLSLTest_ES31, VaryingSampleInAndOutDifferentPrecision)

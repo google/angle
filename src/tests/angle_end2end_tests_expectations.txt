@@ -287,6 +287,7 @@
 
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2127)
 543664599 WIN INTEL OPENGL : FramebufferTestWithFormatFallback.R4G4B4A4_NonZeroBaseLevelStagedImageReformat/* = SKIP
+556564149 WIN INTEL VULKAN : GLSLTest_ES3.InterpolantArrayReferencedWithoutIndex/* = SKIP
 
 // Failures on Intel Alder Lake S UHD Graphics 770 (8086:4680-31.0.101.5333)
 352085732 WIN INTEL OPENGL : GeometryShaderTest.LayeredFramebufferClear2DArrayColor/* = SKIP
@@ -341,6 +342,7 @@
 539554093 WIN NVIDIA GLES : UniformBufferTest31.UniformBufferBindingRangeChangeAfterSubData/* = SKIP
 523371282 WIN NVIDIA GLES : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
 523371282 WIN NVIDIA OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
+556564149 WIN NVIDIA GLES : GLSLTest_ES3.InterpolantArrayReferencedWithoutIndex/* = SKIP
 
 557268102 LINUX NVIDIA VULKAN : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP
 557268102 LINUX NVIDIA VULKAN : GLSLTest_ES3.LiteralNegativeInfinityOutput/* = SKIP
@@ -606,6 +608,7 @@
 40644777 MAC METAL AMD : ColorMaskForDrawBuffersTest.Blit/* = SKIP
 440536251 MAC METAL AMD : GLSLValidationTest_ES3.ManySamplerFieldsInStructComplex/* = SKIP
 443101808 MAC METAL AMD : SimpleUniformTestES3.BoolInArray/* = SKIP
+556564149 MAC METAL AMD : GLSLTest_ES3.InterpolantArrayReferencedWithoutIndex/* = SKIP
 409867243 MAC METAL : Texture2DTestES3.RGB565RenderAndReadIntoRGB565PBO/* = SKIP
 448658625 METAL : GLSLTest_ES3.SwitchConstantFoldWithVariables/* = SKIP
 464927523 METAL : GLSLTest_ES3_PackUnpackEmulation.PackHalf2x16/* = SKIP
