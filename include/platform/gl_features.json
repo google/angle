@@ -1001,6 +1001,15 @@
                 "Reattach texture layer to framebuffer after calling TexImage3D to increase layer count on PowerVR Android."
             ],
             "issue": "http://crbug.com/499602793"
+        },
+        {
+            "name": "upload_oversized_mip_levels_via_unpack_buffer",
+            "category": "Workarounds",
+            "description": [
+                "Stage oversized nonzero-level texture definitions through a scratch pixel unpack buffer ",
+                "to work around driver bugs."
+            ],
+            "issue": "http://crbug.com/548127218"
         }
     ]
 }
