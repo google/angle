@@ -49,6 +49,7 @@ import logging
 import os
 import pathlib
 import posixpath
+import queue
 import re
 import statistics
 import subprocess
@@ -627,27 +628,43 @@ def wait_for_test_warmup(done_event):
                          stdout=subprocess.PIPE,
                          text=True,
                          bufsize=1)  # line-buffered
-    os.set_blocking(p.stdout.fileno(), False)
+    line_queue = queue.Queue()
 
-    start_time = time.time()
-    while True:
-        line = p.stdout.readline()  # non-blocking as per set_blocking above
+    def reader():
+        try:
+            for line in p.stdout:
+                line_queue.put(line)
+        except Exception as e:
+            logging.exception('Error while reading logcat output: %s', e)
+        finally:
+            line_queue.put(None)  # signal EOF
 
-        # Look for text logged by the harness when warmup is complete and a test is starting
-        if 'running test name' in line:
+    reader_thread = threading.Thread(target=reader, daemon=True)
+    reader_thread.start()
+
+    try:
+        while True:
+            if done_event.is_set():
+                logging.warning('Test finished without logging to logcat')
+                break
+
+            try:
+                line = line_queue.get(timeout=0.05)
+            except queue.Empty:
+                continue
+
+            if line is None:
+                logging.warning('Logcat terminated unexpectedly')
+                break
+
+            if 'running test name' in line:
+                break
+    finally:
+        try:
             p.kill()
-            break
-        if done_event.is_set():
-            logging.warning('Test finished without logging to logcat')
-            p.kill()
-            break
-
-        time.sleep(0.05)
-
-        p.poll()
-        if p.returncode != None:
-            logging.warning('Logcat terminated unexpectedly')
-            return
+            p.wait()
+        except OSError:
+            pass
 
 
 def collect_cpu_inst(done_event, test_fixedtime, target_cpu_inst, results):
