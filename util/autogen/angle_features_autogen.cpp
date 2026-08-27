@@ -313,7 +313,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::RemoveInvariantAndCentroidForESSL3, "removeInvariantAndCentroidForESSL3"},
     {Feature::RequireGpuFamily2, "requireGpuFamily2"},
     {Feature::RescopeGlobalVariables, "rescopeGlobalVariables"},
-    {Feature::ResetBaseLevelForASTCSubImage, "resetBaseLevelForASTCSubImage"},
+    {Feature::ResetBaseLevelForASTCImage, "resetBaseLevelForASTCImage"},
     {Feature::ResetSampleCoverageOnFBOChange, "resetSampleCoverageOnFBOChange"},
     {Feature::ResetTexImage2DBaseLevel, "resetTexImage2DBaseLevel"},
     {Feature::ResetTexStorage2DBaseLevel, "resetTexStorage2DBaseLevel"},
