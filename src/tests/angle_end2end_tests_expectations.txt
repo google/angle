@@ -2904,6 +2904,9 @@
 42266581 LINUX INTEL : EGLDisplayTest.InitializeDrawSwapTerminateLoop/* = SKIP
 42266581 LINUX INTEL OPENGL : EGLDisplayTest.TerminateMultipleTimesInDifferentThreads/* = SKIP
 42266581 LINUX INTEL OPENGL : EGLNoConfigContextTest.RenderCheck/* = SKIP
+// Intel linux driver appears has some weird bug that these tests fail for no good reason. Possibly related to 520248049.
+42266581 LINUX INTEL OPENGL : EGLSurfacelessContextTest.DefaultScissorAndViewport/* = SKIP
+42266581 LINUX INTEL OPENGL : EGLSurfacelessContextTest.Switcheroo/* = SKIP
 
 500127519 MAC METAL INTEL : GLSLUBTest.AbsIntOverflow/* = SKIP
 

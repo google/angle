@@ -194,6 +194,28 @@ TEST_P(EGLDisplayTest, ContextLeakAfterTerminate)
     EXPECT_EQ(eglGetError(), EGL_NOT_INITIALIZED);
 }
 
+// Tests that eglMakeCurrent with bad display pointer fails but doesn't crash.
+TEST_P(EGLDisplayTest, MakeCurrentWithBadDisplay)
+{
+    EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    EXPECT_EGL_TRUE(eglInitialize(display, nullptr, nullptr));
+
+    EGLConfig config   = chooseConfig(display);
+    EGLContext context = createContext(display, config);
+
+    // Call eglMakeCurrent with bad display pointer. It should fail validation but not crash.
+    EXPECT_EGL_FALSE(eglMakeCurrent(EGL_CAST(EGLDisplay, (void *)0xdeadbeef), EGL_NO_SURFACE,
+                                    EGL_NO_SURFACE, context));
+    EXPECT_EQ(eglGetError(), EGL_BAD_DISPLAY);
+
+    // Call eglMakeCurrent with no display. It should fail validation but not crash.
+    EXPECT_EGL_FALSE(eglMakeCurrent(EGL_NO_DISPLAY, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
+    EXPECT_EQ(eglGetError(), EGL_BAD_DISPLAY);
+
+    EXPECT_EGL_TRUE(eglDestroyContext(display, context));
+    EXPECT_EGL_TRUE(eglTerminate(display));
+}
+
 // Tests eglGetPlatformDisplayEXT() when EGL_EXT_platform_base is enabled.
 TEST_P(EGLDisplayTest, GetPlatformDisplayEXT)
 {
