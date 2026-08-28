@@ -737,11 +737,13 @@ deps = {
   'third_party/android_toolchain/ndk': {
       'packages': [
             {
-                'package': 'chromium/third_party/android_toolchain/android_toolchain',
+                'package': 'chromium/third_party/android_toolchain/android_toolchain/${{platform}}',
                 'version': 'version:' + Var('android_ndk_version'),
             },
       ],
-      'condition': 'checkout_android and not build_with_chromium',
+      'condition': 'checkout_android and not build_with_chromium and '
+                   '((host_os == "linux" and host_cpu == "x64") or '
+                   '(host_os == "mac" and host_cpu == "arm64"))',
       'dep_type': 'cipd',
   },
 
