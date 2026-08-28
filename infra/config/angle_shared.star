@@ -4,35 +4,18 @@
 
 """Code shared by both CI and try builders."""
 
-load("@chromium-luci//builders.star", "os")
-
-def _apply_linux_builder_defaults(kwargs):
-    kwargs.setdefault("cores", 8)
-    kwargs.setdefault("os", os.LINUX_DEFAULT)
-    kwargs.setdefault("ssd", None)
-    return kwargs
-
-def _apply_mac_builder_defaults(kwargs):
-    kwargs.setdefault("cpu", "arm64")
-    kwargs.setdefault("os", os.MAC_DEFAULT)
-    return kwargs
-
-def _apply_win_clang_builder_defaults(kwargs):
-    kwargs.setdefault("cores", 8)
-    kwargs.setdefault("os", os.WINDOWS_DEFAULT)
-    kwargs.setdefault("ssd", None)
-    return kwargs
-
 def _apply_win_msvc_builder_defaults(kwargs):
-    kwargs.setdefault("cores", 8)
-    kwargs.setdefault("os", os.WINDOWS_DEFAULT)
-    kwargs.setdefault("ssd", None)
+    # n2-standard-8 is specifically targeted for Win/MSVC instead of the more
+    # common e2-standard-8 because Windows compilation takes the most time and
+    # the use of MSVC means that RBE is unsupported for remote compilation. The
+    # newer CPUs used by n2-standard-8 GCE instances result in significantly
+    # faster compile times. e4-standard-8 will be the standard going forward for
+    # all builders and appears to have equivalent MSVC build times to
+    # n2-standard-8, so allow that as well until all n2-standard-8 machines are
+    # phased out.
     kwargs.setdefault("machine_type", "n2-standard-8|e4-standard-8")
     return kwargs
 
 builder_defaults = struct(
-    apply_linux_builder_defaults = _apply_linux_builder_defaults,
-    apply_mac_builder_defaults = _apply_mac_builder_defaults,
-    apply_win_clang_builder_defaults = _apply_win_clang_builder_defaults,
     apply_win_msvc_builder_defaults = _apply_win_msvc_builder_defaults,
 )

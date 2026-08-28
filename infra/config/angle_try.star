@@ -5,7 +5,9 @@
 """Try ANGLE builders using the angle recipe."""
 
 load("@chromium-luci//builder_config.star", "builder_config")
+load("@chromium-luci//builders.star", "os")
 load("@chromium-luci//gn_args.star", "gn_args")
+load("@chromium-luci//gpu.star", "gpu")
 load("@chromium-luci//try.star", "try_")
 load("//angle_shared.star", "builder_defaults")
 load("//constants.star", "default_experiments", "siso")
@@ -14,8 +16,7 @@ try_.defaults.set(
     executable = "recipe:angle/angle_trybot",
     builder_group = "try",
     bucket = "try",
-    pool = "luci.chromium.gpu.try",
-    builderless = True,
+    pool = gpu.try_.POOL,
     build_numbers = True,
     list_view = "try",
     cq_group = "main",
@@ -53,76 +54,36 @@ def apply_cq_builder_defaults(kwargs):
     kwargs.setdefault("properties", {})["no_extra_traces"] = True
     return kwargs
 
-def apply_linux_cq_builder_defaults(kwargs):
-    """Applies default builder settings for a Linux CQ builder.
-
-    Args:
-        kwargs: The args being used for the builder as a dict.
-
-    Returns:
-        |kwargs| with default values set for a Linux CQ builder.
-    """
-    kwargs = apply_cq_builder_defaults(kwargs)
-    kwargs = builder_defaults.apply_linux_builder_defaults(kwargs)
-    return kwargs
-
-def apply_mac_cq_builder_defaults(kwargs):
-    """Applies default builder settings for a Mac CQ builder.
-
-    Args:
-        kwargs: The args being used for the builder as a dict.
-
-    Returns:
-        |kwargs| with default values set for a Mac CQ builder.
-    """
-    kwargs = apply_cq_builder_defaults(kwargs)
-    kwargs = builder_defaults.apply_mac_builder_defaults(kwargs)
-    return kwargs
-
-def apply_win_cq_builder_defaults(kwargs):
-    """Applies default builder settings for a Windows CQ builder.
-
-    Args:
-        kwargs: The args being used for the builder as a dict.
-
-    Returns:
-        |kwargs| with default values set for a Windows CQ builder.
-    """
-    kwargs = apply_cq_builder_defaults(kwargs)
-    kwargs = builder_defaults.apply_win_clang_builder_defaults(kwargs)
-    return kwargs
-
-def apply_win_msvc_cq_builder_defaults(kwargs):
-    """Applies default builder settings for an MSVC Windows CQ builder.
-
-    Args:
-        kwargs: The args being used for the builder as a dict.
-
-    Returns:
-        |kwargs| with default values set for a Windows CQ builder.
-    """
-    kwargs = apply_cq_builder_defaults(kwargs)
-    kwargs = builder_defaults.apply_win_msvc_builder_defaults(kwargs)
-    return kwargs
-
 def angle_linux_functional_cq_tester(**kwargs):
-    kwargs = apply_linux_cq_builder_defaults(kwargs)
-    try_.builder(**kwargs)
+    kwargs = apply_cq_builder_defaults(kwargs)
+    gpu.try_.linux_rate_limited_builder(**kwargs)
 
 def angle_mac_functional_cq_tester(**kwargs):
-    kwargs = apply_mac_cq_builder_defaults(kwargs)
-    try_.builder(**kwargs)
+    kwargs = apply_cq_builder_defaults(kwargs)
+    gpu.try_.mac_rate_limited_builder(**kwargs)
 
 def angle_win_functional_cq_tester(**kwargs):
-    kwargs = apply_win_cq_builder_defaults(kwargs)
-    try_.builder(**kwargs)
+    kwargs = apply_cq_builder_defaults(kwargs)
+    gpu.try_.win_rate_limited_builder(**kwargs)
 
 def angle_win_msvc_functional_cq_tester(**kwargs):
-    kwargs = apply_win_msvc_cq_builder_defaults(kwargs)
-    try_.builder(**kwargs)
+    kwargs = apply_cq_builder_defaults(kwargs)
+    kwargs = builder_defaults.apply_win_msvc_builder_defaults(kwargs)
+    gpu.try_.win_rate_limited_builder(**kwargs)
 
 def angle_linux_presubmit_builder(**kwargs):
-    kwargs = apply_linux_cq_builder_defaults(kwargs)
+    """Creates a Linux trybot that runs PRESUBMIT.py checks.
+
+    Args:
+        **kwargs: The keyword arguments to use to create the trybot.
+    """
+    kwargs = apply_cq_builder_defaults(kwargs)
+
+    # TODO(crbug.com/543082386): Switch this to a shared helper once one is
+    # added for presubmit builders.
+    kwargs.setdefault("cores", 8)
+    kwargs.setdefault("os", os.LINUX_DEFAULT)
+    kwargs.setdefault("ssd", None)
     try_.presubmit_builder(**kwargs)
 
 ## Functional testers
@@ -457,39 +418,13 @@ angle_win_trace_tester(
 # Manual Trybots                                                               #
 ################################################################################
 
-## Templates
-
-def angle_linux_manual_builder(*, name, **kwargs):
-    kwargs = builder_defaults.apply_linux_builder_defaults(kwargs)
-    return try_.builder(
-        name = name,
-        max_concurrent_builds = 1,
-        **kwargs
-    )
-
-def angle_mac_manual_builder(*, name, **kwargs):
-    kwargs = builder_defaults.apply_mac_builder_defaults(kwargs)
-    return try_.builder(
-        name = name,
-        max_concurrent_builds = 1,
-        **kwargs
-    )
-
-def angle_win_manual_builder(*, name, **kwargs):
-    kwargs = builder_defaults.apply_win_clang_builder_defaults(kwargs)
-    return try_.builder(
-        name = name,
-        max_concurrent_builds = 1,
-        **kwargs
-    )
-
 ## Functional testers
 
 # This is effectively a copy of angle-cq-android-arm64-rel, but manual-only and
 # with the angle_ir GN arg config set. Mirroring is done in this way instead
 # of having CI builders because we do not have a need for the CI builders and
 # this keeps the tests in sync between the IR and non-IR builders.
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-android-arm64-ir-rel",
     description_html = ("Tests release ANGLE on Android/arm64 on multiple hardware configs using " +
                         "ANGLE's new intermediate representation for shaders. Manual only."),
@@ -512,7 +447,7 @@ angle_linux_manual_builder(
     ),
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-android-arm64-google-pixel4-rel",
     description_html = "Tests release ANGLE on Android/arm64 on Pixel 4 devices. Manual only.",
     mirrors = [
@@ -522,7 +457,7 @@ angle_linux_manual_builder(
     gn_args = "ci/angle-android-arm64-builder-rel",
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-android-arm64-google-pixel6-exp-rel",
     description_html = "Tests release ANGLE on Android/arm64 on experimental Pixel 6 devices. Manual only.",
     mirrors = [
@@ -532,7 +467,7 @@ angle_linux_manual_builder(
     gn_args = "ci/angle-android-arm64-builder-rel",
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-android-arm64-google-pixel6-rel",
     description_html = "Tests release ANGLE on Android/arm64 on Pixel 6 devices. Manual only.",
     mirrors = [
@@ -542,7 +477,7 @@ angle_linux_manual_builder(
     gn_args = "ci/angle-android-arm64-builder-rel",
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-android-arm64-google-pixel10-rel",
     description_html = "Tests release ANGLE on Android/arm64 on Pixel 10 devices. Manual only.",
     mirrors = [
@@ -552,7 +487,7 @@ angle_linux_manual_builder(
     gn_args = "ci/angle-android-arm64-builder-rel",
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-android-arm64-samsung-s24-rel",
     description_html = "Tests release ANGLE on Android/arm64 on Samsung S24 devices. Manual only.",
     mirrors = [
@@ -567,7 +502,7 @@ angle_linux_manual_builder(
 # with the angle_ir GN arg config set. Mirroring is done in this way instead
 # of having CI builders because we do not have a need for the CI builders and
 # this keeps the tests in sync between the IR and non-IR builders.
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-linux-x64-ir-rel",
     description_html = ("Tests release ANGLE on Linux/x64 on multiple hardware configs using " +
                         "ANGLE's new intermediate representation for shaders. Manual only."),
@@ -590,7 +525,7 @@ angle_linux_manual_builder(
     ),
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-linux-x64-amd-rx5500xt-rel",
     description_html = "Tests release ANGLE on Linux/x64 on AMD RX 5500 XT GPUs. Manual only.",
     mirrors = [
@@ -600,7 +535,7 @@ angle_linux_manual_builder(
     gn_args = "ci/angle-linux-x64-builder-rel",
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-linux-x64-intel-uhd630-exp-rel",
     description_html = "Tests release ANGLE on Linux/x64 on experimental Intel UhD 630 configs. Manual only.",
     mirrors = [
@@ -610,7 +545,7 @@ angle_linux_manual_builder(
     gn_args = "ci/angle-linux-x64-builder-rel",
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-linux-x64-intel-uhd630-rel",
     description_html = "Tests release ANGLE on Linux/x64 on Intel UHD 630 GPUs. Manual only.",
     mirrors = [
@@ -620,7 +555,7 @@ angle_linux_manual_builder(
     gn_args = "ci/angle-linux-x64-builder-rel",
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-linux-x64-nvidia-gtx1660-exp-rel",
     description_html = "Tests release ANGLE on Linux/x64 on experimental NVIDIA GTX 1660 configs. Manual only.",
     mirrors = [
@@ -630,7 +565,7 @@ angle_linux_manual_builder(
     gn_args = "ci/angle-linux-x64-builder-rel",
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-linux-x64-nvidia-gtx1660-rel",
     description_html = "Tests release ANGLE on Linux/x64 on NVIDIA GTX 1660 GPUs. Manual only.",
     mirrors = [
@@ -640,7 +575,7 @@ angle_linux_manual_builder(
     gn_args = "ci/angle-linux-x64-builder-rel",
 )
 
-angle_linux_manual_builder(
+gpu.try_.linux_manual_builder(
     name = "angle-try-linux-x64-sws-rel",
     description_html = "Tests release ANGLE on Linux/x64 with SwiftShader. Manual only.",
     mirrors = [
@@ -654,7 +589,7 @@ angle_linux_manual_builder(
 # with the angle_ir GN arg config set. Mirroring is done in this way instead
 # of having CI builders because we do not have a need for the CI builders and
 # this keeps the tests in sync between the IR and non-IR builders.
-angle_mac_manual_builder(
+gpu.try_.mac_manual_builder(
     name = "angle-try-mac-x64-ir-rel",
     description_html = ("Tests release ANGLE on Mac/x64 on multiple hardware configs using " +
                         "ANGLE's new intermediate representation for shaders. Manual only."),
@@ -676,7 +611,7 @@ angle_mac_manual_builder(
     ),
 )
 
-angle_mac_manual_builder(
+gpu.try_.mac_manual_builder(
     name = "angle-try-mac-arm64-m2-exp-rel",
     description_html = "Tests release ANGLE on Mac/arm64 on experimental configs of Apple M2 SoCs. Manual only.",
     mirrors = [
@@ -686,7 +621,7 @@ angle_mac_manual_builder(
     gn_args = "ci/angle-mac-arm64-builder-rel",
 )
 
-angle_mac_manual_builder(
+gpu.try_.mac_manual_builder(
     name = "angle-try-mac-arm64-m2-rel",
     description_html = "Tests release ANGLE on Mac/arm64 on Apple M2 SoCs. Manual only.",
     mirrors = [
@@ -696,7 +631,7 @@ angle_mac_manual_builder(
     gn_args = "ci/angle-mac-arm64-builder-rel",
 )
 
-angle_mac_manual_builder(
+gpu.try_.mac_manual_builder(
     name = "angle-try-mac-x64-amd-5300m-exp-rel",
     description_html = "Tests release ANGLE on Mac/x64 on experimental configs of 16\" 2019 Macbook Pros w/ 5300M GPUs. Manual only.",
     mirrors = [
@@ -706,7 +641,7 @@ angle_mac_manual_builder(
     gn_args = "ci/angle-mac-x64-builder-rel",
 )
 
-angle_mac_manual_builder(
+gpu.try_.mac_manual_builder(
     name = "angle-try-mac-x64-amd-5300m-rel",
     description_html = "Tests release ANGLE on Mac/x64 on 16\" 2019 Macbook Pros w/ 5300M GPUs. Manual only.",
     mirrors = [
@@ -716,7 +651,7 @@ angle_mac_manual_builder(
     gn_args = "ci/angle-mac-x64-builder-rel",
 )
 
-angle_mac_manual_builder(
+gpu.try_.mac_manual_builder(
     name = "angle-try-mac-x64-amd-555x-rel",
     description_html = "Tests release ANGLE on Mac/x64 on 15\" 2019 Macbook Pros w/ Radeon Pro 555X GPUs. Manual only.",
     mirrors = [
@@ -726,7 +661,7 @@ angle_mac_manual_builder(
     gn_args = "ci/angle-mac-x64-builder-rel",
 )
 
-angle_mac_manual_builder(
+gpu.try_.mac_manual_builder(
     name = "angle-try-mac-x64-intel-uhd630-exp-rel",
     description_html = "Tests release ANGLE on Mac/x64 on experimental configs of 2018 Mac Minis w/ Intel UHD 630 GPUs. Manual only.",
     mirrors = [
@@ -736,7 +671,7 @@ angle_mac_manual_builder(
     gn_args = "ci/angle-mac-x64-builder-rel",
 )
 
-angle_mac_manual_builder(
+gpu.try_.mac_manual_builder(
     name = "angle-try-mac-x64-intel-uhd630-rel",
     description_html = "Tests release ANGLE on Mac/x64 on 2018 Mac Minis w/ Intel UHD 630 GPUs. Manual only.",
     mirrors = [
@@ -746,7 +681,7 @@ angle_mac_manual_builder(
     gn_args = "ci/angle-mac-x64-builder-rel",
 )
 
-angle_win_manual_builder(
+gpu.try_.win_manual_builder(
     name = "angle-try-win-arm64-qualcomm-snapdragon-x-elite-rel",
     description_html = "Tests release ANGLE on Win/ARM64 on Snapdragon X Elite SoCs w/ Adreno X1-85 GPUs. Manual only.",
     mirrors = [
@@ -760,7 +695,7 @@ angle_win_manual_builder(
 # with the angle_ir GN arg config set. Mirroring is done in this way instead
 # of having CI builders because we do not have a need for the CI builders and
 # this keeps the tests in sync between the IR and non-IR builders.
-angle_win_manual_builder(
+gpu.try_.win_manual_builder(
     name = "angle-try-win-x64-ir-rel",
     description_html = ("Tests release ANGLE on Win/x64 on multiple hardware configs using " +
                         "ANGLE's new intermediate representation for shaders. Manual only."),
@@ -782,7 +717,7 @@ angle_win_manual_builder(
     ),
 )
 
-angle_win_manual_builder(
+gpu.try_.win_manual_builder(
     name = "angle-try-win-x64-intel-uhd630-exp-rel",
     description_html = "Tests release ANGLE on Win/x64 on experimental configs of Intel UHD 630 GPUs. Manual only.",
     mirrors = [
@@ -792,7 +727,7 @@ angle_win_manual_builder(
     gn_args = "ci/angle-win-x64-builder-rel",
 )
 
-angle_win_manual_builder(
+gpu.try_.win_manual_builder(
     name = "angle-try-win-x64-intel-uhd770-rel",
     description_html = "Tests release ANGLE on Win/x64 on Intel UHD 770 GPUs. Manual only.",
     mirrors = [
@@ -802,7 +737,7 @@ angle_win_manual_builder(
     gn_args = "ci/angle-win-x64-builder-rel",
 )
 
-angle_win_manual_builder(
+gpu.try_.win_manual_builder(
     name = "angle-try-win-x64-intel-uhd630-rel",
     description_html = "Tests release ANGLE on Win/x64 on Intel UHD 630 GPUs. Manual only.",
     mirrors = [
@@ -812,7 +747,7 @@ angle_win_manual_builder(
     gn_args = "ci/angle-win-x64-builder-rel",
 )
 
-angle_win_manual_builder(
+gpu.try_.win_manual_builder(
     name = "angle-try-win-x64-nvidia-gtx1660-exp-rel",
     description_html = "Tests release ANGLE on Win/x64 on experimental configs of NVIDIA GTX 1660 GPUs. Manual only.",
     mirrors = [
@@ -822,7 +757,7 @@ angle_win_manual_builder(
     gn_args = "ci/angle-win-x64-builder-rel",
 )
 
-angle_win_manual_builder(
+gpu.try_.win_manual_builder(
     name = "angle-try-win-x64-nvidia-gtx1660-rel",
     description_html = "Tests release ANGLE on Win/x64 on NVIDIA GTX 1660 GPUs. Manual only.",
     mirrors = [
@@ -832,7 +767,7 @@ angle_win_manual_builder(
     gn_args = "ci/angle-win-x64-builder-rel",
 )
 
-angle_win_manual_builder(
+gpu.try_.win_manual_builder(
     name = "angle-try-win-x86-sws-rel",
     description_html = "Tests release ANGLE on Win/x86 with SwiftShader. Manual only.",
     mirrors = [

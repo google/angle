@@ -9,6 +9,7 @@ load("@chromium-luci//ci.star", "ci")
 load("@chromium-luci//consoles.star", "consoles")
 load("@chromium-luci//gardener_rotations.star", "gardener_rotations")
 load("@chromium-luci//gn_args.star", "gn_args")
+load("@chromium-luci//gpu.star", "gpu")
 load("@chromium-luci//targets.star", "targets")
 load("//angle_shared.star", "builder_defaults")
 load("//constants.star", "default_experiments", "siso")
@@ -17,7 +18,7 @@ ci.defaults.set(
     executable = "recipe:angle/angle",
     builder_group = "ci",
     bucket = "ci",
-    pool = "luci.chromium.gpu.ci",
+    pool = gpu.ci.POOL,
     triggered_by = ["main-poller"],
     build_numbers = True,
     contact_team_email = "chrome-gpu-infra@google.com",
@@ -28,7 +29,6 @@ ci.defaults.set(
     shadow_siso_project = siso.project.DEFAULT_UNTRUSTED,
     siso_remote_jobs = siso.remote_jobs.DEFAULT,
     thin_tester_cores = 2,
-    builderless = True,
     experiments = default_experiments,
     test_presentation = resultdb.test_presentation(
         column_keys = ["v.gpu"],
@@ -47,23 +47,11 @@ targets.builder_defaults.set(
 # Parent Builders                                                              #
 ################################################################################
 
-def angle_linux_parent_builder(**kwargs):
-    kwargs = builder_defaults.apply_linux_builder_defaults(kwargs)
-    ci.builder(**kwargs)
-
-def angle_mac_parent_builder(**kwargs):
-    kwargs = builder_defaults.apply_mac_builder_defaults(kwargs)
-    ci.builder(**kwargs)
-
-def angle_win_parent_builder(**kwargs):
-    kwargs = builder_defaults.apply_win_clang_builder_defaults(kwargs)
-    ci.builder(**kwargs)
-
 def angle_win_msvc_parent_builder(**kwargs):
     kwargs = builder_defaults.apply_win_msvc_builder_defaults(kwargs)
-    ci.builder(**kwargs)
+    gpu.ci.windows_builder(**kwargs)
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-android-arm-builder-dbg",
     description_html = "Compiles debug ANGLE test binaries for Android/arm",
     schedule = "triggered",
@@ -99,7 +87,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-android-arm-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Android/arm",
     schedule = "triggered",
@@ -136,7 +124,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-android-arm64-builder-dbg",
     description_html = "Compiles debug ANGLE test binaries for Android/arm64",
     schedule = "triggered",
@@ -172,7 +160,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-android-arm64-builder-perf",
     description_html = "Compiles release ANGLE perf test binaries for Android/arm64",
     schedule = "triggered",
@@ -204,7 +192,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-android-arm64-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Android/arm64",
     schedule = "triggered",
@@ -231,7 +219,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-linux-x64-builder-asan",
     description_html = ("Compiles release ANGLE test binaries for Linux/x64 " +
                         "with ASan, LSan, and UBSan enabled"),
@@ -267,7 +255,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-linux-x64-builder-dbg",
     description_html = "Compiles debug ANGLE test binaries for Linux/x64",
     schedule = "triggered",
@@ -303,7 +291,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-linux-x64-builder-perf",
     description_html = "Compiles release ANGLE perf test binaries for Linux/x64",
     schedule = "triggered",
@@ -335,7 +323,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-linux-x64-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Linux/x64",
     schedule = "triggered",
@@ -362,7 +350,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-linux-x64-builder-tsan",
     description_html = "Compiles release ANGLE test binaries for Linux/x64 with TSan enabled",
     schedule = "triggered",
@@ -394,7 +382,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_mac_parent_builder(
+gpu.ci.mac_builder(
     name = "angle-mac-arm64-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Mac/arm64",
     schedule = "triggered",
@@ -421,7 +409,7 @@ angle_mac_parent_builder(
     ),
 )
 
-angle_mac_parent_builder(
+gpu.ci.mac_builder(
     name = "angle-mac-x64-builder-dbg",
     description_html = "Compiles debug ANGLE test binaries for Mac/x64",
     schedule = "triggered",
@@ -456,7 +444,7 @@ angle_mac_parent_builder(
     ),
 )
 
-angle_mac_parent_builder(
+gpu.ci.mac_builder(
     name = "angle-mac-x64-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Mac/x64",
     schedule = "triggered",
@@ -483,7 +471,7 @@ angle_mac_parent_builder(
     ),
 )
 
-angle_win_parent_builder(
+gpu.ci.windows_builder(
     name = "angle-win-arm64-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Win/ARM64",
     schedule = "triggered",
@@ -515,7 +503,7 @@ angle_win_parent_builder(
     ),
 )
 
-angle_win_parent_builder(
+gpu.ci.windows_builder(
     name = "angle-win-x64-builder-asan",
     description_html = "Compiles release ANGLE test binaries for Win/x64 with ASan enabled",
     schedule = "triggered",
@@ -547,7 +535,7 @@ angle_win_parent_builder(
     ),
 )
 
-angle_win_parent_builder(
+gpu.ci.windows_builder(
     name = "angle-win-x64-builder-dbg",
     description_html = "Compiles debug ANGLE test binaries for Win/x64",
     schedule = "triggered",
@@ -653,7 +641,7 @@ angle_win_msvc_parent_builder(
     ),
 )
 
-angle_win_parent_builder(
+gpu.ci.windows_builder(
     name = "angle-win-x64-builder-perf",
     description_html = "Compiles release ANGLE perf test binaries for Win/x64",
     schedule = "triggered",
@@ -685,7 +673,7 @@ angle_win_parent_builder(
     ),
 )
 
-angle_win_parent_builder(
+gpu.ci.windows_builder(
     name = "angle-win-x64-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Win/x64",
     schedule = "triggered",
@@ -782,7 +770,7 @@ angle_win_msvc_parent_builder(
     ),
 )
 
-angle_win_parent_builder(
+gpu.ci.windows_builder(
     name = "angle-win-x86-builder-dbg",
     description_html = "Compiles debug ANGLE test binaries for Win/x86",
     schedule = "triggered",
@@ -888,7 +876,7 @@ angle_win_msvc_parent_builder(
     ),
 )
 
-angle_win_parent_builder(
+gpu.ci.windows_builder(
     name = "angle-win-x86-builder-rel",
     description_html = "Compiles release ANGLE test binaries for Win/x86",
     schedule = "triggered",
@@ -2388,7 +2376,7 @@ ci.thin_tester(
 # Trace Tests                                                                  #
 ################################################################################
 
-angle_linux_parent_builder(
+gpu.ci.linux_builder(
     name = "angle-linux-x64-trace",
     description_html = "Runs ANGLE GLES trace tests on Linux/x64 with SwiftShader",
     schedule = "triggered",
@@ -2427,7 +2415,7 @@ angle_linux_parent_builder(
     ),
 )
 
-angle_win_parent_builder(
+gpu.ci.windows_builder(
     name = "angle-win-x64-trace",
     description_html = "Runs ANGLE GLES trace tests on Windows/x64 with SwiftShader",
     schedule = "triggered",
