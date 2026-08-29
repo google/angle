@@ -24060,6 +24060,141 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedDXT)
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth() / 4, getWindowHeight() / 4, GLColor::green);
 }
 
+class Texture2DTestES3_NPOTHostTwiddledTexture : public Texture2DTestES3
+{};
+
+// Test that non-power-of-two uploads of RGB10_A2 with UNSIGNED_INT_2_10_10_10_REV data succeed and
+// verify texture contents.
+TEST_P(Texture2DTestES3_NPOTHostTwiddledTexture, RGB10A2)
+{
+    constexpr GLsizei kWidth  = 65;
+    constexpr GLsizei kHeight = 64;
+
+    for (int iter = 0; iter < 50; ++iter)
+    {
+        std::vector<uint32_t> data(kWidth * kHeight);
+        for (GLsizei y = 0; y < kHeight; ++y)
+        {
+            for (GLsizei x = 0; x < kWidth; ++x)
+            {
+                uint32_t r = ((x + iter) % 2 == 0) ? 0x3FF : 0;
+                uint32_t g = ((y + iter) % 2 == 0) ? 0x3FF : 0;
+                uint32_t b = ((x + y + iter) % 2 == 0) ? 0x3FF : 0;
+                uint32_t a = 3;  // 1.0 in 2-bit alpha
+                data[y * kWidth + x] =
+                    (r & 0x3FF) | ((g & 0x3FF) << 10) | ((b & 0x3FF) << 20) | ((a & 0x3) << 30);
+            }
+        }
+
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB10_A2, kWidth, kHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_INT_2_10_10_10_REV, data.data());
+        ASSERT_GL_NO_ERROR();
+
+        // Verify texture contents via FBO readback
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        std::vector<GLColor> readback(kWidth * kHeight);
+        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, readback.data());
+        ASSERT_GL_NO_ERROR();
+
+        for (GLsizei y = 0; y < kHeight; ++y)
+        {
+            for (GLsizei x = 0; x < kWidth; ++x)
+            {
+                GLubyte expectedR = ((x + iter) % 2 == 0) ? 255 : 0;
+                GLubyte expectedG = ((y + iter) % 2 == 0) ? 255 : 0;
+                GLubyte expectedB = ((x + y + iter) % 2 == 0) ? 255 : 0;
+                GLubyte expectedA = 255;
+                GLColor expected(expectedR, expectedG, expectedB, expectedA);
+                EXPECT_EQ(readback[y * kWidth + x], expected)
+                    << "Mismatch at (" << x << ", " << y << ") on iter " << iter;
+            }
+        }
+
+        // Also verify sampling via drawQuad
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
+// Test that non-power-of-two uploads of SRGB8_ALPHA8 with UNSIGNED_BYTE data succeed and
+// verify texture contents, including non-default unpack alignment and skip pixels.
+TEST_P(Texture2DTestES3_NPOTHostTwiddledTexture, SRGB8Alpha8)
+{
+    constexpr GLsizei kWidth    = 255;
+    constexpr GLsizei kHeight   = 256;
+    constexpr GLint kSkipPixels = 1;
+
+    for (int iter = 0; iter < 50; ++iter)
+    {
+        // Buffer needs kHeight * kWidth + kSkipPixels pixels when UNPACK_ROW_LENGTH is 0.
+        std::vector<GLColor> data(kHeight * kWidth + kSkipPixels);
+        for (size_t i = 0; i < data.size(); ++i)
+        {
+            GLubyte r = static_cast<GLubyte>((i * 17 + iter * 3) % 256);
+            GLubyte g = static_cast<GLubyte>((i * 31 + iter * 5 + 7) % 256);
+            GLubyte b = static_cast<GLubyte>((i * 53 + iter * 11 + 13) % 256);
+            GLubyte a = 255;
+            data[i]   = GLColor(r, g, b, a);
+        }
+
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, kSkipPixels);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, kWidth, kHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, data.data());
+        ASSERT_GL_NO_ERROR();
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+
+        // Verify texture contents via FBO readback
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        std::vector<GLColor> readback(kWidth * kHeight);
+        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, readback.data());
+        ASSERT_GL_NO_ERROR();
+
+        for (GLsizei y = 0; y < kHeight; ++y)
+        {
+            for (GLsizei x = 0; x < kWidth; ++x)
+            {
+                GLColor expected = data[y * kWidth + x + kSkipPixels];
+                EXPECT_EQ(readback[y * kWidth + x], expected)
+                    << "Mismatch at (" << x << ", " << y << ") on iter " << iter;
+            }
+        }
+
+        // Also verify sampling via drawQuad
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Test that robust init via nullptr-upload to texture after invalidating an image with emulated
 // alpha works.
 TEST_P(Texture2DTestES3RobustInit, InvalidateEmulatedAlphaThenInitViaEmptyUpload)
@@ -24316,6 +24451,12 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     Texture2DTestES3_OversizedMipLevels,
     ES3_OPENGL().enable(Feature::UploadOversizedMipLevelsViaUnpackBuffer),
     ES3_OPENGLES().enable(Feature::UploadOversizedMipLevelsViaUnpackBuffer));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3_NPOTHostTwiddledTexture);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    Texture2DTestES3_NPOTHostTwiddledTexture,
+    ES3_OPENGL().enable(Feature::UseTexSubImageForHostTwiddledNpotUploads),
+    ES3_OPENGLES().enable(Feature::UseTexSubImageForHostTwiddledNpotUploads));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureSizeLimitTest);
 ANGLE_INSTANTIATE_TEST(TextureSizeLimitTest,
