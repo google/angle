@@ -185,6 +185,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ExposeES32ForTesting, "exposeES32ForTesting"},
     {Feature::ExposeNonConformantExtensionsAndVersions, "exposeNonConformantExtensionsAndVersions"},
     {Feature::ExternallySynchronizePipelineCacheAccess, "externallySynchronizePipelineCacheAccess"},
+    {Feature::FinishBeforeBlitFramebufferMultiAttachment, "finishBeforeBlitFramebufferMultiAttachment"},
     {Feature::FinishDoesNotCauseQueriesToBeAvailable, "finishDoesNotCauseQueriesToBeAvailable"},
     {Feature::FlushAfterEndingTransformFeedback, "flushAfterEndingTransformFeedback"},
     {Feature::FlushAfterStreamVertexData, "flushAfterStreamVertexData"},
