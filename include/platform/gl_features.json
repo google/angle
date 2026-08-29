@@ -1045,6 +1045,14 @@
                 "multiple color attachments or any color attachment's texture has base_level > 0."
             ],
             "issue": "http://crbug.com/546252753"
+        },
+        {
+            "name": "use_tex_sub_image_for_host_twiddled_npot_uploads",
+            "category": "Workarounds",
+            "description": [
+                "For texture formats which would be twiddled on the host CPU, upload via TexSubImage2D instead of TexImage2D."
+            ],
+            "issue": "http://crbug.com/553172761"
         }
     ]
 }

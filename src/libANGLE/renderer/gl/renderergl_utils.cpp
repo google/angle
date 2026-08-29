@@ -2779,6 +2779,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, reattachTextureToFboAfterLayerIncrease,
                             IsPowerVR(vendor) && IsAndroid());
 
+    // crbug.com/553172761
+    ANGLE_FEATURE_CONDITION(features, useTexSubImageForHostTwiddledNpotUploads,
+                            false /* IsPowerVR(vendor) */);
+
     // Mac Intel drivers are unable to allocate buffers larger than ~1gb
     ANGLE_FEATURE_CONDITION(features, limitMaxBufferSizeTo1gb, isApple && isIntel);
 

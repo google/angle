@@ -113,6 +113,13 @@ LevelInfoGL GetLevelInfo(const angle::FeaturesGL &features,
                        GetEmulatedAlphaChannel(features, originalInternalFormat));
 }
 
+bool IsHostTwiddledFormat(GLenum internalFormat, GLenum format, GLenum type)
+{
+    return (internalFormat == GL_RGB10_A2 && format == GL_RGBA &&
+            type == GL_UNSIGNED_INT_2_10_10_10_REV) ||
+           (internalFormat == GL_SRGB8_ALPHA8 && format == GL_RGBA && type == GL_UNSIGNED_BYTE);
+}
+
 gl::Texture::DirtyBits GetLevelWorkaroundDirtyBits()
 {
     gl::Texture::DirtyBits bits;
@@ -351,11 +358,29 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
     if (nativegl::UseTexImage2D(getType()))
     {
         ASSERT(size.depth == 1);
-        ANGLE_GL_TRY_ALWAYS_CHECK(
-            context, functions->texImage2D(nativegl::GetTextureBindingTarget(target),
-                                           static_cast<GLint>(level), texImageFormat.internalFormat,
-                                           size.width, size.height, 0, texImageFormat.format,
-                                           texImageFormat.type, pixels));
+        if (features.useTexSubImageForHostTwiddledNpotUploads.enabled && pixels != nullptr &&
+            (!gl::isPow2(size.width) || !gl::isPow2(size.height)) &&
+            IsHostTwiddledFormat(texImageFormat.internalFormat, texImageFormat.format,
+                                 texImageFormat.type))
+        {
+            ANGLE_GL_TRY_ALWAYS_CHECK(
+                context, functions->texImage2D(
+                             nativegl::GetTextureBindingTarget(target), static_cast<GLint>(level),
+                             texImageFormat.internalFormat, size.width, size.height, 0,
+                             texImageFormat.format, texImageFormat.type, nullptr));
+            ANGLE_GL_TRY(context, functions->texSubImage2D(
+                                      nativegl::GetTextureBindingTarget(target),
+                                      static_cast<GLint>(level), 0, 0, size.width, size.height,
+                                      texImageFormat.format, texImageFormat.type, pixels));
+        }
+        else
+        {
+            ANGLE_GL_TRY_ALWAYS_CHECK(
+                context, functions->texImage2D(
+                             nativegl::GetTextureBindingTarget(target), static_cast<GLint>(level),
+                             texImageFormat.internalFormat, size.width, size.height, 0,
+                             texImageFormat.format, texImageFormat.type, pixels));
+        }
     }
     else
     {

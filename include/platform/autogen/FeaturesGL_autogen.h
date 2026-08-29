@@ -794,6 +794,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo useTexSubImageForHostTwiddledNpotUploads = {
+        "useTexSubImageForHostTwiddledNpotUploads",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
