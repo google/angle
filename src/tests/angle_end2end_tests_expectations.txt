@@ -292,6 +292,34 @@
 523371282 WIN NVIDIA GLES : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
 523371282 WIN NVIDIA OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
 
+557268102 LINUX NVIDIA VULKAN : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP
+557268102 LINUX NVIDIA VULKAN : GLSLTest_ES3.LiteralNegativeInfinityOutput/* = SKIP
+
+557268102 LINUX NVIDIA VULKAN : RobustResourceInitTest.MaskedStencilClear/ES2_Vulkan_AllocateNonZeroMemory = SKIP
+557268102 LINUX NVIDIA VULKAN : RobustResourceInitTestES3.MaskedStencilClearBuffer/ES3_Vulkan_AllocateNonZeroMemory = SKIP
+557268102 LINUX NVIDIA VULKAN : Texture2DTestES3.TexImageWithStencilData/ES3_Vulkan_AllocateNonZeroMemory = SKIP
+
+557268102 LINUX NVIDIA VULKAN : Texture2DTestES3.TexImageWithStencilPBO/ES3_Vulkan_AllocateNonZeroMemory = SKIP
+
+557268102 LINUX NVIDIA OPENGL : HardenedTransformFeedbackTest.VertexBufferBoundForTransformFeedback/* = SKIP
+557268102 LINUX NVIDIA OPENGL : SimpleUniformTest.MiddleInactiveUniform/* = SKIP
+557268102 LINUX NVIDIA OPENGL : TransformFeedbackTest.StaleBufferBindingInactiveXfb/* = SKIP
+557268102 LINUX NVIDIA OPENGL : TransformFeedbackTestIOBlocks.Interleaved/* = SKIP
+557268102 LINUX NVIDIA OPENGL : UniformBufferTest31.FourBindingsSameBuffer/* = SKIP
+557268102 LINUX NVIDIA OPENGL : UnpackAlignmentTest.Alignment*LUByte/* = SKIP
+557268102 LINUX NVIDIA OPENGL : UnpackAlignmentTest.Alignment2LAByte/* = SKIP
+557268102 LINUX NVIDIA OPENGL : VertexAttributeTest.UnsignedShortUnnormalized/* = SKIP
+557268102 LINUX NVIDIA OPENGL : VertexAttributeTest.UsingDifferentFormatAndSameBuffer/* = SKIP
+557268102 LINUX NVIDIA OPENGL : VertexAttributeTestES31.DrawArraysWithLargeRelativeOffset/* = SKIP
+557268102 LINUX NVIDIA OPENGL : VertexAttributeTestES31.LargeStride/* = SKIP
+557268102 LINUX NVIDIA OPENGL : VulkanExternalImageTestES31.UninitializedOnGLImportAndStorageWrite/* = SKIP
+
+557268102 LINUX NVIDIA OPENGL : SimpleUniformTestES3.MatCx2InArrayAndOutOfArray/* = SKIP
+557268102 LINUX NVIDIA OPENGL : UniformBlockWithOneLargeArrayMemberTest.SharedSameBufferWithOtherOne/* = SKIP
+557268102 LINUX NVIDIA OPENGL : UniformBufferTest.Std140UniformBlockWithRowMajorQualifier/* = SKIP
+557268102 LINUX NVIDIA OPENGL : UniformTestES3.StructWithNonSquareMatrixAndBool/* = SKIP
+557268102 LINUX NVIDIA OPENGL : UniformTestES31.UniformReorderDoesNotBreakStructUniformsV2/* = SKIP
+
 // Linux
 42264596 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
 // Crashes when compiling the shader

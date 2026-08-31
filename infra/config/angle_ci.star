@@ -1403,20 +1403,33 @@ ci.thin_tester(
         run_tests_serially = True,
     ),
     targets = targets.bundle(
-        targets = [],
+        targets = [
+            "linux_real_hardware_common_gtests",
+            "linux_nvidia_only_gtests",
+            "common_isolated_scripts",
+        ],
         mixins = [
             "linux_nvidia_gtx_1660_experimental",
         ],
+        per_test_modifications = {
+            "angle_deqp_egl_vulkan_tests": targets.mixin(
+                # TODO(crbug.com/557307486): Remove this if/when these tests
+                # have been investigated regarding performance issues.
+                args = [
+                    "--batch-size=128",
+                ],
+            ),
+        },
     ),
     targets_settings = targets.settings(
         browser_config = targets.browser_config.RELEASE,
         os_type = targets.os_type.LINUX,
     ),
     # Uncomment this entry when this experimental tester is actually in use.
-    # console_view_entry = consoles.console_view_entry(
-    #     category = "test|linux|x64|rel|exp",
-    #     short_name = "1660",
-    # ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|linux|x64|rel|exp",
+        short_name = "1660",
+    ),
     list_view = "exp",
 )
 
