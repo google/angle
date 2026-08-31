@@ -67,6 +67,31 @@
 
 namespace angle
 {
+// Thread specific record suspension flag to prevent re-recording cmds from the fixture
+static thread_local bool g_skipCapture = false;
+
+// Check if we've found a fixture injection marker and set the skip flag
+// so that neither suppression markers or marked calls are recorded
+static bool MaybeSkipCapture(const CallCapture &call)
+{
+    if (call.entryPoint != EntryPoint::GLDebugMessageInsert &&
+        call.entryPoint != EntryPoint::GLDebugMessageInsertKHR)
+    {
+        return false;
+    }
+    const GLuint markerId = call.params.getParam("id", ParamType::TGLuint, 2).value.GLuintVal;
+    if (markerId == kFixtureInjectedCommandsBeginId)
+    {
+        g_skipCapture = true;
+        return true;
+    }
+    if (markerId == kFixtureInjectedCommandsEndId)
+    {
+        g_skipCapture = false;
+        return true;
+    }
+    return false;
+}
 
 struct FramebufferCaptureFuncs
 {
@@ -6004,9 +6029,15 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     }
 }
 
-bool SkipCall(EntryPoint entryPoint)
+bool SkipCall(const CallCapture &call)
 {
-    switch (entryPoint)
+    // Skip capture of fixture-injected calls to keep retraces clean
+    if (MaybeSkipCapture(call) || g_skipCapture)
+    {
+        return true;
+    }
+
+    switch (call.entryPoint)
     {
         case EntryPoint::GLDebugMessageCallback:
         case EntryPoint::GLDebugMessageCallbackKHR:
@@ -8393,7 +8424,7 @@ void FrameCaptureShared::updateResourceCountsFromCallCapture(const CallCapture &
 
 void FrameCaptureShared::captureCall(gl::Context *context, CallCapture &&inCall, bool isCallValid)
 {
-    if (SkipCall(inCall.entryPoint))
+    if (SkipCall(inCall))
     {
         return;
     }

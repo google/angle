@@ -442,9 +442,7 @@ FrameCaptureShared::FrameCaptureShared()
 {
     reset();
 
-    std::string enabledFromEnv =
-        GetEnvironmentVarOrUnCachedAndroidProperty(kEnabledVarName, kAndroidEnabled);
-    if (enabledFromEnv == "0")
+    if (!IsCaptureEnabledFromEnv())
     {
         mEnabled = false;
     }
