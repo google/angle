@@ -865,9 +865,14 @@ TEST_P(PixelLocalStorageTest, CommaOperator)
         return pixelLocalLoadANGLE(p);
     }
 
-    highp uvec4 uloadPlane(highp pixelLocalANGLE unused, highp upixelLocalANGLE p)
+    highp uvec4 uloadPlaneNested(highp pixelLocalANGLE unused, highp upixelLocalANGLE p)
     {
         return pixelLocalLoadANGLE(p);
+    }
+
+    highp uvec4 uloadPlane(highp pixelLocalANGLE unused, highp upixelLocalANGLE p)
+    {
+        return uloadPlaneNested(unused, p);
     }
 
     int j = 0;
