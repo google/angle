@@ -6612,9 +6612,29 @@ angle::Result ImageHelper::initExternalMemory(ErrorContext *context,
     {
         bindImagePlaneMemoryInfo.planeAspect = kMemoryPlaneAspects[memoryPlane];
 
+        VkMemoryRequirements planeMemoryRequirements = memoryRequirements;
+        if (extraAllocationInfoCount > 1)
+        {
+            VkImagePlaneMemoryRequirementsInfo planeMemoryRequirementsInfo = {};
+            planeMemoryRequirementsInfo.sType =
+                VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO;
+            planeMemoryRequirementsInfo.planeAspect = kMemoryPlaneAspects[memoryPlane];
+
+            VkImageMemoryRequirementsInfo2 imageMemoryRequirementsInfo = {};
+            imageMemoryRequirementsInfo.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2;
+            imageMemoryRequirementsInfo.pNext = &planeMemoryRequirementsInfo;
+            imageMemoryRequirementsInfo.image = mImage.getHandle();
+
+            VkMemoryRequirements2 planeMemoryRequirements2 = {};
+            planeMemoryRequirements2.sType = VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2;
+            mImage.getMemoryRequirements2(context->getDevice(), imageMemoryRequirementsInfo,
+                                          &planeMemoryRequirements2);
+            planeMemoryRequirements = planeMemoryRequirements2.memoryRequirements;
+        }
+
         ANGLE_VK_TRY(context,
                      AllocateImageMemoryWithRequirements(
-                         context, mMemoryAllocationType, flags, memoryRequirements,
+                         context, mMemoryAllocationType, flags, planeMemoryRequirements,
                          ANGLE_UNSAFE_TODO(extraAllocationInfo[memoryPlane]),
                          bindImagePlaneMemoryInfoPtr, &mImage, &mMemoryTypeIndex, &mDeviceMemory));
     }
