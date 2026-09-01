@@ -47,6 +47,7 @@
 536664909 WIN NVIDIA OPENGL : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
 536664909 WIN NVIDIA GLES : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
 536664909 WIN NVIDIA GLES : CopyTextureTest.Texture2DDestLevelPastStorageMips/* = SKIP
+555873652 WIN NVIDIA OPENGL : CopyTextureTest.Texture2DDestLevelPastStorageMips/* = SKIP
 536664909 PIXEL10 GLES : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
 
 381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
