@@ -1291,6 +1291,12 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
             gl::Offset areaOffset = area.getOffset();
             areaOffset.z          = mState.toOwnerDepth(areaOffset).get();
 
+            // Cannot defer the copy as the PBO buffer is unmapped after the call.
+            if (applyUpdate == vk::ApplyImageUpdate::ImmediatelyInUnlockedTailCall)
+            {
+                applyUpdate = vk::ApplyImageUpdate::Immediately;
+            }
+
             ANGLE_TRY(mImage->stageSubresourceUpdate(
                 contextVk, index, area.getExtents(), areaOffset, formatInfo, type, source, vkFormat,
                 getRequiredFormatSupport(), inputRowPitch, inputDepthPitch, inputSkipBytes,

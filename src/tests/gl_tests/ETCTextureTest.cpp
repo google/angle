@@ -133,6 +133,40 @@ TEST_P(ETCTextureTest, PBOWithMisalignedOffset)
     EXPECT_GL_NO_ERROR();
 }
 
+// Tests that uploading compressed texture from a PBO with a misaligned offset doesn't crash, using
+// storage textures.
+TEST_P(ETCTextureTest, PBOWithMisalignedOffsetImmutableTexture)
+{
+    // Need ES 3.0 for PBOs.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+
+    constexpr GLsizei kWidth  = 512;
+    constexpr GLsizei kHeight = 512;
+    constexpr GLsizei kBPB    = 8;  // 8 bytes per block
+    constexpr GLsizei kBW     = 4;
+    constexpr GLsizei kBH     = 4;
+
+    GLsizei blocksX        = kWidth / kBW;
+    GLsizei blocksY        = kHeight / kBH;
+    GLsizei compressedSize = blocksX * blocksY * kBPB;
+
+    glBindTexture(GL_TEXTURE_2D, mTexture);
+    // Use GL_COMPRESSED_RGB8_ETC2 which is core in ES 3.0
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGB8_ETC2, kWidth, kHeight);
+
+    // Misaligned offset to trigger the fallback path in Metal backend
+    constexpr GLsizei kPBOOffset = 1;
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, kPBOOffset + compressedSize, nullptr, GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_COMPRESSED_RGB8_ETC2,
+                              compressedSize, reinterpret_cast<void *>(kPBOOffset));
+    EXPECT_GL_NO_ERROR();
+}
+
 class ETCToBCTextureTest : public ANGLETest<>
 {
   protected:

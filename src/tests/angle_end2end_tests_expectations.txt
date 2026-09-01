@@ -1263,6 +1263,7 @@
 480069042 PIXEL10 GLES : GLSLTest_ES31.IOBlockInvariantAll/* = SKIP
 498083624 PIXEL10 GLES : CopyTextureTestES3.SRGBWithPackParameters/* = SKIP
 489579953 PIXEL10 GLES : ETCTextureTest.PBOWithMisalignedOffset/* = SKIP
+489579953 PIXEL10 GLES : ETCTextureTest.PBOWithMisalignedOffsetImmutableTexture/* = SKIP
 498904293 PIXEL10 GLES : CopyTextureTestES3.PBOSynchronization/* = SKIP
 499129768 PIXEL10 GLES : Texture2DNorm16TestES3.ReadbackWithPBO/* = SKIP
 500569110 PIXEL10 GLES : MSRTTES3Test.UnresolveWithAndWithoutStencil/* = SKIP
