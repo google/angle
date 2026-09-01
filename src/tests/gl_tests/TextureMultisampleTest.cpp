@@ -1497,7 +1497,7 @@ void main()
 
     const uint32_t *ptr = reinterpret_cast<uint32_t *>(
         glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
-    static constexpr std::array<GLColor, 4> kExpectedColors = {
+    constexpr std::array<GLColor, 4> kExpectedColors = {
         GLColor(96, 32, 0, 255),
         GLColor(223, 96, 0, 255),
         GLColor(32, 159, 0, 255),

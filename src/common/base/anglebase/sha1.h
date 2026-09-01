@@ -64,7 +64,10 @@ class SecureHashAlgorithm
     void Final();
 
     // 20 bytes of message digest.
-    const unsigned char *Digest() const { return reinterpret_cast<const unsigned char *>(H); }
+    const unsigned char *Digest() const
+    {
+        return reinterpret_cast<const unsigned char *>(H.data());
+    }
 
     std::array<uint8_t, kSHA1Length> DigestAsArray() const;
 
@@ -74,7 +77,7 @@ class SecureHashAlgorithm
 
     uint32_t A, B, C, D, E;
 
-    uint32_t H[5];
+    std::array<uint32_t, 5> H;
 
     union
     {

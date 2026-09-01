@@ -8,6 +8,7 @@
 #include "common/unsafe_buffers.h"
 
 #include <iostream>
+#include <string_view>
 #include <variant>
 
 #include "GLSLANG/ShaderLang.h"
@@ -1630,10 +1631,10 @@ void OutputWGSLTraverser::emitTextureBuiltin(const TOperator op, const TIntermSe
     ImmutableString wgslTextureVarName("");
     ImmutableString wgslSamplerVarName("");
 
-    constexpr char k2DCoordsSwizzle[] = ".xy";
-    constexpr char k3DCoordsSwizzle[] = ".xyz";
+    constexpr std::string_view k2DCoordsSwizzle = ".xy";
+    constexpr std::string_view k3DCoordsSwizzle = ".xyz";
 
-    constexpr char kPossibleElems[] = "xyzw";
+    constexpr std::string_view kPossibleElems = "xyzw";
 
     // MonomorphizeUnsupportedFunctions() and RewriteStructSamplers() ensure that this is a
     // reference to the global sampler.
@@ -1862,8 +1863,8 @@ void OutputWGSLTraverser::emitTextureBuiltin(const TOperator op, const TIntermSe
             ASSERT(pIndex == 1);
             const uint8_t vecSize = args[pIndex]->getAsTyped()->getNominalSize();
             ASSERT(vecSize == 3 || vecSize == 4);
-            projectionDivisionSwizzle = BuildConcatenatedImmutableString(
-                '.', ANGLE_UNSAFE_TODO(kPossibleElems[vecSize - 1]));
+            projectionDivisionSwizzle =
+                BuildConcatenatedImmutableString('.', kPossibleElems[vecSize - 1]);
         }
 
         // If sampling from an array, set the swizzle that extracts the array layer number from the
@@ -1888,18 +1889,17 @@ void OutputWGSLTraverser::emitTextureBuiltin(const TOperator op, const TIntermSe
                 elemIndex = 3;
             }
 
-            depthRefSwizzle =
-                BuildConcatenatedImmutableString('.', ANGLE_UNSAFE_TODO(kPossibleElems[elemIndex]));
+            depthRefSwizzle = BuildConcatenatedImmutableString('.', kPossibleElems[elemIndex]);
         }
 
         // Finally, set the swizzle for extracting coordinates from the p vector.
         if (IsSampler2D(samplerType) || IsSampler2DArray(samplerType))
         {
-            coordsSwizzle = ImmutableString(k2DCoordsSwizzle);
+            coordsSwizzle = ImmutableString(k2DCoordsSwizzle.data(), k2DCoordsSwizzle.size());
         }
         else if (IsSampler3D(samplerType) || IsSamplerCube(samplerType))
         {
-            coordsSwizzle = ImmutableString(k3DCoordsSwizzle);
+            coordsSwizzle = ImmutableString(k3DCoordsSwizzle.data(), k3DCoordsSwizzle.size());
         }
     }
 

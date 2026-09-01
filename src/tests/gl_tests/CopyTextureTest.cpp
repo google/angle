@@ -112,29 +112,48 @@ class CopyTextureTest : public ANGLETest<>
 
     void testSrgbToRgb(GLenum internalformat, GLenum format)
     {
-        const size_t kTestCount                = 4;
-        const std::array<GLColor, kTestCount> kSourceColor = {
-            GLColor(89, 67, 45, 123),
-            GLColor(87, 69, 45, 123),
-            GLColor(180, 143, 93, 123),
-            GLColor(89, 67, 45, 123),
+        struct TestCase
+        {
+            GLColor sourceColor;
+            GLColor expectedColor;
+            bool premultiply;
+            bool unmultiply;
         };
-        const std::array<GLColor, kTestCount> kExpectedColor = {
-            GLColor(89, 67, 45, 123),
-            GLColor(180, 143, 93, 123),
-            GLColor(87, 69, 45, 123),
-            GLColor(89, 67, 45, 123),
-        };
-        std::array<bool, kTestCount> kPremultiply = {false, false, true, true};
-        std::array<bool, kTestCount> kUnmultiply  = {false, true, false, true};
 
-        for (size_t test = 0; test < kTestCount; ++test)
+        constexpr TestCase kTestCases[] = {
+            {
+                .sourceColor   = GLColor(89, 67, 45, 123),
+                .expectedColor = GLColor(89, 67, 45, 123),
+                .premultiply   = false,
+                .unmultiply    = false,
+            },
+            {
+                .sourceColor   = GLColor(87, 69, 45, 123),
+                .expectedColor = GLColor(180, 143, 93, 123),
+                .premultiply   = false,
+                .unmultiply    = true,
+            },
+            {
+                .sourceColor   = GLColor(180, 143, 93, 123),
+                .expectedColor = GLColor(87, 69, 45, 123),
+                .premultiply   = true,
+                .unmultiply    = false,
+            },
+            {
+                .sourceColor   = GLColor(89, 67, 45, 123),
+                .expectedColor = GLColor(89, 67, 45, 123),
+                .premultiply   = true,
+                .unmultiply    = true,
+            },
+        };
+
+        for (const auto &test : kTestCases)
         {
             // Create image as sRGB.
             GLTexture sourceTexture;
             glBindTexture(GL_TEXTURE_2D, sourceTexture);
             glTexImage2D(GL_TEXTURE_2D, 0, internalformat, 1, 1, 0, format, GL_UNSIGNED_BYTE,
-                         kSourceColor[test].data());
+                         test.sourceColor.data());
             ASSERT_GL_NO_ERROR();
 
             GLTexture destTexture;
@@ -144,13 +163,13 @@ class CopyTextureTest : public ANGLETest<>
 
             // Note: flipY is used to avoid direct transfer between textures and force a draw-based
             // path.
-            glCopySubTextureCHROMIUM(sourceTexture, 0, GL_TEXTURE_2D, destTexture, 0,  // level,
+            glCopySubTextureCHROMIUM(sourceTexture, 0, GL_TEXTURE_2D, destTexture, 0,  // level
                                      0, 0,                                             // src x,y
                                      0, 0,                                             // dst x,y
-                                     1, 1,                // width, height
-                                     true,                // flip-y
-                                     kPremultiply[test],  // premul
-                                     kUnmultiply[test]);  // unmul
+                                     1, 1,              // width, height
+                                     true,              // flip-y
+                                     test.premultiply,  // premul
+                                     test.unmultiply);  // umul
             ASSERT_GL_NO_ERROR();
 
             // Verify the copy.
@@ -173,7 +192,7 @@ class CopyTextureTest : public ANGLETest<>
             drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
             ASSERT_GL_NO_ERROR();
 
-            EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpectedColor[test], 2);
+            EXPECT_PIXEL_COLOR_NEAR(0, 0, test.expectedColor, 2);
         }
     }
 

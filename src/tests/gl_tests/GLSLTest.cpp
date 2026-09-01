@@ -1894,10 +1894,10 @@ TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElementsU8)
     EXPECT_EQ(42, GetFirstIntPixelRedValue());
 
     const int kIndexDataSize = 5;
-    GLubyte indexData[]      = {1, 2, 5, 3, 100};
+    constexpr std::array<GLubyte, 5> indexData = {1, 2, 5, 3, 100};
     GLBuffer indexBuffer;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData.data(), GL_STATIC_DRAW);
 
     for (size_t first = 0; first < kIndexDataSize; ++first)
     {
@@ -1974,15 +1974,15 @@ TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElementsU8Line)
     glClearBufferiv(GL_COLOR, 0, clearData);
     EXPECT_EQ(42, GetFirstIntPixelRedValue());
 
-    GLubyte indexData[] = {1, 4, 5, 2, 50, 61};
+    constexpr std::array<GLubyte, 6> indexData = {1, 4, 5, 2, 50, 61};
     GLBuffer indexBuffer;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData.data(), GL_STATIC_DRAW);
 
-    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(0, indexData);
-    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(1, indexData);
-    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(2, indexData);
-    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(4, indexData);
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(0, indexData.data());
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(1, indexData.data());
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(2, indexData.data());
+    GLVertexIDIntegerTextureDrawElementsU8Line_Helper(4, indexData.data());
 
     EXPECT_GL_NO_ERROR();
 }
@@ -2014,20 +2014,19 @@ TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElementsU8LineIds)
         oVertexID = vVertexID;
     })";
 
-    GLubyte indexData[]          = {1, 4, 5, 2, 50, 61, 32, 33};
-    constexpr size_t kNumIndices = sizeof(indexData) / sizeof(indexData[0]);
+    constexpr std::array<GLubyte, 8> indexData = {1, 4, 5, 2, 50, 61, 32, 33};
     GLBuffer indexBuffer;
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData.data(), GL_STATIC_DRAW);
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
-    glUniform1f(glGetUniformLocation(program, "width"), kNumIndices);
-    glViewport(0, 0, kNumIndices, 1);
+    glUniform1f(glGetUniformLocation(program, "width"), indexData.size());
+    glViewport(0, 0, indexData.size(), 1);
 
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex);
-    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32I, kNumIndices, 1);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32I, indexData.size(), 1);
     GLFramebuffer fb;
     glBindFramebuffer(GL_FRAMEBUFFER, fb);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
@@ -2054,12 +2053,12 @@ TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawElementsU8LineIds)
 
     EXPECT_GL_NO_ERROR();
 
-    glDrawElements(GL_LINES, kNumIndices, GL_UNSIGNED_BYTE, 0);
+    glDrawElements(GL_LINES, indexData.size(), GL_UNSIGNED_BYTE, 0);
 
-    std::array<GLint, kNumIndices * 4> pixels;
-    glReadPixels(0, 0, kNumIndices, 1, GL_RGBA_INTEGER, GL_INT, pixels.data());
+    std::array<GLint, indexData.size() * 4> pixels;
+    glReadPixels(0, 0, indexData.size(), 1, GL_RGBA_INTEGER, GL_INT, pixels.data());
 
-    for (size_t i = 0; i < kNumIndices; ++i)
+    for (size_t i = 0; i < indexData.size(); ++i)
     {
         const int expected = i % 2 ? kDefaultValue : indexData[i + 1];
         const int actual   = pixels[i * 4];

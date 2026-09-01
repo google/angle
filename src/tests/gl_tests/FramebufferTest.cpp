@@ -2129,8 +2129,12 @@ void main()
                      GL_UNSIGNED_BYTE, nullptr);
     }
 
-    GLenum allBufs[kDrawBufferCount] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
-                                        GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+    constexpr std::array<GLenum, kDrawBufferCount> allBufs = {
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1,
+        GL_COLOR_ATTACHMENT2,
+        GL_COLOR_ATTACHMENT3,
+    };
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
@@ -2142,7 +2146,7 @@ void main()
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + texIndex, GL_TEXTURE_2D,
                                textures[texIndex], 0);
     }
-    glDrawBuffers(kDrawBufferCount, allBufs);
+    glDrawBuffers(kDrawBufferCount, allBufs.data());
 
     // Draw with simple program.
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
@@ -3357,7 +3361,11 @@ TEST_P(FramebufferTestWithFormatFallback, R4G4B4A4_BaseRespecifyPreservesStagedM
     constexpr GLenum kInternalFormat = GL_RGBA4;
     constexpr GLenum kType           = GL_UNSIGNED_SHORT_4_4_4_4;
     constexpr GLsizei kSize          = 8;
-    const GLColor kColors[]          = {GLColor::red, GLColor::green, GLColor::blue};
+    const std::array<GLColor, 3> kColors = {
+        GLColor::red,
+        GLColor::green,
+        GLColor::blue,
+    };
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -4773,7 +4781,7 @@ TEST_P(FramebufferTest_ES31_MSAA, MultisampleStencilSampling)
 
     ANGLE_GL_PROGRAM(drawStencilProg, essl31_shaders::vs::Passthrough(), essl31_shaders::fs::Red());
 
-    const std::array<GLubyte, 4> stencilRefs = {64, 128, 192, 255};
+    constexpr std::array<GLubyte, 4> stencilRefs = {64, 128, 192, 255};
     for (int s = 0; s < kSamples; ++s)
     {
         glSampleMaski(0, 1 << s);
@@ -4789,7 +4797,7 @@ TEST_P(FramebufferTest_ES31_MSAA, MultisampleStencilSampling)
 
     // Populate Layer 0
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, msaaStencilArrayTex, 0, 0);
-    const std::array<GLubyte, 4> stencilRefs0 = {10, 20, 30, 40};
+    constexpr std::array<GLubyte, 4> stencilRefs0 = {10, 20, 30, 40};
     for (int s = 0; s < kSamples; ++s)
     {
         glSampleMaski(0, 1 << s);
@@ -4799,7 +4807,7 @@ TEST_P(FramebufferTest_ES31_MSAA, MultisampleStencilSampling)
 
     // Populate Layer 1
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, msaaStencilArrayTex, 0, 1);
-    const std::array<GLubyte, 4> stencilRefs1 = {50, 100, 150, 200};
+    constexpr std::array<GLubyte, 4> stencilRefs1 = {50, 100, 150, 200};
     for (int s = 0; s < kSamples; ++s)
     {
         glSampleMaski(0, 1 << s);

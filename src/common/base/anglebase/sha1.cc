@@ -86,7 +86,7 @@ void SecureHashAlgorithm::Final()
     Process();
 
     for (int t = 0; t < 5; ++t)
-        ANGLE_UNSAFE_TODO(H[t] = ByteSwap(H[t]));
+        H[t] = ByteSwap(H[t]);
 }
 
 void SecureHashAlgorithm::Update(const void *data, size_t nbytes)
@@ -181,10 +181,10 @@ std::array<uint8_t, kSHA1Length> SecureHashAlgorithm::DigestAsArray() const
 
 std::string SHA1HashString(const std::string &str)
 {
-    char hash[SecureHashAlgorithm::kDigestSizeBytes];
-    SHA1HashBytes(reinterpret_cast<const unsigned char *>(str.c_str()), str.length(),
-                  reinterpret_cast<unsigned char *>(hash));
-    return std::string(hash, SecureHashAlgorithm::kDigestSizeBytes);
+    std::string hash(SecureHashAlgorithm::kDigestSizeBytes, '\0');
+    SHA1HashBytes(reinterpret_cast<const unsigned char *>(str.data()), str.size(),
+                  reinterpret_cast<unsigned char *>(hash.data()));
+    return hash;
 }
 
 void SHA1HashBytes(const unsigned char *data, size_t len, unsigned char *hash)

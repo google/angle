@@ -756,9 +756,9 @@ static GLfloat QuerySingleGLFloat(const FunctionsGL *functions, GLenum name)
 
 static GLfloat QueryGLFloatRange(const FunctionsGL *functions, GLenum name, size_t index)
 {
-    GLfloat result[2] = {};
-    functions->getFloatv(name, result);
-    return ANGLE_UNSAFE_TODO(result[index]);
+    std::array<GLfloat, 2> result = {};
+    functions->getFloatv(name, result.data());
+    return result[index];
 }
 
 static gl::TypePrecision QueryTypePrecision(const FunctionsGL *functions,
