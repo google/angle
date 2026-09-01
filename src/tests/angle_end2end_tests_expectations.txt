@@ -41,11 +41,13 @@
 532617619 OPENGL : MipmapRobustInitTestES3.GenerateMipmapRobustInitOptimization*/* = SKIP
 532617619 GLES : MipmapRobustInitTestES3.GenerateMipmapRobustInitOptimization*/* = SKIP
 
-// Redefining base level on native OpenGL/GLES drivers drops existing higher mip levels.
-480069042 OPENGL : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
-480069042 OPENGL : CopyTextureTest.Texture2DDestLevelPastStorageMips/* = SKIP
-480069042 GLES : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
-480069042 GLES : CopyTextureTest.Texture2DDestLevelPastStorageMips/* = SKIP
+// Redefining base level on some native OpenGL/GLES drivers drops existing higher mip levels.
+536664909 WIN INTEL OPENGL : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
+536664909 WIN INTEL OPENGL : CopyTextureTest.Texture2DDestLevelPastStorageMips/* = SKIP
+536664909 WIN NVIDIA OPENGL : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
+536664909 WIN NVIDIA GLES : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
+536664909 WIN NVIDIA GLES : CopyTextureTest.Texture2DDestLevelPastStorageMips/* = SKIP
+536664909 PIXEL10 GLES : CopyTextureTest.CubeMapDestLevelPastStorageMips/* = SKIP
 
 381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
 
