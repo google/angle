@@ -331,6 +331,19 @@ TEST_P(MSRTTTest, Texture2DParameterCheck)
         assertErrorIfNotMSRTT2(GL_INVALID_ENUM);
     }
 
+    // Attachment not 2D texture
+    GLTexture cube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cube);
+    for (GLenum face = 0; face < 6; face++)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA, 64, 64, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_NO_ERROR();
+    }
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, cube,
+                                         0, 4);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
     // Target not framebuffer
     glFramebufferTexture2DMultisampleEXT(GL_RENDERBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                          texture, 0, 4);
@@ -426,6 +439,14 @@ TEST_P(MSRTTTest, TextureCubeMapParameterCheck)
         // the next larger sample count supported by the implementation"
         EXPECT_GE(param, 4);
     }
+
+    // Attachment not cubemap texture
+    GLTexture notcube;
+    glBindTexture(GL_TEXTURE_2D, notcube);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                         GL_TEXTURE_CUBE_MAP_POSITIVE_X, notcube, 0, 4);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 // Checking for framebuffer completeness using extension methods.
