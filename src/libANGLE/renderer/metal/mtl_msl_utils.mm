@@ -467,11 +467,12 @@ std::string SubstituteTransformFeedbackMarkers(const std::string &originalSource
     std::string result;
     if (hasBindingsMarker && hasOutMarker)
     {
-        result.append(&originalSource[0], &originalSource[xfbBindingsMarkerStart]);
+        result.append(originalSource, 0, xfbBindingsMarkerStart);
         result.append(xfbBindings);
-        result.append(&originalSource[xfbBindingsMarkerEnd], &originalSource[xfbOutMarkerStart]);
+        result.append(originalSource, xfbBindingsMarkerEnd,
+                      xfbOutMarkerStart - xfbBindingsMarkerEnd);
         result.append(xfbOut);
-        result.append(&originalSource[xfbOutMarkerEnd], &originalSource[originalSource.size()]);
+        result.append(originalSource, xfbOutMarkerEnd);
         return result;
     }
     return originalSource;

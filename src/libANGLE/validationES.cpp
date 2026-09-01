@@ -1781,16 +1781,16 @@ bool ValidateBlitFramebufferParameters(const Context *context,
         }
     }
 
-    GLenum masks[]       = {GL_DEPTH_BUFFER_BIT, GL_STENCIL_BUFFER_BIT};
-    GLenum attachments[] = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
-    for (size_t i = 0; i < 2; i++)
+    constexpr std::array<GLenum, 2> kMasks       = {GL_DEPTH_BUFFER_BIT, GL_STENCIL_BUFFER_BIT};
+    constexpr std::array<GLenum, 2> kAttachments = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
+    for (size_t i = 0; i < kMasks.size(); i++)
     {
-        if (mask & ANGLE_UNSAFE_TODO(masks[i]))
+        if (mask & kMasks[i])
         {
             const FramebufferAttachment *readBuffer =
-                readFramebuffer->getAttachment(context, ANGLE_UNSAFE_TODO(attachments[i]));
+                readFramebuffer->getAttachment(context, kAttachments[i]);
             const FramebufferAttachment *drawBuffer =
-                drawFramebuffer->getAttachment(context, ANGLE_UNSAFE_TODO(attachments[i]));
+                drawFramebuffer->getAttachment(context, kAttachments[i]);
 
             if (readBuffer && drawBuffer)
             {

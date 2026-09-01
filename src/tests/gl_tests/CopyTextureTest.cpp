@@ -497,21 +497,19 @@ class CopyTextureVariationsTest : public ANGLETest<CopyTextureVariationsTestPara
     {
         // The texture is initialized as 2x2.  If the componentCount is 1 or 3, then the input data
         // will have a row pitch of 2 or 6, which needs to be padded to 4 or 8 respectively.
-        uint8_t srcColorsPadded[4 * 4];
+        std::array<uint8_t, 4 * 4> srcColorsPadded = {};
         size_t srcRowPitch =
             2 * componentCount + (componentCount == 1 || componentCount == 3 ? 2 : 0);
         size_t inputRowPitch = 2 * componentCount;
         for (size_t row = 0; row < 2; ++row)
         {
-            ANGLE_UNSAFE_TODO(memcpy(&srcColorsPadded[row * srcRowPitch],
-                                     &srcColors[row * inputRowPitch], inputRowPitch));
-            ANGLE_UNSAFE_TODO(memset(&srcColorsPadded[row * srcRowPitch + inputRowPitch], 0,
-                                     srcRowPitch - inputRowPitch));
+            ANGLE_UNSAFE_TODO(memcpy(srcColorsPadded.data() + row * srcRowPitch,
+                                     srcColors + row * inputRowPitch, inputRowPitch));
         }
 
         glBindTexture(target, mTextures[0]);
         glTexImage2D(target, 0, sourceFormat, 2, 2, 0, sourceFormat, GL_UNSIGNED_BYTE,
-                     srcColorsPadded);
+                     srcColorsPadded.data());
     }
 
     void testCopyTexture(GLenum sourceTarget,

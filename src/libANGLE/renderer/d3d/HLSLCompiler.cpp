@@ -7,6 +7,7 @@
 #include "libANGLE/renderer/d3d/HLSLCompiler.h"
 #include "common/unsafe_buffers.h"
 
+#include <array>
 #include <sstream>
 
 #include "common/system_utils.h"
@@ -36,7 +37,7 @@ struct CompilerFlagInfo
     const char *mName;
 };
 
-CompilerFlagInfo CompilerFlagInfos[] = {
+constexpr std::array<CompilerFlagInfo, 21> CompilerFlagInfos = {{
     // NOTE: The data below is copied from d3dcompiler.h
     // If something changes there it should be changed here as well
     CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_DEBUG),                           // (1 << 0)
@@ -60,7 +61,7 @@ CompilerFlagInfo CompilerFlagInfos[] = {
     CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_RESERVED16),           // (1 << 16)
     CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_RESERVED17),           // (1 << 17)
     CREATE_COMPILER_FLAG_INFO(D3DCOMPILE_WARNINGS_ARE_ERRORS)   // (1 << 18)
-};
+}};
 
 #    undef CREATE_COMPILER_FLAG_INFO
 
@@ -306,13 +307,11 @@ angle::Result HLSLCompiler::compileToBinary(d3d::Context *context,
 #if ANGLE_APPEND_ASSEMBLY_TO_SHADER_DEBUG_INFO
             (*outDebugInfo) += "\n\n// ASSEMBLY BEGIN\n\n";
             (*outDebugInfo) += "// Compiler configuration: " + configs[i].name + "\n// Flags:\n";
-            for (size_t fIx = 0; fIx < ArraySize(CompilerFlagInfos); ++fIx)
+            for (const auto &[flag, name] : CompilerFlagInfos)
             {
-                if (IsCompilerFlagSet(configs[i].flags,
-                                      ANGLE_UNSAFE_TODO(CompilerFlagInfos[fIx]).mFlag))
+                if (IsCompilerFlagSet(configs[i].flags, flag))
                 {
-                    (*outDebugInfo) +=
-                        std::string("// ") + ANGLE_UNSAFE_TODO(CompilerFlagInfos[fIx]).mName + "\n";
+                    (*outDebugInfo) += std::string("// ") + name + "\n";
                 }
             }
 

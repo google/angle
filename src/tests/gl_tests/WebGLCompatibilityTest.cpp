@@ -5430,7 +5430,7 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     ANGLE_SKIP_TEST_IF(maxDrawBuffers < 4);
 
     // Clears all the renderbuffers to red.
-    auto ClearEverythingToRed = [](GLRenderbuffer *renderbuffers) {
+    auto ClearEverythingToRed = [](const std::array<GLRenderbuffer, 4> &renderbuffers) {
         GLFramebuffer clearFBO;
         glBindFramebuffer(GL_FRAMEBUFFER, clearFBO);
 
@@ -5438,14 +5438,15 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
         for (int i = 0; i < 4; ++i)
         {
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
-                                      ANGLE_UNSAFE_TODO(renderbuffers[i]));
+                                      renderbuffers[i]);
             glClear(GL_COLOR_BUFFER_BIT);
         }
         ASSERT_GL_NO_ERROR();
     };
 
     // Checks that the renderbuffers specified by mask have the correct color
-    auto CheckColors = [](GLRenderbuffer *renderbuffers, int mask, GLColor color) {
+    auto CheckColors = [](const std::array<GLRenderbuffer, 4> &renderbuffers, int mask,
+                          GLColor color) {
         GLFramebuffer readFBO;
         glBindFramebuffer(GL_FRAMEBUFFER, readFBO);
 
@@ -5454,7 +5455,7 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
             if (mask & (1 << attachmentIndex))
             {
                 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
-                                          ANGLE_UNSAFE_TODO(renderbuffers[attachmentIndex]));
+                                          renderbuffers[attachmentIndex]);
                 EXPECT_PIXEL_COLOR_EQ(0, 0, color) << "attachment " << attachmentIndex;
             }
         }
@@ -5477,13 +5478,13 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     GLFramebuffer drawFBO;
     glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
 
-    GLRenderbuffer renderbuffers[4];
+    std::array<GLRenderbuffer, 4> renderbuffers;
     for (int i = 0; i < 4; ++i)
     {
-        glBindRenderbuffer(GL_RENDERBUFFER, ANGLE_UNSAFE_TODO(renderbuffers[i]));
+        glBindRenderbuffer(GL_RENDERBUFFER, renderbuffers[i]);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, 1, 1);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_RENDERBUFFER,
-                                  ANGLE_UNSAFE_TODO(renderbuffers[i]));
+                                  renderbuffers[i]);
     }
 
     ASSERT_GL_NO_ERROR();

@@ -5,6 +5,7 @@
 //
 
 #include "GPUTestExpectationsParser.h"
+#include <array>
 #include "common/unsafe_buffers.h"
 
 #include <stddef.h>
@@ -164,7 +165,7 @@ struct TokenInfo
     GPUTestExpectationsParser::GPUTestExpectation expectation;
 };
 
-constexpr TokenInfo kTokenData[kNumberOfTokens] = {
+constexpr std::array<TokenInfo, kNumberOfTokens> kTokenData = {{
     {"xp", GPUTestConfig::kConditionWinXP},
     {"vista", GPUTestConfig::kConditionWinVista},
     {"win7", GPUTestConfig::kConditionWin7},
@@ -243,9 +244,9 @@ constexpr TokenInfo kTokenData[kNumberOfTokens] = {
     {},                                    // kNumberOfExactMatchTokens
     {},                                    // kTokenComment
     {},                                    // kTokenWord
-};
+}};
 
-const char *kErrorMessage[kNumberOfErrors] = {
+constexpr std::array<const char *, kNumberOfErrors> kErrorMessage = {
     "file IO failed",
     "entry with wrong format",
     "entry invalid, likely unimplemented modifiers",
@@ -289,7 +290,7 @@ inline Token ParseToken(const std::string &word)
 
     for (int32_t i = 0; i < kNumberOfExactMatchTokens; ++i)
     {
-        if (LowerCaseEqualsASCII(word, ANGLE_UNSAFE_TODO(kTokenData[i]).name))
+        if (LowerCaseEqualsASCII(word, kTokenData[i].name))
         {
             return static_cast<Token>(i);
         }
@@ -358,10 +359,8 @@ GPUTestExpectationsParser::GPUTestExpectationsParser()
           GPUTestExpectationsParser::kGpuTestSkip)
 {
     // Some initial checks.
-    ASSERT((static_cast<unsigned int>(kNumberOfTokens)) ==
-           (sizeof(kTokenData) / sizeof(kTokenData[0])));
-    ASSERT((static_cast<unsigned int>(kNumberOfErrors)) ==
-           (sizeof(kErrorMessage) / sizeof(kErrorMessage[0])));
+    static_assert(kNumberOfTokens == kTokenData.size(), "kTokenData size mismatch");
+    static_assert(kNumberOfErrors == kErrorMessage.size(), "kErrorMessage size mismatch");
 }
 
 GPUTestExpectationsParser::~GPUTestExpectationsParser() = default;
@@ -588,7 +587,7 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig *config,
                     else
                     {
                         // Store the conditions for later comparison if we don't have a config.
-                        entry.conditions[ANGLE_UNSAFE_TODO(kTokenData[token]).condition] = true;
+                        entry.conditions[kTokenData[token].condition] = true;
                     }
                     if (err)
                     {
@@ -657,14 +656,13 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig *config,
                                      lineNumber);
                     return false;
                 }
-                if ((mExpectationsAllowMask & ANGLE_UNSAFE_TODO(kTokenData[token]).expectation) ==
-                    0)
+                if ((mExpectationsAllowMask & kTokenData[token].expectation) == 0)
                 {
                     pushErrorMessage(kErrorMessage[kErrorEntryWithDisallowedExpectation],
                                      lineNumber);
                     return false;
                 }
-                entry.testExpectation = ANGLE_UNSAFE_TODO(kTokenData[token]).expectation;
+                entry.testExpectation = kTokenData[token].expectation;
                 if (stage == kLineParserEqual)
                     stage++;
                 break;
@@ -692,15 +690,15 @@ bool GPUTestExpectationsParser::checkTokenCondition(const GPUTestConfig &config,
                                                     int32_t token,
                                                     size_t lineNumber)
 {
-    if (token >= kNumberOfTokens)
+    if (token < 0 || static_cast<size_t>(token) >= kTokenData.size())
     {
         pushErrorMessage(kErrorMessage[kErrorIllegalEntry], lineNumber);
         err = true;
         return false;
     }
 
-    if (ANGLE_UNSAFE_TODO(kTokenData[token]).condition == GPUTestConfig::kConditionNone ||
-        ANGLE_UNSAFE_TODO(kTokenData[token]).condition >= GPUTestConfig::kNumberOfConditions)
+    if (kTokenData[token].condition == GPUTestConfig::kConditionNone ||
+        kTokenData[token].condition >= GPUTestConfig::kNumberOfConditions)
     {
         pushErrorMessage(kErrorMessage[kErrorInvalidEntry], lineNumber);
         // error on any unsupported conditions
@@ -708,7 +706,7 @@ bool GPUTestExpectationsParser::checkTokenCondition(const GPUTestConfig &config,
         return false;
     }
     err = false;
-    return config.getConditions()[ANGLE_UNSAFE_TODO(kTokenData[token]).condition];
+    return config.getConditions()[kTokenData[token].condition];
 }
 
 bool GPUTestExpectationsParser::detectConflictsBetweenEntries()

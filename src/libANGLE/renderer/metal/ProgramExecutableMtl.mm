@@ -8,6 +8,8 @@
 
 #include "libANGLE/renderer/metal/ProgramExecutableMtl.h"
 
+#include <array>
+
 #include "common/span_util.h"
 #include "common/unsafe_buffers.h"
 #include "libANGLE/renderer/metal/BufferMtl.h"
@@ -1618,13 +1620,13 @@ void ProgramExecutableMtl::getUniformImpl(GLint location, T *v, GLenum entryPoin
     // are uint-sized: ES 3.0 Section 2.12.6.3 "Uniform Buffer Object Storage".
     else if (gl::VariableComponentType(linkedUniform.getType()) == GL_BOOL)
     {
-        bool bVals[4] = {0};
+        std::array<bool, 4> bVals = {0};
         ReadFromDefaultUniformBlockWithElementSize(
-            linkedUniform.getElementComponents(), locationInfo.arrayIndex, bVals, baseComponentSize,
-            layoutInfo, &uniformBlock.uniformData);
+            linkedUniform.getElementComponents(), locationInfo.arrayIndex, bVals.data(),
+            baseComponentSize, layoutInfo, &uniformBlock.uniformData);
         for (int bCol = 0; bCol < linkedUniform.getElementComponents(); ++bCol)
         {
-            unsigned int data              = ANGLE_UNSAFE_TODO(bVals[bCol]);
+            unsigned int data              = bVals[bCol];
             ANGLE_UNSAFE_TODO(*(v + bCol)) = static_cast<T>(data);
         }
     }

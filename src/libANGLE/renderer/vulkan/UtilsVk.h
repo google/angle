@@ -470,8 +470,8 @@ class UtilsVk : angle::NonCopyable
 
     union BlitResolveOffset
     {
-        int32_t resolve[2];
-        float blit[2];
+        std::array<int32_t, 2> resolve;
+        std::array<float, 2> blit;
     };
 
     struct BlitResolveShaderParams

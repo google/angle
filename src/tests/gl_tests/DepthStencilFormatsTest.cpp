@@ -804,10 +804,9 @@ void main()
             std::vector<GLfloat> expectedMax;
             if (filterMode == GL_NEAREST)
             {
-                GLfloat init[] = {d00, d00, d10, d10, d00, d00, d10, d10,
-                                  d01, d01, d11, d11, d01, d01, d11, d11};
-                expectedMin.insert(expectedMin.begin(), init, ANGLE_UNSAFE_TODO(init + 16));
-                expectedMax.insert(expectedMax.begin(), init, ANGLE_UNSAFE_TODO(init + 16));
+                expectedMin = {d00, d00, d10, d10, d00, d00, d10, d10,
+                               d01, d01, d11, d11, d01, d01, d11, d11};
+                expectedMax = expectedMin;
 
                 for (int i = 0; i < 16; i++)
                 {
@@ -817,16 +816,14 @@ void main()
             }
             else
             {
-                GLfloat initMin[] = {
+                expectedMin = {
                     d00 - eps, d00, d00, d10 - eps, d00,       d00, d00, d10,
                     d00,       d00, d00, d10,       d01 - eps, d01, d01, d11 - eps,
                 };
-                GLfloat initMax[] = {
+                expectedMax = {
                     d00 + eps, d10, d10, d10 + eps, d01,       d11, d11, d11,
                     d01,       d11, d11, d11,       d01 + eps, d11, d11, d11 + eps,
                 };
-                expectedMin.insert(expectedMin.begin(), initMin, ANGLE_UNSAFE_TODO(initMin + 16));
-                expectedMax.insert(expectedMax.begin(), initMax, ANGLE_UNSAFE_TODO(initMax + 16));
             }
             for (int yy = 0; yy < destRes; ++yy)
             {
