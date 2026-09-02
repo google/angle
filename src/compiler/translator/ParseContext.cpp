@@ -533,23 +533,6 @@ unsigned int GetTypeComponentCount(const TType &type)
     components *= type.getArraySizeProduct();
     return components;
 }
-
-TIntermTyped *RemoveCommaLeftHandSize(TIntermTyped *node)
-{
-    TIntermTyped *current = node;
-    while (true)
-    {
-        TIntermBinary *asBinary = current->getAsBinaryNode();
-        if (asBinary == nullptr || asBinary->getOp() != EOpComma)
-        {
-            break;
-        }
-
-        current = asBinary->getRight();
-    }
-
-    return current;
-}
 }  // namespace
 
 // This tracks each binding point's current default offset for inheritance of subsequent
