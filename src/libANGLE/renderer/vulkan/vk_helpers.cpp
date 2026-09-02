@@ -11153,7 +11153,6 @@ void ImageHelper::pruneSupersededUpdatesForLevelImpl(ContextVk *contextVk,
         const bool isDepth   = (aspectMask & VK_IMAGE_ASPECT_DEPTH_BIT) != 0;
         const bool isStencil = (aspectMask & VK_IMAGE_ASPECT_STENCIL_BIT) != 0;
         ASSERT(isColor || isDepth || isStencil);
-        int aspectIndex = (isColor || isDepth) ? 0 : 1;
 
         gl::OwnerLayer layerIndex;
         uint32_t layerCount = 0;
@@ -11187,7 +11186,10 @@ void ImageHelper::pruneSupersededUpdatesForLevelImpl(ContextVk *contextVk,
         }
 
         // Check if current update region is superseded by the accumulated update region
-        if (boundingBox[aspectIndex].contains(currentUpdateBox))
+        const bool aspect0Superseded =
+            !(isColor || isDepth) || boundingBox[0].contains(currentUpdateBox);
+        const bool aspect1Superseded = !isStencil || boundingBox[1].contains(currentUpdateBox);
+        if (aspect0Superseded && aspect1Superseded)
         {
             // Warn that the app did something useless.  In case of ClearEmulatedChannelsOnly, a
             // clear is staged by ANGLE not the app, so no need to warn in that case.
@@ -11208,13 +11210,18 @@ void ImageHelper::pruneSupersededUpdatesForLevelImpl(ContextVk *contextVk,
         }
         else
         {
-            // Extend boundingBox to best accommodate current update's box.
-            boundingBox[aspectIndex].extend(currentUpdateBox);
-            // If the volume of the current update box is larger than the extended boundingBox
-            // use that as the new boundingBox instead.
-            if (currentUpdateBox.volume() > boundingBox[aspectIndex].volume())
+            const int aspectIndexStart = (isColor || isDepth) ? 0 : 1;
+            const int aspectIndexEnd   = isStencil ? 1 : 0;
+            for (int aspectIndex = aspectIndexStart; aspectIndex <= aspectIndexEnd; ++aspectIndex)
             {
-                boundingBox[aspectIndex] = currentUpdateBox;
+                // Extend boundingBox to best accommodate current update's box.
+                boundingBox[aspectIndex].extend(currentUpdateBox);
+                // If the volume of the current update box is larger than the extended boundingBox
+                // use that as the new boundingBox instead.
+                if (currentUpdateBox.volume() > boundingBox[aspectIndex].volume())
+                {
+                    boundingBox[aspectIndex] = currentUpdateBox;
+                }
             }
             return false;
         }

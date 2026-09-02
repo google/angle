@@ -8073,7 +8073,6 @@ TEST_P(VulkanPerformanceCounterTest, ResizeFBOAttachedTexture)
     int32_t framebufferCacheSizeAfter    = getPerfCounters().framebufferCacheSize;
     int32_t framebufferCacheSizeIncrease = framebufferCacheSizeAfter - framebufferCacheSizeBefore;
     int32_t expectedFramebufferCacheSizeIncrease = (hasSupportsImagelessFramebuffer()) ? 0 : 1;
-    printf("\tframebufferCacheCountIncrease:%u\n", framebufferCacheSizeIncrease);
     // We should not cache obsolete VkImages. Only current VkImage should be cached.
     EXPECT_EQ(framebufferCacheSizeIncrease, expectedFramebufferCacheSizeIncrease);
 }

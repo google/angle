@@ -8772,6 +8772,150 @@ TEST_P(Texture2DTestES3, CopyImageFBInvalidateThenBlend)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+// Test that invalidating only depth after depth/stencil is robust-initialized results in both
+// aspects still robustly initialized.
+TEST_P(Texture2DTestES3RobustInit, InvalidateDepthOnly)
+{
+    // Set up depth/stencil texture
+    GLTexture depthStencilTexture;
+    glBindTexture(GL_TEXTURE_2D, depthStencilTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, 5, 7);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                           depthStencilTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Depth and stencil are robust cleared.
+    // Invalidate depth only, which should end up robust-clearing depth again.
+    constexpr std::array<GLenum, 1> discards = {GL_DEPTH_ATTACHMENT};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, discards.size(), discards.data());
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Validate that the depth and stencil values are correct by sampling from them.  This leads to
+    // the clears getting flushed instead of used as render pass ops.
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+in vec4 position;
+out vec2 texcoord;
+
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    texcoord = position.xy * 2.0;
+})";
+
+    constexpr char kFSDepth[] = R"(#version 300 es
+layout(location = 0) out mediump vec4 outColor;
+in highp vec2 texcoord;
+uniform highp sampler2D depth;
+
+void main (void)
+{
+    outColor = vec4(texture(depth, texcoord).x, 0, 0, 1);
+})";
+
+    constexpr char kFSStencil[] = R"(#version 300 es
+layout(location = 0) out mediump vec4 outColor;
+in highp vec2 texcoord;
+uniform highp usampler2D stencil;
+
+void main (void)
+{
+    outColor = vec4(0, texture(stencil, texcoord).x == 0u, 0, 1);
+})";
+    ANGLE_GL_PROGRAM(sampleDepth, kVS, kFSDepth);
+    ANGLE_GL_PROGRAM(sampleStencil, kVS, kFSStencil);
+
+    // Verify depth
+    drawQuad(sampleDepth, "position", 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Verify stencil
+    glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_STENCIL_INDEX);
+    drawQuad(sampleStencil, "position", 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that invalidating only stencil after depth/stencil is robust-initialized results in both
+// aspects still robustly initialized.
+TEST_P(Texture2DTestES3RobustInit, InvalidateStencilOnly)
+{
+    // Set up depth/stencil texture
+    GLTexture depthStencilTexture;
+    glBindTexture(GL_TEXTURE_2D, depthStencilTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, 5, 7);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                           depthStencilTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Depth and stencil are robust cleared.
+    // Invalidate stencil only, which should end up robust-clearing depth again.
+    constexpr std::array<GLenum, 1> discards = {GL_STENCIL_ATTACHMENT};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, discards.size(), discards.data());
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Validate that the depth and stencil values are correct by sampling from them.  This leads to
+    // the clears getting flushed instead of used as render pass ops.
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+in vec4 position;
+out vec2 texcoord;
+
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    texcoord = position.xy * 2.0;
+})";
+
+    constexpr char kFSDepth[] = R"(#version 300 es
+layout(location = 0) out mediump vec4 outColor;
+in highp vec2 texcoord;
+uniform highp sampler2D depth;
+
+void main (void)
+{
+    outColor = vec4(texture(depth, texcoord).x, 0, 0, 1);
+})";
+
+    constexpr char kFSStencil[] = R"(#version 300 es
+layout(location = 0) out mediump vec4 outColor;
+in highp vec2 texcoord;
+uniform highp usampler2D stencil;
+
+void main (void)
+{
+    outColor = vec4(0, texture(stencil, texcoord).x == 0u, 0, 1);
+})";
+    ANGLE_GL_PROGRAM(sampleDepth, kVS, kFSDepth);
+    ANGLE_GL_PROGRAM(sampleStencil, kVS, kFSStencil);
+
+    // Verify depth
+    drawQuad(sampleDepth, "position", 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Verify stencil
+    glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_STENCIL_INDEX);
+    drawQuad(sampleStencil, "position", 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that drawing works correctly when levels outside the BASE_LEVEL/MAX_LEVEL range do not
 // have images defined.
 TEST_P(Texture2DTestES3, DrawWithLevelsOutsideRangeUndefined)
@@ -24265,6 +24409,7 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3RobustInit);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
     Texture2DTestES3RobustInit,
     ES3_D3D11_WARP(),
+    ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
     ES3_VULKAN().enable(Feature::PreferSkippingInvalidateForEmulatedFormats),
     ES3_VULKAN().disable(Feature::PreferSkippingInvalidateForEmulatedFormats));
 
