@@ -142,10 +142,6 @@
 524405499 VULKAN : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyStencil8/* = SKIP
 524405499 VULKAN : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyANGLE/* = SKIP
 
-// Out of bounds self-copies don't robust-init
-550302121 VULKAN : Texture2DTestES3RobustInit.CopyTexImageOutOfBoundsSelf/* = SKIP
-550302121 VULKAN : Texture2DTestES3RobustInit.CopyTexImagePartiallyOutOfBoundsSelf/* = SKIP
-
 // Asserts on Win/D3D11
 524406308 WIN D3D11 : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyStencil8/* = SKIP
 524406308 WIN D3D11 : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyANGLE/* = SKIP
