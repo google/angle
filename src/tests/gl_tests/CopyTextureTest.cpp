@@ -1338,8 +1338,7 @@ TEST_P(CopyTextureTest, CubeMapTarget)
             // Check that FB is complete.
             EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
-            ANGLE_UNSAFE_TODO(
-                EXPECT_PIXEL_COLOR_EQ(0, 0, pixels[face - GL_TEXTURE_CUBE_MAP_POSITIVE_X + i]));
+            EXPECT_PIXEL_COLOR_EQ(0, 0, pixels[face - GL_TEXTURE_CUBE_MAP_POSITIVE_X + i]);
 
             EXPECT_GL_NO_ERROR();
         }

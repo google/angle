@@ -416,8 +416,8 @@ TEST_P(ETCToBCTextureTest, ETC2Rgba8UnormToBC3)
     {
         for (int j = 0; j < 4; ++j)
         {
-            ANGLE_UNSAFE_TODO(
-                EXPECT_PIXEL_COLOR_NEAR(j, i, GLColor(kExpectedRGBAColor[i * 4 + j]), kAbsError));
+
+            EXPECT_PIXEL_COLOR_NEAR(j, i, GLColor(kExpectedRGBAColor[i * 4 + j]), kAbsError);
         }
     }
 }
@@ -533,8 +533,7 @@ TEST_P(ETCToBCTextureTest, ETC2R11SignedToBC4)
     {
         for (int j = 0; j < 4; ++j)
         {
-            ANGLE_UNSAFE_TODO(EXPECT_PIXEL_COLOR_NEAR(
-                j, i, GLColor(kExpectedR11SignedColor[i * 4 + j]), kAbsError));
+            EXPECT_PIXEL_COLOR_NEAR(j, i, GLColor(kExpectedR11SignedColor[i * 4 + j]), kAbsError);
         }
     }
 }
@@ -594,8 +593,8 @@ TEST_P(ETCToBCTextureTest, ETC2Rgb8a1UnormToBC1)
     {
         for (int j = 0; j < 4; ++j)
         {
-            ANGLE_UNSAFE_TODO(
-                EXPECT_PIXEL_COLOR_NEAR(j, i, GLColor(kExpectedRgb8a1[i * 4 + j]), kAbsError));
+
+            EXPECT_PIXEL_COLOR_NEAR(j, i, GLColor(kExpectedRgb8a1[i * 4 + j]), kAbsError);
         }
     }
 }

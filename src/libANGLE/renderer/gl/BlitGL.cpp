@@ -285,7 +285,7 @@ BlitGL::BlitGL(const FunctionsGL *functions,
 {
     for (size_t i = 0; i < ArraySize(mScratchTextures); i++)
     {
-        ANGLE_UNSAFE_TODO(mScratchTextures[i]) = 0;
+        mScratchTextures[i] = 0;
     }
 
     ASSERT(mFunctions);
@@ -302,10 +302,10 @@ BlitGL::~BlitGL()
 
     for (size_t i = 0; i < ArraySize(mScratchTextures); i++)
     {
-        if (ANGLE_UNSAFE_TODO(mScratchTextures[i]) != 0)
+        if (mScratchTextures[i] != 0)
         {
-            mStateManager->deleteTexture(ANGLE_UNSAFE_TODO(mScratchTextures[i]));
-            ANGLE_UNSAFE_TODO(mScratchTextures[i]) = 0;
+            mStateManager->deleteTexture(mScratchTextures[i]);
+            mScratchTextures[i] = 0;
         }
     }
 
@@ -1375,7 +1375,7 @@ angle::Result BlitGL::initializeResources(const gl::Context *context)
 
     for (size_t i = 0; i < ArraySize(mScratchTextures); i++)
     {
-        ANGLE_UNSAFE_TODO(ANGLE_GL_TRY(context, mFunctions->genTextures(1, &mScratchTextures[i])));
+        ANGLE_GL_TRY(context, mFunctions->genTextures(1, &mScratchTextures[i]));
     }
 
     ANGLE_GL_TRY(context, mFunctions->genFramebuffers(1, &mScratchFBO));

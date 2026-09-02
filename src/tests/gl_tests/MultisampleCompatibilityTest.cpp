@@ -208,10 +208,9 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAndResolve)
             glEnable(GL_MULTISAMPLE_EXT);
         }
         prepareForVerify();
-        ANGLE_UNSAFE_TODO(results[pass]).reset(new uint8_t[kResultSize]);
+        results[pass].reset(new uint8_t[kResultSize]);
         ANGLE_UNSAFE_TODO(memset(results[pass].get(), 123u, kResultSize));
-        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
-                     ANGLE_UNSAFE_TODO(results[pass]).get());
+        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, results[pass].get());
 
         cleanup();
     }
@@ -262,10 +261,9 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAlphaOneAndResolve)
         glDrawArrays(GL_TRIANGLES, 6, 3);
 
         prepareForVerify();
-        ANGLE_UNSAFE_TODO(results[pass]).reset(new uint8_t[kResultSize]);
+        results[pass].reset(new uint8_t[kResultSize]);
         ANGLE_UNSAFE_TODO(memset(results[pass].get(), 123u, kResultSize));
-        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
-                     ANGLE_UNSAFE_TODO(results[pass]).get());
+        glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, results[pass].get());
         if (pass == 1)
         {
             glDisable(GL_SAMPLE_ALPHA_TO_ONE_EXT);

@@ -7489,15 +7489,12 @@ void main()
 
     for (int i = 0; i < 4; ++i)
     {
-        ANGLE_UNSAFE_TODO({
-            glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
-            glBufferData(GL_ARRAY_BUFFER, kBufferSizes[i] + kBufferOffsets[i], nullptr,
-                         GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
+        glBufferData(GL_ARRAY_BUFFER, kBufferSizes[i] + kBufferOffsets[i], nullptr, GL_STATIC_DRAW);
 
-            glEnableVertexAttribArray(attrLocations[i]);
-            glVertexAttribPointer(attrLocations[i], kAttrComponents[i], kAttrTypes[i], GL_TRUE,
-                                  kAttrStrides[i], reinterpret_cast<void *>(kBufferOffsets[i]));
-        })
+        glEnableVertexAttribArray(attrLocations[i]);
+        glVertexAttribPointer(attrLocations[i], kAttrComponents[i], kAttrTypes[i], GL_TRUE,
+                              kAttrStrides[i], reinterpret_cast<void *>(kBufferOffsets[i]));
     }
     ASSERT_GL_NO_ERROR();
 

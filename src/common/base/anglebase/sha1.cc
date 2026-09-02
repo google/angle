@@ -103,30 +103,28 @@ void SecureHashAlgorithm::Update(const void *data, size_t nbytes)
 
 void SecureHashAlgorithm::Pad()
 {
-    ANGLE_UNSAFE_TODO(M[cursor++]) = 0x80;
+    M[cursor++] = 0x80;
 
     if (cursor > 64 - 8)
     {
         // pad out to next block
         while (cursor < 64)
-            ANGLE_UNSAFE_TODO(M[cursor++]) = 0;
+            M[cursor++] = 0;
 
         Process();
     }
 
     while (cursor < 64 - 8)
-        ANGLE_UNSAFE_TODO(M[cursor++]) = 0;
+        M[cursor++] = 0;
 
-    ANGLE_UNSAFE_TODO({
-        M[cursor++] = (l >> 56) & 0xff;
-        M[cursor++] = (l >> 48) & 0xff;
-        M[cursor++] = (l >> 40) & 0xff;
-        M[cursor++] = (l >> 32) & 0xff;
-        M[cursor++] = (l >> 24) & 0xff;
-        M[cursor++] = (l >> 16) & 0xff;
-        M[cursor++] = (l >> 8) & 0xff;
-        M[cursor++] = l & 0xff;
-    })
+    M[cursor++] = (l >> 56) & 0xff;
+    M[cursor++] = (l >> 48) & 0xff;
+    M[cursor++] = (l >> 40) & 0xff;
+    M[cursor++] = (l >> 32) & 0xff;
+    M[cursor++] = (l >> 24) & 0xff;
+    M[cursor++] = (l >> 16) & 0xff;
+    M[cursor++] = (l >> 8) & 0xff;
+    M[cursor++] = l & 0xff;
 }
 
 void SecureHashAlgorithm::Process()
@@ -140,11 +138,11 @@ void SecureHashAlgorithm::Process()
     // W and M are in a union, so no need to memcpy.
     // memcpy(W, M, sizeof(M));
     for (t = 0; t < 16; ++t)
-        ANGLE_UNSAFE_TODO(W[t] = ByteSwap(W[t]));
+        W[t] = ByteSwap(W[t]);
 
     // b.
     for (t = 16; t < 80; ++t)
-        ANGLE_UNSAFE_TODO(W[t] = S(1, W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16]));
+        W[t] = S(1, W[t - 3] ^ W[t - 8] ^ W[t - 14] ^ W[t - 16]);
 
     // c.
     A = H[0];
@@ -156,7 +154,7 @@ void SecureHashAlgorithm::Process()
     // d.
     for (t = 0; t < 80; ++t)
     {
-        uint32_t TEMP = S(5, A) + f(t, B, C, D) + E + ANGLE_UNSAFE_TODO(W[t]) + K(t);
+        uint32_t TEMP = S(5, A) + f(t, B, C, D) + E + W[t] + K(t);
         E             = D;
         D             = C;
         C             = S(30, B);

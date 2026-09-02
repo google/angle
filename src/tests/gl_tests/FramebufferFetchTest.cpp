@@ -3089,11 +3089,10 @@ TEST_P(FramebufferFetchES31, ReopenRenderPass)
     std::array<GLFramebuffer, 2> fbo;
     for (uint32_t i = 0; i < 2; ++i)
     {
-        glBindRenderbuffer(GL_RENDERBUFFER, ANGLE_UNSAFE_TODO(color[i]));
+        glBindRenderbuffer(GL_RENDERBUFFER, color[i]);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kViewportWidth, kViewportHeight);
         glBindFramebuffer(GL_FRAMEBUFFER, fbo[i]);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
-                                  ANGLE_UNSAFE_TODO(color[i]));
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color[i]);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
