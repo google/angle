@@ -8507,33 +8507,6 @@ void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
     }
 }
 
-void ImageHelper::removeSingleStagedClearAfterInvalidate(gl::OwnerLevel levelIndexGL,
-                                                         gl::OwnerLayer layerIndex,
-                                                         uint32_t layerCount)
-{
-    // When this function is called, it's expected that there may be at most one
-    // ClearAfterInvalidate update pending to this subresource, and that's a color clear due to
-    // emulated channels after invalidate.  This function removes that update.
-
-    SubresourceUpdates *levelUpdates = getLevelUpdates(levelIndexGL);
-    if (levelUpdates == nullptr)
-    {
-        return;
-    }
-
-    for (size_t index = 0; index < levelUpdates->size(); ++index)
-    {
-        auto update = levelUpdates->begin() + index;
-        if (update->updateSource == UpdateSource::ClearAfterInvalidate &&
-            update->matchesLayerRange(layerIndex, layerCount, mLayerCount))
-        {
-            // It's a clear, so doesn't need to be released.
-            levelUpdates->erase(update);
-            // There's only one such clear possible.
-            return;
-        }
-    }
-}
 
 void ImageHelper::removeStagedUpdates(ErrorContext *context,
                                       gl::OwnerLevel levelGLStart,
@@ -10011,13 +9984,12 @@ angle::Result ImageHelper::stageResourceClearWithFormat(ContextVk *contextVk,
                                                         const angle::Format &imageFormat,
                                                         const VkClearValue &clearValue)
 {
-    // It's possible that a ClearAfterInvalidate is already staged on this image, drop that.  This
-    // is only possible if the format has an emulated channel.
-    if (intendedFormat.id != imageFormat.id)
-    {
-        removeSingleStagedClearAfterInvalidate(index.getLevelIndex(), index.getLayerIndex(),
-                                               index.getLayerCount());
-    }
+    // A prior clear or update (such as a previous robust clear or a ClearAfterInvalidate on an
+    // emulated format) may already be staged on this subresource if the texture level was
+    // redefined or re-initialized across operations like mipmap generation. Drop any prior
+    // staged updates so that this newly staged clear becomes the sole pending update.
+    removeSingleSubresourceStagedUpdates(contextVk, index.getLevelIndex(), index.getLayerIndex(),
+                                         index.getLayerCount());
 
     // Otherwise robust clears must only be staged if we do not have any prior data for this
     // subresource.
@@ -12297,14 +12269,10 @@ bool ImageHelper::SubresourceUpdate::matchesLayerRange(gl::OwnerLayer layerIndex
                                                        uint32_t layerCount,
                                                        uint32_t imageLayerCount) const
 {
+    ASSERT(layerCount != VK_REMAINING_ARRAY_LAYERS);
     gl::OwnerLayer updateBaseLayer;
     uint32_t updateLayerCount;
-    getDestSubresource(gl::ImageIndex::kEntireLevel, &updateBaseLayer, &updateLayerCount);
-
-    if (updateLayerCount == VK_REMAINING_ARRAY_LAYERS)
-    {
-        updateLayerCount = imageLayerCount;
-    }
+    getDestSubresource(imageLayerCount, &updateBaseLayer, &updateLayerCount);
 
     return updateBaseLayer == layerIndex && updateLayerCount == layerCount;
 }

@@ -2636,9 +2636,6 @@ class ImageHelper final : public Resource, public angle::Subject
                                               gl::OwnerLevel levelIndexGL,
                                               gl::OwnerLayer layerIndex,
                                               uint32_t layerCount);
-    void removeSingleStagedClearAfterInvalidate(gl::OwnerLevel levelIndexGL,
-                                                gl::OwnerLayer layerIndex,
-                                                uint32_t layerCount);
     void removeStagedUpdates(ErrorContext *context,
                              gl::OwnerLevel levelGLStart,
                              gl::OwnerLevel levelGLEnd);

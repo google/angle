@@ -23609,6 +23609,135 @@ TEST_P(Texture2DTestES3RobustInit, CopyTexSubImagePartiallyOutOfBoundsAcrossMips
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that redefining a texture after generateMipmap and then calling generateMipmap again
+// does not crash or read uninitialized memory.
+TEST_P(Texture2DTestES3RobustInit, RedefineAfterGenerateMipmapThenGenerateMipmap)
+{
+    // format change
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 1024, 1024, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, 1024, 1024, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    }
+
+    // same format, size change small -> large
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    }
+
+    // same format, size change large -> small
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    }
+
+    // manual mip definitions, then redefine level 0, then generateMipmap
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    }
+
+    // double redefine format + size change
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, 64, 64, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    }
+
+    // format change RGBA -> RG8
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RG8, 1024, 1024, 0, GL_RG, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    }
+
+    // NPOT (non-power-of-two) odd dimensions: small -> large
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 37, 53, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 127, 85, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    }
+
+    // NPOT (non-power-of-two) odd dimensions: large -> small (tail purge on NPOT)
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 127, 85, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 37, 53, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+    }
+}
+
 class TextureSizeLimitTest : public ANGLETest<>
 {
   protected:
