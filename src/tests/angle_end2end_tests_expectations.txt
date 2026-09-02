@@ -142,6 +142,10 @@
 524405499 VULKAN : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyStencil8/* = SKIP
 524405499 VULKAN : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyANGLE/* = SKIP
 
+// Out of bounds self-copies don't robust-init
+550302121 VULKAN : Texture2DTestES3RobustInit.CopyTexImageOutOfBoundsSelf/* = SKIP
+550302121 VULKAN : Texture2DTestES3RobustInit.CopyTexImagePartiallyOutOfBoundsSelf/* = SKIP
+
 // Asserts on Win/D3D11
 524406308 WIN D3D11 : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyStencil8/* = SKIP
 524406308 WIN D3D11 : HardenedContextTest.RenderingFeedbackLoopWithStencilOnlyANGLE/* = SKIP
@@ -325,6 +329,8 @@
 437259106 LINUX INTEL : EGLDisplayTest.ContextLeakAfterTerminate/* = SKIP
 448675904 LINUX INTEL OPENGL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 537235696 LINUX INTEL OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
+556789075 LINUX INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImageOutOfBoundsSelf/* = SKIP
+556789075 LINUX INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImagePartiallyOutOfBoundsSelf/* = SKIP
 
 //Angle has bugs for sampler validation
 401546698 : TextureCubeTest.CubeMapBug2/* = SKIP
@@ -387,6 +393,10 @@
 540256225 NVIDIA VULKAN : ImageTestES3.SourceYUVTextureTargetExternalRGBSample/* = SKIP
 546627192 NVIDIA OPENGL : GLSLTest_ES3.VaryingAnonymousStructTernary/* = SKIP
 546627192 NVIDIA GLES : GLSLTest_ES3.VaryingAnonymousStructTernary/* = SKIP
+556790356 NVIDIA OPENGL : Texture2DTestES3RobustInit.CopyTexSubImageOutOfBoundsAcrossMips/* = SKIP
+556790356 NVIDIA GLES : Texture2DTestES3RobustInit.CopyTexSubImageOutOfBoundsAcrossMips/* = SKIP
+556790356 NVIDIA OPENGL : Texture2DTestES3RobustInit.CopyTexSubImagePartiallyOutOfBoundsAcrossMips/* = SKIP
+556790356 NVIDIA GLES : Texture2DTestES3RobustInit.CopyTexSubImagePartiallyOutOfBoundsAcrossMips/* = SKIP
 
 // Failing on NVidia OpenGL
 549916890 NVIDIA OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByDraw/* = SKIP
@@ -610,6 +620,7 @@
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelCopyTexImageSrcDst/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelTexSubImageDstWithUnpackSlow/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelBlitDst/* = SKIP
+556789073 WIN D3D11 : Texture2DTestES3RobustInit.CopyTexImageOutOfBoundsSelf/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -766,6 +777,7 @@
 526518127 PIXEL4ORXL GLES : ImageTestES3.NonZeroLevel*/* = SKIP
 546627192 PIXEL4ORXL GLES : GLSLTest_ES3.VaryingAnonymousStructAssignment/* = SKIP
 546627192 PIXEL4ORXL GLES : GLSLTest_ES3.VaryingAnonymousStructTernary/* = SKIP
+556789076 PIXEL4ORXL GLES : Texture2DTestES3RobustInit.CopyTexImageOutOfBoundsSelf/* = SKIP
 
 42267082 PIXEL4ORXL GLES : BlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42267082 PIXEL4ORXL GLES : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
