@@ -131,7 +131,7 @@ targets.mixin(
 )
 
 targets.mixin(
-    name = "no_xvfb",
+    name = "no_xvfb_angle",
     linux_args = [
         "--no-xvfb",
     ],
@@ -271,6 +271,6 @@ targets.mixin(
 )
 
 targets.mixin(
-    name = "use_isolated_scripts_api",
+    name = "use_isolated_scripts_api_angle",
     use_isolated_scripts_api = True,
 )

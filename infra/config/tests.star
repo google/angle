@@ -23,8 +23,8 @@ targets.tests.isolated_script_test(
 targets.tests.gtest_test(
     name = "angle_cl_api_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_api",
 )
@@ -32,8 +32,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_basic_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_basic",
 )
@@ -41,8 +41,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_bruteforce_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_bruteforce",
 )
@@ -50,8 +50,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_buffers_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_buffers",
 )
@@ -59,8 +59,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_compiler_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_compiler",
 )
@@ -68,8 +68,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_copy_images_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_cl_copy_images",
 )
@@ -77,8 +77,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_events_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_events",
 )
@@ -86,8 +86,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_fill_images_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_cl_fill_images",
 )
@@ -95,8 +95,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_images_get_info_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_cl_get_info",
 )
@@ -104,8 +104,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_multiples_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_multiples",
 )
@@ -113,8 +113,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_non_uniform_work_group_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_non_uniform_work_group",
 )
@@ -122,8 +122,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_cl_profiling_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_oclcts_profiling",
 )
@@ -133,7 +133,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_merge_script",
         "use_angle_d3d11",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_egl_tests",
 )
@@ -142,9 +142,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_egl_gl_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_gl",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     args = [
         # Flaky when run with multiple processes.
@@ -158,9 +158,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_gles",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_egl_tests",
 )
@@ -170,7 +170,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_merge_script",
         "use_angle_metal",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_egl_tests",
 )
@@ -180,9 +180,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_swarming = targets.swarming(
                 shards = 4,
@@ -200,7 +200,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_merge_script",
         "use_angle_d3d11",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles2_tests",
 )
@@ -209,9 +209,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_gles2_gl_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_gl",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles2_tests",
 )
@@ -221,9 +221,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_gles",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_swarming = targets.swarming(
                 shards = 4,
@@ -238,7 +238,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_merge_script",
         "use_angle_metal",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles2_tests",
 )
@@ -248,9 +248,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_swarming = targets.swarming(
                 shards = 4,
@@ -265,9 +265,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_webgpu",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_swarming = targets.swarming(
                 shards = 4,
@@ -282,9 +282,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles31_565_no_depth_no_stencil_tests",
 )
@@ -293,9 +293,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_gles31_gl_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_gl",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             swarming = targets.swarming(
                 shards = 2,
@@ -310,9 +310,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles31_multisample_tests",
 )
@@ -321,9 +321,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_gles31_vulkan_rotate180_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles31_rotate180_tests",
 )
@@ -332,9 +332,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_gles31_vulkan_rotate270_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles31_rotate270_tests",
 )
@@ -343,9 +343,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_gles31_vulkan_rotate90_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles31_rotate90_tests",
 )
@@ -355,9 +355,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_swarming = targets.swarming(
                 shards = 20,
@@ -376,7 +376,7 @@ targets.tests.gtest_test(
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles3_565_no_depth_no_stencil_tests",
 )
@@ -386,7 +386,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_merge_script",
         "use_angle_d3d11",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             swarming = targets.swarming(
                 shards = 2,
@@ -400,9 +400,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_gles3_gl_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_gl",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             swarming = targets.swarming(
                 shards = 2,
@@ -417,9 +417,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_gles",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_swarming = targets.swarming(
                 shards = 12,
@@ -434,7 +434,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_merge_script",
         "use_angle_metal",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             swarming = targets.swarming(
                 shards = 2,
@@ -449,7 +449,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_merge_script",
         "use_angle_metal",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles3_multisample_tests",
 )
@@ -459,9 +459,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles3_multisample_tests",
 )
@@ -470,9 +470,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_gles3_vulkan_rotate180_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             swarming = targets.swarming(
                 shards = 2,
@@ -486,9 +486,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_gles3_vulkan_rotate270_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             swarming = targets.swarming(
                 shards = 2,
@@ -502,9 +502,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_gles3_vulkan_rotate90_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             swarming = targets.swarming(
                 shards = 2,
@@ -519,9 +519,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_swarming = targets.swarming(
                 shards = 12,
@@ -539,9 +539,9 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_khr_default_height_width_seed",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_gl",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles2_tests",
 )
@@ -552,7 +552,7 @@ targets.tests.gtest_test(
         "deqp_khr_default_height_width_seed",
         "deqp_merge_script",
         "use_angle_metal",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles2_tests",
 )
@@ -563,9 +563,9 @@ targets.tests.gtest_test(
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_khr_default_height_width_seed",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles2_tests",
 )
@@ -576,9 +576,9 @@ targets.tests.gtest_test(
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_khr_default_height_width_seed",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles31_tests",
 )
@@ -589,9 +589,9 @@ targets.tests.gtest_test(
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_khr_default_height_width_seed",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles32_tests",
 )
@@ -601,9 +601,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     args = [
         "--deqp-base-seed=2",
@@ -618,9 +618,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     args = [
         "--deqp-base-seed=3",
@@ -636,9 +636,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     args = [
         "--deqp-base-seed=3",
@@ -654,9 +654,9 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_khr_default_height_width_seed",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_gl",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles3_tests",
 )
@@ -667,7 +667,7 @@ targets.tests.gtest_test(
         "deqp_khr_default_height_width_seed",
         "deqp_merge_script",
         "use_angle_metal",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles3_tests",
 )
@@ -678,9 +678,9 @@ targets.tests.gtest_test(
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_khr_default_height_width_seed",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles3_tests",
 )
@@ -691,9 +691,9 @@ targets.tests.gtest_test(
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_khr_default_height_width_seed",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_glesext_tests",
 )
@@ -702,9 +702,9 @@ targets.tests.gtest_test(
     name = "angle_deqp_khr_noctx_gles2_gl_tests",
     mixins = [
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_gl",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_noctx_gles2_tests",
 )
@@ -714,7 +714,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_merge_script",
         "use_angle_metal",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_noctx_gles2_tests",
 )
@@ -724,9 +724,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_noctx_gles2_tests",
 )
@@ -736,9 +736,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_noctx_gles32_tests",
 )
@@ -748,9 +748,9 @@ targets.tests.gtest_test(
     mixins = [
         "android_deqp_increased_verbosity_and_shard_timeout",
         "deqp_merge_script",
-        "no_xvfb",
+        "no_xvfb_angle",
         "use_angle_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_single_gles32_tests",
 )
@@ -760,8 +760,8 @@ targets.tests.gtest_test(
     mixins = [
         "angle_end2end_tests_common_args",
         "gtest_filter_no_vulkan",
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_swarming = targets.swarming(
                 shards = 8,
@@ -779,8 +779,8 @@ targets.tests.gtest_test(
     mixins = [
         "angle_end2end_tests_common_args",
         "gtest_filter_no_vulkan_swiftshader",
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_swarming = targets.swarming(
                 shards = 8,
@@ -797,7 +797,7 @@ targets.tests.gtest_test(
     name = "angle_end2end_vulkan_only_tests",
     mixins = [
         "gtest_filter_only_real_vulkan",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             # Effectively the same as the angle_end2end_tests_common_args mixin
             # but with a different --shard-timeout.
@@ -825,8 +825,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_gles1_conformance_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_args = [
                 "--shard-timeout=600",
@@ -964,8 +964,8 @@ targets.tests.isolated_script_test(
 targets.tests.gtest_test(
     name = "angle_unittests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_args = [
                 "-v",
@@ -978,8 +978,8 @@ targets.tests.gtest_test(
 targets.tests.gtest_test(
     name = "angle_white_box_tests",
     mixins = [
-        "no_xvfb",
-        "use_isolated_scripts_api",
+        "no_xvfb_angle",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             android_args = [
                 "--shard-timeout=180",
@@ -994,7 +994,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_egl_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_egl_tests",
 )
@@ -1003,7 +1003,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles2_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles2_tests",
 )
@@ -1012,7 +1012,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles31_multisample_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles31_multisample_tests",
 )
@@ -1021,7 +1021,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles31_rotate180_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles31_rotate180_tests",
 )
@@ -1030,7 +1030,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles31_rotate270_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles31_rotate270_tests",
 )
@@ -1039,7 +1039,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles31_rotate90_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles31_rotate90_tests",
 )
@@ -1048,7 +1048,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles31_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             swarming = targets.swarming(
                 shards = 10,
@@ -1062,7 +1062,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles3_multisample_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles3_multisample_tests",
 )
@@ -1071,7 +1071,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles3_rotate180_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles3_rotate180_tests",
 )
@@ -1080,7 +1080,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles3_rotate270_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles3_rotate270_tests",
 )
@@ -1089,7 +1089,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles3_rotate90_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_gles3_rotate90_tests",
 )
@@ -1098,7 +1098,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_gles3_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
         targets.mixin(
             swarming = targets.swarming(
                 shards = 4,
@@ -1113,7 +1113,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_khr_default_height_width_seed",
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles2_tests",
 )
@@ -1123,7 +1123,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_khr_default_height_width_seed",
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles31_tests",
 )
@@ -1133,7 +1133,7 @@ targets.tests.gtest_test(
     mixins = [
         "deqp_khr_default_height_width_seed",
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_gles3_tests",
 )
@@ -1142,7 +1142,7 @@ targets.tests.gtest_test(
     name = "swangle_deqp_khr_noctx_gles2_tests",
     mixins = [
         "use_angle_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_deqp_khr_noctx_gles2_tests",
 )
@@ -1151,7 +1151,7 @@ targets.tests.gtest_test(
     name = "swangle_end2end_tests",
     mixins = [
         "gtest_filter_only_vulkan_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_end2end_tests",
 )
@@ -1186,7 +1186,7 @@ targets.tests.gtest_test(
     name = "swangle_white_box_tests",
     mixins = [
         "gtest_filter_only_vulkan_swiftshader",
-        "use_isolated_scripts_api",
+        "use_isolated_scripts_api_angle",
     ],
     binary = "angle_white_box_tests",
 )
