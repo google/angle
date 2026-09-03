@@ -7932,11 +7932,18 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
             // If we are transition into shaderRead layout, remember the last non-shaderRead layout
             // here.
             const bool isCurrentAccessShaderReadOnly = IsShaderReadOnlyAccess(mCurrentAccess);
-            if (isNewAccessShaderReadOnly && !isCurrentAccessShaderReadOnly)
+            if (isNewAccessShaderReadOnly)
             {
-                mLastNonShaderReadOnlyEvent.release(context);
-                mLastNonShaderReadOnlyAccess = mCurrentAccess;
-                mCurrentShaderReadStageMask  = dstStageMask;
+                if (!isCurrentAccessShaderReadOnly)
+                {
+                    mLastNonShaderReadOnlyEvent.release(context);
+                    mLastNonShaderReadOnlyAccess = mCurrentAccess;
+                    mCurrentShaderReadStageMask  = dstStageMask;
+                }
+                else
+                {
+                    mCurrentShaderReadStageMask |= dstStageMask;
+                }
             }
 
             if (barrierType == BarrierType::Event)
