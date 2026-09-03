@@ -6810,6 +6810,132 @@ void main() { col = vec4(0, 0, 1, 1); })";
     EXPECT_PIXEL_COLOR_EQ(64, 64, GLColor::blue);
 }
 
+// Tests that cached pointers in VertexArrayVk are reset if the DynamicBuffer for merged streamed
+// attributes is resized and one of the merged attributes becomes inactive in subsequent draws
+// without rebinding the VAO. See crbug.com/549587685.
+TEST_P(VertexAttributeResizeTest, ResizeMergedStreamedAttribAndSwitchProgram)
+{
+    // Program 1: active 0, 1.
+    constexpr char kLocalVS01[] = R"(#version 300 es
+layout(location = 0) in vec4 a0;
+layout(location = 1) in vec4 a1;
+out vec4 vC;
+void main() {
+    gl_Position = a0 * 0.001 + a1 * 0.001;
+    vC = vec4(1.0);
+})";
+
+    // Program 2: active 0 only.
+    constexpr char kLocalVS0[] = R"(#version 300 es
+layout(location = 0) in vec4 a0;
+out vec4 vC;
+void main() {
+    gl_Position = a0 * 0.001;
+    vC = vec4(1.0);
+})";
+
+    // Program 3: active 2 only.
+    constexpr char kLocalVS2[] = R"(#version 300 es
+layout(location = 2) in vec4 a2;
+out vec4 vC;
+void main() {
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    vC = a2;
+})";
+
+    // Program 4: active 3 only.
+    constexpr char kLocalVS3[] = R"(#version 300 es
+layout(location = 3) in vec4 a3;
+out vec4 vC;
+void main() {
+    gl_Position = a3 * 0.001;
+    vC = vec4(1.0);
+})";
+
+    constexpr char kLocalFS[] = R"(#version 300 es
+precision mediump float;
+in vec4 vC;
+out vec4 col;
+void main() {
+    col = vC;
+})";
+
+    ANGLE_GL_PROGRAM(prog01, kLocalVS01, kLocalFS);
+    ANGLE_GL_PROGRAM(prog0, kLocalVS0, kLocalFS);
+    ANGLE_GL_PROGRAM(prog2, kLocalVS2, kLocalFS);
+    ANGLE_GL_PROGRAM(prog3, kLocalVS3, kLocalFS);
+
+    // Client-memory array 1: 2048 verts * 32B. Slot 0 @ +0, slot 1 @ +16 -> overlapping
+    // address ranges -> merged into ONE allocation under slot 0's index.
+    std::vector<float> clientData(2048 * 8, 0.0f);
+
+    // Client-memory array 2 for slot 3 (separate, NO overlap -> no merge -> its own
+    // mStreamedVertexBuffers[3] DynamicBuffer, whose new blocks allocate fresh
+    // standalone BufferHelpers via make_unique).
+    std::vector<float> clientData3(4096 * 4, 0.0f);
+
+    // slot 2: a normal GL-buffer attrib (non-streaming)
+    GLBuffer bufNorm;
+    glBindBuffer(GL_ARRAY_BUFFER, bufNorm);
+    const std::vector<float> normData(12, 0.0f);
+    glBufferData(GL_ARRAY_BUFFER, normData.size() * sizeof(float), normData.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // default VAO: slots 0, 1, 3 client-memory streaming; slot 2 normal buffer
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 32, clientData.data() + 0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 32, clientData.data() + 4);
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, bufNorm);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 16, nullptr);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 16, clientData3.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Step 1: Draw 1 with prog01. Slots 0+1 active -> client-attrib merge -> single alloc under
+    // index 0.
+    glUseProgram(prog01);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: Draw 2 with prog0. Slot 0 only active, 1200 verts -> realloc of
+    // mStreamedVertexBuffers[0]. Old block goes in-flight, but slot 1 retains a cached pointer to
+    // it.
+    glUseProgram(prog0);
+    glDrawArrays(GL_TRIANGLES, 0, 1200);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 3: glFinish advances queue serial -> old block is released and destroyed.
+    glFinish();
+
+    // Step 4: Groom draws with prog3 (slot 3 only active) with increasing vertex counts.
+    // Each draw that doesn't fit the current block allocates a new block, reusing the freed memory.
+    glUseProgram(prog3);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+    glDrawArrays(GL_TRIANGLES, 0, 1200);
+    ASSERT_GL_NO_ERROR();
+    glDrawArrays(GL_TRIANGLES, 0, 2400);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 5: Draw with prog2 (slot 2 only active).
+    // Slot 2 is a normal buffer (not streamed). The stale pointer for slot 1 must be reset
+    // so it is not accessed when marking vertex buffers as read.
+    glUseProgram(prog2);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+
+    // Second draw to verify stability.
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+    glFinish();
+}
+
 // Ensure a large offset is not interpreted as negative.
 TEST_P(VertexAttributeTestES3, LargeAttribPointerOffsetNoCrash)
 {
