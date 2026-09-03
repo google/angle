@@ -2840,12 +2840,6 @@
 529867799 VULKAN : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
 529867799 INTEL OPENGL : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
 
-// New tests failing on Windows Intel OpenGL
-548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.Uncompressed/* = SKIP
-548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedASTC/* = SKIP
-548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedDXT/* = SKIP
-548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedETC/* = SKIP
-
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

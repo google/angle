@@ -493,7 +493,6 @@ enum class Feature
     UnpackOverlappingRowsSeparatelyUnpackBuffer,
     UnsizedSRGBReadPixelsDoesntTransform,
     UploadDataToIosurfacesWithStagingBuffers,
-    UploadOversizedMipLevelsViaUnpackBuffer,
     UploadTextureDataInChunks,
     UseCullModeDynamicState,
     UseDepthBiasEnableDynamicState,

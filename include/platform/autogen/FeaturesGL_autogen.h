@@ -764,12 +764,6 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
-    FeatureInfo uploadOversizedMipLevelsViaUnpackBuffer = {
-        "uploadOversizedMipLevelsViaUnpackBuffer",
-        FeatureCategory::OpenGLWorkarounds,
-        &members,
-    };
-
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
