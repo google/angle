@@ -3130,8 +3130,8 @@ angle::Result UtilsVk::setupBlitResolveGraphicsProgram(ContextVk *contextVk,
     uint32_t writeInfoOffset = blitDepth || blitColor ? 0 : 1;
     uint32_t writeInfoCount  = blitColor + blitDepth + blitStencil;
 
-    VK_CALL_WITH_GROUP(
-        GetPerfCounterGroup(vk::VulkanApiFunction::vkUpdateDescriptorSets),
+    VK_CALL_WITH_API(
+        vk::VulkanApiFunction::vkUpdateDescriptorSets,
         (vkUpdateDescriptorSets(contextVk->getDevice(), writeInfoCount,
                                 ANGLE_UNSAFE_TODO(writeInfos + writeInfoOffset), 0, nullptr),
          vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfos[2], 0, nullptr)));

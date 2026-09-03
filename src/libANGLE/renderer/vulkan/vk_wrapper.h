@@ -2261,6 +2261,8 @@ ANGLE_INLINE VkResult QueryPool::getResults(VkDevice device,
                                             VkQueryResultFlags flags) const
 {
     ASSERT(valid());
+    // The vkGetQueryPoolResults() does not have corresponding VulkanApiFunction enumeration since
+    // it belongs to multiple groups and can't be used in GetPerfCounterGroup().
     return VK_CALL_WITH_GROUP((flags & VK_QUERY_RESULT_WAIT_BIT)
                                   ? angle::VulkanApiPerfCounterGroup::Wait
                                   : angle::VulkanApiPerfCounterGroup::Other,

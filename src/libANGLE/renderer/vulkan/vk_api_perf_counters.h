@@ -402,7 +402,8 @@ class [[nodiscard]] ScopedVulkanApiPerfTimerImpl<VulkanApiPerfTimerState::Disabl
     static void TryEnable() {}
     static bool IsEnabled() { return false; }
 
-    ANGLE_INLINE ScopedVulkanApiPerfTimerImpl(angle::VulkanApiPerfCounterGroup group) {}
+    ANGLE_INLINE explicit ScopedVulkanApiPerfTimerImpl(angle::VulkanApiPerfCounterGroup group) {}
+    ANGLE_INLINE explicit ScopedVulkanApiPerfTimerImpl(VulkanApiFunction api) {}
 };
 
 class ScopedVulkanApiPerfTimerBase : angle::NonCopyable
@@ -438,10 +439,13 @@ class [[nodiscard]] ScopedVulkanApiPerfTimerImpl<VulkanApiPerfTimerState::Compil
     static void TryEnable() {}
     static bool IsEnabled() { return true; }
 
-    ANGLE_INLINE ScopedVulkanApiPerfTimerImpl(angle::VulkanApiPerfCounterGroup group)
+    ANGLE_INLINE explicit ScopedVulkanApiPerfTimerImpl(angle::VulkanApiPerfCounterGroup group)
     {
         beginScope(group);
     }
+    ANGLE_INLINE explicit ScopedVulkanApiPerfTimerImpl(VulkanApiFunction api)
+        : ScopedVulkanApiPerfTimerImpl(GetPerfCounterGroup(api))
+    {}
     ANGLE_INLINE ~ScopedVulkanApiPerfTimerImpl() { endScope(); }
 };
 
@@ -453,13 +457,16 @@ class [[nodiscard]] ScopedVulkanApiPerfTimerImpl<VulkanApiPerfTimerState::Runtim
     static void TryEnable() { sIsEnabled = true; }
     static bool IsEnabled() { return sIsEnabled; }
 
-    ANGLE_INLINE ScopedVulkanApiPerfTimerImpl(angle::VulkanApiPerfCounterGroup group)
+    ANGLE_INLINE explicit ScopedVulkanApiPerfTimerImpl(angle::VulkanApiPerfCounterGroup group)
     {
         if (sIsEnabled)
         {
             beginScope(group);
         }
     }
+    ANGLE_INLINE explicit ScopedVulkanApiPerfTimerImpl(VulkanApiFunction api)
+        : ScopedVulkanApiPerfTimerImpl(GetPerfCounterGroup(api))
+    {}
     ANGLE_INLINE ~ScopedVulkanApiPerfTimerImpl()
     {
         if (sIsEnabled)
@@ -513,10 +520,13 @@ angle_enable_custom_vulkan_render_pass_cmd_buffers"
             rx::vk::ScopedVulkanApiPerfTimer ANGLE_VK_API_PERF_TIMER(vk_api_perf_counter_group); \
             return vk_call;                                                                      \
         }()
-#    define VK_CALL(vk_api_function, ...)                                            \
-        VK_CALL_WITH_GROUP(                                                          \
-            rx::vk::GetPerfCounterGroup(rx::vk::VulkanApiFunction::vk_api_function), \
-            vk_api_function(__VA_ARGS__))
+#    define VK_CALL_WITH_API(vk_api_function, vk_call)                                 \
+        [&]() {                                                                        \
+            rx::vk::ScopedVulkanApiPerfTimer ANGLE_VK_API_PERF_TIMER(vk_api_function); \
+            return vk_call;                                                            \
+        }()
+#    define VK_CALL(vk_api_function, ...) \
+        VK_CALL_WITH_API(rx::vk::VulkanApiFunction::vk_api_function, vk_api_function(__VA_ARGS__))
 // For Vulkan commands that may only be recorded into Vulkan secondary command buffers (which are
 // not expected to be called when using ANGLE custom secondary command buffers).
 // - Prefer using this macro for all |vkCmd*| calls when possible instead of |VK_CALL|.
@@ -539,6 +549,7 @@ angle_enable_custom_vulkan_render_pass_cmd_buffers"
         }()
 #else
 #    define VK_CALL_WITH_GROUP(vk_api_perf_counter_group, vk_call) vk_call
+#    define VK_CALL_WITH_API(vk_api_function, vk_call) vk_call
 #    define VK_CALL(vk_api_function, ...) vk_api_function(__VA_ARGS__)
 #    define VK_SECONDARY_CMD_CALL(secondary_only_cmd_vk_call) secondary_only_cmd_vk_call
 #endif

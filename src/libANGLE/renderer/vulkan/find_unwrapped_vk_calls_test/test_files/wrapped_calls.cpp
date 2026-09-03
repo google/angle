@@ -6,6 +6,10 @@ void testWrappedCalls()
     VK_CALL_WITH_GROUP(vkQueueSubmit(queue, 1, &submitInfo, fence));
     VK_CALL_WITH_GROUP(vkCreateDevice(physicalDevice, &createInfo, nullptr, &device));
 
+    // Wrapped with VK_CALL_WITH_API macro
+    VK_CALL_WITH_API(vkQueueSubmit(queue, 1, &submitInfo, fence));
+    VK_CALL_WITH_API(vkCreateDevice(physicalDevice, &createInfo, nullptr, &device));
+
     // Wrapped with VK_SECONDARY_CMD_CALL macro
     VK_SECONDARY_CMD_CALL(vkCmdDraw(cmdBuffer, vertexCount, 1, 0, 0));
 

@@ -2570,10 +2570,8 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
         {
             ANGLE_SCOPED_DISABLE_LSAN();
             ANGLE_SCOPED_DISABLE_MSAN();
-            ANGLE_VK_TRY(context,
-                         VK_CALL_WITH_GROUP(
-                             GetPerfCounterGroup(VulkanApiFunction::vkEnumerateInstanceVersion),
-                             enumerateInstanceVersion(&mInstanceVersion)));
+            ANGLE_VK_TRY(context, VK_CALL_WITH_API(VulkanApiFunction::vkEnumerateInstanceVersion,
+                                                   enumerateInstanceVersion(&mInstanceVersion)));
         }
 
         if (IsVulkan11(mInstanceVersion))
@@ -2708,8 +2706,8 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
     ANGLE_VK_TRY(context, VK_CALL(vkEnumeratePhysicalDevices, mInstance, &physicalDeviceCount,
                                   physicalDevices.data()));
-    VK_CALL_WITH_GROUP(
-        GetPerfCounterGroup(VulkanApiFunction::vkGetPhysicalDeviceProperties2),
+    VK_CALL_WITH_API(
+        VulkanApiFunction::vkGetPhysicalDeviceProperties2,
         ChoosePhysicalDevice(vkGetPhysicalDeviceProperties2, physicalDevices, mEnabledICD,
                              preferredVendorId, preferredDeviceId, preferredDeviceUuid,
                              preferredDriverUuid, preferredDriverId, &mPhysicalDevice,
