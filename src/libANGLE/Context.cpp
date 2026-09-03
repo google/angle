@@ -2029,7 +2029,7 @@ Compiler *Context::getCompiler() const
 {
     if (mCompiler.get() == nullptr)
     {
-        mCompiler.set(this, new Compiler(mImplementation.get(), mState, mDisplay));
+        mCompiler.set(this, new Compiler(mImplementation.get(), mState));
     }
     return mCompiler.get();
 }

@@ -297,7 +297,6 @@ class Display final : public LabeledObject,
 
     egl::Error waitUntilWorkScheduled();
 
-    angle::SimpleMutex &getDisplayGlobalMutex() { return mDisplayGlobalMutex; }
     angle::SimpleMutex &getProgramCacheMutex() { return mProgramCacheMutex; }
 
     void lockVulkanQueue();
@@ -447,7 +446,6 @@ class Display final : public LabeledObject,
     std::vector<angle::ScratchBuffer> mScratchBuffers;
     std::vector<angle::ScratchBuffer> mZeroFilledBuffers;
 
-    angle::SimpleMutex mDisplayGlobalMutex;
     angle::SimpleMutex mProgramCacheMutex;
 
     bool mTerminatedByApi;
