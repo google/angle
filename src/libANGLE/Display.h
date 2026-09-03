@@ -297,12 +297,8 @@ class Display final : public LabeledObject,
 
     egl::Error waitUntilWorkScheduled();
 
-    angle::SimpleMutex &getProgramCacheMutex() { return mProgramCacheMutex; }
-
     void lockVulkanQueue();
     void unlockVulkanQueue();
-
-    gl::MemoryShaderCache *getMemoryShaderCache() { return &mMemoryShaderCache; }
 
     // Installs LoggingAnnotator as the global DebugAnnotator, for back-ends that do not implement
     // their own DebugAnnotator.
@@ -445,8 +441,6 @@ class Display final : public LabeledObject,
     angle::SimpleMutex mScratchBufferMutex;
     std::vector<angle::ScratchBuffer> mScratchBuffers;
     std::vector<angle::ScratchBuffer> mZeroFilledBuffers;
-
-    angle::SimpleMutex mProgramCacheMutex;
 
     bool mTerminatedByApi;
 };

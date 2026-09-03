@@ -9852,11 +9852,6 @@ egl::Error Context::releaseExternalContext()
     return egl::NoError();
 }
 
-angle::SimpleMutex &Context::getProgramCacheMutex() const
-{
-    return mDisplay->getProgramCacheMutex();
-}
-
 bool Context::supportsGeometryOrTesselation() const
 {
     return mState.getClientVersion() == ES_3_2 || mState.getExtensions().geometryShaderAny() ||

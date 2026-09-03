@@ -2598,11 +2598,7 @@ EGLint Display::programCacheResize(EGLint limit, EGLenum mode)
     switch (mode)
     {
         case EGL_PROGRAM_CACHE_RESIZE_ANGLE:
-        {
-            size_t initialSize = mMemoryProgramCache.size();
-            mMemoryProgramCache.resize(static_cast<size_t>(limit));
-            return static_cast<EGLint>(initialSize);
-        }
+            return static_cast<EGLint>(mMemoryProgramCache.resize(static_cast<size_t>(limit)));
 
         case EGL_PROGRAM_CACHE_TRIM_ANGLE:
             return static_cast<EGLint>(mMemoryProgramCache.trim(static_cast<size_t>(limit)));
