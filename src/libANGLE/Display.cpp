@@ -107,13 +107,9 @@ namespace
 bool isPerfettoTraceEnabledOnAndroid()
 {
     std::string debugAngleEnablePerfetto;
-    if (angle::android::GetSystemProperty("debug.angle.perfetto_trace.enabled",
-                                          &debugAngleEnablePerfetto) &&
-        debugAngleEnablePerfetto == "1")
-    {
-        return true;
-    }
-    return false;
+    return angle::android::GetSystemProperty("debug.angle.perfetto_trace.enabled",
+                                             &debugAngleEnablePerfetto) &&
+           debugAngleEnablePerfetto == "1";
 }
 #    endif  // defined(ANGLE_PLATFORM_ANDROID) && PERFETTO_BUILDFLAG(PERFETTO_IPC)
 
