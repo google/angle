@@ -1858,12 +1858,12 @@ impl<'options> Generator<'options> {
         shader_type: ShaderType,
         is_es1: bool,
         precision: Precision,
+        precise: bool,
         decorations: &Decorations,
         built_in: Option<BuiltIn>,
         is_global: bool,
     ) -> ffi::ASTType {
         let invariant = decorations.has(Decoration::Invariant);
-        let precise = decorations.has(Decoration::Precise);
         let interpolant = decorations.has(Decoration::Interpolant);
 
         ffi::ASTType {
@@ -2031,6 +2031,7 @@ impl ast::Target for Generator<'_> {
                             ir_meta.get_shader_type(),
                             self.options.is_es1,
                             field.precision,
+                            field.precise,
                             &field.decorations,
                             None,
                             // AST marks fields as EvqGlobal
@@ -2162,6 +2163,7 @@ impl ast::Target for Generator<'_> {
             ir_meta.get_shader_type(),
             self.options.is_es1,
             variable.precision,
+            variable.precise,
             &variable.decorations,
             variable.built_in,
             is_global,
@@ -2247,6 +2249,7 @@ impl ast::Target for Generator<'_> {
                     ir_meta.get_shader_type(),
                     self.options.is_es1,
                     field.precision,
+                    field.precise,
                     &field.decorations,
                     None,
                     true,
@@ -2291,6 +2294,7 @@ impl ast::Target for Generator<'_> {
             ir_meta.get_shader_type(),
             self.options.is_es1,
             function.return_precision,
+            function.return_precise,
             &function.return_decorations,
             None,
             false,

@@ -1560,6 +1560,7 @@ pub struct Variable {
     pub name: Name,
     pub type_id: TypeId,
     pub precision: Precision,
+    pub precise: bool,
     pub decorations: Decorations,
     pub built_in: Option<BuiltIn>,
     pub initializer: Option<ConstantId>,
@@ -1575,6 +1576,7 @@ impl Variable {
         name: Name,
         type_id: TypeId,
         precision: Precision,
+        precise: bool,
         decorations: Decorations,
         built_in: Option<BuiltIn>,
         initializer: Option<ConstantId>,
@@ -1584,6 +1586,7 @@ impl Variable {
             name,
             type_id,
             precision,
+            precise,
             decorations,
             built_in,
             initializer,
@@ -1597,11 +1600,12 @@ impl Variable {
     // Const variables are only created during parse.  They are replaced by constants and never
     // referenced, and only serve the purpose of holding the assigned precision to the constant.
     // That precision affects the precision of operations they are involved in.
-    pub fn new_const(name: Name, type_id: TypeId, precision: Precision) -> Variable {
+    pub fn new_const(name: Name, type_id: TypeId, precision: Precision, precise: bool) -> Variable {
         Variable {
             name,
             type_id,
             precision,
+            precise,
             decorations: Decorations::new_none(),
             built_in: None,
             initializer: None,
@@ -1711,6 +1715,7 @@ pub struct Function {
     pub params: Vec<FunctionParam>,
     pub return_type_id: TypeId,
     pub return_precision: Precision,
+    pub return_precise: bool,
     pub return_decorations: Decorations,
 }
 
@@ -1720,6 +1725,7 @@ impl Function {
         params: Vec<FunctionParam>,
         return_type_id: TypeId,
         return_precision: Precision,
+        return_precise: bool,
         return_decorations: Decorations,
     ) -> Function {
         Function {
@@ -1728,6 +1734,7 @@ impl Function {
             params,
             return_type_id,
             return_precision,
+            return_precise,
             return_decorations,
         }
     }
@@ -1855,7 +1862,6 @@ pub enum EmulatedMultiDraw {
 pub enum Decoration {
     // Corresponding to GLSL qualifiers with the same name
     Invariant,
-    Precise,
     Smooth,
     Flat,
     NoPerspective,
@@ -1932,12 +1938,6 @@ impl Decorations {
             self.decorations.push(Decoration::Invariant);
         }
     }
-    pub fn add_precise(&mut self) {
-        if !self.has(Decoration::Precise) {
-            self.decorations.push(Decoration::Precise);
-        }
-    }
-
     pub fn has(&self, query: Decoration) -> bool {
         self.decorations.contains(&query)
     }
@@ -2037,6 +2037,7 @@ pub struct Field {
     pub name: Name,
     pub type_id: TypeId,
     pub precision: Precision,
+    pub precise: bool,
     pub decorations: Decorations,
     // Reflection info.  Tracking is only needed for fields of nameless interface blocks.
     pub is_static_use: bool,
@@ -2047,9 +2048,10 @@ impl Field {
         name: Name,
         type_id: TypeId,
         precision: Precision,
+        precise: bool,
         decorations: Decorations,
     ) -> Field {
-        Field { name, type_id, precision, decorations, is_static_use: false }
+        Field { name, type_id, precision, precise, decorations, is_static_use: false }
     }
 }
 
@@ -3219,6 +3221,7 @@ impl IRMeta {
         name: Name,
         type_id: TypeId,
         precision: Precision,
+        precise: bool,
         decorations: Decorations,
         built_in: Option<BuiltIn>,
         initializer: Option<ConstantId>,
@@ -3232,8 +3235,16 @@ impl IRMeta {
         } else {
             self.get_pointer_type_id(type_id)
         };
-        let var =
-            Variable::new(name, type_id, precision, decorations, built_in, initializer, scope);
+        let var = Variable::new(
+            name,
+            type_id,
+            precision,
+            precise,
+            decorations,
+            built_in,
+            initializer,
+            scope,
+        );
         let variable_id = self.add_variable(var);
 
         if scope == VariableScope::Global {
@@ -3249,11 +3260,12 @@ impl IRMeta {
         name: Name,
         type_id: TypeId,
         precision: Precision,
+        precise: bool,
     ) -> VariableId {
         // Automatically turn the type into a pointer
         debug_assert!(!self.get_type(type_id).is_pointer());
         let type_id = self.get_pointer_type_id(type_id);
-        let var = Variable::new_const(name, type_id, precision);
+        let var = Variable::new_const(name, type_id, precision, precise);
         // No need to add the variable to any scope, because they are always replaced by their
         // constant value in the IR.
         self.add_variable(var)
@@ -3271,6 +3283,7 @@ impl IRMeta {
             name,
             type_id,
             precision,
+            false,
             Decorations::new_none(),
             None,
             initializer,
@@ -3293,6 +3306,7 @@ impl IRMeta {
             Name::new_exact(""),
             type_id,
             precision,
+            false,
             Decorations::new_none(),
             Some(built_in),
             None,
@@ -3337,6 +3351,7 @@ impl IRMeta {
         let original_name = std::mem::replace(&mut variable.name, Name::new_temp(cache_name));
         let type_id = variable.type_id;
         let precision = variable.precision;
+        let precise = variable.precise;
         let original_decorations =
             std::mem::replace(&mut variable.decorations, Decorations::new_none());
         let original_built_in = std::mem::take(&mut variable.built_in);
@@ -3351,6 +3366,7 @@ impl IRMeta {
             original_name,
             type_id,
             precision,
+            precise,
             original_decorations,
             original_built_in,
             None,

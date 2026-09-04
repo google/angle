@@ -197,7 +197,6 @@ impl Generator {
     ) {
         match decoration {
             Decoration::Invariant => qualifiers.push("invariant".to_string()),
-            Decoration::Precise => qualifiers.push("precise".to_string()),
             Decoration::Interpolant => qualifiers.push("interpolant".to_string()),
             Decoration::Smooth => qualifiers.push("smooth".to_string()),
             Decoration::Flat => qualifiers.push("flat".to_string()),
@@ -242,13 +241,17 @@ impl Generator {
         }
     }
 
-    fn qualifiers_str(precision: Precision, decorations: &Decorations) -> String {
+    fn qualifiers_str(precision: Precision, precise: bool, decorations: &Decorations) -> String {
         let mut qualifiers = vec![];
         let mut layout_qualifiers = vec![];
 
         decorations.decorations.iter().for_each(|&decoration| {
             Self::add_qualifier_str(decoration, &mut qualifiers, &mut layout_qualifiers);
         });
+
+        if precise {
+            qualifiers.push("precise".to_string());
+        }
 
         let mut result = String::new();
         if !layout_qualifiers.is_empty() {
@@ -367,6 +370,7 @@ impl Generator {
         name: &Name,
         type_id: TypeId,
         precision: Precision,
+        precise: bool,
         decorations: &Decorations,
         built_in: Option<BuiltIn>,
         initializer: Option<ConstantId>,
@@ -374,7 +378,7 @@ impl Generator {
         id: u32,
     ) -> (String, String) {
         let type_info = &self.types[&type_id];
-        let qualifiers = Self::qualifiers_str(precision, decorations);
+        let qualifiers = Self::qualifiers_str(precision, precise, decorations);
         let var_name = if let Some(built_in) = built_in {
             Self::built_in_str(built_in, ir_meta.get_shader_type())
         } else {
@@ -678,6 +682,7 @@ impl ast::Target for Generator {
                                     &field.name,
                                     field.type_id,
                                     field.precision,
+                                    field.precise,
                                     &field.decorations,
                                     None,
                                     None,
@@ -761,6 +766,7 @@ impl ast::Target for Generator {
             &variable.name,
             variable.type_id,
             variable.precision,
+            variable.precise,
             &variable.decorations,
             variable.built_in,
             variable.initializer,
@@ -792,8 +798,11 @@ impl ast::Target for Generator {
     }
 
     fn new_function(&mut self, _ir_meta: &IRMeta, id: FunctionId, function: &Function) {
-        let qualifiers =
-            Self::qualifiers_str(function.return_precision, &function.return_decorations);
+        let qualifiers = Self::qualifiers_str(
+            function.return_precision,
+            function.return_precise,
+            &function.return_decorations,
+        );
         let return_type = &self.types[&function.return_type_id];
         let name =
             Self::name_str(&function.name, TEMP_FUNCTION_PREFIX, USER_VARIABLE_PREFIX, id.id);

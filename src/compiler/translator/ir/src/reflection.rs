@@ -875,8 +875,7 @@ fn new_common_shader_variable(
             Decoration::RasterOrdered => var.raster_ordered = true,
             // Some information is either internal, pertains only to InterfaceBlocks or not reported
             // at the API level.
-            Decoration::Precise
-            | Decoration::Interpolant
+            Decoration::Interpolant
             | Decoration::Shared
             | Decoration::Coherent
             | Decoration::Restrict
