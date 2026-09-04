@@ -55,7 +55,7 @@ vars = {
   'checkout_angle_partition_alloc': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'd289f90940954b3cb11acbdd963a76282b60b26a',
+  'chromium_revision': 'ecddf8bda0585cbbf5b8462552a3fbc8c185cff0',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -625,7 +625,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@974124cd40c7f2ffe4bf20891e9e7c7d7a2b389f',
+    'url': '{chromium_git}/chromium/src/testing@9623feb2d853384e25a59e43b31bc6657f978b90',
     'condition': 'not build_with_chromium',
   },
 
@@ -1186,7 +1186,7 @@ deps = {
   },
 
   'third_party/protobuf': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/protobuf@596311125761f3ce096e8eac7107abe99b6a3bc8',
+    'url': Var('chromium_git') + '/chromium/src/third_party/protobuf@07ff24d79f65fa5b8cecb510646bd38561010d22',
     'condition': 'not build_with_chromium',
   },
 
@@ -1235,7 +1235,7 @@ deps = {
   },
 
   'third_party/rust': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/rust@25212f8a10fe5c308a51bc4c2d169a549e0e01d2',
+    'url': Var('chromium_git') + '/chromium/src/third_party/rust@d88b52cced4cbbdb501770924420a2d5506dd782',
     'condition': 'not build_with_chromium',
   },
 
