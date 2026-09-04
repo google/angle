@@ -20,7 +20,6 @@ _util_sources = [
   "OSWindow.h",
   "autogen/angle_features_autogen.cpp",
   "autogen/angle_features_autogen.h",
-  "com_utils.h",
   "geometry_utils.cpp",
   "geometry_utils.h",
   "keyboard.h",
