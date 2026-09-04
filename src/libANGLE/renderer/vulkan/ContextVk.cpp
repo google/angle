@@ -556,7 +556,7 @@ void OnImageBufferWrite(vk::Context *context,
 {
     vk::BufferHelper &buffer = bufferVk->getBuffer();
     VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-    commandBufferHelper->bufferWrite(context, accessFlags, stages, &buffer);
+    commandBufferHelper->bufferWrite(context, accessFlags, stages, &buffer, kNoMemoryBarrierBits);
     bufferVk->onDataChanged();
 }
 
@@ -7659,12 +7659,9 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
 
     // If there are memoryBarrier call being made that requires we insert barriers for images we
     // must do so.
-    bool memoryBarrierRequired = false;
-    if ((mDeferredMemoryBarriers & kWriteAfterAccessImageMemoryBarriers) != 0)
-    {
-        memoryBarrierRequired = true;
-        mDeferredMemoryBarriers &= ~kWriteAfterAccessImageMemoryBarriers;
-    }
+    const GLbitfield memoryBarrierBits =
+        mDeferredMemoryBarriers & kWriteAfterAccessImageMemoryBarriers;
+    mDeferredMemoryBarriers &= ~kWriteAfterAccessImageMemoryBarriers;
 
     FillWithNullptr(&mActiveImages);
 
@@ -7723,7 +7720,7 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
         const vk::ImageAccess imageAccess = GetImageWriteAccessAndSubresource(
             imageUnit, *image, shaderStages, &level, &layerStart, &layerCount);
 
-        if (imageAccess == image->getCurrentImageAccess() && !memoryBarrierRequired)
+        if (imageAccess == image->getCurrentImageAccess() && memoryBarrierBits == 0)
         {
             // GL spec does not require implementation to do WAW barriers for shader image access.
             // If there is no layout change, we skip the barrier here unless there is prior
@@ -7733,7 +7730,8 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
         else
         {
             commandBufferHelper->imageWrite(this, level, layerStart, layerCount,
-                                            image->getAspectFlags(), imageAccess, image);
+                                            image->getAspectFlags(), imageAccess, image,
+                                            memoryBarrierBits);
         }
     }
 

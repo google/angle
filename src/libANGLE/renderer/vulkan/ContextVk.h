@@ -78,6 +78,7 @@ enum class SurfaceAncillaryColorBehavior
     InvalidateOnPresent,
 };
 
+static constexpr GLbitfield kNoMemoryBarrierBits = 0;
 static constexpr GLbitfield kBufferMemoryBarrierBits =
     GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT | GL_ELEMENT_ARRAY_BARRIER_BIT | GL_UNIFORM_BARRIER_BIT |
     GL_COMMAND_BARRIER_BIT | GL_PIXEL_BUFFER_BARRIER_BIT | GL_BUFFER_UPDATE_BARRIER_BIT |
@@ -550,7 +551,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     {
         ASSERT(mRenderPassCommands->started());
         mRenderPassCommands->imageWrite(this, level, layerStart, layerCount, aspectFlags,
-                                        imageAccess, image);
+                                        imageAccess, image, kNoMemoryBarrierBits);
     }
 
     void onColorDraw(gl::OwnerLevel level,

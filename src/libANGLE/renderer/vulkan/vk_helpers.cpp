@@ -1103,18 +1103,21 @@ void CommandBufferHelperCommon::bufferWrite(Context *context,
 {
     VkPipelineStageFlags writePipelineStageFlags =
         GetBufferMemoryBarrierData(writeStage).pipelineStageFlags;
-    bufferWriteImpl(context, writeAccessType, writePipelineStageFlags, writeStage, buffer);
+    bufferWriteImpl(context, writeAccessType, writePipelineStageFlags, writeStage, buffer,
+                    kNoMemoryBarrierBits);
 }
 
 void CommandBufferHelperCommon::bufferWrite(Context *context,
                                             VkAccessFlags writeAccessType,
                                             const gl::ShaderBitSet &writeShaderStages,
-                                            BufferHelper *buffer)
+                                            BufferHelper *buffer,
+                                            const GLbitfield memoryBarrierBits)
 {
     VkPipelineStageFlags writePipelineStageFlags =
         ConvertShaderBitSetToVkPipelineStageFlags(writeShaderStages);
     PipelineStage firstWriteStage = GetPipelineStage(writeShaderStages.first());
-    bufferWriteImpl(context, writeAccessType, writePipelineStageFlags, firstWriteStage, buffer);
+    bufferWriteImpl(context, writeAccessType, writePipelineStageFlags, firstWriteStage, buffer,
+                    memoryBarrierBits);
 }
 
 void CommandBufferHelperCommon::bufferRead(Context *context,
@@ -1124,20 +1127,23 @@ void CommandBufferHelperCommon::bufferRead(Context *context,
 {
     VkPipelineStageFlags readPipelineStageFlags =
         GetBufferMemoryBarrierData(readStage).pipelineStageFlags;
-    bufferReadImpl(context, readAccessType, readPipelineStageFlags, readStage, buffer);
+    bufferReadImpl(context, readAccessType, readPipelineStageFlags, readStage, buffer,
+                   kNoMemoryBarrierBits);
 }
 
 void CommandBufferHelperCommon::bufferRead(Context *context,
                                            VkAccessFlags readAccessType,
                                            const gl::ShaderBitSet &readShaderStages,
-                                           BufferHelper *buffer)
+                                           BufferHelper *buffer,
+                                           const GLbitfield memoryBarrierBits)
 {
     for (const gl::ShaderType shaderType : readShaderStages)
     {
         PipelineStage readStage = GetPipelineStage(shaderType);
         VkPipelineStageFlags readPipelineStageFlags =
             GetBufferMemoryBarrierData(readStage).pipelineStageFlags;
-        bufferReadImpl(context, readAccessType, readPipelineStageFlags, readStage, buffer);
+        bufferReadImpl(context, readAccessType, readPipelineStageFlags, readStage, buffer,
+                       memoryBarrierBits);
     }
 }
 
@@ -1145,10 +1151,11 @@ void CommandBufferHelperCommon::bufferWriteImpl(Context *context,
                                                 VkAccessFlags writeAccessType,
                                                 VkPipelineStageFlags writePipelineStageFlags,
                                                 PipelineStage writeStage,
-                                                BufferHelper *buffer)
+                                                BufferHelper *buffer,
+                                                const GLbitfield memoryBarrierBits)
 {
     buffer->recordWriteBarrier(context, writeAccessType, writePipelineStageFlags, writeStage,
-                               mQueueSerial, &mPipelineBarriers, &mEventBarriers,
+                               mQueueSerial, memoryBarrierBits, &mPipelineBarriers, &mEventBarriers,
                                &mRefCountedEventCollector);
 
     // Make sure host-visible buffer writes result in a barrier inserted at the end of the frame to
@@ -1167,10 +1174,12 @@ void CommandBufferHelperCommon::bufferReadImpl(Context *context,
                                                VkAccessFlags readAccessType,
                                                VkPipelineStageFlags readPipelineStageFlags,
                                                PipelineStage readStage,
-                                               BufferHelper *buffer)
+                                               BufferHelper *buffer,
+                                               const GLbitfield memoryBarrierBits)
 {
     buffer->recordReadBarrier(context, readAccessType, readPipelineStageFlags, readStage,
-                              &mPipelineBarriers, &mEventBarriers, &mRefCountedEventCollector);
+                              memoryBarrierBits, &mPipelineBarriers, &mEventBarriers,
+                              &mRefCountedEventCollector);
     ASSERT(!usesBufferForWrite(*buffer));
 
     buffer->recordReadEvent(context, readAccessType, readPipelineStageFlags, readStage,
@@ -1356,10 +1365,14 @@ void OutsideRenderPassCommandBufferHelper::imageWrite(Context *context,
                                                       uint32_t layerCount,
                                                       VkImageAspectFlags aspectFlags,
                                                       ImageAccess imageAccess,
-                                                      ImageHelper *image)
+                                                      ImageHelper *image,
+                                                      const GLbitfield memoryBarrierBits)
 {
-    imageWriteImpl(context, level, layerStart, layerCount, aspectFlags, imageAccess,
-                   BarrierType::Event, image);
+    const BarrierType barrierType = (memoryBarrierBits & kImageMemoryBarrierBits) != 0
+                                        ? BarrierType::Pipeline
+                                        : BarrierType::Event;
+    imageWriteImpl(context, level, layerStart, layerCount, aspectFlags, imageAccess, barrierType,
+                   image);
     retainImageWithEvent(context, image);
 }
 
@@ -1656,10 +1669,14 @@ void RenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
                                                uint32_t layerCount,
                                                VkImageAspectFlags aspectFlags,
                                                ImageAccess imageAccess,
-                                               ImageHelper *image)
+                                               ImageHelper *image,
+                                               const GLbitfield memoryBarrierBits)
 {
-    imageWriteImpl(contextVk, level, layerStart, layerCount, aspectFlags, imageAccess,
-                   BarrierType::Event, image);
+    const BarrierType barrierType = (memoryBarrierBits & kImageMemoryBarrierBits) != 0
+                                        ? BarrierType::Pipeline
+                                        : BarrierType::Event;
+    imageWriteImpl(contextVk, level, layerStart, layerCount, aspectFlags, imageAccess, barrierType,
+                   image);
     retainImageWithEvent(contextVk, image);
 }
 
@@ -5324,14 +5341,25 @@ void BufferHelper::recordReadBarrier(Context *context,
                                      VkAccessFlags readAccessType,
                                      VkPipelineStageFlags readPipelineStageFlags,
                                      PipelineStage stageIndex,
+                                     const GLbitfield memoryBarrierBits,
                                      PipelineBarrierArray *pipelineBarriers,
                                      EventBarrierArray *eventBarriers,
                                      RefCountedEventCollector *eventCollector)
 {
+    const bool forcePipelineBarrier = (memoryBarrierBits & kBufferMemoryBarrierBits) != 0;
+    if (forcePipelineBarrier && mCurrentWriteEvent.valid())
+    {
+        // Turn events into pipelineBarriers
+        mCurrentWriteAccess |= mCurrentWriteEvent.getAccessFlags();
+        mCurrentWriteStages |=
+            mCurrentWriteEvent.getEvent().getPipelineStageMask(context->getRenderer());
+        mCurrentWriteEvent.releaseToEventCollector(eventCollector);
+    }
+
     // If the type of read already tracked by mCurrentReadEvents, it means we must already inserted
     // the barrier when mCurrentReadEvents is set. No new barrier is needed.
     EventStage eventStage = GetBufferMemoryBarrierData(stageIndex).eventStage;
-    if (mCurrentReadEvents.hasEventAndAccess(eventStage, readAccessType))
+    if (!forcePipelineBarrier && mCurrentReadEvents.hasEventAndAccess(eventStage, readAccessType))
     {
         ASSERT((context->getRenderer()->getPipelineStageMask(eventStage) &
                 readPipelineStageFlags) == readPipelineStageFlags);
@@ -5341,7 +5369,7 @@ void BufferHelper::recordReadBarrier(Context *context,
 
     // If the type of read already tracked by mCurrentReadAccess, it means we must already inserted
     // the barrier when mCurrentReadAccess is set. No new barrier is needed.
-    if ((mCurrentReadAccess & readAccessType) == readAccessType &&
+    if (!forcePipelineBarrier && (mCurrentReadAccess & readAccessType) == readAccessType &&
         (mCurrentReadStages & readPipelineStageFlags) == readPipelineStageFlags)
     {
         return;
@@ -5418,10 +5446,12 @@ void BufferHelper::recordWriteBarrier(Context *context,
                                       VkPipelineStageFlags writeStage,
                                       PipelineStage stageIndex,
                                       const QueueSerial &queueSerial,
+                                      const GLbitfield memoryBarrierBits,
                                       PipelineBarrierArray *pipelineBarriers,
                                       EventBarrierArray *eventBarriers,
                                       RefCountedEventCollector *eventCollector)
 {
+    const bool forcePipelineBarrier = (memoryBarrierBits & kBufferMemoryBarrierBits) != 0;
     Renderer *renderer = context->getRenderer();
 
     updatePipelineStageWriteHistory(context, stageIndex);
@@ -5432,7 +5462,7 @@ void BufferHelper::recordWriteBarrier(Context *context,
         // If we already have a event in the same command buffer, fall back to pipeline. Otherwise
         // you may run into wait an event that has not been set. This may be can be removed once we
         // fix https://issuetracker.google.com/392968868
-        if (usedByCommandBuffer(queueSerial))
+        if (forcePipelineBarrier || usedByCommandBuffer(queueSerial))
         {
             for (EventStage eventStage : mCurrentReadEvents.getBitMask())
             {
@@ -5466,7 +5496,7 @@ void BufferHelper::recordWriteBarrier(Context *context,
         // stage bits. Both are a bit complex. Without evidence showing we are hitting performance
         // issue in real world situation, this will just use pipeline barriers to track extra stages
         // that not captured by mCurrentWriteEvent.
-        if (writtenByCommandBuffer(queueSerial))
+        if (forcePipelineBarrier || writtenByCommandBuffer(queueSerial))
         {
             mCurrentWriteStages |= srcStageFlags;
             mCurrentWriteAccess |= mCurrentWriteEvent.getAccessFlags();
