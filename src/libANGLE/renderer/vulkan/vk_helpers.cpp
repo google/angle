@@ -8487,7 +8487,7 @@ void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
     for (size_t index = 0; index < levelUpdates->size();)
     {
         auto update = levelUpdates->begin() + index;
-        if (update->matchesLayerRange(layerIndex, layerCount, mLayerCount))
+        if (matchesLayerRange(*update, layerIndex, layerCount))
         {
             // Update total staging buffer size
             mTotalStagedBufferUpdateSize -= update->updateSource == UpdateSource::Buffer
@@ -8501,7 +8501,7 @@ void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
             // The layer range should either match the update, or not intersect with it.  If this
             // assertion fails, the update should be pertially removed, but is retained which is
             // incorrect.
-            ASSERT(!update->intersectsLayerRange(layerIndex, layerCount, mLayerCount));
+            ASSERT(!intersectsLayerRange(*update, layerIndex, layerCount));
             index++;
         }
     }
@@ -10335,12 +10335,12 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
         {
             SubresourceUpdate &update = (*levelUpdates)[updateIndex];
 
-            if (update.intersectsLayerRange(layer, layerCount, mLayerCount))
+            if (intersectsLayerRange(update, layer, layerCount))
             {
                 // On any data update or the clear does not match exact layer range, we'll need to
                 // do a full upload.
                 const bool isClear = IsClearOfAllChannels(update.updateSource);
-                if (isClear && update.matchesLayerRange(layer, layerCount, mLayerCount))
+                if (isClear && matchesLayerRange(update, layer, layerCount))
                 {
                     foundClear = updateIndex;
                 }
@@ -10409,7 +10409,7 @@ angle::Result ImageHelper::flushStagedClearEmulatedChannelsUpdates(ContextVk *co
         ASSERT(update->updateSource == UpdateSource::ClearEmulatedChannelsOnly);
         gl::OwnerLayer updateBaseLayer;
         uint32_t updateLayerCount;
-        update->getDestSubresource(mLayerCount, &updateBaseLayer, &updateLayerCount);
+        getDestSubresource(*update, &updateBaseLayer, &updateLayerCount);
 
         const LevelIndex updateMipLevelVk = toVkLevel(updateMipLevelGL);
         update->data.clear.levelIndex     = updateMipLevelGL.get();
@@ -10516,7 +10516,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
 
             gl::OwnerLayer updateBaseLayer;
             uint32_t updateLayerCount;
-            update.getDestSubresource(mLayerCount, &updateBaseLayer, &updateLayerCount);
+            getDestSubresource(update, &updateBaseLayer, &updateLayerCount);
 
             // If the update layers don't intersect the requested layers, skip the update.
             const bool areUpdateLayersOutsideRange =
@@ -10872,7 +10872,7 @@ bool ImageHelper::hasStagedUpdatesForSubresource(gl::OwnerLevel levelGL,
     {
         gl::OwnerLayer updateBaseLayer;
         uint32_t updateLayerCount;
-        update.getDestSubresource(mLayerCount, &updateBaseLayer, &updateLayerCount);
+        getDestSubresource(update, &updateBaseLayer, &updateLayerCount);
 
         const gl::OwnerLayer updateLayerEnd = updateBaseLayer + updateLayerCount;
         const gl::OwnerLayer layerEnd       = layer + layerCount;
@@ -10924,7 +10924,7 @@ void ImageHelper::adjustLayerRange(const SubresourceUpdates &levelUpdates,
     {
         gl::OwnerLayer updateBaseLayer;
         uint32_t updateLayerCount;
-        update.getDestSubresource(mLayerCount, &updateBaseLayer, &updateLayerCount);
+        getDestSubresource(update, &updateBaseLayer, &updateLayerCount);
         const gl::OwnerLayer updateLayerEnd = updateBaseLayer + updateLayerCount;
 
         // In some cases, the update has the bigger layer range than the request. If the update
@@ -11128,7 +11128,7 @@ void ImageHelper::pruneSupersededUpdatesForLevelImpl(ContextVk *contextVk,
 
         gl::OwnerLayer layerIndex;
         uint32_t layerCount = 0;
-        update.getDestSubresource(mLayerCount, &layerIndex, &layerCount);
+        getDestSubresource(update, &layerIndex, &layerCount);
 
         gl::Box currentUpdateBox(gl::kOffsetZero, gl::Extents());
         if (update.updateSource == UpdateSource::Buffer)
@@ -12265,59 +12265,60 @@ void ImageHelper::SubresourceUpdate::release(Renderer *renderer)
     }
 }
 
-bool ImageHelper::SubresourceUpdate::matchesLayerRange(gl::OwnerLayer layerIndex,
-                                                       uint32_t layerCount,
-                                                       uint32_t imageLayerCount) const
+bool ImageHelper::matchesLayerRange(const SubresourceUpdate &update,
+                                    gl::OwnerLayer layerIndex,
+                                    uint32_t layerCount) const
 {
     ASSERT(layerCount != VK_REMAINING_ARRAY_LAYERS);
     gl::OwnerLayer updateBaseLayer;
     uint32_t updateLayerCount;
-    getDestSubresource(imageLayerCount, &updateBaseLayer, &updateLayerCount);
+    getDestSubresource(update, &updateBaseLayer, &updateLayerCount);
 
     return updateBaseLayer == layerIndex && updateLayerCount == layerCount;
 }
 
-bool ImageHelper::SubresourceUpdate::intersectsLayerRange(gl::OwnerLayer layerIndex,
-                                                          uint32_t layerCount,
-                                                          uint32_t imageLayerCount) const
+bool ImageHelper::intersectsLayerRange(const SubresourceUpdate &update,
+                                       gl::OwnerLayer layerIndex,
+                                       uint32_t layerCount) const
 {
     gl::OwnerLayer updateBaseLayer;
     uint32_t updateLayerCount;
-    getDestSubresource(imageLayerCount, &updateBaseLayer, &updateLayerCount);
+    getDestSubresource(update, &updateBaseLayer, &updateLayerCount);
     const gl::OwnerLayer updateLayerEnd = updateBaseLayer + updateLayerCount;
 
     return updateBaseLayer < (layerIndex + layerCount) && updateLayerEnd > layerIndex;
 }
 
-void ImageHelper::SubresourceUpdate::getDestSubresource(uint32_t imageLayerCount,
-                                                        gl::OwnerLayer *baseLayerOut,
-                                                        uint32_t *layerCountOut) const
+void ImageHelper::getDestSubresource(const SubresourceUpdate &update,
+                                     gl::OwnerLayer *baseLayerOut,
+                                     uint32_t *layerCountOut) const
 {
-    if (IsClear(updateSource))
+    if (IsClear(update.updateSource))
     {
-        *baseLayerOut  = gl::OwnerLayer(data.clear.layerIndex);
-        *layerCountOut = data.clear.layerCount;
+        *baseLayerOut  = gl::OwnerLayer(update.data.clear.layerIndex);
+        *layerCountOut = update.data.clear.layerCount;
 
         if (*layerCountOut == static_cast<uint32_t>(gl::ImageIndex::kEntireLevel))
         {
-            *layerCountOut = imageLayerCount;
+            *layerCountOut = mLayerCount;
         }
     }
-    else if (updateSource == UpdateSource::ClearPartial)
+    else if (update.updateSource == UpdateSource::ClearPartial)
     {
-        *baseLayerOut  = gl::OwnerLayer(data.clearPartial.layerIndex);
-        *layerCountOut = data.clearPartial.layerCount;
+        *baseLayerOut  = gl::OwnerLayer(update.data.clearPartial.layerIndex);
+        *layerCountOut = update.data.clearPartial.layerCount;
 
         if (*layerCountOut == static_cast<uint32_t>(gl::ImageIndex::kEntireLevel))
         {
-            *layerCountOut = imageLayerCount;
+            *layerCountOut = mLayerCount;
         }
     }
     else
     {
         const VkImageSubresourceLayers &dstSubresource =
-            updateSource == UpdateSource::Buffer ? data.buffer.copyRegion.imageSubresource
-                                                 : data.image.copyRegion.dstSubresource;
+            update.updateSource == UpdateSource::Buffer
+                ? update.data.buffer.copyRegion.imageSubresource
+                : update.data.image.copyRegion.dstSubresource;
         *baseLayerOut  = gl::OwnerLayer(dstSubresource.baseArrayLayer);
         *layerCountOut = dstSubresource.layerCount;
 
