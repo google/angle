@@ -239,7 +239,7 @@ void PixelLocalStoragePlane::setMemoryless(Context *context,
     mMemoryless     = true;
     // The backing texture will get allocated lazily, once we know what dimensions it should be.
     ASSERT(mTextureID.value == 0);
-    mTextureImageIndex = ImageIndex::MakeFromType(TextureType::_2D, 0, 0);
+    mTextureImageIndex = ImageIndex::Make2D(0);
     mUsage             = usage;
 }
 
@@ -255,8 +255,11 @@ void PixelLocalStoragePlane::setTextureBacked(Context *context,
     mMemoryless     = false;
     mTextureID      = tex->id();
     mTextureObserver.bind(tex);
-    mTextureImageIndex = ImageIndex::MakeFromType(tex->getType(), level, layer);
-    mUsage             = usage;
+    mTextureImageIndex = tex->getType() == TextureType::_2D
+                             ? ImageIndex::Make2D(level)
+                             : ImageIndex::MakeFromType(tex->getType(), level, layer);
+    ASSERT(tex->getType() != TextureType::_2D || !mTextureImageIndex.hasLayer());
+    mUsage = usage;
 }
 
 void PixelLocalStoragePlane::onSubjectStateChange(angle::SubjectIndex index,
@@ -315,7 +318,7 @@ void PixelLocalStoragePlane::ensureBackingTextureIfMemoryless(Context *context, 
     // Internal textures backing memoryless planes are always 2D and not mipmapped.
     ASSERT(mTextureImageIndex.getType() == TextureType::_2D);
     ASSERT(mTextureImageIndex.getLevelIndex() == 0);
-    ASSERT(mTextureImageIndex.getLayerIndex() == 0);
+    ASSERT(!mTextureImageIndex.hasLayer());
 
     Texture *tex = nullptr;
     if (mTextureID.value != 0)
@@ -485,8 +488,7 @@ void PixelLocalStoragePlane::bindToImage(Context *context, GLuint unit, bool nee
         }
     }
     context->bindImageTexture(unit, mTextureID, mTextureImageIndex.getLevelIndex(), GL_FALSE,
-                              mTextureImageIndex.getLayerIndex(), GL_READ_WRITE,
-                              imageBindingFormat);
+                              getTextureLayer(), GL_READ_WRITE, imageBindingFormat);
 }
 
 const Texture *PixelLocalStoragePlane::getBackingTexture(const Context *context) const

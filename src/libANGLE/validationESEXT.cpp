@@ -2078,16 +2078,10 @@ bool ValidateBeginAndRestorePixelLocalStorageGlobalState(const Context *context,
                 if (framebuffer->getDrawBufferMask().test(j) &&
                     framebuffer->getColorAttachment(j)->isTextureWithId(plane.getTextureID()))
                 {
-                    // Compare the ImageIndex values for the PLS plane and framebuffer attachment
-                    // manually; the framebuffer uses a layer index of -1 for texture2d attachments,
-                    // whereas PLS uses a layer index of 0.
                     const ImageIndex &attachmentImageIdx =
                         framebuffer->getColorAttachment(j)->getTextureImageIndex();
                     ASSERT(attachmentImageIdx.getLayerCount() == 1);
-                    if (planeImageIdx.getType() == attachmentImageIdx.getType() &&
-                        planeImageIdx.getLevelIndex() == attachmentImageIdx.getLevelIndex() &&
-                        planeImageIdx.getLayerIndex() ==
-                            std::max(attachmentImageIdx.getLayerIndex(), 0))
+                    if (planeImageIdx == attachmentImageIdx)
                     {
                         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
                                                kPLSSingleTexImagePLSAndAttachment);
