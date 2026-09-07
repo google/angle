@@ -279,13 +279,8 @@ fn gather_field_info(
 
 // Given `uniform type var[N][M]`, returns `type`
 fn get_variable_base_type(ir_meta: &IRMeta, id: VariableId) -> TypeId {
-    let mut type_id = ir_meta.get_pointee_type(ir_meta.get_variable(id).type_id);
-
-    while let Type::Array(element_id, _) = *ir_meta.get_type(type_id) {
-        type_id = element_id;
-    }
-
-    type_id
+    let type_id = ir_meta.get_pointee_type(ir_meta.get_variable(id).type_id);
+    ir_meta.get_base_element_type(type_id)
 }
 
 // Given `uniform type var[N][M]`, returns `(type, [N, M])`

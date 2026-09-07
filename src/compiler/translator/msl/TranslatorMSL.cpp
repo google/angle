@@ -949,14 +949,14 @@ bool TranslatorMSL::translateImpl(TInfoSinkBase &sink,
                 return false;
             }
         }
-    }
 
-    // Replace array of array of opaque uniforms with a flattened array.  This is run after
-    // MonomorphizeUnsupportedFunctions and RewriteStructSamplers so that it's not possible for an
-    // array of array of opaque type to be partially subscripted and passed to a function.
-    if (!RewriteArrayOfArrayOfOpaqueUniforms(this, root, &getSymbolTable()))
-    {
-        return false;
+        // Replace array of array of opaque uniforms with a flattened array.  This is run after
+        // MonomorphizeUnsupportedFunctions and RewriteStructSamplers so that it's not possible for
+        // an array of array of opaque type to be partially subscripted and passed to a function.
+        if (!RewriteArrayOfArrayOfOpaqueUniforms(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
     }
 
     if (getShaderVersion() >= 300 ||

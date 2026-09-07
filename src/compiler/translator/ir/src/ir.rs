@@ -3519,6 +3519,18 @@ impl IRMeta {
         type_info.get_element_type_id().unwrap()
     }
 
+    // Given an array type, retrieves its base element.
+    pub fn get_base_element_type(&self, type_id: TypeId) -> TypeId {
+        debug_assert!(!self.get_type(type_id).is_pointer());
+
+        let mut type_id = type_id;
+        while let Type::Array(element_id, _) = self.get_type(type_id) {
+            type_id = *element_id;
+        }
+
+        type_id
+    }
+
     // For some transformations, it matters if some built-in is statically used, even if it's
     // dead-code eliminated.  Calculate that before DCE.
     pub fn cache_built_in_static_use_before_dce(&mut self) {

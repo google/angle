@@ -5273,22 +5273,21 @@ void main()
 // Test that array indices for arrays of arrays of basic types work as expected.
 TEST_P(GLSLTest_ES31, ArraysOfArraysBasicType)
 {
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "uniform ivec2 test[2][2];\n"
-        "void main() {\n"
-        "    bool passed = true;\n"
-        "    for (int i = 0; i < 2; i++) {\n"
-        "        for (int j = 0; j < 2; j++) {\n"
-        "            if (test[i][j] != ivec2(i + 1, j + 1)) {\n"
-        "                passed = false;\n"
-        "            }\n"
-        "        }\n"
-        "    }\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+uniform ivec2 test[2][2];
+void main() {
+    bool passed = true;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            if (test[i][j] != ivec2(i + 1, j + 1)) {
+                passed = false;
+            }
+        }
+    }
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -5314,22 +5313,21 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysBlockBasicType)
 {
     // anglebug.com/42262465 - fails on AMD Windows
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "layout(packed) uniform UBO { ivec2 test[2][2]; } ubo_data;\n"
-        "void main() {\n"
-        "    bool passed = true;\n"
-        "    for (int i = 0; i < 2; i++) {\n"
-        "        for (int j = 0; j < 2; j++) {\n"
-        "            if (ubo_data.test[i][j] != ivec2(i + 1, j + 1)) {\n"
-        "                passed = false;\n"
-        "            }\n"
-        "        }\n"
-        "    }\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+layout(packed) uniform UBO { ivec2 test[2][2]; } ubo_data;
+void main() {
+    bool passed = true;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            if (ubo_data.test[i][j] != ivec2(i + 1, j + 1)) {
+                passed = false;
+            }
+        }
+    }
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -5377,23 +5375,22 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysBlockBasicType)
 // Test that arrays of arrays of samplers work as expected.
 TEST_P(GLSLTest_ES31, ArraysOfArraysSampler)
 {
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 my_FragColor;\n"
-        "uniform mediump isampler2D test[2][2];\n"
-        "void main() {\n"
-        "    bool passed = true;\n"
-        "#define DO_CHECK(i,j) \\\n"
-        "    if (texture(test[i][j], vec2(0.0, 0.0)) != ivec4(i + 1, j + 1, 0, 1)) { \\\n"
-        "        passed = false; \\\n"
-        "    }\n"
-        "    DO_CHECK(0, 0)\n"
-        "    DO_CHECK(0, 1)\n"
-        "    DO_CHECK(1, 0)\n"
-        "    DO_CHECK(1, 1)\n"
-        "    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 my_FragColor;
+uniform mediump isampler2D test[2][2];
+void main() {
+    bool passed = true;
+#define DO_CHECK(i,j) \
+    if (texture(test[i][j], vec2(0.0, 0.0)) != ivec4(i + 1, j + 1, 0, 1)) { \
+        passed = false; \
+    }
+    DO_CHECK(0, 0)
+    DO_CHECK(0, 1)
+    DO_CHECK(1, 0)
+    DO_CHECK(1, 1)
+    my_FragColor = passed ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
 
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
@@ -14678,41 +14675,41 @@ layout(binding = 1, std430) buffer Output {
   uint success;
 } outbuf;
 
-uniform sampler2D smplr[2][3];
+uniform sampler2D smplr[2][1][3];
 
 uint getValue(in sampler2D s)
 {
     return uint(texture(s, vec2(0.5, 0.5)).x * 255.0);
 }
 
-bool runTest(in sampler2D s[2][3])
+bool runTest(in sampler2D s[2][1][3])
 {
-    // s[0][0] should contain 2
-    // s[0][1] should contain 0
-    // s[0][2] should contain 1
-    // s[1][0] should contain 1
-    // s[1][1] should contain 2
-    // s[1][2] should contain 0
+    // s[0][0][0] should contain 2
+    // s[0][0][1] should contain 0
+    // s[0][0][2] should contain 1
+    // s[1][0][0] should contain 1
+    // s[1][0][1] should contain 2
+    // s[1][0][2] should contain 0
 
     uint result = getValue(
                        s[
                            getValue(
                                 s[
-                                    getValue(s[0][1])   // 0
-                                ][
-                                    getValue(s[0][0])   // 2
+                                    getValue(s[0][0][1])   // 0
+                                ][0][
+                                    getValue(s[0][0][0])   // 2
                                 ]
-                           )                      // s[0][2] -> 1
-                       ][
+                           )                      // s[0][0][2] -> 1
+                       ][0][
                            getValue(
                                 s[
-                                    getValue(s[1][0])   // 1
-                                ][
-                                    getValue(s[1][1])   // 2
+                                    getValue(s[1][0][0])   // 1
+                                ][0][
+                                    getValue(s[1][0][1])   // 2
                                 ]
-                           )                      // s[1][2] -> 0
+                           )                      // s[1][0][2] -> 0
                        ]
-                  );                      // s[1][0] -> 1
+                  );                      // s[1][0][0] -> 1
 
     return result == 1u;
 }
@@ -14753,7 +14750,7 @@ void main(void)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
             std::stringstream uniformName;
-            uniformName << "smplr[" << dim1 << "][" << dim2 << "]";
+            uniformName << "smplr[" << dim1 << "][0][" << dim2 << "]";
             GLint samplerLocation = glGetUniformLocation(program, uniformName.str().c_str());
             EXPECT_NE(samplerLocation, -1);
             glUniform1i(samplerLocation, textureUnit);
