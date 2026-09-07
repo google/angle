@@ -990,15 +990,35 @@ angle::Result TextureGL::handleCopyImageSelfCopyRedefine(const gl::Context *cont
     size_t level                 = static_cast<size_t>(destIndex.getLevelIndex());
 
     gl::Extents fbSize = source->getReadColorAttachment()->getSize();
+
+    bool requiresInitialization =
+        outside && (context->isRobustResourceInitEnabled() || context->isWebGL());
+    const angle::MemoryBuffer *zero = nullptr;
+    if (requiresInitialization)
+    {
+        ContextGL *contextGL = GetImplAs<ContextGL>(context);
+        const gl::InternalFormat &initFormatInfo =
+            gl::GetInternalFormatInfo(initTexFormat, initTexType);
+        const size_t bufferSize =
+            static_cast<size_t>(sourceArea.width) * sourceArea.height * initFormatInfo.pixelBytes;
+        ANGLE_CHECK_GL_ALLOC(contextGL, context->getZeroFilledBuffer(bufferSize, &zero));
+
+        gl::PixelUnpackState unpack;
+        unpack.alignment = 1;
+        ANGLE_TRY(stateManager->setPixelUnpackState(context, unpack));
+        ANGLE_TRY(stateManager->setPixelUnpackBuffer(context, nullptr));
+    }
+
     gl::Rectangle clippedArea;
     if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
     {
         // We won't be copying, but redefine the destination texture in case sourceArea is larger
         stateManager->bindTexture(getType(), mTextureID);
         ANGLE_GL_TRY_ALWAYS_CHECK(
-            context, functions->texImage2D(ToGLenum(target), static_cast<GLint>(level),
-                                           internalFormat, sourceArea.width, sourceArea.height, 0,
-                                           initTexFormat, initTexType, nullptr));
+            context,
+            functions->texImage2D(ToGLenum(target), static_cast<GLint>(level), internalFormat,
+                                  sourceArea.width, sourceArea.height, 0, initTexFormat,
+                                  initTexType, zero ? zero->data() : nullptr));
         return angle::Result::Continue;
     }
 
@@ -1028,7 +1048,7 @@ angle::Result TextureGL::handleCopyImageSelfCopyRedefine(const gl::Context *cont
     ANGLE_GL_TRY_ALWAYS_CHECK(
         context, functions->texImage2D(ToGLenum(target), static_cast<GLint>(level), internalFormat,
                                        sourceArea.width, sourceArea.height, 0, initTexFormat,
-                                       initTexType, nullptr));
+                                       initTexType, zero ? zero->data() : nullptr));
 
     ANGLE_GL_TRY(context, functions->copyTexSubImage2D(ToGLenum(target), static_cast<GLint>(level),
                                                        destOffset.x, destOffset.y, 0, 0,
