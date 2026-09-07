@@ -3028,6 +3028,7 @@
 
 // Unimplemented parts.
 515493666 D3D11 : Restart/DrawElementsVariantsTest.Draw/* = SKIP
+565475913 D3D11 : ProvokingVertexTest.FlatIndexedDrawWithOffset/* = SKIP
 
 529867799 METAL : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
 529867799 VULKAN : ReadPixelsPBOTest.PackLargeRowLength/* = SKIP
