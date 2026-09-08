@@ -2855,6 +2855,8 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
                                                         bufferOffsets.data());
         }
     }
+    vertexArrayVk->assertEmptyBufferConsistency(mEmptyBuffer);
+
     // Mark all active vertex buffers as accessed.
     mRenderPassCommands->buffersVertexAttribRead(this, vertexArrayVk->getCurrentArrayBuffers(),
                                                  maxAttrib);
@@ -2938,6 +2940,8 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffersVertexInputDynamicState
         mRenderPassCommandBuffer->bindVertexBuffers(0, maxAttrib, bufferHandles.data(),
                                                     bufferOffsets.data());
     }
+
+    vertexArrayVk->assertEmptyBufferConsistency(mEmptyBuffer);
 
     // Mark all active vertex buffers as accessed.
     mRenderPassCommands->buffersVertexAttribRead(this, vertexArrayVk->getCurrentArrayBuffers(),
@@ -5747,6 +5751,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 invalidateDefaultAttributes(context->getActiveDefaultAttribsMask());
                 ANGLE_TRY(onVertexArrayChange(vertexArrayVk->getCurrentEnabledAttribsMask()));
                 ANGLE_TRY(onIndexBufferChange(vertexArrayVk->getCurrentElementArrayBuffer()));
+
                 updateCurrentActiveStreamingAttribsMask(context);
                 break;
             }
@@ -9253,17 +9258,16 @@ void ContextVk::restoreAllGraphicsState()
 
 void ContextVk::updateCurrentActiveStreamingAttribsMask(const gl::Context *context)
 {
-    VertexArrayVk *vertexArrayVk                           = getVertexArray();
-    const gl::AttributesMask prevActiveStreamingAttribMask = mCurrentActiveStreamingAttribsMask;
+    VertexArrayVk *vertexArrayVk = getVertexArray();
     const gl::AttributesMask activeAttribs =
         context->getActiveClientAttribsMask() | context->getActiveBufferedAttribsMask();
     mCurrentActiveStreamingAttribsMask =
         vertexArrayVk->getStreamingVertexAttribsMask() & activeAttribs;
 
-    // If there are previous active streaming attribute that becomes inactive, we need to set them
-    // to empty buffer since streaming will only update the active attributes.
+    // If there are streaming attributes that are inactive, we need to set them to empty buffer
+    // since streaming will only update the active attributes.
     const gl::AttributesMask inactiveAttribMask =
-        prevActiveStreamingAttribMask & ~mCurrentActiveStreamingAttribsMask;
+        vertexArrayVk->getStreamingVertexAttribsMask() & ~mCurrentActiveStreamingAttribsMask;
     if (inactiveAttribMask.any())
     {
         vertexArrayVk->resetInactiveStreamingAttribs(inactiveAttribMask, mEmptyBuffer);
