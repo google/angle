@@ -2986,6 +2986,8 @@
 546640308 WIN QUALCOMM VULKAN : SimpleUniformTestES3.TernarySelectAnArrayThenIndex/* = SKIP
 546631281 WIN QUALCOMM VULKAN : Texture2DTestES3.ASTCDecodeModeSwitch/* = SKIP
 
+558505634 WIN QUALCOMM D3D11 : Texture2DTestES3RobustInit.InvalidateDepthOnly/* = SKIP
+558505634 WIN QUALCOMM D3D11 : Texture2DTestES3RobustInit.InvalidateStencilOnly/* = SKIP
 546631272 WIN QUALCOMM D3D11 : RobustResourceInitTestES3.DepthClearWithStencilInit/* = SKIP
 546631272 WIN QUALCOMM D3D11 : RobustResourceInitTestES3.DepthStencilTextureInitCombinations/* = SKIP
 546631272 WIN QUALCOMM D3D11 : RobustResourceInitTestES3.DrawThenInvalidateThenVerifyDepthStencil/* = SKIP
