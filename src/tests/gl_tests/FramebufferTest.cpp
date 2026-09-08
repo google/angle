@@ -10804,6 +10804,9 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     ES3_OPENGLES().enable(Feature::ReattachFboDepthStencilOnReallocation),
     ES3_OPENGLES().disable(Feature::ReattachFboDepthStencilOnReallocation));
 
+// TODO(anglebug.com/558810273): No supported backends are available for this
+// test on iOS on arm64-based Macs.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferTest_ES31_MSAA);
 ANGLE_INSTANTIATE_TEST_ES31_AND(FramebufferTest_ES31_MSAA,
                                 ES31_VULKAN().enable(Feature::EmulatedPrerotation90),
                                 ES31_VULKAN().enable(Feature::EmulatedPrerotation180),

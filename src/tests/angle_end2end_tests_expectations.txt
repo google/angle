@@ -1545,6 +1545,26 @@
 365066518 IOS METAL : ShadowSamplerFunctionTexture2DArrayTest.Test/* = SKIP
 365066518 IOS METAL : ShadowSamplerFunctionTextureCubeTest.Test/* = SKIP
 
+// ARM64-specific failures below. The failures above that were originally found
+// on Intel-based machines may no longer needed on ARM64 machines.
+558819222 IOS METAL : ClipDistanceAPPLETest.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
+558819222 IOS WGPU : RobustVertexAttributeTest.BoundButUnusedBuffer/* = SKIP
+558819222 IOS METAL : Texture2DBaseMaxTestES3.DepthRenderableAfterColorRenderableBelowBaseLevel/* = SKIP
+558819222 IOS METAL : Texture2DBaseMaxTestES3.DepthRenderableWithColorRenderableBeyondMaxLevel/* = SKIP
+558819222 IOS METAL : Texture2DDepthStencilTestES3.Redefinition/* = SKIP
+558819222 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModesWithDepth16/* = SKIP
+558819222 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModesWithDepth24/* = SKIP
+558819222 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModesWithDepth24Stencil8/* = SKIP
+558819222 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModesWithDepth32f/* = SKIP
+558819222 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModesWithDepth32fStencil8/* = SKIP
+558819222 IOS METAL : Texture2DTestES3_RecreateImmutableOnBaseLevelIncrease.ImmutableNPOTTextureBaseLevelIncreaseSwizzle/* = SKIP
+558819222 IOS METAL : Texture2DTestES3.FormatRGB10A2REVToRGB5A1/* = SKIP
+558819222 IOS METAL : Texture2DTestES3.InvalidFormatTypeCombosShouldFail/* = SKIP
+558819222 IOS METAL : Texture2DTestES3.TextureCOMPRESSEDRGB8ETC2ImplicitAlpha1/* = SKIP
+558819222 IOS METAL : Texture2DTestES3.TextureCOMPRESSEDSRGB8ETC2ImplicitAlpha1/* = SKIP
+558819222 IOS METAL : WebGLGLSLTest.FragDataInCommaIndexClampWithoutDrawBuffers/* = SKIP
+558819222 IOS METAL : WebGLGLSLTest.FragDataIndexClampWithoutDrawBuffers/* = SKIP
+
 // D3D11 backend does not support LOD options with shadow samplers
 365066518 D3D11 : ShadowSamplerFunctionTexture2DTest.Test/*__TextureBias_Mipmapped = SKIP
 365066518 D3D11 : ShadowSamplerFunctionTexture2DTest.Test/*__TextureOffsetBias_Mipmapped = SKIP

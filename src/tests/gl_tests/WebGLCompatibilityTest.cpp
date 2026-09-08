@@ -8341,5 +8341,8 @@ TEST_P(HardenedContextTest, UniformBufferRangeExceedsSize)
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(HardenedContextTest);
 ANGLE_INSTANTIATE_TEST_ES3(HardenedContextTest);
 
+// TODO(anglebug.com/558810273): No supported backends are available for this
+// test on iOS on arm64-based Macs.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(HardenedContextTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(HardenedContextTestES31);
 }  // namespace angle
