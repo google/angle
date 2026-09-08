@@ -2716,9 +2716,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, dontInvalidateIncompleteFBOs,
                             !isMesa && isQualcomm && qualcommVersion < 881);
 
-    // glGenerateMipmap may silently fail on mesa, leaving mips that are expected to be recreated to
-    // match the base level in their original shape, hidden from ANGLE and its validation.
-    ANGLE_FEATURE_CONDITION(features, recreateMipmapLevelsBeforeGenerate, isMesa);
+    // glGenerateMipmap may silently fail on mesa or mali. The failure mode is different on each
+    // driver, but in both cases ensuring that the full mip chain is explicitly defined prior to
+    // mipmap generation avoids the problem.
+    ANGLE_FEATURE_CONDITION(features, recreateMipmapLevelsBeforeGenerate, isMesa || isMali);
 
     // http://crbug.com/498828605
     ANGLE_FEATURE_CONDITION(features, expandFragmentOutputsToVec4, isAMD && isMesa);
