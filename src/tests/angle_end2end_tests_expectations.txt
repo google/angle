@@ -64,15 +64,41 @@
 
 // sRGB vs SKIP_DECODE vs texelFetch bugs
 493505759 VULKAN : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
-493505759 VULKAN : SRGBTextureTestES3.SRGBDecodeTexelFetchInHelper/* = SKIP
-493505759 VULKAN : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStruct/* = SKIP
 493505759 LINUX INTEL OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
+493505759 LINUX INTEL OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchAndTexture/* = SKIP
+493505759 LINUX INTEL OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchInDeadCodeAndTexture/* = SKIP
+493505759 LINUX INTEL OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchVsComma/* = SKIP
+493505759 LINUX INTEL OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerArraysInStruct/* = SKIP
+493505759 LINUX INTEL OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStructPassedToFunctions/* = SKIP
 493505759 LINUX AMD OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
+493505759 LINUX AMD OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchAndTexture/* = SKIP
+493505759 LINUX AMD OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchInDeadCodeAndTexture/* = SKIP
+493505759 LINUX AMD OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchVsComma/* = SKIP
+493505759 LINUX AMD OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerArraysInStruct/* = SKIP
+493505759 LINUX AMD OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStructPassedToFunctions/* = SKIP
+493505759 NVIDIA OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchAndTexture/* = SKIP
+493505759 NVIDIA OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchInDeadCodeAndTexture/* = SKIP
+493505759 NVIDIA OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchVsComma/* = SKIP
+493505759 NVIDIA OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerArraysInStruct/* = SKIP
+493505759 NVIDIA OPENGL : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStructPassedToFunctions/* = SKIP
+493505759 NVIDIA GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchAndTexture/* = SKIP
+493505759 NVIDIA GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchInDeadCodeAndTexture/* = SKIP
+493505759 NVIDIA GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchVsComma/* = SKIP
+493505759 NVIDIA GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerArraysInStruct/* = SKIP
+493505759 NVIDIA GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStructPassedToFunctions/* = SKIP
 493505759 WIN INTEL OPENGL : SRGBTextureTestES31.SRGBDecodeTexelFetchArrayDynamicIndex/* = SKIP
 493505759 PIXEL4ORXL GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
+493505759 PIXEL4ORXL GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchInDeadCodeAndTexture/* = SKIP
+493505759 PIXEL4ORXL GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchVsComma/* = SKIP
+493505759 PIXEL4ORXL GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerArraysInStruct/* = SKIP
+493505759 PIXEL4ORXL GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStructPassedToFunctions/* = SKIP
 493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchArrayInconsistent/* = SKIP
 493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchInHelper/* = SKIP
+493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchInDeadCodeAndTexture/* = SKIP
+493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchVsComma/* = SKIP
+493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerArraysInStruct/* = SKIP
 493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStruct/* = SKIP
+493505759 PIXEL10 GLES : SRGBTextureTestES3.SRGBDecodeTexelFetchWithSamplerInStructPassedToFunctions/* = SKIP
 
 // Advanced blend ops currently fail on Windows/Intel.
 376899587 WIN INTEL VULKAN : AdvancedBlendTest.*/* = SKIP
