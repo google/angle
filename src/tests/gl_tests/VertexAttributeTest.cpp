@@ -6717,6 +6717,167 @@ void main() { col = vec4(0, 0, 1, 1); })";
     EXPECT_PIXEL_COLOR_EQ(64, 64, GLColor::blue);
 }
 
+// Shared body for the two tests below. `interposeOtherVAO` is the ONLY difference
+// between them, so any behavioural difference is attributable to it alone.
+static void RunMergedStreamedAttribResize(bool interposeOtherVAO)
+{
+    // Program 1: active 0, 1.
+    constexpr char kLocalVS01[] = R"(#version 300 es
+layout(location = 0) in vec4 a0;
+layout(location = 1) in vec4 a1;
+out vec4 vC;
+void main() {
+    gl_Position = a0 * 0.001 + a1 * 0.001;
+    vC = vec4(1.0);
+})";
+
+    // Program 2: active 0 only.
+    constexpr char kLocalVS0[] = R"(#version 300 es
+layout(location = 0) in vec4 a0;
+out vec4 vC;
+void main() {
+    gl_Position = a0 * 0.001;
+    vC = vec4(1.0);
+})";
+
+    // Program 3: active 2 only. Location 2 makes getMaxActiveAttribLocation() 3, so the
+    // vertex-buffer dirty-bit handler walks slots 0..2 and therefore touches slot 1.
+    constexpr char kLocalVS2[] = R"(#version 300 es
+layout(location = 2) in vec4 a2;
+out vec4 vC;
+void main() {
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    vC = a2;
+})";
+
+    // Program 4: active 3 only, used to groom the freed block.
+    constexpr char kLocalVS3[] = R"(#version 300 es
+layout(location = 3) in vec4 a3;
+out vec4 vC;
+void main() {
+    gl_Position = a3 * 0.001;
+    vC = vec4(1.0);
+})";
+
+    constexpr char kLocalFS[] = R"(#version 300 es
+precision mediump float;
+in vec4 vC;
+out vec4 col;
+void main() {
+    col = vC;
+})";
+
+    ANGLE_GL_PROGRAM(prog01, kLocalVS01, kLocalFS);
+    ANGLE_GL_PROGRAM(prog0, kLocalVS0, kLocalFS);
+    ANGLE_GL_PROGRAM(prog2, kLocalVS2, kLocalFS);
+    ANGLE_GL_PROGRAM(prog3, kLocalVS3, kLocalFS);
+
+    // Client-memory array 1: 2048 verts * 32B. Slot 0 @ +0, slot 1 @ +16 -> overlapping
+    // address ranges -> merged into ONE allocation under slot 0's index.
+    std::vector<float> clientData(2048 * 8, 0.0f);
+
+    // Client-memory array 2 for slot 3 (separate, NO overlap -> no merge).
+    std::vector<float> clientData3(4096 * 4, 0.0f);
+
+    // slot 2: a normal GL-buffer attrib (non-streaming)
+    GLBuffer bufNorm;
+    glBindBuffer(GL_ARRAY_BUFFER, bufNorm);
+    const std::vector<float> normData(12, 0.0f);
+    glBufferData(GL_ARRAY_BUFFER, normData.size() * sizeof(float), normData.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // A second, entirely buffer-backed VAO. It streams nothing, so binding it drives
+    // mCurrentActiveStreamingAttribsMask to empty while its reset is applied to itself.
+    GLVertexArray vaoOther;
+    GLBuffer bufOther;
+    glBindVertexArray(vaoOther);
+    glBindBuffer(GL_ARRAY_BUFFER, bufOther);
+    const std::vector<float> otherData(64, 0.0f);
+    glBufferData(GL_ARRAY_BUFFER, otherData.size() * sizeof(float), otherData.data(),
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 16, nullptr);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // default VAO: slots 0, 1, 3 client-memory streaming; slot 2 normal buffer
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 32, clientData.data() + 0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 32, clientData.data() + 4);
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, bufNorm);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 16, nullptr);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 16, clientData3.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Step 1: slots 0+1 active -> client-attrib merge -> single allocation under index 0.
+    // mCurrentArrayBuffers[0] and [1] both point at that one block.
+    // mCurrentActiveStreamingAttribsMask is now {0, 1}.
+    glUseProgram(prog01);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: the bypass. Draw once on the buffer-backed VAO.
+    if (interposeOtherVAO)
+    {
+        glBindVertexArray(vaoOther);
+        glUseProgram(prog0);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        ASSERT_GL_NO_ERROR();
+        glBindVertexArray(0);
+    }
+
+    // Step 3: slot 0 only active, streaming much bigger vertices to trigger backend streaming
+    // buffer reallocation.
+    glUseProgram(prog0);
+    glDrawArrays(GL_TRIANGLES, 0, 1200);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 4: advance the queue serial -> the old block is released and destroyed.
+    glFinish();
+
+    // Step 5: groom, so the freed block is handed back out to a live BufferHelper.
+    glUseProgram(prog3);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+    glDrawArrays(GL_TRIANGLES, 0, 1200);
+    ASSERT_GL_NO_ERROR();
+    glDrawArrays(GL_TRIANGLES, 0, 2400);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 6: slot 2 only active. Slot 2 is buffer-backed, so nothing is streamed, but
+    // getMaxActiveAttribLocation() is 3 and the vertex-buffer dirty-bit handler marks
+    // slots 0..2 as read unconditionally. Slot 1 is read here, and it is stale.
+    glUseProgram(prog2);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+    glFinish();
+}
+
+// Tests that cached pointers in VertexArrayVk are reset if the DynamicBuffer for merged streamed
+// attributes is resized and one of the merged attributes becomes inactive in subsequent draws
+// without rebinding the VAO. See crbug.com/549587685.
+TEST_P(VertexAttributeResizeTest, ResizeMergedStreamedAttribSameVAOControl)
+{
+    RunMergedStreamedAttribResize(false);
+}
+
+// Similar to ResizeMergedStreamedAttribSameVAOControl, except that the active-attrib set narrows
+// while a different VAO is bound.
+TEST_P(VertexAttributeResizeTest, ResizeMergedStreamedAttribSwitchProgramUnderOtherVAO)
+{
+    RunMergedStreamedAttribResize(true);
+}
+
 // Ensure a large offset is not interpreted as negative.
 TEST_P(VertexAttributeTestES3, LargeAttribPointerOffsetNoCrash)
 {

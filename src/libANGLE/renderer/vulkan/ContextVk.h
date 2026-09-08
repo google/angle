@@ -940,6 +940,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void invalidateGraphicsDriverUniforms();
     void invalidateDriverUniforms();
 
+    void updateCurrentActiveStreamingAttribsMask(const gl::Context *context);
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -1594,6 +1596,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // in-flight buffer or not that we need to release at submission time.
     gl::AttribArray<vk::DynamicBuffer> mStreamedVertexBuffers;
     gl::AttributesMask mHasInFlightStreamedVertexBuffers;
+    // The bit is set when the attribute is current actively streamed (using dynamic buffer).
+    gl::AttributesMask mCurrentActiveStreamingAttribsMask;
 
     vk::ImageHelper *mImageWithTileMemory;
 
