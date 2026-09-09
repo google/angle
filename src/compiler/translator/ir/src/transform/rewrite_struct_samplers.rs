@@ -406,6 +406,7 @@ fn extract_sampler(
             Name::new_exact_with_suffix("extractedSampler", *next_sampler_index),
             type_id,
             precision,
+            false,
             Decorations::new(vec![Decoration::Uniform]),
             None,
             None,
