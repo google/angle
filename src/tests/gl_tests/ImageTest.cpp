@@ -2504,6 +2504,16 @@ void ImageTest::ValidationGLEGLImage_helper(const EGLint *attribs)
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, reinterpret_cast<GLeglImageOES>(0xBAADF00D));
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
+    // If the texture is an immutable-format texture, INVALID_OPERATION is generated.
+    if (getClientMajorVersion() >= 3)
+    {
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 4, 4);
+        ASSERT_GL_NO_ERROR();
+
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+
     // <target> must be RENDERBUFFER_OES, and <image> must be the handle of a valid EGLImage
     // resource, cast into the type
     // eglImageOES.

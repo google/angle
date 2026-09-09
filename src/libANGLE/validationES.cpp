@@ -4748,41 +4748,51 @@ bool ValidateEGLImageObject(const Context *context,
 
 bool ValidateEGLImageTargetTexture2DOES(const Context *context,
                                         angle::EntryPoint entryPoint,
-                                        TextureType type,
-                                        egl::ImageID image)
+                                        TextureType targetPacked,
+                                        egl::ImageID imagePacked)
 {
-    switch (type)
+    // Target is valid in the current context.
     {
-        case TextureType::_2D:
-            if (!context->getExtensions().EGLImageOES)
-            {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, ToGLenum(type));
-                return false;
-            }
-            break;
+        const Extensions &extensions = context->getExtensions();
 
-        case TextureType::_2DArray:
-            if (!context->getExtensions().EGLImageArrayEXT)
-            {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, ToGLenum(type));
+        bool validForContext = false;
+        switch (targetPacked)
+        {
+            case TextureType::_2D:
+                validForContext = extensions.EGLImageOES;
+                break;
+            case TextureType::_2DArray:
+                ASSERT(context->getClientVersion() >= ES_3_0 || !extensions.EGLImageArrayEXT);
+                validForContext = extensions.EGLImageArrayEXT;
+                break;
+            case TextureType::External:
+                validForContext = extensions.EGLImageExternalOES;
+                break;
+            default:
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kTargetUnknown);
                 return false;
-            }
-            break;
+        }
 
-        case TextureType::External:
-            if (!context->getExtensions().EGLImageExternalOES)
-            {
-                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, ToGLenum(type));
-                return false;
-            }
-            break;
-
-        default:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTextureTarget);
+        if (ANGLE_UNLIKELY(!validForContext))
+        {
+            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kTextureTargetInvalid, ToGLenum(targetPacked));
             return false;
+        }
     }
 
-    return ValidateEGLImageObject(context, entryPoint, type, image);
+    // Texture bound to target can be redefined.
+    {
+        Texture *texture = context->getTextureByType(targetPacked);
+        ASSERT(texture != nullptr);
+
+        if (ANGLE_UNLIKELY(texture->getImmutableFormat()))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureIsImmutable);
+            return false;
+        }
+    }
+
+    return ValidateEGLImageObject(context, entryPoint, targetPacked, imagePacked);
 }
 
 bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
