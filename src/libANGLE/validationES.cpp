@@ -4786,6 +4786,12 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureIsImmutable);
             return false;
         }
+
+        if (ANGLE_UNLIKELY(!ValidateNotAttachmentWithActivePLS(context, entryPoint, texture->id())))
+        {
+            // Error already generated.
+            return false;
+        }
     }
 
     return ValidateEGLImageObject(context, entryPoint, targetPacked, imagePacked);
@@ -4806,10 +4812,16 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
 
     // Renderbuffer is bound and can be redefined.
     {
-        Renderbuffer *renderbuffer = state.getCurrentRenderbuffer();
-        if (ANGLE_UNLIKELY(renderbuffer == nullptr))
+        const RenderbufferID id = context->getState().getRenderbufferId();
+        if (ANGLE_UNLIKELY(id.value == 0))
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kRenderbufferNotBound);
+            return false;
+        }
+
+        if (ANGLE_UNLIKELY(!ValidateNotAttachmentWithActivePLS(context, entryPoint, id)))
+        {
+            // Error already generated.
             return false;
         }
     }
