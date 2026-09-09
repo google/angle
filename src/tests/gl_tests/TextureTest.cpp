@@ -9360,6 +9360,123 @@ TEST_P(Texture2DArrayTestES3, RedefineLayerCountTo1AndRespecify)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test that changing GL_TEXTURE_BASE_LEVEL to a mip level with fewer layers properly releases
+// storage so that undeclared layers are not sampleable and do not leak stale data.
+TEST_P(Texture2DArrayTestES3, BaseLevelChangeWithFewerLayersReleasesStorage)
+{
+    constexpr GLsizei kLevel0Width         = 4;
+    constexpr GLsizei kLevel0Height        = 4;
+    constexpr GLsizei kLevel0Layers        = 2;
+    constexpr size_t kLevel0PixelsPerLayer = kLevel0Width * kLevel0Height;
+
+    constexpr GLsizei kLevel1Width         = 2;
+    constexpr GLsizei kLevel1Height        = 2;
+    constexpr GLsizei kLevel1Layers        = 1;
+    constexpr size_t kLevel1PixelsPerLayer = kLevel1Width * kLevel1Height;
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Level 0: 4x4 with 2 layers (layer 0 = red, layer 1 = blue)
+    std::vector<GLColor> level0Data(kLevel0PixelsPerLayer * kLevel0Layers);
+    std::fill_n(level0Data.begin(), kLevel0PixelsPerLayer, GLColor::red);
+    std::fill_n(level0Data.begin() + kLevel0PixelsPerLayer, kLevel0PixelsPerLayer, GLColor::blue);
+
+    // Level 1: 2x2 with 1 layer (layer 0 = green)
+    std::vector<GLColor> level1Data(kLevel1PixelsPerLayer * kLevel1Layers, GLColor::green);
+
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kLevel0Width, kLevel0Height, kLevel0Layers, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, level0Data.data());
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, kLevel1Width, kLevel1Height, kLevel1Layers, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, level1Data.data());
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glUniform1i(mTextureArraySliceUniformLocation, 1);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Change base level to 1, which only has 1 layer.
+    // The texture storage must be released and reallocated with ArraySize = 1.
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 1);
+
+    // Layer 0 is declared at level 1 and should sample green.
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Layer 1 is NOT declared at level 1. Because the texture storage was reallocated with only
+    // 1 layer, sampling layer 1 will clamp to layer 0 (green) according to the GLES spec, rather
+    // than reading the stale blue data from layer 1 of the old 2-layer storage.
+    glUniform1i(mTextureArraySliceUniformLocation, 1);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_NE(ReadColor(0, 0), GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that changing GL_TEXTURE_BASE_LEVEL to a mip level with more layers properly releases
+// storage so that newly exposed layers can be sampled.
+TEST_P(Texture2DArrayTestES3, BaseLevelChangeWithMoreLayersReleasesStorage)
+{
+    constexpr GLsizei kLevel0Width         = 4;
+    constexpr GLsizei kLevel0Height        = 4;
+    constexpr GLsizei kLevel0Layers        = 1;
+    constexpr size_t kLevel0PixelsPerLayer = kLevel0Width * kLevel0Height;
+
+    constexpr GLsizei kLevel1Width         = 2;
+    constexpr GLsizei kLevel1Height        = 2;
+    constexpr GLsizei kLevel1Layers        = 2;
+    constexpr size_t kLevel1PixelsPerLayer = kLevel1Width * kLevel1Height;
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Level 0: 4x4 with 1 layer (layer 0 = red)
+    std::vector<GLColor> level0Data(kLevel0PixelsPerLayer * kLevel0Layers, GLColor::red);
+
+    // Level 1: 2x2 with 2 layers (layer 0 = green, layer 1 = blue)
+    std::vector<GLColor> level1Data(kLevel1PixelsPerLayer * kLevel1Layers);
+    std::fill_n(level1Data.begin(), kLevel1PixelsPerLayer, GLColor::green);
+    std::fill_n(level1Data.begin() + kLevel1PixelsPerLayer, kLevel1PixelsPerLayer, GLColor::blue);
+
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kLevel0Width, kLevel0Height, kLevel0Layers, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, level0Data.data());
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, kLevel1Width, kLevel1Height, kLevel1Layers, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, level1Data.data());
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArrayLocation, 0);
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Change base level to 1, which has 2 layers.
+    // The texture storage must be released and reallocated with ArraySize = 2.
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 1);
+
+    // Layer 0 should sample green.
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Layer 1 should sample blue.
+    glUniform1i(mTextureArraySliceUniformLocation, 1);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
 // Create a 2D array texture and update layers with data and test that pruning
 // of superseded updates works as expected.
 TEST_P(Texture2DArrayTestES3, TextureArrayPruneSupersededUpdates)
