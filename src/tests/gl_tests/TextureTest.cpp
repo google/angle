@@ -9184,7 +9184,7 @@ TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensio
     ANGLE_SKIP_TEST_IF(IsNVIDIAShield());
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_3D, m2DArrayTexture);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
     std::vector<GLColor> texDataRed(8u * 8u * 8u, GLColor::red);
     std::vector<GLColor> texDataGreen(2u * 2u * 2u, GLColor::green);
     std::vector<GLColor> texDataCyan(2u * 2u * 2u, GLColor::cyan);
