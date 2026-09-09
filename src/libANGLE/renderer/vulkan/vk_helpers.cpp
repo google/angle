@@ -8267,7 +8267,7 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         // images.  A compute shader is used in such a case to perform the copy.
         UtilsVk &utilsVk = contextVk->getUtils();
 
-        UtilsVk::CopyImageBitsParameters params;
+        UtilsVk::CopyImageBitsParameters params = {};
         params.srcOffset[0]   = srcX;
         params.srcOffset[1]   = srcY;
         params.srcOffset[2]   = srcZ.get();

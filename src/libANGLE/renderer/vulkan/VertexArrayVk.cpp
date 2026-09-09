@@ -796,7 +796,7 @@ angle::Result VertexArrayVk::convertVertexBufferGPU(ContextVk *contextVk,
 
     UtilsVk::OffsetAndVertexCounts additionalOffsetVertexCounts;
 
-    UtilsVk::ConvertVertexParameters params;
+    UtilsVk::ConvertVertexParameters params = {};
     params.srcFormat   = &srcFormat;
     params.dstFormat   = &dstFormat;
     params.srcStride   = srcStride;
