@@ -2644,6 +2644,14 @@ void Display::initializeFrontendFeatures()
 
     ANGLE_FEATURE_CONDITION(&mFrontendFeatures, forceMinimumMaxVertexAttributes, false);
 
+    // Incompatible redefinition of mutable textures is very tricky.  Changing the texture's base
+    // level at the same time makes it much more tricky and is severely untested in dEQP.  There are
+    // numerous GLES driver bugs around this combination of features.  Some backends of ANGLE are
+    // also prone to bugs in this area.  This feature can be used to disallow this combination on
+    // hardened contexts.
+    ANGLE_FEATURE_CONDITION(&mFrontendFeatures,
+                            disallowNonZeroBaseLevelAndIncompatibleLevelsOnHardenedContexts, false);
+
     // When the IR is built, use it by default.
 #ifdef ANGLE_IR
     ANGLE_FEATURE_CONDITION(&mFrontendFeatures, useIr, true);

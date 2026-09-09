@@ -3816,8 +3816,49 @@ bool ValidateCopyTexImageParametersBase(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kFeedbackLoop);
             return false;
         }
+
+        if (!isSubImage && !ValidateHardenedContextTextureLevelRedefine(
+                               context, entryPoint, texture, level, width, height, 1, formatInfo))
+        {
+            // Error already generated
+            return false;
+        }
     }
 
+    return true;
+}
+
+bool ValidateHardenedContextTextureLevelRedefine(const Context *context,
+                                                 angle::EntryPoint entryPoint,
+                                                 const Texture *texture,
+                                                 GLint level,
+                                                 GLsizei width,
+                                                 GLsizei height,
+                                                 GLsizei depth,
+                                                 const InternalFormat &format)
+{
+    ASSERT(context->isHardenedContext());
+
+    // Disallow incompatible redefinition of levels when base level is not zero on hardened contexts
+    // due to widespread bugs.
+    if (texture->getState().getEffectiveBaseLevel() != 0 &&
+        !texture->getState().isCompatibleWithLevelZero(level, width, height, depth, format))
+    {
+        // Warn the application about the problematic usage.
+        context->getState().getDebug().insertMessage(
+            GL_DEBUG_SOURCE_OTHER, GL_DEBUG_TYPE_PORTABILITY, 0xBADDEF, GL_DEBUG_SEVERITY_HIGH,
+            std::string(GetEntryPointName(entryPoint)) +
+                ": Attempting to incompatibly redefine a mutable texture while base level is not "
+                "zero",
+            gl::LOG_WARN);
+        if (context->getFrontendFeatures()
+                .disallowNonZeroBaseLevelAndIncompatibleLevelsOnHardenedContexts.enabled)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
+                                   kIncompatibleLevelWithNonZeroBaseLevelForbidden);
+            return false;
+        }
+    }
     return true;
 }
 
@@ -7326,6 +7367,34 @@ bool ValidateTexParameterBase(const Context *context,
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBaseLevelNonZero);
                 return false;
+            }
+            // Disallow base level changes if the texture has incompatible levels on hardened
+            // contexts due to widespread bugs.
+            if (context->isHardenedContext() && static_cast<GLuint>(params[0]) != 0)
+            {
+                bool anyIncompatibleLevel = false;
+                const GLuint maxLevel =
+                    texture->getState().getMaxPossibleMipmapLevelsFromLevelZero();
+                const uint32_t compatibleLevels =
+                    texture->getState().getCompatibleLevelCount(0, maxLevel, &anyIncompatibleLevel);
+                if (anyIncompatibleLevel || static_cast<GLuint>(params[0]) >= compatibleLevels ||
+                    texture->getState().anyLevelsDefinedAtOrAbove(compatibleLevels, maxLevel))
+                {
+                    context->getState().getDebug().insertMessage(
+                        GL_DEBUG_SOURCE_OTHER, GL_DEBUG_TYPE_PORTABILITY, 0xBADBA5E,
+                        GL_DEBUG_SEVERITY_HIGH,
+                        std::string(GetEntryPointName(entryPoint)) +
+                            ": Attempting to change base level while the mutable texture is "
+                            "inconsistently defined",
+                        gl::LOG_WARN);
+                    if (context->getFrontendFeatures()
+                            .disallowNonZeroBaseLevelAndIncompatibleLevelsOnHardenedContexts
+                            .enabled)
+                    {
+                        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBaseLevelNonZeroForbidden);
+                        return false;
+                    }
+                }
             }
             break;
 

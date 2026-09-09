@@ -125,6 +125,7 @@ enum class Feature
     DisableTiledRendering,
     DisableTimestampQueries,
     DisallowMixedDepthStencilLoadOpNoneAndLoad,
+    DisallowNonZeroBaseLevelAndIncompatibleLevelsOnHardenedContexts,
     DoesSRGBClearsOnLinearFramebufferAttachments,
     DontInitializeUninitializedLocals,
     DontInvalidateIncompleteFBOs,
