@@ -397,7 +397,6 @@ DefaultUniformBlockMtl::~DefaultUniformBlockMtl() = default;
 ProgramExecutableMtl::ProgramExecutableMtl(const gl::ProgramExecutable *executable)
     : ProgramExecutableImpl(executable),
       mProgramHasFlatAttributes(false),
-      mShadowCompareModes{},
       mProgramSerialId(GenerateProgramSerialId())
 {
     mCurrentShaderVariants.fill(nullptr);
@@ -1142,7 +1141,6 @@ angle::Result ProgramExecutableMtl::updateTextures(const gl::Context *glContext,
             mCurrentShaderVariants[shaderType]->translatedSrcInfo
                 ? *mCurrentShaderVariants[shaderType]->translatedSrcInfo
                 : mMslShaderTranslateInfo[shaderType];
-        bool hasDepthSampler = false;
 
         for (uint32_t textureIndex = 0; textureIndex < mExecutable->getSamplerBindings().size();
              ++textureIndex)
@@ -1172,26 +1170,11 @@ angle::Result ProgramExecutableMtl::updateTextures(const gl::Context *glContext,
                     ANGLE_TRY(contextMtl->getIncompleteTexture(glContext, textureType,
                                                                samplerBinding.format, &texture));
                 }
-                const gl::SamplerState *samplerState =
-                    sampler ? &sampler->getSamplerState() : &texture->getSamplerState();
                 TextureMtl *textureMtl = mtl::GetImpl(texture);
-                if (samplerBinding.format == gl::SamplerFormat::Shadow)
-                {
-                    hasDepthSampler                  = true;
-                    ANGLE_UNSAFE_TODO(mShadowCompareModes[textureSlot]) =
-                        mtl::MslGetShaderShadowCompareMode(samplerState->getCompareMode(),
-                                                           samplerState->getCompareFunc());
-                }
                 ANGLE_TRY(textureMtl->bindToShader(glContext, cmdEncoder, shaderType, sampler,
                                                    textureSlot, samplerSlot));
             }  // for array elements
         }      // for sampler bindings
-
-        if (hasDepthSampler)
-        {
-            cmdEncoder->setData(shaderType, mShadowCompareModes,
-                                mtl::kShadowSamplerCompareModesBindingIndex);
-        }
 
         for (const gl::ImageBinding &imageBinding : mExecutable->getImageBindings())
         {
