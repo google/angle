@@ -160,6 +160,7 @@ INIT_DICT = {
 PLS_DISABLE_LIST = {
     "glBeginTransformFeedback",
     "glBindFramebuffer",
+    "glBindImageTexture",
     "glBlitFramebuffer",
     "glCopyTexImage2D",
     "glDiscardFramebufferEXT",

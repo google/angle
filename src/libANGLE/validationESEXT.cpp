@@ -1981,6 +1981,24 @@ bool ValidateBeginAndRestorePixelLocalStorageGlobalState(const Context *context,
         return false;
     }
 
+    // INVALID_OPERATION is generated if the framebuffer default width and height are not zeros.
+    if (ANGLE_UNLIKELY(framebuffer->getDefaultWidth() != 0 || framebuffer->getDefaultHeight() != 0))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSFramebufferDefaultDimensionsNotZero);
+        return false;
+    }
+
+    // INVALID_OPERATION is generated if any image unit overlapping with PLS planes has a texture.
+    const size_t imageUnitsToCheck = std::min(static_cast<size_t>(n), state.getImageUnits().size());
+    for (size_t i = 0; i < imageUnitsToCheck; ++i)
+    {
+        if (ANGLE_UNLIKELY(state.getImageUnits()[i].texture.get() != nullptr))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSImageUnitTextureBound);
+            return false;
+        }
+    }
+
     // INVALID_FRAMEBUFFER_OPERATION is generated if the draw framebuffer has an image attached to
     // any color attachment point on or after:
     //
