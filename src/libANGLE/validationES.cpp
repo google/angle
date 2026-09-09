@@ -4796,42 +4796,55 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
                                                   GLenum target,
                                                   egl::ImageID image)
 {
-    switch (target)
+    if (ANGLE_UNLIKELY(target != GL_RENDERBUFFER))
     {
-        case GL_RENDERBUFFER:
-            break;
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidRenderbufferTarget);
+        return false;
+    }
 
-        default:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidRenderbufferTarget);
+    const State &state = context->getState();
+
+    // Renderbuffer is bound and can be redefined.
+    {
+        Renderbuffer *renderbuffer = state.getCurrentRenderbuffer();
+        if (ANGLE_UNLIKELY(renderbuffer == nullptr))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kRenderbufferNotBound);
             return false;
+        }
     }
 
-    ASSERT(context->getDisplay());
-    if (!context->getDisplay()->isValidImage(image))
+    // EGL image is valid and can be used as a renderbuffer.
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidEGLImage);
-        return false;
-    }
+        const egl::Display *display = context->getDisplay();
+        ASSERT(display != nullptr);
 
-    egl::Image *imageObject = context->getDisplay()->getImage(image);
-    if (!imageObject->isRenderable(context))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEGLImageRenderbufferFormatNotSupported);
-        return false;
-    }
-    const auto &glState = context->getState();
-    if (imageObject->hasProtectedContent() != glState.hasProtectedContent())
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
-                               "Mismatch between Image and Context Protected Content state");
-        return false;
-    }
+        if (ANGLE_UNLIKELY(!display->isValidImage(image)))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidEGLImage);
+            return false;
+        }
 
-    Renderbuffer *renderbuffer = glState.getCurrentRenderbuffer();
-    if (renderbuffer == nullptr)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kRenderbufferNotBound);
-        return false;
+        const egl::Image *imageObject = display->getImage(image);
+
+        if (ANGLE_UNLIKELY(!imageObject->isRenderable(context)))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEGLImageRenderbufferFormatNotSupported);
+            return false;
+        }
+
+        if (ANGLE_UNLIKELY(imageObject->getLevelCount() > 1 ||
+                           imageObject->getExtents().depth > 1 || imageObject->getSamples() > 1))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEGLImageRenderbufferUnsupportedSource);
+            return false;
+        }
+
+        if (ANGLE_UNLIKELY(imageObject->hasProtectedContent() != state.hasProtectedContent()))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEGLImageProtectedStateMismatch);
+            return false;
+        }
     }
 
     return true;
