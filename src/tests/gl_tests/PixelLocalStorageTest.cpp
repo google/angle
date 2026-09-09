@@ -8376,7 +8376,7 @@ TEST_P(PixelLocalStorageValidationTest, ModifyTextureDuringPLS)
 
 #define CHECK_TEXTURE_2D_MODIFICATION(FN) \
     CHECK_TEXTURE_2D_MODIFICATION_MSG(    \
-        FN, "Operation not permitted on an active pixel local storage backing texture.")
+        FN, "Pixel local storage is active and the texture is bound as its plane.")
 
 #define CHECK_TEXTURE_2D_ARRAY_MODIFICATION_MSG(FN, MSG) \
     glBindTexture(GL_TEXTURE_2D_ARRAY, pls2darray);      \
@@ -8389,7 +8389,7 @@ TEST_P(PixelLocalStorageValidationTest, ModifyTextureDuringPLS)
 
 #define CHECK_TEXTURE_2D_ARRAY_MODIFICATION(FN) \
     CHECK_TEXTURE_2D_ARRAY_MODIFICATION_MSG(    \
-        FN, "Operation not permitted on an active pixel local storage backing texture.")
+        FN, "Pixel local storage is active and the texture is bound as its plane.")
 
     std::vector<uint8_t> imageData(H * W * 4);
 

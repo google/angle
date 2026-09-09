@@ -1562,8 +1562,9 @@ bool ValidateRenderbufferStorageParametersBase(const Context *context,
         return false;
     }
 
-    if (!ValidateNoActivePLSConflict(context, entryPoint, id))
+    if (!ValidateNotAttachmentWithActivePLS(context, entryPoint, id))
     {
+        // Error already generated.
         return false;
     }
 
@@ -7099,7 +7100,7 @@ bool ValidateTexParameterBase(const Context *context,
 
     if (context->getState().isTextureBoundToActivePLS(texture->id()))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kActivePLSBackingTexture);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSActiveBackingTextureModification);
         return false;
     }
 
@@ -7970,7 +7971,7 @@ bool ValidateTexStorage(const Context *context,
             return false;
         }
 
-        if (ANGLE_UNLIKELY(!ValidateNoActivePLSConflict(context, entryPoint, texture->id())))
+        if (ANGLE_UNLIKELY(!ValidateNotAttachmentWithActivePLS(context, entryPoint, texture->id())))
         {
             // Error already generated.
             return false;
@@ -8676,34 +8677,33 @@ static bool IsRenderbufferBoundToFramebuffer(const Context *context,
     return false;
 }
 
-bool ValidateNoActivePLSConflict(const Context *context,
-                                 angle::EntryPoint entryPoint,
-                                 TextureID textureId)
+bool ValidateNotAttachmentWithActivePLS(const Context *context,
+                                        angle::EntryPoint entryPoint,
+                                        TextureID textureId)
 {
+    // Immutable-format textures must not reach this function.
+    ASSERT(textureId.value == 0 || !context->getTexture(textureId)->getImmutableFormat());
+    // Non-immutable-format textures cannot be used as PLS planes.
+    ASSERT(!context->getState().isTextureBoundToActivePLS(textureId));
+
     if (context->getState().getPixelLocalStorageActivePlanes() == 0)
     {
         return true;
     }
 
-    if (context->getState().isTextureBoundToActivePLS(textureId))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSActive);
-        return false;
-    }
-
     const Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
-    if (IsTextureBoundToFramebuffer(context, framebuffer, textureId))
+    if (ANGLE_UNLIKELY(IsTextureBoundToFramebuffer(context, framebuffer, textureId)))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSActive);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSActiveTextureAttachmentRedefinition);
         return false;
     }
 
     return true;
 }
 
-bool ValidateNoActivePLSConflict(const Context *context,
-                                 angle::EntryPoint entryPoint,
-                                 RenderbufferID renderbufferId)
+bool ValidateNotAttachmentWithActivePLS(const Context *context,
+                                        angle::EntryPoint entryPoint,
+                                        RenderbufferID renderbufferId)
 {
     if (context->getState().getPixelLocalStorageActivePlanes() == 0)
     {
@@ -8711,9 +8711,9 @@ bool ValidateNoActivePLSConflict(const Context *context,
     }
 
     const Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
-    if (IsRenderbufferBoundToFramebuffer(context, framebuffer, renderbufferId))
+    if (ANGLE_UNLIKELY(IsRenderbufferBoundToFramebuffer(context, framebuffer, renderbufferId)))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSActive);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSActiveRenderbufferAttachmentRedefinition);
         return false;
     }
 
