@@ -2454,6 +2454,10 @@ void GL_APIENTRY GL_GenerateMipmapContextANGLE(GLeglDisplayANGLE dpy,
     {
         TextureType targetPacked = PackParam<TextureType>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {

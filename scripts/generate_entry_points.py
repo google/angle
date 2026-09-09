@@ -167,6 +167,7 @@ PLS_DISABLE_LIST = {
     "glDrawBuffers",
     "glFramebufferMemorylessPixelLocalStorageANGLE",
     "glFramebufferRenderbuffer",
+    "glGenerateMipmap",
     "glInvalidateFramebuffer",
     "glInvalidateSubFramebuffer",
     "glStartTilingQCOM",

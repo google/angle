@@ -2114,11 +2114,6 @@ bool ValidateGenerateMipmapBase(const Context *context,
         return false;
     }
 
-    if (!ValidateNoActivePLSConflict(context, entryPoint, texture->id()))
-    {
-        return false;
-    }
-
     const GLuint effectiveBaseLevel = texture->getTextureState().getEffectiveBaseLevel();
 
     // This error isn't spelled out in the spec in a very explicit way, but we interpret the spec so

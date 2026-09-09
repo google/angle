@@ -3028,6 +3028,7 @@ void PixelLocalStorageTest::doImplicitDisablesTest_TextureAttachments()
     glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
     CHECK_ENDS_PLS_WITH_READ_FBO(
         glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex2D, 0));
+    CHECK_ENDS_PLS(glGenerateMipmap(GL_TEXTURE_2D));
 
     GLTexture tex2DArray;
     glBindTexture(GL_TEXTURE_2D_ARRAY, tex2DArray);
@@ -3046,6 +3047,7 @@ void PixelLocalStorageTest::doImplicitDisablesTest_TextureAttachments()
     glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
     CHECK_ENDS_PLS_WITH_READ_FBO(
         glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray, 0, 0));
+    CHECK_ENDS_PLS(glGenerateMipmap(GL_TEXTURE_2D_ARRAY));
 
     GLTexture tex3d;
     glBindTexture(GL_TEXTURE_3D, tex3d);
@@ -3063,6 +3065,7 @@ void PixelLocalStorageTest::doImplicitDisablesTest_TextureAttachments()
     glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
     CHECK_ENDS_PLS_WITH_READ_FBO(
         glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d, 0, 0));
+    CHECK_ENDS_PLS(glGenerateMipmap(GL_TEXTURE_3D));
 
     if (EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"))
     {
@@ -4862,10 +4865,6 @@ TEST_P(PixelLocalStorageTest, RedefineBoundAttachmentsConflict)
         glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, W, H);
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-        // 3. glGenerateMipmap
-        glGenerateMipmap(GL_TEXTURE_2D);
-        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
         // Attempt to redefine texNonFB (NOT bound to FB) - should succeed
         glBindTexture(GL_TEXTURE_2D, texNonFB);
 
@@ -4873,11 +4872,7 @@ TEST_P(PixelLocalStorageTest, RedefineBoundAttachmentsConflict)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, W, H, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         EXPECT_GL_NO_ERROR();
 
-        // 2. glGenerateMipmap
-        glGenerateMipmap(GL_TEXTURE_2D);
-        EXPECT_GL_NO_ERROR();
-
-        // 3. glTexStorage2D on texNonFBStorage (NOT bound to FB) - should succeed
+        // 2. glTexStorage2D on texNonFBStorage (NOT bound to FB) - should succeed
         glBindTexture(GL_TEXTURE_2D, texNonFBStorage);
         glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, W, H);
         EXPECT_GL_NO_ERROR();
@@ -8403,14 +8398,6 @@ TEST_P(PixelLocalStorageValidationTest, ModifyTextureDuringPLS)
 
     CHECK_TEXTURE_2D_ARRAY_MODIFICATION(glTexSubImage3D(
         GL_TEXTURE_2D_ARRAY, 0, 0, 0, 1, W, H, 1, GL_RGBA, GL_UNSIGNED_BYTE, imageData.data()));
-
-    CHECK_TEXTURE_2D_MODIFICATION_MSG(
-        glGenerateMipmap(GL_TEXTURE_2D),
-        "Operation not permitted while pixel local storage is active.");
-
-    CHECK_TEXTURE_2D_ARRAY_MODIFICATION_MSG(
-        glGenerateMipmap(GL_TEXTURE_2D_ARRAY),
-        "Operation not permitted while pixel local storage is active.");
 
     if (EnsureGLExtensionEnabled("GL_ANGLE_robust_client_memory"))
     {
