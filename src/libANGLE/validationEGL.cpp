@@ -868,22 +868,6 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
                     vkDeviceUuidSpecified = true;
                     break;
 
-                case EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_CGL_ANGLE:
-                    // The property does not have an effect if it's not active, so do not check
-                    // for non-support.
-                    switch (value)
-                    {
-                        case EGL_FALSE:
-                        case EGL_TRUE:
-                            break;
-                        default:
-                            val->setError(EGL_BAD_ATTRIBUTE,
-                                          "Invalid value for "
-                                          "EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_"
-                                          "CGL_ANGLE attrib");
-                            return false;
-                    }
-                    break;
                 case EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE:
                 case EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE:
                     if (!clientExtensions.platformANGLEDeviceId)

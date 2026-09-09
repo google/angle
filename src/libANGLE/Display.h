@@ -35,16 +35,6 @@
 #include "platform/Feature.h"
 #include "platform/autogen/FrontendFeatures_autogen.h"
 
-// Only DisplayCGL needs to be notified about an EGL call about to be made to prepare
-// per-thread data. Disable Display::prepareForCall on other platforms for performance.
-#if !defined(ANGLE_USE_DISPLAY_PREPARE_FOR_CALL)
-#    if ANGLE_ENABLE_CGL
-#        define ANGLE_USE_DISPLAY_PREPARE_FOR_CALL 1
-#    else
-#        define ANGLE_USE_DISPLAY_PREPARE_FOR_CALL 0
-#    endif
-#endif
-
 namespace angle
 {
 class FrameCaptureShared;
@@ -127,13 +117,6 @@ class Display final : public LabeledObject,
         EnumCount = InvalidEnum,
     };
     Error terminate(Thread *thread, TerminateReason terminateReason);
-
-#if ANGLE_USE_DISPLAY_PREPARE_FOR_CALL
-    // Called before all display state dependent EGL functions. Backends can set up, for example,
-    // thread-specific backend state through this function. Not called for functions that do not
-    // need the state.
-    Error prepareForCall();
-#endif
 
     // Called on eglReleaseThread. Backends can tear down thread-specific backend state through
     // this function.

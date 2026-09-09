@@ -1393,17 +1393,6 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     return NoError();
 }
 
-#if ANGLE_USE_DISPLAY_PREPARE_FOR_CALL
-Error Display::prepareForCall()
-{
-    if (!mInitialized)
-    {
-        return NoError();
-    }
-    return mImplementation->prepareForCall();
-}
-#endif
-
 Error Display::releaseThread()
 {
     // Need to check if initialized, because makeCurrent() may terminate the Display.
@@ -2261,10 +2250,6 @@ static ClientExtensions GenerateClientExtensions()
 
 #if defined(ANGLE_PLATFORM_LINUX)
     extensions.platformANGLEDeviceTypeEGLANGLE = true;
-#endif
-
-#if defined(ANGLE_ENABLE_CGL)
-    extensions.platformANGLEDeviceContextVolatileCgl = true;
 #endif
 
 #if defined(ANGLE_ENABLE_METAL)

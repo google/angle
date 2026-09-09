@@ -138,11 +138,6 @@
 #define EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_EAGL_ANGLE 0x34A2
 #endif /* EGL_ANGLE_platform_angle_device_context_volatile_eagl */
 
-#ifndef EGL_ANGLE_platform_angle_device_context_volatile_cgl
-#define EGL_ANGLE_platform_angle_device_context_volatile_cgl 1
-#define EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_CGL_ANGLE 0x34A3
-#endif /* EGL_ANGLE_platform_angle_device_context_volatile_cgl */
-
 #ifndef EGL_ANGLE_platform_angle_device_id
 #define EGL_ANGLE_platform_angle_device_id
 #define EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE 0x34D6

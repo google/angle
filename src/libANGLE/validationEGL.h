@@ -209,14 +209,6 @@ typename std::remove_reference<PackedT>::type PackParam(FromT from)
         }                                                                 \
     } while (0)
 
-#if ANGLE_USE_DISPLAY_PREPARE_FOR_CALL
-#    define ANGLE_EGL_TRY_PREPARE_FOR_CALL_RETURN ANGLE_EGL_TRY_RETURN
-#    define ANGLE_EGL_TRY_PREPARE_FOR_CALL ANGLE_EGL_TRY
-#else
-#    define ANGLE_EGL_TRY_PREPARE_FOR_CALL_RETURN(...)
-#    define ANGLE_EGL_TRY_PREPARE_FOR_CALL(...)
-#endif
-
 #define ANGLE_EGLBOOLEAN_TRY(EXPR)           \
     do                                       \
     {                                        \
