@@ -1818,6 +1818,9 @@ TEST_P(FramebufferTest_ES3, ClearTextureActiveRenderAttachmentColorOtherLevel)
 
     ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
     // just add components
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE);
