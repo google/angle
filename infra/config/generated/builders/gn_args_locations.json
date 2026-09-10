@@ -77,6 +77,7 @@
     "angle-try-mac-x64-intel-uhd630-rel": "try/angle-try-mac-x64-intel-uhd630-rel/gn-args.json",
     "angle-try-mac-x64-ir-rel": "try/angle-try-mac-x64-ir-rel/gn-args.json",
     "angle-try-win-arm64-qualcomm-snapdragon-x-elite-rel": "try/angle-try-win-arm64-qualcomm-snapdragon-x-elite-rel/gn-args.json",
+    "angle-try-win-x64-amd-5500xt-rel": "try/angle-try-win-x64-amd-5500xt-rel/gn-args.json",
     "angle-try-win-x64-intel-uhd630-exp-rel": "try/angle-try-win-x64-intel-uhd630-exp-rel/gn-args.json",
     "angle-try-win-x64-intel-uhd630-rel": "try/angle-try-win-x64-intel-uhd630-rel/gn-args.json",
     "angle-try-win-x64-intel-uhd770-rel": "try/angle-try-win-x64-intel-uhd770-rel/gn-args.json",

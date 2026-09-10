@@ -1959,6 +1959,43 @@ ci.thin_tester(
 )
 
 ci.thin_tester(
+    name = "angle-win-x64-amd-5500xt-rel",
+    description_html = "Tests release ANGLE on Win/x64 on AMD RX 5500XT GPUs",
+    parent = "angle-win-x64-builder-rel",
+    builder_spec = builder_config.builder_spec(
+        execution_mode = builder_config.execution_mode.TEST,
+        gclient_config = builder_config.gclient_config(
+            config = "angle_nointernal",
+        ),
+        chromium_config = builder_config.chromium_config(
+            config = "angle_clang",
+            build_config = builder_config.build_config.RELEASE,
+            target_arch = builder_config.target_arch.INTEL,
+            target_bits = 64,
+            target_platform = builder_config.target_platform.WIN,
+        ),
+        use_test_trigger_cas = True,
+        run_tests_serially = True,
+    ),
+    targets = targets.bundle(
+        targets = [
+            # TODO(crbug.com/559347434): Enable tests.
+        ],
+        mixins = [
+            "win11_amd_rx_5500_xt_stable",
+        ],
+    ),
+    targets_settings = targets.settings(
+        browser_config = targets.browser_config.RELEASE,
+        os_type = targets.os_type.WINDOWS,
+    ),
+    console_view_entry = consoles.console_view_entry(
+        category = "test|win|x64|rel",
+        short_name = "5500",
+    ),
+)
+
+ci.thin_tester(
     name = "angle-win-x64-intel-uhd630-exp-rel",
     description_html = "Tests release ANGLE on Win/x64 on experimental configs of Intel UHD 630 GPUs",
     parent = "angle-win-x64-builder-rel",

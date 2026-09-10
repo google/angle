@@ -1,4 +1,5 @@
 {
+  "angle-win-x64-amd-5500xt-rel": {},
   "angle-win-x64-intel-uhd630-exp-rel": {},
   "angle-win-x64-intel-uhd630-rel": {
     "gtest_tests": [

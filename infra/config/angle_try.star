@@ -691,6 +691,16 @@ gpu.try_.win_manual_builder(
     gn_args = "ci/angle-win-arm64-builder-rel",
 )
 
+gpu.try_.win_manual_builder(
+    name = "angle-try-win-x64-amd-5500xt-rel",
+    description_html = "Tests release ANGLE on Win/x64 on AMD RX 5500XT GPUs. Manual only.",
+    mirrors = [
+        "ci/angle-win-x64-builder-rel",
+        "ci/angle-win-x64-amd-5500xt-rel",
+    ],
+    gn_args = "ci/angle-win-x64-builder-rel",
+)
+
 # This is effectively a copy of angle-cq-win-x64-rel, but manual-only and
 # with the angle_ir GN arg config set. Mirroring is done in this way instead
 # of having CI builders because we do not have a need for the CI builders and
