@@ -3960,7 +3960,17 @@ angle::Result DynamicDescriptorPool::getOrAllocateDescriptorSet(
     ASSERT(context->getFeatures().descriptorSetCache.enabled);
     bool success;
 
-    // First scan the descriptorSet cache.
+    // If desc matches the most recently resolved entry, reuse it directly without hashing
+    // desc or probing mDescriptorSetCache.
+    if (!mLRUList.empty() && mLRUList.front().sharedCacheKey->getDesc() == desc)
+    {
+        *descriptorSetOut = mLRUList.front().descriptorSet;
+        ASSERT(!(*newSharedCacheKeyOut));
+        mCacheStats.hit();
+        return angle::Result::Continue;
+    }
+
+    // Scan the descriptorSet cache.
     DescriptorSetLRUListIterator listIterator;
     if (mDescriptorSetCache.getDescriptorSet(desc, &listIterator))
     {
