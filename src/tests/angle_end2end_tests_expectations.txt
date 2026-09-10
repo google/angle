@@ -644,7 +644,6 @@
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelCopyTexImageSrcDst/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelTexSubImageDstWithUnpackSlow/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelBlitDst/* = SKIP
-556789073 WIN D3D11 : Texture2DTestES3RobustInit.CopyTexImageOutOfBoundsSelf/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
