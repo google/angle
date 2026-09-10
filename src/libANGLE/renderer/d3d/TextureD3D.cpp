@@ -1054,6 +1054,8 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
             image->markClean();
         }
 
+        mTexStorage->markLevelDirty(index.getLevelIndex());
+
         return angle::Result::Continue;
     }
 

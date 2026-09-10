@@ -62,8 +62,8 @@ class TextureStorage11 : public TextureStorage
                                const d3d11::SharedSRV **outSRV);
     angle::Result generateSwizzles(const gl::Context *context,
                                    const gl::TextureState &textureState);
-    void markLevelDirty(int mipLevel);
-    void markDirty();
+    void markLevelDirty(int mipLevel) override;
+    void markDirty() override;
 
     angle::Result updateSubresourceLevel(const gl::Context *context,
                                          const TextureHelper11 &texture,
@@ -191,7 +191,9 @@ class TextureStorage11 : public TextureStorage
                                             const TextureHelper11 &texture,
                                             d3d11::SharedUAV *outUAV) = 0;
 
-    void verifySwizzleExists(const gl::SwizzleState &swizzleState);
+    void verifySwizzleExists(const gl::SwizzleState &swizzleState,
+                             unsigned int baseLevel,
+                             unsigned int mipLevels);
 
     // Clear all cached non-swizzle SRVs and invalidate the swizzle cache.
     void clearSRVCache();
