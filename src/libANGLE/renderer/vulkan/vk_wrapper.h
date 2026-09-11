@@ -365,7 +365,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                        uint32_t size,
                        const void *data);
 
-    void setBlendConstants(const float blendConstants[4]);
+    void setBlendConstants(const gl::ColorF &blendConstants);
     void setCullMode(VkCullModeFlags cullMode);
     void setDepthBias(float depthBiasConstantFactor,
                       float depthBiasClamp,
@@ -1134,10 +1134,10 @@ ANGLE_INLINE void CommandBuffer::pushConstants(const PipelineLayout &layout,
     VK_CALL(vkCmdPushConstants, mHandle, layout.getHandle(), flag, offset, size, data);
 }
 
-ANGLE_INLINE void CommandBuffer::setBlendConstants(const float blendConstants[4])
+ANGLE_INLINE void CommandBuffer::setBlendConstants(const gl::ColorF &blendConstants)
 {
     ASSERT(valid());
-    VK_SECONDARY_CMD_CALL(vkCmdSetBlendConstants(mHandle, blendConstants));
+    VK_SECONDARY_CMD_CALL(vkCmdSetBlendConstants(mHandle, blendConstants.data()));
 }
 
 ANGLE_INLINE void CommandBuffer::setCullMode(VkCullModeFlags cullMode)

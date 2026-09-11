@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_RENDERER_D3D_TEXTURED3D_H_
 #define LIBANGLE_RENDERER_D3D_TEXTURED3D_H_
 
+#include <array>
 #include <functional>
 
 #include "common/Color.h"
@@ -785,8 +786,8 @@ class TextureD3D_2DArray : public TextureD3D
     // to update all the texture layers since they cannot all be updated at once and it makes the
     // most sense for the Image class to not have to worry about layer subresource as well as mip
     // subresources.
-    GLsizei mLayerCounts[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-    ImageD3D **mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    std::array<GLsizei, gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS> mLayerCounts                = {};
+    std::array<std::vector<ImageD3D *>, gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS> mImageArray = {};
 };
 
 // Base class for immutable textures. These don't support manipulation of individual texture images.

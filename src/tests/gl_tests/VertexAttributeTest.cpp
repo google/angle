@@ -974,13 +974,13 @@ void main() {
         }
 
         // Setup vertex array data for the i-th column
-        GLfloat data[16]{};
+        std::array<GLfloat, 16> data = {};
         data[0 * 4 + i] = 1.0;
         data[1 * 4 + i] = 1.0;
         data[2 * 4 + i] = 1.0;
         data[3 * 4 + i] = 1.0;
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(data), data.data(), GL_STATIC_DRAW);
         glVertexAttribPointer(1 + i, 4, GL_FLOAT, GL_FALSE, 0, reinterpret_cast<void *>(0));
         glEnableVertexAttribArray(1 + i);
         ASSERT_GL_NO_ERROR();
@@ -4465,7 +4465,7 @@ TEST_P(VertexAttributeTestES31, MismatchingSignsChangingAttributeType)
     GLint colorScaleLoc = glGetUniformLocation(program, "colorScale");
     ASSERT_NE(-1, colorScaleLoc);
 
-    GLuint data[15][4][4];
+    std::array<std::array<std::array<GLuint, 4>, 4>, 15> data;
     for (GLuint i = 0; i < 15; ++i)
     {
         for (GLuint j = 0; j < 4; ++j)
@@ -4480,7 +4480,7 @@ TEST_P(VertexAttributeTestES31, MismatchingSignsChangingAttributeType)
 
     GLBuffer buffer;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(data), data.data(), GL_STATIC_DRAW);
 
     // Randomly match and mismatch the component type
     uint16_t signedMask = setupVertexAttribPointersForMismatchSignsTest(0x0FA5, 0x7FFF);
@@ -4548,7 +4548,7 @@ TEST_P(VertexAttributeTestES31, MismatchingSignsChangingProgramType)
         ASSERT_GL_NO_ERROR();
     }
 
-    GLuint data[15][4][4];
+    std::array<std::array<std::array<GLuint, 4>, 4>, 15> data;
     for (GLuint i = 0; i < 15; ++i)
     {
         for (GLuint j = 0; j < 4; ++j)
@@ -4563,7 +4563,7 @@ TEST_P(VertexAttributeTestES31, MismatchingSignsChangingProgramType)
 
     GLBuffer buffer;
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(data), data.data(), GL_STATIC_DRAW);
 
     // Randomly match and mismatch the component type
     setupVertexAttribPointersForMismatchSignsTest(0x55F8, 0x7FFF);

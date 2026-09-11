@@ -18,6 +18,7 @@
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include <EGL/eglext.h>
+#include <array>
 #include <fstream>
 
 #include "common/debug.h"
@@ -1974,7 +1975,7 @@ VkResult RetrieveDeviceLostInfoFromDevice(VkDevice device,
                                           VkPhysicalDeviceFaultFeaturesEXT faultFeatures)
 {
     // For VkDeviceFaultAddressTypeEXT in VK_EXT_device_fault
-    constexpr const char *kDeviceFaultAddressTypeMessage[] = {
+    constexpr std::array kDeviceFaultAddressTypeMessage = {
         "None",
         "InvalidRead",
         "InvalidWrite",

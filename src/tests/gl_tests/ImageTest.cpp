@@ -11,6 +11,8 @@
 #    pragma allow_unsafe_buffers
 #endif
 
+#include <array>
+
 #include "test_utils/ANGLETest.h"
 #include "test_utils/MultiThreadSteps.h"
 #include "test_utils/gl_raii.h"
@@ -82,9 +84,9 @@ GLubyte kLinearColorCube[] = {75, 135, 205, 255, 201, 89,  133, 255, 111, 201, 1
                               30, 90,  230, 255, 180, 210, 70,  255, 77,  111, 99,  255};
 GLubyte kSrgbColorCube[]   = {148, 192, 232, 255, 230, 159, 191, 255, 176, 230, 174, 255,
                               96,  160, 244, 255, 219, 234, 143, 255, 149, 176, 167, 255};
-GLfloat kCubeFaceX[]       = {1.0, -1.0, 0.0, 0.0, 0.0, 0.0};
-GLfloat kCubeFaceY[]       = {0.0, 0.0, 1.0, -1.0, 0.0, 0.0};
-GLfloat kCubeFaceZ[]       = {0.0, 0.0, 0.0, 0.0, 1.0, -1.0};
+constexpr std::array<GLfloat, 6> kCubeFaceX = {1.0, -1.0, 0.0, 0.0, 0.0, 0.0};
+constexpr std::array<GLfloat, 6> kCubeFaceY = {0.0, 0.0, 1.0, -1.0, 0.0, 0.0};
+constexpr std::array<GLfloat, 6> kCubeFaceZ = {0.0, 0.0, 0.0, 0.0, 1.0, -1.0};
 // YUV texture data - ensure they are narrow range compatible values
 GLubyte kYUVColorBlackY[]   = {16, 16, 16, 16};
 GLubyte kYUVColorBlackCb[]  = {128};
@@ -8970,7 +8972,7 @@ TEST_P(ImageTest, MipLevels)
     const std::vector<GLColor> mip0Data(kTextureSize * kTextureSize, GLColor::red);
     const std::vector<GLColor> mip1Data(mip0Data.size() >> 2, GLColor::green);
     const std::vector<GLColor> mip2Data(mip0Data.size() >> 4, GLColor::blue);
-    const GLColor *data[kMipLevels] = {
+    std::array<const GLColor *, kMipLevels> data = {
         mip0Data.data(),
         mip1Data.data(),
         mip2Data.data(),
@@ -9062,7 +9064,7 @@ TEST_P(ImageTestES3, MipLevelsNonZeroBaseLevel)
     const std::vector<GLColor> mip0Data(kTextureSize * kTextureSize, GLColor::red);
     const std::vector<GLColor> mip1Data(mip0Data.size() >> 2, GLColor::green);
     const std::vector<GLColor> mip2Data(mip0Data.size() >> 4, GLColor::blue);
-    const GLColor *data[kMipLevels] = {
+    std::array<const GLColor *, kMipLevels> data = {
         mip0Data.data(),
         mip1Data.data(),
         mip2Data.data(),
@@ -9618,7 +9620,7 @@ TEST_P(ImageTest, SourceCubeAndSameTargetTextureWithEachCubeFace)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     ASSERT_GL_NO_ERROR();
 
-    EGLImageKHR images[6];
+    std::array<EGLImageKHR, 6> images;
     GLTexture targetTexture;
     glBindTexture(GL_TEXTURE_2D, targetTexture);
 

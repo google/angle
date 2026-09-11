@@ -615,7 +615,9 @@ class Texture2DBaseMaxTestES3 : public ANGLETest<>
     }
 
     template <typename colorType = GLColor>
-    void fillMipData(colorType *data, size_t mip0Size, const colorType mipColors[kMipCount])
+    void fillMipData(colorType *data,
+                     size_t mip0Size,
+                     const std::array<colorType, kMipCount> &mipColors)
     {
         for (size_t mip = 0; mip < kMipCount; ++mip)
         {
@@ -644,7 +646,7 @@ class Texture2DBaseMaxTestES3 : public ANGLETest<>
         glBindTexture(GL_TEXTURE_2D, mTexture);
 
         std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
-        fillMipData(mipData.data(), kMip0Size, kMipColors.data());
+        fillMipData(mipData.data(), kMip0Size, kMipColors);
 
         if (immutable)
         {
@@ -6877,7 +6879,7 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
-    fillMipData(mipData.data(), kMip0Size, kMipColors.data());
+    fillMipData(mipData.data(), kMip0Size, kMipColors);
 
     for (size_t mip = 1; mip < kMipCount; ++mip)
     {
@@ -6986,7 +6988,7 @@ TEST_P(Texture2DBaseMaxTestES3, SubImageAfterRedefine)
         GLColor(0, 127, 0, 255),
     };
     std::array<GLColor, getTotalMipDataSize(kMip0Size * 2)> newMipData;
-    fillMipData(newMipData.data(), kMip0Size * 2, kNewMipColors.data());
+    fillMipData(newMipData.data(), kMip0Size * 2, kNewMipColors);
 
     const std::array<GLColor, kMipCount> kSubImageMipColors = {
         GLColor(0, 0, 127, 255),
@@ -6995,7 +6997,7 @@ TEST_P(Texture2DBaseMaxTestES3, SubImageAfterRedefine)
         GLColor(127, 0, 127, 255),
     };
     std::array<GLColor, getTotalMipDataSize(kMip0Size)> subImageMipData;
-    fillMipData(subImageMipData.data(), kMip0Size, kSubImageMipColors.data());
+    fillMipData(subImageMipData.data(), kMip0Size, kSubImageMipColors);
 
     for (size_t mip = 0; mip < kMipCount; ++mip)
     {
@@ -7087,7 +7089,7 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
     };
 
     std::array<GLColor32F, getTotalMipDataSize(kMip0Size)> newMipData;
-    fillMipData(newMipData.data(), kMip0Size, kNewMipColors.data());
+    fillMipData(newMipData.data(), kMip0Size, kNewMipColors);
 
     // Redefine every level with the new format.
     for (size_t mip = 0; mip < kMipCount; ++mip)
@@ -7445,7 +7447,7 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineMutableToImmutable)
 
     glTexStorage2D(GL_TEXTURE_2D, kMipCount, GL_RGBA8, kMip0Size, kMip0Size);
     std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
-    fillMipData(mipData.data(), kMip0Size, kNewMipColors.data());
+    fillMipData(mipData.data(), kMip0Size, kNewMipColors);
     for (size_t mip = 0; mip < kMipCount; ++mip)
     {
         glTexSubImage2D(GL_TEXTURE_2D, mip, 0, 0, kMip0Size >> mip, kMip0Size >> mip, GL_RGBA,
@@ -21358,7 +21360,7 @@ TEST_P(CopyImageTestES31, InvalidTarget)
     //   - is TEXTURE_BUFFER, or
     //   - is one of the cubemap face selectors described in table 3.17,
     // if the target does not match the type of the object.
-    GLenum invalidTargets[] = {
+    constexpr std::array<GLenum, 8> invalidTargets = {
         GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
         GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
         GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
@@ -21366,13 +21368,12 @@ TEST_P(CopyImageTestES31, InvalidTarget)
     };
     GLTexture texSrc;
     GLTexture texDest;
-    const uint32_t invalidTargetsSize = sizeof(invalidTargets) / sizeof((invalidTargets)[0]);
-    for (uint32_t i = 0; i < invalidTargetsSize; ++i)
+    for (GLenum srcTarget : invalidTargets)
     {
-        for (uint32_t j = 0; j < invalidTargetsSize; ++j)
+        for (GLenum dstTarget : invalidTargets)
         {
-            glCopyImageSubDataEXT(texSrc, invalidTargets[i], 0, 0, 0, 0, texDest, invalidTargets[j],
-                                  0, 0, 0, 0, 1, 1, 1);
+            glCopyImageSubDataEXT(texSrc, srcTarget, 0, 0, 0, 0, texDest, dstTarget, 0, 0, 0, 0, 1,
+                                  1, 1);
             EXPECT_GL_ERROR(GL_INVALID_ENUM);
         }
     }
@@ -25312,7 +25313,7 @@ class Texture2DTestES3_ResetTexStorage2DBaseLevel : public Texture2DBaseMaxTestE
 TEST_P(Texture2DTestES3_ResetTexStorage2DBaseLevel, TexStorage2DWithNonZeroBaseLevel)
 {
     constexpr uint32_t kBaseLevel          = 1;
-    const GLColor kNewMipColors[kMipCount] = {
+    const std::array<GLColor, kMipCount> kNewMipColors = {
         GLColor::yellow,
         GLColor::cyan,
         GLColor::white,

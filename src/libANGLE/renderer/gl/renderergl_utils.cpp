@@ -67,10 +67,9 @@ bool IsMesa(const FunctionsGL *functions, std::array<int, 3> *version)
         return false;
     }
 
-    int *data = version->data();
-    ANGLE_UNSAFE_TODO(data[0] = data[1] = data[2] = 0);
-    ANGLE_UNSAFE_TODO(
-        std::sscanf(nativeVersionString.c_str() + pos, "Mesa %d.%d.%d", data, data + 1, data + 2));
+    version->fill(0);
+    ANGLE_UNSAFE_TODO(std::sscanf(nativeVersionString.c_str() + pos, "Mesa %d.%d.%d",
+                                  &(*version)[0], &(*version)[1], &(*version)[2]));
 
     return true;
 }
@@ -723,9 +722,9 @@ static GLint QuerySingleIndexGLInt(const FunctionsGL *functions, GLenum name, GL
 
 static GLint QueryGLIntRange(const FunctionsGL *functions, GLenum name, size_t index)
 {
-    GLint result[2] = {};
-    functions->getIntegerv(name, result);
-    return ANGLE_UNSAFE_TODO(result[index]);
+    std::array<GLint, 2> result = {};
+    functions->getIntegerv(name, result.data());
+    return result[index];
 }
 
 static GLint64 QuerySingleGLInt64(const FunctionsGL *functions, GLenum name)

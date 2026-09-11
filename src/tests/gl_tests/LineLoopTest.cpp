@@ -4,6 +4,8 @@
 // found in the LICENSE file.
 //
 
+#include <array>
+
 #include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 
@@ -198,8 +200,8 @@ TEST_P(LineLoopTest, LineLoopUByteIndicesBlend)
     // This doesn't occur on Windows 10 (Version 1511) though.
     ignoreD3D11SDKLayersWarnings();
 
-    static const GLubyte indices[] = {0, 7, 6, 9, 8, 0};
-    runTestBlend(GL_UNSIGNED_BYTE, 0, ANGLE_UNSAFE_TODO(indices + 1));
+    static const std::array<GLubyte, 6> indices = {0, 7, 6, 9, 8, 0};
+    runTestBlend(GL_UNSIGNED_BYTE, 0, &indices[1]);
 }
 
 // Line loop test that draws a loop and a strip, blends the colors, and checks they're correct. No
@@ -209,8 +211,8 @@ TEST_P(LineLoopTest, LineLoopUShortIndicesBlend)
     // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
     ignoreD3D11SDKLayersWarnings();
 
-    static const GLushort indices[] = {0, 7, 6, 9, 8, 0};
-    runTestBlend(GL_UNSIGNED_SHORT, 0, ANGLE_UNSAFE_TODO(indices + 1));
+    static const std::array<GLushort, 6> indices = {0, 7, 6, 9, 8, 0};
+    runTestBlend(GL_UNSIGNED_SHORT, 0, &indices[1]);
 }
 
 // Line loop test that draws a loop and a strip, blends the colors, and checks they're correct. No
@@ -225,8 +227,8 @@ TEST_P(LineLoopTest, LineLoopUIntIndicesBlend)
     // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
     ignoreD3D11SDKLayersWarnings();
 
-    static const GLuint indices[] = {0, 7, 6, 9, 8, 0};
-    runTestBlend(GL_UNSIGNED_INT, 0, ANGLE_UNSAFE_TODO(indices + 1));
+    static const std::array<GLuint, 6> indices = {0, 7, 6, 9, 8, 0};
+    runTestBlend(GL_UNSIGNED_INT, 0, &indices[1]);
 }
 
 // Line loop test that draws a loop and a strip, blends the colors, and checks they're correct.
@@ -291,8 +293,8 @@ TEST_P(LineLoopTest, LineLoopUByteIndicesNoBlend)
     // This doesn't occur on Windows 10 (Version 1511) though.
     ignoreD3D11SDKLayersWarnings();
 
-    static const GLubyte indices[] = {0, 7, 6, 9, 8, 0};
-    runTestNoBlend(GL_UNSIGNED_BYTE, 0, ANGLE_UNSAFE_TODO(indices + 1));
+    static const std::array<GLubyte, 6> indices = {0, 7, 6, 9, 8, 0};
+    runTestNoBlend(GL_UNSIGNED_BYTE, 0, &indices[1]);
 }
 
 // Line loop test that draws a loop, reads it, then a strip, reads it, and confirms the pixels are
@@ -302,8 +304,8 @@ TEST_P(LineLoopTest, LineLoopUShortIndicesNoBlend)
     // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
     ignoreD3D11SDKLayersWarnings();
 
-    static const GLushort indices[] = {0, 7, 6, 9, 8, 0};
-    runTestNoBlend(GL_UNSIGNED_SHORT, 0, ANGLE_UNSAFE_TODO(indices + 1));
+    static const std::array<GLushort, 6> indices = {0, 7, 6, 9, 8, 0};
+    runTestNoBlend(GL_UNSIGNED_SHORT, 0, &indices[1]);
 }
 
 // Line loop test that draws a loop, reads it, then a strip, reads it, and confirms the pixels are
@@ -318,8 +320,8 @@ TEST_P(LineLoopTest, LineLoopUIntIndicesNoBlend)
     // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
     ignoreD3D11SDKLayersWarnings();
 
-    static const GLuint indices[] = {0, 7, 6, 9, 8, 0};
-    runTestNoBlend(GL_UNSIGNED_INT, 0, ANGLE_UNSAFE_TODO(indices + 1));
+    static const std::array<GLuint, 6> indices = {0, 7, 6, 9, 8, 0};
+    runTestNoBlend(GL_UNSIGNED_INT, 0, &indices[1]);
 }
 
 // Line loop test that draws a loop, reads it, then a strip, reads it, and confirms the pixels are
@@ -962,14 +964,14 @@ void main()
     ASSERT_GL_NO_ERROR();
 
     // clang-format off
-    constexpr GLfloat vertices[] = {
+    constexpr auto vertices = std::to_array<GLfloat>({
         0.1, 0.1, -0.1, 0.1, -0.1, -0.1, 0.1, -0.1,
         0.1, 0.1, -0.1, 0.1, -0.1, -0.1, 0.1, -0.1,
         0.1, 0.1, -0.1, 0.1, -0.1, -0.1, 0.1, -0.1,
         0.1, 0.1, -0.1, 0.1, -0.1, -0.1, 0.1, -0.1,
-    };
+    });
 
-    constexpr GLfloat transform[] = {
+    constexpr auto transform = std::to_array<GLfloat>({
         // first loop transform
         0, 0, 9,
         0, 0, 9,
@@ -990,7 +992,7 @@ void main()
         -0.8, -0.5, 1,
         -0.8, -0.5, 1,
         -0.8, -0.5, 1,
-    };
+    });
 
     constexpr GLushort lineloopAsStripIndices[] = {
         // first strip
@@ -1028,9 +1030,8 @@ void main()
 
     for (int loop = 0; loop < 4; ++loop)
     {
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, ANGLE_UNSAFE_TODO(vertices + 8 * loop));
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0,
-                              ANGLE_UNSAFE_TODO(transform + 12 * loop));
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, &vertices[8 * loop]);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, &transform[12 * loop]);
 
         glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_SHORT, lineloopAsStripIndices);
     }
@@ -1050,12 +1051,12 @@ void main()
                  lineloopWithRestartIndices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(transform), transform, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(transform), transform.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
@@ -1147,14 +1148,14 @@ void main()
     ASSERT_GL_NO_ERROR();
 
     // clang-format off
-    constexpr GLfloat vertices[] = {
+    constexpr auto vertices = std::to_array<GLfloat>({
         0.1, 0.1, -0.1, 0.1, -0.1, -0.1, 0.1, -0.1,
         0.4, 0.1, -0.5, 0.1, -0.6, -0.1, 0.7, -0.1,
         0.8, 0.1, -0.9, 0.1, -1.0, -0.1, 1.1, -0.1,
         0.1, 0.1, -0.1, 0.1, -0.1, -0.1, 0.1, -0.1,
-    };
+    });
 
-    constexpr GLfloat transform[] = {
+    constexpr auto transform = std::to_array<GLfloat>({
         // first loop transform
         0, 0, 9,
         0, 0, 9,
@@ -1175,7 +1176,7 @@ void main()
         -0.8, -0.5, 1,
         -0.8, -0.5, 1,
         -0.8, -0.5, 1,
-    };
+    });
 
     constexpr GLushort lineloopAsStripIndices[] = {
         // first strip
@@ -1210,9 +1211,8 @@ void main()
 
     for (int loop = 1; loop < 3; ++loop)
     {
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, ANGLE_UNSAFE_TODO(vertices + 8 * loop));
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0,
-                              ANGLE_UNSAFE_TODO(transform + 12 * loop));
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, &vertices[8 * loop]);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, &transform[12 * loop]);
 
         glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_SHORT, lineloopAsStripIndices);
     }
@@ -1232,19 +1232,19 @@ void main()
                  lineloopWithRestartIndices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(transform), transform, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(transform), transform.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
     // For xfb
-    const GLfloat expected[16] = {0.4, -0.5, -0.5, -0.6, -0.6, 0.7, 0.7, 0.4,
-                                  0.8, -0.9, -0.9, -1.0, -1.0, 1.1, 1.1, 0.8};
-    unsigned expected_count    = sizeof(expected) / sizeof(expected[0]);
+    const std::array<GLfloat, 16> expected = {0.4, -0.5, -0.5, -0.6, -0.6, 0.7, 0.7, 0.4,
+                                              0.8, -0.9, -0.9, -1.0, -1.0, 1.1, 1.1, 0.8};
+    unsigned expected_count                = expected.size();
     GLuint xfbBuffer;
     glGenBuffers(1, &xfbBuffer);
     glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
@@ -1282,8 +1282,7 @@ void main()
         for (unsigned j = 0; j < expected_count; j++)
         {
             ANGLE_UNSAFE_TODO(EXPECT_EQ(mappedBufferData[j], expected[j]))
-                << "Expected pixel at " << j << " to be " << ANGLE_UNSAFE_TODO(expected[j])
-                << std::endl;
+                << "Expected pixel at " << j << " to be " << expected[j] << std::endl;
         }
     }
 

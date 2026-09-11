@@ -1999,8 +1999,7 @@ angle::Result FramebufferVk::generateFragmentShadingRateWithCompute(
     for (const gl::FocalPoint &focalPoint : activeFocalPoints)
     {
         ASSERT(focalPoint.valid());
-        ANGLE_UNSAFE_TODO(shadingRateParams.focalPoints[shadingRateParams.numFocalPoints]) =
-            focalPoint;
+        shadingRateParams.focalPoints[shadingRateParams.numFocalPoints] = focalPoint;
         shadingRateParams.numFocalPoints++;
     }
 
