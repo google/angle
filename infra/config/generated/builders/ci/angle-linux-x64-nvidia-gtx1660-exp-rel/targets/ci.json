@@ -306,7 +306,7 @@
         "args": [
           "--no-xvfb",
           "--use-angle=vulkan",
-          "--batch-size=128"
+          "--batch-size=64"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"

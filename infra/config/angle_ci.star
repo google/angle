@@ -1416,7 +1416,7 @@ ci.thin_tester(
                 # TODO(crbug.com/557307486): Remove this if/when these tests
                 # have been investigated regarding performance issues.
                 args = [
-                    "--batch-size=128",
+                    "--batch-size=64",
                 ],
             ),
         },

@@ -310,11 +310,17 @@
 557268102 LINUX NVIDIA OPENGL : UniformBufferTest31.FourBindingsSameBuffer/* = SKIP
 557268102 LINUX NVIDIA OPENGL : UnpackAlignmentTest.Alignment*LUByte/* = SKIP
 557268102 LINUX NVIDIA OPENGL : UnpackAlignmentTest.Alignment2LAByte/* = SKIP
+557268102 LINUX NVIDIA OPENGL : VertexAttributeOORTest.ANGLEDrawArraysBufferTooSmall/* = SKIP
+557268102 LINUX NVIDIA OPENGL : VertexAttributeTest.BufferOffsetNonAlignedWithStride/* = SKIP
+557268102 LINUX NVIDIA OPENGL : VertexAttributeTest.DrawArraysWithNonOverlapBufferSubData/* = SKIP
+557268102 LINUX NVIDIA OPENGL : VertexAttributeTest.DrawArraysWith2FloatAtOffsetNotDivisbleBy8/* = SKIP
+557268102 LINUX NVIDIA OPENGL : VertexAttributeTest.InterleavedOneVertex/* = SKIP
 557268102 LINUX NVIDIA OPENGL : VertexAttributeTest.UnsignedShortUnnormalized/* = SKIP
 557268102 LINUX NVIDIA OPENGL : VertexAttributeTest.UsingDifferentFormatAndSameBuffer/* = SKIP
 557268102 LINUX NVIDIA OPENGL : VertexAttributeTestES31.DrawArraysWithLargeRelativeOffset/* = SKIP
 557268102 LINUX NVIDIA OPENGL : VertexAttributeTestES31.LargeStride/* = SKIP
 557268102 LINUX NVIDIA OPENGL : VulkanExternalImageTestES31.UninitializedOnGLImportAndStorageWrite/* = SKIP
+557268102 LINUX NVIDIA OPENGL : WebGL2CompatibilityTest.NoTextureCopyingFeedbackLoopBetween3DLevels/* = SKIP
 
 557268102 LINUX NVIDIA OPENGL : SimpleUniformTestES3.MatCx2InArrayAndOutOfArray/* = SKIP
 557268102 LINUX NVIDIA OPENGL : UniformBlockWithOneLargeArrayMemberTest.SharedSameBufferWithOtherOne/* = SKIP
