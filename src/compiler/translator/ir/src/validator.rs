@@ -24,6 +24,8 @@
 //   - Interface variables with NameSource::ShaderInterface are unique;
 //   - Interface variables with NameSource::Internal are unique:
 //     validate_interface_variables_have_unique_names()
+//   - NameSource::ShaderInterface and NameSource::Internal are never found inside body blocks,
+//     those should always be Temporary: validate_block_variable_name_sources_are_temporary()
 //
 // Types:
 //   - Validate that ImageType fields are valid in combination with ImageDimension:
@@ -88,8 +90,6 @@
 //   - Loop blocks ends in the appropriate instructions.
 //   - NameSource::Internal names don't start with the user and temporary name prefixes (_u, t and f
 //     respectively).
-//   - NameSource::ShaderInterface and NameSource::Internal are never found inside body
-//   - blocks, those should always be Temporary.
 //   - Type matches?
 //   - Whatever else is in the AST validation currently.
 //   - Validate built-ins that accept an out or inout parameter, that the corresponding parameter is
@@ -303,6 +303,7 @@ impl<'a> Validator<'a> {
         self.validate_all_alive_variables_are_pointers();
         self.validate_misuse_of_builtin_names();
         self.validate_interface_variables_have_unique_names();
+        self.validate_block_variable_name_sources_are_temporary();
         self.validate_decorations();
         self.validate_no_pointer_to_pointer_type();
         self.validate_all_variables_are_declared_in_scope();
@@ -1967,6 +1968,28 @@ impl<'a> Validator<'a> {
                 traverser::visitor::VISIT_SUB_BLOCKS
             },
             |_, _| {}, // do nothing in post_visit
+        );
+    }
+
+    fn validate_block_variable_name_sources_are_temporary(&self) {
+        traverser::visitor::for_each_function(
+            &mut (),
+            &self.ir.function_entries,
+            |_, _| {},
+            |_, block, _, _| {
+                for variable_id in &block.variables {
+                    let variable = self.ir.meta.get_variable(*variable_id);
+                    if variable.name.source != NameSource::Temporary {
+                        self.on_error(format_args!(
+                            "invalid variable: {:?}: block variable name source must be \
+                             NameSource::Temporary",
+                            variable
+                        ));
+                    }
+                }
+                traverser::visitor::VISIT_SUB_BLOCKS
+            },
+            |_, _| {},
         );
     }
 
