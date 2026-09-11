@@ -2414,7 +2414,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             IsPowerVR(vendor));
 
     ANGLE_FEATURE_CONDITION(features, adjustSrcDstRegionForBlitFramebuffer,
-                            IsLinux() || (IsAndroid() && isNvidia) || (IsWindows() && isNvidia) ||
+                            IsLinux() || (IsAndroid() && (isNvidia || isMali)) ||
+                                (IsWindows() && isNvidia) ||
                                 (IsApple() && functions->standard == STANDARD_GL_ES));
 
     ANGLE_FEATURE_CONDITION(features, clipSrcRegionForBlitFramebuffer,
