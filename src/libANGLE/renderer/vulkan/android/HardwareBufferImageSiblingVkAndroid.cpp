@@ -641,15 +641,14 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     }
     // If VkExternalFormatANDROID::externalFormat is non-zero disallow format reinterpretability
     vk::ImageFormatReinterpretability formatReinterpretability =
-        (externalFormat.externalFormat != 0)
-            ? vk::ImageFormatReinterpretability::None
-            : vk::ImageFormatReinterpretability::ColorspaceOverrides;
+        externalFormat.externalFormat != 0 ? vk::ImageFormatReinterpretability::None
+                                           : vk::ImageFormatReinterpretability::ColorspaceOverrides;
     VkImageFormatListCreateInfoKHR imageFormatListInfoStorage;
     vk::ImageHelper::ImageFormats imageFormats;
 
     const void *imageCreateInfoPNext = vk::ImageHelper::DeriveCreateInfoPNext(
-        displayVk, actualFormatID, &externalMemoryImageCreateInfo, &imageFormatListInfoStorage,
-        &imageFormats, formatReinterpretability, &imageCreateFlags);
+        displayVk, intendedFormatID, actualFormatID, &externalMemoryImageCreateInfo,
+        &imageFormatListInfoStorage, &imageFormats, formatReinterpretability, &imageCreateFlags);
 
     ANGLE_TRY(mImage->initExternal(
         displayVk, textureType, vkExtents, intendedFormatID, actualFormatID, 1, usage,

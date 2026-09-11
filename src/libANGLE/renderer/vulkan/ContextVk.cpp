@@ -7397,7 +7397,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
         //   The new parameter, TEXTURE_SRGB_DECODE_EXT controls whether the
         //   decoding happens at sample time. It only applies to textures with an
         //   internal format that is sRGB and is ignored for all other textures.
-        ANGLE_TRY(textureVk->updateSrgbDecodeState(this, samplerState));
+        textureVk->updateSrgbDecodeState(samplerState);
 
         const vk::ImageHelper &image = textureVk->getImage();
         if (image.hasInefficientlyEmulatedImageFormat())

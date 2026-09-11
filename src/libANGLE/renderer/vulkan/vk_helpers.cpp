@@ -5976,9 +5976,9 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
     {
         imageCreateInfoPNext = compressionControl;
         ASSERT(GetImageFormatListCreateInfo(imageCreateInfoPNext) == nullptr);
-        imageCreateInfoPNext = DeriveCreateInfoPNext(context, actualFormatID, imageCreateInfoPNext,
-                                                     &imageFormatListInfoStorage, &imageFormats,
-                                                     formatReinterpretability, &mCreateFlags);
+        imageCreateInfoPNext = DeriveCreateInfoPNext(
+            context, intendedFormatID, actualFormatID, imageCreateInfoPNext,
+            &imageFormatListInfoStorage, &imageFormats, formatReinterpretability, &mCreateFlags);
     }
     else
     {
@@ -6101,6 +6101,7 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
 // static
 const void *ImageHelper::DeriveCreateInfoPNext(
     ErrorContext *context,
+    angle::FormatID intendedFormatID,
     angle::FormatID actualFormatID,
     const void *pNext,
     VkImageFormatListCreateInfoKHR *imageFormatListInfoStorage,
@@ -6125,14 +6126,15 @@ const void *ImageHelper::DeriveCreateInfoPNext(
 
     // With the introduction of sRGB related GLES extensions any sample/render target could be
     // respecified causing it to be interpreted in a different colorspace.
-    Renderer *renderer                = context->getRenderer();
-    const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
-    angle::FormatID additionalFormatID =
-        actualFormat.isSRGB ? ConvertToLinear(actualFormatID) : ConvertToSRGB(actualFormatID);
-
-    // Allow linear and sRGB variants if image format list is supported and format features match
-    if (renderer->haveSameFormatFeatureBits(actualFormatID, additionalFormatID))
+    // Allow linear and sRGB variants if the _intended_ format requires it.  sRGB override should be
+    // ignored even if the fallback format supports it.
+    if (IsOverridableLinearOrSRGBFormat(intendedFormatID))
     {
+        Renderer *renderer                = context->getRenderer();
+        const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
+        angle::FormatID additionalFormatID =
+            actualFormat.isSRGB ? ConvertToLinear(actualFormatID) : ConvertToSRGB(actualFormatID);
+
         // Add the VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
         *createFlagsOut |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
 

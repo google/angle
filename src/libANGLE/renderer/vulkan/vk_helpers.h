@@ -2449,6 +2449,7 @@ class ImageHelper final : public Resource, public angle::Subject
     using ImageFormats = angle::FixedVector<VkFormat, kImageColorspaceOverrideFormatCount>;
     static const void *DeriveCreateInfoPNext(
         ErrorContext *context,
+        angle::FormatID intendedFormatID,
         angle::FormatID actualFormatID,
         const void *pNext,
         VkImageFormatListCreateInfoKHR *imageFormatListInfoStorage,

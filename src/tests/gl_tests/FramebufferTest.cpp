@@ -10188,8 +10188,8 @@ TEST_P(FramebufferTest_ES3, DISABLED_MaxSize2DArrayNoOverflow)
     ASSERT_GL_NO_ERROR();
 }
 
-// Verify that recreating a texture's backing image due to use as storage image works when a
-// framebuffer is attached to multiple faces of the same cubemap.
+// Verify that potentially recreating a texture's backing image due to use as storage image works
+// when a framebuffer is attached to multiple faces of the same cubemap.
 TEST_P(FramebufferTest_ES31, AttachToMultipleCubeFacesThenBindAsStorageImage)
 {
     constexpr char kFS[] = R"(#version 310 es
@@ -10247,8 +10247,8 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
-// Verify that recreating a texture's backing image due to srgb override works when a framebuffer is
-// attached to multiple faces of the same cubemap.
+// Verify that potentially recreating a texture's backing image due to srgb override works when a
+// framebuffer is attached to multiple faces of the same cubemap.
 TEST_P(FramebufferTest_ES31, AttachToMultipleCubeFacesThenSrgbOverride)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_sRGB_override"));
@@ -10307,8 +10307,120 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
-// Verify that recreating a texture's backing image due to MSRTT binding works when a framebuffer is
-// attached to multiple faces of the same cubemap.
+// Verify that potentially recreating a texture's backing image due to srgb override works when a
+// framebuffer is attached to multiple faces of the same cubemap.
+TEST_P(FramebufferTest_ES31, AttachToMultipleCubeFacesThenSrgbOverrideRGB10A2)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_sRGB_override"));
+
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+layout(location = 0) out vec4 o0;
+layout(location = 1) out vec4 o1;
+void main()
+{
+    o0 = vec4(1.0, 0.0, 0.0, 1.0);
+    o1 = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    // Create a cube map, and attach a framebuffer to two faces of it.
+    GLTexture cube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cube);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGB10_A2, 6, 6);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+                           cube, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+                           cube, 0);
+    constexpr GLenum kDrawBufs[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, kDrawBufs);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw once to flush all dirty bits.
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f);
+
+    // Enable SRGB override on the texture, which should be ignored because RGB10_A2 does not have
+    // an sRGB equivalent.
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_FORMAT_SRGB_OVERRIDE_EXT, GL_SRGB);
+    ASSERT_GL_NO_ERROR();
+
+    // Change one of the attachments to dirty it, but not the other one.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+                           cube, 0);
+
+    // Draw again.  If the backing image is recreated, both framebuffer attachments must be updated.
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Verify the first draw was also done correctly
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+                           cube, 0);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// Verify that potentially recreating a texture's backing image due to srgb override works when a
+// framebuffer is attached to a layer of a 2D array texture while another layer is being sampled
+// from.
+TEST_P(FramebufferTest_ES31, AttachAndSampleMultipleLayersThenSrgbOverride)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_texture_format_sRGB_override"));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+// Sampled from layer 0, rendering is done to layer 1 so it's not a feedback loop.
+uniform mediump sampler2DArray s;
+out vec4 color;
+void main() { color = texture(s, vec3(0)); })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+
+    constexpr uint32_t kSize = 6;
+
+    // Use RGB10_A2, which should be ignored because RGB10_A2 does not have an sRGB equivalent.
+    // Regression test for an old behavior in the Vulkan backend where the backing image was
+    // recreated.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, color);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGB10_A2, kSize, kSize, 2);
+    const std::vector<uint32_t> kInitColor(kSize * kSize, 0xC00000FFu);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kSize, kSize, 1, GL_RGBA,
+                    GL_UNSIGNED_INT_2_10_10_10_REV, kInitColor.data());
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, color, 0, 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw once to flush all dirty bits.
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Enable SRGB override on the texture
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_FORMAT_SRGB_OVERRIDE_EXT, GL_SRGB);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw again, the backing image might be recreated.
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 0, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Verify that potentially recreating a texture's backing image due to MSRTT binding works when a
+// framebuffer is attached to multiple faces of the same cubemap.
 TEST_P(FramebufferTest_ES31, AttachToMultipleCubeFacesThenMSRTT)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
@@ -10372,8 +10484,8 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
-// Verify that recreating a texture's backing image due to changing its base level works when a
-// framebuffer is attached to multiple faces of the same cubemap.
+// Verify that potentially recreating a texture's backing image due to changing its base level works
+// when a framebuffer is attached to multiple faces of the same cubemap.
 TEST_P(FramebufferTest_ES31, AttachToMultipleCubeFacesThenChangeBaseLevel)
 {
     constexpr char kFS[] = R"(#version 310 es
@@ -10451,8 +10563,8 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
-// Verify that recreating a texture's backing image due to enabling mipmapping works when a
-// framebuffer is attached to multiple faces of the same cubemap.
+// Verify that potentially recreating a texture's backing image due to enabling mipmapping works
+// when a framebuffer is attached to multiple faces of the same cubemap.
 TEST_P(FramebufferTest_ES31, AttachToMultipleCubeFacesThenEnableMipmapping)
 {
     constexpr char kFS[] = R"(#version 310 es
