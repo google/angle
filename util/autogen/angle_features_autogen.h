@@ -528,7 +528,7 @@ enum class Feature
     UseStencilTestEnableDynamicState,
     UseSystemMemoryForConstantBuffers,
     UseTempForNonZeroBaseLevelGenMipmapUsingCopyImageSubData,
-    UseTexSubImageForHostTwiddledNpotUploads,
+    UseTexSubImageForClientDataNpotUploads,
     UseUnusedBlocksWithStandardOrSharedLayout,
     UseVertexInputBindingStrideDynamicState,
     UseVkEventForBufferBarrier,

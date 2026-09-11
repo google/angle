@@ -24813,12 +24813,12 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedDXT)
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth() / 4, getWindowHeight() / 4, GLColor::green);
 }
 
-class Texture2DTestES3_NPOTHostTwiddledTexture : public Texture2DTestES3
+class Texture2DTestES3_NPOTClientDataTexture : public Texture2DTestES3
 {};
 
 // Test that non-power-of-two uploads of RGB10_A2 with UNSIGNED_INT_2_10_10_10_REV data succeed and
 // verify texture contents.
-TEST_P(Texture2DTestES3_NPOTHostTwiddledTexture, RGB10A2)
+TEST_P(Texture2DTestES3_NPOTClientDataTexture, RGB10A2)
 {
     constexpr GLsizei kWidth  = 65;
     constexpr GLsizei kHeight = 64;
@@ -24884,7 +24884,7 @@ TEST_P(Texture2DTestES3_NPOTHostTwiddledTexture, RGB10A2)
 
 // Test that non-power-of-two uploads of SRGB8_ALPHA8 with UNSIGNED_BYTE data succeed and
 // verify texture contents, including non-default unpack alignment and skip pixels.
-TEST_P(Texture2DTestES3_NPOTHostTwiddledTexture, SRGB8Alpha8)
+TEST_P(Texture2DTestES3_NPOTClientDataTexture, SRGB8Alpha8)
 {
     constexpr GLsizei kWidth    = 255;
     constexpr GLsizei kHeight   = 256;
@@ -25206,11 +25206,11 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     ES3_OPENGL().enable(Feature::UploadOversizedMipLevelsViaUnpackBuffer),
     ES3_OPENGLES().enable(Feature::UploadOversizedMipLevelsViaUnpackBuffer));
 
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3_NPOTHostTwiddledTexture);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3_NPOTClientDataTexture);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
-    Texture2DTestES3_NPOTHostTwiddledTexture,
-    ES3_OPENGL().enable(Feature::UseTexSubImageForHostTwiddledNpotUploads),
-    ES3_OPENGLES().enable(Feature::UseTexSubImageForHostTwiddledNpotUploads));
+    Texture2DTestES3_NPOTClientDataTexture,
+    ES3_OPENGL().enable(Feature::UseTexSubImageForClientDataNpotUploads),
+    ES3_OPENGLES().enable(Feature::UseTexSubImageForClientDataNpotUploads));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureSizeLimitTest);
 ANGLE_INSTANTIATE_TEST(TextureSizeLimitTest,
