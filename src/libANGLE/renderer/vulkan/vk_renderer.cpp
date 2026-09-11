@@ -5337,6 +5337,17 @@ gl::Version Renderer::getMaxSupportedESVersion() const
         maxVersion = LimitVersionTo(maxVersion, {2, 0});
     }
 
+    // Verify minimum requirements of ANGLE:
+    //
+    // - VK_KHR_image_format_list
+    //
+    if (!mFeatures.supportsImageFormatList.enabled)
+    {
+        WARN() << "Vulkan device does not meet ANGLE's minimum requirements";
+        WARN() << "  Missing VK_KHR_image_format_list";
+        maxVersion = LimitVersionTo(maxVersion, {0, 0});
+    }
+
     return maxVersion;
 }
 

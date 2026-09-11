@@ -6131,8 +6131,7 @@ const void *ImageHelper::DeriveCreateInfoPNext(
         actualFormat.isSRGB ? ConvertToLinear(actualFormatID) : ConvertToSRGB(actualFormatID);
 
     // Allow linear and sRGB variants if image format list is supported and format features match
-    if (renderer->getFeatures().supportsImageFormatList.enabled &&
-        renderer->haveSameFormatFeatureBits(actualFormatID, additionalFormatID))
+    if (renderer->haveSameFormatFeatureBits(actualFormatID, additionalFormatID))
     {
         // Add the VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
         *createFlagsOut |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;

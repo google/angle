@@ -4043,11 +4043,6 @@ angle::Result TextureVk::syncState(const gl::Context *context,
             mState.getBaseLevelDesc().format.info->sizedInternalFormat));
         mImageView.updateSrgbDecode(imageFormat, srgbDecode);
         mImageView.updateSrgbOverride(imageFormat, mState.getSRGBOverride());
-
-        if (!renderer->getFeatures().supportsImageFormatList.enabled)
-        {
-            refreshAllImageViews = true;
-        }
     }
 
     // Initialize the image storage and flush the pixel buffer.
