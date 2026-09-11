@@ -114,6 +114,11 @@ class [[nodiscard]] ScopedSyncRef final
             mSync->addRef();
         }
     }
+    ScopedSyncRef(ScopedSyncRef &&other) noexcept
+        : mDisplay(std::move(other.mDisplay)), mSync(other.mSync)
+    {
+        other.mSync = nullptr;
+    }
 
     Sync *get() const { return mSync; }
 
