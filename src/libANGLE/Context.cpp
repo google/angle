@@ -9705,7 +9705,7 @@ egl::Error Context::setDefaultFramebuffer(egl::Surface *drawSurface, egl::Surfac
         ANGLE_TRY(drawSurface->makeCurrent(this));
     }
 
-    ANGLE_TRY(mDefaultFramebuffer->setSurfaces(this, drawSurface, readSurface));
+    mDefaultFramebuffer->setSurfaces(this, drawSurface, readSurface);
 
     if (readSurface && (drawSurface != readSurface))
     {
@@ -9747,7 +9747,7 @@ egl::Error Context::unsetDefaultFramebuffer()
             mDrawFramebufferObserverBinding.bind(nullptr);
         }
 
-        ANGLE_TRY(defaultFramebuffer->unsetSurfaces(this));
+        defaultFramebuffer->unsetSurfaces(this);
         mState.mFramebufferManager->setDefaultFramebuffer(nullptr);
     }
 
