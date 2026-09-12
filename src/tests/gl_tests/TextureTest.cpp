@@ -2917,7 +2917,7 @@ TEST_P(TextureCubeTest, CubeMapFBO)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
                            mTextureCube, 0);
 
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
     EXPECT_GL_NO_ERROR();
 
     // Test clearing the six mip faces individually.
@@ -2970,7 +2970,7 @@ TEST_P(TextureCubeTest, CubeMapFBOScissoredClear)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
                            texcube, 0);
 
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
     ASSERT_GL_NO_ERROR();
 
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
@@ -6833,7 +6833,7 @@ TEST_P(Texture2DTestES3, FramebufferTextureChangingBaselevel)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, level);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, level);
 
-        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
         EXPECT_GL_NO_ERROR();
 
         glClearColor(0, 1, 0, 1);
@@ -7552,7 +7552,7 @@ TEST_P(Texture2DBaseMaxTestES3, BaseExceedsMaxFboAttachAtBase)
                            attachmentLevel);
 
     // Framebuffer is complete (attachment == base, even though base > max)
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     // Render green to the framebuffer
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5, 1.0f, true);
@@ -9961,7 +9961,7 @@ void Texture3DIncreaseDepthTestES3::verifyByReadPixels(GLuint texture3D,
             glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D,
                                       expected.level, slice);
             EXPECT_GL_NO_ERROR();
-            ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
             EXPECT_PIXEL_RECT_EQ(0, 0, expected.width, expected.height, expected.expectedColor);
         }
     }
@@ -15790,7 +15790,7 @@ class Texture2DDepthTest : public Texture2DTest
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
-        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
         ASSERT_GL_NO_ERROR();
 
         glViewport(0, 0, w, h);
