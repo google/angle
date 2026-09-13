@@ -11,8 +11,10 @@
 #ifndef LIBANGLE_DISPLAY_H_
 #define LIBANGLE_DISPLAY_H_
 
+#include <array>
 #include <atomic>
 #include <mutex>
+#include <optional>
 #include <vector>
 
 #include "common/SimpleMutex.h"
@@ -82,6 +84,11 @@ using ScopedConstDisplayRefAndLock = ScopedConstDisplayLockAndRef;
 using SurfaceMap = priv::ObjectMap<Surface, angle::SimpleMutex>;
 using ThreadSet  = angle::HashSet<Thread *>;
 
+// Size of a Vulkan device or driver UUID, matching VK_UUID_SIZE.  Spelled out
+// here because this header must not depend on the Vulkan headers.
+constexpr size_t kVulkanUUIDSize = 16;
+using VulkanUUID                 = std::array<uint8_t, kVulkanUUIDSize>;
+
 struct DisplayState final : private angle::NonCopyable
 {
     DisplayState(EGLNativeDisplayType nativeDisplayId);
@@ -94,6 +101,14 @@ struct DisplayState final : private angle::NonCopyable
     SurfaceMap surfaceMap;
     angle::FeatureOverrides featureOverrides;
     EGLNativeDisplayType displayId;
+
+    // EGL_PLATFORM_ANGLE_VULKAN_DEVICE_UUID_ANGLE and
+    // EGL_PLATFORM_ANGLE_VULKAN_DRIVER_UUID_ANGLE name caller-owned buffers
+    // that EGL does not require to outlive eglGetPlatformDisplay, so their
+    // bytes are copied here while that call is still running.  Unset means the
+    // attribute was absent, which is not the same as an all-zero UUID.
+    std::optional<VulkanUUID> vulkanDeviceUUID;
+    std::optional<VulkanUUID> vulkanDriverUUID;
 
     // Single-threaded and multithread pools for use by various parts of ANGLE, such as shader
     // compilation.  These pools are internally synchronized.

@@ -174,10 +174,10 @@ egl::Error DisplayVk::initialize(egl::Display *display)
         static_cast<uint32_t>(attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0));
     const uint32_t preferredDeviceId =
         static_cast<uint32_t>(attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0));
-    const uint8_t *preferredDeviceUuid = reinterpret_cast<const uint8_t *>(
-        attribs.get(EGL_PLATFORM_ANGLE_VULKAN_DEVICE_UUID_ANGLE, 0));
-    const uint8_t *preferredDriverUuid = reinterpret_cast<const uint8_t *>(
-        attribs.get(EGL_PLATFORM_ANGLE_VULKAN_DRIVER_UUID_ANGLE, 0));
+    const uint8_t *preferredDeviceUuid =
+        mState.vulkanDeviceUUID.has_value() ? mState.vulkanDeviceUUID->data() : nullptr;
+    const uint8_t *preferredDriverUuid =
+        mState.vulkanDriverUUID.has_value() ? mState.vulkanDriverUUID->data() : nullptr;
     const VkDriverId preferredDriverId =
         static_cast<VkDriverId>(attribs.get(EGL_PLATFORM_ANGLE_VULKAN_DRIVER_ID_ANGLE, 0));
 
