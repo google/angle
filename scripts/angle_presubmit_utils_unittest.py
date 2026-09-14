@@ -15,10 +15,8 @@ import unittest
 from angle_presubmit_utils import *
 
 def SetCWDToAngleFolder():
-    angle_folder = "angle"
-    cwd = os.path.dirname(os.path.abspath(__file__))
-    cwd = cwd.split(angle_folder)[0] + angle_folder
-    os.chdir(cwd)
+    angle_folder = pathlib.Path(__file__).resolve().parents[1]
+    os.chdir(angle_folder)
 
 
 SetCWDToAngleFolder()
