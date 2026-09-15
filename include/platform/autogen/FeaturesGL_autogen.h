@@ -740,6 +740,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo flushBeforeGenerateMipmap = {
+        "flushBeforeGenerateMipmap",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
     FeatureInfo flushQueriesBeforeDeletingOrUnbindingFbo = {
         "flushQueriesBeforeDeletingOrUnbindingFbo",
         FeatureCategory::OpenGLWorkarounds,

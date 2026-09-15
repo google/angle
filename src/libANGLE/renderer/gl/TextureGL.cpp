@@ -1556,6 +1556,12 @@ angle::Result TextureGL::generateMipmap(const gl::Context *context)
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
 
+    if (features.flushBeforeGenerateMipmap.enabled)
+    {
+        // Force a flush before generating the mipmap, which avoids bad states in the IMG driver.
+        ANGLE_GL_TRY(context, stateManager->forcefullyFlush());
+    }
+
     stateManager->bindTexture(getType(), mTextureID);
 
     bool recreateMipmapLevelsBeforeGenerate =
