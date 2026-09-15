@@ -7154,6 +7154,100 @@ void main()
     EXPECT_PIXEL_NEAR(0, 0, 255, 127, 0, 255, 1);
 }
 
+// Test that sub-4-component fragment outputs zero-initialize missing channels (or keep cleared
+// values on non-widening backends).
+TEST_P(WebGL2GLSLTest, FragmentOutputMissingChannels)
+{
+    // Test 1: out float -> writes R (0.8), G, B, A must be either 0 (widened) or cleared values
+    // (51, 76, 102)
+    {
+        glClearColor(0.1f, 0.2f, 0.3f, 0.4f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+layout(location = 0) out float color;
+void main()
+{
+    color = 0.8;
+})";
+
+        ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+        GLColor pixel;
+        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_NEAR(pixel.R, 204, 1);
+        EXPECT_TRUE(pixel.G == 0 || std::abs(pixel.G - 51) <= 1);
+        EXPECT_TRUE(pixel.B == 0 || std::abs(pixel.B - 76) <= 1);
+        EXPECT_TRUE(pixel.A == 0 || std::abs(pixel.A - 102) <= 1);
+    }
+
+    // Test 2: out vec2 -> writes R (0.8), G (0.6), B, A must be either 0 (widened) or cleared
+    // values (76, 102)
+    {
+        glClearColor(0.1f, 0.2f, 0.3f, 0.4f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+layout(location = 0) out vec2 color;
+void main()
+{
+    color = vec2(0.8, 0.6);
+})";
+
+        ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+        GLColor pixel;
+        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_NEAR(pixel.R, 204, 1);
+        EXPECT_NEAR(pixel.G, 153, 1);
+        EXPECT_TRUE(pixel.B == 0 || std::abs(pixel.B - 76) <= 1);
+        EXPECT_TRUE(pixel.A == 0 || std::abs(pixel.A - 102) <= 1);
+    }
+
+    // Test 3: out uvec3 -> writes R (12), G (34), B (56), A must be either 0 (widened) or cleared
+    // value (4)
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8UI, getWindowWidth(), getWindowHeight(), 0,
+                     GL_RGBA_INTEGER, GL_UNSIGNED_BYTE, nullptr);
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        const GLuint clearColor[4] = {1u, 2u, 3u, 4u};
+        glClearBufferuiv(GL_COLOR, 0, clearColor);
+
+        constexpr char kFS[] = R"(#version 300 es
+precision highp int;
+layout(location = 0) out uvec3 color;
+void main()
+{
+    color = uvec3(12u, 34u, 56u);
+})";
+
+        ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+        uint8_t pixel[4] = {};
+        glReadPixels(0, 0, 1, 1, GL_RGBA_INTEGER, GL_UNSIGNED_BYTE, pixel);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_EQ(pixel[0], 12);
+        EXPECT_EQ(pixel[1], 34);
+        EXPECT_EQ(pixel[2], 56);
+        EXPECT_TRUE(pixel[3] == 0 || pixel[3] == 4)
+            << " pixel[3]=" << static_cast<uint32_t>(pixel[3]);
+    }
+}
+
 // Verify that functions without return statements return zero-initialized vec4
 TEST_P(WebGL2GLSLTest, MissingReturnZeroInitVec4)
 {

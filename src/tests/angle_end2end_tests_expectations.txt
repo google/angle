@@ -83,6 +83,12 @@
 523165431 GLES : GLSLTest.FragDataPassedToFunctionNoDrawBuffers/* = SKIP
 523165431 GLES : GLSLTest.FragDataPassedToFunctionOutNoDrawBuffers/* = SKIP
 
+// Fragment output with missing channels is not clearly defined in WebGL standard
+562053522 VULKAN : WebGL2GLSLTest.FragmentOutputMissingChannels/* = SKIP
+562053522 OPENGL : WebGL2GLSLTest.FragmentOutputMissingChannels/* = SKIP
+562053522 GLES : WebGL2GLSLTest.FragmentOutputMissingChannels/* = SKIP
+562053522 D3D11 : WebGL2GLSLTest.FragmentOutputMissingChannels/* = SKIP
+
 // Fails AST validation
 342866374 : GLSLTest_ES31.PerVertexRedefinition/*_ForceInitShaderVariables* = SKIP
 
