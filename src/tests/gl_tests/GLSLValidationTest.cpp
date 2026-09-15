@@ -7927,7 +7927,7 @@ class GLSLValidationTextureRectangleTest : public GLSLValidationTest
 // Check that if the extension is not supported, trying to use the features without having an
 // extension directive fails.
 //
-// If the extension is supported, check that new types and builtins are usable even with the
+// If the extension is supported, check that new types and builtins are usable even without the
 // #extension directive
 // Issue #15 of ARB_texture_rectangle explains that the extension was specified before the
 // #extension mechanism was in place so it doesn't require explicit enabling.
