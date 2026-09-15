@@ -3495,8 +3495,9 @@ TEST_P(CopyTextureTestES3, TextureCopyMultipleSlicesBetween2DArrayAnd3D)
 }
 
 // Test that glCopyTextureCHROMIUM and glCopySubTextureCHROMIUM fail validation if the source level
-// is outside the [BASE, MAX] range.
-TEST_P(CopyTextureTestES3, VerifySourceLevelInBaseMaxRange)
+// is outside the [BASE, MAX] range, which makes the source not framebuffer attachment complete.
+// This is only the case for mutable textures; for immutable textures all source levels are valid.
+TEST_P(CopyTextureTestES3, VerifyMutableSourceLevelInBaseMaxRange)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
 
@@ -3601,6 +3602,52 @@ TEST_P(CopyTextureTestES3, VerifySourceTexturesComplete)
     glCopySubTextureCHROMIUM(incompleteSrc, 2, GL_TEXTURE_2D, dst, 0, 0, 0, 0, 0, 1, 1, GL_FALSE,
                              GL_FALSE, GL_FALSE);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Test that glCopyTextureCHROMIUM and glCopySubTextureCHROMIUM work if the source level is outside
+// the [BASE, MAX] range but the texture is immutable.
+TEST_P(CopyTextureTestES3, ImmutableSourceLevelOutsideBaseMaxRange)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
+
+    const std::vector<GLColor> kLevel0(64 * 64, GLColor::red);
+    const std::vector<GLColor> kLevel1(32 * 32, GLColor::green);
+    const std::vector<GLColor> kLevel2(16 * 16, GLColor::blue);
+    const std::vector<GLColor> kLevel3(8 * 8, GLColor::yellow);
+    const std::vector<GLColor> kLevel4(4 * 4, GLColor::magenta);
+
+    GLTexture src;
+    glBindTexture(GL_TEXTURE_2D, src);
+    glTexStorage2D(GL_TEXTURE_2D, 5, GL_RGBA8, 64, 64);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 64, 64, GL_RGBA, GL_UNSIGNED_BYTE, kLevel0.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 32, 32, GL_RGBA, GL_UNSIGNED_BYTE, kLevel1.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 2, 0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, kLevel2.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 3, 0, 0, 8, 8, GL_RGBA, GL_UNSIGNED_BYTE, kLevel3.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 4, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, kLevel4.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 3);
+
+    // Copy from level 1 of source texture, which is below base level.
+    GLTexture dst1;
+    glBindTexture(GL_TEXTURE_2D, dst1);
+    glCopyTextureCHROMIUM(src, 1, GL_TEXTURE_2D, dst1, 0, GL_RGBA, GL_UNSIGNED_BYTE, GL_FALSE,
+                          GL_FALSE, GL_FALSE);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dst1, 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 32, 32, kLevel1[0]);
+
+    // Copy from level 4 of source texture, which is above max level.
+    GLTexture dst2;
+    glBindTexture(GL_TEXTURE_2D, dst2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glCopySubTextureCHROMIUM(src, 4, GL_TEXTURE_2D, dst2, 0, 0, 0, 0, 0, 4, 4, GL_FALSE, GL_FALSE,
+                             GL_FALSE);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dst2, 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, kLevel4[0]);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Test that glCopyTextureCHROMIUM and glCopySubTextureCHROMIUM work if the texture base level

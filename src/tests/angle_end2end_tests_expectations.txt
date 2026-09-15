@@ -433,6 +433,9 @@
 556790356 NVIDIA GLES : Texture2DTestES3RobustInit.CopyTexSubImageOutOfBoundsAcrossMips/* = SKIP
 556790356 NVIDIA OPENGL : Texture2DTestES3RobustInit.CopyTexSubImagePartiallyOutOfBoundsAcrossMips/* = SKIP
 556790356 NVIDIA GLES : Texture2DTestES3RobustInit.CopyTexSubImagePartiallyOutOfBoundsAcrossMips/* = SKIP
+// NVIDIA is prone to losing data outside the BASE/MAX range.
+553117511 NVIDIA OPENGL : CopyTextureTestES3.ImmutableSourceLevelOutsideBaseMaxRange/* = SKIP
+553117511 NVIDIA GLES : CopyTextureTestES3.ImmutableSourceLevelOutsideBaseMaxRange/* = SKIP
 
 // Failing on NVidia OpenGL
 549916890 NVIDIA OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByDraw/* = SKIP
