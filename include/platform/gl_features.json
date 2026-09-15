@@ -977,7 +977,7 @@
             "description": [
                 "Force a flush before calling generateMipmap to work around driver bugs."
             ],
-            "issue": "http://crbug.com/549350408"
+            "issue": "http://crbug.com/549350408 https://crbug.com/549995090"
         },
         {
             "name": "split_level_0_pbo_full_sub_image_2D",
