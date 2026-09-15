@@ -14,13 +14,14 @@
 #include <mutex>
 #include <set>
 #include <string>
-#include "common/unsafe_buffers.h"
 
 #include "angle_gl.h"
 #include "common/MemoryBuffer.h"
 #include "common/PackedEnums.h"
 #include "common/SimpleMutex.h"
 #include "common/angleutils.h"
+#include "common/partition_alloc/raw_ptr.h"
+#include "common/unsafe_buffers.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/Context_gles_1_0_autogen.h"
@@ -57,6 +58,7 @@ class EGLImplFactory;
 namespace egl
 {
 class AttributeMap;
+class Display;
 class Surface;
 struct Config;
 class Thread;
@@ -1127,7 +1129,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     const bool mSurfacelessSupported;
     egl::Surface *mCurrentDrawSurface;
     egl::Surface *mCurrentReadSurface;
-    egl::Display *mDisplay;
+    raw_ptr<egl::Display> mDisplay;
     const bool mWebGLContext;
     const bool mHardenedContext;
     bool mBufferAccessValidationEnabled;
