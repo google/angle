@@ -514,6 +514,7 @@ vars = {
   'checkout_angle_restricted_trace_thief_puzzle': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_thimbleweed_park': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_tile_club': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_tiles_hop': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_tmnt_shredders_revenge': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_toca_life_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_toon_blast': 'checkout_extra_traces',
@@ -4913,6 +4914,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_tile_club',
+  },
+  'src/tests/restricted_traces/tiles_hop': {
+      'packages': [
+        {
+            'package': 'angle/traces/tiles_hop',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_tiles_hop',
   },
   'src/tests/restricted_traces/tmnt_shredders_revenge': {
       'packages': [

@@ -76,6 +76,7 @@ REPRESENTATIVE_TRACES = [
     "temple_run_2",
     "tessellation",
     "the_sims_mobile",
+    "tiles_hop",
     "tmnt_shredders_revenge",
     "top_war",
     "tower_of_fantasy",
