@@ -1189,7 +1189,7 @@ bool ValidateDisplay(const ValidationContext *val, const ThreadSafeDisplay *disp
         return false;
     }
 
-    if (!display->isInitialized())
+    if (!display->isInitializedAndNotTerminating())
     {
         if (val)
         {
@@ -3694,7 +3694,7 @@ bool ValidateMakeCurrent(const ValidationContext *val,
     }
 
     // EGL 1.5 spec: dpy can be uninitialized if all other parameters are null
-    if (!display->isInitialized() && (!noContext || !noDraw || !noRead))
+    if (!display->isInitializedAndNotTerminating() && (!noContext || !noDraw || !noRead))
     {
         val->setError(EGL_NOT_INITIALIZED, "<display> not initialized");
         return false;
@@ -3708,7 +3708,7 @@ bool ValidateMakeCurrent(const ValidationContext *val,
     // Allow "un-make" the lost context:
     // If the context is lost, but EGLContext passed to eglMakeCurrent is EGL_NO_CONTEXT, we should
     // not return EGL_CONTEXT_LOST error code.
-    if (display->isInitialized() && display->isDeviceLost() && !noContext)
+    if (display->isInitializedAndNotTerminating() && display->isDeviceLost() && !noContext)
     {
         val->setError(EGL_CONTEXT_LOST, "Context was lost");
         return false;

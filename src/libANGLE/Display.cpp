@@ -1073,7 +1073,7 @@ void DisplayState::notifyDeviceLost() const
 // ThreadSafeDisplay implementation:
 bool ThreadSafeDisplay::isInitialized() const
 {
-    return mInitialized.load(std::memory_order_acquire) && !isTerminating();
+    return (mRefCount.load(std::memory_order_acquire) & kInitializedBit) != 0;
 }
 
 bool ThreadSafeDisplay::isTerminating() const
@@ -1081,13 +1081,31 @@ bool ThreadSafeDisplay::isTerminating() const
     return (mRefCount.load(std::memory_order_acquire) & kTerminatingBit) != 0;
 }
 
+bool ThreadSafeDisplay::isInitializedAndNotTerminating() const
+{
+    // A single load ensures the initialized and terminating bits are observed as a consistent
+    // pair.  With two separate atomics, a reader could load an already-stale initialized flag and
+    // then observe the terminating bit after terminate() cleared it, reporting a state that never
+    // existed.
+    constexpr uint32_t kMask = kInitializedBit | kTerminatingBit;
+    return (mRefCount.load(std::memory_order_acquire) & kMask) == kInitializedBit;
+}
+
+void ThreadSafeDisplay::setInitialized()
+{
+    // Read-modify-write rather than a plain store: the reference count bits in the same word may
+    // be concurrently modified by other threads.
+    mRefCount.fetch_or(kInitializedBit, std::memory_order_release);
+}
+
+void ThreadSafeDisplay::setUninitialized()
+{
+    mRefCount.fetch_and(~kInitializedBit, std::memory_order_release);
+}
+
 bool ThreadSafeDisplay::isDeviceLost() const
 {
-    // Deliberately checks the member rather than isInitialized(), which also folds in
-    // isTerminating(): another thread can set the terminating bit at any point while this
-    // thread holds a display reference.  mInitialized itself is stable for ref holders, since
-    // terminate() only clears it after waitUntilUnreferenced().
-    ASSERT(mInitialized.load(std::memory_order_relaxed));
+    ASSERT(isInitialized());
     return mState.deviceLost.load(std::memory_order_relaxed);
 }
 
@@ -1316,7 +1334,7 @@ void Display::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
 
 void Display::setupDisplayPlatform(rx::DisplayImpl *impl)
 {
-    ASSERT(!mInitialized);
+    ASSERT(!isInitialized());
     ASSERT(impl != nullptr);
     mDisplayMutex.assertLocked();
 
@@ -1510,7 +1528,7 @@ Error Display::initialize()
         mManagersMutex->addRef();
     }
 
-    mInitialized = true;
+    setInitialized();
 
     return NoError();
 }
@@ -1574,7 +1592,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
 
     // All subsequent calls assume the display to be valid and terminated by app.
     // If it is not terminated, if it isn't initialized, early return.
-    if (!mTerminatedByApi || !mInitialized)
+    if (!mTerminatedByApi || !isInitialized())
     {
         return NoError();
     }
@@ -1667,7 +1685,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
 
     mState.deviceLost = false;
 
-    mInitialized = false;
+    setUninitialized();
 
     gl::UninitializeDebugAnnotations();
 
@@ -2052,7 +2070,7 @@ Error Display::makeCurrent(Thread *thread,
                            egl::Surface *readSurface,
                            gl::Context *context)
 {
-    if (!mInitialized)
+    if (!isInitialized())
     {
         return NoError();
     }

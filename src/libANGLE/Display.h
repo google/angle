@@ -202,12 +202,13 @@ class SyncSet final : angle::NonCopyable
 class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
 {
   public:
-    ThreadSafeDisplay(EGLNativeDisplayType displayId)
-        : mState(displayId), mInitialized(false), mRefCount(0)
-    {}
+    ThreadSafeDisplay(EGLNativeDisplayType displayId) : mState(displayId), mRefCount(0) {}
     ~ThreadSafeDisplay() override = default;
 
-    bool isInitialized() const;
+    // Returns whether the display is initialized and is not concurrently being terminated.  This
+    // is what callers outside the display want: a display that is being terminated must already be
+    // treated as no longer initialized.
+    bool isInitializedAndNotTerminating() const;
     bool isDeviceLost() const;
 
     const DisplayExtensions &getExtensions() const { return mDisplayExtensions; }
@@ -246,13 +247,23 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     }
     bool isTerminating() const;
 
+    // Returns whether the display has been initialized, disregarding whether it is currently being
+    // terminated.  This remains stable for as long as a display reference is held, since
+    // terminate() only clears the bit after waitUntilUnreferenced().  Callers that must also
+    // account for a concurrent terminate() want isInitializedAndNotTerminating() instead.
+    bool isInitialized() const;
+    // Both of these must be called with mDisplayMutex held.
+    void setInitialized();
+    void setUninitialized();
+
+    // The high bits of mRefCount hold flags; the remaining bits hold the reference count itself.
+    // Keeping the initialized flag in the same word as the terminating flag lets
+    // isInitializedAndNotTerminating() observe the two as a consistent pair with a single load.
     static constexpr uint32_t kTerminatingBit = 1u << 31;
-    static constexpr uint32_t kRefCountMask   = ~kTerminatingBit;
+    static constexpr uint32_t kInitializedBit = 1u << 30;
+    static constexpr uint32_t kRefCountMask   = ~(kTerminatingBit | kInitializedBit);
 
     DisplayState mState;
-
-    // This gets accessed from multiple threads without locks.
-    std::atomic<bool> mInitialized;
 
     DisplayExtensions mDisplayExtensions;
 
