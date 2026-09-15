@@ -525,6 +525,9 @@ config("angle_common_config") {
   }
 
   defines = []
+  if (angle_use_partition_alloc) {
+    defines += [ "ANGLE_USE_PARTITION_ALLOC" ]
+  }
   if (angle_delegate_workers) {
     defines += [ "ANGLE_DELEGATE_WORKERS=1" ]
   }
@@ -569,14 +572,14 @@ template("angle_common_lib") {
     ]
 
     deps = [ ":xxhash" ]
-    if (angle_use_partition_alloc) {
-      deps += [ "${angle_partition_alloc_dir}" ]
-    }
 
     public_deps = [
       ":angle_abseil",
       ":includes",
     ]
+    if (angle_use_partition_alloc) {
+      public_deps += [ "${angle_partition_alloc_dir}:raw_ptr" ]
+    }
     if (angle_enable_perfetto) {
       public_deps += [ ":angle_libperfetto" ]
     }

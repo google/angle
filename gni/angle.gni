@@ -278,34 +278,36 @@ declare_args() {
   # pointers into safe crashes. Additionally, it can help align tests/benchmark
   # results closer with in-browser behavior, providing more accurate
   # performance metrics that reflect real-world usage in Chrome.
-  angle_use_partition_alloc =
-      # Only for Angle CQ and local development. Not for arbitrary embedders.
-      angle_standalone &&
-      # Only enable PartitionAlloc in assert-enabled builds to avoid performance
-      # penalties in pure release standalone builds.
-      angle_assert_always_on &&
-      # Angle CQ enables `checkout_angle_partition_alloc` by default so that it
-      # can be used in tests/benchmarks. For local development, you can enable
-      # it by adding
-      # ```
-      #    "custom_vars": {
-      #      "checkout_angle_partition_alloc": True,
-      #    },
-      # ```
-      # to your .gclient config.
-      checkout_angle_partition_alloc &&
-      # While GCC is supported, it still lacks CI coverage to catch regressions.
-      # Therefore, we disable it by default on GCC builds for now.
-      is_clang &&
-      # TODO(b/503180635): Enable PartitionAlloc on Windows standalone builds.
-      # Currently it is disabled because it leads to heap mismatch crashes in
-      # trace tests (DLLs vs EXE).
-      !is_win &&
-      # TODO(b/503180635): Enable PartitionAlloc on Android standalone builds.
-      # Currently it is disabled because it leads to systematic test failures
-      # (likely startup crashes) on 'angle-cq-android-arm64-rel' bot across
-      # almost all test suites (unittests, end2end_tests, deqp, etc.).
-      !is_android
+  if (!defined(angle_use_partition_alloc)) {
+    angle_use_partition_alloc =
+        # Only for Angle CQ and local development. Not for arbitrary embedders.
+        angle_standalone &&
+        # Only enable PartitionAlloc in assert-enabled builds to avoid
+        # performance penalties in pure release standalone builds.
+        angle_assert_always_on &&
+        # Angle CQ enables `checkout_angle_partition_alloc` by default so that
+        # it can be used in tests/benchmarks. For local development, you can
+        # enable it by adding ```
+        #    "custom_vars": {
+        #      "checkout_angle_partition_alloc": True,
+        #    },
+        # ```
+        # to your .gclient config.
+        checkout_angle_partition_alloc &&
+        # While GCC is supported, it still lacks CI coverage to catch
+        # regressions. Therefore, we disable it by default on GCC builds for
+        # now.
+        is_clang &&
+        # TODO(b/503180635): Enable PartitionAlloc on Windows standalone builds.
+        # Currently it is disabled because it leads to heap mismatch crashes in
+        # trace tests (DLLs vs EXE).
+        !is_win &&
+        # TODO(b/503180635): Enable PartitionAlloc on Android standalone builds.
+        # Currently it is disabled because it leads to systematic test failures
+        # (likely startup crashes) on 'angle-cq-android-arm64-rel' bot across
+        # almost all test suites (unittests, end2end_tests, deqp, etc.).
+        !is_android
+  }
 }
 
 declare_args() {
@@ -540,6 +542,7 @@ template("angle_shared_library") {
     target_type = "ios_framework_bundle"
     internal_target_name = target_name + "_framework"
   }
+
   target(target_type, internal_target_name) {
     forward_variables_from(invoker,
                            "*",
