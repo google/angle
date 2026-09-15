@@ -659,6 +659,7 @@
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelCopyTexImageSrcDst/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelTexSubImageDstWithUnpackSlow/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelBlitDst/* = SKIP
+562992857 WIN D3D11 : MipmapTestES3.GenerateMipmapImmutableTextureNonZeroBaseLevel/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -2442,6 +2443,8 @@
 389145696 WGPU : MipmapTestES3.GenerateMipmapCubeBaseLevel/* = SKIP
 389145696 WGPU : MipmapTestES3.Generate3DMipmapRespecification/* = SKIP
 389145696 WGPU : MipmapTestES3.GenerateMipmapWithRedefineLevelAndTexture/* = SKIP
+389145696 WGPU : MipmapTestES3.GenerateMipmapImmutableTextureNonZeroBaseLevel/* = SKIP
+389145696 WGPU : MipmapTestES3.GenerateMipmapImmutableTextureNonZeroBaseLevel2/* = SKIP
 389145696 WGPU : MipmapTestES3.*TextureArray* = SKIP
 389145696 WGPU : MipmapTestES3.*Texture3D* = SKIP
 // Can't handle the resize of the texture

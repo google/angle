@@ -8318,8 +8318,9 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
 
     CommandResources resources;
     gl::OwnerLevel baseLevelGL = toGLLevel(baseLevel);
-    resources.onImageTransferWrite(baseLevelGL + 1, maxLevel.get(), gl::OwnerLayer(0), mLayerCount,
-                                   VK_IMAGE_ASPECT_COLOR_BIT, this);
+    resources.onImageTransferWrite(baseLevelGL + 1,
+                                   std::min(mLevelCount - 1, maxLevel.get()) - baseLevel.get(),
+                                   gl::OwnerLayer(0), mLayerCount, VK_IMAGE_ASPECT_COLOR_BIT, this);
 
     OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
