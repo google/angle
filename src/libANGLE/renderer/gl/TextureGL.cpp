@@ -319,7 +319,7 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
     }
 
     if (features.reattachTextureToFboAfterLayerIncrease.enabled &&
-        getType() == gl::TextureType::_2DArray)
+        gl::IsLayeredTextureType(getType()))
     {
         const gl::ImageDesc &desc = mState.getImageDesc(target, level);
         if (size.depth > desc.size.depth)
@@ -1489,7 +1489,7 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
     }
 
     if (features.reattachTextureToFboAfterLayerIncrease.enabled &&
-        getType() == gl::TextureType::_2DArray)
+        gl::IsLayeredTextureType(getType()))
     {
         for (size_t level = 0; level < levels; level++)
         {
