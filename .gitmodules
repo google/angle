@@ -267,6 +267,10 @@
 	path = third_party/zlib
 	url = https://chromium.googlesource.com/chromium/src/third_party/zlib
 	gclient-condition = not build_with_chromium
+[submodule "third_party/zstd/src"]
+	path = third_party/zstd/src
+	url = https://chromium.googlesource.com/external/github.com/facebook/zstd.git
+	gclient-condition = not build_with_chromium
 [submodule "tools/android"]
 	path = tools/android
 	url = https://chromium.googlesource.com/chromium/src/tools/android

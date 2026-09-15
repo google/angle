@@ -110,6 +110,7 @@
 /third_party/wayland/src
 /third_party/wayland-protocols/src
 /third_party/zlib
+/third_party/zstd/src
 /tools/android
 /tools/clang
 /tools/flex-bison/linux/bison

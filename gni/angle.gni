@@ -426,6 +426,10 @@ if (!defined(angle_zlib_compression_utils_dir)) {
   angle_zlib_compression_utils_dir = "//third_party/zlib/google"
 }
 
+if (!defined(angle_zstd_dir)) {
+  angle_zstd_dir = "//third_party/zstd"
+}
+
 angle_common_configs = [
   angle_root + ":angle_asserts_config",
   angle_root + ":constructor_and_destructor_warnings",

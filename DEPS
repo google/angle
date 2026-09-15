@@ -1423,6 +1423,11 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
+  'third_party/zstd/src': {
+    'url': Var('chromium_git') + '/external/github.com/facebook/zstd.git@10da6ba6de05e29169261fa4b68eb99239f770dd',
+    'condition': 'not build_with_chromium',
+  },
+
   'tools/android': {
     'url': Var('chromium_git') + '/chromium/src/tools/android@89949aff3a84ccf1a06430134b67dfee54aea033',
     'condition': 'checkout_android and not build_with_chromium',
