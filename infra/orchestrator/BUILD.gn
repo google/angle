@@ -7,6 +7,8 @@
 # will package all data for the `orchestrator_all` target into a CAS isolate
 # for the child tester to download and extract.
 
+import("//build/config/vpython.gni")
+
 group("orchestrator_all") {
   write_runtime_deps = "$root_out_dir/orchestrator_all.runtime_deps"
 
@@ -50,5 +52,5 @@ group("orchestrator_merge_scripts") {
 }
 
 group("orchestrator_python") {
-  data = [ "//.vpython3" ]
+  data = vpython_spec_files
 }
