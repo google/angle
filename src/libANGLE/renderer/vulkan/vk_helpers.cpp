@@ -8427,11 +8427,9 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
     }
     else
     {
-        // Make sure the following commands know a transfer operation has happened since the last
-        // barrier, and what subresource it has affected.
+        // onImageTransferWrite already declares that the image is being written to.  Set the access
+        // to TransferSrcDst for correct future synchronization.
         setCurrentImageAccess(renderer, ImageAccess::TransferSrcDst);
-        onWrite(baseLevelGL + 1, mLevelCount - 1, gl::OwnerLayer(0), mLayerCount,
-                VK_IMAGE_ASPECT_COLOR_BIT);
     }
 
     contextVk->trackImageWithOutsideRenderPassEvent(this);
