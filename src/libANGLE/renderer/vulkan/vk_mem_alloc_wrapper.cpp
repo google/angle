@@ -51,12 +51,10 @@ VkResult InitAllocator(VkPhysicalDevice physicalDevice,
         funcs.vkBindImageMemory2KHR                   = vkBindImageMemory2;
         funcs.vkGetPhysicalDeviceMemoryProperties2KHR = vkGetPhysicalDeviceMemoryProperties2;
 
-        // vkGetPhysicalDeviceProperties2KHR is introduced in VMA 3.4.  VMA uses Vulkan's versioning
-        // scheme (VK_MAKE_API_VERSION) and sets major and minor versions.  VK_MAKE_API_VERSION
-        // cannot directly be used in the preprocessor |#if| check because it contains casts to
-        // |uint32_t|.  VK_MAKE_API_VERSION shifts the major number by 22 and the minor number by
-        // 12.
-#if defined(VMA_VERSION) && VMA_VERSION >= (3 << 22 | 4 << 12)
+        // vkGetPhysicalDeviceProperties2KHR was introduced in VMA 3.4 and is guarded by
+        // VMA_GET_PHYSICAL_DEVICE_PROPERTIES2. VMA_VERSION cannot be used in a preprocessor #if
+        // check because VK_MAKE_API_VERSION contains (uint32_t) casts.
+#if VMA_GET_PHYSICAL_DEVICE_PROPERTIES2
         funcs.vkGetPhysicalDeviceProperties2KHR = vkGetPhysicalDeviceProperties2;
 #endif
     }
