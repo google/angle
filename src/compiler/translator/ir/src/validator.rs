@@ -26,6 +26,8 @@
 //     validate_interface_variables_have_unique_names()
 //   - NameSource::ShaderInterface and NameSource::Internal are never found inside body blocks,
 //     those should always be Temporary: validate_block_variable_name_sources_are_temporary()
+//   - NameSource::Internal names don't start with the user and temporary name prefixes (*_PREFIX
+//     constants): validate_internal_name_prefixes()
 //
 // Types:
 //   - Validate that ImageType fields are valid in combination with ImageDimension:
@@ -88,8 +90,6 @@
 // TODO(http://anglebug.com/349994211): to validate:
 //   - If there's a cached "has side effect", that it's correct.
 //   - Loop blocks ends in the appropriate instructions.
-//   - NameSource::Internal names don't start with the user and temporary name prefixes (_u, t and f
-//     respectively).
 //   - Type matches?
 //   - Whatever else is in the AST validation currently.
 //   - Validate built-ins that accept an out or inout parameter, that the corresponding parameter is
@@ -304,6 +304,7 @@ impl<'a> Validator<'a> {
         self.validate_misuse_of_builtin_names();
         self.validate_interface_variables_have_unique_names();
         self.validate_block_variable_name_sources_are_temporary();
+        self.validate_internal_name_prefixes();
         self.validate_decorations();
         self.validate_no_pointer_to_pointer_type();
         self.validate_all_variables_are_declared_in_scope();
@@ -1991,6 +1992,53 @@ impl<'a> Validator<'a> {
             },
             |_, _| {},
         );
+    }
+
+    fn validate_internal_name_prefixes(&self) {
+        let validate_name_prefix = |name: Name, user_prefix: &str, temp_prefix: &str| {
+            if name.source != NameSource::Internal {
+                return;
+            }
+            if name.name.starts_with(user_prefix) {
+                self.on_error(format_args!(
+                    "invalid name {:?} internal name should not starts with user name prefix",
+                    name
+                ));
+            }
+            if name.name.starts_with(temp_prefix) {
+                self.on_error(format_args!(
+                    "invalid name {:?} internal name should not starts with temporary name prefix",
+                    name
+                ));
+            }
+        };
+        // Check all variable names
+        for variable in
+            self.ir.meta.all_variables().iter().filter(|variable| !variable.is_dead_code_eliminated)
+        {
+            validate_name_prefix(variable.name, USER_VARIABLE_PREFIX, TEMP_VARIABLE_PREFIX);
+        }
+        // Check all struct and field names
+        for ir_type in self.ir.meta.all_types().iter().filter(|t| !t.is_dead_code_eliminated()) {
+            if let &Type::Struct(struct_name, ref fields, specialization) = ir_type {
+                let user_prefix = match specialization {
+                    StructSpecialization::Struct => USER_VARIABLE_PREFIX,
+                    StructSpecialization::InterfaceBlock => USER_BLOCK_PREFIX,
+                };
+                validate_name_prefix(struct_name, user_prefix, TEMP_STRUCT_PREFIX);
+                for field in fields {
+                    validate_name_prefix(
+                        field.name,
+                        USER_VARIABLE_PREFIX,
+                        TEMP_STRUCT_FIELD_PREFIX,
+                    );
+                }
+            }
+        }
+        // Check all function names
+        for function in self.ir.meta.all_functions() {
+            validate_name_prefix(function.name, USER_VARIABLE_PREFIX, TEMP_FUNCTION_PREFIX);
+        }
     }
 
     fn validate_all_instructions(&self) {
