@@ -408,6 +408,7 @@ vars = {
   'checkout_angle_restricted_trace_odin_valhalla_rising': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_off_the_road': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_offline_games': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_one_piece_bounty_rush': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_one_piece_treasure_cruise': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_one_punch_man': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_onmyoji': 'checkout_extra_traces',
@@ -3856,6 +3857,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_offline_games',
+  },
+  'src/tests/restricted_traces/one_piece_bounty_rush': {
+      'packages': [
+        {
+            'package': 'angle/traces/one_piece_bounty_rush',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_one_piece_bounty_rush',
   },
   'src/tests/restricted_traces/one_piece_treasure_cruise': {
       'packages': [

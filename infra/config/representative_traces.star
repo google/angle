@@ -63,6 +63,7 @@ REPRESENTATIVE_TRACES = [
     "need_for_speed_no_limits",
     "ni_no_kuni",
     "odin_valhalla_rising",
+    "one_piece_bounty_rush",
     "passmark_simple_multiview",
     "pubg_mobile_battle_royale",
     "race_master_3d",
