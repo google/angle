@@ -340,6 +340,9 @@ bool TextureD3D::isImageSubresourceMatchingStorage(const gl::ImageIndex &index,
         return false;
     }
 
+    ASSERT(storageWidth0 > 0 && storageHeight0 > 0 && storageDepth0 > 0 &&
+           storageFormat != GL_NONE);
+
     if (index.getLevelIndex() < 0 || index.getLevelIndex() >= static_cast<int>(storageLevels))
     {
         return false;
@@ -358,6 +361,51 @@ bool TextureD3D::isImageSubresourceMatchingStorage(const gl::ImageIndex &index,
 
     return image->getWidth() == storageWidth && image->getHeight() == storageHeight &&
            image->getDepth() == storageDepth && image->getInternalFormat() == storageFormat;
+}
+
+angle::Result TextureD3D::releaseTexStorageIfMismatched(const gl::Context *context,
+                                                        GLint level,
+                                                        GLenum internalformat,
+                                                        const gl::Extents &size,
+                                                        bool forceReleaseStorage)
+{
+    return releaseTexStorageIfMismatched(context, 0 /*faceIndex*/, level, internalformat, size,
+                                         forceReleaseStorage);
+}
+
+angle::Result TextureD3D::releaseTexStorageIfMismatched(const gl::Context *context,
+                                                        size_t faceIndex,
+                                                        GLint level,
+                                                        GLenum internalformat,
+                                                        const gl::Extents &size,
+                                                        bool forceReleaseStorage)
+{
+    if (!mTexStorage)
+    {
+        return angle::Result::Continue;
+    }
+
+    auto shouldReleaseStorage = [&]() {
+        const int storageLevels = mTexStorage->getLevelCount();
+        return (level >= storageLevels && storageLevels != 0) ||
+               size.width != mTexStorage->getLevelWidth(level) ||
+               size.height != mTexStorage->getLevelHeight(level) ||
+               size.depth != mTexStorage->getLevelDepth(level) ||
+               internalformat != mTexStorage->getFormat();
+    };
+
+    if (forceReleaseStorage || shouldReleaseStorage())
+    {
+        markAllImagesDirty();
+
+        gl::CubeFaceArray<gl::TexLevelMask> copyImageMasks;
+        copyImageMasks.fill(gl::TexLevelMask().set());
+        copyImageMasks[faceIndex].set(level, false);
+
+        ANGLE_TRY(releaseTexStorage(context, copyImageMasks));
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result TextureD3D::setImageImpl(const gl::Context *context,
@@ -835,28 +883,41 @@ angle::Result TextureD3D::getAttachmentRenderTarget(const gl::Context *context,
 
 angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLevel)
 {
-    const int oldStorageWidth  = std::max(1, getLevelZeroWidth());
-    const int oldStorageHeight = std::max(1, getLevelZeroHeight());
-    const int oldStorageDepth  = std::max(1, getBaseLevelStorageDepth());
-    const int oldStorageFormat = getBaseLevelInternalFormat();
-    mBaseLevel                 = baseLevel;
+    mBaseLevel = baseLevel;
+
+    // If mTexStorage has not been created yet, there is no existing storage to back up or release;
+    // when storage is later initialized, it will use the updated mBaseLevel.
+    // For immutable textures (created via glTexStorage*D), the storage already covers all mip
+    // levels with the correct dimensions, so it should never be released on base level change.
+    if (!mTexStorage || isImmutable())
+    {
+        return angle::Result::Continue;
+    }
+
+    const int oldStorageWidth     = mTexStorage->getLevelWidth(0);
+    const int oldStorageHeight    = mTexStorage->getLevelHeight(0);
+    const int oldStorageDepth     = mTexStorage->getLevelDepth(0);
+    const GLenum oldStorageFormat = mTexStorage->getFormat();
 
     // When the base level changes, the texture storage might not be valid anymore, since it could
     // have been created based on the dimensions of the previous specified level range.
-    // For immutable textures (created via glTexStorage*D), the storage already covers all mip
-    // levels with the correct dimensions, so it should never be released on base level change.
     // getLevelZeroWidth() can compute incorrect dimensions for NPOT textures because
     // (width >> N) << N != width when width is not a power of two, which would cause a spurious
     // dimension mismatch and lead to recreating the storage with wrong dimensions.
-    const int newStorageWidth  = std::max(1, getLevelZeroWidth());
-    const int newStorageHeight = std::max(1, getLevelZeroHeight());
-    const int newStorageDepth  = std::max(1, getBaseLevelStorageDepth());
-    const int newStorageFormat = getBaseLevelInternalFormat();
-    if (mTexStorage && !isImmutable() &&
-        (newStorageWidth != oldStorageWidth || newStorageHeight != oldStorageHeight ||
-         newStorageDepth != oldStorageDepth || newStorageFormat != oldStorageFormat))
+    const int newStorageWidth     = getLevelZeroWidth();
+    const int newStorageHeight    = getLevelZeroHeight();
+    const int newStorageDepth     = getBaseLevelStorageDepth();
+    const GLenum newStorageFormat = getBaseLevelInternalFormat();
+    if (newStorageWidth <= 0 || newStorageHeight <= 0 || newStorageDepth <= 0 ||
+        newStorageWidth != oldStorageWidth || newStorageHeight != oldStorageHeight ||
+        newStorageDepth != oldStorageDepth || newStorageFormat != oldStorageFormat)
     {
-        // Iterate over all images and backup contents from texture storage before it is released.
+        // Even if the new base level has zero/invalid dimensions (making the texture incomplete),
+        // changing GL_TEXTURE_BASE_LEVEL does not delete or invalidate pixel data in other mip
+        // levels (e.g. level 0). Because we must release mTexStorage now, we first back up any
+        // mip levels that match oldStorage into their respective ImageD3D staging buffers so their
+        // contents are preserved if the base level is later restored.
+        //
         // We need to copy for both:
         // 1. Render targets: GPU rendering modified the storage directly.
         // 2. Fast-path uploads: TextureStorage11::setData wrote pixel data directly to the GPU
@@ -877,9 +938,9 @@ angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLe
                 ANGLE_TRY(mTexStorage->findRenderTarget(context, index, &renderTarget));
             }
 
-            const bool dimensionsMatch = isImageSubresourceMatchingStorage(
-                index, image, oldStorageWidth, oldStorageHeight, oldStorageDepth,
-                static_cast<GLenum>(oldStorageFormat), storageLevels);
+            const bool dimensionsMatch =
+                isImageSubresourceMatchingStorage(index, image, oldStorageWidth, oldStorageHeight,
+                                                  oldStorageDepth, oldStorageFormat, storageLevels);
 
             const bool hasNoStagingCopy =
                 image && !image->isDirty() &&
@@ -945,7 +1006,10 @@ angle::Result TextureD3D::releaseTexStorage(
 
     if (anyCopyMask)
     {
-        const GLenum storageFormat = getBaseLevelInternalFormat();
+        const int storageWidth0    = mTexStorage->getLevelWidth(0);
+        const int storageHeight0   = mTexStorage->getLevelHeight(0);
+        const int storageDepth0    = mTexStorage->getLevelDepth(0);
+        const GLenum storageFormat = mTexStorage->getFormat();
         const size_t storageLevels = mTexStorage->getLevelCount();
 
         gl::ImageIndexIterator iterator = imageIterator();
@@ -964,9 +1028,9 @@ angle::Result TextureD3D::releaseTexStorage(
                 copyImage = copyStorageToImagesMask[0][index.getLevelIndex()];
             }
 
-            const bool dimensionsMatch = isImageSubresourceMatchingStorage(
-                index, image, getLevelZeroWidth(), getLevelZeroHeight(), getBaseLevelStorageDepth(),
-                storageFormat, storageLevels);
+            const bool dimensionsMatch =
+                isImageSubresourceMatchingStorage(index, image, storageWidth0, storageHeight0,
+                                                  storageDepth0, storageFormat, storageLevels);
 
             if (dimensionsMatch && copyImage)
             {
@@ -1814,35 +1878,16 @@ angle::Result TextureD3D_2D::redefineImage(const gl::Context *context,
 {
     ASSERT(size.depth == 1);
 
-    // If there currently is a corresponding storage texture image, it has these parameters
-    const int storageWidth     = std::max(1, getLevelZeroWidth() >> level);
-    const int storageHeight    = std::max(1, getLevelZeroHeight() >> level);
-    const GLenum storageFormat = getBaseLevelInternalFormat();
-
-    if (mTexStorage)
+    if (mTexStorage && level != 0 && mEGLImageTarget)
     {
-        const size_t storageLevels = mTexStorage->getLevelCount();
-
         // If the storage was from an EGL image, copy it back into local images to preserve it
         // while orphaning
-        if (level != 0 && mEGLImageTarget)
-        {
-            ANGLE_TRY(mImageArray[0]->copyFromTexStorage(context, gl::ImageIndex::Make2D(0),
-                                                         mTexStorage));
-        }
-
-        if ((level >= storageLevels && storageLevels != 0) || size.width != storageWidth ||
-            size.height != storageHeight || internalformat != storageFormat ||
-            mEGLImageTarget)  // Discard mismatched storage
-        {
-            gl::TexLevelMask copyImageMask;
-            copyImageMask.set();
-            copyImageMask.set(level, false);
-
-            ANGLE_TRY(releaseTexStorage(context, copyImageMask));
-            markAllImagesDirty();
-        }
+        ANGLE_TRY(
+            mImageArray[0]->copyFromTexStorage(context, gl::ImageIndex::Make2D(0), mTexStorage));
     }
+
+    ANGLE_TRY(releaseTexStorageIfMismatched(context, static_cast<GLint>(level), internalformat,
+                                            size, mEGLImageTarget /*forceReleaseStorage*/));
 
     mImageArray[level]->redefine(gl::TextureType::_2D, internalformat, size, forceRelease);
     mDirtyImages = mDirtyImages || mImageArray[level]->isDirty();
@@ -2539,28 +2584,8 @@ angle::Result TextureD3D_Cube::redefineImage(const gl::Context *context,
                                              const gl::Extents &size,
                                              bool forceRelease)
 {
-    // If there currently is a corresponding storage texture image, it has these parameters
-    const int storageWidth     = std::max(1, getLevelZeroWidth() >> level);
-    const int storageHeight    = std::max(1, getLevelZeroHeight() >> level);
-    const GLenum storageFormat = getBaseLevelInternalFormat();
-
-    if (mTexStorage)
-    {
-        const int storageLevels = mTexStorage->getLevelCount();
-
-        if ((level >= storageLevels && storageLevels != 0) || size.width != storageWidth ||
-            size.height != storageHeight ||
-            internalformat != storageFormat)  // Discard mismatched storage
-        {
-            markAllImagesDirty();
-
-            gl::CubeFaceArray<gl::TexLevelMask> copyImageMasks;
-            copyImageMasks.fill(gl::TexLevelMask().set());
-            copyImageMasks[faceIndex].set(level, false);
-
-            ANGLE_TRY(releaseTexStorage(context, copyImageMasks));
-        }
-    }
+    ANGLE_TRY(releaseTexStorageIfMismatched(context, faceIndex, level, internalformat, size,
+                                            false /*forceReleaseStorage*/));
 
     mImageArray[faceIndex][level]->redefine(gl::TextureType::CubeMap, internalformat, size,
                                             forceRelease);
@@ -3201,29 +3226,8 @@ angle::Result TextureD3D_3D::redefineImage(const gl::Context *context,
                                            const gl::Extents &size,
                                            bool forceRelease)
 {
-    // If there currently is a corresponding storage texture image, it has these parameters
-    const int storageWidth     = std::max(1, getLevelZeroWidth() >> level);
-    const int storageHeight    = std::max(1, getLevelZeroHeight() >> level);
-    const int storageDepth     = std::max(1, getLevelZeroDepth() >> level);
-    const GLenum storageFormat = getBaseLevelInternalFormat();
-
-    if (mTexStorage)
-    {
-        const int storageLevels = mTexStorage->getLevelCount();
-
-        if ((level >= storageLevels && storageLevels != 0) || size.width != storageWidth ||
-            size.height != storageHeight || size.depth != storageDepth ||
-            internalformat != storageFormat)  // Discard mismatched storage
-        {
-            markAllImagesDirty();
-
-            gl::TexLevelMask copyImageMask;
-            copyImageMask.set();
-            copyImageMask.set(level, false);
-
-            ANGLE_TRY(releaseTexStorage(context, copyImageMask));
-        }
-    }
+    ANGLE_TRY(releaseTexStorageIfMismatched(context, level, internalformat, size,
+                                            false /*forceReleaseStorage*/));
 
     mImageArray[level]->redefine(gl::TextureType::_3D, internalformat, size, forceRelease);
     mDirtyImages = mDirtyImages || mImageArray[level]->isDirty();
@@ -3965,12 +3969,6 @@ angle::Result TextureD3D_2DArray::redefineImage(const gl::Context *context,
                                                 const gl::Extents &size,
                                                 bool forceRelease)
 {
-    // If there currently is a corresponding storage texture image, it has these parameters
-    const int storageWidth     = std::max(1, getLevelZeroWidth() >> level);
-    const int storageHeight    = std::max(1, getLevelZeroHeight() >> level);
-    const GLenum storageFormat = getBaseLevelInternalFormat();
-    const int storageDepth     = getBaseLevelStorageDepth();
-
     // Only reallocate the layers if the size doesn't match
     if (size.depth != ANGLE_UNSAFE_TODO(mLayerCounts[level]))
     {
@@ -3993,23 +3991,8 @@ angle::Result TextureD3D_2DArray::redefineImage(const gl::Context *context,
         }
     }
 
-    if (mTexStorage)
-    {
-        const int storageLevels = mTexStorage->getLevelCount();
-
-        if ((level >= storageLevels && storageLevels != 0) || size.width != storageWidth ||
-            size.height != storageHeight || size.depth != storageDepth ||
-            internalformat != storageFormat)  // Discard mismatched storage
-        {
-            markAllImagesDirty();
-
-            gl::TexLevelMask copyImageMask;
-            copyImageMask.set();
-            copyImageMask.set(level, false);
-
-            ANGLE_TRY(releaseTexStorage(context, copyImageMask));
-        }
-    }
+    ANGLE_TRY(releaseTexStorageIfMismatched(context, level, internalformat, size,
+                                            false /*forceReleaseStorage*/));
 
     if (size.depth > 0)
     {
