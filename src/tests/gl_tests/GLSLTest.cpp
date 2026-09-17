@@ -25586,16 +25586,15 @@ void main()
 // correctly.
 TEST_P(GLSLTest_ES3, DynamicIndexingOfVectorOnRightSideOfLogicalOr)
 {
-    const std::string &fragShader =
-        "#version 300 es\n"
-        "precision highp float;\n"
-        "out vec4 my_FragColor;\n"
-        "uniform int u1;\n"
-        "void main() {\n"
-        "   bvec4 v = bvec4(true, true, true, false);\n"
-        "   my_FragColor = vec4(v[u1 + 1] || v[u1]);\n"
-        "}\n";
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fragShader.c_str());
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+uniform int u1;
+void main() {
+   bvec4 v = bvec4(true, true, true, false);
+   my_FragColor = vec4(v[u1 + 1] || v[u1]);
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     GLint u1Loc = glGetUniformLocation(program, "u1");
     ASSERT_NE(-1, u1Loc);
@@ -25609,37 +25608,35 @@ TEST_P(GLSLTest_ES3, DynamicIndexingOfVectorOnRightSideOfLogicalOr)
 // without a prefix.
 TEST_P(GLSLTest, RewriteElseBlockReturningStruct)
 {
-    const std::string &vs =
-        "attribute vec4 a_position;\n"
-        "struct foo\n"
-        "{\n"
-        "    float member;\n"
-        "};\n"
-        "uniform bool b;\n"
-        "varying float outMember;\n"
-        "foo getFoo()\n"
-        "{\n"
-        "    if (b)\n"
-        "    {\n"
-        "        return foo(0.5);\n"
-        "    }\n"
-        "    else\n"
-        "    {\n"
-        "        return foo(1.0);\n"
-        "    }\n"
-        "}\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = a_position;\n"
-        "   outMember = getFoo().member;\n"
-        "}\n";
-    const std::string &fs =
-        "precision mediump float;\n"
-        "varying float outMember;\n"
-        "void main() {\n"
-        "   gl_FragColor = vec4(outMember, 0.0, 0.0, 1.0);\n"
-        "}\n";
-    ANGLE_GL_PROGRAM(program, vs.c_str(), fs.c_str());
+    constexpr char kVS[] = R"(attribute vec4 a_position;
+struct foo
+{
+    float member;
+};
+uniform bool b;
+varying float outMember;
+foo getFoo()
+{
+    if (b)
+    {
+        return foo(0.5);
+    }
+    else
+    {
+        return foo(1.0);
+    }
+}
+void main()
+{
+   gl_Position = a_position;
+   outMember = getFoo().member;
+})";
+    constexpr char kFS[] = R"(precision mediump float;
+varying float outMember;
+void main() {
+   gl_FragColor = vec4(outMember, 0.0, 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
     GLint bLoc = glGetUniformLocation(program, "b");
     ASSERT_NE(-1, bLoc);
@@ -25653,14 +25650,14 @@ TEST_P(GLSLTest, RewriteElseBlockReturningStruct)
 // test.
 TEST_P(GLSLTest, RemoveDynamicingIndexIndexPrecisionBug)
 {
-    const char vs[] = R"(void main()
+    constexpr char kVS[] = R"(void main()
 {
     mat3 tmp;
     vec3 res = vec3(0);
     for (int i = 0; res += 0., ivec3(0)[i], ivec3(tmp)[i], i < 0;);
     gl_Position = vec4(0.0);
 })";
-    ANGLE_GL_PROGRAM(program, vs, essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(program, kVS, essl1_shaders::fs::Red());
     EXPECT_GL_NO_ERROR();
 }
 
@@ -25668,16 +25665,15 @@ TEST_P(GLSLTest, RemoveDynamicingIndexIndexPrecisionBug)
 // output. This test has a constant array constructor statement.
 TEST_P(GLSLTest_ES3, ConstArrayConstructorStatement)
 {
-    const std::string &fs =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 outColor;\n"
-        "void main()\n"
-        "{\n"
-        "    int[1](0);\n"
-        "    outColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
-        "}\n";
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 outColor;
+void main()
+{
+    int[1](0);
+    outColor = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
@@ -25688,16 +25684,15 @@ TEST_P(GLSLTest_ES3, ConstArrayConstructorStatement)
 // output.
 TEST_P(GLSLTest_ES3, ArrayConstructorStatement)
 {
-    const std::string &fs =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 outColor;\n"
-        "void main()\n"
-        "{\n"
-        "    outColor = vec4(0.0, 0.0, 0.0, 1.0);\n"
-        "    float[1](outColor[1]++);\n"
-        "}\n";
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 outColor;
+void main()
+{
+    outColor = vec4(0.0, 0.0, 0.0, 1.0);
+    float[1](outColor[1]++);
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
@@ -25707,16 +25702,15 @@ TEST_P(GLSLTest_ES3, ArrayConstructorStatement)
 // Test an array of arrays constructor as a statement.
 TEST_P(GLSLTest_ES31, ArrayOfArraysStatement)
 {
-    const std::string &fs =
-        "#version 310 es\n"
-        "precision mediump float;\n"
-        "out vec4 outColor;\n"
-        "void main()\n"
-        "{\n"
-        "    outColor = vec4(0.0, 0.0, 0.0, 1.0);\n"
-        "    float[2][2](float[2](outColor[1]++, 0.0), float[2](1.0, 2.0));\n"
-        "}\n";
-    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fs.c_str());
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 outColor;
+void main()
+{
+    outColor = vec4(0.0, 0.0, 0.0, 1.0);
+    float[2][2](float[2](outColor[1]++, 0.0), float[2](1.0, 2.0));
+})";
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
@@ -25727,17 +25721,16 @@ TEST_P(GLSLTest_ES31, ArrayOfArraysStatement)
 // indexing have correct data that subsequent traversal steps rely on.
 TEST_P(GLSLTest_ES3, VectorDynamicIndexing)
 {
-    const std::string &fs =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "out vec4 outColor;\n"
-        "uniform int i;\n"
-        "void main()\n"
-        "{\n"
-        "    vec4 foo = vec4(0.0, 0.5, 0.0, 1.0);\n"
-        "    outColor = vec4(0.0, foo[i], 0.0, 1.0);\n"
-        "}\n";
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 outColor;
+uniform int i;
+void main()
+{
+    vec4 foo = vec4(0.0, 0.5, 0.0, 1.0);
+    outColor = vec4(0.0, foo[i], 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     GLint iLoc = glGetUniformLocation(program, "i");
     ASSERT_NE(-1, iLoc);
@@ -25751,21 +25744,20 @@ TEST_P(GLSLTest_ES3, VectorDynamicIndexing)
 // changed consistently when the user-defined function is changed to have an array out parameter.
 TEST_P(GLSLTest_ES31, ArrayReturnValue)
 {
-    const std::string &fs =
-        "#version 310 es\n"
-        "precision highp float;\n"
-        "uniform float u;\n"
-        "out vec4 outColor;\n"
-        "float[2] getArray(float f)\n"
-        "{\n"
-        "    return float[2](f, f + 0.5);\n"
-        "}\n"
-        "void main()\n"
-        "{\n"
-        "    float[2] arr = getArray(u);\n"
-        "    outColor = vec4(arr[0], arr[1], 0.0, 1.0);\n"
-        "}\n";
-    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), fs.c_str());
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+uniform float u;
+out vec4 outColor;
+float[2] getArray(float f)
+{
+    return float[2](f, f + 0.5);
+}
+void main()
+{
+    float[2] arr = getArray(u);
+    outColor = vec4(arr[0], arr[1], 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     GLint uLoc = glGetUniformLocation(program, "u");
     ASSERT_NE(-1, uLoc);
@@ -25778,18 +25770,17 @@ TEST_P(GLSLTest_ES31, ArrayReturnValue)
 // Test that writing parameters without a name doesn't assert.
 TEST_P(GLSLTest, ParameterWithNoName)
 {
-    const std::string &fs =
-        "precision mediump float;\n"
-        "uniform vec4 v;\n"
-        "vec4 s(vec4)\n"
-        "{\n"
-        "    return v;\n"
-        "}\n"
-        "void main()\n"
-        "{\n"
-        "    gl_FragColor = s(v);\n"
-        "}\n";
-    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), fs.c_str());
+    constexpr char kFS[] = R"(precision mediump float;
+uniform vec4 v;
+vec4 s(vec4)
+{
+    return v;
+}
+void main()
+{
+    gl_FragColor = s(v);
+})";
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     GLint vLoc = glGetUniformLocation(program, "v");
     ASSERT_NE(-1, vLoc);
@@ -25802,21 +25793,20 @@ TEST_P(GLSLTest, ParameterWithNoName)
 // Test that array dimensions are written out correctly.
 TEST_P(GLSLTest_ES3, ArrayDimensionsCompile)
 {
-    const std::string &fs =
-        "#version 300 es\n"
-        "precision mediump float;\n"
-        "uniform float uf;\n"
-        "out vec4 my_FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "    my_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n"
-        "    float arr[2];\n"
-        "    for (int i = 0; i < 2; ++i) {\n"
-        "        arr[i] = uf * 0.25;\n"
-        "        my_FragColor.x += arr[i];\n"
-        "    }\n"
-        "}\n";
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform float uf;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    float arr[2];
+    for (int i = 0; i < 2; ++i) {
+        arr[i] = uf * 0.25;
+        my_FragColor.x += arr[i];
+    }
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     GLint ufLoc = glGetUniformLocation(program, "uf");
     ASSERT_NE(-1, ufLoc);
@@ -25829,19 +25819,18 @@ TEST_P(GLSLTest_ES3, ArrayDimensionsCompile)
 // Test that initializing array with previously declared array will not be overwritten
 TEST_P(GLSLTest_ES3, SameNameArray)
 {
-    const std::string &fs =
-        "#version 300 es\n"
-        "precision highp float;\n"
-        "out vec4 my_FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "  float arr[2] = float[2](0.5, 1.0);\n"
-        "  {\n"
-        "    float arr[2] = arr;\n"
-        "    my_FragColor = vec4(0.0, arr[0], 0.0, arr[1]);\n"
-        "  }\n"
-        "}\n";
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+void main()
+{
+  float arr[2] = float[2](0.5, 1.0);
+  {
+    float arr[2] = arr;
+    my_FragColor = vec4(0.0, arr[0], 0.0, arr[1]);
+  }
+})";
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_GL_NO_ERROR();
@@ -25852,7 +25841,7 @@ TEST_P(GLSLTest_ES3, SameNameArray)
 // struct mapping.
 TEST_P(GLSLTest_ES3, NonStructMemberAsFunctionArgument)
 {
-    const std::string &fs = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 300 es
     precision highp float;
     out vec4 my_FragColor;
     struct InstancingData
@@ -25871,7 +25860,7 @@ TEST_P(GLSLTest_ES3, NonStructMemberAsFunctionArgument)
         float result = dot(instances[index].data, vec4(0.25, 0.25, 0.25, 0.25));
         my_FragColor = vec4(result, 0.0, 0.0, 1.0);
     })";
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     GLuint blockIndex = glGetUniformBlockIndex(program, "InstanceBlock");
     ASSERT_NE(GL_INVALID_INDEX, blockIndex);
@@ -25905,7 +25894,7 @@ TEST_P(GLSLTest_ES3, UniformBlockWithUnsupportedFieldStructuredBufferFallback)
     // If translation incorrectly used StructuredBuffer, the GPU would read element 49 from offset
     // 49 * 52 = 2548 instead of the correct CPU offset 49 * 64 = 3136, reading garbage and
     // rendering a wrong color.
-    const std::string &fs = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 300 es
 precision highp float;
 struct S {
     vec4 a;
@@ -25920,7 +25909,7 @@ void main() {
     fragColor = buf[u_index].a + vec4(buf[u_index].b[0], 0.0);
 })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     GLuint blockIndex = glGetUniformBlockIndex(program, "Block");
     ASSERT_NE(GL_INVALID_INDEX, blockIndex);
@@ -25964,7 +25953,7 @@ void main() {
 // rendered correctly.
 TEST_P(GLSLTest_ES3, UniformBlockWithSupportedFieldsStructuredBuffer)
 {
-    const std::string &fs = R"(#version 300 es
+    constexpr char kFS[] = R"(#version 300 es
 precision highp float;
 struct S {
     vec4 a;
@@ -25979,7 +25968,7 @@ void main() {
     fragColor = buf[u_index].a + buf[u_index].b[0];
 })";
 
-    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     glUseProgram(program);
     GLuint blockIndex = glGetUniformBlockIndex(program, "Block");
     ASSERT_NE(GL_INVALID_INDEX, blockIndex);

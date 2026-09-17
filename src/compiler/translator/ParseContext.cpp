@@ -1985,7 +1985,7 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
         mValidatedVariableTypeSizes[*type] = variableSize;
     }
 
-    if (variableSize > kWebGLMaxVariableSizeInBytes)
+    if (variableSize >= kWebGLMaxVariableSizeInBytes)
     {
         error(line, "Size of declared variable exceeds implementation-defined limit", identifier);
         return false;
@@ -2029,7 +2029,7 @@ bool TParseContext::checkVariableSize(const TSourceLoc &line,
         case EvqPerVertexIn:
         case EvqPerVertexOut:
 
-            if (variableSize > kWebGLMaxPrivateVariableSizeInBytes)
+            if (variableSize >= kWebGLMaxPrivateVariableSizeInBytes)
             {
                 error(line,
                       "Size of declared private variable exceeds implementation-defined limit",
