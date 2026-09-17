@@ -84,8 +84,6 @@ template <typename DisplayT>
 class ScopedDisplayLockAndRefT;
 using ScopedDisplayLockAndRef      = ScopedDisplayLockAndRefT<Display>;
 using ScopedConstDisplayLockAndRef = ScopedDisplayLockAndRefT<const Display>;
-using ScopedDisplayRefAndLock      = ScopedDisplayLockAndRef;
-using ScopedConstDisplayRefAndLock = ScopedConstDisplayLockAndRef;
 
 using SurfaceMap = priv::ObjectMap<Surface, angle::SimpleMutex>;
 using ThreadSet  = angle::HashSet<Thread *>;

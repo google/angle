@@ -37,7 +37,7 @@ EGLBoolean EGLAPIENTRY EGL_ChooseConfig(EGLDisplay dpy,
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(ChooseConfig,
@@ -81,7 +81,7 @@ EGLBoolean EGLAPIENTRY EGL_CopyBuffers(EGLDisplay dpy,
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(CopyBuffers,
@@ -122,7 +122,7 @@ EGLContext EGLAPIENTRY EGL_CreateContext(EGLDisplay dpy,
     EGLContext returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(CreateContext,
@@ -169,7 +169,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePbufferSurface(EGLDisplay dpy,
     EGLSurface returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(CreatePbufferSurface,
@@ -213,7 +213,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePixmapSurface(EGLDisplay dpy,
     EGLSurface returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(CreatePixmapSurface,
@@ -258,7 +258,7 @@ EGLSurface EGLAPIENTRY EGL_CreateWindowSurface(EGLDisplay dpy,
     EGLSurface returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(CreateWindowSurface,
@@ -300,7 +300,7 @@ EGLBoolean EGLAPIENTRY EGL_DestroyContext(EGLDisplay dpy, EGLContext ctx)
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(DestroyContext, "dpy = 0x%016" PRIxPTR ", ctx = 0x%016" PRIxPTR "",
@@ -336,7 +336,7 @@ EGLBoolean EGLAPIENTRY EGL_DestroySurface(EGLDisplay dpy, EGLSurface surface)
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(DestroySurface, "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR "",
@@ -375,7 +375,7 @@ EGLBoolean EGLAPIENTRY EGL_GetConfigAttrib(EGLDisplay dpy,
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(GetConfigAttrib,
@@ -417,7 +417,7 @@ EGLBoolean EGLAPIENTRY EGL_GetConfigs(EGLDisplay dpy,
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(GetConfigs,
@@ -588,7 +588,7 @@ EGLBoolean EGLAPIENTRY EGL_Initialize(EGLDisplay dpy, EGLint *major, EGLint *min
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(Initialize,
@@ -626,7 +626,7 @@ EGLBoolean EGLAPIENTRY EGL_MakeCurrent(EGLDisplay dpy,
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(MakeCurrent,
@@ -670,7 +670,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryContext(EGLDisplay dpy,
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(QueryContext,
@@ -710,7 +710,7 @@ const char *EGLAPIENTRY EGL_QueryString(EGLDisplay dpy, EGLint name)
     const char *returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(QueryString, "dpy = 0x%016" PRIxPTR ", name = %d", (uintptr_t)dpy, name);
@@ -749,7 +749,7 @@ EGLBoolean EGLAPIENTRY EGL_QuerySurface(EGLDisplay dpy,
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(QuerySurface,
@@ -788,7 +788,7 @@ EGLBoolean EGLAPIENTRY EGL_SwapBuffers(EGLDisplay dpy, EGLSurface surface)
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(SwapBuffers, "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR "",
@@ -824,7 +824,7 @@ EGLBoolean EGLAPIENTRY EGL_Terminate(EGLDisplay dpy)
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(Terminate, "dpy = 0x%016" PRIxPTR "", (uintptr_t)dpy);
@@ -915,7 +915,7 @@ EGLBoolean EGLAPIENTRY EGL_BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(BindTexImage, "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR ", buffer = %d",
@@ -952,7 +952,7 @@ EGLBoolean EGLAPIENTRY EGL_ReleaseTexImage(EGLDisplay dpy, EGLSurface surface, E
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(ReleaseTexImage,
@@ -993,7 +993,7 @@ EGLBoolean EGLAPIENTRY EGL_SurfaceAttrib(EGLDisplay dpy,
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(SurfaceAttrib,
@@ -1032,7 +1032,7 @@ EGLBoolean EGLAPIENTRY EGL_SwapInterval(EGLDisplay dpy, EGLint interval)
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(SwapInterval, "dpy = 0x%016" PRIxPTR ", interval = %d", (uintptr_t)dpy, interval);
@@ -1099,7 +1099,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePbufferFromClientBuffer(EGLDisplay dpy,
     EGLSurface returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(CreatePbufferFromClientBuffer,
@@ -1300,7 +1300,7 @@ EGLImage EGLAPIENTRY EGL_CreateImage(EGLDisplay dpy,
     EGLImage returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(CreateImage,
@@ -1346,7 +1346,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePlatformPixmapSurface(EGLDisplay dpy,
     EGLSurface returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(CreatePlatformPixmapSurface,
@@ -1392,7 +1392,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePlatformWindowSurface(EGLDisplay dpy,
     EGLSurface returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(CreatePlatformWindowSurface,
@@ -1474,7 +1474,7 @@ EGLBoolean EGLAPIENTRY EGL_DestroyImage(EGLDisplay dpy, EGLImage image)
     EGLBoolean returnValue;
     {
         egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayRefAndLock dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
+        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
         const egl::Display *validDisplay           = dpyPackedLock.get();
 
         EGL_EVENT(DestroyImage, "dpy = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR "",

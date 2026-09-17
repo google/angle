@@ -2280,7 +2280,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         else:
             packed_display_conversions = (
                 f"egl::Display *{dpy_param} = PackParam<egl::Display *>({dpy_raw_param_name});\n"
-                f"        egl::ScopedDisplayRefAndLock {dpy_param}Lock = GetDisplayAndLockIfValid({dpy_param});\n"
+                f"        egl::ScopedDisplayLockAndRef {dpy_param}Lock = GetDisplayAndLockIfValid({dpy_param});\n"
                 f"        const egl::Display *validDisplay = {dpy_param}Lock.get();\n\n        ")
         if name in EGL_CONTEXT_LOCK_USES_DPY:
             context_lock_statement = f"ANGLE_EGL_SCOPED_CONTEXT_LOCK_DPY({name}, thread, validDisplay{extra_lock_params});"

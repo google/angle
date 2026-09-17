@@ -2863,24 +2863,24 @@ ScopedThreadSafeDisplayRef GetThreadSafeDisplayIfValid(ThreadSafeDisplay *displa
     return ScopedThreadSafeDisplayRef(*display);
 }
 
-ScopedConstDisplayRefAndLock GetDisplayAndLockIfValid(const Display *display)
+ScopedConstDisplayLockAndRef GetDisplayAndLockIfValid(const Display *display)
 {
     if (!ValidateDisplayPointer(nullptr, display))
     {
-        return ScopedConstDisplayRefAndLock();
+        return ScopedConstDisplayLockAndRef();
     }
 
-    return ScopedConstDisplayRefAndLock(*display);
+    return ScopedConstDisplayLockAndRef(*display);
 }
 
-ScopedDisplayRefAndLock GetDisplayAndLockIfValid(Display *display)
+ScopedDisplayLockAndRef GetDisplayAndLockIfValid(Display *display)
 {
     if (!ValidateDisplayPointer(nullptr, display))
     {
-        return ScopedDisplayRefAndLock();
+        return ScopedDisplayLockAndRef();
     }
 
-    return ScopedDisplayRefAndLock(*display);
+    return ScopedDisplayLockAndRef(*display);
 }
 
 const Surface *GetSurfaceIfValid(const Display *display, SurfaceID surfaceID)
