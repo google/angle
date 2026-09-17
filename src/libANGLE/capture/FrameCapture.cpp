@@ -664,6 +664,49 @@ void MaybeMergeClientAttributes(const gl::VertexArray *vao,
     }
 }
 
+void TrackResetCallStateChanges(const CallCapture &call, StateResetHelper &stateResetHelper)
+{
+    switch (call.entryPoint)
+    {
+        case EntryPoint::GLActiveTexture:
+        {
+            GLenum texture = call.params.getParam("texture", ParamType::TGLenum, 0).value.GLenumVal;
+            stateResetHelper.setCurrentResetActiveTexture(texture - GL_TEXTURE0);
+            break;
+        }
+        case EntryPoint::GLBindTexture:
+        {
+            gl::TextureType target =
+                call.params.getParam("targetPacked", ParamType::TTextureType, 0)
+                    .value.TextureTypeVal;
+            stateResetHelper.setTextureBindingDirty(stateResetHelper.getCurrentResetActiveTexture(),
+                                                    target);
+            break;
+        }
+        case EntryPoint::GLBindBuffer:
+        {
+            gl::BufferBinding target =
+                call.params.getParam("targetPacked", ParamType::TBufferBinding, 0)
+                    .value.BufferBindingVal;
+            stateResetHelper.setBufferBindingDirty(target);
+            break;
+        }
+        case EntryPoint::GLBindFramebuffer:
+        case EntryPoint::GLBindFramebufferOES:
+            stateResetHelper.setEntryPointDirty(EntryPoint::GLBindFramebuffer);
+            break;
+        case EntryPoint::GLUseProgram:
+            stateResetHelper.setEntryPointDirty(EntryPoint::GLUseProgram);
+            break;
+        case EntryPoint::GLBindVertexArray:
+        case EntryPoint::GLBindVertexArrayOES:
+            stateResetHelper.setEntryPointDirty(EntryPoint::GLBindVertexArray);
+            break;
+        default:
+            break;
+    }
+}
+
 // TODO (http://anglebug.com/42263204): Reset more state on frame loop
 void MaybeResetResources(egl::Display *display,
                          gl::ContextID contextID,
@@ -678,6 +721,15 @@ void MaybeResetResources(egl::Display *display,
 {
     // Track the initial output position so we can detect if it has moved
     std::streampos initialOutPos = out.tellp();
+
+    gl::Context *context               = display->getContext(contextID);
+    StateResetHelper &stateResetHelper = context->getFrameCapture()->getStateResetHelper();
+    auto emitResetCall                 = [&](CallCapture &call) {
+        out << "    ";
+        WriteCppReplayForCall(call, replayWriter, out, header, binaryData, maxResourceIDBufferSize);
+        out << ";\n";
+        TrackResetCallStateChanges(call, stateResetHelper);
+    };
 
     switch (resourceIDType)
     {
@@ -703,10 +755,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their regen calls
                 for (CallCapture &call : bufferRegenCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
 
@@ -720,20 +769,14 @@ void MaybeResetResources(egl::Display *display,
                     // which violates the spec. See gl::Buffer::bufferDataImpl().
                     for (CallCapture &call : bufferUnmapCalls[id])
                     {
-                        out << "    ";
-                        WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                              maxResourceIDBufferSize);
-                        out << ";\n";
+                        emitResetCall(call);
                     }
                 }
 
                 // Emit their restore calls
                 for (CallCapture &call : bufferRestoreCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
 
                     // Also note that this buffer has been implicitly unmapped by this call
                     resourceTracker->setBufferUnmapped(contextID, id);
@@ -751,10 +794,7 @@ void MaybeResetResources(egl::Display *display,
                     // Emit their map calls
                     for (CallCapture &call : bufferMapCalls[id])
                     {
-                        out << "    ";
-                        WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                              maxResourceIDBufferSize);
-                        out << ";\n";
+                        emitResetCall(call);
                     }
                 }
                 // If the buffer was unmapped at the start, but is mapped now, we need to unmap
@@ -764,10 +804,7 @@ void MaybeResetResources(egl::Display *display,
                     // Emit their unmap calls
                     for (CallCapture &call : bufferUnmapCalls[id])
                     {
-                        out << "    ";
-                        WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                              maxResourceIDBufferSize);
-                        out << ";\n";
+                        emitResetCall(call);
                     }
                 }
             }
@@ -791,10 +828,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their regen calls
                 for (CallCapture &call : framebufferRegenCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
 
@@ -806,10 +840,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their restore calls
                 for (CallCapture &call : framebufferRestoreCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
             break;
@@ -833,10 +864,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their regen calls
                 for (CallCapture &call : renderbufferRegenCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
 
@@ -848,10 +876,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their restore calls
                 for (CallCapture &call : renderbufferRestoreCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
             break;
@@ -908,10 +933,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their regen calls
                 for (CallCapture &call : shaderProgramRegenCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
 
@@ -920,10 +942,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their restore calls
                 for (CallCapture &call : shaderProgramRestoreCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
 
@@ -948,10 +967,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their regen calls
                 for (CallCapture &call : textureRegenCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
 
@@ -963,16 +979,12 @@ void MaybeResetResources(egl::Display *display,
             {
                 // We need to unbind PIXEL_UNPACK_BUFFER before restoring textures
                 // The correct binding will be restored in context state reset
-                gl::Context *context = display->getContext(contextID);
                 if (context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack))
                 {
                     out << "    // Clearing PIXEL_UNPACK_BUFFER binding for texture restore\n";
-                    out << "    ";
-                    WriteCppReplayForCall(CaptureBindBuffer(context->getState(), true,
-                                                            gl::BufferBinding::PixelUnpack, {0}),
-                                          replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    CallCapture clearPixelUnpack = CaptureBindBuffer(
+                        context->getState(), true, gl::BufferBinding::PixelUnpack, {0});
+                    emitResetCall(clearPixelUnpack);
                 }
             }
 
@@ -981,10 +993,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their restore calls
                 for (CallCapture &call : textureRestoreCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
             break;
@@ -1009,10 +1018,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their regen calls
                 for (CallCapture &call : vertexArrayRegenCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
 
@@ -1023,10 +1029,7 @@ void MaybeResetResources(egl::Display *display,
                 // Emit their restore calls
                 for (CallCapture &call : vertexArrayRestoreCalls[id])
                 {
-                    out << "    ";
-                    WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                          maxResourceIDBufferSize);
-                    out << ";\n";
+                    emitResetCall(call);
                 }
             }
             break;
@@ -1273,6 +1276,7 @@ void MaybeResetDefaultUniforms(std::stringstream &out,
         }
 
         // Bind the program to update its uniforms
+        StateResetHelper &stateResetHelper = context->getFrameCapture()->getStateResetHelper();
         std::vector<CallCapture> bindCalls;
         Capture(&bindCalls, CaptureUseProgram(context->getState(), true, programID));
         CaptureUpdateCurrentProgram((&bindCalls)->back(), 0, &bindCalls);
@@ -1282,6 +1286,7 @@ void MaybeResetDefaultUniforms(std::stringstream &out,
             WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
                                   maxResourceIDBufferSize);
             out << ";\n";
+            TrackResetCallStateChanges(call, stateResetHelper);
         }
 
         DefaultUniformCallsPerLocationMap &defaultUniformResetCalls =
@@ -1409,33 +1414,30 @@ void MaybeResetContextState(ReplayWriter &replayWriter,
     }
 
     // Restore texture bindings to initial state
-    size_t activeTexture                 = context->getState().getActiveSampler();
+    size_t activeTexture                 = stateResetHelper.getCurrentResetActiveTexture();
     const TextureResetMap &resetBindings = stateResetHelper.getResetTextureBindings();
     for (const auto &textureBinding : stateResetHelper.getDirtyTextureBindings())
     {
         TextureResetMap::const_iterator id = resetBindings.find(textureBinding);
-        if (id != resetBindings.end())
+        const auto &[unit, target]         = textureBinding;
+        gl::TextureID textureID = (id != resetBindings.end()) ? id->second : gl::TextureID{0};
+
+        // Set active texture unit if necessary
+        if (unit != activeTexture)
         {
-            const auto &[unit, target] = textureBinding;
-
-            // Set active texture unit if necessary
-            if (unit != activeTexture)
-            {
-                out << "    ";
-                WriteCppReplayForCall(CaptureActiveTexture(context->getState(), true,
-                                                           GL_TEXTURE0 + static_cast<GLenum>(unit)),
-                                      replayWriter, out, header, binaryData,
-                                      maxResourceIDBufferSize);
-                out << ";\n";
-                activeTexture = unit;
-            }
-
-            // Bind texture for this target
             out << "    ";
-            WriteCppReplayForCall(CaptureBindTexture(context->getState(), true, target, id->second),
+            WriteCppReplayForCall(CaptureActiveTexture(context->getState(), true,
+                                                       GL_TEXTURE0 + static_cast<GLenum>(unit)),
                                   replayWriter, out, header, binaryData, maxResourceIDBufferSize);
             out << ";\n";
+            activeTexture = unit;
         }
+
+        // Bind texture for this target
+        out << "    ";
+        WriteCppReplayForCall(CaptureBindTexture(context->getState(), true, target, textureID),
+                              replayWriter, out, header, binaryData, maxResourceIDBufferSize);
+        out << ";\n";
     }
 
     // Restore active texture unit to initial state if necessary
@@ -9869,6 +9871,17 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
 
         // Track whether we changed contexts during Reset
         bool contextChanged = false;
+
+        stateResetHelper.setCurrentResetActiveTexture(context->getState().getActiveSampler());
+        for (const gl::ContextID &contextID : contextIDs)
+        {
+            gl::Context *shareContext = context->getDisplay()->getContext(contextID);
+            if (shareContext)
+            {
+                shareContext->getFrameCapture()->getStateResetHelper().setCurrentResetActiveTexture(
+                    shareContext->getState().getActiveSampler());
+            }
+        }
 
         // First emit shared object reset, including opaque and context state
         {
