@@ -210,6 +210,17 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
     angle::Result releaseTexStorage(
         const gl::Context *context,
         const gl::CubeFaceArray<gl::TexLevelMask> &copyStorageToImagesMask);
+    angle::Result releaseTexStorageIfMismatched(const gl::Context *context,
+                                                GLint level,
+                                                GLenum internalformat,
+                                                const gl::Extents &size,
+                                                bool forceReleaseStorage);
+    angle::Result releaseTexStorageIfMismatched(const gl::Context *context,
+                                                size_t faceIndex,
+                                                GLint level,
+                                                GLenum internalformat,
+                                                const gl::Extents &size,
+                                                bool forceReleaseStorage);
 
     GLuint getBaseLevel() const { return mBaseLevel; }
 
