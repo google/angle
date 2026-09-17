@@ -24762,6 +24762,64 @@ TEST_P(Texture2DTestES3, ClearMidRenderPassThenSample)
     ASSERT_GL_NO_ERROR();
 }
 
+class Texture3DSizeLimitPOTRoundUpTest : public ANGLETest<>
+{
+  protected:
+    Texture3DSizeLimitPOTRoundUpTest() = default;
+};
+
+// Test that 3D texture dimensions are rounded up to power of two when checking size limits.
+TEST_P(Texture3DSizeLimitPOTRoundUpTest, RGB565)
+{
+    // 64x64x64 * sizeof(RGB565) is <= 1 MiB.
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_3D, tex);
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB565, 64, 64, 64, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+                     nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+    {
+        GLTexture texStorage;
+        glBindTexture(GL_TEXTURE_3D, texStorage);
+        glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGB565, 64, 64, 64);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    // 65x65x65 * sizeof(RGB565) is still <= 1 MiB, but when rounded up becomes
+    // 128x128x128 * sizeof(RGB565) which is > 1MiB.
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_3D, tex);
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB565, 65, 65, 65, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+                     nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+    {
+        GLTexture texStorage;
+        glBindTexture(GL_TEXTURE_3D, texStorage);
+        glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGB565, 65, 65, 65);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+
+    // The workaround does not apply to 2D textures.
+    // 724x724x1 * sizeof(RGB565) is <= 1MiB, but rounded up would be
+    // 1024x1024x1 * sizeof(RGB565) which is > 1MiB.
+    {
+        GLTexture tex2D;
+        glBindTexture(GL_TEXTURE_2D, tex2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 724, 724, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+                     nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+    {
+        GLTexture tex2DStorage;
+        glBindTexture(GL_TEXTURE_2D, tex2DStorage);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB565, 724, 724);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 class Texture2DTestES3_NonZeroBaseLevelGenMipmaps : public Texture2DTestES3
 {};
 
@@ -25702,8 +25760,21 @@ ANGLE_INSTANTIATE_TEST(TextureSizeLimitTest,
                        ES2_VULKAN().enable(Feature::LimitMaxTextureBytesTo1MB),
                        ES3_VULKAN().enable(Feature::LimitMaxTextureBytesTo1MB),
                        ES2_OPENGL().enable(Feature::LimitMaxTextureBytesTo1MB),
-                       ES3_OPENGL().enable(Feature::LimitMaxTextureBytesTo1MB),
+                       ES3_OPENGL()
+                           .enable(Feature::LimitMaxTextureBytesTo1MB)
+                           .disable(Feature::RoundUp3dTextureSizeToPOTForLimit),
                        ES2_OPENGLES().enable(Feature::LimitMaxTextureBytesTo1MB),
-                       ES3_OPENGLES().enable(Feature::LimitMaxTextureBytesTo1MB));
+                       ES3_OPENGLES()
+                           .enable(Feature::LimitMaxTextureBytesTo1MB)
+                           .disable(Feature::RoundUp3dTextureSizeToPOTForLimit));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture3DSizeLimitPOTRoundUpTest);
+ANGLE_INSTANTIATE_TEST(Texture3DSizeLimitPOTRoundUpTest,
+                       ES3_OPENGL()
+                           .enable(Feature::LimitMaxTextureBytesTo1MB)
+                           .enable(Feature::RoundUp3dTextureSizeToPOTForLimit),
+                       ES3_OPENGLES()
+                           .enable(Feature::LimitMaxTextureBytesTo1MB)
+                           .enable(Feature::RoundUp3dTextureSizeToPOTForLimit));
 
 }  // anonymous namespace

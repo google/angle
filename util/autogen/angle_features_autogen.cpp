@@ -327,6 +327,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::RGBA4IsNotSupportedForColorRendering, "RGBA4IsNotSupportedForColorRendering"},
     {Feature::RGBDXT1TexturesSampleZeroAlpha, "RGBDXT1TexturesSampleZeroAlpha"},
     {Feature::RoundOutputAfterDithering, "roundOutputAfterDithering"},
+    {Feature::RoundUp3dTextureSizeToPOTForLimit, "roundUp3dTextureSizeToPOTForLimit"},
     {Feature::SanitizeAMDGPURendererString, "sanitizeAMDGPURendererString"},
     {Feature::ScalarizeVecAndMatConstructorArgs, "scalarizeVecAndMatConstructorArgs"},
     {Feature::SelectViewInGeometryShader, "selectViewInGeometryShader"},
