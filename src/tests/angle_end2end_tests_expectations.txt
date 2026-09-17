@@ -846,6 +846,7 @@
 526518127 PIXEL4ORXL GLES : ImageTestES3.NonZeroLevel*/* = SKIP
 546627192 PIXEL4ORXL GLES : GLSLTest_ES3.VaryingAnonymousStructAssignment/* = SKIP
 546627192 PIXEL4ORXL GLES : GLSLTest_ES3.VaryingAnonymousStructTernary/* = SKIP
+563868441 PIXEL4ORXL GLES : ComputeShaderTest.DispatchDrawBlend/* = SKIP
 
 42267082 PIXEL4ORXL GLES : BlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42267082 PIXEL4ORXL GLES : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP

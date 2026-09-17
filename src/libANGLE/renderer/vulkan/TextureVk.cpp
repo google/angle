@@ -2170,6 +2170,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
 
         params.dstOffset[0] = 0;
         params.dstOffset[1] = 0;
+        params.dstMip       = gl::OwnerLevel(0);
 
         for (vk::LayerIndex layerIndex = vk::LayerIndex(0); layerIndex < layerCount; ++layerIndex)
         {

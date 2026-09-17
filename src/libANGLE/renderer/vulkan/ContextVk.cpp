@@ -477,9 +477,9 @@ vk::ImageAccess GetImageWriteAccessAndSubresource(const gl::ImageUnit &imageUnit
 
     *layerStartOut = gl::OwnerLayer(0);
     *layerCountOut = image.getLayerCount();
-    if (imageUnit.layered)
+    if (!imageUnit.layered)
     {
-        *layerStartOut = *layerStartOut + imageUnit.layered;
+        *layerStartOut = *layerStartOut + imageUnit.layer;
         *layerCountOut = 1;
     }
 

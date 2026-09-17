@@ -9403,6 +9403,18 @@ void ImageHelper::onWrite(gl::OwnerLevel levelStart,
                           uint32_t layerCount,
                           VkImageAspectFlags aspectFlags)
 {
+    const LevelIndex levelStartVk = toVkLevel(levelStart);
+    ASSERT((levelStartVk + levelCount).get() <= mLevelCount);
+    // As a special case, the caller might get kMaxContentDefinedLayerCount as layer and a layer
+    // count of 0.
+    const bool isInDepthRange =
+        mImageType == VK_IMAGE_TYPE_3D &&
+        (layerStart + layerCount).get() <= std::max(mExtents.depth >> levelStartVk.get(), 1u);
+    const bool isInLayerRange =
+        mImageType != VK_IMAGE_TYPE_3D && (layerStart + layerCount).get() <= mLayerCount;
+    ASSERT((layerStart == gl::OwnerLayer(kMaxContentDefinedLayerCount) && layerCount == 0) ||
+           isInDepthRange || isInLayerRange);
+
     mCurrentSingleClearValue.reset();
 
     // Mark contents of the given subresource as defined.
