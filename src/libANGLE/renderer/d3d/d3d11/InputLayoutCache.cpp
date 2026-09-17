@@ -24,6 +24,7 @@
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
 #include "libANGLE/renderer/d3d/d3d11/VertexArray11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 namespace rx
 {
@@ -127,7 +128,7 @@ angle::Result InputLayoutCache::getInputLayout(
     const auto &attribs            = state.getVertexArray()->getVertexAttributes();
     const auto &bindings           = state.getVertexArray()->getVertexBindings();
     const auto &locationToSemantic = executableD3D->getAttribLocationToD3DSemantics();
-    int divisorMultiplier          = executable->usesMultiview() ? executable->getNumViews() : 1;
+    int numViews = executable->usesMultiview() ? executable->getNumViews() : 1;
 
     for (size_t attribIndex : executable->getActiveAttribLocationsMask())
     {
@@ -143,8 +144,13 @@ angle::Result InputLayoutCache::getInputLayout(
             state.getVertexAttribCurrentValue(static_cast<unsigned int>(attribIndex));
         angle::FormatID vertexFormatID = gl::GetVertexFormatID(attrib, currentValue.Type);
 
-        layout.addAttributeData(glslElementType, d3dSemantic, vertexFormatID,
-                                binding.getDivisor() * divisorMultiplier);
+        // Disabled attributes use current-value data, which is stored and fetched with divisor 0
+        // (per-vertex). Using divisor 0 here prevents cache key collisions with enabled attributes
+        // whose binding has a non-zero divisor.
+        GLuint divisor =
+            attrib.enabled ? GetMultiviewAdjustedDivisor(numViews, binding.getDivisor()) : 0;
+
+        layout.addAttributeData(glslElementType, d3dSemantic, vertexFormatID, divisor);
     }
 
     if (layout.numAttributes > 0)
