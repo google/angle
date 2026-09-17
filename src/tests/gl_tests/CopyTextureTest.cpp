@@ -3738,6 +3738,64 @@ TEST_P(CopyTextureTest, SelfCopyOOBWrite)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that CopySubTexture to an incomplete level does not import mismatched/uninitialized storage
+// data.
+TEST_P(CopyTextureTestES3, IncompleteLevelDoesNotSyncFromStorage)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
+
+    // Create a 1x1 red source texture.
+    GLTexture sourceTex;
+    glBindTexture(GL_TEXTURE_2D, sourceTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Create destination texture with mip 0 defined as 8x8 yellow and mip 1 as 2x2 blue.
+    // Notice: for an 8x8 base level, mip 1 is expected to be 4x4, so 2x2 is logically incomplete.
+    GLTexture destTex;
+    glBindTexture(GL_TEXTURE_2D, destTex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    const std::vector<GLColor> yellowData(8 * 8, GLColor::yellow);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, yellowData.data());
+    const std::vector<GLColor> blueData(2 * 2, GLColor::blue);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, blueData.data());
+
+    // Attach level 0 to an FBO and clear it to green, materializing native 8x8 storage with mips on
+    // D3D11.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, destTex, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Copy 1x1 red source into destTex mip 1 at offset (0, 0).
+    // The defect in TextureD3D imported native storage into staging because mip 1 was incomplete,
+    // overwriting unwritten blue pixels (1,0), (0,1), (1,1).
+    glCopySubTextureCHROMIUM(sourceTex, 0, GL_TEXTURE_2D, destTex, 1, 0, 0, 0, 0, 1, 1, GL_FALSE,
+                             GL_FALSE, GL_FALSE);
+    ASSERT_GL_NO_ERROR();
+
+    // Expose level 1 by rebasing: redefine level 0 to 4x4 and set BASE_LEVEL = 1, MAX_LEVEL = 1.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    // Attach level 1 to FBO and read back.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, destTex, 1);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Pixel (0,0) was overwritten by the 1x1 copy and must be red.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    // Pixels (1,0), (0,1), (1,1) were not written and must retain the initial blue color.
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::blue);
+}
+
 // Test that copy from non-zero level of texture works when a direct copy is possible.
 TEST_P(CopyTextureTestES3, NonZeroLevel)
 {

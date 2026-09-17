@@ -42,7 +42,6 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
 
     angle::Result getNativeTexture(const gl::Context *context, TextureStorage **outStorage);
 
-    bool hasDirtyImages() const { return mDirtyImages; }
     void resetDirty() { mDirtyImages = false; }
 
     virtual ImageD3D *getImage(const gl::ImageIndex &index) const = 0;
