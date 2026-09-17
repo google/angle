@@ -362,6 +362,15 @@
             "issue": "http://crbug.com/927470"
         },
         {
+            "name": "round_up_3d_texture_size_to_POT_for_limit",
+            "category": "Workarounds",
+            "description": [
+                "Round up 3D texture dimensions to nearest power of two before checking image allocation ",
+                "size limits to prevent mishandling of large 3D textures on older PowerVR drivers."
+            ],
+            "issue": "http://crbug.com/551673541"
+        },
+        {
             "name": "adjust_src_dst_region_for_BlitFramebuffer",
             "category": "Workarounds",
             "description": [

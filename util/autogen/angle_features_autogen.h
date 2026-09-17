@@ -328,6 +328,7 @@ enum class Feature
     RGBA4IsNotSupportedForColorRendering,
     RGBDXT1TexturesSampleZeroAlpha,
     RoundOutputAfterDithering,
+    RoundUp3dTextureSizeToPOTForLimit,
     SanitizeAMDGPURendererString,
     ScalarizeVecAndMatConstructorArgs,
     SelectViewInGeometryShader,
