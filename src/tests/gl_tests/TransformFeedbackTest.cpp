@@ -5473,6 +5473,72 @@ TEST_P(TransformFeedbackTest, InstancedOverflowIncompletePrimitive)
     EXPECT_EQ(6u, primitivesWritten);
 }
 
+// Test that an instanced attribute with a non-zero divisor produces the expected value across
+// all vertices of an instance, even after an intervening draw where the attribute was disabled.
+TEST_P(TransformFeedbackTest, InstancedAttributeAfterDisabledAttribDraw)
+{
+    constexpr char kVS[] = R"(#version 300 es
+layout(location=0) in vec4 value;
+out vec4 captured;
+void main() {
+  captured = value;
+  gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+  gl_PointSize = 1.0;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+void main() {
+  color = vec4(0.0);
+})";
+
+    std::vector<std::string> tfVaryings = {"captured"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program, kVS, kFS, tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    glUseProgram(program);
+
+    constexpr std::array<float, 4> kMarker = {11.25f, 22.5f, 33.75f, 44.125f};
+    GLBuffer source;
+    glBindBuffer(GL_ARRAY_BUFFER, source);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kMarker), kMarker.data(), GL_DYNAMIC_DRAW);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 16, nullptr);
+    glVertexAttribDivisor(0, 0xffffffffu);
+
+    // Initial draw with attribute 0 disabled.
+    glDisableVertexAttribArray(0);
+    glVertexAttrib4fv(0, kMarker.data());
+    glDrawArraysInstanced(GL_POINTS, 0, 1, 1);
+    glFinish();
+
+    // Re-enable attribute 0 and capture vertices via transform feedback in an instanced draw.
+    glEnableVertexAttribArray(0);
+    constexpr GLsizei kCount = 64;
+    GLBuffer destination;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, destination);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, kCount * sizeof(kMarker), nullptr, GL_DYNAMIC_READ);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, destination);
+
+    glEnable(GL_RASTERIZER_DISCARD);
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArraysInstanced(GL_POINTS, 0, kCount, 1);
+    glEndTransformFeedback();
+    glDisable(GL_RASTERIZER_DISCARD);
+    glFinish();
+    ASSERT_GL_NO_ERROR();
+
+    const float *captured = static_cast<const float *>(glMapBufferRange(
+        GL_TRANSFORM_FEEDBACK_BUFFER, 0, kCount * sizeof(kMarker), GL_MAP_READ_BIT));
+    ASSERT_NE(nullptr, captured);
+    for (GLsizei vertex = 0; vertex < kCount; ++vertex)
+    {
+        EXPECT_EQ(kMarker[0], captured[vertex * 4 + 0]) << "vertex " << vertex;
+        EXPECT_EQ(kMarker[1], captured[vertex * 4 + 1]) << "vertex " << vertex;
+        EXPECT_EQ(kMarker[2], captured[vertex * 4 + 2]) << "vertex " << vertex;
+        EXPECT_EQ(kMarker[3], captured[vertex * 4 + 3]) << "vertex " << vertex;
+    }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+}
+
 class HardenedTransformFeedbackTest : public TransformFeedbackTest
 {
   public:
