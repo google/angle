@@ -1282,6 +1282,20 @@ bool ValidImageDataSize(const Context *context,
     return true;
 }
 
+Extents RoundImageAllocationExtentIfNeeded(const Context *context,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLsizei depth)
+{
+    if (context->getLimitations().roundUp3DTextureSizeToPOTForLimit && depth > 1)
+    {
+        return Extents(gl::clampCast<GLsizei>(gl::ceilPow2(width)),
+                       gl::clampCast<GLsizei>(gl::ceilPow2(height)),
+                       gl::clampCast<GLsizei>(gl::ceilPow2(depth)));
+    }
+    return Extents(width, height, depth);
+}
+
 bool ValidImageAllocationSize(const Context *context,
                               angle::EntryPoint entryPoint,
                               GLsizei width,
@@ -1292,7 +1306,8 @@ bool ValidImageAllocationSize(const Context *context,
 {
     const InternalFormat &formatInfo = GetSizedInternalFormatInfo(sizedInternalFormat);
     GLuint allocationSize            = 0;
-    if (!formatInfo.computeImageSize(Extents(width, height, depth), samples, &allocationSize) ||
+    Extents extents = RoundImageAllocationExtentIfNeeded(context, width, height, depth);
+    if (!formatInfo.computeImageSize(extents, samples, &allocationSize) ||
         allocationSize > context->getLimitations().maxTextureBytes)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureSizeLimitation);
@@ -8202,8 +8217,9 @@ bool ValidateTexStorage(const Context *context,
     // Make sure computeImageSize sets expectedImageSize.
     GLuint expectedImageSize = std::numeric_limits<GLuint>::max();
     {
-        const bool isSizeValid = internalFormatInfo.computeImageSize(Extents(width, height, depth),
-                                                                     0, &expectedImageSize);
+        Extents extents = RoundImageAllocationExtentIfNeeded(context, width, height, depth);
+        const bool isSizeValid =
+            internalFormatInfo.computeImageSize(extents, 0, &expectedImageSize);
         if (ANGLE_UNLIKELY(!isSizeValid ||
                            expectedImageSize > context->getLimitations().maxTextureBytes))
         {
