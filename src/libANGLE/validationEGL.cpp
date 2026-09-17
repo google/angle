@@ -1492,6 +1492,13 @@ bool ValidateSurfaceBadAccess(const ValidationContext *val,
         val->setError(EGL_BAD_ACCESS, "Surface can only be current on one thread");
         return false;
     }
+
+    if (surface->isLocked())
+    {
+        val->setError(EGL_BAD_ACCESS, "<surface> is locked");
+        return false;
+    }
+
     return true;
 }
 

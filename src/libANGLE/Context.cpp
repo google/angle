@@ -9700,17 +9700,23 @@ egl::Error Context::setDefaultFramebuffer(egl::Surface *drawSurface, egl::Surfac
     mCurrentDrawSurface = drawSurface;
     mCurrentReadSurface = readSurface;
 
+    egl::Error result = egl::NoError();
     if (drawSurface != nullptr)
     {
-        ANGLE_TRY(drawSurface->makeCurrent(this));
+        result = drawSurface->makeCurrent(this);
     }
+    if (drawSurface != readSurface)
+    {
+        ASSERT(readSurface != nullptr);
+        egl::Error readResult = readSurface->makeCurrent(this);
+        if (!result.isError())
+        {
+            result = readResult;
+        }
+    }
+    ANGLE_TRY(result);
 
     mDefaultFramebuffer->setSurfaces(this, drawSurface, readSurface);
-
-    if (readSurface && (drawSurface != readSurface))
-    {
-        ANGLE_TRY(readSurface->makeCurrent(this));
-    }
 
     // Update default framebuffer, the binding of the previous default
     // framebuffer (or lack of) will have a nullptr.
@@ -9762,6 +9768,7 @@ egl::Error Context::unsetDefaultFramebuffer()
     }
     if (drawSurface != readSurface)
     {
+        ASSERT(readSurface != nullptr);
         ANGLE_TRY(readSurface->unMakeCurrent(this));
     }
 

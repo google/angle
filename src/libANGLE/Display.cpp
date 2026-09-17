@@ -914,6 +914,29 @@ void UpdateAttribsFromEnvironment(AttributeMap &attribMap)
 
 static constexpr uint32_t kScratchBufferLifetime = 64u;
 
+class [[nodiscard]] ScopedResetThreadContextOnError : angle::NonCopyable
+{
+  public:
+    ScopedResetThreadContextOnError(Thread *thread, bool resetOnError)
+        : mThread(thread), mResetOnError(resetOnError)
+    {}
+
+    ~ScopedResetThreadContextOnError()
+    {
+        if (mResetOnError)
+        {
+            mThread->setCurrent(nullptr);
+        }
+    }
+
+    // No error, so reset won't happen
+    void success() { mResetOnError = false; }
+
+  private:
+    Thread *mThread;
+    bool mResetOnError;
+};
+
 }  // anonymous namespace
 
 SyncSet::SyncSet() : mHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES) {}
@@ -2098,6 +2121,7 @@ Error Display::makeCurrent(Thread *thread,
         ScopedContextMutexLock lock(context != nullptr ? &context->getContextMutex() : nullptr);
 
         thread->setCurrent(context);
+        ScopedResetThreadContextOnError resetOnError(thread, contextChanged);
 
         ANGLE_TRY(mImplementation->makeCurrent(this, drawSurface, readSurface, context));
 
@@ -2109,6 +2133,8 @@ Error Display::makeCurrent(Thread *thread,
                 context->addRef();
             }
         }
+
+        resetOnError.success();
     }
 
     // Tick all the scratch buffers to make sure they get cleaned up eventually if they stop being
