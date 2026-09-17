@@ -859,6 +859,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceProvokingVertexFeaturesEXT mProvokingVertexFeatures;
     VkPhysicalDeviceVertexAttributeDivisorFeatures mVertexAttributeDivisorFeatures;
     VkPhysicalDeviceVertexAttributeDivisorProperties mVertexAttributeDivisorProperties;
+    VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT mVertexAttributeDivisorPropertiesEXT;
     VkPhysicalDeviceTransformFeedbackFeaturesEXT mTransformFeedbackFeatures;
     VkPhysicalDeviceIndexTypeUint8Features mIndexTypeUint8Features;
     VkPhysicalDeviceSubgroupProperties mSubgroupProperties;
