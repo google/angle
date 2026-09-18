@@ -302,6 +302,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::PreTransformTextureCubeGradDerivatives, "preTransformTextureCubeGradDerivatives"},
     {Feature::PromotePackedFormatsTo8BitPerChannel, "promotePackedFormatsTo8BitPerChannel"},
     {Feature::ProvokingVertex, "provokingVertex"},
+    {Feature::PurgeableBufferPool, "purgeableBufferPool"},
     {Feature::QueryCounterBitsGeneratesErrors, "queryCounterBitsGeneratesErrors"},
     {Feature::ReadPixelsUsingImplementationColorReadFormatForNorm16, "readPixelsUsingImplementationColorReadFormatForNorm16"},
     {Feature::ReapplyUBOBindingsAfterUsingBinaryProgram, "reapplyUBOBindingsAfterUsingBinaryProgram"},

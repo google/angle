@@ -350,6 +350,12 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
+    FeatureInfo purgeableBufferPool = {
+        "purgeableBufferPool",
+        FeatureCategory::MetalFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;

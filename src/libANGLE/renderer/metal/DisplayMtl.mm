@@ -1093,6 +1093,9 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.blendFuncExtendedEXT = true;
     mNativeCaps.maxDualSourceDrawBuffers   = 1;
 
+    // GL_ANGLE_trim_memory
+    mNativeExtensions.trimMemoryANGLE = true;
+
     // GL_ANGLE_shader_pixel_local_storage.
     if (!mFeatures.disableProgrammableBlending.enabled && supportsAppleGPUFamily(1))
     {
@@ -1265,6 +1268,7 @@ void DisplayMtl::initializeFeatures()
                             isSimulator || !supportsAppleGPUFamily(1));
 
     ANGLE_FEATURE_CONDITION((&mFeatures), writeHelperSampleMask, supportsAppleGPUFamily(1));
+    ANGLE_FEATURE_CONDITION((&mFeatures), purgeableBufferPool, false);
 
     ANGLE_FEATURE_CONDITION((&mFeatures), multisampleColorFormatShaderReadWorkaround, isAMD());
     ANGLE_FEATURE_CONDITION((&mFeatures), copyIOSurfaceToNonIOSurfaceForReadOptimization,

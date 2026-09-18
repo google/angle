@@ -302,6 +302,7 @@ enum class Feature
     PreTransformTextureCubeGradDerivatives,
     PromotePackedFormatsTo8BitPerChannel,
     ProvokingVertex,
+    PurgeableBufferPool,
     QueryCounterBitsGeneratesErrors,
     ReadPixelsUsingImplementationColorReadFormatForNorm16,
     ReapplyUBOBindingsAfterUsingBinaryProgram,
