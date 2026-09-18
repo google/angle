@@ -1868,15 +1868,17 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
                                                        stagingIndex, stagingExtents, stagingOffset,
                                                        &destData, dstFormatID));
 
-    // Source and dst data is tightly packed
-    GLuint srcDataRowPitch = sourceBox.width * srcTextureFormat.pixelBytes;
-    GLuint dstDataRowPitch = sourceBox.width * dstTextureFormat.pixelBytes;
+    // Source and destination data are tightly packed.
+    const size_t srcDataRowPitch =
+        static_cast<size_t>(sourceBox.width) * srcTextureFormat.pixelBytes;
+    const size_t dstDataRowPitch =
+        static_cast<size_t>(sourceBox.width) * dstTextureFormat.pixelBytes;
 
-    GLuint srcDataDepthPitch = srcDataRowPitch * sourceBox.height;
-    GLuint dstDataDepthPitch = dstDataRowPitch * sourceBox.height;
+    const size_t srcDataDepthPitch = srcDataRowPitch * static_cast<size_t>(sourceBox.height);
+    const size_t dstDataDepthPitch = dstDataRowPitch * static_cast<size_t>(sourceBox.height);
 
-    rx::PixelReadFunction pixelReadFunction   = srcTextureFormat.pixelReadFunction;
-    rx::PixelWriteFunction pixelWriteFunction = dstTextureFormat.pixelWriteFunction;
+    PixelReadFunction pixelReadFunction   = srcTextureFormat.pixelReadFunction;
+    PixelWriteFunction pixelWriteFunction = dstTextureFormat.pixelWriteFunction;
 
     // Fix up the read/write functions for the sake of luminance/alpha that are emulated with
     // formats whose channels don't correspond to the original format (alpha is emulated with red,
