@@ -93,7 +93,16 @@ const TVariable *computeFiniteLoopVariable(TIntermLoop *loop)
         case EOpLessThan:
         case EOpGreaterThan:
         case EOpLessThanEqual:
+            break;
         case EOpGreaterThanEqual:
+            // If the type is uint and the condition is >=, it might be |>= 0| which is always true;
+            // don't consider that a finite loop.  Only |>= 0| and |>= variable_that_could_be_zero|
+            // may lead to infinite loop, but all uint with >= is considered infinite loop for
+            // simplicity.
+            if (variable->getType().getBasicType() == EbtUInt)
+            {
+                return nullptr;
+            }
             break;
         default:
             return nullptr;

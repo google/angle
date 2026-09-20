@@ -566,19 +566,30 @@ void main() {
 
 )";
     const char kShaderSuffix[] = "}\n";
-    const char *kTests[]{"int i = 101; for (; i < 10; i++) { }",
-                         "int i = 101; for (; i < 10; i+=1) { }",
-                         "int i = 101; for (; i < 10; i-=1) { }",
-                         "for (int i = 0; i < 10; i++) { }",
-                         "for (int i = 0; i < a; i++) { }",
-                         "for (int i = 0; i < 100000/2; ++i) { }",
-                         "for (uint i = 0u; i < 10u; i++) { }",
-                         "for (uint i = 0u; i < b; i++) { }",
-                         "for (uint i = 0u; i < 100000u/2u; ++i) { }",
-                         "for (uint i = 0u; i < 4294967295u; ++i) { }",
-                         "for (uint i = 10u; i > 1u+3u ; --i) { }",
-                         "const int z = 7; for (int i = 0; i < z; i++) { }",
-                         "for (int i = 0; i < 10; i++) { for (int j = 0; j < 1000; ++j) { }}"};
+    const char *kTests[]{
+        "int i = 101; for (; i < 10; i++) { }",
+        "int i = 101; for (; i < 10; i+=1) { }",
+        "int i = 101; for (; i < 10; i-=1) { }",
+        "for (int i = 0; i < 10; i++) { }",
+        "for (int i = 0; i < a; i++) { }",
+        "for (int i = 0; i < 100000/2; ++i) { }",
+        "for (uint i = 0u; i < 10u; i++) { }",
+        "for (uint i = 0u; i < b; i++) { }",
+        "for (uint i = 0u; i < 100000u/2u; ++i) { }",
+        "for (uint i = 0u; i < 4294967295u; ++i) { }",
+        "for (uint i = 10u; i > 1u+3u ; --i) { }",
+        "const int z = 7; for (int i = 0; i < z; i++) { }",
+        "for (int i = 0; i < 10; i++) { for (int j = 0; j < 1000; ++j) { }}",
+        // Finite because |int| is implemented with |uint| such that wraparound has
+        // well-defined behavior, and eventually the values wrap around to make the
+        // condition false.
+        "for (int i = 0; i >= 0; ++i) { }",
+        "for (int i = 1; i >= 0; ++i) { }",
+        "for (int i = 1; i > 0; ++i) { }",
+        "for (int i = 0; i < 10; i -= 1) { }",
+        // Finite because of eventual wrap around to zero.
+        "for (uint i = 1u; i > 0u; ++i) { }",
+    };
 
     for (const char *test : kTests)
     {
@@ -622,6 +633,13 @@ void main() {
         "for (int i = 0; i < 10; a == 0 ? i++ : i = 0) { }",
         "for (ivec2 i = ivec2(0); i != ivec2(10, 20); i++) { }",
         "for (ivec2 i = ivec2(0); i != ivec2(10, 10); i += ivec2(1, 2)) { }",
+        // Infinite loop because the condition is always true
+        "for (int i = 0; i == 0; i += 0) { }",
+        "for (uint i = 0u; i >= 0u; ++i) { }",
+        // Infinite loop because the |b| might be zero
+        "for (uint i = 10u; i >= b; ++i) { }",
+        // Infinite loop because the condition is always true as |i| never changes.
+        "for (uint i = 0u; i == 0u; i += 0u) { }",
     };
 
     for (const char *test : kTests)

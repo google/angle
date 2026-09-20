@@ -166,6 +166,18 @@ fn matches_finite_loop_condition(ir_meta: &IRMeta, block: &Block) -> Option<Vari
             return None;
         }
 
+        // If the type is uint and the condition is >=, it might be |>= 0| which is always true;
+        // don't consider that a finite loop.  Only |>= 0| and |>= variable_that_could_be_zero| may
+        // lead to infinite loop, but all uint with >= is considered infinite loop for simplicity.
+        if matches!(type_info, Type::Scalar(BasicType::Uint))
+            && matches!(
+                ir_meta.get_instruction(op_result).op,
+                OpCode::Binary(BinaryOpCode::GreaterThanEqual, ..)
+            )
+        {
+            return None;
+        }
+
         loop_variable.id.get_variable()
     } else {
         return None;
