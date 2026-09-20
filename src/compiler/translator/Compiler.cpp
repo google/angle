@@ -31,6 +31,7 @@
 #include "compiler/translator/tree_ops/DeferGlobalInitializers.h"
 #include "compiler/translator/tree_ops/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h"
+#include "compiler/translator/tree_ops/ExpandFragmentOutputsToVec4.h"
 #include "compiler/translator/tree_ops/FoldExpressions.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_ops/PruneEmptyCases.h"
@@ -1167,6 +1168,14 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (compileOptions.rewriteRepeatedAssignToSwizzled)
     {
         if (!sh::RewriteRepeatedAssignToSwizzled(this, root))
+        {
+            return false;
+        }
+    }
+
+    if (compileOptions.expandFragmentOutputsToVec4 && mShaderVersion >= 300)
+    {
+        if (!ExpandFragmentOutputsToVec4(this, root, &getSymbolTable()))
         {
             return false;
         }

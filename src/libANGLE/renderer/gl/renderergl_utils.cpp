@@ -2729,9 +2729,6 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // mipmap generation avoids the problem.
     ANGLE_FEATURE_CONDITION(features, recreateMipmapLevelsBeforeGenerate, isMesa || isMali);
 
-    // http://crbug.com/498828605
-    ANGLE_FEATURE_CONDITION(features, expandFragmentOutputsToVec4, isAMD && isMesa);
-
     // https://github.com/flutter/flutter/issues/47164
     // https://github.com/flutter/flutter/issues/47804
     // Some devices expose the QCOM tiled memory extension string but don't actually provide the

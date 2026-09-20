@@ -219,6 +219,9 @@
 535213600 WIN NVIDIA OPENGL : PbufferTestES3.BindTexImageAndCopyTextureInvertedSrc/* = SKIP
 535213600 WIN NVIDIA GLES : PbufferTestES3.BindTexImageAndCopyTextureInvertedSrc/* = SKIP
 535213600 WIN NVIDIA GLES : PbufferTestES3.BindTexImageAndCopyTexSubTextureInvertedDst/* = SKIP
+564530612 WIN INTEL D3D11 : HardenedContextBlendTest.AlphaBlendNoAlphaChannelInSrcAndDst/* = SKIP
+564530612 WIN INTEL D3D11 : HardenedContextBlendTest.AlphaBlendNoAlphaChannelInSrcAndDst2/* = SKIP
+564530612 WIN INTEL D3D11 : HardenedContextBlendTest.AlphaBlendNoAlphaChannelInSrcAndDstArray/* = SKIP
 
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingAttributeType/* = SKIP
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingProgramType/* = SKIP

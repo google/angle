@@ -368,6 +368,9 @@ class HardenedContextTest : public ANGLETest<>
 class HardenedContextTestES31 : public HardenedContextTest
 {};
 
+class HardenedContextBlendTest : public HardenedContextTest
+{};
+
 // Context creation would fail if EGL_ANGLE_create_context_webgl_compatibility was not available so
 // the GL extension should always be present
 TEST_P(WebGLCompatibilityTest, ExtensionStringExposed)
@@ -9058,6 +9061,107 @@ TEST_P(HardenedContextTestRestrictBaseLevel, Tex3D)
     }
 }
 
+// Test alpha blend where both the framebuffer and shader miss the alpha channel.  The spec says
+// that:
+//
+// > If a color buffer has no A value, then A_d is taken to be 1.
+//
+// But it says nothing about what happens if the shader does not write to alpha and A_s.
+TEST_P(HardenedContextBlendTest, AlphaBlendNoAlphaChannelInSrcAndDst)
+{
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, 1, 1);
+    constexpr uint8_t kInitialValue = 0x10;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_UNSIGNED_BYTE, &kInitialValue);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ANGLE_SKIP_TEST_IF(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE);
+
+    constexpr char kFS[] = R"(#version 300 es
+out mediump float color;
+void main() {
+    color = 0.2;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    // A_d is implicitly one.  But A_s is undefined.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    // Normally, the result cannot be known given A_s is undefined, but in hardened contexts it's
+    // set to 0.
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0x10, 0, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Similar test as AlphaBlendNoAlphaChannelInSrcAndDst, but with a vec2
+TEST_P(HardenedContextBlendTest, AlphaBlendNoAlphaChannelInSrcAndDst2)
+{
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RG8, 1, 1);
+    constexpr std::array<uint8_t, 2> kInitialValue = {0x10, 0x30};
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RG, GL_UNSIGNED_BYTE, kInitialValue.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ANGLE_SKIP_TEST_IF(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE);
+
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec2 color;
+void main() {
+    color = vec2(0.2, 0.4);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    // A_d is implicitly one.  But A_s is undefined.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    // Normally, the result cannot be known given A_s is undefined, but in hardened contexts it's
+    // set to 0.
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0x10, 0x30, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Similar test as AlphaBlendNoAlphaChannelInSrcAndDst, but with an array
+TEST_P(HardenedContextBlendTest, AlphaBlendNoAlphaChannelInSrcAndDstArray)
+{
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, 1, 1);
+    constexpr uint8_t kInitialValue = 0x10;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_UNSIGNED_BYTE, &kInitialValue);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ANGLE_SKIP_TEST_IF(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE);
+
+    constexpr char kFS[] = R"(#version 300 es
+out mediump float color[1];
+void main() {
+    color[0] = 0.2;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    // A_d is implicitly one.  But A_s is undefined.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    // Normally, the result cannot be known given A_s is undefined, but in hardened contexts it's
+    // set to 0.
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0x10, 0, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLCompatibilityTest);
 
 ANGLE_INSTANTIATE_TEST_ES2(WebGL1CompatibilityTest);
@@ -9067,6 +9171,9 @@ ANGLE_INSTANTIATE_TEST_ES3(WebGL2CompatibilityTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(HardenedContextTest);
 ANGLE_INSTANTIATE_TEST_ES3(HardenedContextTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(HardenedContextBlendTest);
+ANGLE_INSTANTIATE_TEST_ES3(HardenedContextBlendTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(HardenedContextTestRestrictBaseLevel);
 ANGLE_INSTANTIATE_TEST(

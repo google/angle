@@ -24362,16 +24362,13 @@ void main() {
     ASSERT_GL_NO_ERROR();
 }
 
-class GLSLTest_ES3_Blend : public GLSLTest_ES3
-{};
-
 // Test alpha blend where both the framebuffer and shader miss the alpha channel.  The spec says
 // that:
 //
 // > If a color buffer has no A value, then A_d is taken to be 1.
 //
 // But it says nothing about what happens if the shader does not write to alpha and A_s.
-TEST_P(GLSLTest_ES3_Blend, AlphaBlendNoAlphaChannelInSrcAndDst)
+TEST_P(GLSLTest_ES3, AlphaBlendNoAlphaChannelInSrcAndDst)
 {
     GLTexture color;
     glBindTexture(GL_TEXTURE_2D, color);
@@ -24407,7 +24404,7 @@ void main() {
 }
 
 // Test alpha blend where the framebuffer misses the alpha channel, but the shader writes to alpha.
-TEST_P(GLSLTest_ES3_Blend, AlphaBlendNoAlphaChannelInDst)
+TEST_P(GLSLTest_ES3, AlphaBlendNoAlphaChannelInDst)
 {
     GLTexture color;
     glBindTexture(GL_TEXTURE_2D, color);
@@ -24438,7 +24435,7 @@ void main() {
 
 // Test blend where the framebuffer misses the alpha channel.  Uses (GL_DST_COLOR, GL_ZERO) blend
 // that hits an optimization path in the mesa/Radeon driver.
-TEST_P(GLSLTest_ES3_Blend, ColorBlendNoAlphaChannelInDst)
+TEST_P(GLSLTest_ES3, ColorBlendNoAlphaChannelInDst)
 {
     GLTexture color;
     glBindTexture(GL_TEXTURE_2D, color);
@@ -26100,11 +26097,6 @@ ANGLE_INSTANTIATE_TEST(GLSLTest_ES3_PackUnpackEmulation,
                        ES3_OPENGLES(),
                        ES3_METAL(),
                        ES3_VULKAN());
-
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES3_Blend);
-ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLTest_ES3_Blend,
-                               ES3_OPENGL().enable(Feature::ExpandFragmentOutputsToVec4),
-                               ES3_OPENGLES().enable(Feature::ExpandFragmentOutputsToVec4));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND(GLSLTestPassthrough,
                                ES2_OPENGLES().enable(Feature::ForcePassthroughShaders));

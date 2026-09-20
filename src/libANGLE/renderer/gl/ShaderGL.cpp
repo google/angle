@@ -271,11 +271,6 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
         options->validatePerStageMaxUniformBlocks = true;
     }
 
-    if (features.expandFragmentOutputsToVec4.enabled)
-    {
-        options->expandFragmentOutputsToVec4 = true;
-    }
-
     if (features.limitOutputVaryingsTo256AtCompileTime.enabled)
     {
         options->limitOutputVaryingsTo256 = true;

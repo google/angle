@@ -64,7 +64,7 @@ fn replace_with_uniform(
 fn add_base_vertex_to_vertex_id(ir: &mut IR) {
     if let Some(vertex_id) = ir.meta.get_built_in_variable(BuiltIn::VertexID) {
         let replaced_vertex_id = TypedId::from_variable_id(&ir.meta, vertex_id);
-        let vertex_id = ir.meta.declare_cached_global_for_variable(vertex_id, "VertexID").1;
+        let vertex_id = ir.meta.declare_cached_global_for_variable(vertex_id, "VertexID", None).1;
 
         let base_vertex = ir.meta.get_or_declare_built_in_variable(BuiltIn::BaseVertex).1;
 

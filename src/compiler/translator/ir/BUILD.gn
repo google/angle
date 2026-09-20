@@ -29,6 +29,7 @@ angle_translator_ir_sources = [
   "src/transform/dealias.rs",
   "src/transform/emulate_instanced_multiview.rs",
   "src/transform/emulate_multi_draw.rs",
+  "src/transform/expand_fragment_outputs_to_vec4.rs",
   "src/transform/initialize_uninitialized_variables.rs",
   "src/transform/localized_workarounds.rs",
   "src/transform/monomorphize_unsupported_functions.rs",

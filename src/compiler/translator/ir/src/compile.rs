@@ -219,6 +219,8 @@ mod ffi {
         scalarize_vec_and_mat_constructor_args: bool,
         // Clamp non-constant indices to the bounds of the entity being indexed for robustness.
         clamp_indirect_indices: bool,
+        // Whether ESSL300 fragment outputs should be expanded to vec4s.
+        expand_fragment_outputs_to_vec4: bool,
 
         // Whether the ANGLE_pixel_local_storage extension has been used and there are PLS uniforms
         // to rewrite.
@@ -672,6 +674,11 @@ fn common_post_variable_collection_transforms(ir: &mut IR, options: &Options) {
             max_dual_source_draw_buffers: options.limits.max_dual_source_draw_buffers,
         };
         transform::run!(localized_workarounds, ir, &transform_options);
+    }
+
+    if options.expand_fragment_outputs_to_vec4 && options.shader_version >= 300 {
+        debug_assert!(ir.meta.get_shader_type() == ShaderType::Fragment);
+        transform::run!(expand_fragment_outputs_to_vec4, ir);
     }
 }
 

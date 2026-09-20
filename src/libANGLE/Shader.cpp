@@ -639,6 +639,7 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
         options.initSharedVariables        = true;
         options.rejectWebglShadersWithLargeVariables    = true;
         options.rejectWebglShadersWithUndefinedBehavior = true;
+        options.expandFragmentOutputsToVec4             = true;
 
         if (context->getFrontendFeatures().allowExtensionDisableAfterNonPpTokens.enabled)
         {

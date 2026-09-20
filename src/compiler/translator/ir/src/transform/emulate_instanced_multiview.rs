@@ -84,7 +84,10 @@ fn replace_instance_id(state: &mut State) -> (TypedId, TypedId) {
 
     // Make a duplicate of gl_InstanceID to add to globals, and let the shader use the replacement.
     (
-        state.ir_meta.declare_cached_global_for_variable(replaced_instance_id, "InstanceID").1,
+        state
+            .ir_meta
+            .declare_cached_global_for_variable(replaced_instance_id, "InstanceID", None)
+            .1,
         replaced_instance_id_typed,
     )
 }

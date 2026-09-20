@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "compiler/translator/tree_ops/glsl/ExpandFragmentOutputsToVec4.h"
+#include "compiler/translator/tree_ops/ExpandFragmentOutputsToVec4.h"
 
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"

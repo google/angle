@@ -3354,17 +3354,18 @@ impl IRMeta {
     // variable is replaced with the global variable and a new id is assigned to the interface
     // variable and returned.  This way, the shader does not need to be modified except for
     // possibly writing to the cache variable at the start of shader and reading from it at the
-    // end.
+    // end.  If requested, the original variable's type is overridden with a given type.
     pub fn declare_cached_global_for_variable(
         &mut self,
         variable_id: VariableId,
         cache_name: &'static str,
+        original_variable_type_override: Option<TypeId>,
     ) -> (VariableId, TypedId) {
         let variable = self.get_variable_mut(variable_id);
 
         // Replace the variable with a private global.
         let original_name = std::mem::replace(&mut variable.name, Name::new_temp(cache_name));
-        let type_id = variable.type_id;
+        let type_id = original_variable_type_override.unwrap_or(variable.type_id);
         let precision = variable.precision;
         let precise = variable.precise;
         let original_decorations =

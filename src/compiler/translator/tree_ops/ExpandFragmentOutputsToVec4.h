@@ -4,8 +4,8 @@
 //
 // ExpandFragmentOutputsToVec4.h: Rewrite outputs that are not a vec4 to be vec4s.
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_GLSL_EXPANDFRAGMENTOUTPUTSTOVEC4_H_
-#define COMPILER_TRANSLATOR_TREEOPS_GLSL_EXPANDFRAGMENTOUTPUTSTOVEC4_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_EXPANDFRAGMENTOUTPUTSTOVEC4_H_
+#define COMPILER_TRANSLATOR_TREEOPS_EXPANDFRAGMENTOUTPUTSTOVEC4_H_
 
 #include "common/angleutils.h"
 #include "common/debug.h"
@@ -17,20 +17,10 @@ class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
 
-#ifdef ANGLE_ENABLE_GLSL
 [[nodiscard]] bool ExpandFragmentOutputsToVec4(TCompiler *compiler,
                                                TIntermBlock *root,
                                                TSymbolTable *symbolTable);
-#else
-[[nodiscard]] ANGLE_INLINE bool ExpandFragmentOutputsToVec4(TCompiler *compiler,
-                                                            TIntermBlock *root,
-                                                            TSymbolTable *symbolTable)
-{
-    UNREACHABLE();
-    return false;
-}
-#endif
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_GLSL_EXPANDFRAGMENTOUTPUTSTOVEC4_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_EXPANDFRAGMENTOUTPUTSTOVEC4_H_
