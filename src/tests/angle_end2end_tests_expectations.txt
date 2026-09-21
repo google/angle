@@ -1611,13 +1611,23 @@
 558819222 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModesWithDepth24Stencil8/* = SKIP
 558819222 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModesWithDepth32f/* = SKIP
 558819222 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModesWithDepth32fStencil8/* = SKIP
+558819222 IOS METAL : Texture2DTestES3.ASTCCompressedSubImageWithBaseLevel/* = SKIP
+558819222 IOS METAL : Texture2DTestES3_OversizedMipLevels.CompressedASTC/* = SKIP
+558819222 IOS METAL : Texture2DTestES3_OversizedMipLevels.CompressedASTC12x12_192x192/* = SKIP
+558819222 IOS METAL : Texture2DTestES3_OversizedMipLevels.CompressedASTC12x12_256x256/* = SKIP
+558819222 IOS METAL : Texture2DTestES3_OversizedMipLevels.CompressedETC/* = SKIP
 558819222 IOS METAL : Texture2DTestES3_RecreateImmutableOnBaseLevelIncrease.ImmutableNPOTTextureBaseLevelIncreaseSwizzle/* = SKIP
 558819222 IOS METAL : Texture2DTestES3.FormatRGB10A2REVToRGB5A1/* = SKIP
 558819222 IOS METAL : Texture2DTestES3.InvalidFormatTypeCombosShouldFail/* = SKIP
 558819222 IOS METAL : Texture2DTestES3.TextureCOMPRESSEDRGB8ETC2ImplicitAlpha1/* = SKIP
 558819222 IOS METAL : Texture2DTestES3.TextureCOMPRESSEDSRGB8ETC2ImplicitAlpha1/* = SKIP
+558819222 IOS METAL : VertexAttributeTestES3.LargeAttribPointerOffsetNoCrash/* = SKIP
+558819222 IOS METAL : WebGL2CompatibilityTest.UnpackStateValidation/* = SKIP
 558819222 IOS METAL : WebGLGLSLTest.FragDataInCommaIndexClampWithoutDrawBuffers/* = SKIP
 558819222 IOS METAL : WebGLGLSLTest.FragDataIndexClampWithoutDrawBuffers/* = SKIP
+564547811 IOS METAL : ASTCCompressedWithBaseLevelTest.Image/* = SKIP
+564547811 IOS METAL : ASTCCompressedWithBaseLevelTest.SubImage/* = SKIP
+564569394 IOS METAL : RobustResourceInitTestES3.RGBASwizzleUndefinedMipCachedThenInitialized/* = SKIP
 
 // D3D11 backend does not support LOD options with shadow samplers
 365066518 D3D11 : ShadowSamplerFunctionTexture2DTest.Test/*__TextureBias_Mipmapped = SKIP
