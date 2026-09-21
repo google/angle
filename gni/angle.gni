@@ -298,10 +298,6 @@ declare_args() {
         # regressions. Therefore, we disable it by default on GCC builds for
         # now.
         is_clang &&
-        # TODO(b/503180635): Enable PartitionAlloc on Windows standalone builds.
-        # Currently it is disabled because it leads to heap mismatch crashes in
-        # trace tests (DLLs vs EXE).
-        !is_win &&
         # TODO(b/503180635): Enable PartitionAlloc on Android standalone builds.
         # Currently it is disabled because it leads to systematic test failures
         # (likely startup crashes) on 'angle-cq-android-arm64-rel' bot across

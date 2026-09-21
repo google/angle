@@ -762,6 +762,10 @@ if (build_angle_trace_tests) {
     # limit in MSVC, so only compile them when using clang
     assert(is_clang, "angle trace tests require clang")
 
+    assert(!is_win || !angle_use_partition_alloc || is_component_build,
+           "angle_trace_tests on Windows cannot use PartitionAlloc in " +
+               "non-component builds due to heap mismatches across trace DLLs.")
+
     if (is_ios) {
       # shared libraries are hidden inside ios_framework_bundle, but we include
       # headers from them
