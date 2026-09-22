@@ -211,6 +211,7 @@
 526503288 WIN INTEL OPENGL : BaseInstanceOverflowTest.BaseInstanceOverflow2/ES3_OpenGL_AlwaysEnableEmulatedMultidrawExtensions = SKIP
 553857574 WIN INTEL OPENGL : Texture2DArrayTestES3.BaseLevelChangeWithFewerLayersReleasesStorage/* = SKIP
 553857574 WIN INTEL OPENGL : Texture2DArrayTestES3.BaseLevelChangeWithMoreLayersReleasesStorage/* = SKIP
+563354824 WIN INTEL OPENGL : Texture2DArrayTestES3RobustInit.RedefineBaseLevelLayerCountPreservesFastPathMipData/* = SKIP
 535213600 WIN NVIDIA OPENGL : PbufferTest.BindTexImageAndCopyTexImageSrc/* = SKIP
 535213600 WIN NVIDIA GLES : PbufferTest.BindTexImageAndCopyTexImageSrc/* = SKIP
 535213600 WIN NVIDIA OPENGL : PbufferTestES3.BindTexImageAndCopyTextureSrc/* = SKIP

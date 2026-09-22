@@ -1241,6 +1241,12 @@ void main()
     GLint mTextureArraySliceUniformLocation;
 };
 
+class Texture2DArrayTestES3RobustInit : public Texture2DArrayTestES3
+{
+  protected:
+    Texture2DArrayTestES3RobustInit() : Texture2DArrayTestES3() { setRobustResourceInit(true); }
+};
+
 class TextureSizeTextureArrayTest : public TexCoordDrawTest
 {
   protected:
@@ -9481,6 +9487,77 @@ TEST_P(Texture2DArrayTestES3, BaseLevelChangeWithMoreLayersReleasesStorage)
     glUniform1i(mTextureArraySliceUniformLocation, 1);
     drawQuad(mProgram, "position", 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
+// Test that redefining the base level of a 2D array texture with a changed layer count preserves
+// other mip levels whose data was uploaded directly to storage via the texSubImage3D fast path,
+// and zero-initializes the redefined base level under robust resource initialization.
+TEST_P(Texture2DArrayTestES3RobustInit, RedefineBaseLevelLayerCountPreservesFastPathMipData)
+{
+    constexpr GLsizei kLevel0Size          = 8;
+    constexpr GLsizei kLevel1Size          = 4;
+    constexpr GLsizei kInitialLayers       = 4;
+    constexpr GLsizei kReducedLayers       = 2;
+    constexpr size_t kLevel1PixelsPerLayer = kLevel1Size * kLevel1Size;
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+
+    // Define level 0 (8x8x4) and level 1 (4x4x4) with null data.
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kLevel0Size, kLevel0Size, kInitialLayers, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, kLevel1Size, kLevel1Size, kInitialLayers, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    // Attach level 0 layer 0 to an FBO and clear to instantiate RT-capable storage.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Upload full-coverage data to level 1 (triggers setData fast path directly into storage).
+    const std::array<GLColor, kInitialLayers> kLayerColors = {GLColor::blue, GLColor::green,
+                                                              GLColor::yellow, GLColor::cyan};
+    std::vector<GLColor> level1Data(kLevel1PixelsPerLayer * kInitialLayers);
+    for (GLsizei layer = 0; layer < kInitialLayers; ++layer)
+    {
+        std::fill_n(level1Data.begin() + layer * kLevel1PixelsPerLayer, kLevel1PixelsPerLayer,
+                    kLayerColors[layer]);
+    }
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 1, 0, 0, 0, kLevel1Size, kLevel1Size, kInitialLayers,
+                    GL_RGBA, GL_UNSIGNED_BYTE, level1Data.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Redefine level 0 with a smaller layer count (2), releasing the existing storage.
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kLevel0Size, kLevel0Size, kReducedLayers, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    // Restore level 0 layer count (4) with null data and switch base level to 1.
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kLevel0Size, kLevel0Size, kInitialLayers, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify all 4 layers of level 1 preserved their uploaded colors.
+    for (GLsizei layer = 0; layer < kInitialLayers; ++layer)
+    {
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 1, layer);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kLevel1Size, kLevel1Size, kLayerColors[layer]);
+    }
+
+    // Switch base level back to 0 and verify the redefined level 0 is zero-initialized.
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 0);
+    for (GLsizei layer = 0; layer < kInitialLayers; ++layer)
+    {
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, layer);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kLevel0Size, kLevel0Size, GLColor::transparentBlack);
+    }
 }
 
 // Create a 2D array texture and update layers with data and test that pruning
@@ -25642,6 +25719,10 @@ ANGLE_INSTANTIATE_TEST_ES3(SamplerTypeMixTestES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DArrayTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(Texture2DArrayTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DArrayTestES3RobustInit);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DArrayTestES3RobustInit,
+                               ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DArrayTestES3_ReattachTextureToFbo);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
