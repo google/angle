@@ -4447,6 +4447,64 @@ TEST_P(Texture2DTest, CallKHRDebugLabelBeforeTexStorageCreation)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
+// Tests that shader read stage masks are accumulated properly when a texture is used in different
+// shader stages in different render passes.
+TEST_P(Texture2DTest, TextureReadStageAccumulationDifferentRenderPass)
+{
+    GLFramebuffer fbo;
+    GLTexture colorTex;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+    ASSERT_GL_NO_ERROR();
+
+    // For the first draw, the texture sampler is in the fragment shader.
+    setUpProgram();
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Switch to the second FBO to end the render pass.
+    // For the second draw, the texture sampler is in the vertex shader.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    constexpr char kVS[] = R"(attribute vec4 position;
+uniform sampler2D tex;
+varying vec4 color;
+void main() {
+    gl_Position = position;
+    color = texture2D(tex, vec2(0.5, 0.5));
+})";
+    constexpr char kFS[] = R"(precision highp float;
+varying vec4 color;
+void main() {
+    gl_FragColor = color;
+})";
+
+    ANGLE_GL_PROGRAM(vertexProgram, kVS, kFS);
+    glUseProgram(vertexProgram);
+    GLint vertexTexLoc = glGetUniformLocation(vertexProgram, "tex");
+    ASSERT_NE(-1, vertexTexLoc);
+    glUniform1i(vertexTexLoc, 0);
+
+    drawQuad(vertexProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Write to the texture before reading the output.
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that glTexSubImage2D combined with a PBO works properly when glTexStorage2D has
 // initialized the image with a depth-only format.
 TEST_P(Texture2DTestES3, TexImageWithDepthPBO)
