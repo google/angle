@@ -658,9 +658,9 @@ pub enum OpCode {
     // is true, that block jumps to the body of loop or the merge block otherwise.  For and
     // while loops can be distinguished by the presence of a "continue" block in Block.  The
     // body of the loop itself must terminate with `Continue` (if not otherwise terminated
-    // with `Break`, `Return` etc).  The continue block itself, if any, should also terminate
-    // with `Continue`, though that's immaterial (as there cannot be any other terminator).
-    //   Loop
+    // with `Break`, `Return`, `Discard`, etc).  The continue block itself, if any, should also
+    // terminate with `Continue`, though that's immaterial (as there cannot be any other
+    // terminator).   Loop
     Loop,
     // Similarly to `Loop`, marks the beginning of a do-loop.  Unlike `Loop`, the initial jump is
     // to the body of the do-while loop.  The body and condition blocks are similar to `Loop`.
