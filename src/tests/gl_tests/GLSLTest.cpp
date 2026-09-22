@@ -25275,16 +25275,67 @@ TEST_P(GLSLTest_ES3, LongIdentifiers)
     glBufferData(GL_UNIFORM_BUFFER, sizeof(kUBOValue), &kUBOValue, GL_STATIC_COPY);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
 
-    // If symbols are at least 1022 characters, they don't get prefixed.  If they are below 1022,
-    // they do.  Either way, this test makes sure these symbols work.  This is particularly needed
-    // given these symbols may get suffixed with `_id`.
-    for (uint32_t len = 1020; len <= 1024; len += 2)
+    // If symbols are longer than 1022 characters, they don't get prefixed.  If they are at most
+    // 1022, they do.  Either way, this test makes sure these symbols work.  This is particularly
+    // needed given these symbols may get suffixed with `_id`.
+    for (uint32_t len = 1020; len <= 1024; ++len)
     {
         const std::string longUBO(len, 'b');
         const std::string longUniform(len, 'u');
         const std::string longGlobalStruct(len, 'S');
         const std::string longLocalStruct(len, 'L');
         const std::string longVariable(len, 'v');
+
+        std::string shader = R"(#version 300 es
+precision mediump float;
+uniform )" + longUBO + R"({
+    float u;
+};
+struct )" + longGlobalStruct +
+                             R"({
+    float f;
+} g;
+uniform float )" + longUniform +
+                             R"(;
+out vec4 color;
+
+void main() {
+    struct )" + longLocalStruct +
+                             R"({
+        float f2;
+    } l;
+    float )" + longVariable + R"( = 0.1 + u;
+    g.f = )" + longUniform + R"(;
+    l.f2 = g.f + 0.25;
+    color = vec4()" + longVariable +
+                             R"(, g.f, l.f2, 1.0);
+})";
+
+        ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), shader.c_str());
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 0, 63, 255), 1);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
+// Test that long symbols starting with underscore work
+TEST_P(GLSLTest_ES3, LongIdentifiersWithUnderscore)
+{
+    constexpr GLfloat kUBOValue = 0.4f;
+    GLBuffer ubo;
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kUBOValue), &kUBOValue, GL_STATIC_COPY);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
+
+    // If symbols are longer than 1022 characters, the shader must fail validation (tested in
+    // GLSLValidationTest.cpp).  If they are at most 1022, they are prefixed with.
+    for (uint32_t len = 1020; len <= 1022; ++len)
+    {
+        const std::string longUBO          = '_' + std::string(len - 1, 'b');
+        const std::string longUniform      = '_' + std::string(len - 1, 'u');
+        const std::string longGlobalStruct = '_' + std::string(len - 1, 'S');
+        const std::string longLocalStruct  = '_' + std::string(len - 1, 'L');
+        const std::string longVariable     = '_' + std::string(len - 1, 'v');
 
         std::string shader = R"(#version 300 es
 precision mediump float;

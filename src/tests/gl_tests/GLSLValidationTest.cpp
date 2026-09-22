@@ -375,7 +375,7 @@ void main() {
 
     std::string result =
         std::string("'") + longName +
-        std::string("' : identifiers beginning with `_` must be < 1022 characters");
+        std::string("' : identifiers beginning with `_` must be <= 1022 characters");
 
     validateError(GL_FRAGMENT_SHADER, shader.c_str(), result.c_str());
 }
@@ -392,7 +392,7 @@ void main() {
 
     std::string result =
         std::string("'") + longName +
-        std::string("' : identifiers beginning with `_` must be < 1022 characters");
+        std::string("' : identifiers beginning with `_` must be <= 1022 characters");
 
     validateError(GL_FRAGMENT_SHADER, shader.c_str(), result.c_str());
 }
@@ -407,11 +407,7 @@ void main() {
   float )" + longName + R"( = 1.0;
 })";
 
-    std::string result =
-        std::string("'") + longName +
-        std::string("' : identifiers beginning with `_` must be < 1022 characters");
-
-    validateError(GL_FRAGMENT_SHADER, shader.c_str(), result.c_str());
+    validateSuccess(GL_FRAGMENT_SHADER, shader.c_str());
 }
 // https://crbug.com/499176133
 TEST_P(GLSLValidationTest, LongIdentifierAtLimit_1021)

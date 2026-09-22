@@ -1130,6 +1130,7 @@
 480069042 PIXEL10 GLES : GLSLTest_ES3.CompoundMultiplyMatrixValidNonSquareDimensions/* = SKIP
 480069042 PIXEL10 GLES : GLSLTest_ES3.DynamicIndexingOfSwizzledLValuesShouldWork2/* = SKIP
 533463991 PIXEL10 GLES : GLSLTest_ES3.LongIdentifiers/* = SKIP
+533463991 PIXEL10 GLES : GLSLTest_ES3.LongIdentifiersWithUnderscore/* = SKIP
 520464738 PIXEL10 GLES : GLSLTest_ES3.UniformBlockWithSupportedFieldsStructuredBuffer/* = SKIP
 520464738 PIXEL10 GLES : GLSLTest_ES3.UniformBlockWithUnsupportedFieldStructuredBufferFallback/* = SKIP
 480069042 PIXEL10 GLES : GLSLTest_ES3.VaryingAnonymousStructEquality/* = SKIP
