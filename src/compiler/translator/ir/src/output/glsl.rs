@@ -631,9 +631,13 @@ impl ast::Target for Generator {
         // TODO(http://anglebug.com/349994211): add #version and #extension lines when ANGLE uses
         // the IR all the way through to
         // codegen.
-        println!("{}", self.function_declarations);
-        // TODO(http://anglebug.com/349994211): return the resulting string instead
-        "".to_string()
+        format!(
+            "{}{}{}{}",
+            self.preamble,
+            self.type_declarations,
+            self.global_variables,
+            self.function_declarations
+        )
     }
 
     fn new_type(&mut self, ir_meta: &IRMeta, id: TypeId, type_info: &Type) {
@@ -877,10 +881,6 @@ impl ast::Target for Generator {
             ir_meta.all_global_variables(),
             None,
         );
-
-        println!("{}", self.preamble);
-        println!("{}", self.type_declarations);
-        println!("{}", self.global_variables);
     }
 
     fn begin_block(

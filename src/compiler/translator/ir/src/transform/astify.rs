@@ -28,6 +28,7 @@
 use crate::ir::*;
 use crate::*;
 
+#[derive(Clone, Copy)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 struct RegisterInfo {
     // How many times the register is read from.
@@ -51,6 +52,11 @@ struct RegisterInfo {
     //
     // If the expression is too deep, it's cached in a temporary to avoid too-deep ASTs.
     depth: u32,
+    // For the result of an Access* instruction, whether the access chain rooted at this register
+    // (inclusive) contains at least one dynamic, i.e. register-valued, index.  Chains made purely
+    // of static indices need no work at dereference time, so this allows skipping the chain walk
+    // in `mark_pointer_indices_read` entirely.  Always false for non-Access* results.
+    contains_dynamic_indices: bool,
 }
 
 impl RegisterInfo {
@@ -60,6 +66,7 @@ impl RegisterInfo {
             has_side_effect: false,
             is_complex: false,
             mark_side_effect_if_read: false,
+            contains_dynamic_indices: false,
             depth: 1,
         }
     }
@@ -86,7 +93,7 @@ impl BreakInfo {
 struct State<'a> {
     ir_meta: &'a mut IRMeta,
     // Used to know when temporary variables are needed
-    register_info: HashMap<RegisterId, RegisterInfo>,
+    register_info: Vec<RegisterInfo>,
     // List of registers without side effect that are not necessarily cached in a temp variable,
     // see comment in `preprocess_block_registers` for details.
     uncached_registers: Vec<RegisterId>,
@@ -123,7 +130,7 @@ pub struct Options {
 pub fn run(ir: &mut IR, options: &Options) -> ast::UncachedRegistersWithSideEffect {
     let mut state = State {
         ir_meta: &mut ir.meta,
-        register_info: HashMap::new(),
+        register_info: Vec::new(),
         uncached_registers: Vec::new(),
         continue_stack: Vec::new(),
         break_stack: Vec::new(),
@@ -179,7 +186,7 @@ pub fn run(ir: &mut IR, options: &Options) -> ast::UncachedRegistersWithSideEffe
     state.uncached_but_with_side_effect
 }
 
-fn get_op_args(opcode: &OpCode) -> Vec<TypedId> {
+fn for_each_op_arg(opcode: &OpCode, mut f: impl FnMut(TypedId)) {
     match opcode {
         OpCode::MergeInput
         | OpCode::Discard
@@ -190,13 +197,13 @@ fn get_op_args(opcode: &OpCode) -> Vec<TypedId> {
         | OpCode::Loop
         | OpCode::DoLoop
         | OpCode::Return(None)
-        | OpCode::Merge(None) => vec![],
+        | OpCode::Merge(None) => (),
         OpCode::Call(_, params)
         | OpCode::ConstructVectorFromMultiple(params)
         | OpCode::ConstructMatrixFromMultiple(params)
         | OpCode::ConstructStruct(params)
         | OpCode::ConstructArray(params)
-        | OpCode::BuiltIn(_, params) => params.clone(),
+        | OpCode::BuiltIn(_, params) => params.iter().copied().for_each(f),
         &OpCode::Return(Some(id))
         | &OpCode::Merge(Some(id))
         | &OpCode::If(id)
@@ -213,7 +220,7 @@ fn get_op_args(opcode: &OpCode) -> Vec<TypedId> {
         | &OpCode::AccessVectorComponentMulti(id, _)
         | &OpCode::AccessStructField(id, _)
         | &OpCode::Load(id)
-        | &OpCode::Unary(_, id) => vec![id],
+        | &OpCode::Unary(_, id) => f(id),
         &OpCode::ExtractVectorComponentDynamic(lhs, rhs)
         | &OpCode::ExtractMatrixColumn(lhs, rhs)
         | &OpCode::ExtractArrayElement(lhs, rhs)
@@ -221,50 +228,51 @@ fn get_op_args(opcode: &OpCode) -> Vec<TypedId> {
         | &OpCode::AccessMatrixColumn(lhs, rhs)
         | &OpCode::AccessArrayElement(lhs, rhs)
         | &OpCode::Store(lhs, rhs)
-        | &OpCode::Binary(_, lhs, rhs) => vec![lhs, rhs],
+        | &OpCode::Binary(_, lhs, rhs) => {
+            f(lhs);
+            f(rhs);
+        }
         &OpCode::Texture(ref texture_op, sampler, coord) => {
-            let mut read_ids = Vec::with_capacity(4);
-            read_ids.push(sampler);
-            read_ids.push(coord);
+            f(sampler);
+            f(coord);
             match texture_op {
                 &TextureOpCode::Implicit { is_proj: _, offset }
                 | &TextureOpCode::Gather { offset } => {
-                    offset.inspect(|&id| read_ids.push(id));
+                    offset.inspect(|&id| f(id));
                 }
                 &TextureOpCode::Compare { compare } => {
-                    read_ids.push(compare);
+                    f(compare);
                 }
                 &TextureOpCode::Lod { is_proj: _, lod, offset } => {
-                    read_ids.push(lod);
-                    offset.inspect(|&id| read_ids.push(id));
+                    f(lod);
+                    offset.inspect(|&id| f(id));
                 }
                 &TextureOpCode::CompareLod { compare, lod } => {
-                    read_ids.push(compare);
-                    read_ids.push(lod);
+                    f(compare);
+                    f(lod);
                 }
                 &TextureOpCode::Bias { is_proj: _, bias, offset } => {
-                    read_ids.push(bias);
-                    offset.inspect(|&id| read_ids.push(id));
+                    f(bias);
+                    offset.inspect(|&id| f(id));
                 }
                 &TextureOpCode::CompareBias { compare, bias } => {
-                    read_ids.push(compare);
-                    read_ids.push(bias);
+                    f(compare);
+                    f(bias);
                 }
                 &TextureOpCode::Grad { is_proj: _, dx, dy, offset } => {
-                    read_ids.push(dx);
-                    read_ids.push(dy);
-                    offset.inspect(|&id| read_ids.push(id));
+                    f(dx);
+                    f(dy);
+                    offset.inspect(|&id| f(id));
                 }
                 &TextureOpCode::GatherComponent { component, offset } => {
-                    read_ids.push(component);
-                    offset.inspect(|&id| read_ids.push(id));
+                    f(component);
+                    offset.inspect(|&id| f(id));
                 }
                 &TextureOpCode::GatherRef { refz, offset } => {
-                    read_ids.push(refz);
-                    offset.inspect(|&id| read_ids.push(id));
+                    f(refz);
+                    offset.inspect(|&id| f(id));
                 }
             };
-            read_ids
         }
         &OpCode::Alias(_) => {
             panic!("Internal error: Aliases must have been resolved before text generation")
@@ -333,18 +341,90 @@ fn can_reorder_expressions_after_op(opcode: &OpCode) -> (bool, bool) {
 
 fn clear_uncached_registers(
     uncached_registers: &mut Vec<RegisterId>,
-    register_info: &mut HashMap<RegisterId, RegisterInfo>,
+    register_info: &mut [RegisterInfo],
 ) {
     uncached_registers.iter().for_each(|id| {
-        register_info.get_mut(id).unwrap().mark_side_effect_if_read = true;
+        register_info[id.id as usize].mark_side_effect_if_read = true;
     });
     uncached_registers.clear();
+}
+
+fn get_access_base(opcode: &OpCode) -> Option<TypedId> {
+    match *opcode {
+        OpCode::AccessVectorComponent(base, _)
+        | OpCode::AccessVectorComponentMulti(base, _)
+        | OpCode::AccessStructField(base, _)
+        | OpCode::AccessVectorComponentDynamic(base, _)
+        | OpCode::AccessMatrixColumn(base, _)
+        | OpCode::AccessArrayElement(base, _) => Some(base),
+        _ => None,
+    }
+}
+
+fn get_dynamic_index(opcode: &OpCode) -> Option<TypedId> {
+    match *opcode {
+        OpCode::AccessVectorComponentDynamic(_, index)
+        | OpCode::AccessMatrixColumn(_, index)
+        | OpCode::AccessArrayElement(_, index) => Some(index),
+        _ => None,
+    }
+}
+
+fn mark_register_read(info: &mut RegisterInfo) {
+    info.read_count += 1;
+    if info.mark_side_effect_if_read {
+        info.has_side_effect = true;
+    }
+}
+
+fn mark_pointer_indices_read(
+    ir_meta: &IRMeta,
+    register_info: &mut [RegisterInfo],
+    mut ptr: TypedId,
+) {
+    while let Id::Register(reg) = ptr.id {
+        // The rest of the chain has no dynamic indices.
+        if !register_info[reg.id as usize].contains_dynamic_indices {
+            break;
+        }
+        let opcode = &ir_meta.get_instruction(reg).op;
+        let Some(base) = get_access_base(opcode) else {
+            break;
+        };
+        if let Some(Id::Register(index_reg)) = get_dynamic_index(opcode).map(|index| index.id) {
+            mark_register_read(&mut register_info[index_reg.id as usize]);
+        }
+        ptr = base;
+    }
+}
+
+// Access* instructions only build an address path; nothing is evaluated or dereferenced until the
+// pointer is used, so their operands are marked as read at the point of use instead (see
+// mark_pointer_indices_read). Returns (max_arg_depth, contains_dynamic_indices).
+fn preprocess_access_operands(
+    register_info: &[RegisterInfo],
+    base: TypedId,
+    opcode: &OpCode,
+) -> (u32, bool) {
+    let mut max_arg_depth = 0;
+    let mut contains_dynamic_indices = false;
+    if let Id::Register(base_reg) = base.id {
+        let base_info = &register_info[base_reg.id as usize];
+        max_arg_depth = base_info.depth;
+        contains_dynamic_indices = base_info.contains_dynamic_indices;
+    }
+    if let Some(Id::Register(index_reg)) = get_dynamic_index(opcode).map(|index| index.id) {
+        max_arg_depth = max_arg_depth.max(register_info[index_reg.id as usize].depth);
+        // A register-valued index is precisely what makes an access dynamic.
+        contains_dynamic_indices = true;
+    }
+    (max_arg_depth, contains_dynamic_indices)
 }
 
 fn preprocess_block_registers(state: &mut State, block: &Block, options: &Options) {
     // Add an unassuming entry for the merge input, if any.
     if let Some(input) = block.input {
-        state.register_info.entry(input.id).or_insert(RegisterInfo::new());
+        state.register_info[input.id.id as usize] = RegisterInfo::new();
     }
 
     for instruction in &block.instructions {
@@ -363,17 +443,29 @@ fn preprocess_block_registers(state: &mut State, block: &Block, options: &Option
         // Mark every potentially-register Id in the arguments of the opcode as being
         // accessed.
         let mut max_arg_depth = 0;
-        for id in get_op_args(opcode) {
-            if let Id::Register(id) = id.id {
-                let read_register_info = state.register_info.get_mut(&id).unwrap();
-                read_register_info.read_count += 1;
+        // For Access* instructions, whether the chain rooted at the result has a dynamic index.
+        let mut contains_dynamic_indices = false;
 
-                if read_register_info.mark_side_effect_if_read {
-                    read_register_info.has_side_effect = true;
+        if let Some(base) = get_access_base(opcode) {
+            (max_arg_depth, contains_dynamic_indices) =
+                preprocess_access_operands(&state.register_info, base, opcode);
+        } else {
+            for_each_op_arg(opcode, |arg| {
+                let Id::Register(reg) = arg.id else {
+                    return;
+                };
+
+                let info = &mut state.register_info[reg.id as usize];
+                max_arg_depth = max_arg_depth.max(info.depth);
+                if state.ir_meta.get_type(arg.type_id).is_pointer() {
+                    // Pointers are not materializable in the output languages, so the index
+                    // expressions are re-evaluated at every dereference.  Mark the dynamic
+                    // indices of the Access* chain as read here.
+                    mark_pointer_indices_read(state.ir_meta, &mut state.register_info, arg);
+                } else {
+                    mark_register_read(info);
                 }
-
-                max_arg_depth = max_arg_depth.max(read_register_info.depth);
-            }
+            });
         }
 
         if !can_reorder_expressions && op_only_reads_from_args {
@@ -384,9 +476,9 @@ fn preprocess_block_registers(state: &mut State, block: &Block, options: &Option
         // effect.  Similarly, if it is complex, mark it as such.
         if let Some(result_id) = result {
             // Add an unassuming entry for the result.
-            let result_info =
-                state.register_info.entry(result_id.id).or_insert(RegisterInfo::new());
+            let result_info = &mut state.register_info[result_id.id.id as usize];
             result_info.depth = max_arg_depth + 1;
+            result_info.contains_dynamic_indices = contains_dynamic_indices;
 
             if opcode.has_side_effect() {
                 result_info.has_side_effect = true;
@@ -425,7 +517,7 @@ fn preprocess_block_registers(state: &mut State, block: &Block, options: &Option
                                 OpCode::AccessVectorComponentMulti(..)
                             )
                         {
-                            let load_register_info = state.register_info.get_mut(&load_id).unwrap();
+                            let load_register_info = &mut state.register_info[load_id.id as usize];
                             // The ExtractVectorComponent* instruction has already counted as
                             // one read, so one more is enough.
                             load_register_info.read_count += 1;
@@ -493,7 +585,7 @@ fn preprocess_block_registers(state: &mut State, block: &Block, options: &Option
             // later if a mutating instruction is encountered, all these registers are marked as
             // needing to be cached if read from again.  For simplicity, we don't track exactly
             // which variables may be modified by the mutating instruction.
-            if !state.register_info.get(&result_id.id).unwrap().has_side_effect {
+            if !state.register_info[result_id.id.id as usize].has_side_effect {
                 let result_type = state.ir_meta.get_type(result_id.type_id);
                 let can_be_cached = !matches!(
                     result_type,
@@ -511,10 +603,15 @@ fn preprocess_block_registers(state: &mut State, block: &Block, options: &Option
 }
 
 fn preprocess_registers(state: &mut State, function_entries: &[Option<Block>], options: &Options) {
+    // Register ids are dense indices into the instruction list, so the info can be indexed by them
+    // directly.  No registers are created during this pre-processing.
+    state.register_info = vec![RegisterInfo::new(); state.ir_meta.total_register_count() as usize];
     traverser::visitor::for_each_function(
         state,
         function_entries,
-        |_, _| {},
+        |state, _| {
+            state.uncached_registers.clear();
+        },
         |state, block, _, _| {
             preprocess_block_registers(state, block, options);
             traverser::visitor::VISIT_SUB_BLOCKS
@@ -761,7 +858,7 @@ fn transform_instruction(
     // - read multiple times
     //
     if let &BlockInstruction::Register(id) = instruction {
-        let info = &state.register_info[&id];
+        let info = &state.register_info[id.id as usize];
         let read_any_times = info.read_count > 0;
         let read_multiple_times = info.read_count > 1;
         let cache_in_variable_if_necessary =
