@@ -88,6 +88,7 @@ enum class Feature
     DebugClDumpCommandStream,
     DebugSupportsClFp64,
     DecodeEncodeSRGBForGenerateMipmap,
+    DeferGlDeleteBuffers,
     DepthStencilBlitExtraCopy,
     DescriptorSetCache,
     DestroyOldSwapchainInSharedPresentMode,

@@ -1374,7 +1374,7 @@ angle::Result BlitGL::generateMipmap(const gl::Context *context,
     // Copy source to an intermediate texture.
     GLuint intermediateTexture = mScratchTextures[0];
     mStateManager->bindTexture(sourceType, intermediateTexture);
-    mStateManager->bindBuffer(gl::BufferBinding::PixelUnpack, 0);
+    mStateManager->bindBuffer(gl::BufferBinding::PixelUnpack, 0, context->isHardenedContext());
     ANGLE_GL_TRY(context, mFunctions->texParameteri(ToGLenum(sourceTarget), GL_TEXTURE_MIN_FILTER,
                                                     GL_NEAREST));
     ANGLE_GL_TRY(context, mFunctions->texParameteri(ToGLenum(sourceTarget), GL_TEXTURE_MAG_FILTER,
@@ -1467,7 +1467,8 @@ angle::Result BlitGL::initializeResources(const gl::Context *context)
     ANGLE_GL_TRY(context, mFunctions->genFramebuffers(1, &mScratchFBO));
 
     ANGLE_GL_TRY(context, mFunctions->genBuffers(1, &mVertexBuffer));
-    mStateManager->bindBuffer(gl::BufferBinding::Array, mVertexBuffer);
+    mStateManager->bindBuffer(gl::BufferBinding::Array, mVertexBuffer,
+                              context->isHardenedContext());
 
     // Use a single, large triangle, to avoid arithmetic precision issues where fragments
     // with the same Y coordinate don't get exactly the same interpolated texcoord Y.
@@ -1583,7 +1584,8 @@ angle::Result BlitGL::setVAOState(const gl::Context *context)
 
 angle::Result BlitGL::initializeVAOState(const gl::Context *context)
 {
-    mStateManager->bindBuffer(gl::BufferBinding::Array, mVertexBuffer);
+    mStateManager->bindBuffer(gl::BufferBinding::Array, mVertexBuffer,
+                              context->isHardenedContext());
 
     ANGLE_GL_TRY(context, mFunctions->enableVertexAttribArray(mTexcoordAttribLocation));
     ANGLE_GL_TRY(context, mFunctions->vertexAttribPointer(mTexcoordAttribLocation, 2, GL_FLOAT,

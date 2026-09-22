@@ -2679,6 +2679,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, doubleClearForRobustInit,
                             isMali || IsAdreno6xxOrOlder(functions));
 
+    // http://crbug.com/558870371
+    ANGLE_FEATURE_CONDITION(features, deferGlDeleteBuffers, isMali);
+
     // https://crbug.com/40264674
     ANGLE_FEATURE_CONDITION(features, disableClipControl, IsMaliG72OrG76OrG51(functions));
 

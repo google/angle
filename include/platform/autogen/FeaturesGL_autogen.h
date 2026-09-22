@@ -806,6 +806,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo deferGlDeleteBuffers = {
+        "deferGlDeleteBuffers",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

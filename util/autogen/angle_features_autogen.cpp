@@ -88,6 +88,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DebugClDumpCommandStream, "debugClDumpCommandStream"},
     {Feature::DebugSupportsClFp64, "debugSupportsClFp64"},
     {Feature::DecodeEncodeSRGBForGenerateMipmap, "decodeEncodeSRGBForGenerateMipmap"},
+    {Feature::DeferGlDeleteBuffers, "deferGlDeleteBuffers"},
     {Feature::DepthStencilBlitExtraCopy, "depthStencilBlitExtraCopy"},
     {Feature::DescriptorSetCache, "descriptorSetCache"},
     {Feature::DestroyOldSwapchainInSharedPresentMode, "destroyOldSwapchainInSharedPresentMode"},
