@@ -355,32 +355,6 @@ vk::FramebufferNonResolveAttachmentMask MakeUnresolveAttachmentMask(const vk::Re
     return unresolveMask;
 }
 
-bool IsAnyAttachment3DWithoutAllLayers(const RenderTargetCache<RenderTargetVk> &renderTargetCache,
-                                       gl::DrawBufferMask colorAttachmentsMask,
-                                       uint32_t framebufferLayerCount)
-{
-    const auto &colorRenderTargets = renderTargetCache.getColors();
-    for (size_t colorIndexGL : colorAttachmentsMask)
-    {
-        RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
-        ASSERT(colorRenderTarget);
-
-        const vk::ImageHelper &image = colorRenderTarget->getImageForRenderPass();
-
-        if (image.getType() == VK_IMAGE_TYPE_3D && image.getExtents().depth > framebufferLayerCount)
-        {
-            return true;
-        }
-    }
-
-    // Depth/stencil attachments cannot be 3D.
-    ASSERT(renderTargetCache.getDepthStencil() == nullptr ||
-           renderTargetCache.getDepthStencil()->getImageForRenderPass().getType() !=
-               VK_IMAGE_TYPE_3D);
-
-    return false;
-}
-
 // Should be called when the image type is VK_IMAGE_TYPE_3D.  Typically, the subresource, offsets
 // and extents are filled in as if images are 2D layers (because depth slices of 3D images are also
 // specified through "layers" everywhere, particularly by gl::ImageIndex).  This function adjusts
@@ -804,10 +778,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         const bool clearAnyWithDraw =
             clearColorWithDraw || clearDepthWithDraw || clearStencilWithDraw;
 
-        bool isAnyAttachment3DWithoutAllLayers =
-            IsAnyAttachment3DWithoutAllLayers(mRenderTargetCache, mState.getColorAttachmentsMask(),
-                                              mCurrentFramebufferDesc.getLayerCount());
-
         // If we are in an active renderpass that has recorded commands and the framebuffer hasn't
         // changed, inline the clear.
         if (isMidRenderPassClear)
@@ -841,7 +811,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
                 // corner cases, such as with 3D or external attachments.  In those cases, a clear
                 // can open a render pass that's otherwise empty, and additional clears can continue
                 // to be accumulated in the render pass loadOps.
-                ASSERT(isAnyAttachment3DWithoutAllLayers || hasAnyExternalAttachments());
+                ASSERT(hasAnyExternalAttachments());
                 clearWithLoadOp(contextVk);
             }
 
@@ -850,15 +820,9 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
             // flush deferred clears, which will start a render pass with deferred clear values.
             // The subsequent draw call will then operate on the cleared attachments.
             //
-            // Additionally, if the framebuffer is layered, any attachment is 3D and it has a larger
-            // depth than the framebuffer layers, clears cannot be deferred.  This is because the
-            // clear may later need to be flushed with vkCmdClearColorImage, which cannot partially
-            // clear the 3D texture.  In that case, the clears are flushed immediately too.
-            //
             // For external images such as from AHBs, the clears are not deferred so that they are
             // definitely applied before the application uses them outside of the control of ANGLE.
-            if (clearAnyWithDraw || isAnyAttachment3DWithoutAllLayers ||
-                hasAnyExternalAttachments())
+            if (clearAnyWithDraw || hasAnyExternalAttachments())
             {
                 ANGLE_TRY(flushDeferredClears(contextVk));
             }

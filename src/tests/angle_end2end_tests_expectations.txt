@@ -1427,6 +1427,7 @@
 563032519 PIXEL10 GLES : Texture2DTestES3.SampleThenFullUpdateWithBaseChange/* = SKIP
 565371513 PIXEL10 GLES : Texture3DTestES3.GenMipmapThenBlend/* = SKIP
 565453056 PIXEL10 GLES : Texture3DTestES3.UploadLayerThenBlend/* = SKIP
+565453056 PIXEL10 GLES : RobustResourceInitTestES3.DrawToSliceOf3DBlendReadback/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP
@@ -3117,6 +3118,24 @@
 546640309 WIN QUALCOMM D3D11 : TransformFeedbackTest.BlitWhileRecordingDoesNotContribute/* = SKIP
 546640309 WIN QUALCOMM D3D11 : TransformFeedbackTest.CopyWhileRecordingDoesNotContribute/* = SKIP
 546640309 WIN QUALCOMM D3D11 : TransformFeedbackTest.TransformFeedbackQueryPausedDrawThenResume/* = SKIP
+
+// The setNeedInitOnInvalidation feature loses data with 3D textures
+564918838 D3D11 : RobustResourceInitTestES3.InvalidateSliceOf3DSample/* = SKIP
+564918838 D3D11 : RobustResourceInitTestES3.InvalidateSliceOf3DReadback/* = SKIP
+564918838 D3D11 : RobustResourceInitTestES3.InvalidateSliceOf3DBlendReadback/* = SKIP
+564918838 D3D11 : RobustResourceInitTestES3.InvalidateLayerOf2DArrayBlendReadback/* = SKIP
+564918838 OPENGL : RobustResourceInitTestES3.InvalidateSliceOf3DSample/* = SKIP
+564918838 OPENGL : RobustResourceInitTestES3.InvalidateSliceOf3DReadback/* = SKIP
+564918838 OPENGL : RobustResourceInitTestES3.InvalidateSliceOf3DBlendReadback/* = SKIP
+564918838 OPENGL : RobustResourceInitTestES3.InvalidateLayerOf2DArrayBlendReadback/* = SKIP
+564918838 GLES : RobustResourceInitTestES3.InvalidateSliceOf3DSample/* = SKIP
+564918838 GLES : RobustResourceInitTestES3.InvalidateSliceOf3DReadback/* = SKIP
+564918838 GLES : RobustResourceInitTestES3.InvalidateSliceOf3DBlendReadback/* = SKIP
+564918838 GLES : RobustResourceInitTestES3.InvalidateLayerOf2DArrayBlendReadback/* = SKIP
+564918838 METAL : RobustResourceInitTestES3.InvalidateSliceOf3DSample/* = SKIP
+564918838 METAL : RobustResourceInitTestES3.InvalidateSliceOf3DReadback/* = SKIP
+564918838 METAL : RobustResourceInitTestES3.InvalidateSliceOf3DBlendReadback/* = SKIP
+564918838 METAL : RobustResourceInitTestES3.InvalidateLayerOf2DArrayBlendReadback/* = SKIP
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file

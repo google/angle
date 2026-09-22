@@ -3273,6 +3273,15 @@ class ImageHelper final : public Resource, public angle::Subject
                uint32_t layerCount,
                OutsideRenderPassCommandBuffer *commandBuffer);
 
+    angle::Result clearPartial(ContextVk *contextVk,
+                               VkImageAspectFlags aspectFlags,
+                               const VkClearValue &value,
+                               LevelIndex mipLevel,
+                               LayerIndex baseArrayLayer,
+                               uint32_t layerCount,
+                               const gl::Rectangle &clearArea,
+                               OutsideRenderPassCommandBufferHelper **commandBuffer);
+
     void clearColor(Renderer *renderer,
                     const VkClearColorValue &color,
                     LevelIndex baseMipLevelVk,

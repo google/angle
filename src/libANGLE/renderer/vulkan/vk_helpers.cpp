@@ -8073,12 +8073,13 @@ void ImageHelper::clearColor(Renderer *renderer,
     if (mImageType == VK_IMAGE_TYPE_3D)
     {
         ASSERT(baseArrayLayer == LayerIndex(0));
-        ASSERT(layerCount == 1 ||
-               layerCount == static_cast<uint32_t>(getLevelExtents(baseMipLevelVk).depth));
+        ASSERT(layerCount == static_cast<uint32_t>(getLevelExtents(baseMipLevelVk).depth));
         range.layerCount = 1;
     }
 
     commandBuffer->clearColorImage(mImage, getCurrentLayout(renderer), color, 1, &range);
+
+    onWrite(baseMipLevelVk, 1, baseArrayLayer, layerCount, VK_IMAGE_ASPECT_COLOR_BIT);
 }
 
 void ImageHelper::clearDepthStencil(Renderer *renderer,
@@ -8104,13 +8105,14 @@ void ImageHelper::clearDepthStencil(Renderer *renderer,
     if (mImageType == VK_IMAGE_TYPE_3D)
     {
         ASSERT(baseArrayLayer == LayerIndex(0));
-        ASSERT(layerCount == 1 ||
-               layerCount == static_cast<uint32_t>(getLevelExtents(baseMipLevelVk).depth));
+        ASSERT(layerCount == static_cast<uint32_t>(getLevelExtents(baseMipLevelVk).depth));
         range.layerCount = 1;
     }
 
     commandBuffer->clearDepthStencilImage(mImage, getCurrentLayout(renderer), depthStencil, 1,
                                           &range);
+
+    onWrite(baseMipLevelVk, 1, baseArrayLayer, layerCount, clearAspectFlags);
 }
 
 void ImageHelper::clear(Renderer *renderer,
@@ -8135,6 +8137,39 @@ void ImageHelper::clear(Renderer *renderer,
 
         clearColor(renderer, value.color, mipLevel, 1, baseArrayLayer, layerCount, commandBuffer);
     }
+}
+
+angle::Result ImageHelper::clearPartial(ContextVk *contextVk,
+                                        VkImageAspectFlags aspectFlags,
+                                        const VkClearValue &value,
+                                        LevelIndex mipLevel,
+                                        LayerIndex baseArrayLayer,
+                                        uint32_t layerCount,
+                                        const gl::Rectangle &clearArea,
+                                        OutsideRenderPassCommandBufferHelper **commandBuffer)
+{
+    // clearTexture() uses LOAD_OP_CLEAR in a render pass to clear the texture. If
+    // the texture has the depth dimension or multiple layers, the clear will be
+    // performed layer by layer.
+    UtilsVk::ClearTextureParameters params = {};
+    params.aspectFlags                     = aspectFlags;
+    params.level                           = mipLevel;
+    params.clearArea                       = clearArea;
+    params.clearValue                      = value;
+
+    for (gl::OwnerLayer layerIndex = baseArrayLayer; layerIndex < baseArrayLayer + layerCount;
+         ++layerIndex)
+    {
+        params.layer = layerIndex;
+        // Note: clearTexture() starts a render pass that automatically marks the
+        // contents of the subresource as defined.  onWrite is
+        // unnecessary.
+        ANGLE_TRY(contextVk->getUtils().clearTexture(contextVk, this, params));
+    }
+
+    // Queue serial index becomes invalid after starting render pass for the op
+    // above. Therefore, the outside command buffer should be re-acquired.
+    return contextVk->getOutsideRenderPassCommandBufferHelper({}, commandBuffer);
 }
 
 angle::Result ImageHelper::clearEmulatedChannels(ContextVk *contextVk,
@@ -10683,32 +10718,48 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                 {
                     if (canTransferTo())
                     {
-                        clear(renderer, update.data.clear.aspectFlags, update.data.clear.value,
-                              updateMipLevelVk, updateBaseLayer, updateLayerCount,
-                              &commandBuffer->getCommandBuffer());
+                        // If clearing only a slice of a 3D image, vkCmdClear*Image cannot be used.
+                        const bool isSliceOf3D =
+                            mImageType == VK_IMAGE_TYPE_3D &&
+                            (updateBaseLayer.get() != 0 ||
+                             (updateBaseLayer + updateLayerCount).get() !=
+                                 static_cast<uint32_t>(getLevelExtents(updateMipLevelVk).depth));
+                        if (isSliceOf3D)
+                        {
+                            const gl::Extents clearExtents = getLevelExtents(updateMipLevelVk);
+                            const gl::Rectangle clearArea(0, 0, clearExtents.width,
+                                                          clearExtents.height);
+                            ASSERT(updateBaseLayer < clearExtents.depth);
+                            ASSERT((updateBaseLayer + updateLayerCount).get() <=
+                                   static_cast<uint32_t>(clearExtents.depth));
+
+                            ANGLE_TRY(clearPartial(contextVk, update.data.clear.aspectFlags,
+                                                   update.data.clear.value, updateMipLevelVk,
+                                                   updateBaseLayer, updateLayerCount, clearArea,
+                                                   &commandBuffer));
+                        }
+                        else
+                        {
+                            clear(renderer, update.data.clear.aspectFlags, update.data.clear.value,
+                                  updateMipLevelVk, updateBaseLayer, updateLayerCount,
+                                  &commandBuffer->getCommandBuffer());
+                        }
                     }
                     else
                     {
                         ASSERT(mUseTileMemory);
                         ASSERT(mImageType != VK_IMAGE_TYPE_3D);
-                        UtilsVk::ClearTextureParameters params = {};
-                        params.aspectFlags                     = getAspectFlags();
-                        params.level                           = updateMipLevelVk;
-                        params.clearArea  = gl::Rectangle(0, 0, mExtents.width, mExtents.height);
-                        params.clearValue = update.data.clear.value;
-                        params.layer      = updateBaseLayer;
-                        ANGLE_TRY(contextVk->getUtils().clearTexture(contextVk, this, params));
+
+                        ANGLE_TRY(clearPartial(contextVk, getAspectFlags(), update.data.clear.value,
+                                               updateMipLevelVk, updateBaseLayer, updateLayerCount,
+                                               gl::Rectangle(0, 0, mExtents.width, mExtents.height),
+                                               &commandBuffer));
                     }
                     contextVk->getPerfCounters().fullImageClears++;
                     // Remember the latest operation is a clear call.  Note that the tracked level
                     // is the GL level.
                     mCurrentSingleClearValue                    = update.data.clear;
                     mCurrentSingleClearValue.value().levelIndex = updateMipLevelGL.get();
-
-                    // Do not call onWrite as it removes mCurrentSingleClearValue, but instead call
-                    // setContentDefined directly.
-                    setContentDefined(updateMipLevelVk, 1, updateBaseLayer, updateLayerCount,
-                                      update.data.clear.aspectFlags);
                     break;
                 }
                 case UpdateSource::ClearPartial:
@@ -10717,29 +10768,11 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                     const gl::Rectangle clearArea =
                         gl::Rectangle(clearPartialUpdate.offset, clearPartialUpdate.extent);
 
-                    // clearTexture() uses LOAD_OP_CLEAR in a render pass to clear the texture. If
-                    // the texture has the depth dimension or multiple layers, the clear will be
-                    // performed layer by layer.
-                    UtilsVk::ClearTextureParameters params = {};
-                    params.aspectFlags                     = clearPartialUpdate.aspectFlags;
-                    params.level                           = updateMipLevelVk;
-                    params.clearArea                       = clearArea;
-                    params.clearValue                      = clearPartialUpdate.clearValue;
+                    ANGLE_TRY(clearPartial(contextVk, clearPartialUpdate.aspectFlags,
+                                           clearPartialUpdate.clearValue, updateMipLevelVk,
+                                           updateBaseLayer, updateLayerCount, clearArea,
+                                           &commandBuffer));
 
-                    for (gl::OwnerLayer layerIndex = updateBaseLayer;
-                         layerIndex < updateBaseLayer + updateLayerCount; ++layerIndex)
-                    {
-                        params.layer = layerIndex;
-                        // Note: clearTexture() starts a render pass that automatically marks the
-                        // contents of the subresource as defined.  setContentDefined is
-                        // unnecessary.
-                        ANGLE_TRY(contextVk->getUtils().clearTexture(contextVk, this, params));
-                    }
-
-                    // Queue serial index becomes invalid after starting render pass for the op
-                    // above. Therefore, the outside command buffer should be re-acquired.
-                    ANGLE_TRY(
-                        contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBuffer));
                     break;
                 }
                 case UpdateSource::Buffer:
@@ -12137,6 +12170,7 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(const VkImageAspectFlags aspec
                                                   const gl::Rectangle &clearArea)
     : updateSource(UpdateSource::ClearPartial)
 {
+    refCounted.image              = nullptr;
     data.clearPartial.aspectFlags = aspectFlags;
     data.clearPartial.levelIndex  = levelIndex.get();
     data.clearPartial.layerIndex  = layerIndex.get();
