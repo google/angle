@@ -3047,7 +3047,33 @@ class UpdateDescriptorSetsBuilder final : angle::NonCopyable
             mCurrentVector = mDescriptorInfos.begin();
             mTotalSize     = 0;
         }
-        T *allocate(uint32_t count);
+
+        T *allocate(uint32_t count)
+        {
+            size_t oldSize = mCurrentVector->size();
+            size_t newSize = oldSize + count;
+            if (newSize <= mCurrentVector->capacity())
+            {
+                (*mCurrentVector).resize(newSize);
+                mTotalSize += count;
+                return &(*mCurrentVector)[oldSize];
+            }
+
+            ++mCurrentVector;
+            // clear() always ensures we have a single element left.
+            ASSERT(mCurrentVector == mDescriptorInfos.end());
+
+            // We have reached capacity, grow the storage
+            mVectorCapacity = std::max(count, mVectorCapacity);
+            mDescriptorInfos.emplace_back();
+            mDescriptorInfos.back().reserve(mVectorCapacity);
+            mCurrentVector = mDescriptorInfos.end() - 1;
+
+            mCurrentVector->resize(count);
+            mTotalSize += count;
+
+            return &mCurrentVector->front();
+        }
 
         bool empty() const { return mTotalSize == 0; }
 
