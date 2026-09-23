@@ -90,6 +90,7 @@ SYNCED_CIPD_DEPS = {
     'buildtools/reclient',
     'buildtools/win',
     'third_party/android_build_tools/aapt2/cipd',
+    'third_party/android_build_tools/bazel_tools/cipd',
     'third_party/android_build_tools/error_prone/cipd',
     'third_party/android_build_tools/error_prone_javac/cipd',
     'third_party/android_build_tools/lint/cipd',
