@@ -134,10 +134,6 @@ angle::Result TextureD3D::handleCopyImageSelfCopyRedefine(
     {
         // We won't be copying, but redefine the destination texture in case sourceArea is larger
         ANGLE_TRY(redefineDest(destExtents));
-        if (context->isWebGL() || context->isRobustResourceInitEnabled())
-        {
-            ANGLE_TRY(initializeContents(context, GL_NONE, destIndex));
-        }
         return angle::Result::Continue;
     }
 
