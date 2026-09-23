@@ -2800,12 +2800,12 @@ class ImageHelper final : public Resource, public angle::Subject
     // This function can be used to prevent issuing redundant layout transition commands.
     bool isReadBarrierNecessary(Renderer *renderer, ImageAccess newAccess) const;
     bool isReadSubresourceBarrierNecessary(ImageAccess newAccess,
-                                           gl::OwnerLevel levelStart,
+                                           LevelIndex levelStart,
                                            uint32_t levelCount,
                                            gl::OwnerLayer layerStart,
                                            uint32_t layerCount) const;
     bool isWriteBarrierNecessary(ImageAccess newAccess,
-                                 gl::OwnerLevel levelStart,
+                                 LevelIndex levelStart,
                                  uint32_t levelCount,
                                  gl::OwnerLayer layerStart,
                                  uint32_t layerCount) const;
@@ -2952,7 +2952,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Mark a given subresource as written to.  The subresource is identified by [levelStart,
     // levelStart + levelCount) and [layerStart, layerStart + layerCount).
-    void onWrite(gl::OwnerLevel levelStart,
+    void onWrite(LevelIndex levelStart,
                  uint32_t levelCount,
                  gl::OwnerLayer layerStart,
                  uint32_t layerCount,

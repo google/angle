@@ -1185,8 +1185,9 @@ void CommandBufferHelperCommon::imageWriteImpl(Context *context,
                                                BarrierType barrierType,
                                                ImageHelper *image)
 {
-    image->onWrite(level, 1, layerStart, layerCount, aspectFlags);
-    if (image->isWriteBarrierNecessary(imageAccess, level, 1, layerStart, layerCount))
+    const LevelIndex levelVk = image->toVkLevel(level);
+    image->onWrite(levelVk, 1, layerStart, layerCount, aspectFlags);
+    if (image->isWriteBarrierNecessary(imageAccess, levelVk, 1, layerStart, layerCount))
     {
         updateImageLayoutAndBarrier(context, image, aspectFlags, imageAccess, barrierType);
     }
@@ -7286,7 +7287,7 @@ bool ImageHelper::isReadBarrierNecessary(Renderer *renderer, ImageAccess newAcce
 }
 
 bool ImageHelper::isReadSubresourceBarrierNecessary(ImageAccess newAccess,
-                                                    gl::OwnerLevel levelStart,
+                                                    LevelIndex levelStart,
                                                     uint32_t levelCount,
                                                     gl::OwnerLayer layerStart,
                                                     uint32_t layerCount) const
@@ -7306,12 +7307,10 @@ bool ImageHelper::isReadSubresourceBarrierNecessary(ImageAccess newAccess,
         layerCount = 1;
     }
 
-    const LevelIndex levelStartVk = toVkLevel(levelStart);
-
     ImageLayerWriteMask layerMask = GetImageLayerWriteMask(layerStart, layerCount);
     for (uint32_t levelOffset = 0; levelOffset < levelCount; levelOffset++)
     {
-        if (areLevelSubresourcesWrittenWithinMaskRange(levelStartVk + levelOffset, layerMask))
+        if (areLevelSubresourcesWrittenWithinMaskRange(levelStart + levelOffset, layerMask))
         {
             return true;
         }
@@ -7321,7 +7320,7 @@ bool ImageHelper::isReadSubresourceBarrierNecessary(ImageAccess newAccess,
 }
 
 bool ImageHelper::isWriteBarrierNecessary(ImageAccess newAccess,
-                                          gl::OwnerLevel levelStart,
+                                          LevelIndex levelStart,
                                           uint32_t levelCount,
                                           gl::OwnerLayer layerStart,
                                           uint32_t layerCount) const
@@ -7344,14 +7343,12 @@ bool ImageHelper::isWriteBarrierNecessary(ImageAccess newAccess,
         layerCount = 1;
     }
 
-    const LevelIndex levelStartVk = toVkLevel(levelStart);
-
     // If we are writing to the same parts of the image (level/layer), we need a barrier. Otherwise,
     // it can be done in parallel.
     ImageLayerWriteMask layerMask = GetImageLayerWriteMask(layerStart, layerCount);
     for (uint32_t levelOffset = 0; levelOffset < levelCount; levelOffset++)
     {
-        if (areLevelSubresourcesWrittenWithinMaskRange(levelStartVk + levelOffset, layerMask))
+        if (areLevelSubresourcesWrittenWithinMaskRange(levelStart + levelOffset, layerMask))
         {
             return true;
         }
@@ -7680,7 +7677,8 @@ void ImageHelper::recordWriteBarrier(Context *context,
                                      uint32_t layerCount,
                                      OutsideRenderPassCommandBufferHelper *commands)
 {
-    if (isWriteBarrierNecessary(newAccess, levelStart, levelCount, layerStart, layerCount))
+    if (isWriteBarrierNecessary(newAccess, toVkLevel(levelStart), levelCount, layerStart,
+                                layerCount))
     {
         ASSERT(!mCurrentEvent.valid() || !commands->hasSetEventPendingFlush(mCurrentEvent));
         VkSemaphore acquireNextImageSemaphore;
@@ -7706,9 +7704,11 @@ void ImageHelper::recordReadSubresourceBarrier(Context *context,
                                                uint32_t layerCount,
                                                OutsideRenderPassCommandBufferHelper *commands)
 {
+    const LevelIndex levelStartVk = toVkLevel(levelStart);
+
     // This barrier is used for an image with both read/write permissions, including during mipmap
     // generation and self-copy.
-    if (isReadSubresourceBarrierNecessary(newAccess, levelStart, levelCount, layerStart,
+    if (isReadSubresourceBarrierNecessary(newAccess, levelStartVk, levelCount, layerStart,
                                           layerCount))
     {
         ASSERT(!mCurrentEvent.valid() || !commands->hasSetEventPendingFlush(mCurrentEvent));
@@ -7724,7 +7724,7 @@ void ImageHelper::recordReadSubresourceBarrier(Context *context,
     }
 
     // Levels/layers being read from are also registered to avoid RAW and WAR hazards.
-    setSubresourcesWrittenSinceBarrier(toVkLevel(levelStart), levelCount, layerStart, layerCount);
+    setSubresourcesWrittenSinceBarrier(levelStartVk, levelCount, layerStart, layerCount);
 }
 
 void ImageHelper::recordReadBarrier(Context *context,
@@ -9009,7 +9009,8 @@ angle::Result ImageHelper::updateSubresourceOnHost(ContextVk *contextVk,
         }
     }
 
-    onWrite(updateLevelGL, 1, baseArrayLayer, layerCount, aspectMask);
+    const LevelIndex updateLevelVk = toVkLevel(updateLevelGL);
+    onWrite(updateLevelVk, 1, baseArrayLayer, layerCount, aspectMask);
     *copiedOut = true;
 
     // Perform the copy without holding the lock.  This is important for applications that perform
@@ -9019,8 +9020,8 @@ angle::Result ImageHelper::updateSubresourceOnHost(ContextVk *contextVk,
     // in this call (just without holding the lock), the sync function won't be called until the
     // copy is done.
     auto doCopy = [contextVk, image = mImage.getHandle(), source, memoryRowLength,
-                   memoryImageHeight, aspectMask, levelVk = toVkLevel(updateLevelGL), is3D,
-                   baseArrayLayer, layerCount, offset, glExtents,
+                   memoryImageHeight, aspectMask, levelVk = updateLevelVk, is3D, baseArrayLayer,
+                   layerCount, offset, glExtents,
                    layout = getCurrentLayout(renderer)](void *resultOut) {
         ANGLE_TRACE_EVENT0("gpu.angle", "Upload image data on host");
         ANGLE_UNUSED_VARIABLE(resultOut);
@@ -9405,19 +9406,18 @@ void ImageHelper::onRenderPassAttach(const QueueSerial &queueSerial)
     mPipelineStageAccessHeuristic.onAccess(PipelineStageGroup::FragmentOnly);
 }
 
-void ImageHelper::onWrite(gl::OwnerLevel levelStart,
+void ImageHelper::onWrite(LevelIndex levelStart,
                           uint32_t levelCount,
                           gl::OwnerLayer layerStart,
                           uint32_t layerCount,
                           VkImageAspectFlags aspectFlags)
 {
-    const LevelIndex levelStartVk = toVkLevel(levelStart);
-    ASSERT((levelStartVk + levelCount).get() <= mLevelCount);
+    ASSERT((levelStart + levelCount).get() <= mLevelCount);
     // As a special case, the caller might get kMaxContentDefinedLayerCount as layer and a layer
     // count of 0.
     const bool isInDepthRange =
         mImageType == VK_IMAGE_TYPE_3D &&
-        (layerStart + layerCount).get() <= std::max(mExtents.depth >> levelStartVk.get(), 1u);
+        (layerStart + layerCount).get() <= std::max(mExtents.depth >> levelStart.get(), 1u);
     const bool isInLayerRange =
         mImageType != VK_IMAGE_TYPE_3D && (layerStart + layerCount).get() <= mLayerCount;
     ASSERT((layerStart == gl::OwnerLayer(kMaxContentDefinedLayerCount) && layerCount == 0) ||
@@ -9426,9 +9426,9 @@ void ImageHelper::onWrite(gl::OwnerLevel levelStart,
     mCurrentSingleClearValue.reset();
 
     // Mark contents of the given subresource as defined.
-    setContentDefined(toVkLevel(levelStart), levelCount, layerStart, layerCount, aspectFlags);
+    setContentDefined(levelStart, levelCount, layerStart, layerCount, aspectFlags);
 
-    setSubresourcesWrittenSinceBarrier(levelStartVk, levelCount, layerStart, layerCount);
+    setSubresourcesWrittenSinceBarrier(levelStart, levelCount, layerStart, layerCount);
 }
 
 bool ImageHelper::hasSubresourceDefinedContent(gl::OwnerLevel level,
@@ -10773,7 +10773,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                     bool commandBufferWasFlushed = false;
                     ANGLE_TRY(contextVk->onCopyUpdate(currentBuffer->getSize(),
                                                       &commandBufferWasFlushed));
-                    onWrite(updateMipLevelGL, 1, updateBaseLayer, updateLayerCount,
+                    onWrite(updateMipLevelVk, 1, updateBaseLayer, updateLayerCount,
                             copyRegion->imageSubresource.aspectMask);
 
                     // Update total staging buffer size.
@@ -10798,7 +10798,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                         update.refCounted.image->get().getImage(),
                         update.refCounted.image->get().getCurrentLayout(renderer), mImage,
                         getCurrentLayout(renderer), 1, copyRegion);
-                    onWrite(updateMipLevelGL, 1, updateBaseLayer, updateLayerCount,
+                    onWrite(updateMipLevelVk, 1, updateBaseLayer, updateLayerCount,
                             copyRegion->dstSubresource.aspectMask);
                     break;
                 }

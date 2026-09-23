@@ -8673,8 +8673,8 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandResources &resources)
                                   writeImage.layerStart, writeImage.layerCount,
                                   mOutsideRenderPassCommands);
         mOutsideRenderPassCommands->retainImage(mRenderer, image);
-        image->onWrite(writeImage.levelStart, writeImage.levelCount, writeImage.layerStart,
-                       writeImage.layerCount, writeImage.image.aspectFlags);
+        image->onWrite(image->toVkLevel(writeImage.levelStart), writeImage.levelCount,
+                       writeImage.layerStart, writeImage.layerCount, writeImage.image.aspectFlags);
     }
 
     for (const vk::CommandResourceBuffer &readBuffer : resources.getReadBuffers())
