@@ -3244,16 +3244,16 @@ class ImageHelper final : public Resource, public angle::Subject
                                  PrimaryCommandBuffer *commandBuffer,
                                  VkSemaphore *acquireNextImageSemaphoreOut);
 
-    void setSubresourcesWrittenSinceBarrier(gl::OwnerLevel levelStart,
+    void setSubresourcesWrittenSinceBarrier(LevelIndex levelStart,
                                             uint32_t levelCount,
                                             gl::OwnerLayer layerStart,
                                             uint32_t layerCount);
 
     void resetSubresourcesWrittenSinceBarrier();
-    bool areLevelSubresourcesWrittenWithinMaskRange(uint32_t level,
+    bool areLevelSubresourcesWrittenWithinMaskRange(LevelIndex level,
                                                     ImageLayerWriteMask &layerMask) const
     {
-        return (mSubresourcesWrittenSinceBarrier[level] & layerMask) != 0;
+        return (mSubresourcesWrittenSinceBarrier[level.get()] & layerMask) != 0;
     }
 
     bool verifyNoStagedUpdates() const;
@@ -3591,6 +3591,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Used to track subresource writes per level/layer. This can help parallelize writes to
     // different levels or layers of the image, such as data uploads.
     // See comment on kMaxParallelLayerWrites.
+    // Indexed by vk::LevelIndex
     gl::TexLevelArray<ImageLayerWriteMask> mSubresourcesWrittenSinceBarrier;
 };
 

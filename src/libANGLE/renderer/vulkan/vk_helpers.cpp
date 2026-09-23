@@ -7306,11 +7306,12 @@ bool ImageHelper::isReadSubresourceBarrierNecessary(ImageAccess newAccess,
         layerCount = 1;
     }
 
+    const LevelIndex levelStartVk = toVkLevel(levelStart);
+
     ImageLayerWriteMask layerMask = GetImageLayerWriteMask(layerStart, layerCount);
     for (uint32_t levelOffset = 0; levelOffset < levelCount; levelOffset++)
     {
-        uint32_t level = levelStart.get() + levelOffset;
-        if (areLevelSubresourcesWrittenWithinMaskRange(level, layerMask))
+        if (areLevelSubresourcesWrittenWithinMaskRange(levelStartVk + levelOffset, layerMask))
         {
             return true;
         }
@@ -7343,13 +7344,14 @@ bool ImageHelper::isWriteBarrierNecessary(ImageAccess newAccess,
         layerCount = 1;
     }
 
+    const LevelIndex levelStartVk = toVkLevel(levelStart);
+
     // If we are writing to the same parts of the image (level/layer), we need a barrier. Otherwise,
     // it can be done in parallel.
     ImageLayerWriteMask layerMask = GetImageLayerWriteMask(layerStart, layerCount);
     for (uint32_t levelOffset = 0; levelOffset < levelCount; levelOffset++)
     {
-        uint32_t level = levelStart.get() + levelOffset;
-        if (areLevelSubresourcesWrittenWithinMaskRange(level, layerMask))
+        if (areLevelSubresourcesWrittenWithinMaskRange(levelStartVk + levelOffset, layerMask))
         {
             return true;
         }
@@ -7634,7 +7636,7 @@ void ImageHelper::recordBarrierOneOffImpl(Renderer *renderer,
                 acquireNextImageSemaphoreOut);
 }
 
-void ImageHelper::setSubresourcesWrittenSinceBarrier(gl::OwnerLevel levelStart,
+void ImageHelper::setSubresourcesWrittenSinceBarrier(LevelIndex levelStart,
                                                      uint32_t levelCount,
                                                      gl::OwnerLayer layerStart,
                                                      uint32_t layerCount)
@@ -7648,15 +7650,15 @@ void ImageHelper::setSubresourcesWrittenSinceBarrier(gl::OwnerLevel levelStart,
 
     for (uint32_t levelOffset = 0; levelOffset < levelCount; levelOffset++)
     {
-        uint32_t level = levelStart.get() + levelOffset;
+        LevelIndex level = levelStart + levelOffset;
         if (layerCount >= kMaxParallelLayerWrites)
         {
-            mSubresourcesWrittenSinceBarrier[level].set();
+            mSubresourcesWrittenSinceBarrier[level.get()].set();
         }
         else
         {
             ImageLayerWriteMask layerMask = GetImageLayerWriteMask(layerStart, layerCount);
-            mSubresourcesWrittenSinceBarrier[level] |= layerMask;
+            mSubresourcesWrittenSinceBarrier[level.get()] |= layerMask;
         }
     }
 }
@@ -7692,7 +7694,7 @@ void ImageHelper::recordWriteBarrier(Context *context,
         }
     }
 
-    setSubresourcesWrittenSinceBarrier(levelStart, levelCount, layerStart, layerCount);
+    setSubresourcesWrittenSinceBarrier(toVkLevel(levelStart), levelCount, layerStart, layerCount);
 }
 
 void ImageHelper::recordReadSubresourceBarrier(Context *context,
@@ -7722,7 +7724,7 @@ void ImageHelper::recordReadSubresourceBarrier(Context *context,
     }
 
     // Levels/layers being read from are also registered to avoid RAW and WAR hazards.
-    setSubresourcesWrittenSinceBarrier(levelStart, levelCount, layerStart, layerCount);
+    setSubresourcesWrittenSinceBarrier(toVkLevel(levelStart), levelCount, layerStart, layerCount);
 }
 
 void ImageHelper::recordReadBarrier(Context *context,
@@ -9426,7 +9428,7 @@ void ImageHelper::onWrite(gl::OwnerLevel levelStart,
     // Mark contents of the given subresource as defined.
     setContentDefined(toVkLevel(levelStart), levelCount, layerStart, layerCount, aspectFlags);
 
-    setSubresourcesWrittenSinceBarrier(levelStart, levelCount, layerStart, layerCount);
+    setSubresourcesWrittenSinceBarrier(levelStartVk, levelCount, layerStart, layerCount);
 }
 
 bool ImageHelper::hasSubresourceDefinedContent(gl::OwnerLevel level,
@@ -10656,22 +10658,21 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                 // If there are more subresources than bits we can track, always insert a barrier.
                 recordWriteBarrier(contextVk, aspectFlags, barrierAccess, updateMipLevelGL, 1,
                                    updateBaseLayer, updateLayerCount, commandBuffer);
-                mSubresourcesWrittenSinceBarrier[updateMipLevelGL.get()].set();
+                mSubresourcesWrittenSinceBarrier[updateMipLevelVk.get()].set();
             }
             else
             {
                 ImageLayerWriteMask subresourceHash =
                     GetImageLayerWriteMask(updateBaseLayer, updateLayerCount);
 
-                if (areLevelSubresourcesWrittenWithinMaskRange(updateMipLevelGL.get(),
-                                                               subresourceHash))
+                if (areLevelSubresourcesWrittenWithinMaskRange(updateMipLevelVk, subresourceHash))
                 {
                     // If there's overlap in subresource upload, issue a barrier.
                     recordWriteBarrier(contextVk, aspectFlags, barrierAccess, updateMipLevelGL, 1,
                                        updateBaseLayer, updateLayerCount, commandBuffer);
-                    mSubresourcesWrittenSinceBarrier[updateMipLevelGL.get()].reset();
+                    mSubresourcesWrittenSinceBarrier[updateMipLevelVk.get()].reset();
                 }
-                mSubresourcesWrittenSinceBarrier[updateMipLevelGL.get()] |= subresourceHash;
+                mSubresourcesWrittenSinceBarrier[updateMipLevelVk.get()] |= subresourceHash;
             }
 
             // Add the necessary commands to the outside command buffer.
