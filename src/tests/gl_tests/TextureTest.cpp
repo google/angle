@@ -9166,6 +9166,84 @@ TEST_P(Texture3DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
 }
 
+// Test that uploading to a non-zero slice of a 3D texture and blending into it works.
+TEST_P(Texture3DTestES3, UploadLayerThenBlend)
+{
+    constexpr uint32_t kWidth  = 16;
+    constexpr uint32_t kHeight = 17;
+    constexpr uint32_t kDepth  = 5;
+    constexpr uint32_t kSlice  = 3;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGBA8, kWidth, kHeight, kDepth);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    const std::vector<GLColor> kInitData(kWidth * kHeight, GLColor::red);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, kSlice, kWidth, kHeight, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kInitData.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, kSlice);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.95f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::yellow);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that generating mipmap on a single-level 3D texture blending into a non-zero slice works.
+TEST_P(Texture3DTestES3, GenMipmapThenBlend)
+{
+    constexpr uint32_t kWidth  = 16;
+    constexpr uint32_t kHeight = 17;
+    constexpr uint32_t kDepth  = 5;
+    constexpr uint32_t kSlice  = 3;
+
+    const std::vector<GLColor> kInitData(kWidth * kHeight * kDepth, GLColor::red);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, kWidth, kHeight, kDepth, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kInitData.data());
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    // Make sure the texture's backing storage is created by drawing to a slice of it
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, kSlice - 1);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.95f);
+
+    // Generate mipmaps
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 1000);
+    glGenerateMipmap(GL_TEXTURE_3D);
+
+    // Blend into a different slice, it should have retained its original data.
+
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, kSlice);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.95f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::yellow);
+    ASSERT_GL_NO_ERROR();
+
+    // For completeness, also verify that the slice that was drawn to has retained its color.
+    ANGLE_GL_PROGRAM(drawBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, kSlice - 1);
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 0.95f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::cyan);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that drawing works correctly when levels outside the BASE_LEVEL/MAX_LEVEL range do not
 // have images defined.
 TEST_P(Texture2DArrayTestES3, DrawWithLevelsOutsideRangeUndefined)
@@ -9674,7 +9752,7 @@ TEST_P(Texture2DArrayTestES3, RedefineLevelData)
     glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
 
     // Fill both levels with red
-    std::vector<GLColor> pixelsRed(2 * 2 * 1, GLColor::red);
+    const std::vector<GLColor> pixelsRed(2 * 2 * 1, GLColor::red);
     glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 2, 2, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                  pixelsRed.data());
     glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
@@ -9699,6 +9777,51 @@ TEST_P(Texture2DArrayTestES3, RedefineLevelData)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 1, 0);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that increasing the layers of a mutable array texture while there are staged updates works.
+TEST_P(Texture2DArrayTestES3, IncreaseLayersWithStagedUpdates)
+{
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+
+    // Define levels 3 and 4 incompatibly, initialize both.
+    const std::vector<GLColor> kLevel3Data(2 * 2 * 1, GLColor::red);
+    const std::vector<GLColor> kLevel4Data(1 * 1 * 2, GLColor::green);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 3, GL_RGBA8, 2, 2, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel3Data.data());
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 4, GL_RGBA8, 1, 1, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel4Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Make sure the texture's backing storage is allocated, covering only level 3.
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 3);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 3);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 3, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Redefine level 1 with a different number of layers (fewer)
+    const std::vector<GLColor> kLevel4Data2(1 * 1 * 1, GLColor::blue);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 4, GL_RGBA8, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel4Data2.data());
+
+    // Redefine level 1 with a different number of layers (more)
+    const std::vector<GLColor> kLevel4Data3(1 * 1 * 3, GLColor::magenta);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 4, GL_RGBA8, 1, 1, 3, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel4Data3.data());
+
+    // Level 0 is unaffacted
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Verify level 1
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 4);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 4);
+    for (uint32_t layer = 0; layer < 3; ++layer)
+    {
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 4, layer);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+    }
 }
 
 class Texture2DArrayTestES3_ReattachTextureToFbo : public Texture2DArrayTestES3
@@ -16460,6 +16583,30 @@ TEST_P(Texture3DTestES3, BasicUnpackBufferOOB)
         glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         ASSERT_GL_NO_ERROR();
     }
+}
+
+// Test that an RGB8 3D texture has alpha 1 when read back
+TEST_P(Texture3DTestES3, RGB3D)
+{
+    // Create a 3D texture and initialize it with a draw call that writes 0 to the alpha channel.
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_3D, tex);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB8, 20, 30, 10, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 1);
+
+    ANGLE_GL_PROGRAM(drawColor, angle::essl1_shaders::vs::Simple(),
+                     angle::essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    const GLint colorLoc = glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorLoc, -1);
+    glUniform4f(colorLoc, 1, 0, 0, 0);
+    drawQuad(drawColor, angle::essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Read back should not be transparent.
+    EXPECT_PIXEL_RECT_EQ(0, 0, 20, 30, GLColor::red);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Tests behaviour with a single texture and multiple sampler objects.

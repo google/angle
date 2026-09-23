@@ -3457,21 +3457,31 @@ class ImageHelper final : public Resource, public angle::Subject
     }
 
     void adjustLayerRange(const SubresourceUpdates &levelUpdates,
+                          const gl::OwnerLevel levelIndex,
                           gl::OwnerLayer *layerStart,
                           gl::OwnerLayer *layerEnd);
 
     // Returns true if the update's layer range exactly matches [layerIndex, layerIndex+layerCount).
+    // For 3D images, layer indicates slice.
     bool matchesLayerRange(const SubresourceUpdate &update,
+                           const gl::OwnerLevel levelIndex,
                            gl::OwnerLayer layerIndex,
                            uint32_t layerCount) const;
     // Returns true if the update is to any layer within range of [layerIndex,
     // layerIndex+layerCount).
+    // For 3D images, layer indicates slice.
     bool intersectsLayerRange(const SubresourceUpdate &update,
+                              const gl::OwnerLevel levelIndex,
                               gl::OwnerLayer layerIndex,
                               uint32_t layerCount) const;
+    // Get the layer range modified by the update.  For 3D images, layer indicates slice.
     void getDestSubresource(const SubresourceUpdate &update,
+                            const gl::OwnerLevel levelIndex,
                             gl::OwnerLayer *baseLayerOut,
                             uint32_t *layerCountOut) const;
+
+    // Make an image index that covers the entire level
+    gl::OwnerImageIndex getImageIndexForLevel(gl::OwnerLevel level);
 
     // Copy most of state and move VkImage/VkDeviceMemory from other ImageHelper. This should not be
     // used for general usage. It is specifically for stageSelfUpdate and falling back from tile
@@ -3559,6 +3569,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Track whether each subresource of VkImage has defined contents. Up to 8 layers are tracked
     // per level, above which the contents are considered unconditionally defined. Note that this is
     // only tracking VkImage. Staged update will not set this bit until it is flushed.
+    // For 3D images, tracking is done per slice.
     gl::TexLevelArray<LevelContentDefinedMask> mVkImageContentDefined;
     gl::TexLevelArray<LevelContentDefinedMask> mVkImageStencilContentDefined;
 

@@ -212,6 +212,7 @@
 553857574 WIN INTEL OPENGL : Texture2DArrayTestES3.BaseLevelChangeWithFewerLayersReleasesStorage/* = SKIP
 553857574 WIN INTEL OPENGL : Texture2DArrayTestES3.BaseLevelChangeWithMoreLayersReleasesStorage/* = SKIP
 563354824 WIN INTEL OPENGL : Texture2DArrayTestES3RobustInit.RedefineBaseLevelLayerCountPreservesFastPathMipData/* = SKIP
+553857574 WIN INTEL OPENGL : Texture2DArrayTestES3.IncreaseLayersWithStagedUpdates/* = SKIP
 535213600 WIN NVIDIA OPENGL : PbufferTest.BindTexImageAndCopyTexImageSrc/* = SKIP
 535213600 WIN NVIDIA GLES : PbufferTest.BindTexImageAndCopyTexImageSrc/* = SKIP
 535213600 WIN NVIDIA OPENGL : PbufferTestES3.BindTexImageAndCopyTextureSrc/* = SKIP
@@ -612,6 +613,7 @@
 536936861 MAC METAL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
 537814733 MAC METAL : WebGLGLSLTest.FragDataIndexClampWithoutDrawBuffers/* = SKIP
 537814733 MAC METAL : WebGLGLSLTest.FragDataInCommaIndexClampWithoutDrawBuffers/* = SKIP
+565312541 MAC METAL AMD : Texture3DTestES3.GenMipmapThenBlend/* = SKIP
 
 // The workaround is not intended to be enabled in this configuration so
 // skip it as the failure is likely a driver bug.
@@ -1423,6 +1425,8 @@
 546627192 PIXEL10 GLES : GLSLTest_ES3.VaryingAnonymousStructAssignment/* = SKIP
 546627192 PIXEL10 GLES : GLSLTest_ES3.VaryingAnonymousStructTernary/* = SKIP
 563032519 PIXEL10 GLES : Texture2DTestES3.SampleThenFullUpdateWithBaseChange/* = SKIP
+565371513 PIXEL10 GLES : Texture3DTestES3.GenMipmapThenBlend/* = SKIP
+565453056 PIXEL10 GLES : Texture3DTestES3.UploadLayerThenBlend/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP

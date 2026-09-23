@@ -389,17 +389,6 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,
     ASSERT(mImage->valid() && (!isResolveImageOwnerOfData() || mResolveImage->valid()));
     ASSERT(framebufferLayerCount != 0);
 
-    // It's impossible to defer clears to slices of a 3D images, as the clear applies to all the
-    // slices, while deferred clears only clear a single slice (where the framebuffer is attached).
-    // Additionally, the layer index for 3D textures is always zero according to Vulkan.
-    gl::OwnerLayer layerIndex = mLayerIndex;
-    if (mImage->getType() == VK_IMAGE_TYPE_3D)
-    {
-        layerIndex         = gl::OwnerLayer(0);
-        deferredClears     = nullptr;
-        deferredClearIndex = 0;
-    }
-
     vk::ImageHelper *image = getOwnerOfData();
 
     // All updates should be staged on the image that owns the data as the source of truth.  With
@@ -410,16 +399,16 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,
     // is a clear, it will accumulate it in the |deferredClears| array.  Later, when the render pass
     // is started, the deferred clears are applied to the transient multisampled image.
     ASSERT(!isResolveImageOwnerOfData() ||
-           !mImage->hasStagedUpdatesForSubresource(mLevelIndexGL, layerIndex, mLayerCount));
+           !mImage->hasStagedUpdatesForSubresource(mLevelIndexGL, mLayerIndex, mLayerCount));
     ASSERT(isResolveImageOwnerOfData() || mResolveImage == nullptr ||
-           !mResolveImage->hasStagedUpdatesForSubresource(mLevelIndexGL, layerIndex, mLayerCount));
+           !mResolveImage->hasStagedUpdatesForSubresource(mLevelIndexGL, mLayerIndex, mLayerCount));
 
-    if (!image->hasStagedUpdatesForSubresource(mLevelIndexGL, layerIndex, framebufferLayerCount))
+    if (!image->hasStagedUpdatesForSubresource(mLevelIndexGL, mLayerIndex, framebufferLayerCount))
     {
         return angle::Result::Continue;
     }
 
-    return image->flushSingleSubresourceStagedUpdates(contextVk, mLevelIndexGL, layerIndex,
+    return image->flushSingleSubresourceStagedUpdates(contextVk, mLevelIndexGL, mLayerIndex,
                                                       framebufferLayerCount, deferredClears,
                                                       deferredClearIndex);
 }
@@ -455,13 +444,16 @@ void RenderTargetVk::invalidateEntireStencilContent(ContextVk *contextVk,
 gl::OwnerImageIndex RenderTargetVk::getImageIndexForClear(uint32_t layerCount) const
 {
     // Determine the GL type from the Vk Image properties.
-    if (mImage->getType() == VK_IMAGE_TYPE_3D || mImage->getLayerCount() > 1)
+    if (mImage->getLayerCount() > 1)
     {
-        // This is used for the sake of staging clears.  The depth slices of the 3D image are
-        // threated as layers for this purpose.
-        //
-        // We also don't need to distinguish 2D array and cube.
+        // We don't need to distinguish 2D array and cube.
         return gl::OwnerImageIndex::Make2DArrayRange(mLevelIndexGL, mLayerIndex, layerCount);
+    }
+    if (mImage->getType() == VK_IMAGE_TYPE_3D)
+    {
+        // The depth slices of the 3D image are treated as layers for this purpose.
+        return gl::OwnerImageIndex::MakeFromType(gl::TextureType::_3D, mLevelIndexGL, mLayerIndex,
+                                                 layerCount);
     }
 
     ASSERT(mLayerIndex == gl::OwnerLayer(0));

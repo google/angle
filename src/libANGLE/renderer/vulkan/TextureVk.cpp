@@ -2647,10 +2647,10 @@ angle::Result TextureVk::redefineLevel(const gl::Context *context,
         ASSERT(layerIndex.get() ==
                (ownIndex.hasLayer() ? static_cast<uint32_t>(ownIndex.getLayerIndex()) : 0));
 
-        if (gl::IsArrayTextureType(index.getType()))
+        if (gl::IsArrayTextureType(index.getType()) || index.getType() == gl::TextureType::_3D)
         {
-            // A multi-layer texture is being redefined, remove all updates to this level; the
-            // number of layers may have changed.
+            // A multi-layer or 3D texture is being redefined, remove all updates to this level; the
+            // number of layers/slices may have changed.
             mImage->redefineLevels(contextVk, levelIndex, levelIndex);
         }
         else
@@ -3602,7 +3602,8 @@ angle::Result TextureVk::flushImageStagedUpdates(ContextVk *contextVk)
                                                         : mImage->getFirstAllocatedLevel();
     const gl::OwnerLayer firstLayer =
         is3D ? gl::OwnerLayer(0) : mState.toOwnerLayer(gl::LayerIndex(0));
-    const gl::OwnerLayer layerEnd = firstLayer + (is3D ? 1 : getImageViewLayerCount());
+    const gl::OwnerLayer layerEnd =
+        firstLayer + (is3D ? mImage->getExtents().depth : getImageViewLayerCount());
 
     return mImage->flushStagedUpdates(contextVk, firstLevel, firstLevel + getImageViewLevelCount(),
                                       firstLayer, layerEnd, mRedefinedLevels);

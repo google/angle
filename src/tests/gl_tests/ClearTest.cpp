@@ -5496,6 +5496,37 @@ TEST_P(ClearTextureEXTTest, Clear3DLayers)
     }
 }
 
+// Test that clearing a non-zero slice of a 3D texture and blending into it works.
+TEST_P(ClearTextureEXTTest, Clear3DLayerThenBlend)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clear_texture"));
+    constexpr uint32_t kWidth  = 51;
+    constexpr uint32_t kHeight = 71;
+    constexpr uint32_t kDepth  = 7;
+    constexpr uint32_t kSlice  = 3;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGBA8, kWidth, kHeight, kDepth);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    glClearTexSubImageEXT(texture, 0, 0, 0, kSlice, kWidth, kHeight, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                          &GLColor::red);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, kSlice);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.95f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::yellow);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that clearing slices of a 3D texture with dimensions of zero does not change it.
 TEST_P(ClearTextureEXTTest, Clear3DZeroDims)
 {
