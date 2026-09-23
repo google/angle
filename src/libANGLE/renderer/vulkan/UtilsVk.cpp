@@ -2583,7 +2583,44 @@ angle::Result UtilsVk::convertVertexBufferImpl(
                                   &mConvertVertex[flags], descriptorSet, &shaderParams,
                                   sizeof(shaderParams), commandBufferHelper));
 
-    commandBuffer->dispatch(UnsignedCeilDivide(shaderParams.outputCount, 64), 1, 1);
+    // If the required workgroup count is greater than the limit, they are divided into chunks.
+    // Each invocation in a workgroup processes a 4-byte output, and there are 64 invocations in
+    // each workgroup.
+    const uint32_t maxWorkGroupsX =
+        contextVk->getRenderer()->getPhysicalDeviceProperties().limits.maxComputeWorkGroupCount[0];
+    const uint32_t maxVerticesPerChunk =
+        std::max(roundDownPow2((maxWorkGroupsX * 64 * shaderParams.Ed) / shaderParams.Nd, 4u), 4u);
+
+    const uint32_t totalVertices = shaderParams.componentCount / shaderParams.Nd;
+    if (ANGLE_UNLIKELY(totalVertices > maxVerticesPerChunk))
+    {
+        uint32_t totalVerticesProcessed = 0;
+        while (totalVerticesProcessed < totalVertices)
+        {
+            uint32_t verticesToProcess =
+                std::min(maxVerticesPerChunk, totalVertices - totalVerticesProcessed);
+
+            ConvertVertexShaderParams chunkParams = shaderParams;
+            chunkParams.componentCount            = verticesToProcess * shaderParams.Nd;
+            chunkParams.outputCount =
+                UnsignedCeilDivide(chunkParams.componentCount, shaderParams.Ed);
+            chunkParams.srcOffset =
+                shaderParams.srcOffset + totalVerticesProcessed * shaderParams.Ss;
+            chunkParams.dstOffset =
+                shaderParams.dstOffset + totalVerticesProcessed * shaderParams.Sd;
+
+            commandBuffer->pushConstants(*mPipelineLayouts[Function::ConvertVertexBuffer],
+                                         VK_SHADER_STAGE_COMPUTE_BIT, 0, sizeof(chunkParams),
+                                         &chunkParams);
+            commandBuffer->dispatch(UnsignedCeilDivide(chunkParams.outputCount, 64), 1, 1);
+
+            totalVerticesProcessed += verticesToProcess;
+        }
+    }
+    else
+    {
+        commandBuffer->dispatch(UnsignedCeilDivide(shaderParams.outputCount, 64), 1, 1);
+    }
 
     if (!additionalOffsetVertexCounts.empty())
     {
