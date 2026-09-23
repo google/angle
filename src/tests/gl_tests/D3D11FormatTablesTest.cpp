@@ -180,9 +180,11 @@ TEST_P(D3D11FormatTablesTest, TestFormatMakeValidSize)
         {
             int reqWidth  = 32;
             int reqHeight = 32;
+            int reqDepth  = 32;
             int level     = 0;
 
-            rx::d3d11::MakeValidSize(image, formatInfo.texFormat, &reqWidth, &reqHeight, &level);
+            rx::d3d11::MakeValidSize(image, formatInfo.texFormat, gl::TextureType::_3D, reqWidth,
+                                     reqHeight, reqDepth, level);
         }
     }
 }

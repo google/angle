@@ -1859,9 +1859,11 @@ ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device)
 
 void MakeValidSize(bool isImage,
                    DXGI_FORMAT format,
-                   GLsizei *requestWidth,
-                   GLsizei *requestHeight,
-                   int *levelOffset)
+                   gl::TextureType type,
+                   GLsizei &requestWidth,
+                   GLsizei &requestHeight,
+                   GLsizei &requestDepth,
+                   int &levelOffset)
 {
     const DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(format);
     bool validFormat                     = format != DXGI_FORMAT_UNKNOWN;
@@ -1869,35 +1871,36 @@ void MakeValidSize(bool isImage,
 
     int upsampleCount = 0;
     // Don't expand the size of full textures that are at least (blockWidth x blockHeight) already.
-    if (validImage || *requestWidth < static_cast<GLsizei>(dxgiFormatInfo.blockWidth) ||
-        *requestHeight < static_cast<GLsizei>(dxgiFormatInfo.blockHeight))
+    if (validImage || requestWidth < static_cast<GLsizei>(dxgiFormatInfo.blockWidth) ||
+        requestHeight < static_cast<GLsizei>(dxgiFormatInfo.blockHeight))
     {
-        while (*requestWidth % dxgiFormatInfo.blockWidth != 0 ||
-               *requestHeight % dxgiFormatInfo.blockHeight != 0)
+        while (requestWidth % dxgiFormatInfo.blockWidth != 0 ||
+               requestHeight % dxgiFormatInfo.blockHeight != 0)
         {
-            *requestWidth <<= 1;
-            *requestHeight <<= 1;
+            requestWidth <<= 1;
+            requestHeight <<= 1;
+            if (type == gl::TextureType::_3D)
+            {
+                requestDepth <<= 1;
+            }
             upsampleCount++;
         }
     }
     else if (validFormat)
     {
-        if (*requestWidth % dxgiFormatInfo.blockWidth != 0)
+        if (requestWidth % dxgiFormatInfo.blockWidth != 0)
         {
-            *requestWidth = roundUp(*requestWidth, static_cast<GLsizei>(dxgiFormatInfo.blockWidth));
+            requestWidth = roundUp(requestWidth, static_cast<GLsizei>(dxgiFormatInfo.blockWidth));
         }
 
-        if (*requestHeight % dxgiFormatInfo.blockHeight != 0)
+        if (requestHeight % dxgiFormatInfo.blockHeight != 0)
         {
-            *requestHeight =
-                roundUp(*requestHeight, static_cast<GLsizei>(dxgiFormatInfo.blockHeight));
+            requestHeight =
+                roundUp(requestHeight, static_cast<GLsizei>(dxgiFormatInfo.blockHeight));
         }
     }
 
-    if (levelOffset)
-    {
-        *levelOffset = upsampleCount;
-    }
+    levelOffset = upsampleCount;
 }
 
 angle::Result GenerateInitialTextureData(

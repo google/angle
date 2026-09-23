@@ -25,6 +25,17 @@ const std::array<GLubyte, 16> kBC7Data4x4 = {0x50, 0x1f, 0xfc, 0xf, 0x0,  0xf0, 
 // Sampling from a zero-filled block is undefined, so use a valid one.
 const std::array<GLubyte, 16> kBC7BlackData4x4 = {0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                                                   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+// BC7 Mode 6 packs fields LSB-first across 128 bits:
+//   bits [0..6]   = 0b1000000 (Mode 6: 7-bit RGBA endpoints + 1-bit p-bit)
+//   bits [7..13]  = R0, [14..20] = R1, [21..27] = G0, [28..34] = G1,
+//   bits [35..41] = B0, [42..48] = B1, [49..55] = A0, [56..62] = A1,
+//   bit  [63]     = P0, [64]     = P1, [65..127] = 16 texel indices (all 0 -> endpoint 0).
+// Mode 6 with R0=0x7f (bits 7..13 -> byte 0 bit 7 = 0x80, byte 1 bits 0..5 = 0x3f),
+// A0=0x7f (bits 49..55 -> byte 6 bits 1..7 = 0xfe), and P0=1 (bit 63 -> byte 7 = 0x80)
+// -> endpoint 0 is solid RGBA(255, 0, 0, 255) (red).
+constexpr std::array<GLubyte, 16> kBC7RedData4x4 = {0xc0, 0x3f, 0x00, 0x00, 0x00, 0x00, 0xfe, 0x80,
+                                                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 }  // anonymous namespace
 
 class BPTCCompressedTextureTest : public ANGLETest<>
@@ -444,6 +455,82 @@ TEST_P(BPTCCompressedTextureTestES3, CompressedTexSubImage3DValidation)
                               GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, kBC7Data4x4.size(),
                               kBC7Data4x4.data());
     ASSERT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Test that uploading and sampling 3D BPTC mip levels smaller than a 4x4 block with depth > 1
+// allocates a staging texture with sufficient depth at the selected mip subresource.
+TEST_P(BPTCCompressedTextureTestES3, CompressedTexImage3DSubBlockMipDepth)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_bptc"));
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+precision highp sampler3D;
+uniform sampler3D u_tex;
+uniform float u_z;
+out vec4 my_FragColor;
+void main()
+{
+    my_FragColor = texture(u_tex, vec3(0.5, 0.5, u_z));
+})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    GLint zLoc = glGetUniformLocation(program, "u_z");
+    ASSERT_NE(-1, zLoc);
+
+    auto testSubBlockMipUploadAndSample = [&](GLint level, GLsizei width, GLsizei height,
+                                              GLsizei depth) {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_3D, tex);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, level);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, level);
+
+        const size_t blocksPerSlice =
+            static_cast<size_t>((width + 3) / 4) * static_cast<size_t>((height + 3) / 4);
+        const size_t totalBlocks = blocksPerSlice * static_cast<size_t>(depth);
+        std::vector<GLubyte> data;
+        data.reserve(totalBlocks * 16);
+
+        // Fill slices [0, depth - 2] with transparentBlack and the last slice (depth - 1) with red.
+        for (size_t block = 0; block < totalBlocks; ++block)
+        {
+            const auto &blockData = (block < blocksPerSlice * static_cast<size_t>(depth - 1))
+                                        ? kBC7BlackData4x4
+                                        : kBC7RedData4x4;
+            data.insert(data.end(), blockData.begin(), blockData.end());
+        }
+
+        glCompressedTexImage3D(GL_TEXTURE_3D, level, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, width,
+                               height, depth, 0, static_cast<GLsizei>(data.size()), data.data());
+        ASSERT_GL_NO_ERROR();
+
+        glUniform1f(zLoc, 0.5f / static_cast<float>(depth));
+        drawQuad(program, "a_position", 0.5f);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::transparentBlack, kPixelTolerance);
+
+        glUniform1f(zLoc, (static_cast<float>(depth) - 0.5f) / static_cast<float>(depth));
+        drawQuad(program, "a_position", 0.5f);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::red, kPixelTolerance);
+    };
+
+    // Level 1 at 1024x2x1024 (height < 4 -> lodOffset = 1): inputRowPitch (4096) != mapped D3D11
+    // DepthPitch (32768), exercising the strided per-slice/per-row loop in LoadCompressedToNative.
+    // Without expanding staging depth by lodOffset, mip 1 only has 512 physical slices instead of
+    // 1024, writing 512 slices across a 16 MiB out-of-bounds span.
+    testSubBlockMipUploadAndSample(1, 1024, 2, 1024);
+
+    // Level 2 at 1x1x512 (width < 4, height < 4 -> lodOffset = 2): both inputDepthPitch and
+    // mapped D3D11 DepthPitch are 16 bytes, exercising the single contiguous memcpy fast-path
+    // (inputImageSize == outputImageSize) in LoadCompressedToNative.
+    testSubBlockMipUploadAndSample(2, 1, 1, 512);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

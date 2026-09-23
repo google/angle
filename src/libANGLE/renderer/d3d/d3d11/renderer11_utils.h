@@ -102,9 +102,11 @@ ANGLED3D11DeviceType GetDeviceType(ID3D11Device *device);
 
 void MakeValidSize(bool isImage,
                    DXGI_FORMAT format,
-                   GLsizei *requestWidth,
-                   GLsizei *requestHeight,
-                   int *levelOffset);
+                   gl::TextureType type,
+                   GLsizei &requestWidth,
+                   GLsizei &requestHeight,
+                   GLsizei &requestDepth,
+                   int &levelOffset);
 
 angle::Result GenerateInitialTextureData(
     const gl::Context *context,
