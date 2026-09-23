@@ -9224,10 +9224,9 @@ angle::Result ContextVk::finalizeImageWithTileMemory()
         params.level                           = vk::LevelIndex(0);
         params.layer                           = vk::LayerIndex(0);
         params.clearValue                      = {};
-        params.clearArea                       = gl::Box(0, 0, 0, 0, 0, 1);
+        params.clearArea = gl::Rectangle(0, 0, mImageWithTileMemory->getExtents().width,
+                                         mImageWithTileMemory->getExtents().height);
         params.aspectFlags                     = mImageWithTileMemory->getAspectFlags();
-        params.clearArea.width                 = mImageWithTileMemory->getExtents().width;
-        params.clearArea.height                = mImageWithTileMemory->getExtents().height;
         ANGLE_TRY(mUtils.clearTextureNoFlush(this, mImageWithTileMemory, params));
 
         // Since this may called from submitCommands, use no submit version to avoid

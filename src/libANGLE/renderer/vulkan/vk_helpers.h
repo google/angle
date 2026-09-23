@@ -3076,8 +3076,6 @@ class ImageHelper final : public Resource, public angle::Subject
         // For ClearEmulatedChannelsOnly, mask of which channels to clear.
         VkColorComponentFlags colorMaskFlags;
     };
-    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
-    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct ClearPartialUpdate
     {
         bool operator==(const ClearPartialUpdate &rhs) const
@@ -3090,8 +3088,8 @@ class ImageHelper final : public Resource, public angle::Subject
         uint32_t levelIndex;
         uint32_t layerIndex;
         uint32_t layerCount;
-        VkOffset3D offset;
-        VkExtent3D extent;
+        VkOffset2D offset;
+        VkExtent2D extent;
     };
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
     struct BufferUpdate
@@ -3127,7 +3125,7 @@ class ImageHelper final : public Resource, public angle::Subject
                           const gl::OwnerLevel levelIndex,
                           const gl::OwnerLayer layerIndex,
                           const uint32_t layerCount,
-                          const gl::Box &clearArea);
+                          const gl::Rectangle &clearArea);
         SubresourceUpdate(VkImageAspectFlags aspectFlags,
                           const VkClearValue &clearValue,
                           gl::OwnerLevel level,

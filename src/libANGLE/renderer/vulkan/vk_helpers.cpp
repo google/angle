@@ -9752,8 +9752,8 @@ angle::Result ImageHelper::stagePartialClear(ContextVk *contextVk,
     ASSERT(!is3D || index.getLayerIndex().get() == static_cast<uint32_t>(clearArea.z));
     ASSERT(!is3D || index.getLayerCount() == static_cast<uint32_t>(clearArea.depth));
 
-    const gl::OwnerLayer layerIndex = is3D ? gl::OwnerLayer(0) : index.getLayerIndex();
-    const uint32_t layerCount = is3D ? 1 : index.getLayerCount();
+    const gl::OwnerLayer layerIndex = index.getLayerIndex();
+    const uint32_t layerCount       = index.getLayerCount();
 
     if (clearMode == ClearTextureMode::FullClear)
     {
@@ -9763,9 +9763,11 @@ angle::Result ImageHelper::stagePartialClear(ContextVk *contextVk,
     }
     else
     {
-        appendSubresourceUpdate(levelIndexGL,
-                                SubresourceUpdate(aspectFlags, clearValue, levelIndexGL, layerIndex,
-                                                  layerCount, clearArea));
+        appendSubresourceUpdate(
+            levelIndexGL,
+            SubresourceUpdate(
+                aspectFlags, clearValue, levelIndexGL, layerIndex, layerCount,
+                gl::Rectangle(clearArea.x, clearArea.y, clearArea.width, clearArea.height)));
     }
     return angle::Result::Continue;
 }
@@ -10691,7 +10693,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                         UtilsVk::ClearTextureParameters params = {};
                         params.aspectFlags                     = getAspectFlags();
                         params.level                           = updateMipLevelVk;
-                        params.clearArea  = gl::Box(0, 0, 0, mExtents.width, mExtents.height, 1);
+                        params.clearArea  = gl::Rectangle(0, 0, mExtents.width, mExtents.height);
                         params.clearValue = update.data.clear.value;
                         params.layer      = updateBaseLayer;
                         ANGLE_TRY(contextVk->getUtils().clearTexture(contextVk, this, params));
@@ -10710,14 +10712,13 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                 }
                 case UpdateSource::ClearPartial:
                 {
-                    ClearPartialUpdate &clearPartialUpdate = update.data.clearPartial;
-                    gl::Box clearArea =
-                        gl::Box(clearPartialUpdate.offset, clearPartialUpdate.extent);
+                    const ClearPartialUpdate &clearPartialUpdate = update.data.clearPartial;
+                    const gl::Rectangle clearArea =
+                        gl::Rectangle(clearPartialUpdate.offset, clearPartialUpdate.extent);
 
                     // clearTexture() uses LOAD_OP_CLEAR in a render pass to clear the texture. If
                     // the texture has the depth dimension or multiple layers, the clear will be
-                    // performed layer by layer. In case of the former, the z-dimension will be used
-                    // as the layer index.
+                    // performed layer by layer.
                     UtilsVk::ClearTextureParameters params = {};
                     params.aspectFlags                     = clearPartialUpdate.aspectFlags;
                     params.level                           = updateMipLevelVk;
@@ -11204,9 +11205,10 @@ void ImageHelper::pruneSupersededUpdatesForLevelImpl(ContextVk *contextVk,
         }
         else if (update.updateSource == UpdateSource::ClearPartial)
         {
-            currentUpdateBox =
-                MakeUpdateBoundingBox(update.data.clearPartial.offset,
-                                      update.data.clearPartial.extent, layerIndex, layerCount);
+            const ClearPartialUpdate &clearPartial = update.data.clearPartial;
+            const VkOffset3D offset = {clearPartial.offset.x, clearPartial.offset.y, 0};
+            const VkExtent3D extent = {clearPartial.extent.width, clearPartial.extent.height, 1};
+            currentUpdateBox        = MakeUpdateBoundingBox(offset, extent, layerIndex, layerCount);
         }
         else
         {
@@ -12131,17 +12133,16 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(const VkImageAspectFlags aspec
                                                   const gl::OwnerLevel levelIndex,
                                                   const gl::OwnerLayer layerIndex,
                                                   const uint32_t layerCount,
-                                                  const gl::Box &clearArea)
+                                                  const gl::Rectangle &clearArea)
     : updateSource(UpdateSource::ClearPartial)
 {
     data.clearPartial.aspectFlags = aspectFlags;
     data.clearPartial.levelIndex  = levelIndex.get();
     data.clearPartial.layerIndex  = layerIndex.get();
     data.clearPartial.layerCount  = layerCount;
-    data.clearPartial.offset      = {clearArea.x, clearArea.y, clearArea.z};
+    data.clearPartial.offset      = {clearArea.x, clearArea.y};
     data.clearPartial.extent      = {static_cast<uint32_t>(clearArea.width),
-                                     static_cast<uint32_t>(clearArea.height),
-                                     static_cast<uint32_t>(clearArea.depth)};
+                                     static_cast<uint32_t>(clearArea.height)};
     data.clearPartial.clearValue  = clearValue;
 }
 
@@ -12364,25 +12365,14 @@ void ImageHelper::getDestSubresource(const SubresourceUpdate &update,
             *layerCountOut = is3D ? getLevelExtents(toVkLevel(levelIndex)).depth : mLayerCount;
         }
     }
-    else if (update.updateSource == UpdateSource::ClearPartial && is3D)
-    {
-        *baseLayerOut  = gl::OwnerLayer(update.data.clearPartial.offset.z);
-        *layerCountOut = update.data.clearPartial.extent.depth;
-
-        if (*layerCountOut == static_cast<uint32_t>(gl::ImageIndex::kEntireLevel))
-        {
-            *layerCountOut = getLevelExtents(toVkLevel(levelIndex)).depth;
-        }
-    }
     else if (update.updateSource == UpdateSource::ClearPartial)
     {
-        ASSERT(!is3D);
         *baseLayerOut  = gl::OwnerLayer(update.data.clearPartial.layerIndex);
         *layerCountOut = update.data.clearPartial.layerCount;
 
         if (*layerCountOut == static_cast<uint32_t>(gl::ImageIndex::kEntireLevel))
         {
-            *layerCountOut = mLayerCount;
+            *layerCountOut = is3D ? getLevelExtents(toVkLevel(levelIndex)).depth : mLayerCount;
         }
     }
     else if (update.updateSource == UpdateSource::Buffer)

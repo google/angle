@@ -158,6 +158,10 @@ struct RectangleImpl
     explicit constexpr RectangleImpl(const RectangleImpl<S> rect)
         : x(rect.x), y(rect.y), width(rect.width), height(rect.height)
     {}
+    template <typename O, typename E>
+    RectangleImpl(const O &offset, const E &size)
+        : x(offset.x), y(offset.y), width(size.width), height(size.height)
+    {}
 
     T x0() const { return x; }
     T y0() const { return y; }
