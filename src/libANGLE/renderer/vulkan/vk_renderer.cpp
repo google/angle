@@ -605,7 +605,46 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "prior_access = "
       "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)",
       "command = vkCmdBeginRenderPass", "prior_command = vkCmdEndRenderPass",
-      "load_op = VK_ATTACHMENT_LOAD_OP_LOAD"}}};
+      "load_op = VK_ATTACHMENT_LOAD_OP_LOAD"}},
+    // Observed on Intel after a VVL roll
+    // BufferDataTestES3.CopyBufferSubDataSelfDependency/ES3_Vulkan
+    // http://anglebug.com/565993690
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     false,
+     {
+         "message_type = RenderPassStoreOpError",
+         "hazard_type = WRITE_AFTER_WRITE",
+         "access = "
+         "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
+         "BIT)",
+         "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
+         "write_barriers = "
+         "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT(VK_ACCESS_2_UNIFORM_READ_BIT|VK_ACCESS_2_COLOR_"
+         "ATTACHMENT_READ_BIT|VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT):VK_PIPELINE_STAGE_2_"
+         "EARLY_FRAGMENT_TESTS_BIT|VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_"
+         "STENCIL_ATTACHMENT_READ_BIT):VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_"
+         "COLOR_ATTACHMENT_READ_BIT|VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
+         "command = vkCmdEndRenderPass",
+         "prior_command = vkCmdPipelineBarrier",
+         "store_op = VK_ATTACHMENT_STORE_OP_STORE",
+     }},
+    // Observed on Nvidia and Intel after a VVL roll
+    // FramebufferFetchES31.ReopenRenderPass/ES3_1_Vulkan
+    // http://anglebug.com/565993690
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     false,
+     {
+         "message_type = RenderPassStoreOpError",
+         "hazard_type = WRITE_AFTER_WRITE",
+         "access = "
+         "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
+         "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
+         "write_barriers = 0",
+         "command = vkCmdEndRenderPass",
+         "prior_command = vkCmdEndRenderPass",
+         "store_op = VK_ATTACHMENT_STORE_OP_STORE",
+     }},
+};
 
 // Messages that should not be generated if the feature to force-enable providing the size pointer
 // to vkCmdBindVertexBuffers2() is disabled.
