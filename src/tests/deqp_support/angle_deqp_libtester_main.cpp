@@ -38,7 +38,14 @@ tcu::RandomOrderExecutor *g_executor = nullptr;
 std::string GetLogFileName(std::string deqpDataDir)
 {
 #if (DE_OS == DE_OS_ANDROID)
-    // On Android executable dir is not writable, so use data dir instead
+    // On Android executable dir is not writable, so use data dir instead.
+    // ActivityThread sets TMPDIR to /data/user/<user_id>/com.android.angle.test/cache,
+    // which works across all Android users (including --force-main-user / user 10).
+    Optional<std::string> tempDir = angle::GetTempDirectory();
+    if (tempDir.valid())
+    {
+        return tempDir.value() + "/" + g_cmdLine->getLogFileName();
+    }
     return std::string("/data/data/com.android.angle.test/") + g_cmdLine->getLogFileName();
 #else
     return g_cmdLine->getLogFileName();
