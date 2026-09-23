@@ -327,9 +327,9 @@ Buffer11::Buffer11(const gl::BufferState &state, Renderer11 *renderer)
       mDeallocThresholds({}),
       mIdleness({}),
       mConstantBufferStorageAdditionalSize(0),
-      mMaxConstantBufferLruCount(0),
+      mNextConstantBufferLruCount(0),
       mStructuredBufferStorageAdditionalSize(0),
-      mMaxStructuredBufferLruCount(0)
+      mNextStructuredBufferLruCount(0)
 {}
 
 Buffer11::~Buffer11()
@@ -901,10 +901,9 @@ angle::Result Buffer11::getConstantBufferRangeStorage(const gl::Context *context
         if (!cacheEntry->storage)
         {
             cacheEntry->storage  = allocateStorage(BUFFER_USAGE_UNIFORM);
-            cacheEntry->lruCount = ++mMaxConstantBufferLruCount;
         }
 
-        cacheEntry->lruCount = ++mMaxConstantBufferLruCount;
+        cacheEntry->lruCount = mNextConstantBufferLruCount++;
         newStorage           = cacheEntry->storage;
     }
 
@@ -979,10 +978,9 @@ angle::Result Buffer11::getStructuredBufferRangeSRV(const gl::Context *context,
         if (!cacheEntry->storage)
         {
             cacheEntry->storage  = allocateStorage(BUFFER_USAGE_STRUCTURED);
-            cacheEntry->lruCount = ++mMaxStructuredBufferLruCount;
         }
 
-        cacheEntry->lruCount = ++mMaxStructuredBufferLruCount;
+        cacheEntry->lruCount = mNextStructuredBufferLruCount++;
         newStorage           = cacheEntry->storage;
     }
 

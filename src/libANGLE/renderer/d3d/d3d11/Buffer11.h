@@ -255,12 +255,12 @@ class Buffer11 : public BufferD3D
     typedef std::map<ConstantBufferKey, BufferCacheEntry> BufferCache;
     BufferCache mConstantBufferRangeStoragesCache;
     size_t mConstantBufferStorageAdditionalSize;
-    unsigned int mMaxConstantBufferLruCount;
+    uint64_t mNextConstantBufferLruCount;
 
     typedef std::map<StructuredBufferKey, BufferCacheEntry> StructuredBufferCache;
     StructuredBufferCache mStructuredBufferRangeStoragesCache;
     size_t mStructuredBufferStorageAdditionalSize;
-    unsigned int mMaxStructuredBufferLruCount;
+    uint64_t mNextStructuredBufferLruCount;
 };
 
 }  // namespace rx
