@@ -6,17 +6,10 @@ charset-normalizer==2.0.12 \
     --hash=sha256:6881edbebdb17b39b4eaaa821b438bf6eddffb4468cf344f09f89def34a8b1df \
     --hash=sha256:de31ce927b58aadb7c952db42fb151f5a518b244d0acda8d9cf9cf3e4bcab059
     # via requests
-httplib2==0.22.0 \
-    --hash=sha256:12c6b6d2ec0aca0ac658373239bb3f73dd16778fd5020b604672efac372450f1 \
-    --hash=sha256:14ae0a53c1ba8f3d37e9e27cf37eabb0fb9980f435ba405d546948b009dd64dc
 idna==3.10 \
     --hash=sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3 \
     --hash=sha256:ad85ff8c3a9711bee3e3af22ae0935ea23f766555d3d72dcd16eeda99d1793f7
     # via requests
-pyparsing==3.2.0 \
-    --hash=sha256:799c11b1e94a53de12a8e0d8a40f16dd0cd5348ae22d79a1b6f9e3ef39648b27 \
-    --hash=sha256:93d9577b88da0bbea8cc8334ee8b918ed014968fd2ec383e868fb8afb1ccef84
-    # via httplib2
 requests==2.32.5 \
     --hash=sha256:2462f94637a34fd532264295e186976db0f5d453d1cdd31473c85a6a161affb6 \
     --hash=sha256:b49a8bfb872473472603ced8d46a5a8ecb9e5f519444260c27dc50c081cde57b
