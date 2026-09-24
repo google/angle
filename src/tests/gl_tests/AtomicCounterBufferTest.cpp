@@ -404,10 +404,6 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
 // Tests atomic counter reads using compute shaders. Used as a confidence check for the translator.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterReadCompute)
 {
-    // Skipping due to a bug on the Adreno OpenGLES Android driver.
-    // http://anglebug.com/42261624
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
-
     constexpr char kComputeShaderSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 
@@ -433,10 +429,6 @@ void main()
 // Test atomic counter read.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 {
-    // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
-    // http://anglebug.com/42260658
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
@@ -470,10 +462,6 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 // update in the context
 TEST_P(AtomicCounterBufferTest31, DependentAtomicCounterBufferChange)
 {
-    // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
-    // http://anglebug.com/42260658
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
@@ -520,10 +508,6 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterBufferRangeRead)
     // http://anglebug.com/42262383
     ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
 
-    // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
-    // http://anglebug.com/42260658
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
@@ -563,15 +547,56 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterBufferRangeRead)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
 }
 
+// Verify that changing atomic counter buffer offsets across draw calls (via glBindBufferRange
+// and glBindBufferBase) works.
+TEST_P(AtomicCounterBufferTest31, AtomicCounterBufferOffsetChangeAcrossDraws)
+{
+    // binding = 1 requires at least 2 fragment atomic counter buffer bindings.
+    GLint maxFragmentAtomicCounterBuffers = 0;
+    glGetIntegerv(GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS, &maxFragmentAtomicCounterBuffers);
+    ANGLE_SKIP_TEST_IF(maxFragmentAtomicCounterBuffers < 2);
+
+    // binding = 1 stores its offset in the second packed 8-bit value of acbBufferOffsets[0],
+    // which also covers the per-binding shift.
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+layout(binding = 1, offset = 0) uniform atomic_uint ac;
+uniform uint expected;
+out highp vec4 my_color;
+void main()
+{
+    my_color = atomicCounter(ac) == expected ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    GLint expectedLoc = glGetUniformLocation(program, "expected");
+    ASSERT_NE(-1, expectedLoc);
+
+    constexpr std::array<GLuint, 4> kBufferData = {10u, 20u, 30u, 40u};
+    constexpr GLsizeiptr kBufferSize            = sizeof(kBufferData);
+    GLBuffer buffer;
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, buffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, kBufferSize, kBufferData.data(), GL_STATIC_DRAW);
+
+    // The order of these calls (1 -> 2 -> 0) is intentional to catch a previous regression in the
+    // Vulkan backend where the offsets where bitwise-ored together without clearing to 0 first.
+    for (GLuint index : {1, 2, 0})
+    {
+        const GLintptr offset = index * sizeof(GLuint);
+        glBindBufferRange(GL_ATOMIC_COUNTER_BUFFER, 1, buffer, offset, kBufferSize - offset);
+        glUniform1ui(expectedLoc, kBufferData[index]);
+        drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green) << "index " << index;
+    }
+}
+
 // Updating atomic counter buffer's offsets was optimized based on a count of valid bindings.
 // Repeatedly bind/unbind buffers across available binding points. The test will fail if
 // there are bugs in how we count valid bindings.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterBufferRepeatedBindUnbind)
 {
-    // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
-    // http://anglebug.com/42260658
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision highp float;\n"
@@ -731,16 +756,6 @@ void main()
 // Test atomic counter array of array.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterArrayOfArray)
 {
-    // Fails on D3D.  Some counters are double-incremented while some are untouched, hinting at a
-    // bug in index translation.  http://anglebug.com/42262427
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
-    // Nvidia's OpenGL driver fails to compile the shader.  http://anglebug.com/42262434
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA());
-
-    // Intel's Windows OpenGL driver crashes in this test.  http://anglebug.com/42262434
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
-
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(binding = 0) uniform atomic_uint ac[7][5][3];

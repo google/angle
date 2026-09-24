@@ -1656,6 +1656,14 @@
 365066518 D3D11 : ShadowSamplerFunctionTextureCubeTest.Test/*__TextureBias_Mipmapped = SKIP
 365066518 D3D11 : ShadowSamplerFunctionTextureCubeTest.Test/*__TextureGrad_Mipmapped = SKIP
 
+// Skipping tests while we work on enabling atomic counter buffer support in the D3D renderer.
+// Nvidia's OpenGL driver fails to compile the shader.
+42262434 NVIDIA OPENGL : AtomicCounterBufferTest31.AtomicCounterArrayOfArray/* = SKIP
+// Intel's Windows OpenGL driver crashes in this test.
+42262434 INTEL OPENGL WIN : AtomicCounterBufferTest31.AtomicCounterArrayOfArray/* = SKIP
+// Skipping due to a bug on the Adreno OpenGLES Android driver.
+42261624 ANDROID QUALCOMM GLES : AtomicCounterBufferTest31.AtomicCounterReadCompute/* = SKIP
+
 // Some drivers incorrectly apply LOD and bias options when an offset is used
 365066518 PIXEL4ORXL GLES : ShadowSamplerFunctionTexture2DTest.Test/*__TextureLodOffset_Mipmapped = SKIP
 365066518 PIXEL4ORXL GLES : ShadowSamplerFunctionTexture2DTest.Test/*__TextureOffsetBias_Mipmapped = SKIP
