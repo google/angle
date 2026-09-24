@@ -23,6 +23,8 @@ angle_unittests_sources = [
   "../common/hash_utils_unittest.cpp",
   "../common/mathutil_unittest.cpp",
   "../common/matrix_utils_unittest.cpp",
+  "../common/partition_alloc/raw_ptr_unittest.cpp",
+  "../common/partition_alloc/raw_ref_unittest.cpp",
   "../common/span_unittest.cpp",
   "../common/span_util_unittest.cpp",
   "../common/string_utils_unittest.cpp",

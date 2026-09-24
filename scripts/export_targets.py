@@ -285,6 +285,7 @@ IGNORED_INCLUDE_PREFIXES = {
     b'mach',
     b'mach-o',
     b'OpenGL',
+    b'partition_alloc',
     b'pci',
     b'sys',
     b'wrl',

@@ -523,6 +523,57 @@ class MsanScopedDisableInterceptorChecks final : angle::NonCopyable
 #    define ANGLE_NOINLINE
 #endif
 
+// Annotates a type as being suitable for passing in registers despite having a
+// non-trivial copy or move constructor or destructor. This requires the type
+// not be concerned about its address remaining constant, be safely usable after
+// copying its memory, and have a destructor that may be safely omitted on
+// moved-from instances; an example is `std::unique_ptr`. Unnecessary if the
+// copy/move constructor(s) and destructor are unconditionally trivial; likely
+// ineffective if the type is too large to be passed in one or two registers
+// with the target ABI. However, annotating a type this way will also cause
+// `IS_TRIVIALLY_RELOCATABLE()` to return true for that type, and so may be
+// desirable even for large types, if they are placed in containers that
+// optimize based on that check.
+//
+// NOTE: Use with caution; this has subtle effects on constructor/destructor
+// ordering. When used with types passed or returned by value, values may be
+// constructed in the source stack frame, passed in a register, and then used
+// and destroyed in the target stack frame.
+//
+// See also:
+//   https://clang.llvm.org/docs/AttributeReference.html#trivial-abi
+//   https://libcxx.llvm.org/docs/DesignDocs/UniquePtrTrivialAbi.html
+//
+// Usage:
+// ```
+//   // Instances of type `S` will be eligible to be passed in registers despite
+//   // `S`'s nontrivial destructor.
+//   struct ANGLE_TRIVIAL_ABI S { ~S(); }
+// ```
+#if defined(__has_cpp_attribute)
+#    if __has_cpp_attribute(clang::trivial_abi)
+#        define ANGLE_TRIVIAL_ABI [[clang::trivial_abi]]
+#    else
+#        define ANGLE_TRIVIAL_ABI
+#    endif
+#else
+#    define ANGLE_TRIVIAL_ABI
+#endif
+
+// Annotates a class as a pointer-like type, so that the compiler can diagnose references left
+// dangling by a temporary owner.
+//
+// https://clang.llvm.org/docs/AttributeReference.html#pointer
+#if defined(__has_cpp_attribute)
+#    if __has_cpp_attribute(gsl::Pointer)
+#        define ANGLE_GSL_POINTER [[gsl::Pointer]]
+#    else
+#        define ANGLE_GSL_POINTER
+#    endif
+#else
+#    define ANGLE_GSL_POINTER
+#endif
+
 #if defined(__clang__) || (defined(__GNUC__) && defined(__has_attribute))
 #    if __has_attribute(format)
 #        define ANGLE_FORMAT_PRINTF(fmt, args) __attribute__((format(__printf__, fmt, args)))

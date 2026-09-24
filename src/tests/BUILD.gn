@@ -44,6 +44,7 @@ if (is_android) {
       }
     }
   }
+
   android_library("native_test_java") {
     testonly = true
     sources = [
@@ -128,6 +129,7 @@ config("angle_common_test_utils_config") {
 
 template("angle_common_test_utils") {
   assert(defined(invoker.angle_util))
+
   angle_source_set(target_name) {
     testonly = true
     if (is_ios) {
@@ -1197,6 +1199,7 @@ if (build_angle_gles1_conform_tests) {
       ]
     }
   }
+
   source_set("angle_gles1_primtest_no_gtest") {
     configs += [
       ":angle_gles1_conform_support",
@@ -1264,6 +1267,7 @@ if (build_angle_gles1_conform_tests) {
       "${angle_root}:angle_backend_config",
     ]
   }
+
   source_set("angle_gles1_covegl_no_gtest_source") {
     configs += [
       ":angle_gles1_conform_support",
@@ -1769,11 +1773,13 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     _api = target_name
 
     config_name = "angle_deqp_${_api}_config"
+
     config(config_name) {
       defines = invoker.defines
     }
 
     shared_library_name = "angle_deqp_lib${_api}"
+
     angle_shared_library(shared_library_name) {
       forward_variables_from(invoker,
                              [
@@ -1872,6 +1878,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       target_name = "${_api}_${mustpass_suffix}"
       target_name = string_replace(target_name, "-", "_")
     }
+
     angle_deqp_gtest(target_name) {
       forward_variables_from(invoker, "*")
 
@@ -2099,6 +2106,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     split_target = string_split(target_name, "_")
     _api = split_target[0]
     _rotate = split_target[1]
+
     angle_deqp_gtest(target_name) {
       forward_variables_from(invoker, "*")
 
