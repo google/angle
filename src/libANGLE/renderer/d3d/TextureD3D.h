@@ -48,9 +48,12 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
     virtual ImageD3D *getImage(const gl::ImageIndex &index) const = 0;
     virtual GLsizei getLayerCount(int level) const                = 0;
 
-    angle::Result getImageAndSyncFromStorage(const gl::Context *context,
-                                             const gl::ImageIndex &index,
-                                             ImageD3D **outImage);
+    // Returns the ImageD3D for |index|, syncing its CPU staging buffer from |mTexStorage| if
+    // |mTexStorage| holds newer data (i.e. when |mTexStorage| is valid/complete and the image does
+    // not already have uncommitted CPU-side modifications).
+    angle::Result getImageAndSyncFromStorageIfNeeded(const gl::Context *context,
+                                                     const gl::ImageIndex &index,
+                                                     ImageD3D **outImage);
 
     GLint getBaseLevelWidth() const;
     GLint getBaseLevelHeight() const;
@@ -183,6 +186,11 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
     virtual bool isImageComplete(const gl::ImageIndex &index) const = 0;
 
     bool canCreateRenderTargetForImage(const gl::ImageIndex &index) const;
+    angle::Result copyImageFromFramebufferToStaging(const gl::Context *context,
+                                                    const gl::ImageIndex &index,
+                                                    const gl::Offset &destOffset,
+                                                    const gl::Rectangle &clippedArea,
+                                                    gl::Framebuffer *source);
     angle::Result ensureBindFlags(const gl::Context *context, BindFlags bindFlags);
     angle::Result ensureRenderTarget(const gl::Context *context);
 
