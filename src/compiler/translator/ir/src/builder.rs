@@ -62,6 +62,44 @@ impl IntermediateBlock {
     }
 }
 
+// Information needed to constant-fold switch statements
+#[cfg_attr(debug_assertions, derive(Debug))]
+struct ConstantSwitchInfo {
+    // Whether the current target of `break` is a `switch` (possibly nested under another switch)
+    // with a constant expression.  In particular, this switch would have to specially handle
+    // `continue` (see comments below).
+    is_constant_switch: bool,
+    // If the current constant-switch has had a `continue` branch, a variable is declared before
+    // the switch and set to true at the point of `continue`, and the branch is changed to
+    // `break`.  An `if (flag) continue;` statement is added after the (replaced) switch.
+    continue_variable: Option<(VariableId, TypedId)>,
+}
+
+impl ConstantSwitchInfo {
+    fn new() -> ConstantSwitchInfo {
+        ConstantSwitchInfo { is_constant_switch: false, continue_variable: None }
+    }
+
+    fn get_continue_variable(&mut self, ir_meta: &mut IRMeta) -> TypedId {
+        if let Some(continue_variable) = self.continue_variable {
+            continue_variable.1
+        } else {
+            let variable = ir_meta.declare_variable(
+                Name::new_temp("continue_flag"),
+                TYPE_ID_BOOL,
+                Precision::NotApplicable,
+                false,
+                Decorations::new_none(),
+                None,
+                Some(CONSTANT_ID_FALSE),
+                VariableScope::Local,
+            );
+            self.continue_variable = Some(variable);
+            variable.1
+        }
+    }
+}
+
 // Helper to construct the CFG of a function.
 #[cfg_attr(debug_assertions, derive(Debug))]
 struct CFGBuilder {
@@ -75,16 +113,24 @@ struct CFGBuilder {
     // The blocks of the CFG that is being built.  Once a function is complete, this stack
     // should be empty.
     interm_blocks: Vec<IntermediateBlock>,
+    // A stack of nested switch / loop info used for folding switch statements with a constant
+    // selector.
+    constant_switch_stack: Vec<ConstantSwitchInfo>,
 }
 
 impl CFGBuilder {
     fn new() -> CFGBuilder {
-        CFGBuilder { current_block: IntermediateBlock::new(), interm_blocks: Vec::new() }
+        CFGBuilder {
+            current_block: IntermediateBlock::new(),
+            interm_blocks: Vec::new(),
+            constant_switch_stack: Vec::new(),
+        }
     }
 
     fn clear(&mut self) {
         let _ = std::mem::replace(&mut self.current_block, IntermediateBlock::new());
         self.interm_blocks.clear();
+        self.constant_switch_stack.clear();
     }
 
     fn is_empty(&self) -> bool {
@@ -192,14 +238,18 @@ impl CFGBuilder {
     // Add an instruction to the current block.  This may be a break, continue, return or discard,
     // in which case the block terminates early.  If another instruction is added after the block
     // is terminated, it is dropped as dead-code.
-    fn add_void_instruction(&mut self, op: OpCode) {
+    fn add_void_instruction(&mut self, ir_meta: &mut IRMeta, op: OpCode) {
         if !self.current_block.new_instructions_are_dead_code {
             if matches!(op, OpCode::Discard | OpCode::Return(_) | OpCode::Break | OpCode::Continue)
             {
                 self.current_block.new_instructions_are_dead_code = true;
             }
 
-            self.current_block.block.add_void_instruction(op);
+            // If `continue` is observed under a switch with a constant selector, it's replaced with
+            // a `break` after setting a flag (to `continue` after the `switch`).
+            if !matches!(op, OpCode::Continue) || !self.constant_switch_nested_continue(ir_meta) {
+                self.current_block.block.add_void_instruction(op);
+            }
         }
     }
     fn add_typed_instruction(&mut self, id: RegisterId) {
@@ -379,6 +429,8 @@ impl CFGBuilder {
             self.current_block.block.terminate(OpCode::Loop);
         }
         self.push_block();
+
+        self.constant_switch_stack.push(ConstantSwitchInfo::new());
     }
 
     fn end_loop_condition_common(&mut self, condition: TypedId) {
@@ -425,6 +477,8 @@ impl CFGBuilder {
         if !self.current_block.new_instructions_are_dead_code {
             self.current_block.block.terminate(OpCode::Continue);
         }
+
+        self.constant_switch_stack.pop();
 
         // Retrieve and set the body block of the loop.  The header of the loop is already at the
         // top of the stack.  Prepare a merge block to continue what comes after the loop.
@@ -482,6 +536,8 @@ impl CFGBuilder {
             self.current_block.block.terminate(OpCode::DoLoop);
         }
         self.push_block();
+
+        self.constant_switch_stack.push(ConstantSwitchInfo::new());
     }
 
     fn begin_do_loop_condition(&mut self) {
@@ -504,6 +560,8 @@ impl CFGBuilder {
     fn end_do_loop(&mut self, condition: TypedId) {
         self.end_loop_condition_common(condition);
 
+        self.constant_switch_stack.pop();
+
         // Prepare a merge block to continue what comes after the do-loop.  If the entire do-loop
         // was dead-code eliminated however, restore the previous (already terminated) block.
         if self.are_new_instructions_dead_code_in_parent_block() {
@@ -522,6 +580,15 @@ impl CFGBuilder {
             self.current_block.block.terminate(OpCode::Switch(value, Vec::new()));
         }
         self.push_block();
+
+        let mut switch_info = ConstantSwitchInfo::new();
+        switch_info.is_constant_switch = value.id.is_constant()
+            || self
+                .constant_switch_stack
+                .last()
+                .map(|info| info.is_constant_switch)
+                .unwrap_or(false);
+        self.constant_switch_stack.push(switch_info);
     }
 
     fn is_empty_switch_block(block: &Block) -> bool {
@@ -624,9 +691,11 @@ impl CFGBuilder {
         (true, None)
     }
 
-    fn end_switch(&mut self) {
+    fn end_switch(&mut self, ir_meta: &mut IRMeta) {
         // Terminate the last case, if not already.
         self.end_previous_case();
+
+        let constant_switch_info = self.constant_switch_stack.pop().unwrap();
 
         // The case blocks have already been processed.  The header of the switch is already at the
         // top of the stack.  Prepare a merge block to continue what comes after the switch.
@@ -658,9 +727,12 @@ impl CFGBuilder {
         // - The switch has a constant expression, but none of the cases match it: In this case, the
         //   switch can be removed as well.
         // - The switch has a constant expression with a matching case: In this case, the
-        //   non-matching cases (that also cannot be fallen-through) can be removed.  Note that
-        //   sometimes the entire switch can be replaced with the matching blocks, but it can get
-        //   tricky with break and continue in it.
+        //   non-matching cases (that also cannot be fallen-through) can be removed.  The blocks in
+        //   the matching cases are placed under an infinite loop, which is broken out of with the
+        //   `break` instructions. Note that `continue` instructions are already turned into `break`
+        //   instructions, in which case a "continue variable" is declared and needs to be added to
+        //   the parent block. After the block, an `if (continue_variable) continue` statement
+        //   should be added.
 
         let (has_matching_case, matching_block_index) =
             Self::switch_has_matching_case(&mut switch_block.block);
@@ -672,50 +744,145 @@ impl CFGBuilder {
         } else {
             // If the switch expression is constant, remove the case blocks that cannot be executed
             if let Some(matching_block_index) = matching_block_index {
-                let case_blocks = std::mem::take(&mut switch_block.block.case_blocks);
+                self.constant_switch_prune(switch_block, matching_block_index)
+            } else {
+                // The switch block has to remain (whether constant and folded or not), push it back
+                // and make the current block a merge block.
+                self.interm_blocks.push(switch_block);
+            }
+            self.constant_switch_declare_continue_variable(ir_meta, constant_switch_info);
+            self.current_block.is_merge_block = true;
+        }
+    }
 
-                // Starting from the matching block, take blocks while their terminator is
-                // `Passthrough` and then the final block with a different terminator.  Note that
-                // take_while stops _after_ the first element that doesn't match the predicate,
-                // i.e. that element is lost.  Because of that, the first element after
-                // `Passthrough` is also matched.
-                let mut iter = case_blocks.into_iter().skip(matching_block_index);
-                let mut matching_case_block = iter.next().unwrap();
-                let mut fallthrough_chain_last_block =
-                    matching_case_block.get_merge_chain_last_block_mut();
+    // Handle `continue` nested under a switch with a constant selector.  If `false` is returned,
+    // the instruction was not handled.
+    fn constant_switch_nested_continue(&mut self, ir_meta: &mut IRMeta) -> bool {
+        if let Some(info) = self.constant_switch_stack.last_mut()
+            && info.is_constant_switch
+        {
+            let continue_variable = info.get_continue_variable(ir_meta);
+            self.current_block
+                .block
+                .add_void_instruction(OpCode::Store(continue_variable, TYPED_CONSTANT_ID_TRUE));
+            self.current_block.block.add_void_instruction(OpCode::Break);
+            return true;
+        }
+        return false;
+    }
 
-                for fallthrough_block in iter {
-                    // If the previous block was fallthrough, chain this block to it. Otherwise
-                    // this block and all after it are unreachable.
-                    if !matches!(
-                        fallthrough_chain_last_block.get_terminating_op(),
-                        &OpCode::Passthrough
-                    ) {
-                        break;
-                    }
+    fn constant_switch_extract_matching_blocks(
+        switch_block: &mut IntermediateBlock,
+        matching_block_index: usize,
+    ) -> Block {
+        let case_blocks = std::mem::take(&mut switch_block.block.case_blocks);
 
-                    fallthrough_chain_last_block.unterminate();
-                    fallthrough_chain_last_block.terminate(OpCode::NextBlock);
-                    fallthrough_chain_last_block.set_merge_block(fallthrough_block);
-                    fallthrough_chain_last_block =
-                        fallthrough_chain_last_block.get_merge_chain_last_block_mut();
-                }
+        // Starting from the matching block, take blocks while their terminator is
+        // `Passthrough` and then the final block with a different terminator.  Note that
+        // take_while stops _after_ the first element that doesn't match the predicate,
+        // i.e. that element is lost.  Because of that, the first element after
+        // `Passthrough` is also matched.
+        let mut iter = case_blocks.into_iter().skip(matching_block_index);
+        let mut matching_case_block = iter.next().unwrap();
+        let mut fallthrough_chain_last_block = matching_case_block.get_merge_chain_last_block_mut();
 
-                let (switch_expression, switch_cases) =
-                    switch_block.block.get_terminating_op().get_switch_expression_and_cases();
-                let matching_case = switch_cases[matching_block_index];
-                // Replace the switch with one that has only one target, that is the matching case.
-                switch_block.block.unterminate();
-                switch_block
-                    .block
-                    .terminate(OpCode::Switch(switch_expression, vec![matching_case]));
-                switch_block.block.case_blocks = vec![matching_case_block];
+        for fallthrough_block in iter {
+            // If the previous block was fallthrough, chain this block to it. Otherwise
+            // this block and all after it are unreachable.
+            if !matches!(fallthrough_chain_last_block.get_terminating_op(), &OpCode::Passthrough) {
+                break;
             }
 
-            // The switch has to remain (whether constant or not), push it back and make the
-            // current block a merge block.
-            self.interm_blocks.push(switch_block);
-            self.current_block.is_merge_block = true;
+            fallthrough_chain_last_block.unterminate();
+            fallthrough_chain_last_block.terminate(OpCode::NextBlock);
+            fallthrough_chain_last_block.set_merge_block(fallthrough_block);
+            fallthrough_chain_last_block =
+                fallthrough_chain_last_block.get_merge_chain_last_block_mut();
+        }
+
+        matching_case_block
+    }
+
+    fn constant_switch_prune(
+        &mut self,
+        mut switch_block: IntermediateBlock,
+        matching_block_index: usize,
+    ) {
+        let matching_case_block =
+            Self::constant_switch_extract_matching_blocks(&mut switch_block, matching_block_index);
+
+        // Build the infinite loop with the matching_case_block as its body.
+        let mut condition_block = Block::new();
+        condition_block.terminate(OpCode::LoopIf(TYPED_CONSTANT_ID_TRUE));
+
+        let mut loop_block = Block::new();
+        loop_block.set_loop_condition_block(condition_block);
+        loop_block.set_loop_body_block(matching_case_block);
+        loop_block.terminate(OpCode::Loop);
+
+        // Instead of issuing a Switch, jump to the loop block directly.
+        switch_block.block.unterminate();
+        switch_block.block.terminate(OpCode::NextBlock);
+
+        self.interm_blocks.push(switch_block);
+
+        self.interm_blocks.push(IntermediateBlock {
+            block: loop_block,
+            is_merge_block: true,
+            new_instructions_are_dead_code: false,
+        });
+    }
+
+    fn constant_switch_declare_continue_variable(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        constant_switch_info: ConstantSwitchInfo,
+    ) {
+        // If there's a continue variable, declare it in the loop block.  Also add
+        // `if (continue_variable) continue;` after the block.  Note that if nested under a switch
+        // with constant selector, this `continue` should be replaced with `break` too.
+        if let Some(continue_variable) = constant_switch_info.continue_variable {
+            self.interm_blocks.last_mut().unwrap().block.variables.push(continue_variable.0);
+
+            let mut if_body = Block::new();
+
+            if let Some(parent_info) = self.constant_switch_stack.last_mut()
+                && parent_info.is_constant_switch
+            {
+                // Generate:
+                //
+                //     Store parent_continue_variable true
+                //     Break
+                let parent_continue_variable = parent_info.get_continue_variable(ir_meta);
+                if_body.add_void_instruction(OpCode::Store(
+                    parent_continue_variable,
+                    TYPED_CONSTANT_ID_TRUE,
+                ));
+                if_body.terminate(OpCode::Break);
+            } else {
+                // Generate:
+                //
+                //     Continue
+                if_body.terminate(OpCode::Continue);
+            }
+
+            // Generate:
+            //
+            //     should_continue = Load continue_variable
+            //                       If should_continue
+            let mut if_block = Block::new();
+            let condition =
+                if_block.add_typed_instruction(instruction::load(ir_meta, continue_variable.1));
+
+            if_block.set_if_true_block(if_body);
+            if_block.terminate(OpCode::If(condition));
+
+            // Set the if block as the merge block of the loop so it runs after it.
+            self.interm_blocks.push(IntermediateBlock {
+                block: if_block,
+                is_merge_block: true,
+                new_instructions_are_dead_code: false,
+            });
         }
     }
 }
@@ -1211,11 +1378,17 @@ impl Builder {
     // Many instructions are generated either as part of a function or the initialization code for
     // global variables.  The following function should be used so that the generated code is
     // placed in the appropriate scope (function or global).
+    fn scope_and_ir_meta(&mut self) -> (&mut CFGBuilder, &mut IRMeta) {
+        (
+            match self.current_function {
+                Some(_) => &mut self.current_function_cfg,
+                None => &mut self.global_initializers_cfg,
+            },
+            &mut self.ir.meta,
+        )
+    }
     fn scope(&mut self) -> &mut CFGBuilder {
-        match self.current_function {
-            Some(_) => &mut self.current_function_cfg,
-            None => &mut self.global_initializers_cfg,
-        }
+        self.scope_and_ir_meta().0
     }
 
     // Used internally, loads an id from the top of the id stack.  If that is a pointer, its value
@@ -1262,7 +1435,8 @@ impl Builder {
         } else {
             self.ir.meta.on_variable_initialized(id);
             let id = TypedId::from_variable_id(&self.ir.meta, id);
-            self.scope().add_void_instruction(OpCode::Store(id, value));
+            let (scope, ir_meta) = self.scope_and_ir_meta();
+            scope.add_void_instruction(ir_meta, OpCode::Store(id, value));
         }
     }
 
@@ -1475,7 +1649,8 @@ impl Builder {
         self.scope().begin_default();
     }
     pub fn end_switch(&mut self) {
-        self.scope().end_switch();
+        let (scope, ir_meta) = self.scope_and_ir_meta();
+        scope.end_switch(ir_meta);
     }
 
     pub fn branch_discard(&mut self) {
@@ -1595,7 +1770,10 @@ impl Builder {
             instruction::Result::Constant(id) => {
                 self.interm_ids.push(TypedId::from_typed_constant_id(id))
             }
-            instruction::Result::Void(op) => self.scope().add_void_instruction(op),
+            instruction::Result::Void(op) => {
+                let (scope, ir_meta) = self.scope_and_ir_meta();
+                scope.add_void_instruction(ir_meta, op)
+            }
             instruction::Result::Register(id) => {
                 self.scope().add_typed_instruction(id.id);
                 self.interm_ids.push(TypedId::from_register_id(id))

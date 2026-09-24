@@ -32,6 +32,7 @@
 #include "compiler/translator/tree_ops/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h"
 #include "compiler/translator/tree_ops/ExpandFragmentOutputsToVec4.h"
+#include "compiler/translator/tree_ops/FoldConstantSwitch.h"
 #include "compiler/translator/tree_ops/FoldExpressions.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_ops/PruneEmptyCases.h"
@@ -789,14 +790,21 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    // Fold expressions that could not be folded before validation that was done as a part of
-    // parsing.
+    // Fold expressions that could not be folded before validation or otherwise that was done as a
+    // part of parsing.
     if (!FoldExpressions(this, root, &mDiagnostics))
     {
         return false;
     }
     // Folding should only be able to generate warnings.
     ASSERT(mDiagnostics.numErrors() == 0);
+
+    // Fold switch statements with constant expression.  Run after FoldExpressions because the
+    // switch selector may need folding.
+    if (!FoldConstantSwitch(this, root, &mSymbolTable))
+    {
+        return false;
+    }
 
     const bool hasAnyClipCullDistance =
         parseContext.isExtensionEnabled(TExtension::ANGLE_clip_cull_distance) ||

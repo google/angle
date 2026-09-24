@@ -141,6 +141,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h",
   "src/compiler/translator/tree_ops/ExpandFragmentOutputsToVec4.cpp",
   "src/compiler/translator/tree_ops/ExpandFragmentOutputsToVec4.h",
+  "src/compiler/translator/tree_ops/FoldConstantSwitch.cpp",
+  "src/compiler/translator/tree_ops/FoldConstantSwitch.h",
   "src/compiler/translator/tree_ops/FoldExpressions.cpp",
   "src/compiler/translator/tree_ops/FoldExpressions.h",
   "src/compiler/translator/tree_ops/GatherDefaultUniforms.cpp",
