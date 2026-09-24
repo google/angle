@@ -3579,6 +3579,15 @@ angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk, ImageMipLe
         }
     }
 
+    // If context doesn't have valid queue index, it can't write and submit command buffer.
+    // Skip flushing the staged updates for now. The flush will be triggered later when used. This
+    // could only happen with eglCreateImage where the context is provided in the API instead of
+    // using current context.
+    if (!contextVk->hasActiveQueueSerialIndex())
+    {
+        return angle::Result::Continue;
+    }
+
     return flushImageStagedUpdates(contextVk);
 }
 

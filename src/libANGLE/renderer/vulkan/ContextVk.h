@@ -629,6 +629,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         const vk::CommandResources &resources,
         vk::OutsideRenderPassCommandBuffer **commandBufferOut)
     {
+        ASSERT(mCurrentQueueSerialIndex != kInvalidQueueSerialIndex);
         ANGLE_TRY(onResourceAccess(resources));
         *commandBufferOut = &mOutsideRenderPassCommands->getCommandBuffer();
         return angle::Result::Continue;
@@ -638,9 +639,15 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         const vk::CommandResources &resources,
         vk::OutsideRenderPassCommandBufferHelper **commandBufferHelperOut)
     {
+        ASSERT(mCurrentQueueSerialIndex != kInvalidQueueSerialIndex);
         ANGLE_TRY(onResourceAccess(resources));
         *commandBufferHelperOut = mOutsideRenderPassCommands;
         return angle::Result::Continue;
+    }
+
+    bool hasActiveQueueSerialIndex() const
+    {
+        return mCurrentQueueSerialIndex != kInvalidQueueSerialIndex;
     }
 
     void trackImageWithOutsideRenderPassEvent(vk::ImageHelper *image)

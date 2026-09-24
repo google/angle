@@ -15566,6 +15566,100 @@ TEST_P(ImageTestES3RobustInit, NonZeroLevelAndFaceReadbackRenderbuffer)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that calling eglCreateImageKHR with a non-current context while another shared context is
+// current works properly and does not flush staged updates on the non-current context.
+// Reproduces bug b/565518145 from peridot trace.
+TEST_P(ImageTest, CreateImageWithNonCurrentContext)
+{
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+    EGLConfig config   = window->getConfig();
+    EGLSurface surface = window->getSurface();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() || !hasExternalExt());
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(display, "EGL_KHR_surfaceless_context"));
+
+    const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, window->getClientMajorVersion(),
+                                     EGL_NONE};
+    EGLContext context1 = eglCreateContext(display, config, window->getContext(), contextAttribs);
+    ASSERT_NE(context1, EGL_NO_CONTEXT);
+    EGLContext context2 = eglCreateContext(display, config, context1, contextAttribs);
+    ASSERT_NE(context2, EGL_NO_CONTEXT);
+
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context1));
+
+    // Create initial texture and EGLImage, bind to external texture, and draw a textured quad.
+    GLTexture sourceTex1;
+    glBindTexture(GL_TEXTURE_2D, sourceTex1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 GLColor::blue.data());
+    EGLImageKHR image1 =
+        eglCreateImageKHR(display, context1, EGL_GL_TEXTURE_2D_KHR,
+                          reinterpretHelper<EGLClientBuffer>(sourceTex1), kDefaultAttribs);
+    ASSERT_EGL_SUCCESS();
+
+    GLTexture externalTex;
+    createEGLImageTargetTextureExternal(image1, externalTex);
+
+    glUseProgram(mTextureExternalProgram);
+    glBindTexture(GL_TEXTURE_EXTERNAL_OES, externalTex);
+    glUniform1i(mTextureExternalUniformLocation, 0);
+    drawQuad(mTextureExternalProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Switch to context2 with EGL_NO_SURFACE
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, context2));
+
+    // Destroy old EGLImage and its backing texture
+    sourceTex1.reset();
+    eglDestroyImageKHR(display, image1);
+
+    // Create new backing 2D texture with initial staged data while context2 is current,
+    // but call eglCreateImageKHR with non-current context1.
+    constexpr GLsizei kWidth  = 64;
+    constexpr GLsizei kHeight = 64;
+    std::vector<GLColor> initialData(kWidth * kHeight, GLColor::green);
+    GLTexture sourceTex2;
+    glBindTexture(GL_TEXTURE_2D, sourceTex2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 initialData.data());
+
+    EGLImageKHR image2 =
+        eglCreateImageKHR(display, context1, EGL_GL_TEXTURE_2D_KHR,
+                          reinterpretHelper<EGLClientBuffer>(sourceTex2), kDefaultAttribs);
+    ASSERT_EGL_SUCCESS();
+
+    glBindTexture(GL_TEXTURE_EXTERNAL_OES, externalTex);
+
+    // Update the backing texture data via glTexSubImage2D (UpdateEGLImageData)
+    std::vector<GLColor> updateData(kWidth * kHeight, GLColor::red);
+    glBindTexture(GL_TEXTURE_2D, sourceTex2);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                    updateData.data());
+
+    // Switch back to context1 with EGL_NO_SURFACE
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, context1));
+
+    // Bind the new EGLImage to externalTex and verify its contents on surface
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context1));
+    glBindTexture(GL_TEXTURE_EXTERNAL_OES, externalTex);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, image2);
+    drawQuad(mTextureExternalProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Clean up
+    eglDestroyImageKHR(display, image2);
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, window->getContext()));
+    eglDestroyContext(display, context1);
+    eglDestroyContext(display, context2);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(ImageTest,
                                        ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
 
