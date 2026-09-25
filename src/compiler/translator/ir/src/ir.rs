@@ -86,13 +86,15 @@ pub const CONSTANT_ID_FALSE: ConstantId = ConstantId { id: 0 };
 pub const CONSTANT_ID_TRUE: ConstantId = ConstantId { id: 1 };
 pub const CONSTANT_ID_FLOAT_ZERO: ConstantId = ConstantId { id: 2 };
 pub const CONSTANT_ID_FLOAT_ONE: ConstantId = ConstantId { id: 3 };
-pub const CONSTANT_ID_INT_ZERO: ConstantId = ConstantId { id: 4 };
-pub const CONSTANT_ID_INT_ONE: ConstantId = ConstantId { id: 5 };
-pub const CONSTANT_ID_UINT_ZERO: ConstantId = ConstantId { id: 6 };
-pub const CONSTANT_ID_UINT_ONE: ConstantId = ConstantId { id: 7 };
-pub const CONSTANT_ID_YUV_CSC_ITU601: ConstantId = ConstantId { id: 8 };
-pub const CONSTANT_ID_YUV_CSC_ITU601_FULL_RANGE: ConstantId = ConstantId { id: 9 };
-pub const CONSTANT_ID_YUV_CSC_ITU709: ConstantId = ConstantId { id: 10 };
+pub const CONSTANT_ID_FLOAT_NEGATIVE_ONE: ConstantId = ConstantId { id: 4 };
+pub const CONSTANT_ID_FLOAT_HALF: ConstantId = ConstantId { id: 5 };
+pub const CONSTANT_ID_INT_ZERO: ConstantId = ConstantId { id: 6 };
+pub const CONSTANT_ID_INT_ONE: ConstantId = ConstantId { id: 7 };
+pub const CONSTANT_ID_UINT_ZERO: ConstantId = ConstantId { id: 8 };
+pub const CONSTANT_ID_UINT_ONE: ConstantId = ConstantId { id: 9 };
+pub const CONSTANT_ID_YUV_CSC_ITU601: ConstantId = ConstantId { id: 10 };
+pub const CONSTANT_ID_YUV_CSC_ITU601_FULL_RANGE: ConstantId = ConstantId { id: 11 };
+pub const CONSTANT_ID_YUV_CSC_ITU709: ConstantId = ConstantId { id: 12 };
 const MAX_PREDEFINED_CONSTANT_ID: u32 = CONSTANT_ID_YUV_CSC_ITU709.id;
 
 // Typed variant of the above constants.
@@ -104,6 +106,10 @@ pub const TYPED_CONSTANT_ID_FLOAT_ZERO: TypedId =
     TypedId::from_constant_id(CONSTANT_ID_FLOAT_ZERO, TYPE_ID_FLOAT, Precision::Low);
 pub const TYPED_CONSTANT_ID_FLOAT_ONE: TypedId =
     TypedId::from_constant_id(CONSTANT_ID_FLOAT_ONE, TYPE_ID_FLOAT, Precision::Low);
+pub const TYPED_CONSTANT_ID_FLOAT_NEGATIVE_ONE: TypedId =
+    TypedId::from_constant_id(CONSTANT_ID_FLOAT_NEGATIVE_ONE, TYPE_ID_FLOAT, Precision::Low);
+pub const TYPED_CONSTANT_ID_FLOAT_HALF: TypedId =
+    TypedId::from_constant_id(CONSTANT_ID_FLOAT_HALF, TYPE_ID_FLOAT, Precision::Low);
 pub const TYPED_CONSTANT_ID_INT_ZERO: TypedId =
     TypedId::from_constant_id(CONSTANT_ID_INT_ZERO, TYPE_ID_INT, Precision::Low);
 pub const TYPED_CONSTANT_ID_INT_ONE: TypedId =
@@ -2652,6 +2658,10 @@ impl IRMeta {
             Constant::new_float(0.0),
             // Corresponding to CONSTANT_ID_FLOAT_ONE
             Constant::new_float(1.0),
+            // Corresponding to CONSTANT_ID_FLOAT_NEGATIVE_ONE
+            Constant::new_float(-1.0),
+            // Corresponding to CONSTANT_ID_FLOAT_HALF
+            Constant::new_float(0.5),
             // Corresponding to CONSTANT_ID_INT_ZERO
             Constant::new_int(0),
             // Corresponding to CONSTANT_ID_INT_ONE
@@ -2688,6 +2698,8 @@ impl IRMeta {
         let float_constant_map = HashMap::from([
             (0.0_f32.to_bits(), CONSTANT_ID_FLOAT_ZERO),
             (1.0_f32.to_bits(), CONSTANT_ID_FLOAT_ONE),
+            ((-1.0_f32).to_bits(), CONSTANT_ID_FLOAT_NEGATIVE_ONE),
+            (0.5_f32.to_bits(), CONSTANT_ID_FLOAT_HALF),
         ]);
         let int_constant_map = HashMap::from([(0, CONSTANT_ID_INT_ZERO), (1, CONSTANT_ID_INT_ONE)]);
         let uint_constant_map =

@@ -260,7 +260,14 @@ TType *make_struct_type(TCompiler *compiler,
         TInterfaceBlock *interfaceBlock =
             new TInterfaceBlock(&compiler->getSymbolTable(), Str(name), fieldList,
                                 TLayoutQualifier{}, structSymbolType);
-        compiler->getSymbolTable().redeclare(interfaceBlock);
+        if (structSymbolType == SymbolType::AngleInternal)
+        {
+            compiler->getSymbolTable().declareInternal(interfaceBlock);
+        }
+        else
+        {
+            compiler->getSymbolTable().redeclare(interfaceBlock);
+        }
         // Same with qualifier and layoutQualifier.
         return new TType(interfaceBlock, EvqTemporary, TLayoutQualifier{});
     }
@@ -389,7 +396,14 @@ TIntermTyped *make_variable(TCompiler *compiler,
             (varType->isInterfaceBlock() || IsShaderIn(varType->getQualifier()) ||
              IsShaderOut(varType->getQualifier())))
         {
-            compiler->getSymbolTable().redeclare(newVariable);
+            if (symbolType == SymbolType::AngleInternal)
+            {
+                compiler->getSymbolTable().declareInternal(newVariable);
+            }
+            else
+            {
+                compiler->getSymbolTable().redeclare(newVariable);
+            }
         }
         variable = newVariable;
     }
