@@ -203,13 +203,7 @@ VertexStorageType ClassifyAttributeStorage(const gl::Context *context,
 
 VertexDataManager::CurrentValueState::CurrentValueState(BufferFactoryD3D *factory)
     : buffer(new StreamingVertexBufferInterface(factory)), offset(0)
-{
-    data.Values.FloatValues[0] = std::numeric_limits<float>::quiet_NaN();
-    data.Values.FloatValues[1] = std::numeric_limits<float>::quiet_NaN();
-    data.Values.FloatValues[2] = std::numeric_limits<float>::quiet_NaN();
-    data.Values.FloatValues[3] = std::numeric_limits<float>::quiet_NaN();
-    data.Type                  = gl::VertexAttribType::Float;
-}
+{}
 
 VertexDataManager::CurrentValueState::CurrentValueState(CurrentValueState &&other)
 {
@@ -616,7 +610,7 @@ angle::Result VertexDataManager::storeCurrentValue(
         ANGLE_TRY(buffer.initialize(context, CONSTANT_VERTEX_BUFFER_SIZE));
     }
 
-    if (cachedState->data != currentValue)
+    if (!cachedState->data.has_value() || *cachedState->data != currentValue)
     {
         ASSERT(translated->attribute && translated->binding);
         const auto &attrib  = *translated->attribute;

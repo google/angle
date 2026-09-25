@@ -6996,6 +6996,73 @@ TEST_P(VertexAttributeTestES3, LargeAttribPointerOffsetNoCrash)
     swapBuffers();
 }
 
+// Test that setting a disabled vertex attribute's current value to NaN before any draw
+// correctly writes the NaN values to the vertex buffer and does not read uninitialized memory
+// (b/564213722).
+TEST_P(VertexAttributeTestES3, NaNCurrentValueInitialDraw)
+{
+    constexpr char kVS[] =
+        R"(#version 300 es
+in vec4 a_position;
+in vec4 a_test;
+out vec4 v_color;
+void main()
+{
+    gl_Position = a_position;
+    if (all(isnan(a_test)))
+    {
+        v_color = vec4(0.0, 1.0, 0.0, 1.0);
+    }
+    else
+    {
+        v_color = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+})";
+
+    constexpr char kFS[] =
+        R"(#version 300 es
+precision mediump float;
+in vec4 v_color;
+out vec4 fragColor;
+void main()
+{
+    fragColor = v_color;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLint testLocation = glGetAttribLocation(program, "a_test");
+    ASSERT_NE(-1, testLocation);
+
+    glDisableVertexAttribArray(testLocation);
+
+    const float kNaN = std::numeric_limits<float>::quiet_NaN();
+    glVertexAttrib4f(testLocation, kNaN, kNaN, kNaN, kNaN);
+
+    drawQuad(program, "a_position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Verify that subsequent changes also work properly.
+    glVertexAttrib4f(testLocation, 1.0f, 2.0f, 3.0f, 4.0f);
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, "a_position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    // Now it should be red because it is no longer NaN.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Transition back to NaN.
+    glVertexAttrib4f(testLocation, kNaN, kNaN, kNaN, kNaN);
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, "a_position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    // Must be green again.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 class VertexAttributeTestES31_Basic : public ANGLETest<>
 {
   protected:
