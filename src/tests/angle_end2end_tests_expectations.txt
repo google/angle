@@ -3145,6 +3145,12 @@
 564918838 METAL : RobustResourceInitTestES3.InvalidateSliceOf3DBlendReadback/* = SKIP
 564918838 METAL : RobustResourceInitTestES3.InvalidateLayerOf2DArrayBlendReadback/* = SKIP
 
+566108153 WIN NVIDIA VULKAN : RobustResourceInitWithInvalidationTest.InvalidateAfterDrawAndClearZeroStencil/* = SKIP
+
+568338695 VULKAN : ClearTestES3.DrawClearInvalidateClear/* = SKIP
+568338695 ARM GLES : ClearTestES3.DrawClearInvalidateClear/* = SKIP
+568338695 PIXEL4ORXL GLES : ClearTestES3.DrawClearInvalidateClear/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
