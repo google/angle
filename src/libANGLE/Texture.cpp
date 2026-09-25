@@ -954,6 +954,8 @@ void Texture::onDestroy(const Context *context)
 
     if (mBoundSurface)
     {
+        // Do not lock mBoundSurface->mMutex here since ContextMutex is already held, which would
+        // invert the Surface::mMutex -> ContextMutex lock order.
         ANGLE_SWALLOW_ERR(mBoundSurface->releaseTexImage(context, EGL_BACK_BUFFER));
         mBoundSurface = nullptr;
     }

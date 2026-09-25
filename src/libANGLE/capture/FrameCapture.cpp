@@ -2124,7 +2124,9 @@ void MaybeCaptureUpdateResourceIDs(const gl::Context *context,
 bool IsDefaultCurrentValue(const gl::VertexAttribCurrentValueData &currentValue)
 {
     if (currentValue.Type != gl::VertexAttribType::Float)
+    {
         return false;
+    }
 
     return currentValue.Values.FloatValues[0] == 0.0f &&
            currentValue.Values.FloatValues[1] == 0.0f &&
@@ -9536,7 +9538,7 @@ void FrameCaptureShared::writeJSON(const gl::Context *context)
     noSurface.extents.height = 9;
     noSurface.colorSpace     = egl::ColorSpace::sRGB;
 
-    const gl::ContextID contextId           = context->id();
+    const gl::ContextID contextId = context->id();
     const SurfaceParams &surfaceParams =
         mDrawSurfaceParams.find(contextId) != mDrawSurfaceParams.end()
             ? mDrawSurfaceParams.at(contextId)

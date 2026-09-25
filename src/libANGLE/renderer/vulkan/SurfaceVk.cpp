@@ -1133,32 +1133,10 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     // Call parent class to destroy any resources parent owns.
     SurfaceVk::destroy(display);
 
-    // Destroy the surface without holding the EGL lock.  This works around a specific deadlock
-    // in Android.  On this platform:
-    //
-    // - For EGL applications, parts of surface creation and destruction are handled by the
-    //   platform, and parts of it are done by the native EGL driver.  Namely, on surface
-    //   destruction, native_window_api_disconnect is called outside the EGL driver.
-    // - For Vulkan applications, vkDestroySurfaceKHR takes full responsibility for destroying
-    //   the surface, including calling native_window_api_disconnect.
-    //
-    // Unfortunately, native_window_api_disconnect may use EGL sync objects and can lead to
-    // calling into the EGL driver.  For ANGLE, this is particularly problematic because it is
-    // simultaneously a Vulkan application and the EGL driver, causing `vkDestroySurfaceKHR` to
-    // call back into ANGLE and attempt to reacquire the EGL lock.
-    //
-    // Since there are no users of the surface when calling vkDestroySurfaceKHR, it is safe for
-    // ANGLE to destroy it without holding the EGL lock, effectively simulating the situation
-    // for EGL applications, where native_window_api_disconnect is called after the EGL driver
-    // has returned.
     if (mSurface)
     {
-        egl::Display::GetCurrentThreadUnlockedTailCall()->add(
-            [surface = mSurface, instance](void *resultOut) {
-                ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::destroy:vkDestroySurfaceKHR");
-                ANGLE_UNUSED_VARIABLE(resultOut);
-                VK_CALL(vkDestroySurfaceKHR, instance, surface, nullptr);
-            });
+        ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::destroy:vkDestroySurfaceKHR");
+        VK_CALL(vkDestroySurfaceKHR, instance, mSurface, nullptr);
         mSurface = VK_NULL_HANDLE;
     }
 }
