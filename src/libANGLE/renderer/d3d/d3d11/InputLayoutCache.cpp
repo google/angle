@@ -67,10 +67,6 @@ struct PackedAttribute
 
 }  // anonymous namespace
 
-PackedAttributeLayout::PackedAttributeLayout() : numAttributes(0), attributeData({}) {}
-
-PackedAttributeLayout::PackedAttributeLayout(const PackedAttributeLayout &other) = default;
-
 void PackedAttributeLayout::addAttributeData(GLenum glType,
                                              UINT semanticIndex,
                                              angle::FormatID vertexFormatID,
