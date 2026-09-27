@@ -2946,6 +2946,9 @@
 454016926 IR : GLSLTest.FunctionArgumentEvalOrder/* = SKIP
 454016926 IR : GLSLTest.FunctionArgumentEvalOrderOverloaded/* = SKIP
 454016926 IR : GLSLTest.TernaryModifiesVariableInSameStatement/* = SKIP
+
+42267100 IR WGPU : GLSLTest.AccessChainIndexPreservedAcrossIncrement/* = SKIP
+42267100 IR WGPU : GLSLTest.AccessChainIndexPreservedAcrossInoutCall/* = SKIP
 // Untriaged failures with MSL
 349994211 IR METAL : GLSLTestLoops.ForContinueInSwitch/* = SKIP
 349994211 IR METAL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
