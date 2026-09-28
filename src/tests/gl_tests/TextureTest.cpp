@@ -6929,9 +6929,6 @@ TEST_P(Texture2DBaseMaxTestES3, PingPongBaseLevelImmutable)
 }
 void Texture2DBaseMaxTestES3::testPingPongBaseLevel(bool immutable)
 {
-    // http://anglebug.com/42263310
-    ANGLE_SKIP_TEST_IF(IsD3D());
-
     // http://anglebug.com/42263311
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAMD() && IsWindows());
 
@@ -7123,8 +7120,6 @@ TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRebase)
 
 TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRebaseImmutable)
 {
-    // http://anglebug.com/42263310
-    ANGLE_SKIP_TEST_IF(IsD3D());
     // http://anglebug.com/42264332
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA());
 
@@ -7428,9 +7423,6 @@ TEST_P(Texture2DBaseMaxTestES3, StageInvalidLevels)
 // Test redefine a mutable texture into an immutable texture.
 TEST_P(Texture2DBaseMaxTestES3, RedefineMutableToImmutable)
 {
-    // http://anglebug.com/42263310
-    ANGLE_SKIP_TEST_IF(IsD3D());
-
     constexpr uint32_t kBaseLevel          = 1;
     const std::array<GLColor, kMipCount> kNewMipColors = {
         GLColor::yellow,
@@ -25319,9 +25311,6 @@ class Texture2DTestES3_ResetTexStorage2DBaseLevel : public Texture2DBaseMaxTestE
 // Test TexStorage2D on a texture that already has non-zero TEXTURE_BASE_LEVEL set.
 TEST_P(Texture2DTestES3_ResetTexStorage2DBaseLevel, TexStorage2DWithNonZeroBaseLevel)
 {
-    // http://anglebug.com/551573368
-    ANGLE_SKIP_TEST_IF(IsD3D());
-
     constexpr uint32_t kBaseLevel          = 1;
     const GLColor kNewMipColors[kMipCount] = {
         GLColor::yellow,

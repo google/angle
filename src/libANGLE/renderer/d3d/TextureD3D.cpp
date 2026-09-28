@@ -199,14 +199,33 @@ angle::Result TextureD3D::getImageAndSyncFromStorage(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+// For immutable textures (glTexStorage*D), all mip levels from 0 to levels-1 are fixed at creation
+// time and mTexStorage is not released when GL_TEXTURE_BASE_LEVEL changes. If storage is later
+// recreated (e.g. via ensureBindFlags to add RenderTarget bind flags) while mBaseLevel > 0, we must
+// use mTexStorage's actual level-0 dimensions rather than extrapolating via
+// `getBaseLevel*() << mBaseLevel`, which can produce wrong level-0 dimensions in two cases:
+// 1. A dimension already clamped to 1 at mBaseLevel (e.g. a 16384x1 texture at baseLevel 13 has
+//    height 1, so `1 << 13` would compute 8192 instead of 1).
+// 2. Non-power-of-two dimensions where low bits were shifted out at mBaseLevel (e.g. a 13x13
+//    texture at baseLevel 1 has width 6, so `6 << 1` would compute 12 instead of 13).
 GLint TextureD3D::getLevelZeroWidth() const
 {
+    if (isImmutable())
+    {
+        ASSERT(mTexStorage);
+        return mTexStorage->getLevelWidth(0);
+    }
     ASSERT(gl::CountLeadingZeros(static_cast<uint32_t>(getBaseLevelWidth())) > getBaseLevel());
     return getBaseLevelWidth() << mBaseLevel;
 }
 
 GLint TextureD3D::getLevelZeroHeight() const
 {
+    if (isImmutable())
+    {
+        ASSERT(mTexStorage);
+        return mTexStorage->getLevelHeight(0);
+    }
     ASSERT(gl::CountLeadingZeros(static_cast<uint32_t>(getBaseLevelHeight())) > getBaseLevel());
     return getBaseLevelHeight() << mBaseLevel;
 }
@@ -3265,6 +3284,12 @@ void TextureD3D_3D::markAllImagesDirty()
 
 GLint TextureD3D_3D::getLevelZeroDepth() const
 {
+    // See comment in TextureD3D::getLevelZeroWidth().
+    if (isImmutable())
+    {
+        ASSERT(mTexStorage);
+        return mTexStorage->getLevelDepth(0);
+    }
     ASSERT(gl::CountLeadingZeros(static_cast<uint32_t>(getBaseLevelDepth())) > getBaseLevel());
     return getBaseLevelDepth() << getBaseLevel();
 }
