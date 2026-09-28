@@ -1106,11 +1106,29 @@ TEST_P(TransformFeedbackTest, TooSmallBuffers)
     const size_t verticesToDraw = 6;
     const size_t stride         = sizeof(float) * 4;
     const size_t bytesNeeded    = stride * verticesToDraw;
+    uint8_t tfData[stride * verticesToDraw] = {0};
 
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
 
+    if (isAtLeastClientVersion(3, 2))
+    {
+        // ES 3.2 records the five points that fit instead of generating INVALID_OPERATION.
+        glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, bytesNeeded - 1, &tfData, GL_STATIC_DRAW);
+
+        GLQuery primitivesWrittenQuery;
+        glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
+        glBeginTransformFeedback(GL_POINTS);
+        glDrawArrays(GL_POINTS, 0, verticesToDraw);
+        EXPECT_GL_NO_ERROR();
+        glEndTransformFeedback();
+        glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
+
+        GLuint primitivesWritten = 0;
+        glGetQueryObjectuiv(primitivesWrittenQuery, GL_QUERY_RESULT_EXT, &primitivesWritten);
+        EXPECT_EQ(verticesToDraw - 1, primitivesWritten);
+    }
+
     // Set up the buffer to be the right size
-    uint8_t tfData[stride * verticesToDraw] = {0};
     glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, bytesNeeded, &tfData, GL_STATIC_DRAW);
 
     glBeginTransformFeedback(GL_POINTS);
@@ -1124,7 +1142,14 @@ TEST_P(TransformFeedbackTest, TooSmallBuffers)
     glBeginTransformFeedback(GL_POINTS);
     EXPECT_GL_NO_ERROR();
     glDrawArrays(GL_POINTS, 0, verticesToDraw);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    if (isAtLeastClientVersion(3, 2))
+    {
+        EXPECT_GL_NO_ERROR();
+    }
+    else
+    {
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
     glEndTransformFeedback();
 
     // Set up the buffer to be the right size but make it smaller after glBeginTransformFeedback
@@ -1133,7 +1158,14 @@ TEST_P(TransformFeedbackTest, TooSmallBuffers)
     glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, bytesNeeded - 1, &tfData, GL_STATIC_DRAW);
     EXPECT_GL_NO_ERROR();
     glDrawArrays(GL_POINTS, 0, verticesToDraw);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    if (isAtLeastClientVersion(3, 2))
+    {
+        EXPECT_GL_NO_ERROR();
+    }
+    else
+    {
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
     glEndTransformFeedback();
 }
 
@@ -4713,7 +4745,14 @@ TEST_P(TransformFeedbackTest, RenderOnceChangeXfbBufferRenderAgain)
 
     glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 40, nullptr, GL_DYNAMIC_READ);
     drawQuad(drawColor, essl3_shaders::PositionAttrib(), 0.5f);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    if (isAtLeastClientVersion(3, 2))
+    {
+        EXPECT_GL_NO_ERROR();
+    }
+    else
+    {
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
 
     glEndTransformFeedback();
     EXPECT_GL_NO_ERROR();

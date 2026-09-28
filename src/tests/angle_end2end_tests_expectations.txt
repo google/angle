@@ -387,6 +387,7 @@
 42265774 LINUX INTEL OPENGL : ComputeShaderTest.DrawDispatchImageReadDraw/* = SKIP
 42266128 LINUX INTEL OPENGL : CopyTexImageTest.CopyTexImageMesaYFlipPartial/* = SKIP
 342316794 LINUX INTEL VULKAN : GLSLTest_ES31.TernaryOnStructsInDifferentBlockStorages/* = SKIP
+564569401 LINUX INTEL VULKAN : TransformFeedbackTest.TooSmallBuffers/* = SKIP
 347282472 LINUX NVIDIA OPENGL : CopyTextureTest.CopyOutsideMipmap/* = SKIP
 454915387 LINUX NVIDIA OPENGL : GLSLConstantFoldingTest.ArrayMixedArgumentsWithSideEffectIndex/* = SKIP
 // New failures when upgrading to Ubuntu 22/newer driver.
