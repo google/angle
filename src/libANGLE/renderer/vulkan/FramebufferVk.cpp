@@ -731,9 +731,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     bool preferDrawOverClearAttachments =
         contextVk->getFeatures().preferDrawClearOverVkCmdClearAttachments.enabled;
 
-    // https://issuetracker.google.com/490503954. Temporary workaround the driver bug.
-    if ((contextVk->getFeatures().supportsTileMemoryHeap.enabled ||
-         contextVk->getFeatures().simulateTileMemoryForTesting.enabled) &&
+    if (contextVk->getFeatures().simulateTileMemoryForTesting.enabled &&
         (clearDepth || clearStencil) &&
         getDepthStencilRenderTarget()->getImageForRenderPass().useTileMemory())
     {

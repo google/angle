@@ -7093,7 +7093,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsTileMemoryHeap,
         mTileMemoryHeapFeatures.tileMemoryHeap == VK_TRUE &&
-            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 868, 1)));
+            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 875, 0)));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsAstc3d,
                             mTextureCompressionASTC3DFeatures.textureCompressionASTC_3D == VK_TRUE);
