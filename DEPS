@@ -225,6 +225,7 @@ vars = {
   'checkout_angle_restricted_trace_brotato': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_bubble_shooter': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_bubble_shooter_and_friends': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_bubble_shooter_pop_bubbles': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_bubble_shooter_relaxing': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_bullet_echo': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_bus_simulator_indonesia': 'checkout_extra_traces',
@@ -2047,6 +2048,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_bubble_shooter_and_friends',
+  },
+  'src/tests/restricted_traces/bubble_shooter_pop_bubbles': {
+      'packages': [
+        {
+            'package': 'angle/traces/bubble_shooter_pop_bubbles',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_bubble_shooter_pop_bubbles',
   },
   'src/tests/restricted_traces/bubble_shooter_relaxing': {
       'packages': [
