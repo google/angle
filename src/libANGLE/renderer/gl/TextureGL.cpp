@@ -467,6 +467,8 @@ angle::Result TextureGL::setImageViaScratchUnpackBuffer(const gl::Context *conte
 
     if (isCompressed)
     {
+        ANGLE_TRY(resetBaseLevelForASTC(context, internalFormat));
+
         const gl::InternalFormat &originalInternalFormatInfo =
             gl::GetSizedInternalFormatInfo(internalFormat);
         nativegl::CompressedTexImageFormat compressedTexImageFormat =
@@ -888,11 +890,7 @@ angle::Result TextureGL::setCompressedImage(const gl::Context *context,
     stateManager->bindTexture(getType(), mTextureID);
     ANGLE_TRY(stateManager->setPixelUnpackState(context, unpack));
 
-    const bool isASTC = gl::IsASTC2DFormat(internalFormat) || gl::IsASTC3DFormat(internalFormat);
-    if (features.resetBaseLevelForASTCImage.enabled && isASTC)
-    {
-        ANGLE_TRY(setBaseLevel(context, 0));
-    }
+    ANGLE_TRY(resetBaseLevelForASTC(context, internalFormat));
 
     if (nativegl::UseTexImage2D(getType()))
     {
@@ -947,11 +945,7 @@ angle::Result TextureGL::setCompressedSubImage(const gl::Context *context,
     stateManager->bindTexture(getType(), mTextureID);
     ANGLE_TRY(stateManager->setPixelUnpackState(context, unpack));
 
-    const bool isASTC = gl::IsASTC2DFormat(format) || gl::IsASTC3DFormat(format);
-    if (features.resetBaseLevelForASTCImage.enabled && isASTC)
-    {
-        ANGLE_TRY(setBaseLevel(context, 0));
-    }
+    ANGLE_TRY(resetBaseLevelForASTC(context, format));
 
     if (nativegl::UseTexImage2D(getType()))
     {
@@ -1555,6 +1549,8 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
             // Internal format must be sized
             ASSERT(internalFormatInfo.sized);
 
+            ANGLE_TRY(resetBaseLevelForASTC(context, internalFormat));
+
             for (size_t level = 0; level < levels; level++)
             {
                 gl::Extents levelSize(std::max(size.width >> level, 1),
@@ -1668,6 +1664,8 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
 
             // Internal format must be sized
             ASSERT(internalFormatInfo.sized);
+
+            ANGLE_TRY(resetBaseLevelForASTC(context, internalFormat));
 
             for (GLsizei i = 0; i < static_cast<GLsizei>(levels); i++)
             {
@@ -2419,6 +2417,18 @@ angle::Result TextureGL::setBaseLevel(const gl::Context *context, GLuint baseLev
     return angle::Result::Continue;
 }
 
+angle::Result TextureGL::resetBaseLevelForASTC(const gl::Context *context, GLenum format)
+{
+    // https://crbug.com/562857750
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
+    if (features.resetBaseLevelForASTCImage.enabled &&
+        (gl::IsASTC2DFormat(format) || gl::IsASTC3DFormat(format)))
+    {
+        ANGLE_TRY(setBaseLevel(context, 0));
+    }
+    return angle::Result::Continue;
+}
+
 angle::Result TextureGL::setMaxLevel(const gl::Context *context, GLuint maxLevel)
 {
     const GLuint maxLevelLimit   = GetMaxMipmapLevel(context->getCaps(), getType());
@@ -3026,6 +3036,8 @@ angle::Result TextureGL::initializeContentsImpl(const gl::Context *context,
     stateManager->bindTexture(getType(), mTextureID);
     if (internalFormatInfo.compressed)
     {
+        ANGLE_TRY(resetBaseLevelForASTC(context, internalFormatInfo.internalFormat));
+
         nativegl::CompressedTexSubImageFormat nativeSubImageFormat =
             nativegl::GetCompressedSubTexImageFormat(functions, features,
                                                      internalFormatInfo.internalFormat);

@@ -12975,12 +12975,10 @@ class ASTCCompressedWithBaseLevelTest : public Texture2DTestES3
         ASSERT_GL_NO_ERROR();
     }
 
-    void runASTCCompressedWithBaseLevelTest(bool useSubImage)
+    // Sets up and binds a shader program that renders a quad from gl_VertexID and samples
+    // texture unit 0, matching the WebGL proof-of-concept for https://crbug.com/562857750.
+    void setUpProgram() override
     {
-        ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_KHR_texture_compression_astc_ldr"));
-
-        // Use shaders that match the proof-of-concept.
-        // They don't use vertex attributes, but gl_VertexID to generate a quad.
         const char *kVS = R"(#version 300 es
 out vec2 uv;
 void main()
@@ -13000,12 +12998,18 @@ void main()
     c = texture(t, uv);
 })";
 
-        ANGLE_GL_PROGRAM(program, kVS, kFS);
-        glUseProgram(program);
-        GLint texLocation = glGetUniformLocation(program, "t");
+        mProgram = CompileProgram(kVS, kFS);
+        ASSERT_NE(0u, mProgram);
+        glUseProgram(mProgram);
+        GLint texLocation = glGetUniformLocation(mProgram, "t");
         ASSERT_NE(-1, texLocation);
         glUniform1i(texLocation, 0);
         ASSERT_GL_NO_ERROR();
+    }
+
+    void runASTCCompressedWithBaseLevelTest(bool useSubImage)
+    {
+        ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_KHR_texture_compression_astc_ldr"));
 
         // 8x5 ASTC format.
         GLenum format = GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
@@ -13090,6 +13094,104 @@ TEST_P(ASTCCompressedWithBaseLevelTest, SubImage)
 TEST_P(ASTCCompressedWithBaseLevelTest, Image)
 {
     runASTCCompressedWithBaseLevelTest(/*useSubImage=*/false);
+}
+
+class ASTCCompressedWithBaseLevelRobustInitTest : public ASTCCompressedWithBaseLevelTest
+{
+  protected:
+    ASTCCompressedWithBaseLevelRobustInitTest() { setRobustResourceInit(true); }
+};
+
+// Test that creating an ASTC texture with glTexStorage2D, setting TEXTURE_BASE_LEVEL > 0,
+// and drawing with robust resource initialization enabled does not crash.
+// https://crbug.com/562857750
+TEST_P(ASTCCompressedWithBaseLevelRobustInitTest, DrawWithoutUpload4x4)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_KHR_texture_compression_astc_ldr"));
+
+    // 4x4 ASTC format (poc_astc44.html)
+    GLenum format             = GL_COMPRESSED_RGBA_ASTC_4x4_KHR;
+    constexpr GLsizei kWidth  = 16;
+    constexpr GLsizei kHeight = 256;
+    constexpr GLsizei kLevels = 9;
+
+    constexpr int kIterations = 16;
+    std::vector<GLTexture> textures(kIterations);
+    for (int i = 0; i < kIterations; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexStorage2D(GL_TEXTURE_2D, kLevels, format, kWidth, kHeight);
+        ASSERT_GL_NO_ERROR();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 8);
+        ASSERT_GL_NO_ERROR();
+
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glFinish();
+        ASSERT_GL_NO_ERROR();
+
+        // Zero-initialized ASTC blocks are invalid (error) blocks. Depending on whether the
+        // implementation decodes ASTC error blocks to LDR8 magenta (e.g. SwiftShader/Mesa),
+        // decodes to FP16 NaN which converts to 0 in an RGBA8 framebuffer (hardware ASTC),
+        // or emulates ASTC with RGBA8, the rendered color is either magenta or transparent black.
+        const GLColor actualColor = angle::ReadColor(0, 0);
+        EXPECT_TRUE(actualColor == GLColor::transparentBlack || actualColor == GLColor::magenta)
+            << actualColor;
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), actualColor);
+    }
+}
+
+// Test that creating an 8x5 ASTC texture with glTexStorage2D, setting TEXTURE_BASE_LEVEL > 0,
+// and drawing with robust resource initialization enabled does not crash.
+// https://crbug.com/562857750
+TEST_P(ASTCCompressedWithBaseLevelRobustInitTest, DrawWithoutUpload8x5)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_KHR_texture_compression_astc_ldr"));
+
+    // 8x5 ASTC format (poc.html)
+    GLenum format             = GL_COMPRESSED_RGBA_ASTC_8x5_KHR;
+    constexpr GLsizei kWidth  = 8;
+    constexpr GLsizei kHeight = 160;
+    constexpr GLsizei kLevels = 5;
+
+    constexpr int kIterations = 16;
+    std::vector<GLTexture> textures(kIterations);
+    for (int i = 0; i < kIterations; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexStorage2D(GL_TEXTURE_2D, kLevels, format, kWidth, kHeight);
+        ASSERT_GL_NO_ERROR();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 4);
+        ASSERT_GL_NO_ERROR();
+
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glFinish();
+        ASSERT_GL_NO_ERROR();
+
+        // Zero-initialized ASTC blocks are invalid (error) blocks. Depending on whether the
+        // implementation decodes ASTC error blocks to LDR8 magenta (e.g. SwiftShader/Mesa),
+        // decodes to FP16 NaN which converts to 0 in an RGBA8 framebuffer (hardware ASTC),
+        // or emulates ASTC with RGBA8, the rendered color is either magenta or transparent black.
+        const GLColor actualColor = angle::ReadColor(0, 0);
+        EXPECT_TRUE(actualColor == GLColor::transparentBlack || actualColor == GLColor::magenta)
+            << actualColor;
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), actualColor);
+    }
+}
+
+// Test that sub-image updates on an ASTC texture with TEXTURE_BASE_LEVEL > 0
+// work correctly when robust resource initialization is enabled.
+// https://crbug.com/562857750
+TEST_P(ASTCCompressedWithBaseLevelRobustInitTest, SubImage)
+{
+    runASTCCompressedWithBaseLevelTest(/*useSubImage=*/true);
 }
 
 // Test that the selected decode precision is actually used for texture decoding.
@@ -26016,6 +26118,11 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ASTCCompressedWithBaseLevelTest);
 ANGLE_INSTANTIATE_TEST_ES3(ASTCCompressedWithBaseLevelTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ASTCCompressedWithBaseLevelRobustInitTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(ASTCCompressedWithBaseLevelRobustInitTest,
+                               ES3_OPENGL().enable(Feature::ResetBaseLevelForASTCImage),
+                               ES3_OPENGLES().enable(Feature::ResetBaseLevelForASTCImage));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureSizeLimitTest);
 ANGLE_INSTANTIATE_TEST(TextureSizeLimitTest,
