@@ -1063,14 +1063,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions.avoidComplexExpressionsInStructConstructor)
-    {
-        if (!WrapStructConstructors(this, root, &mSymbolTable))
-        {
-            return false;
-        }
-    }
-
     if (compileOptions.clampIndirectArrayBounds)
     {
         if (!ClampIndirectIndices(this, root, &mSymbolTable, mExtensionBehavior))
@@ -1151,6 +1143,15 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
         if (!InitializeUninitializedLocals(this, root, getShaderVersion(), canUseLoopsToInitialize,
                                            &getSymbolTable()))
+        {
+            return false;
+        }
+    }
+
+    if (compileOptions.avoidComplexExpressionsInStructConstructor)
+    {
+        // Must run after InitializeUninitializedLocals, as that would introduce struct constructors
+        if (!WrapStructConstructors(this, root, &mSymbolTable))
         {
             return false;
         }
