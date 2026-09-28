@@ -255,6 +255,8 @@ class TextureGL : public TextureImpl
                                                  bool isCompressed,
                                                  size_t imageSize,
                                                  const uint8_t *pixels);
+    angle::Result resetBaseLevelForASTC(const gl::Context *context, GLenum format);
+
     // This changes the current pixel unpack state that will have to be reapplied.
     angle::Result reserveTexImageToBeFilled(const gl::Context *context,
                                             gl::TextureTarget target,
