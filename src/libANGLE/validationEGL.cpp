@@ -3771,6 +3771,13 @@ bool ValidateCreateImage(const ValidationContext *val,
 
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
+    // context can not be current on other thread.
+    if (context != nullptr && context->isReferenced() && context != val->eglThread->getContext())
+    {
+        val->setError(EGL_BAD_ACCESS, "Context can only be current on one thread");
+        return false;
+    }
+
     attributes.initializeWithoutValidation();
 
     const DisplayExtensions &displayExtensions = display->getExtensions();
