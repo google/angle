@@ -55,9 +55,8 @@ egl::ConfigSet DisplayVkGbm::generateConfigs()
 {
     const std::array<GLenum, 1> kColorFormats = {GL_BGRA8_EXT};
 
-    std::vector<GLenum> depthStencilFormats(
-        egl_vk::kConfigDepthStencilFormats,
-        egl_vk::kConfigDepthStencilFormats + ArraySize(egl_vk::kConfigDepthStencilFormats));
+    std::vector<GLenum> depthStencilFormats(std::begin(egl_vk::kConfigDepthStencilFormats),
+                                            std::end(egl_vk::kConfigDepthStencilFormats));
 
     if (getCaps().stencil8)
     {
