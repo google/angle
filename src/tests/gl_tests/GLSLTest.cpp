@@ -7452,6 +7452,70 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test that structs with only samplers can be used on the right-hand side of a comma, where the
+// expression has side effect.
+TEST_P(GLSLTest_ES3, StructWithOnlySamplersRHSOfCommaWithSideEffect)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform struct S {
+    sampler2D n;
+} s[4];
+ivec4 global = ivec4(0);
+out vec4 color;
+void main()
+{
+    int i = 0;
+    (i += 1), s;
+    (global.x = 10), s[0];
+    for (int j = 0; j < 1; ++j, i += 2, s[1])
+    {
+        global.y = 22;
+    }
+
+    color = vec4(i == 3,
+                 global.x == 10,
+                 global.y == 22, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Test that structs with only samplers can be used on the right-hand side of a comma, where the
+// expression has side effect, and the result is passed to a function
+TEST_P(GLSLTest_ES3, StructWithOnlySamplersRHSOfCommaWithSideEffectAsFuncArg)
+{
+    // Only correctly handled by the IR.  Skipped on all backends except GL, which does not use
+    // RewriteStructSamplers.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr) && !IsOpenGL());
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform struct S {
+    sampler2D n;
+} s[4];
+out vec4 color;
+
+int f(S arg)
+{
+    return int(texture(arg.n, vec2(0, 0)).x * 100.0);
+}
+
+void main()
+{
+    int i = 0;
+    int zero = f((i += 4, s[2]));
+
+    color = vec4(i == 4, zero == 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
 // Test that samplers in structs can be extracted if the first reference to the struct does not
 // select an attribute.
 TEST_P(GLSLTest, SamplerInStructNoMemberIndexing)

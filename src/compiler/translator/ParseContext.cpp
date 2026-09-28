@@ -3589,7 +3589,7 @@ void TParseContext::functionCallFragDataCheck(const TFunction *fnCandidate,
         // Note: ESSL 100 does not allow arrays in ternary operator, so there is no need to check
         // for TIntermTernary here for a whole-array use of gl_FragData, only descending into
         // EOpComma nodes is sufficient.
-        if (RemoveCommaLeftHandSize(argument)->getQualifier() == EvqFragData)
+        if (RemoveCommaLeftHandSide(argument)->getQualifier() == EvqFragData)
         {
             // The whole array is passed to the function.  For validation purposes, assume all
             // indices are accessed in the function.
@@ -7499,7 +7499,7 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         return CreateZeroNode(TType(EbtFloat, EbpHigh, EvqConst));
     }
 
-    TIntermTyped *effectivelyIndexedExpression = RemoveCommaLeftHandSize(baseExpression);
+    TIntermTyped *effectivelyIndexedExpression = RemoveCommaLeftHandSide(baseExpression);
     switch (effectivelyIndexedExpression->getQualifier())
     {
         case EvqPerVertexIn:
