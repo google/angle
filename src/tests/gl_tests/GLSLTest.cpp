@@ -1555,6 +1555,38 @@ void main()
     }
 }
 
+// Test that defining structs with long names and a common prefix works.
+TEST_P(GLSLTest_ES3, LongStructNameCollision)
+{
+    for (uint32_t prefixLength : {64, 1011, 1012, 1013, 1023})
+    {
+        const std::string prefix(prefixLength, 'p');
+        const std::string struct1 = prefix + std::string(1024 - prefixLength, '1');
+        const std::string struct2 = prefix + std::string(1024 - prefixLength, '2');
+        const std::string fs = R"(#version 300 es
+precision highp float;
+struct )" + struct1 + R"( { vec4 s; };
+struct )" + struct2 + R"( { vec4 s; };
+uniform )" + struct1 + R"( u1;
+uniform )" + struct2 + R"( u2;
+out vec4 color;
+void main()
+{
+    color = u1.s + u2.s;
+})";
+
+        ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), fs.c_str());
+        glUseProgram(program);
+
+        glUniform4f(glGetUniformLocation(program, "u1.s"), 1, 0, 0, 0.6);
+        glUniform4f(glGetUniformLocation(program, "u2.s"), 0, 1, 0, 0.5);
+
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Test that inactive uniforms of struct type don't cause any errors.
 TEST_P(GLSLTest, InactiveStructUniform)
 {
