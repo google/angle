@@ -881,7 +881,7 @@ const TConstantUnion *TIntermAggregate::getConstantValue() const
         // http://crbug.com/498400132
         angle::base::CheckedNumeric<size_t> checkedArraySize = elementSize;
         checkedArraySize *= getOutermostArraySize();
-        constArray = new TConstantUnion[checkedArraySize.ValueOrDie()];
+        constArray = new TConstantUnion[static_cast<size_t>(checkedArraySize.ValueOrDie())];
 
         size_t elementOffset = 0u;
         for (TIntermNode *constructorArg : mArguments)
