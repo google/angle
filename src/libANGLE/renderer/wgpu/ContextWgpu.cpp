@@ -740,6 +740,7 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED:
                 // Enabled and func get combined into one state in WebGPU. Only sync it once.
                 iter.setLaterBit(gl::state::DIRTY_BIT_DEPTH_FUNC);
+                iter.setLaterBit(gl::state::DIRTY_BIT_DEPTH_MASK);
                 break;
             case gl::state::DIRTY_BIT_DEPTH_FUNC:
                 if (mRenderPipelineDesc.setDepthFunc(
@@ -750,6 +751,12 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
                 }
                 break;
             case gl::state::DIRTY_BIT_DEPTH_MASK:
+                if (mRenderPipelineDesc.setDepthWriteEnabled(
+                        glState.getDepthStencilState().depthTest &&
+                        glState.getDepthStencilState().depthMask))
+                {
+                    invalidateCurrentRenderPipeline();
+                }
                 break;
             case gl::state::DIRTY_BIT_STENCIL_TEST_ENABLED:
                 // Changing the state of stencil test affects both the front and back funcs, which
