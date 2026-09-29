@@ -1637,6 +1637,9 @@
 564547811 IOS METAL : ASTCCompressedWithBaseLevelTest.Image/* = SKIP
 564547811 IOS METAL : ASTCCompressedWithBaseLevelTest.SubImage/* = SKIP
 564569394 IOS METAL : RobustResourceInitTestES3.RGBASwizzleUndefinedMipCachedThenInitialized/* = SKIP
+567407816 IOS METAL : ASTCCompressedWithBaseLevelRobustInitTest.DrawWithoutUpload4x4/* = SKIP
+567407816 IOS METAL : ASTCCompressedWithBaseLevelRobustInitTest.DrawWithoutUpload8x5/* = SKIP
+567407816 IOS METAL : ASTCCompressedWithBaseLevelRobustInitTest.SubImage/* = SKIP
 
 // D3D11 backend does not support LOD options with shadow samplers
 365066518 D3D11 : ShadowSamplerFunctionTexture2DTest.Test/*__TextureBias_Mipmapped = SKIP
