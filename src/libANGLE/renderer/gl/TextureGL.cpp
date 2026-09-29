@@ -2705,6 +2705,12 @@ angle::Result TextureGL::useTempForNonZeroBaseLevelGenmipmap(const gl::Context *
     ANGLE_TRY(
         copyLevelsBetweenTextures(context, mTextureID, effectiveBaseLevel, tempTextureID, 0, 1));
 
+    if (features.flushBeforeGenerateMipmap.enabled)
+    {
+        // Force a flush before generating the mipmap, which avoids bad states in the IMG driver.
+        ANGLE_GL_TRY(context, stateManager->forcefullyFlush());
+    }
+
     ANGLE_GL_TRY_ALWAYS_CHECK(context, functions->generateMipmap(GL_TEXTURE_2D));
 
     ANGLE_TRY(copyLevelsBetweenTextures(context, tempTextureID, 1, mTextureID,
