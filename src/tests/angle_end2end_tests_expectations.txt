@@ -885,9 +885,6 @@
 
 346650202 PIXEL4ORXL : GeometryShaderTest.CreateAndAttachGeometryShaderOES/* = SKIP
 
-42266743 LINUX SWIFTSHADER : VulkanExternalImageTest.PreInitializedOnGLImportLinear*/* = SKIP
-42266743 LINUX INTEL VULKAN : VulkanExternalImageTest.PreInitializedOnGLImportLinear*/* = SKIP
-
 42264692 NEXUS5X GLES : DepthStencilTestES3.FramebufferClearThenStencilAttachedThenStencilTestState/* = SKIP
 42264692 NEXUS5X GLES : DepthStencilTestES3.FramebufferClearThenStencilTestStateThenStencilAttached/* = SKIP
 42264692 NEXUS5X GLES : DepthStencilTestES3.StencilTestStateThenFramebufferClearThenStencilAttached/* = SKIP
