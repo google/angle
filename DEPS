@@ -551,6 +551,7 @@ vars = {
   'checkout_angle_restricted_trace_world_war_doh': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_worms_zone_io': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_wuthering_waves': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_wwe_supercard': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_yalla_ludo': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zenonia_4': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zillow': 'checkout_extra_traces',
@@ -5308,6 +5309,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_wuthering_waves',
+  },
+  'src/tests/restricted_traces/wwe_supercard': {
+      'packages': [
+        {
+            'package': 'angle/traces/wwe_supercard',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_wwe_supercard',
   },
   'src/tests/restricted_traces/yalla_ludo': {
       'packages': [

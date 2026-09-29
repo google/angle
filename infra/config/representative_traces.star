@@ -86,4 +86,5 @@ REPRESENTATIVE_TRACES = [
     "umamusume_pretty_derby",
     "warcraft_rumble",
     "wuthering_waves",
+    "wwe_supercard",
 ]
