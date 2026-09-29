@@ -61,7 +61,7 @@ vars = {
   'dummy_checkout_chromium': False,
 
   # Current revision of VK-GL-CTS (a.k.a dEQP).
-  'vk_gl_cts_revision': '93bca01861b0e3ef3c387027a9791e6d065f900c',
+  'vk_gl_cts_revision': 'd6740da66ddcc7d7e0dd5f1bf8521b4c43dd3dd6',
 
   # Current revision of googletest.
   'googletest_revision': '4fe3307fb2d9f86d19777c7eb0e4809e9694dde7',
