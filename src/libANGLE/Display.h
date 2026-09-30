@@ -72,9 +72,6 @@ template <typename DisplayT>
 class ScopedDisplayRefT;
 using ScopedDisplayRef      = ScopedDisplayRefT<Display>;
 using ScopedConstDisplayRef = ScopedDisplayRefT<const Display>;
-// Only the non-const instantiation is needed: every holder of a ThreadSafeDisplay reference (the
-// generated EGL entry points and ScopedSyncRef) uses it to create, look up or destroy sync
-// objects, all of which mutate the display's SyncSet.
 using ScopedThreadSafeDisplayRef = ScopedDisplayRefT<ThreadSafeDisplay>;
 
 class ScopedDisplayMutexLock;
@@ -227,6 +224,9 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     ScopedSyncMap getSyncsForCapture() const { return mSyncSet.getSyncsForCapture(); }
     bool isValidSync(SyncID sync) const;
 
+    ScopedSurfaceRef getSurfaceRef(egl::SurfaceID surfaceID) const;
+    ScopedSurfaceLockAndRef getSurface(egl::SurfaceID surfaceID) const;
+
   protected:
     [[nodiscard]] bool addRefIfNotTerminating() const
     {
@@ -368,7 +368,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
 
     bool isValidConfig(const Config *config) const;
     bool isValidContext(gl::ContextID contextID) const;
-    bool isValidSurface(SurfaceID surfaceID) const;
     bool isValidImage(ImageID imageID) const;
     bool isValidStream(const Stream *stream) const;
     bool isValidNativeWindow(EGLNativeWindowType window) const;
@@ -491,8 +490,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     angle::ImageLoadContext getImageLoadContext() const;
 
     const gl::Context *getContext(gl::ContextID contextID) const;
-    ScopedSurfaceRef getSurfaceRef(egl::SurfaceID surfaceID) const;
-    ScopedSurfaceLockAndRef getSurface(egl::SurfaceID surfaceID) const;
     const egl::Image *getImage(egl::ImageID imageID) const;
     gl::Context *getContext(gl::ContextID contextID);
     egl::Image *getImage(egl::ImageID imageID);

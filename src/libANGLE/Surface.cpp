@@ -172,11 +172,11 @@ rx::FramebufferAttachmentObjectImpl *Surface::getAttachmentImpl() const
     return mImplementation;
 }
 
-Error Surface::destroyImpl(const Display *display)
+Error Surface::destroyImpl(const ThreadSafeDisplay *display)
 {
     if (mImplementation)
     {
-        mImplementation->destroy(display);
+        mImplementation->destroy(static_cast<const Display *>(display));
     }
 
     ASSERT(!mTexture);
@@ -206,7 +206,7 @@ void Surface::postSwap(const gl::Context *context, const rx::SurfaceSwapFeedback
     mIsDamageRegionSet = false;
 }
 
-Error Surface::initialize(const Display *display)
+Error Surface::initialize(const ThreadSafeDisplay *display)
 {
     GLenum overrideRenderTargetFormat = mState.config->renderTargetFormat;
 
@@ -230,7 +230,7 @@ Error Surface::initialize(const Display *display)
         mDSFormat    = gl::Format(mState.config->depthStencilFormat);
     }
 
-    ANGLE_TRY(mImplementation->initialize(display));
+    ANGLE_TRY(mImplementation->initialize(static_cast<const Display *>(display)));
 
     // Initialized here since impl is nullptr in the constructor.
     // Must happen after implementation initialize for Android.
@@ -299,7 +299,7 @@ Error Surface::unMakeCurrent(const gl::Context *context)
     return releaseRef(context->getDisplay());
 }
 
-Error Surface::releaseRef(const Display *display)
+Error Surface::releaseRef(const ThreadSafeDisplay *display)
 {
     ASSERT(mRefCount > 0);
     if (mRefCount.fetch_sub(1, std::memory_order_acq_rel) == 1)
@@ -312,7 +312,7 @@ Error Surface::releaseRef(const Display *display)
     return NoError();
 }
 
-Error Surface::onDestroy(const Display *display)
+Error Surface::onDestroy(const ThreadSafeDisplay *display)
 {
     ASSERT(mRefCount == 0);
     return destroyImpl(display);
@@ -410,10 +410,10 @@ void Surface::setRequestedSwapInterval(EGLint interval)
     mRequestedSwapInterval = interval;
 }
 
-void Surface::setSwapInterval(const Display *display, EGLint interval)
+void Surface::setSwapInterval(const ThreadSafeDisplay *display, EGLint interval)
 {
     mMutex.assertLocked();
-    mImplementation->setSwapInterval(display, interval);
+    mImplementation->setSwapInterval(static_cast<const Display *>(display), interval);
     mState.swapInterval = interval;
 }
 
@@ -572,7 +572,9 @@ gl::Extents Surface::getSize() const
                : mImplementation->getSize();
 }
 
-egl::Error Surface::getUserSize(const egl::Display *display, EGLint *width, EGLint *height) const
+egl::Error Surface::getUserSize(const egl::ThreadSafeDisplay *display,
+                                EGLint *width,
+                                EGLint *height) const
 {
     ASSERT(width != nullptr || height != nullptr);
     mMutex.assertLocked();
@@ -590,7 +592,7 @@ egl::Error Surface::getUserSize(const egl::Display *display, EGLint *width, EGLi
     }
     else
     {
-        return mImplementation->getUserSize(display, width, height);
+        return mImplementation->getUserSize(static_cast<const Display *>(display), width, height);
     }
 }
 
@@ -958,15 +960,17 @@ EGLAttribKHR Surface::getBitmapPointer() const
     return static_cast<EGLAttribKHR>((intptr_t)mLockBufferPtr);
 }
 
-egl::Error Surface::getCompressionRate(const egl::Display *display,
+egl::Error Surface::getCompressionRate(const egl::ThreadSafeDisplay *display,
                                        const gl::Context *context,
                                        EGLint *rate)
 {
     mMutex.assertLocked();
-    return mImplementation->getCompressionRate(display, context, rate);
+    return mImplementation->getCompressionRate(static_cast<const Display *>(display), context,
+                                               rate);
 }
 
-egl::Error Surface::lockSurfaceKHR(const egl::Display *display, const AttributeMap &attributes)
+egl::Error Surface::lockSurfaceKHR(const egl::ThreadSafeDisplay *display,
+                                   const AttributeMap &attributes)
 {
     mMutex.assertLocked();
     EGLint lockBufferUsageHint = attributes.getAsInt(
@@ -975,16 +979,16 @@ egl::Error Surface::lockSurfaceKHR(const egl::Display *display, const AttributeM
     bool preservePixels = ((attributes.getAsInt(EGL_MAP_PRESERVE_PIXELS_KHR, false) == EGL_TRUE) ||
                            (mState.swapBehavior == EGL_BUFFER_PRESERVED));
 
-    return mImplementation->lockSurface(display, lockBufferUsageHint, preservePixels,
-                                        &mLockBufferPtr, &mLockBufferPitch);
+    return mImplementation->lockSurface(static_cast<const Display *>(display), lockBufferUsageHint,
+                                        preservePixels, &mLockBufferPtr, &mLockBufferPitch);
 }
 
-egl::Error Surface::unlockSurfaceKHR(const egl::Display *display)
+egl::Error Surface::unlockSurfaceKHR(const egl::ThreadSafeDisplay *display)
 {
     mMutex.assertLocked();
     mLockBufferPtr   = nullptr;
     mLockBufferPitch = 0;
-    return mImplementation->unlockSurface(display, true);
+    return mImplementation->unlockSurface(static_cast<const Display *>(display), true);
 }
 
 WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,
@@ -1046,7 +1050,7 @@ PixmapSurface::~PixmapSurface() {}
 
 // SurfaceDeleter implementation.
 
-SurfaceDeleter::SurfaceDeleter(const Display *display) : mDisplay(display) {}
+SurfaceDeleter::SurfaceDeleter(const ThreadSafeDisplay *display) : mDisplay(display) {}
 
 SurfaceDeleter::~SurfaceDeleter() {}
 

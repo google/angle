@@ -1773,12 +1773,46 @@ def is_lockless_egl_entry_point(cmd_name):
     return False
 
 
-def is_egl_sync_entry_point(cmd_name):
+def is_egl_threadsafe_display_entry_point(cmd_name):
     if cmd_name in [
-            "eglClientWaitSync", "eglCreateSync", "eglDestroySync", "eglGetSyncAttrib",
-            "eglWaitSync", "eglCreateSyncKHR", "eglClientWaitSyncKHR",
-            "eglDupNativeFenceFDANDROID", "eglCopyMetalSharedEventANGLE", "eglDestroySyncKHR",
-            "eglGetSyncAttribKHR", "eglSignalSyncKHR", "eglWaitSyncKHR"
+            # EGLSync entry points
+            "eglClientWaitSync",
+            "eglCreateSync",
+            "eglDestroySync",
+            "eglGetSyncAttrib",
+            "eglWaitSync",
+            "eglCreateSyncKHR",
+            "eglClientWaitSyncKHR",
+            "eglDupNativeFenceFDANDROID",
+            "eglCopyMetalSharedEventANGLE",
+            "eglDestroySyncKHR",
+            "eglGetSyncAttribKHR",
+            "eglSignalSyncKHR",
+            "eglWaitSyncKHR",
+            # EGLSurface entry points
+            "eglBindTexImage",
+            "eglCopyBuffers",
+            "eglQuerySurface",
+            "eglReleaseTexImage",
+            "eglSurfaceAttrib",
+            "eglSwapBuffers",
+            "eglAcquireExternalContextANGLE",
+            "eglGetCompositorTimingANDROID",
+            "eglGetCompositorTimingSupportedANDROID",
+            "eglGetFrameTimestampsANDROID",
+            "eglGetFrameTimestampSupportedANDROID",
+            "eglGetMscRateANGLE",
+            "eglGetNextFrameIdANDROID",
+            "eglGetSyncValuesCHROMIUM",
+            "eglLockSurfaceKHR",
+            "eglPostSubBufferNV",
+            "eglPrepareSwapBuffersANGLE",
+            "eglPresentationTimeANDROID",
+            "eglQuerySurface64KHR",
+            "eglQuerySurfacePointerANGLE",
+            "eglSetDamageRegionKHR",
+            "eglSwapBuffersWithDamageKHR",
+            "eglUnlockSurfaceKHR",
     ]:
         return True
     return False
@@ -2338,7 +2372,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
 
     packed_display_conversions = ""
     if api == apis.EGL and dpy_param:
-        if is_egl_sync_entry_point(cmd_name):
+        if is_egl_threadsafe_display_entry_point(cmd_name):
             packed_display_conversions = (
                 f"egl::Display *{dpy_param} = PackParam<egl::Display *>({dpy_raw_param_name});\n"
                 f"    egl::ScopedThreadSafeDisplayRef {dpy_param}Ref = GetThreadSafeDisplayIfValid({dpy_param});\n"
@@ -2348,11 +2382,6 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
                 f"egl::Display *{dpy_param} = PackParam<egl::Display *>({dpy_raw_param_name});\n"
                 f"    egl::ScopedDisplayRef {dpy_param}Ref = GetDisplayIfValid({dpy_param});\n"
                 f"    const egl::Display *validDisplay = {dpy_param}Ref.get();\n\n    ")
-        elif surface_params and cmd_name not in ["eglMakeCurrent", "eglDestroySurface"]:
-            packed_display_conversions = (
-                f"egl::Display *{dpy_param} = PackParam<egl::Display *>({dpy_raw_param_name});\n"
-                f"        egl::ScopedDisplayRef {dpy_param}Ref = GetDisplayIfValid({dpy_param});\n"
-                f"        const egl::Display *validDisplay = {dpy_param}Ref.get();\n\n        ")
         else:
             packed_display_conversions = (
                 f"egl::Display *{dpy_param} = PackParam<egl::Display *>({dpy_raw_param_name});\n"
@@ -2400,7 +2429,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
 
     internal_stub_params = internal_params
     if api == apis.EGL:
-        if dpy_param and is_egl_sync_entry_point(cmd_name):
+        if dpy_param and is_egl_threadsafe_display_entry_point(cmd_name):
             internal_stub_params = [
                 "validDisplay" if p == dpy_param else p for p in internal_stub_params
             ]
@@ -2669,7 +2698,7 @@ def get_internal_params(api,
                         is_capture=False):
     packed_gl_enums = get_packed_enums(api, cmd_packed_gl_enums, cmd_name, packed_param_types,
                                        params)
-    use_threadsafe_display = api == apis.EGL and is_egl_sync_entry_point(
+    use_threadsafe_display = api == apis.EGL and is_egl_threadsafe_display_entry_point(
         cmd_name) and not is_capture
 
     def param_type(param):
@@ -2687,7 +2716,7 @@ def get_internal_params(api,
 def get_validation_params(api, cmd_name, params, cmd_packed_gl_enums, packed_param_types):
     packed_gl_enums = get_packed_enums(api, cmd_packed_gl_enums, cmd_name, packed_param_types,
                                        params)
-    use_threadsafe_display = api == apis.EGL and is_egl_sync_entry_point(cmd_name)
+    use_threadsafe_display = api == apis.EGL and is_egl_threadsafe_display_entry_point(cmd_name)
     last = -1 if params and just_the_name(params[-1]) == "errcode_ret" else None
     result = []
     for param in params[:last]:
@@ -3889,7 +3918,7 @@ def get_epilog(api, cmd_name):
 def get_stub_params(api, cmd_name, params, cmd_packed_egl_enums, packed_param_types):
     packed_enums = get_packed_enums(api, cmd_packed_egl_enums, cmd_name, packed_param_types,
                                     params)
-    use_threadsafe_display = api == apis.EGL and is_egl_sync_entry_point(cmd_name)
+    use_threadsafe_display = api == apis.EGL and is_egl_threadsafe_display_entry_point(cmd_name)
     stub_params = []
     for param in params:
         param_type = just_the_type_packed(param, packed_enums)

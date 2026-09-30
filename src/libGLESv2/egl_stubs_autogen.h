@@ -36,7 +36,7 @@ struct Config;
 
 EGLBoolean BindAPI(Thread *thread, EGLenum api);
 EGLBoolean BindTexImage(Thread *thread,
-                        egl::Display *dpyPacked,
+                        egl::ThreadSafeDisplay *dpyPacked,
                         egl::Surface *surfacePacked,
                         EGLint buffer);
 EGLBoolean ChooseConfig(Thread *thread,
@@ -51,7 +51,7 @@ EGLint ClientWaitSync(Thread *thread,
                       EGLint flags,
                       EGLTime timeout);
 EGLBoolean CopyBuffers(Thread *thread,
-                       egl::Display *dpyPacked,
+                       egl::ThreadSafeDisplay *dpyPacked,
                        egl::Surface *surfacePacked,
                        EGLNativePixmapType target);
 EGLContext CreateContext(Thread *thread,
@@ -142,21 +142,23 @@ EGLBoolean QueryContext(Thread *thread,
                         EGLint *value);
 const char *QueryString(Thread *thread, egl::Display *dpyPacked, EGLint name);
 EGLBoolean QuerySurface(Thread *thread,
-                        egl::Display *dpyPacked,
+                        egl::ThreadSafeDisplay *dpyPacked,
                         egl::Surface *surfacePacked,
                         EGLint attribute,
                         EGLint *value);
 EGLBoolean ReleaseTexImage(Thread *thread,
-                           egl::Display *dpyPacked,
+                           egl::ThreadSafeDisplay *dpyPacked,
                            egl::Surface *surfacePacked,
                            EGLint buffer);
 EGLBoolean ReleaseThread(Thread *thread);
 EGLBoolean SurfaceAttrib(Thread *thread,
-                         egl::Display *dpyPacked,
+                         egl::ThreadSafeDisplay *dpyPacked,
                          egl::Surface *surfacePacked,
                          EGLint attribute,
                          EGLint value);
-EGLBoolean SwapBuffers(Thread *thread, egl::Display *dpyPacked, egl::Surface *surfacePacked);
+EGLBoolean SwapBuffers(Thread *thread,
+                       egl::ThreadSafeDisplay *dpyPacked,
+                       egl::Surface *surfacePacked);
 EGLBoolean SwapInterval(Thread *thread,
                         egl::Display *dpyPacked,
                         egl::Surface *drawSurface,

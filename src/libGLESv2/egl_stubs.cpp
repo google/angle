@@ -50,7 +50,10 @@ EGLBoolean BindAPI(Thread *thread, EGLenum api)
     return EGL_TRUE;
 }
 
-EGLBoolean BindTexImage(Thread *thread, Display *display, Surface *eglSurface, EGLint buffer)
+EGLBoolean BindTexImage(Thread *thread,
+                        ThreadSafeDisplay *display,
+                        Surface *eglSurface,
+                        EGLint buffer)
 {
     gl::Context *context = thread->getContext();
     if (context && !context->isContextLost())
@@ -116,7 +119,7 @@ EGLint ClientWaitSync(Thread *thread,
 }
 
 EGLBoolean CopyBuffers(Thread *thread,
-                       Display *display,
+                       ThreadSafeDisplay *display,
                        Surface *eglSurface,
                        EGLNativePixmapType target)
 {
@@ -546,7 +549,7 @@ const char *QueryString(Thread *thread, Display *display, EGLint name)
 }
 
 EGLBoolean QuerySurface(Thread *thread,
-                        Display *display,
+                        ThreadSafeDisplay *display,
                         Surface *eglSurface,
                         EGLint attribute,
                         EGLint *value)
@@ -575,7 +578,10 @@ EGLBoolean QuerySurface(Thread *thread,
     return EGL_TRUE;
 }
 
-EGLBoolean ReleaseTexImage(Thread *thread, Display *display, Surface *eglSurface, EGLint buffer)
+EGLBoolean ReleaseTexImage(Thread *thread,
+                           ThreadSafeDisplay *display,
+                           Surface *eglSurface,
+                           EGLint buffer)
 {
     gl::Context *context = thread->getContext();
     if (context && !context->isContextLost())
@@ -626,7 +632,7 @@ EGLBoolean ReleaseThread(Thread *thread)
 }
 
 EGLBoolean SurfaceAttrib(Thread *thread,
-                         Display *display,
+                         ThreadSafeDisplay *display,
                          Surface *eglSurface,
                          EGLint attribute,
                          EGLint value)
@@ -638,7 +644,7 @@ EGLBoolean SurfaceAttrib(Thread *thread,
     return EGL_TRUE;
 }
 
-EGLBoolean SwapBuffers(Thread *thread, Display *display, Surface *eglSurface)
+EGLBoolean SwapBuffers(Thread *thread, ThreadSafeDisplay *display, Surface *eglSurface)
 {
     ANGLE_EGL_TRY_RETURN(thread, eglSurface->swap(thread->getContext()), "eglSwapBuffers",
                          eglSurface, EGL_FALSE);

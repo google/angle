@@ -1144,6 +1144,16 @@ bool ThreadSafeDisplay::isValidSync(SyncID syncID) const
     return getSync(syncID).get() != nullptr;
 }
 
+ScopedSurfaceRef ThreadSafeDisplay::getSurfaceRef(egl::SurfaceID surfaceID) const
+{
+    return mState.surfaceMap.getSurfaceRef(this, surfaceID);
+}
+
+ScopedSurfaceLockAndRef ThreadSafeDisplay::getSurface(egl::SurfaceID surfaceID) const
+{
+    return mState.surfaceMap.getSurface(this, surfaceID);
+}
+
 void ThreadSafeDisplay::releaseSync(Sync *sync)
 {
     mSyncSet.releaseSync(this, sync);
@@ -2430,11 +2440,6 @@ bool Display::isValidContext(const gl::ContextID contextID) const
     return getContext(contextID) != nullptr;
 }
 
-bool Display::isValidSurface(SurfaceID surfaceID) const
-{
-    return getSurfaceRef(surfaceID).get() != nullptr;
-}
-
 bool Display::isValidImage(ImageID imageID) const
 {
     return getImage(imageID) != nullptr;
@@ -3031,16 +3036,6 @@ angle::ImageLoadContext Display::getImageLoadContext() const
 const gl::Context *Display::getContext(gl::ContextID contextID) const
 {
     return mState.contextMap.find(contextID);
-}
-
-ScopedSurfaceRef Display::getSurfaceRef(egl::SurfaceID surfaceID) const
-{
-    return mState.surfaceMap.getSurfaceRef(this, surfaceID);
-}
-
-ScopedSurfaceLockAndRef Display::getSurface(egl::SurfaceID surfaceID) const
-{
-    return mState.surfaceMap.getSurface(this, surfaceID);
 }
 
 const egl::Image *Display::getImage(egl::ImageID imageID) const

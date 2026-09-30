@@ -256,7 +256,7 @@ EGLint LabelObjectKHR(Thread *thread,
 }
 
 EGLBoolean PostSubBufferNV(Thread *thread,
-                           Display *display,
+                           ThreadSafeDisplay *display,
                            Surface *eglSurface,
                            EGLint x,
                            EGLint y,
@@ -275,7 +275,7 @@ EGLBoolean PostSubBufferNV(Thread *thread,
 }
 
 EGLBoolean PresentationTimeANDROID(Thread *thread,
-                                   Display *display,
+                                   ThreadSafeDisplay *display,
                                    Surface *eglSurface,
                                    EGLnsecsANDROID time)
 {
@@ -286,7 +286,7 @@ EGLBoolean PresentationTimeANDROID(Thread *thread,
 }
 
 EGLBoolean GetCompositorTimingSupportedANDROID(Thread *thread,
-                                               Display *display,
+                                               ThreadSafeDisplay *display,
                                                Surface *eglSurface,
                                                CompositorTiming nameInternal)
 {
@@ -295,7 +295,7 @@ EGLBoolean GetCompositorTimingSupportedANDROID(Thread *thread,
 }
 
 EGLBoolean GetCompositorTimingANDROID(Thread *thread,
-                                      Display *display,
+                                      ThreadSafeDisplay *display,
                                       Surface *eglSurface,
                                       EGLint numTimestamps,
                                       const EGLint *names,
@@ -309,7 +309,7 @@ EGLBoolean GetCompositorTimingANDROID(Thread *thread,
 }
 
 EGLBoolean GetNextFrameIdANDROID(Thread *thread,
-                                 Display *display,
+                                 ThreadSafeDisplay *display,
                                  Surface *eglSurface,
                                  EGLuint64KHR *frameId)
 {
@@ -321,7 +321,7 @@ EGLBoolean GetNextFrameIdANDROID(Thread *thread,
 }
 
 EGLBoolean GetFrameTimestampSupportedANDROID(Thread *thread,
-                                             Display *display,
+                                             ThreadSafeDisplay *display,
                                              Surface *eglSurface,
                                              Timestamp timestampInternal)
 {
@@ -330,7 +330,7 @@ EGLBoolean GetFrameTimestampSupportedANDROID(Thread *thread,
 }
 
 EGLBoolean GetFrameTimestampsANDROID(Thread *thread,
-                                     Display *display,
+                                     ThreadSafeDisplay *display,
                                      Surface *eglSurface,
                                      EGLuint64KHR frameId,
                                      EGLint numTimestamps,
@@ -458,7 +458,7 @@ EGLBoolean QueryStreamu64KHR(Thread *thread,
 }
 
 EGLBoolean QuerySurfacePointerANGLE(Thread *thread,
-                                    Display *display,
+                                    ThreadSafeDisplay *display,
                                     Surface *eglSurface,
                                     EGLint attribute,
                                     void **value)
@@ -560,7 +560,7 @@ EGLBoolean StreamConsumerReleaseKHR(Thread *thread, Display *display, Stream *st
 }
 
 EGLBoolean SwapBuffersWithDamageKHR(Thread *thread,
-                                    Display *display,
+                                    ThreadSafeDisplay *display,
                                     Surface *eglSurface,
                                     const EGLint *rects,
                                     EGLint n_rects)
@@ -584,7 +584,7 @@ void UnlockVulkanQueueANGLE(Thread *thread, egl::Display *display)
     thread->setSuccess();
 }
 
-EGLBoolean PrepareSwapBuffersANGLE(Thread *thread, Display *display, Surface *eglSurface)
+EGLBoolean PrepareSwapBuffersANGLE(Thread *thread, ThreadSafeDisplay *display, Surface *eglSurface)
 {
     ANGLE_EGL_TRY_RETURN(thread, eglSurface->prepareSwap(thread->getContext()),
                          "eglPrepareSwapBuffersANGLE", eglSurface, EGL_FALSE);
@@ -650,7 +650,7 @@ EGLBoolean StreamPostD3DTextureANGLE(Thread *thread,
 }
 
 EGLBoolean GetMscRateANGLE(Thread *thread,
-                           Display *display,
+                           ThreadSafeDisplay *display,
                            Surface *eglSurface,
                            EGLint *numerator,
                            EGLint *denominator)
@@ -663,7 +663,7 @@ EGLBoolean GetMscRateANGLE(Thread *thread,
 }
 
 EGLBoolean GetSyncValuesCHROMIUM(Thread *thread,
-                                 Display *display,
+                                 ThreadSafeDisplay *display,
                                  Surface *eglSurface,
                                  EGLuint64KHR *ust,
                                  EGLuint64KHR *msc,
@@ -772,7 +772,7 @@ EGLBoolean QueryDisplayAttribANGLE(Thread *thread,
 }
 
 EGLBoolean LockSurfaceKHR(Thread *thread,
-                          egl::Display *display,
+                          egl::ThreadSafeDisplay *display,
                           Surface *surface,
                           const AttributeMap &attributes)
 {
@@ -782,7 +782,7 @@ EGLBoolean LockSurfaceKHR(Thread *thread,
     return EGL_TRUE;
 }
 
-EGLBoolean UnlockSurfaceKHR(Thread *thread, egl::Display *display, Surface *surface)
+EGLBoolean UnlockSurfaceKHR(Thread *thread, egl::ThreadSafeDisplay *display, Surface *surface)
 {
     ANGLE_EGL_TRY_RETURN(thread, surface->unlockSurfaceKHR(display), "eglQuerySurface64KHR",
                          surface, EGL_FALSE);
@@ -791,7 +791,7 @@ EGLBoolean UnlockSurfaceKHR(Thread *thread, egl::Display *display, Surface *surf
 }
 
 EGLBoolean QuerySurface64KHR(Thread *thread,
-                             egl::Display *display,
+                             egl::ThreadSafeDisplay *display,
                              Surface *surface,
                              EGLint attribute,
                              EGLAttribKHR *value)
@@ -819,7 +819,7 @@ EGLBoolean ExportVkImageANGLE(Thread *thread,
 }
 
 EGLBoolean SetDamageRegionKHR(Thread *thread,
-                              egl::Display *display,
+                              egl::ThreadSafeDisplay *display,
                               Surface *surface,
                               EGLint *rects,
                               EGLint n_rects)
@@ -868,7 +868,9 @@ void *CopyMetalSharedEventANGLE(Thread *thread, ThreadSafeDisplay *display, Sync
     return result;
 }
 
-void AcquireExternalContextANGLE(Thread *thread, egl::Display *display, Surface *eglSurface)
+void AcquireExternalContextANGLE(Thread *thread,
+                                 egl::ThreadSafeDisplay *display,
+                                 Surface *eglSurface)
 {
     ANGLE_EGL_TRY(thread, thread->getContext()->acquireExternalContext(eglSurface),
                   "eglAcquireExternalContextANGLE", display);
