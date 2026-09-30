@@ -32,6 +32,8 @@ namespace rx
 
 namespace
 {
+constexpr uint32_t kDisplayVkScratchBufferLifetime = 1000u;
+
 // Query surface format and colorspace support.
 void GetSupportedFormatColorspaces(VkPhysicalDevice physicalDevice,
                                    const angle::FeaturesVk &featuresVk,
@@ -152,7 +154,9 @@ void InstallDebugAnnotator(vk::Renderer *renderer)
 }  // namespace
 
 DisplayVk::DisplayVk(const egl::DisplayState &state)
-    : DisplayImpl(state), ThreadSafeDisplayVk(new vk::Renderer()), mScratchBuffer(1000u)
+    : DisplayImpl(state),
+      ThreadSafeDisplayVk(new vk::Renderer()),
+      mScratchBuffer(kDisplayVkScratchBufferLifetime)
 {}
 
 DisplayVk::~DisplayVk()
@@ -531,10 +535,10 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->glTexture2DImage      = true;
     outExtensions->glTextureCubemapImage = true;
     outExtensions->glTexture3DImage      = getFeatures().supportsSampler2dViewOf3d.enabled;
-    outExtensions->glRenderbufferImage = true;
+    outExtensions->glRenderbufferImage   = true;
     outExtensions->imageNativeBuffer     = getFeatures().supportsAndroidHardwareBuffer.enabled;
-    outExtensions->surfacelessContext = true;
-    outExtensions->glColorspace       = true;
+    outExtensions->surfacelessContext    = true;
+    outExtensions->glColorspace          = true;
     outExtensions->imageGlColorspace     = outExtensions->glColorspace;
 
 #if defined(ANGLE_PLATFORM_ANDROID)
@@ -668,7 +672,18 @@ void DisplayVk::putBlob(const angle::BlobCacheKey &key, const angle::MemoryBuffe
 
 bool DisplayVk::getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *valueOut)
 {
-    return getBlobCache()->get(nullptr, &mScratchBuffer, key, valueOut);
+    // Note: The value handed back is a view into the scratch buffer, not a copy.  This is why the
+    // scratch buffer is per thread.
+    angle::ScratchBuffer *scratchBuffer = nullptr;
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mBlobScratchBuffersMutex);
+        scratchBuffer =
+            &mBlobScratchBuffers
+                 .try_emplace(std::this_thread::get_id(), kDisplayVkScratchBufferLifetime)
+                 .first->second;
+    }
+
+    return getBlobCache()->get(nullptr, scratchBuffer, key, valueOut);
 }
 
 std::shared_ptr<angle::WaitableEvent> DisplayVk::postMultiThreadWorkerTask(
@@ -722,8 +737,8 @@ egl::Error DisplayVk::querySupportedCompressionRates(const egl::Config *configur
     imageFormatInfo.type   = VK_IMAGE_TYPE_2D;
     imageFormatInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
     imageFormatInfo.usage  = vk::kImageUsageTransferBits | VK_IMAGE_USAGE_SAMPLED_BIT |
-                            VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
-                            VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+                             VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
+                             VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
 
     VkImageCompressionPropertiesEXT compressionProperties = {};
     compressionProperties.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT;

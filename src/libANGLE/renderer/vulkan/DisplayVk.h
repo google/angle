@@ -10,6 +10,9 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_DISPLAYVK_H_
 #define LIBANGLE_RENDERER_VULKAN_DISPLAYVK_H_
 
+#include <thread>
+#include <unordered_map>
+
 #include "common/MemoryBuffer.h"
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
@@ -160,6 +163,12 @@ class DisplayVk : public DisplayImpl, public vk::GlobalOps, public ThreadSafeDis
     GlobalOps::Api getFrontendApi() const override { return GlobalOps::Api::Egl; }
 
     angle::ScratchBuffer mScratchBuffer;
+
+    // Scratch storage for getBlob(), one buffer per calling thread to support concurrent getBlob()
+    // calls.  std::unordered_map is used instead of angle::HashMap because references to map values
+    // should remain valid after modification.  The lock thus only protects the map itself.
+    angle::SimpleMutex mBlobScratchBuffersMutex;
+    std::unordered_map<std::thread::id, angle::ScratchBuffer> mBlobScratchBuffers;
 };
 
 }  // namespace rx
