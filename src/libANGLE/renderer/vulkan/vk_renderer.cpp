@@ -2905,7 +2905,9 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
     // The first allocated buffer block from an empty buffer pool has a smaller size in order to
     // reduce the memory footprint.
     mPreferredInitialBufferBlockSize = 1 * 1024 * 1024;
+    mPreferredInitialImageBlockSize  = 1 * 1024 * 1024;
     ASSERT(mPreferredInitialBufferBlockSize <= mPreferredLargeHeapBlockSize);
+    ASSERT(mPreferredInitialImageBlockSize <= mPreferredLargeHeapBlockSize);
 
     // Create VMA allocator
     ANGLE_VK_TRY(context,
@@ -8142,6 +8144,13 @@ VkDeviceSize Renderer::getPreferredInitialBufferBlockSize(uint32_t memoryTypeInd
     return std::min(heapSize / 64, mPreferredInitialBufferBlockSize);
 }
 
+VkDeviceSize Renderer::getPreferredInitialImageBlockSize(uint32_t memoryTypeIndex) const
+{
+    // Try not to exceed 1/64 of heap size to begin with.
+    const VkDeviceSize heapSize = getMemoryProperties().getHeapSizeForMemoryType(memoryTypeIndex);
+    return std::min(heapSize / 64, mPreferredInitialImageBlockSize);
+}
+
 VkDeviceSize Renderer::getPreferredLargeBufferBlockSize(uint32_t memoryTypeIndex) const
 {
     // Try not to exceed 1/64 of heap size to begin with.
@@ -8198,7 +8207,14 @@ ImageMemorySuballocator::~ImageMemorySuballocator() {}
 void ImageMemorySuballocator::destroy(Renderer *renderer)
 {
     const Allocator &allocator = renderer->getAllocator();
-    for (auto &pool : mMemoryPools)
+    for (auto &pool : mInitMemoryPools)
+    {
+        if (pool.valid())
+        {
+            pool.destroy(allocator);
+        }
+    }
+    for (auto &pool : mDefaultMemoryPools)
     {
         if (pool.valid())
         {
@@ -8270,12 +8286,31 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(
             allocator.getHandle(), imageCreateInfo, requiredFlags, preferredFlags, memoryTypeBits,
             allocateDedicatedMemory, &poolMemoryTypeIndex));
 
+        // Try allocating on the initial pools that would allocate a smaller block size (unless the
+        // allocation is too large for it). If the allocation was unsuccessful, retry on the default
+        // pools with the default block size.
         Pool *selectedPool;
-        VK_RESULT_TRY(getMemoryPool(renderer, poolMemoryTypeIndex, &selectedPool));
-        ASSERT(selectedPool != nullptr);
-        result = vma::AllocateAndBindMemoryForImageFromPool(
-            allocator.getHandle(), &image->mHandle, selectedPool->getHandle(),
-            &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
+        if (memoryRequirements->size <= getInitialPoolBlockSize(renderer, poolMemoryTypeIndex))
+        {
+            VK_RESULT_TRY(getInitMemoryPool(renderer, poolMemoryTypeIndex, &selectedPool));
+            ASSERT(selectedPool != nullptr);
+            result = vma::AllocateAndBindMemoryForImageFromPool(
+                allocator.getHandle(), &image->mHandle, selectedPool->getHandle(),
+                &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
+        }
+        else
+        {
+            result = VK_ERROR_OUT_OF_DEVICE_MEMORY;
+        }
+
+        if (result != VK_SUCCESS)
+        {
+            VK_RESULT_TRY(getDefaultMemoryPool(renderer, poolMemoryTypeIndex, &selectedPool));
+            ASSERT(selectedPool != nullptr);
+            result = vma::AllocateAndBindMemoryForImageFromPool(
+                allocator.getHandle(), &image->mHandle, selectedPool->getHandle(),
+                &allocationOut->mHandle, memoryTypeIndexOut, sizeOut);
+        }
 
         // In case allocation fails due to running out of device memory, but the device-local bit
         // is not required, try allocating the image memory on another pool based on the required
@@ -8285,7 +8320,7 @@ VkResult ImageMemorySuballocator::allocateAndBindMemory(
             VK_RESULT_TRY(vma::FindMemoryTypeIndexForImageInfo(
                 allocator.getHandle(), imageCreateInfo, requiredFlags, requiredFlags,
                 memoryTypeBits, allocateDedicatedMemory, &poolMemoryTypeIndex));
-            VK_RESULT_TRY(getMemoryPool(renderer, poolMemoryTypeIndex, &selectedPool));
+            VK_RESULT_TRY(getDefaultMemoryPool(renderer, poolMemoryTypeIndex, &selectedPool));
             ASSERT(selectedPool != nullptr);
             result = vma::AllocateAndBindMemoryForImageFromPool(
                 allocator.getHandle(), &image->mHandle, selectedPool->getHandle(),
@@ -8333,24 +8368,56 @@ VkResult ImageMemorySuballocator::mapMemoryAndInitWithNonZeroValue(Renderer *ren
     return VK_SUCCESS;
 }
 
-VkResult ImageMemorySuballocator::getMemoryPool(Renderer *renderer,
-                                                uint32_t poolMemoryTypeIndex,
-                                                Pool **poolOut)
+VkResult ImageMemorySuballocator::getMemoryPoolImpl(
+    Renderer *renderer,
+    std::array<Pool, VK_MAX_MEMORY_TYPES> &poolGroup,
+    size_t maxBlockCount,
+    VkDeviceSize blockSize,
+    uint32_t poolMemoryTypeIndex,
+    Pool **poolOut)
 {
-    Pool &pool = mMemoryPools[poolMemoryTypeIndex];
+    Pool &pool = poolGroup[poolMemoryTypeIndex];
     if (!pool.valid())
     {
-        VK_RESULT_TRY(pool.init(renderer->getAllocator(), poolMemoryTypeIndex,
-                                renderer->getPreferredLargeHeapBlockSize()));
+        VK_RESULT_TRY(
+            pool.init(renderer->getAllocator(), poolMemoryTypeIndex, maxBlockCount, blockSize));
     }
 
     *poolOut = &pool;
     return VK_SUCCESS;
 }
 
+VkResult ImageMemorySuballocator::getInitMemoryPool(Renderer *renderer,
+                                                    uint32_t poolMemoryTypeIndex,
+                                                    Pool **poolOut)
+{
+    return getMemoryPoolImpl(renderer, mInitMemoryPools, 1,
+                             getInitialPoolBlockSize(renderer, poolMemoryTypeIndex),
+                             poolMemoryTypeIndex, poolOut);
+}
+
+VkResult ImageMemorySuballocator::getDefaultMemoryPool(Renderer *renderer,
+                                                       uint32_t poolMemoryTypeIndex,
+                                                       Pool **poolOut)
+{
+    return getMemoryPoolImpl(renderer, mDefaultMemoryPools, SIZE_MAX,
+                             getDefaultPoolBlockSize(renderer), poolMemoryTypeIndex, poolOut);
+}
+
 bool ImageMemorySuballocator::needsDedicatedMemory(VkDeviceSize size) const
 {
     return size >= kImageSizeThresholdForDedicatedMemoryAllocation;
+}
+
+VkDeviceSize ImageMemorySuballocator::getInitialPoolBlockSize(Renderer *renderer,
+                                                              uint32_t poolMemoryTypeIndex)
+{
+    return renderer->getPreferredInitialImageBlockSize(poolMemoryTypeIndex);
+}
+
+VkDeviceSize ImageMemorySuballocator::getDefaultPoolBlockSize(Renderer *renderer)
+{
+    return renderer->getPreferredLargeHeapBlockSize();
 }
 
 }  // namespace vk
