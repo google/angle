@@ -968,6 +968,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceTileMemoryHeapPropertiesQCOM mTileMemoryHeapProperties;
     VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT mTextureCompressionASTC3DFeatures;
     VkPhysicalDeviceShaderCorePropertiesAMD mShaderCorePropertiesAMD;
+    VkPhysicalDevicePipelineBinaryFeaturesKHR mPipelineBinaryFeatures;
 
     uint32_t mLegacyDitheringVersion = 0;
 

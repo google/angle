@@ -3109,6 +3109,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                     tileMemoryHeapProperties (property)
 // - VK_EXT_texture_compression_astc_3d:               textureCompressionASTC_3D (feature)
 // - VK_AMD_shader_core_properties:                    (properties)
+// - VK_KHR_pipeline_binary:                           pipelineBinaries (feature)
 //
 void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     const vk::ExtensionNameList &deviceExtensionNames,
@@ -3291,6 +3292,11 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     if (ExtensionFound(VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceProperties, &mShaderCorePropertiesAMD);
+    }
+
+    if (ExtensionFound(VK_KHR_PIPELINE_BINARY_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mPipelineBinaryFeatures);
     }
 }
 
@@ -3875,6 +3881,9 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mShaderCorePropertiesAMD       = {};
     mShaderCorePropertiesAMD.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD;
 
+    mPipelineBinaryFeatures       = {};
+    mPipelineBinaryFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_BINARY_FEATURES_KHR;
+
     // Query features and properties.
     VkPhysicalDeviceFeatures2KHR deviceFeatures = {};
     deviceFeatures.sType                        = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
@@ -3977,6 +3986,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mTileMemoryHeapFeatures.pNext   = nullptr;
     mTileMemoryHeapProperties.pNext = nullptr;
     mShaderCorePropertiesAMD.pNext  = nullptr;
+    mPipelineBinaryFeatures.pNext   = nullptr;
 }
 
 // See comment above appendDeviceExtensionFeaturesNotPromoted.  Additional extensions are enabled
@@ -4308,6 +4318,12 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
     if (getFeatures().supportsAmdShaderCoreProperties.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME);
+    }
+
+    if (getFeatures().preferPipelineBinaries.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_KHR_PIPELINE_BINARY_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mPipelineBinaryFeatures);
     }
 }
 
@@ -4804,6 +4820,11 @@ void Renderer::initDeviceExtensionEntryPoints()
         {
             InitDynamicRenderingFunctions(mDevice);
         }
+    }
+
+    if (mFeatures.preferPipelineBinaries.enabled)
+    {
+        InitPipelineBinaryKHRFunctions(mDevice);
     }
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
 
@@ -6789,6 +6810,40 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, preferMonolithicPipelinesOverLibraries,
                             mFeatures.supportsGraphicsPipelineLibrary.enabled && false);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsDynamicRendering,
+                            mDynamicRenderingFeatures.dynamicRendering == VK_TRUE);
+
+    // Don't enable VK_KHR_maintenance5 without VK_KHR_dynamic_rendering
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsMaintenance5,
+                            mFeatures.supportsDynamicRendering.enabled &&
+                                mMaintenance5Features.maintenance5 == VK_TRUE);
+
+    // VK_KHR_pipeline_binary requires the pipelineBinaries feature to be enabled at device
+    // creation; simply enabling the extension is not sufficient.
+    //
+    // The extension also depends on any of Vulkan 1.4, VK_KHR_extended_flags or
+    // VK_KHR_maintenance5, each of which provides VkPipelineCreateFlags2CreateInfo.  That is the
+    // only way to pass VK_PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR, which a pipeline needs before
+    // its binaries can be captured.  ANGLE requires maintenance5, which it already enables and
+    // which every Vulkan 1.4 device supports; VK_KHR_extended_flags is not plumbed.
+    //
+    // Note that supportsMaintenance5 above is gated on supportsDynamicRendering, which is a pure
+    // device capability (dynamicRendering == VK_TRUE).  It is deliberately *not* gated on
+    // preferDynamicRendering, which is the separate policy decision about whether ANGLE actually
+    // renders with dynamic rendering and which is disabled on several vendors for performance or
+    // driver-bug reasons.  Pipeline binaries have no interaction with render pass handling, so
+    // they remain available on devices where ANGLE chooses to keep using render pass objects.
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsPipelineBinary,
+                            mPipelineBinaryFeatures.pipelineBinaries == VK_TRUE &&
+                                mFeatures.supportsMaintenance5.enabled);
+
+    // Off by default while pipeline binaries are tested.  Tests turn them on with
+    // allowPipelineBinariesForTesting, which only takes effect where the extension is supported.
+    ANGLE_FEATURE_CONDITION(&mFeatures, allowPipelineBinariesForTesting, false);
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferPipelineBinaries,
+                            mFeatures.supportsPipelineBinary.enabled &&
+                                mFeatures.allowPipelineBinariesForTesting.enabled);
+
     // To avoid memory bloating due to using pipeline caches per program, the pipeline cache in the
     // renderer can be used.
     ANGLE_FEATURE_CONDITION(&mFeatures, preferGlobalPipelineCache,
@@ -7001,14 +7056,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // vkCmdResetEvent adds extra GPU overhead and ARM prefers CPU overhead of creating/destroying
     // VkEvent instead of GPU overhead associated with vkCmdResetEvent.
     ANGLE_FEATURE_CONDITION(&mFeatures, recycleVkEvent, isSwiftShader);
-
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsDynamicRendering,
-                            mDynamicRenderingFeatures.dynamicRendering == VK_TRUE);
-
-    // Don't enable VK_KHR_maintenance5 without VK_KHR_dynamic_rendering
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsMaintenance5,
-                            mFeatures.supportsDynamicRendering.enabled &&
-                                mMaintenance5Features.maintenance5 == VK_TRUE);
 
     // Disabled on older Nvidia drivers due to a bug with attachment location mapping, resulting in
     // incorrect rendering in the presence of gaps in locations.  http://anglebug.com/372883691.

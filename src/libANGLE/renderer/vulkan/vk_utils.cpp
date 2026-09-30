@@ -1194,6 +1194,13 @@ PFN_vkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferProper
 PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROID = nullptr;
 #    endif
 
+// VK_KHR_pipeline_binary
+PFN_vkGetPipelineKeyKHR vkGetPipelineKeyKHR                           = nullptr;
+PFN_vkCreatePipelineBinariesKHR vkCreatePipelineBinariesKHR           = nullptr;
+PFN_vkDestroyPipelineBinaryKHR vkDestroyPipelineBinaryKHR             = nullptr;
+PFN_vkGetPipelineBinaryDataKHR vkGetPipelineBinaryDataKHR             = nullptr;
+PFN_vkReleaseCapturedPipelineDataKHR vkReleaseCapturedPipelineDataKHR = nullptr;
+
 #    define GET_INSTANCE_FUNC(vkName)                                                              \
         do                                                                                         \
         {                                                                                          \
@@ -1496,6 +1503,15 @@ void InitExternalMemoryHostFunctions(VkDevice device)
 void InitBufferDeviceAddressFunctions(VkDevice device)
 {
     GET_DEVICE_FUNC(vkGetBufferDeviceAddressKHR);
+}
+
+void InitPipelineBinaryKHRFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkGetPipelineKeyKHR);
+    GET_DEVICE_FUNC(vkCreatePipelineBinariesKHR);
+    GET_DEVICE_FUNC(vkDestroyPipelineBinaryKHR);
+    GET_DEVICE_FUNC(vkGetPipelineBinaryDataKHR);
+    GET_DEVICE_FUNC(vkReleaseCapturedPipelineDataKHR);
 }
 
 #    undef GET_INSTANCE_FUNC

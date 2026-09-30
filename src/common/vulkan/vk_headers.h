@@ -190,6 +190,13 @@ extern PFN_vkGetBufferDeviceAddressKHR vkGetBufferDeviceAddressKHR;
 // VK_QCOM_tile_memory_heap
 extern PFN_vkCmdBindTileMemoryQCOM vkCmdBindTileMemoryQCOM;
 
+// VK_KHR_pipeline_binary
+extern PFN_vkGetPipelineKeyKHR vkGetPipelineKeyKHR;
+extern PFN_vkCreatePipelineBinariesKHR vkCreatePipelineBinariesKHR;
+extern PFN_vkDestroyPipelineBinaryKHR vkDestroyPipelineBinaryKHR;
+extern PFN_vkGetPipelineBinaryDataKHR vkGetPipelineBinaryDataKHR;
+extern PFN_vkReleaseCapturedPipelineDataKHR vkReleaseCapturedPipelineDataKHR;
+
 }  // namespace rx
 
 #endif  // ANGLE_SHARED_LIBVULKAN

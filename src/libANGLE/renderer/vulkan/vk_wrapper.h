@@ -155,10 +155,10 @@ class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
 
     VkResult initGraphics(VkDevice device,
                           const VkGraphicsPipelineCreateInfo &createInfo,
-                          const PipelineCache &pipelineCacheVk);
+                          const PipelineCache *pipelineCacheVk);
     VkResult initCompute(VkDevice device,
                          const VkComputePipelineCreateInfo &createInfo,
-                         const PipelineCache &pipelineCacheVk);
+                         const PipelineCache *pipelineCacheVk);
 };
 
 namespace priv
@@ -2171,20 +2171,24 @@ ANGLE_INLINE void Pipeline::destroy(VkDevice device)
 
 ANGLE_INLINE VkResult Pipeline::initGraphics(VkDevice device,
                                              const VkGraphicsPipelineCreateInfo &createInfo,
-                                             const PipelineCache &pipelineCacheVk)
+                                             const PipelineCache *pipelineCacheVk)
 {
     ASSERT(!valid());
-    return VK_CALL(vkCreateGraphicsPipelines, device, pipelineCacheVk.getHandle(), 1, &createInfo,
-                   nullptr, &mHandle);
+    VkPipelineCache cacheHandle =
+        pipelineCacheVk != nullptr ? pipelineCacheVk->getHandle() : VK_NULL_HANDLE;
+    return VK_CALL(vkCreateGraphicsPipelines, device, cacheHandle, 1, &createInfo, nullptr,
+                   &mHandle);
 }
 
 ANGLE_INLINE VkResult Pipeline::initCompute(VkDevice device,
                                             const VkComputePipelineCreateInfo &createInfo,
-                                            const PipelineCache &pipelineCacheVk)
+                                            const PipelineCache *pipelineCacheVk)
 {
     ASSERT(!valid());
-    return VK_CALL(vkCreateComputePipelines, device, pipelineCacheVk.getHandle(), 1, &createInfo,
-                   nullptr, &mHandle);
+    VkPipelineCache cacheHandle =
+        pipelineCacheVk != nullptr ? pipelineCacheVk->getHandle() : VK_NULL_HANDLE;
+    return VK_CALL(vkCreateComputePipelines, device, cacheHandle, 1, &createInfo, nullptr,
+                   &mHandle);
 }
 
 // DescriptorSetLayout implementation.

@@ -1766,6 +1766,24 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsPipelineBinary = {
+        "supportsPipelineBinary",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
+    FeatureInfo preferPipelineBinaries = {
+        "preferPipelineBinaries",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
+    FeatureInfo allowPipelineBinariesForTesting = {
+        "allowPipelineBinariesForTesting",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

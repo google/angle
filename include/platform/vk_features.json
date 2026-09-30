@@ -2322,6 +2322,30 @@
             "description": [
                 "FP64 support for OpenCL."
             ]
+        },
+        {
+            "name": "supports_pipeline_binary",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_KHR_pipeline_binary extension."
+            ],
+            "issue": "http://anglebug.com/481364092"
+        },
+        {
+            "name": "prefer_pipeline_binaries",
+            "category": "Features",
+            "description": [
+                "Prefer using VK_KHR_pipeline_binary over monolithic VkPipelineCache when supported."
+            ],
+            "issue": "http://anglebug.com/481364092"
+        },
+        {
+            "name": "allow_pipeline_binaries_for_testing",
+            "category": "Features",
+            "description": [
+                "Allow preferPipelineBinaries where VK_KHR_pipeline_binary is supported, for testing."
+            ],
+            "issue": "http://anglebug.com/481364092"
         }
     ]
 }

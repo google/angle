@@ -7223,7 +7223,7 @@ VkResult PipelineCacheAccess::createGraphicsPipeline(vk::ErrorContext *context,
 {
     std::unique_lock<angle::SimpleMutex> lock = getLock();
 
-    return pipelineOut->initGraphics(context->getDevice(), createInfo, *mPipelineCache);
+    return pipelineOut->initGraphics(context->getDevice(), createInfo, mPipelineCache);
 }
 
 VkResult PipelineCacheAccess::createComputePipeline(vk::ErrorContext *context,
@@ -7232,7 +7232,7 @@ VkResult PipelineCacheAccess::createComputePipeline(vk::ErrorContext *context,
 {
     std::unique_lock<angle::SimpleMutex> lock = getLock();
 
-    return pipelineOut->initCompute(context->getDevice(), createInfo, *mPipelineCache);
+    return pipelineOut->initCompute(context->getDevice(), createInfo, mPipelineCache);
 }
 
 VkResult PipelineCacheAccess::getCacheData(vk::ErrorContext *context,
