@@ -2230,6 +2230,9 @@ impl Type {
     pub fn is_pixel_local_storage_plane(&self) -> bool {
         matches!(self, Type::Image(_, ImageType { dimension: ImageDimension::PixelLocal, .. }))
     }
+    pub fn is_opaque(&self) -> bool {
+        matches!(self, Type::Image(..) | Type::Scalar(BasicType::AtomicCounter))
+    }
 
     pub fn is_array(&self) -> bool {
         matches!(self, Type::Array(..))
@@ -3586,14 +3589,10 @@ impl IR {
         IR { meta: IRMeta::new(shader_type), function_entries: Vec::with_capacity(20) }
     }
 
-    pub fn add_function(&mut self, function: Function) -> FunctionId {
-        let new_id = self.meta.add_function(function);
-        debug_assert!(new_id.id as usize == self.function_entries.len());
-        self.function_entries.push(None);
-        new_id
-    }
-
     pub fn set_function_entry(&mut self, id: FunctionId, entry: Block) {
+        if id.id as usize >= self.function_entries.len() {
+            self.function_entries.resize_with(id.id as usize + 1, || None);
+        }
         debug_assert!(self.function_entries[id.id as usize].is_none());
         self.function_entries[id.id as usize] = Some(entry);
     }

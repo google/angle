@@ -2253,6 +2253,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     bool hasAMD          = systemInfo.hasAMDGPU();
     bool isMali          = IsARM(vendor);
     bool isHuaweiMaleoon = IsHuaweiMaleoon(functions);
+    bool isPowerVR       = IsPowerVR(vendor);
 
     std::array<int, 3> mesaVersion = {0, 0, 0};
     bool isMesa                    = IsMesa(functions, &mesaVersion);
@@ -2320,8 +2321,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // PBO's cmem mapping. Route through readPixelsRowByRow so Mali only ever
     // sees PACK_ROW_LENGTH=0. Also apply to Imagination GPUs which crash on
     // the new test. crbug.com/529867799
-    ANGLE_FEATURE_CONDITION(features, packLargeRowLengthSeparatelyPackBuffer,
-                            isMali || IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, packLargeRowLengthSeparatelyPackBuffer, isMali || isPowerVR);
 
     std::array<int, 2> powerVRVersion = {0, 0};
     bool isPowerVRDriver =
@@ -2409,15 +2409,14 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, resetTexImage2DBaseLevel,
                             IsApple() && isIntel && GetMacOSVersion() >= OSVersion(10, 12, 4));
 
-    ANGLE_FEATURE_CONDITION(features, resetBaseLevelForASTCImage, IsPowerVR(vendor));
-    ANGLE_FEATURE_CONDITION(features, recreateImmutableTextureOnBaseLevelIncrease,
-                            IsPowerVR(vendor));
-    ANGLE_FEATURE_CONDITION(features, resetTexStorage2DBaseLevel, IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, resetBaseLevelForASTCImage, isPowerVR);
+    ANGLE_FEATURE_CONDITION(features, recreateImmutableTextureOnBaseLevelIncrease, isPowerVR);
+    ANGLE_FEATURE_CONDITION(features, resetTexStorage2DBaseLevel, isPowerVR);
     ANGLE_FEATURE_CONDITION(features, recreateTextureOnTexImage3dDepthIncrease,
                             isQualcomm && IsAndroid());
 
     ANGLE_FEATURE_CONDITION(features, useTempForNonZeroBaseLevelGenMipmapUsingCopyImageSubData,
-                            IsPowerVR(vendor));
+                            isPowerVR);
 
     ANGLE_FEATURE_CONDITION(features, adjustSrcDstRegionForBlitFramebuffer,
                             IsLinux() || (IsAndroid() && (isNvidia || isMali)) ||
@@ -2570,7 +2569,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // Several drivers are buggy with context switching. It needs to unbind fbo before context
     // switching to workadround the driver issues.
     ANGLE_FEATURE_CONDITION(features, unbindFBOBeforeSwitchingContext,
-                            IsPowerVR(vendor) || (IsWindows() && isNvidia));
+                            isPowerVR || (IsWindows() && isNvidia));
 
     // http://crbug.com/1181068 and http://crbug.com/783979
     ANGLE_FEATURE_CONDITION(features, flushOnFramebufferChange,
@@ -2756,36 +2755,34 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     // IMG GL drivers crash in glClearTexImage on various format/type combinations such as packed
     // types, LUMA and depth stencil.
-    ANGLE_FEATURE_CONDITION(features, disableClearTexImageForRobustInit, IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, disableClearTexImageForRobustInit, isPowerVR);
 
     // Disable EXT_clear_texture entirely on IMG as a speculative fix for driver crashes.
-    ANGLE_FEATURE_CONDITION(features, disableClearTexture, IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, disableClearTexture, isPowerVR);
 
     // Forces a flush before generating a mipmap, which avoids bad states in the IMG driver.
-    ANGLE_FEATURE_CONDITION(features, flushBeforeGenerateMipmap, IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, flushBeforeGenerateMipmap, isPowerVR);
 
     // IMG GL drivers crash while compiling shaders with more than the limit of uniform blocks.
-    ANGLE_FEATURE_CONDITION(features, validateMaxPerStageUniformBlocksAtCompileTime,
-                            IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, validateMaxPerStageUniformBlocksAtCompileTime, isPowerVR);
 
     // Some drivers have compilation issues when shaders declare too many output varyings.
     // crbug.com/529991907
-    ANGLE_FEATURE_CONDITION(features, limitOutputVaryingsTo256AtCompileTime, IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, limitOutputVaryingsTo256AtCompileTime, isPowerVR);
 
     // crbug.com/529509587 -- IMG GLSL frontend OOB-writes during semantic analysis of a struct
     // constructor whose array-typed member receives a constant array-constructor argument with a
     // precision mismatch.  The workaround avoids all complex expressions, not just constant arrays
     // just in case.
-    ANGLE_FEATURE_CONDITION(features, avoidComplexExpressionsInStructConstructor,
-                            IsPowerVR(vendor));
+    ANGLE_FEATURE_CONDITION(features, avoidComplexExpressionsInStructConstructor, isPowerVR);
 
     // http://crbug.com/499602793
     ANGLE_FEATURE_CONDITION(features, reattachTextureToFboAfterLayerIncrease,
-                            IsPowerVR(vendor) && IsAndroid());
+                            isPowerVR && IsAndroid());
 
     // crbug.com/553172761
     ANGLE_FEATURE_CONDITION(features, useTexSubImageForClientDataNpotUploads,
-                            false /* IsPowerVR(vendor) */);
+                            false /* isPowerVR */);
 
     // Mac Intel drivers are unable to allocate buffers larger than ~1gb
     ANGLE_FEATURE_CONDITION(features, limitMaxBufferSizeTo1gb, isApple && isIntel);
@@ -2800,6 +2797,7 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     VendorID vendor = GetVendorID(functions);
     bool isQualcomm = IsQualcomm(vendor);
     bool isMali     = IsARM(vendor);
+    bool isPowerVR  = IsPowerVR(vendor);
 
     std::array<int, 3> mesaVersion = {0, 0, 0};
     bool isMesa                    = IsMesa(functions, &mesaVersion);
@@ -2807,7 +2805,7 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     // Program binaries don't contain transform feedback varyings on multiple vendors' GPUs.
     // https://crbug.com/442879525 for the latest example on Imagination / PowerVR.
     ANGLE_FEATURE_CONDITION(features, disableProgramCachingForTransformFeedback,
-                            (!isMesa && isQualcomm) || IsPowerVR(vendor) || isMali);
+                            (!isMesa && isQualcomm) || isPowerVR || isMali);
     // https://crbug.com/480992
     // Disable shader program cache to workaround PowerVR Rogue issues.
     ANGLE_FEATURE_CONDITION(features, disableProgramBinary, IsPowerVrRogue(functions));
