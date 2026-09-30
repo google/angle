@@ -4488,7 +4488,7 @@ impl BuilderWrapper {
             .map(|field| {
                 Field::new(
                     if is_internal {
-                        Name::new_exact(field.name)
+                        Name::new_exact_struct_field(field.name)
                     } else if is_part_of_interface {
                         Name::new_interface(field.name)
                     } else {

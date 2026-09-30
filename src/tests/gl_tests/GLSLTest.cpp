@@ -1289,7 +1289,10 @@ TEST_P(GLSLTest, ScopedStructsOrderBug3)
     // Try IDs between 25 to 35 for IR ids, and 3000 to 3020 for AST ids.
     // For IR, the first 27 or so type ids are reserved, so user ids start at that value.
     // For AST, user ids start at 3000.
-    for (uint32_t id = 25; id <= 3020; ++id)
+    const bool useIr       = getEGLWindow()->isFeatureEnabled(Feature::UseIr);
+    const uint32_t idStart = useIr ? 25 : 3000;
+    const uint32_t idEnd   = useIr ? 35 : 3020;
+    for (uint32_t id = idStart; id <= idEnd; ++id)
     {
         std::ostringstream fs;
         fs << R"(precision mediump float;
@@ -1318,11 +1321,6 @@ void main()
 })";
 
         ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), fs.str().c_str());
-
-        if (id == 35)
-        {
-            id = 2999;
-        }
     }
 }
 
@@ -1392,7 +1390,10 @@ TEST_P(GLSLTest_ES3, UBOVsStructsNameCollision)
     // by both to suffix global struct names.
     // For IR, the first 27 or so type ids are reserved, so user ids start at that value.
     // For AST, user ids start at 3000.
-    for (uint32_t id = 0; id <= 3020; ++id)
+    const bool useIr       = getEGLWindow()->isFeatureEnabled(Feature::UseIr);
+    const uint32_t idStart = useIr ? 0 : 3000;
+    const uint32_t idEnd   = useIr ? 35 : 3020;
+    for (uint32_t id = idStart; id <= idEnd; ++id)
     {
         std::ostringstream fs;
         fs << R"(#version 300 es
@@ -1433,10 +1434,6 @@ void main()
         {
             id = 24;
         }
-        else if (id == 35)
-        {
-            id = 2999;
-        }
     }
 }
 
@@ -1448,7 +1445,10 @@ TEST_P(GLSLTest_ES31, SSBOVsStructsNameCollision)
     // by both to suffix global struct names.
     // For IR, the first 27 or so type ids are reserved, so user ids start at that value.
     // For AST, user ids start at 3000.
-    for (uint32_t id = 0; id <= 3020; ++id)
+    const bool useIr       = getEGLWindow()->isFeatureEnabled(Feature::UseIr);
+    const uint32_t idStart = useIr ? 0 : 3000;
+    const uint32_t idEnd   = useIr ? 35 : 3020;
+    for (uint32_t id = idStart; id <= idEnd; ++id)
     {
         std::ostringstream fs;
         fs << R"(#version 310 es
@@ -1489,10 +1489,6 @@ void main()
         {
             id = 24;
         }
-        else if (id == 35)
-        {
-            id = 2999;
-        }
     }
 }
 
@@ -1506,7 +1502,10 @@ TEST_P(GLSLTest_ES31, IOBlockVsStructsNameCollision)
     // by both to suffix global struct names.
     // For IR, the first 27 or so type ids are reserved, so user ids start at that value.
     // For AST, user ids start at 3000.
-    for (uint32_t id = 0; id <= 3020; ++id)
+    const bool useIr       = getEGLWindow()->isFeatureEnabled(Feature::UseIr);
+    const uint32_t idStart = useIr ? 0 : 3000;
+    const uint32_t idEnd   = useIr ? 35 : 3020;
+    for (uint32_t id = idStart; id <= idEnd; ++id)
     {
         std::ostringstream fs;
         fs << R"(#version 310 es
@@ -1548,10 +1547,74 @@ void main()
         {
             id = 24;
         }
-        else if (id == 35)
-        {
-            id = 2999;
-        }
+    }
+}
+
+// Test that defining an interface variable with an "id" suffix does not collide with a local
+// variable definition without such a suffix.
+TEST_P(GLSLTest_ES3, InterfaceVsPrivateVariableNameCollision)
+{
+    // With the IR, the test fails while code generation is done in AST.  Once code generation is
+    // done from IR directly, different variable types get a different prefix and so there won't be
+    // a collision.  Not an issue with SPIR-V, where the names don't matter in the output, and HLSL
+    // which already assigns different prefixes to variables.
+    ANGLE_SKIP_TEST_IF(getEGLWindow()->isFeatureEnabled(Feature::UseIr) &&
+                       !(IsVulkan() || IsD3D11()));
+
+    // Try IDs between 0 to 10 for IR ids, and 3000 to 3015 for AST ids.
+    // For IR, variable ids start at 0.
+    // For AST, user ids start at 3000.
+    const bool useIr       = getEGLWindow()->isFeatureEnabled(Feature::UseIr);
+    const uint32_t idStart = useIr ? 0 : 3000;
+    const uint32_t idEnd   = useIr ? 10 : 3020;
+    for (uint32_t id = idStart; id <= idEnd; ++id)
+    {
+        const std::string name = "q_" + ToString(id);
+        std::ostringstream vs;
+        vs << R"(#version 300 es
+in vec2 position;
+out highp float )"
+           << name << R"([4];
+out highp float verify[2];
+void main() {
+for (int i = 0; i < 4; ++i)
+{
+    // Should be overwritten below:
+    )" << name
+           << R"([i] = 0.123;
+    float q[2];
+    q[0] = 0.6;
+    q[1] = 0.8;
+    // Name should not alias the local variable
+    )" << name
+           << R"([i] = float(i) / 4.0 + 0.25;
+    verify[0] = q[0];
+    verify[1] = q[1];
+    gl_Position = vec4(position, 0, 1.0);
+}
+})";
+        std::ostringstream fs;
+        fs << R"(#version 300 es
+precision highp float;
+in float )" << name
+           << R"([4];
+in float verify[2];
+out vec4 color;
+void main() {
+if (abs(verify[0] - 0.6) > 1e-3 || abs(verify[1] - 0.8) > 1e-3)
+{
+    color = vec4(1, 0, 0, 1);
+}
+else
+{
+    color = vec4()"
+           << name << R"([0], )" << name << R"([1], )" << name << R"([2], )" << name << R"([3]);
+}
+})";
+
+        ANGLE_GL_PROGRAM(program, vs.str().c_str(), fs.str().c_str());
+        drawQuad(program, "position", 0.5f);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(63, 127, 191, 255), 1);
     }
 }
 

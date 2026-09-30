@@ -1536,11 +1536,26 @@ impl Name {
         Name { name, suffix: None, source: NameSource::ShaderInterface }
     }
     // A name that must be preserved exactly in the output, for example `main`, or ANGLE internal
-    // interface variables.
+    // interface variables.  Avoid prefixes that can be added to user symbols, so that there cannot
+    // be collisions between them.
+    fn verify_no_user_prefix(name: &'static str) {
+        debug_assert!(!name.starts_with(USER_VARIABLE_PREFIX));
+        debug_assert!(!name.starts_with(USER_BLOCK_PREFIX));
+        debug_assert!(!name.starts_with(TEMP_VARIABLE_PREFIX));
+        debug_assert!(!name.starts_with(TEMP_FUNCTION_PREFIX));
+        debug_assert!(!name.starts_with(TEMP_STRUCT_PREFIX));
+    }
     pub fn new_exact(name: &'static str) -> Name {
+        Self::verify_no_user_prefix(name);
+        Name { name, suffix: None, source: NameSource::Internal }
+    }
+    pub fn new_exact_struct_field(name: &'static str) -> Name {
+        // Same as new_exact(), but without a prefix check.  A struct field can have any name (for
+        // example the `far` field of `gl_DepthRangeParameters`)
         Name { name, suffix: None, source: NameSource::Internal }
     }
     pub fn new_exact_with_suffix(name: &'static str, suffix: u32) -> Name {
+        Self::verify_no_user_prefix(name);
         Name { name, suffix: Some(suffix), source: NameSource::Internal }
     }
 }
