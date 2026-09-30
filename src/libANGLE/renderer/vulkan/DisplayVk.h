@@ -20,7 +20,9 @@ namespace rx
 class ThreadSafeDisplayVk : public ThreadSafeDisplayImpl, public vk::ErrorContext
 {
   public:
-    ThreadSafeDisplayVk(vk::Renderer *renderer) : vk::ErrorContext(renderer) {}
+    ThreadSafeDisplayVk(vk::Renderer *renderer)
+        : vk::ErrorContext(renderer), mSupportedColorspaceFormatsMap{}
+    {}
     ~ThreadSafeDisplayVk() override = default;
 
     bool testDeviceLost() override;
@@ -32,6 +34,21 @@ class ThreadSafeDisplayVk : public ThreadSafeDisplayImpl, public vk::ErrorContex
                      const char *file,
                      const char *function,
                      unsigned int line) override;
+
+    bool isConfigFormatSupported(VkFormat format) const;
+    bool isSurfaceFormatColorspacePairSupported(VkSurfaceKHR surface,
+                                                VkFormat format,
+                                                VkColorSpaceKHR colorspace) const;
+
+  protected:
+    bool isColorspaceSupported(VkColorSpaceKHR colorspace) const;
+    void initSupportedSurfaceFormatColorspaces();
+
+  private:
+    // Map of supported colorspace and associated surface format set. This is thread-safe because
+    // it's populated once during initialization under the display lock and is only ever queried
+    // afterwards.
+    angle::HashMap<VkColorSpaceKHR, std::unordered_set<VkFormat>> mSupportedColorspaceFormatsMap;
 };
 
 class DisplayVk : public DisplayImpl, public vk::GlobalOps, public ThreadSafeDisplayVk
@@ -114,11 +131,6 @@ class DisplayVk : public DisplayImpl, public vk::GlobalOps, public ThreadSafeDis
 
     ShareGroupImpl *createShareGroup(const egl::ShareGroupState &state) override;
 
-    bool isConfigFormatSupported(VkFormat format) const;
-    bool isSurfaceFormatColorspacePairSupported(VkSurfaceKHR surface,
-                                                VkFormat format,
-                                                VkColorSpaceKHR colorspace) const;
-
     void lockVulkanQueue() override;
     void unlockVulkanQueue() override;
 
@@ -140,9 +152,6 @@ class DisplayVk : public DisplayImpl, public vk::GlobalOps, public ThreadSafeDis
 
     virtual angle::Result waitNativeImpl();
 
-    bool isColorspaceSupported(VkColorSpaceKHR colorspace) const;
-    void initSupportedSurfaceFormatColorspaces();
-
     // vk::GlobalOps
     void putBlob(const angle::BlobCacheKey &key, const angle::MemoryBuffer &value) override;
     bool getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *valueOut) override;
@@ -152,9 +161,6 @@ class DisplayVk : public DisplayImpl, public vk::GlobalOps, public ThreadSafeDis
     GlobalOps::Api getFrontendApi() const override { return GlobalOps::Api::Egl; }
 
     angle::ScratchBuffer mScratchBuffer;
-
-    // Map of supported colorspace and associated surface format set.
-    angle::HashMap<VkColorSpaceKHR, std::unordered_set<VkFormat>> mSupportedColorspaceFormatsMap;
 };
 
 }  // namespace rx

@@ -30,7 +30,7 @@ class FramebufferState;
 
 namespace egl
 {
-class Display;
+class ThreadSafeDisplay;
 struct Config;
 struct SurfaceState;
 class Thread;
@@ -51,9 +51,9 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
   public:
     SurfaceImpl(const egl::SurfaceState &surfaceState);
     ~SurfaceImpl() override;
-    virtual void destroy(const egl::Display *display) {}
+    virtual void destroy(const egl::ThreadSafeDisplay *display) {}
 
-    virtual egl::Error initialize(const egl::Display *display) = 0;
+    virtual egl::Error initialize(const egl::ThreadSafeDisplay *display) = 0;
     virtual egl::Error makeCurrent(const gl::Context *context);
     virtual egl::Error unMakeCurrent(const gl::Context *context);
     virtual egl::Error prepareSwap(const gl::Context *);
@@ -75,7 +75,7 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual egl::Error releaseTexImage(const gl::Context *context, EGLint buffer) = 0;
     virtual egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc);
     virtual egl::Error getMscRate(EGLint *numerator, EGLint *denominator);
-    virtual void setSwapInterval(const egl::Display *display, EGLint interval) = 0;
+    virtual void setSwapInterval(const egl::ThreadSafeDisplay *display, EGLint interval) = 0;
     virtual void setFixedWidth(EGLint width);
     virtual void setFixedHeight(EGLint height);
     virtual void setSwapBehavior(EGLenum behavior);
@@ -86,7 +86,7 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     // Size must be resolved before the call either during state synchronization or explicitly.
     virtual gl::Extents getSize() const = 0;
     // Unresolved Surface size until render target is first accessed (e.g. after draw).
-    virtual egl::Error getUserSize(const egl::Display *display,
+    virtual egl::Error getUserSize(const egl::ThreadSafeDisplay *display,
                                    EGLint *width,
                                    EGLint *height) const;
 
@@ -117,17 +117,17 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual egl::Error setAutoRefreshEnabled(bool enabled);
 
     // EGL_KHR_lock_surface3
-    virtual egl::Error lockSurface(const egl::Display *display,
+    virtual egl::Error lockSurface(const egl::ThreadSafeDisplay *display,
                                    EGLint usageHint,
                                    bool preservePixels,
                                    uint8_t **bufferPtrOut,
                                    EGLint *bufferPitchOut);
-    virtual egl::Error unlockSurface(const egl::Display *display, bool preservePixels);
+    virtual egl::Error unlockSurface(const egl::ThreadSafeDisplay *display, bool preservePixels);
     virtual EGLint origin() const;
 
     virtual egl::Error setRenderBuffer(EGLint renderBuffer);
 
-    virtual egl::Error getCompressionRate(const egl::Display *display,
+    virtual egl::Error getCompressionRate(const egl::ThreadSafeDisplay *display,
                                           const gl::Context *context,
                                           EGLint *rate);
 

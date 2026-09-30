@@ -176,7 +176,7 @@ Error Surface::destroyImpl(const ThreadSafeDisplay *display)
 {
     if (mImplementation)
     {
-        mImplementation->destroy(static_cast<const Display *>(display));
+        mImplementation->destroy(display);
     }
 
     ASSERT(!mTexture);
@@ -230,7 +230,7 @@ Error Surface::initialize(const ThreadSafeDisplay *display)
         mDSFormat    = gl::Format(mState.config->depthStencilFormat);
     }
 
-    ANGLE_TRY(mImplementation->initialize(static_cast<const Display *>(display)));
+    ANGLE_TRY(mImplementation->initialize(display));
 
     // Initialized here since impl is nullptr in the constructor.
     // Must happen after implementation initialize for Android.
@@ -413,7 +413,7 @@ void Surface::setRequestedSwapInterval(EGLint interval)
 void Surface::setSwapInterval(const ThreadSafeDisplay *display, EGLint interval)
 {
     mMutex.assertLocked();
-    mImplementation->setSwapInterval(static_cast<const Display *>(display), interval);
+    mImplementation->setSwapInterval(display, interval);
     mState.swapInterval = interval;
 }
 
@@ -592,7 +592,7 @@ egl::Error Surface::getUserSize(const egl::ThreadSafeDisplay *display,
     }
     else
     {
-        return mImplementation->getUserSize(static_cast<const Display *>(display), width, height);
+        return mImplementation->getUserSize(display, width, height);
     }
 }
 
@@ -965,8 +965,7 @@ egl::Error Surface::getCompressionRate(const egl::ThreadSafeDisplay *display,
                                        EGLint *rate)
 {
     mMutex.assertLocked();
-    return mImplementation->getCompressionRate(static_cast<const Display *>(display), context,
-                                               rate);
+    return mImplementation->getCompressionRate(display, context, rate);
 }
 
 egl::Error Surface::lockSurfaceKHR(const egl::ThreadSafeDisplay *display,
@@ -979,8 +978,8 @@ egl::Error Surface::lockSurfaceKHR(const egl::ThreadSafeDisplay *display,
     bool preservePixels = ((attributes.getAsInt(EGL_MAP_PRESERVE_PIXELS_KHR, false) == EGL_TRUE) ||
                            (mState.swapBehavior == EGL_BUFFER_PRESERVED));
 
-    return mImplementation->lockSurface(static_cast<const Display *>(display), lockBufferUsageHint,
-                                        preservePixels, &mLockBufferPtr, &mLockBufferPitch);
+    return mImplementation->lockSurface(display, lockBufferUsageHint, preservePixels,
+                                        &mLockBufferPtr, &mLockBufferPitch);
 }
 
 egl::Error Surface::unlockSurfaceKHR(const egl::ThreadSafeDisplay *display)
@@ -988,7 +987,7 @@ egl::Error Surface::unlockSurfaceKHR(const egl::ThreadSafeDisplay *display)
     mMutex.assertLocked();
     mLockBufferPtr   = nullptr;
     mLockBufferPitch = 0;
-    return mImplementation->unlockSurface(static_cast<const Display *>(display), true);
+    return mImplementation->unlockSurface(display, true);
 }
 
 WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,

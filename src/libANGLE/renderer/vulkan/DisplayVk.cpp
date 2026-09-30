@@ -152,10 +152,7 @@ void InstallDebugAnnotator(egl::Display *display, vk::Renderer *renderer)
 }  // namespace
 
 DisplayVk::DisplayVk(const egl::DisplayState &state)
-    : DisplayImpl(state),
-      ThreadSafeDisplayVk(new vk::Renderer()),
-      mScratchBuffer(1000u),
-      mSupportedColorspaceFormatsMap{}
+    : DisplayImpl(state), ThreadSafeDisplayVk(new vk::Renderer()), mScratchBuffer(1000u)
 {}
 
 DisplayVk::~DisplayVk()
@@ -319,7 +316,7 @@ ShareGroupImpl *DisplayVk::createShareGroup(const egl::ShareGroupState &state)
     return new ShareGroupVk(state, mRenderer);
 }
 
-bool DisplayVk::isConfigFormatSupported(VkFormat format) const
+bool ThreadSafeDisplayVk::isConfigFormatSupported(VkFormat format) const
 {
     // Requires VK_GOOGLE_surfaceless_query extension to be supported.
     ASSERT(mRenderer->getFeatures().supportsSurfacelessQueryExtension.enabled);
@@ -338,9 +335,9 @@ bool DisplayVk::isConfigFormatSupported(VkFormat format) const
     return false;
 }
 
-bool DisplayVk::isSurfaceFormatColorspacePairSupported(VkSurfaceKHR surface,
-                                                       VkFormat format,
-                                                       VkColorSpaceKHR colorspace) const
+bool ThreadSafeDisplayVk::isSurfaceFormatColorspacePairSupported(VkSurfaceKHR surface,
+                                                                 VkFormat format,
+                                                                 VkColorSpaceKHR colorspace) const
 {
     if (mSupportedColorspaceFormatsMap.size() > 0)
     {
@@ -376,12 +373,12 @@ bool DisplayVk::isSurfaceFormatColorspacePairSupported(VkSurfaceKHR surface,
     return false;
 }
 
-bool DisplayVk::isColorspaceSupported(VkColorSpaceKHR colorspace) const
+bool ThreadSafeDisplayVk::isColorspaceSupported(VkColorSpaceKHR colorspace) const
 {
     return mSupportedColorspaceFormatsMap.count(colorspace) > 0;
 }
 
-void DisplayVk::initSupportedSurfaceFormatColorspaces()
+void ThreadSafeDisplayVk::initSupportedSurfaceFormatColorspaces()
 {
     const angle::FeaturesVk &featuresVk = mRenderer->getFeatures();
     if (featuresVk.supportsSurfacelessQueryExtension.enabled &&
