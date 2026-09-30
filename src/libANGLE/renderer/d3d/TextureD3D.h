@@ -242,6 +242,10 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
     bool mDirtyImages;
 
     bool mImmutable;
+    // True when mTexStorage is backed by an EGLImage via setEGLImageTarget
+    // (TextureStorage11_EGLImage). Only meaningful for TextureD3D_2D and TextureD3D_External, as no
+    // other D3D texture types support setEGLImageTarget.
+    bool mEGLImageTarget;
     TextureStorage *mTexStorage;
     angle::ObserverBinding mTexStorageObserverBinding;
 
@@ -394,7 +398,6 @@ class TextureD3D_2D : public TextureD3D
                                 const gl::Extents &size,
                                 bool forceRelease);
 
-    bool mEGLImageTarget;
     gl::TexLevelArray<std::unique_ptr<ImageD3D>> mImageArray;
 };
 

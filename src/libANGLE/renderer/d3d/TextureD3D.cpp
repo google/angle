@@ -107,6 +107,7 @@ TextureD3D::TextureD3D(const gl::TextureState &state, RendererD3D *renderer)
       mRenderer(renderer),
       mDirtyImages(true),
       mImmutable(false),
+      mEGLImageTarget(false),
       mTexStorage(nullptr),
       mTexStorageObserverBinding(this, kTextureStorageObserverMessageIndex),
       mBaseLevel(0)
@@ -945,7 +946,10 @@ angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLe
     // when storage is later initialized, it will use the updated mBaseLevel.
     // For immutable textures (created via glTexStorage*D), the storage already covers all mip
     // levels with the correct dimensions, so it should never be released on base level change.
-    if (!mTexStorage || isImmutable())
+    // For EGLImage targets, mTexStorage wraps the external EGLImage (TextureStorage11_EGLImage)
+    // and cannot be backed up to mImageArray or recreated by initializeStorage, so it must also
+    // remain intact on base level change (completeness is handled by the frontend).
+    if (!mTexStorage || isImmutable() || mEGLImageTarget)
     {
         return angle::Result::Continue;
     }
@@ -1205,7 +1209,6 @@ void TextureD3D::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectM
 TextureD3D_2D::TextureD3D_2D(const gl::TextureState &state, RendererD3D *renderer)
     : TextureD3D(state, renderer)
 {
-    mEGLImageTarget = false;
     for (auto &image : mImageArray)
     {
         image.reset(renderer->createImage());
@@ -1696,6 +1699,8 @@ angle::Result TextureD3D_2D::bindTexImage(const gl::Context *context, egl::Surfa
     ASSERT(surfaceD3D);
 
     mTexStorage = mRenderer->createTextureStorage2D(surfaceD3D->getSwapChain(), mState.getLabel());
+    // Even though an EGLSurface is an external buffer, it is an EGLSurface (egl::Surface), not an
+    // EGLImage (egl::Image), so mEGLImageTarget is set to false.
     mEGLImageTarget = false;
 
     mDirtyImages = false;
@@ -4207,6 +4212,9 @@ angle::Result TextureD3D_External::setImageExternal(const gl::Context *context,
     {
         mTexStorage = mRenderer->createTextureStorageExternal(stream, desc, mState.getLabel());
     }
+    // An EGLStream (egl::Stream) is not an EGLImage (egl::Image), so mEGLImageTarget is set to
+    // false.
+    mEGLImageTarget = false;
 
     return angle::Result::Continue;
 }
@@ -4224,6 +4232,7 @@ angle::Result TextureD3D_External::setEGLImageTarget(const gl::Context *context,
     ANGLE_TRY(releaseTexStorage(context, gl::TexLevelMask()));
     mTexStorage =
         mRenderer->createTextureStorageEGLImage(eglImaged3d, renderTargetD3D, mState.getLabel());
+    mEGLImageTarget = true;
 
     return angle::Result::Continue;
 }
