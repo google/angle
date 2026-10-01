@@ -2730,7 +2730,7 @@ TEST_P(MipmapRobustInitTestES3, GenerateMipmapRobustInitOptimization)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     // Allocate with nullptr to verify it gets robust cleared later
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 40, 20, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     // Set levels 1 through 4 to be mipcomplete (incompatible with level 0) with different colors.
     std::vector<GLColor> kLevel1Data(8 * 8, GLColor::green);
@@ -2810,7 +2810,7 @@ TEST_P(MipmapRobustInitTestES3, GenerateMipmapRobustInitOptimizationWithSampling
     glBindTexture(GL_TEXTURE_2D, texture);
 
     // Allocate with nullptr to verify it gets robust cleared later
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 40, 20, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     // Set levels 1 through 4 to be mipcomplete (incompatible with level 0) with different colors.
     std::vector<GLColor> kLevel1Data(8 * 8, GLColor::green);
