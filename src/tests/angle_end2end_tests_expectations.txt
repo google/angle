@@ -3151,6 +3151,11 @@
 568338695 ARM GLES : ClearTestES3.DrawClearInvalidateClear/* = SKIP
 568338695 PIXEL4ORXL GLES : ClearTestES3.DrawClearInvalidateClear/* = SKIP
 
+// Detaching depth while stencil remains attached on a packed depth-stencil buffer does not update
+// Vulkan pipeline depth/stencil state when FramebufferDesc is unchanged.
+568687942 VULKAN : FramebufferTest_ES3.DetachDepthWhileStencilRemainsAttached/* = SKIP
+568687942 PIXEL4ORXL GLES : FramebufferTest_ES3.DetachDepthWhileStencilRemainsAttached/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
