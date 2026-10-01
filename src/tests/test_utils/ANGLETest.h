@@ -609,6 +609,8 @@ class ANGLETestBase : public ::testing::Test
 
     bool platformSupportsMultithreading() const;
 
+    angle::VulkanPerfCounters getPerfCounters();
+
     bool mIsSetUp = false;
 
   private:
@@ -674,6 +676,8 @@ class ANGLETestBase : public ::testing::Test
     TestFixture *mFixture;
 
     RenderDoc mRenderDoc;
+
+    CounterNameToIndexMap mPerfCounterIndexMap;
 
     // Workaround for NVIDIA not being able to share a window with OpenGL and Vulkan.
     static Optional<EGLint> mLastRendererType;

@@ -519,20 +519,7 @@ class MultisampleTexture2DTestES31 : public Texture2DTest
 };
 
 class Texture2DMemoryTestES3 : public Texture2DTestES3
-{
-  protected:
-    angle::VulkanPerfCounters getPerfCounters()
-    {
-        if (mIndexMap.empty())
-        {
-            mIndexMap = BuildCounterNameToIndexMap();
-        }
-
-        return GetPerfCounters(mIndexMap);
-    }
-
-    CounterNameToIndexMap mIndexMap;
-};
+{};
 
 class Texture2DTestES3YUV : public Texture2DTestES3
 {};

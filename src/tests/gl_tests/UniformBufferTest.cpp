@@ -4854,20 +4854,7 @@ TEST_P(UniformBufferTest, BufferDataInLoop)
 }
 
 class UniformBufferMemoryTest : public UniformBufferTest
-{
-  protected:
-    angle::VulkanPerfCounters getPerfCounters()
-    {
-        if (mIndexMap.empty())
-        {
-            mIndexMap = BuildCounterNameToIndexMap();
-        }
-
-        return GetPerfCounters(mIndexMap);
-    }
-
-    CounterNameToIndexMap mIndexMap;
-};
+{};
 
 // Calling BufferData and drawing with it in a loop without glFlush() should still work. Driver is
 // supposedly to issue flush if needed.
