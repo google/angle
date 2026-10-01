@@ -49,6 +49,7 @@ REPRESENTATIVE_TRACES = [
     "diablo_immortal",
     "disney_mirrorverse",
     "dota_underlords",
+    "doubleu_casino",
     "driver_overhead_2",
     "genshin_impact",
     "grand_mountain_adventure",
