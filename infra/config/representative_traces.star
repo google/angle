@@ -53,6 +53,7 @@ REPRESENTATIVE_TRACES = [
     "driver_overhead_2",
     "genshin_impact",
     "grand_mountain_adventure",
+    "guns_of_glory_lost_island",
     "honkai_impact_3rd",
     "honkai_star_rail",
     "identity_v",

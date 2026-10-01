@@ -313,6 +313,7 @@ vars = {
   'checkout_angle_restricted_trace_gossip_harbor': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_grand_mountain_adventure': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_grimvalor': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_guns_of_glory_lost_island': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_gwent_witcher_card_game': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_happy_color': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_harry_potter_hogwarts_mystery': 'checkout_extra_traces',
@@ -2931,6 +2932,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_grimvalor',
+  },
+  'src/tests/restricted_traces/guns_of_glory_lost_island': {
+      'packages': [
+        {
+            'package': 'angle/traces/guns_of_glory_lost_island',
+            'version': 'version:2',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_guns_of_glory_lost_island',
   },
   'src/tests/restricted_traces/gwent_witcher_card_game': {
       'packages': [
