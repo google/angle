@@ -391,11 +391,9 @@ gl::Box MakeUpdateBoundingBox(const Offset &offset,
                               uint32_t layerCount)
 {
     gl::Box updateBoundingBox = {offset, extents};
-    if (layerIndex.get() > 0 || layerCount > 1)
-    {
-        updateBoundingBox.z     = layerIndex.get();
-        updateBoundingBox.depth = layerCount;
-    }
+    // 3D-image updates use the layer index/count for z/depth.
+    updateBoundingBox.z     = layerIndex.get();
+    updateBoundingBox.depth = layerCount;
     return updateBoundingBox;
 }
 
