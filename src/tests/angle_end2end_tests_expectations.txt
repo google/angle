@@ -1331,6 +1331,7 @@
 480069042 PIXEL10 GLES : Texture2DTestES3.DrawWithLevelZeroUndefined/* = SKIP
 480069042 PIXEL10 GLES : Texture2DTestES3.DrawWithLevelsOutsideRangeUndefined/* = SKIP
 480069042 PIXEL10 GLES : Texture2DTestES3.MipmapIncompleteMipmappingDisabled/* = SKIP
+480069042 PIXEL10 GLES : Texture2DTestES3.TexImageUnpackRowLengthSmallerThanWidthAndSubRectPBO/* = SKIP
 480069042 PIXEL10 GLES : Texture2DTestES3.TextureFormatChangesWithBaseLevel/* = SKIP
 480069042 PIXEL10 GLES : Texture2DTestES3.UnpackOverlappingRowsFromUnpackBuffer/* = SKIP
 480069042 PIXEL10 GLES : Texture3DTestES2.CopySubImageAlpha/* = SKIP
