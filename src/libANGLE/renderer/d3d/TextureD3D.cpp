@@ -109,8 +109,7 @@ TextureD3D::TextureD3D(const gl::TextureState &state, RendererD3D *renderer)
       mImmutable(false),
       mEGLImageTarget(false),
       mTexStorage(nullptr),
-      mTexStorageObserverBinding(this, kTextureStorageObserverMessageIndex),
-      mBaseLevel(0)
+      mTexStorageObserverBinding(this, kTextureStorageObserverMessageIndex)
 {}
 
 TextureD3D::~TextureD3D()
@@ -207,12 +206,12 @@ angle::Result TextureD3D::getImageAndSyncFromStorageIfNeeded(const gl::Context *
 
 // For immutable textures (glTexStorage*D), all mip levels from 0 to levels-1 are fixed at creation
 // time and mTexStorage is not released when GL_TEXTURE_BASE_LEVEL changes. If storage is later
-// recreated (e.g. via ensureBindFlags to add RenderTarget bind flags) while mBaseLevel > 0, we must
-// use mTexStorage's actual level-0 dimensions rather than extrapolating via
-// `getBaseLevel*() << mBaseLevel`, which can produce wrong level-0 dimensions in two cases:
-// 1. A dimension already clamped to 1 at mBaseLevel (e.g. a 16384x1 texture at baseLevel 13 has
+// recreated (e.g. via ensureBindFlags to add RenderTarget bind flags) while getBaseLevel() > 0, we
+// must use mTexStorage's actual level-0 dimensions rather than extrapolating via
+// `getBaseLevel*() << getBaseLevel()`, which can produce wrong level-0 dimensions in two cases:
+// 1. A dimension already clamped to 1 at getBaseLevel() (e.g. a 16384x1 texture at baseLevel 13 has
 //    height 1, so `1 << 13` would compute 8192 instead of 1).
-// 2. Non-power-of-two dimensions where low bits were shifted out at mBaseLevel (e.g. a 13x13
+// 2. Non-power-of-two dimensions where low bits were shifted out at getBaseLevel() (e.g. a 13x13
 //    texture at baseLevel 1 has width 6, so `6 << 1` would compute 12 instead of 13).
 GLint TextureD3D::getLevelZeroWidth() const
 {
@@ -222,7 +221,7 @@ GLint TextureD3D::getLevelZeroWidth() const
         return mTexStorage->getLevelWidth(0);
     }
     ASSERT(gl::CountLeadingZeros(static_cast<uint32_t>(getBaseLevelWidth())) > getBaseLevel());
-    return getBaseLevelWidth() << mBaseLevel;
+    return getBaseLevelWidth() << getBaseLevel();
 }
 
 GLint TextureD3D::getLevelZeroHeight() const
@@ -233,7 +232,7 @@ GLint TextureD3D::getLevelZeroHeight() const
         return mTexStorage->getLevelHeight(0);
     }
     ASSERT(gl::CountLeadingZeros(static_cast<uint32_t>(getBaseLevelHeight())) > getBaseLevel());
-    return getBaseLevelHeight() << mBaseLevel;
+    return getBaseLevelHeight() << getBaseLevel();
 }
 
 GLint TextureD3D::getLevelZeroDepth() const
@@ -670,11 +669,12 @@ TextureStorage *TextureD3D::getStorage()
 
 ImageD3D *TextureD3D::getBaseLevelImage() const
 {
-    if (mBaseLevel >= gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
+    const GLuint baseLevel = getBaseLevel();
+    if (baseLevel >= gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
     {
         return nullptr;
     }
-    return getImage(getImageIndex(mBaseLevel, 0));
+    return getImage(getImageIndex(baseLevel, 0));
 }
 
 angle::Result TextureD3D::setImageExternal(const gl::Context *context,
@@ -715,11 +715,12 @@ angle::Result TextureD3D::generateMipmap(const gl::Context *context)
 angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
                                                     const GLuint maxLevel)
 {
+    const GLuint baseLevel = getBaseLevel();
     // We know that all layers have the same dimension, for the texture to be complete
-    GLint layerCount = static_cast<GLint>(getLayerCount(mBaseLevel));
+    GLint layerCount = static_cast<GLint>(getLayerCount(baseLevel));
 
     if (mTexStorage && !mTexStorage->isRenderTarget() &&
-        canCreateRenderTargetForImage(getImageIndex(mBaseLevel, 0)) &&
+        canCreateRenderTargetForImage(getImageIndex(baseLevel, 0)) &&
         mRenderer->getRendererClass() == RENDERER_D3D11)
     {
         if (!mRenderer->getFeatures().setDataFasterThanImageUpload.enabled)
@@ -738,7 +739,7 @@ angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
             // Copy from the storage mip 0 to Image mip 0
             for (GLint layer = 0; layer < layerCount; ++layer)
             {
-                gl::ImageIndex srcIndex = getImageIndex(mBaseLevel, layer);
+                gl::ImageIndex srcIndex = getImageIndex(baseLevel, layer);
 
                 ImageD3D *image = getImage(srcIndex);
                 ANGLE_TRY(image->copyFromTexStorage(context, srcIndex, mTexStorage));
@@ -758,7 +759,7 @@ angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
 
     for (GLint layer = 0; layer < layerCount; ++layer)
     {
-        for (GLuint mip = mBaseLevel + 1; mip <= maxLevel; ++mip)
+        for (GLuint mip = baseLevel + 1; mip <= maxLevel; ++mip)
         {
             ASSERT(getLayerCount(mip) == layerCount);
 
@@ -940,10 +941,12 @@ angle::Result TextureD3D::getAttachmentRenderTarget(const gl::Context *context,
 
 angle::Result TextureD3D::setBaseLevel(const gl::Context *context, GLuint baseLevel)
 {
-    mBaseLevel = baseLevel;
+    // gl::Texture::setBaseLevel updates mState before calling into the backend, so getBaseLevel()
+    // (which queries mState.getEffectiveBaseLevel()) already returns the new baseLevel.
+    ASSERT(baseLevel == getBaseLevel());
 
     // If mTexStorage has not been created yet, there is no existing storage to back up or release;
-    // when storage is later initialized, it will use the updated mBaseLevel.
+    // when storage is later initialized, it will use the updated getBaseLevel().
     // For immutable textures (created via glTexStorage*D), the storage already covers all mip
     // levels with the correct dimensions, so it should never be released on base level change.
     // For EGLImage targets, mTexStorage wraps the external EGLImage (TextureStorage11_EGLImage)

@@ -231,7 +231,7 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
                                                 const gl::Extents &size,
                                                 bool forceReleaseStorage);
 
-    GLuint getBaseLevel() const { return mBaseLevel; }
+    GLuint getBaseLevel() const { return mState.getEffectiveBaseLevel(); }
 
     virtual void markAllImagesDirty() = 0;
 
@@ -264,8 +264,6 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
                                            size_t storageLevels) const;
 
     angle::Result generateMipmapUsingImages(const gl::Context *context, const GLuint maxLevel);
-
-    GLuint mBaseLevel;
 };
 
 class TextureD3D_2D : public TextureD3D
