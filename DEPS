@@ -556,6 +556,7 @@ vars = {
   'checkout_angle_restricted_trace_zenonia_4': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zillow': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zombie_smasher': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_zombie_waves': 'checkout_angle_restricted_traces',
   # === ANGLE Restricted Trace Generated Var End ===
 
   'checkout_angle_perfetto': 'checkout_angle_restricted_traces',
@@ -5359,6 +5360,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_zombie_smasher',
+  },
+  'src/tests/restricted_traces/zombie_waves': {
+      'packages': [
+        {
+            'package': 'angle/traces/zombie_waves',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_zombie_waves',
   },
   # === ANGLE Restricted Trace Generated Code End ===
 

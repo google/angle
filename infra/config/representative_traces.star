@@ -87,4 +87,5 @@ REPRESENTATIVE_TRACES = [
     "warcraft_rumble",
     "wuthering_waves",
     "wwe_supercard",
+    "zombie_waves",
 ]
