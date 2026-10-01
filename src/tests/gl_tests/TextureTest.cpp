@@ -4324,6 +4324,74 @@ TEST_P(Texture2DTest, TexImageUnpackRowLengthPBO)
     EXPECT_PIXEL_COLOR_EQ(0, height - 1, GLColor::blue);
 }
 
+// Test that PBO unpack respects GL_UNPACK_ROW_LENGTH when 0 < rowLength < width
+// and when rowLength > subWidth for a partial-width glTexSubImage2D.
+TEST_P(Texture2DTestES3, TexImageUnpackRowLengthSmallerThanWidthAndSubRectPBO)
+{
+    const int width  = getWindowWidth();
+    const int height = getWindowHeight();
+
+    GLTexture tex2D;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex2D);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Pre-fill the entire texture with red so unwritten texels are deterministically detected.
+    std::vector<GLColor> redPixels(width * height, GLColor::red);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE,
+                    redPixels.data());
+
+    // 1. Unpack full texture from PBO with 0 < rowLength < width.
+    const int smallRowLength  = width / 2;
+    const int smallBufferSize = (height - 1) * smallRowLength + width;
+    std::vector<GLColor> greenPixels(smallBufferSize, GLColor::green);
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, smallBufferSize * sizeof(GLColor), greenPixels.data(),
+                 GL_STATIC_DRAW);
+
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, smallRowLength);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Both the left half [0, width/2) and right half [width/2, width) must be green.
+    EXPECT_PIXEL_RECT_EQ(0, 0, width, height, GLColor::green);
+
+    // 2. Unpack a partial-width sub-rectangle (subWidth = width / 4) with rowLength > subWidth.
+    const int subWidth        = width / 4;
+    const int largeRowLength  = width / 2;
+    const int largeBufferSize = (height - 1) * largeRowLength + subWidth;
+    std::vector<GLColor> bluePixels(largeBufferSize, GLColor::yellow);
+    for (int r = 0; r < height; ++r)
+    {
+        for (int c = 0; c < subWidth; ++c)
+        {
+            bluePixels[r * largeRowLength + c] = GLColor::blue;
+        }
+    }
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, largeBufferSize * sizeof(GLColor), bluePixels.data(),
+                 GL_STATIC_DRAW);
+
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, largeRowLength);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, subWidth, height, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // [0, width/4) must be blue, and [width/4, width) must remain green.
+    EXPECT_PIXEL_RECT_EQ(0, 0, subWidth, height, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(subWidth, 0, width - subWidth, height, GLColor::green);
+}
+
 // Test if the KHR debug label is set and passed to D3D correctly using glCopyTexImage2D.
 TEST_P(Texture2DTest, TextureKHRDebugLabelWithCopyTexImage2D)
 {
