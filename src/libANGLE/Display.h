@@ -226,6 +226,7 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     bool isDeviceLost() const;
 
     const DisplayExtensions &getExtensions() const { return mDisplayExtensions; }
+    const angle::FrontendFeatures &getFrontendFeatures() const { return mFrontendFeatures; }
 
     // Note that Display::getImplementation() hides this one and returns the rx::DisplayImpl
     // instead, so the impl that is retrieved depends on the static type of the display.
@@ -244,6 +245,7 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
 
     ScopedSurfaceRef getSurfaceRef(egl::SurfaceID surfaceID) const;
     ScopedSurfaceLockAndRef getSurface(egl::SurfaceID surfaceID) const;
+    Error destroySurface(Surface *surface);
 
     const gl::Context *getContext(gl::ContextID contextID) const;
     gl::Context *getContext(gl::ContextID contextID);
@@ -269,6 +271,8 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
                       Surface *drawSurface,
                       Surface *readSurface,
                       gl::Context *context);
+
+    Error destroySurfaceImpl(Surface *surface);
 
     virtual void releaseDisplayShareGroupResource(const gl::Context &context) = 0;
 
@@ -319,6 +323,7 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     rx::ThreadSafeDisplayImpl *mThreadSafeImpl;
 
     DisplayExtensions mDisplayExtensions;
+    angle::FrontendFeatures mFrontendFeatures;
 
     SyncSet mSyncSet;
 
@@ -418,7 +423,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
                         const AttributeMap &attribs,
                         gl::Context **outContext);
 
-    Error destroySurface(Surface *surface);
     void destroyImage(Image *image);
     void destroyStream(Stream *stream);
     Error destroyContext(Thread *thread, gl::Context *context);
@@ -493,7 +497,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
 
     const DisplayState &getState() const { return mState; }
 
-    const angle::FrontendFeatures &getFrontendFeatures() { return mFrontendFeatures; }
     void overrideFrontendFeatures(const std::vector<std::string> &featureNames, bool enabled);
 
     const angle::FeatureList &getFeatures() const { return mFeatures; }
@@ -571,7 +574,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
 
     void destroyImageImpl(Image *image, ImageMap *images);
     void destroyStreamImpl(Stream *stream, StreamSet *streams);
-    Error destroySurfaceImpl(Surface *surface, SurfaceMap *surfaces);
 
     void initFromDevice(Device *device, const AttributeMap &attribMap);
     bool initFromNativeDisplay(const AttributeMap &attribMap, const EGLAttrib nativePlatformType);
@@ -591,7 +593,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     ContextMap mInvalidContextMap;
     ImageMap mInvalidImageMap;
     StreamSet mInvalidStreamSet;
-    SurfaceMap mInvalidSurfaceMap;
 
     Caps mCaps;
 
@@ -617,9 +618,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     size_t mGlobalSemaphoreShareGroupUsers;
 
     gl::HandleAllocator mImageHandleAllocator;
-    gl::HandleAllocator mSurfaceHandleAllocator;
-
-    angle::FrontendFeatures mFrontendFeatures;
 
     angle::FeatureList mFeatures;
 

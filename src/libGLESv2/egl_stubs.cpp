@@ -292,7 +292,7 @@ EGLBoolean DestroyImage(Thread *thread, Display *display, ImageID imageID)
     return EGL_TRUE;
 }
 
-EGLBoolean DestroySurface(Thread *thread, Display *display, Surface *eglSurface)
+EGLBoolean DestroySurface(Thread *thread, ThreadSafeDisplay *display, Surface *eglSurface)
 {
     // Workaround https://issuetracker.google.com/292285899
     // When destroying surface, if the surface

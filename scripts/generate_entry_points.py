@@ -1792,6 +1792,7 @@ def is_egl_threadsafe_display_entry_point(cmd_name):
             # EGLSurface entry points
             "eglBindTexImage",
             "eglCopyBuffers",
+            "eglDestroySurface",
             "eglQuerySurface",
             "eglReleaseTexImage",
             "eglSurfaceAttrib",
@@ -3847,7 +3848,7 @@ def get_preamble(api, cmd_name, params):
 def get_unlocked_tail_call(api, cmd_name):
     # Only the following can generate tail calls:
     #
-    # - eglDestroySurface, eglMakeCurrent and eglReleaseThread -> May destroy
+    # - eglReleaseThread -> May destroy
     #   VkSurfaceKHR in tail call
     # - eglCreateWindowSurface and eglCreatePlatformWindowSurface[EXT] -> May
     #   destroy VkSurfaceKHR in tail call if surface initialization fails
@@ -3876,10 +3877,9 @@ def get_unlocked_tail_call(api, cmd_name):
     #   the current Window Surface is in the single buffer mode.
     #
     if (cmd_name in [
-            'eglDestroySurface', 'eglMakeCurrent', 'eglReleaseThread', 'eglCreateWindowSurface',
-            'eglCreatePlatformWindowSurface', 'eglCreatePlatformWindowSurfaceEXT',
-            'eglPrepareSwapBuffersANGLE', 'glFinishFenceNV', 'glCompileShader', 'glLinkProgram',
-            'glShaderBinary', 'glFlush', 'glFinish'
+            'eglReleaseThread', 'eglCreateWindowSurface', 'eglCreatePlatformWindowSurface',
+            'eglCreatePlatformWindowSurfaceEXT', 'eglPrepareSwapBuffersANGLE', 'glFinishFenceNV',
+            'glCompileShader', 'glLinkProgram', 'glShaderBinary', 'glFlush', 'glFinish'
     ] or cmd_name.startswith('glTexImage2D') or cmd_name.startswith('glTexImage3D') or
             cmd_name.startswith('glTexSubImage2D') or cmd_name.startswith('glTexSubImage3D') or
             cmd_name.startswith('glCompressedTexImage2D') or

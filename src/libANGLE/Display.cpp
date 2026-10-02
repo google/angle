@@ -1184,6 +1184,39 @@ ScopedSurfaceLockAndRef ThreadSafeDisplay::getSurface(egl::SurfaceID surfaceID) 
     return mState.surfaceMap.getSurface(this, surfaceID);
 }
 
+Error ThreadSafeDisplay::destroySurfaceImpl(Surface *surface)
+{
+    if (surface->getType() == EGL_WINDOW_BIT)
+    {
+        WindowSurfaceMap *windowSurfaces = GetWindowSurfaces();
+        ASSERT(windowSurfaces);
+
+        bool surfaceRemoved = false;
+        for (WindowSurfaceMap::iterator iter = windowSurfaces->begin();
+             iter != windowSurfaces->end(); iter++)
+        {
+            if (iter->second == surface)
+            {
+                windowSurfaces->erase(iter);
+                surfaceRemoved = true;
+                break;
+            }
+        }
+
+        ASSERT(surfaceRemoved);
+    }
+
+    ANGLE_TRY(surface->releaseRef(this));
+    return NoError();
+}
+
+Error ThreadSafeDisplay::destroySurface(Surface *surface)
+{
+    bool surfaceFound = mState.surfaceMap.erase(surface->id());
+    ASSERT(surfaceFound);
+    return destroySurfaceImpl(surface);
+}
+
 void ThreadSafeDisplay::releaseSync(Sync *sync)
 {
     mSyncSet.releaseSync(this, sync);
@@ -1382,7 +1415,6 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mInvalidContextMap(),
       mInvalidImageMap(),
       mInvalidStreamSet(),
-      mInvalidSurfaceMap(),
       mCaps(),
       mDisplayExtensionString(),
       mVendorString(),
@@ -1398,8 +1430,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mMemoryShaderCache(mBlobCache),
       mGlobalTextureShareGroupUsers(0),
       mGlobalSemaphoreShareGroupUsers(0),
-      mImageHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES),
-      mSurfaceHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES, 64)
+      mImageHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES)
 {}
 
 Display::~Display()
@@ -1680,10 +1711,7 @@ Error Display::destroyInvalidEglObjects()
         destroyStreamImpl(*mInvalidStreamSet.begin(), &mInvalidStreamSet);
     }
 
-    for (Surface *surface : mInvalidSurfaceMap.extractAll())
-    {
-        ANGLE_TRY(destroySurfaceImpl(surface, nullptr));
-    }
+    ANGLE_TRY(mState.surfaceMap.destroyAllInvalidSurfaces(this));
 
     mSyncSet.destroyAllInvalidSyncs(this);
 
@@ -1752,7 +1780,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     mInvalidStreamSet.insert(mStreamSet.begin(), mStreamSet.end());
     mStreamSet.clear();
 
-    mState.surfaceMap.moveTo(&mInvalidSurfaceMap);
+    mState.surfaceMap.invalidateAll();
 
     mSyncSet.invalidateAllSyncs();
 
@@ -1883,7 +1911,7 @@ Error Display::createWindowSurface(const Config *configuration,
     }
 
     SurfaceID id;
-    if (!mSurfaceHandleAllocator.allocate(&id.value))
+    if (!mState.surfaceMap.allocateHandle(&id))
     {
         return Error(EGL_BAD_ALLOC, gl::err::kHandleExhaustion);
     }
@@ -1918,7 +1946,7 @@ Error Display::createPbufferSurface(const Config *configuration,
     }
 
     SurfaceID id;
-    if (!mSurfaceHandleAllocator.allocate(&id.value))
+    if (!mState.surfaceMap.allocateHandle(&id))
     {
         return Error(EGL_BAD_ALLOC, gl::err::kHandleExhaustion);
     }
@@ -1949,7 +1977,7 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration,
     }
 
     SurfaceID id;
-    if (!mSurfaceHandleAllocator.allocate(&id.value))
+    if (!mState.surfaceMap.allocateHandle(&id))
     {
         return Error(EGL_BAD_ALLOC, gl::err::kHandleExhaustion);
     }
@@ -1980,7 +2008,7 @@ Error Display::createPixmapSurface(const Config *configuration,
     }
 
     SurfaceID id;
-    if (!mSurfaceHandleAllocator.allocate(&id.value))
+    if (!mState.surfaceMap.allocateHandle(&id))
     {
         return Error(EGL_BAD_ALLOC, gl::err::kHandleExhaustion);
     }
@@ -2253,38 +2281,6 @@ Error ThreadSafeDisplay::makeCurrent(Thread *thread,
     return NoError();
 }
 
-Error Display::destroySurfaceImpl(Surface *surface, SurfaceMap *surfaces)
-{
-    if (surface->getType() == EGL_WINDOW_BIT)
-    {
-        WindowSurfaceMap *windowSurfaces = GetWindowSurfaces();
-        ASSERT(windowSurfaces);
-
-        bool surfaceRemoved = false;
-        for (WindowSurfaceMap::iterator iter = windowSurfaces->begin();
-             iter != windowSurfaces->end(); iter++)
-        {
-            if (iter->second == surface)
-            {
-                windowSurfaces->erase(iter);
-                surfaceRemoved = true;
-                break;
-            }
-        }
-
-        ASSERT(surfaceRemoved);
-    }
-
-    if (surfaces)
-    {
-        bool surfaceFound = surfaces->erase(surface->id());
-        ASSERT(surfaceFound);
-    }
-    mSurfaceHandleAllocator.release(surface->id().value);
-    ANGLE_TRY(surface->releaseRef(this));
-    return NoError();
-}
-
 void Display::destroyImageImpl(Image *image, ImageMap *images)
 {
     auto iter = images->find(image->id().value);
@@ -2418,11 +2414,6 @@ void Display::destroyImage(Image *image)
 void Display::destroyStream(Stream *stream)
 {
     return destroyStreamImpl(stream, &mStreamSet);
-}
-
-Error Display::destroySurface(Surface *surface)
-{
-    return destroySurfaceImpl(surface, &mState.surfaceMap);
 }
 
 bool Display::testDeviceLost()

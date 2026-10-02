@@ -5384,7 +5384,7 @@ bool ValidateGetSyncValuesCHROMIUM(const ValidationContext *val,
 }
 
 bool ValidateDestroySurface(const ValidationContext *val,
-                            const Display *display,
+                            const ThreadSafeDisplay *display,
                             const Surface *surface)
 {
     ANGLE_VALIDATION_TRY(ValidateSurface(val, display, surface));

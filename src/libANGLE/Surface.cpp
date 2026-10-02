@@ -1058,4 +1058,20 @@ void SurfaceDeleter::operator()(Surface *surface)
     ANGLE_SWALLOW_ERR(surface->onDestroy(mDisplay));
 }
 
+// SurfaceMap implementation.
+
+Error SurfaceMap::destroyAllInvalidSurfaces(ThreadSafeDisplay *display)
+{
+    std::lock_guard<angle::SimpleMutex> lock(mMutex);
+    while (!mInvalidSurfaces.empty())
+    {
+        Surface *surface = mInvalidSurfaces.back();
+        mInvalidSurfaces.pop_back();
+        mHandleAllocator.release(surface->id().value);
+        ANGLE_TRY(display->destroySurfaceImpl(surface));
+    }
+
+    return NoError();
+}
+
 }  // namespace egl

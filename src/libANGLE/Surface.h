@@ -25,6 +25,7 @@
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/HandleAllocator.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/ObjectMap.h"
 #include "libANGLE/RefCountObject.h"
@@ -534,13 +535,47 @@ using SurfacePointer = std::unique_ptr<Surface, SurfaceDeleter>;
 class SurfaceMap final : public priv::ObjectMap<Surface, angle::SimpleMutex>
 {
   public:
+    SurfaceMap() : mHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES, 64) {}
+
     Surface *find(SurfaceID handle) const = delete;
+
+    bool allocateHandle(SurfaceID *outHandle)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        return mHandleAllocator.allocate(&outHandle->value);
+    }
 
     void insert(SurfaceID handle, Surface *surface)
     {
         surface->addRef();
         priv::ObjectMap<Surface, angle::SimpleMutex>::insert(handle, surface);
     }
+
+    bool erase(SurfaceID handle)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        auto iter = mObjects.find(handle.value);
+        if (iter != mObjects.end())
+        {
+            mObjects.erase(iter);
+            mHandleAllocator.release(handle.value);
+            return true;
+        }
+        return false;
+    }
+
+    void invalidateAll()
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        mInvalidSurfaces.reserve(mInvalidSurfaces.size() + mObjects.size());
+        for (const auto &pair : mObjects)
+        {
+            mInvalidSurfaces.push_back(pair.second);
+        }
+        mObjects.clear();
+    }
+
+    Error destroyAllInvalidSurfaces(ThreadSafeDisplay *display);
 
     ScopedSurfaceLockAndRef getSurface(const ThreadSafeDisplay *display, SurfaceID handle) const
     {
@@ -553,6 +588,10 @@ class SurfaceMap final : public priv::ObjectMap<Surface, angle::SimpleMutex>
         auto iter = mObjects.find(handle.value);
         return ScopedSurfaceRef(display, iter != mObjects.end() ? iter->second : nullptr);
     }
+
+  private:
+    std::vector<Surface *> mInvalidSurfaces;
+    gl::HandleAllocator mHandleAllocator;
 };
 
 }  // namespace egl

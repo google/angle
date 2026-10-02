@@ -101,7 +101,9 @@ EGLSurface CreateWindowSurface(Thread *thread,
                                const AttributeMap &attrib_listPacked);
 EGLBoolean DestroyContext(Thread *thread, egl::Display *dpyPacked, gl::ContextID ctxPacked);
 EGLBoolean DestroyImage(Thread *thread, egl::Display *dpyPacked, ImageID imagePacked);
-EGLBoolean DestroySurface(Thread *thread, egl::Display *dpyPacked, egl::Surface *surfacePacked);
+EGLBoolean DestroySurface(Thread *thread,
+                          egl::ThreadSafeDisplay *dpyPacked,
+                          egl::Surface *surfacePacked);
 EGLBoolean DestroySync(Thread *thread, egl::ThreadSafeDisplay *dpyPacked, egl::Sync *syncPacked);
 EGLBoolean GetConfigAttrib(Thread *thread,
                            egl::Display *dpyPacked,

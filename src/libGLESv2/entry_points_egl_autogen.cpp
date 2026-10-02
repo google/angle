@@ -342,9 +342,9 @@ EGLBoolean EGLAPIENTRY EGL_DestroySurface(EGLDisplay dpy, EGLSurface surface)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     EGLBoolean returnValue;
     {
-        egl::Display *dpyPacked                    = PackParam<egl::Display *>(dpy);
-        egl::ScopedDisplayLockAndRef dpyPackedLock = GetDisplayAndLockIfValid(dpyPacked);
-        const egl::Display *validDisplay           = dpyPackedLock.get();
+        egl::Display *dpyPacked                      = PackParam<egl::Display *>(dpy);
+        egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
+        egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
         EGL_EVENT(DestroySurface, "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR "",
                   (uintptr_t)dpy, (uintptr_t)surface);
@@ -368,12 +368,12 @@ EGLBoolean EGLAPIENTRY EGL_DestroySurface(EGLDisplay dpy, EGLSurface surface)
             {
             }
 
-            returnValue = DestroySurface(thread, dpyPacked, surfacePackedObject);
+            returnValue = DestroySurface(thread, validDisplay, surfacePackedObject);
         }
 
         ANGLE_CAPTURE_EGL(DestroySurface, true, thread, dpyPacked, surfacePacked, returnValue);
     }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     return returnValue;
 }
 
@@ -678,7 +678,7 @@ EGLBoolean EGLAPIENTRY EGL_MakeCurrent(EGLDisplay dpy,
         ANGLE_CAPTURE_EGL(MakeCurrent, true, thread, dpyPacked, drawPacked, readPacked, ctxPacked,
                           returnValue);
     }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     return returnValue;
 }
 

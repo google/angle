@@ -50,7 +50,7 @@ bool ValidateDestroyContext(const ValidationContext *val,
                             const egl::Display *dpyPacked,
                             gl::ContextID ctxPacked);
 bool ValidateDestroySurface(const ValidationContext *val,
-                            const egl::Display *dpyPacked,
+                            const egl::ThreadSafeDisplay *dpyPacked,
                             const egl::Surface *surfacePacked);
 bool ValidateGetConfigAttrib(const ValidationContext *val,
                              const egl::Display *dpyPacked,
