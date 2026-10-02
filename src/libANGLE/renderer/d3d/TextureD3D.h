@@ -160,6 +160,11 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
                                      const gl::PixelUnpackState &unpack,
                                      const uint8_t *pixels,
                                      ptrdiff_t layerOffset);
+    angle::Result setStorageImpl(const gl::Context *context,
+                                 gl::TextureType type,
+                                 size_t levels,
+                                 GLenum internalFormat,
+                                 const gl::Extents &size);
     bool isFastUnpackable(const gl::Buffer *unpackBuffer,
                           const gl::PixelUnpackState &unpack,
                           GLenum sizedInternalFormat);

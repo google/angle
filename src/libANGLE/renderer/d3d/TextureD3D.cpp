@@ -282,6 +282,58 @@ angle::Result TextureD3D::setStorage(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result TextureD3D::setStorageImpl(const gl::Context *context,
+                                         gl::TextureType type,
+                                         size_t levels,
+                                         GLenum internalFormat,
+                                         const gl::Extents &size)
+{
+    // TODO(geofflang): Verify storage creation had no errors
+    BindFlags bindFlags;
+    bindFlags.renderTarget = IsRenderTargetUsage(mState.getUsage());
+
+    TexStoragePointer storage;
+    switch (type)
+    {
+        case gl::TextureType::_2D:
+            storage = {mRenderer->createTextureStorage2D(internalFormat, bindFlags, size.width,
+                                                         size.height, static_cast<int>(levels),
+                                                         mState.getLabel()),
+                       context};
+            break;
+        case gl::TextureType::CubeMap:
+            storage = {
+                mRenderer->createTextureStorageCube(internalFormat, bindFlags, size.width,
+                                                    static_cast<int>(levels), mState.getLabel()),
+                context};
+            break;
+        case gl::TextureType::_3D:
+            storage = {mRenderer->createTextureStorage3D(
+                           internalFormat, bindFlags, size.width, size.height, size.depth,
+                           static_cast<int>(levels), mState.getLabel()),
+                       context};
+            break;
+        case gl::TextureType::_2DArray:
+            storage = {mRenderer->createTextureStorage2DArray(
+                           internalFormat, bindFlags, size.width, size.height, size.depth,
+                           static_cast<int>(levels), mState.getLabel()),
+                       context};
+            break;
+        default:
+            UNREACHABLE();
+            return angle::Result::Stop;
+    }
+
+    ANGLE_TRY(setCompleteTexStorage(context, storage.get()));
+    storage.release();
+
+    mImmutable = true;
+
+    ANGLE_TRY(updateStorage(context));
+
+    return angle::Result::Continue;
+}
+
 angle::Result TextureD3D::setStorageMultisample(const gl::Context *context,
                                                 gl::TextureType type,
                                                 GLsizei samples,
@@ -1672,22 +1724,7 @@ angle::Result TextureD3D_2D::setStorage(const gl::Context *context,
         ANGLE_TRY(redefineImage(context, level, GL_NONE, gl::Extents(0, 0, 1), true));
     }
 
-    // TODO(geofflang): Verify storage creation had no errors
-    BindFlags flags;
-    flags.renderTarget        = IsRenderTargetUsage(mState.getUsage());
-    TexStoragePointer storage = {
-        mRenderer->createTextureStorage2D(internalFormat, flags, size.width, size.height,
-                                          static_cast<int>(levels), mState.getLabel()),
-        context};
-
-    ANGLE_TRY(setCompleteTexStorage(context, storage.get()));
-    storage.release();
-
-    ANGLE_TRY(updateStorage(context));
-
-    mImmutable = true;
-
-    return angle::Result::Continue;
+    return setStorageImpl(context, type, levels, internalFormat, size);
 }
 
 angle::Result TextureD3D_2D::bindTexImage(const gl::Context *context, egl::Surface *surface)
@@ -2382,23 +2419,7 @@ angle::Result TextureD3D_Cube::setStorage(const gl::Context *context,
         }
     }
 
-    // TODO(geofflang): Verify storage creation had no errors
-    BindFlags bindFlags;
-    bindFlags.renderTarget = IsRenderTargetUsage(mState.getUsage());
-
-    TexStoragePointer storage = {
-        mRenderer->createTextureStorageCube(internalFormat, bindFlags, size.width,
-                                            static_cast<int>(levels), mState.getLabel()),
-        context};
-
-    ANGLE_TRY(setCompleteTexStorage(context, storage.get()));
-    storage.release();
-
-    ANGLE_TRY(updateStorage(context));
-
-    mImmutable = true;
-
-    return angle::Result::Continue;
+    return setStorageImpl(context, type, levels, internalFormat, size);
 }
 
 // Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
@@ -3069,22 +3090,7 @@ angle::Result TextureD3D_3D::setStorage(const gl::Context *context,
         mImageArray[level]->redefine(gl::TextureType::_3D, GL_NONE, gl::Extents(0, 0, 0), true);
     }
 
-    // TODO(geofflang): Verify storage creation had no errors
-    BindFlags bindFlags;
-    bindFlags.renderTarget    = IsRenderTargetUsage(mState.getUsage());
-    TexStoragePointer storage = {
-        mRenderer->createTextureStorage3D(internalFormat, bindFlags, size.width, size.height,
-                                          size.depth, static_cast<int>(levels), mState.getLabel()),
-        context};
-
-    ANGLE_TRY(setCompleteTexStorage(context, storage.get()));
-    storage.release();
-
-    ANGLE_TRY(updateStorage(context));
-
-    mImmutable = true;
-
-    return angle::Result::Continue;
+    return setStorageImpl(context, type, levels, internalFormat, size);
 }
 
 angle::Result TextureD3D_3D::bindTexImage(const gl::Context *context, egl::Surface *surface)
@@ -3770,22 +3776,7 @@ angle::Result TextureD3D_2DArray::setStorage(const gl::Context *context,
         }
     }
 
-    // TODO(geofflang): Verify storage creation had no errors
-    BindFlags bindFlags;
-    bindFlags.renderTarget    = IsRenderTargetUsage(mState.getUsage());
-    TexStoragePointer storage = {mRenderer->createTextureStorage2DArray(
-                                     internalFormat, bindFlags, size.width, size.height, size.depth,
-                                     static_cast<int>(levels), mState.getLabel()),
-                                 context};
-
-    ANGLE_TRY(setCompleteTexStorage(context, storage.get()));
-    storage.release();
-
-    ANGLE_TRY(updateStorage(context));
-
-    mImmutable = true;
-
-    return angle::Result::Continue;
+    return setStorageImpl(context, type, levels, internalFormat, size);
 }
 
 angle::Result TextureD3D_2DArray::bindTexImage(const gl::Context *context, egl::Surface *surface)

@@ -25576,6 +25576,57 @@ TEST_P(Texture2DTestES3_ResetTexStorage2DBaseLevel, TexStorage2DWithNonZeroBaseL
     }
 }
 
+// Verify that when GL_TEXTURE_BASE_LEVEL is non-zero before glTexStorage*D, all mip levels
+// (including level 0 of RGB8 textures whose emulated alpha channel is initialized during
+// glTexStorage2D) are treated as complete and properly initialized.
+TEST_P(Texture2DTestES3_ResetTexStorage2DBaseLevel, TexStorageNPOTWithNonZeroBaseLevel)
+{
+    constexpr GLsizei kSize = 3;
+
+    ANGLE_GL_PROGRAM(greenProgram, essl3_shaders::vs::Simple(), essl3_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(texProgram, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+
+    GLTexture tex2D;
+    glBindTexture(GL_TEXTURE_2D, tex2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    // When GL_RGB8 is emulated with RGBA8, glTexStorage2D initializes the hidden alpha channel to
+    // 255 across all 3x3 texels by flushing a dirty staging image to the GPU texture. If level 0
+    // is mistakenly treated as incomplete during glTexStorage2D (because baseLevel=1 is 1x1 and
+    // NPOT 3 != 1 << 1), that initial flush is skipped, leaving the GPU texture's alpha at 0 and
+    // the staging image still marked dirty.
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_RGB8, kSize, kSize);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+
+    // Partially update 1x1 at (0, 0) so only texel (0, 0) is uploaded to the GPU texture (with
+    // alpha=255) while marking level 0's staging image clean. Without this partial upload, binding
+    // level 0 to the FBO below would flush the still-dirty 3x3 staging image and mask the skipped
+    // initialization at the other 8 texels (such as (2, 2)).
+    const uint8_t kGreenPixel[3] = {0, 255, 0};
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, kGreenPixel);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // Render green to all 3x3 texels via FBO. For emulated GL_RGB8, FBO rendering masks out alpha
+    // writes (writing RGB only) and relies on glTexStorage2D having already initialized alpha to
+    // 255. Thus texel (2, 2) gets RGB=(0, 255, 0) from this draw while keeping its alpha from
+    // glTexStorage2D (255 with the fix, 0 without).
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex2D, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, kSize, kSize);
+    drawQuad(greenProgram, essl3_shaders::PositionAttrib(), 0.5f);
+
+    // Sample tex2D into the default RGBA8 framebuffer and check the top-right corner, which
+    // samples texel (2, 2) and verifies RGBA is (0, 255, 0, 255) (GLColor::green).
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glBindTexture(GL_TEXTURE_2D, tex2D);
+    drawQuad(texProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() - 1, getWindowHeight() - 1, GLColor::green);
+}
+
 class Texture2DTestES3_OversizedMipLevels : public Texture2DTestES3
 {
   protected:
