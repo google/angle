@@ -11347,11 +11347,10 @@ void TParseContext::addAndCheckOutputVaryings(const TVariable &variable, const T
     mNumOutputVaryingComponents =
         checkedNum.ValueOrDefault(std::numeric_limits<unsigned int>::max());
 
-    // The cap to 256 vec4s = 1024 components seems somewhat arbitrary, but this is intended as a
-    // workaround for a specific driver bug, and this limit being much
-    // higher than the device limits (mResources.MaxVertexOutputVectors *
-    // 4), it avoids regressing both tests and applications.
-    if (mNumOutputVaryingComponents > 1024)
+    // The cap to 256 components seems somewhat arbitrary, but this is intended as a workaround for
+    // a specific driver bug, and this limit being much higher than the device limits
+    // (mResources.MaxVertexOutputVectors * 4), it avoids regressing both tests and applications.
+    if (mNumOutputVaryingComponents > 256)
     {
         error(line, "Too many declared shader output varying components for this device",
               variable.name());
