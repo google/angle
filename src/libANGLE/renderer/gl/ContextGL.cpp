@@ -613,6 +613,7 @@ angle::Result ContextGL::drawElementsInstanced(const gl::Context *context,
     ANGLE_GL_TRY(context,
                  getFunctions()->drawElementsInstanced(ToGLenum(mode), count, ToGLenum(type),
                                                        drawIndexPointer, adjustedInstanceCount));
+    mRenderer->markWorkSubmitted();
     return angle::Result::Continue;
 }
 
@@ -762,6 +763,7 @@ angle::Result ContextGL::drawElementsIndirect(const gl::Context *context,
 {
     ANGLE_GL_TRY(context,
                  getFunctions()->drawElementsIndirect(ToGLenum(mode), ToGLenum(type), indirect));
+    mRenderer->markWorkSubmitted();
     return angle::Result::Continue;
 }
 
