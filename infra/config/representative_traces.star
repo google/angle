@@ -68,6 +68,7 @@ REPRESENTATIVE_TRACES = [
     "odin_valhalla_rising",
     "one_piece_bounty_rush",
     "passmark_simple_multiview",
+    "plants_vs_zombies",
     "pubg_mobile_battle_royale",
     "race_master_3d",
     "return_to_monkey_island",

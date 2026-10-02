@@ -424,6 +424,7 @@ vars = {
   'checkout_angle_restricted_trace_piano_fire': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_piano_kids': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_plague_inc': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_plants_vs_zombies': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_plants_vs_zombies_2': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_plants_vs_zombies_heroes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pokemon_go': 'checkout_extra_traces',
@@ -4042,6 +4043,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_plague_inc',
+  },
+  'src/tests/restricted_traces/plants_vs_zombies': {
+      'packages': [
+        {
+            'package': 'angle/traces/plants_vs_zombies',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_plants_vs_zombies',
   },
   'src/tests/restricted_traces/plants_vs_zombies_2': {
       'packages': [
