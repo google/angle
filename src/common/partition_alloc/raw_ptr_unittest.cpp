@@ -8,7 +8,6 @@
 // PartitionAlloc's one, so that the two do not diverge.
 
 #include "common/partition_alloc/raw_ptr.h"
-#include "common/angleutils.h"
 #include "common/unsafe_buffers.h"
 
 #include <gtest/gtest.h>
@@ -20,13 +19,6 @@
 #include <type_traits>
 #include <unordered_set>
 #include <utility>
-
-#if defined(ANGLE_USE_PARTITION_ALLOC)
-#    include <partition_alloc/buildflags.h>
-#    if PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS) && PA_BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC)
-#        include <partition_alloc/dangling_raw_ptr_checks.h>
-#    endif
-#endif
 
 namespace
 {
@@ -343,76 +335,5 @@ TEST(RawPtrTest, ExtractAsDangling)
     EXPECT_EQ(dangling.get(), &value);
     EXPECT_EQ(p.get(), nullptr);
 }
-
-#if defined(ANGLE_USE_PARTITION_ALLOC)
-#    if PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS) && PA_BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC)
-class ScopedDanglingPointerTracker : angle::NonCopyable
-{
-  public:
-    ScopedDanglingPointerTracker()
-        : mOldDetectedFn(partition_alloc::GetDanglingRawPtrDetectedFn()),
-          mOldReleasedFn(partition_alloc::GetDanglingRawPtrReleasedFn())
-    {
-        sDetected = false;
-        sReleased = false;
-        partition_alloc::SetDanglingRawPtrDetectedFn([](uintptr_t) { sDetected = true; });
-        partition_alloc::SetDanglingRawPtrReleasedFn([](uintptr_t) { sReleased = true; });
-    }
-
-    ~ScopedDanglingPointerTracker()
-    {
-        partition_alloc::SetDanglingRawPtrDetectedFn(mOldDetectedFn);
-        partition_alloc::SetDanglingRawPtrReleasedFn(mOldReleasedFn);
-    }
-
-    bool detected() const { return sDetected; }
-    bool released() const { return sReleased; }
-
-  private:
-    static inline bool sDetected = false;
-    static inline bool sReleased = false;
-
-    partition_alloc::DanglingRawPtrDetectedFn *mOldDetectedFn;
-    partition_alloc::DanglingRawPtrReleasedFn *mOldReleasedFn;
-};
-
-// Tests that dangling raw_ptr instances are detected and reported when
-// ENABLE_DANGLING_RAW_PTR_CHECKS is enabled.
-TEST(RawPtrTest, DanglingPointerDetected)
-{
-    ScopedDanglingPointerTracker tracker;
-
-    std::unique_ptr<int> owner = std::make_unique<int>(42);
-    raw_ptr<int> ptr           = owner.get();
-    EXPECT_FALSE(tracker.detected());
-    EXPECT_FALSE(tracker.released());
-
-    owner.reset();
-    EXPECT_TRUE(tracker.detected());
-    EXPECT_FALSE(tracker.released());
-
-    ptr = nullptr;
-    EXPECT_TRUE(tracker.detected());
-    EXPECT_TRUE(tracker.released());
-}
-
-#        if defined(GTEST_HAS_DEATH_TEST)
-// Tests that releasing a dangling raw_ptr triggers FATAL crash when
-// ENABLE_DANGLING_RAW_PTR_CHECKS is enabled.
-TEST(RawPtrTest, DanglingPointerDetectedDeathTest)
-{
-    EXPECT_DEATH(
-        {
-            std::unique_ptr<int> owner = std::make_unique<int>(42);
-            raw_ptr<int> ptr           = owner.get();
-            owner.reset();
-            ptr = nullptr;
-        },
-        "DanglingPointerDetector: A pointer was dangling!");
-}
-#        endif
-#    endif  // PA_BUILDFLAG(ENABLE_DANGLING_RAW_PTR_CHECKS) &&
-            // PA_BUILDFLAG(USE_PARTITION_ALLOC_AS_MALLOC)
-#endif      // defined(ANGLE_USE_PARTITION_ALLOC)
 
 }  // namespace

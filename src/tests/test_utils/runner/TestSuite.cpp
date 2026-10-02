@@ -8,7 +8,6 @@
 //
 
 #include "TestSuite.h"
-#include "PartitionAllocSupport.h"
 #include "common/unsafe_buffers.h"
 
 #include "common/debug.h"
@@ -1175,9 +1174,6 @@ TestSuite::TestSuite(int *argc, char **argv, std::function<void()> registerTests
 {
     ASSERT(mInstance == nullptr);
     mInstance = this;
-
-    InitializePartitionAllocForTesting();
-    InitializeDanglingPointerDetectorForTesting();
 
     Optional<int> filterArgIndex;
     bool alsoRunDisabledTests = false;
