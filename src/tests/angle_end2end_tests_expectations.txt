@@ -3049,10 +3049,14 @@
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByReadPixels/* = SKIP
 
 // New tests failing on Windows Intel OpenGL
+567613573 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CubeMap/* = SKIP
 548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.Uncompressed/* = SKIP
 548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedASTC/* = SKIP
 548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedDXT/* = SKIP
 548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedETC/* = SKIP
+567613573 WIN INTEL OPENGL : Texture3DTestES3_OversizedMipLevels.OversizedDepth/* = SKIP
+567613573 WIN INTEL OPENGL : Texture2DArrayTestES3_OversizedMipLevels.OversizedLevel1/* = SKIP
+567613573 WIN INTEL OPENGL : Texture2DArrayTestES3_OversizedMipLevels.OversizedLevel1PlusDepth/* = SKIP
 558250724 WIN INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImageOutOfBoundsAcrossMips/* = SKIP
 558250724 WIN INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImagePartiallyOutOfBoundsAcrossMips/* = SKIP
 
@@ -3151,6 +3155,7 @@
 // Platform-specific failures of new tests for the
 // VirtualizeBaseLevelAndMipchain workaround, and workarounds it
 // subsumed. These won't be fixed.
+567613573 PIXEL4ORXL GLES : Texture2DArrayTestES3_OversizedMipLevels.ProperlySizedLevel1/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
 550607402 PIXEL4ORXL GLES : Texture2DTestES3_MultiSizeBaseLevelChange.FillLevel0ThenRaiseBaseLevelAndModify/* = SKIP
 550607402 PIXEL4ORXL GLES : Texture2DTestES3_NonZeroBaseLevelGenMipmaps.VerifyMipmapContents/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
 550607402 PIXEL4ORXL GLES : Texture2DTestES3_RecreateImmutableOnBaseLevelIncrease.ImmutableNPOTTextureBaseLevelIncrease/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP

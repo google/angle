@@ -26381,6 +26381,265 @@ TEST_P(Texture2DTestES3_OversizedMipLevels, CompressedDXT)
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth() / 4, getWindowHeight() / 4, GLColor::green);
 }
 
+// Test that defining an oversized nonzero mip level on all faces of a cube map texture succeeds
+// and renders all six faces correctly.
+TEST_P(Texture2DTestES3_OversizedMipLevels, CubeMap)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 position;
+out vec2 texcoord;
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    texcoord = (position.xy * 0.5) + 0.5;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform highp samplerCube texCube;
+uniform int cubeFace;
+in vec2 texcoord;
+out vec4 fragColor;
+void main()
+{
+    vec2 scaled = vec2(1.0) - vec2(2.0) * texcoord.xy;
+    vec3 cubecoord = vec3(1.0, scaled.xy);
+    if (cubeFace == 1)
+        cubecoord = vec3(-1.0, scaled.xy);
+    else if (cubeFace == 2)
+        cubecoord = vec3(scaled.x, 1.0, scaled.y);
+    else if (cubeFace == 3)
+        cubecoord = vec3(scaled.x, -1.0, scaled.y);
+    else if (cubeFace == 4)
+        cubecoord = vec3(scaled.xy, 1.0);
+    else if (cubeFace == 5)
+        cubecoord = vec3(scaled.xy, -1.0);
+
+    fragColor = texture(texCube, cubecoord);
+})";
+
+    ANGLE_GL_PROGRAM(cubeProgram, kVS, kFS);
+    glUseProgram(cubeProgram);
+    GLint texCubeLoc = glGetUniformLocation(cubeProgram, "texCube");
+    ASSERT_NE(-1, texCubeLoc);
+    glUniform1i(texCubeLoc, 0);
+    GLint cubeFaceLoc = glGetUniformLocation(cubeProgram, "cubeFace");
+    ASSERT_NE(-1, cubeFaceLoc);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Upload Level 0: 64x64 solid red on all six faces.
+    constexpr int kLevel0Size = 64;
+    std::vector<GLColor> redData(kLevel0Size * kLevel0Size, GLColor::red);
+    for (GLenum face = 0; face < 6; ++face)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA8, kLevel0Size, kLevel0Size,
+                     0, GL_RGBA, GL_UNSIGNED_BYTE, redData.data());
+    }
+    ASSERT_GL_NO_ERROR();
+
+    // Upload Level 1: 128x128 solid green on all six faces (oversized relative to Level 0).
+    constexpr int kLevel1Size = 128;
+    std::vector<GLColor> greenData(kLevel1Size * kLevel1Size, GLColor::green);
+    for (GLenum face = 0; face < 6; ++face)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 1, GL_RGBA8, kLevel1Size, kLevel1Size,
+                     0, GL_RGBA, GL_UNSIGNED_BYTE, greenData.data());
+    }
+    ASSERT_GL_NO_ERROR();
+
+    // Verify Level 0 sampling across all six faces.
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
+    for (int face = 0; face < 6; ++face)
+    {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glUniform1i(cubeFaceLoc, face);
+        drawQuad(cubeProgram, "position", 0.5f);
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+    }
+
+    // Verify Level 1 sampling across all six faces.
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 1);
+    for (int face = 0; face < 6; ++face)
+    {
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glUniform1i(cubeFaceLoc, face);
+        drawQuad(cubeProgram, "position", 0.5f);
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+    }
+}
+
+class Texture3DTestES3_OversizedMipLevels : public Texture3DTestES3
+{
+  protected:
+    Texture3DTestES3_OversizedMipLevels() : Texture3DTestES3() {}
+
+    void testSetUp() override
+    {
+        Texture3DTestES3::testSetUp();
+        glUseProgram(mProgram);
+        glUniform1i(mTexture3DUniformLocation, 0);
+        glActiveTexture(GL_TEXTURE0);
+    }
+};
+
+// Test that defining a nonzero mip level on a 3D texture that is oversized along the depth axis
+// succeeds and renders correctly.
+TEST_P(Texture3DTestES3_OversizedMipLevels, OversizedDepth)
+{
+    glBindTexture(GL_TEXTURE_3D, mTexture3D);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Level 0: 64x64x4 solid red. The mip slot for level 1 is 32x32x2.
+    constexpr int kLevel0Width  = 64;
+    constexpr int kLevel0Height = 64;
+    constexpr int kLevel0Depth  = 4;
+    std::vector<GLColor> redData(kLevel0Width * kLevel0Height * kLevel0Depth, GLColor::red);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, kLevel0Width, kLevel0Height, kLevel0Depth, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, redData.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Level 1 oversized via depth: 32x32x4 solid green against slot 32x32x2.
+    constexpr int kLevel1Width  = 32;
+    constexpr int kLevel1Height = 32;
+    constexpr int kLevel1Depth  = 4;
+    std::vector<GLColor> greenData(kLevel1Width * kLevel1Height * kLevel1Depth, GLColor::green);
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, kLevel1Width, kLevel1Height, kLevel1Depth, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, greenData.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Verify Level 0 sampling.
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+
+    // Verify Level 1 sampling.
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 1);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+}
+
+class Texture2DArrayTestES3_OversizedMipLevels : public Texture2DArrayTestES3
+{
+  protected:
+    struct LevelDimensions
+    {
+        int width;
+        int height;
+        int depth;
+    };
+
+    Texture2DArrayTestES3_OversizedMipLevels() : Texture2DArrayTestES3() {}
+
+    void testSetUp() override
+    {
+        Texture2DArrayTestES3::testSetUp();
+        glUseProgram(mProgram);
+        glUniform1i(mTextureArrayLocation, 0);
+        glActiveTexture(GL_TEXTURE0);
+    }
+
+    void runTwoLevelTest(const LevelDimensions &level0, const LevelDimensions &level1)
+    {
+        // Per-slice colors for levels 0 and 1. Slice `i` of level 0 is filled with a solid color
+        // `kLevel0Colors[i]`, and slice `i` of level 1 is filled with `kLevel1Colors[i]`.
+        const std::array<GLColor, 3> kLevel0Colors = {GLColor::red, GLColor::blue,
+                                                      GLColor::magenta};
+        const std::array<GLColor, 3> kLevel1Colors = {GLColor::green, GLColor::yellow,
+                                                      GLColor::cyan};
+        ASSERT_LE(static_cast<size_t>(level0.depth), kLevel0Colors.size());
+        ASSERT_LE(static_cast<size_t>(level1.depth), kLevel1Colors.size());
+
+        glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        // Populate level 0 with `level0.depth` contiguous 2D slices, filling each `level0.width *
+        // level0.height` slice with its corresponding color from `kLevel0Colors`.
+        const size_t level0SliceSize = static_cast<size_t>(level0.width) * level0.height;
+        std::vector<GLColor> level0Data(level0SliceSize * level0.depth);
+        for (int slice = 0; slice < level0.depth; ++slice)
+        {
+            std::fill_n(level0Data.begin() + slice * level0SliceSize, level0SliceSize,
+                        kLevel0Colors[slice]);
+        }
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, level0.width, level0.height, level0.depth, 0,
+                     GL_RGBA, GL_UNSIGNED_BYTE, level0Data.data());
+        ASSERT_GL_NO_ERROR();
+
+        // Populate level 1 with `level1.depth` contiguous 2D slices, filling each `level1.width *
+        // level1.height` slice with its corresponding color from `kLevel1Colors`.
+        const size_t level1SliceSize = static_cast<size_t>(level1.width) * level1.height;
+        std::vector<GLColor> level1Data(level1SliceSize * level1.depth);
+        for (int slice = 0; slice < level1.depth; ++slice)
+        {
+            std::fill_n(level1Data.begin() + slice * level1SliceSize, level1SliceSize,
+                        kLevel1Colors[slice]);
+        }
+        glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, level1.width, level1.height, level1.depth, 0,
+                     GL_RGBA, GL_UNSIGNED_BYTE, level1Data.data());
+        ASSERT_GL_NO_ERROR();
+
+        // Verify Level 0 sampling for all slices.
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 0);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 0);
+        for (int slice = 0; slice < level0.depth; ++slice)
+        {
+            glUniform1i(mTextureArraySliceUniformLocation, slice);
+            drawQuad(mProgram, "position", 0.5f);
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kLevel0Colors[slice]);
+        }
+
+        // Verify Level 1 sampling for all slices.
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_BASE_LEVEL, 1);
+        glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 1);
+        for (int slice = 0; slice < level1.depth; ++slice)
+        {
+            glUniform1i(mTextureArraySliceUniformLocation, slice);
+            drawQuad(mProgram, "position", 0.5f);
+            EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), kLevel1Colors[slice]);
+        }
+    }
+};
+
+// Test that defining an oversized nonzero mip level on a 2D array texture with multiple layers
+// succeeds and renders all levels and layers correctly.
+TEST_P(Texture2DArrayTestES3_OversizedMipLevels, OversizedLevel1)
+{
+    // Level 0 is 64x64x2; level 1 is 128x128x2 (oversized in width and height relative to
+    // level 0, with the same layer count).
+    runTwoLevelTest({64, 64, 2}, {128, 128, 2});
+}
+
+// Test that defining an oversized nonzero mip level on a 2D array texture that is also oversized
+// along the depth (layer count) axis succeeds and renders all levels and layers correctly.
+TEST_P(Texture2DArrayTestES3_OversizedMipLevels, OversizedLevel1PlusDepth)
+{
+    // Level 0 is 64x64x2; level 1 is 128x128x3 (oversized in width, height, and depth/layer count
+    // relative to level 0).
+    runTwoLevelTest({64, 64, 2}, {128, 128, 3});
+}
+
+// Test that defining a properly sized nonzero mip level on a 2D array texture with multiple layers
+// succeeds and renders all levels and layers correctly.
+TEST_P(Texture2DArrayTestES3_OversizedMipLevels, ProperlySizedLevel1)
+{
+    // Level 0 is 64x64x2; level 1 is 32x32x2 (properly sized relative to level 0: width and
+    // height are halved, while the depth/layer count of a 2D array texture remains constant across
+    // mip levels).
+    runTwoLevelTest({64, 64, 2}, {32, 32, 2});
+}
+
 class Texture2DTestES3_MultiSizeBaseLevelChange : public Texture2DTestES3
 {
   protected:
@@ -27186,6 +27445,11 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     ES3_OPENGL().enable(Feature::VirtualizeBaseLevelAndMipchain),
     ES3_OPENGLES().enable(Feature::VirtualizeBaseLevelAndMipchain));
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture3DTestES3_OversizedMipLevels);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture3DTestES3_OversizedMipLevels,
+                               ES3_OPENGL().enable(Feature::VirtualizeBaseLevelAndMipchain),
+                               ES3_OPENGLES().enable(Feature::VirtualizeBaseLevelAndMipchain));
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DIntegerAlpha1TestES3);
 ANGLE_INSTANTIATE_TEST_ES3(Texture2DIntegerAlpha1TestES3);
 
@@ -27200,6 +27464,11 @@ ANGLE_INSTANTIATE_TEST_ES3(SamplerTypeMixTestES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DArrayTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DArrayTestES3,
+                               ES3_OPENGL().enable(Feature::VirtualizeBaseLevelAndMipchain),
+                               ES3_OPENGLES().enable(Feature::VirtualizeBaseLevelAndMipchain));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DArrayTestES3_OversizedMipLevels);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DArrayTestES3_OversizedMipLevels,
                                ES3_OPENGL().enable(Feature::VirtualizeBaseLevelAndMipchain),
                                ES3_OPENGLES().enable(Feature::VirtualizeBaseLevelAndMipchain));
 
