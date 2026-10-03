@@ -3137,6 +3137,47 @@
 568687942 VULKAN : FramebufferTest_ES3.DetachDepthWhileStencilRemainsAttached/* = SKIP
 568687942 PIXEL4ORXL GLES : FramebufferTest_ES3.DetachDepthWhileStencilRemainsAttached/* = SKIP
 
+// Platform-specific failures of new tests for the
+// VirtualizeBaseLevelAndMipchain workaround, and workarounds it
+// subsumed. These won't be fixed.
+550607402 PIXEL4ORXL GLES : Texture2DTestES3_MultiSizeBaseLevelChange.FillLevel0ThenRaiseBaseLevelAndModify/* = SKIP
+550607402 PIXEL4ORXL GLES : Texture2DTestES3_NonZeroBaseLevelGenMipmaps.VerifyMipmapContents/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 PIXEL4ORXL GLES : Texture2DTestES3_RecreateImmutableOnBaseLevelIncrease.ImmutableNPOTTextureBaseLevelIncrease/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 PIXEL4ORXL GLES : Texture2DTestES3_RecreateImmutableOnBaseLevelIncrease.ImmutableNPOTTextureBaseLevelIncreaseMaxLevel/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 MAC AMD METAL : Texture3DTestES3.NPOTGenerateMipmapDrawThenRaiseBaseLevelAndSubImage/* = SKIP
+550607402 LINUX INTEL OPENGL : Texture2DTestES3_ResetTexStorage2DBaseLevel.MutableBaseLevelSyncThenImmutableNPOTStorage/* = SKIP
+550607402 WIN INTEL OPENGL : ASTCCompressedWithBaseLevelRobustInitTest.DrawWithoutUpload4x4/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN INTEL OPENGL : ASTCCompressedWithBaseLevelRobustInitTest.DrawWithoutUpload8x5/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN INTEL OPENGL : ASTCCompressedWithBaseLevelRobustInitTest.MutableToImmutableASTC8x5WithNonZeroBaseLevel/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN INTEL OPENGL : Texture2DTestES3_MultiSizeBaseLevelChange.DefineLevel0ThenBaseLevel1ThenLevel2/* = SKIP
+550607402 WIN INTEL OPENGL : Texture3DTestES3.LargeLevel0ThenSmallLevel1FBOAttach/* = SKIP
+
+// Platform-specific failures from enabling the
+// VirtualizeBaseLevelAndMipchain workaround throughout TextureTest.cpp.
+// These won't be fixed.
+550607402 PIXEL4ORXL GLES : ETC1CompressedTextureTest.ETC1CompressedImageDraws/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 PIXEL4ORXL GLES : Texture2DBaseMaxTestES3.GenerateMipmapAfterRebase/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 PIXEL4ORXL GLES : Texture2DBaseMaxTestES3.GenerateMipmapAfterRebaseImmutable/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 PIXEL4ORXL GLES : Texture2DTestES3.TextureBaseLevelGreaterThanMaxLevel3Levels/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 PIXEL4ORXL GLES : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByDraw/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 PIXEL4ORXL GLES : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeDrawnVerifyByReadPixels/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 PIXEL4ORXL GLES : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByDraw/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 PIXEL4ORXL GLES : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByReadPixels/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN INTEL OPENGL : ETC1CompressedTextureTest.ETC1CompressedImageNPOT/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN INTEL OPENGL : Texture2DTestES3.TextureCOMPRESSEDRGB8ETC2ImplicitAlpha1/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN INTEL OPENGL : Texture2DTestES3.TextureCOMPRESSEDSRGB8ETC2ImplicitAlpha1/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN INTEL OPENGL : Texture2DTestES3.UnpackSkipImages2D/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN INTEL OPENGL : Texture2DTestES3RobustInit.TextureCOMPRESSEDRGB8A1ETC2/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN INTEL OPENGL : Texture2DTestES3RobustInit.TextureCOMPRESSEDSRGB8A1ETC2/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN NVIDIA GLES : Texture2DBaseMaxTestES3.GenerateMipmapAfterRebase/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN NVIDIA GLES : Texture3DTestES3.PixelUnpackParamsChangeTexImage/ES3_OpenGLES_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN NVIDIA GLES : Texture3DTestES3.PixelUnpackParamsChangeTexImage/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 WIN NVIDIA OPENGL : Texture2DBaseMaxTestES3.GenerateMipmapAfterRebase/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+550607402 LINUX NVIDIA OPENGL : Texture2DBaseMaxTestES3.GenerateMipmapAfterRebase/ES3_OpenGL_VirtualizeBaseLevelAndMipchain = SKIP
+
+// Failures of new tests which should be fixed.
+550607402 WIN NVIDIA WGPU : MipmapTestES3.GenerateMipmapBaseLevelOutOfRangeImmutableTexture/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

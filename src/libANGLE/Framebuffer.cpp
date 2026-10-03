@@ -2318,13 +2318,12 @@ void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
             return;
         }
 
+        // A texture attachment's backing native texture ID or level can change when
+        // reattachFboDepthStencilOnReallocation or virtualizeBaseLevelAndMipchain is active.
         if (message == angle::SubjectMessage::ObjectReallocated)
         {
-            if (index == DIRTY_BIT_DEPTH_ATTACHMENT || index == DIRTY_BIT_STENCIL_ATTACHMENT)
-            {
-                mDirtyBits.set(index);
-                onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
-            }
+            mDirtyBits.set(index);
+            onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
             return;
         }
 
