@@ -3126,6 +3126,7 @@
 546640309 WIN QUALCOMM D3D11 : TransformFeedbackTest.BlitWhileRecordingDoesNotContribute/* = SKIP
 546640309 WIN QUALCOMM D3D11 : TransformFeedbackTest.CopyWhileRecordingDoesNotContribute/* = SKIP
 546640309 WIN QUALCOMM D3D11 : TransformFeedbackTest.TransformFeedbackQueryPausedDrawThenResume/* = SKIP
+569910766 WIN QUALCOMM D3D11 : RobustResourceInitWithInvalidationTest.InvalidateAfterDrawAndClearZeroDepth/* = SKIP
 
 // The setNeedInitOnInvalidation feature loses data with 3D textures
 564918838 D3D11 : RobustResourceInitTestES3.InvalidateSliceOf3DSample/* = SKIP
