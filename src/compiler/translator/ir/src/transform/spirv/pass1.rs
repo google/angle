@@ -9,16 +9,19 @@
 use crate::ir::*;
 use crate::*;
 
+use crate::transform::add_driver_uniforms::DriverUniforms;
 use crate::transform::spirv::vertex_instance_id;
 
-pub struct Options {}
+pub struct Options<'a> {
+    pub driver_uniforms: &'a DriverUniforms,
+}
 
 struct State<'a> {
     ir_meta: &'a mut IRMeta,
     vertex_instance_id_state: vertex_instance_id::State,
 }
 
-pub fn run(ir: &mut IR, _options: &Options) {
+pub fn run(ir: &mut IR, options: &Options) {
     let vertex_instance_id_state = vertex_instance_id::init(&mut ir.meta);
     let mut state = State { ir_meta: &mut ir.meta, vertex_instance_id_state };
 
@@ -28,7 +31,7 @@ pub fn run(ir: &mut IR, _options: &Options) {
         &|state, instruction| {
             let (opcode, result) = instruction.get_op_and_result(state.ir_meta);
             match *opcode {
-                OpCode::Load(pointer) => transform_load(state, pointer, result.unwrap()),
+                OpCode::Load(pointer) => transform_load(state, options, pointer, result.unwrap()),
                 _ => vec![],
             }
         },
@@ -37,6 +40,7 @@ pub fn run(ir: &mut IR, _options: &Options) {
 
 fn transform_load(
     state: &mut State,
+    options: &Options,
     pointer: TypedId,
     result: TypedRegisterId,
 ) -> Vec<traverser::Transform> {
@@ -46,6 +50,7 @@ fn transform_load(
             vertex_instance_id::transform_instance_index_load(
                 state.ir_meta,
                 &state.vertex_instance_id_state,
+                options.driver_uniforms,
                 pointer,
                 result,
             )
