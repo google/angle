@@ -230,6 +230,7 @@ vars = {
   'checkout_angle_restricted_trace_bullet_echo': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_bus_simulator_indonesia': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_call_break_offline_card_game': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_call_of_dragons': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_callbreak': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_candy_crush_500': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_candy_crush_soda_saga': 'checkout_angle_restricted_traces',
@@ -2103,6 +2104,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_call_break_offline_card_game',
+  },
+  'src/tests/restricted_traces/call_of_dragons': {
+      'packages': [
+        {
+            'package': 'angle/traces/call_of_dragons',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_call_of_dragons',
   },
   'src/tests/restricted_traces/callbreak': {
       'packages': [

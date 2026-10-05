@@ -39,6 +39,7 @@ REPRESENTATIVE_TRACES = [
     "black_desert_mobile",
     "block_blast",
     "bubble_shooter_pop_bubbles",
+    "call_of_dragons",
     "callbreak",
     "candy_crush_soda_saga",
     "car_chase",
