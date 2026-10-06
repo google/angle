@@ -675,11 +675,13 @@ deps = {
   'third_party/android_build_tools/aapt2/cipd': {
       'packages': [
           {
-              'package': 'chromium/third_party/android_build_tools/aapt2',
-              'version': '7tEuuB92wV8xh54fCO0bRk_6FS_7XtsBl9LB5Tf5d0AC',
+              'package': 'chromium/third_party/android_build_tools/aapt2/${{platform}}',
+              'version': 'version:2@9.5.0-alpha08-16409357',
           },
       ],
-      'condition': 'checkout_android and not build_with_chromium',
+      'condition': 'checkout_android and not build_with_chromium and '
+                   '((host_os == "linux" and host_cpu == "x64") or '
+                   '(host_os == "mac" and host_cpu == "arm64"))',
       'dep_type': 'cipd',
   },
 
