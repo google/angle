@@ -1362,6 +1362,21 @@ impl Block {
     }
 }
 
+impl instruction::InstructionContainer for Block {
+    fn add_register(&mut self, register_id: RegisterId) {
+        self.add_register_instruction(register_id);
+    }
+    fn add_typed_instruction(&mut self, inst: instruction::Result) -> TypedId {
+        self.add_typed_instruction(inst)
+    }
+    fn add_void_instruction(&mut self, inst: instruction::Result) {
+        self.add_instruction(inst)
+    }
+    fn declare(&mut self, variable_id: VariableId) {
+        self.add_variable_declaration(variable_id);
+    }
+}
+
 #[derive(Copy, Clone)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub enum YuvCscStandard {

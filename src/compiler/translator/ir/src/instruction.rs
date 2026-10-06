@@ -5249,3 +5249,400 @@ pub fn built_in_texture(
     let op = OpCode::Texture(op, sampler, coord);
     make_register(ir_meta, op, result_type_id, precision)
 }
+
+// Helper to build transformations with less boilerplate
+pub trait InstructionContainer {
+    fn add_register(&mut self, register_id: RegisterId);
+    fn add_typed_instruction(&mut self, inst: instruction::Result) -> TypedId;
+    fn add_void_instruction(&mut self, inst: instruction::Result);
+    fn declare(&mut self, variable_id: VariableId);
+}
+
+pub struct Builder<'a, Container: InstructionContainer> {
+    container: &'a mut Container,
+}
+
+impl<'a, Container: InstructionContainer> Builder<'a, Container> {
+    pub fn new(container: &'a mut Container) -> Builder<'a, Container> {
+        Builder { container }
+    }
+
+    pub fn add_register(&mut self, register_id: RegisterId) {
+        self.container.add_register(register_id);
+    }
+    pub fn declare(&mut self, variable_id: VariableId) {
+        self.container.declare(variable_id);
+    }
+
+    pub fn load(&mut self, ir_meta: &mut IRMeta, to_load: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(load, ir_meta, to_load))
+    }
+    pub fn store(&mut self, ir_meta: &mut IRMeta, pointer: TypedId, value: TypedId) {
+        self.container.add_void_instruction(instruction::make!(store, ir_meta, pointer, value));
+    }
+    pub fn alias(&mut self, ir_meta: &mut IRMeta, id: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(alias, ir_meta, id))
+    }
+    pub fn vector_component(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        vector: TypedId,
+        component: u32,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            vector_component,
+            ir_meta,
+            vector,
+            component
+        ))
+    }
+    pub fn vector_component_multi(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        vector: TypedId,
+        components: Vec<u32>,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            vector_component_multi,
+            ir_meta,
+            vector,
+            components
+        ))
+    }
+    pub fn index(&mut self, ir_meta: &mut IRMeta, indexed: TypedId, index: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(index, ir_meta, indexed, index))
+    }
+    pub fn struct_field(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        struct_id: TypedId,
+        field_index: u32,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            struct_field,
+            ir_meta,
+            struct_id,
+            field_index
+        ))
+    }
+    pub fn construct(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        type_id: TypeId,
+        args: Vec<TypedId>,
+        precision_override: Option<Precision>,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            construct,
+            ir_meta,
+            type_id,
+            args,
+            precision_override
+        ))
+    }
+    pub fn array_length(&mut self, ir_meta: &mut IRMeta, operand: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(array_length, ir_meta, operand))
+    }
+    pub fn negate(&mut self, ir_meta: &mut IRMeta, operand: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(negate, ir_meta, operand))
+    }
+    pub fn postfix_increment(&mut self, ir_meta: &mut IRMeta, operand: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            postfix_increment,
+            ir_meta,
+            operand
+        ))
+    }
+    pub fn postfix_decrement(&mut self, ir_meta: &mut IRMeta, operand: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            postfix_decrement,
+            ir_meta,
+            operand
+        ))
+    }
+    pub fn prefix_increment(&mut self, ir_meta: &mut IRMeta, operand: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(prefix_increment, ir_meta, operand))
+    }
+    pub fn prefix_decrement(&mut self, ir_meta: &mut IRMeta, operand: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(prefix_decrement, ir_meta, operand))
+    }
+    pub fn add(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(add, ir_meta, lhs, rhs))
+    }
+    pub fn sub(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(sub, ir_meta, lhs, rhs))
+    }
+    pub fn mul(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(mul, ir_meta, lhs, rhs))
+    }
+    pub fn vector_times_scalar(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        lhs: TypedId,
+        rhs: TypedId,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            vector_times_scalar,
+            ir_meta,
+            lhs,
+            rhs
+        ))
+    }
+    pub fn matrix_times_scalar(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        lhs: TypedId,
+        rhs: TypedId,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            matrix_times_scalar,
+            ir_meta,
+            lhs,
+            rhs
+        ))
+    }
+    pub fn vector_times_matrix(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        lhs: TypedId,
+        rhs: TypedId,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            vector_times_matrix,
+            ir_meta,
+            lhs,
+            rhs
+        ))
+    }
+    pub fn matrix_times_vector(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        lhs: TypedId,
+        rhs: TypedId,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            matrix_times_vector,
+            ir_meta,
+            lhs,
+            rhs
+        ))
+    }
+    pub fn matrix_times_matrix(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        lhs: TypedId,
+        rhs: TypedId,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            matrix_times_matrix,
+            ir_meta,
+            lhs,
+            rhs
+        ))
+    }
+    pub fn div(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(div, ir_meta, lhs, rhs))
+    }
+    pub fn imod(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(imod, ir_meta, lhs, rhs))
+    }
+    pub fn logical_not(&mut self, ir_meta: &mut IRMeta, operand: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(logical_not, ir_meta, operand))
+    }
+    pub fn logical_xor(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(logical_xor, ir_meta, lhs, rhs))
+    }
+    pub fn equal(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(equal, ir_meta, lhs, rhs))
+    }
+    pub fn not_equal(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(not_equal, ir_meta, lhs, rhs))
+    }
+    pub fn less_than(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(less_than, ir_meta, lhs, rhs))
+    }
+    pub fn greater_than(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(greater_than, ir_meta, lhs, rhs))
+    }
+    pub fn less_than_equal(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(less_than_equal, ir_meta, lhs, rhs))
+    }
+    pub fn greater_than_equal(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        lhs: TypedId,
+        rhs: TypedId,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            greater_than_equal,
+            ir_meta,
+            lhs,
+            rhs
+        ))
+    }
+    pub fn bitwise_not(&mut self, ir_meta: &mut IRMeta, operand: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(bitwise_not, ir_meta, operand))
+    }
+    pub fn bit_shift_left(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(bit_shift_left, ir_meta, lhs, rhs))
+    }
+    pub fn bit_shift_right(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(bit_shift_right, ir_meta, lhs, rhs))
+    }
+    pub fn bitwise_or(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(bitwise_or, ir_meta, lhs, rhs))
+    }
+    pub fn bitwise_xor(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(bitwise_xor, ir_meta, lhs, rhs))
+    }
+    pub fn bitwise_and(&mut self, ir_meta: &mut IRMeta, lhs: TypedId, rhs: TypedId) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(bitwise_and, ir_meta, lhs, rhs))
+    }
+    pub fn built_in_unary(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        op: UnaryOpCode,
+        operand: TypedId,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            built_in_unary,
+            ir_meta,
+            op,
+            operand
+        ))
+    }
+    pub fn built_in_binary(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        op: BinaryOpCode,
+        operand1: TypedId,
+        operand2: TypedId,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            built_in_binary,
+            ir_meta,
+            op,
+            operand1,
+            operand2
+        ))
+    }
+    pub fn built_in(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        op: BuiltInOpCode,
+        operands: Vec<TypedId>,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(built_in, ir_meta, op, operands))
+    }
+    pub fn built_in_void(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        op: BuiltInOpCode,
+        operands: Vec<TypedId>,
+    ) {
+        self.container.add_void_instruction(instruction::make!(built_in, ir_meta, op, operands))
+    }
+    pub fn built_in_texture(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        op: TextureOpCode,
+        sampler: TypedId,
+        coord: TypedId,
+    ) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(
+            built_in_texture,
+            ir_meta,
+            op,
+            sampler,
+            coord
+        ))
+    }
+}
+
+impl<'a> Builder<'a, Block> {
+    // Adds a block-terminating instruction to the tail of the merge chain.
+    fn add_branch(&mut self, inst: instruction::Result) {
+        InstructionContainer::add_void_instruction(self.container, inst);
+    }
+    pub fn branch_discard(&mut self) {
+        self.add_branch(instruction::branch_discard());
+    }
+    pub fn branch_return(&mut self, value: Option<TypedId>) {
+        self.add_branch(instruction::branch_return(value));
+    }
+    pub fn branch_break(&mut self) {
+        self.add_branch(instruction::branch_break());
+    }
+    pub fn branch_continue(&mut self) {
+        self.add_branch(instruction::branch_continue());
+    }
+    pub fn branch_passthrough(&mut self) {
+        self.add_branch(instruction::branch_passthrough());
+    }
+    pub fn branch_next_block(&mut self) {
+        self.add_branch(instruction::branch_next_block());
+    }
+    pub fn branch_merge(&mut self, id: Option<TypedId>) {
+        self.add_branch(instruction::branch_merge(id));
+    }
+}
+
+impl<'a> Builder<'a, traverser::Transforms> {
+    pub fn is_empty(&self) -> bool {
+        self.container.is_empty()
+    }
+    pub fn keep(&mut self) {
+        self.container.keep();
+    }
+    pub fn remove(&mut self) {
+        self.container.remove();
+    }
+    pub fn add_block(&mut self, block: Block) {
+        self.container.add_block(block);
+    }
+    // Given an existing `result`, make it such that it would evaluate to `value`.
+    // This allows the rest of the shader to continue referencing the existing `result` and not need
+    // modification.
+    //
+    // * If the last transformation in the list is the `value` register, its instruction is instead
+    //   assigned to `result` (similar to `make_with_result_id!()`)
+    // * Otherwise, the existing instruction for `result` is changed to `Alias value`
+    //
+    // For example, in the following transformation:
+    //
+    //     let c = builder.add(ir_meta, a, b);
+    //     builder.alias_result(ir_meta, result, c);
+    //
+    // Then if `builder.add` has generated a `c = Add a b` instruction, then `c` will be a register
+    // and the instruction is changed to `result = Add a b` (and `c` is no longer available).
+    // However, if the instruction is constant-folded, then `c` is a constant, and
+    // `result = Alias c` is added to the transforms.
+    pub fn alias_result(&mut self, ir_meta: &mut IRMeta, result: TypedRegisterId, value: TypedId) {
+        debug_assert_ne!(value.id, Id::Register(result.id));
+        match (value.id, self.container.get_last_transform_result_register_mut()) {
+            (Id::Register(value), Some(last_result)) if value == *last_result => {
+                ir_meta.replace_instruction(result.id, value);
+                *last_result = result.id;
+            }
+            _ => {
+                self.container.add_typed_instruction(instruction::make_with_result_id!(
+                    alias, ir_meta, result, value
+                ));
+            }
+        }
+    }
+
+    pub fn finish(self) -> Vec<traverser::Transform> {
+        self.container.get()
+    }
+
+    pub fn finish_with_result(
+        mut self,
+        ir_meta: &mut IRMeta,
+        result: TypedRegisterId,
+        value: TypedId,
+    ) -> Vec<traverser::Transform> {
+        self.alias_result(ir_meta, result, value);
+        self.container.get()
+    }
+}

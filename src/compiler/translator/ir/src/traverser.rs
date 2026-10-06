@@ -598,3 +598,58 @@ pub mod transformer {
         cur_block
     }
 }
+
+pub struct Transforms {
+    transforms: Vec<Transform>,
+}
+
+impl Transforms {
+    pub fn new() -> Transforms {
+        Transforms { transforms: Vec::new() }
+    }
+
+    pub fn get(&mut self) -> Vec<Transform> {
+        std::mem::take(&mut self.transforms)
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.transforms.is_empty()
+    }
+
+    pub fn keep(&mut self) {
+        self.transforms.push(Transform::Keep);
+    }
+
+    pub fn remove(&mut self) {
+        self.transforms.push(Transform::Remove);
+    }
+
+    pub fn add_block(&mut self, block: Block) {
+        self.transforms.push(Transform::AddBlock(block));
+    }
+
+    // If the last transform is Transform::Add(BlockInstruction::Register(register))), returns
+    // `&mut register`.  This is a helper to allow adding an instruction and then going back to
+    // override its result to an existing ID.
+    pub fn get_last_transform_result_register_mut(&mut self) -> Option<&mut RegisterId> {
+        self.transforms.last_mut().and_then(|transform| match transform {
+            Transform::Add(BlockInstruction::Register(result)) => Some(result),
+            _ => None,
+        })
+    }
+}
+
+impl instruction::InstructionContainer for Transforms {
+    fn add_register(&mut self, register_id: RegisterId) {
+        self.transforms.push(traverser::Transform::Add(BlockInstruction::new_typed(register_id)))
+    }
+    fn add_typed_instruction(&mut self, inst: instruction::Result) -> TypedId {
+        traverser::add_typed_instruction(&mut self.transforms, inst)
+    }
+    fn add_void_instruction(&mut self, inst: instruction::Result) {
+        traverser::add_void_instruction(&mut self.transforms, inst);
+    }
+    fn declare(&mut self, variable_id: VariableId) {
+        self.transforms.push(Transform::DeclareVariable(variable_id));
+    }
+}

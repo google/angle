@@ -387,40 +387,23 @@ fn transform_load_by_image(
     //     partial = BitShiftLeft rrrr gvec4(24, 16, 8, 0)
     //     result = BitShiftRight partial 24
     //
-    let mut transforms = vec![];
-    let coord =
-        traverser::add_typed_instruction(&mut transforms, instruction::load(ir_meta, fragcoord));
-    let plane =
-        traverser::add_typed_instruction(&mut transforms, instruction::load(ir_meta, plane));
-    let mut loaded = instruction::built_in(ir_meta, BuiltInOpCode::ImageLoad, vec![plane, coord]);
+    let mut transforms = traverser::Transforms::new();
+    let mut builder = instruction::Builder::new(&mut transforms);
+    let coord = builder.load(ir_meta, fragcoord);
+    let plane = builder.load(ir_meta, plane);
 
-    if !options.pls.supports_native_rgba8_image_formats
+    let value = if !options.pls.supports_native_rgba8_image_formats
         && plane_info.format == ImageInternalFormat::RGBA8
     {
-        let loaded = traverser::add_typed_instruction(&mut transforms, loaded);
-        let r = traverser::add_typed_instruction(
-            &mut transforms,
-            instruction::vector_component(ir_meta, loaded, 0),
-        );
-        traverser::add_typed_instruction(
-            &mut transforms,
-            instruction::make_with_result_id!(
-                built_in_unary,
-                ir_meta,
-                result,
-                UnaryOpCode::UnpackUnorm4x8,
-                r
-            ),
-        );
+        let loaded = builder.built_in(ir_meta, BuiltInOpCode::ImageLoad, vec![plane, coord]);
+        let r = builder.vector_component(ir_meta, loaded, 0);
+        builder.built_in_unary(ir_meta, UnaryOpCode::UnpackUnorm4x8, r)
     } else if !options.pls.supports_native_rgba8_image_formats
         && (plane_info.format == ImageInternalFormat::RGBA8I
             || plane_info.format == ImageInternalFormat::RGBA8UI)
     {
-        let loaded = traverser::add_typed_instruction(&mut transforms, loaded);
-        let rrrr = traverser::add_typed_instruction(
-            &mut transforms,
-            instruction::vector_component_multi(ir_meta, loaded, vec![0, 0, 0, 0]),
-        );
+        let loaded = builder.built_in(ir_meta, BuiltInOpCode::ImageLoad, vec![plane, coord]);
+        let rrrr = builder.vector_component_multi(ir_meta, loaded, vec![0, 0, 0, 0]);
         // For BinaryOpCode::BitShiftLeft and BinaryOpCode::BitShiftRight,
         // result precision should propagate to both operands. See ir::instruction::propagate().
         // Since the result precision is the same as the first operand precision, we can apply the
@@ -430,25 +413,18 @@ fn transform_load_by_image(
         } else {
             ir_meta.get_constant_uvec4_typed(24, 16, 8, 0, rrrr.precision)
         };
-        let partial = traverser::add_typed_instruction(
-            &mut transforms,
-            instruction::bit_shift_left(ir_meta, rrrr, shift),
-        );
+        let partial = builder.bit_shift_left(ir_meta, rrrr, shift);
         let const24 = if plane_info.format == ImageInternalFormat::RGBA8I {
             ir_meta.get_constant_int_typed(24, partial.precision)
         } else {
             ir_meta.get_constant_uint_typed(24, partial.precision)
         };
-        traverser::add_typed_instruction(
-            &mut transforms,
-            instruction::make_with_result_id!(bit_shift_right, ir_meta, result, partial, const24),
-        );
+        builder.bit_shift_right(ir_meta, partial, const24)
     } else {
-        loaded.override_result_id(ir_meta, result);
-        traverser::add_typed_instruction(&mut transforms, loaded);
-    }
+        builder.built_in(ir_meta, BuiltInOpCode::ImageLoad, vec![plane, coord])
+    };
 
-    transforms
+    builder.finish_with_result(ir_meta, result, value)
 }
 
 fn transform_load_by_framebuffer_fetch(
