@@ -1,10 +1,10 @@
 {
   "infra/config/representative_traces.star":
-    "5f1eb5499c456eb1d190c3b6a6cc79e4",
+    "df38e5062791119a6ee3d2839e54994e",
   "src/tests/restricted_traces/.gitignore":
     "371f3b4bd514af95e67a73f82116d4b6",
   "src/tests/restricted_traces/gen_restricted_traces.py":
     "3a1eec9822a57d7fe8589baaab9326ad",
   "src/tests/restricted_traces/restricted_traces.json":
-    "dd64e88acbb162eb7f21b91c0f127a29"
+    "aeb44f1d634f75d19499212fc18dd381"
 }

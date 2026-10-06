@@ -243,6 +243,7 @@ vars = {
   'checkout_angle_restricted_trace_castlevania_sotn': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_cat_runner': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_catalyst_black': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_chess_offline': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_chrono_trigger': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_clash_of_clans': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_clash_royale': 'checkout_angle_restricted_traces',
@@ -520,7 +521,7 @@ vars = {
   'checkout_angle_restricted_trace_thief_puzzle': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_thimbleweed_park': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_tile_club': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_tiles_hop': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_tiles_hop': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_tmnt_shredders_revenge': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_toca_life_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_toon_blast': 'checkout_extra_traces',
@@ -2236,6 +2237,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_catalyst_black',
+  },
+  'src/tests/restricted_traces/chess_offline': {
+      'packages': [
+        {
+            'package': 'angle/traces/chess_offline',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_chess_offline',
   },
   'src/tests/restricted_traces/chrono_trigger': {
       'packages': [
