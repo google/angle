@@ -3605,8 +3605,10 @@ void CaptureBufferResetCalls(const gl::Context *context,
     Capture(&bufferRestoreCalls[bufferID],
             CaptureBindBuffer(replayState, true, gl::BufferBinding::Array, *id));
 
-    // Mutable buffers will be restored here using glBufferData.
-    // Immutable buffers need to be restored below, after maping.
+    // Mutable buffers will be restored here using glBufferData().
+    // Immutable buffers with the dynamic storage bit can be restored using glBufferSubData().
+    // The remaining immutable buffers need to be restored below, after mapping.
+    const bool isInitiallyMapped = resourceTracker->getStartingBuffersMappedInitial(bufferID);
     if (!buffer->isImmutable())
     {
         Capture(&bufferRestoreCalls[bufferID],
@@ -3614,8 +3616,16 @@ void CaptureBufferResetCalls(const gl::Context *context,
                                   static_cast<GLsizeiptr>(buffer->getSize()),
                                   buffer->getMapPointer(), buffer->getUsage()));
     }
+    else if (!isInitiallyMapped &&
+             (buffer->getStorageExtUsageFlags() & GL_DYNAMIC_STORAGE_BIT_EXT) != 0)
+    {
+        Capture(&bufferRestoreCalls[bufferID],
+                CaptureBufferSubData(replayState, true, gl::BufferBinding::Array, 0,
+                                     static_cast<GLsizeiptr>(buffer->getSize()),
+                                     buffer->getMapPointer()));
+    }
 
-    if (buffer->isMapped())
+    if (isInitiallyMapped)
     {
         // Track calls to remap a buffer that started as mapped
         BufferCalls &bufferMapCalls = resourceTracker->getBufferMapCalls();
