@@ -445,7 +445,32 @@ def add_upgrade_args(parser):
         help='Limits the number of captured frames to produce a shorter trace than the original.')
 
 
+def get_min_reqs_registration_error(trace, traces):
+    # get_min_reqs will run only if the target trace listed in restricted_traces.json and added
+    # to DEPS so output a message if either step is needed
+    if trace not in traces:
+        return 'Trace "%s" is not listed in %s.' % (trace, DEFAULT_TEST_JSON)
+
+    deps_path = os.path.join(SCRIPT_DIR, '..', '..', '..', 'DEPS')
+    with open(deps_path) as f:
+        deps_contents = f.read()
+    if "'checkout_angle_restricted_trace_%s'" % trace not in deps_contents:
+        return 'Trace "%s" is listed in %s but missing from DEPS.' % (trace, DEFAULT_TEST_JSON)
+    return None
+
+
 def get_min_reqs(args, traces):
+    registration_error = get_min_reqs_registration_error(args.traces, traces)
+    if registration_error:
+        logging.error(
+            '%s\nBefore running get_min_reqs, register the trace by running these commands '
+            'in %s:\n'
+            '    jq ".traces = (.traces + [\\"%s <version>\\"] | unique)" %s | sponge %s\n'
+            '    vpython3 gen_restricted_traces.py' %
+            (registration_error, os.path.relpath(SCRIPT_DIR), args.traces, DEFAULT_TEST_JSON,
+             DEFAULT_TEST_JSON))
+        return EXIT_FAILURE
+
     run_autoninja(args)
 
     env = {}
