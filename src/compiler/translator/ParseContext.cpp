@@ -708,7 +708,7 @@ TVector<const TFunction *> GetSamplerPassingFunctionsInDAGOrder(
         {
             visitStack.push_back({arg.callee, false});
         }
-        for (auto paramToArg : functionSamplerAccess->second.paramsPassedToCallee)
+        for (const auto &paramToArg : functionSamplerAccess->second.paramsPassedToCallee)
         {
             for (const SamplerAsFunctionArg &arg : paramToArg)
             {
@@ -8881,9 +8881,9 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
     checkDoesNotHaveDuplicateFieldNames(fieldList, structLine);
 
     // Ensure we do not specify any storage qualifiers on the struct members
-    for (unsigned int typeListIndex = 0; typeListIndex < fieldList->size(); typeListIndex++)
+    for (TField *fieldPtr : *fieldList)
     {
-        TField &field              = *(*fieldList)[typeListIndex];
+        TField &field              = *fieldPtr;
         const TQualifier qualifier = field.type()->getQualifier();
         switch (qualifier)
         {
@@ -10901,18 +10901,18 @@ void TParseContext::checkCallGraph()
 
     // Visit all the functions; even if a function is unreachable, it must still result in a compile
     // error.
-    for (auto iter : mCallGraph)
+    for (const auto &entry : mCallGraph)
     {
-        visitStack.push_back(iter.first);
+        visitStack.push_back(entry.first);
 
         // Check the callees of this function too, if any is undefined, it's an error.
-        for (const TFunction *callee : iter.second)
+        for (const TFunction *callee : entry.second)
         {
             if (mDefinedFunctions.find(callee) == mDefinedFunctions.end())
             {
                 std::stringstream errorStream = sh::InitializeStream<std::stringstream>();
                 errorStream << "Function " << callee->name() << "() called by "
-                            << iter.first->name() << "() is undefined";
+                            << entry.first->name() << "() is undefined";
                 mDiagnostics->globalError(errorStream.str().c_str());
             }
         }

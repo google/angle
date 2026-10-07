@@ -389,9 +389,8 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
 
         modifiedData->modified = nullptr;
 
-        for (size_t fieldIndex = 0; fieldIndex < structure->fields().size(); ++fieldIndex)
+        for (const TField *field : structure->fields())
         {
-            const TField *field    = structure->fields()[fieldIndex];
             const TType &fieldType = *field->type();
 
             // If the field is a sampler, or a struct that's entirely removed, skip it.
