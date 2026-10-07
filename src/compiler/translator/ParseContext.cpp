@@ -21,6 +21,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "common/angleutils.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"
 #include "compiler/preprocessor/SourceLocation.h"
@@ -9040,9 +9041,9 @@ bool TParseContext::isNestedIn(ControlFlowType type) const
     // Used for validation, we need to know for example that a `continue` statement is nested
     // within a loop, etc.  Search backwards in the nested control flow info to find the closest
     // control flow of given type.
-    for (auto iter = mControlFlow.rbegin(); iter != mControlFlow.rend(); ++iter)
+    for (const ControlFlow &controlFlow : angle::Reversed(mControlFlow))
     {
-        if (iter->type == type)
+        if (controlFlow.type == type)
         {
             return true;
         }
@@ -10926,15 +10927,15 @@ void TParseContext::checkCallGraph()
                         << callee->name();
             if (callee != function)
             {
-                for (auto caller = visitStack.rbegin(); caller != visitStack.rend(); ++caller)
+                for (const TFunction *caller : angle::Reversed(visitStack))
                 {
-                    if (visitState[*caller].state != VisitState::Visiting)
+                    if (visitState[caller].state != VisitState::Visiting)
                     {
                         continue;
                     }
 
-                    errorStream << " <- " << (*caller)->name();
-                    if (*caller == callee)
+                    errorStream << " <- " << caller->name();
+                    if (caller == callee)
                     {
                         break;
                     }

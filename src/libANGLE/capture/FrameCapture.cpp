@@ -643,10 +643,9 @@ void MaybeMergeClientAttributes(const gl::VertexArray *vao,
         size_t mergedIndex = mergedIndexMapOut[attribIndex];
         size_t offset      = addrOffset[attribIndex];
 
-        for (auto vaIndex = clientVACallIndices.rbegin(); vaIndex != clientVACallIndices.rend();
-             vaIndex++)
+        for (size_t callIndex : Reversed(clientVACallIndices))
         {
-            CallCapture &framecall = frameCalls->at(*vaIndex);
+            CallCapture &framecall = frameCalls->at(callIndex);
             ASSERT(framecall.params.hasClientArrayData());
 
             // The client pointer index is originally set to the attribute index. It should now be
