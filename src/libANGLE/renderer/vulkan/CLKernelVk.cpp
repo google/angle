@@ -132,7 +132,7 @@ angle::Result CLKernelVk::init()
     size_t podBufferSize        = 0;
 
     bool podFound = false;
-    for (const auto arg : getArgs())
+    for (const auto &arg : getArgs())
     {
         VkDescriptorType descType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
         switch (arg->getReflectionType())
@@ -337,7 +337,7 @@ angle::Result CLKernelVk::createInfo(CLKernelImpl::Info *info) const
     info->functionName = mName;
     info->attributes   = mAttributes;
     info->numArgs      = static_cast<cl_uint>(mArgs.size());
-    for (const auto arg : mArgs)
+    for (const auto &arg : mArgs)
     {
         info->args.push_back(arg->getArgInfo());
     }
@@ -455,7 +455,7 @@ angle::Result CLKernelVk::getOrCreateComputePipeline(vk::PipelineCacheAccess *pi
         constantDataOffset += sizeof(uint32_t);
     }
     // Populate kernel specialization constants (if any)
-    for (const auto arg : mArgs)
+    for (const auto &arg : mArgs)
     {
         if (arg->getUsed() &&
             arg->getReflectionType() == NonSemanticClspvReflectionArgumentWorkgroup)

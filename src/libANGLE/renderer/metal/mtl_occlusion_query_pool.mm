@@ -173,15 +173,14 @@ void OcclusionQueryPool::resolveVisibilityResults(ContextMtl *contextMtl)
 
     // Request synchronization and cleanup
     blitEncoder = contextMtl->getBlitCommandEncoder();
-    for (size_t i = 0; i < mAllocatedQueries.size(); ++i)
+    for (QueryMtl *query : mAllocatedQueries)
     {
-        QueryMtl *query = mAllocatedQueries[i];
         if (!query)
         {
             continue;
         }
 
-        const BufferRef &dstBuf = mAllocatedQueries[i]->getVisibilityResultBuffer();
+        const BufferRef &dstBuf = query->getVisibilityResultBuffer();
 
         dstBuf->syncContent(contextMtl, blitEncoder);
 

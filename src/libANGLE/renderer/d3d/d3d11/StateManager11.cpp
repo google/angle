@@ -3070,9 +3070,8 @@ angle::Result StateManager11::syncUniformBuffersForShader(const gl::Context *con
 
     const auto &shaderUniformBuffers = mExecutableD3D->getShaderUniformBufferCache(shaderType);
 
-    for (size_t bufferIndex = 0; bufferIndex < shaderUniformBuffers.size(); ++bufferIndex)
+    for (const D3DUBOCache &cache : shaderUniformBuffers)
     {
-        const D3DUBOCache cache = shaderUniformBuffers[bufferIndex];
         if (cache.binding == -1)
         {
             continue;
@@ -3168,9 +3167,8 @@ angle::Result StateManager11::syncUniformBuffersForShader(const gl::Context *con
 
     const auto &shaderUniformBuffersUseSB =
         mExecutableD3D->getShaderUniformBufferCacheUseSB(shaderType);
-    for (size_t bufferIndex = 0; bufferIndex < shaderUniformBuffersUseSB.size(); ++bufferIndex)
+    for (const D3DUBOCacheUseSB &cache : shaderUniformBuffersUseSB)
     {
-        const D3DUBOCacheUseSB cache = shaderUniformBuffersUseSB[bufferIndex];
         if (cache.binding == -1)
         {
             continue;

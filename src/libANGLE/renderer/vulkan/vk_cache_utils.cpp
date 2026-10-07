@@ -6183,9 +6183,8 @@ void WriteDescriptorDescs::updateTransformFeedbackWrite(
 void WriteDescriptorDescs::updateDynamicDescriptorsCount()
 {
     mDynamicDescriptorSetCount = 0;
-    for (uint32_t index = 0; index < mDescs.size(); ++index)
+    for (const WriteDescriptorDesc &writeDesc : mDescs)
     {
-        const WriteDescriptorDesc &writeDesc = mDescs[index];
         if (IsDynamicDescriptor(static_cast<VkDescriptorType>(writeDesc.descriptorType)))
         {
             mDynamicDescriptorSetCount += writeDesc.descriptorCount;

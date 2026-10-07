@@ -3843,9 +3843,8 @@ bool DynamicDescriptorPool::allocateFromExistingPool(ErrorContext *context,
                                                      const DescriptorSetLayout &descriptorSetLayout,
                                                      DescriptorSetPointer *descriptorSetOut)
 {
-    for (size_t poolIndex = 0; poolIndex < mDescriptorPools.size(); ++poolIndex)
+    for (DescriptorPoolPointer &pool : mDescriptorPools)
     {
-        DescriptorPoolPointer &pool = mDescriptorPools[poolIndex];
         if (!pool || !pool->valid())
         {
             continue;
@@ -4132,7 +4131,7 @@ void DynamicDescriptorPool::destroyUnusedPool(Renderer *renderer,
 void DynamicDescriptorPool::checkAndDestroyUnusedPool(Renderer *renderer)
 {
     ASSERT(renderer->getFeatures().descriptorSetCache.enabled);
-    for (auto pool : mDescriptorPools)
+    for (const DescriptorPoolPointer &pool : mDescriptorPools)
     {
         pool->cleanupPendingGarbage();
     }
@@ -9379,10 +9378,8 @@ angle::Result ImageHelper::reformatStagedImageUpdates(ContextVk *contextVk,
     VkDeviceSize readbackBatchCapacity = 0;
 
     // Bound readback batches by staging allocation capacity and mip level.
-    for (size_t level = 0; level < mSubresourceUpdates.size(); ++level)
+    for (SubresourceUpdates &levelUpdates : mSubresourceUpdates)
     {
-        SubresourceUpdates &levelUpdates = mSubresourceUpdates[level];
-
         for (SubresourceUpdate &update : levelUpdates)
         {
             if (update.updateSource != UpdateSource::Image ||

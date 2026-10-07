@@ -91,9 +91,8 @@ angle::Result VertexArray11::syncState(const gl::Context *context,
     gl::AttributesMask attributesToUpdate;
 
     // Make sure we trigger re-translation for static index or vertex data.
-    for (auto iter = dirtyBits.begin(), endIter = dirtyBits.end(); iter != endIter; ++iter)
+    for (size_t dirtyBit : dirtyBits)
     {
-        size_t dirtyBit = *iter;
         switch (dirtyBit)
         {
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER:

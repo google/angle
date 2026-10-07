@@ -933,11 +933,8 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
                 break;
             case gl::state::DIRTY_BIT_EXTENDED:
             {
-                for (auto extendedIter    = extendedDirtyBits.begin(),
-                          extendedEndIter = extendedDirtyBits.end();
-                     extendedIter != extendedEndIter; ++extendedIter)
+                for (size_t extendedDirtyBit : extendedDirtyBits)
                 {
-                    const size_t extendedDirtyBit = *extendedIter;
                     switch (extendedDirtyBit)
                     {
                         case gl::state::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
