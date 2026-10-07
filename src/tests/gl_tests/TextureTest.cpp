@@ -4494,11 +4494,7 @@ TEST_P(Texture2DTestES3, TexImageWithDepthPBO)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 
     // Fill depth with 1.0f.
-    std::vector<GLushort> pixels(kSize * kSize);
-    for (size_t pixelId = 0; pixelId < pixels.size(); ++pixelId)
-    {
-        pixels[pixelId] = 0xFFFF;
-    }
+    std::vector<GLushort> pixels(kSize * kSize, 0xFFFF);
 
     GLuint pbo;
     glGenBuffers(1, &pbo);
@@ -4704,11 +4700,7 @@ TEST_P(Texture2DTestES3, TexImageWithStencilPBO)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 
     // Fill stencil with 0x4E
-    std::vector<GLubyte> pixels(kSize * kSize);
-    for (size_t pixelId = 0; pixelId < pixels.size(); ++pixelId)
-    {
-        pixels[pixelId] = 0x4E;
-    }
+    std::vector<GLubyte> pixels(kSize * kSize, 0x4E);
 
     GLuint pbo;
     glGenBuffers(1, &pbo);
@@ -4772,11 +4764,7 @@ TEST_P(Texture2DTestES3, TexImageWithDepthStencilPBO)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 
     // Fill depth with 1.0f and stencil with 0xD5
-    std::vector<GLuint> pixels(kSize * kSize);
-    for (size_t pixelId = 0; pixelId < pixels.size(); ++pixelId)
-    {
-        pixels[pixelId] = 0xFFFFFFD5;
-    }
+    std::vector<GLuint> pixels(kSize * kSize, 0xFFFFFFD5);
 
     GLuint pbo;
     glGenBuffers(1, &pbo);
@@ -22361,7 +22349,7 @@ void CopyImageCompressedWithNorm16(bool isCompressedToNorm16)
     constexpr Norm16FormatDesc possibleNorm16Formats[] = {
         {GL_RGBA16_EXT, GL_RGBA, GL_UNSIGNED_SHORT}, {GL_RGBA16_SNORM_EXT, GL_RGBA, GL_SHORT}};
 
-    for (CompressedFormatDesc compressedFormat : possibleCompressedFormats)
+    for (const CompressedFormatDesc &compressedFormat : possibleCompressedFormats)
     {
         if (!compressedFormat.extension.empty() &&
             !IsGLExtensionEnabled(compressedFormat.extension))
