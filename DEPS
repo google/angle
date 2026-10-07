@@ -3747,7 +3747,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/modern_combat_5',
-            'version': 'version:1',
+            'version': 'version:3',
         },
       ],
       'dep_type': 'cipd',
