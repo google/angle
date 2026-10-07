@@ -1782,9 +1782,9 @@ std::vector<const Config *> Display::chooseConfig(const egl::AttributeMap &attri
 
     // Add the caller-specified values (Note: the poorly-named insert() method will replace any
     // of the default values from above):
-    for (auto attribIter = attribs.begin(); attribIter != attribs.end(); attribIter++)
+    for (const auto &attrib : attribs)
     {
-        attribsWithDefaults.insert(attribIter->first, attribIter->second);
+        attribsWithDefaults.insert(attrib.first, attrib.second);
     }
 
     return mConfigSet.filter(attribsWithDefaults);

@@ -3299,11 +3299,10 @@ bool ValidateCreatePbufferFromClientBuffer(const ValidationContext *val,
             return false;
     }
 
-    for (AttributeMap::const_iterator attributeIter = attributes.begin();
-         attributeIter != attributes.end(); attributeIter++)
+    for (const auto &attrib : attributes)
     {
-        EGLAttrib attribute = attributeIter->first;
-        EGLAttrib value     = attributeIter->second;
+        EGLAttrib attribute = attrib.first;
+        EGLAttrib value     = attrib.second;
 
         switch (attribute)
         {
@@ -3767,11 +3766,10 @@ bool ValidateCreateImage(const ValidationContext *val,
     // If the resource specified by <dpy>, <ctx>, <target>, <buffer> and <attrib_list> is itself an
     // EGLImage sibling, the error EGL_BAD_ACCESS is generated.
 
-    for (AttributeMap::const_iterator attributeIter = attributes.begin();
-         attributeIter != attributes.end(); attributeIter++)
+    for (const auto &attrib : attributes)
     {
-        EGLAttrib attribute = attributeIter->first;
-        EGLAttrib value     = attributeIter->second;
+        EGLAttrib attribute = attrib.first;
+        EGLAttrib value     = attrib.second;
 
         switch (attribute)
         {
@@ -6687,10 +6685,9 @@ bool ValidateCreateNativeClientBufferANDROID(const ValidationContext *val,
     int alphaSize = attribMap.getAsInt(EGL_ALPHA_SIZE, 0);
     int usage     = attribMap.getAsInt(EGL_NATIVE_BUFFER_USAGE_ANDROID, 0);
 
-    for (AttributeMap::const_iterator attributeIter = attribMap.begin();
-         attributeIter != attribMap.end(); attributeIter++)
+    for (const auto &attrib : attribMap)
     {
-        EGLAttrib attribute = attributeIter->first;
+        EGLAttrib attribute = attrib.first;
         switch (attribute)
         {
             case EGL_WIDTH:

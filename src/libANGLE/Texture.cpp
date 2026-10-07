@@ -909,9 +909,9 @@ void TextureState::clearImageDesc(TextureTarget target, size_t level)
 
 void TextureState::clearImageDescs()
 {
-    for (size_t descIndex = 0; descIndex < mImageDescs.size(); descIndex++)
+    for (ImageDesc &imageDesc : mImageDescs)
     {
-        mImageDescs[descIndex] = ImageDesc();
+        imageDesc = ImageDesc();
     }
 }
 
