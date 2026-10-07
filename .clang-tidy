@@ -1,0 +1,54 @@
+# How to run clang-tidy locally:
+#
+# 1. Generate the compilation database (and build generated headers if needed):
+#      gn gen out/Default --export-compile-commands
+#      autoninja -C out/Default
+#
+# 2. Run clang-tidy on a single file (pass --fix to apply fixes in-place):
+#      third_party/llvm-build/Release+Asserts/bin/clang-tidy \
+#          -p out/Default --fix src/libANGLE/Context.cpp
+#
+# 3. Run clang-tidy in parallel across the codebase:
+#      run-clang-tidy -p out/Default \
+#          -clang-tidy-binary third_party/llvm-build/Release+Asserts/bin/clang-tidy \
+#          -clang-apply-replacements-binary third_party/llvm-build/Release+Asserts/bin/clang-apply-replacements \
+#          -fix '^(?!.*third_party).*(src|include|util|samples)/.*'
+
+# Follow .clang-format for formatting
+FormatStyle: file
+
+# GN doesn't support -isystem so Clang-Tidy doesn't know which headers belong
+# to us when applying checks/fixes. Set that here.
+HeaderFilterRegex: '(^|/)(src|include|util|samples)/.*'
+ExcludeHeaderFilterRegex: '(.*third_party/([^a]|a[^n]|an[^g]|ang[^l]|angl[^e]|angle[^/]).*|.*_autogen\..*)'
+
+ImplementationFileExtensions:
+  - c
+  - cc
+  - cpp
+  - cxx
+  - m
+  - mm
+
+Checks:
+  - "-*"
+  - modernize-loop-convert
+  - performance-for-range-copy
+  - performance-implicit-conversion-in-loop
+
+CheckOptions:
+  - key: modernize-loop-convert.NamingStyle
+    value: camelBack
+  # TODO(http://crbug.com/330910097): Remove MakeReverseRangeFunction and
+  # MakeReverseRangeHeader to use std::views::reverse once ANGLE drops C++17
+  # support and requires C++20.
+  - key: modernize-loop-convert.MakeReverseRangeFunction
+    value: angle::Reversed
+  - key: modernize-loop-convert.MakeReverseRangeHeader
+    value: common/angleutils.h
+
+ExtraArgs:
+  # b/382774818: disable unknown pragma warnings from unsafe_buffers plugin
+  # pragmas (#pragma allow_unsafe_buffers / allow_unsafe_libc_calls).
+  - -Wno-unknown-pragmas
+  - -Wno-unused-command-line-argument

@@ -348,6 +348,10 @@ luci.cq_group(
             acl.CQ_DRY_RUNNER,
             groups = "project-angle-tryjob-access",
         ),
+        acl.entry(
+            acl.CQ_NEW_PATCHSET_RUN_TRIGGERER,
+            groups = "project-angle-tryjob-access",
+        ),
     ],
     verifiers = [
         luci.cq_tryjob_verifier(
@@ -361,6 +365,19 @@ luci.cq_group(
         ),
         luci.cq_tryjob_verifier(
             builder = "chromium:try/mac-angle-chromium-try",
+        ),
+        luci.cq_tryjob_verifier(
+            builder = "chromium:try/tricium-clang-tidy",
+            owner_whitelist = ["project-angle-tryjob-access"],
+            experiment_percentage = 10,
+            disable_reuse = True,
+            mode_allowlist = [cq.MODE_NEW_PATCHSET_RUN],
+            location_filters = [
+                cq.location_filter(path_regexp = r".+\.h"),
+                cq.location_filter(path_regexp = r".+\.c"),
+                cq.location_filter(path_regexp = r".+\.cc"),
+                cq.location_filter(path_regexp = r".+\.cpp"),
+            ],
         ),
         luci.cq_tryjob_verifier(
             builder = "chromium:try/win-angle-chromium-arm64-try",
