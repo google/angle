@@ -75,6 +75,7 @@ luci.project(
     bindings = [
         luci.binding(
             roles = "role/configs.validator",
+            groups = "project-angle-committers",
             users = "angle-try-builder@chops-service-accounts.iam.gserviceaccount.com",
         ),
         luci.binding(
