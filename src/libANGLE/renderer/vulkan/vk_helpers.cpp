@@ -6095,6 +6095,13 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
                     imageInfo.usage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
                 }
             }
+            else if (renderer->getFeatures().simulateTileMemoryTransferSrcForTesting.enabled)
+            {
+                // Use SwiftShader to test VK_IMAGE_USAGE_TRANSFER_SRC_BIT capability
+                ASSERT(renderer->getFeatures().simulateTileMemoryForTesting.enabled);
+                mTileMemorySupportsTransferSrc = true;
+                imageInfo.usage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+            }
             mUseTileMemory = true;
         }
         else
@@ -6732,6 +6739,12 @@ angle::Result ImageHelper::fallbackFromTileMemory(ContextVk *contextVk)
 
         if (prevImage->mTileMemorySupportsTransferSrc)
         {
+            // If image has depth and stencil, copy to each individually per Vulkan spec
+            // VUID-VkImageMemoryBarrier-image-03320.
+            if (isCombinedDepthStencilFormat())
+            {
+                aspectFlags = kDepthStencilAspects;
+            }
             // Use vkCmdCopyImage for a bit-exact copy instead of sampling tile memory through a
             // shader.
             CommandResources resources;
@@ -6759,6 +6772,10 @@ angle::Result ImageHelper::fallbackFromTileMemory(ContextVk *contextVk)
             // the tile memory render pass (mirrors what copyImageFromTileMemory does below).
             ANGLE_TRY(contextVk->flushCommandsAndEndRenderPassWithoutSubmit(
                 RenderPassClosureReason::TileMemorySimulatedClear));
+
+            // Restore the added extra content defined bits due to extra aspectFlags for copyImage.
+            mVkImageContentDefined[0]        = prevImage->mVkImageContentDefined[0];
+            mVkImageStencilContentDefined[0] = prevImage->mVkImageStencilContentDefined[0];
         }
         else
         {

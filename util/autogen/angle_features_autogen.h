@@ -340,6 +340,7 @@ enum class Feature
     SetZeroLevelBeforeGenerateMipmap,
     ShiftInstancedArrayDataWithOffset,
     SimulateTileMemoryForTesting,
+    SimulateTileMemoryTransferSrcForTesting,
     SingleThreadedTextureDecompression,
     SkipPipelineCacheSerialization,
     SkipVSConstantRegisterZero,
