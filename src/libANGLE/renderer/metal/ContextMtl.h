@@ -341,6 +341,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     void flushCommandBuffer(mtl::CommandBufferFinishOperation operation);
     void present(const gl::Context *context, id<CAMetalDrawable> presentationDrawable);
     angle::Result finishCommandBuffer();
+    angle::Result checkCommandBufferError();
 
     void addCommandBufferScheduledCallback(std::function<void()> callback);
 
@@ -525,8 +526,6 @@ class ContextMtl : public ContextImpl, public mtl::Context
 
     angle::Result startOcclusionQueryInRenderPass(QueryMtl *query, bool clearOldValue);
 
-    angle::Result checkCommandBufferError();
-
     // Dirty bits.
     enum DirtyBitType : size_t
     {
@@ -641,6 +640,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
     ProvokingVertexHelper mProvokingVertexHelper;
 
     mtl::ContextDevice mContextDevice;
+
+    bool mContextLost = false;
 };
 
 }  // namespace rx
