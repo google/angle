@@ -6824,7 +6824,6 @@ bool TParseContext::checkUnsizedArrayConstructorArgumentDimensionality(
 TIntermTyped *TParseContext::addConstructor(TFunctionLookup *fnCall, const TSourceLoc &line)
 {
     TType type = fnCall->constructorType();
-    checkVariableSize(line, ImmutableString(""), &type);
 
     TIntermSequence &arguments = fnCall->arguments();
     if (type.isUnsizedArray())
@@ -6849,6 +6848,8 @@ TIntermTyped *TParseContext::addConstructor(TFunctionLookup *fnCall, const TSour
         }
         ASSERT(!type.isUnsizedArray());
     }
+
+    checkVariableSize(line, ImmutableString(""), &type);
 
     if (!checkConstructorArguments(line, arguments, type))
     {
