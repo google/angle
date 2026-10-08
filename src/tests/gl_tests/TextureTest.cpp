@@ -9796,6 +9796,52 @@ TEST_P(Texture2DArrayTestES3, TextureArrayUseThenRedefineThenUse)
     EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::green);
 }
 
+// Test that redefining level 0 of a multi-layer 2D array texture to 1 layer (with unchanged
+// width, height, and format) followed by glGenerateMipmap preserves the newly uploaded level 0
+// data and generates mipmaps from it.
+TEST_P(Texture2DArrayTestES3, RedefineBaseLevelLayerCountToOneThenGenerateMipmap)
+{
+    constexpr GLsizei kSize          = 8;
+    constexpr GLsizei kInitialLayers = 4;
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Define level 0 with 4 layers filled with red and draw to materialize native storage.
+    const std::vector<GLColor> pixelsRed(kSize * kSize * kInitialLayers, GLColor::red);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kSize, kSize, kInitialLayers, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, pixelsRed.data());
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Redefine level 0 with 1 layer (unchanged width, height, and format) filled with green.
+    const std::vector<GLColor> pixelsGreen(kSize * kSize * 1, GLColor::green);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, kSize, kSize, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsGreen.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Generate mipmaps; this recreates storage for the full mip chain of the 1-layer array.
+    glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify level 0 and level 1 contain green.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 0, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m2DArrayTexture, 1, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize / 2, kSize / 2, GLColor::green);
+}
+
 // Create a 2D array texture, use it, then redefine one level without changing dimensions.
 TEST_P(Texture2DArrayTestES3, RedefineLevelData)
 {
