@@ -3554,7 +3554,9 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
 
             createInfo.stageCount         = static_cast<uint32_t>(shadersState.shaderStages.size());
             createInfo.pStages            = shadersState.shaderStages.data();
-            createInfo.pTessellationState = &shadersState.tessellationState;
+            createInfo.pTessellationState  = (shadersState.tessellationState.sType != 0)
+                                                 ? &shadersState.tessellationState
+                                                 : nullptr;
             createInfo.pViewportState     = &shadersState.viewportState;
             createInfo.pRasterizationState = &shadersState.rasterState;
             createInfo.pDepthStencilState  = &shadersState.depthStencilState;
