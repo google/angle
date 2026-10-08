@@ -316,7 +316,7 @@ vars = {
   'checkout_angle_restricted_trace_gossip_harbor': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_grand_mountain_adventure': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_grimvalor': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_guns_of_glory_lost_island': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_guns_of_glory_lost_island': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_gwent_witcher_card_game': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_happy_color': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_harry_potter_hogwarts_mystery': 'checkout_extra_traces',
@@ -336,6 +336,7 @@ vars = {
   'checkout_angle_restricted_trace_i9_inferno_nine': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_identity_v': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_idle_heroes': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_idle_zombie_miner': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_indian_bikes_driving_3d': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_infinity_ops': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_injustice_2': 'checkout_angle_restricted_traces',
@@ -3169,6 +3170,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_idle_heroes',
+  },
+  'src/tests/restricted_traces/idle_zombie_miner': {
+      'packages': [
+        {
+            'package': 'angle/traces/idle_zombie_miner',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_idle_zombie_miner',
   },
   'src/tests/restricted_traces/indian_bikes_driving_3d': {
       'packages': [
