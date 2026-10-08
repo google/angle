@@ -74,10 +74,12 @@ pub fn run(ir: &mut IR, options: &Options) {
 
     let mut preamble = Block::new();
     let mut postamble = Block::new();
+    let mut preamble_builder = instruction::Builder::new(&mut preamble);
+    let mut postamble_builder = instruction::Builder::new(&mut postamble);
 
     // When PLS planes are implemented as image2D, gl_FragCoord is used to locate this fragment's
     // coordinates in the plane.
-    let fragcoord = declare_fragcoord_global(&mut state, &mut preamble);
+    let fragcoord = declare_fragcoord_global(&mut state, &mut preamble_builder);
 
     traverser::transformer::for_each_instruction(
         &mut state,
@@ -86,14 +88,19 @@ pub fn run(ir: &mut IR, options: &Options) {
     );
 
     if state.has_image {
-        add_pre_and_post_pls_code_for_image(&mut state, options, &mut preamble, &mut postamble);
+        add_pre_and_post_pls_code_for_image(
+            &mut state,
+            options,
+            &mut preamble_builder,
+            &mut postamble_builder,
+        );
     }
     if state.has_inout {
         add_pre_and_post_pls_code_for_framebuffer_fetch(
             &mut state,
             &global_variables,
-            &mut preamble,
-            &mut postamble,
+            &mut preamble_builder,
+            &mut postamble_builder,
         );
     }
 
@@ -309,7 +316,10 @@ fn transform_variable(
     }
 }
 
-fn declare_fragcoord_global(state: &mut State, preamble: &mut Block) -> Option<TypedId> {
+fn declare_fragcoord_global(
+    state: &mut State,
+    preamble: &mut instruction::Builder<Block>,
+) -> Option<TypedId> {
     let has_image = state.has_image;
     has_image.then(|| {
         let built_in_fragcoord =
@@ -329,24 +339,15 @@ fn declare_fragcoord_global(state: &mut State, preamble: &mut Block) -> Option<T
             )
             .1;
 
-        let built_in_fragcoord =
-            preamble.add_typed_instruction(instruction::load(state.ir_meta, built_in_fragcoord));
-        let built_in_fragcoord_xy = preamble.add_typed_instruction(
-            instruction::vector_component_multi(state.ir_meta, built_in_fragcoord, vec![0, 1]),
-        );
-        let built_in_fragcoord_xy = preamble.add_typed_instruction(instruction::built_in_unary(
-            state.ir_meta,
-            UnaryOpCode::Floor,
-            built_in_fragcoord_xy,
-        ));
-        let built_in_fragcoord_xy = preamble.add_typed_instruction(instruction::construct(
-            state.ir_meta,
-            TYPE_ID_IVEC2,
-            vec![built_in_fragcoord_xy],
-            None,
-        ));
+        let built_in_fragcoord = preamble.load(state.ir_meta, built_in_fragcoord);
+        let built_in_fragcoord_xy =
+            preamble.vector_component_multi(state.ir_meta, built_in_fragcoord, vec![0, 1]);
+        let built_in_fragcoord_xy =
+            preamble.built_in_unary(state.ir_meta, UnaryOpCode::Floor, built_in_fragcoord_xy);
+        let built_in_fragcoord_xy =
+            preamble.construct(state.ir_meta, TYPE_ID_IVEC2, vec![built_in_fragcoord_xy], None);
 
-        preamble.add_void_instruction(OpCode::Store(fragcoord, built_in_fragcoord_xy));
+        preamble.store(state.ir_meta, fragcoord, built_in_fragcoord_xy);
         fragcoord
     })
 }
@@ -456,74 +457,53 @@ fn transform_load_by_framebuffer_fetch(
             access_variable
         ))
     } else {
-        let mut transforms = vec![];
-        let loaded = traverser::add_typed_instruction(
-            &mut transforms,
-            instruction::load(ir_meta, access_variable),
-        );
-        match plane_info.format {
+        let mut transforms = traverser::Transforms::new();
+        let mut builder = instruction::Builder::new(&mut transforms);
+        let loaded = builder.load(ir_meta, access_variable);
+        let as_vec4 = match plane_info.format {
             ImageInternalFormat::R32F => {
                 // For OpCode::ConstructVectorFromMultiple, the result precision should propagate to
                 // operands. See ir::instruction::propagate().
                 // Since the result precision is the highest precision of all operands, we just need
                 // to make sure all constant operands have an assigned precision
                 // less than or equal to loaded.precision.
-                traverser::add_typed_instruction(
-                    &mut transforms,
-                    instruction::make_with_result_id!(
-                        construct,
-                        ir_meta,
-                        result,
-                        TYPE_ID_VEC4,
-                        vec![
-                            loaded,
-                            TYPED_CONSTANT_ID_FLOAT_ZERO,
-                            TYPED_CONSTANT_ID_FLOAT_ZERO,
-                            TYPED_CONSTANT_ID_FLOAT_ONE
-                        ],
-                        None
-                    ),
-                );
+                builder.construct(
+                    ir_meta,
+                    TYPE_ID_VEC4,
+                    vec![
+                        loaded,
+                        TYPED_CONSTANT_ID_FLOAT_ZERO,
+                        TYPED_CONSTANT_ID_FLOAT_ZERO,
+                        TYPED_CONSTANT_ID_FLOAT_ONE,
+                    ],
+                    None,
+                )
             }
-            ImageInternalFormat::R32I => {
-                traverser::add_typed_instruction(
-                    &mut transforms,
-                    instruction::make_with_result_id!(
-                        construct,
-                        ir_meta,
-                        result,
-                        TYPE_ID_IVEC4,
-                        vec![
-                            loaded,
-                            TYPED_CONSTANT_ID_INT_ZERO,
-                            TYPED_CONSTANT_ID_INT_ZERO,
-                            TYPED_CONSTANT_ID_INT_ONE
-                        ],
-                        None
-                    ),
-                );
-            }
-            ImageInternalFormat::R32UI => {
-                traverser::add_typed_instruction(
-                    &mut transforms,
-                    instruction::make_with_result_id!(
-                        construct,
-                        ir_meta,
-                        result,
-                        TYPE_ID_UVEC4,
-                        vec![
-                            loaded,
-                            TYPED_CONSTANT_ID_UINT_ZERO,
-                            TYPED_CONSTANT_ID_UINT_ZERO,
-                            TYPED_CONSTANT_ID_UINT_ONE
-                        ],
-                        None
-                    ),
-                );
-            }
+            ImageInternalFormat::R32I => builder.construct(
+                ir_meta,
+                TYPE_ID_IVEC4,
+                vec![
+                    loaded,
+                    TYPED_CONSTANT_ID_INT_ZERO,
+                    TYPED_CONSTANT_ID_INT_ZERO,
+                    TYPED_CONSTANT_ID_INT_ONE,
+                ],
+                None,
+            ),
+            ImageInternalFormat::R32UI => builder.construct(
+                ir_meta,
+                TYPE_ID_UVEC4,
+                vec![
+                    loaded,
+                    TYPED_CONSTANT_ID_UINT_ZERO,
+                    TYPED_CONSTANT_ID_UINT_ZERO,
+                    TYPED_CONSTANT_ID_UINT_ONE,
+                ],
+                None,
+            ),
             _ => panic!("Internal error: Unhandled pixel local storage format in load"),
-        }
-        transforms
+        };
+        builder.finish_with_result(ir_meta, result, as_vec4)
     }
 }
 
@@ -585,11 +565,10 @@ fn transform_store_by_image(
     //     clamped' = ConstructVectorFromMultiple [packed, 0, 0, 0]
     //
 
-    let mut transforms = vec![];
-    let coord =
-        traverser::add_typed_instruction(&mut transforms, instruction::load(ir_meta, fragcoord));
-    let plane =
-        traverser::add_typed_instruction(&mut transforms, instruction::load(ir_meta, plane));
+    let mut transforms = traverser::Transforms::new();
+    let mut builder = instruction::Builder::new(&mut transforms);
+    let coord = builder.load(ir_meta, fragcoord);
+    let plane = builder.load(ir_meta, plane);
 
     let mut clamped = match plane_info.format {
         ImageInternalFormat::RGBA8I => {
@@ -600,14 +579,7 @@ fn transform_store_by_image(
             // less than or equal to value.precision. Use value.precision for simplicity.
             let int8_min = ir_meta.get_constant_int_typed(-128, value.precision);
             let int8_max = ir_meta.get_constant_int_typed(127, value.precision);
-            traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::built_in(
-                    ir_meta,
-                    BuiltInOpCode::Clamp,
-                    vec![value, int8_min, int8_max],
-                ),
-            )
+            builder.built_in(ir_meta, BuiltInOpCode::Clamp, vec![value, int8_min, int8_max])
         }
         ImageInternalFormat::RGBA8UI => {
             // For BinaryOpCode::Min, result precision should propagate to both operands.
@@ -616,10 +588,7 @@ fn transform_store_by_image(
             // we only need to ensure uint8_max has an assigned precision
             // less than or equal to value.precision. Use value.precision for simplicity.
             let uint8_max = ir_meta.get_constant_uint_typed(255, value.precision);
-            traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::built_in_binary(ir_meta, BinaryOpCode::Min, value, uint8_max),
-            )
+            builder.built_in_binary(ir_meta, BinaryOpCode::Min, value, uint8_max)
         }
         _ => value,
     };
@@ -636,26 +605,14 @@ fn transform_store_by_image(
                     None,
                     VariableScope::Local,
                 );
-                transforms.push(traverser::Transform::DeclareVariable(highp_value_variable));
-                traverser::add_void_instruction(
-                    &mut transforms,
-                    instruction::store(ir_meta, highp_value, clamped),
-                );
-                traverser::add_typed_instruction(
-                    &mut transforms,
-                    instruction::load(ir_meta, highp_value),
-                )
+                builder.declare(highp_value_variable);
+                builder.store(ir_meta, highp_value, clamped);
+                builder.load(ir_meta, highp_value)
             } else {
                 clamped
             };
-            let packed = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::built_in_unary(ir_meta, UnaryOpCode::PackUnorm4x8, to_pack),
-            );
-            clamped = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::construct(ir_meta, TYPE_ID_UVEC4, vec![packed], None),
-            );
+            let packed = builder.built_in_unary(ir_meta, UnaryOpCode::PackUnorm4x8, to_pack);
+            clamped = builder.construct(ir_meta, TYPE_ID_UVEC4, vec![packed], None);
         } else if plane_info.format == ImageInternalFormat::RGBA8I
             || plane_info.format == ImageInternalFormat::RGBA8UI
         {
@@ -690,10 +647,7 @@ fn transform_store_by_image(
                 };
 
             let lowbits = if plane_info.format == ImageInternalFormat::RGBA8I {
-                traverser::add_typed_instruction(
-                    &mut transforms,
-                    instruction::bitwise_and(ir_meta, clamped, const255),
-                )
+                builder.bitwise_and(ir_meta, clamped, const255)
             } else {
                 clamped
             };
@@ -708,80 +662,32 @@ fn transform_store_by_image(
                     None,
                     VariableScope::Local,
                 );
-                transforms.push(traverser::Transform::DeclareVariable(highp_value_variable));
-                traverser::add_void_instruction(
-                    &mut transforms,
-                    instruction::store(ir_meta, highp_value, lowbits),
-                );
-                traverser::add_typed_instruction(
-                    &mut transforms,
-                    instruction::load(ir_meta, highp_value),
-                )
+                builder.declare(highp_value_variable);
+                builder.store(ir_meta, highp_value, lowbits);
+                builder.load(ir_meta, highp_value)
             } else {
                 lowbits
             };
 
-            let r = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::vector_component(ir_meta, lowbits, 0),
-            );
-            let g = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::vector_component(ir_meta, lowbits, 1),
-            );
-            let b = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::vector_component(ir_meta, lowbits, 2),
-            );
-            let a = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::vector_component(ir_meta, lowbits, 3),
-            );
-            let g = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::bit_shift_left(ir_meta, g, const8),
-            );
-            let b = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::bit_shift_left(ir_meta, b, const16),
-            );
-            let a = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::bit_shift_left(ir_meta, a, const24),
-            );
-            let rg = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::bitwise_or(ir_meta, r, g),
-            );
-            let rgb = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::bitwise_or(ir_meta, rg, b),
-            );
-            let rgba = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::bitwise_or(ir_meta, rgb, a),
-            );
-            clamped = traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::construct(ir_meta, vec_format, vec![rgba], None),
-            );
+            let r = builder.vector_component(ir_meta, lowbits, 0);
+            let g = builder.vector_component(ir_meta, lowbits, 1);
+            let b = builder.vector_component(ir_meta, lowbits, 2);
+            let a = builder.vector_component(ir_meta, lowbits, 3);
+            let g = builder.bit_shift_left(ir_meta, g, const8);
+            let b = builder.bit_shift_left(ir_meta, b, const16);
+            let a = builder.bit_shift_left(ir_meta, a, const24);
+            let rg = builder.bitwise_or(ir_meta, r, g);
+            let rgb = builder.bitwise_or(ir_meta, rg, b);
+            let rgba = builder.bitwise_or(ir_meta, rgb, a);
+            clamped = builder.construct(ir_meta, vec_format, vec![rgba], None);
         }
     }
 
-    traverser::add_void_instruction(
-        &mut transforms,
-        instruction::built_in(ir_meta, BuiltInOpCode::MemoryBarrierImage, vec![]),
-    );
-    traverser::add_void_instruction(
-        &mut transforms,
-        instruction::built_in(ir_meta, BuiltInOpCode::ImageStore, vec![plane, coord, clamped]),
-    );
-    traverser::add_void_instruction(
-        &mut transforms,
-        instruction::built_in(ir_meta, BuiltInOpCode::MemoryBarrierImage, vec![]),
-    );
+    builder.built_in_void(ir_meta, BuiltInOpCode::MemoryBarrierImage, vec![]);
+    builder.built_in_void(ir_meta, BuiltInOpCode::ImageStore, vec![plane, coord, clamped]);
+    builder.built_in_void(ir_meta, BuiltInOpCode::MemoryBarrierImage, vec![]);
 
-    transforms
+    builder.finish()
 }
 
 fn transform_store_by_framebuffer_fetch(
@@ -802,21 +708,16 @@ fn transform_store_by_framebuffer_fetch(
     //     value' = ExtractVectorComponent value 0
     //
     let access_variable = plane_info.access_variable.unwrap();
-    let mut transforms = vec![];
+    let mut transforms = traverser::Transforms::new();
+    let mut builder = instruction::Builder::new(&mut transforms);
     let value = match plane_info.format {
         ImageInternalFormat::R32F | ImageInternalFormat::R32I | ImageInternalFormat::R32UI => {
-            traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::vector_component(ir_meta, value, 0),
-            )
+            builder.vector_component(ir_meta, value, 0)
         }
         _ => value,
     };
-    traverser::add_void_instruction(
-        &mut transforms,
-        instruction::store(ir_meta, access_variable, value),
-    );
-    transforms
+    builder.store(ir_meta, access_variable, value);
+    builder.finish()
 }
 
 // Assuming `register_id` is the result of a `Load` operation, return the variable the load was
@@ -899,8 +800,8 @@ fn transform_pls_load_store(
 fn add_pre_and_post_pls_code_for_image(
     state: &mut State,
     options: &Options,
-    preamble: &mut Block,
-    postamble: &mut Block,
+    preamble: &mut instruction::Builder<Block>,
+    postamble: &mut instruction::Builder<Block>,
 ) {
     // When PLS is implemented with images, early_fragment_tests ensure that depth/stencil
     // can also block stores to PLS.
@@ -927,35 +828,35 @@ fn add_pre_and_post_pls_code_for_image(
                 // Raster ordered resources don't need explicit synchronization calls.
             }
             PixelLocalStorageSync::FragmentShaderInterlockNV_GL => {
-                preamble.add_instruction(instruction::built_in(
+                preamble.built_in_void(
                     state.ir_meta,
                     BuiltInOpCode::BeginInvocationInterlockNV,
                     vec![],
-                ));
-                postamble.add_instruction(instruction::built_in(
+                );
+                postamble.built_in_void(
                     state.ir_meta,
                     BuiltInOpCode::EndInvocationInterlockNV,
                     vec![],
-                ));
+                );
             }
             PixelLocalStorageSync::FragmentShaderInterlockARB_GL => {
-                preamble.add_instruction(instruction::built_in(
+                preamble.built_in_void(
                     state.ir_meta,
                     BuiltInOpCode::BeginInvocationInterlockARB,
                     vec![],
-                ));
-                postamble.add_instruction(instruction::built_in(
+                );
+                postamble.built_in_void(
                     state.ir_meta,
                     BuiltInOpCode::EndInvocationInterlockARB,
                     vec![],
-                ));
+                );
             }
             PixelLocalStorageSync::FragmentShaderOrderingINTEL_GL => {
-                preamble.add_instruction(instruction::built_in(
+                preamble.built_in_void(
                     state.ir_meta,
                     BuiltInOpCode::BeginFragmentShaderOrderingINTEL,
                     vec![],
-                ));
+                );
                 // GL_INTEL_fragment_shader_ordering doesn't have an "end()" call.
             }
             PixelLocalStorageSync::Automatic => {
@@ -974,8 +875,8 @@ fn add_pre_and_post_pls_code_for_image(
 fn add_pre_and_post_pls_code_for_framebuffer_fetch(
     state: &mut State,
     global_variables: &[VariableId],
-    preamble: &mut Block,
-    postamble: &mut Block,
+    preamble: &mut instruction::Builder<Block>,
+    postamble: &mut instruction::Builder<Block>,
 ) {
     // [OpenGL ES Version 3.0.6, 3.9.2.3 "Shader Output"]: Any colors, or color components,
     // associated with a fragment that are not written by the fragment shader are undefined.
@@ -1007,23 +908,14 @@ fn add_pre_and_post_pls_code_for_framebuffer_fetch(
                 plane_info.format,
                 ImageInternalFormat::R32F | ImageInternalFormat::R32I | ImageInternalFormat::R32UI
             ) {
-                preamble.add_typed_instruction(instruction::vector_component(
-                    state.ir_meta,
-                    inout_variable,
-                    0,
-                ))
+                preamble.vector_component(state.ir_meta, inout_variable, 0)
             } else {
                 inout_variable
             };
             let access_variable = plane_info.access_variable.unwrap();
 
-            let initial_value =
-                preamble.add_typed_instruction(instruction::load(state.ir_meta, inout_access));
-            preamble.add_instruction(instruction::store(
-                state.ir_meta,
-                access_variable,
-                initial_value,
-            ));
+            let initial_value = preamble.load(state.ir_meta, inout_access);
+            preamble.store(state.ir_meta, access_variable, initial_value);
 
             // At the end of the shader, load from the global and assign back to the inout
             // variable:
@@ -1034,9 +926,8 @@ fn add_pre_and_post_pls_code_for_framebuffer_fetch(
             // The AccessVectorComponent instruction to access the R channel for single-channel
             // formats is *not* repeated in the postamble.  For the foreseeable future, both blocks
             // will be placed in the same function.
-            let final_value =
-                postamble.add_typed_instruction(instruction::load(state.ir_meta, access_variable));
-            postamble.add_instruction(instruction::store(state.ir_meta, inout_access, final_value));
+            let final_value = postamble.load(state.ir_meta, access_variable);
+            postamble.store(state.ir_meta, inout_access, final_value);
         }
     });
 }

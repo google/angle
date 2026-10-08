@@ -419,7 +419,8 @@ fn extract_sampler(
 }
 
 fn access_sampler(state: &mut State, result: TypedRegisterId) -> Vec<traverser::Transform> {
-    let mut transforms = vec![];
+    let mut transforms = traverser::Transforms::new();
+    let mut builder = instruction::Builder::new(&mut transforms);
 
     // If reached a sampler, replace the access chain up to it (if tracked) with one accessing the
     // replacement uniform.
@@ -434,36 +435,19 @@ fn access_sampler(state: &mut State, result: TypedRegisterId) -> Vec<traverser::
         //    indexed1 = AccessArrayElement indexed0 indices[1]
         //    ...
         //    result = AccessArrayElement ...
+        //
+        // If there are no indices, alias the resulting access chain with the uniform.
+        //
+        //    result = Alias sampler
         let mut indexee = *state.extracted_sampler_map.get(&access_chain.path).unwrap();
-        if let Some((&last_index, leading_indices)) = access_chain.indices.split_last() {
-            for &index in leading_indices.iter() {
-                indexee = traverser::add_typed_instruction(
-                    &mut transforms,
-                    instruction::make!(index, state.ir_meta, indexee, index),
-                );
-            }
-            traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::make_with_result_id!(
-                    index,
-                    state.ir_meta,
-                    result,
-                    indexee,
-                    last_index
-                ),
-            );
-        } else {
-            // If there are no indices, alias the resulting access chain with the uniform.
-            //
-            //    result = Alias sampler
-            traverser::add_typed_instruction(
-                &mut transforms,
-                instruction::make_with_result_id!(alias, state.ir_meta, result, indexee),
-            );
+        for &index in access_chain.indices.iter() {
+            indexee = builder.index(state.ir_meta, indexee, index);
         }
-    }
 
-    transforms
+        builder.finish_with_result(state.ir_meta, result, indexee)
+    } else {
+        builder.finish()
+    }
 }
 
 fn transform_struct_field(

@@ -627,16 +627,6 @@ impl Transforms {
     pub fn add_block(&mut self, block: Block) {
         self.transforms.push(Transform::AddBlock(block));
     }
-
-    // If the last transform is Transform::Add(BlockInstruction::Register(register))), returns
-    // `&mut register`.  This is a helper to allow adding an instruction and then going back to
-    // override its result to an existing ID.
-    pub fn get_last_transform_result_register_mut(&mut self) -> Option<&mut RegisterId> {
-        self.transforms.last_mut().and_then(|transform| match transform {
-            Transform::Add(BlockInstruction::Register(result)) => Some(result),
-            _ => None,
-        })
-    }
 }
 
 impl instruction::InstructionContainer for Transforms {
@@ -651,5 +641,13 @@ impl instruction::InstructionContainer for Transforms {
     }
     fn declare(&mut self, variable_id: VariableId) {
         self.transforms.push(Transform::DeclareVariable(variable_id));
+    }
+    // If the last transform is Transform::Add(BlockInstruction::Register(register))), returns
+    // `&mut register`.
+    fn get_last_instruction_result_register_mut(&mut self) -> Option<&mut RegisterId> {
+        self.transforms.last_mut().and_then(|transform| match transform {
+            Transform::Add(BlockInstruction::Register(result)) => Some(result),
+            _ => None,
+        })
     }
 }

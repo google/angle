@@ -5256,6 +5256,9 @@ pub trait InstructionContainer {
     fn add_typed_instruction(&mut self, inst: instruction::Result) -> TypedId;
     fn add_void_instruction(&mut self, inst: instruction::Result);
     fn declare(&mut self, variable_id: VariableId);
+    // If the last instruction is a register, returns `&mut register`.  This is a helper to allow
+    // adding an instruction and then going back to override its result to an existing ID.
+    fn get_last_instruction_result_register_mut(&mut self) -> Option<&mut RegisterId>;
 }
 
 pub struct Builder<'a, Container: InstructionContainer> {
@@ -5272,6 +5275,13 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
     }
     pub fn declare(&mut self, variable_id: VariableId) {
         self.container.declare(variable_id);
+    }
+
+    pub fn call(&mut self, ir_meta: &mut IRMeta, id: FunctionId, params: Vec<TypedId>) -> TypedId {
+        self.container.add_typed_instruction(instruction::make!(call, ir_meta, id, params))
+    }
+    pub fn call_void(&mut self, ir_meta: &mut IRMeta, id: FunctionId, params: Vec<TypedId>) {
+        self.container.add_void_instruction(instruction::make!(call, ir_meta, id, params));
     }
 
     pub fn load(&mut self, ir_meta: &mut IRMeta, to_load: TypedId) -> TypedId {
@@ -5557,6 +5567,46 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
             coord
         ))
     }
+
+    // Given an existing `result`, make it such that it would evaluate to `value`.
+    // This allows the rest of the shader to continue referencing the existing `result` and not need
+    // modification.
+    //
+    // * If the last instruction in the list is the `value` register, its instruction is instead
+    //   assigned to `result` (similar to `make_with_result_id!()`)
+    // * Otherwise, the existing instruction for `result` is changed to `Alias value`
+    //
+    // For example, in the following transformation:
+    //
+    //     let c = builder.add(ir_meta, a, b);
+    //     builder.alias_result(ir_meta, result, c);
+    //
+    // Then if `builder.add` has generated a `c = Add a b` instruction, then `c` will be a register
+    // and the instruction is changed to `result = Add a b` (and `c` is no longer available).
+    // However, if the instruction is constant-folded, then `c` is a constant, and
+    // `result = Alias c` is added to the transforms.
+    //
+    // Returns `result` as `TypedId`.
+    pub fn alias_result(
+        &mut self,
+        ir_meta: &mut IRMeta,
+        result: TypedRegisterId,
+        value: TypedId,
+    ) -> TypedId {
+        debug_assert_ne!(value.id, Id::Register(result.id));
+        match (value.id, self.container.get_last_instruction_result_register_mut()) {
+            (Id::Register(value), Some(last_result)) if value == *last_result => {
+                ir_meta.replace_instruction(result.id, value);
+                *last_result = result.id;
+            }
+            _ => {
+                self.container.add_typed_instruction(instruction::make_with_result_id!(
+                    alias, ir_meta, result, value
+                ));
+            }
+        }
+        TypedId::from_register_id(result)
+    }
 }
 
 impl<'a> Builder<'a, Block> {
@@ -5599,37 +5649,6 @@ impl<'a> Builder<'a, traverser::Transforms> {
     }
     pub fn add_block(&mut self, block: Block) {
         self.container.add_block(block);
-    }
-    // Given an existing `result`, make it such that it would evaluate to `value`.
-    // This allows the rest of the shader to continue referencing the existing `result` and not need
-    // modification.
-    //
-    // * If the last transformation in the list is the `value` register, its instruction is instead
-    //   assigned to `result` (similar to `make_with_result_id!()`)
-    // * Otherwise, the existing instruction for `result` is changed to `Alias value`
-    //
-    // For example, in the following transformation:
-    //
-    //     let c = builder.add(ir_meta, a, b);
-    //     builder.alias_result(ir_meta, result, c);
-    //
-    // Then if `builder.add` has generated a `c = Add a b` instruction, then `c` will be a register
-    // and the instruction is changed to `result = Add a b` (and `c` is no longer available).
-    // However, if the instruction is constant-folded, then `c` is a constant, and
-    // `result = Alias c` is added to the transforms.
-    pub fn alias_result(&mut self, ir_meta: &mut IRMeta, result: TypedRegisterId, value: TypedId) {
-        debug_assert_ne!(value.id, Id::Register(result.id));
-        match (value.id, self.container.get_last_transform_result_register_mut()) {
-            (Id::Register(value), Some(last_result)) if value == *last_result => {
-                ir_meta.replace_instruction(result.id, value);
-                *last_result = result.id;
-            }
-            _ => {
-                self.container.add_typed_instruction(instruction::make_with_result_id!(
-                    alias, ir_meta, result, value
-                ));
-            }
-        }
     }
 
     pub fn finish(self) -> Vec<traverser::Transform> {

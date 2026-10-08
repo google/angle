@@ -78,7 +78,8 @@ fn clamp_indirect_index(
         return vec![];
     }
 
-    let mut transforms = vec![];
+    let mut transforms = traverser::Transforms::new();
+    let mut builder = instruction::Builder::new(&mut transforms);
 
     // On GLSL es 100, clamp is only defined for float, so float arguments are used.
     // Float clamp is unconditionally emitted to work around driver bugs with integer clamp on
@@ -100,34 +101,21 @@ fn clamp_indirect_index(
         }
         _ => panic!("Internal error: Invalid type to index"),
     };
-    let index_as_float = traverser::add_typed_instruction(
-        &mut transforms,
-        instruction::make!(construct, ir_meta, TYPE_ID_FLOAT, vec![index], None),
-    );
+    let index_as_float = builder.construct(ir_meta, TYPE_ID_FLOAT, vec![index], None);
     // For BuiltInOpCode::Clamp, result precision should propagate to operands.
     // See ir::instruction::propagate().
     // Since the result precision is the highest of the operands' precisions, we only need to make
     // sure that TYPED_CONSTANT_ID_FLOAT_ZERO and max both have an assigned precision less than or
     // equal to index_as_float's precision. Use index_as_float.precision for simplicity.
     let max = ir_meta.get_constant_float_typed((max - 1) as f32, index_as_float.precision);
-    let clamped = traverser::add_typed_instruction(
-        &mut transforms,
-        instruction::make!(
-            built_in,
-            ir_meta,
-            BuiltInOpCode::Clamp,
-            vec![index_as_float, TYPED_CONSTANT_ID_FLOAT_ZERO, max]
-        ),
+    let clamped = builder.built_in(
+        ir_meta,
+        BuiltInOpCode::Clamp,
+        vec![index_as_float, TYPED_CONSTANT_ID_FLOAT_ZERO, max],
     );
-    let clamped = traverser::add_typed_instruction(
-        &mut transforms,
-        instruction::make!(construct, ir_meta, index.type_id, vec![clamped], None),
-    );
+    let clamped = builder.construct(ir_meta, index.type_id, vec![clamped], None);
 
     // Replace the original instruction with one using the new index.
-    traverser::add_typed_instruction(
-        &mut transforms,
-        instruction::make_with_result_id!(index, ir_meta, result, indexed, clamped),
-    );
-    transforms
+    let element = builder.index(ir_meta, indexed, clamped);
+    builder.finish_with_result(ir_meta, result, element)
 }

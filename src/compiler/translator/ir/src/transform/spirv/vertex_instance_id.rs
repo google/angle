@@ -38,22 +38,17 @@ pub fn transform_instance_index_load(
         Some(BuiltIn::InstanceIndex)
     ));
 
-    let mut transforms = vec![];
+    let mut transforms = traverser::Transforms::new();
+    let mut builder = instruction::Builder::new(&mut transforms);
 
     // Generate the following:
     //
     //     base_instance'   = Load base_instance
     //     instance_index'  = Load instance_index
     //     result           = Sub instance_index' base_instance'
-    let base_instance = driver_uniforms.base_instance(ir_meta, &mut transforms);
-    let instance_index = traverser::add_typed_instruction(
-        &mut transforms,
-        instruction::make!(load, ir_meta, instance_index),
-    );
-    traverser::add_typed_instruction(
-        &mut transforms,
-        instruction::make_with_result_id!(sub, ir_meta, result, instance_index, base_instance),
-    );
+    let base_instance = driver_uniforms.base_instance(ir_meta, &mut builder);
+    let instance_index = builder.load(ir_meta, instance_index);
+    let instance_index = builder.sub(ir_meta, instance_index, base_instance);
 
-    transforms
+    builder.finish_with_result(ir_meta, result, instance_index)
 }

@@ -1375,6 +1375,13 @@ impl instruction::InstructionContainer for Block {
     fn declare(&mut self, variable_id: VariableId) {
         self.add_variable_declaration(variable_id);
     }
+    // If the last transform is BlockInstruction::Register(register), returns `&mut register`.
+    fn get_last_instruction_result_register_mut(&mut self) -> Option<&mut RegisterId> {
+        self.instructions.last_mut().and_then(|instruction| match instruction {
+            BlockInstruction::Register(result) => Some(result),
+            _ => None,
+        })
+    }
 }
 
 #[derive(Copy, Clone)]
