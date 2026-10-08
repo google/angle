@@ -6754,6 +6754,11 @@ angle::Result ImageHelper::fallbackFromTileMemory(ContextVk *contextVk)
 
             commandBuffer->copyImage(prevImage->getImage(), prevImage->getCurrentLayout(renderer),
                                      getImage(), getCurrentLayout(renderer), 1, &region);
+
+            // Seal mOutsideRenderPassCommands so the copy lands in the same vkQueueSubmit as
+            // the tile memory render pass (mirrors what copyImageFromTileMemory does below).
+            ANGLE_TRY(contextVk->flushCommandsAndEndRenderPassWithoutSubmit(
+                RenderPassClosureReason::TileMemorySimulatedClear));
         }
         else
         {
