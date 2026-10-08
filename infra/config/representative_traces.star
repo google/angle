@@ -29,6 +29,7 @@ SMOKE_TRACES = [
 
 REPRESENTATIVE_TRACES = [
     "ace_racer",
+    "ant_legion",
     "antutu_refinery",
     "asphalt_9_2024",
     "aztec_ruins_high",
@@ -38,7 +39,6 @@ REPRESENTATIVE_TRACES = [
     "black_clover_m",
     "black_desert_mobile",
     "block_blast",
-    "call_of_dragons",
     "callbreak",
     "candy_crush_soda_saga",
     "car_chase",
@@ -50,7 +50,6 @@ REPRESENTATIVE_TRACES = [
     "diablo_immortal",
     "disney_mirrorverse",
     "dota_underlords",
-    "doubleu_casino",
     "driver_overhead_2",
     "garena_rov_abyssal_rift",
     "genshin_impact",
@@ -73,6 +72,7 @@ REPRESENTATIVE_TRACES = [
     "plants_vs_zombies",
     "pokemon_go_ar",
     "pubg_mobile_battle_royale",
+    "puzzles_and_chaos",
     "race_master_3d",
     "return_to_monkey_island",
     "shovel_knight_pocket_dungeon",

@@ -185,6 +185,7 @@ vars = {
   'checkout_angle_restricted_trace_angry_birds_2_1500': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_angry_birds_2_launch': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_animal_crossing': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_ant_legion': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_antistress': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_antutu_refinery': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_apex_girl': 'checkout_extra_traces',
@@ -230,7 +231,7 @@ vars = {
   'checkout_angle_restricted_trace_bullet_echo': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_bus_simulator_indonesia': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_call_break_offline_card_game': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_call_of_dragons': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_call_of_dragons': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_callbreak': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_candy_crush_500': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_candy_crush_soda_saga': 'checkout_angle_restricted_traces',
@@ -271,7 +272,7 @@ vars = {
   'checkout_angle_restricted_trace_domino_dreams': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dont_starve': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dota_underlords': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_doubleu_casino': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_doubleu_casino': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_downwell': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dr_driving': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dr_parking_4': 'checkout_extra_traces',
@@ -445,6 +446,7 @@ vars = {
   'checkout_angle_restricted_trace_pubg_mobile_lite': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pubg_mobile_skydive': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_puzzle_and_dragons': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_puzzles_and_chaos': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_puzzles_and_survival': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_qblock_wood_block_puzzle_game': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_quick_hit_casino_slots': 'checkout_extra_traces',
@@ -1662,6 +1664,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_animal_crossing',
+  },
+  'src/tests/restricted_traces/ant_legion': {
+      'packages': [
+        {
+            'package': 'angle/traces/ant_legion',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_ant_legion',
   },
   'src/tests/restricted_traces/antistress': {
       'packages': [
@@ -4262,6 +4274,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_puzzle_and_dragons',
+  },
+  'src/tests/restricted_traces/puzzles_and_chaos': {
+      'packages': [
+        {
+            'package': 'angle/traces/puzzles_and_chaos',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_puzzles_and_chaos',
   },
   'src/tests/restricted_traces/puzzles_and_survival': {
       'packages': [
