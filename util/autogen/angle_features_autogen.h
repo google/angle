@@ -310,6 +310,7 @@ enum class Feature
     ReapplyUBOBindingsAfterUsingBinaryProgram,
     ReattachFboDepthStencilOnReallocation,
     ReattachTextureToFboAfterLayerIncrease,
+    RecreateFboOnAttachmentRespecification,
     RecreateImmutableTextureOnBaseLevelIncrease,
     RecreateMipmapLevelsBeforeGenerate,
     RecreateTextureOnTexImage3dDepthIncrease,

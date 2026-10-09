@@ -310,6 +310,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ReapplyUBOBindingsAfterUsingBinaryProgram, "reapplyUBOBindingsAfterUsingBinaryProgram"},
     {Feature::ReattachFboDepthStencilOnReallocation, "reattachFboDepthStencilOnReallocation"},
     {Feature::ReattachTextureToFboAfterLayerIncrease, "reattachTextureToFboAfterLayerIncrease"},
+    {Feature::RecreateFboOnAttachmentRespecification, "recreateFboOnAttachmentRespecification"},
     {Feature::RecreateImmutableTextureOnBaseLevelIncrease, "recreateImmutableTextureOnBaseLevelIncrease"},
     {Feature::RecreateMipmapLevelsBeforeGenerate, "recreateMipmapLevelsBeforeGenerate"},
     {Feature::RecreateTextureOnTexImage3dDepthIncrease, "recreateTextureOnTexImage3dDepthIncrease"},
