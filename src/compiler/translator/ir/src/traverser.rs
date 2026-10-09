@@ -496,7 +496,7 @@ pub mod transformer {
         // Keep the branch targets in a temp block for now.  If the transformation results in a
         // tree of blocks, these branch targets are set to the tail of the merge chain.
         let mut branch_targets = Block::new();
-        inherit_branch_targets(&mut branch_targets, block);
+        branch_targets.inherit_branch_targets(block);
 
         // Take the first `intact_count` instructions as-is.
         let to_transform = instructions.split_off(intact_count);
@@ -523,23 +523,9 @@ pub mod transformer {
         // Overwrite the old block and return the the tail of the merge chain.
         *block = new_block;
         let cur_block = block.get_merge_chain_last_block_mut();
-        inherit_branch_targets(cur_block, &mut branch_targets);
+        cur_block.inherit_branch_targets(&mut branch_targets);
 
         cur_block
-    }
-
-    fn inherit_branch_targets(new_block: &mut Block, old_block: &mut Block) {
-        debug_assert!(new_block.merge_block.is_none());
-        debug_assert!(new_block.loop_condition.is_none());
-        debug_assert!(new_block.block1.is_none());
-        debug_assert!(new_block.block2.is_none());
-        debug_assert!(new_block.case_blocks.is_empty());
-
-        new_block.merge_block = old_block.merge_block.take();
-        new_block.loop_condition = old_block.loop_condition.take();
-        new_block.block1 = old_block.block1.take();
-        new_block.block2 = old_block.block2.take();
-        new_block.case_blocks = std::mem::take(&mut old_block.case_blocks);
     }
 
     // After visiting an instruction, apply the transformations that are requested by the
@@ -580,15 +566,11 @@ pub mod transformer {
                 Transform::DeclareVariable(variable_id) => {
                     cur_block.variables.push(variable_id);
                 }
-                Transform::AddBlock(mut block) => {
-                    debug_assert!(block.input.is_none());
-
+                Transform::AddBlock(block) => {
                     // Append the instructions/variables of the new block to this block, then
                     // set the branch targets to the `block`'s.  Future transformations
                     // continue in the merge block of the added block (if any).
-                    cur_block.instructions.extend(std::mem::take(&mut block.instructions));
-                    cur_block.variables.extend(std::mem::take(&mut block.variables));
-                    inherit_branch_targets(cur_block, &mut block);
+                    cur_block.append_block(block);
 
                     cur_block = cur_block.get_merge_chain_last_block_mut();
                 }
@@ -641,6 +623,9 @@ impl instruction::InstructionContainer for Transforms {
     }
     fn declare(&mut self, variable_id: VariableId) {
         self.transforms.push(Transform::DeclareVariable(variable_id));
+    }
+    fn add_block(&mut self, block: Block) {
+        self.transforms.push(Transform::AddBlock(block));
     }
     // If the last transform is Transform::Add(BlockInstruction::Register(register))), returns
     // `&mut register`.
