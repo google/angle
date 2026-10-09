@@ -18778,6 +18778,7 @@ TEST_P(GLSLTestLoops, ForContinueInSwitchComplex)
 {
     constexpr char kFS[] = R"(#version 300 es
 precision mediump float;
+precision highp int;
 out vec4 color;
 
 void main()
@@ -23872,6 +23873,7 @@ TEST_P(GLSLTest_ES3, DenormFloatsToIntValues)
     constexpr char kFS[] =
         "#version 300 es\n"
         "precision highp float;\n"
+        "precision highp int;\n"
         "out vec4 out_color;\n"
         "uniform float u;\n"
         "void main()\n"
