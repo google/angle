@@ -5911,8 +5911,8 @@ impl<'a> Builder<'a, traverser::Transforms> {
     pub fn remove(&mut self) {
         self.container.remove();
     }
-    pub fn finish(self) -> Vec<traverser::Transform> {
-        self.container.get()
+    pub fn finish(self) -> traverser::Transforms {
+        std::mem::replace(self.container, traverser::Transforms::new())
     }
 
     pub fn finish_with_result(
@@ -5920,8 +5920,8 @@ impl<'a> Builder<'a, traverser::Transforms> {
         ir_meta: &mut IRMeta,
         result: TypedRegisterId,
         value: TypedId,
-    ) -> Vec<traverser::Transform> {
+    ) -> traverser::Transforms {
         self.alias_result(ir_meta, result, value);
-        self.container.get()
+        std::mem::replace(self.container, traverser::Transforms::new())
     }
 }

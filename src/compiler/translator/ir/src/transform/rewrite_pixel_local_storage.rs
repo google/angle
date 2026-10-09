@@ -359,7 +359,7 @@ fn transform_load_by_image(
     plane_info: &PlaneInfo,
     result: TypedRegisterId,
     fragcoord: TypedId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     // Transform:
     //
     //     result = PixelLocalLoadANGLE plane
@@ -432,7 +432,7 @@ fn transform_load_by_framebuffer_fetch(
     ir_meta: &mut IRMeta,
     plane_info: &PlaneInfo,
     result: TypedRegisterId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     // Transform:
     //
     //     result = PixelLocalLoadANGLE plane
@@ -514,7 +514,7 @@ fn transform_store_by_image(
     plane_info: &PlaneInfo,
     value: TypedId,
     fragcoord: TypedId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     // Transform:
     //
     //     PixelLocalStoreANGLE plane value
@@ -694,7 +694,7 @@ fn transform_store_by_framebuffer_fetch(
     ir_meta: &mut IRMeta,
     plane_info: &PlaneInfo,
     value: TypedId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     // Transform:
     //
     //     PixelLocalStoreANGLE plane value
@@ -739,7 +739,7 @@ fn transform_pls_load_store(
     options: &Options,
     instruction: &BlockInstruction,
     fragcoord: Option<TypedId>,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     let (opcode, result) = instruction.get_op_and_result(state.ir_meta);
     match opcode {
         &OpCode::Load(plane) => {
@@ -749,12 +749,12 @@ fn transform_pls_load_store(
                 let plane_info = &state.planes[plane_variable_id.id as usize];
                 if plane_info.implementation != PixelLocalStorageImpl::NotSupported {
                     // Remove the Load instruction.  If the emulation needs it, it will Load again.
-                    vec![traverser::Transform::Remove]
+                    traverser::Transforms::new_single(traverser::Transform::Remove)
                 } else {
-                    vec![]
+                    traverser::Transforms::new()
                 }
             } else {
-                vec![]
+                traverser::Transforms::new()
             }
         }
         &OpCode::Unary(UnaryOpCode::PixelLocalLoadANGLE, plane) => {
@@ -793,7 +793,7 @@ fn transform_pls_load_store(
                 transform_store_by_framebuffer_fetch(state.ir_meta, plane_info, value)
             }
         }
-        _ => vec![],
+        _ => traverser::Transforms::new(),
     }
 }
 

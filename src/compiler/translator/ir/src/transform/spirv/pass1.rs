@@ -32,7 +32,7 @@ pub fn run(ir: &mut IR, options: &Options) {
             let (opcode, result) = instruction.get_op_and_result(state.ir_meta);
             match *opcode {
                 OpCode::Load(pointer) => transform_load(state, options, pointer, result.unwrap()),
-                _ => vec![],
+                _ => traverser::Transforms::new(),
             }
         },
     );
@@ -43,7 +43,7 @@ fn transform_load(
     options: &Options,
     pointer: TypedId,
     result: TypedRegisterId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     if let Id::Variable(variable_id) = pointer.id {
         let variable = state.ir_meta.get_variable(variable_id);
         if matches!(variable.built_in, Some(BuiltIn::InstanceIndex)) {
@@ -55,9 +55,9 @@ fn transform_load(
                 result,
             )
         } else {
-            vec![]
+            traverser::Transforms::new()
         }
     } else {
-        vec![]
+        traverser::Transforms::new()
     }
 }

@@ -32,7 +32,7 @@ pub fn transform_instance_index_load(
     driver_uniforms: &DriverUniforms,
     instance_index: TypedId,
     result: TypedRegisterId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     debug_assert!(matches!(
         ir_meta.get_variable(instance_index.id.get_variable()).built_in,
         Some(BuiltIn::InstanceIndex)

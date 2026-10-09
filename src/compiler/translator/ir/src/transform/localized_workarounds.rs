@@ -39,10 +39,10 @@ pub fn run(ir: &mut IR, options: &Options) {
                             options.max_dual_source_draw_buffers,
                         )
                     } else {
-                        vec![]
+                        traverser::Transforms::new()
                     }
                 }
-                _ => vec![],
+                _ => traverser::Transforms::new(),
             }
         },
     );
@@ -54,10 +54,10 @@ fn clamp_indirect_index(
     index: TypedId,
     result: TypedRegisterId,
     max_dual_source_draw_buffers: u32,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     // No need to clamp constant indices, they are already validated to be in range.
     if index.id.is_constant() {
-        return vec![];
+        return traverser::Transforms::new();
     }
 
     let is_frag_data = if let Id::Variable(id) = indexed.id {
@@ -75,7 +75,7 @@ fn clamp_indirect_index(
     // Don't clamp indirect indices on unsized arrays in buffer blocks.  They are covered by the
     // relevant robust access behavior of the backend.
     if indexed_type.is_unsized_array() {
-        return vec![];
+        return traverser::Transforms::new();
     }
 
     let mut transforms = traverser::Transforms::new();

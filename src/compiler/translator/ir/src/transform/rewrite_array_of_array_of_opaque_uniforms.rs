@@ -97,7 +97,7 @@ pub fn run(ir: &mut IR) {
                 OpCode::AccessArrayElement(pointer, index) => {
                     transform_array_element(state, pointer, index, result.unwrap())
                 }
-                _ => vec![],
+                _ => traverser::Transforms::new(),
             }
         },
     );
@@ -205,7 +205,7 @@ fn transform_array_element(
     pointer: TypedId,
     index: TypedId,
     result: TypedRegisterId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     let mut transforms = traverser::Transforms::new();
     let mut builder = instruction::Builder::new(&mut transforms);
 

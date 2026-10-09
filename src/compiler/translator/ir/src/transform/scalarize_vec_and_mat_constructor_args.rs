@@ -35,10 +35,7 @@ pub fn run(ir: &mut IR) {
     );
 }
 
-fn scalarize_args(
-    ir_meta: &mut IRMeta,
-    instruction: &BlockInstruction,
-) -> Vec<traverser::Transform> {
+fn scalarize_args(ir_meta: &mut IRMeta, instruction: &BlockInstruction) -> traverser::Transforms {
     let (opcode, result) = instruction.get_op_and_result(ir_meta);
     match opcode {
         &OpCode::ConstructVectorFromScalar(arg) => {
@@ -56,7 +53,7 @@ fn scalarize_args(
         OpCode::ConstructMatrixFromMultiple(args) => {
             construct_matrix_from_multiple(ir_meta, &args.clone(), result.unwrap())
         }
-        _ => vec![],
+        _ => traverser::Transforms::new(),
     }
 }
 
@@ -147,7 +144,7 @@ fn construct_vector_from_scalar(
     ir_meta: &mut IRMeta,
     arg: TypedId,
     result: TypedRegisterId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     let mut transforms = traverser::Transforms::new();
     let mut builder = instruction::Builder::new(&mut transforms);
     // Assuming original instruction is:
@@ -194,7 +191,7 @@ fn construct_matrix_from_scalar(
     ir_meta: &mut IRMeta,
     arg: TypedId,
     result: TypedRegisterId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     let mut transforms = traverser::Transforms::new();
     let mut builder = instruction::Builder::new(&mut transforms);
 
@@ -220,7 +217,7 @@ fn construct_matrix_from_matrix(
     ir_meta: &mut IRMeta,
     arg: TypedId,
     result: TypedRegisterId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     let mut transforms = traverser::Transforms::new();
     let mut builder = instruction::Builder::new(&mut transforms);
     util::construct_matrix_from_matrix(
@@ -257,7 +254,7 @@ fn construct_vector_from_multiple(
     ir_meta: &mut IRMeta,
     args: &[TypedId],
     result: TypedRegisterId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     let mut transforms = traverser::Transforms::new();
     let mut builder = instruction::Builder::new(&mut transforms);
     // Cache original result precision
@@ -273,7 +270,7 @@ fn construct_matrix_from_multiple(
     ir_meta: &mut IRMeta,
     args: &[TypedId],
     result: TypedRegisterId,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     let mut transforms = traverser::Transforms::new();
     let mut builder = instruction::Builder::new(&mut transforms);
     // Cache original result precision

@@ -514,14 +514,14 @@ fn transform_call(
     instruction: &BlockInstruction,
     options: &Options,
     to_add: &mut Vec<MonomorphizedFunction>,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     let (op, result) = instruction.get_op_and_result(state.ir_meta);
     if let OpCode::Call(function_id, args) = op {
         let unsupported_args = get_unsupported_arguments(state.ir_meta, args, options);
         if unsupported_args.is_empty() {
             // Nothing to do.  Just visit this function later.
             add_to_process(state, *function_id);
-            return vec![];
+            return traverser::Transforms::new();
         }
 
         // Satisfy the borrow checker as we're about to mutate `state`.
@@ -538,7 +538,7 @@ fn transform_call(
         ));
         builder.finish()
     } else {
-        vec![]
+        traverser::Transforms::new()
     }
 }
 

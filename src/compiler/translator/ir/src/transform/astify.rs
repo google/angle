@@ -833,7 +833,7 @@ fn declare_temp_variable_for_constant_operands(
 fn transform_instruction(
     state: &mut State,
     instruction: &BlockInstruction,
-) -> Vec<traverser::Transform> {
+) -> traverser::Transforms {
     // If the instruction is:
     //
     // - a register, and
@@ -915,7 +915,7 @@ fn transform_instruction(
             builder.finish()
         }
     } else {
-        vec![]
+        traverser::Transforms::new()
     }
 }
 

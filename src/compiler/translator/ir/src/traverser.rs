@@ -309,10 +309,10 @@ pub enum Transform {
 
 // Convenience function to process an instruction::Result::Void and append it to the list of
 // Transforms.
-pub fn add_void_instruction(transforms: &mut Vec<Transform>, inst: instruction::Result) {
+pub fn add_void_instruction(transforms: &mut Transforms, inst: instruction::Result) {
     match inst {
         instruction::Result::Void(op) => {
-            transforms.push(Transform::Add(BlockInstruction::new_void(op)))
+            transforms.transforms.push(Transform::Add(BlockInstruction::new_void(op)))
         }
         _ => panic!("Internal error: Expected instruction with no value"),
     };
@@ -320,25 +320,22 @@ pub fn add_void_instruction(transforms: &mut Vec<Transform>, inst: instruction::
 
 // Convenience function to process a typed instruction::Result and append it to the list of
 // Transforms.  Returns a TypedId representing the result.
-pub fn add_typed_instruction(
-    transforms: &mut Vec<Transform>,
-    inst: instruction::Result,
-) -> TypedId {
+pub fn add_typed_instruction(transforms: &mut Transforms, inst: instruction::Result) -> TypedId {
     if let instruction::Result::Register(id) = inst {
-        transforms.push(Transform::Add(BlockInstruction::new_typed(id.id)));
+        transforms.transforms.push(Transform::Add(BlockInstruction::new_typed(id.id)));
     }
 
     inst.get_result_id()
 }
 
 // Variant of the above that create a single instruction, removing some boilerplate.
-pub fn single_void_instruction(inst: instruction::Result) -> Vec<Transform> {
-    let mut transforms = vec![];
+pub fn single_void_instruction(inst: instruction::Result) -> Transforms {
+    let mut transforms = traverser::Transforms::new();
     add_void_instruction(&mut transforms, inst);
     transforms
 }
-pub fn single_typed_instruction(inst: instruction::Result) -> Vec<Transform> {
-    let mut transforms = vec![];
+pub fn single_typed_instruction(inst: instruction::Result) -> Transforms {
+    let mut transforms = traverser::Transforms::new();
     add_typed_instruction(&mut transforms, inst);
     transforms
 }
@@ -411,7 +408,7 @@ pub mod transformer {
         function_entries: &mut [Option<Block>],
         inst_transform: &InstTransform,
     ) where
-        InstTransform: Fn(&mut State, &BlockInstruction) -> Vec<Transform>,
+        InstTransform: Fn(&mut State, &BlockInstruction) -> Transforms,
     {
         for_each_function(state, function_entries, &|state, _, entry| {
             for_each_block(
@@ -444,18 +441,22 @@ pub mod transformer {
         inst_transform: &InstTransform,
     ) -> &'block mut Block
     where
-        InstTransform: Fn(&mut State, &BlockInstruction) -> Vec<Transform>,
+        InstTransform: Fn(&mut State, &BlockInstruction) -> Transforms,
     {
         for (i, instruction) in block.instructions.iter().enumerate() {
             let result = inst_transform(state, instruction);
-            if !result.is_empty() {
+            if !result.transforms.is_empty() {
                 // Transforming branches is not yet supported, but it is allowed to return
                 // [..., Keep], i.e. it is valid to prepend to the branch instruction.
                 debug_assert!(
-                    !instruction.is_branch() || matches!(result.last().unwrap(), Transform::Keep)
+                    !instruction.is_branch()
+                        || matches!(result.transforms.last().unwrap(), Transform::Keep)
                 );
                 // Don't return [Keep], just return [].
-                debug_assert!(!(result.len() == 1 && matches!(result[0], Transform::Keep)));
+                debug_assert!(
+                    !(result.transforms.len() == 1
+                        && matches!(result.transforms[0], Transform::Keep))
+                );
 
                 // If any changes are to be made, use a helper to recreate the block.  This
                 // would move the instructions so far visited as untransformed, and starts
@@ -482,10 +483,10 @@ pub mod transformer {
         block: &'block mut Block,
         inst_transform: &InstTransform,
         intact_count: usize,
-        first_transform_result: Vec<Transform>,
+        first_transform_result: Transforms,
     ) -> &'block mut Block
     where
-        InstTransform: Fn(&mut State, &BlockInstruction) -> Vec<Transform>,
+        InstTransform: Fn(&mut State, &BlockInstruction) -> Transforms,
     {
         let mut new_block = Block::new();
         let mut instructions = std::mem::take(&mut block.instructions);
@@ -533,7 +534,7 @@ pub mod transformer {
     fn apply_transforms(
         new_block: &mut Block,
         instruction: BlockInstruction,
-        transform_result: Vec<Transform>,
+        transform_result: Transforms,
     ) -> &mut Block {
         // An empty transformation result means the instruction should be kept as-is.
         if transform_result.is_empty() {
@@ -544,7 +545,7 @@ pub mod transformer {
         let mut cur_block = new_block;
         let mut instruction = instruction;
 
-        for transform in transform_result {
+        for transform in transform_result.transforms {
             match transform {
                 Transform::Keep => {
                     // There should only be one `Keep`, but to satisfy Rust, make sure
@@ -589,9 +590,8 @@ impl Transforms {
     pub fn new() -> Transforms {
         Transforms { transforms: Vec::new() }
     }
-
-    pub fn get(&mut self) -> Vec<Transform> {
-        std::mem::take(&mut self.transforms)
+    pub fn new_single(transform: Transform) -> Transforms {
+        Transforms { transforms: vec![transform] }
     }
 
     pub fn is_empty(&self) -> bool {
@@ -616,10 +616,10 @@ impl instruction::InstructionContainer for Transforms {
         self.transforms.push(traverser::Transform::Add(BlockInstruction::new_typed(register_id)))
     }
     fn add_typed_instruction(&mut self, inst: instruction::Result) -> TypedId {
-        traverser::add_typed_instruction(&mut self.transforms, inst)
+        traverser::add_typed_instruction(self, inst)
     }
     fn add_void_instruction(&mut self, inst: instruction::Result) {
-        traverser::add_void_instruction(&mut self.transforms, inst);
+        traverser::add_void_instruction(self, inst);
     }
     fn declare(&mut self, variable_id: VariableId) {
         self.transforms.push(Transform::DeclareVariable(variable_id));
