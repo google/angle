@@ -176,6 +176,7 @@
 549275838 WIN INTEL NATIVE : plague_inc = SKIP
 549275838 WIN INTEL NATIVE : sonic_the_hedgehog = SKIP
 549275838 WIN INTEL NATIVE : zombie_smasher = SKIP
+570723416 WIN INTEL NATIVE : garena_rov_abyssal_rift = SKIP
 40096690 WIN INTEL VULKAN : manhattan_10 = SKIP
 42266346 WIN INTEL VULKAN : black_desert_mobile = SKIP
 42266346 WIN INTEL VULKAN : the_gardens_between = SKIP
