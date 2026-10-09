@@ -244,7 +244,7 @@ vars = {
   'checkout_angle_restricted_trace_castlevania_sotn': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_cat_runner': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_catalyst_black': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_chess_offline': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_chess_offline': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_chrono_trigger': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_clash_of_clans': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_clash_royale': 'checkout_angle_restricted_traces',
@@ -271,6 +271,7 @@ vars = {
   'checkout_angle_restricted_trace_disney_tsum_tsum': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_domino_dreams': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dont_starve': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_doomsday_last_survivors': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_dota_underlords': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_doubleu_casino': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_downwell': 'checkout_extra_traces',
@@ -533,7 +534,7 @@ vars = {
   'checkout_angle_restricted_trace_toon_blast': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_top_heroes_kingdom_saga': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_top_war': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_toptop_games': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_toptop_games': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_total_battle': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_tower_of_fantasy': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_township': 'checkout_extra_traces',
@@ -544,6 +545,7 @@ vars = {
   'checkout_angle_restricted_trace_uber': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_umamusume_pretty_derby': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_vainglory': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_viking_rise': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_vita_mahjong': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_walking_dead_survivors': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_war_planet_online': 'checkout_extra_traces',
@@ -2524,6 +2526,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_dont_starve',
+  },
+  'src/tests/restricted_traces/doomsday_last_survivors': {
+      'packages': [
+        {
+            'package': 'angle/traces/doomsday_last_survivors',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_doomsday_last_survivors',
   },
   'src/tests/restricted_traces/dota_underlords': {
       'packages': [
@@ -5254,6 +5266,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_vainglory',
+  },
+  'src/tests/restricted_traces/viking_rise': {
+      'packages': [
+        {
+            'package': 'angle/traces/viking_rise',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_viking_rise',
   },
   'src/tests/restricted_traces/vita_mahjong': {
       'packages': [
