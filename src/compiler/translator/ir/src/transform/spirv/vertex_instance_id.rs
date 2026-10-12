@@ -38,8 +38,7 @@ pub fn transform_instance_index_load(
         Some(BuiltIn::InstanceIndex)
     ));
 
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
 
     // Generate the following:
     //

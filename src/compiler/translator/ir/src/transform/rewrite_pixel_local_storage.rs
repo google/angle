@@ -74,8 +74,8 @@ pub fn run(ir: &mut IR, options: &Options) {
 
     let mut preamble = Block::new();
     let mut postamble = Block::new();
-    let mut preamble_builder = instruction::Builder::new(&mut preamble);
-    let mut postamble_builder = instruction::Builder::new(&mut postamble);
+    let mut preamble_builder = instruction::Builder::<&mut Block>::new(&mut preamble);
+    let mut postamble_builder = instruction::Builder::<&mut Block>::new(&mut postamble);
 
     // When PLS planes are implemented as image2D, gl_FragCoord is used to locate this fragment's
     // coordinates in the plane.
@@ -318,7 +318,7 @@ fn transform_variable(
 
 fn declare_fragcoord_global(
     state: &mut State,
-    preamble: &mut instruction::Builder<Block>,
+    preamble: &mut instruction::Builder<&mut Block>,
 ) -> Option<TypedId> {
     let has_image = state.has_image;
     has_image.then(|| {
@@ -388,8 +388,7 @@ fn transform_load_by_image(
     //     partial = BitShiftLeft rrrr gvec4(24, 16, 8, 0)
     //     result = BitShiftRight partial 24
     //
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
     let coord = builder.load(ir_meta, fragcoord);
     let plane = builder.load(ir_meta, plane);
 
@@ -457,8 +456,7 @@ fn transform_load_by_framebuffer_fetch(
             access_variable
         ))
     } else {
-        let mut transforms = traverser::Transforms::new();
-        let mut builder = instruction::Builder::new(&mut transforms);
+        let mut builder = instruction::Builder::<traverser::Transforms>::new();
         let loaded = builder.load(ir_meta, access_variable);
         let as_vec4 = match plane_info.format {
             ImageInternalFormat::R32F => {
@@ -565,8 +563,7 @@ fn transform_store_by_image(
     //     clamped' = ConstructVectorFromMultiple [packed, 0, 0, 0]
     //
 
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
     let coord = builder.load(ir_meta, fragcoord);
     let plane = builder.load(ir_meta, plane);
 
@@ -708,8 +705,7 @@ fn transform_store_by_framebuffer_fetch(
     //     value' = ExtractVectorComponent value 0
     //
     let access_variable = plane_info.access_variable.unwrap();
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
     let value = match plane_info.format {
         ImageInternalFormat::R32F | ImageInternalFormat::R32I | ImageInternalFormat::R32UI => {
             builder.vector_component(ir_meta, value, 0)
@@ -800,8 +796,8 @@ fn transform_pls_load_store(
 fn add_pre_and_post_pls_code_for_image(
     state: &mut State,
     options: &Options,
-    preamble: &mut instruction::Builder<Block>,
-    postamble: &mut instruction::Builder<Block>,
+    preamble: &mut instruction::Builder<&mut Block>,
+    postamble: &mut instruction::Builder<&mut Block>,
 ) {
     // When PLS is implemented with images, early_fragment_tests ensure that depth/stencil
     // can also block stores to PLS.
@@ -875,8 +871,8 @@ fn add_pre_and_post_pls_code_for_image(
 fn add_pre_and_post_pls_code_for_framebuffer_fetch(
     state: &mut State,
     global_variables: &[VariableId],
-    preamble: &mut instruction::Builder<Block>,
-    postamble: &mut instruction::Builder<Block>,
+    preamble: &mut instruction::Builder<&mut Block>,
+    postamble: &mut instruction::Builder<&mut Block>,
 ) {
     // [OpenGL ES Version 3.0.6, 3.9.2.3 "Shader Output"]: Any colors, or color components,
     // associated with a fragment that are not written by the fragment shader are undefined.

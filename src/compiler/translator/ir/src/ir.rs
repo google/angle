@@ -1386,7 +1386,7 @@ impl Block {
     }
 }
 
-impl instruction::InstructionContainer for Block {
+impl instruction::InstructionContainer for &mut Block {
     fn add_register(&mut self, register_id: RegisterId) {
         self.get_merge_chain_last_block_mut().add_register_instruction(register_id);
     }

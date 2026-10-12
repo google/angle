@@ -100,7 +100,7 @@ fn generate_preamble(
     view_id: TypedId,
 ) -> Block {
     let mut preamble = Block::new();
-    let mut builder = instruction::Builder::new(&mut preamble);
+    let mut builder = instruction::Builder::<&mut Block>::new(&mut preamble);
 
     // Initialize InstanceID and ViewID_OVR as such:
     //

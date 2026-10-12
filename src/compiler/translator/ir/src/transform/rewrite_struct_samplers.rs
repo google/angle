@@ -419,8 +419,7 @@ fn extract_sampler(
 }
 
 fn access_sampler(state: &mut State, result: TypedRegisterId) -> traverser::Transforms {
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
 
     // If reached a sampler, replace the access chain up to it (if tracked) with one accessing the
     // replacement uniform.

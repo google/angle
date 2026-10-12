@@ -328,7 +328,7 @@ struct ReplacementInfo {
 
 fn replace_arg(
     state: &mut State,
-    preamble: &mut instruction::Builder<Block>,
+    preamble: &mut instruction::Builder<&mut Block>,
     access_chain: &[Id],
 ) -> ReplacementInfo {
     let mut params = vec![];
@@ -436,7 +436,7 @@ fn prepare_to_monomorphize(
     builder: &mut instruction::Builder<traverser::Transforms>,
 ) -> MonomorphizedFunction {
     let mut preamble = Block::new();
-    let mut preamble_builder = instruction::Builder::new(&mut preamble);
+    let mut preamble_builder = instruction::Builder::<&mut Block>::new(&mut preamble);
     let function_params = state.ir_meta.get_function(function_id).params.clone();
 
     let mut unreplaced_index = 0;
@@ -526,8 +526,7 @@ fn transform_call(
 
         // Satisfy the borrow checker as we're about to mutate `state`.
         let args = args.clone();
-        let mut transforms = traverser::Transforms::new();
-        let mut builder = instruction::Builder::new(&mut transforms);
+        let mut builder = instruction::Builder::<traverser::Transforms>::new();
         to_add.push(prepare_to_monomorphize(
             state,
             *function_id,

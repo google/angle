@@ -78,8 +78,7 @@ fn clamp_indirect_index(
         return traverser::Transforms::new();
     }
 
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
 
     // On GLSL es 100, clamp is only defined for float, so float arguments are used.
     // Float clamp is unconditionally emitted to work around driver bugs with integer clamp on

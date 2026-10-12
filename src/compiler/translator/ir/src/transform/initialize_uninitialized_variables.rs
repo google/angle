@@ -124,7 +124,7 @@ fn initialize_with_zeros<'block>(
             // For structs, initialize field by field.
             for index in 0..fields.len() {
                 // selected_field = AccessStructField id index
-                let mut builder = instruction::Builder::new(block);
+                let mut builder = instruction::Builder::<&mut Block>::new(block);
                 let selected_field = builder.struct_field(ir_meta, id, index as u32);
                 // Recursively set the field to zeros.
                 block = initialize_with_zeros(ir_meta, block, selected_field, allow_loops);
@@ -145,13 +145,14 @@ fn initialize_with_zeros<'block>(
                     Some(CONSTANT_ID_INT_ZERO),
                     VariableScope::Local,
                 );
-                let mut builder = instruction::Builder::new(block);
+                let mut builder = instruction::Builder::<&mut Block>::new(block);
                 builder.declare(loop_index_var_id);
 
                 // Add the loop condition, index < count:
                 {
                     let mut condition_block = Block::new();
-                    let mut condition_builder = instruction::Builder::new(&mut condition_block);
+                    let mut condition_builder =
+                        instruction::Builder::<&mut Block>::new(&mut condition_block);
                     // loaded_index = Load loop_index_id
                     let loaded_index = condition_builder.load(ir_meta, loop_index_id);
                     // Note: `uint` would be a better loop index type, but ESSL 100 doesn't support
@@ -171,7 +172,8 @@ fn initialize_with_zeros<'block>(
                 // Add the loop continue block, ++index:
                 {
                     let mut continue_block = Block::new();
-                    let mut continue_builder = instruction::Builder::new(&mut continue_block);
+                    let mut continue_builder =
+                        instruction::Builder::<&mut Block>::new(&mut continue_block);
                     continue_builder.prefix_increment(ir_meta, loop_index_id);
 
                     continue_block.terminate(OpCode::Continue);
@@ -181,7 +183,7 @@ fn initialize_with_zeros<'block>(
                 // Add the loop body, recursively initialize id[index]
                 {
                     let mut body_block = Block::new();
-                    let mut body_builder = instruction::Builder::new(&mut body_block);
+                    let mut body_builder = instruction::Builder::<&mut Block>::new(&mut body_block);
                     // loaded_index = Load loop_index_id
                     let loaded_index = body_builder.load(ir_meta, loop_index_id);
                     // selected_element = AccessArrayElement id index
@@ -211,7 +213,7 @@ fn initialize_with_zeros<'block>(
                     let index_constant =
                         ir_meta.get_constant_int_typed(index as i32, Precision::High);
                     // selected_element = AccessArrayElement id index
-                    let mut builder = instruction::Builder::new(block);
+                    let mut builder = instruction::Builder::<&mut Block>::new(block);
                     let selected_element = builder.index(ir_meta, id, index_constant);
                     // Recursively set the element to zeros.
                     block = initialize_with_zeros(ir_meta, block, selected_element, allow_loops);
@@ -224,7 +226,7 @@ fn initialize_with_zeros<'block>(
             // See propagate_precision::propagate_precision_in_instructions().
             // Apply id's precision to null_value.
             let null_value = ir_meta.get_constant_null_typed(type_id, id.precision);
-            let mut builder = instruction::Builder::new(block);
+            let mut builder = instruction::Builder::<&mut Block>::new(block);
             builder.store(ir_meta, id, null_value);
         }
     }
@@ -290,7 +292,7 @@ fn make_init_block(
             //
             // If dual source blending is enabled, only initialize element 0.
             current_block = if is_fragment_output_array && ir_meta.uses_secondary_frag_data() {
-                let mut builder = instruction::Builder::new(current_block);
+                let mut builder = instruction::Builder::<&mut Block>::new(current_block);
                 let element_zero = builder.index(ir_meta, variable, TYPED_CONSTANT_ID_INT_ZERO);
                 initialize_with_zeros(ir_meta, current_block, element_zero, false)
             } else {

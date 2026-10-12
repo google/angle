@@ -75,7 +75,7 @@ fn replace_output_variable(
     let global = TypedId::from_variable_id(&ir.meta, variable_id);
 
     let mut postamble = Block::new();
-    let mut builder = instruction::Builder::new(&mut postamble);
+    let mut builder = instruction::Builder::<&mut Block>::new(&mut postamble);
 
     if let Some(array_size) = array_size {
         for index in 0..array_size {
@@ -111,7 +111,7 @@ fn replace_output_variable(
 
 fn copy_and_expand(
     ir_meta: &mut IRMeta,
-    builder: &mut instruction::Builder<Block>,
+    builder: &mut instruction::Builder<&mut Block>,
     global: TypedId,
     output: TypedId,
     expanded_type_id: TypeId,

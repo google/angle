@@ -206,8 +206,7 @@ fn transform_array_element(
     index: TypedId,
     result: TypedRegisterId,
 ) -> traverser::Transforms {
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
 
     match pointer.id {
         Id::Variable(variable_id) => {

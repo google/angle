@@ -145,8 +145,7 @@ fn construct_vector_from_scalar(
     arg: TypedId,
     result: TypedRegisterId,
 ) -> traverser::Transforms {
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
     // Assuming original instruction is:
     //     r3  (int[3], mediump) = ConstructVectorFromScalar r2 (bool)
     // This function transforms it to the following 2 new instructions:
@@ -192,8 +191,7 @@ fn construct_matrix_from_scalar(
     arg: TypedId,
     result: TypedRegisterId,
 ) -> traverser::Transforms {
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
 
     // Cache original result precision
     let preserved_precision = result.precision;
@@ -218,8 +216,7 @@ fn construct_matrix_from_matrix(
     arg: TypedId,
     result: TypedRegisterId,
 ) -> traverser::Transforms {
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
     util::construct_matrix_from_matrix(
         ir_meta,
         &mut builder,
@@ -255,8 +252,7 @@ fn construct_vector_from_multiple(
     args: &[TypedId],
     result: TypedRegisterId,
 ) -> traverser::Transforms {
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
     // Cache original result precision
     let preserved_precision = result.precision;
     let args = flatten_constructor_args(ir_meta, &mut builder, args);
@@ -271,8 +267,7 @@ fn construct_matrix_from_multiple(
     args: &[TypedId],
     result: TypedRegisterId,
 ) -> traverser::Transforms {
-    let mut transforms = traverser::Transforms::new();
-    let mut builder = instruction::Builder::new(&mut transforms);
+    let mut builder = instruction::Builder::<traverser::Transforms>::new();
     // Cache original result precision
     let preserved_precision = result.precision;
     let args = flatten_constructor_args(ir_meta, &mut builder, args);

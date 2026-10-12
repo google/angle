@@ -17,7 +17,7 @@ pub fn run(ir: &mut IR) {
         //     clamped = Clamp depth min max
         //               Store frag_depth clamped
         let mut clamp_block = Block::new();
-        let mut builder = instruction::Builder::new(&mut clamp_block);
+        let mut builder = instruction::Builder::<&mut Block>::new(&mut clamp_block);
         let depth = builder.load(&mut ir.meta, frag_depth);
         let clamped = builder.built_in(
             &mut ir.meta,

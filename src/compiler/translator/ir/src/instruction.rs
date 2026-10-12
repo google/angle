@@ -5307,15 +5307,20 @@ pub trait InstructionContainer {
     fn add_block(&mut self, block: Block);
 }
 
-pub struct Builder<'a, Container: InstructionContainer> {
-    container: &'a mut Container,
+// A helper to remove some of the boilerplate of generating instructions in transformations.  It
+// mirrors instruction builders above, but also provides helpers to create common control flow (such
+// as `if`, `while`, etc).  It is implemented to support two different kinds of transformations:
+//
+// * Directly generating instructions in a `Block`.  In this case, `Builder::<&mut Block>`
+//   references an existing block and manipulates it.
+// * Using `traverser::Transforms` to prepare a set of transformations to be applied to an
+//   instruction.  In this case, `Builder<traverser::Transforms>` owns the transforms and returns
+//   them on `finish()`.
+pub struct Builder<Container: InstructionContainer> {
+    container: Container,
 }
 
-impl<'a, Container: InstructionContainer> Builder<'a, Container> {
-    pub fn new(container: &'a mut Container) -> Builder<'a, Container> {
-        Builder { container }
-    }
-
+impl<Container: InstructionContainer> Builder<Container> {
     pub fn add_register(&mut self, register_id: RegisterId) {
         self.container.add_register(register_id);
     }
@@ -5333,10 +5338,10 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
         &mut self,
         ir_meta: &mut IRMeta,
         cond: TypedId,
-        then_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
+        then_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
     ) {
         let mut true_block = Block::new();
-        then_fn(&mut Builder::new(&mut true_block), ir_meta);
+        then_fn(&mut Builder::<&mut Block>::new(&mut true_block), ir_meta);
         debug_assert!(true_block.get_merge_chain_last_block().is_terminated());
 
         let mut if_block = Block::new();
@@ -5357,11 +5362,11 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
         &mut self,
         ir_meta: &mut IRMeta,
         cond: TypedId,
-        then_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
-        else_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
+        then_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
+        else_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
     ) -> Option<TypedId> {
         let mut true_block = Block::new();
-        then_fn(&mut Builder::new(&mut true_block), ir_meta);
+        then_fn(&mut Builder::<&mut Block>::new(&mut true_block), ir_meta);
         debug_assert!(true_block.get_merge_chain_last_block().is_terminated());
 
         let true_terminator = true_block.get_merge_chain_last_block().get_terminating_op();
@@ -5372,7 +5377,7 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
         };
 
         let mut false_block = Block::new();
-        else_fn(&mut Builder::new(&mut false_block), ir_meta);
+        else_fn(&mut Builder::<&mut Block>::new(&mut false_block), ir_meta);
         debug_assert!(false_block.get_merge_chain_last_block().is_terminated());
         debug_assert!(merge_input.is_none_or(|input| matches!(
             false_block.get_merge_chain_last_block().get_terminating_op(),
@@ -5405,31 +5410,31 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
     pub fn for_loop(
         &mut self,
         ir_meta: &mut IRMeta,
-        init_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
-        cond_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
-        step_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
-        body_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
+        init_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
+        cond_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
+        step_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
+        body_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
     ) {
         let mut init_block = Block::new();
-        init_fn(&mut Builder::new(&mut init_block), ir_meta);
+        init_fn(&mut Builder::<&mut Block>::new(&mut init_block), ir_meta);
         self.container.add_block(init_block);
 
         let mut cond_block = Block::new();
-        cond_fn(&mut Builder::new(&mut cond_block), ir_meta);
+        cond_fn(&mut Builder::<&mut Block>::new(&mut cond_block), ir_meta);
         debug_assert!(matches!(
             cond_block.get_merge_chain_last_block().get_terminating_op(),
             OpCode::LoopIf(_)
         ));
 
         let mut continue_block = Block::new();
-        step_fn(&mut Builder::new(&mut continue_block), ir_meta);
+        step_fn(&mut Builder::<&mut Block>::new(&mut continue_block), ir_meta);
         debug_assert!(matches!(
             continue_block.get_merge_chain_last_block().get_terminating_op(),
             OpCode::Continue
         ));
 
         let mut body_block = Block::new();
-        body_fn(&mut Builder::new(&mut body_block), ir_meta);
+        body_fn(&mut Builder::<&mut Block>::new(&mut body_block), ir_meta);
         debug_assert!(body_block.get_merge_chain_last_block().is_terminated());
 
         let mut loop_block = Block::new();
@@ -5448,18 +5453,18 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
     pub fn while_loop(
         &mut self,
         ir_meta: &mut IRMeta,
-        cond_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
-        body_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
+        cond_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
+        body_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
     ) {
         let mut cond_block = Block::new();
-        cond_fn(&mut Builder::new(&mut cond_block), ir_meta);
+        cond_fn(&mut Builder::<&mut Block>::new(&mut cond_block), ir_meta);
         debug_assert!(matches!(
             cond_block.get_merge_chain_last_block().get_terminating_op(),
             OpCode::LoopIf(_)
         ));
 
         let mut body_block = Block::new();
-        body_fn(&mut Builder::new(&mut body_block), ir_meta);
+        body_fn(&mut Builder::<&mut Block>::new(&mut body_block), ir_meta);
         debug_assert!(body_block.get_merge_chain_last_block().is_terminated());
 
         let mut loop_block = Block::new();
@@ -5477,15 +5482,15 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
     pub fn do_while_loop(
         &mut self,
         ir_meta: &mut IRMeta,
-        body_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
-        cond_fn: impl FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
+        body_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
+        cond_fn: impl FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
     ) {
         let mut body_block = Block::new();
-        body_fn(&mut Builder::new(&mut body_block), ir_meta);
+        body_fn(&mut Builder::<&mut Block>::new(&mut body_block), ir_meta);
         debug_assert!(body_block.get_merge_chain_last_block().is_terminated());
 
         let mut cond_block = Block::new();
-        cond_fn(&mut Builder::new(&mut cond_block), ir_meta);
+        cond_fn(&mut Builder::<&mut Block>::new(&mut cond_block), ir_meta);
         debug_assert!(matches!(
             cond_block.get_merge_chain_last_block().get_terminating_op(),
             OpCode::LoopIf(_)
@@ -5505,7 +5510,7 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
     pub fn switch<I, F>(&mut self, ir_meta: &mut IRMeta, cond: TypedId, cases: I)
     where
         I: IntoIterator<Item = (Option<ConstantId>, F)>,
-        F: FnOnce(&mut Builder<'_, Block>, &mut IRMeta),
+        F: FnOnce(&mut Builder<&mut Block>, &mut IRMeta),
     {
         let mut case_values = Vec::new();
         let mut case_blocks = Vec::new();
@@ -5513,7 +5518,7 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
         for (val, case_fn) in cases {
             case_values.push(val);
             let mut case_block = Block::new();
-            case_fn(&mut Builder::new(&mut case_block), ir_meta);
+            case_fn(&mut Builder::<&mut Block>::new(&mut case_block), ir_meta);
             debug_assert!(case_block.get_merge_chain_last_block().is_terminated());
             case_blocks.push(case_block);
         }
@@ -5870,10 +5875,14 @@ impl<'a, Container: InstructionContainer> Builder<'a, Container> {
     }
 }
 
-impl<'a> Builder<'a, Block> {
+impl Builder<&mut Block> {
+    pub fn new(container: &mut Block) -> Builder<&mut Block> {
+        Builder { container }
+    }
+
     // Adds a block-terminating instruction to the tail of the merge chain.
     fn add_branch(&mut self, inst: instruction::Result) {
-        InstructionContainer::add_void_instruction(self.container, inst);
+        InstructionContainer::add_void_instruction(&mut self.container, inst);
     }
     pub fn branch_discard(&mut self) {
         self.add_branch(instruction::branch_discard());
@@ -5901,7 +5910,11 @@ impl<'a> Builder<'a, Block> {
     }
 }
 
-impl<'a> Builder<'a, traverser::Transforms> {
+impl Builder<traverser::Transforms> {
+    pub fn new() -> Builder<traverser::Transforms> {
+        Builder { container: traverser::Transforms::new() }
+    }
+
     pub fn is_empty(&self) -> bool {
         self.container.is_empty()
     }
@@ -5912,7 +5925,7 @@ impl<'a> Builder<'a, traverser::Transforms> {
         self.container.remove();
     }
     pub fn finish(self) -> traverser::Transforms {
-        std::mem::replace(self.container, traverser::Transforms::new())
+        self.container
     }
 
     pub fn finish_with_result(
@@ -5922,6 +5935,6 @@ impl<'a> Builder<'a, traverser::Transforms> {
         value: TypedId,
     ) -> traverser::Transforms {
         self.alias_result(ir_meta, result, value);
-        std::mem::replace(self.container, traverser::Transforms::new())
+        self.container
     }
 }

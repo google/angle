@@ -90,7 +90,7 @@ fn broadcast(
         //
         //
         let mut postamble = Block::new();
-        let mut builder = instruction::Builder::new(&mut postamble);
+        let mut builder = instruction::Builder::<&mut Block>::new(&mut postamble);
 
         let replacement = TypedId::from_variable_id(&ir.meta, original_id);
         let color = builder.load(&mut ir.meta, replacement);
