@@ -12023,6 +12023,40 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that gl_FragCoord.zw are correct.  The translator replaces gl_FragCoord with a flipped copy,
+// and the .zw components must be carried over unchanged.
+TEST_P(GLSLTest_ES3, FragCoordZW)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 a_position;
+void main()
+{
+    // Clip-space w of 4 gives gl_FragCoord.w = 0.25.  z = 0 gives gl_FragCoord.z = 0.5.
+    gl_Position = vec4(a_position.xy * 4.0, 0.0, 4.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 colorOut;
+void main()
+{
+    colorOut = vec4(gl_FragCoord.z, gl_FragCoord.w, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program, "a_position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    const GLColor kExpected(128, 64, 0, 255);
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, h - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(w / 2, h / 2, kExpected, 1);
+}
+
 bool SubrectEquals(const std::vector<GLColor> &bigArray,
                    const std::vector<GLColor> &smallArray,
                    int bigSize,

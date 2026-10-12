@@ -99,17 +99,21 @@ constexpr ImmutableString kDefaultUniformsBlockName = ImmutableString("defaultUn
     TIntermBinary *inverseXY   = new TIntermBinary(EOpMul, removePivot, flipXY);
     TIntermBinary *plusPivot   = new TIntermBinary(EOpAdd, inverseXY, pivot->deepCopy());
 
-    // Create the corrected variable and copy the value of the original builtin.
-    TIntermBinary *assignment =
-        new TIntermBinary(EOpAssign, flippedBuiltinRef, builtinRef->deepCopy());
+    // Assign to the replaced variable, with .xy rotated and .zy (if any) retaining the original
+    // builtin value.
+    const uint8_t nominalSize = builtin->getType().getNominalSize();
+    ASSERT(nominalSize == 2 || nominalSize == 4);
 
-    // Create an assignment to the replaced variable's .xy.
-    TIntermSwizzle *correctedXY = new TIntermSwizzle(flippedBuiltinRef->deepCopy(), {0, 1});
-    TIntermBinary *assignToXY   = new TIntermBinary(EOpAssign, correctedXY, plusPivot);
+    TIntermTyped *flippedValue = plusPivot;
+    if (nominalSize == 4)
+    {
+        flippedValue = TIntermAggregate::CreateConstructor(
+            builtin->getType(), {plusPivot, new TIntermSwizzle(builtinRef->deepCopy(), {2, 3})});
+    }
 
     // Add this assigment at the beginning of the main function
-    insertSequence->insert(insertSequence->begin(), assignToXY);
-    insertSequence->insert(insertSequence->begin(), assignment);
+    insertSequence->insert(insertSequence->begin(),
+                           new TIntermBinary(EOpAssign, flippedBuiltinRef, flippedValue));
 
     return compiler->validateAST(root);
 }
