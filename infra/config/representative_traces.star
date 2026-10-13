@@ -29,7 +29,6 @@ SMOKE_TRACES = [
 
 REPRESENTATIVE_TRACES = [
     "ace_racer",
-    "ant_legion",
     "antutu_refinery",
     "asphalt_9_2024",
     "aztec_ruins_high",
@@ -51,7 +50,6 @@ REPRESENTATIVE_TRACES = [
     "doomsday_last_survivors",
     "dota_underlords",
     "driver_overhead_2",
-    "garena_rov_abyssal_rift",
     "genshin_impact",
     "grand_mountain_adventure",
     "honkai_impact_3rd",
@@ -59,6 +57,8 @@ REPRESENTATIVE_TRACES = [
     "identity_v",
     "idle_zombie_miner",
     "injustice_2",
+    "isekai_slow_life",
+    "jewels_blast",
     "limbo",
     "lineage_2m",
     "manhattan_31",
