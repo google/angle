@@ -80,7 +80,9 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual void setFixedHeight(EGLint height);
     virtual void setSwapBehavior(EGLenum behavior);
 
-    // Explicitly resolves surface size to use before state synchronization (e.g. validation).
+    // Explicitly resolves surface size to use before state synchronization (e.g. validation). This
+    // must be implemented in a thread safe way since it may get called from multiple threads
+    // without lock.
     virtual angle::Result ensureSizeResolved(const gl::Context *context);
     // size can change with client window resizing
     // Size must be resolved before the call either during state synchronization or explicitly.

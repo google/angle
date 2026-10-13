@@ -191,6 +191,21 @@ class SyncSet final : angle::NonCopyable
     gl::HandleAllocator mHandleAllocator;
 };
 
+class ScratchBuffers final : angle::NonCopyable
+{
+  public:
+    ScratchBuffers()  = default;
+    ~ScratchBuffers() = default;
+
+    angle::ScratchBuffer requestScratchBuffer();
+    void returnScratchBuffer(angle::ScratchBuffer scratchBuffer);
+    void tick();
+
+  private:
+    angle::SimpleMutex mMutex;
+    std::vector<angle::ScratchBuffer> mScratchBuffers;
+};
+
 // Access to this class is thread safe, i.e. can be called from multiple threads without holding the
 // display's mutex lock.
 class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
@@ -226,6 +241,25 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
 
     ScopedSurfaceRef getSurfaceRef(egl::SurfaceID surfaceID) const;
     ScopedSurfaceLockAndRef getSurface(egl::SurfaceID surfaceID) const;
+
+    const gl::Context *getContext(gl::ContextID contextID) const;
+    gl::Context *getContext(gl::ContextID contextID);
+    bool isValidContext(gl::ContextID contextID) const;
+
+    angle::ScratchBuffer requestScratchBuffer() { return mScratchBuffers.requestScratchBuffer(); }
+    void returnScratchBuffer(angle::ScratchBuffer scratchBuffer)
+    {
+        mScratchBuffers.returnScratchBuffer(std::move(scratchBuffer));
+    }
+
+    angle::ScratchBuffer requestZeroFilledBuffer()
+    {
+        return mZeroFilledBuffers.requestScratchBuffer();
+    }
+    void returnZeroFilledBuffer(angle::ScratchBuffer zeroFilledBuffer)
+    {
+        mZeroFilledBuffers.returnScratchBuffer(std::move(zeroFilledBuffer));
+    }
 
   protected:
     [[nodiscard]] bool addRefIfNotTerminating() const
@@ -275,6 +309,9 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     DisplayExtensions mDisplayExtensions;
 
     SyncSet mSyncSet;
+
+    ScratchBuffers mScratchBuffers;
+    ScratchBuffers mZeroFilledBuffers;
 
     // Only these ScopedDisplay classes could directly access the RefCount.
     template <typename DisplayT>
@@ -375,7 +412,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     Error destroyContext(Thread *thread, gl::Context *context);
 
     bool isValidConfig(const Config *config) const;
-    bool isValidContext(gl::ContextID contextID) const;
     bool isValidImage(ImageID imageID) const;
     bool isValidStream(const Stream *stream) const;
     bool isValidNativeWindow(EGLNativeWindowType window) const;
@@ -454,12 +490,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
 
     EGLAttrib queryAttrib(const EGLint attribute);
 
-    angle::ScratchBuffer requestScratchBuffer();
-    void returnScratchBuffer(angle::ScratchBuffer scratchBuffer);
-
-    angle::ScratchBuffer requestZeroFilledBuffer();
-    void returnZeroFilledBuffer(angle::ScratchBuffer zeroFilledBuffer);
-
     egl::Error handleGPUSwitch();
     egl::Error forceGPUSwitch(EGLint gpuIDHigh, EGLint gpuIDLow);
 
@@ -497,9 +527,7 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
 
     angle::ImageLoadContext getImageLoadContext() const;
 
-    const gl::Context *getContext(gl::ContextID contextID) const;
     const egl::Image *getImage(egl::ImageID imageID) const;
-    gl::Context *getContext(gl::ContextID contextID);
     egl::Image *getImage(egl::ImageID imageID);
 
     const ImageMap &getImagesForCapture() const { return mImageMap; }
@@ -530,10 +558,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     void initVersionString();
     void initClientAPIString();
     void initializeFrontendFeatures();
-
-    angle::ScratchBuffer requestScratchBufferImpl(std::vector<angle::ScratchBuffer> *bufferVector);
-    void returnScratchBufferImpl(angle::ScratchBuffer scratchBuffer,
-                                 std::vector<angle::ScratchBuffer> *bufferVector);
 
     Error destroyInvalidEglObjects();
 
@@ -591,10 +615,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     angle::FrontendFeatures mFrontendFeatures;
 
     angle::FeatureList mFeatures;
-
-    angle::SimpleMutex mScratchBufferMutex;
-    std::vector<angle::ScratchBuffer> mScratchBuffers;
-    std::vector<angle::ScratchBuffer> mZeroFilledBuffers;
 
     bool mTerminatedByApi;
     bool mPendingInternalCleanup;

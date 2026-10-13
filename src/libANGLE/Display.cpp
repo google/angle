@@ -1075,6 +1075,35 @@ void SyncSet::clearPools()
     mSyncPools.clear();
 }
 
+// ScratchBuffers implementation:
+angle::ScratchBuffer ScratchBuffers::requestScratchBuffer()
+{
+    std::lock_guard<angle::SimpleMutex> lock(mMutex);
+    if (!mScratchBuffers.empty())
+    {
+        angle::ScratchBuffer buffer = std::move(mScratchBuffers.back());
+        mScratchBuffers.pop_back();
+        return buffer;
+    }
+
+    return angle::ScratchBuffer(kScratchBufferLifetime);
+}
+
+void ScratchBuffers::returnScratchBuffer(angle::ScratchBuffer scratchBuffer)
+{
+    std::lock_guard<angle::SimpleMutex> lock(mMutex);
+    mScratchBuffers.push_back(std::move(scratchBuffer));
+}
+
+void ScratchBuffers::tick()
+{
+    std::lock_guard<angle::SimpleMutex> lock(mMutex);
+    for (angle::ScratchBuffer &scratchBuffer : mScratchBuffers)
+    {
+        scratchBuffer.tick();
+    }
+}
+
 // DisplayState
 DisplayState::DisplayState(EGLNativeDisplayType nativeDisplayId)
     : label(nullptr),
@@ -1193,6 +1222,21 @@ Error ThreadSafeDisplay::restoreLostDevice() const
         return egl::Error(EGL_CONTEXT_LOST);
     }
     return mThreadSafeImpl->restoreLostDevice(this);
+}
+
+const gl::Context *ThreadSafeDisplay::getContext(gl::ContextID contextID) const
+{
+    return mState.contextMap.find(contextID);
+}
+
+gl::Context *ThreadSafeDisplay::getContext(gl::ContextID contextID)
+{
+    return mState.contextMap.find(contextID);
+}
+
+bool ThreadSafeDisplay::isValidContext(const gl::ContextID contextID) const
+{
+    return getContext(contextID) != nullptr;
 }
 
 // Note that ANGLE support on Ozone platform is limited. Our preferred support Matrix for
@@ -2180,18 +2224,8 @@ Error Display::makeCurrent(Thread *thread,
 
     // Tick all the scratch buffers to make sure they get cleaned up eventually if they stop being
     // used.
-    {
-        std::lock_guard<angle::SimpleMutex> lock(mScratchBufferMutex);
-
-        for (angle::ScratchBuffer &scatchBuffer : mScratchBuffers)
-        {
-            scatchBuffer.tick();
-        }
-        for (angle::ScratchBuffer &zeroFilledBuffer : mZeroFilledBuffers)
-        {
-            zeroFilledBuffer.tick();
-        }
-    }
+    mScratchBuffers.tick();
+    mZeroFilledBuffers.tick();
 
     // If eglTerminate() has previously been called and Context was changed, schedule
     // InternalCleanup to invalidate any non-current Contexts, and possibly fully terminate the
@@ -2433,11 +2467,6 @@ const Caps &Display::getCaps() const
 bool Display::isValidConfig(const Config *config) const
 {
     return mConfigSet.contains(config);
-}
-
-bool Display::isValidContext(const gl::ContextID contextID) const
-{
-    return getContext(contextID) != nullptr;
 }
 
 bool Display::isValidImage(ImageID imageID) const
@@ -2930,47 +2959,6 @@ EGLAttrib Display::queryAttrib(const EGLint attribute)
     return value;
 }
 
-angle::ScratchBuffer Display::requestScratchBuffer()
-{
-    return requestScratchBufferImpl(&mScratchBuffers);
-}
-
-void Display::returnScratchBuffer(angle::ScratchBuffer scratchBuffer)
-{
-    returnScratchBufferImpl(std::move(scratchBuffer), &mScratchBuffers);
-}
-
-angle::ScratchBuffer Display::requestZeroFilledBuffer()
-{
-    return requestScratchBufferImpl(&mZeroFilledBuffers);
-}
-
-void Display::returnZeroFilledBuffer(angle::ScratchBuffer zeroFilledBuffer)
-{
-    returnScratchBufferImpl(std::move(zeroFilledBuffer), &mZeroFilledBuffers);
-}
-
-angle::ScratchBuffer Display::requestScratchBufferImpl(
-    std::vector<angle::ScratchBuffer> *bufferVector)
-{
-    std::lock_guard<angle::SimpleMutex> lock(mScratchBufferMutex);
-    if (!bufferVector->empty())
-    {
-        angle::ScratchBuffer buffer = std::move(bufferVector->back());
-        bufferVector->pop_back();
-        return buffer;
-    }
-
-    return angle::ScratchBuffer(kScratchBufferLifetime);
-}
-
-void Display::returnScratchBufferImpl(angle::ScratchBuffer scratchBuffer,
-                                      std::vector<angle::ScratchBuffer> *bufferVector)
-{
-    std::lock_guard<angle::SimpleMutex> lock(mScratchBufferMutex);
-    bufferVector->push_back(std::move(scratchBuffer));
-}
-
 Error Display::handleGPUSwitch()
 {
     ANGLE_TRY(mImplementation->handleGPUSwitch());
@@ -3047,20 +3035,10 @@ angle::ImageLoadContext Display::getImageLoadContext() const
     return imageLoadContext;
 }
 
-const gl::Context *Display::getContext(gl::ContextID contextID) const
-{
-    return mState.contextMap.find(contextID);
-}
-
 const egl::Image *Display::getImage(egl::ImageID imageID) const
 {
     auto iter = mImageMap.find(imageID.value);
     return iter != mImageMap.end() ? iter->second : nullptr;
-}
-
-gl::Context *Display::getContext(gl::ContextID contextID)
-{
-    return mState.contextMap.find(contextID);
 }
 
 egl::Image *Display::getImage(egl::ImageID imageID)

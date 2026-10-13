@@ -2573,7 +2573,9 @@ bool ValidateThreadContext(const ValidationContext *val,
     return true;
 }
 
-bool ValidateContext(const ValidationContext *val, const Display *display, gl::ContextID contextID)
+bool ValidateContext(const ValidationContext *val,
+                     const ThreadSafeDisplay *display,
+                     gl::ContextID contextID)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
@@ -2911,13 +2913,13 @@ const Stream *GetStreamIfValid(const Display *display, const Stream *stream)
     return ValidateStream(nullptr, display, stream) ? stream : nullptr;
 }
 
-const gl::Context *GetContextIfValid(const Display *display, gl::ContextID contextID)
+const gl::Context *GetContextIfValid(const ThreadSafeDisplay *display, gl::ContextID contextID)
 {
     // display->getContext() - validates contextID
     return ValidateDisplay(nullptr, display) ? display->getContext(contextID) : nullptr;
 }
 
-gl::Context *GetContextIfValid(Display *display, gl::ContextID contextID)
+gl::Context *GetContextIfValid(ThreadSafeDisplay *display, gl::ContextID contextID)
 {
     return ValidateDisplay(nullptr, display) ? display->getContext(contextID) : nullptr;
 }

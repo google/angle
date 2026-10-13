@@ -11,6 +11,7 @@
 #ifndef LIBANGLE_SURFACE_H_
 #define LIBANGLE_SURFACE_H_
 
+#include <algorithm>
 #include <array>
 #include <atomic>
 #include <memory>
@@ -489,24 +490,18 @@ class [[nodiscard]] ScopedSurfacesLockAndRef final
 
         // Acquire surface locks in canonical Surface address order to avoid lock-order inversion
         // when the same surfaces are passed in different orders across entry points.
-        for (size_t i = 1; i < N; ++i)
-        {
-            for (size_t j = i; j > 0 && reinterpret_cast<uintptr_t>(surfaceRefs[j].get()) <
-                                            reinterpret_cast<uintptr_t>(surfaceRefs[j - 1].get());
-                 --j)
-            {
-                std::swap(surfaceRefs[j], surfaceRefs[j - 1]);
-            }
-        }
+        std::sort(
+            surfaceRefs.begin(), surfaceRefs.end(),
+            [](const ScopedSurfaceRef &a, const ScopedSurfaceRef &b) { return a.get() < b.get(); });
 
         size_t lockCount          = 0;
         const Surface *lastLocked = nullptr;
-        for (size_t i = 0; i < N; ++i)
+        for (ScopedSurfaceRef &surfaceRef : surfaceRefs)
         {
-            Surface *surface = surfaceRefs[i].get();
+            Surface *surface = surfaceRef.get();
             if (surface != nullptr && surface != lastLocked)
             {
-                mLocks[lockCount++] = ScopedSurfaceLockAndRef(std::move(surfaceRefs[i]));
+                mLocks[lockCount++] = ScopedSurfaceLockAndRef(std::move(surfaceRef));
                 lastLocked          = surface;
             }
         }
