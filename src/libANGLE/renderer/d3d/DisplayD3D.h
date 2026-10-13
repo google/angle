@@ -74,8 +74,7 @@ class DisplayD3D : public DisplayImpl, public d3d::Context, public ThreadSafeDis
 
     ShareGroupImpl *createShareGroup(const egl::ShareGroupState &state) override;
 
-    egl::Error makeCurrent(egl::Display *display,
-                           egl::Surface *drawSurface,
+    egl::Error makeCurrent(egl::Surface *drawSurface,
                            egl::Surface *readSurface,
                            gl::Context *context) override;
 

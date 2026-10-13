@@ -14,6 +14,7 @@
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/LoggingAnnotator.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DeviceVk.h"
@@ -135,7 +136,7 @@ angle::vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
     return angle::vk::ICD::Default;
 }
 
-void InstallDebugAnnotator(egl::Display *display, vk::Renderer *renderer)
+void InstallDebugAnnotator(vk::Renderer *renderer)
 {
     bool installedAnnotator = false;
 
@@ -145,8 +146,7 @@ void InstallDebugAnnotator(egl::Display *display, vk::Renderer *renderer)
 
     if (!installedAnnotator)
     {
-        std::unique_lock<angle::SimpleMutex> lock(gl::GetDebugMutex());
-        display->setGlobalDebugAnnotator();
+        angle::SetGlobalDebugAnnotator();
     }
 }
 }  // namespace
@@ -186,7 +186,7 @@ egl::Error DisplayVk::initialize(egl::Display *display)
 
     mDeviceQueueIndex = mRenderer->getDeviceQueueIndex(egl::ContextPriority::Medium);
 
-    InstallDebugAnnotator(display, mRenderer);
+    InstallDebugAnnotator(mRenderer);
 
     // Query and cache supported surface format and colorspace for later use.
     initSupportedSurfaceFormatColorspaces();
@@ -201,12 +201,11 @@ void DisplayVk::terminate()
     mRenderer->onDestroy(this);
 }
 
-egl::Error DisplayVk::makeCurrent(egl::Display *display,
-                                  egl::Surface * /*drawSurface*/,
+egl::Error DisplayVk::makeCurrent(egl::Surface * /*drawSurface*/,
                                   egl::Surface * /*readSurface*/,
                                   gl::Context * /*context*/)
 {
-    InstallDebugAnnotator(display, mRenderer);
+    InstallDebugAnnotator(mRenderer);
     return egl::NoError();
 }
 

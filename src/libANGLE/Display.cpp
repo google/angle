@@ -38,6 +38,7 @@
 #include "libANGLE/EGLSync.h"
 #include "libANGLE/ErrorStrings.h"
 #include "libANGLE/Image.h"
+#include "libANGLE/LoggingAnnotator.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/Stream.h"
 #include "libANGLE/Surface.h"
@@ -1542,9 +1543,9 @@ Error Display::initialize()
         mBlobCache.resize(1024 * 1024);
     }
 
-    setGlobalDebugAnnotator();
-
     gl::InitializeDebugMutexIfNeeded();
+
+    angle::SetGlobalDebugAnnotator();
 
     ANGLE_TRACE_EVENT0("gpu.angle", "egl::Display::initialize");
 
@@ -2208,7 +2209,7 @@ Error Display::makeCurrent(Thread *thread,
         thread->setCurrent(context);
         ScopedResetThreadContextOnError resetOnError(thread, contextChanged);
 
-        ANGLE_TRY(mImplementation->makeCurrent(this, drawSurface, readSurface, context));
+        ANGLE_TRY(mImplementation->makeCurrent(drawSurface, readSurface, context));
 
         if (context != nullptr)
         {

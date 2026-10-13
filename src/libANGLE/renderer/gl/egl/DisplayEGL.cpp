@@ -738,8 +738,7 @@ egl::Error DisplayEGL::waitNative(const gl::Context *context, EGLint engine)
     return egl::NoError();
 }
 
-egl::Error DisplayEGL::makeCurrent(egl::Display *display,
-                                   egl::Surface *drawSurface,
+egl::Error DisplayEGL::makeCurrent(egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)
 {
@@ -798,7 +797,7 @@ egl::Error DisplayEGL::makeCurrent(egl::Display *display,
 
         // Do not need to call eglMakeCurrent(), since we don't support switching EGLSurface for
         // external context.
-        return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
+        return DisplayGL::makeCurrent(drawSurface, readSurface, context);
     }
 
     if (newSurface != currentContext.surface || newContext != currentContext.context)
@@ -811,7 +810,7 @@ egl::Error DisplayEGL::makeCurrent(egl::Display *display,
         currentContext.context = newContext;
     }
 
-    return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
+    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
 }
 
 gl::Version DisplayEGL::getMaxSupportedESVersion() const

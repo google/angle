@@ -28,7 +28,6 @@
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/HandleAllocator.h"
-#include "libANGLE/LoggingAnnotator.h"
 #include "libANGLE/MemoryProgramCache.h"
 #include "libANGLE/MemoryShaderCache.h"
 #include "libANGLE/Observer.h"
@@ -498,10 +497,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     void lockVulkanQueue();
     void unlockVulkanQueue();
 
-    // Installs LoggingAnnotator as the global DebugAnnotator, for back-ends that do not implement
-    // their own DebugAnnotator.
-    void setGlobalDebugAnnotator() { gl::InitializeDebugAnnotations(&mAnnotator); }
-
     bool supportsDmaBufFormat(EGLint format) const;
     Error queryDmaBufFormats(EGLint max_formats, EGLint *formats, EGLint *num_formats);
     Error queryDmaBufModifiers(EGLint format,
@@ -596,7 +591,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     Device *mDevice;
     Surface *mSurface;
     EGLenum mPlatform;
-    angle::LoggingAnnotator mAnnotator;
 
     // mManagersMutex protects mTextureManager and mSemaphoreManager
     ContextMutex *mManagersMutex;
