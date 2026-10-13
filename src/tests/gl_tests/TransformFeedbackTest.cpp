@@ -92,6 +92,9 @@ class TransformFeedbackTest : public TransformFeedbackTestBase
     void midRecordOpDoesNotContributeTest(std::function<void()> op);
 };
 
+class TransformFeedbackBaseInstanceTest : public TransformFeedbackTest
+{};
+
 // Test that using a transform feedback program without transform feedback active works, and that
 // using it with transform feedback afterwards also works.
 TEST_P(TransformFeedbackTest, NoCaptureThenCapture)
@@ -4507,24 +4510,22 @@ TEST_P(TransformFeedbackTest, DeletePausedTransformFeedbackBuffer)
 }
 
 // Test that using a transform feedback program with a base instance draw call works.
-TEST_P(TransformFeedbackTest, BaseInstance)
+TEST_P(TransformFeedbackBaseInstanceTest, BaseInstance)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_base_vertex_base_instance"));
 
-    constexpr char kVS[] =
-        "#version 300 es\n"
-        "in float in_value;\n"
-        "out float out_value;\n"
-        "void main() {\n"
-        "  out_value = in_value * 2.0;\n"
-        "}";
+    constexpr char kVS[] = R"(#version 300 es
+in float in_value;
+out float out_value;
+void main() {
+  out_value = in_value * 2.0;
+})";
 
-    constexpr char kFS[] =
-        "#version 300 es\n"
-        "out mediump vec4 color;\n"
-        "void main() {\n"
-        "  color = vec4(0.0, 1.0, 0.0, 1.0);\n"
-        "}";
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec4 color;
+void main() {
+  color = vec4(0.0, 1.0, 0.0, 1.0);
+})";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("out_value");
@@ -5619,6 +5620,19 @@ ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND_ES32_AND(
     ES3_VULKAN()
         .disable(Feature::SupportsTransformFeedbackExtension)
         .disable(Feature::SupportsSPIRV14));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackBaseInstanceTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND_ES32_AND(
+    TransformFeedbackBaseInstanceTest,
+    ES3_OPENGL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
+    ES3_OPENGLES().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
+    ES3_VULKAN()
+        .disable(Feature::SupportsTransformFeedbackExtension)
+        .enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
+    ES3_VULKAN()
+        .disable(Feature::SupportsTransformFeedbackExtension)
+        .disable(Feature::SupportsSPIRV14)
+        .enable(Feature::AlwaysEnableEmulatedMultidrawExtensions));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackLifetimeTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(TransformFeedbackLifetimeTest,

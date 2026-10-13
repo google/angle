@@ -252,6 +252,7 @@
 534082926 WIN INTEL VULKAN : TransformFeedbackTest.RecordTwiceWithBindingOffsetChange/* = SKIP
 568876655 WIN INTEL VULKAN : TransformFeedbackTest.InstancedAttributeAfterDisabledAttribDraw/* = SKIP
 534082926 WIN INTEL VULKAN : TransformFeedbackTestIOBlocks.Interleaved/* = SKIP
+534082926 WIN INTEL VULKAN : TransformFeedbackTestVkEvent.BufferVkEventUAF/* = SKIP
 40096690 WIN INTEL VULKAN : TextureBufferTestES31.UseAsXFBThenAsTextureBuffer/* = SKIP
 
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2111)

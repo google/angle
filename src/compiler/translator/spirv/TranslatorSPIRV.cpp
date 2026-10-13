@@ -209,7 +209,8 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
     //     ivec4 ANGLEGetXfbOffsets(ivec4 strides)
     //     {
     //         int xfbIndex = gl_VertexIndex
-    //                      + gl_InstanceIndex * ANGLEUniforms.xfbVerticesPerInstance;
+    //                      + (gl_InstanceIndex - ANGLEUniforms.baseInstance)
+    //                        * ANGLEUniforms.xfbVerticesPerInstance;
     //         return ANGLEUniforms.xfbBufferOffsets + xfbIndex * strides;
     //     }
 
@@ -224,16 +225,17 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
                                           SymbolType::AngleInternal);
     TIntermSymbol *stridesSymbol = new TIntermSymbol(stridesVar);
 
-    // Create references to gl_VertexIndex, gl_InstanceIndex, ANGLEUniforms.xfbVerticesPerInstance
-    // and ANGLEUniforms.xfbBufferOffsets.
+    // Create references to gl_VertexIndex, gl_InstanceIndex, ANGLEUniforms.baseInstance,
+    // ANGLEUniforms.xfbVerticesPerInstance and ANGLEUniforms.xfbBufferOffsets.
     TIntermSymbol *vertexIndex           = new TIntermSymbol(BuiltInVariable::gl_VertexIndex());
     TIntermSymbol *instanceIndex         = new TIntermSymbol(BuiltInVariable::gl_InstanceIndex());
+    TIntermTyped *baseInstance           = driverUniforms->getBaseInstance();
     TIntermTyped *xfbVerticesPerInstance = driverUniforms->getXfbVerticesPerInstance();
     TIntermTyped *xfbBufferOffsets       = driverUniforms->getXfbBufferOffsets();
 
-    // gl_InstanceIndex * ANGLEUniforms.xfbVerticesPerInstance
-    TIntermBinary *xfbInstanceIndex =
-        new TIntermBinary(EOpMul, instanceIndex, xfbVerticesPerInstance);
+    // (gl_InstanceIndex - ANGLEUniforms.baseInstance) * ANGLEUniforms.xfbVerticesPerInstance
+    TIntermBinary *instanceID       = new TIntermBinary(EOpSub, instanceIndex, baseInstance);
+    TIntermBinary *xfbInstanceIndex = new TIntermBinary(EOpMul, instanceID, xfbVerticesPerInstance);
 
     // gl_VertexIndex + |xfbInstanceIndex|
     TIntermBinary *xfbIndex = new TIntermBinary(EOpAdd, vertexIndex, xfbInstanceIndex);
