@@ -8175,8 +8175,19 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
             if (isCaptureActive() && existingBinding != textureIDToImageTable.end() &&
                 existingBinding->second != imageID)
             {
-                mResourceTracker.getExternalImageBindingsToRestore()[context->id()].insert(
-                    textureID);
+                const ResourceSet &startingTextures =
+                    mResourceTracker.getTrackedResource(context->id(), ResourceIDType::Texture)
+                        .getStartingResources();
+                const ResourceSet &startingImages =
+                    mResourceTracker.getTrackedResource(context->id(), ResourceIDType::Image)
+                        .getStartingResources();
+                // Only restore bindings between a starting texture and starting image
+                if (startingTextures.count(textureID) > 0 &&
+                    startingImages.count(existingBinding->second.value) > 0)
+                {
+                    mResourceTracker.getExternalImageBindingsToRestore()[context->id()].insert(
+                        textureID);
+                }
             }
             textureIDToImageTable.insert(std::pair<GLuint, egl::ImageID>(textureID, imageID));
             break;
