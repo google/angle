@@ -279,6 +279,7 @@ vars = {
   'checkout_angle_restricted_trace_dr_parking_4': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dragon_ball_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dragon_ball_z_dokkan_battle': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_dragon_city': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_dragon_mania_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dragon_raja': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_driver_overhead_2': 'checkout_angle_restricted_traces',
@@ -433,7 +434,7 @@ vars = {
   'checkout_angle_restricted_trace_piano_fire': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_piano_kids': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_plague_inc': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_plants_vs_zombies': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_plants_vs_zombies': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_plants_vs_zombies_2': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_plants_vs_zombies_heroes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pokemon_go': 'checkout_extra_traces',
@@ -2608,6 +2609,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_dragon_ball_z_dokkan_battle',
+  },
+  'src/tests/restricted_traces/dragon_city': {
+      'packages': [
+        {
+            'package': 'angle/traces/dragon_city',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_dragon_city',
   },
   'src/tests/restricted_traces/dragon_mania_legends': {
       'packages': [
