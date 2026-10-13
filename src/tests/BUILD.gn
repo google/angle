@@ -724,6 +724,11 @@ if (build_angle_perftests) {
       "$angle_spirv_tools_dir:spvtools_val",
     ]
 
+    if (angle_enable_vulkan) {
+      sources += angle_perf_tests_vulkan_sources
+      deps += [ "$angle_root/util:angle_test_blob_cache" ]
+    }
+
     data = [
       "$angle_root/scripts/process_angle_perf_results.py",
       "$angle_root/src/tests/py_utils/android_helper.py",

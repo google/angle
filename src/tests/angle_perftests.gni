@@ -45,6 +45,10 @@ angle_perf_tests_sources = [
   "test_utils/draw_call_perf_utils.h",
 ]
 
+# Only meaningful on the Vulkan backend. Everything it touches is public EGL, so
+# it belongs in this suite rather than the white box one.
+angle_perf_tests_vulkan_sources = [ "perf_tests/VulkanPipelineBinaryPerf.cpp" ]
+
 angle_white_box_perf_tests_sources = [
   "../image_util/AstcDecompressorTestUtils.h",
   "angle_unittests_utils.h",

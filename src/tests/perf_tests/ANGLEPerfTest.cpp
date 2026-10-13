@@ -544,29 +544,55 @@ void ANGLEPerfTest::TearDown()
 
 void ANGLEPerfTest::recordIntegerMetric(const char *metric, size_t value, const std::string &units)
 {
-    // Prints "RESULT ..." to stdout
-    mReporter->AddResult(metric, value);
-
-    // Saves results to file if enabled
-    TestSuite::GetMetricWriter().writeInfo(mName, mBackend, mStory, metric, units);
-    TestSuite::GetMetricWriter().writeIntegerValue(value);
+    recordIntegerMetricForStory(mReporter.get(), mStory, metric, value, units);
 }
 
 void ANGLEPerfTest::recordDoubleMetric(const char *metric, double value, const std::string &units)
 {
-    // Prints "RESULT ..." to stdout
-    mReporter->AddResult(metric, value);
-
-    // Saves results to file if enabled
-    TestSuite::GetMetricWriter().writeInfo(mName, mBackend, mStory, metric, units);
-    TestSuite::GetMetricWriter().writeDoubleValue(value);
+    recordDoubleMetricForStory(mReporter.get(), mStory, metric, value, units);
 }
 
 void ANGLEPerfTest::addHistogramSample(const char *metric, double value, const std::string &units)
 {
+    addHistogramSampleForStory(mStory, metric, value, units);
+}
+
+void ANGLEPerfTest::recordIntegerMetricForStory(perf_test::PerfResultReporter *reporter,
+                                                const std::string &story,
+                                                const char *metric,
+                                                size_t value,
+                                                const std::string &units)
+{
+    // Prints "RESULT ..." to stdout
+    reporter->AddResult(metric, value);
+
+    // Saves results to file if enabled
+    TestSuite::GetMetricWriter().writeInfo(mName, mBackend, story, metric, units);
+    TestSuite::GetMetricWriter().writeIntegerValue(value);
+}
+
+void ANGLEPerfTest::recordDoubleMetricForStory(perf_test::PerfResultReporter *reporter,
+                                               const std::string &story,
+                                               const char *metric,
+                                               double value,
+                                               const std::string &units)
+{
+    // Prints "RESULT ..." to stdout
+    reporter->AddResult(metric, value);
+
+    // Saves results to file if enabled
+    TestSuite::GetMetricWriter().writeInfo(mName, mBackend, story, metric, units);
+    TestSuite::GetMetricWriter().writeDoubleValue(value);
+}
+
+void ANGLEPerfTest::addHistogramSampleForStory(const std::string &story,
+                                               const char *metric,
+                                               double value,
+                                               const std::string &units)
+{
     std::string measurement = mName + mBackend + metric;
     // Output histogram JSON set format if enabled.
-    TestSuite::GetInstance()->addHistogramSample(measurement, mStory, value, units);
+    TestSuite::GetInstance()->addHistogramSample(measurement, story, value, units);
 }
 
 void ANGLEPerfTest::processResults()
@@ -981,10 +1007,6 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
-    // Override platform method parameter.
-    EGLPlatformParameters withMethods = mTestParams.eglParameters;
-    withMethods.platformMethods       = &mPlatformMethods;
-
     // Request a common framebuffer config
     mConfigParams.redBits     = 8;
     mConfigParams.greenBits   = 8;
@@ -1005,18 +1027,9 @@ void ANGLERenderTest::SetUp()
         mConfigParams.extensionsEnabled = false;
     }
 
-    GLWindowResult res = mGLWindow->initializeGLWithResult(
-        mOSWindow, mEntryPointsLib.get(), mTestParams.driver, withMethods, mConfigParams);
-    switch (res)
+    if (!initializeGLWindow())
     {
-        case GLWindowResult::NoColorspaceSupport:
-            skipTest("Missing support for color spaces.");
-            return;
-        case GLWindowResult::Error:
-            failTest("Failed initializing GL Window");
-            return;
-        default:
-            break;
+        return;
     }
 
     if (gPrintExtensionsToFile)
@@ -1069,14 +1082,9 @@ void ANGLERenderTest::SetUp()
         extFile.close();
     }
 
-    // Disable vsync (if not done by the window init).
-    if (mTestParams.surfaceType != SurfaceType::WindowWithVSync)
+    if (!configureGLWindow())
     {
-        if (!mGLWindow->setSwapInterval(0))
-        {
-            failTest("Failed setting swap interval");
-            return;
-        }
+        return;
     }
 
     if (mTestParams.trackGpuTime)
@@ -1104,13 +1112,6 @@ void ANGLERenderTest::SetUp()
         GTEST_SKIP() << mSkipTestReason;
         // GTEST_SKIP returns.
     }
-
-#if defined(ANGLE_ENABLE_ASSERTS)
-    if (IsGLExtensionEnabled("GL_KHR_debug") && mEnableDebugCallback)
-    {
-        EnableDebugCallback(&PerfTestDebugCallback, this);
-    }
-#endif
 
     initializeBenchmark();
 
@@ -1182,6 +1183,63 @@ void ANGLERenderTest::TearDown()
     }
 
     ANGLEPerfTest::TearDown();
+}
+
+// Creates the Display and context.  On failure, skips or fails the test and returns false.
+bool ANGLERenderTest::initializeGLWindow()
+{
+    EGLPlatformParameters withMethods = mTestParams.eglParameters;
+    withMethods.platformMethods       = &mPlatformMethods;
+
+    GLWindowResult res = mGLWindow->initializeGLWithResult(
+        mOSWindow, mEntryPointsLib.get(), mTestParams.driver, withMethods, mConfigParams);
+    switch (res)
+    {
+        case GLWindowResult::NoError:
+            return true;
+        case GLWindowResult::NoColorspaceSupport:
+            skipTest("Missing support for color spaces.");
+            return false;
+        case GLWindowResult::NoMutableRenderBufferSupport:
+            skipTest("Missing support for mutable render buffers.");
+            return false;
+        case GLWindowResult::Error:
+            failTest("Failed initializing GL Window");
+            return false;
+        default:
+            UNREACHABLE();
+            return false;
+    }
+}
+
+// Disables vsync unless the test wants it, and reports GL errors in builds with asserts.
+bool ANGLERenderTest::configureGLWindow()
+{
+    if (mTestParams.surfaceType != SurfaceType::WindowWithVSync && !mGLWindow->setSwapInterval(0))
+    {
+        failTest("Failed setting swap interval");
+        return false;
+    }
+
+#if defined(ANGLE_ENABLE_ASSERTS)
+    if (IsGLExtensionEnabled("GL_KHR_debug") && mEnableDebugCallback)
+    {
+        EnableDebugCallback(&PerfTestDebugCallback, this);
+    }
+#endif
+    return true;
+}
+
+// Destroys the Display and context, as the end of a process would.
+void ANGLERenderTest::destroyGLWindow()
+{
+    mGLWindow->destroyGL();
+}
+
+// Creates the Display and context again after destroyGLWindow().
+bool ANGLERenderTest::createGLWindow()
+{
+    return initializeGLWindow() && configureGLWindow();
 }
 
 void ANGLERenderTest::initPerfCounters()

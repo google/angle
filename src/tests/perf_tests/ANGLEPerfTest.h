@@ -115,6 +115,22 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     void recordIntegerMetric(const char *metric, size_t value, const std::string &units);
     void recordDoubleMetric(const char *metric, double value, const std::string &units);
     void addHistogramSample(const char *metric, double value, const std::string &units);
+    // The same for a story other than the test's own, through a reporter for that story with the
+    // metric registered.  For tests whose results don't all describe the test's story.
+    void recordIntegerMetricForStory(perf_test::PerfResultReporter *reporter,
+                                     const std::string &story,
+                                     const char *metric,
+                                     size_t value,
+                                     const std::string &units);
+    void recordDoubleMetricForStory(perf_test::PerfResultReporter *reporter,
+                                    const std::string &story,
+                                    const char *metric,
+                                    double value,
+                                    const std::string &units);
+    void addHistogramSampleForStory(const std::string &story,
+                                    const char *metric,
+                                    double value,
+                                    const std::string &units);
 
     void processResults();
     void processClockResult(const char *metric, double resultSeconds);
@@ -248,6 +264,13 @@ class ANGLERenderTest : public ANGLEPerfTest
     virtual void stopGpuTimer(bool mayNeedFlush = true);
 
     void disableTestHarnessSwap() { mSwapEnabled = false; }
+
+    // destroyGLWindow() destroys the Display and context, and createGLWindow() creates them
+    // again, as a new process would, so a benchmark can look at what the Display left on disk in
+    // between.  If the Display can't be created again, createGLWindow() fails or skips the test
+    // and returns false.
+    void destroyGLWindow();
+    bool createGLWindow();
     void updatePerfCounters();
 
     void startVulkanApiTimer();
@@ -274,6 +297,8 @@ class ANGLERenderTest : public ANGLEPerfTest
     void skipTestIfFailsIntegerPrerequisite();
 
     void initPerfCounters();
+    bool initializeGLWindow();
+    bool configureGLWindow();
     void initVulkanApiCounters(const CounterNameToIndexMap &indexMap);
 
     bool isVulkanApiWallTimeTrackingEnabled() const
