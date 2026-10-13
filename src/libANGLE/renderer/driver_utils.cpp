@@ -14,6 +14,7 @@
 #include "common/android_util.h"
 #include "common/platform.h"
 #include "common/string_utils.h"
+#include "common/system_utils.h"
 #include "gpu_info_util/SystemInfo.h"
 
 #if defined(ANGLE_PLATFORM_LINUX)
@@ -298,6 +299,44 @@ int GetAndroidSDKVersion()
     }
 
     return std::atoi(androidSdkLevel.c_str());
+}
+
+namespace
+{
+// Accepts the same values as android::base::GetBoolProperty().
+std::optional<bool> GetBoolProperty(const char *name)
+{
+    const std::string value = angle::GetEnvironmentVarOrAndroidProperty("", name);
+    if (value == "1" || value == "y" || value == "yes" || value == "on" || value == "true")
+    {
+        return true;
+    }
+    if (value == "0" || value == "n" || value == "no" || value == "off" || value == "false")
+    {
+        return false;
+    }
+    return std::nullopt;
+}
+
+std::optional<int64_t> GetInt64Property(const char *name)
+{
+    int64_t value = 0;
+    if (angle::StringToInt64(angle::GetEnvironmentVarOrAndroidProperty("", name), &value))
+    {
+        return value;
+    }
+    return std::nullopt;
+}
+}  // anonymous namespace
+
+AndroidBlobCacheProperties GetAndroidBlobCacheProperties()
+{
+    AndroidBlobCacheProperties properties;
+    properties.multifileEnabled      = GetBoolProperty("ro.egl.blobcache.multifile");
+    properties.debugMultifileEnabled = GetBoolProperty("debug.egl.blobcache.multifile");
+    properties.multifileLimit        = GetInt64Property("ro.egl.blobcache.multifile_limit");
+    properties.debugMultifileLimit   = GetInt64Property("debug.egl.blobcache.multifile_limit");
+    return properties;
 }
 
 bool IsSamsungXclipse()

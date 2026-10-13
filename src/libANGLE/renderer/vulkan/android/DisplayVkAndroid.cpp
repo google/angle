@@ -34,11 +34,8 @@ void CheckAndroidBlobcacheLimits()
     // Check whether the correct blobcache mode and limits are set
 
     // https://android.googlesource.com/platform/frameworks/native/+/android16-release/opengl/libs/EGL/egl_cache.cpp#237
-    bool roBlobcacheMultifileEnabled =
-        angle::GetEnvironmentVarOrAndroidProperty("", "ro.egl.blobcache.multifile") == "true";
-    bool debugBlobcacheMultifileEnabled =
-        angle::GetEnvironmentVarOrAndroidProperty("", "debug.egl.blobcache.multifile") == "true";
-    if (!roBlobcacheMultifileEnabled && !debugBlobcacheMultifileEnabled)
+    const AndroidBlobCacheProperties blobCacheProperties = GetAndroidBlobCacheProperties();
+    if (!blobCacheProperties.isMultifileEnabled())
     {
         __android_log_print(ANDROID_LOG_INFO, "ANGLE",
                             "GL performance: HIGH: EGL blobcache multifile is not enabled.");
@@ -62,12 +59,10 @@ void CheckAndroidBlobcacheLimits()
 
     // Then check the read-only property
     // https://android.googlesource.com/platform/frameworks/native/+/android16-release/opengl/libs/EGL/egl_cache.cpp#254
-    std::string roBlobcacheMultifileLimitStr =
-        angle::GetEnvironmentVarOrAndroidProperty("", "ro.egl.blobcache.multifile_limit");
-    int64_t roBlobcacheMultifileLimit = -1;
-    if (angle::StringToInt64(roBlobcacheMultifileLimitStr, &roBlobcacheMultifileLimit))
+    if (blobCacheProperties.multifileLimit)
     {
         // The value is set, check against recommendation
+        const int64_t roBlobcacheMultifileLimit = *blobCacheProperties.multifileLimit;
         if (roBlobcacheMultifileLimit < recommendedBlobcacheSize)
         {
             __android_log_print(ANDROID_LOG_INFO, "ANGLE",
@@ -86,12 +81,10 @@ void CheckAndroidBlobcacheLimits()
 
     // Check the debug limit, which overrides read-only
     // https://android.googlesource.com/platform/frameworks/native/+/android16-release/opengl/libs/EGL/egl_cache.cpp#258
-    std::string debugBlobcacheMultifileLimitStr =
-        angle::GetEnvironmentVarOrAndroidProperty("", "debug.egl.blobcache.multifile_limit");
-    int64_t debugBlobcacheMultifileLimit = -1;
-    if (angle::StringToInt64(debugBlobcacheMultifileLimitStr, &debugBlobcacheMultifileLimit))
+    if (blobCacheProperties.debugMultifileLimit)
     {
         // The debug value is set, check it against recommendations too
+        const int64_t debugBlobcacheMultifileLimit = *blobCacheProperties.debugMultifileLimit;
         if (debugBlobcacheMultifileLimit < recommendedBlobcacheSize)
         {
             __android_log_print(ANDROID_LOG_INFO, "ANGLE",

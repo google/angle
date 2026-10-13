@@ -1372,6 +1372,30 @@ void ErasePipelineCacheVkChunks(vk::GlobalOps *globalOps,
                                 const size_t slotIndex,
                                 angle::MemoryBuffer *scratchBuffer);
 
+// Returns the blob cache's total size limit.  Android's multifile blob cache takes it from its
+// limit properties, as egl_cache.cpp does.  Otherwise, assume Android's default of 32MB.
+size_t GetBlobCacheSizeLimit()
+{
+    constexpr size_t kDefaultLimit = 32 * 1024 * 1024;
+#if defined(ANGLE_PLATFORM_ANDROID)
+    const AndroidBlobCacheProperties blobCacheProperties = GetAndroidBlobCacheProperties();
+    if (!blobCacheProperties.isMultifileEnabled())
+    {
+        return kDefaultLimit;
+    }
+    if (blobCacheProperties.debugMultifileLimit.value_or(-1) >= 0)
+    {
+        // If the debug value is set, it has precedence, return it immediately
+        return static_cast<size_t>(*blobCacheProperties.debugMultifileLimit);
+    }
+    if (blobCacheProperties.multifileLimit.value_or(-1) >= 0)
+    {
+        return static_cast<size_t>(*blobCacheProperties.multifileLimit);
+    }
+#endif
+    return kDefaultLimit;
+}
+
 void CompressAndStorePipelineCacheVk(vk::GlobalOps *globalOps,
                                      Renderer *renderer,
                                      const std::vector<uint8_t> &cacheData,
@@ -2511,6 +2535,8 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     {
         vk::ScopedVulkanApiPerfTimer::TryEnable();
     }
+
+    mBlobCacheSizeLimit = GetBlobCacheSizeLimit();
 
     bool canLoadDebugUtils = true;
 #if defined(ANGLE_SHARED_LIBVULKAN)
@@ -7552,9 +7578,9 @@ angle::Result Renderer::syncPipelineCacheVk(const gl::Context *contextGL)
     ASSERT(globalOps);
     if (mFeatures.enableAsyncPipelineCacheCompression.enabled)
     {
-        // zlib compression ratio normally ranges from 2:1 to 5:1. Set kMaxTotalSize to 64M to
-        // ensure the size can fit into the 32MB blob cache limit on supported platforms.
-        constexpr size_t kMaxTotalSize = 64 * 1024 * 1024;
+        // zlib compression ratio normally ranges from 2:1 to 5:1. Set kMaxTotalSize to twice the
+        // blob cache limit to ensure the compressed size can fit.
+        const size_t kMaxTotalSize = 2 * mBlobCacheSizeLimit;
 
         // Create task to compress.
         mCompressEvent = contextGL->getWorkerThreadPool()->postWorkerTask(
