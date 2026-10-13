@@ -72,7 +72,7 @@ bool ValidateInitialize(const ValidationContext *val,
                         const EGLint *major,
                         const EGLint *minor);
 bool ValidateMakeCurrent(const ValidationContext *val,
-                         const egl::Display *dpyPacked,
+                         const egl::ThreadSafeDisplay *dpyPacked,
                          SurfaceID drawPacked,
                          const egl::Surface *drawPackedObject,
                          SurfaceID readPacked,

@@ -1813,6 +1813,7 @@ def is_egl_threadsafe_display_entry_point(cmd_name):
             "eglSetDamageRegionKHR",
             "eglSwapBuffersWithDamageKHR",
             "eglUnlockSurfaceKHR",
+            "eglMakeCurrent",
     ]:
         return True
     return False

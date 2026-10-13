@@ -28,6 +28,10 @@ class ThreadSafeDisplayVk : public ThreadSafeDisplayImpl, public vk::ErrorContex
     bool testDeviceLost() override;
     egl::Error restoreLostDevice(const egl::ThreadSafeDisplay *display) override;
 
+    egl::Error makeCurrent(egl::Surface *drawSurface,
+                           egl::Surface *readSurface,
+                           gl::Context *context) override;
+
     EGLSyncImpl *createSync() override;
 
     void handleError(VkResult result,
@@ -59,10 +63,6 @@ class DisplayVk : public DisplayImpl, public vk::GlobalOps, public ThreadSafeDis
 
     egl::Error initialize(egl::Display *display) override;
     void terminate() override;
-
-    egl::Error makeCurrent(egl::Surface *drawSurface,
-                           egl::Surface *readSurface,
-                           gl::Context *context) override;
 
     std::string getRendererDescription() override;
     std::string getVendorString() override;

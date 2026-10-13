@@ -467,7 +467,7 @@ EGLBoolean Initialize(Thread *thread, Display *display, EGLint *major, EGLint *m
 }
 
 EGLBoolean MakeCurrent(Thread *thread,
-                       Display *display,
+                       ThreadSafeDisplay *display,
                        Surface *drawSurface,
                        Surface *readSurface,
                        gl::ContextID contextID)

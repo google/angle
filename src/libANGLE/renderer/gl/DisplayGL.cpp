@@ -137,9 +137,9 @@ ShareGroupImpl *DisplayGL::createShareGroup(const egl::ShareGroupState &state)
     return new ShareGroupGL(state);
 }
 
-egl::Error DisplayGL::makeCurrent(egl::Surface *drawSurface,
-                                  egl::Surface *readSurface,
-                                  gl::Context *context)
+egl::Error ThreadSafeDisplayGL::makeCurrent(egl::Surface *drawSurface,
+                                            egl::Surface *readSurface,
+                                            gl::Context *context)
 {
     // Ensure that the correct global DebugAnnotator is installed when the end2end tests change
     // the ANGLE back-end (done frequently).
@@ -180,7 +180,7 @@ void DisplayGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
         getRenderer()->getFunctions()->standard == STANDARD_GL_ES;
 }
 
-egl::Error DisplayGL::makeCurrentSurfaceless(gl::Context *context)
+egl::Error ThreadSafeDisplayGL::makeCurrentSurfaceless(gl::Context *context)
 {
     UNIMPLEMENTED();
     return egl::NoError();

@@ -11,6 +11,7 @@
 
 #include <unordered_map>
 
+#include "common/SimpleMutex.h"
 #include "libANGLE/renderer/gl/DisplayGL.h"
 
 #include <GL/wglext.h>
@@ -103,6 +104,7 @@ class DisplayWGL : public DisplayGL, public ThreadSafeDisplayGL
         HDC dc     = nullptr;
         HGLRC glrc = nullptr;
     };
+    angle::SimpleMutex mCurrentNativeContextsMutex;
     angle::HashMap<uint64_t, CurrentNativeContext> mCurrentNativeContexts;
 
     HMODULE mOpenGLModule;

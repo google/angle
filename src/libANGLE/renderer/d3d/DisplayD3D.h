@@ -23,7 +23,7 @@ class ShareGroupD3D : public ShareGroupImpl
     ShareGroupD3D(const egl::ShareGroupState &state) : ShareGroupImpl(state) {}
 };
 
-// testDeviceLost() and restoreLostDevice() are implemented by DisplayD3D
+// testDeviceLost(), restoreLostDevice(), and makeCurrent() are implemented by DisplayD3D
 class ThreadSafeDisplayD3D : public ThreadSafeDisplayImpl
 {
   public:

@@ -211,7 +211,11 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
 {
   public:
     ThreadSafeDisplay(EGLNativeDisplayType displayId)
-        : mState(displayId), mThreadSafeImpl(nullptr), mRefCount(0)
+        : mState(displayId),
+          mThreadSafeImpl(nullptr),
+          mTerminatedByApi(false),
+          mPendingInternalCleanup(false),
+          mRefCount(0)
     {}
     ~ThreadSafeDisplay() override = default;
 
@@ -260,6 +264,14 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
         mZeroFilledBuffers.returnScratchBuffer(std::move(zeroFilledBuffer));
     }
 
+    Error makeCurrent(Thread *thread,
+                      gl::Context *previousContext,
+                      Surface *drawSurface,
+                      Surface *readSurface,
+                      gl::Context *context);
+
+    virtual void releaseDisplayShareGroupResource(const gl::Context &context) = 0;
+
   protected:
     [[nodiscard]] bool addRefIfNotTerminating() const
     {
@@ -281,6 +293,7 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
         uint32_t prev = mRefCount.fetch_sub(1, std::memory_order_release);
         ASSERT((prev & kRefCountMask) > 0);
     }
+    void onPendingInternalCleanup() const;
     bool isTerminating() const;
 
     // Returns whether the display has been initialized, disregarding whether it is currently being
@@ -311,6 +324,12 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
 
     ScratchBuffers mScratchBuffers;
     ScratchBuffers mZeroFilledBuffers;
+
+    Error releaseContext(gl::Context *context, Thread *thread);
+    std::unique_ptr<gl::Context> eraseContextImpl(gl::Context *context, ContextMap *contexts);
+
+    std::atomic<bool> mTerminatedByApi;
+    mutable std::atomic<bool> mPendingInternalCleanup;
 
     // Only these ScopedDisplay classes could directly access the RefCount.
     template <typename DisplayT>
@@ -398,12 +417,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
                         gl::Context *shareContext,
                         const AttributeMap &attribs,
                         gl::Context **outContext);
-
-    Error makeCurrent(Thread *thread,
-                      gl::Context *previousContext,
-                      Surface *drawSurface,
-                      Surface *readSurface,
-                      gl::Context *context);
 
     Error destroySurface(Surface *surface);
     void destroyImage(Image *image);
@@ -538,15 +551,15 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     static angle::UnlockedTailCall *GetCurrentThreadUnlockedTailCall();
     static Error *GetCurrentThreadErrorScratchSpace();
 
+    void releaseDisplayShareGroupResource(const gl::Context &context) override;
+
   private:
+    friend class ThreadSafeDisplay;
+
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 
     void setAttributes(const AttributeMap &attribMap) { mAttributeMap = attribMap; }
     void setupDisplayPlatform(rx::DisplayImpl *impl);
-
-    Error releaseContext(gl::Context *context, Thread *thread);
-    Error releaseContextImpl(std::unique_ptr<gl::Context> &&context);
-    std::unique_ptr<gl::Context> eraseContextImpl(gl::Context *context, ContextMap *contexts);
 
     void initDisplayExtensions();
     void initVendorString();
@@ -610,9 +623,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
 
     angle::FeatureList mFeatures;
 
-    bool mTerminatedByApi;
-    bool mPendingInternalCleanup;
-
     void onUnlockMutex();
 
     // Only these ScopedDisplay classes could directly access the lock.
@@ -635,6 +645,14 @@ class [[nodiscard]] ScopedDisplayRefT final
         if (mHoldingRef)
         {
             mDisplay->releaseRef();
+            if constexpr (std::is_same_v<DisplayT, ThreadSafeDisplay>)
+            {
+                if (ANGLE_UNLIKELY(
+                        mDisplay->mPendingInternalCleanup.load(std::memory_order_acquire)))
+                {
+                    mDisplay->onPendingInternalCleanup();
+                }
+            }
         }
     }
 

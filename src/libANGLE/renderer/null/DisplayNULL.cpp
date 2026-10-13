@@ -38,9 +38,9 @@ void DisplayNULL::terminate()
     mAllocationTracker.reset();
 }
 
-egl::Error DisplayNULL::makeCurrent(egl::Surface *drawSurface,
-                                    egl::Surface *readSurface,
-                                    gl::Context *context)
+egl::Error ThreadSafeDisplayNULL::makeCurrent(egl::Surface *drawSurface,
+                                              egl::Surface *readSurface,
+                                              gl::Context *context)
 {
     // Ensure that the correct global DebugAnnotator is installed when the end2end tests change
     // the ANGLE back-end (done frequently).

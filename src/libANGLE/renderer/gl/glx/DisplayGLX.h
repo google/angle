@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "common/Optional.h"
+#include "common/SimpleMutex.h"
 #include "libANGLE/renderer/gl/DisplayGL.h"
 
 #include "libANGLE/renderer/gl/glx/FunctionsGLX.h"
@@ -129,6 +130,7 @@ class DisplayGLX : public DisplayGL, public ThreadSafeDisplayGL
         glx::Context context;
         glx::Drawable drawable;
     };
+    angle::SimpleMutex mCurrentNativeContextsMutex;
     angle::HashMap<uint64_t, NativeContext> mCurrentNativeContexts;
 
     bool mUsesNewXDisplay;

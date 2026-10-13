@@ -201,9 +201,9 @@ void DisplayVk::terminate()
     mRenderer->onDestroy(this);
 }
 
-egl::Error DisplayVk::makeCurrent(egl::Surface * /*drawSurface*/,
-                                  egl::Surface * /*readSurface*/,
-                                  gl::Context * /*context*/)
+egl::Error ThreadSafeDisplayVk::makeCurrent(egl::Surface * /*drawSurface*/,
+                                            egl::Surface * /*readSurface*/,
+                                            gl::Context * /*context*/)
 {
     InstallDebugAnnotator(mRenderer);
     return egl::NoError();

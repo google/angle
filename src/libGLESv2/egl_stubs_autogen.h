@@ -130,7 +130,7 @@ EGLBoolean GetSyncAttrib(Thread *thread,
                          EGLAttrib *value);
 EGLBoolean Initialize(Thread *thread, egl::Display *dpyPacked, EGLint *major, EGLint *minor);
 EGLBoolean MakeCurrent(Thread *thread,
-                       egl::Display *dpyPacked,
+                       egl::ThreadSafeDisplay *dpyPacked,
                        egl::Surface *drawPacked,
                        egl::Surface *readPacked,
                        gl::ContextID ctxPacked);

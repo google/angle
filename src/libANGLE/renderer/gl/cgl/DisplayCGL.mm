@@ -298,7 +298,7 @@ egl::Error DisplayCGL::makeCurrent(egl::Surface *drawSurface,
                                    gl::Context *context)
 {
     checkDiscreteGPUStatus();
-    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
+    return ThreadSafeDisplayGL::makeCurrent(drawSurface, readSurface, context);
 }
 
 SurfaceImpl *DisplayCGL::createWindowSurface(const egl::SurfaceState &state,

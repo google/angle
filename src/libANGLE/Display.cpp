@@ -1240,6 +1240,16 @@ bool ThreadSafeDisplay::isValidContext(const gl::ContextID contextID) const
     return getContext(contextID) != nullptr;
 }
 
+void ThreadSafeDisplay::onPendingInternalCleanup() const
+{
+    if (mPendingInternalCleanup.exchange(false, std::memory_order_acq_rel))
+    {
+        Display *display = const_cast<Display *>(static_cast<const Display *>(this));
+        ScopedDisplayLockAndRef lockAndRef(*display);
+        (void)display->terminate(nullptr, Display::TerminateReason::InternalCleanup);
+    }
+}
+
 // Note that ANGLE support on Ozone platform is limited. Our preferred support Matrix for
 // EGL_ANGLE_platform_angle on Linux and Ozone/Linux/Fuchsia platforms should be the following:
 //
@@ -1389,9 +1399,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mGlobalTextureShareGroupUsers(0),
       mGlobalSemaphoreShareGroupUsers(0),
       mImageHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES),
-      mSurfaceHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES, 64),
-      mTerminatedByApi(false),
-      mPendingInternalCleanup(false)
+      mSurfaceHandleAllocator(gl::IMPLEMENTATION_MAX_OBJECT_HANDLES, 64)
 {}
 
 Display::~Display()
@@ -1657,7 +1665,9 @@ Error Display::destroyInvalidEglObjects()
         // Need AddRefLock because there may be ContextMutex destruction.
         ScopedContextMutexAddRefLock lock(context->getContextMutex());
         context->setIsDestroyed();
-        ANGLE_TRY(releaseContextImpl(std::unique_ptr<gl::Context>(context)));
+        std::unique_ptr<gl::Context> uniqueContextPtr(context);
+        releaseDisplayShareGroupResource(*uniqueContextPtr);
+        ANGLE_TRY(uniqueContextPtr->onDestroy(this));
     }
 
     while (!mInvalidImageMap.empty())
@@ -2076,8 +2086,35 @@ Error Display::createContext(const Config *configuration,
     // This display texture sharing will allow the first context to create the texture share group.
     bool usingDisplayTextureShareGroup =
         attribs.get(EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_FALSE) == EGL_TRUE;
-    gl::TextureManager *shareTextures = nullptr;
+    // This display semaphore sharing will allow the first context to create the semaphore share
+    // group.
+    bool usingDisplaySemaphoreShareGroup =
+        attribs.get(EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE, EGL_FALSE) == EGL_TRUE;
 
+    // mManagersMutex must taken before modifying mTextureManager.
+    ScopedContextMutexLock mutexLock;
+    ContextMutex *sharedContextMutex = nullptr;
+    if (kIsContextMutexEnabled)
+    {
+        ASSERT(mManagersMutex != nullptr);
+        if (shareContext != nullptr)
+        {
+            sharedContextMutex = shareContext->getContextMutex().getRoot();
+        }
+        else if (usingDisplayTextureShareGroup || usingDisplaySemaphoreShareGroup)
+        {
+            mutexLock          = ScopedContextMutexLock(mManagersMutex);
+            sharedContextMutex = mManagersMutex->getRoot();
+        }
+        // When using shareTextures/Semaphores all Contexts in the Group must use mManagersMutex.
+        ASSERT((!usingDisplayTextureShareGroup && !usingDisplaySemaphoreShareGroup) ||
+               sharedContextMutex == mManagersMutex->getRoot());
+        ASSERT(shareContext == nullptr ||
+               (!usingDisplayTextureShareGroup && !usingDisplaySemaphoreShareGroup) ||
+               shareContext->getContextMutex().getRoot() == mManagersMutex->getRoot());
+    }
+
+    gl::TextureManager *shareTextures = nullptr;
     if (usingDisplayTextureShareGroup)
     {
         ASSERT((mTextureManager == nullptr) == (mGlobalTextureShareGroupUsers == 0));
@@ -2090,10 +2127,6 @@ Error Display::createContext(const Config *configuration,
         shareTextures = mTextureManager;
     }
 
-    // This display semaphore sharing will allow the first context to create the semaphore share
-    // group.
-    bool usingDisplaySemaphoreShareGroup =
-        attribs.get(EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE, EGL_FALSE) == EGL_TRUE;
     gl::SemaphoreManager *shareSemaphores = nullptr;
     if (usingDisplaySemaphoreShareGroup)
     {
@@ -2105,25 +2138,6 @@ Error Display::createContext(const Config *configuration,
 
         mGlobalSemaphoreShareGroupUsers++;
         shareSemaphores = mSemaphoreManager;
-    }
-
-    ScopedContextMutexLock mutexLock;
-    ContextMutex *sharedContextMutex = nullptr;
-    if (kIsContextMutexEnabled)
-    {
-        ASSERT(mManagersMutex != nullptr);
-        if (shareContext != nullptr)
-        {
-            sharedContextMutex = shareContext->getContextMutex().getRoot();
-        }
-        else if (shareTextures != nullptr || shareSemaphores != nullptr)
-        {
-            mutexLock          = ScopedContextMutexLock(mManagersMutex);
-            sharedContextMutex = mManagersMutex->getRoot();
-        }
-        // When using shareTextures/Semaphores all Contexts in the Group must use mManagersMutex.
-        ASSERT((shareTextures == nullptr && shareSemaphores == nullptr) ||
-               sharedContextMutex == mManagersMutex->getRoot());
     }
 
     gl::MemoryProgramCache *programCachePointer = &mMemoryProgramCache;
@@ -2173,11 +2187,11 @@ Error Display::createContext(const Config *configuration,
     return NoError();
 }
 
-Error Display::makeCurrent(Thread *thread,
-                           gl::Context *previousContext,
-                           egl::Surface *drawSurface,
-                           egl::Surface *readSurface,
-                           gl::Context *context)
+Error ThreadSafeDisplay::makeCurrent(Thread *thread,
+                                     gl::Context *previousContext,
+                                     egl::Surface *drawSurface,
+                                     egl::Surface *readSurface,
+                                     gl::Context *context)
 {
     if (!isInitialized())
     {
@@ -2193,11 +2207,11 @@ Error Display::makeCurrent(Thread *thread,
         previousContext->release();
         thread->setCurrent(nullptr);
 
-        auto error = previousContext->unMakeCurrent(this);
+        auto error = previousContext->unMakeCurrent();
         if (!previousContext->isReferenced() && previousContext->isDestroyed())
         {
             // The previous Context may have been created with a different Display.
-            Display *previousDisplay = previousContext->getDisplay();
+            ThreadSafeDisplay *previousDisplay = previousContext->getDisplay();
             ANGLE_TRY(previousDisplay->releaseContext(previousContext, thread));
         }
         ANGLE_TRY(error);
@@ -2209,7 +2223,7 @@ Error Display::makeCurrent(Thread *thread,
         thread->setCurrent(context);
         ScopedResetThreadContextOnError resetOnError(thread, contextChanged);
 
-        ANGLE_TRY(mImplementation->makeCurrent(drawSurface, readSurface, context));
+        ANGLE_TRY(mThreadSafeImpl->makeCurrent(drawSurface, readSurface, context));
 
         if (context != nullptr)
         {
@@ -2231,9 +2245,9 @@ Error Display::makeCurrent(Thread *thread,
     // If eglTerminate() has previously been called and Context was changed, schedule
     // InternalCleanup to invalidate any non-current Contexts, and possibly fully terminate the
     // Display and release all of its resources once the entry point's surface locks are released.
-    if (mTerminatedByApi && contextChanged)
+    if (mTerminatedByApi.load(std::memory_order_acquire) && contextChanged)
     {
-        mPendingInternalCleanup = true;
+        mPendingInternalCleanup.store(true, std::memory_order_release);
     }
 
     return NoError();
@@ -2294,14 +2308,16 @@ void Display::destroyStreamImpl(Stream *stream, StreamSet *streams)
 // To do that we can only call this in two places, Display::makeCurrent at the point where this
 // context is being made uncurrent and in Display::destroyContext where we make the context current
 // as part of destruction.
-Error Display::releaseContext(gl::Context *context, Thread *thread)
+Error ThreadSafeDisplay::releaseContext(gl::Context *context, Thread *thread)
 {
     // Use scoped_ptr to make sure the context is always freed.
     std::unique_ptr<gl::Context> uniqueContextPtr = eraseContextImpl(context, &mState.contextMap);
-    return releaseContextImpl(std::move(uniqueContextPtr));
+    releaseDisplayShareGroupResource(*uniqueContextPtr);
+    return uniqueContextPtr->onDestroy(this);
 }
 
-std::unique_ptr<gl::Context> Display::eraseContextImpl(gl::Context *context, ContextMap *contexts)
+std::unique_ptr<gl::Context> ThreadSafeDisplay::eraseContextImpl(gl::Context *context,
+                                                                 ContextMap *contexts)
 {
     ASSERT(!context->isReferenced());
     bool contextFound = contexts->erase(context->id());
@@ -2309,9 +2325,20 @@ std::unique_ptr<gl::Context> Display::eraseContextImpl(gl::Context *context, Con
     return std::unique_ptr<gl::Context>(context);
 }
 
-Error Display::releaseContextImpl(std::unique_ptr<gl::Context> &&context)
+void Display::releaseDisplayShareGroupResource(const gl::Context &context)
 {
-    if (context->usingDisplayTextureShareGroup())
+    if (!context.usingDisplayTextureShareGroup() && !context.usingDisplaySemaphoreShareGroup())
+    {
+        return;
+    }
+
+    if (mManagersMutex != nullptr)
+    {
+        // Display share group resources are protected by mManagersMutex.
+        mManagersMutex->assertLocked();
+    }
+
+    if (context.usingDisplayTextureShareGroup())
     {
         ASSERT(mGlobalTextureShareGroupUsers >= 1 && mTextureManager != nullptr);
         if (mGlobalTextureShareGroupUsers == 1)
@@ -2319,13 +2346,13 @@ Error Display::releaseContextImpl(std::unique_ptr<gl::Context> &&context)
             // If this is the last context using the global share group, destroy the global
             // texture manager so that the textures can be destroyed while a context still
             // exists
-            mTextureManager->release(context.get());
+            mTextureManager->release(&context);
             mTextureManager = nullptr;
         }
         mGlobalTextureShareGroupUsers--;
     }
 
-    if (context->usingDisplaySemaphoreShareGroup())
+    if (context.usingDisplaySemaphoreShareGroup())
     {
         ASSERT(mGlobalSemaphoreShareGroupUsers >= 1 && mSemaphoreManager != nullptr);
         if (mGlobalSemaphoreShareGroupUsers == 1)
@@ -2333,15 +2360,11 @@ Error Display::releaseContextImpl(std::unique_ptr<gl::Context> &&context)
             // If this is the last context using the global share group, destroy the global
             // semaphore manager so that the semaphores can be destroyed while a context still
             // exists
-            mSemaphoreManager->release(context.get());
+            mSemaphoreManager->release(&context);
             mSemaphoreManager = nullptr;
         }
         mGlobalSemaphoreShareGroupUsers--;
     }
-
-    ANGLE_TRY(context->onDestroy(this));
-
-    return NoError();
 }
 
 Error Display::destroyContext(Thread *thread, gl::Context *context)
@@ -2350,13 +2373,16 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
     auto *currentDrawSurface = thread->getCurrentDrawSurface();
     auto *currentReadSurface = thread->getCurrentReadSurface();
 
-    context->setIsDestroyed();
-
-    // If the context is still current on at least 1 thread, just return since it'll be released
-    // once no threads have it current anymore.
-    if (context->isReferenced())
     {
-        return NoError();
+        ScopedContextMutexLock lock(context->getContextMutex());
+        context->setIsDestroyed();
+
+        // If the context is still current on at least 1 thread, just return since it'll be
+        // released once no threads have it current anymore.
+        if (context->isReferenced())
+        {
+            return NoError();
+        }
     }
 
     // For external context, we cannot change the current native context, and the API user should

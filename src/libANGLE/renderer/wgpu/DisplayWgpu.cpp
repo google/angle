@@ -134,9 +134,9 @@ void DisplayWgpu::terminate()
     mQueue    = nullptr;
 }
 
-egl::Error DisplayWgpu::makeCurrent(egl::Surface *drawSurface,
-                                    egl::Surface *readSurface,
-                                    gl::Context *context)
+egl::Error ThreadSafeDisplayWgpu::makeCurrent(egl::Surface *drawSurface,
+                                              egl::Surface *readSurface,
+                                              gl::Context *context)
 {
     // Ensure that the correct global DebugAnnotator is installed when the end2end tests change
     // the ANGLE back-end (done frequently).

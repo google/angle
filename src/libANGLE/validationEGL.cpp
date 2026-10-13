@@ -1388,7 +1388,7 @@ bool ValidTimestampType(Timestamp timestamp)
 }
 
 bool ValidateCompatibleSurface(const ValidationContext *val,
-                               const Display *display,
+                               const ThreadSafeDisplay *display,
                                const gl::Context *context,
                                const Surface *surface)
 {
@@ -3660,7 +3660,7 @@ bool ValidateCreatePixmapSurface(const ValidationContext *val,
 }
 
 bool ValidateMakeCurrent(const ValidationContext *val,
-                         const Display *display,
+                         const ThreadSafeDisplay *display,
                          SurfaceID drawSurfaceID,
                          const Surface *drawSurface,
                          SurfaceID readSurfaceID,
@@ -3671,7 +3671,7 @@ bool ValidateMakeCurrent(const ValidationContext *val,
     bool noRead    = readSurfaceID.value == 0;
     bool noContext = contextID.value == 0;
 
-    if (display == EGL_NO_DISPLAY || !Display::isValidDisplay(display))
+    if (display == EGL_NO_DISPLAY)
     {
         val->setError(EGL_BAD_DISPLAY, "<display> is not a valid EGLDisplay handle");
         return false;

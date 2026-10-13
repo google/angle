@@ -449,9 +449,9 @@ EGLSyncImpl *ThreadSafeDisplayMtl::createSync()
     return new EGLSyncMtl();
 }
 
-egl::Error DisplayMtl::makeCurrent(egl::Surface *drawSurface,
-                                   egl::Surface *readSurface,
-                                   gl::Context *context)
+egl::Error ThreadSafeDisplayMtl::makeCurrent(egl::Surface *drawSurface,
+                                             egl::Surface *readSurface,
+                                             gl::Context *context)
 {
     if (!context)
     {
