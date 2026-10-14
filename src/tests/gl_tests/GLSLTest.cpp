@@ -27619,6 +27619,25 @@ void main()
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(63, 191, 127, 255), 1);
     ASSERT_GL_NO_ERROR();
 }
+
+// Test `bool_var ? bvec4(true) : bvec4(false)`
+TEST_P(GLSLTest_ES3, BoolSelectorBVecConstantValues)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform bool b;
+out vec4 color;
+void main()
+{
+    bvec4 result = b ? bvec4(true) : bvec4(false);
+    color = vec4(!result.x, result.yz, !result.w);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
