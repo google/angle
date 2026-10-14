@@ -296,6 +296,7 @@
 352085732 WIN INTEL OPENGL : RobustResourceInitTestES31.Multisample2DTextureArray/* = SKIP
 352085732 WIN INTEL OPENGL : SRGBTextureTest.SRGBDecodeTextureParameter/* = SKIP
 352085732 WIN INTEL OPENGL : UniformBufferTest.DrawThenUpdateThenDraw/* = SKIP
+352085732 WIN INTEL OPENGL : UniformBufferTest.OversizedBindBufferRangeDoesNotExposePreviousBuffer/* = SKIP
 352085732 WIN INTEL D3D11 : SimpleStateChangeTest.DrawWithTextureTexSubImageThenDrawAgain/* = SKIP
 352085732 WIN INTEL D3D11 : SimpleStateChangeTest.UpdateTextureInUse/* = SKIP
 352085732 WIN INTEL VULKAN : GLSLTest_ES3.DynamicIndexingOfVectorOnRightSideOfLogicalOr/* = SKIP
@@ -553,6 +554,8 @@
 40096808 LINUX AMD OPENGL : GeometryShaderTest.LayeredFramebufferClear2DArrayColor/* = SKIP
 40096808 LINUX AMD OPENGL : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/* = SKIP
 40096808 LINUX AMD OPENGL : SimpleStateChangeTestES3.DepthInvalidateThenClear/* = SKIP
+42263922 WIN AMD OPENGL : UniformBufferTest.OversizedBindBufferRangeDoesNotExposePreviousBuffer/* = SKIP
+42263922 LINUX AMD OPENGL : UniformBufferTest.OversizedBindBufferRangeDoesNotExposePreviousBuffer/* = SKIP
 40096808 LINUX AMD VULKAN : WebGL2ValidationStateChangeTest.MultiAttachmentDrawFramebufferNegativeAPI/* = SKIP
 
 // Mac
