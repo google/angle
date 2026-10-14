@@ -581,6 +581,15 @@
             "issue": "https://anglebug.com/573420557"
         },
         {
+            "name": "mutable_format_for_int_color_images",
+            "category": "Workarounds",
+            "description": [
+                "Create integer color images with VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT, ",
+                "as some drivers return wrong values for data written into them otherwise"
+            ],
+            "issue": "https://anglebug.com/573449713"
+        },
+        {
             "name": "supports_image_format_list",
             "category": "Features",
             "description": [

@@ -21855,6 +21855,12 @@ class CopyImageTestES31 : public ANGLETest<>
     }
 
     void testCrossFormatLayeredCopy(GLenum srcTarget, GLenum dstTarget);
+    void testAllOnesCopyToRGBA8I(GLenum dstTarget);
+    void verifyAllMinusOneRGBA8I(GLenum target, GLuint image);
+
+    // Not a multiple of the tile size, so the image has both full and partial tiles.
+    static constexpr GLsizei kAllOnesWidth  = 65;
+    static constexpr GLsizei kAllOnesHeight = 63;
 };
 
 // Test validation of target
@@ -22623,6 +22629,128 @@ TEST_P(CopyImageTestES31, CrossFormatLayeredCopy3DTo2DArray)
 TEST_P(CopyImageTestES31, CrossFormatLayeredCopy3DTo3D)
 {
     testCrossFormatLayeredCopy(GL_TEXTURE_3D, GL_TEXTURE_3D);
+}
+
+// Copy all-ones data from renderbuffers and textures of several 32-bit formats into an RGBA8I
+// image of type |dstTarget|, and verify every texel reads back as -1.
+void CopyImageTestES31::testAllOnesCopyToRGBA8I(GLenum dstTarget)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    for (GLenum srcTarget : {GL_RENDERBUFFER, GL_TEXTURE_2D})
+    {
+        for (GLenum srcFormat : {GL_RGBA8, GL_RGB10_A2, GL_SRGB8_ALPHA8})
+        {
+            GLRenderbuffer srcRb;
+            GLTexture srcTex;
+            GLuint src = 0;
+            if (srcTarget == GL_RENDERBUFFER)
+            {
+                glBindRenderbuffer(GL_RENDERBUFFER, srcRb);
+                glRenderbufferStorage(GL_RENDERBUFFER, srcFormat, kAllOnesWidth, kAllOnesHeight);
+
+                GLFramebuffer srcFbo;
+                glBindFramebuffer(GL_FRAMEBUFFER, srcFbo);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                          srcRb);
+                ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+                glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT);
+                src = srcRb;
+            }
+            else
+            {
+                const GLenum type =
+                    srcFormat == GL_RGB10_A2 ? GL_UNSIGNED_INT_2_10_10_10_REV : GL_UNSIGNED_BYTE;
+                std::vector<GLuint> ones(kAllOnesWidth * kAllOnesHeight, 0xFFFFFFFFu);
+                glBindTexture(GL_TEXTURE_2D, srcTex);
+                glTexStorage2D(GL_TEXTURE_2D, 1, srcFormat, kAllOnesWidth, kAllOnesHeight);
+                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kAllOnesWidth, kAllOnesHeight, GL_RGBA,
+                                type, ones.data());
+                src = srcTex;
+            }
+            ASSERT_GL_NO_ERROR();
+
+            GLRenderbuffer dstRb;
+            GLTexture dstTex;
+            GLuint dst = 0;
+            if (dstTarget == GL_RENDERBUFFER)
+            {
+                glBindRenderbuffer(GL_RENDERBUFFER, dstRb);
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8I, kAllOnesWidth, kAllOnesHeight);
+                dst = dstRb;
+            }
+            else
+            {
+                glBindTexture(GL_TEXTURE_2D, dstTex);
+                glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8I, kAllOnesWidth, kAllOnesHeight);
+                dst = dstTex;
+            }
+            ASSERT_GL_NO_ERROR();
+
+            glCopyImageSubDataEXT(src, srcTarget, 0, 0, 0, 0, dst, dstTarget, 0, 0, 0, 0,
+                                  kAllOnesWidth, kAllOnesHeight, 1);
+            ASSERT_GL_NO_ERROR();
+
+            verifyAllMinusOneRGBA8I(dstTarget, dst);
+        }
+    }
+}
+
+// Read back an RGBA8I image and verify every component is -1.
+void CopyImageTestES31::verifyAllMinusOneRGBA8I(GLenum target, GLuint image)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    if (target == GL_RENDERBUFFER)
+    {
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, image);
+    }
+    else
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, image, 0);
+    }
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    std::vector<GLint> pixels(kAllOnesWidth * kAllOnesHeight * 4, 0);
+    glReadPixels(0, 0, kAllOnesWidth, kAllOnesHeight, GL_RGBA_INTEGER, GL_INT, pixels.data());
+    ASSERT_GL_NO_ERROR();
+
+    const std::vector<GLint> expect(kAllOnesWidth * kAllOnesHeight * 4, -1);
+    EXPECT_EQ(pixels, expect);
+}
+
+// Copy all-ones data into an RGBA8I renderbuffer, and verify it reads back as -1.
+TEST_P(CopyImageTestES31, AllOnesCopyToRGBA8IRenderbuffer)
+{
+    testAllOnesCopyToRGBA8I(GL_RENDERBUFFER);
+}
+
+// Copy all-ones data into an RGBA8I texture, and verify it reads back as -1.
+TEST_P(CopyImageTestES31, AllOnesCopyToRGBA8ITexture)
+{
+    testAllOnesCopyToRGBA8I(GL_TEXTURE_2D);
+}
+
+// Upload -1 into an RGBA8I texture, and verify it reads back as -1.
+TEST_P(CopyImageTestES31, AllOnesUploadToRGBA8ITexture)
+{
+    const std::vector<GLbyte> minusOne(kAllOnesWidth * kAllOnesHeight * 4, -1);
+
+    GLTexture immutableTex;
+    glBindTexture(GL_TEXTURE_2D, immutableTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8I, kAllOnesWidth, kAllOnesHeight);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kAllOnesWidth, kAllOnesHeight, GL_RGBA_INTEGER, GL_BYTE,
+                    minusOne.data());
+    ASSERT_GL_NO_ERROR();
+    verifyAllMinusOneRGBA8I(GL_TEXTURE_2D, immutableTex);
+
+    GLTexture mutableTex;
+    glBindTexture(GL_TEXTURE_2D, mutableTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8I, kAllOnesWidth, kAllOnesHeight, 0, GL_RGBA_INTEGER,
+                 GL_BYTE, minusOne.data());
+    ASSERT_GL_NO_ERROR();
+    verifyAllMinusOneRGBA8I(GL_TEXTURE_2D, mutableTex);
 }
 
 // Verify that copying between multisample renderbuffer work
@@ -27600,7 +27728,8 @@ ANGLE_INSTANTIATE_TEST_ES31_AND(TextureTestES31,
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(CopyImageTestES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(CopyImageTestES31,
-                                ES31_VULKAN().enable(Feature::SplitCrossFormatLayeredImageCopy));
+                                ES31_VULKAN().enable(Feature::SplitCrossFormatLayeredImageCopy),
+                                ES31_VULKAN().enable(Feature::MutableFormatForIntColorImages));
 
 ANGLE_INSTANTIATE_TEST_ES3(TextureChangeStorageUploadTest);
 

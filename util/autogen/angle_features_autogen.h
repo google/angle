@@ -272,6 +272,7 @@ enum class Feature
     MrtPerfWorkaround,
     MultisampleColorFormatShaderReadWorkaround,
     MultiviewViaViewportArray,
+    MutableFormatForIntColorImages,
     MutableMipmapTextureUpload,
     NoperspectiveInterpolationBrokenWithPassthroughShaders,
     OverrideSurfaceFormatRGB8ToRGBA8,

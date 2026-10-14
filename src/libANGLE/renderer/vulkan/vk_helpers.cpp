@@ -6041,6 +6041,15 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
         }
     }
 
+    // Adreno 702 reads back all-ones texels written into a non-MUTABLE_FORMAT R8G8B8A8_SINT image
+    // as +1 instead of -1; MUTABLE_FORMAT avoids it.
+    if (renderer->getFeatures().mutableFormatForIntColorImages.enabled &&
+        externalImageCreateInfo == nullptr && actualFormat.isInt() &&
+        !actualFormat.hasDepthOrStencilBits())
+    {
+        mCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+    }
+
     if (hasProtectedContent)
     {
         mCreateFlags |= VK_IMAGE_CREATE_PROTECTED_BIT;

@@ -452,6 +452,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo mutableFormatForIntColorImages = {
+        "mutableFormatForIntColorImages",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo supportsImageFormatList = {
         "supportsImageFormatList",
         FeatureCategory::VulkanFeatures,
