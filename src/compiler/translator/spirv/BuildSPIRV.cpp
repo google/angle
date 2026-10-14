@@ -875,8 +875,10 @@ spirv::IdRef SPIRVBuilder::getFunctionTypeId(spirv::IdRef returnTypeId,
 
 SpirvDecorations SPIRVBuilder::getDecorations(const TType &type)
 {
-    const bool enablePrecision = !mCompileOptions.ignorePrecisionQualifiers;
     const TPrecision precision = type.getPrecision();
+    const bool isInteger       = type.getBasicType() == EbtInt || type.getBasicType() == EbtUInt;
+    const bool enablePrecision = !mCompileOptions.ignorePrecisionQualifiers &&
+                                 !(isInteger && mCompileOptions.avoidRelaxedPrecisionOnIntegers);
 
     SpirvDecorations decorations;
 

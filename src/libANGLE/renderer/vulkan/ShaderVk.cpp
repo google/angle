@@ -116,6 +116,11 @@ std::shared_ptr<ShaderTranslateTask> ShaderVk::compile(const gl::Context *contex
         options->avoidOpSelectWithMismatchingRelaxedPrecision = true;
     }
 
+    if (contextVk->getFeatures().avoidRelaxedPrecisionOnIntegers.enabled)
+    {
+        options->avoidRelaxedPrecisionOnIntegers = true;
+    }
+
     if (contextVk->getFeatures().wrapSwitchInIfTrue.enabled)
     {
         options->wrapSwitchInIfTrue = true;

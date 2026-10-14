@@ -61,6 +61,7 @@ enum class Feature
     AvoidImageGhostOutsideRenderPass,
     AvoidInvisibleWindowSwapchainRecreate,
     AvoidOpSelectWithMismatchingRelaxedPrecision,
+    AvoidRelaxedPrecisionOnIntegers,
     AvoidStencilTextureSwizzle,
     AvoidWaitAny,
     BgraTexImageFormatsBroken,

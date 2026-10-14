@@ -5823,7 +5823,8 @@ void main() {
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ComputeShaderTest);
 ANGLE_INSTANTIATE_TEST_ES31_AND(ComputeShaderTest,
-                                ES31_VULKAN().enable(Feature::ForceRobustResourceInit));
+                                ES31_VULKAN().enable(Feature::ForceRobustResourceInit),
+                                ES31_VULKAN().enable(Feature::AvoidRelaxedPrecisionOnIntegers));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ComputeShaderTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(ComputeShaderTestES3);

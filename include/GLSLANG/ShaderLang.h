@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 429
+#define ANGLE_SH_VERSION 430
 
 enum ShShaderSpec
 {
@@ -343,7 +343,9 @@ struct ShCompileOptions
     // Workaround for a driver bug with nested switches.
     uint64_t wrapSwitchInIfTrue : 1;
 
-    uint64_t unused4 : 1;
+    // Workaround for a driver bug with RelaxedPrecision on integers.  Integer values are emitted
+    // without the RelaxedPrecision decoration.
+    uint64_t avoidRelaxedPrecisionOnIntegers : 1;
 
     // This flag works around a inconsistent behavior in Mac AMD driver where gl_VertexID doesn't
     // include base vertex value. It replaces gl_VertexID with (gl_VertexID + angle_BaseVertex) when

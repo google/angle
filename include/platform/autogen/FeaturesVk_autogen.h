@@ -1304,6 +1304,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo avoidRelaxedPrecisionOnIntegers = {
+        "avoidRelaxedPrecisionOnIntegers",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo wrapSwitchInIfTrue = {
         "wrapSwitchInIfTrue",
         FeatureCategory::VulkanWorkarounds,

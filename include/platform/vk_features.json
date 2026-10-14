@@ -1712,6 +1712,15 @@
             "issue": "http://anglebug.com/41493495"
         },
         {
+            "name": "avoid_RelaxedPrecision_on_integers",
+            "category": "Workarounds",
+            "description": [
+                "Don't decorate integers with RelaxedPrecision, as some drivers sign-extend ",
+                "a mediump uint used as the value of an atomic operation"
+            ],
+            "issue": "https://anglebug.com/573853134"
+        },
+        {
             "name": "wrap_switch_in_if_true",
             "category": "Workarounds",
             "description": [
