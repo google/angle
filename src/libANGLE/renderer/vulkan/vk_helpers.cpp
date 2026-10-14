@@ -8383,9 +8383,53 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         ASSERT(dstImage->getCurrentImageAccess() == ImageAccess::TransferDst ||
                dstImage->getCurrentImageAccess() == ImageAccess::TransferSrcDst);
 
-        commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(renderer),
-                                 dstImage->getImage(), dstImage->getCurrentLayout(renderer), 1,
-                                 &region);
+        // Some drivers copy wrong data when the formats differ and the region covers more than
+        // one layer; issue one copy per layer instead.  No barriers are needed between them.
+        const bool splitPerLayer =
+            renderer->getFeatures().splitCrossFormatLayeredImageCopy.enabled &&
+            srcImage->getActualFormatID() != dstImage->getActualFormatID() &&
+            !srcImage->getActualFormat().isBlock && !dstImage->getActualFormat().isBlock &&
+            srcDepth > 1 && !(isSrc3D && isDst3D);
+
+        if (!splitPerLayer)
+        {
+            commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(renderer),
+                                     dstImage->getImage(), dstImage->getCurrentLayout(renderer), 1,
+                                     &region);
+        }
+        else
+        {
+            VkImageCopy layerRegion               = region;
+            layerRegion.srcSubresource.layerCount = 1;
+            layerRegion.dstSubresource.layerCount = 1;
+            layerRegion.extent.depth              = 1;
+
+            for (uint32_t layer = 0; layer < static_cast<uint32_t>(srcDepth); ++layer)
+            {
+                // copyImage() records a single region, so issue one call per layer.
+                commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(renderer),
+                                         dstImage->getImage(), dstImage->getCurrentLayout(renderer),
+                                         1, &layerRegion);
+
+                if (isSrc3D)
+                {
+                    ++layerRegion.srcOffset.z;
+                }
+                else
+                {
+                    ++layerRegion.srcSubresource.baseArrayLayer;
+                }
+
+                if (isDst3D)
+                {
+                    ++layerRegion.dstOffset.z;
+                }
+                else
+                {
+                    ++layerRegion.dstSubresource.baseArrayLayer;
+                }
+            }
+        }
     }
     else if (!srcImage->getIntendedFormat().isBlock && !dstImage->getIntendedFormat().isBlock)
     {

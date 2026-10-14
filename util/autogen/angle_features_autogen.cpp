@@ -346,6 +346,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SkipPipelineCacheSerialization, "skipPipelineCacheSerialization"},
     {Feature::SkipVSConstantRegisterZero, "skipVSConstantRegisterZero"},
     {Feature::SlowDownMonolithicPipelineCreationForTesting, "slowDownMonolithicPipelineCreationForTesting"},
+    {Feature::SplitCrossFormatLayeredImageCopy, "splitCrossFormatLayeredImageCopy"},
     {Feature::SplitLevel0PboFullSubImage2D, "splitLevel0PboFullSubImage2D"},
     {Feature::SrgbBlendingBroken, "srgbBlendingBroken"},
     {Feature::SupportFragmentShadingRateExtExtensions, "supportFragmentShadingRateExtExtensions"},

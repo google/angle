@@ -346,6 +346,7 @@ enum class Feature
     SkipPipelineCacheSerialization,
     SkipVSConstantRegisterZero,
     SlowDownMonolithicPipelineCreationForTesting,
+    SplitCrossFormatLayeredImageCopy,
     SplitLevel0PboFullSubImage2D,
     SrgbBlendingBroken,
     SupportFragmentShadingRateExtExtensions,

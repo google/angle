@@ -6173,6 +6173,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, forceMaxUniformBufferSize16KB,
                             isQualcommProprietary && isAdreno540);
 
+    bool isAdreno702 = mPhysicalDeviceProperties.deviceID == angle::kDeviceID_Adreno702;
+    ANGLE_FEATURE_CONDITION(&mFeatures, splitCrossFormatLayeredImageCopy,
+                            isQualcommProprietary && isAdreno702);
+
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsImageFormatList,
         ExtensionFound(VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME, deviceExtensionNames));

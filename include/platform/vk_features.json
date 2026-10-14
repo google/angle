@@ -572,6 +572,15 @@
             "issue": "https://issuetracker.google.com/161903006"
         },
         {
+            "name": "split_cross_format_layered_image_copy",
+            "category": "Workarounds",
+            "description": [
+                "Issue one vkCmdCopyImage per layer for multi-layer copies between ",
+                "different formats, which some drivers copy incorrectly"
+            ],
+            "issue": "https://anglebug.com/573420557"
+        },
+        {
             "name": "supports_image_format_list",
             "category": "Features",
             "description": [
