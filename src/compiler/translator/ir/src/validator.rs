@@ -67,6 +67,8 @@
 //     generated right now): validate_merge_block_with_input()
 //   - Loop blocks ends in the appropriate instructions:
 //     validate_loop_block_ends_in_appropriate_instruction()
+//   - There is no foldable control flow (`If constant`, `Switch constant ...`, `Loop`+`LoopIf
+//     false`): validate_no_constant_foldable_instruction(), validate_no_foldable_loop()
 //
 // Instructions:
 //   - Access to struct fields are in bounds: validate_struct_field_in_bounds()
@@ -101,8 +103,6 @@
 //   - Whatever else is in the AST validation currently.
 //   - Validate built-ins that accept an out or inout parameter, that the corresponding parameter is
 //     passed a Pointer at the call site.  For that matter, do the same for user function calls too.
-//   - There is no foldable control flow (`If constant`, `Switch constant ...`, `Loop`+`LoopIf
-//     false`)
 //   - A NameSource::Internal interface block or struct variable is never given an empty ("") name.
 
 use crate::ir::*;
@@ -320,6 +320,7 @@ impl<'a> Validator<'a> {
         self.validate_all_branch_instructions_have_valid_target();
         self.validate_merge_block_with_input();
         self.validate_loop_block_ends_in_appropriate_instruction();
+        self.validate_no_foldable_loop();
         self.validate_all_instructions();
         self.validate_function_parameter_variables();
         self.validate_function_return_types();
@@ -1894,7 +1895,15 @@ impl<'a> Validator<'a> {
                     }
                 }
             }
-            // Other instructions can't be constant folded.
+            OpCode::If(condition) => {
+                if matches!(condition.id, Id::Constant(_)) {
+                    self.on_error(format_args!(
+                        "invalid instruction {:?}, if(constant) should be folded",
+                        opcode
+                    ));
+                }
+            }
+            // Other instructions can't be constant folded or are not checked.
             OpCode::MergeInput
             | OpCode::Discard
             | OpCode::Return(_)
@@ -1903,10 +1912,9 @@ impl<'a> Validator<'a> {
             | OpCode::Passthrough
             | OpCode::NextBlock
             | OpCode::Merge(_)
-            // OpCode::If and OpCode::LoopIf condition can be Constant(ConstantId), as long as the
-            // condition.type_id is TYPE_ID_BOOL. See function
-            // validate_instruction_operand_and_result_type(), and test GLSLTestLoops.ForNoCondition.
-            | OpCode::If(_)
+            // OpCode::LoopIf condition can be Constant(ConstantId),
+            // Loop + LoopIf(true) and DoLoop + LoopIf(constant) are valid.
+            // Loop + LoopIf(false) must be constant folded, which is checked by validate_no_foldable_loop().
             | OpCode::LoopIf(_)
             | OpCode::Loop
             | OpCode::DoLoop
@@ -1923,6 +1931,33 @@ impl<'a> Validator<'a> {
             | OpCode::BuiltIn(_, _)
             | OpCode::Texture(_, _, _) => {}
         };
+    }
+
+    fn validate_no_foldable_loop(&self) {
+        traverser::visitor::for_each_function(
+            &mut (),
+            &self.ir.function_entries,
+            |_, _| {},
+            |_, block, _, _| {
+                // reject loop + loopIf(false),
+                // allow:
+                //  loop + loopif(true)
+                //  doloop + loopif(constant)
+                if matches!(block.get_terminating_op(), OpCode::Loop) {
+                    let condition_block = block.get_loop_condition_block();
+                    let last_op = condition_block.get_merge_chain_terminating_op();
+                    if let &OpCode::LoopIf(condition) = last_op
+                        && condition.id == Id::Constant(CONSTANT_ID_FALSE)
+                    {
+                        self.on_error(format_args!(
+                            "loop + loopif false should be constant folded"
+                        ));
+                    }
+                }
+                traverser::visitor::VISIT_SUB_BLOCKS
+            },
+            |_, _| {},
+        );
     }
 
     fn validate_not_all_args_are_constant(&self, opcode: &OpCode, instruction_args: &[TypedId]) {
