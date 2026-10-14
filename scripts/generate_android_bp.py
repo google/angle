@@ -1153,7 +1153,7 @@ def main():
             'src/libANGLE/renderer/vulkan/shaders/src/third_party/ffx_spd/src/LICENSE',
             'src/tests/test_utils/third_party/LICENSE',
             'src/third_party/libXNVCtrl/LICENSE',
-            'src/third_party/volk/LICENSE.md',
+            'src/third_party/volk/src/LICENSE.md',
             'third_party/abseil-cpp/LICENSE',
             'third_party/glslang/LICENSE',
             'third_party/glslang/src/LICENSE.txt',

@@ -230,7 +230,7 @@ IGNORED_INCLUDES = {
     b'perfetto/tracing/track_event.h',
     b'perfetto/tracing/track_event_legacy.h',
     b'spirv-tools/libspirv.h',
-    b'third_party/volk/volk.h',
+    b'third_party/volk/src/volk.h',
     b'vk_loader_extensions.c',
     b'vk_snippets.h',
     b'vulkan_android.h',
