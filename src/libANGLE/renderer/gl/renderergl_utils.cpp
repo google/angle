@@ -2809,8 +2809,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             isPowerVR && IsAndroid());
 
     // crbug.com/553172761
-    ANGLE_FEATURE_CONDITION(features, useTexSubImageForClientDataNpotUploads,
-                            false /* isPowerVR */);
+    ANGLE_FEATURE_CONDITION(features, useTexSubImageForClientDataNpotUploads, isPowerVR);
 
     ANGLE_FEATURE_CONDITION(features, recreateFboOnAttachmentRespecification, isPowerVR);
 
