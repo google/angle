@@ -271,7 +271,7 @@ vars = {
   'checkout_angle_restricted_trace_disney_tsum_tsum': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_domino_dreams': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dont_starve': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_doomsday_last_survivors': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_doomsday_last_survivors': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dota_underlords': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_doubleu_casino': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_downwell': 'checkout_extra_traces',
@@ -279,7 +279,7 @@ vars = {
   'checkout_angle_restricted_trace_dr_parking_4': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dragon_ball_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dragon_ball_z_dokkan_battle': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_dragon_city': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_dragon_city': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dragon_mania_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_dragon_raja': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_driver_overhead_2': 'checkout_angle_restricted_traces',
@@ -386,6 +386,7 @@ vars = {
   'checkout_angle_restricted_trace_match_factory': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_match_masters': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_matching_story': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_mementomori_afkrpg': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_merge_dragons': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_merge_mansion': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_messenger_lite': 'checkout_extra_traces',
@@ -557,6 +558,7 @@ vars = {
   'checkout_angle_restricted_trace_wayward_souls': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_whatsapp': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_whiteout_survival': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_wizard_of_oz_slots_games': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_woodoku': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_words_crush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_words_of_wonders': 'checkout_extra_traces',
@@ -3680,6 +3682,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_matching_story',
   },
+  'src/tests/restricted_traces/mementomori_afkrpg': {
+      'packages': [
+        {
+            'package': 'angle/traces/mementomori_afkrpg',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_mementomori_afkrpg',
+  },
   'src/tests/restricted_traces/merge_dragons': {
       'packages': [
         {
@@ -5389,6 +5401,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_whiteout_survival',
+  },
+  'src/tests/restricted_traces/wizard_of_oz_slots_games': {
+      'packages': [
+        {
+            'package': 'angle/traces/wizard_of_oz_slots_games',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_wizard_of_oz_slots_games',
   },
   'src/tests/restricted_traces/woodoku': {
       'packages': [
