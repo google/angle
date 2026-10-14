@@ -41,6 +41,12 @@ class D3DTextureTest : public ANGLETest<>
 
     void testSetUp() override
     {
+        if (!IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(),
+                                          "EGL_ANGLE_d3d_texture_client_buffer"))
+        {
+            return;
+        }
+
         constexpr char kVS[] =
             R"(precision highp float;
             attribute vec4 position;
@@ -126,8 +132,11 @@ class D3DTextureTest : public ANGLETest<>
             mD3D11Device = nullptr;
         }
 
-        FreeLibrary(mD3D11Module);
-        mD3D11Module = nullptr;
+        if (mD3D11Module)
+        {
+            FreeLibrary(mD3D11Module);
+            mD3D11Module = nullptr;
+        }
     }
 
     EGLSurface createD3D11PBuffer(size_t width,
@@ -251,9 +260,9 @@ class D3DTextureTest : public ANGLETest<>
         EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0u, 127u, 0u, 255u), 2);
     }
 
-    GLuint mTextureProgram;
-    GLuint mTextureProgramNoSampling;
-    GLint mTextureUniformLocation;
+    GLuint mTextureProgram           = 0;
+    GLuint mTextureProgramNoSampling = 0;
+    GLint mTextureUniformLocation    = -1;
 
     HMODULE mD3D11Module       = nullptr;
     ID3D11Device *mD3D11Device = nullptr;
