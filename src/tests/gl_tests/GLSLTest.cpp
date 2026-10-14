@@ -9679,6 +9679,44 @@ void main()
 
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
 }
+
+// Test corner case involving comma and passing struct with sampler to function
+TEST_P(GLSLTest_ES3, SamplerInStructAsFunctionArgInCommaCornerCase)
+{
+    // The monomorphization AST pass run by multiple backends does not correctly handle comma
+    // expressions.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr));
+
+    const char kFragmentShader[] = R"(#version 300 es
+precision mediump float;
+struct S
+{
+    sampler2D s;
+    int f;
+};
+uniform S u;
+int global = 0;
+
+out vec4 color;
+
+float sampleTex(S s) { ++global; return texture(s.s, vec2(0)).x; }
+float forwardToSample(S s) { return sampleTex(s); }
+
+// Need to forward `u` to `broken` via an intermediate call to cause multiple passes of
+// monomorphization in some backends before the tricky expression is handled.
+void broken(S s) { sampleTex((forwardToSample(s), u)); }
+void forward(S s) { broken(s); }
+
+void main() {
+    forward(u);
+    color = vec4(float(global) / 2.0, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragmentShader);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+}
+
 // Test that a global variable declared after main() works. This is a regression test for an issue
 // in global variable initialization.
 TEST_P(WebGLGLSLTest, GlobalVariableDeclaredAfterMain)
