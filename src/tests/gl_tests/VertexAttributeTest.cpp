@@ -10,6 +10,7 @@
 
 #include <array>
 #include <cmath>
+#include <cstddef>
 #include "anglebase/numerics/safe_conversions.h"
 #include "common/mathutil.h"
 #include "test_utils/ANGLETest.h"
@@ -2601,38 +2602,32 @@ void main() {
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
 
-    // Interleaved per-vertex layout (16 byte stride shared by both attributes):
-    //   [0-1]   padding
-    //   [2-5]   a_shortColor: 2 x GLushort, start offset 2 (2-byte aligned)
-    //   [6-7]   padding
-    //   [8-15]  a_floatColor: 2 x GLfloat, start offset 8 (4-byte aligned)
-    constexpr size_t kStride      = 16;
-    constexpr size_t kVertexCount = 4;
-    constexpr size_t kDataSize    = kStride * kVertexCount;
-
-    std::array<GLubyte, kDataSize + 4> rawData = {};
-    const size_t vertexDataOffset =
-        rx::roundUp(reinterpret_cast<uintptr_t>(rawData.data()), uintptr_t(4)) -
-        reinterpret_cast<uintptr_t>(rawData.data());
-
-    for (size_t v = 0; v < kVertexCount; v++)
+    // Interleaved vertex with a 16 byte stride. The struct is 4-byte aligned, so shortColor
+    // (offset 2) is 2-byte but not 4-byte aligned, while floatColor (offset 8) is 4-byte
+    // aligned. If the Vulkan backend merged both attributes into one streamed buffer starting
+    // at shortColor, floatColor would land at offset 6, which violates Vulkan's 4-byte
+    // alignment requirement for float vertex attributes.
+    struct Vertex
     {
-        GLubyte *vertex = &rawData[vertexDataOffset + v * kStride];
+        GLushort padding0                  = 0;
+        std::array<GLushort, 2> shortColor = {0xFFFFu, 0x7FFFu};
+        GLushort padding1                  = 0;
+        std::array<GLfloat, 2> floatColor  = {0.25f, 0.75f};
+    };
+    static_assert(alignof(Vertex) == 4);
+    static_assert(sizeof(Vertex) == 16);
+    static_assert(offsetof(Vertex, shortColor) == 2);
+    static_assert(offsetof(Vertex, floatColor) == 8);
 
-        const GLushort shortValues[2] = {0xFFFFu, 0x7FFFu};
-        memcpy(vertex + 2, shortValues, sizeof(shortValues));
-
-        const GLfloat floatValues[2] = {0.25f, 0.75f};
-        memcpy(vertex + 8, floatValues, sizeof(floatValues));
-    }
+    std::array<Vertex, 4> vertices = {};
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    glVertexAttribPointer(1, 2, GL_UNSIGNED_SHORT, GL_TRUE, kStride,
-                          &rawData[vertexDataOffset + 2]);
+    glVertexAttribPointer(1, 2, GL_UNSIGNED_SHORT, GL_TRUE, sizeof(Vertex),
+                          vertices[0].shortColor.data());
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, kStride, &rawData[vertexDataOffset + 8]);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), vertices[0].floatColor.data());
     glEnableVertexAttribArray(2);
 
     drawIndexedQuad(program, "a_position", 0.5f, 1.0f);
