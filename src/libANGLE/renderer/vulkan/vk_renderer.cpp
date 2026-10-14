@@ -462,6 +462,12 @@ constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
     "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07287",
 };
 
+// With forceSampleUsageForAhbBackedImages, we assume all AHBs are gpu-sampleable, regardless of
+// the AHB's usage flags.
+constexpr const char *kSkippedMessagesWithForceSampleUsageForAhbBackedImages[] = {
+    "VUID-VkMemoryAllocateInfo-pNext-02390",
+};
+
 // Some syncval errors are resolved in the presence of the NONE load or store render pass ops.  For
 // those, ANGLE makes no further attempt to resolve them and expects vendor support for the
 // extensions instead.  The list of skipped messages is split based on this support.
@@ -5129,6 +5135,15 @@ void Renderer::initializeValidationMessageSuppressions()
         mSkippedValidationMessages.insert(
             mSkippedValidationMessages.end(), kSkippedMessagesWithDynamicRendering,
             kSkippedMessagesWithDynamicRendering + ArraySize(kSkippedMessagesWithDynamicRendering));
+    }
+
+    if (getFeatures().forceSampleUsageForAhbBackedImages.enabled)
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(),
+            kSkippedMessagesWithForceSampleUsageForAhbBackedImages,
+            kSkippedMessagesWithForceSampleUsageForAhbBackedImages +
+                ArraySize(kSkippedMessagesWithForceSampleUsageForAhbBackedImages));
     }
 
     // Build the list of syncval errors that are currently expected and should be skipped.
