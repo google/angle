@@ -5731,6 +5731,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         IsQualcommOpenSource(mPhysicalDeviceProperties.vendorID, mDriverProperties.driverID,
                              mPhysicalDeviceProperties.deviceName);
     const bool isQualcommProprietary = isQualcomm && !isQualcommOpenSource;
+    bool isAdreno702 = mPhysicalDeviceProperties.deviceID == angle::kDeviceID_Adreno702;
 
     // Distinguish between the ARM proprietary driver and the Mesa open source driver
     const bool isMesaPanVK      = IsMesaPanVK(mDriverProperties.driverID);
@@ -6015,9 +6016,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsPrimitiveTopologyListRestart,
         mPrimitiveTopologyListRestartFeatures.primitiveTopologyListRestart == VK_TRUE);
 
+    // Adreno 702 applies advanced blend twice to some samples of multisampled pixels covered by two
+    // primitives sharing an edge; the framebuffer fetch emulation renders them correctly.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsBlendOperationAdvanced,
-        ExtensionFound(VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME, deviceExtensionNames));
+        ExtensionFound(VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME, deviceExtensionNames) &&
+            !(isQualcommProprietary && isAdreno702));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsFormatFeatureFlags2,
@@ -6246,7 +6250,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, forceMaxUniformBufferSize16KB,
                             isQualcommProprietary && isAdreno540);
 
-    bool isAdreno702 = mPhysicalDeviceProperties.deviceID == angle::kDeviceID_Adreno702;
     ANGLE_FEATURE_CONDITION(&mFeatures, splitCrossFormatLayeredImageCopy,
                             isQualcommProprietary && isAdreno702);
 
