@@ -344,14 +344,15 @@ vars = {
   'checkout_angle_restricted_trace_infinity_ops': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_injustice_2': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_into_the_dead_2': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_isekai_slow_life': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_isekai_slow_life': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_jackpot_party': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_jackpot_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_jetpack_joyride': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_jewels_blast': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_jewels_blast': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_junes_journey': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kartrider_rush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kentucky_route_zero': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_kingdom_guard': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_kingshot': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_klondike_adventures': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_knife_hit': 'checkout_angle_restricted_traces',
@@ -440,7 +441,7 @@ vars = {
   'checkout_angle_restricted_trace_plants_vs_zombies_2': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_plants_vs_zombies_heroes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pokemon_go': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_pokemon_go_ar': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_pokemon_go_ar': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pokemon_go_combat': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pokemon_masters_ex': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pokemon_unite': 'checkout_extra_traces',
@@ -475,6 +476,7 @@ vars = {
   'checkout_angle_restricted_trace_rope_hero_vice_town': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_royal_kingdom': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_royal_match': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_run_goddess': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_rush_royale': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_saint_seiya_awakening': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_sakura_school_simulator': 'checkout_extra_traces',
@@ -547,6 +549,7 @@ vars = {
   'checkout_angle_restricted_trace_traffic_rider': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_travel_town': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_trex_200': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_truck_star': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_truckers_of_europe_3': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_two_player_games': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_uber': 'checkout_extra_traces',
@@ -3345,6 +3348,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_kentucky_route_zero',
   },
+  'src/tests/restricted_traces/kingdom_guard': {
+      'packages': [
+        {
+            'package': 'angle/traces/kingdom_guard',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_kingdom_guard',
+  },
   'src/tests/restricted_traces/kingshot': {
       'packages': [
         {
@@ -4575,6 +4588,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_royal_match',
   },
+  'src/tests/restricted_traces/run_goddess': {
+      'packages': [
+        {
+            'package': 'angle/traces/run_goddess',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_run_goddess',
+  },
   'src/tests/restricted_traces/rush_royale': {
       'packages': [
         {
@@ -5294,6 +5317,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_trex_200',
+  },
+  'src/tests/restricted_traces/truck_star': {
+      'packages': [
+        {
+            'package': 'angle/traces/truck_star',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_truck_star',
   },
   'src/tests/restricted_traces/truckers_of_europe_3': {
       'packages': [
