@@ -1,7 +1,6 @@
 Name: xxHash
 URL: https://github.com/Cyan4973/xxHash
-Revision: 9a4c677e4109b53aba0bd62327b31f44df7c1f85
-Version: 0.8.3
+Version: v0.8.4
 Update Mechanism: Manual
 License: BSD-2-Clause
 License File: src/LICENSE
