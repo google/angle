@@ -2935,6 +2935,14 @@ ScopedSyncRef GetSyncIfValid(const ThreadSafeDisplay *display, SyncID syncID)
     return ValidateDisplay(nullptr, display) ? display->getSync(syncID) : ScopedSyncRef();
 }
 
+ScopedSyncDestroy RemoveSyncIfValid(ThreadSafeDisplay *display, SyncID syncID)
+{
+    // display->removeSync() - validates syncID
+    return ValidateDisplay(nullptr, display)
+               ? ScopedSyncDestroy(display, display->removeSync(syncID))
+               : ScopedSyncDestroy();
+}
+
 const LabeledObject *GetLabeledObjectIfValid(Thread *thread,
                                              const Display *display,
                                              ObjectType objectType,
@@ -4672,7 +4680,12 @@ bool ValidateDestroySync(const ValidationContext *val,
                          const ThreadSafeDisplay *display,
                          const Sync *sync)
 {
-    ANGLE_VALIDATION_TRY(ValidateSync(val, display, sync));
+    if (sync == nullptr)
+    {
+        ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+        val->setError(EGL_BAD_PARAMETER, "sync object is not valid.");
+        return false;
+    }
     return true;
 }
 

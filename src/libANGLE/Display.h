@@ -69,8 +69,8 @@ class ThreadSafeDisplay;
 
 template <typename DisplayT>
 class ScopedDisplayRefT;
-using ScopedDisplayRef      = ScopedDisplayRefT<Display>;
-using ScopedConstDisplayRef = ScopedDisplayRefT<const Display>;
+using ScopedDisplayRef           = ScopedDisplayRefT<Display>;
+using ScopedConstDisplayRef      = ScopedDisplayRefT<const Display>;
 using ScopedThreadSafeDisplayRef = ScopedDisplayRefT<ThreadSafeDisplay>;
 
 class ScopedDisplayMutexLock;
@@ -168,7 +168,7 @@ class SyncSet final : angle::NonCopyable
     // when it goes out of scope, so a mutable display is required here.
     ScopedSyncRef getSync(ThreadSafeDisplay *display, SyncID syncID) const;
 
-    void destroySync(const ThreadSafeDisplay *display, SyncID syncID);
+    Sync *removeSync(SyncID syncID);
     void releaseSync(const ThreadSafeDisplay *display, Sync *sync);
 
     void invalidateAllSyncs();
@@ -236,6 +236,7 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
                      EGLenum type,
                      const AttributeMap &attribs,
                      Sync **outSync);
+    Sync *removeSync(egl::SyncID syncID);
     void destroySync(Sync *sync);
     void releaseSync(Sync *sync);
 
