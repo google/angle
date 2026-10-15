@@ -339,7 +339,7 @@ vars = {
   'checkout_angle_restricted_trace_i9_inferno_nine': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_identity_v': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_idle_heroes': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_idle_zombie_miner': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_idle_zombie_miner': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_indian_bikes_driving_3d': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_infinity_ops': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_injustice_2': 'checkout_angle_restricted_traces',
@@ -354,6 +354,7 @@ vars = {
   'checkout_angle_restricted_trace_kentucky_route_zero': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kingshot': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_klondike_adventures': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_knife_hit': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_knives_out': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_lands_of_jail': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_last_shelter_survival': 'checkout_extra_traces',
@@ -451,12 +452,13 @@ vars = {
   'checkout_angle_restricted_trace_pubg_mobile_lite': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_pubg_mobile_skydive': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_puzzle_and_dragons': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_puzzles_and_chaos': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_puzzles_and_chaos': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_puzzles_and_survival': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_qblock_wood_block_puzzle_game': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_quick_hit_casino_slots': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_race_master_3d': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_ragnarok_m_eternal_love': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_raid_rush': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_raid_shadow_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_raising_a_goblin': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_real_commando_secret_mission': 'checkout_extra_traces',
@@ -545,11 +547,12 @@ vars = {
   'checkout_angle_restricted_trace_traffic_rider': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_travel_town': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_trex_200': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_truckers_of_europe_3': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_two_player_games': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_uber': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_umamusume_pretty_derby': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_vainglory': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_viking_rise': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_viking_rise': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_vita_mahjong': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_walking_dead_survivors': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_war_planet_online': 'checkout_extra_traces',
@@ -3362,6 +3365,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_klondike_adventures',
   },
+  'src/tests/restricted_traces/knife_hit': {
+      'packages': [
+        {
+            'package': 'angle/traces/knife_hit',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_knife_hit',
+  },
   'src/tests/restricted_traces/knives_out': {
       'packages': [
         {
@@ -4392,6 +4405,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_ragnarok_m_eternal_love',
   },
+  'src/tests/restricted_traces/raid_rush': {
+      'packages': [
+        {
+            'package': 'angle/traces/raid_rush',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_raid_rush',
+  },
   'src/tests/restricted_traces/raid_shadow_legends': {
       'packages': [
         {
@@ -5271,6 +5294,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_trex_200',
+  },
+  'src/tests/restricted_traces/truckers_of_europe_3': {
+      'packages': [
+        {
+            'package': 'angle/traces/truckers_of_europe_3',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_truckers_of_europe_3',
   },
   'src/tests/restricted_traces/two_player_games': {
       'packages': [
