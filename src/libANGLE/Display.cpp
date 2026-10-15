@@ -148,6 +148,9 @@ struct TLSData
 {
     angle::UnlockedTailCall unlockedTailCall;
     Error errorScratchSpace;
+#if defined(ANGLE_ENABLE_ASSERTS)
+    uint32_t displayRefCount = 0;
+#endif
 
     TLSData();
 };
@@ -3087,4 +3090,31 @@ Error *Display::GetCurrentThreadErrorScratchSpace()
 {
     return &GetDisplayTLS()->errorScratchSpace;
 }
+
+#if defined(ANGLE_ENABLE_ASSERTS)
+// static
+uint32_t ThreadSafeDisplay::GetCurrentThreadDisplayRefCount()
+{
+    TLSData *tls = GetDisplayTLS();
+    ASSERT(tls != nullptr);
+    return tls->displayRefCount;
+}
+
+// static
+void ThreadSafeDisplay::IncrementCurrentThreadDisplayRefCount()
+{
+    TLSData *tls = GetDisplayTLS();
+    ASSERT(tls != nullptr);
+    ++tls->displayRefCount;
+}
+
+// static
+void ThreadSafeDisplay::DecrementCurrentThreadDisplayRefCount()
+{
+    TLSData *tls = GetDisplayTLS();
+    ASSERT(tls != nullptr);
+    ASSERT(tls->displayRefCount > 0);
+    --tls->displayRefCount;
+}
+#endif
 }  // namespace egl

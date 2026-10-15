@@ -86,7 +86,8 @@ class [[nodiscard]] ScopedSyncRef final
 {
   public:
     ScopedSyncRef() = default;
-    ScopedSyncRef(ThreadSafeDisplay &display, Sync *sync) : mDisplay(display), mSync(sync)
+    ScopedSyncRef(ThreadSafeDisplay &display, Sync *sync)
+        : mDisplay(ScopedThreadSafeDisplayRef::Duplicate(display)), mSync(sync)
     {
         // Callers only invoke this with valid Sync* objects; if lookup fails, ScopedSyncRef() is
         // used instead.
@@ -94,7 +95,8 @@ class [[nodiscard]] ScopedSyncRef final
         mSync->addRef();
     }
     ScopedSyncRef(ThreadSafeDisplay *display, Sync *sync)
-        : mDisplay(display ? ScopedThreadSafeDisplayRef(*display) : ScopedThreadSafeDisplayRef()),
+        : mDisplay(display ? ScopedThreadSafeDisplayRef::Duplicate(*display)
+                           : ScopedThreadSafeDisplayRef()),
           mSync(sync)
     {
         if (mSync)
