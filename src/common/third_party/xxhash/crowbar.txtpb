@@ -1,0 +1,15 @@
+upstream {
+  commit: "9a4c677e4109b53aba0bd62327b31f44df7c1f85"
+  artifacts {
+    git {
+      repository: "https://github.com/Cyan4973/xxHash"
+      commit: "9a4c677e4109b53aba0bd62327b31f44df7c1f85"
+    }
+  }
+}
+stages {
+  input {
+    patch { copybara {} }
+  }
+  publish { git {} }
+}
