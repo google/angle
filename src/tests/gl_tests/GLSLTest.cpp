@@ -10344,6 +10344,69 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test switch/case where a variable is declared inside one of the cases and is accessed by a
+// subsequent case.  The variable shadows another outside the switch.
+TEST_P(GLSLTest_ES3, SwitchWithShadowVariableDeclaration)
+{
+    constexpr char kFS[] = R"(#version 300 es
+
+precision highp float;
+out vec4 my_FragColor;
+
+uniform int u_zero;
+
+void main()
+{
+    vec4 result = vec4(0, 0, 0, 1);
+    switch (u_zero)
+    {
+        case 0:
+            result.x = 1.0;
+            // Shadow the variable that is outside the switch
+            vec4 result = vec4(0, 1, 0, 0);
+        default:
+            result.w = 1.0;
+    }
+    my_FragColor = result;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// Test switch/case where a variable is declared inside one of the cases after branch and is
+// accessed by a subsequent case.  The variable shadows another outside the switch.
+TEST_P(GLSLTest_ES3, SwitchWithShadowVariableDeclarationInDeadCode)
+{
+    constexpr char kFS[] = R"(#version 300 es
+
+precision highp float;
+out vec4 my_FragColor;
+
+uniform int u_zero;
+
+void main()
+{
+    vec4 result = vec4(0, 0, 0, 1);
+    switch (u_zero)
+    {
+        case 0:
+            result.x = 1.0;
+            break;
+            // Shadow the variable that is outside the switch
+            vec4 result = vec4(0, 1, 0, 0);
+        default:
+            result.w = 1.0;
+    }
+    my_FragColor = result;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Test that an empty switch/case statement is translated in a way that compiles and executes the
 // init-statement.
 TEST_P(GLSLTest_ES3, EmptySwitch)
