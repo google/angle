@@ -20,3 +20,7 @@ dispatch overhead.
 
 Local Modifications:
 NONE
+
+Update instructions:
+Update commit hashes in crowbar.txtpb, then run from this directory:
+crowbar build --no-dry-run ./
