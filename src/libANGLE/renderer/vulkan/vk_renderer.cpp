@@ -2940,6 +2940,11 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     ANGLE_VK_TRY(context, mPlaceHolderDescriptorSetLayout->init(context->getDevice(), createInfo));
     ASSERT(mPlaceHolderDescriptorSetLayout->valid());
 
+    if (mFeatures.preferPipelineBinaries.enabled)
+    {
+        ANGLE_TRY(mPipelineBinariesCache.init(context));
+    }
+
     return angle::Result::Continue;
 }
 
@@ -5198,7 +5203,8 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context,
     mMemoryAllocationTracker.onDeviceInit();
 
     // Synchronize the Vulkan pipeline cache to the blob cache every frame
-    if (mFeatures.syncPipelineCacheToBlobCacheEveryFrame.enabled)
+    if (mFeatures.syncPipelineCacheToBlobCacheEveryFrame.enabled &&
+        !mFeatures.preferPipelineBinaries.enabled)
     {
         mPipelineCacheVkUpdateTimeout = 1;
     }
@@ -7065,6 +7071,22 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             mFeatures.supportsPipelineBinary.enabled &&
                                 mFeatures.allowPipelineBinariesForTesting.enabled);
 
+    // A pipeline linked from graphics pipeline libraries is created from the libraries, which are
+    // themselves created from stored binaries.  Whether the linked pipeline's own binaries are
+    // worth storing too varies by vendor:
+    //
+    // - Some drivers give no binaries for linked pipelines.
+    // - Some give a linked pipeline the key of the shaders library it links, so its lookup finds
+    //   the library's entry, and reads it a second time.
+    // - Some give every linked pipeline the same placeholder key.
+    // - Qualcomm does much of its compiling when linking, and gives linked pipelines binaries of
+    //   their own.  Creating a linked pipeline without them is far slower than with them.
+    //
+    // So only on Qualcomm are linked pipelines looked up and stored.  Elsewhere they are linked
+    // from the libraries directly.
+    ANGLE_FEATURE_CONDITION(&mFeatures, cachePipelineBinariesForLinkedPipelines,
+                            isQualcommProprietary);
+
     // To avoid memory bloating due to using pipeline caches per program, the pipeline cache in the
     // renderer can be used.
     // Also explicitly prefer the global cache (otherwise, it will be used implicitly):
@@ -7112,6 +7134,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //   each program is individually retrieved and stored in the blob cache already.
     // - VK_EXT_graphics_pipeline_library is supported, but monolithic pipelines are still
     //   preferred, and the cost of syncing the large cache is acceptable.
+    // - preferPipelineBinaries is not enabled.  With it, each pipeline's binaries are stored in the
+    //   blob cache under its own key, so syncing a large monolithic blob is redundant.
     //
     // Otherwise global pipeline cache is recreated on every run.
     const bool canSyncLargeMonolithicCache =
@@ -7120,6 +7144,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         (!IsAndroid() || mFeatures.enableAsyncPipelineCacheCompression.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, syncGlobalPipelineCacheToBlobCache,
                             !mFeatures.skipPipelineCacheSerialization.enabled &&
+                                !mFeatures.preferPipelineBinaries.enabled &&
                                 (!allowProgramPipelineCache() || canSyncLargeMonolithicCache));
 
     // Enable the feature on Samsung by default, because it has big blob cache.
@@ -7627,7 +7652,8 @@ angle::Result Renderer::initPipelineCache(vk::ErrorContext *context,
                                           bool *success)
 {
     angle::MemoryBuffer initialData;
-    if (!mFeatures.disablePipelineCacheLoadForTesting.enabled)
+    if (!mFeatures.disablePipelineCacheLoadForTesting.enabled &&
+        !mFeatures.preferPipelineBinaries.enabled)
     {
         ANGLE_TRY(GetAndDecompressPipelineCacheVk(context, mGlobalOps, &initialData, success));
     }
@@ -7704,7 +7730,7 @@ angle::Result Renderer::getPipelineCache(vk::ErrorContext *context,
             ? &mPipelineCacheMutex
             : nullptr;
 
-    pipelineCacheOut->init(&mPipelineCache, pipelineCacheMutex);
+    pipelineCacheOut->init(&mPipelineCache, &mPipelineBinariesCache, pipelineCacheMutex);
     return angle::Result::Continue;
 }
 
@@ -7795,7 +7821,7 @@ angle::Result Renderer::getLockedPipelineCacheDataIfNew(vk::ErrorContext *contex
     mPipelineCacheMutex.assertLocked();
 
     vk::PipelineCacheAccess globalCache;
-    globalCache.init(&mPipelineCache, nullptr);
+    globalCache.init(&mPipelineCache, &mPipelineBinariesCache, nullptr);
 
     ANGLE_VK_TRY(context, globalCache.getCacheData(context, pipelineCacheSizeOut, nullptr));
 

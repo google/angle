@@ -20,6 +20,7 @@
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 #include "util/random_utils.h"
+#include "util/test_blob_cache.h"
 #include "util/test_utils.h"
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
@@ -540,6 +541,7 @@ ANGLETestBase::ANGLETestBase(const PlatformParameters &params)
       mDeferContextInit(false),
       mAlwaysForceNewDisplay(ShouldAlwaysForceNewDisplay(params)),
       mForceNewDisplay(mAlwaysForceNewDisplay),
+      mNeedsBlobCache(false),
       mSetUpCalled(false),
       mTearDownCalled(false),
       mCurrentParams(nullptr),
@@ -680,6 +682,11 @@ ANGLETestBase::~ANGLETestBase()
     {
         GTEST_NONFATAL_FAILURE_("TearDown not called.");
     }
+
+    if (!mBlobCacheDir.empty())
+    {
+        RemoveTestBlobCacheDirectory(mBlobCacheDir);
+    }
 }
 
 void ANGLETestBase::ANGLETestSetUp()
@@ -813,19 +820,44 @@ void ANGLETestBase::ANGLETestSetUp()
         }
     }
 
-    if (mForceNewDisplay || !mFixture->eglWindow->isDisplayInitialized())
+    // A Display given the TestBlobCache callbacks keeps them, so one that has them when the test
+    // needs none, or the other way around, is replaced
+    if (mForceNewDisplay || !mFixture->eglWindow->isDisplayInitialized() ||
+        mFixture->hasTestBlobCache != mNeedsBlobCache)
     {
         mFixture->eglWindow->destroyGL();
+        mFixture->hasTestBlobCache = false;
         if (!mFixture->eglWindow->initializeDisplay(mFixture->osWindow, driverLib,
                                                     mCurrentParams->driver,
                                                     mCurrentParams->eglParameters))
         {
             FAIL() << "EGL Display init failed.";
         }
+
+        if (mNeedsBlobCache)
+        {
+            EGLDisplay display = mFixture->eglWindow->getDisplay();
+            if (!IsEGLDisplayExtensionEnabled(display, "EGL_ANDROID_blob_cache"))
+            {
+                GTEST_SKIP() << "Test skipped because EGL_ANDROID_blob_cache is not available.";
+            }
+            InitTestBlobCache(display, eglSetBlobCacheFuncsANDROID, mBlobCacheDir,
+                              TestBlobCacheLimits());
+            mFixture->hasTestBlobCache = true;
+        }
     }
-    else if (mCurrentParams->eglParameters != mFixture->eglWindow->getPlatform())
+    else
     {
-        FAIL() << "Internal parameter conflict error.";
+        if (mCurrentParams->eglParameters != mFixture->eglWindow->getPlatform())
+        {
+            FAIL() << "Internal parameter conflict error.";
+        }
+
+        // The Display has the callbacks already
+        if (mNeedsBlobCache)
+        {
+            OpenTestBlobCacheDirectory(mBlobCacheDir, TestBlobCacheLimits());
+        }
     }
 
     // Skip tests that require unsupported ANGLE extensions.
@@ -1728,6 +1760,15 @@ void ANGLETestBase::setContextResetStrategy(EGLenum resetStrategy)
 void ANGLETestBase::forceNewDisplay()
 {
     mForceNewDisplay = true;
+}
+
+void ANGLETestBase::setNeedsBlobCache(bool needed)
+{
+    mNeedsBlobCache = needed;
+    if (mNeedsBlobCache && mBlobCacheDir.empty())
+    {
+        mBlobCacheDir = CreateTestBlobCacheDirectory();
+    }
 }
 
 void ANGLETestBase::setDeferContextInit(bool enabled)

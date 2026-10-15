@@ -1108,7 +1108,8 @@ angle::Result ProgramExecutableVk::warmUpComputePipelineCache(
     if (mProgramPipelineCache.valid())
     {
         // No synchronization necessary since mProgramPipelineCache is internally synchronized.
-        pipelineCache.init(&mProgramPipelineCache, nullptr);
+        pipelineCache.init(&mProgramPipelineCache,
+                           context->getRenderer()->getPipelineBinariesCache(), nullptr);
     }
     else
     {
@@ -1145,7 +1146,8 @@ angle::Result ProgramExecutableVk::warmUpGraphicsPipelineCache(
     if (mProgramPipelineCache.valid())
     {
         // No synchronization necessary since mProgramPipelineCache is internally synchronized.
-        pipelineCache.init(&mProgramPipelineCache, nullptr);
+        pipelineCache.init(&mProgramPipelineCache,
+                           context->getRenderer()->getPipelineBinariesCache(), nullptr);
     }
     else
     {
@@ -1705,7 +1707,8 @@ angle::Result ProgramExecutableVk::createGraphicsPipeline(
         (pipelineSubset == vk::GraphicsPipelineSubset::Shaders ||
          !contextVk->getFeatures().supportsGraphicsPipelineLibrary.enabled))
     {
-        perProgramPipelineCache.init(&mProgramPipelineCache, nullptr);
+        perProgramPipelineCache.init(&mProgramPipelineCache,
+                                     contextVk->getRenderer()->getPipelineBinariesCache(), nullptr);
         pipelineCache = &perProgramPipelineCache;
     }
 
@@ -1740,7 +1743,8 @@ angle::Result ProgramExecutableVk::createLinkedGraphicsPipeline(
         !contextVk->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
     {
         // No synchronization necessary since mProgramPipelineCache is internally synchronized.
-        programPipelineCache.init(&mProgramPipelineCache, nullptr);
+        programPipelineCache.init(&mProgramPipelineCache,
+                                  contextVk->getRenderer()->getPipelineBinariesCache(), nullptr);
         linkPipelineCache = &programPipelineCache;
     }
 

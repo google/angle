@@ -434,11 +434,14 @@ class Renderer : angle::NonCopyable
                                    vk::PipelineCacheAccess *pipelineCacheOut);
     angle::Result mergeIntoPipelineCache(vk::ErrorContext *context,
                                          const vk::PipelineCache &pipelineCache);
+    vk::PipelineBinariesCache *getPipelineBinariesCache() { return &mPipelineBinariesCache; }
 
     // Whether it is allowed to use program's pipeline cache, otherwise need to use mPipelineCache.
     bool allowProgramPipelineCache() const
     {
-        return !mFeatures.preferGlobalPipelineCache.enabled &&
+        // Pipeline binaries replace pipeline caches altogether
+        return !mFeatures.preferPipelineBinaries.enabled &&
+               !mFeatures.preferGlobalPipelineCache.enabled &&
                mFeatures.warmUpPipelineCacheAtLink.enabled &&
                !mFeatures.skipPipelineCacheSerialization.enabled;
     }
@@ -1092,6 +1095,7 @@ class Renderer : angle::NonCopyable
     //    for all access. Lock the mutex if externallySynchronizePipelineCacheAccess is enabled
     angle::SimpleMutex mPipelineCacheMutex;
     vk::PipelineCache mPipelineCache;
+    vk::PipelineBinariesCache mPipelineBinariesCache;
     size_t mCurrentPipelineCacheBlobCacheSlotIndex;
     size_t mPipelineCacheChunkCount;
     uint32_t mPipelineCacheVkUpdateTimeout;

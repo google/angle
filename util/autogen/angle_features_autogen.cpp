@@ -70,6 +70,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::BottomLeftOriginPresentRegionRectangles, "bottomLeftOriginPresentRegionRectangles"},
     {Feature::BresenhamLineRasterization, "bresenhamLineRasterization"},
     {Feature::CacheCompiledShader, "cacheCompiledShader"},
+    {Feature::CachePipelineBinariesForLinkedPipelines, "cachePipelineBinariesForLinkedPipelines"},
     {Feature::CallClearTwice, "callClearTwice"},
     {Feature::ClampArrayAccess, "clampArrayAccess"},
     {Feature::ClampFragDepth, "clampFragDepth"},

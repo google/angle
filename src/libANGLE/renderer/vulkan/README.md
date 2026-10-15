@@ -110,6 +110,7 @@ More implementation details can be found in the `doc` directory:
 
 - [Fast OpenGL State Transitions](doc/FastOpenGLStateTransitions.md)
 - [Shader Module Compilation](doc/ShaderModuleCompilation.md)
+- [Pipeline Binary Caching (`VK_KHR_pipeline_binary`)](doc/PipelineBinaryCaching.md)
 - [Format Tables and Emulation](doc/FormatTablesAndEmulation.md)
 - [Deferred Clears](doc/DeferredClears.md)
 - [Queries](doc/Queries.md)

@@ -1862,6 +1862,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo cachePipelineBinariesForLinkedPipelines = {
+        "cachePipelineBinariesForLinkedPipelines",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo disableRGB888RecordableBit = {
         "disableRGB888RecordableBit",
         FeatureCategory::VulkanAppWorkarounds,

@@ -145,6 +145,7 @@ template("angle_common_test_utils") {
       "$angle_root:angle_common",
       "$angle_root:angle_gpu_info_util",
       "$angle_root/util:${invoker.angle_util}",
+      "$angle_root/util:angle_test_blob_cache",
       "//testing/gmock",
       "//testing/gtest",
       "//third_party/googletest:gmock",
@@ -243,6 +244,7 @@ angle_test("angle_unittests") {
 
   if (angle_enable_vulkan) {
     sources += [ "compiler_tests/Precise_test.cpp" ]
+    sources += angle_unittests_vulkan_sources
     deps += [
       "$angle_root/src/common/spirv:angle_spirv_base",
       "$angle_root/src/common/spirv:angle_spirv_headers",

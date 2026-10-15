@@ -21,6 +21,7 @@
 #include "common/WorkerThread.h"
 #include "libANGLE/Uniform.h"
 #include "libANGLE/renderer/vulkan/ShaderInterfaceVariableInfoMap.h"
+#include "libANGLE/renderer/vulkan/vk_pipeline_binary_cache.h"
 #include "libANGLE/renderer/vulkan/vk_resource.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
@@ -72,6 +73,7 @@ class DynamicDescriptorPool;
 class SamplerHelper;
 enum class ImageAccess;
 class PipelineCacheAccess;
+class PipelineBinariesCache;
 class RenderPassCommandBufferHelper;
 class PackedClearValuesArray;
 class AttachmentOpsArray;
@@ -1498,17 +1500,20 @@ class PipelineCacheAccess
     PipelineCacheAccess()  = default;
     ~PipelineCacheAccess() = default;
 
-    void init(const vk::PipelineCache *pipelineCache, angle::SimpleMutex *mutex)
+    void init(const vk::PipelineCache *pipelineCache,
+              PipelineBinariesCache *pipelineBinariesCache,
+              angle::SimpleMutex *mutex)
     {
-        mPipelineCache = pipelineCache;
-        mMutex         = mutex;
+        mPipelineCache         = pipelineCache;
+        mPipelineBinariesCache = pipelineBinariesCache;
+        mMutex                 = mutex;
     }
 
     VkResult createGraphicsPipeline(vk::ErrorContext *context,
-                                    const VkGraphicsPipelineCreateInfo &createInfo,
+                                    VkGraphicsPipelineCreateInfo *createInfo,
                                     vk::Pipeline *pipelineOut);
     VkResult createComputePipeline(vk::ErrorContext *context,
-                                   const VkComputePipelineCreateInfo &createInfo,
+                                   VkComputePipelineCreateInfo *createInfo,
                                    vk::Pipeline *pipelineOut);
 
     VkResult getCacheData(vk::ErrorContext *context, size_t *cacheSize, void *cacheData);
@@ -1520,7 +1525,8 @@ class PipelineCacheAccess
   private:
     std::unique_lock<angle::SimpleMutex> getLock();
 
-    const vk::PipelineCache *mPipelineCache = nullptr;
+    const vk::PipelineCache *mPipelineCache       = nullptr;
+    PipelineBinariesCache *mPipelineBinariesCache = nullptr;
     angle::SimpleMutex *mMutex;
 };
 

@@ -576,6 +576,11 @@ class ANGLETestBase : public ::testing::Test
     void setContextResetStrategy(EGLenum resetStrategy);
     void forceNewDisplay();
 
+    // Backs the Display with a TestBlobCache (util/test_blob_cache.h) in a directory of the test's
+    // own.  Each SetUp reopens the directory, so a test that restarts itself with
+    // forceNewDisplay() and recreateTestFixture() finds what it stored, as a new process would.
+    void setNeedsBlobCache(bool needed);
+
     // Some EGL extension tests would like to defer the Context init until the test body.
     void setDeferContextInit(bool enabled);
 
@@ -679,6 +684,9 @@ class ANGLETestBase : public ::testing::Test
         OSWindow *osWindow   = nullptr;
         ConfigParameters configParams;
         uint32_t reuseCounter = 0;
+        // Whether the Display was given the TestBlobCache callbacks when it was initialized.  EGL
+        // accepts them only once per Display, which keeps them until it is terminated.
+        bool hasTestBlobCache = false;
     };
 
     int mWidth;
@@ -698,6 +706,9 @@ class ANGLETestBase : public ::testing::Test
     bool mDeferContextInit;
     bool mAlwaysForceNewDisplay;
     bool mForceNewDisplay;
+
+    bool mNeedsBlobCache;
+    std::string mBlobCacheDir;
 
     bool mSetUpCalled;
     bool mTearDownCalled;

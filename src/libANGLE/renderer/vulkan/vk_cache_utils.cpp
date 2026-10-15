@@ -567,6 +567,23 @@ void AttachPipelineRenderingInfo(ErrorContext *context,
 #endif
 }
 
+// Chains |createFlags2| to |createInfo|, moving the create info's flags into it, unless it is
+// already chained.  The caller zero-initializes it.
+template <typename CreateInfoT>
+void AttachPipelineCreateFlags2(VkPipelineCreateFlags2CreateInfoKHR *createFlags2,
+                                CreateInfoT *createInfo)
+{
+    if (createFlags2->sType == VK_STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO_KHR)
+    {
+        return;
+    }
+
+    createFlags2->sType = VK_STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO_KHR;
+    createFlags2->flags = createInfo->flags;
+    createInfo->flags   = 0;
+    AddToPNextChain(createInfo, createFlags2);
+}
+
 void UnpackAttachmentDesc(Renderer *renderer,
                           VkAttachmentDescription2 *desc,
                           angle::FormatID formatID,
@@ -3474,7 +3491,7 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
     // other flag is set.
     DynamicRenderingInfo renderingInfo;
     VkPipelineRenderingCreateInfoKHR pipelineRenderingInfo;
-    VkPipelineCreateFlags2CreateInfoKHR createFlags2;
+    VkPipelineCreateFlags2CreateInfoKHR createFlags2 = {};
     if (context->getFeatures().preferDynamicRendering.enabled)
     {
         DeriveRenderingInfo(context->getRenderer(), getRenderPassDesc(),
@@ -3484,7 +3501,13 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
                                     &pipelineRenderingInfo, &createFlags2, &createInfo);
     }
 
-    VkResult result = pipelineCache->createGraphicsPipeline(context, createInfo, pipelineOut);
+    // Pipeline binaries need flags2, which dynamic rendering may have chained already
+    if (context->getFeatures().preferPipelineBinaries.enabled)
+    {
+        AttachPipelineCreateFlags2(&createFlags2, &createInfo);
+    }
+
+    VkResult result = pipelineCache->createGraphicsPipeline(context, &createInfo, pipelineOut);
 
     if (supportsFeedback)
     {
@@ -7142,21 +7165,31 @@ std::unique_lock<angle::SimpleMutex> PipelineCacheAccess::getLock()
 }
 
 VkResult PipelineCacheAccess::createGraphicsPipeline(vk::ErrorContext *context,
-                                                     const VkGraphicsPipelineCreateInfo &createInfo,
+                                                     VkGraphicsPipelineCreateInfo *createInfo,
                                                      vk::Pipeline *pipelineOut)
 {
     std::unique_lock<angle::SimpleMutex> lock = getLock();
 
-    return pipelineOut->initGraphics(context->getDevice(), createInfo, mPipelineCache);
+    if (mPipelineBinariesCache != nullptr && mPipelineBinariesCache->isInitialized())
+    {
+        return mPipelineBinariesCache->createGraphicsPipeline(context, createInfo, pipelineOut);
+    }
+
+    return pipelineOut->initGraphics(context->getDevice(), *createInfo, mPipelineCache);
 }
 
 VkResult PipelineCacheAccess::createComputePipeline(vk::ErrorContext *context,
-                                                    const VkComputePipelineCreateInfo &createInfo,
+                                                    VkComputePipelineCreateInfo *createInfo,
                                                     vk::Pipeline *pipelineOut)
 {
     std::unique_lock<angle::SimpleMutex> lock = getLock();
 
-    return pipelineOut->initCompute(context->getDevice(), createInfo, mPipelineCache);
+    if (mPipelineBinariesCache != nullptr && mPipelineBinariesCache->isInitialized())
+    {
+        return mPipelineBinariesCache->createComputePipeline(context, createInfo, pipelineOut);
+    }
+
+    return pipelineOut->initCompute(context->getDevice(), *createInfo, mPipelineCache);
 }
 
 VkResult PipelineCacheAccess::getCacheData(vk::ErrorContext *context,
@@ -8158,8 +8191,15 @@ angle::Result ComputePipelineCache::createPipeline(vk::ErrorContext *context,
         vk::AddToPNextChain(&createInfo, &feedbackInfo);
     }
 
+    // Pipeline binaries need flags2.  This is done last, as it takes the flags set above.
+    VkPipelineCreateFlags2CreateInfoKHR createFlags2 = {};
+    if (context->getFeatures().preferPipelineBinaries.enabled)
+    {
+        vk::AttachPipelineCreateFlags2(&createFlags2, &createInfo);
+    }
+
     vk::Pipeline pipeline;
-    ANGLE_VK_TRY(context, pipelineCache->createComputePipeline(context, createInfo, &pipeline));
+    ANGLE_VK_TRY(context, pipelineCache->createComputePipeline(context, &createInfo, &pipeline));
 
     vk::CacheLookUpFeedback lookUpFeedback = vk::CacheLookUpFeedback::None;
 

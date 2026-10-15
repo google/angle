@@ -4,8 +4,9 @@
 // found in the LICENSE file.
 //
 // VulkanPipelineBinaryPerf:
-//   Measures how quickly an application gets its pipelines back on a later run, from ANGLE's
-//   monolithic VkPipelineCache stored in the blob cache.
+//   Measures how quickly an application gets its pipelines back on a later run, comparing ANGLE's
+//   VkPipelineCache with VK_KHR_pipeline_binary (preferPipelineBinaries), which stores one blob
+//   cache entry per driver pipeline key.
 //
 //   Each story runs three phases against one cache, each a run of the same application:
 //     - cold: the first run.  The cache is empty, so every pipeline is created from scratch and
@@ -32,15 +33,16 @@
 //       loading.
 //
 //   Frames are presented every 16.7 ms while loading and for two seconds after, so ANGLE syncs
-//   the monolithic cache to the blob cache as often as it would in an application.  On Linux and
+//   its pipeline cache to the blob cache as often as it would in an application.  On Linux and
 //   Android, the blob cache is dropped from the page cache before each phase, so entries are read
 //   from storage as they would be after a reboot or under memory pressure.  On Linux the cache is
 //   kept under ~/.cache, as /tmp is often in memory.  Each story salts its shaders with the time
 //   it started, so that no driver's own shader cache has seen them, and the cold phase compiles
 //   every pipeline from scratch.
 //
-//   Stories of 10000 and 20000 pipelines are disabled, as filling them takes minutes.  Run them
-//   with --gtest_also_run_disabled_tests.
+//   Stories of 10000 and 20000 pipelines are disabled, as filling them takes minutes, and so are
+//   the pipeline cache stories, which are there for comparison.  Run them with
+//   --gtest_also_run_disabled_tests.
 //
 //   Metrics, per phase, as .<phase>_<metric>:
 //     - time_to_link_all (ms, deferred draw only): linking every program
@@ -82,6 +84,7 @@
 
 #include "common/debug.h"
 #include "common/system_utils.h"
+#include "common/unsafe_buffers.h"
 #include "util/random_utils.h"
 #include "util/shader_utils.h"
 #include "util/test_blob_cache.h"
@@ -90,6 +93,12 @@ using namespace angle;
 
 namespace
 {
+enum class CacheType
+{
+    PipelineCache,
+    PipelineBinary,
+};
+
 enum class Workload
 {
     DrawImmediately,
@@ -107,7 +116,7 @@ constexpr std::array<CachePhase, 3> kPhases = {CachePhase::Cold, CachePhase::War
                                                CachePhase::Partial};
 
 // Frames are presented every 16.7 ms while loading, as an application presents them, rather than
-// after every draw or not at all.  ANGLE syncs the monolithic cache to the blob cache every 60
+// after every draw or not at all.  ANGLE syncs its pipeline cache to the blob cache every 60
 // frames, so presenting after every draw would sync it far more often than an application does,
 // and not presenting would leave it only the idle frames.
 constexpr double kFrameSeconds = 1.0 / 60.0;
@@ -119,7 +128,8 @@ constexpr int kIdleFrames = 2 * 60;
 constexpr int kSmokeIdleFrames      = 2;
 constexpr size_t kSmokeProgramCount = 20;
 
-// Large enough that the blob cache never evicts
+// Large enough that the blob cache doesn't evict, for most drivers.  A story that outgrows it is
+// skipped.
 constexpr size_t kBlobCacheMaxTotalSize    = 1024 * 1024 * 1024;
 constexpr size_t kBlobCacheMaxTotalEntries = 1000000;
 
@@ -133,6 +143,20 @@ const char *PhaseName(CachePhase phase)
             return "warm";
         case CachePhase::Partial:
             return "partial";
+        default:
+            UNREACHABLE();
+            return "";
+    }
+}
+
+const char *CacheTypeName(CacheType cacheType)
+{
+    switch (cacheType)
+    {
+        case CacheType::PipelineCache:
+            return "pipeline_cache";
+        case CacheType::PipelineBinary:
+            return "pipeline_binary";
         default:
             UNREACHABLE();
             return "";
@@ -453,8 +477,8 @@ GLuint CompileAndLinkProgram(const ProgramSource &source)
 
 struct PipelineBinaryPerfParams final : public RenderTestParams
 {
-    PipelineBinaryPerfParams(Workload workloadIn, size_t programCountIn)
-        : workload(workloadIn), programCount(programCountIn)
+    PipelineBinaryPerfParams(CacheType cacheTypeIn, Workload workloadIn, size_t programCountIn)
+        : cacheType(cacheTypeIn), workload(workloadIn), programCount(programCountIn)
     {
         iterationsPerStep = 1;
         majorVersion      = 3;
@@ -463,18 +487,26 @@ struct PipelineBinaryPerfParams final : public RenderTestParams
         windowHeight      = 256;
 
         eglParameters = egl_platform::VULKAN();
-
-        // ANGLE doesn't sync the monolithic cache by default when it warms pipelines up at link
-        // time, and syncing it is what the monolithic cache stories measure
-        eglParameters.enable(Feature::SyncGlobalPipelineCacheToBlobCache);
-        eglParameters.disable(Feature::PreferPipelineBinaries);
+        switch (cacheType)
+        {
+            case CacheType::PipelineCache:
+                // VkPipelineCache, as ANGLE uses it without pipeline binaries
+                eglParameters.disable(Feature::PreferPipelineBinaries);
+                break;
+            case CacheType::PipelineBinary:
+                eglParameters.enable(Feature::AllowPipelineBinariesForTesting);
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
     }
 
     std::string story() const override
     {
         std::stringstream strstr;
         strstr << RenderTestParams::story() << "_" << programCount << "_" << WorkloadName(workload)
-               << "_monolithic_cache";
+               << "_" << CacheTypeName(cacheType);
         return strstr.str();
     }
 
@@ -484,7 +516,8 @@ struct PipelineBinaryPerfParams final : public RenderTestParams
     {
         std::stringstream strstr;
         strstr << RenderTestParams::story() << "_" << programCount << "_" << WorkloadName(workload)
-               << "_" << partialProgramCount(programCount) << "_partial_monolithic_cache";
+               << "_" << partialProgramCount(programCount) << "_partial_"
+               << CacheTypeName(cacheType);
         return strstr.str();
     }
 
@@ -517,6 +550,7 @@ struct PipelineBinaryPerfParams final : public RenderTestParams
         return programs;
     }
 
+    CacheType cacheType;
     Workload workload;
     size_t programCount;
 };
@@ -640,6 +674,8 @@ class VulkanPipelineBinaryBenchmark : public ANGLERenderTest,
     void drawBenchmark() override;
 
   private:
+    bool verifyCacheConfiguration();
+    bool checkColdPhaseFitInBlobCache(CachePhase phase);
     void registerBlobCache();
     void evictBlobCache();
     void setUpDrawResources();
@@ -724,6 +760,59 @@ VulkanPipelineBinaryBenchmark::VulkanPipelineBinaryBenchmark()
 VulkanPipelineBinaryBenchmark::~VulkanPipelineBinaryBenchmark()
 {
     RemoveTestBlobCacheDirectory(mStorageDir);
+}
+
+// Whether ANGLE enabled a Vulkan device extension.
+bool IsDeviceExtensionEnabledByANGLE(EGLDisplay display, std::string_view name)
+{
+    EGLAttrib device     = 0;
+    EGLAttrib extensions = 0;
+    if (!eglQueryDisplayAttribEXT(display, EGL_DEVICE_EXT, &device) || device == 0 ||
+        !eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(device),
+                                 EGL_VULKAN_DEVICE_EXTENSIONS_ANGLE, &extensions) ||
+        extensions == 0)
+    {
+        return false;
+    }
+
+    const char *const *list = reinterpret_cast<const char *const *>(extensions);
+    bool found              = false;
+    // SAFETY: EGL_VULKAN_DEVICE_EXTENSIONS_ANGLE is a null terminated array of strings.
+    ANGLE_UNSAFE_BUFFERS({
+        for (size_t i = 0; list[i] != nullptr && !found; ++i)
+        {
+            found = name == list[i];
+        }
+    });
+    return found;
+}
+
+// Checked on every phase's Display.  ANGLE enables VK_KHR_pipeline_binary exactly when
+// preferPipelineBinaries survives its own checks, so a device without support skips here.
+bool VulkanPipelineBinaryBenchmark::verifyCacheConfiguration()
+{
+    const bool usesPipelineBinaries =
+        IsDeviceExtensionEnabledByANGLE(eglGetCurrentDisplay(), "VK_KHR_pipeline_binary");
+    switch (GetParam().cacheType)
+    {
+        case CacheType::PipelineCache:
+            if (usesPipelineBinaries)
+            {
+                ADD_FAILURE() << "ANGLE uses pipeline binaries in a story that turns them off";
+                return false;
+            }
+            return true;
+        case CacheType::PipelineBinary:
+            if (!usesPipelineBinaries)
+            {
+                skipTest("ANGLE does not use pipeline binaries on this device");
+                return false;
+            }
+            return true;
+        default:
+            UNREACHABLE();
+            return false;
+    }
 }
 
 // Opening the directory again is what a process restart looks like to the test blob cache.
@@ -968,6 +1057,20 @@ void VulkanPipelineBinaryBenchmark::runPhase(CachePhase phase)
 }
 
 // Records the phase once its Display is gone, so whatever ANGLE was still writing has landed.
+// Skips the story if the cold phase stored more than the blob cache holds.  A later phase would
+// find only part of what the cold phase stored, and so measure a partly cold cache.
+bool VulkanPipelineBinaryBenchmark::checkColdPhaseFitInBlobCache(CachePhase phase)
+{
+    const TestBlobCacheStats stats = GetTestBlobCacheStats();
+    if (phase != CachePhase::Cold || stats.evictions == 0)
+    {
+        return true;
+    }
+    skipTest("The cold phase outgrew the blob cache, which evicted " +
+             std::to_string(stats.evictions) + " entries");
+    return false;
+}
+
 void VulkanPipelineBinaryBenchmark::recordPhase(CachePhase phase)
 {
     DiskUsage usage;
@@ -1011,6 +1114,10 @@ void VulkanPipelineBinaryBenchmark::initializeBenchmark()
 {
     for (CachePhase phase : kPhases)
     {
+        if (!verifyCacheConfiguration())
+        {
+            return;
+        }
         registerBlobCache();
         ASSERT_NO_FATAL_FAILURE(evictBlobCache());
         ASSERT_NO_FATAL_FAILURE(setUpDrawResources());
@@ -1018,7 +1125,7 @@ void VulkanPipelineBinaryBenchmark::initializeBenchmark()
 
         destroyGLWindow();
         ASSERT_NO_FATAL_FAILURE(recordPhase(phase));
-        if (!createGLWindow())
+        if (!createGLWindow() || !checkColdPhaseFitInBlobCache(phase))
         {
             return;
         }
@@ -1043,34 +1150,57 @@ TEST_P(VulkanPipelineBinaryLargeBenchmark, DISABLED_Run)
     run();
 }
 
+class VulkanPipelineBinaryPipelineCacheBenchmark : public VulkanPipelineBinaryBenchmark
+{};
+
+// The same with ANGLE's VkPipelineCache, to compare pipeline binaries with.
+TEST_P(VulkanPipelineBinaryPipelineCacheBenchmark, DISABLED_Run)
+{
+    run();
+}
+
 // Adds a story for each workload.
-void AddStories(size_t programCount, std::vector<PipelineBinaryPerfParams> *stories)
+void AddStories(CacheType cacheType,
+                size_t programCount,
+                std::vector<PipelineBinaryPerfParams> *stories)
 {
     constexpr std::array<Workload, 2> kWorkloads = {Workload::DrawImmediately,
                                                     Workload::DeferredDraw};
     for (Workload workload : kWorkloads)
     {
-        stories->push_back(PipelineBinaryPerfParams(workload, programCount));
+        stories->push_back(PipelineBinaryPerfParams(cacheType, workload, programCount));
     }
 }
 
 std::vector<PipelineBinaryPerfParams> PipelineBinaryPerfStories()
 {
     std::vector<PipelineBinaryPerfParams> stories;
-    AddStories(100, &stories);
-    AddStories(1000, &stories);
+    AddStories(CacheType::PipelineBinary, 100, &stories);
+    AddStories(CacheType::PipelineBinary, 1000, &stories);
     return stories;
 }
 
 std::vector<PipelineBinaryPerfParams> PipelineBinaryLargePerfStories()
 {
     std::vector<PipelineBinaryPerfParams> stories;
-    AddStories(10000, &stories);
-    AddStories(20000, &stories);
+    AddStories(CacheType::PipelineBinary, 10000, &stories);
+    AddStories(CacheType::PipelineBinary, 20000, &stories);
+    return stories;
+}
+
+std::vector<PipelineBinaryPerfParams> PipelineBinaryPipelineCachePerfStories()
+{
+    std::vector<PipelineBinaryPerfParams> stories;
+    AddStories(CacheType::PipelineCache, 100, &stories);
+    AddStories(CacheType::PipelineCache, 1000, &stories);
+    AddStories(CacheType::PipelineCache, 10000, &stories);
+    AddStories(CacheType::PipelineCache, 20000, &stories);
     return stories;
 }
 
 ANGLE_INSTANTIATE_TEST_ARRAY(VulkanPipelineBinaryBenchmark, PipelineBinaryPerfStories());
 ANGLE_INSTANTIATE_TEST_ARRAY(VulkanPipelineBinaryLargeBenchmark, PipelineBinaryLargePerfStories());
+ANGLE_INSTANTIATE_TEST_ARRAY(VulkanPipelineBinaryPipelineCacheBenchmark,
+                             PipelineBinaryPipelineCachePerfStories());
 
 }  // anonymous namespace

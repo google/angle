@@ -45,6 +45,7 @@ struct TestBlobCacheStats
 
 std::string CreateTestBlobCacheDirectory();
 void RemoveTestBlobCacheDirectory(const std::string &dir);
+void OpenTestBlobCacheDirectory(const std::string &dir, const TestBlobCacheLimits &limits);
 void InitTestBlobCache(EGLDisplay display,
                        PFNEGLSETBLOBCACHEFUNCSANDROIDPROC setFuncs,
                        const std::string &dir,

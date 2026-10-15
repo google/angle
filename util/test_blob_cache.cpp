@@ -657,6 +657,17 @@ void RemoveTestBlobCacheDirectory(const std::string &dir)
     }
 }
 
+// Applies |limits| and reads the entries already in |dir|, creating it if needed, as Android does
+// for a new process.  For a Display that already has the callbacks.  Statistics start from zero.
+void OpenTestBlobCacheDirectory(const std::string &dir, const TestBlobCacheLimits &limits)
+{
+    State &state = GetState();
+    // Guards the entries, the files, the limits and the statistics.
+    std::lock_guard<std::mutex> lock(state.mutex);
+    state.limits = limits;
+    OpenDirectoryLocked(state, dir);
+}
+
 // Sets up the cache for a new Display, as Android does for a new process: applies |limits|, reads
 // the entries already in |dir|, creating it if needed, and hands the callbacks to |display| through
 // the caller's eglSetBlobCacheFuncsANDROID.  Called again with the same directory for a later
@@ -671,13 +682,7 @@ void InitTestBlobCache(EGLDisplay display,
                        const TestBlobCacheLimits &limits)
 {
     // Open the directory before the callbacks are handed out, so that they never see a stale one
-    {
-        State &state = GetState();
-        // Guards the entries, the files, the limits and the statistics.
-        std::lock_guard<std::mutex> lock(state.mutex);
-        state.limits = limits;
-        OpenDirectoryLocked(state, dir);
-    }
+    OpenTestBlobCacheDirectory(dir, limits);
 
     if (setFuncs == nullptr)
     {

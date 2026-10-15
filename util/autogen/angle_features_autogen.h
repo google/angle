@@ -70,6 +70,7 @@ enum class Feature
     BottomLeftOriginPresentRegionRectangles,
     BresenhamLineRasterization,
     CacheCompiledShader,
+    CachePipelineBinariesForLinkedPipelines,
     CallClearTwice,
     ClampArrayAccess,
     ClampFragDepth,

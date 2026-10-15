@@ -2456,6 +2456,15 @@
             "issue": "http://anglebug.com/481364092"
         },
         {
+            "name": "cache_pipeline_binaries_for_linked_pipelines",
+            "category": "Features",
+            "description": [
+                "With preferPipelineBinaries, also store the binaries of pipelines linked from graphics ",
+                "pipeline libraries, for drivers that do much of their compiling when linking."
+            ],
+            "issue": "http://anglebug.com/481364092"
+        },
+        {
             "name": "disable_RGB888_recordable_bit",
             "category": "AppWorkarounds",
             "description": [

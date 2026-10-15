@@ -507,6 +507,9 @@ class Program final : public LabeledObject, public angle::Subject
         }
     }
 
+    // Block until post-link tasks are finished.
+    void waitForPostLinkTasks(const Context *context);
+
     // Writes a program's binary to |mBinary|.
     angle::Result serialize(const Context *context);
     const angle::MemoryBuffer &getSerializedBinary() const { return mBinary; }
@@ -566,8 +569,6 @@ class Program final : public LabeledObject, public angle::Subject
 
     // Block until linking is finished and resolve it.
     void resolveLinkImpl(const Context *context);
-    // Block until post-link tasks are finished.
-    void waitForPostLinkTasks(const Context *context);
 
     void postResolveLink(const Context *context);
     void cacheProgramBinaryIfNotAlready(const Context *context);

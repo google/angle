@@ -110,7 +110,9 @@ void VulkanPipelineCachePerfTest::step()
     ssm[gl::ShaderType::Vertex]   = vs;
     ssm[gl::ShaderType::Fragment] = fs;
 
-    spc.init(&pc, nullptr);
+    // No pipeline binaries cache and no mutex: this benchmark drives the pipeline cache directly
+    // from a single thread.
+    spc.init(&pc, nullptr, nullptr);
 
     for (unsigned int iteration = 0; iteration < kIterationsPerStep; ++iteration)
     {
