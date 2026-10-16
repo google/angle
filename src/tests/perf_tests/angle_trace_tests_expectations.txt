@@ -252,6 +252,8 @@
 349994211 IR NVIDIA VULKAN : one_piece_bounty_rush = SKIP
 349994211 IR NVIDIA VULKAN : monster_hunter_now_ar = SKIP
 349994211 IR NVIDIA VULKAN : viking_rise = SKIP
+349994211 IR NVIDIA VULKAN : truck_star = SKIP
+349994211 IR NVIDIA VULKAN : truckers_of_europe_3 = SKIP
 
 349994211 IR LINUX INTEL VULKAN : into_the_dead_2 = SKIP
 
@@ -265,6 +267,7 @@
 349994211 IR WIN INTEL VULKAN : raising_a_goblin = SKIP
 349994211 IR WIN INTEL VULKAN : simcity_buildit = SKIP
 349994211 IR WIN INTEL VULKAN : warcraft_rumble = SKIP
+349994211 IR WIN INTEL VULKAN : run_goddess = SKIP
 
 349994211 IR PIXEL6 VULKAN : command_and_conquer_rivals = SKIP
 349994211 IR PIXEL6 VULKAN : genshin_impact = SKIP
@@ -310,6 +313,7 @@
 349994211 IR PIXEL6 VULKAN : raising_a_goblin = SKIP
 349994211 IR PIXEL6 VULKAN : war_planet_online = SKIP
 349994211 IR PIXEL6 VULKAN : monster_hunter_now_ar = SKIP
+349994211 IR PIXEL6 VULKAN : run_goddess = SKIP
 
 349994211 IR PIXEL10 VULKAN : ace_racer = SKIP
 349994211 IR PIXEL10 VULKAN : arena_breakout = SKIP
