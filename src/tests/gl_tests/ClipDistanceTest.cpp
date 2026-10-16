@@ -4632,5 +4632,4 @@ ANGLE_INSTANTIATE_TEST_COMBINE_1(ClipCullDistanceTest,
                                  PrintToStringParamName,
                                  testing::Bool(),
                                  ANGLE_ALL_TEST_PLATFORMS_ES3,
-                                 ANGLE_ALL_TEST_PLATFORMS_ES31,
-                                 ES31_VULKAN().enable(Feature::SupportsClipCullDistanceInGSAndTS));
+                                 ANGLE_ALL_TEST_PLATFORMS_ES31);

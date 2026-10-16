@@ -1286,13 +1286,7 @@ void Renderer::ensureCapsInitialized() const
     constexpr uint32_t kMaxCullDistancePerSpec                = 8;
     constexpr uint32_t kMaxCombinedClipAndCullDistancePerSpec = 8;
 
-    // TODO: http://anglebug.com/42264006
-    // After implementing EXT_geometry_shader, EXT_clip_cull_distance should be additionally
-    // implemented to support the geometry shader. Until then, EXT_clip_cull_distance is enabled
-    // only in the experimental cases.
-    if ((mFeatures.supportsClipCullDistanceInGSAndTS.enabled ||
-         (!mNativeExtensions.geometryShaderAny() && !mNativeExtensions.tessellationShaderAny())) &&
-        mPhysicalDeviceFeatures.shaderClipDistance &&
+    if (mPhysicalDeviceFeatures.shaderClipDistance &&
         limitsVk.maxClipDistances >= kMaxClipDistancePerSpec)
     {
         // Do not enable GL_APPLE_clip_distance for Samsung devices.

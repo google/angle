@@ -1634,12 +1634,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo supportsClipCullDistanceInGSAndTS = {
-        "supportsClipCullDistanceInGSAndTS",
-        FeatureCategory::VulkanFeatures,
-        &members,
-    };
-
     FeatureInfo supportsMaintenance9 = {
         "supportsMaintenance9",
         FeatureCategory::VulkanFeatures,

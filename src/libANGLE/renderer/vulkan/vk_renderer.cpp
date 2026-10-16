@@ -7304,11 +7304,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsAstcHdr3dTextures,
         mFeatures.supportsTextureCompressionAstcHdr.enabled && CanSupportAstcHdr3D(this));
 
-    // http://anglebug.com/42264006
-    // GL_EXT_clip_cull_distance also adds features to geometry and tessellation shaders, which are
-    // currently disabled.
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsClipCullDistanceInGSAndTS, false);
-
     // http://anglebug.com/442950569
     // feature is currently experimental (i.e. dont default enable even if device supports it)
     // keep it as an opt-in override instead

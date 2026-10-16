@@ -379,7 +379,6 @@ enum class Feature
     SupportsBufferDeviceAddress,
     SupportsClFp16,
     SupportsClFp64,
-    SupportsClipCullDistanceInGSAndTS,
     SupportsClKhrSubgroups,
     SupportsColorWriteEnable,
     SupportsComputeTranscodeEtcToBc,

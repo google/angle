@@ -63,10 +63,6 @@
 40096882 VULKAN NVIDIA : KHR-GLES3.packed_pixels.rectangle.rg8_snorm = SKIP
 40096882 VULKAN NVIDIA : KHR-GLES3.packed_pixels.rectangle.rgba8_snorm = SKIP
 
-// Failures related to clip/cull distance in geometry/tessellation shaders
-42264006 VULKAN : KHR-GLES3.cull_distance.functional_test_item_5_* = SKIP
-42264006 VULKAN : KHR-GLES3.cull_distance.functional_test_item_6_* = SKIP
-
 // New failures with latest dEQP roll (2020-04-28)
 42263198 SWIFTSHADER : KHR-GLES3.core.nearest_edge.offset_left = FAIL
 

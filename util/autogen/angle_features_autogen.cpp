@@ -379,7 +379,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsBufferDeviceAddress, "supportsBufferDeviceAddress"},
     {Feature::SupportsClFp16, "supportsClFp16"},
     {Feature::SupportsClFp64, "supportsClFp64"},
-    {Feature::SupportsClipCullDistanceInGSAndTS, "supportsClipCullDistanceInGSAndTS"},
     {Feature::SupportsClKhrSubgroups, "supportsClKhrSubgroups"},
     {Feature::SupportsColorWriteEnable, "supportsColorWriteEnable"},
     {Feature::SupportsComputeTranscodeEtcToBc, "supportsComputeTranscodeEtcToBc"},
