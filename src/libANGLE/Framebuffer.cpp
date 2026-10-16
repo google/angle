@@ -669,6 +669,39 @@ bool FramebufferState::colorAttachmentsAreUniqueImages() const
             {
                 return false;
             }
+
+            // Also check if two attachments on the same texture and mip level have overlapping
+            // layer ranges. For example, glFramebufferTextureMultiviewOVR can attach a range of
+            // layers [baseViewIndex, baseViewIndex + numViews) from a 2D array texture. Even if
+            // two attachments have different baseViewIndex values (so firstAttachment !=
+            // secondAttachment), their layer ranges can still overlap (e.g. layers [0, 2) and
+            // [1, 3) both include layer 1).
+            if (firstAttachment.type() == GL_TEXTURE && secondAttachment.type() == GL_TEXTURE &&
+                firstAttachment.getResource() == secondAttachment.getResource())
+            {
+                const ImageIndex &firstIndex  = firstAttachment.getTextureImageIndex();
+                const ImageIndex &secondIndex = secondAttachment.getTextureImageIndex();
+                if (firstIndex.getLevelIndex() == secondIndex.getLevelIndex())
+                {
+                    // If either attachment covers the entire mip level rather than specific
+                    // layer(s), they must overlap.
+                    if (!firstIndex.hasLayer() || !secondIndex.hasLayer())
+                    {
+                        return false;
+                    }
+
+                    // Check whether the half-open layer intervals [firstStart, firstEnd) and
+                    // [secondStart, secondEnd) overlap.
+                    const GLint firstStart  = firstIndex.getLayerIndex();
+                    const GLint firstEnd    = firstStart + firstIndex.getLayerCount();
+                    const GLint secondStart = secondIndex.getLayerIndex();
+                    const GLint secondEnd   = secondStart + secondIndex.getLayerCount();
+                    if (firstStart < secondEnd && secondStart < firstEnd)
+                    {
+                        return false;
+                    }
+                }
+            }
         }
     }
 

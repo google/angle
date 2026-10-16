@@ -3198,6 +3198,16 @@
 // Failures of new tests which should be fixed.
 550607402 WIN NVIDIA WGPU : MipmapTestES3.GenerateMipmapBaseLevelOutOfRangeImmutableTexture/* = SKIP
 
+// D3D11 does not support mixing 3D and non-3D attachments on the same framebuffer.
+574035865 D3D11 : FramebufferTest_ES3.AttachmentWith3DLayers/* = SKIP
+
+// OpenGL multiview emulation attaches the entire mip level via glFramebufferTexture and uses a
+// single baseViewIndex uniform (from the first attachment) to offset gl_Layer across all
+// attachments, so it cannot render to different baseViewIndex ranges on different attachments
+// (b/575564312).
+575564312 OPENGL : WebGL2CompatibilityTest.UniqueFramebufferAttachmentsMultiview/* = SKIP
+575564312 OPENGL : HardenedContextTest.UniqueFramebufferAttachmentsMultiview/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
