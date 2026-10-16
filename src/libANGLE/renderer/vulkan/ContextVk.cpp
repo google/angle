@@ -5436,6 +5436,30 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         mIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
         resetCurrentGraphicsPipeline();
 
+        // Only the gl_ClipDistance output of the last pre-rasterization stage is clipped against.
+        // The values written by the earlier stages are only observable by the following stages
+        // (through gl_in). Let the shaders know which stage is the last one, so that only that
+        // stage zeroes out the disabled clip distances.
+        sh::vk::LastPreRasterizationStage lastPreRasterizationStage =
+            sh::vk::LastPreRasterizationStage::Vertex;
+        switch (gl::GetLastPreFragmentStage(executable->getLinkedShaderStages()))
+        {
+            case gl::ShaderType::Geometry:
+                lastPreRasterizationStage = sh::vk::LastPreRasterizationStage::Geometry;
+                break;
+            case gl::ShaderType::TessEvaluation:
+                lastPreRasterizationStage =
+                    sh::vk::LastPreRasterizationStage::TessellationEvaluation;
+                break;
+            default:
+                break;
+        }
+        if (mGraphicsDriverUniforms.updateLastPreRasterizationStage(
+                static_cast<uint32_t>(lastPreRasterizationStage)))
+        {
+            mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+        }
+
         const vk::FramebufferFetchMode framebufferFetchMode =
             vk::GetProgramFramebufferFetchMode(executable);
         const bool hasColorFramebufferFetch =

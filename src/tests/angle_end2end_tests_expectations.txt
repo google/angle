@@ -1888,8 +1888,6 @@
 42266123 VULKAN : EXTMultisampleCompatibilityTest.* = SKIP
 
 // Missing geometry & tesselation shader interactions with clip / cull distance
-42264006 VULKAN : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
-42264006 VULKAN : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
 42264006 OPENGL : ClipCullDistanceTest.*GeometryShader/* = SKIP
 42264006 OPENGL : ClipCullDistanceTest.*TessellationShader*/* = SKIP
 42264006 GLES   : ClipCullDistanceTest.*GeometryShader/* = SKIP
