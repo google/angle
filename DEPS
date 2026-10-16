@@ -352,10 +352,10 @@ vars = {
   'checkout_angle_restricted_trace_junes_journey': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kartrider_rush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kentucky_route_zero': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_kingdom_guard': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_kingdom_guard': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kingshot': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_klondike_adventures': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_knife_hit': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_knife_hit': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_knives_out': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_lands_of_jail': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_last_shelter_survival': 'checkout_extra_traces',
@@ -403,7 +403,7 @@ vars = {
   'checkout_angle_restricted_trace_mobile_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_modern_combat_5': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_monopoly_go': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_monster_hunter_now_ar': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_monster_hunter_now_ar': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_monster_hunter_stories': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_monster_strike': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_monument_valley': 'checkout_extra_traces',
@@ -530,6 +530,7 @@ vars = {
   'checkout_angle_restricted_trace_tesla': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_teslagrad': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_tessellation': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_the_battle_cats': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_the_gardens_between': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_the_sims_mobile': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_the_witcher_monster_slayer': 'checkout_extra_traces',
@@ -581,7 +582,9 @@ vars = {
   'checkout_angle_restricted_trace_zenonia_4': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zillow': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zombie_smasher': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_zombie_tsunami': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_zombie_waves': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_zynga_poker_texas_holdem': 'checkout_angle_restricted_traces',
   # === ANGLE Restricted Trace Generated Var End ===
 
   'checkout_angle_perfetto': 'checkout_angle_restricted_traces',
@@ -5139,6 +5142,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_tessellation',
   },
+  'src/tests/restricted_traces/the_battle_cats': {
+      'packages': [
+        {
+            'package': 'angle/traces/the_battle_cats',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_the_battle_cats',
+  },
   'src/tests/restricted_traces/the_gardens_between': {
       'packages': [
         {
@@ -5649,6 +5662,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_zombie_smasher',
   },
+  'src/tests/restricted_traces/zombie_tsunami': {
+      'packages': [
+        {
+            'package': 'angle/traces/zombie_tsunami',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_zombie_tsunami',
+  },
   'src/tests/restricted_traces/zombie_waves': {
       'packages': [
         {
@@ -5658,6 +5681,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_zombie_waves',
+  },
+  'src/tests/restricted_traces/zynga_poker_texas_holdem': {
+      'packages': [
+        {
+            'package': 'angle/traces/zynga_poker_texas_holdem',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_zynga_poker_texas_holdem',
   },
   # === ANGLE Restricted Trace Generated Code End ===
 

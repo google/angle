@@ -195,10 +195,10 @@
     "junes_journey 5 ci",
     "kartrider_rush 5 ci",
     "kentucky_route_zero 1 ci",
-    "kingdom_guard 1",
+    "kingdom_guard 1 ci",
     "kingshot 1 ci",
     "klondike_adventures 5 ci",
-    "knife_hit 1",
+    "knife_hit 1 ci",
     "knives_out 1 ci",
     "lands_of_jail 1 ci",
     "last_shelter_survival 2 ci",
@@ -246,7 +246,7 @@
     "mobile_legends 5 ci",
     "modern_combat_5 3 ci",
     "monopoly_go 1 ci",
-    "monster_hunter_now_ar 1",
+    "monster_hunter_now_ar 1 ci",
     "monster_hunter_stories 1 ci representative",
     "monster_strike 2 ci",
     "monument_valley 1 ci",
@@ -373,6 +373,7 @@
     "tesla 1 ci",
     "teslagrad 1 ci",
     "tessellation 1 ci representative smoke",
+    "the_battle_cats 1",
     "the_gardens_between 1 ci",
     "the_sims_mobile 1 ci representative",
     "the_witcher_monster_slayer 1 ci",
@@ -424,6 +425,8 @@
     "zenonia_4 1 ci",
     "zillow 5 ci",
     "zombie_smasher 2 ci",
-    "zombie_waves 1 ci"
+    "zombie_tsunami 1",
+    "zombie_waves 1 ci",
+    "zynga_poker_texas_holdem 1"
   ]
 }
