@@ -3044,6 +3044,9 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                     primitivesGeneratedQueryWithRasterizerDiscard
 //                                                                                        (property)
 // - VK_EXT_primitive_topology_list_restart:           primitiveTopologyListRestart (feature)
+// - VK_EXT_extended_dynamic_state3:                   (features)
+//                                                     dynamicPrimitiveTopologyUnrestricted
+//                                                                                        (property)
 // - VK_EXT_graphics_pipeline_library:                 graphicsPipelineLibrary (feature),
 //                                                     graphicsPipelineLibraryFastLinking (property)
 // - VK_KHR_fragment_shading_rate:                     pipelineFragmentShadingRate (feature)
@@ -3064,20 +3067,19 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                     hasRender (property)
 // - VK_ANDROID_external_format_resolve:               externalFormatResolve (feature)
 // - VK_EXT_vertex_input_dynamic_state:                vertexInputDynamicState (feature)
-// - VK_EXT_shader_atomic_float                        shaderImageFloat32Atomics (feature)
-// - VK_EXT_image_compression_control                  imageCompressionControl (feature)
-// - VK_EXT_image_compression_control_swapchain        imageCompressionControlSwapchain (feature)
-// - VK_EXT_device_fault                               deviceFault (feature),
+// - VK_EXT_shader_atomic_float:                       shaderImageFloat32Atomics (feature)
+// - VK_EXT_image_compression_control:                 imageCompressionControl (feature)
+// - VK_EXT_image_compression_control_swapchain:       imageCompressionControlSwapchain (feature)
+// - VK_EXT_device_fault:                              deviceFault (feature),
 //                                                     deviceFaultVendorBinary (feature)
-// - VK_EXT_astc_decode_mode                           decodeModeSharedExponent (feature)
-// - VK_KHR_unified_image_layouts                      unifiedImageLayouts (feature)
-// - VK_EXT_external_memory_host                       minImportedHostPointerAlignment (property)
-// - VK_QCOM_tile_memory_heap                          tileMemoryHeapFeatures (feature)
+// - VK_EXT_astc_decode_mode:                          decodeModeSharedExponent (feature)
+// - VK_KHR_unified_image_layouts:                     unifiedImageLayouts (feature)
+// - VK_EXT_external_memory_host:                      minImportedHostPointerAlignment (property)
+// - VK_QCOM_tile_memory_heap:                         tileMemoryHeapFeatures (feature)
 //                                                     tileMemoryHeapProperties (property)
-// - VK_EXT_texture_compression_astc_3d                textureCompressionASTC_3D (feature)
-// - VK_AMD_shader_core_properties
+// - VK_EXT_texture_compression_astc_3d:               textureCompressionASTC_3D (feature)
+// - VK_AMD_shader_core_properties:                    (properties)
 //
-
 void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     const vk::ExtensionNameList &deviceExtensionNames,
     VkPhysicalDeviceFeatures2KHR *deviceFeatures,
@@ -3133,6 +3135,12 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     if (ExtensionFound(VK_EXT_PRIMITIVE_TOPOLOGY_LIST_RESTART_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mPrimitiveTopologyListRestartFeatures);
+    }
+
+    if (ExtensionFound(VK_EXT_EXTENDED_DYNAMIC_STATE_3_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mExtendedDynamicState3Features);
+        vk::AddToPNextChain(deviceProperties, &mExtendedDynamicState3Properties);
     }
 
     if (ExtensionFound(VK_EXT_GRAPHICS_PIPELINE_LIBRARY_EXTENSION_NAME, deviceExtensionNames))
@@ -3655,6 +3663,14 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mExtendedDynamicState2Features.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_2_FEATURES_EXT;
 
+    mExtendedDynamicState3Features = {};
+    mExtendedDynamicState3Features.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT;
+
+    mExtendedDynamicState3Properties = {};
+    mExtendedDynamicState3Properties.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_PROPERTIES_EXT;
+
     mGraphicsPipelineLibraryFeatures = {};
     mGraphicsPipelineLibraryFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT;
@@ -3879,6 +3895,8 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mPrimitiveTopologyListRestartFeatures.pNext       = nullptr;
     mExtendedDynamicStateFeatures.pNext               = nullptr;
     mExtendedDynamicState2Features.pNext              = nullptr;
+    mExtendedDynamicState3Features.pNext              = nullptr;
+    mExtendedDynamicState3Properties.pNext            = nullptr;
     mGraphicsPipelineLibraryFeatures.pNext            = nullptr;
     mGraphicsPipelineLibraryProperties.pNext          = nullptr;
     mVertexInputDynamicStateFeatures.pNext            = nullptr;
@@ -4094,6 +4112,12 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mBlendOperationAdvancedFeatures);
+    }
+
+    if (mFeatures.supportsExtendedDynamicState3.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_EXT_EXTENDED_DYNAMIC_STATE_3_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mExtendedDynamicState3Features);
     }
 
     if (mFeatures.supportsGraphicsPipelineLibrary.enabled)
@@ -4648,6 +4672,10 @@ void Renderer::initDeviceExtensionEntryPoints()
         // dynamic state (only from the extension) is used, need to load the entry points from the
         // extension
         InitExtendedDynamicState2EXTFunctions(mDevice);
+    }
+    if (getFeatures().supportsExtendedDynamicState3.enabled)
+    {
+        InitExtendedDynamicState3EXTFunctions(mDevice);
     }
     if (mFeatures.supportsFragmentShadingRate.enabled)
     {
@@ -6537,6 +6565,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE &&
             !(IsLinux() && isIntel && driverVersion < angle::VersionTriple(22, 2, 0)) &&
             !(IsAndroid() && isGalaxyS23));
+
+    // VK_EXT_extended_dynamic_state3 has lots of features, all of which are optional.  So
+    // supportsExtendedDynamicState3 only checks for the presence of the extension.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsExtendedDynamicState3,
+        ExtensionFound(VK_EXT_EXTENDED_DYNAMIC_STATE_3_EXTENSION_NAME, deviceExtensionNames));
 
     // Older Samsung drivers with version < 24.0.0 have a bug in imageless framebuffer support.
     const bool isSamsungDriverWithImagelessFramebufferBug =

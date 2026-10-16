@@ -393,6 +393,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsDynamicRenderingLocalRead, "supportsDynamicRenderingLocalRead"},
     {Feature::SupportsExtendedDynamicState, "supportsExtendedDynamicState"},
     {Feature::SupportsExtendedDynamicState2, "supportsExtendedDynamicState2"},
+    {Feature::SupportsExtendedDynamicState3, "supportsExtendedDynamicState3"},
     {Feature::SupportsExternalFenceCapabilities, "supportsExternalFenceCapabilities"},
     {Feature::SupportsExternalFenceFd, "supportsExternalFenceFd"},
     {Feature::SupportsExternalFormatResolve, "supportsExternalFormatResolve"},

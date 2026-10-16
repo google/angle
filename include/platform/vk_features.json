@@ -1035,6 +1035,14 @@
             "issue": "http://anglebug.com/42264446"
         },
         {
+            "name": "supports_extended_dynamic_state3",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_extended_dynamic_state3 extension"
+            ],
+            "issue": "http://anglebug.com/42264446"
+        },
+        {
             "name": "use_primitive_restart_enable_dynamic_state",
             "category": "Workarounds",
             "description": [

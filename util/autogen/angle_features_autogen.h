@@ -393,6 +393,7 @@ enum class Feature
     SupportsDynamicRenderingLocalRead,
     SupportsExtendedDynamicState,
     SupportsExtendedDynamicState2,
+    SupportsExtendedDynamicState3,
     SupportsExternalFenceCapabilities,
     SupportsExternalFenceFd,
     SupportsExternalFormatResolve,

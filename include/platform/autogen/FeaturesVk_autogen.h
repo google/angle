@@ -800,6 +800,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsExtendedDynamicState3 = {
+        "supportsExtendedDynamicState3",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo usePrimitiveRestartEnableDynamicState = {
         "usePrimitiveRestartEnableDynamicState",
         FeatureCategory::VulkanWorkarounds,
