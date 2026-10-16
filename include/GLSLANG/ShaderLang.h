@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 424
+#define ANGLE_SH_VERSION 425
 
 enum ShShaderSpec
 {
@@ -84,10 +84,6 @@ struct ShCompileOptionsMetal
     int UBOArgumentBufferBindingIndex = 0;
 
     bool generateShareableShaders = false;
-
-    // Insert asm("") instructions into loop bodies, telling the compiler that all loops have side
-    // effects and cannot be optimized out.
-    bool injectAsmStatementIntoLoopBodies = false;
 };
 
 // For ANGLE_shader_pixel_local_storage.

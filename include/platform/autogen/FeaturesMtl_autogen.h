@@ -326,12 +326,6 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
-    FeatureInfo injectAsmStatementIntoLoopBodies = {
-        "injectAsmStatementIntoLoopBodies",
-        FeatureCategory::MetalFeatures,
-        &members,
-    };
-
     FeatureInfo allocateNonZeroTextures = {
         "allocateNonZeroTextures",
         FeatureCategory::MetalFeatures,
