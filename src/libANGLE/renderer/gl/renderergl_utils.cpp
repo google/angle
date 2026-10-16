@@ -2845,6 +2845,9 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     ANGLE_FEATURE_CONDITION(features, noperspectiveInterpolationBrokenWithPassthroughShaders,
                             isQualcomm);
     ANGLE_FEATURE_CONDITION(features, setNeedInitOnInvalidation, true);
+
+    // PowerVR compiler may crash when encountering an infinite loop
+    ANGLE_FEATURE_CONDITION(features, ensureLoopForwardProgress, isPowerVR);
 }
 
 void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::FeaturesGL *features)

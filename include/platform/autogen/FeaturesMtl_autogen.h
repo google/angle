@@ -332,12 +332,6 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
-    FeatureInfo ensureLoopForwardProgress = {
-        "ensureLoopForwardProgress",
-        FeatureCategory::MetalFeatures,
-        &members,
-    };
-
     FeatureInfo allocateNonZeroTextures = {
         "allocateNonZeroTextures",
         FeatureCategory::MetalFeatures,
