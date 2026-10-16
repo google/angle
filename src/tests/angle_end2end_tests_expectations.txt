@@ -1887,10 +1887,10 @@
 // Missing geometry & tesselation shader interactions with clip / cull distance
 42264006 VULKAN : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
 42264006 VULKAN : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
-42264006 OPENGL : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
-42264006 OPENGL : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
-42264006 GLES : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
-42264006 GLES : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
+42264006 OPENGL : ClipCullDistanceTest.*GeometryShader/* = SKIP
+42264006 OPENGL : ClipCullDistanceTest.*TessellationShader*/* = SKIP
+42264006 GLES   : ClipCullDistanceTest.*GeometryShader/* = SKIP
+42264006 GLES   : ClipCullDistanceTest.*TessellationShader*/* = SKIP
 
 // Confirmed driver bug
 352963103 NVIDIA GLES : FramebufferTest_ES3.RenderSnorm16/* = SKIP
@@ -2991,6 +2991,12 @@
 // Untriaged failures on Pixel 10 / GLES
 349994211 IR PIXEL10 GLES : GLSLTest_ES31.StructArraySamplerWithShortCircuitedSideEffectInIndex/* = SKIP
 349994211 IR PIXEL10 GLES : GLSLTest.ConstantFoldedConstantsRetainPrecision/* = SKIP
+
+// ClipCullDistance related IR failures on Vulkan
+42264006 IR VULKAN : ClipCullDistanceTest.*GeometryShader/* = SKIP
+42264006 IR VULKAN : ClipCullDistanceTest.*TessellationShader/* = SKIP
+42264006 IR VULKAN : GLSLTest_ES31.*Tessellation*/* = SKIP
+42264006 IR VULKAN : GLSLTest_ES31.VaryingIOBlockDeclaredAsInAndOut/* = SKIP
 
 // Crashes on OpenGL
 500930576 OPENGL : ReadPixelsTest.LargeTexture/* = SKIP

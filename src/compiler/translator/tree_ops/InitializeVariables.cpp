@@ -71,7 +71,16 @@ void AddZeroInitSequence(const TIntermTyped *initializedNode,
         const TFieldList &fieldList           = interfaceBlock.fields();
         for (size_t fieldIndex = 0; fieldIndex < fieldList.size(); ++fieldIndex)
         {
-            const TField &field         = *fieldList[fieldIndex];
+            const TField &field = *fieldList[fieldIndex];
+
+            // Skip gl_PerVertex fields
+            if (field.type()->getQualifier() == EvqPointSize ||
+                field.type()->getQualifier() == EvqClipDistance ||
+                field.type()->getQualifier() == EvqCullDistance)
+            {
+                continue;
+            }
+
             TIntermTyped *fieldIndexRef = CreateIndexNode(static_cast<int>(fieldIndex));
             TIntermTyped *fieldReference =
                 new TIntermBinary(TOperator::EOpIndexDirectInterfaceBlock,
