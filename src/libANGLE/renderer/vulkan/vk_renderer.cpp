@@ -2922,6 +2922,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
                   static_cast<size_t>(limitsVk.minStorageBufferOffsetAlignment),
                   static_cast<size_t>(limitsVk.minTexelBufferOffsetAlignment),
                   static_cast<size_t>(limitsVk.minMemoryMapAlignment),
+                  static_cast<size_t>(limitsVk.nonCoherentAtomSize),
                   static_cast<size_t>(defaultBufferMemoryRequirements.alignment)});
 
     // Initialize staging buffer memory type index and alignment.
