@@ -6881,12 +6881,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             mFeatures.supportsDynamicRendering.enabled &&
                                 mMaintenance5Features.maintenance5 == VK_TRUE);
 
-    // Disabled on Nvidia driver due to a bug with attachment location mapping, resulting in
+    // Disabled on older Nvidia drivers due to a bug with attachment location mapping, resulting in
     // incorrect rendering in the presence of gaps in locations.  http://anglebug.com/372883691.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsDynamicRenderingLocalRead,
         mFeatures.supportsDynamicRendering.enabled &&
-            mDynamicRenderingLocalReadFeatures.dynamicRenderingLocalRead == VK_TRUE && !isNvidia);
+            mDynamicRenderingLocalReadFeatures.dynamicRenderingLocalRead == VK_TRUE &&
+            !(isNvidia && driverVersion < angle::VersionTriple(596, 8, 0)));
 
     // Using dynamic rendering when VK_KHR_dynamic_rendering_local_read is available, because that's
     // needed for framebuffer fetch, MSRTT and advanced blend emulation.
