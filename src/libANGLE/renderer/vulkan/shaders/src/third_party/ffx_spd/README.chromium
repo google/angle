@@ -15,3 +15,13 @@ A single-pass downsampler used to generate texture mipmaps.
 
 Local Modifications:
 None
+
+Update instructions:
+1. Change the commits in crowbar.txtpb and Version and Revision above,
+   then run from this directory:
+   crowbar build --no-dry-run ./
+2. The Vulkan internal shaders include src/ffx_a.h and src/ffx_spd.h.
+   Regenerate them from the ANGLE root:
+   scripts/run_code_generation.py
+   If the SPD callback API changed, adapt ../../GenerateMipmap.comp
+   first.
