@@ -193,7 +193,7 @@ constexpr uint8_t kGenerateMipmap_comp_00000006[] = {
 //     uint levelCount;
 // } params;
 //
-// #line 1 "shaders/src/third_party/ffx_spd/ffx_a.h"
+// #line 1 "shaders/src/third_party/ffx_spd/src/ffx_a.h"
 //
 // #extension GL_EXT_shader_16bit_storage : require
 // #extension GL_EXT_shader_explicit_arithmetic_types : require
@@ -541,7 +541,7 @@ constexpr uint8_t kGenerateMipmap_comp_00000006[] = {
 //     return(v0 + v1 + v2 + v3)* float16_t(0.25);
 // }
 //
-// #line 1 "shaders/src/third_party/ffx_spd/ffx_spd.h"
+// #line 1 "shaders/src/third_party/ffx_spd/src/ffx_spd.h"
 //
 //     vec4 SpdLoadSourceImage(ivec2 p){ return vec4(0.0, 0.0, 0.0, 0.0);}
 //     vec4 SpdLoad(ivec2 p){ return vec4(0.0, 0.0, 0.0, 0.0);}

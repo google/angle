@@ -186,7 +186,7 @@ constexpr uint8_t kGenerateMipmap_comp_00000004[] = {
 //     uint levelCount;
 // } params;
 //
-// #line 1 "shaders/src/third_party/ffx_spd/ffx_a.h"
+// #line 1 "shaders/src/third_party/ffx_spd/src/ffx_a.h"
 //
 //    float AF1_x(float a){ return float(a);}
 //    vec2 AF2_x(float a){ return vec2(a, a);}
@@ -419,7 +419,7 @@ constexpr uint8_t kGenerateMipmap_comp_00000004[] = {
 //     return(v0 + v1 + v2 + v3)* 0.25;
 // }
 //
-// #line 1 "shaders/src/third_party/ffx_spd/ffx_spd.h"
+// #line 1 "shaders/src/third_party/ffx_spd/src/ffx_spd.h"
 //
 // #extension GL_KHR_shader_subgroup_quad : require
 //
