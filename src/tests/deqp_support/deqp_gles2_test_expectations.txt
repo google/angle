@@ -330,7 +330,6 @@
 356399840 WGPU : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.fbo.render.resize.*_stencil_index8 = FAIL
 356399840 WGPU : dEQP-GLES2.functional.fbo.render.recreate_*_stencil_index8 = FAIL
-356399840 WGPU : dEQP-GLES2.functional.fbo.render.texsubimage.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.fbo.render.stencil_clear.tex2d_rgb_stencil_index8 = FAIL
 356399840 WGPU : dEQP-GLES2.functional.fbo.render.stencil_clear.rbo_rgb565_stencil_index8 = FAIL
 370690274 WGPU : dEQP-GLES2.functional.fragment_ops.depth_stencil.* = FAIL
@@ -394,7 +393,10 @@
 389145696 WGPU : dEQP-GLES2.functional.texture.mipmap.2d.generate.la88* = SKIP
 389145696 WGPU : dEQP-GLES2.functional.texture.format.* = SKIP
 389145696 WGPU : dEQP-GLES2.functional.texture.size.* = SKIP
-389145696 WGPU : dEQP-GLES2.functional.texture.specification.* = SKIP
+389145696 WGPU : dEQP-GLES2.functional.texture.specification.basic_copytex* = FAIL
+389145696 WGPU : dEQP-GLES2.functional.texture.specification.random_teximage2d.* = FAIL
+389145696 WGPU : dEQP-GLES2.functional.texture.specification.*.*a8* = FAIL
+389145696 WGPU : dEQP-GLES2.functional.texture.specification.*.*l8* = FAIL
 389145696 WGPU : dEQP-GLES2.functional.texture.completeness.* = SKIP
 389145696 WGPU : dEQP-GLES2.functional.texture.vertex.* = SKIP
 356399840 WGPU : dEQP-GLES2.functional.uniform_api.* = FAIL

@@ -2542,7 +2542,6 @@
 42266974 WGPU : Texture2DTest.Tex* = SKIP
 42266974 WGPU : Texture2DTest.Upload* = SKIP
 42266974 WGPU : Texture2DTest.*Superseding* = SKIP
-42266974 WGPU : Texture2DTest.*Copy* = SKIP
 529276211 WGPU : MipmapTestES3.GenerateMipmapPreservesOutOfRangeMips/* = SKIP
 389145696 WGPU : MipmapTestES3.GenerateMipmapCubeBaseLevel/* = SKIP
 389145696 WGPU : MipmapTestES3.Generate3DMipmapRespecification/* = SKIP
@@ -2584,7 +2583,6 @@
 42266907 WGPU : BlitFramebufferTest.BlitStencilScissoredScaled/* = SKIP
 42266907 WGPU : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
 42266907 WGPU : BlitFramebufferTest.Blit2ArrayTo3D/* = SKIP
-42266907 WGPU : SimpleStateChangeTest.TexSubImageOnTextureBoundToFrambuffer/* = SKIP
 42266907 WGPU : DebugMarkerTest.Rendering/* = SKIP
 42266907 WGPU : DepthStencilFormatsTest.DepthBuffer16/* = SKIP
 42266907 WGPU : DepthStencilTest.StencilOnlyEmulatedWithPacked/* = SKIP
@@ -2666,7 +2664,6 @@
 42266907 WGPU : SimpleStateChangeTest.DrawElementsThenDrawElementsWholeNewIndices/* = SKIP
 42266907 WGPU : SimpleStateChangeTest.DrawElementsUBYTEX2ThenDrawElementsUSHORT/* = SKIP
 42266907 WGPU : SimpleStateChangeTest.DrawRepeatUnalignedVboChange/* = SKIP
-42266907 WGPU : SimpleStateChangeTest.DrawWithTextureTexSubImageThenDrawAgain/* = SKIP
 42266907 WGPU : SimpleStateChangeTest.FboEarlyCullFaceBackCCWState/* = SKIP
 42266907 WGPU : SimpleStateChangeTest.FboEarlyCullFaceBackCWState/* = SKIP
 42266907 WGPU : SimpleStateChangeTest.RebindTranslatedAttribute/* = SKIP
@@ -2740,9 +2737,6 @@
 42266907 WGPU : WebGLReadOutsideFramebufferTest.CopyTexSubImage2D/* = SKIP
 42266907 WGPU : WebGLReadOutsideFramebufferTest.CopyTexImage2D/* = SKIP
 
-// 42267100 failures are due to the shader (which uses textures) failing to compile
-42267100 WGPU : Texture2DTest.NegativeAPISubImage* = SKIP
-42267100 WGPU : Texture2DTest.ZeroSizedUploads* = SKIP
 360083331 LINUX INTEL WGPU : RendererTest.BufferData/* = SKIP
 360083331 LINUX INTEL WGPU : RendererTest.RequestedRendererCreated/* = SKIP
 360083331 LINUX INTEL WGPU : Texture2DTest.NPOTSubImageParameters/* = SKIP
