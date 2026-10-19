@@ -1073,6 +1073,299 @@ TEST_P(RobustResourceInitTestES3, ClearThenInvalidateThenReadBack)
     }
 }
 
+// Calling invalidate on uninitialized texture should produce black (the init color for RGB).
+TEST_P(RobustResourceInitTestES3, InvalidateUndefinedThenReadBack)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // Initialize a framebuffer bound to an RGB8 texture.
+    constexpr size_t kSize = 16;
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, kSize, kSize);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Invalidate the color attachment immediately.
+    GLenum attachmentToInvalidate = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &attachmentToInvalidate);
+
+    // The robust clear should still have been applied to the FBO.
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::black);
+}
+
+// Calling invalidate on an uninitialized RGB8 texture followed by blending using the destination
+// alpha should produce the correct color from the shader.
+TEST_P(RobustResourceInitTestES3, InvalidateUndefinedThenBlend)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // Initialize a framebuffer bound to an RGB8 texture.
+    constexpr size_t kSize = 16;
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, kSize, kSize);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Invalidate the color attachment immediately.
+    GLenum attachmentToInvalidate = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &attachmentToInvalidate);
+
+    // Enable blend and draw with green to make sure the alpha component is correctly set to 1.
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glViewport(0, 0, kSize, kSize);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA);
+    drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+}
+
+// Calling invalidate on uninitialized depth-only renderbuffer should produce 1.0 (the robust init
+// depth).
+TEST_P(RobustResourceInitTestES3, InvalidateUndefinedThenReadBackDepthOnly)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr size_t kSize = 16;
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLRenderbuffer rbDepth;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbDepth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, kSize, kSize);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbDepth);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLenum attachmentToInvalidate = GL_DEPTH_ATTACHMENT;
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &attachmentToInvalidate);
+
+    // The robust clear should still have been applied to the FBO.
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glViewport(0, 0, kSize, kSize);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_EQUAL);
+    drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 1.0f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+}
+
+// Calling invalidate on uninitialized stencil-only renderbuffer should produce 0 (the robust init
+// stencil).
+TEST_P(RobustResourceInitTestES3, InvalidateUndefinedThenReadBackStencilOnly)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr size_t kSize = 16;
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLRenderbuffer rbStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, kSize, kSize);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbStencil);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLenum attachmentToInvalidate = GL_STENCIL_ATTACHMENT;
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &attachmentToInvalidate);
+
+    // The robust clear should still have been applied to the FBO.
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glViewport(0, 0, kSize, kSize);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x00, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+}
+
+// Calling invalidate after clear and re-dirtying should either produce the color of the clear call
+// (invalidate didn't happen) or black (the init color for RGB).
+TEST_P(RobustResourceInitTestES3, ClearThenRedirtyThenInvalidateThenReadBack)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // Initialize a framebuffer bound to an RGB8 texture and clear it to red.
+    constexpr size_t kSize = 16;
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, kSize, kSize);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Re-dirty the attachment, and invalidate it immediately.
+    GLenum attachmentToInvalidate = GL_COLOR_ATTACHMENT0;
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &attachmentToInvalidate);
+
+    // Either the clear above has been applied to the FBO, or the robust clear is applied when its
+    // color attachment is invalidated.
+    std::vector<GLColor> outputColors(kSize * kSize);
+    glReadPixels(0, 0, kSize, kSize, GL_RGBA, GL_UNSIGNED_BYTE, outputColors.data());
+
+    bool allPixelsRed   = true;
+    bool allPixelsBlack = true;
+    for (GLColor &color : outputColors)
+    {
+        if (color != GLColor::red)
+        {
+            allPixelsRed = false;
+        }
+        if (color != GLColor::black)
+        {
+            allPixelsBlack = false;
+        }
+        if (!allPixelsRed && !allPixelsBlack)
+        {
+            EXPECT_TRUE(allPixelsRed || allPixelsBlack) << "Actual color found: " << color;
+            break;
+        }
+    }
+    EXPECT_TRUE(allPixelsRed != allPixelsBlack) << "All pixels should be either red or black";
+}
+
+// Calling invalidate after clear and re-dirtying depth should either produce the depth of the clear
+// call (invalidate didn't happen) or 1.0 (the robust init depth).
+TEST_P(RobustResourceInitTestES3, ClearThenRedirtyThenInvalidateThenReadBackDS)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // Initialize a framebuffer bound to an RGB8 and a D/S texture.
+    constexpr size_t kSize = 16;
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, kSize, kSize);
+
+    GLTexture dsTex;
+    glBindTexture(GL_TEXTURE_2D, dsTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, kSize, kSize);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, dsTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Re-dirty the attachment, and invalidate it immediately.
+    std::array<GLenum, 2> attachmentsToInvalidate = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, dsTex, 0);
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, attachmentsToInvalidate.data());
+
+    // Either the clear above has been applied to the FBO, or the robust clear is applied when its
+    // depth attachment is invalidated, both resulting in a depth of 1.0.
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glViewport(0, 0, kSize, kSize);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_EQUAL);
+    drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 1.0f);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Calling invalidate after clear and re-dirtying depth on a depth-only renderbuffer should either
+// produce the depth of the clear call (invalidate didn't happen) or 1.0 (the robust init depth).
+TEST_P(RobustResourceInitTestES3, ClearThenRedirtyThenInvalidateThenReadBackDepthOnly)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr size_t kSize = 16;
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLRenderbuffer rbDepth;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbDepth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, kSize, kSize);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbDepth);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    GLenum attachmentToInvalidate = GL_DEPTH_ATTACHMENT;
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbDepth);
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &attachmentToInvalidate);
+
+    // Either the clear above has been applied to the FBO, or the robust clear is applied when its
+    // depth attachment is invalidated, both resulting in a depth of 1.0.
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glViewport(0, 0, kSize, kSize);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_EQUAL);
+    drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 1.0f);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Calling invalidate after clear and re-dirtying stencil on a stencil-only renderbuffer should
+// either produce the stencil of the clear call (invalidate didn't happen) or 0 (the robust init
+// stencil).
+TEST_P(RobustResourceInitTestES3, ClearThenRedirtyThenInvalidateThenReadBackStencilOnly)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr size_t kSize = 16;
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLRenderbuffer rbStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, kSize, kSize);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbStencil);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearStencil(0x00);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    GLenum attachmentToInvalidate = GL_STENCIL_ATTACHMENT;
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbStencil);
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &attachmentToInvalidate);
+
+    // Either the clear above has been applied to the FBO, or the robust clear is applied when its
+    // stencil attachment is invalidated, both resulting in a stencil of 0.
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glViewport(0, 0, kSize, kSize);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x00, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Tests that invalidating an FBO attachment preceded by a draw and clearColor(0,0,0,0)
 // correctly re-initializes the attachment when read back under robust resource initialization.
 TEST_P(RobustResourceInitWithInvalidationTest, InvalidateAfterDrawAndClearZero)
