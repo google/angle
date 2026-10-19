@@ -1,7 +1,7 @@
 /**
  * volk
  *
- * Copyright (C) 2018-2025, by Arseny Kapoulkine (arseny.kapoulkine@gmail.com)
+ * Copyright (C) 2018-2026, by Arseny Kapoulkine (arseny.kapoulkine@gmail.com)
  * Report bugs and download new versions at https://github.com/zeux/volk
  *
  * This library is distributed under the MIT License. See notice at the end of this file.
@@ -19,7 +19,7 @@
 #endif
 
 /* VOLK_GENERATE_VERSION_DEFINE */
-#define VOLK_HEADER_VERSION 329
+#define VOLK_HEADER_VERSION 350
 /* VOLK_GENERATE_VERSION_DEFINE */
 
 #ifndef VK_NO_PROTOTYPES
@@ -43,6 +43,7 @@ extern "C" {
 #endif
 #endif
 
+struct VolkInstanceTable;
 struct VolkDeviceTable;
 
 /**
@@ -105,6 +106,12 @@ VkInstance volkGetLoadedInstance(void);
  * or VK_NULL_HANDLE if volkLoadDevice() has not been called.
  */
 VkDevice volkGetLoadedDevice(void);
+
+/**
+ * Load function pointers using application-created VkInstance into a table.
+ * Application should use function pointers from that table instead of using global function pointers.
+ */
+void volkLoadInstanceTable(struct VolkInstanceTable* table, VkInstance instance);
 
 /**
  * Load function pointers using application-created VkDevice into a table.
@@ -208,6 +215,10 @@ typedef unsigned long RROutput;
 #include <vulkan/vulkan_beta.h>
 #endif
 
+#ifdef VK_USE_PLATFORM_OHOS
+#include <vulkan/vulkan_ohos.h>
+#endif
+
 #endif
 
 #ifdef __cplusplus
@@ -217,6 +228,377 @@ namespace volk {
 extern "C" {
 #endif
 #endif
+
+/**
+ * Instance-specific function pointer table
+ */
+struct VolkInstanceTable
+{
+	/* VOLK_GENERATE_INSTANCE_TABLE */
+#if defined(VK_VERSION_1_0)
+	PFN_vkCreateDevice vkCreateDevice;
+	PFN_vkDestroyInstance vkDestroyInstance;
+	PFN_vkEnumerateDeviceExtensionProperties vkEnumerateDeviceExtensionProperties;
+	PFN_vkEnumerateDeviceLayerProperties vkEnumerateDeviceLayerProperties;
+	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
+	PFN_vkGetDeviceProcAddr vkGetDeviceProcAddr;
+	PFN_vkGetPhysicalDeviceFeatures vkGetPhysicalDeviceFeatures;
+	PFN_vkGetPhysicalDeviceFormatProperties vkGetPhysicalDeviceFormatProperties;
+	PFN_vkGetPhysicalDeviceImageFormatProperties vkGetPhysicalDeviceImageFormatProperties;
+	PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
+	PFN_vkGetPhysicalDeviceProperties vkGetPhysicalDeviceProperties;
+	PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
+	PFN_vkGetPhysicalDeviceSparseImageFormatProperties vkGetPhysicalDeviceSparseImageFormatProperties;
+#else
+	PFN_vkVoidFunction padding_f34b07f4[13];
+#endif /* defined(VK_VERSION_1_0) */
+#if defined(VK_VERSION_1_1)
+	PFN_vkEnumeratePhysicalDeviceGroups vkEnumeratePhysicalDeviceGroups;
+	PFN_vkGetPhysicalDeviceExternalBufferProperties vkGetPhysicalDeviceExternalBufferProperties;
+	PFN_vkGetPhysicalDeviceExternalFenceProperties vkGetPhysicalDeviceExternalFenceProperties;
+	PFN_vkGetPhysicalDeviceExternalSemaphoreProperties vkGetPhysicalDeviceExternalSemaphoreProperties;
+	PFN_vkGetPhysicalDeviceFeatures2 vkGetPhysicalDeviceFeatures2;
+	PFN_vkGetPhysicalDeviceFormatProperties2 vkGetPhysicalDeviceFormatProperties2;
+	PFN_vkGetPhysicalDeviceImageFormatProperties2 vkGetPhysicalDeviceImageFormatProperties2;
+	PFN_vkGetPhysicalDeviceMemoryProperties2 vkGetPhysicalDeviceMemoryProperties2;
+	PFN_vkGetPhysicalDeviceProperties2 vkGetPhysicalDeviceProperties2;
+	PFN_vkGetPhysicalDeviceQueueFamilyProperties2 vkGetPhysicalDeviceQueueFamilyProperties2;
+	PFN_vkGetPhysicalDeviceSparseImageFormatProperties2 vkGetPhysicalDeviceSparseImageFormatProperties2;
+#else
+	PFN_vkVoidFunction padding_73de037b[11];
+#endif /* defined(VK_VERSION_1_1) */
+#if defined(VK_VERSION_1_3)
+	PFN_vkGetPhysicalDeviceToolProperties vkGetPhysicalDeviceToolProperties;
+#else
+	PFN_vkVoidFunction padding_60958868[1];
+#endif /* defined(VK_VERSION_1_3) */
+#if defined(VK_ARM_data_graph)
+	PFN_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM;
+	PFN_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM;
+#else
+	PFN_vkVoidFunction padding_15920a35[2];
+#endif /* defined(VK_ARM_data_graph) */
+#if defined(VK_ARM_data_graph_optical_flow)
+	PFN_vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM;
+#else
+	PFN_vkVoidFunction padding_4da6b74b[1];
+#endif /* defined(VK_ARM_data_graph_optical_flow) */
+#if defined(VK_ARM_performance_counters_by_region)
+	PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM;
+#else
+	PFN_vkVoidFunction padding_4fd09193[1];
+#endif /* defined(VK_ARM_performance_counters_by_region) */
+#if defined(VK_ARM_shader_instrumentation)
+	PFN_vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM;
+#else
+	PFN_vkVoidFunction padding_faae0311[1];
+#endif /* defined(VK_ARM_shader_instrumentation) */
+#if defined(VK_ARM_tensors)
+	PFN_vkGetPhysicalDeviceExternalTensorPropertiesARM vkGetPhysicalDeviceExternalTensorPropertiesARM;
+#else
+	PFN_vkVoidFunction padding_4622403f[1];
+#endif /* defined(VK_ARM_tensors) */
+#if defined(VK_EXT_acquire_drm_display)
+	PFN_vkAcquireDrmDisplayEXT vkAcquireDrmDisplayEXT;
+	PFN_vkGetDrmDisplayEXT vkGetDrmDisplayEXT;
+#else
+	PFN_vkVoidFunction padding_8e427d62[2];
+#endif /* defined(VK_EXT_acquire_drm_display) */
+#if defined(VK_EXT_acquire_xlib_display)
+	PFN_vkAcquireXlibDisplayEXT vkAcquireXlibDisplayEXT;
+	PFN_vkGetRandROutputDisplayEXT vkGetRandROutputDisplayEXT;
+#else
+	PFN_vkVoidFunction padding_6e6f0a05[2];
+#endif /* defined(VK_EXT_acquire_xlib_display) */
+#if defined(VK_EXT_calibrated_timestamps)
+	PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT vkGetPhysicalDeviceCalibrateableTimeDomainsEXT;
+#else
+	PFN_vkVoidFunction padding_61710136[1];
+#endif /* defined(VK_EXT_calibrated_timestamps) */
+#if defined(VK_EXT_debug_report)
+	PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT;
+	PFN_vkDebugReportMessageEXT vkDebugReportMessageEXT;
+	PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
+#else
+	PFN_vkVoidFunction padding_250c28de[3];
+#endif /* defined(VK_EXT_debug_report) */
+#if defined(VK_EXT_debug_utils)
+	PFN_vkCmdBeginDebugUtilsLabelEXT vkCmdBeginDebugUtilsLabelEXT;
+	PFN_vkCmdEndDebugUtilsLabelEXT vkCmdEndDebugUtilsLabelEXT;
+	PFN_vkCmdInsertDebugUtilsLabelEXT vkCmdInsertDebugUtilsLabelEXT;
+	PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT;
+	PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
+	PFN_vkQueueBeginDebugUtilsLabelEXT vkQueueBeginDebugUtilsLabelEXT;
+	PFN_vkQueueEndDebugUtilsLabelEXT vkQueueEndDebugUtilsLabelEXT;
+	PFN_vkQueueInsertDebugUtilsLabelEXT vkQueueInsertDebugUtilsLabelEXT;
+	PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT;
+	PFN_vkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXT;
+	PFN_vkSubmitDebugUtilsMessageEXT vkSubmitDebugUtilsMessageEXT;
+#else
+	PFN_vkVoidFunction padding_3e2e81f7[11];
+#endif /* defined(VK_EXT_debug_utils) */
+#if defined(VK_EXT_descriptor_heap)
+	PFN_vkGetPhysicalDeviceDescriptorSizeEXT vkGetPhysicalDeviceDescriptorSizeEXT;
+#else
+	PFN_vkVoidFunction padding_ce9bfed[1];
+#endif /* defined(VK_EXT_descriptor_heap) */
+#if defined(VK_EXT_direct_mode_display)
+	PFN_vkReleaseDisplayEXT vkReleaseDisplayEXT;
+#else
+	PFN_vkVoidFunction padding_899830c3[1];
+#endif /* defined(VK_EXT_direct_mode_display) */
+#if defined(VK_EXT_directfb_surface)
+	PFN_vkCreateDirectFBSurfaceEXT vkCreateDirectFBSurfaceEXT;
+	PFN_vkGetPhysicalDeviceDirectFBPresentationSupportEXT vkGetPhysicalDeviceDirectFBPresentationSupportEXT;
+#else
+	PFN_vkVoidFunction padding_f7e0f7b1[2];
+#endif /* defined(VK_EXT_directfb_surface) */
+#if defined(VK_EXT_display_surface_counter)
+	PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT vkGetPhysicalDeviceSurfaceCapabilities2EXT;
+#else
+	PFN_vkVoidFunction padding_8bff43f7[1];
+#endif /* defined(VK_EXT_display_surface_counter) */
+#if defined(VK_EXT_full_screen_exclusive)
+	PFN_vkGetPhysicalDeviceSurfacePresentModes2EXT vkGetPhysicalDeviceSurfacePresentModes2EXT;
+#else
+	PFN_vkVoidFunction padding_ff6b086[1];
+#endif /* defined(VK_EXT_full_screen_exclusive) */
+#if defined(VK_EXT_headless_surface)
+	PFN_vkCreateHeadlessSurfaceEXT vkCreateHeadlessSurfaceEXT;
+#else
+	PFN_vkVoidFunction padding_f8cab9e0[1];
+#endif /* defined(VK_EXT_headless_surface) */
+#if defined(VK_EXT_metal_surface)
+	PFN_vkCreateMetalSurfaceEXT vkCreateMetalSurfaceEXT;
+#else
+	PFN_vkVoidFunction padding_1c6d079a[1];
+#endif /* defined(VK_EXT_metal_surface) */
+#if defined(VK_EXT_sample_locations)
+	PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT vkGetPhysicalDeviceMultisamplePropertiesEXT;
+#else
+	PFN_vkVoidFunction padding_fd7ffce7[1];
+#endif /* defined(VK_EXT_sample_locations) */
+#if defined(VK_EXT_tooling_info)
+	PFN_vkGetPhysicalDeviceToolPropertiesEXT vkGetPhysicalDeviceToolPropertiesEXT;
+#else
+	PFN_vkVoidFunction padding_99aa5ee9[1];
+#endif /* defined(VK_EXT_tooling_info) */
+#if defined(VK_FUCHSIA_imagepipe_surface)
+	PFN_vkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIA;
+#else
+	PFN_vkVoidFunction padding_6db35e8f[1];
+#endif /* defined(VK_FUCHSIA_imagepipe_surface) */
+#if defined(VK_GGP_stream_descriptor_surface)
+	PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP;
+#else
+	PFN_vkVoidFunction padding_cc96d0ec[1];
+#endif /* defined(VK_GGP_stream_descriptor_surface) */
+#if defined(VK_KHR_android_surface)
+	PFN_vkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHR;
+#else
+	PFN_vkVoidFunction padding_ab4fe82c[1];
+#endif /* defined(VK_KHR_android_surface) */
+#if defined(VK_KHR_calibrated_timestamps)
+	PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR vkGetPhysicalDeviceCalibrateableTimeDomainsKHR;
+#else
+	PFN_vkVoidFunction padding_663b2fa0[1];
+#endif /* defined(VK_KHR_calibrated_timestamps) */
+#if defined(VK_KHR_cooperative_matrix)
+	PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR;
+#else
+	PFN_vkVoidFunction padding_59e376cc[1];
+#endif /* defined(VK_KHR_cooperative_matrix) */
+#if defined(VK_KHR_device_group_creation)
+	PFN_vkEnumeratePhysicalDeviceGroupsKHR vkEnumeratePhysicalDeviceGroupsKHR;
+#else
+	PFN_vkVoidFunction padding_6db81211[1];
+#endif /* defined(VK_KHR_device_group_creation) */
+#if defined(VK_KHR_display)
+	PFN_vkCreateDisplayModeKHR vkCreateDisplayModeKHR;
+	PFN_vkCreateDisplayPlaneSurfaceKHR vkCreateDisplayPlaneSurfaceKHR;
+	PFN_vkGetDisplayModePropertiesKHR vkGetDisplayModePropertiesKHR;
+	PFN_vkGetDisplayPlaneCapabilitiesKHR vkGetDisplayPlaneCapabilitiesKHR;
+	PFN_vkGetDisplayPlaneSupportedDisplaysKHR vkGetDisplayPlaneSupportedDisplaysKHR;
+	PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
+	PFN_vkGetPhysicalDeviceDisplayPropertiesKHR vkGetPhysicalDeviceDisplayPropertiesKHR;
+#else
+	PFN_vkVoidFunction padding_cce37eaf[7];
+#endif /* defined(VK_KHR_display) */
+#if defined(VK_KHR_external_fence_capabilities)
+	PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR vkGetPhysicalDeviceExternalFencePropertiesKHR;
+#else
+	PFN_vkVoidFunction padding_b2076412[1];
+#endif /* defined(VK_KHR_external_fence_capabilities) */
+#if defined(VK_KHR_external_memory_capabilities)
+	PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR vkGetPhysicalDeviceExternalBufferPropertiesKHR;
+#else
+	PFN_vkVoidFunction padding_f167e378[1];
+#endif /* defined(VK_KHR_external_memory_capabilities) */
+#if defined(VK_KHR_external_semaphore_capabilities)
+	PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR vkGetPhysicalDeviceExternalSemaphorePropertiesKHR;
+#else
+	PFN_vkVoidFunction padding_acdaf099[1];
+#endif /* defined(VK_KHR_external_semaphore_capabilities) */
+#if defined(VK_KHR_fragment_shading_rate)
+	PFN_vkGetPhysicalDeviceFragmentShadingRatesKHR vkGetPhysicalDeviceFragmentShadingRatesKHR;
+#else
+	PFN_vkVoidFunction padding_d59cae82[1];
+#endif /* defined(VK_KHR_fragment_shading_rate) */
+#if defined(VK_KHR_get_display_properties2)
+	PFN_vkGetDisplayModeProperties2KHR vkGetDisplayModeProperties2KHR;
+	PFN_vkGetDisplayPlaneCapabilities2KHR vkGetDisplayPlaneCapabilities2KHR;
+	PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR vkGetPhysicalDeviceDisplayPlaneProperties2KHR;
+	PFN_vkGetPhysicalDeviceDisplayProperties2KHR vkGetPhysicalDeviceDisplayProperties2KHR;
+#else
+	PFN_vkVoidFunction padding_46c0938b[4];
+#endif /* defined(VK_KHR_get_display_properties2) */
+#if defined(VK_KHR_get_physical_device_properties2)
+	PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR;
+	PFN_vkGetPhysicalDeviceFormatProperties2KHR vkGetPhysicalDeviceFormatProperties2KHR;
+	PFN_vkGetPhysicalDeviceImageFormatProperties2KHR vkGetPhysicalDeviceImageFormatProperties2KHR;
+	PFN_vkGetPhysicalDeviceMemoryProperties2KHR vkGetPhysicalDeviceMemoryProperties2KHR;
+	PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR;
+	PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR vkGetPhysicalDeviceQueueFamilyProperties2KHR;
+	PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR vkGetPhysicalDeviceSparseImageFormatProperties2KHR;
+#else
+	PFN_vkVoidFunction padding_5fac460e[7];
+#endif /* defined(VK_KHR_get_physical_device_properties2) */
+#if defined(VK_KHR_get_surface_capabilities2)
+	PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR vkGetPhysicalDeviceSurfaceCapabilities2KHR;
+	PFN_vkGetPhysicalDeviceSurfaceFormats2KHR vkGetPhysicalDeviceSurfaceFormats2KHR;
+#else
+	PFN_vkVoidFunction padding_3baff606[2];
+#endif /* defined(VK_KHR_get_surface_capabilities2) */
+#if defined(VK_KHR_performance_query)
+	PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR;
+	PFN_vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR;
+#else
+	PFN_vkVoidFunction padding_1b45ef8f[2];
+#endif /* defined(VK_KHR_performance_query) */
+#if defined(VK_KHR_surface)
+	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
+	PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
+	PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
+	PFN_vkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHR;
+	PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
+#else
+	PFN_vkVoidFunction padding_8f1ea665[5];
+#endif /* defined(VK_KHR_surface) */
+#if defined(VK_KHR_video_encode_queue)
+	PFN_vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR;
+#else
+	PFN_vkVoidFunction padding_f0a3114[1];
+#endif /* defined(VK_KHR_video_encode_queue) */
+#if defined(VK_KHR_video_queue)
+	PFN_vkGetPhysicalDeviceVideoCapabilitiesKHR vkGetPhysicalDeviceVideoCapabilitiesKHR;
+	PFN_vkGetPhysicalDeviceVideoFormatPropertiesKHR vkGetPhysicalDeviceVideoFormatPropertiesKHR;
+#else
+	PFN_vkVoidFunction padding_12d937aa[2];
+#endif /* defined(VK_KHR_video_queue) */
+#if defined(VK_KHR_wayland_surface)
+	PFN_vkCreateWaylandSurfaceKHR vkCreateWaylandSurfaceKHR;
+	PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR vkGetPhysicalDeviceWaylandPresentationSupportKHR;
+#else
+	PFN_vkVoidFunction padding_92436324[2];
+#endif /* defined(VK_KHR_wayland_surface) */
+#if defined(VK_KHR_win32_surface)
+	PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
+	PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR vkGetPhysicalDeviceWin32PresentationSupportKHR;
+#else
+	PFN_vkVoidFunction padding_b8dcaf56[2];
+#endif /* defined(VK_KHR_win32_surface) */
+#if defined(VK_KHR_xcb_surface)
+	PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
+	PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR vkGetPhysicalDeviceXcbPresentationSupportKHR;
+#else
+	PFN_vkVoidFunction padding_b6b79326[2];
+#endif /* defined(VK_KHR_xcb_surface) */
+#if defined(VK_KHR_xlib_surface)
+	PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
+	PFN_vkGetPhysicalDeviceXlibPresentationSupportKHR vkGetPhysicalDeviceXlibPresentationSupportKHR;
+#else
+	PFN_vkVoidFunction padding_c5e2b5db[2];
+#endif /* defined(VK_KHR_xlib_surface) */
+#if defined(VK_MVK_ios_surface)
+	PFN_vkCreateIOSSurfaceMVK vkCreateIOSSurfaceMVK;
+#else
+	PFN_vkVoidFunction padding_52f99096[1];
+#endif /* defined(VK_MVK_ios_surface) */
+#if defined(VK_MVK_macos_surface)
+	PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;
+#else
+	PFN_vkVoidFunction padding_1d7ced9a[1];
+#endif /* defined(VK_MVK_macos_surface) */
+#if defined(VK_NN_vi_surface)
+	PFN_vkCreateViSurfaceNN vkCreateViSurfaceNN;
+#else
+	PFN_vkVoidFunction padding_d9ec3901[1];
+#endif /* defined(VK_NN_vi_surface) */
+#if defined(VK_NV_acquire_winrt_display)
+	PFN_vkAcquireWinrtDisplayNV vkAcquireWinrtDisplayNV;
+	PFN_vkGetWinrtDisplayNV vkGetWinrtDisplayNV;
+#else
+	PFN_vkVoidFunction padding_41c66e6[2];
+#endif /* defined(VK_NV_acquire_winrt_display) */
+#if defined(VK_NV_cooperative_matrix)
+	PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV vkGetPhysicalDeviceCooperativeMatrixPropertiesNV;
+#else
+	PFN_vkVoidFunction padding_ee7fcfc8[1];
+#endif /* defined(VK_NV_cooperative_matrix) */
+#if defined(VK_NV_cooperative_matrix2)
+	PFN_vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV vkGetPhysicalDeviceCooperativeMatrixFlexibleDimensionsPropertiesNV;
+#else
+	PFN_vkVoidFunction padding_2ec091f4[1];
+#endif /* defined(VK_NV_cooperative_matrix2) */
+#if defined(VK_NV_cooperative_vector)
+	PFN_vkGetPhysicalDeviceCooperativeVectorPropertiesNV vkGetPhysicalDeviceCooperativeVectorPropertiesNV;
+#else
+	PFN_vkVoidFunction padding_50d51145[1];
+#endif /* defined(VK_NV_cooperative_vector) */
+#if defined(VK_NV_coverage_reduction_mode)
+	PFN_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV;
+#else
+	PFN_vkVoidFunction padding_9a9f15ac[1];
+#endif /* defined(VK_NV_coverage_reduction_mode) */
+#if defined(VK_NV_external_memory_capabilities)
+	PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV vkGetPhysicalDeviceExternalImageFormatPropertiesNV;
+#else
+	PFN_vkVoidFunction padding_988145[1];
+#endif /* defined(VK_NV_external_memory_capabilities) */
+#if defined(VK_NV_optical_flow)
+	PFN_vkGetPhysicalDeviceOpticalFlowImageFormatsNV vkGetPhysicalDeviceOpticalFlowImageFormatsNV;
+#else
+	PFN_vkVoidFunction padding_46a4b95[1];
+#endif /* defined(VK_NV_optical_flow) */
+#if defined(VK_OHOS_surface)
+	PFN_vkCreateSurfaceOHOS vkCreateSurfaceOHOS;
+#else
+	PFN_vkVoidFunction padding_b94570ee[1];
+#endif /* defined(VK_OHOS_surface) */
+#if defined(VK_QNX_screen_surface)
+	PFN_vkCreateScreenSurfaceQNX vkCreateScreenSurfaceQNX;
+	PFN_vkGetPhysicalDeviceScreenPresentationSupportQNX vkGetPhysicalDeviceScreenPresentationSupportQNX;
+#else
+	PFN_vkVoidFunction padding_9b43b57c[2];
+#endif /* defined(VK_QNX_screen_surface) */
+#if defined(VK_SEC_ubm_surface)
+	PFN_vkCreateUbmSurfaceSEC vkCreateUbmSurfaceSEC;
+	PFN_vkGetPhysicalDeviceUbmPresentationSupportSEC vkGetPhysicalDeviceUbmPresentationSupportSEC;
+#else
+	PFN_vkVoidFunction padding_bdcf11f9[2];
+#endif /* defined(VK_SEC_ubm_surface) */
+#if (defined(VK_ARM_data_graph_instruction_set_tosa)) || (defined(VK_ARM_data_graph_optical_flow))
+	PFN_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM;
+#else
+	PFN_vkVoidFunction padding_d3dcb1f3[1];
+#endif /* (defined(VK_ARM_data_graph_instruction_set_tosa)) || (defined(VK_ARM_data_graph_optical_flow)) */
+#if (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1))
+	PFN_vkGetPhysicalDevicePresentRectanglesKHR vkGetPhysicalDevicePresentRectanglesKHR;
+#else
+	PFN_vkVoidFunction padding_a8092b55[1];
+#endif /* (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) */
+	/* VOLK_GENERATE_INSTANCE_TABLE */
+};
 
 /**
  * Device-specific function pointer table
@@ -509,6 +891,21 @@ struct VolkDeviceTable
 #else
 	PFN_vkVoidFunction padding_894d85d8[9];
 #endif /* defined(VK_ARM_data_graph) */
+#if defined(VK_ARM_scheduling_controls) && VK_ARM_SCHEDULING_CONTROLS_SPEC_VERSION >= 2
+	PFN_vkCmdSetDispatchParametersARM vkCmdSetDispatchParametersARM;
+#else
+	PFN_vkVoidFunction padding_4702b278[1];
+#endif /* defined(VK_ARM_scheduling_controls) && VK_ARM_SCHEDULING_CONTROLS_SPEC_VERSION >= 2 */
+#if defined(VK_ARM_shader_instrumentation)
+	PFN_vkClearShaderInstrumentationMetricsARM vkClearShaderInstrumentationMetricsARM;
+	PFN_vkCmdBeginShaderInstrumentationARM vkCmdBeginShaderInstrumentationARM;
+	PFN_vkCmdEndShaderInstrumentationARM vkCmdEndShaderInstrumentationARM;
+	PFN_vkCreateShaderInstrumentationARM vkCreateShaderInstrumentationARM;
+	PFN_vkDestroyShaderInstrumentationARM vkDestroyShaderInstrumentationARM;
+	PFN_vkGetShaderInstrumentationValuesARM vkGetShaderInstrumentationValuesARM;
+#else
+	PFN_vkVoidFunction padding_dcecc311[6];
+#endif /* defined(VK_ARM_shader_instrumentation) */
 #if defined(VK_ARM_tensors)
 	PFN_vkBindTensorMemoryARM vkBindTensorMemoryARM;
 	PFN_vkCmdCopyTensorARM vkCmdCopyTensorARM;
@@ -553,6 +950,11 @@ struct VolkDeviceTable
 #else
 	PFN_vkVoidFunction padding_ab532c18[2];
 #endif /* defined(VK_EXT_conditional_rendering) */
+#if defined(VK_EXT_custom_resolve) && (defined(VK_KHR_dynamic_rendering) || defined(VK_VERSION_1_3))
+	PFN_vkCmdBeginCustomResolveEXT vkCmdBeginCustomResolveEXT;
+#else
+	PFN_vkVoidFunction padding_962e418a[1];
+#endif /* defined(VK_EXT_custom_resolve) && (defined(VK_KHR_dynamic_rendering) || defined(VK_VERSION_1_3)) */
 #if defined(VK_EXT_debug_marker)
 	PFN_vkCmdDebugMarkerBeginEXT vkCmdDebugMarkerBeginEXT;
 	PFN_vkCmdDebugMarkerEndEXT vkCmdDebugMarkerEndEXT;
@@ -586,6 +988,27 @@ struct VolkDeviceTable
 #else
 	PFN_vkVoidFunction padding_98d0fb33[1];
 #endif /* defined(VK_EXT_descriptor_buffer) && (defined(VK_KHR_acceleration_structure) || defined(VK_NV_ray_tracing)) */
+#if defined(VK_EXT_descriptor_heap)
+	PFN_vkCmdBindResourceHeapEXT vkCmdBindResourceHeapEXT;
+	PFN_vkCmdBindSamplerHeapEXT vkCmdBindSamplerHeapEXT;
+	PFN_vkCmdPushDataEXT vkCmdPushDataEXT;
+	PFN_vkGetImageOpaqueCaptureDataEXT vkGetImageOpaqueCaptureDataEXT;
+	PFN_vkWriteResourceDescriptorsEXT vkWriteResourceDescriptorsEXT;
+	PFN_vkWriteSamplerDescriptorsEXT vkWriteSamplerDescriptorsEXT;
+#else
+	PFN_vkVoidFunction padding_a061cda9[6];
+#endif /* defined(VK_EXT_descriptor_heap) */
+#if defined(VK_EXT_descriptor_heap) && defined(VK_EXT_custom_border_color)
+	PFN_vkRegisterCustomBorderColorEXT vkRegisterCustomBorderColorEXT;
+	PFN_vkUnregisterCustomBorderColorEXT vkUnregisterCustomBorderColorEXT;
+#else
+	PFN_vkVoidFunction padding_7b7ddcfe[2];
+#endif /* defined(VK_EXT_descriptor_heap) && defined(VK_EXT_custom_border_color) */
+#if defined(VK_EXT_descriptor_heap) && defined(VK_ARM_tensors)
+	PFN_vkGetTensorOpaqueCaptureDataARM vkGetTensorOpaqueCaptureDataARM;
+#else
+	PFN_vkVoidFunction padding_533712c5[1];
+#endif /* defined(VK_EXT_descriptor_heap) && defined(VK_ARM_tensors) */
 #if defined(VK_EXT_device_fault)
 	PFN_vkGetDeviceFaultInfoEXT vkGetDeviceFaultInfoEXT;
 #else
@@ -678,6 +1101,12 @@ struct VolkDeviceTable
 #else
 	PFN_vkVoidFunction padding_8a212c37[1];
 #endif /* defined(VK_EXT_line_rasterization) */
+#if defined(VK_EXT_memory_decompression)
+	PFN_vkCmdDecompressMemoryEXT vkCmdDecompressMemoryEXT;
+	PFN_vkCmdDecompressMemoryIndirectCountEXT vkCmdDecompressMemoryIndirectCountEXT;
+#else
+	PFN_vkVoidFunction padding_c3b649ee[2];
+#endif /* defined(VK_EXT_memory_decompression) */
 #if defined(VK_EXT_mesh_shader)
 	PFN_vkCmdDrawMeshTasksEXT vkCmdDrawMeshTasksEXT;
 	PFN_vkCmdDrawMeshTasksIndirectEXT vkCmdDrawMeshTasksIndirectEXT;
@@ -728,6 +1157,19 @@ struct VolkDeviceTable
 #else
 	PFN_vkVoidFunction padding_11313020[1];
 #endif /* defined(VK_EXT_pipeline_properties) */
+#if defined(VK_EXT_present_timing)
+	PFN_vkGetPastPresentationTimingEXT vkGetPastPresentationTimingEXT;
+	PFN_vkGetSwapchainTimeDomainPropertiesEXT vkGetSwapchainTimeDomainPropertiesEXT;
+	PFN_vkGetSwapchainTimingPropertiesEXT vkGetSwapchainTimingPropertiesEXT;
+	PFN_vkSetSwapchainPresentTimingQueueSizeEXT vkSetSwapchainPresentTimingQueueSizeEXT;
+#else
+	PFN_vkVoidFunction padding_8751feb5[4];
+#endif /* defined(VK_EXT_present_timing) */
+#if defined(VK_EXT_primitive_restart_index)
+	PFN_vkCmdSetPrimitiveRestartIndexEXT vkCmdSetPrimitiveRestartIndexEXT;
+#else
+	PFN_vkVoidFunction padding_a1770b32[1];
+#endif /* defined(VK_EXT_primitive_restart_index) */
 #if defined(VK_EXT_private_data)
 	PFN_vkCreatePrivateDataSlotEXT vkCreatePrivateDataSlotEXT;
 	PFN_vkDestroyPrivateDataSlotEXT vkDestroyPrivateDataSlotEXT;
@@ -917,6 +1359,66 @@ struct VolkDeviceTable
 #else
 	PFN_vkVoidFunction padding_3d63aec0[3];
 #endif /* defined(VK_KHR_descriptor_update_template) */
+#if defined(VK_KHR_device_address_commands)
+	PFN_vkCmdBindIndexBuffer3KHR vkCmdBindIndexBuffer3KHR;
+	PFN_vkCmdBindVertexBuffers3KHR vkCmdBindVertexBuffers3KHR;
+	PFN_vkCmdCopyImageToMemoryKHR vkCmdCopyImageToMemoryKHR;
+	PFN_vkCmdCopyMemoryKHR vkCmdCopyMemoryKHR;
+	PFN_vkCmdCopyMemoryToImageKHR vkCmdCopyMemoryToImageKHR;
+	PFN_vkCmdCopyQueryPoolResultsToMemoryKHR vkCmdCopyQueryPoolResultsToMemoryKHR;
+	PFN_vkCmdDispatchIndirect2KHR vkCmdDispatchIndirect2KHR;
+	PFN_vkCmdDrawIndexedIndirect2KHR vkCmdDrawIndexedIndirect2KHR;
+	PFN_vkCmdDrawIndirect2KHR vkCmdDrawIndirect2KHR;
+	PFN_vkCmdFillMemoryKHR vkCmdFillMemoryKHR;
+	PFN_vkCmdUpdateMemoryKHR vkCmdUpdateMemoryKHR;
+#else
+	PFN_vkVoidFunction padding_2b90e4ce[11];
+#endif /* defined(VK_KHR_device_address_commands) */
+#if defined(VK_KHR_device_address_commands) && (defined(VK_KHR_draw_indirect_count) || defined(VK_VERSION_1_2))
+	PFN_vkCmdDrawIndexedIndirectCount2KHR vkCmdDrawIndexedIndirectCount2KHR;
+	PFN_vkCmdDrawIndirectCount2KHR vkCmdDrawIndirectCount2KHR;
+#else
+	PFN_vkVoidFunction padding_7a492754[2];
+#endif /* defined(VK_KHR_device_address_commands) && (defined(VK_KHR_draw_indirect_count) || defined(VK_VERSION_1_2)) */
+#if defined(VK_KHR_device_address_commands) && defined(VK_EXT_conditional_rendering)
+	PFN_vkCmdBeginConditionalRendering2EXT vkCmdBeginConditionalRendering2EXT;
+#else
+	PFN_vkVoidFunction padding_f9bf440[1];
+#endif /* defined(VK_KHR_device_address_commands) && defined(VK_EXT_conditional_rendering) */
+#if defined(VK_KHR_device_address_commands) && defined(VK_EXT_transform_feedback)
+	PFN_vkCmdBeginTransformFeedback2EXT vkCmdBeginTransformFeedback2EXT;
+	PFN_vkCmdBindTransformFeedbackBuffers2EXT vkCmdBindTransformFeedbackBuffers2EXT;
+	PFN_vkCmdDrawIndirectByteCount2EXT vkCmdDrawIndirectByteCount2EXT;
+	PFN_vkCmdEndTransformFeedback2EXT vkCmdEndTransformFeedback2EXT;
+#else
+	PFN_vkVoidFunction padding_2d72d440[4];
+#endif /* defined(VK_KHR_device_address_commands) && defined(VK_EXT_transform_feedback) */
+#if defined(VK_KHR_device_address_commands) && defined(VK_EXT_mesh_shader)
+	PFN_vkCmdDrawMeshTasksIndirect2EXT vkCmdDrawMeshTasksIndirect2EXT;
+#else
+	PFN_vkVoidFunction padding_4e6fc3d1[1];
+#endif /* defined(VK_KHR_device_address_commands) && defined(VK_EXT_mesh_shader) */
+#if defined(VK_KHR_device_address_commands) && ((defined(VK_KHR_draw_indirect_count) || defined(VK_VERSION_1_2)) && defined(VK_EXT_mesh_shader))
+	PFN_vkCmdDrawMeshTasksIndirectCount2EXT vkCmdDrawMeshTasksIndirectCount2EXT;
+#else
+	PFN_vkVoidFunction padding_5dc290cb[1];
+#endif /* defined(VK_KHR_device_address_commands) && ((defined(VK_KHR_draw_indirect_count) || defined(VK_VERSION_1_2)) && defined(VK_EXT_mesh_shader)) */
+#if defined(VK_KHR_device_address_commands) && defined(VK_AMD_buffer_marker)
+	PFN_vkCmdWriteMarkerToMemoryAMD vkCmdWriteMarkerToMemoryAMD;
+#else
+	PFN_vkVoidFunction padding_140dbb45[1];
+#endif /* defined(VK_KHR_device_address_commands) && defined(VK_AMD_buffer_marker) */
+#if defined(VK_KHR_device_address_commands) && defined(VK_KHR_acceleration_structure)
+	PFN_vkCreateAccelerationStructure2KHR vkCreateAccelerationStructure2KHR;
+#else
+	PFN_vkVoidFunction padding_2564889a[1];
+#endif /* defined(VK_KHR_device_address_commands) && defined(VK_KHR_acceleration_structure) */
+#if defined(VK_KHR_device_fault)
+	PFN_vkGetDeviceFaultDebugInfoKHR vkGetDeviceFaultDebugInfoKHR;
+	PFN_vkGetDeviceFaultReportsKHR vkGetDeviceFaultReportsKHR;
+#else
+	PFN_vkVoidFunction padding_d83e9289[2];
+#endif /* defined(VK_KHR_device_fault) */
 #if defined(VK_KHR_device_group)
 	PFN_vkCmdDispatchBaseKHR vkCmdDispatchBaseKHR;
 	PFN_vkCmdSetDeviceMaskKHR vkCmdSetDeviceMaskKHR;
@@ -1005,6 +1507,11 @@ struct VolkDeviceTable
 #else
 	PFN_vkVoidFunction padding_4b372c56[1];
 #endif /* defined(VK_KHR_maintenance1) */
+#if defined(VK_KHR_maintenance10)
+	PFN_vkCmdEndRendering2KHR vkCmdEndRendering2KHR;
+#else
+	PFN_vkVoidFunction padding_c866e6ce[1];
+#endif /* defined(VK_KHR_maintenance10) */
 #if defined(VK_KHR_maintenance3)
 	PFN_vkGetDescriptorSetLayoutSupportKHR vkGetDescriptorSetLayoutSupportKHR;
 #else
@@ -1193,6 +1700,11 @@ struct VolkDeviceTable
 #else
 	PFN_vkVoidFunction padding_d290479a[1];
 #endif /* defined(VK_NVX_image_view_handle) && VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION >= 2 */
+#if defined(VK_NVX_image_view_handle) && VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION >= 4
+	PFN_vkGetDeviceCombinedImageSamplerIndexNVX vkGetDeviceCombinedImageSamplerIndexNVX;
+#else
+	PFN_vkVoidFunction padding_a980205b[1];
+#endif /* defined(VK_NVX_image_view_handle) && VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION >= 4 */
 #if defined(VK_NV_clip_space_w_scaling)
 	PFN_vkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNV;
 #else
@@ -1204,6 +1716,11 @@ struct VolkDeviceTable
 #else
 	PFN_vkVoidFunction padding_60e35395[2];
 #endif /* defined(VK_NV_cluster_acceleration_structure) */
+#if defined(VK_NV_compute_occupancy_priority)
+	PFN_vkCmdSetComputeOccupancyPriorityNV vkCmdSetComputeOccupancyPriorityNV;
+#else
+	PFN_vkVoidFunction padding_488584ea[1];
+#endif /* defined(VK_NV_compute_occupancy_priority) */
 #if defined(VK_NV_cooperative_vector)
 	PFN_vkCmdConvertCooperativeVectorMatrixNV vkCmdConvertCooperativeVectorMatrixNV;
 	PFN_vkConvertCooperativeVectorMatrixNV vkConvertCooperativeVectorMatrixNV;
@@ -1349,6 +1866,17 @@ struct VolkDeviceTable
 #else
 	PFN_vkVoidFunction padding_92a0767f[3];
 #endif /* defined(VK_NV_shading_rate_image) */
+#if defined(VK_OHOS_external_memory)
+	PFN_vkGetMemoryNativeBufferOHOS vkGetMemoryNativeBufferOHOS;
+	PFN_vkGetNativeBufferPropertiesOHOS vkGetNativeBufferPropertiesOHOS;
+#else
+	PFN_vkVoidFunction padding_9c703846[2];
+#endif /* defined(VK_OHOS_external_memory) */
+#if defined(VK_QCOM_queue_perf_hint)
+	PFN_vkQueueSetPerfHintQCOM vkQueueSetPerfHintQCOM;
+#else
+	PFN_vkVoidFunction padding_98b80534[1];
+#endif /* defined(VK_QCOM_queue_perf_hint) */
 #if defined(VK_QCOM_tile_memory_heap)
 	PFN_vkCmdBindTileMemoryQCOM vkCmdBindTileMemoryQCOM;
 #else
@@ -1577,6 +2105,15 @@ extern PFN_vkGetPhysicalDeviceToolProperties vkGetPhysicalDeviceToolProperties;
 extern PFN_vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM vkGetPhysicalDeviceQueueFamilyDataGraphProcessingEnginePropertiesARM;
 extern PFN_vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM vkGetPhysicalDeviceQueueFamilyDataGraphPropertiesARM;
 #endif /* defined(VK_ARM_data_graph) */
+#if defined(VK_ARM_data_graph_optical_flow)
+extern PFN_vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM;
+#endif /* defined(VK_ARM_data_graph_optical_flow) */
+#if defined(VK_ARM_performance_counters_by_region)
+extern PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM;
+#endif /* defined(VK_ARM_performance_counters_by_region) */
+#if defined(VK_ARM_shader_instrumentation)
+extern PFN_vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM;
+#endif /* defined(VK_ARM_shader_instrumentation) */
 #if defined(VK_ARM_tensors)
 extern PFN_vkGetPhysicalDeviceExternalTensorPropertiesARM vkGetPhysicalDeviceExternalTensorPropertiesARM;
 #endif /* defined(VK_ARM_tensors) */
@@ -1609,6 +2146,9 @@ extern PFN_vkSetDebugUtilsObjectNameEXT vkSetDebugUtilsObjectNameEXT;
 extern PFN_vkSetDebugUtilsObjectTagEXT vkSetDebugUtilsObjectTagEXT;
 extern PFN_vkSubmitDebugUtilsMessageEXT vkSubmitDebugUtilsMessageEXT;
 #endif /* defined(VK_EXT_debug_utils) */
+#if defined(VK_EXT_descriptor_heap)
+extern PFN_vkGetPhysicalDeviceDescriptorSizeEXT vkGetPhysicalDeviceDescriptorSizeEXT;
+#endif /* defined(VK_EXT_descriptor_heap) */
 #if defined(VK_EXT_direct_mode_display)
 extern PFN_vkReleaseDisplayEXT vkReleaseDisplayEXT;
 #endif /* defined(VK_EXT_direct_mode_display) */
@@ -1764,6 +2304,13 @@ extern PFN_vkCreateSurfaceOHOS vkCreateSurfaceOHOS;
 extern PFN_vkCreateScreenSurfaceQNX vkCreateScreenSurfaceQNX;
 extern PFN_vkGetPhysicalDeviceScreenPresentationSupportQNX vkGetPhysicalDeviceScreenPresentationSupportQNX;
 #endif /* defined(VK_QNX_screen_surface) */
+#if defined(VK_SEC_ubm_surface)
+extern PFN_vkCreateUbmSurfaceSEC vkCreateUbmSurfaceSEC;
+extern PFN_vkGetPhysicalDeviceUbmPresentationSupportSEC vkGetPhysicalDeviceUbmPresentationSupportSEC;
+#endif /* defined(VK_SEC_ubm_surface) */
+#if (defined(VK_ARM_data_graph_instruction_set_tosa)) || (defined(VK_ARM_data_graph_optical_flow))
+extern PFN_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM;
+#endif /* (defined(VK_ARM_data_graph_instruction_set_tosa)) || (defined(VK_ARM_data_graph_optical_flow)) */
 #if (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1))
 extern PFN_vkGetPhysicalDevicePresentRectanglesKHR vkGetPhysicalDevicePresentRectanglesKHR;
 #endif /* (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) */
@@ -2028,6 +2575,17 @@ extern PFN_vkGetDataGraphPipelinePropertiesARM vkGetDataGraphPipelinePropertiesA
 extern PFN_vkGetDataGraphPipelineSessionBindPointRequirementsARM vkGetDataGraphPipelineSessionBindPointRequirementsARM;
 extern PFN_vkGetDataGraphPipelineSessionMemoryRequirementsARM vkGetDataGraphPipelineSessionMemoryRequirementsARM;
 #endif /* defined(VK_ARM_data_graph) */
+#if defined(VK_ARM_scheduling_controls) && VK_ARM_SCHEDULING_CONTROLS_SPEC_VERSION >= 2
+extern PFN_vkCmdSetDispatchParametersARM vkCmdSetDispatchParametersARM;
+#endif /* defined(VK_ARM_scheduling_controls) && VK_ARM_SCHEDULING_CONTROLS_SPEC_VERSION >= 2 */
+#if defined(VK_ARM_shader_instrumentation)
+extern PFN_vkClearShaderInstrumentationMetricsARM vkClearShaderInstrumentationMetricsARM;
+extern PFN_vkCmdBeginShaderInstrumentationARM vkCmdBeginShaderInstrumentationARM;
+extern PFN_vkCmdEndShaderInstrumentationARM vkCmdEndShaderInstrumentationARM;
+extern PFN_vkCreateShaderInstrumentationARM vkCreateShaderInstrumentationARM;
+extern PFN_vkDestroyShaderInstrumentationARM vkDestroyShaderInstrumentationARM;
+extern PFN_vkGetShaderInstrumentationValuesARM vkGetShaderInstrumentationValuesARM;
+#endif /* defined(VK_ARM_shader_instrumentation) */
 #if defined(VK_ARM_tensors)
 extern PFN_vkBindTensorMemoryARM vkBindTensorMemoryARM;
 extern PFN_vkCmdCopyTensorARM vkCmdCopyTensorARM;
@@ -2058,6 +2616,9 @@ extern PFN_vkCmdSetColorWriteEnableEXT vkCmdSetColorWriteEnableEXT;
 extern PFN_vkCmdBeginConditionalRenderingEXT vkCmdBeginConditionalRenderingEXT;
 extern PFN_vkCmdEndConditionalRenderingEXT vkCmdEndConditionalRenderingEXT;
 #endif /* defined(VK_EXT_conditional_rendering) */
+#if defined(VK_EXT_custom_resolve) && (defined(VK_KHR_dynamic_rendering) || defined(VK_VERSION_1_3))
+extern PFN_vkCmdBeginCustomResolveEXT vkCmdBeginCustomResolveEXT;
+#endif /* defined(VK_EXT_custom_resolve) && (defined(VK_KHR_dynamic_rendering) || defined(VK_VERSION_1_3)) */
 #if defined(VK_EXT_debug_marker)
 extern PFN_vkCmdDebugMarkerBeginEXT vkCmdDebugMarkerBeginEXT;
 extern PFN_vkCmdDebugMarkerEndEXT vkCmdDebugMarkerEndEXT;
@@ -2083,6 +2644,21 @@ extern PFN_vkGetSamplerOpaqueCaptureDescriptorDataEXT vkGetSamplerOpaqueCaptureD
 #if defined(VK_EXT_descriptor_buffer) && (defined(VK_KHR_acceleration_structure) || defined(VK_NV_ray_tracing))
 extern PFN_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT;
 #endif /* defined(VK_EXT_descriptor_buffer) && (defined(VK_KHR_acceleration_structure) || defined(VK_NV_ray_tracing)) */
+#if defined(VK_EXT_descriptor_heap)
+extern PFN_vkCmdBindResourceHeapEXT vkCmdBindResourceHeapEXT;
+extern PFN_vkCmdBindSamplerHeapEXT vkCmdBindSamplerHeapEXT;
+extern PFN_vkCmdPushDataEXT vkCmdPushDataEXT;
+extern PFN_vkGetImageOpaqueCaptureDataEXT vkGetImageOpaqueCaptureDataEXT;
+extern PFN_vkWriteResourceDescriptorsEXT vkWriteResourceDescriptorsEXT;
+extern PFN_vkWriteSamplerDescriptorsEXT vkWriteSamplerDescriptorsEXT;
+#endif /* defined(VK_EXT_descriptor_heap) */
+#if defined(VK_EXT_descriptor_heap) && defined(VK_EXT_custom_border_color)
+extern PFN_vkRegisterCustomBorderColorEXT vkRegisterCustomBorderColorEXT;
+extern PFN_vkUnregisterCustomBorderColorEXT vkUnregisterCustomBorderColorEXT;
+#endif /* defined(VK_EXT_descriptor_heap) && defined(VK_EXT_custom_border_color) */
+#if defined(VK_EXT_descriptor_heap) && defined(VK_ARM_tensors)
+extern PFN_vkGetTensorOpaqueCaptureDataARM vkGetTensorOpaqueCaptureDataARM;
+#endif /* defined(VK_EXT_descriptor_heap) && defined(VK_ARM_tensors) */
 #if defined(VK_EXT_device_fault)
 extern PFN_vkGetDeviceFaultInfoEXT vkGetDeviceFaultInfoEXT;
 #endif /* defined(VK_EXT_device_fault) */
@@ -2145,6 +2721,10 @@ extern PFN_vkGetImageDrmFormatModifierPropertiesEXT vkGetImageDrmFormatModifierP
 #if defined(VK_EXT_line_rasterization)
 extern PFN_vkCmdSetLineStippleEXT vkCmdSetLineStippleEXT;
 #endif /* defined(VK_EXT_line_rasterization) */
+#if defined(VK_EXT_memory_decompression)
+extern PFN_vkCmdDecompressMemoryEXT vkCmdDecompressMemoryEXT;
+extern PFN_vkCmdDecompressMemoryIndirectCountEXT vkCmdDecompressMemoryIndirectCountEXT;
+#endif /* defined(VK_EXT_memory_decompression) */
 #if defined(VK_EXT_mesh_shader)
 extern PFN_vkCmdDrawMeshTasksEXT vkCmdDrawMeshTasksEXT;
 extern PFN_vkCmdDrawMeshTasksIndirectEXT vkCmdDrawMeshTasksIndirectEXT;
@@ -2181,6 +2761,15 @@ extern PFN_vkSetDeviceMemoryPriorityEXT vkSetDeviceMemoryPriorityEXT;
 #if defined(VK_EXT_pipeline_properties)
 extern PFN_vkGetPipelinePropertiesEXT vkGetPipelinePropertiesEXT;
 #endif /* defined(VK_EXT_pipeline_properties) */
+#if defined(VK_EXT_present_timing)
+extern PFN_vkGetPastPresentationTimingEXT vkGetPastPresentationTimingEXT;
+extern PFN_vkGetSwapchainTimeDomainPropertiesEXT vkGetSwapchainTimeDomainPropertiesEXT;
+extern PFN_vkGetSwapchainTimingPropertiesEXT vkGetSwapchainTimingPropertiesEXT;
+extern PFN_vkSetSwapchainPresentTimingQueueSizeEXT vkSetSwapchainPresentTimingQueueSizeEXT;
+#endif /* defined(VK_EXT_present_timing) */
+#if defined(VK_EXT_primitive_restart_index)
+extern PFN_vkCmdSetPrimitiveRestartIndexEXT vkCmdSetPrimitiveRestartIndexEXT;
+#endif /* defined(VK_EXT_primitive_restart_index) */
 #if defined(VK_EXT_private_data)
 extern PFN_vkCreatePrivateDataSlotEXT vkCreatePrivateDataSlotEXT;
 extern PFN_vkDestroyPrivateDataSlotEXT vkDestroyPrivateDataSlotEXT;
@@ -2320,6 +2909,48 @@ extern PFN_vkCreateDescriptorUpdateTemplateKHR vkCreateDescriptorUpdateTemplateK
 extern PFN_vkDestroyDescriptorUpdateTemplateKHR vkDestroyDescriptorUpdateTemplateKHR;
 extern PFN_vkUpdateDescriptorSetWithTemplateKHR vkUpdateDescriptorSetWithTemplateKHR;
 #endif /* defined(VK_KHR_descriptor_update_template) */
+#if defined(VK_KHR_device_address_commands)
+extern PFN_vkCmdBindIndexBuffer3KHR vkCmdBindIndexBuffer3KHR;
+extern PFN_vkCmdBindVertexBuffers3KHR vkCmdBindVertexBuffers3KHR;
+extern PFN_vkCmdCopyImageToMemoryKHR vkCmdCopyImageToMemoryKHR;
+extern PFN_vkCmdCopyMemoryKHR vkCmdCopyMemoryKHR;
+extern PFN_vkCmdCopyMemoryToImageKHR vkCmdCopyMemoryToImageKHR;
+extern PFN_vkCmdCopyQueryPoolResultsToMemoryKHR vkCmdCopyQueryPoolResultsToMemoryKHR;
+extern PFN_vkCmdDispatchIndirect2KHR vkCmdDispatchIndirect2KHR;
+extern PFN_vkCmdDrawIndexedIndirect2KHR vkCmdDrawIndexedIndirect2KHR;
+extern PFN_vkCmdDrawIndirect2KHR vkCmdDrawIndirect2KHR;
+extern PFN_vkCmdFillMemoryKHR vkCmdFillMemoryKHR;
+extern PFN_vkCmdUpdateMemoryKHR vkCmdUpdateMemoryKHR;
+#endif /* defined(VK_KHR_device_address_commands) */
+#if defined(VK_KHR_device_address_commands) && (defined(VK_KHR_draw_indirect_count) || defined(VK_VERSION_1_2))
+extern PFN_vkCmdDrawIndexedIndirectCount2KHR vkCmdDrawIndexedIndirectCount2KHR;
+extern PFN_vkCmdDrawIndirectCount2KHR vkCmdDrawIndirectCount2KHR;
+#endif /* defined(VK_KHR_device_address_commands) && (defined(VK_KHR_draw_indirect_count) || defined(VK_VERSION_1_2)) */
+#if defined(VK_KHR_device_address_commands) && defined(VK_EXT_conditional_rendering)
+extern PFN_vkCmdBeginConditionalRendering2EXT vkCmdBeginConditionalRendering2EXT;
+#endif /* defined(VK_KHR_device_address_commands) && defined(VK_EXT_conditional_rendering) */
+#if defined(VK_KHR_device_address_commands) && defined(VK_EXT_transform_feedback)
+extern PFN_vkCmdBeginTransformFeedback2EXT vkCmdBeginTransformFeedback2EXT;
+extern PFN_vkCmdBindTransformFeedbackBuffers2EXT vkCmdBindTransformFeedbackBuffers2EXT;
+extern PFN_vkCmdDrawIndirectByteCount2EXT vkCmdDrawIndirectByteCount2EXT;
+extern PFN_vkCmdEndTransformFeedback2EXT vkCmdEndTransformFeedback2EXT;
+#endif /* defined(VK_KHR_device_address_commands) && defined(VK_EXT_transform_feedback) */
+#if defined(VK_KHR_device_address_commands) && defined(VK_EXT_mesh_shader)
+extern PFN_vkCmdDrawMeshTasksIndirect2EXT vkCmdDrawMeshTasksIndirect2EXT;
+#endif /* defined(VK_KHR_device_address_commands) && defined(VK_EXT_mesh_shader) */
+#if defined(VK_KHR_device_address_commands) && ((defined(VK_KHR_draw_indirect_count) || defined(VK_VERSION_1_2)) && defined(VK_EXT_mesh_shader))
+extern PFN_vkCmdDrawMeshTasksIndirectCount2EXT vkCmdDrawMeshTasksIndirectCount2EXT;
+#endif /* defined(VK_KHR_device_address_commands) && ((defined(VK_KHR_draw_indirect_count) || defined(VK_VERSION_1_2)) && defined(VK_EXT_mesh_shader)) */
+#if defined(VK_KHR_device_address_commands) && defined(VK_AMD_buffer_marker)
+extern PFN_vkCmdWriteMarkerToMemoryAMD vkCmdWriteMarkerToMemoryAMD;
+#endif /* defined(VK_KHR_device_address_commands) && defined(VK_AMD_buffer_marker) */
+#if defined(VK_KHR_device_address_commands) && defined(VK_KHR_acceleration_structure)
+extern PFN_vkCreateAccelerationStructure2KHR vkCreateAccelerationStructure2KHR;
+#endif /* defined(VK_KHR_device_address_commands) && defined(VK_KHR_acceleration_structure) */
+#if defined(VK_KHR_device_fault)
+extern PFN_vkGetDeviceFaultDebugInfoKHR vkGetDeviceFaultDebugInfoKHR;
+extern PFN_vkGetDeviceFaultReportsKHR vkGetDeviceFaultReportsKHR;
+#endif /* defined(VK_KHR_device_fault) */
 #if defined(VK_KHR_device_group)
 extern PFN_vkCmdDispatchBaseKHR vkCmdDispatchBaseKHR;
 extern PFN_vkCmdSetDeviceMaskKHR vkCmdSetDeviceMaskKHR;
@@ -2378,6 +3009,9 @@ extern PFN_vkCmdSetLineStippleKHR vkCmdSetLineStippleKHR;
 #if defined(VK_KHR_maintenance1)
 extern PFN_vkTrimCommandPoolKHR vkTrimCommandPoolKHR;
 #endif /* defined(VK_KHR_maintenance1) */
+#if defined(VK_KHR_maintenance10)
+extern PFN_vkCmdEndRendering2KHR vkCmdEndRendering2KHR;
+#endif /* defined(VK_KHR_maintenance10) */
 #if defined(VK_KHR_maintenance3)
 extern PFN_vkGetDescriptorSetLayoutSupportKHR vkGetDescriptorSetLayoutSupportKHR;
 #endif /* defined(VK_KHR_maintenance3) */
@@ -2510,6 +3144,9 @@ extern PFN_vkGetImageViewHandle64NVX vkGetImageViewHandle64NVX;
 #if defined(VK_NVX_image_view_handle) && VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION >= 2
 extern PFN_vkGetImageViewAddressNVX vkGetImageViewAddressNVX;
 #endif /* defined(VK_NVX_image_view_handle) && VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION >= 2 */
+#if defined(VK_NVX_image_view_handle) && VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION >= 4
+extern PFN_vkGetDeviceCombinedImageSamplerIndexNVX vkGetDeviceCombinedImageSamplerIndexNVX;
+#endif /* defined(VK_NVX_image_view_handle) && VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION >= 4 */
 #if defined(VK_NV_clip_space_w_scaling)
 extern PFN_vkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNV;
 #endif /* defined(VK_NV_clip_space_w_scaling) */
@@ -2517,6 +3154,9 @@ extern PFN_vkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNV;
 extern PFN_vkCmdBuildClusterAccelerationStructureIndirectNV vkCmdBuildClusterAccelerationStructureIndirectNV;
 extern PFN_vkGetClusterAccelerationStructureBuildSizesNV vkGetClusterAccelerationStructureBuildSizesNV;
 #endif /* defined(VK_NV_cluster_acceleration_structure) */
+#if defined(VK_NV_compute_occupancy_priority)
+extern PFN_vkCmdSetComputeOccupancyPriorityNV vkCmdSetComputeOccupancyPriorityNV;
+#endif /* defined(VK_NV_compute_occupancy_priority) */
 #if defined(VK_NV_cooperative_vector)
 extern PFN_vkCmdConvertCooperativeVectorMatrixNV vkCmdConvertCooperativeVectorMatrixNV;
 extern PFN_vkConvertCooperativeVectorMatrixNV vkConvertCooperativeVectorMatrixNV;
@@ -2620,6 +3260,13 @@ extern PFN_vkCmdBindShadingRateImageNV vkCmdBindShadingRateImageNV;
 extern PFN_vkCmdSetCoarseSampleOrderNV vkCmdSetCoarseSampleOrderNV;
 extern PFN_vkCmdSetViewportShadingRatePaletteNV vkCmdSetViewportShadingRatePaletteNV;
 #endif /* defined(VK_NV_shading_rate_image) */
+#if defined(VK_OHOS_external_memory)
+extern PFN_vkGetMemoryNativeBufferOHOS vkGetMemoryNativeBufferOHOS;
+extern PFN_vkGetNativeBufferPropertiesOHOS vkGetNativeBufferPropertiesOHOS;
+#endif /* defined(VK_OHOS_external_memory) */
+#if defined(VK_QCOM_queue_perf_hint)
+extern PFN_vkQueueSetPerfHintQCOM vkQueueSetPerfHintQCOM;
+#endif /* defined(VK_QCOM_queue_perf_hint) */
 #if defined(VK_QCOM_tile_memory_heap)
 extern PFN_vkCmdBindTileMemoryQCOM vkCmdBindTileMemoryQCOM;
 #endif /* defined(VK_QCOM_tile_memory_heap) */
@@ -2765,7 +3412,7 @@ using namespace volk;
 #endif
 
 /**
- * Copyright (c) 2018-2025 Arseny Kapoulkine
+ * Copyright (c) 2018-2026 Arseny Kapoulkine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

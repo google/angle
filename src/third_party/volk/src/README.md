@@ -98,7 +98,7 @@ volk also supports installation and config-file packages. Installation is disabl
 
 By default, volk is compiled as a C library and exposes all Vulkan function pointers as globals. This can result in symbol conflicts if some libraries in the application are still linking to Vulkan libraries directly. While generally speaking it's desirable to not mix & match volk with direct usage of Vulkan - for example, mixed usage means the application still links directly to Vulkan libraries and will fail to launch if Vulkan is not available on the user's system - it's possible to enable `VOLK_NAMESPACE` CMake option (or `VOLK_NAMESPACE` define when building volk manually), which places all volk symbols into `volk::` namespace. This requires compiling `volk.c` in C++ mode, which happens automatically when using CMake, but doesn'trequire any other changes.
 
-Device level functions can be hidden by defining `VOLK_NO_DEVICE_PROTOTYPES`. When using `volkLoadInstaceOnly` and `volkLoadDeviceTable` the device level functions are never loaded and when not used correctly would trigger a runtime error. By hiding the device prototypes mistakes can be checked by the compiler.
+Device level functions can be hidden by defining `VOLK_NO_DEVICE_PROTOTYPES`. When using `volkLoadInstanceOnly` and `volkLoadDeviceTable` the device level functions are never loaded and when not used correctly would trigger a runtime error. By hiding the device prototypes mistakes can be checked by the compiler.
 
 ## License
 
