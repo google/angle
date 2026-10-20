@@ -288,6 +288,7 @@ vars = {
   'checkout_angle_restricted_trace_egypt_1500': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_eight_ball_pool': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_empires_and_puzzles': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_epic_seven': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_eve_echoes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_evony_the_kings_return': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_extreme_car_driving_simulator': 'checkout_extra_traces',
@@ -459,7 +460,7 @@ vars = {
   'checkout_angle_restricted_trace_quick_hit_casino_slots': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_race_master_3d': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_ragnarok_m_eternal_love': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_raid_rush': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_raid_rush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_raid_shadow_legends': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_raising_a_goblin': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_real_commando_secret_mission': 'checkout_extra_traces',
@@ -476,13 +477,14 @@ vars = {
   'checkout_angle_restricted_trace_rope_hero_vice_town': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_royal_kingdom': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_royal_match': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_run_goddess': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_run_goddess': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_rush_royale': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_saint_seiya_awakening': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_sakura_school_simulator': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_scary_teacher_3d': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_school_party_craft': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_scrabble_go': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_sea_of_conquest': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_seaside_escape': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_shadow_fight_2': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_shadow_fight_3': 'checkout_extra_traces',
@@ -501,6 +503,7 @@ vars = {
   'checkout_angle_restricted_trace_sniper_3d': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_soccer_superstar': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_solar_smash': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_sonic_dash_run': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_sonic_forces': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_sonic_the_hedgehog': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_special_forces_group_2': 'checkout_extra_traces',
@@ -530,7 +533,7 @@ vars = {
   'checkout_angle_restricted_trace_tesla': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_teslagrad': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_tessellation': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_the_battle_cats': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_the_battle_cats': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_the_gardens_between': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_the_sims_mobile': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_the_witcher_monster_slayer': 'checkout_extra_traces',
@@ -2722,6 +2725,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_empires_and_puzzles',
   },
+  'src/tests/restricted_traces/epic_seven': {
+      'packages': [
+        {
+            'package': 'angle/traces/epic_seven',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_epic_seven',
+  },
   'src/tests/restricted_traces/eve_echoes': {
       'packages': [
         {
@@ -4672,6 +4685,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_scrabble_go',
   },
+  'src/tests/restricted_traces/sea_of_conquest': {
+      'packages': [
+        {
+            'package': 'angle/traces/sea_of_conquest',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_sea_of_conquest',
+  },
   'src/tests/restricted_traces/seaside_escape': {
       'packages': [
         {
@@ -4851,6 +4874,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_solar_smash',
+  },
+  'src/tests/restricted_traces/sonic_dash_run': {
+      'packages': [
+        {
+            'package': 'angle/traces/sonic_dash_run',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_sonic_dash_run',
   },
   'src/tests/restricted_traces/sonic_forces': {
       'packages': [
