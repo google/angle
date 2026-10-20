@@ -86,31 +86,62 @@ const TVariable *computeFiniteLoopVariable(TIntermLoop *loop)
     {
         return nullptr;
     }
+    // Loop index must be compared with a constant or uniform or similar read-only variable.
+    if (!IsReadOnlyExpr(*binCond->getRight()))
+    {
+        return nullptr;
+    }
     switch (binCond->getOp())
     {
         case EOpEqual:
         case EOpNotEqual:
         case EOpLessThan:
         case EOpGreaterThan:
-        case EOpLessThanEqual:
             break;
+        case EOpLessThanEqual:
+        {
+            // If the condition is <=, it might be |<= UINT_MAX| or |<= INT_MAX| for signed ints.
+            // However, |for| loops with <= are likely common, so we try to avoid considering them
+            // as infinite loop unnecessarily.  For simplicity, if a variable is used or any
+            // unrealistically large constant, consider it a potential infinite loop.
+            constexpr int32_t kLoopLimit     = 1'000'000;
+            const TConstantUnion *comparator = binCond->getRight()->getConstantValue();
+            if (comparator == nullptr)
+            {
+                return nullptr;
+            }
+            switch (comparator->getType())
+            {
+                case EbtInt:
+                    if (comparator->getIConst() < 0 || comparator->getIConst() >= kLoopLimit)
+                    {
+                        return nullptr;
+                    }
+                    break;
+                case EbtUInt:
+                    if (comparator->getUConst() >= kLoopLimit)
+                    {
+                        return nullptr;
+                    }
+                    break;
+                default:
+                    return nullptr;
+            }
+            break;
+        }
         case EOpGreaterThanEqual:
             // If the type is uint and the condition is >=, it might be |>= 0| which is always true;
             // don't consider that a finite loop.  Only |>= 0| and |>= variable_that_could_be_zero|
             // may lead to infinite loop, but all uint with >= is considered infinite loop for
             // simplicity.
-            if (variable->getType().getBasicType() == EbtUInt)
-            {
-                return nullptr;
-            }
-            break;
+            //
+            // While signed int overflow is undefined behavior, |>= INT_MIN| would also be
+            // unconditionally true even if the compiler makes signed int overflow well-defined.
+            // Using >= in loops is uncommon, so any >= use is considered a potential infinite loop
+            // for simplicity.
+            return nullptr;
         default:
             return nullptr;
-    }
-    // Loop index must be compared with a constant or uniform or similar read-only variable.
-    if (!IsReadOnlyExpr(*binCond->getRight()))
-    {
-        return nullptr;
     }
     if (TIntermUnary *unary = expr->getAsUnaryNode())
     {

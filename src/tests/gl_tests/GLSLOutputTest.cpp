@@ -618,8 +618,6 @@ void main() {
         // Finite because |int| is implemented with |uint| such that wraparound has
         // well-defined behavior, and eventually the values wrap around to make the
         // condition false.
-        "for (int i = 0; i >= 0; ++i) { }",
-        "for (int i = 1; i >= 0; ++i) { }",
         "for (int i = 1; i > 0; ++i) { }",
         "for (int i = 0; i < 10; i -= 1) { }",
         // Finite because of eventual wrap around to zero.
@@ -675,6 +673,13 @@ void main() {
         "for (uint i = 10u; i >= b; ++i) { }",
         // Infinite loop because the condition is always true as |i| never changes.
         "for (uint i = 0u; i == 0u; i += 0u) { }",
+        // Infinite loop because signed integer overflow is undefined behavior
+        "for (int i = 0; i >= 0; ++i) { }",
+        "for (int i = 1; i >= 0; ++i) { }",
+        // Infinite loop because the condition is always true
+        "for (int i = 0; i <= 2147483647; ++i) { }",
+        "for (int i = 0; i >= -2147483648; ++i) { }",
+        "for (uint i = 0u; i <= 4294967295u; ++i) { }",
     };
 
     for (const char *test : kTests)
