@@ -14,7 +14,6 @@
 #include "common/android_util.h"
 #include "common/platform.h"
 #include "common/string_utils.h"
-#include "common/system_utils.h"
 #include "gpu_info_util/SystemInfo.h"
 
 #if defined(ANGLE_PLATFORM_LINUX)
@@ -306,7 +305,11 @@ namespace
 // Accepts the same values as android::base::GetBoolProperty().
 std::optional<bool> GetBoolProperty(const char *name)
 {
-    const std::string value = angle::GetEnvironmentVarOrAndroidProperty("", name);
+    std::string value;
+    if (!angle::android::GetSystemProperty(name, &value))
+    {
+        return std::nullopt;
+    }
     if (value == "1" || value == "y" || value == "yes" || value == "on" || value == "true")
     {
         return true;
@@ -320,8 +323,10 @@ std::optional<bool> GetBoolProperty(const char *name)
 
 std::optional<int64_t> GetInt64Property(const char *name)
 {
+    std::string valueString;
     int64_t value = 0;
-    if (angle::StringToInt64(angle::GetEnvironmentVarOrAndroidProperty("", name), &value))
+    if (angle::android::GetSystemProperty(name, &valueString) &&
+        angle::StringToInt64(valueString, &value))
     {
         return value;
     }

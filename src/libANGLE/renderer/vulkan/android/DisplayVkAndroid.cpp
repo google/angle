@@ -14,9 +14,9 @@
 #include <vulkan/vulkan.h>
 #include <cinttypes>
 
+#include "common/android_util.h"
 #include "common/angle_version_info.h"
 #include "common/string_utils.h"
-#include "common/system_utils.h"
 #include "common/unsafe_buffers.h"
 #include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.h"
@@ -45,13 +45,13 @@ void CheckAndroidBlobcacheLimits()
     }
 
     // Check the Android version to determine recommended size
-    std::string androidVersionReleaseStr =
-        angle::GetEnvironmentVarOrAndroidProperty("", "ro.build.version.release");
+    std::string androidVersionReleaseStr;
     int64_t androidVersionRelease = 0;
 
     // Starting with Android 17, we've bumped up recommended to 128 MB
     int64_t recommendedBlobcacheSize = 128 * 1024 * 1024;
-    if (angle::StringToInt64(androidVersionReleaseStr, &androidVersionRelease) &&
+    if (angle::android::GetSystemProperty("ro.build.version.release", &androidVersionReleaseStr) &&
+        angle::StringToInt64(androidVersionReleaseStr, &androidVersionRelease) &&
         androidVersionRelease < 17)
     {
         recommendedBlobcacheSize = 32 * 1024 * 1024;
