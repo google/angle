@@ -8331,7 +8331,22 @@ angle::Result ContextVk::flushAndSubmitOutsideRenderPassCommands(QueueSubmitReas
     }
     ASSERT(QueueSerialsHaveDifferentIndexOrSmaller(mLastSubmittedQueueSerial,
                                                    mLastFlushedQueueSerial));
-    return submitCommands(nullptr, nullptr, reason);
+
+    vk::ImageHelper *imageWithTileMemory = mImageWithTileMemory;
+
+    ANGLE_TRY(submitCommands(nullptr, nullptr, reason));
+
+    // Continue to use the image whose allocation is in the tile memory.  The submission of the
+    // outside render pass commands has no bearing on the render pass's use of this image.  Tile
+    // memory binding is per command buffer, so rebind it for the still open render pass.
+    if (imageWithTileMemory != nullptr && mRenderPassCommands->started() &&
+        mRenderPassCommands->usesImage(*imageWithTileMemory))
+    {
+        ASSERT(!imageWithTileMemory->isVkImageContentDefined());
+        addImageWithTileMemory(imageWithTileMemory);
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::flushOutsideRenderPassCommands()
