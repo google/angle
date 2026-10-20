@@ -6915,11 +6915,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // be enabled on platforms if:
     //
     // - mergeProgramPipelineCachesToGlobalCache is enabled
-    // - preferMonolithicPipelinesOverLibraries is enabled
     // - stale nvidia drivers
     ANGLE_FEATURE_CONDITION(&mFeatures, externallySynchronizePipelineCacheAccess,
                             mFeatures.mergeProgramPipelineCachesToGlobalCache.enabled ||
-                                mFeatures.preferMonolithicPipelinesOverLibraries.enabled ||
                                 (isNvidia && driverVersion < angle::VersionTriple(441, 0, 0)));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, enableAsyncPipelineCacheCompression, true);
