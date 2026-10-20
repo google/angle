@@ -1308,8 +1308,6 @@ void DisplayMtl::initializeFeatures()
     ANGLE_FEATURE_CONDITION(&mFeatures, disableStagedInitializationOfPackedTextureFormats,
                             isIntel() || isAMD());
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), generateShareableShaders, true);
-
     // http://anglebug.com/42266609: NVIDIA GPUs are unsupported due to scarcity of the hardware.
     ANGLE_FEATURE_CONDITION((&mFeatures), disableMetalOnNvidia, true);
 
