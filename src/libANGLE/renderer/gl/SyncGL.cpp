@@ -53,11 +53,12 @@ angle::Result SyncGL::clientWait(const gl::Context *context,
                                  GLenum *outResult)
 {
     ASSERT(mSyncObject != 0);
-    *outResult = mRenderer->getFunctions()->clientWaitSync(mSyncObject, flags, timeout);
-    if (*outResult == GL_ALREADY_SIGNALED || *outResult == GL_CONDITION_SATISFIED)
+    GLenum result = mRenderer->getFunctions()->clientWaitSync(mSyncObject, flags, timeout);
+    if (result == GL_ALREADY_SIGNALED || result == GL_CONDITION_SATISFIED)
     {
         mRenderer->getStateManager()->onSerialCompleted(mDeferredBufferDeletionSerial);
     }
+    *outResult = result;
     return angle::Result::Continue;
 }
 
@@ -71,11 +72,14 @@ angle::Result SyncGL::serverWait(const gl::Context *context, GLbitfield flags, G
 angle::Result SyncGL::getStatus(const gl::Context *context, GLint *outResult)
 {
     ASSERT(mSyncObject != 0);
-    mRenderer->getFunctions()->getSynciv(mSyncObject, GL_SYNC_STATUS, 1, nullptr, outResult);
-    if (*outResult == GL_SIGNALED)
+    GLint status   = GL_UNSIGNALED;
+    GLsizei length = 0;
+    mRenderer->getFunctions()->getSynciv(mSyncObject, GL_SYNC_STATUS, 1, &length, &status);
+    if (length == 1 && status == GL_SIGNALED)
     {
         mRenderer->getStateManager()->onSerialCompleted(mDeferredBufferDeletionSerial);
     }
+    *outResult = status;
     return angle::Result::Continue;
 }
 }  // namespace rx
