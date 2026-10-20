@@ -414,6 +414,14 @@ class Renderer : angle::NonCopyable
     angle::Result mergeIntoPipelineCache(vk::ErrorContext *context,
                                          const vk::PipelineCache &pipelineCache);
 
+    // Whether it is allowed to use program's pipeline cache, otherwise need to use mPipelineCache.
+    bool allowProgramPipelineCache() const
+    {
+        return !mFeatures.preferGlobalPipelineCache.enabled &&
+               mFeatures.warmUpPipelineCacheAtLink.enabled &&
+               !mFeatures.skipPipelineCacheSerialization.enabled;
+    }
+
     const std::vector<const char *> &getSkippedValidationMessages() const
     {
         return mSkippedValidationMessages;

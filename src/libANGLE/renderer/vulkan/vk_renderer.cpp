@@ -7020,22 +7020,26 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // To avoid memory bloating due to using pipeline caches per program, the pipeline cache in the
     // renderer can be used.
+    // Also explicitly prefer the global cache (otherwise, it will be used implicitly):
+    // - when warm up is disabled - program's cache will be empty at draw time, in which case using
+    //   global cache is better.
+    // - when skipping serialization - to avoid creating per program caches unnecessarily.
     ANGLE_FEATURE_CONDITION(&mFeatures, preferGlobalPipelineCache,
-                            isNvidia || (isAMD && !isRADV) || isSamsung || isQualcommProprietary);
+                            !mFeatures.warmUpPipelineCacheAtLink.enabled ||
+                                mFeatures.skipPipelineCacheSerialization.enabled || isNvidia ||
+                                (isAMD && !isRADV) || isSamsung || isQualcommProprietary);
 
     // Whether the pipeline caches should merge into the global pipeline cache.  This should only be
     // enabled on platforms if:
     //
-    // - preferGlobalPipelineCache is not enabled
-    // - VK_EXT_graphics_pipeline_library is not supported.  In that case, only the program's cache
-    //   used during warm up is merged into the global cache for later monolithic pipeline creation.
+    // - allowProgramPipelineCache() is true
     // - VK_EXT_graphics_pipeline_library is supported, monolithic pipelines are preferred, and the
     //   driver is able to reuse blobs from partial pipelines when creating monolithic pipelines.
     ANGLE_FEATURE_CONDITION(&mFeatures, mergeProgramPipelineCachesToGlobalCache,
-                            !mFeatures.preferGlobalPipelineCache.enabled &&
-                                (!mFeatures.supportsGraphicsPipelineLibrary.enabled ||
-                                 (mFeatures.preferMonolithicPipelinesOverLibraries.enabled &&
-                                  libraryBlobsAreReusedByMonolithicPipelines)));
+                            allowProgramPipelineCache() &&
+                                mFeatures.supportsGraphicsPipelineLibrary.enabled &&
+                                mFeatures.preferMonolithicPipelinesOverLibraries.enabled &&
+                                libraryBlobsAreReusedByMonolithicPipelines);
 
     // Whether all accesses to pipeline cache need to be externally synchronized. This should only
     // be enabled on platforms if:
@@ -7056,22 +7060,20 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Sync global pipeline cache to the blob cache occasionally on platforms that would benefit
     // from it:
     //
-    // - VK_EXT_graphics_pipeline_library is not supported, and the program cache is not warmed up:
-    //   If the pipeline cache is being warmed up at link time, the blobs corresponding to each
-    //   program is individually retrieved and stored in the blob cache already.
+    // - the program pipeline cache use is not allowed (only allowed when warmed up):
+    //   If the program pipeline cache is being warmed up at link time, the blobs corresponding to
+    //   each program is individually retrieved and stored in the blob cache already.
     // - VK_EXT_graphics_pipeline_library is supported, but monolithic pipelines are still
     //   preferred, and the cost of syncing the large cache is acceptable.
     //
     // Otherwise global pipeline cache is recreated on every run.
-    const bool hasNoPipelineWarmUp = !mFeatures.supportsGraphicsPipelineLibrary.enabled &&
-                                     !mFeatures.warmUpPipelineCacheAtLink.enabled;
     const bool canSyncLargeMonolithicCache =
         mFeatures.supportsGraphicsPipelineLibrary.enabled &&
         mFeatures.preferMonolithicPipelinesOverLibraries.enabled &&
         (!IsAndroid() || mFeatures.enableAsyncPipelineCacheCompression.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, syncGlobalPipelineCacheToBlobCache,
                             !mFeatures.skipPipelineCacheSerialization.enabled &&
-                                (hasNoPipelineWarmUp || canSyncLargeMonolithicCache));
+                                (!allowProgramPipelineCache() || canSyncLargeMonolithicCache));
 
     // Enable the feature on Samsung by default, because it has big blob cache.
     ANGLE_FEATURE_CONDITION(&mFeatures, useDualPipelineBlobCacheSlots, isSamsung);

@@ -7185,6 +7185,7 @@ VkResult PipelineCacheAccess::getCacheData(vk::ErrorContext *context,
 void PipelineCacheAccess::merge(Renderer *renderer, const vk::PipelineCache &pipelineCache)
 {
     ASSERT(isThreadSafe());
+    ASSERT(pipelineCache.valid() && pipelineCache.getHandle() != mPipelineCache->getHandle());
 
     std::unique_lock<angle::SimpleMutex> lock = getLock();
 

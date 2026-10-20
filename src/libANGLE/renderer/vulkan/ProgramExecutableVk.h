@@ -601,7 +601,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     //
     // With VK_EXT_graphics_pipeline_library, this cache is used for the "shaders" subset of the
     // pipeline.
-    vk::PipelineCache mPipelineCache;
+    vk::PipelineCache mProgramPipelineCache;
 
     vk::GraphicsPipelineDesc mWarmUpGraphicsPipelineDesc;
 

@@ -185,10 +185,9 @@ void GetPipelineCacheData(ContextVk *contextVk,
                           const vk::PipelineCache &pipelineCache,
                           angle::MemoryBuffer *cacheDataOut)
 {
-    ASSERT(pipelineCache.valid() || contextVk->getState().isGLES1() ||
-           !contextVk->getFeatures().warmUpPipelineCacheAtLink.enabled ||
-           contextVk->getFeatures().skipPipelineCacheSerialization.enabled);
-    if (!pipelineCache.valid() || contextVk->getFeatures().skipPipelineCacheSerialization.enabled)
+    ASSERT(pipelineCache.valid() == (contextVk->getRenderer()->allowProgramPipelineCache() &&
+                                     !contextVk->getState().isGLES1()));
+    if (!pipelineCache.valid())
     {
         return;
     }
@@ -700,7 +699,7 @@ ProgramExecutableVk::ProgramExecutableVk(const gl::ProgramExecutable *executable
 
 ProgramExecutableVk::~ProgramExecutableVk()
 {
-    ASSERT(!mPipelineCache.valid());
+    ASSERT(!mProgramPipelineCache.valid());
 }
 
 void ProgramExecutableVk::destroy(const gl::Context *context)
@@ -771,17 +770,15 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
 {
     resetLayout(contextVk);
 
-    if (mPipelineCache.valid())
-    {
-        mPipelineCache.destroy(contextVk->getDevice());
-    }
+    mProgramPipelineCache.destroy(contextVk->getDevice());
 }
 
 angle::Result ProgramExecutableVk::initializePipelineCache(vk::ErrorContext *context,
                                                            bool compressed,
                                                            const std::vector<uint8_t> &pipelineData)
 {
-    ASSERT(!mPipelineCache.valid());
+    ASSERT(context->getRenderer()->allowProgramPipelineCache());
+    ASSERT(!mProgramPipelineCache.valid());
 
     size_t dataSize            = pipelineData.size();
     const uint8_t *dataPointer = pipelineData.data();
@@ -803,12 +800,13 @@ angle::Result ProgramExecutableVk::initializePipelineCache(vk::ErrorContext *con
     pipelineCacheCreateInfo.initialDataSize = dataSize;
     pipelineCacheCreateInfo.pInitialData    = dataPointer;
 
-    ANGLE_VK_TRY(context, mPipelineCache.init(context->getDevice(), pipelineCacheCreateInfo));
+    ANGLE_VK_TRY(context,
+                 mProgramPipelineCache.init(context->getDevice(), pipelineCacheCreateInfo));
 
     // Merge the pipeline cache into Renderer's.
     if (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
     {
-        ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mPipelineCache));
+        ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mProgramPipelineCache));
     }
 
     return angle::Result::Continue;
@@ -816,12 +814,15 @@ angle::Result ProgramExecutableVk::initializePipelineCache(vk::ErrorContext *con
 
 angle::Result ProgramExecutableVk::ensurePipelineCacheInitialized(vk::ErrorContext *context)
 {
-    if (!mPipelineCache.valid())
+    ASSERT(context->getRenderer()->allowProgramPipelineCache());
+
+    if (!mProgramPipelineCache.valid())
     {
         VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
         pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 
-        ANGLE_VK_TRY(context, mPipelineCache.init(context->getDevice(), pipelineCacheCreateInfo));
+        ANGLE_VK_TRY(context,
+                     mProgramPipelineCache.init(context->getDevice(), pipelineCacheCreateInfo));
     }
 
     return angle::Result::Continue;
@@ -845,19 +846,39 @@ angle::Result ProgramExecutableVk::load(ContextVk *contextVk,
     gl::ShaderMap<size_t> requiredBufferSize;
     stream->readPackedEnumMap(&requiredBufferSize);
 
-    if (!isSeparable && !contextVk->getFeatures().preferGlobalPipelineCache.enabled)
+    if (!isSeparable)
     {
+        // Since we skip cache warm up for GLES1, there will be no data to load and it is better to
+        // use global cache instead of empty program's cache later at draw time.
+        const bool needPipelineCache = contextVk->getRenderer()->allowProgramPipelineCache() &&
+                                       !contextVk->getState().isGLES1();
+
         size_t compressedPipelineDataSize = 0;
         stream->readInt<size_t>(&compressedPipelineDataSize);
 
-        std::vector<uint8_t> compressedPipelineData(compressedPipelineDataSize);
         if (compressedPipelineDataSize > 0)
         {
+            std::vector<uint8_t> compressedPipelineData(compressedPipelineDataSize);
             bool compressedData = false;
             stream->readBool(&compressedData);
             stream->readBytes(compressedPipelineData);
-            // Initialize the pipeline cache based on cached data.
-            ANGLE_TRY(initializePipelineCache(contextVk, compressedData, compressedPipelineData));
+            if (needPipelineCache)
+            {
+                // Initialize the pipeline cache based on cached data.
+                ANGLE_TRY(
+                    initializePipelineCache(contextVk, compressedData, compressedPipelineData));
+            }
+            else
+            {
+                WARN() << "Unexpected non-zero program pipeline cache data - ignoring. "
+                          "ANGLE config changed?";
+            }
+        }
+        else if (needPipelineCache)
+        {
+            WARN() << "Zero program pipeline cache data - loading with empty cache. "
+                      "ANGLE config changed?";
+            ANGLE_TRY(ensurePipelineCacheInitialized(contextVk));
         }
     }
 
@@ -899,15 +920,15 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
     // Need to wait for warm up tasks to complete.
     waitForPostLinkTasksImpl(contextVk);
 
-    // Compress and save mPipelineCache.  Separable programs don't warm up the cache, while program
-    // pipelines do.  However, currently ANGLE doesn't sync program pipelines to cache.  ANGLE could
-    // potentially use VK_EXT_graphics_pipeline_library to create separate pipelines for
+    // Compress and save mProgramPipelineCache.  Separable programs don't warm up the cache, while
+    // program pipelines do.  However, currently ANGLE doesn't sync program pipelines to cache.
+    // ANGLE could potentially use VK_EXT_graphics_pipeline_library to create separate pipelines for
     // pre-rasterization and fragment subsets, but currently those subsets are bundled together.
-    if (!isSeparable && !contextVk->getFeatures().preferGlobalPipelineCache.enabled)
+    if (!isSeparable)
     {
         angle::MemoryBuffer cacheData;
 
-        GetPipelineCacheData(contextVk, mPipelineCache, &cacheData);
+        GetPipelineCacheData(contextVk, mProgramPipelineCache, &cacheData);
         stream->writeInt(cacheData.size());
         if (cacheData.size() > 0)
         {
@@ -1010,16 +1031,16 @@ angle::Result ProgramExecutableVk::preparePipelineCacheForWarmUp(
     ASSERT(context->getFeatures().warmUpPipelineCacheAtLink.enabled);
 
     // Ensure pipeline cache is initialized
-    if (context->getFeatures().preferGlobalPipelineCache.enabled)
+    if (context->getRenderer()->allowProgramPipelineCache())
+    {
+        // Make sure ProgramExecutableVk's pipeline cache is initialized
+        ANGLE_TRY(ensurePipelineCacheInitialized(context));
+    }
+    else
     {
         // Make sure Renderer's pipeline cache is initialized
         vk::PipelineCacheAccess unused;
         ANGLE_TRY(context->getRenderer()->getPipelineCache(context, &unused));
-    }
-    else
-    {
-        // Make sure ProgramExecutableVk's pipeline cache is initialized
-        ANGLE_TRY(ensurePipelineCacheInitialized(context));
     }
 
     *isComputeOut        = false;
@@ -1084,14 +1105,14 @@ angle::Result ProgramExecutableVk::warmUpComputePipelineCache(
     ASSERT(mComputeProgramInfo.valid(gl::ShaderType::Compute));
 
     vk::PipelineCacheAccess pipelineCache;
-    if (context->getFeatures().preferGlobalPipelineCache.enabled)
+    if (mProgramPipelineCache.valid())
     {
-        ANGLE_TRY(context->getRenderer()->getPipelineCache(context, &pipelineCache));
+        // No synchronization necessary since mProgramPipelineCache is internally synchronized.
+        pipelineCache.init(&mProgramPipelineCache, nullptr);
     }
     else
     {
-        // No synchronization necessary since mPipelineCache is internally synchronized.
-        pipelineCache.init(&mPipelineCache, nullptr);
+        ANGLE_TRY(context->getRenderer()->getPipelineCache(context, &pipelineCache));
     }
 
     // There is no state associated with compute programs, so only one pipeline needs creation
@@ -1121,14 +1142,14 @@ angle::Result ProgramExecutableVk::warmUpGraphicsPipelineCache(
 
     vk::PipelineCacheAccess pipelineCache;
 
-    if (context->getFeatures().preferGlobalPipelineCache.enabled)
+    if (mProgramPipelineCache.valid())
     {
-        ANGLE_TRY(context->getRenderer()->getPipelineCache(context, &pipelineCache));
+        // No synchronization necessary since mProgramPipelineCache is internally synchronized.
+        pipelineCache.init(&mProgramPipelineCache, nullptr);
     }
     else
     {
-        // No synchronization necessary since mPipelineCache is internally synchronized.
-        pipelineCache.init(&mPipelineCache, nullptr);
+        ANGLE_TRY(context->getRenderer()->getPipelineCache(context, &pipelineCache));
     }
 
     const vk::GraphicsPipelineDesc *descPtr  = nullptr;
@@ -1211,11 +1232,14 @@ void ProgramExecutableVk::waitForGraphicsPostLinkTasks(
 
 angle::Result ProgramExecutableVk::mergePipelineCacheToRenderer(vk::ErrorContext *context) const
 {
+    ASSERT(context->getFeatures().warmUpPipelineCacheAtLink.enabled);
+
     // Merge the cache with Renderer's
-    if (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
+    if (mProgramPipelineCache.valid() &&
+        context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "ProgramExecutableVk::mergePipelineCacheToRenderer");
-        ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mPipelineCache));
+        ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mProgramPipelineCache));
     }
 
     return angle::Result::Continue;
@@ -1672,18 +1696,16 @@ angle::Result ProgramExecutableVk::createGraphicsPipeline(
 {
     ProgramTransformOptions transformOptions = getTransformOptions(contextVk, desc);
 
-    // When creating monolithic pipelines, the renderer's pipeline cache is used as passed in.
-    // When creating the shaders subset of pipelines, the program's own pipeline cache is used,
-    // unless the renderer's pipeline cache is preferred.
+    // Use the program's own pipeline cache if it is valid, was not already merged with the
+    // renderer's (global) cache, and the new pipeline subset is the same that was used during the
+    // warm up.  Otherwise, the renderer's pipeline cache is used as passed in.
     vk::PipelineCacheAccess perProgramPipelineCache;
-    const bool useProgramPipelineCache =
-        !contextVk->getFeatures().preferGlobalPipelineCache.enabled &&
-        pipelineSubset == vk::GraphicsPipelineSubset::Shaders;
-    if (useProgramPipelineCache)
+    if (mProgramPipelineCache.valid() &&
+        !contextVk->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled &&
+        (pipelineSubset == vk::GraphicsPipelineSubset::Shaders ||
+         !contextVk->getFeatures().supportsGraphicsPipelineLibrary.enabled))
     {
-        ANGLE_TRY(ensurePipelineCacheInitialized(contextVk));
-
-        perProgramPipelineCache.init(&mPipelineCache, nullptr);
+        perProgramPipelineCache.init(&mProgramPipelineCache, nullptr);
         pipelineCache = &perProgramPipelineCache;
     }
 
@@ -1694,12 +1716,6 @@ angle::Result ProgramExecutableVk::createGraphicsPipeline(
     ANGLE_TRY(initProgramThenCreateGraphicsPipeline(
         contextVk, transformOptions, pipelineSubset, pipelineCache, source, desc,
         *compatibleRenderPass, descPtrOut, pipelineOut));
-
-    if (useProgramPipelineCache &&
-        contextVk->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
-    {
-        ANGLE_TRY(contextVk->getRenderer()->mergeIntoPipelineCache(contextVk, mPipelineCache));
-    }
 
     return angle::Result::Continue;
 }
@@ -1712,18 +1728,19 @@ angle::Result ProgramExecutableVk::createLinkedGraphicsPipeline(
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut)
 {
+    ASSERT(contextVk->getFeatures().supportsGraphicsPipelineLibrary.enabled);
     ProgramTransformOptions transformOptions = getTransformOptions(contextVk, desc);
     const uint32_t programIndex              = transformOptions.permutationIndex;
 
-    // When linking libraries, use the program's own pipeline cache if monolithic pipelines are not
-    // to be created, otherwise there is effectively a merge to global pipeline cache happening.
+    // When linking libraries, use the program's own pipeline cache if merge to global pipeline
+    // cache is disabled, otherwise there is effectively a merge to global cache happening.
     vk::PipelineCacheAccess programPipelineCache;
     vk::PipelineCacheAccess *linkPipelineCache = pipelineCache;
-    if (!contextVk->getFeatures().preferGlobalPipelineCache.enabled &&
-        !contextVk->getFeatures().preferMonolithicPipelinesOverLibraries.enabled)
+    if (mProgramPipelineCache.valid() &&
+        !contextVk->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
     {
-        // No synchronization necessary since mPipelineCache is internally synchronized.
-        programPipelineCache.init(&mPipelineCache, nullptr);
+        // No synchronization necessary since mProgramPipelineCache is internally synchronized.
+        programPipelineCache.init(&mProgramPipelineCache, nullptr);
         linkPipelineCache = &programPipelineCache;
     }
 
