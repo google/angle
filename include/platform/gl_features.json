@@ -1054,6 +1054,15 @@
                 "For non-power-of-two textures, upload via TexSubImage2D instead of TexImage2D when uploading client-side data."
             ],
             "issue": "http://crbug.com/553172761"
+        },
+        {
+            "name": "finish_before_same_texture_copy",
+            "category": "Workarounds",
+            "description": [
+                "Force a finish before copying from a framebuffer whose read attachment is the ",
+                "destination texture to work around driver bugs."
+            ],
+            "issue": "https://crbug.com/552672183"
         }
     ]
 }
