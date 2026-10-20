@@ -28,6 +28,8 @@
 //     those should always be Temporary: validate_block_variable_name_sources_are_temporary()
 //   - NameSource::Internal names don't start with the user and temporary name prefixes (*_PREFIX
 //     constants): validate_internal_name_prefixes()
+//   - A NameSource::Internal interface block or struct variable is never given an empty ("") name:
+//     validate_internal_interface_block_and_struct_variable_names()
 //
 // Types:
 //   - Validate that ImageType fields are valid in combination with ImageDimension:
@@ -102,7 +104,6 @@
 //   - Whatever else is in the AST validation currently.
 //   - Validate built-ins that accept an out or inout parameter, that the corresponding parameter is
 //     passed a Pointer at the call site.  For that matter, do the same for user function calls too.
-//   - A NameSource::Internal interface block or struct variable is never given an empty ("") name.
 
 use crate::ir::*;
 use crate::traverser::BlockKind;
@@ -308,6 +309,7 @@ impl<'a> Validator<'a> {
         self.validate_misuse_of_builtin_names();
         self.validate_interface_variables_have_unique_names();
         self.validate_block_variable_name_sources_are_temporary();
+        self.validate_internal_interface_block_and_struct_variable_names();
         self.validate_internal_name_prefixes();
         self.validate_decorations();
         self.validate_no_pointer_to_pointer_type();
@@ -2785,6 +2787,24 @@ impl<'a> Validator<'a> {
             },
             |_, _| {},
         );
+    }
+
+    fn validate_internal_interface_block_and_struct_variable_names(&self) {
+        for variable in self.ir.meta.all_variables().iter().filter(|variable| {
+            !variable.is_dead_code_eliminated
+                && variable.name.source == NameSource::Internal
+                && variable.name.name.is_empty()
+                && !variable.is_built_in()
+        }) {
+            let type_id = self.ir.meta.get_pointee_type(variable.type_id);
+            if matches!(self.ir.meta.get_type(type_id), Type::Struct(..)) {
+                self.on_error(format_args!(
+                    "invalid variable {:?}: internal interface block or struct variable name must \
+                     not be empty",
+                    variable
+                ));
+            }
+        }
     }
 
     fn validate_internal_name_prefixes(&self) {
