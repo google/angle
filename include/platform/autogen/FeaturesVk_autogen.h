@@ -1046,8 +1046,8 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo syncMonolithicPipelinesToBlobCache = {
-        "syncMonolithicPipelinesToBlobCache",
+    FeatureInfo syncGlobalPipelineCacheToBlobCache = {
+        "syncGlobalPipelineCacheToBlobCache",
         FeatureCategory::VulkanWorkarounds,
         &members,
     };

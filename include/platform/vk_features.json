@@ -1365,12 +1365,11 @@
             "issue": "https://anglebug.com/42266842"
         },
         {
-            "name": "sync_monolithic_pipelines_to_blob_cache",
+            "name": "sync_global_pipeline_cache_to_blob_cache",
             "category": "Workarounds",
             "description": [
-                "Whether it's beneficial to store monolithic pipelines in the blob cache when ",
-                "VK_EXT_graphics_pipeline_library is in use.  Otherwise the libraries are stored ",
-                "only, and monolithic pipelines are recreated on every run"
+                "Whether it's beneficial to store global pipeline cache in the blob cache. ",
+                "Otherwise the global pipeline cache is recreated on every run"
             ],
             "issue": "https://anglebug.com/42265839"
         },
@@ -1378,9 +1377,8 @@
             "name": "merge_program_pipeline_caches_to_global_cache",
             "category": "Workarounds",
             "description": [
-                "Whether it's beneficial to merge the pipeline cache for the shaders subset of the ",
-                "pipeline into the monolithic pipeline cache.  Only useful on platforms where ",
-                "monolithic pipelines can reuse blobs from partial pipelines"
+                "Whether it's beneficial to merge the per-program pipeline cache into the global ",
+                "pipeline cache after the warm up or load"
             ],
             "issue": "https://anglebug.com/42265839"
         },

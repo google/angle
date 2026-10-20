@@ -511,7 +511,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SwapchainDeferredMemoryAllocation, "swapchainDeferredMemoryAllocation"},
     {Feature::SyncAllVertexArraysToDefault, "syncAllVertexArraysToDefault"},
     {Feature::SyncDefaultVertexArraysToDefault, "syncDefaultVertexArraysToDefault"},
-    {Feature::SyncMonolithicPipelinesToBlobCache, "syncMonolithicPipelinesToBlobCache"},
+    {Feature::SyncGlobalPipelineCacheToBlobCache, "syncGlobalPipelineCacheToBlobCache"},
     {Feature::SyncPipelineCacheToBlobCacheEveryFrame, "syncPipelineCacheToBlobCacheEveryFrame"},
     {Feature::UnbindFBOBeforeSwitchingContext, "unbindFBOBeforeSwitchingContext"},
     {Feature::UncurrentEglSurfaceUponSurfaceDestroy, "uncurrentEglSurfaceUponSurfaceDestroy"},

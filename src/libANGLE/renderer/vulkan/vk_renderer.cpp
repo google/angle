@@ -6927,8 +6927,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // after it.
     ANGLE_FEATURE_CONDITION(&mFeatures, enableExtraSubmitFence, false);
 
-    // Sync monolithic pipelines to the blob cache occasionally on platforms that would benefit from
-    // it:
+    // Sync global pipeline cache to the blob cache occasionally on platforms that would benefit
+    // from it:
     //
     // - VK_EXT_graphics_pipeline_library is not supported, and the program cache is not warmed up:
     //   If the pipeline cache is being warmed up at link time, the blobs corresponding to each
@@ -6936,14 +6936,14 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // - VK_EXT_graphics_pipeline_library is supported, but monolithic pipelines are still
     //   preferred, and the cost of syncing the large cache is acceptable.
     //
-    // Otherwise monolithic pipelines are recreated on every run.
+    // Otherwise global pipeline cache is recreated on every run.
     const bool hasNoPipelineWarmUp = !mFeatures.supportsGraphicsPipelineLibrary.enabled &&
                                      !mFeatures.warmUpPipelineCacheAtLink.enabled;
     const bool canSyncLargeMonolithicCache =
         mFeatures.supportsGraphicsPipelineLibrary.enabled &&
         mFeatures.preferMonolithicPipelinesOverLibraries.enabled &&
         (!IsAndroid() || mFeatures.enableAsyncPipelineCacheCompression.enabled);
-    ANGLE_FEATURE_CONDITION(&mFeatures, syncMonolithicPipelinesToBlobCache,
+    ANGLE_FEATURE_CONDITION(&mFeatures, syncGlobalPipelineCacheToBlobCache,
                             !mFeatures.skipPipelineCacheSerialization.enabled &&
                                 (hasNoPipelineWarmUp || canSyncLargeMonolithicCache));
 
@@ -7679,7 +7679,7 @@ angle::Result Renderer::syncPipelineCacheVk(const gl::Context *contextGL)
     }
     ASSERT(mPipelineCache.valid());
 
-    if (!mFeatures.syncMonolithicPipelinesToBlobCache.enabled)
+    if (!mFeatures.syncGlobalPipelineCacheToBlobCache.enabled)
     {
         return angle::Result::Continue;
     }

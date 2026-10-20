@@ -511,7 +511,7 @@ enum class Feature
     SwapchainDeferredMemoryAllocation,
     SyncAllVertexArraysToDefault,
     SyncDefaultVertexArraysToDefault,
-    SyncMonolithicPipelinesToBlobCache,
+    SyncGlobalPipelineCacheToBlobCache,
     SyncPipelineCacheToBlobCacheEveryFrame,
     UnbindFBOBeforeSwitchingContext,
     UncurrentEglSurfaceUponSurfaceDestroy,
