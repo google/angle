@@ -460,6 +460,9 @@ constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
     "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07285",
     "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07286",
     "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07287",
+    // VVL bug with static state for rasterizer discard.
+    // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/13516
+    "VUID-vkCmdDraw-colorAttachmentCount-06179",
 };
 
 // With forceSampleUsageForAhbBackedImages, we assume all AHBs are gpu-sampleable, regardless of

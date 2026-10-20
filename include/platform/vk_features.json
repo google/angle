@@ -2265,7 +2265,7 @@
         },
         {
             "name": "initialize_color_attachment_with_white",
-            "category": "Workarounds",
+            "category": "AppWorkarounds",
             "description": [
                 "Initialize color tetxure attachment with white color for app bug workaround."
             ]
