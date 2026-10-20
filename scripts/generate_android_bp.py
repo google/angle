@@ -585,6 +585,7 @@ def library_target_to_blueprint(target, build_info) -> list[tuple[str, dict]]:
             bp['defaults'].append('angle_vendor_cc_defaults')
             bp['defaults'].append('angle_dma_buf_cc_defaults')
             bp['afdo'] = True
+            bp['required'] = ['angle_feature_config']
         bps_for_abis[abi] = bp
 
     common_bp = merge_bps(bps_for_abis)
