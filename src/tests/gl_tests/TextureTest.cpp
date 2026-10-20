@@ -6064,11 +6064,21 @@ TEST_P(Texture2DTestES3YUV, CopyTextureChromium)
     verifyResults2D(yuvTexture, expectedRgbColor);
 
     // Create an RGBA texture to copy into
+    GLTexture rgbaTexture;
+    glBindTexture(GL_TEXTURE_2D, rgbaTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glCopyTextureCHROMIUM(yuvTexture, 0, GL_TEXTURE_2D, rgbaTexture, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                          GL_FALSE, GL_FALSE, GL_FALSE);
+    verifyResults2D(rgbaTexture, expectedRgbColor);
+
+    // Also test copying into a 3-channel RGB8 texture (which has 3x 8-bit channels and 3 pixelBytes
+    // like G8_B8R8_2PLANE_420_UNORM, but is not YUV).
     GLTexture rgbTexture;
     glBindTexture(GL_TEXTURE_2D, rgbTexture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glCopyTextureCHROMIUM(yuvTexture, 0, GL_TEXTURE_2D, rgbTexture, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+    glCopyTextureCHROMIUM(yuvTexture, 0, GL_TEXTURE_2D, rgbTexture, 0, GL_RGB, GL_UNSIGNED_BYTE,
                           GL_FALSE, GL_FALSE, GL_FALSE);
     verifyResults2D(rgbTexture, expectedRgbColor);
 
