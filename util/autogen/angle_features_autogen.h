@@ -190,6 +190,7 @@ enum class Feature
     ExposeNonConformantExtensionsAndVersions,
     ExternallySynchronizePipelineCacheAccess,
     FinishBeforeBlitFramebufferMultiAttachment,
+    FinishBeforeSameTextureCopy,
     FinishDoesNotCauseQueriesToBeAvailable,
     FlushAfterEndingTransformFeedback,
     FlushAfterStreamVertexData,

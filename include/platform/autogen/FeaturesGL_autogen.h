@@ -806,6 +806,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo finishBeforeSameTextureCopy = {
+        "finishBeforeSameTextureCopy",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

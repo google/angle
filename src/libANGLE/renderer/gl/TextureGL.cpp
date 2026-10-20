@@ -2168,6 +2168,12 @@ angle::Result TextureGL::copyImage(const gl::Context *context,
         TextureGL *sourceTexture = GetImplAs<TextureGL>(readBuffer->getTexture());
         if (sourceTexture && sourceTexture->mTextureID == mTextureID && !useVirtualMipchain)
         {
+            if (features.finishBeforeSameTextureCopy.enabled)
+            {
+                // Force a finish before copying from a framebuffer that has the destination texture
+                // attached. Avoids an IMG driver bug if the source still has pending rendering.
+                ANGLE_GL_TRY(context, functions->finish());
+            }
             GLuint attachedTextureLevel = readBuffer->mipLevel();
             if (attachedTextureLevel != mState.getEffectiveBaseLevel())
             {
@@ -2367,6 +2373,21 @@ angle::Result TextureGL::copySubImage(const gl::Context *context,
     }
     gl::Offset clippedOffset(destOffset.x + clippedArea.x - sourceArea.x,
                              destOffset.y + clippedArea.y - sourceArea.y, destOffset.z);
+
+    if (features.finishBeforeSameTextureCopy.enabled)
+    {
+        const gl::FramebufferAttachment *readBuffer = source->getReadColorAttachment();
+        if (readBuffer && readBuffer->type() == GL_TEXTURE)
+        {
+            const TextureGL *sourceTexture = GetImplAs<TextureGL>(readBuffer->getTexture());
+            if (sourceTexture && sourceTexture->mTextureID == mTextureID)
+            {
+                // Force a finish before copying from a framebuffer that has the destination texture
+                // attached. Avoids an IMG driver bug if the source still has pending rendering.
+                ANGLE_GL_TRY(context, functions->finish());
+            }
+        }
+    }
 
     NativeLevelTarget nlt    = getNativeLevelTarget(target, level);
     gl::TextureType bindType = gl::TextureTargetToType(nlt.target);

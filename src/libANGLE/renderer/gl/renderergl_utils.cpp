@@ -2800,6 +2800,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // Mac Intel drivers are unable to allocate buffers larger than ~1gb
     ANGLE_FEATURE_CONDITION(features, limitMaxBufferSizeTo1gb, isApple && isIntel);
 
+    // Force a finish before copying from a framebuffer that has the destination texture attached.
+    // Avoids an IMG driver bug if the source still has pending rendering.
+    // https://crbug.com/552672183
+    ANGLE_FEATURE_CONDITION(features, finishBeforeSameTextureCopy, IsPowerVR(vendor));
+
     // Default to state validation disabled. It is extremely costly and should only be enabled
     // explicitly when debugging.
     ANGLE_FEATURE_CONDITION(features, validateState, false);
