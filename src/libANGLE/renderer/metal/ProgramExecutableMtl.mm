@@ -1041,18 +1041,6 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
         UNREACHABLE();
         return angle::Result::Stop;
     }
-    [funcConstants
-        setConstantValue:&(context->getDisplay()->getFeatures().allowSamplerCompareGradient.enabled)
-                    type:MTLDataTypeBool
-                withName:@"ANGLEUseSampleCompareGradient"];
-    [funcConstants
-        setConstantValue:&(context->getDisplay()->getFeatures().emulateAlphaToCoverage.enabled)
-                    type:MTLDataTypeBool
-                withName:@"ANGLEEmulateAlphaToCoverage"];
-    [funcConstants
-        setConstantValue:&(context->getDisplay()->getFeatures().writeHelperSampleMask.enabled)
-                    type:MTLDataTypeBool
-                withName:@"ANGLEWriteHelperSampleMask"];
     ANGLE_TRY(CreateMslShader(context, translatedMslInfo->metalLibrary, SHADER_ENTRY_NAME,
                               funcConstants.get(), &shaderVariant->metalShader));
 

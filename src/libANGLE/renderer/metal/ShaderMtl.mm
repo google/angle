@@ -93,6 +93,10 @@ std::shared_ptr<ShaderTranslateTask> ShaderMtl::compile(const gl::Context *conte
     options->metal.defaultUniformsBindingIndex   = mtl::kDefaultUniformsBindingIndex;
     options->metal.UBOArgumentBufferBindingIndex = mtl::kUBOArgumentBufferBindingIndex;
 
+    options->metal.allowSamplerCompareGradient =
+        displayMtl->getFeatures().allowSamplerCompareGradient.enabled;
+    options->metal.writeHelperSampleMask = displayMtl->getFeatures().writeHelperSampleMask.enabled;
+
     // GL_ANGLE_shader_pixel_local_storage.
     if (displayMtl->getNativeExtensions().shaderPixelLocalStorageANGLE)
     {

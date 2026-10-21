@@ -348,6 +348,7 @@ void AddFragDepthEXTDeclaration(TCompiler &compiler, TIntermBlock &root, TSymbol
                                             TSymbolTable &symbolTable,
                                             const DriverUniformMetal *driverUniforms,
                                             bool includeEmulateAlphaToCoverage,
+                                            bool writeHelperSampleMask,
                                             bool usesSampleMask)
 {
     // uint32_t ANGLE_metal_SampleMask [[sample_mask]]
@@ -358,21 +359,12 @@ void AddFragDepthEXTDeclaration(TCompiler &compiler, TIntermBlock &root, TSymbol
 
     // Write all-enabled sample mask even for single-sampled rendering
     // when the shader uses derivatives to workaround a driver bug.
-    if (compiler.usesDerivatives())
+    if (writeHelperSampleMask)
     {
-        TIntermBlock *helperAssignBlock = new TIntermBlock;
-        helperAssignBlock->appendStatement(new TIntermBinary(
-            EOpAssign, new TIntermSymbol(angleSampleMask), CreateUIntNode(0xFFFFFFFFu)));
-
-        TVariable *writeHelperSampleMaskVar =
-            new TVariable(&symbolTable, sh::ImmutableString(mtl::kWriteHelperSampleMaskConstName),
-                          StaticType::Get<EbtBool, EbpUndefined, EvqSpecConst, 1, 1>(),
-                          SymbolType::AngleInternal);
-
         if (!RunAtTheBeginningOfShader(
                 &compiler, &root,
-                new TIntermIfElse(new TIntermSymbol(writeHelperSampleMaskVar), helperAssignBlock,
-                                  nullptr)))
+                new TIntermBinary(EOpAssign, new TIntermSymbol(angleSampleMask),
+                                  CreateUIntNode(0xFFFFFFFFu))))
         {
             return false;
         }
@@ -554,19 +546,8 @@ void AddFragDepthEXTDeclaration(TCompiler &compiler, TIntermBlock &root, TSymbol
         alphaBlock->appendStatement(new TIntermBinary(
             EOpBitwiseAndAssign, new TIntermSymbol(angleSampleMask), new TIntermSymbol(alphaMask)));
 
-        TIntermBlock *emulateAlphaToCoverageEnabledBlock = new TIntermBlock;
-        emulateAlphaToCoverageEnabledBlock->appendStatement(
+        block->appendStatement(
             new TIntermIfElse(driverUniforms->getAlphaToCoverage(), alphaBlock, nullptr));
-
-        TVariable *emulateAlphaToCoverageVar =
-            new TVariable(&symbolTable, sh::ImmutableString(mtl::kEmulateAlphaToCoverageConstName),
-                          StaticType::Get<EbtBool, EbpUndefined, EvqSpecConst, 1, 1>(),
-                          SymbolType::AngleInternal);
-        TIntermIfElse *useAlphaToCoverage =
-            new TIntermIfElse(new TIntermSymbol(emulateAlphaToCoverageVar),
-                              emulateAlphaToCoverageEnabledBlock, nullptr);
-
-        block->appendStatement(useAlphaToCoverage);
     }
 
     // Sample mask assignment is guarded by ANGLEMultisampledRendering specialization constant
@@ -876,7 +857,8 @@ bool TranslatorMSL::translateImpl(TInfoSinkBase &sink,
     TSymbolTable &symbolTable = getSymbolTable();
     IdGen idGen;
     ProgramPreludeConfig ppc(metalShaderTypeFromGLSL(getShaderType()));
-    ppc.usesDerivatives = usesDerivatives();
+    ppc.allowSamplerCompareGradient = compileOptions.metal.allowSamplerCompareGradient;
+    ppc.writeHelperSampleMask = compileOptions.metal.writeHelperSampleMask && usesDerivatives();
 
     // The MSL generator prefers every struct to have a name, and is not bound by GLSL's requirement
     // that anonymous structs match their (lack of) name between shader stages.
@@ -1293,7 +1275,8 @@ bool TranslatorMSL::translateImpl(TInfoSinkBase &sink,
     {
         mValidateASTOptions.validateVariableReferences = false;
         if (!AddSampleMaskDeclaration(*this, *root, symbolTable, driverUniforms,
-                                      compileOptions.emulateAlphaToCoverage, usesSampleMask))
+                                      compileOptions.emulateAlphaToCoverage,
+                                      ppc.writeHelperSampleMask, usesSampleMask))
         {
             return false;
         }

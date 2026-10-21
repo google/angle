@@ -31,7 +31,9 @@ struct ProgramPreludeConfig
   public:
     ProgramPreludeConfig() {}
     explicit ProgramPreludeConfig(MetalShaderType shaderType) : shaderType(shaderType) {}
-    bool usesDerivatives       = false;
+    bool allowSamplerCompareGradient = false;
+    // The fragment shader always writes the sample mask, regardless of multisampling.
+    bool writeHelperSampleMask = false;
     MetalShaderType shaderType = MetalShaderType::None;
 };
 

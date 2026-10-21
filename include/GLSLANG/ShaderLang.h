@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 430
+#define ANGLE_SH_VERSION 431
 
 enum ShShaderSpec
 {
@@ -82,6 +82,14 @@ struct ShCompileOptionsMetal
     int defaultUniformsBindingIndex = 0;
     // Binding index for UBO's argument buffer
     int UBOArgumentBufferBindingIndex = 0;
+
+    // Use sample_compare with explicit gradients for shadow textureGrad functions. When false,
+    // the gradients are converted to an explicit level of detail.
+    bool allowSamplerCompareGradient = false;
+
+    // Write an all-enabled sample mask even for single-sampled rendering when the fragment shader
+    // uses derivatives.
+    bool writeHelperSampleMask = false;
 };
 
 // For ANGLE_shader_pixel_local_storage.
@@ -1198,12 +1206,6 @@ extern const char kRasterizerDiscardEnabledConstName[];
 
 // Specialization constant to enable depth write in fragment shaders.
 extern const char kDepthWriteEnabledConstName[];
-
-// Specialization constant to enable alpha to coverage.
-extern const char kEmulateAlphaToCoverageConstName[];
-
-// Specialization constant to write helper sample mask output.
-extern const char kWriteHelperSampleMaskConstName[];
 
 // Specialization constant to enable sample mask output.
 extern const char kSampleMaskWriteEnabledConstName[];

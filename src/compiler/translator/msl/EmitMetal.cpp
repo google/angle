@@ -85,6 +85,7 @@ class GenMetalTraverser : public TIntermTraverser
                       IdGen &idGen,
                       const PipelineStructs &pipelineStructs,
                       SymbolEnv &symbolEnv,
+                      const ProgramPreludeConfig &ppc,
                       const ShCompileOptions &compileOptions);
 
     void visitSymbol(TIntermSymbol *) override;
@@ -205,6 +206,7 @@ class GenMetalTraverser : public TIntermTraverser
     size_t mDriverUniformsBindingIndex     = 0;
     size_t mUBOArgumentBufferBindingIndex  = 0;
     bool mRasterOrderGroupsSupported       = false;
+    bool mWriteHelperSampleMask            = false;
 };
 }  // anonymous namespace
 
@@ -220,6 +222,7 @@ GenMetalTraverser::GenMetalTraverser(const TCompiler &compiler,
                                      IdGen &idGen,
                                      const PipelineStructs &pipelineStructs,
                                      SymbolEnv &symbolEnv,
+                                     const ProgramPreludeConfig &ppc,
                                      const ShCompileOptions &compileOptions)
     : TIntermTraverser(true, false, false),
       mOut(out),
@@ -232,7 +235,8 @@ GenMetalTraverser::GenMetalTraverser(const TCompiler &compiler,
       mDriverUniformsBindingIndex(compileOptions.metal.driverUniformsBindingIndex),
       mUBOArgumentBufferBindingIndex(compileOptions.metal.UBOArgumentBufferBindingIndex),
       mRasterOrderGroupsSupported(compileOptions.pls.fragmentSyncType ==
-                                  ShFragmentSynchronizationType::RasterOrderGroups_Metal)
+                                  ShFragmentSynchronizationType::RasterOrderGroups_Metal),
+      mWriteHelperSampleMask(ppc.writeHelperSampleMask)
 {}
 
 void GenMetalTraverser::emitIndentation()
@@ -1322,8 +1326,15 @@ void GenMetalTraverser::emitFieldDeclaration(const TField &field,
         case TQualifier::EvqSampleMask:
             if (field.symbolType() == SymbolType::AngleInternal)
             {
-                mOut << " [[sample_mask, function_constant("
-                     << sh::mtl::kSampleMaskWriteEnabledConstName << ")]]";
+                if (mWriteHelperSampleMask)
+                {
+                    mOut << " [[sample_mask]]";
+                }
+                else
+                {
+                    mOut << " [[sample_mask, function_constant("
+                         << sh::mtl::kSampleMaskWriteEnabledConstName << ")]]";
+                }
             }
             break;
 
@@ -2848,7 +2859,7 @@ bool sh::EmitMetal(TCompiler &compiler,
 #else
         TInfoSinkBase &outWrapper = out;
 #endif
-        GenMetalTraverser gen(compiler, outWrapper, idGen, pipelineStructs, symbolEnv,
+        GenMetalTraverser gen(compiler, outWrapper, idGen, pipelineStructs, symbolEnv, ppc,
                               compileOptions);
         root.traverse(&gen);
     }
