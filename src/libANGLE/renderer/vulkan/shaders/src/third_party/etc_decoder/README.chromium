@@ -2,7 +2,7 @@ Name: Granite
 Short Name: Granite
 URL: https://github.com/Themaister/Granite
 Version: N/A
-Revision: cbc9cc966d2b3cae8906d2d30e761904342b5aba
+Revision: 53090429539bf3404250d18fe58db971f0907c04
 Update Mechanism: Static.HardFork (https://crbug.com/576057070)
 License: MIT
 License File: LICENSE

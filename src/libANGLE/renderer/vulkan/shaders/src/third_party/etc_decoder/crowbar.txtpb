@@ -1,9 +1,9 @@
 upstream {
-  commit: "cbc9cc966d2b3cae8906d2d30e761904342b5aba"
+  commit: "53090429539bf3404250d18fe58db971f0907c04"
   artifacts {
     git {
       repository: "https://github.com/Themaister/Granite"
-      commit: "cbc9cc966d2b3cae8906d2d30e761904342b5aba"
+      commit: "53090429539bf3404250d18fe58db971f0907c04"
     }
   }
 }
