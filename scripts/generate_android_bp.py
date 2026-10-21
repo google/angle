@@ -243,9 +243,6 @@ target_blockist = [
     '//build/config:shared_library_deps',
     '//third_party/zlib:zlib',
     '//third_party/zlib/google:compression_utils_portable',
-    # Replaced by Android's zstd
-    '//third_party/zstd:compress',
-    '//third_party/zstd:decompress',
 
     # end2end tests: -> platform libgtest, libgmock
     '//testing/gtest:gtest',
@@ -285,8 +282,6 @@ include_blocklist = [
     '//out/Android/gen/third_party/glslang/src/include/',
     '//third_party/zlib/',
     '//third_party/zlib/google/',
-    # Resolved by Android's libzstd_ndk
-    '//third_party/zstd/src/lib/',
     # end2end tests: -> platform libgtest, libgmock
     '//third_party/googletest/custom/',
     '//third_party/googletest/src/googletest/include/',
@@ -393,10 +388,6 @@ def gn_deps_to_blueprint_deps(abi, target, build_info):
             # Replace zlib by Android's zlib, compression_utils_portable is the root dependency
             shared_libs.append('libz')
             static_libs.extend(['zlib_google_compression_utils_portable'])
-        elif dep in ('//third_party/zstd:compress', '//third_party/zstd:decompress'):
-            # Replace zstd by Android's zstd, built against the NDK for ANGLE
-            if 'libzstd_ndk' not in static_libs:
-                static_libs.append('libzstd_ndk')
         elif dep == '//testing/gtest:gtest':
             static_libs.append('libgtest_ndk_c++')
         elif dep == '//testing/gmock:gmock':
