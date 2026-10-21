@@ -1613,6 +1613,7 @@
 507904704 IOS METAL : WebGLCompatibilityTest.EnableCompressedTextureExtensionETC1/* = SKIP
 575549236 IOS METAL : FramebufferTest_RecreateFboOnAttachmentRespecification.DisabledDrawBufferCollidingAttachments/* = SKIP
 575549236 IOS METAL : FramebufferTest_RecreateFboOnAttachmentRespecification.RespecifyCollidingAttachments/* = SKIP
+550607402 IOS METAL : ASTCCompressedWithBaseLevelRobustInitTest.MutableToImmutableASTC8x5WithNonZeroBaseLevel/* = SKIP
 
 // Simulator does not support compare functions in the sampler state
 365066518 IOS METAL : ShadowSamplerFunctionTexture2DTest.Test/* = SKIP
@@ -3093,6 +3094,7 @@
 546640307 WIN QUALCOMM VULKAN : ProgramPipelineTest31.SampleTextureAThenTextureB/* = SKIP
 546640308 WIN QUALCOMM VULKAN : SimpleUniformTestES3.TernarySelectAnArrayThenIndex/* = SKIP
 546631281 WIN QUALCOMM VULKAN : Texture2DTestES3.ASTCDecodeModeSwitch/* = SKIP
+573853134 WIN QUALCOMM VULKAN : ComputeShaderTest.AtomicOrMediumpUintHighBit/* = SKIP
 
 558505634 WIN QUALCOMM D3D11 : Texture2DTestES3RobustInit.InvalidateDepthOnly/* = SKIP
 558505634 WIN QUALCOMM D3D11 : Texture2DTestES3RobustInit.InvalidateStencilOnly/* = SKIP

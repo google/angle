@@ -686,8 +686,7 @@ angle::Result TextureGL::setSubImage3DFromUnpackBufferViaCpu(const gl::Context *
         // SAFETY: `scratchBuffer` is allocated with `allocBytes >= copyBytes`, and `mappedPtr`
         // points to `copyBytes` bytes mapped from `GL_PIXEL_UNPACK_BUFFER` by `glMapBufferRange`.
         ANGLE_UNSAFE_BUFFERS(memcpy(scratchBuffer->data(), mappedPtr, copyBytes));
-        GLboolean unmapResult = GL_FALSE;
-        ANGLE_GL_TRY(context, unmapResult = functions->unmapBuffer(GL_PIXEL_UNPACK_BUFFER));
+        ANGLE_GL_TRY(context, functions->unmapBuffer(GL_PIXEL_UNPACK_BUFFER));
     }
 
     gl::PixelUnpackState directUnpack = unpack;
