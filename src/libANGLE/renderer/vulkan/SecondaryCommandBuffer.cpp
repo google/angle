@@ -159,6 +159,8 @@ const char *GetCommandString(CommandID id)
             return "SetLineWidth";
         case CommandID::SetLogicOp:
             return "SetLogicOp";
+        case CommandID::SetPatchControlPoints:
+            return "SetPatchControlPoints";
         case CommandID::SetPrimitiveRestartEnable:
             return "SetPrimitiveRestartEnable";
         case CommandID::SetPrimitiveTopology:
@@ -845,6 +847,13 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const SetLogicOpParams *params = getParamPtr<SetLogicOpParams>(currentCommand);
                     vkCmdSetLogicOpEXT(cmdBuffer, params->logicOp);
+                    break;
+                }
+                case CommandID::SetPatchControlPoints:
+                {
+                    const SetPatchControlPointsParams *params =
+                        getParamPtr<SetPatchControlPointsParams>(currentCommand);
+                    vkCmdSetPatchControlPointsEXT(cmdBuffer, params->patchControlPoints);
                     break;
                 }
                 case CommandID::SetPrimitiveRestartEnable:

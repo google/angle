@@ -836,6 +836,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsPatchControlPointsDynamicState = {
+        "supportsPatchControlPointsDynamicState",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsFragmentShadingRate = {
         "supportsFragmentShadingRate",
         FeatureCategory::VulkanFeatures,

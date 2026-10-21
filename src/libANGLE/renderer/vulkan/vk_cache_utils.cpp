@@ -4137,6 +4137,10 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
     }
+    if (context->getFeatures().supportsPatchControlPointsDynamicState.enabled)
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_PATCH_CONTROL_POINTS_EXT);
+    }
 }
 
 void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(

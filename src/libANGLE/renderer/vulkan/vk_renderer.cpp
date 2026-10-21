@@ -3437,6 +3437,8 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo12(
 // - VK_EXT_extended_dynamic_state:             extendedDynamicState (feature)
 // - VK_EXT_extended_dynamic_state2:            extendedDynamicState2 (feature),
 //                                              extendedDynamicState2LogicOp (feature)
+//                                              extendedDynamicState2PatchControlPoints
+//                                                                           (feature)
 // - VK_KHR_synchronization2:                   synchronization2 (feature)
 // - VK_KHR_dynamic_rendering:                  dynamicRendering (feature)
 // - VK_KHR_maintenance5:                       maintenance5 (feature)
@@ -3446,7 +3448,7 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo12(
 //
 // Note that VK_EXT_extended_dynamic_state2 is partially promoted to Vulkan 1.3.  If ANGLE creates a
 // Vulkan 1.3 device, it would still need to enable this extension separately for
-// extendedDynamicState2LogicOp.
+// extendedDynamicState2LogicOp and extendedDynamicState2PatchControlPoints.
 //
 void Renderer::appendDeviceExtensionFeaturesPromotedTo13(
     const vk::ExtensionNameList &deviceExtensionNames,
@@ -4695,11 +4697,12 @@ void Renderer::initDeviceExtensionEntryPoints()
     {
         InitTransformFeedbackEXTFunctions(mDevice);
     }
-    if (getFeatures().supportsLogicOpDynamicState.enabled)
+    if (getFeatures().supportsLogicOpDynamicState.enabled ||
+        getFeatures().supportsPatchControlPointsDynamicState.enabled)
     {
-        // VK_EXT_extended_dynamic_state2 is only partially core in Vulkan 1.3.  If the logicOp
-        // dynamic state (only from the extension) is used, need to load the entry points from the
-        // extension
+        // VK_EXT_extended_dynamic_state2 is only partially core in Vulkan 1.3.  If the logicOp or
+        // patchControlPoints dynamic state (only from the extension) are used, need to load the
+        // entry points from the extension
         InitExtendedDynamicState2EXTFunctions(mDevice);
     }
     if (getFeatures().supportsExtendedDynamicState3.enabled)
@@ -6598,6 +6601,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE &&
             !(IsLinux() && isIntel && driverVersion < angle::VersionTriple(22, 2, 0)) &&
             !(IsAndroid() && isGalaxyS23));
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsPatchControlPointsDynamicState,
+        mFeatures.supportsExtendedDynamicState2.enabled &&
+            mExtendedDynamicState2Features.extendedDynamicState2PatchControlPoints == VK_TRUE);
 
     // VK_EXT_extended_dynamic_state3 has lots of features, all of which are optional.  So
     // supportsExtendedDynamicState3 only checks for the presence of the extension.

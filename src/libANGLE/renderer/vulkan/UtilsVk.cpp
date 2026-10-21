@@ -1192,6 +1192,7 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     // - depth bias: UtilsVk doesn't enable depth bias
     // - blend constants: UtilsVk doesn't enable blending
     // - logic op: UtilsVk doesn't enable logic op
+    // - patch control points: UtilsVk doesn't use tessellation shaders
     //
     // The following dynamic state is always set by UtilsVk when effective:
     //

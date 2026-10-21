@@ -10617,6 +10617,134 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests state change for GL_PATCH_VERTICES and glPatchParameteri.
+TEST_P(StateChangeTestES31, PatchVertices)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+
+    // With each tessellated draw call, draw a whole quad.  The first draw call draws one patch of
+    // size 4, while the second draw call draws one patch of size 3.  Given the corners of the
+    // quad:
+    //
+    //     1        3
+    //      +------+
+    //      |      |
+    //      |      |
+    //      |      |
+    //      +------+
+    //     0        2
+    //
+    // The vertex shader produces vertices in the following order: 0, 1, 2, 3.  With a patch size of
+    // 4, the 4 vertices form the quad.  With a patch size of 3, only half of the quad is generated
+    // as a triangle.  The tessellation control shader always outputs 4 vertices, but uses
+    // gl_PatchVerticesIn to know when it should emulate vertex 3.
+    //
+    // Each draw will emit a different color based on gl_PatchVerticesIn.  The output of the draw
+    // calls are blended and validated in the end.
+    const char *kVS = R"(#version 310 es
+precision highp float;
+void main()
+{
+    // gl_VertexID    x    y
+    //      0        -1   -1
+    //      1         1   -1
+    //      2        -1    1
+    //      3         1    1
+    int bit0 = gl_VertexID & 1;
+    int bit1 = gl_VertexID >> 1;
+    gl_Position = vec4(bit0 * 2 - 1, bit1 * 2 - 1, 0, 1);
+})";
+
+    const char *kTCS = R"(#version 310 es
+
+#extension GL_EXT_tessellation_shader : require
+
+layout(vertices = 4) out;
+
+precision highp float;
+out vec4 color[];
+
+void main()
+{
+    bool is3VertexPatch = gl_PatchVerticesIn == 3;
+    bool is4VertexPatch = gl_PatchVerticesIn == 4;
+    if (gl_InvocationID < 3 || is4VertexPatch)
+    {
+        gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
+    }
+    else
+    {
+        // Derive the vertex 3 from vertex 0 if this is a 3-vertex patch
+        gl_out[gl_InvocationID].gl_Position = vec4(-gl_in[0].gl_Position.xy, gl_in[0].gl_Position.zw);
+    }
+    color[gl_InvocationID] = vec4(is3VertexPatch, is4VertexPatch, !is3VertexPatch && !is4VertexPatch, 1);
+
+    if (gl_InvocationID == 0)
+    {
+        gl_TessLevelOuter[0] = 4.0;
+        gl_TessLevelOuter[1] = 4.0;
+        gl_TessLevelOuter[2] = 4.0;
+        gl_TessLevelOuter[3] = 4.0;
+
+        gl_TessLevelInner[0] = 4.0;
+        gl_TessLevelInner[1] = 4.0;
+    }
+})";
+
+    const char *kTES = R"(#version 310 es
+
+#extension GL_EXT_tessellation_shader : require
+
+layout(quads, equal_spacing, ccw) in;
+
+precision highp float;
+in vec4 color[];
+out vec4 colorFS;
+
+void main()
+{
+    vec4 bottom = mix(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_TessCoord.x);
+    vec4 top = mix(gl_in[2].gl_Position, gl_in[3].gl_Position, gl_TessCoord.x);
+
+    gl_Position = mix(bottom, top, gl_TessCoord.y);
+    colorFS = color[0];
+})";
+
+    const char *kFS = R"(#version 310 es
+
+precision highp float;
+in vec4 colorFS;
+out vec4 color;
+
+void main()
+{
+    color = colorFS;
+})";
+
+    ANGLE_GL_PROGRAM_WITH_TESS(program, kVS, kTCS, kTES, kFS);
+    glUseProgram(program);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Draw with a 4-vertex patch, which should result in fullscreen green
+    glPatchParameteri(GL_PATCH_VERTICES, 4);
+    glDrawArrays(GL_PATCHES, 0, 4);
+
+    // Draw again with 3-vertex patch, which should result in fullscreen red
+    glPatchParameteri(GL_PATCH_VERTICES, 3);
+    glDrawArrays(GL_PATCHES, 0, 3);
+
+    // Verify results
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::yellow);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test for a bug with the VK_EXT_graphics_pipeline_library implementation in a scenario such as
 // this:
 //

@@ -380,6 +380,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setFrontFace(VkFrontFace frontFace);
     void setLineWidth(float lineWidth);
     void setLogicOp(VkLogicOp logicOp);
+    void setPatchControlPoints(uint32_t patchControlPoints);
     void setPrimitiveRestartEnable(VkBool32 primitiveRestartEnable);
     void setPrimitiveTopology(VkPrimitiveTopology primitiveTopology);
     void setRasterizerDiscardEnable(VkBool32 rasterizerDiscardEnable);
@@ -1211,6 +1212,12 @@ ANGLE_INLINE void CommandBuffer::setLogicOp(VkLogicOp logicOp)
 {
     ASSERT(valid());
     VK_SECONDARY_CMD_CALL(vkCmdSetLogicOpEXT(mHandle, logicOp));
+}
+
+ANGLE_INLINE void CommandBuffer::setPatchControlPoints(uint32_t patchControlPoints)
+{
+    ASSERT(valid());
+    VK_SECONDARY_CMD_CALL(vkCmdSetPatchControlPointsEXT(mHandle, patchControlPoints));
 }
 
 ANGLE_INLINE void CommandBuffer::setPrimitiveRestartEnable(VkBool32 primitiveRestartEnable)

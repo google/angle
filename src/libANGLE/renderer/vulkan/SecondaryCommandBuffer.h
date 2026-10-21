@@ -109,6 +109,7 @@ enum class CommandID : uint16_t
     SetFrontFace,
     SetLineWidth,
     SetLogicOp,
+    SetPatchControlPoints,
     SetPrimitiveRestartEnable,
     SetPrimitiveTopology,
     SetRasterizerDiscardEnable,
@@ -717,6 +718,14 @@ struct SetLogicOpParams
 };
 VERIFY_8_BYTE_ALIGNMENT(SetLogicOpParams)
 
+struct SetPatchControlPointsParams
+{
+    CommandHeader header;
+
+    uint32_t patchControlPoints;
+};
+VERIFY_8_BYTE_ALIGNMENT(SetPatchControlPointsParams)
+
 struct SetPrimitiveRestartEnableParams
 {
     CommandHeader header;
@@ -1124,6 +1133,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void setFrontFace(VkFrontFace frontFace);
     void setLineWidth(float lineWidth);
     void setLogicOp(VkLogicOp logicOp);
+    void setPatchControlPoints(uint32_t patchControlPoints);
     void setPrimitiveRestartEnable(VkBool32 primitiveRestartEnable);
     void setPrimitiveTopology(VkPrimitiveTopology primitiveTopology);
     void setRasterizerDiscardEnable(VkBool32 rasterizerDiscardEnable);
@@ -2245,6 +2255,13 @@ ANGLE_INLINE void SecondaryCommandBuffer::setLogicOp(VkLogicOp logicOp)
 {
     SetLogicOpParams *paramStruct = initCommand<SetLogicOpParams>(CommandID::SetLogicOp);
     paramStruct->logicOp          = logicOp;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setPatchControlPoints(uint32_t patchControlPoints)
+{
+    SetPatchControlPointsParams *paramStruct =
+        initCommand<SetPatchControlPointsParams>(CommandID::SetPatchControlPoints);
+    paramStruct->patchControlPoints = patchControlPoints;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setPrimitiveRestartEnable(VkBool32 primitiveRestartEnable)

@@ -543,6 +543,7 @@
 536046166 INTEL VULKAN : FramebufferTest_ES31_MSAA.MultisampleResolveWithBlitIntoMixedTextures/* = SKIP
 536046166 WIN INTEL VULKAN : FramebufferTest_ES31_MSAA.MultisampleStencilSampling/*EmulatedPrerotation* = SKIP
 540256225 INTEL VULKAN : ImageTestES3.SourceYUVTextureTargetExternalRGBSample/* = SKIP
+576082230 LINUX INTEL VULKAN : StateChangeTestES31.PatchVertices/* = SKIP
 
 // Robust init of OOB framebuffer reads is not zero'd
 500528706 VULKAN : CopyTexImageTestRobustResourceInit.OOBReadShouldBeZeroInit/* = SKIP
@@ -1520,6 +1521,7 @@
 489247643 PIXEL10 VULKAN : ImageTest.BindExternalTextureAsImage_R16_UINT/* = SKIP
 489247643 PIXEL10 VULKAN : ImageTest.BindExternalTextureAsImage_R16G16_UINT/* = SKIP
 456812545 PIXEL10 VULKAN : GLSLTest_ES3.DynamicWriteStaticReadVaryingArray/* = SKIP
+575891844 PIXEL10 VULKAN : StateChangeTestES31.PatchVertices/ES3_1_Vulkan_*NoSupportsExtendedDynamicState2* = SKIP
 
 // Some Metal tests fail on iOS Intel simulator
 40096874 IOS METAL : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
@@ -2813,6 +2815,7 @@
 362486580 LINUX NVIDIA VULKAN : InstancingTestES31.UpdateAttribBindingByVertexAttribDivisor/* = SKIP
 362486580 LINUX NVIDIA VULKAN : LineLoopIndirectTest.UseAsUBOThenUpdateThenUByteIndexIndirectBuffer/* = SKIP
 362486580 LINUX NVIDIA VULKAN : SimpleStateChangeTestES31.MultipleVertexArrayObjectRendering/* = SKIP
+362486580 LINUX NVIDIA VULKAN : StateChangeTestES31.PatchVertices/* = SKIP
 362486580 LINUX NVIDIA VULKAN : SixteenBppTextureTest.RGBA5551Validation/* = SKIP
 362486580 LINUX NVIDIA VULKAN : SixteenBppTextureTestES3.RGB5A1UploadRGB10A2/* = SKIP
 362486580 LINUX NVIDIA VULKAN : VertexAttributeTestES31.DrawArraysWithLargeStride/* = SKIP

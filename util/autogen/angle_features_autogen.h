@@ -436,6 +436,7 @@ enum class Feature
     SupportsMultisampledRenderToSingleSampled,
     SupportsMultiview,
     SupportsMultiviewMultisampleRenderToTexture,
+    SupportsPatchControlPointsDynamicState,
     SupportsPipelineCreationFeedback,
     SupportsPipelineProtectedAccess,
     SupportsPipelineRobustness,

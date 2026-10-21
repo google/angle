@@ -967,6 +967,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_LOGIC_OP);
     }
+    if (mRenderer->getFeatures().supportsPatchControlPointsDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_PATCH_CONTROL_POINTS);
+    }
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
@@ -1066,6 +1070,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicDepthBiasEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_LOGIC_OP] =
         &ContextVk::handleDirtyGraphicsDynamicLogicOp;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_PATCH_CONTROL_POINTS] =
+        &ContextVk::handleDirtyGraphicsDynamicPatchControlPoints;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicPrimitiveRestartEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
@@ -3479,6 +3485,14 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicLogicOp(DirtyBits::Iterator *
                                                            DirtyBits dirtyBitMask)
 {
     mRenderPassCommandBuffer->setLogicOp(gl_vk::GetLogicOp(gl::ToGLenum(mState.getLogicOp())));
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicPatchControlPoints(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setPatchControlPoints(mState.getPatchVertices());
     return angle::Result::Continue;
 }
 
@@ -6021,8 +6035,15 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             }
             case gl::state::DIRTY_BIT_PATCH_VERTICES:
-                mGraphicsPipelineDesc->updatePatchVertices(&mGraphicsPipelineTransition,
-                                                           glState.getPatchVertices());
+                if (mRenderer->getFeatures().supportsPatchControlPointsDynamicState.enabled)
+                {
+                    mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_PATCH_CONTROL_POINTS);
+                }
+                else
+                {
+                    mGraphicsPipelineDesc->updatePatchVertices(&mGraphicsPipelineTransition,
+                                                               glState.getPatchVertices());
+                }
                 break;
             default:
                 UNREACHABLE();
