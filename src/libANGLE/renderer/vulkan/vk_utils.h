@@ -1470,6 +1470,8 @@ void InitExtendedDynamicState2EXTFunctions(VkDevice device);
 
 // VK_EXT_extended_dynamic_state3
 void InitExtendedDynamicState3EXTFunctions(VkDevice device);
+void InitExtendedDynamicState3EXTWithDepthClipControlEXTFunctions(VkDevice device);
+void InitExtendedDynamicState3EXTWithBlendOperationAdvancedEXTFunctions(VkDevice device);
 
 // VK_EXT_vertex_input_dynamic_state
 void InitVertexInputDynamicStateEXTFunctions(VkDevice device);

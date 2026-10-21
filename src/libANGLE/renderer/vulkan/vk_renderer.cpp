@@ -4708,6 +4708,14 @@ void Renderer::initDeviceExtensionEntryPoints()
     if (getFeatures().supportsExtendedDynamicState3.enabled)
     {
         InitExtendedDynamicState3EXTFunctions(mDevice);
+        if (getFeatures().supportsDepthClipControl.enabled)
+        {
+            InitExtendedDynamicState3EXTWithDepthClipControlEXTFunctions(mDevice);
+        }
+        if (getFeatures().supportsBlendOperationAdvanced.enabled)
+        {
+            InitExtendedDynamicState3EXTWithBlendOperationAdvancedEXTFunctions(mDevice);
+        }
     }
     if (mFeatures.supportsFragmentShadingRate.enabled)
     {
