@@ -1075,6 +1075,10 @@ config("libANGLE_config") {
     defines += [ "ANGLE_USE_WAYLAND" ]
   }
 
+  if (angle_has_zstd) {
+    defines += [ "ANGLE_HAS_ZSTD" ]
+  }
+
   if (angle_enable_perf_counter_output) {
     defines += [ "ANGLE_ENABLE_PERF_COUNTER_OUTPUT=1" ]
   }
@@ -1333,12 +1337,11 @@ group("angle_abseil") {
 }
 
 config("angle_compression_config") {
-  include_dirs = [
-    "//third_party/zlib/google",
-
+  include_dirs = [ "//third_party/zlib/google" ]
+  if (angle_has_zstd) {
     # Chromium's zstd targets export no include path for <zstd.h>.
-    "$angle_zstd_dir/src/lib",
-  ]
+    include_dirs += [ "$angle_zstd_dir/src/lib" ]
+  }
 }
 
 group("angle_compression") {
@@ -1346,11 +1349,14 @@ group("angle_compression") {
     ":angle_compression_config",
     "//third_party/zlib:zlib_config",
   ]
-  public_deps = [
-    "$angle_zlib_compression_utils_dir:compression_utils_portable",
-    "$angle_zstd_dir:compress",
-    "$angle_zstd_dir:decompress",
-  ]
+  public_deps =
+      [ "$angle_zlib_compression_utils_dir:compression_utils_portable" ]
+  if (angle_has_zstd) {
+    public_deps += [
+      "$angle_zstd_dir:compress",
+      "$angle_zstd_dir:decompress",
+    ]
+  }
 }
 
 if (angle_has_rapidjson) {

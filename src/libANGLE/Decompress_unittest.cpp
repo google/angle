@@ -26,8 +26,10 @@ bool Compress(Format format, const std::vector<uint8_t> &data, MemoryBuffer *com
     {
         case Format::Zlib:
             return CompressBlob(data.size(), data.data(), compressedOut);
+#if defined(ANGLE_HAS_ZSTD)
         case Format::Zstd:
             return CompressBlobZstd(data.size(), data.data(), compressedOut);
+#endif
         default:
             UNREACHABLE();
             return false;
@@ -45,9 +47,11 @@ bool Decompress(Format format,
         case Format::Zlib:
             return DecompressBlob(compressed.data(), compressedSize, maxUncompressedDataSize,
                                   uncompressedOut);
+#if defined(ANGLE_HAS_ZSTD)
         case Format::Zstd:
             return DecompressBlobZstd(compressed.data(), compressedSize, maxUncompressedDataSize,
                                       uncompressedOut);
+#endif
         default:
             UNREACHABLE();
             return false;
@@ -175,7 +179,11 @@ std::string FormatName(const ::testing::TestParamInfo<Format> &info)
     }
 }
 
+#if defined(ANGLE_HAS_ZSTD)
 const auto kFormats = ::testing::Values(Format::Zlib, Format::Zstd);
+#else
+const auto kFormats = ::testing::Values(Format::Zlib);
+#endif
 
 INSTANTIATE_TEST_SUITE_P(Formats, DecompressTest, kFormats, FormatName);
 

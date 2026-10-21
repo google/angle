@@ -426,9 +426,9 @@ if (!defined(angle_zlib_compression_utils_dir)) {
   angle_zlib_compression_utils_dir = "//third_party/zlib/google"
 }
 
-if (!defined(angle_zstd_dir)) {
-  angle_zstd_dir = "//third_party/zstd"
-}
+# zstd is only used if build_overrides/angle.gni provides it, so that embedders
+# without it can roll ANGLE.
+angle_has_zstd = defined(angle_zstd_dir)
 
 angle_common_configs = [
   angle_root + ":angle_asserts_config",

@@ -19,8 +19,11 @@
 
 #include <limits>
 
-#include <zstd.h>
 #include <memory>
+
+#if defined(ANGLE_HAS_ZSTD)
+#    include <zstd.h>
+#endif
 
 #define USE_SYSTEM_ZLIB
 #include "compression_utils_portable.h"
@@ -1277,6 +1280,7 @@ bool DecompressBlob(const uint8_t *compressedData,
     return true;
 }
 
+#if defined(ANGLE_HAS_ZSTD)
 bool CompressBlobZstd(const size_t cacheSize,
                       const uint8_t *cacheData,
                       MemoryBuffer *compressedData)
@@ -1366,6 +1370,7 @@ bool DecompressBlobZstd(const uint8_t *compressedData,
     uncompressedData->setSize(decompressedSize);
     return true;
 }
+#endif  // defined(ANGLE_HAS_ZSTD)
 
 uint32_t GenerateCRC32(const uint8_t *data, size_t size)
 {
