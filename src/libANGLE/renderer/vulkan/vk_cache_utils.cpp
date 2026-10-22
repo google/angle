@@ -4167,6 +4167,11 @@ void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(
         static_cast<VkBool32>(multisample.bits.alphaToCoverageEnable);
     stateOut->multisampleState.alphaToOneEnable =
         static_cast<VkBool32>(multisample.bits.alphaToOneEnable);
+
+    if (context->getFeatures().supportsAlphaToCoverageEnableDynamicState.enabled)
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT);
+    }
 }
 
 void GraphicsPipelineDesc::initializePipelineFragmentOutputState(

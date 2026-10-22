@@ -3073,7 +3073,8 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                     primitivesGeneratedQueryWithRasterizerDiscard
 //                                                                                        (property)
 // - VK_EXT_primitive_topology_list_restart:           primitiveTopologyListRestart (feature)
-// - VK_EXT_extended_dynamic_state3:                   (features)
+// - VK_EXT_extended_dynamic_state3:                   extendedDynamicState3AlphaToCoverageEnable
+//                                                                                        (feature)
 //                                                     dynamicPrimitiveTopologyUnrestricted
 //                                                                                        (property)
 // - VK_EXT_graphics_pipeline_library:                 graphicsPipelineLibrary (feature),
@@ -6620,6 +6621,27 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsExtendedDynamicState3,
         ExtensionFound(VK_EXT_EXTENDED_DYNAMIC_STATE_3_EXTENSION_NAME, deviceExtensionNames));
+
+    // Static state for rasterizer discard is tricky in Vulkan.  The spec says that
+    // post-rasterization state is "ignored" when rasterizer discard is enabled.  Unfortunately,
+    // this has always been interpreted as VK_DYNAMIC_STATE_* for these state also needing to be
+    // ignored, which implies that if a pipeline with static rasterizer discard is bound, every
+    // post-rasterization state is perturbed and dynamic state has to be set again.  This
+    // complication is not worth handling (since we will practically always use dynamic state for
+    // rasterizer discard), so if rasterizer discard is static state, we will also use static state
+    // for the rest of post-rasterization state.
+    //
+    // Note that currently this is taken into account only for VK_EXT_extended_dynamic_state3
+    // dynamic state.  Older (more common) dynamic state does not take rasterizer discard into
+    // account, and instead VVL errors are suppressed.
+    const bool isRasterizerDiscardDynamicState =
+        mFeatures.useRasterizerDiscardEnableDynamicState.enabled;
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsAlphaToCoverageEnableDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled &&
+            mExtendedDynamicState3Features.extendedDynamicState3AlphaToCoverageEnable == VK_TRUE &&
+            isRasterizerDiscardDynamicState);
 
     // Older Samsung drivers with version < 24.0.0 have a bug in imageless framebuffer support.
     const bool isSamsungDriverWithImagelessFramebufferBug =

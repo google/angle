@@ -355,6 +355,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::Supports8BitPushConstant, "supports8BitPushConstant"},
     {Feature::Supports8BitStorageBuffer, "supports8BitStorageBuffer"},
     {Feature::Supports8BitUniformAndStorageBuffer, "supports8BitUniformAndStorageBuffer"},
+    {Feature::SupportsAlphaToCoverageEnableDynamicState, "supportsAlphaToCoverageEnableDynamicState"},
     {Feature::SupportsAmdShaderCoreProperties, "supportsAmdShaderCoreProperties"},
     {Feature::SupportsAndroidHardwareBuffer, "supportsAndroidHardwareBuffer"},
     {Feature::SupportsAndroidNativeFenceSync, "supportsAndroidNativeFenceSync"},
