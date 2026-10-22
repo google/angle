@@ -147,6 +147,7 @@
     "fishdom 2 ci",
     "five_nights_at_freddys 1 ci",
     "football_league_2025 1 ci",
+    "fps_strike_ops 1",
     "free_fire 5 ci",
     "free_fire_max 1 ci",
     "frost_and_flame 1 ci",
@@ -232,7 +233,7 @@
     "match_factory 1 ci",
     "match_masters 1 ci",
     "matching_story 1 ci",
-    "mementomori_afkrpg 1",
+    "mementomori_afkrpg 1 ci",
     "merge_dragons 1 ci",
     "merge_mansion 1 ci",
     "messenger_lite 5 ci",
@@ -241,6 +242,7 @@
     "minecraft_vibrant_visuals 1 ci",
     "minetest 3 ci",
     "mini_block_craft 2 ci",
+    "mini_fidget_antistress_games 1",
     "mini_games_calm_and_relax 1 ci",
     "mini_world 6 ci",
     "mob_control 1 ci",
@@ -430,6 +432,6 @@
     "zombie_smasher 2 ci",
     "zombie_tsunami 1",
     "zombie_waves 1 ci",
-    "zynga_poker_texas_holdem 1"
+    "zynga_poker_texas_holdem 1 ci"
   ]
 }

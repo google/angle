@@ -50,6 +50,7 @@ REPRESENTATIVE_TRACES = [
     "dota_underlords",
     "driver_overhead_2",
     "epic_seven",
+    "fps_strike_ops",
     "genshin_impact",
     "grand_mountain_adventure",
     "honkai_impact_3rd",
@@ -59,8 +60,8 @@ REPRESENTATIVE_TRACES = [
     "limbo",
     "lineage_2m",
     "manhattan_31",
-    "mementomori_afkrpg",
     "minecraft_bedrock",
+    "mini_fidget_antistress_games",
     "monster_hunter_stories",
     "need_for_speed_no_limits",
     "ni_no_kuni",
@@ -91,5 +92,4 @@ REPRESENTATIVE_TRACES = [
     "wizard_of_oz_slots_games",
     "wuthering_waves",
     "zombie_tsunami",
-    "zynga_poker_texas_holdem",
 ]

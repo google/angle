@@ -300,6 +300,7 @@ vars = {
   'checkout_angle_restricted_trace_fishdom': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_five_nights_at_freddys': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_football_league_2025': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_fps_strike_ops': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_free_fire': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_free_fire_max': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_frost_and_flame': 'checkout_extra_traces',
@@ -385,7 +386,7 @@ vars = {
   'checkout_angle_restricted_trace_match_factory': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_match_masters': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_matching_story': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_mementomori_afkrpg': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_mementomori_afkrpg': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_merge_dragons': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_merge_mansion': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_messenger_lite': 'checkout_extra_traces',
@@ -394,6 +395,7 @@ vars = {
   'checkout_angle_restricted_trace_minecraft_vibrant_visuals': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_minetest': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mini_block_craft': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_mini_fidget_antistress_games': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_mini_games_calm_and_relax': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mini_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mob_control': 'checkout_extra_traces',
@@ -583,7 +585,7 @@ vars = {
   'checkout_angle_restricted_trace_zombie_smasher': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zombie_tsunami': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_zombie_waves': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_zynga_poker_texas_holdem': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_zynga_poker_texas_holdem': 'checkout_extra_traces',
   # === ANGLE Restricted Trace Generated Var End ===
 
   'checkout_angle_perfetto': 'checkout_angle_restricted_traces',
@@ -2870,6 +2872,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_football_league_2025',
   },
+  'src/tests/restricted_traces/fps_strike_ops': {
+      'packages': [
+        {
+            'package': 'angle/traces/fps_strike_ops',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_fps_strike_ops',
+  },
   'src/tests/restricted_traces/free_fire': {
       'packages': [
         {
@@ -3809,6 +3821,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_mini_block_craft',
+  },
+  'src/tests/restricted_traces/mini_fidget_antistress_games': {
+      'packages': [
+        {
+            'package': 'angle/traces/mini_fidget_antistress_games',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_mini_fidget_antistress_games',
   },
   'src/tests/restricted_traces/mini_games_calm_and_relax': {
       'packages': [
