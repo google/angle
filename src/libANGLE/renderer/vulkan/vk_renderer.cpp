@@ -7490,9 +7490,10 @@ const ShPixelLocalStorageOptions &Renderer::getNativePixelLocalStorageOptions() 
 
 void Renderer::initializeFrontendFeatures(angle::FrontendFeatures *features) const
 {
+    const bool isPowerVR = IsPowerVR(mPhysicalDeviceProperties.vendorID);
+    const bool isSamsung = IsSamsung(mPhysicalDeviceProperties.vendorID);
     const bool isSwiftShader =
         IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
-    const bool isSamsung = IsSamsung(mPhysicalDeviceProperties.vendorID);
 
     // Hopefully-temporary work-around for a crash on SwiftShader.  An Android process is turning
     // off GL error checking, and then asking ANGLE to write past the end of a buffer.
@@ -7516,6 +7517,9 @@ void Renderer::initializeFrontendFeatures(angle::FrontendFeatures *features) con
     // Enable the program binary blob compression for glGetProgramBinary and glGetProgramiv.  It
     // will be decompressed when loading the program binary by glProgramBinary.
     ANGLE_FEATURE_CONDITION(features, compressProgramBinaryBlob, isSamsung);
+
+    // PowerVR compiler may crash when encountering an infinite loop
+    ANGLE_FEATURE_CONDITION(features, ensureLoopForwardProgress, isPowerVR);
 }
 
 angle::Result Renderer::getLockedPipelineCacheDataIfNew(vk::ErrorContext *context,
