@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-use super::utils;
+use super::utils::{self, BinaryOpInfo, Precedence};
 use crate::ir::*;
 use crate::*;
 use std::collections::HashMap;
@@ -13,6 +13,7 @@ use std::fmt::Write;
 struct WgslConstant {
     /// WGSL expression text for the constant (e.g. `"1.0f"`, `"42i"`, `"vec2<f32>(1.0f, 2.0f)"`).
     text: String,
+    precedence: Precedence,
 }
 
 #[cfg_attr(debug_assertions, derive(Debug))]
@@ -46,6 +47,7 @@ struct WgslFunction {
 struct ExprInfo {
     /// Formatted WGSL expression string (e.g. `"(_ua + _ub)"`, `"r1.xy"`).
     text: String,
+    precedence: Precedence,
 }
 
 #[derive(Clone)]
@@ -226,11 +228,11 @@ impl WgslOutputGenerator {
             Id::Register(id) => self.expressions[id].clone(),
             Id::Constant(id) => {
                 let constant = &self.constants[id];
-                ExprInfo { text: constant.text.clone() }
+                ExprInfo { text: constant.text.clone(), precedence: constant.precedence }
             }
             Id::Variable(id) => {
                 let var = &self.variables[id];
-                ExprInfo { text: var.name.clone() }
+                ExprInfo { text: var.name.clone(), precedence: Precedence::Primary }
             }
         }
     }
@@ -456,22 +458,30 @@ impl ast::Target for WgslOutputGenerator {
 
     fn new_constant(&mut self, _ir_meta: &IRMeta, id: ConstantId, constant: &Constant) {
         let type_info = &self.types[&constant.type_id];
-        let constant_text = match &constant.value {
-            &ConstantValue::Float(f) => format!("{f:?}f"),
-            &ConstantValue::Int(i) => format!("{i}i"),
-            &ConstantValue::Uint(u) => format!("{u}u"),
-            &ConstantValue::Bool(b) => b.to_string(),
-            &ConstantValue::YuvCsc(_) => "0".to_string(),
-            ConstantValue::Composite(elements) => format!(
-                "{type_info}({})",
-                elements
-                    .iter()
-                    .map(|element| self.constants[element].text.as_str())
-                    .collect::<Vec<_>>()
-                    .join(", ")
+        let (constant_text, precedence) = match &constant.value {
+            &ConstantValue::Float(f) => (
+                format!("{f:?}f"),
+                if f.is_sign_negative() { Precedence::Negate } else { Precedence::Primary },
+            ),
+            &ConstantValue::Int(i) => {
+                (format!("{i}i"), if i < 0 { Precedence::Negate } else { Precedence::Primary })
+            }
+            &ConstantValue::Uint(u) => (format!("{u}u"), Precedence::Primary),
+            &ConstantValue::Bool(b) => (b.to_string(), Precedence::Primary),
+            &ConstantValue::YuvCsc(_) => ("0".to_string(), Precedence::Primary),
+            ConstantValue::Composite(elements) => (
+                format!(
+                    "{type_info}({})",
+                    elements
+                        .iter()
+                        .map(|element| self.constants[element].text.as_str())
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
+                Precedence::Primary,
             ),
         };
-        self.constants.insert(id, WgslConstant { text: constant_text });
+        self.constants.insert(id, WgslConstant { text: constant_text, precedence });
     }
 
     fn new_variable(&mut self, ir_meta: &IRMeta, id: VariableId, variable: &Variable) {
@@ -676,8 +686,13 @@ impl ast::Target for WgslOutputGenerator {
 
     fn swizzle_single(&mut self, _block: &mut String, result: RegisterId, id: TypedId, index: u32) {
         let base = self.get_expr(id);
-        let res_expr = format!("({}).{}", base.text, utils::get_swizzle(index));
-        self.expressions.insert(result, ExprInfo { text: res_expr });
+        let res_expr = format!(
+            "{}.{}",
+            base.precedence.parenthesize_if_needed(&base.text, Precedence::Primary),
+            utils::get_swizzle(index)
+        );
+        self.expressions
+            .insert(result, ExprInfo { text: res_expr, precedence: Precedence::Primary });
     }
 
     fn swizzle_multi(
@@ -688,15 +703,30 @@ impl ast::Target for WgslOutputGenerator {
         indices: &[u32],
     ) {
         let base = self.get_expr(id);
-        let res_expr = format!("({}).{}", base.text, utils::get_swizzle_multi(indices));
-        self.expressions.insert(result, ExprInfo { text: res_expr });
+        let res_expr = format!(
+            "{}.{}",
+            base.precedence.parenthesize_if_needed(&base.text, Precedence::Primary),
+            utils::get_swizzle_multi(indices)
+        );
+        self.expressions
+            .insert(result, ExprInfo { text: res_expr, precedence: Precedence::Primary });
     }
 
     fn index(&mut self, _block: &mut String, result: RegisterId, id: TypedId, index: TypedId) {
         let base = self.get_expr(id);
         let idx = self.get_expr(index);
 
-        self.expressions.insert(result, ExprInfo { text: format!("{}[{}]", base.text, idx.text) });
+        self.expressions.insert(
+            result,
+            ExprInfo {
+                text: format!(
+                    "{}[{}]",
+                    base.precedence.parenthesize_if_needed(&base.text, Precedence::Primary),
+                    idx.text
+                ),
+                precedence: Precedence::Primary,
+            },
+        );
     }
 
     fn select_field(
@@ -710,8 +740,11 @@ impl ast::Target for WgslOutputGenerator {
         let base = self.get_expr(id);
         let field_name = Self::name_str(&field.name, TEMP_STRUCT_FIELD_PREFIX, index);
 
-        let text = format!("({}).{}", base.text, field_name);
-        self.expressions.insert(result, ExprInfo { text });
+        let text = format!(
+            "{}.{field_name}",
+            base.precedence.parenthesize_if_needed(&base.text, Precedence::Primary)
+        );
+        self.expressions.insert(result, ExprInfo { text, precedence: Precedence::Primary });
     }
 
     fn construct_single(
@@ -723,7 +756,10 @@ impl ast::Target for WgslOutputGenerator {
     ) {
         let type_name = Self::basic_type_str(type_id);
         let expr = self.get_expression(id);
-        self.expressions.insert(result, ExprInfo { text: format!("{type_name}({expr})") });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: format!("{type_name}({expr})"), precedence: Precedence::Primary },
+        );
     }
 
     fn construct_multi(
@@ -736,12 +772,15 @@ impl ast::Target for WgslOutputGenerator {
         let type_name =
             self.types.get(&type_id).cloned().unwrap_or_else(|| Self::basic_type_str(type_id));
         let args = self.get_expressions(ids);
-        self.expressions.insert(result, ExprInfo { text: format!("{type_name}({args})") });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: format!("{type_name}({args})"), precedence: Precedence::Primary },
+        );
     }
 
     fn load(&mut self, _block: &mut String, result: RegisterId, pointer: TypedId) {
         let ptr = self.get_expr(pointer);
-        self.expressions.insert(result, ExprInfo { text: ptr.text });
+        self.expressions.insert(result, ExprInfo { text: ptr.text, precedence: ptr.precedence });
     }
 
     fn store(&mut self, block: &mut String, pointer: TypedId, value: TypedId) {
@@ -765,7 +804,8 @@ impl ast::Target for WgslOutputGenerator {
             if has_side_effect_with_unused_result {
                 writeln!(block, "{call_expr};").unwrap();
             } else {
-                self.expressions.insert(res, ExprInfo { text: call_expr });
+                self.expressions
+                    .insert(res, ExprInfo { text: call_expr, precedence: Precedence::Primary });
             }
         } else {
             writeln!(block, "{call_expr};").unwrap();
@@ -780,27 +820,87 @@ impl ast::Target for WgslOutputGenerator {
         id: TypedId,
         has_side_effect_with_unused_result: bool,
     ) {
-        let expr = self.get_expression(id);
-        let (res_expr, stmt) = if let Some(builtin) = Self::unary_builtin_str(unary_op) {
-            (format!("{builtin}({expr})"), None)
+        let expr = self.get_expr(id);
+        let (res_expr, stmt, precedence) = if let Some(builtin) = Self::unary_builtin_str(unary_op)
+        {
+            (format!("{builtin}({})", expr.text), None, Precedence::Primary)
         } else {
             match unary_op {
-                UnaryOpCode::Negate => (format!("(-{expr})"), None),
-                UnaryOpCode::LogicalNot | UnaryOpCode::Not => (format!("(!{expr})"), None),
-                UnaryOpCode::BitwiseNot => (format!("(~{expr})"), None),
+                UnaryOpCode::Negate => (
+                    format!(
+                        "-{}",
+                        expr.precedence.parenthesize_if_needed(&expr.text, Precedence::Unary)
+                    ),
+                    None,
+                    Precedence::Negate,
+                ),
+                UnaryOpCode::LogicalNot | UnaryOpCode::Not => (
+                    format!(
+                        "!{}",
+                        expr.precedence.parenthesize_if_needed(&expr.text, Precedence::Unary)
+                    ),
+                    None,
+                    Precedence::Unary,
+                ),
+                UnaryOpCode::BitwiseNot => (
+                    format!(
+                        "~{}",
+                        expr.precedence.parenthesize_if_needed(&expr.text, Precedence::Unary)
+                    ),
+                    None,
+                    Precedence::Unary,
+                ),
                 // Note: This implementation is buggy (postfix returns the incremented/decremented
                 // value instead of the original value, and `+ 1`/`- 1` uses an untyped integer
                 // literal). Increments and decrements will be implemented properly in a later
                 // commit by lowering them in the IR.
+                // The assignment is emitted as a statement above, and the resulting expression
+                // value used in outer expressions is the variable/lvalue itself
+                // (`expr.text`), which retains `expr.precedence` (typically
+                // `Precedence::Primary`).
                 UnaryOpCode::PrefixIncrement | UnaryOpCode::PostfixIncrement => {
-                    let stmt = format!("{expr} = {expr} + 1;");
-                    (expr, Some(stmt))
+                    let stmt = format!("{} = {} + 1;", expr.text, expr.text);
+                    (expr.text, Some(stmt), expr.precedence)
                 }
                 UnaryOpCode::PrefixDecrement | UnaryOpCode::PostfixDecrement => {
-                    let stmt = format!("{expr} = {expr} - 1;");
-                    (expr, Some(stmt))
+                    let stmt = format!("{} = {} - 1;", expr.text, expr.text);
+                    (expr.text, Some(stmt), expr.precedence)
                 }
-                _ => (expr, None),
+                UnaryOpCode::ArrayLength
+                | UnaryOpCode::Isnan
+                | UnaryOpCode::Isinf
+                | UnaryOpCode::FloatBitsToInt
+                | UnaryOpCode::FloatBitsToUint
+                | UnaryOpCode::IntBitsToFloat
+                | UnaryOpCode::UintBitsToFloat
+                | UnaryOpCode::PackSnorm2x16
+                | UnaryOpCode::PackHalf2x16
+                | UnaryOpCode::UnpackSnorm2x16
+                | UnaryOpCode::UnpackHalf2x16
+                | UnaryOpCode::PackUnorm2x16
+                | UnaryOpCode::UnpackUnorm2x16
+                | UnaryOpCode::PackUnorm4x8
+                | UnaryOpCode::PackSnorm4x8
+                | UnaryOpCode::Inverse
+                | UnaryOpCode::BitfieldReverse
+                | UnaryOpCode::BitCount
+                | UnaryOpCode::FindLSB
+                | UnaryOpCode::FindMSB
+                | UnaryOpCode::InterpolateAtCentroid
+                | UnaryOpCode::AtomicCounter
+                | UnaryOpCode::AtomicCounterIncrement
+                | UnaryOpCode::AtomicCounterDecrement
+                | UnaryOpCode::ImageSize
+                | UnaryOpCode::PixelLocalLoadANGLE => {
+                    // Placeholder for unsupported or unimplemented unary operations that are
+                    // translated in subsequent commits.
+                    (format!("UNIMPLEMENTED_OP({})", expr.text), None, Precedence::Primary)
+                }
+                _ => {
+                    unreachable!(
+                        "Internal error: Unary built-ins are handled by unary_builtin_str above"
+                    )
+                }
             }
         };
         if let Some(s) = stmt {
@@ -808,7 +908,7 @@ impl ast::Target for WgslOutputGenerator {
         } else if has_side_effect_with_unused_result {
             writeln!(block, "{res_expr};").unwrap();
         }
-        self.expressions.insert(result, ExprInfo { text: res_expr });
+        self.expressions.insert(result, ExprInfo { text: res_expr, precedence });
     }
 
     fn binary(
@@ -820,48 +920,92 @@ impl ast::Target for WgslOutputGenerator {
         rhs: TypedId,
         has_side_effect_with_unused_result: bool,
     ) {
-        let l = self.get_expression(lhs);
-        let r = self.get_expression(rhs);
-        let res_expr = match binary_op {
-            BinaryOpCode::Add => format!("({l} + {r})"),
-            BinaryOpCode::Sub => format!("({l} - {r})"),
+        let l = self.get_expr(lhs);
+        let r = self.get_expr(rhs);
+        let info = match binary_op {
+            BinaryOpCode::Add => Some(BinaryOpInfo::new("+", Precedence::Additive)),
+            BinaryOpCode::Sub => Some(BinaryOpInfo::new("-", Precedence::Additive)),
             BinaryOpCode::Mul
             | BinaryOpCode::VectorTimesScalar
             | BinaryOpCode::MatrixTimesScalar
             | BinaryOpCode::VectorTimesMatrix
             | BinaryOpCode::MatrixTimesVector
-            | BinaryOpCode::MatrixTimesMatrix => format!("({l} * {r})"),
-            BinaryOpCode::Div => format!("({l} / {r})"),
-            BinaryOpCode::IMod => format!("({l} % {r})"),
-            BinaryOpCode::Equal | BinaryOpCode::EqualVec => format!("({l} == {r})"),
-            BinaryOpCode::NotEqual | BinaryOpCode::NotEqualVec => format!("({l} != {r})"),
-            BinaryOpCode::LessThan | BinaryOpCode::LessThanVec => format!("({l} < {r})"),
-            BinaryOpCode::GreaterThan | BinaryOpCode::GreaterThanVec => format!("({l} > {r})"),
-            BinaryOpCode::LessThanEqual | BinaryOpCode::LessThanEqualVec => format!("({l} <= {r})"),
-            BinaryOpCode::GreaterThanEqual | BinaryOpCode::GreaterThanEqualVec => {
-                format!("({l} >= {r})")
+            | BinaryOpCode::MatrixTimesMatrix => {
+                Some(BinaryOpInfo::new("*", Precedence::Multiplicative))
             }
-            BinaryOpCode::BitShiftLeft => format!("({l} << {r})"),
-            BinaryOpCode::BitShiftRight => format!("({l} >> {r})"),
-            BinaryOpCode::BitwiseOr => format!("({l} | {r})"),
-            BinaryOpCode::BitwiseXor => format!("({l} ^ {r})"),
-            BinaryOpCode::BitwiseAnd => format!("({l} & {r})"),
-            BinaryOpCode::Atan => format!("atan2({l}, {r})"),
-            BinaryOpCode::Pow => format!("pow({l}, {r})"),
-            BinaryOpCode::Mod => format!("({l} % {r})"),
-            BinaryOpCode::Min => format!("min({l}, {r})"),
-            BinaryOpCode::Max => format!("max({l}, {r})"),
-            BinaryOpCode::Step => format!("step({l}, {r})"),
-            BinaryOpCode::Distance => format!("distance({l}, {r})"),
-            BinaryOpCode::Dot => format!("dot({l}, {r})"),
-            BinaryOpCode::Cross => format!("cross({l}, {r})"),
-            BinaryOpCode::Reflect => format!("reflect({l}, {r})"),
-            _ => format!("({l} + {r})"),
+            BinaryOpCode::Div => Some(BinaryOpInfo::new("/", Precedence::Multiplicative)),
+            BinaryOpCode::IMod | BinaryOpCode::Mod => {
+                Some(BinaryOpInfo::new("%", Precedence::Multiplicative))
+            }
+            BinaryOpCode::BitShiftLeft => Some(BinaryOpInfo::new("<<", Precedence::Shift)),
+            BinaryOpCode::BitShiftRight => Some(BinaryOpInfo::new(">>", Precedence::Shift)),
+            BinaryOpCode::LessThan | BinaryOpCode::LessThanVec => {
+                Some(BinaryOpInfo::new("<", Precedence::Relational))
+            }
+            BinaryOpCode::GreaterThan | BinaryOpCode::GreaterThanVec => {
+                Some(BinaryOpInfo::new(">", Precedence::Relational))
+            }
+            BinaryOpCode::LessThanEqual | BinaryOpCode::LessThanEqualVec => {
+                Some(BinaryOpInfo::new("<=", Precedence::Relational))
+            }
+            BinaryOpCode::GreaterThanEqual | BinaryOpCode::GreaterThanEqualVec => {
+                Some(BinaryOpInfo::new(">=", Precedence::Relational))
+            }
+            BinaryOpCode::Equal | BinaryOpCode::EqualVec => {
+                Some(BinaryOpInfo::new("==", Precedence::Relational))
+            }
+            BinaryOpCode::NotEqual | BinaryOpCode::NotEqualVec | BinaryOpCode::LogicalXor => {
+                Some(BinaryOpInfo::new("!=", Precedence::Relational))
+            }
+            BinaryOpCode::BitwiseOr => Some(BinaryOpInfo::new("|", Precedence::BitwiseOr)),
+            BinaryOpCode::BitwiseXor => Some(BinaryOpInfo::new("^", Precedence::BitwiseXor)),
+            BinaryOpCode::BitwiseAnd => Some(BinaryOpInfo::new("&", Precedence::BitwiseAnd)),
+            _ => None,
+        };
+
+        let (res_expr, precedence) = if let Some(info) = info {
+            info.format_expr(&l.text, l.precedence, &r.text, r.precedence)
+        } else {
+            let fn_call = match binary_op {
+                BinaryOpCode::Atan => format!("atan2({}, {})", l.text, r.text),
+                BinaryOpCode::Pow => format!("pow({}, {})", l.text, r.text),
+                BinaryOpCode::Min => format!("min({}, {})", l.text, r.text),
+                BinaryOpCode::Max => format!("max({}, {})", l.text, r.text),
+                BinaryOpCode::Step => format!("step({}, {})", l.text, r.text),
+                BinaryOpCode::Distance => format!("distance({}, {})", l.text, r.text),
+                BinaryOpCode::Dot => format!("dot({}, {})", l.text, r.text),
+                BinaryOpCode::Cross => format!("cross({}, {})", l.text, r.text),
+                BinaryOpCode::Reflect => format!("reflect({}, {})", l.text, r.text),
+                BinaryOpCode::Modf
+                | BinaryOpCode::Frexp
+                | BinaryOpCode::Ldexp
+                | BinaryOpCode::MatrixCompMult
+                | BinaryOpCode::OuterProduct
+                | BinaryOpCode::InterpolateAtSample
+                | BinaryOpCode::InterpolateAtOffset
+                | BinaryOpCode::AtomicAdd
+                | BinaryOpCode::AtomicMin
+                | BinaryOpCode::AtomicMax
+                | BinaryOpCode::AtomicAnd
+                | BinaryOpCode::AtomicOr
+                | BinaryOpCode::AtomicXor
+                | BinaryOpCode::AtomicExchange => {
+                    // Placeholder for unsupported or unimplemented binary operations that are
+                    // translated in subsequent commits.
+                    format!("UNIMPLEMENTED_OP({}, {})", l.text, r.text)
+                }
+                _ => {
+                    unreachable!(
+                        "Internal error: Binary operators are handled by BinaryOpInfo above"
+                    )
+                }
+            };
+            (fn_call, Precedence::Primary)
         };
         if has_side_effect_with_unused_result {
             writeln!(block, "{res_expr};").unwrap();
         } else {
-            self.expressions.insert(result, ExprInfo { text: res_expr });
+            self.expressions.insert(result, ExprInfo { text: res_expr, precedence });
         }
     }
 
@@ -888,7 +1032,8 @@ impl ast::Target for WgslOutputGenerator {
             if has_side_effect_with_unused_result {
                 writeln!(block, "{res_expr};").unwrap();
             } else {
-                self.expressions.insert(res, ExprInfo { text: res_expr });
+                self.expressions
+                    .insert(res, ExprInfo { text: res_expr, precedence: Precedence::Primary });
             }
         } else {
             writeln!(block, "{res_expr};").unwrap();
@@ -906,7 +1051,10 @@ impl ast::Target for WgslOutputGenerator {
         _offset: Option<TypedId>,
     ) {
         // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(result, ExprInfo { text: "/* UNIMPLEMENTED */".to_string() });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+        );
     }
 
     fn texture_compare(
@@ -919,7 +1067,10 @@ impl ast::Target for WgslOutputGenerator {
         _compare: TypedId,
     ) {
         // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(result, ExprInfo { text: "/* UNIMPLEMENTED */".to_string() });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+        );
     }
 
     fn texture_lod(
@@ -934,7 +1085,10 @@ impl ast::Target for WgslOutputGenerator {
         _offset: Option<TypedId>,
     ) {
         // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(result, ExprInfo { text: "/* UNIMPLEMENTED */".to_string() });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+        );
     }
 
     fn texture_compare_lod(
@@ -948,7 +1102,10 @@ impl ast::Target for WgslOutputGenerator {
         _lod: TypedId,
     ) {
         // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(result, ExprInfo { text: "/* UNIMPLEMENTED */".to_string() });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+        );
     }
 
     fn texture_bias(
@@ -963,7 +1120,10 @@ impl ast::Target for WgslOutputGenerator {
         _offset: Option<TypedId>,
     ) {
         // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(result, ExprInfo { text: "/* UNIMPLEMENTED */".to_string() });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+        );
     }
 
     fn texture_compare_bias(
@@ -977,7 +1137,10 @@ impl ast::Target for WgslOutputGenerator {
         _bias: TypedId,
     ) {
         // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(result, ExprInfo { text: "/* UNIMPLEMENTED */".to_string() });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+        );
     }
 
     fn texture_grad(
@@ -993,7 +1156,10 @@ impl ast::Target for WgslOutputGenerator {
         _offset: Option<TypedId>,
     ) {
         // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(result, ExprInfo { text: "/* UNIMPLEMENTED */".to_string() });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+        );
     }
 
     fn texture_gather(
@@ -1006,7 +1172,10 @@ impl ast::Target for WgslOutputGenerator {
         _offset: Option<TypedId>,
     ) {
         // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(result, ExprInfo { text: "/* UNIMPLEMENTED */".to_string() });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+        );
     }
 
     fn texture_gather_component(
@@ -1020,7 +1189,10 @@ impl ast::Target for WgslOutputGenerator {
         _offset: Option<TypedId>,
     ) {
         // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(result, ExprInfo { text: "/* UNIMPLEMENTED */".to_string() });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+        );
     }
 
     fn texture_gather_ref(
@@ -1034,7 +1206,10 @@ impl ast::Target for WgslOutputGenerator {
         _offset: Option<TypedId>,
     ) {
         // Placeholder: texture lookup codegen is implemented in a later commit.
-        self.expressions.insert(result, ExprInfo { text: "/* UNIMPLEMENTED */".to_string() });
+        self.expressions.insert(
+            result,
+            ExprInfo { text: "/* UNIMPLEMENTED */".to_string(), precedence: Precedence::Primary },
+        );
     }
 
     fn branch_discard(&mut self, block: &mut String) {

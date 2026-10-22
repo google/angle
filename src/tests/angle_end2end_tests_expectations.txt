@@ -2723,7 +2723,6 @@
 42266907 AST WGPU : WebGLCompatibilityTest.BuiltInInvariant/* = SKIP
 42266907 WGPU : WebGLReadOutsideFramebufferTest.CopyTexSubImage2D/* = SKIP
 42266907 WGPU : WebGLReadOutsideFramebufferTest.CopyTexImage2D/* = SKIP
-498271998 WGPU : WebGLGLSLTest.ComplexExpression/* = SKIP
 
 // 42267100 failures are due to the shader (which uses textures) failing to compile
 42267100 WGPU : Texture2DTest.NegativeAPISubImage* = SKIP
@@ -3216,6 +3215,8 @@
 42267100 IR WGPU : DepthStencilTest.StencilOnlyDrawThenCopyThenDraw/* = SKIP
 42267100 IR WGPU : DepthStencilTestES3.LoadStoreOpNoneExtension/* = SKIP
 42267100 IR WGPU : DepthStencilTestES3.ReadOnlyDepthStencilThenOutputDepthStencil/* = SKIP
+42267100 IR WGPU : GLSLPrecedenceTest.*/* = SKIP
+42267100 IR WGPU : GLSLPrecedenceTest_ES3.*/* = SKIP
 42267100 IR WGPU : GLSLTest.EmbeddedStructUniform*/* = SKIP
 42267100 IR WGPU : GLSLTest.MatrixConstructorFromVectors/* = SKIP
 42267100 IR WGPU : GLSLTest.RewriteElseBlockReturningStruct/* = SKIP
