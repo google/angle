@@ -391,6 +391,7 @@ enum class Feature
     SupportsDepthClampEnableDynamicState,
     SupportsDepthClampZeroOne,
     SupportsDepthClipControl,
+    SupportsDepthClipNegativeOneToOneDynamicState,
     SupportsDepthStencilIndependentResolveNone,
     SupportsDepthStencilResolve,
     SupportsDeviceFault,

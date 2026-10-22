@@ -983,6 +983,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE);
     }
+    if (mRenderer->getFeatures().supportsDepthClipNegativeOneToOneDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE);
+    }
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
@@ -1092,6 +1096,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicAlphaToOneEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicDepthClampEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE] =
+        &ContextVk::handleDirtyGraphicsDynamicDepthClipNegativeOneToOne;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate;
 
@@ -3559,6 +3565,14 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicDepthClampEnable(
     return angle::Result::Continue;
 }
 
+angle::Result ContextVk::handleDirtyGraphicsDynamicDepthClipNegativeOneToOne(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setDepthClipNegativeOneToOne(!mState.isClipDepthModeZeroToOne());
+    return angle::Result::Continue;
+}
+
 angle::Result ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate(
     DirtyBits::Iterator *dirtyBitsIterator,
     DirtyBits dirtyBitMask)
@@ -6005,12 +6019,20 @@ angle::Result ContextVk::syncState(const gl::Context *context,
 
                 // If VK_EXT_depth_clip_control is not enabled, there's nothing needed
                 // for depth correction for EXT_clip_control.
-                // glState will be used to toggle control path of depth correction code
-                // in SPIR-V transform options.
+                // glState will be used to control depth correction code in SPIR-V via driver
+                // uniforms.
                 if (getFeatures().supportsDepthClipControl.enabled)
                 {
-                    mGraphicsPipelineDesc->updateDepthClipControl(
-                        &mGraphicsPipelineTransition, !glState.isClipDepthModeZeroToOne());
+                    if (mRenderer->getFeatures()
+                            .supportsDepthClipNegativeOneToOneDynamicState.enabled)
+                    {
+                        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE);
+                    }
+                    else
+                    {
+                        mGraphicsPipelineDesc->updateDepthClipControl(
+                            &mGraphicsPipelineTransition, !glState.isClipDepthModeZeroToOne());
+                    }
                 }
                 else
                 {

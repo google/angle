@@ -3057,63 +3057,65 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 // The following features and properties are not promoted to any core Vulkan versions (up to Vulkan
 // 1.4):
 //
-// - VK_EXT_provoking_vertex:                          provokingVertexLast (feature)
-// - VK_EXT_transform_feedback:                        transformFeedback (feature),
-//                                                     geometryStreams (feature)
-// - VK_EXT_device_memory_report:                      deviceMemoryReport (feature)
-// - VK_EXT_multisampled_render_to_single_sampled:     multisampledRenderToSingleSampled (feature)
-// - VK_EXT_image_2d_view_of_3d:                       image2DViewOf3D (feature)
-//                                                     sampler2DViewOf3D (feature)
-// - VK_EXT_custom_border_color:                       customBorderColors (feature)
-//                                                     customBorderColorWithoutFormat (feature)
+// - VK_EXT_provoking_vertex:                         provokingVertexLast (feature)
+// - VK_EXT_transform_feedback:                       transformFeedback (feature),
+//                                                    geometryStreams (feature)
+// - VK_EXT_device_memory_report:                     deviceMemoryReport (feature)
+// - VK_EXT_multisampled_render_to_single_sampled:    multisampledRenderToSingleSampled (feature)
+// - VK_EXT_image_2d_view_of_3d:                      image2DViewOf3D (feature)
+//                                                    sampler2DViewOf3D (feature)
+// - VK_EXT_custom_border_color:                      customBorderColors (feature)
+//                                                    customBorderColorWithoutFormat (feature)
 // - VK_KHR_depth_clamp_zero_one or
-//   VK_EXT_depth_clamp_zero_one:                      depthClampZeroOne (feature)
-// - VK_EXT_depth_clip_control:                        depthClipControl (feature)
-// - VK_EXT_primitives_generated_query:                primitivesGeneratedQuery (feature),
-//                                                     primitivesGeneratedQueryWithRasterizerDiscard
-//                                                                                        (property)
-// - VK_EXT_primitive_topology_list_restart:           primitiveTopologyListRestart (feature)
-// - VK_EXT_extended_dynamic_state3:                   extendedDynamicState3AlphaToCoverageEnable
-//                                                                                        (feature)
-//                                                     extendedDynamicState3AlphaToOneEnable
-//                                                                                        (feature)
-//                                                     extendedDynamicState3DepthClampEnable
-//                                                                                        (feature)
-//                                                     dynamicPrimitiveTopologyUnrestricted
-//                                                                                        (property)
-// - VK_EXT_graphics_pipeline_library:                 graphicsPipelineLibrary (feature),
-//                                                     graphicsPipelineLibraryFastLinking (property)
-// - VK_KHR_fragment_shading_rate:                     pipelineFragmentShadingRate (feature)
-// - VK_EXT_fragment_shader_interlock:                 fragmentShaderPixelInterlock (feature)
-// - VK_EXT_pipeline_robustness:                       pipelineRobustness (feature)
-// - VK_EXT_pipeline_protected_access:                 pipelineProtectedAccess (feature)
+//   VK_EXT_depth_clamp_zero_one:                     depthClampZeroOne (feature)
+// - VK_EXT_depth_clip_control:                       depthClipControl (feature)
+// - VK_EXT_primitives_generated_query:               primitivesGeneratedQuery (feature),
+//                                                    primitivesGeneratedQueryWithRasterizerDiscard
+//                                                                                       (property)
+// - VK_EXT_primitive_topology_list_restart:          primitiveTopologyListRestart (feature)
+// - VK_EXT_extended_dynamic_state3:                  extendedDynamicState3AlphaToCoverageEnable
+//                                                                                       (feature)
+//                                                    extendedDynamicState3AlphaToOneEnable
+//                                                                                       (feature)
+//                                                    extendedDynamicState3DepthClampEnable
+//                                                                                       (feature)
+//                                                    extendedDynamicState3DepthClipNegativeOneToOne
+//                                                                                       (feature)
+//                                                    dynamicPrimitiveTopologyUnrestricted
+//                                                                                       (property)
+// - VK_EXT_graphics_pipeline_library:                graphicsPipelineLibrary (feature),
+//                                                    graphicsPipelineLibraryFastLinking (property)
+// - VK_KHR_fragment_shading_rate:                    pipelineFragmentShadingRate (feature)
+// - VK_EXT_fragment_shader_interlock:                fragmentShaderPixelInterlock (feature)
+// - VK_EXT_pipeline_robustness:                      pipelineRobustness (feature)
+// - VK_EXT_pipeline_protected_access:                pipelineProtectedAccess (feature)
 // - VK_EXT_rasterization_order_attachment_access or
-//   VK_ARM_rasterization_order_attachment_access:     rasterizationOrderColorAttachmentAccess
-//                                                                                   (feature)
-//                                                     rasterizationOrderDepthAttachmentAccess
-//                                                                                   (feature)
-//                                                     rasterizationOrderStencilAttachmentAccess
-//                                                                                   (feature)
+//   VK_ARM_rasterization_order_attachment_access:    rasterizationOrderColorAttachmentAccess
+//                                                                                  (feature)
+//                                                    rasterizationOrderDepthAttachmentAccess
+//                                                                                  (feature)
+//                                                    rasterizationOrderStencilAttachmentAccess
+//                                                                                  (feature)
 // - VK_KHR_swapchain_maintenance1 or
-//   VK_EXT_swapchain_maintenance1:                    swapchainMaintenance1 (feature)
-// - VK_EXT_legacy_dithering:                          supportsLegacyDithering (feature)
-// - VK_EXT_physical_device_drm:                       hasPrimary (property),
-//                                                     hasRender (property)
-// - VK_ANDROID_external_format_resolve:               externalFormatResolve (feature)
-// - VK_EXT_vertex_input_dynamic_state:                vertexInputDynamicState (feature)
-// - VK_EXT_shader_atomic_float:                       shaderImageFloat32Atomics (feature)
-// - VK_EXT_image_compression_control:                 imageCompressionControl (feature)
-// - VK_EXT_image_compression_control_swapchain:       imageCompressionControlSwapchain (feature)
-// - VK_EXT_device_fault:                              deviceFault (feature),
-//                                                     deviceFaultVendorBinary (feature)
-// - VK_EXT_astc_decode_mode:                          decodeModeSharedExponent (feature)
-// - VK_KHR_unified_image_layouts:                     unifiedImageLayouts (feature)
-// - VK_EXT_external_memory_host:                      minImportedHostPointerAlignment (property)
-// - VK_QCOM_tile_memory_heap:                         tileMemoryHeapFeatures (feature)
-//                                                     tileMemoryHeapProperties (property)
-// - VK_EXT_texture_compression_astc_3d:               textureCompressionASTC_3D (feature)
-// - VK_AMD_shader_core_properties:                    (properties)
-// - VK_KHR_pipeline_binary:                           pipelineBinaries (feature)
+//   VK_EXT_swapchain_maintenance1:                   swapchainMaintenance1 (feature)
+// - VK_EXT_legacy_dithering:                         supportsLegacyDithering (feature)
+// - VK_EXT_physical_device_drm:                      hasPrimary (property),
+//                                                    hasRender (property)
+// - VK_ANDROID_external_format_resolve:              externalFormatResolve (feature)
+// - VK_EXT_vertex_input_dynamic_state:               vertexInputDynamicState (feature)
+// - VK_EXT_shader_atomic_float:                      shaderImageFloat32Atomics (feature)
+// - VK_EXT_image_compression_control:                imageCompressionControl (feature)
+// - VK_EXT_image_compression_control_swapchain:      imageCompressionControlSwapchain (feature)
+// - VK_EXT_device_fault:                             deviceFault (feature),
+//                                                    deviceFaultVendorBinary (feature)
+// - VK_EXT_astc_decode_mode:                         decodeModeSharedExponent (feature)
+// - VK_KHR_unified_image_layouts:                    unifiedImageLayouts (feature)
+// - VK_EXT_external_memory_host:                     minImportedHostPointerAlignment (property)
+// - VK_QCOM_tile_memory_heap:                        tileMemoryHeapFeatures (feature)
+//                                                    tileMemoryHeapProperties (property)
+// - VK_EXT_texture_compression_astc_3d:              textureCompressionASTC_3D (feature)
+// - VK_AMD_shader_core_properties:                   (properties)
+// - VK_KHR_pipeline_binary:                          pipelineBinaries (feature)
 //
 void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     const vk::ExtensionNameList &deviceExtensionNames,
@@ -6689,6 +6691,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3DepthClampEnable == VK_TRUE &&
             mPhysicalDeviceFeatures.depthClamp && isRasterizerDiscardDynamicState && !isPowerVR);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsDepthClipNegativeOneToOneDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled &&
+            mExtendedDynamicState3Features.extendedDynamicState3DepthClipNegativeOneToOne ==
+                VK_TRUE &&
+            mFeatures.supportsDepthClipControl.enabled && isRasterizerDiscardDynamicState);
 
     // Older Samsung drivers with version < 24.0.0 have a bug in imageless framebuffer support.
     const bool isSamsungDriverWithImagelessFramebufferBug =

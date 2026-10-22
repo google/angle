@@ -3976,7 +3976,8 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     stateOut->viewportState.scissorCount  = 1;
     stateOut->viewportState.pScissors     = nullptr;
 
-    if (context->getFeatures().supportsDepthClipControl.enabled)
+    if (context->getFeatures().supportsDepthClipControl.enabled &&
+        !context->getFeatures().supportsDepthClipNegativeOneToOneDynamicState.enabled)
     {
         stateOut->depthClipControl.sType =
             VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT;
@@ -4144,6 +4145,10 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     if (context->getFeatures().supportsDepthClampEnableDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT);
+    }
+    if (context->getFeatures().supportsDepthClipNegativeOneToOneDynamicState.enabled)
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT);
     }
 }
 

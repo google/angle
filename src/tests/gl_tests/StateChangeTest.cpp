@@ -11064,6 +11064,143 @@ void main()
     EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h / 2 - 1, GLColor::blue);
 }
 
+// Tests state change for glClipControlEXT.
+TEST_P(StateChangeTestES3, ClipControl)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clip_control"));
+
+    constexpr char kVS[] = R"(#version 300 es
+precision mediump float;
+uniform vec2 corner;
+uniform float depth;
+void main()
+{
+    vec2 pos = vec2(0.0);
+    // Draw to a corner as such with a given depth:
+    //
+    //            +
+    //            | \
+    //            |   \
+    //      +-----+-----+
+    //      |     |     | \
+    //      |     |     |   \
+    //      |     +-----+-----+
+    //      |           |
+    //      |           |
+    //      +-----------+
+    //
+    switch (gl_VertexID) {
+        case 0: pos = vec2(0.0, 0.0); break;
+        case 1: pos = vec2(corner.x * 2.0, 0.0); break;
+        case 2: pos = vec2(0.0, corner.y * 2.0); break;
+    };
+    gl_Position = vec4(pos, depth, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    color = vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    const GLint cornerLoc = glGetUniformLocation(program, "corner");
+    const GLint depthLoc  = glGetUniformLocation(program, "depth");
+    ASSERT_NE(-1, cornerLoc);
+    ASSERT_NE(-1, depthLoc);
+
+    // Draw four times:
+    //
+    // * Top right corner, lower-left origin, [-1, 1] depth: Top right, depth output (D - 1)/2
+    // * Top left corner, lower-left origin, [0, 1] depth: Top left, depth output D
+    // * Top right corner, top-left origin, [-1, 1] depth: Bottom right, depth output (D - 1)/2
+    // * Top left corner, top-left origin, [0, 1] depth: Bottom left, depth output D
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_ALWAYS);
+
+    const float kD1 = -0.8;  // Writes to depth as 0.1
+    const float kD2 = 0.3;   // Writes to depth as 0.3
+    const float kD3 = 0.2;   // Writes to depth as 0.6
+    const float kD4 = 0.85;  // Writes to depth as 0.85
+
+    glClearColor(0, 1, 0, 1);
+    glClearDepthf(0.5);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Top right corner, lower-left origin, [-1, 1] depth
+    glUniform2f(cornerLoc, 1.0, 1.0);
+    glUniform1f(depthLoc, kD1);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Top left corner, lower-left origin, [0, 1] depth
+    glClipControlEXT(GL_LOWER_LEFT_EXT, GL_ZERO_TO_ONE_EXT);
+    glUniform2f(cornerLoc, -1.0, 1.0);
+    glUniform1f(depthLoc, kD2);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Top right corner, top-left origin, [-1, 1] depth
+    glClipControlEXT(GL_UPPER_LEFT_EXT, GL_NEGATIVE_ONE_TO_ONE_EXT);
+    glUniform2f(cornerLoc, 1.0, 1.0);
+    glUniform1f(depthLoc, kD3);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Top left corner, top-left origin, [0, 1] depth
+    glClipControlEXT(GL_UPPER_LEFT_EXT, GL_ZERO_TO_ONE_EXT);
+    glUniform2f(cornerLoc, -1.0, 1.0);
+    glUniform1f(depthLoc, kD4);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::red);
+
+    // Verify depth for each corner
+    glDepthMask(GL_FALSE);
+    glDepthFunc(GL_GREATER);
+    glDepthRangef(0, 1);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClipControlEXT(GL_LOWER_LEFT_EXT, GL_NEGATIVE_ONE_TO_ONE_EXT);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(drawBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    // Depth slightly above D1 should only draw to the top right.
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), kD1 + 0.01f);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), kD1 - 0.01f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h / 2 - 1, GLColor::transparentBlack);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2 + 1, w / 2 - 1, h - h / 2 - 1, GLColor::transparentBlack);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w - w / 2 - 1, h / 2 - 1, GLColor::transparentBlack);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, h / 2 + 1, w - w / 2 - 1, h - h / 2 - 1, GLColor::blue);
+
+    // Depth slightly above D2 should only draw to the top left.
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 2 * kD2 - 1 + 0.01f);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 2 * kD2 - 1 - 0.01f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h / 2 - 1, GLColor::transparentBlack);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2 + 1, w / 2 - 1, h - h / 2 - 1, GLColor::blue);
+
+    // Depth slightly above D3 should only draw to the bottom right.
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), kD3 + 0.01f);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), kD3 - 0.01f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h / 2 - 1, GLColor::transparentBlack);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w - w / 2 - 1, h / 2 - 1, GLColor::blue);
+
+    // Depth slightly above D4 should only draw to the bottom left.
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 2 * kD4 - 1 + 0.01f);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 2 * kD4 - 1 - 0.01f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h / 2 - 1, GLColor::blue);
+}
+
 // Test for a bug with the VK_EXT_graphics_pipeline_library implementation in a scenario such as
 // this:
 //
