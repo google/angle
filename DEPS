@@ -81,10 +81,6 @@ vars = {
   # https://source.chromium.org/chromium/chromium/src/+/main:DEPS
   'chromium_jsoncpp_revision': 'f62d44704b4da6014aa231cfc116e7fd29617d2a',
 
-  # Current revision of patched-yasm.
-  # Note: this dep cannot be auto-rolled b/c of nesting.
-  'patched_yasm_revision': '720b70524a4424b15fc57e82263568c8ba0496ad',
-
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
@@ -938,11 +934,6 @@ deps = {
     'condition': 'checkout_angle_internal',
   },
 
-  # glmark2 is a GPL3-licensed OpenGL ES 2.0 benchmark. We use it for testing.
-  'third_party/glmark2/src': {
-    'url': Var('chromium_git') + '/external/github.com/glmark2/glmark2@6edcf02205fd1e8979dc3f3964257a81959b80c8',
-  },
-
   'third_party/googletest/src': {
     'url': Var('chromium_git') + '/external/github.com/google/googletest.git' + '@' + Var('googletest_revision'),
     'condition': 'not build_with_chromium',
@@ -956,12 +947,6 @@ deps = {
   'third_party/libdrm/src': {
     'url': Var('chromium_git') + '/chromiumos/third_party/libdrm.git@e984d448b8b17aab853369e6c203e53719f46de1',
     'condition': 'checkout_angle_mesa or not build_with_chromium',
-  },
-
-  # libjpeg_turbo is used by glmark2.
-  'third_party/libjpeg_turbo': {
-    'url': Var('chromium_git') + '/chromium/deps/libjpeg_turbo.git@640f254ad0fa03f6b1f29f89b7dd9366f2f6e533',
-    'condition': 'not build_with_chromium',
   },
 
   'third_party/libpng/src': {
@@ -1208,11 +1193,6 @@ deps = {
   'third_party/meson': {
     'url': Var('chromium_git') + '/external/github.com/mesonbuild/meson@9fd5eb605674067ce6f8876dc27e5e116024e8a6',
     'condition': 'checkout_angle_mesa',
-  },
-
-  'third_party/nasm': {
-    'url': Var('chromium_git') + '/chromium/deps/nasm.git@525a09a813be0f75b646ee93fc2a31c27b87d722',
-    'condition': 'not build_with_chromium',
   },
 
   'third_party/ninja': {
