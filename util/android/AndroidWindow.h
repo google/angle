@@ -9,6 +9,7 @@
 #ifndef UTIL_ANDROID_WINDOW_H_
 #define UTIL_ANDROID_WINDOW_H_
 
+#include "common/span.h"
 #include "util/OSWindow.h"
 
 class AndroidWindow : public OSWindow
@@ -34,8 +35,29 @@ class AndroidWindow : public OSWindow
 
     void signalTestEvent() override;
 
-    ANGLE_UTIL_EXPORT static std::string GetExternalStorageDirectory();
-    ANGLE_UTIL_EXPORT static std::string GetApplicationDirectory();
+    ANGLE_UTIL_EXPORT static bool GetExternalStorageDirectory(angle::Span<char> buf);
+    ANGLE_UTIL_EXPORT static bool GetApplicationDirectory(angle::Span<char> buf);
+
+    // Inline wrapper: std::string is allocated and deallocated entirely within the calling DSO
+    static inline std::string GetApplicationDirectory()
+    {
+        char buf[512] = {};
+        if (GetApplicationDirectory(buf))
+        {
+            return std::string(buf);
+        }
+        return "";
+    }
+    // Inline wrapper: std::string is allocated and deallocated entirely within the calling DSO
+    static inline std::string GetExternalStorageDirectory()
+    {
+        char buf[512] = {};
+        if (GetExternalStorageDirectory(buf))
+        {
+            return std::string(buf);
+        }
+        return "";
+    }
 
   private:
     bool initializeImpl(const std::string &name, int width, int height) override;
