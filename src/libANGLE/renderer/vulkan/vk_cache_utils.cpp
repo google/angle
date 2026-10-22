@@ -4172,6 +4172,10 @@ void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT);
     }
+    if (context->getFeatures().supportsAlphaToOneEnableDynamicState.enabled)
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT);
+    }
 }
 
 void GraphicsPipelineDesc::initializePipelineFragmentOutputState(

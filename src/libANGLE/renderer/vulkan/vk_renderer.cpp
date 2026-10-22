@@ -3075,6 +3075,8 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 // - VK_EXT_primitive_topology_list_restart:           primitiveTopologyListRestart (feature)
 // - VK_EXT_extended_dynamic_state3:                   extendedDynamicState3AlphaToCoverageEnable
 //                                                                                        (feature)
+//                                                     extendedDynamicState3AlphaToOneEnable
+//                                                                                        (feature)
 //                                                     dynamicPrimitiveTopologyUnrestricted
 //                                                                                        (property)
 // - VK_EXT_graphics_pipeline_library:                 graphicsPipelineLibrary (feature),
@@ -6671,6 +6673,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3AlphaToCoverageEnable == VK_TRUE &&
             isRasterizerDiscardDynamicState && !(isIntel && IsWindows()));
+
+    // Disabled on Imagination drivers due to test failures and device loss.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsAlphaToOneEnableDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled &&
+            mExtendedDynamicState3Features.extendedDynamicState3AlphaToOneEnable == VK_TRUE &&
+            isRasterizerDiscardDynamicState && !isPowerVR);
 
     // Older Samsung drivers with version < 24.0.0 have a bug in imageless framebuffer support.
     const bool isSamsungDriverWithImagelessFramebufferBug =

@@ -10775,7 +10775,7 @@ void main()
     GLint colorLoc = glGetUniformLocation(program, "colorIn");
     ASSERT_NE(-1, colorLoc);
 
-    // Setup a multisampled framebuffer.  Draw three times with additive blending:
+    // Setup a multisampled framebuffer.  Draw four times with additive blending:
     //
     // * Transparent red with alpha to coverage disabled: Adds red
     // * Transparent green with alpha to coverage enabled: No op, because alpha is zero
@@ -10836,6 +10836,97 @@ void main()
     glBlitFramebuffer(0, 0, kWidth, kHeight, 0, 0, kWidth, kHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::magenta);
+}
+
+// Tests state change for GL_SAMPLE_ALPHA_TO_ONE_EXT.
+TEST_P(StateChangeTestES31, AlphaToOneEnable)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_multisample_compatibility"));
+
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform vec4 colorIn;
+out vec4 colorOut;
+void main()
+{
+    colorOut = colorIn;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    GLint colorLoc = glGetUniformLocation(program, "colorIn");
+    ASSERT_NE(-1, colorLoc);
+
+    // Setup a multisampled framebuffer.  Draw three times with alpha blend, where dst uses GL_ONE
+    // (i.e. the existing framebuffer color is added) and src uses GL_SRC_ALPHA (i.e. the draw color
+    // is multiplied by alpha):
+    //
+    // * Half-transparent red with alpha to one disabled: Adds half-red
+    // * Half-transparent green with alpha to one enabled: Adds green
+    // * Half-transparent blue with alpha to one disabled: Adds half-blue
+    GLFramebuffer msaaFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, msaaFBO);
+
+    constexpr uint32_t kWidth  = 89;
+    constexpr uint32_t kHeight = 91;
+
+    GLTexture msaaTexture;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msaaTexture);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, kWidth, kHeight, false);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
+                           msaaTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glViewport(0, 0, kWidth, kHeight);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+    // Half-transparent red
+    glUniform4f(colorLoc, 1.0, 0.0, 0.0, 0.5);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Half-transparent green
+    glEnable(GL_SAMPLE_ALPHA_TO_ONE_EXT);
+    glUniform4f(colorLoc, 0.0, 1.0, 0.0, 0.5);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Half-transparent blue
+    glDisable(GL_SAMPLE_ALPHA_TO_ONE_EXT);
+    glUniform4f(colorLoc, 0.0, 0.0, 1.0, 0.5);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Resolve and verify the results.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    glBlitFramebuffer(0, 0, kWidth, kHeight, 0, 0, kWidth, kHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 255, 127, 255), 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWidth - 1, kHeight - 1, GLColor(127, 255, 127, 255), 1);
 }
 
 // Test for a bug with the VK_EXT_graphics_pipeline_library implementation in a scenario such as

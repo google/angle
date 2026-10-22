@@ -1196,7 +1196,8 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     //
     // - line width: UtilsVk doesn't use line primitives
     // - blend constants: UtilsVk doesn't enable blending
-    // - depth bias, logic op, alpha to coverage: UtilsVk doesn't enable these features
+    // - depth bias, logic op, alpha to coverage, alpha to one: UtilsVk doesn't enable these
+    //   features
     // - patch control points: UtilsVk doesn't use tessellation shaders
     //
     // The following dynamic state is always set by UtilsVk when effective:
@@ -1260,6 +1261,10 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     if (renderer->getFeatures().supportsAlphaToCoverageEnableDynamicState.enabled)
     {
         commandBuffer->setAlphaToCoverageEnable(VK_FALSE);
+    }
+    if (renderer->getFeatures().supportsAlphaToOneEnableDynamicState.enabled)
+    {
+        commandBuffer->setAlphaToOneEnable(VK_FALSE);
     }
     if (contextVk->getFeatures().supportsVertexInputDynamicState.enabled)
     {

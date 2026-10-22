@@ -975,6 +975,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_ALPHA_TO_COVERAGE_ENABLE);
     }
+    if (mRenderer->getFeatures().supportsAlphaToOneEnableDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE);
+    }
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
@@ -1080,6 +1084,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicPrimitiveRestartEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_ALPHA_TO_COVERAGE_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicAlphaToCoverageEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE] =
+        &ContextVk::handleDirtyGraphicsDynamicAlphaToOneEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate;
 
@@ -1210,6 +1216,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     if (mRenderer->getFeatures().supportsAlphaToCoverageEnableDynamicState.enabled)
     {
         mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED);
+    }
+    if (mRenderer->getFeatures().supportsAlphaToOneEnableDynamicState.enabled)
+    {
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
     }
     // Dynamic state in VK_EXT_vertex_input_dynamic_state
     if (getFeatures().supportsVertexInputDynamicState.enabled)
@@ -3523,6 +3533,15 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicAlphaToCoverageEnable(
     const uint32_t rasterizationSamples = getDrawFramebuffer()->getSamples();
     mRenderPassCommandBuffer->setAlphaToCoverageEnable(mState.isSampleAlphaToCoverageEnabled() &&
                                                        rasterizationSamples > 1);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicAlphaToOneEnable(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setAlphaToOneEnable(mState.isMultisamplingEnabled() &&
+                                                  mState.isSampleAlphaToOneEnabled());
     return angle::Result::Continue;
 }
 
@@ -5940,9 +5959,16 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // This is part of EXT_multisample_compatibility, and requires the alphaToOne Vulkan
                 // feature.
                 // http://anglebug.com/42266123
-                mGraphicsPipelineDesc->updateAlphaToOneEnable(
-                    &mGraphicsPipelineTransition,
-                    glState.isMultisamplingEnabled() && glState.isSampleAlphaToOneEnabled());
+                if (mRenderer->getFeatures().supportsAlphaToOneEnableDynamicState.enabled)
+                {
+                    mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE);
+                }
+                else
+                {
+                    mGraphicsPipelineDesc->updateAlphaToOneEnable(
+                        &mGraphicsPipelineTransition,
+                        glState.isMultisamplingEnabled() && glState.isSampleAlphaToOneEnabled());
+                }
                 break;
             case gl::state::DIRTY_BIT_SAMPLE_SHADING:
                 updateSampleShadingWithRasterizationSamples(drawFramebufferVk->getSamples());

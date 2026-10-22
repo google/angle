@@ -359,6 +359,7 @@ enum class Feature
     Supports8BitStorageBuffer,
     Supports8BitUniformAndStorageBuffer,
     SupportsAlphaToCoverageEnableDynamicState,
+    SupportsAlphaToOneEnableDynamicState,
     SupportsAmdShaderCoreProperties,
     SupportsAndroidHardwareBuffer,
     SupportsAndroidNativeFenceSync,

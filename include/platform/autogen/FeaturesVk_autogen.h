@@ -848,6 +848,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsAlphaToOneEnableDynamicState = {
+        "supportsAlphaToOneEnableDynamicState",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsFragmentShadingRate = {
         "supportsFragmentShadingRate",
         FeatureCategory::VulkanFeatures,
