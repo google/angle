@@ -1524,6 +1524,7 @@
 489247643 PIXEL10 VULKAN : ImageTest.BindExternalTextureAsImage_R16G16_UINT/* = SKIP
 456812545 PIXEL10 VULKAN : GLSLTest_ES3.DynamicWriteStaticReadVaryingArray/* = SKIP
 575891844 PIXEL10 VULKAN : StateChangeTestES31.PatchVertices/ES3_1_Vulkan_*NoSupportsExtendedDynamicState2* = SKIP
+577276050 PIXEL10 VULKAN : StateChangeTestES3.DepthClamp/* = SKIP
 
 // Some Metal tests fail on iOS Intel simulator
 40096874 IOS METAL : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP

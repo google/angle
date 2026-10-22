@@ -1022,6 +1022,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         // - In VK_EXT_extended_dynamic_state3
         DIRTY_BIT_DYNAMIC_ALPHA_TO_COVERAGE_ENABLE,
         DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE,
+        DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE,
         // - In VK_KHR_fragment_shading_rate
         DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE,
 
@@ -1123,6 +1124,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     static_assert(DIRTY_BIT_DYNAMIC_ALPHA_TO_COVERAGE_ENABLE > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
     static_assert(DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE > DIRTY_BIT_RENDER_PASS,
+                  "Render pass using dirty bit must be handled after the render pass dirty bit");
+    static_assert(DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
     static_assert(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
@@ -1341,6 +1344,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DirtyBits::Iterator *dirtyBitsIterator,
         DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsDynamicAlphaToOneEnable(DirtyBits::Iterator *dirtyBitsIterator,
+                                                             DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsDynamicDepthClampEnable(DirtyBits::Iterator *dirtyBitsIterator,
                                                              DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsDynamicFragmentShadingRate(
         DirtyBits::Iterator *dirtyBitsIterator,

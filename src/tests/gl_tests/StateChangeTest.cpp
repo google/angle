@@ -10772,7 +10772,7 @@ void main()
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
-    GLint colorLoc = glGetUniformLocation(program, "colorIn");
+    const GLint colorLoc = glGetUniformLocation(program, "colorIn");
     ASSERT_NE(-1, colorLoc);
 
     // Setup a multisampled framebuffer.  Draw four times with additive blending:
@@ -10866,7 +10866,7 @@ void main()
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     glUseProgram(program);
-    GLint colorLoc = glGetUniformLocation(program, "colorIn");
+    const GLint colorLoc = glGetUniformLocation(program, "colorIn");
     ASSERT_NE(-1, colorLoc);
 
     // Setup a multisampled framebuffer.  Draw three times with alpha blend, where dst uses GL_ONE
@@ -10927,6 +10927,141 @@ void main()
     glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 255, 127, 255), 1);
     EXPECT_PIXEL_COLOR_NEAR(kWidth - 1, kHeight - 1, GLColor(127, 255, 127, 255), 1);
+}
+
+// Tests state change for GL_DEPTH_CLAMP_EXT.
+TEST_P(StateChangeTestES3, DepthClamp)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_depth_clamp"));
+
+    constexpr char kVS[] = R"(#version 300 es
+precision mediump float;
+uniform vec2 corner;
+uniform float depth;
+void main()
+{
+    vec2 pos = vec2(0.0);
+    // Draw to a corner as such with a given depth:
+    //
+    //            +
+    //            | \
+    //            |   \
+    //      +-----+-----+
+    //      |     |     | \
+    //      |     |     |   \
+    //      |     +-----+-----+
+    //      |           |
+    //      |           |
+    //      +-----------+
+    //
+    switch (gl_VertexID) {
+        case 0: pos = vec2(0.0, 0.0); break;
+        case 1: pos = vec2(corner.x * 2.0, 0.0); break;
+        case 2: pos = vec2(0.0, corner.y * 2.0); break;
+    };
+    gl_Position = vec4(pos, 2.0 * depth - 1.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    color = vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    const GLint cornerLoc = glGetUniformLocation(program, "corner");
+    const GLint depthLoc  = glGetUniformLocation(program, "depth");
+    ASSERT_NE(-1, cornerLoc);
+    ASSERT_NE(-1, depthLoc);
+
+    // Set up the near and far planes to 0.25 and 0.75.  Draw four times:
+    //
+    // * Top right corner closer-than-near, depth clamp disabled: no depth write
+    // * Top left corner closer-than-near, depth clamp enabled: depth clamped to near
+    // * Bottom right corner farther-than-far, depth clamp disabled: no depth write
+    // * Bottom left corner farther-than-far, depth clamp enabled: depth clamped to far
+    //
+
+    const float kNear  = 0.25;
+    const float kClear = 0.6;
+    const float kFar   = 0.75;
+    glDepthRangef(kNear, kFar);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_ALWAYS);
+
+    glClearColor(0, 1, 0, 1);
+    glClearDepthf(kClear);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Top right, closer than near
+    glUniform2f(cornerLoc, 1.0, 1.0);
+    glUniform1f(depthLoc, -0.1);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Top left, closer than near
+    glEnable(GL_DEPTH_CLAMP_EXT);
+    glUniform2f(cornerLoc, -1.0, 1.0);
+    glUniform1f(depthLoc, -0.1);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Bottom right, farther than far
+    glDisable(GL_DEPTH_CLAMP_EXT);
+    glUniform2f(cornerLoc, 1.0, -1.0);
+    glUniform1f(depthLoc, 1.1);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Bottom left, farther than far
+    glEnable(GL_DEPTH_CLAMP_EXT);
+    glUniform2f(cornerLoc, -1.0, -1.0);
+    glUniform1f(depthLoc, 1.1);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // The right half is clipped, the left half is clamped.
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w - w / 2 - 1, h, GLColor::green);
+
+    // Verify depth:
+    //
+    // * Right half is not written to and retains the clear value
+    // * Top left is clamped to the near value
+    // * Bottom left is clamped to the far value
+    glDepthMask(GL_FALSE);
+    glDepthFunc(GL_GREATER);
+    glDepthRangef(0, 1);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(drawBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    // Depth slightly above near should only draw to the top left.
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 2 * kNear - 1 + 0.01f);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 2 * kNear - 1 - 0.01f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h / 2 - 1, GLColor::transparentBlack);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2 + 1, w / 2 - 1, h - h / 2 - 1, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w - w / 2 - 1, h, GLColor::transparentBlack);
+
+    // Depth slightly above clear value should draw to the right side.
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 2 * kClear - 1 + 0.01f);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 2 * kClear - 1 - 0.01f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h / 2 - 1, GLColor::transparentBlack);
+    EXPECT_PIXEL_RECT_EQ(w / 2 + 1, 0, w - w / 2 - 1, h, GLColor::blue);
+
+    // Depth slightly above far value should draw to the bottom left.
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 2 * kFar - 1 + 0.01f);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 2 * kFar - 1 - 0.01f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2 - 1, h / 2 - 1, GLColor::blue);
 }
 
 // Test for a bug with the VK_EXT_graphics_pipeline_library implementation in a scenario such as

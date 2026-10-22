@@ -1108,6 +1108,14 @@
             "issue": "http://anglebug.com/575891833"
         },
         {
+            "name": "supports_depth_clamp_enable_dynamic_state",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the depthClampEnable feature of VK_EXT_extended_dynamic_state3 extension"
+            ],
+            "issue": "http://anglebug.com/575891833"
+        },
+        {
             "name": "supports_fragment_shading_rate",
             "category": "Features",
             "description": [

@@ -979,6 +979,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE);
     }
+    if (mRenderer->getFeatures().supportsDepthClampEnableDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE);
+    }
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
@@ -1086,6 +1090,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicAlphaToCoverageEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicAlphaToOneEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE] =
+        &ContextVk::handleDirtyGraphicsDynamicDepthClampEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate;
 
@@ -3542,6 +3548,14 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicAlphaToOneEnable(
 {
     mRenderPassCommandBuffer->setAlphaToOneEnable(mState.isMultisamplingEnabled() &&
                                                   mState.isSampleAlphaToOneEnabled());
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicDepthClampEnable(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setDepthClampEnable(mState.isDepthClampEnabled());
     return angle::Result::Continue;
 }
 
@@ -6020,9 +6034,16 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                             mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
-                            // TODO(https://anglebug.com/42266182): Use EDS3
-                            mGraphicsPipelineDesc->updateDepthClampEnabled(
-                                &mGraphicsPipelineTransition, glState.isDepthClampEnabled());
+                            if (mRenderer->getFeatures()
+                                    .supportsDepthClampEnableDynamicState.enabled)
+                            {
+                                mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE);
+                            }
+                            else
+                            {
+                                mGraphicsPipelineDesc->updateDepthClampEnabled(
+                                    &mGraphicsPipelineTransition, glState.isDepthClampEnabled());
+                            }
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
                             break;

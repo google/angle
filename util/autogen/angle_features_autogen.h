@@ -388,6 +388,7 @@ enum class Feature
     SupportsDenormPreserveFp16,
     SupportsDenormPreserveFp32,
     SupportsDenormPreserveFp64,
+    SupportsDepthClampEnableDynamicState,
     SupportsDepthClampZeroOne,
     SupportsDepthClipControl,
     SupportsDepthStencilIndependentResolveNone,

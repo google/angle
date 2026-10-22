@@ -1204,6 +1204,7 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     //
     // - depth write mask: UtilsVk sets this when enabling depth test
     // - depth compare op: UtilsVk sets this when enabling depth test
+    // - depth clamp: UtilsVk sets this when clearing depth
     // - stencil compare mask: UtilsVk sets this when enabling stencil test
     // - stencil write mask: UtilsVk sets this when enabling stencil test
     // - stencil reference: UtilsVk sets this when enabling stencil test
@@ -1265,6 +1266,10 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     if (renderer->getFeatures().supportsAlphaToOneEnableDynamicState.enabled)
     {
         commandBuffer->setAlphaToOneEnable(VK_FALSE);
+    }
+    if (renderer->getFeatures().supportsDepthClampEnableDynamicState.enabled)
+    {
+        commandBuffer->setDepthClampEnable(VK_FALSE);
     }
     if (contextVk->getFeatures().supportsVertexInputDynamicState.enabled)
     {
@@ -2847,7 +2852,10 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         if (supportsDepthClamp)
         {
             // Note: this path requires the depthClamp Vulkan feature.
-            pipelineDesc.setDepthClampEnabled(true);
+            if (!renderer->getFeatures().supportsDepthClampEnableDynamicState.enabled)
+            {
+                pipelineDesc.setDepthClampEnabled(true);
+            }
         }
     }
 
@@ -2901,6 +2909,11 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     if (params.clearDepth)
     {
         SetDepthDynamicStateForWrite(renderer, commandBuffer);
+        if (renderer->getFeatures().supportsDepthClampEnableDynamicState.enabled)
+        {
+            ASSERT(supportsDepthClamp);
+            commandBuffer->setDepthClampEnable(VK_TRUE);
+        }
     }
     else
     {
