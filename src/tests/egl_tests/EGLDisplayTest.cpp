@@ -100,6 +100,10 @@ TEST_P(EGLDisplayTest, InitializeMultipleTimesInDifferentThreads)
     {
         thread.join();
     }
+
+    // Properly clean up so it won't affect next test
+    EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+    EXPECT_EGL_TRUE(eglTerminate(display) != EGL_FALSE);
 }
 
 // Test that calling eglTerminate() in parallel in multiple threads works
@@ -127,6 +131,9 @@ TEST_P(EGLDisplayTest, InitializeTerminateInitialize)
     EXPECT_EGL_TRUE(eglInitialize(display, nullptr, nullptr) != EGL_FALSE);
     EXPECT_EGL_TRUE(eglTerminate(display) != EGL_FALSE);
     EXPECT_EGL_TRUE(eglInitialize(display, nullptr, nullptr) != EGL_FALSE);
+
+    // Properly clean up so it won't affect next test
+    EXPECT_EGL_TRUE(eglTerminate(display) != EGL_FALSE);
 }
 
 // Tests that an EGLDisplay can be re-initialized after it was used to draw into a window surface.
