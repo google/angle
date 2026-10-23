@@ -301,7 +301,12 @@ declare_args() {
         # TODO(b/503180635): Enable PartitionAlloc on Windows standalone builds.
         # Currently it is disabled because it leads to heap mismatch crashes in
         # trace tests (DLLs vs EXE).
-        !is_win
+        !is_win &&
+        # TODO(b/503180635): Enable PartitionAlloc on Android standalone builds.
+        # Currently it is disabled because it leads to systematic test failures
+        # (likely startup crashes) on 'angle-cq-android-arm64-rel' bot across
+        # almost all test suites (unittests, end2end_tests, deqp, etc.).
+        !is_android
   }
 }
 
