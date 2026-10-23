@@ -23253,6 +23253,69 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test nested constant switch statements (the pattern from https://crbug.com/548066294).
+// The selector is length() in this test.
+TEST_P(GLSLTest_ES3, NestedConstantSwitchWithLength)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+int sideEffects = 0;
+int[1] one()
+{
+    sideEffects += 1;
+    return int[1](1);
+}
+int[2] two()
+{
+    sideEffects += 1;
+    return int[2](2, 2);
+}
+void main()
+{
+    int result = 0;
+    switch (one().length() - 1)
+    {
+        case 0:
+            result += 1;
+            switch (one().length())
+            {
+                case 0:
+                    result += 10;
+                    break;
+                case 1:
+                    result += 20;
+                    switch (two().length())
+                    {
+                        case 2:
+                            result += 300;
+                            break;
+                        default:
+                            result += 400;
+                            break;
+                    }
+                    break;
+                default:
+                    result += 50;
+                    break;
+            }
+            break;
+        case 1:
+            result += 1000;
+            break;
+        default:
+            result += 2000;
+            break;
+    }
+    color = result == 321 && sideEffects == 3 ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test fall-through across cases in a constant switch.
 TEST_P(GLSLTest_ES3, FallThrough)
 {
