@@ -411,7 +411,6 @@
 // Base level greater than max level fails on Linux/OpenGL
 42267266 LINUX INTEL OPENGL : Texture2DTestES3.TextureBaseLevelGreaterThanMaxLevel3Levels/* = SKIP
 379758210 LINUX INTEL OPENGL : GLSLTest_ES3.SwizzledToBoolCoercion/* = SKIP
-437259106 LINUX INTEL : EGLDisplayTest.ContextLeakAfterTerminate/* = SKIP
 448675904 LINUX INTEL OPENGL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 537235696 LINUX INTEL OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
 
@@ -3029,15 +3028,6 @@
 537692502 PIXEL4ORXL GLES : OcclusionQueriesTest.ExcessiveNumberOfQueries/* = SKIP
 537692502 WIN INTEL VULKAN : OcclusionQueriesTest.ExcessiveNumberOfQueries/* = SKIP
 537692502 WIN INTEL VULKAN : OcclusionQueriesTest.ManyScissoredClearsInsideQuery/* = SKIP
-
-// Intel linux driver appears has bug that running this test causing other tests to fail.
-42266581 LINUX INTEL : EGLDisplayTest.InitializeDrawSwapTerminateLoop/* = SKIP
-42266581 LINUX INTEL OPENGL : EGLDisplayTest.TerminateMultipleTimesInDifferentThreads/* = SKIP
-42266581 LINUX INTEL OPENGL : EGLNoConfigContextTest.RenderCheck/* = SKIP
-// Intel linux driver appears has some weird bug that these tests fail for no good reason. Possibly related to 520248049.
-42266581 LINUX INTEL OPENGL : EGLSurfacelessContextTest.DefaultScissorAndViewport/* = SKIP
-42266581 LINUX INTEL OPENGL : EGLSurfacelessContextTest.Switcheroo/* = SKIP
-42266581 LINUX INTEL OPENGL : EGLSurfacelessContextTest.MakeCurrentSurfaceless/* = SKIP
 
 500127519 MAC METAL INTEL : GLSLUBTest.AbsIntOverflow/* = SKIP
 
