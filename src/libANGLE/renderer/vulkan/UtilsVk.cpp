@@ -556,7 +556,8 @@ namespace unresolve
 //           OpEntryPoint Fragment %4 "main" %26 %27 %28 %29 %30 /  unresolve, and depth replacing
 //           OpExecutionMode %4 OriginUpperLeft                 /   conditional to depth unresolve.
 //           OpExecutionMode %4 DepthReplacing                 /
-//           OpSource GLSL 450                                /
+//           OpExecutionMode %4 StencilRefReplacingEXT        /
+//           OpSource GLSL 450                               /
 //
 //           OpName %4 "main"              \
 //           OpName %26 "colorOut0"         \
@@ -764,6 +765,11 @@ void InsertPreamble(uint32_t colorAttachmentCount,
     {
         spirv::WriteExecutionMode(blobOut, spirv::IdRef(kIdMain), spv::ExecutionModeDepthReplacing,
                                   {});
+    }
+    if (unresolveStencil)
+    {
+        spirv::WriteExecutionMode(blobOut, spirv::IdRef(kIdMain),
+                                  spv::ExecutionModeStencilRefReplacingEXT, {});
     }
     spirv::WriteSource(blobOut, spv::SourceLanguageGLSL, spirv::LiteralInteger(450), nullptr,
                        nullptr);
