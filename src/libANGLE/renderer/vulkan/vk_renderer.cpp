@@ -5958,10 +5958,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 #endif  // defined(ANGLE_PLATFORM_ANDROID) || defined(ANGLE_PLATFORM_LINUX)
 
     // Disabled on SwiftShader due to http://crbug.com/40942995
+    //
+    // Disabled on Intel/windows due to pipeline creation failures when the StencilRefReplacingEXT
+    // execution mode is specified in the shader (glslang used to not emit it by mistake).
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsShaderStencilExport,
         ExtensionFound(VK_EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME, deviceExtensionNames) &&
-            !isSwiftShader);
+            !isSwiftShader && !(IsWindows() && isIntel));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsRenderPassLoadStoreOpNone,
