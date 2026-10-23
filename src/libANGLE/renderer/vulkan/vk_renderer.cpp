@@ -7076,8 +7076,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // supported. Except for SwiftShader, which crashes when binding non-attachment textures as
     // input attachments.
     //
-    // Use of dynamic rendering is disabled on older ARM proprietary drivers due to driver bugs
-    // (http://issuetracker.google.com/356051947).
+    // Use of dynamic rendering is disabled on ARM due to driver bugs
+    // (http://issuetracker.google.com/356051947, http://issuetracker.google.com/575550012).
     //
     // Use of dynamic rendering is disabled on older Qualcomm drivers due to driver bugs
     // (http://crbug.com/415738891).
@@ -7091,8 +7091,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, preferDynamicRendering,
         mFeatures.supportsDynamicRendering.enabled &&
             mFeatures.supportsDynamicRenderingLocalRead.enabled && !hasLegacyDitheringV1 &&
-            !isSwiftShader &&
-            !(isARMProprietary && driverVersion < angle::VersionTriple(52, 0, 0)) &&
+            !isSwiftShader && !isARM &&
             !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 801, 0)) &&
             !isPowerVR);
 
