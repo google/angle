@@ -5732,6 +5732,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         IsQualcommOpenSource(mPhysicalDeviceProperties.vendorID, mDriverProperties.driverID,
                              mPhysicalDeviceProperties.deviceName);
     const bool isQualcommProprietary = isQualcomm && !isQualcommOpenSource;
+    bool isAdreno622 = mPhysicalDeviceProperties.deviceID == angle::kDeviceID_Adreno622;
     bool isAdreno702 = mPhysicalDeviceProperties.deviceID == angle::kDeviceID_Adreno702;
 
     // Distinguish between the ARM proprietary driver and the Mesa open source driver
@@ -6252,7 +6253,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             isQualcommProprietary && isAdreno540);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, splitCrossFormatLayeredImageCopy,
-                            isQualcommProprietary && isAdreno702);
+                            isQualcommProprietary && (isAdreno622 || isAdreno702));
     ANGLE_FEATURE_CONDITION(&mFeatures, mutableFormatForIntColorImages,
                             isQualcommProprietary && isAdreno702);
 
