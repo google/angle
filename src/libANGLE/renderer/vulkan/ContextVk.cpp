@@ -987,6 +987,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE);
     }
+    if (mRenderer->getFeatures().supportsLogicOpEnableDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_LOGIC_OP_ENABLE);
+    }
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
@@ -1098,6 +1102,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicDepthClampEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE] =
         &ContextVk::handleDirtyGraphicsDynamicDepthClipNegativeOneToOne;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_LOGIC_OP_ENABLE] =
+        &ContextVk::handleDirtyGraphicsDynamicLogicOpEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate;
 
@@ -3570,6 +3576,14 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicDepthClipNegativeOneToOne(
     DirtyBits dirtyBitMask)
 {
     mRenderPassCommandBuffer->setDepthClipNegativeOneToOne(!mState.isClipDepthModeZeroToOne());
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicLogicOpEnable(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setLogicOpEnable(mState.isLogicOpEnabled());
     return angle::Result::Continue;
 }
 
@@ -6096,8 +6110,15 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                         case gl::state::EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED:
-                            mGraphicsPipelineDesc->updateLogicOpEnabled(
-                                &mGraphicsPipelineTransition, glState.isLogicOpEnabled());
+                            if (mRenderer->getFeatures().supportsLogicOpEnableDynamicState.enabled)
+                            {
+                                mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_LOGIC_OP_ENABLE);
+                            }
+                            else
+                            {
+                                mGraphicsPipelineDesc->updateLogicOpEnabled(
+                                    &mGraphicsPipelineTransition, glState.isLogicOpEnabled());
+                            }
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_LOGIC_OP:
                             if (mRenderer->getFeatures().supportsLogicOpDynamicState.enabled)

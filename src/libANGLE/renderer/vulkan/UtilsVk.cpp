@@ -1282,6 +1282,10 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     {
         commandBuffer->setDepthClipNegativeOneToOne(VK_TRUE);
     }
+    if (renderer->getFeatures().supportsLogicOpEnableDynamicState.enabled)
+    {
+        commandBuffer->setLogicOpEnable(VK_FALSE);
+    }
     if (contextVk->getFeatures().supportsVertexInputDynamicState.enabled)
     {
         commandBuffer->setVertexInput(0, nullptr, 0, nullptr);

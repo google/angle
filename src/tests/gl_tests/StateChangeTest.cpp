@@ -10618,6 +10618,95 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests state change for GL_COLOR_LOGIC_OP enable.
+TEST_P(StateChangeTestES3, LogicOpEnable)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_logic_op"));
+
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+void main()
+{
+    // gl_VertexID    x    y
+    //      0        -1   -1
+    //      1         1   -1
+    //      2        -1    1
+    //      3         1    1
+    int bit0 = gl_VertexID & 1;
+    int bit1 = gl_VertexID >> 1;
+    gl_Position = vec4(bit0 * 2 - 1, bit1 * 2 - 1, gl_VertexID % 2 == 0 ? -1 : 1, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 colorOut;
+uniform vec4 color;
+void main()
+{
+    colorOut = color;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    glClearColor(0, 0, 0, 1);
+    glClearDepthf(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    auto unorm8 = [](uint8_t value) { return (value + 0.1f) / 255.0f; };
+
+    constexpr uint8_t kInitRed   = 0xA4;
+    constexpr uint8_t kInitGreen = 0x1E;
+    constexpr uint8_t kInitBlue  = 0x97;
+    constexpr uint8_t kInitAlpha = 0x65;
+
+    // Initialize with logic op disabled, but with logic op set to XOR.
+    glDisable(GL_COLOR_LOGIC_OP_ANGLE);
+    glLogicOpANGLE(GL_LOGIC_OP_XOR_ANGLE);
+
+    glUniform4f(colorLoc, unorm8(kInitRed), unorm8(kInitGreen), unorm8(kInitBlue),
+                unorm8(kInitAlpha));
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Enable logic op
+    glEnable(GL_COLOR_LOGIC_OP_ANGLE);
+
+    constexpr uint8_t kXorRed   = 0x4C;
+    constexpr uint8_t kXorGreen = 0x7D;
+    constexpr uint8_t kXorBlue  = 0xB3;
+    constexpr uint8_t kXorAlpha = 0x0F;
+
+    glUniform4f(colorLoc, unorm8(kXorRed), unorm8(kXorGreen), unorm8(kXorBlue), unorm8(kXorAlpha));
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Disable logic op and draw again, logic op should be ignored.  To be able to verify the
+    // previous operations, mask out a few channels.
+    glDisable(GL_COLOR_LOGIC_OP_ANGLE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_FALSE);
+
+    constexpr uint8_t kOverwriteRed   = 0x17;
+    constexpr uint8_t kOverwriteGreen = 0xCC;
+    constexpr uint8_t kIgnoredBlue    = 0x38;
+    constexpr uint8_t kIgnoredAlpha   = 0x9A;
+
+    glUniform4f(colorLoc, unorm8(kOverwriteRed), unorm8(kOverwriteGreen), unorm8(kIgnoredBlue),
+                unorm8(kIgnoredAlpha));
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    // Verify results
+    const GLColor kExpect(
+        static_cast<uint8_t>(kOverwriteRed), static_cast<uint8_t>(kOverwriteGreen),
+        static_cast<uint8_t>(kInitBlue ^ kXorBlue), static_cast<uint8_t>(kInitAlpha ^ kXorAlpha));
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, kExpect);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests state change for GL_PATCH_VERTICES and glPatchParameteri.
 TEST_P(StateChangeTestES31, PatchVertices)
 {

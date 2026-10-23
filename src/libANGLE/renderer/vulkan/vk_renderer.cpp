@@ -3081,6 +3081,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                                                       (feature)
 //                                                    extendedDynamicState3DepthClipNegativeOneToOne
 //                                                                                       (feature)
+//                                                    extendedDynamicState3LogicOpEnable (feature)
 //                                                    dynamicPrimitiveTopologyUnrestricted
 //                                                                                       (property)
 // - VK_EXT_graphics_pipeline_library:                graphicsPipelineLibrary (feature),
@@ -6638,6 +6639,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsLogicOpDynamicState,
         mFeatures.supportsExtendedDynamicState2.enabled &&
             mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE &&
+            mPhysicalDeviceFeatures.logicOp &&
             !(IsLinux() && isIntel && driverVersion < angle::VersionTriple(22, 2, 0)) &&
             !(IsAndroid() && isGalaxyS23));
 
@@ -6698,6 +6700,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             mExtendedDynamicState3Features.extendedDynamicState3DepthClipNegativeOneToOne ==
                 VK_TRUE &&
             mFeatures.supportsDepthClipControl.enabled && isRasterizerDiscardDynamicState);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsLogicOpEnableDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled &&
+            mExtendedDynamicState3Features.extendedDynamicState3LogicOpEnable == VK_TRUE &&
+            mFeatures.supportsLogicOpDynamicState.enabled && isRasterizerDiscardDynamicState);
 
     // Older Samsung drivers with version < 24.0.0 have a bug in imageless framebuffer support.
     const bool isSamsungDriverWithImagelessFramebufferBug =

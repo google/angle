@@ -866,6 +866,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsLogicOpEnableDynamicState = {
+        "supportsLogicOpEnableDynamicState",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsFragmentShadingRate = {
         "supportsFragmentShadingRate",
         FeatureCategory::VulkanFeatures,

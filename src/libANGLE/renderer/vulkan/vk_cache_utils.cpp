@@ -4293,6 +4293,10 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LOGIC_OP_EXT);
     }
+    if (context->getFeatures().supportsLogicOpEnableDynamicState.enabled)
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT);
+    }
 }
 
 void GraphicsPipelineDesc::updateVertexInputWithStride(ContextVk *contextVk,

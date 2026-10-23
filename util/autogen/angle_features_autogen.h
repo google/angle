@@ -437,6 +437,7 @@ enum class Feature
     SupportsLegacyDithering,
     SupportsLockSurfaceExtension,
     SupportsLogicOpDynamicState,
+    SupportsLogicOpEnableDynamicState,
     SupportsMaintenance5,
     SupportsMaintenance9,
     SupportsMemoryBudget,
