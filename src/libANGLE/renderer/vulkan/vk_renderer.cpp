@@ -6637,11 +6637,16 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     const bool isRasterizerDiscardDynamicState =
         mFeatures.useRasterizerDiscardEnableDynamicState.enabled;
 
+    // Disabled on Intel/windows drivers, failing
+    // FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBuffer*,
+    // SimpleStateChangeTestES31.FragWriteSSBOThenChangeDrawbuffersThenWriteSSBO*,
+    // VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDraw*, and
+    // VulkanPerformanceCounterTest_ES31.FramebufferFetchRenderPassThenColorMaskedDraw* tests.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsAlphaToCoverageEnableDynamicState,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3AlphaToCoverageEnable == VK_TRUE &&
-            isRasterizerDiscardDynamicState);
+            isRasterizerDiscardDynamicState && !(isIntel && IsWindows()));
 
     // Older Samsung drivers with version < 24.0.0 have a bug in imageless framebuffer support.
     const bool isSamsungDriverWithImagelessFramebufferBug =
