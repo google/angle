@@ -3082,6 +3082,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                    extendedDynamicState3DepthClipNegativeOneToOne
 //                                                                                       (feature)
 //                                                    extendedDynamicState3LogicOpEnable (feature)
+//                                                    extendedDynamicState3PolygonMode (feature)
 //                                                    dynamicPrimitiveTopologyUnrestricted
 //                                                                                       (property)
 // - VK_EXT_graphics_pipeline_library:                graphicsPipelineLibrary (feature),
@@ -6706,6 +6707,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3LogicOpEnable == VK_TRUE &&
             mFeatures.supportsLogicOpDynamicState.enabled && isRasterizerDiscardDynamicState);
+
+    // Disabled on Imagination drivers due to failure of the StateChangeTestES3.PolygonMode test
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsPolygonModeDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled &&
+            mExtendedDynamicState3Features.extendedDynamicState3PolygonMode == VK_TRUE &&
+            !isPowerVR);
 
     // Older Samsung drivers with version < 24.0.0 have a bug in imageless framebuffer support.
     const bool isSamsungDriverWithImagelessFramebufferBug =

@@ -991,6 +991,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_LOGIC_OP_ENABLE);
     }
+    if (mRenderer->getFeatures().supportsPolygonModeDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_POLYGON_MODE);
+    }
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
@@ -1104,6 +1108,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicDepthClipNegativeOneToOne;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_LOGIC_OP_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicLogicOpEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_POLYGON_MODE] =
+        &ContextVk::handleDirtyGraphicsDynamicPolygonMode;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
         &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate;
 
@@ -3584,6 +3590,14 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicLogicOpEnable(
     DirtyBits dirtyBitMask)
 {
     mRenderPassCommandBuffer->setLogicOpEnable(mState.isLogicOpEnabled());
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicPolygonMode(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    mRenderPassCommandBuffer->setPolygonMode(gl_vk::GetPolygonMode(mState.getPolygonMode()));
     return angle::Result::Continue;
 }
 
@@ -6084,9 +6098,15 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                         case gl::state::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_POLYGON_MODE:
-                            // TODO(https://anglebug.com/42266182): Use EDS3
-                            mGraphicsPipelineDesc->updatePolygonMode(&mGraphicsPipelineTransition,
-                                                                     glState.getPolygonMode());
+                            if (mRenderer->getFeatures().supportsPolygonModeDynamicState.enabled)
+                            {
+                                mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_POLYGON_MODE);
+                            }
+                            else
+                            {
+                                mGraphicsPipelineDesc->updatePolygonMode(
+                                    &mGraphicsPipelineTransition, glState.getPolygonMode());
+                            }
                             // When polygon mode is changed, depth bias might need to be toggled.
                             static_assert(
                                 gl::state::EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED >

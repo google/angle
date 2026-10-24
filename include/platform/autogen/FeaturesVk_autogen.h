@@ -872,6 +872,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsPolygonModeDynamicState = {
+        "supportsPolygonModeDynamicState",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsFragmentShadingRate = {
         "supportsFragmentShadingRate",
         FeatureCategory::VulkanFeatures,

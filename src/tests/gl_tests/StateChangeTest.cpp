@@ -10707,6 +10707,102 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests state change for glPolygonMode.
+TEST_P(StateChangeTestES3, PolygonMode)
+{
+    const bool hasNV    = EnsureGLExtensionEnabled("GL_NV_polygon_mode");
+    const bool hasANGLE = EnsureGLExtensionEnabled("GL_ANGLE_polygon_mode");
+    ANGLE_SKIP_TEST_IF(!hasNV && !hasANGLE);
+
+    constexpr char kVS[] = R"(#version 300 es
+precision highp float;
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-0.99, -0.99); break;
+        case 1: pos = vec2(3.0, -0.99); break;
+        case 2: pos = vec2(-0.99, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+    gl_PointSize = 1.0;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 colorOut;
+uniform vec4 color;
+void main()
+{
+    colorOut = color;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    // Draw three times with blending on:
+    //
+    // * Red with polygon mode line
+    // * Green with polygon mode fill
+    // * Blue with polygon mode point
+    //
+    // The bottom-left corner would have all three colors.  The bottom and left edges have only the
+    // line and fill colors. The rest of the framebuffer contains only the fill color.
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Red edges
+    if (hasNV)
+    {
+        glPolygonModeNV(GL_FRONT_AND_BACK, GL_FILL_NV);
+    }
+    else
+    {
+        glPolygonModeANGLE(GL_FRONT_AND_BACK, GL_FILL_ANGLE);
+    }
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Green fill
+    if (hasNV)
+    {
+        glPolygonModeNV(GL_FRONT_AND_BACK, GL_LINE_NV);
+    }
+    else
+    {
+        glPolygonModeANGLE(GL_FRONT_AND_BACK, GL_LINE_ANGLE);
+    }
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Blue vertices.  This is not supported by the ANGLE extension.
+    if (hasNV)
+    {
+        glPolygonModeNV(GL_FRONT_AND_BACK, GL_POINT_NV);
+        glUniform4f(colorLoc, 0, 0, 1, 1);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+    }
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    // Verify results
+    // Bottom-left corner, blend of all three draws
+    EXPECT_PIXEL_COLOR_EQ(0, 0, hasNV ? GLColor::white : GLColor::yellow);
+    // Bottom and left edges, blend of line and fill modes
+    EXPECT_PIXEL_RECT_EQ(1, 0, w - 1, 1, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(0, 1, 1, h - 1, GLColor::yellow);
+    // Otherwise, shaded by fill only
+    EXPECT_PIXEL_RECT_EQ(1, 1, w - 1, h - 1, GLColor::green);
+}
+
 // Tests state change for GL_PATCH_VERTICES and glPatchParameteri.
 TEST_P(StateChangeTestES31, PatchVertices)
 {

@@ -4150,6 +4150,10 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT);
     }
+    if (context->getFeatures().supportsPolygonModeDynamicState.enabled)
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_POLYGON_MODE_EXT);
+    }
 }
 
 void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(

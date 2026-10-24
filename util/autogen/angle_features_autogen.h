@@ -451,6 +451,7 @@ enum class Feature
     SupportsPipelineProtectedAccess,
     SupportsPipelineRobustness,
     SupportsPipelineStatisticsQuery,
+    SupportsPolygonModeDynamicState,
     SupportsPortabilityEnumeration,
     SupportsPresentation,
     SupportsPrimitiveFragmentShadingRate,
