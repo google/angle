@@ -812,6 +812,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo disablePixelLocalStorage = {
+        "disablePixelLocalStorage",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

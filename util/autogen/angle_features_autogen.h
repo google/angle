@@ -109,6 +109,7 @@ enum class Feature
     DisableNativeParallelCompile,
     DisablePassthroughShaders,
     DisablePipelineCacheLoadForTesting,
+    DisablePixelLocalStorage,
     DisableProgramBinary,
     DisableProgramCaching,
     DisableProgramCachingForTransformFeedback,

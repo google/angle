@@ -109,6 +109,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DisableNativeParallelCompile, "disableNativeParallelCompile"},
     {Feature::DisablePassthroughShaders, "disablePassthroughShaders"},
     {Feature::DisablePipelineCacheLoadForTesting, "disablePipelineCacheLoadForTesting"},
+    {Feature::DisablePixelLocalStorage, "disablePixelLocalStorage"},
     {Feature::DisableProgramBinary, "disableProgramBinary"},
     {Feature::DisableProgramCaching, "disableProgramCaching"},
     {Feature::DisableProgramCachingForTransformFeedback, "disableProgramCachingForTransformFeedback"},

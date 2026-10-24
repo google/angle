@@ -1075,6 +1075,14 @@
                 "destination texture to work around driver bugs."
             ],
             "issue": "https://crbug.com/552672183"
+        },
+        {
+            "name": "disable_pixel_local_storage",
+            "category": "Workarounds",
+            "description": [
+                "Disable ANGLE_shader_pixel_local_storage; kill-switch for known broken GPUs."
+            ],
+            "issue": "http://anglebug.com/40096838"
         }
     ]
 }
