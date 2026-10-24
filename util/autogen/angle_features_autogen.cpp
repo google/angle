@@ -539,6 +539,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UsePrimitiveTopologyDynamicState, "usePrimitiveTopologyDynamicState"},
     {Feature::UseRasterizerDiscardEnableDynamicState, "useRasterizerDiscardEnableDynamicState"},
     {Feature::UseResetCommandBufferBitForSecondaryPools, "useResetCommandBufferBitForSecondaryPools"},
+    {Feature::UseScratchTextureForConvertingCopySubImage, "useScratchTextureForConvertingCopySubImage"},
     {Feature::UseShadowBuffersWhenAppropriate, "useShadowBuffersWhenAppropriate"},
     {Feature::UsesNativeBuiltinClKernel, "usesNativeBuiltinClKernel"},
     {Feature::UsesSecondComponentForStencilBorderColor, "usesSecondComponentForStencilBorderColor"},

@@ -1652,7 +1652,7 @@ angle::Result Texture::copyImage(Context *context,
     ImageIndex index = ImageIndex::MakeFromTarget(target, level, 1);
 
     const InternalFormat &internalFormatInfo =
-        GetInternalFormatInfo(internalFormat, GL_UNSIGNED_BYTE);
+        mTexture->getCopyImageInternalFormat(context, internalFormat, source);
 
     // Most if not all renderers clip these copies to the size of the source framebuffer, leaving
     // other pixels untouched. For safety in robust resource initialization, assume that that

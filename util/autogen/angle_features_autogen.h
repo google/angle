@@ -539,6 +539,7 @@ enum class Feature
     UsePrimitiveTopologyDynamicState,
     UseRasterizerDiscardEnableDynamicState,
     UseResetCommandBufferBitForSecondaryPools,
+    UseScratchTextureForConvertingCopySubImage,
     UseShadowBuffersWhenAppropriate,
     UsesNativeBuiltinClKernel,
     UsesSecondComponentForStencilBorderColor,

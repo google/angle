@@ -27680,6 +27680,144 @@ TEST_P(Texture2DTestES3RobustInit, InvalidateEmulatedAlphaThenInitViaEmptyUpload
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::black);
 }
 
+// Test that glCopyTexImage2D and glCopyTexSubImage2D with unsized GL_RGBA, GL_RGB, GL_LUMINANCE,
+// and GL_LUMINANCE_ALPHA internal formats from 16-bit packed framebuffers (GL_RGBA4, GL_RGB5_A1,
+// GL_RGB565) succeed and copy the rendered color when virtualizeBaseLevelAndMipchain is enabled
+// (https://crbug.com/577343656).
+TEST_P(Texture2DTestES3, CopyTexImageAndSubImageFrom16BitPackedFramebuffer)
+{
+    setUpProgram();
+    glUseProgram(mProgram);
+    glUniform1i(mTexture2DUniformLocation, 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    struct SourceFormatCase
+    {
+        GLenum rboFormat;
+        bool hasAlpha;
+    };
+    constexpr std::array<SourceFormatCase, 3> kSourceFormats = {{
+        {GL_RGBA4, true},
+        {GL_RGB5_A1, true},
+        {GL_RGB565, false},
+    }};
+
+    for (const SourceFormatCase &src : kSourceFormats)
+    {
+        GLFramebuffer fbo;
+        GLRenderbuffer rbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+        glRenderbufferStorage(GL_RENDERBUFFER, src.rboFormat, 8, 8);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        for (GLenum dstFormat : {GL_RGBA, GL_RGB, GL_LUMINANCE, GL_LUMINANCE_ALPHA})
+        {
+            if (!src.hasAlpha && (dstFormat == GL_RGBA || dstFormat == GL_LUMINANCE_ALPHA))
+            {
+                continue;
+            }
+            const GLColor expected = (dstFormat == GL_LUMINANCE || dstFormat == GL_LUMINANCE_ALPHA)
+                                         ? GLColor::white
+                                         : GLColor::red;
+
+            // Test glCopyTexImage2D.
+            GLTexture texCopy;
+            glBindTexture(GL_TEXTURE_2D, texCopy);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glCopyTexImage2D(GL_TEXTURE_2D, 0, dstFormat, 0, 0, 8, 8, 0);
+            ASSERT_GL_NO_ERROR();
+
+            // Test glCopyTexSubImage2D over a zero-initialized texture.
+            GLTexture texSubCopy;
+            glBindTexture(GL_TEXTURE_2D, texSubCopy);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            const std::vector<uint8_t> initZeros(8 * 8 * 4, 0);
+            glTexImage2D(GL_TEXTURE_2D, 0, dstFormat, 8, 8, 0, dstFormat, GL_UNSIGNED_BYTE,
+                         initZeros.data());
+            glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 8, 8);
+            ASSERT_GL_NO_ERROR();
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glBindTexture(GL_TEXTURE_2D, texCopy);
+            drawQuad(mProgram, "position", 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, expected);
+
+            glBindTexture(GL_TEXTURE_2D, texSubCopy);
+            drawQuad(mProgram, "position", 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, expected);
+        }
+    }
+
+    // Also test self-copy glCopyTexImage2D on a 16-bit packed GL_RGBA / GL_UNSIGNED_SHORT_4_4_4_4
+    // texture attached to a framebuffer.
+    {
+        GLTexture selfTex;
+        glBindTexture(GL_TEXTURE_2D, selfTex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4,
+                     nullptr);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer selfFbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, selfFbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, selfTex, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 8, 8, 0);
+        ASSERT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    }
+}
+
+// Test that glCopyTexSubImage3D into an unsized GL_RGBA 3D texture from a 16-bit packed GL_RGBA4
+// framebuffer succeeds and copies the rendered color when virtualizeBaseLevelAndMipchain is enabled
+// (https://crbug.com/577343656).
+TEST_P(Texture3DTestES3, CopyTexSubImage3DFrom16BitPackedFramebuffer)
+{
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    GLFramebuffer fbo;
+    GLRenderbuffer rbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, 4, 4);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    const std::vector<GLColor> redData(4 * 4 * 2, GLColor::red);
+    glBindTexture(GL_TEXTURE_3D, mTexture3D);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, 4, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, redData.data());
+    glCopyTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 0, 0, 4, 4);
+    glCopyTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 1, 0, 0, 4, 4);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 #define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
     ES2_OPENGL().enable(Feature::EmulateCopyTexImage2D), \
         ES2_OPENGLES().enable(Feature::EmulateCopyTexImage2D)

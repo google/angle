@@ -3194,6 +3194,8 @@
 
 // Failures of new tests which should be fixed.
 550607402 WIN NVIDIA WGPU : MipmapTestES3.GenerateMipmapBaseLevelOutOfRangeImmutableTexture/* = SKIP
+578756732 WIN D3D11 : WebGL2CompatibilityTest.CopyTextureImage/* = SKIP
+
 // IR WGSL translator failures (not yet implemented)
 // Default uniforms not yet implemented
 42267100 IR WGPU : BasicUniformUsageTest.*/* = SKIP
