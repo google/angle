@@ -1409,6 +1409,31 @@ angle::Result VertexArrayVk::syncNeedsConversionAttrib(ContextVk *contextVk,
         // change, but for simplicity just make it conservative
     }
 
+    // CalculateMaxVertexCountForConversion has two early returns that allocate nothing: the
+    // source buffer can be smaller than the conversion's offset, and what is left can hold no
+    // whole vertex. On either path it returns before calling initBufferForVertexConversion, so
+    // the conversion has no buffer. The code below would otherwise install that buffer as this
+    // attribute's current array buffer and read its handle. This also covers a conversion that
+    // stays invalid while the source buffer already holds valid data, which the block above does
+    // not reach. Use the empty buffer for the attribute instead, which is what the
+    // enabled-attribute path does when a binding has no vertex in range.
+    if (!conversion->valid())
+    {
+        vk::BufferHelper &emptyBuffer           = contextVk->getEmptyBuffer();
+        mCurrentArrayBuffers[attribIndex]       = &emptyBuffer;
+        mCurrentArrayBufferSerial[attribIndex]  = emptyBuffer.getBufferSerial();
+        mCurrentArrayBufferHandles[attribIndex] = emptyBuffer.getBuffer().getHandle();
+        mCurrentArrayBufferOffsets[attribIndex] = emptyBuffer.getOffset();
+        mCurrentArrayBufferSizes[attribIndex]   = emptyBuffer.getSize();
+        mCurrentEmptyBufferMask.set(attribIndex);
+        mVertexInputAttribDescs[attribIndex].offset  = 0;
+        mVertexInputBindingDescs[attribIndex].stride = 0;
+        setVertexInputAttribDescFormat(renderer, attribIndex, attrib.format->id);
+        setVertexInputBindingDescDivisor(renderer, attribIndex, binding.getDivisor());
+        mCurrentDefaultAttribsMask.reset(attribIndex);
+        return angle::Result::Continue;
+    }
+
     vk::BufferHelper *bufferHelper         = conversion->getBuffer();
     mCurrentArrayBuffers[attribIndex]      = bufferHelper;
     mCurrentArrayBufferSerial[attribIndex] = bufferHelper->getBufferSerial();

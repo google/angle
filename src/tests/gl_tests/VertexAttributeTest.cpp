@@ -23,7 +23,6 @@ using namespace angle;
 
 namespace
 {
-
 GLsizei TypeStride(GLenum attribType)
 {
     switch (attribType)
@@ -3118,6 +3117,9 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
     std::string makeMismatchingSignsTestFS(uint32_t attribCount);
     uint16_t setupVertexAttribPointersForMismatchSignsTest(uint16_t currentSignedMask,
                                                            uint16_t toggleMask);
+    // Shared by the relativeOffset vertex-conversion-buffer tests below.
+    static constexpr GLsizeiptr kConversionBufferSize = 1024;
+    void testUninitializedBufferRelativeOffset(GLuint relativeOffset);
 
     GLuint mVAO            = 0;
     GLuint mExpectedBuffer = 0;
@@ -7761,6 +7763,201 @@ void main()
 
     glDrawArrays(GL_POINTS, 0, 1);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// The four tests below draw with a vertex attribute whose relativeOffset places it at or past the
+// end of the bound buffer, so the binding holds no whole vertex for that attribute. The buffer is
+// allocated with glBufferData and a null pointer and is never written. Each test draws once, binds
+// a second buffer, then rebinds the first and draws again, so both the first use of the buffer and
+// its reuse after a rebind are covered. The attribute values these draws read are undefined, so
+// the rendered pixels are not checked; every backend must draw without an error, a crash or an
+// out-of-bounds read.
+void VertexAttributeTestES31::testUninitializedBufferRelativeOffset(GLuint relativeOffset)
+{
+    constexpr char kVS[] = R"(#version 310 es
+layout(location=0) in vec2 posIn;
+void main()
+{
+    gl_Position  = vec4(posIn, 0.0, 1.0);
+    gl_PointSize = 1.0;
+})";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 outColor;
+void main()
+{
+    outColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, kConversionBufferSize, nullptr, GL_STATIC_DRAW);
+
+    glViewport(0, 0, 1, 1);
+
+    GLVertexArray vertexArray;
+    glBindVertexArray(vertexArray);
+    glBindVertexBuffer(0, buffer, 0, 8);
+    // GL_UNSIGNED_INT feeding a float attribute is what makes the attribute need conversion.
+    glVertexAttribFormat(0, 2, GL_UNSIGNED_INT, GL_FALSE, relativeOffset);
+    glVertexAttribBinding(0, 0);
+    glEnableVertexAttribArray(0);
+
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Divert the binding to a second buffer, then rebind the first one so the next draw goes
+    // through a cache lookup rather than a fresh insertion.
+    GLBuffer buffer2;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer2);
+    glBufferData(GL_ARRAY_BUFFER, kConversionBufferSize, nullptr, GL_STATIC_DRAW);
+    glBindVertexBuffer(0, buffer2, 0, 8);
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    glBindVertexBuffer(0, buffer, 0, 8);
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// relativeOffset puts the attribute entirely past the end of the buffer, so the binding holds
+// no source bytes for it at all. On Vulkan this is the first of the two early returns.
+TEST_P(VertexAttributeTestES31, DrawWithRelativeOffsetPastEndOfUninitializedBuffer)
+{
+    GLint maxRelativeOffset = 0;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, &maxRelativeOffset);
+    ASSERT_GE(maxRelativeOffset, 2047);
+
+    // Past the end of the buffer, and a multiple of four so the binding stays aligned and the
+    // aligned conversion path is the one exercised.
+    constexpr GLuint kRelativeOffset = 2040;
+    static_assert(kRelativeOffset >= kConversionBufferSize,
+                  "the relative offset must pass the end of the buffer");
+
+    testUninitializedBufferRelativeOffset(kRelativeOffset);
+}
+
+// relativeOffset lands inside the buffer but leaves fewer bytes than one whole vertex needs.
+// On Vulkan this is the second early return, where the vertex count comes out zero.
+TEST_P(VertexAttributeTestES31, DrawWithRelativeOffsetLeavingPartialVertexInUninitializedBuffer)
+{
+    GLint maxRelativeOffset = 0;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, &maxRelativeOffset);
+    ASSERT_GE(maxRelativeOffset, 1023);
+
+    // Inside the buffer, leaving four bytes, while two GL_UNSIGNED_INT components need eight. A
+    // multiple of four again, for the same reason as above.
+    constexpr GLuint kRelativeOffset = 1020;
+    static_assert(kRelativeOffset < kConversionBufferSize,
+                  "the relative offset must stay inside the buffer");
+    static_assert(kConversionBufferSize - kRelativeOffset < 2 * sizeof(GLuint),
+                  "the remaining bytes must not hold one whole vertex");
+
+    testUninitializedBufferRelativeOffset(kRelativeOffset);
+}
+
+// The same partial-vertex relativeOffset, but on a buffer that has been given data, so the
+// draw differs from the two tests above only in the buffer's contents. A backend may treat an
+// initialized buffer differently from one that was never written, so both are covered.
+TEST_P(VertexAttributeTestES31, DrawWithRelativeOffsetLeavingPartialVertexInInitializedBuffer)
+{
+    GLint maxRelativeOffset = 0;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, &maxRelativeOffset);
+    ASSERT_GE(maxRelativeOffset, 1023);
+
+    constexpr char kVS[] = R"(#version 310 es
+layout(location=0) in vec2 posIn;
+void main()
+{
+    gl_Position  = vec4(posIn, 0.0, 1.0);
+    gl_PointSize = 1.0;
+})";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 outColor;
+void main()
+{
+    outColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    const std::vector<uint8_t> zeros(kConversionBufferSize, 0);
+    glBufferData(GL_ARRAY_BUFFER, kConversionBufferSize, zeros.data(), GL_STATIC_DRAW);
+
+    glViewport(0, 0, 1, 1);
+
+    GLVertexArray vertexArray;
+    glBindVertexArray(vertexArray);
+    glBindVertexBuffer(0, buffer, 0, 8);
+
+    constexpr GLuint kRelativeOffset = 1020;
+    static_assert(kRelativeOffset < kConversionBufferSize,
+                  "the relative offset must stay inside the buffer");
+    static_assert(kConversionBufferSize - kRelativeOffset < 2 * sizeof(GLuint),
+                  "the remaining bytes must not hold one whole vertex");
+    glVertexAttribFormat(0, 2, GL_UNSIGNED_INT, GL_FALSE, kRelativeOffset);
+    glVertexAttribBinding(0, 0);
+    glEnableVertexAttribArray(0);
+
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Draws once with an in-range relativeOffset, then calls glVertexAttribFormat to move the
+// relativeOffset past the end of the buffer and draws again, so the attribute goes from valid
+// to out of range between two draws. On Vulkan the second draw reaches a fresh conversion
+// cache entry that the conversion code returns from without allocating.
+TEST_P(VertexAttributeTestES31, DrawThenGrowRelativeOffsetPastEndOfUninitializedBuffer)
+{
+    GLint maxRelativeOffset = 0;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, &maxRelativeOffset);
+    ASSERT_GE(maxRelativeOffset, 2047);
+
+    constexpr char kVS[] = R"(#version 310 es
+layout(location=0) in vec2 posIn;
+void main()
+{
+    gl_Position  = vec4(posIn, 0.0, 1.0);
+    gl_PointSize = 1.0;
+})";
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 outColor;
+void main()
+{
+    outColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, kConversionBufferSize, nullptr, GL_STATIC_DRAW);
+
+    glViewport(0, 0, 1, 1);
+
+    GLVertexArray vertexArray;
+    glBindVertexArray(vertexArray);
+    glBindVertexBuffer(0, buffer, 0, 8);
+    glVertexAttribFormat(0, 2, GL_UNSIGNED_INT, GL_FALSE, 0);
+    glVertexAttribBinding(0, 0);
+    glEnableVertexAttribArray(0);
+
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Move the relativeOffset past the end of the buffer, changing the conversion cache key.
+    constexpr GLuint kGrownRelativeOffset = 2040;
+    static_assert(kGrownRelativeOffset >= kConversionBufferSize,
+                  "the relative offset must pass the end of the buffer");
+    glVertexAttribFormat(0, 2, GL_UNSIGNED_INT, GL_FALSE, kGrownRelativeOffset);
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
 }
 
 class VertexAttributeTestES31_Basic : public ANGLETest<>

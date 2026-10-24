@@ -1314,7 +1314,9 @@ VertexConversionBuffer *BufferVk::getVertexConversionBuffer(
     {
         if (buffer.match(cacheKey))
         {
-            ASSERT(buffer.valid());
+            // A matched entry can legitimately have no buffer yet: the vertex-conversion path in
+            // VertexArrayVk leaves an entry in the cache without allocating when a draw has no
+            // whole vertex to convert. Callers check valid() before using the buffer.
             return &buffer;
         }
     }
