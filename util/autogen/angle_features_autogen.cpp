@@ -469,6 +469,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsRoundingModeRtzFp16, "supportsRoundingModeRtzFp16"},
     {Feature::SupportsRoundingModeRtzFp32, "supportsRoundingModeRtzFp32"},
     {Feature::SupportsRoundingModeRtzFp64, "supportsRoundingModeRtzFp64"},
+    {Feature::SupportsSampleMaskDynamicState, "supportsSampleMaskDynamicState"},
     {Feature::SupportsSampler2dViewOf3d, "supportsSampler2dViewOf3d"},
     {Feature::SupportsSamplerMirrorClampToEdge, "supportsSamplerMirrorClampToEdge"},
     {Feature::SupportsShaderAtomicInt64, "supportsShaderAtomicInt64"},

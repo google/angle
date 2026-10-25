@@ -227,6 +227,7 @@
 564530612 WIN QUALCOMM D3D11 : HardenedContextBlendTest.AlphaBlendNoAlphaChannelInSrcAndDst/* = SKIP
 564530612 WIN QUALCOMM D3D11 : HardenedContextBlendTest.AlphaBlendNoAlphaChannelInSrcAndDst2/* = SKIP
 564530612 WIN QUALCOMM D3D11 : HardenedContextBlendTest.AlphaBlendNoAlphaChannelInSrcAndDstArray/* = SKIP
+577959336 WIN INTEL OPENGL : StateChangeTestES3.SampleMaskEnable/* = SKIP
 
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingAttributeType/* = SKIP
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingProgramType/* = SKIP
@@ -1446,6 +1447,10 @@
 573760547 PIXEL10 GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase/* = SKIP
 578128193 PIXEL10 GLES : RobustResourceInitTestES3.UploadToNonZeroSliceBlendReadback/* = SKIP
 578128193 PIXEL10 GLES : RobustResourceInitTestES3.PBOUploadToNonZeroSliceBlendReadback/* = SKIP
+577540877 PIXEL10 GLES : StateChangeTestES3.SampleCoverage/* = SKIP
+577540877 PIXEL10 GLES : StateChangeTestES3.SampleCoverageEnable/* = SKIP
+577540877 PIXEL10 GLES : StateChangeTestES3.SampleMask/* = SKIP
+577540877 PIXEL10 GLES : StateChangeTestES3.SampleMaskEnable/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP
@@ -1494,13 +1499,7 @@
 480069042 PIXEL10 VULKAN : ShadowSamplerFunctionTextureCubeArrayTest.Test/*_TextureBias_* = SKIP
 480069042 PIXEL10 VULKAN : SixteenBppTextureDitheringTestES3.RGBA5551/* = SKIP
 480069042 PIXEL10 VULKAN : StateChangeTestES3.LineWidth/* = SKIP
-480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/*_Vulkan = SKIP
-480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_EnableParallelCompileAndLink_VaryingsRequireMatchingPrecisionInSpirv = SKIP
-480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoSupportsIndexTypeUint8 = SKIP
-480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoUseDepthWriteEnableDynamicState = SKIP
-480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoUsePrimitiveRestartEnableDynamicState = SKIP
-480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoUseVertexInputBindingStrideDynamicState = SKIP
-480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoEnableCreateContextBackwardsCompatible = SKIP
+480069042 PIXEL10 VULKAN : StateChangeTestES3.RasterizerDiscard/* = SKIP
 480069042 PIXEL10 VULKAN : StateChangeTestES3.StencilWriteMaskVsDiscard/ES3_Vulkan_NoUseDepthWriteEnableDynamicState = SKIP
 480069042 PIXEL10 VULKAN : TextureFixedRateCompressionTest.RenderToTexture/* = SKIP
 480069042 PIXEL10 VULKAN : TextureTestES31.LinkedImageUniforms/* = SKIP

@@ -469,6 +469,7 @@ enum class Feature
     SupportsRoundingModeRtzFp16,
     SupportsRoundingModeRtzFp32,
     SupportsRoundingModeRtzFp64,
+    SupportsSampleMaskDynamicState,
     SupportsSampler2dViewOf3d,
     SupportsSamplerMirrorClampToEdge,
     SupportsShaderAtomicInt64,
