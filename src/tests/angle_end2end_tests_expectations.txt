@@ -725,6 +725,7 @@
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelCopyTexImageSrcDst/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelTexSubImageDstWithUnpackSlow/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelBlitDst/* = SKIP
+577854987 WIN D3D11 : EGLSurfaceTest.PreserveThenResize/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -734,6 +735,9 @@
 42265529 ANDROID : EGLReadinessCheckTest.GetProcAddressNegativeTest/* = SKIP
 42265529 ANDROID : EGLReadinessCheckTest.HasGetPlatformDisplayEXT/* = SKIP
 42265529 ANDROID : EGLContextSharingTestNoSyncTextureUploads.NoSync/* = SKIP
+577854987 ANDROID GLES : EGLSurfaceTest.PreserveWithSwapInterval0/* = SKIP
+577854987 ANDROID GLES : EGLSurfaceTest.PreserveWithSwapInterval1/* = SKIP
+577854987 ANDROID GLES : EGLSurfaceTest.PreserveThenResize/* = SKIP
 
 // Skipped due to long execution time
 42266780 LINUX INTEL : UniformBufferMemoryTest.BufferDataInLoopManyTimes/* = SKIP
