@@ -178,7 +178,6 @@ gn_args.config(
 gn_args.config(
     name = "siso",
     args = {
-        "use_reclient": False,
         "use_remoteexec": True,
         "use_siso": True,
     },
