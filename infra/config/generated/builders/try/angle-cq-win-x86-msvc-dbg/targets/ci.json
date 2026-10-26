@@ -1,7 +1,12 @@
 {
   "angle-win-x86-builder-msvc-dbg": {
     "additional_compile_targets": [
-      "all"
+      "angle",
+      "angle_shader_translator",
+      "angle_static",
+      "libGLESv2_capture_complement",
+      "libfeature_support",
+      "translator_fuzzer"
     ]
   }
 }

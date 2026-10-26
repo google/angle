@@ -4,6 +4,11 @@
 # 2. Run //infra/config/main.star
 
 {
+  "angle": {
+    "label": "//:angle",
+    "type": "additional_compile_target",
+    "module_scheme": "None",
+  },
   "angle_capture_tests": {
     "label": "//src/tests:angle_capture_tests",
     "type": "script",
@@ -202,6 +207,16 @@
     "module_scheme": "None",
     "script": "//src/tests/restricted_traces/restricted_trace_gold_tests.py",
   },
+  "angle_shader_translator": {
+    "label": "//:angle_shader_translator",
+    "type": "additional_compile_target",
+    "module_scheme": "None",
+  },
+  "angle_static": {
+    "label": "//:angle_static",
+    "type": "additional_compile_target",
+    "module_scheme": "None",
+  },
   "angle_trace_perf_tests": {
     "label": "//src/tests:angle_trace_perf_tests",
     "type": "script",
@@ -218,8 +233,23 @@
     "type": "windowed_test_launcher",
     "module_scheme": "None",
   },
+  "libGLESv2_capture_complement": {
+    "label": "//:libGLESv2_capture_complement",
+    "type": "additional_compile_target",
+    "module_scheme": "None",
+  },
+  "libfeature_support": {
+    "label": "//:libfeature_support",
+    "type": "additional_compile_target",
+    "module_scheme": "None",
+  },
   "noop_target": {
     "label": "//:noop_target",
+    "type": "additional_compile_target",
+    "module_scheme": "None",
+  },
+  "translator_fuzzer": {
+    "label": "//:translator_fuzzer",
     "type": "additional_compile_target",
     "module_scheme": "None",
   },

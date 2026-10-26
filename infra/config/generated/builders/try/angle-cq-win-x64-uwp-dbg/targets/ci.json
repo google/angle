@@ -1,7 +1,12 @@
 {
   "angle-win-x64-builder-uwp-dbg": {
     "additional_compile_targets": [
-      "all"
+      "angle",
+      "angle_shader_translator",
+      "angle_static",
+      "libGLESv2_capture_complement",
+      "libfeature_support",
+      "translator_fuzzer"
     ]
   }
 }
