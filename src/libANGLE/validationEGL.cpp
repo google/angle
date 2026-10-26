@@ -2838,16 +2838,6 @@ const Thread *GetThreadIfValid(const Thread *thread)
     return thread;
 }
 
-ScopedConstDisplayRef GetDisplayIfValid(const Display *display)
-{
-    if (!ValidateDisplayPointer(nullptr, display))
-    {
-        return ScopedConstDisplayRef();
-    }
-
-    return ScopedConstDisplayRef(*display);
-}
-
 ScopedDisplayRef GetDisplayIfValid(Display *display)
 {
     if (!ValidateDisplayPointer(nullptr, display))
@@ -2866,16 +2856,6 @@ ScopedThreadSafeDisplayRef GetThreadSafeDisplayIfValid(Display *display)
     }
 
     return ScopedThreadSafeDisplayRef(*display);
-}
-
-ScopedConstDisplayLockAndRef GetDisplayAndLockIfValid(const Display *display)
-{
-    if (!ValidateDisplayPointer(nullptr, display))
-    {
-        return ScopedConstDisplayLockAndRef();
-    }
-
-    return ScopedConstDisplayLockAndRef(*display);
 }
 
 ScopedDisplayLockAndRef GetDisplayAndLockIfValid(Display *display)

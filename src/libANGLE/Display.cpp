@@ -3094,28 +3094,32 @@ Error *Display::GetCurrentThreadErrorScratchSpace()
 }
 
 #if defined(ANGLE_ENABLE_ASSERTS)
-// static
-uint32_t ThreadSafeDisplay::GetCurrentThreadDisplayRefCount()
+void AssertCurrentThreadNotHoldingDisplayRefCount()
 {
     TLSData *tls = GetDisplayTLS();
     ASSERT(tls != nullptr);
-    return tls->displayRefCount;
+    ASSERT(tls->displayRefCount == 0);
 }
 
-// static
-void ThreadSafeDisplay::IncrementCurrentThreadDisplayRefCount()
+void AssertCurrentThreadHoldingOneDisplayRefCount()
+{
+    TLSData *tls = GetDisplayTLS();
+    ASSERT(tls != nullptr);
+    ASSERT(tls->displayRefCount == 1);
+}
+
+void IncrementCurrentThreadDisplayRefCount()
 {
     TLSData *tls = GetDisplayTLS();
     ASSERT(tls != nullptr);
     ++tls->displayRefCount;
 }
 
-// static
-void ThreadSafeDisplay::DecrementCurrentThreadDisplayRefCount()
+void DecrementCurrentThreadDisplayRefCount()
 {
     TLSData *tls = GetDisplayTLS();
     ASSERT(tls != nullptr);
-    ASSERT(tls->displayRefCount > 0);
+    ASSERT(tls->displayRefCount == 1);
     --tls->displayRefCount;
 }
 #endif

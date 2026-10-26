@@ -1304,32 +1304,36 @@ EGLint EGLAPIENTRY EGL_ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags
         egl::ScopedThreadSafeDisplayRef dpyPackedRef = GetThreadSafeDisplayIfValid(dpyPacked);
         egl::ThreadSafeDisplay *validDisplay         = dpyPackedRef.get();
 
-        EGL_EVENT(ClientWaitSync,
-                  "dpy = 0x%016" PRIxPTR ", sync = 0x%016" PRIxPTR ", flags = %d, timeout = %llu",
-                  (uintptr_t)dpy, (uintptr_t)sync, flags, static_cast<unsigned long long>(timeout));
-
-        egl::SyncID syncPacked           = PackParam<egl::SyncID>(sync);
-        egl::ScopedSyncRef syncPackedRef = GetSyncIfValid(validDisplay, syncPacked);
-        egl::Sync *syncPackedObject      = syncPackedRef.get();
-
         {
-            ANGLE_EGL_SCOPED_CONTEXT_LOCK(ClientWaitSync, thread, flags);
-            if (IsEGLValidationEnabled())
+            EGL_EVENT(
+                ClientWaitSync,
+                "dpy = 0x%016" PRIxPTR ", sync = 0x%016" PRIxPTR ", flags = %d, timeout = %llu",
+                (uintptr_t)dpy, (uintptr_t)sync, flags, static_cast<unsigned long long>(timeout));
+
+            egl::SyncID syncPacked           = PackParam<egl::SyncID>(sync);
+            egl::ScopedSyncRef syncPackedRef = GetSyncIfValid(validDisplay, syncPacked);
+            egl::Sync *syncPackedObject      = syncPackedRef.get();
+
             {
-                ANGLE_EGL_VALIDATE(thread, ClientWaitSync, validDisplay, EGLint, validDisplay,
-                                   syncPackedObject, flags, timeout);
-            }
-            else
-            {
+                ANGLE_EGL_SCOPED_CONTEXT_LOCK(ClientWaitSync, thread, flags);
+                if (IsEGLValidationEnabled())
+                {
+                    ANGLE_EGL_VALIDATE(thread, ClientWaitSync, validDisplay, EGLint, validDisplay,
+                                       syncPackedObject, flags, timeout);
+                }
+                else
+                {
+                }
+
+                returnValue =
+                    ClientWaitSync(thread, validDisplay, syncPackedObject, flags, timeout);
             }
 
-            returnValue = ClientWaitSync(thread, validDisplay, syncPackedObject, flags, timeout);
+            ANGLE_CAPTURE_EGL(ClientWaitSync, true, thread, dpyPacked, syncPacked, flags, timeout,
+                              returnValue);
         }
-
-        ANGLE_CAPTURE_EGL(ClientWaitSync, true, thread, dpyPacked, syncPacked, flags, timeout,
-                          returnValue);
+        egl::Display::GetCurrentThreadUnlockedTailCall()->run(&returnValue);
     }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run(&returnValue);
     return returnValue;
 }
 

@@ -22,16 +22,14 @@ using namespace angle;
 
 namespace
 {
-// The sync entry point that the *RacesMakeCurrentAfterTerminate tests keep calling.  Each of them
-// creates and destroys an egl::ScopedSyncRef while the entry point is holding the display.
+// The sync entry point that the *RacesMakeCurrentAfterTerminate tests keep calling.
 enum class SyncEntryPoint
 {
-    // eglClientWaitSync() holds the display through a ScopedThreadSafeDisplayRef.
+    // eglClientWaitSync()
     ClientWait,
-    // eglGetSyncAttribKHR() holds the display through a ScopedThreadSafeDisplayRef.
+    // eglGetSyncAttribKHR()
     GetAttrib,
-    // eglLabelObjectKHR() holds the display through a ScopedDisplayLockAndRef, i.e. with the
-    // display mutex locked.
+    // eglLabelObjectKHR(), which, unlike the other two, locks the display.
     Label,
 };
 
@@ -418,24 +416,10 @@ TEST_P(EGLDisplayTestES3, GetPlatformDisplayAndroidValidation)
     ASSERT_EGL_SUCCESS();
 }
 
-// After eglTerminate() is called while contexts are still current, ANGLE keeps the display
-// initialized, and every later context switch schedules a deferred InternalCleanup, which locks the
-// display and waits until no other thread references it.  The thread that switched the context now
-// runs it at the end of eglMakeCurrent().  It used to be run by the first
-// ScopedThreadSafeDisplayRef that was released after it was scheduled, on any thread, assuming that
-// the only reference left was its own.
-//
-// Sync entry points held the display twice, though: once for the entry point and once through the
-// ScopedSyncRef, which was released first.  If a sync entry point was the one that ran the cleanup,
-// it waited for a reference that it held itself, or, in the case of eglLabelObjectKHR(), it locked
-// the display mutex that it was already holding.  Either way, the thread never returned.
-//
-// This is the Android pattern where an app calls eglTerminate() on the process-wide display while
-// HWUI's RenderThread keeps its context current and keeps using syncs.  Here, this thread plays the
-// RenderThread, a few threads keep calling a sync entry point, and a number of threads that had a
-// context current across eglTerminate() release it one by one, each scheduling the cleanup once.
-//
-// The interleaving is a race, so on failure this test either hangs or hits FATAL() below.
+// Calls eglTerminate() while contexts are still current, then releases them one at a time on
+// separate threads while other threads keep calling |entryPoint| on syncs.  Each release after
+// eglTerminate() cleans up the display, which must not deadlock with the sync calls; if it does,
+// the test times out.
 void EGLDisplayTest::testSyncCallsRaceMakeCurrentAfterTerminate(SyncEntryPoint entryPoint)
 {
     // Each releasing thread gives the sync threads one chance to win the race, which they do about
@@ -514,9 +498,6 @@ void EGLDisplayTest::testSyncCallsRaceMakeCurrentAfterTerminate(SyncEntryPoint e
         }
     };
 
-    // Every deferred cleanup invalidates all syncs, so the syncs of each round are created right
-    // before it.  The display may still be terminating if a sync thread ended up running the
-    // cleanup through the outer reference, after the releasing thread had already returned.
     auto createSync = [&]() {
         const auto deadline = std::chrono::steady_clock::now() + kTimeout;
         std::chrono::milliseconds backoff(1);
@@ -597,8 +578,7 @@ void EGLDisplayTest::testSyncCallsRaceMakeCurrentAfterTerminate(SyncEntryPoint e
                     condVar.notify_all();
                 }
 
-                // Keep creating and destroying ScopedSyncRefs until the deferred cleanup
-                // invalidates the sync.
+                // Keep calling the entry point until a cleanup invalidates the sync.
                 while (!stop.load(std::memory_order_relaxed) &&
                        CallSyncEntryPoint(display, sync, entryPoint))
                 {
@@ -674,22 +654,22 @@ void EGLDisplayTest::testSyncCallsRaceMakeCurrentAfterTerminate(SyncEntryPoint e
     EXPECT_EGL_TRUE(eglTerminate(display));
 }
 
-// Test that eglClientWaitSync() does not run the deferred cleanup of a terminated display while it
-// is still holding the display.
+// Test that eglClientWaitSync() does not deadlock when it races with eglMakeCurrent() after
+// eglTerminate().
 TEST_P(EGLDisplayTest, ClientWaitSyncRacesMakeCurrentAfterTerminate)
 {
     testSyncCallsRaceMakeCurrentAfterTerminate(SyncEntryPoint::ClientWait);
 }
 
-// Test that eglGetSyncAttribKHR() does not run the deferred cleanup of a terminated display while
-// it is still holding the display.
+// Test that eglGetSyncAttribKHR() does not deadlock when it races with eglMakeCurrent() after
+// eglTerminate().
 TEST_P(EGLDisplayTest, GetSyncAttribRacesMakeCurrentAfterTerminate)
 {
     testSyncCallsRaceMakeCurrentAfterTerminate(SyncEntryPoint::GetAttrib);
 }
 
-// Test that eglLabelObjectKHR() on a sync does not run the deferred cleanup of a terminated display
-// while it is holding the display mutex.
+// Test that eglLabelObjectKHR() on a sync does not deadlock when it races with eglMakeCurrent()
+// after eglTerminate().
 TEST_P(EGLDisplayTest, LabelSyncRacesMakeCurrentAfterTerminate)
 {
     testSyncCallsRaceMakeCurrentAfterTerminate(SyncEntryPoint::Label);
@@ -708,7 +688,9 @@ TEST_P(EGLDisplayTest, LabelSyncRacesMakeCurrentAfterTerminate)
 // initialization of the display, so it is repeated a number of times.
 //
 // The teardown only overlaps a tail call some of the time, so a tail call that runs while the
-// display is not referenced only makes this test fail some of the time.
+// display is not referenced only makes this test fail some of the time.  In builds with assertions,
+// ScopedSyncRef also checks that its sync is released while the display is held, which fails as
+// soon as a wait takes the tail call path.
 TEST_P(EGLDisplayTestES3, ClientWaitSyncOnPendingFenceRacesLastMakeCurrentAfterTerminate)
 {
     // The Vulkan backend waits for pending fences in unlocked tail calls.
