@@ -4164,9 +4164,8 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
     // Change layouts prior to computation.
     vk::CommandResources resources;
     resources.onImageTransferRead(src->getAspectFlags(), src);
-    resources.onImageTransferWrite(
-        params.dstLevel, 1, gl::OwnerLayer(isDst3D ? 0 : params.dstOffset[2]),
-        isDst3D ? 1 : params.copyExtents[2], VK_IMAGE_ASPECT_COLOR_BIT, dst);
+    resources.onImageTransferWrite(params.dstLevel, 1, gl::OwnerLayer(params.dstOffset[2]),
+                                   params.copyExtents[2], VK_IMAGE_ASPECT_COLOR_BIT, dst);
 
     // srcBuffer is the destination of copyImageToBuffer() below.
     resources.onBufferTransferWrite(&srcBuffer.get());

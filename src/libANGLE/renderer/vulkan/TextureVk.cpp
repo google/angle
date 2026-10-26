@@ -2800,9 +2800,8 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
 
     vk::CommandResources resources;
     resources.onBufferTransferRead(srcBuffer);
-    resources.onImageTransferWrite(level, 1, is3D ? gl::OwnerLayer(0) : layer,
-                                   region.imageSubresource.layerCount, mImage->getAspectFlags(),
-                                   mImage);
+    resources.onImageTransferWrite(level, 1, layer, is3D ? sourceArea.depth : layerCount,
+                                   mImage->getAspectFlags(), mImage);
 
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));

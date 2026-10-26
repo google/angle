@@ -8352,8 +8352,6 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         bool isSrc3D                         = srcImage->getType() == VK_IMAGE_TYPE_3D;
         bool isDst3D                         = dstImage->getType() == VK_IMAGE_TYPE_3D;
         const VkImageAspectFlags aspectFlags = srcImage->getAspectFlags();
-        const gl::OwnerLayer srcBaseLayer    = isSrc3D ? gl::OwnerLayer(0) : srcZ;
-        const gl::OwnerLayer dstBaseLayer    = isDst3D ? gl::OwnerLayer(0) : dstZ;
 
         ASSERT(srcImage->getAspectFlags() == dstImage->getAspectFlags());
 
@@ -8361,12 +8359,12 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
 
         region.srcSubresource.aspectMask     = aspectFlags;
         region.srcSubresource.mipLevel       = srcImage->toVkLevel(srcLevelGL).get();
-        region.srcSubresource.baseArrayLayer = srcBaseLayer.get();
+        region.srcSubresource.baseArrayLayer = isSrc3D ? 0 : srcZ.get();
         region.srcSubresource.layerCount     = isSrc3D ? 1 : srcDepth;
 
         region.dstSubresource.aspectMask     = aspectFlags;
         region.dstSubresource.mipLevel       = dstImage->toVkLevel(dstLevelGL).get();
-        region.dstSubresource.baseArrayLayer = dstBaseLayer.get();
+        region.dstSubresource.baseArrayLayer = isDst3D ? 0 : dstZ.get();
         region.dstSubresource.layerCount     = isDst3D ? 1 : srcDepth;
 
         region.srcOffset.x   = srcX;
@@ -8382,15 +8380,13 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         CommandResources resources;
         if (srcImage == dstImage)
         {
-            resources.onImageSelfCopy(srcLevelGL, 1, srcBaseLayer, region.srcSubresource.layerCount,
-                                      dstLevelGL, 1, dstBaseLayer, region.dstSubresource.layerCount,
+            resources.onImageSelfCopy(srcLevelGL, 1, srcZ, srcDepth, dstLevelGL, 1, dstZ, srcDepth,
                                       aspectFlags, srcImage);
         }
         else
         {
             resources.onImageTransferRead(aspectFlags, srcImage);
-            resources.onImageTransferWrite(dstLevelGL, 1, dstBaseLayer,
-                                           region.dstSubresource.layerCount, aspectFlags, dstImage);
+            resources.onImageTransferWrite(dstLevelGL, 1, dstZ, srcDepth, aspectFlags, dstImage);
         }
 
         OutsideRenderPassCommandBuffer *commandBuffer;
@@ -8487,11 +8483,14 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
 {
     Renderer *renderer = contextVk->getRenderer();
 
+    const uint32_t layerCountOrDepth =
+        mImageType == VK_IMAGE_TYPE_3D ? getLevelExtents(baseLevel + 1).depth : mLayerCount;
+
     CommandResources resources;
     gl::OwnerLevel baseLevelGL = toGLLevel(baseLevel);
-    resources.onImageTransferWrite(baseLevelGL + 1,
-                                   std::min(mLevelCount - 1, maxLevel.get()) - baseLevel.get(),
-                                   gl::OwnerLayer(0), mLayerCount, VK_IMAGE_ASPECT_COLOR_BIT, this);
+    resources.onImageTransferWrite(
+        baseLevelGL + 1, std::min(mLevelCount - 1, maxLevel.get()) - baseLevel.get(),
+        gl::OwnerLayer(0), layerCountOrDepth, VK_IMAGE_ASPECT_COLOR_BIT, this);
 
     OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
@@ -9122,10 +9121,10 @@ angle::Result ImageHelper::updateSubresourceOnHost(ContextVk *contextVk,
     // other reasons, which would now be superseded by the data upload.
     const gl::OwnerLevel updateLevelGL = index.getLevelIndex();
     const gl::OwnerLayer layerIndex = index.hasLayer() ? index.getLayerIndex() : gl::OwnerLayer(0);
-    const uint32_t layerCount = index.getLayerCount();
     const bool isArray                  = gl::IsArrayTextureType(index.getType());
     const bool is3D                     = mImageType == VK_IMAGE_TYPE_3D;
     const gl::OwnerLayer baseArrayLayer = isArray || is3D ? gl::OwnerLayer(offset.z) : layerIndex;
+    const uint32_t layerCount           = isArray || is3D ? glExtents.depth : index.getLayerCount();
     const gl::Box updateBoundingBox =
         MakeUpdateBoundingBox(offset, glExtents, baseArrayLayer, layerCount);
     pruneSupersededUpdatesForLevelImpl(contextVk, updateLevelGL, updateBoundingBox,

@@ -974,6 +974,7 @@
 40096838 PIXEL6 VULKAN : PixelLocalStorageTest.EarlyFragmentTests/ES3_1_Vulkan_EmulatePixelLocalStorage* = SKIP
 448658624 PIXEL6 VULKAN : GLSLTest_ES31.ConstantPrecisionPropagation/* = SKIP
 448658624 PIXEL6 VULKAN : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
+578080487 PIXEL6 VULKAN : MipmapTestES3.MipmapsForTexture3DBlendAndReadback/* = SKIP
 // New failures after TP1A.220624.021 upgrade
 42266050 PIXEL6 VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.DepthStencilInvalidate/* = SKIP
 42266050 PIXEL6 VULKAN : VulkanPerformanceCounterTest_DepthStencilLoadStoreOps.DepthStencilInvalidateAndClear/* = SKIP
@@ -1443,6 +1444,8 @@
 567159166 PIXEL10 GLES : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffect/* = SKIP
 567159166 PIXEL10 GLES : GLSLTest_ES3.StructWithOnlySamplersRHSOfCommaWithSideEffectAsFuncArg/* = SKIP
 573760547 PIXEL10 GLES : GLSLTest_ES3.SamplerInStructAsFunctionArgInCommaCornerCase/* = SKIP
+578128193 PIXEL10 GLES : RobustResourceInitTestES3.UploadToNonZeroSliceBlendReadback/* = SKIP
+578128193 PIXEL10 GLES : RobustResourceInitTestES3.PBOUploadToNonZeroSliceBlendReadback/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP
@@ -2987,6 +2990,12 @@
 512995370 MAC AMD METAL : Texture2DArrayTestES3.ReformatStagedBufferUpdatesLayerCountOOB_3D/* = SKIP
 516824665 MAC METAL : Texture2DTestES3.InvalidFormatTypeCombosShouldFail/* = SKIP
 516824665 MAC METAL : Texture2DTestES3.FormatRGB10A2REVToRGB5A1/* = SKIP
+578117950 MAC AMD METAL : MipmapTestES3.MipmapsForTexture3DBlendAndReadback/* = SKIP
+578117949 MAC AMD METAL : RobustResourceInitTestES3.PBOUploadToNonZeroSliceBlendReadback/* = SKIP
+578117949 MAC AMD METAL : RobustResourceInitTestES3.PBOUploadToNonZeroSliceReadback/* = SKIP
+578117949 MAC AMD METAL : RobustResourceInitTestES3.PBOUploadToWholeLevelBlendReadback/* = SKIP
+578117949 MAC AMD METAL : RobustResourceInitTestES3.UploadToNonZeroSliceBlendReadback/* = SKIP
+578117949 MAC AMD METAL : RobustResourceInitTestES3.UploadToWholeLevelBlendReadback/* = SKIP
 
 // Timeout on Intel
 509829264 VULKAN WIN INTEL : SimpleStateChangeTestES31.TransformFeedbackThenReadWithCompute/* = SKIP

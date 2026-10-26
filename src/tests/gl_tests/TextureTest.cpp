@@ -22287,6 +22287,137 @@ TEST_P(CopyImageTestES31, CubeMapCopyImageSubData)
     ASSERT_GL_NO_ERROR();
 }
 
+// Verify that copies to 3D textures work.
+// Verification is done using blend and readback.
+TEST_P(CopyImageTestES31, Texture3DBlendAndReadback)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    // The src texture.  Copy is done from mip 1, slices 4 and 5.
+    constexpr uint32_t kSrcWidth  = 101;
+    constexpr uint32_t kSrcHeight = 99;
+    constexpr uint32_t kSrcDepth  = 17;
+    constexpr uint32_t kSrcLevels = 4;
+    std::vector<GLColor> pixelsBlue(kSrcWidth * kSrcHeight, GLColor::blue);
+    std::vector<GLColor> pixelsGreen(kSrcWidth * kSrcHeight, GLColor::green);
+
+    constexpr uint32_t kSrcCopyLevel   = 1;
+    constexpr uint32_t kSrcCopySlice   = 4;
+    constexpr uint32_t kCopySliceCount = 2;
+
+    GLTexture src;
+    glBindTexture(GL_TEXTURE_3D, src);
+    glTexStorage3D(GL_TEXTURE_3D, kSrcLevels, GL_RGBA8, kSrcWidth, kSrcHeight, kSrcDepth);
+    for (uint32_t slice = 0; slice < kCopySliceCount; ++slice)
+    {
+        glTexSubImage3D(GL_TEXTURE_3D, kSrcCopyLevel, 0, 0, kSrcCopySlice + slice,
+                        kSrcWidth >> kSrcCopyLevel, kSrcHeight >> kSrcCopyLevel, 1, GL_RGBA,
+                        GL_UNSIGNED_BYTE, slice == 0 ? pixelsBlue.data() : pixelsGreen.data());
+    }
+    ASSERT_GL_NO_ERROR();
+
+    // The dst texture.  Copy is done to mip 2, slices 3 and 4.
+    constexpr uint32_t kWidth      = 27;
+    constexpr uint32_t kHeight     = 19;
+    constexpr uint32_t kDepth      = 25;
+    constexpr uint32_t kLevelCount = 5;
+
+    GLTexture dst;
+    glBindTexture(GL_TEXTURE_3D, dst);
+    glTexStorage3D(GL_TEXTURE_3D, kLevelCount, GL_RGBA8, kWidth, kHeight, kDepth);
+
+    constexpr uint32_t kCopyLevel = 2;
+    constexpr uint32_t kCopySlice = 3;
+
+    glCopyImageSubDataEXT(src, GL_TEXTURE_3D, kSrcCopyLevel, 0, 0, kSrcCopySlice, dst,
+                          GL_TEXTURE_3D, kCopyLevel, 0, 0, kCopySlice, kWidth >> kCopyLevel,
+                          kHeight >> kCopyLevel, kCopySliceCount);
+
+    // Verify the copied slices
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    for (uint32_t slice = 0; slice < kCopySliceCount; ++slice)
+    {
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dst, kCopyLevel,
+                                  kCopySlice + slice);
+        drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> kCopyLevel, kHeight >> kCopyLevel,
+                             slice == 0 ? GLColor::magenta : GLColor::yellow);
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+// Verify that copies to 3D textures work when the src and dst formats are different and one format
+// might be emulated.
+// Verification is done using blend and readback.
+TEST_P(CopyImageTestES31, Texture3DEmulatedAlphaBlendAndReadback)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    // The src texture.  Copy is done from mip 1, slices 4 and 5.
+    constexpr uint32_t kSrcWidth  = 102;
+    constexpr uint32_t kSrcHeight = 99;
+    constexpr uint32_t kSrcDepth  = 17;
+    constexpr uint32_t kSrcLevels = 4;
+    std::vector<GLColorRGB> pixelsBlue(kSrcWidth * kSrcHeight, GLColorRGB::blue);
+    std::vector<GLColorRGB> pixelsGreen(kSrcWidth * kSrcHeight, GLColorRGB::green);
+
+    constexpr uint32_t kSrcCopyLevel   = 1;
+    constexpr uint32_t kSrcCopySlice   = 4;
+    constexpr uint32_t kCopySliceCount = 2;
+
+    GLTexture src;
+    glBindTexture(GL_TEXTURE_3D, src);
+    glTexStorage3D(GL_TEXTURE_3D, kSrcLevels, GL_RGB8UI, kSrcWidth, kSrcHeight, kSrcDepth);
+    for (uint32_t slice = 0; slice < kCopySliceCount; ++slice)
+    {
+        glTexSubImage3D(GL_TEXTURE_3D, kSrcCopyLevel, 0, 0, kSrcCopySlice + slice,
+                        kSrcWidth >> kSrcCopyLevel, kSrcHeight >> kSrcCopyLevel, 1, GL_RGB_INTEGER,
+                        GL_UNSIGNED_BYTE, slice == 0 ? pixelsBlue.data() : pixelsGreen.data());
+    }
+    ASSERT_GL_NO_ERROR();
+
+    // The dst texture.  Copy is done to mip 2, slices 3 and 4.
+    constexpr uint32_t kWidth      = 27;
+    constexpr uint32_t kHeight     = 19;
+    constexpr uint32_t kDepth      = 25;
+    constexpr uint32_t kLevelCount = 5;
+
+    GLTexture dst;
+    glBindTexture(GL_TEXTURE_3D, dst);
+    glTexStorage3D(GL_TEXTURE_3D, kLevelCount, GL_RGB8, kWidth, kHeight, kDepth);
+
+    constexpr uint32_t kCopyLevel = 2;
+    constexpr uint32_t kCopySlice = 3;
+
+    glCopyImageSubDataEXT(src, GL_TEXTURE_3D, kSrcCopyLevel, 0, 0, kSrcCopySlice, dst,
+                          GL_TEXTURE_3D, kCopyLevel, 0, 0, kCopySlice, kWidth >> kCopyLevel,
+                          kHeight >> kCopyLevel, kCopySliceCount);
+
+    // Verify the copied slices
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    for (uint32_t slice = 0; slice < kCopySliceCount; ++slice)
+    {
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dst, kCopyLevel,
+                                  kCopySlice + slice);
+        drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> kCopyLevel, kHeight >> kCopyLevel,
+                             slice == 0 ? GLColor::magenta : GLColor::yellow);
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
 // Verify that copies between texture layers works, including when there is a read after write in a
 // level/layer.
 TEST_P(CopyImageTestES31, ArraySelfCopyImageSubDataWithReadAfterWrite)

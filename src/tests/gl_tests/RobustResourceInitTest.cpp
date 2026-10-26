@@ -5827,6 +5827,270 @@ TEST_P(RobustResourceInitTestES3, ClearSliceOf3DInvalidateAnotherAttachmentReadb
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that after PBO upload to a non-zero 3D texture slice, the other slices are cleared.
+// An immutable texture is used and the PBO format is compatible, such that a fast copy path can be
+// taken in the backends.
+// Verification is done using readback.
+TEST_P(RobustResourceInitTestES3, PBOUploadToNonZeroSliceReadback)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr uint32_t kWidth      = 17;
+    constexpr uint32_t kHeight     = 23;
+    constexpr uint32_t kDepth      = 7;
+    constexpr uint32_t kLevelCount = 3;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexStorage3D(GL_TEXTURE_3D, kLevelCount, GL_RGBA8, kWidth, kHeight, kDepth);
+
+    const std::vector<GLColor> uploadData(kWidth * kHeight, GLColor::green);
+    GLBuffer buffer;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, uploadData.size() * sizeof(uploadData[0]),
+                 uploadData.data(), GL_STATIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+
+    // Upload to mip 1, slice 2.
+    constexpr uint32_t kUploadLevel = 1;
+    constexpr uint32_t kUploadSlice = 2;
+    glTexSubImage3D(GL_TEXTURE_3D, kUploadLevel, 0, 0, kUploadSlice, kWidth >> kUploadLevel,
+                    kHeight >> kUploadLevel, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Verify that every slice is cleared to black except the one that is uploaded to.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    for (uint32_t level = 0; level < kLevelCount; ++level)
+    {
+        for (uint32_t slice = 0; slice < (kDepth >> level); ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level, slice);
+            EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> level, kHeight >> level,
+                                 level == kUploadLevel && slice == kUploadSlice
+                                     ? uploadData[0]
+                                     : GLColor::transparentBlack);
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that after PBO upload to a non-zero 3D texture slice, the other slices are cleared.
+// An immutable texture is used and the PBO format is compatible, such that a fast copy path can be
+// taken in the backends.
+// Verification is done using blend and readback.
+TEST_P(RobustResourceInitTestES3, PBOUploadToNonZeroSliceBlendReadback)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr uint32_t kWidth      = 17;
+    constexpr uint32_t kHeight     = 23;
+    constexpr uint32_t kDepth      = 7;
+    constexpr uint32_t kLevelCount = 3;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexStorage3D(GL_TEXTURE_3D, kLevelCount, GL_RGBA8, kWidth, kHeight, kDepth);
+
+    const std::vector<GLColor> uploadData(kWidth * kHeight, GLColor::green);
+    GLBuffer buffer;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, uploadData.size() * sizeof(uploadData[0]),
+                 uploadData.data(), GL_STATIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+
+    // Upload to mip 1, slice 2.
+    constexpr uint32_t kUploadLevel = 1;
+    constexpr uint32_t kUploadSlice = 2;
+    glTexSubImage3D(GL_TEXTURE_3D, kUploadLevel, 0, 0, kUploadSlice, kWidth >> kUploadLevel,
+                    kHeight >> kUploadLevel, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Verify that every slice is cleared to black except the one that is uploaded to.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    for (uint32_t level = 0; level < kLevelCount; ++level)
+    {
+        for (uint32_t slice = 0; slice < (kDepth >> level); ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level, slice);
+            drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5);
+            if (level == kUploadLevel && slice == kUploadSlice)
+            {
+                EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> level, kHeight >> level, GLColor::yellow);
+            }
+            else
+            {
+                EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> level, kHeight >> level, GLColor::red);
+            }
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that after PBO upload to a whole level of a 3D texture, the other levels are cleared and the
+// defined-subresource tracking is correctly.
+// An immutable texture is used and the PBO format is compatible, such that a fast copy path can be
+// taken in the backends.
+// Verification is done using blend and readback.
+TEST_P(RobustResourceInitTestES3, PBOUploadToWholeLevelBlendReadback)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr uint32_t kWidth      = 17;
+    constexpr uint32_t kHeight     = 23;
+    constexpr uint32_t kDepth      = 7;
+    constexpr uint32_t kLevelCount = 3;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexStorage3D(GL_TEXTURE_3D, kLevelCount, GL_RGBA8, kWidth, kHeight, kDepth);
+
+    const std::vector<GLColor> uploadData(kWidth * kHeight * kDepth, GLColor::green);
+    GLBuffer buffer;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, uploadData.size() * sizeof(uploadData[0]),
+                 uploadData.data(), GL_STATIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+
+    // Upload to mip 1.
+    constexpr uint32_t kUploadLevel = 1;
+    glTexSubImage3D(GL_TEXTURE_3D, kUploadLevel, 0, 0, 0, kWidth >> kUploadLevel,
+                    kHeight >> kUploadLevel, kDepth >> kUploadLevel, GL_RGBA, GL_UNSIGNED_BYTE,
+                    nullptr);
+
+    // Verify that every slice is cleared to black except the ones that are uploaded to.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    for (uint32_t level = 0; level < kLevelCount; ++level)
+    {
+        for (uint32_t slice = 0; slice < (kDepth >> level); ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level, slice);
+            drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5);
+            if (level == kUploadLevel)
+            {
+                EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> level, kHeight >> level, GLColor::yellow);
+            }
+            else
+            {
+                EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> level, kHeight >> level, GLColor::red);
+            }
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that after upload to a non-zero 3D texture slice, the other slices are cleared.
+// An immutable texture is used, such that a fast copy path can be taken in the backends.
+// Verification is done using blend and readback.
+TEST_P(RobustResourceInitTestES3, UploadToNonZeroSliceBlendReadback)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr uint32_t kWidth      = 17;
+    constexpr uint32_t kHeight     = 23;
+    constexpr uint32_t kDepth      = 7;
+    constexpr uint32_t kLevelCount = 3;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexStorage3D(GL_TEXTURE_3D, kLevelCount, GL_RGBA8, kWidth, kHeight, kDepth);
+
+    // Upload to mip 1, slice 2.
+    constexpr uint32_t kUploadLevel = 1;
+    constexpr uint32_t kUploadSlice = 2;
+    const std::vector<GLColor> uploadData(kWidth * kHeight, GLColor::green);
+    glTexSubImage3D(GL_TEXTURE_3D, kUploadLevel, 0, 0, kUploadSlice, kWidth >> kUploadLevel,
+                    kHeight >> kUploadLevel, 1, GL_RGBA, GL_UNSIGNED_BYTE, uploadData.data());
+
+    // Verify that every slice is cleared to black except the one that is uploaded to.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    for (uint32_t level = 0; level < kLevelCount; ++level)
+    {
+        for (uint32_t slice = 0; slice < (kDepth >> level); ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level, slice);
+            drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5);
+            if (level == kUploadLevel && slice == kUploadSlice)
+            {
+                EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> level, kHeight >> level, GLColor::yellow);
+            }
+            else
+            {
+                EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> level, kHeight >> level, GLColor::red);
+            }
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that after upload to a whole level of a 3D texture, the other levels are cleared and the
+// defined-subresource tracking is correctly.
+// An immutable texture is used, such that a fast copy path can be
+// taken in the backends.
+// Verification is done using blend and readback.
+TEST_P(RobustResourceInitTestES3, UploadToWholeLevelBlendReadback)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr uint32_t kWidth      = 17;
+    constexpr uint32_t kHeight     = 23;
+    constexpr uint32_t kDepth      = 7;
+    constexpr uint32_t kLevelCount = 3;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexStorage3D(GL_TEXTURE_3D, kLevelCount, GL_RGBA8, kWidth, kHeight, kDepth);
+
+    // Upload to mip 1.
+    constexpr uint32_t kUploadLevel = 1;
+    const std::vector<GLColor> uploadData(kWidth * kHeight * kDepth, GLColor::green);
+    glTexSubImage3D(GL_TEXTURE_3D, kUploadLevel, 0, 0, 0, kWidth >> kUploadLevel,
+                    kHeight >> kUploadLevel, kDepth >> kUploadLevel, GL_RGBA, GL_UNSIGNED_BYTE,
+                    uploadData.data());
+
+    // Verify that every slice is cleared to black except the ones that are uploaded to.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    for (uint32_t level = 0; level < kLevelCount; ++level)
+    {
+        for (uint32_t slice = 0; slice < (kDepth >> level); ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level, slice);
+            drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5);
+            if (level == kUploadLevel)
+            {
+                EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> level, kHeight >> level, GLColor::yellow);
+            }
+            else
+            {
+                EXPECT_PIXEL_RECT_EQ(0, 0, kWidth >> level, kHeight >> level, GLColor::red);
+            }
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     RobustResourceInitTest,
     ES3_METAL().enable(Feature::EmulateDontCareLoadWithRandomClear),
