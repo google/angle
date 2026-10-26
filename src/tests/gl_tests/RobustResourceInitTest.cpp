@@ -17,15 +17,14 @@
 
 namespace angle
 {
-constexpr char kSimpleTextureVertexShader[] =
-    "#version 300 es\n"
-    "in vec4 position;\n"
-    "out vec2 texcoord;\n"
-    "void main()\n"
-    "{\n"
-    "    gl_Position = position;\n"
-    "    texcoord = vec2(position.xy * 0.5 - 0.5);\n"
-    "}";
+constexpr char kSimpleTextureVertexShader[] = R"(#version 300 es
+in vec4 position;
+out vec2 texcoord;
+void main()
+{
+    gl_Position = position;
+    texcoord = vec2(position.xy * 0.5 - 0.5);
+})";
 
 void UncompressDXTBlock(int destX,
                         int destY,
@@ -4854,6 +4853,102 @@ TEST_P(RobustResourceInitTestES3, BlitDepthStencilAfterClearBuffer)
     EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::green);
+}
+
+// Test that after clearing both depth and stencil, then invalidating depth (which may stage a
+// depth-only robust init clear), that the stencil clear value is retained.
+TEST_P(RobustResourceInitTestES3, ClearDepthStencilInvalidateDepth)
+{
+    ANGLE_SKIP_TEST_IF(!hasRobustSurfaceInit());
+
+    constexpr uint32_t kWidth  = 123;
+    constexpr uint32_t kHeight = 45;
+
+    GLRenderbuffer color;
+    glBindRenderbuffer(GL_RENDERBUFFER, color);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kWidth, kHeight);
+
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kWidth, kHeight);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencil);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear depth/stencil together, then invalidate only depth
+    glClearDepthf(0.99);
+    glClearStencil(0x6C);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    constexpr GLenum kInvalidateAttachment = GL_DEPTH_ATTACHMENT;
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &kInvalidateAttachment);
+
+    // Draw, making sure that depth is either robust-cleared (to 1.0) or invalidate is ignored, and
+    // stencil remains as 0x6C.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x6C, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+    ANGLE_GL_PROGRAM(green, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(green, essl1_shaders::PositionAttrib(), 0.95f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that after clearing both depth and stencil, then invalidating stencil (which may stage a
+// stencil-only robust init clear), that the depth clear value is retained.
+TEST_P(RobustResourceInitTestES3, ClearDepthStencilInvalidateStencil)
+{
+    ANGLE_SKIP_TEST_IF(!hasRobustSurfaceInit());
+
+    constexpr uint32_t kWidth  = 123;
+    constexpr uint32_t kHeight = 45;
+
+    GLRenderbuffer color;
+    glBindRenderbuffer(GL_RENDERBUFFER, color);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kWidth, kHeight);
+
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kWidth, kHeight);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencil);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear depth/stencil together, then invalidate only depth
+    glClearDepthf(0.35f);
+    glClearStencil(0x6C);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    constexpr GLenum kInvalidateAttachment = GL_STENCIL_ATTACHMENT;
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, &kInvalidateAttachment);
+
+    // Draw, making sure that depth is 0.35, and stencil is either robust-cleared (to 0x00) or
+    // invalidate is ignored.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x00, ~0x6C & 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+    ANGLE_GL_PROGRAM(red, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(green, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(green, essl1_shaders::PositionAttrib(), 0.35f * 2 - 1 - 0.01);
+    drawQuad(red, essl1_shaders::PositionAttrib(), 0.35f * 2 - 1 + 0.01);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Tests that binding an FBO to GL_READ_FRAMEBUFFER correctly triggers robust resource

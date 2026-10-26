@@ -10563,6 +10563,7 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
     if (deferredClears)
     {
         Optional<size_t> foundClear;
+        VkImageAspectFlags foundClearAspects = 0;
 
         for (size_t updateIndex = 0; updateIndex < levelUpdates->size(); ++updateIndex)
         {
@@ -10572,10 +10573,17 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
             {
                 // On any data update or the clear does not match exact layer range, we'll need to
                 // do a full upload.
+                //
+                // If there are multiple clears with mismatching aspect flags (for depth/stencil),
+                // also do a full upload.  If needed, this can be optimized in the future such that
+                // the |foundClear| for depth and stencil are tracked separately.  Currently, only
+                // obscure tests hit this scenario.
                 const bool isClear = IsClearOfAllChannels(update.updateSource);
-                if (isClear && matchesLayerRange(update, levelGL, layer, layerCount))
+                if (isClear && matchesLayerRange(update, levelGL, layer, layerCount) &&
+                    (!foundClear.valid() || update.data.clear.aspectFlags == foundClearAspects))
                 {
                     foundClear = updateIndex;
+                    foundClearAspects = update.data.clear.aspectFlags;
                 }
                 else
                 {
