@@ -405,6 +405,7 @@ vars = {
   'checkout_angle_restricted_trace_mortal_kombat': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mu_origin_3': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_my_friend_pedro': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_my_supermarket_journey': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_my_talking_angela': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_my_talking_angela_2': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_my_talking_tom': 'checkout_extra_traces',
@@ -425,6 +426,7 @@ vars = {
   'checkout_angle_restricted_trace_onmyoji': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_oxenfree': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_paper_io2': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_parchisi_star': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_passmark_complex': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_passmark_simple': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_passmark_simple_multiview': 'checkout_angle_restricted_traces',
@@ -547,8 +549,8 @@ vars = {
   'checkout_angle_restricted_trace_traffic_rider': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_travel_town': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_trex_200': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_truck_star': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_truckers_of_europe_3': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_truck_star': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_truckers_of_europe_3': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_two_player_games': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_uber': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_umamusume_pretty_derby': 'checkout_angle_restricted_traces',
@@ -3947,6 +3949,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_my_friend_pedro',
   },
+  'src/tests/restricted_traces/my_supermarket_journey': {
+      'packages': [
+        {
+            'package': 'angle/traces/my_supermarket_journey',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_my_supermarket_journey',
+  },
   'src/tests/restricted_traces/my_talking_angela': {
       'packages': [
         {
@@ -4146,6 +4158,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_paper_io2',
+  },
+  'src/tests/restricted_traces/parchisi_star': {
+      'packages': [
+        {
+            'package': 'angle/traces/parchisi_star',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_parchisi_star',
   },
   'src/tests/restricted_traces/passmark_complex': {
       'packages': [
