@@ -530,6 +530,12 @@ class Texture2DTestES3RobustInit : public Texture2DTestES3
     Texture2DTestES3RobustInit() : Texture2DTestES3() { setRobustResourceInit(true); }
 };
 
+class Texture2DTestES3NoExtensions : public Texture2DTestES3
+{
+  protected:
+    Texture2DTestES3NoExtensions() : Texture2DTestES3() { setExtensionsEnabled(false); }
+};
+
 class Texture2DTestES3PBO : public Texture2DTestES3
 {};
 
@@ -3544,7 +3550,8 @@ TEST_P(Texture2DTestES3, InvalidFormatTypeCombosShouldFail)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, kWidth, kHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
     ASSERT_GL_NO_ERROR();
     std::vector<std::pair<GLenum, GLenum>> acceptableCombosForRGB8 = {{GL_RGB, GL_UNSIGNED_BYTE}};
-    if (IsGLExtensionEnabled("GL_OES_required_internalformat"))
+    if (IsGLExtensionEnabled("GL_OES_required_internalformat") &&
+        IsGLExtensionEnabled("GL_EXT_texture_type_2_10_10_10_REV"))
     {
         acceptableCombosForRGB8.emplace_back(
             std::make_pair(GL_RGB, GL_UNSIGNED_INT_2_10_10_10_REV));
@@ -3557,7 +3564,8 @@ TEST_P(Texture2DTestES3, InvalidFormatTypeCombosShouldFail)
     ASSERT_GL_NO_ERROR();
     std::vector<std::pair<GLenum, GLenum>> acceptableCombosForRGB565 = {
         {GL_RGB, GL_UNSIGNED_SHORT_5_6_5}, {GL_RGB, GL_UNSIGNED_BYTE}};
-    if (IsGLExtensionEnabled("GL_OES_required_internalformat"))
+    if (IsGLExtensionEnabled("GL_OES_required_internalformat") &&
+        IsGLExtensionEnabled("GL_EXT_texture_type_2_10_10_10_REV"))
     {
         acceptableCombosForRGB565.emplace_back(
             std::make_pair(GL_RGB, GL_UNSIGNED_INT_2_10_10_10_REV));
@@ -3616,6 +3624,66 @@ TEST_P(Texture2DTestES3, InvalidFormatTypeCombosShouldFail)
     std::vector<std::pair<GLenum, GLenum>> acceptableCombosForRGB10A2REV = {
         {GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV}};
     combinationTest(GL_UNSIGNED_INT_2_10_10_10_REV, acceptableCombosForRGB10A2REV);
+}
+
+// Tests that glTexSubImage2D with GL_RGB and GL_UNSIGNED_INT_2_10_10_10_REV on sized GL_RGB8 or
+// GL_RGB565 textures requires both GL_OES_required_internalformat and
+// GL_EXT_texture_type_2_10_10_10_REV.
+TEST_P(Texture2DTestES3NoExtensions, SizedRGBSubImageWithUnsignedInt2101010RevRequiresExtensions)
+{
+    constexpr GLsizei kWidth  = 4;
+    constexpr GLsizei kHeight = 4;
+    std::vector<uint32_t> data(kWidth * kHeight, 0);
+
+    auto testSubImage = [&](GLenum expectedError) {
+        for (GLenum internalFormat : {GL_RGB8, GL_RGB565})
+        {
+            const GLenum initType =
+                (internalFormat == GL_RGB8) ? GL_UNSIGNED_BYTE : GL_UNSIGNED_SHORT_5_6_5;
+
+            GLTexture texImage;
+            glBindTexture(GL_TEXTURE_2D, texImage);
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, kWidth, kHeight, 0, GL_RGB, initType,
+                         nullptr);
+            ASSERT_GL_NO_ERROR();
+
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGB,
+                            GL_UNSIGNED_INT_2_10_10_10_REV, data.data());
+            EXPECT_GL_ERROR(expectedError);
+
+            GLTexture texStorage;
+            glBindTexture(GL_TEXTURE_2D, texStorage);
+            glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, kWidth, kHeight);
+            ASSERT_GL_NO_ERROR();
+
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGB,
+                            GL_UNSIGNED_INT_2_10_10_10_REV, data.data());
+            EXPECT_GL_ERROR(expectedError);
+        }
+    };
+
+    ASSERT_FALSE(IsGLExtensionEnabled("GL_OES_required_internalformat"));
+    ASSERT_FALSE(IsGLExtensionEnabled("GL_EXT_texture_type_2_10_10_10_REV"));
+    testSubImage(GL_INVALID_OPERATION);
+
+    if (EnsureGLExtensionEnabled("GL_EXT_texture_type_2_10_10_10_REV"))
+    {
+        testSubImage(GL_INVALID_OPERATION);
+
+        GLTexture texUnsized;
+        glBindTexture(GL_TEXTURE_2D, texUnsized);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, kWidth, kHeight, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                     nullptr);
+        ASSERT_GL_NO_ERROR();
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGB,
+                        GL_UNSIGNED_INT_2_10_10_10_REV, data.data());
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        if (EnsureGLExtensionEnabled("GL_OES_required_internalformat"))
+        {
+            testSubImage(GL_NO_ERROR);
+        }
+    }
 }
 
 // Tests updating an RGB5A1 texture with bytes.
@@ -27659,6 +27727,9 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
     ES3_VULKAN().enable(Feature::PreferSkippingInvalidateForEmulatedFormats),
     ES3_VULKAN().disable(Feature::PreferSkippingInvalidateForEmulatedFormats));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3NoExtensions);
+ANGLE_INSTANTIATE_TEST_ES3(Texture2DTestES3NoExtensions);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3PBO);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3PBO,
