@@ -279,7 +279,7 @@ class TParseContext : angle::NonCopyable
     void checkClipCullDistanceWholeArrayUse(const TSourceLoc &location,
                                             TIntermTyped *node,
                                             const char *message);
-    void functionCallClipCullDistanceCheck(const TFunction *fnCandidate, TIntermAggregate *fnCall);
+    void functionCallClipCullDistanceCheck(const TIntermSequence &arguments);
     void functionCallFragDataCheck(const TFunction *fnCandidate, TIntermAggregate *fnCall);
     void checkInvariantVariableQualifier(bool invariant,
                                          const TQualifier qualifier,

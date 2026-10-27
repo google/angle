@@ -1643,6 +1643,10 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
         return false;
     }
 
+    // Similar to a function call, cannot use Clip/CullDistance in a constructor as a whole-array
+    // unless explicitly sized.
+    functionCallClipCullDistanceCheck(arguments);
+
     for (TIntermNode *arg : arguments)
     {
         markStaticUseIfSymbol(arg);
@@ -3567,17 +3571,16 @@ void TParseContext::checkClipCullDistanceWholeArrayUse(const TSourceLoc &locatio
     }
 }
 
-void TParseContext::functionCallClipCullDistanceCheck(const TFunction *fnCandidate,
-                                                      TIntermAggregate *fnCall)
+void TParseContext::functionCallClipCullDistanceCheck(const TIntermSequence &arguments)
 {
     // If clip/cull distance is not redeclared, they can't be passed to a function because their
     // size is unknown.  Per EXT_clip_cull_distance, only indexing with constants can implicitly
     // size the built-ins, passing to a function shouldn't try to size them.
-    for (size_t i = 0; i < fnCandidate->getParamCount(); ++i)
+    for (TIntermNode *argument : arguments)
     {
-        TIntermTyped *argument = (*fnCall->getSequence())[i]->getAsTyped();
-        checkClipCullDistanceWholeArrayUse(argument->getLine(), argument,
-                                           "Cannot pass to function unless it is explicitly sized");
+        checkClipCullDistanceWholeArrayUse(
+            argument->getLine(), argument->getAsTyped(),
+            "Cannot pass to function or constructor unless it is explicitly sized");
     }
 }
 
@@ -9843,6 +9846,10 @@ TIntermBranch *TParseContext::addBranch(TOperator op,
         {
             error(loc, "function return is not matching type:", "return");
         }
+        checkClipCullDistanceWholeArrayUse(
+            expression->getLine(), expression,
+            "Cannot return from function unless it is explicitly sized");
+
         if (!mControlFlow.empty())
         {
             mControlFlow.back().hasReturn = true;
@@ -10492,7 +10499,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCallImpl(TFunctionLookup *
             callNode->setLine(loc);
             checkImageMemoryAccessForUserDefinedFunctions(fnCandidate, callNode);
             functionCallRValueLValueErrorCheck(fnCandidate, callNode);
-            functionCallClipCullDistanceCheck(fnCandidate, callNode);
+            functionCallClipCullDistanceCheck(*callNode->getSequence());
             functionCallFragDataCheck(fnCandidate, callNode);
             trackSamplersPassedToFunction(fnCandidate, callNode);
 
