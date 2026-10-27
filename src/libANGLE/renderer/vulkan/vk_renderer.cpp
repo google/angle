@@ -6255,7 +6255,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, splitCrossFormatLayeredImageCopy,
                             isQualcommProprietary && (isAdreno622 || isAdreno702));
     ANGLE_FEATURE_CONDITION(&mFeatures, mutableFormatForIntColorImages,
-                            isQualcommProprietary && isAdreno702);
+                            isQualcommProprietary && (isAdreno622 || isAdreno702));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsImageFormatList,
