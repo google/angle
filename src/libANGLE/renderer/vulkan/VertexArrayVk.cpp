@@ -1115,11 +1115,8 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
            prevEnabledNowDisabledAttribBits);
     if (prevEnabledNowDisabledAttribBits.any())
     {
-        // disabled attributes maybe active or inactive. We only need to set to empty buffer for
-        // inactive ones.
-        const gl::AttributesMask disabledInactiveAttribBits =
-            prevEnabledNowDisabledAttribBits & ~context->getActiveDefaultAttribsMask();
-        syncDirtyDisabledAttribs(contextVk, disabledInactiveAttribBits);
+        // Sync the disabled attributes, active or inactive.
+        syncDirtyDisabledAttribs(contextVk, prevEnabledNowDisabledAttribBits);
 
         // default attributes handler will update active attributes.
         const gl::AttributesMask defaultAttribBits =
