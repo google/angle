@@ -8,7 +8,7 @@
 //
 
 #include <gtest/gtest.h>
-#include "common/unsafe_buffers.h"
+#include "common/span.h"
 
 #include <vector>
 
@@ -729,7 +729,7 @@ class EGLPreRotationBlitFramebufferTest : public EGLPreRotationLargeSurfaceTest
     void initializeGeometry(GLuint program,
                             GLBuffer *indexBuffer,
                             GLVertexArray *vertexArray,
-                            GLBuffer *vertexBuffers)
+                            Span<GLBuffer, 2> vertexBuffers)
     {
         GLint positionLocation = glGetAttribLocation(program, "position");
         ASSERT_NE(-1, positionLocation);
@@ -741,14 +741,14 @@ class EGLPreRotationBlitFramebufferTest : public EGLPreRotationLargeSurfaceTest
 
         std::vector<GLushort> indices = {0, 1, 2, 2, 3, 0};
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indices.size(), &indices[0],
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Span(indices).size_bytes(), indices.data(),
                      GL_STATIC_DRAW);
 
         std::vector<GLfloat> positionData = {// quad vertices
                                              -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f};
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffers[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * positionData.size(), &positionData[0],
+        glBufferData(GL_ARRAY_BUFFER, Span(positionData).size_bytes(), positionData.data(),
                      GL_STATIC_DRAW);
         glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2,
                               nullptr);
@@ -757,8 +757,8 @@ class EGLPreRotationBlitFramebufferTest : public EGLPreRotationLargeSurfaceTest
         std::vector<GLfloat> redGreenData = {// green(0,1), black(0,0), red(1,0), yellow(1,1)
                                              0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f};
 
-        glBindBuffer(GL_ARRAY_BUFFER, ANGLE_UNSAFE_TODO(vertexBuffers[1]));
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * redGreenData.size(), &redGreenData[0],
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffers[1]);
+        glBufferData(GL_ARRAY_BUFFER, Span(redGreenData).size_bytes(), redGreenData.data(),
                      GL_STATIC_DRAW);
         glVertexAttribPointer(redGreenLocation, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2,
                               nullptr);
