@@ -7,10 +7,6 @@
 //   Various tests related for Frambuffers.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 #include <array>
 
 #include "common/mathutil.h"
@@ -6572,7 +6568,7 @@ TEST_P(FramebufferTest_ES31, ClearWithColorMasksRGB5A1)
     std::vector<uint8_t> epsilon = {0, 0, 0, 0};
     for (int i = 0; i < 4; ++i)
     {
-        glGetIntegerv(GL_RED_BITS + i, bits.data() + i);
+        glGetIntegerv(GL_RED_BITS + i, &bits[i]);
         epsilon[i] =
             std::min(255u, static_cast<unsigned int>(
                                ceil(1.0 + 255.0 * (1.0 / pow(2.0, static_cast<double>(bits[i]))))));
@@ -6654,7 +6650,7 @@ void clearColorMorePrecisionThanFBOFormatNoDithering(const GLint &fboInternalFor
     std::vector<uint8_t> epsilon = {0, 0, 0, 0};
     for (int i = 0; i < 4; ++i)
     {
-        glGetIntegerv(GL_RED_BITS + i, bits.data() + i);
+        glGetIntegerv(GL_RED_BITS + i, &bits[i]);
         epsilon[i] =
             std::min(255u, static_cast<unsigned int>(
                                ceil(1.0 + 255.0 * (1.0 / pow(2.0, static_cast<double>(bits[i]))))));
@@ -9359,7 +9355,7 @@ void main()
 
         if (invalidate == Invalidate::AfterEachResolve)
         {
-            glInvalidateFramebuffer(GL_READ_FRAMEBUFFER, 1, discards + 1);
+            glInvalidateFramebuffer(GL_READ_FRAMEBUFFER, 1, &discards[1]);
         }
         else if (invalidate == Invalidate::AllAtEnd)
         {
@@ -11283,16 +11279,17 @@ void main() {
     };
 
     // Same-FBO respecification with colliding layouts CA -> CB (Carrier 1 ch=C).
-    const GLenum layoutCA[6] = {GL_RG32UI, GL_RG32UI, GL_RGBA16UI, GL_R8UI, GL_R32UI, GL_RG8UI};
-    const GLenum layoutCB[7] = {GL_R32UI, GL_RGBA16UI, GL_RG32UI, GL_R16UI,
-                                GL_RGBA8, GL_RGBA32UI, GL_R16UI};
+    constexpr std::array<GLenum, 6> layoutCA = {GL_RG32UI, GL_RG32UI, GL_RGBA16UI,
+                                                GL_R8UI,   GL_R32UI,  GL_RG8UI};
+    constexpr std::array<GLenum, 7> layoutCB = {GL_R32UI, GL_RGBA16UI, GL_RG32UI, GL_R16UI,
+                                                GL_RGBA8, GL_RGBA32UI, GL_R16UI};
 
     GLFramebuffer fboRespec;
     GLTexture texC0Float;
     std::array<GLTexture, 6> texCADisabled;
     glBindFramebuffer(GL_FRAMEBUFFER, fboRespec);
     attachStorageTex(GL_RGBA8, GL_COLOR_ATTACHMENT0, texC0Float);
-    for (size_t i = 0; i < 6; ++i)
+    for (size_t i = 0; i < layoutCA.size(); ++i)
     {
         attachStorageTex(layoutCA[i], static_cast<GLenum>(GL_COLOR_ATTACHMENT1 + i),
                          texCADisabled[i]);
@@ -11312,7 +11309,7 @@ void main() {
     GLTexture texC0Uint;
     std::array<GLTexture, 7> texCBDisabled;
     attachStorageTex(GL_RGBA32UI, GL_COLOR_ATTACHMENT0, texC0Uint);
-    for (size_t i = 0; i < 7; ++i)
+    for (size_t i = 0; i < layoutCB.size(); ++i)
     {
         attachStorageTex(layoutCB[i], static_cast<GLenum>(GL_COLOR_ATTACHMENT1 + i),
                          texCBDisabled[i]);
@@ -11367,16 +11364,17 @@ void main() {
     };
 
     // Colliding disabled draw-buffer layouts A and B (Carrier 1 ch=A, hash = 0xbcc863eb).
-    const GLenum layoutA[6] = {GL_R32UI, GL_RG32UI, GL_RG32UI, GL_RGBA32UI, GL_RGBA16UI, GL_RG32UI};
-    const GLenum layoutB[7] = {GL_R8,      GL_R32UI, GL_RG8UI,  GL_R32UI,
-                               GL_RGBA8UI, GL_R32UI, GL_RGBA8UI};
+    constexpr std::array<GLenum, 6> layoutA = {GL_R32UI,    GL_RG32UI,   GL_RG32UI,
+                                               GL_RGBA32UI, GL_RGBA16UI, GL_RG32UI};
+    constexpr std::array<GLenum, 7> layoutB = {GL_R8,      GL_R32UI, GL_RG8UI,  GL_R32UI,
+                                               GL_RGBA8UI, GL_R32UI, GL_RGBA8UI};
 
     GLFramebuffer fboA;
     GLTexture texA0;
     std::array<GLTexture, 6> texADisabled;
     glBindFramebuffer(GL_FRAMEBUFFER, fboA);
     attachStorageTex(GL_RGBA8, GL_COLOR_ATTACHMENT0, texA0);
-    for (size_t i = 0; i < 6; ++i)
+    for (size_t i = 0; i < layoutA.size(); ++i)
     {
         attachStorageTex(layoutA[i], static_cast<GLenum>(GL_COLOR_ATTACHMENT1 + i),
                          texADisabled[i]);
@@ -11395,7 +11393,7 @@ void main() {
     std::array<GLTexture, 7> texBDisabled;
     glBindFramebuffer(GL_FRAMEBUFFER, fboB);
     attachStorageTex(GL_RGBA8, GL_COLOR_ATTACHMENT0, texB0);
-    for (size_t i = 0; i < 7; ++i)
+    for (size_t i = 0; i < layoutB.size(); ++i)
     {
         attachStorageTex(layoutB[i], static_cast<GLenum>(GL_COLOR_ATTACHMENT1 + i),
                          texBDisabled[i]);
