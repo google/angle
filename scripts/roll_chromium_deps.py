@@ -34,7 +34,6 @@ ANGLE_CHROMIUM_DEPS = [
     'buildtools',
     'buildtools/linux64',
     'buildtools/mac',
-    'buildtools/reclient',
     'buildtools/win',
     'testing',
     'third_party/abseil-cpp',

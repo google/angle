@@ -128,10 +128,6 @@ vars = {
   # RBE project to download rewrapper config files for. Only needed if
   # different from the project used in 'rbe_instance'
   'rewrapper_cfg_project': Str(''),
-  # reclient CIPD package
-  'reclient_package': 'infra/rbe/client/',
-  # reclient CIPD package version
-  'reclient_version': 're_client_version:0.185.0.db415f21-gomaip',
 
   # siso CIPD package version.
   'siso_version': 'git_revision:dfc32e4edca158cff2b64a1658ee3940f0116b3a',
@@ -634,17 +630,6 @@ deps = {
     ],
     'dep_type': 'cipd',
     'condition': 'not build_with_chromium and checkout_mac',
-  },
-
-  'buildtools/reclient': {
-    'packages': [
-      {
-        'package': Var('reclient_package') + '${{platform}}',
-        'version': Var('reclient_version'),
-      }
-    ],
-    'dep_type': 'cipd',
-    'condition': 'not build_with_chromium and not (host_os == "linux" and host_cpu == "arm64")',
   },
 
   'buildtools/win': {
