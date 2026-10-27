@@ -4756,7 +4756,10 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     vk::LevelIndex baseLevelVK = image->toVkLevel(baseLevelGL);
     vk::LevelIndex maxLevelVK  = baseLevelVK + (levelCount - 1);
 
-    // Transition entire image to color attachment layout
+    // Transition the entire image to color attachment layout. Passing |resources| to
+    // getOutsideRenderPassCommandBuffer invokes ContextVk::onResourceAccess, which
+    // closes any open render pass using |image|, records the layout transition barrier,
+    // marks all subresources as written, and retains |image| on the command buffer.
     vk::CommandResources resources;
     resources.onImageDrawMipmapGenerationWrite(baseLevelGL, levelCount, gl::OwnerLayer(0),
                                                layerCount, VK_IMAGE_ASPECT_COLOR_BIT, image);
@@ -4850,7 +4853,9 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     // Sample from mipLevel N and draw to mipLevel N+1
     for (vk::LevelIndex srcLevelVk = baseLevelVK; srcLevelVk < maxLevelVK;)
     {
-        // Transition "srcLevel" of all layers to shader read only optimal layout
+        // Transition "srcLevel" of all layers to shader read only optimal layout.
+        // Re-acquire the outside-render-pass command buffer on each iteration because
+        // startRenderPass / flushCommandsAndEndRenderPass may flush and replace it.
         outsideCommandBuffer = nullptr;
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &outsideCommandBuffer));
 
@@ -4929,9 +4934,15 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
         srcLevelVk = dstLevelVk;
     }
 
-    // Transition the last mipLevel to shader read only optimal layout
+    // Transition the last mipLevel to shader read only optimal layout.
+    // Note: vk::Resource only stores the latest QueueSerial per context. Re-acquiring the
+    // outside-render-pass command buffer with |finalResources| after the loop's final render pass
+    // stamps |image| with the final command buffer's serial, ensuring |image| is not garbage
+    // collected until this command buffer (and all preceding loop submissions) finishes.
+    vk::CommandResources finalResources;
+    finalResources.onResourceManualBarrier(image);
     outsideCommandBuffer = nullptr;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &outsideCommandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(finalResources, &outsideCommandBuffer));
 
     barrier.subresourceRange.baseMipLevel = maxLevelVK.get();
     outsideCommandBuffer->imageBarrier(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,

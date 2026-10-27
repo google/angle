@@ -4286,6 +4286,7 @@ class CommandResources : angle::NonCopyable
     }
     void onExternalAcquireRelease(ImageHelper *image) { onResourceAccess(image); }
     void onQueryAccess(QueryHelper *query) { onResourceAccess(query); }
+    void onResourceManualBarrier(Resource *resource) { onResourceAccess(resource); }
     void onBufferExternalAcquireRelease(BufferHelper *buffer);
 
     // The limits reflect the current maximum concurrent usage of each resource type.  ASSERTs will
