@@ -1128,6 +1128,7 @@
 480069042 PIXEL10 GLES : CopyTextureVariationsTest.CopyTexture/ES2_OpenGLES__RGBAToSRGBA* = SKIP
 480069042 PIXEL10 GLES : CopyTextureVariationsTest.CopyTexture/ES2_OpenGLES__RGBToSRGBA* = SKIP
 480069042 PIXEL10 GLES : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
+480069042 PIXEL10 GLES : DepthStencilFormatsTestES3.DepthStencilSubImageNonZeroOffset/* = SKIP
 480069042 PIXEL10 GLES : DepthStencilFormatsTestES31.DrawReadDrawDispatch/* = SKIP
 480069042 PIXEL10 GLES : DepthStencilTestES3.FramebufferClearThenStencilAttachedThenStencilTestState/* = SKIP
 480069042 PIXEL10 GLES : DepthStencilTestES3.FramebufferClearThenStencilTestStateThenStencilAttached/* = SKIP
