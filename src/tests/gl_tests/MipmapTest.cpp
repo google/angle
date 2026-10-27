@@ -1666,7 +1666,7 @@ TEST_P(MipmapTestES3, MipmapsForTexture3DBlendAndReadback)
     glBindTexture(GL_TEXTURE_3D, mTexture);
     glTexStorage3D(GL_TEXTURE_3D, kLevelCount, GL_RGBA8, kWidth, kHeight, kDepth);
 
-    // Fill the first layer with green
+    // Fill the first level with green
     const std::vector<GLColor> uploadData(kWidth * kHeight * kDepth, GLColor::green);
     glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, kWidth, kHeight, kDepth, GL_RGBA, GL_UNSIGNED_BYTE,
                     uploadData.data());

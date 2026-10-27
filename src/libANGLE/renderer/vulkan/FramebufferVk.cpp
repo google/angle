@@ -424,7 +424,10 @@ angle::Result UnresolveYuvImage(ContextVk *contextVk,
 }  // anonymous namespace
 
 FramebufferVk::FramebufferVk(vk::Renderer *renderer, const gl::FramebufferState &state)
-    : FramebufferImpl(state), mBackbuffer(nullptr), mActiveColorComponentMasksForClear(0)
+    : FramebufferImpl(state),
+      mBackbuffer(nullptr),
+      mActiveColorComponentMasksForClear(0),
+      mFragmentShadingRateImage(VK_IMAGE_TYPE_2D)
 {
     if (mState.isDefault())
     {

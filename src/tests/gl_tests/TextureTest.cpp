@@ -2544,7 +2544,6 @@ TEST_P(Texture2DTest, InterleavedSupersedingTextureUpdates)
 {
     constexpr uint32_t kTexWidth  = 3840;
     constexpr uint32_t kTexHeight = 2160;
-    constexpr uint32_t kBpp       = 4;
 
     // Create the texture
     glActiveTexture(GL_TEXTURE0);
@@ -2557,13 +2556,13 @@ TEST_P(Texture2DTest, InterleavedSupersedingTextureUpdates)
 
     // 1. One big upload followed by many small identical uploads
     // Update the entire texture
-    std::vector<GLubyte> fullTextureData(kTexWidth * kTexHeight * kBpp, 128);
+    const std::vector<GLColor> fullTextureData(kTexWidth * kTexHeight, GLColor(128, 128, 128, 128));
     constexpr GLColor kFullTextureColor = GLColor(128u, 128u, 128u, 128u);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTexWidth, kTexHeight, GL_RGBA, GL_UNSIGNED_BYTE,
                     fullTextureData.data());
 
     // Make a number of identical updates to the right half of the texture
-    std::vector<GLubyte> rightHalfData(kTexWidth * kTexHeight * kBpp, 201);
+    const std::vector<GLColor> rightHalfData(kTexWidth * kTexHeight, GLColor(201, 201, 201, 201));
     constexpr GLColor kRightHalfColor = GLColor(201u, 201u, 201u, 201u);
     for (uint32_t iteration = 0; iteration < 10; iteration++)
     {
@@ -2581,30 +2580,34 @@ TEST_P(Texture2DTest, InterleavedSupersedingTextureUpdates)
 
     // 2. Some small uploads followed by one big upload followed by many identical uploads
     // Clear the entire texture
-    std::vector<GLubyte> zeroTextureData(kTexWidth * kTexHeight * kBpp, 255);
+    const std::vector<GLColor> zeroTextureData(kTexWidth * kTexHeight, GLColor(255, 255, 255, 255));
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTexWidth, kTexHeight, GL_RGBA, GL_UNSIGNED_BYTE,
                     zeroTextureData.data());
 
     // Update the top left quadrant of the texture
-    std::vector<GLubyte> topLeftQuadrantData(kTexWidth * kTexHeight * kBpp, 128);
+    const std::vector<GLColor> topLeftQuadrantData(kTexWidth * kTexHeight,
+                                                   GLColor(128, 128, 128, 128));
     constexpr GLColor kTopLeftQuandrantTextureColor = GLColor(128u, 128u, 128u, 128u);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, kTexHeight / 2, kTexWidth / 2, kTexHeight / 2, GL_RGBA,
                     GL_UNSIGNED_BYTE, topLeftQuadrantData.data());
 
     // Update the top right quadrant of the texture
-    std::vector<GLubyte> topRightQuadrantData(kTexWidth * kTexHeight * kBpp, 156);
+    const std::vector<GLColor> topRightQuadrantData(kTexWidth * kTexHeight,
+                                                    GLColor(156, 156, 156, 156));
     constexpr GLColor kTopRightQuadrantTextureColor = GLColor(156u, 156u, 156u, 156u);
     glTexSubImage2D(GL_TEXTURE_2D, 0, kTexWidth / 2, kTexHeight / 2, kTexWidth / 2, kTexHeight / 2,
                     GL_RGBA, GL_UNSIGNED_BYTE, topRightQuadrantData.data());
 
     // Update the bottom half of the texture
-    std::vector<GLubyte> bottomHalfTextureData(kTexWidth * kTexHeight * kBpp, 187);
+    const std::vector<GLColor> bottomHalfTextureData(kTexWidth * kTexHeight,
+                                                     GLColor(187, 187, 187, 187));
     constexpr GLColor kBottomHalfTextureColor = GLColor(187u, 187u, 187u, 187u);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTexWidth, kTexHeight / 2, GL_RGBA, GL_UNSIGNED_BYTE,
                     bottomHalfTextureData.data());
 
     // Make a number of identical updates to the bottom right quadrant of the texture
-    std::vector<GLubyte> bottomRightQuadrantData(kTexWidth * kTexHeight * kBpp, 201);
+    const std::vector<GLColor> bottomRightQuadrantData(kTexWidth * kTexHeight,
+                                                       GLColor(201, 201, 201, 201));
     constexpr GLColor kBottomRightQuadrantColor = GLColor(201u, 201u, 201u, 201u);
     for (uint32_t iteration = 0; iteration < 10; iteration++)
     {
@@ -2656,8 +2659,7 @@ TEST_P(Texture2DTest, ManySupersedingTextureUpdates)
 {
     constexpr uint32_t kTexWidth  = 3840;
     constexpr uint32_t kTexHeight = 2160;
-    constexpr uint32_t kBpp       = 4;
-    std::vector<GLubyte> data(kTexWidth * kTexHeight * kBpp, 0);
+    const std::vector<GLColor> data(kTexWidth * kTexHeight, GLColor::transparentBlack);
 
     // Create the texture
     glActiveTexture(GL_TEXTURE0);
@@ -2677,8 +2679,7 @@ TEST_P(Texture2DTest, ManySupersedingTextureUpdates)
     }
 
     // Upload different color to the whole texture thus superseding all prior updates.
-    std::vector<GLubyte> supersedingData(kTexWidth * kTexHeight * kBpp, 128);
-    constexpr GLColor kGray = GLColor(128u, 128u, 128u, 128u);
+    const std::vector<GLColor> supersedingData(kTexWidth * kTexHeight, GLColor(128, 128, 128, 128));
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTexWidth, kTexHeight, GL_RGBA, GL_UNSIGNED_BYTE,
                     supersedingData.data());
 
@@ -2687,7 +2688,127 @@ TEST_P(Texture2DTest, ManySupersedingTextureUpdates)
     glUniform1i(mTexture2DUniformLocation, 0);
     drawQuad(mProgram, "position", 0.5f);
     EXPECT_GL_NO_ERROR();
-    EXPECT_PIXEL_COLOR_EQ(0, 0, kGray);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, supersedingData[0]);
+}
+
+// Test that repeated calls to glTexSubImage3D with superseding updates works
+TEST_P(Texture3DTestES3, ManySupersedingTextureUpdates)
+{
+    constexpr uint32_t kTexWidth  = 400;
+    constexpr uint32_t kTexHeight = 400;
+    constexpr uint32_t kTexDepth  = 2;
+    const std::vector<GLColor> kSlice0(kTexWidth * kTexHeight, GLColor::blue);
+
+    // Create the texture
+    glBindTexture(GL_TEXTURE_3D, mTexture3D);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, kTexWidth, kTexHeight, kTexDepth, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_NO_ERROR);
+
+    // Issue an upload to slice 1
+    const std::vector<GLColor> kSlice1(kTexWidth * kTexHeight, GLColor::red);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 1, kTexWidth, kTexHeight, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kSlice1.data());
+
+    // Make a large number of superseding updates to slice 0
+    for (uint32_t width = kTexWidth / 2, height = kTexHeight / 2;
+         width < kTexWidth && height < kTexHeight; width++, height++)
+    {
+        glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, kTexWidth, kTexHeight, 1, GL_RGBA,
+                        GL_UNSIGNED_BYTE, kSlice0.data());
+    }
+
+    // Upload different color to the whole of slice 0 thus superseding all prior updates (except the
+    // one to slice 1).
+    const std::vector<GLColor> kSlice0Override(kTexWidth * kTexHeight, GLColor::green);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, kTexWidth, kTexHeight, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kSlice0Override.data());
+
+    constexpr char kVS[] = R"(#version 300 es
+out vec2 texcoord;
+in vec4 position;
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    texcoord = (position.xy * 0.5) + 0.5;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler3D tex3D;
+uniform float slice;
+in vec2 texcoord;
+out vec4 fragColor;
+void main()
+{
+    fragColor = texture(tex3D, vec3(texcoord, slice));
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    const GLint sliceLoc = glGetUniformLocation(program, "slice");
+
+    // Draw slice 0
+    glUniform1f(sliceLoc, 1.0 / 4.0);
+    drawQuad(program, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kSlice0Override[0]);
+
+    // Draw slice 1
+    glUniform1f(sliceLoc, 3.0 / 4.0);
+    drawQuad(program, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kSlice1[1]);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that repeated calls to glTexSubImage3D with superseding updates works
+TEST_P(Texture2DArrayTestES3, ManySupersedingTextureUpdates)
+{
+    constexpr uint32_t kTexWidth  = 400;
+    constexpr uint32_t kTexHeight = 400;
+    constexpr uint32_t kTexDepth  = 2;
+    const std::vector<GLColor> kLayer0(kTexWidth * kTexHeight, GLColor::blue);
+
+    // Create the texture
+    glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, kTexWidth, kTexHeight, kTexDepth, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_NO_ERROR);
+
+    // Issue an upload to layer 1
+    const std::vector<GLColor> kLayer1(kTexWidth * kTexHeight, GLColor::red);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 1, kTexWidth, kTexHeight, 1, GL_RGBA,
+                    GL_UNSIGNED_BYTE, kLayer1.data());
+
+    // Make a large number of superseding updates to layer 0
+    for (uint32_t width = kTexWidth / 2, height = kTexHeight / 2;
+         width < kTexWidth && height < kTexHeight; width++, height++)
+    {
+        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kTexWidth, kTexHeight, 1, GL_RGBA,
+                        GL_UNSIGNED_BYTE, kLayer0.data());
+    }
+
+    // Upload different color to the whole of layer 0 thus superseding all prior updates (except the
+    // one to layer 1).
+    const std::vector<GLColor> kLayer0Override(kTexWidth * kTexHeight, GLColor::green);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kTexWidth, kTexHeight, 1, GL_RGBA,
+                    GL_UNSIGNED_BYTE, kLayer0Override.data());
+
+    glUseProgram(mProgram);
+
+    // Draw layer 0
+    glUniform1i(mTextureArraySliceUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLayer0Override[0]);
+
+    // Draw layer 1
+    glUniform1i(mTextureArraySliceUniformLocation, 1);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLayer1[1]);
+    ASSERT_GL_NO_ERROR();
 }
 
 TEST_P(Texture2DTest, DefineMultipleLevelsWithoutMipmapping)

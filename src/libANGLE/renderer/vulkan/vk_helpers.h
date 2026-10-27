@@ -2295,7 +2295,11 @@ class ImageViewHelper;
 class ImageHelper final : public Resource, public angle::Subject
 {
   public:
-    ImageHelper();
+    ImageHelper(VkImageType imageType);
+    // In some cases, a deeply embedded ImageHelper cannot be given the image type.  In all such
+    // cases in the codebase, the image type is 2D.  When initializing the image, the correctness of
+    // mImageType is asserted.
+    ImageHelper() : ImageHelper(VK_IMAGE_TYPE_2D) {}
     ~ImageHelper() override;
 
     angle::Result init(ErrorContext *context,
@@ -2428,7 +2432,6 @@ class ImageHelper final : public Resource, public angle::Subject
     //
     angle::Result initStaging(ErrorContext *context,
                               bool hasProtectedContent,
-                              VkImageType imageType,
                               const VkExtent3D &extents,
                               angle::FormatID intendedFormatID,
                               angle::FormatID actualFormatID,

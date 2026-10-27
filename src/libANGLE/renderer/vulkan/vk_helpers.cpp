@@ -5693,8 +5693,9 @@ angle::Result InitMappableDeviceMemory(ErrorContext *context,
 }
 
 // ImageHelper implementation.
-ImageHelper::ImageHelper()
+ImageHelper::ImageHelper(VkImageType imageType)
 {
+    mImageType = imageType;
     resetCachedProperties();
     // Reserve reasonable amount of space to avoid storage reallocation.
     mSubresourceUpdates.reserve(12);
@@ -5708,7 +5709,6 @@ ImageHelper::~ImageHelper()
 
 void ImageHelper::resetCachedProperties()
 {
-    mImageType                     = VK_IMAGE_TYPE_2D;
     mTilingMode                    = VK_IMAGE_TILING_OPTIMAL;
     mCreateFlags                   = kVkImageCreateFlagsNone;
     mRequestedUsage                = 0;
@@ -5996,7 +5996,7 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
 
     Renderer *renderer = context->getRenderer();
 
-    mImageType           = gl_vk::GetImageType(textureType);
+    ASSERT(mImageType == gl_vk::GetImageType(textureType));
     mExtents             = extents;
     mRotatedAspectRatio  = false;
     mIntendedFormatID    = intendedFormatID;
@@ -6747,7 +6747,7 @@ angle::Result ImageHelper::fallbackFromTileMemory(ContextVk *contextVk)
     contextVk->getShareGroup()->imageWillFallbackFromTileMemory(this);
 
     // Move the necessary information from this ImageHelper to prevImage
-    std::unique_ptr<ImageHelper> prevImage = std::make_unique<ImageHelper>();
+    std::unique_ptr<ImageHelper> prevImage = std::make_unique<ImageHelper>(mImageType);
     // Move storage from this object to prevImage
     prevImage->copyStateAndMoveStorageFrom(this);
 
@@ -7057,7 +7057,6 @@ void ImageHelper::destroy(Renderer *renderer)
     mDeviceMemory.destroy(device);
     mVmaAllocation.destroy(renderer->getAllocator());
     mCurrentAccess        = ImageAccess::Undefined;
-    mImageType            = VK_IMAGE_TYPE_2D;
     mLayerCount           = 0;
     mLevelCount           = 0;
     mMemoryAllocationType = MemoryAllocationType::InvalidEnum;
@@ -7118,13 +7117,12 @@ angle::Result ImageHelper::init2DStaging(ErrorContext *context,
 {
     gl_vk::GetExtent(glExtents, &mExtents);
 
-    return initStaging(context, hasProtectedContent, VK_IMAGE_TYPE_2D, mExtents, intendedFormatID,
-                       actualFormatID, 1, usage, 1, layerCount);
+    return initStaging(context, hasProtectedContent, mExtents, intendedFormatID, actualFormatID, 1,
+                       usage, 1, layerCount);
 }
 
 angle::Result ImageHelper::initStaging(ErrorContext *context,
                                        bool hasProtectedContent,
-                                       VkImageType imageType,
                                        const VkExtent3D &extents,
                                        angle::FormatID intendedFormatID,
                                        angle::FormatID actualFormatID,
@@ -7138,7 +7136,6 @@ angle::Result ImageHelper::initStaging(ErrorContext *context,
     ASSERT(!IsAnySubresourceContentDefined(mVkImageStencilContentDefined));
     vk::Renderer *renderer = context->getRenderer();
 
-    mImageType          = imageType;
     mExtents            = extents;
     mRotatedAspectRatio = false;
     mIntendedFormatID   = intendedFormatID;
@@ -7150,8 +7147,8 @@ angle::Result ImageHelper::initStaging(ErrorContext *context,
     mRequestedUsage     = usage;
 
     // Validate that mLayerCount is compatible with the image type
-    ASSERT(imageType != VK_IMAGE_TYPE_3D || mLayerCount == 1);
-    ASSERT(imageType != VK_IMAGE_TYPE_2D || mExtents.depth == 1);
+    ASSERT(mImageType != VK_IMAGE_TYPE_3D || mLayerCount == 1);
+    ASSERT(mImageType != VK_IMAGE_TYPE_2D || mExtents.depth == 1);
 
     mCurrentAccess = ImageAccess::Undefined;
 
@@ -10459,8 +10456,8 @@ void ImageHelper::copyStateAndMoveStorageFrom(ImageHelper *other)
     // Copy over state
     mUse = other->mUse;
 
+    ASSERT(mImageType == other->mImageType);
     mVkImageCreateInfo  = other->mVkImageCreateInfo;
-    mImageType          = other->mImageType;
     mTilingMode         = other->mTilingMode;
     mCreateFlags        = other->mCreateFlags;
     mRequestedUsage     = other->mRequestedUsage;
@@ -10536,7 +10533,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(
     contextVk->getShareGroup()->finalizeImageLayoutInAllSharedContexts(this);
 
     std::unique_ptr<RefCounted<ImageHelper>> prevImage =
-        std::make_unique<RefCounted<ImageHelper>>();
+        std::make_unique<RefCounted<ImageHelper>>(mImageType);
 
     // Move storage from this object to prevImage
     prevImage->get().copyStateAndMoveStorageFrom(this);
@@ -11378,6 +11375,11 @@ void ImageHelper::pruneSupersededUpdatesForLevelImpl(ContextVk *contextVk,
                           &boundingBox](SubresourceUpdate &update) {
         if (IsClear(update.updateSource) && reason == PruneReason::MemoryOptimization)
         {
+            // Staged clears don't consume much memory, so no point in pruning them to reduce
+            // memory.  More importantly, MemoryOptimization pruning may happen while the image has
+            // not been initialized yet (only allocated by TextureVk and updates staged against it),
+            // in which case Clear updates that specify kEntireLevel cannot be resolved because the
+            // image dimensions are unknown.
             return false;
         }
         VkDeviceSize updateSize       = 0;
@@ -12024,7 +12026,7 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
     // If the source image is multisampled, we need to resolve it into a temporary image before
     // performing a readback.
     bool isMultisampled = mSamples > 1;
-    RendererScoped<ImageHelper> resolvedImage(contextVk->getRenderer());
+    RendererScoped<ImageHelper> resolvedImage(contextVk->getRenderer(), VK_IMAGE_TYPE_2D);
 
     ImageHelper *src = this;
 
@@ -12561,6 +12563,7 @@ void ImageHelper::getDestSubresource(const SubresourceUpdate &update,
                                      uint32_t *layerCountOut) const
 {
     const bool is3D = mImageType == VK_IMAGE_TYPE_3D;
+
     if (IsClear(update.updateSource))
     {
         *baseLayerOut  = gl::OwnerLayer(update.data.clear.layerIndex);

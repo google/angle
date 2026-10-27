@@ -1763,6 +1763,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         vk::ImageHelper image;
         vk::ImageView view;
         vk::ImageOrBufferViewSerial serial;
+        NullStorageImageEntry() : image(VK_IMAGE_TYPE_2D) {}
     };
     angle::HashMap<GLenum, std::unique_ptr<NullStorageImageEntry>> mNullStorageImages;
 
