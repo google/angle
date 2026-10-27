@@ -281,6 +281,7 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
   protected:
     void addRef() const
     {
+#if defined(ANGLE_ENABLE_ASSERTS)
         // Calling addRef() a second time on a thread that already holds a display reference is
         // forbidden: if another thread enters terminate() in between, it will set kTerminatingBit
         // and block in waitUntilUnreferenced(1) waiting for this thread's first reference to be
@@ -288,6 +289,7 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
         // resulting in a deadlock. Use duplicateRef() when the current thread already holds a
         // reference.
         ASSERT(GetCurrentThreadDisplayRefCount() == 0);
+#endif
         // std::memory_order_relaxed might be sufficient here, but std::memory_order_acquire is used
         // for safety since there is no performance difference.
         uint32_t count = mRefCount.load(std::memory_order_acquire);
@@ -308,18 +310,22 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     }
     void duplicateRef() const
     {
+#if defined(ANGLE_ENABLE_ASSERTS)
         // Since the current thread already holds a display reference, terminate() on another thread
         // is guaranteed to be blocked in waitUntilUnreferenced(1) and cannot proceed until all
         // references are released. Thus, duplicating an existing reference must not wait on
         // kTerminatingBit (which would deadlock with waitUntilUnreferenced(1)).
         ASSERT(GetCurrentThreadDisplayRefCount() > 0);
+#endif
         uint32_t prev = mRefCount.fetch_add(1, std::memory_order_acquire);
         ASSERT((prev & kRefCountMask) > 0);
         IncrementCurrentThreadDisplayRefCount();
     }
     void releaseRef() const
     {
+#if defined(ANGLE_ENABLE_ASSERTS)
         ASSERT(GetCurrentThreadDisplayRefCount() > 0);
+#endif
         DecrementCurrentThreadDisplayRefCount();
         uint32_t prev = mRefCount.fetch_sub(1, std::memory_order_release);
         ASSERT((prev & kRefCountMask) > 0);
