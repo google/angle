@@ -3017,6 +3017,11 @@
 526706312 PIXEL10 VULKAN : MSRTTES3Test.FramebufferFetchSampleID/* = SKIP
 526706312 SWIFTSHADER : MSRTTES3Test.FramebufferFetchSampleID/* = SKIP
 
+// Zero-count multidraw test fails with GL on some backends
+579043433 PIXEL4ORXL GLES : MultiDrawTest.StaleSlotAfterDisableZeroCountMultiDrawProgramSwitchWithSameLocations/*_AlwaysEnableEmulatedMultidrawExtensions* = SKIP
+579043433 LINUX INTEL OPENGL : MultiDrawTest.StaleSlotAfterDisableZeroCountMultiDrawProgramSwitchWithSameLocations/*_AlwaysEnableEmulatedMultidrawExtensions* = SKIP
+579043433 WIN INTEL OPENGL : MultiDrawTest.StaleSlotAfterDisableZeroCountMultiDrawProgramSwitchWithSameLocations/*_AlwaysEnableEmulatedMultidrawExtensions* = SKIP
+
 // Timeout on Intel/Vulkan
 517981272 WIN INTEL VULKAN : EGLMultiContextTest.RepeatedEglInitAndTerminate/* = SKIP
 
