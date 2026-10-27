@@ -274,6 +274,20 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
                       Surface *readSurface,
                       gl::Context *context);
 
+    // After eglTerminate(), makeCurrent() schedules an internal cleanup of the display whenever the
+    // current context changes.  The cleanup invalidates the contexts that are no longer current,
+    // and terminates the display once none are left.  Entry points that lock the display run it
+    // before unlocking it (see Display::onUnlockMutex()), and eglMakeCurrent() runs it in an
+    // unlocked tail call.
+    bool hasPendingInternalCleanup() const
+    {
+        return mPendingInternalCleanup.load(std::memory_order_acquire);
+    }
+    // Runs the internal cleanup if it is still pending.  This locks the display and waits until no
+    // other thread references it, so the calling thread must not hold a reference to the display,
+    // nor any of its surface or context locks.
+    void runPendingInternalCleanup() const;
+
     Error destroySurfaceImpl(Surface *surface);
 
     virtual void releaseDisplayShareGroupResource(const gl::Context &context) = 0;
@@ -338,7 +352,6 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     static void IncrementCurrentThreadDisplayRefCount() {}
     static void DecrementCurrentThreadDisplayRefCount() {}
 #endif
-    void onPendingInternalCleanup() const;
     bool isTerminating() const;
 
     // Returns whether the display has been initialized, disregarding whether it is currently being
@@ -686,14 +699,6 @@ class [[nodiscard]] ScopedDisplayRefT final
         if (mDisplay != nullptr)
         {
             mDisplay->releaseRef();
-            if constexpr (std::is_same_v<DisplayT, ThreadSafeDisplay>)
-            {
-                if (ANGLE_UNLIKELY(
-                        mDisplay->mPendingInternalCleanup.load(std::memory_order_acquire)))
-                {
-                    mDisplay->onPendingInternalCleanup();
-                }
-            }
         }
     }
 

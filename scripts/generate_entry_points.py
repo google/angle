@@ -3887,10 +3887,14 @@ def get_unlocked_tail_call(api, cmd_name):
     # - glFlush, glFinish -> May perform the CPU throttling from the implicit swap buffers call when
     #   the current Window Surface is in the single buffer mode.
     #
+    # - eglMakeCurrent -> Runs the internal cleanup of a display that eglTerminate() was called on,
+    #   once the entry point no longer holds the display or any of its surface or context locks
+    #
     if (cmd_name in [
             'eglCreateWindowSurface', 'eglCreatePlatformWindowSurface',
             'eglCreatePlatformWindowSurfaceEXT', 'eglPrepareSwapBuffersANGLE', 'glFinishFenceNV',
-            'glCompileShader', 'glLinkProgram', 'glShaderBinary', 'glFlush', 'glFinish'
+            'glCompileShader', 'glLinkProgram', 'glShaderBinary', 'glFlush', 'glFinish',
+            'eglMakeCurrent'
     ] or cmd_name.startswith('glTexImage2D') or cmd_name.startswith('glTexImage3D') or
             cmd_name.startswith('glTexSubImage2D') or cmd_name.startswith('glTexSubImage3D') or
             cmd_name.startswith('glCompressedTexImage2D') or

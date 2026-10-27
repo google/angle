@@ -487,6 +487,17 @@ EGLBoolean MakeCurrent(Thread *thread,
             thread,
             display->makeCurrent(thread, previousContext, drawSurface, readSurface, context),
             "eglMakeCurrent", GetContextIfValid(display, contextID), EGL_FALSE);
+
+        // After eglTerminate(), changing the current context schedules an internal cleanup of the
+        // display: it invalidates the contexts that are no longer current, and fully terminates the
+        // display only once no context is current on any thread.  It waits for all other references
+        // to the display to go away, and this entry point holds one, along with surface and context
+        // locks, until it returns.  Run it after they are released.
+        if (display->hasPendingInternalCleanup())
+        {
+            egl::Display::GetCurrentThreadUnlockedTailCall()->add(
+                [display](void *) { display->runPendingInternalCleanup(); });
+        }
     }
 
     thread->setSuccess();

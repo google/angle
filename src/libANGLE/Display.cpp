@@ -1272,7 +1272,7 @@ bool ThreadSafeDisplay::isValidContext(const gl::ContextID contextID) const
     return getContext(contextID) != nullptr;
 }
 
-void ThreadSafeDisplay::onPendingInternalCleanup() const
+void ThreadSafeDisplay::runPendingInternalCleanup() const
 {
     if (mPendingInternalCleanup.exchange(false, std::memory_order_acq_rel))
     {
@@ -2275,6 +2275,8 @@ Error ThreadSafeDisplay::makeCurrent(Thread *thread,
     // If eglTerminate() has previously been called and Context was changed, schedule
     // InternalCleanup to invalidate any non-current Contexts, and possibly fully terminate the
     // Display and release all of its resources once the entry point's surface locks are released.
+    // The caller runs it: eglMakeCurrent() in an unlocked tail call, and the entry points that lock
+    // the display before unlocking it (Display::releaseThread() or Display::onUnlockMutex()).
     if (mTerminatedByApi.load(std::memory_order_acquire) && contextChanged)
     {
         mPendingInternalCleanup.store(true, std::memory_order_release);
