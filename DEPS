@@ -280,7 +280,7 @@ vars = {
   'checkout_angle_restricted_trace_egypt_1500': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_eight_ball_pool': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_empires_and_puzzles': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_epic_seven': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_epic_seven': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_eve_echoes': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_evony_the_kings_return': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_extreme_car_driving_simulator': 'checkout_extra_traces',
@@ -382,6 +382,8 @@ vars = {
   'checkout_angle_restricted_trace_match_factory': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_match_masters': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_matching_story': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_matchington_mansion': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_meme_bots_brainrot_chase_rooms': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_mementomori_afkrpg': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_merge_dragons': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_merge_mansion': 'checkout_extra_traces',
@@ -564,7 +566,7 @@ vars = {
   'checkout_angle_restricted_trace_wayward_souls': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_whatsapp': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_whiteout_survival': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_wizard_of_oz_slots_games': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_wizard_of_oz_slots_games': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_woodoku': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_words_crush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_words_of_wonders': 'checkout_extra_traces',
@@ -3718,6 +3720,26 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_matching_story',
+  },
+  'src/tests/restricted_traces/matchington_mansion': {
+      'packages': [
+        {
+            'package': 'angle/traces/matchington_mansion',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_matchington_mansion',
+  },
+  'src/tests/restricted_traces/meme_bots_brainrot_chase_rooms': {
+      'packages': [
+        {
+            'package': 'angle/traces/meme_bots_brainrot_chase_rooms',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_meme_bots_brainrot_chase_rooms',
   },
   'src/tests/restricted_traces/mementomori_afkrpg': {
       'packages': [
