@@ -4958,7 +4958,7 @@ angle::Result Context::prepareForClearBuffer(GLenum buffer, GLint drawbuffer)
     return syncStateForClear();
 }
 
-ANGLE_INLINE angle::Result Context::prepareForCopyImage()
+angle::Result Context::prepareForCopyImage()
 {
     ANGLE_TRY(syncDirtyObjects(mCopyImageDirtyObjects, Command::CopyImage));
     return syncDirtyBits(mCopyImageDirtyBits, kCopyImageExtendedDirtyBits, Command::CopyImage);

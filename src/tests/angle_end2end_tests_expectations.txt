@@ -32,6 +32,8 @@
 532592076 : ImageTestES3RobustInit.RobustClearInTarget/* = SKIP
 532592076 : ImageTestES3RobustInit.NonZeroLevelAndSliceReadback/* = SKIP
 532592076 : ImageTestES3RobustInit.NonZeroLevelAndSliceReadbackRenderbuffer/* = SKIP
+532592076 : ImageTestES3RobustInit.SelfCopyPartiallyOutOfBounds/* = SKIP
+532592076 : ImageTestES3RobustInit.SelfSubCopyPartiallyOutOfBounds/* = SKIP
 // Array external samplers are not supported by Vulkan
 158215272 VULKAN : ImageTestES3.SourceYUVTextureTargetExternalRGBSampleArray/* = SKIP
 
@@ -870,6 +872,8 @@
 563868441 PIXEL4ORXL GLES : ComputeShaderTest.DispatchDrawBlend/* = SKIP
 568010373 PIXEL4ORXL GLES : WebGL2GLSLTest.UniformArrayDynamicIndexShortCircuit/* = SKIP
 573893628 PIXEL4ORXL GLES : GLSLTest_ES3.SwitchWithShadowVariableDeclaration/* = SKIP
+579047127 PIXEL4ORXL GLES : ImageTestES3RobustInit.SelfCopy/* = SKIP
+579047127 PIXEL4ORXL GLES : ImageTestES3RobustInit.SelfSubCopy/* = SKIP
 
 42267082 PIXEL4ORXL GLES : BlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42267082 PIXEL4ORXL GLES : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
@@ -1451,6 +1455,10 @@
 577540877 PIXEL10 GLES : StateChangeTestES3.SampleCoverageEnable/* = SKIP
 577540877 PIXEL10 GLES : StateChangeTestES3.SampleMask/* = SKIP
 577540877 PIXEL10 GLES : StateChangeTestES3.SampleMaskEnable/* = SKIP
+579030470 PIXEL10 GLES : ImageTestES3RobustInit.SelfCopy/* = SKIP
+579030470 PIXEL10 GLES : ImageTestES3RobustInit.SelfCopyOutOfBounds/* = SKIP
+579030470 PIXEL10 GLES : ImageTestES3RobustInit.SelfSubCopy/* = SKIP
+579030470 PIXEL10 GLES : ImageTestES3RobustInit.SelfSubCopyOutOfBounds/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP

@@ -1697,6 +1697,13 @@ angle::Result Texture::copyImage(Context *context,
                                      internalFormatInfo.format, internalFormatInfo.type,
                                      PixelUnpackState(), nullptr, nullptr));
         mState.setImageDesc(target, level, ImageDesc(size, Format(internalFormatInfo), initState));
+
+        // Because the above setImage may have modified the texture (which could be the source
+        // texture itself), need to sync the read framebuffer if needed.  By calling
+        // prepareForCopyImage(), the back-to-back setImage and copyTexImage calls behave as if the
+        // application did glTexImage2D followed by glCopyTexSubImage2D.
+        ANGLE_TRY(context->prepareForCopyImage());
+
         ANGLE_TRY(ensureSubImageInitialized(context, index, destBox));
         ANGLE_TRY(mTexture->copySubImage(context, index, Offset(), sourceArea, source));
     }
