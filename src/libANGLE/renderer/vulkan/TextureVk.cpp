@@ -5044,6 +5044,13 @@ angle::Result TextureVk::ensureRenderableWithFormat(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
+    // respecifyImageStorage requires that the base level is cube complete (through
+    // getBaseLevelDesc).
+    if (mState.getType() == gl::TextureType::CubeMap && !mState.isCubeComplete())
+    {
+        return angle::Result::Continue;
+    }
+
     mRequiredFormatSupport = vk::ImageFormatSupport::Renderable;
     if (!mImage)
     {

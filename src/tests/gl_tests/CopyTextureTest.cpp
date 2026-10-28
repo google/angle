@@ -4083,29 +4083,38 @@ TEST_P(CopyTextureTestES3, Float16ToRGBA4)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(64, 128, 191, 255), 17.0);
 }
 
-ANGLE_INSTANTIATE_TEST_ES2(CopyTextureTest);
-ANGLE_INSTANTIATE_TEST_COMBINE_6(CopyTextureVariationsTest,
-                                 CopyTextureVariationsTestPrint,
-                                 testing::ValuesIn(kCopyTextureVariationsSrcFormats),
-                                 testing::ValuesIn(kCopyTextureVariationsDstFormats),
-                                 testing::Bool(),  // flipY
-                                 testing::Bool(),  // premultiplyAlpha
-                                 testing::Bool(),  // unmultiplyAlpha
-                                 testing::ValuesIn(kMesaYFlips),
-                                 ES2_D3D11(),
-                                 ES2_OPENGL(),
-                                 ES2_OPENGLES(),
-                                 ES2_VULKAN(),
-                                 ES2_METAL(),
-                                 ES2_WEBGPU());
-ANGLE_INSTANTIATE_TEST_ES2(CopyTextureTestWebGL);
+ANGLE_INSTANTIATE_TEST_ES2_AND(
+    CopyTextureTest,
+    ES2_VULKAN_SWIFTSHADER().enable(Feature::ForceRenderableFallbackFormat));
+ANGLE_INSTANTIATE_TEST_COMBINE_6(
+    CopyTextureVariationsTest,
+    CopyTextureVariationsTestPrint,
+    testing::ValuesIn(kCopyTextureVariationsSrcFormats),
+    testing::ValuesIn(kCopyTextureVariationsDstFormats),
+    testing::Bool(),  // flipY
+    testing::Bool(),  // premultiplyAlpha
+    testing::Bool(),  // unmultiplyAlpha
+    testing::ValuesIn(kMesaYFlips),
+    ES2_D3D11(),
+    ES2_OPENGL(),
+    ES2_OPENGLES(),
+    ES2_VULKAN(),
+    ES2_METAL(),
+    ES2_WEBGPU(),
+    ES2_VULKAN_SWIFTSHADER().enable(Feature::ForceRenderableFallbackFormat));
+ANGLE_INSTANTIATE_TEST_ES2_AND(
+    CopyTextureTestWebGL,
+    ES2_VULKAN_SWIFTSHADER().enable(Feature::ForceRenderableFallbackFormat));
 ANGLE_INSTANTIATE_TEST(CopyTextureTestDest,
                        ES2_D3D11(),
                        ES2_OPENGL(),
                        ES2_OPENGLES(),
                        ES2_VULKAN(),
-                       ES2_METAL());
+                       ES2_METAL(),
+                       ES2_VULKAN_SWIFTSHADER().enable(Feature::ForceRenderableFallbackFormat));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(CopyTextureTestES3);
-ANGLE_INSTANTIATE_TEST_ES3(CopyTextureTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(
+    CopyTextureTestES3,
+    ES3_VULKAN_SWIFTSHADER().enable(Feature::ForceRenderableFallbackFormat));
 }  // namespace angle
