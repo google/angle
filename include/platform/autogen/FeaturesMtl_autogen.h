@@ -338,6 +338,12 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
+    FeatureInfo useTempCopyForDepthStencilBlit = {
+        "useTempCopyForDepthStencilBlit",
+        FeatureCategory::MetalWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;

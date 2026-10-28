@@ -559,6 +559,7 @@ enum class Feature
     UseStencilOpDynamicState,
     UseStencilTestEnableDynamicState,
     UseSystemMemoryForConstantBuffers,
+    UseTempCopyForDepthStencilBlit,
     UseTexSubImageForClientDataNpotUploads,
     UseUnusedBlocksWithStandardOrSharedLayout,
     UseVertexInputBindingStrideDynamicState,

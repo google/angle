@@ -928,8 +928,7 @@ TextureRef Texture::getLinearColorView()
 TextureRef Texture::getReadableCopy(ContextMtl *context,
                                     mtl::BlitCommandEncoder *encoder,
                                     const uint32_t levelToCopy,
-                                    const uint32_t sliceToCopy,
-                                    const MTLRegion &areaToCopy)
+                                    const uint32_t sliceToCopy)
 {
     gl::Extents firstLevelSize = size(kZeroNativeMipLevel);
     if (!mReadCopy || mReadCopy->get().width < static_cast<size_t>(firstLevelSize.width) ||

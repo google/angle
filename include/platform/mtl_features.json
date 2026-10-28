@@ -406,6 +406,14 @@
             "description": [
                 "The renderer supports purgeable BufferPool memory in the Metal backend"
             ]
+        },
+        {
+            "name": "use_temp_copy_for_depth_stencil_blit",
+            "category": "Workarounds",
+            "description": [
+                "Some GPUs have bugs when sampling depth/stencil views of cube map or array texture views during blit. Work around by using a full size temp copy."
+            ],
+            "issue": "http://crbug.com/577571797"
         }
     ]
 }

@@ -2658,6 +2658,9 @@
 42266907 WGPU : BlitFramebufferTest.BlitStencilScissoredScaled/* = SKIP
 42266907 WGPU : BlitFramebufferTest.Blit3DTo2DArray/* = SKIP
 42266907 WGPU : BlitFramebufferTest.Blit2ArrayTo3D/* = SKIP
+578990332 WGPU : BlitFramebufferTest.BlitFromDepthCubeMapFaces/* = SKIP
+578990332 WGPU : BlitFramebufferTest.BlitFromDepthStencilCubeMapFaces/* = SKIP
+578990332 WGPU : BlitFramebufferTest.BlitToDepthStencilCubeMapSingleFace/* = SKIP
 42266907 WGPU : DebugMarkerTest.Rendering/* = SKIP
 42266907 WGPU : DepthStencilFormatsTest.DepthBuffer16/* = SKIP
 42266907 WGPU : DepthStencilTest.StencilOnlyEmulatedWithPacked/* = SKIP

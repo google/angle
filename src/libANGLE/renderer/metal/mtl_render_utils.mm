@@ -707,6 +707,60 @@ ANGLE_INLINE void SetPipelineState(ComputeCommandEncoder *encoder,
     encoder->setComputePipelineState(pipeline);
 }
 
+bool NeedTempCopyForDepthStencilBlit(ContextMtl *contextMtl,
+                                     const TextureRef &texture,
+                                     MipmapNativeLevel level,
+                                     uint32_t slice)
+{
+    // TODO(b/343734719): Simulator has bug in parentRelativeSlice() so skip this step
+    // on simulator.
+    if (contextMtl->getDisplay()->isSimulator() ||
+        !contextMtl->getDisplay()->getFeatures().useTempCopyForDepthStencilBlit.enabled || !texture)
+    {
+        return false;
+    }
+    auto [parent, rootLevel, rootSlice] = texture->getRootParentAndRelativeLevelSlice(level, slice);
+    // Sampling from non-zero mip or slice on a depth/stencil texture might have driver bugs.
+    return rootLevel > kZeroNativeMipLevel || rootSlice > 0;
+}
+
+std::tuple<TextureRef, NormalizedCoords> GetTempCopyForDepthStencilBlit(
+    ContextMtl *contextMtl,
+    mtl::BlitCommandEncoder *blitEncoder,
+    const TextureRef &srcTexture,
+    MipmapNativeLevel srcLevel,
+    uint32_t srcLayer,
+    const NormalizedCoords &srcNormalizedCoords,
+    bool isStencil)
+{
+    auto [rootTexture, rootLevel, rootSlice] =
+        srcTexture->getRootParentAndRelativeLevelSlice(srcLevel, srcLayer);
+
+    TextureRef readableCopy =
+        rootTexture->getReadableCopy(contextMtl, blitEncoder, rootLevel.get(), rootSlice);
+
+    if (isStencil)
+    {
+        // Metal cannot create standalone textures with view-only formats like X24_Stencil8 or
+        // X32_Stencil8. If srcTexture is a stencil view of a packed depth/stencil texture, we must
+        // create the readable copy from its parent texture and then obtain its stencil view.
+        readableCopy = readableCopy->getStencilView();
+    }
+
+    // srcNormalizedCoords is normalized against the source texture level's size. We need to
+    // map it to the readableCopy's size, which only guarantees it is big enough to store the
+    // data and does not always exactly match the source level's size (e.g. for mips > 0).
+    float scaleX = static_cast<float>(srcTexture->width(srcLevel)) / readableCopy->widthAt0();
+    float scaleY = static_cast<float>(srcTexture->height(srcLevel)) / readableCopy->heightAt0();
+    NormalizedCoords newCoords = srcNormalizedCoords;
+    newCoords.v[0] *= scaleX;
+    newCoords.v[1] *= scaleY;
+    newCoords.v[2] *= scaleX;
+    newCoords.v[3] *= scaleY;
+
+    return {readableCopy, newCoords};
+}
+
 }  // namespace
 
 NormalizedCoords::NormalizedCoords() : v{0.0f, 0.0f, 1.0f, 1.0f} {}
@@ -748,6 +802,8 @@ StencilBlitViaBufferParams::StencilBlitViaBufferParams(const DepthStencilBlitPar
     unpackFlipX         = srcParams.unpackFlipX;
     unpackFlipY         = srcParams.unpackFlipY;
 
+    srcLevel   = srcParams.srcLevel;
+    srcLayer   = srcParams.srcLayer;
     srcStencil = srcParams.srcStencil;
 }
 
@@ -833,13 +889,90 @@ angle::Result RenderUtils::blitDepthStencilWithDraw(const gl::Context *context,
                                                     RenderCommandEncoder *cmdEncoder,
                                                     const DepthStencilBlitParams &params)
 {
-    return mDepthStencilBlitUtils.blitDepthStencilWithDraw(context, cmdEncoder, params);
+    if (!params.src && !params.srcStencil)
+    {
+        return angle::Result::Continue;
+    }
+
+    ContextMtl *contextMtl = GetImpl(context);
+    bool needTempCopyForDepth =
+        NeedTempCopyForDepthStencilBlit(contextMtl, params.src, params.srcLevel, params.srcLayer);
+    bool needTempCopyForStencil = NeedTempCopyForDepthStencilBlit(contextMtl, params.srcStencil,
+                                                                  params.srcLevel, params.srcLayer);
+    if (!needTempCopyForDepth && !needTempCopyForStencil)
+    {
+        return mDepthStencilBlitUtils.blitDepthStencilWithDraw(context, cmdEncoder, params);
+    }
+
+    mtl::BlitCommandEncoder *blitEncoder =
+        contextMtl->getBlitCommandEncoderWithoutEndingRenderEncoder();
+
+    // Blit depth and stencil separately in case only one of them needs a temporary copy (leading
+    // to different srcLevel/srcLayer values).
+    if (params.src)
+    {
+        DepthStencilBlitParams depthOnlyParams = params;
+        depthOnlyParams.srcStencil             = nullptr;
+        if (needTempCopyForDepth)
+        {
+            std::tie(depthOnlyParams.src, depthOnlyParams.srcNormalizedCoords) =
+                GetTempCopyForDepthStencilBlit(contextMtl, blitEncoder, params.src, params.srcLevel,
+                                               params.srcLayer, params.srcNormalizedCoords,
+                                               /*isStencil=*/false);
+            depthOnlyParams.srcLevel = mtl::kZeroNativeMipLevel;
+            depthOnlyParams.srcLayer = 0;
+        }
+        ANGLE_TRY(
+            mDepthStencilBlitUtils.blitDepthStencilWithDraw(context, cmdEncoder, depthOnlyParams));
+    }
+
+    if (params.srcStencil)
+    {
+        DepthStencilBlitParams stencilOnlyParams = params;
+        stencilOnlyParams.src                    = nullptr;
+        if (needTempCopyForStencil)
+        {
+            std::tie(stencilOnlyParams.srcStencil, stencilOnlyParams.srcNormalizedCoords) =
+                GetTempCopyForDepthStencilBlit(contextMtl, blitEncoder, params.srcStencil,
+                                               params.srcLevel, params.srcLayer,
+                                               params.srcNormalizedCoords, /*isStencil=*/true);
+            stencilOnlyParams.srcLevel = mtl::kZeroNativeMipLevel;
+            stencilOnlyParams.srcLayer = 0;
+        }
+        ANGLE_TRY(mDepthStencilBlitUtils.blitDepthStencilWithDraw(context, cmdEncoder,
+                                                                  stencilOnlyParams));
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result RenderUtils::blitStencilViaCopyBuffer(const gl::Context *context,
                                                     const StencilBlitViaBufferParams &params)
 {
-    return mDepthStencilBlitUtils.blitStencilViaCopyBuffer(context, params);
+    if (!params.srcStencil || !params.dstStencil)
+    {
+        return angle::Result::Continue;
+    }
+
+    ContextMtl *contextMtl = GetImpl(context);
+    if (!NeedTempCopyForDepthStencilBlit(contextMtl, params.srcStencil, params.srcLevel,
+                                         params.srcLayer))
+    {
+        return mDepthStencilBlitUtils.blitStencilViaCopyBuffer(context, params);
+    }
+
+    mtl::BlitCommandEncoder *blitEncoder =
+        contextMtl->getBlitCommandEncoderWithoutEndingRenderEncoder();
+
+    StencilBlitViaBufferParams tempCopyParams = params;
+    std::tie(tempCopyParams.srcStencil, tempCopyParams.srcNormalizedCoords) =
+        GetTempCopyForDepthStencilBlit(contextMtl, blitEncoder, params.srcStencil, params.srcLevel,
+                                       params.srcLayer, params.srcNormalizedCoords,
+                                       /*isStencil=*/true);
+    tempCopyParams.srcLevel = mtl::kZeroNativeMipLevel;
+    tempCopyParams.srcLayer = 0;
+
+    return mDepthStencilBlitUtils.blitStencilViaCopyBuffer(context, tempCopyParams);
 }
 
 angle::Result RenderUtils::convertIndexBufferGPU(ContextMtl *contextMtl,

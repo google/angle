@@ -4363,6 +4363,301 @@ TEST_P(BlitFramebufferTest, Blit2DArrayTo3D)
     test3DBlit(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_3D);
 }
 
+// Test blitting stencil from each face and mip level of a depth-stencil cube map texture.
+// Regression test for crbug.com/577571797.
+TEST_P(BlitFramebufferTest, BlitFromDepthStencilCubeMapFaces)
+{
+    constexpr GLsizei kSize                           = 19;
+    constexpr GLint kLevels                           = 3;
+    constexpr std::array<GLint, 6> kFaceStencilValues = {161, 162, 163, 164, 165, 123};
+
+    GLTexture srcCube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, srcCube);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, kLevels, GL_DEPTH24_STENCIL8, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer srcFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFBO);
+    for (GLint level = 0; level < kLevels; ++level)
+    {
+        for (size_t face = 0; face < 6; ++face)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face),
+                                   srcCube, level);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            glClearStencil(kFaceStencilValues[face] + level);
+            glClear(GL_STENCIL_BUFFER_BIT);
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture dstColor;
+    glBindTexture(GL_TEXTURE_2D, dstColor);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLRenderbuffer dstStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, dstStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+
+    GLFramebuffer dstFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstColor, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              dstStencil);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    for (GLint level = 0; level < kLevels; ++level)
+    {
+        GLsizei levelSize = std::max(1, kSize >> level);
+        glViewport(0, 0, levelSize, levelSize);
+
+        for (size_t face = 0; face < 6; ++face)
+        {
+            SCOPED_TRACE(testing::Message() << "level=" << level << " face=" << face);
+
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFBO);
+            glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face),
+                                   srcCube, level);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFBO);
+            glDisable(GL_STENCIL_TEST);
+            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            glClearStencil(0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+            glBlitFramebuffer(0, 0, levelSize, levelSize, 0, 0, levelSize, levelSize,
+                              GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+            ASSERT_GL_NO_ERROR();
+
+            glBindFramebuffer(GL_FRAMEBUFFER, dstFBO);
+            glEnable(GL_STENCIL_TEST);
+            glStencilFunc(GL_EQUAL, kFaceStencilValues[face] + level, 0xFF);
+            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+            drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.0f);
+            ASSERT_GL_NO_ERROR();
+
+            EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::green);
+        }
+    }
+}
+
+// Test that blitting stencil to a single face of a depth/stencil cube map works as expected.
+// Regression test for crbug.com/577571797.
+TEST_P(BlitFramebufferTest, BlitToDepthStencilCubeMapSingleFace)
+{
+    constexpr GLsizei kSize     = 19;
+    constexpr GLint kStencilVal = 0x5A;
+
+    GLRenderbuffer srcStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, srcStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+
+    GLFramebuffer srcFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFBO);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              srcStencil);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glClearStencil(kStencilVal);
+    glClearDepthf(1.0f);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture dstColor;
+    glBindTexture(GL_TEXTURE_2D, dstColor);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLTexture dstCube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, dstCube);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_DEPTH24_STENCIL8, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer dstFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstColor, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                           GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, dstCube, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearStencil(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFBO);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFBO);
+    glViewport(0, 0, kSize, kSize);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, kStencilVal, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::green);
+}
+
+// Test blitting color from each face of a color cube map texture.
+// Regression test for crbug.com/577571797.
+TEST_P(BlitFramebufferTest, BlitFromColorCubeMapFaces)
+{
+    constexpr GLsizei kSize                  = 19;
+    const std::array<GLColor, 6> kFaceColors = {GLColor::red,    GLColor::green,   GLColor::blue,
+                                                GLColor::yellow, GLColor::magenta, GLColor::cyan};
+
+    GLTexture srcCube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, srcCube);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA8, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer srcFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFBO);
+    for (size_t face = 0; face < 6; ++face)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face), srcCube,
+                               0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        Vector4 clearColor = kFaceColors[face].toNormalizedVector();
+        glClearColor(clearColor.x(), clearColor.y(), clearColor.z(), clearColor.w());
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture dstColor;
+    glBindTexture(GL_TEXTURE_2D, dstColor);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLFramebuffer dstFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstColor, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    for (size_t face = 0; face < 6; ++face)
+    {
+        SCOPED_TRACE(testing::Message() << "face=" << face);
+
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFBO);
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face), srcCube,
+                               0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFBO);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        ASSERT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, dstFBO);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, kFaceColors[face]);
+    }
+}
+
+// Test blitting depth from each face and mip level of a depth cube map texture.
+// Regression test for crbug.com/577571797.
+TEST_P(BlitFramebufferTest, BlitFromDepthCubeMapFaces)
+{
+    constexpr GLsizei kSize                         = 19;
+    constexpr GLint kLevels                         = 3;
+    constexpr std::array<GLfloat, 6> kFaceDepthVals = {0.1f, 0.25f, 0.4f, 0.55f, 0.7f, 0.85f};
+
+    GLTexture srcCube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, srcCube);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, kLevels, GL_DEPTH_COMPONENT24, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer srcFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFBO);
+    for (GLint level = 0; level < kLevels; ++level)
+    {
+        for (size_t face = 0; face < 6; ++face)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face),
+                                   srcCube, level);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            glClearDepthf(kFaceDepthVals[face]);
+            glClear(GL_DEPTH_BUFFER_BIT);
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture dstColor;
+    glBindTexture(GL_TEXTURE_2D, dstColor);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLRenderbuffer dstDepth;
+    glBindRenderbuffer(GL_RENDERBUFFER, dstDepth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, kSize, kSize);
+
+    GLFramebuffer dstFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstColor, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, dstDepth);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    for (GLint level = 0; level < kLevels; ++level)
+    {
+        GLsizei levelSize = std::max(1, kSize >> level);
+        glViewport(0, 0, levelSize, levelSize);
+
+        for (size_t face = 0; face < 6; ++face)
+        {
+            SCOPED_TRACE(testing::Message() << "level=" << level << " face=" << face);
+
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFBO);
+            glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face),
+                                   srcCube, level);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFBO);
+            glDisable(GL_DEPTH_TEST);
+            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            glClearDepthf(1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glBlitFramebuffer(0, 0, levelSize, levelSize, 0, 0, levelSize, levelSize,
+                              GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+            ASSERT_GL_NO_ERROR();
+
+            glBindFramebuffer(GL_FRAMEBUFFER, dstFBO);
+            glEnable(GL_DEPTH_TEST);
+            glDepthMask(GL_FALSE);
+
+            // Pass (draw green) if stored depth > kFaceDepthVals[face] - 0.05:
+            // incoming (expected - 0.05) < stored.
+            glDepthFunc(GL_LESS);
+            drawQuad(drawGreen, essl1_shaders::PositionAttrib(),
+                     (kFaceDepthVals[face] - 0.05f) * 2.0f - 1.0f);
+
+            // Fail (do not draw red) if stored depth < kFaceDepthVals[face] + 0.05:
+            // incoming (expected + 0.05) < stored.
+            glDepthFunc(GL_LESS);
+            drawQuad(drawRed, essl1_shaders::PositionAttrib(),
+                     (kFaceDepthVals[face] + 0.05f) * 2.0f - 1.0f);
+
+            glDepthMask(GL_TRUE);
+            ASSERT_GL_NO_ERROR();
+
+            EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::green);
+        }
+    }
+}
+
 // Test that glBlitFramebuffer works when the framebuffer attachment level is not zero.  At the same
 // time, the texture's base level is also non-zero.
 TEST_P(BlitFramebufferTestES31, BlitNonZeroLevelSource)
