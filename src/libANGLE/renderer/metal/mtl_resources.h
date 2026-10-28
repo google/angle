@@ -14,6 +14,7 @@
 
 #include <atomic>
 #include <memory>
+#include <tuple>
 
 #include "common/FastVector.h"
 #include "common/MemoryBuffer.h"
@@ -330,6 +331,9 @@ class Texture final : public Resource,
     TextureRef parentTexture();
     MipmapNativeLevel parentRelativeLevel();
     uint32_t parentRelativeSlice();
+    std::tuple<TextureRef, MipmapNativeLevel, uint32_t> getRootParentAndRelativeLevelSlice(
+        MipmapNativeLevel level,
+        uint32_t slice);
 
     // Change the wrapped metal object. Special case for swapchain image
     void set(id<MTLTexture> metalTexture);

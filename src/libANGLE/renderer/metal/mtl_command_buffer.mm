@@ -1453,7 +1453,9 @@ bool RenderCommandEncoder::finalizeLoadStoreAction(
 
     // Check if we need to disable MTLLoadActionLoad & MTLStoreActionStore
     mtl::TextureRef mainTextureRef = cppRenderPassAttachment.getImplicitMSTextureIfAvailOrTexture();
-    ASSERT(mainTextureRef->get() == objCRenderPassAttachment.texture);
+    ASSERT(mainTextureRef->get() == objCRenderPassAttachment.texture ||
+           std::get<0>(mainTextureRef->getRootParentAndRelativeLevelSlice(kZeroNativeMipLevel, 0))
+                   ->get() == objCRenderPassAttachment.texture);
     if (mainTextureRef->shouldNotLoadStore())
     {
         // Disable Load.

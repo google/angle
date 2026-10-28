@@ -130,10 +130,26 @@ id<MTLTexture> ToObjC(const TextureRef &texture)
     return textureRef ? textureRef->get() : nil;
 }
 
+// If attachRootTexture is true, resolve src.texture to its root parent texture and derive the
+// relative mipmap level and slice/depth plane instead of attaching the texture view directly.
 void BaseRenderPassAttachmentDescToObjC(const RenderPassAttachmentDesc &src,
-                                        MTLRenderPassAttachmentDescriptor *dst)
+                                        MTLRenderPassAttachmentDescriptor *dst,
+                                        bool attachRootTexture)
 {
     const TextureRef &implicitMsTexture = src.implicitMSTexture;
+
+    TextureRef texture      = src.texture;
+    MipmapNativeLevel level = src.level;
+    uint32_t sliceOrDepth   = src.sliceOrDepth;
+#if !TARGET_OS_SIMULATOR
+    if (attachRootTexture && texture)
+    {
+        // TODO(b/343734719): Simulator has bug in parentRelativeSlice() so skip this step
+        // on simulator.
+        std::tie(texture, level, sliceOrDepth) =
+            texture->getRootParentAndRelativeLevelSlice(level, sliceOrDepth);
+    }
+#endif
 
     if (implicitMsTexture)
     {
@@ -141,31 +157,31 @@ void BaseRenderPassAttachmentDescToObjC(const RenderPassAttachmentDesc &src,
         dst.level          = 0;
         dst.slice          = 0;
         dst.depthPlane     = 0;
-        dst.resolveTexture = ToObjC(src.texture);
-        dst.resolveLevel   = src.level.get();
+        dst.resolveTexture = ToObjC(texture);
+        dst.resolveLevel   = level.get();
         if (dst.resolveTexture.textureType == MTLTextureType3D)
         {
-            dst.resolveDepthPlane = src.sliceOrDepth;
+            dst.resolveDepthPlane = sliceOrDepth;
             dst.resolveSlice      = 0;
         }
         else
         {
-            dst.resolveSlice      = src.sliceOrDepth;
+            dst.resolveSlice      = sliceOrDepth;
             dst.resolveDepthPlane = 0;
         }
     }
     else
     {
-        dst.texture = ToObjC(src.texture);
-        dst.level   = src.level.get();
+        dst.texture = ToObjC(texture);
+        dst.level   = level.get();
         if (dst.texture.textureType == MTLTextureType3D)
         {
-            dst.depthPlane = src.sliceOrDepth;
+            dst.depthPlane = sliceOrDepth;
             dst.slice      = 0;
         }
         else
         {
-            dst.slice      = src.sliceOrDepth;
+            dst.slice      = sliceOrDepth;
             dst.depthPlane = 0;
         }
         dst.resolveTexture    = nil;
@@ -182,21 +198,27 @@ void BaseRenderPassAttachmentDescToObjC(const RenderPassAttachmentDesc &src,
 void ToObjC(const RenderPassColorAttachmentDesc &desc,
             MTLRenderPassColorAttachmentDescriptor *objCDesc)
 {
-    BaseRenderPassAttachmentDescToObjC(desc, objCDesc);
+    BaseRenderPassAttachmentDescToObjC(desc, objCDesc, /*attachRootTexture=*/false);
     objCDesc.clearColor = desc.clearColor;
 }
 
 void ToObjC(const RenderPassDepthAttachmentDesc &desc,
             MTLRenderPassDepthAttachmentDescriptor *objCDesc)
 {
-    BaseRenderPassAttachmentDescToObjC(desc, objCDesc);
+    // TODO(crbug.com/578756731): on Intel, rendering to a view of a depth texture might
+    // produce wrong result. So always use the original texture and its relative level and
+    // layer.
+    BaseRenderPassAttachmentDescToObjC(desc, objCDesc, /*attachRootTexture=*/true);
     objCDesc.clearDepth = desc.clearDepth;
 }
 
 void ToObjC(const RenderPassStencilAttachmentDesc &desc,
             MTLRenderPassStencilAttachmentDescriptor *objCDesc)
 {
-    BaseRenderPassAttachmentDescToObjC(desc, objCDesc);
+    // TODO(crbug.com/578756731): on Intel, rendering to a view of a depth/stencil texture might
+    // produce wrong result. So always use the original texture and its relative level and
+    // layer.
+    BaseRenderPassAttachmentDescToObjC(desc, objCDesc, /*attachRootTexture=*/true);
     objCDesc.clearStencil = desc.clearStencil;
 }
 

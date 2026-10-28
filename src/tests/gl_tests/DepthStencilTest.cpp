@@ -921,6 +921,80 @@ TEST_P(DepthStencilTestES3, ReadOnlyDepthStencilThenOutputDepthStencil)
     EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::yellow);
 }
 
+// Test clearing all 6 faces of a depth cube map with different depth values and then using the 5th
+// face in a subsequent render pass across multiple mip levels.
+// Regression test for anglebug.com/578756731.
+TEST_P(DepthStencilTestES3, ClearDepthCubeMapFacesThenRenderWithFifthFace)
+{
+    constexpr GLsizei kSize                         = 32;
+    constexpr GLsizei kLevels                       = 3;
+    constexpr std::array<GLfloat, 6> kFaceDepthVals = {0.1f, 0.25f, 0.4f, 0.55f, 0.7f, 0.85f};
+    constexpr size_t kFifthFaceIndex                = 4;
+
+    GLTexture depthCube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, depthCube);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, kLevels, GL_DEPTH_COMPONENT24, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture colorTex;
+    glBindTexture(GL_TEXTURE_2D, colorTex);
+    glTexStorage2D(GL_TEXTURE_2D, kLevels, GL_RGBA8, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    for (GLint level = 0; level < kLevels; ++level)
+    {
+        SCOPED_TRACE(testing::Message() << "level=" << level);
+        GLsizei levelSize = kSize >> level;
+
+        glDepthMask(GL_TRUE);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+
+        for (size_t face = 0; face < 6; ++face)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                   GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face),
+                                   depthCube, level);
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            glClearDepthf(kFaceDepthVals[face]);
+            glClear(GL_DEPTH_BUFFER_BIT);
+        }
+        ASSERT_GL_NO_ERROR();
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex,
+                               level);
+        glFramebufferTexture2D(
+            GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(kFifthFaceIndex), depthCube,
+            level);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glViewport(0, 0, levelSize, levelSize);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(GL_FALSE);
+        glDepthFunc(GL_LESS);
+
+        // Pass (draw green) if stored depth > kFaceDepthVals[kFifthFaceIndex] - 0.05.
+        drawQuad(drawGreen, essl1_shaders::PositionAttrib(),
+                 (kFaceDepthVals[kFifthFaceIndex] - 0.05f) * 2.0f - 1.0f);
+
+        // Fail (do not draw red) if stored depth < kFaceDepthVals[kFifthFaceIndex] + 0.05.
+        drawQuad(drawRed, essl1_shaders::PositionAttrib(),
+                 (kFaceDepthVals[kFifthFaceIndex] + 0.05f) * 2.0f - 1.0f);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::green);
+    }
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     DepthStencilTest,
     ES2_VULKAN().enable(Feature::ForceFallbackFormat),
