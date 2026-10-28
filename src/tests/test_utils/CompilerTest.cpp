@@ -33,7 +33,7 @@ GLuint CompiledShader::compile(GLenum type, const char *source)
     if (compileResult == 0)
     {
         std::cerr << "shader compilation failed: "
-                  << (mInfoLog.empty() ? "<Empty message log>" : mInfoLog.data());
+                  << (mInfoLog.empty() ? "<Empty message log>" : mInfoLog.data()) << "\n";
 
         destroy();
     }
