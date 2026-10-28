@@ -6682,11 +6682,14 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // SimpleStateChangeTestES31.FragWriteSSBOThenChangeDrawbuffersThenWriteSSBO*,
     // VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDraw*, and
     // VulkanPerformanceCounterTest_ES31.FramebufferFetchRenderPassThenColorMaskedDraw* tests.
+    //
+    // Disabled on Intel/mesa drivers, due to driver bugs.  http://crbug.com/577864200
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsAlphaToCoverageEnableDynamicState,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3AlphaToCoverageEnable == VK_TRUE &&
-            isRasterizerDiscardDynamicState && !(isIntel && IsWindows()));
+            isRasterizerDiscardDynamicState && !(isIntel && IsWindows()) &&
+            !(isIntel && IsLinux()));
 
     // Disabled on Imagination drivers due to test failures and device loss.
     ANGLE_FEATURE_CONDITION(
