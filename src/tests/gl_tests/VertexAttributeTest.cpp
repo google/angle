@@ -1062,6 +1062,108 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(64, 64, GLColor::green);
 }
 
+// Test that disabling an attribute, unbinding VAO, reallocating buffer, rebinding VAO and enabling
+// attribute works.
+TEST_P(VertexAttributeTest, RedrawAfterDisableUnbindReallocRebindEnable)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !IsGLExtensionEnabled("GL_OES_vertex_array_object"));
+
+    constexpr char kVS[] = R"(attribute vec3 posIn;
+void main()
+{
+    gl_Position = vec4(posIn, 1.0);
+    gl_PointSize = 1.0;
+})";
+    constexpr char kFS[] = R"(precision mediump float;
+void main()
+{
+    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    // Create and bind a vertex array.
+    GLuint vao;
+    if (getClientMajorVersion() >= 3)
+    {
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+    }
+    else
+    {
+        glGenVertexArraysOES(1, &vao);
+        glBindVertexArrayOES(vao);
+    }
+
+    // Define a large buffer to be used for the attribute.
+    const GLsizeiptr kLargeBufferSize = 16 * 1024 * 1024;
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, kLargeBufferSize, nullptr, GL_STATIC_DRAW);
+
+    std::vector<GLfloat> zeroData(16, 0.0f);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, zeroData.size() * sizeof(GLfloat), zeroData.data());
+
+    // Define and enable the vertex attribute in the program.
+    GLint attribLocation = glGetAttribLocation(program, "posIn");
+    ASSERT_NE(-1, attribLocation);
+
+    glEnableVertexAttribArray(attribLocation);
+    glVertexAttribPointer(attribLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    // Clear and draw a pixel in a one-pixel viewport.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glViewport(0, 0, 1, 1);
+    glDrawArrays(GL_POINTS, 0, 1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+    EXPECT_GL_NO_ERROR();
+
+    // Disable the attribute and unbind the VAO.
+    glDisableVertexAttribArray(attribLocation);
+    if (getClientMajorVersion() >= 3)
+    {
+        glBindVertexArray(0);
+    }
+    else
+    {
+        glBindVertexArrayOES(0);
+    }
+
+    // Redefine the large buffer with a different usage.
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, kLargeBufferSize, nullptr, GL_DYNAMIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, zeroData.size() * sizeof(GLfloat), zeroData.data());
+
+    // Rebind the VAO and re-enable the attribute.
+    if (getClientMajorVersion() >= 3)
+    {
+        glBindVertexArray(vao);
+    }
+    else
+    {
+        glBindVertexArrayOES(vao);
+    }
+    glEnableVertexAttribArray(attribLocation);
+
+    // Clear and draw another pixel.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_POINTS, 0, 1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+    EXPECT_GL_NO_ERROR();
+
+    if (getClientMajorVersion() >= 3)
+    {
+        glDeleteVertexArrays(1, &vao);
+    }
+    else
+    {
+        glDeleteVertexArraysOES(1, &vao);
+    }
+}
+
 class VertexAttributeTestES3 : public VertexAttributeTest
 {
   protected:
