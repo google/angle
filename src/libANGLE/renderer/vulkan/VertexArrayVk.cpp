@@ -939,8 +939,7 @@ gl::VertexArray::DirtyBits VertexArrayVk::checkBufferForDirtyBits(
 {
     gl::VertexArray::DirtyBits dirtyBits;
 
-    const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
-    const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
+    const std::vector<gl::VertexBinding> &bindings = mState.getVertexBindings();
 
     // Element buffer is not in bindings yet, has to handle separately.
     dirtyBits.set(gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
@@ -952,11 +951,14 @@ gl::VertexArray::DirtyBits VertexArrayVk::checkBufferForDirtyBits(
     {
         const gl::Buffer *bufferGL    = getVertexArrayBuffer(bindingIndex);
         vk::BufferSerial bufferSerial = vk::GetImpl(bufferGL)->getBufferSerial();
-        gl::AttributesMask enabledAttributeMask =
-            bindings[bindingIndex].getBoundAttributesMask() & mState.getEnabledAttributesMask();
-        for (size_t attribIndex : enabledAttributeMask)
+
+        // If the buffer for a disabled attribute is respecified when the VAO is unbound and then it
+        // gets re-enabled, the enable-attribute dirty bit is cleared. Without checking the disabled
+        // attributes here, a stale buffer may be bound and used for the next draw in such cases.
+        const gl::AttributesMask boundAttributeMask =
+            bindings[bindingIndex].getBoundAttributesMask();
+        for (size_t attribIndex : boundAttributeMask)
         {
-            ASSERT(attribs[attribIndex].enabled);
             if (!bufferSerial.valid() || bufferSerial != mCurrentArrayBufferSerial[attribIndex])
             {
                 dirtyBits.set(gl::VertexArray::DIRTY_BIT_BINDING_0 + bindingIndex);
