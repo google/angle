@@ -3939,8 +3939,7 @@ def get_unlocked_tail_call(api, cmd_name):
     # - glCompileShader, glShaderBinary, glLinkProgram -> May perform the compilation /
     #   link in tail call
     #
-    # - eglCreateSync, eglCreateImage,
-    #   eglGetCompositorTimingANDROID, eglGetFrameTimestampsANDROID -> Calls
+    # - eglCreateImage, eglGetCompositorTimingANDROID, eglGetFrameTimestampsANDROID -> Calls
     #   native EGL function in tail call
     #
     # - glFlush, glFinish -> May perform the CPU throttling from the implicit swap buffers call when
@@ -3967,14 +3966,10 @@ def get_unlocked_tail_call(api, cmd_name):
             'eglClientWaitSync',
             'eglCreateImageKHR',
             'eglCreateImage',
-            'eglCreateSyncKHR',
-            'eglCreateSync',
             'eglGetCompositorTimingANDROID',
             'eglGetFrameTimestampsANDROID',
             'eglSwapBuffers',
             'eglSwapBuffersWithDamageKHR',
-            'eglWaitSyncKHR',
-            'eglWaitSync',
             'glClientWaitSync',
     ]:
         return 'egl::Display::GetCurrentThreadUnlockedTailCall()->run(&returnValue);'
