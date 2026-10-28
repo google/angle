@@ -1225,11 +1225,6 @@ Sync *ThreadSafeDisplay::removeSync(egl::SyncID syncID)
     return mSyncSet.removeSync(syncID);
 }
 
-void ThreadSafeDisplay::destroySync(Sync *sync)
-{
-    mSyncSet.releaseSync(this, sync);
-}
-
 Error ThreadSafeDisplay::createSync(const gl::Context *currentContext,
                                     EGLenum type,
                                     const AttributeMap &attribs,
@@ -1816,10 +1811,6 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
         // We also shouldn't set it to null in case eglInitialize() is called again later
         SafeDelete(mDevice);
     }
-
-    // Before tearing down the backend device, ensure all deferred operations are run.  It is not
-    // possible to defer them beyond this point.
-    GetCurrentThreadUnlockedTailCall()->run(nullptr);
 
     mImplementation->terminate();
 

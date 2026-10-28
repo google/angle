@@ -330,7 +330,7 @@ EGLBoolean DestroySurface(Thread *thread, ThreadSafeDisplay *display, Surface *e
 
 EGLBoolean DestroySync(Thread *thread, ThreadSafeDisplay *display, Sync *syncObject)
 {
-    display->destroySync(syncObject);
+    display->releaseSync(syncObject);
 
     thread->setSuccess();
     return EGL_TRUE;

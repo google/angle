@@ -250,7 +250,6 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
                      const AttributeMap &attribs,
                      Sync **outSync);
     Sync *removeSync(egl::SyncID syncID);
-    void destroySync(Sync *sync);
     void releaseSync(Sync *sync);
 
     ScopedSyncRef getSync(egl::SyncID syncID) const;
