@@ -2091,6 +2091,45 @@ VkResult RetrieveDeviceLostInfoFromDevice(VkDevice device,
     WARN() << faultString.str();
     return VK_SUCCESS;
 }
+
+#if defined(ANGLE_SHARED_LIBVULKAN)
+// Guards Volk's process-wide state, which is shared by every Renderer: the loadedModule,
+// loadedInstance and loadedDevice statics in volk.c, and all of Volk's vk* function pointer
+// globals, including the promoted *KHR/*EXT aliases assigned by the Init*FromCore() helpers.  That
+// state is defined by Volk, so it cannot live in this class.  Instead, the Volk calls that write it
+// are only reachable through an instance of this class, i.e. while its mutex is held.  The
+// Init*FromCore() aliases must likewise only be assigned while an instance is alive.
+//
+// Renderer initialization and Renderer::reloadVolkIfNeeded() may run concurrently for different
+// Renderers (e.g. eglInitialize on one display and eglMakeCurrent on another) without any other
+// lock in common.  Note that this only serializes writers; Vulkan calls made through the function
+// pointers are not synchronized with it.
+class [[nodiscard]] ScopedVolkLock final : angle::NonCopyable
+{
+  public:
+    ScopedVolkLock() : mLock(GetMutex()) {}
+
+    void initializeLoader(PFN_vkGetInstanceProcAddr getInstanceProcAddr)
+    {
+        VK_CALL(volkInitializeCustom, getInstanceProcAddr);
+    }
+
+    bool isInstanceLoaded(VkInstance instance) const { return volkGetLoadedInstance() == instance; }
+    void loadInstance(VkInstance instance) { VK_CALL(volkLoadInstanceOnly, instance); }
+
+    bool isDeviceLoaded(VkDevice device) const { return volkGetLoadedDevice() == device; }
+    void loadDevice(VkDevice device) { VK_CALL(volkLoadDevice, device); }
+
+  private:
+    static angle::SimpleMutex &GetMutex()
+    {
+        static angle::base::NoDestructor<angle::SimpleMutex> sMutex;
+        return *sMutex;
+    }
+
+    std::lock_guard<angle::SimpleMutex> mLock;
+};
+#endif  // defined(ANGLE_SHARED_LIBVULKAN)
 }  // namespace
 
 // OneOffCommandPool implementation.
@@ -2555,7 +2594,10 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
                 angle::GetLibrarySymbol(mLibVulkanLibrary, "vkGetInstanceProcAddr"));
 
         // Set all vk* function ptrs
-        VK_CALL(volkInitializeCustom, vulkanLoaderGetInstanceProcAddr);
+        {
+            ScopedVolkLock volk;
+            volk.initializeLoader(vulkanLoaderGetInstanceProcAddr);
+        }
 
         uint32_t ver = VK_CALL(volkGetInstanceVersion);
         if (!IsAndroid() && ver < VK_MAKE_API_VERSION(0, 1, 1, 91))
@@ -2718,8 +2760,10 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
         ANGLE_SCOPED_DISABLE_MSAN();
         ANGLE_VK_TRY(context, VK_CALL(vkCreateInstance, &instanceInfo, nullptr, &mInstance));
 #if defined(ANGLE_SHARED_LIBVULKAN)
-        // Load volk if we are linking dynamically
-        VK_CALL(volkLoadInstance, mInstance);
+        // Load volk if we are linking dynamically.  Keep the lock while the promoted extension
+        // entry points are initialized below, as they are Volk globals too.
+        ScopedVolkLock volk;
+        volk.loadInstance(mInstance);
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 
         // For promoted extensions, initialize their entry points from the core version.
@@ -5065,12 +5109,17 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context,
     initializeValidationMessageSuppressions();
 
     ANGLE_VK_TRY(context, VK_CALL(vkCreateDevice, mPhysicalDevice, &createInfo, nullptr, &mDevice));
+    {
 #if defined(ANGLE_SHARED_LIBVULKAN)
-    // Load volk if we are loading dynamically
-    VK_CALL(volkLoadDevice, mDevice);
+        // Load volk if we are loading dynamically.  Keep the lock while
+        // initDeviceExtensionEntryPoints() aliases the promoted extension entry points, as they are
+        // Volk globals too.
+        ScopedVolkLock volk;
+        volk.loadDevice(mDevice);
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 
-    initDeviceExtensionEntryPoints();
+        initDeviceExtensionEntryPoints();
+    }
 
     ANGLE_TRY(mCommandQueue.init(context, queueFamily, enableProtectedContent, queueCount));
     ANGLE_TRY(mCleanUpThread.init());
@@ -8039,22 +8088,19 @@ void Renderer::setGlobalDebugAnnotator(bool *installedAnnotatorOut)
 void Renderer::reloadVolkIfNeeded() const
 {
 #if defined(ANGLE_SHARED_LIBVULKAN)
-    // Volk tracks the currently loaded VkInstance/VkDevice and function pointers in unprotected
-    // global variables, and sets loadedInstance/loadedDevice before populating the function
-    // pointers. Protect the check and reload with a static mutex so concurrent threads (e.g. during
-    // eglMakeCurrent) do not race on Volk globals or observe partially loaded entry points.
-    static angle::base::NoDestructor<angle::SimpleMutex> sVolkMutex;
-    std::unique_lock<angle::SimpleMutex> lock(*sVolkMutex);
+    // Volk sets loadedInstance/loadedDevice before populating the function pointers, so the check
+    // and the reload must be done under the same lock.
+    ScopedVolkLock volk;
 
-    if ((mInstance != VK_NULL_HANDLE) && (volkGetLoadedInstance() != mInstance))
+    if ((mInstance != VK_NULL_HANDLE) && !volk.isInstanceLoaded(mInstance))
     {
-        VK_CALL(volkLoadInstance, mInstance);
+        volk.loadInstance(mInstance);
         initializeInstanceExtensionEntryPointsFromCore();
     }
 
-    if ((mDevice != VK_NULL_HANDLE) && (volkGetLoadedDevice() != mDevice))
+    if ((mDevice != VK_NULL_HANDLE) && !volk.isDeviceLoaded(mDevice))
     {
-        VK_CALL(volkLoadDevice, mDevice);
+        volk.loadDevice(mDevice);
         initializeDeviceExtensionEntryPointsFromCore();
     }
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
