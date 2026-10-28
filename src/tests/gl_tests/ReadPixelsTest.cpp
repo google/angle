@@ -10,6 +10,7 @@
 #include "common/span.h"
 #include "test_utils/ANGLETest.h"
 
+#include <algorithm>
 #include <array>
 
 #include "test_utils/gl_raii.h"
@@ -380,6 +381,107 @@ TEST_P(ReadPixelsPBOTest, Basic)
 
     glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
     EXPECT_GL_NO_ERROR();
+}
+
+// Test that RGB565 readback produces identical results with and without a PBO.
+TEST_P(ReadPixelsPBOTest, RGB565MatchesClientMemory)
+{
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB565, 1, 1);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDisable(GL_DITHER);
+    glClearColor(107.0f / 255.0f, 1.0f, 132.0f / 255.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+    const GLColor *mappedColor = static_cast<const GLColor *>(
+        glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, sizeof(GLColor), GL_MAP_READ_BIT));
+    ASSERT_NE(nullptr, mappedColor);
+    const GLColor pboResult = *mappedColor;
+    EXPECT_GL_TRUE(glUnmapBuffer(GL_PIXEL_PACK_BUFFER));
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+    GLColor clientResult;
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &clientResult);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(clientResult, pboResult);
+}
+
+// Test that PBO readback is synchronized with color attachment writes in SharedPresent layout.
+TEST_P(ReadPixelsPBOTest, SharedPresentPBOReadback)
+{
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(),
+                                                     "EGL_KHR_mutable_render_buffer"));
+
+    setMutableRenderBuffer(true);
+    recreateTestFixture();
+    ASSERT_FALSE(HasFatalFailure());
+    ANGLE_SKIP_TEST_IF(IsSkipped());
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    const GLint colorLocation = glGetUniformLocation(program, essl1_shaders::ColorUniform());
+    ASSERT_NE(-1, colorLocation);
+
+    EGLWindow *window = getEGLWindow();
+    ASSERT_EGL_TRUE(eglSurfaceAttrib(window->getDisplay(), window->getSurface(), EGL_RENDER_BUFFER,
+                                     EGL_SINGLE_BUFFER));
+
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    if (!eglSwapBuffers(window->getDisplay(), window->getSurface()))
+    {
+        ASSERT_EGL_ERROR(EGL_BAD_MATCH);
+        ASSERT_EGL_TRUE(eglSurfaceAttrib(window->getDisplay(), window->getSurface(),
+                                         EGL_RENDER_BUFFER, EGL_BACK_BUFFER));
+        GTEST_SKIP() << "Shared present mode is not supported by this surface.";
+    }
+
+    EGLint renderBuffer = EGL_BACK_BUFFER;
+    ASSERT_EGL_TRUE(eglQueryContext(window->getDisplay(), window->getContext(), EGL_RENDER_BUFFER,
+                                    &renderBuffer));
+    ASSERT_EQ(EGL_SINGLE_BUFFER, renderBuffer);
+
+    const GLsizei width     = getWindowWidth();
+    const GLsizei height    = getWindowHeight();
+    const size_t pixelCount = width * height;
+    const size_t dataSize   = pixelCount * sizeof(GLColor);
+
+    glUseProgram(program);
+    // Change colors so stale image contents cannot accidentally match the current draw.
+    for (const GLColor &color : {GLColor::green, GLColor::red, GLColor::blue})
+    {
+        const angle::Vector4 normalizedColor = color.toNormalizedVector();
+        glUniform4f(colorLocation, normalizedColor.x(), normalizedColor.y(), normalizedColor.z(),
+                    normalizedColor.w());
+        // A draw, unlike a deferred clear, requires color attachment writes before compute reads.
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+        // Keep default pack row order so framebuffer Y inversion requires compute readback.
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+        glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+        const GLColor *pixels = static_cast<const GLColor *>(
+            glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, dataSize, GL_MAP_READ_BIT));
+        ASSERT_NE(nullptr, pixels);
+        // SAFETY: pixels maps dataSize bytes, which contains pixelCount GLColor elements.
+        // The range is checked before the buffer is unmapped.
+        EXPECT_TRUE(ANGLE_UNSAFE_BUFFERS(
+            std::all_of(pixels, pixels + pixelCount,
+                        [&color](const GLColor &pixel) { return pixel == color; })))
+            << "Expected PBO color: " << color;
+        EXPECT_GL_TRUE(glUnmapBuffer(GL_PIXEL_PACK_BUFFER));
+        ASSERT_GL_NO_ERROR();
+    }
 }
 
 // Test copy to snorm
