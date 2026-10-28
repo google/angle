@@ -779,7 +779,8 @@ void MaybeResetResources(egl::Display *display,
     // Track the initial output position so we can detect if it has moved
     std::streampos initialOutPos = out.tellp();
 
-    gl::Context *context               = display->getContext(contextID);
+    egl::ScopedContextRef contextRef   = display->getContextRef(contextID);
+    gl::Context *context               = contextRef.get();
     StateResetHelper &stateResetHelper = context->getFrameCapture()->getStateResetHelper();
     auto emitResetCall                 = [&](CallCapture &call) {
         out << "    ";
@@ -10034,8 +10035,8 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
         stateResetHelper.setCurrentResetActiveTexture(context->getState().getActiveSampler());
         for (const gl::ContextID &contextID : contextIDs)
         {
-            gl::Context *shareContext = context->getDisplay()->getContext(contextID);
-            if (shareContext)
+            egl::ScopedContextRef shareContextRef = context->getDisplay()->getContextRef(contextID);
+            if (gl::Context *shareContext = shareContextRef.get())
             {
                 shareContext->getFrameCapture()->getStateResetHelper().setCurrentResetActiveTexture(
                     shareContext->getState().getActiveSampler());

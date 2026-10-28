@@ -32,9 +32,83 @@ class ShareGroupImpl;
 
 namespace egl
 {
+class ThreadSafeDisplay;
+
+// References a Context, so that it stays alive while this does.  When this drops the last reference
+// to a destroyed Context, it frees it (see ContextMap).
+class [[nodiscard]] ScopedContextRef final : angle::NonCopyable
+{
+  public:
+    ScopedContextRef() = default;
+    // |display| is the one of |context|.  The caller must make sure that |context| is alive, e.g.
+    // because it is current, or because it is found in the context map, which is locked.
+    ScopedContextRef(ThreadSafeDisplay *display, gl::Context *context)
+        : mDisplay(display), mContext(context)
+    {
+        if (mContext != nullptr)
+        {
+            ASSERT(mDisplay != nullptr);
+            mContext->addRef();
+        }
+    }
+    ~ScopedContextRef();
+
+    gl::Context *get() const { return mContext; }
+
+    // Gives up the reference, without dropping it.
+    gl::Context *release()
+    {
+        gl::Context *context = mContext;
+        mDisplay             = nullptr;
+        mContext             = nullptr;
+        return context;
+    }
+
+  private:
+    ThreadSafeDisplay *mDisplay = nullptr;
+    gl::Context *mContext       = nullptr;
+};
+
+// A Context is freed once eglDestroyContext() was called on it, and the last reference to it is
+// dropped (see gl::Context::addRef()).  Until then, it stays in the map, so its handle remains
+// valid, e.g. while it is still current on a thread.  The map's mutex makes looking up and
+// referencing a Context, marking it destroyed, and dropping the last reference to it, atomic with
+// respect to each other.
 class ContextMap final : public priv::ObjectMap<gl::Context, angle::SimpleMutex>
 {
   public:
+    ScopedContextRef getContextRef(ThreadSafeDisplay *display, gl::ContextID handle) const
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        auto iter = mObjects.find(handle.value);
+        return ScopedContextRef(display, iter != mObjects.end() ? iter->second : nullptr);
+    }
+
+    // The caller must hold a reference to |context|, which it then drops with releaseRef().
+    void markDestroyed(gl::Context *context)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        ASSERT(context->getRefCount() > 0);
+        context->setIsDestroyed();
+    }
+
+    // Drops a reference to |context|.  If that was the last one, and |context| is destroyed, this
+    // removes |context| from the map, so that it can no longer be looked up, and returns true: the
+    // caller must then free it.
+    [[nodiscard]] bool releaseRef(gl::Context *context)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        context->release();
+        if (context->getRefCount() > 0 || !context->isDestroyed())
+        {
+            return false;
+        }
+        // Note that the context may have been removed already, if eglDestroyContext() makes it
+        // current to free it.
+        mObjects.erase(context->id().value);
+        return true;
+    }
+
     void pruneUnreferenced(ContextMap *invalidContextMap)
     {
         std::lock_guard<angle::SimpleMutex> lock(mMutex);
@@ -50,7 +124,9 @@ class ContextMap final : public priv::ObjectMap<gl::Context, angle::SimpleMutex>
         angle::HashMap<GLuint, gl::Context *> contextsStillCurrent = {};
         for (auto context : this->mObjects)
         {
-            if (context.second->isCurrentOnAnyThread())
+            // Besides the threads that have the context current, a thread that is releasing it may
+            // still reference it.
+            if (context.second->getRefCount() > 0)
             {
                 contextsStillCurrent.emplace(context);
                 continue;
@@ -89,6 +165,38 @@ class ContextMap final : public priv::ObjectMap<gl::Context, angle::SimpleMutex>
             pair.second->markContextLost(gl::GraphicsResetStatus::UnknownContextReset);
         }
         *deviceLost = true;
+    }
+
+    bool isResetNotificationEnabled() const
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        for (const auto &pair : this->mObjects)
+        {
+            if (pair.second->isResetNotificationEnabled())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void onGPUSwitch() const
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        for (const auto &pair : this->mObjects)
+        {
+            pair.second->onGPUSwitch();
+        }
+    }
+
+    template <typename Callback>
+    void forEach(Callback &&callback) const
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        for (const auto &pair : this->mObjects)
+        {
+            callback(pair.second);
+        }
     }
 };
 

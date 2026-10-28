@@ -260,9 +260,16 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     ScopedSurfaceLockAndRef getSurface(egl::SurfaceID surfaceID) const;
     Error destroySurface(Surface *surface);
 
-    const gl::Context *getContext(gl::ContextID contextID) const;
-    gl::Context *getContext(gl::ContextID contextID);
     bool isValidContext(gl::ContextID contextID) const;
+
+    // Looks up a context and references it, so that it stays alive, and in the context map, even
+    // if another thread destroys it, while the returned ScopedContextRef does.  The EGL entry
+    // points that take a context handle hold one until they return, and pass the context on
+    // instead of its handle.  eglDestroyContext() hands its reference over to destroyContext().
+    ScopedContextRef getContextRef(gl::ContextID contextID) const;
+    // Drops a reference to a context, see ~ScopedContextRef().  If it was the last one to a
+    // destroyed context, this frees the context.
+    void releaseContextRef(gl::Context *context);
 
     angle::ScratchBuffer requestScratchBuffer() { return mScratchBuffers.requestScratchBuffer(); }
     void returnScratchBuffer(angle::ScratchBuffer scratchBuffer)
@@ -279,11 +286,20 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
         mZeroFilledBuffers.returnScratchBuffer(std::move(zeroFilledBuffer));
     }
 
+    // Locks the ContextMutexes of |previousContext| and |context|, and calls makeCurrentLocked().
     Error makeCurrent(Thread *thread,
                       gl::Context *previousContext,
                       Surface *drawSurface,
                       Surface *readSurface,
                       gl::Context *context);
+    // The caller must lock the ContextMutexes of |previousContext| and |context| with a
+    // ScopedContextMutexesLock, which keeps them alive if |previousContext| is freed.  It must also
+    // hold a reference to |context|, see ScopedContextRef.
+    Error makeCurrentLocked(Thread *thread,
+                            gl::Context *previousContext,
+                            Surface *drawSurface,
+                            Surface *readSurface,
+                            gl::Context *context);
 
     // After eglTerminate(), makeCurrent() schedules an internal cleanup of the display whenever the
     // current context changes.  The cleanup invalidates the contexts that are no longer current,
@@ -371,8 +387,9 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     ScratchBuffers mScratchBuffers;
     ScratchBuffers mZeroFilledBuffers;
 
-    Error releaseContext(gl::Context *context, Thread *thread);
-    std::unique_ptr<gl::Context> eraseContextImpl(gl::Context *context, ContextMap *contexts);
+    // Frees a destroyed context, which ContextMap::releaseRef() removed from the context map.  The
+    // caller must lock its ContextMutex, and keep the mutex alive.
+    Error releaseContext(gl::Context *context);
 
     std::atomic<bool> mTerminatedByApi;
     mutable std::atomic<bool> mPendingInternalCleanup;
@@ -466,6 +483,7 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
 
     void destroyImage(Image *image);
     void destroyStream(Stream *stream);
+    // Drops a reference to |context| that the caller hands over (see ScopedContextRef::release()).
     Error destroyContext(Thread *thread, gl::Context *context);
 
     bool isValidConfig(const Config *config) const;

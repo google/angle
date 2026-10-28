@@ -18,12 +18,22 @@
 #include "common/debug.h"
 #include "common/platform_helpers.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/capture/FrameCapture.h"
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/ShareGroupImpl.h"
 
 namespace egl
 {
+// ScopedContextRef
+ScopedContextRef::~ScopedContextRef()
+{
+    if (mContext != nullptr)
+    {
+        mDisplay->releaseContextRef(mContext);
+    }
+}
+
 // ShareGroupState
 ShareGroupState::ShareGroupState()
     : mAnyContextWithRobustness(false), mAnyContextWithDisplayTextureShareGroup(false)

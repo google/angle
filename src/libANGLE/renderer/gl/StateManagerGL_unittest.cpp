@@ -392,6 +392,9 @@ class ScopedTestContext
         const_cast<gl::State &>(mContext->getState()).setDrawFramebufferBinding(nullptr);
         mDefaultFbo->onDestroy(mContext);
         delete mDefaultFbo;
+        // Mimic how the EGL entry point API does, which always holds reference count before calling
+        // into Display::destroyContext.
+        mContext->addRef();
         EXPECT_EQ(EGL_SUCCESS,
                   mDisplay->destroyContext(egl::GetCurrentThread(), mContext).getCode());
         EXPECT_EQ(EGL_SUCCESS,
