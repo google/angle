@@ -497,12 +497,17 @@ TIntermDeclaration *RenameAndDeclareStruct(TSymbolTable *symbolTable,
     // always for simplicity.  +1 for the NUL terminator.
     //
     // If appending ID and the name is too long, cut off the end of the name.  The ID makes it
-    // unique.  Where _0 is used, long names are hashed to avoid collision.
+    // unique.  Where _0 is used, long names are hashed to avoid collision; any name longer than the
+    // hash length itself risks collision, if unhashed, with a hashed name.
     constexpr uint32_t kAppendExtraChars = 1 + 11;  // underscore + 32-bit number
 
-    ImmutableStringBuilder builder(structure->name().length() + kAppendExtraChars);
-    if (scope == StructureOriginalScope::Global &&
-        structure->name().length() > kESSLMaxIdentifierLength - kAppendExtraChars)
+    // Hash length is kSHA1Length, and every byte is written as two hex characters
+    constexpr uint32_t kHashChars = 2 * angle::base::kSHA1Length;
+    static_assert(kHashChars < kESSLMaxIdentifierLength - kAppendExtraChars);
+
+    ImmutableStringBuilder builder(std::max<size_t>(structure->name().length(), kHashChars) +
+                                   kAppendExtraChars);
+    if (scope == StructureOriginalScope::Global && structure->name().length() > kHashChars)
     {
         angle::base::SecureHashAlgorithm hasher;
         hasher.Init();
