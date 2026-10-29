@@ -6705,12 +6705,14 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             mExtendedDynamicState3Features.extendedDynamicState3DepthClampEnable == VK_TRUE &&
             mPhysicalDeviceFeatures.depthClamp && isRasterizerDiscardDynamicState && !isPowerVR);
 
+    // Disabled on Intel/Windows drivers due to rendering corruption across many tests.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsDepthClipNegativeOneToOneDynamicState,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3DepthClipNegativeOneToOne ==
                 VK_TRUE &&
-            mFeatures.supportsDepthClipControl.enabled && isRasterizerDiscardDynamicState);
+            mFeatures.supportsDepthClipControl.enabled && isRasterizerDiscardDynamicState &&
+            !(isIntel && IsWindows()));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsLogicOpEnableDynamicState,
