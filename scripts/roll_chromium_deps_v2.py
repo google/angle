@@ -92,7 +92,6 @@ SYNCED_CIPD_DEPS = {
     'third_party/android_build_tools/error_prone_javac/cipd',
     'third_party/android_build_tools/lint/cipd',
     'third_party/android_build_tools/manifest_merger/cipd',
-    'third_party/android_build_tools/nullaway/cipd',
     'third_party/android_sdk/public',
     'third_party/android_system_sdk/cipd',
     'third_party/fuchsia-sdk/sdk',
