@@ -48,7 +48,6 @@
 #include "compiler/translator/tree_ops/SplitSequenceOperator.h"
 #include "compiler/translator/tree_ops/glsl/RewriteRepeatedAssignToSwizzled.h"
 #include "compiler/translator/tree_ops/glsl/UseInterfaceBlockFields.h"
-#include "compiler/translator/tree_ops/glsl/WrapStructConstructors.h"
 #include "compiler/translator/tree_ops/glsl/apple/AddAndTrueToLoopCondition.h"
 #include "compiler/translator/tree_ops/glsl/apple/UnfoldShortCircuitAST.h"
 #include "compiler/translator/tree_ops/msl/EnsureLoopForwardProgress.h"
@@ -1146,15 +1145,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
         if (!InitializeUninitializedLocals(this, root, getShaderVersion(), canUseLoopsToInitialize,
                                            &getSymbolTable()))
-        {
-            return false;
-        }
-    }
-
-    if (compileOptions.avoidComplexExpressionsInStructConstructor)
-    {
-        // Must run after InitializeUninitializedLocals, as that would introduce struct constructors
-        if (!WrapStructConstructors(this, root, &mSymbolTable))
         {
             return false;
         }
