@@ -506,7 +506,7 @@ impl ast::Target for WgslOutputGenerator {
                 BuiltIn::NumWorkGroups => "gl_NumWorkGroups".to_string(),
                 BuiltIn::SampleID => "gl_SampleID".to_string(),
                 BuiltIn::SampleMask => "gl_SampleMask".to_string(),
-                _ => format!("gl_builtin_{:?}", built_in),
+                _ => panic!("Internal error: Unsupported built-in"),
             }
         } else {
             Self::name_str(&variable.name, TEMP_VARIABLE_PREFIX, id.id)
