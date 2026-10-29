@@ -326,6 +326,7 @@ enum class Feature
     ResetSampleCoverageOnFBOChange,
     ResetTexImage2DBaseLevel,
     ResyncDepthRangeOnClipControl,
+    RetainShaderDebugInfo,
     RetainSPIRVDebugInfo,
     RewriteRepeatedAssignToSwizzled,
     RewriteRowMajorMatrices,

@@ -1017,6 +1017,24 @@ inline bool IsQualifierUnspecified(TQualifier qualifier)
     return (qualifier == EvqTemporary || qualifier == EvqGlobal);
 }
 
+inline bool IsPrivate(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+        case EvqTemporary:
+        case EvqGlobal:
+        case EvqConst:
+        case EvqParamIn:
+        case EvqParamOut:
+        case EvqParamInOut:
+        case EvqParamConst:
+            // Every other qualifier denotes a shader interface variable
+            return true;
+        default:
+            return false;
+    }
+}
+
 inline bool IsStorageBuffer(TQualifier qualifier)
 {
     return qualifier == EvqBuffer;

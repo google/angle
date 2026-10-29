@@ -10560,6 +10560,77 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test indexing a large array in a loop continue statement, where the array is shadowed by a small
+// one in the loop body.  The loop declares two variables, which triggers an AST transformation to
+// simplify it.
+TEST_P(GLSLTest_ES3, ArrayVariableShadowVsMultiDeclarationsInLoop)
+{
+    // Fails with AST transforms when debug info (variable names) are retained.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr) &&
+                       getEGLWindow()->isFeatureEnabled(Feature::RetainShaderDebugInfo));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+float array[1000];
+void main() {
+    float red = 0.;
+    for (int i = 0, j = 0; i < 2; (array[999] = 0.5)) {
+        float array[1] = float[1](0.2);
+        red += array[0];
+        ++j;
+        ++i;
+        // Add a continue in the same scope as |array|, so that replicating |array[999] = 0.5| before
+        // the continue would cause an error.
+        continue;
+    }
+    color = vec4(red, array[999], 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(102, 127, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test indexing a large array in a loop continue statement, where the array is shadowed by a small
+// one in the loop body.  The loop declares two variables, which triggers an AST transformation to
+// simplify it.
+TEST_P(GLSLTest_ES3, ArrayVariableShadowVsMultiDeclarationsInLoop2)
+{
+    // Fails with AST transforms when debug info (variable names) are retained.
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::UseIr) &&
+                       getEGLWindow()->isFeatureEnabled(Feature::RetainShaderDebugInfo));
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+float f(out float array[1000])
+{
+    float red = 0.;
+    for (int i = 0, j = 0; i < 2; (array[999] = 0.5)) {
+        float array[1] = float[1](0.2);
+        red += array[0];
+        ++j;
+        ++i;
+        // Add a continue in the same scope as |array|, so that replicating |array[999] = 0.5| before
+        // the continue would cause an error.
+        continue;
+    }
+    return red;
+}
+void main() {
+    float array[1000];
+    float red = f(array);
+    color = vec4(red, array[999], 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(102, 127, 0, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that an empty switch/case statement is translated in a way that compiles and executes the
 // init-statement.
 TEST_P(GLSLTest_ES3, EmptySwitch)
@@ -27756,7 +27827,7 @@ void main()
 }
 
 // Test indexing a uniform matrix with a non-constant index
-TEST_P(WebGL2GLSLTest, _UniformMatrixDynamicIndex)
+TEST_P(WebGL2GLSLTest, UniformMatrixDynamicIndex)
 {
     constexpr char kVS[] = R"(precision highp float;
 attribute vec2 position;
@@ -27956,6 +28027,10 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
     ES3_OPENGLES()
         .enable(Feature::AvoidComplexExpressionsInStructConstructor)
         .enable(Feature::ForceInitShaderVariables),
+    ES3_OPENGL().enable(Feature::RetainShaderDebugInfo),
+    ES3_OPENGLES().enable(Feature::RetainShaderDebugInfo),
+    ES3_D3D11().enable(Feature::RetainShaderDebugInfo),
+    ES3_METAL().enable(Feature::RetainShaderDebugInfo),
     ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision),
     ES3_VULKAN().enable(Feature::ForceInitShaderVariables),
     ES3_VULKAN().disable(Feature::SupportsSPIRV14),
@@ -27980,6 +28055,10 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     ES3_OPENGLES()
         .enable(Feature::AvoidComplexExpressionsInStructConstructor)
         .enable(Feature::ForceInitShaderVariables),
+    ES3_OPENGL().enable(Feature::RetainShaderDebugInfo),
+    ES3_OPENGLES().enable(Feature::RetainShaderDebugInfo),
+    ES3_D3D11().enable(Feature::RetainShaderDebugInfo),
+    ES3_METAL().enable(Feature::RetainShaderDebugInfo),
     ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision),
     ES3_VULKAN().enable(Feature::ForceInitShaderVariables),
     ES3_VULKAN().disable(Feature::SupportsSPIRV14),
@@ -27993,29 +28072,53 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     ES3_OPENGL().enable(Feature::ForceInitShaderVariables),
     ES3_OPENGL().enable(Feature::ScalarizeVecAndMatConstructorArgs),
     ES3_OPENGLES().enable(Feature::ScalarizeVecAndMatConstructorArgs),
+    ES3_OPENGL().enable(Feature::RetainShaderDebugInfo),
+    ES3_OPENGLES().enable(Feature::RetainShaderDebugInfo),
+    ES3_D3D11().enable(Feature::RetainShaderDebugInfo),
+    ES3_METAL().enable(Feature::RetainShaderDebugInfo),
     ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision),
     ES3_VULKAN().enable(Feature::ForceInitShaderVariables),
     ES3_VULKAN().disable(Feature::SupportsSPIRV14));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTestLoops);
-ANGLE_INSTANTIATE_TEST_ES3(GLSLTestLoops);
+ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLTestLoops,
+                               ES3_OPENGL().enable(Feature::RetainShaderDebugInfo),
+                               ES3_OPENGLES().enable(Feature::RetainShaderDebugInfo),
+                               ES3_D3D11().enable(Feature::RetainShaderDebugInfo),
+                               ES3_METAL().enable(Feature::RetainShaderDebugInfo));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTestLoops_ES31);
-ANGLE_INSTANTIATE_TEST_ES31(GLSLTestLoops_ES31);
+ANGLE_INSTANTIATE_TEST_ES31_AND(GLSLTestLoops_ES31,
+                                ES31_OPENGL().enable(Feature::RetainShaderDebugInfo),
+                                ES31_OPENGLES().enable(Feature::RetainShaderDebugInfo));
 
-ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND(WebGLGLSLTest,
+                               ES2_OPENGL().enable(Feature::RetainShaderDebugInfo),
+                               ES2_OPENGLES().enable(Feature::RetainShaderDebugInfo),
+                               ES2_D3D11().enable(Feature::RetainShaderDebugInfo),
+                               ES2_METAL().enable(Feature::RetainShaderDebugInfo));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ClampPointSize);
 ANGLE_INSTANTIATE_TEST_ES2_AND(GLSLTest_ClampPointSize,
                                ES2_OPENGL().enable(Feature::ClampPointSize),
-                               ES2_VULKAN().enable(Feature::ClampPointSize));
+                               ES2_VULKAN().enable(Feature::ClampPointSize),
+                               ES2_OPENGL().enable(Feature::RetainShaderDebugInfo),
+                               ES2_OPENGLES().enable(Feature::RetainShaderDebugInfo),
+                               ES2_D3D11().enable(Feature::RetainShaderDebugInfo),
+                               ES2_METAL().enable(Feature::RetainShaderDebugInfo));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLTest);
-ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(WebGL2GLSLTest,
+                               ES3_OPENGL().enable(Feature::RetainShaderDebugInfo),
+                               ES3_OPENGLES().enable(Feature::RetainShaderDebugInfo),
+                               ES3_D3D11().enable(Feature::RetainShaderDebugInfo),
+                               ES3_METAL().enable(Feature::RetainShaderDebugInfo));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(
     GLSLTest_ES31,
+    ES31_OPENGL().enable(Feature::RetainShaderDebugInfo),
+    ES31_OPENGLES().enable(Feature::RetainShaderDebugInfo),
     ES31_VULKAN().enable(Feature::ForceInitShaderVariables),
     ES31_VULKAN().enable(Feature::VaryingsRequireMatchingPrecisionInSpirv),
     ES31_VULKAN().disable(Feature::SupportsSPIRV14));
@@ -28028,7 +28131,11 @@ ANGLE_INSTANTIATE_TEST(
     ES3_OPENGLES().enable(Feature::ForceInitShaderVariables),
     ES3_METAL().enable(Feature::ForceInitShaderVariables),
     ES3_VULKAN().enable(Feature::ForceInitShaderVariables),
-    ES3_VULKAN().disable(Feature::SupportsSPIRV14).enable(Feature::ForceInitShaderVariables));
+    ES3_VULKAN().disable(Feature::SupportsSPIRV14).enable(Feature::ForceInitShaderVariables),
+    ES3_OPENGL().enable(Feature::ForceInitShaderVariables).enable(Feature::RetainShaderDebugInfo),
+    ES3_OPENGLES().enable(Feature::ForceInitShaderVariables).enable(Feature::RetainShaderDebugInfo),
+    ES3_D3D11().enable(Feature::ForceInitShaderVariables).enable(Feature::RetainShaderDebugInfo),
+    ES3_METAL().enable(Feature::ForceInitShaderVariables).enable(Feature::RetainShaderDebugInfo));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES31_InitShaderVariables);
 ANGLE_INSTANTIATE_TEST(
@@ -28043,7 +28150,11 @@ ANGLE_INSTANTIATE_TEST(GLSLTest_ES3_PackUnpackEmulation,
                        ES3_OPENGL().enable(Feature::EmitMaxGlsl400ForTesting),
                        ES3_OPENGLES(),
                        ES3_METAL(),
-                       ES3_VULKAN());
+                       ES3_VULKAN(),
+                       ES3_OPENGL().enable(Feature::RetainShaderDebugInfo),
+                       ES3_OPENGLES().enable(Feature::RetainShaderDebugInfo),
+                       ES3_D3D11().enable(Feature::RetainShaderDebugInfo),
+                       ES3_METAL().enable(Feature::RetainShaderDebugInfo));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND(GLSLTestPassthrough,
                                ES2_OPENGLES().enable(Feature::ForcePassthroughShaders));

@@ -2682,25 +2682,16 @@ void TParseContext::declareIRVariable(const TVariable *variable, GeomTessArray s
     ASSERT(type.isTypeIdSet());
 
     ir::VariableId variableId;
-    switch (type.getQualifier())
+    if (IsPrivate(type.getQualifier()))
     {
-        case EvqTemporary:
-        case EvqGlobal:
-        case EvqConst:
-        case EvqParamIn:
-        case EvqParamOut:
-        case EvqParamInOut:
-        case EvqParamConst:
-            // Temporary variables
-            variableId = mIRBuilder.declareTempVariable(variable->name(), type.typeId(), type);
-            break;
-        default:
-            // Interface and built-in variables
-            variableId = mIRBuilder.declareInterfaceVariable(
-                variable->symbolType() == SymbolType::Empty ? kEmptyImmutableString
-                                                            : variable->name(),
-                type.typeId(), type, ir::DeclarationSource::Shader);
-            break;
+        variableId = mIRBuilder.declareTempVariable(variable->name(), type.typeId(), type);
+    }
+    else
+    {
+        // Interface and built-in variables
+        variableId = mIRBuilder.declareInterfaceVariable(
+            variable->symbolType() == SymbolType::Empty ? kEmptyImmutableString : variable->name(),
+            type.typeId(), type, ir::DeclarationSource::Shader);
     }
     mVariableToId[variable] = VariableToIdInfo{variableId, VariableToIdInfo::kNoImplicitField};
 }
