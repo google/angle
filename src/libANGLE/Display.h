@@ -510,6 +510,10 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     const std::string &getVendorString() const;
     const std::string &getVersionString() const;
     const std::string &getClientAPIString() const;
+    const std::string &getRendererString() const;
+
+    // Builds the string returned by glGetString(GL_RENDERER).
+    std::string generateRendererString(bool includeFullVersion) const;
 
     std::string getBackendRendererDescription() const;
     std::string getBackendVendorString() const;
@@ -610,6 +614,7 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     void initVendorString();
     void initVersionString();
     void initClientAPIString();
+    void initRendererString();
     void initializeFrontendFeatures();
 
     Error destroyInvalidEglObjects();
@@ -643,6 +648,7 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     std::string mVendorString;
     std::string mVersionString;
     std::string mClientAPIString;
+    std::string mRendererString;
 
     Device *mDevice;
     Surface *mSurface;

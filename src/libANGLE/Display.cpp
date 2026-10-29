@@ -1633,6 +1633,7 @@ Error Display::initialize()
     initVendorString();
     initVersionString();
     initClientAPIString();
+    initRendererString();
 
     // Populate the Display's EGLDeviceEXT if the Display wasn't created using one
     if (mPlatform == EGL_PLATFORM_DEVICE_EXT)
@@ -2657,6 +2658,9 @@ void Display::initDisplayExtensions()
     // EGL_ANGLE_memory_usage_report is implemented on front end.
     mDisplayExtensions.memoryUsageReportANGLE = true;
 
+    // EGL_ANGLE_query_renderer_strings is implemented on front end.
+    mDisplayExtensions.queryRendererStringsANGLE = true;
+
     mDisplayExtensionString = GenerateExtensionsString(mDisplayExtensions);
 }
 
@@ -2756,6 +2760,42 @@ void Display::initClientAPIString()
     mClientAPIString = "OpenGL_ES";
 }
 
+void Display::initRendererString()
+{
+    // Match the GL_RENDERER string of non-WebGL contexts, which include the full backend version.
+    mRendererString = generateRendererString(true);
+}
+
+std::string Display::generateRendererString(bool includeFullVersion) const
+{
+    constexpr char kRendererString[]        = "ANGLE_GL_RENDERER";
+    constexpr char kAndroidRendererString[] = "debug.angle.gl_renderer";
+
+    std::string overrideRenderer =
+        angle::GetEnvironmentVarOrAndroidProperty(kRendererString, kAndroidRendererString);
+    if (!overrideRenderer.empty())
+    {
+        return overrideRenderer;
+    }
+
+    std::string vendorString(getBackendVendorString());
+    std::string rendererString(getBackendRendererDescription());
+    std::string versionString(getBackendVersionString(includeFullVersion));
+    // Commas are used as a separator in ANGLE's renderer string, so remove commas from each
+    // element.
+    vendorString.erase(std::remove(vendorString.begin(), vendorString.end(), ','),
+                       vendorString.end());
+    rendererString.erase(std::remove(rendererString.begin(), rendererString.end(), ','),
+                         rendererString.end());
+    versionString.erase(std::remove(versionString.begin(), versionString.end(), ','),
+                        versionString.end());
+
+    std::ostringstream frontendRendererString;
+    frontendRendererString << "ANGLE (" << vendorString << ", " << rendererString << ", "
+                           << versionString << ")";
+    return frontendRendererString.str();
+}
+
 void Display::initializeFrontendFeatures()
 {
     // Enable on all Impls
@@ -2797,6 +2837,11 @@ const std::string &Display::getExtensionString() const
 const std::string &Display::getVendorString() const
 {
     return mVendorString;
+}
+
+const std::string &Display::getRendererString() const
+{
+    return mRendererString;
 }
 
 const std::string &Display::getVersionString() const

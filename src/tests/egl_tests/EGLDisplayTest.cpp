@@ -397,6 +397,46 @@ TEST_P(EGLDisplayTest, QueryEGLVendorWithBadDisplay)
     EXPECT_EQ(eglGetError(), EGL_BAD_DISPLAY);
 }
 
+// Tests that EGL_ANGLE_query_renderer_strings returns the same strings as the GL context.
+TEST_P(EGLDisplayTest, QueryRendererStrings)
+{
+    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+    EGLDisplay display    = eglGetPlatformDisplay(
+        GetEglPlatform(), reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+    ASSERT_NE(display, EGL_NO_DISPLAY);
+
+    ASSERT_EGL_TRUE(eglInitialize(display, nullptr, nullptr));
+
+    if (!IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_query_renderer_strings"))
+    {
+        EXPECT_EGL_TRUE(eglTerminate(display));
+        ANGLE_SKIP_TEST_IF(true);
+    }
+
+    const char *rendererString = eglQueryString(display, EGL_RENDERER_STRING_ANGLE);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(nullptr, rendererString);
+    const char *versionString = eglQueryString(display, EGL_ANGLE_VERSION_STRING_ANGLE);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(nullptr, versionString);
+
+    // The returned strings match the ones of a (non-WebGL) context created on the display.
+    EGLConfig config   = chooseConfig(display);
+    EGLContext context = createContext(display, config);
+    EGLSurface surface = createPBufferSurface(display, config);
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context));
+
+    EXPECT_STREQ(reinterpret_cast<const char *>(glGetString(GL_RENDERER)), rendererString);
+    const std::string glVersion = reinterpret_cast<const char *>(glGetString(GL_VERSION));
+    EXPECT_NE(std::string::npos, glVersion.find(std::string("(ANGLE ") + versionString + ")"))
+        << glVersion;
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    EXPECT_EGL_TRUE(eglDestroySurface(display, surface));
+    EXPECT_EGL_TRUE(eglDestroyContext(display, context));
+    EXPECT_EGL_TRUE(eglTerminate(display));
+}
+
 // Tests that eglGetPlatformDisplayEXT can use EGL_PLATFORM_ANDROID_KHR to get a display.
 TEST_P(EGLDisplayTestES3, GetPlatformDisplayAndroidValidation)
 {

@@ -467,6 +467,12 @@ EGLAPI void EGLAPIENTRY eglSetValidationEnabledANGLE(EGLBoolean validationState)
 #define EGL_CONTEXT_PASSTHROUGH_SHADERS_ANGLE 0x3463
 #endif /* EGL_ANGLE_create_context_passthrough_shaders */
 
+#ifndef EGL_ANGLE_query_renderer_strings
+#define EGL_ANGLE_query_renderer_strings 1
+#define EGL_RENDERER_STRING_ANGLE 0x34F9
+#define EGL_ANGLE_VERSION_STRING_ANGLE 0x34FA
+#endif /* EGL_ANGLE_query_renderer_strings */
+
 // clang-format on
 
 #endif  // INCLUDE_EGL_EGLEXT_ANGLE_

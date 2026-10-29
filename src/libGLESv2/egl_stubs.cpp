@@ -552,6 +552,12 @@ const char *QueryString(Thread *thread, Display *display, EGLint name)
             result = angle::GetANGLEEGLVersionString();
             break;
         }
+        case EGL_RENDERER_STRING_ANGLE:
+            result = display->getRendererString().c_str();
+            break;
+        case EGL_ANGLE_VERSION_STRING_ANGLE:
+            result = angle::GetANGLEVersionString();
+            break;
         default:
             UNREACHABLE();
             break;

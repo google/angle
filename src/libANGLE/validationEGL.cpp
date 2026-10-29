@@ -7056,6 +7056,15 @@ bool ValidateQueryString(const ValidationContext *val, const Display *dpyPacked,
         case EGL_VENDOR:
         case EGL_VERSION:
             break;
+        case EGL_RENDERER_STRING_ANGLE:
+        case EGL_ANGLE_VERSION_STRING_ANGLE:
+            if (!dpyPacked->getExtensions().queryRendererStringsANGLE)
+            {
+                val->setError(EGL_BAD_PARAMETER,
+                              "EGL_ANGLE_query_renderer_strings is not supported.");
+                return false;
+            }
+            break;
         default:
             val->setError(EGL_BAD_PARAMETER, "Invalid query <name>");
             return false;
