@@ -11,6 +11,7 @@
 
 #include <string.h>
 #include <algorithm>
+#include <functional>
 #include <limits>
 
 #include "anglebase/numerics/safe_conversions.h"
@@ -419,7 +420,7 @@ struct ScopedBindVAO
 };
 
 void QueryContextStateGL(const FunctionsGL *functions,
-                         GLuint framebufferWithStencilBits,
+                         std::function<GLuint(void)> framebufferWithStencilBitsGetter,
                          ContextStateGL *state)
 {
     GetHelper(functions, GL_CURRENT_PROGRAM, &state->program);
@@ -584,7 +585,8 @@ void QueryContextStateGL(const FunctionsGL *functions,
     // Bind a framebuffer with stencil bits for the rest of the queries. Many queries related to
     // stencil will mask with the number of bits in the current stencil buffer.
     ScopedBindDrawFramebuffer scopedFramebufferWithStencil(
-        functions, state->framebuffers[angle::FramebufferBindingDraw], framebufferWithStencilBits);
+        functions, state->framebuffers[angle::FramebufferBindingDraw],
+        framebufferWithStencilBitsGetter());
 
     GetHelper(functions, GL_RENDERBUFFER_BINDING, &state->renderbuffer);
 
@@ -4638,10 +4640,9 @@ VertexArrayStateGL *StateManagerGL::getCurrentVAOState()
 
 void StateManagerGL::validateState()
 {
-    ensurePlaceholderFramebuffer();
-
     ContextStateGL queriedState(mCaps);
-    QueryContextStateGL(mFunctions, mPlaceholderFbo, &queriedState);
+    QueryContextStateGL(
+        mFunctions, [this]() { return ensurePlaceholderFramebuffer(); }, &queriedState);
     if (mState != queriedState)
     {
         std::ostringstream msg;
@@ -4671,10 +4672,9 @@ angle::Result StateManagerGL::syncFromNativeContext(const gl::Context *context,
     auto *platform   = ANGLEPlatformCurrent();
     double startTime = platform->currentTime(platform);
 
-    ensurePlaceholderFramebuffer();
-
     // Query the current driver state into outNativeContextState so that it can be restored later.
-    QueryContextStateGL(mFunctions, mPlaceholderFbo, outNativeContextState);
+    QueryContextStateGL(
+        mFunctions, [this]() { return ensurePlaceholderFramebuffer(); }, outNativeContextState);
 
     // Compute the dirty bits between the currently tracked state and the queried state in
     // outNativeContextState. This will ensure that all frontend states will be re-applied in the
@@ -4702,11 +4702,11 @@ angle::Result StateManagerGL::restoreNativeContext(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-void StateManagerGL::ensurePlaceholderFramebuffer()
+GLuint StateManagerGL::ensurePlaceholderFramebuffer()
 {
     if (mPlaceholderFbo)
     {
-        return;
+        return mPlaceholderFbo;
     }
 
     GLenum framebufferBinding =
@@ -4733,6 +4733,8 @@ void StateManagerGL::ensurePlaceholderFramebuffer()
     mFunctions->bindFramebuffer(framebufferBinding,
                                 mState.framebuffers[angle::FramebufferBindingDraw]);
     mFunctions->bindRenderbuffer(GL_RENDERBUFFER, mState.renderbuffer);
+
+    return mPlaceholderFbo;
 }
 
 }  // namespace rx

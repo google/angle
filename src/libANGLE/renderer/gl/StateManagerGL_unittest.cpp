@@ -29,6 +29,8 @@ struct MockDriverState
 {
     GLboolean blendEnabled             = GL_FALSE;
     std::array<GLboolean, 4> colorMask = {GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE};
+    GLuint readFramebuffer             = 0;
+    GLuint drawFramebuffer             = 0;
     int enableBlendCallCount           = 0;
     int disableBlendCallCount          = 0;
     int colorMaskCallCount             = 0;
@@ -68,6 +70,15 @@ void GL_APIENTRY StubGetIntegerv(GLenum pname, GLint *data)
             data[3] = gDriverState->colorMask[3];
         });
     }
+    else if (pname == GL_READ_FRAMEBUFFER_BINDING && gDriverState != nullptr)
+    {
+        *data = gDriverState->readFramebuffer;
+    }
+    else if ((pname == GL_DRAW_FRAMEBUFFER_BINDING || pname == GL_FRAMEBUFFER_BINDING) &&
+             gDriverState != nullptr)
+    {
+        *data = gDriverState->drawFramebuffer;
+    }
 }
 void GL_APIENTRY StubGetFloatv(GLenum, GLfloat *) {}
 void GL_APIENTRY StubGetBooleanv(GLenum, GLboolean *) {}
@@ -104,7 +115,21 @@ void GL_APIENTRY StubGenFramebuffers(GLsizei, GLuint *framebuffers)
 {
     *framebuffers = 1;
 }
-void GL_APIENTRY StubBindFramebuffer(GLenum, GLuint) {}
+void GL_APIENTRY StubBindFramebuffer(GLenum target, GLuint framebuffer)
+{
+    if (gDriverState == nullptr)
+    {
+        return;
+    }
+    if (target == GL_READ_FRAMEBUFFER || target == GL_FRAMEBUFFER)
+    {
+        gDriverState->readFramebuffer = framebuffer;
+    }
+    if (target == GL_DRAW_FRAMEBUFFER || target == GL_FRAMEBUFFER)
+    {
+        gDriverState->drawFramebuffer = framebuffer;
+    }
+}
 void GL_APIENTRY StubDeleteFramebuffers(GLsizei, const GLuint *) {}
 void GL_APIENTRY StubGenRenderbuffers(GLsizei, GLuint *renderbuffers)
 {
@@ -443,6 +468,28 @@ TEST_F(StateManagerGLTest, SyncFromNativeContextColorMask)
     EXPECT_EQ(1, driverState().colorMaskCallCount);
     EXPECT_EQ(0, driverState().enableBlendCallCount);
     EXPECT_EQ(0, driverState().disableBlendCallCount);
+}
+
+// Verify that when a non-default framebuffer is bound in the native driver on
+// the first call to syncFromNativeContext, lazy creation of the placeholder
+// framebuffer does not clobber the native draw framebuffer binding before it
+// is queried.
+TEST_F(StateManagerGLTest, SyncFromNativeContextNonDefaultFramebuffer)
+{
+    constexpr GLuint kNativeFbo   = 42;
+    driverState().readFramebuffer = kNativeFbo;
+    driverState().drawFramebuffer = kNativeFbo;
+
+    std::unique_ptr<ContextStateGL> nativeState = stateManager().createContextStateGL();
+    EXPECT_EQ(angle::Result::Continue,
+              stateManager().syncFromNativeContext(nullptr, nativeState.get()));
+
+    EXPECT_EQ(kNativeFbo, nativeState->framebuffers[angle::FramebufferBindingRead]);
+    EXPECT_EQ(kNativeFbo, nativeState->framebuffers[angle::FramebufferBindingDraw]);
+    EXPECT_EQ(kNativeFbo, stateManager().getFramebufferID(angle::FramebufferBindingRead));
+    EXPECT_EQ(kNativeFbo, stateManager().getFramebufferID(angle::FramebufferBindingDraw));
+    EXPECT_EQ(kNativeFbo, driverState().readFramebuffer);
+    EXPECT_EQ(kNativeFbo, driverState().drawFramebuffer);
 }
 
 }  // namespace
