@@ -198,6 +198,7 @@ vars = {
   'checkout_angle_restricted_trace_batman_telltale': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_battle_of_polytopia': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_beach_buggy_racing': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_best_fiends': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_billiards_city': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_bingo_bash': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_bingo_blitz': 'checkout_extra_traces',
@@ -296,7 +297,7 @@ vars = {
   'checkout_angle_restricted_trace_fishdom': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_five_nights_at_freddys': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_football_league_2025': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_fps_strike_ops': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_fps_strike_ops': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_free_fire': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_free_fire_max': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_frost_and_flame': 'checkout_extra_traces',
@@ -344,6 +345,7 @@ vars = {
   'checkout_angle_restricted_trace_jetpack_joyride': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_jewels_blast': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_junes_journey': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_kalliu_game_world': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_kartrider_rush': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kentucky_route_zero': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_kingdom_guard': 'checkout_extra_traces',
@@ -382,8 +384,8 @@ vars = {
   'checkout_angle_restricted_trace_match_factory': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_match_masters': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_matching_story': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_matchington_mansion': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_meme_bots_brainrot_chase_rooms': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_matchington_mansion': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_meme_bots_brainrot_chase_rooms': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mementomori_afkrpg': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_merge_dragons': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_merge_mansion': 'checkout_extra_traces',
@@ -395,6 +397,7 @@ vars = {
   'checkout_angle_restricted_trace_mini_block_craft': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mini_fidget_antistress_games': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_mini_games_calm_and_relax': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_mini_relaxing_game': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_mini_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mob_control': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mobile_legends': 'checkout_extra_traces',
@@ -1881,6 +1884,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_beach_buggy_racing',
   },
+  'src/tests/restricted_traces/best_fiends': {
+      'packages': [
+        {
+            'package': 'angle/traces/best_fiends',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_best_fiends',
+  },
   'src/tests/restricted_traces/billiards_city': {
       'packages': [
         {
@@ -3341,6 +3354,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_junes_journey',
   },
+  'src/tests/restricted_traces/kalliu_game_world': {
+      'packages': [
+        {
+            'package': 'angle/traces/kalliu_game_world',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_kalliu_game_world',
+  },
   'src/tests/restricted_traces/kartrider_rush': {
       'packages': [
         {
@@ -3850,6 +3873,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_mini_games_calm_and_relax',
+  },
+  'src/tests/restricted_traces/mini_relaxing_game': {
+      'packages': [
+        {
+            'package': 'angle/traces/mini_relaxing_game',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_mini_relaxing_game',
   },
   'src/tests/restricted_traces/mini_world': {
       'packages': [
