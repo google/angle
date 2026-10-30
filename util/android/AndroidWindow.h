@@ -38,10 +38,12 @@ class AndroidWindow : public OSWindow
     ANGLE_UTIL_EXPORT static bool GetExternalStorageDirectory(angle::Span<char> buf);
     ANGLE_UTIL_EXPORT static bool GetApplicationDirectory(angle::Span<char> buf);
 
+    static constexpr size_t kMaxPathLength = 512;
+
     // Inline wrapper: std::string is allocated and deallocated entirely within the calling DSO
     static inline std::string GetApplicationDirectory()
     {
-        char buf[512] = {};
+        char buf[kMaxPathLength] = {};
         if (GetApplicationDirectory(buf))
         {
             return std::string(buf);
@@ -51,7 +53,7 @@ class AndroidWindow : public OSWindow
     // Inline wrapper: std::string is allocated and deallocated entirely within the calling DSO
     static inline std::string GetExternalStorageDirectory()
     {
-        char buf[512] = {};
+        char buf[kMaxPathLength] = {};
         if (GetExternalStorageDirectory(buf))
         {
             return std::string(buf);
