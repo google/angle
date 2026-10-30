@@ -322,6 +322,7 @@
 478807229 WIN INTEL VULKAN : OcclusionQueriesTestES3.QueryReuseWithMultipleFBOs/* = SKIP
 434453468 WIN INTEL VULKAN : LineLoopIndirectTest.TwoIndirectDrawsInDifferentIndirectBuffer/* = SKIP
 485440163 WIN INTEL VULKAN : FramebufferMultiviewLayeredClearTest.ScissoredClearBufferfi/* = SKIP
+577276050 WIN INTEL VULKAN : StateChangeTestES3.DepthClamp/* = SKIP
 
 // Texture border clamp ES 3.2 test failures
 390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWithStencil/* = SKIP
@@ -3123,6 +3124,7 @@
 573853134 WIN QUALCOMM VULKAN : ComputeShaderTest.AtomicOrMediumpUintHighBit/* = SKIP
 556564149 WIN QUALCOMM VULKAN : GLSLTest_ES3.InterpolantArrayReferencedWithoutIndex/* = SKIP
 576082230 WIN QUALCOMM VULKAN : StateChangeTestES31.PatchVertices/* = SKIP
+577276050 WIN QUALCOMM VULKAN : StateChangeTestES3.DepthClamp/* = SKIP
 
 558505634 WIN QUALCOMM D3D11 : Texture2DTestES3RobustInit.InvalidateDepthOnly/* = SKIP
 558505634 WIN QUALCOMM D3D11 : Texture2DTestES3RobustInit.InvalidateStencilOnly/* = SKIP
