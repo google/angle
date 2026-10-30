@@ -350,6 +350,7 @@
 523371282 WIN NVIDIA GLES : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
 523371282 WIN NVIDIA OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
 556564149 WIN NVIDIA GLES : GLSLTest_ES3.InterpolantArrayReferencedWithoutIndex/* = SKIP
+579811958 WIN NVIDIA VULKAN : AdvancedBlendMultisampleTest.SharedEdgeKHR/* = SKIP
 
 557268102 LINUX NVIDIA VULKAN : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP
 557268102 LINUX NVIDIA VULKAN : GLSLTest_ES3.LiteralNegativeInfinityOutput/* = SKIP
