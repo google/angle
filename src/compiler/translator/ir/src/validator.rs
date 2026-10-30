@@ -2181,17 +2181,11 @@ impl<'a> Validator<'a> {
                         opcode
                     ));
                 }
-
-                if let Id::Constant(switch_condition_constant_id) = switch_condition.id {
-                    for case_value_id in case_values.iter().flatten() {
-                        if switch_condition_constant_id != *case_value_id {
-                            self.on_error(format_args!(
-                                "operation {:?} could be constant folded. Case value does not \
-                                 match with switch condition constant, case should be removed",
-                                opcode
-                            ));
-                        }
-                    }
+                if matches!(switch_condition.id, Id::Constant(_)) {
+                    self.on_error(format_args!(
+                        "invalid instruction {:?}. switch(constant) should be folded",
+                        opcode
+                    ));
                 }
             }
             OpCode::If(condition) => {
