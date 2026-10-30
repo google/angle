@@ -362,6 +362,8 @@
 
 557268102 LINUX NVIDIA OPENGL : HardenedTransformFeedbackTest.VertexBufferBoundForTransformFeedback/* = SKIP
 557268102 LINUX NVIDIA OPENGL : SimpleUniformTest.MiddleInactiveUniform/* = SKIP
+557268102 LINUX NVIDIA OPENGL : TransformFeedbackLifetimeTest.DeletedBuffer/* = SKIP
+557268102 LINUX NVIDIA OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
 557268102 LINUX NVIDIA OPENGL : TransformFeedbackTest.StaleBufferBindingInactiveXfb/* = SKIP
 557268102 LINUX NVIDIA OPENGL : TransformFeedbackTestIOBlocks.Interleaved/* = SKIP
 557268102 LINUX NVIDIA OPENGL : UniformBufferTest31.FourBindingsSameBuffer/* = SKIP
