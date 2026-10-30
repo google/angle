@@ -23241,6 +23241,93 @@ void main()
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(191, 0, 63, 127), 1);
 }
 
+// Variable declared in switch case that is never executed should be initialized
+TEST_P(GLSLTest_ES3_InitShaderVariables, UninitializedVariableInCase)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+uniform int zero;
+float var = 0.1;
+void main()
+{
+    float var = 0.3;
+    float result;
+    switch (zero)
+    {
+    case 1:
+        float var;
+        break;
+    case 0:
+        var += 0.6;
+        switch (zero + 1)
+        {
+        case 2:
+            float var;
+            break;
+        default:
+            var += 0.1;
+            result = var;
+        }
+        result += var;
+        break;
+    default:
+        color = vec4(1, 0, 0, 1);
+        return;
+    }
+
+    color = vec4(var, result, 0, 1);
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(77, 178, 0, 255), 1);
+}
+
+// Variable declared in switch case that has an initializer (that is executed) should be initialized
+TEST_P(GLSLTest_ES3_InitShaderVariables, VariableWithInitializerInCase)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+uniform int zero;
+float var = 0.1;
+void main()
+{
+    float var = 0.3;
+    float result;
+    switch (zero)
+    {
+    case 1:
+        break;
+    case 0:
+        float var = 0.2;
+        result = var;
+        switch (zero + 1)
+        {
+        case 2:
+            break;
+        default:
+            float var = 0.1;
+            result += var;
+        }
+        result += var;
+        break;
+    default:
+        color = vec4(1, 0, 0, 1);
+        return;
+    }
+
+    color = vec4(var, result, 0, 1);
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(77, 127, 0, 255), 1);
+}
+
 // Tests for constant switch statement folding (https://crbug.com/548066294).
 // Test that a constant switch with matching case executes and draws correctly.
 TEST_P(GLSLTest_ES3, BasicConstantSwitch)
