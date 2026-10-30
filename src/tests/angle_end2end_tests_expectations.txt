@@ -3354,6 +3354,7 @@
 42267100 IR WGPU : UnpackAlignmentTest.*/* = SKIP
 42267100 IR WGPU : UnpackRowLengthTest.*/* = SKIP
 42267100 IR WGPU : WebGLCompatibilityTest.*FTextures/* = SKIP
+42267100 IR WGPU : WebGLCompatibilityTest.EXTColorBufferHalfFloat/* = SKIP
 42267100 IR WGPU : WebGLCompatibilityTest.MultiContextNoRenderingFeedbackLoops/* = SKIP
 42267100 IR WGPU : WebGLCompatibilityTest.RenderingFeedbackLoop/* = SKIP
 42267100 IR WGPU : WebGLReadOutsideFramebufferTest.ReadPixels/* = SKIP
