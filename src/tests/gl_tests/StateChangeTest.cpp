@@ -8,14 +8,12 @@
 //   ANGLE's dirty bits systems don't get confused by certain sequences of state changes.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
+#include "common/span.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 #include "util/random_utils.h"
 
+#include <algorithm>
 #include <array>
 #include <thread>
 
@@ -1277,10 +1275,9 @@ void main()
     ASSERT_GL_NO_ERROR();
 
     // Verify the XFB stage caught the 1.0 attribute values.
-    void *mapped1     = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, size1, GL_MAP_READ_BIT);
-    GLfloat *asFloat1 = reinterpret_cast<GLfloat *>(mapped1);
-    std::vector<GLfloat> actualData1(asFloat1, asFloat1 + data1.size());
-    EXPECT_EQ(data1, actualData1);
+    auto xfbData1 =
+        MapBufferRange<const GLfloat>(GL_TRANSFORM_FEEDBACK_BUFFER, 0, size1, GL_MAP_READ_BIT);
+    EXPECT_EQ(Span(data1), xfbData1);
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 
     // Now, reinitialize the XFB buffer to a larger size, and draw with 2.0.
@@ -1296,10 +1293,9 @@ void main()
     ASSERT_GL_NO_ERROR();
 
     // Verify the XFB stage caught the 2.0 attribute values.
-    void *mapped2     = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, size2, GL_MAP_READ_BIT);
-    GLfloat *asFloat2 = reinterpret_cast<GLfloat *>(mapped2);
-    std::vector<GLfloat> actualData2(asFloat2, asFloat2 + data2.size());
-    EXPECT_EQ(data2, actualData2);
+    auto xfbData2 =
+        MapBufferRange<const GLfloat>(GL_TRANSFORM_FEEDBACK_BUFFER, 0, size2, GL_MAP_READ_BIT);
+    EXPECT_EQ(Span(data2), xfbData2);
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 }
 
@@ -2264,8 +2260,7 @@ TEST_P(SimpleStateChangeTest, DrawRepeatUnalignedVboChange)
     const GLfloat colorData[]                   = {0.515f, 0.515f, 0.515f, 1.0f};
     constexpr size_t colorBufferSize            = colorOffset + sizeof(colorData);
     uint8_t colorDataUnaligned[colorBufferSize] = {0};
-    memcpy(reinterpret_cast<void *>(colorDataUnaligned + colorOffset), colorData,
-           sizeof(colorData));
+    Span(colorDataUnaligned).subspan(colorOffset).copy_from(as_byte_span(colorData));
     for (uint32_t i = 0; i < kRepeat; i++)
     {
         glBindBuffer(GL_ARRAY_BUFFER, colorBuffers[i]);
@@ -4660,7 +4655,7 @@ TEST_P(SimpleStateChangeTestES31, DrawWithUBOThenDrawWithSSBO)
     constexpr std::array<float, 4> kBufferInitValue = {0.125f, 0.25f, 0.5f, 1.0f};
     GLBuffer buffer;
     glBindBuffer(GL_UNIFORM_BUFFER, buffer);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(kBufferInitValue), kBufferInitValue.data(),
+    glBufferData(GL_UNIFORM_BUFFER, Span(kBufferInitValue).size_bytes(), kBufferInitValue.data(),
                  GL_STATIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
 
@@ -4730,13 +4725,14 @@ void main()
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(63, 95, 159, 255), 1);
 
     // Verify the output from the second draw call
-    const float *ptr = reinterpret_cast<const float *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferInitValue), GL_MAP_READ_BIT));
+    auto results = MapBufferRange<const float>(
+        GL_SHADER_STORAGE_BUFFER, 0, Span(kBufferInitValue).size_bytes(), GL_MAP_READ_BIT);
+    ASSERT_FALSE(results.empty());
 
-    EXPECT_NEAR(ptr[0], 0.7f, 0.001);
-    EXPECT_NEAR(ptr[1], 0.6f, 0.001);
-    EXPECT_NEAR(ptr[2], 0.4f, 0.001);
-    EXPECT_NEAR(ptr[3], 0.3f, 0.001);
+    EXPECT_NEAR(results[0], 0.7f, 0.001);
+    EXPECT_NEAR(results[1], 0.6f, 0.001);
+    EXPECT_NEAR(results[2], 0.4f, 0.001);
+    EXPECT_NEAR(results[3], 0.3f, 0.001);
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
@@ -4765,8 +4761,8 @@ TEST_P(SimpleStateChangeTestES31, FragWriteSSBOThenChangeDrawbuffersThenWriteSSB
     constexpr std::array<float, 4> kBufferInitValue = {0.125f, 0.25f, 0.5f, 1.0f};
     GLBuffer buffer;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kBufferInitValue), kBufferInitValue.data(),
-                 GL_STATIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, Span(kBufferInitValue).size_bytes(),
+                 kBufferInitValue.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
 
     // Create a program that writes to the SSBO in the fragment shader.
@@ -4820,12 +4816,13 @@ void main()
     EXPECT_GL_NO_ERROR();
 
     // Verify that the program wrote the SSBO correctly.
-    const float *ptr = reinterpret_cast<const float *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferInitValue), GL_MAP_READ_BIT));
+    auto results = MapBufferRange<const float>(
+        GL_SHADER_STORAGE_BUFFER, 0, Span(kBufferInitValue).size_bytes(), GL_MAP_READ_BIT);
+    ASSERT_FALSE(results.empty());
 
     for (int i = 0; i < 4; ++i)
     {
-        EXPECT_NEAR(ptr[i], kValue1[i], 0.001);
+        EXPECT_NEAR(results[i], kValue1[i], 0.001);
     }
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
@@ -4839,12 +4836,13 @@ void main()
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
     EXPECT_GL_NO_ERROR();
     // Verify that the program wrote the SSBO correctly.
-    ptr = reinterpret_cast<const float *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferInitValue), GL_MAP_READ_BIT));
+    results = MapBufferRange<const float>(GL_SHADER_STORAGE_BUFFER, 0,
+                                          Span(kBufferInitValue).size_bytes(), GL_MAP_READ_BIT);
+    ASSERT_FALSE(results.empty());
 
     for (int i = 0; i < 4; ++i)
     {
-        EXPECT_NEAR(ptr[i], kValue2[i], 0.001);
+        EXPECT_NEAR(results[i], kValue2[i], 0.001);
     }
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
@@ -4874,8 +4872,8 @@ TEST_P(SimpleStateChangeTestES31, VertWriteSSBOThenChangeDrawbuffersThenWriteSSB
     constexpr std::array<float, 4> kBufferInitValue = {0.125f, 0.25f, 0.5f, 1.0f};
     GLBuffer buffer;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kBufferInitValue), kBufferInitValue.data(),
-                 GL_STATIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, Span(kBufferInitValue).size_bytes(),
+                 kBufferInitValue.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
 
     // Create a program that writes to the SSBO in the vertex shader.
@@ -4928,12 +4926,13 @@ void main()
     EXPECT_GL_NO_ERROR();
 
     // Verify that the program wrote the SSBO correctly.
-    const float *ptr = reinterpret_cast<const float *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferInitValue), GL_MAP_READ_BIT));
+    auto results = MapBufferRange<const float>(
+        GL_SHADER_STORAGE_BUFFER, 0, Span(kBufferInitValue).size_bytes(), GL_MAP_READ_BIT);
+    ASSERT_FALSE(results.empty());
 
     for (int i = 0; i < 4; ++i)
     {
-        EXPECT_NEAR(ptr[i], kValue1[i], 0.001);
+        EXPECT_NEAR(results[i], kValue1[i], 0.001);
     }
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
@@ -4947,12 +4946,13 @@ void main()
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
     EXPECT_GL_NO_ERROR();
     // Verify that the program wrote the SSBO correctly.
-    ptr = reinterpret_cast<const float *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferInitValue), GL_MAP_READ_BIT));
+    results = MapBufferRange<const float>(GL_SHADER_STORAGE_BUFFER, 0,
+                                          Span(kBufferInitValue).size_bytes(), GL_MAP_READ_BIT);
+    ASSERT_FALSE(results.empty());
 
     for (int i = 0; i < 4; ++i)
     {
-        EXPECT_NEAR(ptr[i], kValue2[i], 0.001);
+        EXPECT_NEAR(results[i], kValue2[i], 0.001);
     }
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
@@ -4985,8 +4985,8 @@ TEST_P(SimpleStateChangeTestES31, DrawThenSampleWithCompute)
     constexpr std::array<float, 4> kBufferInitValue = {0.123f, 0.456f, 0.789f, 0.852f};
     GLBuffer buffer;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kBufferInitValue), kBufferInitValue.data(),
-                 GL_STATIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, Span(kBufferInitValue).size_bytes(),
+                 kBufferInitValue.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
     EXPECT_GL_NO_ERROR();
 
@@ -5022,13 +5022,14 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
     // Verify the output from the compute shader
-    const float *ptr = reinterpret_cast<const float *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferInitValue), GL_MAP_READ_BIT));
+    auto results = MapBufferRange<const float>(
+        GL_SHADER_STORAGE_BUFFER, 0, Span(kBufferInitValue).size_bytes(), GL_MAP_READ_BIT);
+    ASSERT_FALSE(results.empty());
 
-    EXPECT_EQ(ptr[0], 1.0f);
-    EXPECT_EQ(ptr[1], 0.0f);
-    EXPECT_EQ(ptr[2], 0.0f);
-    EXPECT_EQ(ptr[3], 1.0f);
+    EXPECT_EQ(results[0], 1.0f);
+    EXPECT_EQ(results[1], 0.0f);
+    EXPECT_EQ(results[2], 0.0f);
+    EXPECT_EQ(results[3], 1.0f);
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
@@ -5066,8 +5067,8 @@ TEST_P(SimpleStateChangeTestES31, ClearThenSampleWithCompute)
     constexpr std::array<float, 4> kBufferInitValue = {0.123f, 0.456f, 0.789f, 0.852f};
     GLBuffer buffer;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kBufferInitValue), kBufferInitValue.data(),
-                 GL_STATIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, Span(kBufferInitValue).size_bytes(),
+                 kBufferInitValue.data(), GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
     EXPECT_GL_NO_ERROR();
 
@@ -5098,13 +5099,14 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
     // Verify the output from the compute shader
-    const float *ptr = reinterpret_cast<const float *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferInitValue), GL_MAP_READ_BIT));
+    auto results = MapBufferRange<const float>(
+        GL_SHADER_STORAGE_BUFFER, 0, Span(kBufferInitValue).size_bytes(), GL_MAP_READ_BIT);
+    ASSERT_FALSE(results.empty());
 
-    EXPECT_EQ(ptr[0], 0.0f);
-    EXPECT_EQ(ptr[1], 1.0f);
-    EXPECT_EQ(ptr[2], 0.0f);
-    EXPECT_EQ(ptr[3], 1.0f);
+    EXPECT_EQ(results[0], 0.0f);
+    EXPECT_EQ(results[1], 1.0f);
+    EXPECT_EQ(results[2], 0.0f);
+    EXPECT_EQ(results[3], 1.0f);
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
@@ -5168,10 +5170,11 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
     // Verify the output from the compute shader
-    const uint32_t *ptr = reinterpret_cast<const uint32_t *>(
-        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kResultSize, GL_MAP_READ_BIT));
+    auto results =
+        MapBufferRange<const uint32_t>(GL_SHADER_STORAGE_BUFFER, 0, kResultSize, GL_MAP_READ_BIT);
+    ASSERT_FALSE(results.empty());
 
-    EXPECT_EQ(ptr[0], 1u);
+    EXPECT_EQ(results[0], 1u);
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
@@ -5694,12 +5697,10 @@ TEST_P(ValidationStateChangeTest, RebindBufferShouldPickupBufferChange)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 
     // In context2, map color buffer again and draw, should produce produce GL_INVALID_OPERATION
-    GLColor *bufferPtr = static_cast<GLColor *>(
-        glMapBufferRange(GL_ARRAY_BUFFER, 0, colorBufferSize, GL_MAP_WRITE_BIT));
-    for (size_t i = 0; i < 6; i++)
-    {
-        bufferPtr[i] = GLColor::red;
-    }
+    auto mappedColors =
+        MapBufferRange<GLColor>(GL_ARRAY_BUFFER, 0, colorBufferSize, GL_MAP_WRITE_BIT);
+    ASSERT_FALSE(mappedColors.empty());
+    std::ranges::fill(mappedColors, GLColor::red);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
@@ -6019,12 +6020,10 @@ TEST_P(ValidationStateChangeTestES31, RebindVertexBufferShouldPickupBufferChange
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 
     // In context2, map color buffer again and draw, should produce produce GL_INVALID_OPERATION
-    GLColor *bufferPtr = static_cast<GLColor *>(
-        glMapBufferRange(GL_ARRAY_BUFFER, 0, colorBufferSize, GL_MAP_WRITE_BIT));
-    for (size_t i = 0; i < 6; i++)
-    {
-        bufferPtr[i] = GLColor::red;
-    }
+    auto mappedColors =
+        MapBufferRange<GLColor>(GL_ARRAY_BUFFER, 0, colorBufferSize, GL_MAP_WRITE_BIT);
+    ASSERT_FALSE(mappedColors.empty());
+    std::ranges::fill(mappedColors, GLColor::red);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
@@ -6553,13 +6552,11 @@ void main()
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
-    const GLvoid *mapPointer =
-        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, kTransformFeedbackSize, GL_MAP_READ_BIT);
+    auto xfbData = MapBufferRange<const Vector4>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                 kTransformFeedbackSize, GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
-    ASSERT_NE(nullptr, mapPointer);
-    const Vector4 *typedMapPointer = reinterpret_cast<const Vector4 *>(mapPointer);
-    std::vector<Vector4> actualData(typedMapPointer, typedMapPointer + 6);
-    EXPECT_EQ(positionData, actualData);
+    ASSERT_FALSE(xfbData.empty());
+    EXPECT_EQ(Span(positionData), xfbData);
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 
     // Draw once to update validation cache.
