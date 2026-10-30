@@ -296,6 +296,11 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkDescriptorImageInfo-descriptorType-06713",
     // http://crbug.com/1412096
     "VUID-VkImageCreateInfo-pNext-00990",
+    // VVL bug: https://gitlab.khronos.org/vulkan/Vulkan-ValidationLayers/-/merge_requests/582
+    "VUID-VkGraphicsPipelineCreateInfo-externalFormatResolve-09309",
+    // Spec bug: https://gitlab.khronos.org/vulkan/vulkan/-/merge_requests/8706
+    "VUID-vkCmdDraw-None-09363",
+    "VUID-vkCmdDrawIndexed-None-09363",
     // http://anglebug.com/42266565
     "VUID-VkGraphicsPipelineCreateInfo-Input-07904",
     "VUID-VkGraphicsPipelineCreateInfo-Input-07905",
@@ -6658,9 +6663,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // VK_EXT_extended_dynamic_state3 has lots of features, all of which are optional.  So
     // supportsExtendedDynamicState3 only checks for the presence of the extension.
+    // Disabled on Samsung due to driver bugs (https://issues.angleproject.org/issues/579500670)
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsExtendedDynamicState3,
-        ExtensionFound(VK_EXT_EXTENDED_DYNAMIC_STATE_3_EXTENSION_NAME, deviceExtensionNames));
+        ExtensionFound(VK_EXT_EXTENDED_DYNAMIC_STATE_3_EXTENSION_NAME, deviceExtensionNames) &&
+            !isSamsung);
 
     // Static state for rasterizer discard is tricky in Vulkan.  The spec says that
     // post-rasterization state is "ignored" when rasterizer discard is enabled.  Unfortunately,
