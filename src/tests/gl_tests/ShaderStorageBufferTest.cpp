@@ -13,6 +13,7 @@
 
 #include <array>
 
+#include "common/span.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -25,29 +26,25 @@ struct MatrixCase
 {
     MatrixCase(unsigned cols,
                unsigned rows,
-               unsigned matrixStride,
                const char *computeShaderSource,
-               const float *inputData)
+               Span<const float> inputData)
         : mColumns(cols),
           mRows(rows),
-          mMatrixStride(matrixStride),
           mComputeShaderSource(computeShaderSource),
           mInputdata(inputData)
     {}
     unsigned int mColumns;
     unsigned int mRows;
-    unsigned int mMatrixStride;
     const char *mComputeShaderSource;
-    const float *mInputdata;
-    const unsigned int kBytesPerComponent = sizeof(float);
+    Span<const float> mInputdata;
 };
 
 struct VectorCase
 {
     VectorCase(unsigned components,
                const char *computeShaderSource,
-               const GLuint *inputData,
-               const GLuint *expectedData)
+               Span<const GLuint> inputData,
+               Span<const GLuint> expectedData)
         : mComponents(components),
           mComputeShaderSource(computeShaderSource),
           mInputdata(inputData),
@@ -55,8 +52,8 @@ struct VectorCase
     {}
     unsigned int mComponents;
     const char *mComputeShaderSource;
-    const GLuint *mInputdata;
-    const GLuint *mExpectedData;
+    Span<const GLuint> mInputdata;
+    Span<const GLuint> mExpectedData;
     const unsigned int kBytesPerComponent = sizeof(GLuint);
 };
 
@@ -78,16 +75,21 @@ class ShaderStorageBufferTest31 : public ANGLETest<>
 
     void runMatrixTest(const MatrixCase &matrixCase)
     {
+        // The input holds mRows padded rows (std140/std430), so the stride follows from its size.
+        ASSERT_EQ(matrixCase.mInputdata.size() % matrixCase.mRows, 0u);
+        const size_t floatsPerRow = matrixCase.mInputdata.size() / matrixCase.mRows;
+        ASSERT_GE(floatsPerRow, matrixCase.mColumns);
+
         ANGLE_GL_COMPUTE_PROGRAM(program, matrixCase.mComputeShaderSource);
         glUseProgram(program);
 
         // Create shader storage buffer
         GLBuffer shaderStorageBuffer[2];
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, matrixCase.mRows * matrixCase.mMatrixStride,
-                     matrixCase.mInputdata, GL_STATIC_DRAW);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, matrixCase.mInputdata.size_bytes(),
+                     matrixCase.mInputdata.data(), GL_STATIC_DRAW);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, matrixCase.mRows * matrixCase.mMatrixStride, nullptr,
+        glBufferData(GL_SHADER_STORAGE_BUFFER, matrixCase.mInputdata.size_bytes(), nullptr,
                      GL_STATIC_DRAW);
 
         // Bind shader storage buffer
@@ -99,19 +101,16 @@ class ShaderStorageBufferTest31 : public ANGLETest<>
 
         // Read back shader storage buffer
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
-        const GLfloat *ptr = reinterpret_cast<const GLfloat *>(
-            glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0,
-                             matrixCase.mRows * matrixCase.mMatrixStride, GL_MAP_READ_BIT));
+        auto results = MapBufferRange<const GLfloat>(
+            GL_SHADER_STORAGE_BUFFER, 0, matrixCase.mInputdata.size_bytes(), GL_MAP_READ_BIT);
+        ASSERT_FALSE(results.empty());
 
         for (unsigned int row = 0; row < matrixCase.mRows; row++)
         {
             for (unsigned int col = 0; col < matrixCase.mColumns; col++)
             {
-                GLfloat expected = matrixCase.mInputdata[row * (matrixCase.mMatrixStride /
-                                                                matrixCase.kBytesPerComponent) +
-                                                         col];
-                GLfloat actual =
-                    *(ptr + row * (matrixCase.mMatrixStride / matrixCase.kBytesPerComponent) + col);
+                GLfloat expected = matrixCase.mInputdata[row * floatsPerRow + col];
+                GLfloat actual   = results[row * floatsPerRow + col];
 
                 EXPECT_EQ(expected, actual) << " at row " << row << " and column " << col;
             }
@@ -129,8 +128,8 @@ class ShaderStorageBufferTest31 : public ANGLETest<>
         GLBuffer shaderStorageBuffer[2];
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[0]);
         glBufferData(GL_SHADER_STORAGE_BUFFER,
-                     vectorCase.mComponents * vectorCase.kBytesPerComponent, vectorCase.mInputdata,
-                     GL_STATIC_DRAW);
+                     vectorCase.mComponents * vectorCase.kBytesPerComponent,
+                     vectorCase.mInputdata.data(), GL_STATIC_DRAW);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
         glBufferData(GL_SHADER_STORAGE_BUFFER,
                      vectorCase.mComponents * vectorCase.kBytesPerComponent, nullptr,
@@ -145,12 +144,13 @@ class ShaderStorageBufferTest31 : public ANGLETest<>
 
         // Read back shader storage buffer
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, shaderStorageBuffer[1]);
-        const GLuint *ptr = reinterpret_cast<const GLuint *>(glMapBufferRange(
+        auto results = MapBufferRange<const GLuint>(
             GL_SHADER_STORAGE_BUFFER, 0, vectorCase.mComponents * vectorCase.kBytesPerComponent,
-            GL_MAP_READ_BIT));
+            GL_MAP_READ_BIT);
+        ASSERT_FALSE(results.empty());
         for (unsigned int idx = 0; idx < vectorCase.mComponents; idx++)
         {
-            EXPECT_EQ(vectorCase.mExpectedData[idx], *(ptr + idx));
+            EXPECT_EQ(vectorCase.mExpectedData[idx], results[idx]);
         }
 
         EXPECT_GL_NO_ERROR();
@@ -817,7 +817,7 @@ TEST_P(ShaderStorageBufferTest31, VectorSwizzleInColumnMajorMatrixTest)
     constexpr unsigned int kMatrixStride                                        = 16;
     constexpr float kInputDada[kColumns * (kMatrixStride / kBytesPerComponent)] = {
         0.1, 0.2, 0.3, 0.0, 0.4, 0.5, 0.6, 0.0};
-    MatrixCase matrixCase(kRows, kColumns, kMatrixStride, kComputeShaderSource, kInputDada);
+    MatrixCase matrixCase(kRows, kColumns, kComputeShaderSource, kInputDada);
     runMatrixTest(matrixCase);
 }
 
@@ -850,7 +850,7 @@ TEST_P(ShaderStorageBufferTest31, VectorSwizzleInRowMajorMatrixTest)
     constexpr unsigned int kMatrixStride                                     = 16;
     constexpr float kInputDada[kRows * (kMatrixStride / kBytesPerComponent)] = {
         0.1, 0.2, 0.0, 0.0, 0.3, 0.4, 0.0, 0.0, 0.5, 0.6, 0.0, 0.0};
-    MatrixCase matrixCase(kColumns, kRows, kMatrixStride, kComputeShaderSource, kInputDada);
+    MatrixCase matrixCase(kColumns, kRows, kComputeShaderSource, kInputDada);
     runMatrixTest(matrixCase);
 }
 
@@ -890,7 +890,7 @@ void main()
     constexpr unsigned int kMatrixStride                                     = 16;
     constexpr float kInputDada[kRows * (kMatrixStride / kBytesPerComponent)] = {
         0.1, 0.2, 0.0, 0.0, 0.3, 0.4, 0.0, 0.0, 0.5, 0.6, 0.0, 0.0};
-    MatrixCase matrixCase(kColumns, kRows, kMatrixStride, kComputeShaderSource, kInputDada);
+    MatrixCase matrixCase(kColumns, kRows, kComputeShaderSource, kInputDada);
     runMatrixTest(matrixCase);
 }
 
@@ -922,7 +922,7 @@ void main()
     constexpr unsigned int kMatrixStride                                     = 16;
     constexpr float kInputDada[kRows * (kMatrixStride / kBytesPerComponent)] = {
         0.1, 0.2, 0.0, 0.0, 0.3, 0.4, 0.0, 0.0, 0.5, 0.6, 0.0, 0.0};
-    MatrixCase matrixCase(kColumns, kRows, kMatrixStride, kComputeShaderSource, kInputDada);
+    MatrixCase matrixCase(kColumns, kRows, kComputeShaderSource, kInputDada);
     runMatrixTest(matrixCase);
 }
 
@@ -953,7 +953,7 @@ void main()
     constexpr unsigned int kMatrixStride                                     = 16;
     constexpr float kInputDada[kRows * (kMatrixStride / kBytesPerComponent)] = {
         0.1, 0.2, 0.0, 0.0, 0.3, 0.4, 0.0, 0.0, 0.5, 0.6, 0.0, 0.0};
-    MatrixCase matrixCase(kColumns, kRows, kMatrixStride, kComputeShaderSource, kInputDada);
+    MatrixCase matrixCase(kColumns, kRows, kComputeShaderSource, kInputDada);
     runMatrixTest(matrixCase);
 }
 
@@ -997,7 +997,7 @@ void main()
     constexpr unsigned int kMatrixStride                                     = 16;
     constexpr float kInputDada[kRows * (kMatrixStride / kBytesPerComponent)] = {
         0.1, 0.2, 0.0, 0.0, 0.3, 0.4, 0.0, 0.0, 0.5, 0.6, 0.0, 0.0};
-    MatrixCase matrixCase(kColumns, kRows, kMatrixStride, kComputeShaderSource, kInputDada);
+    MatrixCase matrixCase(kColumns, kRows, kComputeShaderSource, kInputDada);
     runMatrixTest(matrixCase);
 }
 
@@ -1030,7 +1030,7 @@ void main()
     constexpr unsigned int kMatrixStride                                        = 16;
     constexpr float kInputDada[kColumns * (kMatrixStride / kBytesPerComponent)] = {
         0.1, 0.2, 0.3, 0.0, 0.4, 0.5, 0.6, 0.0};
-    MatrixCase matrixCase(kRows, kColumns, kMatrixStride, kComputeShaderSource, kInputDada);
+    MatrixCase matrixCase(kRows, kColumns, kComputeShaderSource, kInputDada);
     runMatrixTest(matrixCase);
 }
 
@@ -1058,7 +1058,7 @@ void main()
     constexpr unsigned int kMatrixStride                                        = 16;
     constexpr float kInputDada[kColumns * (kMatrixStride / kBytesPerComponent)] = {
         0.1, 0.2, 0.3, 0.0, 0.4, 0.5, 0.6, 0.0};
-    MatrixCase matrixCase(kRows, kColumns, kMatrixStride, kComputeShaderSource, kInputDada);
+    MatrixCase matrixCase(kRows, kColumns, kComputeShaderSource, kInputDada);
     runMatrixTest(matrixCase);
 }
 
@@ -1085,7 +1085,7 @@ void main()
     constexpr unsigned int kMatrixStride                                        = 16;
     constexpr float kInputDada[kColumns * (kMatrixStride / kBytesPerComponent)] = {
         0.1, 0.2, 0.3, 0.0, 0.4, 0.5, 0.6, 0.0};
-    MatrixCase matrixCase(kRows, kColumns, kMatrixStride, kComputeShaderSource, kInputDada);
+    MatrixCase matrixCase(kRows, kColumns, kComputeShaderSource, kInputDada);
     runMatrixTest(matrixCase);
 }
 
@@ -1399,10 +1399,8 @@ void main()
 
     constexpr unsigned int kColumns              = 2;
     constexpr unsigned int kRows                 = 2;
-    constexpr unsigned int kBytesPerComponent    = sizeof(float);
-    constexpr unsigned int kMatrixStride         = kRows * kBytesPerComponent;
     constexpr float kInputDada[kColumns * kRows] = {0.1, 0.2, 0.4, 0.5};
-    MatrixCase matrixCase(kRows, kColumns, kMatrixStride, kComputeShaderSource, kInputDada);
+    MatrixCase matrixCase(kRows, kColumns, kComputeShaderSource, kInputDada);
     runMatrixTest(matrixCase);
 }
 
