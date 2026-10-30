@@ -80,6 +80,10 @@ VkResult init_global_layer_properties(struct sample_info &info)
     uint32_t instance_layer_count;
     VkLayerProperties *vk_props = NULL;
     VkResult res;
+#if ANGLE_SHARED_LIBVULKAN
+    res = volkInitialize();
+    ASSERT(res == VK_SUCCESS);
+#endif  // ANGLE_SHARED_LIBVULKAN
 
     /*
      * It's possible, though very rare, that the number of
@@ -228,10 +232,6 @@ void init_instance_extension_names(struct sample_info &info)
 VkResult init_instance(struct sample_info &info, char const *const app_short_name)
 {
     VkResult res = VK_SUCCESS;
-#if ANGLE_SHARED_LIBVULKAN
-    res = volkInitialize();
-    ASSERT(res == VK_SUCCESS);
-#endif  // ANGLE_SHARED_LIBVULKAN
     VkApplicationInfo app_info  = {};
     app_info.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     app_info.pNext              = NULL;
