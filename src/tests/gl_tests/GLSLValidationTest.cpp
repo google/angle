@@ -790,6 +790,37 @@ TEST_P(GLSLValidationTest, AssignFunctionCallToGlobal)
                   "'=' : global variable initializers must be constant expressions");
 }
 
+// Function call in global scope is not allowed
+TEST_P(GLSLValidationTest_ES3, AssignFunctionCallToGlobal)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+vec4 f() { return vec4(0.0); }
+vec4 v = f();
+out vec4 color;
+void main() { color = v; }
+)";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'=' : global variable initializers must be constant expressions");
+}
+
+// Function call in global scope is not allowed.  This test passes a sampler to the function.
+TEST_P(GLSLValidationTest_ES3, AssignFunctionCallToGlobalWithSamplerArg)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform sampler2D s;
+vec4 f(sampler2D s) { return vec4(0.0); }
+vec4 v = f(s);
+out vec4 color;
+void main() { color = v; }
+)";
+
+    validateError(GL_FRAGMENT_SHADER, kFS,
+                  "'=' : global variable initializers must be constant expressions");
+}
+
 // Global variable initializers need to be constant expressions (ESSL 1.00 section 4.3)
 // Initializing with an assignment to another global should be an error.
 TEST_P(GLSLValidationTest, AssignAssignmentToGlobal)
@@ -4699,6 +4730,44 @@ void main()
     color = global3;
 })";
     validateSuccess(GL_VERTEX_SHADER, kVS);
+}
+
+// Test that initializing global variables with function call works
+TEST_P(GLSLValidationTest_ES3, InitGlobalFunctionCall)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_non_constant_global_initializers"));
+
+    constexpr char kVS[] = R"(#version 300 es
+#extension GL_EXT_shader_non_constant_global_initializers : require
+uniform vec4 u;
+out vec4 color;
+vec4 f() { return vec4(0); }
+vec4 global = f();
+void main()
+{
+    color = global;
+})";
+    validateSuccess(GL_VERTEX_SHADER, kVS);
+}
+
+// Function call in global scope is not allowed if passed a sampler
+TEST_P(GLSLValidationTest_ES3, InitGlobalFunctionCallWithSamplerParam)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_non_constant_global_initializers"));
+
+    constexpr char kVS[] = R"(#version 300 es
+#extension GL_EXT_shader_non_constant_global_initializers : require
+uniform vec4 u;
+out vec4 color;
+uniform sampler2D s;
+vec4 f(sampler2D s) { return vec4(0.0); }
+vec4 global = f(s);
+void main()
+{
+    color = global;
+})";
+    validateError(GL_VERTEX_SHADER, kVS,
+                  "passing samplers to functions at global scope is currently unsupported");
 }
 
 // Regression test for a crash in SPIR-V output when faced with an array of struct constant.

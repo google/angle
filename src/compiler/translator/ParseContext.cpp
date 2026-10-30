@@ -10144,6 +10144,16 @@ void TParseContext::trackSamplersPassedToFunction(const TFunction *fnCandidate,
             continue;
         }
 
+        // If GL_EXT_shader_non_constant_global_initializers is enabled, the function call can be at
+        // global scope.  This is not supported yet.
+        if (mCurrentFunction == nullptr)
+        {
+            error(argument->getLine(),
+                  "passing samplers to functions at global scope is currently unsupported",
+                  "sampler");
+            return;
+        }
+
         SamplerAsFunctionArg samplerAsArg;
         samplerAsArg.access         = std::move(access);
         samplerAsArg.callee         = fnCandidate;
