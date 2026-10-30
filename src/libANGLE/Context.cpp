@@ -738,7 +738,7 @@ Context::Context(egl::Display *display,
       mProgramObserverBinding(this, kProgramSubjectIndex),
       mProgramPipelineObserverBinding(this, kProgramPipelineSubjectIndex),
       mFrameCapture(new angle::FrameCapture),
-      mRefCount(0),
+      mCurrentRefCount(0),
       mIsDestroyed(false),
       mDestroyedManagers(false)
 {
@@ -945,9 +945,9 @@ egl::Error Context::onDestroy(const egl::ThreadSafeDisplay *display)
 
     mState.ensureNoPendingLink(this);
 
-    // eglDestoryContext() must have been called for this Context and there must not be any Threads
+    // eglDestroyContext() must have been called for this Context and there must not be any thread
     // that still have it current.
-    ASSERT(mIsDestroyed == true && mRefCount == 0);
+    ASSERT(mIsDestroyed == true && !isCurrentOnAnyThread());
 
     ANGLE_TRY(unMakeCurrent());
 

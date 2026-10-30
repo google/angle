@@ -1685,7 +1685,7 @@ Error Display::destroyInvalidEglObjects()
     // so there is no race condition on mInvalidContextMap.
     for (gl::Context *context : mInvalidContextMap.extractAll())
     {
-        ASSERT(!context->isReferenced());
+        ASSERT(!context->isCurrentOnAnyThread());
         // eglReleaseThread() may call to this method when there are still Contexts, that may
         // potentially acces shared state of the "context".
         // Need AddRefLock because there may be ContextMutex destruction.
@@ -2226,11 +2226,11 @@ Error ThreadSafeDisplay::makeCurrent(Thread *thread,
         // Need AddRefLock because there may be ContextMutex destruction.
         ScopedContextMutexAddRefLock lock(previousContext->getContextMutex());
 
-        previousContext->release();
+        previousContext->releaseCurrentRef();
         thread->setCurrent(nullptr);
 
         auto error = previousContext->unMakeCurrent();
-        if (!previousContext->isReferenced() && previousContext->isDestroyed())
+        if (!previousContext->isCurrentOnAnyThread() && previousContext->isDestroyed())
         {
             // The previous Context may have been created with a different Display.
             ThreadSafeDisplay *previousDisplay = previousContext->getDisplay();
@@ -2252,7 +2252,7 @@ Error ThreadSafeDisplay::makeCurrent(Thread *thread,
             ANGLE_TRY(context->makeCurrent(this, drawSurface, readSurface));
             if (contextChanged)
             {
-                context->addRef();
+                context->addCurrentRef();
             }
         }
 
@@ -2311,7 +2311,7 @@ Error ThreadSafeDisplay::releaseContext(gl::Context *context, Thread *thread)
 std::unique_ptr<gl::Context> ThreadSafeDisplay::eraseContextImpl(gl::Context *context,
                                                                  ContextMap *contexts)
 {
-    ASSERT(!context->isReferenced());
+    ASSERT(!context->isCurrentOnAnyThread());
     bool contextFound = contexts->erase(context->id());
     ASSERT(contextFound);
     return std::unique_ptr<gl::Context>(context);
@@ -2371,7 +2371,7 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
 
         // If the context is still current on at least 1 thread, just return since it'll be
         // released once no threads have it current anymore.
-        if (context->isReferenced())
+        if (context->isCurrentOnAnyThread())
         {
             return NoError();
         }

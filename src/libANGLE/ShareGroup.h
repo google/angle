@@ -50,7 +50,7 @@ class ContextMap final : public priv::ObjectMap<gl::Context, angle::SimpleMutex>
         angle::HashMap<GLuint, gl::Context *> contextsStillCurrent = {};
         for (auto context : this->mObjects)
         {
-            if (context.second->isReferenced())
+            if (context.second->isCurrentOnAnyThread())
             {
                 contextsStillCurrent.emplace(context);
                 continue;

@@ -923,9 +923,19 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                 GLuint framebufferStencilSize) const;
     bool noopClearBuffer(GLenum buffer, GLint drawbuffer) const;
 
-    void addRef() const { mRefCount.fetch_add(1, std::memory_order_relaxed); }
-    void release() const { mRefCount.fetch_sub(1, std::memory_order_acq_rel); }
-    bool isReferenced() const { return mRefCount.load(std::memory_order_acquire) > 0; }
+    // References the Context, see ScopedContextRef and egl::priv::ObjectMap::forEach().  These
+    // count as the Context being current, which keeps it from being released when it is made not
+    // current.
+    void addRef() { addCurrentRef(); }
+    void release() { releaseCurrentRef(); }
+
+    // Whether the Context is current on a thread, or referenced with addRef().
+    bool isCurrentOnAnyThread() const
+    {
+        return mCurrentRefCount.load(std::memory_order_acquire) > 0;
+    }
+    void addCurrentRef() { mCurrentRefCount.fetch_add(1, std::memory_order_relaxed); }
+    void releaseCurrentRef() { mCurrentRefCount.fetch_sub(1, std::memory_order_acq_rel); }
 
     egl::ShareGroup *getShareGroup() const { return mState.getShareGroup(); }
 
@@ -1174,7 +1184,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // Cache representation of the serialized context string.
     mutable std::string mCachedSerializedStateString;
 
-    mutable std::atomic<size_t> mRefCount;
+    // See isCurrentOnAnyThread().
+    std::atomic<size_t> mCurrentRefCount;
 
     std::atomic<bool> mIsDestroyed;
     bool mDestroyedManagers;

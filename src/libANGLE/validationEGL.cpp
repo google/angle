@@ -3726,7 +3726,7 @@ bool ValidateMakeCurrent(const ValidationContext *val,
     const gl::Context *context = GetContextIfValid(display, contextID);
 
     const gl::Context *previousContext = val->eglThread->getContext();
-    if (!noContext && context->isReferenced() && context != previousContext)
+    if (!noContext && context->isCurrentOnAnyThread() && context != previousContext)
     {
         val->setError(EGL_BAD_ACCESS, "Context can only be current on one thread");
         return false;
@@ -3760,7 +3760,8 @@ bool ValidateCreateImage(const ValidationContext *val,
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
 
     // context can not be current on other thread.
-    if (context != nullptr && context->isReferenced() && context != val->eglThread->getContext())
+    if (context != nullptr && context->isCurrentOnAnyThread() &&
+        context != val->eglThread->getContext())
     {
         val->setError(EGL_BAD_ACCESS, "Context can only be current on one thread");
         return false;
