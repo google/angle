@@ -9806,6 +9806,41 @@ void main() {
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
 }
 
+// Test calling a function with a uniform struct containing a sampler from within another function
+// that is itself called with that uniform.
+TEST_P(GLSLTest_ES3, SamplerInStructAsFunctionArgInNestedCalls)
+{
+    const char kFragmentShader[] = R"(#version 300 es
+precision mediump float;
+struct S
+{
+    sampler2D s;
+};
+uniform S u;
+
+out vec4 color;
+
+float inner(S s) { return texture(s.s, vec2(0)).x; }
+float outer(S p) { return inner(u); }
+
+void main() {
+    color = vec4(outer(u), 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragmentShader);
+    glUseProgram(program);
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    const GLColor kTextureColor = GLColor::red;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &kTextureColor);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glUniform1i(glGetUniformLocation(program, "u.s"), 0);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kTextureColor);
+}
+
 // Test that a global variable declared after main() works. This is a regression test for an issue
 // in global variable initialization.
 TEST_P(WebGLGLSLTest, GlobalVariableDeclaredAfterMain)
