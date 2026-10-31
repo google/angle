@@ -105,14 +105,19 @@ bool IsClearValueEqual(VkImageAspectFlags aspect, const VkClearValue &a, const V
     return depthEqual && stencilEqual;
 }
 
+void ReleaseImageView(ImageView *imageView, GarbageObjects *garbage)
+{
+    if (imageView->valid())
+    {
+        garbage->emplace_back(GetGarbage(imageView));
+    }
+}
+
 void ReleaseImageViews(ImageViewVector *imageViewVector, GarbageObjects *garbage)
 {
     for (ImageView &imageView : *imageViewVector)
     {
-        if (imageView.valid())
-        {
-            garbage->emplace_back(GetGarbage(&imageView));
-        }
+        ReleaseImageView(&imageView, garbage);
     }
     imageViewVector->clear();
 }
@@ -133,10 +138,7 @@ void ReleaseLayerLevelImageViews(LayerLevelImageViewVector *imageViewVector,
     {
         for (ImageView &imageView : layerViews)
         {
-            if (imageView.valid())
-            {
-                garbage->emplace_back(GetGarbage(&imageView));
-            }
+            ReleaseImageView(&imageView, garbage);
         }
     }
     imageViewVector->clear();
@@ -159,10 +161,7 @@ void ReleaseSubresourceImageViews(SubresourceImageViewMap *imageViews, GarbageOb
     for (auto &iter : *imageViews)
     {
         std::unique_ptr<ImageView> &imageView = iter.second;
-        if (imageView->valid())
-        {
-            garbage->emplace_back(GetGarbage(imageView.get()));
-        }
+        ReleaseImageView(imageView.get(), garbage);
     }
     imageViews->clear();
 }
@@ -12818,16 +12817,23 @@ ImageViewHelper::ImageViewHelper(ImageViewHelper &&other)
     std::swap(mLevelStorageImageViews, other.mLevelStorageImageViews);
     std::swap(mLayerLevelStorageImageViews, other.mLayerLevelStorageImageViews);
     std::swap(mFragmentShadingRateImageView, other.mFragmentShadingRateImageView);
-    std::swap(mImageViewSerial, other.mImageViewSerial);
+    std::swap(mWriteImageViewSerial, other.mWriteImageViewSerial);
+    std::swap(mReadImageViewSerial, other.mReadImageViewSerial);
 }
 
 ImageViewHelper::~ImageViewHelper() {}
 
 void ImageViewHelper::init(Renderer *renderer)
 {
-    if (!mImageViewSerial.valid())
+    if (!mWriteImageViewSerial.valid())
     {
-        mImageViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
+        mWriteImageViewSerial =
+            renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
+    }
+    if (!mReadImageViewSerial.valid())
+    {
+        mReadImageViewSerial =
+            renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
     }
 }
 
@@ -12850,14 +12856,8 @@ void ImageViewHelper::release(Renderer *renderer, const ResourceUse &use)
     ReleaseImageViews(&mPerLevelRangeSamplerExternal2DY2YEXTImageViews, &garbage);
 
     // Release the copy views
-    if (mLinearCopyImageView.valid())
-    {
-        garbage.emplace_back(GetGarbage(&mLinearCopyImageView));
-    }
-    if (mSRGBCopyImageView.valid())
-    {
-        garbage.emplace_back(GetGarbage(&mSRGBCopyImageView));
-    }
+    ReleaseImageView(&mLinearCopyImageView, &garbage);
+    ReleaseImageView(&mSRGBCopyImageView, &garbage);
 
     // Release the draw views
     ReleaseLayerLevelImageViews(&mLayerLevelDrawImageViews, &garbage);
@@ -12887,10 +12887,7 @@ void ImageViewHelper::release(Renderer *renderer, const ResourceUse &use)
     mLayerLevelStorageImageViews.clear();
 
     // Release fragment shading rate view
-    if (mFragmentShadingRateImageView.valid())
-    {
-        garbage.emplace_back(GetGarbage(&mFragmentShadingRateImageView));
-    }
+    ReleaseImageView(&mFragmentShadingRateImageView, &garbage);
 
     if (!garbage.empty())
     {
@@ -12898,7 +12895,34 @@ void ImageViewHelper::release(Renderer *renderer, const ResourceUse &use)
     }
 
     // Update image view serial.
-    mImageViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
+    mWriteImageViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
+    mReadImageViewSerial  = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
+}
+
+void ImageViewHelper::releaseReadImageViews(Renderer *renderer, const ResourceUse &use)
+{
+    mCurrentBaseMaxLevelHash = 0;
+    mReadColorspace          = ImageViewColorspace::Invalid;
+
+    GarbageObjects garbage;
+    garbage.reserve(6);
+
+    // Release the read views
+    ReleaseImageViews(&mPerLevelRangeLinearReadImageViews, &garbage);
+    ReleaseImageViews(&mPerLevelRangeSRGBReadImageViews, &garbage);
+    ReleaseImageViews(&mPerLevelRangeStencilReadImageViews, &garbage);
+    ReleaseImageViews(&mPerLevelRangeSamplerExternal2DY2YEXTImageViews, &garbage);
+
+    // Release the copy views
+    ReleaseImageView(&mLinearCopyImageView, &garbage);
+    ReleaseImageView(&mSRGBCopyImageView, &garbage);
+
+    if (!garbage.empty())
+    {
+        renderer->collectGarbage(use, std::move(garbage));
+    }
+
+    mReadImageViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
 }
 
 bool ImageViewHelper::isImageViewGarbageEmpty() const
@@ -12961,7 +12985,8 @@ void ImageViewHelper::destroy(VkDevice device)
     // Destroy fragment shading rate view
     mFragmentShadingRateImageView.destroy(device);
 
-    mImageViewSerial = kInvalidImageOrBufferViewSerial;
+    mWriteImageViewSerial = kInvalidImageOrBufferViewSerial;
+    mReadImageViewSerial  = kInvalidImageOrBufferViewSerial;
 }
 
 angle::Result ImageViewHelper::initReadViews(ContextVk *contextVk,
@@ -13032,7 +13057,7 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
                                                  VkImageUsageFlags imageUsageFlags,
                                                  GLenum astcDecodePrecision)
 {
-    ASSERT(mImageViewSerial.valid());
+    ASSERT(mReadImageViewSerial.valid());
     ASSERT(mReadColorspace != ImageViewColorspace::Invalid);
 
     const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(image.getIntendedFormat());
@@ -13184,7 +13209,7 @@ angle::Result ImageViewHelper::getLevelStorageImageView(ContextVk *contextVk,
                                                         angle::FormatID formatID,
                                                         const ImageView **imageViewOut)
 {
-    ASSERT(mImageViewSerial.valid());
+    ASSERT(mWriteImageViewSerial.valid());
 
     if (!mLevelStorageImageViews.contains(formatID))
     {
@@ -13219,7 +13244,7 @@ angle::Result ImageViewHelper::getLevelLayerStorageImageView(ContextVk *contextV
                                                              const ImageView **imageViewOut)
 {
     ASSERT(image.valid());
-    ASSERT(mImageViewSerial.valid());
+    ASSERT(mWriteImageViewSerial.valid());
     ASSERT(!image.getActualFormat().isBlock);
 
     if (!mLayerLevelStorageImageViews.contains(formatID))
@@ -13289,7 +13314,7 @@ angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
                                                      const ImageView **imageViewOut)
 {
     ASSERT(image.valid());
-    ASSERT(mImageViewSerial.valid());
+    ASSERT(mWriteImageViewSerial.valid());
     ASSERT(!image.getActualFormat().isBlock);
 
     if (mWriteColorspace == ImageViewColorspace::Invalid)
@@ -13322,7 +13347,7 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
                                                           const ImageView **imageViewOut)
 {
     ASSERT(image.valid());
-    ASSERT(mImageViewSerial.valid());
+    ASSERT(mWriteImageViewSerial.valid());
     ASSERT(!image.getActualFormat().isBlock);
 
     if (mWriteColorspace == ImageViewColorspace::Invalid)
@@ -13357,7 +13382,7 @@ angle::Result ImageViewHelper::getLevelDepthOrStencilImageView(ContextVk *contex
                                                                const ImageView **imageViewOut)
 {
     ASSERT(image.valid());
-    ASSERT(mImageViewSerial.valid());
+    ASSERT(mWriteImageViewSerial.valid());
     ASSERT((image.getAspectFlags() & aspect) != 0);
 
     ImageSubresourceRange range = MakeImageSubresourceDrawRange(
@@ -13390,7 +13415,7 @@ angle::Result ImageViewHelper::getLevelLayerDepthOrStencilImageView(ContextVk *c
                                                                     const ImageView **imageViewOut)
 {
     ASSERT(image.valid());
-    ASSERT(mImageViewSerial.valid());
+    ASSERT(mWriteImageViewSerial.valid());
     ASSERT((image.getAspectFlags() & aspect) != 0);
 
     LayerLevelImageViewVector &imageViews = aspect == VK_IMAGE_ASPECT_DEPTH_BIT
@@ -13431,7 +13456,7 @@ angle::Result ImageViewHelper::getLevelLayerDepthOrStencilImageViewImpl(
 angle::Result ImageViewHelper::initFragmentShadingRateView(ContextVk *contextVk, ImageHelper *image)
 {
     ASSERT(image->valid());
-    ASSERT(mImageViewSerial.valid());
+    ASSERT(mWriteImageViewSerial.valid());
 
     // Determine if we already have ImageView
     if (mFragmentShadingRateImageView.valid())
@@ -13530,26 +13555,32 @@ void ImageViewHelper::updateColorspace(const angle::Format &imageFormat) const
     ASSERT(mWriteColorspace != ImageViewColorspace::Invalid);
 }
 
-ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerial(gl::OwnerLevel levelGL,
-                                                                         uint32_t levelCount,
-                                                                         gl::OwnerLayer layer,
-                                                                         LayerMode layerMode) const
+ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceWriteSerial(
+    gl::OwnerLevel levelGL,
+    uint32_t levelCount,
+    gl::OwnerLayer layer,
+    LayerMode layerMode) const
 {
-    return getSubresourceSerialForColorspace(levelGL, levelCount, layer, layerMode,
-                                             mReadColorspace);
+    ASSERT(mWriteImageViewSerial.valid());
+
+    ImageOrBufferViewSubresourceSerial serial = {};
+    serial.viewSerial                         = mWriteImageViewSerial;
+    serial.subresource = MakeImageSubresourceReadRange(levelGL, levelCount, layer, layerMode,
+                                                       mWriteColorspace, mWriteColorspace);
+    return serial;
 }
 
-ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerialForColorspace(
+ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceReadSerialForColorspace(
     gl::OwnerLevel levelGL,
     uint32_t levelCount,
     gl::OwnerLayer layer,
     LayerMode layerMode,
     ImageViewColorspace readColorspace) const
 {
-    ASSERT(mImageViewSerial.valid());
+    ASSERT(mReadImageViewSerial.valid());
 
     ImageOrBufferViewSubresourceSerial serial = {};
-    serial.viewSerial                         = mImageViewSerial;
+    serial.viewSerial                         = mReadImageViewSerial;
     serial.subresource = MakeImageSubresourceReadRange(levelGL, levelCount, layer, layerMode,
                                                        readColorspace, mWriteColorspace);
     return serial;
