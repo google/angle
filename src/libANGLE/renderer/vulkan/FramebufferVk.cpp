@@ -2068,7 +2068,7 @@ angle::Result FramebufferVk::updateFoveationState(ContextVk *contextVk,
                                                       foveatedAttachmentSize));
         ASSERT(mFragmentShadingRateImage.valid());
 
-        serial = mFragmentShadingRateImageView.getSubresourceSerial(
+        serial = mFragmentShadingRateImageView.getSubresourceWriteSerial(
             gl::OwnerLevel(0), 1, gl::OwnerLayer(0), vk::LayerMode::All);
     }
 
