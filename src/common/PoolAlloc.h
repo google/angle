@@ -67,8 +67,8 @@ class PoolAllocator : angle::NonCopyable
     // Marks all allocated memory as unused. The memory will be reused.
     void reset();
 
-    // Call allocate() to actually acquire memory.  Returns 0 if no memory
-    // available, otherwise a properly aligned pointer to 'numBytes' of memory.
+    // Returns a properly aligned pointer to 'numBytes' of memory. Backing
+    // allocations use throwing new and do not return null on allocation failure.
     //
     void *allocate(size_t numBytes);
 

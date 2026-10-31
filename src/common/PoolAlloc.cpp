@@ -318,11 +318,7 @@ void *PoolAllocator::allocate(size_t numBytes)
         // Integer overflow is unexpected.
         ASSERT(numBytesToAlloc >= allocationSize);
 
-        uint8_t *memory = new (std::nothrow) uint8_t[numBytesToAlloc];
-        if (memory == nullptr)
-        {
-            return nullptr;
-        }
+        uint8_t *memory = new uint8_t[numBytesToAlloc];
         mInUseList =
             new (memory) PageHeader(mInUseList, (numBytesToAlloc + mPageSize - 1) / mPageSize);
 
@@ -343,7 +339,7 @@ void *PoolAllocator::allocate(size_t numBytes)
 
 #else  // !defined(ANGLE_DISABLE_POOL_ALLOC)
 
-    uint8_t *alloc = new (std::nothrow) uint8_t[numBytes + mAlignment - 1];
+    uint8_t *alloc = new uint8_t[numBytes + mAlignment - 1];
     mStack.emplace_back(std::unique_ptr<uint8_t[]>(alloc));
 
     intptr_t intAlloc = reinterpret_cast<intptr_t>(alloc);
@@ -366,12 +362,8 @@ uint8_t *PoolAllocator::allocateNewPage(size_t numBytes)
     }
     else
     {
-        uint8_t *memory = new (std::nothrow) uint8_t[mPageSize];
-        if (memory == nullptr)
-        {
-            return nullptr;
-        }
-        mInUseList = new (memory) PageHeader(mInUseList, 1);
+        uint8_t *memory = new uint8_t[mPageSize];
+        mInUseList      = new (memory) PageHeader(mInUseList, 1);
     }
 
     // Leave room for the page header.
