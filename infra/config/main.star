@@ -331,6 +331,7 @@ luci.cq(
     status_host = "chromium-cq-status.appspot.com",
     submit_max_burst = 4,
     submit_burst_delay = 480 * time.second,
+    honor_gerrit_linked_accounts = True,
 )
 
 luci.cq_group(
