@@ -2804,6 +2804,15 @@ TEST_P(CopyTextureTestES3, CopyBetweenMips)
 
     ASSERT_GL_NO_ERROR();
 
+    // CopyTextureCHROMIUM redefines the destination level and is not allowed between mips of the
+    // same texture.
+    glCopyTextureCHROMIUM(texture, 1, GL_TEXTURE_2D, texture, 0, GL_RGBA, GL_UNSIGNED_BYTE, false,
+                          false, false);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glCopyTextureCHROMIUM(texture, 0, GL_TEXTURE_2D, texture, 1, GL_RGBA, GL_UNSIGNED_BYTE, false,
+                          false, false);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
     // Copy from mip 0 to mip 1.  The level is not redefined, so a direct copy can potentially be
     // done.
     glCopySubTextureCHROMIUM(texture, 0, GL_TEXTURE_2D, texture, 1, 0, 0, 1, 1, 2, 2, false, false,
