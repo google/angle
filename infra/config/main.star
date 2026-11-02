@@ -334,6 +334,15 @@ luci.cq(
     honor_gerrit_linked_accounts = True,
 )
 
+# Skip Chromium trybots on test-only CLs (Chromium does not build src/tests/).
+# Still runs if any file outside src/tests/ is modified.
+_CHROMIUM_TRY_LOCATION_FILTERS = [
+    cq.location_filter(
+        path_regexp = "src/tests/.+",
+        exclude = True,
+    ),
+]
+
 luci.cq_group(
     name = "main",
     watch = cq.refset(
@@ -357,15 +366,19 @@ luci.cq_group(
     verifiers = [
         luci.cq_tryjob_verifier(
             builder = "chromium:try/android-angle-chromium-try",
+            location_filters = _CHROMIUM_TRY_LOCATION_FILTERS,
         ),
         luci.cq_tryjob_verifier(
             builder = "chromium:try/fuchsia-angle-try",
+            location_filters = _CHROMIUM_TRY_LOCATION_FILTERS,
         ),
         luci.cq_tryjob_verifier(
             builder = "chromium:try/linux-angle-chromium-try",
+            location_filters = _CHROMIUM_TRY_LOCATION_FILTERS,
         ),
         luci.cq_tryjob_verifier(
             builder = "chromium:try/mac-angle-chromium-try",
+            location_filters = _CHROMIUM_TRY_LOCATION_FILTERS,
         ),
         luci.cq_tryjob_verifier(
             builder = "chromium:try/tricium-clang-tidy",
@@ -382,12 +395,15 @@ luci.cq_group(
         ),
         luci.cq_tryjob_verifier(
             builder = "chromium:try/win-angle-chromium-arm64-try",
+            location_filters = _CHROMIUM_TRY_LOCATION_FILTERS,
         ),
         luci.cq_tryjob_verifier(
             builder = "chromium:try/win-angle-chromium-x64-try",
+            location_filters = _CHROMIUM_TRY_LOCATION_FILTERS,
         ),
         luci.cq_tryjob_verifier(
             builder = "chromium:try/win-angle-chromium-x86-try",
+            location_filters = _CHROMIUM_TRY_LOCATION_FILTERS,
         ),
     ],
 )
