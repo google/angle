@@ -859,6 +859,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mCurrentGraphicsPipelineShaders(nullptr),
       mCurrentComputePipeline(nullptr),
       mCurrentDrawMode(gl::PrimitiveMode::Unused1),
+      mCurrentRasterizationSamples(0),
       mCurrentWindowSurface(nullptr),
       mCurrentRotationDrawFramebuffer(SurfaceRotation::Identity),
       mCurrentRotationReadFramebuffer(SurfaceRotation::Identity),
@@ -5258,13 +5259,15 @@ void ContextVk::updateSampleShadingWithRasterizationSamples(const uint32_t raste
 // rasterization sample should be updated.
 void ContextVk::updateRasterizationSamples(const uint32_t rasterizationSamples)
 {
-    uint32_t prevSampleCount = mGraphicsPipelineDesc->getRasterizationSamples();
+    uint32_t prevSampleCount = mCurrentRasterizationSamples;
     updateFrameBufferFetchSamples(prevSampleCount, rasterizationSamples);
     mGraphicsPipelineDesc->updateRasterizationSamples(&mGraphicsPipelineTransition,
                                                       rasterizationSamples);
     updateSampleShadingWithRasterizationSamples(rasterizationSamples);
     updateSampleMaskWithRasterizationSamples(rasterizationSamples);
     updateAlphaToCoverageWithRasterizationSamples(rasterizationSamples);
+
+    mCurrentRasterizationSamples = rasterizationSamples;
 }
 
 void ContextVk::updateRasterizerDiscardEnabled(bool isPrimitivesGeneratedQueryActive)
@@ -6639,8 +6642,7 @@ angle::Result ContextVk::onFramebufferChange(FramebufferVk *framebufferVk, gl::C
     onRenderPassFinished(RenderPassClosureReason::FramebufferChange);
 
     // Ensure that the pipeline description is updated.
-    if (mGraphicsPipelineDesc->getRasterizationSamples() !=
-        static_cast<uint32_t>(framebufferVk->getSamples()))
+    if (mCurrentRasterizationSamples != static_cast<uint32_t>(framebufferVk->getSamples()))
     {
         updateRasterizationSamples(framebufferVk->getSamples());
     }

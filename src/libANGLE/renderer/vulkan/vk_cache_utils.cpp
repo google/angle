@@ -4447,11 +4447,6 @@ void GraphicsPipelineDesc::updateRasterizerDiscardEnabled(
     transition->set(ANGLE_GET_TRANSITION_BIT(mShaders.shaders.bits));
 }
 
-uint32_t GraphicsPipelineDesc::getRasterizationSamples() const
-{
-    return mSharedNonVertexInput.multisample.bits.rasterizationSamplesMinusOne + 1;
-}
-
 void GraphicsPipelineDesc::setRasterizationSamples(uint32_t rasterizationSamples)
 {
     ASSERT(rasterizationSamples > 0);

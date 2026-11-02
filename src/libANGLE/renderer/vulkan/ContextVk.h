@@ -1528,6 +1528,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     vk::PipelineHelper *mCurrentGraphicsPipelineShaders;
     vk::PipelineHelper *mCurrentComputePipeline;
     gl::PrimitiveMode mCurrentDrawMode;
+    uint32_t mCurrentRasterizationSamples;
 
     WindowSurfaceVk *mCurrentWindowSurface;
     // Records the current rotation of the surface (draw/read) framebuffer, derived from

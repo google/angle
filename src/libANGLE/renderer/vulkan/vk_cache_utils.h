@@ -982,7 +982,6 @@ class GraphicsPipelineDesc final
                                         bool rasterizerDiscardEnabled);
 
     // Multisample states
-    uint32_t getRasterizationSamples() const;
     void setRasterizationSamples(uint32_t rasterizationSamples);
     void updateRasterizationSamples(GraphicsPipelineTransitionBits *transition,
                                     uint32_t rasterizationSamples);
