@@ -462,6 +462,7 @@ enum class Feature
     SupportsPrimitiveTopologyListRestart,
     SupportsProtectedMemory,
     SupportsRasterizationOrderAttachmentAccess,
+    SupportsRasterizationSamplesDynamicState,
     SupportsRenderpass2,
     SupportsRenderPassLoadStoreOpNone,
     SupportsRenderPassStoreOpNone,

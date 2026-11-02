@@ -2865,7 +2865,10 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
                               contextVk->pipelineProtectedAccess());
     pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
     pipelineDesc.setSingleColorWriteMask(params.colorAttachmentIndexGL, params.colorMaskFlags);
-    pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
+    if (!renderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
+    {
+        pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
+    }
     pipelineDesc.setRenderPassDesc(contextVk->getStartedRenderPassCommands().getRenderPassDesc());
     // Clears can be done on a currently open render pass, so make sure the correct subpass index is
     // used.
@@ -3042,7 +3045,10 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
                               contextVk->pipelineRobustness(),
                               contextVk->pipelineProtectedAccess());
     pipelineDesc.setSingleColorWriteMask(0, params.colorMaskFlags);
-    pipelineDesc.setRasterizationSamples(dst->getSamples());
+    if (!renderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
+    {
+        pipelineDesc.setRasterizationSamples(dst->getSamples());
+    }
     pipelineDesc.setRenderPassDesc(renderPassDesc);
 
     vk::RenderPassCommandBuffer *commandBuffer;
@@ -3979,7 +3985,10 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
                               contextVk->pipelineRobustness(),
                               contextVk->pipelineProtectedAccess());
     pipelineDesc.setRenderPassDesc(renderPassDesc);
-    pipelineDesc.setRasterizationSamples(dst->getSamples());
+    if (!renderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
+    {
+        pipelineDesc.setRasterizationSamples(dst->getSamples());
+    }
 
     gl::Rectangle renderArea;
     renderArea.x      = params.dstOffset[0];
@@ -4807,7 +4816,10 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
                                              VkColorComponentFlagBits::VK_COLOR_COMPONENT_G_BIT |
                                              VkColorComponentFlagBits::VK_COLOR_COMPONENT_B_BIT |
                                              VkColorComponentFlagBits::VK_COLOR_COMPONENT_A_BIT));
-    pipelineDesc.setRasterizationSamples(sampleCount);
+    if (!renderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
+    {
+        pipelineDesc.setRasterizationSamples(sampleCount);
+    }
     pipelineDesc.setRenderPassDesc(renderPassDesc);
 
     const VkImageLayout drawLayout = image->getCurrentLayout(renderer);
@@ -5017,7 +5029,10 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete,
                               contextVk->pipelineRobustness(),
                               contextVk->pipelineProtectedAccess());
-    pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
+    if (!renderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
+    {
+        pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
+    }
     pipelineDesc.setRenderPassDesc(contextVk->getStartedRenderPassCommands().getRenderPassDesc());
 
     vk::RenderPassCommandBuffer *commandBuffer =

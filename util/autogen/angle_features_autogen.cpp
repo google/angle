@@ -462,6 +462,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsPrimitiveTopologyListRestart, "supportsPrimitiveTopologyListRestart"},
     {Feature::SupportsProtectedMemory, "supportsProtectedMemory"},
     {Feature::SupportsRasterizationOrderAttachmentAccess, "supportsRasterizationOrderAttachmentAccess"},
+    {Feature::SupportsRasterizationSamplesDynamicState, "supportsRasterizationSamplesDynamicState"},
     {Feature::SupportsRenderpass2, "supportsRenderpass2"},
     {Feature::SupportsRenderPassLoadStoreOpNone, "supportsRenderPassLoadStoreOpNone"},
     {Feature::SupportsRenderPassStoreOpNone, "supportsRenderPassStoreOpNone"},

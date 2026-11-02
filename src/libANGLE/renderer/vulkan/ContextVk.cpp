@@ -5261,12 +5261,17 @@ void ContextVk::updateRasterizationSamples(const uint32_t rasterizationSamples)
 {
     uint32_t prevSampleCount = mCurrentRasterizationSamples;
     updateFrameBufferFetchSamples(prevSampleCount, rasterizationSamples);
-    mGraphicsPipelineDesc->updateRasterizationSamples(&mGraphicsPipelineTransition,
-                                                      rasterizationSamples);
     updateSampleShadingWithRasterizationSamples(rasterizationSamples);
     updateSampleMaskWithRasterizationSamples(rasterizationSamples);
     updateAlphaToCoverageWithRasterizationSamples(rasterizationSamples);
 
+    // If rasterization samples is using dynamic state, it's automatically set once at the beginning
+    // of the render pass.
+    if (!mRenderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
+    {
+        mGraphicsPipelineDesc->updateRasterizationSamples(&mGraphicsPipelineTransition,
+                                                          rasterizationSamples);
+    }
     mCurrentRasterizationSamples = rasterizationSamples;
 }
 
@@ -8078,9 +8083,9 @@ angle::Result ContextVk::beginNewRenderPass(
     // Set all dynamic state that is constant throughout the render pass:
     //
     // - Bresenham lines
-    // - TODO(http://anglebug.com/575891833): other state such as rasterization samples, provoking
-    //   vertex, tessellation domain, sample locations, and anything else that is not configurable
-    //   in GLES.
+    // - Rasterization samples
+    // - TODO(http://anglebug.com/575891833): other state such as provoking vertex, tessellation
+    //   domain, sample locations, and anything else that is not configurable in GLES.
     if (mRenderer->getFeatures().supportsLineRasterizationModeDynamicState.enabled)
     {
         // VUID-vkCmdDraw-None-10608:
@@ -8106,6 +8111,11 @@ angle::Result ContextVk::beginNewRenderPass(
         {
             (*commandBufferOut)->setLineStippleEnable(VK_FALSE);
         }
+    }
+    if (mRenderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
+    {
+        (*commandBufferOut)
+            ->setRasterizationSamples(static_cast<VkSampleCountFlagBits>(renderPassDesc.samples()));
     }
 
     return angle::Result::Continue;

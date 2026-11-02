@@ -4198,6 +4198,10 @@ void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT);
     }
+    if (context->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT);
+    }
     if (context->getFeatures().supportsSampleMaskDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_SAMPLE_MASK_EXT);

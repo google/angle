@@ -890,6 +890,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsRasterizationSamplesDynamicState = {
+        "supportsRasterizationSamplesDynamicState",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsSampleMaskDynamicState = {
         "supportsSampleMaskDynamicState",
         FeatureCategory::VulkanFeatures,

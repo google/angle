@@ -3136,6 +3136,8 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                                                       (feature)
 //                                                    extendedDynamicState3LogicOpEnable (feature)
 //                                                    extendedDynamicState3PolygonMode (feature)
+//                                                    extendedDynamicState3RasterizationSamples
+//                                                                                       (feature)
 //                                                    extendedDynamicState3SampleMask (feature)
 //                                                    dynamicPrimitiveTopologyUnrestricted
 //                                                                                       (property)
@@ -6818,6 +6820,16 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3PolygonMode == VK_TRUE &&
             !isPowerVR);
+
+    // Disabled on old Nvidia drivers due to multisample test failures in dEQP as well as
+    // TextureSampleShadingTest.Basic.  Failures were observed on the 535 driver, but not on 610.
+    // Unknown at which version the driver is fixed.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsRasterizationSamplesDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled &&
+            mExtendedDynamicState3Features.extendedDynamicState3RasterizationSamples == VK_TRUE &&
+            isRasterizerDiscardDynamicState && !hasStaticBresenhamLineState &&
+            !(isNvidia && driverVersion < angle::VersionTriple(610, 0, 0)));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsSampleMaskDynamicState,
