@@ -110,6 +110,7 @@ fn uniform_field(name: &'static str, type_id: TypeId) -> Field {
         precision: Precision::High,
         precise: false,
         decorations: Decorations::new_none(),
+        built_in: None,
         is_static_use: true,
     }
 }

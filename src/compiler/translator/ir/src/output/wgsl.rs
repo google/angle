@@ -738,7 +738,11 @@ impl ast::Target for WgslOutputGenerator {
         field: &Field,
     ) {
         let base = self.get_expr(id);
-        let field_name = Self::name_str(&field.name, TEMP_STRUCT_FIELD_PREFIX, index);
+        let field_name = if field.built_in.is_some() {
+            panic!("Internal error: Unsupported gl_PerVertex")
+        } else {
+            Self::name_str(&field.name, TEMP_STRUCT_FIELD_PREFIX, index)
+        };
 
         let text = format!(
             "{}.{field_name}",
