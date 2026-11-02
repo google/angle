@@ -1,11 +1,11 @@
 #!/usr/bin/env vpython3
 #
-# [VPYTHON:BEGIN]
-# wheel: <
-#   name: "infra/python/wheels/perfect-hash-py2_py3"
-#   version: "version:0.2.1"
-# >
-# [VPYTHON:END]
+# /// script
+# requires-python = '>=3.11,<3.12'
+# dependencies = [
+#   'perfect-hash==0.2.1'
+# ]
+# ///
 #
 # Copyright 2018 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
