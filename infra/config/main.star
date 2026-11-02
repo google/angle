@@ -349,6 +349,15 @@ luci.cq_group(
         "https://chromium.googlesource.com/angle/angle",
         refs = [r"refs/heads/main"],
     ),
+    # Allow at most 1 whole-builder retry across the CQ run on a test/compile
+    # failure (re-runs full shards in order; fails immediately if 2+ bots fail).
+    retry_config = cq.retry_config(
+        single_quota = 1,
+        global_quota = 1,
+        failure_weight = 1,
+        transient_failure_weight = 1,
+        timeout_weight = 100,
+    ),
     acls = [
         acl.entry(
             acl.CQ_COMMITTER,
