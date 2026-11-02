@@ -295,6 +295,7 @@ class Renderer : angle::NonCopyable
     const angle::FeaturesVk &getFeatures() const { return mFeatures; }
     uint32_t getMaxVertexAttribDivisor() const { return mMaxVertexAttribDivisor; }
     VkDeviceSize padVertexAttribBufferSizeIfNeeded(VkDeviceSize bufferSize);
+    gl::DrawBufferMask getValidDrawBuffers() const { return mValidDrawBuffers; }
     uint32_t getMaxColorInputAttachmentCount() const { return mMaxColorInputAttachmentCount; }
     ANGLE_INLINE bool isInFlightCommandsEmpty() const
     {
@@ -987,6 +988,7 @@ class Renderer : angle::NonCopyable
     uint32_t mCurrentQueueFamilyIndex;
     uint32_t mMaxVertexAttribDivisor;
     VkDeviceSize mMaxVertexAttribStride;
+    mutable gl::DrawBufferMask mValidDrawBuffers;
     mutable uint32_t mMaxColorInputAttachmentCount;
     uint32_t mDefaultUniformBufferSize;
     VkDevice mDevice;

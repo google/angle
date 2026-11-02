@@ -5353,7 +5353,7 @@ TEST_P(PixelLocalStorageTestES31, EarlyFragmentTests)
         fragColor = vec4(1, 0, 0, 1);
     })";
 
-    ANGLE_GL_PROGRAM(drawGreen, kFullscreenVS, kDrawRed);
+    ANGLE_GL_PROGRAM(drawRed, kFullscreenVS, kDrawRed);
 
     // Render to stencil without PLS uniforms and with a discard. Since we discard, and since the
     // shader shouldn't enable early_fragment_tests, stencil should not be affected.
@@ -5379,7 +5379,7 @@ TEST_P(PixelLocalStorageTestES31, EarlyFragmentTests)
 
     // Render red to the framebuffer with a stencil test. This should have no effect because the
     // stencil buffer should be all zeros.
-    glUseProgram(drawGreen);
+    glUseProgram(drawRed);
     glStencilFunc(GL_NOTEQUAL, 0, ~0u);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::green);
@@ -5399,7 +5399,7 @@ TEST_P(PixelLocalStorageTestES31, EarlyFragmentTests)
 
     // Render red to the framebuffer again. This time the stencil test should pass because the
     // stencil buffer should be all ones.
-    glUseProgram(drawGreen);
+    glUseProgram(drawRed);
     glStencilFunc(GL_NOTEQUAL, 0, ~0u);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::red);

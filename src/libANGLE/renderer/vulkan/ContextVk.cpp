@@ -1009,6 +1009,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE);
     }
+    if (mRenderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_WRITE_MASK);
+    }
     if (mRenderer->getFeatures().supportsDepthClampEnableDynamicState.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE);
@@ -1136,6 +1140,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicAlphaToCoverageEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicAlphaToOneEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_COLOR_WRITE_MASK] =
+        &ContextVk::handleDirtyGraphicsDynamicColorWriteMask;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicDepthClampEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE] =
@@ -1281,6 +1287,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     if (mRenderer->getFeatures().supportsAlphaToOneEnableDynamicState.enabled)
     {
         mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
+    }
+    if (mRenderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_COLOR_MASK);
     }
     if (mRenderer->getFeatures().supportsSampleMaskDynamicState.enabled)
     {
@@ -3577,6 +3587,49 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicAlphaToOneEnable(
     return angle::Result::Continue;
 }
 
+angle::Result ContextVk::handleDirtyGraphicsDynamicColorWriteMask(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    FramebufferVk *framebufferVk = vk::GetImpl(mState.getDrawFramebuffer());
+
+    // Set the write mask for every attachment in the framebuffer.
+    const gl::DrawBufferMask dirtyColorAttachments =
+        mDirtyColorWriteMasks & framebufferVk->getState().getColorAttachmentsMask();
+
+    // If format is RGB but emulated with RGBA, the alpha channel is pre-cleared and must be left
+    // untouched during draw.
+    const gl::DrawBufferMask emulatedAlphaAttachmentMask =
+        framebufferVk->getEmulatedAlphaAttachmentMask();
+
+    // Set the mask to 0 if:
+    //
+    // * The draw buffer is disabled, so it must remain untouched
+    // * The draw buffer is present in the framebuffer, but it is never written to in the shader.
+    //   GL_ANGLE_robust_fragment_shader_output defines the behavior in this case
+    const gl::DrawBufferMask enabledDrawBuffers =
+        framebufferVk->getState().getEnabledDrawBuffers() & ~mMissingOutputsMask;
+
+    for (size_t colorIndexGL : dirtyColorAttachments)
+    {
+        const VkColorComponentFlags colorMask =
+            gl::BlendStateExt::ColorMaskStorage::GetValueIndexed(colorIndexGL, mClearColorMasks);
+        VkColorComponentFlags colorWriteMask = 0;
+        if (enabledDrawBuffers[colorIndexGL])
+        {
+            colorWriteMask = emulatedAlphaAttachmentMask[colorIndexGL]
+                                 ? (colorMask & ~VK_COLOR_COMPONENT_A_BIT)
+                                 : colorMask;
+        }
+
+        mRenderPassCommandBuffer->setColorWriteMask(static_cast<uint32_t>(colorIndexGL), 1,
+                                                    &colorWriteMask);
+    }
+
+    mDirtyColorWriteMasks &= ~dirtyColorAttachments;
+    return angle::Result::Continue;
+}
+
 angle::Result ContextVk::handleDirtyGraphicsDynamicDepthClampEnable(
     DirtyBits::Iterator *dirtyBitsIterator,
     DirtyBits dirtyBitMask)
@@ -4836,14 +4889,25 @@ void ContextVk::updateColorMasks()
 
     mClearColorMasks = blendStateExt.getColorMaskBits();
 
-    FramebufferVk *framebufferVk = vk::GetImpl(mState.getDrawFramebuffer());
-    mGraphicsPipelineDesc->updateColorWriteMasks(&mGraphicsPipelineTransition, mClearColorMasks,
-                                                 framebufferVk->getEmulatedAlphaAttachmentMask(),
-                                                 framebufferVk->getState().getEnabledDrawBuffers());
+    if (mRenderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_WRITE_MASK);
+        // Assume all attachments are dirty for simplicity, we don't currently track what the
+        // previous mask was to compare against.
+        mDirtyColorWriteMasks.set();
+    }
+    else
+    {
+        FramebufferVk *framebufferVk = vk::GetImpl(mState.getDrawFramebuffer());
+        mGraphicsPipelineDesc->updateColorWriteMasks(
+            &mGraphicsPipelineTransition, mClearColorMasks,
+            framebufferVk->getEmulatedAlphaAttachmentMask(),
+            framebufferVk->getState().getEnabledDrawBuffers());
 
-    // This function may be called outside of ContextVk::syncState, and so invalidates the graphics
-    // pipeline.
-    invalidateCurrentGraphicsPipeline();
+        // This function may be called outside of ContextVk::syncState, and so invalidates the
+        // graphics pipeline.
+        invalidateCurrentGraphicsPipeline();
+    }
 
     onColorAccessChange();
 }
@@ -4861,8 +4925,19 @@ void ContextVk::updateMissingAttachments()
     const gl::DrawBufferMask shaderOutMask      = executable->getActiveOutputVariablesMask();
     const gl::DrawBufferMask missingOutputsMask = ~shaderOutMask & framebufferMask;
 
+    // Missing output affects the color write mask
+    if (mRenderer->getFeatures().supportsColorWriteMaskDynamicState.enabled &&
+        missingOutputsMask != mMissingOutputsMask)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_WRITE_MASK);
+        // Only the bits in missingOutputsMask^mMissingOutputsMask (those that have changed) need to
+        // be set, but set all for simplicity.
+        mDirtyColorWriteMasks.set();
+    }
+    mMissingOutputsMask = missingOutputsMask;
+
     mGraphicsPipelineDesc->updateMissingOutputsMask(&mGraphicsPipelineTransition,
-                                                    missingOutputsMask);
+                                                    mMissingOutputsMask);
 
     // Handle missing depth/stencil attachment input.  If gl_LastFragDepth/StencilARM is used by the
     // shader but there is no depth/stencil attachment, the shader is changed not to read from the
@@ -6839,6 +6914,7 @@ void ContextVk::invalidateComputeDescriptorSet(DescriptorSetIndex usedDescriptor
 void ContextVk::invalidateAllDynamicState()
 {
     mGraphicsDirtyBits |= mDynamicStateDirtyBits;
+    mDirtyColorWriteMasks.set();
 }
 
 angle::Result ContextVk::dispatchCompute(const gl::Context *context,
@@ -7196,7 +7272,7 @@ void ContextVk::handleError(VkResult errorCode,
     }
     collector.releaseCommandBuffers();
 
-    mGraphicsDirtyBits |= mNewRenderPassDirtyBits;
+    markNewRenderPassDirtyBits();
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
 
     mOutsideRenderPassSerialFactory.reset();
@@ -8169,6 +8245,12 @@ uint32_t ContextVk::getCurrentViewCount() const
     return drawFBO->getRenderPassDesc().viewCount();
 }
 
+void ContextVk::markNewRenderPassDirtyBits()
+{
+    mGraphicsDirtyBits |= mNewRenderPassDirtyBits;
+    mDirtyColorWriteMasks.set();
+}
+
 angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassClosureReason reason)
 {
     // Ensure we flush the RenderPass *after* the prior commands.
@@ -8182,7 +8264,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassCl
     }
 
     // Set dirty bits if render pass was open (and thus will be closed).
-    mGraphicsDirtyBits |= mNewRenderPassDirtyBits;
+    markNewRenderPassDirtyBits();
 
     mCurrentTransformFeedbackQueueSerial = QueueSerial();
 
@@ -8331,7 +8413,7 @@ angle::Result ContextVk::flushDirtyGraphicsRenderPass(DirtyBits::Iterator *dirty
     // Additionally, make sure any dirty bits not included in the mask are left for future
     // processing.  Note that |dirtyBitMask| is removed from |mNewGraphicsCommandBufferDirtyBits|
     // after dirty bits are iterated, so there's no need to mask them out.
-    mGraphicsDirtyBits |= mNewRenderPassDirtyBits;
+    markNewRenderPassDirtyBits();
     // Because dirtyBitMask always contains DIRTY_BIT_DRIVER_UNIFORMS, we don't need to explicitly
     // add DIRTY_BIT_DRIVER_UNIFORMS to mGraphicsDirtyBits here.
     ASSERT(dirtyBitMask.test(DIRTY_BIT_DRIVER_UNIFORMS));

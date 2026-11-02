@@ -860,6 +860,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsColorWriteMaskDynamicState = {
+        "supportsColorWriteMaskDynamicState",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsDepthClampEnableDynamicState = {
         "supportsDepthClampEnableDynamicState",
         FeatureCategory::VulkanFeatures,

@@ -3123,21 +3123,22 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                                                       (property)
 // - VK_EXT_primitive_topology_list_restart:          primitiveTopologyListRestart (feature)
 // - VK_EXT_extended_dynamic_state3:                  extendedDynamicState3AlphaToCoverageEnable
-//                                                                                       (feature)
+//                                                                                        (feature)
 //                                                    extendedDynamicState3AlphaToOneEnable
-//                                                                                       (feature)
+//                                                                                        (feature)
+//                                                    extendedDynamicState3ColorWriteMask (feature)
 //                                                    extendedDynamicState3DepthClampEnable
-//                                                                                       (feature)
+//                                                                                        (feature)
 //                                                    extendedDynamicState3DepthClipNegativeOneToOne
-//                                                                                       (feature)
+//                                                                                        (feature)
 //                                                    extendedDynamicState3LineRasterizationMode
-//                                                                                       (feature)
+//                                                                                        (feature)
 //                                                    extendedDynamicState3LineStippleEnable
-//                                                                                       (feature)
+//                                                                                        (feature)
 //                                                    extendedDynamicState3LogicOpEnable (feature)
 //                                                    extendedDynamicState3PolygonMode (feature)
 //                                                    extendedDynamicState3RasterizationSamples
-//                                                                                       (feature)
+//                                                                                        (feature)
 //                                                    extendedDynamicState3SampleMask (feature)
 //                                                    dynamicPrimitiveTopologyUnrestricted
 //                                                                                       (property)
@@ -6795,6 +6796,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3AlphaToOneEnable == VK_TRUE &&
             isRasterizerDiscardDynamicState && !hasStaticBresenhamLineState && !isPowerVR);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsColorWriteMaskDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled &&
+            mExtendedDynamicState3Features.extendedDynamicState3ColorWriteMask == VK_TRUE &&
+            isRasterizerDiscardDynamicState);
 
     // Disabled on Imagination drivers due to failure of a few dEQP tests.
     ANGLE_FEATURE_CONDITION(

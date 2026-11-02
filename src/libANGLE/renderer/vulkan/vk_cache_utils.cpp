@@ -3372,14 +3372,17 @@ void GraphicsPipelineDesc::initDefaults(const ErrorContext *context,
 
     if (GraphicsPipelineHasFragmentOutput(subset))
     {
-        constexpr VkFlags kAllColorBits = (VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-                                           VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
+        const VkFlags defaultColorWriteMask =
+            context->getRenderer()->getFeatures().supportsColorWriteMaskDynamicState.enabled
+                ? 0
+                : VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
+                      VK_COLOR_COMPONENT_A_BIT;
 
         for (uint32_t colorIndexGL = 0; colorIndexGL < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
              ++colorIndexGL)
         {
             Int4Array_Set(mFragmentOutput.blend.colorWriteMaskBits.data(), colorIndexGL,
-                          kAllColorBits);
+                          defaultColorWriteMask);
         }
 
         PackedColorBlendAttachmentState blendAttachmentState;
@@ -4214,6 +4217,10 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
 
     // Dynamic state
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_BLEND_CONSTANTS);
+    if (context->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_COLOR_WRITE_MASK_EXT);
+    }
     if (context->getFeatures().supportsLogicOpDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LOGIC_OP_EXT);

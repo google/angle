@@ -426,6 +426,49 @@ void SetDepthStateForUnused(vk::Renderer *renderer, vk::GraphicsPipelineDesc *de
     }
 }
 
+void SetColorDynamicStateForSingleAttachment(vk::Renderer *renderer,
+                                             vk::RenderPassCommandBuffer *commandBuffer)
+{
+    if (renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        constexpr VkColorComponentFlags kAllColorComponents =
+            VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
+            VK_COLOR_COMPONENT_A_BIT;
+        commandBuffer->setColorWriteMask(0, 1, &kAllColorComponents);
+    }
+}
+
+void SetColorDynamicStateForAttachments(vk::Renderer *renderer,
+                                        vk::RenderPassCommandBuffer *commandBuffer,
+                                        gl::DrawBufferMask attachments)
+{
+    if (renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        constexpr VkColorComponentFlags kAllColorComponents =
+            VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
+            VK_COLOR_COMPONENT_A_BIT;
+        for (size_t attachment : attachments)
+        {
+            commandBuffer->setColorWriteMask(static_cast<uint32_t>(attachment), 1,
+                                             &kAllColorComponents);
+        }
+    }
+}
+
+void SetColorDynamicStateForUnused(vk::Renderer *renderer,
+                                   vk::RenderPassCommandBuffer *commandBuffer,
+                                   gl::DrawBufferMask attachments)
+{
+    if (renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        constexpr VkColorComponentFlags kDisableAll = 0;
+        for (size_t attachment : attachments)
+        {
+            commandBuffer->setColorWriteMask(static_cast<uint32_t>(attachment), 1, &kDisableAll);
+        }
+    }
+}
+
 void SetDepthDynamicStateForWrite(vk::Renderer *renderer,
                                   vk::RenderPassCommandBuffer *commandBuffer)
 {
@@ -1355,6 +1398,8 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     //
     // The following dynamic state is always set by UtilsVk when effective:
     //
+    // - color write mask: UtilsVk sets this when drawing to color images, but only for the
+    //   attachments being drawn to
     // - depth write mask: UtilsVk sets this when enabling depth test
     // - depth compare op: UtilsVk sets this when enabling depth test
     // - depth clamp: UtilsVk sets this when clearing depth
@@ -1419,6 +1464,10 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     if (renderer->getFeatures().supportsAlphaToOneEnableDynamicState.enabled)
     {
         commandBuffer->setAlphaToOneEnable(VK_FALSE);
+    }
+    if (renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        SetColorDynamicStateForUnused(renderer, commandBuffer, renderer->getValidDrawBuffers());
     }
     if (renderer->getFeatures().supportsDepthClampEnableDynamicState.enabled)
     {
@@ -2835,8 +2884,11 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete,
                               contextVk->pipelineRobustness(),
                               contextVk->pipelineProtectedAccess());
-    pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
-    pipelineDesc.setSingleColorWriteMask(params.colorAttachmentIndexGL, params.colorMaskFlags);
+    if (!renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
+        pipelineDesc.setSingleColorWriteMask(params.colorAttachmentIndexGL, params.colorMaskFlags);
+    }
     if (!renderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
     {
         pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
@@ -2908,6 +2960,12 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     const VkRect2D scissor = gl_vk::GetRect(params.clearArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    if (params.colorMaskFlags != 0 &&
+        renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        commandBuffer->setColorWriteMask(params.colorAttachmentIndexGL, 1, &params.colorMaskFlags);
+    }
 
     if (params.clearDepth)
     {
@@ -3016,7 +3074,10 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete,
                               contextVk->pipelineRobustness(),
                               contextVk->pipelineProtectedAccess());
-    pipelineDesc.setSingleColorWriteMask(0, params.colorMaskFlags);
+    if (!renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        pipelineDesc.setSingleColorWriteMask(0, params.colorMaskFlags);
+    }
     if (!renderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
     {
         pipelineDesc.setRasterizationSamples(dst->getSamples());
@@ -3052,6 +3113,12 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(renderArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    if (params.colorMaskFlags != 0 &&
+        renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        commandBuffer->setColorWriteMask(0, 1, &params.colorMaskFlags);
+    }
 
     SetDepthDynamicStateForUnused(renderer, commandBuffer);
     SetStencilDynamicStateForUnused(renderer, commandBuffer);
@@ -3303,12 +3370,19 @@ angle::Result UtilsVk::colorBlitResolve(ContextVk *contextVk,
     constexpr VkColorComponentFlags kAllColorComponents =
         VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
         VK_COLOR_COMPONENT_A_BIT;
-
-    pipelineDesc.setColorWriteMasks(
+    const size_t colorAttachmentRange = framebuffer->getRenderPassDesc().colorAttachmentRange();
+    const gl::BlendStateExt::ColorMaskStorage::Type colorMasks =
         gl::BlendStateExt::ColorMaskStorage::GetReplicatedValue(
-            kAllColorComponents, gl::BlendStateExt::ColorMaskStorage::GetMask(
-                                     framebuffer->getRenderPassDesc().colorAttachmentRange())),
-        framebuffer->getEmulatedAlphaAttachmentMask(), ~gl::DrawBufferMask());
+            kAllColorComponents,
+            gl::BlendStateExt::ColorMaskStorage::GetMask(colorAttachmentRange));
+    const gl::DrawBufferMask emulatedAlphaAttachmentMask =
+        framebuffer->getEmulatedAlphaAttachmentMask();
+
+    if (!renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        pipelineDesc.setColorWriteMasks(colorMasks, emulatedAlphaAttachmentMask,
+                                        ~gl::DrawBufferMask());
+    }
 
     for (size_t colorIndexGL : framebuffer->getState().getEnabledDrawBuffers())
     {
@@ -3353,6 +3427,19 @@ angle::Result UtilsVk::colorBlitResolve(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(params.blitArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    if (renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        for (uint32_t colorIndexGL = 0; colorIndexGL < colorAttachmentRange; ++colorIndexGL)
+        {
+            const VkColorComponentFlags colorMask =
+                gl::BlendStateExt::ColorMaskStorage::GetValueIndexed(colorIndexGL, colorMasks);
+            const VkColorComponentFlags colorWriteMask =
+                emulatedAlphaAttachmentMask[colorIndexGL] ? (colorMask & ~VK_COLOR_COMPONENT_A_BIT)
+                                                          : colorMask;
+            commandBuffer->setColorWriteMask(colorIndexGL, 1, &colorWriteMask);
+        }
+    }
 
     SetDepthDynamicStateForUnused(renderer, commandBuffer);
     SetStencilDynamicStateForUnused(renderer, commandBuffer);
@@ -3444,7 +3531,10 @@ angle::Result UtilsVk::depthStencilBlitResolve(
     vk::ImageAccess srcImagelayout = vk::ImageAccess::DepthReadStencilReadFragmentShaderRead;
     VkImageAspectFlags aspectFlags = 0;
 
-    pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
+    if (!renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+    {
+        pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
+    }
     pipelineDesc.setRenderPassDesc(*renderPassDesc);
     if (blitDepth)
     {
@@ -4068,6 +4158,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     VkRect2D scissor = gl_vk::GetRect(renderArea);
     commandBuffer->setScissor(0, 1, &scissor);
 
+    SetColorDynamicStateForSingleAttachment(renderer, commandBuffer);
     SetDepthDynamicStateForUnused(renderer, commandBuffer);
     SetStencilDynamicStateForUnused(renderer, commandBuffer);
 
@@ -4784,10 +4875,6 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
     pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete,
                               contextVk->pipelineRobustness(),
                               contextVk->pipelineProtectedAccess());
-    pipelineDesc.setSingleColorWriteMask(0, (VkColorComponentFlagBits::VK_COLOR_COMPONENT_R_BIT |
-                                             VkColorComponentFlagBits::VK_COLOR_COMPONENT_G_BIT |
-                                             VkColorComponentFlagBits::VK_COLOR_COMPONENT_B_BIT |
-                                             VkColorComponentFlagBits::VK_COLOR_COMPONENT_A_BIT));
     if (!renderer->getFeatures().supportsRasterizationSamplesDynamicState.enabled)
     {
         pipelineDesc.setRasterizationSamples(sampleCount);
@@ -4900,6 +4987,7 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
             // Set dynamic state
             commandBuffer->setViewport(0, 1, &viewport);
             commandBuffer->setScissor(0, 1, &scissor);
+            SetColorDynamicStateForSingleAttachment(renderer, commandBuffer);
             SetDepthDynamicStateForUnused(renderer, commandBuffer);
             SetStencilDynamicStateForUnused(renderer, commandBuffer);
 
@@ -5119,6 +5207,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
                                        &mUnresolve[flags], &pipelineDesc, descriptorSet, nullptr, 0,
                                        commandBuffer));
 
+        SetColorDynamicStateForAttachments(renderer, commandBuffer, params.unresolveColorMask);
         if (params.unresolveDepth)
         {
             SetDepthDynamicStateForWrite(renderer, commandBuffer);
@@ -5157,7 +5246,10 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         ANGLE_TRY(ensureExportStencilResourcesInitialized(contextVk, descriptorType));
 
         // Disable color and depth output, and only let stencil through.
-        pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
+        if (!renderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
+        {
+            pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
+        }
 
         SetDepthStateForUnused(renderer, &pipelineDesc);
         SetStencilStateForWrite(renderer, &pipelineDesc);
@@ -5189,6 +5281,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
                                        exportStencilShader, &mExportStencil[flags], &pipelineDesc,
                                        exportStencilDescriptorSet, nullptr, 0, commandBuffer));
 
+        SetColorDynamicStateForUnused(renderer, commandBuffer, params.unresolveColorMask);
         SetDepthDynamicStateForUnused(renderer, commandBuffer);
         SetStencilDynamicStateForWrite(renderer, commandBuffer);
 

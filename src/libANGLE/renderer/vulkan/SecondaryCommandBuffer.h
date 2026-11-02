@@ -684,8 +684,8 @@ struct SetColorWriteMaskParams
 {
     CommandHeader header;
 
-    uint32_t firstAttachment : 16;
-    uint32_t attachmentCount : 16;
+    uint32_t attachment : 16;
+    uint32_t colorWriteMask : 16;
 };
 VERIFY_8_BYTE_ALIGNMENT(SetColorWriteMaskParams)
 
@@ -2395,14 +2395,13 @@ ANGLE_INLINE void SecondaryCommandBuffer::setColorWriteMask(
     uint32_t attachmentCount,
     const VkColorComponentFlags *colorWriteMask)
 {
-    uint8_t *writePtr;
-    const ArrayParamSize writeMaskSize =
-        calculateArrayParameterSize<VkColorComponentFlags>(attachmentCount);
-    SetColorWriteMaskParams *paramStruct = initCommand<SetColorWriteMaskParams>(
-        CommandID::SetColorWriteMask, writeMaskSize.allocateBytes, &writePtr);
-    SetBitField(paramStruct->firstAttachment, firstAttachment);
-    SetBitField(paramStruct->attachmentCount, attachmentCount);
-    storeArrayParameter(writePtr, colorWriteMask, writeMaskSize);
+    // Masks are set one attachment at a time.
+    ASSERT(attachmentCount == 1);
+
+    SetColorWriteMaskParams *paramStruct =
+        initCommand<SetColorWriteMaskParams>(CommandID::SetColorWriteMask);
+    SetBitField(paramStruct->attachment, firstAttachment);
+    SetBitField(paramStruct->colorWriteMask, colorWriteMask[0]);
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setCullMode(VkCullModeFlags cullMode)

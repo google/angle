@@ -381,6 +381,7 @@ enum class Feature
     SupportsClFp64,
     SupportsClKhrSubgroups,
     SupportsColorWriteEnable,
+    SupportsColorWriteMaskDynamicState,
     SupportsComputeTranscodeEtcToBc,
     SupportsCustomBorderColor,
     SupportsDenormFtzFp16,

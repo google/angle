@@ -845,10 +845,9 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const SetColorWriteMaskParams *params =
                         getParamPtr<SetColorWriteMaskParams>(currentCommand);
-                    const VkColorComponentFlags *colorWriteMask =
-                        GetFirstArrayParameter<VkColorComponentFlags>(params);
-                    vkCmdSetColorWriteMaskEXT(cmdBuffer, params->firstAttachment,
-                                              params->attachmentCount, colorWriteMask);
+                    const VkColorComponentFlags colorWriteMask =
+                        static_cast<VkColorComponentFlags>(params->colorWriteMask);
+                    vkCmdSetColorWriteMaskEXT(cmdBuffer, params->attachment, 1, &colorWriteMask);
                     break;
                 }
                 case CommandID::SetCullMode:

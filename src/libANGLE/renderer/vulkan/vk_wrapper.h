@@ -1210,6 +1210,7 @@ ANGLE_INLINE void CommandBuffer::setColorWriteMask(uint32_t firstAttachment,
                                                    const VkColorComponentFlags *colorWriteMasks)
 {
     ASSERT(valid());
+    ASSERT(attachmentCount == 1);
     VK_SECONDARY_CMD_CALL(
         vkCmdSetColorWriteMaskEXT(mHandle, firstAttachment, attachmentCount, colorWriteMasks));
 }

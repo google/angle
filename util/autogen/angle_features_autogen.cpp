@@ -381,6 +381,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsClFp64, "supportsClFp64"},
     {Feature::SupportsClKhrSubgroups, "supportsClKhrSubgroups"},
     {Feature::SupportsColorWriteEnable, "supportsColorWriteEnable"},
+    {Feature::SupportsColorWriteMaskDynamicState, "supportsColorWriteMaskDynamicState"},
     {Feature::SupportsComputeTranscodeEtcToBc, "supportsComputeTranscodeEtcToBc"},
     {Feature::SupportsCustomBorderColor, "supportsCustomBorderColor"},
     {Feature::SupportsDenormFtzFp16, "supportsDenormFtzFp16"},

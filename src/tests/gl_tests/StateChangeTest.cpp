@@ -9077,6 +9077,589 @@ TEST_P(StateChangeTestES3, BlendColor)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests state change for glColorMaski, with all attachments present.
+TEST_P(StateChangeTestES3, ColorMaskiAllAttachments)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+    constexpr uint32_t kWidth  = 5;
+    constexpr uint32_t kHeight = 3;
+
+    GLint maxDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ASSERT_LE(maxDrawBuffers, 8);
+
+    // Create a framebuffer with the maximum number of attachments.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    std::vector<GLTexture> color(maxDrawBuffers);
+    std::vector<GLenum> drawBuffers(maxDrawBuffers);
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, color[i],
+                               0);
+
+        drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
+    }
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDrawBuffers(maxDrawBuffers, drawBuffers.data());
+
+    // Create a program that writes something different to each attachment based on uniform |color|.
+    //
+    // * Attachment 0: color.xywz
+    // * Attachment 1: color.xyxw
+    // * Attachment 2: color.xzwz
+    // * Attachment 3: color.xzxw
+    // * Attachment 4: color.yywz
+    // * Attachment 5: color.yyxw
+    // * Attachment 6: color.yzwz
+    // * Attachment 7: color.yzxw
+    //
+    // That is:
+    //
+    // * The first component is x or y based on index & 0x4
+    // * The second component is y or z based on index & 0x2
+    // * The third component is w or x based on index & 0x1
+    // * The fourth component is z or w based on index & 0x1
+    //
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    std::ostringstream fs;
+    fs << R"(#version 300 es
+precision highp float;
+)";
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        fs << "layout(location = " << i << ") out vec4 color" << i << ";\n";
+    }
+    fs << R"(uniform vec4 color;
+void main()
+{
+)";
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        fs << "color" << i << " = color." << ((i & 0x4) == 0 ? "x" : "y")
+           << ((i & 0x2) == 0 ? "y" : "z") << ((i & 0x1) == 0 ? "w" : "x")
+           << ((i & 0x1) == 0 ? "z" : "w") << ";\n";
+    }
+    fs << "}\n";
+
+    ANGLE_GL_PROGRAM(program, kVS, fs.str().c_str());
+    glUseProgram(program);
+
+    const GLint colorLoc = glGetUniformLocation(program, "color");
+    ASSERT_NE(colorLoc, -1);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Enable blending so the entire draws can be validated at once.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Set some color masks and draw:
+    //
+    //        XYZW
+    //     0: X_X_
+    //     1: _X_X
+    //     2: X_X_
+    //     3: _X_X
+    //     4: X_X_
+    //     5: _X_X
+    //     6: X_X_
+    //     7: _X_X
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        const int mask = i % 2 == 0 ? GL_TRUE : GL_FALSE;
+        glColorMaskiOES(i, mask, !mask, mask, !mask);
+    }
+    const GLColor kC1(13, 19, 24, 7);
+    glUniform4fv(colorLoc, 1, kC1.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change some of the masks and draw.  Aggregated masks become:
+    //
+    //        XYZW
+    //     0: X_X_
+    //     1: _XXX <-- changed
+    //     2: X_X_
+    //     3: _X_X
+    //     4: X_XX <-- changed
+    //     5: _X_X
+    //     6: X_X_
+    //     7: XX_X <-- changed
+    for (GLint i = 1; i < maxDrawBuffers; i += 3)
+    {
+        glColorMaskiOES(i, i == 1 ? GL_FALSE : GL_TRUE, i == 4 ? GL_FALSE : GL_TRUE,
+                        i == 7 ? GL_FALSE : GL_TRUE, GL_TRUE);
+    }
+    const GLColor kC2(5, 11, 2, 14);
+    glUniform4fv(colorLoc, 1, kC2.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change some of the masks and draw.  Aggregated masks become:
+    //
+    //        XYZW
+    //     0: _XXX <-- changed
+    //     1: _XXX
+    //     2: XX_X <-- changed
+    //     3: _X_X
+    //     4: _XXX <-- changed
+    //     5: _X_X
+    //     6: XX_X <-- changed
+    //     7: XX_X
+    for (GLint i = 0; i < maxDrawBuffers; i += 2)
+    {
+        glColorMaskiOES(i, i % 4 == 0 ? GL_FALSE : GL_TRUE, GL_TRUE,
+                        i % 4 == 2 ? GL_FALSE : GL_TRUE, GL_TRUE);
+    }
+    const GLColor kC3(39, 87, 123, 191);
+    glUniform4fv(colorLoc, 1, kC3.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify results
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        // Each channel might be masked in each draw.  Calculate a multiplier for each channel and
+        // draw color, which is 0 or 1 based on whether the channel is masked or not.
+        const uint32_t r1 = i % 2 == 0 ? 1 : 0;
+        const uint32_t g1 = 1 - r1;
+        const uint32_t b1 = r1;
+        const uint32_t a1 = 1 - r1;
+
+        const uint32_t r2 = i % 3 != 1 ? r1 : i == 1 ? 0 : 1;
+        const uint32_t g2 = i % 3 != 1 ? g1 : i == 4 ? 0 : 1;
+        const uint32_t b2 = i % 3 != 1 ? b1 : i == 7 ? 0 : 1;
+        const uint32_t a2 = i % 3 != 1 ? a1 : 1;
+
+        const uint32_t r3 = i % 2 != 0 ? r2 : i % 4 == 0 ? 0 : 1;
+        const uint32_t g3 = i % 2 != 0 ? g2 : 1;
+        const uint32_t b3 = i % 2 != 0 ? b2 : i % 4 == 2 ? 0 : 1;
+        const uint32_t a3 = i % 2 != 0 ? a2 : 1;
+
+        // Each attachment also has a swizzle, so take that into account
+        const GLColor c1((i & 0x4) == 0 ? kC1.R : kC1.G, (i & 0x2) == 0 ? kC1.G : kC1.B,
+                         (i & 0x1) == 0 ? kC1.A : kC1.R, (i & 0x1) == 0 ? kC1.B : kC1.A);
+        const GLColor c2((i & 0x4) == 0 ? kC2.R : kC2.G, (i & 0x2) == 0 ? kC2.G : kC2.B,
+                         (i & 0x1) == 0 ? kC2.A : kC2.R, (i & 0x1) == 0 ? kC2.B : kC2.A);
+        const GLColor c3((i & 0x4) == 0 ? kC3.R : kC3.G, (i & 0x2) == 0 ? kC3.G : kC3.B,
+                         (i & 0x1) == 0 ? kC3.A : kC3.R, (i & 0x1) == 0 ? kC3.B : kC3.A);
+
+        // Calculate the accumulated color
+        const uint32_t r = r1 * c1.R + r2 * c2.R + r3 * c3.R;
+        const uint32_t g = g1 * c1.G + g2 * c2.G + g3 * c3.G;
+        const uint32_t b = b1 * c1.B + b2 * c2.B + b3 * c3.B;
+        const uint32_t a = a1 * c1.A + a2 * c2.A + a3 * c3.A;
+
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + i);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(r, g, b, a), 1);
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for glColorMask, with some attachments whose locations have gaps.
+TEST_P(StateChangeTestES3, ColorMask)
+{
+    constexpr uint32_t kWidth  = 5;
+    constexpr uint32_t kHeight = 3;
+
+    std::array<GLenum, 4> drawBuffers = {
+        GL_COLOR_ATTACHMENT0,
+        GL_NONE,
+        GL_NONE,
+        GL_COLOR_ATTACHMENT3,
+    };
+
+    std::array<GLTexture, 3> color;
+    for (size_t i = 0; i < color.size(); ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    }
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color[0], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[1], 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    // Create a program that writes something different to each attachment.
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform vec4 color0;
+uniform vec4 color2;
+uniform vec4 color3;
+layout(location = 0) out vec4 colorOut0;
+layout(location = 2) out vec4 colorOut2;
+layout(location = 3) out vec4 colorOut3;
+void main()
+{
+    colorOut0 = color0;
+    colorOut2 = color2;
+    colorOut3 = color3;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    const GLint color0Loc = glGetUniformLocation(program, "color0");
+    const GLint color2Loc = glGetUniformLocation(program, "color2");
+    const GLint color3Loc = glGetUniformLocation(program, "color3");
+    ASSERT_NE(color0Loc, -1);
+    ASSERT_NE(color2Loc, -1);
+    ASSERT_NE(color3Loc, -1);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Make sure the unattached color[2] attachment is also initialized.
+    glBindTexture(GL_TEXTURE_2D, color[2]);
+    const std::vector<GLColor> kColor2Data(kWidth * kHeight, GLColor::transparentBlack);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kColor2Data.data());
+
+    // Enable blending so the entire draws can be validated at once.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Set color mask for all attachments.
+    glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_FALSE);
+    const GLColor kC1(13, 19, 24, 7);
+    const GLColor kC2(5, 11, 2, 14);
+    glUniform4fv(color0Loc, 1, kC1.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kC2.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change the color mask.
+    glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+    const GLColor kC3(27, 4, 51, 67);
+    const GLColor kC4(78, 43, 17, 23);
+    glUniform4fv(color0Loc, 1, kC3.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kC4.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Disable one of the draw buffers and draw again.
+    drawBuffers[0] = GL_NONE;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+    const GLColor kUnused(255, 255, 255, 255);
+    const GLColor kC5(15, 20, 25, 30);
+    glUniform4fv(color0Loc, 1, kUnused.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kC5.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Re-enable the draw buffer and disable the other one.
+    drawBuffers[0] = GL_COLOR_ATTACHMENT0;
+    drawBuffers[3] = GL_NONE;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+    const GLColor kC6(41, 36, 31, 26);
+    glUniform4fv(color0Loc, 1, kC6.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kUnused.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Add an attachment, but don't enable it.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, color[2], 0);
+    const GLColor kC7(7, 9, 7, 9);
+    glUniform4fv(color0Loc, 1, kC7.toNormalizedVector().data());
+    glUniform4fv(color2Loc, 1, kUnused.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kUnused.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Enable all attachments.
+    drawBuffers[2] = GL_COLOR_ATTACHMENT2;
+    drawBuffers[3] = GL_COLOR_ATTACHMENT3;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+    const GLColor kC8(111, 131, 151, 171);
+    const GLColor kC9(6, 8, 4, 6);
+    glUniform4fv(color2Loc, 1, kC8.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kC9.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify results
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_NEAR(
+        0, 0,
+        GLColor(kC3.R + kC6.R + kC7.R + kC7.R, kC1.G + kC3.G + kC6.G + kC7.G + kC7.G, kC1.B,
+                kC3.A + kC6.A + kC7.A + kC7.A),
+        1);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT2);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(kC8.R, kC8.G, 0, kC8.A));
+
+    glReadBuffer(GL_COLOR_ATTACHMENT3);
+    EXPECT_PIXEL_COLOR_NEAR(
+        0, 0,
+        GLColor(kC4.R + kC5.R + kC9.R, kC2.G + kC4.G + kC5.G + kC9.G, kC2.B, kC4.A + kC5.A + kC9.A),
+        1);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for glColorMaski, with some attachments whose locations have gaps.
+TEST_P(StateChangeTestES3, ColorMaski)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+    constexpr uint32_t kWidth  = 5;
+    constexpr uint32_t kHeight = 3;
+
+    std::array<GLenum, 4> drawBuffers = {
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1,
+        GL_NONE,
+        GL_COLOR_ATTACHMENT3,
+    };
+
+    std::array<GLTexture, 3> color;
+    for (size_t i = 0; i < color.size(); ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    }
+
+    GLFramebuffer fbo2;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color[0], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[2], 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawBuffers[1] = GL_NONE;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLFramebuffer fbo1;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, color[1], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[2], 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawBuffers[0] = GL_NONE;
+    drawBuffers[1] = GL_COLOR_ATTACHMENT1;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Create a program that writes something different to each attachment.
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform vec4 color0;
+uniform vec4 color1;
+uniform vec4 color3;
+layout(location = 0) out vec4 colorOut0;
+layout(location = 1) out vec4 colorOut1;
+layout(location = 3) out vec4 colorOut3;
+void main()
+{
+    colorOut0 = color0;
+    colorOut1 = color1;
+    colorOut3 = color3;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    const GLint color0Loc = glGetUniformLocation(program, "color0");
+    const GLint color1Loc = glGetUniformLocation(program, "color1");
+    const GLint color3Loc = glGetUniformLocation(program, "color3");
+    ASSERT_NE(color0Loc, -1);
+    ASSERT_NE(color1Loc, -1);
+    ASSERT_NE(color3Loc, -1);
+
+    // Enable blending so the entire draws can be validated at once.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Set color mask for the attachments
+    glColorMaskiOES(0, GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE);
+    glColorMaskiOES(1, GL_FALSE, GL_TRUE, GL_TRUE, GL_FALSE);
+    glColorMaskiOES(3, GL_TRUE, GL_TRUE, GL_FALSE, GL_FALSE);
+    const GLColor kC1(13, 19, 24, 7);
+    const GLColor kC2(5, 11, 2, 14);
+    glUniform4fv(color1Loc, 1, kC1.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kC2.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change the color mask.
+    glColorMaskiOES(1, GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+    glColorMaskiOES(3, GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE);
+    const GLColor kC3(27, 4, 51, 67);
+    const GLColor kC4(78, 43, 17, 23);
+    glUniform4fv(color1Loc, 1, kC3.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kC4.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Switch to another framebuffer that shares some locations with the current one
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    const GLColor kC5(15, 20, 25, 30);
+    const GLColor kC6(41, 36, 31, 26);
+    glUniform4fv(color0Loc, 1, kC5.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kC6.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change the color mask, but only for one of the attachments.
+    glColorMaskiOES(3, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Switch to the first framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    const GLColor kC7(7, 9, 7, 9);
+    glUniform4fv(color1Loc, 1, kC7.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify results
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(kC5.R + kC5.R, 0, kC5.B + kC5.B, kC5.A + kC5.A), 1);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0,
+                            GLColor(kC3.R + kC7.R, kC1.G + kC3.G + kC7.G, kC1.B, kC3.A + kC7.A), 1);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT3);
+    EXPECT_PIXEL_COLOR_NEAR(
+        0, 0, GLColor(kC2.R + kC4.R + kC6.R, kC2.G, kC4.B + kC6.B + kC6.B + kC6.B, kC4.A + kC6.A),
+        1);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for glColorMaski, with masked clear in between draws.
+TEST_P(StateChangeTestES3, ColorMaskiWithClear)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+    constexpr uint32_t kWidth  = 5;
+    constexpr uint32_t kHeight = 3;
+
+    std::array<GLenum, 4> drawBuffers = {
+        GL_NONE,
+        GL_COLOR_ATTACHMENT1,
+        GL_NONE,
+        GL_COLOR_ATTACHMENT3,
+    };
+
+    std::array<GLTexture, 2> color;
+    for (size_t i = 0; i < color.size(); ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    }
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, color[0], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[1], 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    // Create a program that writes something different to each attachment.
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform vec4 color1;
+uniform vec4 color3;
+layout(location = 1) out vec4 colorOut1;
+layout(location = 3) out vec4 colorOut3;
+void main()
+{
+    colorOut1 = color1;
+    colorOut3 = color3;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    const GLint color1Loc = glGetUniformLocation(program, "color1");
+    const GLint color3Loc = glGetUniformLocation(program, "color3");
+    ASSERT_NE(color1Loc, -1);
+    ASSERT_NE(color3Loc, -1);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Enable blending so the entire draws can be validated at once.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Set color mask for the attachments
+    glColorMaskiOES(1, GL_FALSE, GL_TRUE, GL_TRUE, GL_FALSE);
+    glColorMaskiOES(3, GL_TRUE, GL_TRUE, GL_FALSE, GL_FALSE);
+    const GLColor kC1(13, 19, 24, 7);
+    const GLColor kC2(5, 11, 2, 14);
+    glUniform4fv(color1Loc, 1, kC1.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kC2.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Masked clear and draw again.  The color mask state should be preserved.
+    glClearColor(0.2, 0.4, 0.6, 0.8);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify results
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 102 + kC1.G, 153 + kC1.B, 0), 1);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT3);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(51 + kC2.R, 102 + kC2.G, 0, 0), 1);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests state change for ref and mask in glStencilFuncSeparate.
 TEST_P(StateChangeTestES3, StencilReferenceAndCompareMask)
 {
