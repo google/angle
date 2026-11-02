@@ -1421,16 +1421,12 @@ void MaybeResetDefaultUniforms(std::stringstream &out,
             }
             alreadyReset.insert(baseLocation);
 
-            ASSERT(defaultUniformResetCalls.find(baseLocation) != defaultUniformResetCalls.end());
-            std::vector<CallCapture> &callsPerLocation = defaultUniformResetCalls[baseLocation];
-
-            for (CallCapture &call : callsPerLocation)
-            {
-                out << "    ";
-                WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                      maxResourceIDBufferSize);
-                out << ";\n";
-            }
+            auto callIter = defaultUniformResetCalls.find(baseLocation);
+            ASSERT(callIter != defaultUniformResetCalls.end());
+            out << "    ";
+            WriteCppReplayForCall(callIter->second, replayWriter, out, header, binaryData,
+                                  maxResourceIDBufferSize);
+            out << ";\n";
         }
     }
 }
@@ -2627,10 +2623,187 @@ void CaptureFramebufferAttachment(std::vector<CallCapture> *setupCalls,
     }
 }
 
+bool GetActiveDefaultUniform(const gl::ProgramExecutable &executable,
+                             size_t uniformIndex,
+                             gl::UniformLocation *uniformLocOut,
+                             int *uniformCountOut,
+                             const gl::UniformTypeInfo **typeInfoOut)
+{
+    std::string uniformName          = executable.getUniformNameByIndex(uniformIndex);
+    const gl::LinkedUniform &uniform = executable.getUniformByIndex(uniformIndex);
+
+    int uniformCount = 1;
+    if (uniform.isArray())
+    {
+        uniformCount = uniform.getBasicTypeElementCount();
+        uniformName  = gl::StripLastArrayIndex(uniformName);
+    }
+
+    gl::UniformLocation uniformLoc      = executable.getUniformLocation(uniformName);
+    const gl::UniformTypeInfo &typeInfo = gl::GetUniformTypeInfo(uniform.getType());
+
+    // Skip unused uniforms and image uniforms (which cannot be set via glUniform*)
+    if (uniformLoc.value == -1 || typeInfo.isImageType)
+    {
+        return false;
+    }
+
+    *uniformLocOut   = uniformLoc;
+    *uniformCountOut = uniformCount;
+    *typeInfoOut     = &typeInfo;
+    return true;
+}
+
+CallCapture CaptureDefaultUniformCall(const gl::State &replayState,
+                                      const gl::Context *context,
+                                      const gl::ProgramExecutable &executable,
+                                      const gl::UniformTypeInfo &typeInfo,
+                                      gl::UniformLocation uniformLoc,
+                                      int uniformCount)
+{
+    int componentCount          = typeInfo.componentCount;
+    int uniformSize             = uniformCount * componentCount;
+    gl::UniformLocation readLoc = uniformLoc;
+
+    // Samplers should be populated with GL_INT, regardless of return type
+    if (typeInfo.isSampler)
+    {
+        std::vector<GLint> uniformBuffer(uniformSize);
+        for (int index = 0; index < uniformCount; index++, readLoc.value++)
+        {
+            executable.getUniformiv(context, readLoc,
+                                    uniformBuffer.data() + index * componentCount);
+        }
+
+        return CaptureUniform1iv(replayState, true, uniformLoc, uniformCount, uniformBuffer.data());
+    }
+
+    switch (typeInfo.componentType)
+    {
+        case GL_FLOAT:
+        {
+            std::vector<GLfloat> uniformBuffer(uniformSize);
+            for (int index = 0; index < uniformCount; index++, readLoc.value++)
+            {
+                executable.getUniformfv(context, readLoc,
+                                        uniformBuffer.data() + index * componentCount);
+            }
+            switch (typeInfo.type)
+            {
+                // Note: All matrix uniforms are populated without transpose
+                case GL_FLOAT_MAT4x3:
+                    return CaptureUniformMatrix4x3fv(replayState, true, uniformLoc, uniformCount,
+                                                     false, uniformBuffer.data());
+                case GL_FLOAT_MAT4x2:
+                    return CaptureUniformMatrix4x2fv(replayState, true, uniformLoc, uniformCount,
+                                                     false, uniformBuffer.data());
+                case GL_FLOAT_MAT4:
+                    return CaptureUniformMatrix4fv(replayState, true, uniformLoc, uniformCount,
+                                                   false, uniformBuffer.data());
+                case GL_FLOAT_MAT3x4:
+                    return CaptureUniformMatrix3x4fv(replayState, true, uniformLoc, uniformCount,
+                                                     false, uniformBuffer.data());
+                case GL_FLOAT_MAT3x2:
+                    return CaptureUniformMatrix3x2fv(replayState, true, uniformLoc, uniformCount,
+                                                     false, uniformBuffer.data());
+                case GL_FLOAT_MAT3:
+                    return CaptureUniformMatrix3fv(replayState, true, uniformLoc, uniformCount,
+                                                   false, uniformBuffer.data());
+                case GL_FLOAT_MAT2x4:
+                    return CaptureUniformMatrix2x4fv(replayState, true, uniformLoc, uniformCount,
+                                                     false, uniformBuffer.data());
+                case GL_FLOAT_MAT2x3:
+                    return CaptureUniformMatrix2x3fv(replayState, true, uniformLoc, uniformCount,
+                                                     false, uniformBuffer.data());
+                case GL_FLOAT_MAT2:
+                    return CaptureUniformMatrix2fv(replayState, true, uniformLoc, uniformCount,
+                                                   false, uniformBuffer.data());
+                case GL_FLOAT_VEC4:
+                    return CaptureUniform4fv(replayState, true, uniformLoc, uniformCount,
+                                             uniformBuffer.data());
+                case GL_FLOAT_VEC3:
+                    return CaptureUniform3fv(replayState, true, uniformLoc, uniformCount,
+                                             uniformBuffer.data());
+                case GL_FLOAT_VEC2:
+                    return CaptureUniform2fv(replayState, true, uniformLoc, uniformCount,
+                                             uniformBuffer.data());
+                case GL_FLOAT:
+                    return CaptureUniform1fv(replayState, true, uniformLoc, uniformCount,
+                                             uniformBuffer.data());
+                default:
+                    UNIMPLEMENTED();
+                    break;
+            }
+            break;
+        }
+        case GL_INT:
+        {
+            std::vector<GLint> uniformBuffer(uniformSize);
+            for (int index = 0; index < uniformCount; index++, readLoc.value++)
+            {
+                executable.getUniformiv(context, readLoc,
+                                        uniformBuffer.data() + index * componentCount);
+            }
+            switch (componentCount)
+            {
+                case 4:
+                    return CaptureUniform4iv(replayState, true, uniformLoc, uniformCount,
+                                             uniformBuffer.data());
+                case 3:
+                    return CaptureUniform3iv(replayState, true, uniformLoc, uniformCount,
+                                             uniformBuffer.data());
+                case 2:
+                    return CaptureUniform2iv(replayState, true, uniformLoc, uniformCount,
+                                             uniformBuffer.data());
+                case 1:
+                    return CaptureUniform1iv(replayState, true, uniformLoc, uniformCount,
+                                             uniformBuffer.data());
+                default:
+                    UNIMPLEMENTED();
+                    break;
+            }
+            break;
+        }
+        case GL_BOOL:
+        case GL_UNSIGNED_INT:
+        {
+            std::vector<GLuint> uniformBuffer(uniformSize);
+            for (int index = 0; index < uniformCount; index++, readLoc.value++)
+            {
+                executable.getUniformuiv(context, readLoc,
+                                         uniformBuffer.data() + index * componentCount);
+            }
+            switch (componentCount)
+            {
+                case 4:
+                    return CaptureUniform4uiv(replayState, true, uniformLoc, uniformCount,
+                                              uniformBuffer.data());
+                case 3:
+                    return CaptureUniform3uiv(replayState, true, uniformLoc, uniformCount,
+                                              uniformBuffer.data());
+                case 2:
+                    return CaptureUniform2uiv(replayState, true, uniformLoc, uniformCount,
+                                              uniformBuffer.data());
+                case 1:
+                    return CaptureUniform1uiv(replayState, true, uniformLoc, uniformCount,
+                                              uniformBuffer.data());
+                default:
+                    UNIMPLEMENTED();
+                    break;
+            }
+            break;
+        }
+        default:
+            UNIMPLEMENTED();
+            break;
+    }
+
+    return CallCapture(EntryPoint::Invalid, ParamBuffer());
+}
+
 void CaptureUpdateUniformValues(const gl::State &replayState,
                                 const gl::Context *context,
                                 gl::Program *program,
-                                ResourceTracker *resourceTracker,
                                 std::vector<CallCapture> *callsOut)
 {
     if (!program->isLinked())
@@ -2647,284 +2820,54 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
     }
 
     const gl::ProgramExecutable &executable = program->getExecutable();
-
-    for (GLuint uniformIndex = 0;
-         uniformIndex < static_cast<GLuint>(executable.getUniforms().size()); uniformIndex++)
+    for (size_t uniformIndex = 0; uniformIndex < executable.getUniforms().size(); uniformIndex++)
     {
-        std::string uniformName          = executable.getUniformNameByIndex(uniformIndex);
-        const gl::LinkedUniform &uniform = executable.getUniformByIndex(uniformIndex);
-
-        int uniformCount = 1;
-        if (uniform.isArray())
-        {
-            uniformCount = uniform.getBasicTypeElementCount();
-            uniformName  = gl::StripLastArrayIndex(uniformName);
-        }
-
-        gl::UniformLocation uniformLoc      = executable.getUniformLocation(uniformName);
-        const gl::UniformTypeInfo &typeInfo = gl::GetUniformTypeInfo(uniform.getType());
-        int componentCount                  = typeInfo.componentCount;
-        int uniformSize                     = uniformCount * componentCount;
-
-        // For arrayed uniforms, we'll need to increment a read location
-        gl::UniformLocation readLoc = uniformLoc;
-
-        // If the uniform is unused, just continue
-        if (readLoc.value == -1)
+        gl::UniformLocation uniformLoc;
+        int uniformCount                    = 0;
+        const gl::UniformTypeInfo *typeInfo = nullptr;
+        if (!GetActiveDefaultUniform(executable, uniformIndex, &uniformLoc, &uniformCount,
+                                     &typeInfo))
         {
             continue;
         }
 
-        // Image uniforms are special and cannot be set this way
-        if (typeInfo.isImageType)
+        Capture(callsOut, CaptureDefaultUniformCall(replayState, context, executable, *typeInfo,
+                                                    uniformLoc, uniformCount));
+    }
+}
+
+void CaptureDefaultUniformResetCalls(const gl::State &replayState,
+                                     const gl::Context *context,
+                                     gl::Program *program,
+                                     ResourceTracker *resourceTracker)
+{
+    ASSERT(program->isLinked());
+
+    DefaultUniformCallsPerLocationMap &resetCalls =
+        resourceTracker->getDefaultUniformResetCalls(program->id());
+    const gl::ProgramExecutable &executable = program->getExecutable();
+
+    for (size_t uniformIndex = 0; uniformIndex < executable.getUniforms().size(); uniformIndex++)
+    {
+        gl::UniformLocation uniformLoc;
+        int uniformCount                    = 0;
+        const gl::UniformTypeInfo *typeInfo = nullptr;
+        if (!GetActiveDefaultUniform(executable, uniformIndex, &uniformLoc, &uniformCount,
+                                     &typeInfo))
         {
             continue;
         }
 
-        DefaultUniformCallsPerLocationMap &resetCalls =
-            resourceTracker->getDefaultUniformResetCalls(program->id());
-
-        // Create two lists of calls for uniforms, one for Setup, one for Reset
-        CallVector defaultUniformCalls({callsOut, &resetCalls[uniformLoc]});
-
-        // Samplers should be populated with GL_INT, regardless of return type
-        if (typeInfo.isSampler)
+        for (int index = 0; index < uniformCount; index++)
         {
-            std::vector<GLint> uniformBuffer(uniformSize);
-            for (int index = 0; index < uniformCount; index++, readLoc.value++)
-            {
-                executable.getUniformiv(context, readLoc,
-                                        uniformBuffer.data() + index * componentCount);
-                resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc, uniformLoc);
-            }
-
-            for (std::vector<CallCapture> *calls : defaultUniformCalls)
-            {
-                Capture(calls, CaptureUniform1iv(replayState, true, uniformLoc, uniformCount,
-                                                 uniformBuffer.data()));
-            }
-
-            continue;
+            gl::UniformLocation elemLoc = {uniformLoc.value + index};
+            resourceTracker->setDefaultUniformBaseLocation(program->id(), elemLoc, uniformLoc);
         }
 
-        switch (typeInfo.componentType)
-        {
-            case GL_FLOAT:
-            {
-                std::vector<GLfloat> uniformBuffer(uniformSize);
-                for (int index = 0; index < uniformCount; index++, readLoc.value++)
-                {
-                    executable.getUniformfv(context, readLoc,
-                                            uniformBuffer.data() + index * componentCount);
-                    resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc,
-                                                                   uniformLoc);
-                }
-                switch (typeInfo.type)
-                {
-                    // Note: All matrix uniforms are populated without transpose
-                    case GL_FLOAT_MAT4x3:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniformMatrix4x3fv(replayState, true, uniformLoc,
-                                                                     uniformCount, false,
-                                                                     uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_MAT4x2:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniformMatrix4x2fv(replayState, true, uniformLoc,
-                                                                     uniformCount, false,
-                                                                     uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_MAT4:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniformMatrix4fv(replayState, true, uniformLoc,
-                                                                   uniformCount, false,
-                                                                   uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_MAT3x4:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniformMatrix3x4fv(replayState, true, uniformLoc,
-                                                                     uniformCount, false,
-                                                                     uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_MAT3x2:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniformMatrix3x2fv(replayState, true, uniformLoc,
-                                                                     uniformCount, false,
-                                                                     uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_MAT3:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniformMatrix3fv(replayState, true, uniformLoc,
-                                                                   uniformCount, false,
-                                                                   uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_MAT2x4:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniformMatrix2x4fv(replayState, true, uniformLoc,
-                                                                     uniformCount, false,
-                                                                     uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_MAT2x3:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniformMatrix2x3fv(replayState, true, uniformLoc,
-                                                                     uniformCount, false,
-                                                                     uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_MAT2:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniformMatrix2fv(replayState, true, uniformLoc,
-                                                                   uniformCount, false,
-                                                                   uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_VEC4:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform4fv(replayState, true, uniformLoc,
-                                                             uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_VEC3:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform3fv(replayState, true, uniformLoc,
-                                                             uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT_VEC2:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform2fv(replayState, true, uniformLoc,
-                                                             uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    case GL_FLOAT:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform1fv(replayState, true, uniformLoc,
-                                                             uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    default:
-                        UNIMPLEMENTED();
-                        break;
-                }
-                break;
-            }
-            case GL_INT:
-            {
-                std::vector<GLint> uniformBuffer(uniformSize);
-                for (int index = 0; index < uniformCount; index++, readLoc.value++)
-                {
-                    executable.getUniformiv(context, readLoc,
-                                            uniformBuffer.data() + index * componentCount);
-                    resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc,
-                                                                   uniformLoc);
-                }
-                switch (componentCount)
-                {
-                    case 4:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform4iv(replayState, true, uniformLoc,
-                                                             uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    case 3:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform3iv(replayState, true, uniformLoc,
-                                                             uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    case 2:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform2iv(replayState, true, uniformLoc,
-                                                             uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    case 1:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform1iv(replayState, true, uniformLoc,
-                                                             uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    default:
-                        UNIMPLEMENTED();
-                        break;
-                }
-                break;
-            }
-            case GL_BOOL:
-            case GL_UNSIGNED_INT:
-            {
-                std::vector<GLuint> uniformBuffer(uniformSize);
-                for (int index = 0; index < uniformCount; index++, readLoc.value++)
-                {
-                    executable.getUniformuiv(context, readLoc,
-                                             uniformBuffer.data() + index * componentCount);
-                    resourceTracker->setDefaultUniformBaseLocation(program->id(), readLoc,
-                                                                   uniformLoc);
-                }
-                switch (componentCount)
-                {
-                    case 4:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform4uiv(replayState, true, uniformLoc,
-                                                              uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    case 3:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform3uiv(replayState, true, uniformLoc,
-                                                              uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    case 2:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform2uiv(replayState, true, uniformLoc,
-                                                              uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    case 1:
-                        for (std::vector<CallCapture> *calls : defaultUniformCalls)
-                        {
-                            Capture(calls, CaptureUniform1uiv(replayState, true, uniformLoc,
-                                                              uniformCount, uniformBuffer.data()));
-                        }
-                        break;
-                    default:
-                        UNIMPLEMENTED();
-                        break;
-                }
-                break;
-            }
-            default:
-                UNIMPLEMENTED();
-                break;
-        }
+        ASSERT(resetCalls.find(uniformLoc) == resetCalls.end());
+        resetCalls.emplace(uniformLoc,
+                           CaptureDefaultUniformCall(replayState, context, executable, *typeInfo,
+                                                     uniformLoc, uniformCount));
     }
 }
 
@@ -3679,7 +3622,7 @@ void GenerateLinkedProgram(const gl::Context *context,
 
     Capture(setupCalls, CaptureLinkProgram(replayState, true, id));
     CaptureUpdateUniformLocations(program, setupCalls);
-    CaptureUpdateUniformValues(replayState, context, program, resourceTracker, setupCalls);
+    CaptureUpdateUniformValues(replayState, context, program, setupCalls);
     CaptureUpdateUniformBlockIndexes(program, setupCalls);
 
     // Capture uniform block bindings for each program
@@ -4736,6 +4679,8 @@ void CaptureShareGroupMidExecutionSetup(
                 GenerateLinkedProgram(context, replayState, resourceTracker, calls, program, id,
                                       tempShaderStartID, linkedSources);
             }
+
+            CaptureDefaultUniformResetCalls(replayState, context, program, resourceTracker);
 
             // Update the program in replayState
             if (!replayState.getProgram() || replayState.getProgram()->id() != program->id())

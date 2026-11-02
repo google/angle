@@ -62,10 +62,24 @@ void ReplayFrame1(void)
     glGetError();
     glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, (void *)gReadBuffer);
     glGetError();
+    glUniform1i(gUniformLocations[gCurrentProgramPerContext[gCurrentContext]][0], 1);
+    glUniform1i(gUniformLocations[gCurrentProgramPerContext[gCurrentContext]][1], 0);
+    glGetIntegerv(GL_CURRENT_PROGRAM, (GLint *)gReadBuffer);
+    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (GLint *)gReadBuffer);
+    glGetAttribLocation(gShaderProgramMap[1], "a_position");
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, gClientArrays[0]);
+    glEnableVertexAttribArray(0);
+    UpdateClientArrayPointer(0, (const GLubyte *)GetBinaryData(160), 72);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDisableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glGetError();
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, (void *)gReadBuffer);
+    glGetError();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, gTextureMap[2]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, 9729);
-    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)GetBinaryData(160));
+    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)GetBinaryData(240));
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, gTextureMap[3]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, 9985);
@@ -109,16 +123,20 @@ void ResetReplayContextShared(void)
     glDeleteTextures(1, gResourceIDBuffer);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, gTextureMap[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)GetBinaryData(224));
+    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)GetBinaryData(304));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, 9728);
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, gTextureMap[4]);
-    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)GetBinaryData(288));
+    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)GetBinaryData(368));
     glBindTexture(GL_TEXTURE_2D, gTextureMap[5]);
-    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)GetBinaryData(352));
+    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)GetBinaryData(432));
     glBindTexture(GL_TEXTURE_2D, gTextureMap[3]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, 9728);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, 9728);
+    glUseProgram(gShaderProgramMap[1]);
+    UpdateCurrentProgramPerContext(1);
+    glUniform1iv(gUniformLocations[gCurrentProgramPerContext[gCurrentContext]][0], 1, (const GLint *)GetBinaryData(496));
+    glUniform1iv(gUniformLocations[gCurrentProgramPerContext[gCurrentContext]][1], 1, (const GLint *)GetBinaryData(512));
 }
 
 void ResetReplayContext3(void)
@@ -154,6 +172,8 @@ void ResetReplay(void)
 
     // Reset main context state
     glBindFramebuffer(GL_FRAMEBUFFER, gFramebufferMapPerContext[3][0]);
+    glUseProgram(gShaderProgramMap[1]);
+    UpdateCurrentProgramPerContext(1);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, gTextureMap[1]);
     glActiveTexture(GL_TEXTURE1);

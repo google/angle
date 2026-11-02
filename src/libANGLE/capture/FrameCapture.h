@@ -187,8 +187,8 @@ using DefaultUniformLocationsSet = std::set<gl::UniformLocation>;
 using DefaultUniformLocationsPerProgramMap =
     std::map<gl::ShaderProgramID, DefaultUniformLocationsSet>;
 
-// A map of programs which maps to locations and their reset calls
-using DefaultUniformCallsPerLocationMap = std::map<gl::UniformLocation, std::vector<CallCapture>>;
+// A map of programs which maps to locations and their reset call
+using DefaultUniformCallsPerLocationMap = std::map<gl::UniformLocation, CallCapture>;
 using DefaultUniformCallsPerProgramMap =
     std::map<gl::ShaderProgramID, DefaultUniformCallsPerLocationMap>;
 

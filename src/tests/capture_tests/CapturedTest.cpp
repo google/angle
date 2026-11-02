@@ -704,6 +704,14 @@ void main()
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(0, 0, 0, 255, 255, 255);
 
+    // Swap sampler uniforms -- the result is unchanged but ResetReplay() has to
+    // restore both and to output a single restore call per uniform
+    glUniform1i(samplerLoc1, 1);
+    glUniform1i(samplerLoc2, 0);
+    drawQuad(program, "a_position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_EQ(0, 0, 0, 255, 255, 255);
+
     // Modify the green texture to ensure we bind the right index in Reset
     // Also, modify one of its parameters to ensure it is restored in the end.
     const std::vector<GLColor> kWhiteData(kSize * kSize, GLColor::white);
