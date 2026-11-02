@@ -1379,7 +1379,7 @@ void MaybeResetDefaultUniforms(std::stringstream &out,
         if (ProgramNeedsReset(context, resourceTracker, programID))
         {
             // Skip programs marked for reset as they will update their own uniforms
-            return;
+            continue;
         }
 
         // Bind the program to update its uniforms

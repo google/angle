@@ -600,6 +600,16 @@ void main()
     gl_FragColor = texture2D(s_texture1, v_texCoord) + texture2D(s_texture2, v_texCoord);
 })";
 
+    // Create an earlier starting program whose uniform will be modified and then deleted
+    // during capture. Because its ID precedes `program` in defaultUniformsToReset, skipping
+    // full-reset programs in MaybeResetDefaultUniforms must `continue` rather than `return`
+    // so `program`'s uniforms still get reset.
+    GLuint deletedProgram = CompileProgram(kVS, kFS);
+    ASSERT_NE(0u, deletedProgram);
+    GLint deletedSamplerLoc = glGetUniformLocation(deletedProgram, "s_texture1");
+    glUseProgram(deletedProgram);
+    glUniform1i(deletedSamplerLoc, 0);
+
     ANGLE_GL_PROGRAM(program, kVS, kFS);
     ASSERT_GL_NO_ERROR();
 
@@ -704,13 +714,21 @@ void main()
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(0, 0, 0, 255, 255, 255);
 
-    // Swap sampler uniforms -- the result is unchanged but ResetReplay() has to
-    // restore both and to output a single restore call per uniform
+    // Modify a uniform on `deletedProgram` and then delete it so it appears in both
+    // defaultUniformsToReset and shaderProgramsToRegen/Restore.
+    glUseProgram(deletedProgram);
+    glUniform1i(deletedSamplerLoc, 1);
+    glDeleteProgram(deletedProgram);
+    glUseProgram(program);
+
+    // Swap sampler uniforms and then point both at unit 1 so both locations are dirty and
+    // failing to reset `program`'s uniforms would produce green instead of yellow on loop 2.
     glUniform1i(samplerLoc1, 1);
     glUniform1i(samplerLoc2, 0);
+    glUniform1i(samplerLoc2, 1);
     drawQuad(program, "a_position", 0.5f);
     ASSERT_GL_NO_ERROR();
-    EXPECT_PIXEL_EQ(0, 0, 0, 255, 255, 255);
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
 
     // Modify the green texture to ensure we bind the right index in Reset
     // Also, modify one of its parameters to ensure it is restored in the end.
