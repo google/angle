@@ -9232,7 +9232,7 @@ void FrameCaptureShared::runMidExecutionCapture(gl::Context *mainContext)
                 &mResourceIDBufferSize);
 
             // Release the previously-bound window surface so the side context does not keep a
-            // reference. Otherwise surface's isCurrentOnAnyContext() stays true and the app's other
+            // reference. Otherwise surface's isCurrentOnAnyThread() stays true and the app's other
             // thread gets EGL_BAD_ACCESS "Surface can only be current on one thread" when trying to
             // get the surface on capture start, leading to lost context/bad glBindFramebuffer calls
             egl::Error unmakeError = shareContext->unMakeCurrent();

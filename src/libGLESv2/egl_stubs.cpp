@@ -298,7 +298,7 @@ EGLBoolean DestroySurface(Thread *thread, ThreadSafeDisplay *display, Surface *e
     // is still bound by the context of the current rendering
     // thread, release the surface by passing EGL_NO_SURFACE to eglMakeCurrent().
     if (display->getFrontendFeatures().uncurrentEglSurfaceUponSurfaceDestroy.enabled &&
-        eglSurface->isCurrentOnAnyContext() &&
+        eglSurface->isCurrentOnAnyThread() &&
         (thread->getCurrentDrawSurface() == eglSurface ||
          thread->getCurrentReadSurface() == eglSurface))
     {

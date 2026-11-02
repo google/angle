@@ -1490,7 +1490,7 @@ bool ValidateSurfaceBadAccess(const ValidationContext *val,
                               const gl::Context *previousContext,
                               const Surface *surface)
 {
-    if (surface->isCurrentOnAnyContext() &&
+    if (surface->isCurrentOnAnyThread() &&
         (previousContext == nullptr || (surface != previousContext->getCurrentDrawSurface() &&
                                         surface != previousContext->getCurrentReadSurface())))
     {
@@ -7177,7 +7177,7 @@ bool ValidateLockSurfaceKHR(const ValidationContext *val,
         return false;
     }
 
-    if (surface->isCurrentOnAnyContext())
+    if (surface->isCurrentOnAnyThread())
     {
         val->setError(EGL_BAD_ACCESS,
                       "Surface cannot be current to a context for eglLockSurface()");

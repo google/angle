@@ -739,7 +739,7 @@ Context::Context(egl::Display *display,
       mProgramPipelineObserverBinding(this, kProgramPipelineSubjectIndex),
       mFrameCapture(new angle::FrameCapture),
       mRefCount(0),
-      mCurrentRefCount(0),
+      mIsCurrentOnAnyThread(false),
       mIsDestroyed(false),
       mDestroyedManagers(false)
 {

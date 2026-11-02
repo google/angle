@@ -2252,7 +2252,7 @@ Error ThreadSafeDisplay::makeCurrentLocked(Thread *thread,
     {
         previousContext->getContextMutex().assertLocked();
 
-        previousContext->releaseCurrentRef();
+        previousContext->setIsCurrentOnAnyThread(false);
         thread->setCurrent(nullptr);
 
         auto error = previousContext->unMakeCurrent();
@@ -2286,7 +2286,7 @@ Error ThreadSafeDisplay::makeCurrentLocked(Thread *thread,
             {
                 // eglMakeCurrent() validation fails if the context is current on another thread.
                 ASSERT(!context->isCurrentOnAnyThread());
-                context->addCurrentRef();
+                context->setIsCurrentOnAnyThread(true);
                 // The thread holds a reference to its current context.
                 context->addRef();
             }

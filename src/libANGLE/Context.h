@@ -938,10 +938,15 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // This changes in egl::ThreadSafeDisplay::makeCurrent(), under the ContextMutex.
     bool isCurrentOnAnyThread() const
     {
-        return mCurrentRefCount.load(std::memory_order_acquire) > 0;
+        return mIsCurrentOnAnyThread.load(std::memory_order_acquire);
     }
-    void addCurrentRef() { mCurrentRefCount.fetch_add(1, std::memory_order_relaxed); }
-    void releaseCurrentRef() { mCurrentRefCount.fetch_sub(1, std::memory_order_acq_rel); }
+    void setIsCurrentOnAnyThread(bool isCurrentOnAnyThread)
+    {
+        // A Context can be current on at most one thread, and this is only called under
+        // ContextMutex when the thread's current Context changes, so the state must always toggle.
+        ASSERT(this->isCurrentOnAnyThread() != isCurrentOnAnyThread);
+        mIsCurrentOnAnyThread.store(isCurrentOnAnyThread, std::memory_order_release);
+    }
 
     egl::ShareGroup *getShareGroup() const { return mState.getShareGroup(); }
 
@@ -1193,7 +1198,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // Standard life time management reference counting for Context object. See addRef() for detail.
     mutable std::atomic<size_t> mRefCount;
     // See isCurrentOnAnyThread().
-    std::atomic<size_t> mCurrentRefCount;
+    std::atomic<bool> mIsCurrentOnAnyThread;
 
     std::atomic<bool> mIsDestroyed;
     bool mDestroyedManagers;
