@@ -5,7 +5,6 @@
 // See deqp_support/README.md for format.
 
 // Thread sanitizer skips.
-42265300 TSAN : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP
 42265633 TSAN : InstancingTestES3.LargeDivisor/* = SKIP
 42266467 TSAN : MultithreadingTest.CreateMultiSharedContextAndDraw/* = SKIP
 
@@ -1513,7 +1512,6 @@
 480069042 PIXEL10 VULKAN : MultithreadingTest.MultiContextClear/* = SKIP
 480069042 PIXEL10 VULKAN : MultithreadingTest.MultiContextCreateAndDeleteResources/* = SKIP
 480069042 PIXEL10 VULKAN : MultithreadingTest.MultiContextDraw/* = SKIP
-480069042 PIXEL10 VULKAN : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP
 480069042 PIXEL10 VULKAN : MultithreadingTestES3.SimultaneousUploadAndDraw/* = SKIP
 480069042 PIXEL10 VULKAN : MultiviewMSRTTES3Test.ColorAndDepthAttachment/* = SKIP
 480069042 PIXEL10 VULKAN : ProgramPipelineTest31.LinkedImageUniforms/* = SKIP
@@ -1760,7 +1758,6 @@
 
 // ASAN flaky timeouts and crashes with Win / Vulkan / Swiftshader
 42265439 ASAN WIN VULKAN SWIFTSHADER : MipmapTest* = SKIP
-42265442 ASAN WIN VULKAN SWIFTSHADER : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP
 42265635 ASAN WIN VULKAN SWIFTSHADER : GeometryShaderTest.LayeredFramebufferMidRenderClear3DColor/* = SKIP
 42265737 ASAN WIN VULKAN SWIFTSHADER : MemoryBarrierBufferTest.VertexAtrribArrayBitWriteThenVertexRead/ES3_1_Vulkan_SwiftShader* = SKIP
 42266738 ASAN WIN VULKAN SWIFTSHADER : *EnableParallelCompileAndLink* = SKIP
