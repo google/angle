@@ -1257,7 +1257,7 @@ deps = {
   },
 
   'third_party/rapidjson/src': {
-    'url': Var('chromium_git') + '/external/github.com/Tencent/rapidjson@24b5e7a8b27f42fa16b96fc70aade9106cf7102f',
+    'url': Var('chromium_git') + '/external/github.com/Tencent/rapidjson@297637bc0a0f00dc504dbc1a47ebdaa577f8ae19',
   },
 
   'third_party/re2/src': {
