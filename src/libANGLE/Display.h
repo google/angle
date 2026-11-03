@@ -654,7 +654,6 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     ImageMap mImageMap;
     StreamSet mStreamSet;
 
-    ContextMap mInvalidContextMap;
     ImageMap mInvalidImageMap;
     StreamSet mInvalidStreamSet;
 

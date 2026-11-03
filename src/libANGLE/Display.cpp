@@ -1423,7 +1423,6 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mAttributeMap(),
       mConfigSet(),
       mStreamSet(),
-      mInvalidContextMap(),
       mInvalidImageMap(),
       mInvalidStreamSet(),
       mCaps(),
@@ -1694,24 +1693,7 @@ Error Display::initialize()
 
 Error Display::destroyInvalidEglObjects()
 {
-    // Destroy invalid EGL objects
-    // Note that we don't need to lock mState.contextMapMutex here.
-    // Write and read access to mInvalidContextMap are coming from
-    // EGL_Terminate, EGL_ReleaseThread, ThreadCleanupCallBACK.
-    // Those functions are protected by egl global lock,
-    // so there is no race condition on mInvalidContextMap.
-    for (gl::Context *context : mInvalidContextMap.extractAll())
-    {
-        ASSERT(context->getRefCount() == 0);
-        // eglReleaseThread() may call to this method when there are still Contexts, that may
-        // potentially acces shared state of the "context".
-        // Need AddRefLock because there may be ContextMutex destruction.
-        ScopedContextMutexAddRefLock lock(context->getContextMutex());
-        context->setIsDestroyed();
-        std::unique_ptr<gl::Context> uniqueContextPtr(context);
-        releaseDisplayShareGroupResource(*uniqueContextPtr);
-        ANGLE_TRY(uniqueContextPtr->onDestroy(this));
-    }
+    ANGLE_TRY(mState.contextMap.destroyAllInvalidContexts(this));
 
     while (!mInvalidImageMap.empty())
     {
@@ -1796,7 +1778,7 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
 
     mSyncSet.invalidateAllSyncs();
 
-    mState.contextMap.pruneUnreferenced(&mInvalidContextMap);
+    mState.contextMap.invalidateUnreferenced();
 
     if (!mState.contextMap.empty())
     {
@@ -2264,6 +2246,10 @@ Error ThreadSafeDisplay::makeCurrentLocked(Thread *thread,
         if (previousDisplay->mState.contextMap.releaseRef(previousContext))
         {
             ANGLE_TRY(previousDisplay->releaseContext(previousContext));
+        }
+        else if (previousDisplay->mTerminatedByApi.load(std::memory_order_acquire))
+        {
+            previousDisplay->mState.contextMap.invalidateContext(previousContext);
         }
         ANGLE_TRY(error);
     }

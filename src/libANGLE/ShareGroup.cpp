@@ -109,4 +109,29 @@ void ShareGroup::removeSharedContext(gl::Context *context)
 {
     mState.removeSharedContext(context);
 }
+
+// ContextMap
+Error ContextMap::destroyAllInvalidContexts(ThreadSafeDisplay *display)
+{
+    std::vector<gl::Context *> invalidContexts;
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        invalidContexts = std::move(mInvalidContexts);
+    }
+
+    for (gl::Context *context : invalidContexts)
+    {
+        ASSERT(context->getRefCount() == 0);
+        // eglReleaseThread() may call to this method when there are still Contexts, that may
+        // potentially access shared state of the "context".
+        // Need AddRefLock because there may be ContextMutex destruction.
+        ScopedContextMutexAddRefLock lock(context->getContextMutex());
+        context->setIsDestroyed();
+        std::unique_ptr<gl::Context> uniqueContextPtr(context);
+        display->releaseDisplayShareGroupResource(*uniqueContextPtr);
+        ANGLE_TRY(uniqueContextPtr->onDestroy(display));
+    }
+
+    return NoError();
+}
 }  // namespace egl
