@@ -31,7 +31,7 @@ DMA_BUF_TARGET = "//src/libANGLE/renderer/vulkan:angle_android_vulkan_dma_buf"
 BLUEPRINT_COMMENT_PROPERTY = '__android_bp_comment'
 
 CURRENT_SDK_VERSION = 'current'
-MIN_SDK_VERSION = '28'
+MIN_SDK_VERSION = '35'
 TARGET_SDK_VERSION = '37'
 STL = 'libc++_static'
 
