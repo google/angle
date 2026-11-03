@@ -337,8 +337,6 @@
 42267037 LINUX NVIDIA VULKAN : ParallelShaderCompileTestES31.LinkAndDispatchManyPrograms/ES3_1_Vulkan_EnableParallelCompileAndLink_VaryingsRequireMatchingPrecisionInSpirv = SKIP
 42267037 WIN NVIDIA GLES : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
 42267037 WIN NVIDIA OPENGL : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
-580979613 WIN NVIDIA VULKAN : RobustResourceInitTestES3.ClearThenRedirtyThenInvalidateThenReadBackStencilOnly/ES3_Vulkan_AllocateNonZeroMemory = SKIP
-580979613 WIN NVIDIA VULKAN : RobustResourceInitTestES3.InvalidateUndefinedThenReadBackStencilOnly/ES3_Vulkan_AllocateNonZeroMemory = SKIP
 
 // Intel/windows does not ignore gl_Layer for non-layered framebuffers
 374790899 WIN INTEL OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
@@ -436,6 +434,9 @@
 42264645 NVIDIA GLES : GLSLTestLoops.DoWhileUnconditionalContinue/* = SKIP
 42264645 NVIDIA GLES : GLSLTestLoops.DoWhileContinueInSwitch/* = SKIP
 42264645 NVIDIA GLES : GLSLTestLoops.WhileBreak/* = SKIP
+// Stencil invalidate tests trigger device loss on NVIDIA Vulkan with non-zero allocation
+580979613 NVIDIA VULKAN : RobustResourceInitTestES3.ClearThenRedirtyThenInvalidateThenReadBackStencilOnly/ES3_Vulkan_AllocateNonZeroMemory = SKIP
+580979613 NVIDIA VULKAN : RobustResourceInitTestES3.InvalidateUndefinedThenReadBackStencilOnly/ES3_Vulkan_AllocateNonZeroMemory = SKIP
 // Generates invalid errors when compiling the shader in the GL backend
 42264698 NVIDIA OpenGL : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 42264698 NVIDIA GLES : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
