@@ -4474,7 +4474,12 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
     StateManagerGL *stateManager      = GetStateManagerGL(context);
 
     const gl::ImageDesc &currentDesc = mState.getImageDesc(target, level);
-    if (currentDesc.size.empty() || size.depth <= currentDesc.size.depth)
+    // Only skip the workaround when the level has never been defined or its depth is not
+    // increasing. A level that was defined with a zero extent (e.g. 64x0x4 or 64x64x0) still
+    // exists in the driver, so a redefinition with a larger depth must still go through the
+    // recreate path. Extents::empty() returns true if any dimension is zero and would wrongly
+    // treat such a level as undefined.
+    if (!currentDesc.format.valid() || size.depth <= currentDesc.size.depth)
     {
         return angle::Result::Continue;
     }
@@ -4507,6 +4512,10 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
         const gl::ImageDesc &desc = mState.getImageDesc(target, l);
         if (desc.size.empty())
         {
+            // Zero-extent levels have no contents to copy, so they are not redefined in the new
+            // native texture even though the front-end still tracks them as defined. This is
+            // harmless: queries are answered by the front-end, such levels make the texture
+            // incomplete either way, and a later depth increase on them only recreates again.
             continue;
         }
 
@@ -4539,7 +4548,15 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
 
     stateManager->deleteTexture(oldTextureID);
 
+    // The new texture's filters and base/max levels were changed above to make the levels
+    // complete for copyImageSubData, and mAppliedSampler/mAppliedBaseLevel/mAppliedMaxLevel track
+    // those native values. These states may never have been modified by the application, so they
+    // may not be in mAllModifiedDirtyBits; flag them explicitly so syncState() restores them.
     mLocalDirtyBits = mAllModifiedDirtyBits;
+    mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MIN_FILTER);
+    mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MAG_FILTER);
+    mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_BASE_LEVEL);
+    mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MAX_LEVEL);
     onStateChange(angle::SubjectMessage::SubjectChanged);
 
     return angle::Result::Continue;
