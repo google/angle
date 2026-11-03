@@ -437,6 +437,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsIncrementalPresent, "supportsIncrementalPresent"},
     {Feature::SupportsIndexTypeUint8, "supportsIndexTypeUint8"},
     {Feature::SupportsLegacyDithering, "supportsLegacyDithering"},
+    {Feature::SupportsLineRasterizationModeDynamicState, "supportsLineRasterizationModeDynamicState"},
     {Feature::SupportsLockSurfaceExtension, "supportsLockSurfaceExtension"},
     {Feature::SupportsLogicOpDynamicState, "supportsLogicOpDynamicState"},
     {Feature::SupportsLogicOpEnableDynamicState, "supportsLogicOpEnableDynamicState"},

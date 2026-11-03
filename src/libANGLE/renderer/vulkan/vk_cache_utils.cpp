@@ -4016,10 +4016,11 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     // VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT and if rasterization is enabled, then the
     // alphaToCoverageEnable, alphaToOneEnable, and sampleShadingEnable members of pMultisampleState
     // must all be VK_FALSE.
-    if (multisample.bits.rasterizationSamplesMinusOne == 0 &&
+    if (!context->getFeatures().supportsLineRasterizationModeDynamicState.enabled &&
+        context->getFeatures().bresenhamLineRasterization.enabled &&
+        multisample.bits.rasterizationSamplesMinusOne == 0 &&
         !mShaders.shaders.bits.rasterizerDiscardEnable && !multisample.bits.alphaToCoverageEnable &&
-        !multisample.bits.alphaToOneEnable && !multisample.bits.sampleShadingEnable &&
-        context->getFeatures().bresenhamLineRasterization.enabled)
+        !multisample.bits.alphaToOneEnable && !multisample.bits.sampleShadingEnable)
     {
         stateOut->rasterLineState.lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT;
         *pNextPtr                                       = &stateOut->rasterLineState;
@@ -4149,6 +4150,14 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     if (context->getFeatures().supportsDepthClipNegativeOneToOneDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT);
+    }
+    if (context->getFeatures().supportsLineRasterizationModeDynamicState.enabled)
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT);
+        if (context->getRenderer()->supportsStippledLines())
+        {
+            dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT);
+        }
     }
     if (context->getFeatures().supportsPolygonModeDynamicState.enabled)
     {

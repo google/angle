@@ -171,6 +171,10 @@ const char *GetCommandString(CommandID id)
             return "SetFragmentShadingRate";
         case CommandID::SetFrontFace:
             return "SetFrontFace";
+        case CommandID::SetLineRasterizationMode:
+            return "SetLineRasterizationMode";
+        case CommandID::SetLineStippleEnable:
+            return "SetLineStippleEnable";
         case CommandID::SetLineWidth:
             return "SetLineWidth";
         case CommandID::SetLogicOp:
@@ -928,6 +932,18 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     const SetFrontFaceParams *params =
                         getParamPtr<SetFrontFaceParams>(currentCommand);
                     vkCmdSetFrontFaceEXT(cmdBuffer, params->frontFace);
+                    break;
+                }
+                case CommandID::SetLineRasterizationMode:
+                {
+                    const SetLineRasterizationModeParams *params =
+                        getParamPtr<SetLineRasterizationModeParams>(currentCommand);
+                    vkCmdSetLineRasterizationModeEXT(cmdBuffer, params->lineRasterizationMode);
+                    break;
+                }
+                case CommandID::SetLineStippleEnable:
+                {
+                    vkCmdSetLineStippleEnableEXT(cmdBuffer, VK_FALSE);
                     break;
                 }
                 case CommandID::SetLineWidth:

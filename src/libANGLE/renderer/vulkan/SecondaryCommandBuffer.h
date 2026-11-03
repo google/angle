@@ -115,6 +115,8 @@ enum class CommandID : uint16_t
     SetEvent,
     SetFragmentShadingRate,
     SetFrontFace,
+    SetLineRasterizationMode,
+    SetLineStippleEnable,
     SetLineWidth,
     SetLogicOp,
     SetLogicOpEnable,
@@ -781,6 +783,22 @@ struct SetFrontFaceParams
 };
 VERIFY_8_BYTE_ALIGNMENT(SetFrontFaceParams)
 
+struct SetLineRasterizationModeParams
+{
+    CommandHeader header;
+
+    VkLineRasterizationMode lineRasterizationMode;
+};
+VERIFY_8_BYTE_ALIGNMENT(SetLineRasterizationModeParams)
+
+struct SetLineStippleEnableParams
+{
+    CommandHeader header;
+
+    uint32_t padding;
+};
+VERIFY_8_BYTE_ALIGNMENT(SetLineStippleEnableParams)
+
 struct SetLineWidthParams
 {
     CommandHeader header;
@@ -1258,6 +1276,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void setFragmentShadingRate(const VkExtent2D *fragmentSize,
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
     void setFrontFace(VkFrontFace frontFace);
+    void setLineRasterizationMode(VkLineRasterizationMode lineRasterizationMode);
+    void setLineStippleEnable(VkBool32 stippledLineEnable);
     void setLineWidth(float lineWidth);
     void setLogicOp(VkLogicOp logicOp);
     void setLogicOpEnable(VkBool32 logicOpEnable);
@@ -2473,6 +2493,20 @@ ANGLE_INLINE void SecondaryCommandBuffer::setFrontFace(VkFrontFace frontFace)
 {
     SetFrontFaceParams *paramStruct = initCommand<SetFrontFaceParams>(CommandID::SetFrontFace);
     paramStruct->frontFace          = frontFace;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setLineRasterizationMode(
+    VkLineRasterizationMode lineRasterizationMode)
+{
+    SetLineRasterizationModeParams *paramStruct =
+        initCommand<SetLineRasterizationModeParams>(CommandID::SetLineRasterizationMode);
+    paramStruct->lineRasterizationMode = lineRasterizationMode;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setLineStippleEnable(VkBool32 stippledLineEnable)
+{
+    ASSERT(stippledLineEnable == VK_FALSE);
+    initCommand<SetLineStippleEnableParams>(CommandID::SetLineStippleEnable);
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setLineWidth(float lineWidth)

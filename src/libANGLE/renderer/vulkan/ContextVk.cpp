@@ -8074,6 +8074,40 @@ angle::Result ContextVk::beginNewRenderPass(
         ASSERT(mCurrentGraphicsPipeline->valid());
         mCurrentGraphicsPipeline->retainInRenderPass(mRenderPassCommands);
     }
+
+    // Set all dynamic state that is constant throughout the render pass:
+    //
+    // - Bresenham lines
+    // - TODO(http://anglebug.com/575891833): other state such as rasterization samples, provoking
+    //   vertex, tessellation domain, sample locations, and anything else that is not configurable
+    //   in GLES.
+    if (mRenderer->getFeatures().supportsLineRasterizationModeDynamicState.enabled)
+    {
+        // VUID-vkCmdDraw-None-10608:
+        //
+        // > If ... the current lineRasterizationMode is VK_LINE_RASTERIZATION_MODE_BRESENHAM ...,
+        // > then the current alphaToCoverageEnable, alphaToOneEnable and sampleShadingEnable states
+        // > must all be VK_FALSE
+        //
+        // So we cannot use bresenham lines under those conditions.  Additionally, bresenham lines
+        // should not be used when multisampling (http://anglebug.com/42262723):
+        //
+        // > When Bresenham lines are being rasterized, sample locations may all be treated as being
+        // > at the pixel center
+        //
+        // ANGLE already disables alpha to coverage and alpha to one when the render pass is
+        // single-sampled, and sample shading doesn't apply in that case either.  So all that really
+        // needs to be done here is to disable Bresenham lines if multisampling.
+        (*commandBufferOut)
+            ->setLineRasterizationMode(renderPassDesc.samples() > 1
+                                           ? VK_LINE_RASTERIZATION_MODE_DEFAULT
+                                           : VK_LINE_RASTERIZATION_MODE_BRESENHAM);
+        if (mRenderer->supportsStippledLines())
+        {
+            (*commandBufferOut)->setLineStippleEnable(VK_FALSE);
+        }
+    }
+
     return angle::Result::Continue;
 }
 

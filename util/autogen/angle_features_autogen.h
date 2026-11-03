@@ -437,6 +437,7 @@ enum class Feature
     SupportsIncrementalPresent,
     SupportsIndexTypeUint8,
     SupportsLegacyDithering,
+    SupportsLineRasterizationModeDynamicState,
     SupportsLockSurfaceExtension,
     SupportsLogicOpDynamicState,
     SupportsLogicOpEnableDynamicState,

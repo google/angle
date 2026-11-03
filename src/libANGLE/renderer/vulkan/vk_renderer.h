@@ -422,6 +422,13 @@ class Renderer : angle::NonCopyable
         return mSkippedSyncvalMessages;
     }
 
+    bool supportsStippledLines() const
+    {
+        return mLineRasterizationFeatures.stippledRectangularLines ||
+               mLineRasterizationFeatures.stippledBresenhamLines ||
+               mLineRasterizationFeatures.stippledSmoothLines;
+    }
+
     bool isCoherentColorFramebufferFetchEmulated() const
     {
         return mFeatures.supportsShaderFramebufferFetch.enabled &&

@@ -1254,6 +1254,8 @@ PFN_vkCmdSetDepthClampEnableEXT vkCmdSetDepthClampEnableEXT                   = 
 PFN_vkCmdSetPolygonModeEXT vkCmdSetPolygonModeEXT                             = nullptr;
 PFN_vkCmdSetLogicOpEnableEXT vkCmdSetLogicOpEnableEXT                         = nullptr;
 PFN_vkCmdSetColorBlendAdvancedEXT vkCmdSetColorBlendAdvancedEXT               = nullptr;
+PFN_vkCmdSetLineRasterizationModeEXT vkCmdSetLineRasterizationModeEXT         = nullptr;
+PFN_vkCmdSetLineStippleEnableEXT vkCmdSetLineStippleEnableEXT                 = nullptr;
 
 // VK_EXT_vertex_input_dynamic_state
 PFN_vkCmdSetVertexInputEXT vkCmdSetVertexInputEXT = nullptr;
@@ -1415,6 +1417,13 @@ void InitExtendedDynamicState3EXTWithDepthClipControlEXTFunctions(VkDevice devic
 void InitExtendedDynamicState3EXTWithBlendOperationAdvancedEXTFunctions(VkDevice device)
 {
     GET_DEVICE_FUNC(vkCmdSetColorBlendAdvancedEXT);
+}
+
+// VK_EXT_extended_dynamic_state3 + VK_EXT_line_rasterization
+void InitExtendedDynamicState3EXTWithLineRasterizationEXTFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkCmdSetLineRasterizationModeEXT);
+    GET_DEVICE_FUNC(vkCmdSetLineStippleEnableEXT);
 }
 
 // VK_EXT_vertex_input_dynamic_state

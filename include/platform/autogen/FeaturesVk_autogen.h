@@ -872,6 +872,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsLineRasterizationModeDynamicState = {
+        "supportsLineRasterizationModeDynamicState",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsLogicOpEnableDynamicState = {
         "supportsLogicOpEnableDynamicState",
         FeatureCategory::VulkanFeatures,

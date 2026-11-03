@@ -3130,6 +3130,10 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                                                       (feature)
 //                                                    extendedDynamicState3DepthClipNegativeOneToOne
 //                                                                                       (feature)
+//                                                    extendedDynamicState3LineRasterizationMode
+//                                                                                       (feature)
+//                                                    extendedDynamicState3LineStippleEnable
+//                                                                                       (feature)
 //                                                    extendedDynamicState3LogicOpEnable (feature)
 //                                                    extendedDynamicState3PolygonMode (feature)
 //                                                    extendedDynamicState3SampleMask (feature)
@@ -4790,6 +4794,10 @@ void Renderer::initDeviceExtensionEntryPoints()
         if (getFeatures().supportsBlendOperationAdvanced.enabled)
         {
             InitExtendedDynamicState3EXTWithBlendOperationAdvancedEXTFunctions(mDevice);
+        }
+        if (getFeatures().bresenhamLineRasterization.enabled)
+        {
+            InitExtendedDynamicState3EXTWithLineRasterizationEXTFunctions(mDevice);
         }
     }
     if (mFeatures.supportsFragmentShadingRate.enabled)
@@ -6733,6 +6741,34 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     const bool isRasterizerDiscardDynamicState =
         mFeatures.useRasterizerDiscardEnableDynamicState.enabled;
 
+    // Line rasterization can be made dynamic if Bresenham lines are supported at all and can be
+    // made dynamic.  However, Vulkan also requires that if stippled lines are supported in any
+    // form, that stipple-line-enable is also set.  ANGLE always disable stippled lines, so only the
+    // lineStippleEnable dynamic state is needed (and not lineStipple, which would set the stipple
+    // pattern).
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsLineRasterizationModeDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled &&
+            mFeatures.bresenhamLineRasterization.enabled &&
+            mExtendedDynamicState3Features.extendedDynamicState3LineRasterizationMode == VK_TRUE &&
+            (!supportsStippledLines() ||
+             mExtendedDynamicState3Features.extendedDynamicState3LineStippleEnable) &&
+            isRasterizerDiscardDynamicState);
+
+    // Bresenham lines should **not** be enabled if:
+    //
+    // * multisampling (http://anglebug.com/42262723), or
+    // * (according to VUID-vkCmdDraw-None-10608), any of the following is enabled:
+    //   * alphaToCoverageEnable,
+    //   * alphaToOneEnable
+    //   * sampleShadingEnable
+    //
+    // We cannot support these state being dynamic if bresenham line state is static as pipeline
+    // creation decides to use bresenham lines based on the other state's static value.
+    const bool hasStaticBresenhamLineState =
+        mFeatures.bresenhamLineRasterization.enabled &&
+        !mFeatures.supportsLineRasterizationModeDynamicState.enabled;
+
     // Disabled on Intel/windows drivers, failing
     // FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBuffer*,
     // SimpleStateChangeTestES31.FragWriteSSBOThenChangeDrawbuffersThenWriteSSBO*,
@@ -6744,15 +6780,15 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsAlphaToCoverageEnableDynamicState,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3AlphaToCoverageEnable == VK_TRUE &&
-            isRasterizerDiscardDynamicState && !(isIntel && IsWindows()) &&
-            !(isIntel && IsLinux()));
+            isRasterizerDiscardDynamicState && !hasStaticBresenhamLineState &&
+            !(isIntel && IsWindows()) && !(isIntel && IsLinux()));
 
     // Disabled on Imagination drivers due to test failures and device loss.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsAlphaToOneEnableDynamicState,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3AlphaToOneEnable == VK_TRUE &&
-            isRasterizerDiscardDynamicState && !isPowerVR);
+            isRasterizerDiscardDynamicState && !hasStaticBresenhamLineState && !isPowerVR);
 
     // Disabled on Imagination drivers due to failure of a few dEQP tests.
     ANGLE_FEATURE_CONDITION(

@@ -394,6 +394,8 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
     void setFragmentShadingRate(const VkExtent2D *fragmentSize,
                                 VkFragmentShadingRateCombinerOpKHR ops[2]);
     void setFrontFace(VkFrontFace frontFace);
+    void setLineRasterizationMode(VkLineRasterizationMode lineRasterizationMode);
+    void setLineStippleEnable(VkBool32 stippledLineEnable);
     void setLineWidth(float lineWidth);
     void setLogicOp(VkLogicOp logicOp);
     void setLogicOpEnable(VkBool32 logicOpEnable);
@@ -1282,6 +1284,20 @@ ANGLE_INLINE void CommandBuffer::setFrontFace(VkFrontFace frontFace)
 {
     ASSERT(valid());
     VK_SECONDARY_CMD_CALL(vkCmdSetFrontFaceEXT(mHandle, frontFace));
+}
+
+ANGLE_INLINE void CommandBuffer::setLineRasterizationMode(
+    VkLineRasterizationMode lineRasterizationMode)
+{
+    ASSERT(valid());
+    VK_SECONDARY_CMD_CALL(vkCmdSetLineRasterizationModeEXT(mHandle, lineRasterizationMode));
+}
+
+ANGLE_INLINE void CommandBuffer::setLineStippleEnable(VkBool32 stippledLineEnable)
+{
+    ASSERT(valid());
+    ASSERT(stippledLineEnable == VK_FALSE);
+    VK_SECONDARY_CMD_CALL(vkCmdSetLineStippleEnableEXT(mHandle, VK_FALSE));
 }
 
 ANGLE_INLINE void CommandBuffer::setLineWidth(float lineWidth)

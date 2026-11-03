@@ -147,6 +147,9 @@ extern PFN_vkCmdSetLogicOpEnableEXT vkCmdSetLogicOpEnableEXT;
 extern PFN_vkCmdSetDepthClipNegativeOneToOneEXT vkCmdSetDepthClipNegativeOneToOneEXT;
 // + VK_EXT_blend_operation_advanced
 extern PFN_vkCmdSetColorBlendAdvancedEXT vkCmdSetColorBlendAdvancedEXT;
+// + VK_EXT_line_rasterization
+extern PFN_vkCmdSetLineRasterizationModeEXT vkCmdSetLineRasterizationModeEXT;
+extern PFN_vkCmdSetLineStippleEnableEXT vkCmdSetLineStippleEnableEXT;
 
 // VK_EXT_vertex_input_dynamic_state
 extern PFN_vkCmdSetVertexInputEXT vkCmdSetVertexInputEXT;
