@@ -231,6 +231,8 @@
 564530612 WIN QUALCOMM D3D11 : HardenedContextBlendTest.AlphaBlendNoAlphaChannelInSrcAndDstArray/* = SKIP
 577959336 WIN INTEL OPENGL : StateChangeTestES3.SampleMaskEnable/* = SKIP
 579047121 WIN INTEL OPENGL : CopyTexImageTest.RGBAToRGBA4CubemapWithIncompatibleFaces/* = SKIP
+// Won't fix - driver bug
+580845687 WIN INTEL OPENGL : PixelLocalStorageTest.IncompleteCubeMapAttachment/* = SKIP
 
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingAttributeType/* = SKIP
 42266241 PIXEL6 VULKAN : VertexAttributeTestES31.MismatchingSignsChangingProgramType/* = SKIP
