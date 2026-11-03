@@ -1530,8 +1530,12 @@ ci.thin_tester(
             "linux_nvidia_gtx_1660_stable",
         ],
         per_test_modifications = {
-            "angle_deqp_egl_vulkan_tests": targets.remove(
-                reason = "Occasionally hangs the machine http://anglebug.com/368553850",
+            "angle_deqp_egl_vulkan_tests": targets.mixin(
+                # TODO(crbug.com/557307486): Remove this if/when these tests
+                # have been investigated regarding performance issues.
+                args = [
+                    "--batch-size=64",
+                ],
             ),
         },
     ),
