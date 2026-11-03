@@ -1864,7 +1864,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
         if (context->getFeatures().preferDynamicRendering.enabled &&
             mRenderPassDesc.hasColorFramebufferFetch())
         {
-            // Note MSRTT emulation is not implemented with dynamic rendering.
+            // Note: dynamic rendering uses a different VkImageLayout for framebuffer fetch.
             ASSERT(imageAccess == ImageAccess::ColorWrite);
             imageAccess = ImageAccess::ColorWriteAndInput;
         }

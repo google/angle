@@ -4822,10 +4822,6 @@ void Renderer::initDeviceExtensionEntryPoints()
     {
         InitVertexInputDynamicStateEXTFunctions(mDevice);
     }
-    if (mFeatures.supportsDynamicRenderingLocalRead.enabled)
-    {
-        InitDynamicRenderingLocalReadFunctions(mDevice);
-    }
     if (mFeatures.supportsExternalSemaphoreFd.enabled ||
         mFeatures.supportsExternalSemaphoreFuchsia.enabled)
     {
@@ -7236,7 +7232,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // and render pass objects are continued to be used.
     //
     // Use of dynamic rendering is disabled on ARM due to driver bugs
-    // (http://issuetracker.google.com/356051947, http://issuetracker.google.com/575550012).
+    // (http://issuetracker.google.com/356051947).
     //
     // Use of dynamic rendering is disabled on older Qualcomm drivers due to driver bugs
     // (http://crbug.com/415738891).
@@ -7250,7 +7246,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, preferDynamicRendering,
         mFeatures.supportsDynamicRendering.enabled &&
             mFeatures.supportsDynamicRenderingLocalRead.enabled && !hasLegacyDitheringV1 &&
-            !isARM &&
+            !(isARMProprietary && driverVersion < angle::VersionTriple(52, 0, 0)) &&
             !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 801, 0)) &&
             !isPowerVR);
 

@@ -3584,16 +3584,9 @@ void FramebufferVk::clearWithCommand(ContextVk *contextVk,
                 }
                 else
                 {
-                    // With render pass objects, the clears are indexed by the subpass-mapped
-                    // locations. With dynamic rendering, they are indexed by the actual attachment
-                    // index.
-                    const uint32_t clearAttachmentIndex =
-                        contextVk->getFeatures().preferDynamicRendering.enabled
-                            ? colorIndexVk.get()
-                            : static_cast<uint32_t>(colorIndexGL);
-
-                    attachments.emplace_back(VkClearAttachment{
-                        VK_IMAGE_ASPECT_COLOR_BIT, clearAttachmentIndex, (*clears)[colorIndexGL]});
+                    attachments.emplace_back(VkClearAttachment{VK_IMAGE_ASPECT_COLOR_BIT,
+                                                               static_cast<uint32_t>(colorIndexGL),
+                                                               (*clears)[colorIndexGL]});
 
                     renderPassCommands->onColorAccess(colorIndexVk, vk::ResourceAccess::ReadWrite);
                     if (!scissoredClear)

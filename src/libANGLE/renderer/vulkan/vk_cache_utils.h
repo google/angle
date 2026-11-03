@@ -227,8 +227,8 @@ class alignas(4) RenderPassDesc final
     size_t hash() const;
 
     // Color attachments are in [0, colorAttachmentRange()), with possible gaps.
-    size_t colorAttachmentRange() const { return mColorAttachmentRange; }
-    size_t depthStencilAttachmentIndex() const { return colorAttachmentRange(); }
+    uint32_t colorAttachmentRange() const { return mColorAttachmentRange; }
+    uint32_t depthStencilAttachmentIndex() const { return colorAttachmentRange(); }
 
     bool isColorAttachmentEnabled(size_t colorIndexGL) const;
     bool hasYUVResolveAttachment() const { return mIsYUVResolve; }
