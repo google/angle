@@ -11190,6 +11190,230 @@ TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseInsideRangeStagedVe
     runTest(/*drawBeforeIncrease=*/false, /*doVerifyByDraw=*/false, 3);
 }
 
+// Test that increasing the depth of level 0 when it was first defined with zero width, zero height,
+// or zero depth triggers the texture recreation workaround and preserves other mip levels.
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseFromZeroAreaLevel0)
+{
+    struct ZeroExtentCase
+    {
+        GLsizei width;
+        GLsizei height;
+        GLsizei depth;
+    };
+    constexpr std::array<ZeroExtentCase, 4> kZeroExtentCases = {{
+        {64, 0, 4},
+        {0, 64, 4},
+        {0, 0, 4},
+        {64, 64, 0},
+    }};
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    const std::vector<GLColor> kLevel1Data(4 * 4 * 4, GLColor::cyan);
+    const std::vector<GLColor> kNewLevel0Data(8 * 8 * 16, GLColor::yellow);
+
+    for (const ZeroExtentCase &zeroCase : kZeroExtentCases)
+    {
+        GLTexture texture3D;
+        glBindTexture(GL_TEXTURE_3D, texture3D);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        // First define level 0 with zero area and level 1 with non-empty data.
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, zeroCase.width, zeroCase.height, zeroCase.depth, 0,
+                     GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kLevel1Data.data());
+        ASSERT_GL_NO_ERROR();
+
+        // Redefine level 0 with non-zero area and increased depth (4/0 -> 16).
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 8, 8, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kNewLevel0Data.data());
+        ASSERT_GL_NO_ERROR();
+
+        // Verify by sampling both level 0 and level 1.
+        glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                               mFramebufferColorTexture, 0);
+        glViewport(0, 0, getWindowWidth(), getWindowHeight());
+
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::yellow);
+
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 1);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 1);
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::cyan);
+
+        // Verify all slices of level 0 and level 1 via framebuffer readback.
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 0);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+        for (GLint slice = 0; slice < 16; ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D, 0, slice);
+            ASSERT_GL_NO_ERROR();
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, 8, 8, GLColor::yellow);
+        }
+
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, 1);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 1);
+        for (GLint slice = 0; slice < 4; ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D, 1, slice);
+            ASSERT_GL_NO_ERROR();
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::cyan);
+        }
+    }
+}
+
+// Test increasing the depth of a non-zero mip level that was previously defined with a zero extent.
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseFromZeroAreaNonZeroLevel)
+{
+    struct ZeroExtentCase
+    {
+        GLsizei width;
+        GLsizei height;
+        GLsizei depth;
+    };
+    constexpr std::array<ZeroExtentCase, 3> kZeroExtentCases = {{
+        {8, 0, 8},
+        {0, 8, 8},
+        {8, 8, 0},
+    }};
+
+    for (const ZeroExtentCase &zeroCase : kZeroExtentCases)
+    {
+        for (bool drawBeforeIncrease : {true, false})
+        {
+            for (bool doVerifyByDraw : {true, false})
+            {
+                GLuint texture3D = setUp7Level3DTexture(drawBeforeIncrease);
+
+                // Redefine level 3 (inside the base/max range [3, 4]) with a zero extent before
+                // increasing its depth to 16.
+                glTexImage3D(GL_TEXTURE_3D, 3, GL_RGBA8, zeroCase.width, zeroCase.height,
+                             zeroCase.depth, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+                ASSERT_GL_NO_ERROR();
+
+                const GLColor kNewColor(255, 128, 0, 255);
+                increaseLevelDepth(3, kNewColor);
+
+                if (doVerifyByDraw)
+                {
+                    verifyByDraw(texture3D, 3, kNewColor);
+                }
+                else
+                {
+                    verifyByReadPixels(texture3D, 3, kNewColor);
+                }
+
+                cleanUp(texture3D);
+            }
+        }
+    }
+}
+
+// Test that texture recreation on depth increase restores the base/max level when the
+// application never modified them. The recreate path temporarily changes the native base/max
+// level while copying levels, so they must be resynced even though they are at their defaults.
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseWithDefaultBaseMaxLevel)
+{
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    const std::vector<GLColor> kLevel0Data(4 * 4 * 4, GLColor::red);
+    const std::vector<GLColor> kLevel1Data(2 * 2 * 2, GLColor::green);
+    const std::vector<GLColor> kNewLevel0Data(4 * 4 * 8, GLColor::blue);
+
+    GLTexture texture3D;
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    // Only the filters are modified; BASE_LEVEL and MAX_LEVEL stay at their defaults.
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel1Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           mFramebufferColorTexture, 0);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+
+    // Increase the depth of level 0, which recreates the texture and copies level 1.
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 4, 4, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kNewLevel0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Level 0 must still be sampled as the base level.
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+}
+
+// Test that texture recreation on depth increase restores the default filters and base/max level
+// when the application never modified them. The depth increase makes the mip chain complete, so
+// the texture must be sampled from level 0 with the default mipmap filters.
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseWithDefaultSamplerState)
+{
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    const std::vector<GLColor> kLevel0Data(4 * 4 * 4, GLColor::red);
+    const std::vector<GLColor> kLevel1Data(2 * 2 * 1, GLColor::green);
+    const std::vector<GLColor> kLevel2Data(1 * 1 * 1, GLColor::blue);
+    const std::vector<GLColor> kNewLevel1Data(2 * 2 * 2, GLColor::yellow);
+
+    // Leave all texture parameters at their defaults. Level 1 is initially defined with the wrong
+    // depth, so the mip chain is incomplete.
+    GLTexture texture3D;
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 2, 2, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel1Data.data());
+    glTexImage3D(GL_TEXTURE_3D, 2, GL_RGBA8, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel2Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           mFramebufferColorTexture, 0);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+
+    // Increase the depth of level 1, which recreates the texture and completes the mip chain.
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kNewLevel1Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // The quad magnifies the texture, so level 0 must be sampled.
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+}
+
 // Test that texture completeness is updated if texture max level changes.
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture2DTestES3, TextureCompletenessChangesWithMaxLevel)
