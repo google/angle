@@ -3084,6 +3084,12 @@
 567613573 WIN INTEL OPENGL : Texture2DArrayTestES3_OversizedMipLevels.OversizedLevel1PlusDepth/* = SKIP
 558250724 WIN INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImageOutOfBoundsAcrossMips/* = SKIP
 558250724 WIN INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImagePartiallyOutOfBoundsAcrossMips/* = SKIP
+42263392 WIN INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImageMip1ToMip0Redefine/* = SKIP
+42263392 WIN INTEL OPENGL : Texture2DTestES3RobustInit.CopyTexImageCubeMapRedefineSelf/* = SKIP
+42263389 NVIDIA OPENGL : Texture2DTestES3RobustInit.CopyTexImageMip1ToMip0Redefine/* = SKIP
+42263389 NVIDIA GLES : Texture2DTestES3RobustInit.CopyTexImageMip1ToMip0Redefine/* = SKIP
+42263389 NVIDIA OPENGL : Texture2DTestES3RobustInit.CopyTexImageCubeMapRedefineSelf/* = SKIP
+42263389 NVIDIA GLES : Texture2DTestES3RobustInit.CopyTexImageCubeMapRedefineSelf/* = SKIP
 
 // Various crashes when using Vulkan on Win/ARM64.
 545676921 WIN QUALCOMM VULKAN : GLSLTest_ES31.MixedRowAndColumnMajorMatrices/* = SKIP

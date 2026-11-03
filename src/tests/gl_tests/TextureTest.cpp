@@ -25855,6 +25855,190 @@ TEST_P(Texture2DTestES3RobustInit, CopyTexSubImagePartiallyOutOfBoundsAcrossMips
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that glCopyTexImage2D from mip 1 into mip 0 of the same 2D texture (redefining mip 0 to a
+// smaller size) snapshots mip 1 before releasing storage, including when mip 0 was initially
+// uninitialized (MayNeedInit) or when the copy is partially out of bounds.
+TEST_P(Texture2DTestES3RobustInit, CopyTexImageMip1ToMip0Redefine)
+{
+    constexpr GLsizei kMip0Size = 8;
+    constexpr GLsizei kMip1Size = 4;
+    const std::vector<GLColor> kRedMip0(kMip0Size * kMip0Size, GLColor::red);
+    const std::vector<GLColor> kGreenMip1(kMip1Size * kMip1Size, GLColor::green);
+
+    // Case 1: Mip chain is fully initialized, in-bounds copy from mip 1 to mip 0.
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kRedMip0.data());
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, kMip1Size, kMip1Size, GL_RGBA, GL_UNSIGNED_BYTE,
+                        kGreenMip1.data());
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, kMip1Size, kMip1Size, 0);
+        ASSERT_GL_NO_ERROR();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kMip1Size, kMip1Size, GLColor::green);
+    }
+
+    // Case 2: Mip 0 is initially uninitialized (nullptr / MayNeedInit), in-bounds copy from mip 1.
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kMip1Size, kMip1Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kGreenMip1.data());
+        glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 3, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, kMip1Size, kMip1Size, 0);
+        ASSERT_GL_NO_ERROR();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kMip1Size, kMip1Size, GLColor::green);
+    }
+
+    // Case 3: Mip 0 is initially uninitialized, partially out-of-bounds copy from mip 1.
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kMip1Size, kMip1Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kGreenMip1.data());
+        glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 3, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 1);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kMip1Size / 2, kMip1Size / 2, kMip1Size,
+                         kMip1Size, 0);
+        ASSERT_GL_NO_ERROR();
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kMip1Size / 2, kMip1Size / 2, GLColor::green);
+        EXPECT_PIXEL_RECT_EQ(kMip1Size / 2, 0, kMip1Size / 2, kMip1Size, GLColor::transparentBlack);
+        EXPECT_PIXEL_RECT_EQ(0, kMip1Size / 2, kMip1Size / 2, kMip1Size / 2,
+                             GLColor::transparentBlack);
+    }
+}
+
+// Test that glCopyTexImage2D across cube faces or mip levels of the same cube map texture
+// snapshots the source attachment before redefining the destination face/level.
+TEST_P(Texture2DTestES3RobustInit, CopyTexImageCubeMapRedefineSelf)
+{
+    constexpr GLsizei kMip0Size = 8;
+    constexpr GLsizei kMip1Size = 4;
+    const std::vector<GLColor> kGreenMip0(kMip0Size * kMip0Size, GLColor::green);
+    const std::vector<GLColor> kBlueMip1(kMip1Size * kMip1Size, GLColor::blue);
+
+    // Case 1: Cross-face redefine (+X mip 0 -> -X mip 0 with a smaller size).
+    {
+        GLTexture cube;
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cube);
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             ++face)
+        {
+            const void *data =
+                (face == GL_TEXTURE_CUBE_MAP_POSITIVE_X) ? kGreenMip0.data() : nullptr;
+            glTexImage2D(face, 0, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         data);
+        }
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+                               cube, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glCopyTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA8, 0, 0, kMip1Size, kMip1Size,
+                         0);
+        ASSERT_GL_NO_ERROR();
+
+        // Restore cube completeness on the remaining faces of level 0 so the cube face can be
+        // attached to a framebuffer for readback.
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             ++face)
+        {
+            if (face != GL_TEXTURE_CUBE_MAP_NEGATIVE_X)
+            {
+                glTexImage2D(face, 0, GL_RGBA8, kMip1Size, kMip1Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                             nullptr);
+            }
+        }
+
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+                               cube, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kMip1Size, kMip1Size, GLColor::green);
+    }
+
+    // Case 2: Cross-level redefine (+X mip 1 -> +X mip 0 with a smaller size).
+    {
+        GLTexture cube;
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cube);
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             ++face)
+        {
+            glTexImage2D(face, 0, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         nullptr);
+            const void *mip1Data =
+                (face == GL_TEXTURE_CUBE_MAP_POSITIVE_X) ? kBlueMip1.data() : nullptr;
+            glTexImage2D(face, 1, GL_RGBA8, kMip1Size, kMip1Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         mip1Data);
+            glTexImage2D(face, 2, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            glTexImage2D(face, 3, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        }
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+                               cube, 1);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glCopyTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA8, 0, 0, kMip1Size, kMip1Size,
+                         0);
+        ASSERT_GL_NO_ERROR();
+
+        for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+             ++face)
+        {
+            if (face != GL_TEXTURE_CUBE_MAP_POSITIVE_X)
+            {
+                glTexImage2D(face, 0, GL_RGBA8, kMip1Size, kMip1Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                             nullptr);
+            }
+        }
+
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+                               cube, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kMip1Size, kMip1Size, GLColor::blue);
+    }
+}
+
 // Test that redefining a texture after generateMipmap and then calling generateMipmap again
 // does not crash or read uninitialized memory.
 TEST_P(Texture2DTestES3RobustInit, RedefineAfterGenerateMipmapThenGenerateMipmap)
