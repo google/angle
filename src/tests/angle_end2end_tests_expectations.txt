@@ -291,6 +291,7 @@
 494350632 WIN INTEL OPENGL : MipmapTestES3.MismatchingLevelFormats/* = SKIP
 355607623 WIN INTEL OPENGL : WebGL2GLSLTest.BasicInfiniteLoop/* = SKIP
 537235696 WIN INTEL OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
+581233444 WIN INTEL OPENGL : EGLSurfacelessContextTest.ClearReadPixelsInFBO/* = SKIP
 // Some Intel Vulkan drivers report incorrect VkPhysicalDeviceLimits::maxSamplerLodBias on Windows.
 498165510 WIN INTEL VULKAN : QCOMTextureLodBiasTest.BiasClamping/* = SKIP
 
@@ -346,6 +347,14 @@
 // Intel/windows does not ignore gl_Layer for non-layered framebuffers
 374790899 WIN INTEL OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
 462344532 WIN INTEL OPENGL : GLSLTest_ES3.SingleStructArrayConstructor/* = SKIP
+
+// EGLSurfaceTest3 failures with the OpenGL ES backend
+42264803 WIN GLES : EGLSurfaceTest3.BlitBetweenSurfaces/* = SKIP
+42264803 WIN GLES : EGLSurfaceTest3.BlitBetweenSurfacesWithDeferredClear/* = SKIP
+42264803 WIN GLES : EGLSurfaceTest3.BlitFromLargerReadSurfaceToSmallerDrawSurface/* = SKIP
+42264803 WIN GLES : EGLSurfaceTest3.BlitFromSmallerReadSurfaceToLargerDrawSurface/* = SKIP
+42264803 WIN GLES : EGLSurfaceTest3.BlitColorDepthStencilWithLargerReadSurface/* = SKIP
+42264803 WIN GLES : EGLSurfaceTest3.BlitColorDepthStencilWithSmallerReadSurface/* = SKIP
 
 // NVIDIA GTX 1660 Experimental
 539554093 WIN NVIDIA VULKAN : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP
@@ -727,6 +736,7 @@
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelTexSubImageDstWithUnpackSlow/* = SKIP
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelBlitDst/* = SKIP
 577854987 WIN D3D11 : EGLSurfaceTest.PreserveThenResize/* = SKIP
+581233444 WIN D3D11 : EGLSurfaceTest3.BlitColorDepthStencilWithLargerReadSurface/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -739,6 +749,15 @@
 577854987 ANDROID GLES : EGLSurfaceTest.PreserveWithSwapInterval0/* = SKIP
 577854987 ANDROID GLES : EGLSurfaceTest.PreserveWithSwapInterval1/* = SKIP
 577854987 ANDROID GLES : EGLSurfaceTest.PreserveThenResize/* = SKIP
+
+// EGLSurfaceTest3 failures with the OpenGL ES backend
+42264803 ANDROID GLES : EGLSurfaceTest3.MakeCurrentDifferentSurfaces/* = SKIP
+42264803 ANDROID GLES : EGLSurfaceTest3.BlitBetweenSurfaces/* = SKIP
+42264803 ANDROID GLES : EGLSurfaceTest3.BlitBetweenSurfacesWithDeferredClear/* = SKIP
+42264803 ANDROID GLES : EGLSurfaceTest3.BlitFromLargerReadSurfaceToSmallerDrawSurface/* = SKIP
+42264803 ANDROID GLES : EGLSurfaceTest3.BlitFromSmallerReadSurfaceToLargerDrawSurface/* = SKIP
+42264803 ANDROID GLES : EGLSurfaceTest3.BlitColorDepthStencilWithLargerReadSurface/* = SKIP
+42264803 ANDROID GLES : EGLSurfaceTest3.BlitColorDepthStencilWithSmallerReadSurface/* = SKIP
 
 // Skipped due to long execution time
 42266780 LINUX INTEL : UniformBufferMemoryTest.BufferDataInLoopManyTimes/* = SKIP

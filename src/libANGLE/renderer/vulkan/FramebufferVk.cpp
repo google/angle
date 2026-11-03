@@ -1296,7 +1296,26 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
            (sourceArea.x == destArea.x && sourceArea.y == destArea.y &&
             sourceArea.width == destArea.width && sourceArea.height == destArea.height));
 
+    // The default framebuffer dimensions come from the draw surface, but its read color attachment
+    // is the read surface which may differ in size.
     gl::Rectangle srcFramebufferDimensions = srcFramebufferVk->getNonRotatedCompleteRenderArea();
+    gl::Rectangle srcColorFramebufferDimensions = srcFramebufferDimensions;
+    gl::Rectangle srcClipArea                   = srcFramebufferDimensions;
+    if (blitColorBuffer && srcFramebuffer->isDefault())
+    {
+        const gl::Extents readExtents = srcFramebuffer->getReadColorAttachment()->getSize();
+        srcColorFramebufferDimensions = gl::Rectangle(0, 0, readExtents.width, readExtents.height);
+
+        // The source area is clipped once for all buffers in the mask, so when depth/stencil is
+        // also blitted, it must fit in both the read and draw surfaces.
+        srcClipArea = srcColorFramebufferDimensions;
+        if (blitDepthBuffer || blitStencilBuffer)
+        {
+            srcClipArea.width  = std::min(srcClipArea.width, srcFramebufferDimensions.width);
+            srcClipArea.height = std::min(srcClipArea.height, srcFramebufferDimensions.height);
+        }
+    }
+
     gl::Rectangle dstFramebufferDimensions = getNonRotatedCompleteRenderArea();
 
     // If the destination is flipped in either direction, we will flip the source instead so that
@@ -1329,7 +1348,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     // to match the clipped source.
     gl::Rectangle absSourceArea = sourceArea.removeReversal();
     gl::Rectangle clippedSourceArea;
-    if (!gl::ClipRectangle(srcFramebufferDimensions, absSourceArea, &clippedSourceArea))
+    if (!gl::ClipRectangle(srcClipArea, absSourceArea, &clippedSourceArea))
     {
         return angle::Result::Continue;
     }
@@ -1431,9 +1450,10 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         gl::Rectangle destColorArea                 = destArea;
         SurfaceRotation dstColorFramebufferRotation = dstFramebufferRotation;
         AdjustBlitAreas(readRenderTarget, &sourceColorArea, &destColorArea,
-                        &srcFramebufferDimensions, dstFramebufferDimensions, srcFramebufferRotation,
-                        &dstColorFramebufferRotation, rotation, srcFramebufferFlippedY,
-                        dstFramebufferFlippedY, isResolve, &flipX, &flipY, isDefault, &params);
+                        &srcColorFramebufferDimensions, dstFramebufferDimensions,
+                        srcFramebufferRotation, &dstColorFramebufferRotation, rotation,
+                        srcFramebufferFlippedY, dstFramebufferFlippedY, isResolve, &flipX, &flipY,
+                        isDefault, &params);
 
         noClip = blitArea == destColorArea && stretch[0] == 1.0f && stretch[1] == 1.0f;
 

@@ -902,6 +902,98 @@ class EGLPreRotationBlitFramebufferTest : public EGLPreRotationLargeSurfaceTest
         EXPECT_PIXEL_COLOR_EQ(xOffset + kCoordMidWayLong, yOffset + kCoordMidWayLong,
                               kColorMidWayLongLong);
     }
+
+    // Verifies the pattern drawn by essl1_shaders::fs::Checkered() in the width x height area
+    // starting at the origin, checking the center of each quadrant.
+    void testCheckeredPattern(GLint width, GLint height)
+    {
+        EXPECT_PIXEL_COLOR_EQ(width / 4, height / 4, GLColor::red);
+        EXPECT_PIXEL_COLOR_EQ(width * 3 / 4, height / 4, GLColor::blue);
+        EXPECT_PIXEL_COLOR_EQ(width / 4, height * 3 / 4, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(width * 3 / 4, height * 3 / 4, GLColor::yellow);
+    }
+
+    // Blit the entire read surface to the draw surface, using a window surface and a pbuffer
+    // surface with different sizes and aspect ratios.  Test both portrait and landscape orientation
+    // to ensure that pre-rotation occurs in at least one of them.
+    void testBlitBetweenWindowAndPbuffer(bool readFromWindow)
+    {
+        // OSWindow::setOrientation() is only implemented on Android.
+        ANGLE_SKIP_TEST_IF(isVulkanRenderer() && !IsAndroid());
+
+        setWindowVisible(mOSWindow, true);
+
+        initializeDisplay();
+        initializeSurfaceWithRGBA8888Config();
+
+        EGLint surfaceType = EGL_NONE;
+        eglGetConfigAttrib(mDisplay, mConfig, EGL_SURFACE_TYPE, &surfaceType);
+        ANGLE_SKIP_TEST_IF((surfaceType & EGL_PBUFFER_BIT) == 0);
+
+        constexpr EGLint kPbufferWidth   = 120;
+        constexpr EGLint kPbufferHeight  = 40;
+        const EGLint pbufferAttributes[] = {
+            EGL_WIDTH, kPbufferWidth, EGL_HEIGHT, kPbufferHeight, EGL_NONE,
+        };
+        EGLSurface pbufferSurface = eglCreatePbufferSurface(mDisplay, mConfig, pbufferAttributes);
+        ASSERT_EGL_SUCCESS();
+
+        EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext));
+        ANGLE_GL_PROGRAM(checkerProgram, essl1_shaders::vs::Passthrough(),
+                         essl1_shaders::fs::Checkered());
+
+        constexpr EGLint kWindowSizes[][2] = {{400, 300}, {300, 400}};
+        for (const auto &windowSize : kWindowSizes)
+        {
+            // setOrientation() is asynchronous, so sleep briefly and swap buffers to allow the
+            // window to apply the new rotation.
+            mOSWindow->resize(windowSize[0], windowSize[1]);
+            mOSWindow->setOrientation(windowSize[0], windowSize[1]);
+            angle::Sleep(1000);
+            EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext));
+            eglSwapBuffers(mDisplay, mWindowSurface);
+            ASSERT_EGL_SUCCESS();
+
+            EGLint windowWidth  = 0;
+            EGLint windowHeight = 0;
+            eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &windowWidth);
+            eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &windowHeight);
+
+            EGLSurface readSurface  = readFromWindow ? mWindowSurface : pbufferSurface;
+            EGLSurface drawSurface  = readFromWindow ? pbufferSurface : mWindowSurface;
+            const EGLint readWidth  = readFromWindow ? windowWidth : kPbufferWidth;
+            const EGLint readHeight = readFromWindow ? windowHeight : kPbufferHeight;
+            const EGLint drawWidth  = readFromWindow ? kPbufferWidth : windowWidth;
+            const EGLint drawHeight = readFromWindow ? kPbufferHeight : windowHeight;
+
+            // Draw a checker pattern on readSurface.
+            EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, readSurface, readSurface, mContext));
+            glViewport(0, 0, readWidth, readHeight);
+            drawQuad(checkerProgram, essl1_shaders::PositionAttrib(), 0.5f);
+            testCheckeredPattern(readWidth, readHeight);
+            ASSERT_GL_NO_ERROR();
+
+            // Clear drawSurface to black to detect any areas not covered by the blit.
+            EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, drawSurface, drawSurface, mContext));
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            ASSERT_GL_NO_ERROR();
+
+            // Blit the entire readSurface into the drawSurface.
+            EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, drawSurface, readSurface, mContext));
+            glBlitFramebuffer(0, 0, readWidth, readHeight, 0, 0, drawWidth, drawHeight,
+                              GL_COLOR_BUFFER_BIT, GL_NEAREST);
+            ASSERT_GL_NO_ERROR();
+
+            // Verify that the pattern is rotated if necessary and scaled to cover the entire
+            // drawSurface.
+            EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, drawSurface, drawSurface, mContext));
+            testCheckeredPattern(drawWidth, drawHeight);
+        }
+
+        EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext));
+        eglDestroySurface(mDisplay, pbufferSurface);
+    }
 };
 
 // Draw a predictable pattern (for testing pre-rotation) into an FBO, and then use glBlitFramebuffer
@@ -2410,6 +2502,18 @@ TEST_P(EGLPreRotationBlitFramebufferTest, FboDestOutOfBoundsSourceAndDestBlitFra
     ASSERT_GL_NO_ERROR();
 
     ASSERT_EGL_SUCCESS();
+}
+
+// Blit from the window surface to a smaller pbuffer surface with a different aspect ratio.
+TEST_P(EGLPreRotationBlitFramebufferTest, BlitFromWindowToSmallerPbuffer)
+{
+    testBlitBetweenWindowAndPbuffer(true);
+}
+
+// Blit from a smaller pbuffer surface to the window surface with a different aspect ratio.
+TEST_P(EGLPreRotationBlitFramebufferTest, BlitFromSmallerPbufferToWindow)
+{
+    testBlitBetweenWindowAndPbuffer(false);
 }
 
 class EGLPreRotationInterpolateAtOffsetTest : public EGLPreRotationSurfaceTest
