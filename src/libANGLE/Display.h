@@ -268,8 +268,8 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
     // instead of its handle.  eglDestroyContext() hands its reference over to destroyContext().
     ScopedContextRef getContextRef(gl::ContextID contextID) const;
     // Drops a reference to a context, see ~ScopedContextRef().  If it was the last one to a
-    // destroyed context, this frees the context.
-    void releaseContextRef(gl::Context *context);
+    // destroyed context, this frees the context on the calling thread (see destroyContextImpl()).
+    Error releaseContextRef(gl::Context *context);
 
     angle::ScratchBuffer requestScratchBuffer() { return mScratchBuffers.requestScratchBuffer(); }
     void returnScratchBuffer(angle::ScratchBuffer scratchBuffer)
@@ -317,7 +317,9 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
 
     Error destroySurfaceImpl(Surface *surface);
 
-    virtual void releaseDisplayShareGroupResource(const gl::Context &context) = 0;
+    // Frees a destroyed context, which ContextMap::releaseRef() removed from the context map.  The
+    // caller must lock its ContextMutex, and keep the mutex alive.
+    Error destroyContextImpl(gl::Context *context);
 
   protected:
     void addRef() const
@@ -386,10 +388,6 @@ class ThreadSafeDisplay : public LabeledObject, public angle::NonCopyable
 
     ScratchBuffers mScratchBuffers;
     ScratchBuffers mZeroFilledBuffers;
-
-    // Frees a destroyed context, which ContextMap::releaseRef() removed from the context map.  The
-    // caller must lock its ContextMutex, and keep the mutex alive.
-    Error releaseContext(gl::Context *context);
 
     std::atomic<bool> mTerminatedByApi;
     mutable std::atomic<bool> mPendingInternalCleanup;
@@ -484,7 +482,7 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     void destroyImage(Image *image);
     void destroyStream(Stream *stream);
     // Drops a reference to |context| that the caller hands over (see ScopedContextRef::release()).
-    Error destroyContext(Thread *thread, gl::Context *context);
+    Error destroyContext(gl::Context *context);
 
     bool isValidConfig(const Config *config) const;
     bool isValidImage(ImageID imageID) const;
@@ -617,7 +615,7 @@ class Display final : public angle::ObserverInterface, public ThreadSafeDisplay
     static angle::UnlockedTailCall *GetCurrentThreadUnlockedTailCall();
     static Error *GetCurrentThreadErrorScratchSpace();
 
-    void releaseDisplayShareGroupResource(const gl::Context &context) override;
+    void releaseDisplayShareGroupResources(const gl::Context &context);
 
   private:
     friend class ThreadSafeDisplay;

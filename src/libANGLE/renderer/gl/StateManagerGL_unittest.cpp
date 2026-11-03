@@ -395,8 +395,7 @@ class ScopedTestContext
         // Mimic how the EGL entry point API does, which always holds reference count before calling
         // into Display::destroyContext.
         mContext->addRef();
-        EXPECT_EQ(EGL_SUCCESS,
-                  mDisplay->destroyContext(egl::GetCurrentThread(), mContext).getCode());
+        EXPECT_EQ(EGL_SUCCESS, mDisplay->destroyContext(mContext).getCode());
         EXPECT_EQ(EGL_SUCCESS,
                   mDisplay->terminate(egl::GetCurrentThread(), egl::Display::TerminateReason::Api)
                       .getCode());

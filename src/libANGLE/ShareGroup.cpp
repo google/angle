@@ -30,7 +30,11 @@ ScopedContextRef::~ScopedContextRef()
 {
     if (mContext != nullptr)
     {
-        mDisplay->releaseContextRef(mContext);
+        Error error = mDisplay->releaseContextRef(mContext);
+        if (error.isError())
+        {
+            ERR() << "Failed to destroy an unreferenced context: " << error;
+        }
     }
 }
 
@@ -127,9 +131,7 @@ Error ContextMap::destroyAllInvalidContexts(ThreadSafeDisplay *display)
         // Need AddRefLock because there may be ContextMutex destruction.
         ScopedContextMutexAddRefLock lock(context->getContextMutex());
         context->setIsDestroyed();
-        std::unique_ptr<gl::Context> uniqueContextPtr(context);
-        display->releaseDisplayShareGroupResource(*uniqueContextPtr);
-        ANGLE_TRY(uniqueContextPtr->onDestroy(display));
+        ANGLE_TRY(display->destroyContextImpl(context));
     }
 
     return NoError();

@@ -1262,26 +1262,19 @@ ScopedContextRef ThreadSafeDisplay::getContextRef(gl::ContextID contextID) const
     return mState.contextMap.getContextRef(const_cast<ThreadSafeDisplay *>(this), contextID);
 }
 
-void ThreadSafeDisplay::releaseContextRef(gl::Context *context)
+Error ThreadSafeDisplay::releaseContextRef(gl::Context *context)
 {
     if (!mState.contextMap.releaseRef(context))
     {
-        return;
+        return NoError();
     }
 
     // That was the last reference to a destroyed context, which is therefore not current on any
-    // thread.  This only happens when eglDestroyContext() races with an entry point that references
-    // the context, e.g. eglMakeCurrent() on another thread failing to make it current, so it is up
-    // to that entry point to free the context.  Unlike eglDestroyContext(), it does not make the
-    // context current to free it (see Display::destroyContext()), like for external contexts, and
-    // like eglTerminate() does.
+    // thread.  The context was removed from the context map, so no other thread can access it
+    // anymore.
     // Need AddRefLock because there may be ContextMutex destruction.
     ScopedContextMutexAddRefLock lock(context->getContextMutex());
-    Error error = releaseContext(context);
-    if (error.isError())
-    {
-        ERR() << "Failed to release a destroyed context: " << error;
-    }
+    return destroyContextImpl(context);
 }
 
 void ThreadSafeDisplay::runPendingInternalCleanup() const
@@ -2245,7 +2238,7 @@ Error ThreadSafeDisplay::makeCurrentLocked(Thread *thread,
         ThreadSafeDisplay *previousDisplay = previousContext->getDisplay();
         if (previousDisplay->mState.contextMap.releaseRef(previousContext))
         {
-            ANGLE_TRY(previousDisplay->releaseContext(previousContext));
+            ANGLE_TRY(previousDisplay->destroyContextImpl(previousContext));
         }
         else if (previousDisplay->mTerminatedByApi.load(std::memory_order_acquire))
         {
@@ -2318,21 +2311,22 @@ void Display::destroyStreamImpl(Stream *stream, StreamSet *streams)
     SafeDelete(stream);
 }
 
-// releaseContext must be called with the context being deleted as current.
-// To do that we can only call this in two places, Display::makeCurrent at the point where this
-// context is being made uncurrent and in Display::destroyContext where we make the context current
-// as part of destruction.  The exceptions are external contexts, and the rare case where an entry
-// point drops the last reference to the context (see ThreadSafeDisplay::releaseContextRef()).
-Error ThreadSafeDisplay::releaseContext(gl::Context *context)
+Error ThreadSafeDisplay::destroyContextImpl(gl::Context *context)
 {
     ASSERT(context->getRefCount() == 0 && context->isDestroyed());
     // Use scoped_ptr to make sure the context is always freed.
     std::unique_ptr<gl::Context> uniqueContextPtr(context);
-    releaseDisplayShareGroupResource(*uniqueContextPtr);
-    return uniqueContextPtr->onDestroy(this);
+
+    Error beforeDestroyError = mThreadSafeImpl->beforeDestroyContext(context);
+    static_cast<Display *>(this)->releaseDisplayShareGroupResources(*uniqueContextPtr);
+    Error destroyError = uniqueContextPtr->onDestroy(this);
+    uniqueContextPtr.reset();
+    ANGLE_TRY(mThreadSafeImpl->afterDestroyContext());
+    ANGLE_TRY(beforeDestroyError);
+    return destroyError;
 }
 
-void Display::releaseDisplayShareGroupResource(const gl::Context &context)
+void Display::releaseDisplayShareGroupResources(const gl::Context &context)
 {
     if (!context.usingDisplayTextureShareGroup() && !context.usingDisplaySemaphoreShareGroup())
     {
@@ -2374,7 +2368,7 @@ void Display::releaseDisplayShareGroupResource(const gl::Context &context)
     }
 }
 
-Error Display::destroyContext(Thread *thread, gl::Context *context)
+Error Display::destroyContext(gl::Context *context)
 {
     if (context == nullptr)
     {
@@ -2383,47 +2377,10 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
         return Error(EGL_BAD_CONTEXT, "Invalid context");
     }
 
-    auto *currentContext     = thread->getContext();
-    auto *currentDrawSurface = thread->getCurrentDrawSurface();
-    auto *currentReadSurface = thread->getCurrentReadSurface();
-
     // If the context is still current on at least 1 thread, or another thread uses it, just return
-    // since it'll be released once no threads reference it anymore.
+    // since it'll be destroyed once no threads reference it anymore.
     mState.contextMap.markDestroyed(context);
-    if (!mState.contextMap.releaseRef(context))
-    {
-        return NoError();
-    }
-
-    // The context was removed from the context map, so no other thread can access it anymore.
-
-    // For external context, we cannot change the current native context, and the API user should
-    // make sure the native context is current.
-    if (context->isExternal())
-    {
-        // Need AddRefLock because there may be ContextMutex destruction.
-        ScopedContextMutexAddRefLock lock(context->getContextMutex());
-        return releaseContext(context);
-    }
-
-    // Keep |currentContext| alive, while releasing |context|.
-    ScopedContextRef currentContextRef(
-        currentContext != nullptr ? currentContext->getDisplay() : nullptr, currentContext);
-
-    // Make the context current, so we can release resources belong to the context, and then
-    // when context is released from the current, it will be destroyed.
-    // TODO(http://anglebug.com/42264840): Don't require a Context to be current in order to
-    // destroy it.
-    Error error = makeCurrent(thread, currentContext, nullptr, nullptr, context);
-    if (error.isError())
-    {
-        // The context did not become current.  Free it anyway, since eglTerminate() will not find
-        // it in the context map.
-        ScopedContextMutexAddRefLock lock(context->getContextMutex());
-        ANGLE_SWALLOW_ERR(releaseContext(context));
-        return error;
-    }
-    return makeCurrent(thread, context, currentDrawSurface, currentReadSurface, currentContext);
+    return releaseContextRef(context);
 }
 
 void Display::destroyImage(Image *image)

@@ -1842,7 +1842,6 @@
 
 // Test does not yet support devirtualized contexts.
 40096700 LINUX OPENGL : EGLContextSharingTest.DeleteReaderOfSharedTexture/* = SKIP
-40096700 LINUX OPENGL : EGLContextSharingTest.QueryContextRacesReleaseOfDestroyedContext/* = SKIP
 
 // Failing on Intel Linux
 40096700 LINUX OPENGL INTEL : MultithreadingTestES3.CreateNewContextAfterTextureUploadOnMainThread/* = SKIP

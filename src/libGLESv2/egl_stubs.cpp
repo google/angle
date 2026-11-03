@@ -276,8 +276,8 @@ EGLBoolean DestroyContext(Thread *thread, Display *display, gl::Context *context
     // may free it as it releases it, if it is destroyed already.  The entry point hands over its
     // reference to the context, which destroyContext() drops.  On error, the context is invalid,
     // or freed already.
-    ANGLE_EGL_TRY_RETURN(thread, display->destroyContext(thread, context), "eglDestroyContext",
-                         nullptr, EGL_FALSE);
+    ANGLE_EGL_TRY_RETURN(thread, display->destroyContext(context), "eglDestroyContext", nullptr,
+                         EGL_FALSE);
     thread->setSuccess();
     return EGL_TRUE;
 }

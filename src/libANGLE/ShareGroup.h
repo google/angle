@@ -103,8 +103,6 @@ class ContextMap final : public priv::ObjectMap<gl::Context, angle::SimpleMutex>
         {
             return false;
         }
-        // Note that the context may have been removed already, if eglDestroyContext() makes it
-        // current to free it.
         mObjects.erase(context->id().value);
         return true;
     }
