@@ -18,6 +18,7 @@
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libGLESv2/global_state.h"
 #include "tests/angle_unittests_utils.h"
+#include "tests/test_utils/angle_test_instantiate.h"
 
 namespace rx
 {
@@ -339,7 +340,10 @@ class ScopedTestContext
         displayAttribs.insert(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE);
         mDisplay = egl::Display::GetDisplayFromNativeDisplay(EGL_PLATFORM_ANGLE_ANGLE,
                                                              EGL_DEFAULT_DISPLAY, displayAttribs);
-        EXPECT_NE(nullptr, mDisplay);
+        if (!mDisplay)
+        {
+            return;
+        }
         egl::ScopedDisplayMutexLock lock(*mDisplay);
         EXPECT_EQ(EGL_SUCCESS, mDisplay->initialize().getCode());
 
@@ -355,6 +359,10 @@ class ScopedTestContext
 
     ~ScopedTestContext()
     {
+        if (!mDisplay)
+        {
+            return;
+        }
         egl::ScopedDisplayMutexLock lock(*mDisplay);
         const_cast<gl::State &>(mContext->getState()).setDrawFramebufferBinding(nullptr);
         mDefaultFbo->onDestroy(mContext);
@@ -382,6 +390,7 @@ class ScopedTestContext
 TEST_F(StateManagerGLTest, SyncFromNativeContextBlendEnabled)
 {
     ScopedTestContext testContext(&functions(), &stateManager());
+    ANGLE_SKIP_TEST_IF(!testContext.context());  // Skip if GL not available.
     gl::Context *context = testContext.context();
 
     // Native driver has GL_BLEND enabled while frontend context has blend disabled.
@@ -412,6 +421,7 @@ TEST_F(StateManagerGLTest, SyncFromNativeContextBlendEnabled)
 TEST_F(StateManagerGLTest, SyncFromNativeContextColorMask)
 {
     ScopedTestContext testContext(&functions(), &stateManager());
+    ANGLE_SKIP_TEST_IF(!testContext.context());  // Skip if GL not available.
     gl::Context *context = testContext.context();
 
     // Native driver has red write disabled while frontend context has RGBA all enabled.
