@@ -1488,9 +1488,20 @@ angle::Result FramebufferGL::ensureAttachmentsInitialized(
 angle::Result FramebufferGL::onAttachmentLayerCountChange(gl::FramebufferAttachment *attachment)
 {
     ASSERT(!isDefault() && attachment && attachment->isAttached() &&
-           attachment->type() == GL_TEXTURE && mFunctions->framebufferTextureLayer);
+           attachment->type() == GL_TEXTURE);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-    mFunctions->framebufferTextureLayer(GL_FRAMEBUFFER, attachment->getBinding(), 0, 0, 0);
+    // Detaching with a texture of 0 ignores the remaining parameters.  glFramebufferTextureLayer
+    // is not available on ES 2.0 drivers, while cube map textures are, so fall back to
+    // glFramebufferTexture2D in that case.
+    if (mFunctions->framebufferTextureLayer)
+    {
+        mFunctions->framebufferTextureLayer(GL_FRAMEBUFFER, attachment->getBinding(), 0, 0, 0);
+    }
+    else
+    {
+        mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, attachment->getBinding(), GL_TEXTURE_2D, 0,
+                                         0);
+    }
     return angle::Result::Continue;
 }
 
