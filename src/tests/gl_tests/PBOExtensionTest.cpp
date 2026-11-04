@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 //
 
-#include "common/unsafe_buffers.h"
 #include "test_utils/ANGLETest.h"
 
 using namespace angle;
@@ -88,14 +87,10 @@ TEST_P(PBOExtensionTest, PBOWithOtherTarget)
         glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, mPBO);
 
-        void *mappedPtr        = glMapBufferRangeEXT(GL_ARRAY_BUFFER, 0, 32, GL_MAP_READ_BIT);
-        unsigned char *dataPtr = static_cast<unsigned char *>(mappedPtr);
+        auto pixels = MapBufferRangeEXT<const GLColor>(GL_ARRAY_BUFFER, 0, 32, GL_MAP_READ_BIT);
         EXPECT_GL_NO_ERROR();
 
-        EXPECT_EQ(255, dataPtr[0]);
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(0, dataPtr[1]));
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(0, dataPtr[2]));
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(255, dataPtr[3]));
+        EXPECT_EQ(GLColor::red, pixels[0]);
 
         glUnmapBufferOES(GL_ARRAY_BUFFER);
     }
@@ -122,21 +117,16 @@ TEST_P(PBOExtensionTest, PBOWithExistingData)
 
         // Read 16x16 region from green backbuffer to PBO at offset 16
         glReadPixels(0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<void *>(16));
-        void *mappedPtr        = glMapBufferRangeEXT(GL_PIXEL_PACK_BUFFER, 0, 32, GL_MAP_READ_BIT);
-        unsigned char *dataPtr = static_cast<unsigned char *>(mappedPtr);
+        // Map through pixel 16, the last one checked below.
+        auto pixels = MapBufferRangeEXT<const GLColor>(GL_PIXEL_PACK_BUFFER, 0,
+                                                       17 * sizeof(GLColor), GL_MAP_READ_BIT);
         EXPECT_GL_NO_ERROR();
 
         // Test pixel 0 is red (existing data)
-        EXPECT_EQ(255, dataPtr[0]);
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(0, dataPtr[1]));
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(0, dataPtr[2]));
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(255, dataPtr[3]));
+        EXPECT_EQ(GLColor::red, pixels[0]);
 
         // Test pixel 16 is green (new data)
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(0, dataPtr[16 * 4 + 0]));
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(255, dataPtr[16 * 4 + 1]));
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(0, dataPtr[16 * 4 + 2]));
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(255, dataPtr[16 * 4 + 3]));
+        EXPECT_EQ(GLColor::green, pixels[16]);
 
         glUnmapBufferOES(GL_PIXEL_PACK_BUFFER);
     }

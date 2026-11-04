@@ -5,8 +5,8 @@
 //
 
 #include <cmath>
-#include "common/unsafe_buffers.h"
 
+#include "common/mathutil.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 
@@ -98,18 +98,15 @@ TEST_P(MaxTextureSizeTest, SpecificationTexImage)
     GLsizei textureWidth  = mMaxTexture2DSize;
     GLsizei textureHeight = 64;
 
-    std::vector<GLubyte> data(textureWidth * textureHeight * 4);
+    std::vector<GLColor> data(textureWidth * textureHeight);
     for (int y = 0; y < textureHeight; y++)
     {
         for (int x = 0; x < textureWidth; x++)
         {
-            GLubyte *pixel = ANGLE_UNSAFE_TODO(&data[0] + ((y * textureWidth + x) * 4));
-
             // Draw a gradient, red in direction, green in y direction
-            pixel[0] = static_cast<GLubyte>((float(x) / textureWidth) * 255);
-            ANGLE_UNSAFE_TODO(pixel[1]) = static_cast<GLubyte>((float(y) / textureHeight) * 255);
-            ANGLE_UNSAFE_TODO(pixel[2]) = 0;
-            ANGLE_UNSAFE_TODO(pixel[3]) = 255;
+            data[y * textureWidth + x] =
+                GLColor(gl::floatToNormalized<GLubyte>(float(x) / textureWidth),
+                        gl::floatToNormalized<GLubyte>(float(y) / textureHeight), 0, 255);
         }
     }
 
@@ -122,22 +119,20 @@ TEST_P(MaxTextureSizeTest, SpecificationTexImage)
 
     drawQuad(mTextureProgram, "position", 0.5f);
 
-    std::vector<GLubyte> pixels(getWindowWidth() * getWindowHeight() * 4);
+    std::vector<GLColor> pixels(getWindowWidth() * getWindowHeight());
     glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
 
     for (int y = 1; y < getWindowHeight(); y++)
     {
         for (int x = 1; x < getWindowWidth(); x++)
         {
-            const GLubyte *prevPixel =
-                ANGLE_UNSAFE_TODO(&pixels[0] + (((y - 1) * getWindowWidth() + (x - 1)) * 4));
-            const GLubyte *curPixel =
-                ANGLE_UNSAFE_TODO(&pixels[0] + ((y * getWindowWidth() + x) * 4));
+            const GLColor &prevPixel = pixels[(y - 1) * getWindowWidth() + (x - 1)];
+            const GLColor &curPixel  = pixels[y * getWindowWidth() + x];
 
-            EXPECT_GE(curPixel[0], prevPixel[0]);
-            ANGLE_UNSAFE_TODO(EXPECT_GE(curPixel[1], prevPixel[1]));
-            ANGLE_UNSAFE_TODO(EXPECT_EQ(curPixel[2], prevPixel[2]));
-            ANGLE_UNSAFE_TODO(EXPECT_EQ(curPixel[3], prevPixel[3]));
+            EXPECT_GE(curPixel.R, prevPixel.R);
+            EXPECT_GE(curPixel.G, prevPixel.G);
+            EXPECT_EQ(curPixel.B, prevPixel.B);
+            EXPECT_EQ(curPixel.A, prevPixel.A);
         }
     }
 }
@@ -162,18 +157,15 @@ TEST_P(MaxTextureSizeTest, SpecificationTexStorage)
     GLsizei textureWidth  = 64;
     GLsizei textureHeight = mMaxTexture2DSize;
 
-    std::vector<GLubyte> data(textureWidth * textureHeight * 4);
+    std::vector<GLColor> data(textureWidth * textureHeight);
     for (int y = 0; y < textureHeight; y++)
     {
         for (int x = 0; x < textureWidth; x++)
         {
-            GLubyte *pixel = ANGLE_UNSAFE_TODO(&data[0] + ((y * textureWidth + x) * 4));
-
             // Draw a gradient, red in direction, green in y direction
-            pixel[0] = static_cast<GLubyte>((float(x) / textureWidth) * 255);
-            ANGLE_UNSAFE_TODO(pixel[1]) = static_cast<GLubyte>((float(y) / textureHeight) * 255);
-            ANGLE_UNSAFE_TODO(pixel[2]) = 0;
-            ANGLE_UNSAFE_TODO(pixel[3]) = 255;
+            data[y * textureWidth + x] =
+                GLColor(gl::floatToNormalized<GLubyte>(float(x) / textureWidth),
+                        gl::floatToNormalized<GLubyte>(float(y) / textureHeight), 0, 255);
         }
     }
 
@@ -196,22 +188,20 @@ TEST_P(MaxTextureSizeTest, SpecificationTexStorage)
 
     drawQuad(mTextureProgram, "position", 0.5f);
 
-    std::vector<GLubyte> pixels(getWindowWidth() * getWindowHeight() * 4);
+    std::vector<GLColor> pixels(getWindowWidth() * getWindowHeight());
     glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
 
     for (int y = 1; y < getWindowHeight(); y++)
     {
         for (int x = 1; x < getWindowWidth(); x++)
         {
-            const GLubyte *prevPixel =
-                ANGLE_UNSAFE_TODO(&pixels[0] + (((y - 1) * getWindowWidth() + (x - 1)) * 4));
-            const GLubyte *curPixel =
-                ANGLE_UNSAFE_TODO(&pixels[0] + ((y * getWindowWidth() + x) * 4));
+            const GLColor &prevPixel = pixels[(y - 1) * getWindowWidth() + (x - 1)];
+            const GLColor &curPixel  = pixels[y * getWindowWidth() + x];
 
-            EXPECT_GE(curPixel[0], prevPixel[0]);
-            ANGLE_UNSAFE_TODO(EXPECT_GE(curPixel[1], prevPixel[1]));
-            ANGLE_UNSAFE_TODO(EXPECT_EQ(curPixel[2], prevPixel[2]));
-            ANGLE_UNSAFE_TODO(EXPECT_EQ(curPixel[3], prevPixel[3]));
+            EXPECT_GE(curPixel.R, prevPixel.R);
+            EXPECT_GE(curPixel.G, prevPixel.G);
+            EXPECT_EQ(curPixel.B, prevPixel.B);
+            EXPECT_EQ(curPixel.A, prevPixel.A);
         }
     }
 }

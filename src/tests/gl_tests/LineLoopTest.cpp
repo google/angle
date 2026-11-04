@@ -6,7 +6,7 @@
 
 #include <array>
 
-#include "common/unsafe_buffers.h"
+#include "common/span.h"
 #include "test_utils/ANGLETest.h"
 
 #include "test_utils/gl_raii.h"
@@ -48,7 +48,7 @@ class LineLoopTest : public ANGLETest<>
 
     void checkPixels()
     {
-        std::vector<GLubyte> pixels(getWindowWidth() * getWindowHeight() * 4);
+        std::vector<GLColor> pixels(getWindowWidth() * getWindowHeight());
         glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
                      &pixels[0]);
 
@@ -58,14 +58,11 @@ class LineLoopTest : public ANGLETest<>
         {
             for (int x = 0; x < getWindowWidth(); x++)
             {
-                const GLubyte *pixel =
-                    ANGLE_UNSAFE_TODO(&pixels[0] + ((y * getWindowWidth() + x) * 4));
+                const GLColor &pixel = pixels[y * getWindowWidth() + x];
 
-                EXPECT_EQ(pixel[0], 0) << "Failed at " << x << ", " << y << std::endl;
-                ANGLE_UNSAFE_TODO(EXPECT_EQ(pixel[1], pixel[2]))
-                    << "Failed at " << x << ", " << y << std::endl;
-                ANGLE_UNSAFE_TODO(ASSERT_EQ(pixel[3], 255))
-                    << "Failed at " << x << ", " << y << std::endl;
+                EXPECT_EQ(pixel.R, 0) << "Failed at " << x << ", " << y << std::endl;
+                EXPECT_EQ(pixel.G, pixel.B) << "Failed at " << x << ", " << y << std::endl;
+                ASSERT_EQ(pixel.A, 255) << "Failed at " << x << ", " << y << std::endl;
             }
         }
     }
@@ -1244,7 +1241,6 @@ void main()
     // For xfb
     const std::array<GLfloat, 16> expected = {0.4, -0.5, -0.5, -0.6, -0.6, 0.7, 0.7, 0.4,
                                               0.8, -0.9, -0.9, -1.0, -1.0, 1.1, 1.1, 0.8};
-    unsigned expected_count                = expected.size();
     GLuint xfbBuffer;
     glGenBuffers(1, &xfbBuffer);
     glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
@@ -1273,18 +1269,10 @@ void main()
         }
     }
 
-    GLfloat *mappedBufferData = nullptr;
     glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
-    mappedBufferData = (GLfloat *)glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
-                                                   sizeof(expected), GL_MAP_READ_BIT);
-    if (mappedBufferData != nullptr)
-    {
-        for (unsigned j = 0; j < expected_count; j++)
-        {
-            ANGLE_UNSAFE_TODO(EXPECT_EQ(mappedBufferData[j], expected[j]))
-                << "Expected pixel at " << j << " to be " << expected[j] << std::endl;
-        }
-    }
+    auto mappedBufferData = MapBufferRange<const GLfloat>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                          sizeof(expected), GL_MAP_READ_BIT);
+    EXPECT_EQ(Span(expected), mappedBufferData);
 
     ASSERT_GL_NO_ERROR();
 }
@@ -1684,7 +1672,7 @@ TEST_P(LineLoopIndirectTest, IndirectAndElementDrawsShareIndexBuffer)
     glBindVertexArray(0);
 
     // Check pixels.
-    std::vector<GLubyte> pixels(getWindowWidth() * getWindowHeight() * 4);
+    std::vector<GLColor> pixels(getWindowWidth() * getWindowHeight());
     glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]);
     ASSERT_GL_NO_ERROR();
 
@@ -1692,24 +1680,19 @@ TEST_P(LineLoopIndirectTest, IndirectAndElementDrawsShareIndexBuffer)
     {
         for (int x = 0; x < getWindowWidth() / 2; x++)
         {
-            const GLubyte *pixel = ANGLE_UNSAFE_TODO(&pixels[0] + ((y * getWindowWidth() + x) * 4));
+            const GLColor &pixel = pixels[y * getWindowWidth() + x];
 
-            ANGLE_UNSAFE_TODO(EXPECT_TRUE(pixel[0] == pixel[2]))
-                << "Failed at " << x << ", " << y << std::endl;
-            ANGLE_UNSAFE_TODO(EXPECT_TRUE(pixel[1] == 0))
-                << "Failed at " << x << ", " << y << std::endl;
-            ANGLE_UNSAFE_TODO(ASSERT_EQ(pixel[3], 255))
-                << "Failed at " << x << ", " << y << std::endl;
+            EXPECT_TRUE(pixel.R == pixel.B) << "Failed at " << x << ", " << y << std::endl;
+            EXPECT_TRUE(pixel.G == 0) << "Failed at " << x << ", " << y << std::endl;
+            ASSERT_EQ(pixel.A, 255) << "Failed at " << x << ", " << y << std::endl;
         }
         for (int x = getWindowWidth() / 2; x < getWindowWidth(); x++)
         {
-            const GLubyte *pixel = ANGLE_UNSAFE_TODO(&pixels[0] + ((y * getWindowWidth() + x) * 4));
+            const GLColor &pixel = pixels[y * getWindowWidth() + x];
 
-            EXPECT_TRUE(pixel[0] == 0) << "Failed at " << x << ", " << y << std::endl;
-            ANGLE_UNSAFE_TODO(EXPECT_TRUE(pixel[1] == pixel[2]))
-                << "Failed at " << x << ", " << y << std::endl;
-            ANGLE_UNSAFE_TODO(ASSERT_EQ(pixel[3], 255))
-                << "Failed at " << x << ", " << y << std::endl;
+            EXPECT_TRUE(pixel.R == 0) << "Failed at " << x << ", " << y << std::endl;
+            EXPECT_TRUE(pixel.G == pixel.B) << "Failed at " << x << ", " << y << std::endl;
+            ASSERT_EQ(pixel.A, 255) << "Failed at " << x << ", " << y << std::endl;
         }
     }
 }
@@ -1772,8 +1755,8 @@ void main()
 
     std::vector<GLfloat> initialData(expected.size(), 0.0);
     glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
-    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, expected.size() * sizeof(GLfloat),
-                 initialData.data(), GL_STATIC_READ);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, Span(expected).size_bytes(), initialData.data(),
+                 GL_STATIC_READ);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, xfbBuffer);
     ASSERT_GL_NO_ERROR();
 
@@ -1804,13 +1787,10 @@ void main()
 
     glEndTransformFeedback();
     glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
-    GLfloat *mapped = (GLfloat *)glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
-                                                  expected.size() * sizeof(float), GL_MAP_READ_BIT);
+    auto mapped = MapBufferRange<const GLfloat>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                Span(expected).size_bytes(), GL_MAP_READ_BIT);
     ASSERT_GL_NO_ERROR();
-    for (size_t i = 0; i < expected.size(); i++)
-    {
-        ANGLE_UNSAFE_TODO(EXPECT_EQ(mapped[i], expected[i]));
-    }
+    EXPECT_EQ(Span(expected), mapped);
 }
 ANGLE_INSTANTIATE_TEST_ES2_AND(LineLoopTest,
                                ES2_OPENGLES().enable(Feature::ForcePassthroughShaders));
