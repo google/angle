@@ -115,6 +115,7 @@ fn declare_default_uniforms_block(
             var.precision,
             var.precise,
             var.decorations.clone(),
+            None,
         );
         fields.push(field);
         default_uniform_map.insert(var_id, index as u32);
