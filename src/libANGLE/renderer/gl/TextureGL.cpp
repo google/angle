@@ -2605,15 +2605,12 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
     if (features.reattachTextureToFboAfterLayerIncrease.enabled &&
         gl::IsLayeredTextureType(getType()))
     {
-        for (size_t level = 0; level < levels; level++)
-        {
-            const gl::ImageDesc &desc = mState.getImageDesc(gl::TextureTarget::_2DArray, level);
-            if (size.depth > desc.size.depth)
-            {
-                onStateChange(angle::SubjectMessage::TextureLayerCountIncreased);
-                break;
-            }
-        }
+        // gl::Texture::setStorage() replaces the image descs with the new storage sizes before
+        // calling into the backend, so the previous image layout cannot be compared against
+        // here.  Conservatively assume that the number of images grows.  This is cheap: it only
+        // reaches framebuffers that have this texture attached, and TexStorage can be called at
+        // most once per texture since it makes the texture immutable.
+        onStateChange(angle::SubjectMessage::TextureLayerCountIncreased);
     }
 
     const gl::InternalFormat &originalInternalFormatInfo =
