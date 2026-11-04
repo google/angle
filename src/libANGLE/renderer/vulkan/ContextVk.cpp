@@ -7514,8 +7514,8 @@ angle::Result ContextVk::initImageAllocation(vk::ImageHelper *imageHelper,
     if (result != VK_SUCCESS)
     {
         uint32_t pendingMemoryTypeIndex;
-        bool allocateDedicatedMemory =
-            mRenderer->getImageMemorySuballocator().needsDedicatedMemory(memoryRequirements.size);
+        bool allocateDedicatedMemory = mRenderer->getImageMemorySuballocator().needsDedicatedMemory(
+            mRenderer, memoryRequirements.size);
 
         if (vma::FindMemoryTypeIndexForImageInfo(
                 mRenderer->getAllocator().getHandle(), &imageHelper->getVkImageCreateInfo(), flags,

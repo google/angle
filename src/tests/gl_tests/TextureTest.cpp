@@ -12520,7 +12520,7 @@ TEST_P(Texture2DArrayTestES3, RedefineInittableArray)
 // reformatStagedBufferUpdates getting called. See crbug.com/499091328.
 //
 // Dimensions chosen so that the *single-layer* reformatted RGBA8 staging buffer
-// (W * H * 4 bytes) exceeds ANGLE's kMaxBufferSizeForSuballocation (8 MiB). That
+// (W * H * 4 bytes) exceeds ANGLE's buffer pool block size (8 MiB). That
 // forces a dedicated VkBuffer of exactly W*H*4 bytes; vkCmdCopyBufferToImage with
 // layerCount=D, which used to then read (D-1)*W*H*4 bytes past the end of that VkBuffer.
 TEST_P(Texture2DArrayTestES3, ReformatStagedBufferUpdatesLayerCountOOB_2DArray)

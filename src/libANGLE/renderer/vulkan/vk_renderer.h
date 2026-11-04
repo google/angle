@@ -93,7 +93,7 @@ class ImageMemorySuballocator : angle::NonCopyable
                                               VkMemoryPropertyFlags flags);
 
     // Determines if dedicated memory is required for the allocation.
-    bool needsDedicatedMemory(VkDeviceSize size) const;
+    bool needsDedicatedMemory(Renderer *renderer, VkDeviceSize size) const;
 
     // Initializes a custom memory pool with a specific type index (if needed) and returns it.
     VkResult getInitMemoryPool(Renderer *renderer, uint32_t poolMemoryTypeIndex, Pool **poolOut);
@@ -109,7 +109,7 @@ class ImageMemorySuballocator : angle::NonCopyable
 
     // Gets the block size for a specific memory pool.
     VkDeviceSize getInitialPoolBlockSize(Renderer *renderer, uint32_t poolMemoryTypeIndex);
-    VkDeviceSize getDefaultPoolBlockSize(Renderer *renderer);
+    VkDeviceSize getDefaultPoolBlockSize(Renderer *renderer) const;
 
     // Initial memory pools are smaller and have a max block count. If allocation fails on them, the
     // allocator moves to the default memory pools.

@@ -175,10 +175,6 @@ constexpr uint32_t kPreferredDefaultUniformBufferSize = 64 * 1024u;
 // buffers will be larger.
 constexpr size_t kAllocationCountThresholdForDynamicVertexDataSize = 4096;
 
-// Maximum size to use VMA image suballocation. Any allocation greater than or equal to this
-// value will use a dedicated VkDeviceMemory.
-constexpr size_t kImageSizeThresholdForDedicatedMemoryAllocation = 8 * 1024 * 1024;
-
 // Maximum size for an allocated memory for a single object.
 constexpr VkDeviceSize kMemoryAllocationSizeLimit = 1 * 1024 * 1024 * 1024;
 
@@ -8737,9 +8733,10 @@ VkResult ImageMemorySuballocator::getDefaultMemoryPool(Renderer *renderer,
                              getDefaultPoolBlockSize(renderer), poolMemoryTypeIndex, poolOut);
 }
 
-bool ImageMemorySuballocator::needsDedicatedMemory(VkDeviceSize size) const
+bool ImageMemorySuballocator::needsDedicatedMemory(Renderer *renderer, VkDeviceSize size) const
 {
-    return size >= kImageSizeThresholdForDedicatedMemoryAllocation;
+    // Like VMA's default pools, images over half a block get dedicated memory to avoid waste.
+    return size > getDefaultPoolBlockSize(renderer) / 2;
 }
 
 VkDeviceSize ImageMemorySuballocator::getInitialPoolBlockSize(Renderer *renderer,
@@ -8748,7 +8745,7 @@ VkDeviceSize ImageMemorySuballocator::getInitialPoolBlockSize(Renderer *renderer
     return renderer->getPreferredInitialImageBlockSize(poolMemoryTypeIndex);
 }
 
-VkDeviceSize ImageMemorySuballocator::getDefaultPoolBlockSize(Renderer *renderer)
+VkDeviceSize ImageMemorySuballocator::getDefaultPoolBlockSize(Renderer *renderer) const
 {
     return renderer->getPreferredLargeHeapBlockSize();
 }

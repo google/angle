@@ -3427,7 +3427,7 @@ VkResult BufferPool::allocateBuffer(ErrorContext *context,
     VkDeviceSize offset;
     VkDeviceSize alignedSize = roundUp(sizeInBytes, alignment);
 
-    if (alignedSize >= kMaxBufferSizeForSuballocation)
+    if (alignedSize >= mPreferredSize)
     {
         VkDeviceSize heapSize =
             context->getRenderer()->getMemoryProperties().getHeapSizeForMemoryType(
@@ -6547,8 +6547,8 @@ VkResult ImageHelper::initMemory(ErrorContext *context,
     // To allocate memory here, if possible, we use the image memory suballocator which uses VMA.
     ASSERT(excludedFlags < VK_MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM);
     Renderer *renderer = context->getRenderer();
-    bool allocateDedicatedMemory =
-        renderer->getImageMemorySuballocator().needsDedicatedMemory(memoryRequirements->size);
+    bool allocateDedicatedMemory = renderer->getImageMemorySuballocator().needsDedicatedMemory(
+        renderer, memoryRequirements->size);
 
     // First try allocate tile memory if requested
     ASSERT(!mDeviceMemory.valid());
@@ -6604,7 +6604,7 @@ VkResult ImageHelper::initMemory(ErrorContext *context,
             // memory requirements may have changed
             mImage.getMemoryRequirements(renderer->getDevice(), memoryRequirements);
             allocateDedicatedMemory = renderer->getImageMemorySuballocator().needsDedicatedMemory(
-                memoryRequirements->size);
+                renderer, memoryRequirements->size);
         }
     }
 
