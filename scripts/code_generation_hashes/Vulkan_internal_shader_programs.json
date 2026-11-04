@@ -100,7 +100,9 @@
   "src/libANGLE/renderer/vulkan/shaders/gen/EtcToBc.comp.00000001.inc":
     "112137e2a5a56e8497795753fc3f37e6",
   "src/libANGLE/renderer/vulkan/shaders/gen/ExportStencil.frag.00000000.inc":
-    "f392804289360e9b9a8aaf87580c7434",
+    "e6c3547c353d936067bcbf01387db260",
+  "src/libANGLE/renderer/vulkan/shaders/gen/ExportStencil.frag.00000001.inc":
+    "c47b5f5fe9f0eb7bbb6a7df2d9f266a9",
   "src/libANGLE/renderer/vulkan/shaders/gen/FullScreenTri.vert.00000000.inc":
     "0b663c3051af98464999bbc10056a6e6",
   "src/libANGLE/renderer/vulkan/shaders/gen/GenerateFragmentShadingRate.comp.00000000.inc":
@@ -318,7 +320,9 @@
   "src/libANGLE/renderer/vulkan/shaders/src/EtcToBc.comp.json":
     "59e43d52460e98e6f9992ec8c93e2eb5",
   "src/libANGLE/renderer/vulkan/shaders/src/ExportStencil.frag":
-    "7f714d22a44ddfd15cebbe90af2a6122",
+    "b23ae6c7e5ad5755347d17fb3150e2dd",
+  "src/libANGLE/renderer/vulkan/shaders/src/ExportStencil.frag.json":
+    "2ec96dcdb9c8f52a23b00cbc6778e2f7",
   "src/libANGLE/renderer/vulkan/shaders/src/FullScreenTri.vert":
     "dacf19aaec8cfc9d2d0c05230a11613b",
   "src/libANGLE/renderer/vulkan/shaders/src/GenerateFragmentShadingRate.comp":
@@ -344,9 +348,9 @@
   "src/libANGLE/renderer/vulkan/shaders/src/ImageCopyFloat.frag.json":
     "648ac936936acb9f2f8714c1de15a7ca",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp":
-    "362a7a98500973ec5aaec2c24fadf3df",
+    "8db1664c73d7fea478f3c423908bee67",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h":
-    "cbbcc9a37946ab8f70218413b21421d5",
+    "0d3f1e8159c0ade8ccc4177331c56e03",
   "tools/glslang/glslang_validator.exe.sha1":
     "9dcba3dd9bed38fe20d453e1c9e586ab",
   "tools/glslang/glslang_validator.sha1":

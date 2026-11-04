@@ -4020,7 +4020,6 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
             params.unresolveColorMask  = mRenderPassDesc.getColorUnresolveAttachmentMask();
             params.unresolveDepth      = mRenderPassDesc.hasDepthUnresolveAttachment();
             params.unresolveStencil    = mRenderPassDesc.hasStencilUnresolveAttachment();
-            params.useDynamicRendering = true;
             ANGLE_TRY(contextVk->getUtils().unresolve(contextVk, this, params));
 
             // Update unresolve counters
@@ -4098,7 +4097,6 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         params.unresolveColorMask = unresolveColorMask;
         params.unresolveDepth     = unresolveDepth;
         params.unresolveStencil   = unresolveStencil;
-        params.useDynamicRendering = false;
 
         ANGLE_TRY(contextVk->getUtils().unresolve(contextVk, this, params));
 

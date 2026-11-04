@@ -69,6 +69,7 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/EtcToBc.comp.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/EtcToBc.comp.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ExportStencil.frag.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ExportStencil.frag.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/FullScreenTri.vert.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/GenerateFragmentShadingRate.comp.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/GenerateMipmap.comp.00000000.inc"
@@ -238,6 +239,7 @@ constexpr CompressedShaderBlob kEtcToBc_comp_shaders[] = {
 };
 constexpr CompressedShaderBlob kExportStencil_frag_shaders[] = {
     {kExportStencil_frag_00000000, sizeof(kExportStencil_frag_00000000)},
+    {kExportStencil_frag_00000001, sizeof(kExportStencil_frag_00000001)},
 };
 constexpr CompressedShaderBlob kFullScreenTri_vert_shaders[] = {
     {kFullScreenTri_vert_00000000, sizeof(kFullScreenTri_vert_00000000)},

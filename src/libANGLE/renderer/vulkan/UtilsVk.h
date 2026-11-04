@@ -214,7 +214,6 @@ class UtilsVk : angle::NonCopyable
         gl::DrawBufferMask unresolveColorMask = {};
         bool unresolveDepth                   = false;
         bool unresolveStencil                 = false;
-        bool useDynamicRendering              = false;
     };
 
     struct GenerateFragmentShadingRateParameters
@@ -640,12 +639,14 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureCopyImageToBufferResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureBlitResolveResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureBlitResolveStencilNoExportResourcesInitialized(ContextVk *contextVk);
-    angle::Result ensureExportStencilResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureExportStencilResourcesInitialized(ContextVk *contextVk,
+                                                          VkDescriptorType descriptorType);
     angle::Result ensureGenerateMipmapResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureTransCodeEtcToBcResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureUnresolveResourcesInitialized(ContextVk *contextVk,
                                                       Function function,
-                                                      uint32_t attachmentIndex);
+                                                      uint32_t attachmentIndex,
+                                                      VkDescriptorType descriptorType);
 
     angle::Result ensureImageCopyResourcesInitializedWithSampler(
         ContextVk *contextVk,
@@ -744,7 +745,8 @@ class UtilsVk : angle::NonCopyable
     std::array<ComputeShaderProgramAndPipelines,
                vk::InternalShader::BlitResolveStencilNoExport_comp::kArrayLen>
         mBlitResolveStencilNoExport;
-    GraphicsShaderProgramAndPipelines mExportStencil;
+    std::array<GraphicsShaderProgramAndPipelines, vk::InternalShader::ExportStencil_frag::kArrayLen>
+        mExportStencil;
     std::array<ComputeShaderProgramAndPipelines, vk::InternalShader::GenerateMipmap_comp::kArrayLen>
         mGenerateMipmap;
     std::array<ComputeShaderProgramAndPipelines, vk::InternalShader::EtcToBc_comp::kArrayLen>

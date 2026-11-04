@@ -126,7 +126,11 @@ constexpr size_t kArrayLen = 0x00000002;
 
 namespace ExportStencil_frag
 {
-constexpr size_t kArrayLen = 0x00000001;
+enum flags
+{
+    kUseTexture = 0x00000001,
+};
+constexpr size_t kArrayLen = 0x00000002;
 }  // namespace ExportStencil_frag
 
 namespace FullScreenTri_vert

@@ -7235,10 +7235,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // dynamic rendering.  If only version 1 is exposed, it's not sacrificied for dynamic rendering
     // and render pass objects are continued to be used.
     //
-    // Using dynamic rendering when emulating GL_EXT_multisampled_render_to_texture is
-    // supported. Except for SwiftShader, which crashes when binding non-attachment textures as
-    // input attachments.
-    //
     // Use of dynamic rendering is disabled on ARM due to driver bugs
     // (http://issuetracker.google.com/356051947, http://issuetracker.google.com/575550012).
     //
@@ -7254,7 +7250,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, preferDynamicRendering,
         mFeatures.supportsDynamicRendering.enabled &&
             mFeatures.supportsDynamicRenderingLocalRead.enabled && !hasLegacyDitheringV1 &&
-            !isSwiftShader && !isARM &&
+            !isARM &&
             !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 801, 0)) &&
             !isPowerVR);
 

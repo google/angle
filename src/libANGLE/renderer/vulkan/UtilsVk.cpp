@@ -662,6 +662,31 @@ namespace unresolve
 //           OpReturn           \ Bottom of main().  Fixed.
 //           OpFunctionEnd      /
 //
+// Alternatively, in the case of dynamic rendering, textures are used instead of input attachments.
+// This results in the following unresolve shader:
+//
+//     #version 450 core
+//     #extension GL_ARB_shader_stencil_export : require
+//     #extension GL_EXT_samplerless_texture_functions : require
+
+//     layout(location = 0) out vec4 colorOut0;
+//     layout(location = 1) out ivec4 colorOut1;
+//     layout(location = 2) out uvec4 colorOut2;
+//     layout(set = 0, binding = 0) uniform utexture2D stencilIn;
+//     layout(set = 0, binding = 1) uniform texture2D depthIn;
+//     layout(set = 0, binding = 2) uniform texture2D colorIn0;
+//     layout(set = 0, binding = 3) uniform itexture2D colorIn1;
+//     layout(set = 0, binding = 4) uniform utexture2D colorIn2;
+//
+//     void main()
+//     {
+//         colorOut0 = texelFetch(colorIn0, ivec2(gl_FragCoord.xy), 0);
+//         colorOut1 = texelFetch(colorIn1, ivec2(gl_FragCoord.xy), 0);
+//         colorOut2 = texelFetch(colorIn2, ivec2(gl_FragCoord.xy), 0);
+//         gl_FragDepth = texelFetch(depthIn, ivec2(gl_FragCoord.xy), 0).x;
+//         gl_FragStencilRefARB = int(texelFetch(stencilIn, ivec2(gl_FragCoord.xy), 0).x);
+//     }
+//
 // What makes the generation of this shader manageable is that the majority of it is constant
 // between the different variations of the shader.  The rest are repeating patterns with different
 // ids or indices.
@@ -675,21 +700,21 @@ enum
     kIdMain,
     kIdMainLabel,
 
-    // Types for "out vec4" and "subpassInput"
+    // Types for "out vec4" and "subpassInput"/"texture2D"
     kIdFloatType,
     kIdFloat4Type,
     kIdFloat4OutType,
     kIdFloatSubpassImageType,
     kIdFloatSubpassInputType,
 
-    // Types for "out ivec4" and "isubpassInput"
+    // Types for "out ivec4" and "isubpassInput"/"itexture2D"
     kIdSIntType,
     kIdSInt4Type,
     kIdSInt4OutType,
     kIdSIntSubpassImageType,
     kIdSIntSubpassInputType,
 
-    // Types for "out uvec4" and "usubpassInput"
+    // Types for "out uvec4" and "usubpassInput"/"utexture2D"
     kIdUIntType,
     kIdUInt4Type,
     kIdUInt4OutType,
@@ -699,6 +724,10 @@ enum
     // Types for gl_FragDepth && gl_FragStencilRefARB
     kIdFloatOutType,
     kIdSIntOutType,
+
+    // Types for gl_FragCoord
+    kIdFloat2Type,
+    kIdFloat4InType,
 
     // ivec2(0) constant
     kIdSIntZero,
@@ -714,6 +743,10 @@ enum
     kIdColor0In,
     kIdDepthIn = kIdColor0In + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS,
     kIdStencilIn,
+    kIdFragCoord,
+    kIdFragCoordLoad,
+    kIdFragCoordLoadXY,
+    kIdFragCoordLoadXYInt,
 
     // Ids for temp variables
     kIdColor0Load,
@@ -726,13 +759,25 @@ enum
     kIdCount = kIdStencilLoad + 4,
 };
 
+enum class UnresolveImageType
+{
+    // For dynamic rendering, the source of unresolve is given as a texture
+    Texture,
+    // For legacy render passes, the source is an input attachment
+    Input,
+};
+
 void InsertPreamble(uint32_t colorAttachmentCount,
                     bool unresolveDepth,
                     bool unresolveStencil,
+                    UnresolveImageType unresolveImageType,
                     angle::spirv::Blob *blobOut)
 {
     spirv::WriteCapability(blobOut, spv::CapabilityShader);
-    spirv::WriteCapability(blobOut, spv::CapabilityInputAttachment);
+    if (unresolveImageType == UnresolveImageType::Input)
+    {
+        spirv::WriteCapability(blobOut, spv::CapabilityInputAttachment);
+    }
     if (unresolveStencil)
     {
         spirv::WriteCapability(blobOut, spv::CapabilityStencilExportEXT);
@@ -742,7 +787,7 @@ void InsertPreamble(uint32_t colorAttachmentCount,
     // GLSL.std.450.
     spirv::WriteMemoryModel(blobOut, spv::AddressingModelLogical, spv::MemoryModelGLSL450);
 
-    // Create the list of entry point ids, including only the out variables.
+    // Create the list of entry point ids, including only the out variables and gl_FragCoord.
     spirv::IdRefList entryPointIds;
     for (uint32_t colorIndex = 0; colorIndex < colorAttachmentCount; ++colorIndex)
     {
@@ -755,6 +800,10 @@ void InsertPreamble(uint32_t colorAttachmentCount,
     if (unresolveStencil)
     {
         entryPointIds.push_back(spirv::IdRef(kIdStencilOut));
+    }
+    if (unresolveImageType == UnresolveImageType::Texture)
+    {
+        entryPointIds.push_back(spirv::IdRef(kIdFragCoord));
     }
     spirv::WriteEntryPoint(blobOut, spv::ExecutionModelFragment, spirv::IdRef(kIdMain), "main",
                            entryPointIds);
@@ -773,23 +822,33 @@ void InsertPreamble(uint32_t colorAttachmentCount,
     }
     spirv::WriteSource(blobOut, spv::SourceLanguageGLSL, spirv::LiteralInteger(450), nullptr,
                        nullptr);
+
+    if (unresolveImageType == UnresolveImageType::Texture)
+    {
+        spirv::WriteSourceExtension(blobOut, "GL_EXT_samplerless_texture_functions");
+    }
 }
 
 void InsertInputDecorations(spirv::IdRef id,
                             uint32_t attachmentIndex,
                             uint32_t binding,
+                            UnresolveImageType unresolveImageType,
                             angle::spirv::Blob *blobOut)
 {
     spirv::WriteDecorate(blobOut, id, spv::DecorationDescriptorSet,
                          {spirv::LiteralInteger(ToUnderlying(DescriptorSetIndex::Internal))});
     spirv::WriteDecorate(blobOut, id, spv::DecorationBinding, {spirv::LiteralInteger(binding)});
-    spirv::WriteDecorate(blobOut, id, spv::DecorationInputAttachmentIndex,
-                         {spirv::LiteralInteger(attachmentIndex)});
+    if (unresolveImageType == UnresolveImageType::Input)
+    {
+        spirv::WriteDecorate(blobOut, id, spv::DecorationInputAttachmentIndex,
+                             {spirv::LiteralInteger(attachmentIndex)});
+    }
 }
 
 void InsertColorDecorations(uint32_t colorIndex,
                             uint32_t colorInputIndexStart,
                             uint32_t colorBindingIndexStart,
+                            UnresolveImageType unresolveImageType,
                             angle::spirv::Blob *blobOut)
 {
     // Decorate the output color attachment with Location
@@ -798,12 +857,13 @@ void InsertColorDecorations(uint32_t colorIndex,
     // Decorate the subpasss input color attachment with Set/Binding/InputAttachmentIndex.
     InsertInputDecorations(spirv::IdRef(kIdColor0In + colorIndex),
                            colorIndex + colorInputIndexStart, colorIndex + colorBindingIndexStart,
-                           blobOut);
+                           unresolveImageType, blobOut);
 }
 
 void InsertDepthStencilDecorations(bool unresolveDepth,
                                    bool unresolveStencil,
                                    bool supportsShaderStencilExport,
+                                   UnresolveImageType unresolveImageType,
                                    uint32_t *nextInputIndex,
                                    uint32_t *nextBindingIndex,
                                    angle::spirv::Blob *blobOut)
@@ -819,7 +879,7 @@ void InsertDepthStencilDecorations(bool unresolveDepth,
                              {spirv::LiteralInteger(spv::BuiltInFragStencilRefEXT)});
         // Decorate the subpasss input stencil attachment with Set/Binding/InputAttachmentIndex.
         InsertInputDecorations(spirv::IdRef(kIdStencilIn), *nextInputIndex, *nextBindingIndex,
-                               blobOut);
+                               unresolveImageType, blobOut);
 
         // Advance the binding.  Note that the depth/stencil attachment has the same input
         // attachment index (it's the same attachment in the subpass), but different bindings (one
@@ -833,7 +893,7 @@ void InsertDepthStencilDecorations(bool unresolveDepth,
                              {spirv::LiteralInteger(spv::BuiltInFragDepth)});
         // Decorate the subpasss input depth attachment with Set/Binding/InputAttachmentIndex.
         InsertInputDecorations(spirv::IdRef(kIdDepthIn), *nextInputIndex, *nextBindingIndex,
-                               blobOut);
+                               unresolveImageType, blobOut);
 
         ++*nextBindingIndex;
     }
@@ -851,23 +911,39 @@ void InsertDerivativeTypes(spirv::IdRef baseId,
                            spirv::IdRef vec4OutId,
                            spirv::IdRef imageTypeId,
                            spirv::IdRef inputTypeId,
+                           UnresolveImageType unresolveImageType,
                            angle::spirv::Blob *blobOut)
 {
     spirv::WriteTypeVector(blobOut, vec4Id, baseId, spirv::LiteralInteger(4));
     spirv::WriteTypePointer(blobOut, vec4OutId, spv::StorageClassOutput, vec4Id);
-    spirv::WriteTypeImage(blobOut, imageTypeId, baseId, spv::DimSubpassData,
-                          // Unused with subpass inputs
-                          spirv::LiteralInteger(0),
-                          // Not arrayed
-                          spirv::LiteralInteger(0),
-                          // Not multisampled
-                          spirv::LiteralInteger(0),
-                          // Used without a sampler
-                          spirv::LiteralInteger(2), spv::ImageFormatUnknown, nullptr);
+    if (unresolveImageType == UnresolveImageType::Input)
+    {
+        spirv::WriteTypeImage(blobOut, imageTypeId, baseId, spv::DimSubpassData,
+                              // Unused with subpass inputs
+                              spirv::LiteralInteger(0),
+                              // Not arrayed
+                              spirv::LiteralInteger(0),
+                              // Not multisampled
+                              spirv::LiteralInteger(0),
+                              // Used without a sampler
+                              spirv::LiteralInteger(2), spv::ImageFormatUnknown, nullptr);
+    }
+    else
+    {
+        spirv::WriteTypeImage(blobOut, imageTypeId, baseId, spv::Dim2D,
+                              // Not a depth image
+                              spirv::LiteralInteger(0),
+                              // Not arrayed
+                              spirv::LiteralInteger(0),
+                              // Not multisampled
+                              spirv::LiteralInteger(0),
+                              // Used with a sampler
+                              spirv::LiteralInteger(1), spv::ImageFormatUnknown, nullptr);
+    }
     spirv::WriteTypePointer(blobOut, inputTypeId, spv::StorageClassUniformConstant, imageTypeId);
 }
 
-void InsertCommonTypes(angle::spirv::Blob *blobOut)
+void InsertCommonTypes(UnresolveImageType unresolveImageType, angle::spirv::Blob *blobOut)
 {
     // Types to support main().
     spirv::WriteTypeVoid(blobOut, spirv::IdRef(kIdVoid));
@@ -877,27 +953,33 @@ void InsertCommonTypes(angle::spirv::Blob *blobOut)
     spirv::WriteTypeFloat(blobOut, spirv::IdRef(kIdFloatType), spirv::LiteralInteger(32), nullptr);
     InsertDerivativeTypes(spirv::IdRef(kIdFloatType), spirv::IdRef(kIdFloat4Type),
                           spirv::IdRef(kIdFloat4OutType), spirv::IdRef(kIdFloatSubpassImageType),
-                          spirv::IdRef(kIdFloatSubpassInputType), blobOut);
+                          spirv::IdRef(kIdFloatSubpassInputType), unresolveImageType, blobOut);
 
     // Int types
     spirv::WriteTypeInt(blobOut, spirv::IdRef(kIdSIntType), spirv::LiteralInteger(32),
                         spirv::LiteralInteger(1));
     InsertDerivativeTypes(spirv::IdRef(kIdSIntType), spirv::IdRef(kIdSInt4Type),
                           spirv::IdRef(kIdSInt4OutType), spirv::IdRef(kIdSIntSubpassImageType),
-                          spirv::IdRef(kIdSIntSubpassInputType), blobOut);
+                          spirv::IdRef(kIdSIntSubpassInputType), unresolveImageType, blobOut);
 
     // Unsigned int types
     spirv::WriteTypeInt(blobOut, spirv::IdRef(kIdUIntType), spirv::LiteralInteger(32),
                         spirv::LiteralInteger(0));
     InsertDerivativeTypes(spirv::IdRef(kIdUIntType), spirv::IdRef(kIdUInt4Type),
                           spirv::IdRef(kIdUInt4OutType), spirv::IdRef(kIdUIntSubpassImageType),
-                          spirv::IdRef(kIdUIntSubpassInputType), blobOut);
+                          spirv::IdRef(kIdUIntSubpassInputType), unresolveImageType, blobOut);
 
     // Types to support depth/stencil
     spirv::WriteTypePointer(blobOut, spirv::IdRef(kIdFloatOutType), spv::StorageClassOutput,
                             spirv::IdRef(kIdFloatType));
     spirv::WriteTypePointer(blobOut, spirv::IdRef(kIdSIntOutType), spv::StorageClassOutput,
                             spirv::IdRef(kIdSIntType));
+
+    // Type to support gl_FragCoord
+    spirv::WriteTypeVector(blobOut, spirv::IdRef(kIdFloat2Type), spirv::IdRef(kIdFloatType),
+                           spirv::LiteralInteger(2));
+    spirv::WriteTypePointer(blobOut, spirv::IdRef(kIdFloat4InType), spv::StorageClassInput,
+                            spirv::IdRef(kIdFloat4Type));
 
     // Constants used to load from subpass inputs
     spirv::WriteConstant(blobOut, spirv::IdRef(kIdSIntType), spirv::IdRef(kIdSIntZero),
@@ -969,8 +1051,21 @@ void InsertTopOfMain(angle::spirv::Blob *blobOut)
     spirv::WriteLabel(blobOut, spirv::IdRef(kIdMainLabel));
 }
 
+void InsertFragCoordLoad(angle::spirv::Blob *blobOut)
+{
+    spirv::WriteLoad(blobOut, spirv::IdRef(kIdFloat4Type), spirv::IdRef(kIdFragCoordLoad),
+                     spirv::IdRef(kIdFragCoord), nullptr);
+    spirv::WriteVectorShuffle(blobOut, spirv::IdRef(kIdFloat2Type),
+                              spirv::IdRef(kIdFragCoordLoadXY), spirv::IdRef(kIdFragCoordLoad),
+                              spirv::IdRef(kIdFragCoordLoad),
+                              {spirv::LiteralInteger(0), spirv::LiteralInteger(1)});
+    spirv::WriteConvertFToS(blobOut, spirv::IdRef(kIdSInt2Type),
+                            spirv::IdRef(kIdFragCoordLoadXYInt), spirv::IdRef(kIdFragCoordLoadXY));
+}
+
 void InsertColorUnresolveLoadStore(uint32_t colorIndex,
                                    UnresolveColorAttachmentType type,
+                                   UnresolveImageType unresolveImageType,
                                    angle::spirv::Blob *blobOut)
 {
     spirv::IdRef loadResult(kIdColor0Load + colorIndex * 2);
@@ -997,13 +1092,23 @@ void InsertColorUnresolveLoadStore(uint32_t colorIndex,
 
     // Load the subpass input image, read from it, and store in output.
     spirv::WriteLoad(blobOut, loadType, loadResult, inId, nullptr);
-    spirv::WriteImageRead(blobOut, readType, imageReadResult, loadResult,
-                          spirv::IdRef(kIdSInt2Zero), nullptr, {});
+    if (unresolveImageType == UnresolveImageType::Input)
+    {
+        spirv::WriteImageRead(blobOut, readType, imageReadResult, loadResult,
+                              spirv::IdRef(kIdSInt2Zero), nullptr, {});
+    }
+    else
+    {
+        ASSERT(unresolveImageType == UnresolveImageType::Texture);
+        spirv::WriteImageFetch(blobOut, readType, imageReadResult, loadResult,
+                               spirv::IdRef(kIdFragCoordLoadXYInt), nullptr, {});
+    }
     spirv::WriteStore(blobOut, outId, imageReadResult, nullptr);
 }
 
 void InsertDepthStencilUnresolveLoadStore(bool unresolveDepth,
                                           bool unresolveStencil,
+                                          UnresolveImageType unresolveImageType,
                                           angle::spirv::Blob *blobOut)
 {
     if (unresolveDepth)
@@ -1019,8 +1124,16 @@ void InsertDepthStencilUnresolveLoadStore(bool unresolveDepth,
 
         // Load the subpass input image, read from it, select .x, and store in output.
         spirv::WriteLoad(blobOut, loadType, loadResult, inId, nullptr);
-        spirv::WriteImageRead(blobOut, readType, imageReadResult, loadResult,
-                              spirv::IdRef(kIdSInt2Zero), nullptr, {});
+        if (unresolveImageType == UnresolveImageType::Input)
+        {
+            spirv::WriteImageRead(blobOut, readType, imageReadResult, loadResult,
+                                  spirv::IdRef(kIdSInt2Zero), nullptr, {});
+        }
+        else
+        {
+            spirv::WriteImageFetch(blobOut, readType, imageReadResult, loadResult,
+                                   spirv::IdRef(kIdFragCoordLoadXYInt), nullptr, {});
+        }
         spirv::WriteCompositeExtract(blobOut, spirv::IdRef(kIdFloatType), extractResult,
                                      imageReadResult, {spirv::LiteralInteger(0)});
         spirv::WriteStore(blobOut, outId, extractResult, nullptr);
@@ -1041,8 +1154,16 @@ void InsertDepthStencilUnresolveLoadStore(bool unresolveDepth,
         // bitcast involved since the stencil subpass input has unsigned type, while
         // gl_FragStencilRefARB is signed!
         spirv::WriteLoad(blobOut, loadType, loadResult, inId, nullptr);
-        spirv::WriteImageRead(blobOut, readType, imageReadResult, loadResult,
-                              spirv::IdRef(kIdSInt2Zero), nullptr, {});
+        if (unresolveImageType == UnresolveImageType::Input)
+        {
+            spirv::WriteImageRead(blobOut, readType, imageReadResult, loadResult,
+                                  spirv::IdRef(kIdSInt2Zero), nullptr, {});
+        }
+        else
+        {
+            spirv::WriteImageFetch(blobOut, readType, imageReadResult, loadResult,
+                                   spirv::IdRef(kIdFragCoordLoadXYInt), nullptr, {});
+        }
         spirv::WriteCompositeExtract(blobOut, spirv::IdRef(kIdUIntType), extractResult,
                                      imageReadResult, {spirv::LiteralInteger(0)});
         spirv::WriteBitcast(blobOut, spirv::IdRef(kIdSIntType), bitcastResult, extractResult);
@@ -1061,6 +1182,7 @@ angle::spirv::Blob MakeFragShader(
     gl::DrawBuffersArray<UnresolveColorAttachmentType> &colorAttachmentTypes,
     bool unresolveDepth,
     bool unresolveStencil,
+    UnresolveImageType unresolveImageType,
     bool supportsShaderStencilExport)
 {
     const bool unresolveStencilWithShaderExport = unresolveStencil && supportsShaderStencilExport;
@@ -1074,22 +1196,31 @@ angle::spirv::Blob MakeFragShader(
     spirv::WriteSpirvHeader(&code, spirv::kVersion_1_0, kIdCount);
 
     // The preamble
-    InsertPreamble(colorAttachmentCount, unresolveDepth, unresolveStencilWithShaderExport, &code);
+    InsertPreamble(colorAttachmentCount, unresolveDepth, unresolveStencilWithShaderExport,
+                   unresolveImageType, &code);
 
     // Depth stencil decorations
     uint32_t colorInputIndexStart   = 0;
     uint32_t colorBindingIndexStart = 0;
     InsertDepthStencilDecorations(unresolveDepth, unresolveStencil, supportsShaderStencilExport,
-                                  &colorInputIndexStart, &colorBindingIndexStart, &code);
+                                  unresolveImageType, &colorInputIndexStart,
+                                  &colorBindingIndexStart, &code);
 
     // Color attachment decorations
     for (uint32_t colorIndex = 0; colorIndex < colorAttachmentCount; ++colorIndex)
     {
-        InsertColorDecorations(colorIndex, colorInputIndexStart, colorBindingIndexStart, &code);
+        InsertColorDecorations(colorIndex, colorInputIndexStart, colorBindingIndexStart,
+                               unresolveImageType, &code);
+    }
+    // gl_FragCoord decoration
+    if (unresolveImageType == UnresolveImageType::Texture)
+    {
+        spirv::WriteDecorate(&code, spirv::IdRef(kIdFragCoord), spv::DecorationBuiltIn,
+                             {spirv::LiteralInteger(spv::BuiltInFragCoord)});
     }
 
     // Common types
-    InsertCommonTypes(&code);
+    InsertCommonTypes(unresolveImageType, &code);
 
     // Attachment declarations
     for (uint32_t colorIndex = 0; colorIndex < colorAttachmentCount; ++colorIndex)
@@ -1097,16 +1228,28 @@ angle::spirv::Blob MakeFragShader(
         InsertColorVariableDecl(colorIndex, colorAttachmentTypes[colorIndex], &code);
     }
     InsertDepthStencilVariableDecl(unresolveDepth, unresolveStencilWithShaderExport, &code);
+    // gl_FragCoord declaration
+    if (unresolveImageType == UnresolveImageType::Texture)
+    {
+        spirv::WriteVariable(&code, spirv::IdRef(kIdFloat4InType), spirv::IdRef(kIdFragCoord),
+                             spv::StorageClassInput, nullptr);
+    }
 
     // Top of main
     InsertTopOfMain(&code);
 
+    if (unresolveImageType == UnresolveImageType::Texture)
+    {
+        InsertFragCoordLoad(&code);
+    }
     // Load and store for each attachment
     for (uint32_t colorIndex = 0; colorIndex < colorAttachmentCount; ++colorIndex)
     {
-        InsertColorUnresolveLoadStore(colorIndex, colorAttachmentTypes[colorIndex], &code);
+        InsertColorUnresolveLoadStore(colorIndex, colorAttachmentTypes[colorIndex],
+                                      unresolveImageType, &code);
     }
-    InsertDepthStencilUnresolveLoadStore(unresolveDepth, unresolveStencilWithShaderExport, &code);
+    InsertDepthStencilUnresolveLoadStore(unresolveDepth, unresolveStencilWithShaderExport,
+                                         unresolveImageType, &code);
 
     // Bottom of main
     InsertBottomOfMain(&code);
@@ -1121,6 +1264,7 @@ angle::Result GetUnresolveFrag(
     gl::DrawBuffersArray<UnresolveColorAttachmentType> &colorAttachmentTypes,
     bool unresolveDepth,
     bool unresolveStencil,
+    unresolve::UnresolveImageType unresolveImageType,
     vk::ShaderModulePtr *shader)
 {
     if (*shader)
@@ -1131,7 +1275,7 @@ angle::Result GetUnresolveFrag(
 
     angle::spirv::Blob shaderCode = unresolve::MakeFragShader(
         colorAttachmentCount, colorAttachmentTypes, unresolveDepth, unresolveStencil,
-        context->getFeatures().supportsShaderStencilExport.enabled);
+        unresolveImageType, context->getFeatures().supportsShaderStencilExport.enabled);
 
     ASSERT(spirv::Validate(shaderCode));
 
@@ -1318,7 +1462,6 @@ angle::Result setupUnresolveRenderPass(ContextVk *contextVk,
 
     vk::RenderPassDesc renderPassDesc;
     renderPassDesc.setSamples(framebuffer->getSamples());
-    renderPassDesc.setDynamicMSRTTUnresolve(true);
 
     // In the unresolve operation the resolve images are the source and the multisampled images
     // are the destination.
@@ -1574,8 +1717,11 @@ void UtilsVk::destroy(ContextVk *contextVk)
         programAndPipelines.program.destroy(renderer);
         programAndPipelines.pipelines.destroy(contextVk);
     }
-    mExportStencil.program.destroy(renderer);
-    mExportStencil.pipelines.destroy(contextVk);
+    for (GraphicsShaderProgramAndPipelines &programAndPipelines : mExportStencil)
+    {
+        programAndPipelines.program.destroy(renderer);
+        programAndPipelines.pipelines.destroy(contextVk);
+    }
     for (ComputeShaderProgramAndPipelines &programAndPipelines : mGenerateMipmap)
     {
         programAndPipelines.program.destroy(renderer);
@@ -1872,7 +2018,8 @@ angle::Result UtilsVk::ensureBlitResolveStencilNoExportResourcesInitialized(Cont
     return ensureSamplersInitialized(contextVk);
 }
 
-angle::Result UtilsVk::ensureExportStencilResourcesInitialized(ContextVk *contextVk)
+angle::Result UtilsVk::ensureExportStencilResourcesInitialized(ContextVk *contextVk,
+                                                               VkDescriptorType descriptorType)
 {
     if (mPipelineLayouts[Function::ExportStencil])
     {
@@ -1880,7 +2027,7 @@ angle::Result UtilsVk::ensureExportStencilResourcesInitialized(ContextVk *contex
     }
 
     VkDescriptorPoolSize setSizes[1] = {
-        {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1},
+        {descriptorType, 1},
     };
 
     return ensureResourcesInitialized(contextVk, Function::ExportStencil, setSizes,
@@ -1920,20 +2067,16 @@ angle::Result UtilsVk::ensureTransCodeEtcToBcResourcesInitialized(ContextVk *con
 
 angle::Result UtilsVk::ensureUnresolveResourcesInitialized(ContextVk *contextVk,
                                                            Function function,
-                                                           uint32_t attachmentCount)
+                                                           uint32_t attachmentCount,
+                                                           VkDescriptorType descriptorType)
 {
-    ASSERT(static_cast<uint32_t>(function) -
-               static_cast<uint32_t>(Function::Unresolve1Attachment) ==
-           attachmentCount - 1);
-
     if (mPipelineLayouts[function])
     {
         return angle::Result::Continue;
     }
 
     vk::FramebufferAttachmentArray<VkDescriptorPoolSize> setSizes;
-    std::fill(setSizes.begin(), setSizes.end(),
-              VkDescriptorPoolSize{VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1});
+    std::fill(setSizes.begin(), setSizes.end(), VkDescriptorPoolSize{descriptorType, 1});
 
     return ensureResourcesInitialized(contextVk, function, setSizes.data(), attachmentCount, 0);
 }
@@ -4973,6 +5116,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     ASSERT(!contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled);
 
     vk::Renderer *renderer = contextVk->getRenderer();
+    const bool useDynamicRendering = renderer->getFeatures().preferDynamicRendering.enabled;
 
     // Get attachment count and pointers to resolve images and views.
     gl::DrawBuffersArray<vk::ImageHelper *> colorSrc         = {};
@@ -5020,7 +5164,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     }
 
     // Setup and start a renderpass if unresolve is using dynamic rendering.
-    if (params.useDynamicRendering)
+    if (useDynamicRendering)
     {
         ANGLE_TRY(setupUnresolveRenderPass(contextVk, framebuffer, params, colorSrc));
     }
@@ -5068,13 +5212,17 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
 
     const VkImageLayout readLayout =
         renderer->getVkImageLayout(vk::ImageAccess::FragmentShaderReadOnly);
+    VkDescriptorType descriptorType = useDynamicRendering ? VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE
+                                                          : VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
 
     if (totalBindingCount > 0)
     {
-        const Function function = static_cast<Function>(
-            static_cast<uint32_t>(Function::Unresolve1Attachment) + totalBindingCount - 1);
+        Function baseFunction = Function::Unresolve1Attachment;
+        const Function function =
+            static_cast<Function>(static_cast<uint32_t>(baseFunction) + totalBindingCount - 1);
 
-        ANGLE_TRY(ensureUnresolveResourcesInitialized(contextVk, function, totalBindingCount));
+        ANGLE_TRY(ensureUnresolveResourcesInitialized(contextVk, function, totalBindingCount,
+                                                      descriptorType));
 
         if (params.unresolveDepth)
         {
@@ -5121,7 +5269,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         writeInfo.dstSet               = descriptorSet;
         writeInfo.dstBinding           = 0;
         writeInfo.descriptorCount      = totalBindingCount;
-        writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
+        writeInfo.descriptorType       = descriptorType;
         writeInfo.pImageInfo           = inputImageInfo.data();
 
         VK_CALL(vkUpdateDescriptorSets, contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
@@ -5130,10 +5278,13 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         uint32_t flags = GetUnresolveFlags(colorAttachmentCount, colorSrc, params.unresolveDepth,
                                            params.unresolveStencil, &colorAttachmentTypes);
 
+        const unresolve::UnresolveImageType unresolveImageType =
+            useDynamicRendering ? unresolve::UnresolveImageType::Texture
+                                : unresolve::UnresolveImageType::Input;
         vk::ShaderModulePtr &fragmentShader = mUnresolveFragShaders[flags];
         ANGLE_TRY(GetUnresolveFrag(contextVk, colorAttachmentCount, colorAttachmentTypes,
                                    params.unresolveDepth, params.unresolveStencil,
-                                   &fragmentShader));
+                                   unresolveImageType, &fragmentShader));
 
         ANGLE_TRY(setupGraphicsProgram(contextVk, function, vertexShader, fragmentShader,
                                        &mUnresolve[flags], &pipelineDesc, descriptorSet, nullptr, 0,
@@ -5174,7 +5325,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     // requires that the stencil is cleared to 0 beforehand.
     if (params.unresolveStencil && !unresolveStencilWithShaderExport)
     {
-        ANGLE_TRY(ensureExportStencilResourcesInitialized(contextVk));
+        ANGLE_TRY(ensureExportStencilResourcesInitialized(contextVk, descriptorType));
 
         // Disable color and depth output, and only let stencil through.
         pipelineDesc.setColorWriteMasks(0, gl::DrawBufferMask(), gl::DrawBufferMask());
@@ -5182,8 +5333,9 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         SetDepthStateForUnused(renderer, &pipelineDesc);
         SetStencilStateForWrite(renderer, &pipelineDesc);
 
+        uint32_t flags = useDynamicRendering ? ExportStencil_frag::kUseTexture : 0;
         vk::ShaderModulePtr exportStencilShader;
-        ANGLE_TRY(shaderLibrary.getExportStencil_frag(contextVk, 0, &exportStencilShader));
+        ANGLE_TRY(shaderLibrary.getExportStencil_frag(contextVk, flags, &exportStencilShader));
 
         // A new descriptor set is needed to match the layout of the ExportStencil program.
         VkDescriptorSet exportStencilDescriptorSet;
@@ -5199,13 +5351,13 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         stencilWriteInfo.dstSet               = exportStencilDescriptorSet;
         stencilWriteInfo.dstBinding           = 0;
         stencilWriteInfo.descriptorCount      = 1;
-        stencilWriteInfo.descriptorType       = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
+        stencilWriteInfo.descriptorType       = descriptorType;
         stencilWriteInfo.pImageInfo           = &stencilImageInfo;
 
         VK_CALL(vkUpdateDescriptorSets, contextVk->getDevice(), 1, &stencilWriteInfo, 0, nullptr);
 
         ANGLE_TRY(setupGraphicsProgram(contextVk, Function::ExportStencil, vertexShader,
-                                       exportStencilShader, &mExportStencil, &pipelineDesc,
+                                       exportStencilShader, &mExportStencil[flags], &pipelineDesc,
                                        exportStencilDescriptorSet, nullptr, 0, commandBuffer));
 
         SetDepthDynamicStateForUnused(renderer, commandBuffer);
@@ -5227,16 +5379,16 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
             ExportStencilShaderParams shaderParams;
             shaderParams.bit = bit;
 
-            commandBuffer->pushConstants(
-                *mPipelineLayouts[Function::ExportStencil], VK_SHADER_STAGE_FRAGMENT_BIT, 0,
-                /*static_cast<uint32_t>*/ (sizeof(shaderParams)), &shaderParams);
+            commandBuffer->pushConstants(*mPipelineLayouts[Function::ExportStencil],
+                                         VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(shaderParams),
+                                         &shaderParams);
 
             commandBuffer->draw(3, 0);
         }
         contextVk->invalidateGraphicsDriverUniforms();
     }
 
-    if (params.useDynamicRendering)
+    if (useDynamicRendering)
     {
         // Close the render pass for this temporary framebuffer.
         return contextVk->flushCommandsAndEndRenderPass(

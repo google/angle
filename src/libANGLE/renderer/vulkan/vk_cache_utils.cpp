@@ -86,11 +86,6 @@ VkAttachmentStoreOp ConvertRenderPassStoreOpToVkStoreOp(RenderPassStoreOp storeO
                                               : static_cast<VkAttachmentStoreOp>(storeOp);
 }
 
-constexpr gl::DrawBuffersArray<uint32_t> kUnusedInputIndices = {
-    VK_ATTACHMENT_UNUSED, VK_ATTACHMENT_UNUSED, VK_ATTACHMENT_UNUSED, VK_ATTACHMENT_UNUSED,
-    VK_ATTACHMENT_UNUSED, VK_ATTACHMENT_UNUSED, VK_ATTACHMENT_UNUSED, VK_ATTACHMENT_UNUSED};
-static_assert(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS == 8);
-
 constexpr size_t TransitionBits(size_t size)
 {
     return size / kGraphicsPipelineDirtyBitBytes;
@@ -653,30 +648,19 @@ void AttachPipelineRenderingInfo(ErrorContext *context,
     // Note: VkRenderingInputAttachmentIndexInfoKHR only affects the fragment stage subset, and is
     // needed only when the shaders stage is not coming from a pipeline library (where this mapping
     // is already specified).
-    if ((desc.hasColorFramebufferFetch() || desc.isDynamicMSRTTUnresolve()) &&
-        shadersSource == ShadersStateSource::ThisPipeline && GraphicsPipelineHasShaders(subset))
+    if (desc.hasColorFramebufferFetch() && shadersSource == ShadersStateSource::ThisPipeline &&
+        GraphicsPipelineHasShaders(subset))
     {
         *inputLocationsOut       = {};
         inputLocationsOut->sType = VK_STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR;
-        if (desc.hasColorFramebufferFetch())
-        {
-            inputLocationsOut->colorAttachmentCount =
-                renderingInfo.renderingInfo.colorAttachmentCount;
-            inputLocationsOut->pColorAttachmentInputIndices =
-                renderingInfo.colorAttachmentLocations.data();
-            // Note: for depth/stencil, there is no need to explicitly set
-            // |pDepthInputAttachmentIndex|, |pStencilInputAttachmentIndex|.  When NULL, they
-            // automatically map to input attachments without a |InputAttachmentIndex| decoration,
-            // which is exactly how ANGLE produces its SPIR-V.
-        }
-        else if (desc.isDynamicMSRTTUnresolve())
-        {
-            inputLocationsOut->colorAttachmentCount =
-                renderingInfo.renderingInfo.colorAttachmentCount;
-            inputLocationsOut->pColorAttachmentInputIndices = kUnusedInputIndices.data();
-            inputLocationsOut->pDepthInputAttachmentIndex   = kUnusedInputIndices.data();
-            inputLocationsOut->pStencilInputAttachmentIndex = kUnusedInputIndices.data();
-        }
+        inputLocationsOut->colorAttachmentCount = renderingInfo.renderingInfo.colorAttachmentCount;
+        inputLocationsOut->pColorAttachmentInputIndices =
+            renderingInfo.colorAttachmentLocations.data();
+
+        // Note: for depth/stencil, there is no need to explicitly set
+        // |pDepthInputAttachmentIndex|, |pStencilInputAttachmentIndex|.  When NULL, they
+        // automatically map to input attachments without a |InputAttachmentIndex| decoration,
+        // which is exactly how ANGLE produces its SPIR-V.
 
         AddToPNextChain(createInfoOut, inputLocationsOut);
     }
@@ -3041,17 +3025,6 @@ void RenderPassDesc::beginRendering(
         inputLocations.sType = VK_STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR;
         inputLocations.colorAttachmentCount         = info.renderingInfo.colorAttachmentCount;
         inputLocations.pColorAttachmentInputIndices = info.colorAttachmentLocations.data();
-
-        primary->setRenderingInputAttachmentIndicates(&inputLocations);
-    }
-    else if (isDynamicMSRTTUnresolve())
-    {
-        VkRenderingInputAttachmentIndexInfoKHR inputLocations = {};
-        inputLocations.sType = VK_STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR;
-        inputLocations.colorAttachmentCount         = info.renderingInfo.colorAttachmentCount;
-        inputLocations.pColorAttachmentInputIndices = kUnusedInputIndices.data();
-        inputLocations.pDepthInputAttachmentIndex   = kUnusedInputIndices.data();
-        inputLocations.pStencilInputAttachmentIndex = kUnusedInputIndices.data();
 
         primary->setRenderingInputAttachmentIndicates(&inputLocations);
     }
