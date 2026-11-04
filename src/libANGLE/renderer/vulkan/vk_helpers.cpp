@@ -3357,12 +3357,17 @@ VkResult BufferPool::allocateNewBuffer(ErrorContext *context, VkDeviceSize sizeI
     // First ensure we are not exceeding the heapSize to avoid the validation error.
     VK_RESULT_CHECK(sizeInBytes <= heapSize, VK_ERROR_OUT_OF_DEVICE_MEMORY);
 
-    // Double the size until the requirement is met. This also helps reduce fragmentation. Since
-    // this is global pool, we have less worry about memory waste.
-    // If this is the first buffer block allocation from an empty pool, the initial size is used.
-    // However, the preferred size will be used for future blocks in the same pool.
+    // The first block of an empty pool uses the initial size. Each following block is twice the
+    // largest live block, up to the preferred size, so block sizes grow geometrically. Blocks are
+    // appended to mBufferBlocks in non-decreasing size order, so the last block is the largest.
     ASSERT(mInitialSize <= mPreferredSize);
-    VkDeviceSize newSize = mBufferBlocks.empty() ? mInitialSize : mPreferredSize;
+    VkDeviceSize newSize = mInitialSize;
+    if (!mBufferBlocks.empty())
+    {
+        newSize =
+            std::max(newSize, std::min(mBufferBlocks.back()->getMemorySize() * 2, mPreferredSize));
+    }
+    // Double the size until the requirement is met.
     while (newSize < sizeInBytes)
     {
         newSize <<= 1;
@@ -3410,7 +3415,9 @@ VkResult BufferPool::allocateNewBuffer(ErrorContext *context, VkDeviceSize sizeI
     }
 
     mTotalMemorySize += block->getMemorySize();
-    // Append the bufferBlock into the pool
+    // Append the bufferBlock into the pool. Blocks are kept in non-decreasing size order.
+    ASSERT(mBufferBlocks.empty() ||
+           mBufferBlocks.back()->getMemorySize() <= block->getMemorySize());
     mBufferBlocks.push_back(std::move(block));
     context->getPerfCounters().allocateNewBufferBlockCalls++;
 
@@ -3514,6 +3521,9 @@ VkResult BufferPool::allocateBuffer(ErrorContext *context,
         {
             VK_RESULT_TRY(block->allocate(alignedSize, alignment, &allocation, &offset));
             suballocation->init(block.get(), allocation, offset, alignedSize);
+            // Reused empty blocks are at least mSize, so the size order of mBufferBlocks holds.
+            ASSERT(mBufferBlocks.empty() ||
+                   mBufferBlocks.back()->getMemorySize() <= block->getMemorySize());
             mBufferBlocks.push_back(std::move(block));
             mEmptyBufferBlocks.pop_back();
             mNumberOfNewBuffersNeededSinceLastPrune++;

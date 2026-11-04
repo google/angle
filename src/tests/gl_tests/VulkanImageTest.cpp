@@ -61,6 +61,36 @@ class VulkanMemoryTest : public ANGLETest<>
                                                VkDeviceSize *totalDeviceMemorySizeOut);
 };
 
+class VulkanMemoryBlockGrowthTest : public ANGLETest<>
+{
+  protected:
+    // Creates an RGBA8 texture filled with |color|, or with the contents of the bound
+    // GL_PIXEL_UNPACK_BUFFER if |color| is nullptr.
+    void createTexture(GLTexture &texture, GLsizei width, GLsizei height, const GLColor *color)
+    {
+        std::vector<GLColor> data;
+        if (color != nullptr)
+        {
+            data.assign(static_cast<size_t>(width) * height, *color);
+        }
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE,
+                        color != nullptr ? data.data() : nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    void verifyTexture(GLTexture &texture, GLsizei width, GLsizei height, const GLColor &color)
+    {
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_RECT_EQ(0, 0, width, height, color);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+};
+
 bool VulkanMemoryTest::compatibleMemorySizesForDeviceOOMTest(VkPhysicalDevice physicalDevice,
                                                              VkDeviceSize *totalDeviceMemorySizeOut)
 {
@@ -1116,6 +1146,63 @@ TEST_P(VulkanRGB565Test, ImportRGB565)
     vkFreeMemory(helper.getDevice(), vkDeviceMemory, nullptr);
 }
 
+// Test that buffers whose sizes land in each step of the buffer block growth (initial block, 2MB
+// and 4MB blocks, default block, dedicated memory) keep their contents, also after they are freed
+// and allocated again. Texture uploads from client memory use staging buffers from the same pools.
+TEST_P(VulkanMemoryBlockGrowthTest, BuffersOfIncreasingSize)
+{
+    // RGBA8 sizes: 256KB, 1.5MB, 3MB, 3MB and 6MB.
+    struct Size
+    {
+        GLsizei width;
+        GLsizei height;
+    };
+    constexpr std::array<Size, 5> kSizes = {{
+        {256, 256},
+        {768, 512},
+        {1024, 768},
+        {1024, 768},
+        {1536, 1024},
+    }};
+    const std::array<GLColor, 5> kColors = {GLColor::red, GLColor::green, GLColor::blue,
+                                            GLColor::yellow, GLColor::magenta};
+
+    for (int iteration = 0; iteration < 2; ++iteration)
+    {
+        std::array<GLTexture, kSizes.size()> textures;
+        for (size_t i = 0; i < kSizes.size(); ++i)
+        {
+            createTexture(textures[i], kSizes[i].width, kSizes[i].height, &kColors[i]);
+        }
+
+        // Fill buffers of the same sizes, and upload each one into a texture to verify it.
+        std::array<GLBuffer, kSizes.size()> buffers;
+        std::array<GLTexture, kSizes.size()> bufferTextures;
+        for (size_t i = 0; i < kSizes.size(); ++i)
+        {
+            const GLColor &color = kColors[kSizes.size() - 1 - i];
+            std::vector<GLColor> data(static_cast<size_t>(kSizes[i].width) * kSizes[i].height,
+                                      color);
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffers[i]);
+            glBufferData(GL_PIXEL_UNPACK_BUFFER, data.size() * sizeof(GLColor), data.data(),
+                         GL_STATIC_DRAW);
+            createTexture(bufferTextures[i], kSizes[i].width, kSizes[i].height, nullptr);
+        }
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+        for (size_t i = 0; i < kSizes.size(); ++i)
+        {
+            verifyTexture(textures[i], kSizes[i].width, kSizes[i].height, kColors[i]);
+            verifyTexture(bufferTextures[i], kSizes[i].width, kSizes[i].height,
+                          kColors[kSizes.size() - 1 - i]);
+        }
+
+        // Free everything and end the frame, so that empty buffer blocks can be pruned before the
+        // next iteration allocates again.
+        swapBuffers();
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(VulkanImageTest,
@@ -1126,5 +1213,6 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     ES3_VULKAN().enable(Feature::ForceFallbackFormat),
     ES3_VULKAN().enable(Feature::PreferBGR565ToRGB565).enable(Feature::ForceFallbackFormat));
 ANGLE_INSTANTIATE_TEST_ES3(VulkanMemoryTest);
+ANGLE_INSTANTIATE_TEST(VulkanMemoryBlockGrowthTest, ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER());
 
 }  // namespace angle
