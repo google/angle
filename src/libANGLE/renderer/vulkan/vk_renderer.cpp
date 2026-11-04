@@ -6072,12 +6072,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsPrimitiveTopologyListRestart,
         mPrimitiveTopologyListRestartFeatures.primitiveTopologyListRestart == VK_TRUE);
 
-    // Adreno 702 applies advanced blend twice to some samples of multisampled pixels covered by two
-    // primitives sharing an edge; the framebuffer fetch emulation renders them correctly.
+    // Adreno 622 and 702 misrender pixels along shared primitive edges with
+    // VK_EXT_blend_operation_advanced; framebuffer fetch emulation renders them correctly.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsBlendOperationAdvanced,
         ExtensionFound(VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME, deviceExtensionNames) &&
-            !(isQualcommProprietary && isAdreno702));
+            !(isQualcommProprietary && (isAdreno622 || isAdreno702)));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsFormatFeatureFlags2,
