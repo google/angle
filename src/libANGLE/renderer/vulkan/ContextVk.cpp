@@ -5823,10 +5823,20 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING:
             {
-                gl::AttributesMask staleDefaultAttribsMask =
-                    vertexArrayVk->getCurrentDefaultAttribsMask() &
-                    ~programExecutable->getAttributesMask();
-                vertexArrayVk->syncDirtyDisabledAttribs(this, staleDefaultAttribsMask);
+                // The default attribute buffers cached in the newly bound vertex array are
+                // suballocated from mStreamedVertexBuffers, which may have been reallocated (and
+                // the old BufferHelpers freed) while this vertex array was not bound.  Reset all of
+                // them to the empty buffer; the active ones are reallocated by
+                // handleDirtyGraphicsDefaultAttribs() before they are used.
+                //
+                // Note that the active ones cannot be left stale in anticipation of that update:
+                // the state may be synced without a draw (e.g. a multi-draw where every draw is a
+                // no-op), and the program may change before the next draw.  In that case,
+                // handleDirtyGraphicsDefaultAttribs() skips attributes that are not used by the new
+                // program, while the vertex buffers handler still binds (and tracks) every
+                // attribute up to the program's max active attribute location.
+                vertexArrayVk->syncDirtyDisabledAttribs(
+                    this, vertexArrayVk->getCurrentDefaultAttribsMask());
                 invalidateDefaultAttributes(context->getActiveDefaultAttribsMask());
                 ANGLE_TRY(onVertexArrayChange(vertexArrayVk->getCurrentEnabledAttribsMask()));
                 ANGLE_TRY(onIndexBufferChange(vertexArrayVk->getCurrentElementArrayBuffer()));
