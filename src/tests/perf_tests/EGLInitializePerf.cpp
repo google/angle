@@ -8,11 +8,12 @@
 //
 
 #include "ANGLEPerfTest.h"
-#include "common/unsafe_buffers.h"
 #include "platform/PlatformMethods.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
 #include "util/Timer.h"
+
+#include <string_view>
 
 using namespace testing;
 
@@ -41,18 +42,19 @@ void CapturePlatform_histogramCustomCounts(angle::PlatformMethods *platformMetho
                                            int /*bucketCount*/)
 {
     Captures *captures = static_cast<Captures *>(platformMethods->context);
+    const std::string_view histogramName(name);
 
     // These must match the names of the histograms.
-    if (ANGLE_UNSAFE_TODO(strcmp(name, "GPU.ANGLE.Renderer11InitializeDLLsMS")) == 0)
+    if (histogramName == "GPU.ANGLE.Renderer11InitializeDLLsMS")
     {
         captures->loadDLLsMS += static_cast<size_t>(sample);
     }
     // Note: not captured in debug, due to creating a debug device
-    else if (ANGLE_UNSAFE_TODO(strcmp(name, "GPU.ANGLE.D3D11CreateDeviceMS")) == 0)
+    else if (histogramName == "GPU.ANGLE.D3D11CreateDeviceMS")
     {
         captures->createDeviceMS += static_cast<size_t>(sample);
     }
-    else if (ANGLE_UNSAFE_TODO(strcmp(name, "GPU.ANGLE.Renderer11InitializeDeviceMS")) == 0)
+    else if (histogramName == "GPU.ANGLE.Renderer11InitializeDeviceMS")
     {
         captures->initResourcesMS += static_cast<size_t>(sample);
     }

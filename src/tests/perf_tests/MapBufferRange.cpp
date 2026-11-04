@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "common/debug.h"
+#include "common/span.h"
 #include "test_utils/draw_call_perf_utils.h"
 
 using namespace angle;
@@ -76,17 +77,17 @@ class MapBufferRangeBenchmark : public ANGLERenderTest,
     int mNumUpdateTris;
 };
 
-const GLfloat *GetFloatData(GLint componentCount)
+Span<const GLfloat> GetFloatData(GLint componentCount)
 {
-    static GLfloat vertices2[] = {
+    static constexpr GLfloat vertices2[] = {
         1, 2, 0, 0, 2, 0,
     };
 
-    static GLfloat vertices3[] = {
+    static constexpr GLfloat vertices3[] = {
         1, 2, 1, 0, 0, 1, 2, 0, 1,
     };
 
-    static GLfloat vertices4[] = {
+    static constexpr GLfloat vertices4[] = {
         1, 2, 1, 3, 0, 0, 1, 3, 2, 0, 1, 3,
     };
 
@@ -102,23 +103,21 @@ const GLfloat *GetFloatData(GLint componentCount)
             UNREACHABLE();
     }
 
-    return 0;
+    return {};
 }
 
 template <class T>
-GLsizei GetNormalizedData(GLsizeiptr numElements,
-                          const GLfloat *floatData,
-                          std::vector<uint8_t> *data)
+GLsizei GetNormalizedData(Span<const GLfloat> floatData, std::vector<uint8_t> *data)
 {
-    GLsizei triDataSize = sizeof(T) * numElements;
+    GLsizei triDataSize = sizeof(T) * floatData.size();
     data->resize(triDataSize);
 
-    T *destPtr = ANGLE_UNSAFE_TODO(reinterpret_cast<T *>(data->data()));
+    Span<T> dest = reinterpret_span<T>(Span(*data));
 
-    for (GLsizeiptr dataIndex = 0; dataIndex < numElements; dataIndex++)
+    for (size_t dataIndex = 0; dataIndex < floatData.size(); dataIndex++)
     {
-        GLfloat scaled = ANGLE_UNSAFE_TODO(floatData[dataIndex]) * 0.25f;
-        ANGLE_UNSAFE_TODO(destPtr[dataIndex]) =
+        GLfloat scaled = floatData[dataIndex] * 0.25f;
+        dest[dataIndex] =
             static_cast<T>(scaled * static_cast<GLfloat>(std::numeric_limits<T>::max()));
     }
 
@@ -126,17 +125,16 @@ GLsizei GetNormalizedData(GLsizeiptr numElements,
 }
 
 template <class T>
-GLsizei GetIntData(GLsizeiptr numElements, const GLfloat *floatData, std::vector<uint8_t> *data)
+GLsizei GetIntData(Span<const GLfloat> floatData, std::vector<uint8_t> *data)
 {
-    GLsizei triDataSize = sizeof(T) * numElements;
+    GLsizei triDataSize = sizeof(T) * floatData.size();
     data->resize(triDataSize);
 
-    T *destPtr = ANGLE_UNSAFE_TODO(reinterpret_cast<T *>(data->data()));
+    Span<T> dest = reinterpret_span<T>(Span(*data));
 
-    for (GLsizeiptr dataIndex = 0; dataIndex < numElements; dataIndex++)
+    for (size_t dataIndex = 0; dataIndex < floatData.size(); dataIndex++)
     {
-        ANGLE_UNSAFE_TODO(destPtr[dataIndex]) =
-            static_cast<T>(ANGLE_UNSAFE_TODO(floatData[dataIndex]));
+        dest[dataIndex] = static_cast<T>(floatData[dataIndex]);
     }
 
     return triDataSize;
@@ -147,73 +145,56 @@ GLsizei GetVertexData(GLenum type,
                       GLboolean normalized,
                       std::vector<uint8_t> *data)
 {
-    GLsizei triDataSize      = 0;
-    const GLfloat *floatData = GetFloatData(componentCount);
+    Span<const GLfloat> floatData = GetFloatData(componentCount);
 
     if (type == GL_FLOAT)
     {
-        triDataSize = sizeof(GLfloat) * componentCount * 3;
+        const GLsizei triDataSize = sizeof(GLfloat) * componentCount * 3;
         data->resize(triDataSize);
-        ANGLE_UNSAFE_TODO(memcpy(data->data(), floatData, triDataSize));
+        Span(*data).copy_from(as_bytes(floatData));
+        return triDataSize;
     }
-    else if (normalized == GL_TRUE)
-    {
-        GLsizeiptr numElements = componentCount * 3;
 
+    if (normalized == GL_TRUE)
+    {
         switch (type)
         {
             case GL_BYTE:
-                triDataSize = GetNormalizedData<GLbyte>(numElements, floatData, data);
-                break;
+                return GetNormalizedData<GLbyte>(floatData, data);
             case GL_SHORT:
-                triDataSize = GetNormalizedData<GLshort>(numElements, floatData, data);
-                break;
+                return GetNormalizedData<GLshort>(floatData, data);
             case GL_INT:
-                triDataSize = GetNormalizedData<GLint>(numElements, floatData, data);
-                break;
+                return GetNormalizedData<GLint>(floatData, data);
             case GL_UNSIGNED_BYTE:
-                triDataSize = GetNormalizedData<GLubyte>(numElements, floatData, data);
-                break;
+                return GetNormalizedData<GLubyte>(floatData, data);
             case GL_UNSIGNED_SHORT:
-                triDataSize = GetNormalizedData<GLushort>(numElements, floatData, data);
-                break;
+                return GetNormalizedData<GLushort>(floatData, data);
             case GL_UNSIGNED_INT:
-                triDataSize = GetNormalizedData<GLuint>(numElements, floatData, data);
-                break;
+                return GetNormalizedData<GLuint>(floatData, data);
             default:
                 UNREACHABLE();
+                return 0;
         }
     }
-    else
+
+    switch (type)
     {
-        GLsizeiptr numElements = componentCount * 3;
-
-        switch (type)
-        {
-            case GL_BYTE:
-                triDataSize = GetIntData<GLbyte>(numElements, floatData, data);
-                break;
-            case GL_SHORT:
-                triDataSize = GetIntData<GLshort>(numElements, floatData, data);
-                break;
-            case GL_INT:
-                triDataSize = GetIntData<GLint>(numElements, floatData, data);
-                break;
-            case GL_UNSIGNED_BYTE:
-                triDataSize = GetIntData<GLubyte>(numElements, floatData, data);
-                break;
-            case GL_UNSIGNED_SHORT:
-                triDataSize = GetIntData<GLushort>(numElements, floatData, data);
-                break;
-            case GL_UNSIGNED_INT:
-                triDataSize = GetIntData<GLuint>(numElements, floatData, data);
-                break;
-            default:
-                assert(0);
-        }
+        case GL_BYTE:
+            return GetIntData<GLbyte>(floatData, data);
+        case GL_SHORT:
+            return GetIntData<GLshort>(floatData, data);
+        case GL_INT:
+            return GetIntData<GLint>(floatData, data);
+        case GL_UNSIGNED_BYTE:
+            return GetIntData<GLubyte>(floatData, data);
+        case GL_UNSIGNED_SHORT:
+            return GetIntData<GLushort>(floatData, data);
+        case GL_UNSIGNED_INT:
+            return GetIntData<GLuint>(floatData, data);
+        default:
+            assert(0);
+            return 0;
     }
-
-    return triDataSize;
 }
 
 std::string MapBufferRangeParams::story() const
@@ -309,9 +290,10 @@ void MapBufferRangeBenchmark::initializeBenchmark()
 
     mVertexData.resize(params.bufferSize);
 
+    Span vertexData(mVertexData);
     for (int i = 1; i < totalTris; ++i)
     {
-        ANGLE_UNSAFE_TODO(memcpy(mVertexData.data() + i * mTriSize, mVertexData.data(), mTriSize));
+        vertexData.subspan(i * mTriSize, mTriSize).copy_from(vertexData.first(mTriSize));
     }
 
     if (params.updateSize == 0)

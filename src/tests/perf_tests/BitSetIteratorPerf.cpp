@@ -8,7 +8,8 @@
 //
 
 #include "ANGLEPerfTest.h"
-#include "common/unsafe_buffers.h"
+
+#include <array>
 
 #include <gmock/gmock.h>
 
@@ -54,8 +55,8 @@ using TestTypes = Types<angle::BitSet32<32>,
                         angle::BitSetArray<96>,
                         angle::BitSetArray<300>>;
 
-constexpr char kTestTypeNames[][100] = {"BitSet32_32", "BitSet64_32",    "BitSet64_64",
-                                        "BitSet_96",   "BitSetArray_96", "BitSetArray_300"};
+constexpr std::array kTestTypeNames = {"BitSet32_32", "BitSet64_32",    "BitSet64_64",
+                                       "BitSet_96",   "BitSetArray_96", "BitSetArray_300"};
 
 class BitSetIteratorTypeNames
 {
@@ -63,7 +64,7 @@ class BitSetIteratorTypeNames
     template <typename BitSetType>
     static std::string GetName(int typeIndex)
     {
-        return ANGLE_UNSAFE_TODO(kTestTypeNames[typeIndex]);
+        return kTestTypeNames[typeIndex];
     }
 };
 

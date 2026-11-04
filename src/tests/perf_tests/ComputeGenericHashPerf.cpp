@@ -8,11 +8,13 @@
 //
 
 #include "ANGLEPerfTest.h"
-#include "common/unsafe_buffers.h"
 
+#include <array>
 #include <chrono>
+#include <type_traits>
 
 #include "common/hash_utils.h"
+#include "common/span.h"
 #include "util/random_utils.h"
 
 using namespace testing;
@@ -24,6 +26,10 @@ constexpr unsigned int kIterationsPerStep = 5;
 template <typename T>
 class ComputeGenericHashPerfTest : public ANGLEPerfTest
 {
+    // SetUp() fills each key with sizeof(T) random bytes.
+    static_assert(std::is_same_v<T, std::array<uint8_t, sizeof(T)>>,
+                  "T must be a std::array of bytes");
+
   public:
     ComputeGenericHashPerfTest();
 
@@ -47,10 +53,9 @@ void ComputeGenericHashPerfTest<T>::SetUp()
     for (int keyCount = 0; keyCount < 1000; keyCount++)
     {
         T key;
-        constexpr size_t kKeySize = key.size();
-        std::vector<uint8_t> bytes(kKeySize);
+        std::vector<uint8_t> bytes(sizeof(key));
         FillVectorWithRandomUBytes(&mRNG, &bytes);
-        ANGLE_UNSAFE_TODO(memcpy(key.data(), bytes.data(), kKeySize));
+        angle::Span(key).copy_from(bytes);
         mKeys.insert(key);
     }
 }
@@ -77,9 +82,9 @@ using TestTypes = Types<HashKey<4>,
                         HashKey<128>,
                         HashKey<256>>;
 
-constexpr char kTestTypeNames[][100] = {"KeySize_4_bytes",  "KeySize_8_bytes",  "KeySize_16_bytes",
-                                        "KeySize_32_bytes", "KeySize_64_bytes", "KeySize_128_bytes",
-                                        "KeySize_256_bytes"};
+constexpr std::array kTestTypeNames = {"KeySize_4_bytes",  "KeySize_8_bytes",  "KeySize_16_bytes",
+                                       "KeySize_32_bytes", "KeySize_64_bytes", "KeySize_128_bytes",
+                                       "KeySize_256_bytes"};
 
 class KeySizeNames
 {
@@ -87,7 +92,7 @@ class KeySizeNames
     template <typename BitSetType>
     static std::string GetName(int typeIndex)
     {
-        return ANGLE_UNSAFE_TODO(kTestTypeNames[typeIndex]);
+        return kTestTypeNames[typeIndex];
     }
 };
 

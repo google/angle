@@ -8,8 +8,8 @@
 //
 
 #include "ANGLEPerfTest.h"
-#include "common/unsafe_buffers.h"
 
+#include "common/span.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
@@ -86,7 +86,7 @@ void VulkanPipelineCachePerfTest::randomizeDesc(vk::GraphicsPipelineDesc *desc)
 {
     std::vector<uint8_t> bytes(sizeof(vk::GraphicsPipelineDesc));
     FillVectorWithRandomUBytes(&mRNG, &bytes);
-    ANGLE_UNSAFE_TODO(memcpy(desc, bytes.data(), sizeof(vk::GraphicsPipelineDesc)));
+    angle::byte_span_from_ref(*desc).copy_from(bytes);
 
     desc->setSupportsDynamicStateForTest(GetParam().withDynamicState);
 }

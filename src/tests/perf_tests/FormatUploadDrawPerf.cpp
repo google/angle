@@ -8,7 +8,6 @@
 //
 
 #include "ANGLEPerfTest.h"
-#include "common/unsafe_buffers.h"
 
 #include <array>
 #include <iostream>
@@ -126,8 +125,7 @@ void FormatUploadDrawPerfBenchmark::initializeBenchmark()
     glTexImage2D(GL_TEXTURE_2D, 0, mFormat, mTextureSize, mTextureSize, 0, mFormat, mType, nullptr);
 
     // Initialize color data.
-    mColors.resize(mTextureSize * mTextureSize * mPixelSize);
-    ANGLE_UNSAFE_TODO(memset(mColors.data(), 0, mTextureSize * mTextureSize * mPixelSize));
+    mColors.assign(mTextureSize * mTextureSize * mPixelSize, 0);
 
     // Set up program.
     std::string vs = R"(#version 300 es

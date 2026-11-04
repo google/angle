@@ -8,7 +8,6 @@
 //
 
 #include "ANGLEPerfTest.h"
-#include "common/unsafe_buffers.h"
 
 #if defined(ANGLE_PLATFORM_ANDROID)
 #    include <android/log.h>
@@ -686,7 +685,7 @@ void ANGLEPerfTest::processClockResult(const char *metric, double resultSeconds)
     bool foundMetric = mReporter->GetMetricInfo(metric, &metricInfo);
     if (!foundMetric)
     {
-        ANGLE_UNSAFE_TODO(fprintf(stderr, "Error getting metric info for %s.\n", metric));
+        std::cerr << "Error getting metric info for " << metric << ".\n";
         return;
     }
     units = metricInfo.units;
@@ -1129,8 +1128,8 @@ void ANGLERenderTest::SetUp()
 
     if (gVerboseLogging)
     {
-        ANGLE_UNSAFE_TODO(printf("GL_RENDERER: %s\n", glGetString(GL_RENDERER)));
-        ANGLE_UNSAFE_TODO(printf("GL_VERSION: %s\n", glGetString(GL_VERSION)));
+        std::cout << "GL_RENDERER: " << glGetString(GL_RENDERER) << "\n";
+        std::cout << "GL_VERSION: " << glGetString(GL_VERSION) << "\n";
         switch (mEndQueryFlushPolicy)
         {
             case EndQueryFlushPolicy::Flush:
@@ -1251,9 +1250,8 @@ void ANGLERenderTest::initPerfCounters()
 
     if (!IsGLExtensionEnabled(kPerfMonitorExtensionName))
     {
-        ANGLE_UNSAFE_TODO(fprintf(stderr,
-                                  "Cannot report perf metrics because %s is not available.\n",
-                                  kPerfMonitorExtensionName));
+        std::cerr << "Cannot report perf metrics because " << kPerfMonitorExtensionName
+                  << " is not available.\n";
         return;
     }
 
