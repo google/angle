@@ -1074,7 +1074,8 @@ void main()
     }
 }
 
-// Check that gl_ClipDistance and gl_CullDistance sizes cannot be undefined in Tessellation shaders.
+// Check that gl_ClipDistance and gl_CullDistance sizes cannot be undefined in Tessellation shaders,
+// and that redeclaring them with a size allows dynamic indexing.
 TEST_P(ClipCullDistanceTest, UndefinedArraySizeWithTessellationShader)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled(kExtensionName) ||
@@ -1101,7 +1102,8 @@ void main()
     };
 
     std::stringstream tessControlSource;
-    auto buildTCS = [this, &tessControlSource](std::string name, std::string maxDistances) {
+    auto buildTCS = [this, &tessControlSource](std::string name, std::string maxDistances,
+                                               std::string redeclaration) {
         tessControlSource.str(std::string());
         tessControlSource.clear();
         tessControlSource << R"(#version 310 es
@@ -1109,7 +1111,7 @@ void main()
                           << R"( : require
 #extension GL_EXT_tessellation_shader : require
 layout (vertices = 3) out;
-void main()
+)" << redeclaration << R"(void main()
 {
     for (int i = 0; i < )" << maxDistances
                           << R"(; ++i)
@@ -1130,7 +1132,8 @@ void main()
     };
 
     std::stringstream tessEvalSource;
-    auto buildTES = [this, &tessEvalSource](std::string name, std::string maxDistances) {
+    auto buildTES = [this, &tessEvalSource](std::string name, std::string maxDistances,
+                                            std::string redeclaration) {
         tessEvalSource.str(std::string());
         tessEvalSource.clear();
         tessEvalSource << R"(#version 310 es
@@ -1138,7 +1141,7 @@ void main()
                        << R"( : require
 #extension GL_EXT_tessellation_shader : require
 layout(triangles, equal_spacing, ccw) in;
-void main()
+)" << redeclaration << R"(void main()
 {
     gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
     for (int i = 0; i < )"
@@ -1155,12 +1158,18 @@ void main()
     // Otherwise, the program is expected to link successfully.
     auto checkProgram = [=, &vertexSource, &tessControlSource, &tessEvalSource](
                             std::string name, std::string maxDistances, int sizeVertex,
-                            const char *expectedMsg) {
-        SCOPED_TRACE(::testing::Message() << "name=" << name << " maxDistances=" << maxDistances
-                                          << " sizeVertex=" << sizeVertex);
+                            bool redeclare, const char *expectedMsg) {
+        SCOPED_TRACE(::testing::Message()
+                     << "name=" << name << " maxDistances=" << maxDistances
+                     << " sizeVertex=" << sizeVertex << " redeclare=" << redeclare);
+        // Optionally redeclare gl_PerVertex with a sized array, which allows dynamic indexing
+        const std::string block = "gl_PerVertex { highp vec4 gl_Position; highp float " + name +
+                                  "[" + std::to_string(sizeVertex) + "]; }";
         buildVS(name, sizeVertex);
-        buildTCS(name, maxDistances);
-        buildTES(name, maxDistances);
+        buildTCS(name, maxDistances,
+                 redeclare ? "in " + block + " gl_in[];\nout " + block + " gl_out[];\n" : "");
+        buildTES(name, maxDistances,
+                 redeclare ? "in " + block + " gl_in[];\nout " + block + ";\n" : "");
         CheckProgram({{GL_VERTEX_SHADER, vertexSource.str().c_str()},
                       {GL_TESS_CONTROL_SHADER, tessControlSource.str().c_str()},
                       {GL_TESS_EVALUATION_SHADER, tessEvalSource.str().c_str()},
@@ -1172,11 +1181,18 @@ void main()
     GLint maxCullDistances = 0;
     ASSERT_NO_FATAL_FAILURE(GetAndCheckMaxClipAndCullDistances(maxClipDistances, maxCullDistances));
 
-    checkProgram("gl_ClipDistance", "gl_MaxClipDistances", maxClipDistances, kUnsizedMsg);
-    checkProgram("gl_CullDistance", "gl_MaxCullDistances", maxCullDistances, kUnsizedMsg);
+    checkProgram("gl_ClipDistance", "gl_MaxClipDistances", maxClipDistances, false, kUnsizedMsg);
+    checkProgram("gl_CullDistance", "gl_MaxCullDistances", maxCullDistances, false, kUnsizedMsg);
+
+    checkProgram("gl_ClipDistance", "gl_MaxClipDistances", maxClipDistances, true, nullptr);
+    if (maxCullDistances > 0)
+    {
+        checkProgram("gl_CullDistance", "gl_MaxCullDistances", maxCullDistances, true, nullptr);
+    }
 }
 
-// Check that gl_ClipDistance and gl_CullDistance sizes cannot be undefined in geometry shaders
+// Check that gl_ClipDistance and gl_CullDistance sizes cannot be undefined in geometry shaders, and
+// that redeclaring them with a size allows dynamic indexing.
 TEST_P(ClipCullDistanceTest, UndefinedArraySizeWithGeometryShader)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled(kExtensionName) ||
@@ -1203,7 +1219,8 @@ void main()
     };
 
     std::stringstream geometrySource;
-    auto buildGS = [this, &geometrySource](std::string name, std::string maxDistances) {
+    auto buildGS = [this, &geometrySource](std::string name, std::string maxDistances,
+                                           std::string redeclaration) {
         geometrySource.str(std::string());
         geometrySource.clear();
         geometrySource << R"(#version 310 es
@@ -1212,7 +1229,7 @@ void main()
 #extension GL_EXT_geometry_shader : require
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
-void main()
+)" << redeclaration << R"(void main()
 {
     for (int i = 0; i < 3; ++i)
     {
@@ -1234,11 +1251,16 @@ void main()
     // Otherwise, the program is expected to link successfully.
     auto checkProgram = [=, &vertexSource, &geometrySource](
                             std::string name, std::string maxDistances, int sizeVertex,
-                            const char *expectedMsg) {
-        SCOPED_TRACE(::testing::Message() << "name=" << name << " maxDistances=" << maxDistances
-                                          << " sizeVertex=" << sizeVertex);
+                            bool redeclare, const char *expectedMsg) {
+        SCOPED_TRACE(::testing::Message()
+                     << "name=" << name << " maxDistances=" << maxDistances
+                     << " sizeVertex=" << sizeVertex << " redeclare=" << redeclare);
+        // Optionally redeclare gl_PerVertex with a sized array, which allows dynamic indexing
+        const std::string block = "gl_PerVertex { highp vec4 gl_Position; highp float " + name +
+                                  "[" + std::to_string(sizeVertex) + "]; }";
         buildVS(name, sizeVertex);
-        buildGS(name, maxDistances);
+        buildGS(name, maxDistances,
+                redeclare ? "in " + block + " gl_in[];\nout " + block + ";\n" : "");
         CheckProgram({{GL_VERTEX_SHADER, vertexSource.str().c_str()},
                       {GL_GEOMETRY_SHADER, geometrySource.str().c_str()},
                       {GL_FRAGMENT_SHADER, essl31_shaders::fs::Red()}},
@@ -1249,8 +1271,14 @@ void main()
     GLint maxCullDistances = 0;
     ASSERT_NO_FATAL_FAILURE(GetAndCheckMaxClipAndCullDistances(maxClipDistances, maxCullDistances));
 
-    checkProgram("gl_ClipDistance", "gl_MaxClipDistances", maxClipDistances, kUnsizedMsg);
-    checkProgram("gl_CullDistance", "gl_MaxCullDistances", maxCullDistances, kUnsizedMsg);
+    checkProgram("gl_ClipDistance", "gl_MaxClipDistances", maxClipDistances, false, kUnsizedMsg);
+    checkProgram("gl_CullDistance", "gl_MaxCullDistances", maxCullDistances, false, kUnsizedMsg);
+
+    checkProgram("gl_ClipDistance", "gl_MaxClipDistances", maxClipDistances, true, nullptr);
+    if (maxCullDistances > 0)
+    {
+        checkProgram("gl_CullDistance", "gl_MaxCullDistances", maxCullDistances, true, nullptr);
+    }
 }
 
 // Check that shaders with invalid or missing storage qualifiers are rejected

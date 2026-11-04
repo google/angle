@@ -73,7 +73,9 @@ void AddZeroInitSequence(const TIntermTyped *initializedNode,
         {
             const TField &field = *fieldList[fieldIndex];
 
-            // Skip gl_PerVertex fields
+            // Only gl_Position is initialized. The other gl_PerVertex members may require an
+            // extension the shader hasn't enabled, and writing them would mark them as
+            // active/used.
             if (field.type()->getQualifier() == EvqPointSize ||
                 field.type()->getQualifier() == EvqClipDistance ||
                 field.type()->getQualifier() == EvqCullDistance)

@@ -1406,16 +1406,13 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
 
             // The right operand of EOpIndexDirectInterfaceBlock is the field index constant.
             TIntermConstantUnion *constantUnion = binaryNode->getRight()->getAsConstantUnion();
-            unsigned int fieldIndex  = static_cast<unsigned int>(constantUnion->getIConst(0));
-            const TFieldList &fields = interfaceBlock->fields();
-            if (fieldIndex < fields.size())
+            const int fieldIndex                = constantUnion->getIConst(0);
+            const TFieldList &fields            = interfaceBlock->fields();
+            ASSERT(fieldIndex >= 0 && static_cast<unsigned int>(fieldIndex) < fields.size());
+            const int perVertexMemberIndex = GetPerVertexMemberIndex(fields[fieldIndex]->name());
+            if (perVertexMemberIndex >= 0)
             {
-                const int perVertexMemberIndex =
-                    GetPerVertexMemberIndex(fields[fieldIndex]->name());
-                if (perVertexMemberIndex >= 0)
-                {
-                    accessedFields.set(perVertexMemberIndex);
-                }
+                accessedFields.set(perVertexMemberIndex);
             }
         }
 
