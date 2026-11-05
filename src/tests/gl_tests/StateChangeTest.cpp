@@ -6604,7 +6604,6 @@ void main()
     colorOut = texture(sampler, vec2(0));
 })";
 
-    std::vector<std::string> tfVaryings = {"gl_Position"};
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
     glUseProgram(program);
 

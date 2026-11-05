@@ -1444,7 +1444,6 @@ TEST_P(VulkanPerformanceCounterTest, MutableTexture3DCompatibleMipLevelsNonCubeI
 
     std::vector<GLColor> mip0Color(4 * 2 * 2, GLColor::red);
     std::vector<GLColor> mip1Color(2 * 1 * 1, GLColor::red);
-    std::vector<GLColor> mip2Color(1 * 1 * 1, GLColor::red);
 
     GLTexture texture1;
     glBindTexture(GL_TEXTURE_3D, texture1);

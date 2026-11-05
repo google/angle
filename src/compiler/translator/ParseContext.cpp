@@ -7847,9 +7847,6 @@ int TParseContext::checkIndexLessThan(bool outOfRangeIndexIsError,
     ASSERT(index >= 0);
     if (static_cast<unsigned int>(index) >= arraySize)
     {
-        std::stringstream reasonStream = sh::InitializeStream<std::stringstream>();
-        reasonStream << reason << " '" << index << "'";
-        std::string token = reasonStream.str();
         outOfRangeError(outOfRangeIndexIsError, location, reason, "[]");
         return arraySize - 1;
     }

@@ -8716,7 +8716,6 @@ void Texture2DTestES3::testCopyImageDepthStencil(const APIExtensionVersion usedE
 {
     ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES);
 
-    std::vector<GLColor> texDataRed(4u * 4u, GLColor::red);
     GLTexture srcTexture;
     GLTexture destTexture;
 
@@ -13807,7 +13806,6 @@ TEST_P(Texture2DTestES3, SampleThenFullUpdateWithBaseChange)
     GLTexture tex;
     const std::vector<GLColor> texDataRed(kWidth * kHeight, GLColor::red);
     const std::vector<GLColor> texDataGreen(kWidth * kHeight, GLColor::green);
-    const std::vector<GLColor> texDataBlue(kWidth * kHeight, GLColor::blue);
 
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
