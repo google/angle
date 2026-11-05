@@ -9151,9 +9151,21 @@ angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask dirtyAttri
 
     if (ANGLE_UNLIKELY(mCurrentTransformFeedbackQueueSerial.valid()))
     {
+        // Only enabled non-streamed attributes need to be checked, as only they source their data
+        // from GL buffer objects, which may have been written by transform feedback.  Default
+        // attributes and streamed attributes (client memory or emulated divisor) use internal
+        // buffers suballocated from mStreamedVertexBuffers, which are written by the host.  (The
+        // GL buffer of an emulated divisor attribute is read on the CPU when streamed, which
+        // already waits for any pending GPU write.)  Additionally, mStreamedVertexBuffers may have
+        // been reallocated (and the old BufferHelpers freed) since the streamed attributes were
+        // last streamed, e.g. while the vertex array was not bound, so their buffers must not be
+        // accessed until they are streamed again by setupDraw().
+        const gl::AttributesMask enabledNonStreamingAttribDirtyBits =
+            dirtyAttribBits & vertexArray.getCurrentEnabledAttribsMask() &
+            ~vertexArray.getStreamingVertexAttribsMask();
         const gl::AttribArray<vk::BufferHelper *> &buffers = vertexArray.getCurrentArrayBuffers();
         bool breakRenderPass                               = false;
-        for (size_t attribIndex : dirtyAttribBits)
+        for (size_t attribIndex : enabledNonStreamingAttribDirtyBits)
         {
             ASSERT(buffers[attribIndex] != nullptr);
             if (buffers[attribIndex]->writtenByCommandBuffer(mCurrentTransformFeedbackQueueSerial))
