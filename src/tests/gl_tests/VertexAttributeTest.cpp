@@ -7359,6 +7359,108 @@ void main()
     EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::green);
 }
 
+// Test that a client-memory attribute cached on the default VAO does not use a dangling buffer
+// pointer after the per-context streamed vertex DynamicBuffer grows and commands are submitted,
+// when the default VAO is rebound while transform feedback is active.  Rebinding a VAO while
+// transform feedback writes are recorded in the open render pass makes the Vulkan backend check
+// the vertex buffers for a transform feedback write -> vertex read hazard, before streamed
+// attributes are refreshed by the next draw.
+TEST_P(VertexAttributeTestES3, ClientAttribAfterDynamicBufferGrowthAndRebindDuringTransformFeedback)
+{
+    constexpr char kVS[] = R"(#version 300 es
+layout(location = 0) in vec4 attrib;
+out vec4 captured;
+void main()
+{
+    captured = attrib;
+    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+    gl_PointSize = 1.0;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 fragColor;
+void main()
+{
+    fragColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    const std::vector<std::string> tfVaryings = {"captured"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program, kVS, kFS, tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    glUseProgram(program);
+
+    // The values of attribute 0 for the two draws captured with transform feedback.
+    constexpr std::array<GLfloat, 4> kBufferValue = {1.0f, 2.0f, 3.0f, 4.0f};
+    constexpr std::array<GLfloat, 4> kClientValue = {5.0f, 6.0f, 7.0f, 8.0f};
+
+    GLBuffer xfbBuffer;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 2 * sizeof(kBufferValue), nullptr, GL_STATIC_READ);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, xfbBuffer);
+
+    // Step 1: Default VAO -- attribute 0 sourced from client memory.  The Vulkan backend streams it
+    // through a per-context buffer for attribute 0, which this draw caches on the default VAO.
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, kClientValue.data());
+    glEnableVertexAttribArray(0);
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: vaoB -- attribute 0 with divisor 256.  The Vulkan backend caps the native divisor at
+    // 255 and emulates larger ones by streaming the attribute through the same per-context buffer.
+    // Draw 4096 instances (reading 16 elements) to grow that buffer beyond its initial block size.
+    const std::vector<GLfloat> instanceData(16 * 4, 0.0f);
+    GLBuffer instanceBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+    glBufferData(GL_ARRAY_BUFFER, instanceData.size() * sizeof(GLfloat), instanceData.data(),
+                 GL_STATIC_DRAW);
+
+    GLVertexArray vaoB;
+    glBindVertexArray(vaoB);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(0);
+    glVertexAttribDivisor(0, 256);
+    glDrawArraysInstanced(GL_POINTS, 0, 1, 4096);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 3: Submit and finish commands so the old block, still referenced by the default VAO, is
+    // released.
+    glFinish();
+
+    // Step 4: vaoC -- attribute 0 from a regular buffer.  Draw with transform feedback active, so
+    // the open render pass records transform feedback writes.
+    GLBuffer valueBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, valueBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kBufferValue), kBufferValue.data(), GL_STATIC_DRAW);
+
+    GLVertexArray vaoC;
+    glBindVertexArray(vaoC);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(0);
+
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 5: Rebind the default VAO while transform feedback is still active, and draw.
+    glBindVertexArray(0);
+    glDrawArrays(GL_POINTS, 0, 1);
+    glEndTransformFeedback();
+    ASSERT_GL_NO_ERROR();
+
+    // Each draw must have captured its own value of attribute 0.
+    const GLfloat *captured = static_cast<const GLfloat *>(glMapBufferRange(
+        GL_TRANSFORM_FEEDBACK_BUFFER, 0, 2 * sizeof(kBufferValue), GL_MAP_READ_BIT));
+    ASSERT_NE(nullptr, captured);
+    for (size_t i = 0; i < kBufferValue.size(); ++i)
+    {
+        EXPECT_EQ(kBufferValue[i], captured[i]);
+        EXPECT_EQ(kClientValue[i], captured[kBufferValue.size() + i]);
+    }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+}
+
 // Ensure a large offset is not interpreted as negative.
 TEST_P(VertexAttributeTestES3, LargeAttribPointerOffsetNoCrash)
 {
