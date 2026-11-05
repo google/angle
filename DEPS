@@ -1312,17 +1312,17 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@6167b2afae4b6fe851211f3185c01b8380dff7a1',
+    'url': Var('chromium_git') + '/vulkan-deps@dd9ac23bb4afc5ce79af84b3ca719e1ec0e3240e',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/glslang/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@e2e8c81228d423accb5644319d947c2d187d894f',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@9e78d9ffe78a8bc7fa1d3326f2da91d19eba3479',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/lunarg-vulkantools/src': {
-    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@f651a5eb3785b17e7c6cb9e5d4b2ccf231ae6b1f',
+    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@5ee42aa7ef3927dda7d6b2806fca1440ee10c65e',
     'condition': 'not build_with_chromium',
   },
 
@@ -1332,7 +1332,7 @@ deps = {
   },
 
   'third_party/spirv-headers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@71747ddd16f20e9b379ce293dba2954931d3b3c1',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@6efe5ae6b7c6ad29da3f2cc3f164b9c3d72b78b1',
     'condition': 'not build_with_chromium',
   },
 
@@ -1347,7 +1347,7 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@9b9488a5447d9bf17064fea6eb30471673160d91',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@dc0519b95997439e470df1b9214e4b3b2a2c6a2d',
     'condition': 'not build_with_chromium',
   },
 
@@ -1362,7 +1362,7 @@ deps = {
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@3baa2b863aa78007d6721b09b97890656d0a3705',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@615ed222e657ff79d07acb3db69776a09d1842e5',
     'condition': 'not build_with_chromium',
   },
 
