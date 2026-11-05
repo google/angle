@@ -171,6 +171,7 @@ vars = {
   'checkout_angle_restricted_trace_afk_arena': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_age_of_origins_z': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_agent_a': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_alices_dream_merge_3d': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_aliexpress': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_altos_odyssey': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_among_us': 'checkout_extra_traces',
@@ -354,6 +355,7 @@ vars = {
   'checkout_angle_restricted_trace_knife_hit': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_knives_out': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_lands_of_jail': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_last_fortress_underground': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_last_shelter_survival': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_last_war_survival_game': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_last_z_survival_shooter': 'checkout_extra_traces',
@@ -395,9 +397,9 @@ vars = {
   'checkout_angle_restricted_trace_minecraft_vibrant_visuals': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_minetest': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mini_block_craft': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_mini_fidget_antistress_games': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_mini_fidget_antistress_games': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mini_games_calm_and_relax': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_mini_relaxing_game': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_mini_relaxing_game': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mini_world': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mob_control': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mobile_legends': 'checkout_extra_traces',
@@ -410,7 +412,7 @@ vars = {
   'checkout_angle_restricted_trace_mortal_kombat': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_mu_origin_3': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_my_friend_pedro': 'checkout_extra_traces',
-  'checkout_angle_restricted_trace_my_supermarket_journey': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_my_supermarket_journey': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_my_talking_angela': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_my_talking_angela_2': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_my_talking_tom': 'checkout_extra_traces',
@@ -585,6 +587,7 @@ vars = {
   'checkout_angle_restricted_trace_wuthering_waves': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_wwe_supercard': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_yalla_ludo': 'checkout_extra_traces',
+  'checkout_angle_restricted_trace_yokai_watch_puni_puni': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_zenonia_4': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zillow': 'checkout_extra_traces',
   'checkout_angle_restricted_trace_zombie_smasher': 'checkout_extra_traces',
@@ -1604,6 +1607,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_agent_a',
+  },
+  'src/tests/restricted_traces/alices_dream_merge_3d': {
+      'packages': [
+        {
+            'package': 'angle/traces/alices_dream_merge_3d',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_alices_dream_merge_3d',
   },
   'src/tests/restricted_traces/aliexpress': {
       'packages': [
@@ -3434,6 +3447,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_lands_of_jail',
+  },
+  'src/tests/restricted_traces/last_fortress_underground': {
+      'packages': [
+        {
+            'package': 'angle/traces/last_fortress_underground',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_last_fortress_underground',
   },
   'src/tests/restricted_traces/last_shelter_survival': {
       'packages': [
@@ -5744,6 +5767,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_yalla_ludo',
+  },
+  'src/tests/restricted_traces/yokai_watch_puni_puni': {
+      'packages': [
+        {
+            'package': 'angle/traces/yokai_watch_puni_puni',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_yokai_watch_puni_puni',
   },
   'src/tests/restricted_traces/zenonia_4': {
       'packages': [

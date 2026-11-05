@@ -29,6 +29,7 @@ SMOKE_TRACES = [
 
 REPRESENTATIVE_TRACES = [
     "ace_racer",
+    "alices_dream_merge_3d",
     "antutu_refinery",
     "asphalt_9_2024",
     "aztec_ruins_high",
@@ -57,14 +58,12 @@ REPRESENTATIVE_TRACES = [
     "identity_v",
     "injustice_2",
     "kalliu_game_world",
+    "last_fortress_underground",
     "limbo",
     "lineage_2m",
     "manhattan_31",
     "minecraft_bedrock",
-    "mini_fidget_antistress_games",
-    "mini_relaxing_game",
     "monster_hunter_stories",
-    "my_supermarket_journey",
     "need_for_speed_no_limits",
     "ni_no_kuni",
     "odin_valhalla_rising",
@@ -91,5 +90,6 @@ REPRESENTATIVE_TRACES = [
     "uno",
     "warcraft_rumble",
     "wuthering_waves",
+    "yokai_watch_puni_puni",
     "zombie_tsunami",
 ]
