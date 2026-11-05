@@ -1716,6 +1716,16 @@ angle::Result TextureStorage11_EGLImage::getResource(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result TextureStorage11_EGLImage::checkSubImageSupported(const gl::Context *context)
+{
+    RenderTarget11 *renderTarget11 = nullptr;
+    ANGLE_TRY(getImageRenderTarget(context, &renderTarget11));
+    ANGLE_CHECK(GetImplAs<Context11>(context),
+                renderTarget11->getTexture().getFormat() != DXGI_FORMAT_Y210,
+                "Uploading to a Y210 texture is not supported.", GL_INVALID_OPERATION);
+    return angle::Result::Continue;
+}
+
 angle::Result TextureStorage11_EGLImage::getSRVForSampler(const gl::Context *context,
                                                           const gl::TextureState &textureState,
                                                           const gl::SamplerState &sampler,

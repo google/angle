@@ -548,6 +548,12 @@ angle::Result TextureD3D::subImage(const gl::Context *context,
         ImageD3D *image = getImage(index);
         ASSERT(image);
 
+        // Fail before anything is modified.
+        if (mTexStorage)
+        {
+            ANGLE_TRY(mTexStorage->checkSubImageSupported(context));
+        }
+
         if (shouldUseSetData(index, image) && !mTexStorage->isMultiplanar(context))
         {
             return mTexStorage->setData(context, index, image, &area, type, unpack, pixelData);

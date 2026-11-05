@@ -47,6 +47,10 @@ const Format *GetPackedYUVFormat(DXGI_FORMAT dxgiFormat);
 
 bool IsPackedYUVFormat(DXGI_FORMAT dxgiFormat);
 
+// Returns how many pixels of the texture one texel of the view a packed YUV texture is rendered to
+// and read through covers: 2 for Y210, whose R16G16B16A16_UNORM view is half as wide, 1 otherwise.
+GLuint GetPackedYUVPixelsPerTexel(DXGI_FORMAT dxgiFormat);
+
 struct DXGIFormatSize
 {
     DXGIFormatSize(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight);

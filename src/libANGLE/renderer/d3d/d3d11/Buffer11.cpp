@@ -1756,7 +1756,11 @@ angle::Result Buffer11::PackStorage::packPixels(const gl::Context *context,
                                                   params.outputPitch, reverseRowOrder,
                                                   params.packBuffer, params.offset));
 
-    const gl::Extents stagingTextureSize(clippedReadArea.width, clippedReadArea.height, 1);
+    // The read area is in texels of the view the texture is read through, while the staging texture
+    // and the box are in pixels of the texture.
+    const GLuint pixelsPerTexel = d3d11::GetPackedYUVPixelsPerTexel(srcTexture->getFormat());
+    const gl::Extents stagingTextureSize(clippedReadArea.width * pixelsPerTexel,
+                                         clippedReadArea.height, 1);
     if (!mStagingTexture.get() || mStagingTexture.getFormat() != srcTexture->getFormat() ||
         mStagingTexture.getExtents() != stagingTextureSize ||
         mStagingTexture.getTextureType() != srcTexture->getTextureType())
@@ -1769,8 +1773,8 @@ angle::Result Buffer11::PackStorage::packPixels(const gl::Context *context,
 
     ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
     D3D11_BOX srcBox;
-    srcBox.left   = static_cast<UINT>(clippedReadArea.x);
-    srcBox.right  = static_cast<UINT>(clippedReadArea.x + clippedReadArea.width);
+    srcBox.left   = static_cast<UINT>(clippedReadArea.x * pixelsPerTexel);
+    srcBox.right  = static_cast<UINT>((clippedReadArea.x + clippedReadArea.width) * pixelsPerTexel);
     srcBox.top    = static_cast<UINT>(clippedReadArea.y);
     srcBox.bottom = static_cast<UINT>(clippedReadArea.y + clippedReadArea.height);
 

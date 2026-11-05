@@ -474,8 +474,9 @@ angle::Result Image11::copyFromFramebuffer(const gl::Context *context,
     TextureHelper11 textureHelper  = rt11->getTexture();
     unsigned int sourceSubResource = rt11->getSubresourceIndex();
 
-    // Packed YUV render targets (Y410) share the internal format of their RGBA view alias but keep
-    // a DXGI format that CopySubresourceRegion can't convert, so they take the conversion path.
+    // Packed YUV render targets (Y410/Y210) share the internal format of their RGBA view alias but
+    // keep a DXGI format that CopySubresourceRegion can't convert, so they take the conversion
+    // path.
     if (d3d11Format.texFormat == mDXGIFormat && sourceInternalFormat == mInternalFormat &&
         !d3d11::IsPackedYUVFormat(textureHelper.getFormat()) &&
         textureHelper.is3D() == (mType == gl::TextureType::_3D))

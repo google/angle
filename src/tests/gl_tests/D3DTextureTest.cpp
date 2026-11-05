@@ -18,6 +18,8 @@
 #include <windows.h>
 #include <wrl/client.h>
 #include <array>
+#include <cstdlib>
+#include <vector>
 
 #include "util/EGLWindow.h"
 
@@ -1966,7 +1968,7 @@ class D3DTextureYUVTestES3 : public D3DTextureTest
             EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
         }
 
-        // Packed YUV is sample-only and cannot back pbuffers.
+        // Packed YUV cannot back pbuffers.
         {
             EGLSurface surface = eglCreatePbufferFromClientBuffer(
                 display, EGL_D3D_TEXTURE_ANGLE, static_cast<EGLClientBuffer>(d3d11Texture.Get()),
@@ -1999,65 +2001,9 @@ class D3DTextureYUVTestES3 : public D3DTextureTest
         }
     }
 
-    void RunPackedYUVNotRenderableTest(DXGI_FORMAT format)
-    {
-        // Y410 is renderable through its R10G10B10A2_UNORM view alias; only Y210 is sample-only.
-        ASSERT(format == DXGI_FORMAT_Y210);
-        UINT formatSupport;
-        ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11() ||
-                           FAILED(mD3D11Device->CheckFormatSupport(format, &formatSupport)));
-        ANGLE_SKIP_TEST_IF(!(formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D));
-
-        EGLWindow *window  = getEGLWindow();
-        EGLDisplay display = window->getDisplay();
-
-        window->makeCurrent();
-
-        const UINT bufferSize = 32;
-        EXPECT_TRUE(mD3D11Device != nullptr);
-        Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
-        CD3D11_TEXTURE2D_DESC desc(format, bufferSize, bufferSize, 1, 1,
-                                   D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
-        // Some devices reject render-target bind flags for packed YUV; the
-        // renderability check is only observable where creation succeeds.
-        ANGLE_SKIP_TEST_IF(FAILED(mD3D11Device->CreateTexture2D(&desc, nullptr, &d3d11Texture)));
-
-        // Image binding allocates the aliased SRV; apply the same gate.
-        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-        srvDesc.Format                          = DXGI_FORMAT_R16G16B16A16_UNORM;
-        srvDesc.ViewDimension                   = D3D11_SRV_DIMENSION_TEXTURE2D;
-        srvDesc.Texture2D.MipLevels             = 1;
-        ANGLE_SKIP_TEST_IF(
-            FAILED(mD3D11Device->CreateShaderResourceView(d3d11Texture.Get(), &srvDesc, &srv)));
-        const EGLint attribs[] = {EGL_TEXTURE_INTERNAL_FORMAT_ANGLE, GL_RGBA16_EXT, EGL_NONE};
-        EGLImage image =
-            eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
-                              static_cast<EGLClientBuffer>(d3d11Texture.Get()), attribs);
-        ASSERT_EGL_SUCCESS();
-        ASSERT_NE(image, EGL_NO_IMAGE_KHR);
-
-        // No renderable view: the image must not be framebuffer-attachable.
-        GLTexture texture;
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
-        ASSERT_GL_NO_ERROR();
-
-        GLFramebuffer fbo;
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-        EXPECT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER),
-                  static_cast<unsigned>(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT));
-        ASSERT_GL_NO_ERROR();
-
-        eglDestroyImageKHR(display, image);
-    }
-
     void RunPackedYUVRenderTest(DXGI_FORMAT format)
     {
-        // Only Y410 has a renderable view alias; Y210 keeps rtvFormat unset.
+        // Y210 is covered by the Y210TextureImage* tests, which use a texel pattern.
         ASSERT(format == DXGI_FORMAT_Y410);
         UINT formatSupport;
         ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11() ||
@@ -2168,25 +2114,29 @@ class D3DTextureYUVTestES3 : public D3DTextureTest
         eglDestroyImageKHR(display, image);
     }
 
-    // Creates a renderable |size|x|size| Y410 texture and binds it to |texture| through an EGL
-    // image. Skips the test if the device can't create one.
-    void CreateRenderableY410Image(UINT size,
-                                   Microsoft::WRL::ComPtr<ID3D11Texture2D> *d3d11Texture,
-                                   EGLImage *image,
-                                   GLuint texture)
+    // Creates a renderable |size|x|size| Y410 or Y210 texture and binds it to |texture| through an
+    // EGL image. Skips the test if the device can't create one.
+    void CreateRenderablePackedYUVImage(DXGI_FORMAT format,
+                                        UINT size,
+                                        Microsoft::WRL::ComPtr<ID3D11Texture2D> *d3d11Texture,
+                                        EGLImage *image,
+                                        GLuint texture)
     {
+        ASSERT(format == DXGI_FORMAT_Y410 || format == DXGI_FORMAT_Y210);
         UINT formatSupport;
-        ANGLE_SKIP_TEST_IF(
-            !valid() || !IsD3D11() ||
-            FAILED(mD3D11Device->CheckFormatSupport(DXGI_FORMAT_Y410, &formatSupport)));
+        ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11() ||
+                           FAILED(mD3D11Device->CheckFormatSupport(format, &formatSupport)));
         ANGLE_SKIP_TEST_IF(!(formatSupport & D3D11_FORMAT_SUPPORT_TEXTURE2D));
 
-        CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_Y410, size, size, 1, 1,
+        CD3D11_TEXTURE2D_DESC desc(format, size, size, 1, 1,
                                    D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
         ANGLE_SKIP_TEST_IF(FAILED(
             mD3D11Device->CreateTexture2D(&desc, nullptr, d3d11Texture->ReleaseAndGetAddressOf())));
 
-        const EGLint attribs[] = {EGL_TEXTURE_INTERNAL_FORMAT_ANGLE, GL_RGB10_A2, EGL_NONE};
+        const EGLint attribs[] = {
+            EGL_TEXTURE_INTERNAL_FORMAT_ANGLE,
+            static_cast<EGLint>(format == DXGI_FORMAT_Y410 ? GL_RGB10_A2 : GL_RGBA16_EXT),
+            EGL_NONE};
         *image =
             eglCreateImageKHR(getEGLWindow()->getDisplay(), EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
                               static_cast<EGLClientBuffer>(d3d11Texture->Get()), attribs);
@@ -2198,6 +2148,25 @@ class D3DTextureYUVTestES3 : public D3DTextureTest
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, *image);
         ASSERT_GL_NO_ERROR();
+    }
+
+    void CreateRenderableY410Image(UINT size,
+                                   Microsoft::WRL::ComPtr<ID3D11Texture2D> *d3d11Texture,
+                                   EGLImage *image,
+                                   GLuint texture)
+    {
+        CreateRenderablePackedYUVImage(DXGI_FORMAT_Y410, size, d3d11Texture, image, texture);
+    }
+
+    // Y210 is bound as a half-width RGBA16 image: one texel holds the Y0, U, Y1 and V words of two
+    // adjacent pixels.
+    void CreateRenderableY210Image(UINT size,
+                                   Microsoft::WRL::ComPtr<ID3D11Texture2D> *d3d11Texture,
+                                   EGLImage *image,
+                                   GLuint texture)
+    {
+        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+        CreateRenderablePackedYUVImage(DXGI_FORMAT_Y210, size, d3d11Texture, image, texture);
     }
 
     // Returns the 32-bit word at (|x|, |y|) of a single-level Y410 |texture|, read through D3D11
@@ -2238,6 +2207,204 @@ class D3DTextureYUVTestES3 : public D3DTextureTest
     {
         glClearColor(r / 1023.0f, g / 1023.0f, b / 1023.0f, a / 3.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    // The Y210 images below are kY210Size pixels wide, so their half-width RGBA16 views are
+    // kY210Width texels wide: one texel holds the Y0, U, Y1 and V words of two adjacent pixels.
+    static constexpr UINT kY210Size  = 32;
+    static constexpr UINT kY210Width = kY210Size / 2;
+
+    // A texel value that differs in every channel of every texel, so that a wrong coordinate or
+    // width anywhere in a Y210 image shows up. Matches the shader in DrawY210Pattern().
+    static std::array<uint16_t, 4> Y210Pattern(UINT x, UINT y)
+    {
+        return {static_cast<uint16_t>(0x0800 * x + 0x0123),
+                static_cast<uint16_t>(0x0400 * y + 0x0345),
+                static_cast<uint16_t>(0x8000 + 0x0200 * x + 0x0040 * y),
+                static_cast<uint16_t>(0x4000 + 0x0101 * (x + y))};
+    }
+
+    // Returns Y210Pattern for the |width| x |height| texels starting at (|x0|, |y0|), row by row.
+    static std::vector<uint16_t> Y210PatternRect(UINT x0, UINT y0, UINT width, UINT height)
+    {
+        std::vector<uint16_t> data;
+        for (UINT y = 0; y < height; ++y)
+        {
+            for (UINT x = 0; x < width; ++x)
+            {
+                const std::array<uint16_t, 4> texel = Y210Pattern(x0 + x, y0 + y);
+                data.insert(data.end(), texel.begin(), texel.end());
+            }
+        }
+        return data;
+    }
+
+    // Expects |actual|, the |width| x |height| RGBA16 texels at (|x0|, |y0|), to hold Y210Pattern,
+    // within |tolerance| for float conversions. Reports the first mismatch only.
+    void ExpectY210Pattern(const std::vector<uint16_t> &actual,
+                           UINT x0,
+                           UINT y0,
+                           UINT width,
+                           UINT height,
+                           int tolerance)
+    {
+        const std::vector<uint16_t> expected = Y210PatternRect(x0, y0, width, height);
+        ASSERT_EQ(actual.size(), expected.size());
+        for (size_t i = 0; i < expected.size(); ++i)
+        {
+            if (std::abs(static_cast<int>(actual[i]) - static_cast<int>(expected[i])) > tolerance)
+            {
+                const size_t texel = i / 4;
+                ADD_FAILURE() << "texel (" << x0 + texel % width << ", " << y0 + texel / width
+                              << ") channel " << i % 4 << " is 0x" << std::hex << actual[i]
+                              << ", expected 0x" << expected[i];
+                return;
+            }
+        }
+    }
+
+    // Expects the |width| x |height| rectangle at (|x0|, |y0|) of the bound read framebuffer, an
+    // RGBA16 one, to hold Y210Pattern.
+    void ExpectFramebufferY210Pattern(UINT x0, UINT y0, UINT width, UINT height, int tolerance)
+    {
+        std::vector<uint16_t> pixels(width * height * 4);
+        glReadPixels(x0, y0, width, height, GL_RGBA, GL_UNSIGNED_SHORT, pixels.data());
+        ASSERT_GL_NO_ERROR();
+        ExpectY210Pattern(pixels, x0, y0, width, height, tolerance);
+    }
+
+    // Writes Y210Pattern to the whole Y210 |texture| through D3D11, independent of ANGLE.
+    void WriteY210Pattern(ID3D11Texture2D *texture)
+    {
+        const std::vector<uint16_t> data = Y210PatternRect(0, 0, kY210Width, kY210Size);
+        Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
+        mD3D11Device->GetImmediateContext(&context);
+        context->UpdateSubresource(texture, 0, nullptr, data.data(),
+                                   kY210Width * 4 * sizeof(uint16_t), 0);
+    }
+
+    // Reads the whole single-level Y210 |texture| through D3D11 as kY210Width x kY210Size RGBA16
+    // texels, so that it doesn't depend on ANGLE's readback path.
+    std::vector<uint16_t> ReadY210Texels(ID3D11Texture2D *texture)
+    {
+        D3D11_TEXTURE2D_DESC stagingDesc;
+        texture->GetDesc(&stagingDesc);
+        stagingDesc.BindFlags      = 0;
+        stagingDesc.MiscFlags      = 0;
+        stagingDesc.Usage          = D3D11_USAGE_STAGING;
+        stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> stagingTexture;
+        EXPECT_TRUE(
+            SUCCEEDED(mD3D11Device->CreateTexture2D(&stagingDesc, nullptr, &stagingTexture)));
+
+        Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
+        mD3D11Device->GetImmediateContext(&context);
+        context->CopyResource(stagingTexture.Get(), texture);
+
+        D3D11_MAPPED_SUBRESOURCE mapped = {};
+        EXPECT_TRUE(SUCCEEDED(context->Map(stagingTexture.Get(), 0, D3D11_MAP_READ, 0, &mapped)));
+        const uint8_t *pixels = reinterpret_cast<const uint8_t *>(mapped.pData);
+        const size_t rowSize  = kY210Width * 4 * sizeof(uint16_t);
+        std::vector<uint16_t> texels(kY210Width * kY210Size * 4);
+        for (UINT y = 0; y < kY210Size; ++y)
+        {
+            memcpy(reinterpret_cast<uint8_t *>(texels.data()) + y * rowSize,
+                   pixels + mapped.RowPitch * y, rowSize);
+        }
+        context->Unmap(stagingTexture.Get(), 0);
+        return texels;
+    }
+
+    // Draws Y210Pattern over the whole bound draw framebuffer, a kY210Width x kY210Size one.
+    void DrawY210Pattern()
+    {
+        constexpr char kVS[] =
+            R"(precision highp float;
+            attribute vec4 position;
+
+            void main()
+            {
+                gl_Position = position;
+            })";
+
+        constexpr char kFS[] =
+            R"(precision highp float;
+
+            void main()
+            {
+                float x = floor(gl_FragCoord.x);
+                float y = floor(gl_FragCoord.y);
+                gl_FragColor = vec4(2048.0 * x + 291.0, 1024.0 * y + 837.0,
+                                    32768.0 + 512.0 * x + 64.0 * y,
+                                    16384.0 + 257.0 * (x + y)) / 65535.0;
+            })";
+
+        ANGLE_GL_PROGRAM(program, kVS, kFS);
+        glViewport(0, 0, kY210Width, kY210Size);
+        drawQuad(program, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    // Creates a kY210Width x kY210Size RGBA16 texture holding Y210Pattern.
+    void CreateRGBA16PatternTexture(GLTexture *texture)
+    {
+        glBindTexture(GL_TEXTURE_2D, *texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        const std::vector<uint16_t> data = Y210PatternRect(0, 0, kY210Width, kY210Size);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16_EXT, kY210Width, kY210Size, 0, GL_RGBA,
+                     GL_UNSIGNED_SHORT, data.data());
+        ASSERT_GL_NO_ERROR();
+    }
+
+    // Creates an empty kY210Width x kY210Size texture of |internalFormat| and a framebuffer
+    // rendering to it, cleared to zero.
+    void CreateTextureTarget(GLenum internalFormat, GLTexture *texture, GLFramebuffer *fbo)
+    {
+        glBindTexture(GL_TEXTURE_2D, *texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, kY210Width, kY210Size);
+        glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *texture, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    // Binds |texture|, an image of a Y210 texture, to |fbo| as its color attachment.
+    void AttachY210(GLFramebuffer *fbo, GLuint texture)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    }
+
+    // Checks that glTexSubImage2D into a Y210 texture fails without modifying anything.
+    void RunY210TexSubImageRejectedTest()
+    {
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+        EGLImage image = EGL_NO_IMAGE_KHR;
+        GLTexture texture;
+        CreateRenderableY210Image(kY210Size, &d3d11Texture, &image, texture);
+        if (IsSkipped() || HasFatalFailure())
+        {
+            return;
+        }
+        WriteY210Pattern(d3d11Texture.Get());
+
+        glBindTexture(GL_TEXTURE_2D, texture);
+        const std::vector<uint16_t> data(5 * 2 * 4, 0);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 3, 2, 5, 2, GL_RGBA, GL_UNSIGNED_SHORT, data.data());
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        // Nothing was written, and the texture is still usable.
+        ExpectY210Pattern(ReadY210Texels(d3d11Texture.Get()), 0, 0, kY210Width, kY210Size, 0);
+        GLFramebuffer fbo;
+        AttachY210(&fbo, texture);
+        ExpectFramebufferY210Pattern(0, 0, kY210Width, kY210Size, 0);
+
+        eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
     }
 
     void RunYUVRenderTest(DXGI_FORMAT format)
@@ -3164,11 +3331,489 @@ TEST_P(D3DTextureYUVTestES3, Y410TextureImageCopyTexImageToIncompleteLevel)
     eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
 }
 
-// Test that Y210, which has no renderable view alias, is not
-// framebuffer-attachable even when the D3D texture claims render-target usage.
-TEST_P(D3DTextureYUVTestES3, Y210TextureImageNotRenderable)
+// Test that a Y210 D3D11 texture can be rendered into through its half-width aliased
+// R16G16B16A16_UNORM view, and that every texel lands where it should.
+TEST_P(D3DTextureYUVTestES3, Y210TextureImageRender)
 {
-    RunPackedYUVNotRenderableTest(DXGI_FORMAT_Y210);
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    EGLImage image = EGL_NO_IMAGE_KHR;
+    GLTexture texture;
+    CreateRenderableY210Image(kY210Size, &d3d11Texture, &image, texture);
+    if (IsSkipped() || HasFatalFailure())
+    {
+        return;
+    }
+
+    GLFramebuffer fbo;
+    AttachY210(&fbo, texture);
+    DrawY210Pattern();
+
+    ExpectY210Pattern(ReadY210Texels(d3d11Texture.Get()), 0, 0, kY210Width, kY210Size, 1);
+
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
+}
+
+// Test that glReadPixels from a Y210 framebuffer returns its texels as RGBA16 data, for the whole
+// image and for rectangles away from the origin. Y210 is read back in pixels, not in texels.
+TEST_P(D3DTextureYUVTestES3, Y210TextureImageReadPixels)
+{
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    EGLImage image = EGL_NO_IMAGE_KHR;
+    GLTexture texture;
+    CreateRenderableY210Image(kY210Size, &d3d11Texture, &image, texture);
+    if (IsSkipped() || HasFatalFailure())
+    {
+        return;
+    }
+    WriteY210Pattern(d3d11Texture.Get());
+
+    GLFramebuffer fbo;
+    AttachY210(&fbo, texture);
+    ExpectFramebufferY210Pattern(0, 0, kY210Width, kY210Size, 0);
+    // A single texel, and rectangles that start away from the origin or end at the last texel.
+    ExpectFramebufferY210Pattern(kY210Width / 2, kY210Size / 2, 1, 1, 0);
+    ExpectFramebufferY210Pattern(3, 2, 5, 2, 0);
+    ExpectFramebufferY210Pattern(kY210Width - 4, kY210Size - 3, 4, 3, 0);
+
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
+}
+
+// Test that glReadPixels from a Y210 framebuffer into a pixel pack buffer returns its texels as
+// RGBA16 data. That is a different path than reading into client memory.
+TEST_P(D3DTextureYUVTestES3, Y210TextureImageReadPixelsToBuffer)
+{
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    EGLImage image = EGL_NO_IMAGE_KHR;
+    GLTexture texture;
+    CreateRenderableY210Image(kY210Size, &d3d11Texture, &image, texture);
+    if (IsSkipped() || HasFatalFailure())
+    {
+        return;
+    }
+    WriteY210Pattern(d3d11Texture.Get());
+
+    GLFramebuffer fbo;
+    AttachY210(&fbo, texture);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+    glBufferData(GL_PIXEL_PACK_BUFFER, kY210Width * kY210Size * 4 * sizeof(uint16_t), nullptr,
+                 GL_STREAM_READ);
+    ASSERT_GL_NO_ERROR();
+
+    // Reads the |width| x |height| texels at (|x0|, |y0|) into the buffer and expects them to hold
+    // Y210Pattern.
+    auto expectRect = [&](UINT x0, UINT y0, UINT width, UINT height) {
+        glReadPixels(x0, y0, width, height, GL_RGBA, GL_UNSIGNED_SHORT, nullptr);
+        ASSERT_GL_NO_ERROR();
+        const size_t count   = width * height * 4;
+        const uint16_t *data = static_cast<const uint16_t *>(
+            glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, count * sizeof(uint16_t), GL_MAP_READ_BIT));
+        ASSERT_GL_NO_ERROR();
+        ASSERT_NE(data, nullptr);
+        ExpectY210Pattern(std::vector<uint16_t>(data, data + count), x0, y0, width, height, 0);
+        glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+    };
+    expectRect(0, 0, kY210Width, kY210Size);
+    // A single texel, and rectangles that start away from the origin or end at the last texel.
+    expectRect(kY210Width / 2, kY210Size / 2, 1, 1);
+    expectRect(3, 2, 5, 2);
+    expectRect(kY210Width - 4, kY210Size - 3, 4, 3);
+
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
+}
+
+// Test that glTexSubImage2D into a Y210 texture is rejected instead of silently dropped. D3D11
+// updates it in Y210 pixels, not in texels of the view alias, which isn't supported.
+TEST_P(D3DTextureYUVTestES3, Y210TextureImageTexSubImageRejected)
+{
+    RunY210TexSubImageRejectedTest();
+}
+
+// Runs with the setDataFasterThanImageUpload feature disabled.
+class D3DTextureYUVTestES3NoSetData : public D3DTextureYUVTestES3
+{};
+
+// Test that glTexSubImage2D into a Y210 texture is rejected without TextureStorage11::setData(),
+// where it loads the data into an image first, which must not happen either.
+TEST_P(D3DTextureYUVTestES3NoSetData, Y210TextureImageTexSubImageRejected)
+{
+    RunY210TexSubImageRejectedTest();
+}
+
+// Test that glTexSubImage2D updates a Y410 texture, where a texel is a pixel.
+TEST_P(D3DTextureYUVTestES3, Y410TextureImageTexSubImage)
+{
+    constexpr UINT kSize = 32;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    EGLImage image = EGL_NO_IMAGE_KHR;
+    GLTexture texture;
+    CreateRenderableY410Image(kSize, &d3d11Texture, &image, texture);
+    if (IsSkipped() || HasFatalFailure())
+    {
+        return;
+    }
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ClearRGB10A2(0, 0, 0, 0);
+
+    const uint32_t word = PackRGB10A2(0x234, 0x123, 0x345, 3);
+    const std::vector<uint32_t> data(5 * 2, word);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 3, 2, 5, 2, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV,
+                    data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // The 5x2 block at (3, 2) holds the word, and the texels around it are untouched.
+    for (UINT y = 0; y < 6; ++y)
+    {
+        for (UINT x = 0; x < 10; ++x)
+        {
+            const bool inside = x >= 3 && x < 8 && y >= 2 && y < 4;
+            ASSERT_EQ(ReadY410Word(d3d11Texture.Get(), x, y), inside ? word : 0u)
+                << "texel (" << x << ", " << y << ")";
+        }
+    }
+
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
+}
+
+// Test that glBlitFramebuffer copies between Y210 and RGBA16 framebuffers in both directions. They
+// share a format ID, but CopySubresourceRegion can't copy between their DXGI formats.
+TEST_P(D3DTextureYUVTestES3, Y210TextureImageBlitFramebuffer)
+{
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    EGLImage image = EGL_NO_IMAGE_KHR;
+    GLTexture y210Texture;
+    CreateRenderableY210Image(kY210Size, &d3d11Texture, &image, y210Texture);
+    if (IsSkipped() || HasFatalFailure())
+    {
+        return;
+    }
+    WriteY210Pattern(d3d11Texture.Get());
+
+    GLFramebuffer y210Fbo;
+    AttachY210(&y210Fbo, y210Texture);
+    GLTexture rgbTexture;
+    GLFramebuffer rgbFbo;
+    CreateTextureTarget(GL_RGBA16_EXT, &rgbTexture, &rgbFbo);
+
+    // Y210 to RGBA16, the whole image.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, y210Fbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, rgbFbo);
+    glBlitFramebuffer(0, 0, kY210Width, kY210Size, 0, 0, kY210Width, kY210Size, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, rgbFbo);
+    ExpectFramebufferY210Pattern(0, 0, kY210Width, kY210Size, 0);
+
+    // Y210 to RGBA16, a rectangle away from the origin: nothing outside of it is written.
+    glBindFramebuffer(GL_FRAMEBUFFER, rgbFbo);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, y210Fbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, rgbFbo);
+    glBlitFramebuffer(2, 3, 14, 23, 2, 3, 14, 23, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, rgbFbo);
+    ExpectFramebufferY210Pattern(2, 3, 12, 20, 0);
+    uint16_t outside[4] = {1, 1, 1, 1};
+    glReadPixels(1, 3, 1, 1, GL_RGBA, GL_UNSIGNED_SHORT, outside);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(outside[0] | outside[1] | outside[2] | outside[3], 0);
+
+    // RGBA16 to Y210, the whole image.
+    GLTexture patternTexture;
+    GLFramebuffer patternFbo;
+    CreateRGBA16PatternTexture(&patternTexture);
+    glBindFramebuffer(GL_FRAMEBUFFER, patternFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, patternTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glBindFramebuffer(GL_FRAMEBUFFER, y210Fbo);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, patternFbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, y210Fbo);
+    glBlitFramebuffer(0, 0, kY210Width, kY210Size, 0, 0, kY210Width, kY210Size, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    ExpectY210Pattern(ReadY210Texels(d3d11Texture.Get()), 0, 0, kY210Width, kY210Size, 0);
+
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
+}
+
+// Test that glBlitFramebuffer resolves a multisampled RGBA16 framebuffer into a Y210 one.
+// ResolveSubresource can't resolve into the Y210 texture.
+TEST_P(D3DTextureYUVTestES3, Y210TextureImageBlitFramebufferResolve)
+{
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    EGLImage image = EGL_NO_IMAGE_KHR;
+    GLTexture y210Texture;
+    CreateRenderableY210Image(kY210Size, &d3d11Texture, &image, y210Texture);
+    if (IsSkipped() || HasFatalFailure())
+    {
+        return;
+    }
+
+    GLint maxSamples = 0;
+    glGetInternalformativ(GL_RENDERBUFFER, GL_RGBA16_EXT, GL_SAMPLES, 1, &maxSamples);
+    ANGLE_SKIP_TEST_IF(maxSamples < 4);
+
+    GLFramebuffer y210Fbo;
+    AttachY210(&y210Fbo, y210Texture);
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLRenderbuffer msRenderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, msRenderbuffer);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA16_EXT, kY210Width, kY210Size);
+    GLFramebuffer msFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, msFbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                              msRenderbuffer);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    DrawY210Pattern();
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, y210Fbo);
+    glBlitFramebuffer(0, 0, kY210Width, kY210Size, 0, 0, kY210Width, kY210Size, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    ExpectY210Pattern(ReadY210Texels(d3d11Texture.Get()), 0, 0, kY210Width, kY210Size, 1);
+
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
+}
+
+// Test that glCopySubTextureCHROMIUM copies from a Y210 texture, whole or in part. RGBA16, and
+// thus Y210, isn't a valid destination of that extension, so it copies to RGBA32F instead.
+TEST_P(D3DTextureYUVTestES3, Y210TextureImageCopySubTexture)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_CHROMIUM_copy_texture") ||
+                       !IsGLExtensionEnabled("GL_EXT_color_buffer_float"));
+
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    EGLImage image = EGL_NO_IMAGE_KHR;
+    GLTexture y210Texture;
+    CreateRenderableY210Image(kY210Size, &d3d11Texture, &image, y210Texture);
+    if (IsSkipped() || HasFatalFailure())
+    {
+        return;
+    }
+    WriteY210Pattern(d3d11Texture.Get());
+
+    GLTexture floatTexture;
+    GLFramebuffer floatFbo;
+    CreateTextureTarget(GL_RGBA32F, &floatTexture, &floatFbo);
+
+    // Expects the texel at (x, y) of the RGBA32F |texels| to hold Y210Pattern(px, py).
+    auto readFloatTexels = [&]() {
+        std::vector<float> texels(kY210Width * kY210Size * 4);
+        glReadPixels(0, 0, kY210Width, kY210Size, GL_RGBA, GL_FLOAT, texels.data());
+        EXPECT_GL_NO_ERROR();
+        return texels;
+    };
+    auto expectTexel = [&](const std::vector<float> &texels, UINT x, UINT y, UINT px, UINT py) {
+        const std::array<uint16_t, 4> expected = Y210Pattern(px, py);
+        for (UINT c = 0; c < 4; ++c)
+        {
+            EXPECT_NEAR(texels[(y * kY210Width + x) * 4 + c], expected[c] / 65535.0f, 1e-4f)
+                << "texel (" << x << ", " << y << ") channel " << c;
+        }
+    };
+
+    // A rectangle from (2, 3) to (5, 1): nothing outside of it is written.
+    glCopySubTextureCHROMIUM(y210Texture, 0, GL_TEXTURE_2D, floatTexture, 0, 5, 1, 2, 3, 6, 7,
+                             GL_FALSE, GL_FALSE, GL_FALSE);
+    ASSERT_GL_NO_ERROR();
+    std::vector<float> texels = readFloatTexels();
+    for (UINT y = 0; y < 7; ++y)
+    {
+        for (UINT x = 0; x < 6; ++x)
+        {
+            expectTexel(texels, 5 + x, 1 + y, 2 + x, 3 + y);
+        }
+    }
+    EXPECT_EQ(texels[(1 * kY210Width + 4) * 4 + 0], 0.0f);
+
+    // The whole image, including its last texel.
+    glCopySubTextureCHROMIUM(y210Texture, 0, GL_TEXTURE_2D, floatTexture, 0, 0, 0, 0, 0, kY210Width,
+                             kY210Size, GL_FALSE, GL_FALSE, GL_FALSE);
+    ASSERT_GL_NO_ERROR();
+    texels = readFloatTexels();
+    for (UINT y = 0; y < kY210Size; ++y)
+    {
+        for (UINT x = 0; x < kY210Width; ++x)
+        {
+            expectTexel(texels, x, y, x, y);
+        }
+    }
+
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
+}
+
+// Test that glCopyTexSubImage2D copies between Y210 and RGBA16 textures in both directions.
+TEST_P(D3DTextureYUVTestES3, Y210TextureImageCopyTexSubImage)
+{
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    EGLImage image = EGL_NO_IMAGE_KHR;
+    GLTexture y210Texture;
+    CreateRenderableY210Image(kY210Size, &d3d11Texture, &image, y210Texture);
+    if (IsSkipped() || HasFatalFailure())
+    {
+        return;
+    }
+    WriteY210Pattern(d3d11Texture.Get());
+
+    GLFramebuffer y210Fbo;
+    AttachY210(&y210Fbo, y210Texture);
+    GLTexture rgbTexture;
+    GLFramebuffer rgbFbo;
+    CreateTextureTarget(GL_RGBA16_EXT, &rgbTexture, &rgbFbo);
+
+    // Y210 to RGBA16, the whole image.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, y210Fbo);
+    glBindTexture(GL_TEXTURE_2D, rgbTexture);
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, kY210Width, kY210Size);
+    ASSERT_GL_NO_ERROR();
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, rgbFbo);
+    ExpectFramebufferY210Pattern(0, 0, kY210Width, kY210Size, 0);
+
+    // Y210 to RGBA16, a rectangle from (3, 2) to (1, 1).
+    glBindFramebuffer(GL_FRAMEBUFFER, rgbFbo);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, y210Fbo);
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 1, 1, 3, 2, 5, 2);
+    ASSERT_GL_NO_ERROR();
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, rgbFbo);
+    std::vector<uint16_t> pixels(5 * 2 * 4);
+    glReadPixels(1, 1, 5, 2, GL_RGBA, GL_UNSIGNED_SHORT, pixels.data());
+    ASSERT_GL_NO_ERROR();
+    ExpectY210Pattern(pixels, 3, 2, 5, 2, 0);
+    uint16_t outside[4] = {1, 1, 1, 1};
+    glReadPixels(0, 1, 1, 1, GL_RGBA, GL_UNSIGNED_SHORT, outside);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(outside[0] | outside[1] | outside[2] | outside[3], 0);
+
+    // RGBA16 to Y210, the whole image.
+    GLTexture patternTexture;
+    GLFramebuffer patternFbo;
+    CreateRGBA16PatternTexture(&patternTexture);
+    glBindFramebuffer(GL_FRAMEBUFFER, patternFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, patternTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glBindFramebuffer(GL_FRAMEBUFFER, y210Fbo);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, patternFbo);
+    glBindTexture(GL_TEXTURE_2D, y210Texture);
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, kY210Width, kY210Size);
+    ASSERT_GL_NO_ERROR();
+    ExpectY210Pattern(ReadY210Texels(d3d11Texture.Get()), 0, 0, kY210Width, kY210Size, 0);
+
+    // RGBA16 to Y210, a rectangle from (1, 2) to (3, 1): nothing outside of it is written.
+    glBindFramebuffer(GL_FRAMEBUFFER, y210Fbo);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, patternFbo);
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 3, 1, 1, 2, 5, 2);
+    ASSERT_GL_NO_ERROR();
+    const std::vector<uint16_t> texels = ReadY210Texels(d3d11Texture.Get());
+    std::vector<uint16_t> copied;
+    for (UINT y = 1; y < 3; ++y)
+    {
+        copied.insert(copied.end(), texels.begin() + (y * kY210Width + 3) * 4,
+                      texels.begin() + (y * kY210Width + 8) * 4);
+    }
+    ExpectY210Pattern(copied, 1, 2, 5, 2, 0);
+    EXPECT_EQ(texels[(1 * kY210Width + 2) * 4 + 0], 0);
+
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
+}
+
+// Test that glCopyTexImage2D copies from a Y210 framebuffer into a texture level that isn't
+// complete yet. That copy goes to the level's staging image instead of a render target, and
+// CopySubresourceRegion can't copy from the Y210 texture into it.
+TEST_P(D3DTextureYUVTestES3, Y210TextureImageCopyTexImageToIncompleteLevel)
+{
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    EGLImage image = EGL_NO_IMAGE_KHR;
+    GLTexture y210Texture;
+    CreateRenderableY210Image(kY210Size, &d3d11Texture, &image, y210Texture);
+    if (IsSkipped() || HasFatalFailure())
+    {
+        return;
+    }
+    WriteY210Pattern(d3d11Texture.Get());
+
+    GLFramebuffer y210Fbo;
+    AttachY210(&y210Fbo, y210Texture);
+
+    // Level 1 is incomplete while the base level is undefined.
+    GLTexture rgbTexture;
+    glBindTexture(GL_TEXTURE_2D, rgbTexture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA16_EXT, 0, 0, kY210Width, kY210Size, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Make level 1 the base level to read it back.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    GLFramebuffer rgbFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, rgbFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rgbTexture, 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ExpectFramebufferY210Pattern(0, 0, kY210Width, kY210Size, 0);
+
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
+}
+
+// Test that a Y210 texture that was rendered to through its RGBA16 view can be sampled through
+// the same view afterwards, and that every texel survives the round trip.
+TEST_P(D3DTextureYUVTestES3, Y210TextureImageRenderThenSample)
+{
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    EGLImage image = EGL_NO_IMAGE_KHR;
+    GLTexture y210Texture;
+    CreateRenderableY210Image(kY210Size, &d3d11Texture, &image, y210Texture);
+    if (IsSkipped() || HasFatalFailure())
+    {
+        return;
+    }
+
+    GLFramebuffer y210Fbo;
+    AttachY210(&y210Fbo, y210Texture);
+    DrawY210Pattern();
+
+    GLTexture rgbTexture;
+    GLFramebuffer rgbFbo;
+    CreateTextureTarget(GL_RGBA16_EXT, &rgbTexture, &rgbFbo);
+
+    constexpr char kVS[] =
+        R"(precision highp float;
+        attribute vec4 position;
+
+        void main()
+        {
+            gl_Position = position;
+        })";
+
+    constexpr char kFS[] =
+        R"(precision highp float;
+        uniform sampler2D tex;
+
+        void main()
+        {
+            gl_FragColor = texture2D(tex, gl_FragCoord.xy / vec2(16.0, 32.0));
+        })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, y210Texture);
+    glUniform1i(glGetUniformLocation(program, "tex"), 0);
+    glViewport(0, 0, kY210Width, kY210Size);
+    drawQuad(program, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    ExpectFramebufferY210Pattern(0, 0, kY210Width, kY210Size, 1);
+
+    eglDestroyImageKHR(getEGLWindow()->getDisplay(), image);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
@@ -3176,6 +3821,8 @@ TEST_P(D3DTextureYUVTestES3, Y210TextureImageNotRenderable)
 ANGLE_INSTANTIATE_TEST_ES2(D3DTextureTest);
 ANGLE_INSTANTIATE_TEST_ES3(D3DTextureClearTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(D3DTextureYUVTestES3);
+ANGLE_INSTANTIATE_TEST(D3DTextureYUVTestES3NoSetData,
+                       ES3_D3D11().disable(Feature::SetDataFasterThanImageUpload));
 ANGLE_INSTANTIATE_TEST_ES3(D3DTextureTestES3);
 // D3D Debug device reports an error. http://anglebug.com/40096593
 // ANGLE_INSTANTIATE_TEST(D3DTextureTestMS, ES2_D3D11());

@@ -444,6 +444,7 @@ class TextureStorage11_EGLImage final : public TextureStorage11ImmutableBase
                                       UINT *outSubresourceIndex) const override;
     angle::Result getResource(const gl::Context *context,
                               const TextureHelper11 **outResource) override;
+    angle::Result checkSubImageSupported(const gl::Context *context) override;
     angle::Result getSRVForSampler(const gl::Context *context,
                                    const gl::TextureState &textureState,
                                    const gl::SamplerState &sampler,

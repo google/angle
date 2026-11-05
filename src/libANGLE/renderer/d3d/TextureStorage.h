@@ -58,6 +58,13 @@ class TextureStorage : public angle::Subject
 
     virtual bool isMultiplanar(const gl::Context *context) = 0;
 
+    // Returns an error if glTexSubImage*() can't update the storage. Checked before anything is
+    // modified.
+    virtual angle::Result checkSubImageSupported(const gl::Context *context)
+    {
+        return angle::Result::Continue;
+    }
+
     virtual angle::Result findRenderTarget(const gl::Context *context,
                                            const gl::ImageIndex &index,
                                            RenderTargetD3D **outRT) const = 0;

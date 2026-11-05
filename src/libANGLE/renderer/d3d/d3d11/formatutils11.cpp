@@ -107,11 +107,11 @@ const Format *GetPackedYUVFormat(DXGI_FORMAT dxgiFormat)
         DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R10G10B10A2_UNORM, DXGI_FORMAT_UNKNOWN,
         DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, GL_NONE, nullptr);
 
-    static constexpr Format y210Info(GL_RGBA16_EXT, angle::FormatID::R16G16B16A16_UNORM,
-                                     DXGI_FORMAT_Y210, DXGI_FORMAT_R16G16B16A16_UNORM,
-                                     DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN,
-                                     DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_UNKNOWN,
-                                     DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, GL_NONE, nullptr);
+    static constexpr Format y210Info(
+        GL_RGBA16_EXT, angle::FormatID::R16G16B16A16_UNORM, DXGI_FORMAT_Y210,
+        DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R16G16B16A16_UNORM,
+        DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_UNKNOWN,
+        DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN, GL_NONE, nullptr);
 
     switch (dxgiFormat)
     {
@@ -127,6 +127,11 @@ const Format *GetPackedYUVFormat(DXGI_FORMAT dxgiFormat)
 bool IsPackedYUVFormat(DXGI_FORMAT dxgiFormat)
 {
     return GetPackedYUVFormat(dxgiFormat) != nullptr;
+}
+
+GLuint GetPackedYUVPixelsPerTexel(DXGI_FORMAT dxgiFormat)
+{
+    return dxgiFormat == DXGI_FORMAT_Y210 ? 2 : 1;
 }
 
 DXGIFormatSize::DXGIFormatSize(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight)
@@ -271,7 +276,9 @@ const DXGIFormatSize &GetDXGIFormatSizeInfo(DXGI_FORMAT format)
         case DXGI_FORMAT_BC7_UNORM_SRGB:
             return sizeBC7;
         case DXGI_FORMAT_Y410:
-            // Y410 is rendered to, read back and copied like its R10G10B10A2_UNORM view alias.
+        case DXGI_FORMAT_Y210:
+            // Y410 takes 4 bytes per pixel, and Y210 8 bytes per pair of pixels, which is 4 on
+            // average. The texture's width is in pixels in both cases.
             return size32;
         case DXGI_FORMAT_AYUV:
         case DXGI_FORMAT_Y416:
@@ -280,7 +287,6 @@ const DXGIFormatSize &GetDXGIFormatSizeInfo(DXGI_FORMAT format)
         case DXGI_FORMAT_P016:
         case DXGI_FORMAT_420_OPAQUE:
         case DXGI_FORMAT_YUY2:
-        case DXGI_FORMAT_Y210:
         case DXGI_FORMAT_Y216:
         case DXGI_FORMAT_NV11:
         case DXGI_FORMAT_AI44:
