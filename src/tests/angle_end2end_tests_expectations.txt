@@ -3081,6 +3081,8 @@
 567613573 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CubeMap/* = SKIP
 548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.Uncompressed/* = SKIP
 548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedASTC/* = SKIP
+562849570 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedASTC12x12_192x192/* = SKIP
+562849570 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedASTC12x12_256x256/* = SKIP
 548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedDXT/* = SKIP
 548127218 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CompressedETC/* = SKIP
 567613573 WIN INTEL OPENGL : Texture3DTestES3_OversizedMipLevels.OversizedDepth/* = SKIP
