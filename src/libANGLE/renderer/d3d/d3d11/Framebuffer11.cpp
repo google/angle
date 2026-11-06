@@ -7,6 +7,9 @@
 // Framebuffer11.cpp: Implements the Framebuffer11 class.
 
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
+
+#include <limits>
+
 #include "common/unsafe_buffers.h"
 
 #include "common/bitset_utils.h"
@@ -64,6 +67,143 @@ UINT GetAttachmentLayer(const gl::FramebufferAttachment *attachment)
         return attachment->layer();
     }
     return 0;
+}
+
+struct RTVSubresourceRange
+{
+    UINT mipSlice   = 0;
+    UINT startSlice = 0;
+    UINT endSlice   = 1;
+    UINT planeSlice = 0;
+};
+
+UINT GetSaturatingSliceEnd(UINT startSlice, UINT count)
+{
+    if (count == static_cast<UINT>(-1))
+    {
+        return std::numeric_limits<UINT>::max();
+    }
+    return (count > std::numeric_limits<UINT>::max() - startSlice)
+               ? std::numeric_limits<UINT>::max()
+               : (startSlice + count);
+}
+
+bool IsMultiplanarResource(ID3D11Resource *resource)
+{
+    angle::ComPtr<ID3D11Texture2D> texture2D =
+        angle::DynamicCastComObject<ID3D11Texture2D>(resource);
+    if (!texture2D)
+    {
+        return false;
+    }
+    D3D11_TEXTURE2D_DESC desc = {};
+    texture2D->GetDesc(&desc);
+    return d3d11::IsSupportedMultiplanarFormat(desc.Format);
+}
+
+RTVSubresourceRange GetRTVSubresourceRange(ID3D11RenderTargetView *rtv, bool isMultiplanar)
+{
+    D3D11_RENDER_TARGET_VIEW_DESC desc = {};
+    rtv->GetDesc(&desc);
+
+    RTVSubresourceRange range;
+    if (isMultiplanar &&
+        (desc.Format == DXGI_FORMAT_R8G8_UNORM || desc.Format == DXGI_FORMAT_R16G16_UNORM))
+    {
+        range.planeSlice = 1;
+    }
+
+    switch (desc.ViewDimension)
+    {
+        case D3D11_RTV_DIMENSION_TEXTURE1D:
+            range.mipSlice = desc.Texture1D.MipSlice;
+            break;
+        case D3D11_RTV_DIMENSION_TEXTURE1DARRAY:
+            range.mipSlice   = desc.Texture1DArray.MipSlice;
+            range.startSlice = desc.Texture1DArray.FirstArraySlice;
+            range.endSlice = GetSaturatingSliceEnd(range.startSlice, desc.Texture1DArray.ArraySize);
+            break;
+        case D3D11_RTV_DIMENSION_TEXTURE2D:
+            range.mipSlice = desc.Texture2D.MipSlice;
+            break;
+        case D3D11_RTV_DIMENSION_TEXTURE2DARRAY:
+            range.mipSlice   = desc.Texture2DArray.MipSlice;
+            range.startSlice = desc.Texture2DArray.FirstArraySlice;
+            range.endSlice = GetSaturatingSliceEnd(range.startSlice, desc.Texture2DArray.ArraySize);
+            break;
+        case D3D11_RTV_DIMENSION_TEXTURE2DMS:
+            break;
+        case D3D11_RTV_DIMENSION_TEXTURE2DMSARRAY:
+            range.startSlice = desc.Texture2DMSArray.FirstArraySlice;
+            range.endSlice =
+                GetSaturatingSliceEnd(range.startSlice, desc.Texture2DMSArray.ArraySize);
+            break;
+        case D3D11_RTV_DIMENSION_TEXTURE3D:
+            range.mipSlice   = desc.Texture3D.MipSlice;
+            range.startSlice = desc.Texture3D.FirstWSlice;
+            range.endSlice   = GetSaturatingSliceEnd(range.startSlice, desc.Texture3D.WSize);
+            break;
+        case D3D11_RTV_DIMENSION_BUFFER:
+            range.startSlice = desc.Buffer.FirstElement;
+            range.endSlice   = GetSaturatingSliceEnd(range.startSlice, desc.Buffer.NumElements);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    return range;
+}
+
+bool HasAliasedColorRenderTargets(const gl::AttachmentArray<RenderTarget11 *> &colorRTs)
+{
+    for (size_t firstIdx = 0; firstIdx < colorRTs.size(); ++firstIdx)
+    {
+        const RenderTarget11 *firstRT = colorRTs[firstIdx];
+        if (firstRT == nullptr || !firstRT->getTexture().valid() ||
+            !firstRT->getRenderTargetView().valid())
+        {
+            continue;
+        }
+
+        ID3D11Resource *firstResource = firstRT->getTexture().get();
+        Optional<bool> isMultiplanar;
+        Optional<RTVSubresourceRange> firstRange;
+
+        for (size_t secondIdx = firstIdx + 1; secondIdx < colorRTs.size(); ++secondIdx)
+        {
+            const RenderTarget11 *secondRT = colorRTs[secondIdx];
+            if (secondRT == nullptr || !secondRT->getTexture().valid() ||
+                !secondRT->getRenderTargetView().valid())
+            {
+                continue;
+            }
+
+            if (firstResource != secondRT->getTexture().get())
+            {
+                continue;
+            }
+
+            if (!firstRange.valid())
+            {
+                isMultiplanar = IsMultiplanarResource(firstResource);
+                firstRange    = GetRTVSubresourceRange(firstRT->getRenderTargetView().get(),
+                                                       isMultiplanar.value());
+            }
+
+            const RTVSubresourceRange secondRange = GetRTVSubresourceRange(
+                secondRT->getRenderTargetView().get(), isMultiplanar.value());
+            if (firstRange.value().mipSlice == secondRange.mipSlice &&
+                firstRange.value().planeSlice == secondRange.planeSlice &&
+                firstRange.value().startSlice < secondRange.endSlice &&
+                secondRange.startSlice < firstRange.value().endSlice)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 }  // anonymous namespace
@@ -426,6 +566,15 @@ angle::Result Framebuffer11::syncState(const gl::Context *context,
                                        gl::Command command)
 {
     ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
+
+    // D3D11's OMSetRenderTargets silently fails and leaves previously bound render targets active
+    // when two color RTVs reference overlapping subresources of the same ID3D11Resource. Report a
+    // backend error here (which loses hardened contexts via loseHardenedContextOnBackendError) so
+    // draws, clears, and blits abort before OMSetRenderTargets is called.
+    ANGLE_CHECK(GetImplAs<Context11>(context),
+                !HasAliasedColorRenderTargets(mRenderTargetCache.getColors()),
+                "Framebuffer has aliased color render target views.", GL_INVALID_OPERATION);
+
     ANGLE_TRY(FramebufferD3D::syncState(context, binding, dirtyBits, command));
 
     // Call this last to allow the state manager to take advantage of the cached render targets.

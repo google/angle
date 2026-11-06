@@ -1593,6 +1593,546 @@ TEST_P(D3DTextureTest, TextureArray)
     d3d11Texture->Release();
 }
 
+// Verify that attaching two distinct GL textures or renderbuffers that alias the same D3D11
+// texture subresource (via separate EGL_D3D11_TEXTURE_ANGLE EGLImages, the same EGLImage,
+// EGL_GL_TEXTURE_2D_KHR / orphaned EGLImages, a bound EGL_D3D_TEXTURE_ANGLE pbuffer surface,
+// ignored non-YUV plane attributes, or distinct COM interface pointers) fails in D3D11
+// Framebuffer11::syncState before OMSetRenderTargets and does not corrupt the previously bound
+// framebuffer's render target.
+TEST_P(D3DTextureTestES3, AliasedD3D11TextureAttachmentsDoNotCorruptPreviousFramebuffer)
+{
+    ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11());
+
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+    window->makeCurrent();
+
+    constexpr UINT kSize = 8;
+
+    // Bind firstFbo and draw green to it so its RTV is bound via OMSetRenderTargets on the D3D11
+    // immediate context.
+    GLTexture firstTex;
+    glBindTexture(GL_TEXTURE_2D, firstTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer firstFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, firstFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, firstTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glViewport(0, 0, kSize, kSize);
+    drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Create a single shared D3D11 2D texture and import it through two distinct EGLImages.
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, kSize, kSize, 1, 1,
+                               D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+    ASSERT_TRUE(SUCCEEDED(mD3D11Device->CreateTexture2D(&desc, nullptr, &d3d11Texture)));
+
+    EGLImage image0 = eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                                        static_cast<EGLClientBuffer>(d3d11Texture.Get()), nullptr);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(image0, EGL_NO_IMAGE_KHR);
+
+    EGLImage image1 = eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                                        static_cast<EGLClientBuffer>(d3d11Texture.Get()), nullptr);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(image1, EGL_NO_IMAGE_KHR);
+    ASSERT_NE(image0, image1);
+
+    GLTexture tex0;
+    glBindTexture(GL_TEXTURE_2D, tex0);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image0);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture tex1;
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image1);
+    ASSERT_GL_NO_ERROR();
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+layout(location = 0) out vec4 out0;
+layout(location = 1) out vec4 out1;
+void main()
+{
+    out0 = vec4(1.0, 0.0, 0.0, 1.0);
+    out1 = vec4(0.0, 0.0, 1.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(mrtProgram, kVS, kFS);
+
+    GLFramebuffer secondFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, secondFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, tex1, 0);
+    const GLenum drawBuffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, drawBuffers);
+
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    // Repeated draws against the same aliased FBO must keep failing.
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Masked/scissored clears (which bind multiple RTVs via Clear11) must also fail safely.
+    glColorMask(GL_TRUE, GL_FALSE, GL_TRUE, GL_TRUE);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    // Also verify that binding two textures to the same EGLImage fails.
+    GLTexture texSameImage0;
+    glBindTexture(GL_TEXTURE_2D, texSameImage0);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image0);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texSameImage0, 0);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Also verify that a pbuffer surface wrapping the same D3D11 texture bound via eglBindTexImage
+    // alongside tex0 fails.
+    const EGLint pbufferAttribs[] = {
+        EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGBA, EGL_TEXTURE_TARGET,
+        EGL_TEXTURE_2D,     EGL_NONE,         EGL_NONE,
+    };
+    EGLSurface pbuffer = eglCreatePbufferFromClientBuffer(
+        display, EGL_D3D_TEXTURE_ANGLE, static_cast<EGLClientBuffer>(d3d11Texture.Get()),
+        window->getConfig(), pbufferAttribs);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(pbuffer, EGL_NO_SURFACE);
+
+    GLTexture texFromPbuffer;
+    glBindTexture(GL_TEXTURE_2D, texFromPbuffer);
+    ASSERT_EGL_TRUE(eglBindTexImage(display, pbuffer, EGL_BACK_BUFFER));
+    ASSERT_EGL_SUCCESS();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texFromPbuffer, 0);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Also verify that two distinct pbuffer surfaces wrapping the same D3D11 texture fail.
+    EGLSurface pbuffer2 = eglCreatePbufferFromClientBuffer(
+        display, EGL_D3D_TEXTURE_ANGLE, static_cast<EGLClientBuffer>(d3d11Texture.Get()),
+        window->getConfig(), pbufferAttribs);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(pbuffer2, EGL_NO_SURFACE);
+
+    GLTexture texFromPbuffer2;
+    glBindTexture(GL_TEXTURE_2D, texFromPbuffer2);
+    ASSERT_EGL_TRUE(eglBindTexImage(display, pbuffer2, EGL_BACK_BUFFER));
+    ASSERT_EGL_SUCCESS();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texFromPbuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texFromPbuffer2, 0);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Also verify that a renderbuffer targeting image1 alongside tex0 (targeting image0) fails.
+    GLRenderbuffer rbo1;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo1);
+    glEGLImageTargetRenderbufferStorageOES(GL_RENDERBUFFER, image1);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex0, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_RENDERBUFFER, rbo1);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Also verify that specifying EGL_D3D11_TEXTURE_PLANE_ANGLE on a non-YUV texture (where the
+    // attribute is ignored by D3D11) does not bypass attachment aliasing detection for either
+    // EGLImage or pbuffer surface imports.
+    const EGLint ignoredPlaneAttribs[] = {EGL_D3D11_TEXTURE_PLANE_ANGLE, 1, EGL_NONE};
+    EGLImage imageIgnoredPlane =
+        eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                          static_cast<EGLClientBuffer>(d3d11Texture.Get()), ignoredPlaneAttribs);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(imageIgnoredPlane, EGL_NO_IMAGE_KHR);
+
+    GLTexture texIgnoredPlane;
+    glBindTexture(GL_TEXTURE_2D, texIgnoredPlane);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, imageIgnoredPlane);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texIgnoredPlane, 0);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    const EGLint pbufferIgnoredPlaneAttribs[] = {
+        EGL_TEXTURE_FORMAT,
+        EGL_TEXTURE_RGBA,
+        EGL_TEXTURE_TARGET,
+        EGL_TEXTURE_2D,
+        EGL_D3D11_TEXTURE_PLANE_ANGLE,
+        1,
+        EGL_NONE,
+    };
+    EGLSurface pbufferIgnoredPlane = eglCreatePbufferFromClientBuffer(
+        display, EGL_D3D_TEXTURE_ANGLE, static_cast<EGLClientBuffer>(d3d11Texture.Get()),
+        window->getConfig(), pbufferIgnoredPlaneAttribs);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(pbufferIgnoredPlane, EGL_NO_SURFACE);
+
+    GLTexture texFromPbufferIgnoredPlane;
+    glBindTexture(GL_TEXTURE_2D, texFromPbufferIgnoredPlane);
+    ASSERT_EGL_TRUE(eglBindTexImage(display, pbufferIgnoredPlane, EGL_BACK_BUFFER));
+    ASSERT_EGL_SUCCESS();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
+                           texFromPbufferIgnoredPlane, 0);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Also verify that importing the same D3D11 texture through a different COM interface pointer
+    // (IDXGIResource* / IDXGISurface* queried from ID3D11Texture2D*) resolves to the same
+    // canonical texture identity for both EGLImage and pbuffer surface imports.
+    Microsoft::WRL::ComPtr<IDXGIResource> dxgiResource;
+    ASSERT_TRUE(SUCCEEDED(d3d11Texture.As(&dxgiResource)));
+    Microsoft::WRL::ComPtr<IDXGISurface> dxgiSurface;
+    ASSERT_TRUE(SUCCEEDED(d3d11Texture.As(&dxgiSurface)));
+
+    EGLImage imageFromDxgiResource =
+        eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                          static_cast<EGLClientBuffer>(dxgiResource.Get()), nullptr);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(imageFromDxgiResource, EGL_NO_IMAGE_KHR);
+
+    GLTexture texFromDxgiResource;
+    glBindTexture(GL_TEXTURE_2D, texFromDxgiResource);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, imageFromDxgiResource);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texFromDxgiResource,
+                           0);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    EGLSurface pbufferFromDxgiSurface = eglCreatePbufferFromClientBuffer(
+        display, EGL_D3D_TEXTURE_ANGLE, static_cast<EGLClientBuffer>(dxgiSurface.Get()),
+        window->getConfig(), pbufferAttribs);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(pbufferFromDxgiSurface, EGL_NO_SURFACE);
+
+    GLTexture texFromDxgiSurfacePbuffer;
+    glBindTexture(GL_TEXTURE_2D, texFromDxgiSurfacePbuffer);
+    ASSERT_EGL_TRUE(eglBindTexImage(display, pbufferFromDxgiSurface, EGL_BACK_BUFFER));
+    ASSERT_EGL_SUCCESS();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
+                           texFromDxgiSurfacePbuffer, 0);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Also verify aliasing via EGL_GL_TEXTURE_2D_KHR (source + target, and two targets after
+    // orphaning the source texture).
+    GLTexture glSrcTex;
+    glBindTexture(GL_TEXTURE_2D, glSrcTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    EGLImage glTexImage = eglCreateImageKHR(
+        display, window->getContext(), EGL_GL_TEXTURE_2D_KHR,
+        reinterpret_cast<EGLClientBuffer>(static_cast<uintptr_t>(glSrcTex)), nullptr);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(glTexImage, EGL_NO_IMAGE_KHR);
+
+    GLTexture glTargetA;
+    glBindTexture(GL_TEXTURE_2D, glTargetA);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, glTexImage);
+    GLTexture glTargetB;
+    glBindTexture(GL_TEXTURE_2D, glTargetB);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, glTexImage);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, glSrcTex, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, glTargetA, 0);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Orphan glSrcTex; glTargetA and glTargetB still share the same orphaned D3D11 resource.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, glTargetA, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, glTargetB, 0);
+    glSrcTex.reset();
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Also verify that when COLOR_ATTACHMENT0 is an ordinary non-shared texture and
+    // COLOR_ATTACHMENT1 and COLOR_ATTACHMENT2 alias the same D3D11 texture, the draw still fails.
+    GLTexture unsharedTex;
+    glBindTexture(GL_TEXTURE_2D, unsharedTex);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, unsharedTex, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, tex0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, tex1, 0);
+    const GLenum drawBuffers3[3] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                    GL_COLOR_ATTACHMENT2};
+    glDrawBuffers(3, drawBuffers3);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Verify that firstFbo remained green and was not overwritten by any of the rejected draws.
+    glBindFramebuffer(GL_FRAMEBUFFER, firstFbo);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_GL_NO_ERROR();
+
+    eglDestroyImageKHR(display, glTexImage);
+    eglReleaseTexImage(display, pbufferFromDxgiSurface, EGL_BACK_BUFFER);
+    eglDestroySurface(display, pbufferFromDxgiSurface);
+    eglDestroyImageKHR(display, imageFromDxgiResource);
+    eglReleaseTexImage(display, pbufferIgnoredPlane, EGL_BACK_BUFFER);
+    eglDestroySurface(display, pbufferIgnoredPlane);
+    eglDestroyImageKHR(display, imageIgnoredPlane);
+    eglReleaseTexImage(display, pbuffer2, EGL_BACK_BUFFER);
+    eglDestroySurface(display, pbuffer2);
+    eglReleaseTexImage(display, pbuffer, EGL_BACK_BUFFER);
+    eglDestroySurface(display, pbuffer);
+    eglDestroyImageKHR(display, image0);
+    eglDestroyImageKHR(display, image1);
+}
+
+// Verify that two EGLImages imported from different array slices of the same D3D11 2D texture
+// array can be rendered to simultaneously, whereas two EGLImages imported from the same array
+// slice fail before OMSetRenderTargets.
+TEST_P(D3DTextureTestES3, TextureArraySliceAttachmentsUniqueAndAliased)
+{
+    ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11());
+
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+    window->makeCurrent();
+
+    constexpr UINT kSize      = 8;
+    constexpr UINT kArraySize = 2;
+
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> d3d11Texture;
+    CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, kSize, kSize, kArraySize, 1,
+                               D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+    ASSERT_TRUE(SUCCEEDED(mD3D11Device->CreateTexture2D(&desc, nullptr, &d3d11Texture)));
+
+    const EGLint slice0Attribs[] = {EGL_D3D11_TEXTURE_ARRAY_SLICE_ANGLE, 0, EGL_NONE};
+    const EGLint slice1Attribs[] = {EGL_D3D11_TEXTURE_ARRAY_SLICE_ANGLE, 1, EGL_NONE};
+
+    EGLImage imageSlice0A =
+        eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                          static_cast<EGLClientBuffer>(d3d11Texture.Get()), slice0Attribs);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(imageSlice0A, EGL_NO_IMAGE_KHR);
+
+    EGLImage imageSlice0B =
+        eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                          static_cast<EGLClientBuffer>(d3d11Texture.Get()), slice0Attribs);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(imageSlice0B, EGL_NO_IMAGE_KHR);
+
+    EGLImage imageSlice1 =
+        eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                          static_cast<EGLClientBuffer>(d3d11Texture.Get()), slice1Attribs);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(imageSlice1, EGL_NO_IMAGE_KHR);
+
+    GLTexture texSlice0A;
+    glBindTexture(GL_TEXTURE_2D, texSlice0A);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, imageSlice0A);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture texSlice0B;
+    glBindTexture(GL_TEXTURE_2D, texSlice0B);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, imageSlice0B);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture texSlice1;
+    glBindTexture(GL_TEXTURE_2D, texSlice1);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, imageSlice1);
+    ASSERT_GL_NO_ERROR();
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+layout(location = 0) out vec4 out0;
+layout(location = 1) out vec4 out1;
+void main()
+{
+    out0 = vec4(1.0, 0.0, 0.0, 1.0);
+    out1 = vec4(0.0, 0.0, 1.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(mrtProgram, kVS, kFS);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    const GLenum drawBuffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, drawBuffers);
+    glViewport(0, 0, kSize, kSize);
+
+    // Two attachments referencing slice 0 of the same D3D11 texture array must fail.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texSlice0A, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texSlice0B, 0);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Replacing attachment 1 with slice 1 makes the attachments disjoint and draw succeeds.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texSlice1, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    eglDestroyImageKHR(display, imageSlice0A);
+    eglDestroyImageKHR(display, imageSlice0B);
+    eglDestroyImageKHR(display, imageSlice1);
+}
+
+class HardenedD3DTextureTestES3 : public D3DTextureTestES3
+{
+  protected:
+    HardenedD3DTextureTestES3() : D3DTextureTestES3()
+    {
+        setHardenedContextEnabled(true);
+        setContextResetStrategy(EGL_LOSE_CONTEXT_ON_RESET_EXT);
+    }
+};
+
+// Verify that on a hardened context, drawing to aliased D3D11 color attachments loses the context
+// via loseHardenedContextOnBackendError without corrupting the previously bound framebuffer.
+TEST_P(HardenedD3DTextureTestES3, AliasedD3D11TextureAttachmentsLoseContext)
+{
+    ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11());
+
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_robustness") ||
+                       !IsEGLDisplayExtensionEnabled(display, "EGL_EXT_create_context_robustness"));
+    window->makeCurrent();
+
+    constexpr UINT kSize = 8;
+
+    // Create a victim D3D11 texture, import it, and draw green into it so its RTV is bound on the
+    // D3D11 immediate context.
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> victimD3DTexture;
+    CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, kSize, kSize, 1, 1,
+                               D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+    ASSERT_TRUE(SUCCEEDED(mD3D11Device->CreateTexture2D(&desc, nullptr, &victimD3DTexture)));
+
+    EGLImage victimImage =
+        eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                          static_cast<EGLClientBuffer>(victimD3DTexture.Get()), nullptr);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(victimImage, EGL_NO_IMAGE_KHR);
+
+    GLTexture victimTex;
+    glBindTexture(GL_TEXTURE_2D, victimTex);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, victimImage);
+
+    GLFramebuffer victimFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, victimFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, victimTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glViewport(0, 0, kSize, kSize);
+    drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Create an aliased FBO targeting a second D3D11 texture through two distinct EGLImages.
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> sharedD3DTexture;
+    ASSERT_TRUE(SUCCEEDED(mD3D11Device->CreateTexture2D(&desc, nullptr, &sharedD3DTexture)));
+
+    EGLImage image0 =
+        eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                          static_cast<EGLClientBuffer>(sharedD3DTexture.Get()), nullptr);
+    EGLImage image1 =
+        eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                          static_cast<EGLClientBuffer>(sharedD3DTexture.Get()), nullptr);
+    ASSERT_EGL_SUCCESS();
+
+    GLTexture tex0;
+    glBindTexture(GL_TEXTURE_2D, tex0);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image0);
+    GLTexture tex1;
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image1);
+    ASSERT_GL_NO_ERROR();
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+layout(location = 0) out vec4 out0;
+layout(location = 1) out vec4 out1;
+void main()
+{
+    out0 = vec4(1.0, 0.0, 0.0, 1.0);
+    out1 = vec4(0.0, 0.0, 1.0, 1.0);
+})";
+    ANGLE_GL_PROGRAM(mrtProgram, kVS, kFS);
+
+    GLFramebuffer aliasedFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, aliasedFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, tex1, 0);
+    const GLenum drawBuffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, drawBuffers);
+
+    // Drawing into the aliased FBO must fail with a backend error and lose the hardened context.
+    drawQuad(mrtProgram, "a_position", 0.5f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GLENUM_EQ(GL_UNKNOWN_CONTEXT_RESET_EXT, glGetGraphicsResetStatusEXT());
+
+    // Subsequent commands on the lost context must be rejected with GL_CONTEXT_LOST.
+    glBindTexture(GL_TEXTURE_2D, 0);
+    EXPECT_GL_ERROR(GL_CONTEXT_LOST);
+
+    // Read back the victim D3D11 texture directly via a staging texture to prove it stayed green.
+    CD3D11_TEXTURE2D_DESC stagingDesc = desc;
+    stagingDesc.BindFlags             = 0;
+    stagingDesc.Usage                 = D3D11_USAGE_STAGING;
+    stagingDesc.CPUAccessFlags        = D3D11_CPU_ACCESS_READ;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> stagingTexture;
+    ASSERT_TRUE(SUCCEEDED(mD3D11Device->CreateTexture2D(&stagingDesc, nullptr, &stagingTexture)));
+
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> d3d11Context;
+    mD3D11Device->GetImmediateContext(&d3d11Context);
+    d3d11Context->CopyResource(stagingTexture.Get(), victimD3DTexture.Get());
+
+    D3D11_MAPPED_SUBRESOURCE mapped = {};
+    ASSERT_TRUE(SUCCEEDED(d3d11Context->Map(stagingTexture.Get(), 0, D3D11_MAP_READ, 0, &mapped)));
+    const uint8_t *pixel = static_cast<const uint8_t *>(mapped.pData);
+    EXPECT_EQ(0, pixel[0]);
+    EXPECT_EQ(255, pixel[1]);
+    EXPECT_EQ(0, pixel[2]);
+    EXPECT_EQ(255, pixel[3]);
+    d3d11Context->Unmap(stagingTexture.Get(), 0);
+
+    eglDestroyImageKHR(display, image1);
+    eglDestroyImageKHR(display, image0);
+    eglDestroyImageKHR(display, victimImage);
+}
+
 class D3DTextureYUVTestES3 : public D3DTextureTest
 {
   protected:
@@ -3824,6 +4364,8 @@ ANGLE_INSTANTIATE_TEST_ES3(D3DTextureYUVTestES3);
 ANGLE_INSTANTIATE_TEST(D3DTextureYUVTestES3NoSetData,
                        ES3_D3D11().disable(Feature::SetDataFasterThanImageUpload));
 ANGLE_INSTANTIATE_TEST_ES3(D3DTextureTestES3);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(HardenedD3DTextureTestES3);
+ANGLE_INSTANTIATE_TEST(HardenedD3DTextureTestES3, ES3_D3D11());
 // D3D Debug device reports an error. http://anglebug.com/40096593
 // ANGLE_INSTANTIATE_TEST(D3DTextureTestMS, ES2_D3D11());
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(D3DTextureTestMS);

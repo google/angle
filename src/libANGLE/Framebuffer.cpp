@@ -2289,10 +2289,11 @@ angle::Result Framebuffer::syncState(const Context *context,
 {
     if (mDirtyBits.any())
     {
-        mDirtyBitsGuard = mDirtyBits;
-        ANGLE_TRY(mImpl->syncState(context, framebufferBinding, mDirtyBits, command));
-        mDirtyBits.reset();
+        mDirtyBitsGuard      = mDirtyBits;
+        angle::Result result = mImpl->syncState(context, framebufferBinding, mDirtyBits, command);
         mDirtyBitsGuard.reset();
+        ANGLE_TRY(result);
+        mDirtyBits.reset();
     }
     return angle::Result::Continue;
 }
