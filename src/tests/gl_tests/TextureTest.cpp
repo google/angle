@@ -26266,6 +26266,30 @@ class TextureSizeLimitTest : public ANGLETest<>
 
             if (!es2DepthStencil)
             {
+                // Check maxTextureBytes enforcement across all 6 cube map faces with the
+                // virtualizeBaseLevelAndMipchain workaround enabled (where
+                // TextureGL::allocateTexStorage validates the combined byte size of all faces
+                // against maxTextureBytes, whereas front-end validation checks maxTextureBytes
+                // per-face).
+                if (getEGLWindow()->isFeatureEnabled(Feature::VirtualizeBaseLevelAndMipchain))
+                {
+                    GLuint validWidthCube  = static_cast<GLuint>(std::floor(std::sqrt(pixels / 6)));
+                    GLuint validHeightCube = validWidthCube;
+                    ASSERT_LE(validWidthCube * validHeightCube * 6 * bytesPerPixel, kOneMB);
+
+                    GLTexture texStorageEXTCubeMap;
+                    glBindTexture(GL_TEXTURE_CUBE_MAP, texStorageEXTCubeMap);
+                    glTexStorage2DEXT(GL_TEXTURE_CUBE_MAP, 1, internalFormat, validWidthCube,
+                                      validHeightCube);
+                    EXPECT_GL_NO_ERROR();
+
+                    GLTexture texStorageEXTCubeMapOOM;
+                    glBindTexture(GL_TEXTURE_CUBE_MAP, texStorageEXTCubeMapOOM);
+                    glTexStorage2DEXT(GL_TEXTURE_CUBE_MAP, 1, internalFormat, validWidth2D,
+                                      validHeight2D);
+                    EXPECT_GL_ERROR(GL_OUT_OF_MEMORY);
+                }
+                else
                 {
                     GLTexture texStorageEXTCubeMap;
                     glBindTexture(GL_TEXTURE_CUBE_MAP, texStorageEXTCubeMap);
@@ -28440,6 +28464,62 @@ TEST_P(Texture3DTestES3, CopyTexSubImage3DFrom16BitPackedFramebuffer)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that consolidating a cube map whose per-face images each fit within maxTextureBytes (lowered
+// to 1 MiB via Feature::LimitMaxTextureBytesTo1MB on Texture3DSizeLimitPOTRoundUpTest) but whose
+// combined 6-face storage exceeds maxTextureBytes fails with GL_OUT_OF_MEMORY when
+// virtualizeBaseLevelAndMipchain is enabled (https://crbug.com/577359061).
+TEST_P(Texture3DSizeLimitPOTRoundUpTest, CubeMapConsolidationExceedsMaxTextureBytes)
+{
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::VirtualizeBaseLevelAndMipchain));
+
+    // Feature::LimitMaxTextureBytesTo1MB sets Limitations::maxTextureBytes to 1 MiB. Each 512x512
+    // RGBA8 face is 1 MiB (<= 1 MiB limit), so per-face glTexImage2D succeeds, but consolidating
+    // all 6 faces into a cube map requires >= 6 MiB (> 1 MiB limit).
+    GLTexture cubeTex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
+    for (GLenum face = 0; face < 6; ++face)
+    {
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA8, 512, 512, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    EXPECT_GL_ERROR(GL_OUT_OF_MEMORY);
+
+    GLTexture cubeStorageTex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeStorageTex);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA8, 512, 512);
+    EXPECT_GL_ERROR(GL_OUT_OF_MEMORY);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+
+    // Verify that when the base level fits within maxTextureBytes (512x512 RGBA8 = 1 MiB) so the
+    // initial syncState succeeds, but glGenerateMipmap fails in syncVirtualMipchain because the
+    // full mipchain exceeds 1 MiB, virtualLevels for levels > baseLevel are restored so subsequent
+    // level-0 sampling succeeds and raising BASE_LEVEL does not allocate phantom mip levels.
+    GLTexture mipOomTex;
+    glBindTexture(GL_TEXTURE_2D, mipOomTex);
+    std::vector<GLColor> green512x512(512 * 512, GLColor::green);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 green512x512.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+    EXPECT_GL_ERROR(GL_OUT_OF_MEMORY);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+}
+
 #define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
     ES2_OPENGL().enable(Feature::EmulateCopyTexImage2D), \
         ES2_OPENGLES().enable(Feature::EmulateCopyTexImage2D)
@@ -28752,13 +28832,27 @@ ANGLE_INSTANTIATE_TEST(TextureSizeLimitTest,
                        ES2_VULKAN().enable(Feature::LimitMaxTextureBytesTo1MB),
                        ES3_VULKAN().enable(Feature::LimitMaxTextureBytesTo1MB),
                        ES2_OPENGL().enable(Feature::LimitMaxTextureBytesTo1MB),
+                       ES2_OPENGL()
+                           .enable(Feature::LimitMaxTextureBytesTo1MB)
+                           .enable(Feature::VirtualizeBaseLevelAndMipchain),
                        ES3_OPENGL()
                            .enable(Feature::LimitMaxTextureBytesTo1MB)
                            .disable(Feature::RoundUp3dTextureSizeToPOTForLimit),
+                       ES3_OPENGL()
+                           .enable(Feature::LimitMaxTextureBytesTo1MB)
+                           .disable(Feature::RoundUp3dTextureSizeToPOTForLimit)
+                           .enable(Feature::VirtualizeBaseLevelAndMipchain),
                        ES2_OPENGLES().enable(Feature::LimitMaxTextureBytesTo1MB),
+                       ES2_OPENGLES()
+                           .enable(Feature::LimitMaxTextureBytesTo1MB)
+                           .enable(Feature::VirtualizeBaseLevelAndMipchain),
                        ES3_OPENGLES()
                            .enable(Feature::LimitMaxTextureBytesTo1MB)
-                           .disable(Feature::RoundUp3dTextureSizeToPOTForLimit));
+                           .disable(Feature::RoundUp3dTextureSizeToPOTForLimit),
+                       ES3_OPENGLES()
+                           .enable(Feature::LimitMaxTextureBytesTo1MB)
+                           .disable(Feature::RoundUp3dTextureSizeToPOTForLimit)
+                           .enable(Feature::VirtualizeBaseLevelAndMipchain));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture3DSizeLimitPOTRoundUpTest);
 ANGLE_INSTANTIATE_TEST(Texture3DSizeLimitPOTRoundUpTest,
@@ -28767,6 +28861,14 @@ ANGLE_INSTANTIATE_TEST(Texture3DSizeLimitPOTRoundUpTest,
                            .enable(Feature::RoundUp3dTextureSizeToPOTForLimit),
                        ES3_OPENGLES()
                            .enable(Feature::LimitMaxTextureBytesTo1MB)
-                           .enable(Feature::RoundUp3dTextureSizeToPOTForLimit));
+                           .enable(Feature::RoundUp3dTextureSizeToPOTForLimit),
+                       ES3_OPENGL()
+                           .enable(Feature::LimitMaxTextureBytesTo1MB)
+                           .enable(Feature::RoundUp3dTextureSizeToPOTForLimit)
+                           .enable(Feature::VirtualizeBaseLevelAndMipchain),
+                       ES3_OPENGLES()
+                           .enable(Feature::LimitMaxTextureBytesTo1MB)
+                           .enable(Feature::RoundUp3dTextureSizeToPOTForLimit)
+                           .enable(Feature::VirtualizeBaseLevelAndMipchain));
 
 }  // anonymous namespace

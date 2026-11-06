@@ -176,6 +176,12 @@ struct ScopedTextureGL : angle::NonCopyable
             stateManager->deleteTexture(id);
         }
     }
+    GLuint release()
+    {
+        GLuint releasedId = id;
+        id                = 0;
+        return releasedId;
+    }
     StateManagerGL *stateManager;
     GLuint id = 0;
 };
@@ -351,6 +357,35 @@ angle::Result TextureGL::allocateTexStorage(const gl::Context *context,
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
+    const gl::InternalFormat &internalFormatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
+
+    // Ensure the total byte size of the consolidated allocation across all levels and cube map
+    // faces does not exceed maxTextureBytes (https://crbug.com/577359061).
+    angle::CheckedNumeric<size_t> totalBytes(0);
+    for (size_t level = 0; level < levels; ++level)
+    {
+        gl::Extents levelExtents(
+            std::max(1, size.width >> level), std::max(1, size.height >> level),
+            type == gl::TextureType::_3D ? std::max(1, size.depth >> level) : size.depth);
+        if (context->getLimitations().roundUp3DTextureSizeToPOTForLimit && levelExtents.depth > 1)
+        {
+            levelExtents.width  = gl::clampCast<int>(gl::ceilPow2(levelExtents.width));
+            levelExtents.height = gl::clampCast<int>(gl::ceilPow2(levelExtents.height));
+            levelExtents.depth  = gl::clampCast<int>(gl::ceilPow2(levelExtents.depth));
+        }
+        GLuint levelBytes = 0;
+        ANGLE_CHECK_GL_ALLOC(contextGL,
+                             internalFormatInfo.computeImageSize(levelExtents, 0, &levelBytes));
+        angle::CheckedNumeric<size_t> checkedLevelBytes(levelBytes);
+        if (type == gl::TextureType::CubeMap)
+        {
+            checkedLevelBytes *= gl::kCubeFaceCount;
+        }
+        totalBytes += checkedLevelBytes;
+    }
+    ANGLE_CHECK_GL_ALLOC(contextGL,
+                         totalBytes.IsValid() &&
+                             totalBytes.ValueOrDie() <= context->getLimitations().maxTextureBytes);
 
     stateManager->bindTexture(type, texID);
     if (nativegl::UseTexImage2D(type))
@@ -363,8 +398,6 @@ angle::Result TextureGL::allocateTexStorage(const gl::Context *context,
     else
     {
         ASSERT(nativegl::UseTexImage3D(type));
-        const gl::InternalFormat &internalFormatInfo =
-            gl::GetSizedInternalFormatInfo(internalFormat);
         const bool bypassTexStorage3D = type == gl::TextureType::_3D &&
                                         internalFormatInfo.compressed &&
                                         features.emulateImmutableCompressedTexture3D.enabled;
@@ -776,6 +809,7 @@ angle::Result TextureGL::evacuateMipchainToLevelTextures(const gl::Context *cont
     }
 
     const FunctionsGL *functions = GetFunctionsGL(context);
+    StateManagerGL *stateManager = GetStateManagerGL(context);
     gl::TextureType levelType =
         (getType() == gl::TextureType::CubeMap) ? gl::TextureType::_2D : getType();
     gl::TextureTarget dstTarget = NonCubeTextureTypeToTarget(levelType);
@@ -792,12 +826,14 @@ angle::Result TextureGL::evacuateMipchainToLevelTextures(const gl::Context *cont
             // to be copied out before mTextureID is replaced.
             if (vLevel.texID == 0 && !vLevel.size.empty())
             {
-                ANGLE_GL_TRY(context, functions->genTextures(1, &vLevel.texID));
-                ANGLE_TRY(allocateTexStorage(context, vLevel.texID, levelType, 1,
+                ScopedTextureGL levelTex(stateManager);
+                ANGLE_GL_TRY(context, functions->genTextures(1, &levelTex.id));
+                ANGLE_TRY(allocateTexStorage(context, levelTex.id, levelType, 1,
                                              vLevel.internalFormat, vLevel.size));
                 ANGLE_TRY(copyBetweenNativeLevels(context, mTextureID, target,
-                                                  static_cast<GLint>(offset), vLevel.texID,
+                                                  static_cast<GLint>(offset), levelTex.id,
                                                   dstTarget, 0, vLevel));
+                vLevel.texID = levelTex.release();
             }
             return angle::Result::Continue;
         };
@@ -876,8 +912,16 @@ angle::Result TextureGL::allocateOrUpdateVirtualLevel(const gl::Context *context
         gl::TextureType levelType =
             (getType() == gl::TextureType::CubeMap) ? gl::TextureType::_2D : getType();
         ANGLE_GL_TRY(context, functions->genTextures(1, &vLevel.texID));
-        ANGLE_TRY(
-            allocateTexStorage(context, vLevel.texID, levelType, 1, internalFormat, vLevel.size));
+        angle::Result allocResult =
+            allocateTexStorage(context, vLevel.texID, levelType, 1, internalFormat, vLevel.size);
+        if (allocResult != angle::Result::Continue)
+        {
+            stateManager->deleteTexture(vLevel.texID);
+            vLevel.texID          = 0;
+            vLevel.size           = gl::Extents();
+            vLevel.internalFormat = GL_NONE;
+            return allocResult;
+        }
     }
 
     mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_IMPLEMENTATION);
@@ -1067,12 +1111,14 @@ angle::Result TextureGL::syncVirtualMipchain(const gl::Context *context)
                     VirtualLevelInfo &vLevel = virtualLevels[idx];
                     if (vLevel.texID == 0 && !vLevel.size.empty())
                     {
-                        ANGLE_GL_TRY(context, functions->genTextures(1, &vLevel.texID));
-                        ANGLE_TRY(allocateTexStorage(context, vLevel.texID, levelType, 1,
+                        ScopedTextureGL levelTex(stateManager);
+                        ANGLE_GL_TRY(context, functions->genTextures(1, &levelTex.id));
+                        ANGLE_TRY(allocateTexStorage(context, levelTex.id, levelType, 1,
                                                      vLevel.internalFormat, vLevel.size));
                         ANGLE_TRY(copyBetweenNativeLevels(context, oldTextureID, target,
-                                                          static_cast<GLint>(offset), vLevel.texID,
+                                                          static_cast<GLint>(offset), levelTex.id,
                                                           dstTarget, 0, vLevel));
+                        vLevel.texID = levelTex.release();
                     }
                     return angle::Result::Continue;
                 };
@@ -1097,8 +1143,16 @@ angle::Result TextureGL::syncVirtualMipchain(const gl::Context *context)
         {
             ANGLE_GL_TRY(context, functions->genTextures(1, &newTexID));
         }
-        ANGLE_TRY(
-            allocateTexStorage(context, newTexID, getType(), validLevels, baseFormat, baseSize));
+        angle::Result allocResult =
+            allocateTexStorage(context, newTexID, getType(), validLevels, baseFormat, baseSize);
+        if (allocResult != angle::Result::Continue)
+        {
+            if (oldMipchainLevels > 0)
+            {
+                stateManager->deleteTexture(newTexID);
+            }
+            return allocResult;
+        }
 
         // 3. Populate newTexID from either virtualLevels[idx].texID or oldTextureID.
         for (size_t k = 0; k < validLevels; ++k)
@@ -2827,15 +2881,16 @@ angle::Result TextureGL::setStorage(const gl::Context *context,
         {
             ANGLE_TRY(recreateTexture(context));
         }
+        mVirtualMipChain.reset();
+
+        ANGLE_TRY(allocateTexStorage(context, mTextureID, type, levels,
+                                     texStorageFormat.internalFormat, size));
 
         VirtualMipChain &mipChain = mVirtualMipChain.emplace(mLevelInfo.size());
         mipChain.baseLevel        = 0;
         mipChain.levels           = levels;
         mipChain.baseSize         = size;
         mipChain.internalFormat   = texStorageFormat.internalFormat;
-
-        ANGLE_TRY(allocateTexStorage(context, mTextureID, type, levels,
-                                     texStorageFormat.internalFormat, size));
 
         for (size_t level = 0; level < levels; ++level)
         {
@@ -3192,8 +3247,10 @@ angle::Result TextureGL::generateMipmap(const gl::Context *context)
         const bool is3D         = getType() == gl::TextureType::_3D;
 
         // Levels in (effectiveBaseLevel, maxLevel] will be overwritten by glGenerateMipmap.
-        // Delete any per-level textures for those levels and set their virtual level metadata
-        // to the expected mipmap dimensions and internal format before syncing the mipchain.
+        // Save any existing virtual level entries and set their metadata to the expected mipmap
+        // dimensions and internal format before syncing the mipchain; if consolidation fails,
+        // restore the saved entries.
+        std::vector<VirtualLevelInfo> previousVirtualLevels(mVirtualMipChain->virtualLevels.size());
         for (GLuint levelIdx = 1; levelIdx < levelCount; ++levelIdx)
         {
             size_t level = effectiveBaseLevel + levelIdx;
@@ -3205,23 +3262,23 @@ angle::Result TextureGL::generateMipmap(const gl::Context *context)
             {
                 for (gl::TextureTarget face : gl::AllCubeFaceTextureTargets())
                 {
-                    size_t idx               = GetLevelInfoIndex(face, level);
-                    VirtualLevelInfo &vLevel = mVirtualMipChain->virtualLevels[idx];
-                    stateManager->deleteTexture(vLevel.texID);
-                    vLevel.texID          = 0;
-                    vLevel.size           = levelSize;
-                    vLevel.internalFormat = baseLevelInfo.nativeInternalFormat;
+                    size_t idx                 = GetLevelInfoIndex(face, level);
+                    VirtualLevelInfo &vLevel   = mVirtualMipChain->virtualLevels[idx];
+                    previousVirtualLevels[idx] = std::move(vLevel);
+                    vLevel.texID               = 0;
+                    vLevel.size                = levelSize;
+                    vLevel.internalFormat      = baseLevelInfo.nativeInternalFormat;
                 }
             }
             else
             {
-                gl::TextureTarget target = NonCubeTextureTypeToTarget(getType());
-                size_t idx               = GetLevelInfoIndex(target, level);
-                VirtualLevelInfo &vLevel = mVirtualMipChain->virtualLevels[idx];
-                stateManager->deleteTexture(vLevel.texID);
-                vLevel.texID          = 0;
-                vLevel.size           = levelSize;
-                vLevel.internalFormat = baseLevelInfo.nativeInternalFormat;
+                gl::TextureTarget target   = NonCubeTextureTypeToTarget(getType());
+                size_t idx                 = GetLevelInfoIndex(target, level);
+                VirtualLevelInfo &vLevel   = mVirtualMipChain->virtualLevels[idx];
+                previousVirtualLevels[idx] = std::move(vLevel);
+                vLevel.texID               = 0;
+                vLevel.size                = levelSize;
+                vLevel.internalFormat      = baseLevelInfo.nativeInternalFormat;
                 if (features.copyImageSubData3DFailsOnTailMipLevels.enabled)
                 {
                     vLevel.tailMip3DCpuData.clearCpuData();
@@ -3229,8 +3286,42 @@ angle::Result TextureGL::generateMipmap(const gl::Context *context)
             }
         }
 
-        mAppliedBaseLevel = effectiveBaseLevel;
-        ANGLE_TRY(syncVirtualMipchain(context));
+        mAppliedBaseLevel        = effectiveBaseLevel;
+        angle::Result syncResult = syncVirtualMipchain(context);
+        for (GLuint levelIdx = 1; levelIdx < levelCount; ++levelIdx)
+        {
+            size_t level = effectiveBaseLevel + levelIdx;
+            if (getType() == gl::TextureType::CubeMap)
+            {
+                for (gl::TextureTarget face : gl::AllCubeFaceTextureTargets())
+                {
+                    size_t idx = GetLevelInfoIndex(face, level);
+                    if (syncResult != angle::Result::Continue)
+                    {
+                        mVirtualMipChain->virtualLevels[idx] =
+                            std::move(previousVirtualLevels[idx]);
+                    }
+                    else
+                    {
+                        stateManager->deleteTexture(previousVirtualLevels[idx].texID);
+                    }
+                }
+            }
+            else
+            {
+                gl::TextureTarget target = NonCubeTextureTypeToTarget(getType());
+                size_t idx               = GetLevelInfoIndex(target, level);
+                if (syncResult != angle::Result::Continue)
+                {
+                    mVirtualMipChain->virtualLevels[idx] = std::move(previousVirtualLevels[idx]);
+                }
+                else
+                {
+                    stateManager->deleteTexture(previousVirtualLevels[idx].texID);
+                }
+            }
+        }
+        ANGLE_TRY(syncResult);
 
         stateManager->bindTexture(getType(), mTextureID);
         const GLuint maxLevelLimit   = GetMaxMipmapLevel(context->getCaps(), getType());
