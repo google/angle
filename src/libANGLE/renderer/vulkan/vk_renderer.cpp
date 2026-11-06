@@ -3126,6 +3126,8 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                                                        (feature)
 //                                                    extendedDynamicState3AlphaToOneEnable
 //                                                                                        (feature)
+//                                                    extendedDynamicState3ColorBlendEnable
+//                                                                                        (feature)
 //                                                    extendedDynamicState3ColorWriteMask (feature)
 //                                                    extendedDynamicState3DepthClampEnable
 //                                                                                        (feature)
@@ -6796,6 +6798,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3AlphaToOneEnable == VK_TRUE &&
             isRasterizerDiscardDynamicState && !hasStaticBresenhamLineState && !isPowerVR);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsColorBlendEnableDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled &&
+            mExtendedDynamicState3Features.extendedDynamicState3ColorBlendEnable == VK_TRUE &&
+            isRasterizerDiscardDynamicState);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsColorWriteMaskDynamicState,

@@ -1191,6 +1191,7 @@ ANGLE_INLINE void CommandBuffer::setColorBlendEnable(uint32_t firstAttachment,
                                                      const VkBool32 *colorBlendEnables)
 {
     ASSERT(valid());
+    ASSERT(attachmentCount == 1);
     VK_SECONDARY_CMD_CALL(
         vkCmdSetColorBlendEnableEXT(mHandle, firstAttachment, attachmentCount, colorBlendEnables));
 }

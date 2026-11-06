@@ -426,6 +426,7 @@
 379758210 LINUX INTEL OPENGL : GLSLTest_ES3.SwizzledToBoolCoercion/* = SKIP
 448675904 LINUX INTEL OPENGL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 537235696 LINUX INTEL OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
+582944923 LINUX INTEL OPENGL : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
 
 //Angle has bugs for sampler validation
 401546698 : TextureCubeTest.CubeMapBug2/* = SKIP
@@ -893,6 +894,7 @@
 579047127 PIXEL4ORXL GLES : ImageTestES3RobustInit.SelfCopy/* = SKIP
 579047127 PIXEL4ORXL GLES : ImageTestES3RobustInit.SelfSubCopy/* = SKIP
 580018577 PIXEL4ORXL GLES : RobustResourceInitTestES3.InvalidateUndefinedThenReadBackDepthOnly/* = SKIP
+582944924 PIXEL4ORXL GLES : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
 
 42267082 PIXEL4ORXL GLES : BlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42267082 PIXEL4ORXL GLES : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
@@ -1479,6 +1481,8 @@
 579030470 PIXEL10 GLES : ImageTestES3RobustInit.SelfCopyOutOfBounds/* = SKIP
 579030470 PIXEL10 GLES : ImageTestES3RobustInit.SelfSubCopy/* = SKIP
 579030470 PIXEL10 GLES : ImageTestES3RobustInit.SelfSubCopyOutOfBounds/* = SKIP
+582923452 PIXEL10 GLES : StateChangeTestES3.BlendEnableiAllAttachments/* = SKIP
+582923452 PIXEL10 GLES : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP

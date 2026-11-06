@@ -1009,6 +1009,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE);
     }
+    if (mRenderer->getFeatures().supportsColorBlendEnableDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_BLEND_ENABLE);
+    }
     if (mRenderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_WRITE_MASK);
@@ -1140,6 +1144,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicAlphaToCoverageEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_ALPHA_TO_ONE_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicAlphaToOneEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_COLOR_BLEND_ENABLE] =
+        &ContextVk::handleDirtyGraphicsDynamicColorBlendEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_COLOR_WRITE_MASK] =
         &ContextVk::handleDirtyGraphicsDynamicColorWriteMask;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE] =
@@ -1287,6 +1293,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     if (mRenderer->getFeatures().supportsAlphaToOneEnableDynamicState.enabled)
     {
         mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE);
+    }
+    if (mRenderer->getFeatures().supportsColorBlendEnableDynamicState.enabled)
+    {
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_BLEND_ENABLED);
     }
     if (mRenderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
     {
@@ -3587,6 +3597,50 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicAlphaToOneEnable(
     return angle::Result::Continue;
 }
 
+angle::Result ContextVk::handleDirtyGraphicsDynamicColorBlendEnable(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    FramebufferVk *framebufferVk = vk::GetImpl(mState.getDrawFramebuffer());
+
+    // Set blend enable for every attachment in the framebuffer.
+    const gl::DrawBufferMask dirtyColorAttachments =
+        mDirtyColorBlendEnables & framebufferVk->getState().getColorAttachmentsMask();
+
+    const gl::DrawBufferMask enabledDrawBuffers = framebufferVk->getState().getEnabledDrawBuffers();
+
+    // Filter out blend for disabled attachments.  If advanced blend is enabled, Vulkan forbids
+    // blend from being specified on the other attachments (same as GL, but GL ignores blend on
+    // disabled attachments).
+    const gl::DrawBufferMask enabledBlend =
+        mState.getBlendStateExt().getEnabledMask() & enabledDrawBuffers;
+    const gl::DrawBufferMask advancedBlend =
+        mState.getBlendStateExt().getUsesAdvancedBlendEquationMask();
+
+    for (size_t colorIndexGL : dirtyColorAttachments)
+    {
+        // To avoid triggering valid usage error, blending must be disabled for formats that do not
+        // have VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT feature bit set.  From OpenGL ES
+        // clients, this means disabling blending for integer formats.
+        const bool isInt =
+            angle::Format::Get(framebufferVk->getRenderPassDesc()[colorIndexGL]).isInt();
+
+        // The blend fixed-function is enabled with normal blend as well as advanced blend when the
+        // Vulkan extension is present.  When emulating advanced blend in the shader, the blend
+        // fixed-function must be disabled.
+        const bool isEmulatedAdvancedBlend =
+            advancedBlend[colorIndexGL] && getFeatures().emulateAdvancedBlendEquations.enabled;
+
+        const VkBool32 colorBlendEnable =
+            enabledBlend[colorIndexGL] && !isInt && !isEmulatedAdvancedBlend;
+        mRenderPassCommandBuffer->setColorBlendEnable(static_cast<uint32_t>(colorIndexGL), 1,
+                                                      &colorBlendEnable);
+    }
+
+    mDirtyColorBlendEnables &= ~dirtyColorAttachments;
+    return angle::Result::Continue;
+}
+
 angle::Result ContextVk::handleDirtyGraphicsDynamicColorWriteMask(
     DirtyBits::Iterator *dirtyBitsIterator,
     DirtyBits dirtyBitMask)
@@ -4951,13 +5005,24 @@ void ContextVk::updateMissingAttachments()
 void ContextVk::updateBlendEnabled()
 {
     const gl::DrawBufferMask framebufferMask = mState.getDrawFramebuffer()->getDrawBufferMask();
-    const gl::DrawBufferMask enabledBlend    = mState.getBlendStateExt().getEnabledMask();
 
-    // Filter out blend for disabled attachments.  If advanced blend is enabled, Vulkan
-    // forbids blend from being specified on the other attachments (same as GL, but GL
-    // ignores blend on disabled attachments).
-    mGraphicsPipelineDesc->updateBlendEnabled(&mGraphicsPipelineTransition,
-                                              enabledBlend & framebufferMask);
+    if (mRenderer->getFeatures().supportsColorBlendEnableDynamicState.enabled)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_BLEND_ENABLE);
+        // Assume all attachments are dirty for simplicity, we don't currently track what the
+        // previous enable flag was to compare against.
+        mDirtyColorBlendEnables.set();
+    }
+    else
+    {
+        const gl::DrawBufferMask enabledBlend = mState.getBlendStateExt().getEnabledMask();
+
+        // Filter out blend for disabled attachments.  If advanced blend is enabled, Vulkan
+        // forbids blend from being specified on the other attachments (same as GL, but GL
+        // ignores blend on disabled attachments).
+        mGraphicsPipelineDesc->updateBlendEnabled(&mGraphicsPipelineTransition,
+                                                  enabledBlend & framebufferMask);
+    }
 }
 
 void ContextVk::updateBlendFuncsAndEquations()
@@ -5365,6 +5430,14 @@ void ContextVk::updateAdvancedBlendEquations(const gl::ProgramExecutable *execut
         }
         mGraphicsDriverUniforms.updateAdvancedBlendEquation(advancedBlendEquation);
         mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+
+        // Advanced blend emulation affects whether blending is enabled.
+        if (getFeatures().supportsColorBlendEnableDynamicState.enabled)
+        {
+            mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_BLEND_ENABLE);
+            // Set all for simplicity.
+            mDirtyColorBlendEnables.set();
+        }
     }
 }
 
@@ -6915,6 +6988,7 @@ void ContextVk::invalidateAllDynamicState()
 {
     mGraphicsDirtyBits |= mDynamicStateDirtyBits;
     mDirtyColorWriteMasks.set();
+    mDirtyColorBlendEnables.set();
 }
 
 angle::Result ContextVk::dispatchCompute(const gl::Context *context,
@@ -8249,6 +8323,7 @@ void ContextVk::markNewRenderPassDirtyBits()
 {
     mGraphicsDirtyBits |= mNewRenderPassDirtyBits;
     mDirtyColorWriteMasks.set();
+    mDirtyColorBlendEnables.set();
 }
 
 angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassClosureReason reason)

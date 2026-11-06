@@ -798,7 +798,7 @@ struct GraphicsPipelineFragmentOutputVulkanStructs
 
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 
-using GraphicsPipelineDynamicStateList = angle::FixedVector<VkDynamicState, 36>;
+using GraphicsPipelineDynamicStateList = angle::FixedVector<VkDynamicState, 37>;
 
 enum class PipelineRobustness
 {
@@ -1014,11 +1014,6 @@ class GraphicsPipelineDesc final
     void setRenderPassColorAttachmentFormat(size_t colorIndexGL, angle::FormatID formatID);
 
     // Blend states
-    void setSingleBlend(uint32_t colorIndexGL,
-                        bool enabled,
-                        VkBlendOp op,
-                        VkBlendFactor srcFactor,
-                        VkBlendFactor dstFactor);
     void updateBlendEnabled(GraphicsPipelineTransitionBits *transition,
                             gl::DrawBufferMask blendEnabledMask);
     void updateBlendFuncs(GraphicsPipelineTransitionBits *transition,

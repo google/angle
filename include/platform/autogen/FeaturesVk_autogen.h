@@ -860,6 +860,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsColorBlendEnableDynamicState = {
+        "supportsColorBlendEnableDynamicState",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsColorWriteMaskDynamicState = {
         "supportsColorWriteMaskDynamicState",
         FeatureCategory::VulkanFeatures,
