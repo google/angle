@@ -118,6 +118,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::DisableRasterizerOrderViews, "disableRasterizerOrderViews"},
     {Feature::DisableRasterOrderGroups, "disableRasterOrderGroups"},
     {Feature::DisableRenderSnorm, "disableRenderSnorm"},
+    {Feature::DisableRGB888RecordableBit, "disableRGB888RecordableBit"},
     {Feature::DisableRWTextureTier2Support, "disableRWTextureTier2Support"},
     {Feature::DisableSemaphoreFd, "disableSemaphoreFd"},
     {Feature::DisableSeparateShaderObjects, "disableSeparateShaderObjects"},

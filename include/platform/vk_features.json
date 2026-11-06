@@ -2426,6 +2426,15 @@
                 "Allow preferPipelineBinaries where VK_KHR_pipeline_binary is supported, for testing."
             ],
             "issue": "http://anglebug.com/481364092"
+        },
+        {
+            "name": "disable_RGB888_recordable_bit",
+            "category": "AppWorkarounds",
+            "description": [
+                "Work around an app that incorrectly requests an EGLConfig with EGL_ALPHA_SIZE=0 and ",
+                "EGL_RECORDABLE_ANDROID=1 despite relying on alpha blending. Disable EGL_RECORDABLE_ANDROID ",
+                "for RGB8 to prevent the app from selecting an RGB8 config."
+            ]
         }
     ]
 }

@@ -1844,6 +1844,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo disableRGB888RecordableBit = {
+        "disableRGB888RecordableBit",
+        FeatureCategory::VulkanAppWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

@@ -31,5 +31,12 @@ package_features:
         package_name: "com.shenghe.wzcq.huawei"
         feature_configs:
         [ { feature_name: "initializeColorAttachmentWithWhite" enabled: true }]
+    },
+
+    # AR Dogy: What The Dog Doin (b/579256266#comment4)
+    {
+        package_name: "com.ar.dog.fliter.game.dogyfun"
+        feature_configs:
+        [ { feature_name: "disableRGB888RecordableBit" enabled: true }]
     }
 ]

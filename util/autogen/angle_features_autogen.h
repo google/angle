@@ -118,6 +118,7 @@ enum class Feature
     DisableRasterizerOrderViews,
     DisableRasterOrderGroups,
     DisableRenderSnorm,
+    DisableRGB888RecordableBit,
     DisableRWTextureTier2Support,
     DisableSemaphoreFd,
     DisableSeparateShaderObjects,
