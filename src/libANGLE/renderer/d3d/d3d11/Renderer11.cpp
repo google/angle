@@ -2608,18 +2608,15 @@ angle::Result Renderer11::copyImage2D(const gl::Context *context,
                                       TextureStorage *storage,
                                       GLint level)
 {
-    TextureStorage11_2D *storage11 = GetAs<TextureStorage11_2D>(storage);
-    ASSERT(storage11);
-
     gl::ImageIndex index              = gl::ImageIndex::Make2D(level);
     RenderTargetD3D *destRenderTarget = nullptr;
-    ANGLE_TRY(storage11->getRenderTarget(context, index, &destRenderTarget));
+    ANGLE_TRY(storage->getRenderTarget(context, index, &destRenderTarget));
     ASSERT(destRenderTarget);
 
     ANGLE_TRY(copyImageInternal(context, framebuffer, sourceRect, destFormat, destOffset,
                                 destRenderTarget));
 
-    storage11->markLevelDirty(level);
+    storage->markLevelDirty(level);
 
     return angle::Result::Continue;
 }
@@ -2633,18 +2630,15 @@ angle::Result Renderer11::copyImageCube(const gl::Context *context,
                                         gl::TextureTarget target,
                                         GLint level)
 {
-    TextureStorage11_Cube *storage11 = GetAs<TextureStorage11_Cube>(storage);
-    ASSERT(storage11);
-
     gl::ImageIndex index              = gl::ImageIndex::MakeCubeMapFace(target, level);
     RenderTargetD3D *destRenderTarget = nullptr;
-    ANGLE_TRY(storage11->getRenderTarget(context, index, &destRenderTarget));
+    ANGLE_TRY(storage->getRenderTarget(context, index, &destRenderTarget));
     ASSERT(destRenderTarget);
 
     ANGLE_TRY(copyImageInternal(context, framebuffer, sourceRect, destFormat, destOffset,
                                 destRenderTarget));
 
-    storage11->markLevelDirty(level);
+    storage->markLevelDirty(level);
 
     return angle::Result::Continue;
 }
@@ -2657,18 +2651,15 @@ angle::Result Renderer11::copyImage3D(const gl::Context *context,
                                       TextureStorage *storage,
                                       GLint level)
 {
-    TextureStorage11_3D *storage11 = GetAs<TextureStorage11_3D>(storage);
-    ASSERT(storage11);
-
     gl::ImageIndex index              = gl::ImageIndex::Make3D(level, destOffset.z);
     RenderTargetD3D *destRenderTarget = nullptr;
-    ANGLE_TRY(storage11->getRenderTarget(context, index, &destRenderTarget));
+    ANGLE_TRY(storage->getRenderTarget(context, index, &destRenderTarget));
     ASSERT(destRenderTarget);
 
     ANGLE_TRY(copyImageInternal(context, framebuffer, sourceRect, destFormat, destOffset,
                                 destRenderTarget));
 
-    storage11->markLevelDirty(level);
+    storage->markLevelDirty(level);
 
     return angle::Result::Continue;
 }
@@ -2681,17 +2672,14 @@ angle::Result Renderer11::copyImage2DArray(const gl::Context *context,
                                            TextureStorage *storage,
                                            GLint level)
 {
-    TextureStorage11_2DArray *storage11 = GetAs<TextureStorage11_2DArray>(storage);
-    ASSERT(storage11);
-
     gl::ImageIndex index              = gl::ImageIndex::Make2DArray(level, destOffset.z);
     RenderTargetD3D *destRenderTarget = nullptr;
-    ANGLE_TRY(storage11->getRenderTarget(context, index, &destRenderTarget));
+    ANGLE_TRY(storage->getRenderTarget(context, index, &destRenderTarget));
     ASSERT(destRenderTarget);
 
     ANGLE_TRY(copyImageInternal(context, framebuffer, sourceRect, destFormat, destOffset,
                                 destRenderTarget));
-    storage11->markLevelDirty(level);
+    storage->markLevelDirty(level);
 
     return angle::Result::Continue;
 }
