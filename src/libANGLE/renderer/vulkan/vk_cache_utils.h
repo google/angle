@@ -2038,8 +2038,9 @@ class DescriptorSetDescBuilder final
                                 VkDeviceSize maxBoundBufferRange,
                                 const BufferHelper &emptyBuffer,
                                 const WriteDescriptorDescs &writeDescriptorDescs);
-    void updateOneStorageBuffer(Context *context,
-                                CommandBufferHelperCommon *commandBufferHelper,
+    template <typename CommandBufferHelperT>
+    void updateOneStorageBuffer(ContextVk *contextVk,
+                                CommandBufferHelperT *commandBufferHelper,
                                 const size_t blockIndex,
                                 const gl::InterfaceBlock &block,
                                 const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
@@ -2056,8 +2057,9 @@ class DescriptorSetDescBuilder final
                                VkDescriptorType descriptorType,
                                VkDeviceSize maxBoundBufferRange,
                                const BufferHelper &emptyBuffer);
-    void updateStorageBuffers(Context *context,
-                              CommandBufferHelperCommon *commandBufferHelper,
+    template <typename CommandBufferHelperT>
+    void updateStorageBuffers(ContextVk *contextVk,
+                              CommandBufferHelperT *commandBufferHelper,
                               const gl::ProgramExecutable &executable,
                               const gl::BufferVector &buffers,
                               const std::vector<gl::InterfaceBlock> &blocks,

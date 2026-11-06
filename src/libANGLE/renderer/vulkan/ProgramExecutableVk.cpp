@@ -2277,9 +2277,10 @@ void ProgramExecutableVk::updateShaderResourcesWithSharedCacheKey(
     }
 }
 
+template <typename CommandBufferHelperT>
 angle::Result ProgramExecutableVk::updateShaderResourcesDescInfo(
     ContextVk *contextVk,
-    vk::CommandBufferHelperCommon *commandBufferHelper,
+    CommandBufferHelperT *commandBufferHelper,
     const FramebufferVk *framebufferVk,
     const gl::BufferVector &shaderStorageBufferBindings,
     const gl::BufferVector &atomicCounterBufferBindings,
@@ -2362,6 +2363,34 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescInfo(
 
     return angle::Result::Continue;
 }
+
+template angle::Result ProgramExecutableVk::updateShaderResourcesDescInfo<
+    vk::RenderPassCommandBufferHelper>(ContextVk *contextVk,
+                                       vk::RenderPassCommandBufferHelper *commandBufferHelper,
+                                       const FramebufferVk *framebufferVk,
+                                       const gl::BufferVector &shaderStorageBufferBindings,
+                                       const gl::BufferVector &atomicCounterBufferBindings,
+                                       const VkPhysicalDeviceLimits &limits,
+                                       const vk::BufferHelper &emptyBuffer,
+                                       const GLbitfield memoryBarrierBits,
+                                       const gl::ActiveTextureArray<TextureVk *> &activeImages,
+                                       const std::vector<gl::ImageUnit> &imageUnits,
+                                       uint32_t currentFrameCount,
+                                       UpdateDescriptorSetsBuilder *updateBuilder);
+template angle::Result
+ProgramExecutableVk::updateShaderResourcesDescInfo<vk::OutsideRenderPassCommandBufferHelper>(
+    ContextVk *contextVk,
+    vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper,
+    const FramebufferVk *framebufferVk,
+    const gl::BufferVector &shaderStorageBufferBindings,
+    const gl::BufferVector &atomicCounterBufferBindings,
+    const VkPhysicalDeviceLimits &limits,
+    const vk::BufferHelper &emptyBuffer,
+    const GLbitfield memoryBarrierBits,
+    const gl::ActiveTextureArray<TextureVk *> &activeImages,
+    const std::vector<gl::ImageUnit> &imageUnits,
+    uint32_t currentFrameCount,
+    UpdateDescriptorSetsBuilder *updateBuilder);
 
 template <typename CommandBufferT>
 angle::Result ProgramExecutableVk::bindDescriptorSets(

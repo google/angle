@@ -380,6 +380,17 @@ class ReadWriteResource : public Resource
         mWriteUse.setQueueSerial(writeQueueSerial);
     }
 
+    // Updates mWriteUse without modifying mUse, used when mUse already tracks a larger QueueSerial
+    // (e.g. an open render pass) than writeQueueSerial.
+    void mergeWriteOnlyQueueSerial(const QueueSerial &writeQueueSerial)
+    {
+        ASSERT(mUse >= writeQueueSerial);
+        if (!(mWriteUse >= writeQueueSerial))
+        {
+            mWriteUse.setQueueSerial(writeQueueSerial);
+        }
+    }
+
     // Check if this resource is used by a command buffer.
     bool usedByCommandBuffer(const QueueSerial &commandBufferQueueSerial) const
     {
@@ -402,7 +413,7 @@ class ReadWriteResource : public Resource
         return *this;
     }
 
-    // Track write use of the object. Only updated for setWriteQueueSerial().
+    // Track write use of the object.
     ResourceUse mWriteUse;
 };
 

@@ -13,6 +13,7 @@
 #include "common/span.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
+#include "util/test_utils.h"
 
 using namespace angle;
 
@@ -3578,6 +3579,214 @@ void main() {
         EXPECT_EQ(0u, results[3]);
         glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     }
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that a buffer read in an open render pass as a vertex buffer and then written as an SSBO by
+// a compute dispatch (recorded in the outside-render-pass command buffer with a smaller queue
+// serial, without glMemoryBarrier) is not destroyed before the render pass is submitted.
+TEST_P(ShaderStorageBufferTest31, DeleteVertexBufferAfterOutsideRenderPassSSBOWrite)
+{
+    constexpr char kVS[] = R"(#version 310 es
+layout(location = 0) in vec4 aPos;
+void main()
+{
+    gl_Position = aPos;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 oColor;
+void main()
+{
+    oColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    // Writes X (binding 0) as a storage buffer, and Y (binding 1) so that Y's
+    // write is tracked in the same outside-render-pass batch O.
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x = 1) in;
+layout(std430, binding = 0) buffer BX { uint x[]; };
+layout(std430, binding = 1) buffer BY { uint y[]; };
+void main()
+{
+    x[gl_GlobalInvocationID.x] = 1u;
+    y[0] = 1u;
+})";
+
+    ANGLE_GL_PROGRAM(gfx, kVS, kFS);
+    ANGLE_GL_COMPUTE_PROGRAM(cs, kCS);
+
+    // Render target
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 64, 64);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, 64, 64);
+
+    // BufferX: a big sized buffer may end up with a standalone dedicated VkDeviceMemory in vulkan
+    // backend, which means releasing it ends in vkDestroyBuffer/vkFreeMemory rather than a pool
+    // free.
+    constexpr size_t kXSize = 16u * 1024u * 1024u;
+    std::vector<float> xdata(kXSize / sizeof(float), 0.0f);
+    // A full-screen triangle at the start of the buffer.
+    constexpr std::array<float, 12> kTri = {
+        -1.0f, -1.0f, 0.0f, 1.0f, 3.0f, -1.0f, 0.0f, 1.0f, -1.0f, 3.0f, 0.0f, 1.0f,
+    };
+    Span(xdata).copy_prefix_from(Span(kTri));
+
+    GLBuffer bufferX;
+    glBindBuffer(GL_ARRAY_BUFFER, bufferX);
+    glBufferData(GL_ARRAY_BUFFER, kXSize, xdata.data(), GL_STATIC_DRAW);
+
+    GLBuffer bufferY;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, bufferY);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 256, nullptr, GL_DYNAMIC_READ);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 1: Open render pass R that reads X as a vertex buffer.
+    glUseProgram(gfx);
+    glBindBuffer(GL_ARRAY_BUFFER, bufferX);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: Compute dispatch writes X as an SSBO (no glMemoryBarrier). Driver is allowed to
+    // re-order compute before graphics render pass given no glMemoryBarrier is issued here.
+    glUseProgram(cs);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, bufferX);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, bufferY);
+    glDispatchCompute(1, 1, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 3: >= 64 MiB of staged texture uploads, try to trigger batch submit alone.
+    constexpr GLsizei kTexW      = 2048;
+    constexpr GLsizei kTexH      = 2048;  // 4 MiB of R8 texels
+    constexpr GLsizei kRowLength = kTexW + 256;
+    const size_t pixSize         = static_cast<size_t>(kRowLength) * static_cast<size_t>(kTexH);
+    std::vector<uint8_t> pixels(pixSize, 0x41);
+    std::array<GLTexture, 16> tex;
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, kRowLength);
+    for (size_t i = 0; i < 16; i++)
+    {
+        glBindTexture(GL_TEXTURE_2D, tex[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, kTexW, kTexH);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTexW, kTexH, GL_RED, GL_UNSIGNED_BYTE,
+                        pixels.data());
+    }
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 4: Release X.
+    bufferX.reset();
+    ASSERT_GL_NO_ERROR();
+
+    // Step 5: Make ANGLE observe step 3's completion and run garbage cleanup.
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, bufferY);
+    const GLuint *mappedY = static_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLuint), GL_MAP_READ_BIT));
+    ASSERT_NE(nullptr, mappedY);
+    EXPECT_EQ(1u, *mappedY);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+    // Step 6: Submit the render pass that still references X. It should not crash or trigger asan
+    // complain.
+    glFinish();
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that when a render pass reads one region of a buffer as a vertex buffer and a compute
+// dispatch writes a non-overlapping region of the same buffer as an SSBO without an intervening
+// glMemoryBarrier, both the compute write and the render pass draw produce the expected results.
+TEST_P(ShaderStorageBufferTest31, VertexBufferReadAndComputeSSBOWriteNonOverlapping)
+{
+    constexpr char kVS[] = R"(#version 310 es
+layout(location = 0) in vec4 aPos;
+void main()
+{
+    gl_Position = aPos;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 oColor;
+void main()
+{
+    oColor = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    // Writes the start of X (binding 0) as a storage buffer.
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x = 1) in;
+layout(std430, binding = 0) buffer BX { uint x[]; };
+void main()
+{
+    x[gl_GlobalInvocationID.x] = 1u;
+})";
+
+    ANGLE_GL_PROGRAM(gfx, kVS, kFS);
+    ANGLE_GL_COMPUTE_PROGRAM(cs, kCS);
+
+    // Render target
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 64, 64);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, 64, 64);
+
+    // Place the full-screen triangle at the end of buffer so that the compute shader (writing
+    // element 0) and the render pass (reading the triangle vertices) use non-overlapping parts of
+    // buffer.
+    constexpr size_t kSize = 1024u;
+    std::vector<float> data(kSize / sizeof(float), 0.0f);
+    constexpr std::array<float, 12> kTri = {
+        -1.0f, -1.0f, 0.0f, 1.0f, 3.0f, -1.0f, 0.0f, 1.0f, -1.0f, 3.0f, 0.0f, 1.0f,
+    };
+    Span(data).last(kTri.size()).copy_from(Span(kTri));
+    constexpr size_t kTriByteOffset = kSize - sizeof(kTri);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, kSize, data.data(), GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 1: Open render pass R that reads the end of buffer as a vertex buffer.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(gfx);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0,
+                          reinterpret_cast<const void *>(kTriByteOffset));
+    glEnableVertexAttribArray(0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: Compute dispatch writes the start of buffer as an SSBO without glMemoryBarrier.
+    glUseProgram(cs);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
+    glDispatchCompute(1, 1, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 3: Inspect buffer's content written by compute and verify the render pass output is
+    // red.
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    const GLuint *mappedPtr = static_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLuint), GL_MAP_READ_BIT));
+    ASSERT_NE(nullptr, mappedPtr);
+    EXPECT_EQ(1u, *mappedPtr);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     EXPECT_GL_NO_ERROR();
 }
 

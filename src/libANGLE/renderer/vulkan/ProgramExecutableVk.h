@@ -347,9 +347,10 @@ class ProgramExecutableVk : public ProgramExecutableImpl
             blockIndex, bufferBinding, mUniformBuffersWriteDescriptorDescs);
     }
 
+    template <typename CommandBufferHelperT>
     angle::Result updateShaderResourcesDescInfo(
         ContextVk *contextVk,
-        vk::CommandBufferHelperCommon *commandBufferHelper,
+        CommandBufferHelperT *commandBufferHelper,
         const FramebufferVk *framebufferVk,
         const gl::BufferVector &shaderStorageBufferBindings,
         const gl::BufferVector &atomicCounterBufferBindings,

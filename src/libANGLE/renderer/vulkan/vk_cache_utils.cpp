@@ -6445,9 +6445,10 @@ void DescriptorSetDescBuilder::updateOneUniformBufferOffset(
     SetBitField(mDynamicOffsets[infoDescIndex], newOffset);
 }
 
+template <typename CommandBufferHelperT>
 void DescriptorSetDescBuilder::updateOneStorageBuffer(
-    Context *context,
-    CommandBufferHelperCommon *commandBufferHelper,
+    ContextVk *contextVk,
+    CommandBufferHelperT *commandBufferHelper,
     const size_t blockIndex,
     const gl::InterfaceBlock &block,
     const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
@@ -6469,7 +6470,7 @@ void DescriptorSetDescBuilder::updateOneStorageBuffer(
         return;
     }
 
-    updateOneShaderBuffer(context, commandBufferHelper, infoDescIndex, block, bufferBinding,
+    updateOneShaderBuffer(contextVk, commandBufferHelper, infoDescIndex, block, bufferBinding,
                           descriptorType, maxBoundBufferRange, emptyBuffer);
 
     // Insert necessary barriers
@@ -6480,11 +6481,32 @@ void DescriptorSetDescBuilder::updateOneStorageBuffer(
         // marked read-only.  This also helps BufferVk make better decisions during
         // buffer data uploads and copies by knowing that the buffers are not actually
         // being written to.
-        commandBufferHelper->bufferRead(context, VK_ACCESS_SHADER_READ_BIT, block.activeShaders(),
+        commandBufferHelper->bufferRead(contextVk, VK_ACCESS_SHADER_READ_BIT, block.activeShaders(),
                                         &bufferHelper, memoryBarrierBits);
+        return;
     }
-    else if (bufferHelper.canShaderWriteBarrierSkipped(block.activeShaders()) &&
-             (memoryBarrierBits & kBufferMemoryBarrierBits) == 0)
+
+    if constexpr (std::is_same_v<CommandBufferHelperT, OutsideRenderPassCommandBufferHelper>)
+    {
+        if (contextVk->isRenderPassStartedAndUsesBuffer(bufferHelper))
+        {
+            // If a buffer is used in an open render pass and subsequently written by a compute
+            // shader, the application should have called glMemoryBarrier, which detects the hazard
+            // and ends the render pass. If glMemoryBarrier is missing, the driver is allowed to
+            // reorder the buffer access between the compute dispatch (recorded in the
+            // outside-render-pass command buffer) and the render pass access. Since the open render
+            // pass has a larger QueueSerial, record the write without setting the buffer's mUse
+            // QueueSerial backwards.
+            ASSERT(bufferHelper.getResourceUse() > commandBufferHelper->getQueueSerial());
+            VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+            commandBufferHelper->bufferWriteWhileUsedInRenderPass(
+                contextVk, accessFlags, block.activeShaders(), &bufferHelper, memoryBarrierBits);
+            return;
+        }
+    }
+
+    if (bufferHelper.canShaderWriteBarrierSkipped(block.activeShaders()) &&
+        (memoryBarrierBits & kBufferMemoryBarrierBits) == 0)
     {
         // Buffer is already in shader write access, and this is not from memoryBarrier call,
         // then skip the WAW barrier since GL spec says driver is not required to insert barrier
@@ -6501,14 +6523,15 @@ void DescriptorSetDescBuilder::updateOneStorageBuffer(
     {
         // We set the SHADER_READ_BIT to be conservative.
         VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-        commandBufferHelper->bufferWrite(context, accessFlags, block.activeShaders(), &bufferHelper,
-                                         memoryBarrierBits);
+        commandBufferHelper->bufferWrite(contextVk, accessFlags, block.activeShaders(),
+                                         &bufferHelper, memoryBarrierBits);
     }
 }
 
+template <typename CommandBufferHelperT>
 void DescriptorSetDescBuilder::updateStorageBuffers(
-    Context *context,
-    CommandBufferHelperCommon *commandBufferHelper,
+    ContextVk *contextVk,
+    CommandBufferHelperT *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const gl::BufferVector &buffers,
     const std::vector<gl::InterfaceBlock> &blocks,
@@ -6523,11 +6546,34 @@ void DescriptorSetDescBuilder::updateStorageBuffers(
     {
         const GLuint binding = executable.getShaderStorageBlockBinding(blockIndex);
 
-        updateOneStorageBuffer(context, commandBufferHelper, blockIndex, blocks[blockIndex],
+        updateOneStorageBuffer(contextVk, commandBufferHelper, blockIndex, blocks[blockIndex],
                                buffers[binding], descriptorType, maxBoundBufferRange, emptyBuffer,
                                writeDescriptorDescs, memoryBarrierBits);
     }
 }
+
+template void DescriptorSetDescBuilder::updateStorageBuffers<RenderPassCommandBufferHelper>(
+    ContextVk *contextVk,
+    RenderPassCommandBufferHelper *commandBufferHelper,
+    const gl::ProgramExecutable &executable,
+    const gl::BufferVector &buffers,
+    const std::vector<gl::InterfaceBlock> &blocks,
+    VkDescriptorType descriptorType,
+    VkDeviceSize maxBoundBufferRange,
+    const BufferHelper &emptyBuffer,
+    const WriteDescriptorDescs &writeDescriptorDescs,
+    const GLbitfield memoryBarrierBits);
+template void DescriptorSetDescBuilder::updateStorageBuffers<OutsideRenderPassCommandBufferHelper>(
+    ContextVk *contextVk,
+    OutsideRenderPassCommandBufferHelper *commandBufferHelper,
+    const gl::ProgramExecutable &executable,
+    const gl::BufferVector &buffers,
+    const std::vector<gl::InterfaceBlock> &blocks,
+    VkDescriptorType descriptorType,
+    VkDeviceSize maxBoundBufferRange,
+    const BufferHelper &emptyBuffer,
+    const WriteDescriptorDescs &writeDescriptorDescs,
+    const GLbitfield memoryBarrierBits);
 
 void DescriptorSetDescBuilder::updateAtomicCounters(
     Context *context,

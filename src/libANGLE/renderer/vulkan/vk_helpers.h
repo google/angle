@@ -995,7 +995,6 @@ class BufferHelper : public ReadWriteResource
     void recordWriteEvent(Context *context,
                           VkAccessFlags writeAccessType,
                           VkPipelineStageFlags writePipelineStageFlags,
-                          const QueueSerial &writeQueueSerial,
                           PipelineStage writeStage,
                           RefCountedEventArray *refCountedEventArray);
 
@@ -1649,6 +1648,16 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
     void markOpen() { mCommandBuffer.open(); }
     void markClosed() { mCommandBuffer.close(); }
 #endif
+
+    // Similar to bufferWrite, except the buffer is already used by an open render pass whose
+    // QueueSerial is larger than this command buffer's QueueSerial. Records barriers and write
+    // event without updating the buffer's mUse QueueSerial backwards, while still updating
+    // mWriteUse if needed.
+    void bufferWriteWhileUsedInRenderPass(Context *context,
+                                          VkAccessFlags writeAccessType,
+                                          const gl::ShaderBitSet &writeShaderStages,
+                                          BufferHelper *buffer,
+                                          const GLbitfield memoryBarrierBits);
 
     void imageRead(Context *context,
                    VkImageAspectFlags aspectFlags,
