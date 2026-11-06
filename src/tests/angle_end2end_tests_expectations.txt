@@ -3383,6 +3383,11 @@
 42264006 LINUX INTEL OPENGL : GLSLValidationClipDistanceTest_ES31.GeometryPerVertexInOutClipDistanceDifferentSizeLink/* = SKIP
 42264006 PIXEL4ORXL GLES : GLSLValidationClipDistanceTest_ES31.GeometryPerVertexInOutClipDistanceDifferentSizeLink/* = SKIP
 
+// Platform-specific failures of tests added for
+// limitVaryingsAtCompileTime workaround. Won't fix.
+569367111 MAC AMD METAL : VertexAttributeTestES3.MaxVaryings/* = SKIP
+569367111 MAC INTEL METAL : VertexAttributeTestES3.MaxVaryings/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

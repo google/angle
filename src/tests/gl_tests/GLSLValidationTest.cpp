@@ -11161,16 +11161,15 @@ void main() { big[0][0] = 1.0; col = vec4(big[0][0]); })";
     validateError(GL_FRAGMENT_SHADER, kFS, "version");
 }
 
-class GLSLValidationTest_ES3_LimitOutputVaryings : public GLSLValidationTest_ES3
+class GLSLValidationTest_ES3_LimitVaryings : public GLSLValidationTest_ES3
 {};
 
 // Regression test for crbug.com/529991907.
 // Verify that compiling a shader with up to 256 output varying components
 // succeeds, and exceeding 256 components is rejected at compile time.
-TEST_P(GLSLValidationTest_ES3_LimitOutputVaryings, TooManyDeclaredVertexOutputComponents)
+TEST_P(GLSLValidationTest_ES3_LimitVaryings, TooManyDeclaredVertexOutputComponents)
 {
-    ANGLE_SKIP_TEST_IF(
-        !getEGLWindow()->isFeatureEnabled(Feature::LimitOutputVaryingsTo256AtCompileTime));
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::LimitVaryingsAtCompileTime));
 
     constexpr int kMaxVectors = 256 / 4;
 
@@ -11192,6 +11191,59 @@ TEST_P(GLSLValidationTest_ES3_LimitOutputVaryings, TooManyDeclaredVertexOutputCo
     vsInvalid << "void main() { gl_Position = vec4(0.0); }\n";
     validateError(GL_VERTEX_SHADER, vsInvalid.str().c_str(),
                   "Too many declared shader output varying components for this device");
+}
+
+// Regression test for crbug.com/569367111.
+// Verify that compiling a fragment shader with up to 256 input varying
+// components succeeds, and exceeding 256 components is rejected at compile
+// time.
+TEST_P(GLSLValidationTest_ES3_LimitVaryings, TooManyDeclaredFragmentInputComponents)
+{
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::LimitVaryingsAtCompileTime));
+
+    constexpr int kMaxVectors = 256 / 4;
+
+    std::stringstream fsValid;
+    fsValid << "#version 300 es\n";
+    fsValid << "precision highp float;\n";
+    for (int i = 0; i < kMaxVectors; ++i)
+    {
+        fsValid << "in highp vec4 v" << i << ";\n";
+    }
+    fsValid << "out highp vec4 fragColor;\n";
+    fsValid << "void main() { fragColor = vec4(0.0); }\n";
+    validateSuccess(GL_FRAGMENT_SHADER, fsValid.str().c_str());
+
+    std::stringstream fsInvalid;
+    fsInvalid << "#version 300 es\n";
+    fsInvalid << "precision highp float;\n";
+    for (int i = 0; i < kMaxVectors + 1; ++i)
+    {
+        fsInvalid << "in highp vec4 v" << i << ";\n";
+    }
+    fsInvalid << "out highp vec4 fragColor;\n";
+    fsInvalid << "void main() { fragColor = vec4(0.0); }\n";
+    validateError(GL_FRAGMENT_SHADER, fsInvalid.str().c_str(),
+                  "Too many declared shader input varying components for this device");
+
+    // Also verify that large active input arrays (as in crbug.com/569367111)
+    // exceeding 256 components are rejected at compile time.
+    constexpr char kLargeArraysFS[] = R"(#version 300 es
+precision mediump float;
+in mediump vec4 a0[4095];
+in mediump vec4 a1[4095];
+in mediump vec4 a2[4095];
+in mediump vec4 a3[4095];
+in mediump vec4 a4[909];
+flat in mediump vec4 a5;
+in mediump vec4 a6;
+layout(location = 0) out mediump vec4 color;
+void main() {
+    int i = int(gl_FragCoord.x) % 4095;
+    color = a0[i] + a1[i] + a2[i] + a3[i] + a4[i % 909] + a5 + a6;
+})";
+    validateError(GL_FRAGMENT_SHADER, kLargeArraysFS,
+                  "Too many declared shader input varying components for this device");
 }
 
 class GLSLValidationTest_ES2_PixelLocalStorage : public GLSLValidationTest_ES3
@@ -12139,10 +12191,10 @@ ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLValidationTest);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLValidationTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLValidationTest);
 
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationTest_ES3_LimitOutputVaryings);
-ANGLE_INSTANTIATE_TEST(GLSLValidationTest_ES3_LimitOutputVaryings,
-                       ES3_OPENGL().enable(Feature::LimitOutputVaryingsTo256AtCompileTime),
-                       ES3_OPENGLES().enable(Feature::LimitOutputVaryingsTo256AtCompileTime));
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLValidationTest_ES3_LimitVaryings);
+ANGLE_INSTANTIATE_TEST(GLSLValidationTest_ES3_LimitVaryings,
+                       ES3_OPENGL().enable(Feature::LimitVaryingsAtCompileTime),
+                       ES3_OPENGLES().enable(Feature::LimitVaryingsAtCompileTime));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND(WebGLGLSLValidationExtensionDisableTest,
                                ES2_OPENGL().enable(Feature::AllowExtensionDisableAfterNonPpTokens));

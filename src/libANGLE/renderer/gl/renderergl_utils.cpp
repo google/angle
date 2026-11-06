@@ -2794,9 +2794,9 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // IMG GL drivers crash while compiling shaders with more than the limit of uniform blocks.
     ANGLE_FEATURE_CONDITION(features, validateMaxPerStageUniformBlocksAtCompileTime, isPowerVR);
 
-    // Some drivers have compilation issues when shaders declare too many output varyings.
-    // crbug.com/529991907
-    ANGLE_FEATURE_CONDITION(features, limitOutputVaryingsTo256AtCompileTime, isPowerVR);
+    // Some drivers have compilation issues when shaders declare too many varyings.
+    // crbug.com/529991907, crbug.com/569367111
+    ANGLE_FEATURE_CONDITION(features, limitVaryingsAtCompileTime, isPowerVR);
 
     // crbug.com/529509587 -- IMG GLSL frontend OOB-writes during semantic analysis of a struct
     // constructor whose array-typed member receives a constant array-constructor argument with a

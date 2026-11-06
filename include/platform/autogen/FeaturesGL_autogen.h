@@ -752,8 +752,8 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
-    FeatureInfo limitOutputVaryingsTo256AtCompileTime = {
-        "limitOutputVaryingsTo256AtCompileTime",
+    FeatureInfo limitVaryingsAtCompileTime = {
+        "limitVaryingsAtCompileTime",
         FeatureCategory::OpenGLWorkarounds,
         &members,
     };

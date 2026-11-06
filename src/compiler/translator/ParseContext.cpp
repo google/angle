@@ -576,9 +576,9 @@ TIntermDeclaration *RenameAndDeclareStruct(TSymbolTable *symbolTable,
     return DeclareStruct(symbolTable, structure);
 }
 
-unsigned int GetTypeComponentCount(const TType &type)
+angle::CheckedNumeric<unsigned int> GetTypeComponentCount(const TType &type)
 {
-    unsigned int components = 0;
+    angle::CheckedNumeric<unsigned int> components = 0;
     if (type.getBasicType() == EbtInterfaceBlock)
     {
         for (const TField *field : type.getInterfaceBlock()->fields())
@@ -597,7 +597,10 @@ unsigned int GetTypeComponentCount(const TType &type)
     {
         components = static_cast<unsigned int>(type.getNominalSize()) * type.getSecondarySize();
     }
-    components *= type.getArraySizeProduct();
+    for (unsigned int arraySize : type.getArraySizes())
+    {
+        components *= arraySize;
+    }
     return components;
 }
 
@@ -848,7 +851,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mNumViews(-1),
       mMaxUniformBlocks(GetMaxUniformBlocksForShaderType(mShaderType, options, resources)),
       mNumUniformBlocks(0),
-      mNumOutputVaryingComponents(0),
+      mNumVaryingComponents(0),
       mDeclaringFunction(false),
       mDeclaringMain(false),
       mMainFunction(nullptr),
@@ -2672,7 +2675,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         error(line, "redefinition", identifier);
         return false;
     }
-    addAndCheckOutputVaryings(**variable, line);
+    addAndCheckVaryings(**variable, line);
 
     if (!checkIsNonVoid(line, identifier, type->getBasicType()))
     {
@@ -7484,7 +7487,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
                 error(field->line(), "redefinition of an interface block member name",
                       field->name());
             }
-            addAndCheckOutputVaryings(*fieldVariable, field->line());
+            addAndCheckVaryings(*fieldVariable, field->line());
 
             // Don't declare variables for fields of nameless interface blocks in the IR, just
             // remember to implicitly index the instance variable when referenced.
@@ -7514,7 +7517,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         {
             error(instanceLine, "redefinition of an interface block instance name", instanceName);
         }
-        addAndCheckOutputVaryings(*instanceVariable, instanceLine);
+        addAndCheckVaryings(*instanceVariable, instanceLine);
     }
 
     TIntermSymbol *blockSymbol = new TIntermSymbol(instanceVariable);
@@ -11462,14 +11465,14 @@ bool TParseContext::postParseChecks()
     return numErrors() == 0;
 }
 
-void TParseContext::addAndCheckOutputVaryings(const TVariable &variable, const TSourceLoc &line)
+void TParseContext::addAndCheckVaryings(const TVariable &variable, const TSourceLoc &line)
 {
-    if (mShaderType != GL_VERTEX_SHADER)
+    if (mShaderType != GL_VERTEX_SHADER && mShaderType != GL_FRAGMENT_SHADER)
     {
         return;
     }
 
-    if (!mCompileOptions.limitOutputVaryingsTo256)
+    if (!mCompileOptions.limitVaryingsAtCompileTime)
     {
         return;
     }
@@ -11479,23 +11482,29 @@ void TParseContext::addAndCheckOutputVaryings(const TVariable &variable, const T
         return;
     }
 
-    if (!IsVaryingOut(variable.getType().getQualifier()))
+    const TQualifier qualifier = variable.getType().getQualifier();
+    const bool isTargetVarying = (mShaderType == GL_VERTEX_SHADER && IsVaryingOut(qualifier)) ||
+                                 (mShaderType == GL_FRAGMENT_SHADER && IsVaryingIn(qualifier));
+    if (!isTargetVarying)
     {
         return;
     }
 
-    angle::CheckedNumeric<unsigned int> checkedNum = mNumOutputVaryingComponents;
+    angle::CheckedNumeric<unsigned int> checkedNum = mNumVaryingComponents;
     checkedNum += GetTypeComponentCount(variable.getType());
-    mNumOutputVaryingComponents =
-        checkedNum.ValueOrDefault(std::numeric_limits<unsigned int>::max());
+    mNumVaryingComponents = checkedNum.ValueOrDefault(std::numeric_limits<unsigned int>::max());
 
     // The cap to 256 components seems somewhat arbitrary, but this is intended as a workaround for
     // a specific driver bug, and this limit being much higher than the device limits
-    // (mResources.MaxVertexOutputVectors * 4), it avoids regressing both tests and applications.
-    if (mNumOutputVaryingComponents > 256)
+    // (mResources.MaxVertexOutputVectors * 4 and mResources.MaxFragmentInputVectors * 4), it
+    // avoids regressing both tests and applications.
+    if (mNumVaryingComponents > 256)
     {
-        error(line, "Too many declared shader output varying components for this device",
-              variable.name());
+        const char *errorMessage =
+            mShaderType == GL_VERTEX_SHADER
+                ? "Too many declared shader output varying components for this device"
+                : "Too many declared shader input varying components for this device";
+        error(line, errorMessage, variable.name());
     }
 }
 

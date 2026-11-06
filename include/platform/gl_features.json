@@ -996,7 +996,7 @@
             "issue": "http://crbug.com/496807874"
         },
         {
-            "name": "limit_output_varyings_to_256_at_compile_time",
+            "name": "limit_varyings_at_compile_time",
             "category": "Workarounds",
             "description": [
                 "Limit the number of declared varying components at compile time to work around a PowerVR driver bug."

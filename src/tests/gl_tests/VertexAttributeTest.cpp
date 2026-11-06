@@ -8,9 +8,11 @@
 #    pragma allow_unsafe_buffers
 #endif
 
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <sstream>
 #include "anglebase/numerics/safe_conversions.h"
 #include "common/mathutil.h"
 #include "test_utils/ANGLETest.h"
@@ -8047,6 +8049,91 @@ void main()
     glDrawArrays(GL_TRIANGLES, 6, kQuadVertices);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Verify that declaring the maximum supported number of vertex output and fragment input varyings
+// passes all values accurately from the vertex shader to the fragment shader when rendering.
+TEST_P(VertexAttributeTestES3, MaxVaryings)
+{
+    GLint maxVaryingVectors = 0;
+    glGetIntegerv(GL_MAX_VARYING_VECTORS, &maxVaryingVectors);
+    GLint maxVertexOutputComponents = 0;
+    glGetIntegerv(GL_MAX_VERTEX_OUTPUT_COMPONENTS, &maxVertexOutputComponents);
+    GLint maxFragmentInputComponents = 0;
+    glGetIntegerv(GL_MAX_FRAGMENT_INPUT_COMPONENTS, &maxFragmentInputComponents);
+    ASSERT_GL_NO_ERROR();
+
+    const GLint maxVaryings = std::min(
+        {maxVaryingVectors, maxVertexOutputComponents / 4, maxFragmentInputComponents / 4});
+    ASSERT_GT(maxVaryings, 0);
+
+    std::stringstream vsStream;
+    vsStream << "#version 300 es\n";
+    vsStream << "layout(location = 0) in highp vec4 a_position;\n";
+    vsStream << "layout(location = 1) in highp vec4 a_base;\n";
+    for (GLint i = 0; i < maxVaryings; ++i)
+    {
+        vsStream << "out highp vec4 v" << i << ";\n";
+    }
+    vsStream << "void main()\n{\n";
+    vsStream << "    gl_Position = a_position;\n";
+    for (GLint i = 0; i < maxVaryings; ++i)
+    {
+        const GLint c = i * 4;
+        vsStream << "    v" << i << " = a_base + vec4(" << c << ".0, " << (c + 1) << ".0, "
+                 << (c + 2) << ".0, " << (c + 3) << ".0);\n";
+    }
+    vsStream << "}\n";
+
+    std::stringstream fsStream;
+    fsStream << "#version 300 es\n";
+    fsStream << "precision highp float;\n";
+    for (GLint i = 0; i < maxVaryings; ++i)
+    {
+        fsStream << "in highp vec4 v" << i << ";\n";
+    }
+    fsStream << "out highp vec4 fragColor;\n";
+    fsStream << "void main()\n{\n";
+    fsStream << "    bool ok = true;\n";
+    for (GLint i = 0; i < maxVaryings; ++i)
+    {
+        const GLint c = i * 4;
+        fsStream << "    if (any(greaterThan(abs(v" << i << " - vec4(" << c << ".25, " << (c + 1)
+                 << ".5, " << (c + 2) << ".75, " << (c + 4) << ".0)), vec4(0.01))))\n"
+                 << "    {\n"
+                 << "        ok = false;\n"
+                 << "    }\n";
+    }
+    fsStream << "    fragColor = ok ? vec4(0.0, 1.0, 0.0, 1.0) : vec4(1.0, 0.0, 0.0, 1.0);\n";
+    fsStream << "}\n";
+
+    ANGLE_GL_PROGRAM(program, vsStream.str().c_str(), fsStream.str().c_str());
+    glUseProgram(program);
+
+    GLVertexArray vao;
+    glBindVertexArray(vao);
+
+    const auto &quadVertices = GetQuadVertices();
+    GLBuffer posBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, posBuffer);
+    glBufferData(GL_ARRAY_BUFFER, quadVertices.size() * sizeof(quadVertices[0]),
+                 quadVertices.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    std::vector<Vector4> baseData(quadVertices.size(), Vector4(0.25f, 0.5f, 0.75f, 1.0f));
+    GLBuffer baseBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, baseBuffer);
+    glBufferData(GL_ARRAY_BUFFER, baseData.size() * sizeof(baseData[0]), baseData.data(),
+                 GL_STATIC_DRAW);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(quadVertices.size()));
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
 }
 
 ANGLE_INSTANTIATE_TEST_ES3(VertexAttributeResizeTest);
