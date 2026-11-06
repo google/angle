@@ -873,9 +873,13 @@ void RenderPassAttachment::finalizeLoadStore(ErrorContext *context,
                     // afterwards)
                     break;
                 case RenderPassLoadOp::Load:
-                    // Make sure the attachment is neither loaded nor stored (as it's neither used
-                    // nor invalidated), if possible.
-                    if (supportsLoadStoreOpNone)
+                    // If the render pass has an active subpass resolve attachment, keep loadOp
+                    // as Load so the resolve operation can read the source data; Otherwise,
+                    // loadOp can be optimized to None.
+                    // storeOp can still be optimized to None regardless of active subpass resolve
+                    // attachment, because the attachment was not modified (mAccess ==
+                    // ResourceAccess::Unused)
+                    if (supportsLoadStoreOpNone && !hasResolveAttachment)
                     {
                         *loadOp = RenderPassLoadOp::None;
                     }
