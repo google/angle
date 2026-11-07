@@ -10084,6 +10084,1175 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests state change for glBlendFunciOES and glBlendEquationiOES, with all attachments present.
+TEST_P(StateChangeTestES3, BlendFunciBlendEquationiAllAttachments)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+    constexpr uint32_t kWidth  = 5;
+    constexpr uint32_t kHeight = 3;
+
+    GLint maxDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ASSERT_LE(maxDrawBuffers, 8);
+
+    // Create a framebuffer with the maximum number of attachments.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    std::vector<GLTexture> color(maxDrawBuffers);
+    std::vector<GLenum> drawBuffers(maxDrawBuffers);
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, color[i],
+                               0);
+
+        drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
+    }
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDrawBuffers(maxDrawBuffers, drawBuffers.data());
+
+    // Create a program that broadcasts uniform |color| to all attachments.
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    std::ostringstream fs;
+    fs << R"(#version 300 es
+precision highp float;
+)";
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        fs << "layout(location = " << i << ") out vec4 color" << i << ";\n";
+    }
+    fs << R"(uniform vec4 color;
+void main()
+{
+)";
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        fs << "color" << i << " = color;\n";
+    }
+    fs << "}\n";
+
+    ANGLE_GL_PROGRAM(program, kVS, fs.str().c_str());
+    glUseProgram(program);
+
+    const GLint colorLoc = glGetUniformLocation(program, "color");
+    ASSERT_NE(colorLoc, -1);
+
+    const GLColor32F kC0(33.0 / 255.0, 44.0 / 255.0, 22.0 / 255.0, 11.0 / 255.0);
+    glClearColor(kC0.R, kC0.G, kC0.B, kC0.A);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Enable blending for every attachment except attachment 2 (just for the heck of it).
+    glEnable(GL_BLEND);
+    glDisableiOES(GL_BLEND, 2);
+    const GLColor32F kCK(0.3, 0.7, 0.5, 0.4);
+    glBlendColor(kCK.R, kCK.G, kCK.B, kCK.A);
+
+    struct BlendState
+    {
+        GLenum colorFuncSrc;
+        GLenum colorFuncDst;
+        GLenum alphaFuncSrc;
+        GLenum alphaFuncDst;
+
+        GLenum colorEquation;
+        GLenum alphaEquation;
+    };
+
+    auto applyBlendState = [](GLint index, const BlendState &state) {
+        if (state.colorFuncSrc == state.alphaFuncSrc && state.colorFuncDst == state.alphaFuncDst)
+        {
+            glBlendFunciOES(index, state.colorFuncSrc, state.colorFuncDst);
+        }
+        else
+        {
+            glBlendFuncSeparateiOES(index, state.colorFuncSrc, state.colorFuncDst,
+                                    state.alphaFuncSrc, state.alphaFuncDst);
+        }
+
+        if (state.colorEquation == state.alphaEquation)
+        {
+            glBlendEquationiOES(index, state.colorEquation);
+        }
+        else
+        {
+            glBlendEquationSeparateiOES(index, state.colorEquation, state.alphaEquation);
+        }
+    };
+
+    // Set the following blend funcs and equations:
+    //
+    //     0: Func: One, One, Equation: Add
+    //     1: Func: SrcColor, DstColor, Equation (color): Add, Equation (alpha): Subtract
+    //     2: Func: One, One, Equation: Max
+    //     3: Func (color): One, One, Func (alpha): SrcAlpha, SrcAlpha, Equation: Min
+    //     4: Func: SrcAlpha, OneMinusSrcAlpha, Equation (color): Add, Equation (alpha): Subtract
+    //     5: Func: ConstantColor, One, Equation: Add
+    //     6: Func: One, ConstantAlpha, Equation: Max
+    //     7: Func (color): OneMinusSrcColor, OneMinusDstColor,
+    //        Func (alpha): One, OneMinusDstAlpha,
+    //        Equation (color): Add, Equation (alpha): ReverseSubtract
+    std::array<BlendState, 8> blendStates = {
+        BlendState{
+            GL_ONE,
+            GL_ONE,
+            GL_ONE,
+            GL_ONE,
+            GL_FUNC_ADD,
+            GL_FUNC_ADD,
+        },
+        BlendState{
+            GL_SRC_COLOR,
+            GL_DST_COLOR,
+            GL_SRC_COLOR,
+            GL_DST_COLOR,
+            GL_FUNC_ADD,
+            GL_FUNC_SUBTRACT,
+        },
+        BlendState{
+            GL_ONE,
+            GL_ONE,
+            GL_ONE,
+            GL_ONE,
+            GL_MAX,
+            GL_MAX,
+        },
+        BlendState{
+            GL_ONE,
+            GL_ONE,
+            GL_SRC_ALPHA,
+            GL_SRC_ALPHA,
+            GL_MIN,
+            GL_MIN,
+        },
+        BlendState{
+            GL_SRC_ALPHA,
+            GL_ONE_MINUS_SRC_ALPHA,
+            GL_SRC_ALPHA,
+            GL_ONE_MINUS_SRC_ALPHA,
+            GL_FUNC_ADD,
+            GL_FUNC_SUBTRACT,
+        },
+        BlendState{
+            GL_CONSTANT_COLOR,
+            GL_ONE,
+            GL_CONSTANT_COLOR,
+            GL_ONE,
+            GL_FUNC_ADD,
+            GL_FUNC_ADD,
+        },
+        BlendState{
+            GL_ONE,
+            GL_CONSTANT_ALPHA,
+            GL_ONE,
+            GL_CONSTANT_ALPHA,
+            GL_MAX,
+            GL_MAX,
+        },
+        BlendState{
+            GL_ONE_MINUS_SRC_COLOR,
+            GL_ONE_MINUS_DST_COLOR,
+            GL_ONE,
+            GL_ONE_MINUS_DST_ALPHA,
+            GL_FUNC_ADD,
+            GL_FUNC_REVERSE_SUBTRACT,
+        },
+    };
+    for (GLint i = 0; i < maxDrawBuffers; ++i)
+    {
+        applyBlendState(i, blendStates[i]);
+    }
+    const GLColor32F kC1(51.0 / 255.0, 102.0 / 255.0, 153.0 / 255.0, 204.0 / 255.0);
+    glUniform4fv(colorLoc, 1, &kC1.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change the blend funcs and equations for every other attachment:
+    //
+    //     1: Func: DstAlpha, DstColor, Equation: Add
+    //     3: Func: SrcAlpha, SrcAlpha, Equation (color): ReverseSubtract, Equation (alpha): Max
+    //     5: Func: One, One, Equation: Add
+    //     7: Func: OneMinusSrcColor, OneMinusDstColor,
+    //        Equation (color): Add, Equation (alpha): ReverseSubtract
+    blendStates[1] = BlendState{
+        GL_DST_ALPHA, GL_DST_COLOR, GL_DST_ALPHA, GL_DST_COLOR, GL_FUNC_ADD, GL_FUNC_ADD,
+    };
+    blendStates[3] = BlendState{
+        GL_SRC_ALPHA, GL_SRC_ALPHA, GL_SRC_ALPHA, GL_SRC_ALPHA, GL_FUNC_REVERSE_SUBTRACT, GL_MAX,
+    };
+    blendStates[5] = BlendState{
+        GL_ONE, GL_ONE, GL_ONE, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD,
+    };
+    blendStates[7] = BlendState{GL_ONE_MINUS_SRC_COLOR,
+                                GL_ONE_MINUS_DST_COLOR,
+                                GL_ONE_MINUS_SRC_COLOR,
+                                GL_ONE_MINUS_DST_COLOR,
+                                GL_FUNC_ADD,
+                                GL_FUNC_REVERSE_SUBTRACT};
+    for (GLint i = 1; i < maxDrawBuffers; i += 2)
+    {
+        applyBlendState(i, blendStates[i]);
+    }
+    const GLColor32F kC2(60.0 / 255.0, 70.0 / 255.0, 80.0 / 255.0, 90.0 / 255.0);
+    glUniform4fv(colorLoc, 1, &kC2.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change the blend funcs and equations for every third attachment; attachment 2 is ignored, and
+    // attachment 5 is reverted to its original blend.
+    //
+    //     2: Func (color): OneMinusSrcColor, OneMinusDstColor,
+    //        Func (alpha): One, OneMinusDstAlpha,
+    //        Equation (color): Add, Equation (alpha): ReverseSubtract
+    //     5: Func: ConstantColor, One, Equation: Add
+    blendStates[2] = BlendState{
+        GL_ONE_MINUS_SRC_COLOR,
+        GL_ONE_MINUS_DST_COLOR,
+        GL_ONE,
+        GL_ONE_MINUS_DST_ALPHA,
+        GL_FUNC_ADD,
+        GL_FUNC_REVERSE_SUBTRACT,
+    };
+    blendStates[5] = BlendState{
+        GL_CONSTANT_COLOR, GL_ONE, GL_CONSTANT_COLOR, GL_ONE, GL_FUNC_ADD, GL_FUNC_ADD,
+    };
+    for (GLint i = 2; i < maxDrawBuffers; i += 3)
+    {
+        applyBlendState(i, blendStates[i]);
+    }
+    const GLColor32F kC3(100.0 / 255.0, 110.0 / 255.0, 120.0 / 255.0, 130.0 / 255.0);
+    glUniform4fv(colorLoc, 1, &kC3.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify results
+    ASSERT_GE(maxDrawBuffers, 4);
+
+    auto checkResult = [](uint32_t attachmentIndex, float r, float g, float b, float a,
+                          uint8_t error) {
+        SCOPED_TRACE(::testing::Message() << "Attachment " << attachmentIndex);
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+        const GLColor expect(gl::floatToNormalized<uint8_t>(gl::clamp01(r)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(g)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(b)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(a)));
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, expect, error);
+    };
+
+    // 0
+    {
+        auto blendColor = [](float c0, float c1, float c2, float c3) { return c0 + c1 + c2 + c3; };
+        auto blendAlpha = [](float a0, float a1, float a2, float a3) { return a0 + a1 + a2 + a3; };
+
+        checkResult(0, blendColor(kC0.R, kC1.R, kC2.R, kC3.R),
+                    blendColor(kC0.G, kC1.G, kC2.G, kC3.G), blendColor(kC0.B, kC1.B, kC2.B, kC3.B),
+                    blendAlpha(kC0.A, kC1.A, kC2.A, kC3.A), 1);
+    }
+
+    // 1
+    {
+        auto blendColor = [](float c0, float a0, float c1, float a1, float c2, float a2, float c3) {
+            const float draw1c = gl::clamp01(c0 * c0 + c1 * c1);
+            const float draw1a = gl::clamp01(a1 * a1 - a0 * a0);
+            const float draw2c = gl::clamp01(c2 * draw1a + draw1c * draw1c);
+            const float draw2a = gl::clamp01(a2 * draw1a + draw1a * draw1a);
+            return c3 * draw2a + draw2c * draw2c;
+        };
+        auto blendAlpha = [](float a0, float a1, float a2, float a3) {
+            const float draw1a = gl::clamp01(a1 * a1 - a0 * a0);
+            const float draw2a = gl::clamp01(a2 * draw1a + draw1a * draw1a);
+            return a3 * draw2a + draw2a * draw2a;
+        };
+
+        checkResult(1, blendColor(kC0.R, kC0.A, kC1.R, kC1.A, kC2.R, kC2.A, kC3.R),
+                    blendColor(kC0.G, kC0.A, kC1.G, kC1.A, kC2.G, kC2.A, kC3.G),
+                    blendColor(kC0.B, kC0.A, kC1.B, kC1.A, kC2.B, kC2.A, kC3.B),
+                    blendAlpha(kC0.A, kC1.A, kC2.A, kC3.A), 2);
+    }
+
+    // 2
+    {
+        // Blend is disabled
+        checkResult(2, kC3.R, kC3.G, kC3.B, kC3.A, 1);
+    }
+
+    // 3
+    {
+        auto blendColor = [](float c0, float a0, float c1, float a1, float c2, float a2, float c3,
+                             float a3) {
+            const float draw1c = std::min(c0, c1);
+            const float draw2c = gl::clamp01(draw1c * a2 - c2 * a2);
+            return draw2c * a3 - c3 * a3;
+        };
+        auto blendAlpha = [](float a0, float a1, float a2, float a3) {
+            const float draw1a = std::min(a1, a0);
+            const float draw2a = std::max(a2, draw1a);
+            return std::max(a3, draw2a);
+        };
+
+        checkResult(3, blendColor(kC0.R, kC0.A, kC1.R, kC1.A, kC2.R, kC2.A, kC3.R, kC3.A),
+                    blendColor(kC0.G, kC0.A, kC1.G, kC1.A, kC2.G, kC2.A, kC3.G, kC3.A),
+                    blendColor(kC0.B, kC0.A, kC1.B, kC1.A, kC2.B, kC2.A, kC3.B, kC3.A),
+                    blendAlpha(kC0.A, kC1.A, kC2.A, kC3.A), 1);
+    }
+
+    if (maxDrawBuffers > 4)
+    {
+        auto blendColor = [](float c0, float c1, float a1, float c2, float a2, float c3, float a3) {
+            const float draw1c = gl::clamp01(c0 * (1 - a1) + c1 * a1);
+            const float draw2c = gl::clamp01(draw1c * (1 - a2) + c2 * a2);
+            return draw2c * (1 - a3) + c3 * a3;
+        };
+        auto blendAlpha = [](float a0, float a1, float a2, float a3) {
+            const float draw1a = gl::clamp01(a1 * a1 - a0 * (1 - a1));
+            const float draw2a = gl::clamp01(a2 * a2 - draw1a * (1 - a2));
+            return a3 * a3 - draw2a * (1 - a3);
+        };
+
+        checkResult(4, blendColor(kC0.R, kC1.R, kC1.A, kC2.R, kC2.A, kC3.R, kC3.A),
+                    blendColor(kC0.G, kC1.G, kC1.A, kC2.G, kC2.A, kC3.G, kC3.A),
+                    blendColor(kC0.B, kC1.B, kC1.A, kC2.B, kC2.A, kC3.B, kC3.A),
+                    blendAlpha(kC0.A, kC1.A, kC2.A, kC3.A), 1);
+    }
+
+    if (maxDrawBuffers > 5)
+    {
+        auto blendColor = [](float ck, float c0, float c1, float c2, float c3) {
+            const float draw1c = gl::clamp01(c0 + c1 * ck);
+            const float draw2c = gl::clamp01(draw1c + c2);
+            return draw2c + c3 * ck;
+        };
+        auto blendAlpha = [](float ak, float a0, float a1, float a2, float a3) {
+            const float draw1a = gl::clamp01(a0 + a1 * ak);
+            const float draw2a = gl::clamp01(draw1a + a2);
+            return draw2a + a3 * ak;
+        };
+
+        checkResult(5, blendColor(kCK.R, kC0.R, kC1.R, kC2.R, kC3.R),
+                    blendColor(kCK.G, kC0.G, kC1.G, kC2.G, kC3.G),
+                    blendColor(kCK.B, kC0.B, kC1.B, kC2.B, kC3.B),
+                    blendAlpha(kCK.A, kC0.A, kC1.A, kC2.A, kC3.A), 1);
+    }
+
+    if (maxDrawBuffers > 6)
+    {
+        auto blendColor = [](float c0, float c1, float c2, float c3) {
+            const float draw1c = std::max(c0, c1);
+            const float draw2c = std::max(draw1c, c2);
+            return std::max(draw2c, c3);
+        };
+        auto blendAlpha = [](float a0, float a1, float a2, float a3) {
+            const float draw1a = std::max(a0, a1);
+            const float draw2a = std::max(draw1a, a2);
+            return std::max(draw2a, a3);
+        };
+
+        checkResult(6, blendColor(kC0.R, kC1.R, kC2.R, kC3.R),
+                    blendColor(kC0.G, kC1.G, kC2.G, kC3.G), blendColor(kC0.B, kC1.B, kC2.B, kC3.B),
+                    blendAlpha(kC0.A, kC1.A, kC2.A, kC3.A), 1);
+    }
+
+    if (maxDrawBuffers > 7)
+    {
+        auto blendColor = [](float c0, float c1, float c2, float c3) {
+            const float draw1c = gl::clamp01(c0 * (1 - c0) + c1 * (1 - c1));
+            const float draw2c = gl::clamp01(draw1c * (1 - draw1c) + c2 * (1 - c2));
+            return draw2c * (1 - draw2c) + c3 * (1 - c3);
+        };
+        auto blendAlpha = [](float a0, float a1, float a2, float a3) {
+            const float draw1a = gl::clamp01(a0 * (1 - a0) - a1);
+            const float draw2a = gl::clamp01(draw1a * (1 - draw1a) - a2 * (1 - a2));
+            return draw2a * (1 - draw2a) - a3 * (1 - a3);
+        };
+
+        checkResult(7, blendColor(kC0.R, kC1.R, kC2.R, kC3.R),
+                    blendColor(kC0.G, kC1.G, kC2.G, kC3.G), blendColor(kC0.B, kC1.B, kC2.B, kC3.B),
+                    blendAlpha(kC0.A, kC1.A, kC2.A, kC3.A), 1);
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for glBlendFunc and glBlendEquation, with some attachments whose locations
+// have gaps.
+TEST_P(StateChangeTestES3, BlendFuncBlendEquation)
+{
+    constexpr uint32_t kWidth  = 5;
+    constexpr uint32_t kHeight = 3;
+
+    std::array<GLenum, 4> drawBuffers = {
+        GL_COLOR_ATTACHMENT0,
+        GL_NONE,
+        GL_NONE,
+        GL_COLOR_ATTACHMENT3,
+    };
+
+    std::array<GLTexture, 3> color;
+    for (size_t i = 0; i < color.size(); ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    }
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color[0], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[1], 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    // Create a program that writes something different to each attachment.
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform vec4 color0;
+uniform vec4 color2;
+uniform vec4 color3;
+layout(location = 0) out vec4 colorOut0;
+layout(location = 2) out vec4 colorOut2;
+layout(location = 3) out vec4 colorOut3;
+void main()
+{
+    colorOut0 = color0;
+    colorOut2 = color2;
+    colorOut3 = color3;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    const GLint color0Loc = glGetUniformLocation(program, "color0");
+    const GLint color2Loc = glGetUniformLocation(program, "color2");
+    const GLint color3Loc = glGetUniformLocation(program, "color3");
+    ASSERT_NE(color0Loc, -1);
+    ASSERT_NE(color2Loc, -1);
+    ASSERT_NE(color3Loc, -1);
+
+    const GLColor32F kC0(33.0 / 255.0, 44.0 / 255.0, 22.0 / 255.0, 11.0 / 255.0);
+    glClearColor(kC0.R, kC0.G, kC0.B, kC0.A);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Make sure the unattached color[2] attachment is also initialized.
+    glBindTexture(GL_TEXTURE_2D, color[2]);
+    const std::vector<GLColor> kColor2Data(kWidth * kHeight, GLColor(33, 44, 22, 11));
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kColor2Data.data());
+
+    glEnable(GL_BLEND);
+
+    // Set blend func and equations for all attachments
+    glBlendFunc(GL_ONE, GL_ONE);
+    glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_SUBTRACT);
+    const GLColor32F kC1(51.0 / 255.0, 102.0 / 255.0, 153.0 / 255.0, 204.0 / 255.0);
+    const GLColor32F kC2(60.0 / 255.0, 70.0 / 255.0, 80.0 / 255.0, 90.0 / 255.0);
+    glUniform4fv(color0Loc, 1, &kC1.R);
+    glUniform4fv(color3Loc, 1, &kC2.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change func and equations for all attachments
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+    const GLColor32F kC3(100.0 / 255.0, 110.0 / 255.0, 120.0 / 255.0, 130.0 / 255.0);
+    const GLColor32F kC4(150.0 / 255.0, 20.0 / 255.0, 200.0 / 255.0, 150.0 / 255.0);
+    glUniform4fv(color0Loc, 1, &kC3.R);
+    glUniform4fv(color3Loc, 1, &kC4.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Disable one of the draw buffers and draw again.
+    drawBuffers[0] = GL_NONE;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+    const GLColor32F kUnused(1, 1, 1, 1);
+    const GLColor32F kC5(77.0 / 255.0, 111.0 / 255.0, 88.0 / 255.0, 141.0 / 255.0);
+    glUniform4fv(color0Loc, 1, &kUnused.R);
+    glUniform4fv(color3Loc, 1, &kC5.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Re-enable the draw buffer and disable the other one.
+    drawBuffers[0] = GL_COLOR_ATTACHMENT0;
+    drawBuffers[3] = GL_NONE;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+    const GLColor32F kC6(41.0 / 255.0, 36.0 / 255.0, 31.0 / 255.0, 26.0 / 255.0);
+    glUniform4fv(color0Loc, 1, &kC6.R);
+    glUniform4fv(color3Loc, 1, &kUnused.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Add an attachment, but don't enable it.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, color[2], 0);
+    const GLColor32F kC7(7.0 / 255.0, 9.0 / 255.0, 7.0 / 255.0, 9.0 / 255.0);
+    glUniform4fv(color0Loc, 1, &kC7.R);
+    glUniform4fv(color2Loc, 1, &kUnused.R);
+    glUniform4fv(color3Loc, 1, &kUnused.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Enable all attachments.
+    drawBuffers[2] = GL_COLOR_ATTACHMENT2;
+    drawBuffers[3] = GL_COLOR_ATTACHMENT3;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+    const GLColor32F kC8(111.0 / 255.0, 131.0 / 255.0, 151.0 / 255.0, 171.0 / 255.0);
+    const GLColor32F kC9(6.0 / 255.0, 8.0 / 255.0, 4.0 / 255.0, 6.0 / 255.0);
+    glUniform4fv(color2Loc, 1, &kC8.R);
+    glUniform4fv(color3Loc, 1, &kC9.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify results
+    auto checkResult = [](uint32_t attachmentIndex, float r, float g, float b, float a,
+                          uint8_t error) {
+        SCOPED_TRACE(::testing::Message() << "Attachment " << attachmentIndex);
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+        const GLColor expect(gl::floatToNormalized<uint8_t>(gl::clamp01(r)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(g)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(b)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(a)));
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, expect, error);
+    };
+
+    // 0
+    {
+        auto blendColor = [](float c0, float c1, float c2, float a2, float c4, float a4, float c5,
+                             float a5, float c6, float a6) {
+            const float draw1c = gl::clamp01(c0 + c1);
+            const float draw2c = gl::clamp01(draw1c * (1 - a2) + c2 * a2);
+            const float draw3c = draw2c;
+            const float draw4c = gl::clamp01(draw3c * (1 - a4) + c4 * a4);
+            const float draw5c = gl::clamp01(draw4c * (1 - a5) + c5 * a5);
+            return draw5c * (1 - a6) + c6 * a6;
+        };
+        auto blendAlpha = [](float a0, float a1, float a2, float a4, float a5, float a6) {
+            const float draw1a = gl::clamp01(a1 - a0);
+            const float draw2a = gl::clamp01(draw1a * a2 + a2 * a2);
+            const float draw3a = draw2a;
+            const float draw4a = gl::clamp01(draw3a * a4 + a4 * a4);
+            const float draw5a = gl::clamp01(draw4a * a5 + a5 * a5);
+            return draw5a * a6 + a6 * a6;
+        };
+
+        checkResult(
+            0, blendColor(kC0.R, kC1.R, kC3.R, kC3.A, kC6.R, kC6.A, kC7.R, kC7.A, kC7.R, kC7.A),
+            blendColor(kC0.G, kC1.G, kC3.G, kC3.A, kC6.G, kC6.A, kC7.G, kC7.A, kC7.G, kC7.A),
+            blendColor(kC0.B, kC1.B, kC3.B, kC3.A, kC6.B, kC6.A, kC7.B, kC7.A, kC7.B, kC7.A),
+            blendAlpha(kC0.A, kC1.A, kC3.A, kC6.A, kC7.A, kC7.A), 1);
+    }
+
+    // 2
+    {
+        auto blendColor = [](float c0, float c6, float a6) { return c0 * (1 - a6) + c6 * a6; };
+        auto blendAlpha = [](float a0, float a6) { return a0 * a6 + a6 * a6; };
+
+        checkResult(2, blendColor(kC0.R, kC8.R, kC8.A), blendColor(kC0.G, kC8.G, kC8.A),
+                    blendColor(kC0.B, kC8.B, kC8.A), blendAlpha(kC0.A, kC8.A), 1);
+    }
+
+    // 3
+    {
+        auto blendColor = [](float c0, float c1, float c2, float a2, float c3, float a3, float c6,
+                             float a6) {
+            const float draw1c = gl::clamp01(c0 + c1);
+            const float draw2c = gl::clamp01(draw1c * (1 - a2) + c2 * a2);
+            const float draw3c = gl::clamp01(draw2c * (1 - a3) + c3 * a3);
+            const float draw4c = draw3c;
+            const float draw5c = draw4c;
+            return draw5c * (1 - a6) + c6 * a6;
+        };
+        auto blendAlpha = [](float a0, float a1, float a2, float a3, float a6) {
+            const float draw1a = gl::clamp01(a1 - a0);
+            const float draw2a = gl::clamp01(draw1a * a2 + a2 * a2);
+            const float draw3a = gl::clamp01(draw2a * a3 + a3 * a3);
+            const float draw4a = draw3a;
+            const float draw5a = draw4a;
+            return draw5a * a6 + a6 * a6;
+        };
+
+        checkResult(3, blendColor(kC0.R, kC2.R, kC4.R, kC4.A, kC5.R, kC5.A, kC9.R, kC9.A),
+                    blendColor(kC0.G, kC2.G, kC4.G, kC4.A, kC5.G, kC5.A, kC9.G, kC9.A),
+                    blendColor(kC0.B, kC2.B, kC4.B, kC4.A, kC5.B, kC5.A, kC9.B, kC9.A),
+                    blendAlpha(kC0.A, kC2.A, kC4.A, kC5.A, kC9.A), 1);
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for glBlendFunci and glBlendEquationi, with some attachments whose locations
+// have gaps.
+TEST_P(StateChangeTestES3, BlendFunciBlendEquationi)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+    constexpr uint32_t kWidth  = 10;
+    constexpr uint32_t kHeight = 6;
+
+    std::array<GLenum, 4> drawBuffers = {
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1,
+        GL_NONE,
+        GL_COLOR_ATTACHMENT3,
+    };
+
+    std::array<GLTexture, 3> color;
+    for (size_t i = 0; i < color.size(); ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    }
+
+    GLFramebuffer fbo2;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color[0], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[2], 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawBuffers[1] = GL_NONE;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    const GLColor32F kC0(33.0 / 255.0, 44.0 / 255.0, 22.0 / 255.0, 11.0 / 255.0);
+    glClearColor(kC0.R, kC0.G, kC0.B, kC0.A);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLFramebuffer fbo1;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, color[1], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[2], 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    drawBuffers[0] = GL_NONE;
+    drawBuffers[1] = GL_COLOR_ATTACHMENT1;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Create a program that writes something different to each attachment.
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform vec4 color0;
+uniform vec4 color1;
+uniform vec4 color3;
+layout(location = 0) out vec4 colorOut0;
+layout(location = 1) out vec4 colorOut1;
+layout(location = 3) out vec4 colorOut3;
+void main()
+{
+    colorOut0 = color0;
+    colorOut1 = color1;
+    colorOut3 = color3;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    const GLint color0Loc = glGetUniformLocation(program, "color0");
+    const GLint color1Loc = glGetUniformLocation(program, "color1");
+    const GLint color3Loc = glGetUniformLocation(program, "color3");
+    ASSERT_NE(color0Loc, -1);
+    ASSERT_NE(color1Loc, -1);
+    ASSERT_NE(color3Loc, -1);
+
+    glEnable(GL_BLEND);
+
+    // Set blend func and equations for the attachments, and draw fullscreen.  All attachments are
+    // cleared to kC0, and attachments 1 and 3 are written to by fbo1.
+    glBlendFunciOES(0, GL_ONE, GL_ONE);
+    glBlendEquationiOES(0, GL_FUNC_ADD);
+    glBlendFunciOES(1, GL_SRC_COLOR, GL_DST_COLOR);
+    glBlendEquationSeparateiOES(1, GL_FUNC_ADD, GL_FUNC_SUBTRACT);
+    glBlendFunciOES(3, GL_ONE, GL_ONE);
+    glBlendEquationiOES(3, GL_MAX);
+    const GLColor32F kC1(51.0 / 255.0, 102.0 / 255.0, 153.0 / 255.0, 204.0 / 255.0);
+    const GLColor32F kC2(60.0 / 255.0, 70.0 / 255.0, 80.0 / 255.0, 90.0 / 255.0);
+    glUniform4fv(color1Loc, 1, &kC1.R);
+    glUniform4fv(color3Loc, 1, &kC2.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change func/equation for attachment 3.
+    glBlendFuncSeparateiOES(3, GL_ONE, GL_ONE, GL_SRC_ALPHA, GL_SRC_ALPHA);
+    glBlendEquationiOES(3, GL_FUNC_ADD);
+    const GLColor32F kC3(100.0 / 255.0, 110.0 / 255.0, 120.0 / 255.0, 130.0 / 255.0);
+    const GLColor32F kC4(150.0 / 255.0, 20.0 / 255.0, 200.0 / 255.0, 150.0 / 255.0);
+    glUniform4fv(color1Loc, 1, &kC3.R);
+    glUniform4fv(color3Loc, 1, &kC4.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Switch to another framebuffer that shares some locations with the current one.  Set
+    // func/equation blend for the non-existing attachment.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glBlendFuncSeparateiOES(1, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_DST_ALPHA,
+                            GL_ONE_MINUS_DST_ALPHA);
+    glBlendEquationiOES(1, GL_FUNC_ADD);
+    const GLColor32F kC5(77.0 / 255.0, 111.0 / 255.0, 88.0 / 255.0, 33.0 / 255.0);
+    const GLColor32F kC6(41.0 / 255.0, 36.0 / 255.0, 31.0 / 255.0, 26.0 / 255.0);
+    glUniform4fv(color0Loc, 1, &kC5.R);
+    glUniform4fv(color3Loc, 1, &kC6.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change func/equation for attachment 3.
+    glBlendFuncSeparateiOES(3, GL_ONE_MINUS_SRC_COLOR, GL_ONE_MINUS_DST_COLOR, GL_ONE,
+                            GL_ONE_MINUS_DST_ALPHA);
+    glBlendEquationSeparateiOES(3, GL_FUNC_ADD, GL_FUNC_REVERSE_SUBTRACT);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Switch to the first framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    const GLColor32F kC7(7.0 / 255.0, 9.0 / 255.0, 7.0 / 255.0, 9.0 / 255.0);
+    const GLColor32F kC8(111.0 / 255.0, 131.0 / 255.0, 151.0 / 255.0, 11.0 / 255.0);
+    glUniform4fv(color1Loc, 1, &kC7.R);
+    glUniform4fv(color3Loc, 1, &kC8.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify results
+    auto checkResult = [](uint32_t attachmentIndex, float r, float g, float b, float a,
+                          uint8_t error) {
+        SCOPED_TRACE(::testing::Message() << "Attachment " << attachmentIndex);
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+        const GLColor expect(gl::floatToNormalized<uint8_t>(gl::clamp01(r)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(g)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(b)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(a)));
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, expect, error);
+    };
+
+    // 0
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+        auto blendColor = [](float c0, float c3, float c4) { return c0 + c3 + c4; };
+        auto blendAlpha = [](float a0, float a3, float a4) { return a0 + a3 + a4; };
+
+        checkResult(0, blendColor(kC0.R, kC5.R, kC5.R), blendColor(kC0.G, kC5.G, kC5.G),
+                    blendColor(kC0.B, kC5.B, kC5.B), blendAlpha(kC0.A, kC5.A, kC5.A), 1);
+    }
+
+    // 1
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+        auto blendColor = [](float c0, float c1, float c2, float c5, float a5) {
+            const float draw1c = gl::clamp01(c0 * c0 + c1 * c1);
+            const float draw2c = gl::clamp01(draw1c * draw1c + c2 * c2);
+            const float draw3c = draw2c;
+            const float draw4c = draw3c;
+            return draw4c * (1 - a5) + c5 * a5;
+        };
+        auto blendAlpha = [](float a0, float a1, float a2, float a5) {
+            const float draw1a = gl::clamp01(a1 - a0);
+            const float draw2a = gl::clamp01(a2 - draw1a);
+            const float draw3a = draw2a;
+            const float draw4a = draw3a;
+            return draw4a * (1 - draw4a) + a5 * draw4a;
+        };
+
+        checkResult(1, blendColor(kC0.R, kC1.R, kC3.R, kC7.R, kC7.A),
+                    blendColor(kC0.G, kC1.G, kC3.G, kC7.G, kC7.A),
+                    blendColor(kC0.B, kC1.B, kC3.B, kC7.B, kC7.A),
+                    blendAlpha(kC0.A, kC1.A, kC3.A, kC7.A), 1);
+    }
+
+    // 3
+    {
+        auto blendColor = [](float c0, float c1, float c2, float c3, float c4, float c5) {
+            const float draw1c = std::max(c0, c1);
+            const float draw2c = gl::clamp01(draw1c + c2);
+            const float draw3c = gl::clamp01(draw2c + c3);
+            const float draw4c = gl::clamp01(draw3c * (1 - draw3c) + c4 * (1 - c4));
+            return draw4c * (1 - draw4c) + c5 * (1 - c5);
+        };
+        auto blendAlpha = [](float a0, float a1, float a2, float a3, float a4, float a5) {
+            const float draw1a = std::max(a1, a0);
+            const float draw2a = gl::clamp01(draw1a * a2 + a2 * a2);
+            const float draw3a = gl::clamp01(draw2a * a3 + a3 * a3);
+            const float draw4a = gl::clamp01(draw3a * (1 - draw3a) - a4);
+            return draw4a * (1 - draw4a) - a5;
+        };
+
+        checkResult(3, blendColor(kC0.R, kC2.R, kC4.R, kC6.R, kC6.R, kC8.R),
+                    blendColor(kC0.G, kC2.G, kC4.G, kC6.G, kC6.G, kC8.G),
+                    blendColor(kC0.B, kC2.B, kC4.B, kC6.B, kC6.B, kC8.B),
+                    blendAlpha(kC0.A, kC2.A, kC4.A, kC6.A, kC6.A, kC8.A), 1);
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for glBlendFunci and glBlendEquationi, with some attachments whose locations
+// have gaps.  This test uses advanced blend.
+TEST_P(StateChangeTestES3, BlendFunciBlendEquationiAdvanced)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_KHR_blend_equation_advanced"));
+
+    constexpr uint32_t kWidth  = 10;
+    constexpr uint32_t kHeight = 6;
+
+    std::array<GLenum, 4> drawBuffers = {
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1,
+        GL_NONE,
+        GL_COLOR_ATTACHMENT3,
+    };
+
+    std::array<GLTexture, 3> color;
+    for (size_t i = 0; i < color.size(); ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    }
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color[0], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, color[1], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[2], 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    const GLColor32F kC0(33.0 / 255.0, 44.0 / 255.0, 22.0 / 255.0, 11.0 / 255.0);
+    glClearColor(kC0.R, kC0.G, kC0.B, kC0.A);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Create a program that writes something different to each attachment.
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_KHR_blend_equation_advanced : require
+layout (blend_support_multiply) out;
+precision highp float;
+uniform vec4 color0;
+uniform vec4 color1;
+uniform vec4 color3;
+layout(location = 0) out vec4 colorOut0;
+layout(location = 1) out vec4 colorOut1;
+layout(location = 3) out vec4 colorOut3;
+void main()
+{
+    colorOut0 = color0;
+    colorOut1 = color1;
+    colorOut3 = color3;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    const GLint color0Loc = glGetUniformLocation(program, "color0");
+    const GLint color1Loc = glGetUniformLocation(program, "color1");
+    const GLint color3Loc = glGetUniformLocation(program, "color3");
+    ASSERT_NE(color0Loc, -1);
+    ASSERT_NE(color1Loc, -1);
+    ASSERT_NE(color3Loc, -1);
+
+    glEnable(GL_BLEND);
+
+    // Set blend func and equations for the attachments and draw.
+    glBlendFunciOES(0, GL_ONE, GL_ONE);
+    glBlendEquationiOES(0, GL_FUNC_ADD);
+    glBlendFunciOES(1, GL_SRC_COLOR, GL_DST_COLOR);
+    glBlendEquationSeparateiOES(1, GL_FUNC_ADD, GL_FUNC_SUBTRACT);
+    glBlendFunciOES(3, GL_ONE, GL_ONE);
+    glBlendEquationiOES(3, GL_MAX);
+    const GLColor32F kC1(63.0 / 255.0, 42.0 / 255.0, 21.0 / 255.0, 234.0 / 255.0);
+    const GLColor32F kC2(51.0 / 255.0, 102.0 / 255.0, 153.0 / 255.0, 204.0 / 255.0);
+    const GLColor32F kC3(60.0 / 255.0, 70.0 / 255.0, 80.0 / 255.0, 90.0 / 255.0);
+    glUniform4fv(color0Loc, 1, &kC1.R);
+    glUniform4fv(color1Loc, 1, &kC2.R);
+    glUniform4fv(color3Loc, 1, &kC3.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change to advanced blend for attachment 0 and disable blend on other attachments.  This is
+    // not sufficient however, the attachments themselves need to be disabled.
+    glBlendEquationiOES(0, GL_MULTIPLY_KHR);
+    glDisableiOES(GL_BLEND, 1);
+    glDisableiOES(GL_BLEND, 3);
+    drawBuffers[1] = GL_NONE;
+    drawBuffers[3] = GL_NONE;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+    const GLColor32F kC4(200.0 / 255.0, 180.0 / 255.0, 170.0 / 255.0, 255.0 / 255.0);
+    const GLColor32F kC5(100.0 / 255.0, 110.0 / 255.0, 120.0 / 255.0, 130.0 / 255.0);
+    const GLColor32F kC6(150.0 / 255.0, 20.0 / 255.0, 200.0 / 255.0, 150.0 / 255.0);
+    glUniform4fv(color0Loc, 1, &kC4.R);
+    glUniform4fv(color1Loc, 1, &kC5.R);
+    glUniform4fv(color3Loc, 1, &kC6.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change to advanced blend for attachment 1 while it's disabled, switch back attachment 0 to
+    // non-advanced and enable blend on attachment 3.
+    glBlendFunciOES(0, GL_SRC_COLOR, GL_DST_COLOR);
+    glBlendEquationSeparateiOES(0, GL_FUNC_ADD, GL_FUNC_SUBTRACT);
+    glBlendEquationiOES(1, GL_MULTIPLY_KHR);
+    glEnableiOES(GL_BLEND, 3);
+    drawBuffers[1] = GL_COLOR_ATTACHMENT1;
+    drawBuffers[3] = GL_COLOR_ATTACHMENT3;
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+    const GLColor32F kC7(77.0 / 255.0, 111.0 / 255.0, 88.0 / 255.0, 33.0 / 255.0);
+    const GLColor32F kC8(41.0 / 255.0, 36.0 / 255.0, 31.0 / 255.0, 26.0 / 255.0);
+    const GLColor32F kC9(170.0 / 255.0, 90.0 / 255.0, 170.0 / 255.0, 70.0 / 255.0);
+    glUniform4fv(color0Loc, 1, &kC7.R);
+    glUniform4fv(color1Loc, 1, &kC8.R);
+    glUniform4fv(color3Loc, 1, &kC9.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify results
+    auto checkResult = [](uint32_t attachmentIndex, float r, float g, float b, float a,
+                          uint8_t error) {
+        SCOPED_TRACE(::testing::Message() << "Attachment " << attachmentIndex);
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+        const GLColor expect(gl::floatToNormalized<uint8_t>(gl::clamp01(r)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(g)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(b)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(a)));
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, expect, error);
+    };
+
+    // 0
+    {
+        auto blendColor = [](float c0, float a0, float c1, float a1, float c2, float a2, float c3) {
+            const float draw1c = gl::clamp01(c0 + c1);
+            const float draw1a = gl::clamp01(a0 + a1);
+            const float draw2c = gl::clamp01((draw1c / draw1a) * (c2 / a2));
+            return draw2c * draw2c + c3 * c3;
+        };
+        auto blendAlpha = [](float a0, float a1, float a2, float a3) {
+            const float draw1a = gl::clamp01(a0 + a1);
+            const float draw2a = gl::clamp01(draw1a * a2);
+            return a3 * a3 - draw2a * draw2a;
+        };
+
+        checkResult(0, blendColor(kC0.R, kC0.A, kC1.R, kC1.A, kC4.R, kC4.A, kC7.R),
+                    blendColor(kC0.G, kC0.A, kC1.G, kC1.A, kC4.G, kC4.A, kC7.G),
+                    blendColor(kC0.B, kC0.A, kC1.B, kC1.A, kC4.B, kC4.A, kC7.B),
+                    blendAlpha(kC0.A, kC1.A, kC4.A, kC7.A), 3);
+    }
+
+    // 1
+    {
+        glReadBuffer(GL_COLOR_ATTACHMENT1);
+        EXPECT_PIXEL_COLOR_NEAR(
+            0, 0,
+            GLColor(gl::floatToNormalized<uint8_t>(kC8.R), gl::floatToNormalized<uint8_t>(kC8.G),
+                    gl::floatToNormalized<uint8_t>(kC8.B), gl::floatToNormalized<uint8_t>(kC8.A)),
+            1);
+    }
+
+    // 3
+    {
+        auto blendColor = [](float c0, float c1, float c3) {
+            const float draw1c = std::max(c0, c1);
+            return std::max(draw1c, c3);
+        };
+        auto blendAlpha = [](float a0, float a1, float a3) {
+            const float draw1a = std::max(a0, a1);
+            return std::max(draw1a, a3);
+        };
+
+        checkResult(3, blendColor(kC0.R, kC3.R, kC9.R), blendColor(kC0.G, kC3.G, kC9.G),
+                    blendColor(kC0.B, kC3.B, kC9.B), blendAlpha(kC0.A, kC3.A, kC9.A), 1);
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests state change for glBlendFunci and glBlendEquationi, with masked clear in between draws.
+TEST_P(StateChangeTestES3, BlendFunciBlendEquationiWithClear)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+    constexpr uint32_t kWidth  = 5;
+    constexpr uint32_t kHeight = 3;
+
+    std::array<GLenum, 4> drawBuffers = {
+        GL_NONE,
+        GL_COLOR_ATTACHMENT1,
+        GL_COLOR_ATTACHMENT2,
+        GL_COLOR_ATTACHMENT3,
+    };
+
+    std::array<GLTexture, 3> color;
+    for (size_t i = 0; i < color.size(); ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    }
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, color[0], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, color[1], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[2], 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    // Create a program that writes something different to each attachment.
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform vec4 color1;
+uniform vec4 color2;
+uniform vec4 color3;
+layout(location = 1) out vec4 colorOut1;
+layout(location = 2) out vec4 colorOut2;
+layout(location = 3) out vec4 colorOut3;
+void main()
+{
+    colorOut1 = color1;
+    colorOut2 = color2;
+    colorOut3 = color3;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    const GLint color1Loc = glGetUniformLocation(program, "color1");
+    const GLint color2Loc = glGetUniformLocation(program, "color2");
+    const GLint color3Loc = glGetUniformLocation(program, "color3");
+    ASSERT_NE(color1Loc, -1);
+    ASSERT_NE(color2Loc, -1);
+    ASSERT_NE(color3Loc, -1);
+
+    const GLColor32F kC0(33.0 / 255.0, 44.0 / 255.0, 22.0 / 255.0, 11.0 / 255.0);
+    glClearColor(kC0.R, kC0.G, kC0.B, kC0.A);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+
+    // Set blend func/equation for some attachments, disable blend for one.
+    glDisableiOES(GL_BLEND, 2);
+    glBlendFunciOES(1, GL_SRC_COLOR, GL_DST_COLOR);
+    glBlendEquationSeparateiOES(1, GL_FUNC_ADD, GL_FUNC_SUBTRACT);
+    glBlendFuncSeparateiOES(3, GL_ONE, GL_ONE, GL_SRC_ALPHA, GL_SRC_ALPHA);
+    glBlendEquationiOES(3, GL_FUNC_ADD);
+    const GLColor32F kC1(51.0 / 255.0, 102.0 / 255.0, 153.0 / 255.0, 204.0 / 255.0);
+    const GLColor32F kC2(60.0 / 255.0, 70.0 / 255.0, 80.0 / 255.0, 90.0 / 255.0);
+    const GLColor32F kC3(100.0 / 255.0, 110.0 / 255.0, 120.0 / 255.0, 130.0 / 255.0);
+    glUniform4fv(color1Loc, 1, &kC1.R);
+    glUniform4fv(color2Loc, 1, &kC2.R);
+    glUniform4fv(color3Loc, 1, &kC3.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Masked clear and draw again.  The blend should not apply to the clear, but it should be
+    // preserved for the next draw.
+    const GLColor32F kC4(150.0 / 255.0, 20.0 / 255.0, 200.0 / 255.0, 150.0 / 255.0);
+    glClearColor(kC4.R, kC4.G, kC4.B, kC4.A);
+    glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_FALSE);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    // Draw again without dirtying blend state.
+    const GLColor32F kC5(77.0 / 255.0, 111.0 / 255.0, 88.0 / 255.0, 33.0 / 255.0);
+    const GLColor32F kC6(41.0 / 255.0, 36.0 / 255.0, 31.0 / 255.0, 26.0 / 255.0);
+    const GLColor32F kC7(7.0 / 255.0, 9.0 / 255.0, 7.0 / 255.0, 9.0 / 255.0);
+    glUniform4fv(color1Loc, 1, &kC5.R);
+    glUniform4fv(color2Loc, 1, &kC6.R);
+    glUniform4fv(color3Loc, 1, &kC7.R);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify results
+    auto checkResult = [](uint32_t attachmentIndex, float r, float g, float b, float a,
+                          uint8_t error) {
+        SCOPED_TRACE(::testing::Message() << "Attachment " << attachmentIndex);
+        glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+        const GLColor expect(gl::floatToNormalized<uint8_t>(gl::clamp01(r)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(g)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(b)),
+                             gl::floatToNormalized<uint8_t>(gl::clamp01(a)));
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, expect, error);
+    };
+
+    // 1
+    {
+        auto blendColor = [](float c0, float c1, float c2) {
+            const float draw1c = gl::clamp01(c0 * c0 + c1 * c1);
+            return draw1c * draw1c + c2 * c2;
+        };
+        auto blendColorMasked = [](float clear, float c2) { return clear * clear + c2 * c2; };
+        auto blendAlpha       = [](float a0, float a1, float a2) {
+            const float draw1a = gl::clamp01(a1 * a1 - a0 * a0);
+            return a2 * a2 - draw1a * draw1a;
+        };
+
+        checkResult(1, blendColor(kC0.R, kC1.R, kC5.R), blendColorMasked(kC4.G, kC5.G),
+                    blendColor(kC0.B, kC1.B, kC5.B), blendAlpha(kC0.A, kC1.A, kC5.A), 1);
+    }
+
+    // 2
+    {
+        glReadBuffer(GL_COLOR_ATTACHMENT2);
+        EXPECT_PIXEL_COLOR_NEAR(
+            0, 0,
+            GLColor(gl::floatToNormalized<uint8_t>(kC6.R), gl::floatToNormalized<uint8_t>(kC6.G),
+                    gl::floatToNormalized<uint8_t>(kC6.B), gl::floatToNormalized<uint8_t>(kC6.A)),
+            1);
+    }
+
+    // 3
+    {
+        auto blendColor = [](float c0, float c1, float c2) {
+            const float draw1c = gl::clamp01(c0 + c1);
+            return draw1c + c2;
+        };
+        auto blendColorMasked = [](float clear, float c2) { return clear + c2; };
+        auto blendAlpha       = [](float a0, float a1, float a2) {
+            const float draw1a = gl::clamp01(a1 * a1 + a0 * a1);
+            return a2 * a2 + draw1a * a2;
+        };
+
+        checkResult(3, blendColor(kC0.R, kC3.R, kC7.R), blendColorMasked(kC4.G, kC7.G),
+                    blendColor(kC0.B, kC3.B, kC7.B), blendAlpha(kC0.A, kC3.A, kC7.A), 1);
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests state change for glColorMaski, with all attachments present.
 TEST_P(StateChangeTestES3, ColorMaskiAllAttachments)
 {

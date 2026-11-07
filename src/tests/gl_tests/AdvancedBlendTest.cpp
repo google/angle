@@ -123,7 +123,7 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
     // It's also ok to render to multiple attachments if blend is not enabled on the attachment that
-    // has advanced blend..
+    // has advanced blend.
     if (EnsureGLExtensionEnabled("GL_OES_draw_buffers_indexed"))
     {
         // Enable two attachments

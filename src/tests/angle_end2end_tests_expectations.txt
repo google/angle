@@ -446,6 +446,7 @@
 448675904 LINUX INTEL OPENGL : GLSLTestLoops.ForContinueInSwitchComplex/* = SKIP
 537235696 LINUX INTEL OPENGL : ClipDistance*.ThreeClipDistancesRedeclaredAndPassedToFunction/* = SKIP
 582944923 LINUX INTEL OPENGL : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
+582944923 LINUX INTEL OPENGL : StateChangeTestES3.BlendFunciBlendEquationiAdvanced/* = SKIP
 
 //Angle has bugs for sampler validation
 401546698 : TextureCubeTest.CubeMapBug2/* = SKIP
@@ -747,6 +748,7 @@
 526451592 WIN D3D11 : ImageTestES3.NonZeroLevelBlitDst/* = SKIP
 577854987 WIN D3D11 : EGLSurfaceTest.PreserveThenResize/* = SKIP
 581233444 WIN D3D11 : EGLSurfaceTest3.BlitColorDepthStencilWithLargerReadSurface/* = SKIP
+584386494 WIN D3D11 : StateChangeTestES3.BlendFunciBlendEquationiAllAttachments/* = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -924,6 +926,7 @@
 579047127 PIXEL4ORXL GLES : ImageTestES3RobustInit.SelfSubCopy/* = SKIP
 580018577 PIXEL4ORXL GLES : RobustResourceInitTestES3.InvalidateUndefinedThenReadBackDepthOnly/* = SKIP
 582944924 PIXEL4ORXL GLES : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
+582944924 PIXEL4ORXL GLES : StateChangeTestES3.BlendFunciBlendEquationiAdvanced/* = SKIP
 
 42267082 PIXEL4ORXL GLES : BlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42267082 PIXEL4ORXL GLES : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP

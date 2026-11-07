@@ -1859,6 +1859,104 @@ VkLogicOp GetLogicOp(const GLenum logicOp)
     return static_cast<VkLogicOp>(logicOp - GL_CLEAR);
 }
 
+VkBlendOp GetBlendOp(const gl::BlendEquationType blendOp)
+{
+    switch (blendOp)
+    {
+        case gl::BlendEquationType::Add:
+            return VK_BLEND_OP_ADD;
+        case gl::BlendEquationType::Subtract:
+            return VK_BLEND_OP_SUBTRACT;
+        case gl::BlendEquationType::ReverseSubtract:
+            return VK_BLEND_OP_REVERSE_SUBTRACT;
+        case gl::BlendEquationType::Min:
+            return VK_BLEND_OP_MIN;
+        case gl::BlendEquationType::Max:
+            return VK_BLEND_OP_MAX;
+        case gl::BlendEquationType::Multiply:
+            return VK_BLEND_OP_MULTIPLY_EXT;
+        case gl::BlendEquationType::Screen:
+            return VK_BLEND_OP_SCREEN_EXT;
+        case gl::BlendEquationType::Overlay:
+            return VK_BLEND_OP_OVERLAY_EXT;
+        case gl::BlendEquationType::Darken:
+            return VK_BLEND_OP_DARKEN_EXT;
+        case gl::BlendEquationType::Lighten:
+            return VK_BLEND_OP_LIGHTEN_EXT;
+        case gl::BlendEquationType::Colordodge:
+            return VK_BLEND_OP_COLORDODGE_EXT;
+        case gl::BlendEquationType::Colorburn:
+            return VK_BLEND_OP_COLORBURN_EXT;
+        case gl::BlendEquationType::Hardlight:
+            return VK_BLEND_OP_HARDLIGHT_EXT;
+        case gl::BlendEquationType::Softlight:
+            return VK_BLEND_OP_SOFTLIGHT_EXT;
+        case gl::BlendEquationType::Difference:
+            return VK_BLEND_OP_DIFFERENCE_EXT;
+        case gl::BlendEquationType::Exclusion:
+            return VK_BLEND_OP_EXCLUSION_EXT;
+        case gl::BlendEquationType::HslHue:
+            return VK_BLEND_OP_HSL_HUE_EXT;
+        case gl::BlendEquationType::HslSaturation:
+            return VK_BLEND_OP_HSL_SATURATION_EXT;
+        case gl::BlendEquationType::HslColor:
+            return VK_BLEND_OP_HSL_COLOR_EXT;
+        case gl::BlendEquationType::HslLuminosity:
+            return VK_BLEND_OP_HSL_LUMINOSITY_EXT;
+        default:
+            UNREACHABLE();
+            return VK_BLEND_OP_ADD;
+    }
+}
+
+VkBlendFactor GetBlendFactor(const gl::BlendFactorType blendFactor)
+{
+    switch (blendFactor)
+    {
+        case gl::BlendFactorType::Zero:
+            return VK_BLEND_FACTOR_ZERO;
+        case gl::BlendFactorType::One:
+            return VK_BLEND_FACTOR_ONE;
+        case gl::BlendFactorType::SrcColor:
+            return VK_BLEND_FACTOR_SRC_COLOR;
+        case gl::BlendFactorType::DstColor:
+            return VK_BLEND_FACTOR_DST_COLOR;
+        case gl::BlendFactorType::OneMinusSrcColor:
+            return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
+        case gl::BlendFactorType::SrcAlpha:
+            return VK_BLEND_FACTOR_SRC_ALPHA;
+        case gl::BlendFactorType::OneMinusSrcAlpha:
+            return VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        case gl::BlendFactorType::DstAlpha:
+            return VK_BLEND_FACTOR_DST_ALPHA;
+        case gl::BlendFactorType::OneMinusDstAlpha:
+            return VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA;
+        case gl::BlendFactorType::OneMinusDstColor:
+            return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
+        case gl::BlendFactorType::SrcAlphaSaturate:
+            return VK_BLEND_FACTOR_SRC_ALPHA_SATURATE;
+        case gl::BlendFactorType::ConstantColor:
+            return VK_BLEND_FACTOR_CONSTANT_COLOR;
+        case gl::BlendFactorType::ConstantAlpha:
+            return VK_BLEND_FACTOR_CONSTANT_ALPHA;
+        case gl::BlendFactorType::OneMinusConstantColor:
+            return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR;
+        case gl::BlendFactorType::OneMinusConstantAlpha:
+            return VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA;
+        case gl::BlendFactorType::Src1Color:
+            return VK_BLEND_FACTOR_SRC1_COLOR;
+        case gl::BlendFactorType::Src1Alpha:
+            return VK_BLEND_FACTOR_SRC1_ALPHA;
+        case gl::BlendFactorType::OneMinusSrc1Color:
+            return VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR;
+        case gl::BlendFactorType::OneMinusSrc1Alpha:
+            return VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA;
+        default:
+            UNREACHABLE();
+            return VK_BLEND_FACTOR_ZERO;
+    }
+}
+
 void GetOffset(const gl::Offset &glOffset, VkOffset3D *vkOffset)
 {
     vkOffset->x = glOffset.x;

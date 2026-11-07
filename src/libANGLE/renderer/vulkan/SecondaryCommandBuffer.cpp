@@ -835,10 +835,16 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const SetColorBlendEquationParams *params =
                         getParamPtr<SetColorBlendEquationParams>(currentCommand);
-                    const VkColorBlendEquationEXT *colorBlendEquation =
-                        GetFirstArrayParameter<VkColorBlendEquationEXT>(params);
-                    vkCmdSetColorBlendEquationEXT(cmdBuffer, params->firstAttachment,
-                                                  params->attachmentCount, colorBlendEquation);
+                    const VkColorBlendEquationEXT colorBlendEquation = {
+                        static_cast<VkBlendFactor>(params->srcColorBlendFactor),
+                        static_cast<VkBlendFactor>(params->dstColorBlendFactor),
+                        static_cast<VkBlendOp>(params->colorBlendOp),
+                        static_cast<VkBlendFactor>(params->srcAlphaBlendFactor),
+                        static_cast<VkBlendFactor>(params->dstAlphaBlendFactor),
+                        static_cast<VkBlendOp>(params->alphaBlendOp),
+                    };
+                    vkCmdSetColorBlendEquationEXT(cmdBuffer, params->attachment, 1,
+                                                  &colorBlendEquation);
                     break;
                 }
                 case CommandID::SetColorWriteMask:

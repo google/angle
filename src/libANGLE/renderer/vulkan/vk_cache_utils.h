@@ -798,7 +798,7 @@ struct GraphicsPipelineFragmentOutputVulkanStructs
 
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 
-using GraphicsPipelineDynamicStateList = angle::FixedVector<VkDynamicState, 37>;
+using GraphicsPipelineDynamicStateList = angle::FixedVector<VkDynamicState, 39>;
 
 enum class PipelineRobustness
 {

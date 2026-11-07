@@ -675,8 +675,16 @@ struct SetColorBlendEquationParams
 {
     CommandHeader header;
 
-    uint32_t firstAttachment : 16;
-    uint32_t attachmentCount : 16;
+    uint32_t attachment : 6;
+
+    // Note: advanced blend operations are never set via this function.  VkBlendFactor fits in 5
+    // bits and VkBlendOp (the non-advanced ops) fit in 3 bits.
+    uint32_t srcColorBlendFactor : 5;
+    uint32_t dstColorBlendFactor : 5;
+    uint32_t colorBlendOp : 3;
+    uint32_t srcAlphaBlendFactor : 5;
+    uint32_t dstAlphaBlendFactor : 5;
+    uint32_t alphaBlendOp : 3;
 };
 VERIFY_8_BYTE_ALIGNMENT(SetColorBlendEquationParams)
 
@@ -2342,14 +2350,15 @@ ANGLE_INLINE void SecondaryCommandBuffer::setColorBlendAdvanced(
     // GL allows advanced blend only on 1 attachment, and that is attachment 0.
     ASSERT(firstAttachment == 0);
     ASSERT(attachmentCount == 1);
+
     // The following are the default (unconfigurable) values in GL.  When state is static, ANGLE
     // never includes VkPipelineColorBlendAdvancedStateCreateInfoEXT, and the spec says:
     //
     // > If this structure is not present, srcPremultiplied and dstPremultiplied are both considered
     // > to be VK_TRUE, and blendOverlap is considered to be VK_BLEND_OVERLAP_UNCORRELATED_EXT.
     //
-    // Also corresponding to static, clamp is not enabled.  The spec says in the Blend Operations
-    // section:
+    // Also corresponding to static state, clamp is not enabled.  The spec says in the Blend
+    // Operations section:
     //
     // > If the color attachment is floating-point, no clamping occurs.
     ASSERT(colorBlendAdvanced[0].srcPremultiplied == VK_TRUE);
@@ -2380,14 +2389,18 @@ ANGLE_INLINE void SecondaryCommandBuffer::setColorBlendEquation(
     uint32_t attachmentCount,
     const VkColorBlendEquationEXT *colorBlendEquation)
 {
-    uint8_t *writePtr;
-    const ArrayParamSize blendEquationSize =
-        calculateArrayParameterSize<VkColorBlendEquationEXT>(attachmentCount);
-    SetColorBlendEquationParams *paramStruct = initCommand<SetColorBlendEquationParams>(
-        CommandID::SetColorBlendEquation, blendEquationSize.allocateBytes, &writePtr);
-    SetBitField(paramStruct->firstAttachment, firstAttachment);
-    SetBitField(paramStruct->attachmentCount, attachmentCount);
-    storeArrayParameter(writePtr, colorBlendEquation, blendEquationSize);
+    // Blend equation is set one attachment at a time.
+    ASSERT(attachmentCount == 1);
+
+    SetColorBlendEquationParams *paramStruct =
+        initCommand<SetColorBlendEquationParams>(CommandID::SetColorBlendEquation);
+    SetBitField(paramStruct->attachment, firstAttachment);
+    SetBitField(paramStruct->srcColorBlendFactor, colorBlendEquation[0].srcColorBlendFactor);
+    SetBitField(paramStruct->dstColorBlendFactor, colorBlendEquation[0].dstColorBlendFactor);
+    SetBitField(paramStruct->colorBlendOp, colorBlendEquation[0].colorBlendOp);
+    SetBitField(paramStruct->srcAlphaBlendFactor, colorBlendEquation[0].srcAlphaBlendFactor);
+    SetBitField(paramStruct->dstAlphaBlendFactor, colorBlendEquation[0].dstAlphaBlendFactor);
+    SetBitField(paramStruct->alphaBlendOp, colorBlendEquation[0].alphaBlendOp);
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setColorWriteMask(

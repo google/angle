@@ -139,52 +139,16 @@ bool GraphicsPipelineHasFragmentOutput(GraphicsPipelineSubset subset)
 
 uint8_t PackGLBlendOp(gl::BlendEquationType blendOp)
 {
-    switch (blendOp)
+    const VkBlendOp blendOpVk = gl_vk::GetBlendOp(blendOp);
+    if (blendOpVk > VK_BLEND_OP_MAX)
     {
-        case gl::BlendEquationType::Add:
-            return static_cast<uint8_t>(VK_BLEND_OP_ADD);
-        case gl::BlendEquationType::Subtract:
-            return static_cast<uint8_t>(VK_BLEND_OP_SUBTRACT);
-        case gl::BlendEquationType::ReverseSubtract:
-            return static_cast<uint8_t>(VK_BLEND_OP_REVERSE_SUBTRACT);
-        case gl::BlendEquationType::Min:
-            return static_cast<uint8_t>(VK_BLEND_OP_MIN);
-        case gl::BlendEquationType::Max:
-            return static_cast<uint8_t>(VK_BLEND_OP_MAX);
-        case gl::BlendEquationType::Multiply:
-            return static_cast<uint8_t>(VK_BLEND_OP_MULTIPLY_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::Screen:
-            return static_cast<uint8_t>(VK_BLEND_OP_SCREEN_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::Overlay:
-            return static_cast<uint8_t>(VK_BLEND_OP_OVERLAY_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::Darken:
-            return static_cast<uint8_t>(VK_BLEND_OP_DARKEN_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::Lighten:
-            return static_cast<uint8_t>(VK_BLEND_OP_LIGHTEN_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::Colordodge:
-            return static_cast<uint8_t>(VK_BLEND_OP_COLORDODGE_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::Colorburn:
-            return static_cast<uint8_t>(VK_BLEND_OP_COLORBURN_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::Hardlight:
-            return static_cast<uint8_t>(VK_BLEND_OP_HARDLIGHT_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::Softlight:
-            return static_cast<uint8_t>(VK_BLEND_OP_SOFTLIGHT_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::Difference:
-            return static_cast<uint8_t>(VK_BLEND_OP_DIFFERENCE_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::Exclusion:
-            return static_cast<uint8_t>(VK_BLEND_OP_EXCLUSION_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::HslHue:
-            return static_cast<uint8_t>(VK_BLEND_OP_HSL_HUE_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::HslSaturation:
-            return static_cast<uint8_t>(VK_BLEND_OP_HSL_SATURATION_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::HslColor:
-            return static_cast<uint8_t>(VK_BLEND_OP_HSL_COLOR_EXT - VK_BLEND_OP_ZERO_EXT);
-        case gl::BlendEquationType::HslLuminosity:
-            return static_cast<uint8_t>(VK_BLEND_OP_HSL_LUMINOSITY_EXT - VK_BLEND_OP_ZERO_EXT);
-        default:
-            UNREACHABLE();
-            return 0;
+        // The first advanced blend used by GLES (multiply) is far enough from the first Vulkan
+        // advanced blend (zero) that the following is still larger than the basic blends.  The
+        // range of blend ops can be reduced this way to fit in fewer bits.
+        ASSERT(blendOpVk - VK_BLEND_OP_ZERO_EXT > VK_BLEND_OP_MAX);
+        return static_cast<uint8_t>(blendOpVk - VK_BLEND_OP_ZERO_EXT);
     }
+    return static_cast<uint8_t>(blendOpVk);
 }
 
 VkBlendOp UnpackBlendOp(uint8_t packedBlendOp)
@@ -198,50 +162,7 @@ VkBlendOp UnpackBlendOp(uint8_t packedBlendOp)
 
 uint8_t PackGLBlendFactor(gl::BlendFactorType blendFactor)
 {
-    switch (blendFactor)
-    {
-        case gl::BlendFactorType::Zero:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_ZERO);
-        case gl::BlendFactorType::One:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE);
-        case gl::BlendFactorType::SrcColor:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_SRC_COLOR);
-        case gl::BlendFactorType::DstColor:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_DST_COLOR);
-        case gl::BlendFactorType::OneMinusSrcColor:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR);
-        case gl::BlendFactorType::SrcAlpha:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_SRC_ALPHA);
-        case gl::BlendFactorType::OneMinusSrcAlpha:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA);
-        case gl::BlendFactorType::DstAlpha:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_DST_ALPHA);
-        case gl::BlendFactorType::OneMinusDstAlpha:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA);
-        case gl::BlendFactorType::OneMinusDstColor:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR);
-        case gl::BlendFactorType::SrcAlphaSaturate:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_SRC_ALPHA_SATURATE);
-        case gl::BlendFactorType::ConstantColor:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_CONSTANT_COLOR);
-        case gl::BlendFactorType::ConstantAlpha:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_CONSTANT_ALPHA);
-        case gl::BlendFactorType::OneMinusConstantColor:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR);
-        case gl::BlendFactorType::OneMinusConstantAlpha:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA);
-        case gl::BlendFactorType::Src1Color:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_SRC1_COLOR);
-        case gl::BlendFactorType::Src1Alpha:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_SRC1_ALPHA);
-        case gl::BlendFactorType::OneMinusSrc1Color:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR);
-        case gl::BlendFactorType::OneMinusSrc1Alpha:
-            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA);
-        default:
-            UNREACHABLE();
-            return 0;
-    }
+    return static_cast<uint8_t>(gl_vk::GetBlendFactor(blendFactor));
 }
 
 // A struct that contains render pass information derived from RenderPassDesc.  It contains dynamic
@@ -4161,14 +4082,20 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
             VK_PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT;
     }
 
-    // If blend-enable is dynamic state, we cannot tell which attachments might need blending later
-    // so static state for blend equation/function must be set for all attachments of the render
-    // pass.
-    // TODO(http://anglebug.com/575891833): When blend equation/function is also dynamic state,
-    // there is no need to set any static blend state (unless advanced blend is not dynamic), in
-    // which case this mask could be zero instead.
+    // If all blend state is dynamic state, there is no static state to provide.
+    //
+    // If only blend-enable is dynamic state, we cannot tell which attachments might need blending
+    // later so static state for blend equation/function must be set for all attachments of the
+    // render pass.
+    const bool isBlendEnableDynamic =
+        context->getFeatures().supportsColorBlendEnableDynamicState.enabled;
+    const bool isBlendEquationDynamic =
+        context->getFeatures().supportsColorBlendEquationDynamicState.enabled;
+    // Blend equation is only dynamic if blend enable is.
+    ASSERT(!isBlendEquationDynamic || isBlendEnableDynamic);
     const gl::DrawBufferMask staticBlendMask =
-        context->getFeatures().supportsColorBlendEnableDynamicState.enabled
+        isBlendEquationDynamic ? gl::DrawBufferMask()
+        : isBlendEnableDynamic
             ? gl::DrawBufferMask().set()
             : gl::DrawBufferMask(mFragmentOutput.blendMaskAndLogic.bits.blendEnableMask);
 
@@ -4187,6 +4114,8 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
 
         if (staticBlendMask[colorIndexGL])
         {
+            ASSERT(!isBlendEquationDynamic);
+
             // To avoid triggering valid usage error, blending must be disabled for formats that do
             // not have VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT feature bit set.
             // From OpenGL ES clients, this means disabling blending for integer formats.
@@ -4231,6 +4160,14 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
     if (context->getFeatures().supportsColorBlendEnableDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT);
+    }
+    if (context->getFeatures().supportsColorBlendEquationDynamicState.enabled)
+    {
+        dynamicStateListOut->push_back(VK_DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT);
+        if (context->getFeatures().supportsBlendOperationAdvanced.enabled)
+        {
+            dynamicStateListOut->push_back(VK_DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT);
+        }
     }
     if (context->getFeatures().supportsColorWriteMaskDynamicState.enabled)
     {

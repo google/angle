@@ -1182,6 +1182,7 @@ ANGLE_INLINE void CommandBuffer::setColorBlendAdvanced(
     const VkColorBlendAdvancedEXT *colorBlendAdvanced)
 {
     ASSERT(valid());
+    ASSERT(attachmentCount == 1);
     VK_SECONDARY_CMD_CALL(vkCmdSetColorBlendAdvancedEXT(mHandle, firstAttachment, attachmentCount,
                                                         colorBlendAdvanced));
 }
@@ -1202,6 +1203,7 @@ ANGLE_INLINE void CommandBuffer::setColorBlendEquation(
     const VkColorBlendEquationEXT *colorBlendEquations)
 {
     ASSERT(valid());
+    ASSERT(attachmentCount == 1);
     VK_SECONDARY_CMD_CALL(vkCmdSetColorBlendEquationEXT(mHandle, firstAttachment, attachmentCount,
                                                         colorBlendEquations));
 }

@@ -1013,6 +1013,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_BLEND_ENABLE);
     }
+    if (mRenderer->getFeatures().supportsColorBlendEquationDynamicState.enabled)
+    {
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_BLEND_EQUATION);
+    }
     if (mRenderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_WRITE_MASK);
@@ -1146,6 +1150,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicAlphaToOneEnable;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_COLOR_BLEND_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicColorBlendEnable;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_COLOR_BLEND_EQUATION] =
+        &ContextVk::handleDirtyGraphicsDynamicColorBlendEquation;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_COLOR_WRITE_MASK] =
         &ContextVk::handleDirtyGraphicsDynamicColorWriteMask;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_DEPTH_CLAMP_ENABLE] =
@@ -1297,6 +1303,11 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     if (mRenderer->getFeatures().supportsColorBlendEnableDynamicState.enabled)
     {
         mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_BLEND_ENABLED);
+    }
+    if (mRenderer->getFeatures().supportsColorBlendEquationDynamicState.enabled)
+    {
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_BLEND_FUNCS);
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_BLEND_EQUATIONS);
     }
     if (mRenderer->getFeatures().supportsColorWriteMaskDynamicState.enabled)
     {
@@ -3650,7 +3661,7 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicColorBlendEnable(
     // disabled attachments).
     const gl::DrawBufferMask enabledBlend =
         mState.getBlendStateExt().getEnabledMask() & enabledDrawBuffers;
-    const gl::DrawBufferMask advancedBlend =
+    const gl::DrawBufferMask advancedBlendMask =
         mState.getBlendStateExt().getUsesAdvancedBlendEquationMask();
 
     for (size_t colorIndexGL : dirtyColorAttachments)
@@ -3665,7 +3676,7 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicColorBlendEnable(
         // Vulkan extension is present.  When emulating advanced blend in the shader, the blend
         // fixed-function must be disabled.
         const bool isEmulatedAdvancedBlend =
-            advancedBlend[colorIndexGL] && getFeatures().emulateAdvancedBlendEquations.enabled;
+            advancedBlendMask[colorIndexGL] && getFeatures().emulateAdvancedBlendEquations.enabled;
 
         const VkBool32 colorBlendEnable =
             enabledBlend[colorIndexGL] && !isInt && !isEmulatedAdvancedBlend;
@@ -3674,6 +3685,97 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicColorBlendEnable(
     }
 
     mDirtyColorBlendEnables &= ~dirtyColorAttachments;
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicColorBlendEquation(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    FramebufferVk *framebufferVk           = vk::GetImpl(mState.getDrawFramebuffer());
+    const gl::BlendStateExt &blendStateExt = mState.getBlendStateExt();
+
+    // Set blend equation for every attachment in the framebuffer.
+    //
+    // If needed, this can be optimized to enabled attachments and only those for which blend is
+    // enabled; in that case, attachment changes and blend-enable changes should dirty
+    // DIRTY_BIT_DYNAMIC_COLOR_BLEND_EQUATION so that the corresponding blend equations can be set.
+    const gl::DrawBufferMask dirtyColorAttachments =
+        mDirtyColorBlendEquations & framebufferVk->getState().getColorAttachmentsMask();
+
+    // Attachments with advanced blend are configured via a different API.
+    const bool supportsAdvancedBlendThroughEXT =
+        getFeatures().supportsBlendOperationAdvanced.enabled;
+    const gl::DrawBufferMask advancedBlendMask =
+        supportsAdvancedBlendThroughEXT ? blendStateExt.getUsesAdvancedBlendEquationMask()
+                                        : gl::DrawBufferMask();
+
+    const gl::DrawBufferMask enabledBlend = mState.getBlendStateExt().getEnabledMask() &
+                                            framebufferVk->getState().getEnabledDrawBuffers();
+
+    for (size_t colorIndexGL : dirtyColorAttachments)
+    {
+        // Advanced blend can only be used with attachment 0 in GLES.  If the application has
+        // configured advanced blend on any other attachment, that is allowed if blending is
+        // disabled for that attachment.  Guard against that by never using advanced blend for
+        // non-zero attachments.
+        const VkBlendOp colorBlendOp =
+            gl_vk::GetBlendOp(blendStateExt.getEquationColorIndexed(colorIndexGL));
+        const bool isAdvancedBlend = colorBlendOp > VK_BLEND_OP_MAX;
+        if (advancedBlendMask[colorIndexGL] && colorIndexGL == 0)
+        {
+            ASSERT(isAdvancedBlend);
+
+            VkColorBlendAdvancedEXT advancedBlend = {};
+            advancedBlend.advancedBlendOp         = colorBlendOp;
+            advancedBlend.srcPremultiplied        = VK_TRUE;
+            advancedBlend.dstPremultiplied        = VK_TRUE;
+            advancedBlend.blendOverlap            = VK_BLEND_OVERLAP_UNCORRELATED_EXT;
+            advancedBlend.clampResults            = VK_FALSE;
+
+            mRenderPassCommandBuffer->setColorBlendAdvanced(static_cast<uint32_t>(colorIndexGL), 1,
+                                                            &advancedBlend);
+        }
+        else if (isAdvancedBlend &&
+                 (!supportsAdvancedBlendThroughEXT || !enabledBlend[colorIndexGL]))
+        {
+            // When emulated, advanced blend is communicated via uniforms and implemented in the
+            // shader.  Blend itself is disabled, so it doesn't matter what gets set here.
+            //
+            // When using the extension, blend must be disabled (or else the draw call would have
+            // failed) for a non-zero color index with advanced blend.  In that case too, it doesn't
+            // matter what gets set here.  There is no need to dirty blend equations when blend
+            // enable changes for the sake of this code (which checks enabledBlend), because simply
+            // enabling blend for this attachment would make the draw call fail validation; a blend
+            // equation change is needed which results in this function getting called
+            // automatically.
+            VkColorBlendEquationEXT blendEquation = {};
+            mRenderPassCommandBuffer->setColorBlendEquation(static_cast<uint32_t>(colorIndexGL), 1,
+                                                            &blendEquation);
+        }
+        else
+        {
+            VkColorBlendEquationEXT blendEquation = {};
+            blendEquation.srcColorBlendFactor =
+                gl_vk::GetBlendFactor(blendStateExt.getSrcColorIndexed(colorIndexGL));
+            blendEquation.dstColorBlendFactor =
+                gl_vk::GetBlendFactor(blendStateExt.getDstColorIndexed(colorIndexGL));
+            blendEquation.colorBlendOp = isAdvancedBlend ? VK_BLEND_OP_ADD : colorBlendOp;
+            blendEquation.srcAlphaBlendFactor =
+                gl_vk::GetBlendFactor(blendStateExt.getSrcAlphaIndexed(colorIndexGL));
+            blendEquation.dstAlphaBlendFactor =
+                gl_vk::GetBlendFactor(blendStateExt.getDstAlphaIndexed(colorIndexGL));
+            blendEquation.alphaBlendOp =
+                isAdvancedBlend
+                    ? VK_BLEND_OP_ADD
+                    : gl_vk::GetBlendOp(blendStateExt.getEquationAlphaIndexed(colorIndexGL));
+
+            mRenderPassCommandBuffer->setColorBlendEquation(static_cast<uint32_t>(colorIndexGL), 1,
+                                                            &blendEquation);
+        }
+    }
+
+    mDirtyColorBlendEquations &= ~dirtyColorAttachments;
     return angle::Result::Continue;
 }
 
@@ -5075,20 +5177,34 @@ void ContextVk::updateBlendEnabled()
 
 void ContextVk::updateBlendFuncsAndEquationsOnFramebufferChange()
 {
-    // Clear the blend funcs/equations for color attachment indices that no longer exist.  Restore
-    // for color attachment indices that are new.
     const gl::DrawBufferMask previousAttachmentsMask = mCachedDrawFramebufferColorAttachmentMask;
     const gl::DrawBufferMask newAttachmentsMask =
         getDrawFramebuffer()->getState().getColorAttachmentsMask();
     mCachedDrawFramebufferColorAttachmentMask = newAttachmentsMask;
 
-    mGraphicsPipelineDesc->resetBlendFuncsAndEquations(&mGraphicsPipelineTransition,
-                                                       mState.getBlendStateExt(),
-                                                       previousAttachmentsMask, newAttachmentsMask);
+    if (mRenderer->getFeatures().supportsColorBlendEquationDynamicState.enabled)
+    {
+        // There is no need to set mDirtyColorBlendEquations, any equation that has been previously
+        // set still applies.  If there is a new attachment that previously didn't exist, then the
+        // blend equation dirty bit needs to be set so the blend equations for the new attachments
+        // are set in the command buffer.
+        const gl::DrawBufferMask dirtyNewAttachments =
+            newAttachmentsMask & ~previousAttachmentsMask & mDirtyColorBlendEquations;
+        if (dirtyNewAttachments.any())
+        {
+            mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_BLEND_EQUATION);
+        }
+    }
+    else
+    {
+        mGraphicsPipelineDesc->resetBlendFuncsAndEquations(
+            &mGraphicsPipelineTransition, mState.getBlendStateExt(), previousAttachmentsMask,
+            newAttachmentsMask);
 
-    // This function may be called outside of ContextVk::syncState, and so invalidates the graphics
-    // pipeline.
-    invalidateCurrentGraphicsPipeline();
+        // This function may be called outside of ContextVk::syncState, and so invalidates the
+        // graphics pipeline.
+        invalidateCurrentGraphicsPipeline();
+    }
 }
 
 void ContextVk::updateSampleMaskWithRasterizationSamples(const uint32_t rasterizationSamples)
@@ -5453,6 +5569,41 @@ void ContextVk::updateRasterizerDiscardEnabled(bool isPrimitivesGeneratedQueryAc
     }
 }
 
+void ContextVk::updateBlendFuncs()
+{
+    if (mRenderer->getFeatures().supportsColorBlendEquationDynamicState.enabled)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_BLEND_EQUATION);
+        // Assume all attachments are dirty for simplicity, we don't currently track what the
+        // previous blend functions and equations were to compare against.
+        mDirtyColorBlendEquations.set();
+    }
+    else
+    {
+        mGraphicsPipelineDesc->updateBlendFuncs(
+            &mGraphicsPipelineTransition, mState.getBlendStateExt(),
+            getDrawFramebuffer()->getState().getColorAttachmentsMask());
+    }
+}
+
+void ContextVk::updateBlendEquations(const gl::ProgramExecutable *executable)
+{
+    if (mRenderer->getFeatures().supportsColorBlendEquationDynamicState.enabled)
+    {
+        mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_COLOR_BLEND_EQUATION);
+        // Assume all attachments are dirty for simplicity, we don't currently track what the
+        // previous blend functions and equations were to compare against.
+        mDirtyColorBlendEquations.set();
+    }
+    else
+    {
+        mGraphicsPipelineDesc->updateBlendEquations(
+            &mGraphicsPipelineTransition, mState.getBlendStateExt(),
+            getDrawFramebuffer()->getState().getColorAttachmentsMask());
+    }
+    updateAdvancedBlendEquations(executable);
+}
+
 void ContextVk::updateAdvancedBlendEquations(const gl::ProgramExecutable *executable)
 {
     if (!getFeatures().emulateAdvancedBlendEquations.enabled || executable == nullptr)
@@ -5780,15 +5931,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_BLEND_CONSTANTS);
                 break;
             case gl::state::DIRTY_BIT_BLEND_FUNCS:
-                mGraphicsPipelineDesc->updateBlendFuncs(
-                    &mGraphicsPipelineTransition, glState.getBlendStateExt(),
-                    drawFramebufferVk->getState().getColorAttachmentsMask());
+                updateBlendFuncs();
                 break;
             case gl::state::DIRTY_BIT_BLEND_EQUATIONS:
-                mGraphicsPipelineDesc->updateBlendEquations(
-                    &mGraphicsPipelineTransition, glState.getBlendStateExt(),
-                    drawFramebufferVk->getState().getColorAttachmentsMask());
-                updateAdvancedBlendEquations(programExecutable);
+                updateBlendEquations(programExecutable);
                 break;
             case gl::state::DIRTY_BIT_COLOR_MASK:
                 updateColorMasks();
@@ -7037,6 +7183,7 @@ void ContextVk::invalidateAllDynamicState()
     mGraphicsDirtyBits |= mDynamicStateDirtyBits;
     mDirtyColorWriteMasks.set();
     mDirtyColorBlendEnables.set();
+    mDirtyColorBlendEquations.set();
 }
 
 angle::Result ContextVk::dispatchCompute(const gl::Context *context,
@@ -8372,6 +8519,7 @@ void ContextVk::markNewRenderPassDirtyBits()
     mGraphicsDirtyBits |= mNewRenderPassDirtyBits;
     mDirtyColorWriteMasks.set();
     mDirtyColorBlendEnables.set();
+    mDirtyColorBlendEquations.set();
 }
 
 angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassClosureReason reason)

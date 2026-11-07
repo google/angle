@@ -1555,6 +1555,8 @@ VkComponentSwizzle GetSwizzle(const GLenum swizzle);
 VkCompareOp GetCompareOp(const GLenum compareFunc);
 VkStencilOp GetStencilOp(const GLenum compareOp);
 VkLogicOp GetLogicOp(const GLenum logicOp);
+VkBlendOp GetBlendOp(const gl::BlendEquationType blendOp);
+VkBlendFactor GetBlendFactor(const gl::BlendFactorType blendFactor);
 
 constexpr gl::ShaderMap<VkShaderStageFlagBits> kShaderStageMap = {
     {gl::ShaderType::Vertex, VK_SHADER_STAGE_VERTEX_BIT},

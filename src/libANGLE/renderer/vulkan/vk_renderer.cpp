@@ -3146,7 +3146,11 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                                                        (feature)
 //                                                    extendedDynamicState3AlphaToOneEnable
 //                                                                                        (feature)
+//                                                    extendedDynamicState3ColorBlendAdvanced
+//                                                                                        (feature)
 //                                                    extendedDynamicState3ColorBlendEnable
+//                                                                                        (feature)
+//                                                    extendedDynamicState3ColorBlendEquation
 //                                                                                        (feature)
 //                                                    extendedDynamicState3ColorWriteMask (feature)
 //                                                    extendedDynamicState3DepthClampEnable
@@ -6818,6 +6822,25 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.supportsExtendedDynamicState3.enabled &&
             mExtendedDynamicState3Features.extendedDynamicState3ColorBlendEnable == VK_TRUE &&
             isRasterizerDiscardDynamicState);
+
+    // Drivers typically either support both colorBlendEnable and colorBlendEquation or neither.  To
+    // simplify deciding when static state needs to be set, make colorBlendEquation dynamic state
+    // use conditional to colorBlendEnable.  This way, it's not possible to set blend equations
+    // dynamically while blend-enable is static.
+    //
+    // Additionally, it's unnecessarily complicated to have colorBlendEquation dynamic but not
+    // colorBlendAdvanced, so those are enabled by the same feature flag.
+    //
+    // Disabled on Nvidia due corner-case failures (http://anglebug.com/584396636)
+    const bool hasStaticAdvancedBlend =
+        mFeatures.supportsBlendOperationAdvanced.enabled &&
+        mExtendedDynamicState3Features.extendedDynamicState3ColorBlendAdvanced == VK_FALSE;
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsColorBlendEquationDynamicState,
+        mFeatures.supportsExtendedDynamicState3.enabled &&
+            mFeatures.supportsColorBlendEnableDynamicState.enabled &&
+            mExtendedDynamicState3Features.extendedDynamicState3ColorBlendEquation == VK_TRUE &&
+            !hasStaticAdvancedBlend && isRasterizerDiscardDynamicState && !isNvidia);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsColorWriteMaskDynamicState,

@@ -1383,7 +1383,7 @@ void ResetDynamicState(ContextVk *contextVk, vk::RenderPassCommandBuffer *comman
     // reset them:
     //
     // - line rasterization mode, stipple, width: UtilsVk doesn't use line primitives
-    // - blend constants: UtilsVk doesn't enable blending
+    // - blend constants, funcs, equations: UtilsVk doesn't enable blending
     // - patch control points: UtilsVk doesn't use tessellation shaders
     //
     // The following dynamic state is unused by UtilsVk, but needs to be reset do they don't
