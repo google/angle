@@ -1843,6 +1843,7 @@
 40096700 LINUX OPENGL INTEL : MultithreadingTestES3.RenderThenSampleInNewContextWithDifferentPriority/* = SKIP
 
 42266091 WIN INTEL : *EmulateCopyTexImage2DFromRenderbuffers* = SKIP
+580842459 WIN INTEL OPENGL : Texture2DBaseMaxTestES3.BaseLevelRoundTripWithDifferentFormat/* = SKIP
 
 42266092 WIN SWIFTSHADER : VulkanPerformanceCounterTest.EndXfbAfterRenderPassClosed/* = SKIP
 466331749 SWIFTSHADER : GLSLTest_ES31.ShortCircuitOutOfBoundsAccess/* = SKIP
@@ -3168,6 +3169,7 @@
 523470135 WIN INTEL OPENGL : RobustResourceInitTestES3.CubeMapCopySubImageMismatchedFaceRedefine/* = SKIP
 
 566108153 WIN NVIDIA VULKAN : RobustResourceInitWithInvalidationTest.InvalidateAfterDrawAndClearZeroStencil/* = SKIP
+580842459 WIN NVIDIA VULKAN : Texture2DBaseMaxTestES3WithFormatFallback.BaseLevelRoundTripWithRenderableFallback/ES3_Vulkan_ForceRenderableFallbackFormat = SKIP
 
 568338695 VULKAN : ClearTestES3.DrawClearInvalidateClear/* = SKIP
 568338695 ARM GLES : ClearTestES3.DrawClearInvalidateClear/* = SKIP

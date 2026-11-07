@@ -7961,6 +7961,201 @@ TEST_P(Texture2DBaseMaxTestES3, DepthRenderableAfterColorRenderableBelowBaseLeve
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test that a TEXTURE_BASE_LEVEL round trip (0 -> 1 -> 0) when level 1 has a different sized
+// format preserves level 0's contents.
+TEST_P(Texture2DBaseMaxTestES3, BaseLevelRoundTripWithDifferentFormat)
+{
+    constexpr GLsizei kWidth      = 128;
+    constexpr GLsizei kHeight     = 128;
+    constexpr size_t kRounds      = 6;
+    constexpr size_t kFillerCount = 3;
+
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+    gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+})";
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform sampler2D t;
+out vec4 o;
+void main()
+{
+    o = texture(t, gl_FragCoord.xy / 128.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glUniform1i(glGetUniformLocation(program, "t"), 0);
+
+    GLTexture rt;
+    glBindTexture(GL_TEXTURE_2D, rt);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rt, 0);
+
+    GLFramebuffer fbo2;
+    glViewport(0, 0, kWidth, kHeight);
+
+    auto initTexParams = [](GLTexture &tex) {
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    };
+
+    auto draw = [&](GLuint tex) {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+    };
+
+    const std::vector<GLColor> greenData(kWidth * kHeight, GLColor::green);
+    const std::vector<GLColor> blueData(kWidth * kHeight, GLColor::blue);
+    const std::vector<GLColor> controlLevel1Data((kWidth / 2) * (kHeight / 2),
+                                                 GLColor(0x11, 0x22, 0x33, 255));
+    std::vector<GLubyte> rgData((kWidth / 2) * (kHeight / 2) * 2);
+    for (size_t k = 0; k < rgData.size(); k += 2)
+    {
+        rgData[k]     = 0x11;
+        rgData[k + 1] = 0x22;
+    }
+
+    // Warm up first-use allocations.
+    {
+        GLTexture warmupTex;
+        initTexParams(warmupTex);
+        const std::vector<GLColor> warmupData(8 * 8, GLColor(1, 2, 3, 255));
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     warmupData.data());
+        draw(warmupTex);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(1, 2, 3, 255));
+    }
+    glFinish();
+
+    std::vector<GLTexture> keep(kRounds * kFillerCount + kFillerCount);
+    size_t keepIndex = 0;
+
+    auto runRound = [&](bool sameFormatControl) {
+        GLTexture tex;
+        initTexParams(tex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     greenData.data());
+        if (sameFormatControl)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth / 2, kHeight / 2, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, controlLevel1Data.data());
+        }
+        else
+        {
+            glTexImage2D(GL_TEXTURE_2D, 1, GL_RG8, kWidth / 2, kHeight / 2, 0, GL_RG,
+                         GL_UNSIGNED_BYTE, rgData.data());
+        }
+
+        // Step A: draw with base level 0.
+        draw(tex);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+
+        // Step B: draw with base level 1.
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+        draw(tex);
+        const GLColor expectedLevel1Color =
+            sameFormatControl ? GLColor(0x11, 0x22, 0x33, 255) : GLColor(0x11, 0x22, 0, 255);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, expectedLevel1Color);
+        glFinish();
+
+        // Occupy the memory the step-A image just gave back, so step C's new image gets a
+        // different sub-allocation.
+        for (size_t f = 0; f < kFillerCount; ++f)
+        {
+            GLTexture &filler = keep[keepIndex++];
+            initTexParams(filler);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         blueData.data());
+            draw(filler);
+        }
+        glFinish();
+
+        // Step C: restore base level 0 and sample level 0.
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+        draw(tex);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+
+        // Step D: read level 0 directly through an FBO attachment.
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+        EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+
+        EXPECT_GL_NO_ERROR();
+    };
+
+    for (size_t i = 0; i < kRounds; ++i)
+    {
+        runRound(false);
+    }
+    runRound(true);
+}
+
+class Texture2DBaseMaxTestES3WithFormatFallback : public Texture2DBaseMaxTestES3
+{};
+
+// Similar to BaseLevelRoundTripWithDifferentFormat, but the texture is made renderable while the
+// base level is at a level with a different format.  Level 0's format (RGBA4) switches to its
+// renderable fallback format (forced by ForceRenderableFallbackFormat), so level 0's data must be
+// preserved and converted to that format.
+TEST_P(Texture2DBaseMaxTestES3WithFormatFallback, BaseLevelRoundTripWithRenderableFallback)
+{
+    constexpr GLsizei kSize = 16;
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Level 0 is green RGBA4, level 1 is red RGBA8.
+    const std::vector<GLushort> level0Data(kSize * kSize, 0x0F0F);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4,
+                 level0Data.data());
+    const std::vector<GLColor> level1Data((kSize / 2) * (kSize / 2), GLColor::red);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize / 2, kSize / 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 level1Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Sample level 0.  This allocates the image with RGBA4's non-renderable format.
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+
+    // Switch to level 1 and make the texture renderable by attaching it to a framebuffer.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 1);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize / 2, kSize / 2, GLColor::red);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+
+    // Switch back to level 0.  Its data must be intact.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that the following scenario works:
 // - change a texture's max level to 0.
 // - clear the texture with glClear.
@@ -27647,6 +27842,11 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DBaseMaxTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DBaseMaxTestES3,
                                ES3_OPENGL().enable(Feature::VirtualizeBaseLevelAndMipchain),
                                ES3_OPENGLES().enable(Feature::VirtualizeBaseLevelAndMipchain));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DBaseMaxTestES3WithFormatFallback);
+ANGLE_INSTANTIATE_TEST(Texture2DBaseMaxTestES3WithFormatFallback,
+                       ES3_VULKAN().enable(Feature::ForceRenderableFallbackFormat),
+                       ES3_VULKAN_SWIFTSHADER().enable(Feature::ForceRenderableFallbackFormat));
 
 ANGLE_INSTANTIATE_TEST_ES2(Texture3DTestES2);
 
