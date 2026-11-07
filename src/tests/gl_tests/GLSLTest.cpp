@@ -27484,6 +27484,75 @@ void main()
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(63, 191, 127, 255), 1);
     ASSERT_GL_NO_ERROR();
 }
+
+// Test that when calling interpolateAt* built-in functions on varyings whose precision is
+// mismatched between shader stages, regardless of whether we apply precision fixer in shader
+// translator, the shaders should compile fine.
+TEST_P(GLSLTest_ES3, InterpolateOnVaryingWithPrecisionMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_shader_multisample_interpolation"));
+    constexpr char kVS[] = R"(#version 300 es
+in highp vec2 position;
+out mediump vec4 v_var;
+void main() {
+v_var = vec4(0.2, 0.25, 0.3, 1.0);
+gl_Position = vec4(position, 0, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_OES_shader_multisample_interpolation : require
+precision highp float;
+in highp vec4 v_var;
+out vec4 outColor;
+void main() {
+  outColor = interpolateAtCentroid(v_var)
+           + interpolateAtOffset(v_var, vec2(0.0, 0.0))
+           + interpolateAtSample(v_var, 0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(153, 191, 230, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that when calling interpolateAt* built-in functions on array type varying whose precision is
+// mismatched between shader stages, regardless of whether we apply precision fixer in shader
+// translator, the shaders should compile fine.
+TEST_P(GLSLTest_ES3, InterpolateOnArrayVaryingWithPrecisionMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_shader_multisample_interpolation"));
+    constexpr char kVS[] = R"(#version 300 es
+in highp vec2 position;
+out mediump vec4 v_var[3];
+void main() {
+v_var[0] = vec4(0.1, 0.1, 0.1, 1.0);
+v_var[1] = vec4(0.2, 0.2, 0.2, 1.0);
+v_var[2] = vec4(0.3, 0.3, 0.3, 1.0);
+gl_Position = vec4(position, 0, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_OES_shader_multisample_interpolation : require
+precision highp float;
+in highp vec4 v_var[3];
+out vec4 outColor;
+void main() {
+  outColor = interpolateAtCentroid(v_var[0])
+           + interpolateAtOffset(v_var[1], vec2(0.0, 0.0))
+           + interpolateAtSample(v_var[2], 0);
+})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(153, 153, 153, 255), 1);
+    ASSERT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
@@ -27524,6 +27593,7 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
         .enable(Feature::AvoidComplexExpressionsInStructConstructor)
         .enable(Feature::ForceInitShaderVariables),
     ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision),
+    ES3_VULKAN().enable(Feature::VaryingsRequireMatchingPrecisionInSpirv),
     ES3_VULKAN().enable(Feature::ForceInitShaderVariables),
     ES3_VULKAN().disable(Feature::SupportsSPIRV14),
     ES3_VULKAN().enable(Feature::EmulatedPrerotation90),
