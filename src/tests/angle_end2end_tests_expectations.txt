@@ -1055,6 +1055,11 @@
 465140993 PIXEL6 VULKAN : GLSLTest_ES3_PackUnpackEmulation.PackSnorm2x16/* = SKIP
 491488984 PIXEL6 VULKAN : GLSLTest_ES31.HelperInvocationsAfterDiscard/* = SKIP
 
+580873376 PIXEL6 VULKAN : GLSLTest_ES3.InterpolateOnVaryingWithPrecisionMismatch/* = SKIP
+580873376 PIXEL6 VULKAN : GLSLTest_ES3.InterpolateOnArrayVaryingWithPrecisionMismatch/* = SKIP
+580873376 PIXEL6 GLES : GLSLTest_ES3.InterpolateOnVaryingWithPrecisionMismatch/* = SKIP
+580873376 PIXEL6 GLES : GLSLTest_ES3.InterpolateOnArrayVaryingWithPrecisionMismatch/* = SKIP
+
 // Pixel 10 expectations.
 480069042 PIXEL10 GLES : AtomicCounterBufferTest31.DependentAtomicCounterBufferChange/* = SKIP
 480069042 PIXEL10 GLES : BlitFramebufferANGLETest.BlitWithDepthUserToDefault/* = SKIP
@@ -1483,6 +1488,7 @@
 579030470 PIXEL10 GLES : ImageTestES3RobustInit.SelfSubCopyOutOfBounds/* = SKIP
 582923452 PIXEL10 GLES : StateChangeTestES3.BlendEnableiAllAttachments/* = SKIP
 582923452 PIXEL10 GLES : StateChangeTestES3.DrawBuffersWithAdvancedBlend/* = SKIP
+580873376 PIXEL10 GLES : GLSLTest_ES3.InterpolateOnVaryingWithPrecisionMismatch/* = SKIP
 
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RG16_SNORM_EXT_GL_RG_GL_SHORT_GL_TEXTURE_2D_ARRAY = SKIP
 480069042 PIXEL10 VULKAN : ClearTextureEXTTestES31Unrenderable.Clear/ES3_1_Vulkan*__GL_RGB32UI_GL_RGB_INTEGER_GL_UNSIGNED_INT_GL_TEXTURE_2D_ARRAY = SKIP

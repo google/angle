@@ -1577,6 +1577,14 @@ class SpirvVaryingPrecisionFixer final : angle::NonCopyable
                                           spv::StorageClass storageClass,
                                           spirv::Blob *blobOut);
 
+    TransformationState transformExtInst(const uint32_t *instruction, spirv::Blob *blobOut);
+
+    void transformAccessChain(spirv::IdResultType typeId,
+                              spirv::IdResult id,
+                              spirv::IdRef baseId,
+                              const spirv::IdRefList &indexList,
+                              spirv::Blob *blobOut);
+
     void modifyEntryPointInterfaceList(EntryPointList entryPointList,
                                        spirv::IdRefList *interfaceList);
     void addDecorate(spirv::IdRef replacedId, spirv::Blob *blobOut);
@@ -1648,6 +1656,53 @@ TransformationState SpirvVaryingPrecisionFixer::transformVariable(
         return TransformationState::Transformed;
     }
     return TransformationState::Unchanged;
+}
+
+TransformationState SpirvVaryingPrecisionFixer::transformExtInst(const uint32_t *instruction,
+                                                                 spirv::Blob *blobOut)
+{
+    spirv::IdResultType typeId;
+    spirv::IdResult id;
+    spirv::IdRef set;
+    spirv::LiteralExtInstInteger extInst;
+    spirv::IdRefList operands;
+    spirv::ParseExtInst(instruction, &typeId, &id, &set, &extInst, &operands);
+
+    switch (extInst)
+    {
+        case spv::GLSLstd450InterpolateAtCentroid:
+        case spv::GLSLstd450InterpolateAtSample:
+        case spv::GLSLstd450InterpolateAtOffset:
+            ASSERT(operands.size() >= 1);
+            ASSERT(operands[0] < mFixedVaryingId.size());
+            if (mFixedVaryingId[operands[0]].valid())
+            {
+                operands[0] = mFixedVaryingId[operands[0]];
+                spirv::WriteExtInst(blobOut, typeId, id, set, extInst, operands);
+                return TransformationState::Transformed;
+            }
+            break;
+        default:
+            return TransformationState::Unchanged;
+    }
+    return TransformationState::Unchanged;
+}
+
+void SpirvVaryingPrecisionFixer::transformAccessChain(spirv::IdResultType typeId,
+                                                      spirv::IdResult id,
+                                                      spirv::IdRef baseId,
+                                                      const spirv::IdRefList &indexList,
+                                                      spirv::Blob *blobOut)
+{
+    ASSERT(baseId < mFixedVaryingId.size());
+    ASSERT(id < mFixedVaryingId.size());
+    if (mFixedVaryingId[baseId].valid())
+    {
+        mFixedVaryingId[id] = SpirvTransformerBase::GetNewId(blobOut);
+        spirv::WriteAccessChain(blobOut, typeId, mFixedVaryingId[id], mFixedVaryingId[baseId],
+                                indexList);
+    }
+    return;
 }
 
 void SpirvVaryingPrecisionFixer::writeInputPreamble(
@@ -4834,6 +4889,13 @@ TransformationState SpirvTransformer::transformExtInstImport(const uint32_t *ins
 
 TransformationState SpirvTransformer::transformExtInst(const uint32_t *instruction)
 {
+    if (mOptions.useSpirvVaryingPrecisionFixer &&
+        mVaryingPrecisionFixer.transformExtInst(instruction, mSpirvBlobOut) ==
+            TransformationState::Transformed)
+    {
+        return TransformationState::Transformed;
+    }
+
     sh::vk::spirv::NonSemanticInstruction inst;
     if (!mNonSemanticInstructions.visitExtInst(instruction, &inst))
     {
@@ -5022,19 +5084,24 @@ TransformationState SpirvTransformer::transformAccessChain(const uint32_t *instr
         }
     }
 
-    if (mOptions.useSpirvVaryingPrecisionFixer)
+    if (info->activeStages[mOptions.shaderType])
     {
-        if (info->activeStages[mOptions.shaderType] &&
+        if (!mOptions.useSpirvVaryingPrecisionFixer ||
             info->useRelaxedPrecision == PrecisionAdjustmentEnum::kUnchanged)
         {
             return TransformationState::Unchanged;
         }
-    }
-    else
-    {
-        if (info->activeStages[mOptions.shaderType])
+        // If the fragment shader calls following built-in functions:
+        // interpolateAtCentroid(inputVarying[index])
+        // interpolateAtOffset(inputVarying[index])
+        // interpolateAtSample(inputVarying[index])
+        // And we replace the inputVarying with replacementVarying, we need to generate access chain
+        // instruction on the replaceVarying so that we can modify the functions to take the
+        // replacementVarying[index].
+        if (mOptions.shaderType == gl::ShaderType::Fragment && info->varyingIsInput)
         {
-            return TransformationState::Unchanged;
+            mVaryingPrecisionFixer.transformAccessChain(typeId, id, baseId, indexList,
+                                                        mSpirvBlobOut);
         }
     }
 
