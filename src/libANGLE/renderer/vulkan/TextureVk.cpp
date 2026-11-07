@@ -3332,7 +3332,15 @@ angle::Result TextureVk::respecifyImageStorage(ContextVk *contextVk)
     }
     else
     {
-        const vk::Format &format         = getBaseLevelFormat(contextVk->getRenderer());
+        // Reformat the image only if its own format now requires a different actual format, i.e.
+        // the texture has switched to a renderable fallback format.  Note that the format of the
+        // image is used and not that of the base level.  If the base level has changed to a level
+        // with a different format, the image still holds the data of the previous levels, which
+        // must be preserved in their own format.  Converting them to the new base level's format
+        // would stage updates that are incompatible with those levels, leaving them uninitialized
+        // once the image is recreated for them.
+        const vk::Format &format =
+            contextVk->getRenderer()->getFormat(mImage->getIntendedFormatID());
         const uint32_t enabledLevelCount = getMipLevelCount(ImageMipLevels::EnabledLevels);
         const angle::Format &dstFormat   = format.getActualImageFormat(getRequiredFormatSupport());
         const bool canReformatImage      = mImage->getActualFormatID() != dstFormat.id &&
