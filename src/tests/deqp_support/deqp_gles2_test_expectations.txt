@@ -432,6 +432,7 @@
 42267100 IR WGPU : dEQP-GLES2.functional.fbo.render.shared_colorbuffer_clear.* = FAIL
 42267100 IR WGPU : dEQP-GLES2.functional.fbo.render.shared_depthbuffer.* = FAIL
 42267100 IR WGPU : dEQP-GLES2.functional.fbo.render.stencil_clear.* = FAIL
+42267100 IR WGPU : dEQP-GLES2.functional.fbo.render.texsubimage.* = FAIL
 42267100 IR WGPU : dEQP-GLES2.functional.texture.filtering.2d.linear_* = FAIL
 42267100 IR WGPU : dEQP-GLES2.functional.texture.filtering.2d.nearest_* = FAIL
 42267100 IR WGPU : dEQP-GLES2.functional.texture.mipmap.2d.affine.* = FAIL
@@ -439,6 +440,10 @@
 42267100 IR WGPU : dEQP-GLES2.functional.texture.mipmap.2d.bias.* = FAIL
 42267100 IR WGPU : dEQP-GLES2.functional.texture.mipmap.2d.generate.* = FAIL
 42267100 IR WGPU : dEQP-GLES2.functional.texture.mipmap.2d.projected.* = FAIL
+42267100 IR WGPU : dEQP-GLES2.functional.texture.specification.*.*rgb565* = FAIL
+42267100 IR WGPU : dEQP-GLES2.functional.texture.specification.*.*rgb888* = FAIL
+42267100 IR WGPU : dEQP-GLES2.functional.texture.specification.*.*rgba4444* = FAIL
+42267100 IR WGPU : dEQP-GLES2.functional.texture.specification.*.*rgba5551* = FAIL
 42267100 IR WGPU : dEQP-GLES2.functional.texture.wrap.* = FAIL
 42267100 IR WGPU : dEQP-GLES2.functional.texture.units.* = FAIL
 42267100 IR WGPU : dEQP-GLES2.functional.shaders.texture_functions.fragment.* = FAIL
