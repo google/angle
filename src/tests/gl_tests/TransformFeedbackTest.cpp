@@ -5554,6 +5554,431 @@ void main() {
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 }
 
+struct ScopedTransformFeedbackEnd
+{
+    bool *active;
+    ~ScopedTransformFeedbackEnd()
+    {
+        if (*active)
+        {
+            glEndTransformFeedback();
+        }
+        glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+        glUseProgram(0);
+    }
+};
+
+// On some GL drivers, drawing while transform feedback is paused corrupts driver state so draws
+// after glResumeTransformFeedback() fail to write to the transform feedback buffer even after
+// glEndTransformFeedback() (see OverrunWithPauseAndResume).  Tests that draw while paused still
+// verify the pre-pause draw's captured data (indices 0..2) on all configurations, and skip only
+// the post-resume draw's captured data (indices 3..5) on affected drivers.
+bool CanCaptureAfterResumeFollowingPausedDraw()
+{
+    // Fails on Adreno GL drivers.
+    if (IsOpenGL() && IsAdreno() && IsAndroid())
+    {
+        return false;
+    }
+
+    // Fails on Windows Intel GL drivers.  http://anglebug.com/42263296
+    if (IsOpenGL() && IsIntel() && IsWindows())
+    {
+        return false;
+    }
+
+    return true;
+}
+
+// Test that linking an unrelated program while transform feedback is active and unpaused keeps
+// program state synchronized when pausing transform feedback, switching programs, resuming, or
+// starting a subsequent transform feedback pass.
+//
+// Note: the shaders in the LinkOtherProgramWhileActive* tests are intentionally distinct from the
+// ones used elsewhere.  If an identical program was linked before (e.g. by another test on the
+// same display), the link may be served from the program cache.  That goes through
+// ProgramGL::load() instead of ProgramGL::postLinkJobImpl(), and would not exercise the bug.
+TEST_P(TransformFeedbackTest, LinkOtherProgramWhileActiveThenPauseAndDraw)
+{
+    constexpr char kXfbVS[] = R"(#version 300 es
+out float v_tf;
+void main()
+{
+    vec2 pos = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+    gl_Position = vec4(pos * 2.0 - 1.0, 0.0, 1.0);
+    v_tf = float(gl_VertexID + 1);
+})";
+
+    constexpr char kRedFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    color = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kPlainVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+    gl_Position = vec4(pos * 2.0 - 1.0, 0.0, 1.0);
+})";
+
+    constexpr char kGreenFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    const float kGreenValue = 1.0;
+    color = vec4(0.0, kGreenValue, 0.0, 1.0);
+})";
+
+    std::vector<std::string> tfVaryings = {"v_tf"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(xfbProgram, kXfbVS, kRedFS, tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    bool xfbActive = false;
+    ScopedTransformFeedbackEnd xfbCleanup{&xfbActive};
+
+    glUseProgram(xfbProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    xfbActive = true;
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Link an unrelated program while transform feedback is active and unpaused.
+    ANGLE_GL_PROGRAM(otherProgram, kPlainVS, kGreenFS);
+
+    glPauseTransformFeedback();
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(otherProgram);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Resume transform feedback on the original program and capture a second primitive.
+    glUseProgram(xfbProgram);
+    glResumeTransformFeedback();
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glEndTransformFeedback();
+    xfbActive = false;
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    {
+        const size_t expectedCount = CanCaptureAfterResumeFollowingPausedDraw() ? 6 : 3;
+        auto captured = MapBufferRange<const float>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                    expectedCount * sizeof(float), GL_MAP_READ_BIT);
+        ASSERT_FALSE(captured.empty());
+        for (size_t i = 0; i < captured.size(); ++i)
+        {
+            EXPECT_EQ(static_cast<float>((i % 3) + 1), captured[i]) << "index " << i;
+        }
+        glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+    }
+
+    // Start a second transform feedback session on the same object after drawing with otherProgram.
+    glUseProgram(otherProgram);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    const std::array<float, 3> kZeroData = {0.0f, 0.0f, 0.0f};
+    glBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(kZeroData), kZeroData.data());
+    glUseProgram(xfbProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    xfbActive = true;
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glEndTransformFeedback();
+    xfbActive = false;
+    ASSERT_GL_NO_ERROR();
+
+    {
+        auto captured = MapBufferRange<const float>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                    3 * sizeof(float), GL_MAP_READ_BIT);
+        ASSERT_FALSE(captured.empty());
+        for (size_t i = 0; i < captured.size(); ++i)
+        {
+            EXPECT_EQ(static_cast<float>(i + 1), captured[i]) << "index " << i;
+        }
+        glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+    }
+}
+
+// Test that linking unrelated programs while transform feedback is active and unpaused preserves
+// transform feedback capture on subsequent draws and clean termination without explicit pause.
+TEST_P(TransformFeedbackTest, LinkOtherProgramWhileActiveAndContinueCapture)
+{
+    constexpr char kXfbVS[] = R"(#version 300 es
+out float v_tf;
+void main()
+{
+    vec2 pos = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+    gl_Position = vec4(pos * 2.0 - 1.0, 0.0, 1.0);
+    v_tf = float(gl_VertexID + 10);
+})";
+
+    constexpr char kRedFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    color = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kPlainVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+    gl_Position = vec4(pos * 2.0 - 1.0, 0.0, 1.0);
+})";
+
+    constexpr char kBlueFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    const float kBlueValue = 1.0;
+    color = vec4(0.0, 0.0, kBlueValue, 1.0);
+})";
+
+    constexpr char kYellowFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    const float kYellowValue = 1.0;
+    color = vec4(kYellowValue, kYellowValue, 0.0, 1.0);
+})";
+
+    std::vector<std::string> tfVaryings = {"v_tf"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(xfbProgram, kXfbVS, kRedFS, tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    bool xfbActive = false;
+    ScopedTransformFeedbackEnd xfbCleanup{&xfbActive};
+
+    glUseProgram(xfbProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    xfbActive = true;
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Link an unrelated program and continue drawing with active transform feedback on xfbProgram.
+    ANGLE_GL_PROGRAM(blueProgram, kPlainVS, kBlueFS);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Link and delete a temporary program before ending transform feedback.
+    {
+        ANGLE_GL_PROGRAM(tempProgram, kPlainVS, kYellowFS);
+    }
+    glEndTransformFeedback();
+    xfbActive = false;
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Create a new program (which may recycle the deleted native ID and hit the program cache) and
+    // verify its draw executes with synchronized program state.
+    ANGLE_GL_PROGRAM(cachedBlueProgram, kPlainVS, kBlueFS);
+    glUseProgram(cachedBlueProgram);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    auto captured = MapBufferRange<const float>(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 6 * sizeof(float),
+                                                GL_MAP_READ_BIT);
+    ASSERT_FALSE(captured.empty());
+    for (size_t i = 0; i < captured.size(); ++i)
+    {
+        EXPECT_EQ(static_cast<float>((i % 3) + 10), captured[i]) << "index " << i;
+    }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+}
+
+// Test that creating a program on one context and linking it on a shared context in another
+// virtualization group while transform feedback is active keeps both contexts' program state
+// synchronized, including after the linking context is destroyed.
+TEST_P(TransformFeedbackTest, LinkSharedProgramAcrossContextsWhileActive)
+{
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+    EGLSurface surface = window->getSurface();
+
+    EGLint extraAttributes1[] = {EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, 1, EGL_NONE};
+    EGLint extraAttributes2[] = {EGL_CONTEXT_VIRTUALIZATION_GROUP_ANGLE, 2, EGL_NONE};
+    if (!IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_context_virtualization"))
+    {
+        extraAttributes1[0] = EGL_NONE;
+        extraAttributes2[0] = EGL_NONE;
+    }
+
+    EGLContext baseContext = eglGetCurrentContext();
+    EGLContext context1    = EGL_NO_CONTEXT;
+    EGLContext context2    = EGL_NO_CONTEXT;
+
+    struct ScopedContextCleanup
+    {
+        EGLDisplay display;
+        EGLSurface surface;
+        EGLContext baseContext;
+        EGLContext *context1;
+        EGLContext *context2;
+        ~ScopedContextCleanup()
+        {
+            eglMakeCurrent(display, surface, surface, baseContext);
+            if (*context2 != EGL_NO_CONTEXT)
+            {
+                eglDestroyContext(display, *context2);
+            }
+            if (*context1 != EGL_NO_CONTEXT)
+            {
+                eglDestroyContext(display, *context1);
+            }
+        }
+    } cleanup{display, surface, baseContext, &context1, &context2};
+
+    context1 = window->createContext(EGL_NO_CONTEXT, extraAttributes1);
+    ASSERT_NE(context1, EGL_NO_CONTEXT);
+    context2 = window->createContext(context1, extraAttributes2);
+    ASSERT_NE(context2, EGL_NO_CONTEXT);
+
+    constexpr char kXfbVS[] = R"(#version 300 es
+out float v_tf;
+void main()
+{
+    vec2 pos = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+    gl_Position = vec4(pos * 2.0 - 1.0, 0.0, 1.0);
+    v_tf = float(gl_VertexID + 1);
+})";
+
+    constexpr char kPlainVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+    gl_Position = vec4(pos * 2.0 - 1.0, 0.0, 1.0);
+})";
+
+    constexpr char kRedFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 color;
+void main()
+{
+    color = vec4(1.0, 0.0, 0.0, 1.0);
+})";
+
+    constexpr char kSharedUniformFS[] = R"(#version 300 es
+precision mediump float;
+uniform vec4 u_colorOffset;
+out vec4 color;
+void main()
+{
+    color = vec4(0.0, 1.0, 0.0, 1.0) + u_colorOffset;
+})";
+
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context1));
+    {
+        ANGLE_GL_PROGRAM(redProgram, kPlainVS, kRedFS);
+        glUseProgram(redProgram);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+        // Create and attach shaders for sharedProgram on context1 without linking yet.
+        GLShader sharedVS(GL_VERTEX_SHADER);
+        GLShader sharedFS(GL_FRAGMENT_SHADER);
+        const char *vsSrc = kPlainVS;
+        const char *fsSrc = kSharedUniformFS;
+        glShaderSource(sharedVS, 1, &vsSrc, nullptr);
+        glCompileShader(sharedVS);
+        glShaderSource(sharedFS, 1, &fsSrc, nullptr);
+        glCompileShader(sharedFS);
+
+        GLProgram sharedProgram;
+        glAttachShader(sharedProgram, sharedVS);
+        glAttachShader(sharedProgram, sharedFS);
+
+        // Switch to context2, start transform feedback, and link sharedProgram while active.
+        ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context2));
+        {
+            std::vector<std::string> tfVaryings = {"v_tf"};
+            ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(xfbProgram, kXfbVS, kRedFS, tfVaryings,
+                                                GL_INTERLEAVED_ATTRIBS);
+            GLTransformFeedback tf;
+            GLBuffer tfBuffer;
+            glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, tf);
+            glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, tfBuffer);
+            glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, 1024, nullptr, GL_DYNAMIC_COPY);
+            glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, tfBuffer);
+
+            bool xfbActive = false;
+            ScopedTransformFeedbackEnd xfbCleanup{&xfbActive};
+
+            glUseProgram(xfbProgram);
+            glBeginTransformFeedback(GL_TRIANGLES);
+            xfbActive = true;
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+
+            glLinkProgram(sharedProgram);
+            GLint linkStatus = 0;
+            glGetProgramiv(sharedProgram, GL_LINK_STATUS, &linkStatus);
+            ASSERT_EQ(GL_TRUE, linkStatus);
+
+            glPauseTransformFeedback();
+            ASSERT_GL_NO_ERROR();
+
+            // Draw with sharedProgram using its zero-initialized uniform value (green).
+            glUseProgram(sharedProgram);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            ASSERT_GL_NO_ERROR();
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+            glUseProgram(xfbProgram);
+            glResumeTransformFeedback();
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glEndTransformFeedback();
+            xfbActive = false;
+            ASSERT_GL_NO_ERROR();
+
+            {
+                const size_t expectedCount = CanCaptureAfterResumeFollowingPausedDraw() ? 6 : 3;
+                auto captured =
+                    MapBufferRange<const float>(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                                expectedCount * sizeof(float), GL_MAP_READ_BIT);
+                ASSERT_FALSE(captured.empty());
+                for (size_t i = 0; i < captured.size(); ++i)
+                {
+                    EXPECT_EQ(static_cast<float>((i % 3) + 1), captured[i]) << "index " << i;
+                }
+                glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+            }
+        }
+
+        // Switch back to context1, destroy context2, and verify binding sharedProgram and updating
+        // its uniform on context1 still works properly.
+        ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, context1));
+        ASSERT_EGL_TRUE(eglDestroyContext(display, context2));
+        context2 = EGL_NO_CONTEXT;
+
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glUseProgram(sharedProgram);
+        GLint offsetLoc = glGetUniformLocation(sharedProgram, "u_colorOffset");
+        ASSERT_NE(-1, offsetLoc);
+        glUniform4f(offsetLoc, 0.0f, -1.0f, 1.0f, 0.0f);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+        glUseProgram(0);
+    }
+}
+
 class HardenedTransformFeedbackTest : public TransformFeedbackTest
 {
   public:
