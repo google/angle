@@ -731,6 +731,9 @@ angle::Result TextureGL::setSubImage3DFromUnpackBufferViaCpu(const gl::Context *
     StateManagerGL *stateManager       = GetStateManagerGL(context);
     const angle::FeaturesGL &features  = GetFeaturesGL(context);
     const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
+    // The unsized (format, type) pair must resolve to a valid format so byte counts are non-zero
+    // before copying from the unpack buffer into the scratch buffer.
+    ASSERT(glFormat.internalFormat != GL_NONE);
 
     GLuint rowBytes   = 0;
     GLuint imageBytes = 0;
@@ -748,6 +751,7 @@ angle::Result TextureGL::setSubImage3DFromUnpackBufferViaCpu(const gl::Context *
     const size_t startOffset = reinterpret_cast<uintptr_t>(pixels) + static_cast<size_t>(skipBytes);
     const size_t allocBytes =
         std::max<size_t>(copyBytes, static_cast<size_t>(area.depth) * imageBytes);
+    ASSERT(copyBytes > 0 && allocBytes > 0);
 
     angle::MemoryBuffer *scratchBuffer = nullptr;
     ANGLE_CHECK_GL_ALLOC(contextGL, context->getScratchBuffer(allocBytes, &scratchBuffer));
@@ -1712,6 +1716,7 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
     ANGLE_TRY(stateManager->setPixelUnpackBuffer(context, unpackBuffer));
 
     const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
+    ASSERT(glFormat.internalFormat != GL_NONE);
 
     GLuint rowBytes    = 0;
     GLuint imageBytes  = 0;
@@ -1721,6 +1726,7 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
     ANGLE_CHECK_GL_MATH(contextGL, glFormat.computeRowDepthSkipBytes(
                                        type, area.width, area.height, unpack, useTexImage3D,
                                        &rowBytes, &imageBytes, &skipBytes));
+    ASSERT(rowBytes > 0);
 
     GLint rowsPerChunk =
         std::min(std::max(static_cast<GLint>(maxBytesUploadedPerChunk / rowBytes), 1), area.height);
@@ -1757,7 +1763,8 @@ angle::Result TextureGL::setSubImageRowByRowWorkaround(const gl::Context *contex
         ASSERT(nativegl::UseTexImage2D(bindType));
         if (area.height == 1 && maxBytesUploadedPerChunk > 0 && maxBytesUploadedPerChunk < rowBytes)
         {
-            GLuint pixelBytes    = glFormat.computePixelBytes(type);
+            GLuint pixelBytes = glFormat.computePixelBytes(type);
+            ASSERT(pixelBytes > 0);
             GLint pixelsPerChunk = std::min(
                 std::max(static_cast<GLint>(maxBytesUploadedPerChunk / pixelBytes), 1), area.width);
             for (GLint col = 0; col < area.width; col += pixelsPerChunk)

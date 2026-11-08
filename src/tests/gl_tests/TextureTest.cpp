@@ -17133,9 +17133,9 @@ TEST_P(Texture2DFloatTestES3, TextureHalfFloatSampleLegacyTest)
 
     if (IsGLExtensionEnabled("GL_EXT_texture_storage"))
     {
-        testFloatTextureSample(GL_LUMINANCE16F_EXT, GL_LUMINANCE, GL_HALF_FLOAT);
-        testFloatTextureSample(GL_ALPHA16F_EXT, GL_ALPHA, GL_HALF_FLOAT);
-        testFloatTextureSample(GL_LUMINANCE_ALPHA16F_EXT, GL_LUMINANCE_ALPHA, GL_HALF_FLOAT);
+        testFloatTextureSample(GL_LUMINANCE16F_EXT, GL_LUMINANCE, GL_HALF_FLOAT_OES);
+        testFloatTextureSample(GL_ALPHA16F_EXT, GL_ALPHA, GL_HALF_FLOAT_OES);
+        testFloatTextureSample(GL_LUMINANCE_ALPHA16F_EXT, GL_LUMINANCE_ALPHA, GL_HALF_FLOAT_OES);
     }
 }
 // Test texture sampling for legacy GLES 2.0 half float texture formats in ES2
@@ -17221,9 +17221,9 @@ TEST_P(Texture2DFloatTestES3, TextureHalfFloatLinearLegacyTest)
 
     if (IsGLExtensionEnabled("GL_EXT_texture_storage"))
     {
-        testFloatTextureLinear(GL_LUMINANCE16F_EXT, GL_LUMINANCE, GL_HALF_FLOAT);
-        testFloatTextureLinear(GL_ALPHA16F_EXT, GL_ALPHA, GL_HALF_FLOAT);
-        testFloatTextureLinear(GL_LUMINANCE_ALPHA16F_EXT, GL_LUMINANCE_ALPHA, GL_HALF_FLOAT);
+        testFloatTextureLinear(GL_LUMINANCE16F_EXT, GL_LUMINANCE, GL_HALF_FLOAT_OES);
+        testFloatTextureLinear(GL_ALPHA16F_EXT, GL_ALPHA, GL_HALF_FLOAT_OES);
+        testFloatTextureLinear(GL_LUMINANCE_ALPHA16F_EXT, GL_LUMINANCE_ALPHA, GL_HALF_FLOAT_OES);
     }
 }
 // Test linear sampling for legacy GLES 2.0 16F formats in ES2
@@ -17235,6 +17235,90 @@ TEST_P(Texture2DFloatTestES2, TextureHalfFloatLinearLegacyTest)
     testFloatTextureLinear(GL_LUMINANCE, GL_LUMINANCE, GL_HALF_FLOAT_OES);
     testFloatTextureLinear(GL_ALPHA, GL_ALPHA, GL_HALF_FLOAT_OES);
     testFloatTextureLinear(GL_LUMINANCE_ALPHA, GL_LUMINANCE_ALPHA, GL_HALF_FLOAT_OES);
+}
+
+// Test that legacy luminance/alpha formats reject GL_HALF_FLOAT in ES3 while accepting
+// GL_HALF_FLOAT_OES.
+TEST_P(Texture2DFloatTestES3, LegacyLuminanceAlphaRejectsCoreHalfFloat)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_half_float"));
+
+    GLenum unsizedFormats[] = {GL_LUMINANCE, GL_ALPHA, GL_LUMINANCE_ALPHA};
+    for (GLenum format : unsizedFormats)
+    {
+        GLTexture tex2D;
+        glBindTexture(GL_TEXTURE_2D, tex2D);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, 1, 1, 0, format, GL_HALF_FLOAT, nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        GLTexture tex3D;
+        glBindTexture(GL_TEXTURE_3D, tex3D);
+        glTexImage3D(GL_TEXTURE_3D, 0, format, 1, 1, 1, 0, format, GL_HALF_FLOAT, nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_texture_storage"))
+    {
+        struct SizedLumaInfo
+        {
+            GLenum sizedInternalFormat;
+            GLenum format;
+        };
+        const SizedLumaInfo sizedFormats[] = {
+            {GL_LUMINANCE16F_EXT, GL_LUMINANCE},
+            {GL_ALPHA16F_EXT, GL_ALPHA},
+            {GL_LUMINANCE_ALPHA16F_EXT, GL_LUMINANCE_ALPHA},
+        };
+
+        constexpr GLhalf pixelHalf[4] = {0x3C00, 0x3C00, 0x3C00, 0x3C00};
+
+        for (const auto &info : sizedFormats)
+        {
+            // Core GL_HALF_FLOAT must be rejected for glTexImage2D and glTexImage3D
+            GLTexture tex2D;
+            glBindTexture(GL_TEXTURE_2D, tex2D);
+            glTexImage2D(GL_TEXTURE_2D, 0, info.sizedInternalFormat, 1, 1, 0, info.format,
+                         GL_HALF_FLOAT, nullptr);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            // GL_HALF_FLOAT_OES should succeed
+            glTexImage2D(GL_TEXTURE_2D, 0, info.sizedInternalFormat, 1, 1, 0, info.format,
+                         GL_HALF_FLOAT_OES, nullptr);
+            EXPECT_GL_NO_ERROR();
+
+            GLTexture tex3D;
+            glBindTexture(GL_TEXTURE_3D, tex3D);
+            glTexImage3D(GL_TEXTURE_3D, 0, info.sizedInternalFormat, 1, 1, 1, 0, info.format,
+                         GL_HALF_FLOAT, nullptr);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            glTexImage3D(GL_TEXTURE_3D, 0, info.sizedInternalFormat, 1, 1, 1, 0, info.format,
+                         GL_HALF_FLOAT_OES, nullptr);
+            EXPECT_GL_NO_ERROR();
+
+            // Verify glTexStorage2D / glTexStorage3D followed by glTexSubImage2D / glTexSubImage3D
+            GLTexture storageTex2D;
+            glBindTexture(GL_TEXTURE_2D, storageTex2D);
+            glTexStorage2D(GL_TEXTURE_2D, 1, info.sizedInternalFormat, 1, 1);
+            ASSERT_GL_NO_ERROR();
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, info.format, GL_HALF_FLOAT, pixelHalf);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, info.format, GL_HALF_FLOAT_OES,
+                            pixelHalf);
+            EXPECT_GL_NO_ERROR();
+
+            GLTexture storageTex3D;
+            glBindTexture(GL_TEXTURE_3D, storageTex3D);
+            glTexStorage3D(GL_TEXTURE_3D, 1, info.sizedInternalFormat, 1, 1, 1);
+            ASSERT_GL_NO_ERROR();
+            glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 1, 1, 1, info.format, GL_HALF_FLOAT,
+                            pixelHalf);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+            glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 1, 1, 1, info.format, GL_HALF_FLOAT_OES,
+                            pixelHalf);
+            EXPECT_GL_NO_ERROR();
+        }
+    }
 }
 
 // Test color-renderability for ES3 float and half float textures
@@ -28663,6 +28747,110 @@ TEST_P(Texture3DTestES3, CopyTexSubImage3DFrom16BitPackedFramebuffer)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+class Texture3DPboReadbackTestES3 : public Texture3DTestES3
+{};
+
+// Test that 3D PBO upload with legacy luminance/alpha half-float formats rejects GL_HALF_FLOAT and
+// works with GL_HALF_FLOAT_OES.
+TEST_P(Texture3DPboReadbackTestES3, LuminanceHalfFloatPboUpload)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_half_float"));
+
+    // 16x16x2 two-channel half-float data = 1024 GLhalf elements = 2048 bytes.
+    // 0x3800 is 0.5f in IEEE 754 half precision float (~128 / 255).
+    std::vector<GLhalf> halfFloatData(16 * 16 * 2 * 2, 0x3800);
+    const GLColor expectedFullColor(128u, 128u, 128u, 128u);
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, halfFloatData.size() * sizeof(GLhalf),
+                 halfFloatData.data(), GL_STREAM_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+
+    auto verifyTexImage3DPboUpload = [&](GLenum internalFormat, GLenum format) {
+        GLTexture tex3D;
+        glBindTexture(GL_TEXTURE_3D, tex3D);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+        // Prime the context scratch buffer with a small RGB8 3D upload from the PBO.
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB8, 2, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_NO_ERROR();
+
+        // Core GL_HALF_FLOAT must be rejected with GL_INVALID_OPERATION.
+        glTexImage3D(GL_TEXTURE_3D, 0, internalFormat, 16, 16, 2, 0, format, GL_HALF_FLOAT,
+                     nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        // GL_HALF_FLOAT_OES must succeed from the PBO.
+        glTexImage3D(GL_TEXTURE_3D, 0, internalFormat, 4, 4, 2, 0, format, GL_HALF_FLOAT_OES,
+                     nullptr);
+        EXPECT_GL_NO_ERROR();
+
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+        glClearColor(0.1f, 0.2f, 0.3f, 0.4f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, SliceFormatColor(format, expectedFullColor), 2);
+    };
+
+    const GLenum unsizedFormats[] = {GL_LUMINANCE, GL_ALPHA, GL_LUMINANCE_ALPHA};
+    for (GLenum format : unsizedFormats)
+    {
+        verifyTexImage3DPboUpload(format, format);
+    }
+
+    if (IsGLExtensionEnabled("GL_EXT_texture_storage"))
+    {
+        struct SizedLumaInfo
+        {
+            GLenum sizedInternalFormat;
+            GLenum format;
+        };
+        const SizedLumaInfo sizedFormats[] = {
+            {GL_LUMINANCE16F_EXT, GL_LUMINANCE},
+            {GL_ALPHA16F_EXT, GL_ALPHA},
+            {GL_LUMINANCE_ALPHA16F_EXT, GL_LUMINANCE_ALPHA},
+        };
+
+        for (const auto &info : sizedFormats)
+        {
+            verifyTexImage3DPboUpload(info.sizedInternalFormat, info.format);
+
+            // Also verify glTexStorage3D + glTexSubImage3D from the PBO.
+            GLTexture storageTex3D;
+            glBindTexture(GL_TEXTURE_3D, storageTex3D);
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexStorage3D(GL_TEXTURE_3D, 1, info.sizedInternalFormat, 4, 4, 2);
+            ASSERT_GL_NO_ERROR();
+
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+            glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 4, 4, 2, info.format, GL_HALF_FLOAT,
+                            nullptr);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+            glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 4, 4, 2, info.format, GL_HALF_FLOAT_OES,
+                            nullptr);
+            EXPECT_GL_NO_ERROR();
+
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+            glClearColor(0.1f, 0.2f, 0.3f, 0.4f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            drawQuad(mProgram, "position", 0.5f);
+            EXPECT_GL_NO_ERROR();
+            EXPECT_PIXEL_COLOR_NEAR(0, 0, SliceFormatColor(info.format, expectedFullColor), 2);
+        }
+    }
+}
+
 // Test that consolidating a cube map whose per-face images each fit within maxTextureBytes (lowered
 // to 1 MiB via Feature::LimitMaxTextureBytesTo1MB on Texture3DSizeLimitPOTRoundUpTest) but whose
 // combined 6-face storage exceeds maxTextureBytes fails with GL_OUT_OF_MEMORY when
@@ -28818,6 +29006,15 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture3DTestES3_OversizedMipLevel
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture3DTestES3_OversizedMipLevels,
                                ES3_OPENGL().enable(Feature::VirtualizeBaseLevelAndMipchain),
                                ES3_OPENGLES().enable(Feature::VirtualizeBaseLevelAndMipchain));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture3DPboReadbackTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture3DPboReadbackTestES3,
+                               ES3_OPENGL()
+                                   .enable(Feature::VirtualizeBaseLevelAndMipchain)
+                                   .enable(Feature::Readback3DDepthStencilPbosDuringUpload),
+                               ES3_OPENGLES()
+                                   .enable(Feature::VirtualizeBaseLevelAndMipchain)
+                                   .enable(Feature::Readback3DDepthStencilPbosDuringUpload));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DIntegerAlpha1TestES3);
 ANGLE_INSTANTIATE_TEST_ES3(Texture2DIntegerAlpha1TestES3);
