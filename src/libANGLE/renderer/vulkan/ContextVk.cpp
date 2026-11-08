@@ -5025,18 +5025,18 @@ void ContextVk::updateBlendEnabled()
     }
 }
 
-void ContextVk::updateBlendFuncsAndEquations()
+void ContextVk::updateBlendFuncsAndEquationsOnFramebufferChange()
 {
-    const gl::BlendStateExt &blendStateExt = mState.getBlendStateExt();
+    // Clear the blend funcs/equations for color attachment indices that no longer exist.  Restore
+    // for color attachment indices that are new.
+    const gl::DrawBufferMask previousAttachmentsMask = mCachedDrawFramebufferColorAttachmentMask;
+    const gl::DrawBufferMask newAttachmentsMask =
+        getDrawFramebuffer()->getState().getColorAttachmentsMask();
+    mCachedDrawFramebufferColorAttachmentMask = newAttachmentsMask;
 
-    FramebufferVk *framebufferVk              = vk::GetImpl(mState.getDrawFramebuffer());
-    mCachedDrawFramebufferColorAttachmentMask = framebufferVk->getState().getEnabledDrawBuffers();
-
-    mGraphicsPipelineDesc->updateBlendFuncs(&mGraphicsPipelineTransition, blendStateExt,
-                                            mCachedDrawFramebufferColorAttachmentMask);
-
-    mGraphicsPipelineDesc->updateBlendEquations(&mGraphicsPipelineTransition, blendStateExt,
-                                                mCachedDrawFramebufferColorAttachmentMask);
+    mGraphicsPipelineDesc->resetBlendFuncsAndEquations(&mGraphicsPipelineTransition,
+                                                       mState.getBlendStateExt(),
+                                                       previousAttachmentsMask, newAttachmentsMask);
 
     // This function may be called outside of ContextVk::syncState, and so invalidates the graphics
     // pipeline.
@@ -5978,15 +5978,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateScissor(glState);
                 updateDepthStencil(glState);
                 updateDither();
-
-                // Clear the blend funcs/equations for color attachment indices that no longer
-                // exist.
-                gl::DrawBufferMask newColorAttachmentMask =
-                    drawFramebufferVk->getState().getColorAttachmentsMask();
-                mGraphicsPipelineDesc->resetBlendFuncsAndEquations(
-                    &mGraphicsPipelineTransition, glState.getBlendStateExt(),
-                    mCachedDrawFramebufferColorAttachmentMask, newColorAttachmentMask);
-                mCachedDrawFramebufferColorAttachmentMask = newColorAttachmentMask;
+                updateBlendFuncsAndEquationsOnFramebufferChange();
 
                 if (!getFeatures().preferDynamicRendering.enabled)
                 {

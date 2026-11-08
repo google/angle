@@ -489,7 +489,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                        gl::Texture **textureOut);
     void updateColorMasks();
     void updateBlendEnabled();
-    void updateBlendFuncsAndEquations();
+    void updateBlendFuncsAndEquationsOnFramebufferChange();
 
     void handleError(VkResult errorCode,
                      const char *file,

@@ -9938,6 +9938,152 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests state change for color attachments between float and int types when blend is enabled.
+TEST_P(StateChangeTestES3, AttachmentFormatWithEnabledBlend)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
+    constexpr uint32_t kWidth  = 5;
+    constexpr uint32_t kHeight = 3;
+
+    std::array<GLenum, 4> drawBuffers = {
+        GL_NONE,
+        GL_COLOR_ATTACHMENT1,
+        GL_NONE,
+        GL_COLOR_ATTACHMENT3,
+    };
+
+    std::array<GLTexture, 2> color;
+    for (size_t i = 0; i < color.size(); ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[i]);
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kWidth, kHeight);
+    }
+    GLTexture colorInt;
+    glBindTexture(GL_TEXTURE_2D, colorInt);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA32UI, kWidth, kHeight);
+    const std::vector<GLColor32UI> kInitIntegerData(kWidth * kHeight,
+                                                    GLColor32UI(0xABCD, 0x1234, 0x6789, 0xFEFE));
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA_INTEGER, GL_UNSIGNED_INT,
+                    kInitIntegerData.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, color[0], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[1], 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDrawBuffers(drawBuffers.size(), drawBuffers.data());
+
+    // Create a program that writes something different to each attachment.
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform vec4 color1;
+uniform vec4 color3;
+layout(location = 1) out vec4 colorOut1;
+layout(location = 3) out vec4 colorOut3;
+void main()
+{
+    colorOut1 = color1;
+    colorOut3 = color3;
+})";
+
+    constexpr char kFSInt[] = R"(#version 300 es
+precision highp float;
+precision highp int;
+uniform vec4 color1;
+uniform uvec4 color3;
+layout(location = 1) out vec4 colorOut1;
+layout(location = 3) out uvec4 colorOut3;
+void main()
+{
+    colorOut1 = color1;
+    colorOut3 = color3;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+
+    const GLint color1Loc = glGetUniformLocation(program, "color1");
+    const GLint color3Loc = glGetUniformLocation(program, "color3");
+    ASSERT_NE(color1Loc, -1);
+    ASSERT_NE(color3Loc, -1);
+
+    ANGLE_GL_PROGRAM(programInt, kVS, kFSInt);
+    glUseProgram(programInt);
+
+    const GLint color1IntLoc = glGetUniformLocation(programInt, "color1");
+    const GLint color3IntLoc = glGetUniformLocation(programInt, "color3");
+    ASSERT_NE(color1IntLoc, -1);
+    ASSERT_NE(color3IntLoc, -1);
+
+    glUseProgram(program);
+
+    const GLColor kC0(33, 44, 22, 11);
+    const angle::Vector4 kC0Vec4 = kC0.toNormalizedVector();
+    glClearColor(kC0Vec4.x(), kC0Vec4.y(), kC0Vec4.z(), kC0Vec4.w());
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Enable blend for all attachments and do not change it between draws
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Draw once, both attachments should blend.
+    const GLColor kC1(13, 19, 24, 7);
+    const GLColor kC2(5, 11, 2, 14);
+    glUniform4fv(color1Loc, 1, kC1.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kC2.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change the attachment to an integer type, which should implicitly disable blend for it.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, colorInt, 0);
+    glUseProgram(programInt);
+    const GLColor kC3(27, 4, 51, 67);
+    const GLColor32UI kC4(0x13579BDF, 0x2468ACE0, 0x19195F5F, 0xA150C5);
+    glUniform4fv(color1IntLoc, 1, kC3.toNormalizedVector().data());
+    glUniform4ui(color3IntLoc, kC4.R, kC4.G, kC4.B, kC4.A);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Change the attachment back to the unorm type, which should implicitly re-enable blend for it.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, color[1], 0);
+    glUseProgram(program);
+    const GLColor kC5(27, 4, 51, 67);
+    const GLColor kC6(78, 43, 17, 23);
+    glUniform4fv(color1Loc, 1, kC5.toNormalizedVector().data());
+    glUniform4fv(color3Loc, 1, kC6.toNormalizedVector().data());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify results
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0,
+                            GLColor(kC0.R + kC1.R + kC3.R + kC5.R, kC0.G + kC1.G + kC3.G + kC5.G,
+                                    kC0.B + kC1.B + kC3.B + kC5.B, kC0.A + kC1.A + kC3.A + kC5.A),
+                            1);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT3);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0,
+                            GLColor(kC0.R + kC2.R + kC6.R, kC0.G + kC2.G + kC6.G,
+                                    kC0.B + kC2.B + kC6.B, kC0.A + kC2.A + kC6.A),
+                            1);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, colorInt, 0);
+    EXPECT_PIXEL_RECT32UI_EQ(0, 0, kWidth, kHeight, kC4);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests state change for glColorMaski, with all attachments present.
 TEST_P(StateChangeTestES3, ColorMaskiAllAttachments)
 {

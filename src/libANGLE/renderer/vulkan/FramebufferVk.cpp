@@ -2770,7 +2770,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     {
         contextVk->updateColorMasks();
         contextVk->updateBlendEnabled();
-        contextVk->updateBlendFuncsAndEquations();
+        contextVk->updateBlendFuncsAndEquationsOnFramebufferChange();
     }
 
     if (shouldUpdateLayerCount)
