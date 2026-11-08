@@ -1401,8 +1401,7 @@ angle::Result TextureGL::setImageHelper(const gl::Context *context,
     stateManager->bindTexture(getType(), mTextureID);
 
     if (features.recreateTextureOnTexImage3dDepthIncrease.enabled &&
-        getType() == gl::TextureType::_3D && !mState.getImmutableFormat() &&
-        functions->copyImageSubData)
+        getType() == gl::TextureType::_3D && !mState.getImmutableFormat())
     {
         ANGLE_TRY(recreateTextureOnTexImage3DDepthIncreaseWorkaround(context, target, level, size));
     }
@@ -4684,6 +4683,23 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
     if (!currentDesc.format.valid() || size.depth <= currentDesc.size.depth)
     {
         return angle::Result::Continue;
+    }
+
+    // The contents of the other levels are preserved in the new texture with glCopyImageSubData.
+    // If it is unavailable and any other level has contents, fail instead of letting the driver
+    // redefine the level in place, which is what triggers the driver bug.  On hardened contexts
+    // (such as WebGL contexts), this error loses the context.  Without other levels to preserve,
+    // the texture can still be recreated.
+    if (functions->copyImageSubData == nullptr)
+    {
+        for (size_t l = 0; l < mState.getImageDescs().size(); ++l)
+        {
+            ANGLE_CHECK(GetImplAs<ContextGL>(context),
+                        l == level || mState.getImageDesc(target, l).size.empty(),
+                        "Increasing the depth of a level of a 3D texture with other levels "
+                        "defined requires glCopyImageSubData.",
+                        GL_INVALID_OPERATION);
+        }
     }
 
     GLuint oldTextureID = mTextureID;
