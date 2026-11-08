@@ -3080,6 +3080,7 @@
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseOutsideRangeStagedVerifyByReadPixels/* = SKIP
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseWithDefaultBaseMaxLevel/* = SKIP
 549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseWithDefaultSamplerState/* = SKIP
+549916890 WIN INTEL OPENGL : Texture3DIncreaseDepthTestES3.TexImage3DDepthIncreaseWithPixelUnpackBuffer/* = SKIP
 
 // New tests failing on Windows Intel OpenGL
 567613573 WIN INTEL OPENGL : Texture2DTestES3_OversizedMipLevels.CubeMap/* = SKIP

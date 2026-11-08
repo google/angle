@@ -11508,6 +11508,192 @@ TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseWithDefaultSamplerS
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
 }
 
+// Test that glGenerateMipmap regenerates all levels after texture recreation on depth increase when
+// the application never modified any texture parameter, and that a generated level can then be
+// respecified. The recreate path temporarily sets the native base/max level to each copied level;
+// if they were left there, the native glGenerateMipmap would not generate anything while the
+// front-end considers all levels generated and initialized.
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseThenGenerateMipmap)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    const std::vector<GLColor> kLevel0Data(8 * 8 * 2, GLColor::red);
+    const std::vector<GLColor> kLevel1Data(4 * 4 * 1, GLColor::green);
+    const std::vector<GLColor> kNewLevel0Data(8 * 8 * 8, GLColor::blue);
+    const std::vector<GLColor> kNewLevel1Data(4 * 4 * 4, GLColor::yellow);
+
+    // Leave all texture parameters at their defaults.
+    GLTexture texture3D;
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 8, 8, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel1Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Increase the depth of level 0, which recreates the texture and copies level 1.
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kNewLevel0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    glGenerateMipmap(GL_TEXTURE_3D);
+    ASSERT_GL_NO_ERROR();
+
+    // All the levels below level 0 must have been generated from the new level 0.
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    for (GLint level = 1; level <= 3; ++level)
+    {
+        const GLint levelSize = 8 >> level;
+        for (GLint slice = 0; slice < levelSize; ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D, level,
+                                      slice);
+            ASSERT_GL_NO_ERROR();
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, levelSize, levelSize, GLColor::blue);
+        }
+    }
+
+    // Respecify level 1 with the size it was generated with, and fill it with new data.
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_3D, 1, 0, 0, 0, 4, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kNewLevel1Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    for (GLint slice = 0; slice < 4; ++slice)
+    {
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D, 1, slice);
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::yellow);
+    }
+
+    // With non-mipmap filtering, only the base level (level 0) must be sampled.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           mFramebufferColorTexture, 0);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+}
+
+// Test increasing the depth of a level while a pixel unpack buffer is bound. The texture recreation
+// must not source the other levels from the unpack buffer, which may be too small for them, while
+// the redefined level must still be uploaded from it.
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseWithPixelUnpackBuffer)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+
+    const std::vector<GLColor> kLevel0Data(8 * 8 * 2, GLColor::red);
+    const std::vector<GLColor> kLevel1Data(4 * 4 * 1, GLColor::green);
+    const std::vector<GLColor> kNewLevel1Data(4 * 4 * 4, GLColor::cyan);
+
+    GLTexture texture3D;
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 8, 8, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 4, 4, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel1Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    // The unpack buffer only holds the new level 1 data, which is smaller than level 0.
+    GLBuffer unpackBuffer;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, kNewLevel1Data.size() * sizeof(GLColor),
+                 kNewLevel1Data.data(), GL_STATIC_DRAW);
+
+    // Increase the depth of level 1 from the unpack buffer, which recreates the texture and copies
+    // level 0.
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+    struct LevelExpectation
+    {
+        GLint level;
+        GLint width;
+        GLint height;
+        GLint depth;
+        GLColor expectedColor;
+    };
+    const LevelExpectation kExpectedLevels[] = {
+        {0, 8, 8, 2, GLColor::red},
+        {1, 4, 4, 4, GLColor::cyan},
+    };
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    for (const LevelExpectation &expected : kExpectedLevels)
+    {
+        // The levels are not mipmap-compatible, so make the read level the base level.
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_BASE_LEVEL, expected.level);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, expected.level);
+        for (GLint slice = 0; slice < expected.depth; ++slice)
+        {
+            glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D,
+                                      expected.level, slice);
+            ASSERT_GL_NO_ERROR();
+            ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+            EXPECT_PIXEL_RECT_EQ(0, 0, expected.width, expected.height, expected.expectedColor);
+        }
+    }
+}
+
+// Test increasing the depth of a level of a texture that has been sampled from multiple texture
+// units. The redefined level must be uploaded to the recreated texture.
+TEST_P(Texture3DIncreaseDepthTestES3, TexImage3DDepthIncreaseAfterUseOnMultipleTextureUnits)
+{
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    const std::vector<GLColor> kLevel0Data(4 * 4 * 4, GLColor::red);
+    const std::vector<GLColor> kNewLevel0Data(4 * 4 * 8, GLColor::blue);
+
+    GLTexture texture3D;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    glUseProgram(mProgram);
+
+    // Sample the texture from texture unit 0, then from texture unit 1.
+    constexpr GLint kTextureUnits[] = {0, 1};
+    for (GLint unit : kTextureUnits)
+    {
+        glUniform1i(mTexture3DUniformLocation, unit);
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+    }
+
+    // Increase the depth of level 0, which recreates the texture.
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 4, 4, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kNewLevel0Data.data());
+    ASSERT_GL_NO_ERROR();
+
+    for (GLint unit : kTextureUnits)
+    {
+        glUniform1i(mTexture3DUniformLocation, unit);
+        drawQuad(mProgram, "position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::blue);
+    }
+}
+
 // Test that texture completeness is updated if texture max level changes.
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture2DTestES3, TextureCompletenessChangesWithMaxLevel)

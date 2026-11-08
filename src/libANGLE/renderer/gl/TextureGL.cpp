@@ -4811,6 +4811,11 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
     mAppliedBaseLevel = 0;
     mAppliedMaxLevel  = gl::kInitialMaxLevel;
 
+    // The levels of the new texture are allocated without data, which must not be sourced from the
+    // pixel unpack buffer bound by the application.
+    GLuint prevUnpackBuffer = stateManager->getBufferID(gl::BufferBinding::PixelUnpack);
+    stateManager->bindBuffer(gl::BufferBinding::PixelUnpack, 0, context->isHardenedContext());
+
     for (size_t l = 0; l < mState.getImageDescs().size(); ++l)
     {
         if (l == level)
@@ -4855,13 +4860,21 @@ angle::Result TextureGL::recreateTextureOnTexImage3DDepthIncreaseWorkaround(
                                         0, 0, desc.size.width, desc.size.height, desc.size.depth));
     }
 
+    stateManager->bindBuffer(gl::BufferBinding::PixelUnpack, prevUnpackBuffer,
+                             context->isHardenedContext());
+
     stateManager->deleteTexture(oldTextureID);
+    // deleteTexture() changes the active texture unit if the old texture is bound to another unit.
+    // The caller defines the requested level in the texture bound to the active unit, so make sure
+    // that is the new texture.
+    stateManager->bindTexture(getType(), mTextureID);
 
     // The new texture's filters and base/max levels were changed above to make the levels
     // complete for copyImageSubData, and mAppliedSampler/mAppliedBaseLevel/mAppliedMaxLevel track
     // those native values. These states may never have been modified by the application, so they
     // may not be in mAllModifiedDirtyBits; flag them explicitly so syncState() restores them.
-    mLocalDirtyBits = mAllModifiedDirtyBits;
+    // Pending local dirty bits are preserved, as they may not be in mAllModifiedDirtyBits either.
+    mLocalDirtyBits |= mAllModifiedDirtyBits;
     mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MIN_FILTER);
     mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MAG_FILTER);
     mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_BASE_LEVEL);
