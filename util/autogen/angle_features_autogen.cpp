@@ -312,6 +312,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::QueryCounterBitsGeneratesErrors, "queryCounterBitsGeneratesErrors"},
     {Feature::Readback3DDepthStencilPbosDuringUpload, "readback3DDepthStencilPbosDuringUpload"},
     {Feature::ReadPixelsUsingImplementationColorReadFormatForNorm16, "readPixelsUsingImplementationColorReadFormatForNorm16"},
+    {Feature::ReadPixelsViaSingleAttachmentFramebuffer, "readPixelsViaSingleAttachmentFramebuffer"},
     {Feature::ReapplyUBOBindingsAfterUsingBinaryProgram, "reapplyUBOBindingsAfterUsingBinaryProgram"},
     {Feature::ReattachFboDepthStencilOnReallocation, "reattachFboDepthStencilOnReallocation"},
     {Feature::ReattachTextureToFboAfterLayerIncrease, "reattachTextureToFboAfterLayerIncrease"},
