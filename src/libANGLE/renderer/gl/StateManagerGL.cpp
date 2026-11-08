@@ -1878,6 +1878,12 @@ void StateManagerGL::useProgram(GLuint program)
 
 void StateManagerGL::forceUseProgram(GLuint program)
 {
+    // glUseProgram generates GL_INVALID_OPERATION while the current transform feedback is active
+    // and not paused, which would leave mState.program out of sync with the native state.  Pause
+    // it first; syncTransformFeedbackState() resumes it on the next draw if it is still unpaused
+    // in the frontend.
+    pauseTransformFeedback();
+
     mState.program = program;
     mFunctions->useProgram(program);
     mLocalDirtyBits.set(gl::state::DIRTY_BIT_PROGRAM_BINDING);
@@ -2386,9 +2392,8 @@ void StateManagerGL::updateDispatchIndirectBufferBinding(const gl::Context *cont
 
 void StateManagerGL::pauseTransformFeedback()
 {
-    if (mCurrentTransformFeedback != nullptr)
+    if (mCurrentTransformFeedback != nullptr && mCurrentTransformFeedback->syncPausedState(true))
     {
-        mCurrentTransformFeedback->syncPausedState(true);
         onTransformFeedbackStateChange();
     }
 }
