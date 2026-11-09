@@ -2865,7 +2865,9 @@ bool StateManager11::syncIndexBuffer(ID3D11Buffer *buffer,
     return false;
 }
 
-angle::Result StateManager11::generateSwizzle(const gl::Context *context, gl::Texture *texture)
+angle::Result StateManager11::generateSwizzle(const gl::Context *context,
+                                              gl::Texture *texture,
+                                              const gl::SamplerState &samplerState)
 {
     if (!texture)
     {
@@ -2882,7 +2884,7 @@ angle::Result StateManager11::generateSwizzle(const gl::Context *context, gl::Te
     {
         TextureStorage11 *storage11          = GetAs<TextureStorage11>(texStorage);
         const gl::TextureState &textureState = texture->getTextureState();
-        ANGLE_TRY(storage11->generateSwizzles(context, textureState));
+        ANGLE_TRY(storage11->generateSwizzles(context, textureState, samplerState));
     }
 
     return angle::Result::Continue;
@@ -2891,20 +2893,28 @@ angle::Result StateManager11::generateSwizzle(const gl::Context *context, gl::Te
 angle::Result StateManager11::generateSwizzlesForShader(const gl::Context *context,
                                                         gl::ShaderType type)
 {
-    const gl::State &glState       = context->getState();
-    const gl::RangeUI samplerRange = mExecutableD3D->getUsedSamplerRange(type);
+    const gl::State &glState = context->getState();
+    // Use the active textures cache (matching applyTexturesForSRVs) rather than
+    // glState.getSamplerTexture() directly. If a bound texture is sampler-incomplete (for example,
+    // a mipmapped minFilter is set before non-base mip levels are defined) or attached to the draw
+    // framebuffer, completeTextures[textureUnit] is nullptr and applyTexturesForSRVs binds the
+    // fallback incomplete texture instead. Skipping incomplete textures here ensures we never
+    // generate and cache swizzles for undefined/uninitialized mip levels.
+    const gl::ActiveTexturesCache &completeTextures = glState.getActiveTexturesCache();
+    const gl::RangeUI samplerRange                  = mExecutableD3D->getUsedSamplerRange(type);
 
     for (unsigned int i = samplerRange.low(); i < samplerRange.high(); i++)
     {
-        gl::TextureType textureType = mExecutableD3D->getSamplerTextureType(type, i);
         GLint textureUnit = mExecutableD3D->getSamplerMapping(type, i, context->getCaps());
         if (textureUnit != -1)
         {
-            gl::Texture *texture = glState.getSamplerTexture(textureUnit, textureType);
-            ASSERT(texture);
-            if (SwizzleRequired(texture->getTextureState()))
+            gl::Texture *texture = completeTextures[textureUnit];
+            if (texture && SwizzleRequired(texture->getTextureState()))
             {
-                ANGLE_TRY(generateSwizzle(context, texture));
+                gl::Sampler *samplerObject = glState.getSampler(textureUnit);
+                const gl::SamplerState &samplerState =
+                    samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
+                ANGLE_TRY(generateSwizzle(context, texture, samplerState));
             }
         }
     }

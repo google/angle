@@ -175,7 +175,8 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
                                    const gl::Box &destArea,
                                    GLenum sizedInternalFormat,
                                    GLenum type,
-                                   RenderTargetD3D *destRenderTarget);
+                                   RenderTargetD3D *destRenderTarget,
+                                   GLint level);
 
     GLint getLevelZeroWidth() const;
     GLint getLevelZeroHeight() const;

@@ -349,8 +349,23 @@ angle::Result TextureStorage11::getSRVLevel(const gl::Context *context,
             const TextureHelper11 *resource = nullptr;
             ANGLE_TRY(getResource(context, &resource));
 
-            ANGLE_TRY(createSRVForSampler(context, mipLevel, 1, mFormatInfo.stencilSRVFormat,
-                                          *resource, &mLevelStencilSRVs[mipLevel]));
+            if (isCubeMap())
+            {
+                // Swizzle blits on cube maps use PS_Swizzle*2DArray, which declares its input as
+                // Texture2DArray. Unlike TextureStorage11_2DArray::createSRVForSampler (which
+                // already creates D3D11_SRV_DIMENSION_TEXTURE2DARRAY),
+                // TextureStorage11_Cube::createSRVForSampler creates
+                // D3D11_SRV_DIMENSION_TEXTURECUBE for GLES samplerCube sampling. Use
+                // TextureStorage11_Cube::createSRVForImage here so the single-level SRV is created
+                // with D3D11_SRV_DIMENSION_TEXTURE2DARRAY covering all 6 cube faces.
+                ANGLE_TRY(createSRVForImage(context, mipLevel, mFormatInfo.stencilSRVFormat,
+                                            *resource, &mLevelStencilSRVs[mipLevel]));
+            }
+            else
+            {
+                ANGLE_TRY(createSRVForSampler(context, mipLevel, 1, mFormatInfo.stencilSRVFormat,
+                                              *resource, &mLevelStencilSRVs[mipLevel]));
+            }
         }
         *outSRV = &mLevelStencilSRVs[mipLevel];
         return angle::Result::Continue;
@@ -373,8 +388,18 @@ angle::Result TextureStorage11::getSRVLevel(const gl::Context *context,
 
             DXGI_FORMAT resourceFormat =
                 srvType == SRVType::Blit ? mFormatInfo.blitSRVFormat : mFormatInfo.srvFormat;
-            ANGLE_TRY(createSRVForSampler(context, mipLevel, 1, resourceFormat, *resource,
-                                          &levelSRVs[mipLevel]));
+            if (isCubeMap())
+            {
+                // See comment above: cube map per-level SRVs are consumed as a 6-slice
+                // Texture2DArray by PS_Swizzle*2DArray, which createSRVForImage produces.
+                ANGLE_TRY(createSRVForImage(context, mipLevel, resourceFormat, *resource,
+                                            &levelSRVs[mipLevel]));
+            }
+            else
+            {
+                ANGLE_TRY(createSRVForSampler(context, mipLevel, 1, resourceFormat, *resource,
+                                              &levelSRVs[mipLevel]));
+            }
         }
     }
 
@@ -473,12 +498,18 @@ const d3d11::Format &TextureStorage11::getFormatSet() const
 }
 
 angle::Result TextureStorage11::generateSwizzles(const gl::Context *context,
-                                                 const gl::TextureState &textureState)
+                                                 const gl::TextureState &textureState,
+                                                 const gl::SamplerState &samplerState)
 {
     gl::SwizzleState swizzleTarget = GetEffectiveSwizzle(textureState);
     const int baseLevel            = static_cast<int>(textureState.getEffectiveBaseLevel());
-    const int maxLevel =
-        std::min(static_cast<int>(textureState.getEffectiveMaxLevel()), getLevelCount() - 1);
+    // Match getSRVForSampler: when the sampler does not use a mipmap minFilter, only baseLevel is
+    // sampled and non-base mip levels of a mutable texture may not even be defined yet (even though
+    // getEffectiveMaxLevel() defaults to 1000).
+    const bool mipmapping = gl::IsMipmapFiltered(samplerState.getMinFilter());
+    const int maxMipLevel =
+        mipmapping ? static_cast<int>(textureState.getEffectiveMaxLevel()) : baseLevel;
+    const int maxLevel = std::min(maxMipLevel, getLevelCount() - 1);
     for (int level = baseLevel; level <= maxLevel; level++)
     {
         // Check if the swizzle for this level is out of date
@@ -493,7 +524,13 @@ angle::Result TextureStorage11::generateSwizzles(const gl::Context *context,
             const d3d11::RenderTargetView *destRTV;
             ANGLE_TRY(getSwizzleRenderTarget(context, level, &destRTV));
 
-            gl::Extents size(getLevelWidth(level), getLevelHeight(level), getLevelDepth(level));
+            // Unlike TextureStorage11_2DArray (where getLevelDepth returns the layer count
+            // mTextureDepth), TextureStorage11_Cube sets mTextureDepth = 1 because each face is
+            // specified as a 2D image with depth = 1. Pass gl::kCubeFaceCount (6) so
+            // Blit11::swizzleTexture blits all 6 cube faces into the 6-slice swizzle RTV.
+            const int depth =
+                isCubeMap() ? static_cast<int>(gl::kCubeFaceCount) : getLevelDepth(level);
+            gl::Extents size(getLevelWidth(level), getLevelHeight(level), depth);
 
             Blit11 *blitter = mRenderer->getBlitter();
 
