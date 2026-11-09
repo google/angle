@@ -336,7 +336,9 @@ class StateManager11 final : angle::NonCopyable
                                    const gl::ImageUnit &imageUnit,
                                    UAVList *uavList);
 
-    angle::Result generateSwizzle(const gl::Context *context, gl::Texture *texture);
+    angle::Result generateSwizzle(const gl::Context *context,
+                                  gl::Texture *texture,
+                                  const gl::SamplerState &samplerState);
     angle::Result generateSwizzlesForShader(const gl::Context *context, gl::ShaderType type);
     angle::Result generateSwizzles(const gl::Context *context);
 

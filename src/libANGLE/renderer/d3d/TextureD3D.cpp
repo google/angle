@@ -633,7 +633,8 @@ angle::Result TextureD3D::fastUnpackPixels(const gl::Context *context,
                                            const gl::Box &destArea,
                                            GLenum sizedInternalFormat,
                                            GLenum type,
-                                           RenderTargetD3D *destRenderTarget)
+                                           RenderTargetD3D *destRenderTarget,
+                                           GLint level)
 {
     bool check = (unpack.skipRows != 0 || unpack.skipPixels != 0 || unpack.imageHeight != 0 ||
                   unpack.skipImages != 0);
@@ -655,6 +656,12 @@ angle::Result TextureD3D::fastUnpackPixels(const gl::Context *context,
     ANGLE_TRY(mRenderer->fastCopyBufferToTexture(
         context, unpack, unpackBuffer, static_cast<unsigned int>(offset), destRenderTarget,
         sizedInternalFormat, type, destArea));
+
+    // fastCopyBufferToTexture writes directly to the destination level's RTV on the GPU, bypassing
+    // CPU staging (updateSubresourceLevel) and gl::Framebuffer attachment dirty notifications, so
+    // we must explicitly invalidate the level's swizzle cache here.
+    ASSERT(mTexStorage);
+    mTexStorage->markLevelDirty(level);
 
     return angle::Result::Continue;
 }
@@ -1373,7 +1380,8 @@ angle::Result TextureD3D_2D::setImage(const gl::Context *context,
                          1);
 
         ANGLE_TRY(fastUnpackPixels(context, unpack, unpackBuffer, pixels, destArea,
-                                   internalFormatInfo.sizedInternalFormat, type, destRenderTarget));
+                                   internalFormatInfo.sizedInternalFormat, type, destRenderTarget,
+                                   index.getLevelIndex()));
 
         // Ensure we don't overwrite our newly initialized data
         mImageArray[index.getLevelIndex()]->markClean();
@@ -1411,7 +1419,7 @@ angle::Result TextureD3D_2D::setSubImage(const gl::Context *context,
         ASSERT(!mImageArray[index.getLevelIndex()]->isDirty());
 
         return fastUnpackPixels(context, unpack, unpackBuffer, pixels, area, mipFormat, type,
-                                renderTarget);
+                                renderTarget, index.getLevelIndex());
     }
     else
     {
@@ -2836,7 +2844,8 @@ angle::Result TextureD3D_3D::setImage(const gl::Context *context,
                          getDepth(index.getLevelIndex()));
 
         ANGLE_TRY(fastUnpackPixels(context, unpack, unpackBuffer, pixels, destArea,
-                                   internalFormatInfo.sizedInternalFormat, type, destRenderTarget));
+                                   internalFormatInfo.sizedInternalFormat, type, destRenderTarget,
+                                   index.getLevelIndex()));
 
         // Ensure we don't overwrite our newly initialized data
         mImageArray[index.getLevelIndex()]->markClean();
@@ -2872,7 +2881,7 @@ angle::Result TextureD3D_3D::setSubImage(const gl::Context *context,
         ASSERT(!mImageArray[index.getLevelIndex()]->isDirty());
 
         return fastUnpackPixels(context, unpack, unpackBuffer, pixels, area, mipFormat, type,
-                                destRenderTarget);
+                                destRenderTarget, index.getLevelIndex());
     }
     else
     {

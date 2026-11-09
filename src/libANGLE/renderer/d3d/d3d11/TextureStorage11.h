@@ -61,7 +61,8 @@ class TextureStorage11 : public TextureStorage
                                bool forceLinearSampler,
                                const d3d11::SharedSRV **outSRV);
     angle::Result generateSwizzles(const gl::Context *context,
-                                   const gl::TextureState &textureState);
+                                   const gl::TextureState &textureState,
+                                   const gl::SamplerState &samplerState);
     void markLevelDirty(int mipLevel) override;
     void markDirty() override;
 
@@ -138,6 +139,7 @@ class TextureStorage11 : public TextureStorage
     virtual angle::Result getSwizzleRenderTarget(const gl::Context *context,
                                                  int mipLevel,
                                                  const d3d11::RenderTargetView **outRTV) = 0;
+    virtual bool isCubeMap() const { return false; }
 
     enum class SRVType
     {
@@ -542,6 +544,7 @@ class TextureStorage11_Cube : public TextureStorage11
     angle::Result getSwizzleRenderTarget(const gl::Context *context,
                                          int mipLevel,
                                          const d3d11::RenderTargetView **outRTV) override;
+    bool isCubeMap() const override { return true; }
 
     angle::Result ensureDropStencilTexture(const gl::Context *context,
                                            DropStencil *dropStencilOut) override;

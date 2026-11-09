@@ -2686,6 +2686,471 @@ TEST_P(RobustResourceInitTestES3, RGBASwizzleUndefinedMipCachedThenInitialized)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that defining or updating a swizzled 2D texture level from a PBO (fastUnpackPixels)
+// invalidates the swizzle cache, including when GL_TEXTURE_MAX_LEVEL is left at its default during
+// the initial non-mipmapped draw.
+TEST_P(RobustResourceInitTestES3, RGBASwizzleUndefinedMipCachedThenPBOUnpacked2D)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    ANGLE_GL_PROGRAM(prog2D, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(prog2D);
+    GLint lodLoc = glGetUniformLocation(prog2D, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLoc);
+
+    std::vector<GLColor> redPixels(64 * 64, GLColor::red);
+    std::vector<GLColor> greenPixels(32 * 32, GLColor::green);
+    std::vector<GLColor> bluePixels(32 * 32, GLColor::blue);
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+
+    // Leave GL_TEXTURE_MAX_LEVEL at its default (1000) during the initial non-mipmapped draw.
+    GLTexture tex2D;
+    glBindTexture(GL_TEXTURE_2D, tex2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ONE);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, redPixels.size() * sizeof(GLColor), redPixels.data(),
+                 GL_STATIC_DRAW);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Sample mip 0: red (255, 0, 0, 255) swizzled as (G, B, R, 1) -> blue (0, 0, 255, 255).
+    glUniform1f(lodLoc, 0.0f);
+    drawQuad(prog2D, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Define mip 1 from PBO with green (0, 255, 0, 255) and sample it:
+    // swizzled as (G, B, R, 1) -> red (255, 0, 0, 255).
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, greenPixels.size() * sizeof(GLColor), greenPixels.data(),
+                 GL_STATIC_DRAW);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+
+    glUniform1f(lodLoc, 1.0f);
+    drawQuad(prog2D, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Update already-cached mip 1 via PBO glTexSubImage2D with blue (0, 0, 255, 255):
+    // swizzled as (G, B, R, 1) -> green (0, 255, 0, 255).
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, bluePixels.size() * sizeof(GLColor), bluePixels.data(),
+                 GL_STATIC_DRAW);
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 32, 32, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    drawQuad(prog2D, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that defining or updating a swizzled 3D texture level from a PBO (fastUnpackPixels)
+// invalidates the swizzle cache, including when GL_TEXTURE_MAX_LEVEL is left at its default during
+// the initial non-mipmapped draw.
+TEST_P(RobustResourceInitTestES3, RGBASwizzleUndefinedMipCachedThenPBOUnpacked3D)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr char k3DFS[] = R"(#version 300 es
+precision highp float;
+precision highp sampler3D;
+uniform sampler3D uTex;
+uniform float uLod;
+out vec4 outColor;
+void main() {
+    outColor = textureLod(uTex, vec3(0.5, 0.5, 0.5), uLod);
+})";
+    ANGLE_GL_PROGRAM(prog3D, essl3_shaders::vs::Simple(), k3DFS);
+    glUseProgram(prog3D);
+    GLint lod3DLoc = glGetUniformLocation(prog3D, "uLod");
+    ASSERT_NE(-1, lod3DLoc);
+
+    std::vector<GLColor> redPixels(8 * 8 * 8, GLColor::red);
+    std::vector<GLColor> greenPixels(4 * 4 * 4, GLColor::green);
+    std::vector<GLColor> bluePixels(4 * 4 * 4, GLColor::blue);
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+
+    GLTexture tex3D;
+    glBindTexture(GL_TEXTURE_3D, tex3D);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_B, GL_RED);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_SWIZZLE_A, GL_ONE);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, redPixels.size() * sizeof(GLColor), redPixels.data(),
+                 GL_STATIC_DRAW);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glUniform1f(lod3DLoc, 0.0f);
+    drawQuad(prog3D, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, greenPixels.size() * sizeof(GLColor), greenPixels.data(),
+                 GL_STATIC_DRAW);
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+
+    glUniform1f(lod3DLoc, 1.0f);
+    drawQuad(prog3D, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, bluePixels.size() * sizeof(GLColor), bluePixels.data(),
+                 GL_STATIC_DRAW);
+    glTexSubImage3D(GL_TEXTURE_3D, 1, 0, 0, 0, 4, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    drawQuad(prog3D, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that defining or updating a swizzled cube map texture level from a PBO properly updates
+// the swizzle cache, including when GL_TEXTURE_MAX_LEVEL is left at its default during the initial
+// non-mipmapped draw.
+TEST_P(RobustResourceInitTestES3, RGBASwizzleUndefinedMipCachedThenPBOUnpackedCubeMap)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    // Sample all 6 cube faces to verify that swizzle generation blits every face (slices 0..5)
+    // rather than only slice 0.
+    constexpr char kCubeFS[] = R"(#version 300 es
+precision highp float;
+precision highp samplerCube;
+uniform samplerCube uTex;
+uniform vec3 uDir;
+uniform float uLod;
+out vec4 outColor;
+void main() {
+    outColor = textureLod(uTex, uDir, uLod);
+})";
+    ANGLE_GL_PROGRAM(progCube, essl3_shaders::vs::Simple(), kCubeFS);
+    glUseProgram(progCube);
+    GLint dirLoc = glGetUniformLocation(progCube, "uDir");
+    ASSERT_NE(-1, dirLoc);
+    GLint lodLoc = glGetUniformLocation(progCube, "uLod");
+    ASSERT_NE(-1, lodLoc);
+
+    const std::array<Vector3, 6> kFaceDirs = {{
+        Vector3(1.0f, 0.0f, 0.0f),
+        Vector3(-1.0f, 0.0f, 0.0f),
+        Vector3(0.0f, 1.0f, 0.0f),
+        Vector3(0.0f, -1.0f, 0.0f),
+        Vector3(0.0f, 0.0f, 1.0f),
+        Vector3(0.0f, 0.0f, -1.0f),
+    }};
+    auto verifyAllFaces                    = [&](float lod, const GLColor &expectedColor) {
+        glUniform1f(lodLoc, lod);
+        for (const Vector3 &dir : kFaceDirs)
+        {
+            glUniform3fv(dirLoc, 1, dir.data());
+            drawQuad(progCube, essl3_shaders::PositionAttrib(), 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, expectedColor);
+        }
+    };
+
+    std::vector<GLColor> redPixels(16 * 16, GLColor::red);
+    std::vector<GLColor> greenPixels(8 * 8, GLColor::green);
+    std::vector<GLColor> bluePixels(8 * 8, GLColor::blue);
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+
+    GLTexture texCube;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texCube);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_SWIZZLE_B, GL_RED);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_SWIZZLE_A, GL_ONE);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, redPixels.size() * sizeof(GLColor), redPixels.data(),
+                 GL_STATIC_DRAW);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         ++face)
+    {
+        glTexImage2D(face, 0, GL_RGBA8, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    }
+
+    verifyAllFaces(0.0f, GLColor::blue);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, greenPixels.size() * sizeof(GLColor), greenPixels.data(),
+                 GL_STATIC_DRAW);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         ++face)
+    {
+        glTexImage2D(face, 1, GL_RGBA8, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+
+    verifyAllFaces(1.0f, GLColor::red);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, bluePixels.size() * sizeof(GLColor), bluePixels.data(),
+                 GL_STATIC_DRAW);
+    for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+         ++face)
+    {
+        glTexSubImage2D(face, 1, 0, 0, 8, 8, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    }
+
+    verifyAllFaces(1.0f, GLColor::green);
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that defining or updating a swizzled 2D array texture level from a PBO properly updates
+// the swizzle cache, including when GL_TEXTURE_MAX_LEVEL is left at its default during the initial
+// non-mipmapped draw.
+TEST_P(RobustResourceInitTestES3, RGBASwizzleUndefinedMipCachedThenPBOUnpacked2DArray)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    constexpr char k2DArrayFS[] = R"(#version 300 es
+precision highp float;
+precision highp sampler2DArray;
+uniform sampler2DArray uTex;
+uniform float uLod;
+out vec4 outColor;
+void main() {
+    outColor = textureLod(uTex, vec3(0.5, 0.5, 1.0), uLod);
+})";
+    ANGLE_GL_PROGRAM(prog2DArray, essl3_shaders::vs::Simple(), k2DArrayFS);
+    glUseProgram(prog2DArray);
+    GLint lodLoc = glGetUniformLocation(prog2DArray, "uLod");
+    ASSERT_NE(-1, lodLoc);
+
+    std::vector<GLColor> redPixels(16 * 16 * 2, GLColor::red);
+    std::vector<GLColor> greenPixels(8 * 8 * 2, GLColor::green);
+    std::vector<GLColor> bluePixels(8 * 8 * 2, GLColor::blue);
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+
+    GLTexture tex2DArray;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex2DArray);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_SWIZZLE_B, GL_RED);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_SWIZZLE_A, GL_ONE);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, redPixels.size() * sizeof(GLColor), redPixels.data(),
+                 GL_STATIC_DRAW);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 16, 16, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    glUniform1f(lodLoc, 0.0f);
+    drawQuad(prog2DArray, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, greenPixels.size() * sizeof(GLColor), greenPixels.data(),
+                 GL_STATIC_DRAW);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 8, 8, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+
+    glUniform1f(lodLoc, 1.0f);
+    drawQuad(prog2DArray, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, bluePixels.size() * sizeof(GLColor), bluePixels.data(),
+                 GL_STATIC_DRAW);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 1, 0, 0, 0, 8, 8, 2, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    drawQuad(prog2DArray, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test toggling mipmap filtering off -> on -> off on a swizzled texture with PBO uploads at each
+// stage.
+TEST_P(RobustResourceInitTestES3, RGBASwizzleMipmapStateChangeWithPBOUnpack)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    ANGLE_GL_PROGRAM(prog, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(prog);
+    GLint lodLoc = glGetUniformLocation(prog, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLoc);
+
+    std::vector<GLColor> red64(64 * 64, GLColor::red);
+    std::vector<GLColor> green64(64 * 64, GLColor::green);
+    std::vector<GLColor> blue64(64 * 64, GLColor::blue);
+    std::vector<GLColor> red32(32 * 32, GLColor::red);
+    std::vector<GLColor> green32(32 * 32, GLColor::green);
+    std::vector<GLColor> blue32(32 * 32, GLColor::blue);
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ONE);
+
+    // 1. With mipmap disabled (GL_NEAREST), upload mip 0 (red) and mip 1 (green) and draw.
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, red64.size() * sizeof(GLColor), red64.data(),
+                 GL_STATIC_DRAW);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, green32.size() * sizeof(GLColor), green32.data(),
+                 GL_STATIC_DRAW);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glUniform1f(lodLoc, 0.0f);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // 2. Enable mipmap (GL_NEAREST_MIPMAP_NEAREST), sample mip 1, then upload again and draw.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glUniform1f(lodLoc, 1.0f);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, green64.size() * sizeof(GLColor), green64.data(),
+                 GL_STATIC_DRAW);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 64, 64, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, blue32.size() * sizeof(GLColor), blue32.data(),
+                 GL_STATIC_DRAW);
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 32, 32, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glUniform1f(lodLoc, 0.0f);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glUniform1f(lodLoc, 1.0f);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // 3. Disable mipmap again (GL_NEAREST), upload again, draw mip 0, and re-enable mipmap to
+    // verify mip 1 was also updated.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, blue64.size() * sizeof(GLColor), blue64.data(),
+                 GL_STATIC_DRAW);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 64, 64, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, red32.size() * sizeof(GLColor), red32.data(),
+                 GL_STATIC_DRAW);
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 32, 32, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glUniform1f(lodLoc, 0.0f);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glUniform1f(lodLoc, 1.0f);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test changing GL_TEXTURE_BASE_LEVEL (1 -> 2 -> 0) on a swizzled texture with PBO uploads at
+// each stage.
+TEST_P(RobustResourceInitTestES3, RGBASwizzleBaseLevelStateChangeWithPBOUnpack)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+
+    ANGLE_GL_PROGRAM(prog, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(prog);
+    GLint lodLoc = glGetUniformLocation(prog, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLoc);
+    glUniform1f(lodLoc, 0.0f);
+
+    std::vector<GLColor> red64(64 * 64, GLColor::red);
+    std::vector<GLColor> green64(64 * 64, GLColor::green);
+    std::vector<GLColor> blue64(64 * 64, GLColor::blue);
+    std::vector<GLColor> red32(32 * 32, GLColor::red);
+    std::vector<GLColor> green32(32 * 32, GLColor::green);
+    std::vector<GLColor> red16(16 * 16, GLColor::red);
+    std::vector<GLColor> green16(16 * 16, GLColor::green);
+    std::vector<GLColor> blue16(16 * 16, GLColor::blue);
+
+    GLBuffer pbo;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_GREEN);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_BLUE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ONE);
+
+    // Phase 1: Define levels as base level changes 1 -> 2 -> 0.
+    // Base level 1: upload red -> swizzled as blue.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, red32.size() * sizeof(GLColor), red32.data(),
+                 GL_STATIC_DRAW);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Base level 2: upload green -> swizzled as red.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, green16.size() * sizeof(GLColor), green16.data(),
+                 GL_STATIC_DRAW);
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA8, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Base level 0: upload blue -> swizzled as green.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, blue64.size() * sizeof(GLColor), blue64.data(),
+                 GL_STATIC_DRAW);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Phase 2: All levels 0..2 are now defined with matching dimensions, so mTexStorage stays
+    // alive across base level changes (1 -> 2 -> 0). Verify PBO uploads invalidate each level's
+    // swizzle cache.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, green32.size() * sizeof(GLColor), green32.data(),
+                 GL_STATIC_DRAW);
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 32, 32, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, blue16.size() * sizeof(GLColor), blue16.data(),
+                 GL_STATIC_DRAW);
+    glTexSubImage2D(GL_TEXTURE_2D, 2, 0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, red64.size() * sizeof(GLColor), red64.data(),
+                 GL_STATIC_DRAW);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 64, 64, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    drawQuad(prog, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Reading a partially initialized texture (texImage2D) should succeed with all uninitialized bytes
 // set to 0 and initialized bytes untouched.
 TEST_P(RobustResourceInitTest, ReadingPartiallyInitializedTexture)
